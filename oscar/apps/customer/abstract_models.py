@@ -91,7 +91,7 @@ class AbstractEmail(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL, related_name='emails', verbose_name=_("User"))
     subject = models.TextField(_('Subject'), max_length=255)
     body_text = models.TextField(_("Body Text"))
-    body_html = models.TextField(_("Body HTML"), blank=True, null=True)
+    body_html = models.TextField(_("Body HTML"), blank=True)
     date_sent = models.DateTimeField(_("Date Sent"), auto_now_add=True)
 
     class Meta:
@@ -126,12 +126,11 @@ class AbstractCommunicationEventType(models.Model):
 
     # Template content for emails
     email_subject_template = models.CharField(
-        _('Email Subject Template'), max_length=255, blank=True, null=True)
+        _('Email Subject Template'), max_length=255, blank=True)
     email_body_template = models.TextField(
-        _('Email Body Template'), blank=True, null=True)
+        _('Email Body Template'), blank=True)
     email_body_html_template = models.TextField(
-        _('Email Body HTML Template'), blank=True, null=True,
-        help_text=_("HTML template"))
+        _('Email Body HTML Template'), blank=True, help_text=_("HTML template"))
 
     # Template content for SMS messages
     sms_template = models.CharField(_('SMS Template'), max_length=170,
@@ -169,7 +168,7 @@ class AbstractCommunicationEventType(models.Model):
                      'sms': 'sms_template'}
         for name, attr_name in templates.items():
             field = getattr(self, attr_name, None)
-            if field is not None:
+            if field:
                 # Template content is in a model field
                 templates[name] = Template(field)
             else:
@@ -219,7 +218,7 @@ class AbstractNotification(models.Model):
 
     # Some projects may want to categorise their notifications.  You may want
     # to use this field to show a different icons next to the notification.
-    category = models.CharField(max_length=255, null=True)
+    category = models.CharField(max_length=255, blank=True)
 
     INBOX, ARCHIVE = 'Inbox', 'Archive'
     choices = (
@@ -259,10 +258,10 @@ class AbstractProductAlert(models.Model):
     # attached to the notification
     user = models.ForeignKey(AUTH_USER_MODEL, db_index=True, blank=True, null=True,
                              related_name="alerts", verbose_name=_('User'))
-    email = models.EmailField(_("Email"), db_index=True, blank=True, null=True)
+    email = models.EmailField(_("Email"), db_index=True, blank=True)
 
     # This key are used to confirm and cancel alerts for anon users
-    key = models.CharField(_("Key"), max_length=128, null=True, db_index=True)
+    key = models.CharField(_("Key"), max_length=128, blank=True, db_index=True)
 
     # An alert can have two different statuses for authenticated
     # users ``ACTIVE`` and ``INACTIVE`` and anonymous users have an

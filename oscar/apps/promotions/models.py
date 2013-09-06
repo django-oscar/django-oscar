@@ -222,7 +222,7 @@ class AbstractProductList(AbstractPromotion):
     """
     name = models.CharField(_("Title"), max_length=255)
     description = models.TextField(_("Description"), blank=True)
-    link_url = ExtendedURLField(_('Link URL'), blank=True, null=True)
+    link_url = ExtendedURLField(_('Link URL'), blank=True)
     link_text = models.CharField(_("Link text"), max_length=255, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
 

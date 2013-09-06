@@ -401,7 +401,7 @@ class Condition(models.Model):
     range = models.ForeignKey(
         'offer.Range', verbose_name=_("Range"), null=True, blank=True)
     type = models.CharField(_('Type'), max_length=128, choices=TYPE_CHOICES,
-                            null=True, blank=True)
+                            blank=True)
     value = PositiveDecimalField(_('Value'), decimal_places=2, max_digits=12,
                                  null=True, blank=True)
 

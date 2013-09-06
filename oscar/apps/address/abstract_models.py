@@ -211,23 +211,21 @@ class AbstractAddress(models.Model):
 
     title = models.CharField(
         pgettext_lazy(u"Treatment Pronouns for the customer", u"Title"),
-        max_length=64, choices=TITLE_CHOICES, blank=True, null=True)
-    first_name = models.CharField(
-        _("First name"), max_length=255, blank=True, null=True)
+        max_length=64, choices=TITLE_CHOICES, blank=True)
+    first_name = models.CharField(_("First name"), max_length=255, blank=True)
     last_name = models.CharField(_("Last name"), max_length=255, blank=True)
 
     # We use quite a few lines of an address as they are often quite long and
     # it's easier to just hide the unnecessary ones than add extra ones.
     line1 = models.CharField(_("First line of address"), max_length=255)
     line2 = models.CharField(
-        _("Second line of address"), max_length=255, blank=True, null=True)
+        _("Second line of address"), max_length=255, blank=True)
     line3 = models.CharField(
-        _("Third line of address"), max_length=255, blank=True, null=True)
-    line4 = models.CharField(_("City"), max_length=255, blank=True, null=True)
-    state = models.CharField(
-        _("State/County"), max_length=255, blank=True, null=True)
+        _("Third line of address"), max_length=255, blank=True)
+    line4 = models.CharField(_("City"), max_length=255, blank=True)
+    state = models.CharField(_("State/County"), max_length=255, blank=True)
     postcode = fields.UppercaseCharField(
-        _("Post/Zip-code"), max_length=64, blank=True, null=True)
+        _("Post/Zip-code"), max_length=64, blank=True)
     country = models.ForeignKey('address.Country', verbose_name=_("Country"))
 
     #: A field only used for searching addresses - this contains all the
@@ -380,7 +378,7 @@ class AbstractCountry(models.Model):
     iso_3166_1_a2 = models.CharField(_('ISO 3166-1 alpha-2'), max_length=2,
                                      primary_key=True)
     iso_3166_1_a3 = models.CharField(_('ISO 3166-1 alpha-3'), max_length=3,
-                                     null=True, db_index=True)
+                                     blank=True, db_index=True)
     iso_3166_1_numeric = models.PositiveSmallIntegerField(
         _('ISO 3166-1 numeric'), null=True, db_index=True)
     name = models.CharField(_('Official name (CAPS)'), max_length=128)
@@ -410,11 +408,10 @@ class AbstractShippingAddress(AbstractAddress):
     A shipping address should not be edited once the order has been placed -
     it should be read-only after that.
     """
-    phone_number = models.CharField(_("Phone number"), max_length=32,
-                                    blank=True, null=True)
+    phone_number = models.CharField(
+        _("Phone number"), max_length=32, blank=True)
     notes = models.TextField(
-        blank=True, null=True,
-        verbose_name=_('Courier instructions'),
+        blank=True, verbose_name=_('Courier instructions'),
         help_text=_("For example, leave the parcel in the wheelie bin "
                     "if I'm not in."))
 

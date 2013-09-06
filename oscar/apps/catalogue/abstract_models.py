@@ -69,7 +69,7 @@ class AbstractCategory(MP_Node):
     Uses django-treebeard.
     """
     name = models.CharField(_('Name'), max_length=255, db_index=True)
-    description = models.TextField(_('Description'), blank=True, null=True)
+    description = models.TextField(_('Description'), blank=True)
     image = models.ImageField(_('Image'), upload_to='categories', blank=True,
                               null=True, max_length=255)
     slug = models.SlugField(_('Slug'), max_length=255, db_index=True,
@@ -275,14 +275,14 @@ class AbstractProduct(models.Model):
                     "product)."))
 
     # Title is mandatory for canonical products but optional for child products
-    title = models.CharField(_('Title'), max_length=255, blank=True, null=True)
+    title = models.CharField(_('Title'), max_length=255, blank=True)
     slug = models.SlugField(_('Slug'), max_length=255, unique=False)
-    description = models.TextField(_('Description'), blank=True, null=True)
+    description = models.TextField(_('Description'), blank=True)
 
     #: Use this field to indicate if the product is inactive or awaiting
     #: approval
-    status = models.CharField(_('Status'), max_length=128, blank=True,
-                              null=True, db_index=True)
+    status = models.CharField(
+        _('Status'), max_length=128, blank=True, db_index=True)
     product_class = models.ForeignKey(
         'catalogue.ProductClass', verbose_name=_('Product Class'), null=True,
         help_text=_("""Choose what type of product this is"""))
@@ -798,12 +798,11 @@ class AbstractProductAttributeValue(models.Model):
     product = models.ForeignKey(
         'catalogue.Product', related_name='attribute_values',
         verbose_name=_("Product"))
-    value_text = models.CharField(
-        _('Text'), max_length=255, blank=True, null=True)
+    value_text = models.CharField(_('Text'), max_length=255, blank=True)
     value_integer = models.IntegerField(_('Integer'), blank=True, null=True)
     value_boolean = models.BooleanField(_('Boolean'), blank=True)
     value_float = models.FloatField(_('Float'), blank=True, null=True)
-    value_richtext = models.TextField(_('Richtext'), blank=True, null=True)
+    value_richtext = models.TextField(_('Richtext'), blank=True)
     value_date = models.DateField(_('Date'), blank=True, null=True)
     value_option = models.ForeignKey(
         'catalogue.AttributeOption', blank=True, null=True,
@@ -1003,8 +1002,7 @@ class AbstractProductImage(models.Model):
         'catalogue.Product', related_name='images', verbose_name=_("Product"))
     original = models.ImageField(
         _("Original"), upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255)
-    caption = models.CharField(
-        _("Caption"), max_length=200, blank=True, null=True)
+    caption = models.CharField(_("Caption"), max_length=200, blank=True)
 
     #: Use display_order to determine which is the "primary" image
     display_order = models.PositiveIntegerField(_("Display Order"), default=0,

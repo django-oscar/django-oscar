@@ -35,9 +35,9 @@ class AbstractProductReview(models.Model):
         AUTH_USER_MODEL, related_name='reviews', null=True, blank=True)
 
     # Fields to be completed if user is anonymous
-    name = models.CharField(_("Name"), max_length=255, null=True, blank=True)
-    email = models.EmailField(_("Email"), null=True, blank=True)
-    homepage = models.URLField(_("URL"), null=True, blank=True)
+    name = models.CharField(_("Name"), max_length=255, blank=True)
+    email = models.EmailField(_("Email"), blank=True)
+    homepage = models.URLField(_("URL"), blank=True)
 
     FOR_MODERATION, APPROVED, REJECTED = range(0, 3)
     STATUS_CHOICES = (

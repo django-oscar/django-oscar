@@ -47,12 +47,12 @@ class AbstractOrder(models.Model):
         'order.ShippingAddress', null=True, blank=True,
         verbose_name=_("Shipping Address"))
     shipping_method = models.CharField(
-        _("Shipping method"), max_length=128, null=True, blank=True)
+        _("Shipping method"), max_length=128, blank=True)
 
     # Use this field to indicate that an order is on hold / awaiting payment
-    status = models.CharField(_("Status"), max_length=100, null=True, blank=True)
+    status = models.CharField(_("Status"), max_length=100, blank=True)
 
-    guest_email = models.EmailField(_("Guest email address"), null=True, blank=True)
+    guest_email = models.EmailField(_("Guest email address"), blank=True)
 
     # Index added to this field for reporting
     date_placed = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -269,7 +269,7 @@ class AbstractOrderNote(models.Model):
 
     # We allow notes to be classified although this isn't always needed
     INFO, WARNING, ERROR, SYSTEM = 'Info', 'Warning', 'Error', 'System'
-    note_type = models.CharField(_("Note Type"), max_length=128, null=True)
+    note_type = models.CharField(_("Note Type"), max_length=128, blank=True)
 
     message = models.TextField(_("Message"))
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
@@ -338,6 +338,8 @@ class AbstractLine(models.Model):
     partner_sku = models.CharField(_("Partner SKU"), max_length=128)
 
     title = models.CharField(_("Title"), max_length=255)
+    # UPC can be null because it's usually set as the product's UPC, and that
+    # can be null as well
     upc = models.CharField(_("UPC"), max_length=128, blank=True, null=True)
 
     # We don't want any hard links between orders and the products table so we
@@ -382,16 +384,15 @@ class AbstractLine(models.Model):
 
     # Partner information
     partner_line_reference = models.CharField(
-        _("Partner reference"), max_length=128, blank=True, null=True,
+        _("Partner reference"), max_length=128, blank=True,
         help_text=_("This is the item number that the partner uses "
                     "within their system"))
     partner_line_notes = models.TextField(
-        _("Partner Notes"), blank=True, null=True)
+        _("Partner Notes"), blank=True)
 
     # Partners often want to assign some status to each line to help with their
     # own business processes.
-    status = models.CharField(_("Status"), max_length=255,
-                              null=True, blank=True)
+    status = models.CharField(_("Status"), max_length=255, blank=True)
 
     # Estimated dispatch date - should be set at order time
     est_dispatch_date = models.DateField(
@@ -758,7 +759,7 @@ class AbstractShippingEvent(models.Model):
     event_type = models.ForeignKey(
         'order.ShippingEventType', verbose_name=_("Event Type"))
     notes = models.TextField(
-        _("Event notes"), blank=True, null=True,
+        _("Event notes"), blank=True,
         help_text=_("This could be the dispatch reference, or a "
                     "tracking number"))
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
@@ -888,18 +889,18 @@ class AbstractOrderDiscount(models.Model):
     offer_id = models.PositiveIntegerField(
         _("Offer ID"), blank=True, null=True)
     offer_name = models.CharField(
-        _("Offer name"), max_length=128, db_index=True, null=True)
+        _("Offer name"), max_length=128, db_index=True, blank=True)
     voucher_id = models.PositiveIntegerField(
         _("Voucher ID"), blank=True, null=True)
     voucher_code = models.CharField(
-        _("Code"), max_length=128, db_index=True, null=True)
+        _("Code"), max_length=128, db_index=True, blank=True)
     frequency = models.PositiveIntegerField(_("Frequency"), null=True)
     amount = models.DecimalField(
         _("Amount"), decimal_places=2, max_digits=12, default=0)
 
     # Post-order offer applications can return a message to indicate what
     # action was taken after the order was placed.
-    message = models.TextField(blank=True, null=True)
+    message = models.TextField(blank=True)
 
     @property
     def is_basket_discount(self):
