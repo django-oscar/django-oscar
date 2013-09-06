@@ -331,17 +331,17 @@ DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': is_internal
 }
 DEBUG_TOOLBAR_PANELS = (
-    'debug_toolbar.panels.version.VersionDebugPanel',
-    'debug_toolbar.panels.timer.TimerDebugPanel',
-    'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
     'debug_toolbar.panels.headers.HeaderDebugPanel',
     'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
     'debug_toolbar.panels.template.TemplateDebugPanel',
-    'debug_toolbar.panels.sql.SQLDebugPanel',  # Disabled for performance
+    'debug_toolbar.panels.timer.TimerDebugPanel',
+    'debug_toolbar.panels.sql.SQLDebugPanel',
+    'template_timings_panel.panels.TemplateTimings.TemplateTimings',
+    'cache_panel.panel.CacheDebugPanel',
     'debug_toolbar.panels.signals.SignalDebugPanel',
     'debug_toolbar.panels.logger.LoggingPanel',
-    'cache_panel.panel.CacheDebugPanel',
-    #'template_timings_panel.panels.TemplateTimings.TemplateTimings',
+    'debug_toolbar.panels.version.VersionDebugPanel',
+    'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
 )
 
 # ==============
