@@ -21,6 +21,7 @@
 
 {% block header %}
     <div class="page-header">
+        <a href="{% url 'dashboard:page-create' %}" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new page" %}</a>
         <h1>{% trans "Page Management" %}</h1>
     </div>
 {% endblock header %}
@@ -32,16 +33,8 @@
     <div class="well">
         <form action="." method="get" class="form-inline">
             {% include "partials/form_fields_inline.html" with form=form %}
-            <input type="submit" value="{% trans "Search" %}" class="btn btn-primary"/>
-        </form>
-    </div>
-
-    <div class="table-header">
-        <h3><i class="icon-file icon-large"></i>{% trans "Create new page" %}</h3>
-    </div>
-    <div class="well">
-        <form action="{% url 'dashboard:page-create' %}" method="get" class="form-inline">
-            <button type="submit" class="btn btn-primary"><i class="icon-plus"></i> {% trans "Create page" %}</button>
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a href="{% url 'dashboard:page-list' %}" class="btn">Reset</a>
         </form>
     </div>
 
@@ -64,8 +57,8 @@
                 <tbody>
                     {% for page in flatpage_list %}
                         <tr>
-                            <td>{{ page.title}}</td>
-                            <td>{{ page.url}}</td>
+                            <td><a href="{% url 'dashboard:page-update' page.id %}">{{ page.title}}</a></td>
+                            <td><a title="{% trans "View on site" %}" href="{{ page.get_absolute_url }}">{{ page.url }}</a></td>
                             <td>
                                 <div class="btn-toolbar">
                                     <div class="btn-group">
