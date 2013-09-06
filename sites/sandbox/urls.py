@@ -12,6 +12,8 @@ from oscar.views import handler500, handler404, handler403
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    # Include admin as convenience. It's unsupported and you should
+    # use the dashboard
     (r'^admin/', include(admin.site.urls)),
     # Custom functionality to allow dashboard users to be created
     (r'^gateway/', include('apps.gateway.urls')),
