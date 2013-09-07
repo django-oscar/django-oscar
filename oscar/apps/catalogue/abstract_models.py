@@ -304,7 +304,7 @@ class AbstractProduct(models.Model):
         verbose_name=_("Related Products"),
         help_text=_("Related items are things like different formats of the "
                     "same book.  Grouping them together allows better linking "
-                    "betwen products on the site."))
+                    "between products on the site."))
 
     recommended_products = models.ManyToManyField(
         'catalogue.Product', through='ProductRecommendation', blank=True,
