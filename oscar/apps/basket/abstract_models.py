@@ -729,8 +729,10 @@ class AbstractLine(models.Model):
 
     @property
     def line_price_excl_tax_and_discounts(self):
-        if self.is_tax_known:
-            return (self.line_price_excl_tax - self._discount) * self._tax_ratio
+        if self.is_tax_known and self._discount:
+            # Scale discount down appropriately
+            discount_excl_tax = self._discount * self._tax_ratio
+            return self.line_price_excl_tax - discount_excl_tax
         return self.line_price_excl_tax
 
     @property
