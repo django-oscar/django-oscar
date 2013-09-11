@@ -381,6 +381,8 @@ class AbstractCountry(models.Model):
                                      primary_key=True)
     iso_3166_1_a3 = models.CharField(_('ISO 3166-1 alpha-3'), max_length=3,
                                      null=True, db_index=True)
+    # This should have been a CharField as it needs to be padded with zeros to
+    # be 3 digits.  Access via the numeric_code instead.
     iso_3166_1_numeric = models.PositiveSmallIntegerField(
         _('ISO 3166-1 numeric'), null=True, db_index=True)
     name = models.CharField(_('Official name (CAPS)'), max_length=128)
@@ -401,6 +403,10 @@ class AbstractCountry(models.Model):
 
     def __unicode__(self):
         return self.printable_name or self.name
+
+    @property
+    def numeric_code(self):
+        return u"%.03d" % self.iso_3166_1_numeric
 
 
 class AbstractShippingAddress(AbstractAddress):
