@@ -49,7 +49,14 @@ class PagePromotionForm(forms.ModelForm):
 
     def clean_page_url(self):
         page_url = self.cleaned_data.get('page_url')
-        if (page_url and page_url.startswith('/') and
-                not page_url.endswith('/')):
+        if not page_url:
+            return page_url
+
+        if page_url.startswith('http'):
+            raise forms.ValidationError(
+                _("Content blocks can only be linked to internal URLs"))
+
+        if page_url.startswith('/') and not page_url.endswith('/'):
             page_url += '/'
+
         return page_url
