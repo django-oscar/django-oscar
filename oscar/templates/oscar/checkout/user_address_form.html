@@ -2,6 +2,10 @@
 {% load url from future %}
 {% load i18n %}
 
+{% block title %}
+    {% trans "Edit address" %} | {{ block.super }}
+{% endblock title %}
+
 {% block order_contents %}{% endblock %}
 {% block shipping_method %}{% endblock %}
 {% block payment_method %}{% endblock %}
@@ -11,8 +15,9 @@
     {% include 'checkout/nav.html' with step=1 %}
 {% endblock %}
 
+{% block checkout_title %}{% trans "Edit address" %}{% endblock %}
+
 {% block shipping_address %}
-    <h1>{% trans "Edit address" %}</h1>
     <form action="." method="post" class="form-horizontal">
         <div class="well well-info">
             {% csrf_token %}

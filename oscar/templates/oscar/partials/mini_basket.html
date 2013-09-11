@@ -14,5 +14,11 @@
             </ul>
         </div>
     </li>
-    <li class="cart_summary"><strong>{% trans "Basket total:" %} <span>{{ request.basket.total_incl_tax|currency }}</span></strong></li>
+    <li class="cart_summary"><strong>{% trans "Basket total:" %} <span>
+        {% if request.basket.is_tax_known %}
+            {{ request.basket.total_incl_tax|currency }}
+        {% else %}
+            {{ request.basket.total_excl_tax|currency }}            
+        {% endif %}
+    </span></strong></li>
 </ul><!-- /cart -->

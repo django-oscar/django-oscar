@@ -27,6 +27,7 @@ TODO
 
 # Test files
 .coverage
+.noseids
 coverage.xml
 violations.txt
 nosetests.xml

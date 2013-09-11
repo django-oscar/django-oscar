@@ -6,9 +6,15 @@
     {% if basket.is_empty %}
         {% trans "Your basket is now empty" %}
     {% else %}
-        {% blocktrans with total=basket.total_incl_tax|currency %}
-        Basket total now <strong>{{ total }}</strong>.
-        {% endblocktrans %}
+        {% if basket.is_tax_known %}
+            {% blocktrans with total=basket.total_incl_tax|currency %}
+            Basket total now <strong>{{ total }}</strong>.
+            {% endblocktrans %}
+        {% else %}
+            {% blocktrans with total=basket.total_excl_tax|currency %}
+            Basket total now <strong>{{ total }}</strong> + tax.
+            {% endblocktrans %}
+        {% endif %}
     {% endif %}
 </p>
 

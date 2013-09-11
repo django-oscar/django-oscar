@@ -1,15 +1,13 @@
 from decimal import Decimal as D
 
 from django.test import TestCase
+from nose.plugins.attrib import attr
 
 from oscar.apps.basket.models import Basket
-from oscar.core.compat import get_user_model
 from oscar.apps.shipping import repository, methods
 
 
-User = get_user_model()
-
-
+@attr('shipping')
 class TestShippingRepository(TestCase):
 
     def setUp(self):
@@ -23,8 +21,8 @@ class TestShippingRepository(TestCase):
 
         method = available_methods[0]
         self.assertTrue(isinstance(method, methods.Free))
-        self.assertEquals(D('0.00'), method.basket_charge_incl_tax())
-        self.assertEquals(D('0.00'), method.basket_charge_excl_tax())
+        self.assertEquals(D('0.00'), method.charge_incl_tax)
+        self.assertEquals(D('0.00'), method.charge_excl_tax)
 
     def test_allows_free_method_to_be_retrieved(self):
         method = self.repo.find_by_code(methods.Free.code, self.basket)

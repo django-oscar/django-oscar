@@ -15,25 +15,32 @@
         <a class="btn btn-navbar btn-cart visible-phone" href="{% url 'checkout:index' %}">
             <i class="icon-shopping-cart"></i>
             <strong>{% trans "Basket" %}
-                {% if request.basket.all_lines.count %}
-                    {% trans "Total:" %} {{ basket.total_incl_tax|currency }}
+                {% if not request.basket.is_empty %}
+                    {% if request.basket.is_tax_known %}
+                        {% trans "Total:" %} {{ basket.total_incl_tax|currency }}
+                    {% else %}
+                        {% trans "Total:" %} {{ basket.total_excl_tax|currency }} 
+                        + {% trans "tax" %}.
+                    {% endif %}
                 {% endif %}
             </strong>
         </a>
 
         <div class="nav-collapse primary-collapse">
             <div id="browse" class="dropdown pull-left {% if expand_dropdown %}open{% endif %}">
+
                 <button class="btn btn-primary dropdown-toggle hidden-phone"{% if not expand_dropdown %} data-toggle="dropdown"{% endif %}>
                     {% trans "Browse Store" %}
                     <span class="caret"></span>
                 </button>
+
                 {% category_tree depth=2 as tree_categories %}
                 <ul class="dropdown-menu" role="menu">
                     <li><a tabindex="-1" href="{% url 'catalogue:index' %}">{% trans "All Products" %}</a></li>
                     {% if tree_categories %}
                         <li class="divider"></li>
                         {% for tree_category, info in tree_categories %}
-                            {% if info.children %}
+                            {% if info.has_children %}
                                 <li class="dropdown-submenu">
                                 <a tabindex="-1" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
                                 <ul class="dropdown-menu">
@@ -41,7 +48,7 @@
                                 <li><a tabindex="-1" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a></li>
                             {% endif %}
 
-                            {% for close in info.close %}
+                            {% for x in info.num_to_close %}
                                 </ul></li>
                             {% endfor %}
                         {% endfor %}
@@ -49,6 +56,7 @@
                     <li class="divider"></li>
                     <li><a href="{% url 'offer:list' %}">{% trans "Offers" %}</a></li>
                 </ul>
+
             </div>
             {% include "partials/search.html" %}
         </div><!-- /nav-collapse -->

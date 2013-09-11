@@ -2,6 +2,7 @@ from decimal import Decimal as D
 
 from django.core.urlresolvers import reverse
 
+from oscar.core import prices
 from oscar.apps.dashboard.views import IndexView
 from oscar.test.testcases import ClientTestCase
 from oscar.test.factories import create_order
@@ -35,8 +36,10 @@ class TestDashboardIndexForStaffUser(ClientTestCase):
         self.assertEquals(report['max_revenue'], 0)
 
     def test_includes_hourly_report_with_orders(self):
-        create_order(total_incl_tax=D('34.05'), total_excl_tax=D('34.05'))
-        create_order(total_incl_tax=D('21.90'), total_excl_tax=D('21.90'))
+        create_order(total=prices.Price('GBP', excl_tax=D('34.05'),
+                                        tax=D('0.00')))
+        create_order(total=prices.Price('GBP', excl_tax=D('21.90'),
+                                        tax=D('0.00')))
         report = IndexView().get_hourly_report()
 
         self.assertEquals(len(report['order_total_hourly']), 12)

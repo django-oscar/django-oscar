@@ -441,15 +441,14 @@ class OrderDetailView(DetailView, PostActionMixin):
 
         This puts the contents of the previous order into your basket
         """
-
         # Collect lines to be added to the basket and any warnings for lines
         # that are no longer available.
         basket = self.request.basket
         lines_to_add = []
         warnings = []
         for line in order.lines.all():
-            is_available, reason = line.is_available_to_reorder(basket,
-                self.request.user)
+            is_available, reason = line.is_available_to_reorder(
+                basket, self.request.strategy)
             if is_available:
                 lines_to_add.append(line)
             else:
@@ -477,7 +476,8 @@ class OrderDetailView(DetailView, PostActionMixin):
                     options.append({
                         'option': attribute.option,
                         'value': attribute.value})
-            basket.add_product(line.product, line.quantity, options)
+            info = self.request.strategy.fetch(line.product)
+            basket.add_product(line.product, info, line.quantity, options)
 
         if len(lines_to_add) > 0:
             self.response = HttpResponseRedirect(reverse('basket:summary'))
@@ -505,12 +505,12 @@ class OrderLineView(DetailView, PostActionMixin):
         return order.lines.get(id=self.kwargs['line_id'])
 
     def do_reorder(self, line):
-        self.response = HttpResponseRedirect(reverse('customer:order',
-                                    args=(int(self.kwargs['order_number']),)))
+        self.response = HttpResponseRedirect(
+            reverse('customer:order', args=(int(self.kwargs['order_number']),)))
         basket = self.request.basket
 
-        line_available_to_reorder, reason = line.is_available_to_reorder(basket,
-            self.request.user)
+        line_available_to_reorder, reason = line.is_available_to_reorder(
+            basket, self.request.strategy)
 
         if not line_available_to_reorder:
             messages.warning(self.request, reason)
@@ -525,7 +525,8 @@ class OrderLineView(DetailView, PostActionMixin):
         for attribute in line.attributes.all():
             if attribute.option:
                 options.append({'option': attribute.option, 'value': attribute.value})
-        basket.add_product(line.product, line.quantity, options)
+        info = self.request.strategy.fetch(line.product)
+        basket.add_product(line.product, info, line.quantity, options)
 
         if line.quantity > 1:
             msg = _("%(qty)d copies of '%(product)s' have been added to your basket") % {

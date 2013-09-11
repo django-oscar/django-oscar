@@ -10,12 +10,9 @@
 
 {% block checkout_nav %}{% endblock %}
 
+{% block checkout_title %}{% trans "Order confirmation" %}{% endblock %}
+
 {% block content %}
-    <div class="sub-header">
-        <h1>{% blocktrans with order_num=order.number %}
-                Confirmation for order #{{ order_num }}
-            {% endblocktrans %}</h1>
-    </div>
     <p>{% trans "Your order has been placed and a confirmation email has ben sent - your order number is" %}
         <span class="label label-success">{{ order.number }}</span></p>
     <p>{% trans "Please make a note of this reference or print this page and quote it in any communication with us regarding your order." %}</p>
@@ -23,37 +20,47 @@
     <div class="row-fluid shipping-payment">
         <div class="span6">
             {% block shipping_info %}
+                <div class="sub-header">
+                    <h2>{% trans "Shipping" %}</h2>
+                </div>
                 <div class="well well-info">
-                    <h3>{% trans "Shipping" %}</h3>
-                    {% if order.shipping_address %}
-                        <dl>
-                            <dt>{% trans "Address" %}</dt>
-                            <dd>
-                                {% for field in order.shipping_address.active_address_fields %}
-                                    {{ field }}<br/>
-                                {% endfor %}
-                            </dd>
-                            {% if order.shipping_address.phone_number %}
-                                <dt>{% trans "Contact number" %}</dt>
-                                <dd>{{ order.shipping_address.phone_number }}</dd>
+                    <h4>{% trans "Address" %}</h4>
+                    <address>
+                        {% for field in order.shipping_address.active_address_fields %}
+                            {{ field }}<br/>
+                        {% endfor %}
+                    </address>
+
+                    {% if order.shipping_address.phone_number %}
+                        <h4>{% trans "Contact" %}</h4>
+                        <p>
+                            {% trans "Phone" %}: {{ order.shipping_address.phone_number }}
+                            {% if order.guest_email %}
+                                <br/>{% trans "Email" %}: {{ order.guest_email }}
                             {% endif %}
-                            {% if order.shipping_address.notes %}
-                                <dt>{% trans "Shipping notes" %}</dt>
-                                <dd>{{ order.shipping_address.notes }}</dd>
-                            {% endif %}
-                            <dt>{% trans "Shipping method" %}</dt>
-                            <dd>{{ order.shipping_method }}</dd>
-                        </dl>
-                    {% else %}
-                        {% trans "No shipping is required for this order." %}
+                        </p>
                     {% endif %}
+
+                    {% if order.shipping_address.notes %}
+                        <h4>{% trans "Note" %}</h4>
+                        <p>{{ order.shipping_address.notes|linebreaks }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="well well-info">
+                    <h4>{% trans "Shipping method" %}</h4>
+                    <p>{{ order.shipping_method }}</p>
                 </div>
             {% endblock %}
         </div>
+
         <div class="span6">
             {% block payment_info %}
+                <div class="sub-header">
+                    <h2>{% trans "Payment" %}</h2>
+                </div>
                 <div class="well well-success">
-                    <h3>{% trans "Payment" %}</h3>
+                    <h4>{% trans "Payment" %}</h4>
                     {% for source in order.sources.all %}
                         {{ source }}
                     {% empty %}
@@ -63,6 +70,7 @@
             {% endblock %}
         </div>
     </div>
+
     <div class="sub-header">
         <h3>{% trans "Order details" %}</h3>
     </div>

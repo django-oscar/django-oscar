@@ -15,6 +15,7 @@ class ChangesOwnerName(models.Benefit):
         if basket.owner:
             basket.owner.first_name = "Barry"
             basket.owner.save()
+        return "Your name has been changed to Barry!"
 
     @property
     def description(self):

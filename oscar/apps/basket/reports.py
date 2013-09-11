@@ -21,7 +21,6 @@ class OpenBasketReportCSVFormatter(ReportCSVFormatter):
                       _('Basket status'),
                       _('Num lines'),
                       _('Num items'),
-                      _('Value'),
                       _('Date of creation'),
                       _('Time since creation'),
                      ]
@@ -32,13 +31,11 @@ class OpenBasketReportCSVFormatter(ReportCSVFormatter):
                 row = [basket.owner_id, basket.owner.get_full_name(),
                        basket.owner.email,
                        basket.status, basket.num_lines,
-                       basket.num_items, basket.total_incl_tax,
                        self.format_datetime(basket.date_created),
                        basket.time_since_creation]
             else:
                 row = [basket.owner_id, None, None, basket.status,
                        basket.num_lines, basket.num_items,
-                       basket.total_incl_tax,
                        self.format_datetime(basket.date_created),
                        basket.time_since_creation]
             writer.writerow(row)
@@ -81,7 +78,6 @@ class SubmittedBasketReportCSVFormatter(ReportCSVFormatter):
                       _('Basket status'),
                       _('Num lines'),
                       _('Num items'),
-                      _('Value'),
                       _('Date created'),
                       _('Time between creation and submission'),
                      ]
@@ -93,7 +89,6 @@ class SubmittedBasketReportCSVFormatter(ReportCSVFormatter):
                    basket.status,
                    basket.num_lines,
                    basket.num_items,
-                   basket.total_incl_tax,
                    self.format_datetime(basket.date_created),
                    basket.time_before_submit]
             writer.writerow(row)

@@ -43,8 +43,9 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     communication_type_code = 'ORDER_PLACED'
     view_signal = post_checkout
 
-    def handle_order_placement(self, order_number, basket, total_incl_tax,
-                               total_excl_tax, user=None, **kwargs):
+    def handle_order_placement(self, order_number, user, basket,
+                               shipping_address, shipping_method,
+                               total, **kwargs):
         """
         Write out the order models and return the appropriate HTTP response
 
@@ -53,10 +54,41 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         can happen when a basket gets frozen.
         """
         order = self.place_order(
-            order_number, basket, total_incl_tax,
-            total_excl_tax, user, **kwargs)
+            order_number, user, basket, shipping_address, shipping_method,
+            total, **kwargs)
         basket.submit()
         return self.handle_successful_order(order)
+
+    def place_order(self, order_number, user, basket, shipping_address,
+                    shipping_method, total, billing_address=None, **kwargs):
+        """
+        Writes the order out to the DB including the payment models
+        """
+        # Create saved shipping address instance from passed in unsaved
+        # instance
+        shipping_address = self.create_shipping_address(user, shipping_address)
+
+        # We pass the kwargs as they often include the billing address form
+        # which will be needed to save a billing address.
+        billing_address = self.create_billing_address(
+            billing_address, shipping_address, **kwargs)
+
+        if 'status' not in kwargs:
+            status = self.get_initial_order_status(basket)
+        else:
+            status = kwargs.pop('status')
+
+        order = OrderCreator().place_order(
+            user=user,
+            order_number=order_number,
+            basket=basket,
+            shipping_address=shipping_address,
+            shipping_method=shipping_method,
+            total=total,
+            billing_address=billing_address,
+            status=status, **kwargs)
+        self.save_payment_details(order)
+        return order
 
     def add_payment_source(self, source):
         if self._payment_sources is None:
@@ -99,103 +131,24 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         return response
 
     def send_signal(self, request, response, order):
-        self.view_signal.send(sender=self, order=order, user=request.user,
-                              request=request, response=response)
+        self.view_signal.send(
+            sender=self, order=order, user=request.user,
+            request=request, response=response)
 
     def get_success_url(self):
         return reverse('checkout:thank-you')
 
-    def place_order(self, order_number, basket, total_incl_tax,
-                    total_excl_tax, user=None, **kwargs):
-        """
-        Writes the order out to the DB including the payment models
-        """
-        shipping_address = self.create_shipping_address(basket)
-        shipping_method = self.get_shipping_method(basket)
-
-        # We pass the kwargs as they often include the billing address form
-        # which will be needed to save a billing address.
-        billing_address = self.create_billing_address(
-            shipping_address, **kwargs)
-
-        if 'status' not in kwargs:
-            status = self.get_initial_order_status(basket)
-        else:
-            status = kwargs.pop('status')
-
-        # We allow a user to be passed in to handle cases where the order is
-        # being placed on behalf of someone else.
-        if user is None:
-            user = self.request.user
-
-        # Set guest email address for anon checkout.   Some libraries (eg
-        # PayPal) will pass this explicitly so we take care not to clobber.
-        if (not self.request.user.is_authenticated() and 'guest_email'
-                not in kwargs):
-            kwargs['guest_email'] = self.checkout_session.get_guest_email()
-
-        order = OrderCreator().place_order(
-            basket=basket, total_incl_tax=total_incl_tax,
-            total_excl_tax=total_excl_tax, user=user,
-            shipping_method=shipping_method,
-            shipping_address=shipping_address,
-            billing_address=billing_address, order_number=order_number,
-            status=status, **kwargs)
-        self.save_payment_details(order)
-        return order
-
-    def create_shipping_address(self, basket=None):
+    def create_shipping_address(self, user, shipping_address):
         """
         Create and return the shipping address for the current order.
 
         Compared to self.get_shipping_address(), ShippingAddress is saved and
         makes sure that appropriate UserAddress exists.
         """
-        addr = self.get_shipping_address(basket=basket)
-        if addr:
-            addr.save()
-            if self.request.user.is_authenticated():
-                self.update_address_book(self.request.user, addr)
-        return addr
-
-    def get_shipping_address(self, basket=None):
-        """
-        Return the (unsaved) shipping address for the current order.
-
-        If the shipping address was entered manually, then we instanciate a
-        ShippingAddress model with the appropriate form data.
-
-        If the shipping address was selected from the user's address book,
-        then we convert the UserAddress to a ShippingAddress.
-
-        The ShippingAddress instance is not saved as sometimes you need a
-        shipping address instance before the order is placed.  For example, if
-        you are submitting fraud information as part of a payment request.
-
-        The create_shipping_address method is responsible for saving a shipping
-        address when an order is placed.
-        """
-        if not basket:
-            basket = self.request.basket
-        if not basket.is_shipping_required():
-            return None
-
-        addr_data = self.checkout_session.new_shipping_address_fields()
-        addr_id = self.checkout_session.user_address_id()
-        if addr_data:
-            return ShippingAddress(**addr_data)
-        elif addr_id:
-            try:
-                address = UserAddress._default_manager.get(pk=addr_id)
-            except UserAddress.DoesNotExist:
-                raise UnableToPlaceOrder(
-                    "The selected shipping address no longer exists. "
-                    "Please select or enter another")
-            shipping_addr = ShippingAddress()
-            address.populate_alternative_model(shipping_addr)
-            return shipping_addr
-        else:
-            raise UnableToPlaceOrder("No shipping address data found")
+        shipping_address.save()
+        if user.is_authenticated():
+            self.update_address_book(user, shipping_address)
+        return shipping_address
 
     def update_address_book(self, user, shipping_addr):
         """
@@ -249,7 +202,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         shipping_addr.save()
         return shipping_addr
 
-    def create_billing_address(self, shipping_address=None, **kwargs):
+    def create_billing_address(self, billing_address=None, shipping_address=None, **kwargs):
         """
         Saves any relevant billing data (eg a billing address).
         """
