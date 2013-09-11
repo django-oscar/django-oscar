@@ -9,9 +9,11 @@ class ProductReviewForm(forms.ModelForm):
     name = forms.CharField(required=True)
     email = forms.EmailField(required=True)
 
-    def __init__(self, user=None, *args, **kwargs):
+    def __init__(self, product, user=None, *args, **kwargs):
         super(ProductReviewForm, self).__init__(*args, **kwargs)
-        if user is not None and user.is_authenticated():
+        self.instance.product = product
+        if user and user.is_authenticated():
+            self.instance.user = user
             del self.fields['name']
             del self.fields['email']
 

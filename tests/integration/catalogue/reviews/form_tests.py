@@ -22,9 +22,8 @@ class TestReviewForm(TestCase):
         }
 
     def test_cleans_title(self):
-        instance = self.product.reviews.model(
-            product=self.product)
-        form = forms.ProductReviewForm(data=self.data, instance=instance)
+        form = forms.ProductReviewForm(
+            product=self.product, user=self.reviewer, data=self.data)
         self.assertTrue(form.is_valid())
         review = form.save()
         self.assertEquals("This product is lovely", review.title)
