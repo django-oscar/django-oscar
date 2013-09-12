@@ -16,10 +16,13 @@ class AbstractWishList(models.Model):
                               verbose_name=_('Owner'))
     name = models.CharField(verbose_name=_('Name'), default=_('New Wish List'),
                             max_length=255)
-    # This key is used for shared wish lists
+    #: This key acts as primary key and is used instead of an int to make it
+    #: harder to guess
     key = models.CharField(_('Key'), max_length=6, db_index=True, unique=True,
                            editable=False)
 
+    # Oscar core does not support public or shared wishlists at the moment, but
+    # all the right hooks should be there
     PUBLIC, PRIVATE, SHARED = ('Public', 'Private', 'Shared')
     VISIBILITY_CHOICES = (
         (PRIVATE, _('Private - Only the owner can see the wish list')),

@@ -9,14 +9,12 @@
         <tbody>
             <tr>
                 <th>{% trans 'Name' %}</th>
-                <th>{% trans 'Visibility' %}</th>
                 <th>{% trans 'Number of entries' %}</th>
                 <th>{% trans 'Action' %}</th>
             </tr>
             {% for wishlist in wishlists %}
                 <tr>
                     <td>{{ wishlist.name }}</td>
-                    <td>{{ wishlist.get_visibility_display }}</td>
                     <td>{{ wishlist.lines.count }}</td>
                     <td>
                         <div class="btn-group">
