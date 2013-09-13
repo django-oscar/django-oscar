@@ -13,7 +13,7 @@ from oscar.core.utils import format_datetime
 ProductReview = get_model('reviews', 'productreview')
 
 
-class ReviewListView(generic.ListView, BulkEditMixin):
+class ReviewListView(BulkEditMixin, generic.ListView):
     model = ProductReview
     template_name = 'dashboard/reviews/review_list.html'
     context_object_name = 'review_list'

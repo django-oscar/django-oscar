@@ -245,7 +245,7 @@ class RegisterUserMixin(object):
             Dispatcher().dispatch_user_messages(user, messages)
 
 
-class AccountRegistrationView(FormView, RegisterUserMixin):
+class AccountRegistrationView(RegisterUserMixin, FormView):
     form_class = EmailUserCreationForm
     template_name = 'customer/registration.html'
     redirect_field_name = 'next'
@@ -280,7 +280,7 @@ class AccountRegistrationView(FormView, RegisterUserMixin):
             form.cleaned_data['redirect_url'])
 
 
-class AccountAuthView(TemplateView, RegisterUserMixin):
+class AccountAuthView(RegisterUserMixin, TemplateView):
     """
     This is actually a slightly odd double form view
     """
@@ -425,7 +425,7 @@ class OrderHistoryView(ListView):
         return ctx
 
 
-class OrderDetailView(DetailView, PostActionMixin):
+class OrderDetailView(PostActionMixin, DetailView):
     """Customer order details"""
     model = Order
 
@@ -496,7 +496,7 @@ class OrderDetailView(DetailView, PostActionMixin):
                 {'number': order.number})
 
 
-class OrderLineView(DetailView, PostActionMixin):
+class OrderLineView(PostActionMixin, DetailView):
     """Customer order line"""
 
     def get_object(self, queryset=None):

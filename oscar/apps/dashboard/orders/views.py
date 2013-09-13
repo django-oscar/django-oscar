@@ -68,7 +68,7 @@ class OrderStatsView(FormView):
         return stats
 
 
-class OrderListView(ListView, BulkEditMixin):
+class OrderListView(BulkEditMixin, ListView):
     model = Order
     context_object_name = 'orders'
     template_name = 'dashboard/orders/order_list.html'
