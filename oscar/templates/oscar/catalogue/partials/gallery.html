@@ -1,5 +1,6 @@
 {% load thumbnail %}
 {% load i18n %}
+{% load staticfiles %}
 
 <script id="img-wrapper-tmpl" type="text/x-jquery-tmpl">
     <div class="rg-image-wrapper">
@@ -35,7 +36,7 @@
                             {% for image in all_images %}
                             <li>
                                 {% thumbnail image.original "100x100" upscale=False as thumb %}
-                                <a href="{{ image.original.url }}" rel="lightbox"><img src="{{ thumb.url }}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" /> </a>
+                                <a href="{{ image.original.url }}" rel="lightbox"><img src="{% static thumb.url %}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" /> </a>
                                 {% endthumbnail %}
                             </li>
                             {% endfor %}
@@ -52,9 +53,9 @@
         {% with image=product.primary_image %}
             {% thumbnail image.original "400x400" upscale=False as thumb %}
             {% if not image.is_missing %}
-                <a href="{{ image.original.url }}" rel="lightbox"><img src="{{ thumb.url }}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" /></a>
+                <a href="{{ image.original.url }}" rel="lightbox"><img src="{% static thumb.url %}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" /></a>
             {% else %}
-                <img src="{{ thumb.url }}" alt="image02" />
+                <img src="{% static thumb.url %}" alt="image02" />
             {% endif %}
             {% endthumbnail %}
         {% endwith %}

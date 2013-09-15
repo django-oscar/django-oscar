@@ -3,6 +3,8 @@ import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
+from oscar.core.compat import AUTH_USER_MODEL, AUTH_USER_MODEL_NAME
+
 
 class Migration(SchemaMigration):
     depends_on = (
@@ -11,7 +13,6 @@ class Migration(SchemaMigration):
     )
 
     def forwards(self, orm):
-        
         # Adding model 'Voucher'
         db.create_table('voucher_voucher', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -39,7 +40,7 @@ class Migration(SchemaMigration):
         db.create_table('voucher_voucherapplication', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('voucher', self.gf('django.db.models.fields.related.ForeignKey')(related_name='applications', to=orm['voucher.Voucher'])),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], null=True, blank=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm[AUTH_USER_MODEL], null=True, blank=True)),
             ('order', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['order.Order'])),
             ('date_created', self.gf('django.db.models.fields.DateField')(auto_now_add=True, blank=True)),
         ))
@@ -47,7 +48,7 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
-        
+
         # Deleting model 'Voucher'
         db.delete_table('voucher_voucher')
 
@@ -82,8 +83,8 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         },
-        'auth.user': {
-            'Meta': {'object_name': 'User'},
+        AUTH_USER_MODEL: {
+            'Meta': {'object_name': AUTH_USER_MODEL_NAME},
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
@@ -104,7 +105,7 @@ class Migration(SchemaMigration):
             'date_merged': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'date_submitted': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'owner': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'baskets'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'owner': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'baskets'", 'null': 'True', 'to': "orm['{0}']".format(AUTH_USER_MODEL)}),
             'status': ('django.db.models.fields.CharField', [], {'default': "'Open'", 'max_length': '128'}),
             'vouchers': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['voucher.Voucher']", 'null': 'True', 'symmetrical': 'False'})
         },
@@ -290,7 +291,7 @@ class Migration(SchemaMigration):
             'status': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'total_excl_tax': ('django.db.models.fields.DecimalField', [], {'max_digits': '12', 'decimal_places': '2'}),
             'total_incl_tax': ('django.db.models.fields.DecimalField', [], {'max_digits': '12', 'decimal_places': '2'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'orders'", 'null': 'True', 'to': "orm['auth.User']"})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'orders'", 'null': 'True', 'to': "orm['{0}']".format(AUTH_USER_MODEL)})
         },
         'order.shippingaddress': {
             'Meta': {'object_name': 'ShippingAddress'},
@@ -334,7 +335,7 @@ class Migration(SchemaMigration):
             'date_created': ('django.db.models.fields.DateField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'order': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['order.Order']"}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'null': 'True', 'blank': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['{0}']".format(AUTH_USER_MODEL), 'null': 'True', 'blank': 'True'}),
             'voucher': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'applications'", 'to': "orm['voucher.Voucher']"})
         }
     }

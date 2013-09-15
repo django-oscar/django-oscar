@@ -1,5 +1,10 @@
+from __future__ import absolute_import  # for import below
+import logging
+
+from django.utils.timezone import get_current_timezone, is_naive, make_aware
 from unidecode import unidecode
 from django.conf import settings
+from django.template.defaultfilters import date as date_filter
 
 
 def slugify(value):
@@ -48,3 +53,24 @@ def compose(*functions):
                 args = fn(args)
         return args
     return _composed
+
+
+
+def format_datetime(dt, format=None):
+    """
+    Takes an instance of datetime, converts it to the current timezone and
+    formats it as a string. Use this instead of
+    django.core.templatefilters.date, which expects localtime.
+
+    :param format: Common will be settings.DATETIME_FORMAT or
+                   settings.DATE_FORMAT, or the resp. shorthands
+                   ('DATETIME_FORMAT', 'DATE_FORMAT')
+    """
+    if is_naive(dt):
+        localtime = make_aware(dt, get_current_timezone())
+        logging.warning(
+            "oscar.core.utils.format_datetime received native datetime")
+    else:
+        localtime = dt.astimezone(get_current_timezone())
+    return date_filter(localtime, format)
+
