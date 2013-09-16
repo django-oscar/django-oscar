@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import (TemplateView, ListView, DetailView,
                                   CreateView, UpdateView, DeleteView,
                                   FormView, RedirectView)
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
@@ -39,7 +39,7 @@ User = get_user_model()
 
 
 class LogoutView(RedirectView):
-    url = '/'
+    url = reverse_lazy('promotions:home')
     permanent = False
 
     def get(self, request, *args, **kwargs):
