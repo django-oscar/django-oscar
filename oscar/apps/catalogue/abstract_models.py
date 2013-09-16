@@ -383,7 +383,7 @@ class AbstractProduct(models.Model):
             # If any one of this product's variants is available, then we treat
             # this product as available.
             for variant in self.variants.select_related('stockrecord').all():
-                if variant.is_available_to_buy:
+                if variant.stockrecord and variant.is_available_to_buy:
                     return True
             return False
         if not self.get_product_class().track_stock:
