@@ -1,5 +1,4 @@
 {% extends 'dashboard/layout.html' %}
-
 {% load url from future %}
 {% load i18n %}
 {% load currency_filters %}
@@ -16,9 +15,7 @@
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
             <span class="divider">/</span>
         </li>
-        <li class="active">
-            <a href="{% url 'dashboard:user-alert-list' %}">{% trans "Product alerts" %}</a>
-        </li>
+        <li class="active">{% trans "Product alerts" %}</li>
     </ul>
 {% endblock %}
 
@@ -74,7 +71,7 @@
                         <div class="btn-toolbar">
                             <div class="btn-group">
                                 <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                    Actions
+                                    {% trans "Actions" %}
                                     <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu pull-right">

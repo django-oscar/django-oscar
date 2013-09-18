@@ -1,13 +1,14 @@
-from django.db.models import get_model
+import httplib
 
+from django.db.models import get_model
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
 from django.template import Template, Context
 from django_dynamic_fixture import get, G
 
-from oscar.test.testcases import ClientTestCase
+from oscar.test.testcases import ClientTestCase, WebTestCase
 from oscar.test.factories import create_order, create_product
-from oscar.apps.order.models import Order, OrderNote
+from oscar.apps.order.models import Order, OrderNote, ShippingAddress
 from oscar.core.compat import get_user_model
 
 
@@ -16,21 +17,24 @@ Basket = get_model('basket', 'Basket')
 Partner = get_model('partner', 'Partner')
 ShippingAddress = get_model('order', 'ShippingAddress')
 
-class OrderListTests(ClientTestCase):
+class TestOrderListDashboard(WebTestCase):
     is_staff = True
 
-    def test_searching_for_valid_order_number_redirects_to_order_page(self):
-        # Importing here as the import makes DB queries
-        from oscar.apps.dashboard.orders.forms import OrderSearchForm
+    def test_redirects_to_detail_page(self):
         order = create_order()
-        fields = OrderSearchForm.base_fields.keys()
-        pairs = dict(zip(fields, ['']*len(fields)))
-        pairs['order_number'] = order.number
-        pairs['response_format'] = 'html'
-        url = '%s?%s' % (reverse('dashboard:order-list'),
-                         '&'.join(['%s=%s' % (k,v) for k,v in pairs.items()]))
-        response = self.client.get(url)
-        self.assertIsRedirect(response)
+        page = self.get(reverse('dashboard:order-list'))
+        form = page.forms['search_form']
+        form['order_number'] = order.number
+        response = form.submit()
+        self.assertEqual(httplib.FOUND, response.status_code)
+
+    def test_downloads_to_csv_without_error(self):
+        address = get(ShippingAddress)
+        create_order(shipping_address=address)
+        page = self.get(reverse('dashboard:order-list'))
+        form = page.forms['orders_form']
+        form['selected_order'].checked = True
+        form.submit('download_selected')
 
 
 class PermissionBasedDashboardOrderTests(ClientTestCase):
@@ -113,7 +117,6 @@ class PermissionBasedDashboardOrderTests(ClientTestCase):
         url = reverse('dashboard:order-shipping-address',
                       kwargs={'number': self.order12.number})
         self.assertNoAccess(self.client.get(url))
-
 
 
 class OrderDetailTests(ClientTestCase):

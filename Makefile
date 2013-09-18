@@ -37,7 +37,7 @@ demo: install
 	sites/demo/manage.py loaddata countries.json sites/_fixtures/pages.json
 	# Create catalogue (create product classes from fixture than import CSV files)
 	sites/demo/manage.py loaddata sites/demo/fixtures/auth.json sites/demo/fixtures/offers.json
-	sites/demo/manage.py loaddata sites/demo/fixtures/product-classes.json sites/demo/fixtures/product-attributes.json
+	sites/demo/manage.py loaddata sites/demo/fixtures/product-classes.json sites/demo/fixtures/product-attributes.json sites/demo/fixtures/shipping-event-types.json
 	sites/demo/manage.py create_products --class=Books sites/demo/fixtures/books.csv
 	sites/demo/manage.py create_products --class=Downloads sites/demo/fixtures/downloads.csv
 	sites/demo/manage.py create_products --class=Clothing sites/demo/fixtures/clothing.csv
@@ -66,6 +66,8 @@ lint:
 # and upgrade would overwrite it.  We also build the sandbox as part of this target
 # to catch any errors that might come from that build process.
 travis: install lint coverage sandbox
+	pip install -r requirements_vagrant.txt --use-mirrors
+	cd sites/sandbox && ./test_migrations.sh
 
 messages:
 	# Create the .po files used for i18n
@@ -83,7 +85,7 @@ puppet:
 	puppet module install --target-dir sites/puppet/modules/ puppetlabs/mysql
 	puppet module install --target-dir sites/puppet/modules/ puppetlabs/apache
 	git clone git://github.com/akumria/puppet-postgresql.git sites/puppet/modules/postgresql
-	git clone git://github.com/uggedal/puppet-module-python.git sites/puppet/modules/python
+	git clone git://github.com/puppetmodules/puppet-module-python.git sites/puppet/modules/python
 	git clone git://github.com/codeinthehole/puppet-userconfig.git sites/puppet/modules/userconfig
 
 css:

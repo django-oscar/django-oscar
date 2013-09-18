@@ -20,7 +20,7 @@
 
 {% block header %}
     <div class="page-header">
-        <h1>Reviews</h1>
+        <h1>{% trans "Reviews" %}</h1>
     </div>
 {% endblock header %}
 
@@ -54,8 +54,8 @@
                 </caption>
                 <tr>
                     <th></th>
-                    <th>{% trans "Review Title" %}</th>
-                    <th>{% trans "Review For Product" %}</th>
+                    <th>{% trans "Title" %}</th>
+                    <th>{% trans "Product" %}</th>
                     <th>{% trans "User" %}</th>
                     <th>{% trans "Score" %}</th>
                     <th>{% trans "Votes" %}</th>
@@ -67,21 +67,17 @@
                     <tr>
                         <td><input type="checkbox" name="selected_review" class="selected_review" value="{{ review.id }}"/></td>
                         <td>
-                            {% if review.product %}
-                                <a href="{% url 'catalogue:reviews-detail' review.product.slug review.product.id review.id %}">{{ review.title }}</a>
-                            {% else %}
-                                {{ review.title }}
-                            {% endif %}
+                            <a href="{% url 'dashboard:reviews-update' review.id %}">{{ review.title }}</a>
                         </td>
                         <td>
                             {% if review.product %}
                                 <a href='{% url 'catalogue:detail' review.product.slug review.product.id %}'>{{ review.product.title }}</a> </td>
                         {% else %}
-                            [Product deleted]
+                            {% trans "[Product deleted]" %}
                         {% endif %}
                         <td>
-                            {% if review.user %}
-                                <a href="{% url 'dashboard:user-detail' review.user.id %}">{{ review.get_reviewer_name }}</a>
+                            {% if not review.is_anonymous %}
+                                <a href="{% url 'dashboard:user-detail' review.user.id %}">{{ review.review_name }}</a>
                             {% else %}
                                 {{ review.name }}
                             {% endif %}
@@ -93,39 +89,42 @@
                         <td>
                             {% if review.status == 1 %}
                                 <span class="label label-success">
-                            {% elif review.status == 2 %}
-                                <span class="label label-important">
-                            {% else %}
-                                <span class="label label-info">
-                            {% endif %}
-                            {{ review.get_status_display }}
-                            </span>
-                        </td>
-                        <td>{{ review.date_created }}</td>
-                        <td>
-                            <div class="btn-toolbar">
-                                <div class="btn-group">
-                                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                        {% trans "Actions" %}
-                                        <span class="caret"></span>
-                                    </a>
-                                    <ul class="dropdown-menu pull-right">
-                                        <li><a href="{% url 'dashboard:reviews-update' review.id %}">{% trans "Edit" %}</a></li>
-                                        <li><a href="{% url 'dashboard:reviews-delete' review.id %}">{% trans "Delete" %}</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-            {% include "partials/pagination.html" %}
-        </form>
-    {% else %}
-        <table class="table table-striped table-bordered table-hover">
-            <caption>{{ description }}</caption>
-            <tr><td>{% trans "No reviews found." %}</td></tr>
-        </table>
-    {% endif %}
+                                    {% elif review.status == 2 %}
+                                    <span class="label label-important">
+                                    {% else %}
+                                        <span class="label label-info">
+                                        {% endif %}
+                                        {{ review.get_status_display }}
+                                    </span>
+                                </td>
+                                <td>{{ review.date_created }}</td>
+                                <td>
+                                    <div class="btn-toolbar">
+                                        <div class="btn-group">
+                                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                                {% trans "Actions" %}
+                                                <span class="caret"></span>
+                                            </a>
+                                            <ul class="dropdown-menu pull-right">
+                                                {% if review.title %}
+                                                    <li><a href="{% url 'catalogue:reviews-detail' review.product.slug review.product.id review.id %}">{% trans "View on site" %}</a></li>
+                                                {% endif %}
+                                                <li><a href="{% url 'dashboard:reviews-update' review.id %}">{% trans "Edit" %}</a></li>
+                                                <li><a href="{% url 'dashboard:reviews-delete' review.id %}">{% trans "Delete" %}</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    {% include "partials/pagination.html" %}
+                </form>
+            {% else %}
+                <table class="table table-striped table-bordered table-hover">
+                    <caption>{{ description }}</caption>
+                    <tr><td>{% trans "No reviews found." %}</td></tr>
+                </table>
+            {% endif %}
 
-{% endblock dashboard_content %}
+        {% endblock dashboard_content %}

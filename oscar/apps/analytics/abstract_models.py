@@ -64,8 +64,8 @@ class AbstractUserRecord(models.Model):
 
     class Meta:
         abstract = True
-        verbose_name = _('User Record')
-        verbose_name_plural = _('User Records')
+        verbose_name = _('User record')
+        verbose_name_plural = _('User records')
 
 
 class AbstractUserProductView(models.Model):
@@ -76,8 +76,8 @@ class AbstractUserProductView(models.Model):
 
     class Meta:
         abstract = True
-        verbose_name = _('Basket')
-        verbose_name_plural = _('Baskets')
+        verbose_name = _('User product view')
+        verbose_name_plural = _('User product views')
 
     def __unicode__(self):
         return _("%(user)s viewed '%(product)s'") % {
@@ -92,6 +92,7 @@ class AbstractUserSearch(models.Model):
 
     class Meta:
         abstract = True
+        verbose_name = _("User search query")
         verbose_name_plural = _("User search queries")
 
     def __unicode__(self):

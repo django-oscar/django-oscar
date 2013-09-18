@@ -7,6 +7,10 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ('address', '0001_initial'),
+    )
+
     def forwards(self, orm):
         # Adding M2M table for field countries on 'OrderAndItemCharges'
         db.create_table('shipping_orderanditemcharges_countries', (

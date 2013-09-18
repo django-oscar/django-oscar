@@ -28,14 +28,13 @@ Further reading:
 * `Google Group`_ - the mailing list is django-oscar@googlegroups.com
 * `Continuous integration homepage`_ on `travis-ci.org`_
 * `Twitter account for news and updates`_
-* `Twitter account of all commits`_
 * `crate.io page`_
 * `PyPI page`_
 * `Transifex project`_ - translating Oscar made easy
 
 Continuous integration status:
 
-.. image:: https://secure.travis-ci.org/tangentlabs/django-oscar.png
+.. image:: https://secure.travis-ci.org/tangentlabs/django-oscar.png?branch=master
     :target: http://travis-ci.org/#!/tangentlabs/django-oscar
 
 .. image:: https://coveralls.io/repos/tangentlabs/django-oscar/badge.png?branch=master
@@ -65,22 +64,21 @@ PyPI status:
 .. _`Transifex project`: https://www.transifex.com/projects/p/django-oscar/
 
 Oscar was written by `David Winterbottom`_ (`@codeinthehole`_) and is developed
-and maintained by `Tangent Labs`_, a London-based digital agency, with help from
-`Mirumee`_.
-
-.. _`Mirumee`: http://mirumee.com/
+and maintained by `Tangent Labs`_, a London-based digital agency.
 
 .. _`David Winterbottom`: http://codeinthehole.com
 .. _`@codeinthehole`: https://twitter.com/codeinthehole
 .. _`Tangent Labs`: http://www.tangentlabs.co.uk
-.. _`Mirumee`: http://mirumee.com/
 
 Screenshots
 -----------
 
-These are a few screenshots from the 'sandbox' example site that ships with
-Oscar.  It sports a simple design built with Twitter's Bootstrap_.  It provides a
-good starting point for quickly building elegant e-commerce sites.
+Sandbox
+~~~~~~~
+
+These are screenshots from the 'sandbox' example site that ships with
+Oscar.  It sports a simple design built with Twitter's Bootstrap_ and provides a
+good starting point for rapidly building elegant e-commerce sites.
 
 .. _Bootstrap: http://twitter.github.com/bootstrap/
 
@@ -97,16 +95,21 @@ good starting point for quickly building elegant e-commerce sites.
     :target: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/dashboard.png
 
 The sandbox site is also available to browse at
-http://latest.oscarcommerce.com
+http://latest.oscarcommerce.com.  Dashboard users can be created using `this
+gateway page`_.
 
-You can have this sample shop running on your machine `in 5 commands`_.  Want to
+The sandbox site can be set-up locally `in 5 commands`_.  Want to
 make changes?  Check out the `contributing guidelines`_.
 
+.. _`this gateway page`: http://latest.oscarcommerce.com/gateway/
 .. _`in 5 commands`: http://django-oscar.readthedocs.org/en/latest/internals/sandbox.html#running-the-sandbox-locally
-.. _`contributing guidelines`: http://django-oscar.readthedocs.org/en/latest/contributing/index.html
+.. _`contributing guidelines`: http://django-oscar.readthedocs.org/en/latest/internals/contributing/index.html
+
+Demo
+~~~~
 
 Oscar also ships with a demo site, which is a reference build of an Oscar
-project.
+project.  It integrates with Oscar's stores_, PayPal_ and Datacash_ extensions.
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/demo.home.thumb.png
     :target: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/demo.home.png
@@ -116,6 +119,9 @@ project.
 
 The demo site is also available to browse at
 http://demo.oscarcommerce.com
+
+.. _stores: https://github.com/tangentlabs/django-oscar-stores
+.. _PayPal: https://github.com/tangentlabs/django-oscar-paypal
 
 Extensions
 ----------
@@ -131,7 +137,10 @@ The following extensions are stable and ready for use:
   functionality and loyalty schemes)
 * django-oscar-stores_ - Physical stores integration (opening hours, store
   locator etc)
-* django-oscar-testsupport_ - Testing utilities for Oscar extensions.
+* django-oscar-easyrec_ - Recomendations using EasyRec_
+  locator etc)
+* django-oscar-testsupport_ - Testing utilities for Oscar extensions
+  (deprecated)
 
 .. _django-oscar-datacash: https://github.com/tangentlabs/django-oscar-datacash
 .. _django-oscar-paymentexpress: https://github.com/tangentlabs/django-oscar-paymentexpress
@@ -146,21 +155,41 @@ The following extensions are stable and ready for use:
 .. _Jirafe: https://jirafe.com/
 .. _django-oscar-accounts: https://github.com/tangentlabs/django-oscar-accounts
 .. _django-oscar-testsupport: https://github.com/tangentlabs/django-oscar-testsupport
+.. _django-oscar-easyrec: https://github.com/tangentlabs/django-oscar-easyrec
+.. _EasyRec: http://easyrec.org/
 
-The following extensions are in development:
+The following extensions are in development by Tangent:
 
+* django-oscar-stripe_ - Integration with the Stripe_ payment gateway
 * django-oscar-gocardless_ - Integration with the GoCardless_ payment gateway
 * django-oscar-jirafe_ - Integration with the Jirafe_ analytics package
 * django-oscar-parachute_ - Import scripts for migrating away from non-Oscar
   platforms.
+* django-oscar-eway_ - Integration with the eWay_ payment gateway.
 * django-oscar-approval_ - Approval workflow for authorising new
   orders/products.
 
+.. _django-oscar-stripe: https://github.com/tangentlabs/django-oscar-stripe
 .. _django-oscar-stores: https://github.com/tangentlabs/django-oscar-stores
 .. _django-oscar-parachute: https://github.com/tangentlabs/django-oscar-parachute
 .. _django-oscar-approval: https://github.com/tangentlabs/django-oscar-approval
+.. _Stripe: https://stripe.com
+.. _django-oscar-eway: https://github.com/tangentlabs/django-oscar-eway
+.. _eWay: https://www.eway.com.au
+
+The following are community-written extensions:
+
+* django-oscar-unicredit_ - Integration with the Unicredit payment gateway
+* django-oscar-payments_ - Pluggable payments for Oscar
+* django-oscar-recurly_ - Integration with the Recurly payment gateway
+* django-oscar-erp_
 
 Let us know if you're writing a new one!
+
+.. _django-oscar-unicredit: https://bitbucket.org/marsim/django-oscar-unicredit/
+.. _django-oscar-erp: https://bitbucket.org/zikzakmedia/django-oscar_erp
+.. _django-oscar-payments: https://github.com/Lacrymology/django-oscar-payments
+.. _django-oscar-recurly: https://github.com/mynameisgabe/django-oscar-recurly
 
 License
 -------
@@ -172,10 +201,10 @@ Oscar is released under the permissive `New BSD license`_.
 Case studies
 ------------
 
-Oscar is still in active development, but is used in production by a range of
+Oscar is still in active development but is used in production by a range of
 companies, from large multinationals to small, boutique stores:
 
-Tangent projects:
+Selected Tangent projects:
 
 * Tata Group - http://www.landmarkonthenet.com
 * Carlsberg - Their global "We Deliver More" platform is powered by Oscar (but
@@ -184,6 +213,7 @@ Tangent projects:
 * The UK Labour party - http://shop.labour.org.uk
 * Meridian Audio - http://www.meridian-audio.co.uk
 * Which Rightchoice - http://www.whichrightchoice.com
+* Freetix - http://www.freetix.com.au/
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/landmark.thumb.png
     :target: http://www.landmarkonthenet.com
@@ -202,6 +232,9 @@ Tangent projects:
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/rightchoice.thumb.png
     :target: http://www.whichrightchoice.com
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/freetix.thumb.png
+    :target: http://www.freetix.com.au/
 
 Non-Tangent:
 
@@ -227,22 +260,33 @@ Many more on the way.  If you use Oscar in production, please let us know.
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/logos/tangentlabs.jpg
     :target: http://www.tangentlabs.co.uk/
 
-Want an Oscar project?
-~~~~~~~~~~~~~~~~~~~~~~
+Oscar resources
+---------------
 
-If you are interested in having an Oscar project built for you, Tangent can
-help.  Please get in touch with us via `oscar@tangentlabs.co.uk`_
+Presentations:
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/presentations/oscon2012.png
+    :target: https://speakerdeck.com/codeinthehole/writing-a-django-e-commerce-framework-1
+
+Looking for commercial support?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you are interested in having an Oscar project built for you, or for
+development of an existing Oscar site, Tangent can
+help.  Please get in touch via `oscar@tangentlabs.co.uk`_ or via the `Tangent
+Snowball`_ site.
 
 .. _`oscar@tangentlabs.co.uk`: mailto:oscar@tangentlabs.co.uk
+.. _`Tangent Snowball`: http://www.tangentsnowball.com/products/oscar
 
-Work on Oscar?
-~~~~~~~~~~~~~~
+Want to get paid to work on Oscar?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 `Tangent Labs`_ are currently looking for python hackers to work on Oscar as well
 as some of other internal products and e-commerce projects.  If this sounds
 interesting, please email `recruitment@tangentlabs.co.uk`_.
 
 The position is in Tangent's London offices and you must have the appropriate
-visas to work here.
+visas to work in the UK.
 
 .. _`recruitment@tangentlabs.co.uk`: mailto:recruitment@tangentlabs.co.uk

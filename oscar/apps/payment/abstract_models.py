@@ -12,7 +12,12 @@ from . import bankcards
 
 class AbstractTransaction(models.Model):
     """
-    A transaction with a payment gateway
+    A transaction for a particular payment source.
+
+    These are similar to the payment events within the order app but model a
+    slightly different aspect of payment.  Crucially, payment sources and
+    transactions have nothing to do with the lines of the order while payment
+    events do.
 
     For example:
     * A 'pre-auth' with a bankcard gateway
@@ -42,6 +47,7 @@ class AbstractTransaction(models.Model):
         abstract = True
         verbose_name = _("Transaction")
         verbose_name_plural = _("Transactions")
+        ordering = ['-date_created']
 
 
 class AbstractSource(models.Model):
@@ -120,8 +126,8 @@ class AbstractSource(models.Model):
 
     def _create_transaction(self, txn_type, amount, reference=None,
                             status=None):
-        AbstractTransaction.objects.create(
-            source=self, txn_type=txn_type, amount=amount,
+        self.transactions.create(
+            txn_type=txn_type, amount=amount,
             reference=reference, status=status)
 
     # =======
@@ -138,7 +144,7 @@ class AbstractSource(models.Model):
             AbstractTransaction.AUTHORISE, amount, reference, status)
     allocate.alters_data = True
 
-    def debit(self, amount=None, reference=None, status=None):
+    def debit(self, amount=None, reference=None, status=''):
         """
         Convenience method for recording debits against this source
         """
@@ -242,12 +248,21 @@ class AbstractBankcard(models.Model):
     issue_number = None
     ccv = None
 
+    def __unicode__(self):
+        return _(u"%(card_type)s %(number)s (Expires: %(expiry)s)") % {
+            'card_type': self.card_type,
+            'number': self.number,
+            'expiry': self.expiry_month()}
+
     def __init__(self, *args, **kwargs):
         # Pop off the temporary data
         self.start_date = kwargs.pop('start_date', None)
         self.issue_number = kwargs.pop('issue_number', None)
         self.ccv = kwargs.pop('ccv', None)
         super(AbstractBankcard, self).__init__(*args, **kwargs)
+        self.card_type = bankcards.bankcard_type(self.number)
+        if self.card_type is None:
+            self.card_type = 'Unknown card type'
 
     class Meta:
         abstract = True
@@ -262,15 +277,23 @@ class AbstractBankcard(models.Model):
     def prepare_for_save(self):
         # This is the first time this card instance is being saved.  We
         # remove all sensitive data
-        self.card_type = bankcards.bankcard_type(self.number)
-        if self.card_type is None:
-            self.card_type = 'Unknown card type'
         self.number = u"XXXX-XXXX-XXXX-%s" % self.number[-4:]
         self.start_date = self.issue_number = self.ccv = None
 
     @property
+    def card_number(self):
+        import warnings
+        warnings.warn(("The `card_number` property is deprecated in favour of "
+                       "`number` on the Bankcard model"), DeprecationWarning)
+        return self.number
+
+    @property
     def cvv(self):
         return self.ccv
+
+    @property
+    def obfuscated_number(self):
+        return u'XXXX-XXXX-XXXX-%s' % self.number[-4:]
 
     def start_month(self, format='%m/%y'):
         return self.start_date.strftime(format)

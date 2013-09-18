@@ -5,7 +5,6 @@ from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.db.models import get_model
-from django.utils.translation import ugettext_lazy as _
 
 from oscar.models.fields import ExtendedURLField
 
@@ -166,7 +165,9 @@ class Image(AbstractPromotion):
     link_url = ExtendedURLField(
         _('Link URL'), blank=True,
         help_text=_('This is where this promotion links to'))
-    image = models.ImageField(_('Image'), upload_to=settings.OSCAR_PROMOTION_FOLDER)
+    image = models.ImageField(_('Image'),
+                              upload_to=settings.OSCAR_PROMOTION_FOLDER,
+                              max_length=255)
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):

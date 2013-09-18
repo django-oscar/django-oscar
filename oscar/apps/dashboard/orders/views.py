@@ -9,12 +9,12 @@ from django.db.models.loading import get_model
 from django.db.models import fields, Q, Sum, Count
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
-from django.template.defaultfilters import date as format_date
 from django.utils.datastructures import SortedDict
 from django.views.generic import ListView, DetailView, UpdateView, FormView
 from django.conf import settings
 
 from oscar.core.loading import get_class
+from oscar.core.utils import format_datetime
 from oscar.apps.dashboard.orders import forms
 from oscar.views.generic import BulkEditMixin
 from oscar.apps.dashboard.reports.csv_utils import CsvUnicodeWriter
@@ -24,6 +24,7 @@ from oscar.apps.order.exceptions import InvalidShippingEvent, InvalidStatus
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
 ShippingAddress = get_model('order', 'ShippingAddress')
+Transaction = get_model('payment', 'Transaction')
 Line = get_model('order', 'Line')
 ShippingEventType = get_model('order', 'ShippingEventType')
 PaymentEventType = get_model('order', 'PaymentEventType')
@@ -115,7 +116,7 @@ class OrderStatsView(FormView):
         return stats
 
 
-class OrderListView(ListView, BulkEditMixin):
+class OrderListView(BulkEditMixin, ListView):
     model = Order
     context_object_name = 'orders'
     template_name = 'dashboard/orders/order_list.html'
@@ -186,14 +187,13 @@ class OrderListView(ListView, BulkEditMixin):
 
         if data['date_from'] and data['date_to']:
             desc_ctx['date_filter'] = _(" placed between %(start_date)s and %(end_date)s") % {
-                'start_date': format_date(data['date_from']),
-                'end_date': format_date(data['date_to'])}
+                'start_date': format_datetime(data['date_from']),
+                'end_date': format_datetime(data['date_to'])}
         elif data['date_from']:
-            desc_ctx['date_filter'] = _(" placed since %s") % format_date(data['date_from'])
+            desc_ctx['date_filter'] = _(" placed since %s") % format_datetime(data['date_from'])
         elif data['date_to']:
             date_to = data['date_to'] + datetime.timedelta(days=1)
-            desc_ctx['date_filter'] = _(" placed before %s") % format_date(date_to)
-
+            desc_ctx['date_filter'] = _(" placed before %s") % format_datetime(date_to)
         if data['voucher']:
             desc_ctx['voucher_filter'] = _(" using voucher '%s'") % data['voucher']
 
@@ -288,7 +288,7 @@ class OrderListView(ListView, BulkEditMixin):
 
     def sort_queryset(self, queryset):
         sort = self.request.GET.get('sort', None)
-        allowed_sorts = ['number',]
+        allowed_sorts = ['number', 'total_incl_tax']
         if sort in allowed_sorts:
             direction = self.request.GET.get('dir', 'desc')
             sort = ('-' if direction == 'desc' else '') + sort
@@ -341,16 +341,16 @@ class OrderListView(ListView, BulkEditMixin):
             row = columns.copy()
             row['number'] = order.number
             row['value'] = order.total_incl_tax
-            row['date'] = format_date(order.date_placed, 'DATETIME_FORMAT')
+            row['date'] = format_datetime(order.date_placed, 'DATETIME_FORMAT')
             row['num_items'] = order.num_items
             row['status'] = order.status
             row['customer'] = order.email
             if order.shipping_address:
-                row['shipping_address_name'] = order.shipping_address.name()
+                row['shipping_address_name'] = order.shipping_address.name
             else:
                 row['shipping_address_name'] = ''
             if order.billing_address:
-                row['billing_address_name'] = order.billing_address.name()
+                row['billing_address_name'] = order.billing_address.name
             else:
                 row['billing_address_name'] = ''
 
@@ -379,7 +379,12 @@ class OrderDetailView(DetailView):
         ctx['line_statuses'] = Line.all_statuses()
         ctx['shipping_event_types'] = ShippingEventType.objects.all()
         ctx['payment_event_types'] = PaymentEventType.objects.all()
+        ctx['payment_transactions'] = self.get_payment_transactions()
         return ctx
+
+    def get_payment_transactions(self):
+        return Transaction.objects.filter(
+            source__order=self.object)
 
     def get_order_note_form(self):
         post_data = None
@@ -465,7 +470,7 @@ class OrderDetailView(DetailView):
             messages.error(request, _("The new status '%s' is not valid for this order") % new_status)
             return self.reload_page_response()
 
-        handler = EventHandler()
+        handler = EventHandler(request.user)
         try:
             handler.handle_order_status_change(order, new_status)
         except PaymentError, e:

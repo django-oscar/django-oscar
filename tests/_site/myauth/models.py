@@ -6,10 +6,6 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 
 class CustomUserManager(BaseUserManager):
-    """
-    Identical to django.contrib.auth.tests.CustomUserManager apart from the
-    date_of_birth field
-    """
 
     def create_user(self, username, email, password):
         """
@@ -21,8 +17,8 @@ class CustomUserManager(BaseUserManager):
         user = self.model(
             email=CustomUserManager.normalize_email(email),
             username=username,
-            is_active = True,
-            )
+            is_active=True,
+        )
 
         user.set_password(password)
         user.save(using=self._db)

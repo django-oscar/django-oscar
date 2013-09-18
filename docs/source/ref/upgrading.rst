@@ -41,8 +41,7 @@ Migrating customised apps
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For apps that you are customising, you need to create a new migration that picks
-up the changes in the core Oscar models::
-
+up the changes in the core Oscar models.
 For instance,  if you have an app ``myproject.shipping`` that replaces
 ``oscar.apps.shipping`` in your ``INSTALLED_APPS`` then you can simply run::
 

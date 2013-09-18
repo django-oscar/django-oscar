@@ -14,32 +14,35 @@ Oscar uses a nose_ testrunner which can be invoked using::
 To run a subset of tests, you can use filesystem or module paths.  These two
 commands will run the same set of tests::
 
-    $ ./runtests.py tests/unit/order
-    $ ./runtests.py tests.unit.order
+    $ ./runtests.py tests/unit/offer/availability_tests.py
+    $ ./runtests.py tests.unit.offer.availability_tests
 
 To run an individual test class, use one of::
 
-    $ ./runtests.py tests/unit/order:TestSuccessfulOrderCreation
-    $ ./runtests.py tests.unit.order:TestSuccessfulOrderCreation
+    $ ./runtests.py tests/unit/offer/availability_tests.py:TestAPerUserConditionalOffer
+    $ ./runtests.py tests.unit.offer.availability_tests:TestAPerUserConditionalOffer
 
 (Note the ':'.)
 
 To run an individual test, use one of::
 
-    $ ./runtests.py tests/unit/order:TestSuccessfulOrderCreation.test_creates_order_and_line_models
-    $ ./runtests.py tests.unit.order:TestSuccessfulOrderCreation.test_creates_order_and_line_models
+    $ ./runtests.py tests/unit/offer/availability_tests.py:TestAPerUserConditionalOffer.test_is_available_with_no_applications
+    $ ./runtests.py tests.unit.offer.availability_tests:TestAPerUserConditionalOffer.test_is_available_with_no_applications
 
 Testing against different setups
 --------------------------------
 
-To run all tests against multiple versions of Django and Python, use tox_::
+To run all tests against multiple versions of Django and Python, use detox_::
 
-    $ tox
+    $ detox
 
 You need to have all Python interpreters to test against installed on your 
 system. All other requirements are downloaded automatically.
+detox_ is a wrapper around tox_, creating the environments and running the tests
+in parallel. This greatly speeds up the process.
 
 .. _tox: http://tox.readthedocs.org/en/latest/
+.. _detox: https://pypi.python.org/pypi/detox
 
 Kinds of tests
 --------------

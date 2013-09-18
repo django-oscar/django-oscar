@@ -1,11 +1,38 @@
-<span class="help-block">{{ form.non_field_errors }}</span>
+{% load i18n %}
+{% load form_tags %}
+
+{% if form.is_bound and not form.is_valid %}
+    <div class="alert alert-error">
+        <strong>{% trans "Oops! We found some errors" %}</strong> - {% trans "please check the error messages below and try again" %}
+    </div>
+{% endif %}
+
+{% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-error control-group error">
+            <span class="help-inline"><i class="icon-exclamation-sign"></i> {{ error }}</span>
+        </div>
+    {% endfor %}
+{% endif %}
+
 {% for field in form.hidden_fields %}
     {{ field }}
 {% endfor %}
+
 {% for field in form.visible_fields %}
+    {% comment %}
+        Make the field widget type available to templates so we can mark-up
+        checkboxes differently to other widgets.
+    {% endcomment %}
+    {% annotate_form_field field %}
+
     {% comment %}
         We use a separate template for each field so that forms can be rendered
         field-by-field easily #}
     {% endcomment %}
-    {% include 'partials/form_field.html' with field=field %}
+    {% if field.widget_type == 'CheckboxInput' %}
+        {% include 'partials/form_field_checkbox.html' with field=field %}
+    {% else %}
+        {% include 'partials/form_field.html' with field=field %}
+    {% endif %}
 {% endfor %}

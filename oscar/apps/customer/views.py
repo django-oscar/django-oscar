@@ -1,10 +1,8 @@
-import urlparse
-
 from django.shortcuts import get_object_or_404
 from django.views.generic import (TemplateView, ListView, DetailView,
                                   CreateView, UpdateView, DeleteView,
                                   FormView, RedirectView)
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
@@ -36,11 +34,12 @@ Email = get_model('customer', 'Email')
 UserAddress = get_model('address', 'UserAddress')
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
 ProductAlert = get_model('customer', 'ProductAlert')
+
 User = get_user_model()
 
 
 class LogoutView(RedirectView):
-    url = '/'
+    url = reverse_lazy('promotions:home')
     permanent = False
 
     def get(self, request, *args, **kwargs):
@@ -137,7 +136,8 @@ class AccountSummaryView(TemplateView):
             except ObjectDoesNotExist:
                 profile = profile_class(user=user)
 
-            for field_name in profile._meta.get_all_field_names():
+            field_names = [f.name for f in profile._meta.local_fields]
+            for field_name in field_names:
                 if field_name in ('user', 'id'):
                     continue
                 field_data.append(
@@ -199,84 +199,23 @@ class AccountSummaryView(TemplateView):
             return None
 
 
-class AccountRegistrationView(TemplateView):
-    template_name = 'customer/registration.html'
-    redirect_field_name = 'next'
-    registration_prefix = 'registration'
+class RegisterUserMixin(object):
     communication_type_code = 'REGISTRATION'
 
-    def get_logged_in_redirect(self):
-        return reverse('customer:summary')
-
-    def check_redirect(self, context):
-        redirect_to = context.get(self.redirect_field_name)
-        if not redirect_to:
-            return settings.LOGIN_REDIRECT_URL
-
-        netloc = urlparse.urlparse(redirect_to)[1]
-        if netloc and netloc != self.request.get_host():
-            return settings.LOGIN_REDIRECT_URL
-
-        return redirect_to
-
-    def get_context_data(self, *args, **kwargs):
-        context = super(AccountRegistrationView, self).get_context_data(*args, **kwargs)
-        redirect_to = self.request.REQUEST.get(self.redirect_field_name, '')
-        context[self.redirect_field_name] = redirect_to
-        context['registration_form'] = EmailUserCreationForm(
-            prefix=self.registration_prefix
-        )
-        return context
-
-    def send_registration_email(self, user):
-        code = self.communication_type_code
-        ctx = {'user': user,
-               'site': get_current_site(self.request)}
-        messages = CommunicationEventType.objects.get_and_render(
-            code, ctx)
-        if messages and messages['body']:
-            Dispatcher().dispatch_user_messages(user, messages)
-
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(*args, **kwargs)
-
-        if request.user.is_authenticated():
-            return HttpResponseRedirect(self.get_logged_in_redirect())
-
-        self.request.session.set_test_cookie()
-        return self.render_to_response(context)
-
-    def post(self, request, *args, **kwargs):
-        context = self.get_context_data(*args, **kwargs)
-        redirect_to = self.check_redirect(context)
-
-        registration_form = EmailUserCreationForm(
-            prefix=self.registration_prefix,
-            data=request.POST
-        )
-        context['registration_form'] = registration_form
-
-        if registration_form.is_valid():
-            self._register_user(registration_form)
-            return HttpResponseRedirect(redirect_to)
-
-        self.request.session.set_test_cookie()
-        return self.render_to_response(context)
-
-    def _register_user(self, form):
+    def register_user(self, form):
         """
-        Register and return a new user from the data in *form*. If
-        ``OSCAR_SEND_REGISTRATION_EMAIL`` is set to ``True`` a
-        registration email will be send to the provided email address.
-        A new user account is created and the user is then logged in.
+        Create a user instance and send a new registration email (if configured
+        to).
         """
         user = form.save()
 
         if getattr(settings, 'OSCAR_SEND_REGISTRATION_EMAIL', True):
             self.send_registration_email(user)
 
+        # Raise signal
         user_registered.send_robust(sender=self, user=user)
 
+        # We have to authenticate before login
         try:
             user = authenticate(
                 username=user.email,
@@ -293,53 +232,142 @@ class AccountRegistrationView(TemplateView):
                 u.delete()
 
         auth_login(self.request, user)
-        if self.request.session.test_cookie_worked():
-            self.request.session.delete_test_cookie()
 
         return user
 
+    def send_registration_email(self, user):
+        code = self.communication_type_code
+        ctx = {'user': user,
+               'site': get_current_site(self.request)}
+        messages = CommunicationEventType.objects.get_and_render(
+            code, ctx)
+        if messages and messages['body']:
+            Dispatcher().dispatch_user_messages(user, messages)
 
-class AccountAuthView(AccountRegistrationView):
-    template_name = 'customer/login_registration.html'
-    login_prefix = 'login'
+
+class AccountRegistrationView(RegisterUserMixin, FormView):
+    form_class = EmailUserCreationForm
+    template_name = 'customer/registration.html'
+    redirect_field_name = 'next'
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
+        return super(AccountRegistrationView, self).get(
+            request, *args, **kwargs)
+
+    def get_logged_in_redirect(self):
+        return reverse('customer:summary')
+
+    def get_form_kwargs(self):
+        kwargs = super(AccountRegistrationView, self).get_form_kwargs()
+        kwargs['initial'] = {
+            'email': self.request.GET.get('email', ''),
+            'redirect_url': self.request.GET.get(self.redirect_field_name, '')
+        }
+        kwargs['host'] = self.request.get_host()
+        return kwargs
 
     def get_context_data(self, *args, **kwargs):
-        context = super(AccountAuthView, self).get_context_data(*args, **kwargs)
-        redirect_to = self.request.REQUEST.get(self.redirect_field_name, '')
-        context[self.redirect_field_name] = redirect_to
-        context['login_form'] = EmailAuthenticationForm(prefix=self.login_prefix)
-        context['registration_form'] = EmailUserCreationForm(prefix=self.registration_prefix)
-        return context
+        ctx = super(AccountRegistrationView, self).get_context_data(
+            *args, **kwargs)
+        ctx['cancel_url'] = self.request.META.get('HTTP_REFERER', None)
+        return ctx
+
+    def form_valid(self, form):
+        self.register_user(form)
+        return HttpResponseRedirect(
+            form.cleaned_data['redirect_url'])
+
+
+class AccountAuthView(RegisterUserMixin, TemplateView):
+    """
+    This is actually a slightly odd double form view
+    """
+    template_name = 'customer/login_registration.html'
+    login_prefix, registration_prefix = 'login', 'registration'
+    login_form_class = EmailAuthenticationForm
+    registration_form_class = EmailUserCreationForm
+    redirect_field_name = 'next'
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
+        return super(AccountAuthView, self).get(
+            request, *args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(AccountAuthView, self).get_context_data(*args, **kwargs)
+        ctx.update(kwargs)
+
+        # Don't pass request as we don't want to trigger validation of BOTH
+        # forms.
+        if 'login_form' not in kwargs:
+            ctx['login_form'] = self.get_login_form()
+        if 'registration_form' not in kwargs:
+            ctx['registration_form'] = self.get_registration_form()
+        return ctx
+
+    def get_login_form(self, request=None):
+        return self.login_form_class(**self.get_login_form_kwargs(request))
+
+    def get_login_form_kwargs(self, request=None):
+        kwargs = {}
+        kwargs['host'] = self.request.get_host()
+        kwargs['prefix'] = self.login_prefix
+        kwargs['initial'] = {
+            'redirect_url': self.request.GET.get(self.redirect_field_name, ''),
+        }
+        if request and request.method in ('POST', 'PUT'):
+            kwargs.update({
+                'data': request.POST,
+                'files': request.FILES,
+            })
+        return kwargs
+
+    def get_registration_form(self, request=None):
+        return self.registration_form_class(
+            **self.get_registration_form_kwargs(request))
+
+    def get_registration_form_kwargs(self, request=None):
+        kwargs = {}
+        kwargs['host'] = self.request.get_host()
+        kwargs['prefix'] = self.registration_prefix
+        kwargs['initial'] = {
+            'redirect_url': self.request.GET.get(self.redirect_field_name, ''),
+        }
+        if request and request.method in ('POST', 'PUT'):
+            kwargs.update({
+                'data': request.POST,
+                'files': request.FILES,
+            })
+        return kwargs
 
     def post(self, request, *args, **kwargs):
-        context = self.get_context_data(*args, **kwargs)
-        redirect_to = self.check_redirect(context)
+        # Use the name of the submit button to determine which form to validate
+        if u'login_submit' in request.POST:
+            return self.validate_login_form()
+        elif u'registration_submit' in request.POST:
+            return self.validate_registration_form()
+        return self.get(request)
 
-        if u'login_submit' in self.request.POST:
-            login_form = EmailAuthenticationForm(
-                prefix=self.login_prefix,
-                data=request.POST
-            )
-            if login_form.is_valid():
-                auth_login(request, login_form.get_user())
-                if request.session.test_cookie_worked():
-                    request.session.delete_test_cookie()
-                return HttpResponseRedirect(redirect_to)
-            context['login_form'] = login_form
+    def validate_login_form(self):
+        form = self.get_login_form(self.request)
+        if form.is_valid():
+            auth_login(self.request, form.get_user())
+            return HttpResponseRedirect(form.cleaned_data['redirect_url'])
 
-        if u'registration_submit' in self.request.POST:
-            registration_form = EmailUserCreationForm(
-                prefix=self.registration_prefix,
-                data=request.POST
-            )
-            context['registration_form'] = registration_form
+        ctx = self.get_context_data(login_form=form)
+        return self.render_to_response(ctx)
 
-            if registration_form.is_valid():
-                self._register_user(registration_form)
-                return HttpResponseRedirect(redirect_to)
+    def validate_registration_form(self):
+        form = self.get_registration_form(self.request)
+        if form.is_valid():
+            self.register_user(form)
+            return HttpResponseRedirect(form.cleaned_data['redirect_url'])
 
-        self.request.session.set_test_cookie()
-        return self.render_to_response(context)
+        ctx = self.get_context_data(registration_form=form)
+        return self.render_to_response(ctx)
 
 
 class EmailHistoryView(ListView):
@@ -397,7 +425,7 @@ class OrderHistoryView(ListView):
         return ctx
 
 
-class OrderDetailView(DetailView, PostActionMixin):
+class OrderDetailView(PostActionMixin, DetailView):
     """Customer order details"""
     model = Order
 
@@ -468,7 +496,7 @@ class OrderDetailView(DetailView, PostActionMixin):
                 {'number': order.number})
 
 
-class OrderLineView(DetailView, PostActionMixin):
+class OrderLineView(PostActionMixin, DetailView):
     """Customer order line"""
 
     def get_object(self, queryset=None):
@@ -509,6 +537,11 @@ class OrderLineView(DetailView, PostActionMixin):
         messages.info(self.request, msg)
 
 
+# ------------
+# Address book
+# ------------
+
+
 class AddressListView(ListView):
     """Customer address book"""
     context_object_name = "addresses"
@@ -525,16 +558,15 @@ class AddressCreateView(CreateView):
     mode = UserAddress
     template_name = 'customer/address_form.html'
 
+    def get_form_kwargs(self):
+        kwargs = super(AddressCreateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
     def get_context_data(self, **kwargs):
         ctx = super(AddressCreateView, self).get_context_data(**kwargs)
         ctx['title'] = _('Add a new address')
         return ctx
-
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.user = self.request.user
-        self.object.save()
-        return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
         messages.success(self.request, _("Address saved"))
@@ -546,17 +578,22 @@ class AddressUpdateView(UpdateView):
     model = UserAddress
     template_name = 'customer/address_form.html'
 
+    def get_form_kwargs(self):
+        kwargs = super(AddressUpdateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
     def get_context_data(self, **kwargs):
-        ctx =  super(AddressUpdateView, self).get_context_data(**kwargs)
+        ctx = super(AddressUpdateView, self).get_context_data(**kwargs)
         ctx['title'] = _('Edit address')
         return ctx
 
     def get_queryset(self):
-        return UserAddress._default_manager.filter(user=self.request.user)
+        return self.request.user.addresses.all()
 
     def get_success_url(self):
         messages.success(self.request, _("Address saved"))
-        return reverse('customer:address-detail', kwargs={'pk': self.get_object().pk })
+        return reverse('customer:address-list')
 
 
 class AddressDeleteView(DeleteView):
@@ -568,6 +605,11 @@ class AddressDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('customer:address-list')
+
+
+# ------------
+# Order status
+# ------------
 
 
 class AnonymousOrderDetailView(DetailView):

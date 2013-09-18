@@ -45,6 +45,7 @@
                 <tr>
                     <th>{% anchor 'name' _('Partner name') %}</th>
                     <th>{% trans 'Users' %}</th>
+                    <th>{% trans 'Addresses' %}</th>
                     <th>&nbsp;</th>
                 </tr>
                 {% for partner in partners %}
@@ -70,10 +71,23 @@
                             {% endwith %}
                         </td>
                         <td>
+                            {% with addresses=partner.addresses.all %}
+                            {% if addresses %}
+                                <ul>
+                                    {% for address in addresses %}
+                                        <li>{{ address.summary }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                {% trans 'No address associated.' %}
+                            {% endif %}
+                            {% endwith %}
+                        </td>
+                        <td>
                             <div class="btn-toolbar">
                                 <div class="btn-group">
                                     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                        Actions
+                                        {% trans "Actions" %}
                                         <span class="caret"></span>
                                     </a>
                                     <ul class="dropdown-menu pull-right">

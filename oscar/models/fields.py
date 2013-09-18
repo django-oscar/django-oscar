@@ -1,4 +1,6 @@
 from django.db.models.fields import CharField, DecimalField
+from django.db.models import SubfieldBase
+from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core import validators
@@ -12,6 +14,8 @@ else:
     add_introspection_rules([], ["^oscar\.models\.fields\.ExtendedURLField$"])
     add_introspection_rules([], [
         "^oscar\.models\.fields\.PositiveDecimalField$"])
+    add_introspection_rules([], [
+        "^oscar\.models\.fields\.UppercaseCharField$"])
 
 
 class ExtendedURLField(CharField):
@@ -46,3 +50,16 @@ class ExtendedURLField(CharField):
 class PositiveDecimalField(DecimalField):
     def formfield(self, **kwargs):
         return super(PositiveDecimalField, self).formfield(min_value=0)
+
+
+class UppercaseCharField(CharField):
+    # necessary for to_python to be called
+    __metaclass__ = SubfieldBase
+
+    def to_python(self, value):
+        val = super(UppercaseCharField, self).to_python(value)
+        if isinstance(val, six.string_types):
+            return val.upper()
+        else:
+            return val
+

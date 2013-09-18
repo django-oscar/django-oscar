@@ -6,6 +6,7 @@
 {% load history_tags %}
 {% load thumbnail %}
 {% load i18n %}
+{% load staticfiles %}
 
 {% block title %}
     {% trans "All reviews" %} | {{ product.title }} | {{ block.super }}
@@ -52,7 +53,7 @@
                             <option value="score">{% trans "Score" %}</option>
                             <option value="recency">{% trans "Recency" %}</option>
                         </select>
-                        <input type="submit" value="Go" />
+                        <input type="submit" value="{% trans "Go" %}" />
                     </form>
 
                     {% for review in reviews %}
@@ -69,7 +70,7 @@
                 <div class="thumbnail">
                     {% with image=product.primary_image %}
                         {% thumbnail image.original "400x400" upscale=False as thumb %}
-                        <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+                        <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{% static thumb.url %}" alt="{{ product.get_title }}"></a>
                         {% endthumbnail %}
                     {% endwith %}
                 </div>

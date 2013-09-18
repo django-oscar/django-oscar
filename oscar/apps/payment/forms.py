@@ -64,8 +64,7 @@ class BankcardMonthField(forms.MultiValueField):
     def __init__(self, *args, **kwargs):
         # Allow the number of years to be specified
         if 'num_years' in kwargs:
-            self.num_years = kwargs['num_years']
-            del kwargs['num_years']
+            self.num_years = kwargs.pop('num_years')
 
         errors = self.default_error_messages.copy()
         if 'error_messages' in kwargs:
@@ -79,9 +78,10 @@ class BankcardMonthField(forms.MultiValueField):
                 choices=self.year_choices(),
                 error_messages={'invalid': errors['invalid_year']}),
         )
+        if 'widget' not in kwargs:
+            kwargs['widget'] = BankcardMonthWidget(
+                widgets=[fields[0].widget, fields[1].widget])
         super(BankcardMonthField, self).__init__(fields, *args, **kwargs)
-        self.widget = BankcardMonthWidget(
-            widgets=[fields[0].widget, fields[1].widget])
 
     def month_choices(self):
         return []
@@ -91,6 +91,7 @@ class BankcardMonthField(forms.MultiValueField):
 
 
 class BankcardExpiryMonthField(BankcardMonthField):
+    num_years = 10
 
     def __init__(self, *args, **kwargs):
         today = date.today()

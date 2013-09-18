@@ -5,10 +5,17 @@ from django.test.utils import override_settings
 from mock import Mock
 
 from oscar.apps.basket.models import Basket
-from oscar.apps.order.models import Order
-from oscar.test.factories import create_product
-from oscar.apps.order.utils import OrderCreator
 from oscar.apps.catalogue.models import ProductClass, Product
+from oscar.apps.offer.utils import Applicator
+from oscar.apps.order.models import Order
+from oscar.apps.order.utils import OrderCreator
+from oscar.apps.shipping.methods import FixedPrice, Free
+from oscar.apps.shipping.repository import Repository
+from oscar.core.loading import get_class
+from oscar.test.factories import create_product, create_offer
+
+Range = get_class('offer.models', 'Range')
+Benefit = get_class('offer.models', 'Benefit')
 
 
 class TestOrderCreatorErrorCases(TestCase):
@@ -105,3 +112,57 @@ class TestPlacingOrderForDigitalGoods(TestCase):
         product_ = Product.objects.get(id=product.id)
         self.assertTrue(product_.stockrecord.num_in_stock is None)
         self.assertTrue(product_.stockrecord.num_allocated is None)
+
+class StubRepository(Repository):
+    """ Custom shipping methods """
+    methods = (FixedPrice(D('5.00')), Free())
+
+class TestShippingOfferForOrder(TestCase):
+
+    def setUp(self):
+        self.creator = OrderCreator()
+        self.basket = Basket.objects.create()
+
+    def apply_20percent_shipping_offer(self):
+        """Shipping offer 20% off"""
+        range = Range.objects.create(name="All products range",
+                                    includes_all_products=True)
+        benefit = Benefit.objects.create(
+            range=range, type=Benefit.SHIPPING_PERCENTAGE, value=20)
+        offer = create_offer(range=range, benefit=benefit)
+        Applicator().apply_offers(self.basket, [offer])
+
+    def test_shipping_offer_is_applied(self):
+        self.basket.add_product(create_product(price=D('12.00')))
+        self.apply_20percent_shipping_offer()
+
+        # Normal shipping 5.00
+        shipping = StubRepository().find_by_code(FixedPrice.code, self.basket)
+
+        self.creator.place_order(
+            basket=self.basket,
+            order_number='1234',
+            shipping_method=shipping)
+        order = Order.objects.get(number='1234')
+
+        self.assertEqual(1, len(order.shipping_discounts))
+        self.assertEqual(D('4.00'), order.shipping_incl_tax)
+        self.assertEqual(D('16.00'), order.total_incl_tax)
+
+    def test_zero_shipping_discount_is_not_created(self):
+        self.basket.add_product(create_product(price=D('12.00')))
+        self.apply_20percent_shipping_offer()
+
+        # Free shipping
+        shipping = StubRepository().find_by_code(Free.code, self.basket)
+
+        self.creator.place_order(
+            basket=self.basket,
+            order_number='1234',
+            shipping_method=shipping)
+        order = Order.objects.get(number='1234')
+
+        # No shipping discount
+        self.assertEqual(0, len(order.shipping_discounts))
+        self.assertEqual(D('0.00'), order.shipping_incl_tax)
+        self.assertEqual(D('12.00'), order.total_incl_tax)

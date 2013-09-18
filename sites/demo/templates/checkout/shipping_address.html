@@ -11,7 +11,7 @@
     {% if request.user.is_authenticated %}
         {% if addresses %}
         <div class="span6">   
-            <h3>An address from your addressbook?</h3>
+            <h3>{% trans "An address from your addressbook?" %}</h3>
             <div class="choose-block">
                 <ul>
                     {% for address in addresses %}

@@ -233,15 +233,17 @@ var oscar = (function(o, $) {
         gateway: {
             init: function() {
                 var radioWidgets = $('form input[name=options]');
-                o.checkout.gateway.handleRadioSelection(radioWidgets.val());
+                var selectedRadioWidget = $('form input[name=options]:checked');
+                o.checkout.gateway.handleRadioSelection(selectedRadioWidget.val());
                 radioWidgets.change(o.checkout.gateway.handleRadioChange);
+                $('#id_username').focus();
             },
             handleRadioChange: function() {
                 o.checkout.gateway.handleRadioSelection($(this).val());
             },
             handleRadioSelection: function(value) {
                 var pwInput = $('#id_password');
-                if (value == 'new') {
+                if (value == 'anonymous' || value =='new') {
                     pwInput.attr('disabled', 'disabled');
                 } else {
                     pwInput.removeAttr('disabled');

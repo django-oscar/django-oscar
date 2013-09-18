@@ -1,13 +1,15 @@
 import logging
 
 from django.http import Http404, HttpResponseRedirect, HttpResponseBadRequest
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
+
 from django.contrib import messages
 from django.contrib.auth import login
 from django.db.models import get_model
 from django.utils.translation import ugettext as _
 from django.views.generic import DetailView, TemplateView, FormView, \
                                  DeleteView, UpdateView, CreateView
+from oscar.apps.customer.utils import normalise_email
 
 from oscar.apps.shipping.methods import NoShippingRequired
 from oscar.core.loading import get_class, get_classes
@@ -47,11 +49,12 @@ class IndexView(CheckoutSessionMixin, FormView):
     """
     template_name = 'checkout/gateway.html'
     form_class = GatewayForm
+    success_url = reverse_lazy('checkout:shipping-address')
 
     def get(self, request, *args, **kwargs):
         # We redirect immediately to shipping address stage if the user is
-        # signed in or has already filled out the anonymous checkout form.
-        if request.user.is_authenticated() or self.checkout_session.get_guest_email():
+        # signed in
+        if request.user.is_authenticated():
             return self.get_success_response()
         return super(IndexView, self).get(request, *args, **kwargs)
 
@@ -61,24 +64,35 @@ class IndexView(CheckoutSessionMixin, FormView):
         if email:
             kwargs['initial'] = {
                 'username': email,
-                'options': 'new'
             }
         return kwargs
 
     def form_valid(self, form):
-        if form.is_guest_checkout():
+        if form.is_guest_checkout() or form.is_new_account_checkout():
             email = form.cleaned_data['username']
             self.checkout_session.set_guest_email(email)
+
+            if form.is_new_account_checkout():
+                messages.info(
+                    self.request,
+                    _("Create your account and then you will be redirected "
+                      "back to the checkout process"))
+                self.success_url = "%s?next=%s&email=%s" % (
+                    reverse('customer:register'),
+                    reverse('checkout:shipping-address'),
+                    email
+                )
         else:
             user = form.get_user()
             login(self.request, user)
+
         return self.get_success_response()
 
     def get_success_response(self):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return reverse('checkout:shipping-address')
+        return self.success_url
 
 
 # ================
@@ -135,10 +149,11 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
         return UserAddress._default_manager.filter(user=self.request.user).order_by('-is_default_for_shipping')
 
     def post(self, request, *args, **kwargs):
-        # Check if a shipping address was selected directly (eg no form was filled in)
+        # Check if a shipping address was selected directly (eg no form was
+        # filled in)
         if self.request.user.is_authenticated() and 'address_id' in self.request.POST:
-            address = UserAddress._default_manager.get(pk=self.request.POST['address_id'],
-                                                       user=self.request.user)
+            address = UserAddress._default_manager.get(
+                pk=self.request.POST['address_id'], user=self.request.user)
             action = self.request.POST.get('action', None)
             if action == 'ship_to':
                 # User has selected a previous address to ship to
@@ -152,42 +167,19 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
             else:
                 return HttpResponseBadRequest()
         else:
-            return super(ShippingAddressView, self).post(request, *args, **kwargs)
+            return super(ShippingAddressView, self).post(
+                request, *args, **kwargs)
 
     def form_valid(self, form):
         # Store the address details in the session and redirect to next step
-        self.checkout_session.ship_to_new_address(form.clean())
+        address_fields = dict(
+            (k, v) for (k, v) in form.instance.__dict__.items()
+            if not k.startswith('_'))
+        self.checkout_session.ship_to_new_address(address_fields)
         return super(ShippingAddressView, self).form_valid(form)
 
     def get_success_url(self):
         return reverse('checkout:shipping-method')
-
-
-class UserAddressCreateView(CheckoutSessionMixin, CreateView):
-    """
-    Add a USER address to the user's addressbook.
-
-    This is not the same as creating a SHIPPING Address, although if used for the order,
-    it will be converted into a shipping address at submission-time.
-    """
-    template_name = 'checkout/user_address_form.html'
-    form_class = UserAddressForm
-
-    def get_context_data(self, **kwargs):
-        kwargs = super(UserAddressCreateView, self).get_context_data(**kwargs)
-        kwargs['form_url'] = reverse('checkout:user-address-create')
-        return kwargs
-
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.user = self.request.user
-        self.object.save()
-        return self.get_success_response()
-
-    def get_success_response(self):
-        messages.info(self.request, _("Address saved"))
-        # We redirect back to the shipping address page
-        return HttpResponseRedirect(reverse('checkout:shipping-address'))
 
 
 class UserAddressUpdateView(CheckoutSessionMixin, UpdateView):
@@ -198,11 +190,11 @@ class UserAddressUpdateView(CheckoutSessionMixin, UpdateView):
     form_class = UserAddressForm
 
     def get_queryset(self):
-        return UserAddress._default_manager.filter(user=self.request.user)
+        return self.request.user.addresses.all()
 
-    def get_context_data(self, **kwargs):
-        kwargs = super(UserAddressUpdateView, self).get_context_data(**kwargs)
-        kwargs['form_url'] = reverse('checkout:user-address-update', args=(str(kwargs['object'].id),))
+    def get_form_kwargs(self):
+        kwargs = super(UserAddressUpdateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
         return kwargs
 
     def get_success_url(self):
@@ -217,7 +209,7 @@ class UserAddressDeleteView(CheckoutSessionMixin, DeleteView):
     template_name = 'checkout/user_address_delete.html'
 
     def get_queryset(self):
-        return UserAddress._default_manager.filter(user=self.request.user)
+        return self.request.user.addresses.all()
 
     def get_success_url(self):
         messages.info(self.request, _("Address deleted"))
@@ -357,9 +349,9 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     """
     For taking the details of payment and creating the order
 
-    The class is deliberately split into fine-grained methods, responsible for only one
-    thing.  This is to make it easier to subclass and override just one component of
-    functionality.
+    The class is deliberately split into fine-grained methods, responsible for
+    only one thing.  This is to make it easier to subclass and override just
+    one component of functionality.
 
     All projects will need to subclass and customise this class.
     """
@@ -367,8 +359,33 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     template_name_preview = 'checkout/preview.html'
     preview = False
 
-    def get_template_names(self):
-        return [self.template_name_preview] if self.preview else [self.template_name]
+    def get(self, request, *args, **kwargs):
+        error_response = self.get_error_response()
+        if error_response:
+            return error_response
+
+        return super(PaymentDetailsView, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        """
+        This method is designed to be overridden by subclasses which will
+        validate the forms from the payment details page.  If the forms are
+        valid then the method can call submit()
+        """
+        error_response = self.get_error_response()
+        if error_response:
+            return error_response
+
+        if self.preview:
+            # We use a custom parameter to indicate if this is an attempt to
+            # place an order.  Without this, we assume a payment form is being
+            # submitted from the payment-details page
+            if request.POST.get('action', '') == 'place_order':
+                return self.submit(request.basket)
+            return self.render_preview(request)
+
+        # Posting to payment-details isn't the right thing to do
+        return self.get(request, *args, **kwargs)
 
     def get_error_response(self):
         # Check that the user's basket is not empty
@@ -377,41 +394,31 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             return HttpResponseRedirect(reverse('basket:summary'))
 
         shipping_required = self.request.basket.is_shipping_required()
+
         # Check that shipping address has been completed
         if shipping_required and not self.checkout_session.is_shipping_address_set():
             messages.error(self.request, _("Please choose a shipping address"))
             return HttpResponseRedirect(reverse('checkout:shipping-address'))
+
         # Check that shipping method has been set
         if shipping_required and not self.checkout_session.is_shipping_method_set():
             messages.error(self.request, _("Please choose a shipping method"))
             return HttpResponseRedirect(reverse('checkout:shipping-method'))
 
-    def get(self, request, *args, **kwargs):
-        error_response = self.get_error_response()
-        if error_response:
-            return error_response
-        return super(PaymentDetailsView, self).get(request, *args, **kwargs)
+    def get_context_data(self, **kwargs):
+        # Return kwargs directly instead of using 'params' as in django's
+        # TemplateView
+        ctx = super(PaymentDetailsView, self).get_context_data(**kwargs)
 
-    def post(self, request, *args, **kwargs):
-        """
-        This method is designed to be overridden by subclasses which will
-        validate the forms from the payment details page.  If the forms are valid
-        then the method can call submit()
-        """
-        error_response = self.get_error_response()
+        # Add guest email if one is set
+        ctx['guest_email'] = self.checkout_session.get_guest_email()
 
-        if error_response:
-            return error_response
-        if self.preview:
-            # We use a custom parameter to indicate if this is an attempt to place an order.
-            # Without this, we assume a payment form is being submitted from the
-            # payment-details page
-            if request.POST.get('action', '') == 'place_order':
-                return self.submit(request.basket)
-            return self.render_preview(request)
+        ctx.update(kwargs)
+        return ctx
 
-        # Posting to payment-details isn't the right thing to do
-        return self.get(request, *args, **kwargs)
+    def get_template_names(self):
+        return [self.template_name_preview] if self.preview else [
+            self.template_name]
 
     def render_preview(self, request, **kwargs):
         """
@@ -454,6 +461,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         Submit a basket for order placement.
 
         The process runs as follows:
+
          * Generate an order number
          * Freeze the basket so it cannot be modified any more (important when
            redirecting the user to another site for payment as it prevents the
@@ -472,12 +480,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         if order_kwargs is None:
             order_kwargs = {}
 
-        # Next, check that basket isn't empty
-        if basket.is_empty:
-            messages.error(self.request, _("This order cannot be submitted as the basket is empty"))
-            url = self.request.META.get('HTTP_REFERER', reverse('basket:summary'))
-            return HttpResponseRedirect(url)
-
         # Domain-specific checks on the basket
         is_valid, reason, url = self.can_basket_be_submitted(basket)
         if not is_valid:
@@ -490,6 +492,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         # checkouts (eg where we redirect to a 3rd party site and place
         # the order on a different request).
         order_number = self.generate_order_number(basket)
+        self.checkout_session.set_order_number(order_number)
         logger.info("Order #%s: beginning submission process for basket #%d", order_number, basket.id)
 
         # Freeze the basket so it cannot be manipulated while the customer is
@@ -555,20 +558,26 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
                 **order_kwargs)
         except UnableToPlaceOrder, e:
             # It's possible that something will go wrong while trying to
-            # actually place an order.  Not a good situation to be in, but needs
+            # actually place an order.  Not a good situation to be in as a
+            # payment transaction may already have taken place, but needs
             # to be handled gracefully.
-            logger.error("Order #%s: unable to place order - %s", order_number, e)
+            logger.error("Order #%s: unable to place order - %s",
+                         order_number, e)
+            logger.exception(e)
             msg = unicode(e)
             self.restore_frozen_basket()
             return self.render_to_response(self.get_context_data(error=msg))
 
     def generate_order_number(self, basket):
-        generator = OrderNumberGenerator()
-        order_number = generator.order_number(basket)
-        self.checkout_session.set_order_number(order_number)
-        return order_number
+        """
+        Return a new order number
+        """
+        return OrderNumberGenerator().order_number(basket)
 
     def freeze_basket(self, basket):
+        """
+        Freeze the basket so it can no longer be modified
+        """
         # We freeze the basket to prevent it being modified once the payment
         # process has started.  If your payment fails, then the basket will
         # need to be "unfrozen".  We also store the basket ID in the session
@@ -588,12 +597,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         linked to the order when it is saved later on.
         """
         pass
-
-    def get_context_data(self, **kwargs):
-        # Return kwargs directly instead of using 'params' as in django's TemplateView
-        ctx = super(PaymentDetailsView, self).get_context_data(**kwargs)
-        ctx.update(kwargs)
-        return ctx
 
 
 # =========

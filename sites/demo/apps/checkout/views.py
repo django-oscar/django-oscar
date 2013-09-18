@@ -48,14 +48,14 @@ class PaymentDetailsView(views.PaymentDetailsView):
         # Call oscar's submit method, passing through the bankcard object so it
         # gets passed to the 'handle_payment' method and can be used for the
         # submission to Datacash.
-        bankcard = bankcard_form.get_bankcard_obj()
+        bankcard = bankcard_form.bankcard
         return self.submit(request.basket,
                            payment_kwargs={'bankcard': bankcard})
 
     def handle_payment(self, order_number, total_incl_tax, **kwargs):
         # Make request to DataCash - if there any problems (eg bankcard
         # not valid / request refused by bank) then an exception would be
-        # raised ahd handled)
+        # raised and handled by the parent PaymentDetail view)
         facade = Facade()
         datacash_ref = facade.pre_authorise(
             order_number, total_incl_tax, kwargs['bankcard'])
@@ -71,4 +71,5 @@ class PaymentDetailsView(views.PaymentDetailsView):
         self.add_payment_source(source)
 
         # Also record payment event
-        self.add_payment_event('pre-auth', total_incl_tax)
+        self.add_payment_event(
+            'pre-auth', total_incl_tax, reference=datacash_ref)

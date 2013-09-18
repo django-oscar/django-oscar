@@ -159,7 +159,7 @@ class ProductForm(forms.ModelForm):
         super(ProductForm, self).__init__(*args, **kwargs)
         self.add_attribute_fields()
         related_products = self.fields.get('related_products', None)
-        if self.instance.pk is not None:
+        if 'parent' in self.fields and self.instance.pk is not None:
             # Prevent selecting itself as parent
             parent = self.fields['parent']
             parent.queryset = parent.queryset.exclude(
@@ -168,7 +168,7 @@ class ProductForm(forms.ModelForm):
             related_products.queryset = self.get_related_products_queryset()
         if 'title' in self.fields:
             self.fields['title'].widget = forms.TextInput(
-                attrs={'autocompete': 'off'})
+                attrs={'autocomplete': 'off'})
 
     def set_initial_attribute_values(self, kwargs):
         if kwargs.get('instance', None) is None:

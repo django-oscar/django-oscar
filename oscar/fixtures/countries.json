@@ -6,7 +6,7 @@
             "iso_3166_1_a3": "GBR", 
             "name": "UNITED KINGDOM", 
             "printable_name": "United Kingdom of Great Britain and Northern Ireland", 
-            "is_highlighted": true, 
+            "display_order": 1, 
             "iso_3166_1_numeric": 826, 
             "is_shipping_country": true
         }
@@ -18,7 +18,7 @@
             "iso_3166_1_a3": "AFG", 
             "name": "AFGHANISTAN", 
             "printable_name": "Afghanistan", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 4, 
             "is_shipping_country": false
         }
@@ -30,7 +30,7 @@
             "iso_3166_1_a3": "ALA", 
             "name": "ALAND ISLANDS", 
             "printable_name": "\u00c5land Islands", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 248, 
             "is_shipping_country": false
         }
@@ -42,7 +42,7 @@
             "iso_3166_1_a3": "ALB", 
             "name": "ALBANIA", 
             "printable_name": "Albania", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 8, 
             "is_shipping_country": false
         }
@@ -54,7 +54,7 @@
             "iso_3166_1_a3": "DZA", 
             "name": "ALGERIA", 
             "printable_name": "Algeria", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 12, 
             "is_shipping_country": false
         }
@@ -66,7 +66,7 @@
             "iso_3166_1_a3": "ASM", 
             "name": "AMERICAN SAMOA", 
             "printable_name": "American Samoa", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 16, 
             "is_shipping_country": false
         }
@@ -78,7 +78,7 @@
             "iso_3166_1_a3": "AND", 
             "name": "ANDORRA", 
             "printable_name": "Andorra", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 20, 
             "is_shipping_country": false
         }
@@ -90,7 +90,7 @@
             "iso_3166_1_a3": "AGO", 
             "name": "ANGOLA", 
             "printable_name": "Angola", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 24, 
             "is_shipping_country": false
         }
@@ -102,7 +102,7 @@
             "iso_3166_1_a3": "AIA", 
             "name": "ANGUILLA", 
             "printable_name": "Anguilla", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 660, 
             "is_shipping_country": false
         }
@@ -114,7 +114,7 @@
             "iso_3166_1_a3": "ATA", 
             "name": "ANTARCTICA", 
             "printable_name": "Antarctica", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 10, 
             "is_shipping_country": false
         }
@@ -126,7 +126,7 @@
             "iso_3166_1_a3": "ATG", 
             "name": "ANTIGUA AND BARBUDA", 
             "printable_name": "Antigua and Barbuda", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 28, 
             "is_shipping_country": false
         }
@@ -138,7 +138,7 @@
             "iso_3166_1_a3": "ARG", 
             "name": "ARGENTINA", 
             "printable_name": "Argentina", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 32, 
             "is_shipping_country": false
         }
@@ -150,7 +150,7 @@
             "iso_3166_1_a3": "ARM", 
             "name": "ARMENIA", 
             "printable_name": "Armenia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 51, 
             "is_shipping_country": false
         }
@@ -162,7 +162,7 @@
             "iso_3166_1_a3": "ABW", 
             "name": "ARUBA", 
             "printable_name": "Aruba", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 533, 
             "is_shipping_country": false
         }
@@ -174,7 +174,7 @@
             "iso_3166_1_a3": "AUS", 
             "name": "AUSTRALIA", 
             "printable_name": "Australia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 36, 
             "is_shipping_country": false
         }
@@ -186,7 +186,7 @@
             "iso_3166_1_a3": "AUT", 
             "name": "AUSTRIA", 
             "printable_name": "Austria", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 40, 
             "is_shipping_country": false
         }
@@ -198,7 +198,7 @@
             "iso_3166_1_a3": "AZE", 
             "name": "AZERBAIJAN", 
             "printable_name": "Azerbaijan", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 31, 
             "is_shipping_country": false
         }
@@ -210,7 +210,7 @@
             "iso_3166_1_a3": "BHS", 
             "name": "BAHAMAS", 
             "printable_name": "Bahamas", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 44, 
             "is_shipping_country": false
         }
@@ -222,7 +222,7 @@
             "iso_3166_1_a3": "BHR", 
             "name": "BAHRAIN", 
             "printable_name": "Bahrain", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 48, 
             "is_shipping_country": false
         }
@@ -234,7 +234,7 @@
             "iso_3166_1_a3": "BGD", 
             "name": "BANGLADESH", 
             "printable_name": "Bangladesh", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 50, 
             "is_shipping_country": false
         }
@@ -246,7 +246,7 @@
             "iso_3166_1_a3": "BRB", 
             "name": "BARBADOS", 
             "printable_name": "Barbados", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 52, 
             "is_shipping_country": false
         }
@@ -258,7 +258,7 @@
             "iso_3166_1_a3": "BLR", 
             "name": "BELARUS", 
             "printable_name": "Belarus", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 112, 
             "is_shipping_country": false
         }
@@ -270,7 +270,7 @@
             "iso_3166_1_a3": "BEL", 
             "name": "BELGIUM", 
             "printable_name": "Belgium", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 56, 
             "is_shipping_country": false
         }
@@ -282,7 +282,7 @@
             "iso_3166_1_a3": "BLZ", 
             "name": "BELIZE", 
             "printable_name": "Belize", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 84, 
             "is_shipping_country": false
         }
@@ -294,7 +294,7 @@
             "iso_3166_1_a3": "BEN", 
             "name": "BENIN", 
             "printable_name": "Benin", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 204, 
             "is_shipping_country": false
         }
@@ -306,7 +306,7 @@
             "iso_3166_1_a3": "BMU", 
             "name": "BERMUDA", 
             "printable_name": "Bermuda", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 60, 
             "is_shipping_country": false
         }
@@ -318,7 +318,7 @@
             "iso_3166_1_a3": "BTN", 
             "name": "BHUTAN", 
             "printable_name": "Bhutan", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 64, 
             "is_shipping_country": false
         }
@@ -330,7 +330,7 @@
             "iso_3166_1_a3": "BOL", 
             "name": "BOLIVIA", 
             "printable_name": "Bolivia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 68, 
             "is_shipping_country": false
         }
@@ -342,7 +342,7 @@
             "iso_3166_1_a3": "BIH", 
             "name": "BOSNIA AND HERZEGOVINA", 
             "printable_name": "Bosnia and Herzegovina", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 70, 
             "is_shipping_country": false
         }
@@ -354,7 +354,7 @@
             "iso_3166_1_a3": "BWA", 
             "name": "BOTSWANA", 
             "printable_name": "Botswana", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 72, 
             "is_shipping_country": false
         }
@@ -366,7 +366,7 @@
             "iso_3166_1_a3": "BVT", 
             "name": "BOUVET ISLAND", 
             "printable_name": "Bouvet Island", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 74, 
             "is_shipping_country": false
         }
@@ -378,7 +378,7 @@
             "iso_3166_1_a3": "BRA", 
             "name": "BRAZIL", 
             "printable_name": "Brazil", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 76, 
             "is_shipping_country": false
         }
@@ -390,7 +390,7 @@
             "iso_3166_1_a3": "IOT", 
             "name": "BRITISH INDIAN OCEAN TERRITORY", 
             "printable_name": "British Indian Ocean Territory", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 86, 
             "is_shipping_country": false
         }
@@ -402,7 +402,7 @@
             "iso_3166_1_a3": "BRN", 
             "name": "BRUNEI DARUSSALAM", 
             "printable_name": "Brunei Darussalam", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 96, 
             "is_shipping_country": false
         }
@@ -414,7 +414,7 @@
             "iso_3166_1_a3": "BGR", 
             "name": "BULGARIA", 
             "printable_name": "Bulgaria", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 100, 
             "is_shipping_country": false
         }
@@ -426,7 +426,7 @@
             "iso_3166_1_a3": "BFA", 
             "name": "BURKINA FASO", 
             "printable_name": "Burkina Faso", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 854, 
             "is_shipping_country": false
         }
@@ -438,7 +438,7 @@
             "iso_3166_1_a3": "BDI", 
             "name": "BURUNDI", 
             "printable_name": "Burundi", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 108, 
             "is_shipping_country": false
         }
@@ -450,7 +450,7 @@
             "iso_3166_1_a3": "KHM", 
             "name": "CAMBODIA", 
             "printable_name": "Cambodia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 116, 
             "is_shipping_country": false
         }
@@ -462,7 +462,7 @@
             "iso_3166_1_a3": "CMR", 
             "name": "CAMEROON", 
             "printable_name": "Cameroon", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 120, 
             "is_shipping_country": false
         }
@@ -474,7 +474,7 @@
             "iso_3166_1_a3": "CAN", 
             "name": "CANADA", 
             "printable_name": "Canada", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 124, 
             "is_shipping_country": false
         }
@@ -486,7 +486,7 @@
             "iso_3166_1_a3": "CPV", 
             "name": "CAPE VERDE", 
             "printable_name": "Cape Verde", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 132, 
             "is_shipping_country": false
         }
@@ -498,7 +498,7 @@
             "iso_3166_1_a3": "CYM", 
             "name": "CAYMAN ISLANDS", 
             "printable_name": "Cayman Islands", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 136, 
             "is_shipping_country": false
         }
@@ -510,7 +510,7 @@
             "iso_3166_1_a3": "CAF", 
             "name": "CENTRAL AFRICAN REPUBLIC", 
             "printable_name": "Central African Republic", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 140, 
             "is_shipping_country": false
         }
@@ -522,7 +522,7 @@
             "iso_3166_1_a3": "TCD", 
             "name": "CHAD", 
             "printable_name": "Chad", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 148, 
             "is_shipping_country": false
         }
@@ -534,7 +534,7 @@
             "iso_3166_1_a3": "CHL", 
             "name": "CHILE", 
             "printable_name": "Chile", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 152, 
             "is_shipping_country": false
         }
@@ -546,7 +546,7 @@
             "iso_3166_1_a3": "CHN", 
             "name": "CHINA", 
             "printable_name": "China", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 156, 
             "is_shipping_country": false
         }
@@ -558,7 +558,7 @@
             "iso_3166_1_a3": "CXR", 
             "name": "CHRISTMAS ISLAND", 
             "printable_name": "Christmas Island", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 162, 
             "is_shipping_country": false
         }
@@ -570,7 +570,7 @@
             "iso_3166_1_a3": "CCK", 
             "name": "COCOS (KEELING) ISLANDS", 
             "printable_name": "Cocos (Keeling) Islands", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 166, 
             "is_shipping_country": false
         }
@@ -582,7 +582,7 @@
             "iso_3166_1_a3": "COL", 
             "name": "COLOMBIA", 
             "printable_name": "Colombia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 170, 
             "is_shipping_country": false
         }
@@ -594,7 +594,7 @@
             "iso_3166_1_a3": "COM", 
             "name": "COMOROS", 
             "printable_name": "Comoros", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 174, 
             "is_shipping_country": false
         }
@@ -606,7 +606,7 @@
             "iso_3166_1_a3": "COG", 
             "name": "CONGO", 
             "printable_name": "Congo", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 178, 
             "is_shipping_country": false
         }
@@ -618,7 +618,7 @@
             "iso_3166_1_a3": "COD", 
             "name": "CONGO, THE DEMOCRATIC REPUBLIC OF THE", 
             "printable_name": "Democratic Republic of the Congo", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 180, 
             "is_shipping_country": false
         }
@@ -630,7 +630,7 @@
             "iso_3166_1_a3": "COK", 
             "name": "COOK ISLANDS", 
             "printable_name": "Cook Islands", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 184, 
             "is_shipping_country": false
         }
@@ -642,7 +642,7 @@
             "iso_3166_1_a3": "CRI", 
             "name": "COSTA RICA", 
             "printable_name": "Costa Rica", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 188, 
             "is_shipping_country": false
         }
@@ -654,7 +654,7 @@
             "iso_3166_1_a3": "CIV", 
             "name": "COTE D'IVOIRE", 
             "printable_name": "C\u00f4te d'Ivoire", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 384, 
             "is_shipping_country": false
         }
@@ -666,7 +666,7 @@
             "iso_3166_1_a3": "HRV", 
             "name": "CROATIA", 
             "printable_name": "Croatia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 191, 
             "is_shipping_country": false
         }
@@ -678,7 +678,7 @@
             "iso_3166_1_a3": "CUB", 
             "name": "CUBA", 
             "printable_name": "Cuba", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 192, 
             "is_shipping_country": false
         }
@@ -690,7 +690,7 @@
             "iso_3166_1_a3": "CYP", 
             "name": "CYPRUS", 
             "printable_name": "Cyprus", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 196, 
             "is_shipping_country": false
         }
@@ -702,7 +702,7 @@
             "iso_3166_1_a3": "CZE", 
             "name": "CZECH REPUBLIC", 
             "printable_name": "Czech Republic", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 203, 
             "is_shipping_country": false
         }
@@ -714,7 +714,7 @@
             "iso_3166_1_a3": "DNK", 
             "name": "DENMARK", 
             "printable_name": "Denmark", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 208, 
             "is_shipping_country": false
         }
@@ -726,7 +726,7 @@
             "iso_3166_1_a3": "DJI", 
             "name": "DJIBOUTI", 
             "printable_name": "Djibouti", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 262, 
             "is_shipping_country": false
         }
@@ -738,7 +738,7 @@
             "iso_3166_1_a3": "DMA", 
             "name": "DOMINICA", 
             "printable_name": "Dominica", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 212, 
             "is_shipping_country": false
         }
@@ -750,7 +750,7 @@
             "iso_3166_1_a3": "DOM", 
             "name": "DOMINICAN REPUBLIC", 
             "printable_name": "Dominican Republic", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 214, 
             "is_shipping_country": false
         }
@@ -762,7 +762,7 @@
             "iso_3166_1_a3": "ECU", 
             "name": "ECUADOR", 
             "printable_name": "Ecuador", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 218, 
             "is_shipping_country": false
         }
@@ -774,7 +774,7 @@
             "iso_3166_1_a3": "EGY", 
             "name": "EGYPT", 
             "printable_name": "Egypt", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 818, 
             "is_shipping_country": false
         }
@@ -786,7 +786,7 @@
             "iso_3166_1_a3": "SLV", 
             "name": "EL SALVADOR", 
             "printable_name": "El Salvador", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 222, 
             "is_shipping_country": false
         }
@@ -798,7 +798,7 @@
             "iso_3166_1_a3": "GNQ", 
             "name": "EQUATORIAL GUINEA", 
             "printable_name": "Equatorial Guinea", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 226, 
             "is_shipping_country": false
         }
@@ -810,7 +810,7 @@
             "iso_3166_1_a3": "ERI", 
             "name": "ERITREA", 
             "printable_name": "Eritrea", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 232, 
             "is_shipping_country": false
         }
@@ -822,7 +822,7 @@
             "iso_3166_1_a3": "EST", 
             "name": "ESTONIA", 
             "printable_name": "Estonia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 233, 
             "is_shipping_country": false
         }
@@ -834,7 +834,7 @@
             "iso_3166_1_a3": "ETH", 
             "name": "ETHIOPIA", 
             "printable_name": "Ethiopia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 231, 
             "is_shipping_country": false
         }
@@ -846,7 +846,7 @@
             "iso_3166_1_a3": "FLK", 
             "name": "FALKLAND ISLANDS (MALVINAS)", 
             "printable_name": "Falkland Islands (Malvinas)", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 238, 
             "is_shipping_country": false
         }
@@ -858,7 +858,7 @@
             "iso_3166_1_a3": "FRO", 
             "name": "FAROE ISLANDS", 
             "printable_name": "Faeroe Islands", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 234, 
             "is_shipping_country": false
         }
@@ -870,7 +870,7 @@
             "iso_3166_1_a3": "FJI", 
             "name": "FIJI", 
             "printable_name": "Fiji", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 242, 
             "is_shipping_country": false
         }
@@ -882,7 +882,7 @@
             "iso_3166_1_a3": "FIN", 
             "name": "FINLAND", 
             "printable_name": "Finland", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 246, 
             "is_shipping_country": false
         }
@@ -894,7 +894,7 @@
             "iso_3166_1_a3": "FRA", 
             "name": "FRANCE", 
             "printable_name": "France", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 250, 
             "is_shipping_country": false
         }
@@ -906,7 +906,7 @@
             "iso_3166_1_a3": "GUF", 
             "name": "FRENCH GUIANA", 
             "printable_name": "French Guiana", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 254, 
             "is_shipping_country": false
         }
@@ -918,7 +918,7 @@
             "iso_3166_1_a3": "PYF", 
             "name": "FRENCH POLYNESIA", 
             "printable_name": "French Polynesia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 258, 
             "is_shipping_country": false
         }
@@ -930,7 +930,7 @@
             "iso_3166_1_a3": "ATF", 
             "name": "FRENCH SOUTHERN TERRITORIES", 
             "printable_name": "French Southern Territories", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 260, 
             "is_shipping_country": false
         }
@@ -942,7 +942,7 @@
             "iso_3166_1_a3": "GAB", 
             "name": "GABON", 
             "printable_name": "Gabon", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 266, 
             "is_shipping_country": false
         }
@@ -954,7 +954,7 @@
             "iso_3166_1_a3": "GMB", 
             "name": "GAMBIA", 
             "printable_name": "Gambia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 270, 
             "is_shipping_country": false
         }
@@ -966,7 +966,7 @@
             "iso_3166_1_a3": "GEO", 
             "name": "GEORGIA", 
             "printable_name": "Georgia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 268, 
             "is_shipping_country": false
         }
@@ -978,7 +978,7 @@
             "iso_3166_1_a3": "DEU", 
             "name": "GERMANY", 
             "printable_name": "Germany", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 276, 
             "is_shipping_country": false
         }
@@ -990,7 +990,7 @@
             "iso_3166_1_a3": "GHA", 
             "name": "GHANA", 
             "printable_name": "Ghana", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 288, 
             "is_shipping_country": false
         }
@@ -1002,7 +1002,7 @@
             "iso_3166_1_a3": "GIB", 
             "name": "GIBRALTAR", 
             "printable_name": "Gibraltar", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 292, 
             "is_shipping_country": false
         }
@@ -1014,7 +1014,7 @@
             "iso_3166_1_a3": "GRC", 
             "name": "GREECE", 
             "printable_name": "Greece", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 300, 
             "is_shipping_country": false
         }
@@ -1026,7 +1026,7 @@
             "iso_3166_1_a3": "GRL", 
             "name": "GREENLAND", 
             "printable_name": "Greenland", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 304, 
             "is_shipping_country": false
         }
@@ -1038,7 +1038,7 @@
             "iso_3166_1_a3": "GRD", 
             "name": "GRENADA", 
             "printable_name": "Grenada", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 308, 
             "is_shipping_country": false
         }
@@ -1050,7 +1050,7 @@
             "iso_3166_1_a3": "GLP", 
             "name": "GUADELOUPE", 
             "printable_name": "Guadeloupe", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 312, 
             "is_shipping_country": false
         }
@@ -1062,7 +1062,7 @@
             "iso_3166_1_a3": "GUM", 
             "name": "GUAM", 
             "printable_name": "Guam", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 316, 
             "is_shipping_country": false
         }
@@ -1074,7 +1074,7 @@
             "iso_3166_1_a3": "GTM", 
             "name": "GUATEMALA", 
             "printable_name": "Guatemala", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 320, 
             "is_shipping_country": false
         }
@@ -1086,7 +1086,7 @@
             "iso_3166_1_a3": "GGY", 
             "name": "GUERNSEY", 
             "printable_name": "Guernsey", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 831, 
             "is_shipping_country": false
         }
@@ -1098,7 +1098,7 @@
             "iso_3166_1_a3": "GIN", 
             "name": "GUINEA", 
             "printable_name": "Guinea", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 324, 
             "is_shipping_country": false
         }
@@ -1110,7 +1110,7 @@
             "iso_3166_1_a3": "GNB", 
             "name": "GUINEA-BISSAU", 
             "printable_name": "Guinea-Bissau", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 624, 
             "is_shipping_country": false
         }
@@ -1122,7 +1122,7 @@
             "iso_3166_1_a3": "GUY", 
             "name": "GUYANA", 
             "printable_name": "Guyana", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 328, 
             "is_shipping_country": false
         }
@@ -1134,7 +1134,7 @@
             "iso_3166_1_a3": "HTI", 
             "name": "HAITI", 
             "printable_name": "Haiti", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 332, 
             "is_shipping_country": false
         }
@@ -1146,7 +1146,7 @@
             "iso_3166_1_a3": "HMD", 
             "name": "HEARD ISLAND AND MCDONALD ISLANDS", 
             "printable_name": "Heard Island and Mcdonald Islands", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 334, 
             "is_shipping_country": false
         }
@@ -1158,7 +1158,7 @@
             "iso_3166_1_a3": "VAT", 
             "name": "HOLY SEE (VATICAN CITY STATE)", 
             "printable_name": "Holy See", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 336, 
             "is_shipping_country": false
         }
@@ -1170,7 +1170,7 @@
             "iso_3166_1_a3": "HND", 
             "name": "HONDURAS", 
             "printable_name": "Honduras", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 340, 
             "is_shipping_country": false
         }
@@ -1182,7 +1182,7 @@
             "iso_3166_1_a3": "HKG", 
             "name": "HONG KONG", 
             "printable_name": "Hong Kong Special Administrative Region of China", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 344, 
             "is_shipping_country": false
         }
@@ -1194,7 +1194,7 @@
             "iso_3166_1_a3": "HUN", 
             "name": "HUNGARY", 
             "printable_name": "Hungary", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 348, 
             "is_shipping_country": false
         }
@@ -1206,7 +1206,7 @@
             "iso_3166_1_a3": "ISL", 
             "name": "ICELAND", 
             "printable_name": "Iceland", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 352, 
             "is_shipping_country": false
         }
@@ -1218,7 +1218,7 @@
             "iso_3166_1_a3": "IND", 
             "name": "INDIA", 
             "printable_name": "India", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 356, 
             "is_shipping_country": false
         }
@@ -1230,7 +1230,7 @@
             "iso_3166_1_a3": "IDN", 
             "name": "INDONESIA", 
             "printable_name": "Indonesia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 360, 
             "is_shipping_country": false
         }
@@ -1242,7 +1242,7 @@
             "iso_3166_1_a3": "IRN", 
             "name": "IRAN, ISLAMIC REPUBLIC OF", 
             "printable_name": "Iran, Islamic Republic of", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 364, 
             "is_shipping_country": false
         }
@@ -1254,7 +1254,7 @@
             "iso_3166_1_a3": "IRQ", 
             "name": "IRAQ", 
             "printable_name": "Iraq", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 368, 
             "is_shipping_country": false
         }
@@ -1266,7 +1266,7 @@
             "iso_3166_1_a3": "IRL", 
             "name": "IRELAND", 
             "printable_name": "Ireland", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 372, 
             "is_shipping_country": false
         }
@@ -1278,7 +1278,7 @@
             "iso_3166_1_a3": "IMN", 
             "name": "ISLE OF MAN", 
             "printable_name": "Isle of Man", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 833, 
             "is_shipping_country": false
         }
@@ -1290,7 +1290,7 @@
             "iso_3166_1_a3": "ISR", 
             "name": "ISRAEL", 
             "printable_name": "Israel", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 376, 
             "is_shipping_country": false
         }
@@ -1302,7 +1302,7 @@
             "iso_3166_1_a3": "ITA", 
             "name": "ITALY", 
             "printable_name": "Italy", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 380, 
             "is_shipping_country": false
         }
@@ -1314,7 +1314,7 @@
             "iso_3166_1_a3": "JAM", 
             "name": "JAMAICA", 
             "printable_name": "Jamaica", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 388, 
             "is_shipping_country": false
         }
@@ -1326,7 +1326,7 @@
             "iso_3166_1_a3": "JPN", 
             "name": "JAPAN", 
             "printable_name": "Japan", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 392, 
             "is_shipping_country": false
         }
@@ -1338,7 +1338,7 @@
             "iso_3166_1_a3": "JEY", 
             "name": "JERSEY", 
             "printable_name": "Jersey", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 832, 
             "is_shipping_country": false
         }
@@ -1350,7 +1350,7 @@
             "iso_3166_1_a3": "JOR", 
             "name": "JORDAN", 
             "printable_name": "Jordan", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 400, 
             "is_shipping_country": false
         }
@@ -1362,7 +1362,7 @@
             "iso_3166_1_a3": "KAZ", 
             "name": "KAZAKHSTAN", 
             "printable_name": "Kazakhstan", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 398, 
             "is_shipping_country": false
         }
@@ -1374,7 +1374,7 @@
             "iso_3166_1_a3": "KEN", 
             "name": "KENYA", 
             "printable_name": "Kenya", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 404, 
             "is_shipping_country": false
         }
@@ -1386,7 +1386,7 @@
             "iso_3166_1_a3": "KIR", 
             "name": "KIRIBATI", 
             "printable_name": "Kiribati", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 296, 
             "is_shipping_country": false
         }
@@ -1398,7 +1398,7 @@
             "iso_3166_1_a3": "PRK", 
             "name": "KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF", 
             "printable_name": "Democratic People's Republic of Korea", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 408, 
             "is_shipping_country": false
         }
@@ -1410,7 +1410,7 @@
             "iso_3166_1_a3": "KOR", 
             "name": "KOREA, REPUBLIC OF", 
             "printable_name": "Republic of Korea", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 410, 
             "is_shipping_country": false
         }
@@ -1422,7 +1422,7 @@
             "iso_3166_1_a3": "KWT", 
             "name": "KUWAIT", 
             "printable_name": "Kuwait", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 414, 
             "is_shipping_country": false
         }
@@ -1434,7 +1434,7 @@
             "iso_3166_1_a3": "KGZ", 
             "name": "KYRGYZSTAN", 
             "printable_name": "Kyrgyzstan", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 417, 
             "is_shipping_country": false
         }
@@ -1446,7 +1446,7 @@
             "iso_3166_1_a3": "LAO", 
             "name": "LAO PEOPLE'S DEMOCRATIC REPUBLIC", 
             "printable_name": "Lao People's Democratic Republic", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 418, 
             "is_shipping_country": false
         }
@@ -1458,7 +1458,7 @@
             "iso_3166_1_a3": "LVA", 
             "name": "LATVIA", 
             "printable_name": "Latvia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 428, 
             "is_shipping_country": false
         }
@@ -1470,7 +1470,7 @@
             "iso_3166_1_a3": "LBN", 
             "name": "LEBANON", 
             "printable_name": "Lebanon", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 422, 
             "is_shipping_country": false
         }
@@ -1482,7 +1482,7 @@
             "iso_3166_1_a3": "LSO", 
             "name": "LESOTHO", 
             "printable_name": "Lesotho", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 426, 
             "is_shipping_country": false
         }
@@ -1494,7 +1494,7 @@
             "iso_3166_1_a3": "LBR", 
             "name": "LIBERIA", 
             "printable_name": "Liberia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 430, 
             "is_shipping_country": false
         }
@@ -1506,7 +1506,7 @@
             "iso_3166_1_a3": "LBY", 
             "name": "LIBYAN ARAB JAMAHIRIYA", 
             "printable_name": "Libyan Arab Jamahiriya", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 434, 
             "is_shipping_country": false
         }
@@ -1518,7 +1518,7 @@
             "iso_3166_1_a3": "LIE", 
             "name": "LIECHTENSTEIN", 
             "printable_name": "Liechtenstein", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 438, 
             "is_shipping_country": false
         }
@@ -1530,7 +1530,7 @@
             "iso_3166_1_a3": "LTU", 
             "name": "LITHUANIA", 
             "printable_name": "Lithuania", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 440, 
             "is_shipping_country": false
         }
@@ -1542,7 +1542,7 @@
             "iso_3166_1_a3": "LUX", 
             "name": "LUXEMBOURG", 
             "printable_name": "Luxembourg", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 442, 
             "is_shipping_country": false
         }
@@ -1554,7 +1554,7 @@
             "iso_3166_1_a3": "MAC", 
             "name": "MACAO", 
             "printable_name": "Macao Special Administrative Region of China", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 446, 
             "is_shipping_country": false
         }
@@ -1566,7 +1566,7 @@
             "iso_3166_1_a3": "MKD", 
             "name": "MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF", 
             "printable_name": "The former Yugoslav Republic of Macedonia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 807, 
             "is_shipping_country": false
         }
@@ -1578,7 +1578,7 @@
             "iso_3166_1_a3": "MDG", 
             "name": "MADAGASCAR", 
             "printable_name": "Madagascar", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 450, 
             "is_shipping_country": false
         }
@@ -1590,7 +1590,7 @@
             "iso_3166_1_a3": "MWI", 
             "name": "MALAWI", 
             "printable_name": "Malawi", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 454, 
             "is_shipping_country": false
         }
@@ -1602,7 +1602,7 @@
             "iso_3166_1_a3": "MYS", 
             "name": "MALAYSIA", 
             "printable_name": "Malaysia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 458, 
             "is_shipping_country": false
         }
@@ -1614,7 +1614,7 @@
             "iso_3166_1_a3": "MDV", 
             "name": "MALDIVES", 
             "printable_name": "Maldives", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 462, 
             "is_shipping_country": false
         }
@@ -1626,7 +1626,7 @@
             "iso_3166_1_a3": "MLI", 
             "name": "MALI", 
             "printable_name": "Mali", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 466, 
             "is_shipping_country": false
         }
@@ -1638,7 +1638,7 @@
             "iso_3166_1_a3": "MLT", 
             "name": "MALTA", 
             "printable_name": "Malta", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 470, 
             "is_shipping_country": false
         }
@@ -1650,7 +1650,7 @@
             "iso_3166_1_a3": "MHL", 
             "name": "MARSHALL ISLANDS", 
             "printable_name": "Marshall Islands", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 584, 
             "is_shipping_country": false
         }
@@ -1662,7 +1662,7 @@
             "iso_3166_1_a3": "MTQ", 
             "name": "MARTINIQUE", 
             "printable_name": "Martinique", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 474, 
             "is_shipping_country": false
         }
@@ -1674,7 +1674,7 @@
             "iso_3166_1_a3": "MRT", 
             "name": "MAURITANIA", 
             "printable_name": "Mauritania", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 478, 
             "is_shipping_country": false
         }
@@ -1686,7 +1686,7 @@
             "iso_3166_1_a3": "MUS", 
             "name": "MAURITIUS", 
             "printable_name": "Mauritius", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 480, 
             "is_shipping_country": false
         }
@@ -1698,7 +1698,7 @@
             "iso_3166_1_a3": "MYT", 
             "name": "MAYOTTE", 
             "printable_name": "Mayotte", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 175, 
             "is_shipping_country": false
         }
@@ -1710,7 +1710,7 @@
             "iso_3166_1_a3": "MEX", 
             "name": "MEXICO", 
             "printable_name": "Mexico", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 484, 
             "is_shipping_country": false
         }
@@ -1722,7 +1722,7 @@
             "iso_3166_1_a3": "FSM", 
             "name": "MICRONESIA, FEDERATED STATES OF", 
             "printable_name": "Micronesia, Federated States of", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 583, 
             "is_shipping_country": false
         }
@@ -1734,7 +1734,7 @@
             "iso_3166_1_a3": "MDA", 
             "name": "MOLDOVA, REPUBLIC OF", 
             "printable_name": "Republic of Moldova", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 498, 
             "is_shipping_country": false
         }
@@ -1746,7 +1746,7 @@
             "iso_3166_1_a3": "MCO", 
             "name": "MONACO", 
             "printable_name": "Monaco", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 492, 
             "is_shipping_country": false
         }
@@ -1758,7 +1758,7 @@
             "iso_3166_1_a3": "MNG", 
             "name": "MONGOLIA", 
             "printable_name": "Mongolia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 496, 
             "is_shipping_country": false
         }
@@ -1770,7 +1770,7 @@
             "iso_3166_1_a3": "MNE", 
             "name": "MONTENEGRO", 
             "printable_name": "Montenegro", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 499, 
             "is_shipping_country": false
         }
@@ -1782,7 +1782,7 @@
             "iso_3166_1_a3": "MSR", 
             "name": "MONTSERRAT", 
             "printable_name": "Montserrat", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 500, 
             "is_shipping_country": false
         }
@@ -1794,7 +1794,7 @@
             "iso_3166_1_a3": "MAR", 
             "name": "MOROCCO", 
             "printable_name": "Morocco", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 504, 
             "is_shipping_country": false
         }
@@ -1806,7 +1806,7 @@
             "iso_3166_1_a3": "MOZ", 
             "name": "MOZAMBIQUE", 
             "printable_name": "Mozambique", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 508, 
             "is_shipping_country": false
         }
@@ -1818,7 +1818,7 @@
             "iso_3166_1_a3": "MMR", 
             "name": "MYANMAR", 
             "printable_name": "Myanmar", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 104, 
             "is_shipping_country": false
         }
@@ -1830,7 +1830,7 @@
             "iso_3166_1_a3": "NAM", 
             "name": "NAMIBIA", 
             "printable_name": "Namibia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 516, 
             "is_shipping_country": false
         }
@@ -1842,7 +1842,7 @@
             "iso_3166_1_a3": "NRU", 
             "name": "NAURU", 
             "printable_name": "Nauru", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 520, 
             "is_shipping_country": false
         }
@@ -1854,7 +1854,7 @@
             "iso_3166_1_a3": "NPL", 
             "name": "NEPAL", 
             "printable_name": "Nepal", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 524, 
             "is_shipping_country": false
         }
@@ -1866,7 +1866,7 @@
             "iso_3166_1_a3": "NLD", 
             "name": "NETHERLANDS", 
             "printable_name": "Netherlands", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 528, 
             "is_shipping_country": false
         }
@@ -1878,7 +1878,7 @@
             "iso_3166_1_a3": "ANT", 
             "name": "NETHERLANDS ANTILLES", 
             "printable_name": "Netherlands Antilles", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 530, 
             "is_shipping_country": false
         }
@@ -1890,7 +1890,7 @@
             "iso_3166_1_a3": "NCL", 
             "name": "NEW CALEDONIA", 
             "printable_name": "New Caledonia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 540, 
             "is_shipping_country": false
         }
@@ -1902,7 +1902,7 @@
             "iso_3166_1_a3": "NZL", 
             "name": "NEW ZEALAND", 
             "printable_name": "New Zealand", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 554, 
             "is_shipping_country": false
         }
@@ -1914,7 +1914,7 @@
             "iso_3166_1_a3": "NIC", 
             "name": "NICARAGUA", 
             "printable_name": "Nicaragua", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 558, 
             "is_shipping_country": false
         }
@@ -1926,7 +1926,7 @@
             "iso_3166_1_a3": "NER", 
             "name": "NIGER", 
             "printable_name": "Niger", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 562, 
             "is_shipping_country": false
         }
@@ -1938,7 +1938,7 @@
             "iso_3166_1_a3": "NGA", 
             "name": "NIGERIA", 
             "printable_name": "Nigeria", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 566, 
             "is_shipping_country": false
         }
@@ -1950,7 +1950,7 @@
             "iso_3166_1_a3": "NIU", 
             "name": "NIUE", 
             "printable_name": "Niue", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 570, 
             "is_shipping_country": false
         }
@@ -1962,7 +1962,7 @@
             "iso_3166_1_a3": "NFK", 
             "name": "NORFOLK ISLAND", 
             "printable_name": "Norfolk Island", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 574, 
             "is_shipping_country": false
         }
@@ -1974,7 +1974,7 @@
             "iso_3166_1_a3": "MNP", 
             "name": "NORTHERN MARIANA ISLANDS", 
             "printable_name": "Northern Mariana Islands", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 580, 
             "is_shipping_country": false
         }
@@ -1986,7 +1986,7 @@
             "iso_3166_1_a3": "NOR", 
             "name": "NORWAY", 
             "printable_name": "Norway", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 578, 
             "is_shipping_country": false
         }
@@ -1998,7 +1998,7 @@
             "iso_3166_1_a3": "OMN", 
             "name": "OMAN", 
             "printable_name": "Oman", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 512, 
             "is_shipping_country": false
         }
@@ -2010,7 +2010,7 @@
             "iso_3166_1_a3": "PAK", 
             "name": "PAKISTAN", 
             "printable_name": "Pakistan", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 586, 
             "is_shipping_country": false
         }
@@ -2022,7 +2022,7 @@
             "iso_3166_1_a3": "PLW", 
             "name": "PALAU", 
             "printable_name": "Palau", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 585, 
             "is_shipping_country": false
         }
@@ -2034,7 +2034,7 @@
             "iso_3166_1_a3": "PSE", 
             "name": "PALESTINIAN TERRITORY, OCCUPIED", 
             "printable_name": "Occupied Palestinian Territory", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 275, 
             "is_shipping_country": false
         }
@@ -2046,7 +2046,7 @@
             "iso_3166_1_a3": "PAN", 
             "name": "PANAMA", 
             "printable_name": "Panama", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 591, 
             "is_shipping_country": false
         }
@@ -2058,7 +2058,7 @@
             "iso_3166_1_a3": "PNG", 
             "name": "PAPUA NEW GUINEA", 
             "printable_name": "Papua New Guinea", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 598, 
             "is_shipping_country": false
         }
@@ -2070,7 +2070,7 @@
             "iso_3166_1_a3": "PRY", 
             "name": "PARAGUAY", 
             "printable_name": "Paraguay", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 600, 
             "is_shipping_country": false
         }
@@ -2082,7 +2082,7 @@
             "iso_3166_1_a3": "PER", 
             "name": "PERU", 
             "printable_name": "Peru", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 604, 
             "is_shipping_country": false
         }
@@ -2094,7 +2094,7 @@
             "iso_3166_1_a3": "PHL", 
             "name": "PHILIPPINES", 
             "printable_name": "Philippines", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 608, 
             "is_shipping_country": false
         }
@@ -2106,7 +2106,7 @@
             "iso_3166_1_a3": "PCN", 
             "name": "PITCAIRN", 
             "printable_name": "Pitcairn", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 612, 
             "is_shipping_country": false
         }
@@ -2118,7 +2118,7 @@
             "iso_3166_1_a3": "POL", 
             "name": "POLAND", 
             "printable_name": "Poland", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 616, 
             "is_shipping_country": false
         }
@@ -2130,7 +2130,7 @@
             "iso_3166_1_a3": "PRT", 
             "name": "PORTUGAL", 
             "printable_name": "Portugal", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 620, 
             "is_shipping_country": false
         }
@@ -2142,7 +2142,7 @@
             "iso_3166_1_a3": "PRI", 
             "name": "PUERTO RICO", 
             "printable_name": "Puerto Rico", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 630, 
             "is_shipping_country": false
         }
@@ -2154,7 +2154,7 @@
             "iso_3166_1_a3": "QAT", 
             "name": "QATAR", 
             "printable_name": "Qatar", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 634, 
             "is_shipping_country": false
         }
@@ -2166,7 +2166,7 @@
             "iso_3166_1_a3": "REU", 
             "name": "REUNION", 
             "printable_name": "R\u00e9union", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 638, 
             "is_shipping_country": false
         }
@@ -2178,7 +2178,7 @@
             "iso_3166_1_a3": "ROU", 
             "name": "ROMANIA", 
             "printable_name": "Romania", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 642, 
             "is_shipping_country": false
         }
@@ -2190,7 +2190,7 @@
             "iso_3166_1_a3": "RUS", 
             "name": "RUSSIAN FEDERATION", 
             "printable_name": "Russian Federation", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 643, 
             "is_shipping_country": false
         }
@@ -2202,7 +2202,7 @@
             "iso_3166_1_a3": "RWA", 
             "name": "RWANDA", 
             "printable_name": "Rwanda", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 646, 
             "is_shipping_country": false
         }
@@ -2214,7 +2214,7 @@
             "iso_3166_1_a3": "SHN", 
             "name": "SAINT HELENA", 
             "printable_name": "Saint Helena", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 654, 
             "is_shipping_country": false
         }
@@ -2226,7 +2226,7 @@
             "iso_3166_1_a3": "KNA", 
             "name": "SAINT KITTS AND NEVIS", 
             "printable_name": "Saint Kitts and Nevis", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 659, 
             "is_shipping_country": false
         }
@@ -2238,7 +2238,7 @@
             "iso_3166_1_a3": "LCA", 
             "name": "SAINT LUCIA", 
             "printable_name": "Saint Lucia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 662, 
             "is_shipping_country": false
         }
@@ -2250,7 +2250,7 @@
             "iso_3166_1_a3": "SPM", 
             "name": "SAINT PIERRE AND MIQUELON", 
             "printable_name": "Saint Pierre and Miquelon", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 666, 
             "is_shipping_country": false
         }
@@ -2262,7 +2262,7 @@
             "iso_3166_1_a3": "VCT", 
             "name": "SAINT VINCENT AND THE GRENADINES", 
             "printable_name": "Saint Vincent and the Grenadines", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 670, 
             "is_shipping_country": false
         }
@@ -2274,7 +2274,7 @@
             "iso_3166_1_a3": "WSM", 
             "name": "SAMOA", 
             "printable_name": "Samoa", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 882, 
             "is_shipping_country": false
         }
@@ -2286,7 +2286,7 @@
             "iso_3166_1_a3": "SMR", 
             "name": "SAN MARINO", 
             "printable_name": "San Marino", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 674, 
             "is_shipping_country": false
         }
@@ -2298,7 +2298,7 @@
             "iso_3166_1_a3": "STP", 
             "name": "SAO TOME AND PRINCIPE", 
             "printable_name": "Sao Tome and Principe", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 678, 
             "is_shipping_country": false
         }
@@ -2310,7 +2310,7 @@
             "iso_3166_1_a3": "SAU", 
             "name": "SAUDI ARABIA", 
             "printable_name": "Saudi Arabia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 682, 
             "is_shipping_country": false
         }
@@ -2322,7 +2322,7 @@
             "iso_3166_1_a3": "SEN", 
             "name": "SENEGAL", 
             "printable_name": "Senegal", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 686, 
             "is_shipping_country": false
         }
@@ -2334,7 +2334,7 @@
             "iso_3166_1_a3": "SRB", 
             "name": "SERBIA", 
             "printable_name": "Serbia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 688, 
             "is_shipping_country": false
         }
@@ -2346,7 +2346,7 @@
             "iso_3166_1_a3": "SYC", 
             "name": "SEYCHELLES", 
             "printable_name": "Seychelles", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 690, 
             "is_shipping_country": false
         }
@@ -2358,7 +2358,7 @@
             "iso_3166_1_a3": "SLE", 
             "name": "SIERRA LEONE", 
             "printable_name": "Sierra Leone", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 694, 
             "is_shipping_country": false
         }
@@ -2370,7 +2370,7 @@
             "iso_3166_1_a3": "SGP", 
             "name": "SINGAPORE", 
             "printable_name": "Singapore", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 702, 
             "is_shipping_country": false
         }
@@ -2382,7 +2382,7 @@
             "iso_3166_1_a3": "SVK", 
             "name": "SLOVAKIA", 
             "printable_name": "Slovakia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 703, 
             "is_shipping_country": false
         }
@@ -2394,7 +2394,7 @@
             "iso_3166_1_a3": "SVN", 
             "name": "SLOVENIA", 
             "printable_name": "Slovenia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 705, 
             "is_shipping_country": false
         }
@@ -2406,7 +2406,7 @@
             "iso_3166_1_a3": "SLB", 
             "name": "SOLOMON ISLANDS", 
             "printable_name": "Solomon Islands", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 90, 
             "is_shipping_country": false
         }
@@ -2418,7 +2418,7 @@
             "iso_3166_1_a3": "SOM", 
             "name": "SOMALIA", 
             "printable_name": "Somalia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 706, 
             "is_shipping_country": false
         }
@@ -2430,7 +2430,7 @@
             "iso_3166_1_a3": "ZAF", 
             "name": "SOUTH AFRICA", 
             "printable_name": "South Africa", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 710, 
             "is_shipping_country": false
         }
@@ -2442,7 +2442,7 @@
             "iso_3166_1_a3": "SGS", 
             "name": "SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS", 
             "printable_name": "South Georgia and the South Sandwich Islands", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 239, 
             "is_shipping_country": false
         }
@@ -2454,7 +2454,7 @@
             "iso_3166_1_a3": "ESP", 
             "name": "SPAIN", 
             "printable_name": "Spain", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 724, 
             "is_shipping_country": false
         }
@@ -2466,7 +2466,7 @@
             "iso_3166_1_a3": "LKA", 
             "name": "SRI LANKA", 
             "printable_name": "Sri Lanka", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 144, 
             "is_shipping_country": false
         }
@@ -2478,7 +2478,7 @@
             "iso_3166_1_a3": "SDN", 
             "name": "SUDAN", 
             "printable_name": "Sudan", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 736, 
             "is_shipping_country": false
         }
@@ -2490,7 +2490,7 @@
             "iso_3166_1_a3": "SUR", 
             "name": "SURINAME", 
             "printable_name": "Suriname", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 740, 
             "is_shipping_country": false
         }
@@ -2502,7 +2502,7 @@
             "iso_3166_1_a3": "SJM", 
             "name": "SVALBARD AND JAN MAYEN", 
             "printable_name": "Svalbard and Jan Mayen Islands", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 744, 
             "is_shipping_country": false
         }
@@ -2514,7 +2514,7 @@
             "iso_3166_1_a3": "SWZ", 
             "name": "SWAZILAND", 
             "printable_name": "Swaziland", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 748, 
             "is_shipping_country": false
         }
@@ -2526,7 +2526,7 @@
             "iso_3166_1_a3": "SWE", 
             "name": "SWEDEN", 
             "printable_name": "Sweden", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 752, 
             "is_shipping_country": false
         }
@@ -2538,7 +2538,7 @@
             "iso_3166_1_a3": "CHE", 
             "name": "SWITZERLAND", 
             "printable_name": "Switzerland", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 756, 
             "is_shipping_country": false
         }
@@ -2550,7 +2550,7 @@
             "iso_3166_1_a3": "SYR", 
             "name": "SYRIAN ARAB REPUBLIC", 
             "printable_name": "Syrian Arab Republic", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 760, 
             "is_shipping_country": false
         }
@@ -2562,7 +2562,7 @@
             "iso_3166_1_a3": "TWN", 
             "name": "TAIWAN, PROVINCE OF CHINA", 
             "printable_name": "Taiwan, Province of China", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 158, 
             "is_shipping_country": false
         }
@@ -2574,7 +2574,7 @@
             "iso_3166_1_a3": "TJK", 
             "name": "TAJIKISTAN", 
             "printable_name": "Tajikistan", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 762, 
             "is_shipping_country": false
         }
@@ -2586,7 +2586,7 @@
             "iso_3166_1_a3": "TZA", 
             "name": "TANZANIA, UNITED REPUBLIC OF", 
             "printable_name": "United Republic of Tanzania", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 834, 
             "is_shipping_country": false
         }
@@ -2598,7 +2598,7 @@
             "iso_3166_1_a3": "THA", 
             "name": "THAILAND", 
             "printable_name": "Thailand", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 764, 
             "is_shipping_country": false
         }
@@ -2610,7 +2610,7 @@
             "iso_3166_1_a3": "TLS", 
             "name": "TIMOR-LESTE", 
             "printable_name": "Timor-Leste", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 626, 
             "is_shipping_country": false
         }
@@ -2622,7 +2622,7 @@
             "iso_3166_1_a3": "TGO", 
             "name": "TOGO", 
             "printable_name": "Togo", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 768, 
             "is_shipping_country": false
         }
@@ -2634,7 +2634,7 @@
             "iso_3166_1_a3": "TKL", 
             "name": "TOKELAU", 
             "printable_name": "Tokelau", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 772, 
             "is_shipping_country": false
         }
@@ -2646,7 +2646,7 @@
             "iso_3166_1_a3": "TON", 
             "name": "TONGA", 
             "printable_name": "Tonga", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 776, 
             "is_shipping_country": false
         }
@@ -2658,7 +2658,7 @@
             "iso_3166_1_a3": "TTO", 
             "name": "TRINIDAD AND TOBAGO", 
             "printable_name": "Trinidad and Tobago", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 780, 
             "is_shipping_country": false
         }
@@ -2670,7 +2670,7 @@
             "iso_3166_1_a3": "TUN", 
             "name": "TUNISIA", 
             "printable_name": "Tunisia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 788, 
             "is_shipping_country": false
         }
@@ -2682,7 +2682,7 @@
             "iso_3166_1_a3": "TUR", 
             "name": "TURKEY", 
             "printable_name": "Turkey", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 792, 
             "is_shipping_country": false
         }
@@ -2694,7 +2694,7 @@
             "iso_3166_1_a3": "TKM", 
             "name": "TURKMENISTAN", 
             "printable_name": "Turkmenistan", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 795, 
             "is_shipping_country": false
         }
@@ -2706,7 +2706,7 @@
             "iso_3166_1_a3": "TCA", 
             "name": "TURKS AND CAICOS ISLANDS", 
             "printable_name": "Turks and Caicos Islands", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 796, 
             "is_shipping_country": false
         }
@@ -2718,7 +2718,7 @@
             "iso_3166_1_a3": "TUV", 
             "name": "TUVALU", 
             "printable_name": "Tuvalu", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 798, 
             "is_shipping_country": false
         }
@@ -2730,7 +2730,7 @@
             "iso_3166_1_a3": "UGA", 
             "name": "UGANDA", 
             "printable_name": "Uganda", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 800, 
             "is_shipping_country": false
         }
@@ -2742,7 +2742,7 @@
             "iso_3166_1_a3": "UKR", 
             "name": "UKRAINE", 
             "printable_name": "Ukraine", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 804, 
             "is_shipping_country": false
         }
@@ -2754,7 +2754,7 @@
             "iso_3166_1_a3": "ARE", 
             "name": "UNITED ARAB EMIRATES", 
             "printable_name": "United Arab Emirates", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 784, 
             "is_shipping_country": false
         }
@@ -2766,7 +2766,7 @@
             "iso_3166_1_a3": "USA", 
             "name": "UNITED STATES", 
             "printable_name": "United States of America", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 840, 
             "is_shipping_country": false
         }
@@ -2778,7 +2778,7 @@
             "iso_3166_1_a3": "UMI", 
             "name": "UNITED STATES MINOR OUTLYING ISLANDS", 
             "printable_name": "United States Minor Outlying Islands", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 581, 
             "is_shipping_country": false
         }
@@ -2790,7 +2790,7 @@
             "iso_3166_1_a3": "URY", 
             "name": "URUGUAY", 
             "printable_name": "Uruguay", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 858, 
             "is_shipping_country": false
         }
@@ -2802,7 +2802,7 @@
             "iso_3166_1_a3": "UZB", 
             "name": "UZBEKISTAN", 
             "printable_name": "Uzbekistan", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 860, 
             "is_shipping_country": false
         }
@@ -2814,7 +2814,7 @@
             "iso_3166_1_a3": "VUT", 
             "name": "VANUATU", 
             "printable_name": "Vanuatu", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 548, 
             "is_shipping_country": false
         }
@@ -2826,7 +2826,7 @@
             "iso_3166_1_a3": "VEN", 
             "name": "VENEZUELA", 
             "printable_name": "Venezuela (Bolivarian Republic of)", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 862, 
             "is_shipping_country": false
         }
@@ -2838,7 +2838,7 @@
             "iso_3166_1_a3": "VNM", 
             "name": "VIET NAM", 
             "printable_name": "Viet Nam", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 704, 
             "is_shipping_country": false
         }
@@ -2850,7 +2850,7 @@
             "iso_3166_1_a3": "VGB", 
             "name": "VIRGIN ISLANDS, BRITISH", 
             "printable_name": "British Virgin Islands", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 92, 
             "is_shipping_country": false
         }
@@ -2862,7 +2862,7 @@
             "iso_3166_1_a3": "VIR", 
             "name": "VIRGIN ISLANDS, U.S.", 
             "printable_name": "United States Virgin Islands", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 850, 
             "is_shipping_country": false
         }
@@ -2874,7 +2874,7 @@
             "iso_3166_1_a3": "WLF", 
             "name": "WALLIS AND FUTUNA", 
             "printable_name": "Wallis and Futuna Islands", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 876, 
             "is_shipping_country": false
         }
@@ -2886,7 +2886,7 @@
             "iso_3166_1_a3": "ESH", 
             "name": "WESTERN SAHARA", 
             "printable_name": "Western Sahara", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 732, 
             "is_shipping_country": false
         }
@@ -2898,7 +2898,7 @@
             "iso_3166_1_a3": "YEM", 
             "name": "YEMEN", 
             "printable_name": "Yemen", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 887, 
             "is_shipping_country": false
         }
@@ -2910,7 +2910,7 @@
             "iso_3166_1_a3": "ZMB", 
             "name": "ZAMBIA", 
             "printable_name": "Zambia", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 894, 
             "is_shipping_country": false
         }
@@ -2922,7 +2922,7 @@
             "iso_3166_1_a3": "ZWE", 
             "name": "ZIMBABWE", 
             "printable_name": "Zimbabwe", 
-            "is_highlighted": false, 
+            "display_order": 0, 
             "iso_3166_1_numeric": 716, 
             "is_shipping_country": false
         }

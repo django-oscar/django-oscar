@@ -26,7 +26,7 @@
 
 {% block promotion_form %}
 <div class="table-header">
-    <h2>Content block</h2>
+    <h2>{% trans "Content block" %}</h2>
 </div>
 
 <form action="." method="post" enctype="multipart/form-data" class="well form-stacked wysiwyg">
@@ -64,7 +64,7 @@
 					{% csrf_token %}
 					<input type="hidden" name="action" value="remove_from_page" />
 					<input type="hidden" name="pagepromotion_id" value="{{ link.id }}" />
-						<a href="{% url 'dashboard:promotion-list-by-url' link.page_url|urlencode:"" %}" class="btn btn-info">{% trans "View all blocks on this page" %}</a>
+						<a href="{% url 'dashboard:promotion-list-by-url' link.page_url %}" class="btn btn-info">{% trans "View all blocks on this page" %}</a>
 						<button class="btn" type="submit">{% trans "Remove from page" %}</button>
 				</form>
 			</td>

@@ -35,7 +35,7 @@
         {% include "partials/form_fields.html" with form=form %}
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">{% trans "Update address" %}</button>
-            or <a href="{% url 'dashboard:order-detail' order.number %}">{% trans "cancel" %}</a>
+            {% trans "or" %} <a href="{% url 'dashboard:order-detail' order.number %}">{% trans "cancel" %}</a>
         </div>
     </form>
 

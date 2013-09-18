@@ -23,6 +23,12 @@ project:
     $ pip install django-oscar
     $ django-admin.py startproject frobshop
 
+If you do not have mkvirtualenv, then replace that line with::
+
+    $ virtualenv oscar
+    $ . ./oscar/bin/activate
+    (oscar) $
+
 This will create a folder ``frobshop`` for your project. It is highly
 recommended to install Oscar in a virtualenv.
 
@@ -72,6 +78,7 @@ Now set ``TEMPLATE_CONTEXT_PROCESSORS`` to:
         "django.core.context_processors.i18n",
         "django.core.context_processors.media",
         "django.core.context_processors.static",
+        "django.core.context_processors.tz",
         "django.contrib.messages.context_processors.messages",
         'oscar.apps.search.context_processors.search_form',
         'oscar.apps.promotions.context_processors.promotions',
@@ -93,14 +100,15 @@ and append Oscar's core apps:
         'django.contrib.sessions',
         'django.contrib.sites',
         'django.contrib.messages',
+        'django.contrib.staticfiles',
         'django.contrib.flatpages',
         ...
         'south',
         'compressor',
     ] + get_core_apps()
 
-Note that Oscar requires ``django.contrib.messages`` and
-``django.contrib.flatpages`` which aren't included by default.
+Note that Oscar requires ``django.contrib.flatpages`` which isn't
+included by default.
 
 Next, add ``django.contrib.flatpages.middleware.FlatpageFallbackMiddleware`` to
 your ``MIDDLEWARE_CLASSES`` setting:
@@ -158,7 +166,10 @@ Modify your ``TEMPLATE_DIRS`` to include the main Oscar template directory:
 .. code-block:: django
 
     from oscar import OSCAR_MAIN_TEMPLATE_DIR
-    TEMPLATE_DIRS = TEMPLATE_DIRS + (OSCAR_MAIN_TEMPLATE_DIR,)
+    TEMPLATE_DIRS = (
+        location('templates'),
+        OSCAR_MAIN_TEMPLATE_DIR,
+    )
 
 Oscar currently uses Haystack for search so you need to specify:
 

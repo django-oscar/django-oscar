@@ -4,6 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView
+from oscar.apps.customer.utils import normalise_email
 
 from oscar.views.generic import BulkEditMixin
 from oscar.core.compat import get_user_model
@@ -16,7 +17,7 @@ ProductAlert = get_model('customer', 'ProductAlert')
 User = get_user_model()
 
 
-class IndexView(ListView, BulkEditMixin):
+class IndexView(BulkEditMixin, ListView):
     template_name = 'dashboard/users/index.html'
     paginate_by = 25
     model = User
@@ -46,8 +47,9 @@ class IndexView(ListView, BulkEditMixin):
         data = self.form.cleaned_data
 
         if data['email']:
-            queryset = queryset.filter(email__startswith=data['email'])
-            self.desc_ctx['email_filter'] = _(" with email matching '%s'") % data['email']
+            email = normalise_email(data['email'])
+            queryset = queryset.filter(email__startswith=email)
+            self.desc_ctx['email_filter'] = _(" with email matching '%s'") % email
         if data['name']:
             # If the value is two words, then assume they are first name and last name
             parts = data['name'].split()
@@ -86,10 +88,6 @@ class UserDetailView(DetailView):
     template_name = 'dashboard/users/detail.html'
     model = User
     context_object_name = 'customer'
-
-    def get_context_data(self, **kwargs):
-        context = super(UserDetailView, self).get_context_data(**kwargs)
-        return context
 
 
 class ProductAlertListView(ListView):

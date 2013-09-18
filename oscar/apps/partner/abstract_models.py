@@ -73,6 +73,36 @@ class AbstractPartner(models.Model):
             self.code = slugify(self.name)
         super(AbstractPartner, self).save(*args, **kwargs)
 
+    @property
+    def primary_address(self):
+        """
+        Returns a partners primary address. Usually that will be the
+        headquarters or similar.
+
+        This is a rudimentary implementation that raises an error if there's
+        more than one address. If you actually want to support multiple
+        addresses, you will likely need to extend PartnerAddress to have some
+        field or flag to base your decision on.
+        """
+        addresses = self.addresses.all()
+        if len(addresses) == 0:  # intentionally using len() to save queries
+            return None
+        elif len(addresses) == 1:
+            return addresses[0]
+        else:
+            raise NotImplementedError(
+                "Oscar's default implementation of primary_address only "
+                "supports one PartnerAddress.  You need to override the "
+                "primary_address to look up the right address")
+
+    def get_address_for_stockrecord(self, stockrecord):
+        """
+        Stock might be coming from different warehouses. Overriding this
+        function allows selecting the correct PartnerAddress for the record.
+        That can be useful when determining tax.
+        """
+        return self.primary_address
+
     class Meta:
         permissions = (('dashboard_access', _('Can access dashboard')), )
         verbose_name = _('Fulfillment partner')

@@ -192,7 +192,7 @@ class AbstractCommunicationEventType(models.Model):
             messages[name] = template.render(Context(ctx)) if template else ''
 
         # Ensure the email subject doesn't contain any newlines
-        messages['subject'] = messages['subject'].replace("\n", "")
+        messages['subject'] = messages['subject'].replace("\n", "").replace("\r", "")
 
         return messages
 
@@ -229,7 +229,7 @@ class AbstractNotification(models.Model):
                                 default=INBOX)
 
     date_sent = models.DateTimeField(auto_now_add=True)
-    date_read = models.DateTimeField(null=True)
+    date_read = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         ordering = ('-date_sent',)

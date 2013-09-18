@@ -4,7 +4,7 @@
 {% load i18n %}
 
 {% block title %}
-    {% blocktrans with name=voucher.name %}Voucher '{{ name }}'{% endblocktrans %} | Vouchers | {{ block.super }}
+    {% blocktrans with name=voucher.name %}Voucher '{{ name }}'{% endblocktrans %} | {% trans "Vouchers" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}

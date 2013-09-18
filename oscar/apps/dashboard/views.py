@@ -18,7 +18,12 @@ Order = get_model('order', 'Order')
 Line = get_model('order', 'Line')
 User = get_user_model()
 
+
 class IndexView(TemplateView):
+    """
+    An overview view which displays several reports about the shop.
+    """
+
     template_name = 'dashboard/index.html'
 
     def get_context_data(self, **kwargs):

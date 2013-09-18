@@ -1,9 +1,12 @@
 {% load i18n %}
 <footer class="footer container-fluid">
     {% block footer %}
-        <ul class="footer_links">   
-            <li><a href="/about/">{% trans "About" %}</a></li>
-            <li class="top_page"><a href="#top_page"><i class="icon-sort-up hidden-phone"></i> {% trans "Top of the page" %}</a></li>
-        </ul>
+        {% comment %}
+            Could be used for displaying links to privacy policy, terms of service, etc.
+            We have a CSS class defined:
+                <ul class="footer_links">
+                    ...
+                </ul>
+         {% endcomment %}
     {% endblock %}
 </footer>

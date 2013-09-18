@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.db.models import get_model
 from django.http import HttpResponseRedirect
@@ -8,12 +7,16 @@ from django.utils.translation import ugettext_lazy as _
 from django.template.loader import render_to_string
 from django.views import generic
 
+from oscar.apps.customer.utils import normalise_email
 from oscar.apps.dashboard.partners.forms import UserEmailForm, ExistingUserForm, NewUserForm
 from oscar.core.loading import get_classes
+from oscar.core.compat import get_user_model
 
+User = get_user_model()
 Partner = get_model('partner', 'Partner')
-PartnerSearchForm, PartnerCreateForm = get_classes(
-    'dashboard.partners.forms', ['PartnerSearchForm', 'PartnerCreateForm'])
+PartnerSearchForm, PartnerCreateForm, PartnerAddressForm = get_classes(
+    'dashboard.partners.forms',
+    ['PartnerSearchForm', 'PartnerCreateForm', 'PartnerAddressForm'])
 
 
 class PartnerListView(generic.ListView):
@@ -79,27 +82,61 @@ class PartnerCreateView(generic.CreateView):
         return reverse_lazy('dashboard:partner-list')
 
 
-class PartnerManageView(generic.UpdateView):
+class PartnerManageView(generic.TemplateView):
     """
-    Is a merge of an UpdateView to update the name of the partner,
-    and a ListView to list associated users.
+    This multi-purpose view renders out a form to edit the partner's details,
+    the associated address and a list of all associated users.
     """
-    model = Partner
     template_name = 'dashboard/partners/partner_manage.html'
-    form_class = PartnerCreateForm
-    context_object_name = 'partner'
+    partner_form_class = PartnerCreateForm
+    address_form_class = PartnerAddressForm
 
-    def get_context_data(self, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
+        self.partner = self.object = get_object_or_404(
+            Partner, pk=kwargs['pk'])
+        self.address = self.partner.primary_address
+        if self.address is None:
+            self.address = self.partner.addresses.model(partner=self.partner)
+        return super(PartnerManageView, self).dispatch(
+            request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        partner_form = self.partner_form_class(instance=self.partner)
+        address_form = self.address_form_class(instance=self.address)
+        context = self.get_context_data(partner_form, address_form)
+        return self.render_to_response(context)
+
+    def get_context_data(self, partner_form, address_form, **kwargs):
         ctx = super(PartnerManageView, self).get_context_data(**kwargs)
+        ctx['partner'] = self.object
         ctx['title'] = self.object.name
         ctx['users'] = self.object.users.all()
+        ctx['partner_form'] = partner_form
+        ctx['address_form'] = address_form
         return ctx
 
-    def get_success_url(self):
-        messages.success(self.request,
-                         _("Partner '%s' was updated successfully.") %
-                         self.object.name)
-        return reverse_lazy('dashboard:partner-list')
+    def post(self, request, *args, **kwargs):
+        if request.POST['submit'] == 'partner_form':
+            partner_form = self.partner_form_class(
+                request.POST, instance=self.partner)
+            if partner_form.is_valid():
+                self.partner = self.object = partner_form.save()
+                messages.success(
+                    self.request, _("Partner '%s' was updated successfully.") %
+                    self.object.name)
+            address_form = self.address_form_class(instance=self.address)
+        else:
+            address_form = self.address_form_class(
+                request.POST, instance=self.address)
+            if address_form.is_valid():
+                address_form.save()
+                messages.success(
+                    self.request, _("Address was updated successfully."))
+            partner_form = self.partner_form_class(instance=self.partner)
+
+        context = self.get_context_data(partner_form, address_form)
+
+        return self.render_to_response(context)
 
 
 class PartnerDeleteView(generic.DeleteView):
@@ -173,7 +210,7 @@ class PartnerUserSelectView(generic.ListView):
 
     def get_queryset(self):
         if self.form.is_valid():
-            email = self.form.cleaned_data['email']
+            email = normalise_email(self.form.cleaned_data['email'])
             return User.objects.filter(is_staff=True, email__icontains=email)
         else:
             return User.objects.none()

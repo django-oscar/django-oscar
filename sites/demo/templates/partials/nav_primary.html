@@ -32,7 +32,7 @@
                                     <li><a tabindex="-1" href="{{ subcategory.0.get_absolute_url }}"> {{ subcategory.0.name }} <i class="icon-arrow-right"></i></a></li>
                                 {% endfor %}
                                 <li class="divider"></li>
-                                <li><a tabindex="-1" href="{{ category.0.get_absolute_url }}">All {{ category.0.name }} <i class="icon-arrow-right"></i></a></li>
+                                <li><a tabindex="-1" href="{{ category.0.get_absolute_url }}">{% blocktrans %}All {{ category.0.name }}{% endblocktrans %} <i class="icon-arrow-right"></i></a></li>
                             </ul>
                         {% else %}
                             <a tabindex="-1" href="{{ category.0.get_absolute_url }}">{{ category.0.name }}</a>

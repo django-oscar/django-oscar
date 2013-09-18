@@ -1,12 +1,14 @@
 {% load i18n %}
+{% load staticfiles %}
+
 <div id="{{ image_id }}" class="image-input">
     {% if image_url %}
-    <img src="{{ image_url }}" alt="thumbnail" />
+        <img src="{% static image_url %}" alt="{% trans "thumbnail" %}" />
     {% else %}
-    <img alt="thumbnail"
-        onload="jQuery(this).next().hide()"
-        onerror="jQuery(this).next().show(); alert('{% trans 'Unrecognized image type!' %}')" />
-    <button class="btn btn-primary">{% trans "Upload Image" %}</button>
+        <img alt="{% trans "thumbnail" %}"
+            onload="jQuery(this).next().hide()"
+            onerror="jQuery(this).next().show(); alert('{% trans 'Unrecognized image type!' %}')" />
+        <button class="btn btn-primary">{% trans "Upload Image" %}</button>
     {% endif %}
     <div class="input-field">
         <input {{ input_attrs|safe }} accept="image/*" />

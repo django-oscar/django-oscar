@@ -19,13 +19,16 @@ location = lambda x: os.path.join(
 DEBUG = True
 TEMPLATE_DEBUG = True
 SQL_DEBUG = True
-SEND_BROKEN_LINK_EMAILS = True
+SEND_BROKEN_LINK_EMAILS = False
 
 ADMINS = (
     ('David', 'david.winterbottom@tangentlabs.co.uk'),
 )
 EMAIL_SUBJECT_PREFIX = '[Oscar demo] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+ALLOWED_HOSTS = ['demo.oscarcommerce.com',
+                 'demo.oscar.tangentlabs.co.uk']
 
 MANAGERS = ADMINS
 
@@ -104,7 +107,8 @@ SECRET_KEY = '$)a7n&o80u!6y5t-+jrd3)3!%vh&shg$wqpjpxc!ar&p#!)n1a'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    # needed by django-treebeard for admin (and potentially other libs)
+    'django.template.loaders.eggs.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -204,6 +208,11 @@ LOGGING = {
             'propagate': True,
             'level': 'INFO',
         },
+        'datacash': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level': 'INFO',
+        },
         'django.db.backends': {
             'handlers': ['null'],
             'propagate': False,
@@ -238,9 +247,12 @@ INSTALLED_APPS = [
     'apps.bigbang',
 ]
 
-# Include a shipping override app to provide some shipping methods
+# Include core apps with a few overrides:
+# - a shipping override app to provide some shipping methods
+# - an order app to provide order processing logic
 from oscar import get_core_apps
-INSTALLED_APPS = INSTALLED_APPS + get_core_apps(['apps.shipping'])
+INSTALLED_APPS = INSTALLED_APPS + get_core_apps(
+    ['apps.shipping', 'apps.order'])
 
 AUTHENTICATION_BACKENDS = (
     'oscar.apps.customer.auth_backends.Emailbackend',

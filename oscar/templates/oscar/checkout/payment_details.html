@@ -7,7 +7,7 @@
     {% trans "Payment details" %} | {{ block.super }}
 {% endblock %}
 
-{% block checkout-nav %}
+{% block checkout_nav %}
     {% include 'checkout/nav.html' with step=3 %}
 {% endblock %}
 
@@ -18,7 +18,7 @@
 
 {% block payment_details %}
     <div class="sub-header">
-        <h2>Enter payment details</h2>
+        <h2>{% trans "Enter payment details" %}</h2>
     </div>
 
 	{% block payment_details_content %}

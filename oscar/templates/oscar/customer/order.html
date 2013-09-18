@@ -139,7 +139,7 @@
                     {% else %}
                         <tr>
                             <th colspan="4">{% trans "Shipping total" %}</th>
-                            <td colspan="2">{{ order.shipping_incl_Tax|currency }}</td>
+                            <td colspan="2">{{ order.shipping_incl_tax|currency }}</td>
                         </tr>
                     {% endif %}
 
@@ -168,13 +168,13 @@
                     <div class="span4">
                         <div class="well well-info">
                             <h4>{% trans 'Contact Number:' %}</h4>
-                            <p>{{ shipping_address.phone_number }}</p>
+                            <p>{{ order.shipping_address.phone_number }}</p>
                         </div>
                     </div>
                     <div class="span4">
                         <div class="well well-info">
                             <h4>{% trans 'Shipping Notes:' %}</h4>
-                            <p>{{ shipping_address.notes }}</p>
+                            <p>{{ order.shipping_address.notes }}</p>
                         </div>
                     </div>
                 </div>

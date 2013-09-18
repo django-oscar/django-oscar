@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block title %}
-    {% blocktrans with name=voucher.name %}Delete voucher '{{ name }}'?{% endblocktrans %} | Vouchers | {{ block.super }}
+    {% blocktrans with name=voucher.name %}Delete voucher '{{ name }}'?{% endblocktrans %} | {% trans "Vouchers" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}

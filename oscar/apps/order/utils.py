@@ -7,6 +7,8 @@ from oscar.apps.shipping.methods import Free
 from oscar.apps.order.exceptions import UnableToPlaceOrder
 from oscar.core.loading import get_class
 
+from decimal import Decimal as D
+
 ShippingAddress = get_model('order', 'ShippingAddress')
 Order = get_model('order', 'Order')
 Line = get_model('order', 'Line')
@@ -78,6 +80,9 @@ class OrderCreator(object):
             application['message'] = application['offer'].apply_deferred_benefit(basket)
             # Record offer application results
             if application['result'].affects_shipping:
+                # Skip zero shipping discounts
+                if shipping_method.discount <= D('0.00'):
+                    continue
                 # If a shipping offer, we need to grab the actual discount off
                 # the shipping method instance, which should be wrapped in an
                 # OfferDiscount instance.
@@ -158,7 +163,7 @@ class OrderCreator(object):
                      'unit_price_excl_tax': basket_line.unit_price_excl_tax,
                      'unit_retail_price': stockrecord.price_retail,
                      # Shipping details
-                     'est_dispatch_date':  basket_line.product.stockrecord.dispatch_date
+                     'est_dispatch_date': stockrecord.dispatch_date
                      }
         extra_line_fields = extra_line_fields or {}
         if hasattr(settings, 'OSCAR_INITIAL_LINE_STATUS'):
@@ -176,7 +181,7 @@ class OrderCreator(object):
 
     def update_stock_records(self, line):
         product = line.product
-        if product.product_class.track_stock:
+        if product.get_product_class().track_stock:
             line.product.stockrecord.allocate(line.quantity)
 
     def create_additional_line_models(self, order, order_line, basket_line):

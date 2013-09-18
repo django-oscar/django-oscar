@@ -12,6 +12,10 @@ TEMPLATE_DEBUG = True
 SQL_DEBUG = True
 SEND_BROKEN_LINK_EMAILS = False
 
+ALLOWED_HOSTS = ['latest.oscarcommerce.com',
+                 'sandbox.oscar.tangentlabs.co.uk',
+                 'master.oscarcommerce.com']
+
 ADMINS = (
     ('David Winterbottom', 'david.winterbottom@tangentlabs.co.uk'),
 )
@@ -113,7 +117,8 @@ SECRET_KEY = '$)a7n&o80u!6y5t-+jrd3)3!%vh&shg$wqpjpxc!ar&p#!)n1a'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    # needed by django-treebeard for admin (and potentially other libs)
+    'django.template.loaders.eggs.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -238,6 +243,11 @@ LOGGING = {
             'propagate': True,
             'level': 'INFO',
         },
+        'oscar.catalogue.import': {
+            'handlers': ['console'],
+            'propagate': False,
+            'level': 'INFO',
+        },
         'gateway': {
             'handlers': ['gateway_file'],
             'propagate': True,
@@ -253,6 +263,12 @@ LOGGING = {
             'propagate': False,
             'level': 'DEBUG',
         },
+        # suppress output of this debug toolbar panel
+        'template_timings_panel': {
+            'handlers': ['null'],
+            'level': 'DEBUG',
+            'propagate': False,
+        }
     }
 }
 
@@ -267,11 +283,13 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     'django.contrib.staticfiles',
     'django_extensions',
+    # Debug toolbar + extensions
     'debug_toolbar',
+    'cache_panel',
+    'template_timings_panel',
     'south',
     'rosetta',          # For i18n testing
     'compressor',
-    'apps.user',        # For profile testing
     'apps.gateway',     # For allowing dashboard access
 ]
 from oscar import get_core_apps
@@ -295,8 +313,6 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
-AUTH_PROFILE_MODULE = 'user.Profile'
-
 # =============
 # Debug Toolbar
 # =============
@@ -315,15 +331,17 @@ DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': is_internal
 }
 DEBUG_TOOLBAR_PANELS = (
-    'debug_toolbar.panels.version.VersionDebugPanel',
-    'debug_toolbar.panels.timer.TimerDebugPanel',
-    'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
     'debug_toolbar.panels.headers.HeaderDebugPanel',
     'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
     'debug_toolbar.panels.template.TemplateDebugPanel',
-    #'debug_toolbar.panels.sql.SQLDebugPanel',
+    'debug_toolbar.panels.timer.TimerDebugPanel',
+    'debug_toolbar.panels.sql.SQLDebugPanel',
+    'template_timings_panel.panels.TemplateTimings.TemplateTimings',
+    'cache_panel.panel.CacheDebugPanel',
     'debug_toolbar.panels.signals.SignalDebugPanel',
     'debug_toolbar.panels.logger.LoggingPanel',
+    'debug_toolbar.panels.version.VersionDebugPanel',
+    'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
 )
 
 # ==============
@@ -335,8 +353,7 @@ from oscar.defaults import *
 # Meta
 # ====
 
-OSCAR_SHOP_NAME = 'Oscar Sandbox'
-OSCAR_SHOP_TAGLINE = 'e-Commerce for Django'
+OSCAR_SHOP_TAGLINE = 'Sandbox'
 
 # Enter Google Analytics ID for the tracking to be included in the templates
 #GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'

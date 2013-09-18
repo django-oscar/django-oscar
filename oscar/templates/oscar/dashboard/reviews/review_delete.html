@@ -31,7 +31,7 @@
 
 {% block dashboard_content %}
     <div class="table-header">
-        <h2>Review</h2>
+        <h2>{% trans "Review" %}</h2>
     </div>
     <form action="." method="post" class="well">
         {% csrf_token %}
@@ -40,7 +40,7 @@
             <tbody> 
                 <tr><th>{% trans "Review Title" %}</th><td>{{ review.title }}</td></tr>
                 <tr><th>{% trans "Product" %}</th><td>{{ review.product.title }}</td></tr>
-                <tr><th>{% trans "User" %}</th><td>{{ review.user.get_reviewer_name|default:"-" }}</td></tr>
+                <tr><th>{% trans "User" %}</th><td>{{ review.user.reviewer_name|default:"-" }}</td></tr>
                 <tr><th>{% trans "Score" %}</th><td>{{ review.score|floatformat:1 }}</td></tr>
                 <tr><th>{% trans "Votest" %}</th><td>{{ review.total_votes }}</td></tr>
                 <tr><th>{% trans "Status" %}</th><td>{{ review.status }}</td></tr>
