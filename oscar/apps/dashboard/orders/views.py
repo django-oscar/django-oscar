@@ -129,10 +129,13 @@ class OrderListView(BulkEditMixin, ListView):
     actions = ('download_selected_orders',)
     current_view = 'dashboard:order-list'
 
-    def get(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         # base_queryset is equal to all orders the user is allowed to access
         self.base_queryset = queryset_orders_for_user(
-            self.request.user).order_by('-date_placed')
+            request.user).order_by('-date_placed')
+        return super(OrderListView, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
         if 'order_number' in request.GET and request.GET.get(
                 'response_format', 'html') == 'html':
             # Redirect to Order detail page if valid order number is given
