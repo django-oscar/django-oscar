@@ -51,16 +51,17 @@ class AbstractWishList(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk or kwargs.get('force_insert', False):
-            self.key = self.get_random_key()
+            self.key = self.__class__.random_key()
         super(AbstractWishList, self).save(*args, **kwargs)
 
-    def get_random_key(self, length=6):
+    @classmethod
+    def random_key(cls, length=6):
         """
         Get a unique random generated key based on SHA-1 and owner
         """
         while True:
             key = hashlib.sha1(str(random.random())).hexdigest()[:length]
-            if self.__class__._default_manager.filter(key=key).count() == 0:
+            if cls._default_manager.filter(key=key).count() == 0:
                 return key
 
     def is_allowed_to_see(self, user):

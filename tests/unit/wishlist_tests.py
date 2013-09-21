@@ -6,11 +6,8 @@ from oscar.apps.wishlists.models import WishList
 
 class TestAWishlist(TestCase):
 
-    def setUp(self):
-        self.wishlist = WishList()
-
     def test_can_generate_a_random_key(self):
-        key = WishList().get_random_key(6)
+        key = WishList.random_key(6)
         self.assertTrue(len(key) == 6)
 
 
