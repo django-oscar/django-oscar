@@ -2,45 +2,34 @@
 {% load url from future %}
 
 {% if user.is_authenticated %}
-    {% if in_user_wishlists|length == 1 %}
-    <p>{% blocktrans with name=in_user_wishlists.0.name %}
-        Product is in your wish list '{{ name }}'.
-        {% endblocktrans %}</p>
-    {% elif in_user_wishlists|length >= 1 %}
-    <p>{% blocktrans with name=in_user_wishlists.0.name count=in_user_wishlists|length|add:"-1" %}
-        Product is in your wish list '{{ name }}' and {{ count }} others.
-        {% endblocktrans %}</p>
-    {% endif %}
     <div class="btn-group">
         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-            {% if in_user_wishlists %}
-                {% trans 'Add to or remove from wish list' %}
-            {% else %}
-                {% trans 'Add to wish list' %}
-            {% endif %}
-            <span class="caret"></span>
+            {% trans "Add to wish list" %} <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
-        {% for wishlist in wishlists %}
-            <li>
-                {% if wishlist in in_user_wishlists %}
-                <a href="{% url 'customer:wishlists-remove-product' key=wishlist.key product_pk=product.pk %}">
-                    {% blocktrans with name=wishlist.name %}
-                    Remove from wish list '{{ name }}'
-                    {% endblocktrans %}
-                </a>
-                {% else %}
-                    <a href="{% url 'customer:wishlists-add-product' key=wishlist.key product_pk=product.pk %}">
-                        {% blocktrans with name=wishlist.name %}
-                        Add to wish list '{{ name }}'
-                        {% endblocktrans %}
-                    </a>
-                {% endif %}
-             </li>
-        {% endfor %}
-        <li><a href="{% url 'customer:wishlists-create' product_pk=product.pk %}">{% trans 'Add to new wish list' %}</a></li>
+            {% for wishlist in wishlists %}
+                <li>
+                    {% if wishlist not in in_user_wishlists %}
+                        <a href="{% url 'customer:wishlists-add-product' key=wishlist.key product_pk=product.pk %}">
+                            {% blocktrans with name=wishlist.name %}
+                                Add to '{{ name }}' wish list
+                            {% endblocktrans %}
+                        </a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            <li><a href="{% url 'customer:wishlists-create' product_pk=product.pk %}">{% trans 'Add to new wish list' %}</a></li>
         </ul>
     </div>
+    <p>
+        {% for wishlist in in_user_wishlists %}
+            <br/>
+            {% blocktrans with name=wishlist.name url=wishlist.get_absolute_url %}
+                Product is in <a href="{{ url }}">'{{ name }}'</a> wishlist.
+            {% endblocktrans %}
+            <a class="btn btn-small" href="{% url 'customer:wishlists-remove-product' key=wishlist.key product_pk=product.pk %}">{% trans "Remove" %}</a>
+        {% endfor %}
+    </p>
 {% else %}
     <button class="btn" disabled="disabled" title="{% trans 'Please login to add products to a wish list.' %}">{% trans 'Add to wish list' %}</button>
 {% endif %}

@@ -1,21 +1,26 @@
 import hashlib
 import random
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.core.urlresolvers import reverse
+
 from oscar.core.compat import AUTH_USER_MODEL
 
 
 class AbstractWishList(models.Model):
     """
-    Represents a user's wish lists of products. A user can have multiple
-    wish lists, move products between them, etc.
+    Represents a user's wish lists of products.
+
+    A user can have multiple wish lists, move products between them, etc.
     """
 
-    # Currently only authenticated users can have wishlists
+    # Only authenticated users can have wishlists
     owner = models.ForeignKey(AUTH_USER_MODEL, related_name='wishlists',
                               verbose_name=_('Owner'))
     name = models.CharField(verbose_name=_('Name'), default=_('New Wish List'),
                             max_length=255)
+
     #: This key acts as primary key and is used instead of an int to make it
     #: harder to guess
     key = models.CharField(_('Key'), max_length=6, db_index=True, unique=True,
@@ -73,6 +78,10 @@ class AbstractWishList(models.Model):
         verbose_name = _('Wish List')
         abstract = True
 
+    def get_absolute_url(self):
+        return reverse('customer:wishlists-detail', kwargs={
+            'key': self.key})
+
 
 class AbstractLine(models.Model):
     """
@@ -80,7 +89,8 @@ class AbstractLine(models.Model):
     """
     wishlist = models.ForeignKey('wishlists.WishList', related_name='lines',
                                  verbose_name=_('Wish List'))
-    product = models.ForeignKey('catalogue.Product', verbose_name=_('Product'),
+    product = models.ForeignKey(
+        'catalogue.Product', verbose_name=_('Product'),
         related_name='wishlists_lines', on_delete=models.SET_NULL,
         blank=True, null=True)
     quantity = models.PositiveIntegerField(_('Quantity'), default=1)
@@ -99,10 +109,5 @@ class AbstractLine(models.Model):
 
     class Meta:
         abstract = True
-        verbose_name = _('Wish List Line')
+        verbose_name = _('Wish list line')
         unique_together = (('wishlist', 'product'), )
-
-
-
-
-
