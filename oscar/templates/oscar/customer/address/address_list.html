@@ -60,8 +60,10 @@
         </table>
         {% include "partials/pagination.html" %}
     {% else %}
-        {% trans 'There are no addresses in your address book.' %}
+        <p>{% trans 'There are no addresses in your address book.' %}</p>
     {% endif %}
-    <a href="{% url 'customer:address-create' %}" class="btn btn-primary">{% trans 'Add a New Address' %}</a>
+    <p>
+        <a href="{% url 'customer:address-create' %}" class="btn btn-primary">{% trans 'Add a new address' %}</a>
+    </p>
 {% endblock tabcontent %}
 

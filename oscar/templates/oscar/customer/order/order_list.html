@@ -19,8 +19,8 @@
         </div>
     {% endif %}
 
-    <h3>{{ form.description }}</h3>
     {% if orders %}
+        <h3>{{ form.description }}</h3>
         <table class="table table-striped table-bordered">
             <tr>
                 <th>{% trans "Order number" %}</th>
@@ -38,7 +38,7 @@
             {% endfor %}
         </table>
     {% else %}
-        <p>{% trans 'No orders found' %}</p>
+        <p>{% trans "You haven't placed any orders." %}</p>
     {% endif %}
 
     {% include "partials/pagination.html" %}

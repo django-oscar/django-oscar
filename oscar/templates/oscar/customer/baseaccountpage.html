@@ -25,20 +25,13 @@
     </ul>
 {% endblock %}
 
-{% block headertext %}
-    {% trans 'Account' %}
-{% endblock %}
+{% block headertext %}{{ page_title }}{% endblock %}
 
 {% block content %}
     <div class="tabbable">
         {% include 'customer/partials/nav_account.html' %}
         <div class="tab-content">
             <div class="tab-pane active">
-                <div class="sub-header">
-                    {% block tabheader %}
-                        <h3>{{ page_title }}</h3>
-                    {% endblock %}
-                </div>
                 {% block tabcontent %}{% endblock tabcontent %}
             </div>
         </div>
