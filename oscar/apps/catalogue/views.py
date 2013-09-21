@@ -51,12 +51,7 @@ class ProductDetailView(DetailView):
         ctx['reviews'] = self.get_reviews()
         ctx['alert_form'] = self.get_alert_form()
         ctx['has_active_alert'] = self.get_alert_status()
-        if self.request.user.is_authenticated():
-            # most recent wish list is treated as default one
-            ctx['wishlists'] = self.request.user.wishlists.order_by('-created')
-            # the wish lists that the product appears in
-            ctx['in_user_wishlists'] = self.object.in_wishlists(
-                self.request.user)
+
         return ctx
 
     def get_alert_status(self):
