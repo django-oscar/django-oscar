@@ -2,17 +2,17 @@
 Wishlists
 =========
 
-The wishlists app is built to allow a user create one or more wishlists and let
-her add products to one or more of her wishlists. She can add a product from the
-product's detail page and manage the lists in the account section.
+The wishlists app allows signed-in users to create one or more wishlists.  A
+user can add a product to their wishlist from the product detail page and manage
+their lists in the account section.
 
-The wishlists app is hence wired up as a subapp of :doc:`customer` and a partial
-is included in `add_to_basket_form.html`.
+The wishlists app is wired up as a subapp of :doc:`customer`.
 
-Please note that currently only private wishlists are supported. The
-hooks and fields for public (as in general public) and shared (as in access via
-an obfuscated link) are there, but the UI hasn't been designed yet.
+.. note::
 
+    Please note that currently only private wishlists are supported. The hooks
+    and fields for public (as in general public) and shared (as in access via an
+    obfuscated link) are there, but the UI hasn't been designed yet.
 
 Abstract models
 ---------------
