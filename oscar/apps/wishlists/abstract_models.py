@@ -32,7 +32,7 @@ class AbstractWishList(models.Model):
     VISIBILITY_CHOICES = (
         (PRIVATE, _('Private - Only the owner can see the wish list')),
         (SHARED, _('Shared - Only the owner and people with access to the obfuscated link can see the wish list')),
-        #(PUBLIC, _('Public - Everybody can see the wish list')),
+        (PUBLIC, _('Public - Everybody can see the wish list')),
     )
     visibility = models.CharField(
         _('Visibility'), max_length=20, default=PRIVATE, choices=VISIBILITY_CHOICES)
