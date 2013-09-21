@@ -1,9 +1,41 @@
 {% extends "customer/baseaccountpage.html" %}
 {% load i18n %}
+{% load url from future %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'promotions:home' %}">{% trans 'Home' %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li>
+            <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li>
+            <a href="{% url 'customer:wishlists-list' %}">{% trans 'Wish Lists' %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li class="active">
+            {% if wishlist %}
+                {{ wishlist.name }}
+            {% else %}
+                {% trans "Create" %}
+            {% endif %}
+        </li>
+    </ul>
+{% endblock %}
 
 {% block tabcontent %}
-<form action="." method="post" class="form-horizontal" data-behaviours="lock">
-    {% csrf_token %}
-    {% include "partials/form.html" %}
-</form>
+    <h2>
+        {% if wishlist %}
+            {{ wishlist.name }}
+        {% else %}
+            {% trans "Create" %}
+        {% endif %}
+    </h2>
+    <form action="." method="post" class="form-horizontal" data-behaviours="lock">
+        {% csrf_token %}
+        {% include "partials/form.html" %}
+    </form>
 {% endblock tabcontent %}

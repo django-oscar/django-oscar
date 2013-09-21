@@ -8,12 +8,12 @@
             <tbody>
                 <tr>
                     <th>{% trans 'Name' %}</th>
-                    <th>{% trans 'Number of entries' %}</th>
+                    <th>{% trans 'Number of products' %}</th>
                     <th>{% trans 'Action' %}</th>
                 </tr>
                 {% for wishlist in wishlists %}
                     <tr>
-                        <td>{{ wishlist.name }}</td>
+                        <td><a href="{% url 'customer:wishlists-detail' wishlist.key %}">{{ wishlist.name }}</a></td>
                         <td>{{ wishlist.lines.count }}</td>
                         <td>
                             <div class="btn-group">
@@ -47,8 +47,7 @@
     {% endif %}
 
     <p>
-        <a href="{% url 'customer:wishlists-create' %}" class="btn btn-primary">{% trans 'Add a wish list' %}</a>
+        <a href="{% url 'customer:wishlists-create' %}" class="btn btn-primary">{% trans 'Create a new wish list' %}</a>
     </p>
 
 {% endblock tabcontent %}
-

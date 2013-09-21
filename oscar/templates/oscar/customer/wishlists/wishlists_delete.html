@@ -1,21 +1,42 @@
 {% extends "customer/baseaccountpage.html" %}
-
 {% load url from future %}
-
 {% load i18n %}
 
-{% block tabcontent %}
-<form action="." method="post">
-    {% csrf_token %}
-    <p>
-	    {% blocktrans with name=wishlist.name %}
-	        Are you sure you want to delete {{ name }}?
-	    {% endblocktrans %}
-    </p>
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'promotions:home' %}">{% trans 'Home' %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li>
+            <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li>
+            <a href="{% url 'customer:wishlists-list' %}">{% trans 'Wish Lists' %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li class="active">
+            {% blocktrans with name=wishlist.name %}
+                Delete '{{ name }}'?
+            {% endblocktrans %}
+        </li>
+    </ul>
+{% endblock %}
 
-    <div class="form-actions">
-        <button type="submit" value="Delete wish list" class="btn btn-danger btn-large">{% trans 'Delete' %}</button> {% trans 'or' %} <a href="{% url 'customer:wishlists-list' %}">{% trans 'cancel' %}</a>
-    </div>
-</form>
+{% block tabcontent %}
+    <h2>{{ wishlist.name }}</h2>
+    <form action="." method="post">
+        {% csrf_token %}
+        <p>
+            {% blocktrans with name=wishlist.name %}
+                Are you sure you want to delete {{ name }}?
+            {% endblocktrans %}
+        </p>
+
+        <div class="form-actions">
+            <button type="submit" value="Delete wish list" class="btn btn-danger btn-large">{% trans 'Delete' %}</button> {% trans 'or' %} <a href="{% url 'customer:wishlists-list' %}">{% trans 'cancel' %}</a>
+        </div>
+    </form>
 {% endblock tabcontent %}
 

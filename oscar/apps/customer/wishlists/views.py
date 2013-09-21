@@ -7,6 +7,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View, FormView
 from django.utils.translation import ugettext_lazy as _
+
 from oscar.apps.customer.mixins import PageTitleMixin
 from oscar.core.loading import get_classes
 
@@ -23,7 +24,7 @@ class WishListListView(PageTitleMixin, ListView):
     page_title = _('Wish Lists')
 
     def get_queryset(self):
-        return WishList._default_manager.filter(owner=self.request.user)
+        return self.request.user.wishlists.all()
 
 
 class WishListDetailView(PageTitleMixin, FormView):
@@ -79,7 +80,7 @@ class WishListCreateView(PageTitleMixin, CreateView):
     model = WishList
     template_name = 'customer/wishlists/wishlists_form.html'
     active_tab = "wishlists"
-    page_title = _('Create new Wish List')
+    page_title = _('Create a new wish list')
     form_class = WishListForm
 
     def form_valid(self, form):
@@ -111,17 +112,18 @@ class WishListUpdateView(PageTitleMixin, UpdateView):
     template_name = 'customer/wishlists/wishlists_form.html'
     active_tab = "wishlists"
     form_class = WishListForm
+    context_object_name = 'wishlist'
 
     def get_page_title(self):
-        return u'Edit %s' % self.object.name
+        return self.object.name
 
     def get_object(self, queryset=None):
         return get_object_or_404(WishList, owner=self.request.user,
                                  key=self.kwargs['key'])
 
     def get_success_url(self):
-        messages.success(self.request, _("Changes to wish list '%s' saved") %
-                         self.object.name)
+        messages.success(
+            self.request, _("Your '%s' wishlist has been updated") % self.object.name)
         return reverse('customer:wishlists-list')
 
 
@@ -138,8 +140,8 @@ class WishListDeleteView(PageTitleMixin, DeleteView):
                                  key=self.kwargs['key'])
 
     def get_success_url(self):
-        messages.success(self.request, _("Wish list '%s' deleted") %
-                                       self.object.name)
+        messages.success(
+            self.request, _("Your '%s' wish list has been deleted") % self.object.name)
         return reverse('customer:wishlists-list')
 
 
@@ -151,8 +153,8 @@ class WishListAddProduct(View):
 
     def get(self, request, *args, **kwargs):
         product = get_object_or_404(Product, pk=kwargs['product_pk'])
-        wishlist = get_object_or_404(WishList, owner=request.user,
-                                     key=kwargs['key'])
+        wishlist = get_object_or_404(
+            WishList, owner=request.user, key=kwargs['key'])
         if not wishlist.is_allowed_to_edit(self.request.user):
             raise Http404
         try:
@@ -174,24 +176,23 @@ class LineMixin(object):
     """
     Handles fetching both a wish list and a product
     Views using this mixin must be passed two keyword arguments:
-    * key: The key of a wish list
-
-    * line_pk: The primary key of the wish list line
+        * key: The key of a wish list
+        * line_pk: The primary key of the wish list line
     or
-    * product_pk: The primary key of the product
+        * product_pk: The primary key of the product
     """
 
     def dispatch(self, request, *args, **kwargs):
-        self.wishlist = get_object_or_404(WishList, owner=request.user,
-                                          key=kwargs['key'])
+        self.wishlist = get_object_or_404(
+            WishList, owner=request.user, key=kwargs['key'])
         try:
             if 'line_pk' in kwargs:
                 self.line = self.wishlist.lines.get(pk=kwargs['line_pk'])
             elif 'product_pk' in kwargs:
-                self.line = self.wishlist.lines.get(product_id=kwargs['product_pk'])
+                self.line = self.wishlist.lines.get(
+                    product_id=kwargs['product_pk'])
         except (ObjectDoesNotExist, MultipleObjectsReturned):
             raise Http404
-
         self.product = self.line.product
         return super(LineMixin, self).dispatch(request, *args, **kwargs)
 
@@ -200,28 +201,32 @@ class WishListRemoveProduct(LineMixin, View):
 
     def get(self, request, *args, **kwargs):
         self.line.delete()
-        messages.success(self.request, _('Product removed from wish list %s') %
-                         self.wishlist.name)
-        default_url = reverse('customer:wishlists-detail',
-                              kwargs= {'key': self.wishlist.key})
-        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER',
-                                                          default_url))
+
+        msg = _("'%(title)s' removed from '%(name)s' wishlist") % {
+            'title': self.product.get_title(),
+            'name': self.wishlist.name}
+        messages.success(self.request, msg)
+
+        default_url = reverse(
+            'customer:wishlists-detail', kwargs={'key': self.wishlist.key})
+        return HttpResponseRedirect(self.request.META.get(
+            'HTTP_REFERER', default_url))
 
 
 class WishListMoveProductToAnotherWishList(LineMixin, View):
 
     def get(self, request, *args, **kwargs):
-        #from_wishlist = self.wishlist
-        to_wishlist = get_object_or_404(WishList, owner=request.user,
-                                        key=kwargs['to_key'])
+        to_wishlist = get_object_or_404(
+            WishList, owner=request.user, key=kwargs['to_key'])
         self.line.wishlist = to_wishlist
         self.line.save()
-        messages.success(self.request,
-                         _('Product moved to wish list %s') % to_wishlist.name)
-        default_url = reverse('customer:wishlists-detail',
-                              kwargs= {'key': self.wishlist.key})
-        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER',
-                                                          default_url))
 
+        msg = _("'%(title)s' moved to '%(name)s' wishlist") % {
+            'title': self.product.get_title(),
+            'name': to_wishlist.name}
+        messages.success(self.request, msg)
 
-
+        default_url = reverse(
+            'customer:wishlists-detail', kwargs={'key': self.wishlist.key})
+        return HttpResponseRedirect(self.request.META.get(
+            'HTTP_REFERER', default_url))

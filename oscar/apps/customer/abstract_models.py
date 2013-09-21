@@ -43,6 +43,7 @@ if hasattr(auth_models, 'BaseUserManager'):
             u.save(using=self._db)
             return u
 
+
     class AbstractUser(auth_models.AbstractBaseUser,
                        auth_models.PermissionsMixin):
         """
