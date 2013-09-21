@@ -43,8 +43,8 @@ class AbstractWishList(models.Model):
     # specifying which one , one shall use the default one.
     # That is a rare enough case to handle it by convention instead of a
     # BooleanField.
-    created = models.DateTimeField(_('Creation date'),
-                                   auto_now_add=True, editable=False)
+    date_created = models.DateTimeField(
+        _('Date created'), auto_now_add=True, editable=False)
 
     def __unicode__(self):
         return u"%s's Wish List '%s'" % (self.owner, self.name)
@@ -75,7 +75,7 @@ class AbstractWishList(models.Model):
         return user == self.owner
 
     class Meta:
-        ordering = ('owner', 'created', )
+        ordering = ('owner', 'date_created', )
         verbose_name = _('Wish List')
         abstract = True
 

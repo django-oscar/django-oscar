@@ -15,7 +15,7 @@ class Migration(SchemaMigration):
             ('name', self.gf('django.db.models.fields.CharField')(default=u'New Wish List', max_length=255)),
             ('key', self.gf('django.db.models.fields.CharField')(unique=True, max_length=6, db_index=True)),
             ('visibility', self.gf('django.db.models.fields.CharField')(default='Private', max_length=20)),
-            ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('date_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
         ))
         db.send_create_signal('wishlists', ['WishList'])
 
@@ -104,7 +104,7 @@ class Migration(SchemaMigration):
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'full_name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'db_index': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'db_index': 'True'}),
             'numchild': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'path': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'}),
@@ -202,8 +202,8 @@ class Migration(SchemaMigration):
             'wishlist': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'lines'", 'to': "orm['wishlists.WishList']"})
         },
         'wishlists.wishlist': {
-            'Meta': {'ordering': "('owner', 'created')", 'object_name': 'WishList'},
-            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'Meta': {'ordering': "('owner', 'date_created')", 'object_name': 'WishList'},
+            'date_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'key': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '6', 'db_index': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'default': "u'New Wish List'", 'max_length': '255'}),
