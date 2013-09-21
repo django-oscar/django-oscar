@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
 from django.core.urlresolvers import reverse
 from django.db.models import get_model
+
 from oscar.test.factories import create_product
 from oscar.test.testcases import ClientTestCase
 
 WishList = get_model('wishlists', 'WishList')
 
 
-class TestWishlists(ClientTestCase):
+class TestProductDetailPage(ClientTestCase):
 
     def setUp(self):
-        super(TestWishlists, self).setUp()
+        super(TestProductDetailPage, self).setUp()
         self.product = create_product()
 
-    def test_add_to_wishlist_button_is_displayed(self):
+    def test_contains_add_to_wishlist_url(self):
         resp = self.client.get(self.product.get_absolute_url())
         self.assertContains(resp, reverse('customer:wishlists-create',
                                           args=[self.product.pk]))
@@ -38,11 +39,3 @@ class TestWishlists(ClientTestCase):
         self.assertIsRedirect(resp)
         self.assertEqual(WishList.objects.count(), 0)
         self.assertEqual(self.product.wishlists_lines.count(), 0)
-
-
-
-
-
-
-
-
