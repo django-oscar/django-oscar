@@ -1,3 +1,4 @@
+from django.conf import settings
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.forms.widgets import Input
@@ -56,7 +57,12 @@ class MultiFacetedSearchForm(FacetedSearchForm):
         Overriding the search method to allow for multiple facets
         '''
         sqs = super(FacetedSearchForm, self).search()
-        if hasattr(self, 'cleaned_data') and 'selected_facets' in self.cleaned_data:
-            for f in self.cleaned_data['selected_facets'].split("|"):
+        for facet in settings.OSCAR_SEARCH_FACETS['fields'].values():
+            sqs = sqs.facet(facet['field'])
+        for facet in settings.OSCAR_SEARCH_FACETS['queries'].values():
+            for query in facet['queries']:
+                sqs = sqs.query_facet(facet['field'], query[1])
+        if self.selected_facets:
+            for f in self.selected_facets:
                 sqs = sqs.narrow(f)
         return sqs

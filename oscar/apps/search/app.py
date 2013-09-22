@@ -10,6 +10,7 @@ from haystack.query import SearchQuerySet
 class SearchApplication(Application):
     name = 'search'
     search_view = views.MultiFacetedSearchView
+    form_class = forms.MultiFacetedSearchForm
 
     def get_urls(self):
         # Build SQS
@@ -23,7 +24,7 @@ class SearchApplication(Application):
         # The form class has to be passed to the __init__ method as that is how
         # Haystack works.  It's slightly different to normal CBVs.
         urlpatterns = patterns('',
-            url(r'^$', self.search_view(form_class=forms.MultiFacetedSearchForm),
+            url(r'^$', self.search_view(form_class=self.form_class),
                 name='search'),
             url(r'^default/$', search_view_factory(
                 view_class=views.FacetedSearchView,

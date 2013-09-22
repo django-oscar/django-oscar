@@ -73,6 +73,7 @@ class FacetedSearchView(views.FacetedSearchView):
         for field, facets in extra['facets']['fields'].items():
             facet_data[field] = []
             for name, count in facets:
+                escaped_name = unicode('"{0}"').format(name)
                 # Ignore zero-count facets for field
                 if count == 0:
                     continue
@@ -80,19 +81,19 @@ class FacetedSearchView(views.FacetedSearchView):
                 datum = {
                     'name': name,
                     'count': count}
-                if selected.get(field_filter, None) == name:
+                if selected.get(field_filter, None) == escaped_name:
                     # This filter is selected - build the 'deselect' URL
                     datum['selected'] = True
                     url = base_url.remove_query_param(
                         'selected_facets', '%s:%s' % (
-                            field_filter, name))
+                            field_filter, escaped_name))
                     datum['deselect_url'] = url.as_string()
                 else:
                     # This filter is not selected - built the 'select' URL
                     datum['selected'] = False
                     url = base_url.append_query_param(
                         'selected_facets', '%s:%s' % (
-                            field_filter, name))
+                            field_filter, escaped_name))
                     datum['select_url'] = url.as_string()
                 facet_data[field].append(datum)
 

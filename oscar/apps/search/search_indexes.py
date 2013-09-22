@@ -14,7 +14,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
     # Fields for faceting
     category = indexes.CharField(null=True, faceted=True)
-    price = indexes.DecimalField(null=True, faceted=True)
+    price = indexes.FloatField(null=True, faceted=True)
     num_in_stock = indexes.IntegerField(null=True, faceted=True)
 
     date_created = indexes.DateTimeField(model_attr='date_created')
