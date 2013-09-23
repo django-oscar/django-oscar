@@ -53,7 +53,7 @@ class AccountSummaryView(RedirectView):
     url = reverse_lazy(settings.OSCAR_ACCOUNTS_REDIRECT_URL)
 
 
-class AccountRegistrationView(FormView, RegisterUserMixin):
+class AccountRegistrationView(RegisterUserMixin, FormView):
     form_class = EmailUserCreationForm
     template_name = 'customer/registration.html'
     redirect_field_name = 'next'
@@ -88,7 +88,7 @@ class AccountRegistrationView(FormView, RegisterUserMixin):
             form.cleaned_data['redirect_url'])
 
 
-class AccountAuthView(TemplateView, RegisterUserMixin):
+class AccountAuthView(RegisterUserMixin, TemplateView):
     """
     This is actually a slightly odd double form view
     """
@@ -179,7 +179,7 @@ class AccountAuthView(TemplateView, RegisterUserMixin):
 
 
 class LogoutView(RedirectView):
-    url = '/'
+    url = reverse_lazy('promotions:home')
     permanent = False
 
     def get(self, request, *args, **kwargs):
@@ -409,7 +409,7 @@ class OrderHistoryView(PageTitleMixin, ListView):
         return ctx
 
 
-class OrderDetailView(PageTitleMixin, DetailView, PostActionMixin):
+class OrderDetailView(PageTitleMixin, PostActionMixin, DetailView):
     model = Order
     active_tab = 'orders'
 
@@ -486,7 +486,7 @@ class OrderDetailView(PageTitleMixin, DetailView, PostActionMixin):
                 {'number': order.number})
 
 
-class OrderLineView(DetailView, PostActionMixin):
+class OrderLineView(PostActionMixin, DetailView):
     """Customer order line"""
 
     def get_object(self, queryset=None):
@@ -496,12 +496,12 @@ class OrderLineView(DetailView, PostActionMixin):
         return order.lines.get(id=self.kwargs['line_id'])
 
     def do_reorder(self, line):
-        self.response = HttpResponseRedirect(reverse('customer:order',
-                                    args=(int(self.kwargs['order_number']),)))
+        self.response = HttpResponseRedirect(
+            reverse('customer:order', args=(int(self.kwargs['order_number']),)))
         basket = self.request.basket
 
-        line_available_to_reorder, reason = line.is_available_to_reorder(basket,
-            self.request.user)
+        line_available_to_reorder, reason = line.is_available_to_reorder(
+            basket, self.request.user)
 
         if not line_available_to_reorder:
             messages.warning(self.request, reason)

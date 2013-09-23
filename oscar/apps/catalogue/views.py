@@ -1,3 +1,4 @@
+import warnings
 from django.conf import settings
 from django.http import HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404
@@ -97,20 +98,13 @@ class ProductDetailView(DetailView):
 
 def get_product_base_queryset():
     """
-    Return ``QuerySet`` for product model with related
-    content pre-loaded. The ``QuerySet`` returns unfiltered
-    results for further filtering.
+    Deprecated. Kept only for backwards compatibility.
+    Product.browsable.base_queryset() should be used instead.
     """
-    return Product.browsable.select_related(
-        'product_class',
-    ).prefetch_related(
-        'variants',
-        'product_options',
-        'product_class__options',
-        'stockrecord',
-        'images',
-    ).all()
-
+    warnings.warn(("`get_product_base_queryset` is deprecated in favour of"
+                   "`base_queryset` on Product's managers. It will be removed"
+                   "in Oscar 0.7."))
+    return Product.browsable.base_queryset()
 
 class ProductCategoryView(ListView):
     """
@@ -157,7 +151,7 @@ class ProductCategoryView(ListView):
         return context
 
     def get_queryset(self):
-        return get_product_base_queryset().filter(
+        return Product.browsable.base_queryset().filter(
             categories__in=self.categories
         ).distinct()
 
@@ -178,12 +172,13 @@ class ProductListView(ListView):
 
     def get_queryset(self):
         q = self.get_search_query()
+        qs = Product.browsable.base_queryset()
         if q:
             # Send signal to record the view of this product
             self.search_signal.send(sender=self, query=q, user=self.request.user)
-            return get_product_base_queryset().filter(title__icontains=q)
+            return qs.filter(title__icontains=q)
         else:
-            return get_product_base_queryset()
+            return qs
 
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)

@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load currency_filters %}
 {% load thumbnail %}
+{% load staticfiles %}
 
 
 {% block body_class %}create-page catalogue{% endblock %}
@@ -71,7 +72,7 @@
                                 {% with image=product.primary_image %}
                                     {% thumbnail image.original "250x250" upscale=False as thumb %}
                                         <a href="{{ image.original.url }}" rel="lightbox_{{ product.upc|default:"-" }}">
-                                            <img src="{{ thumb.url }}" alt="{{ product.get_title }}" class="img-polaroid" data-description="{% if image.caption %}{{ image.caption }}{% endif %}">
+                                            <img src="{% static thumb.url %}" alt="{{ product.get_title }}" class="img-polaroid" data-description="{% if image.caption %}{{ image.caption }}{% endif %}">
                                         </a>
                                     {% endthumbnail %}
                                 {% endwith %}

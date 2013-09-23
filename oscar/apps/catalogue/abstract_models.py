@@ -13,10 +13,10 @@ from django.utils.translation import ugettext_lazy as _
 from treebeard.mp_tree import MP_Node
 
 from oscar.core.utils import slugify
-from oscar.core.loading import get_class
+from oscar.core.loading import get_classes
 
-BrowsableProductManager = get_class(
-    'catalogue.managers', 'BrowsableProductManager')
+ProductManager, BrowsableProductManager = get_classes(
+    'catalogue.managers', ['ProductManager', 'BrowsableProductManager'])
 
 
 class AbstractProductClass(models.Model):
@@ -331,7 +331,7 @@ class AbstractProduct(models.Model):
     #: merchants from avoiding discounting such products
     is_discountable = models.BooleanField(_("Is Discountable"), default=True)
 
-    objects = models.Manager()
+    objects = ProductManager()
     browsable = BrowsableProductManager()
 
     def __init__(self, *args, **kwargs):

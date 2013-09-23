@@ -177,3 +177,6 @@ There are new migrations in the following apps to be aware of.
     - The `date` field of the ``order.AbstractCommunicationEvent``, ``order.AbstractPaymentEvent`` and
       ``order.AbstractShippingEvent`` models have been renamed to ``date_created`` for
       consistency with the rest of Oscar.
+    - ``0015``: Unused ``sequence_number`` and ``is_required`` deleted from
+      ``ShippingEventType``. Unused ``sequence_number`` deleted from
+      ``PaymentEventType``.

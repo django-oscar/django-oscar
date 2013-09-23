@@ -3,6 +3,7 @@
 {% load currency_filters %}
 {% load thumbnail %}
 {% load i18n %}
+{% load staticfiles %}
 
 {% block title %}
     {% trans "Confirmation of order" %} {{ order.number }} | {{ block.super }}
@@ -83,7 +84,7 @@
                     <div class="image_container">
                         {% with image=line.product.primary_image %}
                             {% thumbnail image.original "200x200" upscale=False as thumb %}
-                            <a href="{{ line.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+                            <a href="{{ line.product.get_absolute_url }}"><img class="thumbnail" src="{% static thumb.url %}" alt="{{ product.get_title }}"></a>
                             {% endthumbnail %}
                         {% endwith %}
                     </div>
