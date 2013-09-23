@@ -206,7 +206,7 @@
 
     <div class="form-actions">
         <a onclick="window.print()" href="#" class="btn btn-primary btn-large">{% trans "Print this page" %}</a>
-        <a href="/" class="btn btn-primary btn-large pull-right">{% trans "Continue shopping" %}</a>
+        <a href="{% url 'promotions:home' %}" class="btn btn-primary btn-large pull-right">{% trans "Continue shopping" %}</a>
     </div>
 {% endblock content %}
 
