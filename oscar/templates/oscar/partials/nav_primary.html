@@ -22,6 +22,8 @@
         </a>
 
         <div class="nav-collapse primary-collapse">
+        {% block primary_navigation %}
+            {% block browse_store_button %}
             <div id="browse" class="dropdown pull-left {% if expand_dropdown %}open{% endif %}">
                 <button class="btn btn-primary dropdown-toggle hidden-phone"{% if not expand_dropdown %} data-toggle="dropdown"{% endif %}>
                     {% trans "Browse Store" %}
@@ -50,7 +52,12 @@
                     <li><a href="{% url 'offer:list' %}">{% trans "Offers" %}</a></li>
                 </ul>
             </div>
+            {% endblock %}
+            {# Block for other buttons #}
+            {% block head_bar %}
+            {% endblock %}
             {% include "partials/search.html" %}
+        {% endblock %}
         </div><!-- /nav-collapse -->
 
     </div><!-- /navbar-inner -->
