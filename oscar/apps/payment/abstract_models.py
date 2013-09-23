@@ -124,8 +124,8 @@ class AbstractSource(models.Model):
             self.deferred_txns = []
         self.deferred_txns.append((txn_type, amount, reference, status))
 
-    def _create_transaction(self, txn_type, amount, reference=None,
-                            status=None):
+    def _create_transaction(self, txn_type, amount, reference='',
+                            status=''):
         self.transactions.create(
             txn_type=txn_type, amount=amount,
             reference=reference, status=status)
@@ -134,7 +134,7 @@ class AbstractSource(models.Model):
     # Actions
     # =======
 
-    def allocate(self, amount, reference=None, status=None):
+    def allocate(self, amount, reference='', status=''):
         """
         Convenience method for ring-fencing money against this source
         """
@@ -144,7 +144,7 @@ class AbstractSource(models.Model):
             AbstractTransaction.AUTHORISE, amount, reference, status)
     allocate.alters_data = True
 
-    def debit(self, amount=None, reference=None, status=''):
+    def debit(self, amount=None, reference='', status=''):
         """
         Convenience method for recording debits against this source
         """
@@ -156,7 +156,7 @@ class AbstractSource(models.Model):
             AbstractTransaction.DEBIT, amount, reference, status)
     debit.alters_data = True
 
-    def refund(self, amount, reference=None, status=None):
+    def refund(self, amount, reference='', status=''):
         """
         Convenience method for recording refunds against this source
         """
