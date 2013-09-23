@@ -5,6 +5,8 @@ Oscar 0.6 release notes
 Welcome to Oscar 0.6!
 
 These release notes cover the `new features`_ as well as `upgrading advice`_.
+Oscar 0.6 has several backwards incompatible changes that you should be aware
+of.
 
 .. _`new features`: `What's new in Oscar 0.6?`_
 .. _`upgrading advice`: `Upgrading`_
@@ -12,10 +14,11 @@ These release notes cover the `new features`_ as well as `upgrading advice`_.
 Overview
 ========
 
-...
-
 What's new in Oscar 0.6?
 ========================
+
+Payment models are split into concrete and abstract
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The payment models have been split into abstract- and concrete versions.  This
 brings them inline with other Oscar apps and allows them to be customised.
@@ -25,6 +28,13 @@ Multiple-stockrecords, pricing, tax, availability
 
 Search
 ~~~~~~
+
+Wishlists
+~~~~~~~~~
+
+Wishlist functionality has finally landed.  Signed in customers are now able to
+create multiple named wishlists and add products to them.  There is a new
+section in the customer's account where wishlists can be managed.
 
 Multi-partner dashboard
 ~~~~~~~~~~~~~~~~~~~~~~~

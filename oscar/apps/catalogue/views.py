@@ -51,6 +51,7 @@ class ProductDetailView(DetailView):
         ctx['reviews'] = self.get_reviews()
         ctx['alert_form'] = self.get_alert_form()
         ctx['has_active_alert'] = self.get_alert_status()
+
         return ctx
 
     def get_alert_status(self):
