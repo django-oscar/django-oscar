@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python -Wall
 """
 Custom test runner
 

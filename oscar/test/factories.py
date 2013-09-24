@@ -43,7 +43,11 @@ def create_stockrecord(product=None, price_excl_tax=None, partner_sku=None,
 
 def create_stockinfo(record):
     return strategy.StockInfo(
-        price=prices.DelegateToStockRecord(record),
+        price=prices.FixedPrice(
+            record.price_currency,
+            record.price_excl_tax,
+            D('0.00')  # Default to no tax
+        ),
         availability=availability.DelegateToStockRecord(record),
         stockrecord=record
     )

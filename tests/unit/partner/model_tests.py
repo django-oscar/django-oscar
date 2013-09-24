@@ -72,6 +72,10 @@ class TestStockRecord(TestCase):
 
 
 class CustomWrapperTests(TestCase):
+    """
+    Partner wrappers are deprecated.  This testcase will be removed/rewritten
+    in Oscar 0.7.
+    """
 
     def setUp(self):
         abstract_models.partner_wrappers = {1: DummyWrapper()}

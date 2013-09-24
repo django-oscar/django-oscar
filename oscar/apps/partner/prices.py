@@ -46,6 +46,11 @@ class FixedPrice(Base):
 
 
 class DelegateToStockRecord(Base):
+    """
+    Pricing policy which wraps around an existing stockrecord.
+
+    This is backwards compatible with Oscar<0.6.
+    """
     is_tax_known = True
 
     def __init__(self, stockrecord):
@@ -61,6 +66,7 @@ class DelegateToStockRecord(Base):
 
     @property
     def incl_tax(self):
+        assert False
         return self.stockrecord.price_incl_tax
 
     @property

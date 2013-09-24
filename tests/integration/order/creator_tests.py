@@ -125,9 +125,10 @@ class TestPlacingOrderForDigitalGoods(TestCase):
         add_product(self.basket, D('12.00'), product=product)
         place_order(self.creator, basket=self.basket, order_number='1234')
 
-        product_ = Product.objects.get(id=product.id)
-        self.assertTrue(product_.stockrecord.num_in_stock is None)
-        self.assertTrue(product_.stockrecord.num_allocated is None)
+        product = Product.objects.get(id=product.id)
+        stockrecord = product.stockrecords.all()[0]
+        self.assertTrue(stockrecord.num_in_stock is None)
+        self.assertTrue(stockrecord.num_allocated is None)
 
 
 class StubRepository(Repository):
