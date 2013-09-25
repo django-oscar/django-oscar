@@ -1,6 +1,6 @@
 {% extends "checkout/layout.html" %}
 {% load url from future %}
-{% load currency_filters %}
+{% load currency_tags %}
 {% load thumbnail %}
 {% load i18n %}
 {% load stockrecord_tags %}
@@ -127,9 +127,9 @@
                     <div class="span2 align-right">
                         <p class="price_color">
                             {% if line.is_tax_known %}
-                                {{ line.line_price_incl_tax|currency }}
+                                {% currency line.line_price_incl_tax basket.currency %}
                             {% else %}
-                                {{ line.line_price_excl_tax|currency }}
+                                {% currency line.line_price_excl_tax basket.currency %}
                             {% endif %}
                         </p>
                     </div>

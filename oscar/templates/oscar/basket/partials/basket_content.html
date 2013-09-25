@@ -1,7 +1,7 @@
 {% load url from future %}
 {% load i18n %}
 {% load thumbnail %}
-{% load currency_filters %}
+{% load currency_tags %}
 {% load stockrecord_tags %}
 
 {% if basket_warnings %}
@@ -77,9 +77,9 @@
                             <div class="span2">
                                 <p class="price_color align-right">
                                     {% if session.price.is_tax_known %}
-                                        {{ session.price.incl_tax|currency }}
+                                        {% currency session.price.incl_tax session.price.currency %}
                                     {% else %}
-                                        {{ session.price.excl_tax|currency }}
+                                        {% currency session.price.excl_tax session.price.currency %}
                                     {% endif %}
                                 </p>
                             </div>
@@ -170,7 +170,14 @@
                                 {{ form.DELETE }}
                             </div>
                         </div>
-                        <div class="span2 align-center"><p class="price_color">{{ form.instance.unit_price_incl_tax|currency }}</p></div>
+                        {% session_strategy request form.instance as saved %}
+                        <div class="span2 align-center"><p class="price_color">
+                                {% if saved.price.is_tax_known %}
+                                    {% currency saved.price.incl_tax saved.price.currency %}
+                                {% else %}
+                                    {% currency saved.price.excl_tax saved.price.currency %}
+                                {% endif %}
+                        </p></div>
                         <div class="span2"><a href="#" data-id="{{ forloop.counter0 }}" class="btn pull-right btn-full" data-behaviours="move">{% trans "Move to basket" %}</a></div>
                     </div>
                 {% endfor %}
