@@ -19,8 +19,6 @@ class CsvUnicodeWriter(object):
         self.writer = csv.writer(self.queue, dialect=dialect, **kwds)
         self.stream = f
         self.encoder = codecs.getincrementalencoder(encoding)()
-        # Write BOM into file
-        self.stream.write(codecs.BOM_UTF8)
 
     def cast_to_str(self, obj):
         if isinstance(obj, unicode):
