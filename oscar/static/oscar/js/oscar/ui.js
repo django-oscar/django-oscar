@@ -11,7 +11,13 @@ var oscar = (function(o, $) {
         info: function(msg) { o.messages.addMessage('info', msg); },
         success: function(msg) { o.messages.addMessage('success', msg); },
         warning: function(msg) { o.messages.addMessage('warning', msg); },
-        error: function(msg) { o.messages.addMessage('error:', msg); }
+        error: function(msg) { o.messages.addMessage('error:', msg); },
+        clear: function() {
+            $('#messages').html('');
+        },
+        scrollTo: function() {
+            $('html').animate({scrollTop: $('#messages').offset().top});
+        }
     };
 
     // This block may need removing after reworking of promotions app
@@ -56,19 +62,6 @@ var oscar = (function(o, $) {
                 return false;
             }
             $form.data('locked', true);
-        }
-    };
-
-    o.account = {
-        init: function() {
-            if (document.location.hash) {
-                // Ensure the right tab is open if it is specified in the hash.
-                var hash = document.location.hash.substring(1),
-                $activeClass = $('.account-profile .tabbable'),
-                $li = $('a[href=#' + hash + ']').closest('li');
-                $activeClass.find('.active').removeClass('active');
-                $('#' + hash).add($li).addClass('active');
-            }
         }
     };
 
@@ -154,7 +147,11 @@ var oscar = (function(o, $) {
 
     o.basket = {
         is_form_being_submitted: false,
-        init: function() {
+        init: function(options) {
+            if (typeof options == 'undefined') {
+                options = {'basketURL': document.URL};
+            }
+            o.basket.url = options.basketURL || document.URL;
             $('#content_inner').on('click', '#basket_formset a[data-behaviours~="remove"]', function(event) {
                 o.basket.checkAndSubmit($(this), 'form', 'DELETE');
                 event.preventDefault();
@@ -186,7 +183,7 @@ var oscar = (function(o, $) {
         submitBasketForm: function(event) {
             $('#messages').html('');
             var payload = $('#basket_formset').serializeArray();
-            $.post('/basket/', payload, o.basket.submitFormSuccess, 'json');
+            $.post(o.basket.url, payload, o.basket.submitFormSuccess, 'json');
             event.preventDefault();
         },
         submitFormSuccess: function(data) {
@@ -223,15 +220,17 @@ var oscar = (function(o, $) {
         gateway: {
             init: function() {
                 var radioWidgets = $('form input[name=options]');
-                o.checkout.gateway.handleRadioSelection(radioWidgets.val());
+                var selectedRadioWidget = $('form input[name=options]:checked');
+                o.checkout.gateway.handleRadioSelection(selectedRadioWidget.val());
                 radioWidgets.change(o.checkout.gateway.handleRadioChange);
+                $('#id_username').focus();
             },
             handleRadioChange: function() {
                 o.checkout.gateway.handleRadioSelection($(this).val());
             },
             handleRadioSelection: function(value) {
                 var pwInput = $('#id_password');
-                if (value == 'new') {
+                if (value == 'anonymous' || value =='new') {
                     pwInput.attr('disabled', 'disabled');
                 } else {
                     pwInput.removeAttr('disabled');

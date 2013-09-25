@@ -3,6 +3,7 @@ import re
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.utils.timezone import now
+from oscar.core.compat import AUTH_USER_MODEL
 
 Product = models.get_model('catalogue', 'Product')
 
@@ -11,7 +12,7 @@ class RangeProductFileUpload(models.Model):
     range = models.ForeignKey('offer.Range', related_name='file_uploads', verbose_name=_("Range"))
     filepath = models.CharField(_("File Path"), max_length=255)
     size = models.PositiveIntegerField(_("Size"))
-    uploaded_by = models.ForeignKey('auth.User', verbose_name=_("Uploaded By"))
+    uploaded_by = models.ForeignKey(AUTH_USER_MODEL, verbose_name=_("Uploaded By"))
     date_uploaded = models.DateTimeField(_("Date Uploaded"), auto_now_add=True)
 
     PENDING, FAILED, PROCESSED = 'Pending', 'Failed', 'Processed'
@@ -21,7 +22,7 @@ class RangeProductFileUpload(models.Model):
         (PROCESSED, PROCESSED),
     )
     status = models.CharField(_("Status"), max_length=32, choices=choices, default=PENDING)
-    error_message = models.CharField(_("Error Message"), max_length=255, null=True)
+    error_message = models.CharField(_("Error Message"), max_length=255, blank=True)
 
     # Post-processing audit fields
     date_processed = models.DateTimeField(_("Date Processed"), null=True)

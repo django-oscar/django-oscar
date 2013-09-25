@@ -3,6 +3,7 @@ import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
+from oscar.core.compat import AUTH_USER_MODEL, AUTH_USER_MODEL_NAME
 
 class Migration(SchemaMigration):
     depends_on = (
@@ -26,7 +27,7 @@ class Migration(SchemaMigration):
         # Adding model 'UserRecord'
         db.create_table('analytics_userrecord', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
+            ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm[AUTH_USER_MODEL], unique=True)),
             ('num_product_views', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
             ('num_basket_additions', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
             ('num_orders', self.gf('django.db.models.fields.PositiveIntegerField')(default=0, db_index=True)),
@@ -40,7 +41,7 @@ class Migration(SchemaMigration):
         # Adding model 'UserProductView'
         db.create_table('analytics_userproductview', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm[AUTH_USER_MODEL])),
             ('product', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['catalogue.Product'])),
             ('date_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
         ))
@@ -49,7 +50,7 @@ class Migration(SchemaMigration):
         # Adding model 'UserSearch'
         db.create_table('analytics_usersearch', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm[AUTH_USER_MODEL])),
             ('query', self.gf('django.db.models.fields.CharField')(max_length=255, db_index=True)),
             ('date_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
         ))
@@ -86,7 +87,7 @@ class Migration(SchemaMigration):
             'date_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'product': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.Product']"}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['{0}']".format(AUTH_USER_MODEL)})
         },
         'analytics.userrecord': {
             'Meta': {'object_name': 'UserRecord'},
@@ -98,14 +99,14 @@ class Migration(SchemaMigration):
             'num_orders': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0', 'db_index': 'True'}),
             'num_product_views': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'total_spent': ('django.db.models.fields.DecimalField', [], {'default': "'0.00'", 'max_digits': '12', 'decimal_places': '2'}),
-            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['auth.User']", 'unique': 'True'})
+            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['{0}']".format(AUTH_USER_MODEL), 'unique': 'True'})
         },
         'analytics.usersearch': {
             'Meta': {'object_name': 'UserSearch'},
             'date_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'query': ('django.db.models.fields.CharField', [], {'max_length': '255', 'db_index': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['{0}']".format(AUTH_USER_MODEL)})
         },
         'auth.group': {
             'Meta': {'object_name': 'Group'},
@@ -120,8 +121,8 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         },
-        'auth.user': {
-            'Meta': {'object_name': 'User'},
+        AUTH_USER_MODEL: {
+            'Meta': {'object_name': AUTH_USER_MODEL_NAME},
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),

@@ -40,7 +40,7 @@ class LinePriceAdmin(admin.ModelAdmin):
 
 
 class ShippingEventTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'is_required', 'sequence_number')
+    list_display = ('name', )
     exclude = ('code',)
 
 
@@ -51,7 +51,7 @@ class PaymentEventQuantityInline(admin.TabularInline):
 
 class PaymentEventAdmin(admin.ModelAdmin):
     list_display = ('order', 'event_type', 'amount', 'num_affected_lines',
-                    'date')
+                    'date_created')
     inlines = [PaymentEventQuantityInline]
 
 

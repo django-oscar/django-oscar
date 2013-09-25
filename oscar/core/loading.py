@@ -44,8 +44,11 @@ def get_classes(module_label, classnames):
     # App must be local - check if module is in local app (it could be in
     # oscar's)
     app_label = module_label.split('.')[0]
-    base_package = app_module_path.rsplit('.' + app_label, 1)[0]
-    local_app = "%s.%s" % (base_package, module_label)
+    if '.' in app_module_path:
+        base_package = app_module_path.rsplit('.' + app_label, 1)[0]
+        local_app = "%s.%s" % (base_package, module_label)
+    else:
+        local_app = module_label
     try:
         imported_local_module = __import__(local_app, fromlist=classnames)
     except ImportError:
@@ -101,8 +104,19 @@ def get_profile_class():
     """
     Return the profile model class
     """
+    setting = getattr(settings, 'AUTH_PROFILE_MODULE', None)
+    if setting is None:
+        return None
     app_label, model_name = settings.AUTH_PROFILE_MODULE.split('.')
     profile_class = get_model(app_label, model_name)
     if not profile_class:
         raise ImproperlyConfigured("Can't import profile model")
     return profile_class
+
+
+def feature_hidden(feature_name):
+    """
+    Test if a certain Oscar feature is disabled.
+    """
+    return (feature_name is not None and
+            feature_name in settings.OSCAR_HIDDEN_FEATURES)

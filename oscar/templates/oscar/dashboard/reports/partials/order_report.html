@@ -1,31 +1,40 @@
 {% extends 'dashboard/reports/index.html' %}
+{% load url from future %}
 {% load currency_filters %}
 {% load i18n %}
 
 {% block report %}
-<table class="table table-striped table-bordered table-hover">
-    {% if objects %}
-	<tr>
-		<th>{% trans "Order number" %}</th>
-		<th>{% trans "User" %}</th>
-		<th>{% trans "Total incl. tax" %}</th>
-		<th>{% trans "Date placed" %}</th>
-		<th></th>
-	</tr>
-	{% for order in objects %}
-	<tr>
-		<td>{{ order.number }}</td>
-		<td>{{ order.user|default:"-" }}</td>
-		<td>{{ order.total_incl_tax|currency }}</td>
-		<td>{{ order.date_placed }}</td>
-		<td>
-			<a class="btn btn-info" href="{% url dashboard:order-detail order.number %}">{% trans "View" %}</a>
-		</td>
-	</tr>
-	{% endfor %}
-	{% else %}
-    <tr><td>{% trans "No results found." %}</td></tr>
-    {% endif %}
-</table>
-{% include "partials/pagination.html" %}
+    <table class="table table-striped table-bordered table-hover">
+        {% if objects %}
+            <tr>
+                <th>{% trans "Order number" %}</th>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Email" %}</th>
+                <th>{% trans "Total incl. tax" %}</th>
+                <th>{% trans "Date placed" %}</th>
+                <th></th>
+            </tr>
+            {% for order in objects %}
+                <tr>
+                    <td>{{ order.number }}</td>
+                        {% if not order.is_anonymous %}
+                            <td>{{ order.user.get_full_name|default:"-" }}</td>
+                            <td>{{ order.user.email }}</td>
+                        {% else %}
+                            <td>-</td>
+                            <td>{{ order.guest_email }}</td>
+                        {% endif %}
+                    </td>
+                    <td>{{ order.total_incl_tax|currency }}</td>
+                    <td>{{ order.date_placed }}</td>
+                    <td>
+                        <a class="btn btn-info" href="{% url 'dashboard:order-detail' order.number %}">{% trans "View" %}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr><td>{% trans "No results found." %}</td></tr>
+        {% endif %}
+    </table>
+    {% include "partials/pagination.html" %}
 {% endblock %}

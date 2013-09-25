@@ -7,7 +7,7 @@
 {% block content %}
 
 {% if suggestion %}
-    {% trans 'Did you mean' %} <a href="{% url search:search %}?q={{ suggestion }}">{{ suggestion }}</a>?
+    {% trans 'Did you mean' %} <a href="{% url 'search:search' %}?q={{ suggestion }}">{{ suggestion }}</a>?
 {% endif %}
 
 {% if page.object_list %}

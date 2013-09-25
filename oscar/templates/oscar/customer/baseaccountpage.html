@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% load url from future %}
+{% load i18n %}
+
+{% block title %}
+    {{ page_title }} | {% trans 'Account' %} | {{ block.super }}
+{% endblock %}
+
+{% block body_class %}account-profile{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'promotions:home' %}">{% trans 'Home' %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li>
+            <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
+            <span class="divider">/</span>
+        </li>
+        {% block extra_breadcrumbs %}{% endblock %}
+        <li class="active">{{ page_title }}</li>
+    </ul>
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+    <div class="tabbable">
+        {% include 'customer/partials/nav_account.html' %}
+        <div class="tab-content">
+            <div class="tab-pane active">
+                {% block tabcontent %}{% endblock tabcontent %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}

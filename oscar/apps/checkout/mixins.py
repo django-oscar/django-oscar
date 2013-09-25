@@ -1,16 +1,17 @@
 import logging
 
 from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
-from django.contrib.sites.models import Site
+from django.core.urlresolvers import reverse, NoReverseMatch
+from django.contrib.sites.models import Site, get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import get_model
 
 from oscar.core.loading import get_class
+from oscar.core.decorators import deprecated
+
 OrderCreator = get_class('order.utils', 'OrderCreator')
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 CheckoutSessionMixin = get_class('checkout.session', 'CheckoutSessionMixin')
-
 ShippingAddress = get_model('order', 'ShippingAddress')
 CommunicationEvent = get_model('order', 'CommunicationEvent')
 PaymentEventType = get_model('order', 'PaymentEventType')
@@ -19,6 +20,7 @@ PaymentEventQuantity = get_model('order', 'PaymentEventQuantity')
 UserAddress = get_model('address', 'UserAddress')
 Basket = get_model('basket', 'Basket')
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
+UnableToPlaceOrder = get_class('order.exceptions', 'UnableToPlaceOrder')
 
 post_checkout = get_class('checkout.signals', 'post_checkout')
 
@@ -50,8 +52,9 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         isn't necessarily the correct one to use in placing the order.  This
         can happen when a basket gets frozen.
         """
-        order = self.place_order(order_number, basket, total_incl_tax,
-                                 total_excl_tax, user, **kwargs)
+        order = self.place_order(
+            order_number, basket, total_incl_tax,
+            total_excl_tax, user, **kwargs)
         basket.submit()
         return self.handle_successful_order(order)
 
@@ -60,12 +63,18 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             self._payment_sources = []
         self._payment_sources.append(source)
 
-    def add_payment_event(self, event_type_name, amount):
+    def add_payment_event(self, event_type_name, amount, reference=''):
+        """
+        Record a payment event for creation once the order is placed
+        """
         event_type, __ = PaymentEventType.objects.get_or_create(
             name=event_type_name)
+        # We keep a local cache of payment events
         if self._payment_events is None:
             self._payment_events = []
-        event = PaymentEvent(event_type=event_type, amount=amount)
+        event = PaymentEvent(
+            event_type=event_type, amount=amount,
+            reference=reference)
         self._payment_events.append(event)
 
     def handle_successful_order(self, order):
@@ -103,7 +112,11 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         """
         shipping_address = self.create_shipping_address(basket)
         shipping_method = self.get_shipping_method(basket)
-        billing_address = self.create_billing_address(shipping_address)
+
+        # We pass the kwargs as they often include the billing address form
+        # which will be needed to save a billing address.
+        billing_address = self.create_billing_address(
+            shipping_address, **kwargs)
 
         if 'status' not in kwargs:
             status = self.get_initial_order_status(basket)
@@ -118,33 +131,49 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         # Set guest email address for anon checkout.   Some libraries (eg
         # PayPal) will pass this explicitly so we take care not to clobber.
         if (not self.request.user.is_authenticated() and 'guest_email'
-            not in kwargs):
+                not in kwargs):
             kwargs['guest_email'] = self.checkout_session.get_guest_email()
 
-        order = OrderCreator().place_order(basket=basket,
-                                           total_incl_tax=total_incl_tax,
-                                           total_excl_tax=total_excl_tax,
-                                           user=user,
-                                           shipping_method=shipping_method,
-                                           shipping_address=shipping_address,
-                                           billing_address=billing_address,
-                                           order_number=order_number,
-                                           status=status,
-                                           **kwargs)
+        order = OrderCreator().place_order(
+            basket=basket, total_incl_tax=total_incl_tax,
+            total_excl_tax=total_excl_tax, user=user,
+            shipping_method=shipping_method,
+            shipping_address=shipping_address,
+            billing_address=billing_address, order_number=order_number,
+            status=status, **kwargs)
         self.save_payment_details(order)
         return order
 
     def create_shipping_address(self, basket=None):
         """
-        Create and returns the shipping address for the current order.
+        Create and return the shipping address for the current order.
 
-        If the shipping address was entered manually, then we simply
-        write out a ShippingAddress model with the appropriate form data.  If
-        the user is authenticated, then we create a UserAddress from this data
-        too so it can be re-used in the future.
+        Compared to self.get_shipping_address(), ShippingAddress is saved and
+        makes sure that appropriate UserAddress exists.
+        """
+        addr = self.get_shipping_address(basket=basket)
+        if addr:
+            addr.save()
+            if self.request.user.is_authenticated():
+                self.update_address_book(self.request.user, addr)
+        return addr
+
+    def get_shipping_address(self, basket=None):
+        """
+        Return the (unsaved) shipping address for the current order.
+
+        If the shipping address was entered manually, then we instanciate a
+        ShippingAddress model with the appropriate form data.
 
         If the shipping address was selected from the user's address book,
         then we convert the UserAddress to a ShippingAddress.
+
+        The ShippingAddress instance is not saved as sometimes you need a
+        shipping address instance before the order is placed.  For example, if
+        you are submitting fraud information as part of a payment request.
+
+        The create_shipping_address method is responsible for saving a shipping
+        address when an order is placed.
         """
         if not basket:
             basket = self.request.basket
@@ -154,20 +183,42 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         addr_data = self.checkout_session.new_shipping_address_fields()
         addr_id = self.checkout_session.user_address_id()
         if addr_data:
-            addr = self.create_shipping_address_from_form_fields(addr_data)
-            self.create_user_address(addr_data)
+            return ShippingAddress(**addr_data)
         elif addr_id:
-            addr = self.create_shipping_address_from_user_address(addr_id)
+            try:
+                address = UserAddress._default_manager.get(pk=addr_id)
+            except UserAddress.DoesNotExist:
+                raise UnableToPlaceOrder(
+                    "The selected shipping address no longer exists. "
+                    "Please select or enter another")
+            shipping_addr = ShippingAddress()
+            address.populate_alternative_model(shipping_addr)
+            return shipping_addr
         else:
-            raise AttributeError("No shipping address data found")
-        return addr
+            raise UnableToPlaceOrder("No shipping address data found")
 
+    def update_address_book(self, user, shipping_addr):
+        """
+        Update the user's address book based on the new shipping address
+        """
+        try:
+            user_addr = user.addresses.get(
+                hash=shipping_addr.generate_hash())
+        except ObjectDoesNotExist:
+            # Create a new user address
+            user_addr = UserAddress(user=user)
+            shipping_addr.populate_alternative_model(user_addr)
+        user_addr.num_orders += 1
+        user_addr.save()
+
+    @deprecated
     def create_shipping_address_from_form_fields(self, addr_data):
         """Creates a shipping address model from the saved form fields"""
         shipping_addr = ShippingAddress(**addr_data)
         shipping_addr.save()
         return shipping_addr
 
+    @deprecated
     def create_user_address(self, session_addr_data):
         """
         For signed-in users, we create a user address model which will go
@@ -185,6 +236,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             except ObjectDoesNotExist:
                 user_addr.save()
 
+    @deprecated
     def create_shipping_address_from_user_address(self, addr_id):
         """Creates a shipping address from a user address"""
         address = UserAddress._default_manager.get(pk=addr_id)
@@ -197,7 +249,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         shipping_addr.save()
         return shipping_addr
 
-    def create_billing_address(self, shipping_address=None):
+    def create_billing_address(self, shipping_address=None, **kwargs):
         """
         Saves any relevant billing data (eg a billing address).
         """
@@ -223,9 +275,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         # We assume all lines are involved in the initial payment event
         for line in order.lines.all():
             PaymentEventQuantity.objects.create(
-                event=event,
-                line=line,
-                quantity=line.quantity)
+                event=event, line=line, quantity=line.quantity)
 
     def save_payment_sources(self, order):
         """
@@ -267,15 +317,24 @@ class OrderPlacementMixin(CheckoutSessionMixin):
 
     def send_confirmation_message(self, order, **kwargs):
         code = self.communication_type_code
-        ctx = {'order': order,
+        ctx = {'user': self.request.user,
+               'order': order,
+               'site': get_current_site(self.request),
                'lines': order.lines.all()}
 
         if not self.request.user.is_authenticated():
-            path = reverse('customer:anon-order',
-                           kwargs={'order_number': order.number,
-                                   'hash': order.verification_hash()})
-            site = Site.objects.get_current()
-            ctx['status_url'] = 'http://%s%s' % (site.domain, path)
+            # Attempt to add the anon order status URL to the email template
+            # ctx.
+            try:
+                path = reverse('customer:anon-order',
+                               kwargs={'order_number': order.number,
+                                       'hash': order.verification_hash()})
+            except NoReverseMatch:
+                # We don't care that much if we can't resolve the URL
+                pass
+            else:
+                site = Site.objects.get_current()
+                ctx['status_url'] = 'http://%s%s' % (site.domain, path)
 
         try:
             event_type = CommunicationEventType.objects.get(code=code)

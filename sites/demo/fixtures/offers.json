@@ -96,7 +96,7 @@
         "fields": {
             "range": null, 
             "proxy_class": "apps.offers.ChangesOwnerName", 
-            "type": null, 
+            "type": "", 
             "max_affected_items": null, 
             "value": null
         }

@@ -9,17 +9,28 @@ def create_from_sequence(bits):
     """
     if len(bits) == 1:
         # Get or create root node
+        name = bits[0]
         try:
-            root = Category.objects.get(depth=1, name=bits[0])
+            # Category names should be unique at the depth=1
+            root = Category.objects.get(depth=1, name=name)
         except Category.DoesNotExist:
-            root = Category.add_root(name=bits[0])
+            root = Category.add_root(name=name)
+        except Category.MultipleObjectsReturned:
+            raise ValueError((
+                "There are more than one categories with name "
+                "%s at depth=1") % name)
         return [root]
     else:
         parents = create_from_sequence(bits[:-1])
+        parent, name = parents[-1], bits[-1]
         try:
-            child = parents[-1].get_children().get(name=bits[-1])
+            child = parent.get_children().get(name=name)
         except Category.DoesNotExist:
-            child = parents[-1].add_child(name=bits[-1])
+            child = parent.add_child(name=name)
+        except Category.MultipleObjectsReturned:
+            raise ValueError((
+                "There are more than one categories with name "
+                "%s which are children of %s") % (name, parent))
         parents.append(child)
         return parents
 

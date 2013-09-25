@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+
+{% load url from future %}
+
 {% load currency_filters %}
 {% load category_tags %}
 {% load dashboard_tags %}
@@ -44,10 +47,10 @@
 
                 <div class="nav-collapse nav-accounts collapse">
                     <ul class="nav pull-right">
-                        <li><span>{% trans "Welcome" %} <em>{{ request.user.get_full_name|default:'Guest' }}</em></span></li>
-                        <li><a href="{% url promotions:home %}"><i class="icon-home"></i> {% trans "Return to site" %}</a></li>
-                        <li><a href="{% url customer:summary %}"><i class="icon-user"></i> {% trans "Account" %}</a></li>
-                        <li><a href="{% url customer:logout %}"><i class="icon-signout"></i> {% trans "Log out" %}</a></li>
+                        <li><span>{% trans "Welcome" %} <em>{{ request.user.get_full_name|default:request.user.email }}</em></span></li>
+                        <li><a href="{% url 'promotions:home' %}"><i class="icon-home"></i> {% trans "Return to site" %}</a></li>
+                        <li><a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "Account" %}</a></li>
+                        <li><a href="{% url 'customer:logout' %}"><i class="icon-signout"></i> {% trans "Log out" %}</a></li>
                     </ul>
                 </div>
             </div>
@@ -102,12 +105,12 @@
                 </div>
             </div>
         </div>
-	{% endblock %}
+    {% endblock %}
 
     <div class="container-fluid dashboard">
         {% block breadcrumbs %}
         <ul class="breadcrumb">
-            <li><a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a> <span class="divider">/</span></li>
+            <li><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a> <span class="divider">/</span></li>
         </ul>
         {% endblock %}
 
@@ -127,19 +130,17 @@
     </div><!-- /container -->
 {% endblock %}
 
-{% block cdn_scripts %}
-    {{ block.super }}
-    <!-- Custom Jquery UI, only contains date picker -->
-    <script src="{% static "oscar/js/jquery/jquery-ui-1.10.1.custom.min.js" %}" type="text/javascript" charset="utf-8"></script>
-{% endblock %}
-
 {% block extrascripts %}
     {{ block.super }}
     {% compress js %}
+
     {# jQuery plugins #}
+    <!-- Custom Jquery UI, only contains date picker -->
+    <script src="{% static "oscar/js/jquery/jquery-ui-1.10.1.custom.min.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "oscar/js/mousewheel/jquery.mousewheel.min.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "oscar/js/scrollpane/jquery.jscrollpane.min.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "oscar/js/select2/select2.js" %}" type="text/javascript" charset="utf-8"></script>
+
     {# WYSIHTML5 #}
     <script src="{% static "oscar/js/bootstrap-wysihtml5/wysihtml5-0.3.0.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.js" %}" type="text/javascript" charset="utf-8"></script>
@@ -149,5 +150,5 @@
 {% endblock %}
 
 {% block onbodyload %}
-oscar.dashboard.init();
+    oscar.dashboard.init();
 {% endblock %}

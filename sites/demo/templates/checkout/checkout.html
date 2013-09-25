@@ -33,7 +33,7 @@
 
         {% block shipping_address_actions %}
         <div class="alert-actions">
-            <a href="{% url checkout:shipping-address %}" class="btn">{% trans "Change shipping address" %}</a>
+            <a href="{% url 'checkout:shipping-address' %}" class="btn">{% trans "Change shipping address" %}</a>
         </div>
         {% endblock %}
 
@@ -50,7 +50,7 @@
     <div class="well well-success" data-behaviours="match-height">
         <p>{% trans "Payment details to go here" %}</p>
         <div class="alert-actions">
-            <a href="{% url checkout:payment-details %}" class="btn">{% trans "Change payment details" %}</a>
+            <a href="{% url 'checkout:payment-details' %}" class="btn">{% trans "Change payment details" %}</a>
         </div>
     </div>    
 </div>
@@ -98,7 +98,7 @@
            {% block order_contents_actions %}
             <hr/>
             <div class="row-fluid">
-                <a href="{% url basket:summary %}" class="btn btn-info pull-right">{% trans "Edit order contents" %}</a>
+                <a href="{% url 'basket:summary' %}" class="btn btn-info pull-right">{% trans "Edit order contents" %}</a>
             </div>
             {% endblock %}
         </div>

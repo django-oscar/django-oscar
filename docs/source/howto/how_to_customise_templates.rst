@@ -23,6 +23,7 @@ as so::
     TEMPLATE_LOADERS = (
         'django.template.loaders.filesystem.Loader',
         'django.template.loaders.app_directories.Loader',
+        'django.template.loaders.eggs.Loader',
     )
 
     import os
@@ -88,12 +89,12 @@ Apart from overriding ``catalogue/partials/product.html`` to change the looks
 for all products, you can also override it for individual products by placing
 templates in ``catalogue/partials/product/upc-%s.html`` or
 ``catalogue/partials/product/class-%s.html``, where ``%s`` is the product's UPC
-or product class in lower case, respectively.
+or class's slug, respectively.
 
 Example: Changing the analytics package
 ---------------------------------------
 
-Support you want to use an alternative analytics package to Google analytics.
+Suppose you want to use an alternative analytics package to Google analytics.
 We can achieve this by overriding templates where the analytics urchin is loaded
 and called.
 

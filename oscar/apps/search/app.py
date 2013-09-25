@@ -30,7 +30,7 @@ class SearchApplication(Application):
                 form_class=forms.PriceRangeSearchForm,
                 searchqueryset=sqs,
                 template='search/results.html'),
-                name='search_default'),
+                name='search-default'),
         )
         return self.post_process_urls(urlpatterns)
 

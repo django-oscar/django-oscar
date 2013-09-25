@@ -1,3 +1,5 @@
+{% extends "partials/google_analytics.html" %}
+{% block extratracking %}
 _gaq.push(['_addTrans',
     '{{ order.number|escapejs }}',
     '{{ shop_name|escapejs }}',
@@ -13,9 +15,9 @@ _gaq.push(['_addTrans',
         '{{ order.number }}',
         '{{ line.partner_sku|escapejs }}',
         '{{ line.title|escapejs }}',
-        '{{ line.category|escapejs }}',
+        '{{ line.category|default:"Uncategorised"|escapejs }}',
         '{{ line.unit_price_incl_tax }}',
         '{{ line.quantity }}']);
 {% endfor %}
 _gaq.push(['_trackTrans']);
-
+{% endblock %}

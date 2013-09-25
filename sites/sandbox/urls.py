@@ -1,7 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.conf import settings
 from django.contrib import admin
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 
 from oscar.app import shop
@@ -13,6 +12,8 @@ from oscar.views import handler500, handler404, handler403
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    # Include admin as convenience. It's unsupported and you should
+    # use the dashboard
     (r'^admin/', include(admin.site.urls)),
     # Custom functionality to allow dashboard users to be created
     (r'^gateway/', include('apps.gateway.urls')),
@@ -27,7 +28,6 @@ if 'rosetta' in settings.INSTALLED_APPS:
 
 if settings.DEBUG:
     # Server statics and uploaded media
-    urlpatterns += staticfiles_urlpatterns()
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
     # Allow error pages to be tested

@@ -1,8 +1,11 @@
 from itertools import chain
 from datetime import datetime, date
+import logging
+import os
 
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.contrib.staticfiles.finders import find
+from django.core.exceptions import ObjectDoesNotExist, ValidationError, ImproperlyConfigured
 from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Sum, Count, get_model
@@ -10,33 +13,37 @@ from django.utils.translation import ugettext_lazy as _
 from treebeard.mp_tree import MP_Node
 
 from oscar.core.utils import slugify
-from oscar.core.loading import get_class
-BrowsableProductManager = get_class(
-    'catalogue.managers', 'BrowsableProductManager')
+from oscar.core.loading import get_classes
+
+ProductManager, BrowsableProductManager = get_classes(
+    'catalogue.managers', ['ProductManager', 'BrowsableProductManager'])
 
 
 class AbstractProductClass(models.Model):
     """
-    Defines the options and attributes for a group of products, e.g. Books,
-    DVDs and Toys.
+    Used for defining options and attributes for a subset of products.
+    E.g. Books, DVDs and Toys. A product can only belong to one product class.
+
+    At least one product class must be created when setting up a new
+    Oscar deployment.
 
     Not necessarily equivalent to top-level categories but usually will be.
     """
     name = models.CharField(_('Name'), max_length=128)
     slug = models.SlugField(_('Slug'), max_length=128, unique=True)
 
-    # Some product type don't require shipping (eg digital products) - we use
-    # this field to take some shortcuts in the checkout.
+    #: Some product type don't require shipping (eg digital products) - we use
+    #: this field to take some shortcuts in the checkout.
     requires_shipping = models.BooleanField(_("Requires shipping?"),
                                             default=True)
 
-    # Digital products generally don't require their stock levels to be
-    # tracked.
+    #: Digital products generally don't require their stock levels to be
+    #: tracked.
     track_stock = models.BooleanField(_("Track stock levels?"), default=True)
 
-    # These are the options (set by the user when they add to basket) for this
-    # item class.  For instance, a product class of "SMS message" would always
-    # require a message to be specified before it could be bought.
+    #: These are the options (set by the user when they add to basket) for this
+    #: item class.  For instance, a product class of "SMS message" would always
+    #: require a message to be specified before it could be bought.
     options = models.ManyToManyField('catalogue.Option', blank=True,
                                      verbose_name=_("Options"))
 
@@ -64,7 +71,7 @@ class AbstractCategory(MP_Node):
     name = models.CharField(_('Name'), max_length=255, db_index=True)
     description = models.TextField(_('Description'), blank=True, null=True)
     image = models.ImageField(_('Image'), upload_to='categories', blank=True,
-                              null=True)
+                              null=True, max_length=255)
     slug = models.SlugField(_('Slug'), max_length=255, db_index=True,
                             editable=False)
     full_name = models.CharField(_('Full Name'), max_length=255,
@@ -76,19 +83,33 @@ class AbstractCategory(MP_Node):
     def __unicode__(self):
         return self.full_name
 
+    def update_slug(self, commit=True):
+        """
+        Updates the instance's slug. Use update_children_slugs for updating
+        the rest of the tree.
+        """
+        parent = self.get_parent()
+        slug = slugify(self.name)
+        # If category has a parent, includes the parents slug in this one
+        if parent:
+            self.slug = '%s%s%s' % (
+                parent.slug, self._slug_separator, slug)
+            self.full_name = '%s%s%s' % (
+                parent.full_name, self._full_name_separator, self.name)
+        else:
+            self.slug = slug
+            self.full_name = self.name
+        if commit:
+            self.save()
+
+    def update_children_slugs(self):
+        for child in self.get_children():
+            child.update_slug()
+            child.update_children_slugs()
+
     def save(self, update_slugs=True, *args, **kwargs):
         if update_slugs:
-            parent = self.get_parent()
-            slug = slugify(self.name)
-            # If category has a parent, includes the parents slug in this one
-            if parent:
-                self.slug = '%s%s%s' % (
-                    parent.slug, self._slug_separator, slug)
-                self.full_name = '%s%s%s' % (
-                    parent.full_name, self._full_name_separator, self.name)
-            else:
-                self.slug = slug
-                self.full_name = self.name
+            self.update_slug(commit=False)
 
         # Enforce slug uniqueness here as MySQL can't handle a unique index on
         # the slug field
@@ -103,6 +124,7 @@ class AbstractCategory(MP_Node):
                         'slug': self.slug})
 
         super(AbstractCategory, self).save(*args, **kwargs)
+        self.update_children_slugs()
 
     def move(self, target, pos=None):
         """
@@ -113,14 +135,12 @@ class AbstractCategory(MP_Node):
         """
         super(AbstractCategory, self).move(target, pos)
 
-        # Update the slugs and full names of all nodes in the new subtree.
         # We need to reload self as 'move' doesn't update the current instance,
         # then we iterate over the subtree and call save which automatically
         # updates slugs.
         reloaded_self = self.__class__.objects.get(pk=self.pk)
-        subtree = self.__class__.get_tree(parent=reloaded_self)
-        for node in subtree:
-            node.save()
+        reloaded_self.update_slug()
+        reloaded_self.update_children_slugs()
 
     def get_ancestors(self, include_self=True):
         ancestors = list(super(AbstractCategory, self).get_ancestors())
@@ -130,8 +150,8 @@ class AbstractCategory(MP_Node):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('catalogue:category', (), {
-                'category_slug': self.slug})
+        return ('catalogue:category', (),
+                {'category_slug': self.slug, 'pk': self.pk})
 
     class Meta:
         abstract = True
@@ -230,25 +250,24 @@ class AbstractProductContributor(models.Model):
 class AbstractProduct(models.Model):
     """
     The base product object
-    """
-    # If an item has no parent, then it is the "canonical" or abstract version
-    # of a product which essentially represents a set of products.  If a
-    # product has a parent then it is a specific version of a catalogue.
-    #
-    # For example, a canonical product would have a title like "Green fleece"
-    # while its children would be "Green fleece - size L".
 
-    # Universal product code
-    upc = models.CharField(_("UPC"), max_length=64, blank=True, null=True,
-                           unique=True,
+    If an item has no parent, then it is the "canonical" or abstract version
+    of a product which essentially represents a set of products.  If a
+    product has a parent then it is a specific version of a catalogue.
+
+    For example, a canonical product would have a title like "Green fleece"
+    while its children would be "Green fleece - size L".
+    """
+    #: Universal product code
+    upc = models.CharField(
+        _("UPC"), max_length=64, blank=True, null=True, unique=True,
         help_text=_("Universal Product Code (UPC) is an identifier for "
                     "a product which is not specific to a particular "
                     " supplier. Eg an ISBN for a book."))
 
     # No canonical product should have a stock record as they cannot be bought.
-    parent = models.ForeignKey('self', null=True, blank=True,
-                               related_name='variants',
-                               verbose_name=_("Parent"),
+    parent = models.ForeignKey(
+        'self', null=True, blank=True, related_name='variants', verbose_name=_("Parent"),
         help_text=_("Only choose a parent product if this is a 'variant' of "
                     "a canonical catalogue.  For example if this is a size "
                     "4 of a particular t-shirt.  Leave blank if this is a "
@@ -260,8 +279,8 @@ class AbstractProduct(models.Model):
     slug = models.SlugField(_('Slug'), max_length=255, unique=False)
     description = models.TextField(_('Description'), blank=True, null=True)
 
-    # Use this field to indicate if the product is inactive or awaiting
-    # approval
+    #: Use this field to indicate if the product is inactive or awaiting
+    #: approval
     status = models.CharField(_('Status'), max_length=128, blank=True,
                               null=True, db_index=True)
     product_class = models.ForeignKey(
@@ -285,9 +304,8 @@ class AbstractProduct(models.Model):
         verbose_name=_("Related Products"),
         help_text=_("Related items are things like different formats of the "
                     "same book.  Grouping them together allows better linking "
-                    "betwen products on the site."))
+                    "between products on the site."))
 
-    # Recommended products
     recommended_products = models.ManyToManyField(
         'catalogue.Product', through='ProductRecommendation', blank=True,
         verbose_name=_("Recommended Products"))
@@ -308,9 +326,12 @@ class AbstractProduct(models.Model):
         'catalogue.Category', through='ProductCategory',
         verbose_name=_("Categories"))
 
+    #: Determines if a product may be used in an offer. It is illegal to
+    #: discount some types of product (e.g. ebooks) and this field helps
+    #: merchants from avoiding discounting such products
     is_discountable = models.BooleanField(_("Is Discountable"), default=True)
 
-    objects = models.Manager()
+    objects = ProductManager()
     browsable = BrowsableProductManager()
 
     def __init__(self, *args, **kwargs):
@@ -365,7 +386,7 @@ class AbstractProduct(models.Model):
                 if variant.is_available_to_buy:
                     return True
             return False
-        if not self.product_class.track_stock:
+        if not self.get_product_class().track_stock:
             return True
         return self.has_stockrecord and self.stockrecord.is_available_to_buy
 
@@ -391,7 +412,7 @@ class AbstractProduct(models.Model):
         except ObjectDoesNotExist:
             return False
         else:
-            return True
+            return self.stockrecord is not None
 
     def is_purchase_permitted(self, user, quantity):
         """
@@ -399,7 +420,7 @@ class AbstractProduct(models.Model):
         """
         if not self.has_stockrecord:
             return False, _("No stock available")
-        return self.stockrecord.is_purchase_permitted(user, quantity)
+        return self.stockrecord.is_purchase_permitted(user, quantity, self)
 
     def add_category_from_breadcrumbs(self, breadcrumb):
         from oscar.apps.catalogue.categories import create_from_breadcrumbs
@@ -451,15 +472,16 @@ class AbstractProduct(models.Model):
 
     def primary_image(self):
         images = self.images.all()
-        if images.count():
+        try:
             return images[0]
-        # We return a dict with fields that mirror the key properties of the
-        # ProductImage class so this missing image can be used interchangably
-        # in templates.  Strategy pattern ftw!
-        return {
-            'original': self.get_missing_image(),
-            'caption': '',
-            'is_missing': True}
+        except IndexError:
+            # We return a dict with fields that mirror the key properties of the
+            # ProductImage class so this missing image can be used interchangably
+            # in templates.  Strategy pattern ftw!
+            return {
+                'original': self.get_missing_image(),
+                'caption': '',
+                'is_missing': True}
 
     # Helpers
 
@@ -513,6 +535,13 @@ class AbstractProduct(models.Model):
         """
         Update rating field
         """
+        self.rating = self.calculate_rating()
+        self.save()
+
+    def calculate_rating(self):
+        """
+        Calculate rating value
+        """
         ProductReview = get_model('reviews', 'ProductReview')
         result = self.reviews.filter(
             status=ProductReview.APPROVED
@@ -520,11 +549,15 @@ class AbstractProduct(models.Model):
             sum=Sum('score'), count=Count('id'))
         reviews_sum = result['sum'] or 0
         reviews_count = result['count'] or 0
+        rating = None
         if reviews_count > 0:
-            self.rating = float(reviews_sum) / reviews_count
-        else:
-            self.rating = None
-        self.save()
+            rating = float(reviews_sum) / reviews_count
+        return rating
+
+    def has_review_by(self, user):
+        if user.is_anonymous():
+            return False
+        return self.reviews.filter(user=user).exists()
 
 
 class ProductRecommendation(models.Model):
@@ -546,6 +579,10 @@ class ProductRecommendation(models.Model):
 class ProductAttributesContainer(object):
     """
     Stolen liberally from django-eav, but simplified to be product-specific
+
+    To set attributes on a product, use the `attr` attribute:
+
+        product.attr.weight = 125
     """
 
     def __setstate__(self, state):
@@ -565,7 +602,7 @@ class ProductAttributesContainer(object):
             return getattr(self, name)
         raise AttributeError(
             _("%(obj)s has no attribute named '%(attr)s'") % {
-                'obj': self.product.product_class, 'attr': name})
+                'obj': self.product.get_product_class(), 'attr': name})
 
     def validate_attributes(self):
         for attribute in self.get_all_attributes():
@@ -610,6 +647,15 @@ class AbstractProductAttribute(models.Model):
     Defines an attribute for a product class. (For example, number_of_pages for
     a 'book' class)
     """
+    product_class = models.ForeignKey(
+        'catalogue.ProductClass', related_name='attributes', blank=True,
+        null=True, verbose_name=_("Product Class"))
+    name = models.CharField(_('Name'), max_length=128)
+    code = models.SlugField(
+        _('Code'), max_length=128,
+        validators=[RegexValidator(
+            regex=r'^[a-zA-Z_][0-9a-zA-Z_]*$',
+            message=_("Code must match ^[a-zA-Z_][0-9a-zA-Z_]*$"))])
 
     TYPE_CHOICES = (
         ("text", _("Text")),
@@ -620,14 +666,6 @@ class AbstractProductAttribute(models.Model):
         ("date", _("Date")),
         ("option", _("Option")),
         ("entity", _("Entity")))
-    product_class = models.ForeignKey(
-        'catalogue.ProductClass', related_name='attributes', blank=True,
-        null=True, verbose_name=_("Product Class"))
-    name = models.CharField(_('Name'), max_length=128)
-    code = models.SlugField(
-        _('Code'), max_length=128,
-        validators=[RegexValidator(regex=r'^[a-zA-Z_][0-9a-zA-Z_]*$',
-        message=_("Code must match ^[a-zA-Z_][0-9a-zA-Z_]*$"))])
     type = models.CharField(
         choices=TYPE_CHOICES, default=TYPE_CHOICES[0][0],
         max_length=20, verbose_name=_("Type"))
@@ -921,8 +959,40 @@ class AbstractOption(models.Model):
 
 class MissingProductImage(object):
 
+    """
+    Mimics a Django file field by having a name property.
+
+    sorl-thumbnail requires all it's images to be in MEDIA_ROOT. This class
+    tries symlinking the default "missing image" image in STATIC_ROOT
+    into MEDIA_ROOT for convenience, as that is necessary every time an Oscar
+    project is setup. This avoids the less helpful NotFound IOError that would
+    be raised when sorl-thumbnail tries to access it.
+    """
+
     def __init__(self, name=None):
         self.name = name if name else settings.OSCAR_MISSING_IMAGE_URL
+        media_file_path = os.path.join(settings.MEDIA_ROOT, self.name)
+        # don't try to symlink if MEDIA_ROOT is not set (e.g. running tests)
+        if settings.MEDIA_ROOT and not os.path.exists(media_file_path):
+            self.symlink_missing_image(media_file_path)
+
+    def symlink_missing_image(self, media_file_path):
+        static_file_path = find('oscar/img/%s' % self.name)
+        if static_file_path is not None:
+            try:
+                os.symlink(static_file_path, media_file_path)
+            except OSError:
+                raise ImproperlyConfigured((
+                    "Please copy/symlink the "
+                    "'missing image' image at %s into your MEDIA_ROOT at %s. "
+                    "This exception was raised because Oscar was unable to "
+                    "symlink it for you.") % (media_file_path,
+                                              settings.MEDIA_ROOT))
+            else:
+                logging.info((
+                    "Symlinked the 'missing image' image at %s into your "
+                    "MEDIA_ROOT at %s") % (media_file_path,
+                                           settings.MEDIA_ROOT))
 
 
 class AbstractProductImage(models.Model):
@@ -932,11 +1002,11 @@ class AbstractProductImage(models.Model):
     product = models.ForeignKey(
         'catalogue.Product', related_name='images', verbose_name=_("Product"))
     original = models.ImageField(
-        _("Original"), upload_to=settings.OSCAR_IMAGE_FOLDER)
+        _("Original"), upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255)
     caption = models.CharField(
         _("Caption"), max_length=200, blank=True, null=True)
 
-    # Use display_order to determine which is the "primary" image
+    #: Use display_order to determine which is the "primary" image
     display_order = models.PositiveIntegerField(_("Display Order"), default=0,
         help_text=_("""An image with a display order of
                        zero will be the primary image for a product"""))

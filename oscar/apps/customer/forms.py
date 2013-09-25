@@ -1,26 +1,27 @@
 import string
+import urlparse
 import random
 
-from django.contrib.auth.forms import AuthenticationForm
-from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext_lazy as _
-from django.core.exceptions import ObjectDoesNotExist
 from django import forms
-from django.db.models import get_model
-from django.contrib.auth.models import User
-from django.contrib.auth import forms as auth_forms
 from django.conf import settings
-from django.core import validators
-from django.core.exceptions import ValidationError
-from django.contrib.sites.models import get_current_site
+from django.contrib.auth import forms as auth_forms
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.models import get_current_site
+from django.core import validators
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ValidationError
+from django.db.models import get_model
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_profile_class, get_class
-from oscar.apps.customer.utils import get_password_reset_url
+from oscar.core.compat import get_user_model
+from oscar.apps.customer.utils import get_password_reset_url, normalise_email
 
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 CommunicationEventType = get_model('customer', 'communicationeventtype')
 ProductAlert = get_model('customer', 'ProductAlert')
+User = get_user_model()
 
 
 def generate_username():
@@ -54,6 +55,7 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
                 site.domain,
                 get_password_reset_url(user))
             ctx = {
+                'user': user,
                 'site': site,
                 'reset_url': reset_url}
             messages = CommunicationEventType.objects.get_and_render(
@@ -68,6 +70,21 @@ class EmailAuthenticationForm(AuthenticationForm):
     auth backend.
     """
     username = forms.EmailField(label=_('Email Address'))
+    redirect_url = forms.CharField(
+        widget=forms.HiddenInput, required=False)
+
+    def __init__(self, host, *args, **kwargs):
+        self.host = host
+        super(EmailAuthenticationForm, self).__init__(*args, **kwargs)
+
+    def clean_redirect_url(self):
+        url = self.cleaned_data['redirect_url'].strip()
+        if not url:
+            return settings.LOGIN_REDIRECT_URL
+        host = urlparse.urlparse(url)[1]
+        if host and host != self.host:
+            return settings.LOGIN_REDIRECT_URL
+        return url
 
 
 class CommonPasswordValidator(validators.BaseValidator):
@@ -126,75 +143,106 @@ class CommonPasswordValidator(validators.BaseValidator):
 
 
 class EmailUserCreationForm(forms.ModelForm):
-    email = forms.EmailField(label=_('Email Address'))
-    password1 = forms.CharField(label=_('Password'), widget=forms.PasswordInput,
-                                validators=[validators.MinLengthValidator(6),
-                                CommonPasswordValidator()])
-    password2 = forms.CharField(label=_('Confirm Password'), widget=forms.PasswordInput)
+    email = forms.EmailField(label=_('Email address'))
+    password1 = forms.CharField(
+        label=_('Password'), widget=forms.PasswordInput,
+        validators=[validators.MinLengthValidator(6),
+                    CommonPasswordValidator()])
+    password2 = forms.CharField(
+        label=_('Confirm password'), widget=forms.PasswordInput)
+    redirect_url = forms.CharField(
+        widget=forms.HiddenInput, required=False)
 
     class Meta:
         model = User
         fields = ('email',)
 
+    def __init__(self, host=None, *args, **kwargs):
+        self.host = host
+        super(EmailUserCreationForm, self).__init__(*args, **kwargs)
+
     def clean_email(self):
-        email = self.cleaned_data['email'].lower()
-        try:
-            User.objects.get(email=email)
-        except User.DoesNotExist:
-            return email
-        raise forms.ValidationError(_("A user with that email address already exists."))
+        email = normalise_email(self.cleaned_data['email'])
+        if User._default_manager.filter(email=email).exists():
+            raise forms.ValidationError(
+                _("A user with that email address already exists."))
+        return email
 
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1', '')
         password2 = self.cleaned_data.get('password2', '')
-
         if password1 != password2:
-            raise forms.ValidationError(_("The two password fields didn't match."))
+            raise forms.ValidationError(
+                _("The two password fields didn't match."))
         return password2
+
+    def clean_redirect_url(self):
+        url = self.cleaned_data['redirect_url'].strip()
+        if not url:
+            return settings.LOGIN_REDIRECT_URL
+        host = urlparse.urlparse(url)[1]
+        if host and self.host and host != self.host:
+            return settings.LOGIN_REDIRECT_URL
+        return url
 
     def save(self, commit=True):
         user = super(EmailUserCreationForm, self).save(commit=False)
         user.set_password(self.cleaned_data['password1'])
-        user.username = generate_username()
 
+        if 'username' in [f.name for f in User._meta.fields]:
+            user.username = generate_username()
         if commit:
             user.save()
         return user
 
 
-class SearchByDateRangeForm(forms.Form):
+class OrderSearchForm(forms.Form):
     date_from = forms.DateField(required=False, label=_("From"))
     date_to = forms.DateField(required=False, label=_("To"))
+    order_number = forms.CharField(required=False, label=_("Order number"))
 
     def clean(self):
-        if self.is_valid() and not self.cleaned_data['date_from'] and not self.cleaned_data['date_to']:
-            raise forms.ValidationError(_("At least one date field is required."))
-        return super(SearchByDateRangeForm, self).clean()
+        if self.is_valid() and not any([self.cleaned_data['date_from'],
+                                        self.cleaned_data['date_to'],
+                                        self.cleaned_data['order_number']]):
+            raise forms.ValidationError(_("At least one field is required."))
+        return super(OrderSearchForm, self).clean()
 
     def description(self):
         if not self.is_bound or not self.is_valid():
             return _('All orders')
         date_from = self.cleaned_data['date_from']
         date_to = self.cleaned_data['date_to']
+        order_number = self.cleaned_data['order_number']
+        desc = None
         if date_from and date_to:
-            return _('Orders placed between %(date_from)s and %(date_to)s') % {
+            desc = _('Orders placed between %(date_from)s and %(date_to)s') % {
                 'date_from': date_from,
                 'date_to': date_to}
         elif date_from:
-            return _('Orders placed since %s') % date_from
+            desc = _('Orders placed since %s') % date_from
         elif date_to:
-            return _('Orders placed until %s') % date_to
+            desc = _('Orders placed until %s') % date_to
+        if order_number and desc is None:
+            desc = _('Orders with order number containing %s') % order_number
+        elif order_number and desc is not None:
+            desc += _(' and order number containing %s') % order_number
+        return desc
 
     def get_filters(self):
         date_from = self.cleaned_data['date_from']
         date_to = self.cleaned_data['date_to']
+        order_number = self.cleaned_data['order_number']
+        kwargs = {}
         if date_from and date_to:
-            return {'date_placed__range': [date_from, date_to]}
+            kwargs['date_placed__range'] = [date_from, date_to]
         elif date_from and not date_to:
-            return {'date_placed__gt': date_from}
+            kwargs['date_placed__gt'] = date_from
         elif not date_from and date_to:
-            return {'date_placed__lt': date_to}
-        return {}
+            kwargs['date_placed__lt'] = date_to
+        if order_number:
+            kwargs['number__contains'] = order_number
+        return kwargs
 
 
 class UserForm(forms.ModelForm):
@@ -203,6 +251,8 @@ class UserForm(forms.ModelForm):
         self.user = user
         kwargs['instance'] = user
         super(UserForm, self).__init__(*args, **kwargs)
+        if 'email' in self.fields:
+            self.fields['email'].required = True
 
     def clean_email(self):
         """
@@ -211,16 +261,12 @@ class UserForm(forms.ModelForm):
         unique-ness of email addresses is *not* enforced on the model
         level in ``django.contrib.auth.models.User``.
         """
-        email = self.cleaned_data['email']
-        try:
-            User.objects.exclude(
-                id=self.user.id).get(email=email)
-        except User.DoesNotExist:
-            return email
-        else:
+        email = normalise_email(self.cleaned_data['email'])
+        if User._default_manager.filter(
+                email=email).exclude(id=self.user.id).exists():
             raise ValidationError(
-                _("A user with this email address already exists")
-            )
+                _("A user with this email address already exists"))
+        return email
 
     class Meta:
         model = User
@@ -229,23 +275,16 @@ class UserForm(forms.ModelForm):
                    'user_permissions', 'groups')
 
 
-if hasattr(settings, 'AUTH_PROFILE_MODULE'):
-    Profile = get_profile_class()
+Profile = get_profile_class()
+if Profile:
 
     class UserAndProfileForm(forms.ModelForm):
-        first_name = forms.CharField(
-            label=_('First name'), max_length=128, required=False)
-        last_name = forms.CharField(
-            label=_('Last name'), max_length=128, required=False)
-        email = forms.EmailField(label=_('Email address'))
-
-        # Fields from user model
-        user_fields = ('first_name', 'last_name', 'email')
+        email = forms.EmailField(label=_('Email address'), required=True)
 
         def __init__(self, user, *args, **kwargs):
             self.user = user
             try:
-                instance = user.get_profile()
+                instance = Profile.objects.get(user=user)
             except ObjectDoesNotExist:
                 # User has no profile, try a blank one
                 instance = Profile(user=user)
@@ -253,40 +292,55 @@ if hasattr(settings, 'AUTH_PROFILE_MODULE'):
 
             super(UserAndProfileForm, self).__init__(*args, **kwargs)
 
-            # Add user fields
-            self.fields['first_name'].initial = self.instance.user.first_name
-            self.fields['last_name'].initial = self.instance.user.last_name
+            # Get a list of profile fields to help with ordering later
+            profile_field_names = self.fields.keys()
+            del profile_field_names[profile_field_names.index('email')]
+
             self.fields['email'].initial = self.instance.user.email
 
-            # Ensure user fields are above profile
-            order = list(self.user_fields)
-            for field_name in self.fields.keys():
-                if field_name not in self.user_fields:
-                    order.append(field_name)
-            self.fields.keyOrder = order
+            # Add user fields (we look for core user fields first)
+            core_field_names = set([f.name for f in User._meta.fields])
+            user_field_names = ['email']
+            for field_name in ('first_name', 'last_name'):
+                if field_name in core_field_names:
+                    user_field_names.append(field_name)
+            user_field_names.extend(User._meta.additional_fields)
+
+            # Store user fields so we know what to save later
+            self.user_field_names = user_field_names
+
+            # Add additional user fields
+            additional_fields = forms.fields_for_model(
+                User, fields=user_field_names)
+            self.fields.update(additional_fields)
+
+            # Set initial values
+            for field_name in user_field_names:
+                self.fields[field_name].initial = getattr(user, field_name)
+
+            # Ensure order of fields is email, user fields then profile fields
+            self.fields.keyOrder = user_field_names + profile_field_names
 
         class Meta:
             model = Profile
             exclude = ('user',)
 
         def clean_email(self):
-            email = self.cleaned_data['email']
-            try:
-                User.objects.exclude(
-                    id=self.user.id).get(email=email)
-            except User.DoesNotExist:
-                return email
-            else:
+            email = normalise_email(self.cleaned_data['email'])
+            if User._default_manager.filter(
+                    email=email).exclude(id=self.user.id).exists():
                 raise ValidationError(
-                    _("A user with this email address already exists")
-                )
+                    _("A user with this email address already exists"))
+            return email
 
         def save(self, *args, **kwargs):
             user = self.instance.user
-            user.first_name = self.cleaned_data['first_name']
-            user.last_name = self.cleaned_data['last_name']
-            user.email = self.cleaned_data['email']
+
+            # Save user also
+            for field_name in self.user_field_names:
+                setattr(user, field_name, self.cleaned_data[field_name])
             user.save()
+
             return super(ProfileForm, self).save(*args, **kwargs)
 
     ProfileForm = UserAndProfileForm

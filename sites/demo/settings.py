@@ -19,7 +19,7 @@ location = lambda x: os.path.join(
 DEBUG = True
 TEMPLATE_DEBUG = True
 SQL_DEBUG = True
-SEND_BROKEN_LINK_EMAILS = True
+SEND_BROKEN_LINK_EMAILS = False
 
 ADMINS = (
     ('David', 'david.winterbottom@tangentlabs.co.uk'),
@@ -27,7 +27,22 @@ ADMINS = (
 EMAIL_SUBJECT_PREFIX = '[Oscar demo] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+ALLOWED_HOSTS = ['demo.oscarcommerce.com',
+                 'demo.oscar.tangentlabs.co.uk']
+
 MANAGERS = ADMINS
+
+# Use settings_local to specify your own PostGIS database and creds
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'oscar_demo',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '',
+    },
+}
 
 CACHES = {
     'default': {
@@ -92,7 +107,8 @@ SECRET_KEY = '$)a7n&o80u!6y5t-+jrd3)3!%vh&shg$wqpjpxc!ar&p#!)n1a'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    # needed by django-treebeard for admin (and potentially other libs)
+    'django.template.loaders.eggs.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -192,6 +208,11 @@ LOGGING = {
             'propagate': True,
             'level': 'INFO',
         },
+        'datacash': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level': 'INFO',
+        },
         'django.db.backends': {
             'handlers': ['null'],
             'propagate': False,
@@ -226,9 +247,12 @@ INSTALLED_APPS = [
     'apps.bigbang',
 ]
 
-# Include a shipping override app to provide some shipping methods
+# Include core apps with a few overrides:
+# - a shipping override app to provide some shipping methods
+# - an order app to provide order processing logic
 from oscar import get_core_apps
-INSTALLED_APPS = INSTALLED_APPS + get_core_apps(['apps.shipping'])
+INSTALLED_APPS = INSTALLED_APPS + get_core_apps(
+    ['apps.shipping', 'apps.order'])
 
 AUTHENTICATION_BACKENDS = (
     'oscar.apps.customer.auth_backends.Emailbackend',
@@ -261,12 +285,12 @@ OSCAR_ALLOW_ANON_CHECKOUT = True
 OSCAR_SHOP_NAME = 'Oscar'
 OSCAR_SHOP_TAGLINE = 'Demo site'
 
-#GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
-
 COMPRESS_ENABLED = False
 COMPRESS_PRECOMPILERS = (
     ('text/less', 'lessc {infile} {outfile}'),
 )
+
+THUMBNAIL_KEY_PREFIX = 'oscar-demo'
 
 LOG_ROOT = location('logs')
 # Ensure log root exists
@@ -281,19 +305,18 @@ USE_TZ = True
 OSCAR_MISSING_IMAGE_URL = 'image_not_found.jpg'
 
 # Add stores node to navigation
-from django.utils.translation import ugettext_lazy as _
 new_nav = OSCAR_DASHBOARD_NAVIGATION
 new_nav.append(
     {
-        'label': _('Stores'),
+        'label': 'Stores',
         'icon': 'icon-shopping-cart',
         'children': [
             {
-                'label': _('Stores'),
+                'label': 'Stores',
                 'url_name': 'stores-dashboard:store-list',
             },
             {
-                'label': _('Store groups'),
+                'label': 'Store groups',
                 'url_name': 'stores-dashboard:store-group-list',
             },
         ]

@@ -2,9 +2,9 @@ from decimal import Decimal as D, ROUND_DOWN, ROUND_UP
 
 from django.core import exceptions
 from django.db.models import get_model
-from django.template.defaultfilters import date
+from django.template.defaultfilters import date as date_filter
 from django.db import models
-from django.utils.timezone import now
+from django.utils.timezone import now, get_current_timezone
 from django.utils.translation import ungettext, ugettext as _
 from django.utils.importlib import import_module
 from django.core.exceptions import ValidationError
@@ -45,8 +45,7 @@ class ConditionalOffer(models.Model):
         _("Name"), max_length=128, unique=True,
         help_text=_("This is displayed within the customer's basket"))
     slug = models.SlugField(_("Slug"), max_length=128, unique=True, null=True)
-    description = models.TextField(
-        _("Description"), blank=True, null=True,
+    description = models.TextField(_("Description"), blank=True,
         help_text=_("This is displayed on the offer browsing page"))
 
     # Offers come in a few different types:
@@ -113,6 +112,7 @@ class ConditionalOffer(models.Model):
     # Use this field to limit the number of times this offer can be applied to
     # a basket (and hence a single order).
     max_basket_applications = models.PositiveIntegerField(
+        _("Max basket applications"),
         blank=True, null=True,
         help_text=_("The number of times this offer can be applied to a "
                     "basket (and order)"))
@@ -332,26 +332,27 @@ class ConditionalOffer(models.Model):
                 'description': desc,
                 'is_satisfied': True})
 
-        def format_datetime(dt):
+        def hide_time_if_zero(dt):
             # Only show hours/minutes if they have been specified
-            if dt.hour == 0 and dt.minute == 0:
-                return date(dt, settings.DATE_FORMAT)
-            return date(dt, settings.DATETIME_FORMAT)
+            localtime = dt.astimezone(get_current_timezone())
+            if localtime.hour == 0 and localtime.minute == 0:
+                return date_filter(localtime, settings.DATE_FORMAT)
+            return date_filter(localtime, settings.DATETIME_FORMAT)
 
         if self.start_datetime or self.end_datetime:
             today = now()
             if self.start_datetime and self.end_datetime:
                 desc = _("Available between %(start)s and %(end)s") % {
-                        'start': format_datetime(self.start_datetime),
-                        'end': format_datetime(self.end_datetime)}
+                        'start': hide_time_if_zero(self.start_datetime),
+                        'end': hide_time_if_zero(self.end_datetime)}
                 is_satisfied = self.start_datetime <= today <= self.end_datetime
             elif self.start_datetime:
                 desc = _("Available from %(start)s") % {
-                    'start': format_datetime(self.start_datetime)}
+                    'start': hide_time_if_zero(self.start_datetime)}
                 is_satisfied = today >= self.start_datetime
             elif self.end_datetime:
                 desc = _("Available until %(end)s") % {
-                    'end': format_datetime(self.end_datetime)}
+                    'end': hide_time_if_zero(self.end_datetime)}
                 is_satisfied = today <= self.end_datetime
             restrictions.append({
                 'description': desc,
@@ -433,7 +434,11 @@ class Condition(models.Model):
         return self
 
     def __unicode__(self):
-        return self.proxy().__unicode__()
+        return self.proxy().name
+
+    @property
+    def name(self):
+        return self.description
 
     @property
     def description(self):
@@ -507,8 +512,7 @@ class Benefit(models.Model):
         (SHIPPING_PERCENTAGE, _("Discount is a percentage off of the shipping cost")),
     )
     type = models.CharField(
-        _("Type"), max_length=128, choices=TYPE_CHOICES, null=True,
-        blank=True)
+        _("Type"), max_length=128, choices=TYPE_CHOICES, blank=True)
 
     # The value to use with the designated type.  This can be either an integer
     # (eg for multibuy) or a decimal (eg an amount) which is slightly
@@ -554,13 +558,17 @@ class Benefit(models.Model):
         raise RuntimeError("Unrecognised benefit type (%s)" % self.type)
 
     def __unicode__(self):
-        desc = self.description
+        name = self.proxy().name
         if self.max_affected_items:
-            desc += ungettext(
+            name += ungettext(
                 " (max %d item)",
                 " (max %d items)",
                 self.max_affected_items) % self.max_affected_items
-        return desc
+        return name
+
+    @property
+    def name(self):
+        return self.description
 
     @property
     def description(self):
@@ -644,7 +652,10 @@ class Benefit(models.Model):
     def clean_absolute(self):
         if not self.range:
             raise ValidationError(
-                _("Percentage benefits require a product range"))
+                _("Fixed discount benefits require a product range"))
+        if not self.value:
+            raise ValidationError(
+                _("Fixed discount benefits require a value"))
 
     def round(self, amount):
         """
@@ -673,7 +684,7 @@ class Benefit(models.Model):
 
         :basket: The basket
         :range: The range of products to use for filtering.  The fixed-price
-        benefit ignores its range and uses the condition range
+                benefit ignores its range and uses the condition range
         """
         if range is None:
             range = self.range
@@ -814,7 +825,8 @@ class CountCondition(Condition):
     """
     _description = _("Basket includes %(count)d item(s) from %(range)s")
 
-    def __unicode__(self):
+    @property
+    def name(self):
         return self._description % {
             'count': self.value,
             'range': unicode(self.range).lower()}
@@ -872,7 +884,7 @@ class CountCondition(Condition):
 
         :basket: The basket
         :affected_lines: The lines that have been affected by the discount.
-        This should be list of tuples (line, discount, qty)
+                         This should be list of tuples (line, discount, qty)
         """
         # We need to count how many items have already been consumed as part of
         # applying the benefit, so we don't consume too many items.
@@ -899,7 +911,8 @@ class CoverageCondition(Condition):
     """
     _description = _("Basket includes %(count)d distinct item(s) from %(range)s")
 
-    def __unicode__(self):
+    @property
+    def name(self):
         return self._description % {
             'count': self.value,
             'range': unicode(self.range).lower()}
@@ -998,7 +1011,8 @@ class ValueCondition(Condition):
     """
     _description = _("Basket includes %(amount)s from %(range)s")
 
-    def __unicode__(self):
+    @property
+    def name(self):
         return self._description % {
             'amount': currency(self.value),
             'range': unicode(self.range).lower()}
@@ -1165,7 +1179,8 @@ class PercentageDiscountBenefit(Benefit):
     """
     _description = _("%(value)s%% discount on %(range)s")
 
-    def __unicode__(self):
+    @property
+    def name(self):
         return self._description % {
             'value': self.value,
             'range': self.range.name.lower()}
@@ -1212,7 +1227,8 @@ class AbsoluteDiscountBenefit(Benefit):
     """
     _description = _("%(value)s discount on %(range)s")
 
-    def __unicode__(self):
+    @property
+    def name(self):
         return self._description % {
             'value': currency(self.value),
             'range': self.range.name.lower()}
@@ -1339,7 +1355,7 @@ class FixedPriceBenefit(Benefit):
 
         # Apply discount to the affected lines
         discount_applied = D('0.00')
-        last_line = covered_lines[-1][0]
+        last_line = covered_lines[-1][1]
         for price, line, quantity in covered_lines:
             if line == last_line:
                 # If last line, we just take the difference to ensure that
@@ -1356,7 +1372,8 @@ class FixedPriceBenefit(Benefit):
 class MultibuyDiscountBenefit(Benefit):
     _description = _("Cheapest product from %(range)s is free")
 
-    def __unicode__(self):
+    @property
+    def name(self):
         return self._description % {
             'range': self.range.name.lower()}
 

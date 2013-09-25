@@ -26,6 +26,8 @@ URLs
 * Create pages should have 'create' as the final path segment; e.g.
   ``/dashboard/notifications/create/``
 
+* URL names use dashes not underscores.
+
 * Update pages are sometimes the same as detail pages (i.e., when in the
   dashboard).  In those cases, just use the detail convention, eg
   ``/dashboard/notifications/3/``.  If there is a distinction between the detail
@@ -48,3 +50,8 @@ Referencing managers
 
 Use ``_default_manager`` rather than ``objects``.  This allows projects to
 override the default manager to provide domain-specific behaviour.
+
+HTML
+----
+
+Please indent with four spaces.

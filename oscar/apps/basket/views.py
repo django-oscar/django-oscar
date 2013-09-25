@@ -112,9 +112,10 @@ class BasketView(ModelFormSetView):
 
     def get_upsell_messages(self, basket):
         offers = Applicator().get_offers(self.request, basket)
+        applied_offers = basket.offer_applications.offers.values()
         msgs = []
         for offer in offers:
-            if offer.is_condition_partially_satisfied(basket):
+            if offer.is_condition_partially_satisfied(basket) and offer not in applied_offers:
                 data = {
                     'message': offer.get_upsell_message(basket),
                     'offer': offer}
@@ -280,8 +281,7 @@ class BasketAddView(FormView):
             kwargs['instance'] = product_select_form.cleaned_data['product_id']
         else:
             kwargs['instance'] = None
-        kwargs['user'] = self.request.user
-        kwargs['basket'] = self.request.basket
+        kwargs['request'] = self.request
         return kwargs
 
     def get_success_url(self):
@@ -470,7 +470,7 @@ class SavedView(ModelFormSetView):
 
         is_move = False
         for form in formset:
-            if form.cleaned_data['move_to_basket']:
+            if form.cleaned_data.get('move_to_basket', False):
                 is_move = True
                 msg = render_to_string(
                     'basket/messages/line_restored.html',

@@ -1,12 +1,14 @@
 from django_webtest import WebTest
-from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.core import mail
 from django_dynamic_fixture import G
 
-from oscar_testsupport.factories import create_product
+from oscar.test.factories import create_product
+from oscar.core.compat import get_user_model
 from oscar.apps.customer.models import ProductAlert
 
+
+User = get_user_model()
 
 class TestAUser(WebTest):
 
@@ -35,15 +37,19 @@ class TestAUserWithAnActiveStockAlert(WebTest):
         form.submit()
 
     def test_can_cancel_it(self):
-        account_page = self.app.get(reverse('customer:summary'),
-                                    user=self.user)
-        form = account_page.forms['alerts_form']
-        form.submit('cancel_alert')
+        alerts = ProductAlert.objects.filter(user=self.user)
+        self.assertEqual(1, len(alerts))
+        alert = alerts[0]
+        self.assertFalse(alert.is_cancelled)
+        self.app.get(reverse('customer:alerts-cancel-by-pk',
+                             kwargs={'pk': alert.pk}),
+                             user=self.user)
 
         alerts = ProductAlert.objects.filter(user=self.user)
         self.assertEqual(1, len(alerts))
         alert = alerts[0]
         self.assertTrue(alert.is_cancelled)
+
 
     def test_gets_notified_when_it_is_back_in_stock(self):
         self.product.stockrecord.num_in_stock = 10

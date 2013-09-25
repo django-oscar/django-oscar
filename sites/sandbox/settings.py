@@ -11,7 +11,10 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 SQL_DEBUG = True
 SEND_BROKEN_LINK_EMAILS = False
-THUMBNAIL_DEBUG = True
+
+ALLOWED_HOSTS = ['latest.oscarcommerce.com',
+                 'sandbox.oscar.tangentlabs.co.uk',
+                 'master.oscarcommerce.com']
 
 ADMINS = (
     ('David Winterbottom', 'david.winterbottom@tangentlabs.co.uk'),
@@ -114,7 +117,8 @@ SECRET_KEY = '$)a7n&o80u!6y5t-+jrd3)3!%vh&shg$wqpjpxc!ar&p#!)n1a'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    # needed by django-treebeard for admin (and potentially other libs)
+    'django.template.loaders.eggs.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -140,7 +144,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     # Allow languages to be selected
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -151,7 +155,6 @@ MIDDLEWARE_CLASSES = (
     #'oscar.profiling.middleware.ProfileMiddleware',
 )
 
-INTERNAL_IPS = ('127.0.0.1',)
 
 ROOT_URLCONF = 'urls'
 
@@ -178,6 +181,11 @@ LOGGING = {
         'simple': {
             'format': '[%(asctime)s] %(message)s'
         },
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
     },
     'handlers': {
         'null': {
@@ -216,6 +224,7 @@ LOGGING = {
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
+            'filters': ['require_debug_false'],
         },
     },
     'loggers': {
@@ -234,6 +243,11 @@ LOGGING = {
             'propagate': True,
             'level': 'INFO',
         },
+        'oscar.catalogue.import': {
+            'handlers': ['console'],
+            'propagate': False,
+            'level': 'INFO',
+        },
         'gateway': {
             'handlers': ['gateway_file'],
             'propagate': True,
@@ -249,6 +263,12 @@ LOGGING = {
             'propagate': False,
             'level': 'DEBUG',
         },
+        # suppress output of this debug toolbar panel
+        'template_timings_panel': {
+            'handlers': ['null'],
+            'level': 'DEBUG',
+            'propagate': False,
+        }
     }
 }
 
@@ -263,11 +283,13 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     'django.contrib.staticfiles',
     'django_extensions',
+    # Debug toolbar + extensions
     'debug_toolbar',
+    'cache_panel',
+    'template_timings_panel',
     'south',
     'rosetta',          # For i18n testing
     'compressor',
-    'apps.user',        # For profile testing
     'apps.gateway',     # For allowing dashboard access
 ]
 from oscar import get_core_apps
@@ -291,6 +313,12 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
+# =============
+# Debug Toolbar
+# =============
+
+INTERNAL_IPS = ('127.0.0.1',)
+
 
 # Allow internal IPs to see the debug toolbar.  This is just for Tangent's QA
 # department to be able to create better issues when something goes wrong.
@@ -302,23 +330,30 @@ DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
     'SHOW_TOOLBAR_CALLBACK': is_internal
 }
-
-AUTH_PROFILE_MODULE = 'user.Profile'
-
+DEBUG_TOOLBAR_PANELS = (
+    'debug_toolbar.panels.headers.HeaderDebugPanel',
+    'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
+    'debug_toolbar.panels.template.TemplateDebugPanel',
+    'debug_toolbar.panels.timer.TimerDebugPanel',
+    'debug_toolbar.panels.sql.SQLDebugPanel',
+    'template_timings_panel.panels.TemplateTimings.TemplateTimings',
+    'cache_panel.panel.CacheDebugPanel',
+    'debug_toolbar.panels.signals.SignalDebugPanel',
+    'debug_toolbar.panels.logger.LoggingPanel',
+    'debug_toolbar.panels.version.VersionDebugPanel',
+    'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
+)
 
 # ==============
 # Oscar settings
 # ==============
 
-
 from oscar.defaults import *
-
 
 # Meta
 # ====
 
-OSCAR_SHOP_NAME = 'Oscar Sandbox'
-OSCAR_SHOP_TAGLINE = 'e-Commerce for Django'
+OSCAR_SHOP_TAGLINE = 'Sandbox'
 
 # Enter Google Analytics ID for the tracking to be included in the templates
 #GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
@@ -368,6 +403,11 @@ COMPRESS_OFFLINE_CONTEXT = {
     'use_less': USE_LESS,
 }
 
+# We do this to work around an issue in compressor where the LESS files are
+# compiled but compression isn't enabled.  When this happens, the relative URL
+# is wrong between the generated CSS file and other assets:
+# https://github.com/jezdez/django_compressor/issues/226
+COMPRESS_OUTPUT_DIR = 'oscar'
 
 # Logging
 # =======
@@ -376,6 +416,12 @@ LOG_ROOT = location('logs')
 # Ensure log root exists
 if not os.path.exists(LOG_ROOT):
     os.mkdir(LOG_ROOT)
+
+# Sorl
+# ====
+
+THUMBNAIL_DEBUG = True
+THUMBNAIL_KEY_PREFIX = 'oscar-sandbox'
 
 
 # Try and import local settings which can be used to override any of the above.

@@ -1,4 +1,5 @@
 {% extends "checkout/checkout.html" %}
+{% load url from future %}
 {% load i18n %}
 
 {% block order_contents %}{% endblock %}
@@ -6,18 +7,16 @@
 {% block payment_method %}{% endblock %}
 {% block payment_details %}{% endblock %}
 
-{% block checkout-nav %}
-	{% include 'checkout/nav.html' with step=1 %}
+{% block checkout_nav %}
+    {% include 'checkout/nav.html' with step=1 %}
 {% endblock %}
 
 {% block shipping_address %}
-
-<h1>Delete address?</h1>
-<form action="." method="post">
-    {% csrf_token %}
-	{{ object.summary }}
-	<p>{% trans "Are you sure you want to delete this address?" %} <button type="submit" class="btn btn-danger">{% trans "Yes!" %}</button>
-	{% trans "or" %} <a href="{% url checkout:shipping-address %}">{% trans "cancel" %}</a>.</p>
-</form>
-
+    <h1>{% trans "Delete address?" %}</h1>
+    <form action="." method="post">
+        {% csrf_token %}
+        {{ object.summary }}
+        <p>{% trans "Are you sure you want to delete this address?" %} <button type="submit" class="btn btn-danger">{% trans "Yes!" %}</button>
+            {% trans "or" %} <a href="{% url 'checkout:shipping-address' %}">{% trans "cancel" %}</a>.</p>
+    </form>
 {% endblock shipping_address %}

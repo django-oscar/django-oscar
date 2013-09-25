@@ -8,155 +8,169 @@ adding functionality.
 product_viewed
 --------------
 
-.. data:: oscar.apps.catalogue.signals.product_viewed
-    :class:
+.. class:: oscar.apps.catalogue.signals.product_viewed
 
-Raised when a product detail page is viewed.
+    Raised when a product detail page is viewed.
 
 Arguments sent with this signal:
 
-``product``
+.. attribute:: product
+
     The product being viewed
 
-``user``
+.. attribute:: user
+
     The user in question
 
-``request``
+.. attribute:: request
+
     The request instance
 
-``response``
+.. attribute:: response
+
     The response instance
 
 product_search
 --------------
 
-.. data:: oscar.apps.catalogue.signals.product_search
-    :class:
+.. class:: oscar.apps.catalogue.signals.product_search
 
-Raised when a search is performed.
+   Raised when a search is performed.
 
 Arguments sent with this signal:
 
-``query``
+.. attribute:: query
+
     The search term
 
-``user``
+.. attribute:: user
+
     The user in question
 
 basket_addition
 ---------------
 
-.. data:: oscar.apps.basket.signals.basket_addition
-    :class:
+.. class:: oscar.apps.basket.signals.basket_addition
 
-Raised when a product is added to a basket
+   Raised when a product is added to a basket
 
 Arguments sent with this signal:
 
-``product``
+.. attribute:: product
+
     The product being added
 
-``user``
+.. attribute:: user
+
     The user in question
 
 voucher_addition
 ----------------
 
-.. data:: oscar.apps.basket.signals.voucher_addition
-    :class:
+.. class:: oscar.apps.basket.signals.voucher_addition
 
-Raised when a valid voucher is added to a basket
+   Raised when a valid voucher is added to a basket
 
 Arguments sent with this signal:
 
-``basket``
+.. attribute:: basket
+
     The basket in question
 
-``voucher``
+.. attribute:: voucher
+
     The voucher in question
 
 pre_payment
 -----------
 
-.. data:: oscar.apps.checkout.signals.pre_payment
-    :class:
+.. class:: oscar.apps.checkout.signals.pre_payment
 
-Raised immediately before attempting to take payment in the checkout.
+   Raised immediately before attempting to take payment in the checkout.
 
 Arguments sent with this signal:
 
-``view``
+.. attribute:: view
+
     The view class instance
 
 post_payment
 ------------
 
-.. data:: oscar.apps.checkout.signals.post_payment
-    :class:
+.. class:: oscar.apps.checkout.signals.post_payment
 
-Raised immediately after payment has been taken.
+   Raised immediately after payment has been taken.
 
 Arguments sent with this signal:
 
-``view``
+.. attribute:: view
+
     The view class instance
 
 order_placed
 ------------
 
-.. data:: oscar.apps.order.signals.order_placed
-    :class:
+.. class:: oscar.apps.order.signals.order_placed
 
-Raised by the :class:`oscar.apps.order.utils.OrderCreator` class when creating an order.
+   Raised by the :class:`oscar.apps.order.utils.OrderCreator` class when
+   creating an order.
 
 Arguments sent with this signal:
 
-``order``
+.. attribute:: order
+
     The order created
 
-``user``
+.. attribute:: user
+
     The user creating the order (not necessarily the user linked to the order
     instance!)
 
 post_checkout
 -------------
 
-.. data:: oscar.apps.checkout.signals.post_checkout
-    :class:
+.. class:: oscar.apps.checkout.signals.post_checkout
 
-Raised by the :class:`oscar.apps.checkout.mixins.OrderPlacementMixin` class
-when a customer completes the checkout process.
+    Raised by the :class:`oscar.apps.checkout.mixins.OrderPlacementMixin` class
+    when a customer completes the checkout process
 
-``order``
+.. attribute:: order
+
     The order created
 
-``user``
+.. attribute:: user
+
     The user who completed the checkout
 
-``request``
+.. attribute:: request
+
     The request instance
 
-``response``
+.. attribute:: response
+
     The response instance
 
 review_created
 --------------
 
-.. data:: oscar.apps.catalogue.reviews.signals.review_added
-    :class:
+.. class:: oscar.apps.catalogue.reviews.signals.review_added
 
-Raised when a product detail page is viewed.
+    Raised when a review is added.
 
 Arguments sent with this signal:
 
-``review``
+.. attribute:: review
+
     The review that was created
 
-``user``
+.. attribute:: user
+
     The user performing the action
 
-``request``
+.. attribute:: request
+
     The request instance
 
-``response``
+.. attribute:: response
+
     The response instance

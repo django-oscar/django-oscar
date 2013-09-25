@@ -2,8 +2,8 @@
 {% load i18n %}
 
 {% if product.is_available_to_buy %}
-    {% basket_form request.basket product as basket_form %}
-    <form action="{% url basket:add %}" method="post">
+    {% basket_form request product as basket_form %}
+    <form action="{% url 'basket:add' %}" method="post">
         {% csrf_token %}
         {% include "partials/form_fields.html" with form=basket_form %}
         <hr/>
@@ -13,7 +13,7 @@
     {% if has_active_alert %}
     <p>{% trans "You have an active stock alert for this product." %}</p>
     {% else %}
-    <form id="alert_form" method="post" action="{% url customer:alert-create product.id %}">
+    <form id="alert_form" method="post" action="{% url 'customer:alert-create' product.id %}">
         {% csrf_token %}
         <p>{% trans "You can get an email alert when this product is back in stock." %}</p>
         {% include "partials/form_fields.html" with form=alert_form %}

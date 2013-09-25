@@ -1,64 +1,68 @@
 {% extends "checkout/layout.html" %}
+
+{% load url from future %}
 {% load currency_filters %}
 {% load i18n %}
 
 {% block title %}
-{% trans "Checkout gateway" %} | {{ block.super }}
+    {% trans "Checkout gateway" %} | {{ block.super }}
 {% endblock %}
 
-{% block checkout-nav %}
-	{% include 'checkout/nav.html' with step=0 %}
+{% block checkout_nav %}
+    {% include 'checkout/nav.html' with step=0 %}
 {% endblock %}
 
 {% block content %}
 
-<div class="sub-header">
-	<h2>{% trans "Who are you?" %}</h2>
-</div>
+    <div class="sub-header">
+        <h1>{% trans "Who are you?" %}</h1>
+    </div>
 
-<form action="." method="post" class="form-stacked well well-info">
-	{% csrf_token %}
-	{{ form.non_field_errors }}
-	{% include 'partials/form_field.html' with field=form.username %}
-	
-	<div class="control-group">
-		{{ form.options.errors }}
-		<div class="controls">
-			<label class="radio">
-			     <input type="radio" id="id_options_1" name="options" value="existing" {% if form.password.errors %}checked="checked"{% endif %} />
-				 {% trans "I have an account and my password is" %}:
-			</label>
-		</div>
-	</div>
-	
-	<div class="control-group {% for error in form.password.errors %}error{% endfor %}">
-		<div class="controls">
-		    {{ form.password }}
-			<small><a href="{% url password-reset %}">{% trans "Get a password reminder" %}</a></small>
-		    {% for error in form.password.errors %}
-				<span class="help-block">
-					{{ error }}
-				</span>
-            {% endfor %}
-		</div>
-	</div>	
-	
-	<div class="control-group">
-		<div class="controls">
-			<label class="radio">
-			     <input type="radio" id="id_options_0" name="options" value="new" {% if not form.password.errors %}checked="checked"{% endif %} />
-				 {% trans "I don't want to create an account" %}:
-			</label>
-		</div>
-	</div>
-		
-	<div class="form-actions">
-		<button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
-	</div>
-</form>
+    <form action="." method="post" class="form-stacked well well-info">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        {% include "partials/form_field.html" with field=form.username %}
+
+        <div class="control-group">
+            <div class="controls">
+                <div class="radio">
+                    {{ form.options.0 }}
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group {% if form.password.errors %}error{% endif %}">
+            {{ form.options.errors }}
+            <div class="controls">
+                <div class="radio">
+                    {{ form.options.2 }}
+                    <div class="form-inline">
+                        {{ form.password }}
+                        <small><a href="{% url 'password-reset' %}" tabindex="-1">{% trans "Get a password reminder" %}</a></small>
+                        {% for error in form.password.errors %}
+                            <span class="help-block">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="controls">
+                <div class="radio">
+                    {{ form.options.1 }}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
+        </div>
+    </form>
 
 {% endblock content %}
 
 {% block onbodyload %}
-oscar.checkout.gateway.init();
+    oscar.checkout.gateway.init();
 {% endblock %}

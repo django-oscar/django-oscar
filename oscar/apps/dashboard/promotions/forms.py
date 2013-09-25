@@ -2,10 +2,10 @@ from django import forms
 from django.conf import settings
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
+from oscar.apps.promotions.conf import PROMOTION_CLASSES
 
 from oscar.forms.fields import ExtendedURLField
 from oscar.core.loading import get_classes
-from oscar.apps.promotions.conf import PROMOTION_CLASSES
 
 RawHTML, SingleProduct, PagePromotion, HandPickedProductList, OrderedProduct = get_classes('promotions.models',
     ['RawHTML', 'SingleProduct', 'PagePromotion', 'HandPickedProductList',
@@ -15,7 +15,7 @@ RawHTML, SingleProduct, PagePromotion, HandPickedProductList, OrderedProduct = g
 class PromotionTypeSelectForm(forms.Form):
     choices = []
     for klass in PROMOTION_CLASSES:
-        choices.append((klass.classname(), klass._type))
+        choices.append((klass.classname(), klass._meta.verbose_name))
     promotion_type = forms.ChoiceField(choices=tuple(choices),
                                        label=_("Promotion type"))
 
@@ -37,10 +37,11 @@ OrderedProductFormSet = inlineformset_factory(HandPickedProductList,
 
 
 class PagePromotionForm(forms.ModelForm):
-    page_url = ExtendedURLField(label=_("URL"))
-    position = forms.CharField(widget=forms.Select(choices=settings.OSCAR_PROMOTION_POSITIONS),
-                               label=_("Position"),
-                               help_text=_("Where in the page this content block will appear"))
+    page_url = ExtendedURLField(label=_("URL"), verify_exists=True)
+    position = forms.CharField(
+        widget=forms.Select(choices=settings.OSCAR_PROMOTION_POSITIONS),
+        label=_("Position"),
+        help_text=_("Where in the page this content block will appear"))
 
     class Meta:
         model = PagePromotion
@@ -48,8 +49,14 @@ class PagePromotionForm(forms.ModelForm):
 
     def clean_page_url(self):
         page_url = self.cleaned_data.get('page_url')
-        if (page_url and page_url.startswith('/') and
-            not page_url.endswith('/')):
-            page_url += '/'
-        return page_url
+        if not page_url:
+            return page_url
 
+        if page_url.startswith('http'):
+            raise forms.ValidationError(
+                _("Content blocks can only be linked to internal URLs"))
+
+        if page_url.startswith('/') and not page_url.endswith('/'):
+            page_url += '/'
+
+        return page_url

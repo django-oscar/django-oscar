@@ -1,4 +1,7 @@
-{% load currency_filters i18n %}<p xmlns="http://www.w3.org/1999/html">{% trans 'Hello,' %}</p>
+{% extends "customer/emails/base.html" %}
+{% load currency_filters i18n %}
+
+{% block body %}<p xmlns="http://www.w3.org/1999/html">{% trans 'Hello,' %}</p>
 
 <p>{% blocktrans with order_number=order.number %}We are pleased to confirm your order {{ order_number }} has been received and
 will be processed shortly.{% endblocktrans %}</p>
@@ -22,6 +25,4 @@ will be processed shortly.{% endblocktrans %}</p>
 
 {% if status_url %}
 <p>{% blocktrans %}You can view the status of this order by clicking <a href="{{ status_url }}" title="order status">here</a>{% endblocktrans %}</p>
-{% endif %}
-
-<p>{% blocktrans %}The team{% endblocktrans %}</p>
+{% endif %}{% endblock %}

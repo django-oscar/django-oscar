@@ -33,10 +33,10 @@ setup(name='django-oscar',
       packages=find_packages(exclude=["sandbox*", "tests*"]),
       include_package_data=True,
       install_requires=[
-          'django>=1.4,<1.5',
+          'django>=1.4.2,<1.6',
           # PIL is required for image fields, Pillow is the "friendly" PIL fork
           'pillow>=1.7.8,<2.0.0',
-          # Oscar ships with migraations
+          # Oscar ships with migrations
           'South>=0.7.6,<0.8',
           # We use the ModelFormSetView from django-extra-views for the basket
           # page
@@ -46,10 +46,10 @@ setup(name='django-oscar',
           # eagerly anticipating a stable 2.0 release on PyPI.
           'django-haystack==2.0.0-beta',
           # Treebeard is used for categories
-          'django-treebeard>=1.61,<1.62',
+          'django-treebeard==2.0b1',
           # Sorl is used as the default thumbnailer
           'sorl-thumbnail==11.12',
-          'python-memcached>=1.48,<1.49',
+          'python-memcached>=1.48,<1.52',
           # Babel is used for currency formatting
           'Babel>=0.9,<0.10',
           # Oscar's default templates use compressor (but you can override
@@ -58,7 +58,7 @@ setup(name='django-oscar',
           # For converting non-ASCII to ASCII when creating slugs
           'Unidecode>=0.04.12,<0.05',
           # For manipulating search URLs
-          'purl>=0.6'
+          'purl>=0.7'
       ],
       dependency_links=['https://github.com/toastdriven/django-haystack/tarball/fd83d3f449c2197f93040bb3d7bc6083ea8e48b7#egg=django-haystack-2.0.0-beta'],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers

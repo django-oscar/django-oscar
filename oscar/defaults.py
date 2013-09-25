@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 
 OSCAR_SHOP_NAME = 'Oscar'
-OSCAR_SHOP_TAGLINE = 'Domain-driven e-Commerce for Django'
+OSCAR_SHOP_TAGLINE = ''
 
 # Basket settings
 OSCAR_BASKET_COOKIE_LIFETIME = 7 * 24 * 60 * 60
@@ -26,7 +26,7 @@ OSCAR_UPLOAD_ROOT = '/tmp'
 
 # Address settings
 OSCAR_REQUIRED_ADDRESS_FIELDS = ('first_name', 'last_name', 'line1',
-                                 'city', 'postcode', 'country')
+                                 'line4', 'postcode', 'country')
 
 # Search settings
 OSCAR_SEARCH_SUGGEST_LIMIT = 10
@@ -57,6 +57,9 @@ OSCAR_PROMOTION_POSITIONS = (('page', 'Page'),
 OSCAR_ALLOW_ANON_REVIEWS = True
 OSCAR_MODERATE_REVIEWS = False
 
+# Accounts
+OSCAR_ACCOUNTS_REDIRECT_URL = 'customer:profile-view'
+
 # This enables sending alert notifications/emails
 # instantly when products get back in stock
 # by listening to stock record update signals
@@ -77,6 +80,9 @@ OSCAR_OFFER_BLACKLIST_PRODUCT = None
 
 # Cookies
 OSCAR_COOKIES_DELETE_ON_LOGOUT = ['oscar_recently_viewed_products', ]
+
+# Hidden Oscar features, e.g. wishlists or reviews
+OSCAR_HIDDEN_FEATURES = []
 
 # Menu structure of the dashboard navigation
 OSCAR_DASHBOARD_NAVIGATION = [
@@ -118,6 +124,10 @@ OSCAR_DASHBOARD_NAVIGATION = [
             {
                 'label': _('Statistics'),
                 'url_name': 'dashboard:order-stats',
+            },
+            {
+                'label': _('Partners'),
+                'url_name': 'dashboard:partner-list',
             },
         ]
     },
@@ -183,7 +193,6 @@ OSCAR_DASHBOARD_NAVIGATION = [
 ]
 
 # Search facets
-c = lambda x: u'\xa3%.0f' % x
 OSCAR_SEARCH_FACETS = {
     'fields': {
         # The key for these dicts will be used when passing facet data
@@ -200,10 +209,10 @@ OSCAR_SEARCH_FACETS = {
             'queries': [
                 # This is a list of (name, query) tuples where the name will
                 # be displayed on the front-end.
-                (_('%s to %s' % (c(0), c(20))), '[0 TO 20]'),
-                (_('%s to %s' % (c(20), c(40))), '[20 TO 40]'),
-                (_('%s to %s' % (c(40), c(60))), '[40 TO 60]'),
-                (_('%s+' % c(60)), '[60 TO *]')
+                (_('0 to 40'), '[0 TO 20]'),
+                (_('20 to 40'), '[20 TO 40]'),
+                (_('40 to 60'), '[40 TO 60]'),
+                (_('60+'), '[60 TO *]'),
             ]
         }
     }

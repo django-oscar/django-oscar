@@ -187,7 +187,8 @@ class ProductCreateUpdateView(generic.UpdateView):
         logic to check all forms
         """
         self.creating = self.object is None
-        # need to create the product here because the inline forms need it
+
+        # Need to create the product here because the inline forms need it
         # can't use commit=False because ProductForm does not support it
         if self.creating and form.is_valid():
             self.object = form.save()

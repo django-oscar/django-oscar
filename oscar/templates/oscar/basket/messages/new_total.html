@@ -1,3 +1,4 @@
+{% load url from future %}
 {% load i18n %}
 {% load currency_filters %}
 
@@ -11,9 +12,9 @@
     {% endif %}
 </p>
 
-{% if show_buttons %}
+{% if include_buttons %}
 <p>
-    <a href="{% url basket:summary %}" class="btn btn-info">{% trans "View basket" %}</a>
-    <a href="{% url checkout:index %}" class="btn btn-info">{% trans "Checkout now" %}</a>
+    <a href="{% url 'basket:summary' %}" class="btn btn-info">{% trans "View basket" %}</a>
+    <a href="{% url 'checkout:index' %}" class="btn btn-info">{% trans "Checkout now" %}</a>
 </p>
 {% endif %}

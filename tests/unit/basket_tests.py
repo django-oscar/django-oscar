@@ -6,7 +6,7 @@ from django.test.client import RequestFactory
 
 from oscar.apps.basket.models import Basket
 from oscar.apps.basket.middleware import BasketMiddleware
-from oscar_testsupport.factories import create_product
+from oscar.test.factories import create_product
 from oscar.apps.basket.reports import (
     OpenBasketReportGenerator, SubmittedBasketReportGenerator)
 from oscar.apps.catalogue.models import Option
@@ -62,6 +62,7 @@ class TestABasket(TestCase):
         self.basket.add_product(self.product, options=options)
         self.assertEqual(0, self.basket.line_quantity(self.product))
         self.assertEqual(1, self.basket.line_quantity(self.product, options))
+        self.assertEqual(1, self.basket.product_quantity(self.product))
 
     def test_has_method_to_test_if_submitted(self):
         self.basket.set_as_submitted()

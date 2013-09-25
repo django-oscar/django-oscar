@@ -17,7 +17,7 @@
     {% if user.is_authenticated and user.is_staff %}
         <div class="row-fluid">
             <div class="well">
-                <a href="{% url dashboard:catalogue-product product.id %}"><button class="btn btn-success btn-full">{% trans "Edit this product" %}</button></a>
+                <a href="{% url 'dashboard:catalogue-product' product.id %}"><button class="btn btn-success btn-full">{% trans "Edit this product" %}</button></a>
             </div>
         </div>
     {% endif %}
@@ -86,11 +86,11 @@
                                     
                                     <div class="variant-form">
                                         {% if variant.is_available_to_buy %}
-                                        {% basket_form basket variant as basket_form %}
-                                        <form action="{% url basket:add %}" method="post" class="form-inline">
+                                        {% basket_form request variant as basket_form %}
+                                        <form action="{% url 'basket:add' %}" method="post" class="form-inline">
                                             {% csrf_token %}
                                             {% include "partials/form_fields_inline.html" with form=basket_form %}
-                                            <button type="submit" class="btn btn-primary" value="Add to basket">Add to bag</button>
+                                            <button type="submit" class="btn btn-primary" value="Add to basket">{% trans "Add to bag" %}</button>
                                         </form>
                                         <span itemprop="availability" content="in_stock"></span>
                                         {% else %}
@@ -116,7 +116,7 @@
                 </tr>
                 {% endif %}
                 <tr>
-                    <th>{% trans "Product class" %}</th><td>{{ product.product_class.name }}</td>
+                    <th>{% trans "Product class" %}</th><td>{{ product.get_product_class.name }}</td>
                 </tr>
                 {% if product.stockrecord %}
                 <tr>
@@ -151,14 +151,14 @@
             <section>
                 <div id="reviews" class="review-title">
                     <h3>{% trans "Customer Reviews" %}</h3>
-                    <a id="write_review" href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn">{% trans "Add a review" %}</a>
+                    <a id="write_review" href="{% url 'catalogue:reviews-add' product.slug product.id %}#addreview" class="btn">{% trans "Add a review" %}</a>
                     <p class="star-rating {{ product.rating|as_stars }}">
                         <i class="icon-star"></i>
                         <i class="icon-star"></i>
                         <i class="icon-star"></i>
                         <i class="icon-star"></i>
                         <i class="icon-star"></i>
-                        <a href="{% url catalogue:reviews-list product.slug product.id %}">
+                        <a href="{% url 'catalogue:reviews-list' product.slug product.id %}">
                         {% blocktrans count reviews|length as num_reviews %}
                         1 custom review
                         {% plural %}
@@ -170,7 +170,7 @@
                 {% if not reviews %}
                     <p class="well">
                         {% trans "This product does not have any reviews yet" %} - 
-                        <a href="{% url catalogue:reviews-add product.slug product.id %}#addreview">{% trans "be the first to write one" %}</a>.
+                        <a href="{% url 'catalogue:reviews-add' product.slug product.id %}#addreview">{% trans "be the first to write one" %}</a>.
                     </p>
                 {% else %}
                     {% for review in reviews|slice:":3" %}

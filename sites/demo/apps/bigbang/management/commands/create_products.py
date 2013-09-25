@@ -3,7 +3,7 @@ from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 
-from demo.apps.bigbang import utils
+from apps.bigbang import utils
 
 
 class Command(BaseCommand):

@@ -1,19 +1,19 @@
-{% if products %}
 {% load i18n %}
 {% load product_tags %}
-<div class="sub-header">
-    <h2>{% trans 'Products you recently viewed' %}</h2>
-</div>
-<!-- Elastislide Carousel -->
-<div id="carousel" class="es-carousel-wrapper">
-    <div class="es-carousel">
-        <ul>
-            {% for product in products %}
-            <li>
-                {% render_product product %}
-            </li>
-            {% endfor %}
-        </ul>
+
+{% if products %}
+    <div class="sub-header">
+        <h2>{% trans 'Products you recently viewed' %}</h2>
     </div>
-</div>
+
+    <!-- Elastislide Carousel -->
+    <div id="carousel" class="es-carousel-wrapper">
+        <div class="es-carousel">
+            <ul>
+                {% for product in products %}
+                    <li>{% render_product product %}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 {% endif %}

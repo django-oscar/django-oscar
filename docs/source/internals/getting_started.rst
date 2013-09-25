@@ -1,6 +1,6 @@
-============================
-Start building your own shop
-============================
+======================
+Building your own shop
+======================
 
 For simplicity, let's assume you're building a new e-commerce project from
 scratch and have decided to use Oscar.  Let's call this shop 'frobshop'
@@ -19,10 +19,30 @@ project:
 
 .. code-block:: bash
 
-    pip install django-oscar
-    django-admin.py startproject frobshop
+    $ mkvirtualenv oscar
+    $ pip install django-oscar
+    $ django-admin.py startproject frobshop
 
-This will create a folder ``frobshop`` for your project.
+If you do not have mkvirtualenv, then replace that line with::
+
+    $ virtualenv oscar
+    $ . ./oscar/bin/activate
+    (oscar) $
+
+This will create a folder ``frobshop`` for your project. It is highly
+recommended to install Oscar in a virtualenv.
+
+.. attention::
+
+    Please ensure that ``pillow``, a fork of the the Python Imaging Library
+    (PIL), gets installed with JPEG support. Supported formats are printed
+    when ``pillow`` is first installed.
+    Instructions_ on how to get JPEG support are highly platform specific,
+    but guides for ``PIL`` should work for ``pillow`` as well. Generally
+    speaking, you need to ensure that ``libjpeg-dev`` is installed and found
+    during installation.
+
+    .. _Instructions: http://www.google.com/search?q=install+pil+with+jpeg+support
 
 Settings
 --------
@@ -58,6 +78,7 @@ Now set ``TEMPLATE_CONTEXT_PROCESSORS`` to:
         "django.core.context_processors.i18n",
         "django.core.context_processors.media",
         "django.core.context_processors.static",
+        "django.core.context_processors.tz",
         "django.contrib.messages.context_processors.messages",
         'oscar.apps.search.context_processors.search_form',
         'oscar.apps.promotions.context_processors.promotions',
@@ -79,14 +100,15 @@ and append Oscar's core apps:
         'django.contrib.sessions',
         'django.contrib.sites',
         'django.contrib.messages',
+        'django.contrib.staticfiles',
         'django.contrib.flatpages',
         ...
         'south',
         'compressor',
     ] + get_core_apps()
 
-Note that Oscar requires ``django.contrib.messages`` and
-``django.contrib.flatpages`` which aren't included by default.
+Note that Oscar requires ``django.contrib.flatpages`` which isn't
+included by default.
 
 Next, add ``django.contrib.flatpages.middleware.FlatpageFallbackMiddleware`` to
 your ``MIDDLEWARE_CLASSES`` setting:
@@ -121,12 +143,33 @@ Now set your auth backends to:
 
 to allow customers to sign in using an email address rather than a username.
 
+Set ``MEDIA_ROOT`` and ``MEDIA_URL`` to your environment, and make sure the
+path in ``MEDIA_ROOT`` exists. An example from the Sandbox site:
+
+.. code-block:: django
+
+
+    PROJECT_DIR = os.path.dirname(__file__)
+    location = lambda x: os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), x)
+    MEDIA_ROOT = location("public/media")
+    MEDIA_URL = '/media/'
+
+Verify your ``staticfiles`` settings and ensure that files in ``MEDIA_ROOT``
+get served:
+
+* `staticfiles in Django 1.3 and 1.4 <https://docs.djangoproject.com/en/1.3/howto/static-files/#serving-other-directories>`_
+* `staticfiles in Django 1.5 <https://docs.djangoproject.com/en/1.5/howto/static-files/#serving-files-uploaded-by-a-user>`_
+
 Modify your ``TEMPLATE_DIRS`` to include the main Oscar template directory:
 
 .. code-block:: django
 
     from oscar import OSCAR_MAIN_TEMPLATE_DIR
-    TEMPLATE_DIRS = TEMPLATE_DIRS + (OSCAR_MAIN_TEMPLATE_DIR,)
+    TEMPLATE_DIRS = (
+        location('templates'),
+        OSCAR_MAIN_TEMPLATE_DIR,
+    )
 
 Oscar currently uses Haystack for search so you need to specify:
 
@@ -168,10 +211,51 @@ Then create the database and the shop should be browsable:
 
 .. code-block:: bash
 
-    python manage.py syncdb --noinput
-    python manage.py migrate
+    $ python manage.py syncdb --noinput
+    $ python manage.py migrate
+    $ python manage.py runserver
 
 You should now have a running Oscar install that you can browse.
+
+Fixtures
+--------
+
+The default checkout process requires a shipping address with a country.  Oscar
+uses a model for countries with flags that indicate which are valid shipping
+countries and so the ``address_country`` database table must be populated before
+a customer can check out.
+
+This is easily achieved using fixtures.  Oscar ships with a ``countries.json``
+fixture that loads most countries from the `ISO 3166 standard`_.  This can loaded
+via::
+
+    $ python manage.py loaddata countries
+
+Note however that this file only sets the UK as a valid shipping country.  If
+you want other countries to be available, it would make more sense to take a
+copy of Oscar's countries fixture and edit it as you see it before loading it.
+
+Further, a simple way of loading countries for your project is to use a `data
+migration`_.
+
+.. _`ISO 3166 standard`: http://en.wikipedia.org/wiki/ISO_3166
+.. _`data migration`: http://codeinthehole.com/writing/prefer-data-migrations-to-initial-data/
+
+
+Creating product classes and fulfillment partners
+-------------------------------------------------
+
+Every Oscar deployment needs at least one
+:class:`product class <oscar.apps.catalogue.abstract_models.AbstractProductClass>`
+and one
+:class:`fulfillment partner <oscar.apps.partner.abstract_models.AbstractPartner>`.
+These aren't created automatically as they're highly specific to the shop you
+want to build.
+The quickest way to set them up is to log into the Django admin
+interface at http://127.0.0.1:8000/admin/ and create instances of both there.
+For a deployment setup, we recommend creating them as `data migration`_.
+
+.. _data migration: http://codeinthehole.com/writing/prefer-data-migrations-to-initial-data/
 
 Defining the order pipeline
 ---------------------------
@@ -214,4 +298,4 @@ Next steps
 ==========
 
 The next step is to implement the business logic of your domain on top of
-Oscar.  The fun part.
+Oscar. The fun part.

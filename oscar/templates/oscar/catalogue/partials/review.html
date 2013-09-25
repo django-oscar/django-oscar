@@ -1,3 +1,4 @@
+{% load url from future %}
 {% load reviews_tags %}
 {% load i18n %}
 
@@ -11,24 +12,30 @@
                 <p>{{ review.body.strip|linebreaks }}</p>
                 <p>
                     <small>
-                        {% blocktrans with name=review.get_reviewer_name review_date=review.date_created %}
-                        Reviewed by {{ name }} on {{ review_date }}
-                        {% endblocktrans %}
-                        | <a href="{% url catalogue:reviews-detail product.slug product.pk review.pk %}">{% trans 'Permalink' %}</a>
+                        {% if review.user == user %}
+                            {% blocktrans with review_date=review.date_created %}
+                            Reviewed by you on {{ review_date }}
+                            {% endblocktrans %}
+                        {% else %}
+                            {% blocktrans with name=review.reviewer_name review_date=review.date_created %}
+                                Reviewed by <strong>{{ name }}</strong> on {{ review_date }}
+                            {% endblocktrans %}
+                        {% endif %}
+                        | <a href="{% url 'catalogue:reviews-detail' product.slug product.pk review.pk %}">{% trans 'Permalink' %}</a>
                     </small>
                 </p>
             </div>
         </div>
         <div class="span4 review_votes">
             <div>
-                {% if request.user.is_authenticated %}
+                {% if review|may_vote:user %}
                     {% trans "Is this review helpful?" %}<br/>
-                    <form action="{{ review.get_absolute_url }}" method="post" class="vote_agree" >
+                    <form action="{% url 'catalogue:reviews-vote' product.slug product.pk review.pk %}" method="post" class="vote_agree" >
                         {% csrf_token %}
                         <input type="hidden" name="delta" value="1"/>
                         <button type="submit" class="btn btn-success btn-small">{% trans "Yes" %}</button>
                     </form>
-                    <form  action="{{ review.get_absolute_url }}" method="post">
+                    <form  action="{% url 'catalogue:reviews-vote' product.slug product.pk review.pk %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="delta" value="-1"/>
                         <button type="submit" class="btn btn-danger btn-small">{% trans "No" %}</button>
@@ -37,12 +44,14 @@
 
                 {% if review.has_votes %}
                     <p>
-                        {% blocktrans count review.num_up_votes as num_up_votes %}
-                        1 customer found this useful
+                        {% blocktrans with num_up_votes=review.num_up_votes count num_votes=review.total_votes %}
+                        {{ num_up_votes }} of 1 customer found this useful
                         {% plural %}
-                        {{ num_up_votes }} customers found this useful
+                        {{ num_up_votes }} of {{ num_votes }} customers found this useful
                         {% endblocktrans %}
                     </p>
+                {% else %}
+                    <p>This review has no votes.</p>
                 {% endif %}
             </div>
         </div>

@@ -45,7 +45,7 @@
         <h4 class="price_color">{% include "catalogue/partials/stock_record.html" %}</h4>
         
         {% if product.is_group %}
-            <a class="btn btn-block" href="{% url catalogue:detail product.slug product.id %}">{% trans "View range" %}</a>
+            <a class="btn btn-block" href="{% url 'catalogue:detail' product.slug product.id %}">{% trans "View range" %}</a>
         {% else %}
             {% include "catalogue/partials/add_to_basket_form_compact.html" %}
         {% endif %}

@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
 from django.utils.importlib import import_module as django_import_module
+from oscar.core.compat import AUTH_USER_MODEL
 
 from oscar.core.utils import slugify
 from oscar.core.loading import get_class
@@ -45,16 +46,21 @@ def _load_partner_wrappers():
 
 class AbstractPartner(models.Model):
     """
-    Fulfillment partner
+    A fulfillment partner. An individual or company who can fulfil products.
+    E.g. for physical goods, somebody with a warehouse and means of delivery.
+
+    Creating one or more instances of the Partner model is a required step in
+    setting up an Oscar deployment. Many Oscar deployments will only have one
+    fulfillment partner.
     """
     code = models.SlugField(_("Code"), max_length=128, unique=True)
     name = models.CharField(_("Name"), max_length=128, null=True, blank=True)
 
-    # A partner can have users assigned to it.  These can be used
-    # to provide authentication for webservices etc.
+    #: A partner can have users assigned to it.  These can be used
+    #: to provide authentication for webservices etc.
     users = models.ManyToManyField(
-        'auth.User', related_name="partners", blank=True, null=True,
-        verbose_name=_("Users"))
+        AUTH_USER_MODEL, related_name="partners",
+        blank=True, null=True, verbose_name=_("Users"))
 
     @property
     def display_name(self):
@@ -66,6 +72,36 @@ class AbstractPartner(models.Model):
         if not self.code:
             self.code = slugify(self.name)
         super(AbstractPartner, self).save(*args, **kwargs)
+
+    @property
+    def primary_address(self):
+        """
+        Returns a partners primary address. Usually that will be the
+        headquarters or similar.
+
+        This is a rudimentary implementation that raises an error if there's
+        more than one address. If you actually want to support multiple
+        addresses, you will likely need to extend PartnerAddress to have some
+        field or flag to base your decision on.
+        """
+        addresses = self.addresses.all()
+        if len(addresses) == 0:  # intentionally using len() to save queries
+            return None
+        elif len(addresses) == 1:
+            return addresses[0]
+        else:
+            raise NotImplementedError(
+                "Oscar's default implementation of primary_address only "
+                "supports one PartnerAddress.  You need to override the "
+                "primary_address to look up the right address")
+
+    def get_address_for_stockrecord(self, stockrecord):
+        """
+        Stock might be coming from different warehouses. Overriding this
+        function allows selecting the correct PartnerAddress for the record.
+        That can be useful when determining tax.
+        """
+        return self.primary_address
 
     class Meta:
         verbose_name = _('Fulfillment partner')
@@ -100,9 +136,10 @@ class AbstractStockRecord(models.Model):
         verbose_name=_("Product"))
     partner = models.ForeignKey('partner.Partner', verbose_name=_("Partner"))
 
-    # The fulfilment partner will often have their own SKU for a product, which
-    # we store here.  This will sometimes be the same the product's UPC but not
-    # always.  It should be unique per partner.
+    #: The fulfilment partner will often have their own SKU for a product, which
+    #: we store here.  This will sometimes be the same the product's UPC but not
+    #: always.  It should be unique per partner.
+    #: See also http://en.wikipedia.org/wiki/Stock-keeping_unit
     partner_sku = models.CharField(_("Partner SKU"), max_length=128)
 
     # Price info:
@@ -118,34 +155,34 @@ class AbstractStockRecord(models.Model):
         _("Price (excl. tax)"), decimal_places=2, max_digits=12,
         blank=True, null=True)
 
-    # Retail price for this item.  This is simply the recommended price from
-    # the manufacturer.  If this is used, it is for display purposes only.
-    # This prices is the NOT the price charged to the customer.
+    #: Retail price for this item.  This is simply the recommended price from
+    #: the manufacturer.  If this is used, it is for display purposes only.
+    #: This prices is the NOT the price charged to the customer.
     price_retail = models.DecimalField(
         _("Price (retail)"), decimal_places=2, max_digits=12,
         blank=True, null=True)
 
-    # Cost price is the price charged by the fulfilment partner.  It is not
-    # used (by default) in any price calculations but is often used in
-    # reporting so merchants can report on their profit margin.
+    #: Cost price is the price charged by the fulfilment partner.  It is not
+    #: used (by default) in any price calculations but is often used in
+    #: reporting so merchants can report on their profit margin.
     cost_price = models.DecimalField(
         _("Cost Price"), decimal_places=2, max_digits=12,
         blank=True, null=True)
 
-    # Number of items in stock
+    #: Number of items in stock
     num_in_stock = models.PositiveIntegerField(
         _("Number in stock"), blank=True, null=True)
 
-    # Threshold for low-stock alerts.  When stock goes beneath this threshold,
-    # an alert is triggered so warehouse managers can order more.
+    #: Threshold for low-stock alerts.  When stock goes beneath this threshold,
+    #: an alert is triggered so warehouse managers can order more.
     low_stock_threshold = models.PositiveIntegerField(
         _("Low Stock Threshold"), blank=True, null=True)
 
-    # The amount of stock allocated to orders but not fed back to the master
-    # stock system.  A typical stock update process will set the num_in_stock
-    # variable to a new value and reset num_allocated to zero
+    #: The amount of stock allocated to orders but not fed back to the master
+    #: stock system.  A typical stock update process will set the num_in_stock
+    #: variable to a new value and reset num_allocated to zero
     num_allocated = models.IntegerField(
-        _("Number allocated"), default=0, blank=True, null=True)
+        _("Number allocated"), blank=True, null=True)
 
     # Date information
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
@@ -232,12 +269,12 @@ class AbstractStockRecord(models.Model):
         """
         return get_partner_wrapper(self.partner_id).is_available_to_buy(self)
 
-    def is_purchase_permitted(self, user=None, quantity=1):
+    def is_purchase_permitted(self, user=None, quantity=1, product=None):
         """
         Return whether this stockrecord allows the product to be purchased by a
         specific user and quantity
         """
-        return get_partner_wrapper(self.partner_id).is_purchase_permitted(self, user, quantity)
+        return get_partner_wrapper(self.partner_id).is_purchase_permitted(self, user, quantity, product)
 
     @property
     def is_below_threshold(self):
@@ -310,6 +347,9 @@ class AbstractStockRecord(models.Model):
 
 
 class AbstractStockAlert(models.Model):
+    """
+    A stock alert. E.g. used to notify users when a product is 'back in stock'.
+    """
     stockrecord = models.ForeignKey(
         'partner.StockRecord', related_name='alerts',
         verbose_name=_("Stock Record"))
@@ -333,6 +373,7 @@ class AbstractStockAlert(models.Model):
         return _('<stockalert for "%(stock)s" status %(status)s>') % {'stock': self.stockrecord, 'status': self.status}
 
     class Meta:
+        abstract = True
         ordering = ('-date_created',)
         verbose_name = _('Stock Alert')
         verbose_name_plural = _('Stock Alerts')

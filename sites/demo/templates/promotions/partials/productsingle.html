@@ -19,10 +19,10 @@
             <h3 class="price_color">{% include "catalogue/partials/stock_record.html" %}</h3>
             <p>{{ promotion.description|safe|truncatechars:200 }}</p>
             {% if product.is_group %}
-                <a class="btn btn-large" href="{% url catalogue:detail product.slug product.id %}">{% trans "View range" %}</a>
+                <a class="btn btn-large" href="{% url 'catalogue:detail' product.slug product.id %}">{% trans "View range" %}</a>
             {% else %}
-                {% basket_form request.basket product as basket_form single %}
-                <form action="{% url basket:add %}" method="post">
+                {% basket_form request product as basket_form single %}
+                <form action="{% url 'basket:add' %}" method="post">
                     {% csrf_token %}
                     {{ basket_form.as_p }}
                     {% if product.is_available_to_buy %}

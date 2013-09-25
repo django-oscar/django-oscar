@@ -33,9 +33,15 @@ class CategoryInline(admin.TabularInline):
     extra = 1
 
 
+class ProductAttributeInline(admin.TabularInline):
+    model = ProductAttribute
+    extra = 2
+
+
 class ProductClassAdmin(admin.ModelAdmin):
     list_display = ('name', 'requires_shipping', 'track_stock')
     prepopulated_fields = {"slug": ("name",)}
+    inlines = [ProductAttributeInline]
 
 
 class ContributorAdmin(admin.ModelAdmin):

@@ -1,0 +1,6 @@
+{% load i18n %}
+{% load url from future %}
+{% blocktrans %}
+User {{ user_name }} was unlinked from {{ partner_name }}.
+{% endblocktrans %}
+<a href="{% url 'dashboard:partner-user-link' partner_pk user_pk %}">{% trans 'Undo' %}.</a>

@@ -12,6 +12,9 @@ Submitting pull requests
 
 * Write good commit messages: see `Tim Pope's excellent note`_.
 
-.. _`Tim Pope's excellent note`: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
-
 * Make pull requests against Oscar's master branch unless instructed otherwise.
+
+* Always submit pull requests from a custom branch.  Don't submit from your
+  master branch.  
+
+.. _`Tim Pope's excellent note`: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html

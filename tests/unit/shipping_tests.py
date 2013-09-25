@@ -1,15 +1,16 @@
 from decimal import Decimal as D
 
 from django.test import TestCase
-from django.contrib.auth.models import User
 
 from oscar.apps.shipping.methods import Free, FixedPrice
 from oscar.apps.shipping.models import OrderAndItemCharges, WeightBased
-from oscar.apps.shipping.repository import Repository
 from oscar.apps.shipping import Scales
 from oscar.apps.basket.models import Basket
-from oscar_testsupport.factories import create_product
-from oscar_testsupport.decorators import dataProvider
+from oscar.core.compat import get_user_model
+from oscar.test.factories import create_product
+
+
+User = get_user_model()
 
 
 class FreeTest(TestCase):
@@ -46,17 +47,13 @@ class FixedPriceTest(TestCase):
         method.set_basket(basket)
         self.assertEquals(D('10.00'), method.basket_charge_excl_tax())
 
-    shipping_values = lambda: [('1.00',),
-                               ('5.00',),
-                               ('10.00',),
-                               ('12.00',)]
-
-    @dataProvider(shipping_values)
-    def test_different_values(self, value):
-        method = FixedPrice(D(value))
-        basket = Basket()
-        method.set_basket(basket)
-        self.assertEquals(D(value), method.basket_charge_excl_tax())
+    def test_different_values(self):
+        shipping_values = ['1.00', '5.00', '10.00', '12.00']
+        for value in shipping_values:
+            basket = Basket()
+            method = FixedPrice(D(value))
+            method.set_basket(basket)
+            self.assertEquals(D(value), method.basket_charge_excl_tax())
 
 
 class OrderAndItemChargesTests(TestCase):
@@ -123,7 +120,7 @@ class ScalesTests(TestCase):
 
     def test_simple_weight_calculation(self):
         scales = Scales(attribute_code='weight')
-        p = create_product(attributes={'weight': 1})
+        p = create_product(attributes={'weight': '1'})
         self.assertEqual(1, scales.weigh_product(p))
 
     def test_default_weight_is_used_when_attribute_is_missing(self):
@@ -145,16 +142,18 @@ class ScalesTests(TestCase):
 
     def test_weight_calculation_of_basket(self):
         basket = Basket()
-        basket.add_product(create_product(attributes={'weight': 1}))
-        basket.add_product(create_product(attributes={'weight': 2}))
+        basket.add_product(create_product(attributes={'weight': '1'}))
+        basket.add_product(create_product(attributes={'weight': '2'}))
 
         scales = Scales(attribute_code='weight')
         self.assertEquals(1+2, scales.weigh_basket(basket))
 
     def test_weight_calculation_of_basket_with_line_quantity(self):
         basket = Basket()
-        basket.add_product(create_product(attributes={'weight': 1}), quantity=3)
-        basket.add_product(create_product(attributes={'weight': 2}), quantity=4)
+        basket.add_product(create_product(
+            attributes={'weight': '1'}), quantity=3)
+        basket.add_product(create_product(
+            attributes={'weight': '2'}), quantity=4)
 
         scales = Scales(attribute_code='weight')
         self.assertEquals(1*3+2*4, scales.weigh_basket(basket))
@@ -176,7 +175,7 @@ class WeightBasedMethodTests(TestCase):
         self.assertEqual(band.id, fetched_band.id)
 
     def test_get_band_for_higher_weight(self):
-        band = self.standard.bands.create(upper_limit=1, charge=D('4.00'))
+        self.standard.bands.create(upper_limit=1, charge=D('4.00'))
         fetched_band = self.standard.get_band_for_weight(1.5)
         self.assertIsNone(fetched_band)
 
@@ -245,16 +244,3 @@ class OfferDiscountTest(TestCase):
             self.assertFalse(method.is_discounted)
         for method in self.discount_methods:
             self.assertTrue(method.is_discounted)
-
-
-class RepositoryTests(TestCase):
-
-    def setUp(self):
-        self.repo = Repository()
-
-    def test_default_method_is_free(self):
-        user, basket = User(), Basket()
-        methods = self.repo.get_shipping_methods(user, basket)
-        self.assertEqual(1, len(methods))
-        self.assertTrue(isinstance(methods[0], Free))
-

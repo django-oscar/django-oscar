@@ -3,8 +3,14 @@ import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
+from oscar.core.compat import AUTH_USER_MODEL, AUTH_USER_MODEL_NAME
 
 class Migration(SchemaMigration):
+
+    depends_on = (
+        ('catalogue', '0001_initial'),
+        ('offer', '0001_initial'),
+    )
 
     def forwards(self, orm):
 
@@ -14,7 +20,7 @@ class Migration(SchemaMigration):
             ('range', self.gf('django.db.models.fields.related.ForeignKey')(related_name='file_uploads', to=orm['offer.Range'])),
             ('filepath', self.gf('django.db.models.fields.CharField')(max_length=255)),
             ('size', self.gf('django.db.models.fields.PositiveIntegerField')()),
-            ('uploaded_by', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('uploaded_by', self.gf('django.db.models.fields.related.ForeignKey')(to=orm[AUTH_USER_MODEL])),
             ('date_uploaded', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('status', self.gf('django.db.models.fields.CharField')(default='Pending', max_length=32)),
             ('error_message', self.gf('django.db.models.fields.CharField')(max_length=255, null=True)),
@@ -46,8 +52,8 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         },
-        'auth.user': {
-            'Meta': {'object_name': 'User'},
+        AUTH_USER_MODEL: {
+            'Meta': {'object_name': AUTH_USER_MODEL_NAME},
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
@@ -201,7 +207,7 @@ class Migration(SchemaMigration):
             'range': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'file_uploads'", 'to': "orm['offer.Range']"}),
             'size': ('django.db.models.fields.PositiveIntegerField', [], {}),
             'status': ('django.db.models.fields.CharField', [], {'default': "'Pending'", 'max_length': '32'}),
-            'uploaded_by': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
+            'uploaded_by': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['{0}']".format(AUTH_USER_MODEL)})
         }
     }
 

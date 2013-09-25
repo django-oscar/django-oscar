@@ -1,0 +1,49 @@
+{% load i18n %}
+{% load url from future %}
+{% load wishlist_tags %}
+
+{% if user.is_authenticated %}
+    {% with wishlists=user.wishlists.all %}
+        {% if wishlists %}
+
+            {# Select wishlists that contains product #}
+            {% wishlists_containing_product wishlists product as product_wishlists %}
+
+            <div class="btn-group">
+                <a class="btn" href="{% url 'customer:wishlists-create' product_pk=product.pk %}">{% trans "Add to wish list" %}</a>
+                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    {% for wishlist in wishlists %}
+                        <li>
+                            {% if wishlist not in product_wishlists %}
+                                <a href="{% url 'customer:wishlists-add-product' key=wishlist.key product_pk=product.pk %}">
+                                    {% blocktrans with name=wishlist.name %}
+                                        Add to '{{ name }}' wish list
+                                    {% endblocktrans %}
+                                </a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    <li><a href="{% url 'customer:wishlists-create' product_pk=product.pk %}">{% trans 'Create a new wishlist' %}</a></li>
+                </ul>
+            </div>
+        {% else %}
+            {# No existing wishlists - show a simple button #}
+            <a class="btn" href="{% url 'customer:wishlists-create' product_pk=product.pk %}">{% trans "Add to wish list" %}</a>
+        {% endif %}
+
+        <p>
+            {% for wishlist in product_wishlists %}
+                <br/>
+                {% blocktrans with name=wishlist.name url=wishlist.get_absolute_url %}
+                    Product is in <a href="{{ url }}">'{{ name }}'</a> wishlist.
+                {% endblocktrans %}
+                <a class="btn btn-small" href="{% url 'customer:wishlists-remove-product' key=wishlist.key product_pk=product.pk %}">{% trans "Remove" %}</a>
+            {% endfor %}
+        </p>
+    {% endwith %}
+{% else %}
+    <button class="btn" disabled="disabled" title="{% trans 'Please login to add products to a wish list.' %}">{% trans 'Add to wish list' %}</button><br/>
+{% endif %}

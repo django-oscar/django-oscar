@@ -14,32 +14,35 @@ Oscar uses a nose_ testrunner which can be invoked using::
 To run a subset of tests, you can use filesystem or module paths.  These two
 commands will run the same set of tests::
 
-    $ ./runtests.py tests/unit/order
-    $ ./runtests.py tests.unit.order
+    $ ./runtests.py tests/unit/offer/availability_tests.py
+    $ ./runtests.py tests.unit.offer.availability_tests
 
 To run an individual test class, use one of::
 
-    $ ./runtests.py tests/unit/order:TestSuccessfulOrderCreation
-    $ ./runtests.py tests.unit.order:TestSuccessfulOrderCreation
+    $ ./runtests.py tests/unit/offer/availability_tests.py:TestAPerUserConditionalOffer
+    $ ./runtests.py tests.unit.offer.availability_tests:TestAPerUserConditionalOffer
 
 (Note the ':'.)
 
 To run an individual test, use one of::
 
-    $ ./runtests.py tests/unit/order:TestSuccessfulOrderCreation.test_creates_order_and_line_models
-    $ ./runtests.py tests.unit.order:TestSuccessfulOrderCreation.test_creates_order_and_line_models
+    $ ./runtests.py tests/unit/offer/availability_tests.py:TestAPerUserConditionalOffer.test_is_available_with_no_applications
+    $ ./runtests.py tests.unit.offer.availability_tests:TestAPerUserConditionalOffer.test_is_available_with_no_applications
 
 Testing against different setups
 --------------------------------
 
-To run all tests against multiple versions of Django and Python, use tox_::
+To run all tests against multiple versions of Django and Python, use detox_::
 
-    $ tox
+    $ detox
 
 You need to have all Python interpreters to test against installed on your 
 system. All other requirements are downloaded automatically.
+detox_ is a wrapper around tox_, creating the environments and running the tests
+in parallel. This greatly speeds up the process.
 
 .. _tox: http://tox.readthedocs.org/en/latest/
+.. _detox: https://pypi.python.org/pypi/detox
 
 Kinds of tests
 --------------
@@ -60,9 +63,9 @@ Tests are split into 3 folders:
 Naming tests
 ------------
 
-Oscar's testrunner uses the progressive_ plugin when running all tests, but uses
-the spec_ plugin when running a subset.  It is a good practice to name your test
-cases and methods so that the spec output reads well.  For example::
+When running a subset of tests, Oscar uses the spec_ plugin.  It is a good
+practice to name your test cases and methods so that the spec output reads well.
+For example::
 
     $ ./runtests.py tests/unit/offer/benefit_tests.py:TestAbsoluteDiscount
     nosetests --verbosity 1 tests/unit/offer/benefit_tests.py:TestAbsoluteDiscount -s -x --with-spec
@@ -88,5 +91,4 @@ cases and methods so that the spec output reads well.  For example::
     ----------------------------------------------------------------------
     Ran 15 tests in 0.295s
 
-.. _progressive: http://pypi.python.org/pypi/nose-progressive/
-.. _spec: http://darcs.idyll.org/~t/projects/pinocchio/doc/#spec-generate-test-description-from-test-class-method-names
+.. _spec: https://github.com/bitprophet/spec

@@ -7,8 +7,8 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        from django.core.management import call_command
-        call_command('oscar_update_product_ratings')
+        for product in orm['catalogue.Product'].objects.all():
+            product.update_rating()
 
     def backwards(self, orm):
         # rating field will be deleted anyway if migrating backwards

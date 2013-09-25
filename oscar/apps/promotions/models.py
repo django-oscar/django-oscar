@@ -5,7 +5,6 @@ from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.db.models import get_model
-from django.utils.translation import ugettext_lazy as _
 
 from oscar.models.fields import ExtendedURLField
 
@@ -43,7 +42,8 @@ class PagePromotion(LinkedPromotion):
     """
     A promotion embedded on a particular page.
     """
-    page_url = ExtendedURLField(_('Page URL'), max_length=128, db_index=True)
+    page_url = ExtendedURLField(
+        _('Page URL'), max_length=128, db_index=True, verify_exists=True)
 
     def __unicode__(self):
         return u"%s on %s" % (self.content_object, self.page_url)
@@ -68,7 +68,7 @@ class KeywordPromotion(LinkedPromotion):
 
     # We allow an additional filter which will let search query matches
     # be restricted to different parts of the site.
-    filter = models.CharField(_("Filter"), max_length=200, blank=True, null=True)
+    filter = models.CharField(_("Filter"), max_length=200, blank=True)
 
     def get_link(self):
         return reverse('promotions:keyword-click', kwargs={'keyword_promotion_id': self.id})
@@ -140,8 +140,7 @@ class RawHTML(AbstractPromotion):
     # if a different width container is required).  This isn't always
     # required.
     display_type = models.CharField(
-        _("Display type"), max_length=128,
-        blank=True, null=True,
+        _("Display type"), max_length=128, blank=True,
         help_text=_("This can be used to have different types of HTML blocks (eg different widths)"))
     body = models.TextField(_("HTML"))
     date_created = models.DateTimeField(auto_now_add=True)
@@ -163,9 +162,12 @@ class Image(AbstractPromotion):
     """
     _type = 'Image'
     name = models.CharField(_("Name"), max_length=128)
-    link_url = ExtendedURLField(_('Link URL'), blank=True, null=True, help_text=_("""This is
-        where this promotion links to"""))
-    image = models.ImageField(_('Image'), upload_to=settings.OSCAR_PROMOTION_FOLDER)
+    link_url = ExtendedURLField(
+        _('Link URL'), blank=True,
+        help_text=_('This is where this promotion links to'))
+    image = models.ImageField(_('Image'),
+                              upload_to=settings.OSCAR_PROMOTION_FOLDER,
+                              max_length=255)
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
@@ -199,7 +201,7 @@ class SingleProduct(AbstractPromotion):
     _type = 'Single product'
     name = models.CharField(_("Name"), max_length=128)
     product = models.ForeignKey('catalogue.Product')
-    description = models.TextField(_("Description"), null=True, blank=True)
+    description = models.TextField(_("Description"), blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
@@ -219,9 +221,9 @@ class AbstractProductList(AbstractPromotion):
     of products.
     """
     name = models.CharField(_("Title"), max_length=255)
-    description = models.TextField(_("Description"), null=True, blank=True)
+    description = models.TextField(_("Description"), blank=True)
     link_url = ExtendedURLField(_('Link URL'), blank=True, null=True)
-    link_text = models.CharField(_("Link text"), max_length=255, blank=True, null=True)
+    link_text = models.CharField(_("Link text"), max_length=255, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
     class Meta:

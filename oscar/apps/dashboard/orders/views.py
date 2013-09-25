@@ -7,14 +7,14 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.loading import get_model
 from django.db.models import fields, Q, Sum, Count
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.template.defaultfilters import date as format_date
 from django.utils.datastructures import SortedDict
 from django.views.generic import ListView, DetailView, UpdateView, FormView
 from django.conf import settings
 
 from oscar.core.loading import get_class
+from oscar.core.utils import format_datetime
 from oscar.apps.dashboard.orders import forms
 from oscar.views.generic import BulkEditMixin
 from oscar.apps.dashboard.reports.csv_utils import CsvUnicodeWriter
@@ -24,6 +24,7 @@ from oscar.apps.order.exceptions import InvalidShippingEvent, InvalidStatus
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
 ShippingAddress = get_model('order', 'ShippingAddress')
+Transaction = get_model('payment', 'Transaction')
 Line = get_model('order', 'Line')
 ShippingEventType = get_model('order', 'ShippingEventType')
 PaymentEventType = get_model('order', 'PaymentEventType')
@@ -67,7 +68,7 @@ class OrderStatsView(FormView):
         return stats
 
 
-class OrderListView(ListView, BulkEditMixin):
+class OrderListView(BulkEditMixin, ListView):
     model = Order
     context_object_name = 'orders'
     template_name = 'dashboard/orders/order_list.html'
@@ -90,13 +91,8 @@ class OrderListView(ListView, BulkEditMixin):
                 return HttpResponseRedirect(reverse('dashboard:order-detail', kwargs={'number': order.number}))
         return super(OrderListView, self).get(request, *args, **kwargs)
 
-    def get_queryset(self):
-        """
-        Build the queryset for this list and also update the title that
-        describes the queryset
-        """
-        queryset = self.model.objects.all().order_by('-date_placed')
-        queryset = self.sort_queryset(queryset)
+    def get_desc_context(self, data=None):
+        """Update the title that describes the queryset"""
         desc_ctx = {
             'main_filter': _('All orders'),
             'name_filter': '',
@@ -109,20 +105,69 @@ class OrderListView(ListView, BulkEditMixin):
             'status_filter': '',
         }
 
+        if 'order_status' in self.request.GET:
+            status = self.request.GET['order_status']
+            if status.lower() == 'none':
+                desc_ctx['main_filter'] = _("Orders without an order status")
+            else:
+                desc_ctx['main_filter'] = _("Orders with status '%s'") % status
+        if data is None:
+            return desc_ctx
+
+        if data['order_number']:
+            desc_ctx['main_filter'] = _('Orders with number starting with "%s"') % data['order_number']
+
+        if data['name']:
+            desc_ctx['name_filter'] = _(" with customer name matching '%s'") % data['name']
+
+        if data['product_title']:
+            desc_ctx['title_filter'] = _(" including an item with title matching '%s'") % data['product_title']
+
+        if data['upc']:
+            desc_ctx['upc_filter'] = _(" including an item with UPC '%s'") % data['upc']
+
+        if data['partner_sku']:
+            desc_ctx['upc_filter'] = _(" including an item with ID '%s'") % data['partner_sku']
+
+        if data['date_from'] and data['date_to']:
+            desc_ctx['date_filter'] = _(" placed between %(start_date)s and %(end_date)s") % {
+                'start_date': format_datetime(data['date_from']),
+                'end_date': format_datetime(data['date_to'])}
+        elif data['date_from']:
+            desc_ctx['date_filter'] = _(" placed since %s") % format_datetime(data['date_from'])
+        elif data['date_to']:
+            date_to = data['date_to'] + datetime.timedelta(days=1)
+            desc_ctx['date_filter'] = _(" placed before %s") % format_datetime(data['date_to'])
+
+        if data['voucher']:
+            desc_ctx['voucher_filter'] = _(" using voucher '%s'") % data['voucher']
+
+        if data['payment_method']:
+            desc_ctx['payment_filter'] = _(" paid for by %s") % data['payment_method']
+
+        if data['status']:
+            desc_ctx['status_filter'] = _(" with status %s") % data['status']
+
+        return desc_ctx
+
+    def get_queryset(self):
+        """
+        Build the queryset for this list.
+        """
+        queryset = self.model.objects.all().order_by('-date_placed')
+        queryset = self.sort_queryset(queryset)
+
         # Look for shortcut query filters
         if 'order_status' in self.request.GET:
             self.form = self.form_class()
             status = self.request.GET['order_status']
             if status.lower() == 'none':
-                desc_ctx['main_filter'] = _("Orders without an order status")
                 status = None
-            else:
-                desc_ctx['main_filter'] = _("Orders with status '%s'") % status
-            self.description = self.desc_template % desc_ctx
+            self.description = self.desc_template % self.get_desc_context()
             return self.model.objects.filter(status=status)
 
         if 'order_number' not in self.request.GET:
-            self.description = self.desc_template % desc_ctx
+            self.description = self.desc_template % self.get_desc_context()
             self.form = self.form_class()
             return queryset
 
@@ -134,7 +179,6 @@ class OrderListView(ListView, BulkEditMixin):
 
         if data['order_number']:
             queryset = self.model.objects.filter(number__istartswith=data['order_number'])
-            desc_ctx['main_filter'] = _('Orders with number starting with "%s"') % data['order_number']
 
         if data['name']:
             # If the value is two words, then assume they are first name and last name
@@ -155,53 +199,41 @@ class OrderListView(ListView, BulkEditMixin):
                           Q(shipping_address__last_name__istartswith=parts[1])
 
             queryset = queryset.filter(filter).distinct()
-            desc_ctx['name_filter'] = _(" with customer name matching '%s'") % data['name']
 
         if data['product_title']:
             queryset = queryset.filter(lines__title__istartswith=data['product_title']).distinct()
-            desc_ctx['title_filter'] = _(" including an item with title matching '%s'") % data['product_title']
 
         if data['upc']:
             queryset = queryset.filter(lines__upc=data['upc'])
-            desc_ctx['upc_filter'] = _(" including an item with UPC '%s'") % data['upc']
 
         if data['partner_sku']:
             queryset = queryset.filter(lines__partner_sku=data['partner_sku'])
-            desc_ctx['upc_filter'] = _(" including an item with ID '%s'") % data['partner_sku']
 
         if data['date_from'] and data['date_to']:
             # Add 24 hours to make search inclusive
             date_to = data['date_to'] + datetime.timedelta(days=1)
             queryset = queryset.filter(date_placed__gte=data['date_from']).filter(date_placed__lt=date_to)
-            desc_ctx['date_filter'] = _(" placed between %(start_date)s and %(end_date)s") % {
-                'start_date': format_date(data['date_from']),
-                'end_date': format_date(data['date_to'])}
         elif data['date_from']:
             queryset = queryset.filter(date_placed__gte=data['date_from'])
-            desc_ctx['date_filter'] = _(" placed since %s") % format_date(data['date_from'])
         elif data['date_to']:
             date_to = data['date_to'] + datetime.timedelta(days=1)
             queryset = queryset.filter(date_placed__lt=date_to)
-            desc_ctx['date_filter'] = _(" placed before %s") % format_date(data['date_to'])
 
         if data['voucher']:
             queryset = queryset.filter(discounts__voucher_code=data['voucher']).distinct()
-            desc_ctx['voucher_filter'] = _(" using voucher '%s'") % data['voucher']
 
         if data['payment_method']:
             queryset = queryset.filter(sources__source_type__code=data['payment_method']).distinct()
-            desc_ctx['payment_filter'] = _(" paid for by %s") % data['payment_method']
 
         if data['status']:
             queryset = queryset.filter(status=data['status'])
-            desc_ctx['status_filter'] = _(" with status %s") % data['status']
 
-        self.description = self.desc_template % desc_ctx
+        self.description = self.desc_template % self.get_desc_context(data)
         return queryset
 
     def sort_queryset(self, queryset):
         sort = self.request.GET.get('sort', None)
-        allowed_sorts = ['number',]
+        allowed_sorts = ['number', 'total_incl_tax']
         if sort in allowed_sorts:
             direction = self.request.GET.get('dir', 'desc')
             sort = ('-' if direction == 'desc' else '') + sort
@@ -254,16 +286,16 @@ class OrderListView(ListView, BulkEditMixin):
             row = columns.copy()
             row['number'] = order.number
             row['value'] = order.total_incl_tax
-            row['date'] = format_date(order.date_placed, 'DATETIME_FORMAT')
+            row['date'] = format_datetime(order.date_placed, 'DATETIME_FORMAT')
             row['num_items'] = order.num_items
             row['status'] = order.status
             row['customer'] = order.email
             if order.shipping_address:
-                row['shipping_address_name'] = order.shipping_address.name()
+                row['shipping_address_name'] = order.shipping_address.name
             else:
                 row['shipping_address_name'] = ''
             if order.billing_address:
-                row['billing_address_name'] = order.billing_address.name()
+                row['billing_address_name'] = order.billing_address.name
             else:
                 row['billing_address_name'] = ''
 
@@ -291,7 +323,12 @@ class OrderDetailView(DetailView):
         ctx['line_statuses'] = Line.all_statuses()
         ctx['shipping_event_types'] = ShippingEventType.objects.all()
         ctx['payment_event_types'] = PaymentEventType.objects.all()
+        ctx['payment_transactions'] = self.get_payment_transactions()
         return ctx
+
+    def get_payment_transactions(self):
+        return Transaction.objects.filter(
+            source__order=self.object)
 
     def get_order_note_form(self):
         post_data = None
@@ -377,7 +414,7 @@ class OrderDetailView(DetailView):
             messages.error(request, _("The new status '%s' is not valid for this order") % new_status)
             return self.reload_page_response()
 
-        handler = EventHandler()
+        handler = EventHandler(request.user)
         try:
             handler.handle_order_status_change(order, new_status)
         except PaymentError, e:
@@ -494,15 +531,7 @@ class LineDetailView(DetailView):
     template_name = 'dashboard/orders/line_detail.html'
 
     def get_object(self, queryset=None):
-        try:
-            return self.model.objects.get(pk=self.kwargs['line_id'])
-        except self.model.DoesNotExist:
-            raise Http404()
-
-    def get_context_data(self, **kwargs):
-        ctx = super(LineDetailView, self).get_context_data(**kwargs)
-        ctx['order'] = self.object.order
-        return ctx
+        return get_object_or_404(self.model, pk=self.kwargs['line_id'])
 
 
 def get_changes_between_models(model1, model2, excludes=None):

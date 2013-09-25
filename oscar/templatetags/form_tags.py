@@ -24,5 +24,6 @@ class FormFieldNode(template.Node):
 
     def render(self, context):
         field = self.field.resolve(context)
-        field.widget_type = field.field.widget.__class__.__name__
+        if hasattr(field, 'field'):
+            field.widget_type = field.field.widget.__class__.__name__
         return ''

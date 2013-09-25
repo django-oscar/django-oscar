@@ -17,6 +17,9 @@ class BaseCatalogueApplication(Application):
             url(r'^$', self.index_view.as_view(), name='index'),
             url(r'^(?P<product_slug>[\w-]*)_(?P<pk>\d+)/$',
                 self.detail_view.as_view(), name='detail'),
+            url(r'^category/(?P<category_slug>[\w-]+(/[\w-]+)*)_(?P<pk>\d+)/$',
+                self.category_view.as_view(), name='category'),
+            # Legacy route for the category view
             url(r'^(?P<category_slug>[\w-]+(/[\w-]+)*)/$',
                 self.category_view.as_view(), name='category'))
         return self.post_process_urls(urlpatterns)

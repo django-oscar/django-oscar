@@ -3,7 +3,7 @@ import os
 # Use 'final' as the 4th element to indicate
 # a full release
 
-VERSION = (0, 5, 0, 'final')
+VERSION = (0, 6, 0, 'alpha', 0)
 
 
 def get_short_version():
@@ -32,20 +32,21 @@ OSCAR_MAIN_TEMPLATE_DIR = os.path.join(
 OSCAR_CORE_APPS = [
     'oscar',
     'oscar.apps.analytics',
-    'oscar.apps.order',
     'oscar.apps.checkout',
+    'oscar.apps.address',
     'oscar.apps.shipping',
     'oscar.apps.catalogue',
     'oscar.apps.catalogue.reviews',
+    'oscar.apps.partner',
     'oscar.apps.basket',
     'oscar.apps.payment',
     'oscar.apps.offer',
-    'oscar.apps.address',
-    'oscar.apps.partner',
+    'oscar.apps.order',
     'oscar.apps.customer',
     'oscar.apps.promotions',
     'oscar.apps.search',
     'oscar.apps.voucher',
+    'oscar.apps.wishlists',
     'oscar.apps.dashboard',
     'oscar.apps.dashboard.reports',
     'oscar.apps.dashboard.users',
@@ -53,6 +54,7 @@ OSCAR_CORE_APPS = [
     'oscar.apps.dashboard.promotions',
     'oscar.apps.dashboard.catalogue',
     'oscar.apps.dashboard.offers',
+    'oscar.apps.dashboard.partners',
     'oscar.apps.dashboard.ranges',
     'oscar.apps.dashboard.vouchers',
     'oscar.apps.dashboard.communications',
