@@ -696,6 +696,11 @@ class Benefit(models.Model):
         line_tuples = []
         for line in basket.all_lines():
             product = line.product
+
+            # We only include products where we know the tax charged
+            if not line.stockinfo.price.is_tax_known:
+                continue
+
             if (not range.contains(product) or
                     not self.can_apply_benefit(line)):
                 continue
