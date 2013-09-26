@@ -19,6 +19,18 @@ All bugs are reported on our `GitHub issue tracker`_.
 
 .. _`GitHub issue tracker`: https://github.com/tangentlabs/django-oscar/issues
 
+Reporting security issues
+-------------------------
+
+Security is paramount for e-commerce software like Oscar.  Hence, we have
+adopted a policy which allows for responsible resporting and disclosure of
+security related issues.
+
+If you believe you have found something in Oscar (or one of its extensions)
+which has security implications, please report is via email to
+``oscar.security@tangentlabs.co.uk``.  Someone from the core team will
+acknowledge your report and take appropriate action.
+
 Reporting bugs
 --------------
 
