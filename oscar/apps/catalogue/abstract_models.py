@@ -654,8 +654,8 @@ class AbstractProductAttribute(models.Model):
     code = models.SlugField(
         _('Code'), max_length=128,
         validators=[RegexValidator(
-            regex=r'^[a-zA-Z_][0-9a-zA-Z_]*$',
-            message=_("Code must match ^[a-zA-Z_][0-9a-zA-Z_]*$"))])
+            regex=r'^[a-zA-Z_-][0-9a-zA-Z_-]*$',
+            message=_("Code must match ^[a-zA-Z_-][0-9a-zA-Z_-]*$"))])
 
     TYPE_CHOICES = (
         ("text", _("Text")),
