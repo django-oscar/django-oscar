@@ -1,3 +1,6 @@
+import warnings
+from functools import wraps
+
 import mock
 
 
@@ -60,3 +63,31 @@ no_sockets = mock.patch('socket.getaddrinfo', mock.Mock(
 
 no_externals = no_diggity = compose(
     no_database, no_filesystem, no_sockets)  # = no doubt
+
+
+def ignore_deprecation_warnings(target):
+    """
+    Ignore deprecation warnings for the wrapped TestCase or test method
+
+    This is useful as the test runner can be set to raise an exception on a
+    deprecation warning.  Using this decorator allows tests to exercise
+    deprecated code without an exception.
+    """
+    if not target.__class__.__name__ == 'instancemethod':
+        # Decorate every test method in class
+        for attr in dir(target):
+            if not attr.startswith('test'):
+                continue
+            attr_value = getattr(target, attr)
+            if not hasattr(attr_value, '__call__'):
+                continue
+            setattr(target, attr, ignore_deprecation_warnings(attr_value))
+        return target
+    else:
+        # Decorate single test method
+        @wraps(target)
+        def _wrapped(*args, **kwargs):
+            with warnings.catch_warnings():
+                warnings.filterwarnings("ignore", category=DeprecationWarning)
+                return target(*args, **kwargs)
+        return _wrapped
