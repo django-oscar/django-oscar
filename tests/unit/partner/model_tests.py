@@ -3,7 +3,7 @@ from django.db.models import get_model
 
 from django.test import TestCase
 
-from oscar.test.factories import create_product, create_stockrecord
+from oscar.test import factories, decorators
 from oscar.apps.partner import abstract_models
 
 Partner = get_model('partner', 'Partner')
@@ -23,10 +23,11 @@ class DummyWrapper(object):
 class TestStockRecord(TestCase):
 
     def setUp(self):
-        self.product = create_product()
-        self.stockrecord = create_stockrecord(
+        self.product = factories.create_product()
+        self.stockrecord = factories.create_stockrecord(
             self.product, price_excl_tax=D('10.00'), num_in_stock=10)
 
+    @decorators.ignore_deprecation_warnings
     def test_get_price_incl_tax_defaults_to_no_tax(self):
         self.assertEquals(D('10.00'), self.stockrecord.price_incl_tax)
 
@@ -67,10 +68,12 @@ class TestStockRecord(TestCase):
         self.assertEqual(0, self.stockrecord.num_allocated)
         self.assertEqual(10, self.stockrecord.num_in_stock)
 
+    @decorators.ignore_deprecation_warnings
     def test_max_purchase_quantity(self):
         self.assertEqual(10, self.stockrecord.max_purchase_quantity())
 
 
+@decorators.ignore_deprecation_warnings
 class CustomWrapperTests(TestCase):
     """
     Partner wrappers are deprecated.  This testcase will be removed/rewritten
@@ -84,14 +87,14 @@ class CustomWrapperTests(TestCase):
         abstract_models.partner_wrappers = None
 
     def test_wrapper_availability_gets_called(self):
-        product = create_product(
+        product = factories.create_product(
             price=D('10.00'), partner="Acme", num_in_stock=10)
         stockrecord = product.stockrecords.all()[0]
         self.assertEquals(u"Dummy response",
                           unicode(stockrecord.availability))
 
     def test_wrapper_dispatch_date_gets_called(self):
-        product = create_product(
+        product = factories.create_product(
             price=D('10.00'), partner="Acme", num_in_stock=10)
         stockrecord = product.stockrecords.all()[0]
         self.assertEquals("Another dummy response",

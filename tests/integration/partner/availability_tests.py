@@ -1,9 +1,10 @@
 from django.test import TestCase
 
 from oscar.apps.partner import availability
-from oscar.test import factories
+from oscar.test import factories, decorators
 
 
+@decorators.ignore_deprecation_warnings
 class TestDelegateToStockRecordWrapper(TestCase):
 
     def setUp(self):

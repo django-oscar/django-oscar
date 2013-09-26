@@ -72,7 +72,6 @@ class TestAStaffUser(WebTestCase):
         form['productcategory_set-0-category'] = category.id
         assert form['title'].value != new_title
         form['title'] = new_title
-
         form.submit()
 
         try:
@@ -81,8 +80,8 @@ class TestAStaffUser(WebTestCase):
             pass
         else:
             self.assertTrue(product.title == new_title)
-            if product.has_stockrecord:
-                self.fail('product has stock record but should not')
+            if product.has_stockrecords:
+                self.fail('Product has stock records but should not')
 
     def test_can_delete_an_individual_product(self):
         product = create_product()

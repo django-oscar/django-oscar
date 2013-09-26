@@ -73,7 +73,7 @@ def ignore_deprecation_warnings(target):
     deprecation warning.  Using this decorator allows tests to exercise
     deprecated code without an exception.
     """
-    if not target.__class__.__name__ == 'instancemethod':
+    if not target.__class__.__name__ in ('instancemethod', 'function'):
         # Decorate every test method in class
         for attr in dir(target):
             if not attr.startswith('test'):

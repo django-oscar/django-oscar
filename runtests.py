@@ -1,4 +1,4 @@
-#!/usr/bin/env python -Wall
+#!/usr/bin/env python
 """
 Custom test runner
 
@@ -32,10 +32,20 @@ $ ./runtests.py ... --pdb-failures
 
 import sys
 import logging
+import warnings
 
 from tests.config import configure
 
+# No logging
 logging.disable(logging.CRITICAL)
+
+# Warnings: ignore some uninteresting ones but raise an exception on a
+# DeprecationWarnings.
+warnings.simplefilter('default')
+warnings.filterwarnings('error', category=DeprecationWarning)
+for category in [PendingDeprecationWarning, UserWarning, ImportWarning]:
+    warnings.filterwarnings('ignore', category=category)
+
 
 
 def run_tests(*test_args):
