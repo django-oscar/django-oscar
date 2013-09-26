@@ -1,5 +1,6 @@
 {% load basket_tags %}
 {% load i18n %}
+{% load url from future %}
 
 {% if product.is_available_to_buy %}
     {% basket_form request product as basket_form %}

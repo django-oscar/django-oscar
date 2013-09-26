@@ -1,3 +1,4 @@
+{% load url from future %}
 {% load i18n %}
 
 <form id="alert_form_{{ product.id }}" method="post" action="{% url 'customer:alert-create' product.id %}" class="form-notify {% if not user.is_authenticated %}form-inline{% endif %}">

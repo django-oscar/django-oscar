@@ -4,37 +4,6 @@
     border:0;
 }
 
-.navbar-static-top.accounts {
-    position: relative;
-    font-size: @fontSizeSmall;
-    margin-bottom:-40px;
-    z-index: 1;
-
-    .navbar-inner {
-        background:transparent;
-        filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
-    }
-
-    .nav > li {
-        margin-left: 15px;
-        padding: 15px 0;
-
-        a {
-            padding: 0 0 0 15px;
-            border-left: 1px solid #dedede;
-            color: #6b8ea4;
-
-            &:hover {
-                text-decoration: underline;
-            }
-        }
-
-        &:first-child a {
-            border-left: none;
-        }
-    }
-}
-
 .navbar.primary {
     .navbar-inner {
         min-height: 60px;
@@ -75,7 +44,7 @@
         .border-radius(0);
         color: @white;
         background-color: #337abf;
-
+        min-width:250px;
         .divider {
             margin: 0;
             border-bottom: none;
