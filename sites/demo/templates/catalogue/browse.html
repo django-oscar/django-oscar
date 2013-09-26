@@ -4,6 +4,7 @@
 {% load basket_tags %}
 {% load promotion_tags %}
 {% load product_tags %}
+{% load category_tags %}
 {% load i18n %}
 
 {% block header %}
@@ -22,20 +23,33 @@
 
 {% block column_left %}
     <div class="side_categories">
-        {% if categories %}
+        {% category_tree as tree_categories %}
+        
+        {% if tree_categories %}
         <ul class="nav nav-list">
             <li class="nav-header">{% trans "Browse" %}</li>
-            {% for category in categories %}
-            <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }} <i class="icon-arrow-right"></i></a>
-                {% if category.1 %}
-                <ul>
-                    {% for subcategory in category.1 %}
-                        <li><a href="{{ subcategory.0.get_absolute_url }}">{{ subcategory.0.name }} <i class="icon-arrow-right"></i></a>
-                    {% endfor %}
-                </ul>
+
+            {% for tree_category,info in tree_categories %}
+                {% if info.has_children %}
+                    <li>
+                        <a href="{{ tree_category.get_absolute_url }}">
+                            {{ tree_category.name }} 
+                            <i class="icon-arrow-down"></i>
+                        </a>
+                        <ul>
+                 {% else %}
+                    <li>
+                        <a href="{{ tree_category.get_absolute_url }}">
+                            {{ tree_category.name }}
+                            <i class="icon-arrow-right"></i>
+                        </a>
+                    </li>
                 {% endif %}
-            </li>
+                {% for close in info.num_to_close %}
+                    </ul></li>
+                {% endfor %}
             {% endfor %}
+
         </ul>
         {% endif %}
     </div>

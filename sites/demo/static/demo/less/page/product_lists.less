@@ -180,7 +180,6 @@
     list-style: none;
   }
   i {
-    display:none;
     position:absolute;
     right:10px;
     top:18px;
@@ -207,9 +206,6 @@
       }
       ul {
         margin-left:0;
-        a {
-          padding-left:30px;
-        }
       }
     }
   }
@@ -227,4 +223,15 @@
     padding:15px;
     display:block;
   }
+}
+
+//Side category indents
+.side_categories .nav-list > li ul a {
+  padding-left:30px;
+}
+.side_categories .nav-list > li ul ul a {
+  padding-left:45px;
+}
+.side_categories .nav-list > li ul ul ul a {
+  padding-left:60px;
 }
