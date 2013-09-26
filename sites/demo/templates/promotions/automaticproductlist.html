@@ -5,9 +5,9 @@
 <div class="promotion-block">
     <h3>{{ promotion.name }}</h3>
     <p>{{ promotion.description|safe }}</p>
-    <ol class="products four">
+    <ol class="row-fluid">
         {% for product in products %}
-        <li {% if forloop.counter|divisibleby:"4" %}class="no-margin"{% endif %}>{% render_product product %}</li>
+        <li class="span3 {% if forloop.counter0|divisibleby:"4" %}no-margin{% endif %}">{% render_product product %}</li>
         {% endfor %}
     </ol>
     {% if block.link_url %}

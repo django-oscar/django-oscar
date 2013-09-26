@@ -59,14 +59,12 @@
 
 {% if products.count %}
 <section>
-    <div class="mod">
-        <ol class="products four">
-            {% for product in products %}
-                <li {% if forloop.counter|divisibleby:"4" %}class="no-margin"{% endif %}>{% render_product product %}</li>
-            {% endfor %}
-        </ol>
-        {% include "partials/pagination.html" %}
-    </div>
+    <ol class="row-fluid">
+        {% for product in products %}
+            <li class="span3 {% if forloop.counter0|divisibleby:"4" %}no-margin{% endif %}">{% render_product product %}</li>
+        {% endfor %}
+    </ol>
+    {% include "partials/pagination.html" %}
 </section>
 {% else %}
     <p class="nonefound">{% trans "No products found." %}</p>

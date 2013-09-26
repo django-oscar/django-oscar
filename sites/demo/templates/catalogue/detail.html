@@ -188,9 +188,9 @@
         <div class="sub-header">
             <h2>{% trans "Related items" %}</h2>
         </div>
-        <ol class="products five">
-            {% for product in product.related_products.all|slice:":5" %}
-            <li {% if forloop.counter|divisibleby:"5" %}class="no-margin"{% endif %}>{% render_product product %}</li>
+        <ol class="row-fluid">
+            {% for product in product.related_products.all|slice:":6" %}
+            <li class="span2 {% if forloop.counter0|divisibleby:"6" %}no-margin{% endif %}">{% render_product product %}</li>
             {% endfor %}
         </ol>
     {% endif %}
@@ -199,9 +199,9 @@
         <div class="sub-header">
             <h2>{% trans "Recommended items" %}</h2>
         </div>
-        <ol class="products five">
-            {% for product in product.recommended_products.all|slice:":5" %}
-            <li {% if forloop.counter|divisibleby:"5" %}class="no-margin"{% endif %}>{% render_product product %}</li>
+        <ol class="row-fluid">
+            {% for product in product.recommended_products.all|slice:":6" %}
+            <li class="span2 {% if forloop.counter0|divisibleby:"6" %}no-margin{% endif %}">{% render_product product %}</li>
             {% endfor %}
         </ol>
     {% endif %}
