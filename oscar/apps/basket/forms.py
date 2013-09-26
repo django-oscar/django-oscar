@@ -4,7 +4,7 @@ from django.db.models import get_model
 from django.forms.models import modelformset_factory, BaseModelFormSet
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.templatetags.currency_filters import currency
+from oscar.templatetags.currency_filters import render_currency as currency
 
 Line = get_model('basket', 'line')
 Basket = get_model('basket', 'basket')

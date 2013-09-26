@@ -170,7 +170,7 @@
                                 {{ form.DELETE }}
                             </div>
                         </div>
-                        {% session_strategy request form.instance as saved %}
+                        {% session_strategy request form.instance.product as saved %}
                         <div class="span2 align-center"><p class="price_color">
                                 {% if saved.price.is_tax_known %}
                                     {% currency saved.price.incl_tax saved.price.currency %}

@@ -17,10 +17,13 @@
             <strong>{% trans "Basket" %}
                 {% if not request.basket.is_empty %}
                     {% if request.basket.is_tax_known %}
-                        {% trans "Total:" %} {{ basket.total_incl_tax|currency }}
+                        {% blocktrans with total=basket.total_incl_tax|currency:basket.currency %}
+                            Total: {{ total }}
+                        {% endblocktrans %}
                     {% else %}
-                        {% trans "Total:" %} {{ basket.total_excl_tax|currency }} 
-                        + {% trans "tax" %}.
+                        {% blocktrans with total=basket.total_excl_tax|currency:basket.currency %}
+                            Total: {{ total }}
+                        {% endblocktrans %}
                     {% endif %}
                 {% endif %}
             </strong>

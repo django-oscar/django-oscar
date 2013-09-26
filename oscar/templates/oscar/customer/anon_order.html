@@ -68,8 +68,8 @@
                 <td>{{ line.shipping_status|default:"-" }}</td>
                 <td>{{ line.est_dispatch_date|default:"-" }}</td>
                 <td>{{ line.quantity }}</td>
-                <td>{{ line.line_price_before_discounts_excl_tax|currency }}</td>
-                <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
+                <td>{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>
+                <td>{{ line.line_price_before_discounts_incl_tax|currency:order.currency }}</td>
                 <td>
                     <a href="{% url 'catalogue:reviews-add' line.product.slug line.product.id %}" class="btn btn-primary">{% trans 'Write a review' %}</a>
                 </td>
@@ -78,7 +78,7 @@
         {% for discount in order.discounts.all %}
             <tr>
                 <td colspan="5">{{ discount.description }}</td>
-                <td>-{{ discount.amount|currency }}</td>
+                <td>-{{ discount.amount|currency:order.currency }}</td>
                 <td colspan="1"></td>
             </tr>
         {% endfor %}
@@ -88,15 +88,15 @@
         <caption>{% trans 'Totals' %}</caption>
         <tr>
             <th>{% trans 'Basket total (inc. tax)' %}</th>
-            <td>{{ order.basket_total_incl_tax|currency }}</td>
+            <td>{{ order.basket_total_incl_tax|currency:order.currency }}</td>
         </tr>
         <tr>
             <th>{% trans 'Shipping charge (inc. tax)' %}</th>
-            <td>{{ order.shipping_incl_tax|currency }}</td>
+            <td>{{ order.shipping_incl_tax|currency:order.currency }}</td>
         </tr>
         <tr>
             <th>{% trans 'Order total' %}</th>
-            <td>{{ order.total_incl_tax|currency }}</td>
+            <td>{{ order.total_incl_tax|currency:order.currency }}</td>
         </tr>
     </table>
 
