@@ -51,7 +51,15 @@
 @serifFontFamily:       Georgia, "Times New Roman", Times, serif;
 @monoFontFamily:        Monaco, Menlo, Consolas, "Courier New", monospace;
 
-@baseFontSize:          14px;
+@OneSize: 48; // 48px;
+@TwoSize: 32; // 32px;
+@ThreeSize: 24; // 24px;
+@FourSize: @baseSize; // 16px;
+@bodySize: 14; // 14px;
+@baseSize: 16; // 16px;
+
+@bodyFontSize: 			(@bodySize / @baseSize) + 0em; // Set the initial body font size: 14px
+@baseFontSize:          (@bodySize / @bodySize) + 0em; // This needs to set as 1em
 @baseFontFamily:        @sansFontFamily;
 @baseLineHeight:        20px;
 @altFontFamily:         @serifFontFamily;
@@ -60,10 +68,10 @@
 @headingsFontWeight:    bold;    // instead of browser default, bold
 @headingsColor:         inherit; // empty to use BS default, @textColor
 
-@headingOneSize: 48px;
-@headingTwoSize: 32px;
-@headingThreeSize: 24px;
-@headingFourSize: 16px;
+@headingOneSize: (@OneSize / @bodySize) + 0em; // 48px;
+@headingTwoSize: (@TwoSize / @bodySize) + 0em; // 32px;
+@headingThreeSize: (@ThreeSize / @bodySize) + 0em; // 24px;
+@headingFourSize: (@FourSize / @bodySize) + 0em; // 16px;
 
 @containerWidth: 1170px;
 

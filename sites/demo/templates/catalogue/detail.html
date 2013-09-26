@@ -41,7 +41,7 @@
                         {% if not product.is_group %}
                         <div class="row-fluid">
                             <h2 class="price_color">{% include "catalogue/partials/stock_record.html" %}</h2>
-                            <p class="free-delivery"><i class="icon-truck"></i> <span><strong>{% trans "Free shipping" %}</strong> <br/> {% trans "For all orders over $300" %}</span></p>
+                            <p class="free-delivery"><i class="icon-truck"></i> <span><span>{% trans "Free shipping" %}</span><br/> <strong>{% trans "For all orders over $300" %}</strong></span></p>
                         </div>
                         {% endif %}
                     {% endblock %}

@@ -64,6 +64,28 @@
   }
 }
 
+.free-delivery {
+  text-transform: uppercase;
+  line-height: 1.1em;
+  i {
+    display:inline-block;
+    float:left;
+    font-size: (@OneSize / @ThreeSize) + 0em;
+  }
+  > span {
+    margin-left:(@OneSize / @ThreeSize) + 0.5em;
+    display:block;
+  }
+  > span span {
+    font-size: (@TwoSize / @ThreeSize) + 0em;
+    line-height: 1em;
+  }
+  strong {
+    font-size: (17 / @ThreeSize) + 0em;
+    letter-spacing: 0;
+  }
+}
+
 //Widget blocks
 .widget-delivery,
 .widget-shipping {
@@ -77,19 +99,8 @@
   .btn {
     float:right;
   }
-  i {
-    font-size:@headingOneSize;
-  }
 }
-.widget-delivery {
-  i {
-    margin-right:5px;
-    vertical-align: middle;
-  }
-  h3 {
-    font-size: 22px;
-  }
-}
+
 .widget-image-link {
   color:@white;
   text-align: center;
@@ -121,7 +132,7 @@
     position: absolute;
     right:5px;
     top:10px;
-    font-size: @headingTwoSize;
+    font-size: (32 / @ThreeSize) + 0em;
   }
   &.large {
     h3 {

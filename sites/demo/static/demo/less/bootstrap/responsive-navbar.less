@@ -6,6 +6,13 @@
 // TABLETS AND BELOW
 // -----------------
 @media (max-width: @navbarCollapseWidth) {
+  
+  //Lets reduce the fonts for smaller screens
+  @bodySize: 12; // Body font size set to 12px;
+
+  body {
+    font-size: @bodyFontSize;
+  }
 
   // UNFIX THE TOPBAR
   // ----------------

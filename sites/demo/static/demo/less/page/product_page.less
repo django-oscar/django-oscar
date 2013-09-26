@@ -15,39 +15,14 @@
     float:right;
   }
 }
-.free-delivery {
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  i {
-    margin-right:5px;
-    vertical-align: top;
-  }
-  i, span {
-    display:inline-block;
-  }
-  strong {
-    font-size:20px;
-  }
-}
+
 .product-page .free-delivery {
   color:@blue;
-  font-size:10px;
   border:1px solid @blue;
   padding:10px;
-  line-height: @baseFontSize;
-  i {
-    font-size: @headingThreeSize;
-  }
-  strong {
-    font-size:20px;
-  }
-}
-.widget-shipping .free-delivery {
-  font-size:15px;
-  line-height: 20px;
-  strong {
-    font-size:@headingTwoSize;
-    letter-spacing: 0;
+  > span span {
+    font-size: (20 / @bodySize) + 0em;
+    font-weight:@headingsFontWeight;
   }
 }
 
