@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "layout_2_col.html" %}
 
 {% load url from future %}
 {% load i18n %}
@@ -24,15 +24,36 @@
     </ul>
 {% endblock %}
 
-{% block header %}{% endblock %}
+{% block headertext %}{{ page_title }}{% endblock %}
+
+{% block column_left %}
+    <ul class="nav nav-pills nav-stacked">
+        {% block standard_tabs %}
+            <li{% if active_tab == 'profile' %} class="active"{% endif %}>
+                <a href="{% url 'customer:profile-view' %}">{% trans "Profile" %}</a>
+            </li>
+            <li{% if active_tab == 'orders' %} class="active"{% endif %}>
+                <a href="{% url 'customer:order-list' %}">{% trans "Order History" %}</a>
+            </li>
+            <li{% if active_tab == 'addresses' %} class="active"{% endif %}>
+                <a href="{% url 'customer:address-list' %}">{% trans "Address Book" %}</a>
+            </li>
+            <li{% if active_tab == 'emails' %} class="active"{% endif %}>
+                <a href="{% url 'customer:email-list' %}">{% trans "Email History" %}</a>
+            </li>
+            <li{% if active_tab == 'alerts' %} class="active"{% endif %}>
+                <a href="{% url 'customer:alerts-list' %}">{% trans "Product Alerts" %}</a>
+            </li>
+            <li{% if active_tab == 'notifications' %} class="active"{% endif %}>
+                <a href="{% url 'customer:notifications-inbox' %}">{% trans "Notifications" %}</a>
+            </li>
+            <li{% if active_tab == 'wishlists' %} class="active"{% endif %}>
+                <a href="{% url 'customer:wishlists-list' %}">{% trans "Wish Lists" %}</a>
+            </li>
+        {% endblock %}
+    </ul>
+{% endblock %}
 
 {% block content %}
-    <div class="tabbable">
-        {% include 'customer/partials/nav_account.html' %}
-        <div class="tab-content">
-            <div class="tab-pane active">
-                {% block tabcontent %}{% endblock tabcontent %}
-            </div>
-        </div>
-    </div>
+    {% block tabcontent %}{% endblock tabcontent %}
 {% endblock content %}
