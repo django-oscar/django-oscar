@@ -6,12 +6,12 @@
 
 <article class="product_pod">
     {% block product_image %}
-    <div class="image_container">
+    <div class="image_container {% if not product.is_available_to_buy %}product-unavailable{% endif %}">
         {% with image=product.primary_image %}
             {% thumbnail image.original "150x150" upscale=False as thumb %}
                 <a href="{{ product.get_absolute_url }}">
                     <img src="{{ thumb.url }}" alt="{{ product.get_title }}">
-                    {% if not product.is_available_to_buy %}<i class="unavailable"></i>{% endif %}
+                    <i class="product-badge"></i>
                 </a>
             {% endthumbnail %}
         {% endwith %}  

@@ -5,6 +5,28 @@
   font-weight:bold;
 }
 
+//Product badges default
+.product-badge {
+  position:absolute;
+  right:0;
+  top:0;
+  //Default display none
+  display:none;
+}
+
+//Unavailable badge
+.product-unavailable {
+  .product-badge {
+    display:block;
+    width:113px;
+    height:86px;
+    background:url(/static/demo/img/ui/unavailable.png) 0 0;
+  }
+  img {
+    .opacity(35);
+  }
+}
+
 .product_pod {
   position:relative;
   height:430px;
@@ -12,14 +34,6 @@
   .clearfix();
   & p {
     margin-bottom:0;
-  }
-  .unavailable {
-    width:113px;
-    height:86px;
-    position:absolute;
-    right:0;
-    top:0;
-    background:url(/static/demo/img/ui/unavailable.png) 0 0;
   }
   h3 {
     font-size:@headingFourSize;
