@@ -1,5 +1,14 @@
 // OSCAR HEADER
 // -----------
+.header {
+  position:relative;
+  z-index: 1;
+}
+//IE9 seems to like more constraints on SVG rather than just attr width and height
+.logo {
+  width:140px;
+  height:108px;
+}
 .header-content {
   height:108px;
   position: relative;
@@ -13,6 +22,7 @@
     margin-left:160px;
     position: absolute;
     bottom:0;
+    left:0;
   }
   .logo {
     float:left;

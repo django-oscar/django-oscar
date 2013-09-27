@@ -13,7 +13,7 @@
     function megaCarousel() {
         $('#homepage-carousel').flexslider({
           animation: "fade",
-          slideshow: true,
+          slideshow: true
         });
     }
 
@@ -39,11 +39,13 @@
                 homePage = $('.home-page'),
                 imageWidth = 180,
                 maxProducts = 4,
+                minProducts = 1,
                 showNav = true;
             if (productPage.length > 0) {
                 imageWidth = 150;
                 maxProducts = 5;
                 showNav = false;
+                minProducts = 2;
             }
             if (homePage.length > 0) {
                 imageWidth = 140;
@@ -52,7 +54,7 @@
                 animation: "slide",
                 animationLoop: true,
                 itemWidth: imageWidth,
-                minItems: 1,
+                minItems: minProducts,
                 maxItems: maxProducts,
                 controlNav: showNav
             });
