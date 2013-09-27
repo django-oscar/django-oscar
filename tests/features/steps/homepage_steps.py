@@ -2,14 +2,6 @@ from behave import *
 from nose.tools import *
 
 
-@given('a user')
-def step(context):
-    from django_dynamic_fixture import G
-    from oscar.core.compat import get_user_model
-    User = get_user_model()
-    G(User)
-
-
 @when('I view the homepage')
 def step(context):
     br = context.browser

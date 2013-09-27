@@ -106,6 +106,7 @@ def get_product_base_queryset():
                    "in Oscar 0.7."))
     return Product.browsable.base_queryset()
 
+
 class ProductCategoryView(ListView):
     """
     Browse products in a given category
