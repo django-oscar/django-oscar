@@ -24,7 +24,6 @@
 {% endblock %}
 
 {% block tabcontent %}
-    <h2>{{ wishlist.name }}</h2>
     {% if form.total_form_count %}
         <form class="stacked" method="post">
             {{ form.management_form }}
@@ -62,46 +61,50 @@
                                             </ul>
                                         {% endfor %}
                                     {% endfor %}
-                                    <td>
-                                        <div class="btn-group">
-                                            {% if line.product %}
-                                                <a class="btn" href="{{ line.product.get_absolute_url }}">{% trans 'View product' %}</a>
-                                                <button class="btn dropdown-toggle" data-toggle="dropdown">
-                                                    <span class="caret"></span>
-                                                </button>
-                                            {% else %}
-                                                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                                    {% trans 'Actions' %}
-                                                    <span class="caret"></span>
-                                                </a>
-                                            {% endif %}
-                                            <ul class="dropdown-menu">
-                                                <li><a href="{% url 'customer:wishlists-remove-product' key=wishlist.key line_pk=line.pk %}">
-                                                        {% trans 'Remove' %}
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        {% if line.product %}
+                                            <a class="btn" href="{{ line.product.get_absolute_url }}">{% trans 'View product' %}</a>
+                                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                            </button>
+                                        {% else %}
+                                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                                {% trans 'Actions' %}
+                                                <span class="caret"></span>
+                                            </a>
+                                        {% endif %}
+                                        <ul class="dropdown-menu">
+                                            <li><a href="{% url 'customer:wishlists-remove-product' key=wishlist.key line_pk=line.pk %}">
+                                                    {% trans 'Remove' %}
+                                            </a></li>
+                                            {% for other_wishlist in other_wishlists %}
+                                                <li><a href="{% url 'customer:wishlists-move-product-to-another' key=wishlist.key line_pk=line.pk to_key=other_wishlist.key %}">
+                                                        {% blocktrans with name=other_wishlist.name %}
+                                                            Move to '{{ name }}' wish list
+                                                        {% endblocktrans %}
                                                 </a></li>
-                                                {% for other_wishlist in other_wishlists %}
-                                                    <li><a href="{% url 'customer:wishlists-move-product-to-another' key=wishlist.key line_pk=line.pk to_key=other_wishlist.key %}">
-                                                            {% blocktrans with name=other_wishlist.name %}
-                                                                Move to '{{ name }}' wish list
-                                                            {% endblocktrans %}
-                                                    </a></li>
-                                                {% endfor %}
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endwith %}
-                        {% endfor %}
-                    </tbody>
-                </table>
-                <div class="form-actions">
-                    <button class="btn btn-large btn-primary" type="submit">{% trans "Update quantities" %}</button>
-                    {% trans "or" %} <a href="{% url 'customer:wishlists-list' %}">{% trans "cancel" %}</a>
-                </div>
-            </form>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endwith %}
+                    {% endfor %}
+                    <tr>
+                        <td colspan="2"></td>
+                        <td>
+                            <button class="btn btn-primary" type="submit">{% trans "Update quantities" %}</button>
+                        </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
 
-        {% else %}
-            {% trans "Your wish list is empty." %}
-        {% endif %}
+    {% else %}
+        {% trans "Your wish list is empty." %}
+    {% endif %}
 
-    {% endblock tabcontent %}
+{% endblock tabcontent %}

@@ -16,16 +16,15 @@
             <a href="{% url 'customer:wishlists-list' %}">{% trans 'Wish Lists' %}</a>
             <span class="divider">/</span>
         </li>
-        <li class="active">
-            {% blocktrans with name=wishlist.name %}
-                Delete '{{ name }}'?
-            {% endblocktrans %}
+        <li>
+            <a href="{% url 'customer:wishlists-detail' wishlist.key %}">{{ wishlist.name }}</a>
+            <span class="divider">/</span>
         </li>
+        <li class="active">{% trans "Delete?" %}</li>
     </ul>
 {% endblock %}
 
 {% block tabcontent %}
-    <h2>{{ wishlist.name }}</h2>
     <form action="." method="post">
         {% csrf_token %}
         <p>

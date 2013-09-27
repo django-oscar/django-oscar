@@ -132,6 +132,11 @@ class WishListUpdateView(PageTitleMixin, UpdateView):
         return get_object_or_404(WishList, owner=self.request.user,
                                  key=self.kwargs['key'])
 
+    def get_form_kwargs(self):
+        kwargs = super(WishListUpdateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
     def get_success_url(self):
         messages.success(
             self.request, _("Your '%s' wishlist has been updated") % self.object.name)
