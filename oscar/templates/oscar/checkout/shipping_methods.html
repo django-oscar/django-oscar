@@ -1,7 +1,6 @@
 {% extends "checkout/checkout.html" %}
 
 {% load url from future %}
-{% load currency_tags %}
 {% load currency_filters %}
 {% load i18n %}
 
@@ -47,9 +46,9 @@
                 </div>
                 <div class="span1">
                     {% if method.is_tax_known %}
-                        {% currency method.charge_incl_tax basket.currency %}
+                        {{ method.charge_incl_tax:currency.basket.currency }}
                     {% else %}
-                        {% currency method.charge_excl_tax basket.currency %}
+                        {{ method.charge_excl_tax:currency.basket.currency }}
                     {% endif %}
                 </div>
                 <div class="span3">

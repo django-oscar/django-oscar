@@ -1,15 +1,15 @@
 {% load url from future %}
 {% load i18n %}
-{% load currency_tags %}
+{% load currency_filters %}
 
 <p>
     {% if basket.is_empty %}
         {% trans "Your basket is now empty" %}
     {% else %}
         {% if basket.is_tax_known %}
-            {% trans "Basket total now" %} {% currency basket.total_incl_tax basket.currency %}
+            {% trans "Basket total now" %} {{ basket.total_incl_tax|currency:basket.currency }}
         {% else %}
-            {% trans "Basket total now" %} {% currency basket.total_excl_tax basket.currency %}
+            {% trans "Basket total now" %} {{ basket.total_excl_tax|currency:basket.currency }}
         {% endif %}
     {% endif %}
 </p>

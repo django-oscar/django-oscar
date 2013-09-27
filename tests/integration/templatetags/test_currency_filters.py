@@ -33,26 +33,3 @@ class TestCurrencyFilter(TestCase):
         self.template.render(template.Context({
             'price': ''
         }))
-
-
-class TestCurrencyTag(TestCase):
-
-    def test_renders_uk_price_correctly(self):
-        ctx = {'price': D('10.23')}
-        out = render("{% load currency_tags %}{% currency price 'GBP' %}", ctx)
-        self.assertTrue(u'£10.23' in out)
-
-    def test_renders_us_price_correctly(self):
-        ctx = {
-            'price': D('10.23'),
-            'currency': 'USD'
-        }
-        out = render(
-            "{% load currency_tags %}{% currency price currency %}", ctx)
-        self.assertTrue(u'$10.23' in out)
-
-    def test_uses_default_currency(self):
-        ctx = {'price': D('10.23')}
-        out = render(
-            "{% load currency_tags %}{% currency price currency %}", ctx)
-        self.assertTrue(u'£10.23' in out)
