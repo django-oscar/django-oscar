@@ -109,11 +109,11 @@ class WishListCreateView(PageTitleMixin, CreateView):
         wishlist = form.save()
         if self.product:
             wishlist.add(self.product)
-            msg = _("Your wishlist has been created")
-        else:
             msg = _("Your wishlist has been created and '%(name)s "
                     "has been added") % {
                         'name': self.product.get_title()}
+        else:
+            msg = _("Your wishlist has been created")
         messages.success(self.request, msg)
         return HttpResponseRedirect(wishlist.get_absolute_url())
 
