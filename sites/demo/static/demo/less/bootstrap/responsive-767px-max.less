@@ -142,6 +142,37 @@
     float:none;
     margin-left:20px;
   }
+
+  //Checkout navigation
+  .checkoutNav {
+    margin:30px 0 0;
+    background:@navbarInverseBackground;
+    border-top:0;
+    border-bottom:0;
+    ul {
+      li {
+        text-align: left;
+        width:auto;
+        color:@navbarInverseBackground;
+        display:none;
+        &.active {
+          color:@white;
+          display:block;
+          padding:10px 0;
+        }
+      }
+    }
+  }
+  
+  //Payment details form
+  .payment-details {
+    select {
+      display:block;
+      margin-bottom:@baseLineHeight;
+    }
+  }
+
+
 }
 
 

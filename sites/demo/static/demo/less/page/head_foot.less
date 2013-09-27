@@ -8,7 +8,7 @@
     font-weight: 300;
     text-transform: capitalize;
     font-size: @baseFontSize;
-    line-height: @baseFontSize;
+    line-height: @baseLineHeight;
     margin:0;
     margin-left:160px;
     position: absolute;
@@ -76,7 +76,7 @@
 .footer {
   position: relative;
   clear: both;
-  height: @footer-height;
+  min-height: @footer-height;
   background: url(/static/demo/img/ui/wavecut-blue.png) 0 0 repeat @blueDark;
   color:@white;
   a {

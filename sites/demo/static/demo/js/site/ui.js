@@ -83,6 +83,7 @@
 
 
     // Register desktop callback
+    site.responsive.register(matchHeight, ['desktop', 'tablet']);
     site.responsive.register(megaCarousel, ['desktop', 'tablet']);
     site.responsive.register(productCarousel, ['desktop', 'tablet']);
     site.responsive.register(productSingleCarousel, ['desktop', 'tablet']);

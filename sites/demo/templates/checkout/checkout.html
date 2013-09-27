@@ -59,7 +59,7 @@
 
 {% block order_contents %}
 <h3>{% trans "Order contents" %}</h3>
-<div class="basket-title">
+<div class="basket-title hidden-phone">
     <div class="row-fluid">
         <h4 class="span8">{% trans "Items in basket" %}</h4>
         <h4 class="span2 align-center">{% trans "Quantity" %}</h4>
@@ -69,7 +69,7 @@
 {% for line in basket.all_lines %}
 <div class="basket-items">
     <div class="row-fluid">
-        <div class="span8">
+        <div class="span2">
             <div class="image_container">
                 {% with image=line.product.primary_image %}
                 {% thumbnail image.original "200x200" upscale=False as thumb %}
@@ -77,6 +77,8 @@
                 {% endthumbnail %}
                 {% endwith %}
             </div>
+        </div>
+        <div class="span6">
             <h4>{{ line.product.stockrecord.partner.name }}</h4>
             <h3><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h3>
         </div>
