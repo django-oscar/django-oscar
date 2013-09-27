@@ -4,16 +4,12 @@
 
 {% if user.is_authenticated %}
     {% with wishlists=user.wishlists.all %}
-        {% if wishlists %}
-
-            {# Select wishlists that contains product #}
-            {% wishlists_containing_product wishlists product as product_wishlists %}
+        {# Select wishlists that contains product #}
+        {% wishlists_containing_product wishlists product as product_wishlists %}
+        {% if wishlists|length > 1 %}
 
             <div class="btn-group">
-                <a class="btn" href="{% url 'customer:wishlists-create' product_pk=product.pk %}">{% trans "Add to wish list" %}</a>
-                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                    <span class="caret"></span>
-                </a>
+                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">{% trans "Add to wish list" %} <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     {% for wishlist in wishlists %}
                         <li>
@@ -26,12 +22,15 @@
                             {% endif %}
                         </li>
                     {% endfor %}
-                    <li><a href="{% url 'customer:wishlists-create' product_pk=product.pk %}">{% trans 'Create a new wishlist' %}</a></li>
+                    <li><a href="{% url 'customer:wishlists-create-with-product' product_pk=product.pk %}">{% trans 'Create a new wishlist' %}</a></li>
                 </ul>
             </div>
         {% else %}
-            {# No existing wishlists - show a simple button #}
-            <a class="btn" href="{% url 'customer:wishlists-create' product_pk=product.pk %}">{% trans "Add to wish list" %}</a>
+            {# 1 or no existing wishlists - show a simple button #}
+            <form action="{% url 'customer:wishlists-add-product' product_pk=product.pk %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn">{% trans "Add to wish list" %}</button>
+            </form>
         {% endif %}
 
         <p>

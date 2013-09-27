@@ -42,12 +42,13 @@ class CustomerApplication(Application):
     alert_confirm_view = alert_views.ProductAlertConfirmView
     alert_cancel_view = alert_views.ProductAlertCancelView
 
+    wishlists_add_product_view = wishlists_views.WishListAddProduct
     wishlists_list_view = wishlists_views.WishListListView
     wishlists_detail_view = wishlists_views.WishListDetailView
     wishlists_create_view = wishlists_views.WishListCreateView
+    wishlists_create_with_product_view = wishlists_views.WishListCreateView
     wishlists_update_view = wishlists_views.WishListUpdateView
     wishlists_delete_view = wishlists_views.WishListDeleteView
-    wishlists_add_product_view = wishlists_views.WishListAddProduct
     wishlists_remove_product = wishlists_views.WishListRemoveProduct
     wishlists_move_product_to_another = wishlists_views.WishListMoveProductToAnotherWishList
 
@@ -142,21 +143,26 @@ class CustomerApplication(Application):
             url(r'wishlists/$',
                 login_required(self.wishlists_list_view.as_view()),
                 name='wishlists-list'),
+            url(r'wishlists/add/(?P<product_pk>\d+)/$',
+                login_required(self.wishlists_add_product_view.as_view()),
+                name='wishlists-add-product'),
+            url(r'wishlists/(?P<key>[a-z0-9]+)/add/(?P<product_pk>\d+)/',
+                login_required(self.wishlists_add_product_view.as_view()),
+                name='wishlists-add-product'),
             url(r'wishlists/create/$',
                 login_required(self.wishlists_create_view.as_view()),
                 name='wishlists-create'),
             url(r'wishlists/create/with-product/(?P<product_pk>\d+)/$',
                 login_required(self.wishlists_create_view.as_view()),
-                name='wishlists-create'),
+                name='wishlists-create-with-product'),
+            url(r'wishlists/(?P<key>[a-z0-9]+)/$',
+                self.wishlists_detail_view.as_view(), name='wishlists-detail'),
             url(r'wishlists/(?P<key>[a-z0-9]+)/update/$',
                 login_required(self.wishlists_update_view.as_view()),
                 name='wishlists-update'),
             url(r'wishlists/(?P<key>[a-z0-9]+)/delete/$',
                 login_required(self.wishlists_delete_view.as_view()),
                 name='wishlists-delete'),
-            url(r'wishlists/(?P<key>[a-z0-9]+)/add/(?P<product_pk>\d+)/',
-                login_required(self.wishlists_add_product_view.as_view()),
-                name='wishlists-add-product'),
             url(r'wishlists/(?P<key>[a-z0-9]+)/lines/(?P<line_pk>\d+)/delete/',
                 login_required(self.wishlists_remove_product.as_view()),
                 name='wishlists-remove-product'),
@@ -166,8 +172,6 @@ class CustomerApplication(Application):
             url(r'wishlists/(?P<key>[a-z0-9]+)/lines/(?P<line_pk>\d+)/move-to/(?P<to_key>[a-z0-9]+)/$',
                 login_required(self.wishlists_move_product_to_another.as_view()),
                 name='wishlists-move-product-to-another'),
-            url(r'wishlists/(?P<key>[a-z0-9]+)/$',
-                self.wishlists_detail_view.as_view(), name='wishlists-detail'),
             )
         return self.post_process_urls(urlpatterns)
 
