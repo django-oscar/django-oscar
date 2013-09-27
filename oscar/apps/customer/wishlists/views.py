@@ -227,7 +227,7 @@ class WishListAddProduct(View):
     def add_product(self):
         self.wishlist.add(self.product)
         msg = _("'%s' was added to your wish list." % self.product.get_title())
-        messages.success(self.request, msg % self.product)
+        messages.success(self.request, msg)
         return HttpResponseRedirect(
             self.request.META.get('HTTP_REFERER',
                                   self.product.get_absolute_url()))
