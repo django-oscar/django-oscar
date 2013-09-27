@@ -216,7 +216,9 @@ class WishListAddProduct(View):
         return wishlist
 
     def get(self, request, *args, **kwargs):
-        # TODO - get rid of this method
+        # This is nasty as we shouldn't be performing write operations on a GET
+        # request.  It's only included as the UI of the product detail page
+        # allows a wishlist to be selected from a dropdown.
         return self.add_product()
 
     def post(self, request, *args, **kwargs):
@@ -258,7 +260,7 @@ class LineMixin(object):
 
 class WishListRemoveProduct(LineMixin, View):
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         self.line.delete()
 
         msg = _("'%(title)s' was removed from your '%(name)s' wish list") % {
