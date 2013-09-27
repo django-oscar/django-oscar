@@ -7,11 +7,35 @@
 // -----------------
 @media (max-width: @navbarCollapseWidth) {
   
-  //Lets reduce the fonts for smaller screens
+  //Lets reduce the fonts for smaller screens on navigation collapse
   @bodySize: 12; // Body font size set to 12px;
 
   body {
     font-size: @bodyFontSize;
+  }
+  //Any other font size updates
+  .widget-delivery,
+  .widget-shipping {
+    .free-delivery {
+      font-size: 1.5em;
+    }
+  }
+  .widget-image-link h3 {
+    font-size: 1.3em;
+  }
+  //Footer links are also part of the navbar collapse
+  .footer-links {
+    h3 {
+      margin-bottom:0;
+      a {
+        display: block;
+      }
+    }
+    > li {
+      float:none;
+      width:100%;
+      margin-bottom:20px;
+    }
   }
 
   // UNFIX THE TOPBAR
