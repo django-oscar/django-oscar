@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.db.models import get_model
-from django.forms.models import inlineformset_factory
+from django.forms.models import inlineformset_factory, fields_for_model
 
 WishList = get_model('wishlists', 'WishList')
 Line = get_model('wishlists', 'Line')
@@ -18,5 +18,13 @@ class WishListForm(forms.ModelForm):
         fields = ('name', )
 
 
-LineFormset = inlineformset_factory(WishList, Line, fields=('quantity', ),
-                                    extra=0, can_delete=False)
+class WishListLineForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(WishListLineForm, self).__init__(*args, **kwargs)
+        self.fields['quantity'].widget.attrs['size'] = 2
+
+
+LineFormset = inlineformset_factory(
+    WishList, Line, fields=('quantity', ), form=WishListLineForm,
+    extra=0, can_delete=False)
