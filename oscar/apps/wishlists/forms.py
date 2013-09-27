@@ -22,7 +22,7 @@ class WishListLineForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(WishListLineForm, self).__init__(*args, **kwargs)
-        self.fields['quantity'].widget.attrs['size'] = 2
+        self.fields['quantity'].widget.attrs['class'] = 'input-mini'
 
 
 LineFormset = inlineformset_factory(
