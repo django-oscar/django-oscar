@@ -83,17 +83,17 @@
         <tr>
                 <td>{{ product.upc|default:"-" }}</td>
                 <td>
-                {% if product.primary_image.original.url %}
-                {% with image=product.primary_image %}
-                    {% thumbnail image.original "70x70" upscale=False as thumb %}
-                        <a href="{{ image.original.url }}" rel="lightbox_{{ product.upc|default:"-" }}" class="sub-image">
-                            <img src="{% static thumb.url %}" alt="{{ product.get_title }}" data-description="{% if image.caption %}{{ image.caption }}{% endif %}">
-                        </a>
-                    {% endthumbnail %}
-                {% endwith %}
-                {% else %}
-                -
-                {% endif %}
+                    {% with image=product.primary_image %}
+                        {% if image.original.url %}
+                            {% thumbnail image.original "70x70" upscale=False as thumb %}
+                                <a href="{{ image.original.url }}" rel="lightbox_{{ product.upc|default:"-" }}" class="sub-image">
+                                    <img src="{% static thumb.url %}" alt="{{ product.get_title }}" data-description="{% if image.caption %}{{ image.caption }}{% endif %}">
+                                </a>
+                            {% endthumbnail %}
+                        {% else %}
+                            -
+                        {% endif %}
+                    {% endwith %}
                 </td>
                 <td>{{ product.get_title }}</td>
                 <td>{{ product.get_product_class.name }}</td>
