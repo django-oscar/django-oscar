@@ -196,7 +196,7 @@ class WishListAddProduct(View):
     Adds a product to a wish list.
 
     - If the user doesn't already have a wishlist then it will be created for
-    them.
+      them.
     - If the product is already in the wish list, its quantity is increased.
     """
 
@@ -237,10 +237,13 @@ class LineMixin(object):
     """
     Handles fetching both a wish list and a product
     Views using this mixin must be passed two keyword arguments:
-        * key: The key of a wish list
-        * line_pk: The primary key of the wish list line
+
+    * key: The key of a wish list
+    * line_pk: The primary key of the wish list line
+
     or
-        * product_pk: The primary key of the product
+
+    * product_pk: The primary key of the product
     """
 
     def dispatch(self, request, *args, **kwargs):
