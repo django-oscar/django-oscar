@@ -69,16 +69,16 @@
 {% for line in basket.all_lines %}
 <div class="basket-items">
     <div class="row-fluid">
-        <div class="span2">
+        <div class="span1">
             <div class="image_container">
                 {% with image=line.product.primary_image %}
-                {% thumbnail image.original "200x200" upscale=False as thumb %}
+                {% thumbnail image.original "100x100" upscale=False as thumb %}
                 <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
                 {% endthumbnail %}
                 {% endwith %}
             </div>
         </div>
-        <div class="span6">
+        <div class="span7">
             <h4>{{ line.product.stockrecord.partner.name }}</h4>
             <h3><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h3>
         </div>

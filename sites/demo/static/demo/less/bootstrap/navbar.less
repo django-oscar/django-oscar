@@ -168,6 +168,7 @@
   margin-bottom: 0; // remove 18px margin for default navbar
   .navbar-inner {
     .border-radius(0);
+    border:0;
   }
 }
 
@@ -210,12 +211,6 @@
 // Fixed to top
 .navbar-fixed-top {
   top: 0;
-}
-.navbar-fixed-top,
-.navbar-static-top {
-  .navbar-inner {
-    .box-shadow(~"0 1px 10px rgba(0,0,0,.1)");
-  }
 }
 
 // Fixed to bottom
@@ -403,15 +398,32 @@
   .navbar-inner {
     #gradient > .vertical(@navbarInverseBackgroundHighlight, @navbarInverseBackground);
     border-color: @navbarInverseBorder;
+    min-height: 60px;
+    padding:0;
   }
 
   .brand,
   .nav > li > a {
     color: @navbarInverseLinkColor;
     text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+    font-weight: bold;
+    padding: ((60px - @baseLineHeight) / 2) 30px ((60px - @baseLineHeight) / 2);
+    text-transform: uppercase;
+    &.dropdown-toggle {
+      padding: ((60px - @baseLineHeight) / 2) 25px ((60px - @baseLineHeight) / 2) 30px;
+    }
     &:hover,
     &:focus {
       color: @navbarInverseLinkColorHover;
+    }
+  }
+
+  .navbar-form {
+    input,
+    select,
+    .radio,
+    .checkbox {
+        margin-top: (60px - 30px) / 2;
     }
   }
 
@@ -455,9 +467,10 @@
   .nav li.dropdown.open > .dropdown-toggle,
   .nav li.dropdown.active > .dropdown-toggle,
   .nav li.dropdown.open.active > .dropdown-toggle {
-    background-color: @navbarInverseLinkBackgroundActive;
+    background-color: #337abf;
     color: @navbarInverseLinkColorActive;
   }
+
   .nav li.dropdown > a:hover .caret,
   .nav li.dropdown > a:focus .caret {
     border-top-color: @navbarInverseLinkColorActive;
@@ -472,6 +485,47 @@
   .nav li.dropdown.open.active > .dropdown-toggle .caret {
     border-top-color: @navbarInverseLinkColorActive;
     border-bottom-color: @navbarInverseLinkColorActive;
+  }
+
+  .nav > li > .dropdown-menu {
+    &:before,
+    &:after {
+        display: none;
+    }
+  }
+
+  .dropdown-menu {
+      margin: 0;
+      padding: 0;
+      border: none;
+      .border-radius(0);
+      color: @white;
+      background-color: #337abf;
+      min-width:250px;
+      .divider {
+          margin: 0;
+          border-bottom: none;
+      }
+  }
+
+  .dropdown-menu > li > a {
+      padding: (@baseLineHeight / 2) @baseLineHeight;
+      color: @white;
+      position: relative;
+      padding-right:30px;
+
+      &:hover {
+          background: #0e263f;
+          i {
+              display:inline-block;
+          }
+      }
+      i {
+          position: absolute;
+          right:12px;
+          top:12px;
+          display:none;
+      }
   }
 
   // Navbar search
@@ -504,3 +558,9 @@
   }
 
 }
+
+
+
+
+
+

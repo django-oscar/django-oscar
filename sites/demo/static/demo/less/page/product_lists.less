@@ -1,8 +1,17 @@
 // Price Color
+//Price (i = variant)
 .price_color {
   display:block;
   color:@green;
   font-weight:bold;
+  i {
+    display:block;
+    color:@gray;
+    font-style: normal;
+  }
+  del {
+    color:@gray;
+  }
 }
 
 //Product badges default
@@ -72,17 +81,6 @@
     form {
       margin-bottom:0px;
     }
-  }
-}
-//Price (i = variant)
-.price_color {
-  i {
-    display:block;
-    color:@gray;
-    font-style: normal;
-  }
-  del {
-    color:@gray;
   }
 }
 

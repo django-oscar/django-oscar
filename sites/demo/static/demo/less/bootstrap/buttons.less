@@ -14,27 +14,22 @@
   margin-bottom: 0; // For input.btn
   font-size: @baseFontSize;
   line-height: @baseLineHeight;
+  font-weight: 700;
   text-align: center;
+  text-transform: uppercase;
   vertical-align: middle;
   cursor: pointer;
-  .buttonBackground(@btnBackground, @btnBackgroundHighlight, @grayDark, 0 1px 1px rgba(255,255,255,.75));
-  border: 1px solid @btnBorder;
+  white-space: nowrap;
+  .buttonBackground(@blue, #3C92E4);
+  border: 0;
   *border: 0; // Remove the border to prevent IE7's black border on input:focus
-  border-bottom-color: darken(@btnBorder, 10%);
-  .border-radius(@baseBorderRadius);
+  .border-radius(50px);
   .ie7-restore-left-whitespace(); // Give IE7 some love
-  .box-shadow(~"inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05)");
 
   // Hover/focus state
   &:hover,
   &:focus {
-    color: @grayDark;
     text-decoration: none;
-    background-position: 0 -15px;
-
-    // transition is only when going to hover/focus, otherwise the background
-    // behind the gradient (there for IE<=9 fallback) gets mismatched
-    .transition(background-position .1s linear);
   }
 
   // Focus state for keyboard and accessibility
@@ -47,14 +42,15 @@
   &:active {
     background-image: none;
     outline: 0;
-    .box-shadow(~"inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05)");
+    .box-shadow(inset 0 3px 5px rgba(0,0,0,.15));
   }
 
   // Disabled state
   &.disabled,
-  &[disabled] {
+  &[disabled],
+  fieldset[disabled] & {
     cursor: default;
-    background-image: none;
+    pointer-events: none; // Future-proof disabling of clicks
     .opacity(65);
     .box-shadow(none);
   }
@@ -71,7 +67,6 @@
   padding: 20px 30px;
   font-size: @headingThreeSize;
   *line-height: 2em;
-  .border-radius(@borderRadiusLarge);
 }
 .btn-large [class^="icon-"],
 .btn-large [class*=" icon-"] {
@@ -127,15 +122,11 @@ input[type="button"] {
 }
 
 
-
 // Alternate buttons
 // --------------------------------------------------
 
 // Provide *some* extra contrast for those who can get it
 .btn-primary.active,
-.btn-warning.active,
-.btn-danger.active,
-.btn-success.active,
 .btn-info.active,
 .btn-inverse.active {
   color: rgba(255,255,255,.75);
@@ -144,27 +135,15 @@ input[type="button"] {
 // Set the backgrounds
 // -------------------------
 .btn-primary {
-  .buttonBackground(@btnPrimaryBackground, @btnPrimaryBackgroundHighlight);
-}
-// Warning appears are orange
-.btn-warning {
-  .buttonBackground(@btnWarningBackground, @btnWarningBackgroundHighlight);
-}
-// Danger and error appear as red
-.btn-danger {
-  .buttonBackground(@btnDangerBackground, @btnDangerBackgroundHighlight);
-}
-// Success appears as green
-.btn-success {
-  .buttonBackground(@btnSuccessBackground, @btnSuccessBackgroundHighlight);
+  .buttonBackground(@green, #5CCB5B);
 }
 // Info appears as a neutral blue
 .btn-info {
-  .buttonBackground(@btnInfoBackground, @btnInfoBackgroundHighlight);
+  .buttonBackground(@gray, #B0B0B0);
 }
 // Inverse appears as dark gray
 .btn-inverse {
-  .buttonBackground(@btnInverseBackground, @btnInverseBackgroundHighlight);
+  .buttonBackground(@blueDark, @blue);
 }
 
 

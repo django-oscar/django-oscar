@@ -23,17 +23,17 @@
         {% for form in formset %}
         <div class="basket-items">
             <div class="row-fluid">
-                <div class="span2">
+                <div class="span1">
                     {{ form.id }}
                     <div class="image_container">
                         {% with image=form.instance.product.primary_image %}
-                        {% thumbnail image.original "200x200" upscale=False as thumb %}
+                        {% thumbnail image.original "100x100" upscale=False as thumb %}
                         <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
                         {% endthumbnail %}
                         {% endwith %}
                     </div>
                 </div>
-                <div class="span4">
+                <div class="span5">
                     <h4>{{ form.instance.product.stockrecord.partner.name }}</h4>
                     <h3><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h3>
                 </div>
@@ -133,17 +133,17 @@
                 {{ saved_formset.management_form }}
                 {% for form in saved_formset %}
                     <div class="row-fluid basket-items">
-                        <div class="span2">
+                        <div class="span1">
                             {{ form.id }}
                             <div class="image_container">
                                 {% with image=form.instance.product.primary_image %}
-                                    {% thumbnail image.original "200x200" upscale=False as thumb %}
+                                    {% thumbnail image.original "100x100" upscale=False as thumb %}
                                     <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{% static thumb.url %}" alt="{{ form.instance.product.get_title }}"></a>
                                     {% endthumbnail %}
                                 {% endwith %}
                             </div>
                         </div>
-                        <div class="span6">
+                        <div class="span7">
                             <h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
                             <p class="availability {{ form.instance.product.stockrecord.availability_code }}">{{ form.instance.product.stockrecord.availability }}</p>
                             <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove">{% trans "Remove" %}</a>
