@@ -125,12 +125,12 @@ class AccountAuthView(RegisterUserMixin, TemplateView):
         kwargs['prefix'] = self.login_prefix
         kwargs['initial'] = {
             'redirect_url': self.request.GET.get(self.redirect_field_name, ''),
-            }
+        }
         if request and request.method in ('POST', 'PUT'):
             kwargs.update({
                 'data': request.POST,
                 'files': request.FILES,
-                })
+            })
         return kwargs
 
     def get_registration_form(self, request=None):

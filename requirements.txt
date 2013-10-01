@@ -22,6 +22,7 @@ django-webtest>=1.5.7,<1.6
 detox==0.9.2
 coveralls>=0.1.1,<0.2
 purl>=0.4
+behave==1.2.3
 
 # i18n
 transifex-client>=0.8,<0.9

@@ -18,7 +18,7 @@ class AbstractWishList(models.Model):
     # Only authenticated users can have wishlists
     owner = models.ForeignKey(AUTH_USER_MODEL, related_name='wishlists',
                               verbose_name=_('Owner'))
-    name = models.CharField(verbose_name=_('Name'), default=_('New Wish List'),
+    name = models.CharField(verbose_name=_('Name'), default=_('Default'),
                             max_length=255)
 
     #: This key acts as primary key and is used instead of an int to make it

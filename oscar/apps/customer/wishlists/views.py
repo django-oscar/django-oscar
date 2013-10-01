@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import (
+    ObjectDoesNotExist, MultipleObjectsReturned, PermissionDenied)
 from django.core.urlresolvers import reverse
 from django.db.models import get_model
 from django.http import Http404, HttpResponseRedirect
@@ -77,6 +78,12 @@ class WishListDetailView(PageTitleMixin, FormView):
 
 
 class WishListCreateView(PageTitleMixin, CreateView):
+    """
+    Create a new wishlist
+
+    If a product ID is assed as a kwargs, then this product will be added to
+    the wishlist.
+    """
     model = WishList
     template_name = 'customer/wishlists/wishlists_form.html'
     active_tab = "wishlists"
@@ -109,13 +116,36 @@ class WishListCreateView(PageTitleMixin, CreateView):
         wishlist = form.save()
         if self.product:
             wishlist.add(self.product)
-            msg = _("Your wishlist has been created")
-        else:
             msg = _("Your wishlist has been created and '%(name)s "
                     "has been added") % {
                         'name': self.product.get_title()}
+        else:
+            msg = _("Your wishlist has been created")
         messages.success(self.request, msg)
         return HttpResponseRedirect(wishlist.get_absolute_url())
+
+
+class WishListCreateWithProductView(View):
+    """
+    Create a wish list and immediately add a product to it
+    """
+
+    def post(self, request, *args, **kwargs):
+        product = get_object_or_404(Product, pk=kwargs['product_pk'])
+        wishlists = request.user.wishlists.all()
+        if len(wishlists) == 0:
+            wishlist = request.user.wishlists.create()
+        else:
+            # This shouldn't really happen but we default to using the first
+            # wishlist for a user if one already exists when they make this
+            # request.
+            wishlist = wishlists[0]
+        wishlist.add(product)
+        messages.success(
+            request, _("%(title)s has been added to your wishlist") % {
+                'title': product.get_title()})
+        return HttpResponseRedirect(request.META.get(
+            'HTTP_REFERER', wishlist.get_absolute_url()))
 
 
 class WishListUpdateView(PageTitleMixin, UpdateView):
@@ -131,6 +161,11 @@ class WishListUpdateView(PageTitleMixin, UpdateView):
     def get_object(self, queryset=None):
         return get_object_or_404(WishList, owner=self.request.user,
                                  key=self.kwargs['key'])
+
+    def get_form_kwargs(self):
+        kwargs = super(WishListUpdateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
     def get_success_url(self):
         messages.success(
@@ -158,39 +193,57 @@ class WishListDeleteView(PageTitleMixin, DeleteView):
 
 class WishListAddProduct(View):
     """
-    Adds a product to a wish list. If no wish list is passed, it is created.
-    If the product is already in the wish list, it's quantity is increased.
+    Adds a product to a wish list.
+
+    - If the user doesn't already have a wishlist then it will be created for
+      them.
+    - If the product is already in the wish list, its quantity is increased.
     """
 
-    def get(self, request, *args, **kwargs):
-        product = get_object_or_404(Product, pk=kwargs['product_pk'])
-        wishlist = get_object_or_404(
-            WishList, owner=request.user, key=kwargs['key'])
-        if not wishlist.is_allowed_to_edit(self.request.user):
-            raise Http404
-        try:
-            line = wishlist.lines.get(product=product)
-        except ObjectDoesNotExist:
-            line = Line.objects.create(product=product, wishlist=wishlist,
-                                       title=product.get_title())
-            msg = _("'%s' was added to your wish list.")
-        else:
-            line.quantity += 1
-            line.save()
-            msg = _("The quantity of '%s' in your wish list was increased.")
+    def dispatch(self, request, *args, **kwargs):
+        self.product = get_object_or_404(Product, pk=kwargs['product_pk'])
+        self.wishlist = self.get_or_create_wishlist(request, *args, **kwargs)
+        return super(WishListAddProduct, self).dispatch(request)
 
-        messages.success(self.request, msg % product)
-        return HttpResponseRedirect(product.get_absolute_url())
+    def get_or_create_wishlist(self, request, *args, **kwargs):
+        wishlists = request.user.wishlists.all()
+        num_wishlists = len(wishlists)
+        if num_wishlists == 0:
+            return request.user.wishlists.create()
+        wishlist = wishlists[0]
+        if not wishlist.is_allowed_to_edit(request.user):
+            raise PermissionDenied
+        return wishlist
+
+    def get(self, request, *args, **kwargs):
+        # This is nasty as we shouldn't be performing write operations on a GET
+        # request.  It's only included as the UI of the product detail page
+        # allows a wishlist to be selected from a dropdown.
+        return self.add_product()
+
+    def post(self, request, *args, **kwargs):
+        return self.add_product()
+
+    def add_product(self):
+        self.wishlist.add(self.product)
+        msg = _("'%s' was added to your wish list." % self.product.get_title())
+        messages.success(self.request, msg)
+        return HttpResponseRedirect(
+            self.request.META.get('HTTP_REFERER',
+                                  self.product.get_absolute_url()))
 
 
 class LineMixin(object):
     """
     Handles fetching both a wish list and a product
     Views using this mixin must be passed two keyword arguments:
-        * key: The key of a wish list
-        * line_pk: The primary key of the wish list line
+
+    * key: The key of a wish list
+    * line_pk: The primary key of the wish list line
+
     or
-        * product_pk: The primary key of the product
+
+    * product_pk: The primary key of the product
     """
 
     def dispatch(self, request, *args, **kwargs):
@@ -210,7 +263,7 @@ class LineMixin(object):
 
 class WishListRemoveProduct(LineMixin, View):
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         self.line.delete()
 
         msg = _("'%(title)s' was removed from your '%(name)s' wish list") % {

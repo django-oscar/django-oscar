@@ -27,16 +27,11 @@
 {% endblock %}
 
 {% block tabcontent %}
-    <h2>
-        {% if wishlist %}
-            {{ wishlist.name }}
-        {% else %}
-            {% trans "Create new wish list" %}
-        {% endif %}
-    </h2>
     <form action="." method="post" class="form-horizontal" data-behaviours="lock">
         {% csrf_token %}
-        <p>{% trans "What should your new wish list be called?" %}</p>
+        {% if not wishlist %}
+            <p>{% trans "What should your new wish list be called?" %}</p>
+        {% endif %}
         {% include "partials/form_fields.html" %}
         {% if product %}
             <p>
