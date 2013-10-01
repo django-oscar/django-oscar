@@ -4,8 +4,6 @@
 }
 .promotion_single {
   h2 {
-    font-size: 36px;
-    line-height: 42px;
     a {
       color:@navbarInverseBackground;
     }
@@ -30,6 +28,33 @@
   }
   .single-content {
     padding:30px 20px 0;
+  }
+}
+
+//If single promotion in a smaller container
+.span4,
+.span3,
+.span2,
+.span1 {
+  .promotion_single {
+    //fonts slightly smaller
+    font-size:0.875em;
+    [class*="span"] {
+      float:none;
+      margin-left: 0;
+      width:auto;
+    }
+    .single-content {
+      padding: 0;
+    }
+    .image_container {
+      min-height: 200px;
+      line-height: 200px;
+    }
+    .btn-large {
+      font-size: 1em;
+      padding: 8px 16px;
+    }
   }
 }
 

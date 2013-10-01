@@ -75,6 +75,10 @@
                 <p>{% trans "We offer Free Shipping for all orders over $300*." %}</p>
                 <a href="#" class="btn">{% trans "Find out more" %}</a>
             </div>
+
+            {% for promotion in promotions_right %}
+                {% render_promotion promotion %}
+            {% endfor %}
         </div>
     </div>
 {% endblock %}
