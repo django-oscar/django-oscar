@@ -11,7 +11,7 @@
         <ul class="slides">
             {% for image in all_images %}
             <li>
-                {% thumbnail image.original "600x600" upscale=False as thumb %}
+                {% thumbnail image.original "600x600" crop="center" as thumb %}
                 <img src="{{ thumb.url }}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" />
                 {% endthumbnail %}
             </li>
@@ -23,7 +23,7 @@
         {# Only one image to show #}
         <div class="image_container"> 
             {% with image=product.primary_image %}
-                {% thumbnail image.original "600x600" upscale=False as thumb %}
+                {% thumbnail image.original "600x600" crop="center" as thumb %}
                 {% if not image.is_missing %}
                     <img src="{{ thumb.url }}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" />
                 {% else %}
