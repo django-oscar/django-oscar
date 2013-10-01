@@ -137,65 +137,67 @@
     top:0;
   }
 }
-//Categories
-.side_categories {
-  background:#F2F2F2;
-  li {
+//Aside Categories and search filters
+.aside-options {
+  h4 {
+    background:@navbarInverseBackground;
+    color:@white;
+    text-transform: none;
+    font-size: 1em;
+    line-height: 1em;
+  }
+  ul {
     list-style: none;
+  }
+  dl, > ul {
+    margin-top:0;
+    border:1px solid #D8D8D8;
+    background:#F2F2F2;
+  }
+  > ul {
+    margin-left:0;
+    margin-bottom:@baseLineHeight;
+    ul {
+      margin:0;
+    }
+  }
+  ul a {
+    display:block;
+      &:hover {
+      background:@blue;
+      color:@white;
+      i {
+        display: inline-block;
+      }
+    }
+  }
+  //New title or list need separation
+  dt, > ul > li {
+     border-top:1px solid #D8D8D8;
+     &:first-child {
+      border-top:0;
+     }
+  }
+  dt, dd, li {
+    position:relative;
+  }
+  dt, dd, h4, ul a {
+    padding:15px;
+    margin:0;
+  }
+  //Indent child lists
+  dd, ul ul a {
+    padding-left:30px;
+  }
+  ul ul ul a {
+    padding-left:45px;
+  }
+  ul ul ul ul a {
+    padding-left:60px;
   }
   i {
     position:absolute;
     right:10px;
     top:18px;
   }
-  .nav-header {
-    background:@navbarInverseBackground;
-    color:@white;
-    text-transform: none;
-    font-size: @headingFourSize;
-  }
-  .nav-list > li > a,
-  .nav-header {
-    margin-left: 0;
-    margin-right: 0;
-  }
-  .nav-list {
-    padding-left: 0;
-    padding-right: 0;
-    > li {
-      border:1px solid #D8D8D8;
-      border-top-width:0;
-      &.nav-header {
-        border-color:@navbarInverseBackground;
-      }
-      ul {
-        margin-left:0;
-      }
-    }
-  }
-  .nav > li > a:hover, a:hover {
-    background:@blue;
-    color:@white;
-    i {
-      display: inline-block;
-    }
-  }
-  a,
-  .nav-list > li > a,
-  .nav-header {
-    position: relative;
-    padding:15px;
-    display:block;
-  }
-}
-
-//Side category indents
-.side_categories .nav-list > li ul a {
-  padding-left:30px;
-}
-.side_categories .nav-list > li ul ul a {
-  padding-left:45px;
-}
-.side_categories .nav-list > li ul ul ul a {
-  padding-left:60px;
 }

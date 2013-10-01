@@ -22,13 +22,11 @@
 {% endblock  %}
 
 {% block column_left %}
-    <div class="side_categories">
+    <div class="aside-options">
         {% category_tree as tree_categories %}
-        
+        <h4>{% trans "Browse" %}</h4>
         {% if tree_categories %}
-        <ul class="nav nav-list">
-            <li class="nav-header">{% trans "Browse" %}</li>
-
+        <ul>
             {% for tree_category,info in tree_categories %}
                 {% if info.has_children %}
                     <li>
