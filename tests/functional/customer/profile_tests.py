@@ -24,7 +24,7 @@ class TestASignedInUser(WebTestCase):
         Basket.objects.all().delete()
 
     def test_can_view_their_profile(self):
-        response = self.app.get(reverse('customer:summary'),
+        response = self.app.get(reverse('customer:profile-view'),
                                 user=self.user)
         self.assertEqual(200, response.status_code)
         self.assertTrue(self.email in response.content)
@@ -37,7 +37,7 @@ class TestASignedInUser(WebTestCase):
         form['first_name'] = 'Barry'
         form['last_name'] = 'Chuckle'
         response = form.submit()
-        self.assertRedirects(response, reverse('customer:summary'))
+        self.assertRedirects(response, reverse('customer:profile-view'))
 
     def test_can_update_their_email_address_and_name(self):
         profile_form_page = self.app.get(reverse('customer:profile-update'),
@@ -48,7 +48,7 @@ class TestASignedInUser(WebTestCase):
         form['first_name'] = 'Barry'
         form['last_name'] = 'Chuckle'
         response = form.submit()
-        self.assertRedirects(response, reverse('customer:summary'))
+        self.assertRedirects(response, reverse('customer:profile-view'))
 
         user = User.objects.get(id=self.user.id)
         self.assertEqual('new@example.com', user.email)
@@ -89,14 +89,15 @@ class TestASignedInUser(WebTestCase):
         form['old_password'] = self.password
         form['new_password1'] = form['new_password2'] = new_password
         response = form.submit()
-        self.assertRedirects(response, reverse('customer:summary'))
+        self.assertRedirects(response, reverse('customer:profile-view'))
         updated_user = User.objects.get(pk=self.user.pk)
         self.assertTrue(updated_user.check_password(new_password))
 
     def test_can_reorder_a_previous_order(self):
-        order_history_page = self.app.get(reverse('customer:order-list'),
+        order_history_page = self.app.get(reverse('customer:order',
+                                                  args=[self.order.number]),
                                           user=self.user)
-        form = order_history_page.forms['order_form_%d' % self.order.id]
+        form = order_history_page.forms['line_form_%d' % self.order.id]
         form.submit()
 
         basket = Basket.open.get(owner=self.user)
@@ -119,9 +120,10 @@ class TestASignedInUser(WebTestCase):
         product.stockrecord.num_in_stock = 0
         product.stockrecord.save()
 
-        order_history_page = self.app.get(reverse('customer:order-list'),
+        order_history_page = self.app.get(reverse('customer:order',
+                                                  args=[self.order.number]),
                                           user=self.user)
-        form = order_history_page.forms['order_form_%d' % self.order.id]
+        form = order_history_page.forms['line_form_%d' % self.order.id]
         form.submit()
 
         basket = Basket.open.get(owner=self.user)

@@ -1,49 +1,18 @@
-{% extends "layout.html" %}
+{% extends "customer/baseaccountpage.html" %}
 {% load url from future %}
 {% load currency_filters %}
 {% load display_tags %}
 {% load i18n %}
 
-{% block title %}
-    {% trans 'Order' %} {{ order.number }} | {{ block.super }}
-{% endblock %}
-
-{% block body_class %}account-pages{% endblock %}
-
-{% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-        <a href="{% url 'promotions:home' %}">{% trans 'Home' %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li>
-        <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
-        <span class="divider">/</span>
-    </li>
+{% block extra_breadcrumbs %}
     <li>
         <a href="{% url 'customer:order-list' %}">{% trans 'Order history' %}</a>
         <span class="divider">/</span>
     </li>
     <li class="active">{% blocktrans with number=order.number %}Order #{{ number }}{% endblocktrans %}</li>
-</ul>
 {% endblock %}
 
-{% block headertext %}
-    {% trans 'Account' %}
-{% endblock %}
-
-{% block subnavigation %}
-    {% include "partials/nav_profile.html" with order_history="active" %}
-{% endblock %}
-
-{% block subheader %}
-<div class="sub-header">
-    <h2>{% blocktrans with number=order.number %}Order #{{ number }}{% endblocktrans %}</h2>
-</div>
-{% endblock subheader %}
-
-{% block content %}
-
+{% block tabcontent %}
 <div class="row-fluid">
     <div class="span3">
         <ul class="nav nav-tabs nav-stacked">
@@ -149,6 +118,13 @@
                     </tr>
                 </tbody>
                 </table>
+
+                <form id="order_form_{{ order.id }}" action="{% url 'customer:order' order.number %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="order_id" value="{{ order.id }}" />
+                    <input type="hidden" name="action" value="reorder" />
+                    <button type="submit" class="btn btn-success">{% trans 'Re-order all items' %}</button>
+                </form>
             </div>
 
             <div class="tab-pane" id="2">
@@ -182,4 +158,5 @@
         </div>
     </div>
 </div>
-{% endblock content %}
+{% endblock tabcontent %}
+

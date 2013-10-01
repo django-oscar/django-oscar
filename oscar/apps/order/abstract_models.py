@@ -57,18 +57,37 @@ class AbstractOrder(models.Model):
     # Index added to this field for reporting
     date_placed = models.DateTimeField(auto_now_add=True, db_index=True)
 
-    # Dict of available status changes
+    #: Order status pipeline.  This should be a dict where each (key, value) #:
+    #: corresponds to a status and a list of possible statuses that can follow
+    #: that one.
     pipeline = getattr(settings,  'OSCAR_ORDER_STATUS_PIPELINE', {})
+
+    #: Order status cascade pipeline.  This should be a dict where each (key,
+    #: value) pair corresponds to an *order* status and the corresponding
+    #: *line* status that needs to be set when the order is set to the new
+    #: status
     cascade = getattr(settings,  'OSCAR_ORDER_STATUS_CASCADE', {})
 
     @classmethod
     def all_statuses(cls):
+        """
+        Return all possible statuses for an order
+        """
         return cls.pipeline.keys()
 
     def available_statuses(self):
+        """
+        Return all possible statuses that this order can move to
+        """
         return self.pipeline.get(self.status, ())
 
     def set_status(self, new_status):
+        """
+        Set a new status for this order.
+
+        If the requested status is not valid, then ``InvalidOrderStatus`` is
+        raised.
+        """
         if new_status == self.status:
             return
         if new_status not in self.available_statuses():
@@ -397,6 +416,9 @@ class AbstractLine(models.Model):
     est_dispatch_date = models.DateField(
         _("Estimated Dispatch Date"), blank=True, null=True)
 
+    #: Order status pipeline.  This should be a dict where each (key, value)
+    #: corresponds to a status and the possible statuses that can follow that
+    #: one.
     pipeline = getattr(settings,  'OSCAR_LINE_STATUS_PIPELINE', {})
 
     class Meta:
@@ -414,12 +436,24 @@ class AbstractLine(models.Model):
 
     @classmethod
     def all_statuses(cls):
+        """
+        Return all possible statuses for an order line
+        """
         return cls.pipeline.keys()
 
     def available_statuses(self):
+        """
+        Return all possible statuses that this order line can move to
+        """
         return self.pipeline.get(self.status, ())
 
     def set_status(self, new_status):
+        """
+        Set a new status for this line
+
+        If the requested status is not valid, then ``InvalidLineStatus`` is
+        raised.
+        """
         if new_status == self.status:
             return
         if new_status not in self.available_statuses():

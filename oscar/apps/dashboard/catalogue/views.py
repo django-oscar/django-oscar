@@ -55,8 +55,8 @@ class ProductListView(generic.ListView):
         """
         description_ctx = {'upc_filter': '',
                            'title_filter': ''}
-        queryset = self.model.objects.all().order_by('-date_created').prefetch_related(
-            'product_class', 'stockrecord__partner')
+        queryset = self.model.objects.base_queryset().select_related(
+            'stockrecord__partner').order_by('-date_created')
         self.form = self.form_class(self.request.GET)
         if not self.form.is_valid():
             self.description = self.description_template % description_ctx

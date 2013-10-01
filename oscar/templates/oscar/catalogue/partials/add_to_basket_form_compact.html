@@ -5,13 +5,13 @@
 {% basket_form request product as basket_form single %}
 
 {% if basket_form.purchase_permitted %}
-<form action="{% url 'basket:add' %}" method="post">
-    {% csrf_token %}
-    {{ basket_form.as_p }}
-    {% if product.is_available_to_buy %}
-        <button type="submit" class="btn btn-primary btn-full">{% trans "Add to basket" %}</button>
-    {% endif %}
-</form>
+    <form action="{% url 'basket:add' %}" method="post">
+        {% csrf_token %}
+        {{ basket_form.as_p }}
+        {% if product.is_available_to_buy %}
+            <button type="submit" class="btn btn-primary btn-full">{% trans "Add to basket" %}</button>
+        {% endif %}
+    </form>
 {% else %}
     {{ basket_form.reason }}
 {% endif %}

@@ -38,9 +38,7 @@ DATABASES = {
 
 CACHES = {
     'default': {
-        'BACKEND':
-        'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
 
@@ -302,7 +300,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-LOGIN_REDIRECT_URL = '/accounts/'
+LOGIN_REDIRECT_URL = '/'
 APPEND_SLASH = True
 
 # Haystack settings

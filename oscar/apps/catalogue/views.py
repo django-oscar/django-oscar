@@ -52,6 +52,7 @@ class ProductDetailView(DetailView):
         ctx['reviews'] = self.get_reviews()
         ctx['alert_form'] = self.get_alert_form()
         ctx['has_active_alert'] = self.get_alert_status()
+
         return ctx
 
     def get_alert_status(self):
@@ -104,6 +105,7 @@ def get_product_base_queryset():
                    "`base_queryset` on Product's managers. It will be removed"
                    "in Oscar 0.7."))
     return Product.browsable.base_queryset()
+
 
 class ProductCategoryView(ListView):
     """
