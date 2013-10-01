@@ -37,8 +37,20 @@
 .span2,
 .span1 {
   .promotion_single {
-    //fonts slightly smaller
-    font-size:0.875em;
+    > h3 {
+      font-size:1em;
+      line-height: 1em;
+      text-align:left;
+      background:@navbarInverseBackground;
+      color:@white;
+      margin:0;
+      padding:15px;
+    }
+    .well {
+      //fonts slightly smaller
+      font-size:0.875em;
+      background:#F2F2F2;
+    }
     [class*="span"] {
       float:none;
       margin-left: 0;
@@ -48,6 +60,7 @@
       padding: 0;
     }
     .image_container {
+      background:@white;
       min-height: 200px;
       line-height: 200px;
     }
