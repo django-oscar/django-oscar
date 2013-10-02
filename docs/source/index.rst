@@ -89,6 +89,7 @@ All you need to start developing an Oscar project.
    :maxdepth: 1
 
    topics/customisation
+   topics/prices-and-availability
    howto/index
    ref/apps/index
    ref/settings

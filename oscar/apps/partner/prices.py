@@ -12,20 +12,32 @@ class Base(object):
     #: Whether tax is known
     is_tax_known = False
 
-    #: Normal price properties
-    excl_tax = incl_tax = tax = None
+    #: Price excluding tax
+    excl_tax = None
 
-    #: Currency prices are in
+    #: Price including tax
+    incl_tax = None
+
+    #: Price tax
+    tax = None
+
+    #: Price currency (3 char code)
     currency = None
 
 
 class Unavailable(Base):
     """
-    No stockrecord, therefore no prices
+    This should be used as a pricing policy when a product is not available and
+    no prices are known.
     """
 
 
 class FixedPrice(Base):
+    """
+    This should be used for when the price of a product is known in advance.
+
+    It can work for when tax isn't known (like in the US).
+    """
     exists = True
 
     def __init__(self, currency, excl_tax, tax=None):
@@ -49,7 +61,8 @@ class DelegateToStockRecord(Base):
     """
     Pricing policy which wraps around an existing stockrecord.
 
-    This is backwards compatible with Oscar<0.6.
+    This is backwards compatible with Oscar<0.6 where taxes were calculated by
+    "partner wrappers" which wrapped around stockrecords.
     """
     is_tax_known = True
 
@@ -66,7 +79,6 @@ class DelegateToStockRecord(Base):
 
     @property
     def incl_tax(self):
-        assert False
         return self.stockrecord.price_incl_tax
 
     @property

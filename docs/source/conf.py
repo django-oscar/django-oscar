@@ -227,6 +227,9 @@ man_pages = [
      [u'David Winterbottom'], 1)
 ]
 
+# Autodoc settings
+autoclass_content = 'both'
+
 # Better documenting of Django models
 # See http://djangosnippets.org/snippets/2533/
 

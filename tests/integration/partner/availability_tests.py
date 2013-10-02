@@ -35,11 +35,6 @@ class TestDelegateToStockRecordWrapper(TestCase):
             self.stockrecord.availability,
             self.availability.message)
 
-    def test_delegates_lead_time(self):
-        self.assertEquals(
-            self.stockrecord.lead_time,
-            self.availability.lead_time)
-
     def test_delegates_dispatch_date(self):
         self.assertEquals(
             self.stockrecord.dispatch_date,

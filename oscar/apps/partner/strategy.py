@@ -4,7 +4,7 @@ from decimal import Decimal as D
 from . import availability, prices
 
 
-# a container for policies
+# A container for policies
 StockInfo = namedtuple('StockInfo', ['price', 'availability', 'stockrecord'])
 
 
@@ -23,9 +23,13 @@ class Selector(object):
 
         3. Passing nothing.  This is for offline processes that don't
         correspond to a specific user.  Eg, determining a price to store in
-        Solr's index.
+        a search index.
     """
+
     def strategy(self, request=None, user=None, **kwargs):
+        """
+        Return an instanticated strategy instance
+        """
         # Default to the backwards-compatible strategy of picking the first
         # stockrecord.
         return Default(request)
@@ -33,8 +37,14 @@ class Selector(object):
 
 class Base(object):
     """
-    The interface for a strategy. Only has to implement the fetch method,
-    which is responsible for returning a StockInfo instance.
+    The base strategy class
+
+    Given a product, strategies are responsible for returning a ``StockInfo``
+    instance which contains:
+
+    - The appropriate stockrecord for this customer
+    - A pricing policy instance
+    - An availability policy instance
     """
 
     def __init__(self, request=None):
@@ -44,6 +54,18 @@ class Base(object):
             self.user = request.user
 
     def fetch(self, product, stockrecord=None):
+        """
+        Given a product, return a ``StockInfo`` instance.
+
+        The ``StockInfo`` class is a named tuple with attributes:
+
+        - ``price``: a pricing policy object.
+        - ``availability``: an availability policy object.
+        - ``stockrecord``: the stockrecord that is being used to calculate prices and
+
+        If a stockrecord is passed, return the appropriate ``StockInfo``
+        instance for that product and stockrecord is returned.
+        """
         raise NotImplementedError(
             "A strategy class must define a fetch method "
             "for returning the availability and pricing "
@@ -53,10 +75,20 @@ class Base(object):
 
 class Structured(Base):
     """
-    An intermediate class which should be sufficient for most use cases
+    A strategy class which provides separate, overridable methods for
+    determining the 3 things that a ``StockInfo`` instance requires:
+
+    #) A stockrecord
+    #) A pricing policy
+    #) An availability policy
     """
 
     def fetch(self, product, stockrecord=None):
+        """
+        Return the appropriate stockinfo instance.
+
+        This method is not intended to be overridden.
+        """
         if stockrecord is None:
             stockrecord = self.select_stockrecord(product)
         return StockInfo(
@@ -66,7 +98,7 @@ class Structured(Base):
 
     def select_stockrecord(self, product):
         """
-        Select the appropriate stockrecord to go with the passed product
+        Select the appropriate stockrecord
         """
         raise NotImplementedError(
             "A structured strategy class must define a "
@@ -94,7 +126,11 @@ class Structured(Base):
 
 class UseFirstStockRecord(object):
     """
-    Always use the first (normally only) stock record for a product
+    Stockrecord selection mixin for use with the ``Structured`` base strategy.
+    This mixin picks the first (normally only) stockrecord to fulfil a product.
+
+    This is backwards compatible with Oscar<0.6 where only one stockrecord per
+    product was permitted.
     """
 
     def select_stockrecord(self, product):
@@ -105,6 +141,11 @@ class UseFirstStockRecord(object):
 
 
 class StockRequired(object):
+    """
+    Availability policy mixin for use with the ``Structured`` base strategy.
+    This mixin ensures that a product can only be bought if it has stock
+    available (if stock is being tracked).
+    """
 
     def availability_policy(self, product, stockrecord):
         if not stockrecord:
@@ -118,8 +159,9 @@ class StockRequired(object):
 
 class NoTax(object):
     """
-    Prices are the same as the price_excl_tax field on the
-    stockrecord with zero tax.
+    Pricing policy mixin for use with the ``Structured`` base strategy.
+    This mixin specifies zero tax and uses the ``price_excl_tax`` from the
+    stockrecord.
     """
 
     def pricing_policy(self, product, stockrecord):
@@ -133,8 +175,9 @@ class NoTax(object):
 
 class FixedRateTax(object):
     """
-    Prices are the same as the price_excl_tax field on the
-    stockrecord with zero tax.
+    Pricing policy mixin for use with the ``Structured`` base strategy.
+    This mixin applies a fixed rate tax to the base price from the product's
+    stockrecord.
     """
     rate = D('0.20')
 
@@ -149,8 +192,9 @@ class FixedRateTax(object):
 
 class DeferredTax(object):
     """
-    For when taxes aren't known until the shipping details are entered.  Like
-    in the USA
+    Pricing policy mixin for use with the ``Structured`` base strategy.
+    This mixin does not specify the product tax and is suitable to territories
+    where tax isn't known until late in the checkout process.
     """
 
     def pricing_policy(self, product, stockrecord):
