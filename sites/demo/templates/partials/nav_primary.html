@@ -43,6 +43,8 @@
                         {% endfor %}
                     {% endif %}
 
+                    <li><a href="{% url 'offer:list' %}">{% trans "Offers" %}</a></li>
+
                 </ul>
                 {% include "partials/search.html" %}
             </div><!-- /.nav-collapse -->

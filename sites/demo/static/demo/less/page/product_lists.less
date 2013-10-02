@@ -38,7 +38,8 @@
 
 .product_pod {
   position:relative;
-  height:430px;
+  height:410px;
+  margin-bottom:@baseLineHeight * 2;
   overflow:hidden;
   .clearfix();
   & p {
@@ -74,7 +75,7 @@
   }
   .product_price {
     position:absolute;
-    bottom:20px;
+    bottom:0;
     left:0;
     width:100%;
     // min-height:130px;
@@ -106,7 +107,7 @@
   overflow:hidden;
   position: relative;
   color:@white;
-  margin-bottom:30px;
+  margin-bottom:@baseLineHeight;
   h1 {
     color:@white;
     text-transform: uppercase;
@@ -121,11 +122,12 @@
   }
   div {
     position: relative;
-    background:url(/static/demo/img/ui/bg-category-title.png) -200px 0 no-repeat;
+    background:url(/static/demo/img/ui/bg-category-title.png) 80% 0 no-repeat;
     position: absolute;
     top:0;
     left:0px;
     height:250px;
+    width:85%;
   }
   img {
     position: absolute;

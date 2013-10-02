@@ -56,7 +56,7 @@
 {% block content %}
 
 {% if products.count %}
-<section>
+<section class="product-list">
     <ol class="row-fluid">
         {% for product in products %}
             <li class="span3 {% if forloop.counter0|divisibleby:"4" %}no-margin{% endif %}">{% render_product product %}</li>

@@ -28,16 +28,14 @@
 {% endif %}
 
 {% if page.object_list %}
-<section>
-    <div class="mod">
-        {% include "search/partials/pagination.html" %}
-        <ol class="row-fluid">
-            {% for result in page.object_list %}
-                <li class="span3 {% if forloop.counter0|divisibleby:"4" %}no-margin{% endif %}">{% render_product result.object %}</li>
-            {% endfor %}
-        </ol>
-        {% include "search/partials/pagination.html" %}
-    </div>
+<section class="product-list">
+    {% include "search/partials/pagination.html" %}
+    <ol class="row-fluid">
+        {% for result in page.object_list %}
+            <li class="span3 {% if forloop.counter0|divisibleby:"4" %}no-margin{% endif %}">{% render_product result.object %}</li>
+        {% endfor %}
+    </ol>
+    {% include "search/partials/pagination.html" %}
 </section>
 {% else %}
     <p>{% trans 'No search results found.' %}</p>
