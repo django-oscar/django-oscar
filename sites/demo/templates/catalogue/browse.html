@@ -10,7 +10,7 @@
 {% block header %}
 <div class="category-title">
     {% if category.image %}
-        <img src="{{ category.image.url }}" alt="{{ summary }}" />
+        <img src="{{ category.image.url }}" alt="{{ summary }}" class="hidden-phone" />
     {% endif %}
     <div>
         <h1>{{ summary }}</h1>

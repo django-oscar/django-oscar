@@ -112,12 +112,12 @@
     text-transform: uppercase;
     margin-bottom:0;
     font-size:@headingTwoSize;
-    margin: 50px 350px 0 30px;
+    margin: 50px 35% 0 30px;
   }
   p {
     border-top:2px solid @white;
     padding-top:10px;
-    margin: 0 350px 0 30px;
+    margin: 0 35% 0 30px;
   }
   div {
     position: relative;
@@ -161,12 +161,13 @@
   }
   ul a {
     display:block;
-      &:hover {
-      background:@blue;
-      color:@white;
-      i {
-        display: inline-block;
-      }
+  }
+  ul a:hover,
+  .active a {
+    background:@blue;
+    color:@white;
+    i {
+      display: inline-block;
     }
   }
   //New title or list need separation
