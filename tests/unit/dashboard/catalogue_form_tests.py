@@ -18,6 +18,6 @@ class TestCreateProductForm(TestCase):
         self.assertFalse(form.is_valid())
 
     def test_validates_that_child_products_dont_need_a_title(self):
-        parent = G(models.Product, product_class=self.pclass)
+        parent = G(models.Product, product_class=self.pclass, parent=None)
         form = self.submit({'parent': parent.id})
         self.assertTrue(form.is_valid())

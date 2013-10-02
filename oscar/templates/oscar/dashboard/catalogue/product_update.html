@@ -70,7 +70,7 @@
                             <div class="pull-left">
                              {% if product.primary_image.original.url %}
                                 {% with image=product.primary_image %}
-                                    {% thumbnail image.original "250x250" upscale=False as thumb %}
+                                    {% thumbnail image.original "240x240" upscale=False as thumb %}
                                         <a href="{{ image.original.url }}" rel="lightbox_{{ product.upc|default:"-" }}">
                                             <img src="{% static thumb.url %}" alt="{{ product.get_title }}" class="img-polaroid" data-description="{% if image.caption %}{{ image.caption }}{% endif %}">
                                         </a>

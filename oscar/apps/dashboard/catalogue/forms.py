@@ -159,11 +159,10 @@ class ProductForm(forms.ModelForm):
         super(ProductForm, self).__init__(*args, **kwargs)
         self.add_attribute_fields()
         related_products = self.fields.get('related_products', None)
-        if 'parent' in self.fields and self.instance.pk is not None:
-            # Prevent selecting itself as parent
-            parent = self.fields['parent']
-            parent.queryset = parent.queryset.exclude(
-                pk=self.instance.pk).filter(parent=None)
+        parent = self.fields.get('parent', None)
+
+        if parent is not None:
+            parent.queryset = self.get_parent_products_queryset()
         if related_products is not None:
             related_products.queryset = self.get_related_products_queryset()
         if 'title' in self.fields:
@@ -194,6 +193,18 @@ class ProductForm(forms.ModelForm):
 
     def get_related_products_queryset(self):
         return Product.browsable.order_by('title')
+
+    def get_parent_products_queryset(self):
+        """
+        :return: Canonical products excluding this product
+        """
+        # Not using Product.browsable because a deployment might override
+        # that manager to respect a status field or such like
+        queryset = Product._default_manager.filter(parent=None)
+        if self.instance.pk is not None:
+            # Prevent selecting itself as parent
+            queryset = queryset.exclude(pk=self.instance.pk)
+        return queryset
 
     class Meta:
         model = Product
