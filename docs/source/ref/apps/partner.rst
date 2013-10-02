@@ -13,6 +13,20 @@ Abstract models
 .. automodule:: oscar.apps.partner.abstract_models
     :members:
 
-Views
------
-None.
+Strategy classes
+----------------
+
+.. automodule:: oscar.apps.partner.strategy
+    :members:
+
+Pricing policies
+----------------
+
+.. automodule:: oscar.apps.partner.prices
+    :members:
+
+Availability policies
+---------------------
+
+.. automodule:: oscar.apps.partner.availability
+    :members:

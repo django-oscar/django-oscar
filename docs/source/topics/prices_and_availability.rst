@@ -41,6 +41,8 @@ availability problems can be easily solved.
     The old APIs are still available but considered deprecated and
     will be removed in Oscar 0.7.
 
+.. _strategy_class:
+
 The strategy class
 ------------------
 
@@ -131,6 +133,7 @@ class:
 
 .. autoclass:: oscar.apps.partner.strategy.Base
    :members:
+   :noindex:
 
 Oscar also provides a "structured" strategy class which provides overridable
 methods for selecting the stockreord, and determining pricing and availabiltiy
@@ -138,6 +141,7 @@ policies:
 
 .. autoclass:: oscar.apps.partner.strategy.Structured
    :members:
+   :noindex:
 
 For most projects, subclassing and overriding the ``Structured`` base class
 should be sufficient.  However, Oscar also provides mixins to easily compose the
@@ -150,8 +154,11 @@ Strategy instances are determined by the ``Selector`` class:
 
 .. autoclass:: oscar.apps.partner.strategy.Selector
    :members:
+   :noindex:
 
 It's common to override this class so a custom strategy class can be returned.
+
+.. _pricing_policies:
 
 Pricing policies
 ----------------
@@ -163,11 +170,15 @@ There is a base class that defines the interface a pricing policy should have:
 
 .. autoclass:: oscar.apps.partner.prices.Base
    :members:
+   :noindex:
 
 There are also several policies that accommodate common scenarios:
 
 .. automodule:: oscar.apps.partner.prices
    :members: Unavailable, FixedPrice, DelegateToStockRecord
+   :noindex:
+
+.. _availability_policies:
 
 Availability policies
 ---------------------
@@ -181,11 +192,13 @@ The base class defines the interface:
 
 .. autoclass:: oscar.apps.partner.availability.Base
    :members:
+   :noindex:
 
 There are also several pre-defined availability policies:
 
 .. automodule:: oscar.apps.partner.availability
    :members: Unavailable, Available, StockRequired, DelegateToStockRecord
+   :noindex:
 
 Strategy mixins
 ---------------
@@ -197,6 +210,7 @@ composed from re-usable parts:
 .. automodule:: oscar.apps.partner.strategy
    :members: UseFirstStockRecord, StockRequired, NoTax, FixedRateTax,
              DeferredTax
+   :noindex:
 
 Default strategy
 ----------------

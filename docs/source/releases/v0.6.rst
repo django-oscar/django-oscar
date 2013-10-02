@@ -4,33 +4,89 @@ Oscar 0.6 release notes
 
 Welcome to Oscar 0.6!
 
-These release notes cover the `new features`_ as well as `upgrading advice`_.
+These release notes cover the `new features`_ as well as `backwards incompatible changes`_ 
+that you'll want to be aware of when upgrading from Oscar 0.5 or
+earlier.  This release contains some major changes to core APIs which means
+many old APIs are to be dropped - see the `deprecation plan`_.
+
+To upgrade your Oscar site, make sure you study both the `backwards incompatible changes`_ 
+and the `deprecated features`_
 
 .. _`new features`: `What's new in Oscar 0.6?`_
 .. _`upgrading advice`: `Upgrading`_
+.. _`deprecation plan`: `Features deprecated in 0.6`_
+.. _`deprecation features`: `Features deprecated in 0.6`_
+.. _`backwards incompatible changes`: `Backwards incompatible changes in 0.6`_
 
 Overview
 ========
 
-...
+The biggest change in Oscar 0.6 is the reworking of `pricing and availability`_, which 
+builds on top of the change to allow `multiple stockrecords per product`_.  The
+charge is largely backwards compatible with the old system of "partner
+wrappers" but it is recommended to upgrade to the new system.
+
+Oscar now supports Django 1.5 and its custom user model.  This has been only
+tested in the context of starting a new Oscar project with a custom model.
+Switching from a separate "profile" model to the new system is not recommended
+at this point.
+
+Other notable new features include:
+
+* A feature-rich demo site that illustrates how Oscar can be customised.  It
+  also uses several of Oscar's many extensions, such as django-oscar-paypal_,
+  django-oscar-datacash_ and django-oscar-stores_.
+
+* Partners can now have addresses.
 
 What's new in Oscar 0.6?
 ========================
 
+Multiple stockrecords per product
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Products can now have multiple stockrecords rather than just one.  This allows a
+product to be fulfilled by one of several partners.  This is a key requirement
+for large-scale e-commerce sites selling millions of products, that use many
+different fulfillment partners.
+
+Pricing and availability
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+When products can have many stockrecords, a process needs to be in place to
+choose which one is selected for a given customer and product.  To handle this,
+a new "strategy" class has been introduced which selects the appropriate
+stockrecord for a given customer and product.
+
+This change also paved the way for reworking how prices, taxes and availability
+are handled.  Instead of using `"partner wrappers"`_, the strategy class is
+responsible for returning availability details and prices for a particular
+product.  New classes known as pricing and availabiliy policies are used to
+encapsulate this information.
+
+These changes allows Oscar to support many advanced scenarios such as:
+
+* Fulfilling a product from the partner that offers the best margin.
+* Fulfilling a product from the partner geographically closest to the customer.
+* Supporting transactions in multiple currencies on the same site.
+* Supporting different tax treatments on the same site (eg UK VAT and US sales
+  tax)
+* Having different pricing policies for different customers. 
+
+There's a great deal of flexibility.
+
+Payment models have abstract versions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 The payment models have been split into abstract- and concrete versions.  This
 brings them inline with other Oscar apps and allows them to be customised.
-
-Multiple-stockrecords, pricing, tax, availability
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Search
-~~~~~~
 
 Multi-partner dashboard
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 Partners can now have addresses.  These are useful for US sales tax where tax
-calculations need to know the origin of a product being shipped.
+calculations need to know the origin of a product being shipped.  The dashboard
+has been extended to allow partner addresses to be edited.
 
 Demo site
 ~~~~~~~~~
@@ -48,6 +104,7 @@ It's features include:
 
 .. _django-oscar-paypal: https://github.com/tangentlabs/django-oscar-paypal
 .. _django-oscar-datacash: https://github.com/tangentlabs/django-oscar-datacash
+.. _django-oscar-stores: https://github.com/tangentlabs/django-oscar-stores
 
 Further reading:
 
@@ -56,9 +113,10 @@ Further reading:
 Django 1.5 and custom user model support
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Oscar now supports `custom user models`_, the headline new feature in Django 1.5.  These can be used standalone 
-or with a one-to-one profile model: Oscar's account forms inspect the model
-fields to dynamically pick up the fields for editing and display.
+Oscar now supports `custom user models`_, the headline new feature in Django
+1.5.  These can be used standalone or with a one-to-one profile model: Oscar's
+account forms inspect the model fields to dynamically pick up the fields for
+editing and display.
 
 There are some restrictions on what fields a custom user model must have.  For
 instance, Oscar's default auth backend requires the user model to have an email
@@ -95,15 +153,38 @@ Minor changes
 
 .. _detox: https://pypi.python.org/pypi/detox
 
-Upgrading 
-=========
+Backwards incompatible changes in 0.6
+=====================================
 
-Templatetags:
+Signature changes
+~~~~~~~~~~~~~~~~~
+
+Several classes and functions have had signature changes:
 
 * The ``basket_form`` templatetag has been altered to take the ``request`` as the
   first argument, not ``request.basket``.
 
-Templates:
+* The :class:`oscar.apps.customer.forms.EmailAuthenticationForm` form needs to
+  be instantated with a host name so prevent redirects to external sites.
+
+* The :class:`oscar.apps.customer.forms.EmailAuthenticationForm` form needs to
+  be instantated with a host name so prevent redirects to external sites.
+
+* The two product review forms, ``SignedInUserProductReviewForm`` and
+  ``AnonymousUserProductReviewForm``, have been replaced by a new
+  :class:`oscar.apps.catalogue.reviews.forms.ProductReviewForm``.
+
+Address model changes
+~~~~~~~~~~~~~~~~~~~~~
+
+* The ``UserAddress.salutation`` and ``UserAddress.name`` methods are now
+  properties.
+
+* ``Country`` model's `is_highlighted` column is now integer field to allow
+  fine-grained country selection. 0 = no highlighting
+
+Renamed templates
+~~~~~~~~~~~~~~~~~
 
 * The template ``customer/email/email.html`` has been renamed to
   ``customer/email/email_detail.html``.
@@ -111,20 +192,21 @@ Templates:
 * The template ``customer/orders/order.html`` has been renamed to
   ``customer/orders/order_detail.html``.
 
+Template block changes
+~~~~~~~~~~~~~~~~~~~~~~
+
 * The template ``dashboard/orders/order_detail.html`` has been reorganised.  The
   ``tab_transactions`` block has been renamed to ``payment_transactions``.
+
+Upgrading notes
+===============
+
+Database migrations
+~~~~~~~~~~~~~~~~~~~
 
 * Alternative product class templates now use ``slug` field instead of
   ``name.lower()`` to determine their filename.  If you have templates for
   specific product classes, please update your filenames accordingly
-
-Address app:
-
-* The ``UserAddress.salutation`` and ``UserAddress.name`` methods are now
-  properties.
-
-* ``Country`` model's `is_highlighted` column is now integer field to allow
-  fine-grained country selection. 0 = no highlighting
 
 Checkout app:
 
@@ -170,3 +252,106 @@ There are new migrations in the following apps to be aware of.
     - The `date` field of the ``order.AbstractCommunicationEvent``, ``order.AbstractPaymentEvent`` and
       ``order.AbstractShippingEvent`` models have been renamed to ``date_created`` for
       consistency with the rest of Oscar.
+  
+
+Features deprecated in 0.6
+==========================
+
+Accessing a product's stockrecords
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Several properties and methods of the core
+:class:`~oscar.apps.catalogue.abstract_models.AbstractProduct`  class have been
+deprecated following the change to allow multiple stockrecords per product. 
+
+* :attr:`~oscar.apps.catalogue.abstract_models.AbstractProduct.has_stockrecord`
+  no longer makes sense when there can be more than one stockrecord.  It is
+  replaced by
+  :attr:`~oscar.apps.catalogue.abstract_models.AbstractProduct.has_stockrecords`
+
+* :attr:`~oscar.apps.catalogue.abstract_models.AbstractProduct.stockrecord` is
+  deprecated since it presumes there is only one stockrecord per product.
+  Choosing the appropriate stockrecord is now the responsiblity of the 
+  :ref:`strategy class <strategy_class>`.  A backward compatible version has
+  been kept in place that selects the first stockrecord for a product.  This
+  will continue to work for sites that only have one stockrecord per product.
+
+All availability logic has been moved to :ref:`availability policies<availability_policies>` 
+which are determined by the :ref:`strategy class <strategy_class>`.
+
+* :attr:`~oscar.apps.catalogue.abstract_models.AbstractProduct.is_available_to_buy` 
+  is deprecated.  The functionality is now part of availability policies.
+
+* :meth:`~oscar.apps.catalogue.abstract_models.AbstractProduct.is_purchase_permitted` 
+  is deprecated.  The functionality is now part of availability policies.
+
+"Partner wrappers"
+~~~~~~~~~~~~~~~~~~
+
+Before Oscar 0.6, availability and pricing logic was encapsulated in "partner
+wrappers".  A partner wrapper was a class that provided availability and price
+information for a particular partner, as specified by the
+``OSCAR_PARTNER_WRAPPERS`` setting.  The stockrecord model had several
+properties and methods
+which delegated to the appropriate wrapper for the record's partner.
+
+This functionailty is now deprecated in favour of using :ref:`strategy classes <strategy_class>`.  
+How prices and taxes are determined is not generally a function of the partner,
+and so this system was not a good model.  Strategy classes are much more
+flexible and allow better modelling of taxes and availability.
+
+The following attributes and methods from :class:`~oscar.apps.partner.abstract_models.StockRecord` 
+are deprecated and will be removed for Oscar 0.7.  
+
+* :attr:`AbstractStockRecord.is_available_to_buy <oscar.apps.partner.abstract_models.AbstractStockRecord.is_available_to_buy>` 
+* :meth:`AbstractStockRecord.is_purchase_permitted <oscar.apps.partner.abstract_models.AbstractStockRecord.is_purchase_permitted>` 
+* :attr:`AbstractStockRecord.availability_code <oscar.apps.partner.abstract_models.AbstractStockRecord.availability_code>` 
+* :attr:`AbstractStockRecord.availability <oscar.apps.partner.abstract_models.AbstractStockRecord.availability>` 
+* :attr:`AbstractStockRecord.max_purchase_quantity <oscar.apps.partner.abstract_models.AbstractStockRecord.max_purchase_quantity>` 
+* :attr:`AbstractStockRecord.dispatch_date <oscar.apps.partner.abstract_models.AbstractStockRecord.dispatch_date>` 
+* :attr:`AbstractStockRecord.lead_time <oscar.apps.partner.abstract_models.AbstractStockRecord.lead_time>` 
+* :attr:`AbstractStockRecord.price_incl_tax <oscar.apps.partner.abstract_models.AbstractStockRecord.price_incl_tax>` 
+* :attr:`AbstractStockRecord.price_tax <oscar.apps.partner.abstract_models.AbstractStockRecord.price_tax>` 
+
+All the above properties and methods have effectively been moved to the availability and pricing
+policies that a strategy class is responsible for loading.  To upgrade your
+codebase, replcae your partner wrapper classes with equivalent 
+:doc:`availability and pricing policies </topics/prices_and_availability>`.
+
+Basket
+~~~~~~~
+
+Now that products can have multiple stockrecords, several changes have been made
+to baskets to allow the appropriate stockrecord to be tracked for each basket
+line.  The basket line model has a new field that links to the selected
+stockrecord and the basket itself requires an instance of the strategy class so
+that prices can be calculated for each line.  Hence, if you are manipulating
+baskets directly, you need to assign a strategy class in order for prices to
+calculate correctly:
+
+.. code-block:: python
+
+    from oscar.apps.basket import models
+
+    basket = models.Basket.objects.get(id=1)
+    basket.strategy = request.strategy
+
+With an assigned strategy class, a basket will raise a ``RuntimeError`` when
+attempting to calculate totals.
+
+The way a product is added to a basket has also been changed as a ``StockInfo``
+instance is also required.  
+
+.. code-block:: python
+
+    from oscar.apps.basket import models
+    from oscar.apps.catalogue import models as product_models
+
+    basket = models.Basket.objects.get(id=1)
+    basket.strategy = request.strategy
+    product = product_models.Product.objects.get(id=1)
+    stockinfo = request.strategy.fetch(product)
+    
+    basket.
+    
+

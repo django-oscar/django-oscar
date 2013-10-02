@@ -412,6 +412,9 @@ class AbstractProduct(models.Model):
 
     @property
     def has_stockrecords(self):
+        """
+        Test if this product has any stockrecords
+        """
         return self.num_stockrecords > 0
 
     @property
@@ -443,11 +446,15 @@ class AbstractProduct(models.Model):
 
     @property
     def stockrecord(self):
+        """
+        Return the stockrecord associated with this product.  For backwards
+        compatibility, this defaults to choosing the first stockrecord found.
+        """
         # This is the old way of fetching a stockrecord, when they were
         # one-to-one with a product.
         warnings.warn(("Product.stockrecord is deprecated in favour of "
                        "using the stockrecord template tag.  It will be "
-                       "removed in v0.8"), DeprecationWarning)
+                       "removed in v0.7"), DeprecationWarning)
         try:
             return self.stockrecords.all()[0]
         except IndexError:
@@ -460,7 +467,7 @@ class AbstractProduct(models.Model):
         """
         warnings.warn(("Product.is_available_to_buy is deprecated in favour "
                        "of using the stockrecord template tag.  It will be "
-                       "removed in v0.8"), DeprecationWarning)
+                       "removed in v0.7"), DeprecationWarning)
         if self.is_group:
             # If any one of this product's variants is available, then we treat
             # this product as available.
@@ -478,7 +485,7 @@ class AbstractProduct(models.Model):
         """
         warnings.warn(("Product.is_purchase_permitted is deprecated in favour "
                        "of using a partner strategy.  It will be "
-                       "removed in v0.8"), DeprecationWarning)
+                       "removed in v0.7"), DeprecationWarning)
         if not self.has_stockrecords:
             return False, _("No stock available")
         return self.stockrecord.is_purchase_permitted(user, quantity, self)
