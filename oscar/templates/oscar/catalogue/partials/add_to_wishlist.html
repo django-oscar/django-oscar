@@ -8,9 +8,9 @@
         {% wishlists_containing_product wishlists product as product_wishlists %}
         {% if wishlists|length > 0 %}
 
-            <div class="btn-group">
-                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">{% trans "Add to wish list" %} <span class="caret"></span></a>
-                <ul class="dropdown-menu">
+            <div class="btn-group btn-wishlist">
+                <a class="btn btn-large dropdown-toggle" data-toggle="dropdown" href="#">{% trans "Add to wish list" %} <span class="caret"></span></a>
+                <ul class="dropdown-menu pull-right">
                     {% for wishlist in wishlists %}
                         <li>
                                 <a href="{% url 'customer:wishlists-add-product' key=wishlist.key product_pk=product.pk %}">
@@ -25,9 +25,9 @@
             </div>
         {% else %}
             {# 1 or no existing wishlists - show a simple button #}
-            <form id="add_to_wishlist_form" action="{% url 'customer:wishlists-add-product' product_pk=product.pk %}" method="post">
+            <form id="add_to_wishlist_form" action="{% url 'customer:wishlists-add-product' product_pk=product.pk %}" method="post" class="btn-wishlist">
                 {% csrf_token %}
-                <button type="submit" class="btn">{% trans "Add to wish list" %}</button>
+                <button type="submit" class="btn btn-large">{% trans "Add to wish list" %}</button>
             </form>
         {% endif %}
 
@@ -35,12 +35,12 @@
             <form action="{% url 'customer:wishlists-remove-product' wishlist.key product.id %}" method="post">
                 {% csrf_token %}
                 {% blocktrans with name=wishlist.name url=wishlist.get_absolute_url %}
-                    Product is in <a href="{{ url }}">'{{ name }}'</a> wishlist.
+                    <span class="pull-left">Product is in <a href="{{ url }}">'{{ name }}'</a> wishlist.</span>
                 {% endblocktrans %}
-                <button type="submit" class="btn btn-small btn-danger">{% trans "Remove" %}</button>
+                <button type="submit" class="btn btn-small pull-right">{% trans "Remove" %}</button>
             </form>
         {% endfor %}
     {% endwith %}
 {% else %}
-    <button class="btn" disabled="disabled" title="{% trans 'Please login to add products to a wish list.' %}">{% trans 'Add to wish list' %}</button><br/>
+    <button class="btn btn-large btn-wishlist" disabled="disabled" title="{% trans 'Please login to add products to a wish list.' %}">{% trans 'Add to wish list' %}</button><br/>
 {% endif %}
