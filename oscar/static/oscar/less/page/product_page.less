@@ -34,3 +34,26 @@
 .side_categories {
   .well();
 }
+
+//Align wish list button with add to basket button
+.add-to-basket {
+  //Width of default input/select/textarea
+  width: 220px;
+  margin-bottom:0;
+  margin-right:10px;
+  *margin-right:20px;
+}
+.add-to-basket,
+.btn-wishlist {
+  display:inline-block;
+  *display:inline;
+  zoom:1;
+}
+//For responsive - when button falls under each other
+.btn-wishlist {
+  vertical-align:bottom;
+}
+.add-to-basket .btn,
+.btn-wishlist {
+  margin-bottom:@baseLineHeight;
+}

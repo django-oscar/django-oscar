@@ -6836,6 +6836,25 @@ a:hover .thumbnail {
 .side_categories:after {
   clear: both;
 }
+.add-to-basket {
+  width: 220px;
+  margin-bottom: 0;
+  margin-right: 10px;
+  *margin-right: 20px;
+}
+.add-to-basket,
+.btn-wishlist {
+  display: inline-block;
+  *display: inline;
+  zoom: 1;
+}
+.btn-wishlist {
+  vertical-align: bottom;
+}
+.add-to-basket .btn,
+.btn-wishlist {
+  margin-bottom: 20px;
+}
 /* Elastislide Style */
 .es-carousel-wrapper {
   padding: 1px 20px;
