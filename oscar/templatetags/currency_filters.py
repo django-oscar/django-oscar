@@ -17,7 +17,7 @@ def currency(value):
     except (TypeError, InvalidOperation):
         return u""
     # Using Babel's currency formatting
-    # http://packages.python.org/Babel/api/babel.numbers-module.html#format_currency
+    # http://babel.pocoo.org/docs/api/numbers/#babel.numbers.format_currency
     kwargs = {
         'currency': settings.OSCAR_DEFAULT_CURRENCY,
         'format': getattr(settings, 'OSCAR_CURRENCY_FORMAT', None)}
