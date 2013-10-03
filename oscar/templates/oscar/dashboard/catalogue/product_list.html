@@ -56,7 +56,7 @@
             {% for product_class in product_classes %}
                 {{ product_class.name }}
                 <input type="hidden" name="product_class" value="{{ product_class.id }}">
-            {% endfor %}
+            {% endfor%}
         </span>
         <button class="btn btn-primary" type="submit"><i class="icon-plus"></i> {% trans "New Product" %}</button>
     </form>
