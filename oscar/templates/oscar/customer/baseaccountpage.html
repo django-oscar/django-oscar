@@ -20,11 +20,11 @@
             <span class="divider">/</span>
         </li>
         {% block extra_breadcrumbs %}{% endblock %}
-        <li class="active">{{ page_title }}</li>
+        <li class="active">{{ page_title|striptags }}</li>
     </ul>
 {% endblock %}
 
-{% block headertext %}{{ page_title }}{% endblock %}
+{% block headertext %}{{ page_title|striptags }}{% endblock %}
 
 {% block column_left %}
     <ul class="nav nav-pills nav-stacked">
