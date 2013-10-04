@@ -206,48 +206,42 @@
         {% endblock product_review %}
     {% endiffeature %}
 
-    <div class="row-fluid">
-        {% if product.related_products.count %}
-        <div class="span6">
-            <div class="sub-header">
-                <h2>{% trans "Related items" %}</h2>
-            </div>
-            <div class="es-carousel-wrapper">
-                <div class="es-carousel">
-                    <ul>
-                        {% for product in product.related_products.all %}
-                        <li>
-                            {% render_product product %}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
+    {% if product.related_products.count %}
+        <div class="sub-header">
+            <h2>{% trans "Related items" %}</h2>
+        </div>
+        <div class="es-carousel-wrapper">
+            <div class="es-carousel">
+                <ul>
+                    {% for product in product.related_products.all %}
+                    <li>
+                        {% render_product product %}
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
-        {% endif %}
+    {% endif %}
 
-        {% if product.recommended_products.count %}
-        <div class="span6">
-            <div class="sub-header">
-                <h2>{% trans "Recommended items" %}</h2>
-            </div>
-            <div class="es-carousel-wrapper">
-                <div class="es-carousel">
-                    <ul>
-                        {% for product in product.recommended_products.all %}
-                        <li>
-                            {% render_product product %}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
+    {% if product.recommended_products.count %}
+        <div class="sub-header">
+            <h2>{% trans "Recommended items" %}</h2>
+        </div>
+        <div class="es-carousel-wrapper">
+            <div class="es-carousel">
+                <ul>
+                    {% for product in product.recommended_products.all %}
+                    <li>
+                        {% render_product product %}
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
-        {% endif %}
+    {% endif %}
+    
+    {% recently_viewed_products %}
 
-        {% recently_viewed_products %}
-
-    </div>
 </article><!-- End of product page -->
 {% endblock content %}
 
