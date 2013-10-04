@@ -1,5 +1,6 @@
 {% extends "oscar/checkout/checkout.html" %}
 {% load currency_filters %}
+{% load url from future %}
 {% load thumbnail %}
 {% load i18n %}
 
@@ -33,7 +34,7 @@
 
         {% block shipping_address_actions %}
         <div class="alert-actions">
-            <a href="{% url checkout:shipping-address %}" class="btn">{% trans "Change shipping address" %}</a>
+            <a href="{% url 'checkout:shipping-address' %}" class="btn">{% trans "Change shipping address" %}</a>
         </div>
         {% endblock %}
 
@@ -50,7 +51,7 @@
     <div class="well well-success" data-behaviours="match-height">
         <p>{% trans "Payment details to go here" %}</p>
         <div class="alert-actions">
-            <a href="{% url checkout:payment-details %}" class="btn">{% trans "Change payment details" %}</a>
+            <a href="{% url 'checkout:payment-details' %}" class="btn">{% trans "Change payment details" %}</a>
         </div>
     </div>    
 </div>
@@ -58,7 +59,7 @@
 
 {% block order_contents %}
 <h3>{% trans "Order contents" %}</h3>
-<div class="basket-title">
+<div class="basket-title hidden-phone">
     <div class="row-fluid">
         <h4 class="span8">{% trans "Items in basket" %}</h4>
         <h4 class="span2 align-center">{% trans "Quantity" %}</h4>
@@ -68,14 +69,16 @@
 {% for line in basket.all_lines %}
 <div class="basket-items">
     <div class="row-fluid">
-        <div class="span8">
+        <div class="span1">
             <div class="image_container">
                 {% with image=line.product.primary_image %}
-                {% thumbnail image.original "200x200" upscale=False as thumb %}
+                {% thumbnail image.original "100x100" upscale=False as thumb %}
                 <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
                 {% endthumbnail %}
                 {% endwith %}
             </div>
+        </div>
+        <div class="span7">
             <h4>{{ line.product.stockrecord.partner.name }}</h4>
             <h3><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h3>
         </div>
@@ -98,7 +101,7 @@
            {% block order_contents_actions %}
             <hr/>
             <div class="row-fluid">
-                <a href="{% url basket:summary %}" class="btn btn-info pull-right">{% trans "Edit order contents" %}</a>
+                <a href="{% url 'basket:summary' %}" class="btn btn-info pull-right">{% trans "Edit order contents" %}</a>
             </div>
             {% endblock %}
         </div>

@@ -1,26 +1,10 @@
 {% extends "catalogue/detail.html" %}
 {% load i18n %}
 {% load reviews_tags %}
+{% load url from future %}
 
 {% block product_review %}
-<div class="review-title">
-    <h3>{% trans "Customer Reviews" %}</h3>
-    <a id="write_review" href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn">{% trans "Add a review" %}</a>
-    <p class="star-rating {{ product.rating|as_stars }}">
-        <i class="icon-star"></i>
-        <i class="icon-star"></i>
-        <i class="icon-star"></i>
-        <i class="icon-star"></i>
-        <i class="icon-star"></i>
-        <a href="{% url catalogue:reviews-list product.slug product.id %}">
-        {% blocktrans count reviews|length as num_reviews %}
-        1 custom review
-        {% plural %}
-        {{ num_reviews }} customer reviews
-        {% endblocktrans %}
-        </a>
-    </p> 
-</div>
+{% include "catalogue/partials/review_totals.html" %}
 
 <div id="addreview" class="review_add">
     <h3>{% trans "Leave a product review" %}</h3>
