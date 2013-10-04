@@ -4,8 +4,11 @@
     {% block footer %}
         <ul class="footer-links"> 
             <li>
-                <h3>{% trans "About" %}</h3>
-                <ul>
+                <h3>
+                    <a class="hide pull-right" data-toggle="collapse" data-target=".footer-list-01"><i class="icon-plus"></i></a>
+                    {% trans "About" %}
+                </h3>
+                <ul class="nav-collapse footer-list-01">
                     <li><a href="#">{% trans "All" %}</a></li>
                     <li><a href="#">{% trans "Gill" %}</a></li>
                     <li><a href="#">{% trans "Henro Lloyd" %}</a></li>
@@ -30,7 +33,7 @@
     <div class="footer-disclaimer">
         <div class="container-fluid">
             <a href="#" class="pull-right">{% trans "Site by Tangent Snowball Australia" %}</a>
-            <p>
+            <p class="hidden-phone">
                 <a href="https://www.verisign.com.au" title="https://www.verisign.com.au" target="_blank"><i class="verisign"></i></a>
                 <i class="credit-cards"></i>
             </p>

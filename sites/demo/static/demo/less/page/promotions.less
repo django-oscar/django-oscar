@@ -4,8 +4,6 @@
 }
 .promotion_single {
   h2 {
-    font-size: 36px;
-    line-height: 42px;
     a {
       color:@navbarInverseBackground;
     }
@@ -17,14 +15,63 @@
     margin-bottom:15px;
   }
   .image_container {
+    border:1px solid #ddd;
+    min-height: 400px;
+    line-height: 400px;
     img {
-      width:100%;
+      width:90%;
       max-width: none;
       max-height:none;
       height:auto;
+      display:inline-block;
+    }
+  }
+  .single-content {
+    padding:30px 20px 0;
+  }
+}
+
+//If promotions in a smaller container
+.span4,
+.span3,
+.span2,
+.span1 {
+  .promotion_single {
+    > h3 {
+      font-size:1em;
+      line-height: 1em;
+      text-align:left;
+      background:@navbarInverseBackground;
+      color:@white;
+      margin:0;
+      padding:15px;
+    }
+    .well {
+      //fonts slightly smaller
+      font-size:0.875em;
+      background:#F2F2F2;
+    }
+    [class*="span"] {
+      float:none;
+      margin-left: 0;
+      width:auto;
+    }
+    .single-content {
+      padding: 0;
+    }
+    .image_container {
+      background:@white;
+      min-height: 200px;
+      line-height: 200px;
+    }
+    .btn-large {
+      font-size: 1em;
+      padding: 8px 16px;
     }
   }
 }
+
+//TODO: what is this for?
 .pro
 .sidebar {
   .promotion_single {
@@ -57,6 +104,28 @@
   }
 }
 
+.free-delivery {
+  text-transform: uppercase;
+  line-height: 1.1em;
+  i {
+    display:inline-block;
+    float:left;
+    font-size: (@OneSize / @ThreeSize) + 0em;
+  }
+  > span {
+    margin-left:(@OneSize / @ThreeSize) + 0.5em;
+    display:block;
+  }
+  > span span {
+    font-size: (@TwoSize / @ThreeSize) + 0em;
+    line-height: 1em;
+  }
+  strong {
+    font-size: (17 / @ThreeSize) + 0em;
+    letter-spacing: 0;
+  }
+}
+
 //Widget blocks
 .widget-delivery,
 .widget-shipping {
@@ -70,19 +139,8 @@
   .btn {
     float:right;
   }
-  i {
-    font-size:@headingOneSize;
-  }
 }
-.widget-delivery {
-  i {
-    margin-right:5px;
-    vertical-align: middle;
-  }
-  h3 {
-    font-size: 22px;
-  }
-}
+
 .widget-image-link {
   color:@white;
   text-align: center;
@@ -114,11 +172,25 @@
     position: absolute;
     right:5px;
     top:10px;
-    font-size: @headingTwoSize;
+    font-size: (32 / @ThreeSize) + 0em;
   }
   &.large {
     h3 {
       background:@navbarInverseBackground;
+    }
+  }
+}
+
+
+//If promotions in a smaller container
+.span3,
+.span2,
+.span1 {
+  .widget-image-link {
+    //fonts slightly smaller
+    font-size:0.7em;
+    i {
+      top:14px;
     }
   }
 }
