@@ -23,7 +23,7 @@
         </tr>
         <tr>
             <th>{% trans 'Subject' %}</th>
-            <td>{{ notification.subject }}</td>
+            <td>{{ notification.subject|safe }}</td>
         </tr>
         <tr>
             <th>{% trans 'Body' %}</th>

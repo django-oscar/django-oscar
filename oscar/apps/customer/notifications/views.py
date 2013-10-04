@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse
+from django.utils.html import strip_tags
 from django.utils.translation import ugettext_lazy as _, ungettext
 from django.utils.timezone import now
 from django.contrib import messages
@@ -63,7 +64,8 @@ class DetailView(PageTitleMixin, generic.DetailView):
 
     def get_page_title(self):
         """Append subject to page title"""
-        return u'%s: %s' % (_('Notification'), self.object.subject)
+        title = strip_tags(self.object.subject)
+        return u'%s: %s' % (_('Notification'), title)
 
     def get_queryset(self):
         return self.model._default_manager.filter(

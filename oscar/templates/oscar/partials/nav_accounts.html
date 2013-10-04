@@ -29,8 +29,11 @@
                         <li>
                             {% if num_unread_notifications > 0 %}
                                 {# If user has new notifications - we change account link to go to inbox #}
-                                <a href="{% url 'customer:notifications-inbox' %}"><i class="icon-user"></i> {% trans "Account" %}</a>
-                                <span class="label label-important">{{ num_unread_notifications }}</span>
+                                <a href="{% url 'customer:notifications-inbox' %}">
+                                    <i class="icon-user"></i>
+                                    {% trans "Account" %}
+                                    <span class="label label-important">{{ num_unread_notifications }}</span>
+                                </a>
                             {% else %}
                                 <a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "Account" %}</a>
                             {% endif %}</a>
