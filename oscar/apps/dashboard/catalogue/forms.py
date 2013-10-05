@@ -175,13 +175,14 @@ class ProductForm(forms.ModelForm):
         if 'initial' not in kwargs:
             kwargs['initial'] = {}
         for attribute in self.product_class.attributes.all():
-            try:
-                value = kwargs['instance'].attribute_values.get(
-                    attribute=attribute).value
-            except ProductAttributeValue.DoesNotExist:
-                pass
+            values = kwargs['instance'].attribute_values.filter(
+                attribute=attribute)
+            values = [v.value for v in values]
+            if attribute.type == 'multi_option':
+                kwargs['initial']['attr_%s' % attribute.code] = values
             else:
-                kwargs['initial']['attr_%s' % attribute.code] = value
+                if values:
+                    kwargs['initial']['attr_%s' % attribute.code] = values[0]
 
     def add_attribute_fields(self):
         for attribute in self.product_class.attributes.all():
