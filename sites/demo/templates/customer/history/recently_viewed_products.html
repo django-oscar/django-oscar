@@ -1,18 +1,20 @@
-{% if products %}
 {% load i18n %}
 {% load product_tags %}
-<div class="product-carousel">
-    <h3>{% trans 'Products you recently viewed' %}</h3>
-    <div class="well">
-        <div class="flexslider">
-            <ul class="slides products">
-                {% for product in products %}
-                <li>
-                    {% render_product product %}
-                </li>
-                {% endfor %}
-            </ul>
+
+{% if products %}
+    <div class="product-carousel products-viewed">
+        <h3>{% trans 'Products you recently viewed' %}</h3>
+        <div class="well">
+            <div class="flexslider">
+                <ul class="slides">
+                    {% for product in products %}
+                    <li>
+                        {% render_product product %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
     </div>
-</div>
 {% endif %}
+

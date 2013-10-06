@@ -4,8 +4,8 @@ Settings for Oscar's demo site.
 Notes:
 
 * The demo site uses the stores extension which requires a spatial database.
-  The DATABASES settings is not set in this module.  Instead, you should add
-  the appropriate details to your settings_local module.
+  Only the postgis and spatialite backends are tested, but all backends
+  supported by GeoDjango should work.
 
 """
 
@@ -32,7 +32,7 @@ ALLOWED_HOSTS = ['demo.oscarcommerce.com',
 
 MANAGERS = ADMINS
 
-# Use settings_local to specify your own PostGIS database and creds
+# Use settings_local to override this default
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
@@ -46,9 +46,7 @@ DATABASES = {
 
 CACHES = {
     'default': {
-        'BACKEND':
-        'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
 
@@ -63,7 +61,7 @@ TIME_ZONE = 'Europe/London'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-gb'
 
 LANGUAGES = (
     ('en-gb', 'English'),

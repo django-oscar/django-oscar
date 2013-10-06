@@ -1,8 +1,9 @@
+{% load url from future %}
 {% load basket_tags %}
 {% load i18n %}
 
 {% basket_form request product as basket_form single %}
-<form action="{% url basket:add %}" method="post">
+<form action="{% url 'basket:add' %}" method="post">
     {% csrf_token %}
     {{ basket_form.as_p }}
     {% if product.is_available_to_buy %}

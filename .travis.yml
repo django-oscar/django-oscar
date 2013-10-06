@@ -1,15 +1,18 @@
 language: python
 python:
-  - 2.6
-  - 2.7
+- '2.6'
+- '2.7'
 env:
-# NOTE: easy_install *will* downgrade if setup.py specifies a max version
-# This causes the tests to run with the wrong Django version
-  - DJANGO_VERSION=1.4.5
-  - DJANGO_VERSION=1.5
+  global:
+    # $TRANSIFEX_PASSWORD for oscar_bot (used in transifex.sh)
+    secure: FuIlzEsGJiAwhaIRBmRNsq9eXmuzs25fX6BChknW4lDyVAySWMp0+Zps9Bd0JgfFYUG3Ip+OTmksYIoTUsG25ZJS9cq1IFt3QKUAN70YCI/4ZBLeIdICPEyxq+Km179+NeEXmBUug17RLMLxh3MWfO+RKUHK9yHIPNNpq0dNyoo=
+  matrix:
+  - DJANGO_VERSION=1.4.8
+  - DJANGO_VERSION=1.5.4
 install:
-  - easy_install Django==$DJANGO_VERSION
+- easy_install Django==$DJANGO_VERSION
 script:
-  - make travis
+- make travis
 after_success:
-  - coveralls
+- coveralls
+- ./transifex.sh

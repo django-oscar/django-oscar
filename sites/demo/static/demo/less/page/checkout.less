@@ -8,7 +8,6 @@
   }
   .checkout-quantity {
       input {
-          width: 10%;
           margin-right: 2px;
           margin-bottom:0px;
       }
@@ -24,10 +23,10 @@
   clear:both;
   border:1px solid #ddd;
   background:#F2F2F2;
-  padding:20px;
+  padding:10px;
   margin-bottom:10px;
   .row-fluid [class*="span"] {
-    min-height:auto;
+    min-height:0;
   }
   h4 {
     margin:0;
@@ -47,12 +46,8 @@
   padding:15px 0;
   [class*="span"] {
     .image_container {
-      min-height:170px;
-      line-height: 170px;
-      width:150px;
-      float:left;
-      margin-right:15px;
-      margin-bottom:0;
+      min-height:100px;
+      line-height: 100px;
       border:1px solid #ddd;
       background:@white;
     }
@@ -71,17 +66,12 @@
       }
     }
     img {
-      max-height:150px;
+      max-height:90px;
     }
   }
   .price_color {
     font-size:@baseFontSize + 2;
     font-weight:bold;
-  }
-}
-.basket_summary {
-  + .row-fluid .well {
-    min-height: 400px;
   }
 }
 //Basket Totals table
@@ -145,18 +135,13 @@
     }
   } 
 }
-.shipping-payment {
-  .span6 > .well {
-    min-height:380px;
-  }
-}
 //Checkout navigation
 .checkoutNav {
   .container-fluid {
     max-width: 960px;
   }
   position: relative;
-  margin:30px 0 50px;
+  margin:30px 0;
   background:#F2F2F2;
   padding:5px 0; 
   border-top:2px solid @navbarInverseBackground;
@@ -167,7 +152,7 @@
     position: absolute;
     width:100%;
     left:0;
-    top:-25px;
+    top:-1.1em;
   }
   ul {
     .clearfix();
@@ -182,13 +167,13 @@
       font-weight: bold;
       text-transform: uppercase;
       color:@navbarInverseBackground;
-      font-size: 18px;
+      font-size: (18 / @bodySize) + 0em;
       &.visited {
         color:@green;
         i:first-child + i {
           display:inline-block;
-          font-size: @headingThreeSize;
-          line-height: @headingThreeSize;
+          font-size: (@ThreeSize / 18) + 0em;
+          line-height: 1em;
         }
         a {
           color:@green;
@@ -197,11 +182,11 @@
       &.active {
         i:first-child {
           display:inline-block;
-          font-size: @headingTwoSize;
-          line-height: @headingTwoSize;
-          height:32px;
+          font-size: (@TwoSize / 18) + 0em;
+          line-height: 1em;
+          height:1em;
           overflow: hidden;
-          top:-38px;
+          top:-1.2em;
         }
       }
     }
