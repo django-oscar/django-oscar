@@ -36,33 +36,12 @@
 {% endblock %}
 
 {% block headertext %}
-    {{ product.get_title }}
+    {% trans "Customer reviews" %}
 {% endblock  %}
 
 {% block content %}
-
-    <article>
-        <a href="{% url 'catalogue:reviews-add' product.slug product.id %}" class="btn btn-primary btn-large pull-right">{% trans "Write a review" %}</a>
-        <h2>{% trans "Customer review" %}</h2>
-
-        <div class="row-fluid">
-            <div class='span9'>
-                {% include 'catalogue/partials/review.html' %}
-            </div>
-
-            <div class="span3" style="text-align: center">
-                <div class="thumbnail">
-                    {% with image=product.primary_image %}
-                        {% thumbnail image.original "400x400" upscale=False as thumb %}
-                        <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{% static thumb.url %}" alt="{{ product.get_title }}"></a>
-                        {% endthumbnail %}
-                    {% endwith %}
-                </div>
-                <div>
-                    <h2><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a></h2>
-                    {% include "catalogue/partials/stock_record.html" %}
-                </div>
-            </div>
-        </div>
-    </article>
+    <section>
+        {% include 'catalogue/reviews/review_product.html' %}
+        {% include 'catalogue/partials/review.html' %}
+    </section>
 {% endblock %}

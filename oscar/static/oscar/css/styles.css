@@ -6900,7 +6900,7 @@ a:hover .thumbnail {
 }
 /* review styles */
 .review {
-  border-bottom: 1px solid #999999;
+  margin-bottom: 20px;
   *zoom: 1;
 }
 .review:before,
@@ -6913,41 +6913,18 @@ a:hover .thumbnail {
   clear: both;
 }
 .review h3 {
-  margin-top: 10px;
   margin-bottom: 10px;
-  font-size: 17px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .review h3 small {
   font-size: 13px;
 }
-.review h4 {
-  border-top: 1px solid #eeeeee;
-  border-bottom: 1px solid #999999;
-  font-size: 15px;
-}
-.review_content div {
-  padding: 15px;
-  padding-left: 0px;
-  border-right: dotted 1px #999999;
-}
-.review_votes div {
-  padding: 15px;
-  padding-left: 0px;
-  padding-bottom: 0px;
-}
-.review_votes .vote_agree {
-  float: left;
-  margin-right: 10px;
-}
-.review_votes form {
-  padding-bottom: 10px;
-  margin-bottom: 0px;
-}
-.review_votes form input {
-  /*      width:70px;*/
-
+.review form {
+  display: inline-block;
+  *display: inline;
+  zoom: 1;
+  margin-bottom: 0;
 }
 .review_add,
 .review_all,
@@ -7196,62 +7173,40 @@ a:hover .thumbnail {
   float: right;
   line-height: 40px;
 }
-/* Star Rating Default */
-.star {
-  clear: both;
-  display: block;
-  padding-left: 110px;
-  background: url(../img/ui/bg-stars.png) 0px -4px no-repeat;
-  height: 18px;
-  line-height: 18px;
+/* Star Rating using font icons */
+.star-rating {
+  color: #CBCBCB;
 }
-.star.One {
-  background-position: 0px -26px;
+.star-rating i {
+  letter-spacing: -1px;
+  width: auto;
 }
-.star.Two {
-  background-position: 0px -48px;
+.star-rating a {
+  margin-left: 10px;
 }
-.star.Three {
-  background-position: 0px -70px;
+.star-rating.One i:first-child {
+  color: #E6CE31;
 }
-.star.Four {
-  background-position: 0px -92px;
+.star-rating.Two i:first-child,
+.star-rating.Two i:first-child + i {
+  color: #E6CE31;
 }
-.star.Five {
-  background-position: 0px -114px;
+.star-rating.Three i:first-child,
+.star-rating.Three i:first-child + i,
+.star-rating.Three i:first-child + i + i {
+  color: #E6CE31;
 }
-/* Star Rating Small */
-.product_pod .star,
-.promotion_single .star {
-  padding-left: 0px;
-  text-indent: -9999px;
-  background: url(../img/ui/bg-stars-small.png) 0px -4px no-repeat;
-  height: 11px;
-  line-height: 11px;
-  width: 65px;
+.star-rating.Four i:first-child,
+.star-rating.Four i:first-child + i,
+.star-rating.Four i:first-child + i + i,
+.star-rating.Four i:first-child + i + i + i {
+  color: #E6CE31;
 }
-.product_pod .star {
+.star-rating.Five i {
+  color: #E6CE31;
+}
+.product_pod .star-rating {
   margin: 0px auto 4px;
-}
-.product_pod .star.One,
-.promotion_single .star.One {
-  background-position: 0px -18px;
-}
-.product_pod .star.Two,
-.promotion_single .star.Two {
-  background-position: 0px -32px;
-}
-.product_pod .star.Three,
-.promotion_single .star.Three {
-  background-position: 0px -47px;
-}
-.product_pod .star.Four,
-.promotion_single .star.Four {
-  background-position: 0px -61px;
-}
-.product_pod .star.Five,
-.promotion_single .star.Five {
-  background-position: 0px -75px;
 }
 /*** Promotional block styles ***/
 .promotion_single .image_container {
