@@ -42,6 +42,7 @@ CACHES = {
     }
 }
 
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -420,6 +421,9 @@ if not os.path.exists(LOG_ROOT):
 
 THUMBNAIL_DEBUG = True
 THUMBNAIL_KEY_PREFIX = 'oscar-sandbox'
+
+# Use a custom KV store to handle integrity error
+THUMBNAIL_KVSTORE = 'oscar.sorl_kvstore.ConcurrentKVStore'
 
 
 # Try and import local settings which can be used to override any of the above.
