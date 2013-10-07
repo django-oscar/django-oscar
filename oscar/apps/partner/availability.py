@@ -101,7 +101,7 @@ class StockRequired(Base):
     def short_message(self):
         if self.num_available > 0:
             return _("In stock")
-        return _("Not available")
+        return _("Unavailable")
 
     @property
     def message(self):
