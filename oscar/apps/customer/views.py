@@ -2,13 +2,12 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import (TemplateView, ListView, DetailView,
                                   CreateView, UpdateView, DeleteView,
                                   FormView, RedirectView)
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
-from django.utils.translation import ugettext as _
-from django.contrib.auth import (authenticate, login as auth_login,
-                                 logout as auth_logout)
+from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth import logout as auth_logout, login as auth_login
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.sites.models import get_current_site
 from django.conf import settings
@@ -18,11 +17,12 @@ from oscar.views.generic import PostActionMixin
 from oscar.apps.customer.utils import get_password_reset_url
 from oscar.core.loading import get_class, get_profile_class, get_classes
 from oscar.core.compat import get_user_model
+from .mixins import PageTitleMixin, RegisterUserMixin
 
 Dispatcher = get_class('customer.utils', 'Dispatcher')
-EmailAuthenticationForm, EmailUserCreationForm, SearchByDateRangeForm = get_classes(
+EmailAuthenticationForm, EmailUserCreationForm, OrderSearchForm = get_classes(
     'customer.forms', ['EmailAuthenticationForm', 'EmailUserCreationForm',
-                       'SearchByDateRangeForm'])
+                       'OrderSearchForm'])
 ProfileForm = get_class('customer.forms', 'ProfileForm')
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
 user_registered = get_class('customer.signals', 'user_registered')
@@ -32,219 +32,28 @@ Basket = get_model('basket', 'Basket')
 UserAddress = get_model('address', 'UserAddress')
 Email = get_model('customer', 'Email')
 UserAddress = get_model('address', 'UserAddress')
-CommunicationEventType = get_model('customer', 'CommunicationEventType')
 ProductAlert = get_model('customer', 'ProductAlert')
+CommunicationEventType = get_model('customer', 'CommunicationEventType')
 
 User = get_user_model()
 
 
-class LogoutView(RedirectView):
-    url = '/'
-    permanent = False
-
-    def get(self, request, *args, **kwargs):
-        auth_logout(request)
-        response = super(LogoutView, self).get(request, *args, **kwargs)
-
-        for cookie in settings.OSCAR_COOKIES_DELETE_ON_LOGOUT:
-            response.delete_cookie(cookie)
-
-        return response
+# =======
+# Account
+# =======
 
 
-class ProfileUpdateView(FormView):
-    form_class = ProfileForm
-    template_name = 'customer/profile_form.html'
-    communication_type_code = 'EMAIL_CHANGED'
-
-    def get_form_kwargs(self):
-        kwargs = super(ProfileUpdateView, self).get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
-
-    def form_valid(self, form):
-        # Grab current user instance before we save form.  We may need this to
-        # send a warning email if the email address is changed.
-        try:
-            old_user = User.objects.get(id=self.request.user.id)
-        except User.DoesNotExist:
-            old_user = None
-
-        form.save()
-
-        # We have to look up the email address from the form's
-        # cleaned data because the object created by form.save() can
-        # either be a user or profile depending on AUTH_PROFILE_MODULE
-        new_email = form.cleaned_data['email']
-        if old_user and new_email != old_user.email:
-            # Email address has changed - send a confirmation email to the old
-            # address including a password reset link in case this is a
-            # suspicious change.
-            ctx = {
-                'user': self.request.user,
-                'site': get_current_site(self.request),
-                'reset_url': get_password_reset_url(old_user),
-                'new_email': new_email,
-            }
-            msgs = CommunicationEventType.objects.get_and_render(
-                code=self.communication_type_code, context=ctx)
-            Dispatcher().dispatch_user_messages(old_user, msgs)
-
-        messages.success(self.request, "Profile updated")
-        return HttpResponseRedirect(self.get_success_url())
-
-    def get_success_url(self):
-        return reverse('customer:summary')
+class AccountSummaryView(RedirectView):
+    """
+    View that exists for legacy reasons and customisability. It commonly gets
+    called when the user clicks on "Account" in the navbar, and can be
+    overriden to determine to what sub-page the user is directed without
+    having to change a lot of templates.
+    """
+    url = reverse_lazy(settings.OSCAR_ACCOUNTS_REDIRECT_URL)
 
 
-class AccountSummaryView(TemplateView):
-    template_name = 'customer/profile.html'
-
-    def get_context_data(self, **kwargs):
-        ctx = super(AccountSummaryView, self).get_context_data(**kwargs)
-        # Delegate data fetching to separate methods so they are easy to
-        # override.
-        ctx['addressbook_size'] = self.request.user.addresses.all().count()
-        ctx['default_shipping_address'] = self.get_default_shipping_address(
-            self.request.user)
-        ctx['default_billing_address'] = self.get_default_billing_address(
-            self.request.user)
-        ctx['orders'] = self.get_orders(self.request.user)
-        ctx['emails'] = self.get_emails(self.request.user)
-        ctx['alerts'] = self.get_product_alerts(self.request.user)
-        ctx['profile_fields'] = self.get_profile_fields(self.request.user)
-
-        ctx['active_tab'] = self.request.GET.get('tab', 'profile')
-        return ctx
-
-    def get_orders(self, user):
-        return Order._default_manager.filter(user=user)[0:5]
-
-    def get_profile_fields(self, user):
-        field_data = []
-
-        # Check for custom user model
-        for field_name in User._meta.additional_fields:
-            field_data.append(
-                self.get_model_field_data(user, field_name))
-
-        # Check for profile class
-        profile_class = get_profile_class()
-        if profile_class:
-            try:
-                profile = profile_class.objects.get(user=user)
-            except ObjectDoesNotExist:
-                profile = profile_class(user=user)
-
-            for field_name in profile._meta.get_all_field_names():
-                if field_name in ('user', 'id'):
-                    continue
-                field_data.append(
-                    self.get_model_field_data(profile, field_name))
-
-        return field_data
-
-    def get_model_field_data(self, model_class, field_name):
-        """
-        Extract the verbose name and value for a model's field value
-        """
-        field = model_class._meta.get_field(field_name)
-        if field.choices:
-            value = getattr(model_class, 'get_%s_display' % field_name)()
-        else:
-            value = getattr(model_class, field_name)
-        return {
-            'name': getattr(field, 'verbose_name'),
-            'value': value,
-        }
-
-    def post(self, request, *args, **kwargs):
-        # A POST means an attempt to change the status of an alert
-        if 'cancel_alert' in request.POST:
-            return self.cancel_alert(request.POST.get('cancel_alert'))
-        return super(AccountSummaryView, self).post(request, *args, **kwargs)
-
-    def cancel_alert(self, alert_id):
-        try:
-            alert = ProductAlert.objects.get(user=self.request.user, pk=alert_id)
-        except ProductAlert.DoesNotExist:
-            messages.error(self.request, _("No alert found"))
-        else:
-            alert.cancel()
-            messages.success(self.request, _("Alert cancelled"))
-        return HttpResponseRedirect(
-            reverse('customer:summary')+'?tab=alerts'
-        )
-
-    def get_emails(self, user):
-        return Email.objects.filter(user=user)
-
-    def get_product_alerts(self, user):
-        return ProductAlert.objects.select_related().filter(
-            user=self.request.user,
-            date_closed=None,
-        )
-
-    def get_default_billing_address(self, user):
-        return self.get_user_address(user, is_default_for_billing=True)
-
-    def get_default_shipping_address(self, user):
-        return self.get_user_address(user, is_default_for_shipping=True)
-
-    def get_user_address(self, user, **filters):
-        try:
-            return user.addresses.get(**filters)
-        except UserAddress.DoesNotExist:
-            return None
-
-
-class RegisterUserMixin(object):
-    communication_type_code = 'REGISTRATION'
-
-    def register_user(self, form):
-        """
-        Create a user instance and send a new registration email (if configured
-        to).
-        """
-        user = form.save()
-
-        if getattr(settings, 'OSCAR_SEND_REGISTRATION_EMAIL', True):
-            self.send_registration_email(user)
-
-        # Raise signal
-        user_registered.send_robust(sender=self, user=user)
-
-        # We have to authenticate before login
-        try:
-            user = authenticate(
-                username=user.email,
-                password=form.cleaned_data['password1'])
-        except User.MultipleObjectsReturned:
-            # Handle race condition where the registration request is made
-            # multiple times in quick succession.  This leads to both requests
-            # passing the uniqueness check and creating users (as the first one
-            # hasn't committed when the second one runs the check).  We retain
-            # the first one and delete the dupes.
-            users = User.objects.filter(email=user.email)
-            user = users[0]
-            for u in users[1:]:
-                u.delete()
-
-        auth_login(self.request, user)
-
-        return user
-
-    def send_registration_email(self, user):
-        code = self.communication_type_code
-        ctx = {'user': user,
-               'site': get_current_site(self.request)}
-        messages = CommunicationEventType.objects.get_and_render(
-            code, ctx)
-        if messages and messages['body']:
-            Dispatcher().dispatch_user_messages(user, messages)
-
-
-class AccountRegistrationView(FormView, RegisterUserMixin):
+class AccountRegistrationView(RegisterUserMixin, FormView):
     form_class = EmailUserCreationForm
     template_name = 'customer/registration.html'
     redirect_field_name = 'next'
@@ -279,7 +88,7 @@ class AccountRegistrationView(FormView, RegisterUserMixin):
             form.cleaned_data['redirect_url'])
 
 
-class AccountAuthView(TemplateView, RegisterUserMixin):
+class AccountAuthView(RegisterUserMixin, TemplateView):
     """
     This is actually a slightly odd double form view
     """
@@ -334,12 +143,12 @@ class AccountAuthView(TemplateView, RegisterUserMixin):
         kwargs['prefix'] = self.registration_prefix
         kwargs['initial'] = {
             'redirect_url': self.request.GET.get(self.redirect_field_name, ''),
-        }
+            }
         if request and request.method in ('POST', 'PUT'):
             kwargs.update({
                 'data': request.POST,
                 'files': request.FILES,
-            })
+                })
         return kwargs
 
     def post(self, request, *args, **kwargs):
@@ -369,47 +178,223 @@ class AccountAuthView(TemplateView, RegisterUserMixin):
         return self.render_to_response(ctx)
 
 
-class EmailHistoryView(ListView):
-    """Customer email history"""
+class LogoutView(RedirectView):
+    url = reverse_lazy('promotions:home')
+    permanent = False
+
+    def get(self, request, *args, **kwargs):
+        auth_logout(request)
+        response = super(LogoutView, self).get(request, *args, **kwargs)
+
+        for cookie in settings.OSCAR_COOKIES_DELETE_ON_LOGOUT:
+            response.delete_cookie(cookie)
+
+        return response
+
+
+# =============
+# Profile
+# =============
+
+class ProfileView(PageTitleMixin, TemplateView):
+    template_name = 'customer/profile/profile.html'
+    page_title = _('Profile')
+    active_tab = 'profile'
+
+    def get_context_data(self, **kwargs):
+        ctx = super(ProfileView, self).get_context_data(**kwargs)
+        ctx['profile'] = self.get_profile_fields(self.request.user)
+        return ctx
+
+    def get_profile_fields(self, user):
+        field_data = []
+
+        # Check for custom user model
+        for field_name in User._meta.additional_fields:
+            field_data.append(
+                self.get_model_field_data(user, field_name))
+
+        # Check for profile class
+        profile_class = get_profile_class()
+        if profile_class:
+            try:
+                profile = profile_class.objects.get(user=user)
+            except ObjectDoesNotExist:
+                profile = profile_class(user=user)
+
+            field_names = [f.name for f in profile._meta.local_fields]
+            for field_name in field_names:
+                if field_name in ('user', 'id'):
+                    continue
+                field_data.append(
+                    self.get_model_field_data(profile, field_name))
+
+        return field_data
+
+    def get_model_field_data(self, model_class, field_name):
+        """
+        Extract the verbose name and value for a model's field value
+        """
+        field = model_class._meta.get_field(field_name)
+        if field.choices:
+            value = getattr(model_class, 'get_%s_display' % field_name)()
+        else:
+            value = getattr(model_class, field_name)
+        return {
+            'name': getattr(field, 'verbose_name'),
+            'value': value,
+        }
+
+
+class ProfileUpdateView(PageTitleMixin, FormView):
+    form_class = ProfileForm
+    template_name = 'customer/profile/profile_form.html'
+    communication_type_code = 'EMAIL_CHANGED'
+    page_title = _('Edit Profile')
+    active_tab = 'profile'
+
+    def get_form_kwargs(self):
+        kwargs = super(ProfileUpdateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        # Grab current user instance before we save form.  We may need this to
+        # send a warning email if the email address is changed.
+        try:
+            old_user = User.objects.get(id=self.request.user.id)
+        except User.DoesNotExist:
+            old_user = None
+
+        form.save()
+
+        # We have to look up the email address from the form's
+        # cleaned data because the object created by form.save() can
+        # either be a user or profile depending on AUTH_PROFILE_MODULE
+        new_email = form.cleaned_data['email']
+        if old_user and new_email != old_user.email:
+            # Email address has changed - send a confirmation email to the old
+            # address including a password reset link in case this is a
+            # suspicious change.
+            ctx = {
+                'user': self.request.user,
+                'site': get_current_site(self.request),
+                'reset_url': get_password_reset_url(old_user),
+                'new_email': new_email,
+            }
+            msgs = CommunicationEventType.objects.get_and_render(
+                code=self.communication_type_code, context=ctx)
+            Dispatcher().dispatch_user_messages(old_user, msgs)
+
+        messages.success(self.request, "Profile updated")
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('customer:profile-view')
+
+
+class ChangePasswordView(PageTitleMixin, FormView):
+    form_class = PasswordChangeForm
+    template_name = 'customer/profile/change_password_form.html'
+    communication_type_code = 'PASSWORD_CHANGED'
+    page_title = _('Change Password')
+    active_tab = 'profile'
+
+    def get_form_kwargs(self):
+        kwargs = super(ChangePasswordView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, _("Password updated"))
+
+        ctx = {
+            'user': self.request.user,
+            'site': get_current_site(self.request),
+            'reset_url': get_password_reset_url(self.request.user),
+            }
+        msgs = CommunicationEventType.objects.get_and_render(
+            code=self.communication_type_code, context=ctx)
+        Dispatcher().dispatch_user_messages(self.request.user, msgs)
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('customer:profile-view')
+
+
+# =============
+# Email history
+# =============
+
+class EmailHistoryView(PageTitleMixin, ListView):
     context_object_name = "emails"
-    template_name = 'customer/email_list.html'
+    template_name = 'customer/email/email_list.html'
     paginate_by = 20
+    page_title = _('Email History')
+    active_tab = 'emails'
 
     def get_queryset(self):
-        """Return a customer's orders"""
         return Email._default_manager.filter(user=self.request.user)
 
 
-class EmailDetailView(DetailView):
-    """Customer order details"""
-    template_name = "customer/email.html"
+class EmailDetailView(PageTitleMixin, DetailView):
+    """Customer email"""
+    template_name = "customer/email/email_detail.html"
     context_object_name = 'email'
+    active_tab = 'emails'
 
     def get_object(self, queryset=None):
         """Return an order object or 404"""
         return get_object_or_404(Email, user=self.request.user,
                                  id=self.kwargs['email_id'])
 
+    def get_page_title(self):
+        """Append email subject to page title"""
+        return u'%s: %s' % (_('Email'), self.object.subject)
 
-class OrderHistoryView(ListView):
+
+# =============
+# Order history
+# =============
+
+class OrderHistoryView(PageTitleMixin, ListView):
     """
     Customer order history
     """
     context_object_name = "orders"
-    template_name = 'customer/order_list.html'
+    template_name = 'customer/order/order_list.html'
     paginate_by = 20
     model = Order
-    form_class = SearchByDateRangeForm
+    form_class = OrderSearchForm
+    page_title = _('Order History')
+    active_tab = 'orders'
 
     def get(self, request, *args, **kwargs):
         if 'date_from' in request.GET:
-            self.form = SearchByDateRangeForm(self.request.GET)
+            self.form = self.form_class(self.request.GET)
             if not self.form.is_valid():
                 self.object_list = self.get_queryset()
                 ctx = self.get_context_data(object_list=self.object_list)
                 return self.render_to_response(ctx)
+            data = self.form.cleaned_data
+
+            # If the user has just entered an order number, try and look it up
+            # and redirect immediately to the order detail page.
+            if data['order_number'] and not (data['date_to'] or
+                                             data['date_from']):
+                try:
+                    order = Order.objects.get(
+                        number=data['order_number'], user=self.request.user)
+                except Order.DoesNotExist:
+                    pass
+                else:
+                    return HttpResponseRedirect(
+                        reverse('customer:order',
+                                kwargs={'order_number': order.number}))
         else:
-            self.form = SearchByDateRangeForm()
+            self.form = self.form_class()
         return super(OrderHistoryView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -424,12 +409,18 @@ class OrderHistoryView(ListView):
         return ctx
 
 
-class OrderDetailView(DetailView, PostActionMixin):
-    """Customer order details"""
+class OrderDetailView(PageTitleMixin, PostActionMixin, DetailView):
     model = Order
+    active_tab = 'orders'
 
     def get_template_names(self):
-        return ["customer/order.html"]
+        return ["customer/order/order_detail.html"]
+
+    def get_page_title(self):
+        """
+        Order number as page title
+        """
+        return u'%s #%s' % (_('Order'), self.object.number)
 
     def get_object(self, queryset=None):
         return get_object_or_404(self.model, user=self.request.user,
@@ -495,7 +486,7 @@ class OrderDetailView(DetailView, PostActionMixin):
                 {'number': order.number})
 
 
-class OrderLineView(DetailView, PostActionMixin):
+class OrderLineView(PostActionMixin, DetailView):
     """Customer order line"""
 
     def get_object(self, queryset=None):
@@ -537,26 +528,42 @@ class OrderLineView(DetailView, PostActionMixin):
         messages.info(self.request, msg)
 
 
+class AnonymousOrderDetailView(DetailView):
+    model = Order
+    template_name = "customer/anon_order.html"
+
+    def get_object(self, queryset=None):
+        # Check URL hash matches that for order to prevent spoof attacks
+        order = get_object_or_404(self.model, user=None,
+                                  number=self.kwargs['order_number'])
+        if self.kwargs['hash'] != order.verification_hash():
+            raise Http404()
+        return order
+
+
 # ------------
 # Address book
 # ------------
 
-
-class AddressListView(ListView):
+class AddressListView(PageTitleMixin, ListView):
     """Customer address book"""
     context_object_name = "addresses"
-    template_name = 'customer/address_list.html'
+    template_name = 'customer/address/address_list.html'
     paginate_by = 40
+    active_tab = 'addresses'
+    page_title = _('Address Book')
 
     def get_queryset(self):
-        """Return a customer's addresses"""
+        """Return customer's addresses"""
         return UserAddress._default_manager.filter(user=self.request.user)
 
 
-class AddressCreateView(CreateView):
+class AddressCreateView(PageTitleMixin, CreateView):
     form_class = UserAddressForm
-    mode = UserAddress
-    template_name = 'customer/address_form.html'
+    model = UserAddress
+    template_name = 'customer/address/address_form.html'
+    active_tab = 'addresses'
+    page_title = _('Add a new address')
 
     def get_form_kwargs(self):
         kwargs = super(AddressCreateView, self).get_form_kwargs()
@@ -569,14 +576,17 @@ class AddressCreateView(CreateView):
         return ctx
 
     def get_success_url(self):
-        messages.success(self.request, _("Address saved"))
+        messages.success(self.request,
+                         _("Address '%s' created") % self.object.summary)
         return reverse('customer:address-list')
 
 
-class AddressUpdateView(UpdateView):
+class AddressUpdateView(PageTitleMixin, UpdateView):
     form_class = UserAddressForm
     model = UserAddress
-    template_name = 'customer/address_form.html'
+    template_name = 'customer/address/address_form.html'
+    active_tab = 'addresses'
+    page_title = _('Edit address')
 
     def get_form_kwargs(self):
         kwargs = super(AddressUpdateView, self).get_form_kwargs()
@@ -592,63 +602,37 @@ class AddressUpdateView(UpdateView):
         return self.request.user.addresses.all()
 
     def get_success_url(self):
-        messages.success(self.request, _("Address saved"))
+        messages.success(self.request,
+                         _("Address '%s' updated") % self.object.summary)
         return reverse('customer:address-list')
 
 
-class AddressDeleteView(DeleteView):
+class AddressDeleteView(PageTitleMixin, DeleteView):
     model = UserAddress
-    template_name = "customer/address_delete.html"
+    template_name = "customer/address/address_delete.html"
+    page_title = _('Delete address?')
+    active_tab = 'addresses'
+    context_object_name = 'address'
 
     def get_queryset(self):
         return UserAddress._default_manager.filter(user=self.request.user)
 
     def get_success_url(self):
+        messages.success(self.request,
+                         _("Address '%s' deleted") % self.object.summary)
         return reverse('customer:address-list')
 
 
-# ------------
-# Order status
-# ------------
+class AddressChangeStatusView(RedirectView):
+    """
+    Sets an address as default_for_(billing|shipping)
+    """
+    url = reverse_lazy('customer:address-list')
 
-
-class AnonymousOrderDetailView(DetailView):
-    model = Order
-    template_name = "customer/anon_order.html"
-
-    def get_object(self, queryset=None):
-        # Check URL hash matches that for order to prevent spoof attacks
-        order = get_object_or_404(self.model, user=None,
-                                  number=self.kwargs['order_number'])
-        if self.kwargs['hash'] != order.verification_hash():
-            raise Http404()
-        return order
-
-
-class ChangePasswordView(FormView):
-    form_class = PasswordChangeForm
-    template_name = 'customer/change_password_form.html'
-    communication_type_code = 'PASSWORD_CHANGED'
-
-    def get_form_kwargs(self):
-        kwargs = super(ChangePasswordView, self).get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, _("Password updated"))
-
-        ctx = {
-            'user': self.request.user,
-            'site': get_current_site(self.request),
-            'reset_url': get_password_reset_url(self.request.user),
-        }
-        msgs = CommunicationEventType.objects.get_and_render(
-            code=self.communication_type_code, context=ctx)
-        Dispatcher().dispatch_user_messages(self.request.user, msgs)
-
-        return HttpResponseRedirect(self.get_success_url())
-
-    def get_success_url(self):
-        return reverse('customer:summary')
+    def get(self, request, pk=None, action=None, *args, **kwargs):
+        address = get_object_or_404(UserAddress, user=self.request.user,
+                                    pk=pk)
+        setattr(address, 'is_%s' % action, True)
+        address.save()
+        return super(AddressChangeStatusView, self).get(
+            request, *args, **kwargs)

@@ -22,3 +22,4 @@ Oscar is split up in multiple, mostly independent apps.
    search
    shipping
    voucher
+   wishlists

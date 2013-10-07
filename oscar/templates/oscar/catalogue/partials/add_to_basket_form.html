@@ -14,6 +14,7 @@
             <button type="submit" class="btn btn-large btn-primary btn-full" value="{% trans "Add to basket" %}">{% trans "Add to basket" %}</button>
         </div>
     </form>
+    {% include "catalogue/partials/add_to_wishlist.html" %}
 {% else %}
     {% if has_active_alert %}
         <p>{% trans "You have an active stock alert for this product." %}</p>
@@ -24,5 +25,6 @@
             {% include "partials/form_fields.html" with form=alert_form %}
             <button type="submit" class="btn btn-large btn-info btn-full">{% trans "Notify me" %}</button>
         </form>
+        {% include "catalogue/partials/add_to_wishlist.html" %}
     {% endif %}
 {% endif %}

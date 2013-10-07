@@ -70,18 +70,37 @@ class AbstractOrder(models.Model):
     # Index added to this field for reporting
     date_placed = models.DateTimeField(auto_now_add=True, db_index=True)
 
-    # Dict of available status changes
+    #: Order status pipeline.  This should be a dict where each (key, value) #:
+    #: corresponds to a status and a list of possible statuses that can follow
+    #: that one.
     pipeline = getattr(settings,  'OSCAR_ORDER_STATUS_PIPELINE', {})
+
+    #: Order status cascade pipeline.  This should be a dict where each (key,
+    #: value) pair corresponds to an *order* status and the corresponding
+    #: *line* status that needs to be set when the order is set to the new
+    #: status
     cascade = getattr(settings,  'OSCAR_ORDER_STATUS_CASCADE', {})
 
     @classmethod
     def all_statuses(cls):
+        """
+        Return all possible statuses for an order
+        """
         return cls.pipeline.keys()
 
     def available_statuses(self):
+        """
+        Return all possible statuses that this order can move to
+        """
         return self.pipeline.get(self.status, ())
 
     def set_status(self, new_status):
+        """
+        Set a new status for this order.
+
+        If the requested status is not valid, then ``InvalidOrderStatus`` is
+        raised.
+        """
         if new_status == self.status:
             return
         if new_status not in self.available_statuses():
@@ -415,6 +434,9 @@ class AbstractLine(models.Model):
     est_dispatch_date = models.DateField(
         _("Estimated Dispatch Date"), blank=True, null=True)
 
+    #: Order status pipeline.  This should be a dict where each (key, value)
+    #: corresponds to a status and the possible statuses that can follow that
+    #: one.
     pipeline = getattr(settings,  'OSCAR_LINE_STATUS_PIPELINE', {})
 
     class Meta:
@@ -432,12 +454,24 @@ class AbstractLine(models.Model):
 
     @classmethod
     def all_statuses(cls):
+        """
+        Return all possible statuses for an order line
+        """
         return cls.pipeline.keys()
 
     def available_statuses(self):
+        """
+        Return all possible statuses that this order line can move to
+        """
         return self.pipeline.get(self.status, ())
 
     def set_status(self, new_status):
+        """
+        Set a new status for this line
+
+        If the requested status is not valid, then ``InvalidLineStatus`` is
+        raised.
+        """
         if new_status == self.status:
             return
         if new_status not in self.available_statuses():
@@ -681,7 +715,6 @@ class AbstractPaymentEventType(models.Model):
     """
     name = models.CharField(_("Name"), max_length=128, unique=True)
     code = models.SlugField(_("Code"), max_length=128, unique=True)
-    sequence_number = models.PositiveIntegerField(_("Sequence"), default=0)
 
     def save(self, *args, **kwargs):
         if not self.code:
@@ -692,7 +725,7 @@ class AbstractPaymentEventType(models.Model):
         abstract = True
         verbose_name = _("Payment Event Type")
         verbose_name_plural = _("Payment Event Types")
-        ordering = ('sequence_number',)
+        ordering = ('name', )
 
     def __unicode__(self):
         return self.name
@@ -838,16 +871,8 @@ class AbstractShippingEventType(models.Model):
     """
     # Name is the friendly description of an event
     name = models.CharField(_("Name"), max_length=255, unique=True)
-
     # Code is used in forms
     code = models.SlugField(_("Code"), max_length=128, unique=True)
-    is_required = models.BooleanField(
-        _("Is Required"), default=False,
-        help_text=_("This event must be passed before the next "
-                    "shipping event can take place"))
-
-    # The normal order in which these shipping events take place
-    sequence_number = models.PositiveIntegerField(_("Sequence"), default=0)
 
     def save(self, *args, **kwargs):
         if not self.code:
@@ -858,19 +883,10 @@ class AbstractShippingEventType(models.Model):
         abstract = True
         verbose_name = _("Shipping Event Type")
         verbose_name_plural = _("Shipping Event Types")
-        ordering = ('sequence_number',)
+        ordering = ('name', )
 
     def __unicode__(self):
         return self.name
-
-    def get_prerequisites(self):
-        """
-        Return event types that must be complete before this one
-        """
-        return self.__class__._default_manager.filter(
-            is_required=True,
-            sequence_number__lt=self.sequence_number).order_by(
-                'sequence_number')
 
 
 # DISCOUNTS

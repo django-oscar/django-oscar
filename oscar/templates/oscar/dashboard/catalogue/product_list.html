@@ -2,6 +2,7 @@
 {% load url from future %}
 {% load i18n %}
 {% load thumbnail %}
+{% load staticfiles %}
 
 {% block body_class %}catalogue{% endblock %}
 
@@ -81,7 +82,7 @@
                                 {% with image=product.primary_image %}
                                     {% thumbnail image.original "70x70" upscale=False as thumb %}
                                     <a href="{{ image.original.url }}" rel="lightbox_{{ product.upc|default:"-" }}" class="sub-image">
-                                        <img src="{{ thumb.url }}" alt="{{ product.get_title }}" data-description="{% if image.caption %}{{ image.caption }}{% endif %}">
+                                        <img src="{% static thumb.url %}" alt="{{ product.get_title }}" data-description="{% if image.caption %}{{ image.caption }}{% endif %}">
                                     </a>
                                     {% endthumbnail %}
                                 {% endwith %}

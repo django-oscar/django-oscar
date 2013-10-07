@@ -6,7 +6,6 @@ from django.utils import timezone
 import mock
 
 from oscar.apps.address.models import Country
-from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import ShippingAddress, Order, Line, \
         ShippingEvent, ShippingEventType, ShippingEventQuantity, OrderNote, \
         OrderDiscount
@@ -218,17 +217,6 @@ class ShippingEventTypeTests(TestCase):
         etype = ShippingEventType.objects.create(name='Returned')
         self.assertEqual('returned', etype.code)
 
-    def test_get_prerequisites(self):
-        ShippingEventType.objects.create(name='Shipped',
-                                         is_required=True,
-                                         sequence_number=0)
-        etype = ShippingEventType.objects.create(name='Returned',
-                                                 is_required=False,
-                                                 sequence_number=1)
-        prereqs = etype.get_prerequisites()
-        self.assertEqual(1, len(prereqs))
-        self.assertEqual('Shipped', prereqs[0].name)
-
 
 class ShippingEventQuantityTests(TestCase):
 
@@ -238,10 +226,10 @@ class ShippingEventQuantityTests(TestCase):
         self.order = create_order(number='100002', basket=basket)
         self.line = self.order.lines.all()[0]
 
-        self.shipped, _ = ShippingEventType.objects.get_or_create(
-            name='Shipped', is_required=True, sequence_number=0)
-        self.returned, _ = ShippingEventType.objects.get_or_create(
-            name='Returned', is_required=False, sequence_number=1)
+        self.shipped, __ = ShippingEventType.objects.get_or_create(
+            name='Shipped')
+        self.returned, __ = ShippingEventType.objects.get_or_create(
+            name='Returned')
 
     def tearDown(self):
         ShippingEventType.objects.all().delete()

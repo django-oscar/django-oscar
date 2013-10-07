@@ -1,5 +1,6 @@
 {% extends "oscar/checkout/user_address_form.html" %}
 {% load i18n %}
+{% load url from future %}
 
 {% block shipping_address %}
 <div class="page-header">
@@ -16,6 +17,6 @@
         </div>
     </div>
     <button type="submit" class="btn btn-large btn-primary pull-right">{% trans "Save" %}</button>
-    {% trans "or" %} <a href="{% url checkout:shipping-address %}">{% trans "cancel" %}</a>.
+    {% trans "or" %} <a href="{% url 'checkout:shipping-address' %}">{% trans "cancel" %}</a>.
 </form>
 {% endblock shipping_address %}

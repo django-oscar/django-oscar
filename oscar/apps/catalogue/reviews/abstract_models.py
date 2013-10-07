@@ -97,7 +97,8 @@ class AbstractProductReview(models.Model):
 
     def delete(self, *args, **kwargs):
         super(AbstractProductReview, self).delete(*args, **kwargs)
-        self.product.update_rating()
+        if self.product is not None:
+            self.product.update_rating()
 
     # Properties
 

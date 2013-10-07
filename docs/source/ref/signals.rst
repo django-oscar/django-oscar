@@ -155,7 +155,7 @@ review_created
 
 .. class:: oscar.apps.catalogue.reviews.signals.review_added
 
-    Raised when a product detail page is viewed.
+    Raised when a review is added.
 
 Arguments sent with this signal:
 

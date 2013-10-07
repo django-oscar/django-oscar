@@ -3,13 +3,14 @@
 {% load thumbnail %}
 {% load i18n %}
 {% load display_tags %}
+{% load staticfiles %}
 
 <article class="product_pod">
     {% block product_image %}
         <div class="image_container">
             {% with image=product.primary_image %}
-                {% thumbnail image.original "400x400" upscale=False as thumb %}
-                <a href="{{ product.get_absolute_url }}"><img src="{{ thumb.url }}" alt="{{ product.get_title }}" class="thumbnail"></a>
+                {% thumbnail image.original "x155" upscale=False as thumb %}
+                <a href="{{ product.get_absolute_url }}"><img src="{% static thumb.url %}" alt="{{ product.get_title }}" class="thumbnail"></a>
                 {% endthumbnail %}
             {% endwith %}
         </div>

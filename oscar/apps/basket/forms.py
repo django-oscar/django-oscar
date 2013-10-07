@@ -114,7 +114,7 @@ class BasketVoucherForm(forms.Form):
     code = forms.CharField(max_length=128, label=_('Code'))
 
     def __init__(self, *args, **kwargs):
-        return super(BasketVoucherForm, self).__init__(*args, **kwargs)
+        super(BasketVoucherForm, self).__init__(*args, **kwargs)
 
     def clean_code(self):
         return self.cleaned_data['code'].strip().upper()
@@ -203,19 +203,22 @@ class AddToBasketForm(forms.Form):
         """
         Adds the fields for a "group"-type product (eg, a parent product with a
         list of variants.
+
+        Currently requires that a stock record exists for the variant
         """
         choices = []
         for variant in item.variants.all():
-            if variant.has_stockrecords:
+            if variant.has_stockrecord:
+                title = variant.get_title()
                 attr_summary = variant.attribute_summary
+                price = currency(variant.stockrecord.price_incl_tax)
                 if attr_summary:
-                    attr_summary = "(%s)" % attr_summary
-                    summary = u"%s %s - %s" % (
-                        variant.get_title(), attr_summary,
-                        currency(variant.stockrecord.price_incl_tax))
-                    choices.append((variant.id, summary))
-                    self.fields['product_id'] = forms.ChoiceField(
-                        choices=tuple(choices), label=_("Variant"))
+                    summary = u"%s (%s) - %s" % (title, attr_summary, price)
+                else:
+                    summary = u"%s - %s" % (title, price)
+                choices.append((variant.id, summary))
+                self.fields['product_id'] = forms.ChoiceField(
+                    choices=tuple(choices), label=_("Variant"))
 
     def _create_product_fields(self, item):
         """

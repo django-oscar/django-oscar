@@ -3,6 +3,7 @@
 {% load history_tags %}
 {% load thumbnail %}
 {% load i18n %}
+{% load staticfiles %}
 
 {% block title %}
     {{ review.title }} | {% trans "Reviews" %} | {{ product.title }} | {{ block.super }}
@@ -53,7 +54,7 @@
                 <div class="thumbnail">
                     {% with image=product.primary_image %}
                         {% thumbnail image.original "400x400" upscale=False as thumb %}
-                        <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+                        <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{% static thumb.url %}" alt="{{ product.get_title }}"></a>
                         {% endthumbnail %}
                     {% endwith %}
                 </div>

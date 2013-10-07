@@ -18,6 +18,7 @@ Customisation
     how_to_change_a_url
     how_to_customise_a_view
     how_to_configure_the_dashboard_navigation
+    how_to_customise_oscar_communications
 
 Customers
 ---------

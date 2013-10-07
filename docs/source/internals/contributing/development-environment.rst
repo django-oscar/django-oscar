@@ -9,6 +9,9 @@ Fork the repo and run::
     $ mkvirtualenv oscar  # using virtualenvwrapper
     $ make install
 
+If using Ubuntu, the ``python-dev`` package is required for some packages to
+compile.
+
 The :doc:`sandbox </internals/sandbox>` site can be used to test our changes in
 a browser. It is easily created with ``make sandbox``.
 

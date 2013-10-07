@@ -291,8 +291,7 @@ class UpdateHandPickedProductListView(UpdateView):
             return HttpResponseRedirect(self.get_success_url())
 
         ctx = self.get_context_data(product_formset=product_formset)
-        return self.render_response(ctx)
-
+        return self.render_to_response(ctx)
 
 # ============
 # DELETE VIEWS

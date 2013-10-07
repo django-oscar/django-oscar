@@ -108,7 +108,7 @@ class TestCreateChildProduct(ProductWebTest):
 
     def setUp(self):
         self.pclass = G(ProductClass)
-        self.parent = G(Product)
+        self.parent = G(Product, parent=None)
         super(TestCreateChildProduct, self).setUp()
 
     def test_categories_are_not_required(self):

@@ -89,7 +89,7 @@ class RangeDeleteView(DeleteView):
         return reverse('dashboard:range-list')
 
 
-class RangeProductListView(ListView, BulkEditMixin):
+class RangeProductListView(BulkEditMixin, ListView):
     model = Product
     template_name = 'dashboard/ranges/range_product_list.html'
     context_object_name = 'products'

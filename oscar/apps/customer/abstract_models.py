@@ -43,6 +43,7 @@ if hasattr(auth_models, 'BaseUserManager'):
             u.save(using=self._db)
             return u
 
+
     class AbstractUser(auth_models.AbstractBaseUser,
                        auth_models.PermissionsMixin):
         """
@@ -361,4 +362,4 @@ class AbstractProductAlert(models.Model):
         return reverse('customer:alerts-confirm', kwargs={'key': self.key})
 
     def get_cancel_url(self):
-        return reverse('customer:alerts-cancel', kwargs={'key': self.key})
+        return reverse('customer:alerts-cancel-by-key', kwargs={'key': self.key})

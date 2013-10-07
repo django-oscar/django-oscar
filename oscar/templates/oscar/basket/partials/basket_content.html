@@ -3,6 +3,7 @@
 {% load thumbnail %}
 {% load currency_filters %}
 {% load stockrecord_tags %}
+{% load staticfiles %}
 
 {% if basket_warnings %}
     <h5>{% trans "Important messages about items in your basket" %}</h5>
@@ -131,8 +132,10 @@
 
 {% else %}
     {% block emptybasket %}
-        <p>{% trans "Your basket is empty." %}</p>
-        <p><a href="/" class="btn btn-primary">{% trans "Continue shopping" %}</a></p>
+        <p>
+            {% trans "Your basket is empty." %}
+            <a href="{% url 'promotions:home' %}">{% trans "Continue shopping" %}</a>
+        </p>
     {% endblock %}
 {% endif %}
 
@@ -158,7 +161,7 @@
                             <div class="image_container">
                                 {% with image=form.instance.product.primary_image %}
                                     {% thumbnail image.original "200x200" upscale=False as thumb %}
-                                    <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ form.instance.product.get_title }}"></a>
+                                    <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{% static thumb.url %}" alt="{{ form.instance.product.get_title }}"></a>
                                     {% endthumbnail %}
                                 {% endwith %}
                             </div>

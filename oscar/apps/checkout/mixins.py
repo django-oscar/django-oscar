@@ -1,7 +1,7 @@
 import logging
 
 from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, NoReverseMatch
 from django.contrib.sites.models import Site, get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import get_model
@@ -276,11 +276,18 @@ class OrderPlacementMixin(CheckoutSessionMixin):
                'lines': order.lines.all()}
 
         if not self.request.user.is_authenticated():
-            path = reverse('customer:anon-order',
-                           kwargs={'order_number': order.number,
-                                   'hash': order.verification_hash()})
-            site = Site.objects.get_current()
-            ctx['status_url'] = 'http://%s%s' % (site.domain, path)
+            # Attempt to add the anon order status URL to the email template
+            # ctx.
+            try:
+                path = reverse('customer:anon-order',
+                               kwargs={'order_number': order.number,
+                                       'hash': order.verification_hash()})
+            except NoReverseMatch:
+                # We don't care that much if we can't resolve the URL
+                pass
+            else:
+                site = Site.objects.get_current()
+                ctx['status_url'] = 'http://%s%s' % (site.domain, path)
 
         try:
             event_type = CommunicationEventType.objects.get(code=code)

@@ -1,7 +1,8 @@
-from django.template.defaultfilters import date
 from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
+
 from oscar.apps.dashboard.reports.csv_utils import CsvUnicodeWriter
+from oscar.core import utils
 
 
 class ReportGenerator(object):
@@ -46,10 +47,10 @@ class ReportGenerator(object):
 
 class ReportFormatter(object):
     def format_datetime(self, dt):
-        return date(dt, 'DATETIME_FORMAT')
+        return utils.format_datetime(dt, 'DATETIME_FORMAT')
 
     def format_date(self, d):
-        return date(d, 'DATE_FORMAT')
+        return utils.format_datetime(d, 'DATE_FORMAT')
 
     def filename(self):
         return self.filename_template

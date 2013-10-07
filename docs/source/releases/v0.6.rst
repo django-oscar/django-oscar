@@ -81,6 +81,16 @@ Payment models have abstract versions
 The payment models have been split into abstract- and concrete versions.  This
 brings them inline with other Oscar apps and allows them to be customised.
 
+Search
+~~~~~~
+
+Wishlists
+~~~~~~~~~
+
+Wishlist functionality has finally landed.  Signed in customers are now able to
+create multiple named wishlists and add products to them.  There is a new
+section in the customer's account where wishlists can be managed.
+
 Multi-partner dashboard
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -156,9 +166,6 @@ Minor changes
 Backwards incompatible changes in 0.6
 =====================================
 
-Signature changes
-~~~~~~~~~~~~~~~~~
-
 Several classes and functions have had signature changes:
 
 * The ``basket_form`` templatetag has been altered to take the ``request`` as the
@@ -223,6 +230,12 @@ Payment app:
 
 * The `balance` method on the source object is not a property not a method.
 
+Order app:
+
+* ``0015``: Unused ``sequence_number`` and ``is_required`` deleted from
+  ``ShippingEventType``. Unused ``sequence_number`` deleted from
+  ``PaymentEventType``.
+
 URLs
 ~~~~
 
@@ -252,7 +265,6 @@ There are new migrations in the following apps to be aware of.
     - The `date` field of the ``order.AbstractCommunicationEvent``, ``order.AbstractPaymentEvent`` and
       ``order.AbstractShippingEvent`` models have been renamed to ``date_created`` for
       consistency with the rest of Oscar.
-  
 
 Features deprecated in 0.6
 ==========================

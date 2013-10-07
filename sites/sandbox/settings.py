@@ -38,11 +38,10 @@ DATABASES = {
 
 CACHES = {
     'default': {
-        'BACKEND':
-        'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -301,7 +300,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-LOGIN_REDIRECT_URL = '/accounts/'
+LOGIN_REDIRECT_URL = '/'
 APPEND_SLASH = True
 
 # Haystack settings
@@ -330,17 +329,17 @@ DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': is_internal
 }
 DEBUG_TOOLBAR_PANELS = (
-    'debug_toolbar.panels.version.VersionDebugPanel',
-    'debug_toolbar.panels.timer.TimerDebugPanel',
-    'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
     'debug_toolbar.panels.headers.HeaderDebugPanel',
     'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
     'debug_toolbar.panels.template.TemplateDebugPanel',
-    'debug_toolbar.panels.sql.SQLDebugPanel',  # Disabled for performance
+    'debug_toolbar.panels.timer.TimerDebugPanel',
+    'debug_toolbar.panels.sql.SQLDebugPanel',
+    'template_timings_panel.panels.TemplateTimings.TemplateTimings',
+    'cache_panel.panel.CacheDebugPanel',
     'debug_toolbar.panels.signals.SignalDebugPanel',
     'debug_toolbar.panels.logger.LoggingPanel',
-    'cache_panel.panel.CacheDebugPanel',
-    #'template_timings_panel.panels.TemplateTimings.TemplateTimings',
+    'debug_toolbar.panels.version.VersionDebugPanel',
+    'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
 )
 
 # ==============
@@ -352,8 +351,7 @@ from oscar.defaults import *
 # Meta
 # ====
 
-OSCAR_SHOP_NAME = 'Oscar Sandbox'
-OSCAR_SHOP_TAGLINE = 'e-Commerce for Django'
+OSCAR_SHOP_TAGLINE = 'Sandbox'
 
 # Enter Google Analytics ID for the tracking to be included in the templates
 #GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
@@ -422,6 +420,9 @@ if not os.path.exists(LOG_ROOT):
 
 THUMBNAIL_DEBUG = True
 THUMBNAIL_KEY_PREFIX = 'oscar-sandbox'
+
+# Use a custom KV store to handle integrity error
+THUMBNAIL_KVSTORE = 'oscar.sorl_kvstore.ConcurrentKVStore'
 
 
 # Try and import local settings which can be used to override any of the above.

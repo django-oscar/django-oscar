@@ -29,7 +29,7 @@ Features:
 
 * Vouchers (built on top of the offers framework)
 
-* Comprehensive dashboard
+* Comprehensive dashboard that replaces the Django admin completely
 
 * Support for complex order processing such split payment orders, multi-batch
   shipping, order status pipelines.
@@ -95,6 +95,7 @@ All you need to start developing an Oscar project.
    ref/settings
    ref/signals
    ref/upgrading
+   ref/deploying
    topics/translation
 
 The Oscar open-source project

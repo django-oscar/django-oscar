@@ -16,28 +16,29 @@
 
 {% block layout %}
 <div id="layout">
-    <header class="header">
+    <header class="header clearfix">
         <div class="container-fluid">
             <div class="header-content">
                 <div>
                     {% include "partials/brand.html" %}
                 </div>
-                <div>
+                <div class="hidden-phone">
                     <p><a href="https://www.verisign.com.au" target="_blank" title="https://www.verisign.com.au"><i class="verisign"></i></a></p>
                     <p>{% trans "We accept" %} <br/> <i class="credit-cards"></i></p>
                 </div>
              </div>
         </div>
-        {% block checkout-nav %}
+        {% block checkout_nav %}
         {% endblock %}
     </header>
 
     <div class="page">
         <div class="container-fluid">
             {% include 'partials/alert_messages.html' %}
-            {% block header %}{% endblock %}
+            
 
            <div class="page_inner">
+                {% block header %}{% endblock %}
                 <!-- The main nav on checkout pages contain links to modal flatpages -->
                 {% block modal %}
                     {% load flatpages %}

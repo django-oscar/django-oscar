@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 
 OSCAR_SHOP_NAME = 'Oscar'
-OSCAR_SHOP_TAGLINE = 'Domain-driven e-Commerce for Django'
+OSCAR_SHOP_TAGLINE = ''
 
 # Basket settings
 OSCAR_BASKET_COOKIE_LIFETIME = 7 * 24 * 60 * 60
@@ -56,6 +56,9 @@ OSCAR_PROMOTION_POSITIONS = (('page', 'Page'),
 # Reviews
 OSCAR_ALLOW_ANON_REVIEWS = True
 OSCAR_MODERATE_REVIEWS = False
+
+# Accounts
+OSCAR_ACCOUNTS_REDIRECT_URL = 'customer:profile-view'
 
 # This enables sending alert notifications/emails
 # instantly when products get back in stock

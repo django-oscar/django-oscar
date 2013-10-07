@@ -2,9 +2,9 @@ from decimal import Decimal as D, ROUND_DOWN, ROUND_UP
 
 from django.core import exceptions
 from django.db.models import get_model
-from django.template.defaultfilters import date
+from django.template.defaultfilters import date as date_filter
 from django.db import models
-from django.utils.timezone import now
+from django.utils.timezone import now, get_current_timezone
 from django.utils.translation import ungettext, ugettext as _
 from django.utils.importlib import import_module
 from django.core.exceptions import ValidationError
@@ -332,26 +332,27 @@ class ConditionalOffer(models.Model):
                 'description': desc,
                 'is_satisfied': True})
 
-        def format_datetime(dt):
+        def hide_time_if_zero(dt):
             # Only show hours/minutes if they have been specified
-            if dt.hour == 0 and dt.minute == 0:
-                return date(dt, settings.DATE_FORMAT)
-            return date(dt, settings.DATETIME_FORMAT)
+            localtime = dt.astimezone(get_current_timezone())
+            if localtime.hour == 0 and localtime.minute == 0:
+                return date_filter(localtime, settings.DATE_FORMAT)
+            return date_filter(localtime, settings.DATETIME_FORMAT)
 
         if self.start_datetime or self.end_datetime:
             today = now()
             if self.start_datetime and self.end_datetime:
                 desc = _("Available between %(start)s and %(end)s") % {
-                        'start': format_datetime(self.start_datetime),
-                        'end': format_datetime(self.end_datetime)}
+                        'start': hide_time_if_zero(self.start_datetime),
+                        'end': hide_time_if_zero(self.end_datetime)}
                 is_satisfied = self.start_datetime <= today <= self.end_datetime
             elif self.start_datetime:
                 desc = _("Available from %(start)s") % {
-                    'start': format_datetime(self.start_datetime)}
+                    'start': hide_time_if_zero(self.start_datetime)}
                 is_satisfied = today >= self.start_datetime
             elif self.end_datetime:
                 desc = _("Available until %(end)s") % {
-                    'end': format_datetime(self.end_datetime)}
+                    'end': hide_time_if_zero(self.end_datetime)}
                 is_satisfied = today <= self.end_datetime
             restrictions.append({
                 'description': desc,

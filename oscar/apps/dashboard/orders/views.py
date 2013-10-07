@@ -7,14 +7,14 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.loading import get_model
 from django.db.models import fields, Q, Sum, Count
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.template.defaultfilters import date as format_date
 from django.utils.datastructures import SortedDict
 from django.views.generic import ListView, DetailView, UpdateView, FormView
 from django.conf import settings
 
 from oscar.core.loading import get_class
+from oscar.core.utils import format_datetime
 from oscar.apps.dashboard.orders import forms
 from oscar.views.generic import BulkEditMixin
 from oscar.apps.dashboard.reports.csv_utils import CsvUnicodeWriter
@@ -68,7 +68,7 @@ class OrderStatsView(FormView):
         return stats
 
 
-class OrderListView(ListView, BulkEditMixin):
+class OrderListView(BulkEditMixin, ListView):
     model = Order
     context_object_name = 'orders'
     template_name = 'dashboard/orders/order_list.html'
@@ -131,13 +131,13 @@ class OrderListView(ListView, BulkEditMixin):
 
         if data['date_from'] and data['date_to']:
             desc_ctx['date_filter'] = _(" placed between %(start_date)s and %(end_date)s") % {
-                'start_date': format_date(data['date_from']),
-                'end_date': format_date(data['date_to'])}
+                'start_date': format_datetime(data['date_from']),
+                'end_date': format_datetime(data['date_to'])}
         elif data['date_from']:
-            desc_ctx['date_filter'] = _(" placed since %s") % format_date(data['date_from'])
+            desc_ctx['date_filter'] = _(" placed since %s") % format_datetime(data['date_from'])
         elif data['date_to']:
             date_to = data['date_to'] + datetime.timedelta(days=1)
-            desc_ctx['date_filter'] = _(" placed before %s") % format_date(data['date_to'])
+            desc_ctx['date_filter'] = _(" placed before %s") % format_datetime(data['date_to'])
 
         if data['voucher']:
             desc_ctx['voucher_filter'] = _(" using voucher '%s'") % data['voucher']
@@ -286,7 +286,7 @@ class OrderListView(ListView, BulkEditMixin):
             row = columns.copy()
             row['number'] = order.number
             row['value'] = order.total_incl_tax
-            row['date'] = format_date(order.date_placed, 'DATETIME_FORMAT')
+            row['date'] = format_datetime(order.date_placed, 'DATETIME_FORMAT')
             row['num_items'] = order.num_items
             row['status'] = order.status
             row['customer'] = order.email

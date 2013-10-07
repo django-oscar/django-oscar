@@ -14,10 +14,10 @@ from django.utils.translation import ugettext_lazy as _
 from treebeard.mp_tree import MP_Node
 
 from oscar.core.utils import slugify
-from oscar.core.loading import get_class
+from oscar.core.loading import get_classes
 
-BrowsableProductManager = get_class(
-    'catalogue.managers', 'BrowsableProductManager')
+ProductManager, BrowsableProductManager = get_classes(
+    'catalogue.managers', ['ProductManager', 'BrowsableProductManager'])
 
 
 class AbstractProductClass(models.Model):
@@ -307,7 +307,7 @@ class AbstractProduct(models.Model):
         verbose_name=_("Related Products"),
         help_text=_("Related items are things like different formats of the "
                     "same book.  Grouping them together allows better linking "
-                    "betwen products on the site."))
+                    "between products on the site."))
 
     recommended_products = models.ManyToManyField(
         'catalogue.Product', through='ProductRecommendation', blank=True,
@@ -334,7 +334,7 @@ class AbstractProduct(models.Model):
     #: merchants from avoiding discounting such products
     is_discountable = models.BooleanField(_("Is Discountable"), default=True)
 
-    objects = models.Manager()
+    objects = ProductManager()
     browsable = BrowsableProductManager()
 
     class Meta:
