@@ -33,47 +33,21 @@
 }
 /* review styles */
 .review {
-  border-bottom:1px solid @grayLight;
+  margin-bottom:@baseLineHeight;
   .clearfix();
   h3 {
-    margin-top:10px;
     margin-bottom: 10px;
-    font-size: @baseFontSize + 3;
     overflow: hidden;
     text-overflow: ellipsis;
     small {
       font-size: @baseFontSize - 1;
     }
   }
-  h4 {
-    border-top:1px solid @grayLighter;
-    border-bottom:1px solid @grayLight;
-    font-size: @baseFontSize + 1;
-  }
-}
-.review_content {
-  div {
-    padding:15px;
-    padding-left:0px;
-    border-right:dotted 1px @grayLight;
-  }
-}
-.review_votes {
-  div {
-    padding:15px;
-    padding-left:0px;
-    padding-bottom:0px;
-  }
-  .vote_agree {
-    float:left;
-    margin-right:10px;
-  }
   form {
-    padding-bottom:10px;
-    margin-bottom:0px;
-    input {
-/*      width:70px;*/
-    }
+    display:inline-block;
+    *display:inline;
+    zoom:1;
+    margin-bottom:0;
   }
 }
 .review_add,
