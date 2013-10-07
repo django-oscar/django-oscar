@@ -27,34 +27,22 @@
         <tbody>
             {% for line in order.lines.all %}
             <tr>
-                <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
+                <td>
+                    <p><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></p>
+                    {% iffeature "reviews" %}
+                        <a class="btn" href="{% url 'catalogue:reviews-add' line.product.slug line.product.id %}">{% trans 'Write a review' %}</a>
+                    {% endiffeature %}
+                </td>
                 <td>{{ line.est_dispatch_date|default:"-" }}</td>
                 <td>{{ line.quantity }}</td>
                 <td>{{ line.line_price_before_discounts_excl_tax|currency }}</td>
                 <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
-                <td>
+                <td width="90">
                     {% if line.product %}
                     <form id="line_form_{{ line.id }}" action="{% url 'customer:order-line' order.number line.id %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="action" value="reorder" />
-                        
-                        <div class="btn-group">
-                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                {% trans 'Options' %}
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <button class="btn-link" type="submit">{% trans 'Re-order' %}</button>
-                                </li>
-                                {% iffeature "reviews" %}
-                                <li>                           
-                                    <a href="{% url 'catalogue:reviews-add' line.product.slug line.product.id %}">{% trans 'Write a review' %}</a>
-                                </li>
-                                {% endiffeature %}
-                            </ul>
-                        </div>
-
+                        <button class="btn btn-success" type="submit">{% trans 'Re-order' %}</button>
                     </form>
                     {% else %}
                         {% trans 'Not available anymore' %}

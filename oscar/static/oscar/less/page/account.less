@@ -26,21 +26,3 @@
 #language_selector select {
   width:100px;
 }
-//buttons inside dropdowns menus to appear like links
-.dropdown-menu {
-  .btn-link {
-    display:block;
-    padding: 3px 20px;
-    width: 100%;
-    *width:160px;
-    text-align: left;
-    line-height: @baseLineHeight;
-    color: @dropdownLinkColor;
-    white-space: nowrap;
-    &:hover {
-      text-decoration: none;
-      color: @dropdownLinkColorHover;
-      #gradient > .vertical(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%));
-    }
-  }
-}
