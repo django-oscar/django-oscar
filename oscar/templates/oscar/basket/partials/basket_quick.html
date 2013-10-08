@@ -36,7 +36,7 @@
                     <small>{% trans "Total:" %} {{ request.basket.total_excl_tax|currency:request.basket.currency }}</small> 
                 {% endif %}
             </h4>
-            <p class="pull-left"><a href="{% url 'basket:summary' %}" class="btn btn-info btn-small">{% trans "View Basket" %}</a></p>
+            <p class="pull-left"><a href="{% url 'basket:summary' %}" class="btn btn-info btn-small">{% trans "View basket" %}</a></p>
             <p class="pull-right"><a href="{% url 'checkout:index' %}" class="btn btn-primary btn-small"><i class="icon-shopping-cart"></i> {% trans "Checkout" %}</a></p>
         </li>
     {% else %}

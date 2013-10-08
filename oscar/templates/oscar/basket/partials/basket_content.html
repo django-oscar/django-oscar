@@ -78,9 +78,9 @@
                             <div class="span2">
                                 <p class="price_color align-right">
                                     {% if session.price.is_tax_known %}
-                                        {{ session.price.incl_tax session.price.currency }}
+                                        {{ session.price.incl_tax|currency:session.price.currency }}
                                     {% else %}
-                                        {{ session.price.excl_tax session.price.currency }}
+                                        {{ session.price.excl_tax|currency:session.price.currency }}
                                     {% endif %}
                                 </p>
                             </div>

@@ -39,7 +39,7 @@
 
                     {% category_tree depth=2 as tree_categories %}
                     <ul class="dropdown-menu" role="menu">
-                        <li><a tabindex="-1" href="{% url 'catalogue:index' %}">{% trans "All Products" %}</a></li>
+                        <li><a tabindex="-1" href="{% url 'catalogue:index' %}">{% trans "All products" %}</a></li>
                         {% if tree_categories %}
                             <li class="divider"></li>
                             {% for tree_category, info in tree_categories %}

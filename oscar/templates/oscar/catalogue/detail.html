@@ -73,7 +73,7 @@
             <h1>{{ product.get_title }}</h1>
 
             {% block product_stock_record %}
-                {% include "catalogue/partials/stock_record.html" %}
+                {% include "catalogue/partials/stock_record.html" with verbose=1 %}
             {% endblock %}
 
             {% iffeature "reviews" %}
