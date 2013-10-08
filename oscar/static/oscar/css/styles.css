@@ -6595,37 +6595,31 @@ form:after {
 .choose-block ul:after {
   clear: both;
 }
-.choose-block ul li {
-  width: 33.33333333333333%;
-  float: left;
-}
-.choose-block ul li .default-address {
-  background-color: #eeeeee;
-}
 .choose-block .well {
   position: relative;
+  min-height: 240px;
 }
 .choose-block .well form {
-  position: relative;
-  padding-bottom: 35px;
   margin-bottom: 0;
 }
-.choose-block .well form .ship-address {
-  bottom: 0;
+.choose-block address {
+  margin-bottom: 0;
+}
+.choose-block address span:first-child {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.choose-block .btn-primary,
+.choose-block .btn-success {
   position: absolute;
+  bottom: 20px;
+  left: 20px;
 }
-.choose-block .well .remove-item {
+.choose-block .btn-remove-address {
   position: absolute;
-  bottom: 10px;
-  right: 19px;
-  margin-bottom: 0;
-}
-.choose-block .well .remove-item input {
-  margin-bottom: 0;
-}
-.choose-block .well-info.default-address {
-  background-color: #dff0d8;
-  border-color: #d6e9c6;
+  top: 20px;
+  right: 20px;
 }
 .choose-block .alert-actions {
   *zoom: 1;
