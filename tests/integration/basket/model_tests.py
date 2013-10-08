@@ -18,7 +18,7 @@ class TestAddingAProductToABasket(TestCase):
             currency='GBP',
             product=self.product, price_excl_tax=D('10.00'))
         self.stockinfo = factories.create_stockinfo(self.record)
-        self.basket.add(self.product, self.stockinfo)
+        self.basket.add(self.product)
 
     def test_creates_a_line(self):
         self.assertEqual(1, self.basket.num_lines)
@@ -30,11 +30,10 @@ class TestAddingAProductToABasket(TestCase):
 
     def test_means_another_currency_product_cannot_be_added(self):
         product = factories.create_product()
-        record = factories.create_stockrecord(
+        factories.create_stockrecord(
             currency='USD', product=product, price_excl_tax=D('20.00'))
-        stockinfo = factories.create_stockinfo(record)
         with self.assertRaises(ValueError):
-            self.basket.add(product, stockinfo)
+            self.basket.add(product)
 
 
 class TestANonEmptyBasket(TestCase):
@@ -46,7 +45,7 @@ class TestANonEmptyBasket(TestCase):
         self.record = factories.create_stockrecord(
             self.product, price_excl_tax=D('10.00'))
         self.stockinfo = factories.create_stockinfo(self.record)
-        self.basket.add(self.product, self.stockinfo, 10)
+        self.basket.add(self.product, 10)
 
     def test_can_be_flushed(self):
         self.basket.flush()
@@ -77,11 +76,10 @@ class TestANonEmptyBasket(TestCase):
         product = factories.create_product()
         record = factories.create_stockrecord(
             product, price_excl_tax=D('5.00'))
-        stockinfo = factories.create_stockinfo(record)
         option = Option.objects.create(name="Message")
         options = [{"option": option, "value": "2"}]
 
-        self.basket.add(product, stockinfo, options=options)
+        self.basket.add(product, options=options)
         self.assertEqual(0, self.basket.line_quantity(
             product, record))
         self.assertEqual(1, self.basket.line_quantity(
@@ -98,13 +96,11 @@ class TestMergingTwoBaskets(TestCase):
 
         self.main_basket = Basket()
         self.main_basket.strategy = strategy.Default()
-        self.main_basket.add(self.product, self.stockinfo,
-                             quantity=2)
+        self.main_basket.add(self.product, quantity=2)
 
         self.merge_basket = Basket()
         self.merge_basket.strategy = strategy.Default()
-        self.merge_basket.add(self.product, self.stockinfo,
-                              quantity=1)
+        self.merge_basket.add(self.product, quantity=1)
 
         self.main_basket.merge(self.merge_basket)
 

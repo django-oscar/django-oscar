@@ -148,6 +148,7 @@ class SavedBasketTests(TestCase):
         add_product(basket, product=product)
 
         saved_basket, created = Basket.saved.get_or_create(owner=user)
+        saved_basket.strategy = basket.strategy
         add_product(saved_basket, product=product)
 
         response = client.get(reverse('basket:summary'))

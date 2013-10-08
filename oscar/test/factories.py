@@ -85,9 +85,8 @@ def create_basket(empty=False):
     basket.strategy = strategy.Default()
     if not empty:
         product = create_product()
-        stockrecord = create_stockrecord(product)
-        stockinfo = create_stockinfo(stockrecord)
-        basket.add_product(product, stockinfo)
+        create_stockrecord(product)
+        basket.add_product(product)
     return basket
 
 
@@ -101,10 +100,9 @@ def create_order(number=None, basket=None, user=None, shipping_address=None,
         basket = Basket.objects.create()
         basket.strategy = strategy.Default()
         product = create_product()
-        record = create_stockrecord(
+        create_stockrecord(
             product, num_in_stock=10, price_excl_tax=D('10.00'))
-        info = create_stockinfo(record)
-        basket.add_product(product, info)
+        basket.add_product(product)
     if not basket.id:
         basket.save()
     if shipping_method is None:

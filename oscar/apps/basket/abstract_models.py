@@ -159,7 +159,7 @@ class AbstractBasket(models.Model):
         self.lines.all().delete()
         self._lines = None
 
-    def add_product(self, product, stock_info, quantity=1, options=None):
+    def add_product(self, product, quantity=1, options=None):
         """
         Add a product to the basket
 
@@ -177,6 +177,7 @@ class AbstractBasket(models.Model):
 
         # Ensure that all lines are the same currency
         price_currency = self.currency
+        stock_info = self.strategy.fetch(product)
         if price_currency and stock_info.price.currency != price_currency:
             raise ValueError((
                 "Basket lines must all have the same currency. Proposed "

@@ -35,24 +35,26 @@ class TestScales(TestCase):
 
     def test_returns_correct_weight_for_nonempty_basket(self):
         basket = factories.create_basket(empty=True)
-        record = factories.create_stockrecord(price_excl_tax=D('5.00'))
-        info = factories.create_stockinfo(record)
-        basket.add_product(
-            factories.create_product(attributes={'weight': '1'}), info)
-        basket.add_product(
-            factories.create_product(attributes={'weight': '2'}), info)
+        products = [
+            factories.create_product(attributes={'weight': '1'},
+                                     price=D('5.00')),
+            factories.create_product(attributes={'weight': '2'},
+                                     price=D('5.00'))]
+        for product in products:
+            basket.add(product)
 
         scales = Scales(attribute_code='weight')
-        self.assertEquals(1+2, scales.weigh_basket(basket))
+        self.assertEquals(1 + 2, scales.weigh_basket(basket))
 
     def test_returns_correct_weight_for_nonempty_basket_with_line_quantities(self):
         basket = factories.create_basket(empty=True)
-        record = factories.create_stockrecord(price_excl_tax=D('5.00'))
-        info = factories.create_stockinfo(record)
-        basket.add_product(factories.create_product(
-            attributes={'weight': '1'}), info, quantity=3)
-        basket.add_product(factories.create_product(
-            attributes={'weight': '2'}), info, quantity=4)
+        products = [
+            (factories.create_product(attributes={'weight': '1'},
+                                      price=D('5.00')), 3),
+            (factories.create_product(attributes={'weight': '2'},
+                                      price=D('5.00')), 4)]
+        for product, quantity in products:
+            basket.add(product, quantity=quantity)
 
         scales = Scales(attribute_code='weight')
-        self.assertEquals(1*3+2*4, scales.weigh_basket(basket))
+        self.assertEquals(1*3 + 2*4, scales.weigh_basket(basket))

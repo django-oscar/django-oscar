@@ -467,8 +467,7 @@ class OrderDetailView(PageTitleMixin, PostActionMixin, DetailView):
                     options.append({
                         'option': attribute.option,
                         'value': attribute.value})
-            info = self.request.strategy.fetch(line.product)
-            basket.add_product(line.product, info, line.quantity, options)
+            basket.add_product(line.product, line.quantity, options)
 
         if len(lines_to_add) > 0:
             self.response = HttpResponseRedirect(reverse('basket:summary'))
@@ -515,9 +514,9 @@ class OrderLineView(PostActionMixin, DetailView):
         options = []
         for attribute in line.attributes.all():
             if attribute.option:
-                options.append({'option': attribute.option, 'value': attribute.value})
-        info = self.request.strategy.fetch(line.product)
-        basket.add_product(line.product, info, line.quantity, options)
+                options.append({'option': attribute.option,
+                                'value': attribute.value})
+        basket.add_product(line.product, line.quantity, options)
 
         if line.quantity > 1:
             msg = _("%(qty)d copies of '%(product)s' have been added to your basket") % {

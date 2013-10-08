@@ -24,15 +24,13 @@ class OrderAndItemChargesTests(TestCase):
 
     def test_single_item_basket(self):
         record = factories.create_stockrecord()
-        info = factories.create_stockinfo(record)
-        self.basket.add_product(record.product, info)
+        self.basket.add_product(record.product)
         self.assertEquals(D('5.00') + D('1.00'),
                           self.method.charge_incl_tax)
 
     def test_multi_item_basket(self):
         record = factories.create_stockrecord()
-        info = factories.create_stockinfo(record)
-        self.basket.add_product(record.product, info, 7)
+        self.basket.add_product(record.product, 7)
         self.assertEquals(D('5.00') + 7*D('1.00'), self.method.charge_incl_tax)
 
 
@@ -49,8 +47,7 @@ class ZeroFreeThresholdTest(TestCase):
 
     def test_free_shipping_with_nonempty_basket(self):
         record = factories.create_stockrecord(price_excl_tax=D('5.00'))
-        info = factories.create_stockinfo(record)
-        self.basket.add_product(record.product, info)
+        self.basket.add_product(record.product)
         self.assertEquals(D('0.00'), self.method.charge_incl_tax)
 
 
@@ -65,20 +62,17 @@ class NonZeroFreeThresholdTest(TestCase):
 
     def test_basket_below_threshold(self):
         record = factories.create_stockrecord(price_excl_tax=D('5.00'))
-        info = factories.create_stockinfo(record)
-        self.basket.add_product(record.product, info)
+        self.basket.add_product(record.product)
         self.assertEquals(D('10.00'), self.method.charge_incl_tax)
 
     def test_basket_on_threshold(self):
         record = factories.create_stockrecord(price_excl_tax=D('5.00'))
-        info = factories.create_stockinfo(record)
-        self.basket.add_product(record.product, info, quantity=4)
+        self.basket.add_product(record.product, quantity=4)
         self.assertEquals(D('0.00'), self.method.charge_incl_tax)
 
     def test_basket_above_threshold(self):
         record = factories.create_stockrecord(price_excl_tax=D('5.00'))
-        info = factories.create_stockinfo(record)
-        self.basket.add_product(record.product, info, quantity=8)
+        self.basket.add_product(record.product, quantity=8)
         self.assertEquals(D('0.00'), self.method.charge_incl_tax)
 
 
