@@ -15,7 +15,7 @@
 
 {% block content %}
 
-    <form action="." method="post" class="form-stacked well well-info">
+    <form action="." method="post" class="form-stacked well">
         {% csrf_token %}
         {{ form.non_field_errors }}
 
@@ -54,7 +54,11 @@
         </div>
 
         <div class="form-actions">
-            <button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
+            <div class="row-fluid">
+                <div class="span3">
+                    <button type="submit" class="btn btn-large btn-block btn-primary">{% trans "Continue" %}</button>
+                </div>
+            </div>
         </div>
     </form>
 

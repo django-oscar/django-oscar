@@ -30,15 +30,10 @@
 .basket-items {
   border-bottom:1px solid lighten(@grayLight, 30%);
   padding:10px;
-  [class*="span"] {
-    .image_container {
-      min-height:100px;
-      width:80px;
-      float:left;
-      margin-right:15px;
-    }
+  .image_container {
+    min-height: 0;
     img {
-      max-height:100px;
+    max-height: 100px;
     }
   }
   &:nth-child(even) {
@@ -111,62 +106,15 @@
   background-color:#FDF5D9!important;
 }
 
-.checkoutNav ul li {
-    background: none repeat scroll 0 0 @grayLighter;
-    color: #FFFFFF;
-    float: left;
-    height: 30px;
-    line-height: 30px;
-    margin: 0;
-    padding: 1px 0 4px;
-    position: relative;
-    text-decoration: none;
-    h3 {
-        text-align: center;
-        font-size: 11px;
-        color: @grayLight;
-        margin: 0;
-        margin-left: 12px;
-        line-height: 30px;
+// Checkout navigation - uses navbar
+.nav-checkout {
+  text-align:center;
+  &.navbar .nav {
+    margin:0;
+  }
+  .active {
+    .navbar-text {
+      color:#fff;
     }
-}
-
-.checkoutNav ul li:after {
-    border-color: transparent transparent transparent @grayLighter;
-    border-style: solid;
-    border-width: 14px 0 15px 15px;
-    content: "";
-    float: left;
-    height: 0;
-    position: absolute;
-    right: -15px;
-    top: 0;
-    width: 0;
-}
-
-.checkoutNav ul li.active:after {
-    border-color: transparent transparent transparent #0088CC;
-}
-
-.checkoutNav ul li.active {
-    background-color: #0088CC;
-}
-
-.checkoutNav ul li:before {
-    border-color: transparent transparent transparent #fff;
-    border-style: solid;
-    border-width: 15px 0 15px 15px;
-    content: "";
-    float: left;
-    height: 0;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 0;
-}
-
-.checkoutNav ul li.active h3 {
-    color: #fff;
-    text-align: center;
-    font-size: 12px;
+  }
 }

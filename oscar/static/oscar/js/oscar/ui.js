@@ -94,8 +94,8 @@ var oscar = (function(o, $) {
         initNav: function() {
             // Initial navigation for desktop
             var $sidebar = $('aside.span3'), 
-                $browse = $('#browse > .dropdown-menu'), 
-                $browseOpen = $browse.parent().find('> button[data-toggle]');
+                $browse = $('[data-navigation="dropdown-menu"]'),
+                $browseOpen = $browse.parent().find('> a[data-toggle]');
             // Set width of nav dropdown to be same as sidebar
             $browse.css('width', $sidebar.outerWidth());
             // Remove click on browse button if menu is currently open
