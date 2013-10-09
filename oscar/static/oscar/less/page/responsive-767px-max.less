@@ -1,0 +1,80 @@
+//
+// Responsive: Landscape phone to desktop/tablet
+// --------------------------------------------------
+
+
+@media (max-width: 767px) {
+
+ 	// Remove padding here, we are setting in on page inner
+  	body {
+    	padding: 0;
+  	}
+  	// Padding for the static navbars
+  	.navbar-static-top .navbar-inner {
+  		padding:5px;
+  	}
+  	.navbar-static-top {
+  		margin-left:0;
+  		margin-right:0;
+  	}
+	// Make the navbar collase button the same height as the other navbar buttons 
+  	.btn-navbar > span {
+	  	display:inline-block;
+	}
+	.navbar.primary {
+		.btn-navbar {
+			// Lets move the browse button to the left, with basket total on right
+			&.btn-nav-collapse {
+				float:left;
+			}
+		}
+		.nav {
+			margin-top:10px;
+		}
+		input[type="search"] {
+			width:100px;
+		}
+	}
+
+	// The carousel JS hasn't initialised for mobile, great, but we should make the products visible
+	.es-carousel-wrapper,
+	.es-carousel {
+		border:none;
+		padding:0;
+	}
+	.es-carousel {
+		ul {
+			display:block;
+			margin-left: 0;
+			margin-right: 0;
+			li {
+				float:none;
+				height:auto;
+				display:block;
+			}
+		} 
+	}
+
+	// Product lists need to remove some shackles
+	.product_pod,
+	.product_pod .availability,
+	.availability {
+		text-align: left;
+	}
+	.image_container img,
+	.product_pod .star {
+		margin-left:0;
+		margin-right:0;
+	}
+	.product_pod {
+		position: relative;
+		height: auto;
+		.product_price {
+			position: static;
+			width: auto;
+			min-height: 0;
+		}
+	}
+
+
+}
