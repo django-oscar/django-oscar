@@ -57,7 +57,6 @@ product images going to be served from?
 
 * :doc:`/howto/how_to_disable_an_app`
 
-
 Pricing, stock and availability
 ===============================
 
@@ -76,6 +75,9 @@ factors, including:
   regular customers will.
 * The shipping address of the order.
 * The payment method used.
+
+Recipes:
+* :doc:`/howto/how_to_configure_tax`
 
 What availability messages are shown to customers?
 --------------------------------------------------

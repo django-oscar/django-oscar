@@ -49,16 +49,19 @@
     {% else %}
 
         {# Only one image to show #}
-
-        {% with image=product.primary_image %}
-            {% thumbnail image.original "400x400" upscale=False as thumb %}
-            {% if not image.is_missing %}
-                <a href="{{ image.original.url }}" rel="lightbox"><img src="{% static thumb.url %}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" /></a>
-            {% else %}
-                <img src="{% static thumb.url %}" alt="image02" />
-            {% endif %}
-            {% endthumbnail %}
-        {% endwith %}
+        <div class="es-carousel-wrapper">
+            <div class="rg-image single-image">
+            {% with image=product.primary_image %}
+                {% thumbnail image.original "400x400" upscale=False as thumb %}
+                {% if not image.is_missing %}
+                    <a href="{{ image.original.url }}" rel="lightbox"><img src="{% static thumb.url %}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" /></a>
+                {% else %}
+                    <img src="{% static thumb.url %}" alt="image02" />
+                {% endif %}
+                {% endthumbnail %}
+            {% endwith %}
+            </div>
+        </div>
 
     {% endif %}
 {% endwith %}

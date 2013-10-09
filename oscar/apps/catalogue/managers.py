@@ -13,7 +13,7 @@ class ProductManager(models.Manager):
             'variants',
             'product_options',
             'product_class__options',
-            'stockrecord',
+            'stockrecords',
             'images',
             ).all()
 

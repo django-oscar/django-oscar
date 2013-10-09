@@ -13,6 +13,12 @@ Abstract models
 .. automodule:: oscar.apps.customer.abstract_models
     :members:
 
+Forms
+-----
+
+.. automodule:: oscar.apps.customer.forms
+    :members:
+
 Views
 -----
 

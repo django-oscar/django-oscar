@@ -2,17 +2,11 @@
 Payment
 =======
 
-The payment app acts as a facade for one or more payment gateways.
-
+The payment app contains models that capture how orders are paid for.  It does
+not have any views.
 
 Abstract models
 ---------------
 
 .. automodule:: oscar.apps.payment.abstract_models
-    :members:
-
-Views
------
-
-.. automodule:: oscar.apps.payment.views
     :members:

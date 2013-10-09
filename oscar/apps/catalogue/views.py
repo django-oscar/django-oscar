@@ -103,7 +103,7 @@ def get_product_base_queryset():
     """
     warnings.warn(("`get_product_base_queryset` is deprecated in favour of"
                    "`base_queryset` on Product's managers. It will be removed"
-                   "in Oscar 0.7."))
+                   "in Oscar 0.7."), DeprecationWarning)
     return Product.browsable.base_queryset()
 
 

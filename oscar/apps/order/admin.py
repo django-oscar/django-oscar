@@ -32,7 +32,7 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 class LineAdmin(admin.ModelAdmin):
-    list_display = ('order', 'product', 'quantity')
+    list_display = ('order', 'product', 'stockrecord', 'quantity')
 
 
 class LinePriceAdmin(admin.ModelAdmin):

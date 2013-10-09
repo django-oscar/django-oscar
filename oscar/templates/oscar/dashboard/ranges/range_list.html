@@ -1,6 +1,5 @@
 {% extends 'dashboard/layout.html' %}
 {% load url from future %}
-{% load currency_filters %}
 {% load i18n %}
 
 {% block title %}
@@ -40,7 +39,7 @@
             <tbody>
                 {% for range in ranges %}
                     <tr>
-                        <td>{{ range.name }}</td>
+                        <td><a href="{% url 'dashboard:range-update' range.id %}">{{ range.name }}</a></td>
                         <td>{{ range.num_products|default:"-" }}</td>
                         <td>{{ range.date_created }}</td>
                         <td>

@@ -154,7 +154,6 @@ MIDDLEWARE_CLASSES = (
     #'oscar.profiling.middleware.ProfileMiddleware',
 )
 
-
 ROOT_URLCONF = 'urls'
 
 # Add another path to Oscar's templates.  This allows templates to be
@@ -239,7 +238,7 @@ LOGGING = {
         },
         'oscar.checkout': {
             'handlers': ['console', 'checkout_file'],
-            'propagate': True,
+            'propagate': False,
             'level': 'INFO',
         },
         'oscar.catalogue.import': {

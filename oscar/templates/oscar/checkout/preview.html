@@ -1,5 +1,4 @@
 {% extends "checkout/checkout.html" %}
-
 {% load url from future %}
 {% load i18n %}
 
@@ -9,6 +8,10 @@
 
 {% block checkout_nav %}
     {% include 'checkout/nav.html' with step=4 %}
+{% endblock %}
+
+{% block checkout_title %}
+    {% trans "Preview order" %}
 {% endblock %}
 
 {% block place_order %}

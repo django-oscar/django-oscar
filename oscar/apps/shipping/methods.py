@@ -2,21 +2,14 @@ from decimal import Decimal as D
 
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.shipping.base import ShippingMethod
+from oscar.apps.shipping.base import Base
 
 
-class Free(ShippingMethod):
-    """
-    Simple method for free shipping
-    """
+class Free(Base):
     code = 'free-shipping'
     name = _('Free shipping')
-
-    def basket_charge_incl_tax(self):
-        return D('0.00')
-
-    def basket_charge_excl_tax(self):
-        return D('0.00')
+    is_tax_known = True
+    charge_incl_tax = charge_excl_tax = D('0.00')
 
 
 class NoShippingRequired(Free):
@@ -28,24 +21,18 @@ class NoShippingRequired(Free):
     name = _('No shipping required')
 
 
-class FixedPrice(ShippingMethod):
+class FixedPrice(Base):
     code = 'fixed-price-shipping'
     name = _('Fixed price shipping')
 
-    def __init__(self, charge_incl_tax, charge_excl_tax=None):
-        self.charge_incl_tax = charge_incl_tax
-        if not charge_excl_tax:
-            charge_excl_tax = charge_incl_tax
+    def __init__(self, charge_excl_tax, charge_incl_tax=None):
         self.charge_excl_tax = charge_excl_tax
-
-    def basket_charge_incl_tax(self):
-        return self.charge_incl_tax
-
-    def basket_charge_excl_tax(self):
-        return self.charge_excl_tax
+        if charge_incl_tax is not None:
+            self.charge_incl_tax = charge_incl_tax
+            self.is_tax_known = True
 
 
-class OfferDiscount(ShippingMethod):
+class OfferDiscount(Base):
     """
     Wrapper class that applies a discount to an existing shipping method's
     charges
@@ -81,7 +68,7 @@ class OfferDiscount(ShippingMethod):
     def get_discount(self):
         # Return a 'discount' dictionary in the same form as that used by the
         # OfferApplications class
-        parent_charge = self.method.basket_charge_incl_tax()
+        parent_charge = self.method.charge_incl_tax
         return {
             'offer': self.offer,
             'result': None,
@@ -91,23 +78,31 @@ class OfferDiscount(ShippingMethod):
             'freq': 1,
             'discount': self.offer.shipping_discount(parent_charge)}
 
-    def basket_charge_incl_tax_before_discount(self):
-        return self.method.basket_charge_incl_tax()
+    @property
+    def charge_incl_tax_before_discount(self):
+        return self.method.charge_incl_tax
 
-    def basket_charge_excl_tax_before_discount(self):
-        return self.method.basket_charge_excl_tax()
+    @property
+    def charge_excl_tax_before_discount(self):
+        return self.method.charge_excl_tax
 
-    def basket_charge_incl_tax(self):
-        parent_charge = self.method.basket_charge_incl_tax()
+    @property
+    def is_tax_known(self):
+        return self.method.is_tax_known
+
+    @property
+    def charge_incl_tax(self):
+        parent_charge = self.method.charge_incl_tax
         discount = self.offer.shipping_discount(parent_charge)
         return parent_charge - discount
 
-    def basket_charge_excl_tax(self):
+    @property
+    def charge_excl_tax(self):
         # Adjust tax exclusive rate using the ratio of the two tax inclusive
         # charges.
-        parent_charge_excl_tax = self.method.basket_charge_excl_tax()
-        parent_charge_incl_tax = self.method.basket_charge_incl_tax()
-        charge_incl_tax = self.basket_charge_incl_tax()
+        parent_charge_excl_tax = self.method.charge_excl_tax
+        parent_charge_incl_tax = self.method.charge_incl_tax
+        charge_incl_tax = self.charge_incl_tax
         if parent_charge_incl_tax == 0:
             return D('0.00')
         return parent_charge_excl_tax * (charge_incl_tax /

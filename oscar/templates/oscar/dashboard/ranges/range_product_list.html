@@ -1,6 +1,5 @@
 {% extends 'dashboard/layout.html' %}
 {% load url from future %}
-{% load currency_filters %}
 {% load i18n %}
 
 {% block body_class %}create-page{% endblock %}
@@ -93,9 +92,6 @@
                         <th></th>
                         <th>{% trans "UPC" %}</th>
                         <th>{% trans "Title" %}</th>
-                        <th>{% trans "Partner" %}</th>
-                        <th>{% trans "Partner SKU" %}</th>
-                        <th>{% trans "Price" %}</th>
                         <th>{% trans "Is product discountable?" %}</th>
                         <th></th>
                     </tr>
@@ -105,36 +101,33 @@
                                 <input type="checkbox" name="selected_product" value="{{ product.id }}" />
                             </td>
                             <td>{{ product.upc|default:"-" }}</td>
-                            <td>{{ product.get_title }}</td>
-                            <td>{{ product.stockrecord.partner.display_name }}</td>
-                            <td>{{ product.stockrecord.partner_sku }}</td>
-                            <td>{{ product.stockrecord.price_incl_tax|currency }}</td>
-                        <td>{% if product.is_discountable %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>
-                        <td>
-                            <a class="btn btn-danger" href="#" data-behaviours="remove">{% trans "Remove" %}</a>
-                        </td>
-                    </tr>
-                {% endfor %}
+                            <td><a href="{% url 'dashboard:catalogue-product' product.id %}">{{ product.get_title }}</a></td>
+                            <td>{% if product.is_discountable %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>
+                            <td>
+                                <a class="btn btn-danger" href="#" data-behaviours="remove">{% trans "Remove" %}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+                {% include "partials/pagination.html" %}
+            </form>
+
+        {% else %}
+            <table class="table table-striped table-bordered table-hover">
+                <caption>
+                    {% trans "Products in Range" %}
+                </caption>
+                <tr><td>{% trans "No products found." %}</td></tr>
             </table>
+        {% endif %}
 
-            {% include "partials/pagination.html" %}
-        </form>
+        <div class="form-actions">
+            <a href="{% url 'dashboard:range-update' range.id %}" class="btn btn-large btn-primary">{% trans "Edit range" %}</a> {% trans "or" %}
+            <a href="{% url 'dashboard:range-list' %}" class="">{% trans "return to range list" %}</a>
+        </div>
 
-    {% else %}
-        <table class="table table-striped table-bordered table-hover">
-            <caption>
-                {% trans "Products in Range" %}
-            </caption>
-            <tr><td>{% trans "No products found." %}</td></tr>
-        </table>
-    {% endif %}
-
-    <div class="form-actions">
-        <a href="{% url 'dashboard:range-update' range.id %}" class="btn btn-large btn-primary">{% trans "Edit range" %}</a> {% trans "or" %}
-        <a href="{% url 'dashboard:range-list' %}" class="">{% trans "return to range list" %}</a>
     </div>
-
-</div>
 
 {% endblock dashboard_content %}
 

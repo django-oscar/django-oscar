@@ -4,12 +4,14 @@ from django.core import mail
 from django.conf import settings
 from django.template import loader, Context
 from django.contrib.sites.models import Site
-from django.db.models import get_model
+from django.db.models import get_model, Max
 
 from oscar.apps.customer.notifications import services
+from oscar.core.loading import get_class
 
 ProductAlert = get_model('customer', 'ProductAlert')
 Product = get_model('catalogue', 'Product')
+Selector = get_class('partner.strategy', 'Selector')
 
 logger = logging.getLogger(__file__)
 
@@ -23,8 +25,7 @@ def send_alerts():
     ).distinct()
     logger.info("Found %d products with active alerts", products.count())
     for product in products:
-        if product.is_available_to_buy:
-            send_product_alerts(product)
+        send_product_alerts(product)
 
 
 def send_alert_confirmation(alert):
@@ -51,10 +52,9 @@ def send_product_alerts(product):
     if the product is back in stock. Add a little 'hurry' note if the
     amount of in-stock items is less then the number of notifications.
     """
-    if not product.has_stockrecord:
-        return
-    num_in_stock = product.stockrecord.num_in_stock
-    if num_in_stock == 0:
+    stockrecords = product.stockrecords.all()
+    num_stockrecords = len(stockrecords)
+    if not num_stockrecords:
         return
 
     logger.info("Sending alerts for '%s'", product)
@@ -62,7 +62,15 @@ def send_product_alerts(product):
         product=product,
         status=ProductAlert.ACTIVE,
     )
-    hurry_mode = alerts.count() < product.stockrecord.num_in_stock
+
+    # Determine 'hurry mode'
+    num_alerts = alerts.count()
+    if num_stockrecords == 1:
+        num_in_stock = stockrecords[0].num_in_stock
+        hurry_mode = num_alerts < num_in_stock
+    else:
+        result = stockrecords.aggregate(max_in_stock=Max('num_in_stock'))
+        hurry_mode = num_alerts < result['max_in_stock']
 
     # Load templates
     message_tpl = loader.get_template('customer/alerts/message.html')
@@ -71,7 +79,14 @@ def send_product_alerts(product):
 
     emails = []
     num_notifications = 0
+    selector = Selector()
     for alert in alerts:
+        # Check if the product is available to this user
+        strategy = selector.strategy(user=alert.user)
+        data = strategy.fetch(product)
+        if not data.availability.is_available_to_buy:
+            continue
+
         ctx = Context({
             'alert': alert,
             'site': Site.objects.get_current(),

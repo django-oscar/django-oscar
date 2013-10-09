@@ -1,9 +1,10 @@
+from decimal import Decimal as D
+
 from django.test import TestCase
-from django_dynamic_fixture import G
 
 from oscar.apps.offer import models
-from oscar.apps.basket.models import Basket
-from oscar.test.factories import create_product
+from oscar.test.basket import add_product, add_products
+from oscar.test import factories
 
 
 class TestACountConditionWithPercentageDiscount(TestCase):
@@ -27,9 +28,8 @@ class TestACountConditionWithPercentageDiscount(TestCase):
             benefit=benefit)
 
     def test_consumes_correct_number_of_products_for_3_product_basket(self):
-        basket = G(Basket)
-        for product in [create_product()]:
-            basket.add_product(product, 3)
+        basket = factories.create_basket(empty=True)
+        add_product(basket, D('1'), 3)
 
         self.assertTrue(self.offer.is_condition_satisfied(basket))
         discount = self.offer.apply_benefit(basket)
@@ -39,9 +39,8 @@ class TestACountConditionWithPercentageDiscount(TestCase):
         self.assertFalse(self.offer.is_condition_satisfied(basket))
 
     def test_consumes_correct_number_of_products_for_4_product_basket(self):
-        basket = G(Basket)
-        for product in [create_product(), create_product()]:
-            basket.add_product(product, 2)
+        basket = factories.create_basket(empty=True)
+        add_products(basket, [(D('1'), 2), (D('1'), 2)])
 
         self.assertTrue(self.offer.is_condition_satisfied(basket))
         discount = self.offer.apply_benefit(basket)
@@ -51,9 +50,8 @@ class TestACountConditionWithPercentageDiscount(TestCase):
         self.assertFalse(self.offer.is_condition_satisfied(basket))
 
     def test_consumes_correct_number_of_products_for_6_product_basket(self):
-        basket = G(Basket)
-        for product in [create_product(), create_product()]:
-            basket.add_product(product, 3)
+        basket = factories.create_basket(empty=True)
+        add_products(basket, [(D('1'), 3), (D('1'), 3)])
 
         # First application
         discount = self.offer.apply_benefit(basket)

@@ -14,12 +14,13 @@ from oscar.apps.order.models import Order
 from oscar.apps.address.models import Country
 from oscar.apps.voucher.models import Voucher
 from oscar.apps.offer.models import ConditionalOffer
+from oscar.test.basket import add_product
 
 
 class CheckoutMixin(object):
 
     def add_product_to_basket(self):
-        product = create_product(price=D('12.00'))
+        product = create_product(price=D('12.00'), num_in_stock=10)
         self.client.post(reverse('basket:add'), {'product_id': product.id,
                                                  'quantity': 1})
 
@@ -91,7 +92,7 @@ class EnabledAnonymousCheckoutViewsTests(ClientTestCase, CheckoutMixin):
         return import_module(settings.ROOT_URLCONF)
 
     def add_product_to_basket(self):
-        product = create_product(price=D('12.00'))
+        product = create_product(price=D('12.00'), num_in_stock=10)
         self.client.post(reverse('basket:add'), {'product_id': product.id,
                                                  'quantity': 1})
 
@@ -251,11 +252,9 @@ class TestPaymentDetailsView(ClientTestCase, CheckoutMixin):
 class TestOrderPlacement(ClientTestCase, CheckoutMixin):
 
     def setUp(self):
-        Order.objects.all().delete()
-
         super(TestOrderPlacement, self).setUp()
         self.basket = Basket.objects.create(owner=self.user)
-        self.basket.add_product(create_product(price=D('12.00')))
+        add_product(self.basket, D('12.00'))
 
         self.complete_shipping_address()
         self.complete_shipping_method()

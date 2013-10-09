@@ -432,15 +432,14 @@ class OrderDetailView(PageTitleMixin, PostActionMixin, DetailView):
 
         This puts the contents of the previous order into your basket
         """
-
         # Collect lines to be added to the basket and any warnings for lines
         # that are no longer available.
         basket = self.request.basket
         lines_to_add = []
         warnings = []
         for line in order.lines.all():
-            is_available, reason = line.is_available_to_reorder(basket,
-                self.request.user)
+            is_available, reason = line.is_available_to_reorder(
+                basket, self.request.strategy)
             if is_available:
                 lines_to_add.append(line)
             else:
@@ -501,7 +500,7 @@ class OrderLineView(PostActionMixin, DetailView):
         basket = self.request.basket
 
         line_available_to_reorder, reason = line.is_available_to_reorder(
-            basket, self.request.user)
+            basket, self.request.strategy)
 
         if not line_available_to_reorder:
             messages.warning(self.request, reason)
@@ -515,7 +514,8 @@ class OrderLineView(PostActionMixin, DetailView):
         options = []
         for attribute in line.attributes.all():
             if attribute.option:
-                options.append({'option': attribute.option, 'value': attribute.value})
+                options.append({'option': attribute.option,
+                                'value': attribute.value})
         basket.add_product(line.product, line.quantity, options)
 
         if line.quantity > 1:

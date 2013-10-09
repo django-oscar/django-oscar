@@ -62,4 +62,3 @@ class UppercaseCharField(CharField):
             return val.upper()
         else:
             return val
-

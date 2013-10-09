@@ -67,17 +67,35 @@ class ProductSearchForm(forms.Form):
 class StockRecordForm(forms.ModelForm):
 
     def __init__(self, product_class, *args, **kwargs):
-        self.product_class = product_class
         super(StockRecordForm, self).__init__(*args, **kwargs)
 
         # If not tracking stock, we hide the fields
-        if not self.product_class.track_stock:
+        if not product_class.track_stock:
             del self.fields['num_in_stock']
             del self.fields['low_stock_threshold']
+        else:
+            self.fields['price_excl_tax'].required = True
+            self.fields['num_in_stock'].required = True
 
     class Meta:
         model = StockRecord
-        exclude = ('product', 'num_allocated', 'price_currency')
+        exclude = ('product', 'num_allocated')
+
+
+BaseStockRecordFormSet = inlineformset_factory(
+    Product, StockRecord, form=StockRecordForm, extra=1)
+
+
+class StockRecordFormSet(BaseStockRecordFormSet):
+
+    def __init__(self, product_class, *args, **kwargs):
+        self.product_class = product_class
+        super(StockRecordFormSet, self).__init__(*args, **kwargs)
+
+    def _construct_form(self, i, **kwargs):
+        kwargs['product_class'] = self.product_class
+        return super(StockRecordFormSet, self)._construct_form(
+            i, **kwargs)
 
 
 def _attr_text_field(attribute):
