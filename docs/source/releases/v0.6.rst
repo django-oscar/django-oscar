@@ -24,20 +24,32 @@ Overview
 The biggest change in Oscar 0.6 is the reworking of `pricing and availability`_, which 
 builds on top of the change to allow `multiple stockrecords per product`_.  The
 charge is largely backwards compatible with the old system of "partner
-wrappers" but it is recommended to upgrade to the new system.
+wrappers" but it is recommended to upgrade to the new system.  Support for
+partner wrappers will be removed for Oscar 0.7.
 
-Oscar now supports Django 1.5 and its custom user model.  This has been only
+`Oscar now supports Django 1.5`_ and its custom user model.  This has been only
 tested in the context of starting a new Oscar project with a custom model.
 Switching from a separate "profile" model to the new system is not recommended
 at this point.
 
 Other notable new features include:
 
-* A feature-rich demo site that illustrates how Oscar can be customised.  It
-  also uses several of Oscar's many extensions, such as django-oscar-paypal_,
-  django-oscar-datacash_ and django-oscar-stores_.
+* A feature-rich `demo site`_ that illustrates how Oscar can be customised.  It
+  uses several of Oscar's many extensions, such as django-oscar-paypal_,
+  django-oscar-datacash_ and django-oscar-stores_.  It is intended as a
+  reference site for Oscar.
 
-* Partners can now have addresses.
+* `Partners can now have addresses`_.
+
+* `Customer wishlists`_
+
+* `New helper methods`_ in the ``EventHandler`` class for order processing
+
+.. _`Oscar now supports Django 1.5`: `Django 1.5 and customer user model support`_
+.. _`demo site`: `Demo site`_
+.. _`Partners can now have addresses`: `Partner addresses`_
+.. _`Customer wishlists`: `Wishlists`_
+.. _`New helper methods`: `Order processing changes`_
 
 What's new in Oscar 0.6?
 ========================
@@ -48,7 +60,13 @@ Multiple stockrecords per product
 Products can now have multiple stockrecords rather than just one.  This allows a
 product to be fulfilled by one of several partners.  This is a key requirement
 for large-scale e-commerce sites selling millions of products, that use many
-different fulfillment partners.
+different fulfillment partners.  It also allows products to be sold in 
+different currencies.
+
+This changes means several APIs are `deprecated`_ as they assume there is only
+one stockrecord per product.
+
+.. _`deprecated`: `Features deprecated in 0.6`_
 
 Pricing and availability
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -64,7 +82,8 @@ responsible for returning availability details and prices for a particular
 product.  New classes known as pricing and availabiliy policies are used to
 encapsulate this information.
 
-These changes allows Oscar to support many advanced scenarios such as:
+These changes allows Oscar to dynamically choose which stockrecord to use for a
+given customer and product.  This enables several advanced features such as:
 
 * Fulfilling a product from the partner that offers the best margin.
 * Fulfilling a product from the partner geographically closest to the customer.
@@ -73,16 +92,17 @@ These changes allows Oscar to support many advanced scenarios such as:
   tax)
 * Having different pricing policies for different customers. 
 
-There's a great deal of flexibility.
+It also provides a customisation layer for custom price and availability logic.  
+There's a great deal of flexibility.  See the guide to 
+:doc:`prices and availability </topics/prices_and_availability>`
+for more information.
 
 Payment models have abstract versions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The payment models have been split into abstract- and concrete versions.  This
-brings them inline with other Oscar apps and allows them to be customised.
-
-Search
-~~~~~~
+The :doc:`payment models </ref/apps/payment>` have been split into abstract- and
+concrete versions.  This brings them inline with other Oscar apps and allows
+them to be customised.
 
 Wishlists
 ~~~~~~~~~
@@ -91,8 +111,8 @@ Wishlist functionality has finally landed.  Signed in customers are now able to
 create multiple named wishlists and add products to them.  There is a new
 section in the customer's account where wishlists can be managed.
 
-Multi-partner dashboard
-~~~~~~~~~~~~~~~~~~~~~~~
+Partner addresses
+~~~~~~~~~~~~~~~~~
 
 Partners can now have addresses.  These are useful for US sales tax where tax
 calculations need to know the origin of a product being shipped.  The dashboard
@@ -166,6 +186,9 @@ Minor changes
 Backwards incompatible changes in 0.6
 =====================================
 
+Signature changes
+~~~~~~~~~~~~~~~~~
+
 Several classes and functions have had signature changes:
 
 * The ``basket_form`` templatetag has been altered to take the ``request`` as the
@@ -187,23 +210,64 @@ Address model changes
 * The ``UserAddress.salutation`` and ``UserAddress.name`` methods are now
   properties.
 
-* ``Country`` model's `is_highlighted` column is now integer field to allow
-  fine-grained country selection. 0 = no highlighting
+* The ``Country`` model's `is_highlighted` column is now an integer field to allow
+  fine-grained country selection. 
 
 Renamed templates
 ~~~~~~~~~~~~~~~~~
 
-* The template ``customer/email/email.html`` has been renamed to
-  ``customer/email/email_detail.html``.
+Some templates have been renamed for greater consistency.  If you are overriding
+these templates, ensure you rename your corresponding project templates.
 
-* The template ``customer/orders/order.html`` has been renamed to
-  ``customer/orders/order_detail.html``.
+Many of the profile templates have been reorganised:
+
+* ``customer/address_list.html`` is renamed to
+  ``customer/address/address_list.html``
+
+* ``customer/address_form.html`` is renamed to
+  ``customer/address/address_form.html``
+
+* ``customer/address_delete.html`` is renamed to
+  ``customer/address/address_delete.html``
+
+* ``customer/email.html`` is renamed to
+  ``customer/email/email_detail.html``
+
+* ``customer/email_list.html`` is renamed to
+  ``customer/email/email_list.html``
+
+* ``customer/order.html`` is renamed to
+  ``customer/order/order_detail.html``
+
+* ``customer/order_list.html`` is renamed to
+  ``customer/order/order_list.html``
+
+* ``customer/profile.html`` is renamed to
+  ``customer/profile/profile.html``
+
+* ``customer/profile_form.html`` is renamed to
+  ``customer/profile/profile_form.html``
+
+* ``customer/change_password_form.html`` is renamed to
+  ``customer/profile/change_password_form.html``
+
+* ``partials/nav_profile.html`` has been removed.
 
 Template block changes
 ~~~~~~~~~~~~~~~~~~~~~~
 
 * The template ``dashboard/orders/order_detail.html`` has been reorganised.  The
   ``tab_transactions`` block has been renamed to ``payment_transactions``.
+
+* In ``checkout/checkout.html``, the ``checkout-nav`` block has been renamed
+  ``checkout_nav``.
+
+Account templates
+~~~~~~~~~~~~~~~~~
+
+The templates for the customer account section have been reworked so that the
+profile page is much simpler.  Content is no longer loaded into tabs on a single
+page; instead, separate pages are used to each section.
 
 Upgrading notes
 ===============
@@ -239,8 +303,6 @@ Order app:
 URLs
 ~~~~
 
-The named search URL ``search_default`` is renamed to ``search-default`` for
-consistency with the rest of Oscar.
 
 Migrations
 ~~~~~~~~~~
