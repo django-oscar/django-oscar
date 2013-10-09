@@ -45,10 +45,14 @@
             <span class="control-group">
                 <label for="id_promotion_type">{% trans "Create a new product of type" %}</label>
                 <select id="id_promotion_type" name="product_class">
-                    <option> -- {% trans "Choose type" %} --</option>
-                    {% for product_class in product_classes %}
-                        <option value="{{ product_class.id }}">{{ product_class.name }}</option>
-                    {% endfor %}
+                    {% if product_classes.count == 1 %}
+                         <option value="{{ product_classes.0.id }}">{{ product_classes.0.name }}</option>
+                    {% else %}
+                         <option> -- {% trans "Choose type" %} --</option>
+                        {% for product_class in product_classes %}
+                            <option value="{{ product_class.id }}">{{ product_class.name }}</option>
+                        {% endfor %}
+                    {% endif %}
                 </select>
             </span>
             <button class="btn btn-primary" type="submit"><i class="icon-plus"></i> {% trans "New Product" %}</button>
