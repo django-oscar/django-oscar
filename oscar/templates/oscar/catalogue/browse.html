@@ -12,6 +12,10 @@
     {{ summary }} | {{ block.super }}
 {% endblock %}
 
+{% block description %}
+    {{ category.description }}
+{% endblock %}
+
 {% block headertext %}{{ summary }}{% endblock %}
 
 {% block breadcrumbs %}
