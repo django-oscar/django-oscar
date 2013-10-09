@@ -8,6 +8,11 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding field 'Order.currency'
+        db.add_column(u'order_order', 'currency',
+                      self.gf('django.db.models.fields.CharField')(default='GBP', max_length=12),
+                      keep_default=False)
+
         # Adding field 'Line.stockrecord'
         db.add_column(u'order_line', 'stockrecord',
                       self.gf('django.db.models.fields.related.ForeignKey')(to=orm['partner.StockRecord'], null=True, on_delete=models.SET_NULL, blank=True),
@@ -15,6 +20,9 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
+        # Deleting field 'Order.currency'
+        db.delete_column(u'order_order', 'currency')
+
         # Deleting field 'Line.stockrecord'
         db.delete_column(u'order_line', 'stockrecord_id')
 
@@ -261,6 +269,7 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "['-date_placed']", 'object_name': 'Order'},
             'basket_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'billing_address': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['order.BillingAddress']", 'null': 'True', 'blank': 'True'}),
+            'currency': ('django.db.models.fields.CharField', [], {'default': "'GBP'", 'max_length': '12'}),
             'date_placed': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
             'guest_email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -317,11 +326,10 @@ class Migration(SchemaMigration):
             'quantity': ('django.db.models.fields.PositiveIntegerField', [], {})
         },
         u'order.paymenteventtype': {
-            'Meta': {'ordering': "('sequence_number',)", 'object_name': 'PaymentEventType'},
+            'Meta': {'ordering': "('name',)", 'object_name': 'PaymentEventType'},
             'code': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '128'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'}),
-            'sequence_number': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'})
+            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'})
         },
         u'order.shippingaddress': {
             'Meta': {'object_name': 'ShippingAddress'},
@@ -357,12 +365,10 @@ class Migration(SchemaMigration):
             'quantity': ('django.db.models.fields.PositiveIntegerField', [], {})
         },
         u'order.shippingeventtype': {
-            'Meta': {'ordering': "('sequence_number',)", 'object_name': 'ShippingEventType'},
+            'Meta': {'ordering': "('name',)", 'object_name': 'ShippingEventType'},
             'code': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '128'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_required': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'}),
-            'sequence_number': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'})
+            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'})
         },
         u'partner.partner': {
             'Meta': {'object_name': 'Partner'},
