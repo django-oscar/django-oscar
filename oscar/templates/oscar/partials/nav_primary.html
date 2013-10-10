@@ -17,11 +17,11 @@
             <strong>{% trans "Basket" %}
                 {% if not request.basket.is_empty %}
                     {% if request.basket.is_tax_known %}
-                        {% blocktrans with total=basket.total_incl_tax|currency:basket.currency %}
+                        {% blocktrans with total=request.basket.total_incl_tax|currency:request.basket.currency %}
                             Total: {{ total }}
                         {% endblocktrans %}
                     {% else %}
-                        {% blocktrans with total=basket.total_excl_tax|currency:basket.currency %}
+                        {% blocktrans with total=request.basket.total_excl_tax|currency:request.basket.currency %}
                             Total: {{ total }}
                         {% endblocktrans %}
                     {% endif %}
