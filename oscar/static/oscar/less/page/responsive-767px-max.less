@@ -2,6 +2,15 @@
 // Responsive: Landscape phone to desktop/tablet
 // --------------------------------------------------
 
+// For sreens that are on the money with the page width, lets add some space
+@media (max-width: @oscarpagewidth) {
+	.header {
+	  .page_inner {
+	    padding-left:20px;
+	    padding-right:20px;
+	  }
+	}
+}
 
 @media (max-width: 767px) {
 
@@ -9,6 +18,13 @@
   	body {
     	padding: 0;
   	}
+
+	// Utilities
+	.align-right,
+	.align-center {
+		text-align: left;
+	}
+
   	// Make the brand a little more significant
   	.header h1 {
   		text-align: center;

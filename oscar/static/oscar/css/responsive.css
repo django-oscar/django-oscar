@@ -1086,9 +1086,19 @@
     overflow: visible !important;
   }
 }
+@media (max-width: 960px) {
+  .header .page_inner {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 @media (max-width: 767px) {
   body {
     padding: 0;
+  }
+  .align-right,
+  .align-center {
+    text-align: left;
   }
   .header h1 {
     text-align: center;
@@ -1130,7 +1140,8 @@
   }
   .product_pod,
   .product_pod .availability,
-  .availability {
+  .availability,
+  .rg-image {
     text-align: left;
   }
   .image_container img,

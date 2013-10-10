@@ -6552,13 +6552,10 @@ form:after {
   border-bottom: 1px solid #e5e5e5;
   padding: 10px;
 }
-.basket-items [class*="span"] .image_container {
-  min-height: 100px;
-  width: 80px;
-  float: left;
-  margin-right: 15px;
+.basket-items .image_container {
+  min-height: 0;
 }
-.basket-items [class*="span"] img {
+.basket-items .image_container img {
   max-height: 100px;
 }
 .basket-items:nth-child(even) {
@@ -6643,60 +6640,6 @@ form:after {
 }
 .total {
   background-color: #FDF5D9!important;
-}
-.checkoutNav ul li {
-  background: none repeat scroll 0 0 #eeeeee;
-  color: #FFFFFF;
-  float: left;
-  height: 30px;
-  line-height: 30px;
-  margin: 0;
-  padding: 1px 0 4px;
-  position: relative;
-  text-decoration: none;
-}
-.checkoutNav ul li h3 {
-  text-align: center;
-  font-size: 11px;
-  color: #999999;
-  margin: 0;
-  margin-left: 12px;
-  line-height: 30px;
-}
-.checkoutNav ul li:after {
-  border-color: transparent transparent transparent #eeeeee;
-  border-style: solid;
-  border-width: 14px 0 15px 15px;
-  content: "";
-  float: left;
-  height: 0;
-  position: absolute;
-  right: -15px;
-  top: 0;
-  width: 0;
-}
-.checkoutNav ul li.active:after {
-  border-color: transparent transparent transparent #0088CC;
-}
-.checkoutNav ul li.active {
-  background-color: #0088CC;
-}
-.checkoutNav ul li:before {
-  border-color: transparent transparent transparent #fff;
-  border-style: solid;
-  border-width: 15px 0 15px 15px;
-  content: "";
-  float: left;
-  height: 0;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 0;
-}
-.checkoutNav ul li.active h3 {
-  color: #fff;
-  text-align: center;
-  font-size: 12px;
 }
 .nav-checkout {
   text-align: center;

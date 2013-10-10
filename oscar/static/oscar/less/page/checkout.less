@@ -30,15 +30,10 @@
 .basket-items {
   border-bottom:1px solid lighten(@grayLight, 30%);
   padding:10px;
-  [class*="span"] {
-    .image_container {
-      min-height:100px;
-      width:80px;
-      float:left;
-      margin-right:15px;
-    }
+  .image_container {
+    min-height: 0;
     img {
-      max-height:100px;
+    max-height: 100px;
     }
   }
   &:nth-child(even) {
