@@ -11,7 +11,7 @@
             <span class="icon-bar"></span>
         </a>
 
-        <div class="nav-collapse account-collapse">
+        <div class="nav-collapse account-collapse collapse">
             <div class="container-fluid">
                 {% if LANGUAGES|length > 1 %}
                     <form id="language_selector" class="pull-left navbar-form" action="/i18n/setlang/" method="post">
@@ -39,7 +39,7 @@
                             {% endif %}</a>
                         </li>
                         {% if user.is_staff %}
-                            <li><a href="{% url 'dashboard:index' %}"><i class="icon-list-ul"></i> {% trans "Dashboard" %}</a></li>
+                            <li class="hidden-phone"><a href="{% url 'dashboard:index' %}"><i class="icon-list-ul"></i> {% trans "Dashboard" %}</a></li>
                         {% endif %}
                         <li><a href="{% url 'customer:logout' %}"><i class="icon-signout"></i> {% trans "Logout" %}</a></li>
                     {% else %}

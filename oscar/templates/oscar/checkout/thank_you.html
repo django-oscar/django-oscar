@@ -9,7 +9,15 @@
     {% trans "Confirmation of order" %} {{ order.number }} | {{ block.super }}
 {% endblock title %}
 
-{% block checkout_nav %}{% endblock %}
+{% block checkout_nav %}
+<div class="navbar navbar-static-top navbar-inverse nav-checkout">
+    <div class="navbar-inner">
+        <ul class="nav row-fluid visible-phone">
+            <li class="active span12"><span class="navbar-text">{% trans "Confirmation" %}</span></li>
+        </ul>
+    </div><!-- /navbar-inner -->
+</div><!-- /navbar -->
+{% endblock %}
 
 {% block checkout_title %}{% trans "Order confirmation" %}{% endblock %}
 
@@ -88,7 +96,7 @@
     {% for line in order.lines.all %}
         <div class="basket-items">
             <div class="row-fluid">
-                <div class="span6">
+                <div class="span2">
                     <div class="image_container">
                         {% with image=line.product.primary_image %}
                             {% thumbnail image.original "200x200" upscale=False as thumb %}
@@ -96,6 +104,8 @@
                             {% endthumbnail %}
                         {% endwith %}
                     </div>
+                </div>
+                <div class="span4">
                     <h4><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h4>
                 </div>
                 <div class="span3 align-center">
@@ -213,8 +223,14 @@
     {% endif %}
 
     <div class="form-actions">
-        <a onclick="window.print()" href="#" class="btn btn-primary btn-large">{% trans "Print this page" %}</a>
-        <a href="{% url 'promotions:home' %}" class="btn btn-primary btn-large pull-right">{% trans "Continue shopping" %}</a>
+        <div class="row-fluid">
+            <div class="span3">
+                <p><a onclick="window.print()" href="#" class="btn btn-primary btn-block btn-large">{% trans "Print this page" %}</a></p>
+            </div>
+            <div class="span3 offset6">
+                <p><a href="{% url 'promotions:home' %}" class="btn btn-primary btn-block btn-large">{% trans "Continue shopping" %}</a></p>
+            </div>
+        </div>
     </div>
 {% endblock content %}
 
