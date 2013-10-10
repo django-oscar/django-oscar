@@ -72,7 +72,7 @@
             pops out when clicked.  A bit like the Django-Debug-Toolbar button
             {% endcomment %}
             {% if user.is_authenticated and user.is_staff %}
-                <a class="pull-right" href="{% url 'dashboard:catalogue-product' product.id %}"><small><i class="icon-edit"></i> {% trans "Edit this product" %}</small></a>
+                <a class="pull-right hidden-phone" href="{% url 'dashboard:catalogue-product' product.id %}"><small><i class="icon-edit"></i> {% trans "Edit this product" %}</small></a>
             {% endif %}
             <h1>{{ product.get_title }}</h1>
 
