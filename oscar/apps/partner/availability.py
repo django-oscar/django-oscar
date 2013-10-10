@@ -107,7 +107,7 @@ class StockRequired(Base):
     def message(self):
         if self.num_available > 0:
             return _("In stock (%d available)") % self.num_available
-        return _("Not available")
+        return _("Unavailable")
 
 
 class DelegateToStockRecord(Base):

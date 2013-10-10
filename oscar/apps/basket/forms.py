@@ -130,7 +130,7 @@ class ProductSelectionForm(forms.Form):
             return Product.objects.get(pk=id)
         except Product.DoesNotExist:
             raise forms.ValidationError(
-                _("This product is not available for purchase"))
+                _("This product is unavailable for purchase"))
 
 
 class AddToBasketForm(forms.Form):

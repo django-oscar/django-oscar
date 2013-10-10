@@ -27,7 +27,7 @@ class Base(object):
 
 class Unavailable(Base):
     """
-    This should be used as a pricing policy when a product is not available and
+    This should be used as a pricing policy when a product is unavailable and
     no prices are known.
     """
 

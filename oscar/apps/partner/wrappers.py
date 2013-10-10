@@ -29,7 +29,7 @@ class DefaultWrapper(object):
         # check, if fetched product is provided, to avoid db call
         product = product or stockrecord.product
         if not self.is_available_to_buy(stockrecord):
-            return False, _("'%s' is not available to purchase") % product.title
+            return False, _("'%s' is unavailable to purchase") % product.title
         max_qty = self.max_purchase_quantity(stockrecord, user, product)
         if max_qty is None:
             return True, None

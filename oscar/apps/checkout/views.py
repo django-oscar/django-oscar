@@ -253,7 +253,7 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         self._methods = self.get_available_shipping_methods()
         if len(self._methods) == 0:
             # No shipping methods available for given address
-            messages.warning(request, _("Shipping is not available for your chosen address - please choose another"))
+            messages.warning(request, _("Shipping is unavailable for your chosen address - please choose another"))
             return HttpResponseRedirect(reverse('checkout:shipping-address'))
         elif len(self._methods) == 1:
             # Only one shipping method - set this and redirect onto the next step
