@@ -35,12 +35,12 @@ setup(name='django-oscar',
       install_requires=[
           'django>=1.4.2,<1.6',
           # PIL is required for image fields, Pillow is the "friendly" PIL fork
-          'pillow>=1.7.8,<2.0.0',
+          'pillow>=1.7.8,<2.3',
           # Oscar ships with migrations
-          'South>=0.7.6,<0.8',
+          'South>=0.7.6,<0.9',
           # We use the ModelFormSetView from django-extra-views for the basket
           # page
-          'django-extra-views>=0.2,<0.6',
+          'django-extra-views>=0.2,<0.7',
           # We ship a simple Haystack implementation (that needs to be
           # improved).  We are using the 2.0-beta release from Github and
           # eagerly anticipating a stable 2.0 release on PyPI.
@@ -49,9 +49,9 @@ setup(name='django-oscar',
           'django-treebeard==2.0b2',
           # Sorl is used as the default thumbnailer
           'sorl-thumbnail==11.12',
-          'python-memcached>=1.48,<1.52',
+          'python-memcached>=1.48,<1.53',
           # Babel is used for currency formatting
-          'Babel>=0.9,<0.10',
+          'Babel>=1.0',
           # Oscar's default templates use compressor (but you can override
           # this)
           'django-compressor>=1.2,<1.4',
