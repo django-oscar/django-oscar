@@ -11,13 +11,11 @@
                 {% include "partials/brand.html" %}
             </div><!-- /row-fluid -->
         </div>
-        {% include "partials/nav_checkout.html" %}
+        {% block checkout_nav %}{% endblock %}
     </header><!-- /header -->
 
     <div class="container-fluid page">
-
        <div class="page_inner">
-            {% block checkout_nav %}{% endblock %}
             {% include 'partials/alert_messages.html' %}
 
             <div class="sub-header">

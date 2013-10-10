@@ -1090,7 +1090,11 @@
   body {
     padding: 0;
   }
-  .navbar-static-top .navbar-inner {
+  .header h1 {
+    text-align: center;
+  }
+  .navbar-static-top .navbar-inner,
+  .checkoutNav ul {
     padding: 5px;
   }
   .navbar-static-top {
@@ -1142,5 +1146,19 @@
     position: static;
     width: auto;
     min-height: 0;
+  }
+  .nav-checkout .previous span,
+  .nav-checkout .visited,
+  .nav-checkout .disabled {
+    display: none;
+  }
+  .nav-checkout .active {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .nav-checkout .previous {
+    position: relative;
+    z-index: 1;
   }
 }

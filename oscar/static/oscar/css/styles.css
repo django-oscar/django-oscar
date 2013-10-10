@@ -6698,6 +6698,15 @@ form:after {
   text-align: center;
   font-size: 12px;
 }
+.nav-checkout {
+  text-align: center;
+}
+.nav-checkout.navbar .nav {
+  margin: 0;
+}
+.nav-checkout .active .navbar-text {
+  color: #fff;
+}
 ol.row-fluid,
 ul.row-fluid {
   margin-left: 0;
@@ -6708,7 +6717,7 @@ ul.row-fluid {
 }
 .product_pod {
   position: relative;
-  height: 365px;
+  height: 400px;
   overflow: hidden;
   text-align: center;
   margin: 20px 0;
@@ -7126,9 +7135,6 @@ a:hover .thumbnail {
 }
 .star-rating.Five i {
   color: #E6CE31;
-}
-.product_pod .star-rating {
-  margin: 0px auto 4px;
 }
 /*** Promotional block styles ***/
 .promotion_single .image_container {

@@ -9,8 +9,13 @@
   	body {
     	padding: 0;
   	}
+  	// Make the brand a little more significant
+  	.header h1 {
+  		text-align: center;
+  	}
   	// Padding for the static navbars
-  	.navbar-static-top .navbar-inner {
+  	.navbar-static-top .navbar-inner,
+  	.checkoutNav ul {
   		padding:5px;
   	}
   	.navbar-static-top {
@@ -36,7 +41,7 @@
 		}
 	}
 
-	// The carousel JS hasn't initialised for mobile, great, but we should make the products visible
+	// The carousel JS isn't initialised for mobile, great, but we should make the products visible
 	.es-carousel-wrapper,
 	.es-carousel {
 		border:none;
@@ -76,5 +81,25 @@
 		}
 	}
 
+	// Checkout navigation
+	.nav-checkout {
+		// For mobile lets only show the active and the previous link in the checkout
+		.previous span,
+		.visited,
+		.disabled {
+			display:none;
+		}
+		// Center the active state 
+		.active {
+			position:absolute;
+			top:0;
+			left:0;
+		}
+		// Previous needs to be above active to be clickable
+		.previous {
+			position:relative;
+			z-index: 1;
+		}
+	}
 
 }
