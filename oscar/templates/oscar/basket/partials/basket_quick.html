@@ -6,7 +6,7 @@
 {% load i18n %}
 {% load staticfiles %}
 
-<ul class="basket_item">
+<ul class="basket-mini-item unstyled">
     {% if request.basket.num_lines %}
         {% for line in request.basket.all_lines %}
             <li>
@@ -21,7 +21,7 @@
                         </div>
                     </div>
                     <div class="span6">
-                        <h4><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h4>
+                        <h5><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h5>
                     </div>
                     <div class="span1 align-center"><strong>{% trans "Qty" %}</strong> {{ line.quantity }}</div>
                     <div class="span2 price_color align-right">{{ line.unit_price_excl_tax|currency:request.basket.currency }}</div>
@@ -29,7 +29,7 @@
             </li>
         {% endfor %}
         <li class="form-actions">
-            <h4>
+            <h4 class="align-right">
                 {% if request.basket.is_tax_known %}
                     <small>{% trans "Total:" %} {{ request.basket.total_incl_tax|currency:request.basket.currency }}</small> 
                 {% else %}

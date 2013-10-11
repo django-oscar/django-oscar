@@ -12,7 +12,7 @@
 @import "bootstrap/variables.less"; // Modify this for custom colors, font-sizes, etc
 @import "bootstrap/mixins.less";
 
-// Oscar variables and mixins
+// Oscar variables
 @import "page/mixins.less"; // Kept separtate for bootstrap updates - but should be imported into bootstap mixins.
 
 // CSS Reset
@@ -65,15 +65,19 @@
 @import "bootstrap/carousel.less";
 @import "bootstrap/hero-unit.less";
 
-// Unique Page Styles
-@import "page/layout.less"; // Note: combine and remove with layout.less in bootstrap - it was kept separate on intital for bootstrap updates
-@import "page/head_foot.less";
-@import "page/account.less";
-@import "page/checkout.less";
+// Oscar: Unique
+@import "page/layout.less";
+@import "page/type.less";
+@import "page/forms.less";
+@import "page/header.less";
 @import "page/product_lists.less";
 @import "page/product_page.less";
-@import "page/plugins.less";
+@import "page/reviews.less";
 @import "page/promotions.less";
+@import "page/checkout.less";
+@import "page/wells.less";
+@import "page/plugins.less";
+
 
 // Utility classes
 @import "bootstrap/utilities.less"; // Has to be last to override when necessary

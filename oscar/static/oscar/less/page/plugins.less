@@ -1,6 +1,8 @@
 // OSCAR PLUGINS STYLES
 // -----------
-/* Elastislide Style */
+
+// These styles relate to the Elastislide carousel used for product promotion
+// and the gallery
 .es-carousel-wrapper {
   padding:1px 20px;
   -moz-border-radius: 4px;
@@ -73,7 +75,7 @@
 .es-nav span:hover {
   background-color:#ddd;
 }
-/* Gallery */
+// Gallery styles
 .rg-image-wrapper{
 	position:relative;
 	padding:20px 30px;
@@ -141,8 +143,7 @@
 	margin-top:15px;
 	position:relative;
 }
-.rg-caption p{
-	//font-size:11px;
+.rg-caption p {
 	font-size:0.846em;
 	letter-spacing:2px;
 	font-family: 'Trebuchet MS', 'Myriad Pro', Arial, sans-serif;
@@ -182,64 +183,10 @@
 	position:absolute;
 	top:50%;
 	left:50%;
-/*  background:#000 url(../responsivegallery/ajax-loader.gif) no-repeat center center;*/
 	margin:-23px 0px 0px -23px;
 	z-index:100;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 	border-radius: 10px;
 	opacity:0.7;
-}
-/* Modal modifications */
-.large-content {
-  height:300px;
-  overflow:auto;
-  padding-right:30px;
-}
-.sub-header {
-  h2 {
-    small {
-     .clearfix(); 
-    }
-    a {
-      float:right;
-      line-height: @baseLineHeight * 2;
-    }
-  }
-}
-/* Star Rating using font icons */
-.star-rating {
-    color:#CBCBCB;
-    i {
-    	letter-spacing: -1px;
-    	width:auto;
-    }
-    a {
-        margin-left:10px;
-    }
-}
-.star-rating.One {
-    i:first-child {
-        color:#E6CE31;
-    }
-}
-.star-rating.Two {
-    i:first-child, i:first-child + i {
-        color:#E6CE31;
-    }
-}
-.star-rating.Three {
-    i:first-child, i:first-child + i, i:first-child + i + i {
-        color:#E6CE31;
-    }
-}
-.star-rating.Four {
-    i:first-child, i:first-child + i, i:first-child + i + i, i:first-child + i + i + i {
-        color:#E6CE31;
-    }
-}
-.star-rating.Five {
-    i {
-        color:#E6CE31;
-    }
 }

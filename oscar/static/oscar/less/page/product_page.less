@@ -1,59 +1,54 @@
 // OSCAR PRODUCTS UNIQUE STYLES
 // -----------
 .availability {
-  &.outofstock {
-    color:@red;
-  }
-  &.instock {
-   color:@green;
-  }
+    &.outofstock {
+        color:@red;
+    }
+    &.instock {
+    color:@green;
+    }
 }
 
-/* review styles */
-.review {
-  margin-bottom:@baseLineHeight;
-  .clearfix();
-  h3 {
-    margin-bottom: 10px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    small {
-      font-size: @baseFontSize - 1;
-    }
-  }
-  form {
-    display:inline-block;
-    *display:inline;
-    zoom:1;
-    margin-bottom:0;
-  }
+// PRICE SIZE/COLOR
+// -----------
+.price_color {
+    display:block;
+    color:@green;
+    font-weight:bold;
 }
+.product_pod .price_color { margin-top:0 }
+.es-carousel .price_color { font-size:20px; }
+
+// Added Well mixin to page elements
+// TODO: good to have this as this it is easy to remove/update rather than a
+// class in the template. But maybe better moved from here.
 .review_add,
 .review_all,
 .review_read,
 .side_categories {
-  .well();
+    .well();
 }
 
-//Align wish list button with add to basket button
+// Wish lists
+// Align wish list button with add to basket button
 .add-to-basket {
-  //Width of default input/select/textarea
-  width: 220px;
-  margin-bottom:0;
-  margin-right:10px;
-  *margin-right:20px;
+    //Width of default input/select/textarea
+    width: 220px;
+    margin-bottom:0;
+    margin-right:10px;
+    *margin-right:20px;
 }
 .add-to-basket,
 .btn-wishlist {
-  display:inline-block;
-  *display:inline;
-  zoom:1;
+    display:inline-block;
+    *display:inline;
+    zoom:1;
 }
-//For responsive - when button falls under each other
+// For responsive - when button falls under each other
 .btn-wishlist {
-  vertical-align:bottom;
+    vertical-align:bottom;
 }
 .add-to-basket .btn,
 .btn-wishlist {
-  margin-bottom:@baseLineHeight;
+    margin-bottom:@baseLineHeight;
 }

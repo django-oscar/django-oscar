@@ -1158,6 +1158,9 @@
     width: auto;
     min-height: 0;
   }
+  .basket-items img {
+    margin: 0 0 10px;
+  }
   .nav-checkout .previous span,
   .nav-checkout .visited,
   .nav-checkout .disabled {
