@@ -61,12 +61,10 @@
     {% endif %}
 
 
-    <form action="{% url 'checkout:shipping-address' %}" method="post" class="form-horizontal {% if request.user.is_authenticated and addresses %}collapse{% endif %}" id="new_shipping_address">
+    <form action="{% url 'checkout:shipping-address' %}" method="post" class="{% if request.user.is_authenticated and addresses %}collapse{% endif %}" id="new_shipping_address">
         <div class="well">
             {% csrf_token %}
             {% include "partials/form_fields.html" with form=form %}
-        </div>
-        <div class="form-actions">
             <button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
             {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
         </div>
