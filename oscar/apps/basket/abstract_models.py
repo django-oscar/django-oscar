@@ -92,10 +92,11 @@ class AbstractBasket(models.Model):
         if not self.has_strategy:
             raise RuntimeError(
                 "No strategy class has been assigned to this basket. "
-                "Ensure you are using "
-                "oscar.apps.partner.middleware.StrategyMiddleware "
-                "in MIDDLEWARE.  It should come before the basket "
-                "middleware")
+                "This is normally assigned to the incoming request in "
+                "oscar.apps.basket.middleware.BasketMiddleware. "
+                "Since it is missing, you must be doing something different. "
+                "Ensure that a strategy instance is assigne to the basket!"
+            )
         return self._strategy
 
     def _set_strategy(self, strategy):
