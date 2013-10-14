@@ -30,6 +30,7 @@
 {% endblock content %}
 
 {% block onbodyload %}
+    {{ block.super }}
     {# We pass in the URL to send AJAX requests to #}
     var options = {
         'basketURL': '{% url 'basket:summary' %}'

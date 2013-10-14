@@ -58,6 +58,7 @@
 {% endblock tabcontent %}
 
 {% block extrastyles %}
+    {{ block.super }}
     <link rel="stylesheet" href="{% static "oscar/js/jquery/bootstrap-datepicker.css" %}" />
 {% endblock %}
 
@@ -67,5 +68,6 @@
 {% endblock %}
 
 {% block onbodyload %}
+    {{ block.super }}
     $('#id_date_to, #id_date_from').datepicker({'dateFormat': 'yy-mm-dd'});
 {% endblock %}

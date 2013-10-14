@@ -60,6 +60,7 @@
 {% endblock tabcontent %}
 
 {% block onbodyload %}
+    {{ block.super }}
     oscar.notifications.init();
 {% endblock %}
 
