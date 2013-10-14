@@ -427,5 +427,13 @@ instance is also required.
     stockinfo = request.strategy.fetch(product)
     
     basket.
-    
 
+Test support extension brought back into core
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The `Oscar test support library`_ has been ported back into Oscar core.  This
+simplifies things and avoids circular dependency issues.  If your project is
+using this extension, you should remove it as a dependency and use the
+analogous functionality from ``oscar/test/``.
+
+.. _`Oscar test support library`: https://github.com/tangentlabs/django-oscar-testsupport
