@@ -574,7 +574,8 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             # mail admins on an error as this issue warrants some further
             # investigation.
             msg = unicode(e)
-            logger.error("Order #%s: payment error (%s)", order_number, msg)
+            logger.error("Order #%s: payment error (%s)", order_number, msg,
+                         exc_info=True)
             self.restore_frozen_basket()
             self.preview = False
             return self.render_to_response(
@@ -584,8 +585,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             # development.
             logger.error(
                 "Order #%s: unhandled exception while taking payment (%s)",
-                order_number, e)
-            logger.exception(e)
+                order_number, e, exc_info=True)
             self.restore_frozen_basket()
             self.preview = False
             return self.render_to_response(
@@ -605,8 +605,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             # payment transaction may already have taken place, but needs
             # to be handled gracefully.
             logger.error("Order #%s: unable to place order - %s",
-                         order_number, e)
-            logger.exception(e)
+                         order_number, e, exc_info=True)
             msg = unicode(e)
             self.restore_frozen_basket()
             return self.render_to_response(self.get_context_data(error=msg))
