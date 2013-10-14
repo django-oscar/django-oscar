@@ -3,16 +3,19 @@ from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.views.generic import ListView, DetailView, DeleteView, UpdateView
+from django.views.generic import ListView, DetailView, DeleteView, \
+    UpdateView, FormView
+from django.shortcuts import get_object_or_404
 from oscar.apps.customer.utils import normalise_email
 
 from oscar.views.generic import BulkEditMixin
 from oscar.core.compat import get_user_model
-from oscar.core.loading import get_classes
+from oscar.core.loading import get_class, get_classes
 
 UserSearchForm, ProductAlertSearchForm, ProductAlertUpdateForm = get_classes(
     'dashboard.users.forms', ('UserSearchForm', 'ProductAlertSearchForm',
                               'ProductAlertUpdateForm'))
+PasswordResetForm = get_class('customer.forms', 'PasswordResetForm')
 ProductAlert = get_model('customer', 'ProductAlert')
 User = get_user_model()
 
@@ -88,6 +91,34 @@ class UserDetailView(DetailView):
     template_name = 'dashboard/users/detail.html'
     model = User
     context_object_name = 'customer'
+
+
+class PasswordResetView(FormView):
+    form_class = PasswordResetForm
+    template_name = "registration/password_reset_form.html"
+    http_method_names = ['post']
+
+    def get_user(self):
+        user_id = self.kwargs.get('pk')
+        return get_object_or_404(User, id=user_id)
+
+    def get_initial(self):
+        return {'email': self.get_user().email}
+
+    def get_success_url(self):
+        messages.success(self.request, _("Password reset email has been sent"))
+        return reverse(
+            'dashboard:user-detail',
+            kwargs={'pk': self.get_user().id}
+        )
+
+    def form_valid(self, form):
+        # The PasswordResetForm's save method sends the reset email
+        form.save(request=self.request)
+        return super(PasswordResetView, self).form_valid(form)
+
+    def get_form_kwargs(self):
+        return {'data': {'email': self.get_user().email}}
 
 
 class ProductAlertListView(ListView):

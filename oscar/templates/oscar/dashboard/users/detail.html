@@ -89,6 +89,16 @@
                     <th>{% trans "Date joined" %}</th>
                     <td>{{ customer.date_joined }}</td>
                 </tr>
+                <tr>
+                    <th>{% trans "Actions" %}</th>
+                    <td>
+                        <form id="password_reset_form" action="{% url 'dashboard:user-password-reset' pk=customer.id %}" method="post" class="form-horizontal">
+                            {% csrf_token %}
+                            {% include 'partials/form_fields.html' %}
+                            <button type="submit" class="btn btn-primary btn-large">{% trans 'Send password reset email' %}</button>
+                        </form>
+                    </td>
+                </tr>
                 {% endwith %}
             </table>
         </div>
