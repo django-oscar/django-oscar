@@ -11,18 +11,18 @@ form,
 .table,
 .page-header,
 .sub-header {
-  margin:0 0 @baseLineHeight;
+    margin:0 0 @baseLineHeight;
 }
 ul,
 ol {
-  margin-bottom:@baseLineHeight;
+    margin-bottom:@baseLineHeight;
 }
 .page-header,
 .sub-header,
 .table {
-  h1, h2, h3, h4, h5, h6, form {
-    margin-bottom:0;
-  }
+    h1, h2, h3, h4, h5, h6, form {
+        margin-bottom:0;
+    }
 }
 
 // Heading fonts a little smaller
@@ -34,21 +34,34 @@ h5, .h5 { font-size: @baseFontSize; line-height: @baseLineHeight; } // 14px
 
 // Page / sub headers consistant
 .sub-header {
-  padding-bottom: (@baseLineHeight / 2) - 1;
-  border-bottom: 1px solid @grayLighter;
+    padding-bottom: (@baseLineHeight / 2) - 1;
+    border-bottom: 1px solid @grayLighter;
 }
 .page-header {
-  h1,h2 {
-    font-size: @baseFontSize * 2.14;
-    line-height: 40px;
-  }
+    h1,h2 {
+        font-size: @baseFontSize * 2.14;
+        line-height: 40px;
+    }
 }
 // Sub header a little lighter
 .sub-header {
-  h2,h3,h4 {
-    font-size: @baseFontSize * 1.6; // 22px
-    line-height: @baseLineHeight * 1.5; 
-    font-weight:normal;
-    color:@grayDark;
-  }
+    h2,h3,h4 {
+        font-size: @baseFontSize * 1.6; // 22px
+        line-height: @baseLineHeight * 1.5; 
+        font-weight:normal;
+        color:@grayDark;
+    }
+}
+
+// Text alignment
+.align-right,
+.table .align-right,
+.table .align-right {
+    text-align:right;
+}
+
+.align-center,
+.table .align-center,
+.table .align-center {
+    text-align:center;
 }

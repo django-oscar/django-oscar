@@ -2,98 +2,29 @@
 // -----------
 
 body {
-  background-color: @grayLighter;
+    background-color: @grayLighter;
 }
 .container-fluid {
-  padding:0px;
-  margin:0px auto;
-  // Here is the page width
-  max-width:@oscarpagewidth;
+    padding:0px;
+    margin:0px auto;
+    // Here is the page width: editable in page/mixins.less
+    max-width:@oscarpagewidth;
 }
 
 // The page container
 .page {
-  background:@white;
-  -webkit-border-radius: 0 0 6px 6px;
-  -moz-border-radius: 0 0 6px 6px;
-  border-radius: 0 0 6px 6px;
-  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
-  -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
-  box-shadow: 0 1px 2px rgba(0,0,0,.15);
+    background:@white;
+    -webkit-border-radius: 0 0 6px 6px;
+    -moz-border-radius: 0 0 6px 6px;
+    border-radius: 0 0 6px 6px;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+    box-shadow: 0 1px 2px rgba(0,0,0,.15);
 }
 
 // Some padding for the inner container
 // Also usefull for the mobile
 .page_inner {
-   padding:@gridGutterWidth;
-   .clearfix();
+    padding:@gridGutterWidth;
+    .clearfix();
 }
-
-// PRICE SIZE/COLOR
-// -----------
-.price_color {
-  display:block;
-  color:@green;
-  font-weight:bold;
-}
-.product_pod .price_color { margin-top:0 }
-.es-carousel .price_color { font-size:20px; }
-
-
-// WELLS
-// -----
-.well {
-  .clearfix();
-}
-.well-success {
-  background-color: @successBackground;
-  border-color: @successBorder;  
-}
-.well-info {
-  background-color: @infoBackground;
-  border-color: @infoBorder;
-}
-.well-blank {
-  background-color: @white;
-  border-color: rgba(0,0,0,.1);
-}
-
-// UTILITY CLASSES
-// ---------------
-.align-right,
-.table .align-right,
-.table .align-right {
-  text-align:right;
-}
-
-.align-center,
-.table .align-center,
-.table .align-center {
-  text-align:center;
-}
-
-// FORMS
-// ------------
-form {
-  .clearfix();
-}
-//For IE: adds width for selects inside overflow hidden containers
-.select-open {
-  width:300px!important;
-}
-
-// ADDITIONAL ERRORS
-.errorlist {
-    margin:0;
-    padding:0 0 10px 0;
-    color:#B94A48;
-    li {
-        padding:0 0 5px 0;
-        list-style:none;
-    }
-}
-
-.control-label.required span {
-    color: #FF0000;
-}
-
