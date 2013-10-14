@@ -382,8 +382,12 @@
                     <table class="table table-striped table-bordered table-hover">
                         <tbody>
                             <tr>
-                                <th>{% trans "Method" %}</th>
+                                <th>{% trans "Method name" %}</th>
                                 <td>{{ order.shipping_method }}</td>
+                            </tr>
+                            <tr>
+                                <th>{% trans "Method code" %}</th>
+                                <td>{{ order.shipping_code|upper }}</td>
                             </tr>
                             <tr>
                                 <th>{% trans "Charge (incl tax)" %}</th>

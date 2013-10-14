@@ -57,6 +57,13 @@ class TestSuccessfulOrderCreation(TestCase):
     def tearDown(self):
         Order.objects.all().delete()
 
+    def test_saves_shipping_code(self):
+        add_product(self.basket, D('12.00'))
+        free_method = Free()
+        order = place_order(self.creator, basket=self.basket,
+                            order_number='1234', shipping_method=free_method)
+        self.assertEqual(order.shipping_code, free_method.code)
+
     def test_creates_order_and_line_models(self):
         add_product(self.basket, D('12.00'))
         place_order(self.creator, basket=self.basket, order_number='1234')

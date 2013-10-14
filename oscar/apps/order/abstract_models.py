@@ -60,6 +60,9 @@ class AbstractOrder(models.Model):
     shipping_method = models.CharField(
         _("Shipping method"), max_length=128, null=True, blank=True)
 
+    # Identifies shipping code
+    shipping_code = models.CharField(blank=True, max_length=128, default="")
+
     # Use this field to indicate that an order is on hold / awaiting payment
     status = models.CharField(
         _("Status"), max_length=100, null=True, blank=True)
