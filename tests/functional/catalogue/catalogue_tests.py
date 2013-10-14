@@ -52,7 +52,7 @@ class TestProductListView(WebTestCase):
         page = self.app.get(reverse('catalogue:index'))
 
         self.assertContains(page, product.title)
-        self.assertContains(page, "Not available")
+        self.assertContains(page, "Unavailable")
 
     def test_shows_pagination_navigation_for_multiple_pages(self):
         per_page = ProductListView.paginate_by

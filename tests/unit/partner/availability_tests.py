@@ -77,7 +77,7 @@ class TestStockRequiredWrapperForRecordWithoutStock(TestCase):
         self.assertEquals('outofstock', self.availability.code)
 
     def test_returns_correct_message(self):
-        self.assertEquals('Not available', self.availability.message)
+        self.assertEquals('Unavailable', self.availability.message)
 
 
 class TestAvailableWrapper(TestCase):
