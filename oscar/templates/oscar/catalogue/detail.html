@@ -11,6 +11,7 @@
 {% load stockrecord_tags %}
 
 {% block extrastyles %}
+    {{ block.super }}
     <!-- Colorbox (a lightbox plugin) for image galleries -->
     <link rel="stylesheet" href="{% static "oscar/js/colorbox/colorbox.css" %}" type="text/css" media="screen" charset="utf-8"/>
 {% endblock %}

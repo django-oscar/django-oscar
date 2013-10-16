@@ -73,5 +73,6 @@
 {% endblock dashboard_content %}
 
 {% block onbodyload %}
+    {{ block.super }}
     oscar.dashboard.promotions.init();
 {% endblock %}

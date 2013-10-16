@@ -148,5 +148,6 @@
 {% endblock %}
 
 {% block onbodyload %}
+    {{ block.super }}
     oscar.dashboard.init();
 {% endblock %}

@@ -17,5 +17,5 @@ class ProductAlert(abstract_models.AbstractProductAlert):
     pass
 
 
-from oscar.apps.customer.history_helpers import *
+from oscar.apps.customer.history import *
 from oscar.apps.customer.alerts.receivers import *

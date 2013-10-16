@@ -30,5 +30,6 @@
 {% block submittext %}{% trans "Continue to step 3" %}{% endblock %}
 
 {% block onbodyload %}
-oscar.dashboard.offers.init();
+    {{ block.super }}
+    oscar.dashboard.offers.init();
 {% endblock %}
