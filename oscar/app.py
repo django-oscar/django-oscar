@@ -3,30 +3,32 @@ from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse_lazy
 
 from oscar.core.application import Application
-from oscar.apps.catalogue.app import application as catalogue_app
-from oscar.apps.customer.app import application as customer_app
-from oscar.apps.basket.app import application as basket_app
-from oscar.apps.checkout.app import application as checkout_app
-from oscar.apps.promotions.app import application as promotions_app
-from oscar.apps.search.app import application as search_app
-from oscar.apps.offer.app import application as offer_app
-from oscar.apps.dashboard.app import application as dashboard_app
 
 from oscar.apps.customer import forms
+from oscar.core.loading import get_class
 from oscar.views.decorators import login_forbidden
+
+CATALOGUE_APP = get_class('catalogue.app', 'application')
+CUSTOMER_APP = get_class('customer.app', 'application')
+BASKET_APP = get_class('basket.app', 'application')
+CHECKOUT_APP = get_class('checkout.app', 'application')
+PROMOTIONS_APP = get_class('promotions.app', 'application')
+SEARCH_APP = get_class('search.app', 'application')
+OFFER_APP = get_class('offer.app', 'application')
+DASHBOARD_APP = get_class('dashboard.app', 'application')
 
 
 class Shop(Application):
     name = None
 
-    catalogue_app = catalogue_app
-    customer_app = customer_app
-    basket_app = basket_app
-    checkout_app = checkout_app
-    promotions_app = promotions_app
-    search_app = search_app
-    dashboard_app = dashboard_app
-    offer_app = offer_app
+    catalogue_app = CATALOGUE_APP
+    customer_app = CUSTOMER_APP
+    basket_app = BASKET_APP
+    checkout_app = CHECKOUT_APP
+    promotions_app = PROMOTIONS_APP
+    search_app = SEARCH_APP
+    dashboard_app = DASHBOARD_APP
+    offer_app = OFFER_APP
 
     def get_urls(self):
         urlpatterns = patterns('',
