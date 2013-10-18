@@ -46,13 +46,11 @@
                         <div class="row-fluid">
                             <div class="span2">
                                 {{ form.id }}
-                                <div class="image_container">
-                                    {% with image=product.primary_image %}
-                                        {% thumbnail image.original "100x100" upscale=False as thumb %}
-                                        <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"/></a>
-                                        {% endthumbnail %}
-                                    {% endwith %}
-                                </div>
+                                {% with image=product.primary_image %}
+                                    {% thumbnail image.original "100x100" upscale=False as thumb %}
+                                    <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"/></a>
+                                    {% endthumbnail %}
+                                {% endwith %}
                             </div>
                             <div class="span4">
                                 <h4><a href="{{ product.get_absolute_url }}">{{ line.description }}</a></h4>
@@ -165,13 +163,11 @@
                         <div class="row-fluid">
                             <div class="span2">
                                 {{ form.id }}
-                                <div class="image_container">
-                                    {% with image=form.instance.product.primary_image %}
-                                        {% thumbnail image.original "100x100" upscale=False as thumb %}
-                                        <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{% static thumb.url %}" alt="{{ form.instance.product.get_title }}"></a>
-                                        {% endthumbnail %}
-                                    {% endwith %}
-                                </div>
+                                {% with image=form.instance.product.primary_image %}
+                                    {% thumbnail image.original "100x100" upscale=False as thumb %}
+                                    <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{% static thumb.url %}" alt="{{ form.instance.product.get_title }}"></a>
+                                    {% endthumbnail %}
+                                {% endwith %}
                             </div>
                             <div class="span6">
                                 <h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
