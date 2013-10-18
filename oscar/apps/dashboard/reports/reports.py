@@ -47,9 +47,13 @@ class ReportGenerator(object):
 
 class ReportFormatter(object):
     def format_datetime(self, dt):
+        if not dt:
+            return ''
         return utils.format_datetime(dt, 'DATETIME_FORMAT')
 
     def format_date(self, d):
+        if not d:
+            return ''
         return utils.format_datetime(d, 'DATE_FORMAT')
 
     def filename(self):
