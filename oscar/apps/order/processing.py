@@ -48,7 +48,7 @@ class EventHandler(object):
 
         These should normally be called as part of handling a shipping event.
         It is rare to call to this method directly.  It does make sense for
-        refunds though where the payment event may be unrelated to a particualr
+        refunds though where the payment event may be unrelated to a particular
         shipping event and doesn't directly correspond to a set of lines.
         """
         self.validate_payment_event(
@@ -88,7 +88,7 @@ class EventHandler(object):
         if errors:
             raise exceptions.InvalidShippingEvent(", ".join(errors))
 
-    def validate_payment_event(self, order, event_type, lines,
+    def validate_payment_event(self, order, event_type, amount, lines,
                                line_quantities, **kwargs):
         errors = []
         for line, qty in zip(lines, line_quantities):
