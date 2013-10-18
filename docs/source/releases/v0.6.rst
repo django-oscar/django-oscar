@@ -45,8 +45,7 @@ Other notable new features include:
 
 * `New helper methods`_ in the ``EventHandler`` class for order processing
 
-.. _`Oscar now supports Django 1.5`: `Django 1.5 and customer user model support`_
-.. _`demo site`: `Demo site`_
+.. _`Oscar now supports Django 1.5`: `Django 1.5 and custom user model support`_
 .. _`Partners can now have addresses`: `Partner addresses`_
 .. _`Customer wishlists`: `Wishlists`_
 .. _`New helper methods`: `Order processing changes`_
@@ -97,6 +96,9 @@ There's a great deal of flexibility.  See the guide to
 :doc:`prices and availability </topics/prices_and_availability>`
 for more information.
 
+Note that the :function:`oscar.templatetags.currency_filters.currency` now
+accepts an optional currency parameter.
+
 Payment models have abstract versions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -117,6 +119,16 @@ Partner addresses
 Partners can now have addresses.  These are useful for US sales tax where tax
 calculations need to know the origin of a product being shipped.  The dashboard
 has been extended to allow partner addresses to be edited.
+
+Checkout
+~~~~~~~~
+
+The :class:`~oscar.apps.checkout.views.PaymentDetailsView` checkout view has
+been restructured slightly to be more flexible.  There is a new
+``build_submission`` method which is responsible for building a dict of all data
+for passing to the ``submit`` method.  This includes the shipping address and
+shipping method which were previously loaded indirectly within the ``submit``
+method.  The ``submit`` method has also been extended to take additional parameters.
 
 Demo site
 ~~~~~~~~~
@@ -186,6 +198,19 @@ Minor changes
 Backwards incompatible changes in 0.6
 =====================================
 
+Checkout
+~~~~~~~~
+
+Several changes have been made to the checkout classes.  
+
+* The ``submit`` method in
+  :class:`~oscar.apps.checkout.views.PaymentDetailsView` now accepts several
+  new parameters.  
+
+* The ``handle_payment`` method in
+  :class:`~oscar.apps.checkout.views.PaymentDetailsView` now accepts a
+  :class:`~oscar.core.prices.Price`` instance instead of a Decimal.
+
 Signature changes
 ~~~~~~~~~~~~~~~~~
 
@@ -203,6 +228,7 @@ Several classes and functions have had signature changes:
 * The two product review forms, ``SignedInUserProductReviewForm`` and
   ``AnonymousUserProductReviewForm``, have been replaced by a new
   :class:`oscar.apps.catalogue.reviews.forms.ProductReviewForm``.
+
 
 Address model changes
 ~~~~~~~~~~~~~~~~~~~~~
@@ -302,7 +328,6 @@ Order app:
 
 URLs
 ~~~~
-
 
 Migrations
 ~~~~~~~~~~
