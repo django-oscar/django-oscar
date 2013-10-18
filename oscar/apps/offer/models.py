@@ -726,6 +726,7 @@ class Range(models.Model):
     Represents a range of products that can be used within an offer
     """
     name = models.CharField(_("Name"), max_length=128, unique=True)
+    slug = models.SlugField(_('Slug'), max_length=128, unique=True, null=True)
     includes_all_products = models.BooleanField(
         _('Includes All Products'), default=False)
     included_products = models.ManyToManyField(
@@ -758,6 +759,17 @@ class Range(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.get_name())
+
+        # Save product
+        super(Range, self).save(*args, **kwargs)
+
+    def get_name(self):
+        name = self.name
+        return name
 
     def contains_product(self, product):
         """
