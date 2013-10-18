@@ -12,20 +12,18 @@ class RangeForm(forms.ModelForm):
 
     class Meta:
         model = Range
-        exclude = ('included_products', 'excluded_products', 'classes',
+        exclude = ('included_products', 'slug', 'excluded_products', 'classes',
                    'proxy_class')
 
 
 class RangeProductForm(forms.Form):
-    query = forms.CharField(max_length=1024,
-                            label=_("Product SKUs or UPCs"),
-                            widget=forms.Textarea,
-                            required=False,
-                            help_text=_("You can paste in a selection of SKUs or UPCs"))
+    query = forms.CharField(
+        max_length=1024, label=_("Product SKUs or UPCs"),
+        widget=forms.Textarea, required=False,
+        help_text=_("You can paste in a selection of SKUs or UPCs"))
     file_upload = forms.FileField(
         label=_("File of SKUs or UPCs"), required=False, max_length=255,
         help_text=_('Either comma-separated, or one identifier per line'))
-
 
     def __init__(self, range, *args, **kwargs):
         self.range = range
@@ -34,7 +32,8 @@ class RangeProductForm(forms.Form):
     def clean(self):
         clean_data = super(RangeProductForm, self).clean()
         if not clean_data.get('query') and not clean_data.get('file_upload'):
-            raise forms.ValidationError(_("You must submit either a list of SKU/UPCs or a file"))
+            raise forms.ValidationError(
+                _("You must submit either a list of SKU/UPCs or a file"))
         return clean_data
 
     def clean_query(self):
@@ -45,7 +44,8 @@ class RangeProductForm(forms.Form):
         # Check that the search matches some products
         ids = set(re.compile(r'[\w-]+').findall(raw))
         products = self.range.included_products.all()
-        existing_skus = set(products.values_list('stockrecords__partner_sku', flat=True))
+        existing_skus = set(products.values_list(
+            'stockrecords__partner_sku', flat=True))
         existing_upcs = set(products.values_list('upc', flat=True))
         existing_ids = existing_skus.union(existing_upcs)
         new_ids = ids - existing_ids
