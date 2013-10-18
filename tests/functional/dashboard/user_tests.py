@@ -98,5 +98,5 @@ class TestDetailViewForStaffUser(WebTestCase):
         # Check that success message shows up
         self.assertContains(
             response.follow(),
-            _("Password reset email has been sent")
+            _("A password reset email has been sent")
         )

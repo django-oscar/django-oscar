@@ -34,6 +34,9 @@ def generate_username():
 
 
 class PasswordResetForm(auth_forms.PasswordResetForm):
+    """
+    This form takes the same structure as its parent from django.contrib.auth
+    """
     communication_type_code = "PASSWORD_RESET"
 
     def save(self, domain_override=None,

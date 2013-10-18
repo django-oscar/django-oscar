@@ -95,30 +95,28 @@ class UserDetailView(DetailView):
 
 class PasswordResetView(FormView):
     form_class = PasswordResetForm
-    template_name = "registration/password_reset_form.html"
     http_method_names = ['post']
 
-    def get_user(self):
-        user_id = self.kwargs.get('pk')
-        return get_object_or_404(User, id=user_id)
+    def post(self, request, *args, **kwargs):
+        self.user = get_object_or_404(
+            User, id=kwargs['pk'])
+        return super(PasswordResetView, self).post(request, *args, **kwargs)
 
-    def get_initial(self):
-        return {'email': self.get_user().email}
-
-    def get_success_url(self):
-        messages.success(self.request, _("Password reset email has been sent"))
-        return reverse(
-            'dashboard:user-detail',
-            kwargs={'pk': self.get_user().id}
-        )
+    def get_form_kwargs(self):
+        return {'data': {'email': self.user.email}}
 
     def form_valid(self, form):
         # The PasswordResetForm's save method sends the reset email
         form.save(request=self.request)
         return super(PasswordResetView, self).form_valid(form)
 
-    def get_form_kwargs(self):
-        return {'data': {'email': self.get_user().email}}
+    def get_success_url(self):
+        messages.success(
+            self.request, _("A password reset email has been sent"))
+        return reverse(
+            'dashboard:user-detail', kwargs={'pk': self.user.id}
+        )
+
 
 
 class ProductAlertListView(ListView):
