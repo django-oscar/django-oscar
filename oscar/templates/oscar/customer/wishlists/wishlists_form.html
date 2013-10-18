@@ -27,7 +27,7 @@
 {% endblock %}
 
 {% block tabcontent %}
-    <form action="." method="post" class="form-horizontal" data-behaviours="lock">
+    <form action="." method="post" data-behaviours="lock">
         {% csrf_token %}
         {% if not wishlist %}
             <p>{% trans "What should your new wish list be called?" %}</p>
