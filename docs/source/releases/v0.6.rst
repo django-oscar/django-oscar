@@ -359,6 +359,16 @@ which are determined by the :ref:`strategy class <strategy_class>`.
 * :meth:`~oscar.apps.catalogue.abstract_models.AbstractProduct.is_purchase_permitted` 
   is deprecated.  The functionality is now part of availability policies.
 
+
+Checkout session manager
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``shipping_method`` method of the
+:class:`~oscar.apps.checkout.utils.CheckoutSessionData` is now deprecated in
+favour of using ``shipping_method_code``.  It is being removed as the
+``CheckoutSessionData`` class should only be responsible for retriving data
+from the session, not loading shipping method instances.
+
 "Partner wrappers"
 ~~~~~~~~~~~~~~~~~~
 
