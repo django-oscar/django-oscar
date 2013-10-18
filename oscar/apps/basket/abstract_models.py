@@ -113,7 +113,7 @@ class AbstractBasket(models.Model):
         lost.
         """
         if self.id is None:
-            return query.EmptyQuerySet(model=self.__class__)
+            return self.lines.none()
         if self._lines is None:
             self._lines = self.lines.select_related(
                 'product', 'product__stockrecord'
