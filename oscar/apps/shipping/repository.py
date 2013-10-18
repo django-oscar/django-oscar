@@ -17,10 +17,10 @@ class Repository(object):
                              request=None, **kwargs):
         """
         Return a list of all applicable shipping method objects
-        for a given basket.
+        for a given basket, address etc.
 
-        We default to returning the Method models that have been defined but
-        this behaviour can easily be overridden by subclassing this class
+        We default to returning the ``Method`` models that have been defined
+        but this behaviour can easily be overridden by subclassing this class
         and overriding this method.
         """
         return self.prime_methods(basket, self.methods)

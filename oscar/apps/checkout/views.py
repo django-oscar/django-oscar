@@ -395,17 +395,24 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
                 "You need to add some items to your basket to checkout"))
             return HttpResponseRedirect(reverse('basket:summary'))
 
-        # Check that shipping address has been completed
-        shipping_required = self.request.basket.is_shipping_required()
-        if shipping_required and not self.checkout_session.is_shipping_address_set():
-            messages.error(self.request, _("Please choose a shipping address"))
-            return HttpResponseRedirect(reverse('checkout:shipping-address'))
+        if self.request.basket.is_shipping_required():
+            shipping_address = self.get_shipping_address(
+                self.request.basket)
+            shipping_method = self.get_shipping_method(
+                self.request.basket, shipping_address)
+            # Check that shipping address has been completed
+            if not shipping_address:
+                messages.error(
+                    self.request, _("Please choose a shipping address"))
+                return HttpResponseRedirect(
+                    reverse('checkout:shipping-address'))
 
-        # Check that shipping method has been set
-        if shipping_required and not self.checkout_session.is_shipping_method_set(
-                self.request.basket):
-            messages.error(self.request, _("Please choose a shipping method"))
-            return HttpResponseRedirect(reverse('checkout:shipping-method'))
+            # Check that shipping method has been set
+            if not shipping_method:
+                messages.error(
+                    self.request, _("Please choose a shipping method"))
+                return HttpResponseRedirect(
+                    reverse('checkout:shipping-method'))
 
     def build_submission(self, **kwargs):
         """

@@ -46,9 +46,9 @@
                 </div>
                 <div class="span1">
                     {% if method.is_tax_known %}
-                        {{ method.charge_incl_tax:currency.basket.currency }}
+                        {{ method.charge_incl_tax|currency:basket.currency }}
                     {% else %}
-                        {{ method.charge_excl_tax:currency.basket.currency }}
+                        {{ method.charge_excl_tax|currency:basket.currency }}
                     {% endif %}
                 </div>
                 <div class="span3">
