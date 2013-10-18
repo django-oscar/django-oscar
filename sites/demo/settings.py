@@ -22,7 +22,7 @@ SQL_DEBUG = True
 SEND_BROKEN_LINK_EMAILS = False
 
 ADMINS = (
-    ('David', 'david.winterbottom@tangentlabs.co.uk'),
+    ('David Winterbottom', 'david.winterbottom@tangentlabs.co.uk'),
 )
 EMAIL_SUBJECT_PREFIX = '[Oscar demo] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -163,6 +163,11 @@ LOGGING = {
             'format': '%(levelname)s %(message)s'
         },
     },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
     'handlers': {
         'null': {
             'level': 'DEBUG',
@@ -188,6 +193,7 @@ LOGGING = {
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
+            'filters': ['require_debug_false'],
         },
     },
     'loggers': {
@@ -257,7 +263,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-LOGIN_REDIRECT_URL = '/accounts/'
+LOGIN_REDIRECT_URL = '/'
 APPEND_SLASH = True
 
 # Haystack settings
@@ -281,7 +287,7 @@ OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = True
 
 OSCAR_SHOP_NAME = 'Oscar'
-OSCAR_SHOP_TAGLINE = 'Demo site'
+OSCAR_SHOP_TAGLINE = 'Demo'
 
 COMPRESS_ENABLED = False
 COMPRESS_PRECOMPILERS = (
