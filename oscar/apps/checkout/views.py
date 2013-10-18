@@ -413,8 +413,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         """
         basket = self.request.basket
         shipping_address = self.get_shipping_address(basket)
-        shipping_method = self.get_shipping_method(
-            basket, shipping_address)
+        shipping_method = self.get_shipping_method(basket)
         total = self.get_order_totals(
             basket, shipping_method=shipping_method)
         submission = {
