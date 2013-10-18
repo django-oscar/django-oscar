@@ -20,5 +20,6 @@
         '{{ line.unit_price_incl_tax }}',
         '{{ line.quantity }}']);
     {% endfor %}
+    _gaq.push(['_set', 'currencyCode', '{{ order.currency|escapejs }}']);
     _gaq.push(['_trackTrans']);
 {% endblock %}

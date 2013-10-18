@@ -880,6 +880,7 @@ class AbstractAttributeOptionGroup(models.Model):
     """
     Defines a group of options that collectively may be used as an
     attribute type
+
     For example, Language
     """
     name = models.CharField(_('Name'), max_length=128)

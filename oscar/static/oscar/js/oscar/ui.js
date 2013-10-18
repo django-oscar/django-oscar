@@ -3,7 +3,7 @@ var oscar = (function(o, $) {
     o.messages = {
         addMessage: function(tag, msg) {
             var msgHTML = '<div class="alert fade in alert-' + tag + '">' +
-                '<a href="#" class="close" data-dismiss="alert">&times;</a>'  + msg +
+                '<a href="#" class="close" data-dismiss="alert">x</a>'  + msg +
                 '</div>';
             $('#messages').append($(msgHTML));
         },
@@ -11,7 +11,7 @@ var oscar = (function(o, $) {
         info: function(msg) { o.messages.addMessage('info', msg); },
         success: function(msg) { o.messages.addMessage('success', msg); },
         warning: function(msg) { o.messages.addMessage('warning', msg); },
-        error: function(msg) { o.messages.addMessage('error', msg); },
+        error: function(msg) { o.messages.addMessage('error:', msg); },
         clear: function() {
             $('#messages').html('');
         },

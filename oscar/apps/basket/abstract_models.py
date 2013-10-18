@@ -11,7 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from oscar.apps.basket.managers import OpenBasketManager, SavedBasketManager
 from oscar.apps.offer import results
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.templatetags.currency_filters import render_currency as currency
+from oscar.templatetags.currency_filters import currency
 
 
 class AbstractBasket(models.Model):

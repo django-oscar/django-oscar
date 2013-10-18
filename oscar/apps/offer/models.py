@@ -13,7 +13,7 @@ from django.conf import settings
 
 from oscar.core.utils import slugify
 from oscar.apps.offer.managers import ActiveOfferManager
-from oscar.templatetags.currency_filters import render_currency as currency
+from oscar.templatetags.currency_filters import currency
 from oscar.models.fields import PositiveDecimalField, ExtendedURLField
 
 

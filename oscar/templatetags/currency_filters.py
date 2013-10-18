@@ -8,7 +8,7 @@ register = template.Library()
 
 
 @register.filter(name='currency')
-def render_currency(value, currency=None):
+def currency(value, currency=None):
     """
     Format decimal value as currency
     """
