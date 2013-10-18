@@ -762,14 +762,10 @@ class Range(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.get_name())
+            self.slug = slugify(self.name)
 
         # Save product
         super(Range, self).save(*args, **kwargs)
-
-    def get_name(self):
-        name = self.name
-        return name
 
     def contains_product(self, product):
         """
