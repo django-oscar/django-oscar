@@ -8,27 +8,18 @@ from oscar.apps.customer import forms
 from oscar.core.loading import get_class
 from oscar.views.decorators import login_forbidden
 
-CATALOGUE_APP = get_class('catalogue.app', 'application')
-CUSTOMER_APP = get_class('customer.app', 'application')
-BASKET_APP = get_class('basket.app', 'application')
-CHECKOUT_APP = get_class('checkout.app', 'application')
-PROMOTIONS_APP = get_class('promotions.app', 'application')
-SEARCH_APP = get_class('search.app', 'application')
-OFFER_APP = get_class('offer.app', 'application')
-DASHBOARD_APP = get_class('dashboard.app', 'application')
-
 
 class Shop(Application):
     name = None
 
-    catalogue_app = CATALOGUE_APP
-    customer_app = CUSTOMER_APP
-    basket_app = BASKET_APP
-    checkout_app = CHECKOUT_APP
-    promotions_app = PROMOTIONS_APP
-    search_app = SEARCH_APP
-    dashboard_app = DASHBOARD_APP
-    offer_app = OFFER_APP
+    catalogue_app = get_class('catalogue.app', 'application')
+    customer_app = get_class('customer.app', 'application')
+    basket_app = get_class('basket.app', 'application')
+    checkout_app = get_class('checkout.app', 'application')
+    promotions_app = get_class('promotions.app', 'application')
+    search_app = get_class('search.app', 'application')
+    dashboard_app = get_class('dashboard.app', 'application')
+    offer_app = get_class('offer.app', 'application')
 
     def get_urls(self):
         urlpatterns = patterns('',
