@@ -58,7 +58,7 @@
                 </tr>
                 {% for offer in offers %}
                     <tr>
-                        <td><a href="{% url 'dashboard:offer-detail' offer.pk %}">{{ offer.name }}</a></td>
+                        <td><a href="{% url 'dashboard:offer-detail' pk=offer.pk %}">{{ offer.name }}</a></td>
                         <td>{{ offer.start_date|default:"-" }}</td>
                         <td>{{ offer.end_date|default:"-" }}</td>
                         <td>{{ offer.benefit.description|safe }}</td>
@@ -90,10 +90,10 @@
                                         <span class="caret"></span>
                                     </a>
                                     <ul class="dropdown-menu pull-right">
-                                        <li><a class="" href="{% url 'offer:detail' offer.slug %}">{% trans "Browse" %}</a></li>
-                                        <li><a class="" href="{% url 'dashboard:offer-detail' offer.pk %}">{% trans "Stats" %}</a></li>
-                                        <li><a class="" href="{% url 'dashboard:offer-metadata' offer.pk %}">{% trans "Edit" %}</a></li>
-                                        <li><a class="" href="{% url 'dashboard:offer-delete' offer.pk %}">{% trans "Delete" %}</a></li>
+                                        <li><a class="" href="{% url 'offer:detail' slug=offer.slug %}">{% trans "Browse" %}</a></li>
+                                        <li><a class="" href="{% url 'dashboard:offer-detail' pk=offer.pk %}">{% trans "Stats" %}</a></li>
+                                        <li><a class="" href="{% url 'dashboard:offer-metadata' pk=offer.pk %}">{% trans "Edit" %}</a></li>
+                                        <li><a class="" href="{% url 'dashboard:offer-delete' pk=offer.pk %}">{% trans "Delete" %}</a></li>
                                     </ul>
                                 </div>
                             </div>

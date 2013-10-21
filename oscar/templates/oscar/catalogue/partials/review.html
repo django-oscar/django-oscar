@@ -29,18 +29,18 @@
                     Reviewed by <strong>{{ name }}</strong> on {{ review_date }}
                 {% endblocktrans %}
             {% endif %}
-            | <a href="{% url 'catalogue:reviews-detail' product.slug product.pk review.pk %}">{% trans 'Permalink' %}</a>
+            | <a href="{% url 'catalogue:reviews-detail' product_slug=product.slug product_pk=product.pk pk=review.pk %}">{% trans 'Permalink' %}</a>
         </small>
     </p>
 
     {% if review|may_vote:user %}
         <small>{% trans "Is this review helpful?" %}</small>
-        <form action="{% url 'catalogue:reviews-vote' product.slug product.pk review.pk %}" method="post" class="vote_agree" >
+        <form action="{% url 'catalogue:reviews-vote' product_slug=product.slug product_pk=product.pk pk=review.pk %}" method="post" class="vote_agree" >
             {% csrf_token %}
             <input type="hidden" name="delta" value="1"/>
             <button type="submit" class="btn btn-success btn-mini">{% trans "Yes" %}</button>
         </form>
-        <form  action="{% url 'catalogue:reviews-vote' product.slug product.pk review.pk %}" method="post">
+        <form  action="{% url 'catalogue:reviews-vote' product_slug=product.slug product_pk=product.pk pk=review.pk %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="delta" value="-1"/>
             <button type="submit" class="btn btn-danger btn-mini">{% trans "No" %}</button>

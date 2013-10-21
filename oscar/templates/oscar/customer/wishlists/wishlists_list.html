@@ -13,22 +13,22 @@
                 </tr>
                 {% for wishlist in wishlists %}
                     <tr>
-                        <td><a href="{% url 'customer:wishlists-detail' wishlist.key %}">{{ wishlist.name }}</a></td>
+                        <td><a href="{% url 'customer:wishlists-detail' key=wishlist.key %}">{{ wishlist.name }}</a></td>
                         <td>{{ wishlist.lines.count }}</td>
                         <td>
                             <div class="btn-group">
-                                <a class="btn" href="{% url 'customer:wishlists-detail' wishlist.key %}">{% trans 'View' %}</a>
+                                <a class="btn" href="{% url 'customer:wishlists-detail' key=wishlist.key %}">{% trans 'View' %}</a>
                                 <button class="btn dropdown-toggle" data-toggle="dropdown">
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="{% url 'customer:wishlists-update' wishlist.key %}">
+                                        <a href="{% url 'customer:wishlists-update' key=wishlist.key %}">
                                             {% trans 'Edit' %}
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'customer:wishlists-delete' wishlist.key %}">
+                                        <a href="{% url 'customer:wishlists-delete' key=wishlist.key %}">
                                             {% trans 'Delete' %}
                                         </a>
                                     </li>

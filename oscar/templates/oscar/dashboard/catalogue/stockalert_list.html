@@ -69,7 +69,7 @@
         <td>{{ alert.date_created }}</td>
         <td>{{ alert.status }}</td>
         <td>
-            <a class="btn btn-info" href="{% url 'dashboard:catalogue-product' alert.stockrecord.product.id %}">{% trans "Update" %}</a>
+            <a class="btn btn-info" href="{% url 'dashboard:catalogue-product' pk=alert.stockrecord.product.id %}">{% trans "Update" %}</a>
         </td>
     </tr>
     {% endfor %}
