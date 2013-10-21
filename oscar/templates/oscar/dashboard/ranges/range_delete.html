@@ -21,7 +21,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:range-update' range.pk %}">'{{ range.name }}'</a>
+            <a href="{% url 'dashboard:range-update' pk=range.pk %}">'{{ range.name }}'</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Delete?" %}</li>

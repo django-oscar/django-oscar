@@ -75,7 +75,7 @@
                             <td>{{ order.total_incl_tax|currency }}</td>
                             <td>{{ discount.amount|currency }}</td>
                             <td>{{ order.date_placed }}</td>
-                            <td><a href="{% url 'dashboard:order-detail' order.number %}" class="btn btn-info">{% trans "View" %}</a></td>
+                            <td><a href="{% url 'dashboard:order-detail' number=order.number %}" class="btn btn-info">{% trans "View" %}</a></td>
                         </tr>
                     {% endwith %}
                 {% endfor %}
@@ -84,8 +84,8 @@
     </table>
 
     <div class="form-actions">
-        <a class="btn btn-primary" href="{% url 'dashboard:voucher-update' voucher.id %}">{% trans "Edit" %}</a> {% trans "or" %}
-        <a class="btn btn-danger" href="{% url 'dashboard:voucher-delete' voucher.id %}">{% trans "Delete" %}</a> {% trans "or" %}
+        <a class="btn btn-primary" href="{% url 'dashboard:voucher-update' pk=voucher.id %}">{% trans "Edit" %}</a> {% trans "or" %}
+        <a class="btn btn-danger" href="{% url 'dashboard:voucher-delete' pk=voucher.id %}">{% trans "Delete" %}</a> {% trans "or" %}
         <a href="{% url 'dashboard:voucher-list' %}">{% trans "cancel" %}</a>
     </div>
 

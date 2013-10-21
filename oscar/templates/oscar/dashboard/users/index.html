@@ -75,14 +75,14 @@
                 {% for user in user_list %}
                     <tr>
                         <td><input type="checkbox" name="selected_user" class="selected_user" value="{{ user.id }}"/></td>
-                        <td><a href="{% url 'dashboard:user-detail' user.id %}">{{ user.email }}</a></td>
+                        <td><a href="{% url 'dashboard:user-detail' pk=user.id %}">{{ user.email }}</a></td>
                         <td>{{ user.get_full_name|default:"-" }}</td>
                         <td>{{ user.is_active|yesno:_("True,False") }}</td>
                         <td>{{ user.is_staff|yesno:_("True,False") }}</td>
                         <td>{{ user.date_joined|date:"d/m/y H:s" }}</td>
                         <td>{% num_orders user %}</td>
                         <td>
-                            <a href="{% url 'dashboard:user-detail' user.id %}" class="btn btn-info">{% trans "View" %}</a>
+                            <a href="{% url 'dashboard:user-detail' pk=user.id %}" class="btn btn-info">{% trans "View" %}</a>
                         </td>
                     </tr>
                 {% endfor %}

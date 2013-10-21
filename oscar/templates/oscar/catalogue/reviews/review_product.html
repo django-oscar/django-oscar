@@ -28,7 +28,7 @@
                 <i class="icon-star"></i>
                 <i class="icon-star"></i>
 
-                <small><a href="{% url 'catalogue:reviews-list' product.slug product.id %}">
+                <small><a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.id %}">
                         {% blocktrans count reviews|length as num_reviews %}
                         1 custom review
                         {% plural %}
@@ -40,7 +40,7 @@
                 <h4>
             {% endif %}
             {% if not product|has_review_by:user %}
-                <a id="write_review" href="{% url 'catalogue:reviews-add' product.slug product.id %}#addreview" class="btn btn-success btn-small">
+                <a id="write_review" href="{% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id %}#addreview" class="btn btn-success btn-small">
                     {% trans "Write a review" %}
                 </a>
             {% endif %}

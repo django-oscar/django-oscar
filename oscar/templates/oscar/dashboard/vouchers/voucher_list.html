@@ -73,9 +73,9 @@
                         <span class="caret"></span>
                       </a>
                       <ul class="dropdown-menu pull-right">
-                          <li><a href="{% url 'dashboard:voucher-stats' voucher.id %}">{% trans "Stats" %}</a></li>
-                            <li><a href="{% url 'dashboard:voucher-update' voucher.id %}">{% trans "Edit" %}</a></li>
-                            <li><a href="{% url 'dashboard:voucher-delete' voucher.id %}">{% trans "Delete" %}</a></li>
+                          <li><a href="{% url 'dashboard:voucher-stats' pk=voucher.id %}">{% trans "Stats" %}</a></li>
+                            <li><a href="{% url 'dashboard:voucher-update' pk=voucher.id %}">{% trans "Edit" %}</a></li>
+                            <li><a href="{% url 'dashboard:voucher-delete' pk=voucher.id %}">{% trans "Delete" %}</a></li>
                       </ul>
                     </div>
                 </div>

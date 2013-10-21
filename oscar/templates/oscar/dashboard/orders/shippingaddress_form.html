@@ -17,7 +17,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:order-detail' order.number %}">{{ order.number }}</a>
+            <a href="{% url 'dashboard:order-detail' number=order.number %}">{{ order.number }}</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Edit shipping address" %}</li>
@@ -35,7 +35,7 @@
         {% include "partials/form_fields.html" with form=form %}
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">{% trans "Update address" %}</button>
-            {% trans "or" %} <a href="{% url 'dashboard:order-detail' order.number %}">{% trans "cancel" %}</a>
+            {% trans "or" %} <a href="{% url 'dashboard:order-detail' number=order.number %}">{% trans "cancel" %}</a>
         </div>
     </form>
 

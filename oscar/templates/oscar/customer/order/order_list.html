@@ -42,7 +42,7 @@
             </tr>
             {% for order in orders %}
                 <tr>
-                    <td><a href="{% url 'customer:order' order.number %}">{{ order.number }}</a></td>
+                    <td><a href="{% url 'customer:order' order_number=order.number %}">{{ order.number }}</a></td>
                     <td>{{ order.num_items }}</td>
                     <td>{{ order.total_incl_tax|currency:order.currency }}</td>
                     <td>{{ order.date_placed }}</td>

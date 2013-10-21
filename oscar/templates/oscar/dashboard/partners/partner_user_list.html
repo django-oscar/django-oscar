@@ -30,8 +30,8 @@
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
-                <li><a href="{% url 'dashboard:partner-user-create' partner.pk %}" >{% trans "Link a new user" %}</a></li>
-                <li><a href="{% url 'dashboard:partner-user-select' partner.pk %}" >{% trans "Link an existing user" %}</a></li>
+                <li><a href="{% url 'dashboard:partner-user-create' partner_pk=partner.pk %}" >{% trans "Link a new user" %}</a></li>
+                <li><a href="{% url 'dashboard:partner-user-select' partner_pk=partner.pk %}" >{% trans "Link an existing user" %}</a></li>
             </ul>
         </div>
         <h1>{% trans "Manage users" %}</h1>
@@ -52,11 +52,11 @@
             <tbody>
                 {% for user in users %}
                     <tr>
-                        <td><a href="{% url 'dashboard:partner-user-update' partner.pk user.id %}">{{ user.email }}</a></td>
+                        <td><a href="{% url 'dashboard:partner-user-update' partner_pk=partner.pk user_pk=user.id %}">{{ user.email }}</a></td>
                         <td>{{ user.first_name|default:"-" }}</td>
                         <td>{{ user.last_name|default:"-" }}</td>
                         <td>
-                            <form action="{% url 'dashboard:partner-user-unlink' partner.id user.id %}" method="post">
+                            <form action="{% url 'dashboard:partner-user-unlink' partner_pk=partner.id user_pkuser.id %}" method="post">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-danger">{% trans 'Unlink user' %}</button>
                             </form>

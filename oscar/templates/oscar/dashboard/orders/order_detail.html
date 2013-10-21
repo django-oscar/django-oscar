@@ -113,7 +113,7 @@
                                         <td>{{ line.quantity }}</td>
                                         <td>
                                             {% if line.product %}
-                                                <a href="{% url 'dashboard:catalogue-product' line.product.id %}">{{ line.title }}</a>
+                                                <a href="{% url 'dashboard:catalogue-product' pk=line.product.id %}">{{ line.title }}</a>
                                             {% else %}
                                                 {{ line.title }}
                                             {% endif %}
@@ -122,7 +122,7 @@
                                         <td>{{ line.status|default:"-" }}</td>
                                         <td>
                                             {% if line.partner %}
-                                                <a href="{% url 'dashboard:partner-manage' line.partner.id %}">{{ line.partner_name }}</a>
+                                                <a href="{% url 'dashboard:partner-manage' pk=line.partner.id %}">{{ line.partner_name }}</a>
                                             {% else %}
                                                 {{ line.partner_name }}
                                             {% endif %}
@@ -131,7 +131,7 @@
                                         <td>{{ line.est_dispatch_date|default:"-" }}</td>
                                         <td style="text-align: right">{{ line.line_price_before_discounts_incl_tax|currency:order.currency }}</td>
                                         <td>
-                                            <a href="{% url 'dashboard:order-line-detail' order.number line.id %}" class="btn btn-info">{% trans "View" %}</a>
+                                            <a href="{% url 'dashboard:order-line-detail' number=order.number line_id=line.id %}" class="btn btn-info">{% trans "View" %}</a>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -308,7 +308,7 @@
                                                 <td>{{ event.event_type.name }}</td>
                                                 <td>
                                                     {% for line_qty in event.line_quantities.all %}
-                                                        <a href="{% url 'dashboard:order-line-detail' order.number line_qty.line.id %}">
+                                                        <a href="{% url 'dashboard:order-line-detail' number=order.number line_id=line_qty.line.id %}">
                                                             {% blocktrans with title=line_qty.line.title event_qty=line_qty.quantity total_qty=line_qty.line.quantity %}
                                                                 {{ title }} (quantity {{ event_qty }}/{{ total_qty }})
                                                             {% endblocktrans %}
@@ -525,7 +525,7 @@
                                         </td>
                                         <td>
                                             {% if discount.offer %}
-                                                <a href="{% url 'dashboard:offer-detail' discount.offer.id %}">{{ discount.offer.name }}</a>
+                                                <a href="{% url 'dashboard:offer-detail' pk=discount.offer.id %}">{{ discount.offer.name }}</a>
                                             {% else %}
                                                 {{ discount.offer_name }}
                                             {% endif %}
@@ -576,7 +576,7 @@
                                         <td>{{ note.message|linebreaks }}</td>
                                         <td class="span2">
                                             {% if note.is_editable %}
-                                                &nbsp;<a href="{% url 'dashboard:order-detail-note' order.number note.id %}#notes" class="btn btn-info">{% trans "Edit" %}</a>
+                                                &nbsp;<a href="{% url 'dashboard:order-detail-note' number=order.number note_id=note.id %}#notes" class="btn btn-info">{% trans "Edit" %}</a>
                                                 <form action="." method="post" class="pull-left">
                                                     {% csrf_token %}
                                                     <input type="hidden" name="order_action" value="delete_note" />

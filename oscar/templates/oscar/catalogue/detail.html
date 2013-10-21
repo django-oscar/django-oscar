@@ -73,7 +73,7 @@
             pops out when clicked.  A bit like the Django-Debug-Toolbar button
             {% endcomment %}
             {% if user.is_authenticated and user.is_staff %}
-                <a class="pull-right hidden-phone" href="{% url 'dashboard:catalogue-product' product.id %}"><small><i class="icon-edit"></i> {% trans "Edit this product" %}</small></a>
+                <a class="pull-right hidden-phone" href="{% url 'dashboard:catalogue-product' pk=product.id %}"><small><i class="icon-edit"></i> {% trans "Edit this product" %}</small></a>
             {% endif %}
             <h1>{{ product.get_title }}</h1>
 
@@ -90,7 +90,7 @@
                     <i class="icon-star"></i>
                     <i class="icon-star"></i>
 
-                    <small><a href="{% url 'catalogue:reviews-list' product.slug product.id %}">
+                    <small><a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.id %}">
                             {% blocktrans count reviews|length as num_reviews %}
                             1 custom review
                             {% plural %}
@@ -102,7 +102,7 @@
                     <h4>
                 {% endif %}
                 {% if not product|has_review_by:user %}
-                    <a id="write_review" href="{% url 'catalogue:reviews-add' product.slug product.id %}#addreview" class="btn btn-success btn-small">
+                    <a id="write_review" href="{% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id %}#addreview" class="btn btn-success btn-small">
                         {% trans "Write a review" %}
                     </a>
                 {% endif %}
@@ -184,7 +184,7 @@
         <section>
             <div id="reviews" class="sub-header">
                 {% if reviews|length > 3 %}
-                    <a href="{% url 'catalogue:reviews-list' product.slug product.id %}" class="btn pull-right">{% trans "See all reviews" %}</a>
+                    <a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.id %}" class="btn pull-right">{% trans "See all reviews" %}</a>
                 {% endif %}
                 <h2>{% trans "Customer Reviews" %}</h2>
             </div>
@@ -192,7 +192,7 @@
             {% if not reviews %}
                 <p>
                     {% trans "This product does not have any reviews yet" %} -
-                    <a href="{% url 'catalogue:reviews-add' product.slug product.id %}#addreview">{% trans "be the first to write one" %}</a>.
+                    <a href="{% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id %}#addreview">{% trans "be the first to write one" %}</a>.
                 </p>
             {% else %}
                 <ol class="unstyled review-list">

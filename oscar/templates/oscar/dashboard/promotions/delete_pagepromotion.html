@@ -34,7 +34,7 @@
 
         <div class="form-actions">
             <button type="submit" class="btn btn-danger">{% trans "Remove" %}</button>
-            {% trans "or" %} <a href="{% url 'dashboard:promotion-list-by-url' object.page_url  %}">{% trans "cancel" %}</a>
+            {% trans "or" %} <a href="{% url 'dashboard:promotion-list-by-url' path=object.page_url  %}">{% trans "cancel" %}</a>
         </div>
     </form>
 {% endblock %}

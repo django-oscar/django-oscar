@@ -21,7 +21,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:offer-detail' offer.pk %}">'{{ offer.name }}'</a>
+            <a href="{% url 'dashboard:offer-detail' pk=offer.pk %}">'{{ offer.name }}'</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Delete?" %}</li>
