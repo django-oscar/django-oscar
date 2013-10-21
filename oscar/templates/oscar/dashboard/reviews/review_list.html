@@ -77,7 +77,7 @@
                         {% endif %}
                         <td>
                             {% if not review.is_anonymous %}
-                                <a href="{% c 'dashboard:user-detail' pk=review.user.id %}">{{ review.review_name }}</a>
+                                <a href="{% url 'dashboard:user-detail' pk=review.user.id %}">{{ review.review_name }}</a>
                             {% else %}
                                 {{ review.name }}
                             {% endif %}

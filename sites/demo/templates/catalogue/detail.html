@@ -154,7 +154,7 @@
                 {% if not reviews %}
                     <p class="well">
                         {% trans "This product does not have any reviews yet" %} - 
-                        <a href="{% url 'catalogue:reviews-add' product.slug product.id %}#addreview">{% trans "be the first to write one" %}</a>.
+                        <a href="{% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id %}#addreview">{% trans "be the first to write one" %}</a>.
                     </p>
                 {% else %}
                     {% for review in reviews|slice:":3" %}
