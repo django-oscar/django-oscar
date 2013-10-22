@@ -1,10 +1,11 @@
-from decimal import Decimal
+from decimal import Decimal as D
 
 from django.test import TestCase
 
 from oscar.apps.offer import models
 from oscar.apps.basket.models import Basket
-from oscar.test.factories import create_product
+from oscar.test import factories
+from oscar.test.basket import add_product, add_products
 from tests.unit.offer import OfferTest
 
 
@@ -19,44 +20,44 @@ class TestCountCondition(OfferTest):
         self.assertFalse(self.condition.is_satisfied(self.basket))
 
     def test_not_discountable_product_fails_condition(self):
-        prod1, prod2 = create_product(), create_product()
+        prod1, prod2 = factories.create_product(), factories.create_product()
         prod2.is_discountable = False
         prod2.save()
-        self.basket.add_product(prod1)
-        self.basket.add_product(prod2)
+        add_product(self.basket, product=prod1)
+        add_product(self.basket, product=prod2)
         self.assertFalse(self.condition.is_satisfied(self.basket))
 
     def test_empty_basket_fails_partial_condition(self):
         self.assertFalse(self.condition.is_partially_satisfied(self.basket))
 
     def test_smaller_quantity_basket_passes_partial_condition(self):
-        self.basket.add_product(create_product(), 1)
+        add_product(self.basket)
         self.assertTrue(self.condition.is_partially_satisfied(self.basket))
 
     def test_smaller_quantity_basket_upsell_message(self):
-        self.basket.add_product(create_product(), 1)
+        add_product(self.basket)
         self.assertTrue('Buy 1 more product from ' in
                         self.condition.get_upsell_message(self.basket))
 
     def test_matching_quantity_basket_fails_partial_condition(self):
-        self.basket.add_product(create_product(), 2)
+        add_product(self.basket, quantity=2)
         self.assertFalse(self.condition.is_partially_satisfied(self.basket))
 
     def test_matching_quantity_basket_passes_condition(self):
-        self.basket.add_product(create_product(), 2)
+        add_product(self.basket, quantity=2)
         self.assertTrue(self.condition.is_satisfied(self.basket))
 
     def test_greater_quantity_basket_passes_condition(self):
-        self.basket.add_product(create_product(), 3)
+        add_product(self.basket, quantity=3)
         self.assertTrue(self.condition.is_satisfied(self.basket))
 
     def test_consumption(self):
-        self.basket.add_product(create_product(), 3)
+        add_product(self.basket, quantity=3)
         self.condition.consume_items(self.basket, [])
         self.assertEquals(1, self.basket.all_lines()[0].quantity_without_discount)
 
     def test_is_satisfied_accounts_for_consumed_items(self):
-        self.basket.add_product(create_product(), 3)
+        add_product(self.basket, quantity=3)
         self.condition.consume_items(self.basket, [])
         self.assertFalse(self.condition.is_satisfied(self.basket))
 
@@ -64,9 +65,10 @@ class TestCountCondition(OfferTest):
 class ValueConditionTest(OfferTest):
     def setUp(self):
         super(ValueConditionTest, self).setUp()
-        self.condition = models.ValueCondition(range=self.range, type="Value", value=Decimal('10.00'))
-        self.item = create_product(price=Decimal('5.00'))
-        self.expensive_item = create_product(price=Decimal('15.00'))
+        self.condition = models.ValueCondition(
+            range=self.range, type="Value", value=D('10.00'))
+        self.item = factories.create_product(price=D('5.00'))
+        self.expensive_item = factories.create_product(price=D('15.00'))
 
     def test_empty_basket_fails_condition(self):
         self.assertFalse(self.condition.is_satisfied(self.basket))
@@ -75,47 +77,46 @@ class ValueConditionTest(OfferTest):
         self.assertFalse(self.condition.is_partially_satisfied(self.basket))
 
     def test_less_value_basket_fails_condition(self):
-        self.basket.add_product(self.item, 1)
+        add_product(self.basket, D('5'))
         self.assertFalse(self.condition.is_satisfied(self.basket))
 
     def test_not_discountable_item_fails_condition(self):
-        self.expensive_item.is_discountable = False
-        self.expensive_item.save()
-        self.basket.add_product(self.expensive_item, 1)
+        product = factories.create_product(is_discountable=False)
+        add_product(self.basket, D('15'), product=product)
         self.assertFalse(self.condition.is_satisfied(self.basket))
 
     def test_upsell_message(self):
-        self.basket.add_product(self.item, 1)
+        add_product(self.basket, D('5'))
         self.assertTrue('Spend' in self.condition.get_upsell_message(self.basket))
 
     def test_matching_basket_fails_partial_condition(self):
-        self.basket.add_product(self.item, 2)
+        add_product(self.basket, D('5'), 2)
         self.assertFalse(self.condition.is_partially_satisfied(self.basket))
 
     def test_less_value_basket_passes_partial_condition(self):
-        self.basket.add_product(self.item, 1)
+        add_product(self.basket, D('5'), 1)
         self.assertTrue(self.condition.is_partially_satisfied(self.basket))
 
     def test_matching_basket_passes_condition(self):
-        self.basket.add_product(self.item, 2)
+        add_product(self.basket, D('5'), 2)
         self.assertTrue(self.condition.is_satisfied(self.basket))
 
     def test_greater_than_basket_passes_condition(self):
-        self.basket.add_product(self.item, 3)
+        add_product(self.basket, D('5'), 3)
         self.assertTrue(self.condition.is_satisfied(self.basket))
 
     def test_consumption(self):
-        self.basket.add_product(self.item, 3)
+        add_product(self.basket, D('5'), 3)
         self.condition.consume_items(self.basket, [])
         self.assertEquals(1, self.basket.all_lines()[0].quantity_without_discount)
 
     def test_consumption_with_high_value_product(self):
-        self.basket.add_product(self.expensive_item, 1)
+        add_product(self.basket, D('15'), 1)
         self.condition.consume_items(self.basket, [])
         self.assertEquals(0, self.basket.all_lines()[0].quantity_without_discount)
 
     def test_is_consumed_respects_quantity_consumed(self):
-        self.basket.add_product(self.expensive_item, 1)
+        add_product(self.basket, D('15'), 1)
         self.assertTrue(self.condition.is_satisfied(self.basket))
         self.condition.consume_items(self.basket, [])
         self.assertFalse(self.condition.is_satisfied(self.basket))
@@ -124,14 +125,14 @@ class ValueConditionTest(OfferTest):
 class TestCoverageCondition(TestCase):
 
     def setUp(self):
-        self.products = [create_product(Decimal('5.00')), create_product(Decimal('10.00'))]
+        self.products = [factories.create_product(), factories.create_product()]
         self.range = models.Range.objects.create(name="Some products")
         for product in self.products:
             self.range.included_products.add(product)
             self.range.included_products.add(product)
-
-        self.basket = Basket.objects.create()
-        self.condition = models.CoverageCondition(range=self.range, type="Coverage", value=2)
+        self.basket = factories.create_basket(empty=True)
+        self.condition = models.CoverageCondition(
+            range=self.range, type="Coverage", value=2)
 
     def test_empty_basket_fails(self):
         self.assertFalse(self.condition.is_satisfied(self.basket))
@@ -140,46 +141,45 @@ class TestCoverageCondition(TestCase):
         self.assertFalse(self.condition.is_partially_satisfied(self.basket))
 
     def test_single_item_fails(self):
-        self.basket.add_product(self.products[0])
+        add_product(self.basket, product=self.products[0])
         self.assertFalse(self.condition.is_satisfied(self.basket))
 
     def test_not_discountable_item_fails(self):
         self.products[0].is_discountable = False
         self.products[0].save()
-        self.basket.add_product(self.products[0])
-        self.basket.add_product(self.products[1])
+        add_product(self.basket, product=self.products[0])
+        add_product(self.basket, product=self.products[1])
         self.assertFalse(self.condition.is_satisfied(self.basket))
 
     def test_single_item_passes_partial_condition(self):
-        self.basket.add_product(self.products[0])
+        add_product(self.basket, product=self.products[0])
         self.assertTrue(self.condition.is_partially_satisfied(self.basket))
 
     def test_upsell_message(self):
-        self.basket.add_product(self.products[0])
+        add_product(self.basket, product=self.products[0])
         self.assertTrue('Buy 1 more' in self.condition.get_upsell_message(self.basket))
 
     def test_duplicate_item_fails(self):
-        self.basket.add_product(self.products[0])
-        self.basket.add_product(self.products[0])
+        add_product(self.basket, quantity=2, product=self.products[0])
         self.assertFalse(self.condition.is_satisfied(self.basket))
 
     def test_duplicate_item_passes_partial_condition(self):
-        self.basket.add_product(self.products[0], 2)
+        add_product(self.basket, quantity=2, product=self.products[0])
         self.assertTrue(self.condition.is_partially_satisfied(self.basket))
 
     def test_covering_items_pass(self):
-        self.basket.add_product(self.products[0])
-        self.basket.add_product(self.products[1])
+        add_product(self.basket, product=self.products[0])
+        add_product(self.basket, product=self.products[1])
         self.assertTrue(self.condition.is_satisfied(self.basket))
 
     def test_covering_items_fail_partial_condition(self):
-        self.basket.add_product(self.products[0])
-        self.basket.add_product(self.products[1])
+        add_product(self.basket, product=self.products[0])
+        add_product(self.basket, product=self.products[1])
         self.assertFalse(self.condition.is_partially_satisfied(self.basket))
 
     def test_covering_items_are_consumed(self):
-        self.basket.add_product(self.products[0])
-        self.basket.add_product(self.products[1])
+        add_product(self.basket, product=self.products[0])
+        add_product(self.basket, product=self.products[1])
         self.condition.consume_items(self.basket, [])
         self.assertEquals(0, self.basket.num_items_without_discount)
 
@@ -190,9 +190,9 @@ class TestCoverageCondition(TestCase):
 
         # Get 4 distinct products in the basket
         self.products.extend(
-            [create_product(Decimal('15.00')), create_product(Decimal('20.00'))])
+            [factories.create_product(), factories.create_product()])
         for product in self.products:
-            self.basket.add_product(product)
+            add_product(self.basket, product=product)
 
         self.assertTrue(cond.is_satisfied(self.basket))
         cond.consume_items(self.basket, [])

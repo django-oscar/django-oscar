@@ -3,7 +3,7 @@ var oscar = (function(o, $) {
     o.messages = {
         addMessage: function(tag, msg) {
             var msgHTML = '<div class="alert fade in alert-' + tag + '">' +
-                '<a href="#" class="close" data-dismiss="alert">x</a>'  + msg +
+                '<a href="#" class="close" data-dismiss="alert">&times;</a>'  + msg +
                 '</div>';
             $('#messages').append($(msgHTML));
         },
@@ -11,7 +11,7 @@ var oscar = (function(o, $) {
         info: function(msg) { o.messages.addMessage('info', msg); },
         success: function(msg) { o.messages.addMessage('success', msg); },
         warning: function(msg) { o.messages.addMessage('warning', msg); },
-        error: function(msg) { o.messages.addMessage('error:', msg); },
+        error: function(msg) { o.messages.addMessage('error', msg); },
         clear: function() {
             $('#messages').html('');
         },
@@ -65,19 +65,6 @@ var oscar = (function(o, $) {
         }
     };
 
-    o.account = {
-        init: function() {
-            if (document.location.hash) {
-                // Ensure the right tab is open if it is specified in the hash.
-                var hash = document.location.hash.substring(1),
-                $activeClass = $('.account-profile .tabbable'),
-                $li = $('a[href=#' + hash + ']').closest('li');
-                $activeClass.find('.active').removeClass('active');
-                $('#' + hash).add($li).addClass('active');
-            }
-        }
-    };
-
 
     o.page = {
         init: function() {
@@ -107,8 +94,8 @@ var oscar = (function(o, $) {
         initNav: function() {
             // Initial navigation for desktop
             var $sidebar = $('aside.span3'), 
-                $browse = $('#browse > .dropdown-menu'), 
-                $browseOpen = $browse.parent().find('> button[data-toggle]');
+                $browse = $('[data-navigation="dropdown-menu"]'),
+                $browseOpen = $browse.parent().find('> a[data-toggle]');
             // Set width of nav dropdown to be same as sidebar
             $browse.css('width', $sidebar.outerWidth());
             // Remove click on browse button if menu is currently open

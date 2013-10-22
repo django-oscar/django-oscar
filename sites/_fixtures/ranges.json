@@ -5,6 +5,7 @@
         "fields": {
             "included_categories": [],
             "name": "Whole site",
+            "slug": "whole-site",
             "included_products": [],
             "proxy_class": null,
             "excluded_products": [],
@@ -21,6 +22,7 @@
                 2
             ],
             "name": "Fiction books",
+            "slug": "fiction-books",
             "included_products": [],
             "proxy_class": null,
             "excluded_products": [],

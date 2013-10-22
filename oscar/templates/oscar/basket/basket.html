@@ -1,5 +1,4 @@
 {% extends "layout.html" %}
-{% load currency_filters %}
 {% load thumbnail %}
 {% load i18n %}
 {% load url from future %}
@@ -31,6 +30,7 @@
 {% endblock content %}
 
 {% block onbodyload %}
+    {{ block.super }}
     {# We pass in the URL to send AJAX requests to #}
     var options = {
         'basketURL': '{% url 'basket:summary' %}'

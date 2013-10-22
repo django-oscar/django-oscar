@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from oscar.test.factories import create_product
 from oscar.core.compat import get_user_model
-from oscar.apps.customer.history_helpers import get_recently_viewed_product_ids
+from oscar.apps.customer  import history
 from oscar.templatetags.history_tags import get_back_button
 from django.http import HttpRequest
 
@@ -20,13 +20,13 @@ class HistoryHelpersTest(TestCase):
 
     def test_viewing_product_creates_cookie(self):
         response = self.client.get(self.product.get_absolute_url())
-        self.assertTrue('oscar_recently_viewed_products' in response.cookies)
+        self.assertTrue(history.COOKIE_NAME in response.cookies)
 
     def test_id_gets_added_to_cookie(self):
         response = self.client.get(self.product.get_absolute_url())
         request = HttpRequest()
-        request.COOKIES['oscar_recently_viewed_products'] = response.cookies['oscar_recently_viewed_products'].value
-        self.assertTrue(self.product.id in get_recently_viewed_product_ids(request))
+        request.COOKIES[history.COOKIE_NAME] = response.cookies[history.COOKIE_NAME].value
+        self.assertTrue(self.product.id in history.extract(request))
 
     def test_get_back_button(self):
         request = HttpRequest()
@@ -57,9 +57,8 @@ class TestAUserWhoLogsOut(TestCase):
 
     def test_has_their_cookies_deleted_on_logout(self):
         response = self.client.get(self.product.get_absolute_url())
-        self.assertTrue('oscar_recently_viewed_products' in response.cookies)
+        self.assertTrue(history.COOKIE_NAME in response.cookies)
 
         response = self.client.get(reverse('customer:logout'))
-        self.assertTrue(('oscar_recently_viewed_products' not in response.cookies)
-                        or not
-                        self.client.cookies['oscar_recently_viewed_products'].coded_value)
+        self.assertTrue((history.COOKIE_NAME not in response.cookies)
+                        or not self.client.cookies['oscar_recently_viewed_products'].coded_value)

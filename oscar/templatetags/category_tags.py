@@ -80,9 +80,9 @@ class CategoryTreeNode(template.Node):
 
         Borrows heavily from treebeard's get_annotated_list
         """
-        result, info = [], {}
-        start_depth, prev_depth = (None, None)
+        annotated_categories = []
 
+        start_depth, prev_depth = (None, None)
         if parent:
             categories = parent.get_descendants()
             if max_depth is not None:
@@ -90,31 +90,30 @@ class CategoryTreeNode(template.Node):
         else:
             categories = Category.get_tree()
 
+        info = {}
         for node in categories:
             depth = node.get_depth()
             if start_depth is None:
                 start_depth = depth
-
             if max_depth is not None and depth > max_depth:
                 continue
 
-            # annotate previous node's info
+            # Update previous node's info
             info['has_children'] = depth > prev_depth
             if depth < prev_depth:
                 info['num_to_close'] = range(0, prev_depth - depth)
 
-            info = {'open': depth > prev_depth,  # is going down a level
-                    'num_to_close': [],                 # is going up len(close) levels
+            info = {'num_to_close': [],
                     'level': depth - start_depth}
-
-            result.append((node, info,))
+            annotated_categories.append((node, info,))
             prev_depth = depth
 
         if prev_depth is not None:
             # close last leaf
             info['num_to_close'] = range(0, prev_depth - start_depth)
             info['has_children'] = prev_depth > prev_depth
-        return result
+
+        return annotated_categories
 
     def render(self, context):
         depth = int(self.depth_var.resolve(context))
@@ -122,6 +121,7 @@ class CategoryTreeNode(template.Node):
             parent = self.parent_var.resolve(context)
         else:
             parent = None
-        annotated_list = self.get_annotated_list(max_depth=depth or None, parent=parent)
+        annotated_list = self.get_annotated_list(
+            max_depth=depth or None, parent=parent)
         context[self.as_var] = annotated_list
         return ''

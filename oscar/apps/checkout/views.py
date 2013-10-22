@@ -9,14 +9,11 @@ from django.db.models import get_model
 from django.utils.translation import ugettext as _
 from django.views.generic import DetailView, TemplateView, FormView, \
                                  DeleteView, UpdateView, CreateView
-from oscar.apps.customer.utils import normalise_email
 
 from oscar.apps.shipping.methods import NoShippingRequired
 from oscar.core.loading import get_class, get_classes
 
 ShippingAddressForm, GatewayForm = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
-OrderTotalCalculator = get_class('checkout.calculators', 'OrderTotalCalculator')
-CheckoutSessionData = get_class('checkout.utils', 'CheckoutSessionData')
 pre_payment, post_payment = get_classes('checkout.signals', ['pre_payment', 'post_payment'])
 OrderNumberGenerator, OrderCreator = get_classes('order.utils', ['OrderNumberGenerator', 'OrderCreator'])
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
@@ -256,7 +253,7 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         self._methods = self.get_available_shipping_methods()
         if len(self._methods) == 0:
             # No shipping methods available for given address
-            messages.warning(request, _("Shipping is not available for your chosen address - please choose another"))
+            messages.warning(request, _("Shipping is unavailable for your chosen address - please choose another"))
             return HttpResponseRedirect(reverse('checkout:shipping-address'))
         elif len(self._methods) == 1:
             # Only one shipping method - set this and redirect onto the next step
@@ -278,10 +275,12 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         for a given basket.
         """
         # Shipping methods can depend on the user, the contents of the basket
-        # and the shipping address.  I haven't come across a scenario that doesn't
-        # fit this system.
-        return Repository().get_shipping_methods(self.request.user, self.request.basket,
-                                                 self.get_shipping_address())
+        # and the shipping address.  I haven't come across a scenario that
+        # doesn't fit this system.
+        return Repository().get_shipping_methods(
+            user=self.request.user, basket=self.request.basket,
+            shipping_addr=self.get_shipping_address(self.request.basket),
+            request=self.request)
 
     def post(self, request, *args, **kwargs):
         # Need to check that this code is valid for this user
@@ -330,7 +329,7 @@ class PaymentMethodView(CheckoutSessionMixin, TemplateView):
             return HttpResponseRedirect(reverse('checkout:shipping-address'))
 
         # Check that shipping method has been set
-        if shipping_required and not self.checkout_session.is_shipping_method_set():
+        if shipping_required and not self.checkout_session.is_shipping_method_set(self.request.basket):
             messages.error(request, _("Please choose a shipping method"))
             return HttpResponseRedirect(reverse('checkout:shipping-method'))
 
@@ -363,7 +362,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         error_response = self.get_error_response()
         if error_response:
             return error_response
-
         return super(PaymentDetailsView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
@@ -381,7 +379,10 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             # place an order.  Without this, we assume a payment form is being
             # submitted from the payment-details page
             if request.POST.get('action', '') == 'place_order':
-                return self.submit(request.basket)
+                # We pull together all the things that are needed to place an
+                # order.
+                submission = self.build_submission()
+                return self.submit(**submission)
             return self.render_preview(request)
 
         # Posting to payment-details isn't the right thing to do
@@ -390,30 +391,58 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     def get_error_response(self):
         # Check that the user's basket is not empty
         if self.request.basket.is_empty:
-            messages.error(self.request, _("You need to add some items to your basket to checkout"))
+            messages.error(self.request, _(
+                "You need to add some items to your basket to checkout"))
             return HttpResponseRedirect(reverse('basket:summary'))
 
-        shipping_required = self.request.basket.is_shipping_required()
+        if self.request.basket.is_shipping_required():
+            shipping_address = self.get_shipping_address(
+                self.request.basket)
+            shipping_method = self.get_shipping_method(
+                self.request.basket, shipping_address)
+            # Check that shipping address has been completed
+            if not shipping_address:
+                messages.error(
+                    self.request, _("Please choose a shipping address"))
+                return HttpResponseRedirect(
+                    reverse('checkout:shipping-address'))
 
-        # Check that shipping address has been completed
-        if shipping_required and not self.checkout_session.is_shipping_address_set():
-            messages.error(self.request, _("Please choose a shipping address"))
-            return HttpResponseRedirect(reverse('checkout:shipping-address'))
+            # Check that shipping method has been set
+            if not shipping_method:
+                messages.error(
+                    self.request, _("Please choose a shipping method"))
+                return HttpResponseRedirect(
+                    reverse('checkout:shipping-method'))
 
-        # Check that shipping method has been set
-        if shipping_required and not self.checkout_session.is_shipping_method_set():
-            messages.error(self.request, _("Please choose a shipping method"))
-            return HttpResponseRedirect(reverse('checkout:shipping-method'))
+    def build_submission(self, **kwargs):
+        """
+        Return a dict of data to submitted to pay for, and create an order
+        """
+        basket = self.request.basket
+        shipping_address = self.get_shipping_address(basket)
+        shipping_method = self.get_shipping_method(
+            basket, shipping_address)
+        total = self.get_order_totals(
+            basket, shipping_method=shipping_method)
+        submission = {
+            'user': self.request.user,
+            'basket': basket,
+            'shipping_address': shipping_address,
+            'shipping_method': shipping_method,
+            'order_total': total,
+            'order_kwargs': {},
+            'payment_kwargs': {}}
+        if not submission['user'].is_authenticated():
+            email = self.checkout_session.get_guest_email()
+            submission['order_kwargs']['guest_email'] = email
+        return submission
 
     def get_context_data(self, **kwargs):
-        # Return kwargs directly instead of using 'params' as in django's
-        # TemplateView
-        ctx = super(PaymentDetailsView, self).get_context_data(**kwargs)
-
-        # Add guest email if one is set
-        ctx['guest_email'] = self.checkout_session.get_guest_email()
-
+        # Use the proposed submission as template context data.  Flatten the
+        # order kwargs so they are easily available too.
+        ctx = self.build_submission(**kwargs)
         ctx.update(kwargs)
+        ctx.update(ctx['order_kwargs'])
         return ctx
 
     def get_template_names(self):
@@ -425,16 +454,22 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         Show a preview of the order.
 
         If sensitive data was submitted on the payment details page, you will
-        need to pass it back to the view here so it can be stored in hidden form
-        inputs.  This avoids ever writing the sensitive data to disk.
+        need to pass it back to the view here so it can be stored in hidden
+        form inputs.  This avoids ever writing the sensitive data to disk.
         """
         ctx = self.get_context_data()
         ctx.update(kwargs)
         return self.render_to_response(ctx)
 
     def can_basket_be_submitted(self, basket):
-        for line in basket.lines.all():
-            is_permitted, reason = line.product.is_purchase_permitted(self.request.user, line.quantity)
+        """
+        Check if the basket is permitted to be submitted as an order
+        """
+        strategy = self.request.strategy
+        for line in basket.all_lines():
+            result = strategy.fetch(line.product)
+            is_permitted, reason = result.availability.is_purchase_permitted(
+                line.quantity)
             if not is_permitted:
                 return False, reason, reverse('basket:summary')
         return True, None, None
@@ -456,7 +491,8 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         except UserAddress.DoesNotExist:
             return None
 
-    def submit(self, basket, payment_kwargs=None, order_kwargs=None):
+    def submit(self, user, basket, shipping_address, shipping_method,
+               order_total, payment_kwargs=None, order_kwargs=None):
         """
         Submit a basket for order placement.
 
@@ -472,13 +508,19 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
            - If payment is unsuccessful, show an appropriate error message
 
         :basket: The basket to submit.
-        :payment_kwargs: Additional kwargs to pass to the handle_payment method.
-        :order_kwargs: Additional kwargs to pass to the place_order method.
+        :payment_kwargs: Additional kwargs to pass to the handle_payment method
+        :order_kwargs: Additional kwargs to pass to the place_order method
         """
         if payment_kwargs is None:
             payment_kwargs = {}
         if order_kwargs is None:
             order_kwargs = {}
+
+        # Taxes must be known at this point
+        assert basket.is_tax_known, (
+            "Basket tax must be set before a user can place an order")
+        assert shipping_method.is_tax_known, (
+            "Shipping method tax must be set before a user can place an order")
 
         # Domain-specific checks on the basket
         is_valid, reason, url = self.can_basket_be_submitted(basket)
@@ -493,7 +535,8 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         # the order on a different request).
         order_number = self.generate_order_number(basket)
         self.checkout_session.set_order_number(order_number)
-        logger.info("Order #%s: beginning submission process for basket #%d", order_number, basket.id)
+        logger.info("Order #%s: beginning submission process for basket #%d",
+                    order_number, basket.id)
 
         # Freeze the basket so it cannot be manipulated while the customer is
         # completing payment on a 3rd party site.  Also, store a reference to
@@ -510,9 +553,9 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
                       "order - no payment has been taken.  Please "
                       "contact customer services if this problem persists")
         pre_payment.send_robust(sender=self, view=self)
-        total_incl_tax, total_excl_tax = self.get_order_totals(basket)
+
         try:
-            self.handle_payment(order_number, total_incl_tax, **payment_kwargs)
+            self.handle_payment(order_number, order_total, **payment_kwargs)
         except RedirectRequired, e:
             # Redirect required (eg PayPal, 3DS)
             logger.info("Order #%s: redirecting to %s", order_number, e.url)
@@ -523,7 +566,9 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             # thing. This type of exception is supposed to set a friendly error
             # message that makes sense to the customer.
             msg = unicode(e)
-            logger.warning("Order #%s: unable to take payment (%s) - restoring basket", order_number, msg)
+            logger.warning(
+                "Order #%s: unable to take payment (%s) - restoring basket",
+                order_number, msg)
             self.restore_frozen_basket()
             # We re-render the payment details view
             self.preview = False
@@ -536,34 +581,38 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             # mail admins on an error as this issue warrants some further
             # investigation.
             msg = unicode(e)
-            logger.error("Order #%s: payment error (%s)", order_number, msg)
+            logger.error("Order #%s: payment error (%s)", order_number, msg,
+                         exc_info=True)
             self.restore_frozen_basket()
             self.preview = False
-            return self.render_to_response(self.get_context_data(error=error_msg))
+            return self.render_to_response(
+                self.get_context_data(error=error_msg))
         except Exception, e:
             # Unhandled exception - hopefully, you will only ever see this in
             # development.
-            logger.error("Order #%s: unhandled exception while taking payment (%s)", order_number, e)
-            logger.exception(e)
+            logger.error(
+                "Order #%s: unhandled exception while taking payment (%s)",
+                order_number, e, exc_info=True)
             self.restore_frozen_basket()
             self.preview = False
-            return self.render_to_response(self.get_context_data(error=error_msg))
+            return self.render_to_response(
+                self.get_context_data(error=error_msg))
         post_payment.send_robust(sender=self, view=self)
 
         # If all is ok with payment, try and place order
-        logger.info("Order #%s: payment successful, placing order", order_number)
+        logger.info("Order #%s: payment successful, placing order",
+                    order_number)
         try:
             return self.handle_order_placement(
-                order_number, basket, total_incl_tax, total_excl_tax,
-                **order_kwargs)
+                order_number, user, basket, shipping_address, shipping_method,
+                order_total, **order_kwargs)
         except UnableToPlaceOrder, e:
             # It's possible that something will go wrong while trying to
             # actually place an order.  Not a good situation to be in as a
             # payment transaction may already have taken place, but needs
             # to be handled gracefully.
             logger.error("Order #%s: unable to place order - %s",
-                         order_number, e)
-            logger.exception(e)
+                         order_number, e, exc_info=True)
             msg = unicode(e)
             self.restore_frozen_basket()
             return self.render_to_response(self.get_context_data(error=msg))

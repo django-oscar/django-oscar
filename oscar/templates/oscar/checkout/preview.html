@@ -1,5 +1,4 @@
 {% extends "checkout/checkout.html" %}
-
 {% load url from future %}
 {% load i18n %}
 
@@ -9,6 +8,10 @@
 
 {% block checkout_nav %}
     {% include 'checkout/nav.html' with step=4 %}
+{% endblock %}
+
+{% block checkout_title %}
+    {% trans "Preview order" %}
 {% endblock %}
 
 {% block place_order %}
@@ -26,8 +29,12 @@
             {% block hiddenforms %}{% endblock %}
         </div>
 
-        <div class="form-actions">
-            <button id='place-order' type="submit" class="pull-right btn btn-primary btn-large js-disable-on-click" data-loading-text="{% trans 'Submitting...' %}">{% trans "Place order" %}</button>
+        <div class="form-actions clearfix">
+            <div class="row-fluid">
+                <div class="span3 offset9">
+                     <button id='place-order' type="submit" class="btn btn-primary btn-large btn-block js-disable-on-click" data-loading-text="{% trans 'Submitting...' %}">{% trans "Place order" %}</button>
+                </div>
+            </div>
         </div>
     </form>
 {% endblock place_order %}

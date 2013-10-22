@@ -1,21 +1,27 @@
 {% extends "layout.html" %}
 
 {% load url from future %}
-{% load currency_filters %}
 {% load history_tags %}
+{% load currency_filters %}
 {% load reviews_tags %}
 {% load staticfiles %}
 {% load product_tags %}
 {% load display_tags %}
 {% load i18n %}
+{% load stockrecord_tags %}
 
 {% block extrastyles %}
+    {{ block.super }}
     <!-- Colorbox (a lightbox plugin) for image galleries -->
     <link rel="stylesheet" href="{% static "oscar/js/colorbox/colorbox.css" %}" type="text/css" media="screen" charset="utf-8"/>
 {% endblock %}
 
 {% block title %}
     {{ product.title }} | {{ block.super }}
+{% endblock %}
+
+{% block description %}
+    {{ product.description }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -67,17 +73,23 @@
             pops out when clicked.  A bit like the Django-Debug-Toolbar button
             {% endcomment %}
             {% if user.is_authenticated and user.is_staff %}
-                <a class="pull-right" href="{% url 'dashboard:catalogue-product' product.id %}"><small><i class="icon-edit"></i> {% trans "Edit this product" %}</small></a>
+                <a class="pull-right hidden-phone" href="{% url 'dashboard:catalogue-product' product.id %}"><small><i class="icon-edit"></i> {% trans "Edit this product" %}</small></a>
             {% endif %}
             <h1>{{ product.get_title }}</h1>
 
             {% block product_stock_record %}
-            {% include "catalogue/partials/stock_record.html" %}
+                {% include "catalogue/partials/stock_record.html" with verbose=1 %}
             {% endblock %}
 
             {% iffeature "reviews" %}
                 {% if product.rating != None %}
-                <p class="star {{ product.rating|as_stars }}">
+                <h4 class="star-rating {{ product.rating|as_stars }}">
+                    <i class="icon-star"></i>
+                    <i class="icon-star"></i>
+                    <i class="icon-star"></i>
+                    <i class="icon-star"></i>
+                    <i class="icon-star"></i>
+
                     <small><a href="{% url 'catalogue:reviews-list' product.slug product.id %}">
                             {% blocktrans count reviews|length as num_reviews %}
                             1 custom review
@@ -87,14 +99,14 @@
                     </a></small>
                     &nbsp;
                 {% else %}
-                    <p class="star">
+                    <h4>
                 {% endif %}
                 {% if not product|has_review_by:user %}
                     <a id="write_review" href="{% url 'catalogue:reviews-add' product.slug product.id %}#addreview" class="btn btn-success btn-small">
                         {% trans "Write a review" %}
                     </a>
                 {% endif %}
-                </p>
+                </h4>
             {% endiffeature %}
 
             <hr/>
@@ -129,17 +141,24 @@
         <tr>
             <th>{% trans "Product class" %}</th><td>{{ product.get_product_class.name }}</td>
         </tr>
-        {% if product.stockrecord %}
-        <tr>
-            <th>{% trans "Price (excl. tax)" %}</th><td>{{ product.stockrecord.price_excl_tax|currency }}</td>
-        </tr>
-        <tr>
-            <th>{% trans "Price (incl. tax)" %}</th><td>{{ product.stockrecord.price_incl_tax|currency }}</td>
-        </tr>
-        <tr>
-            <th>{% trans "Availability" %}</th>
-            <td>{{ product.stockrecord.availability }}</td>
-        </tr>
+
+        {% session_strategy request product as session %}
+        {% if session.price.exists %}
+            <tr>
+                <th>{% trans "Price (excl. tax)" %}</th><td>{{ session.price.excl_tax|currency:session.price.currency }}</td>
+            </tr>
+            {% if session.price.is_tax_known %}
+                <tr>
+                    <th>{% trans "Price (incl. tax)" %}</th><td>{{ session.price.incl_tax|currency:session.price.currency }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Tax" %}</th><td>{{ session.price.tax|currency:session.price.currency }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th>{% trans "Availability" %}</th>
+                <td>{{ session.availability.message }}</td>
+            </tr>
         {% endif %}
         {% for av in product.attribute_values.all %}
         <tr>
@@ -176,58 +195,54 @@
                     <a href="{% url 'catalogue:reviews-add' product.slug product.id %}#addreview">{% trans "be the first to write one" %}</a>.
                 </p>
             {% else %}
-                <div>
+                <ol class="unstyled review-list">
                     {% for review in reviews|slice:":3" %}
+                        <li>
                         {% include 'catalogue/partials/review.html' %}
+                        </li>
                     {% endfor %}
-                </div>
+                </ol>
             {% endif %}
         </section>
         {% endblock product_review %}
     {% endiffeature %}
 
-    <div class="row-fluid">
-        {% if product.related_products.count %}
-        <div class="span6">
-            <div class="sub-header">
-                <h2>{% trans "Related items" %}</h2>
-            </div>
-            <div class="es-carousel-wrapper">
-                <div class="es-carousel">
-                    <ul>
-                        {% for product in product.related_products.all %}
-                        <li>
-                            {% render_product product %}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
+    {% if product.related_products.count %}
+        <div class="sub-header">
+            <h2>{% trans "Related items" %}</h2>
+        </div>
+        <div class="es-carousel-wrapper">
+            <div class="es-carousel">
+                <ul>
+                    {% for product in product.related_products.all %}
+                    <li>
+                        {% render_product product %}
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
-        {% endif %}
+    {% endif %}
 
-        {% if product.recommended_products.count %}
-        <div class="span6">
-            <div class="sub-header">
-                <h2>{% trans "Recommended items" %}</h2>
-            </div>
-            <div class="es-carousel-wrapper">
-                <div class="es-carousel">
-                    <ul>
-                        {% for product in product.recommended_products.all %}
-                        <li>
-                            {% render_product product %}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
+    {% if product.recommended_products.count %}
+        <div class="sub-header">
+            <h2>{% trans "Recommended items" %}</h2>
+        </div>
+        <div class="es-carousel-wrapper">
+            <div class="es-carousel">
+                <ul>
+                    {% for product in product.recommended_products.all %}
+                    <li>
+                        {% render_product product %}
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
-        {% endif %}
+    {% endif %}
+    
+    {% recently_viewed_products %}
 
-        {% recently_viewed_products %}
-
-    </div>
 </article><!-- End of product page -->
 {% endblock content %}
 

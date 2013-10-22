@@ -1,7 +1,6 @@
 {% extends "layout_2_col.html" %}
 
 {% load url from future %}
-{% load currency_filters %}
 {% load basket_tags %}
 {% load promotion_tags %}
 {% load category_tags %}
@@ -11,6 +10,10 @@
 
 {% block title %}
     {{ summary }} | {{ block.super }}
+{% endblock %}
+
+{% block description %}
+    {{ category.description }}
 {% endblock %}
 
 {% block headertext %}{{ summary }}{% endblock %}
@@ -72,9 +75,9 @@
     {% if products %}
         <section>
             <div class="mod">
-                <ol class="products four">
+                <ol class="row-fluid">
                     {% for product in products %}
-                        <li>{% render_product product %}</li>
+                        <li class="span3 {% if forloop.counter0|divisibleby:"4" %}no-margin{% endif %}">{% render_product product %}</li>
                     {% endfor %}
                 </ol>
                 {% include "partials/pagination.html" %}

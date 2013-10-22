@@ -4,8 +4,8 @@ Settings for Oscar's demo site.
 Notes:
 
 * The demo site uses the stores extension which requires a spatial database.
-  The DATABASES settings is not set in this module.  Instead, you should add
-  the appropriate details to your settings_local module.
+  Only the postgis and spatialite backends are tested, but all backends
+  supported by GeoDjango should work.
 
 """
 
@@ -22,7 +22,7 @@ SQL_DEBUG = True
 SEND_BROKEN_LINK_EMAILS = False
 
 ADMINS = (
-    ('David', 'david.winterbottom@tangentlabs.co.uk'),
+    ('David Winterbottom', 'david.winterbottom@tangentlabs.co.uk'),
 )
 EMAIL_SUBJECT_PREFIX = '[Oscar demo] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -32,7 +32,7 @@ ALLOWED_HOSTS = ['demo.oscarcommerce.com',
 
 MANAGERS = ADMINS
 
-# Use settings_local to specify your own PostGIS database and creds
+# Use settings_local to override this default
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
@@ -46,9 +46,7 @@ DATABASES = {
 
 CACHES = {
     'default': {
-        'BACKEND':
-        'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
 
@@ -63,7 +61,7 @@ TIME_ZONE = 'Europe/London'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-gb'
 
 LANGUAGES = (
     ('en-gb', 'English'),
@@ -165,6 +163,11 @@ LOGGING = {
             'format': '%(levelname)s %(message)s'
         },
     },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
     'handlers': {
         'null': {
             'level': 'DEBUG',
@@ -190,6 +193,7 @@ LOGGING = {
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
+            'filters': ['require_debug_false'],
         },
     },
     'loggers': {
@@ -259,7 +263,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-LOGIN_REDIRECT_URL = '/accounts/'
+LOGIN_REDIRECT_URL = '/'
 APPEND_SLASH = True
 
 # Haystack settings
@@ -283,7 +287,7 @@ OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = True
 
 OSCAR_SHOP_NAME = 'Oscar'
-OSCAR_SHOP_TAGLINE = 'Demo site'
+OSCAR_SHOP_TAGLINE = 'Demo'
 
 COMPRESS_ENABLED = False
 COMPRESS_PRECOMPILERS = (

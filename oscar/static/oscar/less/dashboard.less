@@ -797,9 +797,10 @@ div[data-spy="affix"].affix {
 .bs-docs-sidenav > li > a,
 .bs-docs-sidenav > li > span {
   display: block;
-  margin: 0 0 -1px;
+  margin: 0;
   padding: 8px 14px;
   border: 1px solid #e5e5e5;
+  border-top-width:0;
   color:@linkColor;
   &:hover {
    background:#f1faff;
@@ -820,12 +821,7 @@ div[data-spy="affix"].affix {
   background:#f1faff;
   z-index: 2;
   padding: 9px 15px;
-  border-left: 0;
-  border-right: 0;
   text-shadow: 0 1px 0 rgba(0,0,0,.15);
-  -webkit-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
-     -moz-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
-          box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
   &:hover {
     background:#f1faff;
     color:@linkColor;
@@ -873,77 +869,6 @@ div[data-spy="affix"].affix {
     &:first-child {
       border-top-width:1px;
     }
-  }
-}
-
-
-/* Sidenav for Docs
--------------------------------------------------- */
-div[data-spy="affix"] {
-  width:266px;
-}
-div[data-spy="affix"].affix {
-  top:@baseLineHeight;
-}
-
-.bs-docs-sidenav {
-  padding: 0;
-  background-color: #fff;
-  -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
-     -moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
-          box-shadow: 0 1px 4px rgba(0,0,0,.065);
-}
-.bs-docs-sidenav > li > a {
-  display: block;
-  width: 190px \9;
-  margin: 0 0 -1px;
-  padding: 8px 14px;
-  border: 1px solid #e5e5e5;
-  color:@linkColor;
-  &:hover {
-   background:#f1faff;
-  }
-  i.icon-info-sign {
-    color:#ea0001;
-    font-size:16px;
-  }
-}
-.bs-docs-sidenav > .active > a {
-  font-weight:bold;
-  position: relative;
-  color:@linkColor;
-  background:#f1faff;
-  z-index: 2;
-  padding: 9px 15px;
-  border-left: 0;
-  border-right: 0;
-  text-shadow: 0 1px 0 rgba(0,0,0,.15);
-  -webkit-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
-     -moz-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
-          box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
-  &:hover {
-    background:#f1faff;
-    color:@linkColor;
-  }
-  &:after {
-    border-bottom: 10px solid transparent;
-    border-left: 10px solid #f1faff;
-    border-top: 10px solid transparent;
-    content: "";
-    display: inline-block;
-    position: absolute;
-    right: -9px;
-    top: 9px;
-  }
-  &:before {
-    border-bottom: 11px solid transparent;
-    border-left: 11px solid #ccc;
-    border-top: 11px solid transparent;
-    content: "";
-    display: inline-block;
-    position: absolute;
-    right: -10px;
-    top: 8px;
   }
 }
 

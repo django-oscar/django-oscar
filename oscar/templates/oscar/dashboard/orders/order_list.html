@@ -107,7 +107,7 @@
                     <tr>
                         <td><input type="checkbox" name="selected_order" class="selected_order" value="{{ order.id }}"/>
                             <td><a href="{% url 'dashboard:order-detail' order.number %}">{{ order.number }}</a></td>
-                            <td>{{ order.total_incl_tax|currency }}</td>
+                            <td>{{ order.total_incl_tax|currency:order.currency }}</td>
                             <td>{{ order.num_items }}</td>
                             <td>{{ order.status|default:"-" }}</td>
                             <td>
@@ -142,6 +142,7 @@
     {% endblock dashboard_content %}
 
     {% block onbodyload %}
+        {{ block.super }}
         oscar.dashboard.orders.initTable();
         oscar.dashboard.search.init();
     {% endblock onbodyload %}

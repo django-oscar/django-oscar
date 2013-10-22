@@ -2,14 +2,14 @@ from itertools import chain
 from decimal import Decimal as D
 import hashlib
 
+from django.conf import settings
 from django.db import models
+from django.db.models import Sum
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
+
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.utils import slugify
-from django.utils.translation import ugettext_lazy as _
-from django.db.models import Sum
-from django.conf import settings
-
 from . import exceptions
 
 
@@ -18,20 +18,31 @@ class AbstractOrder(models.Model):
     The main order model
     """
     number = models.CharField(_("Order number"), max_length=128, db_index=True)
+
     # We track the site that each order is placed within
     site = models.ForeignKey('sites.Site', verbose_name=_("Site"))
-    basket_id = models.PositiveIntegerField(_("Basket ID"), null=True, blank=True)
+    basket_id = models.PositiveIntegerField(
+        _("Basket ID"), null=True, blank=True)
+
     # Orders can be anonymous so we don't always have a customer ID
-    user = models.ForeignKey(AUTH_USER_MODEL, related_name='orders', null=True, blank=True, verbose_name=_("User"))
+    user = models.ForeignKey(
+        AUTH_USER_MODEL, related_name='orders', null=True, blank=True,
+        verbose_name=_("User"))
+
     # Billing address is not always required (eg paying by gift card)
-    billing_address = models.ForeignKey('order.BillingAddress', null=True, blank=True,
+    billing_address = models.ForeignKey(
+        'order.BillingAddress', null=True, blank=True,
         verbose_name=_("Billing Address"))
 
     # Total price looks like it could be calculated by adding up the
     # prices of the associated lines, but in some circumstances extra
     # order-level charges are added and so we need to store it separately
-    total_incl_tax = models.DecimalField(_("Order total (inc. tax)"), decimal_places=2, max_digits=12)
-    total_excl_tax = models.DecimalField(_("Order total (excl. tax)"), decimal_places=2, max_digits=12)
+    currency = models.CharField(
+        _("Currency"), max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
+    total_incl_tax = models.DecimalField(
+        _("Order total (inc. tax)"), decimal_places=2, max_digits=12)
+    total_excl_tax = models.DecimalField(
+        _("Order total (excl. tax)"), decimal_places=2, max_digits=12)
 
     # Shipping charges
     shipping_incl_tax = models.DecimalField(
@@ -41,34 +52,58 @@ class AbstractOrder(models.Model):
         _("Shipping charge (excl. tax)"), decimal_places=2, max_digits=12,
         default=0)
 
-    # Not all lines are actually shipped (such as downloads), hence shipping address
-    # is not mandatory.
+    # Not all lines are actually shipped (such as downloads), hence shipping
+    # address is not mandatory.
     shipping_address = models.ForeignKey(
         'order.ShippingAddress', null=True, blank=True,
         verbose_name=_("Shipping Address"))
     shipping_method = models.CharField(
         _("Shipping method"), max_length=128, null=True, blank=True)
 
-    # Use this field to indicate that an order is on hold / awaiting payment
-    status = models.CharField(_("Status"), max_length=100, null=True, blank=True)
+    # Identifies shipping code
+    shipping_code = models.CharField(blank=True, max_length=128, default="")
 
-    guest_email = models.EmailField(_("Guest email address"), null=True, blank=True)
+    # Use this field to indicate that an order is on hold / awaiting payment
+    status = models.CharField(
+        _("Status"), max_length=100, null=True, blank=True)
+
+    guest_email = models.EmailField(
+        _("Guest email address"), null=True, blank=True)
 
     # Index added to this field for reporting
     date_placed = models.DateTimeField(auto_now_add=True, db_index=True)
 
-    # Dict of available status changes
+    #: Order status pipeline.  This should be a dict where each (key, value) #:
+    #: corresponds to a status and a list of possible statuses that can follow
+    #: that one.
     pipeline = getattr(settings,  'OSCAR_ORDER_STATUS_PIPELINE', {})
+
+    #: Order status cascade pipeline.  This should be a dict where each (key,
+    #: value) pair corresponds to an *order* status and the corresponding
+    #: *line* status that needs to be set when the order is set to the new
+    #: status
     cascade = getattr(settings,  'OSCAR_ORDER_STATUS_CASCADE', {})
 
     @classmethod
     def all_statuses(cls):
+        """
+        Return all possible statuses for an order
+        """
         return cls.pipeline.keys()
 
     def available_statuses(self):
+        """
+        Return all possible statuses that this order can move to
+        """
         return self.pipeline.get(self.status, ())
 
     def set_status(self, new_status):
+        """
+        Set a new status for this order.
+
+        If the requested status is not valid, then ``InvalidOrderStatus`` is
+        raised.
+        """
         if new_status == self.status:
             return
         if new_status not in self.available_statuses():
@@ -331,6 +366,11 @@ class AbstractLine(models.Model):
     partner = models.ForeignKey(
         'partner.Partner', related_name='order_lines', blank=True, null=True,
         on_delete=models.SET_NULL, verbose_name=_("Partner"))
+    # We keep a link to the stockrecord used for this line which allows us to
+    # update stocklevels when it ships
+    stockrecord = models.ForeignKey(
+        'partner.StockRecord', on_delete=models.SET_NULL, blank=True,
+        null=True, verbose_name=_("Stock record"))
     partner_name = models.CharField(_("Partner name"), max_length=128)
     partner_sku = models.CharField(_("Partner SKU"), max_length=128)
 
@@ -388,12 +428,15 @@ class AbstractLine(models.Model):
     # Partners often want to assign some status to each line to help with their
     # own business processes.
     status = models.CharField(_("Status"), max_length=255,
-                              null=True, blank=True)
+                             null=True, blank=True)
 
     # Estimated dispatch date - should be set at order time
     est_dispatch_date = models.DateField(
         _("Estimated Dispatch Date"), blank=True, null=True)
 
+    #: Order status pipeline.  This should be a dict where each (key, value)
+    #: corresponds to a status and the possible statuses that can follow that
+    #: one.
     pipeline = getattr(settings,  'OSCAR_LINE_STATUS_PIPELINE', {})
 
     class Meta:
@@ -411,12 +454,24 @@ class AbstractLine(models.Model):
 
     @classmethod
     def all_statuses(cls):
+        """
+        Return all possible statuses for an order line
+        """
         return cls.pipeline.keys()
 
     def available_statuses(self):
+        """
+        Return all possible statuses that this order line can move to
+        """
         return self.pipeline.get(self.status, ())
 
     def set_status(self, new_status):
+        """
+        Set a new status for this line
+
+        If the requested status is not valid, then ``InvalidLineStatus`` is
+        raised.
+        """
         if new_status == self.status:
             return
         if new_status not in self.available_statuses():
@@ -568,25 +623,24 @@ class AbstractLine(models.Model):
     def is_product_deleted(self):
         return self.product is None
 
-    def is_available_to_reorder(self, basket, user):
+    def is_available_to_reorder(self, basket, strategy):
         """
-        Test if this line can be re-ordered by the passed user, using the
-        passed basket.
+        Test if this line can be re-ordered using the passed strategy and
+        basket
         """
         if not self.product:
             return False, (_("'%(title)s' is no longer available") %
                            {'title': self.title})
 
-        Line = models.get_model('basket', 'Line')
         try:
             basket_line = basket.lines.get(product=self.product)
-        except Line.DoesNotExist:
+        except basket.lines.model.DoesNotExist:
             desired_qty = self.quantity
         else:
             desired_qty = basket_line.quantity + self.quantity
 
-        is_available, reason = self.product.is_purchase_permitted(
-            user=user,
+        result = strategy.fetch(self.product)
+        is_available, reason = result.availability.is_purchase_permitted(
             quantity=desired_qty)
         if not is_available:
             return False, reason

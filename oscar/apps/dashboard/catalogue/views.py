@@ -11,19 +11,20 @@ from oscar.core.loading import get_classes
 (ProductForm,
  ProductSearchForm,
  CategoryForm,
- StockRecordForm,
+ StockRecordFormSet,
  StockAlertSearchForm,
  ProductCategoryFormSet,
  ProductImageFormSet,
- ProductRecommendationFormSet) = get_classes('dashboard.catalogue.forms',
-                                    ('ProductForm',
-                                     'ProductSearchForm',
-                                     'CategoryForm',
-                                     'StockRecordForm',
-                                     'StockAlertSearchForm',
-                                     'ProductCategoryFormSet',
-                                     'ProductImageFormSet',
-                                     'ProductRecommendationFormSet'))
+ ProductRecommendationFormSet) = get_classes(
+     'dashboard.catalogue.forms',
+     ('ProductForm',
+      'ProductSearchForm',
+      'CategoryForm',
+      'StockRecordFormSet',
+      'StockAlertSearchForm',
+      'ProductCategoryFormSet',
+      'ProductImageFormSet',
+      'ProductRecommendationFormSet'))
 Product = get_model('catalogue', 'Product')
 Category = get_model('catalogue', 'Category')
 ProductImage = get_model('catalogue', 'ProductImage')
@@ -50,11 +51,12 @@ class ProductListView(generic.ListView):
         return ctx
 
     def get_queryset_for_user(self, user):
+        queryset = self.model.objects.base_queryset().select_related(
+            'stockrecord__partner').order_by('-date_created')
         if user.is_staff:
-            return self.model._default_manager.all()
+            return queryset.all()
         else:
-            return self.model._default_manager.filter(
-                stockrecord__partner__users__pk=user.pk)
+            return queryset.filter(stockrecord__partner__users__pk=user.pk)
 
     def get_queryset(self):
         """
@@ -64,8 +66,6 @@ class ProductListView(generic.ListView):
         description_ctx = {'upc_filter': '',
                            'title_filter': ''}
         queryset = self.get_queryset_for_user(self.request.user)
-        queryset = queryset.order_by('-date_created').prefetch_related(
-            'product_class', 'stockrecord__partner')
         self.form = self.form_class(self.request.GET)
         if not self.form.is_valid():
             self.description = self.description_template % description_ctx
@@ -115,7 +115,7 @@ class ProductCreateUpdateView(generic.UpdateView):
     category_formset = ProductCategoryFormSet
     image_formset = ProductImageFormSet
     recommendations_formset = ProductRecommendationFormSet
-    stockrecord_form = StockRecordForm
+    stockrecord_formset = StockRecordFormSet
 
     def get_object(self, queryset=None):
         """
@@ -143,8 +143,9 @@ class ProductCreateUpdateView(generic.UpdateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
-        if 'stockrecord_form' not in ctx:
-            ctx['stockrecord_form'] = self.get_stockrecord_form()
+        if 'stockrecord_formset' not in ctx:
+            ctx['stockrecord_formset'] = self.stockrecord_formset(
+                self.product_class, instance=self.object)
         if 'category_formset' not in ctx:
             ctx['category_formset'] = self.category_formset(instance=self.object)
         if 'image_formset' not in ctx:
@@ -162,42 +163,6 @@ class ProductCreateUpdateView(generic.UpdateView):
         kwargs['product_class'] = self.product_class
         return kwargs
 
-    def is_stockrecord_submitted(self):
-        """
-        Check if there's POST data that matches StockRecordForm field names
-        """
-        fields = dict(self.stockrecord_form.base_fields.items() +
-                      self.stockrecord_form.declared_fields.items())
-        for name, field in fields.iteritems():
-            if len(self.request.POST.get(name, '')) > 0:
-                return True
-        return False
-
-    def get_stockrecord_form(self):
-        """
-        Get the the ``StockRecordForm`` prepopulated with POST
-        data if available. If the product in this view has a
-        stock record it will be passed into the form as
-        ``instance``.
-        """
-        form_kwargs = {'product_class': self.product_class, }
-        try:
-            form_kwargs['instance'] = self.object.stockrecord
-        except (AttributeError, StockRecord.DoesNotExist):
-            # either self.object is None, or no stockrecord
-            form_kwargs['instance'] = None
-        if self.request.method == 'POST':
-            form_kwargs['data'] = self.request.POST
-        form = self.stockrecord_form(**form_kwargs)
-        if self.require_user_stockrecord:
-            # only show partners that have current user in their users
-            partners = Partner._default_manager.filter(users__pk=
-                                                       self.request.user.pk)
-            if len(partners) == 0:  # len instead of .count() -> only one query
-                raise ImproperlyConfigured("User can't set a valid stock record. Add her to at least one partner")
-            form.fields['partner'].queryset = partners
-        return form
-
     def form_valid(self, form):
         return self.process_all_forms(form)
 
@@ -214,12 +179,13 @@ class ProductCreateUpdateView(generic.UpdateView):
         if self.creating and form.is_valid():
             self.object = form.save()
 
-        stockrecord_form = self.get_stockrecord_form()
-        category_formset = self.category_formset(self.request.POST,
-                                                 instance=self.object)
-        image_formset = self.image_formset(self.request.POST,
-                                           self.request.FILES,
-                                           instance=self.object)
+        stockrecord_formset = self.stockrecord_formset(
+            self.product_class,
+            self.request.POST, instance=self.object)
+        category_formset = self.category_formset(
+            self.request.POST, instance=self.object)
+        image_formset = self.image_formset(
+            self.request.POST, self.request.FILES, instance=self.object)
         recommended_formset = self.recommendations_formset(
             self.request.POST, self.request.FILES, instance=self.object)
 
@@ -228,23 +194,23 @@ class ProductCreateUpdateView(generic.UpdateView):
             category_formset.is_valid(),
             image_formset.is_valid(),
             recommended_formset.is_valid(),
-            # enforce if self.require_user_stockrecord, skip if not submitted
-            stockrecord_form.is_valid() or
-            (not self.require_user_stockrecord and not self.is_stockrecord_submitted()),
-            ])
+            stockrecord_formset.is_valid(),
+        ])
 
         if is_valid:
-            return self.forms_valid(form, stockrecord_form, category_formset,
-                                    image_formset, recommended_formset)
+            return self.forms_valid(
+                form, stockrecord_formset, category_formset,
+                image_formset, recommended_formset)
         else:
             # delete the temporary product again
             if self.creating and form.is_valid():
                 self.object.delete()
                 self.object = None
-            return self.forms_invalid(form, stockrecord_form, category_formset,
-                                      image_formset, recommended_formset)
+            return self.forms_invalid(
+                form, stockrecord_formset, category_formset,
+                image_formset, recommended_formset)
 
-    def forms_valid(self, form, stockrecord_form, category_formset,
+    def forms_valid(self, form, stockrecord_formset, category_formset,
                     image_formset, recommended_formset):
         """
         Save all changes and display a success url.
@@ -252,30 +218,22 @@ class ProductCreateUpdateView(generic.UpdateView):
         if not self.creating:
             # a just created product was already saved in process_all_forms()
             self.object = form.save()
-        if self.is_stockrecord_submitted():
-            # Save stock record
-            stockrecord = stockrecord_form.save(commit=False)
-            stockrecord.product = self.object
-            stockrecord.save()
-        else:
-            # delete it
-            if self.object.has_stockrecord:
-                self.object.stockrecord.delete()
 
         # Save formsets
         category_formset.save()
         image_formset.save()
         recommended_formset.save()
+        stockrecord_formset.save()
 
         return HttpResponseRedirect(self.get_success_url())
 
-    def forms_invalid(self, form, stockrecord_form, category_formset,
+    def forms_invalid(self, form, stockrecord_formset, category_formset,
                       image_formset, recommended_formset):
         messages.error(self.request,
                        _("Your submitted data was not valid - please "
                          "correct the below errors"))
         ctx = self.get_context_data(form=form,
-                                    stockrecord_form=stockrecord_form,
+                                    stockrecord_formset=stockrecord_formset,
                                     category_formset=category_formset,
                                     image_formset=image_formset,
                                     recommended_formset=recommended_formset)

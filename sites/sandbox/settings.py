@@ -38,11 +38,10 @@ DATABASES = {
 
 CACHES = {
     'default': {
-        'BACKEND':
-        'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -103,7 +102,9 @@ MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
 STATIC_ROOT = location('public/static')
-STATICFILES_DIRS = ()
+STATICFILES_DIRS = (
+    location('static/'),
+)
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -154,7 +155,6 @@ MIDDLEWARE_CLASSES = (
     # URL path to print out profile details
     #'oscar.profiling.middleware.ProfileMiddleware',
 )
-
 
 ROOT_URLCONF = 'urls'
 
@@ -240,7 +240,7 @@ LOGGING = {
         },
         'oscar.checkout': {
             'handlers': ['console', 'checkout_file'],
-            'propagate': True,
+            'propagate': False,
             'level': 'INFO',
         },
         'oscar.catalogue.import': {
@@ -302,7 +302,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-LOGIN_REDIRECT_URL = '/accounts/'
+LOGIN_REDIRECT_URL = '/'
 APPEND_SLASH = True
 
 # Haystack settings
@@ -422,6 +422,9 @@ if not os.path.exists(LOG_ROOT):
 
 THUMBNAIL_DEBUG = True
 THUMBNAIL_KEY_PREFIX = 'oscar-sandbox'
+
+# Use a custom KV store to handle integrity error
+THUMBNAIL_KVSTORE = 'oscar.sorl_kvstore.ConcurrentKVStore'
 
 
 # Try and import local settings which can be used to override any of the above.

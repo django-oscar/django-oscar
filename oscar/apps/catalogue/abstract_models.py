@@ -2,6 +2,7 @@ from itertools import chain
 from datetime import datetime, date
 import logging
 import os
+import warnings
 
 from django.conf import settings
 from django.contrib.staticfiles.finders import find
@@ -267,7 +268,8 @@ class AbstractProduct(models.Model):
 
     # No canonical product should have a stock record as they cannot be bought.
     parent = models.ForeignKey(
-        'self', null=True, blank=True, related_name='variants', verbose_name=_("Parent"),
+        'self', null=True, blank=True, related_name='variants',
+        verbose_name=_("Parent"),
         help_text=_("Only choose a parent product if this is a 'variant' of "
                     "a canonical catalogue.  For example if this is a size "
                     "4 of a particular t-shirt.  Leave blank if this is a "
@@ -285,6 +287,7 @@ class AbstractProduct(models.Model):
                               null=True, db_index=True)
     product_class = models.ForeignKey(
         'catalogue.ProductClass', verbose_name=_('Product Class'), null=True,
+        related_name="products",
         help_text=_("""Choose what type of product this is"""))
     attributes = models.ManyToManyField(
         'catalogue.ProductAttribute',
@@ -334,9 +337,42 @@ class AbstractProduct(models.Model):
     objects = ProductManager()
     browsable = BrowsableProductManager()
 
+    class Meta:
+        abstract = True
+        ordering = ['-date_created']
+        verbose_name = _('Product')
+        verbose_name_plural = _('Products')
+
     def __init__(self, *args, **kwargs):
         super(AbstractProduct, self).__init__(*args, **kwargs)
         self.attr = ProductAttributesContainer(product=self)
+
+    def __unicode__(self):
+        if self.is_variant:
+            return u"%s (%s)" % (self.get_title(), self.attribute_summary)
+        return self.get_title()
+
+    @models.permalink
+    def get_absolute_url(self):
+        u"""Return a product's absolute url"""
+        return ('catalogue:detail', (), {
+            'product_slug': self.slug,
+            'pk': self.id})
+
+    def save(self, *args, **kwargs):
+        if self.is_top_level and not self.title:
+            raise ValidationError(_("Canonical products must have a title"))
+        if not self.slug:
+            self.slug = slugify(self.get_title())
+
+        # Validate attributes if necessary
+        self.attr.validate_attributes()
+
+        # Save product
+        super(AbstractProduct, self).save(*args, **kwargs)
+
+        # Finally, save attributes
+        self.attr.save()
 
     # Properties
 
@@ -375,10 +411,63 @@ class AbstractProduct(models.Model):
         return self.product_class.requires_shipping
 
     @property
+    def has_stockrecords(self):
+        """
+        Test if this product has any stockrecords
+        """
+        return self.num_stockrecords > 0
+
+    @property
+    def num_stockrecords(self):
+        return self.stockrecords.all().count()
+
+    @property
+    def attribute_summary(self):
+        """
+        Return a string of all of a product's attributes
+        """
+        pairs = []
+        for value in self.attribute_values.select_related().all():
+            pairs.append("%s: %s" % (value.attribute.name,
+                                     value.value))
+        return ", ".join(pairs)
+
+    # Deprecated stockrecord methods
+
+    @property
+    def has_stockrecord(self):
+        """
+        Test if this product has a stock record
+        """
+        warnings.warn(("Product.has_stockrecord is deprecated in favour of "
+                       "using the stockrecord template tag.  It will be "
+                       "removed in v0.8"), DeprecationWarning)
+        return self.num_stockrecords > 0
+
+    @property
+    def stockrecord(self):
+        """
+        Return the stockrecord associated with this product.  For backwards
+        compatibility, this defaults to choosing the first stockrecord found.
+        """
+        # This is the old way of fetching a stockrecord, when they were
+        # one-to-one with a product.
+        warnings.warn(("Product.stockrecord is deprecated in favour of "
+                       "using the stockrecord template tag.  It will be "
+                       "removed in v0.7"), DeprecationWarning)
+        try:
+            return self.stockrecords.all()[0]
+        except IndexError:
+            return None
+
+    @property
     def is_available_to_buy(self):
         """
         Test whether this product is available to be purchased
         """
+        warnings.warn(("Product.is_available_to_buy is deprecated in favour "
+                       "of using the stockrecord template tag.  It will be "
+                       "removed in v0.7"), DeprecationWarning)
         if self.is_group:
             # If any one of this product's variants is available, then we treat
             # this product as available.
@@ -390,35 +479,14 @@ class AbstractProduct(models.Model):
             return True
         return self.has_stockrecord and self.stockrecord.is_available_to_buy
 
-    @property
-    def min_variant_price_incl_tax(self):
-        """
-        Return minimum variant price including tax
-        """
-        return self._min_variant_price('price_incl_tax')
-
-    @property
-    def min_variant_price_excl_tax(self):
-        """Return minimum variant price excluding tax"""
-        return self._min_variant_price('price_excl_tax')
-
-    @property
-    def has_stockrecord(self):
-        """
-        Test if this product has a stock record
-        """
-        try:
-            self.stockrecord
-        except ObjectDoesNotExist:
-            return False
-        else:
-            return self.stockrecord is not None
-
     def is_purchase_permitted(self, user, quantity):
         """
         Test whether this product can be bought by the passed user.
         """
-        if not self.has_stockrecord:
+        warnings.warn(("Product.is_purchase_permitted is deprecated in favour "
+                       "of using a partner strategy.  It will be "
+                       "removed in v0.7"), DeprecationWarning)
+        if not self.has_stockrecords:
             return False, _("No stock available")
         return self.stockrecord.is_purchase_permitted(user, quantity, self)
 
@@ -431,24 +499,34 @@ class AbstractProduct(models.Model):
         except (AttributeError, ObjectDoesNotExist):
             return False
 
-    def add_category_from_breadcrumbs(self, breadcrumb):
-        from oscar.apps.catalogue.categories import create_from_breadcrumbs
-        category = create_from_breadcrumbs(breadcrumb)
-
-        temp = get_model('catalogue', 'ProductCategory')(
-            category=category, product=self)
-        temp.save()
-    add_category_from_breadcrumbs.alters_data = True
-
-    def attribute_summary(self):
+    @property
+    def min_variant_price_incl_tax(self):
         """
-        Return a string of all of a product's attributes
+        Return minimum variant price including tax
         """
-        pairs = []
-        for value in self.attribute_values.select_related().all():
-            pairs.append("%s: %s" % (value.attribute.name,
-                                     value.value))
-        return ", ".join(pairs)
+        return self._min_variant_price('price_incl_tax')
+
+    @property
+    def min_variant_price_excl_tax(self):
+        """
+        Return minimum variant price excluding tax
+        """
+        return self._min_variant_price('price_excl_tax')
+
+    def _min_variant_price(self, property):
+        """
+        Return minimum variant price
+        """
+        prices = []
+        for variant in self.variants.all():
+            if variant.has_stockrecords:
+                prices.append(getattr(variant.stockrecord, property))
+        if not prices:
+            return None
+        prices.sort()
+        return prices[0]
+
+    # Wrappers
 
     def get_title(self):
         """
@@ -471,6 +549,8 @@ class AbstractProduct(models.Model):
         return None
     get_product_class.short_description = _("Product class")
 
+    # Images
+
     def get_missing_image(self):
         """
         Returns a missing image object.
@@ -484,76 +564,30 @@ class AbstractProduct(models.Model):
         try:
             return images[0]
         except IndexError:
-            # We return a dict with fields that mirror the key properties of the
-            # ProductImage class so this missing image can be used interchangably
-            # in templates.  Strategy pattern ftw!
+            # We return a dict with fields that mirror the key properties of
+            # the ProductImage class so this missing image can be used
+            # interchangably in templates.  Strategy pattern ftw!
             return {
                 'original': self.get_missing_image(),
                 'caption': '',
                 'is_missing': True}
 
-    # Helpers
-
-    def _min_variant_price(self, property):
-        """
-        Return minimum variant price
-        """
-        prices = []
-        for variant in self.variants.all():
-            if variant.has_stockrecord:
-                prices.append(getattr(variant.stockrecord, property))
-        if not prices:
-            return None
-        prices.sort()
-        return prices[0]
-
-    class Meta:
-        abstract = True
-        ordering = ['-date_created']
-        verbose_name = _('Product')
-        verbose_name_plural = _('Products')
-
-    def __unicode__(self):
-        if self.is_variant:
-            return u"%s (%s)" % (self.get_title(), self.attribute_summary())
-        return self.get_title()
-
-    @models.permalink
-    def get_absolute_url(self):
-        u"""Return a product's absolute url"""
-        return ('catalogue:detail', (), {
-            'product_slug': self.slug,
-            'pk': self.id})
-
-    def save(self, *args, **kwargs):
-        if self.is_top_level and not self.title:
-            raise ValidationError(_("Canonical products must have a title"))
-        if not self.slug:
-            self.slug = slugify(self.get_title())
-
-        # Validate attributes if necessary
-        self.attr.validate_attributes()
-
-        # Save product
-        super(AbstractProduct, self).save(*args, **kwargs)
-
-        # Finally, save attributes
-        self.attr.save()
+    # Updating methods
 
     def update_rating(self):
         """
-        Update rating field
+        Recalculate rating field
         """
         self.rating = self.calculate_rating()
         self.save()
+    update_rating.alters_data = True
 
     def calculate_rating(self):
         """
         Calculate rating value
         """
-        ProductReview = get_model('reviews', 'ProductReview')
         result = self.reviews.filter(
-            status=ProductReview.APPROVED
+            status=self.reviews.model.APPROVED
         ).aggregate(
             sum=Sum('score'), count=Count('id'))
         reviews_sum = result['sum'] or 0
@@ -562,6 +596,15 @@ class AbstractProduct(models.Model):
         if reviews_count > 0:
             rating = float(reviews_sum) / reviews_count
         return rating
+
+    def add_category_from_breadcrumbs(self, breadcrumb):
+        from oscar.apps.catalogue.categories import create_from_breadcrumbs
+        category = create_from_breadcrumbs(breadcrumb)
+
+        temp = get_model('catalogue', 'ProductCategory')(
+            category=category, product=self)
+        temp.save()
+    add_category_from_breadcrumbs.alters_data = True
 
     def has_review_by(self, user):
         if user.is_anonymous():
@@ -846,6 +889,7 @@ class AbstractAttributeOptionGroup(models.Model):
     """
     Defines a group of options that collectively may be used as an
     attribute type
+
     For example, Language
     """
     name = models.CharField(_('Name'), max_length=128)

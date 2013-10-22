@@ -1,5 +1,6 @@
 from decimal import Decimal as D
 import datetime
+from django.db.transaction import commit_on_success
 
 from oscar.apps.dashboard.reports.csv_utils import CsvUnicodeReader
 from oscar.apps.catalogue import models, categories
@@ -14,6 +15,7 @@ class Importer(object):
     def __init__(self, logger):
         self.logger = logger
 
+    @commit_on_success
     def handle(self, product_class_name, filepath):
         product_class = models.ProductClass.objects.get(
             name=product_class_name)

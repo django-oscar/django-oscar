@@ -1,12 +1,13 @@
 {% extends "oscar/checkout/shipping_methods.html" %}
 {% load currency_filters %}
+{% load url from future %}
 {% load i18n %}
 
 {% block shipping_method %}
 <div class="page-header">
     <h1>{% trans "Choose a shipping method" %}</h1>
 </div>
-<div class="basket-title">
+<div class="basket-title hidden-phone">
     <div class="row-fluid">
         <h4 class="span9">{% trans "Method" %}</h4>
         <h4 class="span3">{% trans "Cost" %}</h4>
@@ -35,7 +36,7 @@
             {{ method.basket_charge_incl_tax|currency }}
         </div>
         <div class="span2">
-            <form method="post" action="{% url checkout:shipping-method %}">
+            <form method="post" action="{% url 'checkout:shipping-method' %}">
                 {% csrf_token %}
                 <input type="hidden" name="method_code" value="{{ method.code }}" class="btn" />
                 <button type="submit" class="btn btn-primary pull-right">{% trans "Select option" %}</button>

@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.exceptions import ImproperlyConfigured
 
 
 def get_user_model():
@@ -33,4 +34,7 @@ def get_user_model():
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 # Two additional settings that are useful in South migrations when
 # specifying the user model in the FakeORM
-AUTH_USER_APP_LABEL, AUTH_USER_MODEL_NAME = AUTH_USER_MODEL.split('.')
+try:
+    AUTH_USER_APP_LABEL, AUTH_USER_MODEL_NAME = AUTH_USER_MODEL.split('.')
+except ValueError:
+    raise ImproperlyConfigured("AUTH_USER_MODEL must be of the form 'app_label.model_name'")

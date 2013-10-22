@@ -11,14 +11,15 @@ Display settings
 ``OSCAR_SHOP_NAME``
 -------------------
 
-Default: ``Oscar``
+Default: ``'Oscar'``
 
-The name of your e-commerce shop site.
+The name of your e-commerce shop site.  This is shown as the main logo within
+the default templates.
 
 ``OSCAR_SHOP_TAGLINE``
 ----------------------
 
-Default: ``Domain-driven e-Commerce for Django``
+Default: ``''``
 
 The tagline that is displayed next to the shop name and in the browser title.
 
@@ -38,6 +39,11 @@ class.  For example::
 
 The wrapper class should subclass ``oscar.apps.partner.wrappers.DefaultWrapper``
 and override the appropriate methods to control availability behaviour.
+
+.. warning::
+
+   This settings has been deprecated for Oscar 0.6.  Use :ref:`strategy classes <strategy_class>` 
+   instead to provide availability and pricing information.
 
 ``OSCAR_RECENTLY_VIEWED_PRODUCTS``
 ----------------------------------

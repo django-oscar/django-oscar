@@ -13,7 +13,7 @@
     function megaCarousel() {
         $('#homepage-carousel').flexslider({
           animation: "fade",
-          slideshow: true,
+          slideshow: true
         });
     }
 
@@ -37,22 +37,29 @@
         $('.product-carousel .flexslider').each(function(){
             var productPage = $('.product-page'),
                 homePage = $('.home-page'),
+                offerPage = $('.offer-page'),
                 imageWidth = 180,
                 maxProducts = 4,
+                minProducts = 1,
                 showNav = true;
             if (productPage.length > 0) {
                 imageWidth = 150;
                 maxProducts = 5;
                 showNav = false;
+                minProducts = 2;
             }
             if (homePage.length > 0) {
                 imageWidth = 140;
+            }
+            if (offerPage.length > 0) {
+                imageWidth = 150;
+                maxProducts = 5;
             }
             $(this).flexslider({
                 animation: "slide",
                 animationLoop: true,
                 itemWidth: imageWidth,
-                minItems: 1,
+                minItems: minProducts,
                 maxItems: maxProducts,
                 controlNav: showNav
             });
@@ -83,6 +90,7 @@
 
 
     // Register desktop callback
+    site.responsive.register(matchHeight, ['desktop', 'tablet']);
     site.responsive.register(megaCarousel, ['desktop', 'tablet']);
     site.responsive.register(productCarousel, ['desktop', 'tablet']);
     site.responsive.register(productSingleCarousel, ['desktop', 'tablet']);

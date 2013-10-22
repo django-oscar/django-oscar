@@ -3,14 +3,12 @@
 {% load currency_filters %}
 {% load thumbnail %}
 {% load i18n %}
+{% load stockrecord_tags %}
 {% load staticfiles %}
 
 {% block title %}
     {% trans "Checkout" %} | {{ block.super }}
 {% endblock %}
-
-{% block header %}
-{% endblock header %}
 
 {% block checkout_nav %}
     {% include 'checkout/nav.html' %}
@@ -38,8 +36,9 @@
                                 {{ field }}<br/>
                             {% endfor %}
                         </address>
+
                         {% if shipping_address.phone_number %}
-                            <h4>Contact</h4>
+                            <h4>{% trans "Contact" %}</h4>
                             <p>
                                 {% trans "Phone" %}: {{ shipping_address.phone_number }}
                                 {% if guest_email %}
@@ -49,7 +48,7 @@
                         {% endif %}
 
                         {% if shipping_address.notes %}
-                            <h4>{% trans "Note" %}</h4>
+                            <h4>{% trans "Instructions" %}</h4>
                             <p>{{ shipping_address.notes|linebreaks }}</p>
                         {% endif %}
 
@@ -87,7 +86,7 @@
                     <h2>{% trans "Payment" %}</h2>
                 </div>
                 <div class="well well-success">
-                    <h4>Payment</h4>
+                    <h4>{% trans "Payment" %}</h4>
                     <p>{% trans "Payment details to go here" %}</p>
                     <div class="alert-actions">
                         <a href="{% url 'checkout:payment-details' %}" class="btn">{% trans "Change payment details" %}</a>
@@ -103,30 +102,39 @@
         </div>
         <div class="basket-title">
             <div class="row-fluid">
-                <h4 class="span9">{% trans "Items in basket" %}</h4>
+                <h4 class="span9">{% trans "Product" %}</h4>
                 <h4 class="span1 align-center">{% trans "Quantity" %}</h4>
                 <h4 class="span2 align-right">{% trans "Price" %}</h4>
             </div>
         </div>
         {% for line in basket.all_lines %}
+            {% session_strategy request line.product as session %}
             <div class="basket-items">
                 <div class="row-fluid">
-                    <div class="span9">
+                    <div class="span2">
                         <div class="image_container">
                             {% with image=line.product.primary_image %}
-                                {% thumbnail image.original "200x200" upscale=False as thumb %}
+                                {% thumbnail image.original "100x100" upscale=False as thumb %}
                                 <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{% static thumb.url %}" alt="{{ product.get_title }}"></a>
                                 {% endthumbnail %}
                             {% endwith %}
                         </div>
+                    </div>
+                    <div class="span7">
                         <h4><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h4>
-                        <span class="availability {{ line.product.stockrecord.availability_code }}">{{ line.product.stockrecord.availability }}</span>
+                        <span class="availability {{ session.availability.code }}">{{ session.availability.message }}</span>
                     </div>
                     <div class="span1 align-center">
                         {{ line.quantity }}
                     </div>
                     <div class="span2 align-right">
-                        <p class="price_color">{{ line.line_price_incl_tax|currency }}</p>
+                        <p class="price_color">
+                            {% if line.is_tax_known %}
+                                {{ line.line_price_incl_tax|currency:basket.currency }}
+                            {% else %}
+                                {{ line.line_price_excl_tax|currency:basket.currency }}
+                            {% endif %}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -146,7 +154,6 @@
         {% endblock %}
 
     {% endblock order_contents %}
-
 
     {% block shipping_method %}
     {% endblock shipping_method %}

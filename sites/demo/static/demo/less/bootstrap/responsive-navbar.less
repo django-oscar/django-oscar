@@ -6,6 +6,47 @@
 // TABLETS AND BELOW
 // -----------------
 @media (max-width: @navbarCollapseWidth) {
+  
+  //Lets reduce the fonts for smaller screens on navigation collapse
+  @bodySize: 12; // Body font size set to 12px;
+
+  body {
+    font-size: @bodyFontSize;
+  }
+  //Any other font size updates
+  .widget-delivery,
+  .widget-shipping {
+    .free-delivery {
+      font-size: 1.5em;
+    }
+  }
+  .widget-image-link h3 {
+    font-size: 1.3em;
+  }
+  //Footer links are also part of the navbar collapse
+  .footer-links {
+    h3 {
+      margin-bottom:0;
+      a {
+        display: block;
+      }
+    }
+    > li {
+      float:none;
+      width:100%;
+      margin-bottom:20px;
+    }
+  }
+  //Category title
+  .category-title {
+    div {
+      background-position: 90% 0;
+    }
+    p, h1 {
+      margin-right:15%;
+    }
+  }
+
 
   // UNFIX THE TOPBAR
   // ----------------
@@ -28,7 +69,8 @@
   .navbar-fixed-bottom .navbar-inner {
     padding: 5px;
   }
-  .navbar .container {
+  .navbar .container,
+  .navbar .container-fluid {
     width: auto;
     padding: 0;
   }
@@ -139,14 +181,6 @@
     float: none;
     padding: (@baseLineHeight / 2) 15px;
     margin: (@baseLineHeight / 2) 0;
-    border-top: 1px solid @navbarBackground;
-    border-bottom: 1px solid @navbarBackground;
-    .box-shadow(~"inset 0 1px 0 rgba(255,255,255,.1), 0 1px 0 rgba(255,255,255,.1)");
-  }
-  .navbar-inverse .nav-collapse .navbar-form,
-  .navbar-inverse .nav-collapse .navbar-search {
-    border-top-color: @navbarInverseBackground;
-    border-bottom-color: @navbarInverseBackground;
   }
   // Pull right (secondary) nav content
   .navbar .nav-collapse .nav.pull-right {
@@ -162,6 +196,8 @@
   // Navbar button
   .navbar .btn-navbar {
     display: block;
+    padding-right: @gridGutterWidth;
+    padding-left: @gridGutterWidth;
   }
 
   // STATIC NAVBAR
@@ -171,6 +207,38 @@
     padding-right: 10px;
   }
 
+  // Negative indent the now static "fixed" navbar
+  .navbar-fixed-top,
+  .navbar-fixed-bottom,
+  .navbar-static-top,
+  .nav-profile,
+  .nav-primary {
+    .navbar-inner {
+      padding-left: 0;
+      padding-right: 0;
+    }
+    .nav {
+      padding:@gridGutterWidth;
+    }
+  }
+  .navbar.primary .navbar-inner {
+    min-height: 40px;
+  }
+
+  .navbar.primary .nav > li > a.dropdown-toggle,
+  .navbar.primary .nav > li > a {
+    padding: 9px 20px;
+  }
+  
+  //With the tag line not present this doesn't need a width
+  .header-content {
+    > div {
+      width:auto;
+    }
+    h3 {
+      display:none;
+    } 
+  }
 
 }
 

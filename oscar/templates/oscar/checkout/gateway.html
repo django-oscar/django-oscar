@@ -1,7 +1,6 @@
 {% extends "checkout/layout.html" %}
 
 {% load url from future %}
-{% load currency_filters %}
 {% load i18n %}
 
 {% block title %}
@@ -12,13 +11,11 @@
     {% include 'checkout/nav.html' with step=0 %}
 {% endblock %}
 
+{% block checkout_title %}{% trans "Who are you?" %}{% endblock %}
+
 {% block content %}
 
-    <div class="sub-header">
-        <h1>{% trans "Who are you?" %}</h1>
-    </div>
-
-    <form action="." method="post" class="form-stacked well well-info">
+    <form action="." method="post" class="form-stacked well">
         {% csrf_token %}
         {{ form.non_field_errors }}
 
@@ -57,12 +54,17 @@
         </div>
 
         <div class="form-actions">
-            <button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
+            <div class="row-fluid">
+                <div class="span3">
+                    <button type="submit" class="btn btn-large btn-block btn-primary">{% trans "Continue" %}</button>
+                </div>
+            </div>
         </div>
     </form>
 
 {% endblock content %}
 
 {% block onbodyload %}
+    {{ block.super }}
     oscar.checkout.gateway.init();
 {% endblock %}

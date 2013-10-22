@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load currency_filters %}
+{% load url from future %}
 
 <div id="basket_totals">
     <table class="table table-bordered">
@@ -37,7 +38,7 @@
                     <td>
                         {{ discount.voucher.name }} ({{ discount.voucher.code }})
                         {% if editable %}
-                        <form action="{% url basket:vouchers-remove discount.voucher.id %}" method="POST">
+                        <form action="{% url 'basket:vouchers-remove' discount.voucher.id %}" method="POST">
                             {% csrf_token %}
                             <input type="submit" value="{% trans "Remove" %}" class="btn btn-small btn-danger"/>
                         </form>

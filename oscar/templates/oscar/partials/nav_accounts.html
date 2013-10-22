@@ -11,7 +11,7 @@
             <span class="icon-bar"></span>
         </a>
 
-        <div class="nav-collapse account-collapse">
+        <div class="nav-collapse account-collapse collapse">
             <div class="container-fluid">
                 {% if LANGUAGES|length > 1 %}
                     <form id="language_selector" class="pull-left navbar-form" action="/i18n/setlang/" method="post">
@@ -27,17 +27,19 @@
                 <ul class="nav pull-right">
                     {% if user.is_authenticated %}
                         <li>
-                            <a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "Account" %}</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'customer:notifications-inbox' %}">
-                                <i class="icon-envelope"></i> {% trans "Notifications" %}
-                                {% if num_unread_notifications > 0 %}
+                            {% if num_unread_notifications > 0 %}
+                                {# If user has new notifications - we change account link to go to inbox #}
+                                <a href="{% url 'customer:notifications-inbox' %}">
+                                    <i class="icon-user"></i>
+                                    {% trans "Account" %}
                                     <span class="label label-important">{{ num_unread_notifications }}</span>
-                                {% endif %}</a>
+                                </a>
+                            {% else %}
+                                <a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "Account" %}</a>
+                            {% endif %}</a>
                         </li>
                         {% if user.is_staff %}
-                            <li><a href="{% url 'dashboard:index' %}"><i class="icon-list-ul"></i> {% trans "Dashboard" %}</a></li>
+                            <li class="hidden-phone"><a href="{% url 'dashboard:index' %}"><i class="icon-list-ul"></i> {% trans "Dashboard" %}</a></li>
                         {% endif %}
                         <li><a href="{% url 'customer:logout' %}"><i class="icon-signout"></i> {% trans "Logout" %}</a></li>
                     {% else %}

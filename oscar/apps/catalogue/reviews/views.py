@@ -39,10 +39,8 @@ class CreateProductReview(CreateView):
 
     def get_form_kwargs(self):
         kwargs = super(CreateProductReview, self).get_form_kwargs()
-        review = self.model(product=self.product)
-        if self.request.user.is_authenticated():
-            review.user = kwargs['user'] = self.request.user
-        kwargs['instance'] = review
+        kwargs['product'] = self.product
+        kwargs['user'] = self.request.user
         return kwargs
 
     def form_valid(self, form):

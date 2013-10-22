@@ -1,10 +1,51 @@
 #!/usr/bin/env python
+"""
+Custom test runner
+
+If args or options, we run the testsuite as quickly as possible.
+
+If args but no options, we default to using the spec plugin and aborting on
+first error/failure.
+
+If options, we ignore defaults and pass options onto Nose.
+
+Examples:
+
+Run all tests (as fast as possible)
+$ ./runtests.py
+
+Run all unit tests (using spec output)
+$ ./runtests.py tests/unit
+
+Run all checkout unit tests (using spec output)
+$ ./runtests.py tests/unit/checkout
+
+Run all tests relating to shipping
+$ ./runtests.py --attr=shipping
+
+Re-run failing tests (needs to be run twice to first build the index)
+$ ./runtests.py ... --failed
+
+Drop into pdb when a test fails
+$ ./runtests.py ... --pdb-failures
+"""
+
 import sys
 import logging
+import warnings
 
 from tests.config import configure
 
+# No logging
 logging.disable(logging.CRITICAL)
+
+# Warnings: ignore some uninteresting ones but raise an exception on a
+# DeprecationWarnings.
+warnings.simplefilter('default')
+warnings.filterwarnings('error', category=DeprecationWarning)
+for category in [PendingDeprecationWarning, UserWarning, ImportWarning]:
+    warnings.filterwarnings('ignore', category=category)
+
 
 
 def run_tests(verbosity, *test_args):

@@ -1,7 +1,6 @@
 {% extends 'dashboard/layout.html' %}
 {% load url from future %}
 {% load i18n %}
-{% load currency_filters %}
 {% load thumbnail %}
 {% load staticfiles %}
 
@@ -70,7 +69,7 @@
                             <div class="pull-left">
                              {% if product.primary_image.original.url %}
                                 {% with image=product.primary_image %}
-                                    {% thumbnail image.original "250x250" upscale=False as thumb %}
+                                    {% thumbnail image.original "240x240" upscale=False as thumb %}
                                         <a href="{{ image.original.url }}" rel="lightbox_{{ product.upc|default:"-" }}">
                                             <img src="{% static thumb.url %}" alt="{{ product.get_title }}" class="img-polaroid" data-description="{% if image.caption %}{{ image.caption }}{% endif %}">
                                         </a>
@@ -79,16 +78,6 @@
                                 {% endif %}
                             </div>
                             <div class="span9">
-                                <p>
-                                    <strong>{% trans "Fulfilment partner" %}</strong> <br />
-                                    <span class="product-count">
-                                        {% if product.has_stockrecord %}
-                                            {{ product.stockrecord.partner.name }}
-                                        {% else %}
-                                            {% trans "Out of stock" %}
-                                        {% endif %}
-                                    </span>
-                                </p>
                                 <p><strong>{% trans "Description" %}</strong><br /> {{ product.description|safe }}</p>
 
                                 {% with stats=product.stats %}
@@ -308,44 +297,43 @@
                 </div>
 
                 <div class="tab-pane" id="product_stock">
-                    {{ stockrecord_form.non_field_errors }}
                     <table class="table table-striped table-bordered">
                         <caption>{% trans "Stock and price information" %}</caption>
+                        {{ stockrecord_formset.management_form }}
+                        {{ stockrecord_formset.non_form_errors }}
+                        <thead>
+                            <tr>
+                                <th>Partner</th>
+                                <th>SKU</th>
+                                <th>Num in stock</th>
+                                <th>Num allocated</th>
+                                <th>Low stock threshold</th>
+                                <th>Currency</th>
+                                <th>Cost price</th>
+                                <th>Price (excl tax)</th>
+                                <th>Retail price</th>
+                                <th>Delete?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for stockrecord_form in stockrecord_formset %}
                         <tr>
-                            {% for field in stockrecord_form %}
-                                {% if "partner" in field.id_for_label %}
-                                    <th width="20%">{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</th>
-                                {% endif %}
-                                {% if "price" in field.id_for_label %}
-                                    <th>{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</th>
-                                {% endif %}
-                                {% if "stock" in field.id_for_label %}
-                                    <th>{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</th>
-                                {% endif %}
-                            {% endfor %}
+                            <td>{% include "partials/form_field.html" with field=stockrecord_form.partner nolabel=True %}</td>
+                            <td>{% include "partials/form_field.html" with field=stockrecord_form.partner_sku nolabel=True%}</td>
+                            <td>{% include "partials/form_field.html" with field=stockrecord_form.num_in_stock nolabel=True%}</td>
+                            <td>{{ stockrecord_form.instance.num_allocated|default:"-" }}</td>
+                            <td>{% include "partials/form_field.html" with field=stockrecord_form.low_stock_threshold nolabel=True%}</td>
+                            <td>{% include "partials/form_field.html" with field=stockrecord_form.price_currency nolabel=True%}</td>
+                            <td>{% include "partials/form_field.html" with field=stockrecord_form.cost_price nolabel=True%}</td>
+                            <td>{% include "partials/form_field.html" with field=stockrecord_form.price_excl_tax nolabel=True%}</td>
+                            <td>{% include "partials/form_field.html" with field=stockrecord_form.price_retail nolabel=True%}</td>
+                            <td>
+                                {% include "partials/form_field.html" with field=stockrecord_form.id nolabel=True%}
+                                {% include "partials/form_field.html" with field=stockrecord_form.DELETE nolabel=True%}
+                            </td>
                         </tr>
-                        <tr>
-                            {% for field in stockrecord_form %}
-                                {% if "partner" in field.id_for_label %}
-                                    <td>
-                                        {{ field }}
-                                        {{ field.errors }}
-                                    </td>
-                                {% endif %}
-                                {% if "price" in field.id_for_label %}
-                                    <td>
-                                        {{ field }}
-                                        {{ field.errors }}
-                                    </td>
-                                {% endif %}
-                                {% if "stock" in field.id_for_label %}
-                                    <td>
-                                        {{ field }}
-                                        {{ field.errors }}
-                                    </td>
-                                {% endif %}
-                            {% endfor %}
-                        </tr>
+                        {% endfor %}
+                    </tbody>
                     </table>
                 </div>
 

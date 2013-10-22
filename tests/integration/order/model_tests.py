@@ -6,14 +6,13 @@ from django.utils import timezone
 import mock
 
 from oscar.apps.address.models import Country
-from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import ShippingAddress, Order, Line, \
         ShippingEvent, ShippingEventType, ShippingEventQuantity, OrderNote, \
         OrderDiscount
 from oscar.apps.order.exceptions import (InvalidOrderStatus, InvalidLineStatus,
                                          InvalidShippingEvent)
-from oscar.test.factories import create_order, create_product, create_offer, \
-                               create_voucher
+from oscar.test.factories import create_order, create_offer, create_voucher, create_basket
+from oscar.test.basket import add_product
 
 ORDER_PLACED = 'order_placed'
 
@@ -101,8 +100,8 @@ class OrderNoteTests(TestCase):
 class LineTests(TestCase):
 
     def setUp(self):
-        basket = Basket()
-        basket.add_product(create_product(price=D('10.00')), 4)
+        basket = create_basket(empty=True)
+        add_product(basket, D('10.00'), 4)
         self.order = create_order(number='100002', basket=basket)
         self.line = self.order.lines.all()[0]
         self.order_placed, __ = ShippingEventType.objects.get_or_create(
@@ -222,13 +221,15 @@ class ShippingEventTypeTests(TestCase):
 class ShippingEventQuantityTests(TestCase):
 
     def setUp(self):
-        basket = Basket()
-        basket.add_product(create_product(price=D('10.00')), 4)
+        basket = create_basket(empty=True)
+        add_product(basket, D('10.00'), 4)
         self.order = create_order(number='100002', basket=basket)
         self.line = self.order.lines.all()[0]
 
-        self.shipped,_ = ShippingEventType.objects.get_or_create(name='Shipped')
-        self.returned,_ = ShippingEventType.objects.get_or_create(name='Returned')
+        self.shipped, __ = ShippingEventType.objects.get_or_create(
+            name='Shipped')
+        self.returned, __ = ShippingEventType.objects.get_or_create(
+            name='Returned')
 
     def tearDown(self):
         ShippingEventType.objects.all().delete()

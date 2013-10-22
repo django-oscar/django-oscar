@@ -8,6 +8,7 @@ from oscar.core.compat import get_user_model
 
 User = get_user_model()
 
+
 def send_product_alerts(sender, instance, created, **kwargs):
     if kwargs.get('raw', False):
         return

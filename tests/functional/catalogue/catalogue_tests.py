@@ -41,10 +41,8 @@ class TestProductDetailView(WebTestCase):
 class TestProductListView(WebTestCase):
 
     def test_shows_add_to_basket_button_for_available_product(self):
-        product = create_product()
-
+        product = create_product(num_in_stock=1)
         page = self.app.get(reverse('catalogue:index'))
-
         self.assertContains(page, product.title)
         self.assertContains(page, "Add to basket")
 
@@ -54,7 +52,7 @@ class TestProductListView(WebTestCase):
         page = self.app.get(reverse('catalogue:index'))
 
         self.assertContains(page, product.title)
-        self.assertContains(page, "Not available")
+        self.assertContains(page, "Unavailable")
 
     def test_shows_pagination_navigation_for_multiple_pages(self):
         per_page = ProductListView.paginate_by

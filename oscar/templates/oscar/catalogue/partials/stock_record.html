@@ -1,24 +1,34 @@
 {% load currency_filters %}
 {% load i18n %}
+{% load stockrecord_tags %}
+
+{% session_strategy request product as session %}
 
 {% if product.is_group %}
-    <h2 class="price_color">{% blocktrans with product.min_variant_price_incl_tax|currency as price %}From {{ price }}{% endblocktrans %}</h2>
+    <h2 class="price_color">{% trans "From:" %} {{ product.min_variant_price_incl_tax|currency:session.price.currency }}</h2>
 {% else %}
-    <h2 class="price_color">{{ product.stockrecord.price_incl_tax|currency }}</h2>
+    {% if session.price.exists %}
+        {% if session.price.is_tax_known %}
+            <h2 class="price_color">{{ session.price.incl_tax|currency:session.price.currency }}</h2>
+        {% else %}
+            <h2 class="price_color">{{ session.price.excl_tax|currency:session.price.currency }}</h2>
+        {% endif %}
+    {% else %}
+        <h2 class="price_color"></h2>
+    {% endif %}
 {% endif %}
 
-{% if product.is_available_to_buy %}
-    {% if product.is_group %}
-        <p class="instock availability ">
-            <i class="icon-ok"></i> {% trans "Available" %}
-        </p>
-    {% else %}
-        <p class="{{ product.stockrecord.availability_code }} availability ">
-            <i class="icon-ok"></i> {{ product.stockrecord.availability|truncatewords:2 }}
-        </p>
-    {% endif %}
-{% else %}
-    <p class="availability outofstock">
-        <i class="icon-remove"></i> {% trans "Not available" %}
+{% if product.is_group %}
+    <p class="instock availability ">
+        <i class="icon-ok"></i> {% trans "Available" %}
     </p>
+{% else %}
+    <p class="{{ session.availability.code }} availability">
+    <i class="icon-{% if session.availability.is_available_to_buy %}ok{% else %}remove{% endif %}"></i> 
+    {% if verbose %}
+        {{ session.availability.message }}
+    {% else %}
+        {{ session.availability.short_message }}
+    {% endif %}
+</p>
 {% endif %}

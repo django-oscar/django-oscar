@@ -42,7 +42,14 @@
 .btn-group > .btn,
 .btn-group > .dropdown-menu,
 .btn-group > .popover {
-  font-size: @baseFontSize; // redeclare as part 2 of font-size inline-block hack
+  //Can't use ems here as initial font size is 0 as part of part 1 hack
+  font-size: @bodySize + 0px; // redeclare as part 2 of font-size inline-block hack
+}
+
+//TODO: Move this into oscar template instead
+.btn-group > .dropdown-menu {
+  left:auto;
+  right:0;
 }
 
 // Reset fonts for other sizes

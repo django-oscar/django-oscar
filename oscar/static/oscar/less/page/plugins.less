@@ -1,6 +1,8 @@
 // OSCAR PLUGINS STYLES
 // -----------
-/* Elastislide Style */
+
+// These styles relate to the Elastislide carousel used for product promotion
+// and the gallery
 .es-carousel-wrapper {
   padding:1px 20px;
   -moz-border-radius: 4px;
@@ -73,7 +75,7 @@
 .es-nav span:hover {
   background-color:#ddd;
 }
-/* Gallery */
+// Gallery styles
 .rg-image-wrapper{
 	position:relative;
 	padding:20px 30px;
@@ -89,6 +91,12 @@
 	position:relative;
 	text-align:center;
 	line-height:0px;
+	&.single-image {
+		padding:10px;
+		img {
+			max-height: none;
+		}
+	}
 }
 .rg-image a {
 	display:block;
@@ -135,8 +143,7 @@
 	margin-top:15px;
 	position:relative;
 }
-.rg-caption p{
-	//font-size:11px;
+.rg-caption p {
 	font-size:0.846em;
 	letter-spacing:2px;
 	font-family: 'Trebuchet MS', 'Myriad Pro', Arial, sans-serif;
@@ -176,85 +183,10 @@
 	position:absolute;
 	top:50%;
 	left:50%;
-/*  background:#000 url(../responsivegallery/ajax-loader.gif) no-repeat center center;*/
 	margin:-23px 0px 0px -23px;
 	z-index:100;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 	border-radius: 10px;
 	opacity:0.7;
-}
-/* Modal modifications */
-.large-content {
-  height:300px;
-  overflow:auto;
-  padding-right:30px;
-}
-.sub-header {
-  h2 {
-    small {
-     .clearfix(); 
-    }
-    a {
-      float:right;
-      line-height: @baseLineHeight * 2;
-    }
-  }
-}
-/* Star Rating Default */
-.star {
-	clear:both;
-	display:block;
-	padding-left:110px;
-	background:url(../img/ui/bg-stars.png) 0px -4px no-repeat;
-	height:18px;
-	line-height:18px;
-}
-.star.One {
-	background-position: 0px -26px;
-}
-.star.Two {
-	background-position: 0px -48px;
-}
-.star.Three {
-	background-position: 0px -70px;
-}
-.star.Four {
-	background-position: 0px -92px;
-}
-.star.Five {
-	background-position: 0px -114px;
-}
-/* Star Rating Small */
-.product_pod .star,
-.promotion_single .star {
-  padding-left:0px;
-	text-indent:-9999px;
-	background:url(../img/ui/bg-stars-small.png) 0px -4px no-repeat;
-	height:11px;
-	line-height:11px;
-	width: 65px;
-}
-.product_pod .star {
-  margin: 0px auto 4px;
-}
-.product_pod .star.One,
-.promotion_single .star.One {
-	background-position: 0px -18px;
-}
-.product_pod .star.Two,
-.promotion_single .star.Two {
-	background-position: 0px -32px;
-}
-.product_pod .star.Three,
-.promotion_single .star.Three {
-	background-position: 0px -47px;
-}
-.product_pod .star.Four,
-.promotion_single .star.Four {
-	background-position: 0px -61px;
-}
-.product_pod .star.Five,
-.promotion_single .star.Five {
-	background-position: 0px -75px;
 }

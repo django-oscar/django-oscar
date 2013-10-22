@@ -4,6 +4,10 @@ Translation
 
 All Oscar translation work is done on Transifex_. If you'd like to contribute,
 just apply for a language and go ahead!
+The source strings in Transifex are updated after every commit on Oscar's
+master branch on GitHub. We only pull the translation strings back into Oscar's
+repository when preparing for a release. That means your most recent
+translations will always be on Transifex, not in the repo!
 
 .. _Transifex: https://www.transifex.com/projects/p/django-oscar/
 

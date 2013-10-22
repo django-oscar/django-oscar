@@ -56,9 +56,9 @@ node precise64 {
 	}
 
 	# MySQL
-	class {"mysql::python": }
+	class {"mysql::bindings::python": }
 	class {"mysql::server":
-	    config_hash => {"root_password" => "root_password"}
+	    override_options => {"root_password" => "root_password"}
 	}
 	mysql::db {$database_name:
 		user => $user,

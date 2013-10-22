@@ -7,7 +7,7 @@
     <div class="well">
         <p>{{ promotion.description|safe }}</p>
         <div class="flexslider">
-            <ul class="slides products">
+            <ul class="slides">
                 {% for product in products %}
                 <li>{% render_product product %}</li>
                 {% endfor %}

@@ -106,6 +106,15 @@ class WebTestCase(WebTest):
         kwargs.setdefault('user', self.user)
         return self.app.post(url, **kwargs)
 
+    # Custom assertions
+
+    def assertIsRedirect(self, response, expected_url=None):
+        self.assertTrue(response.status_code in (httplib.FOUND,
+                                                 httplib.MOVED_PERMANENTLY))
+        if expected_url:
+            location = URL.from_string(response['Location'])
+            self.assertEqual(expected_url, location.path())
+
     def assertRedirectsTo(self, response, url_name):
         self.assertTrue(str(response.status_code).startswith('3'))
         location = response.headers['Location']

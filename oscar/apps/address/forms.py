@@ -22,7 +22,8 @@ class UserAddressForm(AbstractAddressForm):
 
     class Meta:
         model = UserAddress
-        exclude = ('user', 'num_orders', 'hash', 'search_text')
+        exclude = ('user', 'num_orders', 'hash', 'search_text',
+                   'is_default_for_billing', 'is_default_for_shipping')
 
     def __init__(self, user, *args, **kwargs):
         super(UserAddressForm, self).__init__(*args, **kwargs)

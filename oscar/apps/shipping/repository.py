@@ -1,10 +1,9 @@
+from decimal import Decimal as D
+
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.shipping.methods import (
-    Free, NoShippingRequired, OfferDiscount)
-
-from decimal import Decimal as D
+from oscar.apps.shipping import methods
 
 
 class Repository(object):
@@ -12,33 +11,34 @@ class Repository(object):
     Repository class responsible for returning ShippingMethod
     objects for a given user, basket etc
     """
-    methods = (Free(),)
+    methods = (methods.Free(),)
 
-    def get_shipping_methods(self, user, basket, shipping_addr=None, **kwargs):
+    def get_shipping_methods(self, user, basket, shipping_addr=None,
+                             request=None, **kwargs):
         """
         Return a list of all applicable shipping method objects
-        for a given basket.
+        for a given basket, address etc.
 
-        We default to returning the Method models that have been defined but
-        this behaviour can easily be overridden by subclassing this class
+        We default to returning the ``Method`` models that have been defined
+        but this behaviour can easily be overridden by subclassing this class
         and overriding this method.
         """
         return self.prime_methods(basket, self.methods)
 
     def get_default_shipping_method(self, user, basket, shipping_addr=None,
-                                    **kwargs):
+                                    request=None, **kwargs):
         """
         Return a 'default' shipping method to show on the basket page to give
         the customer an indication of what their order will cost.
         """
-        methods = self.get_shipping_methods(
-            user, basket, shipping_addr, **kwargs)
-        if len(methods) == 0:
+        shipping_methods = self.get_shipping_methods(
+            user, basket, shipping_addr, request, **kwargs)
+        if len(shipping_methods) == 0:
             raise ImproperlyConfigured(
                 _("You need to define some shipping methods"))
 
         # Choose the cheapest method by default
-        return min(methods, key=lambda method: method.basket_charge_incl_tax())
+        return min(shipping_methods, key=lambda method: method.charge_excl_tax)
 
     def prime_methods(self, basket, methods):
         """
@@ -61,8 +61,8 @@ class Repository(object):
         if basket.offer_applications.shipping_discounts:
             # We assume there is only one shipping discount available
             discount = basket.offer_applications.shipping_discounts[0]
-            if method.basket_charge_incl_tax > D('0.00'):
-                return OfferDiscount(method, discount['offer'])
+            if method.charge_incl_tax > D('0.00'):
+                return methods.OfferDiscount(method, discount['offer'])
         return method
 
     def find_by_code(self, code, basket):
@@ -74,5 +74,5 @@ class Repository(object):
                 return self.prime_method(basket, method)
 
         # Check for NoShippingRequired as that is a special case
-        if code == NoShippingRequired.code:
-            return self.prime_method(basket, NoShippingRequired())
+        if code == methods.NoShippingRequired.code:
+            return self.prime_method(basket, methods.NoShippingRequired())
