@@ -1,10 +1,13 @@
-from django.db.models.fields import CharField, DecimalField
+from django.db.models.fields import CharField, DecimalField, Field
 from django.db.models import SubfieldBase
 from django.utils import six
 from django.utils.translation import ugettext_lazy as _
+from django.core import validators as django_validators
 
 from oscar.core import validators
 from oscar.forms import fields
+
+import oscar.core.phonenumber as phonenumber
 
 try:
     from south.modelsinspector import add_introspection_rules
@@ -16,6 +19,8 @@ else:
         "^oscar\.models\.fields\.PositiveDecimalField$"])
     add_introspection_rules([], [
         "^oscar\.models\.fields\.UppercaseCharField$"])
+    add_introspection_rules([], [
+        "^oscar\.models\.fields\.PhoneNumberField$"])
 
 
 class ExtendedURLField(CharField):
@@ -62,3 +67,31 @@ class UppercaseCharField(CharField):
             return val.upper()
         else:
             return val
+
+class PhoneNumberField(Field):
+    attr_class = phonenumber.PhoneNumber
+    descriptor_class = phonenumber.PhoneNumberDescriptor
+    default_validators = [phonenumber.validate_international_phonenumber]
+
+    description = _("Phone number")
+
+    def __init__(self, *args, **kwargs):
+        kwargs['max_length'] = kwargs.get('max_length', 128)
+        super(PhoneNumberField, self).__init__(*args, **kwargs)
+        self.validators.append(django_validators.MaxLengthValidator(self.max_length))
+
+    def get_internal_type(self):
+        return "CharField"
+
+    def get_prep_value(self, value):
+        """
+        Returns field's value prepared for saving into a database.
+        """
+        value = phonenumber.to_python(value)
+        if value is None:
+            return ''
+        return value.as_e164 if value.is_valid() else value.raw_input
+
+    def contribute_to_class(self, cls, name):
+        super(PhoneNumberField, self).contribute_to_class(cls, name)
+        setattr(cls, self.name, self.descriptor_class(self))
