@@ -13,7 +13,7 @@ class Migration(SchemaMigration):
         # Adding model 'WishList'
         db.create_table('wishlists_wishlist', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('owner', self.gf('django.db.models.fields.related.ForeignKey')(related_name='wishlists', to=orm[to=orm[AUTH_USER_MODEL])),
+            ('owner', self.gf('django.db.models.fields.related.ForeignKey')(related_name='wishlists', to=orm[AUTH_USER_MODEL])),
             ('name', self.gf('django.db.models.fields.CharField')(default=u'New Wish List', max_length=255)),
             ('key', self.gf('django.db.models.fields.CharField')(unique=True, max_length=6, db_index=True)),
             ('visibility', self.gf('django.db.models.fields.CharField')(default='Private', max_length=20)),
