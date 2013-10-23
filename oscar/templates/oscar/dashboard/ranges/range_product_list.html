@@ -19,7 +19,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:range-update' range.id %}">'{{ range.name }}'</a>
+            <a href="{% url 'dashboard:range-update' pk=range.id %}">'{{ range.name }}'</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Products" %}</li>
@@ -101,7 +101,7 @@
                                 <input type="checkbox" name="selected_product" value="{{ product.id }}" />
                             </td>
                             <td>{{ product.upc|default:"-" }}</td>
-                            <td><a href="{% url 'dashboard:catalogue-product' product.id %}">{{ product.get_title }}</a></td>
+                            <td><a href="{% url 'dashboard:catalogue-product' pk=product.id %}">{{ product.get_title }}</a></td>
                             <td>{% if product.is_discountable %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>
                             <td>
                                 <a class="btn btn-danger" href="#" data-behaviours="remove">{% trans "Remove" %}</a>
@@ -123,7 +123,7 @@
         {% endif %}
 
         <div class="form-actions">
-            <a href="{% url 'dashboard:range-update' range.id %}" class="btn btn-large btn-primary">{% trans "Edit range" %}</a> {% trans "or" %}
+            <a href="{% url 'dashboard:range-update' pk=range.id %}" class="btn btn-large btn-primary">{% trans "Edit range" %}</a> {% trans "or" %}
             <a href="{% url 'dashboard:range-list' %}" class="">{% trans "return to range list" %}</a>
         </div>
 

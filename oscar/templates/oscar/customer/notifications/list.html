@@ -34,7 +34,7 @@
                                 <em>{{ notification.date_sent }}</em> 
                             </td>
                             <td>
-                                <a href="{% url 'customer:notifications-detail' notification.pk %}" class="btn btn-info btn-small">{% trans 'View' %}</a>
+                                <a href="{% url 'customer:notifications-detail' pk=notification.pk %}" class="btn btn-info btn-small">{% trans 'View' %}</a>
                                 {% if list_type == 'inbox' %}
                                     <a class="btn btn-success btn-small" href="#" data-behaviours="archive">{% trans 'Archive' %}</a>
                                 {% endif %}

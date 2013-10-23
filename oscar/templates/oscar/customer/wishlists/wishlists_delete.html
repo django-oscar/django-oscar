@@ -17,7 +17,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'customer:wishlists-detail' wishlist.key %}">{{ wishlist.name }}</a>
+            <a href="{% url 'customer:wishlists-detail' key=wishlist.key %}">{{ wishlist.name }}</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Delete?" %}</li>

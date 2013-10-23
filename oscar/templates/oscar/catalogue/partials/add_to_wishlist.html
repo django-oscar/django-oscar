@@ -32,7 +32,7 @@
         {% endif %}
 
         {% for wishlist in product_wishlists %}
-            <form action="{% url 'customer:wishlists-remove-product' wishlist.key product.id %}" method="post">
+            <form action="{% url 'customer:wishlists-remove-product' key=wishlist.key product_pk=product.id %}" method="post">
                 {% csrf_token %}
                 {% blocktrans with name=wishlist.name url=wishlist.get_absolute_url %}
                     <span class="pull-left">Product is in <a href="{{ url }}">'{{ name }}'</a> wishlist.</span>

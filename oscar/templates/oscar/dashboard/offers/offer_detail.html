@@ -32,7 +32,7 @@
             {% else %}
                 <button type="submit" class="btn" name="suspend">{% trans "Suspend offer" %}</button>
             {% endif %}
-            <a class="btn btn-danger" href="{% url 'dashboard:offer-delete' offer.pk %}">{% trans "Delete offer" %}</a>
+            <a class="btn btn-danger" href="{% url 'dashboard:offer-delete' pk=offer.pk %}">{% trans "Delete offer" %}</a>
         </form>
         <h1>{{ offer.name }}</h1>
     </div>
@@ -64,7 +64,7 @@
             <tr>
                 <th>{% trans "Name" %}</th>
                 <td>{{ offer.name }}</td>
-                <td rowspan="2"><a id="edit_metadata" href="{% url 'dashboard:offer-metadata' offer.pk %}" class="btn">{% trans "Edit" %}</a></td>
+                <td rowspan="2"><a id="edit_metadata" href="{% url 'dashboard:offer-metadata' pk=offer.pk %}" class="btn">{% trans "Edit" %}</a></td>
             </tr>
             <tr>
                 <th>{% trans "Description" %}</th>
@@ -73,12 +73,12 @@
             <tr>
                 <th>{% trans "Incentive" %}</th>
                 <td>{{ offer.benefit.description|safe }}</td>
-                <td><a href="{% url 'dashboard:offer-benefit' offer.pk %}" class="btn">{% trans "Edit" %}</a></td>
+                <td><a href="{% url 'dashboard:offer-benefit' pk=offer.pk %}" class="btn">{% trans "Edit" %}</a></td>
             </tr>
             <tr>
                 <th>{% trans "Condition" %}</th>
                 <td>{{ offer.condition.description|safe }}</td>
-                <td><a href="{% url 'dashboard:offer-condition' offer.pk %}" class="btn">{% trans "Edit" %}</a></td>
+                <td><a href="{% url 'dashboard:offer-condition' pk=offer.pk %}" class="btn">{% trans "Edit" %}</a></td>
             </tr>
             <tr>
                 <th>{% trans "Restrictions" %}</th>
@@ -93,7 +93,7 @@
                         {% endif %}
                     {% endfor %}
                 </td>
-                <td><a href="{% url 'dashboard:offer-restrictions' offer.pk %}" class="btn">{% trans "Edit" %}</a></td>
+                <td><a href="{% url 'dashboard:offer-restrictions' pk=offer.pk %}" class="btn">{% trans "Edit" %}</a></td>
             </tr>
         </tbody>
     </table>
@@ -114,7 +114,7 @@
                 {% for discount in order_discounts %}
                     {% with order=discount.order %}
                         <tr>
-                            <td><a href="{% url 'dashboard:order-detail' order.number %}">{{ order.number }}</a></td>
+                            <td><a href="{% url 'dashboard:order-detail' number=order.number %}">{{ order.number }}</a></td>
                             <td>{{ order.date_placed }}</td>
                             <td>{{ order.total_incl_tax|currency }}</td>
                             <td>{{ discount.amount|currency }}</td>

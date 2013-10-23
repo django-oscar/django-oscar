@@ -51,7 +51,7 @@
                 {% for partner in partners %}
                     <tr>
                         <td>
-                            <a href="{% url 'dashboard:partner-manage' partner.pk %}">{{ partner.name }}</a>
+                            <a href="{% url 'dashboard:partner-manage' pk=partner.pk %}">{{ partner.name }}</a>
                         </td>
                         <td>
                             {% with users=partner.users.all %}
@@ -59,7 +59,7 @@
                                     <ul>
                                         {% for user in users %}
                                             <li>
-                                                <a href="{% url 'dashboard:partner-user-update' partner.pk user.id %}" title="{% trans "Edit the user's details" %}">
+                                                <a href="{% url 'dashboard:partner-user-update' partner_pk=partner.pk user_pk=user.id %}" title="{% trans "Edit the user's details" %}">
                                                     {{ user.get_full_name|default:user.email }}
                                                 </a>
                                             </li>
@@ -91,10 +91,10 @@
                                         <span class="caret"></span>
                                     </a>
                                     <ul class="dropdown-menu pull-right">
-                                        <li><a href="{% url 'dashboard:partner-manage' partner.pk %}">{% trans "Manage partner and users" %}</a></li>
-                                        <li><a href="{% url 'dashboard:partner-delete' partner.pk %}">{% trans "Delete partner" %}</a></li>
-                                        <li><a href="{% url 'dashboard:partner-user-select' partner.pk %}">{% trans "Link an existing user" %}</a></li>
-                                        <li><a href="{% url 'dashboard:partner-user-create' partner.pk %}">{% trans "Link a new user" %}</a></li>
+                                        <li><a href="{% url 'dashboard:partner-manage' pk=partner.pk %}">{% trans "Manage partner and users" %}</a></li>
+                                        <li><a href="{% url 'dashboard:partner-delete' pk=partner.pk %}">{% trans "Delete partner" %}</a></li>
+                                        <li><a href="{% url 'dashboard:partner-user-select' partner_pk=partner.pk %}">{% trans "Link an existing user" %}</a></li>
+                                        <li><a href="{% url 'dashboard:partner-user-create' partner_pk=partner.pk %}">{% trans "Link a new user" %}</a></li>
                                     </ul>
                                 </div>
                             </div>

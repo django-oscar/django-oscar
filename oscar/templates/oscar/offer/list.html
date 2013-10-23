@@ -43,7 +43,7 @@
                 </div>
             </div>
             <p>
-                <a class="btn" href="{% url 'offer:detail' offer.slug %}">{% trans "Browse products in offer" %}</a>
+                <a class="btn" href="{% url 'offer:detail' slug=offer.slug %}">{% trans "Browse products in offer" %}</a>
             </p>
         {% endif %}
         <hr/>

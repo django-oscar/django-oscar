@@ -3,26 +3,27 @@
 {% load currency_filters %}
 {% load promotion_tags %}
 {% load category_tags %}
+{% load url from future %}
 
 {% block layout %}
     <div id="container">
         <div id="header">
-            <p><a href="{% url promotions:home %}">{% trans "Oscar // Flexible e-commerce for Django" %}</a></p>
+            <p><a href="{% url 'promotions:home' %}">{% trans "Oscar // Flexible e-commerce for Django" %}</a></p>
 
-            <form method="get" action="{% url search:search %}">
+            <form method="get" action="{% url 'search:search' %}">
                 {{ search_form.as_p }}
                 <input type="submit" value="{% trans "Go!" %}" />
             </form>
 
             {% if user.is_authenticated %}
-                <a href="{% url customer:summary %}">{% trans "Profile" %}</a>
-                <a href="{% url customer:logout %}">{% trans "Logout" %}</a>
+                <a href="{% url 'customer:summary' %}">{% trans "Profile" %}</a>
+                <a href="{% url 'customer:logout' %}">{% trans "Logout" %}</a>
             {% else %}
-                <a href="{% url customer:login %}">{% trans "Login" %}</a>
+                <a href="{% url 'customer:login' %}">{% trans "Login" %}</a>
             {% endif %}
 
             {% blocktrans with total=basket.total_incl_tax|currency %}Basket total: {{ total }}{% endblocktrans %}
-            <a href="{% url basket:summary %}">{% trans "View basket" %}</a>
+            <a href="{% url 'basket:summary' %}">{% trans "View basket" %}</a>
 
 			{% category_tree depth=2 as categories %}
 
