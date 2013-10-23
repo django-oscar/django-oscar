@@ -2,6 +2,8 @@ from django.conf import settings
 from django import forms
 from django.db.models import get_model
 
+from oscar.views.generic import PhoneNumberMixin
+
 UserAddress = get_model('address', 'useraddress')
 
 
@@ -18,7 +20,7 @@ class AbstractAddressForm(forms.ModelForm):
             self.fields[field_name].required = True
 
 
-class UserAddressForm(AbstractAddressForm):
+class UserAddressForm(PhoneNumberMixin, AbstractAddressForm):
 
     class Meta:
         model = UserAddress
