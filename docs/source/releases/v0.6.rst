@@ -269,6 +269,25 @@ The templates for the customer account section have been reworked so that the
 profile page is much simpler.  Content is no longer loaded into tabs on a single
 page; instead, separate pages are used to each section.
 
+Additional apps
+~~~~~~~~~~~~~~~
+
+To enable dynamic loading of dashboard `Application` classes, two new apps are required
+in your ``INSTALLED_APPS``:
+
+.. code-block:: python
+
+    INSTALLED_APPS = (
+        ...
+        'oscar.apps.dashboard.pages',
+        'oscar.apps.dashboard.reviews',
+        ...
+    )
+
+If you are using the ``get_core_apps`` helper function, then these new apps
+will be added automatically. Neither of these apps contains models so no
+database schema changes are required.
+
 Upgrading notes
 ===============
 
