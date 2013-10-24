@@ -24,31 +24,35 @@
             <div class="choose-block">
                 <ul class="row-fluid unstyled">
                     {% for address in addresses %}
-					<li class="span6">
-						<div class="well">
-                            <address>
-                                {% for field in address.active_address_fields %}
-    							<span>{{ field }}</span>{% if not forloop.first %}<br/>{% endif %}
-    							{% endfor %}
-                            </address>
-							<form action="{% url 'checkout:shipping-address' %}" method="post">
-								{% csrf_token %}
-								<input type="hidden" name="action" value="ship_to" />
-								<input type="hidden" name="address_id" value="{{ address.id }}" />
-                                {% if address.is_default_for_shipping %}
-                                    <button type="submit" class="btn btn-success ship-address"><i class="icon-ok"></i> {% trans "Ship to your default shipping address" %}</button>
-                                {% else %}
-                                    <button type="submit" class="btn btn-primary ship-address">{% trans "Ship to this address" %}</button>
-                                {% endif %}
-								<a href="{% url 'checkout:user-address-update' pk=address.id %}">{% trans "Edit address" %}</a>
-								<a href="{% url 'checkout:user-address-delete' pk=address.id %}" class="btn btn-small btn-remove-address">{% trans "Delete" %}</a>
-							</form>
-						</div>
-					</li>
-                    {% if forloop.counter|divisibleby:2 %}
-                        </ul>
-                        {% if not forloop.last %}<ul class="row-fluid">{% endif %}
-                    {% endif %}
+                        {% block select_address_form %}
+                            <li class="span6">
+                                <div class="well">
+                                    <address>
+                                        {% block select_address_fields %}
+                                            {% for field in address.active_address_fields %}
+                                                <span>{{ field }}</span>{% if not forloop.first %}<br/>{% endif %}
+                                            {% endfor %}
+                                        {% endblock %}
+                                    </address>
+                                    <form action="{% url 'checkout:shipping-address' %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="ship_to" />
+                                        <input type="hidden" name="address_id" value="{{ address.id }}" />
+                                        {% if address.is_default_for_shipping %}
+                                            <button type="submit" class="btn btn-success ship-address"><i class="icon-ok"></i> {% trans "Ship to your default shipping address" %}</button>
+                                        {% else %}
+                                            <button type="submit" class="btn btn-primary ship-address">{% trans "Ship to this address" %}</button>
+                                        {% endif %}
+                                        <a href="{% url 'checkout:user-address-update' pk=address.id %}">{% trans "Edit address" %}</a>
+                                        <a href="{% url 'checkout:user-address-delete' pk=address.id %}" class="btn btn-small btn-remove-address">{% trans "Delete" %}</a>
+                                    </form>
+                                </div>
+                            </li>
+                            {% if forloop.counter|divisibleby:2 %}
+                                </ul>
+                                {% if not forloop.last %}<ul class="row-fluid">{% endif %}
+                            {% endif %}
+                        {% endblock %}
                     {% endfor %}
                 </ul>
             </div>
@@ -57,18 +61,18 @@
                 <button class="btn" data-toggle="collapse" data-target="#new_shipping_address">{% trans "Add address" %}</button>
             </h3>
         {% endif %}
-    </div>
     {% endif %}
 
-
-    <form action="{% url 'checkout:shipping-address' %}" method="post" class="{% if request.user.is_authenticated and addresses %}collapse{% endif %}" id="new_shipping_address">
-        <div class="well">
-            {% csrf_token %}
-            {% include "partials/form_fields.html" with form=form %}
-            <button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
-            {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
-        </div>
-    </form>
+    {% block new_address_form %}
+        <form action="{% url 'checkout:shipping-address' %}" method="post" class="{% if request.user.is_authenticated and addresses %}collapse{% endif %}" id="new_shipping_address">
+            <div class="well">
+                {% csrf_token %}
+                {% include "partials/form_fields.html" with form=form %}
+                <button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
+                {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
+            </div>
+        </form>
+    {% endblock %}
 {% endblock shipping_address %}
 
 {% block shipping_method %}{% endblock %}
