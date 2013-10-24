@@ -9,9 +9,9 @@ Abstract models
 
 .. automodule:: oscar.apps.order.abstract_models
     :members:
+    :noindex:
 
 Views
 -----
 
 None.
-

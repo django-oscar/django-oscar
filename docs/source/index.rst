@@ -1,4 +1,4 @@
-.. image:: http://img692.imageshack.us/img692/6498/logovf.png
+.. figure:: oscar.png
 
 ===================================
 Domain-driven e-commerce for Django
