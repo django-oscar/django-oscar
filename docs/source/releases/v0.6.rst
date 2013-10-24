@@ -13,9 +13,9 @@ To upgrade your Oscar site, make sure you study both the `backwards incompatible
 and the `deprecated features`_
 
 .. _`new features`: `What's new in Oscar 0.6?`_
-.. _`upgrading advice`: `Upgrading`_
+.. _`upgrading advice`: `Upgrading notes`_
 .. _`deprecation plan`: `Features deprecated in 0.6`_
-.. _`deprecation features`: `Features deprecated in 0.6`_
+.. _`deprecated features`: `Features deprecated in 0.6`_
 .. _`backwards incompatible changes`: `Backwards incompatible changes in 0.6`_
 
 Overview
@@ -96,7 +96,7 @@ There's a great deal of flexibility.  See the guide to
 :doc:`prices and availability </topics/prices_and_availability>`
 for more information.
 
-Note that the :function:`oscar.templatetags.currency_filters.currency` now
+Note that the :func:`oscar.templatetags.currency_filters.currency` now
 accepts an optional currency parameter.
 
 Payment models have abstract versions

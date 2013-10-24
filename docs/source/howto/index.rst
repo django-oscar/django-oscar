@@ -63,6 +63,14 @@ Shipping
 
     how_to_configure_shipping
 
+Order processing
+----------------
+
+.. toctree::
+    :maxdepth: 1
+
+    how_to_set_up_order_processing
+
 Offers
 ------
 
