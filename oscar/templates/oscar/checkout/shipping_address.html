@@ -24,12 +24,15 @@
             <div class="choose-block">
                 <ul class="row-fluid unstyled">
                     {% for address in addresses %}
+                        {% block select_address_form %}
 					<li class="span6">
 						<div class="well">
                             <address>
-                                {% for field in address.active_address_fields %}
-    							<span>{{ field }}</span>{% if not forloop.first %}<br/>{% endif %}
-    							{% endfor %}
+                                {% block select_address_fields %}
+                                    {% for field in address.active_address_fields %}
+                                        <span>{{ field }}</span>{% if not forloop.first %}<br/>{% endif %}
+                                    {% endfor %}
+                                {% endblock %}
                             </address>
 							<form action="{% url 'checkout:shipping-address' %}" method="post">
 								{% csrf_token %}
@@ -45,10 +48,11 @@
 							</form>
 						</div>
 					</li>
-                    {% if forloop.counter|divisibleby:2 %}
-                        </ul>
-                        {% if not forloop.last %}<ul class="row-fluid">{% endif %}
-                    {% endif %}
+                            {% if forloop.counter|divisibleby:2 %}
+                                </ul>
+                                {% if not forloop.last %}<ul class="row-fluid">{% endif %}
+                            {% endif %}
+                        {% endblock %}
                     {% endfor %}
                 </ul>
             </div>
@@ -61,14 +65,16 @@
     {% endif %}
 
 
-    <form action="{% url 'checkout:shipping-address' %}" method="post" class="{% if request.user.is_authenticated and addresses %}collapse{% endif %}" id="new_shipping_address">
-        <div class="well">
-            {% csrf_token %}
-            {% include "partials/form_fields.html" with form=form %}
-            <button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
-            {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
-        </div>
-    </form>
+    {% block new_address_form %}
+        <form action="{% url 'checkout:shipping-address' %}" method="post" class="{% if request.user.is_authenticated and addresses %}collapse{% endif %}" id="new_shipping_address">
+            <div class="well">
+                {% csrf_token %}
+                {% include "partials/form_fields.html" with form=form %}
+                <button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
+                {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
+            </div>
+        </form>
+    {% endblock %}
 {% endblock shipping_address %}
 
 {% block shipping_method %}{% endblock %}
