@@ -2,6 +2,10 @@ from django.template.defaultfilters import date
 from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
 
+from oscar.core.loading import get_class
+
+CsvUnicodeWriter = get_class('dashboard.reports.csv_utils', 'CsvUnicodeWriter')
+
 
 class ReportGenerator(object):
     """
@@ -56,6 +60,9 @@ class ReportFormatter(object):
 
 
 class ReportCSVFormatter(ReportFormatter):
+    
+    def get_csv_writer(self, file_handle, **kwargs):
+        return CsvUnicodeWriter(file_handle, **kwargs)
 
     def generate_response(self, objects, **kwargs):
         response = HttpResponse(mimetype='text/csv')

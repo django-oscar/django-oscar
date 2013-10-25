@@ -1,4 +1,4 @@
-import csv
+
 import datetime
 from decimal import Decimal as D, InvalidOperation
 
@@ -20,6 +20,7 @@ from oscar.views.generic import BulkEditMixin
 from oscar.apps.payment.exceptions import PaymentError
 from oscar.apps.order.exceptions import InvalidShippingEvent, InvalidStatus
 
+CsvUnicodeWriter = get_class('dashboard.reports.csv_utils', 'CsvUnicodeWriter')
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
 ShippingAddress = get_model('order', 'ShippingAddress')
@@ -221,7 +222,7 @@ class OrderListView(ListView, BulkEditMixin):
     def download_selected_orders(self, request, orders):
         response = HttpResponse(mimetype='text/csv')
         response['Content-Disposition'] = 'attachment; filename=%s' % self.get_download_filename(request)
-        writer = csv.writer(response, delimiter=',')
+        writer = CsvUnicodeWriter(response, delimiter=',')
 
         meta_data = (('number', _('Order number')),
                      ('value', _('Order value')),
