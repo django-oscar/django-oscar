@@ -426,6 +426,11 @@ THUMBNAIL_KEY_PREFIX = 'oscar-sandbox'
 # Use a custom KV store to handle integrity error
 THUMBNAIL_KVSTORE = 'oscar.sorl_kvstore.ConcurrentKVStore'
 
+# Django has switched to JSON serializing for security reasons, but it does not
+# serialize Models. We should resolve this by extending the
+# django/core/serializers/json.Serializer to have the `dumps` function. Also
+# in tests/config.py
+SESSION_SERIALIZER='django.contrib.sessions.serializers.PickleSerializer'
 
 # Try and import local settings which can be used to override any of the above.
 try:
