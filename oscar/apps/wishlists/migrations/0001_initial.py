@@ -209,7 +209,7 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'key': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '6', 'db_index': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'default': "u'New Wish List'", 'max_length': '255'}),
-            'owner': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'wishlists'", 'to': "orm[AUTH_USER_MODEL]"}),
+            'owner': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'wishlists'", 'to': "orm['{0}']".format(AUTH_USER_MODEL)}),
             'visibility': ('django.db.models.fields.CharField', [], {'default': "'Private'", 'max_length': '20'})
         }
     }
