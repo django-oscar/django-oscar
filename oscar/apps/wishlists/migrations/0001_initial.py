@@ -3,6 +3,7 @@ import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
+from oscar.core.compat import AUTH_USER_MODEL, AUTH_USER_MODEL_NAME
 
 
 class Migration(SchemaMigration):
@@ -11,7 +12,7 @@ class Migration(SchemaMigration):
         # Adding model 'WishList'
         db.create_table('wishlists_wishlist', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('owner', self.gf('django.db.models.fields.related.ForeignKey')(related_name='wishlists', to=orm['auth.User'])),
+            ('owner', self.gf('django.db.models.fields.related.ForeignKey')(related_name='wishlists', to=orm[AUTH_USER_MODEL])),
             ('name', self.gf('django.db.models.fields.CharField')(default=u'New Wish List', max_length=255)),
             ('key', self.gf('django.db.models.fields.CharField')(unique=True, max_length=6, db_index=True)),
             ('visibility', self.gf('django.db.models.fields.CharField')(default='Private', max_length=20)),
@@ -58,8 +59,8 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         },
-        'auth.user': {
-            'Meta': {'object_name': 'User'},
+        AUTH_USER_MODEL: {
+            'Meta': {'object_name': AUTH_USER_MODEL_NAME},
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
@@ -207,7 +208,7 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'key': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '6', 'db_index': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'default': "u'New Wish List'", 'max_length': '255'}),
-            'owner': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'wishlists'", 'to': "orm['auth.User']"}),
+            'owner': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'wishlists'", 'to': "orm['{0}']".format(AUTH_USER_MODEL)}),
             'visibility': ('django.db.models.fields.CharField', [], {'default': "'Private'", 'max_length': '20'})
         }
     }
