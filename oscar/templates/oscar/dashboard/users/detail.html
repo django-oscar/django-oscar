@@ -128,7 +128,7 @@
                                     <td>{{ order.number }}</td>
                                     <td>{{ order.num_items }}</td>
                                     <td>{{ order.basket_total_incl_tax|currency }}</td>
-                                    <td>{{ order.date_placed|date:"d/m/y H:s" }}</td>
+                                    <td>{{ order.date_placed|date:"d/m/y H:i" }}</td>
                                     <td>{{ order.status }}</td>
                                     <td><a href="{% url 'dashboard:order-detail' number=order.number %}" class="btn btn-info">{% trans "View" %}</a></td>
                                 </tr>

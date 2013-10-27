@@ -55,7 +55,7 @@
         <tr>
             <td>{{ order.total_incl_tax|currency:order.currency }}</td>
             <td>{{ order.date_placed|date:"d/m/y" }}</td>
-            <td>{{ order.date_placed|date:"H:s" }}</td>
+            <td>{{ order.date_placed|date:"H:i" }}</td>
             <td>{{ order.status|default:"N/A" }}</td>
         </tr>
     </table>
