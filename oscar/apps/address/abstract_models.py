@@ -406,6 +406,13 @@ class AbstractCountry(models.Model):
         return self.printable_name or self.name
 
     @property
+    def code(self):
+        """
+        Shorthand for the ISO 3166 code
+        """
+        return self.iso_3166_1_a2
+
+    @property
     def numeric_code(self):
         return u"%.03d" % self.iso_3166_1_numeric
 
