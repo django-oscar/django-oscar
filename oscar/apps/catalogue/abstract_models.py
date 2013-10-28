@@ -844,7 +844,7 @@ class AbstractProductAttributeValue(models.Model):
     value_text = models.CharField(
         _('Text'), max_length=255, blank=True, null=True)
     value_integer = models.IntegerField(_('Integer'), blank=True, null=True)
-    value_boolean = models.BooleanField(_('Boolean'), blank=True)
+    value_boolean = models.NullBooleanField(_('Boolean'), blank=True)
     value_float = models.FloatField(_('Float'), blank=True, null=True)
     value_richtext = models.TextField(_('Richtext'), blank=True, null=True)
     value_date = models.DateField(_('Date'), blank=True, null=True)

@@ -8,6 +8,7 @@ class ExtendedURLField(fields.URLField):
     Custom field similar to URLField type field, however also accepting and
     validating local relative URLs, ie. '/product/'
     """
+    default_validators = []
 
     def __init__(self, max_length=None, min_length=None, verify_exists=None,
                  *args, **kwargs):
