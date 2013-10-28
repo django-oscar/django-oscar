@@ -1,5 +1,6 @@
-from itertools import chain
+import collections
 from datetime import datetime, date
+from itertools import chain
 import logging
 import os
 import warnings
@@ -11,10 +12,10 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Sum, Count, get_model
 from django.utils.translation import ugettext_lazy as _
+from oscar.core.loading import get_classes
+from oscar.core.utils import slugify
 from treebeard.mp_tree import MP_Node
 
-from oscar.core.utils import slugify
-from oscar.core.loading import get_classes
 
 ProductManager, BrowsableProductManager = get_classes(
     'catalogue.managers', ['ProductManager', 'BrowsableProductManager'])
@@ -649,19 +650,22 @@ class ProductAttributesContainer(object):
 
     def validate_attributes(self):
         for attribute in self.get_all_attributes():
-            value = getattr(self, attribute.code, None)
-            if value is None:
+            values = getattr(self, attribute.code, None)
+            if values is None:
                 if attribute.required:
                     raise ValidationError(
                         _("%(attr)s attribute cannot be blank") %
                         {'attr': attribute.code})
             else:
-                try:
-                    attribute.validate_value(value)
-                except ValidationError, e:
-                    raise ValidationError(
-                        _("%(attr)s attribute %(err)s") %
-                        {'attr': attribute.code, 'err': e})
+                if not isinstance(values, collections.Iterable):
+                    values = [values]
+                for value in values:
+                    try:
+                        attribute.validate_value(value)
+                    except ValidationError, e:
+                        raise ValidationError(
+                            _("%(attr)s attribute %(err)s") %
+                            {'attr': attribute.code, 'err': e})
 
     def get_values(self):
         return self.product.attribute_values.all()
@@ -708,6 +712,7 @@ class AbstractProductAttribute(models.Model):
         ("richtext", _("Rich Text")),
         ("date", _("Date")),
         ("option", _("Option")),
+        ("multi_option", _("Multi Option")),
         ("entity", _("Entity")))
     type = models.CharField(
         choices=TYPE_CHOICES, default=TYPE_CHOICES[0][0],
@@ -715,7 +720,7 @@ class AbstractProductAttribute(models.Model):
     option_group = models.ForeignKey(
         'catalogue.AttributeOptionGroup', blank=True, null=True,
         verbose_name=_("Option Group"),
-        help_text=_('Select an option group if using type "Option"'))
+        help_text=_('Select an option group if using type "Option" or "Multi Option"'))
     entity_type = models.ForeignKey(
         'catalogue.AttributeEntityType', blank=True, null=True,
         verbose_name=_("Entity Type"),
@@ -779,6 +784,9 @@ class AbstractProductAttribute(models.Model):
                 _("%(enum)s is not a valid choice for %(attr)s") %
                 {'enum': value, 'attr': self})
 
+    def _validate_multi_option(self, value):
+        self._validate_option(value)
+
     def get_validator(self):
         DATATYPE_VALIDATORS = {
             'text': self._validate_text,
@@ -789,6 +797,7 @@ class AbstractProductAttribute(models.Model):
             'date': self._validate_date,
             'entity': self._validate_entity,
             'option': self._validate_option,
+            'multi_option': self._validate_multi_option,
         }
 
         return DATATYPE_VALIDATORS[self.type]
@@ -799,20 +808,25 @@ class AbstractProductAttribute(models.Model):
     def save(self, *args, **kwargs):
         super(AbstractProductAttribute, self).save(*args, **kwargs)
 
-    def save_value(self, product, value):
-        try:
-            value_obj = product.attribute_values.get(attribute=self)
-        except get_model('catalogue', 'ProductAttributeValue').DoesNotExist:
-            if value is None or value == '':
-                return
+    def save_value(self, product, values):
+        """
+        Value could either be an individual value or
+        a queryset of values (in case of a multiple choice option attribute)
+        """
+        if self.type == 'multi_option':
+            values = set(iter(values))
+        else:
+            values = [values]
+
+        existing_values = product.attribute_values.filter(attribute=self)
+        existing_values.delete()
+
+        for value_obj in values:
             model = get_model('catalogue', 'ProductAttributeValue')
-            value_obj = model.objects.create(product=product, attribute=self)
-        if value is None or value == '':
-            value_obj.delete()
-            return
-        if value != value_obj.value:
-            value_obj.value = value
-            value_obj.save()
+            attrib_value = model.objects.create(product=product,
+                                                attribute=self,
+                                                value=value_obj)
+
 
     def validate_value(self, value):
         self.get_validator()(value)
@@ -856,14 +870,23 @@ class AbstractProductAttributeValue(models.Model):
         verbose_name=_("Value Entity"))
 
     def _get_value(self):
+        if self.attribute.type == 'multi_option':
+            val = getattr(self, 'value_%s' % 'option')
+            return val
+
         return getattr(self, 'value_%s' % self.attribute.type)
 
     def _set_value(self, new_value):
-        if self.attribute.type == 'option' and isinstance(new_value, str):
+        if (self.attribute.type in (u'option', u'multi_option',)
+                and isinstance(new_value, str)):
             # Need to look up instance of AttributeOption
             new_value = self.attribute.option_group.options.get(
                 option=new_value)
-        setattr(self, 'value_%s' % self.attribute.type, new_value)
+
+        if self.attribute.type == 'multi_option':
+            setattr(self, 'value_%s' % 'option', new_value)
+        else:
+            setattr(self, 'value_%s' % self.attribute.type, new_value)
 
     value = property(_get_value, _set_value)
 
