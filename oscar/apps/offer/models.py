@@ -729,6 +729,8 @@ class Range(models.Model):
     slug = models.SlugField(_('Slug'), max_length=128, unique=True, null=True)
     includes_all_products = models.BooleanField(
         _('Includes All Products'), default=False)
+    is_browseable = models.BooleanField(
+        _('Is Browsable'), default=False)
     included_products = models.ManyToManyField(
         'catalogue.Product', related_name='includes', blank=True,
         verbose_name=_("Included Products"))
