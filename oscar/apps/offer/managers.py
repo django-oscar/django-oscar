@@ -1,7 +1,6 @@
 from django.utils.timezone import now
 from django.db import models
 
-from oscar.core.loading import get_classes
 
 class ActiveOfferManager(models.Manager):
     """
