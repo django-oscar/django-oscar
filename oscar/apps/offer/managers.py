@@ -1,7 +1,7 @@
 from django.utils.timezone import now
-
 from django.db import models
 
+from oscar.core.loading import get_classes
 
 class ActiveOfferManager(models.Manager):
     """
@@ -12,3 +12,13 @@ class ActiveOfferManager(models.Manager):
         return super(ActiveOfferManager, self).get_query_set().filter(
             models.Q(end_datetime__gte=cutoff) | models.Q(end_datetime=None),
             start_datetime__lte=cutoff)
+
+class RangeManager(models.Manager):
+
+    def get_query_set(self):
+        return super(RangeManager, self).get_query_set()
+
+class BrowsableRangeManager(models.Manager):
+
+    def get_query_set(self):
+        return super(BrowsableRangeManager, self).get_query_set().filter(is_browseable=True)
