@@ -204,6 +204,10 @@ class AbstractOrder(models.Model):
         return num_items
 
     @property
+    def shipping_tax(self):
+        return self.shipping_incl_tax - self.shipping_excl_tax
+
+    @property
     def shipping_status(self):
         events = self.shipping_events.all()
         if not len(events):
