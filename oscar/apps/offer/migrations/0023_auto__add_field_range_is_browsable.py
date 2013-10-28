@@ -10,8 +10,8 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding field 'Range.is_browsable'
         db.add_column(u'offer_range', 'is_browsable',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
+                      self.gf('django.db.models.fields.BooleanField')(default=True),
+                      keep_default=True)
 
 
     def backwards(self, orm):
@@ -181,7 +181,7 @@ class Migration(SchemaMigration):
             'included_categories': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'includes'", 'blank': 'True', 'to': u"orm['catalogue.Category']"}),
             'included_products': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'includes'", 'blank': 'True', 'to': u"orm['catalogue.Product']"}),
             'includes_all_products': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_browsable': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'is_browsable': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'}),
             'proxy_class': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '255', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             'slug': ('django.db.models.fields.SlugField', [], {'max_length': '128', 'unique': 'True', 'null': 'True'})

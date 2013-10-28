@@ -734,7 +734,7 @@ class Range(models.Model):
     includes_all_products = models.BooleanField(
         _('Includes All Products'), default=False)
     is_browsable = models.BooleanField(
-        _('Is Browsable'), default=False)
+        _('Is Browsable'), default=True)
     included_products = models.ManyToManyField(
         'catalogue.Product', related_name='includes', blank=True,
         verbose_name=_("Included Products"))
