@@ -764,7 +764,7 @@ class Range(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
 
-        # Save product
+        # Save Range
         super(Range, self).save(*args, **kwargs)
 
     def contains_product(self, product):
