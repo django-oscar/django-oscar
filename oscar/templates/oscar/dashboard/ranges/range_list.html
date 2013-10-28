@@ -32,6 +32,7 @@
                 <tr>
                     <th>{% trans "Name" %}</th>
                     <th>{% trans "Num products" %}</th>
+                    <th>{% trans "Is Browsable" %}</th>
                     <th>{% trans "Date created" %}</th>
                     <th></th>
                 </tr>
@@ -40,7 +41,17 @@
                 {% for range in ranges %}
                     <tr>
                         <td><a href="{% url 'dashboard:range-update' pk=range.id %}">{{ range.name }}</a></td>
-                        <td>{{ range.num_products|default:"-" }}</td>
+                        {% if range.includes_all_products %}
+                            <td>All</td>
+                        {% else %}
+                            <td>{{ range.num_products|default:"-" }}</td>
+                        {% endif %}
+
+                        {% if range.is_browsable %}
+                            <td>Yes</td>
+                        {% else %}
+                            <td>No</td>
+                        {% endif %}
                         <td>{{ range.date_created }}</td>
                         <td>
                             <div class="btn-toolbar">
