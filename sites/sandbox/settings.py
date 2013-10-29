@@ -286,7 +286,7 @@ INSTALLED_APPS = [
     # Debug toolbar + extensions
     'debug_toolbar',
     'cache_panel',
-    'template_timings_panel',
+    #'template_timings_panel',
     'south',
     'rosetta',          # For i18n testing
     'compressor',
