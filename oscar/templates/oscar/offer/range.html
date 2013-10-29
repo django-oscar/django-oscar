@@ -23,16 +23,10 @@
 
 {% block headertext %}{{ range.name }}{% endblock %}
 
-{% block column_left %}
-{% endblock %}
-
 {% block content %}
     {% if range.description %}
         {{ range.description|safe }}
     {% endif %}
-    {% if range.description %}
-        {{ range.description|safe }}
-    {% endif %
     {% if products %}
         <section>
             <div class="mod">
