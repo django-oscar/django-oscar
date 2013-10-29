@@ -4,6 +4,7 @@
 {% load currency_filters %}
 {% load staticfiles %}
 {% load url from future %}
+{% load stockrecord_tags %}
 
 {% block basket_form_headers %}
 <div class="basket-title hidden-phone">
@@ -21,6 +22,7 @@
         {{ formset.management_form }}
 
         {% for form in formset %}
+            {% session_strategy request form.instance.product as session %}
         <div class="basket-items">
             <div class="row-fluid">
                 <div class="span1">
@@ -34,7 +36,7 @@
                     </div>
                 </div>
                 <div class="span5">
-                    <h4>{{ form.instance.product.stockrecord.partner.name }}</h4>
+                    <h4>{{ session.stockrecord.partner.name }}</h4>
                     <h3><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h3>
                 </div>
                 <div class="span4">
@@ -145,7 +147,7 @@
                         </div>
                         <div class="span7">
                             <h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
-                            <p class="availability {{ form.instance.product.stockrecord.availability_code }}">{{ form.instance.product.stockrecord.availability }}</p>
+                            <p class="availability {{ session.availability_code }}">{{ session.availability.message }}</p>
                             <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove">{% trans "Remove" %}</a>
                             <div style="display:none">
                                 {{ form.move_to_basket }}
@@ -160,4 +162,3 @@
         </div>
     {% endif %}
 {% endblock %}
-
