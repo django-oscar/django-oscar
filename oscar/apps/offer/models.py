@@ -731,6 +731,8 @@ class Range(models.Model):
     name = models.CharField(_("Name"), max_length=128, unique=True)
     slug = models.SlugField(_('Slug'), max_length=128, unique=True, null=True)
 
+    description = models.TextField(blank=True)
+
     # Whether this range is public
     is_public = models.BooleanField(
         _('Is public?'), default=False,
