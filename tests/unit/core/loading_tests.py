@@ -6,21 +6,8 @@ from django.test.utils import override_settings
 import oscar
 from tests import temporary_python_path
 from oscar.core.loading import (
-    import_module, AppNotFoundError,
+    AppNotFoundError,
     get_classes, get_class, ClassNotFoundError)
-
-
-class TestImportModule(TestCase):
-    """
-    oscar.core.loading.import_module
-    """
-
-    def test_imports_a_class_correctly(self):
-        module = import_module('analytics.models', ['ProductRecord'])
-        self.assertEqual('oscar.apps.analytics.models', module.__name__)
-
-    def test_raises_exception_for_unknown_app(self):
-        self.assertRaises(AppNotFoundError, import_module, 'banana', ['skin'])
 
 
 class TestClassLoading(TestCase):

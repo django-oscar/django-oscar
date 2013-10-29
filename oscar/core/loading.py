@@ -1,6 +1,5 @@
 import sys
 import traceback
-from imp import new_module
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
@@ -102,21 +101,6 @@ def _get_app_module_path(module_label):
         if installed_app.endswith(app_name):
             return installed_app
     return None
-
-
-def import_module(module_label, classes, namespace=None):
-    """
-    This is the deprecated old way of loading modules
-    """
-    klasses = get_classes(module_label, classes)
-    if namespace:
-        for classname, klass in zip(classes, klasses):
-            namespace[classname] = klass
-    else:
-        module = new_module("oscar.apps.%s" % module_label)
-        for classname, klass in zip(classes, klasses):
-            setattr(module, classname, klass)
-        return module
 
 
 def get_profile_class():
