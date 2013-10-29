@@ -183,6 +183,15 @@ Better bankcard handling
 
 The bankcard model in the payment app has been greatly improved.
 
+Customer-facing range pages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Ranges can now be flagged as public which means they can be browsed by
+customers. They can be used to created curated collections of products.
+
+The core :class:`~oscar.apps.offer.models.Range` model has been extended with a
+HTML description field also.
+
 Order processing changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -317,9 +326,6 @@ database schema changes are required.
 Upgrading notes
 ===============
 
-Database migrations
-~~~~~~~~~~~~~~~~~~~
-
 * Alternative product class templates now use ``slug` field instead of
   ``name.lower()`` to determine their filename.  If you have templates for
   specific product classes, please update your filenames accordingly
@@ -338,12 +344,6 @@ Checkout app:
 Payment app:
 
 * The `balance` method on the source object is not a property not a method.
-
-Order app:
-
-* ``0015``: Unused ``sequence_number`` and ``is_required`` deleted from
-  ``ShippingEventType``. Unused ``sequence_number`` deleted from
-  ``PaymentEventType``.
 
 URLs
 ~~~~
@@ -371,6 +371,19 @@ There are new migrations in the following apps to be aware of.
     - The `date` field of the ``order.AbstractCommunicationEvent``, ``order.AbstractPaymentEvent`` and
       ``order.AbstractShippingEvent`` models have been renamed to ``date_created`` for
       consistency with the rest of Oscar.
+
+Order app:
+
+* ``0015``: Unused ``sequence_number`` and ``is_required`` deleted from
+  ``ShippingEventType``. Unused ``sequence_number`` deleted from
+  ``PaymentEventType``.
+
+Offer app:
+
+* ``0021``: Add a ``slug`` field to the :class:`~oscar.apps.offer.models.Range` model.
+* ``0022``: A data migration to populate the new range slug field. 
+* ``0023``: Add a ``is_public`` field to the :class:`~oscar.apps.offer.models.Range` model.
+* ``0024``: Add a ``description`` field to the :class:`~oscar.apps.offer.models.Range` model.
 
 Features deprecated in 0.6
 ==========================
