@@ -32,7 +32,7 @@
                 <tr>
                     <th>{% trans "Name" %}</th>
                     <th>{% trans "Num products" %}</th>
-                    <th>{% trans "Is Browsable" %}</th>
+                    <th>{% trans "Is public?" %}</th>
                     <th>{% trans "Date created" %}</th>
                     <th></th>
                 </tr>
@@ -47,10 +47,10 @@
                             <td>{{ range.num_products|default:"-" }}</td>
                         {% endif %}
 
-                        {% if range.is_browsable %}
-                            <td>Yes</td>
+                        {% if range.is_public %}
+                            <td>{% trans "Yes" %}</td>
                         {% else %}
-                            <td>No</td>
+                            <td>{% trans "No" %}</td>
                         {% endif %}
                         <td>{{ range.date_created }}</td>
                         <td>
@@ -66,6 +66,9 @@
                                             {% if not range.includes_all_products %}
                                                 <li><a href="{% url 'dashboard:range-products' pk=range.id %}">{% trans "Edit products" %}</a></li>
                                             {% endif %}
+                                        {% endif %}
+                                        {% if range.is_public %}
+                                            <li><a href="{{ range.get_absolute_url }}">{% trans "View on site" %}</a></li>
                                         {% endif %}
                                         <li><a href="{% url 'dashboard:range-delete' pk=range.id %}">{% trans "Delete" %}</a></li>
                                     </ul>

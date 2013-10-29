@@ -24,4 +24,5 @@ class BrowsableRangeManager(models.Manager):
     For searching only ranges which have the "is_browsable" flag set to True.
     """
     def get_query_set(self):
-        return super(BrowsableRangeManager, self).get_query_set().filter(is_browsable=True)
+        return super(BrowsableRangeManager, self).get_query_set().filter(
+            is_public=True)

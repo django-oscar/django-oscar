@@ -8,15 +8,15 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Range.is_browsable'
-        db.add_column(u'offer_range', 'is_browsable',
-                      self.gf('django.db.models.fields.BooleanField')(default=True),
-                      keep_default=True)
+        # Adding field 'Range.is_public'
+        db.add_column(u'offer_range', 'is_public',
+                      self.gf('django.db.models.fields.BooleanField')(default=False),
+                      keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting field 'Range.is_browsable'
-        db.delete_column(u'offer_range', 'is_browsable')
+        # Deleting field 'Range.is_public'
+        db.delete_column(u'offer_range', 'is_public')
 
 
     models = {
@@ -181,7 +181,7 @@ class Migration(SchemaMigration):
             'included_categories': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'includes'", 'blank': 'True', 'to': u"orm['catalogue.Category']"}),
             'included_products': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'includes'", 'blank': 'True', 'to': u"orm['catalogue.Product']"}),
             'includes_all_products': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_browsable': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'is_public': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'}),
             'proxy_class': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '255', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             'slug': ('django.db.models.fields.SlugField', [], {'max_length': '128', 'unique': 'True', 'null': 'True'})

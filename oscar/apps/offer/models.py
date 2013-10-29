@@ -731,10 +731,15 @@ class Range(models.Model):
     """
     name = models.CharField(_("Name"), max_length=128, unique=True)
     slug = models.SlugField(_('Slug'), max_length=128, unique=True, null=True)
+
+    # Whether this range is public
+    is_public = models.BooleanField(
+        _('Is public?'), default=False,
+        help_text=_("Public ranges have a customer-facing page"))
+
     includes_all_products = models.BooleanField(
-        _('Includes All Products'), default=False)
-    is_browsable = models.BooleanField(
-        _('Is Browsable'), default=True)
+        _('Includes all products?'), default=False)
+
     included_products = models.ManyToManyField(
         'catalogue.Product', related_name='includes', blank=True,
         verbose_name=_("Included Products"))
