@@ -12,12 +12,6 @@ class ActiveOfferManager(models.Manager):
             models.Q(end_datetime__gte=cutoff) | models.Q(end_datetime=None),
             start_datetime__lte=cutoff)
 
-class RangeManager(models.Manager):
-    """
-    Base Range Manager
-    """
-    def get_query_set(self):
-        return super(RangeManager, self).get_query_set()
 
 class BrowsableRangeManager(models.Manager):
     """

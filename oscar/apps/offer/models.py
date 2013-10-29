@@ -15,10 +15,9 @@ from oscar.core.utils import slugify
 from oscar.apps.offer.managers import ActiveOfferManager
 from oscar.templatetags.currency_filters import currency
 from oscar.models.fields import PositiveDecimalField, ExtendedURLField
-from oscar.core.loading import get_classes
+from oscar.core.loading import get_class
 
-RangeManager, BrowsableRangeManager = get_classes(
-    'offer.managers', ['RangeManager', 'BrowsableRangeManager'])
+BrowsableRangeManager = get_class('offer.managers', 'BrowsableRangeManager')
 
 
 def load_proxy(proxy_class):
@@ -764,7 +763,7 @@ class Range(models.Model):
     __excluded_product_ids = None
     __class_ids = None
 
-    objects = RangeManager()
+    objects = models.Manager()
     browsable = BrowsableRangeManager()
 
     class Meta:
@@ -773,6 +772,10 @@ class Range(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('catalogue:range', kwargs={
+            'slug': self.slug})
 
     def save(self, *args, **kwargs):
         if not self.slug:
