@@ -15,6 +15,10 @@ from oscar.core.utils import slugify
 from oscar.apps.offer.managers import ActiveOfferManager
 from oscar.templatetags.currency_filters import currency
 from oscar.models.fields import PositiveDecimalField, ExtendedURLField
+from oscar.core.loading import get_classes
+
+RangeManager, BrowsableRangeManager = get_classes(
+    'offer.managers', ['RangeManager', 'BrowsableRangeManager'])
 
 
 def load_proxy(proxy_class):
@@ -729,6 +733,8 @@ class Range(models.Model):
     slug = models.SlugField(_('Slug'), max_length=128, unique=True, null=True)
     includes_all_products = models.BooleanField(
         _('Includes All Products'), default=False)
+    is_browsable = models.BooleanField(
+        _('Is Browsable'), default=True)
     included_products = models.ManyToManyField(
         'catalogue.Product', related_name='includes', blank=True,
         verbose_name=_("Included Products"))
@@ -753,6 +759,9 @@ class Range(models.Model):
     __excluded_product_ids = None
     __class_ids = None
 
+    objects = RangeManager()
+    browsable = BrowsableRangeManager()
+
     class Meta:
         verbose_name = _("Range")
         verbose_name_plural = _("Ranges")
@@ -764,7 +773,7 @@ class Range(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
 
-        # Save product
+        # Save Range
         super(Range, self).save(*args, **kwargs)
 
     def contains_product(self, product):
