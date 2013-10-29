@@ -44,7 +44,7 @@ setup(name='django-oscar',
           # We ship a simple Haystack implementation (that needs to be
           # improved).  We are using the 2.0-beta release from Github and
           # eagerly anticipating a stable 2.0 release on PyPI.
-          'django-haystack==2.0.0-beta',
+          'django-haystack>=2.0.0',
           # Treebeard is used for categories
           'django-treebeard==2.0b2',
           # Sorl is used as the default thumbnailer
@@ -62,7 +62,6 @@ setup(name='django-oscar',
           # For phone number field
           'phonenumbers==5.8b1'
       ],
-      dependency_links=['https://github.com/toastdriven/django-haystack/tarball/fd83d3f449c2197f93040bb3d7bc6083ea8e48b7#egg=django-haystack-2.0.0-beta'],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
           'Development Status :: 4 - Beta',
