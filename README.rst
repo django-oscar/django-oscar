@@ -243,7 +243,8 @@ Non-Tangent:
 * Laivee - http://laivee.pl
 * Colinss - http://colinss.com
 * Audio App - https://audioapp.pl/
-* Anyting Gift - http://www.anythinggift.co.uk
+* Anything Gift - http://www.anythinggift.co.uk
+* FP Sport - http://www.fpsport.it
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/dolbeau.thumb.png
     :target: http://www.dolbeau.ca
@@ -262,6 +263,9 @@ Non-Tangent:
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/anythinggift.thumb.png
     :target: http://www.anythinggift.co.uk
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/fpsport.thumb.png
+    :target: https://www.fpsport.it
 
 Many more on the way.  If you use Oscar in production, please let us know.
 
