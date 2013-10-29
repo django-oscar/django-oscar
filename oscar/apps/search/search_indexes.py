@@ -28,6 +28,10 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     def get_model(self):
         return get_model('catalogue', 'Product')
 
+    def index_queryset(self, using=None):
+        # Only index browsable products (not each individual variant)
+        return self.get_model().browsable.order_by('-date_updated')
+
     def prepare_category(self, obj):
         categories = obj.categories.all()
         if len(categories) > 0:
@@ -36,7 +40,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_price(self, obj):
         # Pricing is tricky as product do not necessarily have a single price
         # (although that is the most common scenario).
-        if obj.is_top_level and obj.has_stockrecords:
+        if obj.has_stockrecords:
             result = strategy.fetch(obj)
             if result.price.is_tax_known:
                 return result.price.incl_tax
@@ -46,10 +50,6 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         if obj.has_stockrecords:
             result = strategy.fetch(obj)
             return result.stockrecord.num_in_stock
-
-    def index_queryset(self, using=None):
-        # Only index browsable products (not each individual variant)
-        return self.get_model().browsable.order_by('-date_updated')
 
     def get_updated_field(self):
         """

@@ -1,10 +1,10 @@
-from oscar.core.loading import import_module
+from oscar.core.loading import get_class
 
-search_forms = import_module('search.forms', ['MultiFacetedSearchForm'])
+MultiFacetedSearchForm = get_class('search.forms', 'MultiFacetedSearchForm')
 
 
 def search_form(request):
     """
-    Ensures that the search form is available site wide
+    Ensure that the search form is available site wide
     """
-    return {'search_form': search_forms.MultiFacetedSearchForm(request.GET)}
+    return {'search_form': MultiFacetedSearchForm(request.GET)}
