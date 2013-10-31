@@ -49,8 +49,7 @@ PyPI status:
 .. image:: https://pypip.in/d/django-oscar/badge.png
     :target: https://crate.io/packages/django-oscar/
 
-.. image::
-   https://d2weczhvl823v0.cloudfront.net/tangentlabs/django-oscar/trend.png 
+.. image:: https://d2weczhvl823v0.cloudfront.net/tangentlabs/django-oscar/trend.png 
     :alt: Bitdeli badge 
     :target: https://bitdeli.com/free
 
