@@ -70,6 +70,7 @@ def configure():
             'DEBUG': False,
             'SITE_ID': 1,
             'APPEND_SLASH': True,
+            'SESSION_SERIALIZER': 'django.contrib.sessions.serializers.PickleSerializer',
         }
         if django.VERSION >= (1, 5):
             test_settings['INSTALLED_APPS'] += ['tests._site.myauth', ]
