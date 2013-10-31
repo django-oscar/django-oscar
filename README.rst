@@ -310,3 +310,9 @@ The position is in Tangent's London offices and you must have the appropriate
 visas to work in the UK.
 
 .. _`recruitment@tangentlabs.co.uk`: mailto:recruitment@tangentlabs.co.uk
+
+
+.. image:: https://d2weczhvl823v0.cloudfront.net/tangentlabs/django-oscar/trend.png
+   :alt: Bitdeli badge
+   :target: https://bitdeli.com/free
+
