@@ -22,6 +22,9 @@
     {{ block.super }}
     {% compress css %}
         <link rel="stylesheet" href="{% static "oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.css" %}" />
+
+        <link rel="stylesheet" href="{% static "oscar/js/cleditor/jquery.cleditor.css" %}" />
+
         <link rel="stylesheet" href="{% static "oscar/js/select2/select2.css" %}" />
         <link rel="stylesheet" href="{% static "oscar/js/jquery/bootstrap-datepicker.css" %}" />
     {% endcompress %}
@@ -140,8 +143,7 @@
     <script src="{% static "oscar/js/select2/select2.js" %}" type="text/javascript" charset="utf-8"></script>
 
     {# WYSIHTML5 #}
-    <script src="{% static "oscar/js/bootstrap-wysihtml5/wysihtml5-0.3.0.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/cleditor/jquery.cleditor.min.js" %}" type="text/javascript" charset="utf-8"></script>
 
     <script src="{% static "oscar/js/oscar/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
     {% endcompress %}
