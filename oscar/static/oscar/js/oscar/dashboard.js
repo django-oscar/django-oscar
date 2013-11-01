@@ -51,10 +51,10 @@ var oscar = (function(o, $) {
             }
 
             // Use WYSIHTML5 widget on textareas
-            var wysiOptions = {
-                "html": true
-            };
-            $('form.wysiwyg textarea, textarea.wysiwyg').wysihtml5(wysiOptions);
+            $('form.wysiwyg textarea, textarea.wysiwyg').tinymce({
+                statusbar: false,
+                menubar: false
+            });
 
             $('.scroll-pane').jScrollPane();
 
