@@ -178,6 +178,15 @@ Accounts
 The views and templates of the accounts section have been reworked to be clearer
 and easier to extend.
 
+Bootstrap-WYSIHTML5 replaced by TinyMCE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+TinyMCE 4.0 is now used in the dashboard for all textareas with class
+``wysiwyg``.  This has better browser support and is easier to customise than
+bootstrap-wysihtml5.
+
+It is easy to configure or replace with the HTML editor of your choice.
+
 Better bankcard handling
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

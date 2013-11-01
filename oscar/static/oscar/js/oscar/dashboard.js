@@ -19,7 +19,17 @@ var oscar = (function(o, $) {
             var defaults = {
                 'dateFormat': 'yy-mm-dd',
                 'timeFormat': 'HH:mm',
-                'stepMinute': 15
+                'stepMinute': 15,
+                'tinyConfig': {
+                    statusbar: false,
+                    menubar: false,
+                    plugins: "link",
+                    style_formats: [
+                        {title: 'Heading', block: 'h2'},
+                        {title: 'Subheading', block: 'h3'}
+                    ],
+                    toolbar: "styleselect | bold italic blockquote | bullist numlist | link"
+                }
             };
             o.dashboard.options = $.extend(defaults, options);
 
@@ -81,11 +91,8 @@ var oscar = (function(o, $) {
             }
         },
         initWYSIWYG: function() {
-            // Use WYSIHTML5 widget on textareas
-            var wysiOptions = {
-                "html": true
-            };
-            $('form.wysiwyg textarea, textarea.wysiwyg').wysihtml5(wysiOptions);
+            // Use TinyMCE by default
+            $('form.wysiwyg textarea, textarea.wysiwyg').tinymce(o.dashboard.options.tinyConfig);
         },
         offers: {
             init: function() {
