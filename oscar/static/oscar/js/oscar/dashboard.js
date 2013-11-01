@@ -23,6 +23,36 @@ var oscar = (function(o, $) {
             };
             o.dashboard.options = $.extend(defaults, options);
 
+            o.dashboard.initDatePickers();
+            o.dashboard.initWYSIWYG();
+
+            $('.scroll-pane').jScrollPane();
+
+            $(".category-select ul").prev('a').on('click', function(){
+                var $this = $(this),
+                plus = $this.hasClass('ico_expand');
+                if (plus) {
+                    $this.removeClass('ico_expand').addClass('ico_contract');
+                } else {
+                    $this.removeClass('ico_contract').addClass('ico_expand');
+                }
+                return false;
+            });
+
+            // Adds error icon if there are errors in the product update form
+            $('[data-behaviour="affix-nav-errors"] .tab-pane').each(function(){
+              var productErrorListener = $(this).find('[class*="error"]').closest('.tab-pane').attr('id');
+              $('[data-spy="affix"] a[href="#' + productErrorListener + '"]').append('<i class="icon-info-sign pull-right"></i>');
+            });
+
+            // Adds type/search for select fields
+            $('.form-stacked select').css('width', '95%');
+            $('.form-inline select').css('width', '300px');
+            $('select').select2({width: 'resolve'});
+
+            o.dashboard.filereader.init();
+        },
+        initDatePickers: function() {
             // Use datepicker for all inputs that have 'date' or 'datetime' in the name
             if ($.datepicker) {
                 var defaultDatepickerConfig = {'dateFormat': o.dashboard.options.dateFormat};
@@ -49,38 +79,13 @@ var oscar = (function(o, $) {
                     $ele.datetimepicker(config);
                 });
             }
-
+        },
+        initWYSIWYG: function() {
             // Use WYSIHTML5 widget on textareas
             var wysiOptions = {
                 "html": true
             };
             $('form.wysiwyg textarea, textarea.wysiwyg').wysihtml5(wysiOptions);
-
-            $('.scroll-pane').jScrollPane();
-
-            $(".category-select ul").prev('a').on('click', function(){
-                var $this = $(this),
-                plus = $this.hasClass('ico_expand');
-                if (plus) {
-                    $this.removeClass('ico_expand').addClass('ico_contract');
-                } else {
-                    $this.removeClass('ico_contract').addClass('ico_expand');
-                }
-                return false;
-            });
-            
-            // Adds error icon if there are errors in the product update form
-            $('[data-behaviour="affix-nav-errors"] .tab-pane').each(function(){
-              var productErrorListener = $(this).find('[class*="error"]').closest('.tab-pane').attr('id');
-              $('[data-spy="affix"] a[href="#' + productErrorListener + '"]').append('<i class="icon-info-sign pull-right"></i>');
-            });
-            
-            // Adds type/search for select fields
-            $('.form-stacked select').css('width', '95%');
-            $('.form-inline select').css('width', '300px');
-            $('select').select2({width: 'resolve'});
-
-            o.dashboard.filereader.init();
         },
         offers: {
             init: function() {
