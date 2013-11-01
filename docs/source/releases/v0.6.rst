@@ -239,7 +239,38 @@ Several classes and functions have had signature changes:
   :class:`oscar.apps.catalogue.reviews.forms.ProductReviewForm``.
 
 
-Address model changes
+Loading shipping methods
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The default implementation of the shipping method repository has been adjusted
+to avoid thread-safety issues.  If you define your own shipping ``Repository``
+class, ensure that your shipping methods are instantiated per-request and not
+at compile time.
+
+For example, avoid this:
+
+.. code-block:: python
+
+   from oscar.apps.shipping import repository
+
+   class Repository(repository.Repository)
+       methods = [SomeMethod(), AnotherMethod()]
+
+Instead, instantiate the methods within ``get_shipping_methods``:
+
+.. code-block:: python
+
+   from oscar.apps.shipping import repository
+
+   class Repository(repository.Repository)
+       # Note, methods are not instantiated
+       methods = [SomeMethod, AnotherMethod]
+
+Beware of shipping methods that are configured via constructor arguments, like 
+:class:`~oscar.apps.shipping.methods.FixedPrice`.  Shipping methods will be
+reworked for Oscar 0.7.
+
+Address Model changes
 ~~~~~~~~~~~~~~~~~~~~~
 
 * The ``UserAddress.salutation`` and ``UserAddress.name`` methods are now
