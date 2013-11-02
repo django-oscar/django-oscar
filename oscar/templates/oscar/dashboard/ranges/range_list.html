@@ -32,6 +32,7 @@
                 <tr>
                     <th>{% trans "Name" %}</th>
                     <th>{% trans "Num products" %}</th>
+                    <th>{% trans "Is public?" %}</th>
                     <th>{% trans "Date created" %}</th>
                     <th></th>
                 </tr>
@@ -39,8 +40,18 @@
             <tbody>
                 {% for range in ranges %}
                     <tr>
-                        <td><a href="{% url 'dashboard:range-update' range.id %}">{{ range.name }}</a></td>
-                        <td>{{ range.num_products|default:"-" }}</td>
+                        <td><a href="{% url 'dashboard:range-update' pk=range.id %}">{{ range.name }}</a></td>
+                        {% if range.includes_all_products %}
+                            <td>All</td>
+                        {% else %}
+                            <td>{{ range.num_products|default:"-" }}</td>
+                        {% endif %}
+
+                        {% if range.is_public %}
+                            <td>{% trans "Yes" %}</td>
+                        {% else %}
+                            <td>{% trans "No" %}</td>
+                        {% endif %}
                         <td>{{ range.date_created }}</td>
                         <td>
                             <div class="btn-toolbar">
@@ -51,12 +62,15 @@
                                     </a>
                                     <ul class="dropdown-menu pull-right">
                                         {% if range.is_editable %}
-                                            <li><a href="{% url 'dashboard:range-update' range.id %}">{% trans "Edit" %}</a></li>
+                                            <li><a href="{% url 'dashboard:range-update' pk=range.id %}">{% trans "Edit" %}</a></li>
                                             {% if not range.includes_all_products %}
-                                                <li><a href="{% url 'dashboard:range-products' range.id %}">{% trans "Edit products" %}</a></li>
+                                                <li><a href="{% url 'dashboard:range-products' pk=range.id %}">{% trans "Edit products" %}</a></li>
                                             {% endif %}
                                         {% endif %}
-                                        <li><a href="{% url 'dashboard:range-delete' range.id %}">{% trans "Delete" %}</a></li>
+                                        {% if range.is_public %}
+                                            <li><a href="{{ range.get_absolute_url }}">{% trans "View on site" %}</a></li>
+                                        {% endif %}
+                                        <li><a href="{% url 'dashboard:range-delete' pk=range.id %}">{% trans "Delete" %}</a></li>
                                     </ul>
                                 </div>
                             </div>

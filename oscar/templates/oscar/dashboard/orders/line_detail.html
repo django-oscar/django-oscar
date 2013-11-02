@@ -19,7 +19,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:order-detail' line.order.number %}">#{{ line.order.number }}</a>
+            <a href="{% url 'dashboard:order-detail' number=line.order.number %}">#{{ line.order.number }}</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{% blocktrans with id=line.id %}Line #{{ id }}{% endblocktrans %}</li>

@@ -8,7 +8,10 @@
 {% load product_tags %}
 {% load thumbnail %}
 {% load basket_tags %}
+{% load stockrecord_tags %}
 {% load i18n %}
+
+{% session_strategy request product as session %}
 
 {% block body_class %}product-page{% endblock body_class %}
 
@@ -34,7 +37,7 @@
         <div class="span6">
             {% block product_main %}
                 <div class="product-highlight">
-                    <h4>{{ product.stockrecord.partner.name }}</h4>
+                    <h4>{{ session.stockrecord.partner.name }}</h4>
                     <h1>{{ product.get_title }}</h1>
                     
                     {% block product_stock_record %}
@@ -119,16 +122,16 @@
                 <tr>
                     <th>{% trans "Product class" %}</th><td>{{ product.get_product_class.name }}</td>
                 </tr>
-                {% if product.stockrecord %}
+                {% if session.availability.is_available_to_buy %}
                 <tr>
-                    <th>{% trans "Price (excl. tax)" %}</th><td>{{ product.stockrecord.price_incl_tax|currency }}</td>
+                    <th>{% trans "Price (excl. tax)" %}</th><td>{{ session.price.excl_tax|currency }}</td>
                 </tr>
                 <tr>
-                    <th>{% trans "Price (incl. tax)" %}</th><td>{{ product.stockrecord.price_excl_tax|currency }}</td>
+                    <th>{% trans "Price (incl. tax)" %}</th><td>{{ session.price.incl_tax|currency }}</td>
                 </tr>
                 <tr>
                     <th>{% trans "Availability" %}</th>
-                    <td>{{ product.stockrecord.availability }}</td>
+                    <td>{{ session.availability.message }}</td>
                 </tr>
                 {% endif %}
                 {% for av in product.attribute_values.all %}
@@ -154,7 +157,7 @@
                 {% if not reviews %}
                     <p class="well">
                         {% trans "This product does not have any reviews yet" %} - 
-                        <a href="{% url 'catalogue:reviews-add' product.slug product.id %}#addreview">{% trans "be the first to write one" %}</a>.
+                        <a href="{% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id %}#addreview">{% trans "be the first to write one" %}</a>.
                     </p>
                 {% else %}
                     {% for review in reviews|slice:":3" %}

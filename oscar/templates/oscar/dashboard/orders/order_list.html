@@ -106,13 +106,13 @@
                 {% for order in orders %}
                     <tr>
                         <td><input type="checkbox" name="selected_order" class="selected_order" value="{{ order.id }}"/>
-                            <td><a href="{% url 'dashboard:order-detail' order.number %}">{{ order.number }}</a></td>
+                            <td><a href="{% url 'dashboard:order-detail' number=order.number %}">{{ order.number }}</a></td>
                             <td>{{ order.total_incl_tax|currency:order.currency }}</td>
                             <td>{{ order.num_items }}</td>
                             <td>{{ order.status|default:"-" }}</td>
                             <td>
                                 {% if not order.is_anonymous %}
-                                    <a href="{% url 'dashboard:user-detail' order.user.id %}">{{ order.user.get_full_name }}</a>
+                                    <a href="{% url 'dashboard:user-detail' pk=order.user.id %}">{{ order.user.get_full_name }}</a>
                                 {% else %}
                                     {{ order.email }}
                                 {% endif %}
@@ -121,7 +121,7 @@
                             <td>{{ order.billing_address|default:"-" }}</td>
                             <td>{{ order.date_placed }}</td>
                             <td>
-                                <a class="btn btn-info" href="{% url 'dashboard:order-detail' order.number %}">{% trans "View" %}</a>
+                                <a class="btn btn-info" href="{% url 'dashboard:order-detail' number=order.number %}">{% trans "View" %}</a>
                             </td>
                         </tr>
                     {% endfor %}

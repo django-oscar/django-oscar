@@ -11,7 +11,9 @@ class Repository(object):
     Repository class responsible for returning ShippingMethod
     objects for a given user, basket etc
     """
-    methods = (methods.Free(),)
+    # Note, don't instantiate your shipping methods here (at class-level) as
+    # that isn't thread safe.
+    methods = (methods.Free,)
 
     def get_shipping_methods(self, user, basket, shipping_addr=None,
                              request=None, **kwargs):
@@ -23,7 +25,10 @@ class Repository(object):
         but this behaviour can easily be overridden by subclassing this class
         and overriding this method.
         """
-        return self.prime_methods(basket, self.methods)
+        # We need to instantiate each method class to avoid thread-safety
+        # issues
+        methods = [klass() for klass in self.methods]
+        return self.prime_methods(basket, methods)
 
     def get_default_shipping_method(self, user, basket, shipping_addr=None,
                                     request=None, **kwargs):
@@ -69,8 +74,9 @@ class Repository(object):
         """
         Return the appropriate Method object for the given code
         """
-        for method in self.methods:
-            if method.code == code:
+        for method_class in self.methods:
+            if method_class.code == code:
+                method = method_class()
                 return self.prime_method(basket, method)
 
         # Check for NoShippingRequired as that is a special case

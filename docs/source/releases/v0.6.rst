@@ -13,9 +13,9 @@ To upgrade your Oscar site, make sure you study both the `backwards incompatible
 and the `deprecated features`_
 
 .. _`new features`: `What's new in Oscar 0.6?`_
-.. _`upgrading advice`: `Upgrading`_
+.. _`upgrading advice`: `Upgrading notes`_
 .. _`deprecation plan`: `Features deprecated in 0.6`_
-.. _`deprecation features`: `Features deprecated in 0.6`_
+.. _`deprecated features`: `Features deprecated in 0.6`_
 .. _`backwards incompatible changes`: `Backwards incompatible changes in 0.6`_
 
 Overview
@@ -96,7 +96,7 @@ There's a great deal of flexibility.  See the guide to
 :doc:`prices and availability </topics/prices_and_availability>`
 for more information.
 
-Note that the :function:`oscar.templatetags.currency_filters.currency` now
+Note that the :func:`oscar.templatetags.currency_filters.currency` now
 accepts an optional currency parameter.
 
 Payment models have abstract versions
@@ -183,6 +183,15 @@ Better bankcard handling
 
 The bankcard model in the payment app has been greatly improved.
 
+Customer-facing range pages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Ranges can now be flagged as public which means they can be browsed by
+customers. They can be used to created curated collections of products.
+
+The core :class:`~oscar.apps.offer.models.Range` model has been extended with a
+HTML description field also.
+
 Order processing changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -230,7 +239,38 @@ Several classes and functions have had signature changes:
   :class:`oscar.apps.catalogue.reviews.forms.ProductReviewForm``.
 
 
-Address model changes
+Loading shipping methods
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The default implementation of the shipping method repository has been adjusted
+to avoid thread-safety issues.  If you define your own shipping ``Repository``
+class, ensure that your shipping methods are instantiated per-request and not
+at compile time.
+
+For example, avoid this:
+
+.. code-block:: python
+
+   from oscar.apps.shipping import repository
+
+   class Repository(repository.Repository)
+       methods = [SomeMethod(), AnotherMethod()]
+
+Instead, instantiate the methods within ``get_shipping_methods``:
+
+.. code-block:: python
+
+   from oscar.apps.shipping import repository
+
+   class Repository(repository.Repository)
+       # Note, methods are not instantiated
+       methods = [SomeMethod, AnotherMethod]
+
+Beware of shipping methods that are configured via constructor arguments, like 
+:class:`~oscar.apps.shipping.methods.FixedPrice`.  Shipping methods will be
+reworked for Oscar 0.7.
+
+Address Model changes
 ~~~~~~~~~~~~~~~~~~~~~
 
 * The ``UserAddress.salutation`` and ``UserAddress.name`` methods are now
@@ -295,11 +335,27 @@ The templates for the customer account section have been reworked so that the
 profile page is much simpler.  Content is no longer loaded into tabs on a single
 page; instead, separate pages are used to each section.
 
+Additional apps
+~~~~~~~~~~~~~~~
+
+To enable dynamic loading of dashboard `Application` classes, two new apps are required
+in your ``INSTALLED_APPS``:
+
+.. code-block:: python
+
+    INSTALLED_APPS = (
+        ...
+        'oscar.apps.dashboard.pages',
+        'oscar.apps.dashboard.reviews',
+        ...
+    )
+
+If you are using the ``get_core_apps`` helper function, then these new apps
+will be added automatically. Neither of these apps contains models so no
+database schema changes are required.
+
 Upgrading notes
 ===============
-
-Database migrations
-~~~~~~~~~~~~~~~~~~~
 
 * Alternative product class templates now use ``slug` field instead of
   ``name.lower()`` to determine their filename.  If you have templates for
@@ -319,12 +375,6 @@ Checkout app:
 Payment app:
 
 * The `balance` method on the source object is not a property not a method.
-
-Order app:
-
-* ``0015``: Unused ``sequence_number`` and ``is_required`` deleted from
-  ``ShippingEventType``. Unused ``sequence_number`` deleted from
-  ``PaymentEventType``.
 
 URLs
 ~~~~
@@ -352,6 +402,19 @@ There are new migrations in the following apps to be aware of.
     - The `date` field of the ``order.AbstractCommunicationEvent``, ``order.AbstractPaymentEvent`` and
       ``order.AbstractShippingEvent`` models have been renamed to ``date_created`` for
       consistency with the rest of Oscar.
+
+Order app:
+
+* ``0015``: Unused ``sequence_number`` and ``is_required`` deleted from
+  ``ShippingEventType``. Unused ``sequence_number`` deleted from
+  ``PaymentEventType``.
+
+Offer app:
+
+* ``0021``: Add a ``slug`` field to the :class:`~oscar.apps.offer.models.Range` model.
+* ``0022``: A data migration to populate the new range slug field. 
+* ``0023``: Add a ``is_public`` field to the :class:`~oscar.apps.offer.models.Range` model.
+* ``0024``: Add a ``description`` field to the :class:`~oscar.apps.offer.models.Range` model.
 
 Features deprecated in 0.6
 ==========================

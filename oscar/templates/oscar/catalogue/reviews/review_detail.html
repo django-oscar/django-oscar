@@ -27,7 +27,7 @@
                 <span class="divider">/</span>
             </li>
             <li>
-                <a href="{% url 'catalogue:reviews-list' product.slug product.pk %}">{% trans "Reviews" %}</a>
+                <a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.pk %}">{% trans "Reviews" %}</a>
                 <span class="divider">/</span>
             </li>
         {% endwith %}

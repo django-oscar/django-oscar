@@ -15,7 +15,7 @@
             {% for email in emails %}
                 <tr>
                     <td>
-                        <a href="{% url 'customer:email-detail' email.id %}">{{ email.subject }}</a>
+                        <a href="{% url 'customer:email-detail' email_id=email.id %}">{{ email.subject }}</a>
                     </td>
                     <td>{{ email.date_sent }}</td>
                 </tr>

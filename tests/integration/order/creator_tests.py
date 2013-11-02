@@ -8,7 +8,7 @@ from oscar.apps.catalogue.models import ProductClass, Product
 from oscar.apps.offer.utils import Applicator
 from oscar.apps.order.models import Order
 from oscar.apps.order.utils import OrderCreator
-from oscar.apps.shipping.methods import FixedPrice, Free
+from oscar.apps.shipping.methods import FixedPrice, Free, Base
 from oscar.apps.shipping.repository import Repository
 from oscar.core.loading import get_class
 from oscar.test import factories
@@ -138,9 +138,15 @@ class TestPlacingOrderForDigitalGoods(TestCase):
         self.assertTrue(stockrecord.num_allocated is None)
 
 
+class Fixed(Base):
+    code = 'test'
+    charge_incl_tax = charge_excl_tax = D('5.00')
+    is_tax_known = True
+
+
 class StubRepository(Repository):
     """ Custom shipping methods """
-    methods = (FixedPrice(D('5.00'), D('5.00')), Free())
+    methods = (Fixed, Free)
 
 
 class TestShippingOfferForOrder(TestCase):
@@ -152,7 +158,7 @@ class TestShippingOfferForOrder(TestCase):
     def apply_20percent_shipping_offer(self):
         """Shipping offer 20% off"""
         range = Range.objects.create(name="All products range",
-                                    includes_all_products=True)
+                                     includes_all_products=True)
         benefit = Benefit.objects.create(
             range=range, type=Benefit.SHIPPING_PERCENTAGE, value=20)
         offer = factories.create_offer(range=range, benefit=benefit)
@@ -163,7 +169,7 @@ class TestShippingOfferForOrder(TestCase):
         self.apply_20percent_shipping_offer()
 
         # Normal shipping 5.00
-        shipping = StubRepository().find_by_code(FixedPrice.code, self.basket)
+        shipping = StubRepository().find_by_code('test', self.basket)
 
         place_order(self.creator,
                     basket=self.basket,

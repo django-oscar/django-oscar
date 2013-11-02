@@ -78,7 +78,7 @@ var oscar = (function(o, $) {
             // Adds type/search for select fields
             $('.form-stacked select').css('width', '95%');
             $('.form-inline select').css('width', '300px');
-            $('select').select2();
+            $('select').select2({width: 'resolve'});
 
             o.dashboard.filereader.init();
         },

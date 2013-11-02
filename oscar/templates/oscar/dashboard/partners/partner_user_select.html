@@ -18,7 +18,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:partner-manage' partner.id %}">{{ partner.name }}</a>
+            <a href="{% url 'dashboard:partner-manage' pk=partner.id %}">{{ partner.name }}</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Link an existing user" %}</li>
@@ -35,7 +35,7 @@
             {% include 'partials/form_fields_inline.html' with form=form %}
             <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
             {% if form.is_bound %}
-                <a class="btn" href="{% url 'dashboard:partner-user-select' partner.id %}" >{% trans "Reset" %}</a>
+                <a class="btn" href="{% url 'dashboard:partner-user-select' partner_pk=partner.id %}" >{% trans "Reset" %}</a>
             {% endif %}
             <div style="margin-top:5px">{% trans "A partial email address can be entered (eg '@example.com') to match multiple addresses." %}</div>
         </form>
@@ -65,7 +65,7 @@
                                             User is already linked to {{ name }}.
                                         {% endblocktrans %}
                                     {% else %}
-                                        <form action="{% url 'dashboard:partner-user-link' partner.id user.id %}" method="post">
+                                        <form action="{% url 'dashboard:partner-user-link' partner_pk=partner.id user_pk=user.id %}" method="post">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-primary">{% trans 'Link user' %}</button>
                                         </form>

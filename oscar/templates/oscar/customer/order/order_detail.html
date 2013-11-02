@@ -30,7 +30,7 @@
                 <td>
                     <p><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></p>
                     {% iffeature "reviews" %}
-                        <a class="btn" href="{% url 'catalogue:reviews-add' line.product.slug line.product.id %}">{% trans 'Write a review' %}</a>
+                        <a class="btn" href="{% url 'catalogue:reviews-add' product_slug=line.product.slug product_pk=line.product.id %}">{% trans 'Write a review' %}</a>
                     {% endiffeature %}
                 </td>
                 <td>{{ line.est_dispatch_date|default:"-" }}</td>
@@ -39,7 +39,7 @@
                 <td>{{ line.line_price_before_discounts_incl_tax|currency:order.currency }}</td>
                 <td width="90">
                     {% if line.product %}
-                    <form id="line_form_{{ line.id }}" action="{% url 'customer:order-line' order.number line.id %}" method="POST">
+                    <form id="line_form_{{ line.id }}" action="{% url 'customer:order-line' order_number=order.number line_id=line.id %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="action" value="reorder" />
                         <button class="btn btn-success" type="submit">{% trans 'Re-order' %}</button>
@@ -110,7 +110,7 @@
         </tbody>
     </table>
 
-    <form id="order_form_{{ order.id }}" action="{% url 'customer:order' order.number %}" method="post">
+    <form id="order_form_{{ order.id }}" action="{% url 'customer:order' order_number=order.number %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="order_id" value="{{ order.id }}" />
         <input type="hidden" name="action" value="reorder" />

@@ -15,6 +15,9 @@ from oscar.core.utils import slugify
 from oscar.apps.offer.managers import ActiveOfferManager
 from oscar.templatetags.currency_filters import currency
 from oscar.models.fields import PositiveDecimalField, ExtendedURLField
+from oscar.core.loading import get_class
+
+BrowsableRangeManager = get_class('offer.managers', 'BrowsableRangeManager')
 
 
 def load_proxy(proxy_class):
@@ -727,8 +730,17 @@ class Range(models.Model):
     """
     name = models.CharField(_("Name"), max_length=128, unique=True)
     slug = models.SlugField(_('Slug'), max_length=128, unique=True, null=True)
+
+    description = models.TextField(blank=True)
+
+    # Whether this range is public
+    is_public = models.BooleanField(
+        _('Is public?'), default=False,
+        help_text=_("Public ranges have a customer-facing page"))
+
     includes_all_products = models.BooleanField(
-        _('Includes All Products'), default=False)
+        _('Includes all products?'), default=False)
+
     included_products = models.ManyToManyField(
         'catalogue.Product', related_name='includes', blank=True,
         verbose_name=_("Included Products"))
@@ -753,6 +765,9 @@ class Range(models.Model):
     __excluded_product_ids = None
     __class_ids = None
 
+    objects = models.Manager()
+    browsable = BrowsableRangeManager()
+
     class Meta:
         verbose_name = _("Range")
         verbose_name_plural = _("Ranges")
@@ -760,11 +775,15 @@ class Range(models.Model):
     def __unicode__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('catalogue:range', kwargs={
+            'slug': self.slug})
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
 
-        # Save product
+        # Save Range
         super(Range, self).save(*args, **kwargs)
 
     def contains_product(self, product):

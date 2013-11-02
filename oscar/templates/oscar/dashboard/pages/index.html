@@ -57,7 +57,7 @@
                 <tbody>
                     {% for page in flatpage_list %}
                         <tr>
-                            <td><a href="{% url 'dashboard:page-update' page.id %}">{{ page.title}}</a></td>
+                            <td><a href="{% url 'dashboard:page-update' pk=page.id %}">{{ page.title}}</a></td>
                             <td><a title="{% trans "View on site" %}" href="{{ page.get_absolute_url }}">{{ page.url }}</a></td>
                             <td>
                                 <div class="btn-toolbar">
@@ -68,8 +68,8 @@
                                         </a>
                                         <ul class="dropdown-menu pull-right">
                                             <li><a href="{{ page.get_absolute_url }}">{% trans "View" %}</a></li>
-                                            <li><a href="{% url 'dashboard:page-update' page.id %}">{% trans "Edit" %}</a></li>
-                                            <li><a href="{% url 'dashboard:page-delete' page.id %}">{% trans "Delete" %}</a></li>
+                                            <li><a href="{% url 'dashboard:page-update' pk=page.id %}">{% trans "Edit" %}</a></li>
+                                            <li><a href="{% url 'dashboard:page-delete' pk=page.id %}">{% trans "Delete" %}</a></li>
                                         </ul>
                                     </div>
                                 </div>

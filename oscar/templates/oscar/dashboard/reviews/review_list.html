@@ -67,17 +67,17 @@
                     <tr>
                         <td><input type="checkbox" name="selected_review" class="selected_review" value="{{ review.id }}"/></td>
                         <td>
-                            <a href="{% url 'dashboard:reviews-update' review.id %}">{{ review.title }}</a>
+                            <a href="{% url 'dashboard:reviews-update' pk=review.id %}">{{ review.title }}</a>
                         </td>
                         <td>
                             {% if review.product %}
-                                <a href='{% url 'catalogue:detail' review.product.slug review.product.id %}'>{{ review.product.title }}</a> </td>
+                                <a href='{% url 'catalogue:detail' product_slug=review.product.slug pk=review.product.id %}'>{{ review.product.title }}</a> </td>
                         {% else %}
                             {% trans "[Product deleted]" %}
                         {% endif %}
                         <td>
                             {% if not review.is_anonymous %}
-                                <a href="{% url 'dashboard:user-detail' review.user.id %}">{{ review.review_name }}</a>
+                                <a href="{% url 'dashboard:user-detail' pk=review.user.id %}">{{ review.review_name }}</a>
                             {% else %}
                                 {{ review.name }}
                             {% endif %}
@@ -107,10 +107,10 @@
                                             </a>
                                             <ul class="dropdown-menu pull-right">
                                                 {% if review.title %}
-                                                    <li><a href="{% url 'catalogue:reviews-detail' review.product.slug review.product.id review.id %}">{% trans "View on site" %}</a></li>
+                                                    <li><a href="{% url 'catalogue:reviews-detail' product_slug=review.product.slug product_pk=review.product.id pk=review.id %}">{% trans "View on site" %}</a></li>
                                                 {% endif %}
-                                                <li><a href="{% url 'dashboard:reviews-update' review.id %}">{% trans "Edit" %}</a></li>
-                                                <li><a href="{% url 'dashboard:reviews-delete' review.id %}">{% trans "Delete" %}</a></li>
+                                                <li><a href="{% url 'dashboard:reviews-update' pk=review.id %}">{% trans "Edit" %}</a></li>
+                                                <li><a href="{% url 'dashboard:reviews-delete' pk=review.id %}">{% trans "Delete" %}</a></li>
                                             </ul>
                                         </div>
                                     </div>

@@ -49,6 +49,10 @@ PyPI status:
 .. image:: https://pypip.in/d/django-oscar/badge.png
     :target: https://crate.io/packages/django-oscar/
 
+.. image:: https://d2weczhvl823v0.cloudfront.net/tangentlabs/django-oscar/trend.png 
+    :alt: Bitdeli badge 
+    :target: https://bitdeli.com/free
+
 .. _`Official homepage`: http://oscarcommerce.com
 .. _`Sandbox site`: http://latest.oscarcommerce.com
 .. _`Demo site`: http://demo.oscarcommerce.com
@@ -243,7 +247,9 @@ Non-Tangent:
 * Laivee - http://laivee.pl
 * Colinss - http://colinss.com
 * Audio App - https://audioapp.pl/
-* Anyting Gift - http://www.anythinggift.co.uk
+* Anything Gift - http://www.anythinggift.co.uk
+* FP Sport - http://www.fpsport.it
+* Garmsby - https://garmsby.co.uk
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/dolbeau.thumb.png
     :target: http://www.dolbeau.ca
@@ -262,6 +268,12 @@ Non-Tangent:
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/anythinggift.thumb.png
     :target: http://www.anythinggift.co.uk
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/fpsport.thumb.png
+    :target: https://www.fpsport.it
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/garmsby.thumb.png
+    :target: https://garmsby.co.uk
 
 Many more on the way.  If you use Oscar in production, please let us know.
 
