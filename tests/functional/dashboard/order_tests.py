@@ -8,7 +8,7 @@ from django_dynamic_fixture import get, G
 
 from oscar.test.testcases import ClientTestCase, WebTestCase
 from oscar.test.factories import create_order, create_product
-from oscar.apps.order.models import Order, OrderNote, ShippingAddress
+from oscar.apps.order.models import Order, OrderNote
 from oscar.core.compat import get_user_model
 
 
@@ -16,6 +16,7 @@ User = get_user_model()
 Basket = get_model('basket', 'Basket')
 Partner = get_model('partner', 'Partner')
 ShippingAddress = get_model('order', 'ShippingAddress')
+
 
 class TestOrderListDashboard(WebTestCase):
     is_staff = True

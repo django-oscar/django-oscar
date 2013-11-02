@@ -56,8 +56,10 @@ class TestAStaffUser(WebTestCase):
         form['upc'] = '123456'
         form['title'] = 'new product'
         form['productcategory_set-0-category'] = category.id
-        form['partner'] = self.partner.id
-        form['partner_sku'] = '14'
+        form['stockrecords-0-partner'] = self.partner.id
+        form['stockrecords-0-partner_sku'] = '14'
+        form['stockrecords-0-num_in_stock'] = '555'
+        form['stockrecords-0-price_excl_tax'] = '13.99'
         page = form.submit('action', index=0)
 
         self.assertEquals(Product.objects.count(), 1)
@@ -163,8 +165,8 @@ class TestANonStaffUser(TestAStaffUser):
         self.partner.users.add(self.user)
 
     def test_can_list_her_products(self):
-        product1 = create_product(partner_users=[self.user, ])
-        product2 = create_product(partner="sneaky", partner_users=[])
+        product1 = create_product(partner="A", partner_users=[self.user, ])
+        product2 = create_product(partner="B", partner_users=[])
         page = self.get(reverse('dashboard:catalogue-product-list'))
         assert product1 in page.context['object_list']
         assert product2 not in page.context['object_list']
