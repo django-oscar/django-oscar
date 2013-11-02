@@ -25,14 +25,15 @@ ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 
 
 def create_stockrecord(product=None, price_excl_tax=None, partner_sku=None,
-                       num_in_stock=None, partner_name="Dummy partner",
+                       num_in_stock=None, partner_name=u"Dummy partner",
                        currency=settings.OSCAR_DEFAULT_CURRENCY,
-                       partner_users=[]):
+                       partner_users=None):
     if product is None:
         product = create_product()
     partner, __ = Partner.objects.get_or_create(
         name=partner_name)
-    for user in partner_users:
+    if partner_users:
+        for user in partner_users:
             partner.users.add(user)
     if not price_excl_tax:
         price_excl_tax = D('9.99')
@@ -79,10 +80,11 @@ def create_product(upc=None, title=u"Dummy title",
 
     # Shortcut for creating stockrecord
     stockrecord_fields = [price, partner_sku, num_in_stock, partner_users]
-    if any([field is not None for field in stockrecord_fields):
+    if any([field is not None for field in stockrecord_fields]):
         create_stockrecord(
             product, price_excl_tax=price, num_in_stock=num_in_stock,
-            partner_users=partner_users, partner_sku=partner_sku)
+            partner_users=partner_users, partner_sku=partner_sku,
+            partner_name=partner)
     return product
 
 

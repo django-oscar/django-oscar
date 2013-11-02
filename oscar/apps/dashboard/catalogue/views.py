@@ -1,4 +1,4 @@
-from django.core.exceptions import ObjectDoesNotExist, PermissionDenied, ImproperlyConfigured
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.views import generic
 from django.db.models import get_model
 from django.http import HttpResponseRedirect, Http404
@@ -35,6 +35,15 @@ StockAlert = get_model('partner', 'StockAlert')
 Partner = get_model('partner', 'Partner')
 
 
+def get_queryset_for_user(user):
+    queryset = Product.objects.base_queryset().order_by('-date_created')
+    if user.is_staff:
+        return queryset.all()
+    else:
+        return queryset.filter(
+            stockrecords__partner__users__pk=user.pk).distinct()
+
+
 class ProductListView(generic.ListView):
     template_name = 'dashboard/catalogue/product_list.html'
     model = Product
@@ -50,14 +59,6 @@ class ProductListView(generic.ListView):
         ctx['queryset_description'] = self.description
         return ctx
 
-    def get_queryset_for_user(self, user):
-        queryset = self.model.objects.base_queryset().select_related(
-            'stockrecord__partner').order_by('-date_created')
-        if user.is_staff:
-            return queryset.all()
-        else:
-            return queryset.filter(stockrecord__partner__users__pk=user.pk)
-
     def get_queryset(self):
         """
         Build the queryset for this list and also update the title that
@@ -65,7 +66,7 @@ class ProductListView(generic.ListView):
         """
         description_ctx = {'upc_filter': '',
                            'title_filter': ''}
-        queryset = self.get_queryset_for_user(self.request.user)
+        queryset = get_queryset_for_user(self.request.user)
         self.form = self.form_class(self.request.GET)
         if not self.form.is_valid():
             self.description = self.description_template % description_ctx
@@ -137,9 +138,13 @@ class ProductCreateUpdateView(generic.UpdateView):
             else:
                 return None  # success
         else:
-            obj = super(ProductCreateUpdateView, self).get_object(queryset)
-            self.product_class = obj.product_class
-            return obj
+            product = super(ProductCreateUpdateView, self).get_object(queryset)
+            user = self.request.user
+            self.product_class = product.product_class
+            if user.is_staff or product.is_user_in_partners_users(user):
+                return product
+            else:
+                raise PermissionDenied
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
@@ -270,7 +275,7 @@ class ProductDeleteView(generic.DeleteView):
         """
         product = super(ProductDeleteView, self).get_object(queryset)
         user = self.request.user
-        if user.is_staff or product.user_in_partner_users(user):
+        if user.is_staff or product.is_user_in_partners_users(user):
             return product
         else:
             raise PermissionDenied

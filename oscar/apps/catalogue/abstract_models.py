@@ -6,7 +6,7 @@ import warnings
 
 from django.conf import settings
 from django.contrib.staticfiles.finders import find
-from django.core.exceptions import ObjectDoesNotExist, ValidationError, ImproperlyConfigured
+from django.core.exceptions import ValidationError, ImproperlyConfigured
 from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Sum, Count, get_model
@@ -490,14 +490,19 @@ class AbstractProduct(models.Model):
             return False, _("No stock available")
         return self.stockrecord.is_purchase_permitted(user, quantity, self)
 
-    def user_in_partner_users(self, user):
+    def is_user_in_partners_users(self, user, match_all=False):
         """
-        Test whether the user is in this product partner's users
+        The stockrecords of this product are linked to a fulfilment partner,
+        which have a M2M field for a list of users.
+
+        This function tests whether a given user is in any (match_all=False) or
+        all (match_all=True) of those user lists.
         """
-        try:
-            return self.stockrecord.partner.users.filter(pk=user.pk).exists()
-        except (AttributeError, ObjectDoesNotExist):
-            return False
+        queryset = user.partners.filter(stockrecords__product=self)
+        if match_all:
+            return queryset.count() == self.stockrecords.count()
+        else:
+            return queryset.exists()
 
     @property
     def min_variant_price_incl_tax(self):
