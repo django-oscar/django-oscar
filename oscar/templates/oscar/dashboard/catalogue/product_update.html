@@ -32,6 +32,7 @@
 <form action="{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" method="post" class="form-stacked wysiwyg fixed-actions" enctype="multipart/form-data" data-behaviour="affix-nav-errors" autocomplete="off">
     {% csrf_token %}
     <div class="row-fluid">
+        {% block sections %}
         <div class="span3">
             <div data-spy="affix" class="affix-top" data-offset-top="200">
                 <div class="table-header">
@@ -55,8 +56,10 @@
                 </ul>
             </div>
         </div>
+        {% endblock sections %}
         <div class="span9">
             <div class="tab-content">
+                {% block product_overview %}
                 {% if product %}
                 <div class="tab-pane active" id="overview">
                     <div class="table-header">
@@ -147,6 +150,9 @@
                     </div>
                 </div>
                 {% endif %}
+                {% endblock product_overview %}
+
+                {% block product_details %}
                 <div class="tab-pane {% if not product %}active{% endif %}" id="product_details">
                     <div class="table-header">
                         <h3>{% trans "Product Details" %}</h3>
@@ -193,7 +199,9 @@
                         {% endwith %}
                     </div>
                 </div>
+                {% endblock product_details %}
 
+                {% block product_variants %}
                 {% with variants=product.variants.all %}
                 {% if variants|length > 0 %}
                 <div class="tab-pane" id="product_variants">
@@ -226,8 +234,9 @@
                 </div>
                 {% endif %}
                 {% endwith %}
+                {% endblock product_variants %}
 
-
+                {% block product_attributes %}
                 <div class="tab-pane" id="product_attributes">
                     <table class="table table-striped table-bordered">
                         <caption>
@@ -265,7 +274,9 @@
                         {% endfor %}
                     </table>
                 </div>
+                {% endblock product_attributes %}
 
+                {% block product_categories %}
                 <div class="tab-pane" id="product_category">
                     <table class="table table-striped table-bordered form-inline">
                         <caption>{% trans "Category" %}</caption>
@@ -280,7 +291,9 @@
                         {% endfor %}
                     </table>
                 </div>
+                {% endblock product_categories %}
 
+                {% block product_images %}
                 <div class="tab-pane" id="product_images">
                     <div class="table-header">
                         <h3>{% trans "Upload, change or remove images" %}</h3>
@@ -295,6 +308,7 @@
                         </ol>
                     </div>
                 </div>
+                {% endblock product_images %}
 
                 <div class="tab-pane" id="product_stock">
                     <table class="table table-striped table-bordered">
@@ -337,6 +351,7 @@
                     </table>
                 </div>
 
+                {% block recommended_products %}
                 <div class="tab-pane" id="product_recommended">
                     <table class="table table-striped table-bordered form-inline">
                         <caption>{% trans "Recommended products" %}</caption>
@@ -351,6 +366,7 @@
                         {% endfor %}
                     </table>
                 </div>
+                {% endblock recommended_products %}
 
             </div>
         </div>
