@@ -7,6 +7,7 @@ from oscar.apps.shipping import base
 class Standard(base.Base):
     code = 'standard'
     name = 'Standard shipping'
+    is_tax_known = True
 
     charge_per_item = D('0.99')
     threshold = D('12.00')
@@ -37,6 +38,8 @@ class Standard(base.Base):
 class Express(base.Base):
     code = 'express'
     name = 'Express shipping'
+    is_tax_known = True
+
     charge_per_item = D('1.50')
     description = render_to_string(
         'shipping/express.html', {'charge_per_item': charge_per_item})
