@@ -65,7 +65,8 @@ class AbstractSource(models.Model):
     order = models.ForeignKey(
         'order.Order', related_name='sources', verbose_name=_("Order"))
     source_type = models.ForeignKey(
-        'payment.SourceType', verbose_name=_("Source Type"))
+        'payment.SourceType', verbose_name=_("Source Type"),
+        related_name="sources")
     currency = models.CharField(
         _("Currency"), max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
 

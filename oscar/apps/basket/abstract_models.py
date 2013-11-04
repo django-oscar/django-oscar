@@ -2,7 +2,7 @@ from decimal import Decimal
 import zlib
 
 from django.db import models
-from django.db.models import query, Sum
+from django.db.models import Sum
 from django.conf import settings
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
@@ -95,7 +95,7 @@ class AbstractBasket(models.Model):
                 "This is normally assigned to the incoming request in "
                 "oscar.apps.basket.middleware.BasketMiddleware. "
                 "Since it is missing, you must be doing something different. "
-                "Ensure that a strategy instance is assigne to the basket!"
+                "Ensure that a strategy instance is assigned to the basket!"
             )
         return self._strategy
 
