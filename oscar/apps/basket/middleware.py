@@ -1,4 +1,4 @@
-mport zlib
+import zlib
 
 from django.conf import settings
 from django.db.models import get_model
