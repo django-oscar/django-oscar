@@ -58,13 +58,12 @@
             </div>
             <h3>
                 {% trans "Or a new address?" %} 
-                <button class="btn" data-toggle="collapse" data-target="#new_shipping_address">{% trans "Add address" %}</button>
             </h3>
         {% endif %}
     {% endif %}
 
     {% block new_address_form %}
-        <form action="{% url 'checkout:shipping-address' %}" method="post" class="{% if request.user.is_authenticated and addresses %}collapse{% endif %}" id="new_shipping_address">
+        <form action="{% url 'checkout:shipping-address' %}" method="post" id="new_shipping_address">
             <div class="well">
                 {% csrf_token %}
                 {% include "partials/form_fields.html" with form=form %}
