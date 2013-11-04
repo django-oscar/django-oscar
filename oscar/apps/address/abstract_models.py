@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.core import exceptions
 
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.models.fields import UppercaseCharField
+from oscar.models.fields import UppercaseCharField, PhoneNumberField
 
 
 class AbstractAddress(models.Model):
@@ -424,8 +424,8 @@ class AbstractShippingAddress(AbstractAddress):
     A shipping address should not be edited once the order has been placed -
     it should be read-only after that.
     """
-    phone_number = models.CharField(
-        _("Phone number"), max_length=32, blank=True, null=True,
+    phone_number = PhoneNumberField(
+        _("Phone number"), blank=True, 
         help_text=_("In case we need to call you about your order"))
     notes = models.TextField(
         blank=True, null=True,

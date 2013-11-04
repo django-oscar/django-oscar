@@ -9,6 +9,8 @@ from django.utils.translation import ugettext_lazy as _
 from oscar.apps.address.forms import AbstractAddressForm
 from . import bankcards
 
+from oscar.views.generic import PhoneNumberMixin
+
 Country = get_model('address', 'Country')
 BillingAddress = get_model('order', 'BillingAddress')
 Bankcard = get_model('payment', 'Bankcard')
@@ -226,7 +228,7 @@ class BankcardForm(forms.ModelForm):
                         ccv=self.cleaned_data['ccv'])
 
 
-class BillingAddressForm(AbstractAddressForm):
+class BillingAddressForm(PhoneNumberMixin, AbstractAddressForm):
 
     def __init__(self, *args, **kwargs):
         super(BillingAddressForm, self).__init__(*args, **kwargs)

@@ -397,6 +397,11 @@ There are new migrations in the following apps to be aware of.
     - ``0003``: ``Country``'s ``is_highlighted`` is now an integer to allow
       finer control.
 
+* ShippingAddress:
+
+    - ``0018``: ``ShippingAddress``'s ``phone_number`` is now a PhoneNumberField
+      to allow fine validation.
+
 * Order app:
 
     - The `date` field of the ``order.AbstractCommunicationEvent``, ``order.AbstractPaymentEvent`` and
