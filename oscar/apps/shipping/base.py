@@ -24,7 +24,7 @@ class Base(object):
     name = 'Default shipping'
 
     #: A more detailed description of the shipping method shown to the customer
-    # during checkout.  Can contain HTML.
+    #  during checkout.  Can contain HTML.
     description = ''
 
     #: Shipping charge including taxes
