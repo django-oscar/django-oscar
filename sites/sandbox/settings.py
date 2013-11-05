@@ -286,7 +286,6 @@ INSTALLED_APPS = [
     # Debug toolbar + extensions
     'debug_toolbar',
     'cache_panel',
-    #'template_timings_panel',
     'south',
     'rosetta',          # For i18n testing
     'compressor',
@@ -336,7 +335,6 @@ DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.template.TemplateDebugPanel',
     'debug_toolbar.panels.timer.TimerDebugPanel',
     'debug_toolbar.panels.sql.SQLDebugPanel',
-    #'template_timings_panel.panels.TemplateTimings.TemplateTimings',
     'cache_panel.panel.CacheDebugPanel',
     'debug_toolbar.panels.signals.SignalDebugPanel',
     'debug_toolbar.panels.logger.LoggingPanel',

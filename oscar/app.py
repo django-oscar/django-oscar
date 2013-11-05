@@ -3,7 +3,6 @@ from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse_lazy
 
 from oscar.core.application import Application
-
 from oscar.apps.customer import forms
 from oscar.core.loading import get_class
 from oscar.views.decorators import login_forbidden
@@ -22,12 +21,12 @@ class Shop(Application):
     offer_app = get_class('offer.app', 'application')
 
     def get_urls(self):
-        #After we drop support for Django<1.6 the following line won't be
-        #necessary, and the parameter uidb36 should be replaced with uidb64.
-        #The necessary update should also be done in oscar/apps/customer/utils.py
-        password_reset_confirm = getattr(auth_views,
-                                         'password_reset_confirm_uidb36',
-                                         auth_views.password_reset_confirm)
+        # After we drop support for Django<1.6 the following line won't be
+        # necessary, and the parameter uidb36 should be replaced with uidb64.
+        # The necessary update should also be done in oscar/apps/customer/utils.py
+        password_reset_confirm = getattr(
+            auth_views, 'password_reset_confirm_uidb36',
+            auth_views.password_reset_confirm)
 
         urlpatterns = patterns('',
             (r'^i18n/', include('django.conf.urls.i18n')),
