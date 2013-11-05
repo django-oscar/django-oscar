@@ -7,7 +7,7 @@
 <div class="span6">
     <h3>{% trans "Payment" %}</h3>
 	<div class="well well-success" data-behaviours="match-height">
-		<p>{% blocktrans with amount=order_total_incl_tax|currency %}{{ amount }} will be debited from your bankcard.{% endblocktrans %}</p>
+		<p>{% blocktrans with amount=order_total.incl_tax|currency %}{{ amount }} will be debited from your bankcard.{% endblocktrans %}</p>
 		<div class="alert-actions">
 			<a href="{% url 'checkout:payment-details' %}" class="btn">{% trans "Change payment details" %}</a>
 		</div>

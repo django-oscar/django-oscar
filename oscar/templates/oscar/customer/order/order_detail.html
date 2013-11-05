@@ -9,7 +9,6 @@
         <a href="{% url 'customer:order-list' %}">{% trans 'Order history' %}</a>
         <span class="divider">/</span>
     </li>
-    <li class="active">{% blocktrans with number=order.number %}Order #{{ number }}{% endblocktrans %}</li>
 {% endblock %}
 
 {% block tabcontent %}

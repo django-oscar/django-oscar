@@ -2,7 +2,7 @@
 .PHONY: install upgrade sandbox demo coverage ci i18n lint travis docs
 
 install:
-	pip install -r requirements.txt --use-mirrors
+	pip install -r requirements.txt
 	python setup.py develop
 
 upgrade:
@@ -28,7 +28,7 @@ geoip:
 
 demo: install
 	# Install additional requirements
-	pip install -r requirements_demo.txt --use-mirrors
+	pip install -r requirements_demo.txt
 	# Create database
 	sites/demo/manage.py reset_db --router=default --noinput
 	sites/demo/manage.py syncdb --noinput
@@ -66,7 +66,7 @@ lint:
 # and upgrade would overwrite it.  We also build the sandbox as part of this target
 # to catch any errors that might come from that build process.
 travis: install lint coverage sandbox
-	pip install -r requirements_vagrant.txt --use-mirrors
+	pip install -r requirements_vagrant.txt
 	cd sites/sandbox && ./test_migrations.sh
 
 messages:

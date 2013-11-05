@@ -266,7 +266,7 @@ AUTHENTICATION_BACKENDS = (
 LOGIN_REDIRECT_URL = '/'
 APPEND_SLASH = True
 
-# Haystack settings
+# Haystack settings - we use a local Solr instance running on the default port
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.solr_backend.SolrEngine',

@@ -6,6 +6,8 @@ from django.http import QueryDict
 from django.utils.translation import ugettext_lazy as _
 from oscar.apps.address.forms import AbstractAddressForm
 
+from oscar.views.generic import PhoneNumberMixin
+
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
 ShippingAddress = get_model('order', 'ShippingAddress')
@@ -112,7 +114,7 @@ class OrderNoteForm(forms.ModelForm):
         exclude = ('order', 'user', 'note_type')
 
 
-class ShippingAddressForm(AbstractAddressForm):
+class ShippingAddressForm(PhoneNumberMixin, AbstractAddressForm):
 
     class Meta:
         model = ShippingAddress
