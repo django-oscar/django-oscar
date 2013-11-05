@@ -238,7 +238,6 @@ Several classes and functions have had signature changes:
   ``AnonymousUserProductReviewForm``, have been replaced by a new
   :class:`oscar.apps.catalogue.reviews.forms.ProductReviewForm``.
 
-
 Loading shipping methods
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -270,7 +269,18 @@ Beware of shipping methods that are configured via constructor arguments, like
 :class:`~oscar.apps.shipping.methods.FixedPrice`.  Shipping methods will be
 reworked for Oscar 0.7.
 
-Address Model changes
+Basket model changes
+~~~~~~~~~~~~~~~~~~~~~
+
+Several properties of the basket ``Line`` model have been renamed:
+
+* ``Line.line_price_excl_tax_and_discounts`` has been renamed to 
+  ``Line.line_price_exlc_tax_incl_discounts``.
+
+* ``Line.line_price_incl_tax_and_discounts`` has been renamed to 
+  ``Line.line_price_inlc_tax_incl_discounts``.
+
+Address model changes
 ~~~~~~~~~~~~~~~~~~~~~
 
 * The ``UserAddress.salutation`` and ``UserAddress.name`` methods are now

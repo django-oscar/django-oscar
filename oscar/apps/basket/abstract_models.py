@@ -364,7 +364,7 @@ class AbstractBasket(models.Model):
         """
         Return total line price excluding tax
         """
-        return self._get_total('line_price_excl_tax_and_discounts')
+        return self._get_total('line_price_excl_tax_incl_discounts')
 
     @property
     def total_tax(self):
@@ -376,7 +376,7 @@ class AbstractBasket(models.Model):
         """
         Return total price inclusive of tax and discounts
         """
-        return self._get_total('line_price_incl_tax_and_discounts')
+        return self._get_total('line_price_incl_tax_incl_discounts')
 
     @property
     def total_incl_tax_excl_discounts(self):
@@ -749,7 +749,7 @@ class AbstractLine(models.Model):
         return self.quantity * self.unit_price_excl_tax
 
     @property
-    def line_price_excl_tax_and_discounts(self):
+    def line_price_excl_tax_incl_discounts(self):
         if self._discount_excl_tax:
             return self.line_price_excl_tax - self._discount_excl_tax
         if self._discount_incl_tax:
@@ -761,7 +761,7 @@ class AbstractLine(models.Model):
         return self.line_price_excl_tax
 
     @property
-    def line_price_incl_tax_and_discounts(self):
+    def line_price_incl_tax_incl_discounts(self):
         # We use whichever discount value is set.  If the discount value was
         # calculated against the tax-exclusive prices, then the line price
         # including tax
