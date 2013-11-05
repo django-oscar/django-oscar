@@ -35,9 +35,27 @@ def load_proxy(proxy_class):
 
 
 def range_anchor(range):
-    return '<a href="%s">%s</a>' % (
+    return u'<a href="%s">%s</a>' % (
         reverse('dashboard:range-update', kwargs={'pk': range.pk}),
         range.name)
+
+
+def unit_price(offer, line):
+    """
+    Return the relevant price for a given basket line.
+
+    This is required so offers can apply in circumstances where tax isn't known
+    """
+    if offer.applies_to_tax_exclusive_prices:
+        return line.unit_price_excl_tax
+    return line.unit_price_incl_tax
+
+
+def apply_discount(line, discount, quantity):
+    """
+    Apply a given discount to the passed basket
+    """
+    line.discount(discount, quantity, incl_tax=False)
 
 
 class ConditionalOffer(models.Model):
@@ -82,8 +100,16 @@ class ConditionalOffer(models.Model):
         'offer.Condition', verbose_name=_("Condition"))
     benefit = models.ForeignKey('offer.Benefit', verbose_name=_("Benefit"))
 
+    applies_to_tax_exclusive_prices = models.BooleanField(
+        _("Should this offer uses tax-exclusive prices for calculations?"),
+        default=False,
+        help_text=_(
+            "This is required for an offer to apply in territories where "
+            "taxes aren't known until checkout, like the USA"))
+
     # Some complicated situations require offers to be applied in a set order.
-    priority = models.IntegerField(_("Priority"), default=0,
+    priority = models.IntegerField(
+        _("Priority"), default=0,
         help_text=_("The highest priority offers are applied first"))
 
     # AVAILABILITY
@@ -91,7 +117,8 @@ class ConditionalOffer(models.Model):
     # Range of availability.  Note that if this is a voucher offer, then these
     # dates are ignored and only the dates from the voucher are used to
     # determine availability.
-    start_datetime = models.DateTimeField(_("Start date"), blank=True, null=True)
+    start_datetime = models.DateTimeField(
+        _("Start date"), blank=True, null=True)
     end_datetime = models.DateTimeField(
         _("End date"), blank=True, null=True,
         help_text=_("Offers are active until the end of the 'end date'"))
@@ -102,7 +129,7 @@ class ConditionalOffer(models.Model):
     max_global_applications = models.PositiveIntegerField(
         _("Max global applications"),
         help_text=_("The number of times this offer can be used before it "
-          "is unavailable"), blank=True, null=True)
+                    "is unavailable"), blank=True, null=True)
 
     # Use this field to limit the number of times this offer can be used by a
     # single user.  This only works for signed-in users - it doesn't really
@@ -179,7 +206,7 @@ class ConditionalOffer(models.Model):
 
     def clean(self):
         if (self.start_datetime and self.end_datetime and
-            self.start_datetime > self.end_datetime):
+                self.start_datetime > self.end_datetime):
             raise exceptions.ValidationError(
                 _('End date should be later than start date'))
 
@@ -219,13 +246,13 @@ class ConditionalOffer(models.Model):
         return self.get_max_applications(user) > 0
 
     def is_condition_satisfied(self, basket):
-        return self.condition.proxy().is_satisfied(basket)
+        return self.condition.proxy().is_satisfied(self, basket)
 
     def is_condition_partially_satisfied(self, basket):
-        return self.condition.proxy().is_partially_satisfied(basket)
+        return self.condition.proxy().is_partially_satisfied(self, basket)
 
     def get_upsell_message(self, basket):
-        return self.condition.proxy().get_upsell_message(basket)
+        return self.condition.proxy().get_upsell_message(self, basket)
 
     def apply_benefit(self, basket):
         """
@@ -447,10 +474,10 @@ class Condition(models.Model):
     def description(self):
         return self.proxy().description
 
-    def consume_items(self, basket, affected_lines):
+    def consume_items(self, offer, basket, affected_lines):
         pass
 
-    def is_satisfied(self, basket):
+    def is_satisfied(self, offer, basket):
         """
         Determines whether a given basket meets this condition.  This is
         stubbed in this top-class object.  The subclassing proxies are
@@ -458,7 +485,7 @@ class Condition(models.Model):
         """
         return False
 
-    def is_partially_satisfied(self, basket):
+    def is_partially_satisfied(self, offer, basket):
         """
         Determine if the basket partially meets the condition.  This is useful
         for up-selling messages to entice customers to buy something more in
@@ -466,7 +493,7 @@ class Condition(models.Model):
         """
         return False
 
-    def get_upsell_message(self, basket):
+    def get_upsell_message(self, offer, basket):
         return None
 
     def can_apply_condition(self, line):
@@ -478,7 +505,7 @@ class Condition(models.Model):
         product = line.product
         return self.range.contains_product(product) and product.is_discountable
 
-    def get_applicable_lines(self, basket, most_expensive_first=True):
+    def get_applicable_lines(self, offer, basket, most_expensive_first=True):
         """
         Return line data for the lines that can be consumed by this condition
         """
@@ -487,11 +514,7 @@ class Condition(models.Model):
             if not self.can_apply_condition(line):
                 continue
 
-            # We only include products where we know the tax charged
-            if not line.stockinfo.price.is_tax_known:
-                continue
-
-            price = line.unit_price_incl_tax
+            price = unit_price(offer, line)
             if not price:
                 continue
             line_tuples.append((price, line))
@@ -583,7 +606,7 @@ class Benefit(models.Model):
     def description(self):
         return self.proxy().description
 
-    def apply(self, basket, condition, offer=None):
+    def apply(self, basket, condition, offer):
         return ZERO_DISCOUNT
 
     def apply_deferred(self, basket):
@@ -687,7 +710,7 @@ class Benefit(models.Model):
         """
         return line.stockrecord and line.product.is_discountable
 
-    def get_applicable_lines(self, basket, range=None):
+    def get_applicable_lines(self, offer, basket, range=None):
         """
         Return the basket lines that are available to be discounted
 
@@ -701,15 +724,11 @@ class Benefit(models.Model):
         for line in basket.all_lines():
             product = line.product
 
-            # We only include products where we know the tax charged
-            if not line.stockinfo.price.is_tax_known:
-                continue
-
             if (not range.contains(product) or
                     not self.can_apply_benefit(line)):
                 continue
 
-            price = line.unit_price_incl_tax
+            price = unit_price(offer, line)
             if not price:
                 # Avoid zero price products
                 continue
@@ -881,14 +900,14 @@ class CountCondition(Condition):
         verbose_name = _("Count Condition")
         verbose_name_plural = _("Count Conditions")
 
-    def is_satisfied(self, basket):
+    def is_satisfied(self, offer, basket):
         """
         Determines whether a given basket meets this condition
         """
         num_matches = 0
         for line in basket.all_lines():
             if (self.can_apply_condition(line)
-                and line.quantity_without_discount > 0):
+                    and line.quantity_without_discount > 0):
                 num_matches += line.quantity_without_discount
             if num_matches >= self.value:
                 return True
@@ -905,18 +924,18 @@ class CountCondition(Condition):
         self._num_matches = num_matches
         return num_matches
 
-    def is_partially_satisfied(self, basket):
+    def is_partially_satisfied(self, offer, basket):
         num_matches = self._get_num_matches(basket)
         return 0 < num_matches < self.value
 
-    def get_upsell_message(self, basket):
+    def get_upsell_message(self, offer, basket):
         num_matches = self._get_num_matches(basket)
         delta = self.value - num_matches
         return ungettext('Buy %(delta)d more product from %(range)s',
                          'Buy %(delta)d more products from %(range)s', delta) % {
                             'delta': delta, 'range': self.range}
 
-    def consume_items(self, basket, affected_lines):
+    def consume_items(self, offer, basket, affected_lines):
         """
         Marks items within the basket lines as consumed so they
         can't be reused in other offers.
@@ -934,7 +953,7 @@ class CountCondition(Condition):
         if to_consume == 0:
             return
 
-        for __, line in self.get_applicable_lines(basket,
+        for __, line in self.get_applicable_lines(offer, basket,
                                                   most_expensive_first=True):
             quantity_to_consume = min(line.quantity_without_discount,
                                       to_consume)
@@ -946,7 +965,8 @@ class CountCondition(Condition):
 
 class CoverageCondition(Condition):
     """
-    An offer condition dependent on the number of DISTINCT matching items from the basket.
+    An offer condition dependent on the number of DISTINCT matching items from
+    the basket.
     """
     _description = _("Basket includes %(count)d distinct item(s) from %(range)s")
 
@@ -967,7 +987,7 @@ class CoverageCondition(Condition):
         verbose_name = _("Coverage Condition")
         verbose_name_plural = _("Coverage Conditions")
 
-    def is_satisfied(self, basket):
+    def is_satisfied(self, offer, basket):
         """
         Determines whether a given basket meets this condition
         """
@@ -992,16 +1012,16 @@ class CoverageCondition(Condition):
                 covered_ids.append(product.id)
         return len(covered_ids)
 
-    def get_upsell_message(self, basket):
+    def get_upsell_message(self, offer,  basket):
         delta = self.value - self._get_num_covered_products(basket)
         return ungettext('Buy %(delta)d more product from %(range)s',
                          'Buy %(delta)d more products from %(range)s', delta) % {
                          'delta': delta, 'range': self.range}
 
-    def is_partially_satisfied(self, basket):
+    def is_partially_satisfied(self, offer, basket):
         return 0 < self._get_num_covered_products(basket) < self.value
 
-    def consume_items(self, basket, affected_lines):
+    def consume_items(self, offer, basket, affected_lines):
         """
         Marks items within the basket lines as consumed so they
         can't be reused in other offers.
@@ -1031,13 +1051,13 @@ class CoverageCondition(Condition):
             if to_consume == 0:
                 break
 
-    def get_value_of_satisfying_items(self, basket):
+    def get_value_of_satisfying_items(self, offer, basket):
         covered_ids = []
         value = D('0.00')
         for line in basket.all_lines():
             if (self.can_apply_condition(line) and line.product.id not in covered_ids):
                 covered_ids.append(line.product.id)
-                value += line.unit_price_incl_tax
+                value += unit_price(offer, line)
             if len(covered_ids) >= self.value:
                 return value
         return value
@@ -1067,41 +1087,41 @@ class ValueCondition(Condition):
         verbose_name = _("Value Condition")
         verbose_name_plural = _("Value Conditions")
 
-    def is_satisfied(self, basket):
+    def is_satisfied(self, offer, basket):
         """
         Determine whether a given basket meets this condition
         """
         value_of_matches = D('0.00')
         for line in basket.all_lines():
             if (self.can_apply_condition(line) and line.quantity_without_discount > 0):
-                price = line.unit_price_incl_tax
+                price = unit_price(offer, line)
                 value_of_matches += price * int(line.quantity_without_discount)
             if value_of_matches >= self.value:
                 return True
         return False
 
-    def _get_value_of_matches(self, basket):
+    def _get_value_of_matches(self, offer, basket):
         if hasattr(self, '_value_of_matches'):
             return getattr(self, '_value_of_matches')
         value_of_matches = D('0.00')
         for line in basket.all_lines():
             if (self.can_apply_condition(line) and line.quantity_without_discount > 0):
-                price = line.unit_price_incl_tax
+                price = unit_price(offer, line)
                 value_of_matches += price * int(line.quantity_without_discount)
         self._value_of_matches = value_of_matches
         return value_of_matches
 
-    def is_partially_satisfied(self, basket):
-        value_of_matches = self._get_value_of_matches(basket)
+    def is_partially_satisfied(self, offer, basket):
+        value_of_matches = self._get_value_of_matches(offer, basket)
         return D('0.00') < value_of_matches < self.value
 
-    def get_upsell_message(self, basket):
-        value_of_matches = self._get_value_of_matches(basket)
+    def get_upsell_message(self, offer, basket):
+        value_of_matches = self._get_value_of_matches(offer, basket)
         return _('Spend %(value)s more from %(range)s') % {
             'value': currency(self.value - value_of_matches),
             'range': self.range}
 
-    def consume_items(self, basket, affected_lines):
+    def consume_items(self, offer, basket, affected_lines):
         """
         Marks items within the basket lines as consumed so they
         can't be reused in other offers.
@@ -1112,7 +1132,7 @@ class ValueCondition(Condition):
         # Determine value of items already consumed as part of discount
         value_consumed = D('0.00')
         for line, __, qty in affected_lines:
-            price = line.unit_price_incl_tax
+            price = unit_price(offer, line)
             value_consumed += price * qty
 
         to_consume = max(0, self.value - value_consumed)
@@ -1120,7 +1140,7 @@ class ValueCondition(Condition):
             return
 
         for price, line in self.get_applicable_lines(
-                basket, most_expensive_first=True):
+                offer, basket, most_expensive_first=True):
             quantity_to_consume = min(
                 line.quantity_without_discount,
                 (to_consume / price).quantize(D(1), ROUND_UP))
@@ -1231,8 +1251,8 @@ class PercentageDiscountBenefit(Benefit):
         verbose_name = _("Percentage discount benefit")
         verbose_name_plural = _("Percentage discount benefits")
 
-    def apply(self, basket, condition, offer=None):
-        line_tuples = self.get_applicable_lines(basket)
+    def apply(self, basket, condition, offer):
+        line_tuples = self.get_applicable_lines(offer, basket)
 
         discount = D('0.00')
         affected_items = 0
@@ -1245,14 +1265,14 @@ class PercentageDiscountBenefit(Benefit):
                                     max_affected_items - affected_items)
             line_discount = self.round(self.value / D('100.0') * price
                                        * int(quantity_affected))
-            line.discount(line_discount, quantity_affected)
+            apply_discount(line, line_discount, quantity_affected)
 
             affected_lines.append((line, line_discount, quantity_affected))
             affected_items += quantity_affected
             discount += line_discount
 
         if discount > 0:
-            condition.consume_items(basket, affected_lines)
+            condition.consume_items(offer, basket, affected_lines)
         return BasketDiscount(discount)
 
 
@@ -1279,10 +1299,10 @@ class AbsoluteDiscountBenefit(Benefit):
         verbose_name = _("Absolute discount benefit")
         verbose_name_plural = _("Absolute discount benefits")
 
-    def apply(self, basket, condition, offer=None):
+    def apply(self, basket, condition, offer):
         # Fetch basket lines that are in the range and available to be used in
         # an offer.
-        line_tuples = self.get_applicable_lines(basket)
+        line_tuples = self.get_applicable_lines(offer, basket)
         if not line_tuples:
             return ZERO_DISCOUNT
 
@@ -1321,11 +1341,11 @@ class AbsoluteDiscountBenefit(Benefit):
                 # Calculate a weighted discount for the line
                 line_discount = self.round(
                     ((price * qty) / affected_items_total) * discount)
-            line.discount(line_discount, qty)
+            apply_discount(line, line_discount, qty)
             affected_lines.append((line, line_discount, qty))
             applied_discount += line_discount
 
-        condition.consume_items(basket, affected_lines)
+        condition.consume_items(offer, basket, affected_lines)
 
         return BasketDiscount(discount)
 
@@ -1357,13 +1377,13 @@ class FixedPriceBenefit(Benefit):
         verbose_name = _("Fixed price benefit")
         verbose_name_plural = _("Fixed price benefits")
 
-    def apply(self, basket, condition, offer=None):
+    def apply(self, basket, condition, offer):
         if isinstance(condition, ValueCondition):
             return ZERO_DISCOUNT
 
         # Fetch basket lines that are in the range and available to be used in
         # an offer.
-        line_tuples = self.get_applicable_lines(basket, range=condition.range)
+        line_tuples = self.get_applicable_lines(offer, basket, range=condition.range)
         if not line_tuples:
             return ZERO_DISCOUNT
 
@@ -1399,7 +1419,7 @@ class FixedPriceBenefit(Benefit):
             else:
                 line_discount = self.round(
                     discount * (price * quantity) / value_affected)
-            line.discount(line_discount, quantity)
+            apply_discount(line, line_discount, quantity)
             discount_applied += line_discount
         return BasketDiscount(discount)
 
@@ -1422,17 +1442,17 @@ class MultibuyDiscountBenefit(Benefit):
         verbose_name = _("Multibuy discount benefit")
         verbose_name_plural = _("Multibuy discount benefits")
 
-    def apply(self, basket, condition, offer=None):
-        line_tuples = self.get_applicable_lines(basket)
+    def apply(self, basket, condition, offer):
+        line_tuples = self.get_applicable_lines(offer, basket)
         if not line_tuples:
             return ZERO_DISCOUNT
 
         # Cheapest line gives free product
         discount, line = line_tuples[0]
-        line.discount(discount, 1)
+        apply_discount(line, discount, 1)
 
         affected_lines = [(line, discount, 1)]
-        condition.consume_items(basket, affected_lines)
+        condition.consume_items(offer, basket, affected_lines)
 
         return BasketDiscount(discount)
 
@@ -1444,8 +1464,8 @@ class MultibuyDiscountBenefit(Benefit):
 
 class ShippingBenefit(Benefit):
 
-    def apply(self, basket, condition, offer=None):
-        condition.consume_items(basket, affected_lines=())
+    def apply(self, basket, condition, offer):
+        condition.consume_items(offer, basket, affected_lines=())
         return SHIPPING_DISCOUNT
 
     class Meta:

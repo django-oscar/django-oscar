@@ -5,7 +5,6 @@ from django.test.client import RequestFactory
 import mock
 
 from oscar.apps.offer import models, utils, custom
-from oscar.apps.order.utils import OrderCreator
 from oscar.test import factories
 from oscar.test.basket import add_product
 
@@ -15,8 +14,8 @@ class CustomAction(models.Benefit):
     class Meta:
         proxy = True
 
-    def apply(self, basket, condition, offer=None):
-        condition.consume_items(basket, ())
+    def apply(self, basket, condition, offer):
+        condition.consume_items(offer, basket, ())
         return models.PostOrderAction(
             "Something will happen")
 

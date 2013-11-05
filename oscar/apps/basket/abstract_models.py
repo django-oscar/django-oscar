@@ -363,7 +363,7 @@ class AbstractBasket(models.Model):
     def total_excl_tax(self):
         """
         Return total line price excluding tax
-    """
+        """
         return self._get_total('line_price_excl_tax_and_discounts')
 
     @property
@@ -577,7 +577,8 @@ class AbstractLine(models.Model):
     def __init__(self, *args, **kwargs):
         super(AbstractLine, self).__init__(*args, **kwargs)
         # Instance variables used to persist discount information
-        self._discount = Decimal('0.00')
+        self._discount_excl_tax = Decimal('0.00')
+        self._discount_incl_tax = Decimal('0.00')
         self._affected_quantity = 0
 
     class Meta:
@@ -613,14 +614,28 @@ class AbstractLine(models.Model):
         """
         Remove any discounts from this line.
         """
-        self._discount = Decimal('0.00')
+        self._discount_excl_tax = Decimal('0.00')
+        self._discount_incl_tax = Decimal('0.00')
         self._affected_quantity = 0
 
-    def discount(self, discount_value, affected_quantity):
+    def discount(self, discount_value, affected_quantity, incl_tax=True):
         """
-        Apply a discount
+        Apply a discount to this line
+
+        Note that it only makes sense to apply
         """
-        self._discount += discount_value
+        if incl_tax:
+            if self._discount_excl_tax > 0:
+                raise RuntimeError(
+                    "Attempting to discount the tax-inclusive price of a line "
+                    "when tax-exclusive discounts are already applied")
+            self._discount_incl_tax += discount_value
+        else:
+            if self._discount_incl_tax > 0:
+                raise RuntimeError(
+                    "Attempting to discount the tax-exclusive price of a line "
+                    "when tax-inclusive discounts are already applied")
+            self._discount_excl_tax += discount_value
         self._affected_quantity += int(affected_quantity)
 
     def consume(self, quantity):
@@ -642,6 +657,9 @@ class AbstractLine(models.Model):
         Returns a list of (unit_price_incl_tx, unit_price_excl_tax, quantity)
         tuples.
         """
+        if not self.is_tax_known:
+            raise RuntimeError("A price breakdown can only be determined "
+                               "when taxes are known")
         prices = []
         if not self.has_discount:
             prices.append((self.unit_price_incl_tax, self.unit_price_excl_tax,
@@ -650,7 +668,7 @@ class AbstractLine(models.Model):
             # Need to split the discount among the affected quantity
             # of products.
             item_incl_tax_discount = (
-                self._discount / int(self._affected_quantity))
+                self.discount_value / int(self._affected_quantity))
             item_excl_tax_discount = item_incl_tax_discount * self._tax_ratio
             prices.append((self.unit_price_incl_tax - item_incl_tax_discount,
                            self.unit_price_excl_tax - item_excl_tax_discount,
@@ -693,7 +711,8 @@ class AbstractLine(models.Model):
 
     @property
     def discount_value(self):
-        return self._discount
+        # Only one of the incl- and excl- discounts should be non-zero
+        return max(self._discount_incl_tax, self._discount_excl_tax)
 
     @property
     def stockinfo(self):
@@ -731,11 +750,22 @@ class AbstractLine(models.Model):
 
     @property
     def line_price_excl_tax_and_discounts(self):
-        if self.is_tax_known and self._discount:
-            # Scale discount down appropriately
-            discount_excl_tax = self._discount * self._tax_ratio
-            return self.line_price_excl_tax - discount_excl_tax
+        if self._discount_excl_tax:
+            return self.line_price_excl_tax - self._discount_excl_tax
+        if self._discount_incl_tax:
+            # This is a tricky situation.  We know the discount as calculated
+            # against tax inclusive prices but we need to guess how much of the
+            # discount applies to tax-exclusive prices.  We do this by
+            # assuming a linear tax and scaling down the original discount.
+            return self.line_price_excl_tax - self._tax_ratio * self._discount_incl_tax
         return self.line_price_excl_tax
+
+    @property
+    def line_price_incl_tax_and_discounts(self):
+        # We use whichever discount value is set.  If the discount value was
+        # calculated against the tax-exclusive prices, then the line price
+        # including tax
+        return self.line_price_incl_tax - self.discount_value
 
     @property
     def line_tax(self):
@@ -744,11 +774,6 @@ class AbstractLine(models.Model):
     @property
     def line_price_incl_tax(self):
         return self.quantity * self.unit_price_incl_tax
-
-    @property
-    def line_price_incl_tax_and_discounts(self):
-        # Discount is implicitly assumed to include tax
-        return self.line_price_incl_tax - self._discount
 
     @property
     def description(self):
