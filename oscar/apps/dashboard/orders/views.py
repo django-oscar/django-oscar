@@ -16,6 +16,7 @@ from django.conf import settings
 from oscar.core.loading import get_class
 from oscar.core.utils import format_datetime
 from oscar.apps.dashboard.orders import forms
+from oscar.views import sort_queryset
 from oscar.views.generic import BulkEditMixin
 from oscar.apps.dashboard.reports.csv_utils import CsvUnicodeWriter
 from oscar.apps.payment.exceptions import PaymentError
@@ -155,7 +156,8 @@ class OrderListView(BulkEditMixin, ListView):
         Build the queryset for this list.
         """
         queryset = self.model.objects.all().order_by('-date_placed')
-        queryset = self.sort_queryset(queryset)
+        queryset = sort_queryset(queryset, self.request,
+                                 ['number', 'total_incl_tax'])
 
         # Look for shortcut query filters
         if 'order_status' in self.request.GET:
@@ -229,15 +231,6 @@ class OrderListView(BulkEditMixin, ListView):
             queryset = queryset.filter(status=data['status'])
 
         self.description = self.desc_template % self.get_desc_context(data)
-        return queryset
-
-    def sort_queryset(self, queryset):
-        sort = self.request.GET.get('sort', None)
-        allowed_sorts = ['number', 'total_incl_tax']
-        if sort in allowed_sorts:
-            direction = self.request.GET.get('dir', 'desc')
-            sort = ('-' if direction == 'desc' else '') + sort
-            queryset = queryset.order_by(sort)
         return queryset
 
     def get_context_data(self, **kwargs):

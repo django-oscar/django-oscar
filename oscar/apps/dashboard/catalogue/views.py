@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_classes
+from oscar.views import sort_queryset
 
 (ProductForm,
  ProductSearchForm,
@@ -41,12 +42,18 @@ class ProductListView(generic.ListView):
     form_class = ProductSearchForm
     description_template = _(u'Products %(upc_filter)s %(title_filter)s')
     paginate_by = 20
+    recent_products = 5
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductListView, self).get_context_data(**kwargs)
         ctx['product_classes'] = ProductClass.objects.all()
         ctx['form'] = self.form
-        ctx['queryset_description'] = self.description
+        if 'recently_edited' in self.request.GET:
+            ctx['queryset_description'] = _("Last %(num_products)d edited products") \
+                % {'num_products': self.recent_products}
+        else:
+            ctx['queryset_description'] = self.description
+
         return ctx
 
     def get_queryset(self):
@@ -57,7 +64,16 @@ class ProductListView(generic.ListView):
         description_ctx = {'upc_filter': '',
                            'title_filter': ''}
         queryset = self.model.objects.base_queryset().select_related(
-            'stockrecord__partner').order_by('-date_created')
+            'stockrecord__partner')
+        if 'recently_edited' in self.request.GET:
+            # Just show recently edited
+            queryset = queryset.order_by('-date_updated')
+            queryset = queryset[:self.recent_products]
+        else:
+            # Allow sorting when all
+            queryset = sort_queryset(queryset, self.request,
+                                     ['title'], '-date_created')
+
         self.form = self.form_class(self.request.GET)
         if not self.form.is_valid():
             self.description = self.description_template % description_ctx

@@ -1,6 +1,7 @@
 {% extends "dashboard/layout.html" %}
 {% load url from future %}
 {% load currency_filters %}
+{% load sorting_tags %}
 {% load i18n %}
 
 {% block body_class %}reviews{% endblock %}
@@ -57,10 +58,10 @@
                     <th>{% trans "Title" %}</th>
                     <th>{% trans "Product" %}</th>
                     <th>{% trans "User" %}</th>
-                    <th>{% trans "Score" %}</th>
-                    <th>{% trans "Votes" %}</th>
+                    <th>{% anchor 'score' _("Score") %}</th>
+                    <th>{% anchor 'total_votes' _("Votes") %}</th>
                     <th>{% trans "Status" %}</th>
-                    <th>{% trans "Date created" %}</th>
+                    <th>{% anchor 'date_created' _("Date created") %}</th>
                     <th></th>
                 </tr>
                 {% for review in review_list %}

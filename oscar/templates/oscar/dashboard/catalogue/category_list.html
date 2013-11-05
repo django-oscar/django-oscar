@@ -19,18 +19,14 @@
     </ul>
 {% endblock %}
 
-{% block headertext %}
-    {% trans "Category management" %}
-{% endblock %}
+{% block header %}
+    <div class="page-header">
+        <a href="{% url 'dashboard:catalogue-category-create' %}" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new category" %}</a>
+        <h1>{% trans "Category management" %}</h1>
+    </div>
+{% endblock header %}
 
 {% block dashboard_content %}
-    <div class="table-header">
-        <h3><i class="icon-sitemap icon-large"></i>{% trans 'Create new category' %}</h3>
-    </div>
-    <div class="well">
-        <p><a class="btn btn-large btn-primary" href="{% url 'dashboard:catalogue-category-create' %}"><i class="icon-plus"></i> {% trans "New category" %}</a></p>
-    </div>
-
     <div class="alert alert-info">
         <p>{% trans "You are editing:" %}
             <strong><a href="{% url 'dashboard:catalogue-category-list' %}">{% trans "Home" %}</a></strong>
@@ -56,9 +52,9 @@
         <tbody>
             {% for category in child_categories %}
                 <tr>
-                    <td>{{ category.name }}</td>
+                    <td><a href="{% url 'dashboard:catalogue-category-update' category.id %}">{{ category.name }}</a></td>
                     <td>{{ category.description|default:""|striptags|cut:"&nbsp;"|truncatewords:6 }}</td>
-                    <td>{{ category.get_num_children }}</td>
+                    <td><a href="{% url 'dashboard:catalogue-category-detail-list' pk=category.pk %}">{{ category.get_num_children }}</a></td>
                     <td>
                         <div class="btn-toolbar">
                             <div class="btn-group">

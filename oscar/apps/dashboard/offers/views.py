@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_classes, get_class
+from oscar.views import sort_queryset
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 Condition = get_model('offer', 'Condition')
@@ -34,7 +35,9 @@ class OfferListView(ListView):
     def get_queryset(self):
         qs = self.model._default_manager.filter(
             offer_type=ConditionalOffer.SITE)
-        qs = self.sort_queryset(qs)
+        qs = sort_queryset(qs, self.request,
+                           ['name', 'start_date', 'end_date',
+                           'num_applications', 'total_discount'])
 
         self.description = _("All offers")
 
@@ -57,16 +60,6 @@ class OfferListView(ListView):
             qs = qs.filter(start_date__lte=today, end_date__gte=today)
 
         return qs
-
-    def sort_queryset(self, queryset):
-        sort = self.request.GET.get('sort', None)
-        allowed_sorts = ['name', 'start_date', 'end_date', 'num_applications',
-                         'total_discount']
-        if sort in allowed_sorts:
-            direction = self.request.GET.get('dir', 'desc')
-            sort = ('-' if direction == 'desc' else '') + sort
-            queryset = queryset.order_by(sort)
-        return queryset
 
     def get_context_data(self, **kwargs):
         ctx = super(OfferListView, self).get_context_data(**kwargs)
@@ -188,7 +181,41 @@ class OfferWizardStepView(FormView):
     def form_valid(self, form):
         self._store_form_kwargs(form)
         self._store_object(form)
-        return super(OfferWizardStepView, self).form_valid(form)
+
+        if self.update and 'save' in form.data:
+            # Save changes to this offer when updating and pressed save button
+            return self.save_offer(self.offer)
+        else:
+            # Proceed to next page
+            return super(OfferWizardStepView, self).form_valid(form)
+
+    def save_offer(self, offer):
+        # We update the offer with the name/description from step 1
+        session_offer = self._fetch_session_offer()
+        offer.name = session_offer.name
+        offer.description = session_offer.description
+
+        # Working around a strange Django issue where saving the related model
+        # in place does not register it correctly and so it has to be saved and
+        # reassigned.
+        benefit = session_offer.benefit
+        benefit.save()
+        condition = session_offer.condition
+        condition.save()
+        offer.benefit = benefit
+        offer.condition = condition
+        offer.save()
+
+        self._flush_session()
+
+        if self.update:
+            msg = _("Offer '%s' updated") % offer.name
+        else:
+            msg = _("Offer '%s' created!") % offer.name
+        messages.success(self.request, msg)
+
+        return HttpResponseRedirect(reverse(
+            'dashboard:offer-detail', kwargs={'pk': offer.pk}))
 
     def get_success_url(self):
         if self.update:
@@ -254,33 +281,7 @@ class OfferRestrictionsView(OfferWizardStepView):
 
     def form_valid(self, form):
         offer = form.save(commit=False)
-
-        # We update the offer with the name/description from step 1
-        session_offer = self._fetch_session_offer()
-        offer.name = session_offer.name
-        offer.description = session_offer.description
-
-        # Working around a strange Django issue where saving the related model
-        # in place does not register it correctly and so it has to be saved and
-        # reassigned.
-        benefit = session_offer.benefit
-        benefit.save()
-        condition = session_offer.condition
-        condition.save()
-        offer.benefit = benefit
-        offer.condition = condition
-        offer.save()
-
-        self._flush_session()
-
-        if self.update:
-            msg = _("Offer '%s' updated") % offer.name
-        else:
-            msg = _("Offer '%s' created!") % offer.name
-        messages.success(self.request, msg)
-
-        return HttpResponseRedirect(reverse(
-            'dashboard:offer-detail', kwargs={'pk': offer.pk}))
+        return self.save_offer(offer)
 
     def get_instance(self):
         return self.offer

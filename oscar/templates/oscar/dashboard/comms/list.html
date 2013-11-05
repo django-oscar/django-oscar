@@ -39,7 +39,7 @@
             <tbody>
                 {% for commtype in commtypes %}
                     <tr>
-                        <td>{{ commtype.code }}</td>
+                        <td><a href="{% url 'dashboard:comms-update' commtype.code|lower %}">{{ commtype.code }}</a></td>
                         <td>{{ commtype.name }}</td>
                         <td>{{ commtype.category }}</td>
                         <td>
