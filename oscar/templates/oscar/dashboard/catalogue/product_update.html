@@ -333,19 +333,28 @@
                             </thead>
                             <tbody>
                                 {% for stockrecord_form in stockrecord_formset %}
+                                    {% if stockrecord_form.non_field_errors %}
+                                    <tr>
+                                        <td colspan="10">
+                                            {% for error in stockrecord_form.non_field_errors  %}
+                                                <span class="help-block errorlist"><i class="icon-exclamation-sign"></i> {{ error }}</span>
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                    {% endif %}
                                     <tr>
                                         <td>{% include "partials/form_field.html" with field=stockrecord_form.partner nolabel=True %}</td>
-                                        <td>{% include "partials/form_field.html" with field=stockrecord_form.partner_sku nolabel=True%}</td>
-                                        <td>{% include "partials/form_field.html" with field=stockrecord_form.num_in_stock nolabel=True%}</td>
+                                        <td>{% include "partials/form_field.html" with field=stockrecord_form.partner_sku nolabel=True %}</td>
+                                        <td>{% include "partials/form_field.html" with field=stockrecord_form.num_in_stock nolabel=True %}</td>
                                         <td>{{ stockrecord_form.instance.num_allocated|default:"-" }}</td>
-                                        <td>{% include "partials/form_field.html" with field=stockrecord_form.low_stock_threshold nolabel=True%}</td>
-                                        <td>{% include "partials/form_field.html" with field=stockrecord_form.price_currency nolabel=True%}</td>
-                                        <td>{% include "partials/form_field.html" with field=stockrecord_form.cost_price nolabel=True%}</td>
-                                        <td>{% include "partials/form_field.html" with field=stockrecord_form.price_excl_tax nolabel=True%}</td>
-                                        <td>{% include "partials/form_field.html" with field=stockrecord_form.price_retail nolabel=True%}</td>
+                                        <td>{% include "partials/form_field.html" with field=stockrecord_form.low_stock_threshold nolabel=True %}</td>
+                                        <td>{% include "partials/form_field.html" with field=stockrecord_form.price_currency nolabel=True %}</td>
+                                        <td>{% include "partials/form_field.html" with field=stockrecord_form.cost_price nolabel=True %}</td>
+                                        <td>{% include "partials/form_field.html" with field=stockrecord_form.price_excl_tax nolabel=True %}</td>
+                                        <td>{% include "partials/form_field.html" with field=stockrecord_form.price_retail nolabel=True %}</td>
                                         <td>
-                                            {% include "partials/form_field.html" with field=stockrecord_form.id nolabel=True%}
-                                            {% include "partials/form_field.html" with field=stockrecord_form.DELETE nolabel=True%}
+                                            {% include "partials/form_field.html" with field=stockrecord_form.id nolabel=True %}
+                                            {% include "partials/form_field.html" with field=stockrecord_form.DELETE nolabel=True %}
                                         </td>
                                     </tr>
                                 {% endfor %}
