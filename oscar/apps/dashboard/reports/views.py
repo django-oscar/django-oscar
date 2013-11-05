@@ -53,6 +53,21 @@ class IndexView(ListView):
 
     def set_list_view_attrs(self, generator, report):
         self.template_name = generator.filename()
-        self.object_list = self.queryset = report
+
+        queryset = report
+        #Filter by date, if that's provided by the form
+        if getattr(generator, 'start_date'):
+            queryset = queryset.filter(
+                date_created__gt=generator.start_date
+            )
+        if getattr(generator, 'end_date'):
+            queryset = queryset.filter(
+                date_created__lt=datetime.datetime.combine(
+                    generator.end_date,
+                    datetime.time(hour=23, minute=59, second=59)
+                )
+            )
+
+        self.object_list = self.queryset = queryset
 
 
