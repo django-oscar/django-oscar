@@ -1,5 +1,5 @@
 # Development
-django-debug-toolbar<=0.9.1
+django-debug-toolbar>=0.10
 django-cache-panel
 django-debug-toolbar-template-timings
 django-extensions>=1.2.0,<1.3.0
@@ -26,7 +26,7 @@ behave==1.2.3
 
 # i18n
 transifex-client>=0.8,<0.9
-django-rosetta>=0.6.8,<0.7
+django-rosetta>=0.7.2
 
 # Misc
 flake8>=2.0,<2.1
