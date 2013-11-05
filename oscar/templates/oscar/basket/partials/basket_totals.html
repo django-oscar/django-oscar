@@ -13,7 +13,20 @@
                     {# Basket total will be discounted so we show a before and after version #}
                     <tr>
                         <td>{% trans "Basket total (before discounts)" %}</td>
-                        <td class="align-right">{% currency basket.total_incl_tax_excl_discounts basket.currency %}</td>
+                        <td class="align-right">
+                            {% if not show_tax_separately %}
+                                {{ basket.total_incl_tax_excl_discounts|currency:basket.currency }}
+                            {% else %}
+                                {{ basket.total_excl_tax_excl_discounts|currency:basket.currency }}
+                            {% endif %}
+                        </td>
+                        <td class="align-right">
+                            {% if basket.is_tax_known and not show_tax_separately %}
+                                {{ basket.total_incl_tax_excl_discounts|currency:basket.currency }}
+                            {% else %}
+                                {{ basket.total_excl_tax_excl_discounts|currency:basket.currency }}
+                            {% endif %}
+                        </td>
                     </tr>
 
                     {% if offer_discounts %}
