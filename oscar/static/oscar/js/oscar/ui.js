@@ -86,6 +86,7 @@ var oscar = (function(o, $) {
             if (o.responsive.isDesktop()) {
                 o.responsive.initNav();
                 o.responsive.initCarousel();
+                o.responsive.initSlider();
             }
         },
         isDesktop: function() {
@@ -121,6 +122,13 @@ var oscar = (function(o, $) {
                         onClick: function() {return true;}
                     });
                 }
+            });
+        },
+        initSlider: function() {
+            $('.bxslider').bxSlider({
+                mode: 'fade',
+                auto: true,
+                pause: 7500
             });
         }
     };
