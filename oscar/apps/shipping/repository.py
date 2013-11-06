@@ -13,7 +13,7 @@ class Repository(object):
     """
     # Note, don't instantiate your shipping methods here (at class-level) as
     # that isn't thread safe.
-    methods = (methods.Free,)
+    methods = (methods.Free, methods.NoShippingRequired)
 
     def get_shipping_methods(self, user, basket, shipping_addr=None,
                              request=None, **kwargs):
