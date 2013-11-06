@@ -165,9 +165,9 @@ class Image(AbstractPromotion):
     link_url = ExtendedURLField(
         _('Link URL'), blank=True,
         help_text=_('This is where this promotion links to'))
-    image = models.ImageField(_('Image'),
-                              upload_to=settings.OSCAR_PROMOTION_FOLDER,
-                              max_length=255)
+    image = models.ImageField(
+        _('Image'), upload_to=settings.OSCAR_PROMOTION_FOLDER,
+        max_length=255)
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
@@ -186,7 +186,10 @@ class MultiImage(AbstractPromotion):
     """
     _type = 'Multi-image'
     name = models.CharField(_("Name"), max_length=128)
-    images = models.ManyToManyField('promotions.Image', null=True, blank=True)
+    images = models.ManyToManyField(
+        'promotions.Image', null=True, blank=True,
+        help_text=("Choose the Image content blocks that this block will use. "
+                   "(You may need to create some first)."))
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):

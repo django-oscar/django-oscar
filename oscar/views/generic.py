@@ -1,7 +1,13 @@
+from django import forms
+from django.core import validators
+from django.core.exceptions import ValidationError
 from django.utils.encoding import smart_str
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
+
+import phonenumbers
+from oscar.core.phonenumber import PhoneNumber
 
 
 class PostActionMixin(object):
@@ -85,3 +91,57 @@ class BulkEditMixin(object):
 
     def get_object_dict(self, ids):
         return self.model.objects.in_bulk(ids)
+
+
+class PhoneNumberMixin(object):
+    """
+    Validation mixin for forms with a phone number, and optionally a country.
+    It tries to validate the phone number, and on failure tries to validate it
+    using a hint (the country provided), and treating it as a local number.
+    
+    It looks for ``self.country``, or ``self.fields['country'].queryset``
+    """
+    
+    phone_number = forms.CharField(max_length=32, required=False)
+
+    def clean_phone_number(self):
+        number = self.cleaned_data['phone_number']
+
+        # empty
+        if number in validators.EMPTY_VALUES:
+            return None
+        
+        # Check for an international phone format
+        try:
+            phone_number = PhoneNumber.from_string(number)
+        except phonenumbers.NumberParseException:
+            # Try hinting with the shipping country
+            if hasattr(self.instance, 'country'):
+                country = self.instance.country
+            elif hasattr(self.fields.get('country'), 'queryset'):
+                country = self.fields['country'].queryset[0]
+            else:
+                country = None
+
+            if country:
+                country = self.cleaned_data.get('country', country)
+                            
+                region_code = country.iso_3166_1_a2
+                # The PhoneNumber class does not allow specifying
+                # the region. So we drop down to the underlying phonenumbers library,
+                # which luckily allows parsing into a PhoneNumber instance
+                try:
+                    phone_number = PhoneNumber.from_string(number, region=region_code)
+                    if not phone_number.is_valid():
+                        raise ValidationError(
+                            _(u'This is not a valid local phone format for %s.') % country)
+                except phonenumbers.NumberParseException:
+                    # Not a valid local or international phone number
+                    raise ValidationError(
+                        _(u'This is not a valid local or international phone format.'))
+            else:
+                # There is no shipping country, not a valid international number
+                raise ValidationError(
+                    _(u'This is not a valid international phone format.'))
+
+        return phone_number

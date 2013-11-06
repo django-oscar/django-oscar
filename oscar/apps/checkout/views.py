@@ -7,8 +7,8 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.db.models import get_model
 from django.utils.translation import ugettext as _
-from django.views.generic import DetailView, TemplateView, FormView, \
-                                 DeleteView, UpdateView, CreateView
+from django.views.generic import (DetailView, TemplateView, FormView,
+                                  DeleteView, UpdateView)
 
 from oscar.apps.shipping.methods import NoShippingRequired
 from oscar.core.loading import get_class, get_classes

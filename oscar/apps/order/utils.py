@@ -150,8 +150,8 @@ class OrderCreator(object):
             'upc': product.upc,
             'quantity': basket_line.quantity,
             # Price details
-            'line_price_excl_tax': basket_line.line_price_excl_tax_and_discounts,
-            'line_price_incl_tax': basket_line.line_price_incl_tax_and_discounts,
+            'line_price_excl_tax': basket_line.line_price_excl_tax_incl_discounts,
+            'line_price_incl_tax': basket_line.line_price_incl_tax_incl_discounts,
             'line_price_before_discounts_excl_tax': basket_line.line_price_excl_tax,
             'line_price_before_discounts_incl_tax': basket_line.line_price_incl_tax,
             # Reporting details

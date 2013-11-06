@@ -40,7 +40,13 @@
             <tbody>
                 {% for range in ranges %}
                     <tr>
-                        <td><a href="{% url 'dashboard:range-update' pk=range.id %}">{{ range.name }}</a></td>
+                        <td>
+                            {% if range.is_editable %}
+                                <a href="{% url 'dashboard:range-update' pk=range.id %}">{{ range.name }}</a>
+                            {% else %}
+                                {{ range.name }}
+                            {% endif %}
+                        </td>
                         {% if range.includes_all_products %}
                             <td>All</td>
                         {% else %}

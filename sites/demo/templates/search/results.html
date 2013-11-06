@@ -5,7 +5,6 @@
 {% load product_tags %}
 {% load i18n %}
 
-
 {% block column_left %}
     <div class="aside-options">
         <h4>{% trans "Refine your search" %}</h4>
@@ -23,22 +22,22 @@
 
 {% block content %}
 
-{% if suggestion %}
-    {% trans 'Did you mean' %} <a href="{% url 'search:search' %}?q={{ suggestion }}">{{ suggestion }}</a>?
-{% endif %}
+    {% if suggestion %}
+        {% trans 'Did you mean' %} <a href="{% url 'search:search' %}?q={{ suggestion }}">{{ suggestion }}</a>?
+    {% endif %}
 
-{% if page.object_list %}
-<section class="product-list">
-    {% include "search/partials/pagination.html" %}
-    <ol class="row-fluid">
-        {% for result in page.object_list %}
-            <li class="span3 {% if forloop.counter0|divisibleby:"4" %}no-margin{% endif %}">{% render_product result.object %}</li>
-        {% endfor %}
-    </ol>
-    {% include "search/partials/pagination.html" %}
-</section>
-{% else %}
-    <p>{% trans 'No search results found.' %}</p>
-{% endif %}
+    {% if page.object_list %}
+        <section class="product-list">
+            {% include "search/partials/pagination.html" %}
+            <ol class="row-fluid">
+                {% for result in page.object_list %}
+                    <li class="span3 {% if forloop.counter0|divisibleby:"4" %}no-margin{% endif %}">{% render_product result.object %}</li>
+                {% endfor %}
+            </ol>
+            {% include "search/partials/pagination.html" %}
+        </section>
+    {% else %}
+        <p>{% trans 'No search results found.' %}</p>
+    {% endif %}
 
 {% endblock %}

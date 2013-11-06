@@ -13,7 +13,7 @@
         </tr>
         {% for voucher in objects %}
         <tr>
-            <td>{{ voucher.code }}</td>
+            <td><a href="{% url 'dashboard:voucher-stats' voucher.id %}">{{ voucher.code }}</a></td>
             <td>{{ voucher.num_basket_additions }}</td>
             <td>{{ voucher.num_orders }}</td>
             <td>{{ voucher.total_discount|currency }}</td>

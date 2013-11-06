@@ -7,11 +7,13 @@ from oscar.apps.address.forms import AbstractAddressForm
 from oscar.apps.customer.utils import normalise_email
 from oscar.core.compat import get_user_model
 
+from oscar.views.generic import PhoneNumberMixin
+
 User = get_user_model()
 Country = get_model('address', 'Country')
 
 
-class ShippingAddressForm(AbstractAddressForm):
+class ShippingAddressForm(PhoneNumberMixin, AbstractAddressForm):
 
     def __init__(self, *args, **kwargs):
         super(ShippingAddressForm, self).__init__(*args, **kwargs)

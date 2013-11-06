@@ -16,8 +16,8 @@ Condition class.
 At a minimum, a custom condition must:
 
 * have a ``name`` attribute
-* have an ``is_satisified`` method that takes a basket instance and returns a
-  boolean
+* have an ``is_satisfied`` method that takes a basket instance and an offer
+  instance and returns a boolean
 
 It can also implement:
 
@@ -44,7 +44,7 @@ Silly example::
         class Meta:
             proxy = True
 
-        def is_satisfied(self, basket):
+        def is_satisfied(self, offer, basket):
             if not basket.owner:
                 return False
             return basket.owner.first_name.lower() == 'barry'

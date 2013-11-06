@@ -162,6 +162,10 @@ class CreateImageView(CreateView):
     model = Image
 
 
+class CreateMultiImageView(CreateView):
+    model = MultiImage
+
+
 class CreateAutomaticProductListView(CreateView):
     model = AutomaticProductList
 
@@ -264,6 +268,10 @@ class UpdateImageView(UpdateView):
     model = Image
 
 
+class UpdateMultiImageView(UpdateView):
+    model = MultiImage
+
+
 class UpdateAutomaticProductListView(UpdateView):
     model = AutomaticProductList
 
@@ -316,6 +324,10 @@ class DeleteSingleProductView(DeleteView):
 
 class DeleteImageView(DeleteView):
     model = Image
+
+
+class DeleteMultiImageView(DeleteView):
+    model = MultiImage
 
 
 class DeleteAutomaticProductListView(DeleteView):

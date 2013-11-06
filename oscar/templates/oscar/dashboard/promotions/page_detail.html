@@ -44,7 +44,7 @@
                 <tbody class="promotion_list">
                     {% for promotion in position.promotions %}
                         <tr id="promo_{{ promotion.pk }}">
-                            <td>{{ promotion.content_object.name }}</td>
+                            <td><a href="{% url 'dashboard:promotion-update' ptype=promotion.content_object.code pk=promotion.pk %}">{{ promotion.content_object.name }}</a></td>
                             <td>{{ promotion.content_object.type }}</td>
                             <td>
                                 <div class="btn-toolbar">

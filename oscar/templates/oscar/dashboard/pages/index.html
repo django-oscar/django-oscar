@@ -33,8 +33,8 @@
     <div class="well">
         <form action="." method="get" class="form-inline">
             {% include "partials/form_fields_inline.html" with form=form %}
-            <button type="submit" class="btn btn-primary">Search</button>
-            <a href="{% url 'dashboard:page-list' %}" class="btn">Reset</a>
+            <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+            <a href="{% url 'dashboard:page-list' %}" class="btn">{% trans "Reset" %}</a>
         </form>
     </div>
 

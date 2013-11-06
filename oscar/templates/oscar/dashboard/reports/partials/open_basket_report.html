@@ -14,8 +14,20 @@
         </tr>
         {% for basket in objects %}
             <tr>
-                <td>{{ basket.owner.email|default:"-" }}</td>
-                <td>{{ basket.owner.get_full_name|default:"-" }}</td>
+                <td>
+                    {% if basket.owner %}
+                        <a href="{% url 'dashboard:user-detail' basket.owner.id %}">{{ basket.owner.email }}</a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>
+                    {% if basket.owner %}
+                        <a href="{% url 'dashboard:user-detail' basket.owner.id %}">{{ basket.owner.get_full_name|default:"-" }}</a></td>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
                 <td>{{ basket.num_lines }}</td>
                 <td>{{ basket.num_items }}</td>
                 <td>{{ basket.date_created }}</td>

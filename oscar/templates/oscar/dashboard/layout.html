@@ -130,21 +130,22 @@
 
 {% block extrascripts %}
     {{ block.super }}
+
+    <script src="//code.jquery.com/ui/1.10.3/jquery-ui.js" type="text/javascript" charset="utf-8"></script>
+
     {% compress js %}
 
     {# jQuery plugins #}
     <!-- Custom Jquery UI, only contains date picker -->
-    <script src="{% static "oscar/js/jquery/jquery-ui-1.10.1.custom.min.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "oscar/js/mousewheel/jquery.mousewheel.min.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "oscar/js/scrollpane/jquery.jscrollpane.min.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "oscar/js/select2/select2.js" %}" type="text/javascript" charset="utf-8"></script>
-
-    {# WYSIHTML5 #}
-    <script src="{% static "oscar/js/bootstrap-wysihtml5/wysihtml5-0.3.0.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.js" %}" type="text/javascript" charset="utf-8"></script>
-
     <script src="{% static "oscar/js/oscar/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
     {% endcompress %}
+
+    <script src="//tinymce.cachefly.net/4.0/tinymce.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="//tinymce.cachefly.net/4.0/jquery.tinymce.min.js" type="text/javascript" charset="utf-8"></script>
+
 {% endblock %}
 
 {% block onbodyload %}

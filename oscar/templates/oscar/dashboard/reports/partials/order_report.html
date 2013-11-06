@@ -16,16 +16,16 @@
             </tr>
             {% for order in objects %}
                 <tr>
-                    <td>{{ order.number }}</td>
-                        {% if not order.is_anonymous %}
-                            <td>{{ order.user.get_full_name|default:"-" }}</td>
-                            <td>{{ order.user.email }}</td>
+                    <td><a href="{% url 'dashboard:order-detail' order.number %}">{{ order.number }}</a></td>
+                    <td>
+                        {% if order.user %}
+                            <a href="{% url 'dashboard:user-detail' order.user.id %}">{{ order.user|default:"-" }}</a></td>
                         {% else %}
-                            <td>-</td>
-                            <td>{{ order.guest_email }}</td>
+                            -
                         {% endif %}
                     </td>
-                    <td>{{ order.total_incl_tax|currency }}</td>
+                    <td>{{ order.email }}</td>
+                    <td>{{ order.total_incl_tax|currency:order.currency }}</td>
                     <td>{{ order.date_placed }}</td>
                     <td>
                         <a class="btn btn-info" href="{% url 'dashboard:order-detail' number=order.number %}">{% trans "View" %}</a>

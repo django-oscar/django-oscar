@@ -22,7 +22,7 @@ class ExtendedURLValidator(validators.URLValidator):
         except ValidationError:
             # The parent validator will raise an exception if the URL does not
             # exist and so we test here to see if the value is a local URL.
-            if self.verify_exists and value:
+            if value:
                 self.validate_local_url(value)
             else:
                 raise
@@ -42,7 +42,7 @@ class ExtendedURLValidator(validators.URLValidator):
                     self.is_local_url = True
                 else:
                     return
-            raise ValidationError(_('Specified page does not exist'))
+            raise ValidationError(_('The URL "%s" does not exist') % value)
         else:
             self.is_local_url = True
 

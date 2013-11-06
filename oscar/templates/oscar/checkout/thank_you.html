@@ -115,12 +115,17 @@
                     {{ line.quantity }}
                 </div>
                 <div class="span2 align-right">
-                    <p class="price_color">{{ line.line_price_before_discounts_incl_tax|currency:order.currency }}</p>
+                    <p class="price_color">
+                        {% if show_tax_separately %}
+                            {{ line.line_price_before_discounts_excl_tax|currency:order.currency }}
+                        {% else %}
+                            {{ line.line_price_before_discounts_incl_tax|currency:order.currency }}
+                        {% endif %}
+                    </p>
                 </div>
             </div>
         </div>
     {% endfor %}
-
 
     <div class="row-fluid">
         <div class="span6">&nbsp;</div>
@@ -150,7 +155,13 @@
                         {% else %}
                             <tr class="basket-items">
                                 <th class="total">{% trans "Basket total" %}</th>
-                                <th class="total align-right">{{ order.basket_total_incl_tax|currency:order.currency }}</th>
+                                <th class="total align-right">
+                                    {% if show_tax_separately %}
+                                        {{ order.basket_total_excl_tax|currency:order.currency }}
+                                    {% else %}
+                                        {{ order.basket_total_incl_tax|currency:order.currency }}
+                                    {% endif %}
+                                </th>
                             </tr>
                         {% endif %}
                     {% endwith %}
@@ -180,7 +191,25 @@
                     {% else %}
                         <tr>
                             <th class="total">{% trans "Shipping charge" %}</th>
-                            <th class="total align-right">{{ order.shipping_incl_tax|currency:order.currency }}</th>
+                            <th class="total align-right">
+                                {% if show_tax_separately %}
+                                    {{ order.shipping_excl_tax|currency:order.currency }}
+                                {% else %}
+                                    {{ order.shipping_incl_tax|currency:order.currency }}
+                                {% endif %}
+                            </th>
+                        </tr>
+                    {% endif %}
+
+                    {% if show_tax_separately %}
+                        <tr>
+                            <th colspan="2">&nbsp;</th>
+                        </tr>
+                        <tr>
+                            <th class="total">{% trans "Order tax" %}</th>
+                            <th class="total align-right">
+                                {{ order.total_tax|currency:order.currency }}
+                            </th>
                         </tr>
                     {% endif %}
 

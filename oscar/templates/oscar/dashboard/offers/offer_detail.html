@@ -64,11 +64,15 @@
             <tr>
                 <th>{% trans "Name" %}</th>
                 <td>{{ offer.name }}</td>
-                <td rowspan="2"><a id="edit_metadata" href="{% url 'dashboard:offer-metadata' pk=offer.pk %}" class="btn">{% trans "Edit" %}</a></td>
+                <td rowspan="3"><a id="edit_metadata" href="{% url 'dashboard:offer-metadata' pk=offer.pk %}" class="btn">{% trans "Edit" %}</a></td>
             </tr>
             <tr>
                 <th>{% trans "Description" %}</th>
-                <td>{{ offer.description|safe }}</td>
+                <td>{{ offer.description|safe|default:"-" }}</td>
+            </tr>
+            <tr>
+                <th>{% trans "Uses tax-exclusive prices for calculations?" %}</th>
+                <td>{{ offer.applies_to_tax_exclusive_prices }}</td>
             </tr>
             <tr>
                 <th>{% trans "Incentive" %}</th>
