@@ -32,45 +32,20 @@ EventHandler = get_class('order.processing', 'EventHandler')
 Partner = get_model('partner', 'Partner')
 
 
-def iterate_orders_for_nonstaff_user(user, initial_qs=None):
-    """
-    Generator to get all orders that a non-staff user is allowed to see
-
-    This default implementation only shows an order to a user if for each
-    order line, she's in the line's partner user list (in line.partner.users)
-    """
-    partners = Partner._default_manager.filter(users=user)
-    if initial_qs is not None:
-        initial = initial_qs
-    else:
-        initial = Order._default_manager.all()
-    # All orders where the user is in at least one line's partner users
-    possible_orders = initial.filter(lines__partner__in=partners)
-    # need to use a custom name for annotation because num_lines is already
-    # present as an attribute
-    possible_orders = possible_orders.annotate(line_count=Count('lines__pk'))
-    for possible_order in possible_orders:
-        line_count_for_user = possible_order.lines.filter(
-            partner__in=partners).distinct().count()
-        total_line_count = possible_order.lines.count()
-        if total_line_count == line_count_for_user:
-            yield possible_order
-
-
 def queryset_orders_for_user(user):
     """
-    Returns a queryset of all orders that a user is allowed to access,
-    regardless of her being a staff user or not
-
-    Adds another query to the query count of iterate_orders_for_nonstaff_user,
-    but a queryset is often more useful than an iterator
+    Returns a queryset of all orders that a user is allowed to access.
+    A staff user may access all orders.
+    To allow access to an order for a non-staff user, at least one line's
+    partner has to have the user in the partner's list.
     """
+    queryset = Order._default_manager.all()
     if user.is_staff:
-        return Order._default_manager.all()
+        return queryset
     else:
-        orders = iterate_orders_for_nonstaff_user(user)
-        order_pks = [order.pk for order in orders]
-        return Order._default_manager.filter(pk__in=order_pks)
+        partners = Partner._default_manager.filter(users=user)
+        return queryset.filter(lines__partner__in=partners).distinct()
+
 
 def get_order_for_user_or_404(user, number):
     try:
@@ -80,6 +55,10 @@ def get_order_for_user_or_404(user, number):
 
 
 class OrderStatsView(FormView):
+    """
+    Dashboard view for order statistics.
+    Supports the permission-based dashboard.
+    """
     template_name = 'dashboard/orders/statistics.html'
     form_class = forms.OrderStatsForm
 
@@ -117,6 +96,10 @@ class OrderStatsView(FormView):
 
 
 class OrderListView(BulkEditMixin, ListView):
+    """
+    Dashboard view for a list of orders.
+    Supports the permission-based dashboard.
+    """
     model = Order
     context_object_name = 'orders'
     template_name = 'dashboard/orders/order_list.html'
@@ -363,6 +346,10 @@ class OrderListView(BulkEditMixin, ListView):
 
 
 class OrderDetailView(DetailView):
+    """
+    Dashboard view to display a single order.
+    Supports the permission-based dashboard.
+    """
     model = Order
     context_object_name = 'order'
     template_name = 'dashboard/orders/order_detail.html'
@@ -585,6 +572,10 @@ class OrderDetailView(DetailView):
 
 
 class LineDetailView(DetailView):
+    """
+    Dashboard view to show a single line of an order.
+    Supports the permission-based dashboard.
+    """
     model = Line
     context_object_name = 'line'
     template_name = 'dashboard/orders/line_detail.html'
@@ -634,6 +625,10 @@ def get_change_summary(model1, model2):
 
 
 class ShippingAddressUpdateView(UpdateView):
+    """
+    Dashboard view to update an order's shipping address.
+    Supports the permission-based dashboard.
+    """
     model = ShippingAddress
     context_object_name = 'address'
     template_name = 'dashboard/orders/shippingaddress_form.html'

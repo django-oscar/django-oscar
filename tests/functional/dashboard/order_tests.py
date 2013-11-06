@@ -7,7 +7,7 @@ from django.template import Template, Context
 from django_dynamic_fixture import get, G
 
 from oscar.test.testcases import ClientTestCase, WebTestCase
-from oscar.test.factories import create_order, create_product
+from oscar.test.factories import create_order, create_basket
 from oscar.apps.order.models import Order, OrderNote
 from oscar.core.compat import get_user_model
 
@@ -43,36 +43,29 @@ class PermissionBasedDashboardOrderTests(ClientTestCase):
 
     def setUp(self):
         """
-        Two partners with one product each, and one user each.
-        Three orders: order #1 for product #1, order #2 for product #2,
-                      and order #3 for both products.
+        Creates two orders. order_in has self.user in it's partner users list.
         """
         self.client = Client()
-        self.user1 = self.create_user(username='user1@example.com')
-        self.user2 = self.create_user(username='user2@example.com')
-        self.partner1 = G(Partner, users=[self.user1])
-        self.partner2 = G(Partner, users=[self.user2])
-        self.product1 = create_product(partner=self.partner1)
-        self.product2 = create_product(partner=self.partner2)
-        self.basket1 = Basket.objects.create()
-        self.basket2 = Basket.objects.create()
-        self.basket12 = Basket.objects.create()
-        self.basket1.add_product(self.product1)
-        self.basket2.add_product(self.product2)
-        self.basket12.add_product(self.product1)
-        self.basket12.add_product(self.product2)
+        self.user = self.create_user(username='user1@example.com',
+                                     is_staff=False)
         self.address = G(ShippingAddress)
-        self.order1 = create_order(basket=self.basket1,
-                                   shipping_address=self.address)
-        self.order2 = create_order(basket=self.basket2,
-                                   shipping_address=self.address)
-        self.order12 = create_order(basket=self.basket12,
-                                    shipping_address=self.address)
+        self.basket_in = create_basket()
+        self.basket_out = create_basket()
+        # replace partner with one that has the user in it's users list
+        self.partner_in = G(Partner, users=[self.user])
+        stockrecord = self.basket_in.lines.all()[0].stockrecord
+        stockrecord.partner = self.partner_in
+        stockrecord.save()
+
+        self.order_in = create_order(basket=self.basket_in,
+                                     shipping_address=self.address)
+        self.order_out = create_order(basket=self.basket_out,
+                                      shipping_address=self.address)
 
     def test_staff_user_can_list_all_orders(self):
         self.is_staff = True
         self.login()
-        orders = [self.order1, self.order2, self.order12]
+        orders = [self.order_in, self.order_out]
         # order-list
         response = self.client.get(reverse('dashboard:order-list'))
         self.assertIsOk(response)
@@ -89,34 +82,29 @@ class PermissionBasedDashboardOrderTests(ClientTestCase):
         self.client.login(username='user1@example.com', password=self.password)
         response = self.client.get(reverse('dashboard:order-list'))
         self.assertEqual(set(response.context['orders']),
-                         set([self.order1]))
-        # order-list user2
-        self.client.login(username='user2@example.com', password=self.password)
-        response = self.client.get(reverse('dashboard:order-list'))
-        self.assertEqual(set(response.context['orders']),
-                         set([self.order2]))
+                         set([self.order_in]))
         # order-detail user2
         url = reverse('dashboard:order-detail',
-                      kwargs={'number': self.order2.number})
+                      kwargs={'number': self.order_in.number})
         self.assertIsOk(self.client.get(url))
         url = reverse('dashboard:order-detail',
-                      kwargs={'number': self.order12.number})
+                      kwargs={'number': self.order_out.number})
         self.assertNoAccess(self.client.get(url))
         # order-line-detail user2
         url = reverse('dashboard:order-line-detail',
-                      kwargs={'number': self.order2.number,
-                              'line_id': self.order2.lines.all()[0].pk})
+                      kwargs={'number': self.order_in.number,
+                              'line_id': self.order_in.lines.all()[0].pk})
         self.assertIsOk(self.client.get(url))
         url = reverse('dashboard:order-line-detail',
-                      kwargs={'number': self.order12.number,
-                              'line_id': self.order12.lines.all()[0].pk})
+                      kwargs={'number': self.order_out.number,
+                              'line_id': self.order_out.lines.all()[0].pk})
         self.assertNoAccess(self.client.get(url))
         # order-shipping-address
         url = reverse('dashboard:order-shipping-address',
-                      kwargs={'number': self.order2.number})
+                      kwargs={'number': self.order_in.number})
         self.assertIsOk(self.client.get(url))
         url = reverse('dashboard:order-shipping-address',
-                      kwargs={'number': self.order12.number})
+                      kwargs={'number': self.order_out.number})
         self.assertNoAccess(self.client.get(url))
 
 

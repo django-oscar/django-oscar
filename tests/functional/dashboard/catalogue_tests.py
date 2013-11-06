@@ -64,7 +64,7 @@ class TestAStaffUser(WebTestCase):
 
         self.assertEquals(Product.objects.count(), 1)
         product = Product.objects.all()[0]
-        self.assertEquals(product.stockrecord.partner, self.partner)
+        self.assertEquals(product.stockrecords.all()[0].partner, self.partner)
         self.assertRedirects(page, reverse('dashboard:catalogue-product',
                                            kwargs={'pk': product.id}))
 
