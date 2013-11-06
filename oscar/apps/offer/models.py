@@ -5,7 +5,7 @@ from django.db.models import get_model
 from django.template.defaultfilters import date as date_filter
 from django.db import models
 from django.utils.timezone import now, get_current_timezone
-from django.utils.translation import ungettext, ugettext as _
+from django.utils.translation import ungettext, ugettext_lazy as _
 from django.utils.importlib import import_module
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
