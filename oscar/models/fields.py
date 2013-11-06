@@ -68,22 +68,23 @@ class UppercaseCharField(CharField):
         else:
             return val
 
+
 class PhoneNumberField(Field):
     """
     Copyright (c) 2011 Stefan Foulis and contributors.
     https://github.com/stefanfoulis/django-phonenumber-field
-    
+
     Taken from fork https://github.com/maikhoepfel/django-phonenumber-field/
-    
+
     A international phone number field for django that uses
     http://pypi.python.org/pypi/phonenumbers for validation.
-    
+
     * Validates a wide range of phone number formats
     * Displays it nicely formatted
     * Can be given a hint for the country, so that it can accept local numbers,
       that are not in an international format
     """
-    
+
     attr_class = phonenumber.PhoneNumber
     descriptor_class = phonenumber.PhoneNumberDescriptor
     default_validators = [phonenumber.validate_international_phonenumber]
