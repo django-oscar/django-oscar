@@ -1,5 +1,5 @@
 # Osar extensions
-django-oscar-stores>=0.4,<0.5
+django-oscar-stores>=0.5
 django-oscar-paypal>=0.7
 django-oscar-datacash>=0.4.2,<0.5
 
