@@ -7,7 +7,9 @@ from oscar.core.loading import get_class
 
 class DashboardApplication(Application):
     name = 'dashboard'
-    permissions_map = {'index': ['is_staff', ]}
+    permissions_map = {
+        'index': (['is_staff'], ['partner.dashboard_access']),
+    }
 
     index_view = views.IndexView
     reports_app = get_class('dashboard.reports.app', 'application')
