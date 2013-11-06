@@ -55,4 +55,4 @@ class MultiFacetedSearchForm(FacetedSearchForm):
         if hasattr(self, 'cleaned_data') and 'selected_facets' in self.cleaned_data:
             for f in self.cleaned_data['selected_facets'].split("|"):
                 sqs = sqs.narrow(f)
-                return sqs
+        return sqs
