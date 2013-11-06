@@ -1,6 +1,6 @@
 import datetime
 
-from django.views.generic import (ListView, FormView, DeleteView, DetailView,
+from django.views.generic import (ListView, FormView, DeleteView,
                                   CreateView, UpdateView)
 from django.db.models.loading import get_model
 from django.core.urlresolvers import reverse

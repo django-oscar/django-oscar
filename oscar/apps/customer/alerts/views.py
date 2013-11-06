@@ -1,12 +1,10 @@
-from django.http import HttpResponseRedirect, Http404
+from django.http import Http404
 from django.views import generic
 from django.db.models import get_model
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django import http
-from django.views.generic import TemplateView
-from django.views.generic.list import MultipleObjectMixin
 
 from oscar.core.loading import get_class
 from oscar.apps.customer.alerts import utils

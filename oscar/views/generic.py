@@ -8,7 +8,6 @@ from django.utils.translation import ugettext_lazy as _
 
 import phonenumbers
 from oscar.core.phonenumber import PhoneNumber
-from oscar.models.fields import PhoneNumberField
 
 
 class PostActionMixin(object):
@@ -96,7 +95,7 @@ class BulkEditMixin(object):
 
 class PhoneNumberMixin(object):
     """
-    Validation mixin for forms with a phone number, and optionaly a country.
+    Validation mixin for forms with a phone number, and optionally a country.
     It tries to validate the phone number, and on failure tries to validate it
     using a hint (the country provided), and treating it as a local number.
     

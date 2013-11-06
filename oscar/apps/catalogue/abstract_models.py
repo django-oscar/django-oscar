@@ -6,7 +6,7 @@ import warnings
 
 from django.conf import settings
 from django.contrib.staticfiles.finders import find
-from django.core.exceptions import ObjectDoesNotExist, ValidationError, ImproperlyConfigured
+from django.core.exceptions import ValidationError, ImproperlyConfigured
 from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Sum, Count, get_model

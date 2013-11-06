@@ -1,3 +1,4 @@
+from django.core.exceptions import ImproperlyConfigured
 from django.db.models.fields import CharField, DecimalField, Field
 from django.db.models import SubfieldBase
 from django.utils import six

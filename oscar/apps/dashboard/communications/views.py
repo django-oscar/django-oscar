@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.sites.models import get_current_site
 from django.db.models import get_model
