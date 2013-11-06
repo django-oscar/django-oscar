@@ -125,11 +125,13 @@ var oscar = (function(o, $) {
             });
         },
         initSlider: function() {
-            $('.bxslider').bxSlider({
-                mode: 'fade',
-                auto: true,
-                pause: 7500
-            });
+            if ($.fn.bxSlider) {
+                $('.bxslider').bxSlider({
+                    mode: 'fade',
+                    auto: true,
+                    pause: 7500
+                });
+            }
         }
     };
 
