@@ -95,6 +95,8 @@ Default::
 
 Defines the available promotion block types that can be used in Oscar.
 
+.. _OSCAR_DASHBOARD_NAVIGATION:
+
 ``OSCAR_DASHBOARD_NAVIGATION``
 ------------------------------
 
