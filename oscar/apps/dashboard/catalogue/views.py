@@ -36,6 +36,12 @@ Partner = get_model('partner', 'Partner')
 
 
 def get_queryset_for_user(user):
+    """
+    Returns all products the given user has access to.
+    A staff user is allowed to access all Products.
+    A non-staff user is only allowed access to a product if she's in at least
+    one stock record's partner user list.
+    """
     queryset = Product.objects.base_queryset().order_by('-date_created')
     if user.is_staff:
         return queryset.all()
@@ -45,6 +51,11 @@ def get_queryset_for_user(user):
 
 
 class ProductListView(generic.ListView):
+    """
+    Dashboard view of the product list.
+    Supports the permission-based dashboard.
+    """
+
     template_name = 'dashboard/catalogue/product_list.html'
     model = Product
     context_object_name = 'products'
@@ -108,6 +119,11 @@ class ProductCreateRedirectView(generic.RedirectView):
 
 
 class ProductCreateUpdateView(generic.UpdateView):
+    """
+    Dashboard view that bundles both creating and updating single products.
+    Supports the permission-based dashboard.
+    """
+
     template_name = 'dashboard/catalogue/product_update.html'
     model = Product
     context_object_name = 'product'
@@ -141,7 +157,8 @@ class ProductCreateUpdateView(generic.UpdateView):
             product = super(ProductCreateUpdateView, self).get_object(queryset)
             user = self.request.user
             self.product_class = product.product_class
-            if user.is_staff or product.is_user_in_partners_users(user):
+            # check user has permission to update Product
+            if user.is_staff or product.is_user_a_partner_user(user):
                 return product
             else:
                 raise PermissionDenied
@@ -264,18 +281,18 @@ class ProductCreateUpdateView(generic.UpdateView):
 
 
 class ProductDeleteView(generic.DeleteView):
+    """
+    Dashboard view to delete a product.
+    Supports the permission-based dashboard.
+    """
     template_name = 'dashboard/catalogue/product_delete.html'
     model = Product
     context_object_name = 'product'
 
     def get_object(self, queryset=None):
-        """
-        Check permissions before returning product. The user having the
-        catalogue.delete_product permission is enforced in dashboard's app.py
-        """
         product = super(ProductDeleteView, self).get_object(queryset)
         user = self.request.user
-        if user.is_staff or product.is_user_in_partners_users(user):
+        if user.is_staff or product.is_user_a_partner_user(user):
             return product
         else:
             raise PermissionDenied

@@ -490,7 +490,7 @@ class AbstractProduct(models.Model):
             return False, _("No stock available")
         return self.stockrecord.is_purchase_permitted(user, quantity, self)
 
-    def is_user_in_partners_users(self, user, match_all=False):
+    def is_user_a_partner_user(self, user, match_all=False):
         """
         The stockrecords of this product are linked to a fulfilment partner,
         which have a M2M field for a list of users.
