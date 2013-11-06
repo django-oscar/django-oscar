@@ -266,6 +266,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             fzn_basket.thaw()
             if self.request.basket.id != fzn_basket.id:
                 fzn_basket.merge(self.request.basket)
+                # Use same strategy as current request basket
+                fzn_basket.strategy = self.request.basket.strategy
                 self.request.basket = fzn_basket
 
     def send_confirmation_message(self, order, **kwargs):

@@ -418,7 +418,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         """
         Return a dict of data to submitted to pay for, and create an order
         """
-        basket = self.request.basket
+        basket = kwargs.get('basket', self.request.basket)
         shipping_address = self.get_shipping_address(basket)
         shipping_method = self.get_shipping_method(
             basket, shipping_address)
