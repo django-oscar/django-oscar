@@ -37,7 +37,8 @@ class Repository(object):
         the customer an indication of what their order will cost.
         """
         shipping_methods = self.get_shipping_methods(
-            user, basket, shipping_addr, request, **kwargs)
+            user, basket, shipping_addr=shipping_addr,
+            request=request, **kwargs)
         if len(shipping_methods) == 0:
             raise ImproperlyConfigured(
                 _("You need to define some shipping methods"))
