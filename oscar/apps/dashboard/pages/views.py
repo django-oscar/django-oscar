@@ -3,14 +3,16 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db.models.loading import get_model
 from django.http import HttpResponseRedirect
-from oscar.core.utils import slugify
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
+
 from django.views.generic import ListView
 
+from oscar.core.utils import slugify
 from oscar.core.validators import URLDoesNotExistValidator
 from oscar.apps.dashboard.pages import forms
+
 
 FlatPage = get_model('flatpages', 'FlatPage')
 Site = get_model('sites', 'Site')

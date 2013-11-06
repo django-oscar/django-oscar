@@ -257,9 +257,6 @@ class AbstractOrder(models.Model):
     class Meta:
         abstract = True
         ordering = ['-date_placed',]
-        permissions = (
-            ("can_view", _("Can view orders (eg for reporting)")),
-        )
         verbose_name = _("Order")
         verbose_name_plural = _("Orders")
 

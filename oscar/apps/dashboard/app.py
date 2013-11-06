@@ -1,5 +1,4 @@
 from django.conf.urls import patterns, url, include
-from oscar.views.decorators import staff_member_required
 
 from oscar.apps.dashboard import views
 from oscar.core.application import Application
@@ -8,6 +7,9 @@ from oscar.core.loading import get_class
 
 class DashboardApplication(Application):
     name = 'dashboard'
+    permissions_map = {
+        'index': (['is_staff'], ['partner.dashboard_access']),
+    }
 
     index_view = views.IndexView
     reports_app = get_class('dashboard.reports.app', 'application')
@@ -40,9 +42,6 @@ class DashboardApplication(Application):
             url(r'^comms/', include(self.comms_app.urls)),
         )
         return self.post_process_urls(urlpatterns)
-
-    def get_url_decorator(self, url_name):
-        return staff_member_required
 
 
 application = DashboardApplication()

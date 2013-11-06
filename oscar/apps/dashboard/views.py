@@ -22,9 +22,17 @@ User = get_user_model()
 class IndexView(TemplateView):
     """
     An overview view which displays several reports about the shop.
+
+    Supports the permission-based dashboard. It is recommended to add a
+    index_nonstaff.html template because Oscar's default template will
+    display potentially sensitive store information.
     """
 
-    template_name = 'dashboard/index.html'
+    def get_template_names(self):
+        if self.request.user.is_staff:
+            return ['dashboard/index.html', ]
+        else:
+            return ['dashboard/index_nonstaff.html', 'dashboard/index.html']
 
     def get_context_data(self, **kwargs):
         ctx = super(IndexView, self).get_context_data(**kwargs)

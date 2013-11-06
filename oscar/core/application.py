@@ -1,10 +1,16 @@
 from django.conf.urls import patterns
 from oscar.core.loading import feature_hidden
 
+from oscar.views.decorators import permissions_required
+
 
 class Application(object):
     name = None
     hidable_feature_name = None
+    #: Maps view names to a tuple or list of permissions
+    permissions_map = {}
+    #: Default permission for any view not in permissions_map
+    default_permissions = None
 
     def __init__(self, app_name=None, **kwargs):
         self.app_name = app_name
@@ -43,12 +49,22 @@ class Application(object):
                 pattern._callback = decorator(pattern._callback)
         return urlpatterns
 
-    def get_url_decorator(self, url_name):
+    def get_permissions(self, urlname):
+        return self.permissions_map.get(urlname, self.default_permissions)
+
+    def get_url_decorator(self, pattern):
         """
         Return the appropriate decorator for the view function with the passed
-        URL name
+        URL name. Mainly used for access-protecting views.
+        It's possible to specify
+        - no permissions necessary: use None
+        - a set of permissions: use a list
+        - two set of permissions (`or`): use a two-tuple of lists
+
+        See permissions_required decorator for details
         """
-        return None
+        permissions = self.get_permissions(pattern.name)
+        return permissions_required(permissions)
 
     @property
     def urls(self):

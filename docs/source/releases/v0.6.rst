@@ -27,6 +27,11 @@ charge is largely backwards compatible with the old system of "partner
 wrappers" but it is recommended to upgrade to the new system.  Support for
 partner wrappers will be removed for Oscar 0.7.
 
+Oscar 0.6 also introduces better support for marketplaces with the so-called
+permission-based dashboard. It is now possible to give non-staff users access
+to a subset of the dashboard's views (products and orders) by setting the
+new ``dashboard_access`` permission.
+
 `Oscar now supports Django 1.5`_ and its custom user model.  This has been only
 tested in the context of starting a new Oscar project with a custom model.
 Switching from a separate "profile" model to the new system is not recommended
@@ -98,6 +103,24 @@ for more information.
 
 Note that the :func:`oscar.templatetags.currency_filters.currency` now
 accepts an optional currency parameter.
+
+Permission-based dashboard
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Three changes were necessary to better support marketplace scenarios within
+Oscar:
+
+* Oscar's core :class:`oscar.core.application.Application` class now supports
+  specifying permissions on a per-view basis. This is done via a new default
+  decorator. Legacy behaviour is unchanged.
+
+* The dashboard's menu's are now built dynamically. If the current user does
+  not have access to some views in :ref:`OSCAR_DASHBOARD_NAVIGATION`, they will
+  be omitted in the menu returned by
+  :meth:`oscar.apps.dashboard.nav.create_menu`.
+
+* The index, catalogue and order dashboard views have been modified to allow
+  access to non-staff users. See :doc:`/ref/apps/dashboard` for details.
 
 Payment models have abstract versions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -372,6 +395,25 @@ in your ``INSTALLED_APPS``:
 If you are using the ``get_core_apps`` helper function, then these new apps
 will be added automatically. Neither of these apps contains models so no
 database schema changes are required.
+
+Changes to Partner permissions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following permissions on the
+:class:`~oscar.apps.partner.abstract_models.AbstractPartner` model were not
+used in Oscar and have been removed to avoid confusion with the newly
+introduced permission-based dashboard:
+
+* ``can_edit_stock_records``
+* ``can_view_stock_records``
+* ``can_edit_product_range``
+* ``can_view_product_range``
+* ``can_edit_order_lines``
+* ``can_view_order_lines``
+
+The permission-based dashboard introduced a new permission:
+
+* ``dashboard_access``
 
 Upgrading notes
 ===============

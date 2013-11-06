@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.loading import get_model
 from django.db.models import fields, Q, Sum, Count
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.utils.datastructures import SortedDict
 from django.views.generic import ListView, DetailView, UpdateView, FormView
@@ -30,9 +30,36 @@ Line = get_model('order', 'Line')
 ShippingEventType = get_model('order', 'ShippingEventType')
 PaymentEventType = get_model('order', 'PaymentEventType')
 EventHandler = get_class('order.processing', 'EventHandler')
+Partner = get_model('partner', 'Partner')
+
+
+def queryset_orders_for_user(user):
+    """
+    Returns a queryset of all orders that a user is allowed to access.
+    A staff user may access all orders.
+    To allow access to an order for a non-staff user, at least one line's
+    partner has to have the user in the partner's list.
+    """
+    queryset = Order._default_manager.all()
+    if user.is_staff:
+        return queryset
+    else:
+        partners = Partner._default_manager.filter(users=user)
+        return queryset.filter(lines__partner__in=partners).distinct()
+
+
+def get_order_for_user_or_404(user, number):
+    try:
+        return queryset_orders_for_user(user).get(number=number)
+    except ObjectDoesNotExist:
+        raise Http404()
 
 
 class OrderStatsView(FormView):
+    """
+    Dashboard view for order statistics.
+    Supports the permission-based dashboard.
+    """
     template_name = 'dashboard/orders/statistics.html'
     form_class = forms.OrderStatsForm
 
@@ -57,7 +84,7 @@ class OrderStatsView(FormView):
         return ctx
 
     def get_stats(self, filters):
-        orders = Order.objects.filter(**filters)
+        orders = queryset_orders_for_user(self.request.user).filter(**filters)
         stats = {
             'total_orders': orders.count(),
             'total_lines': Line.objects.filter(order__in=orders).count(),
@@ -70,6 +97,10 @@ class OrderStatsView(FormView):
 
 
 class OrderListView(BulkEditMixin, ListView):
+    """
+    Dashboard view for a list of orders.
+    Supports the permission-based dashboard.
+    """
     model = Order
     context_object_name = 'orders'
     template_name = 'dashboard/orders/order_list.html'
@@ -82,14 +113,25 @@ class OrderListView(BulkEditMixin, ListView):
     actions = ('download_selected_orders',)
     current_view = 'dashboard:order-list'
 
+    def dispatch(self, request, *args, **kwargs):
+        # base_queryset is equal to all orders the user is allowed to access
+        self.base_queryset = queryset_orders_for_user(
+            request.user).order_by('-date_placed')
+        return super(OrderListView, self).dispatch(request, *args, **kwargs)
+
     def get(self, request, *args, **kwargs):
-        if 'order_number' in request.GET and request.GET.get('response_format', 'html') == 'html':
+        if 'order_number' in request.GET and request.GET.get(
+                'response_format', 'html') == 'html':
+            # Redirect to Order detail page if valid order number is given
             try:
-                order = Order.objects.get(number=request.GET['order_number'])
+                order = self.base_queryset.get(
+                    number=request.GET['order_number'])
             except Order.DoesNotExist:
                 pass
             else:
-                return HttpResponseRedirect(reverse('dashboard:order-detail', kwargs={'number': order.number}))
+                url = reverse('dashboard:order-detail',
+                              kwargs={'number': order.number})
+                return HttpResponseRedirect(url)
         return super(OrderListView, self).get(request, *args, **kwargs)
 
     def get_desc_context(self, data=None):
@@ -138,8 +180,7 @@ class OrderListView(BulkEditMixin, ListView):
             desc_ctx['date_filter'] = _(" placed since %s") % format_datetime(data['date_from'])
         elif data['date_to']:
             date_to = data['date_to'] + datetime.timedelta(days=1)
-            desc_ctx['date_filter'] = _(" placed before %s") % format_datetime(data['date_to'])
-
+            desc_ctx['date_filter'] = _(" placed before %s") % format_datetime(date_to)
         if data['voucher']:
             desc_ctx['voucher_filter'] = _(" using voucher '%s'") % data['voucher']
 
@@ -155,8 +196,7 @@ class OrderListView(BulkEditMixin, ListView):
         """
         Build the queryset for this list.
         """
-        queryset = self.model.objects.all().order_by('-date_placed')
-        queryset = sort_queryset(queryset, self.request,
+        queryset = sort_queryset(self.base_queryset, self.request,
                                  ['number', 'total_incl_tax'])
 
         # Look for shortcut query filters
@@ -166,7 +206,7 @@ class OrderListView(BulkEditMixin, ListView):
             if status.lower() == 'none':
                 status = None
             self.description = self.desc_template % self.get_desc_context()
-            return self.model.objects.filter(status=status)
+            return self.base_queryset.filter(status=status)
 
         if 'order_number' not in self.request.GET:
             self.description = self.desc_template % self.get_desc_context()
@@ -180,7 +220,8 @@ class OrderListView(BulkEditMixin, ListView):
         data = self.form.cleaned_data
 
         if data['order_number']:
-            queryset = self.model.objects.filter(number__istartswith=data['order_number'])
+            queryset = self.base_queryset.objects.filter(
+                number__istartswith=data['order_number'])
 
         if data['name']:
             # If the value is two words, then assume they are first name and last name
@@ -298,6 +339,10 @@ class OrderListView(BulkEditMixin, ListView):
 
 
 class OrderDetailView(DetailView):
+    """
+    Dashboard view to display a single order.
+    Supports the permission-based dashboard.
+    """
     model = Order
     context_object_name = 'order'
     template_name = 'dashboard/orders/order_detail.html'
@@ -307,7 +352,8 @@ class OrderDetailView(DetailView):
                     'create_payment_event')
 
     def get_object(self, queryset=None):
-        return get_object_or_404(self.model, number=self.kwargs['number'])
+        return get_order_for_user_or_404(self.request.user,
+                                         self.kwargs['number'])
 
     def get_context_data(self, **kwargs):
         ctx = super(OrderDetailView, self).get_context_data(**kwargs)
@@ -519,12 +565,26 @@ class OrderDetailView(DetailView):
 
 
 class LineDetailView(DetailView):
+    """
+    Dashboard view to show a single line of an order.
+    Supports the permission-based dashboard.
+    """
     model = Line
     context_object_name = 'line'
     template_name = 'dashboard/orders/line_detail.html'
 
     def get_object(self, queryset=None):
-        return get_object_or_404(self.model, pk=self.kwargs['line_id'])
+        order = get_order_for_user_or_404(self.request.user,
+                                          self.kwargs['number'])
+        try:
+            return order.lines.get(pk=self.kwargs['line_id'])
+        except self.model.DoesNotExist:
+            raise Http404()
+
+    def get_context_data(self, **kwargs):
+        ctx = super(LineDetailView, self).get_context_data(**kwargs)
+        ctx['order'] = self.object.order
+        return ctx
 
 
 def get_changes_between_models(model1, model2, excludes=None):
@@ -558,13 +618,19 @@ def get_change_summary(model1, model2):
 
 
 class ShippingAddressUpdateView(UpdateView):
+    """
+    Dashboard view to update an order's shipping address.
+    Supports the permission-based dashboard.
+    """
     model = ShippingAddress
     context_object_name = 'address'
     template_name = 'dashboard/orders/shippingaddress_form.html'
     form_class = forms.ShippingAddressForm
 
     def get_object(self, queryset=None):
-        return get_object_or_404(self.model, order__number=self.kwargs['number'])
+        order = get_order_for_user_or_404(self.request.user,
+                                          self.kwargs['number'])
+        return get_object_or_404(self.model, order=order)
 
     def get_context_data(self, **kwargs):
         ctx = super(ShippingAddressUpdateView, self).get_context_data(**kwargs)

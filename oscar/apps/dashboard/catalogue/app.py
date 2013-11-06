@@ -1,12 +1,19 @@
 from django.conf.urls import patterns, url
 
-from oscar.views.decorators import staff_member_required
 from oscar.core.application import Application
 from oscar.apps.dashboard.catalogue import views
 
 
 class CatalogueApplication(Application):
     name = None
+
+    default_permissions = ['is_staff', ]
+    permissions_map = _map = {
+        'catalogue-product':        (['is_staff'], ['partner.dashboard_access']),
+        'catalogue-product-create': (['is_staff'], ['partner.dashboard_access']),
+        'catalogue-product-list':   (['is_staff'], ['partner.dashboard_access']),
+        'catalogue-product-delete': (['is_staff'], ['partner.dashboard_access']),
+    }
 
     product_list_view = views.ProductListView
     product_create_redirect_view = views.ProductCreateRedirectView
@@ -23,7 +30,8 @@ class CatalogueApplication(Application):
 
     def get_urls(self):
         urlpatterns = patterns('',
-            url(r'^products/(?P<pk>\d+)/$', self.product_createupdate_view.as_view(),
+            url(r'^products/(?P<pk>\d+)/$',
+                self.product_createupdate_view.as_view(),
                 name='catalogue-product'),
             url(r'^products/create/$',
                 self.product_create_redirect_view.as_view(),
@@ -53,9 +61,6 @@ class CatalogueApplication(Application):
                 name='catalogue-category-delete'),
         )
         return self.post_process_urls(urlpatterns)
-
-    def get_url_decorator(self, url_name):
-        return staff_member_required
 
 
 application = CatalogueApplication()

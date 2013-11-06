@@ -1,4 +1,4 @@
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.views import generic
 from django.db.models import get_model
 from django.http import HttpResponseRedirect, Http404
@@ -33,9 +33,30 @@ ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductClass = get_model('catalogue', 'ProductClass')
 StockRecord = get_model('partner', 'StockRecord')
 StockAlert = get_model('partner', 'StockAlert')
+Partner = get_model('partner', 'Partner')
+
+
+def get_queryset_for_user(user):
+    """
+    Returns all products the given user has access to.
+    A staff user is allowed to access all Products.
+    A non-staff user is only allowed access to a product if she's in at least
+    one stock record's partner user list.
+    """
+    queryset = Product.objects.base_queryset().order_by('-date_created')
+    if user.is_staff:
+        return queryset.all()
+    else:
+        return queryset.filter(
+            stockrecords__partner__users__pk=user.pk).distinct()
 
 
 class ProductListView(generic.ListView):
+    """
+    Dashboard view of the product list.
+    Supports the permission-based dashboard.
+    """
+
     template_name = 'dashboard/catalogue/product_list.html'
     model = Product
     context_object_name = 'products'
@@ -63,8 +84,7 @@ class ProductListView(generic.ListView):
         """
         description_ctx = {'upc_filter': '',
                            'title_filter': ''}
-        queryset = self.model.objects.base_queryset().select_related(
-            'stockrecord__partner')
+        queryset = get_queryset_for_user(self.request.user)
         if 'recently_edited' in self.request.GET:
             # Just show recently edited
             queryset = queryset.order_by('-date_updated')
@@ -73,7 +93,6 @@ class ProductListView(generic.ListView):
             # Allow sorting when all
             queryset = sort_queryset(queryset, self.request,
                                      ['title'], '-date_created')
-
         self.form = self.form_class(self.request.GET)
         if not self.form.is_valid():
             self.description = self.description_template % description_ctx
@@ -83,11 +102,14 @@ class ProductListView(generic.ListView):
 
         if data['upc']:
             queryset = queryset.filter(upc=data['upc'])
-            description_ctx['upc_filter'] = _(" including an item with UPC '%s'") % data['upc']
+            description_ctx['upc_filter'] = _(
+                " including an item with UPC '%s'") % data['upc']
 
         if data['title']:
-            queryset = queryset.filter(title__icontains=data['title']).distinct()
-            description_ctx['title_filter'] = _(" including an item with title matching '%s'") % data['title']
+            queryset = queryset.filter(
+                title__icontains=data['title']).distinct()
+            description_ctx['title_filter'] = _(
+                " including an item with title matching '%s'") % data['title']
 
         self.description = self.description_template % description_ctx
         return queryset
@@ -112,6 +134,11 @@ class ProductCreateRedirectView(generic.RedirectView):
 
 
 class ProductCreateUpdateView(generic.UpdateView):
+    """
+    Dashboard view that bundles both creating and updating single products.
+    Supports the permission-based dashboard.
+    """
+
     template_name = 'dashboard/catalogue/product_update.html'
     model = Product
     context_object_name = 'product'
@@ -129,11 +156,10 @@ class ProductCreateUpdateView(generic.UpdateView):
         is that self.object is None. We emulate this behavior.
         Additionally, self.product_class is set.
         """
-        if 'pk' in self.kwargs:  # UpdateView
-            obj = super(ProductCreateUpdateView, self).get_object(queryset)
-            self.product_class = obj.product_class
-            return obj
-        else:  # CreateView
+        user = self.request.user
+        self.require_user_stockrecord = not user.is_staff
+        self.creating = not 'pk' in self.kwargs
+        if self.creating:
             try:
                 product_class_id = self.kwargs.get('product_class_id', None)
                 self.product_class = ProductClass.objects.get(
@@ -142,6 +168,15 @@ class ProductCreateUpdateView(generic.UpdateView):
                 raise Http404
             else:
                 return None  # success
+        else:
+            product = super(ProductCreateUpdateView, self).get_object(queryset)
+            user = self.request.user
+            self.product_class = product.product_class
+            # check user has permission to update Product
+            if user.is_staff or product.is_user_a_partner_user(user):
+                return product
+            else:
+                raise PermissionDenied
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
@@ -176,8 +211,6 @@ class ProductCreateUpdateView(generic.UpdateView):
         Short-circuits the regular logic to have one place to have our
         logic to check all forms
         """
-        self.creating = self.object is None
-
         # Need to create the product here because the inline forms need it
         # can't use commit=False because ProductForm does not support it
         if self.creating and form.is_valid():
@@ -263,9 +296,21 @@ class ProductCreateUpdateView(generic.UpdateView):
 
 
 class ProductDeleteView(generic.DeleteView):
+    """
+    Dashboard view to delete a product.
+    Supports the permission-based dashboard.
+    """
     template_name = 'dashboard/catalogue/product_delete.html'
     model = Product
     context_object_name = 'product'
+
+    def get_object(self, queryset=None):
+        product = super(ProductDeleteView, self).get_object(queryset)
+        user = self.request.user
+        if user.is_staff or product.is_user_a_partner_user(user):
+            return product
+        else:
+            raise PermissionDenied
 
     def get_success_url(self):
         msg =_("Deleted product '%s'") % self.object.title
