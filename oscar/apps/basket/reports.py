@@ -55,6 +55,7 @@ class OpenBasketReportGenerator(ReportGenerator):
     """
     code = 'open_baskets'
     description = _('Open baskets')
+    date_range_field_name = 'date_created'
 
     formatters = {
         'CSV_formatter': OpenBasketReportCSVFormatter,
@@ -108,6 +109,7 @@ class SubmittedBasketReportGenerator(ReportGenerator):
     """
     code = 'submitted_baskets'
     description = _('Submitted baskets')
+    date_range_field_name = 'date_submitted'
 
     formatters = {
         'CSV_formatter': SubmittedBasketReportCSVFormatter,

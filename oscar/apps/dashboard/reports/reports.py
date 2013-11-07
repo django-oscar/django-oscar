@@ -1,3 +1,5 @@
+import datetime
+
 from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
 
@@ -14,11 +16,11 @@ class ReportGenerator(object):
     content_type = 'text/csv'
     code = ''
     description = '<insert report description>'
+    date_range_field_name = None
 
     def __init__(self, **kwargs):
-        if 'start_date' in kwargs and 'end_date' in kwargs:
-            self.start_date = kwargs['start_date']
-            self.end_date = kwargs['end_date']
+        self.start_date = kwargs.get('start_date')
+        self.end_date = kwargs.get('end_date')
 
         self.formatter = self.formatters['%s_formatter' % kwargs['formatter']]()
 
@@ -44,6 +46,31 @@ class ReportGenerator(object):
         """
         return user.is_staff
 
+    def filter_with_date_range(self, queryset):
+        """
+        Filter results based that are within a (possibly open ended) daterange
+        """
+        #Nothing to do if we don't have a date field, or a range
+        if not self.date_range_field_name or \
+           (not self.start_date and \
+            not self.end_date):
+            return queryset
+
+        #After the start date
+        if self.start_date:
+            queryset = queryset.filter(**{
+                "%s__gt" % self.date_range_field_name: self.start_date,
+            })
+        #Before the end of the end date
+        if self.end_date:
+            queryset = queryset.filter(**{
+                "%s__lt" % self.date_range_field_name:datetime.datetime.combine(
+                    self.end_date,
+                    datetime.time(hour=23, minute=59, second=59)
+                )
+            })
+        
+        return queryset
 
 class ReportFormatter(object):
     def format_datetime(self, dt):
