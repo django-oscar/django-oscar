@@ -26,7 +26,7 @@ behave==1.2.3
 
 # i18n
 transifex-client>=0.8,<0.9
-django-rosetta>=0.6.8,<0.7
+django-rosetta>=0.7
 
 # Misc
 flake8>=2.0,<2.1
