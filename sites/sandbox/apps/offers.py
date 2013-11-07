@@ -7,7 +7,7 @@ class ChangesOwnerName(models.Benefit):
         proxy = True
 
     def apply(self, basket, condition, offer=None):
-        condition.consume_items(basket, ())
+        condition.consume_items(offer, basket, ())
         return models.PostOrderAction(
             "You will have your name changed to Barry!")
 
