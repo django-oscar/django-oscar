@@ -268,7 +268,7 @@ class AbstractAddress(models.Model):
             country_code = self.country.iso_3166_1_a2
             regex = self.POSTCODES_REGEX.get(country_code, None)
             if regex:
-                msg = ("Addresses in %(country)s require a postcode") % {
+                msg = ("Addresses in %(country)s require a valid postcode") % {
                     'country': self.country}
                 raise exceptions.ValidationError(msg)
 
@@ -281,7 +281,7 @@ class AbstractAddress(models.Model):
             # Validate postcode against regext for the country if available
             if regex and not re.match(regex, postcode):
                 msg = _("The postcode '%(postcode)s' is not valid "
-                        "for the %(country)s") % {
+                        "for %(country)s") % {
                             'postcode': self.postcode,
                             'country': self.country}
                 raise exceptions.ValidationError(
@@ -425,7 +425,7 @@ class AbstractShippingAddress(AbstractAddress):
     it should be read-only after that.
     """
     phone_number = PhoneNumberField(
-        _("Phone number"), blank=True, 
+        _("Phone number"), blank=True,
         help_text=_("In case we need to call you about your order"))
     notes = models.TextField(
         blank=True, null=True,

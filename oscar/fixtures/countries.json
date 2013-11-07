@@ -2753,7 +2753,7 @@
         "fields": {
             "iso_3166_1_a3": "ARE", 
             "name": "UNITED ARAB EMIRATES", 
-            "printable_name": "United Arab Emirates", 
+            "printable_name": "The United Arab Emirates",
             "display_order": 0, 
             "iso_3166_1_numeric": 784, 
             "is_shipping_country": false
@@ -2765,7 +2765,7 @@
         "fields": {
             "iso_3166_1_a3": "USA", 
             "name": "UNITED STATES", 
-            "printable_name": "United States of America", 
+            "printable_name": "The United States of America",
             "display_order": 0, 
             "iso_3166_1_numeric": 840, 
             "is_shipping_country": false
@@ -2777,7 +2777,7 @@
         "fields": {
             "iso_3166_1_a3": "UMI", 
             "name": "UNITED STATES MINOR OUTLYING ISLANDS", 
-            "printable_name": "United States Minor Outlying Islands", 
+            "printable_name": "The United States Minor Outlying Islands",
             "display_order": 0, 
             "iso_3166_1_numeric": 581, 
             "is_shipping_country": false
