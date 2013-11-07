@@ -11,6 +11,9 @@ env:
   - DJANGO_VERSION=1.5.5
 install:
 - easy_install Django==$DJANGO_VERSION
+before_script:
+  - mysql -e 'create database oscar_vagrant;'
+  - psql -c 'create database oscar_vagrant;' -U postgres
 script:
 - make travis
 after_success:
