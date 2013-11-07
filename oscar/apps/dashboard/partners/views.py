@@ -244,7 +244,7 @@ class PartnerUserUnlinkView(generic.View):
                 {'user_name': name,
                  'partner_name': partner.name,
                  'user_pk': user_pk,
-                 'partner_pk': partner_pk })
+                 'partner_pk': partner_pk})
             messages.success(self.request, msg, extra_tags='safe')
         else:
             messages.error(
@@ -280,5 +280,3 @@ class PartnerUserUpdateView(generic.UpdateView):
         messages.success(self.request,
                          _("User '%s' was updated successfully.") % name)
         return reverse_lazy('dashboard:partner-list')
-
-
