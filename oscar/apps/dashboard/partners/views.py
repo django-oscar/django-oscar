@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.models import Permission
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.db.models import get_model
 from django.http import HttpResponseRedirect
@@ -203,7 +204,7 @@ class PartnerUserSelectView(generic.ListView):
     def get_queryset(self):
         if self.form.is_valid():
             email = normalise_email(self.form.cleaned_data['email'])
-            return User.objects.filter(is_staff=True, email__icontains=email)
+            return User.objects.filter(email__icontains=email)
         else:
             return User.objects.none()
 
@@ -220,6 +221,9 @@ class PartnerUserLinkView(generic.View):
         name = user.get_full_name() or user.email
         if not partner.users.filter(pk=user_pk).exists():
             partner.users.add(user)
+            dashboard_access_perm = Permission.objects.get(codename='dashboard_access',
+                                                           content_type__app_label='partner')
+            user.user_permissions.add(dashboard_access_perm)
             messages.success(
                 request, _("User '%(name)s' was linked to '%(partner_name)s'") %
                 {'name': name, 'partner_name': partner.name})
@@ -239,6 +243,9 @@ class PartnerUserUnlinkView(generic.View):
         partner = get_object_or_404(Partner, pk=partner_pk)
         if partner.users.filter(pk=user_pk).exists():
             partner.users.remove(user)
+            dashboard_access_perm = Permission.objects.get(codename='dashboard_access',
+                                                           content_type__app_label='partner')
+            user.user_permissions.remove(dashboard_access_perm)
             msg = render_to_string(
                 'dashboard/partners/messages/user_unlinked.html',
                 {'user_name': name,
@@ -267,7 +274,8 @@ class PartnerUserUpdateView(generic.UpdateView):
         return get_object_or_404(User,
                                  pk=self.kwargs['user_pk'],
                                  partners__pk=self.kwargs['partner_pk'],
-                                 is_staff=True)
+                                 user_permissions__codename='dashboard_access',
+                                 user_permissions__content_type__app_label='partner')
 
     def get_context_data(self, **kwargs):
         ctx = super(PartnerUserUpdateView, self).get_context_data(**kwargs)

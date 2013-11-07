@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.models import Permission
 from django.core import validators
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
@@ -29,9 +30,11 @@ class NewUserForm(EmailUserCreationForm):
 
     def save(self):
         user = super(NewUserForm, self).save(commit=False)
-        user.is_staff = True
         user.save()
         self.partner.users.add(user)
+        dashboard_access_perm = Permission.objects.get(codename='dashboard_access',
+                                                       content_type__app_label='partner')
+        user.user_permissions.add(dashboard_access_perm)
         return user
 
     class Meta:
