@@ -312,6 +312,7 @@
                         </div>
                     {% endblock product_images %}
 
+                    {% block stock_record %}
                     <div class="tab-pane" id="product_stock">
                         <table class="table table-striped table-bordered">
                             <caption>{% trans "Stock and price information" %}</caption>
@@ -361,6 +362,7 @@
                             </tbody>
                         </table>
                     </div>
+                    {% endblock stock_record %}
 
                     {% block recommended_products %}
                         <div class="tab-pane" id="product_recommended">
