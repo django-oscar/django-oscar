@@ -7,7 +7,8 @@ your project.  It builds upon the steps described in
 :doc:`/topics/customisation`. Please read it first and ensure that you've:
 
 * Created a Python module with the the same label
-* Use custom root and local ``app.py``
+* Added it as Django app to ``INSTALLED_APPS``
+* Use custom ``app.py``
 
 Example
 -------
