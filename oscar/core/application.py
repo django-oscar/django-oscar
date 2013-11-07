@@ -49,8 +49,13 @@ class Application(object):
                 pattern._callback = decorator(pattern._callback)
         return urlpatterns
 
-    def get_permissions(self, urlname):
-        return self.permissions_map.get(urlname, self.default_permissions)
+    def get_permissions(self, url):
+        # url namespaced?
+        if url is not None and ':' in url:
+            view_name = url.split(':')[1]
+        else:
+            view_name = url
+        return self.permissions_map.get(view_name, self.default_permissions)
 
     def get_url_decorator(self, pattern):
         """
