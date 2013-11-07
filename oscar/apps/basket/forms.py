@@ -17,6 +17,8 @@ class BasketLineForm(forms.ModelForm):
 
     def __init__(self, strategy, *args, **kwargs):
         self.strategy = strategy
+        if 'instance' in kwargs:
+            kwargs['instance'].strategy = strategy
         super(BasketLineForm, self).__init__(*args, **kwargs)
 
     def clean_quantity(self):
