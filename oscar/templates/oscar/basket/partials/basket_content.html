@@ -28,8 +28,9 @@
         <div class="basket-title hidden-phone">
             <div class="row-fluid">
                 <h4 class="span6">{% trans "Items to buy now" %}</h4>
-                <h4 class="span4">{% trans "Quantity" %}</h4>
+                <h4 class="span2">{% trans "Quantity" %}</h4>
                 <h4 class="span2 align-right">{% trans "Price" %}</h4>
+                <h4 class="span2 align-right">{% trans "Total" %}</h4>
             </div>
         </div>
     {% endblock %}
@@ -56,7 +57,7 @@
                                 <h4><a href="{{ product.get_absolute_url }}">{{ line.description }}</a></h4>
                                 <p class="availability {{ session.availability.code }}">{{ session.availability.message }}</p>
                             </div>
-                            <div class="span4">
+                            <div class="span2">
                                 <div class="checkout-quantity control-group {% if form.errors %}error{% endif %}">
                                     {{ form.quantity }}
                                     <button class="btn" type="submit">{% trans "Update" %}</button>
@@ -81,6 +82,15 @@
                                         {{ session.price.incl_tax|currency:session.price.currency }}
                                     {% else %}
                                         {{ session.price.excl_tax|currency:session.price.currency }}
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="span2">
+                                <p class="price_color align-right">
+                                    {% if basket.is_tax_known %}
+                                        {{ line.line_price_incl_tax|currency:basket.currency }}
+                                    {% else %}
+                                        {{ line.line_price_excl_tax|currency:basket.currency }}
                                     {% endif %}
                                 </p>
                             </div>
