@@ -10,12 +10,6 @@
 {% load i18n %}
 {% load stockrecord_tags %}
 
-{% block extrastyles %}
-    {{ block.super }}
-    <!-- Colorbox (a lightbox plugin) for image galleries -->
-    <link rel="stylesheet" href="{% static "oscar/js/colorbox/colorbox.css" %}" type="text/css" media="screen" charset="utf-8"/>
-{% endblock %}
-
 {% block title %}
     {{ product.title }} | {{ block.super }}
 {% endblock %}
@@ -211,34 +205,26 @@
         <div class="sub-header">
             <h2>{% trans "Related items" %}</h2>
         </div>
-        <div class="es-carousel-wrapper">
-            <div class="es-carousel">
-                <ul>
-                    {% for product in product.related_products.all %}
-                    <li>
-                        {% render_product product %}
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
+        <ul class="row-fluid">
+            {% for product in product.related_products.all|slice:":6" %}
+            <li class="span2 {% if forloop.counter0|divisibleby:"6" %}no-margin{% endif %}">
+                {% render_product product %}
+            </li>
+            {% endfor %}
+        </ul>
     {% endif %}
 
     {% if product.recommended_products.count %}
         <div class="sub-header">
             <h2>{% trans "Recommended items" %}</h2>
         </div>
-        <div class="es-carousel-wrapper">
-            <div class="es-carousel">
-                <ul>
-                    {% for product in product.recommended_products.all %}
-                    <li>
-                        {% render_product product %}
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
+        <ul class="row-fluid">
+            {% for product in product.recommended_products.all|slice:":6" %}
+            <li class="span2 {% if forloop.counter0|divisibleby:"6" %}no-margin{% endif %}">
+                {% render_product product %}
+            </li>
+            {% endfor %}
+        </ul>
     {% endif %}
     
     {% recently_viewed_products %}
@@ -248,8 +234,4 @@
 
 {% block extrascripts %}
     {{ block.super }}
-    <!-- Responsive gallery js -->
-    <script src="{% static "oscar/js/colorbox/jquery.colorbox-min.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/responsivegallery/jquery.tmpl.min.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/responsivegallery/gallery.js" %}" type="text/javascript" charset="utf-8"></script>
 {% endblock %}

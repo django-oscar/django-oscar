@@ -83,7 +83,6 @@ var oscar = (function(o, $) {
         init: function() {
             if (o.responsive.isDesktop()) {
                 o.responsive.initNav();
-                o.responsive.initCarousel();
             }
         },
         isDesktop: function() {
@@ -102,24 +101,6 @@ var oscar = (function(o, $) {
                 // Set margin top of aside allow space for open navigation
                 $sidebar.css({ marginTop: $browse.outerHeight() });
             }
-        },
-        initCarousel: function() {
-            $('.es-carousel-wrapper').each(function(){
-                var gallery = $(this).parent('.rg-thumbs').length;
-                // Don't apply this to the gallery carousel
-                if (gallery <= 0) {
-                    var imageWidth = 175,
-                        minProducts = 4;
-                    if ($(this).hasClass('wide')) {
-                        minProducts = 5;
-                    }
-                    $(this).elastislide({
-                        imageW: imageWidth,
-                        minItems: minProducts,
-                        onClick: function() {return true;}
-                    });
-                }
-            });
         },
         initSlider: function() {
             $('.carousel').carousel({

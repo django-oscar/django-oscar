@@ -6,14 +6,9 @@
         <h2>{% trans 'Products you recently viewed' %}</h2>
     </div>
 
-    <!-- Elastislide Carousel -->
-    <div id="carousel" class="es-carousel-wrapper">
-        <div class="es-carousel">
-            <ul>
-                {% for product in products %}
-                    <li>{% render_product product %}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
+    <ul class="row-fluid">
+        {% for product in products|slice:":6" %}
+            <li class="span2 {% if forloop.counter0|divisibleby:"6" %}no-margin{% endif %}">{% render_product product %}</li>
+        {% endfor %}
+    </ul>
 {% endif %}
