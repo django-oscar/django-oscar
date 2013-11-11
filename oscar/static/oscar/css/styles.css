@@ -6676,6 +6676,35 @@ input[type="text"][id*="quantity"] {
   background-color: #ffffff;
   border-color: rgba(0, 0, 0, 0.1);
 }
+.carousel {
+  margin-bottom: 40px;
+}
+.carousel-indicators {
+  top: auto;
+  right: auto;
+  bottom: -20px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+.carousel-indicators li {
+  display: inline-block;
+  *display: inline;
+  *text-indent: 0;
+  zoom: 1;
+  float: none;
+  background-color: #ccc;
+  background-color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  text-align: center;
+}
+.carousel-indicators .active {
+  background-color: #000;
+}
+.carousel-inner > .item > img,
+.carousel-inner > .item > a > img {
+  margin: 0 auto;
+}
 .es-carousel-wrapper {
   padding: 1px 20px;
   -moz-border-radius: 4px;

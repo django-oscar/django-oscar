@@ -1,6 +1,40 @@
 // OSCAR PLUGINS STYLES
 // -----------
 
+
+// Carousel overrides, idicators in the center bottom
+.carousel {
+  margin-bottom: @baseLineHeight * 2;
+}
+.carousel-indicators {
+  top: auto;
+  right: auto;
+  bottom:-20px;
+  left:0;
+  width:100%;
+  text-align: center;
+  li {
+    display: inline-block;
+    *display: inline;
+    *text-indent: 0;
+    zoom: 1;
+    float: none;
+    background-color: #ccc;
+    background-color: rgba(0,0,0,.5);
+    cursor: pointer;
+    text-align: center;
+
+  }
+  .active {
+    background-color: #000;
+  }
+}
+// Center the carousel image
+.carousel-inner > .item > img, 
+.carousel-inner > .item > a > img {
+	margin:0 auto;
+}
+
 // These styles relate to the Elastislide carousel used for product promotion
 // and the gallery
 .es-carousel-wrapper {

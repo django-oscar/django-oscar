@@ -23,9 +23,7 @@ var oscar = (function(o, $) {
     // This block may need removing after reworking of promotions app
     o.promotions = {
         init: function() {
-            $('#myCarousel').carousel({
-                interval: 6000
-            });
+
         }
     };
 
@@ -86,7 +84,6 @@ var oscar = (function(o, $) {
             if (o.responsive.isDesktop()) {
                 o.responsive.initNav();
                 o.responsive.initCarousel();
-                o.responsive.initSlider();
             }
         },
         isDesktop: function() {
@@ -125,13 +122,9 @@ var oscar = (function(o, $) {
             });
         },
         initSlider: function() {
-            if ($.fn.bxSlider) {
-                $('.bxslider').bxSlider({
-                    mode: 'fade',
-                    auto: true,
-                    pause: 7500
-                });
-            }
+            $('.carousel').carousel({
+                interval: 20000
+            });
         }
     };
 
@@ -253,6 +246,7 @@ var oscar = (function(o, $) {
         o.forms.init();
         o.page.init();
         o.responsive.init();
+        o.responsive.initSlider();
         o.compatibility.init();
     };
 
