@@ -125,9 +125,11 @@ class CustomerApplication(Application):
                 name='notifications-detail'),
 
             # Alerts
-            url(r'^alerts/$', self.alert_list_view.as_view(),
+            url(r'^alerts/$',
+                login_required(self.alert_list_view.as_view()),
                 name='alerts-list'),
-            url(r'^alerts/create/(?P<pk>\d+)/$', self.alert_create_view.as_view(),
+            url(r'^alerts/create/(?P<pk>\d+)/$',
+                self.alert_create_view.as_view(),
                 name='alert-create'),
             url(r'^alerts/confirm/(?P<key>[a-z0-9]+)/$',
                 self.alert_confirm_view.as_view(),

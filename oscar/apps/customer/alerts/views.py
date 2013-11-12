@@ -26,7 +26,7 @@ class ProductAlertListView(PageTitleMixin, generic.ListView):
         return ProductAlert.objects.select_related().filter(
             user=self.request.user,
             date_closed=None,
-            )
+        )
 
 
 class ProductAlertCreateView(generic.CreateView):
