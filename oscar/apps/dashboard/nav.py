@@ -61,7 +61,10 @@ class Node(object):
         except (ImportError, AttributeError):
             raise ImproperlyConfigured("Please follow Oscar's default dashboard layout or replace access_fn")
 
-        view_name = self.url_name.split(':')[1]
+        if ':' in self.url_name:
+            view_name = self.url_name.split(':')[1]
+        else:
+            view_name = self.url_name
         permissions = app_instance.get_permissions(view_name)
         return check_permissions(user, permissions)
 
