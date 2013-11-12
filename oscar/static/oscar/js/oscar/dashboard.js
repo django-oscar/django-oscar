@@ -88,6 +88,18 @@ var oscar = (function(o, $) {
                         'stepMinute': $ele.data('stepminute')});
                     $ele.datetimepicker(config);
                 });
+
+                var defaultTimepickerConfig = {
+                    'timeFormat': o.dashboard.options.timeFormat,
+                    'stepMinute': o.dashboard.options.stepMinute
+                };
+                $('input[name$="time"]').not('input[name$="datetime"]').each(function(ind, ele) {
+                    var $ele = $(ele),
+                        config = $.extend({}, defaultTimepickerConfig, {
+                        'timeFormat': $ele.data('timeformat'),
+                        'stepMinute': $ele.data('stepminute')});
+                    $ele.timepicker(config);
+                });
             }
         },
         initWYSIWYG: function() {
