@@ -71,18 +71,18 @@
                                     <h3>{{ product.get_title }}</h3>
                                     <hr />
                                     <div class="row-fluid">
-                                        <div class="pull-left">
+                                        <div class="span4">
                                             {% if product.primary_image.original.url %}
                                                 {% with image=product.primary_image %}
-                                                    {% thumbnail image.original "240x240" upscale=False as thumb %}
-                                                    <a href="{{ image.original.url }}" rel="lightbox_{{ product.upc|default:"-" }}">
-                                                        <img src="{% static thumb.url %}" alt="{{ product.get_title }}" class="img-polaroid" data-description="{% if image.caption %}{{ image.caption }}{% endif %}">
-                                                    </a>
+                                                    {% thumbnail image.original "240" upscale=False as thumb %}
+                                                        <a href="{{ image.original.url }}" rel="lightbox_{{ product.upc|default:"-" }}" class="thumbnail">
+                                                            <img src="{% static thumb.url %}" class="row-fluid" alt="{{ product.get_title }}" data-description="{% if image.caption %}{{ image.caption }}{% endif %}">
+                                                        </a>
                                                     {% endthumbnail %}
                                                 {% endwith %}
                                             {% endif %}
                                         </div>
-                                        <div class="span9">
+                                        <div class="span8">
                                             <p><strong>{% trans "Description" %}</strong><br /> {{ product.description|safe }}</p>
 
                                             {% with stats=product.stats %}
