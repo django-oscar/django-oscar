@@ -8,16 +8,7 @@
     {% if all_images|length > 1 %}
 
         <div id="product-gallery" class="carousel slide">
-            <ol class="carousel-indicators">
-                {% for image in all_images %}
-                    <li data-target="#product-gallery" data-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}">
-                        {% thumbnail image.original "50x38" crop="center" as thumb %}
-                        <img src="{% static thumb.url %}" alt="{{ product.get_title }}" />
-                        {% endthumbnail %}
-                    </li>
-                {% endfor %}
-            </ol>
-            <div>
+            <div class="thumbnail">
                 <div class="carousel-inner">
                 {% for image in all_images %}
                     <div class="item {% if forloop.first %}active{% endif %}">
@@ -29,6 +20,16 @@
                 </div>
             </div>
 
+            <ol class="carousel-indicators thumbnail">
+                {% for image in all_images %}
+                    <li data-target="#product-gallery" data-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}">
+                        {% thumbnail image.original "65x55" crop="center" as thumb %}
+                        <img src="{% static thumb.url %}" alt="{{ product.get_title }}" />
+                        {% endthumbnail %}
+                    </li>
+                {% endfor %}
+            </ol>
+
             <a class="carousel-control left" href="#product-gallery" data-slide="prev">&lsaquo;</a>
             <a class="carousel-control right" href="#product-gallery" data-slide="next">&rsaquo;</a>
         </div>
@@ -37,7 +38,7 @@
 
         {# Only one image to show #}
         <div id="product-gallery" class="carousel">
-            <div>
+            <div class="thumbnail">
                 <div class="carousel-inner">
                     <div class="item active">
                     {% with image=product.primary_image %}

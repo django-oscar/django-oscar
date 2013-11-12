@@ -37,16 +37,6 @@
 
 // Multiple image gallery carousel over-rides
 #product-gallery {
-  &.carousel {
-    height:412px;
-    > div {
-      border:1px solid @grayLighter;
-      padding:5px;
-    }
-  }
-  &.slide {
-    margin-bottom: @baseLineHeight * 6;
-  }
   .carousel-inner > .item {
     height:400px;
     line-height: 400px;
@@ -58,20 +48,36 @@
     vertical-align: middle;
     max-height: 400px;
   }
+  .carousel-control {
+    left:-20px;
+    top: 200px;
+  }
+  .carousel-control.right {
+    left:auto;
+    right: -20px;
+  }
   .carousel-indicators {
-    bottom:auto;
-    top:101%;
+    position:static;
+    margin-top:1%;
+    *margin-bottom:@baseLineHeight;
+    width:auto;
+    display:block;
+    .clearfix();
     li {
-      width:50px;
-      height:38px;
+      width:17%;
+      height:auto;
       display: block;
       float: left;
-      margin-top:5px;
+      margin:@baseLineHeight/4;
       text-indent: 0;
+      background-color:#fff;
       .opacity(50);
     }
     .active {
       .opacity(100);
     }
+  }
+  .thumbnail {
+    .transition(none);
   }
 }
