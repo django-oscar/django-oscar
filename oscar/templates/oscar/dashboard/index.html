@@ -83,7 +83,12 @@
     
     <div class="span4">
         <table class="table table-striped table-bordered table-hover">
-			<caption><i class="icon-shopping-cart icon-large"></i>{% trans "Orders - All Time" %}<a href="{% url 'dashboard:order-list' %}" class="btn pull-right"><i class="icon-shopping-cart icon-large"></i>{% trans "Manage" %}</a></caption>
+			<caption>
+                <a href="{% url 'dashboard:order-list' %}" class="btn pull-right">
+                    <i class="icon-shopping-cart"></i> {% trans "Manage" %}
+                </a>
+                <i class="icon-shopping-cart icon-large"></i>{% trans "Orders - All Time" %}
+            </caption>
             <tr>
                 <th class="span10">{% trans "Total orders" %}</th>
                     <td class="span2" >{{ total_orders }}</td>
@@ -128,10 +133,14 @@
             <caption>
                 <div class="btn-toolbar pull-right">
                   <div class="btn-group">
-                    <a href="{% url 'dashboard:catalogue-product-list' %}" class="btn"><i class="icon-sitemap icon-large"></i>{% trans "Manage" %}</a>
+                    <a href="{% url 'dashboard:catalogue-product-list' %}" class="btn">
+                        <i class="icon-sitemap"></i> {% trans "Manage" %}
+                    </a>
                   </div>
                   <div class="btn-group">
-                      <a href="{% url 'dashboard:stock-alert-list' %}" class="btn"><i class="icon-sitemap icon-large"></i>{% trans "View Stock Alerts" %}</a>
+                    <a href="{% url 'dashboard:stock-alert-list' %}" class="btn">
+                        <i class="icon-sitemap"></i> {% trans "View Stock Alerts" %}
+                    </a>
                   </div>
                 </div>
                 <i class="icon-sitemap icon-large"></i>{% trans "Catalogue and stock" %}

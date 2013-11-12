@@ -68,17 +68,6 @@ h3.app-ico:before {
 td .btn-toolbar {
   margin:0;
 }
-//ICONS
-.icon-large:before {
-  font-size: 18px;
-}
-.btn {
-  .icon-large {
-    position:relative;
-    top:2px;
-    padding-right: 5px;
-  }
-}
 
 // FORM CHANGES
 // -----------
@@ -331,9 +320,7 @@ body {
 .navbar-primary .nav {
   > li i {
     color: #dcdcdc;
-    font-family: 'FontAwesome';
     padding-right: 12px;
-    font-size: 16px;
   }
 }
 
@@ -356,10 +343,15 @@ button {
 caption,
 .table-header {
   .clearfix();
+  .icon-large {
+    &:before {
+      font-size: 18px;
+    }
+  }
   h2,h3 {
     font-weight: bold;
     font-size: 14px;
-    line-height: 28px;
+    line-height: normal;
     margin:0;
     > i {
       padding-right: 10px;
@@ -375,7 +367,7 @@ caption,
   padding: 6px 10px;
   .border-radius(3px 3px 0 0);
   text-align: left;
-  line-height: 28px;
+  // line-height: 28px;
   .btn-toolbar {
     margin-top:0;
     margin-bottom:0;
