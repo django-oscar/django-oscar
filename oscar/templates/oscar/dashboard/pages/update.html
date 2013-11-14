@@ -1,5 +1,6 @@
 {% extends 'dashboard/layout.html' %}
-{% load currency_filters %}
+
+{% load url from future %}
 {% load i18n %}
 
 {% block body_class %}create-page pages{% endblock %}
@@ -10,11 +11,11 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:page-list %}">{% trans "Pages" %}</a>
+        <a href="{% url 'dashboard:page-list' %}">{% trans "Pages" %}</a>
         <span class="divider">/</span>
     </li>
     <li class="active">{{ title }}</li>
@@ -31,7 +32,7 @@
 </div>
 
 <form action="." method="post" class="well form-stacked wysiwyg" enctype="multipart/form-data">
-	{% csrf_token %}
+    {% csrf_token %}
     {% include 'partials/form.html' %}
 </form>
 

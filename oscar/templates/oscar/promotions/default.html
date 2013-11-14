@@ -1,4 +1,5 @@
 {% load currency_filters %}
+{% load product_tags %}
 {% load i18n %}
 
 <h2>{{ block.title }}</h2>
@@ -6,20 +7,7 @@
 {{ block.description|safe }}
 
 <ol>
-{% for product in block.products.all %}
-<li>
-    <a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a><br/>
-    {% if product.is_group %}
-        From {{ product.min_variant_price_incl_tax|currency }}
-    {% else %}
-        {% if product.has_stockrecord %} 
-            {{ product.stockrecord.price_incl_tax|currency }}<br/>
-            {{ product.stockrecord.availability }}
-        {% else %}
-		{% trans "Not available" %}
-        {% endif %}
-    {% endif %}    
-</li>
-{% endfor %}
+    {% for product in block.products.all %}
+        <li>{% render_product product %}</li>
+    {% endfor %}
 </ol>
-

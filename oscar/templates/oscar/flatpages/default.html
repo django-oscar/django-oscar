@@ -1,13 +1,24 @@
 {% extends "layout.html" %}
+{% load i18n %}
 
 {% block title %}
-{{ flatpage.title}} | {{ block.super }}
+    {{ flatpage.title}} | {{ block.super }}
 {% endblock %}
 
 {% block headertext %}
-{{ flatpage.title }}
+    {{ flatpage.title }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'promotions:home' %}">{% trans "Home" %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li class="active">{{ flatpage.title }}</li>
+    </ul>
 {% endblock %}
 
 {% block content %}
-<article>{{ flatpage.content|linebreaks }}</article>
+    <article>{{ flatpage.content|linebreaks }}</article>
 {% endblock %}

@@ -17,6 +17,6 @@ in the bootstrap folder.
 Compiling less
 --------------
 
-Use the helper script to build the CSS files::
+You can compile the CSS from the root of the project using a make target::
     
-    ./generate_css.sh
+    make css

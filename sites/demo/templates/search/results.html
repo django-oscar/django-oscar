@@ -1,0 +1,43 @@
+{% extends "oscar/search/results.html" %}
+{% load currency_filters %}
+{% load url from future %}
+{% load thumbnail %}
+{% load product_tags %}
+{% load i18n %}
+
+{% block column_left %}
+    <div class="aside-options">
+        <h4>{% trans "Refine your search" %}</h4>
+        <dl>
+            {% if facet_data.category %}
+                {% include 'search/partials/facet.html' with name='Category' items=facet_data.category %}
+            {% endif %}
+
+            {% if facet_data.price_range %}
+                {% include 'search/partials/facet.html' with name='Price range' items=facet_data.price_range %}
+            {% endif %}
+        </dl>
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    {% if suggestion %}
+        {% trans 'Did you mean' %} <a href="{% url 'search:search' %}?q={{ suggestion }}">{{ suggestion }}</a>?
+    {% endif %}
+
+    {% if page.object_list %}
+        <section class="product-list">
+            {% include "search/partials/pagination.html" %}
+            <ol class="row-fluid">
+                {% for result in page.object_list %}
+                    <li class="span3 {% if forloop.counter0|divisibleby:"4" %}no-margin{% endif %}">{% render_product result.object %}</li>
+                {% endfor %}
+            </ol>
+            {% include "search/partials/pagination.html" %}
+        </section>
+    {% else %}
+        <p>{% trans 'No search results found.' %}</p>
+    {% endif %}
+
+{% endblock %}

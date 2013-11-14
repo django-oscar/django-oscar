@@ -1,5 +1,8 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
 {% load currency_filters %}
+
 {% load i18n %}
 
 {% block body_class %}create-page{% endblock %}
@@ -14,27 +17,27 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">   	
-    <li>   	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>   	
-        <span class="divider">/</span>   	
-    </li>   	
-    <li>   	
-        <a href="{% url dashboard:offer-list %}">{% trans "Offer management" %}</a>
-        <span class="divider">/</span>   	
-    </li>   	
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url 'dashboard:offer-list' %}">{% trans "Offer management" %}</a>
+        <span class="divider">/</span>
+    </li>
     {% if offer.pk %}
-    <li>   	
-        <a href="{% url dashboard:offer-detail offer.pk %}">{{ offer.name }}</a>   	
-        <span class="divider">/</span>   	
-    </li>   	
+    <li>
+        <a href="{% url 'dashboard:offer-detail' pk=offer.pk %}">{{ offer.name }}</a>
+        <span class="divider">/</span>
+    </li>
     {% else %}
     <li>
         {% trans "Create new offer" %}
         <span class="divider">/</span>
     </li>
     {% endif %}
-    <li class="active">{{ title }}</li>   	
+    <li class="active">{{ title }}</li>
 </ul>
 {% endblock %}
 
@@ -66,14 +69,20 @@
                     {% endblock %}
                     {% block form_extradata %}{% endblock %}
                 </div>
+
                 {% block form_actions %}
 
                     <div class="fixed-actions-group">
                         <div class="form-actions">
                             <div class="pull-right">
+                            {% block form_actions_buttons %}
                                 <button class="btn btn-primary" type="submit">{% block submittext %}{% trans "Continue" %}{% endblock %}</button>
+                                {% if offer %}{# When editing offer, show saving button #}
+                                    <button class="btn" name="save" type="submit">{% trans "Save changes" %}</button>
+                                {% endif %}
+                            {% endblock %}
                             </div>
-                            <a class="btn" href="{% url dashboard:offer-list %}">{% trans "cancel" %}</a>
+                            <a class="btn" href="{% url 'dashboard:offer-list' %}">{% trans "cancel" %}</a>
                         </div>
                     </div>
 

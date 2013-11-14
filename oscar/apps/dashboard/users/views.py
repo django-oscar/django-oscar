@@ -1,21 +1,26 @@
 from django.db.models import Q, get_model
 from django.contrib import messages
-from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.views.generic import ListView, DetailView, DeleteView, UpdateView
+from django.views.generic import ListView, DetailView, DeleteView, \
+    UpdateView, FormView
+from django.shortcuts import get_object_or_404
+from oscar.apps.customer.utils import normalise_email
 
 from oscar.views.generic import BulkEditMixin
-from oscar.core.loading import get_classes
+from oscar.core.compat import get_user_model
+from oscar.core.loading import get_class, get_classes
 
-UserSearchForm, ProductAlertSearchForm, ProductAlertUpdateForm  = get_classes(
+UserSearchForm, ProductAlertSearchForm, ProductAlertUpdateForm = get_classes(
     'dashboard.users.forms', ('UserSearchForm', 'ProductAlertSearchForm',
                               'ProductAlertUpdateForm'))
+PasswordResetForm = get_class('customer.forms', 'PasswordResetForm')
 ProductAlert = get_model('customer', 'ProductAlert')
+User = get_user_model()
 
 
-class IndexView(ListView, BulkEditMixin):
+class IndexView(BulkEditMixin, ListView):
     template_name = 'dashboard/users/index.html'
     paginate_by = 25
     model = User
@@ -45,8 +50,9 @@ class IndexView(ListView, BulkEditMixin):
         data = self.form.cleaned_data
 
         if data['email']:
-            queryset = queryset.filter(email__startswith=data['email'])
-            self.desc_ctx['email_filter'] = _(" with email matching '%s'") % data['email']
+            email = normalise_email(data['email'])
+            queryset = queryset.filter(email__startswith=email)
+            self.desc_ctx['email_filter'] = _(" with email matching '%s'") % email
         if data['name']:
             # If the value is two words, then assume they are first name and last name
             parts = data['name'].split()
@@ -86,9 +92,31 @@ class UserDetailView(DetailView):
     model = User
     context_object_name = 'customer'
 
-    def get_context_data(self, **kwargs):
-        context = super(UserDetailView, self).get_context_data(**kwargs)
-        return context
+
+class PasswordResetView(FormView):
+    form_class = PasswordResetForm
+    http_method_names = ['post']
+
+    def post(self, request, *args, **kwargs):
+        self.user = get_object_or_404(
+            User, id=kwargs['pk'])
+        return super(PasswordResetView, self).post(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        return {'data': {'email': self.user.email}}
+
+    def form_valid(self, form):
+        # The PasswordResetForm's save method sends the reset email
+        form.save(request=self.request)
+        return super(PasswordResetView, self).form_valid(form)
+
+    def get_success_url(self):
+        messages.success(
+            self.request, _("A password reset email has been sent"))
+        return reverse(
+            'dashboard:user-detail', kwargs={'pk': self.user.id}
+        )
+
 
 
 class ProductAlertListView(ListView):

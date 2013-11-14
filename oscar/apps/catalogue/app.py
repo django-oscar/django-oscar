@@ -2,6 +2,7 @@ from django.conf.urls import patterns, url, include
 
 from oscar.core.application import Application
 from oscar.apps.catalogue import views
+from oscar.apps.offer import views as offer_views
 from oscar.apps.catalogue.reviews.app import application as reviews_app
 
 
@@ -10,6 +11,7 @@ class BaseCatalogueApplication(Application):
     detail_view = views.ProductDetailView
     index_view = views.ProductListView
     category_view = views.ProductCategoryView
+    range_view = offer_views.RangeDetailView
 
     def get_urls(self):
         urlpatterns = super(BaseCatalogueApplication, self).get_urls()
@@ -17,6 +19,11 @@ class BaseCatalogueApplication(Application):
             url(r'^$', self.index_view.as_view(), name='index'),
             url(r'^(?P<product_slug>[\w-]*)_(?P<pk>\d+)/$',
                 self.detail_view.as_view(), name='detail'),
+            url(r'^category/(?P<category_slug>[\w-]+(/[\w-]+)*)_(?P<pk>\d+)/$',
+                self.category_view.as_view(), name='category'),
+            url(r'^ranges/(?P<slug>[\w-]+)/$',
+                self.range_view.as_view(), name='range'),
+            # Legacy route for the category view
             url(r'^(?P<category_slug>[\w-]+(/[\w-]+)*)/$',
                 self.category_view.as_view(), name='category'))
         return self.post_process_urls(urlpatterns)

@@ -21,8 +21,7 @@ class PageUpdateForm(forms.ModelForm):
     the same URL already exists in the system.
     """
     url = forms.CharField(max_length=128, required=False, label=_("URL"),
-                          help_text=_("Example: '/about/contact/'. Make sure"
-                                      " to have leading and trailing slashes."))
+                          help_text=_("Example: '/about/contact/'."))
 
     def clean_url(self):
         """
@@ -32,11 +31,12 @@ class PageUpdateForm(forms.ModelForm):
 
         Returns cleaned URL or raises an exception.
         """
+        url = self.cleaned_data['url']
         if 'url' in self.changed_data:
-            if not self.cleaned_data['url'].endswith('/'):
-                self.cleaned_data['url'] += '/'
-            URLDoesNotExistValidator()(self.cleaned_data['url'])
-        return self.cleaned_data['url']
+            if not url.endswith('/'):
+                url += '/'
+            URLDoesNotExistValidator()(url)
+        return url
 
     class Meta:
         model = FlatPage

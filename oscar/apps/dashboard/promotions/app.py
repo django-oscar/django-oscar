@@ -1,6 +1,5 @@
 from django.conf.urls import patterns, url
 
-from oscar.views.decorators import staff_member_required
 from oscar.core.application import Application
 from oscar.apps.dashboard.promotions import views
 from oscar.apps.promotions.conf import PROMOTION_CLASSES
@@ -8,6 +7,8 @@ from oscar.apps.promotions.conf import PROMOTION_CLASSES
 
 class PromotionsDashboardApplication(Application):
     name = None
+    default_permissions = ['is_staff', ]
+
     list_view = views.ListView
     page_list = views.PageListView
     page_detail = views.PageDetailView
@@ -25,14 +26,16 @@ class PromotionsDashboardApplication(Application):
     def get_urls(self):
         urlpatterns = patterns('',
             url(r'^$', self.list_view.as_view(), name='promotion-list'),
-            url(r'^pages/$', self.page_list.as_view(), name='promotion-list-by-page'),
-            url(r'^pages/(?P<path>.+)/$', self.page_detail.as_view(), name='promotion-list-by-url'),
+            url(r'^pages/$', self.page_list.as_view(),
+                name='promotion-list-by-page'),
+            url(r'^page/(?P<path>/([\w-]+(/[\w-]+)*/)?)$',
+                self.page_detail.as_view(), name='promotion-list-by-url'),
             url(r'^create/$',
                 self.create_redirect_view.as_view(),
                 name='promotion-create-redirect'),
             url(r'^page-promotion/(?P<pk>\d+)/$',
-                self.delete_page_promotion_view.as_view(), name='pagepromotion-delete')
-            )
+                self.delete_page_promotion_view.as_view(),
+                name='pagepromotion-delete'))
 
         for klass in PROMOTION_CLASSES:
             code = klass.classname()
@@ -45,13 +48,9 @@ class PromotionsDashboardApplication(Application):
                     name='promotion-update'),
                 url(r'^delete/(?P<ptype>%s)/(?P<pk>\d+)/$' % code,
                     getattr(self, 'delete_%s_view' % code).as_view(),
-                    name='promotion-delete')
-            )
+                    name='promotion-delete'))
 
         return self.post_process_urls(urlpatterns)
-
-    def get_url_decorator(self, url_name):
-        return staff_member_required
 
 
 application = PromotionsDashboardApplication()

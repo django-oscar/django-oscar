@@ -1,3 +1,5 @@
+import warnings
+
 from oscar.core.loading import get_class
 
 Repository = get_class('shipping.repository', 'Repository')
@@ -125,20 +127,31 @@ class CheckoutSessionData(object):
         """
         self._set('shipping', 'method_code', code)
 
-    def shipping_method(self, basket=None):
+    def shipping_method_code(self, basket):
+        """
+        Returns the shipping method code
+        """
+        return self._get('shipping', 'method_code')
+
+    def shipping_method(self, basket):
         """
         Returns the shipping method model based on the
         data stored in the session.
         """
-        if not basket:
-            basket = self.request.basket
-        code = self._get('shipping', 'method_code')
+        warnings.warn((
+            "shipping_method is deprecated as the functionality has "
+            "been moved to the get_shipping_method from the checkout "
+            "session mixin"), DeprecationWarning)
+        code = self.shipping_method_code(basket)
         if not code:
             return None
         return Repository().find_by_code(code, basket)
 
-    def is_shipping_method_set(self):
-        return bool(self._get('shipping', 'method_code'))
+    def is_shipping_method_set(self, basket):
+        """
+        Test if a valid shipping method is stored in the session
+        """
+        return self.shipping_method_code(basket) is not None
 
     # Billing address fields
     # ======================

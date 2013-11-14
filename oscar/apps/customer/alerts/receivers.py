@@ -2,7 +2,11 @@ from django.conf import settings
 from django.db.models import get_model
 from django.db.models.signals import post_save
 from django.db import connection
-from django.contrib.auth.models import User
+
+from oscar.core.compat import get_user_model
+
+
+User = get_user_model()
 
 
 def send_product_alerts(sender, instance, created, **kwargs):

@@ -1,0 +1,5 @@
+{% load url from future %}
+{% load i18n %}
+<form method="get" action="{% url 'search:search-default' %}" class="navbar-form pull-right">
+    {{ search_form.q }}
+</form>

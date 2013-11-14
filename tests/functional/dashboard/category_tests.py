@@ -1,13 +1,15 @@
 from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
 from django.test import TestCase
 from django_dynamic_fixture import G
 
-from oscar_testsupport.testcases import WebTestCase, ClientTestCase
+from oscar.test.testcases import WebTestCase
+from oscar.core.compat import get_user_model
 from oscar.apps.catalogue.models import Category
 from oscar.apps.dashboard.catalogue.forms import CategoryForm
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
 
+
+User = get_user_model()
 
 def create_test_category_tree():
     trail = 'A > B > C'
@@ -104,6 +106,6 @@ class TestCategoryDashboard(WebTestCase):
         dashboard_index = self.app.get(reverse('dashboard:index'),
                                        user=self.staff)
         category_index = dashboard_index.click("Categories")
-        category_add = category_index.click("New category")
+        category_add = category_index.click("Create new category")
         response = category_add.form.submit()
         self.assertEqual(200, response.status_code)

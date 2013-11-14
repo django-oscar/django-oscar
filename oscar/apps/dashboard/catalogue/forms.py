@@ -2,7 +2,7 @@ from django import forms
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
-from treebeard.forms import MoveNodeForm
+from treebeard.forms import MoveNodeForm, movenodeform_factory
 
 from oscar.core.utils import slugify
 from oscar.core.loading import get_class
@@ -20,18 +20,18 @@ ProductSelect = get_class('dashboard.catalogue.widgets', 'ProductSelect')
 ProductSelectMultiple = get_class('dashboard.catalogue.widgets', 'ProductSelectMultiple')
 
 
-class CategoryForm(MoveNodeForm):
+class BaseCategoryForm(MoveNodeForm):
 
     def clean(self):
-        cleaned_data = super(CategoryForm, self).clean()
+        cleaned_data = super(BaseCategoryForm, self).clean()
 
         name = cleaned_data.get('name')
         ref_node_pk = cleaned_data.get('_ref_node_id')
         pos = cleaned_data.get('_position')
 
         if name and self.is_slug_conflicting(name, ref_node_pk, pos):
-            raise forms.ValidationError(_('Category with the given path'
-                                          ' already exists.'))
+            raise forms.ValidationError(
+                _('Category with the given path already exists.'))
         return cleaned_data
 
     def is_slug_conflicting(self, name, ref_node_pk, position):
@@ -59,8 +59,7 @@ class CategoryForm(MoveNodeForm):
                 return True
         return False
 
-    class Meta(MoveNodeForm.Meta):
-        model = Category
+CategoryForm = movenodeform_factory(Category, form=BaseCategoryForm)
 
 
 class ProductSearchForm(forms.Form):
@@ -71,17 +70,35 @@ class ProductSearchForm(forms.Form):
 class StockRecordForm(forms.ModelForm):
 
     def __init__(self, product_class, *args, **kwargs):
-        self.product_class = product_class
         super(StockRecordForm, self).__init__(*args, **kwargs)
 
         # If not tracking stock, we hide the fields
-        if not self.product_class.track_stock:
+        if not product_class.track_stock:
             del self.fields['num_in_stock']
             del self.fields['low_stock_threshold']
+        else:
+            self.fields['price_excl_tax'].required = True
+            self.fields['num_in_stock'].required = True
 
     class Meta:
         model = StockRecord
-        exclude = ('product', 'num_allocated', 'price_currency')
+        exclude = ('product', 'num_allocated')
+
+
+BaseStockRecordFormSet = inlineformset_factory(
+    Product, StockRecord, form=StockRecordForm, extra=1)
+
+
+class StockRecordFormSet(BaseStockRecordFormSet):
+
+    def __init__(self, product_class, *args, **kwargs):
+        self.product_class = product_class
+        super(StockRecordFormSet, self).__init__(*args, **kwargs)
+
+    def _construct_form(self, i, **kwargs):
+        kwargs['product_class'] = self.product_class
+        return super(StockRecordFormSet, self)._construct_form(
+            i, **kwargs)
 
 
 def _attr_text_field(attribute):
@@ -91,7 +108,7 @@ def _attr_text_field(attribute):
 
 def _attr_textarea_field(attribute):
     return forms.CharField(label=attribute.name,
-               widget=forms.Textarea(),
+                           widget=forms.Textarea(),
                            required=attribute.required)
 
 
@@ -173,12 +190,15 @@ class ProductForm(forms.ModelForm):
         super(ProductForm, self).__init__(*args, **kwargs)
         self.add_attribute_fields()
         related_products = self.fields.get('related_products', None)
-        if self.instance.pk is not None:
-            # prevent selecting itself as parent
-            parent = self.fields['parent']
-            parent.queryset = parent.queryset.exclude(pk=self.instance.pk)
+        parent = self.fields.get('parent', None)
+
+        if parent is not None:
+            parent.queryset = self.get_parent_products_queryset()
         if related_products is not None:
             related_products.queryset = self.get_related_products_queryset()
+        if 'title' in self.fields:
+            self.fields['title'].widget = forms.TextInput(
+                attrs={'autocomplete': 'off'})
 
     def set_initial_attribute_values(self, kwargs):
         if kwargs.get('instance', None) is None:
@@ -204,6 +224,18 @@ class ProductForm(forms.ModelForm):
 
     def get_related_products_queryset(self):
         return Product.browsable.order_by('title')
+
+    def get_parent_products_queryset(self):
+        """
+        :return: Canonical products excluding this product
+        """
+        # Not using Product.browsable because a deployment might override
+        # that manager to respect a status field or such like
+        queryset = Product._default_manager.filter(parent=None)
+        if self.instance.pk is not None:
+            # Prevent selecting itself as parent
+            queryset = queryset.exclude(pk=self.instance.pk)
+        return queryset
 
     def save(self):
         object = super(ProductForm, self).save(False)

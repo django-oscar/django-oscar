@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse
+from django.utils.html import strip_tags
 from django.utils.translation import ugettext_lazy as _, ungettext
 from django.utils.timezone import now
 from django.contrib import messages
@@ -6,35 +7,38 @@ from django import http
 from django.views import generic
 from django.db.models import get_model
 
+from oscar.apps.customer.mixins import PageTitleMixin
 from oscar.views.generic import BulkEditMixin
 
 Notification = get_model('customer', 'Notification')
 
 
-class NotificationListView(generic.ListView):
+class NotificationListView(PageTitleMixin, generic.ListView):
     model = Notification
     template_name = 'customer/notifications/list.html'
     context_object_name = 'notifications'
     paginate_by = 20
+    page_title = _("Notifications")
+    active_tab = 'notifications'
 
     def get_context_data(self, **kwargs):
         ctx = super(NotificationListView, self).get_context_data(**kwargs)
-        ctx['title'] = self.title
         ctx['list_type'] = self.list_type
         return ctx
 
 
 class InboxView(NotificationListView):
-    title = _("Notifications inbox")
     list_type = 'inbox'
 
     def get_queryset(self):
         qs = self.model._default_manager.filter(
             recipient=self.request.user,
             location=self.model.INBOX)
+        # Mark unread notifications so they can be rendered differently...
         for obj in qs:
             if not obj.is_read:
                 setattr(obj, 'is_new', True)
+        # ...but then mark everything as read.
         self.mark_as_read(qs)
         return qs
 
@@ -44,7 +48,6 @@ class InboxView(NotificationListView):
 
 
 class ArchiveView(NotificationListView):
-    title = _("Archived notifications")
     list_type = 'archive'
 
     def get_queryset(self):
@@ -53,10 +56,16 @@ class ArchiveView(NotificationListView):
             location=self.model.ARCHIVE)
 
 
-class DetailView(generic.DetailView):
+class DetailView(PageTitleMixin, generic.DetailView):
     model = Notification
     template_name = 'customer/notifications/detail.html'
     context_object_name = 'notification'
+    active_tab = 'notifications'
+
+    def get_page_title(self):
+        """Append subject to page title"""
+        title = strip_tags(self.object.subject)
+        return u'%s: %s' % (_('Notification'), title)
 
     def get_queryset(self):
         return self.model._default_manager.filter(

@@ -1,14 +1,16 @@
 from django_dynamic_fixture import G
-from django.contrib.auth.models import User
 
 from mock import Mock
 import contextlib
+from nose.plugins.attrib import attr
 
-from oscar_testsupport.testcases import WebTestCase
-from oscar_testsupport.factories import create_product
-
+from oscar.test.testcases import WebTestCase
+from oscar.test.factories import create_product
+from oscar.core.compat import get_user_model
 from oscar.apps.catalogue.reviews.signals import review_added
 
+
+User = get_user_model()
 
 @contextlib.contextmanager
 def mock_signal_receiver(signal, wraps=None, **kwargs):
@@ -29,6 +31,7 @@ def mock_signal_receiver(signal, wraps=None, **kwargs):
     signal.disconnect(receiver)
 
 
+@attr('reviews')
 class TestACustomer(WebTestCase):
 
     def setUp(self):

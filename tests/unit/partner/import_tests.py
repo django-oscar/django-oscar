@@ -7,14 +7,16 @@ from oscar.apps.partner.utils import CatalogueImporter
 from oscar.apps.partner.exceptions import ImportError
 from oscar.apps.catalogue.models import ProductClass, Product
 from oscar.apps.partner.models import Partner, StockRecord
-from oscar_testsupport.factories import create_product
+from oscar.test.factories import create_product
 
 TEST_BOOKS_CSV = os.path.join(os.path.dirname(__file__), 'fixtures/books-small.csv')
 TEST_BOOKS_SEMICOLON_CSV = os.path.join(os.path.dirname(__file__), 'fixtures/books-small-semicolon.csv')
 
+
 class NullHandler(logging.Handler):
     def emit(self, record):
         pass
+
 
 logger = logging.getLogger("Null")
 logger.addHandler(NullHandler())
@@ -49,11 +51,10 @@ class ImportSmokeTest(TestCase):
     # Second row is (has no stock data):
     # "9780955337819","Better Photography",NULL,"Book"
 
-
     def setUp(self):
         self.importer = CatalogueImporter(logger)
         self.importer.handle(TEST_BOOKS_CSV)
-        self.item = Product.objects.get(upc='9780115531446')
+        self.product = Product.objects.get(upc='9780115531446')
 
     def test_all_rows_are_imported(self):
         self.assertEquals(10, Product.objects.all().count())
@@ -74,7 +75,7 @@ class ImportSmokeTest(TestCase):
             self.fail()
 
     def test_title_is_imported(self):
-        self.assertEquals("Prepare for Your Practical Driving Test", self.item.title)
+        self.assertEquals("Prepare for Your Practical Driving Test", self.product.title)
 
     def test_partner_is_created(self):
         try:
@@ -89,13 +90,15 @@ class ImportSmokeTest(TestCase):
             self.fail()
 
     def test_null_fields_are_skipped(self):
-        self.assertEquals("", self.item.description)
+        self.assertEquals("", self.product.description)
 
     def test_price_is_imported(self):
-        self.assertEquals(D('10.32'), self.item.stockrecord.price_excl_tax)
+        stockrecord = self.product.stockrecords.all()[0]
+        self.assertEquals(D('10.32'), stockrecord.price_excl_tax)
 
     def test_num_in_stock_is_imported(self):
-        self.assertEquals(6, self.item.stockrecord.num_in_stock)
+        stockrecord = self.product.stockrecords.all()[0]
+        self.assertEquals(6, stockrecord.num_in_stock)
 
 
 class ImportSemicolonDelimitedFileTest(TestCase):

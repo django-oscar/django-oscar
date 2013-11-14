@@ -1,0 +1,15 @@
+{% load staticfiles %}
+
+{% if promotion.images %}
+<ul class="bxslider">
+    {% for promotion_image in promotion.images.all %}
+        <li>
+                {% if promotion_image.link_url %}
+                <a href="{{ promotion_image.link_url }}"><img src="{% static promotion_image.image.url %}" title="{{ promotion_image.name }}" /></a>
+                {% else %}
+                <img src="{% static promotion_image.image.url %}" title="{{ promotion_image.name }}" />
+                {% endif %}
+        </li>
+    {% endfor %}
+</ul> 
+{% endif %}

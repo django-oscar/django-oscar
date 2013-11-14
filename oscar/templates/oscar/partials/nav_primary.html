@@ -1,3 +1,4 @@
+{% load url from future %}
 {% load currency_filters %}
 {% load category_tags %}
 {% load i18n %}
@@ -5,48 +6,70 @@
 <div class="navbar primary navbar-static-top navbar-inverse">
     <div class="navbar-inner">
 
-        <a class="btn btn-navbar" data-toggle="collapse" data-target=".primary-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
+        {# This is used in mobile view #}
+        <a class="btn btn-navbar btn-nav-collapse" data-toggle="collapse" data-target=".primary-collapse">
+            <span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </span>
         </a>
 
-        <a class="btn btn-navbar btn-cart visible-phone" href="{% url checkout:index %}">
+        <a class="btn btn-navbar btn-cart visible-phone" href="{% url 'basket:summary' %}">
             <i class="icon-shopping-cart"></i>
-			<strong>{% trans "Basket" %}
-            {% if request.basket.all_lines.count %}
-			{% trans "Total:" %} {{ basket.total_incl_tax|currency }}
+            {% trans "Basket" %}
+            {% if not request.basket.is_empty %}
+                {% if request.basket.is_tax_known %}
+                    {% blocktrans with total=request.basket.total_incl_tax|currency:request.basket.currency %}
+                        Total: {{ total }}
+                    {% endblocktrans %}
+                {% else %}
+                    {% blocktrans with total=request.basket.total_excl_tax|currency:request.basket.currency %}
+                        Total: {{ total }}
+                    {% endblocktrans %}
+                {% endif %}
             {% endif %}
-            </strong>
         </a>
 
-        <div class="nav-collapse primary-collapse">
-            <div id="browse" class="dropdown pull-left {% if expand_dropdown %}open{% endif %}">
-                <button class="btn btn-primary dropdown-toggle hidden-phone" {% if not expand_dropdown %}data-toggle="dropdown"{% endif %}>
-                    {% trans "Browse Store" %}
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a tabindex="-1" href="{% url catalogue:index %}">{% trans "All Products" %}</a></li>
-                    <li class="divider"></li>
-                    {% for category in categories %}
-                    <li class="dropdown-submenu">
-                        <a tabindex="-1" href="{{ category.0.get_absolute_url }}">{{ category.0.name }} {% if category.1 %}{% endif %}</a>
-                        {% if category.1 %}
-                        <ul class="dropdown-menu">
-                        {% for subcategory in category.1 %}
-                            <li><a tabindex="-1" href="{{ subcategory.0.get_absolute_url }}"> {{ subcategory.0.name }}</a></li>
-                        {% endfor %}
+        <div class="nav-collapse primary-collapse collapse">
+            {% block nav_dropdown %}
+                <ul id="browse" class="nav">
+                    <li class="dropdown active {% if expand_dropdown %}open{% endif %}">
+                        <a href="#" class="dropdown-toggle" {% if not expand_dropdown %} data-toggle="dropdown"{% endif %}>
+                            {% trans "Browse store" %}
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu" data-navigation="dropdown-menu">
+                            {% category_tree depth=2 as tree_categories %}
+                            <li><a tabindex="-1" href="{% url 'catalogue:index' %}">{% trans "All products" %}</a></li>
+                            {% if tree_categories %}
+                                <li class="divider"></li>
+                                {% for tree_category, info in tree_categories %}
+                                    {% if info.has_children %}
+                                        <li class="dropdown-submenu">
+                                            <a tabindex="-1" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
+                                            <ul class="dropdown-menu">
+                                            {% else %}
+                                                <li><a tabindex="-1" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a></li>
+                                            {% endif %}
+
+                                            {% for close in info.num_to_close %}
+                                                </ul></li>
+                                            {% endfor %}
+                                {% endfor %}
+                            {% endif %}
+                            <li class="divider"></li>
+                            {% block nav_dropdown_extra_items %}
+                                <li><a href="{% url 'offer:list' %}">{% trans "Offers" %}</a></li>
+                            {% endblock %}
                         </ul>
-                        {% endif %}
                     </li>
-                    {% endfor %}
-                    <li class="divider"></li>
-                    <li><a href="{% url offer:list %}">{% trans "Offers" %}</a></li>
+                    {% block nav_extra %}
+                    {% endblock %}
                 </ul>
-            </div>
+            {% endblock %}
             {% include "partials/search.html" %}
-        </div><!-- /.nav-collapse -->
+        </div><!-- /nav-collapse -->
 
     </div><!-- /navbar-inner -->
 </div><!-- /navbar -->

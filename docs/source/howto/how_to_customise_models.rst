@@ -2,16 +2,19 @@
 How to customise models
 =======================
 
-You must first create a local version of the app that you wish to customise.  This
-involves creating a local app with the same name and importing the equivalent models
-from Oscar into it.
+This How-to describes how to replace Oscar models with your own. This allows you
+to add fields and custom methods.  It builds upon the steps described in
+:doc:`/topics/customisation`. Please read it first and ensure that you've:
+
+* Created a Python module with the the same app label
+* Added it as Django app to ``INSTALLED_APPS``
 
 Example
 -------
 
-Suppose you want to add a video_url field to the core product model.  This means that
-you want your application to use a subclass of ``oscar.apps.catalogue.models.Product`` which
-has an additional field.
+Suppose you want to add a ``video_url`` field to the core product model.  This means
+that you want your application to use a subclass of
+:class:`oscar.apps.catalogue.abstract_models.AbstractProduct` which has an additional field.
 
 The first step is to create a local version of the "catalogue" app.  At a minimum, this 
 involves creating ``catalogue/models.py`` within your project and changing ``INSTALLED_APPS``
@@ -32,32 +35,35 @@ Next, you can modify the ``Product`` model through subclassing::
 
 Make sure to import the remaining Oscar models at the bottom of your file. 
 
+.. tip::
+
+   Using ``from ... import *`` is strange isn't it?  Yes it is, but it needs to
+   be done at the bottom of the module due to the way Django registers models.
+   The order that model classes are imported makes a difference, with only the
+   first one for a given class name being registered.
+
 The last thing you need to do now is make Django update the database schema and
-create a new column in the product table. We recommend to use South migrations 
-for this (internally Oscar already uses it) so all you need to do is create a
-new schema migration. Depending on your setup you should follow one of these
-two options:
+create a new column in the product table. We recommend using South migrations 
+for this (internally Oscar already does this) so all you need to do is create a
+new schema migration. 
 
-1. You **have not** run ``./manage.py migrate`` before
+It is possible to simply create a new catalogue migration (using ``./manage.py
+schemamigration catalogue --auto``) but this isn't recommended as any
+dependencies between migrations will need to be applied manually (by adding a
+``depends_on`` attribute to the migration class).
 
-   You can simply generate a new initial migration using::
-
-    ./manage.py schemamigration catalogue --initial
-
-2. You **have** run ``./manage.py migrate`` before
-
-   You have to copy the ``migrations`` directory from ``oscar/apps/catalogue``
-   (the same as the ``models.py`` you just copied) and put it into your
-   ``catalogue`` app.
-   Now create a new (additional) schemamigration using the ``schemamigration``
-   management command and follow the instructions::
+The recommended way to handle migrations is to copy the ``migrations`` directory
+from ``oscar/apps/catalogue`` into your new ``catalogue`` app.  Then you can
+create a new (additional) schemamigration using the ``schemamigration``
+management command::
 
     ./manage.py schemamigration catalogue --auto
+
+which will pick up any customisations to the product model.
 
 To apply the migration you just created, all you have to do is run
 ``./manage.py migrate catalogue`` and the new column is added to the product
 table in the database.
-
 
 Customising Products
 --------------------

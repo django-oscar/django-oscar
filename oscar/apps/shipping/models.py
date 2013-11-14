@@ -11,7 +11,6 @@ class ShippingMethod(models.Model):
     """
     Fields from shipping.base.ShippingMethod must be added here manually.
     """
-
     code = models.SlugField(_("Slug"), max_length=128, unique=True)
     name = models.CharField(_("Name"), max_length=128, unique=True)
     description = models.TextField(_("Description"), blank=True)
@@ -73,11 +72,12 @@ class OrderAndItemCharges(ShippingMethod):
     def set_basket(self, basket):
         self._basket = basket
 
-    def basket_charge_incl_tax(self):
+    @property
+    def charge_incl_tax(self):
         """
         Return basket total including tax
         """
-        if self.free_shipping_threshold != None and \
+        if self.free_shipping_threshold is not None and \
                 self._basket.total_incl_tax >= self.free_shipping_threshold:
             return D('0.00')
 
@@ -86,13 +86,14 @@ class OrderAndItemCharges(ShippingMethod):
             charge += line.quantity * self.price_per_item
         return charge
 
-    def basket_charge_excl_tax(self):
+    @property
+    def charge_excl_tax(self):
         """
         Return basket total excluding tax.
 
         Default implementation assumes shipping is tax free.
         """
-        return self.basket_charge_incl_tax()
+        return self.charge_incl_tax
 
 
 class WeightBased(ShippingMethod):
@@ -112,7 +113,8 @@ class WeightBased(ShippingMethod):
         verbose_name = _("Weight-based Shipping Method")
         verbose_name_plural = _("Weight-based Shipping Methods")
 
-    def basket_charge_incl_tax(self):
+    @property
+    def charge_incl_tax(self):
         weight = Scales(attribute_code=self.weight_attribute,
                         default_weight=self.default_weight).weigh_basket(
                             self._basket)
@@ -124,8 +126,9 @@ class WeightBased(ShippingMethod):
                 return D('0.00')
         return band.charge
 
-    def basket_charge_excl_tax(self):
-        return self.basket_charge_incl_tax()
+    @property
+    def charge_excl_tax(self):
+        return self.charge_incl_tax
 
     def get_band_for_weight(self, weight):
         """

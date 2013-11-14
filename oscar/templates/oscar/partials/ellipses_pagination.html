@@ -1,0 +1,25 @@
+{% load display_tags %}
+{% load ellipses_pagination %}
+{% load i18n %}
+
+{% if paginator.num_pages > 1 %}
+    <div class="pagination pagination-centered">
+        <ul>
+            {% if page_obj.has_previous %}
+                <li class="previous"><a href="?{% get_parameters page %}page={{ page_obj.previous_page_number }}">{% trans "previous" %}</a></li>
+            {% endif %}
+            {% for page_num in page_obj|ellipses_page_range %}
+                {% if page_num %}
+                    <li {% ifequal page_num page_obj.number %}class="active"{% endifequal %}>
+                        <a href="?{% get_parameters page %}page={{ page_num }}">{{ page_num }}</a>
+                    </li>
+                {% else %}
+                    <li><span>&hellip;</span></li>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li class="next"><a href="?{% get_parameters page %}page={{ page_obj.next_page_number }}">{% trans "next" %}</a></li>
+            {% endif %}
+        </ul>
+    </div>
+{% endif %}

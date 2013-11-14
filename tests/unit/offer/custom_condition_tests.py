@@ -1,9 +1,12 @@
 from django.test import TestCase
-from django.contrib.auth.models import User
 from django_dynamic_fixture import G
 
 from oscar.apps.offer import custom, models
 from oscar.apps.basket.models import Basket
+from oscar.core.compat import get_user_model
+
+
+User = get_user_model()
 
 
 class BasketOwnerCalledBarry(models.Condition):
@@ -11,7 +14,7 @@ class BasketOwnerCalledBarry(models.Condition):
     class Meta:
         proxy = True
 
-    def is_satisfied(self, basket):
+    def is_satisfied(self, offer, basket):
         if not basket.owner:
             return False
         return basket.owner.first_name.lower() == 'barry'

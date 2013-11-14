@@ -1,9 +1,12 @@
-from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django_dynamic_fixture import G
 
-from oscar_testsupport.testcases import WebTestCase
+from oscar.test.testcases import WebTestCase
+from oscar.core.compat import get_user_model
 from oscar.apps.catalogue.models import ProductClass, Category, Product
+
+
+User = get_user_model()
 
 
 class ProductWebTest(WebTestCase):
@@ -105,7 +108,7 @@ class TestCreateChildProduct(ProductWebTest):
 
     def setUp(self):
         self.pclass = G(ProductClass)
-        self.parent = G(Product)
+        self.parent = G(Product, parent=None)
         super(TestCreateChildProduct, self).setUp()
 
     def test_categories_are_not_required(self):

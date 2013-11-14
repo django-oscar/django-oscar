@@ -14,5 +14,9 @@ class InvalidShippingEvent(Exception):
     pass
 
 
+class InvalidPaymentEvent(Exception):
+    pass
+
+
 class UnableToPlaceOrder(Exception):
     pass

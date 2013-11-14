@@ -45,7 +45,7 @@ Although you have your menu in the dashboard now, it doesn't look as
 nice as the other menu items that have icons displayed next to them. So
 you probably want to add an icon to your heading.
 
-Oscar uses `Font Awesome`_ for its icons which makes it very simple to
+Oscar uses `Font Awesome`_ for its icons which makes it very simple to add
 an icon to your dashboard menu. All you need to do is find the right icon
 for your menu item. Check out `the icon list`_ to find one.
 
