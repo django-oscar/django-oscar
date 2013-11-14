@@ -217,8 +217,13 @@ class PartnerUserLinkView(generic.View):
     def post(self, request, user_pk, partner_pk):
         user = get_object_or_404(User, pk=user_pk)
         partner = get_object_or_404(Partner, pk=partner_pk)
+        self.link_user(request, user, partner)
+        return HttpResponseRedirect(reverse('dashboard:partner-manage',
+                                            kwargs={'pk': partner_pk}))
+
+    def link_user(self, request, user, partner):
         name = user.get_full_name() or user.email
-        if not partner.users.filter(pk=user_pk).exists():
+        if not partner.users.filter(pk=user.pk).exists():
             partner.users.add(user)
             messages.success(
                 request, _("User '%(name)s' was linked to '%(partner_name)s'") %
@@ -227,8 +232,6 @@ class PartnerUserLinkView(generic.View):
             messages.error(
                 request, _("User '%(name)s' is already linked to '%(partner_name)s'") %
                 {'name': name, 'partner_name': partner.name})
-        return HttpResponseRedirect(reverse('dashboard:partner-manage',
-                                            kwargs={'pk': partner_pk}))
 
 
 class PartnerUserUnlinkView(generic.View):
