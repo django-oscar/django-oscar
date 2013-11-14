@@ -100,6 +100,11 @@ class StockRecordFormSet(BaseStockRecordFormSet):
     def _construct_form(self, i, **kwargs):
         kwargs['product_class'] = self.product_class
         kwargs['user'] = self.user
+        if i == 0:
+            if not self.user.is_staff:
+                # require at least one stock record for non-is_staff users because in the product
+                # list they can see only products that have a stock record for one of their partners
+                kwargs['empty_permitted'] = False
         return super(StockRecordFormSet, self)._construct_form(
             i, **kwargs)
 
