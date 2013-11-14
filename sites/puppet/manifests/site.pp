@@ -15,6 +15,7 @@ class python_dependencies {
 		"postgresql-server-dev-9.1",
 		"libmysqlclient-dev",
 		"git-core",
+		"python-dev",
     ]
     package {
         $packages: ensure => installed,
