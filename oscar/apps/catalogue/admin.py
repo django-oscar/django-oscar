@@ -1,7 +1,6 @@
 from django.contrib import admin
-from django.db.models import get_model, Q
+from django.db.models import get_model
 from treebeard.admin import TreeAdmin
-from ajax_select import LookupChannel, make_ajax_form
 
 AttributeEntity = get_model('catalogue', 'AttributeEntity')
 AttributeEntityType = get_model('catalogue', 'AttributeEntityType')
@@ -20,20 +19,6 @@ ProductImage = get_model('catalogue', 'ProductImage')
 ProductRecommendation = get_model('catalogue', 'ProductRecommendation')
 
 
-class ProductLookup(LookupChannel):
-    """Ajax lookup for product fields using django-ajax-selects"""
-    model = Product
-
-    def get_query(self, q, request):
-        qs = (Product.objects.select_related('parent')
-                             .order_by('title', 'parent__title'))
-        qs = qs.filter(Q(title__icontains=q) | Q(parent__title__icontains=q))
-        qs = qs[:15] # Big numbers don't look well and extend long below page
-                     # we could updated css and add `overflow: scroll`
-                     # to the selection box
-        return qs
-
-
 class AttributeInline(admin.TabularInline):
     model = ProductAttributeValue
 
@@ -41,8 +26,6 @@ class AttributeInline(admin.TabularInline):
 class ProductRecommendationInline(admin.TabularInline):
     model = ProductRecommendation
     fk_name = 'primary'
-    form = make_ajax_form(ProductRecommendation, {'recommendation': 'product'},
-                          show_help_text=True)
 
 
 class CategoryInline(admin.TabularInline):
@@ -50,9 +33,15 @@ class CategoryInline(admin.TabularInline):
     extra = 1
 
 
+class ProductAttributeInline(admin.TabularInline):
+    model = ProductAttribute
+    extra = 2
+
+
 class ProductClassAdmin(admin.ModelAdmin):
     list_display = ('name', 'requires_shipping', 'track_stock')
     prepopulated_fields = {"slug": ("name",)}
+    inlines = [ProductAttributeInline]
 
 
 class ContributorAdmin(admin.ModelAdmin):
@@ -69,11 +58,10 @@ class ProductAdmin(admin.ModelAdmin):
                     'date_created')
     prepopulated_fields = {"slug": ("title",)}
     inlines = [AttributeInline, CategoryInline, ProductRecommendationInline]
-    form = make_ajax_form(Product, {'parent': 'product',
-                                    'related_products': 'product',})
 
 
 class ProductAttributeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'code', 'product_class', 'type')
     prepopulated_fields = {"code": ("name", )}
 
 

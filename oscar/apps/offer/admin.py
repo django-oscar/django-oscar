@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.db.models import get_model
-from ajax_select import make_ajax_form
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 Condition = get_model('offer', 'Condition')
@@ -31,12 +30,7 @@ class ConditionalOfferAdmin(admin.ModelAdmin):
     )
 
 
-class RangeAdmin(admin.ModelAdmin):
-    form = make_ajax_form(Range, {'included_products': 'product',
-                                  'excluded_products': 'product'})
-
-
 admin.site.register(ConditionalOffer, ConditionalOfferAdmin)
 admin.site.register(Condition, ConditionAdmin)
 admin.site.register(Benefit, BenefitAdmin)
-admin.site.register(Range, RangeAdmin)
+admin.site.register(Range)
