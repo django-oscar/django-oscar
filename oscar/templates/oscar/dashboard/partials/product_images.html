@@ -2,8 +2,13 @@
     {% for field in form %}
         {% if field.is_hidden %}
             {{ field }}
-            {% elif "original" in field.id_for_label %}
+        {% elif "original" in field.id_for_label %}
             <div>{{ field }}</div>
+            {% for error in field.errors %}
+                <ul class="help-block">
+                    <li>{{ error }}</li>
+                </ul>
+            {% endfor %}
         {% else %}
             {{ field.label_tag }}
             {{ field }}
