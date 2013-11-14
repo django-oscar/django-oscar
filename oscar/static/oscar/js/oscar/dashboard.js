@@ -59,6 +59,48 @@ var oscar = (function(o, $) {
             $('.form-stacked select').css('width', '95%');
             $('.form-inline select').css('width', '300px');
             $('select').select2({width: 'resolve'});
+            $('input.select2').each(function(i, e) {
+                var opts = {};
+                if($(e).data('ajax-url')) {
+                    opts = {
+                        'ajax': {
+                            'url': $(e).data('ajax-url'),
+                            'dataType': 'json',
+                            'results': function(data) {
+                                data.results.unshift({'id': '', 'text': '------------'});
+                                return data;
+                            },
+                            'data': function(term, page) {
+                                return {
+                                    'q': term,
+                                    'page': page
+                                };
+                            }
+                        },
+                        'multiple': $(e).data('multiple'),
+                        'initSelection': function(e, callback){
+                            if($(e).val()) {
+                                $.ajax({
+                                    'type': 'GET',
+                                    'url': $(e).data('ajax-url'),
+                                    'data': [{'name': 'initial', 'value': $(e).val()}],
+                                    'success': function(data){
+                                        if(data.results) {
+                                            if($(e).data('multiple')){
+                                                callback(data.results);
+                                            } else {
+                                                callback(data.results[0]);
+                                            }
+                                        }
+                                    },
+                                    'dataType': 'json'
+                                });
+                            }
+                        }
+                    };
+                }
+                $(e).select2(opts);
+            });
 
             o.dashboard.filereader.init();
         },

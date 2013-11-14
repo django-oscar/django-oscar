@@ -1,12 +1,13 @@
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.views import generic
-from django.db.models import get_model
+from django.db.models import get_model, Q
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_classes
+from oscar.views.generic import ObjectLookupView
 from oscar.views import sort_queryset
 
 (ProductForm,
@@ -262,6 +263,8 @@ class ProductCreateUpdateView(generic.UpdateView):
         recommended_formset.save()
         stockrecord_formset.save()
 
+        form.save()
+
         return HttpResponseRedirect(self.get_success_url())
 
     def forms_invalid(self, form, stockrecord_formset, category_formset,
@@ -417,3 +420,13 @@ class CategoryDeleteView(CategoryListMixin, generic.DeleteView):
     def get_success_url(self):
         messages.info(self.request, _("Category deleted successfully"))
         return super(CategoryDeleteView, self).get_success_url()
+
+
+class ProductLookupView(ObjectLookupView):
+    model = Product
+
+    def get_query_set(self):
+        return self.model.browsable.all()
+
+    def lookup_filter(self, qs, term):
+        return qs.filter(Q(title__icontains=term) | Q(parent__title__icontains=term))

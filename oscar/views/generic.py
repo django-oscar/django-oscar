@@ -1,10 +1,13 @@
+import json
+
 from django import forms
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.utils.encoding import smart_str
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.utils.translation import ugettext_lazy as _
+from django.views.generic.base import View
 
 import phonenumbers
 from oscar.core.phonenumber import PhoneNumber
@@ -91,6 +94,60 @@ class BulkEditMixin(object):
 
     def get_object_dict(self, ids):
         return self.model.objects.in_bulk(ids)
+
+
+class ObjectLookupView(View):
+    """Base view for json lookup for objects"""
+    def get_query_set(self):
+        return self.model.objects.all()
+
+    def format_object(self, obj):
+        return {
+            'id': obj.pk,
+            'text': unicode(obj),
+        }
+
+    def initial_filter(self, qs, value):
+        return qs.filter(pk__in=value.split(','))
+
+    def lookup_filter(self, qs, term):
+        return qs
+
+    def paginate(self, qs, page, page_limit):
+        total = qs.count()
+
+        start = (page-1) * page_limit
+        stop = start + page_limit
+
+        qs = qs[start:stop]
+
+        return qs, (page_limit * page < total)
+
+    def get_args(self):
+        GET = self.request.GET
+        return (GET.get('initial', None),
+                GET.get('q', None),
+                int(GET.get('page', 1)),
+                int(GET.get('page_limit', 20)))
+       
+    def get(self, request):
+        self.request = request
+        qs = self.get_query_set()
+
+        initial, q, page, page_limit = self.get_args()
+
+        if initial:
+            qs = self.initial_filter(qs, initial)
+            more = False
+        else:
+            if q:
+                qs = self.lookup_filter(qs, q)
+            qs, more = self.paginate(qs, page, page_limit)
+
+        return HttpResponse(json.dumps({
+            'results': map(self.format_object, qs),
+            'more': more,
+        }), mimetype='application/json')
 
 
 class PhoneNumberMixin(object):

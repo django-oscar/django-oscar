@@ -16,6 +16,7 @@ class CatalogueApplication(Application):
     }
 
     product_list_view = views.ProductListView
+    product_lookup_view = views.ProductLookupView
     product_create_redirect_view = views.ProductCreateRedirectView
     product_createupdate_view = views.ProductCreateUpdateView
     product_delete_view = views.ProductDeleteView
@@ -46,6 +47,8 @@ class CatalogueApplication(Application):
                 name='catalogue-product-list'),
             url(r'^stock-alerts/$', self.stock_alert_view.as_view(),
                 name='stock-alert-list'),
+            url(r'^product-lookup/$', self.product_lookup_view.as_view(),
+                name='catalogue-product-lookup'),
             url(r'^categories/$', self.category_list_view.as_view(),
                 name='catalogue-category-list'),
             url(r'^categories/(?P<pk>\d+)/$',
