@@ -79,7 +79,7 @@ if __name__ == '__main__':
             # Default options:
             # --stop Abort on first error/failure
             # --nocapture Don't capture STDOUT
-            args.extend(['--nocapture', '--stop', '--with-specplugin'])
+            args.extend(['--nocapture', '--stop', '--with-spec'])
         else:
             # Remove options as nose will pick these up from sys.argv
             for arg in args:
