@@ -29,6 +29,7 @@ class IndexView(BulkEditMixin, ListView):
     form_class = UserSearchForm
     desc_template = _('%(main_filter)s %(email_filter)s %(name_filter)s')
     description = ''
+    context_object_name = 'user_list'
 
     def get_queryset(self):
         queryset = self.model.objects.all().order_by('-date_joined')
