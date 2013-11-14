@@ -81,6 +81,13 @@ class StockRecordForm(forms.ModelForm):
             self.fields['partner'].queryset \
                 = self.fields['partner'].queryset.filter(users__in=[user])
 
+            if len(self.fields['partner'].queryset) == 1:
+                self.fields['partner'].initial = self.fields['partner'].queryset.get()
+                # Even if the ForeignKey has blank=False null=False it doesn't set required=True
+                # on the ModelChoiceField, so an empty choice will be offered in the select box
+                # as well. Prevent this by resetting empty_label.
+                self.fields['partner'].empty_label = None
+
     class Meta:
         model = StockRecord
         exclude = ('product', 'num_allocated')
