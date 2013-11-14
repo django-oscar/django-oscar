@@ -66,7 +66,7 @@ class ProductSearchForm(forms.Form):
 
 class StockRecordForm(forms.ModelForm):
 
-    def __init__(self, product_class, *args, **kwargs):
+    def __init__(self, product_class, user, *args, **kwargs):
         super(StockRecordForm, self).__init__(*args, **kwargs)
 
         # If not tracking stock, we hide the fields
@@ -76,6 +76,10 @@ class StockRecordForm(forms.ModelForm):
         else:
             self.fields['price_excl_tax'].required = True
             self.fields['num_in_stock'].required = True
+
+        if not user.is_staff:
+            self.fields['partner'].queryset \
+                = self.fields['partner'].queryset.filter(users__in=[user])
 
     class Meta:
         model = StockRecord
@@ -88,12 +92,14 @@ BaseStockRecordFormSet = inlineformset_factory(
 
 class StockRecordFormSet(BaseStockRecordFormSet):
 
-    def __init__(self, product_class, *args, **kwargs):
+    def __init__(self, product_class, user, *args, **kwargs):
         self.product_class = product_class
+        self.user = user
         super(StockRecordFormSet, self).__init__(*args, **kwargs)
 
     def _construct_form(self, i, **kwargs):
         kwargs['product_class'] = self.product_class
+        kwargs['user'] = self.user
         return super(StockRecordFormSet, self)._construct_form(
             i, **kwargs)
 
