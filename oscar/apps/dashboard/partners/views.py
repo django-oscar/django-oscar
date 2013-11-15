@@ -226,9 +226,11 @@ class PartnerUserLinkView(generic.View):
         name = user.get_full_name() or user.email
         if not partner.users.filter(pk=user.pk).exists():
             partner.users.add(user)
-            dashboard_access_perm = Permission.objects.get(codename='dashboard_access',
-                                                           content_type__app_label='partner')
-            user.user_permissions.add(dashboard_access_perm)
+            if not user.is_staff:
+                dashboard_access_perm = Permission.objects.get(
+                    codename='dashboard_access',
+                    content_type__app_label='partner')
+                user.user_permissions.add(dashboard_access_perm)
             messages.success(
                 request, _("User '%(name)s' was linked to '%(partner_name)s'") %
                 {'name': name, 'partner_name': partner.name})
@@ -246,9 +248,6 @@ class PartnerUserUnlinkView(generic.View):
         partner = get_object_or_404(Partner, pk=partner_pk)
         if partner.users.filter(pk=user_pk).exists():
             partner.users.remove(user)
-            dashboard_access_perm = Permission.objects.get(codename='dashboard_access',
-                                                           content_type__app_label='partner')
-            user.user_permissions.remove(dashboard_access_perm)
             msg = render_to_string(
                 'dashboard/partners/messages/user_unlinked.html',
                 {'user_name': name,
@@ -276,9 +275,7 @@ class PartnerUserUpdateView(generic.UpdateView):
     def get_object(self, queryset=None):
         return get_object_or_404(User,
                                  pk=self.kwargs['user_pk'],
-                                 partners__pk=self.kwargs['partner_pk'],
-                                 user_permissions__codename='dashboard_access',
-                                 user_permissions__content_type__app_label='partner')
+                                 partners__pk=self.kwargs['partner_pk'])
 
     def get_context_data(self, **kwargs):
         ctx = super(PartnerUserUpdateView, self).get_context_data(**kwargs)
