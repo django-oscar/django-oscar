@@ -32,7 +32,7 @@ class Shop(Application):
             (r'^dashboard/', include(self.dashboard_app.urls)),
             (r'^offers/', include(self.offer_app.urls)),
 
-            # Password reset - as we're using Django's default view funtions,
+            # Password reset - as we're using Django's default view functions,
             # we can't namespace these urls as that prevents
             # the reverse function from working.
             url(r'^password-reset/$',
