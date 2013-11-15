@@ -66,8 +66,10 @@ var oscar = (function(o, $) {
                         'ajax': {
                             'url': $(e).data('ajax-url'),
                             'dataType': 'json',
-                            'results': function(data) {
-                                data.results.unshift({'id': '', 'text': '------------'});
+                            'results': function(data, page) {
+                                if((page==1) && !($(e).data('required')=='required')) {
+                                    data.results.unshift({'id': '', 'text': '------------'});
+                                }
                                 return data;
                             },
                             'data': function(term, page) {
