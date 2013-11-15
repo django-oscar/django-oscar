@@ -19,13 +19,27 @@ of views, and her access to products and orders is limited.
 
 :class:`~oscar.apps.partner.abstract_models.AbstractPartner` instances
 have a :attr:`~oscar.apps.partner.abstract_models.AbstractPartner.users` field.
-If a non-staff user is in that list, she is given
-access to associated models. By default, this access is rather permissive:
-a user gets granted access if one of a product's stock records has a matching
-partner, or if one of an order's lines is associated with a matching partner.
+Prior to Oscar 0.6, this field was not used. Since Oscar 0.6, it is used solely
+for modelling dashboard access.
+
+If a non-staff user with the ``partner.dashboard_access`` permission is in
+:attr:`~oscar.apps.partner.abstract_models.AbstractPartner.users`, she can:
+
+* Create products. It is enforced that at least one stock record's partner has
+  the current user in ``users``.
+* Update products. At least one stock record must have the user in the stock
+  record's partner's ``users``.
+* Delete and list products. Limited to products the user is allowed to update.
+* Managing orders. Similar to products, a user get access if one of an order's
+  lines is associated with a matching partner.
 
 For many marketplace scenarios, it will make sense to ensure at checkout that
 a basket only contains lines from one partner.
+Please note that the dashboard currently ignores any other permissions,
+including `Django's default permissions`_.
+
+.. _Django's default permissions: https://docs.djangoproject.com/en/dev/topics/auth/default/#default-permissions
+
 
 Abstract models
 ---------------

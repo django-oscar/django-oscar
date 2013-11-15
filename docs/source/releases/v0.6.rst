@@ -122,6 +122,10 @@ Oscar:
 * The index, catalogue and order dashboard views have been modified to allow
   access to non-staff users. See :doc:`/ref/apps/dashboard` for details.
 
+* :attr:`oscar.apps.partner.abstract_models.AbstractPartner.users` was not
+  used by core Oscar prior 0.6. It is now used to model access for the
+  permission-based dashboard.
+
 Payment models have abstract versions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

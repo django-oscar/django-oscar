@@ -57,8 +57,8 @@ class AbstractPartner(models.Model):
     code = models.SlugField(_("Code"), max_length=128, unique=True)
     name = models.CharField(_("Name"), max_length=128, null=True, blank=True)
 
-    #: A partner can have users assigned to it.  These can be used
-    #: to provide authentication for webservices etc.
+    #: A partner can have users assigned to it. This is used
+    #: for access modelling in the permission-based dashboard
     users = models.ManyToManyField(
         AUTH_USER_MODEL, related_name="partners",
         blank=True, null=True, verbose_name=_("Users"))
