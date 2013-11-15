@@ -18,9 +18,11 @@ SingleProduct, RawHTML, Image, MultiImage, \
     HandPickedProductList = get_classes('promotions.models',
     ['SingleProduct', 'RawHTML', 'Image', 'MultiImage', 'AutomaticProductList',
      'PagePromotion', 'HandPickedProductList'])
-SelectForm, RawHTMLForm, PagePromotionForm, HandPickedProductListForm, OrderedProductFormSet = get_classes('dashboard.promotions.forms',
+SelectForm, RawHTMLForm, PagePromotionForm, HandPickedProductListForm, \
+    SingleProductForm, OrderedProductFormSet = get_classes(
+    'dashboard.promotions.forms',
     ['PromotionTypeSelectForm', 'RawHTMLForm', 'PagePromotionForm',
-     'HandPickedProductListForm', 'OrderedProductFormSet'])
+     'HandPickedProductListForm', 'SingleProductForm', 'OrderedProductFormSet'])
 
 
 class ListView(generic.TemplateView):
@@ -156,6 +158,7 @@ class CreateRawHTMLView(CreateView):
 
 class CreateSingleProductView(CreateView):
     model = SingleProduct
+    form_class = SingleProductForm
 
 
 class CreateImageView(CreateView):
@@ -262,6 +265,7 @@ class UpdateRawHTMLView(UpdateView):
 
 class UpdateSingleProductView(UpdateView):
     model = SingleProduct
+    form_class = SingleProductForm
 
 
 class UpdateImageView(UpdateView):
