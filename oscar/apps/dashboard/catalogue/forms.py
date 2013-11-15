@@ -69,7 +69,7 @@ class ProductSearchForm(forms.Form):
 
 class StockRecordForm(forms.ModelForm):
 
-    def __init__(self, product_class, *args, **kwargs):
+    def __init__(self, product_class, user, *args, **kwargs):
         super(StockRecordForm, self).__init__(*args, **kwargs)
 
         # If not tracking stock, we hide the fields
@@ -79,6 +79,17 @@ class StockRecordForm(forms.ModelForm):
         else:
             self.fields['price_excl_tax'].required = True
             self.fields['num_in_stock'].required = True
+
+        if not user.is_staff:
+            self.fields['partner'].queryset \
+                = self.fields['partner'].queryset.filter(users__in=[user])
+
+            if len(self.fields['partner'].queryset) == 1:
+                self.fields['partner'].initial = self.fields['partner'].queryset.get()
+                # Even if the ForeignKey has blank=False null=False it doesn't set required=True
+                # on the ModelChoiceField, so an empty choice will be offered in the select box
+                # as well. Prevent this by resetting empty_label.
+                self.fields['partner'].empty_label = None
 
     class Meta:
         model = StockRecord
@@ -91,12 +102,19 @@ BaseStockRecordFormSet = inlineformset_factory(
 
 class StockRecordFormSet(BaseStockRecordFormSet):
 
-    def __init__(self, product_class, *args, **kwargs):
+    def __init__(self, product_class, user, *args, **kwargs):
         self.product_class = product_class
+        self.user = user
         super(StockRecordFormSet, self).__init__(*args, **kwargs)
 
     def _construct_form(self, i, **kwargs):
         kwargs['product_class'] = self.product_class
+        kwargs['user'] = self.user
+        if i == 0:
+            if not self.user.is_staff:
+                # require at least one stock record for non-is_staff users because in the product
+                # list they can see only products that have a stock record for one of their partners
+                kwargs['empty_permitted'] = False
         return super(StockRecordFormSet, self)._construct_form(
             i, **kwargs)
 
