@@ -775,9 +775,15 @@ class AbstractLine(models.Model):
         if not self.stockinfo.price.is_tax_known:
             return
 
-        # Compare current price to price when added to basket
-        current_price_incl_tax = self.stockinfo.price.incl_tax
-        if current_price_incl_tax > self.price_incl_tax:
+        # Compare current price to price when added to basket. We quantize the
+        # prices to 2 decimal places to ensure that values like
+        # Decimal('12.00') and Decimal('12.0000123') are treated as equal.
+        # Otherwise we get a warning saying price has decreased to the same
+        # value and we don't want that, right?
+        current_price_incl_tax = self.stockinfo.price.incl_tax.quantize(
+            Decimal(".01"))
+        price_incl_tax = self.price_incl_tax.quantize(Decimal(".01"))
+        if current_price_incl_tax > price_incl_tax:
             msg = ("The price of '%(product)s' has increased from "
                    "%(old_price)s to %(new_price)s since you added it "
                    "to your basket")
@@ -785,7 +791,7 @@ class AbstractLine(models.Model):
                 'product': self.product.get_title(),
                 'old_price': currency(self.price_incl_tax),
                 'new_price': currency(current_price_incl_tax)}
-        if current_price_incl_tax < self.price_incl_tax:
+        if current_price_incl_tax < price_incl_tax:
             msg = ("The price of '%(product)s' has decreased from "
                    "%(old_price)s to %(new_price)s since you added it "
                    "to your basket")
