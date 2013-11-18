@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.template import Template, Context
 from django_dynamic_fixture import get, G
 
-from oscar.test.testcases import ClientTestCase, WebTestCase
+from oscar.test.testcases import WebTestCase, WebTestCase
 from oscar.test.factories import create_order, create_basket
 from oscar.apps.order.models import Order, OrderNote
 from oscar.core.compat import get_user_model
@@ -38,7 +38,7 @@ class TestOrderListDashboard(WebTestCase):
         form.submit('download_selected')
 
 
-class PermissionBasedDashboardOrderTests(ClientTestCase):
+class PermissionBasedDashboardOrderTests(WebTestCase):
     permissions = ['partner.dashboard_access', ]
 
     def setUp(self):
@@ -64,6 +64,7 @@ class PermissionBasedDashboardOrderTests(ClientTestCase):
 
     def test_staff_user_can_list_all_orders(self):
         self.is_staff = True
+        self.user = self.create_user()
         self.login()
         orders = [self.order_in, self.order_out]
         # order-list
@@ -108,7 +109,7 @@ class PermissionBasedDashboardOrderTests(ClientTestCase):
         self.assertNoAccess(self.client.get(url))
 
 
-class OrderDetailTests(ClientTestCase):
+class OrderDetailTests(WebTestCase):
     is_staff = True
 
     def setUp(self):
@@ -140,7 +141,7 @@ class OrderDetailTests(ClientTestCase):
         self.assertEqual(OrderNote.SYSTEM, notes[0].note_type)
 
 
-class LineDetailTests(ClientTestCase):
+class LineDetailTests(WebTestCase):
     is_staff = True
 
     def setUp(self):
