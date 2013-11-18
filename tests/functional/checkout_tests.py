@@ -298,9 +298,8 @@ class TestPlacingOrderUsingAVoucher(WebTestCase, CheckoutMixin):
 class TestPlacingOrderUsingAnOffer(WebTestCase, CheckoutMixin):
 
     def setUp(self):
+        super(TestPlacingOrderUsingAnOffer, self).setUp()
         offer = create_offer()
-        self.user = self.create_user()
-        self.login()
         self.add_product_to_basket()
         self.complete_shipping_address()
         self.complete_shipping_method()
