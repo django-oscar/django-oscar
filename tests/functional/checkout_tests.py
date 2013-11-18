@@ -273,8 +273,7 @@ class TestOrderPlacement(WebTestCase, CheckoutMixin):
 class TestPlacingOrderUsingAVoucher(WebTestCase, CheckoutMixin):
 
     def setUp(self):
-        self.user = self.create_user()
-        self.login()
+        super(TestPlacingOrderUsingAVoucher, self).setUp()
         self.add_product_to_basket()
         voucher = create_voucher()
         self.add_voucher_to_basket(voucher)
