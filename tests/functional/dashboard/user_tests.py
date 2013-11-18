@@ -3,7 +3,7 @@ from django.core import mail
 from django_dynamic_fixture import get
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.test.testcases import WebTestCase, WebTestCase
+from oscar.test.testcases import WebTestCase
 
 from oscar.apps.dashboard.users.views import IndexView
 from oscar.core.compat import get_user_model

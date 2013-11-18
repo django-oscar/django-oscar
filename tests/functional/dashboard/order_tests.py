@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.template import Template, Context
 from django_dynamic_fixture import get, G
 
-from oscar.test.testcases import WebTestCase, WebTestCase
+from oscar.test.testcases import WebTestCase
 from oscar.test.factories import create_order, create_basket
 from oscar.apps.order.models import Order, OrderNote
 from oscar.core.compat import get_user_model

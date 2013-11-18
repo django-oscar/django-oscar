@@ -1,7 +1,5 @@
 import httplib
 
-from django.test import TestCase
-from django.test.client import Client
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import Permission
 from django_webtest import WebTest
@@ -62,10 +60,11 @@ class WebTestCase(WebTest):
         add_permissions(user, perms)
         return user
 
-    def login(self):
-#        self.user = self.create_user()
-        self.client.login(username=self.username,
-            password=self.password)
+    def login(self, username = None, password = None):
+        username = username or self.username
+        password = password or self.password
+        self.client.login(username=username,
+            password=password)
 
     # Custom assertions
 
