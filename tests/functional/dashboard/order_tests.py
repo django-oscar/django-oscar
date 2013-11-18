@@ -47,9 +47,6 @@ class PermissionBasedDashboardOrderTestsBase(WebTestCase):
         Creates two orders. order_in has self.user in it's partner users list.
         """
         super(PermissionBasedDashboardOrderTestsBase, self).setUp()
-        # self.client = Client()
-        # self.user = self.create_user(username='user1@example.com',
-        #                              is_staff=False)
         self.address = G(ShippingAddress)
         self.basket_in = create_basket()
         self.basket_out = create_basket()
