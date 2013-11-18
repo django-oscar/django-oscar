@@ -332,7 +332,10 @@ class AbstractProduct(models.Model):
     #: Determines if a product may be used in an offer. It is illegal to
     #: discount some types of product (e.g. ebooks) and this field helps
     #: merchants from avoiding discounting such products
-    is_discountable = models.BooleanField(_("Is Discountable"), default=True)
+    is_discountable = models.BooleanField(
+        _("Is discountable?"), default=True, help_text=(
+            "This flag indicates if this product can be used in an offer "
+            "or not"))
 
     objects = ProductManager()
     browsable = BrowsableProductManager()
