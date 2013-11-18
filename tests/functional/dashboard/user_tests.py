@@ -3,7 +3,7 @@ from django.core import mail
 from django_dynamic_fixture import get
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.test.testcases import ClientTestCase, WebTestCase
+from oscar.test.testcases import WebTestCase
 
 from oscar.apps.dashboard.users.views import IndexView
 from oscar.core.compat import get_user_model
@@ -13,7 +13,7 @@ from webtest import AppError
 User = get_user_model()
 
 
-class IndexViewTests(ClientTestCase):
+class IndexViewTests(WebTestCase):
     is_staff = True
     active_users_ids = []
     inactive_users_ids = []
@@ -51,7 +51,7 @@ class IndexViewTests(ClientTestCase):
         self.assertFalse(ex_active.is_active)
 
 
-class DetailViewTests(ClientTestCase):
+class DetailViewTests(WebTestCase):
     is_staff = True
 
     def test_user_detail_view(self):

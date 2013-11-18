@@ -4,11 +4,11 @@ from django.core.urlresolvers import reverse
 
 from oscar.core import prices
 from oscar.apps.dashboard.views import IndexView
-from oscar.test.testcases import ClientTestCase
+from oscar.test.testcases import WebTestCase
 from oscar.test.factories import create_order
 
 
-class TestDashboardIndexForAnonUser(ClientTestCase):
+class TestDashboardIndexForAnonUser(WebTestCase):
     is_anonymous = True
 
     def test_is_not_available(self):
@@ -16,7 +16,7 @@ class TestDashboardIndexForAnonUser(ClientTestCase):
         self.assertContains(response, 'login-username', status_code=200)
 
 
-class TestDashboardIndexForStaffUser(ClientTestCase):
+class TestDashboardIndexForStaffUser(WebTestCase):
     is_staff = True
 
     def test_is_available(self):
