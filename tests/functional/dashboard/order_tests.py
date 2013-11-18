@@ -38,16 +38,18 @@ class TestOrderListDashboard(WebTestCase):
         form.submit('download_selected')
 
 
-class PermissionBasedDashboardOrderTests(WebTestCase):
+class PermissionBasedDashboardOrderTestsBase(WebTestCase):
     permissions = ['partner.dashboard_access', ]
+    username = 'user1@example.com'
 
     def setUp(self):
         """
         Creates two orders. order_in has self.user in it's partner users list.
         """
-        self.client = Client()
-        self.user = self.create_user(username='user1@example.com',
-                                     is_staff=False)
+        super(PermissionBasedDashboardOrderTestsBase, self).setUp()
+        # self.client = Client()
+        # self.user = self.create_user(username='user1@example.com',
+        #                              is_staff=False)
         self.address = G(ShippingAddress)
         self.basket_in = create_basket()
         self.basket_out = create_basket()
@@ -62,21 +64,7 @@ class PermissionBasedDashboardOrderTests(WebTestCase):
         self.order_out = create_order(basket=self.basket_out,
                                       shipping_address=self.address)
 
-    def test_staff_user_can_list_all_orders(self):
-        self.is_staff = True
-        self.user = self.create_user()
-        self.login()
-        orders = [self.order_in, self.order_out]
-        # order-list
-        response = self.client.get(reverse('dashboard:order-list'))
-        self.assertIsOk(response)
-        self.assertEqual(set(response.context['orders']),
-                         set(orders))
-        # order-detail
-        for order in orders:
-            url = reverse('dashboard:order-detail',
-                          kwargs={'number': order.number})
-            self.assertIsOk(self.client.get(url))
+class PermissionBasedDashboardOrderTestsNoStaff(PermissionBasedDashboardOrderTestsBase):
 
     def test_non_staff_can_only_list_her_orders(self):
         # order-list user1
@@ -107,6 +95,23 @@ class PermissionBasedDashboardOrderTests(WebTestCase):
         url = reverse('dashboard:order-shipping-address',
                       kwargs={'number': self.order_out.number})
         self.assertNoAccess(self.client.get(url))
+
+
+class PermissionBasedDashboardOrderTestsStaff(PermissionBasedDashboardOrderTestsBase):
+    is_staff = True
+
+    def test_staff_user_can_list_all_orders(self):
+        orders = [self.order_in, self.order_out]
+        # order-list
+        response = self.client.get(reverse('dashboard:order-list'))
+        self.assertIsOk(response)
+        self.assertEqual(set(response.context['orders']),
+                         set(orders))
+        # order-detail
+        for order in orders:
+            url = reverse('dashboard:order-detail',
+                          kwargs={'number': order.number})
+            self.assertIsOk(self.client.get(url))
 
 
 class OrderDetailTests(WebTestCase):

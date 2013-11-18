@@ -37,6 +37,8 @@ class WebTestCase(WebTest):
             self.user = User.objects.create_user(self.username, self.email,
                                                  self.password)
             self.user.is_staff = self.is_staff
+            perms = self.permissions
+            add_permissions(self.user, perms)
             self.user.save()
             self.login()
 
@@ -47,18 +49,6 @@ class WebTestCase(WebTest):
     def post(self, url, **kwargs):
         kwargs.setdefault('user', self.user)
         return self.app.post(url, **kwargs)
-
-    def create_user(self, username=None, password=None, email=None,
-                    is_staff=None, is_superuser=None, permissions=None):
-        user = User.objects.create_user(username or self.username,
-                                        email or self.email,
-                                        password or self.password)
-        user.is_staff = is_staff or self.is_staff
-        user.is_superuser = is_superuser or self.is_superuser
-        user.save()
-        perms = permissions if permissions is not None else self.permissions
-        add_permissions(user, perms)
-        return user
 
     def login(self, username = None, password = None):
         username = username or self.username
