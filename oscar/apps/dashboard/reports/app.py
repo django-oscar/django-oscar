@@ -1,12 +1,11 @@
 from django.conf.urls import patterns, url
 
-from oscar.core.application import Application
+from oscar.core.application import DashboardApplication
 from oscar.apps.dashboard.reports import views
 
 
-class ReportsApplication(Application):
+class ReportsApplication(DashboardApplication):
     name = None
-    default_permissions = ['is_staff', ]
 
     index_view = views.IndexView
 

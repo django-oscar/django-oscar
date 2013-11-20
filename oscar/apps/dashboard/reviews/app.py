@@ -1,12 +1,11 @@
 from django.conf.urls import patterns, url
 
-from oscar.core.application import Application
+from oscar.core.application import DashboardApplication
 from oscar.apps.dashboard.reviews import views
 
 
-class ReviewsApplication(Application):
+class ReviewsApplication(DashboardApplication):
     name = None
-    default_permissions = ['is_staff', ]
 
     list_view = views.ReviewListView
     update_view = views.ReviewUpdateView

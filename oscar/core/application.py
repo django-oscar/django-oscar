@@ -75,3 +75,8 @@ class Application(object):
     def urls(self):
         # We set the application and instance namespace here
         return self.get_urls(), self.app_name, self.name
+
+
+class DashboardApplication(Application):
+    """ Protect application to be accessible by staff only by default """
+    default_permissions = ['is_staff', ]

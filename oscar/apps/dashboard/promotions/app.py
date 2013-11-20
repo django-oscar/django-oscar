@@ -1,13 +1,12 @@
 from django.conf.urls import patterns, url
 
-from oscar.core.application import Application
+from oscar.core.application import DashboardApplication
 from oscar.apps.dashboard.promotions import views
 from oscar.apps.promotions.conf import PROMOTION_CLASSES
 
 
-class PromotionsDashboardApplication(Application):
+class PromotionsDashboardApplication(DashboardApplication):
     name = None
-    default_permissions = ['is_staff', ]
 
     list_view = views.ListView
     page_list = views.PageListView

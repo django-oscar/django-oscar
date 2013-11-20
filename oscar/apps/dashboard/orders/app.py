@@ -1,12 +1,11 @@
 from django.conf.urls import patterns, url
 
-from oscar.core.application import Application
+from oscar.core.application import DashboardApplication
 from oscar.apps.dashboard.orders import views
 
 
-class OrdersDashboardApplication(Application):
+class OrdersDashboardApplication(DashboardApplication):
     name = None
-    default_permissions = ['is_staff', ]
     permissions_map = {
         'order-list':             (['is_staff'], ['partner.dashboard_access']),
         'order-stats':            (['is_staff'], ['partner.dashboard_access']),
