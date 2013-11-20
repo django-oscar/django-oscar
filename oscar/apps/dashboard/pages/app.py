@@ -1,12 +1,11 @@
 from django.conf.urls import patterns, url
 
-from oscar.core.application import Application
+from oscar.core.application import DashboardApplication
 from oscar.apps.dashboard.pages import views
 
 
-class FlatPageManagementApplication(Application):
+class FlatPageManagementApplication(DashboardApplication):
     name = None
-    default_permissions = ['is_staff', ]
 
     list_view = views.PageListView
     create_view = views.PageCreateView

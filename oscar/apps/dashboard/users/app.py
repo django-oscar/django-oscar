@@ -1,12 +1,11 @@
 from django.conf.urls import patterns, url
 
-from oscar.core.application import Application
+from oscar.core.application import DashboardApplication
 from oscar.apps.dashboard.users import views
 
 
-class UserManagementApplication(Application):
+class UserManagementApplication(DashboardApplication):
     name = None
-    default_permissions = ['is_staff', ]
 
     index_view = views.IndexView
     user_detail_view = views.UserDetailView

@@ -1,13 +1,12 @@
 from django.conf.urls import patterns, url
 
-from oscar.core.application import Application
+from oscar.core.application import DashboardApplication
 from oscar.apps.dashboard.catalogue import views
 
 
-class CatalogueApplication(Application):
+class CatalogueApplication(DashboardApplication):
     name = None
 
-    default_permissions = ['is_staff', ]
     permissions_map = _map = {
         'catalogue-product':        (['is_staff'], ['partner.dashboard_access']),
         'catalogue-product-create': (['is_staff'], ['partner.dashboard_access']),

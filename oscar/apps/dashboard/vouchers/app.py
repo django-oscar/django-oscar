@@ -1,12 +1,11 @@
 from django.conf.urls import patterns, url
 
-from oscar.core.application import Application
+from oscar.core.application import DashboardApplication
 from oscar.apps.dashboard.vouchers import views
 
 
-class VoucherDashboardApplication(Application):
+class VoucherDashboardApplication(DashboardApplication):
     name = None
-    default_permissions = ['is_staff', ]
 
     list_view = views.VoucherListView
     create_view = views.VoucherCreateView
