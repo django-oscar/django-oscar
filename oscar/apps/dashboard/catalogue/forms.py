@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
@@ -91,7 +92,9 @@ BaseStockRecordFormSet = inlineformset_factory(
 
 class StockRecordFormSet(BaseStockRecordFormSet):
 
-    def __init__(self, product_class, *args, **kwargs):
+    def __init__(self, product_class, user, *args, **kwargs):
+        self.user = user
+        self.require_user_stockrecord = not user.is_staff
         self.product_class = product_class
         super(StockRecordFormSet, self).__init__(*args, **kwargs)
 
@@ -100,6 +103,19 @@ class StockRecordFormSet(BaseStockRecordFormSet):
         return super(StockRecordFormSet, self)._construct_form(
             i, **kwargs)
 
+    def clean(self):
+        """
+        If the user isn't a staff user, this validation ensures that at least
+        one stock record's partner is associated with a users partners.
+        """
+        if any(self.errors):
+            return
+        if self.require_user_stockrecord:
+            stockrecord_partners = set([form.cleaned_data.get('partner', None)
+                                        for form in self.forms])
+            user_partners = set(self.user.partners.all())
+            if not user_partners & stockrecord_partners:
+                raise ValidationError(_("At least one stock record must be set to a partner that you're associated with."))
 
 def _attr_text_field(attribute):
     return forms.CharField(label=attribute.name,
