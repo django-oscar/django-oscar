@@ -183,7 +183,7 @@ class AbstractBasket(models.Model):
             raise ValueError((
                 "Basket lines must all have the same currency. Proposed "
                 "line has currency %s, while basket has currency %s") % (
-                    price_currency, stock_info.price.currency))
+                    stock_info.price.currency, price_currency))
 
         # Line reference is used to distinguish between variations of the same
         # product (eg T-shirts with different personalisations)
