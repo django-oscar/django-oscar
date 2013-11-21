@@ -179,16 +179,21 @@ class FixedRateTax(object):
     Pricing policy mixin for use with the ``Structured`` base strategy.
     This mixin applies a fixed rate tax to the base price from the product's
     stockrecord.
+    The price_incl_tax is quantized to two decimal places. Rounding behaviour is
+    Decimal's default
     """
     rate = D('0.20')
+    exponent = D('0.01')
 
     def pricing_policy(self, product, stockrecord):
         if not stockrecord:
             return prices.Unavailable()
+        # round to two decimal places
+        tax = (stockrecord.price_excl_tax * self.rate).quantize(self.exponent)
         return prices.FixedPrice(
             currency=stockrecord.price_currency,
             excl_tax=stockrecord.price_excl_tax,
-            tax=stockrecord.price_excl_tax * self.rate)
+            tax=tax)
 
 
 class DeferredTax(object):
