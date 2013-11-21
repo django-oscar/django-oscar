@@ -1089,18 +1089,3 @@ class AbstractProductImage(models.Model):
         """
         return self.display_order == 0
 
-    def resized_image_url(self, width=None, height=None, **kwargs):
-        return self.original.url
-
-    @property
-    def fullsize_url(self):
-        """
-        Returns the URL path for this image.  This is intended
-        to be overridden in subclasses that want to serve
-        images in a specific way.
-        """
-        return self.resized_image_url()
-
-    @property
-    def thumbnail_url(self):
-        return self.resized_image_url()

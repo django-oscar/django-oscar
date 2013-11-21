@@ -278,6 +278,11 @@ Several classes and functions have had signature changes:
   ``AnonymousUserProductReviewForm``, have been replaced by a new
   :class:`oscar.apps.catalogue.reviews.forms.ProductReviewForm``.
 
+* 3 properties have been removed from
+  :class:`oscar.apps.catalogue.abstract_models.AbstractProductImage` as they
+  were unused: ``resized_image_url``, ``fullsize_url`` and ``thumbnail_url``.
+  Thumbnailing is instead achieved in templates with Sorl.
+
 Loading shipping methods
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
