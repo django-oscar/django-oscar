@@ -15,7 +15,7 @@
                 <td>{{ user.email }}</td>
             </tr>
             {% block profile_fields %}
-                {% for field in profile_fields %}
+                {% for field in profile %}
                     <tr>
                         <th>{{ field.name }}</th>
                         <td>{{ field.value|default:"-" }}</td>
@@ -33,4 +33,3 @@
     <a href="{% url 'customer:profile-update' %}" class="btn btn-primary">{% trans 'Edit profile' %}</a>
 
 {% endblock %}
-
