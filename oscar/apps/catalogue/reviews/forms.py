@@ -1,13 +1,14 @@
 from django import forms
 from django.db.models import get_model
+from django.utils.translation import ugettext_lazy as _
 
 Vote = get_model('reviews', 'vote')
 ProductReview = get_model('reviews', 'productreview')
 
 
 class ProductReviewForm(forms.ModelForm):
-    name = forms.CharField(required=True)
-    email = forms.EmailField(required=True)
+    name = forms.CharField(label=_('Name'), required=True)
+    email = forms.EmailField(label=_('Email'), required=True)
 
     def __init__(self, product, user=None, *args, **kwargs):
         super(ProductReviewForm, self).__init__(*args, **kwargs)
