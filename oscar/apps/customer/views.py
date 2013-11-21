@@ -203,7 +203,7 @@ class ProfileView(PageTitleMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(ProfileView, self).get_context_data(**kwargs)
-        ctx['profile'] = self.get_profile_fields(self.request.user)
+        ctx['profile_fields'] = self.get_profile_fields(self.request.user)
         return ctx
 
     def get_profile_fields(self, user):
