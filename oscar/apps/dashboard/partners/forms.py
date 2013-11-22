@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.models import Permission
 from django.core import validators
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
@@ -20,18 +21,30 @@ class PartnerCreateForm(forms.ModelForm):
         model = Partner
         fields = ('name',)
 
+ROLE_CHOICES = (
+    ('staff', _('Full dashboard access')),
+    ('limited', _('Limited dashboard access')),
+)
+
 
 class NewUserForm(EmailUserCreationForm):
+    role = forms.ChoiceField(choices=ROLE_CHOICES, widget=forms.RadioSelect,
+                             label=_('User role'), initial='limited')
 
     def __init__(self, partner, *args, **kwargs):
         self.partner = partner
         super(NewUserForm, self).__init__(host=None, *args, **kwargs)
 
     def save(self):
+        role = self.cleaned_data.get('role', 'limited')
         user = super(NewUserForm, self).save(commit=False)
-        user.is_staff = True
+        user.is_staff = role == 'staff'
         user.save()
         self.partner.users.add(user)
+        if role == 'limited':
+            dashboard_access_perm = Permission.objects.get(
+                codename='dashboard_access', content_type__app_label='partner')
+            user.user_permissions.add(dashboard_access_perm)
         return user
 
     class Meta:
@@ -46,6 +59,8 @@ class ExistingUserForm(forms.ModelForm):
     * doesn't regenerate username
     * doesn't allow changing email till #668 is resolved
     """
+    role = forms.ChoiceField(choices=ROLE_CHOICES, widget=forms.RadioSelect,
+                             label=_('User role'))
     password1 = forms.CharField(
         label=_('Password'),
         widget=forms.PasswordInput,
@@ -62,15 +77,32 @@ class ExistingUserForm(forms.ModelForm):
         password2 = self.cleaned_data.get('password2', '')
 
         if password1 != password2:
-            raise forms.ValidationError(_("The two password fields didn't match."))
+            raise forms.ValidationError(
+                _("The two password fields didn't match."))
         return password2
 
-    def save(self, commit=True):
+    def __init__(self, *args, **kwargs):
+        user = kwargs['instance']
+        role = 'staff' if user.is_staff else 'limited'
+        kwargs.get('initial', {}).setdefault('role', role)
+        super(ExistingUserForm, self).__init__(*args, **kwargs)
+
+    def save(self):
+        role = self.cleaned_data.get('role', 'none')
         user = super(ExistingUserForm, self).save(commit=False)
+        user.is_staff = role == 'staff'
         if self.cleaned_data['password1']:
             user.set_password(self.cleaned_data['password1'])
-        if commit:
-            user.save()
+        user.save()
+
+        dashboard_perm = Permission.objects.get(
+            codename='dashboard_access', content_type__app_label='partner')
+        user_has_perm = user.user_permissions.filter(
+            pk=dashboard_perm.pk).exists()
+        if role == 'limited' and not user_has_perm:
+            user.user_permissions.add(dashboard_perm)
+        elif role == 'staff' and user_has_perm:
+            user.user_permissions.remove(dashboard_perm)
         return user
 
     class Meta:
