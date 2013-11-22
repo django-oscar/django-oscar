@@ -194,6 +194,8 @@ class OfferWizardStepView(FormView):
         session_offer = self._fetch_session_offer()
         offer.name = session_offer.name
         offer.description = session_offer.description
+        offer.applies_to_tax_exclusive_prices = \
+            session_offer.applies_to_tax_exclusive_prices
 
         # Working around a strange Django issue where saving the related model
         # in place does not register it correctly and so it has to be saved and
