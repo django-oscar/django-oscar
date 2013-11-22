@@ -1,5 +1,5 @@
 from django import forms
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, MultipleObjectsReturned
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
@@ -100,6 +100,16 @@ class StockRecordFormSet(BaseStockRecordFormSet):
         self.require_user_stockrecord = not user.is_staff
         self.product_class = product_class
         super(StockRecordFormSet, self).__init__(*args, **kwargs)
+        if self.require_user_stockrecord:
+            # If user has only one partner associated, set the first
+            # stock record's partner to it.
+            try:
+                user_partner = self.user.partners.get()
+            except (Partner.DoesNotExist, MultipleObjectsReturned):
+                pass
+            else:
+                if 'partner' in self.forms[0].fields:
+                    self.forms[0].fields['partner'].initial = user_partner
 
     def _construct_form(self, i, **kwargs):
         kwargs['product_class'] = self.product_class
