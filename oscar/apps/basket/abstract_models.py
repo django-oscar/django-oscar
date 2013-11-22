@@ -5,7 +5,7 @@ from django.db import models
 from django.db.models import Sum
 from django.conf import settings
 from django.utils.timezone import now
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 
 from oscar.apps.basket.managers import OpenBasketManager, SavedBasketManager

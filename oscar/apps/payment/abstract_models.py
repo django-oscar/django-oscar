@@ -1,7 +1,7 @@
 from decimal import Decimal
 
 from django.db import models
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
 from oscar.core.compat import AUTH_USER_MODEL

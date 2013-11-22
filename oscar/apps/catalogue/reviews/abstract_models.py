@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Sum, Count
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.catalogue.reviews.managers import ApprovedReviewsManager
 from oscar.core.compat import AUTH_USER_MODEL
