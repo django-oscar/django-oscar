@@ -70,7 +70,10 @@ class ProductSearchForm(forms.Form):
 
 class StockRecordForm(forms.ModelForm):
 
-    def __init__(self, product_class, *args, **kwargs):
+    def __init__(self, product_class, user, *args, **kwargs):
+        # The user kwarg is not used by stock StockRecordForm. We pass it
+        # anyway in case one wishes to customise the partner queryset
+        self.user = user
         super(StockRecordForm, self).__init__(*args, **kwargs)
 
         # If not tracking stock, we hide the fields
@@ -100,6 +103,7 @@ class StockRecordFormSet(BaseStockRecordFormSet):
 
     def _construct_form(self, i, **kwargs):
         kwargs['product_class'] = self.product_class
+        kwargs['user'] = self.user
         return super(StockRecordFormSet, self)._construct_form(
             i, **kwargs)
 
