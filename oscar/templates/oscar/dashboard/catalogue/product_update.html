@@ -359,7 +359,13 @@
                                             <tr>
                                                 <td>{% include "partials/form_field.html" with field=stockrecord_form.partner nolabel=True %}</td>
                                                 <td>{% include "partials/form_field.html" with field=stockrecord_form.partner_sku nolabel=True %}</td>
-                                                <td>{% include "partials/form_field.html" with field=stockrecord_form.num_in_stock nolabel=True %}</td>
+                                                <td>
+                                                    {% if stockrecord_form.num_in_stock %}
+                                                        {% include "partials/form_field.html" with field=stockrecord_form.num_in_stock nolabel=True %}
+                                                    {% else %}
+                                                        -
+                                                    {% endif %}
+                                                </td>
                                                 <td>{{ stockrecord_form.instance.num_allocated|default:"-" }}</td>
                                                 <td>{% include "partials/form_field.html" with field=stockrecord_form.low_stock_threshold nolabel=True %}</td>
                                                 <td>{% include "partials/form_field.html" with field=stockrecord_form.price_currency nolabel=True %}</td>

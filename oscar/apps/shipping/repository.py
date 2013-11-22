@@ -25,10 +25,12 @@ class Repository(object):
         but this behaviour can easily be overridden by subclassing this class
         and overriding this method.
         """
+        if not basket.is_shipping_required():
+            return [methods.NoShippingRequired()]
         # We need to instantiate each method class to avoid thread-safety
         # issues
-        methods = [klass() for klass in self.methods]
-        return self.prime_methods(basket, methods)
+        methods_ = [klass() for klass in self.methods]
+        return self.prime_methods(basket, methods_)
 
     def get_default_shipping_method(self, user, basket, shipping_addr=None,
                                     request=None, **kwargs):
