@@ -145,6 +145,10 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         Compared to self.get_shipping_address(), ShippingAddress is saved and
         makes sure that appropriate UserAddress exists.
         """
+        # For an order that only contains items that don't require shipping we
+        # won't have a shipping address, so we have to check for it.
+        if not shipping_address:
+            return None
         shipping_address.save()
         if user.is_authenticated():
             self.update_address_book(user, shipping_address)
