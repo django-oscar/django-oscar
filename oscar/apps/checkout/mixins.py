@@ -66,7 +66,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         """
         # Create saved shipping address instance from passed in unsaved
         # instance
-        shipping_address = self.create_shipping_address(user, shipping_address)
+        if shipping_method.code != 'no-shipping-required':
+            shipping_address = self.create_shipping_address(user, shipping_address)
 
         # We pass the kwargs as they often include the billing address form
         # which will be needed to save a billing address.
