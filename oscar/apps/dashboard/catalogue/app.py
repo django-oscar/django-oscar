@@ -13,6 +13,7 @@ class CatalogueApplication(Application):
         'catalogue-product-create': (['is_staff'], ['partner.dashboard_access']),
         'catalogue-product-list':   (['is_staff'], ['partner.dashboard_access']),
         'catalogue-product-delete': (['is_staff'], ['partner.dashboard_access']),
+        'catalogue-product-lookup': (['is_staff'], ['partner.dashboard_access']),
     }
 
     product_list_view = views.ProductListView
