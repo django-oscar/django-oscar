@@ -159,12 +159,15 @@ class RangeProductListView(BulkEditMixin, ListView):
         if dupe_skus:
             messages.warning(
                 request,
-                _("The products with SKUs or UPCs matching %s are already in this range") % ", ".join(dupe_skus))
+                _("The products with SKUs or UPCs matching %s are already "
+                  "in this range") % ", ".join(dupe_skus))
 
         missing_skus = form.get_missing_skus()
         if missing_skus:
-            messages.warning(request,
-                             _("No product(s) were found with SKU or UPC matching %s") % ", ".join(missing_skus))
+            messages.warning(
+                request,
+                _("No product(s) were found with SKU or UPC matching %s") %
+                ", ".join(missing_skus))
 
     def handle_file_products(self, request, range, form):
         if not 'file_upload' in request.FILES:
