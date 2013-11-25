@@ -92,15 +92,18 @@
                                 <button type="submit" class="btn">{% trans "Remove selected products" %}</button>
                             </div>
                         </caption>
-                        <tr>
-                            <th></th>
-                            <th>{% trans "UPC" %}</th>
-                            <th>{% trans "Title" %}</th>
-                            <th>{% trans "Is product discountable?" %}</th>
-                            <th></th>
-                        </tr>
-                        {% for product in products %}
+                        <thead>
                             <tr>
+                                <th></th>
+                                <th>{% trans "UPC" %}</th>
+                                <th>{% trans "Title" %}</th>
+                                <th>{% trans "Is product discountable?" %}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody class="product_list">
+                        {% for product in products %}
+                            <tr id="product_{{ product.pk }}">
                                 <td>
                                     <input type="checkbox" name="selected_product" value="{{ product.id }}" />
                                 </td>
@@ -109,9 +112,11 @@
                                 <td>{% if product.is_discountable %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>
                                 <td>
                                     <a class="btn btn-danger" href="#" data-behaviours="remove">{% trans "Remove" %}</a>
+                                    <a href="#" class="btn btn-info btn-handle"><i class="icon-move icon-large"></i> {% trans "Re-order" %}</a>
                                 </td>
                             </tr>
                         {% endfor %}
+                        </tbody>
                     </table>
                     {% include "partials/pagination.html" %}
                 </form>
@@ -137,5 +142,9 @@
 
 {% block onbodyload %}
     {{ block.super }}
-    oscar.dashboard.ranges.init()
+    oscar.dashboard.ranges.init();
+    oscar.dashboard.reordering.init({
+        wrapper: '.product_list',
+        submit_url: '{% url 'dashboard:range-reorder' pk=range.id %}'
+    });
 {% endblock %}

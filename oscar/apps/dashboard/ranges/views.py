@@ -6,16 +6,18 @@ from django.core import exceptions
 from django.core.urlresolvers import reverse
 from django.db.models.loading import get_model
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, HttpResponse
 from django.template.loader import render_to_string
 from django.utils.translation import ungettext, ugettext_lazy as _
-from django.views.generic import (ListView, DeleteView, CreateView, UpdateView)
+from django.views.generic import (
+    ListView, DeleteView, CreateView, UpdateView, View)
 
 
 from oscar.views.generic import BulkEditMixin
 from oscar.core.loading import get_classes
 
 Range = get_model('offer', 'Range')
+RangeOrdering = get_model('offer', 'RangeOrdering')
 Product = get_model('catalogue', 'Product')
 RangeForm, RangeProductForm = get_classes('dashboard.ranges.forms',
                                           ['RangeForm', 'RangeProductForm'])
@@ -108,7 +110,8 @@ class RangeProductListView(BulkEditMixin, ListView):
         return self._range
 
     def get_queryset(self):
-        return self.get_range().included_products.all()
+        products = self.get_range().included_products.all()
+        return products.order_by('-rangeordering__priority')
 
     def get_context_data(self, **kwargs):
         ctx = super(RangeProductListView, self).get_context_data(**kwargs)
@@ -191,3 +194,23 @@ class RangeProductListView(BulkEditMixin, ListView):
             size=f.size
         )
         return upload
+
+
+class RangeReorderView(View):
+    def post(self, request, pk):
+        order = dict(request.POST).get('product[]')
+        self._save_page_order(order)
+        return HttpResponse(status=200)
+
+    def _save_page_order(self, order):
+        """
+        Save the order of the pages. This gets used when an ajax request
+        posts backa new order for promotions within page regions.
+        """
+        range = get_object_or_404(Range, id=self.kwargs['pk'])
+        for index, item in enumerate(reversed(order)):
+            ordering = RangeOrdering.objects.get(range=range, product__pk=item)
+            print "Ordering: %s => %d" % (ordering.product.title, index)
+            if ordering.priority != index:
+                ordering.priority = index
+                ordering.save()
