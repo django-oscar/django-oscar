@@ -22,6 +22,12 @@ class CreateProductReview(CreateView):
     form_class = ProductReviewForm
     view_signal = review_added
 
+    def dispatch(self, request, *args, **kwargs):
+        self.product = get_object_or_404(
+            self.product_model, pk=kwargs['product_pk'])
+        return super(CreateProductReview, self).dispatch(
+            request, *args, **kwargs)
+
     def get(self, request, *args, **kwargs):
         self.product = get_object_or_404(
             self.product_model, pk=kwargs['product_pk'])
