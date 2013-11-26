@@ -762,7 +762,7 @@ class Range(models.Model):
 
     included_products = models.ManyToManyField(
         'catalogue.Product', related_name='includes', blank=True,
-        verbose_name=_("Included Products"))
+        verbose_name=_("Included Products"), through='offer.RangeProduct')
     excluded_products = models.ManyToManyField(
         'catalogue.Product', related_name='excludes', blank=True,
         verbose_name=_("Excluded Products"))
@@ -804,6 +804,37 @@ class Range(models.Model):
 
         # Save Range
         super(Range, self).save(*args, **kwargs)
+
+    def add_product(self, product, display_order=None):
+        """ Add product to the range
+
+        When adding product that is already in the range, prevent re-adding it.
+        If display_order is specified, update it.
+
+        Standard display_order for a new product in the range (0) puts
+        the product at the top of the list.
+
+        display_order needs to be tested for None because
+
+          >>> display_order = 0
+          >>> not display_order
+          True
+          >>> display_order is None
+          False
+        """
+        initial_order = 0 if display_order is None else display_order
+        relation, __ = RangeProduct.objects.get_or_create(
+            range=self, product=product,
+            defaults={'display_order': initial_order})
+
+        if (display_order is not None and
+                relation.display_order != display_order):
+            relation.display_order = display_order
+            relation.save()
+
+    def remove_product(self, product):
+        """ Remove product from range """
+        RangeProduct.objects.filter(range=self, product=product).delete()
 
     def contains_product(self, product):
         """
@@ -870,6 +901,15 @@ class Range(models.Model):
         """
         return self.proxy_class is None
 
+
+class RangeProduct(models.Model):
+    """ Allow ordering products inside ranges """
+    range = models.ForeignKey('offer.Range')
+    product = models.ForeignKey('catalogue.Product')
+    display_order = models.IntegerField(default=0)
+
+    class Meta:
+        unique_together = (('range', 'product'),)
 
 # ==========
 # Conditions
