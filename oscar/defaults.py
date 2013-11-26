@@ -29,9 +29,6 @@ OSCAR_UPLOAD_ROOT = '/tmp'
 OSCAR_REQUIRED_ADDRESS_FIELDS = ('first_name', 'last_name', 'line1',
                                  'line4', 'postcode', 'country')
 
-# Search settings
-OSCAR_SEARCH_SUGGEST_LIMIT = 10
-
 # Product list settings
 OSCAR_PRODUCTS_PER_PAGE = 20
 

@@ -9,7 +9,8 @@ from oscar.core.application import Application
 
 class SearchApplication(Application):
     name = 'search'
-    search_view = views.MultiFacetedSearchView
+    search_view = views.FacetedSearchView
+    search_form = forms.PriceRangeSearchForm
 
     def get_urls(self):
         # Build SQS based on the OSCAR_SEARCH_FACETS settings
@@ -24,17 +25,11 @@ class SearchApplication(Application):
         # Haystack works.  It's slightly different to normal CBVs.
         urlpatterns = patterns(
             '',
-            # This view is used in the default templates (at the moment)
-            url(r'^$', self.search_view(
-                form_class=forms.MultiFacetedSearchForm),
+            url(r'^$', search_view_factory(
+                view_class=self.search_view,
+                form_class=self.search_form,
+                searchqueryset=self.get_sqs()),
                 name='search'),
-            # This view is used in the demo site.
-            url(r'^default/$', search_view_factory(
-                view_class=views.FacetedSearchView,
-                form_class=forms.PriceRangeSearchForm,
-                searchqueryset=sqs,
-                template='search/results.html'),
-                name='search-default'),
         )
         return self.post_process_urls(urlpatterns)
 
