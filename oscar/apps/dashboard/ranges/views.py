@@ -124,7 +124,7 @@ class RangeProductListView(BulkEditMixin, ListView):
     def remove_selected_products(self, request, products):
         range = self.get_range()
         for product in products:
-            range.included_products.remove(product)
+            range.remove_product(product)
         num_products = len(products)
         messages.success(request, ungettext("Removed %d product from range",
                                             "Removed %d products from range",
@@ -149,7 +149,7 @@ class RangeProductListView(BulkEditMixin, ListView):
             return
 
         for product in products:
-            range.included_products.add(product)
+            range.add_product(product)
 
         num_products = len(products)
         messages.success(request, ungettext("%d product added to range",

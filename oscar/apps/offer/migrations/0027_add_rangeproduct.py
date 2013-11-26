@@ -187,17 +187,17 @@ class Migration(SchemaMigration):
             'excluded_products': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'excludes'", 'blank': 'True', 'to': u"orm['catalogue.Product']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'included_categories': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'includes'", 'blank': 'True', 'to': u"orm['catalogue.Category']"}),
-            'included_products': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'includes'", 'blank': 'True', 'through': u"orm['offer.RangeOrdering']", 'to': u"orm['catalogue.Product']"}),
+            'included_products': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'includes'", 'blank': 'True', 'through': u"orm['offer.RangeProduct']", 'to': u"orm['catalogue.Product']"}),
             'includes_all_products': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_public': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'}),
             'proxy_class': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '255', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             'slug': ('django.db.models.fields.SlugField', [], {'max_length': '128', 'unique': 'True', 'null': 'True'})
         },
-        u'offer.rangeordering': {
-            'Meta': {'object_name': 'RangeOrdering'},
+        u'offer.rangeproduct': {
+            'Meta': {'unique_together': "(('range', 'product'),)", 'object_name': 'RangeProduct'},
+            'display_order': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'priority': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'product': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['catalogue.Product']"}),
             'range': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['offer.Range']"})
         }
