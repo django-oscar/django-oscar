@@ -762,7 +762,7 @@ class Range(models.Model):
 
     included_products = models.ManyToManyField(
         'catalogue.Product', related_name='includes', blank=True,
-        verbose_name=_("Included Products"), through='offer.RangeOrdering')
+        verbose_name=_("Included Products"), through='offer.RangeProduct')
     excluded_products = models.ManyToManyField(
         'catalogue.Product', related_name='excludes', blank=True,
         verbose_name=_("Excluded Products"))
@@ -871,12 +871,11 @@ class Range(models.Model):
         return self.proxy_class is None
 
 
-class RangeOrdering(models.Model):
+class RangeProduct(models.Model):
     """ Allow ordering products inside ranges """
     range = models.ForeignKey('offer.Range')
     product = models.ForeignKey('catalogue.Product')
-    # Higher the priority, the higher the product is placed
-    priority = models.IntegerField(default=0)
+    display_order = models.IntegerField(default=0)
 
 # ==========
 # Conditions

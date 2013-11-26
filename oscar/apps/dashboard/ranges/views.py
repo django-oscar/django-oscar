@@ -17,7 +17,7 @@ from oscar.views.generic import BulkEditMixin
 from oscar.core.loading import get_classes
 
 Range = get_model('offer', 'Range')
-RangeOrdering = get_model('offer', 'RangeOrdering')
+RangeProduct = get_model('offer', 'RangeProduct')
 Product = get_model('catalogue', 'Product')
 RangeForm, RangeProductForm = get_classes('dashboard.ranges.forms',
                                           ['RangeForm', 'RangeProductForm'])
@@ -111,7 +111,7 @@ class RangeProductListView(BulkEditMixin, ListView):
 
     def get_queryset(self):
         products = self.get_range().included_products.all()
-        return products.order_by('-rangeordering__priority')
+        return products.order_by('rangeproduct__display_order')
 
     def get_context_data(self, **kwargs):
         ctx = super(RangeProductListView, self).get_context_data(**kwargs)
@@ -207,13 +207,11 @@ class RangeReorderView(View):
 
     def _save_page_order(self, order):
         """
-        Save the order of the pages. This gets used when an ajax request
-        posts backa new order for promotions within page regions.
+        Save the order of the products within range.
         """
-        range = get_object_or_404(Range, id=self.kwargs['pk'])
-        for index, item in enumerate(reversed(order)):
-            ordering = RangeOrdering.objects.get(range=range, product__pk=item)
-            print "Ordering: %s => %d" % (ordering.product.title, index)
-            if ordering.priority != index:
-                ordering.priority = index
-                ordering.save()
+        range = get_object_or_404(Range, pk=self.kwargs['pk'])
+        for index, item in enumerate(order):
+            entry = RangeProduct.objects.get(range=range, product__pk=item)
+            if entry.display_order != index:
+                entry.display_order = index
+                entry.save()

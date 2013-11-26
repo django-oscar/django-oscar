@@ -12,18 +12,18 @@ class Migration(SchemaMigration):
     the priority column. The risk when handling data should be minimal """
 
     OLD_TABLE = u'offer_range_included_products'
-    NEW_TABLE = u'offer_rangeordering'
-    PRIORITY_COL = u'priority'
+    NEW_TABLE = u'offer_rangeproduct'
+    ORDER_COL = u'display_order'
 
     def forwards(self, orm):
         db.rename_table(self.OLD_TABLE, self.NEW_TABLE)
         db.add_column(
-            self.NEW_TABLE, self.PRIORITY_COL,
+            self.NEW_TABLE, self.ORDER_COL,
             self.gf('django.db.models.fields.IntegerField')(default=0))
 
     def backwards(self, orm):
         db.rename_table(self.NEW_TABLE, self.OLD_TABLE)
-        db.delete_column(self.OLD_TABLE, self.PRIORITY_COL)
+        db.delete_column(self.OLD_TABLE, self.ORDER_COL)
 
     models = {
         u'catalogue.attributeentity': {
