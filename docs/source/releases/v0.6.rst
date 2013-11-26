@@ -25,7 +25,7 @@ Overview
 
 The biggest change in Oscar 0.6 is the reworking of `pricing and availability`_, which 
 builds on top of the change to allow `multiple stockrecords per product`_.  The
-charge is largely backwards compatible with the old system of "partner
+change is largely backwards compatible with the old system of "partner
 wrappers" but it is recommended to upgrade to the new system.  Support for
 partner wrappers will be removed for Oscar 0.7.
 
@@ -133,7 +133,7 @@ Oscar:
 Payment models have abstract versions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The :doc:`payment models </ref/apps/payment>` have been split into abstract- and
+The :doc:`payment models </ref/apps/payment>` have been split into abstract and
 concrete versions.  This brings them inline with other Oscar apps and allows
 them to be customised.
 
@@ -272,7 +272,7 @@ Several changes have been made to the checkout classes.
 
 * The ``handle_payment`` method in
   :class:`~oscar.apps.checkout.views.PaymentDetailsView` now accepts a
-  :class:`~oscar.core.prices.Price`` instance instead of a Decimal.
+  :class:`~oscar.core.prices.Price` instance instead of a Decimal.
 
 Signature changes
 ~~~~~~~~~~~~~~~~~
@@ -285,12 +285,9 @@ Several classes and functions have had signature changes:
 * The :class:`oscar.apps.customer.forms.EmailAuthenticationForm` form needs to
   be instantated with a host name so prevent redirects to external sites.
 
-* The :class:`oscar.apps.customer.forms.EmailAuthenticationForm` form needs to
-  be instantated with a host name so prevent redirects to external sites.
-
 * The two product review forms, ``SignedInUserProductReviewForm`` and
   ``AnonymousUserProductReviewForm``, have been replaced by a new
-  :class:`oscar.apps.catalogue.reviews.forms.ProductReviewForm``.
+  :class:`oscar.apps.catalogue.reviews.forms.ProductReviewForm`.
 
 * 3 properties have been removed from
   :class:`oscar.apps.catalogue.abstract_models.AbstractProductImage` as they
@@ -334,10 +331,10 @@ Basket model changes
 Several properties of the basket ``Line`` model have been renamed:
 
 * ``Line.line_price_excl_tax_and_discounts`` has been renamed to 
-  ``Line.line_price_exlc_tax_incl_discounts``.
+  ``Line.line_price_excl_tax_incl_discounts``.
 
 * ``Line.line_price_incl_tax_and_discounts`` has been renamed to 
-  ``Line.line_price_inlc_tax_incl_discounts``.
+  ``Line.line_price_incl_tax_incl_discounts``.
 
 Address model changes
 ~~~~~~~~~~~~~~~~~~~~~
@@ -456,7 +453,7 @@ The permission-based dashboard introduced a new permission:
 Upgrading notes
 ===============
 
-* Alternative product class templates now use ``slug` field instead of
+* Alternative product class templates now use ``slug`` field instead of
   ``name.lower()`` to determine their filename.  If you have templates for
   specific product classes, please update your filenames accordingly
 
@@ -473,7 +470,7 @@ Checkout app:
 
 Payment app:
 
-* The `balance` method on the source object is not a property not a method.
+* The `balance` method on the source object is now a property not a method.
 
 URLs
 ~~~~
@@ -591,7 +588,7 @@ are deprecated and will be removed for Oscar 0.7.
 
 All the above properties and methods have effectively been moved to the availability and pricing
 policies that a strategy class is responsible for loading.  To upgrade your
-codebase, replcae your partner wrapper classes with equivalent 
+codebase, replace your partner wrapper classes with equivalent 
 :doc:`availability and pricing policies </topics/prices_and_availability>`.
 
 Basket
@@ -612,11 +609,11 @@ calculate correctly:
     basket = models.Basket.objects.get(id=1)
     basket.strategy = request.strategy
 
-With an assigned strategy class, a basket will raise a ``RuntimeError`` when
+Without an assigned strategy class, a basket will raise a ``RuntimeError`` when
 attempting to calculate totals.
 
 The way a product is added to a basket has also been changed as a ``StockInfo``
-instance is also required.  
+instance is also required.
 
 .. code-block:: python
 
