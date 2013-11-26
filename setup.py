@@ -41,9 +41,6 @@ setup(name='django-oscar',
           # We use the ModelFormSetView from django-extra-views for the basket
           # page
           'django-extra-views>=0.2,<0.7',
-          # We ship a simple Haystack implementation (that needs to be
-          # improved).  We are using the 2.0-beta release from Github and
-          # eagerly anticipating a stable 2.0 release on PyPI.
           'django-haystack>=2.0.0',
           # Treebeard is used for categories
           'django-treebeard==2.0b2',

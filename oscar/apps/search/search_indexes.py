@@ -38,9 +38,10 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
             return categories[0].full_name
 
     def prepare_price(self, obj):
-        # Pricing is tricky as product do not necessarily have a single price
+        # Pricing is tricky as products do not necessarily have a single price
         # (although that is the most common scenario).
         if obj.has_stockrecords:
+            # Fetch a "default" stockinfo
             result = strategy.fetch(obj)
             if result.price.is_tax_known:
                 return result.price.incl_tax
@@ -49,7 +50,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_num_in_stock(self, obj):
         if obj.has_stockrecords:
             result = strategy.fetch(obj)
-            return result.stockrecord.num_in_stock
+            return result.stockrecord.net_stock_level
 
     def get_updated_field(self):
         """
