@@ -22,14 +22,14 @@ class CreateProductReview(CreateView):
     form_class = ProductReviewForm
     view_signal = review_added
 
-    def dispatch(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         self.product = get_object_or_404(
             self.product_model, pk=kwargs['product_pk'])
         if self.product.has_review_by(request.user):
             messages.warning(
                 self.request, _("You have already reviewed this product!"))
             return HttpResponseRedirect(self.product.get_absolute_url())
-        return super(CreateProductReview, self).dispatch(
+        return super(CreateProductReview, self).get(
             request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
