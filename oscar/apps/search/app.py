@@ -13,13 +13,6 @@ class SearchApplication(Application):
     search_form = forms.PriceRangeSearchForm
 
     def get_urls(self):
-        # Build SQS based on the OSCAR_SEARCH_FACETS settings
-        sqs = SearchQuerySet()
-        for facet in settings.OSCAR_SEARCH_FACETS['fields'].values():
-            sqs = sqs.facet(facet['field'])
-        for facet in settings.OSCAR_SEARCH_FACETS['queries'].values():
-            for query in facet['queries']:
-                sqs = sqs.query_facet(facet['field'], query[1])
 
         # The form class has to be passed to the __init__ method as that is how
         # Haystack works.  It's slightly different to normal CBVs.
@@ -32,6 +25,19 @@ class SearchApplication(Application):
                 name='search'),
         )
         return self.post_process_urls(urlpatterns)
+
+    def get_sqs(self):
+        """
+        Return the SQS required by a the Haystack search view
+        """
+        # Build SQS based on the OSCAR_SEARCH_FACETS settings
+        sqs = SearchQuerySet()
+        for facet in settings.OSCAR_SEARCH_FACETS['fields'].values():
+            sqs = sqs.facet(facet['field'])
+        for facet in settings.OSCAR_SEARCH_FACETS['queries'].values():
+            for query in facet['queries']:
+                sqs = sqs.query_facet(facet['field'], query[1])
+        return sqs
 
 
 application = SearchApplication()

@@ -25,17 +25,14 @@
 {% endblock %}
 
 {% block column_left %}
-    {# TODO - generate this block automatically using the facets setting #}
-    {% if facet_data %}
+    {% if has_facets %}
         <h4>{% trans "Refine your search" %}</h4>
         <dl>
-            {% if facet_data.category %}
-                {% include 'search/partials/facet.html' with name='Category' items=facet_data.category %}
-            {% endif %}
-
-            {% if facet_data.price_range %}
-                {% include 'search/partials/facet.html' with name='Price range' items=facet_data.price_range %}
-            {% endif %}
+            {% for field, data in facet_data.items %}
+                {% if data.results %}
+                    {% include 'search/partials/facet.html' with name=data.name items=data.results %}
+                {% endif %}
+            {% endfor %}
         </dl>
     {% endif %}
 {% endblock %}
