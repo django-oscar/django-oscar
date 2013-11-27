@@ -7,10 +7,12 @@ Welcome to Oscar 0.6!
 These release notes cover the `new features`_ as well as `backwards incompatible changes`_ 
 that you'll want to be aware of when upgrading from Oscar 0.5 or
 earlier.  This release contains some major changes to core APIs which means
-many old APIs are to be dropped - see the `deprecation plan`_.
+many old APIs are to be dropped - see the `deprecation plan`_ to avoid any
+nasty surprises.
 
 To upgrade your Oscar site, make sure you study both the `backwards incompatible changes`_ 
-and the `deprecated features`_
+and the `deprecated features`_.  If you have any undocumented issues, please
+let us know on the mailing list.
 
 .. _`new features`: `What's new in Oscar 0.6?`_
 .. _`upgrading advice`: `Upgrading notes`_
@@ -27,10 +29,10 @@ charge is largely backwards compatible with the old system of "partner
 wrappers" but it is recommended to upgrade to the new system.  Support for
 partner wrappers will be removed for Oscar 0.7.
 
-Oscar 0.6 also introduces better support for marketplaces with the so-called
-permission-based dashboard. It is now possible to give non-staff users access
-to a subset of the dashboard's views (products and orders) by setting the
-new ``dashboard_access`` permission.
+Oscar 0.6 also introduces better support for marketplace-like functionality
+with the so-called permission-based dashboard. It is now possible to give
+non-staff users access to a subset of the dashboard's views (products and
+orders) by setting the new ``dashboard_access`` permission.
 
 `Oscar now supports Django 1.5`_ and its custom user model.  This has been only
 tested in the context of starting a new Oscar project with a custom model.
@@ -48,7 +50,9 @@ Other notable new features include:
 
 * `Customer wishlists`_
 
-* `New helper methods`_ in the ``EventHandler`` class for order processing
+* `New helper methods`_ in the ``EventHandler`` class for order processing.
+
+* `Reworked seach app`_ with support for easy faceting.
 
 .. _`Oscar now supports Django 1.5`: `Django 1.5 and custom user model support`_
 .. _`Partners can now have addresses`: `Partner addresses`_
@@ -228,6 +232,16 @@ customers. They can be used to created curated collections of products.
 The core :class:`~oscar.apps.offer.models.Range` model has been extended with a
 HTML description field also.
 
+Reworked search app
+~~~~~~~~~~~~~~~~~~~
+
+Oscar's search app has been reviewed and simplified.  The main view class has
+been reworked to provide better support for faceting, which can be easily
+specified using the ``OSCAR_SEARCH_FACETS`` setting.
+
+The ``SuggestionsView`` has been removed as it wasn't being used.  A later
+version of Oscar will include a replacement.
+
 Order processing changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -333,6 +347,17 @@ Address model changes
 
 * The ``Country`` model's `is_highlighted` column is now an integer field to allow
   fine-grained country selection. 
+
+Search app changes
+~~~~~~~~~~~~~~~~~~
+
+Some of the names have been simplified.
+
+* The ``MultiFacetedSearchView`` and ``SuggestionsView`` view classes have been
+  removed.  The ``MultiFacetedSeachView`` class is replaced by ``FacetedSearchView``.
+
+* The ``MultiFacetedSearchForm`` has been removed in favour of
+  ``SearchForm``.
 
 Renamed templates
 ~~~~~~~~~~~~~~~~~
