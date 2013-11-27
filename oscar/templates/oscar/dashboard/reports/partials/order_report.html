@@ -19,7 +19,7 @@
                     <td><a href="{% url 'dashboard:order-detail' order.number %}">{{ order.number }}</a></td>
                     <td>
                         {% if order.user %}
-                            <a href="{% url 'dashboard:user-detail' order.user.id %}">{{ order.user|default:"-" }}</a></td>
+                            <a href="{% url 'dashboard:user-detail' order.user.id %}">{{ order.user|default:"-" }}</a>
                         {% else %}
                             -
                         {% endif %}
