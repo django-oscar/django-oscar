@@ -371,6 +371,9 @@ BaseProductCategoryFormSet = inlineformset_factory(
 
 class ProductCategoryFormSet(BaseProductCategoryFormSet):
 
+    def __init__(self, product_class, user, *args, **kwargs):
+        super(ProductCategoryFormSet, self).__init__(*args, **kwargs)
+
     def clean(self):
         if self.instance.is_top_level and self.get_num_categories() == 0:
             raise forms.ValidationError(
@@ -414,8 +417,13 @@ class ProductImageForm(forms.ModelForm):
         return self.prefix.split('-').pop()
 
 
-ProductImageFormSet = inlineformset_factory(
+BaseProductImageFormSet = inlineformset_factory(
     Product, ProductImage, form=ProductImageForm, extra=2)
+
+
+class ProductImageFormSet(BaseProductImageFormSet):
+    def __init__(self, product_class, user, *args, **kwargs):
+        super(ProductImageFormSet, self).__init__(*args, **kwargs)
 
 
 class ProductRecommendationForm(forms.ModelForm):
@@ -426,6 +434,11 @@ class ProductRecommendationForm(forms.ModelForm):
         }
 
 
-ProductRecommendationFormSet = inlineformset_factory(
+BaseProductRecommendationFormSet = inlineformset_factory(
     Product, ProductRecommendation, form=ProductRecommendationForm,
     extra=5, fk_name="primary")
+
+
+class ProductRecommendationFormSet(BaseProductRecommendationFormSet):
+    def __init__(self, product_class, user, *args, **kwargs):
+        super(ProductRecommendationFormSet, self).__init__(*args, **kwargs)
