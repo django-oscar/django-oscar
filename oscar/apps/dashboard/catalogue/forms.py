@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError, MultipleObjectsReturned
-from django.forms.models import inlineformset_factory, BaseInlineFormSet
+from django.forms.models import inlineformset_factory
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
 from treebeard.forms import MoveNodeForm, movenodeform_factory
@@ -364,7 +364,12 @@ class ProductCategoryForm(forms.ModelForm):
         model = ProductCategory
 
 
-class BaseProductCategoryFormSet(BaseInlineFormSet):
+BaseProductCategoryFormSet = inlineformset_factory(
+    Product, ProductCategory, form=ProductCategoryForm,
+    fields=('category',), extra=1, can_delete=False)
+
+
+class ProductCategoryFormSet(BaseProductCategoryFormSet):
 
     def clean(self):
         if self.instance.is_top_level and self.get_num_categories() == 0:
@@ -383,12 +388,6 @@ class BaseProductCategoryFormSet(BaseInlineFormSet):
                     and not form.cleaned_data.get('DELETE', False)):
                 num_categories += 1
         return num_categories
-
-
-ProductCategoryFormSet = inlineformset_factory(
-    Product, ProductCategory, form=ProductCategoryForm,
-    formset=BaseProductCategoryFormSet, fields=('category',), extra=1,
-    can_delete=False)
 
 
 class ProductImageForm(forms.ModelForm):
