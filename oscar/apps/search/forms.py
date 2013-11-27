@@ -14,7 +14,7 @@ class SearchInput(Input):
     input_type = 'search'
 
 
-class PriceRangeSearchForm(FacetedSearchForm):
+class SearchForm(FacetedSearchForm):
     """
     In Haystack, the search form is used for interpretting
     and sub-filtering the SQS.
@@ -30,7 +30,7 @@ class PriceRangeSearchForm(FacetedSearchForm):
         # handle range queries
 
         # Note, we call super on a parent class
-        sqs = super(FacetedSearchForm, self).search()
+        sqs = super(SearchForm, self).search()
 
         # We need to process each facet to ensure that the field name and the
         # value are quoted correctly and separately:
