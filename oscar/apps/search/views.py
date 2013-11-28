@@ -13,6 +13,13 @@ class FacetedSearchView(views.FacetedSearchView):
     def extra_context(self):
         extra = super(FacetedSearchView, self).extra_context()
 
+        # Show suggestion no matter what.  Haystack 2.1 only shows a suggestion
+        # if there are some results, which seems a bit weird to me
+        if self.results.query.backend.include_spelling:
+            suggestion = self.form.get_suggestion()
+            if suggestion != self.query:
+                extra['suggestion'] = suggestion
+
         if 'fields' in extra['facets']:
             # Convert facet data into a more useful datastructure
             extra['facet_data'] = facets.facet_data(
