@@ -4,7 +4,7 @@ Prices and availability
 
 This page explains how prices and availability are determined in Oscar.  In
 short, it seems quite complicated as there are several parts to it, but what
-this buys is flexility: buckets of it.
+this buys is flexibility: buckets of it.
 
 Overview
 --------
@@ -73,7 +73,7 @@ product and returns a ``StockInfo`` instance:
         print "Selected stockrecord is %s" % stock_info.stockrecord
 
 The strategy class is accessed in several places in Oscar's codebase.  In templates, a
-``session_strategy`` template tag is used to load the price and availabilty
+``session_strategy`` template tag is used to load the price and availability
 information into the template context:
 
 .. code-block:: html+django
@@ -136,7 +136,7 @@ class:
    :noindex:
 
 Oscar also provides a "structured" strategy class which provides overridable
-methods for selecting the stockreord, and determining pricing and availabiltiy
+methods for selecting the stockrecord, and determining pricing and availability
 policies:
 
 .. autoclass:: oscar.apps.partner.strategy.Structured
@@ -204,7 +204,7 @@ Strategy mixins
 ---------------
 
 Oscar also ships with several mixins which implement one method of the
-``Structured`` stategy.  These allow strategies to be easily
+``Structured`` strategy.  These allow strategies to be easily
 composed from re-usable parts:
 
 .. automodule:: oscar.apps.partner.strategy
