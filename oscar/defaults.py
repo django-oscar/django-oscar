@@ -197,7 +197,15 @@ OSCAR_SEARCH_FACETS = {
         'category': {
             'name': _('Category'),
             'field': 'category'
-        }
+        },
+        'product_class': {
+            'name': _('Type'),
+            'field': 'product_class'
+        },
+        #'rating': {
+        #    'name': _('Rating'),
+        #    'field': 'rating'
+        #}
     },
     'queries': {
         'price_range': {

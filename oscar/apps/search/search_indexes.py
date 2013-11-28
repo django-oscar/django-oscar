@@ -18,9 +18,11 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     title = indexes.EdgeNgramField(model_attr='title', null=True)
 
     # Fields for faceting
+    product_class = indexes.CharField(null=True, faceted=True)
     category = indexes.CharField(null=True, faceted=True)
     price = indexes.DecimalField(null=True, faceted=True)
     num_in_stock = indexes.IntegerField(null=True, faceted=True)
+    rating = indexes.IntegerField(null=True, faceted=True)
 
     date_created = indexes.DateTimeField(model_attr='date_created')
     date_updated = indexes.DateTimeField(model_attr='date_updated')
@@ -35,10 +37,17 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     def read_queryset(self, using=None):
         return self.get_model().browsable.base_queryset()
 
+    def prepare_product_class(self, obj):
+        return obj.product_class.name
+
     def prepare_category(self, obj):
         categories = obj.categories.all()
         if len(categories) > 0:
             return categories[0].full_name
+
+    def prepare_rating(self, obj):
+        if obj.rating is not None:
+            return int(obj.rating)
 
     def prepare_price(self, obj):
         # Pricing is tricky as products do not necessarily have a single price
