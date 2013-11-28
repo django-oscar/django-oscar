@@ -32,6 +32,9 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         # Only index browsable products (not each individual variant)
         return self.get_model().browsable.order_by('-date_updated')
 
+    def read_queryset(self, using=None):
+        return self.get_model().browsable.base_queryset()
+
     def prepare_category(self, obj):
         categories = obj.categories.all()
         if len(categories) > 0:
