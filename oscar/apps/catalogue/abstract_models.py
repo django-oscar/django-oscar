@@ -11,6 +11,7 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Sum, Count, get_model
 from django.utils.translation import ugettext_lazy as _
+from django.utils.functional import cached_property
 from treebeard.mp_tree import MP_Node
 
 from oscar.core.utils import slugify
@@ -394,7 +395,7 @@ class AbstractProduct(models.Model):
         """
         return self.parent_id is None
 
-    @property
+    @cached_property
     def is_group(self):
         """
         Test if this is a top level product and has more than 0 variants
@@ -550,7 +551,7 @@ class AbstractProduct(models.Model):
         """
         Return a product's item class
         """
-        if self.product_class:
+        if self.product_class_id or self.product_class:
             return self.product_class
         if self.parent and self.parent.product_class:
             return self.parent.product_class
