@@ -1,9 +1,6 @@
 {% extends "layout.html" %}
 {% load url from future %}
-{% load history_tags %}
-{% load thumbnail %}
 {% load i18n %}
-{% load staticfiles %}
 
 {% block title %}
     {{ review.title }} | {% trans "Reviews" %} | {{ product.title }} | {{ block.super }}

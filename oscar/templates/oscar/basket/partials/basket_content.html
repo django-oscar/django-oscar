@@ -49,7 +49,9 @@
                                 {{ form.id }}
                                 {% with image=product.primary_image %}
                                     {% thumbnail image.original "100x100" upscale=False as thumb %}
-                                    <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"/></a>
+                                        <a href="{{ product.get_absolute_url }}">
+                                            <img class="thumbnail" src="{% static thumb.url %}" alt="{{ product.get_title }}"/>
+                                        </a>
                                     {% endthumbnail %}
                                 {% endwith %}
                             </div>
@@ -173,7 +175,9 @@
                                 {{ form.id }}
                                 {% with image=form.instance.product.primary_image %}
                                     {% thumbnail image.original "100x100" upscale=False as thumb %}
-                                    <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{% static thumb.url %}" alt="{{ form.instance.product.get_title }}"></a>
+                                    <a href="{{ form.instance.product.get_absolute_url }}">
+                                        <img class="thumbnail" src="{% static thumb.url %}" alt="{{ form.instance.product.get_title }}">
+                                    </a>
                                     {% endthumbnail %}
                                 {% endwith %}
                             </div>
