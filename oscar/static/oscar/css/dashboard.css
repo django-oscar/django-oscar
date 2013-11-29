@@ -3558,6 +3558,8 @@ caption > i,
 .upload-image {
   *zoom: 1;
   margin: 0;
+  z-index: 1;
+  position: relative;
 }
 .upload-image:before,
 .upload-image:after {
