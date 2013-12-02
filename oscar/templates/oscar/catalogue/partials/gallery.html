@@ -13,7 +13,7 @@
                 {% for image in all_images %}
                     <div class="item {% if forloop.first %}active{% endif %}">
                         {% thumbnail image.original "440x400" upscale=False as thumb %}
-                        <img src="{% static thumb.url %}" alt="{{ product.get_title }}" />
+                        <img src="{{ thumb.url }}" alt="{{ product.get_title }}" />
                         {% endthumbnail %}
                     </div>
                 {% endfor %}
@@ -24,7 +24,7 @@
                 {% for image in all_images %}
                     <li data-target="#product-gallery" data-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}">
                         {% thumbnail image.original "65x55" crop="center" as thumb %}
-                        <img src="{% static thumb.url %}" alt="{{ product.get_title }}" />
+                        <img src="{{ thumb.url }}" alt="{{ product.get_title }}" />
                         {% endthumbnail %}
                     </li>
                 {% endfor %}
@@ -43,11 +43,7 @@
                     <div class="item active">
                     {% with image=product.primary_image %}
                         {% thumbnail image.original "440x400" upscale=False as thumb %}
-                        {% if not image.is_missing %}
-                            <img src="{% static thumb.url %}" alt="{{ product.get_title }}" />
-                        {% else %}
-                            <img src="{% static thumb.url %}" alt="{{ product.get_title }}" />
-                        {% endif %}
+                            <img src="{{ thumb.url }}" alt="{{ product.get_title }}" />
                         {% endthumbnail %}
                     {% endwith %}
                     </div>

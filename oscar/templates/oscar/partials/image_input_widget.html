@@ -1,9 +1,11 @@
 {% load i18n %}
-{% load staticfiles %}
+{% load thumbnail %}
 
 <div id="{{ image_id }}" class="image-input">
     {% if image_url %}
-        <img src="{% static image_url %}" alt="{% trans "thumbnail" %}" />
+        {% thumbnail image_url "200x200" upscale=False as thumb %}
+            <img src="{{ thumb.url }}" alt="{% trans "thumbnail" %}" />
+        {% endthumbnail %}
     {% else %}
         <img alt="{% trans "thumbnail" %}"
             onload="$('#upload-button-{{ image_id }}').hide()"
