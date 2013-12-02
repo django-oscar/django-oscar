@@ -494,7 +494,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for txn in transactions %}
+                                    {% for txn in payment_transactions %}
                                         <tr>
                                             <td>{{ txn.source.source_type }}</td>
                                             <td>{{ txn.amount|currency:order.currency }}</td>
