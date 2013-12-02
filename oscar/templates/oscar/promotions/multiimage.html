@@ -1,5 +1,3 @@
-{% load staticfiles %}
-
 {% if promotion.images %}
 <div id="{{ promotion.name|slugify }}" class="carousel slide">
 	<ol class="carousel-indicators">
@@ -12,9 +10,9 @@
     {% for promotion_image in promotion.images.all %}
         <div class="item {% if forloop.first %}active{% endif %}">
             {% if promotion_image.link_url %}
-            <a href="{{ promotion_image.link_url }}"><img src="{% static promotion_image.image.url %}" title="{{ promotion_image.name }}" /></a>
+                <a href="{{ promotion_image.link_url }}"><img src="{{ promotion_image.image.url }}" title="{{ promotion_image.name }}" /></a>
             {% else %}
-            <img src="{% static promotion_image.image.url %}" title="{{ promotion_image.name }}" />
+                <img src="{{ promotion_image.image.url }}" title="{{ promotion_image.name }}" />
             {% endif %}
         </div>
     {% endfor %}

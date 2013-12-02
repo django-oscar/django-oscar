@@ -77,7 +77,7 @@
                                                 {% with image=product.primary_image %}
                                                     {% thumbnail image.original "240" upscale=False as thumb %}
                                                         <a href="{{ image.original.url }}" rel="lightbox_{{ product.upc|default:"-" }}" class="thumbnail">
-                                                            <img src="{% static thumb.url %}" class="row-fluid" alt="{{ product.get_title }}" data-description="{% if image.caption %}{{ image.caption }}{% endif %}">
+                                                            <img src="{{ thumb.url }}" class="row-fluid" alt="{{ product.get_title }}" data-description="{% if image.caption %}{{ image.caption }}{% endif %}">
                                                         </a>
                                                     {% endthumbnail %}
                                                 {% endwith %}

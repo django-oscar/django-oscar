@@ -1,10 +1,8 @@
-{% load staticfiles %}
-
 {% if promotion.image %}
     {% if promotion.link_url %}
-        <a href="{{ promotion.link_url }}"><img src="{% static promotion.image.url %}" title="{{ promotion.name }}" /></a>
+        <a href="{{ promotion.link_url }}"><img src="{{ promotion.image.url }}" title="{{ promotion.name }}" /></a>
     {% else %}
-        <img src="{% static promotion.image.url %}" title="{{ promotion.name }}" />
+        <img src="{{ promotion.image.url }}" title="{{ promotion.name }}" />
     {% endif %}
 {% endif %}
 
