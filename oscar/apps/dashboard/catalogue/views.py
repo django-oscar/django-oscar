@@ -158,7 +158,6 @@ class ProductCreateUpdateView(generic.UpdateView):
         Additionally, self.product_class is set.
         """
         user = self.request.user
-        self.require_user_stockrecord = not user.is_staff
         self.creating = not 'pk' in self.kwargs
         if self.creating:
             try:
@@ -183,7 +182,7 @@ class ProductCreateUpdateView(generic.UpdateView):
         ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
         if 'stockrecord_formset' not in ctx:
             ctx['stockrecord_formset'] = self.stockrecord_formset(
-                self.product_class, instance=self.object)
+                self.product_class, self.request.user, instance=self.object)
         if 'category_formset' not in ctx:
             ctx['category_formset'] = self.category_formset(instance=self.object)
         if 'image_formset' not in ctx:
@@ -218,7 +217,7 @@ class ProductCreateUpdateView(generic.UpdateView):
             self.object = form.save()
 
         stockrecord_formset = self.stockrecord_formset(
-            self.product_class,
+            self.product_class, self.request.user,
             self.request.POST, instance=self.object)
         category_formset = self.category_formset(
             self.request.POST, instance=self.object)
