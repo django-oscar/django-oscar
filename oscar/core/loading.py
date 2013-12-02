@@ -57,12 +57,12 @@ def get_classes(module_label, classnames):
         #  1. local_app does not exist
         #  2. local_app exists but is corrupted (ImportError inside of the app)
         #
-        # Obviously, for the reason #1 we want to fail back to use Oscar app.
+        # Obviously, for the reason #1 we want to fall back to use Oscar app.
         # For the reason #2 we want to propagate error (the dev obviously wants
         # to override app and not use Oscar app)
         #
         # ImportError does not provide easy way to distinguish those two cases.
-        # Fortunatelly, the traceback of the ImportError starts at __import__
+        # Fortunately, the traceback of the ImportError starts at __import__
         # statement. If the traceback has more than one frame, it means that
         # application was found and ImportError originates within the local app
         __, __, exc_traceback = sys.exc_info()

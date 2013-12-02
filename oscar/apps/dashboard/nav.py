@@ -1,7 +1,9 @@
+import re
 from django.core.urlresolvers import reverse, resolve, NoReverseMatch
 from django.core.exceptions import ImproperlyConfigured
 from django.conf import settings
 from django.http import Http404
+from oscar.core.loading import get_class, AppNotFoundError
 from oscar.views.decorators import check_permissions
 
 
@@ -39,28 +41,37 @@ class Node(object):
         This function might seem costly, but a simple comparison with DTT
         did not show any change in response time
         """
+        exception = ImproperlyConfigured(
+            "Please follow Oscar's default dashboard app layout or set a "
+            "custom access_fn")
         if self.is_heading:
             return True
+        # get view module string
         try:
             url = reverse(self.url_name, args=self.url_args,
                           kwargs=self.url_kwargs)
-        except NoReverseMatch:
+            view_module = resolve(url).func.__module__
+        except (NoReverseMatch, Http404):
             # if there's no match, no need to display it
             return False
-        try:
-            view_module = resolve(url).func.__module__
-        except Http404:
-            # unlikely, but again it doesn't make sense to display it
-            return False
-        if not view_module.endswith('.views'):
-            raise ImproperlyConfigured("Please follow Oscar's default dashboard layout or replace access_fn")
-        app_module_str = view_module.replace('.views', '.app')
-        try:
-            app_module = __import__(app_module_str, fromlist=['application'])
-            app_instance = app_module.application
-        except (ImportError, AttributeError):
-            raise ImproperlyConfigured("Please follow Oscar's default dashboard layout or replace access_fn")
 
+        # We can't assume that the view has the same parent module as the app,
+        # as either the app or view can be customised. So we turn the module
+        # string (e.g. 'oscar.apps.dashboard.catalogue.views') into an app
+        # label that can be loaded by get_class (e.g. 'dashboard.catalogue.app),
+        # which then essentially checks INSTALLED_APPS for the right module to
+        # load
+        match = re.search('(dashboard[\w\.]*)\.views$', view_module)
+        if not match:
+            raise exception
+        app_label_str = match.groups()[0] + '.app'
+
+        try:
+            app_instance = get_class(app_label_str, 'application')
+        except (ImportError, AppNotFoundError):
+            raise exception
+
+        # handle name-spaced view names
         if ':' in self.url_name:
             view_name = self.url_name.split(':')[1]
         else:
