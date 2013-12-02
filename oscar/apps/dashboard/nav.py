@@ -2,6 +2,7 @@ from django.core.urlresolvers import reverse, resolve, NoReverseMatch
 from django.core.exceptions import ImproperlyConfigured
 from django.conf import settings
 from django.http import Http404
+from oscar.core.loading import get_class
 from oscar.views.decorators import check_permissions
 
 
@@ -55,11 +56,16 @@ class Node(object):
         if not view_module.endswith('.views'):
             raise ImproperlyConfigured("Please follow Oscar's default dashboard layout or replace access_fn")
         app_module_str = view_module.replace('.views', '.app')
-        try:
-            app_module = __import__(app_module_str, fromlist=['application'])
-            app_instance = app_module.application
-        except (ImportError, AttributeError):
-            raise ImproperlyConfigured("Please follow Oscar's default dashboard layout or replace access_fn")
+
+        if app_module_str.startswith('oscar.apps.'):
+            app_module_str = app_module_str[len('oscar.apps.'):]
+            app_instance = get_class(app_module_str, 'application')
+        else:
+            try:
+                app_module = __import__(app_module_str, fromlist=['application'])
+                app_instance = app_module.application
+            except (ImportError, AttributeError):
+                raise ImproperlyConfigured("Please follow Oscar's default dashboard layout or replace access_fn")
 
         if ':' in self.url_name:
             view_name = self.url_name.split(':')[1]
