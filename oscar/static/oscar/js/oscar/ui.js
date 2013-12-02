@@ -30,10 +30,10 @@ var oscar = (function(o, $) {
     // Notifications inbox within 'my account' section.
     o.notifications = {
         init: function() {
-            $('a[data-behaviours~="archive"]').click(function() {
+            $('a[data-behaviours~="archive"]').on('click', function() {
                 o.notifications.checkAndSubmit($(this), 'archive');
             });
-            $('a[data-behaviours~="delete"]').click(function() {
+            $('a[data-behaviours~="delete"]').on('click', function() {
                 o.notifications.checkAndSubmit($(this), 'delete');
             });
         },
@@ -52,7 +52,7 @@ var oscar = (function(o, $) {
             $('form[data-behaviours~="lock"]').submit(o.forms.submitIfNotLocked);
 
             // Disable buttons when they are clicked
-            $('.js-disable-on-click').click(function(){$(this).button('loading');});
+            $('.js-disable-on-click').on('click', function(){$(this).button('loading');});
         },
         submitIfNotLocked: function(event) {
             var $form = $(this);
@@ -67,7 +67,7 @@ var oscar = (function(o, $) {
     o.page = {
         init: function() {
             // Scroll to sections
-            $('.top_page a').click(function(e) {
+            $('.top_page a').on('click', function(e) {
                 var href = $(this).attr('href');
                 $('html, body').animate({
                     scrollTop: $(href).offset().top
@@ -90,7 +90,7 @@ var oscar = (function(o, $) {
         },
         initNav: function() {
             // Initial navigation for desktop
-            var $sidebar = $('aside.span3'), 
+            var $sidebar = $('aside.span3'),
                 $browse = $('[data-navigation="dropdown-menu"]'),
                 $browseOpen = $browse.parent().find('> a[data-toggle]');
             // Set width of nav dropdown to be same as sidebar
