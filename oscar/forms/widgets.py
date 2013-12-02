@@ -1,6 +1,5 @@
 import re
 
-from django.conf import settings
 from django import forms
 from django.template import Context
 from django.forms.widgets import FileInput
@@ -11,7 +10,7 @@ from django.forms.util import flatatt
 
 class ImageInput(FileInput):
     """
-    Widget prodiving a input element for file uploads based on the
+    Widget providing a input element for file uploads based on the
     Django ``FileInput`` element. It hides the actual browser-specific
     input element and shows the available image for images that have
     been previously uploaded. Selecting the image will open the file
@@ -39,8 +38,6 @@ class ImageInput(FileInput):
             final_attrs['value'] = force_unicode(self._format_value(value))
 
         image_url = final_attrs.get('value', '')
-        if image_url:
-            image_url = "%s/%s" % (settings.MEDIA_URL, image_url)
 
         return render_to_string(self.template_name, Context({
             'input_attrs': flatatt(final_attrs),
