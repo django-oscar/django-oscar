@@ -1,5 +1,6 @@
 {% extends 'dashboard/offers/step_form.html' %}
 {% load i18n %}
+{% load staticfiles %}
 
 {% block summary %}
     {% include 'dashboard/offers/summary.html' %}
@@ -11,7 +12,8 @@
 
 {% block extrascripts %}
     {{ block.super }}
-    <script src="{{ STATIC_URL }}oscar/js/timepicker/jquery-ui-timepicker-addon.js" type="text/javascript"></script>
+    {# The CSS for that is directly in dashboard.less #}
+    <script src="{% static 'oscar/js/timepicker/jquery-ui-timepicker-addon.min.js' %}" type="text/javascript"></script>
 {% endblock %}
 
 {% block form_actions_buttons %}
