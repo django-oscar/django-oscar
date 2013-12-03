@@ -186,7 +186,7 @@ class AbstractBasket(models.Model):
                     stock_info.price.currency, price_currency))
 
         if stock_info.stockrecord is None:
-            raise ValueError(_(
+            raise ValueError((
                 "Basket lines must all have stock records. Strategy hasn't "
                 "found any stock record for product %s") % product)
 
