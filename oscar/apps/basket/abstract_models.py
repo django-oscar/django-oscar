@@ -185,6 +185,11 @@ class AbstractBasket(models.Model):
                 "line has currency %s, while basket has currency %s") % (
                     stock_info.price.currency, price_currency))
 
+        if stock_info.stockrecord is None:
+            raise ValueError((
+                "Basket lines must all have stock records. Strategy hasn't "
+                "found any stock record for product %s") % product)
+
         # Line reference is used to distinguish between variations of the same
         # product (eg T-shirts with different personalisations)
         line_ref = self._create_line_reference(
