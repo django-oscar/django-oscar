@@ -1,16 +1,26 @@
 // OSCAR HEADER
 // -----------
 
-.header {
+.site-header {
     position:relative;
     z-index:2;
-    .page_inner {
-        padding:50px 0 40px;
+    .site-spacing {
+        padding:@gridGutterWidth * 2.5 0 @gridGutterWidth * 2;
     }
     h1 {
         line-height:inherit;
         margin:0;
         font-size:30px;
+    }
+}
+
+// Site brand (logo and mini basket layout)
+.site-brand {
+    // 100% and clearfix
+    .makeFluidRow();
+    
+    h1 {
+        .makeFluidCol(7);
     }
 }
 
@@ -21,6 +31,9 @@
 
 // Basket Mini Dropdown
 .basket-mini {
+
+    float:right;
+
     .btn-group {
         margin-left:10px;
     }

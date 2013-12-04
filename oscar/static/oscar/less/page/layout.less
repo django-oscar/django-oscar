@@ -4,15 +4,19 @@
 body {
     background-color: @grayLighter;
 }
-.container-fluid {
+
+.site-header,
+.site-container,
+.nav-accounts-collapse,
+.site-footer {
     padding:0px;
     margin:0px auto;
     // Here is the page width: editable in page/mixins.less
     max-width:@oscarpagewidth;
 }
 
-// The page container
-.page {
+// The site container
+.site-container {
     background:@white;
     -webkit-border-radius: 0 0 6px 6px;
     -moz-border-radius: 0 0 6px 6px;
@@ -24,7 +28,27 @@ body {
 
 // Some padding for the inner container
 // Also usefull for the mobile
-.page_inner {
+.site-spacing {
     padding:@gridGutterWidth;
     .clearfix();
+}
+
+// Two/Three column layout use this wrapper .site-content-wrapper
+// Two columns layout used on home,browse,search results and account pages
+.site-content-wrapper {
+    // 100% and clearfix
+    .makeFluidRow();
+}
+.site-content-aside,
+.site-content-left,
+.site-content-right {
+    .makeFluidCol(3);
+}
+// If two column layout Main content is smaller
+.site-content-aside + .site-content-main {
+    .makeFluidCol(9);
+}
+// If three column layout Main content is smaller still
+.site-content-left + .site-content-main {
+    .makeFluidCol(6);
 }

@@ -7,9 +7,9 @@
     {% include "partials/nav_accounts.html" %}
 
     {# Site logo/title, mini-basket, browse dropdown and searchbox #}
-    <header class="header container-fluid">
-        <div class="page_inner">
-            <div class="row-fluid">
+    <header class="site-header">
+        <div class="site-spacing">
+            <div class="site-brand">
                 {% include "partials/brand.html" %}
                 {# Mini-basket wrapped in a block so some templates can now display it #}
                 {% block mini_basket %}{% include "partials/mini_basket.html" %}{% endblock %}
@@ -22,8 +22,8 @@
 
     {# Main content of page - other layout templates may override this block #}
     {% block content_wrapper %}
-        <div class="container-fluid page">
-            <div class="page_inner">
+        <div class="site-container">
+            <div class="site-spacing">
                 {% block breadcrumbs %}{% endblock %}
                 {% block header %}
                     <div class="page-header action">
@@ -32,7 +32,7 @@
                 {% endblock %}
                 {% include "partials/alert_messages.html" %}
                 {% block subnavigation %}{% endblock %}
-                <div class="content">
+                <div class="site-content-main">
                     {% block subheader %}{% endblock subheader %}
 
                     {# Render promotions #}
@@ -45,8 +45,8 @@
                     {# Div exists for AJAX updates to entire content section #}
                     <div id="content_inner">{% block content %}{% endblock %}</div>
                 </div>
-            </div>
-        </div>
+            </div><!-- /site-spacing -->
+        </div><!-- /site-container -->
     {% endblock %}
 
     {% include "partials/footer.html" %}

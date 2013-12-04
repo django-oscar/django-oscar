@@ -5,8 +5,8 @@
 {% load staticfiles %}
 {% load i18n %}
 
-<div class="row-fluid">
-    <div class="span2">
+<div class="review-product-summary">
+    <div class="review-image">
         <div class="image_container">
             {% with image=product.primary_image %}
                 {% thumbnail image.original "x155" upscale=False as thumb %}
@@ -15,7 +15,7 @@
             {% endwith %}
         </div>
     </div>
-    <div class="span10">
+    <div class="review-summary">
         <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a></h3>
         {% include "catalogue/partials/stock_record.html" %}
 

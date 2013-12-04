@@ -2,18 +2,20 @@
 {% load product_tags %}
 
 {% block content %}
-<section class="well well-blank">
+<section class="promotion-block promotion-{{ promotion|slugify|lower }}">
     <div class="sub-header">
         <h2>{{ promotion.name }}</h2>
     </div>
 
     {{ promotion.description|safe }}
 
-    <ul class="row-fluid">
-        {% for product in products %}
-        <li class="span3 {% if forloop.counter0|divisibleby:"4" %}no-margin{% endif %}">{% render_product product %}</li>
-        {% endfor %}
-    </ul>
+    <div class="product-list-wrapper">
+        <ul class="product-list">
+            {% for product in products %}
+            <li {% if forloop.counter0|divisibleby:"4" %}class="product-list-row"{% endif %}>{% render_product product %}</li>
+            {% endfor %}
+        </ul>
+    </div>
 
     {% if block.link_url %}
         <a href="{{ block.link_url }}">{% trans "See more" %}</a>

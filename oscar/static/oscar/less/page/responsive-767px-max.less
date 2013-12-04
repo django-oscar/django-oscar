@@ -4,8 +4,8 @@
 
 // For sreens that are on the money with the page width, lets add some space
 @media (max-width: @oscarpagewidth) {
-	.header {
-	  .page_inner {
+	.site-header {
+	  .site-spacing {
 	    padding-left:20px;
 	    padding-right:20px;
 	  }
@@ -16,8 +16,35 @@
 
 	// Remove padding here, we are setting in on page inner
 	body {
-	padding: 0;
+		padding: 0;
 	}
+	
+	// For semantic/theming sake we have added grid mixins
+	// Make all makeFluidCol mixins block level again
+	.site-content-aside,
+	.site-content-left,
+	.site-content-right,
+	.site-content-aside + .site-content-main,
+	.site-content-left + .site-content-main,
+	.product-list > li,
+	.product-list-recommended .product-list > li,
+	.product-list-related .product-list > li,
+	.product-list-viewed .product-list > li,
+	.product-list-offers .product-list > li,
+	.category-description-text,
+	.category-description-image,
+	#product-gallery,
+	.product-summary,
+	.promotion-single-product-description,
+	.promotion-single-product-image,
+	.review-summary,
+	.review-image {
+	    float: none;
+	    display: block;
+	    width: 100%;
+	    margin-left: 0;
+	    .box-sizing(border-box);
+	 }
 
 	// Utilities
 	.align-right,

@@ -2,13 +2,16 @@
 {% load product_tags %}
 
 {% if products %}
+<section class="product-list-viewed">
     <div class="sub-header">
         <h2>{% trans 'Products you recently viewed' %}</h2>
     </div>
-
-    <ul class="row-fluid">
-        {% for product in products|slice:":6" %}
-            <li class="span2 {% if forloop.counter0|divisibleby:"6" %}no-margin{% endif %}">{% render_product product %}</li>
-        {% endfor %}
-    </ul>
+    <div class="product-list-wrapper">
+        <ul class="product-list">
+	        {% for product in products|slice:":6" %}
+	            <li {% if forloop.counter0|divisibleby:"6" %}class="product-list-row"{% endif %}>{% render_product product %}</li>
+	        {% endfor %}
+    	</ul>
+	</div>
+</section>
 {% endif %}
