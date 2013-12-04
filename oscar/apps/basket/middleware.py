@@ -86,7 +86,7 @@ class BasketMiddleware(object):
         # Check if we need to set a cookie. If the cookies is already available
         # but is set in the cookies_to_delete list then we need to re-set it.
         has_basket_cookie = (
-            settings.OSCAR_BASKET_COOKIE_OPEN not in request.COOKIES
+            settings.OSCAR_BASKET_COOKIE_OPEN in request.COOKIES
             and settings.OSCAR_BASKET_COOKIE_OPEN not in cookies_to_delete)
 
         # If a basket has had products added to it, but the user is anonymous
