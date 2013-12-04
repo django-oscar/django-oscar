@@ -81,7 +81,7 @@ class BasketMiddleware(object):
         for cookie_key in cookies_to_delete:
             response.delete_cookie(cookie_key)
 
-        basket_id = request.basket.id if hasattr(request, 'basket') else None
+        basket_id = request.basket.id if hasattr(request, 'basket') else 0
 
         # Check if we need to set a cookie. If the cookies is already available
         # but is set in the cookies_to_delete list then we need to re-set it.
@@ -93,8 +93,7 @@ class BasketMiddleware(object):
         # then we need to assign it to a cookie
         if (basket_id > 0 and not request.user.is_authenticated()
                 and not has_basket_cookie):
-            cookie = "%s_%s" % (
-                request.basket.id, self.get_basket_hash(request.basket.id))
+            cookie = "%s_%s" % (basket_id, self.get_basket_hash(basket_id))
             response.set_cookie(
                 settings.OSCAR_BASKET_COOKIE_OPEN, cookie,
                 max_age=settings.OSCAR_BASKET_COOKIE_LIFETIME, httponly=True)
