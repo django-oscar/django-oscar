@@ -27,7 +27,7 @@ Example
 Consider a simple situation where all orders are paid for by PayPal using their
 'SALE' mode where the money is settled immediately (one-phase payment model).
 The project would have a 'PayPal' SourceType and, for each order, create a new
-``Source`` instance where the ``amount_debitted`` would be the order total.  A
+``Source`` instance where the ``amount_debited`` would be the order total.  A
 ``Transaction`` model with ``txn_type=Transaction.DEBIT`` would normally also be
 created (although this is optional).
 
@@ -56,11 +56,11 @@ common exceptions which can occur:
   that require redirecting the user to a 3rd-party site.  This exception class
   has a ``url`` attribute that needs to be set.
 
-* ``oscar.apps.payment.exceptions.UnableToTakePayment`` For _anticipated_ payment
+* ``oscar.apps.payment.exceptions.UnableToTakePayment`` For *anticipated* payment
   problems such as invalid bankcard number, not enough funds in account - that kind
   of thing.
 
-* ``oscar.apps.payment.exceptions.PaymentError``  For _unanticipated_ payment
+* ``oscar.apps.payment.exceptions.PaymentError``  For *unanticipated* payment
   errors such as the payment gateway not responding or being badly configured.
 
 When payment has completed, there's a few things to do:

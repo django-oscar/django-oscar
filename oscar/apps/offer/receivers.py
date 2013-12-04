@@ -1,5 +1,5 @@
 from django.dispatch import receiver
-from django.db.models.signals import m2m_changed, post_save
+from django.db.models.signals import m2m_changed
 from django.db.models import get_model
 
 from oscar.apps.basket.abstract_models import AbstractBasket

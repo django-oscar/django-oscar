@@ -33,9 +33,6 @@ some Oscar-specific styling.
 
 A few other CSS files are used to provide styles for javascript libraries.
 
-The core CSS files are not committed to source control to avoid duplication
-issues.  However, they are included in the released Oscar packages.
-
 By default, the CSS files are used rather than the Less ones.  To use Less
 directly, set ``USE_LESS = True`` in your settings file.  You will also need to
 ensure that the ``lessc`` executable is installed and is configured using a
@@ -57,7 +54,7 @@ this to your settings file::
 
     COMPRESS_OFFLINE_CONTEXT = {
         # this is the only default value from compressor itself
-        'STATIC_URL': 'STATIC_URL',
+        'STATIC_URL': STATIC_URL,
         'use_less': USE_LESS,
     }
 

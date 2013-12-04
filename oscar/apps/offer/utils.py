@@ -1,7 +1,8 @@
 from itertools import chain
 import logging
 
-from django.db.models import get_model
+from django.db.models import get_model, Q
+from django.utils.timezone import now
 
 from oscar.apps.offer import results
 
@@ -66,19 +67,22 @@ class Applicator(object):
         """
         Return site offers that are available to all users
         """
+        cutoff = now()
+        date_based = Q(
+            Q(start_datetime__lte=cutoff),
+            Q(end_datetime__gte=cutoff) | Q(end_datetime=None),
+        )
+
+        nondate_based = Q(start_datetime=None, end_datetime=None)
+
+        qs = ConditionalOffer.objects.filter(
+            date_based | nondate_based,
+            offer_type=ConditionalOffer.SITE,
+            status=ConditionalOffer.OPEN)
         # Using select_related with the condition/benefit ranges doesn't seem
         # to work.  I think this is because both the related objects have the
         # FK to range with the same name.
-        date_based_offers = ConditionalOffer.active.select_related(
-            'condition', 'condition__range', 'benefit').filter(
-                offer_type=ConditionalOffer.SITE,
-                status=ConditionalOffer.OPEN)
-        nondate_based_offers = ConditionalOffer.objects.select_related(
-            'condition', 'condition__range', 'benefit').filter(
-                offer_type=ConditionalOffer.SITE,
-                status=ConditionalOffer.OPEN,
-                start_datetime=None, end_datetime=None)
-        return list(chain(date_based_offers, nondate_based_offers))
+        return qs.select_related('condition', 'condition__range', 'benefit')
 
     def get_basket_offers(self, basket, user):
         """

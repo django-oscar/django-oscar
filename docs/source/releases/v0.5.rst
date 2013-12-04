@@ -176,8 +176,8 @@ Upgrading
 =========
 
 This section describes changes in core Oscar that you need to be aware of if you
-are upgrading from 0.4.  See the :doc:`upgrading guidelines </ref/upgrading>` for
-further details on the steps you need to take.
+are upgrading from 0.4.  See the :doc:`upgrading guidelines </topics/upgrading>`
+for further details on the steps you need to take.
 
 Migrations
 ~~~~~~~~~~

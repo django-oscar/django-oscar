@@ -13,3 +13,16 @@ Examples include:
 
 These are modeled using a base ``promotion`` model, which contains image fields, the link
 destination, and two "linking" models which link promotions to either a page URL or a particular keyword.
+
+
+Models
+---------------
+
+.. automodule:: oscar.apps.promotions.models
+    :members:
+
+Views
+-----
+
+.. automodule:: oscar.apps.promotions.views
+    :members:

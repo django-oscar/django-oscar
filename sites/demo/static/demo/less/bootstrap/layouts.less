@@ -1,0 +1,26 @@
+//
+// Layouts
+// --------------------------------------------------
+
+// Demo page structure
+html,
+body {
+  height: 100%;
+}
+
+#layout {
+  min-height: 100%;
+  margin-bottom: -(@footer-height);
+}
+
+.container-fluid {
+  padding-right:@gridGutterWidth;
+  padding-left:@gridGutterWidth;
+  margin:0px auto;
+  max-width:@containerWidth;
+}
+
+.page_inner {
+   padding:@gridGutterWidth 0 50px;
+   .clearfix();
+}

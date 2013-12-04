@@ -1,10 +1,10 @@
 {% load i18n compress %}
 {% load staticfiles %}
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html lang="{{ lang|default:"en-gb" }}" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html lang="{{ lang|default:"en-gb" }}" class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html lang="{{ lang|default:"en-gb" }}" class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="{{ lang|default:"en-gb" }}" class="no-js"> <!--<![endif]-->
+<!--[if lt IE 7]>      <html lang="{{ LANGUAGE_CODE|default:"en-gb" }}" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="{{ LANGUAGE_CODE|default:"en-gb" }}" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="{{ LANGUAGE_CODE|default:"en-gb" }}" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="{{ LANGUAGE_CODE|default:"en-gb" }}" class="no-js"> <!--<![endif]-->
     <head>
         <title>{% if display_version %}[{% trans "Build" %} {{ version }}] {% endif %}{% block title %}{{ shop_name }} - {{ shop_tagline }}{% endblock %}</title>
 
@@ -61,9 +61,7 @@
 
         {% block tracking %}
             {# Default to using Google analytics #}
-            {% if google_analytics_id %}
-                {% include 'partials/google_analytics.html' %}
-            {% endif %}
+            {% include "partials/google_analytics.html" %}
         {% endblock %}
 
         {% comment %}
@@ -72,7 +70,7 @@
         {% endcomment %}
         {% block cdn_scripts %}
             <!-- jQuery -->
-            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
             <script>window.jQuery || document.write('<script src="{% static "oscar/js/jquery/jquery-1.9.1.min.js" %}"><\/script>')</script>
         {% endblock %}
 

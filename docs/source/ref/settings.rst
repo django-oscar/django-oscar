@@ -11,14 +11,15 @@ Display settings
 ``OSCAR_SHOP_NAME``
 -------------------
 
-Default: ``Oscar``
+Default: ``'Oscar'``
 
-The name of your e-commerce shop site.
+The name of your e-commerce shop site.  This is shown as the main logo within
+the default templates.
 
 ``OSCAR_SHOP_TAGLINE``
 ----------------------
 
-Default: ``Domain-driven e-Commerce for Django``
+Default: ``''``
 
 The tagline that is displayed next to the shop name and in the browser title.
 
@@ -39,6 +40,11 @@ class.  For example::
 The wrapper class should subclass ``oscar.apps.partner.wrappers.DefaultWrapper``
 and override the appropriate methods to control availability behaviour.
 
+.. warning::
+
+   This settings has been deprecated for Oscar 0.6.  Use :ref:`strategy classes <strategy_class>` 
+   instead to provide availability and pricing information.
+
 ``OSCAR_RECENTLY_VIEWED_PRODUCTS``
 ----------------------------------
 
@@ -53,13 +59,38 @@ Default: 20
 
 The number of products to paginate by.
 
-``OSCAR_SEARCH_SUGGEST_LIMIT``
+``OSCAR_SEARCH_FACETS``
 ------------------------------
 
-Default: 10
+A dictionary that specifies the facets to use with the search backend.  It
+needs to be a dict with keys ``fields`` and ``queries`` for field- and
+query-type facets.  The default is::
 
-The number of suggestions that the search 'suggest' function should return
-at maximum.
+    OSCAR_SEARCH_FACETS = {
+        'fields': {
+            # The key for these dicts will be used when passing facet data
+            # to the template. Same for the 'queries' dict below.
+            'category': {
+                'name': _('Category'),
+                'field': 'category'
+            }
+        },
+        'queries': {
+            'price_range': {
+                'name': _('Price range'),
+                'field': 'price',
+                'queries': [
+                    # This is a list of (name, query) tuples where the name will
+                    # be displayed on the front-end.
+                    (_('0 to 40'), '[0 TO 20]'),
+                    (_('20 to 40'), '[20 TO 40]'),
+                    (_('40 to 60'), '[40 TO 60]'),
+                    (_('60+'), '[60 TO *]'),
+                ]
+            }
+        }
+    }
+
 
 ``OSCAR_PROMOTION_POSITIONS``
 -----------------------------
@@ -89,12 +120,15 @@ Default::
 
 Defines the available promotion block types that can be used in Oscar.
 
+.. _OSCAR_DASHBOARD_NAVIGATION:
+
 ``OSCAR_DASHBOARD_NAVIGATION``
 ------------------------------
 
 Default: see ``oscar.defaults`` (too long to include here).
 
-A list of dashboard navigation elements.
+A list of dashboard navigation elements. Usage is explained in
+:doc:`/howto/how_to_configure_the_dashboard_navigation`.
 
 Order settings
 ==============
@@ -178,15 +212,6 @@ List of form fields that a user has to fill out to validate an address field.
 
 Review settings
 ===============
-
-``OSCAR_ALLOW_ANON_REVIEWS``
-----------------------------
-
-Default: ``True``
-
-This setting defines whether an anonymous user can create a review for
-a product without registering first. If it is set to ``True`` anonymous
-users can create product reviews.
 
 ``OSCAR_MODERATE_REVIEWS``
 --------------------------

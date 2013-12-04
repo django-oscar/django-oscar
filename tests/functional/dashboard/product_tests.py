@@ -1,9 +1,12 @@
-from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django_dynamic_fixture import G
 
-from oscar_testsupport.testcases import WebTestCase
+from oscar.test.testcases import WebTestCase
+from oscar.core.compat import get_user_model
 from oscar.apps.catalogue.models import ProductClass, Category, Product
+
+
+User = get_user_model()
 
 
 class ProductWebTest(WebTestCase):
@@ -105,7 +108,7 @@ class TestCreateChildProduct(ProductWebTest):
 
     def setUp(self):
         self.pclass = G(ProductClass)
-        self.parent = G(Product)
+        self.parent = G(Product, parent=None)
         super(TestCreateChildProduct, self).setUp()
 
     def test_categories_are_not_required(self):
@@ -115,7 +118,7 @@ class TestCreateChildProduct(ProductWebTest):
 
         product_form = page.form
         product_form['title'] = 'Nice T-Shirt'
-        product_form['parent'] = self.parent.id
+        product_form['parent'] = str(self.parent.id)
         page = product_form.submit()
 
         try:
@@ -124,3 +127,31 @@ class TestCreateChildProduct(ProductWebTest):
             self.fail('creating a child product did not work: %s' % page.body)
 
         self.assertEquals(product.parent, self.parent)
+
+
+class TestProductUpdate(ProductWebTest):
+    def test_porduct_update_form(self):
+        self.product = G(Product)
+
+        url = reverse('dashboard:catalogue-product',
+                      kwargs={'pk': self.product.id})
+
+        a, b = [G(Product, title='a', parent=None),
+                G(Product, title='b', parent=None)]
+
+        page = self.get(url)
+
+        product_form = page.form
+        product_form['title'] = 'Nice T-Shirt'
+
+        # ProductSelectMultiple widget expects comma separated ids:
+        product_form['related_products'] = ','.join((str(a.id), str(b.id)))
+
+        page = product_form.submit()
+        assert not page.context, page.context['form'].errors
+
+        product = Product.objects.get(id=self.product.id)
+
+        self.assertEquals(product.title, 'Nice T-Shirt')
+        self.assertEquals(list(product.related_products.all().order_by('title')),
+                          [a, b])

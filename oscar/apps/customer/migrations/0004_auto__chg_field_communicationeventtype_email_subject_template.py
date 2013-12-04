@@ -4,6 +4,9 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+from oscar.core.compat import AUTH_USER_MODEL, AUTH_USER_MODEL_NAME
+
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
@@ -32,8 +35,8 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         },
-        'auth.user': {
-            'Meta': {'object_name': 'User'},
+        AUTH_USER_MODEL: {
+            'Meta': {'object_name': AUTH_USER_MODEL_NAME},
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 10, 15, 17, 40, 13, 532212)'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
@@ -186,7 +189,7 @@ class Migration(SchemaMigration):
             'date_sent': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'subject': ('django.db.models.fields.TextField', [], {'max_length': '255'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'emails'", 'to': "orm['auth.User']"})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'emails'", 'to': "orm['{0}']".format(AUTH_USER_MODEL)})
         },
         'customer.notification': {
             'Meta': {'ordering': "('-date_sent',)", 'object_name': 'Notification'},
@@ -196,8 +199,8 @@ class Migration(SchemaMigration):
             'date_sent': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'location': ('django.db.models.fields.CharField', [], {'default': "'Inbox'", 'max_length': '32'}),
-            'recipient': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'notifications'", 'to': "orm['auth.User']"}),
-            'sender': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'null': 'True'}),
+            'recipient': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'notifications'", 'to': "orm['{0}']".format(AUTH_USER_MODEL)}),
+            'sender': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['{0}']".format(AUTH_USER_MODEL), 'null': 'True'}),
             'subject': ('django.db.models.fields.CharField', [], {'max_length': '255'})
         },
         'customer.productalert': {
@@ -211,7 +214,7 @@ class Migration(SchemaMigration):
             'key': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True', 'db_index': 'True'}),
             'product': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.Product']"}),
             'status': ('django.db.models.fields.CharField', [], {'default': "'Active'", 'max_length': '20'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'alerts'", 'null': 'True', 'to': "orm['auth.User']"})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'alerts'", 'null': 'True', 'to': "orm['{0}']".format(AUTH_USER_MODEL)})
         }
     }
 

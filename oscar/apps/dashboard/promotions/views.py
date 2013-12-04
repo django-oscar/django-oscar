@@ -18,9 +18,11 @@ SingleProduct, RawHTML, Image, MultiImage, \
     HandPickedProductList = get_classes('promotions.models',
     ['SingleProduct', 'RawHTML', 'Image', 'MultiImage', 'AutomaticProductList',
      'PagePromotion', 'HandPickedProductList'])
-SelectForm, RawHTMLForm, PagePromotionForm, HandPickedProductListForm, OrderedProductFormSet = get_classes('dashboard.promotions.forms',
+SelectForm, RawHTMLForm, PagePromotionForm, HandPickedProductListForm, \
+    SingleProductForm, OrderedProductFormSet = get_classes(
+    'dashboard.promotions.forms',
     ['PromotionTypeSelectForm', 'RawHTMLForm', 'PagePromotionForm',
-     'HandPickedProductListForm', 'OrderedProductFormSet'])
+     'HandPickedProductListForm', 'SingleProductForm', 'OrderedProductFormSet'])
 
 
 class ListView(generic.TemplateView):
@@ -156,10 +158,15 @@ class CreateRawHTMLView(CreateView):
 
 class CreateSingleProductView(CreateView):
     model = SingleProduct
+    form_class = SingleProductForm
 
 
 class CreateImageView(CreateView):
     model = Image
+
+
+class CreateMultiImageView(CreateView):
+    model = MultiImage
 
 
 class CreateAutomaticProductListView(CreateView):
@@ -258,10 +265,15 @@ class UpdateRawHTMLView(UpdateView):
 
 class UpdateSingleProductView(UpdateView):
     model = SingleProduct
+    form_class = SingleProductForm
 
 
 class UpdateImageView(UpdateView):
     model = Image
+
+
+class UpdateMultiImageView(UpdateView):
+    model = MultiImage
 
 
 class UpdateAutomaticProductListView(UpdateView):
@@ -291,8 +303,7 @@ class UpdateHandPickedProductListView(UpdateView):
             return HttpResponseRedirect(self.get_success_url())
 
         ctx = self.get_context_data(product_formset=product_formset)
-        return self.render_response(ctx)
-
+        return self.render_to_response(ctx)
 
 # ============
 # DELETE VIEWS
@@ -317,6 +328,10 @@ class DeleteSingleProductView(DeleteView):
 
 class DeleteImageView(DeleteView):
     model = Image
+
+
+class DeleteMultiImageView(DeleteView):
+    model = MultiImage
 
 
 class DeleteAutomaticProductListView(DeleteView):

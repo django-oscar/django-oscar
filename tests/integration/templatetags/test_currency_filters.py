@@ -5,6 +5,11 @@ from django.test import TestCase
 from django import template
 
 
+def render(template_string, ctx):
+    tpl = template.Template(template_string)
+    return tpl.render(template.Context(ctx))
+
+
 class TestCurrencyFilter(TestCase):
 
     def setUp(self):

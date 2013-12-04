@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load url from future %}
 {% load i18n %}
 
 {% block layout %}
@@ -10,7 +11,7 @@
         {% block error_message %}{% endblock %}
         <p>
             <a class="btn btn-primary btn-large" onclick="javascript:history.go(-1);">{% trans 'Return to previous page' %}</a>
-			<a class="btn btn-primary btn-large" href="/">{% trans "Go to homepage" %}</a>
+            <a class="btn btn-primary btn-large" href="{% url 'promotions:home' %}">{% trans "Go to homepage" %}</a>
         </p>
     </div>
 </div>

@@ -1,8 +1,16 @@
 from django.conf.urls import patterns
+from oscar.core.loading import feature_hidden
+
+from oscar.views.decorators import permissions_required
 
 
 class Application(object):
     name = None
+    hidable_feature_name = None
+    #: Maps view names to a tuple or list of permissions
+    permissions_map = {}
+    #: Default permission for any view not in permissions_map
+    default_permissions = None
 
     def __init__(self, app_name=None, **kwargs):
         self.app_name = app_name
@@ -24,6 +32,11 @@ class Application(object):
         By default, this only allows custom decorators to be specified, but you
         could override this method to do anything you want.
         """
+        # Test if this the URLs in the Application instance should be
+        # available.  If the feature is hidden then we don't include the URLs.
+        if feature_hidden(self.hidable_feature_name):
+            return patterns('')
+
         for pattern in urlpatterns:
             if hasattr(pattern, 'url_patterns'):
                 self.post_process_urls(pattern.url_patterns)
@@ -36,8 +49,27 @@ class Application(object):
                 pattern._callback = decorator(pattern._callback)
         return urlpatterns
 
-    def get_url_decorator(self, url_name):
-        return None
+    def get_permissions(self, url):
+        # url namespaced?
+        if url is not None and ':' in url:
+            view_name = url.split(':')[1]
+        else:
+            view_name = url
+        return self.permissions_map.get(view_name, self.default_permissions)
+
+    def get_url_decorator(self, pattern):
+        """
+        Return the appropriate decorator for the view function with the passed
+        URL name. Mainly used for access-protecting views.
+        It's possible to specify
+        - no permissions necessary: use None
+        - a set of permissions: use a list
+        - two set of permissions (`or`): use a two-tuple of lists
+
+        See permissions_required decorator for details
+        """
+        permissions = self.get_permissions(pattern.name)
+        return permissions_required(permissions)
 
     @property
     def urls(self):

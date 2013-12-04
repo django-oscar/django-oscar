@@ -7,6 +7,9 @@ from oscar.core.loading import get_class
 
 Applicator = get_class('offer.utils', 'Applicator')
 Basket = get_model('basket', 'basket')
+Selector = get_class('partner.strategy', 'Selector')
+
+selector = Selector()
 
 
 class BasketMiddleware(object):
@@ -14,10 +17,21 @@ class BasketMiddleware(object):
     def process_request(self, request):
         request.cookies_to_delete = []
         basket = self.get_basket(request)
+
+        # Load stock/price strategy and assign to request and basket
+        strategy = selector.strategy(
+            request=request, user=request.user)
+        request.strategy = basket.strategy = strategy
+
+        self.ensure_basket_lines_have_stockrecord(basket)
+
         self.apply_offers_to_basket(request, basket)
         request.basket = basket
 
     def get_basket(self, request):
+        """
+        Return an open basket for this request
+        """
         manager = Basket.open
         cookie_basket = self.get_cookie_basket(
             settings.OSCAR_BASKET_COOKIE_OPEN, request, manager)
@@ -70,21 +84,31 @@ class BasketMiddleware(object):
         # If a basket has had products added to it, but the user is anonymous
         # then we need to assign it to a cookie
         if (hasattr(request, 'basket') and request.basket.id > 0
-            and not request.user.is_authenticated()
-            and settings.OSCAR_BASKET_COOKIE_OPEN not in request.COOKIES):
+                and not request.user.is_authenticated()
+                and settings.OSCAR_BASKET_COOKIE_OPEN not in request.COOKIES):
             cookie = "%s_%s" % (
                 request.basket.id, self.get_basket_hash(request.basket.id))
-            response.set_cookie(settings.OSCAR_BASKET_COOKIE_OPEN,
-                                cookie,
-                                max_age=settings.OSCAR_BASKET_COOKIE_LIFETIME,
-                                httponly=True)
+            response.set_cookie(
+                settings.OSCAR_BASKET_COOKIE_OPEN, cookie,
+                max_age=settings.OSCAR_BASKET_COOKIE_LIFETIME, httponly=True)
         return response
 
     def process_template_response(self, request, response):
         if hasattr(response, 'context_data'):
             if response.context_data is None:
                 response.context_data = {}
-            response.context_data['basket'] = request.basket
+            if 'basket' not in response.context_data:
+                response.context_data['basket'] = request.basket
+            else:
+                # Occasionally, a view will want to pass an alternative basket
+                # to be rendered.  This can happen as part of checkout
+                # processes where the submitted basket is frozen when the
+                # customer is redirected to another site (eg PayPal).  When the
+                # customer returns and we want to show the order preview
+                # template, we need to ensure that the frozen basket gets
+                # rendered (not request.basket).  We still keep a reference to
+                # the request basket (just in case).
+                response.context_data['request_basket'] = request.basket
         return response
 
     def get_cookie_basket(self, cookie_key, request, manager):
@@ -116,3 +140,32 @@ class BasketMiddleware(object):
 
     def get_basket_hash(self, basket_id):
         return str(zlib.crc32(str(basket_id) + settings.SECRET_KEY))
+
+    def ensure_basket_lines_have_stockrecord(self, basket):
+        """
+        Ensure each basket line has a stockrecord.
+
+        This is to handle the backwards compatibility issue introduced in v0.6
+        where basket lines began to require a stockrecord.
+        """
+        if not basket.id:
+            return
+        for line in basket.all_lines():
+            if not line.stockrecord:
+                self.ensure_line_has_stockrecord(basket, line)
+
+    def ensure_line_has_stockrecord(self, basket, line):
+        # Get details off line before deleting it
+        product = line.product
+        quantity = line.quantity
+        options = []
+        for attr in line.attributes.all():
+            options.append({
+                'option': attr.option,
+                'value': attr.value})
+        line.delete()
+
+        # Attempt to re-add to basket with the appropriate stockrecord
+        stock_info = basket.strategy.fetch(product)
+        if stock_info.stockrecord:
+            basket.add(product, quantity, options=options)

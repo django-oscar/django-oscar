@@ -25,3 +25,14 @@ def as_stars(value):
     }
     num_stars = int(round(value or 0.0))
     return num_stars_to_class.get(num_stars, '')
+
+
+@register.filter
+def may_vote(review, user):
+    can_vote, __ = review.can_user_vote(user)
+    return can_vote
+
+
+@register.filter
+def has_review_by(product, user):
+    return product.has_review_by(user)

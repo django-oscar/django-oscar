@@ -2,16 +2,11 @@ from decimal import Decimal as D
 
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django_dynamic_fixture import G
 import mock
 
 from oscar.apps.offer import models, utils, custom
-from oscar.apps.basket.models import Basket
-from oscar.apps.order.utils import OrderCreator
-from oscar.apps.shipping.repository import Repository
-from oscar.apps.shipping.methods import FixedPrice
-from oscar_testsupport.factories import create_product
-
+from oscar.test import factories
+from oscar.test.basket import add_product
 
 
 class CustomAction(models.Benefit):
@@ -19,8 +14,8 @@ class CustomAction(models.Benefit):
     class Meta:
         proxy = True
 
-    def apply(self, basket, condition, offer=None):
-        condition.consume_items(basket, ())
+    def apply(self, basket, condition, offer):
+        condition.consume_items(offer, basket, ())
         return models.PostOrderAction(
             "Something will happen")
 
@@ -55,9 +50,8 @@ def apply_offers(basket):
 class TestAnOfferWithAPostOrderAction(TestCase):
 
     def setUp(self):
-        self.basket = G(Basket)
-        for product in [create_product(price=D('12.00'))]:
-            self.basket.add_product(product, 1)
+        self.basket = factories.create_basket(empty=True)
+        add_product(self.basket, D('12.00'), 1)
         create_offer()
         apply_offers(self.basket)
 
@@ -69,7 +63,7 @@ class TestAnOfferWithAPostOrderAction(TestCase):
         self.assertEqual('Something will happen', action['description'])
 
     def test_has_discount_recorded_correctly_when_order_is_placed(self):
-        order = OrderCreator().place_order(self.basket)
+        order = factories.create_order(basket=self.basket)
 
         discounts = order.discounts.all()
         self.assertEqual(1, len(discounts))

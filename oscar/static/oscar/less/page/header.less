@@ -1,0 +1,73 @@
+// OSCAR HEADER
+// -----------
+
+.header {
+    position:relative;
+    z-index:2;
+    .page_inner {
+        padding:50px 0 40px;
+    }
+    h1 {
+        line-height:inherit;
+        margin:0;
+        font-size:30px;
+    }
+}
+
+//Language select
+#language_selector select {
+    width:100px;
+}
+
+// Basket Mini Dropdown
+.basket-mini {
+    .btn-group {
+        margin-left:10px;
+    }
+    .dropdown-menu {
+        width:400px;
+        padding-bottom:0px;
+        max-width:none;
+        li {
+            display:block;
+        }
+    }
+}
+
+// Basket Mini Item
+.basket-mini-item {
+    li {
+        border-top:1px solid @grayLighter;
+        padding:10px 15px;
+        &:first-child {
+            border-top:none;
+        }
+    }
+    .image_container {
+        @imagecontainerheight: 70px;
+        min-height: @imagecontainerheight;
+        img {
+            max-height: @imagecontainerheight;
+        }
+        a {
+            padding:0;
+        }
+    }
+    a {
+        color:@linkColor;
+        font-weight:inherit;
+        white-space:normal;
+        &.btn {
+            color:#fff;
+        }
+    }
+    .form-actions {
+        -webkit-border-radius: 0 0px 6px 6px;
+        -moz-border-radius: 0 0px 6px 6px;
+        border-radius: 0 0px 6px 6px;
+        margin:0px;
+        h4 {
+            margin-bottom:@baseLineHeight / 2;
+        }
+    }
+}

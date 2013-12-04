@@ -16,19 +16,23 @@ class OrderReportCSVFormatter(ReportCSVFormatter):
     def generate_csv(self, response, orders):
         writer = self.get_csv_writer(response)
         header_row = [_('Order number'),
-                      _('User'),
+                      _('Name'),
+                      _('Email'),
                       _('Total incl. tax'),
                       _('Date placed')]
         writer.writerow(header_row)
         for order in orders:
-            row = [order.number,
-                   order.user,
-                   order.total_incl_tax,
-                   self.format_datetime(order.date_placed)]
+            row = [
+                order.number,
+                '-' if order.is_anonymous else order.user.get_full_name(),
+                order.guest_email if order.is_anonymous else order.user.email,
+                order.total_incl_tax,
+                self.format_datetime(order.date_placed)]
             writer.writerow(row)
 
     def filename(self, **kwargs):
-        return self.filename_template % (kwargs['start_date'], kwargs['end_date'])
+        return self.filename_template % (
+            kwargs['start_date'], kwargs['end_date'])
 
 
 class OrderReportHTMLFormatter(ReportHTMLFormatter):

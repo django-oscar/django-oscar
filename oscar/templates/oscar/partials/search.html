@@ -1,5 +1,7 @@
+{% load url from future %}
 {% load i18n %}
-<form  method="get" action="{% url search:search %}" class="navbar-form pull-right">
+
+<form method="get" action="{% url 'search:search' %}" class="navbar-form pull-right">
     {{ search_form.q }}
-	<input type="submit" value="{% trans "Search" %}" class="btn" />
+    <input type="submit" value="{% trans "Search" %}" class="btn" />
 </form>

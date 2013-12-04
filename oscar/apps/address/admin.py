@@ -3,7 +3,6 @@ from django.db.models import get_model
 
 
 class UserAddressAdmin(admin.ModelAdmin):
-    exclude = ('search_text', 'hash')
     readonly_fields = ('num_orders',)
 
 

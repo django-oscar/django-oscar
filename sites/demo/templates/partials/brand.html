@@ -1,0 +1,5 @@
+{% load url from future %}
+{% load staticfiles %}
+<a href="{% url 'promotions:home' %}">
+	<img src="{% static "demo/img/svg/logo.svg" %}" class="logo" alt="{{ shop_name }} - {{ shop_tagline }}" width="140" height="108" />
+</a>

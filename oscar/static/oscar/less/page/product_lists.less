@@ -1,111 +1,76 @@
-/*  Procduct columns*/
-.five li {
-    width:@fifth;
+//no margin on lists
+ol,
+ul {
+    &.row-fluid {
+        margin-left:0;
+        list-style: none;
+    }
 }
-.four li {
-    width:@quart;
+
+//Remove margin if condition
+.row-fluid [class*="span"] {
+    &.no-margin {
+        margin-left:0;
+    }
 }
-.three li {
-    width:@third;
-}
-.two li {
-    width:@half
-}
-.one li {
-    width:@full;
-}
-.five li,
-.four li,
-.three li,
-.two li,
-.one li {
-  li {
-    width:auto;
-  }
-}
-.products {
-  .horiz_col;
-}
+
+//Products listed container
+// Space between products in a list is determined by the Grid and therfore the
+// gutter width: 20px
 .product_pod {
-  padding:8%;
-  position:relative;
-  height:405px;
-  overflow:hidden;
-  text-align:center;
-  .clearfix();
-  & p {
-    margin-bottom:0;
-  }
-  h3 {
-    font-size:1em;
-    margin-bottom:0;
-    line-height:@baseLineHeight;
-    a {
-      line-height:@baseLineHeight;
-    }
-  }
-  .price_color {
-    min-height:50px;
-  }
-  h4 {
-    .clearfix();
-    margin-bottom: @baseLineHeight;
-    margin-top: @baseLineHeight / 2;
-    line-height:@baseLineHeight;
-    font-size:@baseFontSize + 3;
-  }
-  form p {
-    min-height:40px;
-  }
-  .availability {
-    margin-bottom:@baseLineHeight / 2;
+    height:370px;
+    overflow:hidden;
     text-align:center;
-    min-height:30px;
-    white-space:nowrap;
-  }
-  button {
-    width:100%;
-  }
-  .product_price {
-    position:absolute;
-    bottom:8%;
-    left:8%;
-    width:84%;
-    min-height:130px;
-    form {
-      margin-bottom:0px;
-      input#id_quantity,
-      #id_product_id {
+    margin: @baseLineHeight 0;
+    position:relative;
+    p, h3, h2, form {
+        margin-bottom:0;
+    }
+    h3 {
+        .h5();
+        margin-bottom:0;
+    }
+    .price_color {
+        .h4();
+    }
+    .availability,
+    .price_color {
+        min-height:30px;
+        white-space:nowrap;
+    }
+    .image_container,
+    .availability,
+    .price_color {
+        margin-bottom: @baseLineHeight / 2;
+    }
+    // This could be set to 100% but this gives a little more space around products.
+    .product_price {
+        position:absolute;
+        bottom:0;
+        left:5%;
         width:90%;
-      }
-      label {
-        display:none;
-      }
     }
-    .btn {
-      padding-left:0px;
-      padding-right:0px;
-      width:100%;
-    }
-  }
 }
-/* Product list image container */
+
+// Product list image container sets a height so images don't breakout
+// This can be used to verically align the image with same line-height
+// Alternatively if you are cropping images and have a specific W & H this isn't neccessary
 .image_container {
-  width:100%;
-  min-height:155px;
-  overflow:hidden;
-  text-align: center;
-  margin-bottom: @baseLineHeight / 2;
-  position:relative;
-  img {
-    max-height:155px;
-    max-width:90%;
-    width:auto;
-    margin:0px auto;
-  }
+    width:100%;
+    min-height:@imagecontainerheight;
+    overflow:hidden;
+    text-align: center;
+    position:relative;
+    img {
+        max-height:@imagecontainerheight - 10px;
+        max-width:90%;
+        width:auto;
+        margin:0px auto;
+    }
 }
+
 // Add a hover state for thumbnail
 a:hover .thumbnail {
-  border-color: @linkColor;
-  .box-shadow(0 1px 4px rgba(0,105,214,.25));
+    border-color: @linkColor;
+    .box-shadow(0 1px 4px rgba(0,105,214,.25));
 }

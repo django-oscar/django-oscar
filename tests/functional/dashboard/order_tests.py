@@ -1,30 +1,111 @@
 import httplib
 
-from django.test import TestCase
-from django.contrib.auth.models import User
+from django.db.models import get_model
+from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
 from django.template import Template, Context
-from django_dynamic_fixture import get
+from django_dynamic_fixture import get, G
 
-from oscar_testsupport.testcases import ClientTestCase
-from oscar_testsupport.factories import create_order
+from oscar.test.testcases import ClientTestCase, WebTestCase
+from oscar.test.factories import create_order, create_basket
 from oscar.apps.order.models import Order, OrderNote
+from oscar.core.compat import get_user_model
 
 
-class OrderListTests(ClientTestCase):
+User = get_user_model()
+Basket = get_model('basket', 'Basket')
+Partner = get_model('partner', 'Partner')
+ShippingAddress = get_model('order', 'ShippingAddress')
+
+
+class TestOrderListDashboard(WebTestCase):
     is_staff = True
 
-    def test_searching_for_valid_order_number_redirects_to_order_page(self):
-        # Importing here as the import makes DB queries
-        from oscar.apps.dashboard.orders.forms import OrderSearchForm
+    def test_redirects_to_detail_page(self):
         order = create_order()
-        fields = OrderSearchForm.base_fields.keys()
-        pairs = dict(zip(fields, ['']*len(fields)))
-        pairs['order_number'] = order.number
-        pairs['response_format'] = 'html'
-        url = '%s?%s' % (reverse('dashboard:order-list'), '&'.join(['%s=%s' % (k,v) for k,v in pairs.items()]))
-        response = self.client.get(url)
+        page = self.get(reverse('dashboard:order-list'))
+        form = page.forms['search_form']
+        form['order_number'] = order.number
+        response = form.submit()
         self.assertEqual(httplib.FOUND, response.status_code)
+
+    def test_downloads_to_csv_without_error(self):
+        address = get(ShippingAddress)
+        create_order(shipping_address=address)
+        page = self.get(reverse('dashboard:order-list'))
+        form = page.forms['orders_form']
+        form['selected_order'].checked = True
+        form.submit('download_selected')
+
+
+class PermissionBasedDashboardOrderTests(ClientTestCase):
+    permissions = ['partner.dashboard_access', ]
+
+    def setUp(self):
+        """
+        Creates two orders. order_in has self.user in it's partner users list.
+        """
+        self.client = Client()
+        self.user = self.create_user(username='user1@example.com',
+                                     is_staff=False)
+        self.address = G(ShippingAddress)
+        self.basket_in = create_basket()
+        self.basket_out = create_basket()
+        # replace partner with one that has the user in it's users list
+        self.partner_in = G(Partner, users=[self.user])
+        stockrecord = self.basket_in.lines.all()[0].stockrecord
+        stockrecord.partner = self.partner_in
+        stockrecord.save()
+
+        self.order_in = create_order(basket=self.basket_in,
+                                     shipping_address=self.address)
+        self.order_out = create_order(basket=self.basket_out,
+                                      shipping_address=self.address)
+
+    def test_staff_user_can_list_all_orders(self):
+        self.is_staff = True
+        self.login()
+        orders = [self.order_in, self.order_out]
+        # order-list
+        response = self.client.get(reverse('dashboard:order-list'))
+        self.assertIsOk(response)
+        self.assertEqual(set(response.context['orders']),
+                         set(orders))
+        # order-detail
+        for order in orders:
+            url = reverse('dashboard:order-detail',
+                          kwargs={'number': order.number})
+            self.assertIsOk(self.client.get(url))
+
+    def test_non_staff_can_only_list_her_orders(self):
+        # order-list user1
+        self.client.login(username='user1@example.com', password=self.password)
+        response = self.client.get(reverse('dashboard:order-list'))
+        self.assertEqual(set(response.context['orders']),
+                         set([self.order_in]))
+        # order-detail user2
+        url = reverse('dashboard:order-detail',
+                      kwargs={'number': self.order_in.number})
+        self.assertIsOk(self.client.get(url))
+        url = reverse('dashboard:order-detail',
+                      kwargs={'number': self.order_out.number})
+        self.assertNoAccess(self.client.get(url))
+        # order-line-detail user2
+        url = reverse('dashboard:order-line-detail',
+                      kwargs={'number': self.order_in.number,
+                              'line_id': self.order_in.lines.all()[0].pk})
+        self.assertIsOk(self.client.get(url))
+        url = reverse('dashboard:order-line-detail',
+                      kwargs={'number': self.order_out.number,
+                              'line_id': self.order_out.lines.all()[0].pk})
+        self.assertNoAccess(self.client.get(url))
+        # order-shipping-address
+        url = reverse('dashboard:order-shipping-address',
+                      kwargs={'number': self.order_in.number})
+        self.assertIsOk(self.client.get(url))
+        url = reverse('dashboard:order-shipping-address',
+                      kwargs={'number': self.order_out.number})
+        self.assertNoAccess(self.client.get(url))
 
 
 class OrderDetailTests(ClientTestCase):

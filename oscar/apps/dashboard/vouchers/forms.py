@@ -2,6 +2,8 @@ from django import forms
 from django.db.models.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
+from oscar.forms import widgets
+
 Voucher = get_model('voucher', 'Voucher')
 Benefit = get_model('offer', 'Benefit')
 Range = get_model('offer', 'Range')
@@ -14,8 +16,11 @@ class VoucherForm(forms.Form):
     """
     name = forms.CharField(label=_("Name"))
     code = forms.CharField(label=_("Code"))
-    start_date = forms.DateField(label=_("Start date"))
-    end_date = forms.DateField(label=_("End date"))
+
+    start_date = forms.DateField(
+        label=_("Start date"), widget=widgets.DatePickerInput())
+    end_date = forms.DateField(
+        label=_("End date"), widget=widgets.DatePickerInput())
     usage = forms.ChoiceField(choices=Voucher.USAGE_CHOICES, label=_("Usage"))
 
     benefit_range = forms.ModelChoiceField(
