@@ -1,4 +1,4 @@
-from decimal import Decimal
+from decimal import Decimal as D
 import zlib
 
 from django.db import models
@@ -337,7 +337,7 @@ class AbstractBasket(models.Model):
         For executing a named method on each line of the basket
         and returning the total.
         """
-        total = Decimal('0.00')
+        total = D('0.00')
         for line in self.all_lines():
             try:
                 total += getattr(line, property)
@@ -582,8 +582,8 @@ class AbstractLine(models.Model):
     def __init__(self, *args, **kwargs):
         super(AbstractLine, self).__init__(*args, **kwargs)
         # Instance variables used to persist discount information
-        self._discount_excl_tax = Decimal('0.00')
-        self._discount_incl_tax = Decimal('0.00')
+        self._discount_excl_tax = D('0.00')
+        self._discount_incl_tax = D('0.00')
         self._affected_quantity = 0
 
     class Meta:
@@ -619,8 +619,8 @@ class AbstractLine(models.Model):
         """
         Remove any discounts from this line.
         """
-        self._discount_excl_tax = Decimal('0.00')
-        self._discount_incl_tax = Decimal('0.00')
+        self._discount_excl_tax = D('0.00')
+        self._discount_incl_tax = D('0.00')
         self._affected_quantity = 0
 
     def discount(self, discount_value, affected_quantity, incl_tax=True):
@@ -666,7 +666,7 @@ class AbstractLine(models.Model):
             raise RuntimeError("A price breakdown can only be determined "
                                "when taxes are known")
         prices = []
-        if not self.has_discount:
+        if not self.discount_value:
             prices.append((self.unit_price_incl_tax, self.unit_price_excl_tax,
                            self.quantity))
         else:
@@ -675,6 +675,7 @@ class AbstractLine(models.Model):
             item_incl_tax_discount = (
                 self.discount_value / int(self._affected_quantity))
             item_excl_tax_discount = item_incl_tax_discount * self._tax_ratio
+            item_excl_tax_discount = item_excl_tax_discount.quantize(D('0.01'))
             prices.append((self.unit_price_incl_tax - item_incl_tax_discount,
                            self.unit_price_excl_tax - item_excl_tax_discount,
                            self._affected_quantity))

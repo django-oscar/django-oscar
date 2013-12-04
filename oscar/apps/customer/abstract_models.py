@@ -185,8 +185,8 @@ class AbstractCommunicationEventType(models.Model):
         # Pass base URL for serving images within HTML emails
         if ctx is None:
             ctx = {}
-        ctx['static_base_url'] = getattr(settings,
-                                         'OSCAR_STATIC_BASE_URL', None)
+        ctx['static_base_url'] = getattr(
+            settings, 'OSCAR_STATIC_BASE_URL', None)
 
         messages = {}
         for name, template in templates.items():
