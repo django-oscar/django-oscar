@@ -175,7 +175,7 @@ class ProductListView(ListView):
         q = self.get_search_query()
         qs = Product.browsable.base_queryset()
         if q:
-            # Send signal to record the view of this product
+            # Send signal to record this search
             self.search_signal.send(sender=self, query=q,
                                     user=self.request.user)
             return qs.filter(title__icontains=q)
