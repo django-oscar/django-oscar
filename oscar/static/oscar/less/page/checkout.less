@@ -14,17 +14,17 @@ input[type="text"][id*="quantity"] {
 }
 
 // Basket items like table headers
-.basket-title {
+.basket-title-wrapper {
     clear:both;
     border-bottom:1px solid lighten(@grayLight, 30%);
     padding:0 10px;
     h4 {
-        margin:0;
+        margin-bottom:0;
     }
 }
 
 // Basket items
-.basket-items {
+.basket-items-wrapper {
     border-bottom:1px solid lighten(@grayLight, 30%);
     padding:10px;
     &:nth-child(even) {
@@ -39,6 +39,74 @@ input[type="text"][id*="quantity"] {
         font-weight:bold;
     }
 }
+
+// Basket title grid
+.basket-title-summary {
+    .makeFluidRow();
+}
+.basket-title-items {
+    .makeFluidCol(6);
+}
+.basket-title-quantity {
+    .makeFluidCol(2);
+}
+.basket-title-price {
+    .makeFluidCol(2);
+}
+.basket-title-total {
+    .makeFluidCol(2);
+}
+.basket-title-price,
+.basket-title-total {
+    text-align: right;
+}
+
+// Basket items summary grid
+.basket-items-summary {
+    .makeFluidRow();
+}
+.basket-items-image {
+    .makeFluidCol(2);
+}
+.basket-items-description {
+    .makeFluidCol(4);
+}
+.basket-items-quantity {
+    .makeFluidCol(2);
+}
+.basket-items-price {
+    .makeFluidCol(2);
+}
+.basket-items-total {
+    .makeFluidCol(2);
+}
+
+// Saved item summary grid
+.basket-saved .basket-items-description {
+    .makeFluidCol(6);
+}
+
+// Saved title summary grid
+.basket-saved .basket-title-items {
+    .makeFluidCol(8);
+}
+.basket-saved .basket-title-price {
+    .makeFluidCol(4);
+    text-align: left;
+}
+
+// Basket summary wrapper = voucher and totals table
+.basket-summary-wrapper {
+    .makeFluidRow();
+}
+.basket-summary-voucher {
+    .makeFluidCol(6);
+}
+.basket-summary-totals {
+    .makeFluidCol(6);
+}
+
+
 
 // Descriptions next to shipping prices - basket totals table
 #basket_totals {

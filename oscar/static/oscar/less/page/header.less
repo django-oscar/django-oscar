@@ -47,8 +47,8 @@
     }
 }
 
-// Basket Mini Item
-.basket-mini-item {
+// Basket Mini Summary
+.basket-mini-summary {
     li {
         border-top:1px solid @grayLighter;
         padding:10px 15px;
@@ -83,4 +83,31 @@
             margin-bottom:@baseLineHeight / 2;
         }
     }
+}
+
+// Basket Mini Item Grid
+.basket-mini-item {
+    // 100% and clearfix
+    .makeFluidRow();
+
+    .image_container {
+        .makeFluidCol(3);
+    }
+    h5 {
+        .makeFluidCol(5);
+    }
+    .price_color {
+        .makeFluidCol(2);
+    }
+    .basket-mini-quantity {
+        .makeFluidCol(2);
+    }
+}
+
+// Basket actions
+.basket-action-summary {
+    .makeFluidRow();
+}
+.basket-action-button {
+    .makeFluidCol(4, 8);
 }

@@ -21,29 +21,27 @@
 	
 	// For semantic/theming sake we have added grid mixins
 	// Make all makeFluidCol mixins block level again
-	.site-content-aside,
-	.site-content-left,
-	.site-content-right,
-	.site-content-aside + .site-content-main,
-	.site-content-left + .site-content-main,
+	[class*="site-content-"],
+	[class*="site-content-"] + .site-content-main,
 	.product-list > li,
-	.product-list-recommended .product-list > li,
-	.product-list-related .product-list > li,
-	.product-list-viewed .product-list > li,
-	.product-list-offers .product-list > li,
-	.category-description-text,
-	.category-description-image,
+	[class*="product-list-"] .product-list > li,
 	#product-gallery,
 	.product-summary,
-	.promotion-single-product-description,
-	.promotion-single-product-image,
-	.review-summary,
-	.review-image {
+	[class*="category-description-"],
+	[class*="promotion-single-product-"],
+	[class*="review-"],
+	[class*="basket-items"],
+	[class*="basket-summary-"],
+	.basket-saved [class*="basket-items"],
+	.basket-action-button {
 	    float: none;
 	    display: block;
 	    width: 100%;
 	    margin-left: 0;
 	    .box-sizing(border-box);
+	    &:first-child {
+	    	margin-left: 0;
+	    }
 	 }
 
 	// Utilities

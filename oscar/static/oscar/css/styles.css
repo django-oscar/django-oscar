@@ -7721,38 +7721,124 @@ form:after {
 .basket-mini .dropdown-menu li {
   display: block;
 }
-.basket-mini-item li {
+.basket-mini-summary li {
   border-top: 1px solid #eeeeee;
   padding: 10px 15px;
 }
-.basket-mini-item li:first-child {
+.basket-mini-summary li:first-child {
   border-top: none;
 }
-.basket-mini-item .image_container {
+.basket-mini-summary .image_container {
   min-height: 70px;
 }
-.basket-mini-item .image_container img {
+.basket-mini-summary .image_container img {
   max-height: 70px;
 }
-.basket-mini-item .image_container a {
+.basket-mini-summary .image_container a {
   padding: 0;
 }
-.basket-mini-item a {
+.basket-mini-summary a {
   color: #0088cc;
   font-weight: inherit;
   white-space: normal;
 }
-.basket-mini-item a.btn {
+.basket-mini-summary a.btn {
   color: #fff;
 }
-.basket-mini-item .form-actions {
+.basket-mini-summary .form-actions {
   -webkit-border-radius: 0 0px 6px 6px;
   -moz-border-radius: 0 0px 6px 6px;
   border-radius: 0 0px 6px 6px;
   margin: 0px;
 }
-.basket-mini-item .form-actions h4 {
+.basket-mini-summary .form-actions h4 {
   margin-bottom: 10px;
+}
+.basket-mini-item {
+  width: 100%;
+  *zoom: 1;
+}
+.basket-mini-item:before,
+.basket-mini-item:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.basket-mini-item:after {
+  clear: both;
+}
+.basket-mini-item .image_container {
+  float: left;
+  width: 23.404255319148934%;
+  *width: 23.351063829787233%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-mini-item .image_container:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-mini-item h5 {
+  float: left;
+  width: 40.42553191489362%;
+  *width: 40.37234042553192%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-mini-item h5:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-mini-item .price_color {
+  float: left;
+  width: 14.893617021276595%;
+  *width: 14.840425531914894%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-mini-item .price_color:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-mini-item .basket-mini-quantity {
+  float: left;
+  width: 14.893617021276595%;
+  *width: 14.840425531914894%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-mini-item .basket-mini-quantity:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-action-summary {
+  width: 100%;
+  *zoom: 1;
+}
+.basket-action-summary:before,
+.basket-action-summary:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.basket-action-summary:after {
+  clear: both;
+}
+.basket-action-button {
+  float: left;
+  width: 31.914893617021278%;
+  *width: 31.861702127659576%;
+  margin-left: 70.2127659574468%;
+  *margin-left: 70.10638297872339%;
+}
+.basket-action-button:first-child {
+  margin-left: 0;
+  margin-left: 68.08510638297872%;
+  *margin-left: 67.9787234042553%;
 }
 .product-list-recommended .product-list > li,
 .product-list-related .product-list > li,
@@ -8160,29 +8246,241 @@ input[type="text"][id*="quantity"] {
   margin-right: 2px;
   margin-bottom: 0px;
 }
-.basket-title {
+.basket-title-wrapper {
   clear: both;
   border-bottom: 1px solid #e5e5e5;
   padding: 0 10px;
 }
-.basket-title h4 {
-  margin: 0;
+.basket-title-wrapper h4 {
+  margin-bottom: 0;
 }
-.basket-items {
+.basket-items-wrapper {
   border-bottom: 1px solid #e5e5e5;
   padding: 10px;
 }
-.basket-items:nth-child(even) {
+.basket-items-wrapper:nth-child(even) {
   background: #f8f8f8;
 }
-.basket-items img {
+.basket-items-wrapper img {
   margin-left: auto;
   margin-right: auto;
 }
-.basket-items .price_color {
+.basket-items-wrapper .price_color {
   font-size: 16.099999999999998px;
   line-height: 24px;
   font-weight: bold;
+}
+.basket-title-summary {
+  width: 100%;
+  *zoom: 1;
+}
+.basket-title-summary:before,
+.basket-title-summary:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.basket-title-summary:after {
+  clear: both;
+}
+.basket-title-items {
+  float: left;
+  width: 48.93617021276595%;
+  *width: 48.88297872340425%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-title-items:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-title-quantity {
+  float: left;
+  width: 14.893617021276595%;
+  *width: 14.840425531914894%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-title-quantity:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-title-price {
+  float: left;
+  width: 14.893617021276595%;
+  *width: 14.840425531914894%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-title-price:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-title-total {
+  float: left;
+  width: 14.893617021276595%;
+  *width: 14.840425531914894%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-title-total:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-title-price,
+.basket-title-total {
+  text-align: right;
+}
+.basket-items-summary {
+  width: 100%;
+  *zoom: 1;
+}
+.basket-items-summary:before,
+.basket-items-summary:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.basket-items-summary:after {
+  clear: both;
+}
+.basket-items-image {
+  float: left;
+  width: 14.893617021276595%;
+  *width: 14.840425531914894%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-items-image:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-items-description {
+  float: left;
+  width: 31.914893617021278%;
+  *width: 31.861702127659576%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-items-description:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-items-quantity {
+  float: left;
+  width: 14.893617021276595%;
+  *width: 14.840425531914894%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-items-quantity:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-items-price {
+  float: left;
+  width: 14.893617021276595%;
+  *width: 14.840425531914894%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-items-price:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-items-total {
+  float: left;
+  width: 14.893617021276595%;
+  *width: 14.840425531914894%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-items-total:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-saved .basket-items-description {
+  float: left;
+  width: 48.93617021276595%;
+  *width: 48.88297872340425%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-saved .basket-items-description:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-saved .basket-title-items {
+  float: left;
+  width: 65.95744680851064%;
+  *width: 65.90425531914893%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-saved .basket-title-items:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-saved .basket-title-price {
+  float: left;
+  width: 31.914893617021278%;
+  *width: 31.861702127659576%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+  text-align: left;
+}
+.basket-saved .basket-title-price:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-summary-wrapper {
+  width: 100%;
+  *zoom: 1;
+}
+.basket-summary-wrapper:before,
+.basket-summary-wrapper:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.basket-summary-wrapper:after {
+  clear: both;
+}
+.basket-summary-voucher {
+  float: left;
+  width: 48.93617021276595%;
+  *width: 48.88297872340425%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-summary-voucher:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-summary-totals {
+  float: left;
+  width: 48.93617021276595%;
+  *width: 48.88297872340425%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-summary-totals:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
 }
 #basket_totals th small {
   font-weight: normal;
