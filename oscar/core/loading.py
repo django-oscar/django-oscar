@@ -73,7 +73,11 @@ def get_classes(module_label, classnames):
         # Module not in local app
         imported_local_module = {}
     oscar_app = "oscar.apps.%s" % module_label
-    imported_oscar_module = __import__(oscar_app, fromlist=classnames)
+    try:
+        imported_oscar_module = __import__(oscar_app, fromlist=classnames)
+    except ImportError:
+        # Oscar does not have this application, can't fallback to it
+        imported_oscar_module = None
 
     return _pluck_classes([imported_local_module, imported_oscar_module],
                           classnames)
