@@ -5,41 +5,43 @@
 {% load display_tags %}
 {% load staticfiles %}
 
-<article class="product_pod">
-    {% block product_image %}
-        <div class="image_container">
-            {% with image=product.primary_image %}
-                {% thumbnail image.original "x155" upscale=False as thumb %}
-                <a href="{{ product.get_absolute_url }}"><img src="{{ thumb.url }}" alt="{{ product.get_title }}" class="thumbnail"></a>
-                {% endthumbnail %}
-            {% endwith %}
-        </div>
-    {% endblock %}
+{% block product %}
+    <article class="product_pod">
+        {% block product_image %}
+            <div class="image_container">
+                {% with image=product.primary_image %}
+                    {% thumbnail image.original "x155" upscale=False as thumb %}
+                    <a href="{{ product.get_absolute_url }}"><img src="{{ thumb.url }}" alt="{{ product.get_title }}" class="thumbnail"></a>
+                    {% endthumbnail %}
+                {% endwith %}
+            </div>
+        {% endblock %}
 
-    {% block product_review %}
-        {% iffeature "reviews" %}
-            <p class="star-rating {{ product.rating|as_stars }}">
-                <i class="icon-star"></i>
-                <i class="icon-star"></i>
-                <i class="icon-star"></i>
-                <i class="icon-star"></i>
-                <i class="icon-star"></i>
-            </p>
-        {% endiffeature %}
-    {% endblock %}
+        {% block product_review %}
+            {% iffeature "reviews" %}
+                <p class="star-rating {{ product.rating|as_stars }}">
+                    <i class="icon-star"></i>
+                    <i class="icon-star"></i>
+                    <i class="icon-star"></i>
+                    <i class="icon-star"></i>
+                    <i class="icon-star"></i>
+                </p>
+            {% endiffeature %}
+        {% endblock %}
 
-    {% block product_title %}
-        <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:4 }}</a></h3>
-    {% endblock %}
+        {% block product_title %}
+            <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:4 }}</a></h3>
+        {% endblock %}
 
-    {% block product_price %}
-        <div class="product_price">
-            {% include "catalogue/partials/stock_record.html" %}
-            {% if product.is_group %}
-                <a class="btn btn-block" href="{{ product.get_absolute_url }}">{% trans "View" %}</a>
-            {% else %}
-                {% include "catalogue/partials/add_to_basket_form_compact.html" %}
-            {% endif %}
-        </div>
-    {% endblock %}
-</article>
+        {% block product_price %}
+            <div class="product_price">
+                {% include "catalogue/partials/stock_record.html" %}
+                {% if product.is_group %}
+                    <a class="btn btn-block" href="{{ product.get_absolute_url }}">{% trans "View" %}</a>
+                {% else %}
+                    {% include "catalogue/partials/add_to_basket_form_compact.html" %}
+                {% endif %}
+            </div>
+        {% endblock %}
+    </article>
+{% endblock %}
