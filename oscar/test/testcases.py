@@ -31,11 +31,22 @@ class WebTestCase(WebTest):
     is_superuser = False
     permissions = []
 
+    def create_user(self, username=None, email=None, password=None):
+        """
+        Creates a user. But as usernames are optional in newer versions of
+        Django, it only sets it if exists.
+        """
+        kwargs = {'email': email, 'password': password}
+        if 'username' in User._meta.get_all_field_names():
+            kwargs['username'] = username
+        return User.objects.create_user(**kwargs)
+
     def setUp(self):
         self.user = None
+
         if not self.is_anonymous or self.is_staff:
-            self.user = User.objects.create_user(self.username, self.email,
-                                                 self.password)
+            self.user = self.create_user(
+                self.username, self.email, self.password)
             self.user.is_staff = self.is_staff
             perms = self.permissions
             add_permissions(self.user, perms)
