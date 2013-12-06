@@ -24,6 +24,16 @@ def add_permissions(user, permissions):
         user.user_permissions.add(perm)
 
 
+def create_user(username=None, email=None, password=None):
+    user_fields = User._meta.get_all_field_names()
+    kwargs = {'email': email, 'password': password}
+
+    if 'username' in user_fields:
+        kwargs['username'] = username
+
+    return User.objects.create_user(**kwargs)
+
+
 class ClientTestCase(TestCase):
     """
     Helper TestCase for using Django's test client.  The class provides
@@ -49,9 +59,7 @@ class ClientTestCase(TestCase):
 
     def create_user(self, username=None, password=None, email=None,
                     is_staff=None, is_superuser=None, permissions=None):
-        user = User.objects.create_user(username or self.username,
-                                        email or self.email,
-                                        password or self.password)
+        user = create_user(username, email, password)
         user.is_staff = is_staff or self.is_staff
         user.is_superuser = is_superuser or self.is_superuser
         user.save()
@@ -92,9 +100,9 @@ class WebTestCase(WebTest):
 
     def setUp(self):
         self.user = None
+
         if not self.is_anonymous or self.is_staff:
-            self.user = User.objects.create_user(self.username, self.email,
-                                                 self.password)
+            self.user = create_user(self.username, self.email, self.password)
             self.user.is_staff = self.is_staff
             self.user.save()
 
