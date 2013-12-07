@@ -859,6 +859,9 @@ class Range(models.Model):
         return self.__class_ids
 
     def num_products(self):
+        # Delegate to a proxy class if one is provided
+        if self.proxy_class:
+            return load_proxy(self.proxy_class)().num_products()
         if self.includes_all_products:
             return None
         return self.included_products.all().count()
