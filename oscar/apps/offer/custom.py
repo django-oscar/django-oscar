@@ -1,4 +1,5 @@
 from django.core import exceptions
+from django.utils.encoding import force_text
 
 from oscar.apps.offer.models import Range, Condition, Benefit
 
@@ -14,9 +15,22 @@ def create_range(range_class):
     if not hasattr(range_class, 'name'):
         raise exceptions.ValidationError(
             "A custom range must have a name attribute")
-    return Range.objects.create(
-        name=range_class.name,
-        proxy_class=_class_path(range_class))
+
+    # In Django versions further than 1.6 it will be update_or_create
+    # Proof: https://docs.djangoproject.com/en/dev/ref/models/querysets/#update-or-create
+    values = {
+        'name': force_text(range_class.name),
+        'proxy_class': _class_path(range_class),
+    }
+    try:
+        obj = Range.objects.get(**values)
+        for key, value in values.iteritems():
+            setattr(obj, key, value)
+        obj.save()
+    except Range.DoesNotExist:
+        obj = Range(**values)
+        obj.save()
+    return obj
 
 
 def create_condition(condition_class):
