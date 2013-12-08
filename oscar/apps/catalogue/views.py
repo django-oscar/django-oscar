@@ -62,7 +62,7 @@ class ProductDetailView(DetailView):
             alerts = ProductAlert.objects.filter(
                 product=self.object, user=self.request.user,
                 status=ProductAlert.ACTIVE)
-            has_alert = alerts.count() > 0
+            has_alert = alerts.exists()
         return has_alert
 
     def get_alert_form(self):

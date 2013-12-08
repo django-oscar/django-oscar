@@ -260,7 +260,7 @@ class PartnerUserUnlinkView(generic.View):
         if not partner.users.filter(pk=user.pk).exists():
             return False
         partner.users.remove(user)
-        if not user.is_staff and user.partners.count() == 0:
+        if not user.is_staff and not user.partners.exists():
             user.user_permissions.filter(
                 codename='dashboard_access',
                 content_type__app_label='partner').delete()

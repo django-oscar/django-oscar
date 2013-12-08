@@ -521,7 +521,7 @@ class AbstractUserAddress(AbstractShippingAddress):
             hash=self.generate_hash())
         if self.id:
             qs = qs.exclude(id=self.id)
-        if qs.count() > 0:
+        if qs.exists():
             raise exceptions.ValidationError({
                 '__all__': [_("This address is already in your address book")]})
 

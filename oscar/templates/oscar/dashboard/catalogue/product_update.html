@@ -127,7 +127,7 @@
                                                 <h3>{% trans "Ranges" %}</h3>
                                             </div>
                                             <table class="table table-striped table-bordered">
-                                                {% if ranges.count > 0 %}
+                                                {% if ranges %}
                                                     {% for range in ranges %}
                                                         <tr><td><a href="{% url 'dashboard:range-update' pk=range.id %}" alt="{{ range.name }}">{{ range.name }}</a></td></tr>
                                                     {% endfor %}
@@ -141,7 +141,7 @@
                                                 <h3>{% trans "Offers" %}</h3>
                                             </div>
                                             <table class="table table-striped table-bordered">
-                                                {% if offers.count > 0 %}
+                                                {% if offers %}
                                                     {% for offer in offers %}
                                                         <tr><td>{{ offer.name }}</td></tr>
                                                     {% endfor %}

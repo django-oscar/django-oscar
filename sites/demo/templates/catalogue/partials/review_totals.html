@@ -13,7 +13,7 @@
         <i class="icon-star"></i>
         <i class="icon-star"></i>
         <a href="{% url 'catalogue:reviews-list' product.slug product.id %}">
-        {% if reviews.count > 0 %}
+        {% if reviews %}
             {% blocktrans count reviews|length as num_reviews %}
             1 custom review
             {% plural %}

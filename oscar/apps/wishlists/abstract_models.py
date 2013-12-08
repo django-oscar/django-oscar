@@ -61,7 +61,7 @@ class AbstractWishList(models.Model):
         """
         while True:
             key = hashlib.sha1(str(random.random())).hexdigest()[:length]
-            if cls._default_manager.filter(key=key).count() == 0:
+            if not cls._default_manager.filter(key=key).exists():
                 return key
 
     def is_allowed_to_see(self, user):
