@@ -137,7 +137,7 @@ class WeightBased(ShippingMethod):
         bands = self.bands.filter(
             upper_limit__gte=weight).order_by('upper_limit')[:1]
         # Query return only one row, so we can evaluate it
-        if bands:
+        if not bands:
             # No band for this weight
             return None
         return bands[0]
