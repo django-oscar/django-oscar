@@ -152,10 +152,12 @@ Further reading:
 
 * :doc:`The demo site </internals/sandbox>`.
 
-Django 1.5 and custom user model support
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Django 1.5, 1.6 and custom user model support
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Oscar now supports `custom user models`_, the headline new feature in Django
+Oscar now supports Django 1.5 and 1.6.
+
+Specifically, Oscar supports `custom user models`_, the headline new feature in Django
 1.5.  These can be used standalone or with a one-to-one profile model: Oscar's
 account forms inspect the model fields to dynamically pick up the fields for
 editing and display.
