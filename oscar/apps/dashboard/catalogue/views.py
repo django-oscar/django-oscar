@@ -1,4 +1,4 @@
-from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.core.exceptions import ObjectDoesNotExist
 from django.views import generic
 from django.db.models import get_model, Q
 from django.http import HttpResponseRedirect, Http404
@@ -37,19 +37,17 @@ StockAlert = get_model('partner', 'StockAlert')
 Partner = get_model('partner', 'Partner')
 
 
-def get_queryset_for_user(user):
+def filter_products(queryset, user):
     """
-    Returns all products the given user has access to.
+    Restrict the queryset to products the given user has access to.
     A staff user is allowed to access all Products.
-    A non-staff user is only allowed access to a product if she's in at least
-    one stock record's partner user list.
+    A non-staff user is only allowed access to a product if they are in at
+    least one stock record's partner user list.
     """
-    queryset = Product.objects.base_queryset().order_by('-date_created')
     if user.is_staff:
-        return queryset.all()
-    else:
-        return queryset.filter(
-            stockrecords__partner__users__pk=user.pk).distinct()
+        return queryset
+
+    return queryset.filter(stockrecords__partner__users__pk=user.pk).distinct()
 
 
 class ProductListView(generic.ListView):
@@ -79,12 +77,20 @@ class ProductListView(generic.ListView):
 
         return ctx
 
+    def filter_queryset(self, queryset):
+        """
+        Apply any filters to restrict the products that appear on the list
+        """
+        return filter_products(queryset, self.request.user)
+
     def get_queryset(self):
         """
         Build the base queryset for this list and apply sorting.
         """
-        queryset = get_queryset_for_user(self.request.user)
+        queryset = Product.objects.base_queryset()
+        queryset = self.filter_queryset(queryset)
         queryset = self.apply_search(queryset)
+
         if 'recently_edited' in self.request.GET:
             # Just show recently edited
             queryset = queryset.order_by('-date_updated')
@@ -162,6 +168,12 @@ class ProductCreateUpdateView(generic.UpdateView):
     recommendations_formset = ProductRecommendationFormSet
     stockrecord_formset = StockRecordFormSet
 
+    def get_queryset(self):
+        """
+        Filter products that the user doesn't have permission to update
+        """
+        return filter_products(Product.objects.all(), self.request.user)
+
     def get_object(self, queryset=None):
         """
         This parts allows generic.UpdateView to handle creating products as
@@ -169,7 +181,6 @@ class ProductCreateUpdateView(generic.UpdateView):
         is that self.object is None. We emulate this behavior.
         Additionally, self.product_class is set.
         """
-        user = self.request.user
         self.creating = not 'pk' in self.kwargs
         if self.creating:
             try:
@@ -182,13 +193,8 @@ class ProductCreateUpdateView(generic.UpdateView):
                 return None  # success
         else:
             product = super(ProductCreateUpdateView, self).get_object(queryset)
-            user = self.request.user
             self.product_class = product.product_class
-            # check user has permission to update Product
-            if user.is_staff or product.is_user_a_partner_user(user):
-                return product
-            else:
-                raise PermissionDenied
+            return product
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
@@ -318,13 +324,11 @@ class ProductDeleteView(generic.DeleteView):
     model = Product
     context_object_name = 'product'
 
-    def get_object(self, queryset=None):
-        product = super(ProductDeleteView, self).get_object(queryset)
-        user = self.request.user
-        if user.is_staff or product.is_user_a_partner_user(user):
-            return product
-        else:
-            raise PermissionDenied
+    def get_queryset(self):
+        """
+        Filter products that the user doesn't have permission to update
+        """
+        return filter_products(Product.objects.all(), self.request.user)
 
     def get_success_url(self):
         msg = _("Deleted product '%s'") % self.object.title
