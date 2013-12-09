@@ -1,4 +1,5 @@
 import datetime
+import json
 
 from django.views.generic import (ListView, FormView, DeleteView,
                                   CreateView, UpdateView)
@@ -8,6 +9,8 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
+from django.core import serializers
+from django.core.serializers.json import DjangoJSONEncoder
 
 from oscar.core.loading import get_classes, get_class
 from oscar.views import sort_queryset
@@ -105,26 +108,53 @@ class OfferWizardStepView(FormView):
 
     def _store_form_kwargs(self, form):
         session_data = self.request.session.setdefault(self.wizard_name, {})
-        form_kwargs = {'data': form.cleaned_data.copy()}
-        session_data[self._key()] = form_kwargs
+
+        # Adjust kwargs to avoid trying to save the range instance
+        form_data = form.cleaned_data.copy()
+        if 'range' in form_data:
+            form_data['range_id'] = form_data['range'].id
+            del form_data['range']
+        form_kwargs = {'data': form_data}
+        json_data = json.dumps(form_kwargs, cls=DjangoJSONEncoder)
+
+        session_data[self._key()] = json_data
         self.request.session.save()
 
     def _fetch_form_kwargs(self, step_name=None):
         if not step_name:
             step_name = self.step_name
         session_data = self.request.session.setdefault(self.wizard_name, {})
-        return session_data.get(self._key(step_name), {})
+        json_data = session_data.get(self._key(step_name), None)
+        if json_data:
+            form_kwargs = json.loads(json_data)
+            if 'range_id' in form_kwargs['data']:
+                form_kwargs['data']['range'] = Range.objects.get(
+                    id=form_kwargs['data']['range_id'])
+                del form_kwargs['data']['range_id']
+            return form_kwargs
+
+        return {}
 
     def _store_object(self, form):
         session_data = self.request.session.setdefault(self.wizard_name, {})
-        session_data[self._key(is_object=True)] = form.save(commit=False)
+
+        # We don't store the object instance as that is not JSON serialisable.
+        # Instead, we save an alternative form
+        instance = form.save(commit=False)
+        json_qs = serializers.serialize('json', [instance])
+
+        session_data[self._key(is_object=True)] = json_qs
         self.request.session.save()
 
     def _fetch_object(self, step_name, request=None):
         if request is None:
             request = self.request
         session_data = request.session.setdefault(self.wizard_name, {})
-        return session_data.get(self._key(step_name, is_object=True), None)
+        json_qs = session_data.get(self._key(step_name, is_object=True), None)
+        if json_qs:
+            # Recreate model instance from passed data
+            deserialised_obj = list(serializers.deserialize('json', json_qs))[0]
+            return deserialised_obj.object
 
     def _fetch_session_offer(self):
         """
