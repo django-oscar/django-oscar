@@ -85,12 +85,16 @@ class ProductListView(generic.ListView):
 
     def get_queryset(self):
         """
-        Build the base queryset for this list and apply sorting.
+        Build the queryset for this list
         """
         queryset = Product.objects.base_queryset()
         queryset = self.filter_queryset(queryset)
         queryset = self.apply_search(queryset)
+        queryset = self.apply_ordering(queryset)
 
+        return queryset
+
+    def apply_ordering(self, queryset):
         if 'recently_edited' in self.request.GET:
             # Just show recently edited
             queryset = queryset.order_by('-date_updated')
@@ -99,7 +103,6 @@ class ProductListView(generic.ListView):
             # Allow sorting when all
             queryset = sort_queryset(queryset, self.request,
                                      ['title'], '-date_created')
-
         return queryset
 
     def apply_search(self, queryset):
