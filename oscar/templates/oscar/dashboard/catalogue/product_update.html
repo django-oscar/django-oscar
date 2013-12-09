@@ -45,11 +45,9 @@
                             {% endif %}
                             <li{% if not product %} class="active"{% endif %}><a href="#product_details" data-toggle="tab">{% trans 'Product details' %}</a></li>
                             <li><a href="#product_recommended" data-toggle="tab">{% trans 'Recommended Products' %}</a></li>
-                            {% with variants=product.variants.all %}
-                                {% if variants|length > 0 %}
-                                    <li><a href="#product_variants" data-toggle="tab">{% trans 'Product variants' %}</a></li>
-                                {% endif %}
-                            {% endwith %}
+                            {% if product.variants.exists %}
+                                <li><a href="#product_variants" data-toggle="tab">{% trans 'Product variants' %}</a></li>
+                            {% endif %}
                             <li><a href="#product_attributes" data-toggle="tab">{% trans 'Product attributes' %}</a></li>
                             <li><a href="#product_category" data-toggle="tab">{% trans 'Product category' %}</a></li>
                             <li><a href="#product_images" data-toggle="tab">{% trans 'Product images' %}</a></li>
@@ -127,13 +125,11 @@
                                                 <h3>{% trans "Ranges" %}</h3>
                                             </div>
                                             <table class="table table-striped table-bordered">
-                                                {% if ranges %}
-                                                    {% for range in ranges %}
-                                                        <tr><td><a href="{% url 'dashboard:range-update' pk=range.id %}" alt="{{ range.name }}">{{ range.name }}</a></td></tr>
-                                                    {% endfor %}
-                                                {% else %}
+                                                {% for range in ranges %}
+                                                    <tr><td><a href="{% url 'dashboard:range-update' pk=range.id %}" alt="{{ range.name }}">{{ range.name }}</a></td></tr>
+                                                {% empty %}
                                                     <tr><td>{% trans "No ranges currently include this product for this product" %}</td></tr>
-                                                {% endif %}
+                                                {% endfor %}
                                             </table>
                                         </div>
                                         <div class="span4">
@@ -141,13 +137,11 @@
                                                 <h3>{% trans "Offers" %}</h3>
                                             </div>
                                             <table class="table table-striped table-bordered">
-                                                {% if offers %}
-                                                    {% for offer in offers %}
-                                                        <tr><td>{{ offer.name }}</td></tr>
-                                                    {% endfor %}
-                                                {% else %}
+                                                {% for offer in offers %}
+                                                    <tr><td>{{ offer.name }}</td></tr>
+                                                {% empty %}
                                                     <tr><td>{% trans "No offers currently include this product" %}</td></tr>
-                                                {% endif %}
+                                                {% endfor %}
                                             </table>
                                         </div>
                                     </div>
@@ -209,7 +203,7 @@
 
                     {% block product_variants %}
                         {% with variants=product.variants.all %}
-                            {% if variants|length > 0 %}
+                            {% if variants %}
                                 <div class="tab-pane" id="product_variants">
                                     {% block product_variants_content %}
                                         <table class='table table-striped table-bordered'>

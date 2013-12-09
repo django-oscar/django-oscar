@@ -23,18 +23,16 @@
                         </td>
                     </tr>
 
-                    {% if offer_discounts %}
-                        {% for discount in offer_discounts %}
-                            <tr>
-                                <td class="basket-discount"><span class="label label-success">{% trans "Discount" %}</span> {{ discount.name }}
-                                    {% if discount.description %}
-                                        <br/><small>{{ discount.description }}</small>
-                                    {% endif %}
-                                </td>
-                                <td class="align-right">-{{ discount.discount|currency:basket.currency }}</td>
-                            </tr>
-                        {% endfor %}
-                    {% endif %}
+                    {% for discount in offer_discounts %}
+                        <tr>
+                            <td class="basket-discount"><span class="label label-success">{% trans "Discount" %}</span> {{ discount.name }}
+                                {% if discount.description %}
+                                    <br/><small>{{ discount.description }}</small>
+                                {% endif %}
+                            </td>
+                            <td class="align-right">-{{ discount.discount|currency:basket.currency }}</td>
+                        </tr>
+                    {% endfor %}
 
                     {% if voucher_discounts %}
                         <tr>
