@@ -56,6 +56,32 @@ class PagePromotion(AbstractPagePromotion):
     pass
 
 
+class AbstractKeywordPromotion(LinkedPromotion):
+    """
+    A promotion linked to a specific keyword.
+
+    This can be used on a search results page to show promotions
+    linked to a particular keyword.
+    """
+
+    keyword = models.CharField(_("Keyword"), max_length=200)
+
+    # We allow an additional filter which will let search query matches
+    # be restricted to different parts of the site.
+    filter = models.CharField(_("Filter"), max_length=200, blank=True)
+
+    def get_link(self):
+        return reverse('promotions:keyword-click', kwargs={'keyword_promotion_id': self.id})
+
+    class Meta:
+        abstract = True
+        verbose_name = _("Keyword Promotion")
+        verbose_name_plural = _("Keyword Promotions")
+
+
+class KeywordPromotion(AbstractKeywordPromotion):
+    pass
+
 class AbstractPromotion(models.Model):
     """
     Abstract base promotion that defines the interface
@@ -313,30 +339,3 @@ class AbstractTabbedBlock(AbstractPromotion):
         abstract = True
         verbose_name = _("Tabbed Block")
         verbose_name_plural = _("Tabbed Blocks")
-
-
-class AbstractKeywordPromotion(LinkedPromotion):
-    """
-    A promotion linked to a specific keyword.
-
-    This can be used on a search results page to show promotions
-    linked to a particular keyword.
-    """
-
-    keyword = models.CharField(_("Keyword"), max_length=200)
-
-    # We allow an additional filter which will let search query matches
-    # be restricted to different parts of the site.
-    filter = models.CharField(_("Filter"), max_length=200, blank=True)
-
-    def get_link(self):
-        return reverse('promotions:keyword-click', kwargs={'keyword_promotion_id': self.id})
-
-    class Meta:
-        abstract = True
-        verbose_name = _("Keyword Promotion")
-        verbose_name_plural = _("Keyword Promotions")
-
-
-class KeywordPromotion(AbstractKeywordPromotion):
-    pass
