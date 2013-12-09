@@ -1,5 +1,3 @@
-import csv
-
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
 
@@ -17,7 +15,7 @@ class VoucherReportCSVFormatter(ReportCSVFormatter):
     filename_template = 'voucher-performance.csv'
 
     def generate_csv(self, response, vouchers):
-        writer = csv.writer(response)
+        writer = self.get_csv_writer(response)
         header_row = [_('Voucher code'),
                       _('Added to a basket'),
                       _('Used in an order'),
