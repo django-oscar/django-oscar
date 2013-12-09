@@ -81,12 +81,10 @@ class ProductListView(generic.ListView):
 
     def get_queryset(self):
         """
-        Build the queryset for this list and also update the title that
-        describes the queryset
+        Build the base queryset for this list and apply sorting.
         """
-        description_ctx = {'upc_filter': '',
-                           'title_filter': ''}
         queryset = get_queryset_for_user(self.request.user)
+        queryset = self.apply_search(queryset)
         if 'recently_edited' in self.request.GET:
             # Just show recently edited
             queryset = queryset.order_by('-date_updated')
@@ -95,7 +93,19 @@ class ProductListView(generic.ListView):
             # Allow sorting when all
             queryset = sort_queryset(queryset, self.request,
                                      ['title'], '-date_created')
+
+        return queryset
+
+    def apply_search(self, queryset):
+        """
+        Filter the queryset and set the description according to the search
+        parameters given
+        """
+        description_ctx = {'upc_filter': '',
+                           'title_filter': ''}
+
         self.form = self.form_class(self.request.GET)
+
         if not self.form.is_valid():
             self.description = self.description_template % description_ctx
             return queryset
@@ -114,6 +124,7 @@ class ProductListView(generic.ListView):
                 " including an item with title matching '%s'") % data['title']
 
         self.description = self.description_template % description_ctx
+
         return queryset
 
 
