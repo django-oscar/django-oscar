@@ -33,6 +33,7 @@ DATABASES = {
         'PASSWORD': '',
         'HOST': '',
         'PORT': '',
+        'ATOMIC_REQUESTS': True
     }
 }
 
@@ -286,7 +287,6 @@ INSTALLED_APPS = [
     # Debug toolbar + extensions
     'debug_toolbar',
     'cache_panel',
-    #'template_timings_panel',
     'south',
     'rosetta',          # For i18n testing
     'compressor',
@@ -336,7 +336,6 @@ DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.template.TemplateDebugPanel',
     'debug_toolbar.panels.timer.TimerDebugPanel',
     'debug_toolbar.panels.sql.SQLDebugPanel',
-    #'template_timings_panel.panels.TemplateTimings.TemplateTimings',
     'cache_panel.panel.CacheDebugPanel',
     'debug_toolbar.panels.signals.SignalDebugPanel',
     'debug_toolbar.panels.logger.LoggingPanel',
@@ -427,6 +426,11 @@ THUMBNAIL_KEY_PREFIX = 'oscar-sandbox'
 # Use a custom KV store to handle integrity error
 THUMBNAIL_KVSTORE = 'oscar.sorl_kvstore.ConcurrentKVStore'
 
+# Django 1.6 has switched to JSON serializing for security reasons, but it does not
+# serialize Models. We should resolve this by extending the
+# django/core/serializers/json.Serializer to have the `dumps` function. Also
+# in tests/config.py
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
 # Try and import local settings which can be used to override any of the above.
 try:
