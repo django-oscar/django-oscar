@@ -125,6 +125,18 @@
             </div>
         </div>
     </div><!-- /container -->
+
+    {% comment %}
+        This block includes a single pixel from one of Tangent's servers.  We use the referer header to determine which sites are
+        using Oscar.  Since Tangent sponsor Oscar's development, this is an important metric to help justify the investment.  You
+        are, of course, welcome to remove this tracker - but please email the mailing list if you have a production site using Oscar.
+    {% endcomment %}
+    {% block trackerimage %}
+        {% if call_home and not debug %}
+            <img src="//oscar-static.tangentlabs.co.uk/tracker.gif" style="display:none" />
+        {% endif %}
+    {% endblock %}
+
 {% endblock %}
 
 {% block extrascripts %}

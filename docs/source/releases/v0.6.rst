@@ -52,12 +52,16 @@ Other notable new features include:
 
 * `New helper methods`_ in the ``EventHandler`` class for order processing.
 
-* `Reworked seach app`_ with support for easy faceting.
+* `Reworked search app`_ with support for easy faceting.
 
-.. _`Oscar now supports Django 1.5`: `Django 1.5 and custom user model support`_
+Also, to help justify Tangent's sponsorship of Oscar, 
+a simple `tracking mechanism`_ has been introduced.
+
+.. _`Oscar now supports Django 1.5`: `django_support`_
 .. _`Partners can now have addresses`: `Partner addresses`_
 .. _`Customer wishlists`: `Wishlists`_
 .. _`New helper methods`: `Order processing changes`_
+.. _`tracking mechanism`: `Tracking Oscar sites`_
 
 What's new in Oscar 0.6?
 ========================
@@ -183,6 +187,8 @@ Further reading:
 
 * :doc:`The demo site </internals/sandbox>`.
 
+.. _django_support:
+
 Django 1.5, 1.6 and custom user model support
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -248,6 +254,17 @@ Order processing changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 There are changes to order processing methods
+
+Tracking Oscar sites
+~~~~~~~~~~~~~~~~~~~~
+
+Oscar's dashboard now serves a single pixel image from one of Tangent's
+servers.  This is included to gather information on which sites use Oscar,
+which is an important metric for Tangent, who sponsor Oscar's development.
+
+It can easily be disabled by setting ``OSCAR_TRACKING=False``.  If you do opt
+out, please email the mailing list with any production Oscar sites you are
+running.  This will help to ensure investment in Oscar's future.
 
 Minor changes
 ~~~~~~~~~~~~~
