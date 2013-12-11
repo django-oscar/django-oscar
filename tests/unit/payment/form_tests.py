@@ -128,3 +128,17 @@ class TestValidBankcardForm(TestCase):
         bankcard = self.form.bankcard
         self.assertFalse(bankcard.number.startswith('X'))
         self.assertEquals('123', bankcard.ccv)
+
+
+class TestBankcardForm(TestCase):
+
+    def test_requires_4_digit_ccv_for_amex(self):
+        today = datetime.date.today()
+        data = {
+            'number': '378282246310005',
+            'ccv': '123',
+            'expiry_month_0': '01',
+            'expiry_month_1': today.year + 1,
+        }
+        form = forms.BankcardForm(data)
+        self.assertFalse(form.is_valid())

@@ -35,6 +35,10 @@ CARD_TYPES = [
 ]
 
 
+def is_amex(number):
+    return bankcard_type(number) == AMEX
+
+
 def bankcard_type(card_number):
     """
     Return the type of a bankcard based on its card_number.
