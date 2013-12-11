@@ -479,7 +479,7 @@ class AbstractBasket(models.Model):
     def contains_a_voucher(self):
         if not self.id:
             return False
-        return self.vouchers.all().count() > 0
+        return self.vouchers.exists()
 
     @property
     def is_submitted(self):

@@ -120,7 +120,7 @@ class WeightBased(ShippingMethod):
                             self._basket)
         band = self.get_band_for_weight(weight)
         if not band:
-            if self.bands.all().count() > 0 and self.upper_charge:
+            if self.bands.all().exists() and self.upper_charge:
                 return self.upper_charge
             else:
                 return D('0.00')
@@ -134,8 +134,10 @@ class WeightBased(ShippingMethod):
         """
         Return the weight band for a given weight
         """
-        bands = self.bands.filter(upper_limit__gte=weight).order_by('upper_limit')
-        if not bands.count():
+        bands = self.bands.filter(
+            upper_limit__gte=weight).order_by('upper_limit')[:1]
+        # Query return only one row, so we can evaluate it
+        if not bands:
             # No band for this weight
             return None
         return bands[0]

@@ -400,10 +400,7 @@ class AbstractProduct(models.Model):
         """
         Test if this is a top level product and has more than 0 variants
         """
-        # use len() instead of count() in this specific instance
-        # as variants are highly likely to be used after this
-        # which reduces the amount of SQL queries required
-        return self.is_top_level and len(self.variants.all()) > 0
+        return self.is_top_level and self.variants.exists()
 
     @property
     def is_variant(self):

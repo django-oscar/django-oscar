@@ -31,7 +31,7 @@ def get_request_promotions(request):
 
     if 'q' in request.GET:
         keyword_promotions = KeywordPromotion._default_manager.select_related().filter(keyword=request.GET['q'])
-        if keyword_promotions.count() > 0:
+        if keyword_promotions.exists():
             promotions = list(chain(promotions, keyword_promotions))
     return promotions
 
