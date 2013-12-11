@@ -51,14 +51,7 @@ class BulkEditMixin(object):
     def get_checkbox_object_name(self):
         if self.checkbox_object_name:
             return self.checkbox_object_name
-        object_list = self.get_queryset()
-        if hasattr(object_list, 'model'):
-            return smart_str(object_list.model._meta.object_name.lower())
-        else:
-            return None
-
-    def get_queryset(self):
-        pass
+        return smart_str(self.model._meta.object_name.lower())
 
     def get_error_url(self, request):
         return request.META.get('HTTP_REFERER', '.')
