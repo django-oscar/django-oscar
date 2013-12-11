@@ -88,6 +88,11 @@ class CheckoutSessionData(object):
         id
         """
         self._unset('shipping', 'new_address_fields')
+        phone_number = address_fields.get('phone_number')
+        if phone_number:
+            address_fields = address_fields.copy()
+            address_fields['phone_number'] = unicode(
+                address_fields['phone_number'])
         self._set('shipping', 'new_address_fields', address_fields)
 
     def new_shipping_address_fields(self):
