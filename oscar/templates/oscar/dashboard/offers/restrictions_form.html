@@ -10,12 +10,6 @@
     {% include 'dashboard/offers/progress.html' with step=4 %}
 {% endblock %}
 
-{% block extrascripts %}
-    {{ block.super }}
-    {# The CSS for that is directly in dashboard.less #}
-    <script src="{% static 'oscar/js/timepicker/jquery-ui-timepicker-addon.min.js' %}" type="text/javascript"></script>
-{% endblock %}
-
 {% block form_actions_buttons %}
     <button class="btn btn-primary" type="submit">{% trans "Save this offer" %}</button>
 {% endblock %}
