@@ -20,9 +20,9 @@
 
 {% block extrastyles %}
     {{ block.super }}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/cupertino/jquery-ui.css">
     {% compress css %}
         <link rel="stylesheet" href="{% static "oscar/js/select2/select2.css" %}" />
-        <link rel="stylesheet" href="{% static "oscar/js/jquery/bootstrap-datepicker.css" %}" />
     {% endcompress %}
 {% endblock %}
 
@@ -142,16 +142,16 @@
 {% block extrascripts %}
     {{ block.super }}
 
-    <script src="//code.jquery.com/ui/1.10.3/jquery-ui.js" type="text/javascript" charset="utf-8"></script>
+    <script src="//code.jquery.com/ui/1.10.3/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
 
     {% compress js %}
-
-    {# jQuery plugins #}
-    <!-- Custom Jquery UI, only contains date picker -->
-    <script src="{% static "oscar/js/mousewheel/jquery.mousewheel.min.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/scrollpane/jquery.jscrollpane.min.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/select2/select2.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/oscar/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
+        {# jQuery plugins #}
+        <script src="{% static "oscar/js/mousewheel/jquery.mousewheel.min.js" %}" type="text/javascript" charset="utf-8"></script>
+        <script src="{% static "oscar/js/scrollpane/jquery.jscrollpane.min.js" %}" type="text/javascript" charset="utf-8"></script>
+        {# The CSS for the timepicker is embedded in dashboard.less #}
+        <script src="{% static "oscar/js/timepicker/jquery-ui-timepicker-addon.min.js" %}" type="text/javascript" charset="utf-8"></script>
+        <script src="{% static "oscar/js/select2/select2.js" %}" type="text/javascript" charset="utf-8"></script>
+        <script src="{% static "oscar/js/oscar/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
     {% endcompress %}
 
     <script src="//tinymce.cachefly.net/4.0/tinymce.min.js" type="text/javascript" charset="utf-8"></script>

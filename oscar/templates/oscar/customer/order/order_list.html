@@ -59,12 +59,12 @@
 
 {% block extrastyles %}
     {{ block.super }}
-    <link rel="stylesheet" href="{% static "oscar/js/jquery/bootstrap-datepicker.css" %}" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/cupertino/jquery-ui.css">
 {% endblock %}
 
 {% block cdn_scripts %}
     {{ block.super }}
-    <script src="{% static "oscar/js/jquery/jquery-ui-1.10.1.custom.min.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="//code.jquery.com/ui/1.10.3/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
 
 {% block onbodyload %}
