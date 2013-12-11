@@ -163,26 +163,7 @@
                                             {{ field }}
                                         {% endif %}
                                         {% if 'attr' not in field.id_for_label %}
-                                            <div class="control-group {% for error in field.errors %}error{% endfor %}">
-                                                {% if field.is_hidden %}
-                                                    {{ field }}
-                                                {% else %}
-                                                    <label for="{{ field.auto_id }}" class="control-label {% if field.field.required %}required{% endif %}">{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</label>
-                                                    <div class="controls">
-                                                        {{ field }}
-                                                        {% for error in field.errors %}
-                                                            <span class="help-block">
-                                                                {{ error }}
-                                                            </span>
-                                                        {% endfor %}
-                                                        {% if field.help_text %}
-                                                            <span class='help-block'>
-                                                                {{ field.help_text }}
-                                                            </span>
-                                                        {% endif %}
-                                                    </div>
-                                                {% endif %}
-                                            </div>
+                                            {% include "partials/form_field.html" with field=field %}
                                         {% endif %}
                                     {% endfor %}
 
@@ -211,23 +192,23 @@
                                             {% with parent=product.parent %}
                                                 {% if parent %}
                                                     <tr>
-                                                        <th>{% trans "Parent" %}</th>
-                                                        <th></th>
+                                                        <th colspan="3">{% trans "Parent" %}</th>
                                                     </tr>
                                                     <tr>
                                                         <td>{{ parent.title }}</td>
+                                                        <td></td>
                                                         <td><a href="{% url 'dashboard:catalogue-product' pk=parent.id %}" class="btn btn-primary" title="{% blocktrans %}Edit {{ parent.title }}{% endblocktrans %}">{% trans "Edit" %}</a></td>
                                                     </tr>
                                                 {% endif %}
                                             {% endwith %}
                                             <tr>
-                                                <th>{% trans "Children" %}</th>
-                                                <th></th>
+                                                <th colspan="3">{% trans "Children" %}</th>
                                             </tr>
 
                                             {% for variant in variants %}
                                                 <tr>
-                                                    <td>{{ variant.title }}</td>
+                                                    <td>{{ variant.get_title }}</td>
+                                                    <td>{{ variant.attribute_summary }}</td>
                                                     <td><a href="{% url 'dashboard:catalogue-product' pk=variant.id %}" class="btn btn-primary">{% trans "Edit" %}</a></td>
                                                 </tr>
                                             {% endfor %}
