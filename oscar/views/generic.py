@@ -87,7 +87,7 @@ class BulkEditMixin(object):
         return [object_dict[id] for id in ids]
 
     def get_object_dict(self, ids):
-        return self.model.objects.in_bulk(ids)
+        return self.get_queryset().in_bulk(ids)
 
 
 class ObjectLookupView(View):
