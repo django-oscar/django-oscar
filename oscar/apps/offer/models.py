@@ -1519,4 +1519,5 @@ class ShippingPercentageDiscountBenefit(ShippingBenefit):
         verbose_name_plural = _("Shipping percentage discount benefits")
 
     def shipping_discount(self, charge):
-        return charge * self.value / D('100.0')
+        discount = charge * self.value / D('100.0')
+        return discount.quantize(D('0.01'))
