@@ -17,10 +17,11 @@ class VoucherForm(forms.Form):
     name = forms.CharField(label=_("Name"))
     code = forms.CharField(label=_("Code"))
 
-    start_date = forms.DateField(
-        label=_("Start date"), widget=widgets.DatePickerInput())
-    end_date = forms.DateField(
-        label=_("End date"), widget=widgets.DatePickerInput())
+    start_datetime = forms.DateTimeField(
+        widget=widgets.DateTimePickerInput(),
+        label=_("Start datetime"))
+    end_datetime = forms.DateTimeField(
+        label=_("End datetime"), widget=widgets.DateTimePickerInput())
     usage = forms.ChoiceField(choices=Voucher.USAGE_CHOICES, label=_("Usage"))
 
     benefit_range = forms.ModelChoiceField(
