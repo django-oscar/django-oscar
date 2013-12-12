@@ -908,6 +908,11 @@ class AbstractAttributeOptionGroup(models.Model):
         verbose_name = _('Attribute Option Group')
         verbose_name_plural = _('Attribute Option Groups')
 
+    @property
+    def option_summary(self):
+        options = [o.option for o in self.options.all()]
+        return ", ".join(options)
+
 
 class AbstractAttributeOption(models.Model):
     """
