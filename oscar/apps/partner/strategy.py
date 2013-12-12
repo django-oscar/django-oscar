@@ -176,21 +176,19 @@ class NoTax(object):
 
 class FixedRateTax(object):
     """
-    Pricing policy mixin for use with the ``Structured`` base strategy.
-    This mixin applies a fixed rate tax to the base price from the product's
-    stockrecord.
-    The price_incl_tax is quantized to two decimal places. Rounding behaviour is
-    Decimal's default
+    Pricing policy mixin for use with the ``Structured`` base strategy.  This
+    mixin applies a fixed rate tax to the base price from the product's
+    stockrecord.  The price_incl_tax is quantized to two decimal places.
+    Rounding behaviour is Decimal's default
     """
     rate = D('0.20')
-    exponent = D('0.01')
+    exponent = D('0.01')  # Default to two decimal places
 
     def pricing_policy(self, product, stockrecord):
         if not stockrecord:
             return prices.Unavailable()
-        # round to two decimal places
         tax = (stockrecord.price_excl_tax * self.rate).quantize(self.exponent)
-        return prices.FixedPrice(
+        return prices.TaxInclusiveFixedPrice(
             currency=stockrecord.price_currency,
             excl_tax=stockrecord.price_excl_tax,
             tax=tax)
@@ -224,7 +222,13 @@ class Default(UseFirstStockRecord, StockRequired, NoTax, Structured):
     """
 
 
+class UK(UseFirstStockRecord, StockRequired, FixedRateTax, Structured):
+    """
+    Sample strategy for the UK (just for testing really)
+    """
+
+
 class US(UseFirstStockRecord, StockRequired, DeferredTax, Structured):
     """
-    Default strategy for the USA (just for testing really)
+    Sample strategy for the USA (just for testing really)
     """

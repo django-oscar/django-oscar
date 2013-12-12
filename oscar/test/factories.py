@@ -88,7 +88,7 @@ def create_product(upc=None, title=u"Dummy title",
     return product
 
 
-def create_basket(empty=False):
+def create_basket(empty=False, strategy=None):
     basket = Basket.objects.create()
     basket.strategy = strategy.Default()
     if not empty:

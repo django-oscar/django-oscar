@@ -738,6 +738,13 @@ class AbstractLine(models.Model):
         return self.stockinfo.price.is_tax_known
 
     @property
+    def unit_effective_price(self):
+        """
+        The price to use for offer calculations
+        """
+        return self.stockinfo.price.effective_price
+
+    @property
     def unit_price_excl_tax(self):
         return self.stockinfo.price.excl_tax
 

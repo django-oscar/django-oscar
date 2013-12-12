@@ -46,9 +46,7 @@ def unit_price(offer, line):
 
     This is required so offers can apply in circumstances where tax isn't known
     """
-    if offer.applies_to_tax_exclusive_prices:
-        return line.unit_price_excl_tax
-    return line.unit_price_incl_tax
+    return line.unit_effective_price
 
 
 def apply_discount(line, discount, quantity):
@@ -1194,6 +1192,12 @@ class BasketDiscount(ApplicationResult):
     @property
     def is_successful(self):
         return self.discount > 0
+
+    def __str__(self):
+        return '<Basket discount of %s>' % self.discount
+
+    def __repr__(self):
+        return '%s(%r)' % (self.__class__.__name__, self.discount)
 
 
 # Helper global as returning zero discount is quite common
