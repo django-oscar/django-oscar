@@ -98,13 +98,6 @@ class ConditionalOffer(models.Model):
         'offer.Condition', verbose_name=_("Condition"))
     benefit = models.ForeignKey('offer.Benefit', verbose_name=_("Benefit"))
 
-    applies_to_tax_exclusive_prices = models.BooleanField(
-        _("Should this offer uses tax-exclusive prices for calculations?"),
-        default=False,
-        help_text=_(
-            "This is required for an offer to apply in territories where "
-            "taxes aren't known until checkout, like the USA"))
-
     # Some complicated situations require offers to be applied in a set order.
     priority = models.IntegerField(
         _("Priority"), default=0,

@@ -49,6 +49,11 @@ class FixedPrice(Base):
     This should be used for when the price of a product is known in advance.
 
     It can work for when tax isn't known (like in the US).
+
+    Note that this price class uses the tax-exclusive price for offers, even if
+    the tax is known.  This may not be what you want.  Use the
+    TaxInclusiveFixedPrice class if you want offers to use tax-inclusive
+    prices.
     """
     exists = True
 

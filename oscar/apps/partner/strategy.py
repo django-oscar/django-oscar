@@ -31,9 +31,8 @@ class Selector(object):
         Return an instanticated strategy instance
         """
         # Default to the backwards-compatible strategy of picking the first
-        # stockrecord.
+        # stockrecord but charging zero tax.
         return Default(request)
-        #return US(request)
 
 
 class Base(object):
