@@ -7,6 +7,7 @@ import warnings
 from django.conf import settings
 from django.contrib.staticfiles.finders import find
 from django.core.exceptions import ValidationError, ImproperlyConfigured
+from django.core.files.base import File
 from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Sum, Count, get_model
@@ -723,7 +724,10 @@ class AbstractProductAttribute(models.Model):
         ("richtext", _("Rich Text")),
         ("date", _("Date")),
         ("option", _("Option")),
-        ("entity", _("Entity")))
+        ("entity", _("Entity")),
+        ("file", _("File")),
+        ("image", _("Image")),
+    )
     type = models.CharField(
         choices=TYPE_CHOICES, default=TYPE_CHOICES[0][0],
         max_length=20, verbose_name=_("Type"))
@@ -746,6 +750,10 @@ class AbstractProductAttribute(models.Model):
     @property
     def is_option(self):
         return self.type == "option"
+
+    @property
+    def is_file(self):
+        return self.type in ["file", "image"]
 
     def _validate_text(self, value):
         if not (type(value) == unicode or type(value) == str):
@@ -794,6 +802,10 @@ class AbstractProductAttribute(models.Model):
                 _("%(enum)s is not a valid choice for %(attr)s") %
                 {'enum': value, 'attr': self})
 
+    def _validate_file(self, value):
+        if value and not isinstance(value, File):
+            raise ValidationError(_("Must be a file field"))
+
     def get_validator(self):
         DATATYPE_VALIDATORS = {
             'text': self._validate_text,
@@ -804,6 +816,8 @@ class AbstractProductAttribute(models.Model):
             'date': self._validate_date,
             'entity': self._validate_entity,
             'option': self._validate_option,
+            'file': self._validate_file,
+            'image': self._validate_file,
         }
 
         return DATATYPE_VALIDATORS[self.type]
@@ -818,16 +832,34 @@ class AbstractProductAttribute(models.Model):
         try:
             value_obj = product.attribute_values.get(attribute=self)
         except get_model('catalogue', 'ProductAttributeValue').DoesNotExist:
-            if value is None or value == '':
+            # FileField uses False for anouncing deletion of the file
+            # not creating a new value
+            delete_file = self.is_file and value is False
+            if value is None or value == '' or delete_file:
                 return
             model = get_model('catalogue', 'ProductAttributeValue')
             value_obj = model.objects.create(product=product, attribute=self)
-        if value is None or value == '':
-            value_obj.delete()
-            return
-        if value != value_obj.value:
-            value_obj.value = value
-            value_obj.save()
+
+        if self.is_file:
+            # File fields in Django are treated differently, see
+            # django.db.models.fields.FileField and method save_form_data
+            if value is None:
+                # No change
+                return
+            elif value is False:
+                # Delete file
+                value_obj.delete()
+            else:
+                # New uploaded file
+                value_obj.value = value
+                value_obj.save()
+        else:
+            if value is None or value == '':
+                value_obj.delete()
+                return
+            if value != value_obj.value:
+                value_obj.value = value
+                value_obj.save()
 
     def validate_value(self, value):
         self.get_validator()(value)
@@ -869,6 +901,12 @@ class AbstractProductAttributeValue(models.Model):
     value_entity = models.ForeignKey(
         'catalogue.AttributeEntity', blank=True, null=True,
         verbose_name=_("Value Entity"))
+    value_file = models.FileField(
+        upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255,
+        blank=True, null=True)
+    value_image = models.ImageField(
+        upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255,
+        blank=True, null=True)
 
     def _get_value(self):
         return getattr(self, 'value_%s' % self.attribute.type)

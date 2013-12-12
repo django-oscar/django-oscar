@@ -143,6 +143,7 @@ class StockRecordFormSet(BaseStockRecordFormSet):
             if not user_partners & stockrecord_partners:
                 raise ValidationError(_("At least one stock record must be set to a partner that you're associated with."))
 
+
 def _attr_text_field(attribute):
     return forms.CharField(label=attribute.name,
                            required=attribute.required)
@@ -201,6 +202,16 @@ def _attr_numeric_field(attribute):
                             required=attribute.required)
 
 
+def _attr_file_field(attribute):
+    return forms.FileField(
+        label=attribute.name, required=attribute.required)
+
+
+def _attr_image_field(attribute):
+    return forms.ImageField(
+        label=attribute.name, required=attribute.required)
+
+
 class ProductForm(forms.ModelForm):
 
     FIELD_FACTORIES = {
@@ -214,6 +225,8 @@ class ProductForm(forms.ModelForm):
         "multi_option": _attr_multi_option_field,
         "entity": _attr_entity_field,
         "numeric": _attr_numeric_field,
+        "file": _attr_file_field,
+        "image": _attr_image_field,
     }
 
     class Meta:
