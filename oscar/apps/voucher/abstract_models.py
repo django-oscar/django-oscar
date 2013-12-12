@@ -4,7 +4,7 @@ import datetime
 from django.core import exceptions
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.utils.timezone import utc
+from django.utils import timezone
 from oscar.core.compat import AUTH_USER_MODEL
 
 
@@ -75,7 +75,8 @@ class AbstractVoucher(models.Model):
         Test whether this voucher is currently active.
         """
         if not test_datetime:
-            test_datetime = datetime.datetime.now().replace(tzinfo=utc)
+            tzinfo = timezone.get_default_timezone()
+            test_datetime = datetime.datetime.now().replace(tzinfo=tzinfo)
         return self.start_datetime <= test_datetime <= self.end_datetime
 
     def is_available_to_user(self, user=None):
