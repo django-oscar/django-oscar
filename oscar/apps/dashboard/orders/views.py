@@ -407,7 +407,7 @@ class OrderDetailView(DetailView):
                     qty = request.POST.get('selected_line_qty_%s' % line_id)
                     line_quantities.append(int(qty))
                 lines = order.lines.filter(id__in=line_ids)
-                if lines.count() == 0:
+                if not lines.exists():
                     messages.error(self.request, _("You must select some lines to act on"))
                     return self.reload_page_response()
                 return getattr(self, line_action)(request, order, lines, line_quantities)

@@ -400,10 +400,7 @@ class AbstractProduct(models.Model):
         """
         Test if this is a top level product and has more than 0 variants
         """
-        # use len() instead of count() in this specific instance
-        # as variants are highly likely to be used after this
-        # which reduces the amount of SQL queries required
-        return self.is_top_level and len(self.variants.all()) > 0
+        return self.is_top_level and self.variants.exists()
 
     @property
     def is_variant(self):
@@ -862,7 +859,7 @@ class AbstractProductAttributeValue(models.Model):
     value_text = models.CharField(
         _('Text'), max_length=255, blank=True, null=True)
     value_integer = models.IntegerField(_('Integer'), blank=True, null=True)
-    value_boolean = models.BooleanField(_('Boolean'), blank=True)
+    value_boolean = models.NullBooleanField(_('Boolean'), blank=True)
     value_float = models.FloatField(_('Float'), blank=True, null=True)
     value_richtext = models.TextField(_('Richtext'), blank=True, null=True)
     value_date = models.DateField(_('Date'), blank=True, null=True)

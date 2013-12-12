@@ -128,7 +128,7 @@ class PageUpdateView(generic.UpdateView):
     def form_valid(self, form):
         # Ensure saved page is added to the current site
         page = form.save(commit=False)
-        if not page.sites.count():
+        if not page.sites.exists():
             page.sites.add(Site.objects.get_current())
         page.save()
         return HttpResponseRedirect(self.get_success_url())

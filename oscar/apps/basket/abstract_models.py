@@ -479,7 +479,7 @@ class AbstractBasket(models.Model):
     def contains_a_voucher(self):
         if not self.id:
             return False
-        return self.vouchers.all().count() > 0
+        return self.vouchers.exists()
 
     @property
     def is_submitted(self):
@@ -807,22 +807,22 @@ class AbstractLine(models.Model):
 
         # Compare current price to price when added to basket
         current_price_incl_tax = self.stockinfo.price.incl_tax
-        if current_price_incl_tax > self.price_incl_tax:
-            msg = ("The price of '%(product)s' has increased from "
-                   "%(old_price)s to %(new_price)s since you added it "
-                   "to your basket")
-            return _(msg) % {
+        if current_price_incl_tax != self.price_incl_tax:
+            product_prices = {
                 'product': self.product.get_title(),
                 'old_price': currency(self.price_incl_tax),
-                'new_price': currency(current_price_incl_tax)}
-        if current_price_incl_tax < self.price_incl_tax:
-            msg = ("The price of '%(product)s' has decreased from "
-                   "%(old_price)s to %(new_price)s since you added it "
-                   "to your basket")
-            return _(msg) % {
-                'product': self.product.get_title(),
-                'old_price': currency(self.price_incl_tax),
-                'new_price': currency(current_price_incl_tax)}
+                'new_price': currency(current_price_incl_tax)
+            }
+            if current_price_incl_tax > self.price_incl_tax:
+                warning = _("The price of '%(product)s' has increased from "
+                            "%(old_price)s to %(new_price)s since you added it "
+                            "to your basket")
+                return warning % product_prices
+            else:
+                warning = _("The price of '%(product)s' has decreased from "
+                            "%(old_price)s to %(new_price)s since you added it "
+                            "to your basket")
+                return warning %  product_prices
 
 
 class AbstractLineAttribute(models.Model):

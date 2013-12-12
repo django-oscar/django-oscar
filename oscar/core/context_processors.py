@@ -10,5 +10,8 @@ def metadata(request):
             'shop_name': settings.OSCAR_SHOP_NAME,
             'shop_tagline': settings.OSCAR_SHOP_TAGLINE,
             'use_less': getattr(settings, 'USE_LESS', False),
+            # Whether to use a tracker gif in the dashboard to call back to one
+            # of Tangent's servers.
+            'call_home': getattr(settings, 'OSCAR_TRACKING', True),
             'google_analytics_id': getattr(settings,
                                            'GOOGLE_ANALYTICS_ID', None)}

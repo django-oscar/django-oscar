@@ -29,6 +29,14 @@ To run an individual test, use one of::
     $ ./runtests.py tests/unit/offer/availability_tests.py:TestAPerUserConditionalOffer.test_is_available_with_no_applications
     $ ./runtests.py tests.unit.offer.availability_tests:TestAPerUserConditionalOffer.test_is_available_with_no_applications
 
+To check if the number of queries changes::
+
+    $ ./runtests.py --with-querycount
+
+Please note that ``--with-querycount`` sets ``DEBUG = True``, which might affect
+test outcomes. Total query count gives a quick indication. Diff'ing the outputs
+is recommended for further analysis.
+
 Testing against different setups
 --------------------------------
 

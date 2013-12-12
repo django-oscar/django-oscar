@@ -8,8 +8,6 @@ from django.db.models import get_model
 
 from oscar.models.fields import ExtendedURLField
 
-Item = get_model('product', 'Item')
-
 
 # Linking models - these link promotions to content (eg pages, or keywords)
 

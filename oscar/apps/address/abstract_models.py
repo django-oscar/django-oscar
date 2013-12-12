@@ -268,8 +268,8 @@ class AbstractAddress(models.Model):
             country_code = self.country.iso_3166_1_a2
             regex = self.POSTCODES_REGEX.get(country_code, None)
             if regex:
-                msg = ("Addresses in %(country)s require a valid postcode") % {
-                    'country': self.country}
+                msg = _("Addresses in %(country)s require a valid postcode") % {
+                        'country': self.country}
                 raise exceptions.ValidationError(msg)
 
         if self.postcode and self.country_id:
@@ -521,7 +521,7 @@ class AbstractUserAddress(AbstractShippingAddress):
             hash=self.generate_hash())
         if self.id:
             qs = qs.exclude(id=self.id)
-        if qs.count() > 0:
+        if qs.exists():
             raise exceptions.ValidationError({
                 '__all__': [_("This address is already in your address book")]})
 

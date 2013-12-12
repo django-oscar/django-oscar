@@ -71,7 +71,7 @@ def configure():
             'SITE_ID': 1,
             'APPEND_SLASH': True,
             'DDF_DEFAULT_DATA_FIXTURE': 'tests.dynamic_fixtures.OscarDynamicDataFixtureClass',
-            
+            'SESSION_SERIALIZER': 'django.contrib.sessions.serializers.PickleSerializer',
         }
         if django.VERSION >= (1, 5):
             test_settings['INSTALLED_APPS'] += ['tests._site.myauth', ]

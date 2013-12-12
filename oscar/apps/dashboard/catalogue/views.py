@@ -284,9 +284,9 @@ class ProductCreateUpdateView(generic.UpdateView):
 
     def get_success_url(self):
         if self.creating:
-            msg = _("Created product '%s'") % self.object.title
+            msg = _("Created product '%s'") % self.object.get_title()
         else:
-            msg = _("Updated product '%s'") % self.object.title
+            msg = _("Updated product '%s'") % self.object.get_title()
         messages.success(self.request, msg)
         url = reverse('dashboard:catalogue-product-list')
         if self.request.POST.get('action') == 'continue':
