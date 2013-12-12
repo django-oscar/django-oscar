@@ -116,6 +116,8 @@ class DatePickerInput(forms.DateInput):
     """
     def __init__(self, *args, **kwargs):
         super(DatePickerInput, self).__init__(*args, **kwargs)
+        # overiding formats due to localization issue
+        self.format = settings.DATE_INPUT_FORMATS[0]
         add_js_formats(self)
 
 
