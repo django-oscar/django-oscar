@@ -39,7 +39,7 @@ class OfferListView(ListView):
         qs = self.model._default_manager.filter(
             offer_type=ConditionalOffer.SITE)
         qs = sort_queryset(qs, self.request,
-                           ['name', 'start_date', 'end_date',
+                           ['name', 'start_datetime', 'end_datetime',
                             'num_applications', 'total_discount'])
 
         self.description = _("All offers")
