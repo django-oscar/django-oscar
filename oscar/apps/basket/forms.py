@@ -206,17 +206,16 @@ class AddToBasketForm(forms.Form):
         """
         choices = []
         for variant in item.variants.all():
-            if variant.has_stockrecord:
-                title = variant.get_title()
+            info = self.request.strategy.fetch(variant)
+            if info.availability.is_available_to_buy:
                 attr_summary = variant.attribute_summary
-                price = currency(variant.stockrecord.price_incl_tax)
                 if attr_summary:
-                    summary = u"%s (%s) - %s" % (title, attr_summary, price)
+                    summary = attr_summary
                 else:
-                    summary = u"%s - %s" % (title, price)
+                    summary = variant.get_title()
                 choices.append((variant.id, summary))
-                self.fields['product_id'] = forms.ChoiceField(
-                    choices=tuple(choices), label=_("Variant"))
+        self.fields['product_id'] = forms.ChoiceField(
+            choices=tuple(choices), label=_("Variant"))
 
     def _create_product_fields(self, item):
         """
