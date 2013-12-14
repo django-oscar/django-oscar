@@ -6,8 +6,10 @@ from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_class
 ReportGenerator = get_class('dashboard.reports.reports', 'ReportGenerator')
-ReportCSVFormatter = get_class('dashboard.reports.reports', 'ReportCSVFormatter')
-ReportHTMLFormatter = get_class('dashboard.reports.reports', 'ReportHTMLFormatter')
+ReportCSVFormatter = get_class('dashboard.reports.reports',
+                               'ReportCSVFormatter')
+ReportHTMLFormatter = get_class('dashboard.reports.reports',
+                                'ReportHTMLFormatter')
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 OrderDiscount = get_model('order', 'OrderDiscount')
 
@@ -19,7 +21,7 @@ class OfferReportCSVFormatter(ReportCSVFormatter):
         writer = self.get_csv_writer(response)
         header_row = [_('Offer'),
                       _('Total discount')
-                     ]
+                      ]
         writer.writerow(header_row)
 
         for offer in offers:
@@ -49,13 +51,15 @@ class OfferReportGenerator(ReportGenerator):
         for discount in discounts:
             if discount.offer_id not in offer_discounts:
                 try:
-                    offer = ConditionalOffer._default_manager.get(id=discount.offer_id)
+                    all_offers = ConditionalOffer._default_manager
+                    offer = all_offers.get(id=discount.offer_id)
                 except ConditionalOffer.DoesNotExist:
                     continue
                 offer_discounts[discount.offer_id] = {
                     'offer': offer,
                     'total_discount': D('0.00')
                 }
-            offer_discounts[discount.offer_id]['total_discount'] += discount.amount
+            offer_discounts[discount.offer_id]['total_discount'] \
+                += discount.amount
 
         return self.formatter.generate_response(offer_discounts.values())

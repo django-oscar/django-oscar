@@ -12,12 +12,12 @@ class CommsDashboardApplication(Application):
     update_view = views.UpdateView
 
     def get_urls(self):
-        urlpatterns = patterns('',
+        urls = [
             url(r'^$', self.list_view.as_view(), name='comms-list'),
             url(r'^(?P<code>\w+)/$', self.update_view.as_view(),
                 name='comms-update'),
-        )
-        return self.post_process_urls(urlpatterns)
+        ]
+        return self.post_process_urls(patterns('', *urls))
 
 
 application = CommsDashboardApplication()

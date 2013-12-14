@@ -62,7 +62,8 @@ class Base(object):
 
         - ``price``: a pricing policy object.
         - ``availability``: an availability policy object.
-        - ``stockrecord``: the stockrecord that is being used to calculate prices and
+        - ``stockrecord``: the stockrecord that is being used to calculate
+          prices and
 
         If a stockrecord is passed, return the appropriate ``StockInfo``
         instance for that product and stockrecord is returned.
@@ -179,8 +180,8 @@ class FixedRateTax(object):
     Pricing policy mixin for use with the ``Structured`` base strategy.
     This mixin applies a fixed rate tax to the base price from the product's
     stockrecord.
-    The price_incl_tax is quantized to two decimal places. Rounding behaviour is
-    Decimal's default
+    The price_incl_tax is quantized to two decimal places. Rounding behaviour
+    is Decimal's default
     """
     rate = D('0.20')
     exponent = D('0.01')

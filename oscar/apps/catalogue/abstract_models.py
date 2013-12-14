@@ -133,7 +133,7 @@ class AbstractCategory(MP_Node):
         Moves the current node and all its descendants to a new position
         relative to another node.
 
-        See https://tabo.pe/projects/django-treebeard/docs/1.61/api.html#treebeard.models.Node.move
+        See https://tabo.pe/projects/django-treebeard/docs/1.61/api.html#treebeard.models.Node.move  # noqa
         """
         super(AbstractCategory, self).move(target, pos)
 
@@ -1066,9 +1066,10 @@ class AbstractProductImage(models.Model):
         _("Caption"), max_length=200, blank=True, null=True)
 
     #: Use display_order to determine which is the "primary" image
-    display_order = models.PositiveIntegerField(_("Display Order"), default=0,
-        help_text=_("""An image with a display order of
-                       zero will be the primary image for a product"""))
+    display_order = models.PositiveIntegerField(
+        _("Display Order"), default=0,
+        help_text=_("An image with a display order of zero will be the primary"
+                    " image for a product"))
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     class Meta:
@@ -1086,4 +1087,3 @@ class AbstractProductImage(models.Model):
         Return bool if image display order is 0
         """
         return self.display_order == 0
-

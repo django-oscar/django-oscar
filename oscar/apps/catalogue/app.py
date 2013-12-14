@@ -15,7 +15,7 @@ class BaseCatalogueApplication(Application):
 
     def get_urls(self):
         urlpatterns = super(BaseCatalogueApplication, self).get_urls()
-        urlpatterns += patterns('',
+        urls = [
             url(r'^$', self.index_view.as_view(), name='index'),
             url(r'^(?P<product_slug>[\w-]*)_(?P<pk>\d+)/$',
                 self.detail_view.as_view(), name='detail'),
@@ -25,7 +25,8 @@ class BaseCatalogueApplication(Application):
                 self.range_view.as_view(), name='range'),
             # Legacy route for the category view
             url(r'^(?P<category_slug>[\w-]+(/[\w-]+)*)/$',
-                self.category_view.as_view(), name='category'))
+                self.category_view.as_view(), name='category')]
+        urlpatterns += patterns('', *urls)
         return self.post_process_urls(urlpatterns)
 
 
@@ -35,10 +36,11 @@ class ReviewsApplication(Application):
 
     def get_urls(self):
         urlpatterns = super(ReviewsApplication, self).get_urls()
-        urlpatterns += patterns('',
+        urls = [
             url(r'^(?P<product_slug>[\w-]*)_(?P<product_pk>\d+)/reviews/',
                 include(self.reviews_app.urls)),
-        )
+        ]
+        urlpatterns += patterns('', *urls)
         return self.post_process_urls(urlpatterns)
 
 

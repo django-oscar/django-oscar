@@ -31,8 +31,9 @@ class BasketLineForm(forms.ModelForm):
             raise forms.ValidationError(reason)
 
     def check_permission(self, qty):
-        is_available, reason = self.instance.stockinfo.availability.is_purchase_permitted(
-            quantity=qty)
+        is_available, reason \
+            = self.instance.stockinfo.availability.is_purchase_permitted(
+                quantity=qty)
         if not is_available:
             raise forms.ValidationError(reason)
 
@@ -191,10 +192,9 @@ class AddToBasketForm(forms.Form):
                 raise forms.ValidationError(
                     _("Due to technical limitations we are not able to ship"
                       " more than %(threshold)d items in one order. Your"
-                      " basket currently has %(basket)d items.") % {
-                          'threshold': basket_threshold,
-                          'basket': total_basket_quantity,
-                      })
+                      " basket currently has %(basket)d items.")
+                    % {'threshold': basket_threshold,
+                       'basket': total_basket_quantity})
         return qty
 
     def _create_group_product_fields(self, item):

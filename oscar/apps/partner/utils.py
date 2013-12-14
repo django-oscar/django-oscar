@@ -8,7 +8,8 @@ from oscar.apps.catalogue.categories import create_from_breadcrumbs
 from oscar.apps.dashboard.reports.csv_utils import CsvUnicodeReader
 from oscar.core.loading import get_class, get_classes
 ImportError = get_class('partner.exceptions', 'ImportError')
-Partner, StockRecord = get_classes('partner.models', ('Partner', 'StockRecord'))
+Partner, StockRecord = get_classes('partner.models', ['Partner',
+                                                      'StockRecord'])
 ProductClass, Product, Category, ProductCategory = get_classes(
     'catalogue.models', ('ProductClass', 'Product', 'Category',
                          'ProductCategory'))
@@ -23,9 +24,11 @@ class StockImporter(object):
         try:
             self._partner = Partner.objects.get(name=partner)
         except Partner.DoesNotExist:
-            name_list = ", ".join([d['name'] for d in Partner.objects.values('name')])
-            raise ImportError(_("Partner named '%(partner)s' does not exist (existing partners: %(list)s)") % {
-                              'partner': partner, 'list': name_list})
+            name_list = ", ".join([d['name']
+                                   for d in Partner.objects.values('name')])
+            raise ImportError(_("Partner named '%(partner)s' does not exist"
+                                " (existing partners: %(list)s)")
+                              % {'partner': partner, 'list': name_list})
 
     def handle(self, file_path=None):
         u"""Handles the actual import process"""
@@ -40,27 +43,35 @@ class StockImporter(object):
                  'unchanged_items': 0,
                  'unmatched_items': 0}
         row_number = 0
-        for row in CsvUnicodeReader(open(file_path, 'rb'), delimiter=self._delimiter, quotechar='"', escapechar='\\'):
+        for row in CsvUnicodeReader(open(file_path, 'rb'),
+                                    delimiter=self._delimiter, quotechar='"',
+                                    escapechar='\\'):
             row_number += 1
             self._import_row(row_number, row, stats)
-        msg = "\tUpdated items: %d\n\tUnchanged items: %d\n\tUnmatched items: %d" % (
-            stats['updated_items'],
-            stats['unchanged_items'],
-            stats['unmatched_items'])
+        msg = "\tUpdated items: %d\n\tUnchanged items: %d\n" \
+            "\tUnmatched items: %d" % (stats['updated_items'],
+                                       stats['unchanged_items'],
+                                       stats['unmatched_items'])
         self.logger.info(msg)
 
     def _import_row(self, row_number, row, stats):
         if len(row) != 3:
-            self.logger.error("Row number %d has an invalid number of fields, skipping..." % row_number)
+            self.logger.error("Row number %d has an invalid number of fields,"
+                              " skipping..." % row_number)
         else:
-            self._update_stockrecord(*row[:3], row_number=row_number, stats=stats)
+            self._update_stockrecord(*row[:3], row_number=row_number,
+                                     stats=stats)
 
-    def _update_stockrecord(self, partner_sku, price_excl_tax, num_in_stock, row_number, stats):
+    def _update_stockrecord(self, partner_sku, price_excl_tax, num_in_stock,
+                            row_number, stats):
         try:
-            stock = StockRecord.objects.get(partner=self._partner, partner_sku=partner_sku)
+            stock = StockRecord.objects.get(partner=self._partner,
+                                            partner_sku=partner_sku)
         except StockRecord.DoesNotExist:
             stats['unmatched_items'] += 1
-            self.logger.error("\t - Row %d: StockRecord for partner '%s' and sku '%s' does not exist, skipping..." % (row_number, self._partner, partner_sku))
+            self.logger.error("\t - Row %d: StockRecord for partner '%s' and"
+                              " sku '%s' does not exist, skipping..."
+                              % (row_number, self._partner, partner_sku))
             return
 
         price_changed = False
@@ -123,28 +134,34 @@ class CatalogueImporter(object):
         stats = {'new_items': 0,
                  'updated_items': 0}
         row_number = 0
-        for row in CsvUnicodeReader(open(file_path,'rb'), delimiter=self._delimiter, quotechar='"', escapechar='\\'):
+        for row in CsvUnicodeReader(open(file_path, 'rb'),
+                                    delimiter=self._delimiter, quotechar='"',
+                                    escapechar='\\'):
             row_number += 1
             self._import_row(row_number, row, stats)
-        msg = "New items: %d, updated items: %d" % (stats['new_items'], stats['updated_items'])
+        msg = "New items: %d, updated items: %d" % (stats['new_items'],
+                                                    stats['updated_items'])
         self.logger.info(msg)
 
     def _import_row(self, row_number, row, stats):
         if len(row) != 5 and len(row) != 9:
-            self.logger.error("Row number %d has an invalid number of fields (%d), skipping..." % (row_number, len(row)))
+            self.logger.error("Row number %d has an invalid number of fields"
+                              " (%d), skipping..." % (row_number, len(row)))
             return
         item = self._create_item(*row[:5], stats=stats)
         if len(row) == 9:
             # With stock data
             self._create_stockrecord(item, *row[5:9], stats=stats)
 
-    def _create_item(self, product_class, category_str, upc, title, description, stats):
+    def _create_item(self, product_class, category_str, upc, title,
+                     description, stats):
         # Ignore any entries that are NULL
         if description == 'NULL':
             description = ''
 
         # Create item class and item
-        product_class, __ = ProductClass.objects.get_or_create(name=product_class)
+        product_class, __ \
+            = ProductClass.objects.get_or_create(name=product_class)
         try:
             item = Product.objects.get(upc=upc)
             stats['updated_items'] += 1

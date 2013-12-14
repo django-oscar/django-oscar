@@ -60,7 +60,7 @@ def create_stockinfo(record):
 def create_product(upc=None, title=u"Dummy title",
                    product_class=u"Dummy item class",
                    partner=u"Dummy partner", partner_sku=None, price=None,
-                   num_in_stock=None, attributes=None, 
+                   num_in_stock=None, attributes=None,
                    partner_users=None, **kwargs):
     """
     Helper method for creating products that are used in tests.

@@ -11,10 +11,12 @@ class Scales(object):
 
     def weigh_product(self, product):
         try:
-            attr_val = product.attribute_values.get(attribute__code=self.attribute)
+            attr_val = product.attribute_values.get(
+                attribute__code=self.attribute)
         except ObjectDoesNotExist:
             if self.default_weight is None:
-                raise ValueError("No attribute %s found for product %s" % (self.attribute, product))
+                raise ValueError("No attribute %s found for product %s"
+                                 % (self.attribute, product))
             weight = self.default_weight
         else:
             weight = attr_val.value
@@ -25,4 +27,3 @@ class Scales(object):
         for line in basket.lines.all():
             weight += self.weigh_product(line.product) * line.quantity
         return weight
-

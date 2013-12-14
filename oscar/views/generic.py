@@ -81,7 +81,8 @@ class BulkEditMixin(object):
         if not ids:
             messages.error(
                 self.request,
-                _("You need to select some %ss") % self.get_checkbox_object_name())
+                _("You need to select some %ss")
+                % self.get_checkbox_object_name())
             return HttpResponseRedirect(self.get_error_url(request))
 
         objects = self.get_objects(ids)
@@ -116,7 +117,7 @@ class ObjectLookupView(View):
     def paginate(self, qs, page, page_limit):
         total = qs.count()
 
-        start = (page-1) * page_limit
+        start = (page - 1) * page_limit
         stop = start + page_limit
 
         qs = qs[start:stop]
@@ -129,7 +130,7 @@ class ObjectLookupView(View):
                 GET.get('q', None),
                 int(GET.get('page', 1)),
                 int(GET.get('page_limit', 20)))
-       
+
     def get(self, request):
         self.request = request
         qs = self.get_query_set()
@@ -155,10 +156,10 @@ class PhoneNumberMixin(object):
     Validation mixin for forms with a phone number, and optionally a country.
     It tries to validate the phone number, and on failure tries to validate it
     using a hint (the country provided), and treating it as a local number.
-    
+
     It looks for ``self.country``, or ``self.fields['country'].queryset``
     """
-    
+
     phone_number = forms.CharField(max_length=32, required=False)
 
     def clean_phone_number(self):
@@ -167,7 +168,7 @@ class PhoneNumberMixin(object):
         # empty
         if number in validators.EMPTY_VALUES:
             return None
-        
+
         # Check for an international phone format
         try:
             phone_number = PhoneNumber.from_string(number)
@@ -180,25 +181,30 @@ class PhoneNumberMixin(object):
             else:
                 country = None
 
-            if country:
-                country = self.cleaned_data.get('country', country)
-                            
-                region_code = country.iso_3166_1_a2
-                # The PhoneNumber class does not allow specifying
-                # the region. So we drop down to the underlying phonenumbers library,
-                # which luckily allows parsing into a PhoneNumber instance
-                try:
-                    phone_number = PhoneNumber.from_string(number, region=region_code)
-                    if not phone_number.is_valid():
-                        raise ValidationError(
-                            _(u'This is not a valid local phone format for %s.') % country)
-                except phonenumbers.NumberParseException:
-                    # Not a valid local or international phone number
-                    raise ValidationError(
-                        _(u'This is not a valid local or international phone format.'))
-            else:
-                # There is no shipping country, not a valid international number
+            if not country:
+                # There is no shipping country, not a valid international
+                # number
                 raise ValidationError(
                     _(u'This is not a valid international phone format.'))
+
+            country = self.cleaned_data.get('country', country)
+
+            region_code = country.iso_3166_1_a2
+            # The PhoneNumber class does not allow specifying
+            # the region. So we drop down to the underlying phonenumbers
+            # library, which luckily allows parsing into a PhoneNumber
+            # instance
+            try:
+                phone_number = PhoneNumber.from_string(number,
+                                                       region=region_code)
+                if not phone_number.is_valid():
+                    raise ValidationError(
+                        _(u'This is not a valid local phone format for %s.')
+                        % country)
+            except phonenumbers.NumberParseException:
+                # Not a valid local or international phone number
+                raise ValidationError(
+                    _(u'This is not a valid local or international phone'
+                      u' format.'))
 
         return phone_number

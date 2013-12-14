@@ -13,16 +13,18 @@ from django.shortcuts import HttpResponse
 from oscar.core.loading import get_classes
 from oscar.apps.promotions.conf import PROMOTION_CLASSES
 
-SingleProduct, RawHTML, Image, MultiImage, \
-    AutomaticProductList, PagePromotion, \
-    HandPickedProductList = get_classes('promotions.models',
-    ['SingleProduct', 'RawHTML', 'Image', 'MultiImage', 'AutomaticProductList',
-     'PagePromotion', 'HandPickedProductList'])
+SingleProduct, RawHTML, Image, MultiImage, AutomaticProductList, \
+    PagePromotion, HandPickedProductList \
+    = get_classes('promotions.models',
+                  ['SingleProduct', 'RawHTML', 'Image', 'MultiImage',
+                   'AutomaticProductList', 'PagePromotion',
+                   'HandPickedProductList'])
 SelectForm, RawHTMLForm, PagePromotionForm, HandPickedProductListForm, \
-    SingleProductForm, OrderedProductFormSet = get_classes(
-    'dashboard.promotions.forms',
-    ['PromotionTypeSelectForm', 'RawHTMLForm', 'PagePromotionForm',
-     'HandPickedProductListForm', 'SingleProductForm', 'OrderedProductFormSet'])
+    SingleProductForm, OrderedProductFormSet \
+    = get_classes('dashboard.promotions.forms',
+                  ['PromotionTypeSelectForm', 'RawHTMLForm',
+                   'PagePromotionForm', 'HandPickedProductListForm',
+                   'SingleProductForm', 'OrderedProductFormSet'])
 
 
 class ListView(generic.TemplateView):
@@ -80,12 +82,11 @@ class PageDetailView(generic.TemplateView):
         for code, name in settings.OSCAR_PROMOTION_POSITIONS:
             promotions = PagePromotion._default_manager.select_related() \
                                                        .filter(page_url=path,
-                                                               position=code) \
-                                                       .order_by('display_order')
+                                                               position=code)
             ctx.append({
                 'code': code,
                 'name': name,
-                'promotions': promotions,
+                'promotions': promotions.order_by('display_order'),
             })
         return ctx
 
@@ -181,7 +182,8 @@ class CreateHandPickedProductListView(CreateView):
         ctx = super(CreateHandPickedProductListView,
                     self).get_context_data(**kwargs)
         if 'product_formset' not in kwargs:
-            ctx['product_formset'] = OrderedProductFormSet(instance=self.object)
+            ctx['product_formset'] \
+                = OrderedProductFormSet(instance=self.object)
         return ctx
 
     def form_valid(self, form):
@@ -192,7 +194,8 @@ class CreateHandPickedProductListView(CreateView):
             promotion.save()
             product_formset.save()
             self.object = promotion
-            messages.success(self.request, _('Product list content block created'))
+            messages.success(self.request,
+                             _('Product list content block created'))
             return HttpResponseRedirect(self.get_success_url())
 
         ctx = self.get_context_data(product_formset=product_formset)
@@ -235,10 +238,12 @@ class UpdateView(PromotionMixin, generic.UpdateView):
         if form.is_valid():
             form.save()
             page_url = form.cleaned_data['page_url']
-            messages.success(request, _("Content block '%(block)s' added to page '%(page)s'") % {
-                'block': promotion.name,
-                'page': page_url})
-            return HttpResponseRedirect(reverse('dashboard:promotion-update', kwargs=kwargs))
+            messages.success(request, _("Content block '%(block)s' added to"
+                                        " page '%(page)s'")
+                             % {'block': promotion.name,
+                                'page': page_url})
+            return HttpResponseRedirect(reverse('dashboard:promotion-update',
+                                                kwargs=kwargs))
 
         main_form = self.get_form_class()(instance=self.object)
         ctx = self.get_context_data(form=main_form)
@@ -254,8 +259,10 @@ class UpdateView(PromotionMixin, generic.UpdateView):
         else:
             page_url = link.page_url
             link.delete()
-            messages.success(request, _("Content block removed from page '%s'") % page_url)
-        return HttpResponseRedirect(reverse('dashboard:promotion-update', kwargs=kwargs))
+            messages.success(request, _("Content block removed from page '%s'")
+                             % page_url)
+        return HttpResponseRedirect(reverse('dashboard:promotion-update',
+                                            kwargs=kwargs))
 
 
 class UpdateRawHTMLView(UpdateView):
@@ -288,7 +295,8 @@ class UpdateHandPickedProductListView(UpdateView):
         ctx = super(UpdateHandPickedProductListView,
                     self).get_context_data(**kwargs)
         if 'product_formset' not in kwargs:
-            ctx['product_formset'] = OrderedProductFormSet(instance=self.object)
+            ctx['product_formset'] \
+                = OrderedProductFormSet(instance=self.object)
         return ctx
 
     def form_valid(self, form):
