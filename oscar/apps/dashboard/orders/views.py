@@ -135,7 +135,7 @@ class OrderListView(BulkEditMixin, ListView):
                 return HttpResponseRedirect(url)
         return super(OrderListView, self).get(request, *args, **kwargs)
 
-    def get_desc_context(self, data=None):
+    def get_desc_context(self, data=None):  # noqa (too complex (16))
         """Update the title that describes the queryset"""
         desc_ctx = {
             'main_filter': _('All orders'),
@@ -204,7 +204,7 @@ class OrderListView(BulkEditMixin, ListView):
 
         return desc_ctx
 
-    def get_queryset(self):
+    def get_queryset(self):  # noqa (too complex (19))
         """
         Build the queryset for this list.
         """

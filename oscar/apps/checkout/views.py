@@ -516,7 +516,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         except UserAddress.DoesNotExist:
             return None
 
-    def submit(self, user, basket, shipping_address, shipping_method,
+    def submit(self, user, basket, shipping_address, shipping_method,  # noqa (too complex (10))
                order_total, payment_kwargs=None, order_kwargs=None):
         """
         Submit a basket for order placement.

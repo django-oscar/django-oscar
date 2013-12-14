@@ -28,7 +28,7 @@ class Importer(object):
         self.logger = logger
         self._field = field
 
-    @commit_on_success
+    @commit_on_success  # noqa (too complex (10))
     def handle(self, dirname):
         stats = {
             'num_processed': 0,

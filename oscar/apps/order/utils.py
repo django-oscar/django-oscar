@@ -38,7 +38,7 @@ class OrderCreator(object):
     Places the order by writing out the various models
     """
 
-    def place_order(self, basket, total,
+    def place_order(self, basket, total,  # noqa (too complex (12))
                     user=None, shipping_method=None, shipping_address=None,
                     billing_address=None, order_number=None, status=None,
                     **kwargs):

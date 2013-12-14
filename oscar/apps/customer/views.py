@@ -426,7 +426,7 @@ class OrderDetailView(PageTitleMixin, PostActionMixin, DetailView):
         return get_object_or_404(self.model, user=self.request.user,
                                  number=self.kwargs['order_number'])
 
-    def do_reorder(self, order):
+    def do_reorder(self, order):  # noqa (too complex (10))
         """
         'Re-order' a previous order.
 

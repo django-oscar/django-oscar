@@ -2,7 +2,7 @@ from django.conf import settings
 from purl import URL
 
 
-def facet_data(request, form, results):
+def facet_data(request, form, results):  # noqa (too complex (10))
     """
     Convert Haystack's facet data into a more useful datastructure that
     templates can use without having to manually construct URLs

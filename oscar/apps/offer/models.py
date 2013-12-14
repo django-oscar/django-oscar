@@ -323,7 +323,7 @@ class ConditionalOffer(models.Model):
         descriptions = [r['description'] for r in restrictions]
         return "<br/>".join(descriptions)
 
-    def availability_restrictions(self):
+    def availability_restrictions(self):  # noqa (too complex (15))
         restrictions = []
         if self.is_suspended:
             restrictions.append({
@@ -833,7 +833,7 @@ class Range(models.Model):
         """ Remove product from range """
         RangeProduct.objects.filter(range=self, product=product).delete()
 
-    def contains_product(self, product):
+    def contains_product(self, product):  # noqa (too complex (12))
         """
         Check whether the passed product is part of this range
         """
@@ -1423,7 +1423,7 @@ class FixedPriceBenefit(Benefit):
         verbose_name = _("Fixed price benefit")
         verbose_name_plural = _("Fixed price benefits")
 
-    def apply(self, basket, condition, offer):
+    def apply(self, basket, condition, offer):  # noqa (too complex (10))
         if isinstance(condition, ValueCondition):
             return ZERO_DISCOUNT
 
