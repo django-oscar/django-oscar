@@ -8,7 +8,7 @@
 # for Jenkins/Hudson can understand.  Ignore warnings from migrations we we don't
 # really care about those.
 ERRORFILE="violations.txt"
-flake8 --exclude=migrations oscar | perl -ple "s/: /: [E] /" > $ERRORFILE
+flake8 oscar | perl -ple "s/: /: [E] /" > $ERRORFILE
 
 # Check that the number of violations is acceptable
 NUMERRORS=`cat $ERRORFILE | wc -l`
