@@ -55,7 +55,6 @@ def compose(*functions):
     return _composed
 
 
-
 def format_datetime(dt, format=None):
     """
     Takes an instance of datetime, converts it to the current timezone and
@@ -73,4 +72,3 @@ def format_datetime(dt, format=None):
     else:
         localtime = dt.astimezone(get_current_timezone())
     return date_filter(localtime, format)
-

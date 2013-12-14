@@ -6,7 +6,7 @@
 
 # Ideally, this figure should be < 100.  I'll keep reducing it as the 
 # codebase gets tidied up incrementally.
-THRESHOLD=795
+THRESHOLD=0
 
 # Some warnings aren't worth worrying about...
 IGNORE="W292,E202,E128,E124"

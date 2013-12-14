@@ -67,7 +67,8 @@ class ConditionalOffer(models.Model):
         help_text=_("This is displayed within the customer's basket"))
     slug = models.SlugField(_("Slug"), max_length=128, unique=True, null=True)
     description = models.TextField(_("Description"), blank=True,
-        help_text=_("This is displayed on the offer browsing page"))
+                                   help_text=_("This is displayed on the offer"
+                                               " browsing page"))
 
     # Offers come in a few different types:
     # (a) Offers that are available to all customers on the site.  Eg a
@@ -299,9 +300,9 @@ class ConditionalOffer(models.Model):
 
     def get_num_user_applications(self, user):
         OrderDiscount = models.get_model('order', 'OrderDiscount')
-        aggregates = OrderDiscount.objects.filter(
-            offer_id=self.id, order__user=user).aggregate(
-                total=models.Sum('frequency'))
+        aggregates = OrderDiscount.objects.filter(offer_id=self.id,
+                                                  order__user=user)\
+            .aggregate(total=models.Sum('frequency'))
         return aggregates['total'] if aggregates['total'] is not None else 0
 
     def shipping_discount(self, charge):
@@ -331,33 +332,27 @@ class ConditionalOffer(models.Model):
 
         if self.max_global_applications:
             remaining = self.max_global_applications - self.num_applications
-            desc = _(
-                "Limited to %(total)d uses "
-                "(%(remainder)d remaining)") % {
-                    'total': self.max_global_applications,
-                    'remainder': remaining}
-            restrictions.append({
-                'description': desc,
-                'is_satisfied': remaining > 0})
+            desc = _("Limited to %(total)d uses (%(remainder)d remaining)") \
+                % {'total': self.max_global_applications,
+                   'remainder': remaining}
+            restrictions.append({'description': desc,
+                                 'is_satisfied': remaining > 0})
 
         if self.max_user_applications:
             if self.max_user_applications == 1:
                 desc = _("Limited to 1 use per user")
             else:
-                desc = _(
-                    "Limited to %(total)d uses per user") % {
-                        'total': self.max_user_applications}
-            restrictions.append({
-                'description': desc,
-                'is_satisfied': True})
+                desc = _("Limited to %(total)d uses per user") \
+                    % {'total': self.max_user_applications}
+            restrictions.append({'description': desc,
+                                 'is_satisfied': True})
 
         if self.max_basket_applications:
             if self.max_user_applications == 1:
                 desc = _("Limited to 1 use per basket")
             else:
-                desc = _(
-                    "Limited to %(total)d uses per basket") % {
-                        'total': self.max_basket_applications}
+                desc = _("Limited to %(total)d uses per basket") \
+                    % {'total': self.max_basket_applications}
             restrictions.append({
                 'description': desc,
                 'is_satisfied': True})
@@ -372,10 +367,11 @@ class ConditionalOffer(models.Model):
         if self.start_datetime or self.end_datetime:
             today = now()
             if self.start_datetime and self.end_datetime:
-                desc = _("Available between %(start)s and %(end)s") % {
-                        'start': hide_time_if_zero(self.start_datetime),
-                        'end': hide_time_if_zero(self.end_datetime)}
-                is_satisfied = self.start_datetime <= today <= self.end_datetime
+                desc = _("Available between %(start)s and %(end)s") \
+                    % {'start': hide_time_if_zero(self.start_datetime),
+                       'end': hide_time_if_zero(self.end_datetime)}
+                is_satisfied \
+                    = self.start_datetime <= today <= self.end_datetime
             elif self.start_datetime:
                 desc = _("Available from %(start)s") % {
                     'start': hide_time_if_zero(self.start_datetime)}
@@ -412,11 +408,11 @@ class ConditionalOffer(models.Model):
         cond_range = self.condition.range
         if cond_range.includes_all_products:
             # Return ALL the products
-            return Product.browsable.select_related(
-                'product_class', 'stockrecord').filter(
-                    is_discountable=True).prefetch_related(
-                        'variants', 'images', 'product_class__options',
-                        'product_options')
+            return Product.browsable.select_related('product_class',
+                                                    'stockrecord')\
+                .filter(is_discountable=True)\
+                .prefetch_related('variants', 'images',
+                                  'product_class__options', 'product_options')
         return cond_range.included_products.filter(is_discountable=True)
 
 
@@ -541,7 +537,8 @@ class Benefit(models.Model):
         (SHIPPING_ABSOLUTE,
          _("Discount is a fixed amount of the shipping cost")),
         (SHIPPING_FIXED_PRICE, _("Get shipping for a fixed price")),
-        (SHIPPING_PERCENTAGE, _("Discount is a percentage off of the shipping cost")),
+        (SHIPPING_PERCENTAGE, _("Discount is a percentage off of the shipping"
+                                " cost")),
     )
     type = models.CharField(
         _("Type"), max_length=128, choices=TYPE_CHOICES, blank=True)
@@ -844,7 +841,7 @@ class Range(models.Model):
         # the tests that require more database queries.
 
         if settings.OSCAR_OFFER_BLACKLIST_PRODUCT and \
-            settings.OSCAR_OFFER_BLACKLIST_PRODUCT(product):
+                settings.OSCAR_OFFER_BLACKLIST_PRODUCT(product):
             return False
 
         # Delegate to a proxy class if one is provided
@@ -865,7 +862,8 @@ class Range(models.Model):
         if test_categories:
             for category in product.categories.all():
                 for test_category in test_categories:
-                    if category == test_category or category.is_descendant_of(test_category):
+                    if category == test_category \
+                            or category.is_descendant_of(test_category):
                         return True
         return False
 
@@ -874,14 +872,16 @@ class Range(models.Model):
 
     def _included_product_ids(self):
         if self.__included_product_ids is None:
-            self.__included_product_ids = [row['id'] for row in self.included_products.values('id')]
+            self.__included_product_ids = [row['id'] for row in
+                                           self.included_products.values('id')]
         return self.__included_product_ids
 
     def _excluded_product_ids(self):
         if not self.id:
             return []
         if self.__excluded_product_ids is None:
-            self.__excluded_product_ids = [row['id'] for row in self.excluded_products.values('id')]
+            self.__excluded_product_ids = [row['id'] for row in
+                                           self.excluded_products.values('id')]
         return self.__excluded_product_ids
 
     def _class_ids(self):
@@ -959,7 +959,7 @@ class CountCondition(Condition):
         num_matches = 0
         for line in basket.all_lines():
             if (self.can_apply_condition(line)
-                and line.quantity_without_discount > 0):
+                    and line.quantity_without_discount > 0):
                 num_matches += line.quantity_without_discount
         self._num_matches = num_matches
         return num_matches
@@ -972,8 +972,8 @@ class CountCondition(Condition):
         num_matches = self._get_num_matches(basket)
         delta = self.value - num_matches
         return ungettext('Buy %(delta)d more product from %(range)s',
-                         'Buy %(delta)d more products from %(range)s', delta) % {
-                            'delta': delta, 'range': self.range}
+                         'Buy %(delta)d more products from %(range)s', delta) \
+            % {'delta': delta, 'range': self.range}
 
     def consume_items(self, offer, basket, affected_lines):
         """
@@ -1008,7 +1008,8 @@ class CoverageCondition(Condition):
     An offer condition dependent on the number of DISTINCT matching items from
     the basket.
     """
-    _description = _("Basket includes %(count)d distinct item(s) from %(range)s")
+    _description = _("Basket includes %(count)d distinct item(s) from"
+                     " %(range)s")
 
     @property
     def name(self):
@@ -1036,7 +1037,8 @@ class CoverageCondition(Condition):
             if not line.is_available_for_discount:
                 continue
             product = line.product
-            if (self.can_apply_condition(line) and product.id not in covered_ids):
+            if (self.can_apply_condition(line) and product.id not in
+                    covered_ids):
                 covered_ids.append(product.id)
             if len(covered_ids) >= self.value:
                 return True
@@ -1048,15 +1050,16 @@ class CoverageCondition(Condition):
             if not line.is_available_for_discount:
                 continue
             product = line.product
-            if (self.can_apply_condition(line) and product.id not in covered_ids):
+            if (self.can_apply_condition(line) and product.id not in
+                    covered_ids):
                 covered_ids.append(product.id)
         return len(covered_ids)
 
-    def get_upsell_message(self, offer,  basket):
+    def get_upsell_message(self, offer, basket):
         delta = self.value - self._get_num_covered_products(basket)
         return ungettext('Buy %(delta)d more product from %(range)s',
-                         'Buy %(delta)d more products from %(range)s', delta) % {
-                         'delta': delta, 'range': self.range}
+                         'Buy %(delta)d more products from %(range)s', delta) \
+            % {'delta': delta, 'range': self.range}
 
     def is_partially_satisfied(self, offer, basket):
         return 0 < self._get_num_covered_products(basket) < self.value
@@ -1095,7 +1098,8 @@ class CoverageCondition(Condition):
         covered_ids = []
         value = D('0.00')
         for line in basket.all_lines():
-            if (self.can_apply_condition(line) and line.product.id not in covered_ids):
+            if (self.can_apply_condition(line) and line.product.id not in
+                    covered_ids):
                 covered_ids.append(line.product.id)
                 value += unit_price(offer, line)
             if len(covered_ids) >= self.value:
@@ -1133,7 +1137,8 @@ class ValueCondition(Condition):
         """
         value_of_matches = D('0.00')
         for line in basket.all_lines():
-            if (self.can_apply_condition(line) and line.quantity_without_discount > 0):
+            if (self.can_apply_condition(line) and
+                    line.quantity_without_discount > 0):
                 price = unit_price(offer, line)
                 value_of_matches += price * int(line.quantity_without_discount)
             if value_of_matches >= self.value:
@@ -1145,7 +1150,8 @@ class ValueCondition(Condition):
             return getattr(self, '_value_of_matches')
         value_of_matches = D('0.00')
         for line in basket.all_lines():
-            if (self.can_apply_condition(line) and line.quantity_without_discount > 0):
+            if (self.can_apply_condition(line) and
+                    line.quantity_without_discount > 0):
                 price = unit_price(offer, line)
                 value_of_matches += price * int(line.quantity_without_discount)
         self._value_of_matches = value_of_matches
@@ -1423,7 +1429,8 @@ class FixedPriceBenefit(Benefit):
 
         # Fetch basket lines that are in the range and available to be used in
         # an offer.
-        line_tuples = self.get_applicable_lines(offer, basket, range=condition.range)
+        line_tuples = self.get_applicable_lines(offer, basket,
+                                                range=condition.range)
         if not line_tuples:
             return ZERO_DISCOUNT
 

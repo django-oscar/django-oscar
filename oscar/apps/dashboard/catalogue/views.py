@@ -17,16 +17,16 @@ from oscar.views.generic import ObjectLookupView
  StockAlertSearchForm,
  ProductCategoryFormSet,
  ProductImageFormSet,
- ProductRecommendationFormSet) = get_classes(
-     'dashboard.catalogue.forms',
-     ('ProductForm',
-      'ProductSearchForm',
-      'CategoryForm',
-      'StockRecordFormSet',
-      'StockAlertSearchForm',
-      'ProductCategoryFormSet',
-      'ProductImageFormSet',
-      'ProductRecommendationFormSet'))
+ ProductRecommendationFormSet) \
+    = get_classes('dashboard.catalogue.forms',
+                  ('ProductForm',
+                   'ProductSearchForm',
+                   'CategoryForm',
+                   'StockRecordFormSet',
+                   'StockAlertSearchForm',
+                   'ProductCategoryFormSet',
+                   'ProductImageFormSet',
+                   'ProductRecommendationFormSet'))
 Product = get_model('catalogue', 'Product')
 Category = get_model('catalogue', 'Category')
 ProductImage = get_model('catalogue', 'ProductImage')
@@ -71,7 +71,8 @@ class ProductListView(generic.ListView):
         ctx['product_classes'] = ProductClass.objects.all()
         ctx['form'] = self.form
         if 'recently_edited' in self.request.GET:
-            ctx['queryset_description'] = _("Last %(num_products)d edited products") \
+            ctx['queryset_description'] \
+                = _("Last %(num_products)d edited products") \
                 % {'num_products': self.recent_products}
         else:
             ctx['queryset_description'] = self.description
@@ -184,11 +185,13 @@ class ProductCreateUpdateView(generic.UpdateView):
             ctx['stockrecord_formset'] = self.stockrecord_formset(
                 self.product_class, self.request.user, instance=self.object)
         if 'category_formset' not in ctx:
-            ctx['category_formset'] = self.category_formset(instance=self.object)
+            ctx['category_formset'] \
+                = self.category_formset(instance=self.object)
         if 'image_formset' not in ctx:
             ctx['image_formset'] = self.image_formset(instance=self.object)
         if 'recommended_formset' not in ctx:
-            ctx['recommended_formset'] = self.recommendations_formset(instance=self.object)
+            ctx['recommended_formset'] \
+                = self.recommendations_formset(instance=self.object)
         if self.object is None:
             ctx['title'] = _('Create new %s product') % self.product_class.name
         else:
@@ -313,7 +316,7 @@ class ProductDeleteView(generic.DeleteView):
             raise PermissionDenied
 
     def get_success_url(self):
-        msg =_("Deleted product '%s'") % self.object.title
+        msg = _("Deleted product '%s'") % self.object.title
         messages.success(self.request, msg)
         return reverse('dashboard:catalogue-product-list')
 
@@ -358,7 +361,8 @@ class CategoryDetailListView(generic.DetailView):
     context_object_name = 'category'
 
     def get_context_data(self, *args, **kwargs):
-        ctx = super(CategoryDetailListView, self).get_context_data(*args, **kwargs)
+        ctx = super(CategoryDetailListView, self).get_context_data(*args,
+                                                                   **kwargs)
         ctx['child_categories'] = self.object.get_children()
         ctx['ancestors'] = self.object.get_ancestors()
         return ctx
@@ -372,7 +376,7 @@ class CategoryListMixin(object):
             return reverse("dashboard:catalogue-category-list")
         else:
             return reverse("dashboard:catalogue-category-detail-list",
-                            args=(parent.pk,))
+                           args=(parent.pk,))
 
 
 class CategoryCreateView(CategoryListMixin, generic.CreateView):
@@ -426,4 +430,5 @@ class ProductLookupView(ObjectLookupView):
         return self.model.browsable.all()
 
     def lookup_filter(self, qs, term):
-        return qs.filter(Q(title__icontains=term) | Q(parent__title__icontains=term))
+        return qs.filter(Q(title__icontains=term)
+                         | Q(parent__title__icontains=term))

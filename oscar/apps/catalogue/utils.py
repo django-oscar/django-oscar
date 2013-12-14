@@ -38,21 +38,29 @@ class Importer(object):
         if image_dir:
             for filename in filenames:
                 try:
-                    lookup_value = self._get_lookup_value_from_filename(filename)
+                    lookup_value \
+                        = self._get_lookup_value_from_filename(filename)
                     self._process_image(image_dir, filename, lookup_value)
                     stats['num_processed'] += 1
                 except Product.MultipleObjectsReturned:
-                    self.logger.warning("Multiple products matching %s='%s', skipping" % (self._field, lookup_value))
+                    self.logger.warning("Multiple products matching %s='%s',"
+                                        " skipping"
+                                        % (self._field, lookup_value))
                     stats['num_skipped'] += 1
                 except Product.DoesNotExist:
-                    self.logger.warning("No item matching %s='%s'" % (self._field, lookup_value))
+                    self.logger.warning("No item matching %s='%s'"
+                                        % (self._field, lookup_value))
                     stats['num_skipped'] += 1
                 except IdenticalImageError:
-                    self.logger.warning(" - Identical image already exists for %s='%s', skipping" % (self._field, lookup_value))
+                    self.logger.warning(" - Identical image already exists for"
+                                        " %s='%s', skipping"
+                                        % (self._field, lookup_value))
                     stats['num_skipped'] += 1
                 except IOError, e:
-                    raise ImageImportError(_('%(filename)s is not a valid image (%(error)s)') % {
-                        'filename': filename, 'error': e})
+                    raise ImageImportError(_('%(filename)s is not a valid'
+                                             ' image (%(error)s)')
+                                           % {'filename': filename,
+                                              'error': e})
                     stats['num_invalid'] += 1
                 except FieldError, e:
                     raise ImageImportError(e)
@@ -60,8 +68,10 @@ class Importer(object):
             if image_dir != dirname:
                 shutil.rmtree(image_dir)
         else:
-            raise InvalidImageArchive(_('%s is not a valid image archive') % dirname)
-        self.logger.info("Finished image import: %(num_processed)d imported, %(num_skipped)d skipped" % stats)
+            raise InvalidImageArchive(_('%s is not a valid image archive')
+                                      % dirname)
+        self.logger.info("Finished image import: %(num_processed)d imported,"
+                         " %(num_skipped)d skipped" % stats)
 
     def _get_image_files(self, dirname):
         filenames = []
@@ -69,7 +79,8 @@ class Importer(object):
         if image_dir:
             for filename in os.listdir(image_dir):
                 ext = os.path.splitext(filename)[1]
-                if os.path.isfile(os.path.join(image_dir, filename)) and ext in self.allowed_extensions:
+                if os.path.isfile(os.path.join(image_dir, filename)) \
+                        and ext in self.allowed_extensions:
                     filenames.append(filename)
         return image_dir, filenames
 

@@ -23,12 +23,13 @@ class Shop(Application):
     def get_urls(self):
         # After we drop support for Django<1.6 the following line won't be
         # necessary, and the parameter uidb36 should be replaced with uidb64.
-        # The necessary update should also be done in oscar/apps/customer/utils.py
+        # The necessary update should also be done in
+        # oscar/apps/customer/utils.py
         password_reset_confirm = getattr(
             auth_views, 'password_reset_confirm_uidb36',
             auth_views.password_reset_confirm)
 
-        urlpatterns = patterns('',
+        urls = [
             (r'^i18n/', include('django.conf.urls.i18n')),
             (r'^catalogue/', include(self.catalogue_app.urls)),
             (r'^basket/', include(self.basket_app.urls)),
@@ -49,16 +50,18 @@ class Shop(Application):
             url(r'^password-reset/done/$',
                 login_forbidden(auth_views.password_reset_done),
                 name='password-reset-done'),
-            url(r'^password-reset/confirm/(?P<uidb36>[0-9A-Za-z]{1,13})-(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+            url(r'^password-reset/confirm/(?P<uidb36>[0-9A-Za-z]{1,13})-'
+                r'(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
                 login_forbidden(password_reset_confirm),
-                {'post_reset_redirect': reverse_lazy('password-reset-complete')},
+                {'post_reset_redirect':
+                 reverse_lazy('password-reset-complete')},
                 name='password-reset-confirm'),
             url(r'^password-reset/complete/$',
                 login_forbidden(auth_views.password_reset_complete),
                 name='password-reset-complete'),
             (r'', include(self.promotions_app.urls)),
-        )
-        return urlpatterns
+        ]
+        return patterns('', *urls)
 
 
 # 'shop' kept for legacy projects - 'application' is a better name

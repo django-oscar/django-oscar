@@ -107,7 +107,8 @@ class OrderListView(BulkEditMixin, ListView):
     form_class = forms.OrderSearchForm
     desc_template = _("%(main_filter)s %(name_filter)s %(title_filter)s"
                       "%(upc_filter)s %(sku_filter)s %(date_filter)s"
-                      "%(voucher_filter)s %(payment_filter)s %(status_filter)s")
+                      "%(voucher_filter)s %(payment_filter)s"
+                      "%(status_filter)s")
     paginate_by = 25
     description = ''
     actions = ('download_selected_orders',)
@@ -158,37 +159,48 @@ class OrderListView(BulkEditMixin, ListView):
             return desc_ctx
 
         if data['order_number']:
-            desc_ctx['main_filter'] = _('Orders with number starting with "%s"') % data['order_number']
+            desc_ctx['main_filter'] = _('Orders with number starting with'
+                                        ' "%(order_number)s"') % data
 
         if data['name']:
-            desc_ctx['name_filter'] = _(" with customer name matching '%s'") % data['name']
+            desc_ctx['name_filter'] = _(" with customer name matching"
+                                        " '%(name)s'") % data
 
         if data['product_title']:
-            desc_ctx['title_filter'] = _(" including an item with title matching '%s'") % data['product_title']
+            desc_ctx['title_filter'] \
+                = _(" including an item with title matching"
+                    " '%(product_title)s'") % data
 
         if data['upc']:
-            desc_ctx['upc_filter'] = _(" including an item with UPC '%s'") % data['upc']
+            desc_ctx['upc_filter'] = _(" including an item with UPC"
+                                       " '%(upc)s'") % data
 
         if data['partner_sku']:
-            desc_ctx['upc_filter'] = _(" including an item with ID '%s'") % data['partner_sku']
+            desc_ctx['upc_filter'] = _(" including an item with ID"
+                                       " '%(partner_sku)s'") % data
 
         if data['date_from'] and data['date_to']:
-            desc_ctx['date_filter'] = _(" placed between %(start_date)s and %(end_date)s") % {
-                'start_date': format_datetime(data['date_from']),
-                'end_date': format_datetime(data['date_to'])}
+            desc_ctx['date_filter'] \
+                = _(" placed between %(start_date)s and %(end_date)s") \
+                % {'start_date': format_datetime(data['date_from']),
+                   'end_date': format_datetime(data['date_to'])}
         elif data['date_from']:
-            desc_ctx['date_filter'] = _(" placed since %s") % format_datetime(data['date_from'])
+            desc_ctx['date_filter'] = _(" placed since %s") \
+                % format_datetime(data['date_from'])
         elif data['date_to']:
             date_to = data['date_to'] + datetime.timedelta(days=1)
-            desc_ctx['date_filter'] = _(" placed before %s") % format_datetime(date_to)
+            desc_ctx['date_filter'] = _(" placed before %s") \
+                % format_datetime(date_to)
         if data['voucher']:
-            desc_ctx['voucher_filter'] = _(" using voucher '%s'") % data['voucher']
+            desc_ctx['voucher_filter'] = _(" using voucher '%(voucher)s'") \
+                % data
 
         if data['payment_method']:
-            desc_ctx['payment_filter'] = _(" paid for by %s") % data['payment_method']
+            desc_ctx['payment_filter'] = _(" paid for by %(payment_method)s") \
+                % data
 
         if data['status']:
-            desc_ctx['status_filter'] = _(" with status %s") % data['status']
+            desc_ctx['status_filter'] = _(" with status %(status)s") % data
 
         return desc_ctx
 
@@ -224,7 +236,8 @@ class OrderListView(BulkEditMixin, ListView):
                 number__istartswith=data['order_number'])
 
         if data['name']:
-            # If the value is two words, then assume they are first name and last name
+            # If the value is two words, then assume they are first name and
+            # last name
             parts = data['name'].split()
             allow_anon = getattr(settings, 'OSCAR_ALLOW_ANON_CHECKOUT', False)
 
@@ -233,18 +246,19 @@ class OrderListView(BulkEditMixin, ListView):
             else:
                 parts = [parts[0], parts[1:]]
 
-            filter = Q(user__first_name__istartswith=parts[0]) |\
-                     Q(user__last_name__istartswith=parts[1])
+            filter = Q(user__first_name__istartswith=parts[0])
+            filter |= Q(user__last_name__istartswith=parts[1])
             if allow_anon:
-                filter |= Q(billing_address__first_name__istartswith=parts[0]) |\
-                          Q(shipping_address__first_name__istartswith=parts[0]) |\
-                          Q(billing_address__last_name__istartswith=parts[1]) |\
-                          Q(shipping_address__last_name__istartswith=parts[1])
+                filter |= Q(billing_address__first_name__istartswith=parts[0])
+                filter |= Q(shipping_address__first_name__istartswith=parts[0])
+                filter |= Q(billing_address__last_name__istartswith=parts[1])
+                filter |= Q(shipping_address__last_name__istartswith=parts[1])
 
             queryset = queryset.filter(filter).distinct()
 
         if data['product_title']:
-            queryset = queryset.filter(lines__title__istartswith=data['product_title']).distinct()
+            queryset = queryset.filter(
+                lines__title__istartswith=data['product_title']).distinct()
 
         if data['upc']:
             queryset = queryset.filter(lines__upc=data['upc'])
@@ -255,7 +269,8 @@ class OrderListView(BulkEditMixin, ListView):
         if data['date_from'] and data['date_to']:
             # Add 24 hours to make search inclusive
             date_to = data['date_to'] + datetime.timedelta(days=1)
-            queryset = queryset.filter(date_placed__gte=data['date_from']).filter(date_placed__lt=date_to)
+            queryset = queryset.filter(date_placed__gte=data['date_from'])
+            queryset = queryset.filter(date_placed__lt=date_to)
         elif data['date_from']:
             queryset = queryset.filter(date_placed__gte=data['date_from'])
         elif data['date_to']:
@@ -263,10 +278,12 @@ class OrderListView(BulkEditMixin, ListView):
             queryset = queryset.filter(date_placed__lt=date_to)
 
         if data['voucher']:
-            queryset = queryset.filter(discounts__voucher_code=data['voucher']).distinct()
+            queryset = queryset.filter(
+                discounts__voucher_code=data['voucher']).distinct()
 
         if data['payment_method']:
-            queryset = queryset.filter(sources__source_type__code=data['payment_method']).distinct()
+            queryset = queryset.filter(
+                sources__source_type__code=data['payment_method']).distinct()
 
         if data['status']:
             queryset = queryset.filter(status=data['status'])
@@ -299,7 +316,8 @@ class OrderListView(BulkEditMixin, ListView):
 
     def download_selected_orders(self, request, orders):
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=%s' % self.get_download_filename(request)
+        response['Content-Disposition'] = 'attachment; filename=%s' \
+            % self.get_download_filename(request)
         writer = CsvUnicodeWriter(response, delimiter=',')
 
         meta_data = (('number', _('Order number')),
@@ -333,7 +351,8 @@ class OrderListView(BulkEditMixin, ListView):
             else:
                 row['billing_address_name'] = ''
 
-            encoded_values = [unicode(value).encode('utf8') for value in row.values()]
+            encoded_values = [unicode(value).encode('utf8')
+                              for value in row.values()]
             writer.writerow(encoded_values)
         return response
 
@@ -408,15 +427,18 @@ class OrderDetailView(DetailView):
                     line_quantities.append(int(qty))
                 lines = order.lines.filter(id__in=line_ids)
                 if not lines.exists():
-                    messages.error(self.request, _("You must select some lines to act on"))
+                    messages.error(self.request,
+                                   _("You must select some lines to act on"))
                     return self.reload_page_response()
-                return getattr(self, line_action)(request, order, lines, line_quantities)
+                return getattr(self, line_action)(request, order, lines,
+                                                  line_quantities)
 
         messages.error(request, _("No valid action submitted"))
         return self.reload_page_response()
 
     def reload_page_response(self, fragment=None):
-        url = reverse('dashboard:order-detail', kwargs={'number': self.object.number})
+        url = reverse('dashboard:order-detail', kwargs={'number':
+                                                        self.object.number})
         if fragment:
             url += '#' + fragment
         return HttpResponseRedirect(url)
@@ -447,47 +469,51 @@ class OrderDetailView(DetailView):
     def change_order_status(self, request, order):
         new_status = request.POST['new_status'].strip()
         if not new_status:
-            messages.error(request, _("The new status '%s' is not valid") % new_status)
+            messages.error(request, _("The new status '%s' is not valid")
+                           % new_status)
             return self.reload_page_response()
         if not new_status in order.available_statuses():
-            messages.error(request, _("The new status '%s' is not valid for this order") % new_status)
+            messages.error(request, _("The new status '%s' is not valid for"
+                                      " this order") % new_status)
             return self.reload_page_response()
 
         handler = EventHandler(request.user)
         try:
             handler.handle_order_status_change(order, new_status)
         except PaymentError, e:
-            messages.error(request, _("Unable to change order status due to payment error: %s") % e)
+            messages.error(request, _("Unable to change order status due to"
+                                      " payment error: %s") % e)
         else:
-            msg = _("Order status changed from '%(old_status)s' to '%(new_status)s'") % {
-                'old_status': order.status,
-                'new_status': new_status}
+            msg = _("Order status changed from '%(old_status)s' to"
+                    " '%(new_status)s'") % {'old_status': order.status,
+                                            'new_status': new_status}
             messages.info(request, msg)
             order.notes.create(user=request.user, message=msg,
-                            note_type=OrderNote.SYSTEM)
+                               note_type=OrderNote.SYSTEM)
         return self.reload_page_response(fragment='activity')
 
     def change_line_statuses(self, request, order, lines, quantities):
         new_status = request.POST['new_status'].strip()
         if not new_status:
-            messages.error(request, _("The new status '%s' is not valid") % new_status)
+            messages.error(request, _("The new status '%s' is not valid")
+                           % new_status)
             return self.reload_page_response()
         errors = []
         for line in lines:
             if new_status not in line.available_statuses():
-                errors.append(_("'%(status)s' is not a valid new status for line %(line_id)d") % {
-                    'status': new_status,
-                    'line_id': line.id})
+                errors.append(_("'%(status)s' is not a valid new status for"
+                                " line %(line_id)d") % {'status': new_status,
+                                                        'line_id': line.id})
         if errors:
             messages.error(request, "\n".join(errors))
             return self.reload_page_response()
 
         msgs = []
         for line in lines:
-            msg = _("Status of line #%(line_id)d changed from '%(old_status)s' to '%(new_status)s'") % {
-                        'line_id': line.id,
-                        'old_status': line.status,
-                        'new_status': new_status}
+            msg = _("Status of line #%(line_id)d changed from '%(old_status)s'"
+                    " to '%(new_status)s'") % {'line_id': line.id,
+                                               'old_status': line.status,
+                                               'new_status': new_status}
             msgs.append(msg)
             line.set_status(new_status)
         message = "\n".join(msgs)
@@ -501,7 +527,8 @@ class OrderDetailView(DetailView):
         try:
             event_type = ShippingEventType._default_manager.get(code=code)
         except ShippingEventType.DoesNotExist:
-            messages.error(request, _("The event type '%s' is not valid") % code)
+            messages.error(request, _("The event type '%s' is not valid")
+                           % code)
             return self.reload_page_response()
 
         reference = request.POST.get('reference', None)
@@ -510,11 +537,14 @@ class OrderDetailView(DetailView):
                                                  quantities,
                                                  reference=reference)
         except InvalidShippingEvent, e:
-            messages.error(request, _("Unable to create shipping event: %s") % e)
+            messages.error(request,
+                           _("Unable to create shipping event: %s") % e)
         except InvalidStatus, e:
-            messages.error(request, _("Unable to create shipping event: %s") % e)
+            messages.error(request,
+                           _("Unable to create shipping event: %s") % e)
         except PaymentError, e:
-            messages.error(request, _("Unable to create shipping event due to payment error: %s") % e)
+            messages.error(request, _("Unable to create shipping event due to"
+                                      " payment error: %s") % e)
         else:
             messages.success(request, _("Shipping event created"))
         return self.reload_page_response()
@@ -534,13 +564,15 @@ class OrderDetailView(DetailView):
         try:
             event_type = PaymentEventType._default_manager.get(code=code)
         except PaymentEventType.DoesNotExist:
-            messages.error(request, _("The event type '%s' is not valid") % code)
+            messages.error(request, _("The event type '%s' is not valid")
+                           % code)
             return self.reload_page_response()
         try:
             EventHandler().handle_payment_event(order, event_type, amount,
                                                 lines, quantities)
         except PaymentError, e:
-            messages.error(request, _("Unable to change order status due to payment error: %s") % e)
+            messages.error(request, _("Unable to change order status due to"
+                                      " payment error: %s") % e)
         else:
             messages.info(request, _("Payment event created"))
         return self.reload_page_response()
@@ -595,11 +627,14 @@ def get_changes_between_models(model1, model2, excludes=None):
         excludes = []
     changes = {}
     for field in model1._meta.fields:
-        if not (isinstance(field, (fields.AutoField, fields.related.RelatedField))
+        if (isinstance(field, (fields.AutoField,
+                               fields.related.RelatedField))
                 or field.name in excludes):
-            if field.value_from_object(model1) != field.value_from_object(model2):
-                changes[field.verbose_name] = (field.value_from_object(model1),
-                                               field.value_from_object(model2))
+            continue
+
+        if field.value_from_object(model1) != field.value_from_object(model2):
+            changes[field.verbose_name] = (field.value_from_object(model1),
+                                           field.value_from_object(model2))
     return changes
 
 
@@ -610,10 +645,11 @@ def get_change_summary(model1, model2):
     changes = get_changes_between_models(model1, model2, ['search_text'])
     change_descriptions = []
     for field, delta in changes.items():
-        change_descriptions.append(_("%(field)s changed from '%(old_value)s' to '%(new_value)s'") % {
-            'field': field,
-            'old_value': delta[0],
-            'new_value': delta[1]})
+        change_descriptions.append(_("%(field)s changed from '%(old_value)s'"
+                                     " to '%(new_value)s'")
+                                   % {'field': field,
+                                      'old_value': delta[0],
+                                      'new_value': delta[1]})
     return "\n".join(change_descriptions)
 
 
@@ -644,9 +680,10 @@ class ShippingAddressUpdateView(UpdateView):
         if changes:
             msg = _("Delivery address updated:\n%s") % changes
             self.object.order.notes.create(user=self.request.user, message=msg,
-                                        note_type=OrderNote.SYSTEM)
+                                           note_type=OrderNote.SYSTEM)
         return response
 
     def get_success_url(self):
         messages.info(self.request, _("Delivery address updated"))
-        return reverse('dashboard:order-detail', kwargs={'number': self.object.order.number, })
+        return reverse('dashboard:order-detail',
+                       kwargs={'number': self.object.order.number, })
