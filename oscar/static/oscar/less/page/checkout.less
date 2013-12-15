@@ -47,17 +47,16 @@ input[type="text"][id*="quantity"] {
 .basket-title-items {
     .makeFluidCol(6);
 }
-.basket-title-quantity {
-    .makeFluidCol(2);
-}
-.basket-title-price {
-    .makeFluidCol(2);
-}
+.basket-title-quantity,
+.basket-title-date,
+.basket-title-price,
 .basket-title-total {
     .makeFluidCol(2);
 }
 .basket-title-price,
-.basket-title-total {
+.basket-title-total,
+.basket-items-price,
+.basket-items-total {
     text-align: right;
 }
 
@@ -65,20 +64,18 @@ input[type="text"][id*="quantity"] {
 .basket-items-summary {
     .makeFluidRow();
 }
-.basket-items-image {
+.basket-items-image,
+.basket-items-quantity,
+.basket-items-price,
+.basket-items-total,
+.basket-items-date {
     .makeFluidCol(2);
 }
 .basket-items-description {
     .makeFluidCol(4);
 }
-.basket-items-quantity {
-    .makeFluidCol(2);
-}
-.basket-items-price {
-    .makeFluidCol(2);
-}
-.basket-items-total {
-    .makeFluidCol(2);
+.basket-items-last {
+    margin-bottom:@baseLineHeight;
 }
 
 // Saved item summary grid
@@ -94,6 +91,11 @@ input[type="text"][id*="quantity"] {
     .makeFluidCol(4);
     text-align: left;
 }
+.basket-saved .basket-items-price {
+    text-align: left;
+}
+
+
 
 // Basket summary wrapper = voucher and totals table
 .basket-summary-wrapper {
@@ -104,7 +106,44 @@ input[type="text"][id*="quantity"] {
 }
 .basket-summary-totals {
     .makeFluidCol(6);
+    float:right;
 }
+
+// Basket Order Page
+.basket-order .basket-title-items {
+    .makeFluidCol(8);
+}
+.basket-order .basket-items-description {
+    .makeFluidCol(6);
+}
+.basket-order .basket-title-quantity,
+.basket-order .basket-items-quantity {
+    text-align: center;
+}
+
+// Shipping and payment method grid
+.shipping-payment-wrapper {
+    .makeFluidRow();
+}
+.shipping-wrapper,
+.payment-wrapper {
+    .makeFluidCol(6);
+}
+
+// Basket actions
+.checkout-action-button {
+    .clearfix();
+    text-align: right;
+}
+.checkout-action-multiple {
+    &.btn:first-child {
+        float:left;
+    }
+}
+.checkout-gateway .checkout-action-button {
+    text-align: left;
+}
+
 
 
 

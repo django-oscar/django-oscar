@@ -7815,31 +7815,6 @@ form:after {
   margin-left: 0%;
   *margin-left: -0.10638297872340438%;
 }
-.basket-action-summary {
-  width: 100%;
-  *zoom: 1;
-}
-.basket-action-summary:before,
-.basket-action-summary:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-.basket-action-summary:after {
-  clear: both;
-}
-.basket-action-button {
-  float: left;
-  width: 31.914893617021278%;
-  *width: 31.861702127659576%;
-  margin-left: 70.2127659574468%;
-  *margin-left: 70.10638297872339%;
-}
-.basket-action-button:first-child {
-  margin-left: 0;
-  margin-left: 68.08510638297872%;
-  *margin-left: 67.9787234042553%;
-}
 .product-list-recommended .product-list > li,
 .product-list-related .product-list > li,
 .product-list-viewed .product-list > li,
@@ -8295,30 +8270,9 @@ input[type="text"][id*="quantity"] {
   margin-left: 0%;
   *margin-left: -0.10638297872340438%;
 }
-.basket-title-quantity {
-  float: left;
-  width: 14.893617021276595%;
-  *width: 14.840425531914894%;
-  margin-left: 2.127659574468085%;
-  *margin-left: 2.0212765957446805%;
-}
-.basket-title-quantity:first-child {
-  margin-left: 0;
-  margin-left: 0%;
-  *margin-left: -0.10638297872340438%;
-}
-.basket-title-price {
-  float: left;
-  width: 14.893617021276595%;
-  *width: 14.840425531914894%;
-  margin-left: 2.127659574468085%;
-  *margin-left: 2.0212765957446805%;
-}
-.basket-title-price:first-child {
-  margin-left: 0;
-  margin-left: 0%;
-  *margin-left: -0.10638297872340438%;
-}
+.basket-title-quantity,
+.basket-title-date,
+.basket-title-price,
 .basket-title-total {
   float: left;
   width: 14.893617021276595%;
@@ -8326,13 +8280,18 @@ input[type="text"][id*="quantity"] {
   margin-left: 2.127659574468085%;
   *margin-left: 2.0212765957446805%;
 }
+.basket-title-quantity:first-child,
+.basket-title-date:first-child,
+.basket-title-price:first-child,
 .basket-title-total:first-child {
   margin-left: 0;
   margin-left: 0%;
   *margin-left: -0.10638297872340438%;
 }
 .basket-title-price,
-.basket-title-total {
+.basket-title-total,
+.basket-items-price,
+.basket-items-total {
   text-align: right;
 }
 .basket-items-summary {
@@ -8348,14 +8307,22 @@ input[type="text"][id*="quantity"] {
 .basket-items-summary:after {
   clear: both;
 }
-.basket-items-image {
+.basket-items-image,
+.basket-items-quantity,
+.basket-items-price,
+.basket-items-total,
+.basket-items-date {
   float: left;
   width: 14.893617021276595%;
   *width: 14.840425531914894%;
   margin-left: 2.127659574468085%;
   *margin-left: 2.0212765957446805%;
 }
-.basket-items-image:first-child {
+.basket-items-image:first-child,
+.basket-items-quantity:first-child,
+.basket-items-price:first-child,
+.basket-items-total:first-child,
+.basket-items-date:first-child {
   margin-left: 0;
   margin-left: 0%;
   *margin-left: -0.10638297872340438%;
@@ -8372,41 +8339,8 @@ input[type="text"][id*="quantity"] {
   margin-left: 0%;
   *margin-left: -0.10638297872340438%;
 }
-.basket-items-quantity {
-  float: left;
-  width: 14.893617021276595%;
-  *width: 14.840425531914894%;
-  margin-left: 2.127659574468085%;
-  *margin-left: 2.0212765957446805%;
-}
-.basket-items-quantity:first-child {
-  margin-left: 0;
-  margin-left: 0%;
-  *margin-left: -0.10638297872340438%;
-}
-.basket-items-price {
-  float: left;
-  width: 14.893617021276595%;
-  *width: 14.840425531914894%;
-  margin-left: 2.127659574468085%;
-  *margin-left: 2.0212765957446805%;
-}
-.basket-items-price:first-child {
-  margin-left: 0;
-  margin-left: 0%;
-  *margin-left: -0.10638297872340438%;
-}
-.basket-items-total {
-  float: left;
-  width: 14.893617021276595%;
-  *width: 14.840425531914894%;
-  margin-left: 2.127659574468085%;
-  *margin-left: 2.0212765957446805%;
-}
-.basket-items-total:first-child {
-  margin-left: 0;
-  margin-left: 0%;
-  *margin-left: -0.10638297872340438%;
+.basket-items-last {
+  margin-bottom: 20px;
 }
 .basket-saved .basket-items-description {
   float: left;
@@ -8445,6 +8379,9 @@ input[type="text"][id*="quantity"] {
   margin-left: 0%;
   *margin-left: -0.10638297872340438%;
 }
+.basket-saved .basket-items-price {
+  text-align: left;
+}
 .basket-summary-wrapper {
   width: 100%;
   *zoom: 1;
@@ -8476,11 +8413,86 @@ input[type="text"][id*="quantity"] {
   *width: 48.88297872340425%;
   margin-left: 2.127659574468085%;
   *margin-left: 2.0212765957446805%;
+  float: right;
 }
 .basket-summary-totals:first-child {
   margin-left: 0;
   margin-left: 0%;
   *margin-left: -0.10638297872340438%;
+}
+.basket-order .basket-title-items {
+  float: left;
+  width: 65.95744680851064%;
+  *width: 65.90425531914893%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-order .basket-title-items:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-order .basket-items-description {
+  float: left;
+  width: 48.93617021276595%;
+  *width: 48.88297872340425%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-order .basket-items-description:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-order .basket-title-quantity,
+.basket-order .basket-items-quantity {
+  text-align: center;
+}
+.shipping-payment-wrapper {
+  width: 100%;
+  *zoom: 1;
+}
+.shipping-payment-wrapper:before,
+.shipping-payment-wrapper:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.shipping-payment-wrapper:after {
+  clear: both;
+}
+.shipping-wrapper,
+.payment-wrapper {
+  float: left;
+  width: 48.93617021276595%;
+  *width: 48.88297872340425%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.shipping-wrapper:first-child,
+.payment-wrapper:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.checkout-action-button {
+  *zoom: 1;
+  text-align: right;
+}
+.checkout-action-button:before,
+.checkout-action-button:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.checkout-action-button:after {
+  clear: both;
+}
+.checkout-action-multiple.btn:first-child {
+  float: left;
+}
+.checkout-gateway .checkout-action-button {
+  text-align: left;
 }
 #basket_totals th small {
   font-weight: normal;

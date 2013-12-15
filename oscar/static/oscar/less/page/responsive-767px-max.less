@@ -33,7 +33,10 @@
 	[class*="basket-items"],
 	[class*="basket-summary-"],
 	.basket-saved [class*="basket-items"],
-	.basket-action-button {
+	.basket-order [class*="basket-items"],
+	.checkout-action-button,
+	.shipping-wrapper,
+	.payment-wrapper {
 	    float: none;
 	    display: block;
 	    width: 100%;
@@ -45,8 +48,11 @@
 	 }
 
 	// Utilities
+	// Look to remove the align-right and align-right classes
 	.align-right,
-	.align-center {
+	.align-center,
+	[class*="basket-"],
+	.basket-order [class*="basket-"] {
 		text-align: left;
 	}
 
@@ -124,11 +130,19 @@
 	}
 
 	// Basket items
-	.basket-items {
-	  img {
-	    margin: 0 0 @baseLineHeight / 2;
-	  }
+	.basket-items-image img {
+	    margin:0 0 @baseLineHeight;
 	}
+
+	// Checkout action button
+	// TODO: add mixin for full width buttons and button for that matter.
+	.checkout-action-button .btn {
+	    padding-left: 0;
+	    padding-right: 0;
+	    width:100%;
+		.box-sizing(border-box);
+	}
+
 
 	// Checkout navigation
 	.nav-checkout {

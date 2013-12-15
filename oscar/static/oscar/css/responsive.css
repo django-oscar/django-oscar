@@ -1108,7 +1108,10 @@
   [class*="basket-items"],
   [class*="basket-summary-"],
   .basket-saved [class*="basket-items"],
-  .basket-action-button {
+  .basket-order [class*="basket-items"],
+  .checkout-action-button,
+  .shipping-wrapper,
+  .payment-wrapper {
     float: none;
     display: block;
     width: 100%;
@@ -1129,11 +1132,16 @@
   [class*="basket-items"]:first-child,
   [class*="basket-summary-"]:first-child,
   .basket-saved [class*="basket-items"]:first-child,
-  .basket-action-button:first-child {
+  .basket-order [class*="basket-items"]:first-child,
+  .checkout-action-button:first-child,
+  .shipping-wrapper:first-child,
+  .payment-wrapper:first-child {
     margin-left: 0;
   }
   .align-right,
-  .align-center {
+  .align-center,
+  [class*="basket-"],
+  .basket-order [class*="basket-"] {
     text-align: left;
   }
   .header h1 {
@@ -1194,8 +1202,16 @@
     width: auto;
     min-height: 0;
   }
-  .basket-items img {
-    margin: 0 0 10px;
+  .basket-items-image img {
+    margin: 0 0 20px;
+  }
+  .checkout-action-button .btn {
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
   }
   .nav-checkout .previous span,
   .nav-checkout .visited,
