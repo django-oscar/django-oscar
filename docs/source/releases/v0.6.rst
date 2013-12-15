@@ -236,6 +236,8 @@ Customer-facing range pages
 
 Ranges can now be flagged as public which means they can be browsed by
 customers. They can be used to created curated collections of products.
+Products can be manually reordered to display products in the specific
+order to customers.
 
 The core :class:`~oscar.apps.offer.models.Range` model has been extended with a
 HTML description field also.
@@ -374,6 +376,21 @@ Some of the names have been simplified.
 
 * The ``MultiFacetedSearchForm`` has been removed in favour of
   ``SearchForm``.
+
+Range model changes
+~~~~~~~~~~~~~~~~~~~
+
+ManyToManyField ``included_product`` of ``Range`` model was changed to use
+``through`` relationship:
+
+* Use ``Range.add_product(product)`` instead of
+  ``Range.included_product.add(product)``. 
+* Use ``Range.remove_product(product)`` instead of
+  ``Range.included_product.remove(product)``.
+
+When adding a product into a range, position in the range can be specified
+with ``display_order`` argument:
+``Range.add_product(product, display_order=3)``
 
 Renamed templates
 ~~~~~~~~~~~~~~~~~

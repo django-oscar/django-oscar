@@ -47,7 +47,7 @@ class TestWholeSiteRange(TestCase):
         self.assertFalse(self.range.contains_product(self.prod))
 
     def test_whitelisting(self):
-        self.range.included_products.add(self.prod)
+        self.range.add_product(self.prod)
         self.assertTrue(self.range.contains_product(self.prod))
 
     def test_blacklisting(self):

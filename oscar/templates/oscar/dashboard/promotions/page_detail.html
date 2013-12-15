@@ -74,5 +74,7 @@
 
 {% block onbodyload %}
     {{ block.super }}
-    oscar.dashboard.promotions.init();
+    oscar.dashboard.reordering.init({
+        wrapper: '.promotion_list'
+    });
 {% endblock %}

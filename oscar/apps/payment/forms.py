@@ -209,6 +209,15 @@ class BankcardForm(forms.ModelForm):
         model = Bankcard
         fields = ('number', 'start_month', 'expiry_month', 'ccv')
 
+    def clean(self):
+        data = self.cleaned_data
+        number, ccv = data.get('number'), data.get('ccv')
+        if number and ccv:
+            if bankcards.is_amex(number) and len(ccv) != 4:
+                raise forms.ValidationError(_(
+                    "American Express cards use a 4 digit security code"))
+        return data
+
     def save(self, *args, **kwargs):
         # It doesn't really make sense to save directly from the form as saving
         # will obfuscate some of the card details which you normally need to

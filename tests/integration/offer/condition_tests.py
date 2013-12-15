@@ -132,8 +132,8 @@ class TestCoverageCondition(TestCase):
         self.products = [factories.create_product(), factories.create_product()]
         self.range = models.Range.objects.create(name="Some products")
         for product in self.products:
-            self.range.included_products.add(product)
-            self.range.included_products.add(product)
+            self.range.add_product(product)
+            self.range.add_product(product)
         self.basket = factories.create_basket(empty=True)
         self.condition = models.CoverageCondition(
             range=self.range, type="Coverage", value=2)

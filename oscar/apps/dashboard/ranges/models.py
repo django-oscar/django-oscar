@@ -71,7 +71,7 @@ class RangeProductFileUpload(models.Model):
             models.Q(stockrecord__partner_sku__in=new_ids) |
             models.Q(upc__in=new_ids))
         for product in products:
-            self.range.included_products.add(product)
+            self.range.add_product(product)
 
         # Processing stats
         found_skus = set(filter(bool, products.values_list('stockrecord__partner_sku', flat=True)))
