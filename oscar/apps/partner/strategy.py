@@ -72,11 +72,18 @@ class Base(object):
             "information."
         )
 
-    def fetch_for_line(self, line):
+    def fetch_for_line(self, line, stockrecord=None):
         """
         Given a basket line instance, fetch a ``PurchaseInfo`` instance.
+
+        This method is provided to allow purchase info to be determined using a
+        basket line's attributes.  For instance, "bundle" products often use
+        basket line attributes to store SKUs of contained products.  For such
+        products, we need to look at the availability of each contained product
+        to determine overall availability.
         """
-        # Default to ignoring any basket line options
+        # Default to ignoring any basket line options as we don't know what to
+        # do with them within Oscar - that's up to your project to implement.
         return self.fetch_for_product(line.product)
 
 
