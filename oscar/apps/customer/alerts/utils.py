@@ -83,7 +83,7 @@ def send_product_alerts(product):
     for alert in alerts:
         # Check if the product is available to this user
         strategy = selector.strategy(user=alert.user)
-        data = strategy.fetch(product)
+        data = strategy.fetch_for_product(product)
         if not data.availability.is_available_to_buy:
             continue
 

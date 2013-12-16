@@ -166,6 +166,6 @@ class BasketMiddleware(object):
         line.delete()
 
         # Attempt to re-add to basket with the appropriate stockrecord
-        stock_info = basket.strategy.fetch(product)
+        stock_info = basket.strategy.fetch_for_product(product)
         if stock_info.stockrecord:
             basket.add(product, quantity, options=options)

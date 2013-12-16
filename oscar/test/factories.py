@@ -45,8 +45,8 @@ def create_stockrecord(product=None, price_excl_tax=None, partner_sku=None,
         price_excl_tax=price_excl_tax, num_in_stock=num_in_stock)
 
 
-def create_stockinfo(record):
-    return strategy.StockInfo(
+def create_purchase_info(record):
+    return strategy.PurchaseInfo(
         price=prices.FixedPrice(
             record.price_currency,
             record.price_excl_tax,
