@@ -4,14 +4,14 @@ from django import template
 register = template.Library()
 
 
-@register.tag(name="purchase_info_for_product")
-def do_product_purchase_info(parse, token):
+@register.tag
+def purchase_info_for_product(parse, token):
     """
     Template tag for fetching the appropriate ``PurchaseInfo`` instance for a
     product and returning it to the context
     """
     tokens = token.split_contents()
-    if len(tokens) < 3 or tokens[3] != 'as':
+    if len(tokens) != 5 or tokens[3] != 'as':
         raise template.TemplateSyntaxError(
             "%(tag)r tag uses the following syntax: "
             "{%% %(tag)r request product as "
@@ -39,14 +39,14 @@ class StrategyNode(template.Node):
         return ''
 
 
-@register.tag(name="purchase_info_for_line")
-def do_line_purchase_info(parse, token):
+@register.tag
+def purchase_info_for_line(parse, token):
     """
     Template tag for fetching the appropriate ``PurchaseInfo`` instance for a
     basket line and returning it to the context
     """
     tokens = token.split_contents()
-    if len(tokens) < 3 or tokens[3] != 'as':
+    if len(tokens) < 5 or tokens[3] != 'as':
         raise template.TemplateSyntaxError(
             "%(tag)r tag uses the following syntax: "
             "{%% %(tag)r request line as "
