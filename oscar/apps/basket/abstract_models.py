@@ -178,7 +178,7 @@ class AbstractBasket(models.Model):
 
         # Ensure that all lines are the same currency
         price_currency = self.currency
-        stock_info = self.strategy.fetch(product)
+        stock_info = self.strategy.fetch_for_product(product)
         if price_currency and stock_info.price.currency != price_currency:
             raise ValueError((
                 "Basket lines must all have the same currency. Proposed "
@@ -728,7 +728,7 @@ class AbstractLine(models.Model):
         if not hasattr(self, '_info'):
             # Cache the stockinfo (note that a strategy instance is assigned to
             # each line by the basket in the all_lines method).
-            self._info = self.strategy.fetch(
+            self._info = self.strategy.fetch_for_product(
                 self.product, self.stockrecord)
         return self._info
 

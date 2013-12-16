@@ -53,7 +53,7 @@ class Base(object):
         if request and request.user.is_authenticated():
             self.user = request.user
 
-    def fetch(self, product, stockrecord=None):
+    def fetch_for_product(self, product, stockrecord=None):
         """
         Given a product, return a ``StockInfo`` instance.
 
@@ -61,13 +61,13 @@ class Base(object):
 
         - ``price``: a pricing policy object.
         - ``availability``: an availability policy object.
-        - ``stockrecord``: the stockrecord that is being used to calculate prices and
+        - ``stockrecord``: the stockrecord that is being used
 
         If a stockrecord is passed, return the appropriate ``StockInfo``
         instance for that product and stockrecord is returned.
         """
         raise NotImplementedError(
-            "A strategy class must define a fetch method "
+            "A strategy class must define a fetch_for_product method "
             "for returning the availability and pricing "
             "information."
         )
@@ -77,7 +77,7 @@ class Base(object):
         Given a basket line instance, fetch a ``StockInfo`` instance.
         """
         # Default to ignoring any basket line options
-        return self.fetch(line.product)
+        return self.fetch_for_product(line.product)
 
 
 class Structured(Base):
@@ -90,7 +90,7 @@ class Structured(Base):
     #) An availability policy
     """
 
-    def fetch(self, product, stockrecord=None):
+    def fetch_for_product(self, product, stockrecord=None):
         """
         Return the appropriate stockinfo instance.
 

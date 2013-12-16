@@ -469,7 +469,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         """
         strategy = self.request.strategy
         for line in basket.all_lines():
-            result = strategy.fetch(line.product)
+            result = strategy.fetch_for_product(line.product)
             is_permitted, reason = result.availability.is_purchase_permitted(
                 line.quantity)
             if not is_permitted:

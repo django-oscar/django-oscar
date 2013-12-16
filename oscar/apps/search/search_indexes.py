@@ -54,14 +54,14 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         # (although that is the most common scenario).
         if obj.has_stockrecords:
             # Fetch a "default" stockinfo
-            result = strategy.fetch(obj)
+            result = strategy.fetch_for_product(obj)
             if result.price.is_tax_known:
                 return result.price.incl_tax
             return result.price.excl_tax
 
     def prepare_num_in_stock(self, obj):
         if obj.has_stockrecords:
-            result = strategy.fetch(obj)
+            result = strategy.fetch_for_product(obj)
             return result.stockrecord.net_stock_level
 
     def get_updated_field(self):

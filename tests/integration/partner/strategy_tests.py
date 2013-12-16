@@ -14,13 +14,13 @@ class TestDefaultStrategy(TestCase):
 
     def test_no_stockrecords(self):
         product = factories.create_product()
-        info = self.strategy.fetch(product)
+        info = self.strategy.fetch_for_product(product)
         self.assertFalse(info.availability.is_available_to_buy)
         self.assertIsNone(info.price.incl_tax)
 
     def test_one_stockrecord(self):
         product = factories.create_product(price=D('1.99'), num_in_stock=4)
-        info = self.strategy.fetch(product)
+        info = self.strategy.fetch_for_product(product)
         self.assertTrue(info.availability.is_available_to_buy)
         self.assertEquals(D('1.99'), info.price.excl_tax)
         self.assertEquals(D('1.99'), info.price.incl_tax)
@@ -31,7 +31,7 @@ class TestDefaultStrategy(TestCase):
         product = factories.create_product(
             product_class=product_class,
             price=D('1.99'), num_in_stock=None)
-        info = self.strategy.fetch(product)
+        info = self.strategy.fetch_for_product(product)
         self.assertTrue(info.availability.is_available_to_buy)
 
     def test_line_method_is_same_as_product_one(self):
