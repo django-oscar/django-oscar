@@ -369,8 +369,11 @@ class AbstractProduct(models.Model):
         if not self.slug:
             self.slug = slugify(self.get_title())
 
-        # Validate attributes if necessary
-        self.attr.validate_attributes()
+        # Allow attribute validation to be skipped.  This is required when
+        # saving a parent product which belongs to a product class with
+        # required attributes.
+        if kwargs.pop('validate_attributes', True):
+            self.attr.validate_attributes()
 
         # Save product
         super(AbstractProduct, self).save(*args, **kwargs)

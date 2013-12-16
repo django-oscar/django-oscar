@@ -143,6 +143,7 @@ class StockRecordFormSet(BaseStockRecordFormSet):
             if not user_partners & stockrecord_partners:
                 raise ValidationError(_("At least one stock record must be set to a partner that you're associated with."))
 
+
 def _attr_text_field(attribute):
     return forms.CharField(label=attribute.name,
                            required=attribute.required)
@@ -203,6 +204,16 @@ def _attr_numeric_field(attribute):
 
 class ProductForm(forms.ModelForm):
 
+    # We need a special field to distinguish between group and standalone
+    # products.  It's impossible to tell when the product is first created.
+    # This is quite clunky but will be replaced when #693 is complete.
+    is_group = forms.BooleanField(
+        label=_("Is group product?"),
+        required=False,
+        help_text=_(
+            "Check this if this product is a group/parent product "
+            "that has variants (eg different sizes/colours available)"))
+
     FIELD_FACTORIES = {
         "text": _attr_text_field,
         "richtext": _attr_textarea_field,
@@ -226,11 +237,26 @@ class ProductForm(forms.ModelForm):
             'related_products': ProductSelectMultiple,
         }
 
-    def __init__(self, product_class, *args, **kwargs):
+    def __init__(self, product_class, data=None, *args, **kwargs):
         self.product_class = product_class
         self.set_initial_attribute_values(kwargs)
-        super(ProductForm, self).__init__(*args, **kwargs)
-        self.add_attribute_fields()
+        super(ProductForm, self).__init__(data, *args, **kwargs)
+
+        # Set the initial value of the is_group field.  This isn't watertight:
+        # if the product is intended to be a parent product but doesn't have
+        # any variants then we can't distinguish it from a standalone product
+        # and this checkbox won't have the right value.  This will be addressed
+        # in #693
+        instance = kwargs.get('instance', None)
+        if instance:
+            self.fields['is_group'].initial = instance.is_group
+
+        # This is quite nasty.  We use the raw posted data to determine if the
+        # product is a group product, as this changes the validation rules we
+        # want to apply.
+        is_parent = data and data.get('is_group', '') == 'on'
+        self.add_attribute_fields(is_parent)
+
         related_products = self.fields.get('related_products', None)
         parent = self.fields.get('parent', None)
 
@@ -256,10 +282,13 @@ class ProductForm(forms.ModelForm):
             else:
                 kwargs['initial']['attr_%s' % attribute.code] = value
 
-    def add_attribute_fields(self):
+    def add_attribute_fields(self, is_parent=False):
         for attribute in self.product_class.attributes.all():
             self.fields['attr_%s' % attribute.code] = \
                     self.get_attribute_field(attribute)
+            # Attributes are not required for a parent product
+            if is_parent:
+                self.fields['attr_%s' % attribute.code].required = False
 
     def get_attribute_field(self, attribute):
         return self.FIELD_FACTORIES[attribute.type](attribute)
@@ -280,21 +309,21 @@ class ProductForm(forms.ModelForm):
         return queryset
 
     def save(self):
-        object = super(ProductForm, self).save(False)
+        object = super(ProductForm, self).save(commit=False)
         object.product_class = self.product_class
         for attribute in self.product_class.attributes.all():
             value = self.cleaned_data['attr_%s' % attribute.code]
             setattr(object.attr, attribute.code, value)
         if not object.upc:
             object.upc = None
-        object.save()
+
+        if self.cleaned_data['is_group']:
+            # Don't validate attributes for parent products
+            object.save(validate_attributes=False)
+        else:
+            object.save()
         self.save_m2m()
         return object
-
-    def save_attributes(self, object):
-        for attribute in self.product_class.attributes.all():
-            value = self.cleaned_data['attr_%s' % attribute.code]
-            attribute.save_value(object, value)
 
     def clean(self):
         data = self.cleaned_data
