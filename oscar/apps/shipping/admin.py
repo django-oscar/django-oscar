@@ -6,7 +6,8 @@ from oscar.apps.shipping.models import (
 
 class OrderChargesAdmin(admin.ModelAdmin):
     exclude = ('code',)
-    list_display = ('name', 'description', 'price_per_order', 'price_per_item', 'free_shipping_threshold')
+    list_display = ('name', 'description', 'price_per_order', 'price_per_item',
+                    'free_shipping_threshold')
 
 
 class WeightBandAdmin(admin.ModelAdmin):

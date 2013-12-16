@@ -32,7 +32,7 @@ transifex-client>=0.8,<0.9
 django-rosetta>=0.7.2
 
 # Misc
-flake8>=2.0,<2.1
+flake8>=2.1
 pyprof2calltree==1.1.0
 ipdb>=0.7,<0.8
 ipython>=0.13.1,<0.14

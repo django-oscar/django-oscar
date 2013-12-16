@@ -10,11 +10,12 @@ class OfferApplication(Application):
     list_view = views.OfferListView
 
     def get_urls(self):
-        urlpatterns = patterns('',
+        urls = [
             url(r'^$', self.list_view.as_view(), name='list'),
-            url(r'^(?P<slug>[\w-]+)/$', self.detail_view.as_view(), name='detail'),
-        )
-        return self.post_process_urls(urlpatterns)
+            url(r'^(?P<slug>[\w-]+)/$', self.detail_view.as_view(),
+                name='detail'),
+        ]
+        return self.post_process_urls(patterns('', *urls))
 
 
 application = OfferApplication()

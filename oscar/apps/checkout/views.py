@@ -13,14 +13,19 @@ from django.views.generic import (DetailView, TemplateView, FormView,
 from oscar.apps.shipping.methods import NoShippingRequired
 from oscar.core.loading import get_class, get_classes
 
-ShippingAddressForm, GatewayForm = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
-pre_payment, post_payment = get_classes('checkout.signals', ['pre_payment', 'post_payment'])
-OrderNumberGenerator, OrderCreator = get_classes('order.utils', ['OrderNumberGenerator', 'OrderCreator'])
+ShippingAddressForm, GatewayForm \
+    = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
+pre_payment, post_payment \
+    = get_classes('checkout.signals', ['pre_payment', 'post_payment'])
+OrderNumberGenerator, OrderCreator \
+    = get_classes('order.utils', ['OrderNumberGenerator', 'OrderCreator'])
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
 Repository = get_class('shipping.repository', 'Repository')
 AccountAuthView = get_class('customer.views', 'AccountAuthView')
-RedirectRequired, UnableToTakePayment, PaymentError = get_classes(
-    'payment.exceptions', ['RedirectRequired', 'UnableToTakePayment', 'PaymentError'])
+RedirectRequired, UnableToTakePayment, PaymentError \
+    = get_classes('payment.exceptions', ['RedirectRequired',
+                                         'UnableToTakePayment',
+                                         'PaymentError'])
 UnableToPlaceOrder = get_class('order.exceptions', 'UnableToPlaceOrder')
 OrderPlacementMixin = get_class('checkout.mixins', 'OrderPlacementMixin')
 CheckoutSessionMixin = get_class('checkout.session', 'CheckoutSessionMixin')
@@ -102,13 +107,14 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
     Determine the shipping address for the order.
 
     The default behaviour is to display a list of addresses from the users's
-    address book, from which the user can choose one to be their shipping address.
-    They can add/edit/delete these USER addresses.  This address will be
-    automatically converted into a SHIPPING address when the user checks out.
+    address book, from which the user can choose one to be their shipping
+    address.  They can add/edit/delete these USER addresses.  This address will
+    be automatically converted into a SHIPPING address when the user checks
+    out.
 
     Alternatively, the user can enter a SHIPPING address directly which will be
-    saved in the session and later saved as ShippingAddress model when the order
-    is sucessfully submitted.
+    saved in the session and later saved as ShippingAddress model when the
+    order is sucessfully submitted.
     """
     template_name = 'checkout/shipping_address.html'
     form_class = ShippingAddressForm
@@ -116,18 +122,22 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
     def get(self, request, *args, **kwargs):
         # Check that the user's basket is not empty
         if request.basket.is_empty:
-            messages.error(request, _("You need to add some items to your basket to checkout"))
+            messages.error(request, _("You need to add some items to your"
+                                      " basket to checkout"))
             return HttpResponseRedirect(reverse('basket:summary'))
 
         # Check that guests have entered an email address
-        if not request.user.is_authenticated() and not self.checkout_session.get_guest_email():
-            messages.error(request, _("Please either sign in or enter your email address"))
+        if not request.user.is_authenticated() \
+                and not self.checkout_session.get_guest_email():
+            messages.error(request, _("Please either sign in or enter your"
+                                      " email address"))
             return HttpResponseRedirect(reverse('checkout:index'))
 
-        # Check to see that a shipping address is actually required.  It may not be if
-        # the basket is purely downloads
+        # Check to see that a shipping address is actually required.  It may
+        # not be if the basket is purely downloads
         if not request.basket.is_shipping_required():
-            messages.info(request, _("Your basket does not require a shipping address to be submitted"))
+            messages.info(request, _("Your basket does not require a shipping"
+                                     " address to be submitted"))
             return HttpResponseRedirect(self.get_success_url())
 
         return super(ShippingAddressView, self).get(request, *args, **kwargs)
@@ -145,12 +155,13 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
     def get_available_addresses(self):
         return self.request.user.addresses.filter(
             country__is_shipping_country=True).order_by(
-                '-is_default_for_shipping')
+            '-is_default_for_shipping')
 
     def post(self, request, *args, **kwargs):
         # Check if a shipping address was selected directly (eg no form was
         # filled in)
-        if self.request.user.is_authenticated() and 'address_id' in self.request.POST:
+        if self.request.user.is_authenticated() \
+                and 'address_id' in self.request.POST:
             address = UserAddress._default_manager.get(
                 pk=self.request.POST['address_id'], user=self.request.user)
             action = self.request.POST.get('action', None)
@@ -161,8 +172,10 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
             elif action == 'delete':
                 # Delete the selected address
                 address.delete()
-                messages.info(self.request, _("Address deleted from your address book"))
-                return HttpResponseRedirect(reverse('checkout:shipping-method'))
+                messages.info(self.request, _("Address deleted from your"
+                                              " address book"))
+                return HttpResponseRedirect(
+                    reverse('checkout:shipping-method'))
             else:
                 return HttpResponseBadRequest()
         else:
@@ -237,12 +250,14 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         # Check that the user's basket is not empty
         if request.basket.is_empty:
-            messages.error(request, _("You need to add some items to your basket to checkout"))
+            messages.error(request, _("You need to add some items to your"
+                                      " basket to checkout"))
             return HttpResponseRedirect(reverse('basket:summary'))
 
         # Check that shipping is required at all
         if not request.basket.is_shipping_required():
-            self.checkout_session.use_shipping_method(NoShippingRequired().code)
+            self.checkout_session.use_shipping_method(
+                NoShippingRequired().code)
             return self.get_success_response()
 
         # Check that shipping address has been completed
@@ -255,10 +270,13 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         self._methods = self.get_available_shipping_methods()
         if len(self._methods) == 0:
             # No shipping methods available for given address
-            messages.warning(request, _("Shipping is unavailable for your chosen address - please choose another"))
+            messages.warning(request, _("Shipping is unavailable for your"
+                                        " chosen address - please choose"
+                                        " another"))
             return HttpResponseRedirect(reverse('checkout:shipping-address'))
         elif len(self._methods) == 1:
-            # Only one shipping method - set this and redirect onto the next step
+            # Only one shipping method - set this and redirect onto the next
+            # step
             self.checkout_session.use_shipping_method(self._methods[0].code)
             return self.get_success_response()
 
@@ -292,7 +310,8 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
             if method.code == method_code:
                 is_valid = True
         if not is_valid:
-            messages.error(request, _("Your submitted shipping method is not permitted"))
+            messages.error(request, _("Your submitted shipping method is not"
+                                      " permitted"))
             return HttpResponseRedirect(reverse('checkout:shipping-method'))
 
         # Save the code for the chosen shipping method in the session
@@ -320,18 +339,22 @@ class PaymentMethodView(CheckoutSessionMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         # Check that the user's basket is not empty
         if request.basket.is_empty:
-            messages.error(request, _("You need to add some items to your basket to checkout"))
+            messages.error(request, _("You need to add some items to your"
+                                      " basket to checkout"))
             return HttpResponseRedirect(reverse('basket:summary'))
 
         shipping_required = request.basket.is_shipping_required()
 
         # Check that shipping address has been completed
-        if shipping_required and not self.checkout_session.is_shipping_address_set():
+        if shipping_required \
+                and not self.checkout_session.is_shipping_address_set():
             messages.error(request, _("Please choose a shipping address"))
             return HttpResponseRedirect(reverse('checkout:shipping-address'))
 
         # Check that shipping method has been set
-        if shipping_required and not self.checkout_session.is_shipping_method_set(self.request.basket):
+        if shipping_required \
+                and not self.checkout_session.is_shipping_method_set(
+                    self.request.basket):
             messages.error(request, _("Please choose a shipping method"))
             return HttpResponseRedirect(reverse('checkout:shipping-method'))
 
@@ -493,7 +516,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         except UserAddress.DoesNotExist:
             return None
 
-    def submit(self, user, basket, shipping_address, shipping_method,
+    def submit(self, user, basket, shipping_address, shipping_method,  # noqa (too complex (10))
                order_total, payment_kwargs=None, order_kwargs=None):
         """
         Submit a basket for order placement.
@@ -667,13 +690,16 @@ class ThankYouView(DetailView):
         order = None
         if self.request.user.is_superuser:
             if 'order_number' in self.request.GET:
-                order = Order._default_manager.get(number=self.request.GET['order_number'])
+                order = Order._default_manager.get(
+                    number=self.request.GET['order_number'])
             elif 'order_id' in self.request.GET:
-                order = Order._default_manager.get(id=self.request.GET['orderid'])
+                order = Order._default_manager.get(
+                    id=self.request.GET['orderid'])
 
         if not order:
             if 'checkout_order_id' in self.request.session:
-                order = Order._default_manager.get(pk=self.request.session['checkout_order_id'])
+                order = Order._default_manager.get(
+                    pk=self.request.session['checkout_order_id'])
             else:
                 raise Http404(_("No order found"))
 

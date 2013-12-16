@@ -2,6 +2,7 @@ from django import template
 
 register = template.Library()
 
+
 @register.filter(name='ellipses_page_range')
 def ellipses_page_range(page, args="1,2"):
     """
@@ -13,7 +14,7 @@ def ellipses_page_range(page, args="1,2"):
 
     Filter has two parameters:
       * AT_BORDERS: how many first/last pages do you want to show?
-      * ARROUND_CURRENT: how many pages to the left/right from the current page 
+      * ARROUND_CURRENT: how many pages to the left/right from the current page
         do you want to show?
 
     Range consits of 5 parts:
@@ -21,8 +22,8 @@ def ellipses_page_range(page, args="1,2"):
 
     Parts collide sometimes, e.g. when current page is the first one. Filter
     prevents putting the same page number twice in the range.
-    
-    Ellipses has to substitue at least two page numbers so something like 
+
+    Ellipses has to substitue at least two page numbers so something like
     [1, None, 3, 4, 5, 6, 7, None, 10] doesn't happen (it is more meaningful
     to have 2 instead of None).
 
@@ -37,14 +38,14 @@ def ellipses_page_range(page, args="1,2"):
     """
     if ',' not in args or len(args.split(',')) != 2:
         raise template.TemplateSyntaxError("Invalid number of arguments")
-    
+
     AT_BORDERS, AROUND_CURRENT = (int(arg.strip()) for arg in args.split(','))
 
     page_num = page.number
     num_pages = page.paginator.num_pages
 
     # Compute borders
-    first_start =  1
+    first_start = 1
     first_end = first_start + AT_BORDERS
     middle_start = max(first_end, page_num - AROUND_CURRENT)
     middle_end = min(page_num + AROUND_CURRENT + 1, num_pages)

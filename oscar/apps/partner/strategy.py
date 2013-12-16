@@ -5,7 +5,8 @@ from . import availability, prices
 
 
 # A container for policies
-PurchaseInfo = namedtuple('PurchaseInfo', ['price', 'availability', 'stockrecord'])
+PurchaseInfo = namedtuple(
+    'PurchaseInfo', ['price', 'availability', 'stockrecord'])
 
 
 class Selector(object):
@@ -39,8 +40,8 @@ class Base(object):
     """
     The base strategy class
 
-    Given a product, strategies are responsible for returning a ``PurchaseInfo``
-    instance which contains:
+    Given a product, strategies are responsible for returning a
+    ``PurchaseInfo`` instance which contains:
 
     - The appropriate stockrecord for this customer
     - A pricing policy instance

@@ -43,7 +43,6 @@ if hasattr(auth_models, 'BaseUserManager'):
             u.save(using=self._db)
             return u
 
-
     class AbstractUser(auth_models.AbstractBaseUser,
                        auth_models.PermissionsMixin):
         """
@@ -65,7 +64,8 @@ if hasattr(auth_models, 'BaseUserManager'):
             _('Active'), default=True,
             help_text=_('Designates whether this user should be treated as '
                         'active. Unselect this instead of deleting accounts.'))
-        date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+        date_joined = models.DateTimeField(_('date joined'),
+                                           default=timezone.now)
 
         objects = UserManager()
 
@@ -89,7 +89,8 @@ class AbstractEmail(models.Model):
     This is a record of all emails sent to a customer.
     Normally, we only record order-related emails.
     """
-    user = models.ForeignKey(AUTH_USER_MODEL, related_name='emails', verbose_name=_("User"))
+    user = models.ForeignKey(AUTH_USER_MODEL, related_name='emails',
+                             verbose_name=_("User"))
     subject = models.TextField(_('Subject'), max_length=255)
     body_text = models.TextField(_("Body Text"))
     body_html = models.TextField(_("Body HTML"), blank=True, null=True)
@@ -181,7 +182,6 @@ class AbstractCommunicationEventType(models.Model):
                 except TemplateDoesNotExist:
                     templates[name] = None
 
-
         # Pass base URL for serving images within HTML emails
         if ctx is None:
             ctx = {}
@@ -193,7 +193,8 @@ class AbstractCommunicationEventType(models.Model):
             messages[name] = template.render(Context(ctx)) if template else ''
 
         # Ensure the email subject doesn't contain any newlines
-        messages['subject'] = messages['subject'].replace("\n", "").replace("\r", "")
+        messages['subject'] = messages['subject'].replace("\n", "")
+        messages['subject'] = messages['subject'].replace("\r", "")
 
         return messages
 
@@ -208,8 +209,8 @@ class AbstractCommunicationEventType(models.Model):
 
 
 class AbstractNotification(models.Model):
-    recipient = models.ForeignKey(AUTH_USER_MODEL, related_name='notifications',
-                                  db_index=True)
+    recipient = models.ForeignKey(AUTH_USER_MODEL,
+                                  related_name='notifications', db_index=True)
 
     # Not all notifications will have a sender.
     sender = models.ForeignKey(AUTH_USER_MODEL, null=True)
@@ -258,8 +259,9 @@ class AbstractProductAlert(models.Model):
     # A user is only required if the notification is created by a
     # registered user, anonymous users will only have an email address
     # attached to the notification
-    user = models.ForeignKey(AUTH_USER_MODEL, db_index=True, blank=True, null=True,
-                             related_name="alerts", verbose_name=_('User'))
+    user = models.ForeignKey(AUTH_USER_MODEL, db_index=True, blank=True,
+                             null=True, related_name="alerts",
+                             verbose_name=_('User'))
     email = models.EmailField(_("Email"), db_index=True, blank=True, null=True)
 
     # This key are used to confirm and cancel alerts for anon users
@@ -344,7 +346,8 @@ class AbstractProductAlert(models.Model):
         # calls save, and doesn't call the methods cancel(), confirm() etc).
         if self.status == self.CANCELLED and self.date_cancelled is None:
             self.date_cancelled = timezone.now()
-        if not self.user and self.status == self.ACTIVE and self.date_confirmed is None:
+        if not self.user and self.status == self.ACTIVE \
+                and self.date_confirmed is None:
             self.date_confirmed = timezone.now()
         if self.status == self.CLOSED and self.date_closed is None:
             self.date_closed = timezone.now()
@@ -362,4 +365,5 @@ class AbstractProductAlert(models.Model):
         return reverse('customer:alerts-confirm', kwargs={'key': self.key})
 
     def get_cancel_url(self):
-        return reverse('customer:alerts-cancel-by-key', kwargs={'key': self.key})
+        return reverse('customer:alerts-cancel-by-key', kwargs={'key':
+                                                                self.key})

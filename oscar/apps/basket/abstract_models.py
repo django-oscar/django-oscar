@@ -75,10 +75,10 @@ class AbstractBasket(models.Model):
 
     def __unicode__(self):
         return _(
-            u"%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)") % {
-                'status': self.status,
-                'owner': self.owner,
-                'num_lines': self.num_lines}
+            u"%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)") \
+            % {'status': self.status,
+               'owner': self.owner,
+               'num_lines': self.num_lines}
 
     # ========
     # Strategy
@@ -142,9 +142,8 @@ class AbstractBasket(models.Model):
             if qty > max_allowed:
                 return False, _(
                     "Due to technical limitations we are not able "
-                    "to ship more than %(threshold)d items in one order.") % {
-                        'threshold': basket_threshold,
-                    }
+                    "to ship more than %(threshold)d items in one order.") \
+                    % {'threshold': basket_threshold}
         return True, None
 
     # ============
@@ -182,8 +181,8 @@ class AbstractBasket(models.Model):
         if price_currency and stock_info.price.currency != price_currency:
             raise ValueError((
                 "Basket lines must all have the same currency. Proposed "
-                "line has currency %s, while basket has currency %s") % (
-                    stock_info.price.currency, price_currency))
+                "line has currency %s, while basket has currency %s")
+                % (stock_info.price.currency, price_currency))
 
         if stock_info.stockrecord is None:
             raise ValueError((
@@ -594,10 +593,10 @@ class AbstractLine(models.Model):
 
     def __unicode__(self):
         return _(
-            u"Basket #%(basket_id)d, Product #%(product_id)d, quantity %(quantity)d") % {
-                'basket_id': self.basket.pk,
-                'product_id': self.product.pk,
-                'quantity': self.quantity}
+            u"Basket #%(basket_id)d, Product #%(product_id)d, quantity"
+            u" %(quantity)d") % {'basket_id': self.basket.pk,
+                                 'product_id': self.product.pk,
+                                 'quantity': self.quantity}
 
     def save(self, *args, **kwargs):
         """
@@ -770,7 +769,8 @@ class AbstractLine(models.Model):
             # against tax inclusive prices but we need to guess how much of the
             # discount applies to tax-exclusive prices.  We do this by
             # assuming a linear tax and scaling down the original discount.
-            return self.line_price_excl_tax - self._tax_ratio * self._discount_incl_tax
+            return self.line_price_excl_tax \
+                - self._tax_ratio * self._discount_incl_tax
         return self.line_price_excl_tax
 
     @property
@@ -822,15 +822,15 @@ class AbstractLine(models.Model):
                 'new_price': currency(current_price_incl_tax)
             }
             if current_price_incl_tax > self.price_incl_tax:
-                warning = _("The price of '%(product)s' has increased from "
-                            "%(old_price)s to %(new_price)s since you added it "
-                            "to your basket")
+                warning = _("The price of '%(product)s' has increased from"
+                            " %(old_price)s to %(new_price)s since you added"
+                            " it to your basket")
                 return warning % product_prices
             else:
-                warning = _("The price of '%(product)s' has decreased from "
-                            "%(old_price)s to %(new_price)s since you added it "
-                            "to your basket")
-                return warning %  product_prices
+                warning = _("The price of '%(product)s' has decreased from"
+                            " %(old_price)s to %(new_price)s since you added"
+                            " it to your basket")
+                return warning % product_prices
 
 
 class AbstractLineAttribute(models.Model):

@@ -4,7 +4,8 @@ from django.core import validators
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.customer.forms import EmailUserCreationForm, CommonPasswordValidator
+from oscar.apps.customer.forms import (EmailUserCreationForm,
+                                       CommonPasswordValidator)
 from oscar.core.compat import get_user_model
 
 User = get_user_model()

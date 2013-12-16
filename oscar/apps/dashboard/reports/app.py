@@ -11,10 +11,10 @@ class ReportsApplication(Application):
     index_view = views.IndexView
 
     def get_urls(self):
-        urlpatterns = patterns('',
+        urls = [
             url(r'^$', self.index_view.as_view(), name='reports-index'),
-        )
-        return self.post_process_urls(urlpatterns)
+        ]
+        return self.post_process_urls(patterns('', *urls))
 
 
 application = ReportsApplication()

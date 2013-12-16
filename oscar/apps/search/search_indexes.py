@@ -49,10 +49,10 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         if obj.rating is not None:
             return int(obj.rating)
 
-    # Pricing and stock is tricky as it can vary per customer.  However, the most common
-    # case is for customers to see the same prices and stock levels and so we
-    # implement that case here.
-    
+    # Pricing and stock is tricky as it can vary per customer.  However, the
+    # most common case is for customers to see the same prices and stock levels
+    # and so we implement that case here.
+
     def prepare_price(self, obj):
         if obj.has_stockrecords:
             result = strategy.fetch_for_product(obj)

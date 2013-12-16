@@ -6,7 +6,7 @@ ProductReview = get_model('reviews', 'productreview')
 
 
 class DashboardProductReviewForm(forms.ModelForm):
-    choices= (
+    choices = (
         (ProductReview.APPROVED, _('Approved')),
         (ProductReview.REJECTED, _('Rejected')),
     )
