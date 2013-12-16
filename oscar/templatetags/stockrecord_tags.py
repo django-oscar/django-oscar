@@ -37,3 +37,38 @@ class StrategyNode(template.Node):
 
         context[self.name_var] = request.strategy.fetch(product)
         return ''
+
+
+@register.tag(name="purchase_info_for_line")
+def do_line_purchase_info(parse, token):
+    """
+    Template tag for fetching the appropriate ``StockInfo`` instance for a
+    basket line and returning it to the context
+    """
+    tokens = token.split_contents()
+    if len(tokens) < 3 or tokens[3] != 'as':
+        raise template.TemplateSyntaxError(
+            "%(tag)r tag uses the following syntax: "
+            "{%% %(tag)r request line as "
+            "record %%}" % {'tag': tokens[0]})
+
+    request_var, line_var, name_var = tokens[1], tokens[2], tokens[4]
+    return LinePurchaseInfoNode(
+        request_var, line_var, name_var)
+
+
+class LinePurchaseInfoNode(template.Node):
+    def __init__(self, request_var, line_var, name_var):
+        self.request_var = template.Variable(request_var)
+        self.line_var = template.Variable(line_var)
+        self.name_var = name_var
+
+    def render(self, context):
+        try:
+            request = self.request_var.resolve(context)
+            line = self.line_var.resolve(context)
+        except template.VariableDoesNotExist:
+            return ''
+
+        context[self.name_var] = request.strategy.fetch_for_line(line)
+        return ''

@@ -72,6 +72,13 @@ class Base(object):
             "information."
         )
 
+    def fetch_for_line(self, line):
+        """
+        Given a basket line instance, fetch a ``StockInfo`` instance.
+        """
+        # Default to ignoring any basket line options
+        return self.fetch(line.product)
+
 
 class Structured(Base):
     """
