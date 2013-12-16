@@ -6,11 +6,11 @@ import urllib
 sys.stdout = sys.stderr
 
 # Project root
-root = '/var/www/oscar/builds/qa/sites/sandbox'
+root = '/var/www/oscar/builds/latest/sites/sandbox'
 sys.path.insert(0, root)
 
 # Packages from virtualenv
-activate_this = '/var/www/oscar/virtualenvs/qa/bin/activate_this.py'
+activate_this = '/var/www/oscar/virtualenvs/latest/bin/activate_this.py'
 execfile(activate_this, dict(__file__=activate_this))
 
 # Set environmental variable for Django and fire WSGI handler
