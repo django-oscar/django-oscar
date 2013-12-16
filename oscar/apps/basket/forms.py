@@ -31,7 +31,7 @@ class BasketLineForm(forms.ModelForm):
             raise forms.ValidationError(reason)
 
     def check_permission(self, qty):
-        is_available, reason = self.instance.stockinfo.availability.is_purchase_permitted(
+        is_available, reason = self.instance.purchase_info.availability.is_purchase_permitted(
             quantity=qty)
         if not is_available:
             raise forms.ValidationError(reason)

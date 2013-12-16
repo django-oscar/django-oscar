@@ -7,7 +7,7 @@ register = template.Library()
 @register.tag(name="purchase_info_for_product")
 def do_product_purchase_info(parse, token):
     """
-    Template tag for fetching the appropriate ``StockInfo`` instance for a
+    Template tag for fetching the appropriate ``PurchaseInfo`` instance for a
     product and returning it to the context
     """
     tokens = token.split_contents()
@@ -42,7 +42,7 @@ class StrategyNode(template.Node):
 @register.tag(name="purchase_info_for_line")
 def do_line_purchase_info(parse, token):
     """
-    Template tag for fetching the appropriate ``StockInfo`` instance for a
+    Template tag for fetching the appropriate ``PurchaseInfo`` instance for a
     basket line and returning it to the context
     """
     tokens = token.split_contents()

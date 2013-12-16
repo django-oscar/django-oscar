@@ -721,13 +721,13 @@ class AbstractLine(models.Model):
         return max(self._discount_incl_tax, self._discount_excl_tax)
 
     @property
-    def stockinfo(self):
+    def purchase_info(self):
         """
         Return the stock/price info
         """
         if not hasattr(self, '_info'):
-            # Cache the stockinfo (note that a strategy instance is assigned to
-            # each line by the basket in the all_lines method).
+            # Cache the PurchaseInfo instance (note that a strategy instance is
+            # assigned to each line by the basket in the all_lines method).
             self._info = self.strategy.fetch_for_product(
                 self.product, self.stockrecord)
         return self._info
@@ -736,26 +736,26 @@ class AbstractLine(models.Model):
     def is_tax_known(self):
         if not hasattr(self, 'strategy'):
             return False
-        return self.stockinfo.price.is_tax_known
+        return self.purchase_info.price.is_tax_known
 
     @property
     def unit_effective_price(self):
         """
         The price to use for offer calculations
         """
-        return self.stockinfo.price.effective_price
+        return self.purchase_info.price.effective_price
 
     @property
     def unit_price_excl_tax(self):
-        return self.stockinfo.price.excl_tax
+        return self.purchase_info.price.excl_tax
 
     @property
     def unit_price_incl_tax(self):
-        return self.stockinfo.price.incl_tax
+        return self.purchase_info.price.incl_tax
 
     @property
     def unit_tax(self):
-        return self.stockinfo.price.tax
+        return self.purchase_info.price.tax
 
     @property
     def line_price_excl_tax(self):
@@ -810,11 +810,11 @@ class AbstractLine(models.Model):
 
         if not self.price_incl_tax:
             return
-        if not self.stockinfo.price.is_tax_known:
+        if not self.purchase_info.price.is_tax_known:
             return
 
         # Compare current price to price when added to basket
-        current_price_incl_tax = self.stockinfo.price.incl_tax
+        current_price_incl_tax = self.purchase_info.price.incl_tax
         if current_price_incl_tax != self.price_incl_tax:
             product_prices = {
                 'product': self.product.get_title(),

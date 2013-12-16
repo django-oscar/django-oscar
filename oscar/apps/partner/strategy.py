@@ -5,7 +5,7 @@ from . import availability, prices
 
 
 # A container for policies
-StockInfo = namedtuple('StockInfo', ['price', 'availability', 'stockrecord'])
+PurchaseInfo = namedtuple('PurchaseInfo', ['price', 'availability', 'stockrecord'])
 
 
 class Selector(object):
@@ -39,7 +39,7 @@ class Base(object):
     """
     The base strategy class
 
-    Given a product, strategies are responsible for returning a ``StockInfo``
+    Given a product, strategies are responsible for returning a ``PurchaseInfo``
     instance which contains:
 
     - The appropriate stockrecord for this customer
@@ -55,15 +55,15 @@ class Base(object):
 
     def fetch_for_product(self, product, stockrecord=None):
         """
-        Given a product, return a ``StockInfo`` instance.
+        Given a product, return a ``PurchaseInfo`` instance.
 
-        The ``StockInfo`` class is a named tuple with attributes:
+        The ``PurchaseInfo`` class is a named tuple with attributes:
 
         - ``price``: a pricing policy object.
         - ``availability``: an availability policy object.
         - ``stockrecord``: the stockrecord that is being used
 
-        If a stockrecord is passed, return the appropriate ``StockInfo``
+        If a stockrecord is passed, return the appropriate ``PurchaseInfo``
         instance for that product and stockrecord is returned.
         """
         raise NotImplementedError(
@@ -74,7 +74,7 @@ class Base(object):
 
     def fetch_for_line(self, line):
         """
-        Given a basket line instance, fetch a ``StockInfo`` instance.
+        Given a basket line instance, fetch a ``PurchaseInfo`` instance.
         """
         # Default to ignoring any basket line options
         return self.fetch_for_product(line.product)
@@ -83,7 +83,7 @@ class Base(object):
 class Structured(Base):
     """
     A strategy class which provides separate, overridable methods for
-    determining the 3 things that a ``StockInfo`` instance requires:
+    determining the 3 things that a ``PurchaseInfo`` instance requires:
 
     #) A stockrecord
     #) A pricing policy
@@ -92,13 +92,13 @@ class Structured(Base):
 
     def fetch_for_product(self, product, stockrecord=None):
         """
-        Return the appropriate stockinfo instance.
+        Return the appropriate ``PurchaseInfo`` instance.
 
         This method is not intended to be overridden.
         """
         if stockrecord is None:
             stockrecord = self.select_stockrecord(product)
-        return StockInfo(
+        return PurchaseInfo(
             price=self.pricing_policy(product, stockrecord),
             availability=self.availability_policy(product, stockrecord),
             stockrecord=stockrecord)
