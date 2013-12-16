@@ -167,7 +167,7 @@
                 {% csrf_token %}
                 {{ saved_formset.management_form }}
                 {% for form in saved_formset %}
-                    {% session_strategy request form.instance.product as session %}
+                    {% purchase_info_for_product request form.instance.product as session %}
                     <div class="basket-items">
                         <div class="row-fluid">
                             <div class="span2">
@@ -189,7 +189,7 @@
                                     {{ form.DELETE }}
                                 </div>
                             </div>
-                            {% session_strategy request form.instance.product as saved %}
+                            {% purchase_info_for_product request form.instance.product as saved %}
                             <div class="span2 align-center">
                                 <p class="price_color">
                                     {% if saved.price.is_tax_known %}

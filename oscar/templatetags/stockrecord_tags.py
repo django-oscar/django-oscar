@@ -4,10 +4,10 @@ from django import template
 register = template.Library()
 
 
-@register.tag(name="session_strategy")
-def do_stockrecord(parse, token):
+@register.tag(name="purchase_info_for_product")
+def do_product_purchase_info(parse, token):
     """
-    Template tag for fetching the appropriate stockrecord for a
+    Template tag for fetching the appropriate ``StockInfo`` instance for a
     product and returning it to the context
     """
     tokens = token.split_contents()
@@ -35,7 +35,7 @@ class StrategyNode(template.Node):
         except template.VariableDoesNotExist:
             return ''
 
-        context[self.name_var] = request.strategy.fetch(product)
+        context[self.name_var] = request.strategy.fetch_for_product(product)
         return ''
 
 
