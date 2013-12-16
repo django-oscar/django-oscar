@@ -72,6 +72,16 @@ class Base(object):
             "information."
         )
 
+    def fetch_for_group(self, product):
+        """
+        Given a group product, fetch a ``StockInfo`` instance
+        """
+        raise NotImplementedError(
+            "A strategy class must define a fetch_for_group method "
+            "for returning the availability and pricing "
+            "information."
+        )
+
 
 class Structured(Base):
     """
@@ -96,6 +106,15 @@ class Structured(Base):
             availability=self.availability_policy(product, stockrecord),
             stockrecord=stockrecord)
 
+    def fetch_for_group(self, product):
+        # Select variants and associated stockrecords
+        variant_stock = self.select_variant_stockrecords(product)
+        return StockInfo(
+            price=self.group_pricing_policy(product, variant_stock),
+            availability=self.group_availability_policy(
+                product, variant_stock),
+            stockrecord=None)
+
     def select_stockrecord(self, product):
         """
         Select the appropriate stockrecord
@@ -103,6 +122,15 @@ class Structured(Base):
         raise NotImplementedError(
             "A structured strategy class must define a "
             "'select_stockrecord' method")
+
+    def select_variant_stockrecords(self, product):
+        """
+        Select appropriate stock record for all variants of a product
+        """
+        records = []
+        for variant in product.variants.all():
+            records.append((variant, self.select_stockrecord(variant)))
+        return records
 
     def pricing_policy(self, product, stockrecord):
         """
@@ -156,6 +184,14 @@ class StockRequired(object):
             return availability.StockRequired(
                 stockrecord.net_stock_level)
 
+    def group_availability_policy(self, product, variant_stock):
+        # A parent product is available if one of its variants is
+        for variant, stockrecord in variant_stock:
+            policy = self.availability_policy(product, stockrecord)
+            if policy.is_available_to_buy:
+                return availability.Available()
+        return availability.Unavailable()
+
 
 class NoTax(object):
     """
@@ -167,6 +203,17 @@ class NoTax(object):
     def pricing_policy(self, product, stockrecord):
         if not stockrecord:
             return prices.Unavailable()
+        return prices.FixedPrice(
+            currency=stockrecord.price_currency,
+            excl_tax=stockrecord.price_excl_tax,
+            tax=D('0.00'))
+
+    def group_pricing_policy(self, product, variant_stock):
+        stockrecords = [x[1] for x in variant_stock if x[1] is not None]
+        if not stockrecords:
+            return prices.Unavailable()
+        # We take price from first record
+        stockrecord = stockrecords[0]
         return prices.FixedPrice(
             currency=stockrecord.price_currency,
             excl_tax=stockrecord.price_excl_tax,
