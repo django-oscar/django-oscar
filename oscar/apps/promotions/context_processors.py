@@ -49,8 +49,3 @@ def split_by_position(linked_promotions, context):
         if key not in context:
             context[key] = []
         context[key].append(promotion)
-      
-
-
-        
-    

@@ -46,9 +46,7 @@ def unit_price(offer, line):
 
     This is required so offers can apply in circumstances where tax isn't known
     """
-    if offer.applies_to_tax_exclusive_prices:
-        return line.unit_price_excl_tax
-    return line.unit_price_incl_tax
+    return line.unit_effective_price
 
 
 def apply_discount(line, discount, quantity):
@@ -99,13 +97,6 @@ class ConditionalOffer(models.Model):
     condition = models.ForeignKey(
         'offer.Condition', verbose_name=_("Condition"))
     benefit = models.ForeignKey('offer.Benefit', verbose_name=_("Benefit"))
-
-    applies_to_tax_exclusive_prices = models.BooleanField(
-        _("Should this offer uses tax-exclusive prices for calculations?"),
-        default=False,
-        help_text=_(
-            "This is required for an offer to apply in territories where "
-            "taxes aren't known until checkout, like the USA"))
 
     # Some complicated situations require offers to be applied in a set order.
     priority = models.IntegerField(
@@ -1235,6 +1226,12 @@ class BasketDiscount(ApplicationResult):
     def is_successful(self):
         return self.discount > 0
 
+    def __str__(self):
+        return '<Basket discount of %s>' % self.discount
+
+    def __repr__(self):
+        return '%s(%r)' % (self.__class__.__name__, self.discount)
+
 
 # Helper global as returning zero discount is quite common
 ZERO_DISCOUNT = BasketDiscount(D('0.00'))
@@ -1562,4 +1559,5 @@ class ShippingPercentageDiscountBenefit(ShippingBenefit):
         verbose_name_plural = _("Shipping percentage discount benefits")
 
     def shipping_discount(self, charge):
-        return charge * self.value / D('100.0')
+        discount = charge * self.value / D('100.0')
+        return discount.quantize(D('0.01'))

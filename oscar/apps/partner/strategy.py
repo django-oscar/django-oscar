@@ -31,9 +31,8 @@ class Selector(object):
         Return an instanticated strategy instance
         """
         # Default to the backwards-compatible strategy of picking the first
-        # stockrecord.
+        # stockrecord but charging zero tax.
         return Default(request)
-        #return US(request)
 
 
 class Base(object):
@@ -176,21 +175,19 @@ class NoTax(object):
 
 class FixedRateTax(object):
     """
-    Pricing policy mixin for use with the ``Structured`` base strategy.
-    This mixin applies a fixed rate tax to the base price from the product's
-    stockrecord.
-    The price_incl_tax is quantized to two decimal places. Rounding behaviour is
-    Decimal's default
+    Pricing policy mixin for use with the ``Structured`` base strategy.  This
+    mixin applies a fixed rate tax to the base price from the product's
+    stockrecord.  The price_incl_tax is quantized to two decimal places.
+    Rounding behaviour is Decimal's default
     """
-    rate = D('0.20')
-    exponent = D('0.01')
+    rate = D('0')  # Subclass and specify the correct rate
+    exponent = D('0.01')  # Default to two decimal places
 
     def pricing_policy(self, product, stockrecord):
         if not stockrecord:
             return prices.Unavailable()
-        # round to two decimal places
         tax = (stockrecord.price_excl_tax * self.rate).quantize(self.exponent)
-        return prices.FixedPrice(
+        return prices.TaxInclusiveFixedPrice(
             currency=stockrecord.price_currency,
             excl_tax=stockrecord.price_excl_tax,
             tax=tax)
@@ -224,7 +221,31 @@ class Default(UseFirstStockRecord, StockRequired, NoTax, Structured):
     """
 
 
+class UK(UseFirstStockRecord, StockRequired, FixedRateTax, Structured):
+    """
+    Sample strategy for the UK that:
+        - uses the first stockrecord for each product (effectively assuming
+        there is only one).
+        - requires that a product has stock available to be bought
+        - applies a fixed rate of tax on all products
+
+    This is just a sample strategy used for internal development.  It is not
+    recommended to be used in production, especially as the tax rate is
+    hard-coded.
+    """
+    # Use UK VAT rate (as of December 2013)
+    rate = D('0.20')
+
+
 class US(UseFirstStockRecord, StockRequired, DeferredTax, Structured):
     """
-    Default strategy for the USA (just for testing really)
+    Sample strategy for the US.
+        - uses the first stockrecord for each product (effectively assuming
+        there is only one).
+        - requires that a product has stock available to be bought
+        - doesn't apply a tax to product prices (normally this will be done
+        after the shipping address is entered).
+
+    This is just a sample one used for internal development.  It is not
+    recommended to be used in production.
     """
