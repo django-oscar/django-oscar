@@ -8,3 +8,7 @@ psycopg2==2.5.1
 
 # To use Solr, we need pysolr
 pysolr==3.1
+
+lxml==3.2.4
+cssselect==0.9.1
+BeautifulSoup==3.2.1
