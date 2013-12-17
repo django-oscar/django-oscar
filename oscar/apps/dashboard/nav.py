@@ -68,7 +68,7 @@ class Node(object):
 
         try:
             app_instance = get_class(app_label_str, 'application')
-        except (ImportError, AppNotFoundError):
+        except AppNotFoundError:
             raise exception
 
         # handle name-spaced view names
