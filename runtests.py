@@ -88,4 +88,7 @@ if __name__ == '__main__':
         # Note: The context manager is not thread safe. Behaviour with multiple
         # threads is undefined.
         warnings.filterwarnings('error', category=DeprecationWarning)
+        warnings.filterwarnings('ignore',
+                                r'django.utils.simplejson is deprecated.*',
+                                DeprecationWarning, r'sorl\.thumbnail\.helpers')
         run_tests(verbosity, *args)
