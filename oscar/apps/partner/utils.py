@@ -1,12 +1,17 @@
 import os
 from decimal import Decimal as D
-from django.db.transaction import commit_on_success
 
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
 from oscar.apps.dashboard.reports.csv_utils import CsvUnicodeReader
 from oscar.core.loading import get_class, get_classes
+
+try:
+    from django.db.transaction import atomic as atomic_compat
+except ImportError:
+    from django.db.transaction import commit_on_success as atomic_compat
+
 ImportError = get_class('partner.exceptions', 'ImportError')
 Partner, StockRecord = get_classes('partner.models', ['Partner',
                                                       'StockRecord'])
@@ -128,7 +133,7 @@ class CatalogueImporter(object):
         Partner.objects.all().delete()
         StockRecord.objects.all().delete()
 
-    @commit_on_success
+    @atomic_compat
     def _import(self, file_path):
         u"""Imports given file"""
         stats = {'new_items': 0,
