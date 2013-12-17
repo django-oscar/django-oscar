@@ -20,7 +20,7 @@ class PartnersDashboardApplication(Application):
     user_update_view = views.PartnerUserUpdateView
 
     def get_urls(self):
-        urlpatterns = patterns('',
+        urls = [
             url(r'^$', self.list_view.as_view(), name='partner-list'),
             url(r'^create/$', self.create_view.as_view(),
                 name='partner-create'),
@@ -42,8 +42,8 @@ class PartnersDashboardApplication(Application):
             url(r'^(?P<partner_pk>\d+)/users/(?P<user_pk>\d+)/update/$',
                 self.user_update_view.as_view(),
                 name='partner-user-update'),
-        )
-        return self.post_process_urls(urlpatterns)
+        ]
+        return self.post_process_urls(patterns('', *urls))
 
 
 application = PartnersDashboardApplication()

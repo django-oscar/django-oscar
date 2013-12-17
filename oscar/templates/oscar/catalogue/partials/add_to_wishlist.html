@@ -6,7 +6,7 @@
     {% with wishlists=user.wishlists.all %}
         {# Select wishlists that contains product #}
         {% wishlists_containing_product wishlists product as product_wishlists %}
-        {% if wishlists|length > 0 %}
+        {% if wishlists %}
 
             <div class="btn-group btn-wishlist">
                 <a class="btn btn-large dropdown-toggle" data-toggle="dropdown" href="#">{% trans "Add to wish list" %} <span class="caret"></span></a>

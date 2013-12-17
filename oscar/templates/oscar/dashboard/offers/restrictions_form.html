@@ -1,5 +1,6 @@
 {% extends 'dashboard/offers/step_form.html' %}
 {% load i18n %}
+{% load staticfiles %}
 
 {% block summary %}
     {% include 'dashboard/offers/summary.html' %}
@@ -7,11 +8,6 @@
 
 {% block progress %}
     {% include 'dashboard/offers/progress.html' with step=4 %}
-{% endblock %}
-
-{% block extrascripts %}
-    {{ block.super }}
-    <script src="{{ STATIC_URL }}oscar/js/timepicker/jquery-ui-timepicker-addon.js" type="text/javascript"></script>
 {% endblock %}
 
 {% block form_actions_buttons %}

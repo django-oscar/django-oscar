@@ -9,7 +9,8 @@ from django.template.loader import render_to_string
 from django.views import generic
 
 from oscar.apps.customer.utils import normalise_email
-from oscar.apps.dashboard.partners.forms import UserEmailForm, ExistingUserForm, NewUserForm
+from oscar.apps.dashboard.partners.forms import (UserEmailForm,
+                                                 ExistingUserForm, NewUserForm)
 from oscar.core.loading import get_classes
 from oscar.core.compat import get_user_model
 from oscar.views import sort_queryset
@@ -237,13 +238,14 @@ class PartnerUserLinkView(generic.View):
         partner = get_object_or_404(Partner, pk=partner_pk)
         if self.link_user(user, partner):
             messages.success(
-                request, _("User '%(name)s' was linked to '%(partner_name)s'") %
-                         {'name': name, 'partner_name': partner.name})
+                request,
+                _("User '%(name)s' was linked to '%(partner_name)s'")
+                % {'name': name, 'partner_name': partner.name})
         else:
             messages.info(
                 request,
-                _("User '%(name)s' is already linked to '%(partner_name)s'") %
-                    {'name': name, 'partner_name': partner.name})
+                _("User '%(name)s' is already linked to '%(partner_name)s'")
+                % {'name': name, 'partner_name': partner.name})
         return HttpResponseRedirect(reverse('dashboard:partner-manage',
                                             kwargs={'pk': partner_pk}))
 
@@ -255,12 +257,13 @@ class PartnerUserUnlinkView(generic.View):
         Unlinks a user from a partner, and removes the dashboard permission
         if she's not linked to any other partners.
 
-        Returns False if the user was not linked to the partner; True otherwise.
+        Returns False if the user was not linked to the partner; True
+        otherwise.
         """
         if not partner.users.filter(pk=user.pk).exists():
             return False
         partner.users.remove(user)
-        if not user.is_staff and user.partners.count() == 0:
+        if not user.is_staff and not user.partners.exists():
             user.user_permissions.filter(
                 codename='dashboard_access',
                 content_type__app_label='partner').delete()
@@ -282,7 +285,7 @@ class PartnerUserUnlinkView(generic.View):
             messages.error(
                 request,
                 _("User '%(name)s' is not linked to '%(partner_name)s'") %
-                    {'name': name, 'partner_name': partner.name})
+                {'name': name, 'partner_name': partner.name})
         return HttpResponseRedirect(reverse('dashboard:partner-manage',
                                             kwargs={'pk': partner_pk}))
 

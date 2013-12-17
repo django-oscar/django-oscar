@@ -19,7 +19,7 @@ class CheckoutApplication(Application):
     thankyou_view = views.ThankYouView
 
     def get_urls(self):
-        urlpatterns = patterns('',
+        urls = [
             url(r'^$', self.index_view.as_view(), name='index'),
 
             # Shipping/user address views
@@ -48,8 +48,8 @@ class CheckoutApplication(Application):
                 name='preview'),
             url(r'thank-you/$', self.thankyou_view.as_view(),
                 name='thank-you'),
-        )
-        return self.post_process_urls(urlpatterns)
+        ]
+        return self.post_process_urls(patterns('', *urls))
 
     def get_url_decorator(self, pattern):
         if not settings.OSCAR_ALLOW_ANON_CHECKOUT:

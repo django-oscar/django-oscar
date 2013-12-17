@@ -78,6 +78,7 @@ class AttributeOptionInline(admin.TabularInline):
 
 
 class AttributeOptionGroupAdmin(admin.ModelAdmin):
+    list_display = ('name', 'option_summary')
     inlines = [AttributeOptionInline, ]
 
 

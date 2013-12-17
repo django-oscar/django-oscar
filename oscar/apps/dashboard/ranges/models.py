@@ -9,10 +9,12 @@ Product = models.get_model('catalogue', 'Product')
 
 
 class RangeProductFileUpload(models.Model):
-    range = models.ForeignKey('offer.Range', related_name='file_uploads', verbose_name=_("Range"))
+    range = models.ForeignKey('offer.Range', related_name='file_uploads',
+                              verbose_name=_("Range"))
     filepath = models.CharField(_("File Path"), max_length=255)
     size = models.PositiveIntegerField(_("Size"))
-    uploaded_by = models.ForeignKey(AUTH_USER_MODEL, verbose_name=_("Uploaded By"))
+    uploaded_by = models.ForeignKey(AUTH_USER_MODEL,
+                                    verbose_name=_("Uploaded By"))
     date_uploaded = models.DateTimeField(_("Date Uploaded"), auto_now_add=True)
 
     PENDING, FAILED, PROCESSED = 'Pending', 'Failed', 'Processed'
@@ -21,14 +23,19 @@ class RangeProductFileUpload(models.Model):
         (FAILED, FAILED),
         (PROCESSED, PROCESSED),
     )
-    status = models.CharField(_("Status"), max_length=32, choices=choices, default=PENDING)
-    error_message = models.CharField(_("Error Message"), max_length=255, blank=True)
+    status = models.CharField(_("Status"), max_length=32, choices=choices,
+                              default=PENDING)
+    error_message = models.CharField(_("Error Message"), max_length=255,
+                                     blank=True)
 
     # Post-processing audit fields
     date_processed = models.DateTimeField(_("Date Processed"), null=True)
-    num_new_skus = models.PositiveIntegerField(_("Number of New SKUs"), null=True)
-    num_unknown_skus = models.PositiveIntegerField(_("Number of Unknown SKUs"), null=True)
-    num_duplicate_skus = models.PositiveIntegerField(_("Number of Duplicate SKUs"), null=True)
+    num_new_skus = models.PositiveIntegerField(_("Number of New SKUs"),
+                                               null=True)
+    num_unknown_skus = models.PositiveIntegerField(_("Number of Unknown SKUs"),
+                                                   null=True)
+    num_duplicate_skus = models.PositiveIntegerField(
+        _("Number of Duplicate SKUs"), null=True)
 
     class Meta:
         ordering = ('-date_uploaded',)
@@ -62,8 +69,11 @@ class RangeProductFileUpload(models.Model):
         """
         all_ids = set(self.extract_ids())
         products = self.range.included_products.all()
-        existing_skus = set(filter(bool, products.values_list('stockrecord__partner_sku', flat=True)))
-        existing_upcs = set(filter(bool, products.values_list('upc', flat=True)))
+        existing_skus = products.values_list('stockrecord__partner_sku',
+                                             flat=True)
+        existing_skus = set(filter(bool, existing_skus))
+        existing_upcs = products.values_list('upc', flat=True)
+        existing_upcs = set(filter(bool, existing_upcs))
         existing_ids = existing_skus.union(existing_upcs)
         new_ids = all_ids - existing_ids
 
@@ -71,10 +81,12 @@ class RangeProductFileUpload(models.Model):
             models.Q(stockrecord__partner_sku__in=new_ids) |
             models.Q(upc__in=new_ids))
         for product in products:
-            self.range.included_products.add(product)
+            self.range.add_product(product)
 
         # Processing stats
-        found_skus = set(filter(bool, products.values_list('stockrecord__partner_sku', flat=True)))
+        found_skus = products.values_list('stockrecord__partner_sku',
+                                          flat=True)
+        found_skus = set(filter(bool, found_skus))
         found_upcs = set(filter(bool, products.values_list('upc', flat=True)))
         found_ids = found_skus.union(found_upcs)
         missing_ids = new_ids - found_ids

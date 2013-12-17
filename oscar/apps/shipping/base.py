@@ -49,6 +49,8 @@ class Base(object):
         return self.charge_incl_tax - self.charge_excl_tax
 
     def _set_tax(self, value):
+        # Tax can be set later on in territories where it is now known up
+        # front.
         self.charge_incl_tax = self.charge_excl_tax + value
         self.is_tax_known = True
 

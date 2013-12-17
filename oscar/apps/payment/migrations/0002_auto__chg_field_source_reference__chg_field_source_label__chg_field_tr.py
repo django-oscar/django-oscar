@@ -12,18 +12,19 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
 
-        # Replace nulls with empty strings before adjusting fields
-        model_labels = [
-            ('payment.Source', 'reference'),
-            ('payment.Source', 'label'),
-            ('payment.Transaction', 'status'),
-            ('payment.Transaction', 'reference'),
-            ('payment.Bankcard', 'partner_reference'),
-        ]
-        for model_label, field in model_labels:
-            filter_kwargs = {field: None}
-            update_kwargs = {field: ''}
-            orm[model_label].objects.filter(**filter_kwargs).update(**update_kwargs)
+        if not db.dry_run:
+            # Replace nulls with empty strings before adjusting fields
+            model_labels = [
+                ('payment.Source', 'reference'),
+                ('payment.Source', 'label'),
+                ('payment.Transaction', 'status'),
+                ('payment.Transaction', 'reference'),
+                ('payment.Bankcard', 'partner_reference'),
+            ]
+            for model_label, field in model_labels:
+                filter_kwargs = {field: None}
+                update_kwargs = {field: ''}
+                orm[model_label].objects.filter(**filter_kwargs).update(**update_kwargs)
 
         # Changing field 'Source.reference'
         db.alter_column('payment_source', 'reference', self.gf('django.db.models.fields.CharField')(default='', max_length=128))

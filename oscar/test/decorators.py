@@ -11,13 +11,13 @@ def dataProvider(fn_data_provider):
     sticking with the JUnit style naming as unittest does this already.
 
     Implementation based on:
-    http://melp.nl/2011/02/phpunit-style-dataprovider-in-python-unit-test/#more-525
+    http://melp.nl/2011/02/phpunit-style-dataprovider-in-python-unit-test/#more-525  # noqa
     """
     def test_decorator(test_method):
         def execute_test_method_with_each_data_set(self):
             for data in fn_data_provider():
                 if (len(data) == 2 and isinstance(data[0], tuple) and
-                    isinstance(data[1], dict)):
+                        isinstance(data[1], dict)):
                     # Both args and kwargs being provided
                     args, kwargs = data[:]
                 else:

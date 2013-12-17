@@ -49,19 +49,20 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         if obj.rating is not None:
             return int(obj.rating)
 
+    # Pricing and stock is tricky as it can vary per customer.  However, the
+    # most common case is for customers to see the same prices and stock levels
+    # and so we implement that case here.
+
     def prepare_price(self, obj):
-        # Pricing is tricky as products do not necessarily have a single price
-        # (although that is the most common scenario).
         if obj.has_stockrecords:
-            # Fetch a "default" stockinfo
-            result = strategy.fetch(obj)
+            result = strategy.fetch_for_product(obj)
             if result.price.is_tax_known:
                 return result.price.incl_tax
             return result.price.excl_tax
 
     def prepare_num_in_stock(self, obj):
         if obj.has_stockrecords:
-            result = strategy.fetch(obj)
+            result = strategy.fetch_for_product(obj)
             return result.stockrecord.net_stock_level
 
     def get_updated_field(self):

@@ -31,11 +31,12 @@ class AbstractWishList(models.Model):
     PUBLIC, PRIVATE, SHARED = ('Public', 'Private', 'Shared')
     VISIBILITY_CHOICES = (
         (PRIVATE, _('Private - Only the owner can see the wish list')),
-        (SHARED, _('Shared - Only the owner and people with access to the obfuscated link can see the wish list')),
+        (SHARED, _('Shared - Only the owner and people with access to the'
+                   ' obfuscated link can see the wish list')),
         (PUBLIC, _('Public - Everybody can see the wish list')),
     )
-    visibility = models.CharField(
-        _('Visibility'), max_length=20, default=PRIVATE, choices=VISIBILITY_CHOICES)
+    visibility = models.CharField(_('Visibility'), max_length=20,
+                                  default=PRIVATE, choices=VISIBILITY_CHOICES)
 
     # Convention: A user can have multiple wish lists. The last created wish
     # list for a user shall be her "default" wish list.
@@ -61,7 +62,7 @@ class AbstractWishList(models.Model):
         """
         while True:
             key = hashlib.sha1(str(random.random())).hexdigest()[:length]
-            if cls._default_manager.filter(key=key).count() == 0:
+            if not cls._default_manager.filter(key=key).exists():
                 return key
 
     def is_allowed_to_see(self, user):

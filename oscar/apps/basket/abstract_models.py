@@ -1,4 +1,4 @@
-from decimal import Decimal
+from decimal import Decimal as D
 import zlib
 
 from django.db import models
@@ -75,10 +75,10 @@ class AbstractBasket(models.Model):
 
     def __unicode__(self):
         return _(
-            u"%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)") % {
-                'status': self.status,
-                'owner': self.owner,
-                'num_lines': self.num_lines}
+            u"%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)") \
+            % {'status': self.status,
+               'owner': self.owner,
+               'num_lines': self.num_lines}
 
     # ========
     # Strategy
@@ -142,9 +142,8 @@ class AbstractBasket(models.Model):
             if qty > max_allowed:
                 return False, _(
                     "Due to technical limitations we are not able "
-                    "to ship more than %(threshold)d items in one order.") % {
-                        'threshold': basket_threshold,
-                    }
+                    "to ship more than %(threshold)d items in one order.") \
+                    % {'threshold': basket_threshold}
         return True, None
 
     # ============
@@ -178,12 +177,12 @@ class AbstractBasket(models.Model):
 
         # Ensure that all lines are the same currency
         price_currency = self.currency
-        stock_info = self.strategy.fetch(product)
+        stock_info = self.strategy.fetch_for_product(product)
         if price_currency and stock_info.price.currency != price_currency:
             raise ValueError((
                 "Basket lines must all have the same currency. Proposed "
-                "line has currency %s, while basket has currency %s") % (
-                    stock_info.price.currency, price_currency))
+                "line has currency %s, while basket has currency %s")
+                % (stock_info.price.currency, price_currency))
 
         if stock_info.stockrecord is None:
             raise ValueError((
@@ -337,7 +336,7 @@ class AbstractBasket(models.Model):
         For executing a named method on each line of the basket
         and returning the total.
         """
-        total = Decimal('0.00')
+        total = D('0.00')
         for line in self.all_lines():
             try:
                 total += getattr(line, property)
@@ -479,7 +478,7 @@ class AbstractBasket(models.Model):
     def contains_a_voucher(self):
         if not self.id:
             return False
-        return self.vouchers.all().count() > 0
+        return self.vouchers.exists()
 
     @property
     def is_submitted(self):
@@ -582,8 +581,8 @@ class AbstractLine(models.Model):
     def __init__(self, *args, **kwargs):
         super(AbstractLine, self).__init__(*args, **kwargs)
         # Instance variables used to persist discount information
-        self._discount_excl_tax = Decimal('0.00')
-        self._discount_incl_tax = Decimal('0.00')
+        self._discount_excl_tax = D('0.00')
+        self._discount_incl_tax = D('0.00')
         self._affected_quantity = 0
 
     class Meta:
@@ -594,10 +593,10 @@ class AbstractLine(models.Model):
 
     def __unicode__(self):
         return _(
-            u"Basket #%(basket_id)d, Product #%(product_id)d, quantity %(quantity)d") % {
-                'basket_id': self.basket.pk,
-                'product_id': self.product.pk,
-                'quantity': self.quantity}
+            u"Basket #%(basket_id)d, Product #%(product_id)d, quantity"
+            u" %(quantity)d") % {'basket_id': self.basket.pk,
+                                 'product_id': self.product.pk,
+                                 'quantity': self.quantity}
 
     def save(self, *args, **kwargs):
         """
@@ -619,8 +618,8 @@ class AbstractLine(models.Model):
         """
         Remove any discounts from this line.
         """
-        self._discount_excl_tax = Decimal('0.00')
-        self._discount_incl_tax = Decimal('0.00')
+        self._discount_excl_tax = D('0.00')
+        self._discount_incl_tax = D('0.00')
         self._affected_quantity = 0
 
     def discount(self, discount_value, affected_quantity, incl_tax=True):
@@ -666,7 +665,7 @@ class AbstractLine(models.Model):
             raise RuntimeError("A price breakdown can only be determined "
                                "when taxes are known")
         prices = []
-        if not self.has_discount:
+        if not self.discount_value:
             prices.append((self.unit_price_incl_tax, self.unit_price_excl_tax,
                            self.quantity))
         else:
@@ -675,6 +674,7 @@ class AbstractLine(models.Model):
             item_incl_tax_discount = (
                 self.discount_value / int(self._affected_quantity))
             item_excl_tax_discount = item_incl_tax_discount * self._tax_ratio
+            item_excl_tax_discount = item_excl_tax_discount.quantize(D('0.01'))
             prices.append((self.unit_price_incl_tax - item_incl_tax_discount,
                            self.unit_price_excl_tax - item_excl_tax_discount,
                            self._affected_quantity))
@@ -720,14 +720,14 @@ class AbstractLine(models.Model):
         return max(self._discount_incl_tax, self._discount_excl_tax)
 
     @property
-    def stockinfo(self):
+    def purchase_info(self):
         """
         Return the stock/price info
         """
         if not hasattr(self, '_info'):
-            # Cache the stockinfo (note that a strategy instance is assigned to
-            # each line by the basket in the all_lines method).
-            self._info = self.strategy.fetch(
+            # Cache the PurchaseInfo instance (note that a strategy instance is
+            # assigned to each line by the basket in the all_lines method).
+            self._info = self.strategy.fetch_for_product(
                 self.product, self.stockrecord)
         return self._info
 
@@ -735,19 +735,26 @@ class AbstractLine(models.Model):
     def is_tax_known(self):
         if not hasattr(self, 'strategy'):
             return False
-        return self.stockinfo.price.is_tax_known
+        return self.purchase_info.price.is_tax_known
+
+    @property
+    def unit_effective_price(self):
+        """
+        The price to use for offer calculations
+        """
+        return self.purchase_info.price.effective_price
 
     @property
     def unit_price_excl_tax(self):
-        return self.stockinfo.price.excl_tax
+        return self.purchase_info.price.excl_tax
 
     @property
     def unit_price_incl_tax(self):
-        return self.stockinfo.price.incl_tax
+        return self.purchase_info.price.incl_tax
 
     @property
     def unit_tax(self):
-        return self.stockinfo.price.tax
+        return self.purchase_info.price.tax
 
     @property
     def line_price_excl_tax(self):
@@ -762,7 +769,8 @@ class AbstractLine(models.Model):
             # against tax inclusive prices but we need to guess how much of the
             # discount applies to tax-exclusive prices.  We do this by
             # assuming a linear tax and scaling down the original discount.
-            return self.line_price_excl_tax - self._tax_ratio * self._discount_incl_tax
+            return self.line_price_excl_tax \
+                - self._tax_ratio * self._discount_incl_tax
         return self.line_price_excl_tax
 
     @property
@@ -802,27 +810,27 @@ class AbstractLine(models.Model):
 
         if not self.price_incl_tax:
             return
-        if not self.stockinfo.price.is_tax_known:
+        if not self.purchase_info.price.is_tax_known:
             return
 
         # Compare current price to price when added to basket
-        current_price_incl_tax = self.stockinfo.price.incl_tax
-        if current_price_incl_tax > self.price_incl_tax:
-            msg = ("The price of '%(product)s' has increased from "
-                   "%(old_price)s to %(new_price)s since you added it "
-                   "to your basket")
-            return _(msg) % {
+        current_price_incl_tax = self.purchase_info.price.incl_tax
+        if current_price_incl_tax != self.price_incl_tax:
+            product_prices = {
                 'product': self.product.get_title(),
                 'old_price': currency(self.price_incl_tax),
-                'new_price': currency(current_price_incl_tax)}
-        if current_price_incl_tax < self.price_incl_tax:
-            msg = ("The price of '%(product)s' has decreased from "
-                   "%(old_price)s to %(new_price)s since you added it "
-                   "to your basket")
-            return _(msg) % {
-                'product': self.product.get_title(),
-                'old_price': currency(self.price_incl_tax),
-                'new_price': currency(current_price_incl_tax)}
+                'new_price': currency(current_price_incl_tax)
+            }
+            if current_price_incl_tax > self.price_incl_tax:
+                warning = _("The price of '%(product)s' has increased from"
+                            " %(old_price)s to %(new_price)s since you added"
+                            " it to your basket")
+                return warning % product_prices
+            else:
+                warning = _("The price of '%(product)s' has decreased from"
+                            " %(old_price)s to %(new_price)s since you added"
+                            " it to your basket")
+                return warning % product_prices
 
 
 class AbstractLineAttribute(models.Model):

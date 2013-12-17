@@ -42,7 +42,7 @@
     {% if description != "All vouchers" %}
         <caption><i class="icon-money icon-large"></i>{{ description }}</caption>
     {% endif %}
-    {% if vouchers.count %}
+    {% if vouchers %}
     <tr>
         <th>{% trans "Name" %}</th>
         <th>{% trans "Code" %}</th>
