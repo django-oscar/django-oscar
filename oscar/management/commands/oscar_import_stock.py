@@ -13,11 +13,9 @@ class Command(BaseCommand):
     help = 'For updating stock for a partner based on a CSV file'
 
     option_list = BaseCommand.option_list + (
-        make_option('--delimiter',
-            dest='delimiter',
-            default=",",
-            help='Delimiter used within CSV file(s)'),
-        )
+        make_option('--delimiter', dest='delimiter', default=",",
+                    help='Delimiter used within CSV file(s)'),
+    )
 
     def handle(self, *args, **options):
         if len(args) != 2:

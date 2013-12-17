@@ -9,11 +9,12 @@ Category = get_model('catalogue', 'category')
 NODE_CACHE = {}
 
 
-@register.tag(name="category_tree")
+@register.tag(name="category_tree")  # noqa (too complex (14))
 def do_category_list(parse, token):
     tokens = token.split_contents()
     error_msg = ("%r tag uses the following syntax: {%% category_tree "
-                 "[depth=n] [parent=<parent_category>] as categories %%}" % tokens[0])
+                 "[depth=n] [parent=<parent_category>] as categories %%}"
+                 % tokens[0])
     # dict allows to assign values in `assign_vars` function closure
     var = {
         'depth': '0',

@@ -52,15 +52,16 @@ class RangeProductForm(forms.Form):
 
         if len(new_ids) == 0:
             raise forms.ValidationError(
-                _("The products with SKUs or UPCs matching %s are already in this range") % (
-                    ', '.join(ids)))
+                _("The products with SKUs or UPCs matching %s are already in"
+                  " this range") % (', '.join(ids)))
 
         self.products = Product._default_manager.filter(
             Q(stockrecords__partner_sku__in=new_ids) |
             Q(upc__in=new_ids))
         if len(self.products) == 0:
             raise forms.ValidationError(
-                _("No products exist with a SKU or UPC matching %s") % ", ".join(ids))
+                _("No products exist with a SKU or UPC matching %s")
+                % ", ".join(ids))
 
         found_skus = set(self.products.values_list(
             'stockrecords__partner_sku', flat=True))

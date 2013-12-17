@@ -38,7 +38,7 @@ def staff_member_required(view_func, login_url=None):
             login_scheme, login_netloc = urlparse.urlparse(login_url)[:2]
             current_scheme, current_netloc = urlparse.urlparse(path)[:2]
             if ((not login_scheme or login_scheme == current_scheme) and
-                (not login_netloc or login_netloc == current_netloc)):
+                    (not login_netloc or login_netloc == current_netloc)):
                 path = request.get_full_path()
 
             messages.warning(request, _("You must log in to access this page"))

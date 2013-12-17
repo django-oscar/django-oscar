@@ -9,11 +9,14 @@ class CatalogueApplication(Application):
 
     default_permissions = ['is_staff', ]
     permissions_map = _map = {
-        'catalogue-product':        (['is_staff'], ['partner.dashboard_access']),
-        'catalogue-product-create': (['is_staff'], ['partner.dashboard_access']),
-        'catalogue-product-list':   (['is_staff'], ['partner.dashboard_access']),
-        'catalogue-product-delete': (['is_staff'], ['partner.dashboard_access']),
-        'catalogue-product-lookup': (['is_staff'], ['partner.dashboard_access']),
+        'catalogue-product': (['is_staff'], ['partner.dashboard_access']),
+        'catalogue-product-create': (['is_staff'],
+                                     ['partner.dashboard_access']),
+        'catalogue-product-list': (['is_staff'], ['partner.dashboard_access']),
+        'catalogue-product-delete': (['is_staff'],
+                                     ['partner.dashboard_access']),
+        'catalogue-product-lookup': (['is_staff'],
+                                     ['partner.dashboard_access']),
     }
 
     product_list_view = views.ProductListView
@@ -31,7 +34,7 @@ class CatalogueApplication(Application):
     stock_alert_view = views.StockAlertListView
 
     def get_urls(self):
-        urlpatterns = patterns('',
+        urls = [
             url(r'^products/(?P<pk>\d+)/$',
                 self.product_createupdate_view.as_view(),
                 name='catalogue-product'),
@@ -63,8 +66,8 @@ class CatalogueApplication(Application):
             url(r'^categories/(?P<pk>\d+)/delete/$',
                 self.category_delete_view.as_view(),
                 name='catalogue-category-delete'),
-        )
-        return self.post_process_urls(urlpatterns)
+        ]
+        return self.post_process_urls(patterns('', *urls))
 
 
 application = CatalogueApplication()

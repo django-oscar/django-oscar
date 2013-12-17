@@ -47,7 +47,7 @@ class OfferDiscount(Base):
         # We check to see if the discount is non-zero.  It is possible to have
         # zero shipping already in which case this the offer does not lead to
         # any further discount.
-        return self.get_discount()['discount'] > 0
+        return self.discount > 0
 
     @property
     def discount(self):
@@ -68,7 +68,6 @@ class OfferDiscount(Base):
     def get_discount(self):
         # Return a 'discount' dictionary in the same form as that used by the
         # OfferApplications class
-        parent_charge = self.method.charge_incl_tax
         return {
             'offer': self.offer,
             'result': None,
@@ -76,7 +75,7 @@ class OfferDiscount(Base):
             'description': '',
             'voucher': self.offer.get_voucher(),
             'freq': 1,
-            'discount': self.offer.shipping_discount(parent_charge)}
+            'discount': self.effective_discount}
 
     @property
     def charge_incl_tax_before_discount(self):
@@ -89,6 +88,50 @@ class OfferDiscount(Base):
     @property
     def is_tax_known(self):
         return self.method.is_tax_known
+
+    @property
+    def effective_discount(self):
+        """
+        The discount value.
+        """
+        raise NotImplemented()
+
+    @property
+    def charge_excl_tax(self):
+        raise NotImplemented()
+
+    @property
+    def charge_incl_tax(self):
+        raise NotImplemented()
+
+
+class TaxExclusiveOfferDiscount(OfferDiscount):
+
+    @property
+    def effective_discount(self):
+        parent_charge = self.method.charge_excl_tax
+        return self.offer.shipping_discount(parent_charge)
+
+    @property
+    def charge_excl_tax(self):
+        parent_charge = self.method.charge_excl_tax
+        discount = self.offer.shipping_discount(parent_charge)
+        return parent_charge - discount
+
+    @property
+    def charge_incl_tax(self):
+        """
+        Tax needs to be assigned later on
+        """
+        return self.charge_excl_tax + self.tax
+
+
+class TaxInclusiveOfferDiscount(OfferDiscount):
+
+    @property
+    def effective_discount(self):
+        parent_charge = self.method.charge_incl_tax
+        return self.offer.shipping_discount(parent_charge)
 
     @property
     def charge_incl_tax(self):
@@ -105,5 +148,6 @@ class OfferDiscount(Base):
         charge_incl_tax = self.charge_incl_tax
         if parent_charge_incl_tax == 0:
             return D('0.00')
-        return parent_charge_excl_tax * (charge_incl_tax /
-                                         parent_charge_incl_tax)
+        charge = parent_charge_excl_tax * (charge_incl_tax /
+                                           parent_charge_incl_tax)
+        return charge.quantize(D('0.01'))

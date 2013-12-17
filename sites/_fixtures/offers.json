@@ -143,7 +143,6 @@
         "fields": {
             "included_categories": [],
             "name": "Site",
-            "included_products": [],
             "proxy_class": null,
             "excluded_products": [],
             "classes": [],

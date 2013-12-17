@@ -10,8 +10,8 @@ def promotions(request):
     """
     promotions = get_request_promotions(request)
 
-    # Split the promotions into separate lists for each position, and 
-    # add them to the template bindings
+    # Split the promotions into separate lists for each position, and add them
+    # to the template bindings
     context = {
         'url_path': request.path
     }
@@ -25,12 +25,14 @@ def get_request_promotions(request):
     Return promotions relevant to this request
     """
     promotions = PagePromotion._default_manager.select_related() \
-                                               .prefetch_related('content_object') \
-                                               .filter(page_url=request.path) \
-                                               .order_by('display_order')
+        .prefetch_related('content_object') \
+        .filter(page_url=request.path) \
+        .order_by('display_order')
 
     if 'q' in request.GET:
-        keyword_promotions = KeywordPromotion._default_manager.select_related().filter(keyword=request.GET['q'])
+        keyword_promotions \
+            = KeywordPromotion._default_manager.select_related()\
+            .filter(keyword=request.GET['q'])
         if keyword_promotions.exists():
             promotions = list(chain(promotions, keyword_promotions))
     return promotions
@@ -49,8 +51,3 @@ def split_by_position(linked_promotions, context):
         if key not in context:
             context[key] = []
         context[key].append(promotion)
-      
-
-
-        
-    

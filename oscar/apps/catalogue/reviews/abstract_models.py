@@ -45,7 +45,9 @@ class AbstractProductReview(models.Model):
         (APPROVED, _("Approved")),
         (REJECTED, _("Rejected")),
     )
-    default_status = FOR_MODERATION if settings.OSCAR_MODERATE_REVIEWS else APPROVED
+    default_status = APPROVED
+    if settings.OSCAR_MODERATE_REVIEWS:
+        default_status = FOR_MODERATION
     status = models.SmallIntegerField(
         _("Status"), choices=STATUS_CHOICES, default=default_status)
 

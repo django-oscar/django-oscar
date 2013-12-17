@@ -45,8 +45,8 @@ def create_stockrecord(product=None, price_excl_tax=None, partner_sku=None,
         price_excl_tax=price_excl_tax, num_in_stock=num_in_stock)
 
 
-def create_stockinfo(record):
-    return strategy.StockInfo(
+def create_purchase_info(record):
+    return strategy.PurchaseInfo(
         price=prices.FixedPrice(
             record.price_currency,
             record.price_excl_tax,
@@ -60,7 +60,7 @@ def create_stockinfo(record):
 def create_product(upc=None, title=u"Dummy title",
                    product_class=u"Dummy item class",
                    partner=u"Dummy partner", partner_sku=None, price=None,
-                   num_in_stock=None, attributes=None, 
+                   num_in_stock=None, attributes=None,
                    partner_users=None, **kwargs):
     """
     Helper method for creating products that are used in tests.

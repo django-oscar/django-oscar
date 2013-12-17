@@ -51,7 +51,8 @@ class VoucherForm(forms.Form):
             pass
         else:
             if (not self.voucher) or (voucher.id != self.voucher.id):
-                raise forms.ValidationError(_("The name '%s' is already in use") % name)
+                raise forms.ValidationError(_("The name '%s' is already in"
+                                              " use") % name)
         return name
 
     def clean_code(self):
@@ -64,7 +65,8 @@ class VoucherForm(forms.Form):
             pass
         else:
             if (not self.voucher) or (voucher.id != self.voucher.id):
-                raise forms.ValidationError(_("The code '%s' is already in use") % code)
+                raise forms.ValidationError(_("The code '%s' is already in"
+                                              " use") % code)
         return code
 
     def clean(self):
@@ -72,7 +74,8 @@ class VoucherForm(forms.Form):
         start_date = cleaned_data.get('start_date', None)
         end_date = cleaned_data.get('end_date', None)
         if start_date and end_date and end_date < start_date:
-            raise forms.ValidationError(_("The start date must be before the end date"))
+            raise forms.ValidationError(_("The start date must be before the"
+                                          " end date"))
         return cleaned_data
 
 
