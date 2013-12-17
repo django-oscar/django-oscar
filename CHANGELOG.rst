@@ -2,6 +2,11 @@
 Changelog
 =========
 
+0.4.14 - 2013-12-17
+-------------------
+
+Use Django's cryptographic signing functionality for basket cookie
+
 0.4.13 - 2013-10-25
 -------------------
 
