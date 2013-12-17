@@ -181,6 +181,7 @@ class ProductCreateUpdateView(generic.UpdateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
+        ctx['product_class'] = self.product_class
         if 'stockrecord_formset' not in ctx:
             ctx['stockrecord_formset'] = self.stockrecord_formset(
                 self.product_class, self.request.user, instance=self.object)
