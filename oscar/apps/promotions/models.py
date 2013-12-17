@@ -4,8 +4,9 @@ from oscar.apps.promotions.abstract_models import (
     AbstractPagePromotion, AbstractKeywordPromotion,
     AbstractRawHTML, AbstractImage, AbstractMultiImage,
     AbstractSingleProduct, AbstractHandPickedProductList,
-    AbstractOrderedProduct, AbstractAutomaticProductList,
-    AbstractOrderedProductList, AbstractTabbedBlock)
+    AbstractOrderedProduct, AbstractHandPickedProduct,
+    AbstractAutomaticProductList, AbstractOrderedProductList,
+    AbstractTabbedBlock)
 
 Item = get_model('product', 'Item')
 
@@ -42,6 +43,10 @@ class HandPickedProductList(AbstractHandPickedProductList):
 
 
 class OrderedProduct(AbstractOrderedProduct):
+    pass
+
+
+class HandPickedProduct(AbstractHandPickedProduct):
     pass
 
 

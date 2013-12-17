@@ -52,10 +52,6 @@ class AbstractPagePromotion(LinkedPromotion):
         verbose_name_plural = _("Page Promotions")
 
 
-class PagePromotion(AbstractPagePromotion):
-    pass
-
-
 class AbstractKeywordPromotion(LinkedPromotion):
     """
     A promotion linked to a specific keyword.
@@ -79,17 +75,14 @@ class AbstractKeywordPromotion(LinkedPromotion):
         verbose_name_plural = _("Keyword Promotions")
 
 
-class KeywordPromotion(AbstractKeywordPromotion):
-    pass
-
 class AbstractPromotion(models.Model):
     """
     Abstract base promotion that defines the interface
     that subclasses must implement.
     """
     _type = 'Promotion'
-    keywords = generic.GenericRelation(KeywordPromotion, verbose_name=_('Keywords'))
-    pages = generic.GenericRelation(PagePromotion, verbose_name=_('Pages'))
+    keywords = generic.GenericRelation('KeywordPromotion', verbose_name=_('Keywords'))
+    pages = generic.GenericRelation('PagePromotion', verbose_name=_('Pages'))
 
     class Meta:
         abstract = True
@@ -124,9 +117,9 @@ class AbstractPromotion(models.Model):
     @property
     def num_times_used(self):
         ctype = self.content_type
-        page_count = PagePromotion.objects.filter(content_type=ctype,
+        page_count = self.pages.objects.filter(content_type=ctype,
                                                   object_id=self.id).count()
-        keyword_count = KeywordPromotion.objects.filter(content_type=ctype,
+        keyword_count = self.keywords.objects.filter(content_type=ctype,
                                                         object_id=self.id).count()
         return page_count + keyword_count
 
@@ -253,11 +246,11 @@ class AbstractHandPickedProductList(AbstractProductList):
     products.
     """
     _type = 'Product list'
-    products = models.ManyToManyField('catalogue.Product', through='OrderedProduct', blank=True, null=True,
+    products = models.ManyToManyField('catalogue.Product', through='HandPickedProduct', blank=True, null=True,
         verbose_name=_("Products"))
 
-    def get_queryset(self):
-        return self.products.all().order_by('%s.display_order' % OrderedProduct._meta.db_table)
+    # def get_queryset(self):
+    #     return self.products.all().order_by('%s.display_order' % OrderedProduct._meta.db_table)
 
     def get_products(self):
         return self.get_queryset()
@@ -268,9 +261,8 @@ class AbstractHandPickedProductList(AbstractProductList):
         verbose_name_plural = _("Hand Picked Product Lists")
 
 
-class AbstractOrderedProduct(models.Model):
+class AbstractProduct(models.Model):
 
-    list = models.ForeignKey('promotions.HandPickedProductList', verbose_name=_("List"))
     product = models.ForeignKey('catalogue.Product', verbose_name=_("Product"))
     display_order = models.PositiveIntegerField(_('Display Order'), default=0)
 
@@ -281,8 +273,12 @@ class AbstractOrderedProduct(models.Model):
         verbose_name_plural = _("Ordered Product")
 
 
-class OrderedProduct(AbstractOrderedProduct):
-    pass
+class AbstractOrderedProduct(AbstractProduct):
+    list = models.ForeignKey('promotions.OrderedProductList', verbose_name=_("List"))
+
+
+class AbstractHandPickedProduct(AbstractProduct):
+    list = models.ForeignKey('promotions.HandPickedProductList', verbose_name=_("List"))
 
 
 class AbstractAutomaticProductList(AbstractProductList):
@@ -317,10 +313,13 @@ class AbstractAutomaticProductList(AbstractProductList):
         verbose_name_plural = _("Automatic Product Lists")
 
 
-class AbstractOrderedProductList(AbstractHandPickedProductList):
+class AbstractOrderedProductList(AbstractProductList):
     tabbed_block = models.ForeignKey('promotions.TabbedBlock',
                                      related_name='tabs', verbose_name=_("Tabbed Block"))
     display_order = models.PositiveIntegerField(_('Display Order'), default=0)
+
+    products = models.ManyToManyField('catalogue.Product', through='OrderedProduct', blank=True, null=True,
+        verbose_name=_("Products"))
 
     class Meta:
         abstract = True

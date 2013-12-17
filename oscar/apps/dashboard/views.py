@@ -7,7 +7,7 @@ from django.db.models.loading import get_model
 from django.db.models import Avg, Sum, Count
 
 from oscar.core.compat import get_user_model
-from oscar.apps.promotions.models import AbstractPromotion
+from oscar.apps.promotions.abstract_models import AbstractPromotion
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 Voucher = get_model('voucher', 'Voucher')
