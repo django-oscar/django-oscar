@@ -54,7 +54,7 @@ class IndexView(TemplateView):
         Get all active vouchers. The returned ``Queryset`` of vouchers
         is filtered by end date greater then the current date.
         """
-        return Voucher.objects.filter(end_date__gt=now())
+        return Voucher.objects.filter(end_datetime__gt=now())
 
     def get_number_of_promotions(self, abstract_base=AbstractPromotion):
         """
