@@ -149,6 +149,7 @@ class StockRecordFormSet(BaseStockRecordFormSet):
                                         " with."))
 
 
+
 def _attr_text_field(attribute):
     return forms.CharField(label=attribute.name,
                            required=attribute.required)
