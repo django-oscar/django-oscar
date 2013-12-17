@@ -76,13 +76,13 @@ class AbstractOrder(models.Model):
     #: Order status pipeline.  This should be a dict where each (key, value) #:
     #: corresponds to a status and a list of possible statuses that can follow
     #: that one.
-    pipeline = getattr(settings,  'OSCAR_ORDER_STATUS_PIPELINE', {})
+    pipeline = getattr(settings, 'OSCAR_ORDER_STATUS_PIPELINE', {})
 
     #: Order status cascade pipeline.  This should be a dict where each (key,
     #: value) pair corresponds to an *order* status and the corresponding
     #: *line* status that needs to be set when the order is set to the new
     #: status
-    cascade = getattr(settings,  'OSCAR_ORDER_STATUS_CASCADE', {})
+    cascade = getattr(settings, 'OSCAR_ORDER_STATUS_CASCADE', {})
 
     @classmethod
     def all_statuses(cls):
@@ -107,11 +107,12 @@ class AbstractOrder(models.Model):
         if new_status == self.status:
             return
         if new_status not in self.available_statuses():
-            raise exceptions.InvalidOrderStatus(_("'%(new_status)s' is not a valid status for order %(number)s "
-                                       "(current status: '%(status)s')") % {
-                                            'new_status': new_status,
-                                            'number': self.number,
-                                            'status': self.status})
+            raise exceptions.InvalidOrderStatus(
+                _("'%(new_status)s' is not a valid status for order %(number)s"
+                  " (current status: '%(status)s')")
+                % {'new_status': new_status,
+                   'number': self.number,
+                   'status': self.status})
         self.status = new_status
         if new_status in self.cascade:
             for line in self.lines.all():
@@ -219,7 +220,8 @@ class AbstractOrder(models.Model):
             event_name = event.event_type.name
             if event_name not in map:
                 map[event_name] = []
-            map[event_name] = list(chain(map[event_name], event.line_quantities.all()))
+            map[event_name] = list(chain(map[event_name],
+                                         event.line_quantities.all()))
 
         # Determine last complete event
         status = _("In progress")
@@ -256,7 +258,7 @@ class AbstractOrder(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ['-date_placed',]
+        ordering = ['-date_placed']
         verbose_name = _("Order")
         verbose_name_plural = _("Orders")
 
@@ -264,7 +266,8 @@ class AbstractOrder(models.Model):
         return u"#%s" % (self.number,)
 
     def verification_hash(self):
-        return hashlib.md5('%s%s' % (self.number, settings.SECRET_KEY)).hexdigest()
+        hash = hashlib.md5('%s%s' % (self.number, settings.SECRET_KEY))
+        return hash.hexdigest()
 
     @property
     def email(self):
@@ -297,11 +300,13 @@ class AbstractOrderNote(models.Model):
     This are often used for audit purposes too.  IE, whenever an admin
     makes a change to an order, we create a note to record what happened.
     """
-    order = models.ForeignKey('order.Order', related_name="notes", verbose_name=_("Order"))
+    order = models.ForeignKey('order.Order', related_name="notes",
+                              verbose_name=_("Order"))
 
     # These are sometimes programatically generated so don't need a
     # user everytime
-    user = models.ForeignKey(AUTH_USER_MODEL, null=True, verbose_name=_("User"))
+    user = models.ForeignKey(AUTH_USER_MODEL, null=True,
+                             verbose_name=_("User"))
 
     # We allow notes to be classified although this isn't always needed
     INFO, WARNING, ERROR, SYSTEM = 'Info', 'Warning', 'Error', 'System'
@@ -348,7 +353,8 @@ class AbstractCommunicationEvent(models.Model):
         ordering = ['-date_created']
 
     def __unicode__(self):
-        return _("'%(type)s' event for order #%(number)s") % {'type': self.event_type.name, 'number': self.order.number}
+        return _("'%(type)s' event for order #%(number)s") \
+            % {'type': self.event_type.name, 'number': self.order.number}
 
 
 # LINES
@@ -432,7 +438,7 @@ class AbstractLine(models.Model):
     # Partners often want to assign some status to each line to help with their
     # own business processes.
     status = models.CharField(_("Status"), max_length=255,
-                             null=True, blank=True)
+                              null=True, blank=True)
 
     # Estimated dispatch date - should be set at order time
     est_dispatch_date = models.DateField(
@@ -441,7 +447,7 @@ class AbstractLine(models.Model):
     #: Order status pipeline.  This should be a dict where each (key, value)
     #: corresponds to a status and the possible statuses that can follow that
     #: one.
-    pipeline = getattr(settings,  'OSCAR_LINE_STATUS_PIPELINE', {})
+    pipeline = getattr(settings, 'OSCAR_LINE_STATUS_PIPELINE', {})
 
     class Meta:
         abstract = True
@@ -479,8 +485,10 @@ class AbstractLine(models.Model):
         if new_status == self.status:
             return
         if new_status not in self.available_statuses():
-            raise exceptions.InvalidLineStatus(_("'%(new_status)s' is not a valid status (current status: '%(status)s')") % {
-                                    'new_status': new_status, 'status': self.status})
+            raise exceptions.InvalidLineStatus(
+                _("'%(new_status)s' is not a valid status (current status:"
+                  " '%(status)s')")
+                % {'new_status': new_status, 'status': self.status})
         self.status = new_status
         self.save()
     set_status.alters_data = True
@@ -508,11 +516,13 @@ class AbstractLine(models.Model):
 
     @property
     def discount_incl_tax(self):
-        return self.line_price_before_discounts_incl_tax - self.line_price_incl_tax
+        return self.line_price_before_discounts_incl_tax \
+            - self.line_price_incl_tax
 
     @property
     def discount_excl_tax(self):
-        return self.line_price_before_discounts_excl_tax - self.line_price_excl_tax
+        return self.line_price_before_discounts_excl_tax \
+            - self.line_price_excl_tax
 
     @property
     def line_price_tax(self):
@@ -568,8 +578,7 @@ class AbstractLine(models.Model):
         event of the passed type.
         """
         result = self.shipping_event_quantities.filter(
-            event__event_type=event_type).aggregate(
-                Sum('quantity'))
+            event__event_type=event_type).aggregate(Sum('quantity'))
         if result['quantity__sum'] is None:
             return 0
         else:
@@ -616,8 +625,7 @@ class AbstractLine(models.Model):
         event of the passed type.
         """
         result = self.payment_event_quantities.filter(
-            event__event_type=event_type).aggregate(
-                Sum('quantity'))
+            event__event_type=event_type).aggregate(Sum('quantity'))
         if result['quantity__sum'] is None:
             return 0
         else:
@@ -643,7 +651,7 @@ class AbstractLine(models.Model):
         else:
             desired_qty = basket_line.quantity + self.quantity
 
-        result = strategy.fetch(self.product)
+        result = strategy.fetch_for_product(self.product)
         is_available, reason = result.availability.is_purchase_permitted(
             quantity=desired_qty)
         if not is_available:

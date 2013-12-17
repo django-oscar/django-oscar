@@ -5,7 +5,8 @@ from . import availability, prices
 
 
 # A container for policies
-StockInfo = namedtuple('StockInfo', ['price', 'availability', 'stockrecord'])
+PurchaseInfo = namedtuple(
+    'PurchaseInfo', ['price', 'availability', 'stockrecord'])
 
 
 class Selector(object):
@@ -31,17 +32,16 @@ class Selector(object):
         Return an instanticated strategy instance
         """
         # Default to the backwards-compatible strategy of picking the first
-        # stockrecord.
+        # stockrecord but charging zero tax.
         return Default(request)
-        #return US(request)
 
 
 class Base(object):
     """
     The base strategy class
 
-    Given a product, strategies are responsible for returning a ``StockInfo``
-    instance which contains:
+    Given a product, strategies are responsible for returning a
+    ``PurchaseInfo`` instance which contains:
 
     - The appropriate stockrecord for this customer
     - A pricing policy instance
@@ -54,21 +54,21 @@ class Base(object):
         if request and request.user.is_authenticated():
             self.user = request.user
 
-    def fetch(self, product, stockrecord=None):
+    def fetch_for_product(self, product, stockrecord=None):
         """
-        Given a product, return a ``StockInfo`` instance.
+        Given a product, return a ``PurchaseInfo`` instance.
 
-        The ``StockInfo`` class is a named tuple with attributes:
+        The ``PurchaseInfo`` class is a named tuple with attributes:
 
         - ``price``: a pricing policy object.
         - ``availability``: an availability policy object.
-        - ``stockrecord``: the stockrecord that is being used to calculate prices and
+        - ``stockrecord``: the stockrecord that is being used
 
-        If a stockrecord is passed, return the appropriate ``StockInfo``
+        If a stockrecord is passed, return the appropriate ``PurchaseInfo``
         instance for that product and stockrecord is returned.
         """
         raise NotImplementedError(
-            "A strategy class must define a fetch method "
+            "A strategy class must define a fetch_for_product method "
             "for returning the availability and pricing "
             "information."
         )
@@ -83,26 +83,40 @@ class Base(object):
             "information."
         )
 
+    def fetch_for_line(self, line, stockrecord=None):
+        """
+        Given a basket line instance, fetch a ``PurchaseInfo`` instance.
+
+        This method is provided to allow purchase info to be determined using a
+        basket line's attributes.  For instance, "bundle" products often use
+        basket line attributes to store SKUs of contained products.  For such
+        products, we need to look at the availability of each contained product
+        to determine overall availability.
+        """
+        # Default to ignoring any basket line options as we don't know what to
+        # do with them within Oscar - that's up to your project to implement.
+        return self.fetch_for_product(line.product)
+
 
 class Structured(Base):
     """
     A strategy class which provides separate, overridable methods for
-    determining the 3 things that a ``StockInfo`` instance requires:
+    determining the 3 things that a ``PurchaseInfo`` instance requires:
 
     #) A stockrecord
     #) A pricing policy
     #) An availability policy
     """
 
-    def fetch(self, product, stockrecord=None):
+    def fetch_for_product(self, product, stockrecord=None):
         """
-        Return the appropriate stockinfo instance.
+        Return the appropriate ``PurchaseInfo`` instance.
 
         This method is not intended to be overridden.
         """
         if stockrecord is None:
             stockrecord = self.select_stockrecord(product)
-        return StockInfo(
+        return PurchaseInfo(
             price=self.pricing_policy(product, stockrecord),
             availability=self.availability_policy(product, stockrecord),
             stockrecord=stockrecord)
@@ -110,7 +124,7 @@ class Structured(Base):
     def fetch_for_group(self, product):
         # Select variants and associated stockrecords
         variant_stock = self.select_variant_stockrecords(product)
-        return StockInfo(
+        return PurchaseInfo(
             price=self.group_pricing_policy(product, variant_stock),
             availability=self.group_availability_policy(
                 product, variant_stock),
@@ -223,21 +237,19 @@ class NoTax(object):
 
 class FixedRateTax(object):
     """
-    Pricing policy mixin for use with the ``Structured`` base strategy.
-    This mixin applies a fixed rate tax to the base price from the product's
-    stockrecord.
-    The price_incl_tax is quantized to two decimal places. Rounding behaviour is
-    Decimal's default
+    Pricing policy mixin for use with the ``Structured`` base strategy.  This
+    mixin applies a fixed rate tax to the base price from the product's
+    stockrecord.  The price_incl_tax is quantized to two decimal places.
+    Rounding behaviour is Decimal's default
     """
-    rate = D('0.20')
-    exponent = D('0.01')
+    rate = D('0')  # Subclass and specify the correct rate
+    exponent = D('0.01')  # Default to two decimal places
 
     def pricing_policy(self, product, stockrecord):
         if not stockrecord:
             return prices.Unavailable()
-        # round to two decimal places
         tax = (stockrecord.price_excl_tax * self.rate).quantize(self.exponent)
-        return prices.FixedPrice(
+        return prices.TaxInclusiveFixedPrice(
             currency=stockrecord.price_currency,
             excl_tax=stockrecord.price_excl_tax,
             tax=tax)
@@ -271,7 +283,31 @@ class Default(UseFirstStockRecord, StockRequired, NoTax, Structured):
     """
 
 
+class UK(UseFirstStockRecord, StockRequired, FixedRateTax, Structured):
+    """
+    Sample strategy for the UK that:
+        - uses the first stockrecord for each product (effectively assuming
+        there is only one).
+        - requires that a product has stock available to be bought
+        - applies a fixed rate of tax on all products
+
+    This is just a sample strategy used for internal development.  It is not
+    recommended to be used in production, especially as the tax rate is
+    hard-coded.
+    """
+    # Use UK VAT rate (as of December 2013)
+    rate = D('0.20')
+
+
 class US(UseFirstStockRecord, StockRequired, DeferredTax, Structured):
     """
-    Default strategy for the USA (just for testing really)
+    Sample strategy for the US.
+        - uses the first stockrecord for each product (effectively assuming
+        there is only one).
+        - requires that a product has stock available to be bought
+        - doesn't apply a tax to product prices (normally this will be done
+        after the shipping address is entered).
+
+    This is just a sample one used for internal development.  It is not
+    recommended to be used in production.
     """

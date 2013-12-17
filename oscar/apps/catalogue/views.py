@@ -124,8 +124,8 @@ class ProductCategoryView(ListView):
         if 'pk' in self.kwargs:
             self.category = get_object_or_404(Category, pk=self.kwargs['pk'])
         else:
-            self.category = get_object_or_404(Category,
-                                              slug=self.kwargs['category_slug'])
+            self.category = get_object_or_404(
+                Category, slug=self.kwargs['category_slug'])
 
     def get(self, request, *args, **kwargs):
         self.get_object()
@@ -176,7 +176,8 @@ class ProductListView(ListView):
         qs = Product.browsable.base_queryset()
         if q:
             # Send signal to record the view of this product
-            self.search_signal.send(sender=self, query=q, user=self.request.user)
+            self.search_signal.send(sender=self, query=q,
+                                    user=self.request.user)
             return qs.filter(title__icontains=q)
         else:
             return qs
@@ -187,6 +188,7 @@ class ProductListView(ListView):
         if not q:
             context['summary'] = _('All products')
         else:
-            context['summary'] = _("Products matching '%(query)s'") % {'query': q}
+            context['summary'] = _("Products matching '%(query)s'") \
+                % {'query': q}
             context['search_term'] = q
         return context

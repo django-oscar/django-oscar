@@ -16,7 +16,7 @@ class UserManagementApplication(Application):
     alert_delete_view = views.ProductAlertDeleteView
 
     def get_urls(self):
-        urlpatterns = patterns('',
+        urls = [
             url(r'^$', self.index_view.as_view(), name='users-index'),
             url(r'^(?P<pk>\d+)/$',
                 self.user_detail_view.as_view(), name='user-detail'),
@@ -34,8 +34,8 @@ class UserManagementApplication(Application):
             url(r'^alerts/(?P<pk>\d+)/update/$',
                 self.alert_update_view.as_view(),
                 name='user-alert-update'),
-        )
-        return self.post_process_urls(urlpatterns)
+        ]
+        return self.post_process_urls(patterns('', *urls))
 
 
 application = UserManagementApplication()

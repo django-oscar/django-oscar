@@ -63,14 +63,23 @@ class Repository(object):
         Prime an individual method instance
         """
         method.set_basket(basket)
+
         # If the basket has a shipping offer, wrap the shipping method with a
         # decorating class that applies the offer discount to the shipping
         # charge.
         if basket.offer_applications.shipping_discounts:
             # We assume there is only one shipping discount available
             discount = basket.offer_applications.shipping_discounts[0]
-            if method.charge_incl_tax > D('0.00'):
-                return methods.OfferDiscount(method, discount['offer'])
+            if method.charge_excl_tax > D('0.00'):
+                if method.is_tax_known:
+                    return methods.TaxInclusiveOfferDiscount(
+                        method, discount['offer'])
+                else:
+                    # When returning a tax exclusive discount, it is assumed
+                    # that this will be used to calculate taxes which will then
+                    # be assigned directly to the method instance.
+                    return methods.TaxExclusiveOfferDiscount(
+                        method, discount['offer'])
         return method
 
     def find_by_code(self, code, basket):

@@ -31,8 +31,9 @@ class BasketLineForm(forms.ModelForm):
             raise forms.ValidationError(reason)
 
     def check_permission(self, qty):
-        is_available, reason = self.instance.stockinfo.availability.is_purchase_permitted(
-            quantity=qty)
+        is_available, reason \
+            = self.instance.purchase_info.availability.is_purchase_permitted(
+                quantity=qty)
         if not is_available:
             raise forms.ValidationError(reason)
 
@@ -83,7 +84,7 @@ class SavedLineForm(forms.ModelForm):
         else:
             desired_qty = self.instance.quantity + line.quantity
 
-        result = self.strategy.fetch(self.instance.product)
+        result = self.strategy.fetch_for_product(self.instance.product)
         is_available, reason = result.availability.is_purchase_permitted(
             quantity=desired_qty)
         if not is_available:
@@ -173,7 +174,7 @@ class AddToBasketForm(forms.Form):
         # basket.
         current_qty = self.basket.product_quantity(product)
         desired_qty = current_qty + self.cleaned_data.get('quantity', 1)
-        result = self.request.strategy.fetch(product)
+        result = self.request.strategy.fetch_for_product(product)
         is_permitted, reason = result.availability.is_purchase_permitted(
             desired_qty)
         if not is_permitted:
@@ -191,10 +192,9 @@ class AddToBasketForm(forms.Form):
                 raise forms.ValidationError(
                     _("Due to technical limitations we are not able to ship"
                       " more than %(threshold)d items in one order. Your"
-                      " basket currently has %(basket)d items.") % {
-                          'threshold': basket_threshold,
-                          'basket': total_basket_quantity,
-                      })
+                      " basket currently has %(basket)d items.")
+                    % {'threshold': basket_threshold,
+                       'basket': total_basket_quantity})
         return qty
 
     def _create_group_product_fields(self, item):

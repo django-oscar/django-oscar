@@ -115,9 +115,9 @@ class WeightBased(ShippingMethod):
 
     @property
     def charge_incl_tax(self):
-        weight = Scales(attribute_code=self.weight_attribute,
-                        default_weight=self.default_weight).weigh_basket(
-                            self._basket)
+        scales = Scales(attribute_code=self.weight_attribute,
+                        default_weight=self.default_weight)
+        weight = scales.weigh_basket(self._basket)
         band = self.get_band_for_weight(weight)
         if not band:
             if self.bands.all().exists() and self.upper_charge:
@@ -147,8 +147,10 @@ class WeightBand(models.Model):
     """
     Represents a weight band which are used by the WeightBasedShipping method.
     """
-    method = models.ForeignKey(WeightBased, related_name='bands', verbose_name=_("Method"))
-    upper_limit = models.FloatField(_("Upper Limit"), help_text=_("""Enter upper limit of this
+    method = models.ForeignKey(WeightBased, related_name='bands',
+                               verbose_name=_("Method"))
+    upper_limit = models.FloatField(_("Upper Limit"),
+                                    help_text=_("""Enter upper limit of this
                                                 weight band in Kg, the lower
                                                 limit will be determine by the
                                                 other weight bands"""))
@@ -157,7 +159,7 @@ class WeightBand(models.Model):
     @property
     def weight_from(self):
         lower_bands = self.method.bands.filter(
-                upper_limit__lt=self.upper_limit).order_by('-upper_limit')
+            upper_limit__lt=self.upper_limit).order_by('-upper_limit')
         if not lower_bands:
             return D('0.00')
         return lower_bands[0].upper_limit

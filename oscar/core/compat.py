@@ -38,10 +38,10 @@ AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 # Two additional settings that are useful in South migrations when
 # specifying the user model in the FakeORM
 try:
-    AUTH_USER_APP_LABEL, AUTH_USER_MODEL_NAME = AUTH_USER_MODEL.split('.')
+    AUTH_USER_APP_LABEL, AUTH_USER_MODEL_NAME = AUTH_USER_MODEL.rsplit('.', 1)
 except ValueError:
-    raise ImproperlyConfigured("AUTH_USER_MODEL must be of the form 'app_label.model_name'")
-
+    raise ImproperlyConfigured("AUTH_USER_MODEL must be of the form"
+                               " 'app_label.model_name'")
 
 def format_html(format_string, *args, **kwargs):
     """
@@ -51,4 +51,3 @@ def format_html(format_string, *args, **kwargs):
     kwargs_safe = dict([(k, conditional_escape(v)) for (k, v) in
                         six.iteritems(kwargs)])
     return mark_safe(format_string.format(*args_safe, **kwargs_safe))
-
