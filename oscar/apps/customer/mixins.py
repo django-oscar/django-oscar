@@ -76,6 +76,3 @@ class RegisterUserMixin(object):
             code, ctx)
         if messages and messages['body']:
             Dispatcher().dispatch_user_messages(user, messages)
-
-
-

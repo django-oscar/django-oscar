@@ -100,7 +100,8 @@ class ProductReviewList(ListView):
 
     def get_queryset(self):
         qs = self.model.approved.filter(product=self.kwargs['product_pk'])
-        if 'sort_by' in self.request.GET and self.request.GET['sort_by'] == 'score':
+        if 'sort_by' in self.request.GET \
+                and self.request.GET['sort_by'] == 'score':
             return qs.order_by('-score')
         return qs.order_by('-date_created')
 

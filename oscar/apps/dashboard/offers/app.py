@@ -18,7 +18,7 @@ class OffersDashboardApplication(Application):
     detail_view = views.OfferDetailView
 
     def get_urls(self):
-        urlpatterns = patterns('',
+        urls = [
             url(r'^$', self.list_view.as_view(), name='offer-list'),
             # Creation
             url(r'^new/name-and-description/$', self.metadata_view.as_view(),
@@ -48,8 +48,8 @@ class OffersDashboardApplication(Application):
             # Stats
             url(r'^(?P<pk>\d+)/$', self.detail_view.as_view(),
                 name='offer-detail'),
-        )
-        return self.post_process_urls(urlpatterns)
+        ]
+        return self.post_process_urls(patterns('', *urls))
 
 
 application = OffersDashboardApplication()

@@ -7,10 +7,10 @@ from oscar.apps.promotions.conf import PROMOTION_CLASSES
 from oscar.forms.fields import ExtendedURLField
 from oscar.core.loading import get_classes, get_class
 
-HandPickedProductList, RawHTML, SingleProduct, PagePromotion, OrderedProduct = get_classes(
-    'promotions.models',
-    ['HandPickedProductList', 'RawHTML', 'SingleProduct', 'PagePromotion',
-     'OrderedProduct'])
+HandPickedProductList, RawHTML, SingleProduct, PagePromotion, OrderedProduct \
+    = get_classes('promotions.models',
+                  ['HandPickedProductList', 'RawHTML', 'SingleProduct',
+                   'PagePromotion', 'OrderedProduct'])
 ProductSelect = get_class('dashboard.catalogue.widgets', 'ProductSelect')
 
 
@@ -31,9 +31,7 @@ class RawHTMLForm(forms.ModelForm):
 class SingleProductForm(forms.ModelForm):
     class Meta:
         model = SingleProduct
-        widgets = {
-            'product': ProductSelect,
-            }
+        widgets = {'product': ProductSelect}
 
 
 class HandPickedProductListForm(forms.ModelForm):
@@ -78,5 +76,3 @@ class PagePromotionForm(forms.ModelForm):
             page_url += '/'
 
         return page_url
-
-

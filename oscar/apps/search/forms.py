@@ -29,8 +29,9 @@ class SearchForm(FacetedSearchForm):
         # We replace the 'search' method from FacetedSearchForm, so that we can
         # handle range queries
 
-        # Note, we call super on a parent class
-        sqs = super(SearchForm, self).search()
+        # Note, we call super on a parent class as the default faceted view
+        # escapes everything (which doesn't work for price range queries
+        sqs = super(FacetedSearchForm, self).search()
 
         # We need to process each facet to ensure that the field name and the
         # value are quoted correctly and separately:

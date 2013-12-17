@@ -3,7 +3,7 @@ from django.conf import settings
 
 from haystack.query import SearchQuerySet
 from haystack.views import search_view_factory
-from oscar.apps.search import views, forms
+from oscar.apps.search import views
 from oscar.core.application import Application
 from oscar.core.loading import get_class
 

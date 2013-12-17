@@ -16,7 +16,8 @@ class BenefitAdmin(admin.ModelAdmin):
 
 
 class ConditionalOfferAdmin(admin.ModelAdmin):
-    list_display = ('name', 'offer_type', 'start_datetime', 'end_datetime', 'condition', 'benefit', 'total_discount')
+    list_display = ('name', 'offer_type', 'start_datetime', 'end_datetime',
+                    'condition', 'benefit', 'total_discount')
     list_filter = ('offer_type',)
     readonly_fields = ('total_discount', 'num_orders')
     fieldsets = (

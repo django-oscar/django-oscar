@@ -44,7 +44,7 @@
     {% endblock %}
 
     {% if form.is_bound %}
-        {% if users.count %}
+        {% if users %}
             {% with partner_users=partner.users.all %}
                 <table class="table table-striped table-bordered">
                     {% block users_header %}

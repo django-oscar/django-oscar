@@ -82,8 +82,8 @@ class EventHandler(object):
             # 'is_shipping_event_permitted' and enforce the correct order of
             # shipping events.
             if not line.is_shipping_event_permitted(event_type, qty):
-                msg = _("The selected quantity for line #%(line_id)s is too large") % {
-                    'line_id': line.id}
+                msg = _("The selected quantity for line #%(line_id)s is too"
+                        " large") % {'line_id': line.id}
                 errors.append(msg)
         if errors:
             raise exceptions.InvalidShippingEvent(", ".join(errors))
@@ -93,8 +93,8 @@ class EventHandler(object):
         errors = []
         for line, qty in zip(lines, line_quantities):
             if not line.is_payment_event_permitted(event_type, qty):
-                msg = _("The selected quantity for line #%(line_id)s is too large") % {
-                    'line_id': line.id}
+                msg = _("The selected quantity for line #%(line_id)s is too"
+                        " large") % {'line_id': line.id}
                 errors.append(msg)
         if errors:
             raise exceptions.InvalidPaymentEvent(", ".join(errors))

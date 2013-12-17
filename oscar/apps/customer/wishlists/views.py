@@ -6,7 +6,8 @@ from django.core.urlresolvers import reverse
 from django.db.models import get_model
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View, FormView
+from django.views.generic import (ListView, CreateView, UpdateView, DeleteView,
+                                  View, FormView)
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.customer.mixins import PageTitleMixin
@@ -41,7 +42,8 @@ class WishListDetailView(PageTitleMixin, FormView):
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_wishlist_or_404(kwargs['key'], request.user)
-        return super(WishListDetailView, self).dispatch(request, *args, **kwargs)
+        return super(WishListDetailView, self).dispatch(request, *args,
+                                                        **kwargs)
 
     def get_wishlist_or_404(self, key, user):
         wishlist = get_object_or_404(WishList, key=key)
@@ -74,7 +76,7 @@ class WishListDetailView(PageTitleMixin, FormView):
                 subform.save()
         messages.success(self.request, _('Quantities updated.'))
         return HttpResponseRedirect(reverse('customer:wishlists-detail',
-                                            kwargs= {'key': self.object.key}))
+                                            kwargs={'key': self.object.key}))
 
 
 class WishListCreateView(PageTitleMixin, CreateView):
@@ -117,8 +119,8 @@ class WishListCreateView(PageTitleMixin, CreateView):
         if self.product:
             wishlist.add(self.product)
             msg = _("Your wishlist has been created and '%(name)s "
-                    "has been added") % {
-                        'name': self.product.get_title()}
+                    "has been added") \
+                % {'name': self.product.get_title()}
         else:
             msg = _("Your wishlist has been created")
         messages.success(self.request, msg)
@@ -169,7 +171,8 @@ class WishListUpdateView(PageTitleMixin, UpdateView):
 
     def get_success_url(self):
         messages.success(
-            self.request, _("Your '%s' wishlist has been updated") % self.object.name)
+            self.request, _("Your '%s' wishlist has been updated")
+            % self.object.name)
         return reverse('customer:wishlists-list')
 
 
@@ -187,7 +190,8 @@ class WishListDeleteView(PageTitleMixin, DeleteView):
 
     def get_success_url(self):
         messages.success(
-            self.request, _("Your '%s' wish list has been deleted") % self.object.name)
+            self.request, _("Your '%s' wish list has been deleted")
+            % self.object.name)
         return reverse('customer:wishlists-list')
 
 

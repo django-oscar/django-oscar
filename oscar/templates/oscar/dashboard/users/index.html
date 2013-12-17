@@ -38,7 +38,7 @@
     </div>
 
     {% block users_list %}
-        {% if user_list.count %}
+        {% if user_list %}
             <form action="." method="post" class="form-inline">
                 {% csrf_token %}
                 <table class="table table-striped table-bordered table-hover">

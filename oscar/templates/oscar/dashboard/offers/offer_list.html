@@ -43,7 +43,7 @@
                     <a href="{% url 'dashboard:offer-list' %}" >{% trans "Reset" %}</a>
                 {% endif %}
             </caption>
-            {% if offers.count %}
+            {% if offers %}
                 <tr>
                     <th>{% anchor 'name' _('Offer name') %}</th>
                     <th>{% anchor 'start_date' _('Start date') %}</th>

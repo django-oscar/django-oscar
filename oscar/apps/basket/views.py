@@ -17,10 +17,11 @@ from oscar.apps.basket.signals import basket_addition, voucher_addition
 from oscar.core.loading import get_class, get_classes
 Applicator = get_class('offer.utils', 'Applicator')
 (BasketLineFormSet, BasketLineForm, AddToBasketForm, BasketVoucherForm,
- SavedLineFormSet, SavedLineForm, ProductSelectionForm) = get_classes(
-     'basket.forms', ('BasketLineFormSet', 'BasketLineForm', 'AddToBasketForm',
-                      'BasketVoucherForm', 'SavedLineFormSet',
-                      'SavedLineForm', 'ProductSelectionForm'))
+ SavedLineFormSet, SavedLineForm, ProductSelectionForm) \
+    = get_classes('basket.forms', ('BasketLineFormSet', 'BasketLineForm',
+                                   'AddToBasketForm', 'BasketVoucherForm',
+                                   'SavedLineFormSet', 'SavedLineForm',
+                                   'ProductSelectionForm'))
 Repository = get_class('shipping.repository', ('Repository'))
 OrderTotalCalculator = get_class(
     'checkout.calculators', 'OrderTotalCalculator')
@@ -124,7 +125,8 @@ class BasketView(ModelFormSetView):
         applied_offers = basket.offer_applications.offers.values()
         msgs = []
         for offer in offers:
-            if offer.is_condition_partially_satisfied(basket) and offer not in applied_offers:
+            if offer.is_condition_partially_satisfied(basket) \
+                    and offer not in applied_offers:
                 data = {
                     'message': offer.get_upsell_message(basket),
                     'offer': offer}

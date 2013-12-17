@@ -25,7 +25,8 @@ User = get_user_model()
 
 
 def generate_username():
-    uname = ''.join([random.choice(string.letters + string.digits + '_') for i in range(30)])
+    uname = ''.join([random.choice(string.letters + string.digits + '_')
+                     for i in range(30)])
     try:
         User.objects.get(username=uname)
         return generate_username()
@@ -93,7 +94,8 @@ class EmailAuthenticationForm(AuthenticationForm):
 
 
 class CommonPasswordValidator(validators.BaseValidator):
-    # See http://www.smartplanet.com/blog/business-brains/top-20-most-common-passwords-of-all-time-revealed-8216123456-8216princess-8216qwerty/4519
+    # See
+    # http://www.smartplanet.com/blog/business-brains/top-20-most-common-passwords-of-all-time-revealed-8216123456-8216princess-8216qwerty/4519  # noqa
     forbidden_passwords = [
         'password',
         '1234',

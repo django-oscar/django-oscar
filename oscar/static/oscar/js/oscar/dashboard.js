@@ -197,14 +197,12 @@ var oscar = (function(o, $) {
                 });
             }
         },
-        promotions: {
-            init: function() {
-                $('.promotion_list').sortable({
-                    handle: '.btn-handle',
-                    stop: o.dashboard.promotions.saveOrder
-                });
+        reordering: (function() {
+            var options = {
+                handle: '.btn-handle',
+                submit_url: '#'
             },
-            saveOrder: function(event, ui) {
+            saveOrder = function(event, ui) {
                 // Get the csrf token, otherwise django will not accept the
                 // POST request.
                 var serial = $(this).sortable("serialize"),
@@ -214,13 +212,25 @@ var oscar = (function(o, $) {
                     type: 'POST',
                     data: serial,
                     dataType: "json",
-                    url: '#',
+                    url: options.submit_url,
                     beforeSend: function(xhr, settings) {
                         xhr.setRequestHeader("X-CSRFToken", csrf);
                     }
                 });
-            }
-        },
+            },
+            init = function(user_options) {
+                options = $.extend(options, user_options);
+                $(options.wrapper).sortable({
+                    handle: options.handle,
+                    stop: saveOrder
+                });
+            };
+
+            return {
+                init: init,
+                saveOrder: saveOrder
+            };
+        }()),
         search: {
             init: function() {
                 var searchForm = $(".orders_search"),

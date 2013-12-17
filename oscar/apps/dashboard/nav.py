@@ -58,9 +58,9 @@ class Node(object):
         # We can't assume that the view has the same parent module as the app,
         # as either the app or view can be customised. So we turn the module
         # string (e.g. 'oscar.apps.dashboard.catalogue.views') into an app
-        # label that can be loaded by get_class (e.g. 'dashboard.catalogue.app),
-        # which then essentially checks INSTALLED_APPS for the right module to
-        # load
+        # label that can be loaded by get_class (e.g.
+        # 'dashboard.catalogue.app), which then essentially checks
+        # INSTALLED_APPS for the right module to load
         match = re.search('(dashboard[\w\.]*)\.views$', view_module)
         if not match:
             raise exception
@@ -68,7 +68,7 @@ class Node(object):
 
         try:
             app_instance = get_class(app_label_str, 'application')
-        except (ImportError, AppNotFoundError):
+        except AppNotFoundError:
             raise exception
 
         # handle name-spaced view names
@@ -90,7 +90,8 @@ class Node(object):
             return None
         node = Node(
             label=self.label, url_name=self.url_name, url_args=self.url_args,
-            url_kwargs=self.url_kwargs, access_fn=self.access_fn, icon=self.icon
+            url_kwargs=self.url_kwargs, access_fn=self.access_fn,
+            icon=self.icon
         )
         for child in self.children:
             if child.is_visible(user):

@@ -1,6 +1,9 @@
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
+from django.utils import six
+from django.utils.html import conditional_escape
+from django.utils.safestring import mark_safe
 
 
 def get_user_model():
@@ -35,6 +38,17 @@ AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 # Two additional settings that are useful in South migrations when
 # specifying the user model in the FakeORM
 try:
-    AUTH_USER_APP_LABEL, AUTH_USER_MODEL_NAME = AUTH_USER_MODEL.split('.')
+    AUTH_USER_APP_LABEL, AUTH_USER_MODEL_NAME = AUTH_USER_MODEL.rsplit('.', 1)
 except ValueError:
-    raise ImproperlyConfigured("AUTH_USER_MODEL must be of the form 'app_label.model_name'")
+    raise ImproperlyConfigured("AUTH_USER_MODEL must be of the form"
+                               " 'app_label.model_name'")
+
+
+def format_html(format_string, *args, **kwargs):
+    """
+    Backport of format_html from Django 1.5+ to support Django 1.4
+    """
+    args_safe = map(conditional_escape, args)
+    kwargs_safe = dict([(k, conditional_escape(v)) for (k, v) in
+                        six.iteritems(kwargs)])
+    return mark_safe(format_string.format(*args_safe, **kwargs_safe))

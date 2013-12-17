@@ -4,7 +4,7 @@ from django.db.models import get_model
 from django.forms.models import modelformset_factory, BaseModelFormSet
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.templatetags.currency_filters import currency
+from oscar.forms import widgets
 
 Line = get_model('basket', 'line')
 Basket = get_model('basket', 'basket')
@@ -31,8 +31,9 @@ class BasketLineForm(forms.ModelForm):
             raise forms.ValidationError(reason)
 
     def check_permission(self, qty):
-        is_available, reason = self.instance.stockinfo.availability.is_purchase_permitted(
-            quantity=qty)
+        is_available, reason \
+            = self.instance.purchase_info.availability.is_purchase_permitted(
+                quantity=qty)
         if not is_available:
             raise forms.ValidationError(reason)
 
@@ -83,7 +84,7 @@ class SavedLineForm(forms.ModelForm):
         else:
             desired_qty = self.instance.quantity + line.quantity
 
-        result = self.strategy.fetch(self.instance.product)
+        result = self.strategy.fetch_for_product(self.instance.product)
         is_available, reason = result.availability.is_purchase_permitted(
             quantity=desired_qty)
         if not is_available:
@@ -173,7 +174,7 @@ class AddToBasketForm(forms.Form):
         # basket.
         current_qty = self.basket.product_quantity(product)
         desired_qty = current_qty + self.cleaned_data.get('quantity', 1)
-        result = self.request.strategy.fetch(product)
+        result = self.request.strategy.fetch_for_product(product)
         is_permitted, reason = result.availability.is_purchase_permitted(
             desired_qty)
         if not is_permitted:
@@ -191,10 +192,9 @@ class AddToBasketForm(forms.Form):
                 raise forms.ValidationError(
                     _("Due to technical limitations we are not able to ship"
                       " more than %(threshold)d items in one order. Your"
-                      " basket currently has %(basket)d items.") % {
-                          'threshold': basket_threshold,
-                          'basket': total_basket_quantity,
-                      })
+                      " basket currently has %(basket)d items.")
+                    % {'threshold': basket_threshold,
+                       'basket': total_basket_quantity})
         return qty
 
     def _create_group_product_fields(self, item):
@@ -205,18 +205,21 @@ class AddToBasketForm(forms.Form):
         Currently requires that a stock record exists for the variant
         """
         choices = []
+        disabled_values = []
         for variant in item.variants.all():
-            if variant.has_stockrecord:
-                title = variant.get_title()
-                attr_summary = variant.attribute_summary
-                price = currency(variant.stockrecord.price_incl_tax)
-                if attr_summary:
-                    summary = u"%s (%s) - %s" % (title, attr_summary, price)
-                else:
-                    summary = u"%s - %s" % (title, price)
-                choices.append((variant.id, summary))
-                self.fields['product_id'] = forms.ChoiceField(
-                    choices=tuple(choices), label=_("Variant"))
+            attr_summary = variant.attribute_summary
+            if attr_summary:
+                summary = attr_summary
+            else:
+                summary = variant.get_title()
+            info = self.request.strategy.fetch(variant)
+            if not info.availability.is_available_to_buy:
+                disabled_values.append(variant.id)
+            choices.append((variant.id, summary))
+
+        self.fields['product_id'] = forms.ChoiceField(
+            choices=tuple(choices), label=_("Variant"),
+            widget=widgets.AdvancedSelect(disabled_values=disabled_values))
 
     def _create_product_fields(self, item):
         """

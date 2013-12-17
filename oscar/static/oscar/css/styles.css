@@ -7887,7 +7887,8 @@ a:hover .thumbnail {
   float: none;
   width: auto;
 }
-input[type="text"][id*="quantity"] {
+input[type="text"][id*="quantity"],
+input[type="number"][id*="quantity"] {
   width: 30px;
 }
 .checkout-quantity input {

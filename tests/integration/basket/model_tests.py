@@ -17,7 +17,7 @@ class TestAddingAProductToABasket(TestCase):
         self.record = factories.create_stockrecord(
             currency='GBP',
             product=self.product, price_excl_tax=D('10.00'))
-        self.stockinfo = factories.create_stockinfo(self.record)
+        self.purchase_info = factories.create_purchase_info(self.record)
         self.basket.add(self.product)
 
     def test_creates_a_line(self):
@@ -25,8 +25,8 @@ class TestAddingAProductToABasket(TestCase):
 
     def test_sets_line_prices(self):
         line = self.basket.lines.all()[0]
-        self.assertEqual(line.price_incl_tax, self.stockinfo.price.incl_tax)
-        self.assertEqual(line.price_excl_tax, self.stockinfo.price.excl_tax)
+        self.assertEqual(line.price_incl_tax, self.purchase_info.price.incl_tax)
+        self.assertEqual(line.price_excl_tax, self.purchase_info.price.excl_tax)
 
     def test_means_another_currency_product_cannot_be_added(self):
         product = factories.create_product()
@@ -44,7 +44,7 @@ class TestANonEmptyBasket(TestCase):
         self.product = factories.create_product()
         self.record = factories.create_stockrecord(
             self.product, price_excl_tax=D('10.00'))
-        self.stockinfo = factories.create_stockinfo(self.record)
+        self.purchase_info = factories.create_purchase_info(self.record)
         self.basket.add(self.product, 10)
 
     def test_can_be_flushed(self):
@@ -92,7 +92,7 @@ class TestMergingTwoBaskets(TestCase):
         self.product = factories.create_product()
         self.record = factories.create_stockrecord(
             self.product, price_excl_tax=D('10.00'))
-        self.stockinfo = factories.create_stockinfo(self.record)
+        self.purchase_info = factories.create_purchase_info(self.record)
 
         self.main_basket = Basket()
         self.main_basket.strategy = strategy.Default()
