@@ -36,8 +36,10 @@ def send_alert_confirmation(alert):
         'alert': alert,
         'site': Site.objects.get_current(),
     })
-    subject_tpl = loader.get_template('customer/alerts/emails/confirmation_subject.txt')
-    body_tpl = loader.get_template('customer/alerts/emails/confirmation_body.txt')
+    subject_tpl = loader.get_template('customer/alerts/emails/'
+                                      'confirmation_subject.txt')
+    body_tpl = loader.get_template('customer/alerts/emails/'
+                                   'confirmation_body.txt')
     mail.send_mail(
         subject_tpl.render(ctx).strip(),
         body_tpl.render(ctx),
@@ -74,8 +76,10 @@ def send_product_alerts(product):
 
     # Load templates
     message_tpl = loader.get_template('customer/alerts/message.html')
-    email_subject_tpl = loader.get_template('customer/alerts/emails/alert_subject.txt')
-    email_body_tpl = loader.get_template('customer/alerts/emails/alert_body.txt')
+    email_subject_tpl = loader.get_template('customer/alerts/emails/'
+                                            'alert_subject.txt')
+    email_body_tpl = loader.get_template('customer/alerts/emails/'
+                                         'alert_body.txt')
 
     emails = []
     num_notifications = 0
@@ -83,7 +87,7 @@ def send_product_alerts(product):
     for alert in alerts:
         # Check if the product is available to this user
         strategy = selector.strategy(user=alert.user)
-        data = strategy.fetch(product)
+        data = strategy.fetch_for_product(product)
         if not data.availability.is_available_to_buy:
             continue
 
@@ -116,4 +120,5 @@ def send_product_alerts(product):
         connection.send_messages(emails)
         connection.close()
 
-    logger.info("Sent %d notifications and %d emails", num_notifications, len(emails))
+    logger.info("Sent %d notifications and %d emails", num_notifications,
+                len(emails))

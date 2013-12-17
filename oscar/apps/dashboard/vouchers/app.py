@@ -15,7 +15,7 @@ class VoucherDashboardApplication(Application):
     stats_view = views.VoucherStatsView
 
     def get_urls(self):
-        urlpatterns = patterns('',
+        urls = [
             url(r'^$', self.list_view.as_view(), name='voucher-list'),
             url(r'^create/$', self.create_view.as_view(),
                 name='voucher-create'),
@@ -25,8 +25,8 @@ class VoucherDashboardApplication(Application):
                 name='voucher-delete'),
             url(r'^stats/(?P<pk>\d+)/$', self.stats_view.as_view(),
                 name='voucher-stats'),
-        )
-        return self.post_process_urls(urlpatterns)
+        ]
+        return self.post_process_urls(patterns('', *urls))
 
 
 application = VoucherDashboardApplication()

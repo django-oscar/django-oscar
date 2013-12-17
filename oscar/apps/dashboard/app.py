@@ -26,7 +26,7 @@ class DashboardApplication(Application):
     comms_app = get_class('dashboard.communications.app', 'application')
 
     def get_urls(self):
-        urlpatterns = patterns('',
+        urls = [
             url(r'^$', self.index_view.as_view(), name='index'),
             url(r'^catalogue/', include(self.catalogue_app.urls)),
             url(r'^reports/', include(self.reports_app.urls)),
@@ -40,8 +40,8 @@ class DashboardApplication(Application):
             url(r'^reviews/', include(self.reviews_app.urls)),
             url(r'^vouchers/', include(self.vouchers_app.urls)),
             url(r'^comms/', include(self.comms_app.urls)),
-        )
-        return self.post_process_urls(urlpatterns)
+        ]
+        return self.post_process_urls(patterns('', *urls))
 
 
 application = DashboardApplication()

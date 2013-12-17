@@ -29,8 +29,9 @@ class VoucherListView(ListView):
     def get_queryset(self):
         qs = self.model.objects.all().order_by('-date_created')
         qs = sort_queryset(qs, self.request,
-            ['num_basket_additions', 'num_orders', 'date_created'],
-            '-date_created')
+                           ['num_basket_additions', 'num_orders',
+                            'date_created'],
+                           '-date_created')
         self.description_ctx = {'main_filter': _('All vouchers'),
                                 'name_filter': '',
                                 'code_filter': ''}
@@ -47,10 +48,12 @@ class VoucherListView(ListView):
         data = self.form.cleaned_data
         if data['name']:
             qs = qs.filter(name__icontains=data['name'])
-            self.description_ctx['name_filter'] = _("with name matching '%s'") % data['name']
+            self.description_ctx['name_filter'] \
+                = _("with name matching '%s'") % data['name']
         if data['code']:
             qs = qs.filter(code=data['code'])
-            self.description_ctx['code_filter'] = _("with code '%s'") % data['code']
+            self.description_ctx['code_filter'] \
+                = _("with code '%s'") % data['code']
         if data['is_active']:
             today = datetime.date.today()
             qs = qs.filter(start_date__lte=today, end_date__gte=today)
@@ -116,7 +119,9 @@ class VoucherStatsView(DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super(VoucherStatsView, self).get_context_data(**kwargs)
-        ctx['discounts'] = OrderDiscount.objects.filter(voucher_id=self.object.id).order_by('-order__date_placed')
+        discounts = OrderDiscount.objects.filter(voucher_id=self.object.id)
+        discounts = discounts.order_by('-order__date_placed')
+        ctx['discounts'] = discounts
         return ctx
 
 

@@ -18,7 +18,8 @@ ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductImage = get_model('catalogue', 'ProductImage')
 ProductRecommendation = get_model('catalogue', 'ProductRecommendation')
 ProductSelect = get_class('dashboard.catalogue.widgets', 'ProductSelect')
-ProductSelectMultiple = get_class('dashboard.catalogue.widgets', 'ProductSelectMultiple')
+ProductSelectMultiple = get_class('dashboard.catalogue.widgets',
+                                  'ProductSelectMultiple')
 
 
 class BaseCategoryForm(MoveNodeForm):
@@ -47,7 +48,9 @@ class BaseCategoryForm(MoveNodeForm):
             parent = None
 
         # build full slug
-        slug_prefix = (parent.slug + Category._slug_separator) if parent else ''
+        slug_prefix = ''
+        if parent:
+            slug_prefix = (parent.slug + Category._slug_separator)
         slug = '%s%s' % (slug_prefix, slugify(name))
 
         # check if slug is conflicting
@@ -141,7 +144,10 @@ class StockRecordFormSet(BaseStockRecordFormSet):
                                         for form in self.forms])
             user_partners = set(self.user.partners.all())
             if not user_partners & stockrecord_partners:
-                raise ValidationError(_("At least one stock record must be set to a partner that you're associated with."))
+                raise ValidationError(_("At least one stock record must be set"
+                                        " to a partner that you're associated"
+                                        " with."))
+
 
 def _attr_text_field(attribute):
     return forms.CharField(label=attribute.name,
@@ -201,6 +207,16 @@ def _attr_numeric_field(attribute):
                             required=attribute.required)
 
 
+def _attr_file_field(attribute):
+    return forms.FileField(
+        label=attribute.name, required=attribute.required)
+
+
+def _attr_image_field(attribute):
+    return forms.ImageField(
+        label=attribute.name, required=attribute.required)
+
+
 class ProductForm(forms.ModelForm):
 
     FIELD_FACTORIES = {
@@ -214,6 +230,8 @@ class ProductForm(forms.ModelForm):
         "multi_option": _attr_multi_option_field,
         "entity": _attr_entity_field,
         "numeric": _attr_numeric_field,
+        "file": _attr_file_field,
+        "image": _attr_image_field,
     }
 
     class Meta:
@@ -258,8 +276,8 @@ class ProductForm(forms.ModelForm):
 
     def add_attribute_fields(self):
         for attribute in self.product_class.attributes.all():
-            self.fields['attr_%s' % attribute.code] = \
-                    self.get_attribute_field(attribute)
+            self.fields['attr_%s' % attribute.code] \
+                = self.get_attribute_field(attribute)
 
     def get_attribute_field(self, attribute):
         return self.FIELD_FACTORIES[attribute.type](attribute)
@@ -334,7 +352,7 @@ class BaseProductCategoryFormSet(BaseInlineFormSet):
             form = self.forms[i]
             if (hasattr(form, 'cleaned_data')
                     and form.cleaned_data.get('category', None)
-                    and form.cleaned_data.get('DELETE', False) != True):
+                    and not form.cleaned_data.get('DELETE', False)):
                 num_categories += 1
         return num_categories
 

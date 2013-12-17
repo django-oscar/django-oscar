@@ -33,8 +33,8 @@ class UpdateView(generic.UpdateView):
 
     def form_invalid(self, form):
         messages.error(self.request,
-            _("The submitted form was not valid, please correct "
-              "the errors and resubmit"))
+                       _("The submitted form was not valid, please correct "
+                         "the errors and resubmit"))
         return super(UpdateView, self).form_invalid(form)
 
     def form_valid(self, form):

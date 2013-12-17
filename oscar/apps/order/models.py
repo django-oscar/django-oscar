@@ -1,5 +1,6 @@
-from oscar.apps.order.abstract_models import *
-from oscar.apps.address.abstract_models import AbstractShippingAddress, AbstractBillingAddress
+from oscar.apps.order.abstract_models import *  # noqa
+from oscar.apps.address.abstract_models import (AbstractShippingAddress,
+                                                AbstractBillingAddress)
 
 
 class Order(AbstractOrder):
@@ -20,7 +21,7 @@ class ShippingAddress(AbstractShippingAddress):
 
 class BillingAddress(AbstractBillingAddress):
     pass
-    
+
 
 class Line(AbstractLine):
     pass
@@ -52,6 +53,3 @@ class PaymentEventType(AbstractPaymentEventType):
 
 class OrderDiscount(AbstractOrderDiscount):
     pass
-
-
-    

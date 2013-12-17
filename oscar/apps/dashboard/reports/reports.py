@@ -20,14 +20,15 @@ class ReportGenerator(object):
             self.start_date = kwargs['start_date']
             self.end_date = kwargs['end_date']
 
-        self.formatter = self.formatters['%s_formatter' % kwargs['formatter']]()
+        formatter_name = '%s_formatter' % kwargs['formatter']
+        self.formatter = self.formatters[formatter_name]()
 
     def report_description(self):
-        return _('%(report_filter)s between %(start_date)s and %(end_date)s') % {
-            'report_filter': self.description,
-            'start_date': self.start_date,
-            'end_date': self.end_date,
-        }
+        return _('%(report_filter)s between %(start_date)s and %(end_date)s') \
+            % {'report_filter': self.description,
+               'start_date': self.start_date,
+               'end_date': self.end_date,
+               }
 
     def generate(self, response):
         pass
@@ -67,7 +68,8 @@ class ReportCSVFormatter(ReportFormatter):
 
     def generate_response(self, objects, **kwargs):
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=%s' % self.filename(**kwargs)
+        response['Content-Disposition'] = 'attachment; filename=%s' \
+            % self.filename(**kwargs)
         self.generate_csv(response, objects)
         return response
 

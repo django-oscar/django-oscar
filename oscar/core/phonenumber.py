@@ -5,10 +5,12 @@ from django.utils.translation import ugettext_lazy as _
 
 import phonenumbers
 
+
 class PhoneNumber(phonenumbers.phonenumber.PhoneNumber):
     """
-    A extended version of phonenumbers.phonenumber.PhoneNumber that provides some neat and more pythonic, easy
-    to access methods. This makes using a PhoneNumber instance much easier, especially in templates and such.
+    A extended version of phonenumbers.phonenumber.PhoneNumber that provides
+    some neat and more pythonic, easy to access methods. This makes using a
+    PhoneNumber instance much easier, especially in templates and such.
     """
     format_map = {
         'E164': phonenumbers.PhoneNumberFormat.E164,
@@ -77,23 +79,25 @@ class PhoneNumber(phonenumbers.phonenumber.PhoneNumber):
         else:
             return super(PhoneNumber, self).__eq__(other)
 
+
 def to_python(value):
     if value in validators.EMPTY_VALUES:  # None or ''
         phone_number = None
     elif value and isinstance(value, basestring):
         try:
             phone_number = PhoneNumber.from_string(phone_number=value)
-        except phonenumbers.phonenumberutil.NumberParseException, e:
+        except phonenumbers.phonenumberutil.NumberParseException:
             # the string provided is not a valid PhoneNumber.
             phone_number = PhoneNumber(raw_input=value)
     elif isinstance(value, PhoneNumber):
         phone_number = value
     return phone_number
 
+
 class PhoneNumberDescriptor(object):
     """
-    The descriptor for the phone number attribute on the model instance. Returns a PhoneNumber when accessed so you can
-    do stuff like::
+    The descriptor for the phone number attribute on the model instance.
+    Returns a PhoneNumber when accessed so you can do stuff like::
 
         >>> instance.phone_number.as_international
 
@@ -116,6 +120,7 @@ class PhoneNumberDescriptor(object):
 
     def __set__(self, instance, value):
         instance.__dict__[self.field.name] = to_python(value)
+
 
 def validate_international_phonenumber(value):
     phone_number = to_python(value)

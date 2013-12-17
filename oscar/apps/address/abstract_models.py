@@ -268,8 +268,8 @@ class AbstractAddress(models.Model):
             country_code = self.country.iso_3166_1_a2
             regex = self.POSTCODES_REGEX.get(country_code, None)
             if regex:
-                msg = _("Addresses in %(country)s require a valid postcode") % {
-                        'country': self.country}
+                msg = _("Addresses in %(country)s require a valid postcode") \
+                    % {'country': self.country}
                 raise exceptions.ValidationError(msg)
 
         if self.postcode and self.country_id:
@@ -281,9 +281,9 @@ class AbstractAddress(models.Model):
             # Validate postcode against regext for the country if available
             if regex and not re.match(regex, postcode):
                 msg = _("The postcode '%(postcode)s' is not valid "
-                        "for %(country)s") % {
-                            'postcode': self.postcode,
-                            'country': self.country}
+                        "for %(country)s") \
+                    % {'postcode': self.postcode,
+                       'country': self.country}
                 raise exceptions.ValidationError(
                     {'postcode': msg})
 
@@ -497,15 +497,13 @@ class AbstractUserAddress(AbstractShippingAddress):
 
     def _ensure_defaults_integrity(self):
         if self.is_default_for_shipping:
-            self.__class__._default_manager.filter(
-                user=self.user,
-                is_default_for_shipping=True).update(
-                    is_default_for_shipping=False)
+            self.__class__._default_manager\
+                .filter(user=self.user, is_default_for_shipping=True)\
+                .update(is_default_for_shipping=False)
         if self.is_default_for_billing:
-            self.__class__._default_manager.filter(
-                user=self.user,
-                is_default_for_billing=True).update(
-                    is_default_for_billing=False)
+            self.__class__._default_manager\
+                .filter(user=self.user, is_default_for_billing=True)\
+                .update(is_default_for_billing=False)
 
     class Meta:
         abstract = True
@@ -523,7 +521,8 @@ class AbstractUserAddress(AbstractShippingAddress):
             qs = qs.exclude(id=self.id)
         if qs.exists():
             raise exceptions.ValidationError({
-                '__all__': [_("This address is already in your address book")]})
+                '__all__': [_("This address is already in your address"
+                              " book")]})
 
 
 class AbstractBillingAddress(AbstractAddress):

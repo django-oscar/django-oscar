@@ -284,8 +284,8 @@ class AbstractStockRecord(models.Model):
             "removed in 0.7.  Use a strategy class to determine availability "
             "instead"), DeprecationWarning)
         return get_partner_wrapper(
-            self.partner_id).is_purchase_permitted(
-                self, user, quantity, product)
+            self.partner_id).is_purchase_permitted(self, user, quantity,
+                                                   product)
 
     @property
     def availability_code(self):
@@ -399,7 +399,8 @@ class AbstractStockAlert(models.Model):
     close.alters_data = True
 
     def __unicode__(self):
-        return _('<stockalert for "%(stock)s" status %(status)s>') % {'stock': self.stockrecord, 'status': self.status}
+        return _('<stockalert for "%(stock)s" status %(status)s>') \
+            % {'stock': self.stockrecord, 'status': self.status}
 
     class Meta:
         abstract = True

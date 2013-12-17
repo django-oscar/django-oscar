@@ -7,15 +7,13 @@ class ProductManager(models.Manager):
         """
         Return ``QuerySet`` with related content pre-loaded.
         """
-        return self.get_query_set().select_related(
-            'product_class',
-            ).prefetch_related(
-            'variants',
-            'product_options',
-            'product_class__options',
-            'stockrecords',
-            'images',
-            ).all()
+        return self.get_query_set().select_related('product_class')\
+            .prefetch_related('variants',
+                              'product_options',
+                              'product_class__options',
+                              'stockrecords',
+                              'images',
+                              ).all()
 
 
 class BrowsableProductManager(ProductManager):

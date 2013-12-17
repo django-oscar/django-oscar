@@ -2,7 +2,7 @@ from django.conf import settings
 from purl import URL
 
 
-def facet_data(request, form, results):
+def facet_data(request, form, results):  # noqa (too complex (10))
     """
     Convert Haystack's facet data into a more useful datastructure that
     templates can use without having to manually construct URLs
@@ -12,8 +12,9 @@ def facet_data(request, form, results):
     facet_counts = results.facet_counts()
 
     # Field facets
+    valid_facets = [f for f in form.selected_facets if ':' in f]
     selected = dict(
-        map(lambda x: x.split(':'), form.selected_facets))
+        map(lambda x: x.split(':', 1), valid_facets))
     for key, facet in settings.OSCAR_SEARCH_FACETS['fields'].items():
         facet_data[key] = {
             'name': facet['name'],

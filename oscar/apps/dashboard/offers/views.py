@@ -21,10 +21,10 @@ Range = get_model('offer', 'Range')
 Product = get_model('catalogue', 'Product')
 OrderDiscount = get_model('order', 'OrderDiscount')
 Benefit = get_model('offer', 'Benefit')
-MetaDataForm, ConditionForm, BenefitForm, RestrictionsForm, OfferSearchForm = get_classes(
-    'dashboard.offers.forms', [
-        'MetaDataForm', 'ConditionForm', 'BenefitForm', 'RestrictionsForm',
-        'OfferSearchForm'])
+MetaDataForm, ConditionForm, BenefitForm, RestrictionsForm, OfferSearchForm \
+    = get_classes('dashboard.offers.forms',
+                  ['MetaDataForm', 'ConditionForm', 'BenefitForm',
+                   'RestrictionsForm', 'OfferSearchForm'])
 OrderDiscountCSVFormatter = get_class(
     'dashboard.offers.reports', 'OrderDiscountCSVFormatter')
 
@@ -39,8 +39,8 @@ class OfferListView(ListView):
         qs = self.model._default_manager.filter(
             offer_type=ConditionalOffer.SITE)
         qs = sort_queryset(qs, self.request,
-                           ['name', 'start_date', 'end_date',
-                           'num_applications', 'total_discount'])
+                           ['name', 'start_datetime', 'end_datetime',
+                            'num_applications', 'total_discount'])
 
         self.description = _("All offers")
 
@@ -91,7 +91,8 @@ class OfferWizardStepView(FormView):
                 request, _("%s step not complete") % (
                     self.previous_view.step_name.title(),))
             return HttpResponseRedirect(self.get_back_url())
-        return super(OfferWizardStepView, self).dispatch(request, *args, **kwargs)
+        return super(OfferWizardStepView, self).dispatch(request, *args,
+                                                         **kwargs)
 
     def is_previous_step_complete(self, request):
         if not self.previous_view:
@@ -153,8 +154,8 @@ class OfferWizardStepView(FormView):
         json_qs = session_data.get(self._key(step_name, is_object=True), None)
         if json_qs:
             # Recreate model instance from passed data
-            deserialised_obj = list(serializers.deserialize('json', json_qs))[0]
-            return deserialised_obj.object
+            deserialised_obj = list(serializers.deserialize('json', json_qs))
+            return deserialised_obj[0].object
 
     def _fetch_session_offer(self):
         """
@@ -224,8 +225,6 @@ class OfferWizardStepView(FormView):
         session_offer = self._fetch_session_offer()
         offer.name = session_offer.name
         offer.description = session_offer.description
-        offer.applies_to_tax_exclusive_prices = \
-            session_offer.applies_to_tax_exclusive_prices
 
         # Working around a strange Django issue where saving the related model
         # in place does not register it correctly and so it has to be saved and
