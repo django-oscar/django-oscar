@@ -17,8 +17,9 @@ from oscar.views.generic import PostActionMixin
 from oscar.apps.customer.utils import get_password_reset_url
 from oscar.core.loading import get_class, get_profile_class, get_classes
 from oscar.core.compat import get_user_model
-from .mixins import PageTitleMixin, RegisterUserMixin
 
+PageTitleMixin, RegisterUserMixin = get_classes(
+    'customer.mixins', ['PageTitleMixin', 'RegisterUserMixin'])
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 EmailAuthenticationForm, EmailUserCreationForm, OrderSearchForm = get_classes(
     'customer.forms', ['EmailAuthenticationForm', 'EmailUserCreationForm',
