@@ -19,16 +19,17 @@
 {% block payment_method %}{% endblock %}
 
 {% block shipping_method %}
-    <div class="basket-title">
-        <div class="row-fluid">
-            <h4 class="span8">{% trans "Method" %}</h4>
-            <h4 class="span3">{% trans "Cost" %}</h4>
+    <div class="basket-title-wrapper hidden-phone">
+        <div class="basket-title-summary">
+            <h4 class="basket-title-method">{% trans "Method" %}</h4>
+            <h4 class="basket-title-cost">{% trans "Cost" %}</h4>
         </div>
     </div>
+
     {% for method in methods %}
-        <div class="basket-items">
-            <div class="row-fluid">
-                <div class="span8">
+        <div class="basket-items-wrapper {% if forloop.last %}basket-items-last{% endif %}">
+            <div class="basket-items-summary">
+                <div class="basket-items-method">
                     <h4>{{ method.name }}</h4>
                     {% if method.description %}
                         <p>{{ method.description|safe }}</p>
@@ -44,14 +45,14 @@
                         </small>
                     {% endif %}
                 </div>
-                <div class="span1">
+                <div class="basket-items-cost">
                     {% if method.is_tax_known %}
                         {{ method.charge_incl_tax|currency:basket.currency }}
                     {% else %}
                         {{ method.charge_excl_tax|currency:basket.currency }}
                     {% endif %}
                 </div>
-                <div class="span3">
+                <div class="basket-items-option">
                     <form method="post" action="{% url 'checkout:shipping-method' %}">
                         {% csrf_token %}
                         <input type="hidden" name="method_code" value="{{ method.code }}" class="btn" />

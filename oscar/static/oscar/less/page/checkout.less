@@ -47,6 +47,13 @@ input[type="text"][id*="quantity"] {
 .basket-title-items {
     .makeFluidCol(6);
 }
+.basket-title-method,
+.basket-items-method {
+    .makeFluidCol(8);
+}
+.basket-title-cost {
+    .makeFluidCol(4);
+}
 .basket-title-quantity,
 .basket-title-date,
 .basket-title-price,
@@ -73,6 +80,12 @@ input[type="text"][id*="quantity"] {
 }
 .basket-items-description {
     .makeFluidCol(4);
+}
+.basket-items-cost {
+    .makeFluidCol(1);
+}
+.basket-items-option {
+    .makeFluidCol(3);
 }
 .basket-items-last {
     margin-bottom:@baseLineHeight;
@@ -136,8 +149,12 @@ input[type="text"][id*="quantity"] {
     text-align: right;
 }
 .checkout-action-multiple {
-    &.btn:first-child {
-        float:left;
+    text-align: right;
+    .btn {
+        float:right;
+        &:first-child {
+            float:left;
+        }
     }
 }
 .checkout-gateway .checkout-action-button {
@@ -161,10 +178,16 @@ input[type="text"][id*="quantity"] {
 
 
 // Choosing a shipping address
-.choose-block {
-    ul {
-        .clearfix();
+.shipping-addresses {
+    
+    .makeFluidRow();
+    margin-left:0;
+    list-style: none;
+
+    li {
+        .makeFluidCol(6);
     }
+    
     .well {
         position:relative;
         min-height:240px;
@@ -196,6 +219,12 @@ input[type="text"][id*="quantity"] {
 // Checkout navigation - uses navbar
 .nav-checkout {
     text-align:center;
+    ul {
+        .makeFluidRow();
+    }
+    li {
+        .makeFluidCol(3);
+    }
     &.navbar .nav {
         margin:0;
     }

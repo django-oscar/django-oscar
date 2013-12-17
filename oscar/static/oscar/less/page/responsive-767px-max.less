@@ -32,6 +32,7 @@
 	[class*="review-"],
 	[class*="basket-items"],
 	[class*="basket-summary-"],
+	.nav-checkout li,
 	.basket-saved [class*="basket-items"],
 	.basket-order [class*="basket-items"],
 	.checkout-action-button,
@@ -142,6 +143,11 @@
 	    width:100%;
 		.box-sizing(border-box);
 	}
+	.checkout-action-multiple {
+	    .btn {
+	        margin:0 0 @baseLineHeight;
+	    }
+	}
 
 
 	// Checkout navigation
@@ -162,6 +168,7 @@
 		.previous {
 			position:relative;
 			z-index: 1;
+			text-align: left;
 		}
 	}
 

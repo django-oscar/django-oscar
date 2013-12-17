@@ -7547,6 +7547,33 @@ body {
   margin-left: 0%;
   *margin-left: -0.10638297872340438%;
 }
+.site-login-wrapper {
+  width: 100%;
+  *zoom: 1;
+}
+.site-login-wrapper:before,
+.site-login-wrapper:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.site-login-wrapper:after {
+  clear: both;
+}
+.site-login,
+.site-register {
+  float: left;
+  width: 48.93617021276595%;
+  *width: 48.88297872340425%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.site-login:first-child,
+.site-register:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
 h1,
 h2,
 h3,
@@ -8270,6 +8297,32 @@ input[type="text"][id*="quantity"] {
   margin-left: 0%;
   *margin-left: -0.10638297872340438%;
 }
+.basket-title-method,
+.basket-items-method {
+  float: left;
+  width: 65.95744680851064%;
+  *width: 65.90425531914893%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-title-method:first-child,
+.basket-items-method:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-title-cost {
+  float: left;
+  width: 31.914893617021278%;
+  *width: 31.861702127659576%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-title-cost:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
 .basket-title-quantity,
 .basket-title-date,
 .basket-title-price,
@@ -8335,6 +8388,30 @@ input[type="text"][id*="quantity"] {
   *margin-left: 2.0212765957446805%;
 }
 .basket-items-description:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-items-cost {
+  float: left;
+  width: 6.382978723404255%;
+  *width: 6.329787234042553%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-items-cost:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.basket-items-option {
+  float: left;
+  width: 23.404255319148934%;
+  *width: 23.351063829787233%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.basket-items-option:first-child {
   margin-left: 0;
   margin-left: 0%;
   *margin-left: -0.10638297872340438%;
@@ -8488,7 +8565,13 @@ input[type="text"][id*="quantity"] {
 .checkout-action-button:after {
   clear: both;
 }
-.checkout-action-multiple.btn:first-child {
+.checkout-action-multiple {
+  text-align: right;
+}
+.checkout-action-multiple .btn {
+  float: right;
+}
+.checkout-action-multiple .btn:first-child {
   float: left;
 }
 .checkout-gateway .checkout-action-button {
@@ -8500,46 +8583,86 @@ input[type="text"][id*="quantity"] {
 .total {
   background-color: #FDF5D9!important;
 }
-.choose-block ul {
+.shipping-addresses {
+  width: 100%;
   *zoom: 1;
+  margin-left: 0;
+  list-style: none;
 }
-.choose-block ul:before,
-.choose-block ul:after {
+.shipping-addresses:before,
+.shipping-addresses:after {
   display: table;
   content: "";
   line-height: 0;
 }
-.choose-block ul:after {
+.shipping-addresses:after {
   clear: both;
 }
-.choose-block .well {
+.shipping-addresses li {
+  float: left;
+  width: 48.93617021276595%;
+  *width: 48.88297872340425%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.shipping-addresses li:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
+}
+.shipping-addresses .well {
   position: relative;
   min-height: 240px;
 }
-.choose-block .well form {
+.shipping-addresses .well form {
   margin-bottom: 0;
 }
-.choose-block address {
+.shipping-addresses address {
   margin-bottom: 0;
 }
-.choose-block address span:first-child {
+.shipping-addresses address span:first-child {
   display: block;
   font-weight: bold;
   margin-bottom: 10px;
 }
-.choose-block .btn-primary,
-.choose-block .btn-success {
+.shipping-addresses .btn-primary,
+.shipping-addresses .btn-success {
   position: absolute;
   bottom: 20px;
   left: 20px;
 }
-.choose-block .btn-remove-address {
+.shipping-addresses .btn-remove-address {
   position: absolute;
   top: 20px;
   right: 20px;
 }
 .nav-checkout {
   text-align: center;
+}
+.nav-checkout ul {
+  width: 100%;
+  *zoom: 1;
+}
+.nav-checkout ul:before,
+.nav-checkout ul:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.nav-checkout ul:after {
+  clear: both;
+}
+.nav-checkout li {
+  float: left;
+  width: 23.404255319148934%;
+  *width: 23.351063829787233%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.0212765957446805%;
+}
+.nav-checkout li:first-child {
+  margin-left: 0;
+  margin-left: 0%;
+  *margin-left: -0.10638297872340438%;
 }
 .nav-checkout.navbar .nav {
   margin: 0;

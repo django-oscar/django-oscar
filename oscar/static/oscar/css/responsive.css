@@ -1107,6 +1107,7 @@
   [class*="review-"],
   [class*="basket-items"],
   [class*="basket-summary-"],
+  .nav-checkout li,
   .basket-saved [class*="basket-items"],
   .basket-order [class*="basket-items"],
   .checkout-action-button,
@@ -1131,6 +1132,7 @@
   [class*="review-"]:first-child,
   [class*="basket-items"]:first-child,
   [class*="basket-summary-"]:first-child,
+  .nav-checkout li:first-child,
   .basket-saved [class*="basket-items"]:first-child,
   .basket-order [class*="basket-items"]:first-child,
   .checkout-action-button:first-child,
@@ -1213,6 +1215,9 @@
     -moz-box-sizing: border-box;
     box-sizing: border-box;
   }
+  .checkout-action-multiple .btn {
+    margin: 0 0 20px;
+  }
   .nav-checkout .previous span,
   .nav-checkout .visited,
   .nav-checkout .disabled {
@@ -1226,5 +1231,6 @@
   .nav-checkout .previous {
     position: relative;
     z-index: 1;
+    text-align: left;
   }
 }
