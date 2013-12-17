@@ -1,6 +1,8 @@
 import warnings
 
 from oscar.core.loading import get_class
+import oscar.core.phonenumber as phonenumber
+from copy import deepcopy
 
 Repository = get_class('shipping.repository', 'Repository')
 
@@ -88,6 +90,10 @@ class CheckoutSessionData(object):
         id
         """
         self._unset('shipping', 'new_address_fields')
+        phone_number = address_fields.get('phone_number')
+        if phone_number and isinstance(phone_number, phonenumber.PhoneNumber):
+            address_fields = deepcopy(address_fields)
+            address_fields['phone_number'] = address_fields['phone_number'].raw_input
         self._set('shipping', 'new_address_fields', address_fields)
 
     def new_shipping_address_fields(self):
