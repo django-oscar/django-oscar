@@ -43,6 +43,7 @@ except ValueError:
     raise ImproperlyConfigured("AUTH_USER_MODEL must be of the form"
                                " 'app_label.model_name'")
 
+
 def format_html(format_string, *args, **kwargs):
     """
     Backport of format_html from Django 1.5+ to support Django 1.4

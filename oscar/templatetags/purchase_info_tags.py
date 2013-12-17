@@ -38,7 +38,8 @@ class StrategyNode(template.Node):
         if product.is_group:
             context[self.name_var] = request.strategy.fetch_for_group(product)
         else:
-            context[self.name_var] = request.strategy.fetch_for_product(product)
+            context[self.name_var] = request.strategy.fetch_for_product(
+                product)
         return ''
 
 
