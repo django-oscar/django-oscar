@@ -48,7 +48,7 @@ class AnonAddToBasketViewTests(TestCase):
         self.assertTrue('oscar_open_basket' in self.response.cookies)
 
     def test_price_is_recorded(self):
-        basket_id = self.response.cookies['oscar_open_basket'].value.split('_')[0]
+        basket_id = self.response.cookies['oscar_open_basket'].value.split(':')[0]
         basket = Basket.objects.get(id=basket_id)
         line = basket.lines.get(product=self.product)
         self.assertEqual(self.product.stockrecord.price_incl_tax, line.price_incl_tax)
