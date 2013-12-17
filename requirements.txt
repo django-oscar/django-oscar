@@ -28,7 +28,7 @@ behave==1.2.3
 nose-django-querycount==0.3
 
 # i18n
-transifex-client>=0.8,<0.9
+transifex-client==0.10
 django-rosetta>=0.7.2
 
 # Misc
