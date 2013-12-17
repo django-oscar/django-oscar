@@ -40,3 +40,64 @@ class TestDefaultStrategy(TestCase):
         info = self.strategy.fetch_for_line(line)
         self.assertFalse(info.availability.is_available_to_buy)
         self.assertIsNone(info.price.incl_tax)
+
+
+class TestDefaultStrategyForParentProductWhoseVariantsHaveNoStockRecords(TestCase):
+
+    def setUp(self):
+        self.strategy = strategy.Default()
+        parent = factories.create_product()
+        for x in range(3):
+            factories.create_product(parent=parent)
+        self.info = self.strategy.fetch_for_group(parent)
+
+    def test_specifies_product_is_unavailable(self):
+        self.assertFalse(self.info.availability.is_available_to_buy)
+
+    def test_specifies_correct_availability_code(self):
+        self.assertEquals('unavailable', self.info.availability.code)
+
+    def test_specifies_product_has_no_price(self):
+        self.assertFalse(self.info.price.exists)
+
+
+class TestDefaultStrategyForParentProductWithInStockVariant(TestCase):
+
+    def setUp(self):
+        self.strategy = strategy.Default()
+        parent = factories.create_product()
+        factories.create_product(parent=parent, price=D('10.00'),
+                                 num_in_stock=3)
+        for x in range(2):
+            factories.create_product(parent=parent)
+        self.info = self.strategy.fetch_for_group(parent)
+
+    def test_specifies_product_is_available(self):
+        self.assertTrue(self.info.availability.is_available_to_buy)
+
+    def test_specifies_correct_availability_code(self):
+        self.assertEquals('available', self.info.availability.code)
+
+    def test_specifies_product_has_correct_price(self):
+        self.assertEquals(D('10.00'), self.info.price.incl_tax)
+
+
+class TestDefaultStrategyForParentProductWithOutOfStockVariant(TestCase):
+
+    def setUp(self):
+        self.strategy = strategy.Default()
+        parent = factories.create_product()
+        factories.create_product(parent=parent, price=D('10.00'),
+                                 num_in_stock=0)
+        for x in range(2):
+            factories.create_product(parent=parent)
+        self.info = self.strategy.fetch_for_group(parent)
+
+    def test_specifies_product_is_unavailable(self):
+        self.assertFalse(self.info.availability.is_available_to_buy)
+
+    def test_specifies_correct_availability_code(self):
+        self.assertEquals('unavailable', self.info.availability.code)
+
+    def test_specifies_product_has_correct_price(self):
+        self.assertEquals(D('10.00'), self.info.price.incl_tax)

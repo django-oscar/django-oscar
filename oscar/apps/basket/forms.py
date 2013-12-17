@@ -4,7 +4,7 @@ from django.db.models import get_model
 from django.forms.models import modelformset_factory, BaseModelFormSet
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.templatetags.currency_filters import currency
+from oscar.forms import widgets
 
 Line = get_model('basket', 'line')
 Basket = get_model('basket', 'basket')
@@ -205,18 +205,21 @@ class AddToBasketForm(forms.Form):
         Currently requires that a stock record exists for the variant
         """
         choices = []
+        disabled_values = []
         for variant in item.variants.all():
-            if variant.has_stockrecord:
-                title = variant.get_title()
-                attr_summary = variant.attribute_summary
-                price = currency(variant.stockrecord.price_incl_tax)
-                if attr_summary:
-                    summary = u"%s (%s) - %s" % (title, attr_summary, price)
-                else:
-                    summary = u"%s - %s" % (title, price)
-                choices.append((variant.id, summary))
-                self.fields['product_id'] = forms.ChoiceField(
-                    choices=tuple(choices), label=_("Variant"))
+            attr_summary = variant.attribute_summary
+            if attr_summary:
+                summary = attr_summary
+            else:
+                summary = variant.get_title()
+            info = self.request.strategy.fetch(variant)
+            if not info.availability.is_available_to_buy:
+                disabled_values.append(variant.id)
+            choices.append((variant.id, summary))
+
+        self.fields['product_id'] = forms.ChoiceField(
+            choices=tuple(choices), label=_("Variant"),
+            widget=widgets.AdvancedSelect(disabled_values=disabled_values))
 
     def _create_product_fields(self, item):
         """

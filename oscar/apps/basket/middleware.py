@@ -1,5 +1,3 @@
-import zlib
-
 from django.conf import settings
 from django.core.signing import Signer, BadSignature
 from django.db.models import get_model
