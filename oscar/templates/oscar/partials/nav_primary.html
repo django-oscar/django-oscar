@@ -2,6 +2,7 @@
 {% load currency_filters %}
 {% load category_tags %}
 {% load i18n %}
+{% load cache %}
 
 <div class="navbar primary navbar-static-top navbar-inverse">
     <div class="navbar-inner">
@@ -40,6 +41,7 @@
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu" data-navigation="dropdown-menu">
+                            {% cache 300 categories_tree request.LANGUAGE_CODE %}
                             {% category_tree depth=2 as tree_categories %}
                             <li><a tabindex="-1" href="{% url 'catalogue:index' %}">{% trans "All products" %}</a></li>
                             {% if tree_categories %}
@@ -58,6 +60,7 @@
                                             {% endfor %}
                                 {% endfor %}
                             {% endif %}
+                            {% endcache %}
                             <li class="divider"></li>
                             {% block nav_dropdown_extra_items %}
                                 <li><a href="{% url 'offer:list' %}">{% trans "Offers" %}</a></li>
