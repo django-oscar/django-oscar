@@ -399,7 +399,6 @@ class CategoryCreateView(CategoryListMixin, generic.CreateView):
         return {'_ref_node_id': self.kwargs.get('parent')}
 
 
-
 class CategoryUpdateView(CategoryListMixin, generic.UpdateView):
     template_name = 'dashboard/catalogue/category_form.html'
     model = Category
