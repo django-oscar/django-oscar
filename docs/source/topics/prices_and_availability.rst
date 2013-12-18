@@ -78,7 +78,7 @@ information into the template context:
 
 .. code-block:: html+django
 
-   {% load stockrecord_tags %}
+   {% load purchase_info_tags %}
    {% load currency_filters %}
 
    {% session_strategy request product as session %}
