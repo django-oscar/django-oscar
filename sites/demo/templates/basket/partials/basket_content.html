@@ -22,7 +22,7 @@
         {{ formset.management_form }}
 
         {% for form in formset %}
-            {% session_strategy request form.instance.product as session %}
+            {% purchase_info_for_product request form.instance.product as session %}
         <div class="basket-items">
             <div class="row-fluid">
                 <div class="span1">
