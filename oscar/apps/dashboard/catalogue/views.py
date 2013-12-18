@@ -394,6 +394,11 @@ class CategoryCreateView(CategoryListMixin, generic.CreateView):
         messages.info(self.request, _("Category created successfully"))
         return super(CategoryCreateView, self).get_success_url()
 
+    def get_initial(self):
+        super(CategoryCreateView, self).get_initial()
+        return {'_ref_node_id': self.kwargs.get('parent')}
+
+
 
 class CategoryUpdateView(CategoryListMixin, generic.UpdateView):
     template_name = 'dashboard/catalogue/category_form.html'
