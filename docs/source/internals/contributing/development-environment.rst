@@ -6,7 +6,7 @@ Fork the repo and run::
 
     $ git clone git@github.com:<username>/django-oscar.git
     $ cd django-oscar
-    $ mkvirtualenv oscar  # using virtualenvwrapper
+    $ mkvirtualenv oscar  # needs virtualenvwrapper
     $ make install
 
 If using Ubuntu, the ``python-dev`` package is required for some packages to
