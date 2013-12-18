@@ -13,7 +13,7 @@ ProductAlert = get_model('customer', 'ProductAlert')
 Product = get_model('catalogue', 'Product')
 Selector = get_class('partner.strategy', 'Selector')
 
-logger = logging.getLogger(__file__)
+logger = logging.getLogger('oscar.alerts')
 
 
 def send_alerts():

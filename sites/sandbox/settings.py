@@ -174,7 +174,7 @@ TEMPLATE_DIRS = (
 # more details on how to customize your logging configuration.
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
     'formatters': {
         'verbose': {
             'format': '%(levelname)s %(asctime)s %(module)s %(message)s',
@@ -229,6 +229,7 @@ LOGGING = {
         },
     },
     'loggers': {
+        # Django loggers
         'django': {
             'handlers': ['null'],
             'propagate': True,
@@ -239,6 +240,12 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': False,
         },
+        'django.db.backends': {
+            'handlers': ['null'],
+            'propagate': False,
+            'level': 'DEBUG',
+        },
+        # Oscar core loggers
         'oscar.checkout': {
             'handlers': ['console', 'checkout_file'],
             'propagate': False,
@@ -249,8 +256,20 @@ LOGGING = {
             'propagate': False,
             'level': 'INFO',
         },
+        'oscar.alerts': {
+            'handlers': ['null'],
+            'propagate': False,
+            'level': 'INFO',
+        },
+        # Sandbox logging
         'gateway': {
             'handlers': ['gateway_file'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+        # Third party
+        'south': {
+            'handlers': ['null'],
             'propagate': True,
             'level': 'INFO',
         },
@@ -259,12 +278,7 @@ LOGGING = {
             'propagate': True,
             'level': 'INFO',
         },
-        'django.db.backends': {
-            'handlers': ['null'],
-            'propagate': False,
-            'level': 'DEBUG',
-        },
-        # suppress output of this debug toolbar panel
+        # Suppress output of this debug toolbar panel
         'template_timings_panel': {
             'handlers': ['null'],
             'level': 'DEBUG',
