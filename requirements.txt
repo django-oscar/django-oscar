@@ -6,6 +6,7 @@ django-extensions>=1.2.0,<1.3.0
 Werkzeug>=0.8.3,<0.9
 
 # Sandbox
+Whoosh>=2.5
 pysolr>=3.1
 requests==2.1
 uWSGI==1.9.21.1
