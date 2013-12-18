@@ -495,19 +495,32 @@ class AbstractProduct(models.Model):
             return False, _("No stock available")
         return self.stockrecord.is_purchase_permitted(user, quantity, self)
 
-    def is_user_a_partner_user(self, user, match_all=False):
+    @property
+    def min_variant_price_incl_tax(self):
         """
-        The stockrecords of this product are linked to a fulfilment partner,
-        which have a M2M field for a list of users.
+        Return minimum variant price including tax
+        """
+        return self._min_variant_price('price_incl_tax')
 
-        This function tests whether a given user is in any (match_all=False) or
-        all (match_all=True) of those user lists.
+    @property
+    def min_variant_price_excl_tax(self):
         """
-        queryset = user.partners.filter(stockrecords__product=self)
-        if match_all:
-            return queryset.count() == self.stockrecords.count()
-        else:
-            return queryset.exists()
+        Return minimum variant price excluding tax
+        """
+        return self._min_variant_price('price_excl_tax')
+
+    def _min_variant_price(self, property):
+        """
+        Return minimum variant price
+        """
+        prices = []
+        for variant in self.variants.all():
+            if variant.has_stockrecords:
+                prices.append(getattr(variant.stockrecord, property))
+        if not prices:
+            return None
+        prices.sort()
+        return prices[0]
 
     # Wrappers
 
