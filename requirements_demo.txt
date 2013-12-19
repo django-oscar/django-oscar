@@ -1,7 +1,7 @@
 # Oscar extensions
 django-oscar-stores>=0.5
 django-oscar-paypal>=0.7
-django-oscar-datacash>=0.6.3
+django-oscar-datacash==0.7
 
 # We need PostGIS as the stores extension uses GeoDjango.
 psycopg2==2.5.1
