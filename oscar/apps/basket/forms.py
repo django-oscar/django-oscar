@@ -212,7 +212,7 @@ class AddToBasketForm(forms.Form):
                 summary = attr_summary
             else:
                 summary = variant.get_title()
-            info = self.request.strategy.fetch(variant)
+            info = self.request.strategy.fetch_for_product(variant)
             if not info.availability.is_available_to_buy:
                 disabled_values.append(variant.id)
             choices.append((variant.id, summary))
