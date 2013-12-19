@@ -300,7 +300,6 @@ INSTALLED_APPS = [
     'django_extensions',
     # Debug toolbar + extensions
     'debug_toolbar',
-    'cache_panel',
     'south',
     'rosetta',          # For i18n testing
     'compressor',
@@ -333,24 +332,16 @@ HAYSTACK_CONNECTIONS = {
 
 INTERNAL_IPS = ('127.0.0.1',)
 
-
-# Allow internal IPs to see the debug toolbar.  This is just for Tangent's QA
-# department to be able to create better issues when something goes wrong.
-def is_internal(request):
-    ip_addr = request.META['REMOTE_ADDR']
-    return ip_addr in INTERNAL_IPS or ip_addr.startswith('192.168')
-
 DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
-    'SHOW_TOOLBAR_CALLBACK': is_internal
 }
 DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.headers.HeaderDebugPanel',
     'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
     'debug_toolbar.panels.template.TemplateDebugPanel',
     'debug_toolbar.panels.timer.TimerDebugPanel',
+    'debug_toolbar.panels.cache.CacheDebugPanel',
     'debug_toolbar.panels.sql.SQLDebugPanel',
-    'cache_panel.panel.CacheDebugPanel',
     'debug_toolbar.panels.signals.SignalDebugPanel',
     'debug_toolbar.panels.logger.LoggingPanel',
     'debug_toolbar.panels.version.VersionDebugPanel',
