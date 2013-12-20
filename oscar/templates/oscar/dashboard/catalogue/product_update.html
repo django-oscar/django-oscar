@@ -111,7 +111,7 @@
                                                 <h3>{% trans "Categories" %}</h3>
                                             </div>
                                             <table class="table table-striped table-bordered">
-                                                {% if product.categories %}
+                                                {% if product.categories.all %}
                                                     {% for category in product.categories.all %}
                                                         <tr><td>{{ category.full_name }}</td></tr>
                                                     {% endfor %}
