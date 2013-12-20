@@ -285,15 +285,62 @@ Backwards incompatible changes in 0.6
 Checkout
 ~~~~~~~~
 
-Several changes have been made to the checkout classes.  
+Several changes have been made to the checkout in the name of simplification
+and making things easier to customise.  
+
+The ``PaymentDetailsView`` has been adjusted to explicitly pass variables
+around rather than relying on methods that load them on demand.  This makes
+customisation easier.
 
 * The ``submit`` method in
-  :class:`~oscar.apps.checkout.views.PaymentDetailsView` now accepts several
-  new parameters.  
+  :class:`~oscar.apps.checkout.views.PaymentDetailsView` has a new signature.
+  It now accepts the user, shipping address, shipping method and order total as
+  required parameters  The intention is that the ``build_submission`` methods
+  returns a dict of kwargs for ``submit`` so that it can be called like::
+
+    submission = self.build_submission()
+    return self.submit(**submission)
+
+  If your payment or order submission process requires additional parameters (eg
+  a bankcard), override the ``build_submission`` method to provide them.  The
+  dict returns from the new ``build_submission`` method is also passed to the
+  template.
 
 * The ``handle_payment`` method in
   :class:`~oscar.apps.checkout.views.PaymentDetailsView` now accepts a
-  :class:`~oscar.core.prices.Price` instance instead of a Decimal.
+  :class:`~oscar.core.prices.Price` instance instead of a Decimal for the order
+  total.
+
+* The ``handle_order_placement`` method in
+  :class:`~oscar.apps.checkout.mixins.OrderPlacementMixin`
+  now accepts the user, shipping address and shipping method in a
+  different order consistent with the ``submit`` method from
+  ``PaymentDetailsView``.
+
+* The ``place_order`` method in
+  :class:`~oscar.apps.checkout.mixins.OrderPlacementMixin` 
+  has a new signature.  The parameters have been reordered and the shipping
+  address, shipping method and billing address must be passed in explicitly (as
+  unsaved instances).
+
+* The ``create_shipping_address`` method in
+  :class:`~oscar.apps.checkout.mixins.OrderPlacementMixin` has changed
+  signature.  Instead of being passed a basket, it is now passed the user and
+  an unsaved shipping address instance.
+
+* The ``create_billing_address`` method in
+  :class:`~oscar.apps.checkout.mixins.OrderPlacementMixin` has changed
+  signature.  It is now passed an unsaved billing address instance as well as
+  a shipping address instance.
+
+* The ``get_shipping_method`` (from
+  :class:`~oscar.apps.checkout.session.CheckoutSessionMixin`) no longer
+  defaults to returning free shipping if no shipping method can be looked up.
+
+* The :class:`~oscar.apps.checkout.calculators.OrderTotalCalculator` now
+  returns a :class:`~oscar.core.prices.Price` instance from a new ``calculate``
+  method.  The old methods ``order_total_incl_tax`` and
+  ``order_total_excl_tax`` have been removed.
 
 Signature changes
 ~~~~~~~~~~~~~~~~~
@@ -301,7 +348,7 @@ Signature changes
 Several classes and functions have had signature changes:
 
 * The ``basket_form`` templatetag has been altered to take the ``request`` as the
-  first argument, not ``request.basket``.
+  first parameter, not ``request.basket``.
 
 * The :class:`oscar.apps.customer.forms.EmailAuthenticationForm` form needs to
   be instantated with a host name so prevent redirects to external sites.
@@ -342,7 +389,7 @@ Instead, instantiate the methods within ``get_shipping_methods``:
        # Note, methods are not instantiated
        methods = [SomeMethod, AnotherMethod]
 
-Beware of shipping methods that are configured via constructor arguments, like 
+Beware of shipping methods that are configured via constructor parameters, like 
 :class:`~oscar.apps.shipping.methods.FixedPrice`.  Shipping methods will be
 reworked for Oscar 0.7.
 
@@ -389,7 +436,7 @@ ManyToManyField ``included_product`` of ``Range`` model was changed to use
   ``Range.included_product.remove(product)``.
 
 When adding a product into a range, position in the range can be specified
-with ``display_order`` argument:
+with ``display_order`` parameter:
 ``Range.add_product(product, display_order=3)``
 
 Renamed templates
@@ -584,7 +631,6 @@ which are determined by the :ref:`strategy class <strategy_class>`.
 * :meth:`~oscar.apps.catalogue.abstract_models.AbstractProduct.is_purchase_permitted` 
   is deprecated.  The functionality is now part of availability policies.
 
-
 Checkout session manager
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -593,6 +639,16 @@ The ``shipping_method`` method of the
 favour of using ``shipping_method_code``.  It is being removed as the
 ``CheckoutSessionData`` class should only be responsible for retriving data
 from the session, not loading shipping method instances.
+
+Checkout order placement mixin
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following methods within 
+:class:`~oscar.apps.checkout.mixins.OrderPlacementMixin` are deprecated:
+
+* :meth:`~oscar.apps.checkout.mixins.OrderPlacementMixin.create_shipping_address_from_form_fields`
+* :meth:`~oscar.apps.checkout.mixins.OrderPlacementMixin.create_shipping_address_from_user_address`
+* :meth:`~oscar.apps.checkout.mixins.OrderPlacementMixin.create_user_address`
 
 "Partner wrappers"
 ~~~~~~~~~~~~~~~~~~
