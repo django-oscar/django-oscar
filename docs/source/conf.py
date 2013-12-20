@@ -245,6 +245,10 @@ def process_docstring(app, what, name, obj, options, lines):
     # Only look at objects that inherit from Django's base model class
     if inspect.isclass(obj) and issubclass(obj, models.Model):
 
+        # Ignore abstract models
+        if not hasattr(obj._meta, '_fields'):
+            return lines
+
         # Grab the field list from the meta class
         fields = obj._meta._fields()
 
