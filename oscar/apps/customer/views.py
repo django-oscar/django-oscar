@@ -657,7 +657,15 @@ class AddressChangeStatusView(RedirectView):
     def get(self, request, pk=None, action=None, *args, **kwargs):
         address = get_object_or_404(UserAddress, user=self.request.user,
                                     pk=pk)
-        setattr(address, 'is_%s' % action, True)
+        #  We don't want the user to set an address as the default shipping
+        #  address, though they should be able to set it as their billing
+        #  address.
+        if address.country.is_shipping_country:
+            setattr(address, 'is_%s' % action, True)
+        elif action == 'default_for_billing':
+            setattr(address, 'is_default_for_billing', True)
+        else:
+            messages.error(request, _('We do not ship to this country'))
         address.save()
         return super(AddressChangeStatusView, self).get(
             request, *args, **kwargs)
