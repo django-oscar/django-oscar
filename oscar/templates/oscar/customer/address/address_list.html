@@ -20,6 +20,9 @@
                             {% if address.is_default_for_billing %}
                                 <span class="label label-info">{% trans 'Default billing address' %}</span>
                             {% endif %}
+                            {% if shipping_address_error %}
+                                <span class="label label-warning">{{ shipping_address_error }}</span>
+                            {% endif %}
                             <address>
                                 {% for field in address.active_address_fields %}
                                     {{ field }}</br>
