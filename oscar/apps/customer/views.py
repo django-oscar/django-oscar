@@ -640,8 +640,7 @@ class AddressChangeStatusView(RedirectView):
         elif action == 'default_for_billing':
             setattr(address, 'is_default_for_billing', True)
         else:
-            (args.context['shipping_address_error'] = 
-                'We do not ship to this country')
+            messages.error(request, 'We do not ship to this country')
         address.save()
         return super(AddressChangeStatusView, self).get(
             request, *args, **kwargs)
