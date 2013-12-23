@@ -46,7 +46,6 @@ setup(name='django-oscar',
           'django-treebeard==2.0b2',
           # Sorl is used as the default thumbnailer
           'sorl-thumbnail==11.12',
-          'python-memcached>=1.48,<1.53',
           # Babel is used for currency formatting
           'Babel>=1.0',
           # Oscar's default templates use compressor (but you can override
