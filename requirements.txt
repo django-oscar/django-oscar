@@ -1,6 +1,6 @@
 # Development
-django-debug-toolbar==0.11
-django-debug-toolbar-template-timings
+django-debug-toolbar=>1.0,<1.1
+django-debug-toolbar-template-timings>=0.5.5
 django-extensions>=1.2.0,<1.3.0
 Werkzeug>=0.8.3,<0.9
 
