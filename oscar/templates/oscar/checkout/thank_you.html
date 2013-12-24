@@ -254,8 +254,8 @@
         <div class="sub-header">
             <h2>{% trans "Tracking your order" %}</h2>
         </div>
-        <p>{% trans "You can" %}
-            <a href="{% url 'customer:anon-order' order_number=order.number hash=order.verification_hash %}">{% trans "track the status of your order" %}</a>.
+        <p>{% trans "You can track the status of your order" as track_status_label %}
+            <a href="{% url 'customer:anon-order' order_number=order.number hash=order.verification_hash %}">{{ track_status_label }}</a>.
         </p>
     {% endif %}
 
