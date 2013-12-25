@@ -275,10 +275,6 @@ Minor changes
 
 .. _detox: https://pypi.python.org/pypi/detox
 
-* ``OSCAR_ALLOW_ANON_REVIEWS`` has been a documented setting since Oscar 0.4.
-  But there's never been any code to support this, so the setting has been
-  dropped.
-
 Backwards incompatible changes in 0.6
 =====================================
 

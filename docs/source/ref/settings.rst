@@ -213,6 +213,15 @@ List of form fields that a user has to fill out to validate an address field.
 Review settings
 ===============
 
+``OSCAR_ALLOW_ANON_REVIEWS``
+----------------------------
+
+Default: ``True``
+
+This setting defines whether an anonymous user can create a review for
+a product without registering first. If it is set to ``True`` anonymous
+users can create product reviews.
+
 ``OSCAR_MODERATE_REVIEWS``
 --------------------------
 
