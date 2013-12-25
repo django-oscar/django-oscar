@@ -593,15 +593,6 @@ class AbstractProduct(models.Model):
             rating = float(reviews_sum) / reviews_count
         return rating
 
-    def add_category_from_breadcrumbs(self, breadcrumb):
-        from oscar.apps.catalogue.categories import create_from_breadcrumbs
-        category = create_from_breadcrumbs(breadcrumb)
-
-        temp = get_model('catalogue', 'ProductCategory')(
-            category=category, product=self)
-        temp.save()
-    add_category_from_breadcrumbs.alters_data = True
-
     def has_review_by(self, user):
         if user.is_anonymous():
             return False

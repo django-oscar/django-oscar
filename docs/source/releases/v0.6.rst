@@ -488,6 +488,12 @@ Template block changes
 * In ``checkout/checkout.html``, the ``checkout-nav`` block has been renamed
   ``checkout_nav``.
 
+Product model changes
+~~~~~~~~~~~~~~~~~~~~~
+
+* The function ``add_category_from_breadcrumbs`` was not used and has been
+  removed.
+
 Account templates
 ~~~~~~~~~~~~~~~~~
 
