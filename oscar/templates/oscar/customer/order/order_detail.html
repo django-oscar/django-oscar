@@ -3,6 +3,7 @@
 {% load currency_filters %}
 {% load display_tags %}
 {% load i18n %}
+{% load reviews_tags %}
 
 {% block extra_breadcrumbs %}
     <li>
@@ -29,7 +30,9 @@
                 <td>
                     <p><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></p>
                     {% iffeature "reviews" %}
-                        <a class="btn" href="{% url 'catalogue:reviews-add' product_slug=line.product.slug product_pk=line.product.id %}">{% trans 'Write a review' %}</a>
+                        {% if line.product|is_review_permitted:user %}
+                            <a class="btn" href="{% url 'catalogue:reviews-add' product_slug=line.product.slug product_pk=line.product.id %}">{% trans 'Write a review' %}</a>
+                        {% endif %}
                     {% endiffeature %}
                 </td>
                 <td>{{ line.est_dispatch_date|default:"-" }}</td>
