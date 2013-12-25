@@ -279,6 +279,13 @@ Minor changes
   But there's never been any code to support this, so the setting has been
   dropped.
 
+* Oscar uses a cookie to display recently displayed products. This cookie never
+  expired and wasn't a HttpOnly cookie. It is now a HttpOnly cookie and expires
+  after 7 days. Additionally, two settings have been introduced to configure
+  it analogues to the basket cookies:
+  ``OSCAR_RECENTLY_VIEWED_COOKIE_LIFETIME`` and
+  ``OSCAR_RECENTLY_VIEWED_COOKIE_NAME``.
+
 Backwards incompatible changes in 0.6
 =====================================
 
