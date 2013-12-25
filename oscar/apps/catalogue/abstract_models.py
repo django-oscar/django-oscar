@@ -598,6 +598,21 @@ class AbstractProduct(models.Model):
             return False
         return self.reviews.filter(user=user).exists()
 
+    def is_review_permitted(self, user):
+        """
+        Determines whether a user may add a review on this product.
+
+        Default implementation respects OSCAR_ALLOW_ANON_REVIEWS and only
+        allows leaving one review per user and product.
+
+        Override this if you want to alter the default behaviour; e.g. enforce
+        that a user purchased the product to be allowed to leave a review.
+        """
+        if user.is_authenticated() or settings.OSCAR_ALLOW_ANON_REVIEWS:
+            return not self.has_review_by(user)
+        else:
+            return False
+
 
 class ProductRecommendation(models.Model):
     """
