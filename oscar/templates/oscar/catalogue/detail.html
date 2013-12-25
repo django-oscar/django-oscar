@@ -86,7 +86,7 @@
 
                     <small><a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.id %}">
                             {% blocktrans count reviews|length as num_reviews %}
-                            1 custom review
+                            1 customer review
                             {% plural %}
                             {{ num_reviews }} customer reviews
                             {% endblocktrans %}
@@ -185,8 +185,10 @@
 
             {% if not reviews %}
                 <p>
-                    {% trans "This product does not have any reviews yet" %} -
-                    <a href="{% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id %}#addreview">{% trans "be the first to write one" %}</a>.
+                    {% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id as add_review_url %}
+                    {% blocktrans %}This product does not have any reviews yet" -
+                    <a href="{{ add_review_url }}#addreview">be the first to write one</a>.
+                    {% endblocktrans %}
                 </p>
             {% else %}
                 <ol class="unstyled review-list">
