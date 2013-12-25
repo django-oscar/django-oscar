@@ -71,7 +71,15 @@
                 <div class="well well-success">
                     <h4>{% trans "Payment" %}</h4>
                     {% for source in order.sources.all %}
-                        {{ source }}
+                        {% if source.reference %}
+                            {% blocktrans with amount=source.amount_allocated|currency:source.currency type=source.source_type.name reference=source.reference %}
+                                Allocation of {{ amount }} from type {{ type }} (reference: {{ reference }})
+                            {% endblocktrans %}
+                        {% else %}
+                            {% blocktrans with amount=source.amount_allocated|currency:source.currency type=source.source_type.name %}
+                                Allocation of {{ amount }} from type {{ type }}
+                            {% endblocktrans %}
+                        {% endif %}
                     {% empty %}
                         {% trans "No payment was required for this order." %}
                     {% endfor %}
