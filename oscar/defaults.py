@@ -55,6 +55,7 @@ OSCAR_PROMOTION_POSITIONS = (('page', 'Page'),
                              ('left', 'Left-hand sidebar'))
 
 # Reviews
+OSCAR_ALLOW_ANON_REVIEWS = True
 OSCAR_MODERATE_REVIEWS = False
 
 # Accounts

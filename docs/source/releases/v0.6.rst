@@ -276,8 +276,8 @@ Minor changes
 .. _detox: https://pypi.python.org/pypi/detox
 
 * ``OSCAR_ALLOW_ANON_REVIEWS`` has been a documented setting since Oscar 0.4.
-  But there's never been any code to support this, so the setting has been
-  dropped.
+  But there's never been any code to support this, which has been rectified with
+  this release. Things should now work as expected.
 
 * Oscar uses a cookie to display recently displayed products. This cookie never
   expired and wasn't a HttpOnly cookie. It is now a HttpOnly cookie and expires

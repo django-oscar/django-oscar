@@ -25,10 +25,15 @@ class CreateProductReview(CreateView):
     def dispatch(self, request, *args, **kwargs):
         self.product = get_object_or_404(
             self.product_model, pk=kwargs['product_pk'])
-        if self.product.has_review_by(request.user):
-            messages.warning(
-                self.request, _("You have already reviewed this product!"))
+        # check permission to leave review
+        if not self.product.is_review_permitted(request.user):
+            if self.product.has_review_by(request.user):
+                message = _("You have already reviewed this product!")
+            else:
+                message = _("You can't leave a review for this product.")
+            messages.warning(self.request, message)
             return HttpResponseRedirect(self.product.get_absolute_url())
+
         return super(CreateProductReview, self).dispatch(
             request, *args, **kwargs)
 
