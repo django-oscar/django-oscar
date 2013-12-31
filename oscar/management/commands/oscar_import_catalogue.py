@@ -7,6 +7,8 @@ from oscar.core.loading import get_class
 CatalogueImporter = get_class('partner.utils', 'CatalogueImporter')
 CatalogueImportError = get_class('partner.exceptions', 'CatalogueImportError')
 
+logger = logging.getLogger('oscar.catalogue.import')
+
 
 class Command(BaseCommand):
     args = '/path/to/file1.csv /path/to/file2.csv ...'
@@ -19,7 +21,6 @@ class Command(BaseCommand):
                     help='Delimiter used within CSV file(s)'))
 
     def handle(self, *args, **options):
-        logger = self._get_logger()
         if not args:
             raise CommandError("Please select a CSV file to import")
 
@@ -33,10 +34,3 @@ class Command(BaseCommand):
                 importer.handle(file_path)
             except CatalogueImportError, e:
                 raise CommandError(str(e))
-
-    def _get_logger(self):
-        logger = logging.getLogger(__file__)
-        stream = logging.StreamHandler(self.stdout)
-        logger.addHandler(stream)
-        logger.setLevel(logging.DEBUG)
-        return logger

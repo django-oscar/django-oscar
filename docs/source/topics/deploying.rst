@@ -25,6 +25,7 @@ external API calls and sending emails. Django's pluggable email backends allow
 for switching out the blocking SMTP backend to a custom non-blocking solution.
 Possible options are storing emails in a database or cache for later consumption
 or triggering an external worker, e.g. via `django-celery`_.
+`django_post-office`_ works nicely.
 
 Security
 --------
@@ -41,3 +42,4 @@ deployments behind SSL.
 .. _`cached template loader`: https://docs.djangoproject.com/en/dev/ref/templates/api/#django.template.loaders.cached.Loader
 .. _django-celery: http://www.celeryproject.org/
 .. _django-secure: https://pypi.python.org/pypi/django-secure
+.. _django_post-office: https://github.com/ui/django-post_office

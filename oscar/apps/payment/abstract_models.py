@@ -6,6 +6,7 @@ from django.conf import settings
 
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.utils import slugify
+from oscar.templatetags.currency_filters import currency
 
 from . import bankcards
 
@@ -102,8 +103,9 @@ class AbstractSource(models.Model):
         verbose_name_plural = _("Sources")
 
     def __unicode__(self):
-        description = _("Allocation of %(amount).2f from type %(type)s") % {
-            'amount': self.amount_allocated, 'type': self.source_type}
+        description = _("Allocation of %(amount)s from type %(type)s") % {
+            'amount': currency(self.amount_allocated, self.currency),
+            'type': self.source_type}
         if self.reference:
             description += _(" (reference: %s)") % self.reference
         return description

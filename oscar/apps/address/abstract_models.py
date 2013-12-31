@@ -285,7 +285,7 @@ class AbstractAddress(models.Model):
                     % {'postcode': self.postcode,
                        'country': self.country}
                 raise exceptions.ValidationError(
-                    {'postcode': msg})
+                    {'postcode': [msg]})
 
     def _update_search_text(self):
         search_fields = filter(

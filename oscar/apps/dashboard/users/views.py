@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic import ListView, DetailView, DeleteView, \
     UpdateView, FormView
-from django.shortcuts import get_object_or_404
+from django.views.generic.detail import SingleObjectMixin
 from oscar.apps.customer.utils import normalise_email
 
 from oscar.views.generic import BulkEditMixin
@@ -98,17 +98,19 @@ class UserDetailView(DetailView):
     context_object_name = 'customer'
 
 
-class PasswordResetView(FormView):
+class PasswordResetView(SingleObjectMixin, FormView):
     form_class = PasswordResetForm
     http_method_names = ['post']
+    model = User
 
     def post(self, request, *args, **kwargs):
-        self.user = get_object_or_404(
-            User, id=kwargs['pk'])
+        self.object = self.get_object()
         return super(PasswordResetView, self).post(request, *args, **kwargs)
 
     def get_form_kwargs(self):
-        return {'data': {'email': self.user.email}}
+        kwargs = super(PasswordResetView, self).get_form_kwargs()
+        kwargs['data'] = {'email': self.object.email}
+        return kwargs
 
     def form_valid(self, form):
         # The PasswordResetForm's save method sends the reset email
@@ -119,7 +121,7 @@ class PasswordResetView(FormView):
         messages.success(
             self.request, _("A password reset email has been sent"))
         return reverse(
-            'dashboard:user-detail', kwargs={'pk': self.user.id}
+            'dashboard:user-detail', kwargs={'pk': self.object.id}
         )
 
 

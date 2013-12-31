@@ -342,7 +342,12 @@ OSCAR_DASHBOARD_NAVIGATION = new_nav
 
 GEOIP_PATH = os.path.join(os.path.dirname(__file__), 'geoip')
 
+#default currency for django-oscar-datacash
+DATACASH_CURRENCY = "GBP"
+
 try:
     from settings_local import *
 except ImportError:
     pass
+
+

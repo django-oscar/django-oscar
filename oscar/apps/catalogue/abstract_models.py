@@ -370,8 +370,11 @@ class AbstractProduct(models.Model):
         if not self.slug:
             self.slug = slugify(self.get_title())
 
-        # Validate attributes if necessary
-        self.attr.validate_attributes()
+        # Allow attribute validation to be skipped.  This is required when
+        # saving a parent product which belongs to a product class with
+        # required attributes.
+        if kwargs.pop('validate_attributes', True):
+            self.attr.validate_attributes()
 
         # Save product
         super(AbstractProduct, self).save(*args, **kwargs)
@@ -492,20 +495,6 @@ class AbstractProduct(models.Model):
             return False, _("No stock available")
         return self.stockrecord.is_purchase_permitted(user, quantity, self)
 
-    def is_user_a_partner_user(self, user, match_all=False):
-        """
-        The stockrecords of this product are linked to a fulfilment partner,
-        which have a M2M field for a list of users.
-
-        This function tests whether a given user is in any (match_all=False) or
-        all (match_all=True) of those user lists.
-        """
-        queryset = user.partners.filter(stockrecords__product=self)
-        if match_all:
-            return queryset.count() == self.stockrecords.count()
-        else:
-            return queryset.exists()
-
     @property
     def min_variant_price_incl_tax(self):
         """
@@ -604,19 +593,25 @@ class AbstractProduct(models.Model):
             rating = float(reviews_sum) / reviews_count
         return rating
 
-    def add_category_from_breadcrumbs(self, breadcrumb):
-        from oscar.apps.catalogue.categories import create_from_breadcrumbs
-        category = create_from_breadcrumbs(breadcrumb)
-
-        temp = get_model('catalogue', 'ProductCategory')(
-            category=category, product=self)
-        temp.save()
-    add_category_from_breadcrumbs.alters_data = True
-
     def has_review_by(self, user):
         if user.is_anonymous():
             return False
         return self.reviews.filter(user=user).exists()
+
+    def is_review_permitted(self, user):
+        """
+        Determines whether a user may add a review on this product.
+
+        Default implementation respects OSCAR_ALLOW_ANON_REVIEWS and only
+        allows leaving one review per user and product.
+
+        Override this if you want to alter the default behaviour; e.g. enforce
+        that a user purchased the product to be allowed to leave a review.
+        """
+        if user.is_authenticated() or settings.OSCAR_ALLOW_ANON_REVIEWS:
+            return not self.has_review_by(user)
+        else:
+            return False
 
 
 class ProductRecommendation(models.Model):
@@ -945,6 +940,11 @@ class AbstractAttributeOptionGroup(models.Model):
         abstract = True
         verbose_name = _('Attribute Option Group')
         verbose_name_plural = _('Attribute Option Groups')
+
+    @property
+    def option_summary(self):
+        options = [o.option for o in self.options.all()]
+        return ", ".join(options)
 
 
 class AbstractAttributeOption(models.Model):

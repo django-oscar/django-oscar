@@ -2,6 +2,7 @@
 {% load url from future %}
 {% load currency_filters %}
 {% load i18n %}
+{% load reviews_tags %}
 
 {% block headertext %}
     {% blocktrans with number=order.number %}Order #{{ number }}{% endblocktrans %}
@@ -71,7 +72,9 @@
                 <td>{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>
                 <td>{{ line.line_price_before_discounts_incl_tax|currency:order.currency }}</td>
                 <td>
-                    <a href="{% url 'catalogue:reviews-add' product_slug=line.product.slug product_pk=line.product.id %}" class="btn btn-primary">{% trans 'Write a review' %}</a>
+                    {% if line.product|is_review_permitted:user %}
+                        <a href="{% url 'catalogue:reviews-add' product_slug=line.product.slug product_pk=line.product.id %}" class="btn btn-primary">{% trans 'Write a review' %}</a>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}

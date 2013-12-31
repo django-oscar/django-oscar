@@ -32,7 +32,7 @@ class Standard(base.Base):
     @property
     def charge_excl_tax(self):
         # Assume no tax
-        return self.basket_charge_incl_tax()
+        return self.charge_incl_tax
 
 
 class Express(base.Base):
@@ -55,4 +55,4 @@ class Express(base.Base):
     @property
     def charge_excl_tax(self):
         # Assume no tax
-        return self.basket_charge_incl_tax()
+        return self.charge_incl_tax

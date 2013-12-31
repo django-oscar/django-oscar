@@ -73,15 +73,15 @@ product and returns a ``StockInfo`` instance:
         print "Selected stockrecord is %s" % stock_info.stockrecord
 
 The strategy class is accessed in several places in Oscar's codebase.  In templates, a
-``session_strategy`` template tag is used to load the price and availability
+``purchase_info_for_product`` template tag is used to load the price and availability
 information into the template context:
 
 .. code-block:: html+django
 
-   {% load stockrecord_tags %}
+   {% load purchase_info_tags %}
    {% load currency_filters %}
 
-   {% session_strategy request product as session %}
+   {% purchase_info_for_product request product as session %}
 
    <p>
    {% if session.price.is_tax_known %}

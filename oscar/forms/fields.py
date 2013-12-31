@@ -1,4 +1,4 @@
-from django.forms import fields
+from django.forms import fields, TextInput
 
 from oscar.core import validators
 
@@ -9,6 +9,10 @@ class ExtendedURLField(fields.URLField):
     validating local relative URLs, ie. '/product/'
     """
     default_validators = []
+    # Django 1.6 renders URLInput as <input type=url>, which causes some
+    # browsers to require the input to be a valid absolute URL. As relative
+    # URLS are allowed for ExtendedURLField, we must set it to TextInput
+    widget = TextInput
 
     def __init__(self, max_length=None, min_length=None, verify_exists=None,
                  *args, **kwargs):

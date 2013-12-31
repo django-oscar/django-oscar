@@ -77,21 +77,22 @@
                                     {% endfor %}
                                 </div>
                             </div>
+
                             <div class="basket-items-price">
                                 <p class="price_color">
-                                    {% if session.price.is_tax_known %}
-                                        {{ session.price.incl_tax|currency:session.price.currency }}
+                                    {% if line.is_tax_known %}
+                                        {{ line.unit_price_incl_tax|currency:line.price_currency }}
                                     {% else %}
-                                        {{ session.price.excl_tax|currency:session.price.currency }}
+                                        {{ line.unit_price_excl_tax|currency:line.price_currency }}
                                     {% endif %}
                                 </p>
                             </div>
                             <div class="basket-items-total">
                                 <p class="price_color">
-                                    {% if basket.is_tax_known %}
-                                        {{ line.line_price_incl_tax|currency:basket.currency }}
+                                    {% if line.is_tax_known %}
+                                        {{ line.line_price_incl_tax|currency:line.price_currency }}
                                     {% else %}
-                                        {{ line.line_price_excl_tax|currency:basket.currency }}
+                                        {{ line.line_price_excl_tax|currency:line.price_currency }}
                                     {% endif %}
                                 </p>
                             </div>

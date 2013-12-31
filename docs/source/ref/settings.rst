@@ -52,6 +52,20 @@ Default: 20
 
 The number of recently viewed products to store.
 
+``OSCAR_RECENTLY_VIEWED_COOKIE_LIFETIME``
+-----------------------------------------
+
+Default: 604800 (1 week in seconds)
+
+The time to live for the cookie in seconds.
+
+``OSCAR_RECENTLY_VIEWED_COOKIE_NAME``
+-------------------------------------
+
+Default: ``'oscar_history'``
+
+The name of the cookie for showing recently viewed products.
+
 ``OSCAR_PRODUCTS_PER_PAGE``
 ---------------------------
 
@@ -213,6 +227,15 @@ List of form fields that a user has to fill out to validate an address field.
 Review settings
 ===============
 
+``OSCAR_ALLOW_ANON_REVIEWS``
+----------------------------
+
+Default: ``True``
+
+This setting defines whether an anonymous user can create a review for
+a product without registering first. If it is set to ``True`` anonymous
+users can create product reviews.
+
 ``OSCAR_MODERATE_REVIEWS``
 --------------------------
 
@@ -314,12 +337,16 @@ The maximum number of products that can be added to a basket at once.
 ``OSCAR_BASKET_COOKIE_OPEN``
 ----------------------------
 
-Default: ``oscar_open_basket``
+Default: ``'oscar_open_basket'``
+
+The name of the cookie for the open basket.
 
 ``OSCAR_BASKET_COOKIE_SAVED``
 -----------------------------
 
-Default: ``oscar_saved_basket``
+Default: ``'oscar_saved_basket'``
+
+The name of the cookie for the saved basket.
 
 Currency settings
 =================

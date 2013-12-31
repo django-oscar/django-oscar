@@ -216,25 +216,49 @@ class OrderSearchForm(forms.Form):
         return super(OrderSearchForm, self).clean()
 
     def description(self):
+        """
+        Uses the form's data to build a useful description of what orders
+        are listed.
+        """
         if not self.is_bound or not self.is_valid():
             return _('All orders')
-        date_from = self.cleaned_data['date_from']
-        date_to = self.cleaned_data['date_to']
-        order_number = self.cleaned_data['order_number']
-        desc = None
+        else:
+            date_from = self.cleaned_data['date_from']
+            date_to = self.cleaned_data['date_to']
+            order_number = self.cleaned_data['order_number']
+            return self._orders_description(date_from, date_to, order_number)
+
+    def _orders_description(self, date_from, date_to, order_number):
         if date_from and date_to:
-            desc = _('Orders placed between %(date_from)s and %(date_to)s') % {
-                'date_from': date_from,
-                'date_to': date_to}
+            if order_number:
+                desc = _('Orders placed between %(date_from)s and '
+                         '%(date_to)s and order number containing '
+                         '%(order_number)s')
+            else:
+                desc = _('Orders placed between %(date_from)s and '
+                         '%(date_to)s')
         elif date_from:
-            desc = _('Orders placed since %s') % date_from
+            if order_number:
+                desc = _('Orders placed since %(date_from)s and '
+                         'order number containing %(order_number)s')
+            else:
+                desc = _('Orders placed since %(date_from)s')
         elif date_to:
-            desc = _('Orders placed until %s') % date_to
-        if order_number and desc is None:
-            desc = _('Orders with order number containing %s') % order_number
-        elif order_number and desc is not None:
-            desc += _(' and order number containing %s') % order_number
-        return desc
+            if order_number:
+                desc = _('Orders placed until %(date_to)s and '
+                         'order number containing %(order_number)s')
+            else:
+                desc = _('Orders placed until %(date_to)s')
+        elif order_number:
+            desc = _('Orders with order number containing %(order_number)s')
+        else:
+            return None
+        params = {
+            'date_from': date_from,
+            'date_to': date_to,
+            'order_number': order_number,
+        }
+        return desc % params
 
     def get_filters(self):
         date_from = self.cleaned_data['date_from']

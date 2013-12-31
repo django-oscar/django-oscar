@@ -1,16 +1,13 @@
 import json
 
-from django.dispatch import receiver
 from django.conf import settings
 from django.db.models import get_model
+from django.dispatch import receiver
 
 from oscar.core.loading import get_class
 
 Product = get_model('catalogue', 'Product')
 product_viewed = get_class('catalogue.signals', 'product_viewed')
-
-COOKIE_NAME = 'oscar_history'
-MAX_PRODUCTS = settings.OSCAR_RECENTLY_VIEWED_PRODUCTS
 
 
 def get(request):
@@ -30,13 +27,14 @@ def extract(request, response=None):
     Extract the IDs of products in the history cookie
     """
     ids = []
-    if COOKIE_NAME in request.COOKIES:
+    cookie_name = settings.OSCAR_RECENTLY_VIEWED_COOKIE_NAME
+    if cookie_name in request.COOKIES:
         try:
-            ids = json.loads(request.COOKIES[COOKIE_NAME])
+            ids = json.loads(request.COOKIES[cookie_name])
         except ValueError:
             # This can occur if something messes up the cookie
             if response:
-                response.delete_cookie(COOKIE_NAME)
+                response.delete_cookie(cookie_name)
     return ids
 
 
@@ -44,11 +42,12 @@ def add(ids, new_id):
     """
     Add a new product ID to the list of product IDs
     """
+    max_products = settings.OSCAR_RECENTLY_VIEWED_PRODUCTS
     if new_id in ids:
         ids.remove(new_id)
     ids.append(new_id)
-    if (len(ids) > MAX_PRODUCTS):
-        ids = ids[len(ids) - MAX_PRODUCTS:]
+    if (len(ids) > max_products):
+        ids = ids[len(ids) - max_products:]
     return ids
 
 
@@ -59,7 +58,11 @@ def update(product, request, response):
     """
     ids = extract(request, response)
     updated_ids = add(ids, product.id)
-    response.set_cookie(COOKIE_NAME, json.dumps(updated_ids), httponly=True)
+    response.set_cookie(
+        settings.OSCAR_RECENTLY_VIEWED_COOKIE_NAME,
+        json.dumps(updated_ids),
+        max_age=settings.OSCAR_RECENTLY_VIEWED_COOKIE_LIFETIME,
+        httponly=True)
 
 
 # Receivers
