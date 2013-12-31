@@ -1112,7 +1112,10 @@
   .basket-order [class*="basket-items"],
   .checkout-action-button,
   .shipping-wrapper,
-  .payment-wrapper {
+  .payment-wrapper,
+  .site-brand h1,
+  .shipping-addresses li,
+  .site-login-wrapper [class*="site-"] {
     float: none;
     display: block;
     width: 100%;
@@ -1137,7 +1140,10 @@
   .basket-order [class*="basket-items"]:first-child,
   .checkout-action-button:first-child,
   .shipping-wrapper:first-child,
-  .payment-wrapper:first-child {
+  .payment-wrapper:first-child,
+  .site-brand h1:first-child,
+  .shipping-addresses li:first-child,
+  .site-login-wrapper [class*="site-"]:first-child {
     margin-left: 0;
   }
   .align-right,
@@ -1146,7 +1152,7 @@
   .basket-order [class*="basket-"] {
     text-align: left;
   }
-  .header h1 {
+  .site-brand {
     text-align: center;
   }
   .navbar-static-top .navbar-inner,
