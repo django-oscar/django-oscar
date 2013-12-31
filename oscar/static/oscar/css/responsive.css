@@ -1113,7 +1113,7 @@
   .checkout-action-button,
   .shipping-wrapper,
   .payment-wrapper,
-  .site-brand h1,
+  .site-logo,
   .shipping-addresses li,
   .site-login-wrapper [class*="site-"] {
     float: none;
@@ -1141,7 +1141,7 @@
   .checkout-action-button:first-child,
   .shipping-wrapper:first-child,
   .payment-wrapper:first-child,
-  .site-brand h1:first-child,
+  .site-logo:first-child,
   .shipping-addresses li:first-child,
   .site-login-wrapper [class*="site-"]:first-child {
     margin-left: 0;

@@ -7719,14 +7719,14 @@ form:after {
 .site-brand:after {
   clear: both;
 }
-.site-brand h1 {
+.site-logo {
   float: left;
   width: 57.44680851063829%;
   *width: 57.39361702127659%;
   margin-left: 2.127659574468085%;
   *margin-left: 2.0212765957446805%;
 }
-.site-brand h1:first-child {
+.site-logo:first-child {
   margin-left: 0;
   margin-left: 0%;
   *margin-left: -0.10638297872340438%;
