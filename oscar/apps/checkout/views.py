@@ -694,7 +694,7 @@ class ThankYouView(DetailView):
                     number=self.request.GET['order_number'])
             elif 'order_id' in self.request.GET:
                 order = Order._default_manager.get(
-                    id=self.request.GET['orderid'])
+                    id=self.request.GET['order_id'])
 
         if not order:
             if 'checkout_order_id' in self.request.session:
