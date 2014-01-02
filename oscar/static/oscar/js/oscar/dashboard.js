@@ -161,6 +161,7 @@ var oscar = (function(o, $) {
                 var type = $('#id_type').val(),
                     $valueContainer = $('#id_value').parents('.control-group');
                 if (type == 'Multibuy') {
+                    $('#id_value').val('');
                     $valueContainer.hide();
                 } else {
                     $valueContainer.show();
