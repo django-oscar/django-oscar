@@ -27,4 +27,12 @@ class VoteForm(forms.ModelForm):
 
     class Meta:
         model = Vote
-        fields = ()
+        fields = ('delta',)
+
+    @property
+    def is_up_vote(self):
+        return self.cleaned_data['delta'] == Vote.UP
+
+    @property
+    def is_down_vote(self):
+        return self.cleaned_data['delta'] == Vote.DOWN
