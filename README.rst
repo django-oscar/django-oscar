@@ -253,6 +253,7 @@ Non-Tangent:
 * FP Sport - http://www.fpsport.it
 * Garmsby - https://garmsby.co.uk
 * Partecipa Cards - http://www.partecipacards.com
+* Chiyome - https://chiyome.com
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/dolbeau.thumb.png
     :target: http://www.dolbeau.ca
@@ -280,6 +281,9 @@ Non-Tangent:
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/partecipacards.thumb.png
     :target: http://www.partecipacards.com
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/chiyome.thumb.png
+    :target: https://chiyome.com
 
 Many more on the way.  If you use Oscar in production, please let us know.
 
