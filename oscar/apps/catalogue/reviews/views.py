@@ -87,8 +87,7 @@ class AddVoteView(View):
         product = get_object_or_404(Product, pk=self.kwargs['product_pk'])
         review = get_object_or_404(ProductReview, pk=self.kwargs['pk'])
 
-        instance = Vote(review=review, user=request.user)
-        form = VoteForm(data=request.POST, instance=instance)
+        form = VoteForm(review, request.user, request.POST)
         if form.is_valid():
             if form.is_up_vote:
                 review.vote_up(request.user)

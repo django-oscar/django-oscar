@@ -29,6 +29,11 @@ class VoteForm(forms.ModelForm):
         model = Vote
         fields = ('delta',)
 
+    def __init__(self, review, user, *args, **kwargs):
+        super(VoteForm, self).__init__(*args, **kwargs)
+        self.instance.review = review
+        self.instance.user = user
+
     @property
     def is_up_vote(self):
         return self.cleaned_data['delta'] == Vote.UP
