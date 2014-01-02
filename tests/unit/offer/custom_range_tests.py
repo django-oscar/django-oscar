@@ -28,29 +28,28 @@ class CustomRangeLazy(object):
 
 class TestACustomRange(TestCase):
 
-    def setUp(self):
-        self.rng = custom.create_range(CustomRange)
-
     def test_creating_unique_custom_range(self):
+        custom.create_range(CustomRange)
         try:
             custom.create_range(CustomRange)
         except IntegrityError:
             self.fail(
                 'IntegrityError when added the same CustomRange as existing')
 
-    def test_ugettext_in_custom_range_name(self):
+    def test_must_have_a_text_name(self):
         try:
             custom.create_range(CustomRangeLazy)
         except Exception:
-        # Here is InterfaceError in sqlite3.
-        # But no InterfaceError cover in Django 1.5
-            self.fail(
-                'InterfaceError when added CustomRange with ugettext_lazy in name')
+            pass
+        else:
+            self.fail("Range can't have ugettext titles")
 
     def test_correctly_includes_match(self):
+        rng = custom.create_range(CustomRange)
         test_product = create_product(title=u"A tale")
-        self.assertTrue(self.rng.contains_product(test_product))
+        self.assertTrue(rng.contains_product(test_product))
 
     def test_correctly_excludes_nonmatch(self):
+        rng = custom.create_range(CustomRange)
         test_product = create_product(title=u"B tale")
-        self.assertFalse(self.rng.contains_product(test_product))
+        self.assertFalse(rng.contains_product(test_product))
