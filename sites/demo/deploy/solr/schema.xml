@@ -161,9 +161,6 @@
     <field name="num_in_stock_exact" type="long" indexed="true" stored="true" multiValued="false" />
     <field name="date_created" type="date" indexed="true" stored="true" multiValued="false" />
     <field name="_version_" type="long" indexed="true" stored="true"/>
-    <field name="product_class" type="text_en" indexed="true" stored="true" multiValued="false" />
-    <field name="product_class_exact" type="string" indexed="true" stored="true" multiValued="false" />
-
 
   </fields>
 
