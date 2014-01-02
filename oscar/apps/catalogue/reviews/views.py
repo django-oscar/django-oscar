@@ -124,4 +124,3 @@ class ProductReviewList(ListView):
         context['product'] = get_object_or_404(
             self.product_model, pk=self.kwargs['product_pk'])
         return context
-

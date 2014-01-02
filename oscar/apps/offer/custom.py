@@ -24,7 +24,7 @@ def create_range(range_class):
             "Custom ranges must have text names (not ugettext proxies)")
 
     # In Django versions further than 1.6 it will be update_or_create
-    # Proof: https://docs.djangoproject.com/en/dev/ref/models/querysets/#update-or-create
+    # https://docs.djangoproject.com/en/dev/ref/models/querysets/#update-or-create # noqa
     values = {
         'name': range_class.name,
         'proxy_class': _class_path(range_class),
