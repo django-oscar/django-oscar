@@ -7,13 +7,15 @@
 # Run flake8 and convert the output into a format that the "violations" plugin 
 # for Jenkins/Hudson can understand.  Ignore warnings from migrations we we don't
 # really care about those.
-ERRORFILE="violations.txt"
-flake8 oscar | perl -ple "s/: /: [E] /" > $ERRORFILE
+ERROR_FILE="violations.txt"
+THRESHOLD=0
+flake8 --max-complexity=10 oscar | perl -ple "s/: /: [E] /" > $ERROR_FILE
 
 # Check that the number of violations is acceptable
-NUMERRORS=`cat $ERRORFILE | wc -l`
-if [ $NUMERRORS -gt 0 ]
+NUMERRORS=`cat $ERROR_FILE | wc -l`
+if [ $NUMERRORS -gt $THRESHOLD ]
 then
-    cat violations.txt
+    echo "The following flake8 errors need to be fixed"
+    cat $ERROR_FILE
     exit 1
 fi
