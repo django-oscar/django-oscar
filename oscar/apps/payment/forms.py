@@ -4,9 +4,10 @@ import re
 import six
 
 from django import forms
-from oscar.core.loading import get_model
+from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext_lazy as _
 
+from oscar.core.loading import get_model
 from oscar.apps.address.forms import AbstractAddressForm
 from . import bankcards
 
@@ -15,6 +16,9 @@ from oscar.views.generic import PhoneNumberMixin
 Country = get_model('address', 'Country')
 BillingAddress = get_model('order', 'BillingAddress')
 Bankcard = get_model('payment', 'Bankcard')
+
+# List of card names for all the card types supported in payment.bankcards
+VALID_CARDS = set([card_type[0] for card_type in bankcards.CARD_TYPES])
 
 
 class BankcardNumberField(forms.CharField):
@@ -25,6 +29,13 @@ class BankcardNumberField(forms.CharField):
             'widget': forms.TextInput(attrs={'autocomplete': 'off'}),
             'label': _("Card number")
         }
+        if 'types' in kwargs:
+            self.accepted_cards = set(kwargs.pop('types'))
+            difference = self.accepted_cards - VALID_CARDS
+            if difference:
+                raise ImproperlyConfigured('The following accepted_cards are '
+                                           'unknown: %s' % difference)
+
         _kwargs.update(kwargs)
         super(BankcardNumberField, self).__init__(*args, **_kwargs)
 
@@ -39,6 +50,13 @@ class BankcardNumberField(forms.CharField):
         if value and not bankcards.luhn(value):
             raise forms.ValidationError(
                 _("Please enter a valid credit card number."))
+
+        if hasattr(self, 'accepted_cards'):
+            card_type = bankcards.bankcard_type(value)
+            if card_type not in self.accepted_cards:
+                raise forms.ValidationError(
+                    _("%s cards are not accepted." % card_type))
+
         return super(BankcardNumberField, self).clean(value)
 
 
@@ -203,6 +221,12 @@ class BankcardCCVField(forms.RegexField):
 
 
 class BankcardForm(forms.ModelForm):
+    # By default, this number field will accept any number. The only validation
+    # is whether it passes the luhn check. If you wish to only accept certain
+    # types of card, you can pass a types kwarg to BankcardNumberField, e.g.
+    #
+    # BankcardNumberField(types=[bankcards.VISA, bankcards.VISA_ELECTRON,])
+
     number = BankcardNumberField()
     ccv = BankcardCCVField()
     start_month = BankcardStartingMonthField()
