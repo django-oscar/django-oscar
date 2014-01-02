@@ -8,9 +8,7 @@ from oscar.apps.shipping import Scales
 
 
 class ShippingMethod(models.Model):
-    """
-    Fields from shipping.base.ShippingMethod must be added here manually.
-    """
+    # Fields from shipping.base.ShippingMethod must be added here manually.
     code = models.SlugField(_("Slug"), max_length=128, unique=True)
     name = models.CharField(_("Name"), max_length=128, unique=True)
     description = models.TextField(_("Description"), blank=True)
@@ -69,9 +67,6 @@ class OrderAndItemCharges(ShippingMethod):
         verbose_name = _("Order and Item Charge")
         verbose_name_plural = _("Order and Item Charges")
 
-    def set_basket(self, basket):
-        self._basket = basket
-
     @property
     def charge_incl_tax(self):
         """
@@ -94,6 +89,11 @@ class OrderAndItemCharges(ShippingMethod):
         Default implementation assumes shipping is tax free.
         """
         return self.charge_incl_tax
+
+    @property
+    def is_tax_known(self):
+        # We assume tax is known
+        return True
 
 
 class WeightBased(ShippingMethod):
@@ -129,6 +129,11 @@ class WeightBased(ShippingMethod):
     @property
     def charge_excl_tax(self):
         return self.charge_incl_tax
+
+    @property
+    def is_tax_known(self):
+        # We assume tax is known
+        return True
 
     def get_band_for_weight(self, weight):
         """

@@ -15,9 +15,13 @@ User = get_user_model()
 class OrderAndItemChargesTests(TestCase):
 
     def setUp(self):
-        self.method = OrderAndItemCharges(price_per_order=D('5.00'), price_per_item=D('1.00'))
+        self.method = OrderAndItemCharges(
+            price_per_order=D('5.00'), price_per_item=D('1.00'))
         self.basket = factories.create_basket(empty=True)
         self.method.set_basket(self.basket)
+
+    def test_tax_is_known(self):
+        self.assertTrue(self.method.is_tax_known)
 
     def test_order_level_charge_for_empty_basket(self):
         self.assertEquals(D('5.00'), self.method.charge_incl_tax)
@@ -86,6 +90,10 @@ class WeightBasedMethodTests(TestCase):
     def tearDown(self):
         self.standard.delete()
         self.express.delete()
+
+    def test_tax_is_known(self):
+        self.assertTrue(self.standard.is_tax_known)
+        self.assertTrue(self.express.is_tax_known)
 
     def test_get_band_for_lower_weight(self):
         band = self.standard.bands.create(upper_limit=1, charge=D('4.00'))
