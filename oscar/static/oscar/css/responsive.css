@@ -1087,7 +1087,7 @@
   }
 }
 @media (max-width: 960px) {
-  .header .page_inner {
+  .site-header .site-spacing {
     padding-left: 20px;
     padding-right: 20px;
   }
@@ -1096,11 +1096,63 @@
   body {
     padding: 0;
   }
+  [class*="site-content-"],
+  [class*="site-content-"] + .site-content-main,
+  .product-list > li,
+  [class*="product-list-"] .product-list > li,
+  #product-gallery,
+  .product-summary,
+  [class*="category-description-"],
+  [class*="promotion-single-product-"],
+  [class*="review-"],
+  [class*="basket-items"],
+  [class*="basket-summary-"],
+  .nav-checkout li,
+  .basket-saved [class*="basket-items"],
+  .basket-order [class*="basket-items"],
+  .checkout-action-button,
+  .shipping-wrapper,
+  .payment-wrapper,
+  .site-logo,
+  .shipping-addresses li,
+  .site-login-wrapper [class*="site-"] {
+    float: none;
+    display: block;
+    width: 100%;
+    margin-left: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  [class*="site-content-"]:first-child,
+  [class*="site-content-"] + .site-content-main:first-child,
+  .product-list > li:first-child,
+  [class*="product-list-"] .product-list > li:first-child,
+  #product-gallery:first-child,
+  .product-summary:first-child,
+  [class*="category-description-"]:first-child,
+  [class*="promotion-single-product-"]:first-child,
+  [class*="review-"]:first-child,
+  [class*="basket-items"]:first-child,
+  [class*="basket-summary-"]:first-child,
+  .nav-checkout li:first-child,
+  .basket-saved [class*="basket-items"]:first-child,
+  .basket-order [class*="basket-items"]:first-child,
+  .checkout-action-button:first-child,
+  .shipping-wrapper:first-child,
+  .payment-wrapper:first-child,
+  .site-logo:first-child,
+  .shipping-addresses li:first-child,
+  .site-login-wrapper [class*="site-"]:first-child {
+    margin-left: 0;
+  }
   .align-right,
-  .align-center {
+  .align-center,
+  [class*="basket-"],
+  .basket-order [class*="basket-"] {
     text-align: left;
   }
-  .header h1 {
+  .site-brand {
     text-align: center;
   }
   .navbar-static-top .navbar-inner,
@@ -1158,8 +1210,19 @@
     width: auto;
     min-height: 0;
   }
-  .basket-items img {
-    margin: 0 0 10px;
+  .basket-items-image img {
+    margin: 0 0 20px;
+  }
+  .checkout-action-button .btn {
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  .checkout-action-multiple .btn {
+    margin: 0 0 20px;
   }
   .nav-checkout .previous span,
   .nav-checkout .visited,
@@ -1174,5 +1237,6 @@
   .nav-checkout .previous {
     position: relative;
     z-index: 1;
+    text-align: left;
   }
 }

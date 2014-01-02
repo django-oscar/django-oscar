@@ -22,8 +22,8 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row-fluid">
-        <div class="span6 register_form">
+    <div class="site-login-wrapper">
+        <div class="site-register">
             <form id="register_form" action="." method="post" class="form-stacked">
                 {% csrf_token %}
                 {% include "partials/form_fields.html"  %}

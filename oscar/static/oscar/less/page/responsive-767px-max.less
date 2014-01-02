@@ -4,8 +4,8 @@
 
 // For sreens that are on the money with the page width, lets add some space
 @media (max-width: @oscarpagewidth) {
-	.header {
-	  .page_inner {
+	.site-header {
+	  .site-spacing {
 	    padding-left:20px;
 	    padding-right:20px;
 	  }
@@ -16,17 +16,52 @@
 
 	// Remove padding here, we are setting in on page inner
 	body {
-	padding: 0;
+		padding: 0;
 	}
+	
+	// For semantic/theming sake we have added grid mixins
+	// Make all makeFluidCol mixins block level again
+	[class*="site-content-"],
+	[class*="site-content-"] + .site-content-main,
+	.product-list > li,
+	[class*="product-list-"] .product-list > li,
+	#product-gallery,
+	.product-summary,
+	[class*="category-description-"],
+	[class*="promotion-single-product-"],
+	[class*="review-"],
+	[class*="basket-items"],
+	[class*="basket-summary-"],
+	.nav-checkout li,
+	.basket-saved [class*="basket-items"],
+	.basket-order [class*="basket-items"],
+	.checkout-action-button,
+	.shipping-wrapper,
+	.payment-wrapper,
+	.site-logo,
+	.shipping-addresses li,
+	.site-login-wrapper [class*="site-"] {
+	    float: none;
+	    display: block;
+	    width: 100%;
+	    margin-left: 0;
+	    .box-sizing(border-box);
+	    &:first-child {
+	    	margin-left: 0;
+	    }
+	 }
 
 	// Utilities
+	// Look to remove the align-right and align-right classes
 	.align-right,
-	.align-center {
+	.align-center,
+	[class*="basket-"],
+	.basket-order [class*="basket-"] {
 		text-align: left;
 	}
 
 	// Make the brand a little more significant
-	.header h1 {
+	.site-brand {
 		text-align: center;
 	}
 	// Padding for the static navbars
@@ -99,11 +134,24 @@
 	}
 
 	// Basket items
-	.basket-items {
-	  img {
-	    margin: 0 0 @baseLineHeight / 2;
-	  }
+	.basket-items-image img {
+	    margin:0 0 @baseLineHeight;
 	}
+
+	// Checkout action button
+	// TODO: add mixin for full width buttons and button for that matter.
+	.checkout-action-button .btn {
+	    padding-left: 0;
+	    padding-right: 0;
+	    width:100%;
+		.box-sizing(border-box);
+	}
+	.checkout-action-multiple {
+	    .btn {
+	        margin:0 0 @baseLineHeight;
+	    }
+	}
+
 
 	// Checkout navigation
 	.nav-checkout {
@@ -123,6 +171,7 @@
 		.previous {
 			position:relative;
 			z-index: 1;
+			text-align: left;
 		}
 	}
 

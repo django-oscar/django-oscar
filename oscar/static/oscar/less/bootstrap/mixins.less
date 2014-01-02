@@ -569,6 +569,23 @@
   width: (@gridColumnWidth * @columns) + (@gridGutterWidth * (@columns - 1));
 }
 
+//  Make a Fluid Grid -- not avaliable in Bootstrap 2.3, use .makeFluidRow and 
+//  .makeFluidCol for semantic layouts
+.makeFluidRow(){
+    width: 100%;
+    .clearfix();
+}
+
+.makeFluidCol(@span:1,@offset:0){
+    float: left;
+    #grid > .fluid .span(@span);
+    #grid > .fluid .offset(@offset);
+    &:first-child {
+        margin-left: 0;
+        .offsetFirstChild(@offset);
+    }
+}
+
 // The Grid
 #grid {
 

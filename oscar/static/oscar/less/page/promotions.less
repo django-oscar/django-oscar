@@ -1,27 +1,37 @@
 // Promotional block styles
-.promotion_single {
-    .image_container {
-        @imagecontainerheight: 210px;
-        min-height: @imagecontainerheight;
-        margin-bottom: @baseLineHeight;
-        img {
-            max-height: @imagecontainerheight - 10;
-        }
-    }
+.promotion-block {
+    min-height: 20px;
+    padding: 19px;
+    margin-bottom: 20px;
+    background-color: @wellBackground;
+    border: 1px solid darken(@wellBackground, 7%);
+    .border-radius(@baseBorderRadius);
 }
-.sidebar {
-    .promotion_single {
+
+// Single product promotion
+.promotion-single-product-summary {
+    .makeFluidRow();
+}
+.promotion-single-product-description {
+   .makeFluidCol(9); 
+}
+.promotion-single-product-image {
+    .makeFluidCol(3);
+}
+
+// Single product promotion if in aside
+.site-content-aside {
+    .promotion-single-product {
         h2 {
             .h3();
         }
         h3 {
             .h5();
         }
-        .row-fluid {
-            > [class*="span"] {
-                float:none;
-                width:auto;
-            }
+        .promotion-single-product-description,
+        .promotion-single-product-image {
+            float:none;
+            width:auto;
         }
     }
 }

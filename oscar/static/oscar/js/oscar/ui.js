@@ -90,7 +90,7 @@ var oscar = (function(o, $) {
         },
         initNav: function() {
             // Initial navigation for desktop
-            var $sidebar = $('aside.span3'), 
+            var $sidebar = $('.site-content-aside'), 
                 $browse = $('[data-navigation="dropdown-menu"]'),
                 $browseOpen = $browse.parent().find('> a[data-toggle]');
             // Set width of nav dropdown to be same as sidebar

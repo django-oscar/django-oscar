@@ -1,17 +1,26 @@
 // OSCAR HEADER
 // -----------
 
-.header {
+.site-header {
     position:relative;
     z-index:2;
-    .page_inner {
-        padding:50px 0 40px;
+    .site-spacing {
+        padding:@gridGutterWidth * 2.5 0 @gridGutterWidth * 2;
     }
     h1 {
         line-height:inherit;
         margin:0;
         font-size:30px;
     }
+}
+
+// Site brand (logo and mini basket layout)
+.site-brand {
+    // 100% and clearfix
+    .makeFluidRow();
+}
+.site-logo {
+    .makeFluidCol(7);
 }
 
 //Language select
@@ -21,6 +30,9 @@
 
 // Basket Mini Dropdown
 .basket-mini {
+
+    float:right;
+
     .btn-group {
         margin-left:10px;
     }
@@ -34,8 +46,8 @@
     }
 }
 
-// Basket Mini Item
-.basket-mini-item {
+// Basket Mini Summary
+.basket-mini-summary {
     li {
         border-top:1px solid @grayLighter;
         padding:10px 15px;
@@ -69,5 +81,24 @@
         h4 {
             margin-bottom:@baseLineHeight / 2;
         }
+    }
+}
+
+// Basket Mini Item Grid
+.basket-mini-item {
+    // 100% and clearfix
+    .makeFluidRow();
+
+    .image_container {
+        .makeFluidCol(3);
+    }
+    h5 {
+        .makeFluidCol(5);
+    }
+    .price_color {
+        .makeFluidCol(2);
+    }
+    .basket-mini-quantity {
+        .makeFluidCol(2);
     }
 }

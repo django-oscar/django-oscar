@@ -2,13 +2,13 @@
 {% load promotion_tags %}
 
 {% block content_wrapper %}
-    <div class="container-fluid page">
-        <div class="page_inner">
+    <div class="site-container">
+        <div class="site-spacing">
             {% block breadcrumbs %}{% endblock %}
 
-            <div class="row-fluid">
+            <div class="site-content-wrapper">
 
-                <aside class="span3">
+                <aside class="site-content-left">
                     <div id="promotions_left">
                         {% for promotion in promotions_left %}
                         {% render_promotion promotion %}
@@ -18,7 +18,7 @@
                     {% endblock %}
                 </aside>
 
-                <div class="span6">
+                <div class="site-content-main">
                     {% block header %}
                     <div class="page-header action">
                         <h1>{% block headertext %}{% endblock %}</h1>
@@ -35,7 +35,7 @@
                     {% block content %}{% endblock %}
                 </div>
 
-                <aside class="span3">
+                <aside class="site-content-right">
                     <div id="promotions_right">
                         {% for promotion in promotions_right %}
                         {% render_promotion promotion %}
@@ -45,8 +45,8 @@
                     {% endblock %}
                 </aside>
 
-            </div><!-- /row-fluid -->
-
-        </div><!-- /page_inner -->
-    </div><!-- /container-fluid -->
+            </div><!-- /site-content-wrapper -->
+            
+        </div><!-- /site-spacing -->
+    </div><!-- /site-container -->
 {% endblock %}

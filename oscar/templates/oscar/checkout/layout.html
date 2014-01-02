@@ -5,17 +5,17 @@
 
 {% block layout %}
 
-    <header class="header container-fluid">
-        <div class="page_inner">
-            <div class="row-fluid">
+    <header class="site-header">
+        <div class="site-spacing">
+            <div class="site-brand">
                 {% include "partials/brand.html" %}
-            </div><!-- /row-fluid -->
+            </div>
         </div>
         {% block checkout_nav %}{% endblock %}
     </header><!-- /header -->
 
-    <div class="container-fluid page">
-       <div class="page_inner">
+    <div class="site-container">
+        <div class="site-spacing">
             {% include 'partials/alert_messages.html' %}
 
             <div class="sub-header">
@@ -40,15 +40,16 @@
                 </div>
                 {% endfor %}
             {% endblock %}
+            <div class="site-content-main">
+                {% block content %}{% endblock %}
 
-            {% block content %}{% endblock %}
-
-            <div id="promotions">
-                {% for promotion in promotions_page %}
-                    {% render_promotion promotion %}
-                {% endfor %}
+                <div id="promotions">
+                    {% for promotion in promotions_page %}
+                        {% render_promotion promotion %}
+                    {% endfor %}
+                </div>
             </div>
-        </div><!-- /page_inner -->
-    </div>
+        </div><!-- /site-spacing -->
+    </div><!-- /site-container -->
     {% include "partials/footer_checkout.html" %}
 {% endblock %}

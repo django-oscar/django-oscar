@@ -15,7 +15,7 @@
 
 {% block content %}
 
-    <form action="." method="post" class="form-stacked well">
+    <form action="." method="post" class="checkout-gateway well">
         {% csrf_token %}
         {{ form.non_field_errors }}
 
@@ -52,14 +52,11 @@
                 </div>
             </div>
         </div>
-
-        <div class="form-actions">
-            <div class="row-fluid">
-                <div class="span3">
-                    <button type="submit" class="btn btn-large btn-block btn-primary">{% trans "Continue" %}</button>
-                </div>
-            </div>
+        
+        <div class="checkout-action-button form-actions">
+            <button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
         </div>
+
     </form>
 
 {% endblock content %}

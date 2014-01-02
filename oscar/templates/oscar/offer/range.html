@@ -24,21 +24,21 @@
 {% block headertext %}{{ range.name }}{% endblock %}
 
 {% block content %}
-    {% if range.description %}
-        {{ range.description|safe }}
-    {% endif %}
-    {% if products %}
-        <section>
-            <div class="mod">
-                <ol class="row-fluid">
+    <section class="product-list-offers">
+        {% if range.description %}
+            {{ range.description|safe }}
+        {% endif %}
+        {% if products %}
+            <div class="product-list-wrapper">
+                <ol class="product-list">
                     {% for product in products %}
-                        <li class="span2 {% if forloop.counter0|divisibleby:"6" %}no-margin{% endif %}">{% render_product product %}</li>
+                        <li {% if forloop.counter0|divisibleby:"6" %}class="product-list-row"{% endif %}>{% render_product product %}</li>
                     {% endfor %}
                 </ol>
                 {% include "partials/pagination.html" %}
             </div>
-        </section>
-    {% else %}
-        <p class="nonefound">{% trans "No products found." %}</p>
-    {% endif %}
+        {% else %}
+            <p class="nonefound">{% trans "No products found." %}</p>
+        {% endif %}
+    </section>
 {% endblock content %}

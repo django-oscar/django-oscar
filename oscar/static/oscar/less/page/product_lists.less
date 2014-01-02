@@ -1,18 +1,55 @@
-//no margin on lists
-ol,
-ul {
-    &.row-fluid {
-        margin-left:0;
-        list-style: none;
+// Product lists
+
+// The product list wrapper, add padding, border or background here.
+.product-list-wrapper {
+
+}
+
+// For products recommended, related, viewed, offers that appear on the detail
+// page more product appear in that row, so a new width is needed
+.product-list-recommended,
+.product-list-related,
+.product-list-viewed,
+.product-list-offers {
+
+    .product-list {
+        > li {
+            .makeFluidCol(2);
+        }
+    }
+
+}
+
+// The product list (either a ol or ul)
+.product-list {
+    // 100% and clearfix
+    .makeFluidRow();
+    margin-left:0;
+    list-style: none;
+    
+    // Width of product listed item
+    > li {
+        .makeFluidCol(3);
+
+        // Remove margin at beginning of new row
+        &.product-list-row {
+            margin-left:0;
+        }
     }
 }
 
-//Remove margin if condition
-.row-fluid [class*="span"] {
-    &.no-margin {
-        margin-left:0;
-    }
+// Product category description
+.category-description {
+    // 100% and clearfix
+    .makeFluidRow();
 }
+.category-description-text {
+   .makeFluidCol(9); 
+}
+.category-description-image {
+    .makeFluidCol(3);
+}
+
 
 //Products listed container
 // Space between products in a list is determined by the Grid and therfore the
