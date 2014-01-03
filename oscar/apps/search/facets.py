@@ -33,6 +33,9 @@ def facet_data(request, form, results):  # noqa (too complex (10))
                 url = base_url.remove_query_param(
                     'selected_facets', '%s:%s' % (
                         field_filter, name))
+                # Don't carry through pagination params
+                if url.has_query_param('page'):
+                    url = url.remove_query_param('page')
                 datum['deselect_url'] = url.as_string()
             else:
                 # This filter is not selected - built the 'select' URL
@@ -40,6 +43,9 @@ def facet_data(request, form, results):  # noqa (too complex (10))
                 url = base_url.append_query_param(
                     'selected_facets', '%s:%s' % (
                         field_filter, name))
+                # Don't carry through pagination params
+                if url.has_query_param('page'):
+                    url = url.remove_query_param('page')
                 datum['select_url'] = url.as_string()
             facet_data[key]['results'].append(datum)
 
