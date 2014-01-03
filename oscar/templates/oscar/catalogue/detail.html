@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block description %}
-    {{ product.description|default:"" }}
+    {{ product.description|default:""|striptags }}
 {% endblock %}
 
 {% block breadcrumbs %}
