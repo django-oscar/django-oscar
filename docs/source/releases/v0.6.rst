@@ -2,23 +2,33 @@
 Oscar 0.6 release notes
 =======================
 
-Welcome to Oscar 0.6!
+:release: 2014-01-15
+
+It took a while but it's finally here: welcome to Oscar 0.6!
 
 These release notes cover the `new features`_ as well as `backwards incompatible changes`_ 
 that you'll want to be aware of when upgrading from Oscar 0.5 or
 earlier.  This release contains some major changes to core APIs which means
-many old APIs are to be dropped - see the `deprecation plan`_ to avoid any
+many old APIs are scheduled to be dropped - see the `deprecation plan`_ to avoid any
 nasty surprises.
 
 To upgrade your Oscar site, make sure you study both the `backwards incompatible changes`_ 
 and the `deprecated features`_.  If you have any undocumented issues, please
-let us know on the mailing list.
+let us know on the `mailing list`_.
 
 .. _`new features`: `What's new in Oscar 0.6?`_
 .. _`upgrading advice`: `Upgrading notes`_
 .. _`deprecation plan`: `Features deprecated in 0.6`_
 .. _`deprecated features`: `Features deprecated in 0.6`_
 .. _`backwards incompatible changes`: `Backwards incompatible changes in 0.6`_
+.. _`mailing list`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar
+
+Table of contents:
+
+* `Overview`_
+* `What's new in Oscar 0.6?`_
+* `Backwards incompatible changes in 0.6`_
+* `Features deprecated in 0.6`_
 
 Overview
 ========
@@ -39,10 +49,14 @@ tested in the context of starting a new Oscar project with a custom model.
 Switching from a separate "profile" model to the new system is not recommended
 at this point.
 
+Oscar also supports Django 1.6 although this is considered experimental at this
+stage.  It's possible there are still some incompatibilities that haven't been
+teased out just yet.
+
 Other notable new features include:
 
 * A feature-rich `demo site`_ that illustrates how Oscar can be customised.  It
-  uses several of Oscar's many extensions, such as django-oscar-paypal_,
+  uses several of Oscar's many extensions such as django-oscar-paypal_,
   django-oscar-datacash_ and django-oscar-stores_.  It is intended as a
   reference site for Oscar.
 
@@ -71,7 +85,7 @@ Multiple stockrecords per product
 
 Products can now have multiple stockrecords rather than just one.  This allows a
 product to be fulfilled by one of several partners.  This is a key requirement
-for large-scale e-commerce sites selling millions of products, that use many
+for large-scale e-commerce sites selling millions of products that use many
 different fulfillment partners.  It also allows products to be sold in 
 different currencies.
 
@@ -85,16 +99,16 @@ Pricing and availability
 
 When products can have many stockrecords, a process needs to be in place to
 choose which one is selected for a given customer and product.  To handle this,
-a new "strategy" class has been introduced which selects the appropriate
-stockrecord for a given customer and product.
+a new "strategy" class has been introduced responsible for selecting the appropriate
+stockrecord for a given customer and product.  
 
 This change also paved the way for reworking how prices, taxes and availability
 are handled.  Instead of using `"partner wrappers"`_, the strategy class is
 responsible for returning availability details and prices for a particular
-product.  New classes known as pricing and availabiliy policies are used to
+product.  New classes known as pricing and availability policies are used to
 encapsulate this information.
 
-These changes allows Oscar to dynamically choose which stockrecord to use for a
+These changes allows Oscar to dynamically determine prices, partner and availability 
 given customer and product.  This enables several advanced features such as:
 
 * Fulfilling a product from the partner that offers the best margin.
@@ -102,7 +116,7 @@ given customer and product.  This enables several advanced features such as:
 * Supporting transactions in multiple currencies on the same site.
 * Supporting different tax treatments on the same site (eg UK VAT and US sales
   tax)
-* Having different pricing policies for different customers. 
+* Having different pricing and availability policies for different customers. 
 
 It also provides a customisation layer for custom price and availability logic.  
 There's a great deal of flexibility.  See the guide to 
@@ -575,44 +589,111 @@ URLs
 Migrations
 ~~~~~~~~~~
 
-There are new migrations in the following apps to be aware of.
+There are rather a lot of new migrations in Oscar 0.6.  They are all detailed
+below.  
 
-* Catalogue:
+If you are upgrading and your project overrides one of these apps with
+new migrations, then ensure you pick up the schema changes in a new migration
+within your app.  You can generally do this using ``manage.py schemamigration
+$APP --auto`` but check the corresponding core migration to ensure there aren't
+any subtleties that are being overlooked.
 
-    - ``0011``: Higher ``max_length`` on FileFields and ImageFields
-
-* Promotions:
-
-    - ``0003``: Higher ``max_length`` on FileFields and ImageFields
+Some of these migrations rename fields for consistency, while others ensure
+``CharField`` fields are not nullable.
 
 * Address:
 
-    - ``0003``: ``Country``'s ``is_highlighted`` is now an integer to allow
-      finer control.
+    - ``0003``: A new field ``display_order`` is added to the ``Country``
+      model.  This is the first of 3 migrations that replace the
+      boolean ``is_highlighted`` field with an integer field that allows
+      fine-grained control of the order of countries in dropdowns.
+    - ``0004``: A data migration to ensure highlighted countries have a display
+      order of 1.
+    - ``0005``: Remove the ``is_highlighted`` field from the ``Country`` model
+      as it is no longer necessary.
+    - ``0006``: Add a uniqueness constraint across ``user_id`` and ``hash`` for
+      the ``UserAddress`` model to prevent duplicate addresses.
+    - ``0007``: Use a custom field for address postcodes.
 
-* ShippingAddress:
+* Basket:
 
-    - ``0018``: ``ShippingAddress``'s ``phone_number`` is now a PhoneNumberField
-      to allow fine validation.
+    - ``0004``: Add ``stockrecord`` field to the ``Line`` model to track which
+      stockrecord has been selected to fulfill a particular line.
+    - ``0005``: Add ``price_currency`` field to the ``Line`` model.
+
+* Catalogue:
+
+    - ``0011``: Larger ``max_length`` on FileFields and ImageFields
+    - ``0012``: Use ``NullBooleanField`` for the ``value_boolean`` field of
+      the ``ProductAttributeValue`` model. 
+    - ``0013``: Add ``value_file`` and ``value_image`` fields to the
+      ``ProductAttributeValue`` model to support file and image attributes.
+
+* Customer:
+
+    - ``0005``: Don't allow ``sms_template`` field of
+      ``CommunicationEventType`` model to be nullable.
+
+* Dashboard:
+
+    - ``0002``: Don't allow ``error_message`` field of
+      ``RangeProductFileUpload`` model to be nullable.
+
+* Offer app:
+
+    - ``0020``: Data migration to set null offer descriptions to empty string.
+    - ``0021``: Don't allow null offer descriptions or benefit types.
+    - ``0022``: Add a ``slug`` field to the :class:`~oscar.apps.offer.models.Range` model.
+    - ``0023``: A data migration to populate the new range slug field. 
+    - ``0024``: Add a ``is_public`` field to the :class:`~oscar.apps.offer.models.Range` model.
+    - ``0025``: Add a ``description`` field to the :class:`~oscar.apps.offer.models.Range` model.
+    - ``0026``: Add a ``applies_to_tax_exclusive_price`` field to
+      ``ConditionalOffer`` model to try and handle offers that apply in bothe
+      the US and UK (this field is later removed).
+    - ``0027``: Create a joining table for the new M2M relationship between
+      ranges and products.
+    - ``0028``: Remove ``applies_to_tax_exclusive_price`` field.
 
 * Order app:
 
-    - The `date` field of the ``order.AbstractCommunicationEvent``, ``order.AbstractPaymentEvent`` and
-      ``order.AbstractShippingEvent`` models have been renamed to ``date_created`` for
-      consistency with the rest of Oscar.
+    - ``0010``: Allow postcodes for shipping- and billing addresses to be
+      nullable.
+    - ``0011``: Rename ``date`` field on ``CommunicationEvent``,
+      ``ShippingEvent`` and ``PaymentEvent`` models to be ``date_created``. 
+    - ``0012``: Add ``reference`` field to ``PaymentEvent`` model.
+    - ``0013``: Add a foreign key to ``ShippingEvent`` from ``PaymentEvent``
+      model.
+    - ``0014``: Change ``postcode`` field on ``ShippingAddress`` and
+      ``BillingAddress`` models to use ``UppercaseCharField`` field.
+    - ``0015``: Remove ``is_required`` and ``sequence_number`` fields from
+      ``ShippingEventType`` and ``PaymentEventType`` models. 
+    - ``0016``: Add ``currency`` field to ``Order model``.  Add a foreign key
+      to the ``StockRecord`` model from the ``Line`` model.
+    - ``0017``: Add a ``shipping_code`` field to the ``Order`` model.
+    - ``0018``: ``ShippingAddress``'s ``phone_number`` is now a ``PhoneNumberField``
+      to allow better validation.
 
-Order app:
+* Partner app:
 
-* ``0015``: Unused ``sequence_number`` and ``is_required`` deleted from
-  ``ShippingEventType``. Unused ``sequence_number`` deleted from
-  ``PaymentEventType``.
+    - ``0008``: Remove unnecessary ``partner_abstractstockalert`` table.
+    - ``0009``: Create table for new ``PartnerAddress`` model.
+    - ``0010``: Remove uniqueness constraint on ``product_id`` for the
+      ``StockRecord`` model.  This allows a product to have more than one
+      stockrecord.
 
-Offer app:
+* Payment app:
 
-* ``0021``: Add a ``slug`` field to the :class:`~oscar.apps.offer.models.Range` model.
-* ``0022``: A data migration to populate the new range slug field. 
-* ``0023``: Add a ``is_public`` field to the :class:`~oscar.apps.offer.models.Range` model.
-* ``0024``: Add a ``description`` field to the :class:`~oscar.apps.offer.models.Range` model.
+    - ``0002``: Ensure all ``CharField`` fields are not nullable.  This
+      migration handles both the data- and schema-migration in one.
+
+* Promotions app:
+
+    - ``0002``: Ensure all ``CharField`` fields are not nullable.
+    - ``0003``: Extend the ``max_length`` of the ``image`` field.
+
+* Wishlist app:
+
+    - ``0001``: Initial table creation
 
 Features deprecated in 0.6
 ==========================
