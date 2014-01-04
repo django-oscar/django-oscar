@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import codecs
 import csv
+import six
 from six.moves import cStringIO
 
 
@@ -21,12 +22,12 @@ class CsvUnicodeWriter(object):
         self.encoder = codecs.getincrementalencoder(encoding)()
 
     def cast_to_str(self, obj):
-        if isinstance(obj, unicode):
+        if isinstance(obj, six.text_type):
             return obj.encode('utf-8')
-        elif isinstance(obj, str):
+        elif isinstance(obj, six.byte_type):
             return obj
         elif hasattr(obj, '__unicode__'):
-            return unicode(obj).encode('utf-8')
+            return six.test_type(obj).encode('utf-8')
         elif hasattr(obj, '__str__'):
             return str(obj)
         else:
@@ -77,7 +78,7 @@ class CsvUnicodeReader(object):
 
     def next(self):
         row = self.reader.next()
-        return [unicode(s, "utf-8") for s in row]
+        return [s.encode("utf-8") for s in row]
 
     def __iter__(self):
         return self
