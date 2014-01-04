@@ -73,7 +73,8 @@ def send_product_alerts(product):
         hurry_mode = num_in_stock is not None and num_alerts < num_in_stock
     else:
         result = stockrecords.aggregate(max_in_stock=Max('num_in_stock'))
-        hurry_mode = num_alerts < result['max_in_stock']
+        hurry_mode = result['max_in_stock'] is not None and \
+            num_alerts < result['max_in_stock']
 
     # Load templates
     message_tpl = loader.get_template('customer/alerts/message.html')
