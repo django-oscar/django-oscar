@@ -445,8 +445,7 @@ class AbstractBasket(models.Model):
     @property
     def num_items(self):
         """Return number of items"""
-        return reduce(
-            lambda num, line: num + line.quantity, self.lines.all(), 0)
+        return sum(line.quantity for line in self.lines.all())
 
     @property
     def num_items_without_discount(self):
