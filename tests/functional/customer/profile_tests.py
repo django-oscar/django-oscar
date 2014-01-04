@@ -57,7 +57,7 @@ class TestASignedInUser(WebTestCase):
     def test_cant_update_their_email_address_if_it_already_exists(self):
         User.objects.create_user(username='testuser', email='new@example.com',
                                  password="somerandompassword")
-        self.assertEquals(User.objects.count(), 2)
+        self.assertEqual(User.objects.count(), 2)
 
         profile_form_page = self.app.get(reverse('customer:profile-update'),
                                 user=self.user)
@@ -145,7 +145,7 @@ class TestReorderingOrderLines(ClientTestCase):
 
         basket = Basket.objects.all()[0]
         basket.strategy = strategy.Default()
-        self.assertEquals(len(basket.all_lines()), 1)
+        self.assertEqual(len(basket.all_lines()), 1)
 
         # try to reorder a product
         self.client.post(reverse('customer:order',
@@ -168,11 +168,11 @@ class TestReorderingOrderLines(ClientTestCase):
 
         basket = Basket.objects.all()[0]
         basket.strategy = strategy.Default()
-        self.assertEquals(len(basket.all_lines()), 1)
+        self.assertEqual(len(basket.all_lines()), 1)
 
         self.client.post(reverse('customer:order-line',
                                  args=(order.number, line.pk)),
                          {'action': 'reorder'})
 
-        self.assertEquals(len(basket.all_lines()), 1)
+        self.assertEqual(len(basket.all_lines()), 1)
         self.assertNotEqual(line.product.pk, product.pk)

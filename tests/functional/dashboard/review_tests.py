@@ -39,9 +39,9 @@ class ReviewsDashboardTests(ClientTestCase):
         }
         self.client.post(url, post_params)
 
-        self.assertEquals(ProductReview.objects.get(pk=1).status, 0)
-        self.assertEquals(ProductReview.objects.get(pk=2).status, 1)
-        self.assertEquals(ProductReview.objects.get(pk=3).status, 1)
+        self.assertEqual(ProductReview.objects.get(pk=1).status, 0)
+        self.assertEqual(ProductReview.objects.get(pk=2).status, 1)
+        self.assertEqual(ProductReview.objects.get(pk=3).status, 1)
 
     def test_filter_reviews_by_name(self):
         url = reverse('dashboard:reviews-list')
@@ -55,14 +55,14 @@ class ReviewsDashboardTests(ClientTestCase):
 
         response = self.client.get(url, {'name': 'peter'})
 
-        self.assertEquals(len(response.context['review_list']), 1)
-        self.assertEquals(response.context['review_list'][0].user, user1)
+        self.assertEqual(len(response.context['review_list']), 1)
+        self.assertEqual(response.context['review_list'][0].user, user1)
 
         response = self.client.get(url, {'name': 'lois griffin'})
 
-        self.assertEquals(len(response.context['review_list']), 2)
+        self.assertEqual(len(response.context['review_list']), 2)
         for review in response.context['review_list']:
-            self.assertEquals(review.user, user2)
+            self.assertEqual(review.user, user2)
 
     def test_filter_reviews_by_keyword(self):
         url = reverse('dashboard:reviews-list')

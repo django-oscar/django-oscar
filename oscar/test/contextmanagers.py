@@ -12,7 +12,7 @@ def mock_signal_receiver(signal, wraps=None, **kwargs):
 
         with mock_signal_receiver(signal) as receiver:
             # Do the thing that should trigger the signal
-            self.assertEquals(receiver.call_count, 1)
+            self.assertEqual(receiver.call_count, 1)
 
     Implementation based on:
     https://github.com/dcramer/mock-django/blob/master/mock_django/signals.py

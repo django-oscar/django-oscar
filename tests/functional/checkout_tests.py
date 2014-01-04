@@ -288,10 +288,10 @@ class TestPlacingOrderUsingAVoucher(ClientTestCase, CheckoutMixin):
         self.assertRedirectUrlName(self.response, 'checkout:thank-you')
 
     def test_records_use(self):
-        self.assertEquals(1, self.voucher.num_orders)
+        self.assertEqual(1, self.voucher.num_orders)
 
     def test_records_discount(self):
-        self.assertEquals(1, self.voucher.num_orders)
+        self.assertEqual(1, self.voucher.num_orders)
 
 
 class TestPlacingOrderUsingAnOffer(ClientTestCase, CheckoutMixin):
@@ -311,5 +311,5 @@ class TestPlacingOrderUsingAnOffer(ClientTestCase, CheckoutMixin):
         self.assertRedirectUrlName(self.response, 'checkout:thank-you')
 
     def test_records_use(self):
-        self.assertEquals(1, self.offer.num_orders)
-        self.assertEquals(1, self.offer.num_applications)
+        self.assertEqual(1, self.offer.num_orders)
+        self.assertEqual(1, self.offer.num_applications)

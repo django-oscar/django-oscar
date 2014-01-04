@@ -170,4 +170,4 @@ class TemplateTagTests(TestCase):
         ).render(Context({
             'user': user
         }))
-        self.assertEquals(out, "3")
+        self.assertEqual(out, "3")

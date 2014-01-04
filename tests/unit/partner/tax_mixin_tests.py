@@ -22,12 +22,12 @@ class TestNoTaxMixin(TestCase):
     def test_returns_zero_tax(self):
         policy = self.mixin.pricing_policy(
             self.product, self.stockrecord)
-        self.assertEquals(D('0.00'), policy.tax)
+        self.assertEqual(D('0.00'), policy.tax)
 
     def test_doesnt_add_tax_to_net_price(self):
         policy = self.mixin.pricing_policy(
             self.product, self.stockrecord)
-        self.assertEquals(D('12.00'), policy.incl_tax)
+        self.assertEqual(D('12.00'), policy.incl_tax)
 
 
 class TestFixedRateTaxMixin(TestCase):
@@ -47,10 +47,10 @@ class TestFixedRateTaxMixin(TestCase):
     def test_returns_correct_tax(self):
         policy = self.mixin.pricing_policy(
             self.product, self.stockrecord)
-        self.assertEquals(self.mixin.rate * self.stockrecord.price_excl_tax,
+        self.assertEqual(self.mixin.rate * self.stockrecord.price_excl_tax,
                           policy.tax)
 
     def test_adds_tax_to_net_price(self):
         policy = self.mixin.pricing_policy(
             self.product, self.stockrecord)
-        self.assertEquals(D('13.20'), policy.incl_tax)
+        self.assertEqual(D('13.20'), policy.incl_tax)

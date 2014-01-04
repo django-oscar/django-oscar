@@ -31,9 +31,9 @@ class TestDashboardIndexForStaffUser(ClientTestCase):
         report = IndexView().get_hourly_report()
         self.assertItemsEqual(report, ['order_total_hourly', 'max_revenue',
                                        'y_range'])
-        self.assertEquals(len(report['order_total_hourly']), 12)
-        self.assertEquals(len(report['y_range']), 0)
-        self.assertEquals(report['max_revenue'], 0)
+        self.assertEqual(len(report['order_total_hourly']), 12)
+        self.assertEqual(len(report['y_range']), 0)
+        self.assertEqual(report['max_revenue'], 0)
 
     def test_includes_hourly_report_with_orders(self):
         create_order(total=prices.Price('GBP', excl_tax=D('34.05'),
@@ -42,9 +42,9 @@ class TestDashboardIndexForStaffUser(ClientTestCase):
                                         tax=D('0.00')))
         report = IndexView().get_hourly_report()
 
-        self.assertEquals(len(report['order_total_hourly']), 12)
-        self.assertEquals(len(report['y_range']), 11)
-        self.assertEquals(report['max_revenue'], D('60'))
+        self.assertEqual(len(report['order_total_hourly']), 12)
+        self.assertEqual(len(report['y_range']), 11)
+        self.assertEqual(report['max_revenue'], D('60'))
 
     def test_has_stats_vars_in_context(self):
         response = self.client.get(reverse('dashboard:index'))

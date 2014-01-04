@@ -29,17 +29,17 @@ class TestStockRecord(TestCase):
 
     @decorators.ignore_deprecation_warnings
     def test_get_price_incl_tax_defaults_to_no_tax(self):
-        self.assertEquals(D('10.00'), self.stockrecord.price_incl_tax)
+        self.assertEqual(D('10.00'), self.stockrecord.price_incl_tax)
 
     def test_get_price_excl_tax_returns_correct_value(self):
-        self.assertEquals(D('10.00'), self.stockrecord.price_excl_tax)
+        self.assertEqual(D('10.00'), self.stockrecord.price_excl_tax)
 
     def test_net_stock_level_with_no_allocation(self):
-        self.assertEquals(10, self.stockrecord.net_stock_level)
+        self.assertEqual(10, self.stockrecord.net_stock_level)
 
     def test_net_stock_level_with_allocation(self):
         self.stockrecord.allocate(5)
-        self.assertEquals(10-5, self.stockrecord.net_stock_level)
+        self.assertEqual(10-5, self.stockrecord.net_stock_level)
 
     def test_allocated_does_not_alter_num_in_stock(self):
         self.stockrecord.allocate(5)
@@ -90,14 +90,14 @@ class CustomWrapperTests(TestCase):
         product = factories.create_product(
             price=D('10.00'), partner="Acme", num_in_stock=10)
         stockrecord = product.stockrecords.all()[0]
-        self.assertEquals(u"Dummy response",
+        self.assertEqual(u"Dummy response",
                           unicode(stockrecord.availability))
 
     def test_wrapper_dispatch_date_gets_called(self):
         product = factories.create_product(
             price=D('10.00'), partner="Acme", num_in_stock=10)
         stockrecord = product.stockrecords.all()[0]
-        self.assertEquals("Another dummy response",
+        self.assertEqual("Another dummy response",
                           stockrecord.dispatch_date)
 
 

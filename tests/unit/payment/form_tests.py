@@ -12,7 +12,7 @@ class TestBankcardNumberField(TestCase):
         self.field = forms.BankcardNumberField()
 
     def test_strips_non_digits(self):
-        self.assertEquals(
+        self.assertEqual(
             '4111111111111111', self.field.clean('  4111 1111 1111 1111'))
 
     def test_rejects_numbers_which_dont_pass_luhn(self):
@@ -44,7 +44,7 @@ class TestStartingMonthField(TestCase):
 
     def test_returns_the_first_day_of_month(self):
         start_date = self.field.clean(['01', '2010'])
-        self.assertEquals(1, start_date.day)
+        self.assertEqual(1, start_date.day)
 
 
 class TestExpiryMonthField(TestCase):
@@ -73,11 +73,11 @@ class TestExpiryMonthField(TestCase):
     def test_returns_last_day_of_month(self):
         today = datetime.date.today()
         end_date = self.field.clean(['01', today.year + 1])
-        self.assertEquals(31, end_date.day)
+        self.assertEqual(31, end_date.day)
 
     def test_defaults_to_current_month(self):
         today = datetime.date.today()
-        self.assertEquals(["%.2d" % today.month, today.year],
+        self.assertEqual(["%.2d" % today.month, today.year],
                           self.field.initial)
 
 
@@ -104,7 +104,7 @@ class TestCCVField(TestCase):
         try:
             self.field.clean("asdf")
         except ValidationError as e:
-            self.assertEquals("Please enter a 3 or 4 digit number",
+            self.assertEqual("Please enter a 3 or 4 digit number",
                               e.messages[0])
 
 
@@ -127,7 +127,7 @@ class TestValidBankcardForm(TestCase):
     def test_returns_bankcard_with_sensitive_data_intact(self):
         bankcard = self.form.bankcard
         self.assertFalse(bankcard.number.startswith('X'))
-        self.assertEquals('123', bankcard.ccv)
+        self.assertEqual('123', bankcard.ccv)
 
 
 class TestBankcardForm(TestCase):

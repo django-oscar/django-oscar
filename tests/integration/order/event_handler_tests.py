@@ -74,7 +74,7 @@ class TestTotalCalculation(TestCase):
         lines, line_quantities = self.order.lines.all(), [2]
         total = self.handler.calculate_payment_event_subtotal(
             self.settled, lines, line_quantities)
-        self.assertEquals(2 * D('10.00'), total)
+        self.assertEqual(2 * D('10.00'), total)
         self.handler.create_payment_event(
             self.order, self.settled, total, lines, line_quantities)
 
@@ -82,13 +82,13 @@ class TestTotalCalculation(TestCase):
         line_quantities = [3]
         total = self.handler.calculate_payment_event_subtotal(
             self.settled, lines, line_quantities)
-        self.assertEquals(3 * D('10.00'), total)
+        self.assertEqual(3 * D('10.00'), total)
 
     def test_invalid_payment_sequence(self):
         lines, line_quantities = self.order.lines.all(), [2]
         total = self.handler.calculate_payment_event_subtotal(
             self.settled, lines, line_quantities)
-        self.assertEquals(2 * D('10.00'), total)
+        self.assertEqual(2 * D('10.00'), total)
         self.handler.create_payment_event(
             self.order, self.settled, total, lines, line_quantities)
 
