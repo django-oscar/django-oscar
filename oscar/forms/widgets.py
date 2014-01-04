@@ -1,4 +1,5 @@
 import re
+import six
 
 from django import forms
 from django.forms.util import flatatt
@@ -74,7 +75,7 @@ def datetime_format_to_js_date_format(format):
         '%d': 'dd',
         '%H:%M': '',
     }
-    for search, replace in replacements.iteritems():
+    for search, replace in six.iteritems(replacements):
         converted = converted.replace(search, replace)
     return converted.strip()
 
@@ -92,7 +93,7 @@ def datetime_format_to_js_time_format(format):
         '%H': 'HH',
         '%M': 'mm',
     }
-    for search, replace in replacements.iteritems():
+    for search, replace in six.iteritems(replacements):
         converted = converted.replace(search, replace)
 
     converted = re.sub('[-/][^%]', '', converted)
