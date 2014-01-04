@@ -6,7 +6,7 @@ from django.forms.util import flatatt
 from django.forms.widgets import FileInput
 from django.template import Context
 from django.template.loader import render_to_string
-from django.utils.encoding import force_text, force_unicode
+from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
 
 try:
@@ -43,7 +43,7 @@ class ImageInput(FileInput):
         final_attrs = self.build_attrs(attrs, type=self.input_type, name=name)
         if value != '':
             # Only add the 'value' attribute if a value is non-empty.
-            final_attrs['value'] = force_unicode(self._format_value(value))
+            final_attrs['value'] = force_text(self._format_value(value))
 
         image_url = final_attrs.get('value', '')
 
