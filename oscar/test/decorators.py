@@ -24,7 +24,7 @@ def dataProvider(fn_data_provider):
                     args, kwargs = data, {}
                 try:
                     test_method(self, *args, **kwargs)
-                except AssertionError, e:
+                except AssertionError as e:
                     self.fail("%s (Provided data: %s, %s)" % (e, args, kwargs))
         return execute_test_method_with_each_data_set
     return test_decorator

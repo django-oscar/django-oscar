@@ -56,13 +56,13 @@ class Importer(object):
                                         " %s='%s', skipping"
                                         % (self._field, lookup_value))
                     stats['num_skipped'] += 1
-                except IOError, e:
+                except IOError as e:
                     raise ImageImportError(_('%(filename)s is not a valid'
                                              ' image (%(error)s)')
                                            % {'filename': filename,
                                               'error': e})
                     stats['num_invalid'] += 1
-                except FieldError, e:
+                except FieldError as e:
                     raise ImageImportError(e)
                     self._process_image(image_dir, filename)
             if image_dir != dirname:

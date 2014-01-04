@@ -669,7 +669,7 @@ class ProductAttributesContainer(object):
             else:
                 try:
                     attribute.validate_value(value)
-                except ValidationError, e:
+                except ValidationError as e:
                     raise ValidationError(
                         _("%(attr)s attribute %(err)s") %
                         {'attr': attribute.code, 'err': e})

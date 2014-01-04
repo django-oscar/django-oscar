@@ -164,7 +164,7 @@ class AbstractProductReview(models.Model):
         vote = self.votes.model(review=self, user=user, delta=1)
         try:
             vote.full_clean()
-        except ValidationError, e:
+        except ValidationError as e:
             return False, u"%s" % e
         return True, ""
 
