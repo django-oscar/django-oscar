@@ -2,6 +2,7 @@ from itertools import chain
 from datetime import datetime, date
 import logging
 import os
+import six
 import warnings
 
 from django.conf import settings
@@ -751,7 +752,7 @@ class AbstractProductAttribute(models.Model):
         return self.type in ["file", "image"]
 
     def _validate_text(self, value):
-        if not (type(value) == unicode or type(value) == str):
+        if not isinstance(value, six.string_types):
             raise ValidationError(_("Must be str or unicode"))
 
     def _validate_float(self, value):
