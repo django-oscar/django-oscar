@@ -24,7 +24,7 @@ class CsvUnicodeWriter(object):
     def cast_to_str(self, obj):
         if isinstance(obj, six.text_type):
             return obj.encode('utf-8')
-        elif isinstance(obj, six.byte_type):
+        elif isinstance(obj, six.binary_type):
             return obj
         elif hasattr(obj, '__unicode__'):
             return six.test_type(obj).encode('utf-8')
