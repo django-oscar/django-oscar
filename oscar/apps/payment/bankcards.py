@@ -16,13 +16,13 @@ CARD_TYPES = [
     (DINERS_CLUB, (14,), ('300', '301', '302', '303', '304', '305')),
     (DINERS_CLUB, (14,), ('36',)),
     (DISCOVER, (16,),
-     map(str, range(622126, 622926)) +
-     map(str, range(644, 650)) + ['6011', '65']),
+     list(map(str, range(622126, 622926))) +
+     list(map(str, range(644, 650))) + ['6011', '65']),
     (JCB, (16,), map(str, range(3528, 3590))),
     (LASER, range(16, 20), ('6304', '6706', '6771', '6709')),
     (MAESTRO, range(12, 20), ('5018', '5020', '5038', '5893', '6304',
                               '6759', '6761', '6762', '6763', '0604')),
-    (MASTERCARD, (16,), map(str, range(51, 56))),
+    (MASTERCARD, (16,), list(map(str, range(51, 56)))),
     # Diners Club cards match the same pattern as Mastercard.  They are treated
     # as Mastercard normally so we put the mastercard pattern first.
     (DINERS_CLUB, (16,), ('54', '55')),
