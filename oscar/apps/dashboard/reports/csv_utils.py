@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import codecs
 import csv
-import cStringIO
+from six.moves import cStringIO
 
 
 # These classes are copied from http://docs.python.org/2/library/csv.html
@@ -15,7 +15,7 @@ class CsvUnicodeWriter(object):
 
     def __init__(self, f, dialect=csv.excel, encoding="utf-8", **kwds):
         # Redirect output to a queue
-        self.queue = cStringIO.StringIO()
+        self.queue = cStringIO()
         self.writer = csv.writer(self.queue, dialect=dialect, **kwds)
         self.stream = f
         self.encoder = codecs.getincrementalencoder(encoding)()
