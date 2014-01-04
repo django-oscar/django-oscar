@@ -1,11 +1,10 @@
-import urlparse
-
 from django import template
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import resolve, Resolver404
 
 from oscar.apps.customer import history
+from oscar.core.compat import urlparse
 
 Site = get_model('sites', 'Site')
 
