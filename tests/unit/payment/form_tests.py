@@ -103,7 +103,7 @@ class TestCCVField(TestCase):
     def test_has_meaningful_error_message(self):
         try:
             self.field.clean("asdf")
-        except ValidationError, e:
+        except ValidationError as e:
             self.assertEquals("Please enter a 3 or 4 digit number",
                               e.messages[0])
 
