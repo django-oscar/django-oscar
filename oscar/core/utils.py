@@ -1,4 +1,5 @@
 from __future__ import absolute_import  # for import below
+import six
 import logging
 
 from django.utils.timezone import get_current_timezone, is_naive, make_aware
@@ -26,8 +27,7 @@ def slugify(value):
 
     # Use unidecode to convert non-ASCII strings to ASCII equivalents where
     # possible.
-    value = slugifier(
-        unidecode(unicode(value)))
+    value = slugifier(unidecode(six.text_type(value)))
 
     # Remove stopwords
     if hasattr(settings, 'OSCAR_SLUG_BLACKLIST'):
