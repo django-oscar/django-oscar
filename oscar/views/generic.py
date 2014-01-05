@@ -71,7 +71,7 @@ class BulkEditMixin(object):
 
         ids = request.POST.getlist(
             'selected_%s' % self.get_checkbox_object_name())
-        ids = map(int, ids)
+        ids = list(map(int, ids))
         if not ids:
             messages.error(
                 self.request,
