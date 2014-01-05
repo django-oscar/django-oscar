@@ -100,8 +100,8 @@ class CategoryTreeNode(template.Node):
                 continue
 
             # Update previous node's info
-            info['has_children'] = depth > prev_depth
-            if depth < prev_depth:
+            info['has_children'] = prev_depth is None or depth > prev_depth
+            if prev_depth is not None and depth < prev_depth:
                 info['num_to_close'] = range(0, prev_depth - depth)
 
             info = {'num_to_close': [],
