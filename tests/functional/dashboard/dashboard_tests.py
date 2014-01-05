@@ -29,8 +29,11 @@ class TestDashboardIndexForStaffUser(ClientTestCase):
 
     def test_includes_hourly_report_with_no_orders(self):
         report = IndexView().get_hourly_report()
-        self.assertItemsEqual(report, ['order_total_hourly', 'max_revenue',
-                                       'y_range'])
+        self.assertEqual(len(report), 3)
+        for i, j in zip(sorted(report.keys()),
+                ['max_revenue', 'order_total_hourly', 'y_range']):
+            self.assertEqual(i, j)
+
         self.assertEqual(len(report['order_total_hourly']), 12)
         self.assertEqual(len(report['y_range']), 0)
         self.assertEqual(report['max_revenue'], 0)

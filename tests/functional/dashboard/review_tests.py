@@ -76,7 +76,8 @@ class ReviewsDashboardTests(ClientTestCase):
         get(ProductReview, user=user2, title='Lovely Thing')
 
         response = self.client.get(url, {'keyword': 'argh'})
-        self.assertItemsEqual(response.context['review_list'], [review2])
+        self.assertEqual(len(response.context['review_list']), 1)
+        self.assertEqual(response.context['review_list'][0], review2)
 
         response = self.client.get(url, {'keyword': 'review'})
         self.assertQuerysetContains(response.context['review_list'],
@@ -85,7 +86,9 @@ class ReviewsDashboardTests(ClientTestCase):
     def assertQuerysetContains(self, qs, items):
         qs_ids = [obj.id for obj in qs]
         item_ids = [item.id for item in items]
-        self.assertItemsEqual(qs_ids, item_ids)
+        self.assertEqual(len(qs_ids), len(item_ids))
+        for i, j in zip(qs_ids, item_ids):
+            self.assertEqual(i, j)
 
     def test_filter_reviews_by_date(self):
         now = datetime.now()
@@ -124,13 +127,16 @@ class ReviewsDashboardTests(ClientTestCase):
         review3 = get(ProductReview, user=user2, status=2)
 
         response = self.client.get(url, {'status': 0})
-        self.assertItemsEqual(response.context['review_list'], [review2])
+        self.assertEqual(len(response.context['review_list']), 1)
+        self.assertEqual(response.context['review_list'][0], review2)
 
         response = self.client.get(url, {'status': 1})
-        self.assertItemsEqual(response.context['review_list'], [review1])
+        self.assertEqual(len(response.context['review_list']), 1)
+        self.assertEqual(response.context['review_list'][0], review1)
 
         response = self.client.get(url, {'status': 2})
-        self.assertItemsEqual(response.context['review_list'], [review3])
+        self.assertEqual(len(response.context['review_list']), 1)
+        self.assertEqual(response.context['review_list'][0], review3)
 
         response = self.client.get(url, {'status': 3})
         reviews = response.context['review_list']
