@@ -267,7 +267,7 @@ class AbstractOrder(models.Model):
         return u"#%s" % (self.number,)
 
     def verification_hash(self):
-        hash = hashlib.md5('%s%s' % (self.number, settings.SECRET_KEY))
+        hash = hashlib.md5(('%s%s' % (self.number, settings.SECRET_KEY)).encode('utf8'))
         return hash.hexdigest()
 
     @property
