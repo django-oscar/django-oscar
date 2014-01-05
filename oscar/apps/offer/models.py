@@ -437,7 +437,7 @@ class Condition(models.Model):
         Return the proxy model
         """
         field_dict = dict(self.__dict__)
-        for field in field_dict.keys():
+        for field in list(field_dict.keys()):
             if field.startswith('_'):
                 del field_dict[field]
 
@@ -561,7 +561,7 @@ class Benefit(models.Model):
 
     def proxy(self):
         field_dict = dict(self.__dict__)
-        for field in field_dict.keys():
+        for field in list(field_dict.keys()):
             if field.startswith('_'):
                 del field_dict[field]
 
