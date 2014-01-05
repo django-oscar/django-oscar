@@ -118,7 +118,8 @@ class CheckoutSessionData(object):
         """
         new_fields = self.new_shipping_address_fields()
         has_new_address = new_fields is not None
-        has_old_address = self.user_address_id() > 0
+        user_address_id = self.user_address_id()
+        has_old_address = user_address_id is not None and user_address_id > 0
         return has_new_address or has_old_address
 
     # Shipping method
