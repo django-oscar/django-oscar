@@ -26,7 +26,7 @@ class TestASignedInUser(WebTestCase):
         response = self.app.get(reverse('customer:profile-view'),
                                 user=self.user)
         self.assertEqual(200, response.status_code)
-        self.assertTrue(self.email in response.content)
+        self.assertTrue(self.email in response.content.decode('utf8'))
 
     def test_can_update_their_name(self):
         profile_form_page = self.app.get(reverse('customer:profile-update'),
