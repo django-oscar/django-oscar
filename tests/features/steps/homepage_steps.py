@@ -22,5 +22,5 @@ def step(context, code):
 
 @then('page includes "{text}"')
 def step(context, text):
-    ok_(text.encode('utf8') in context.response.content,
+    ok_(text.encode('utf8') in context.response.content.decode('utf8'),
         "%r not page content" % text)

@@ -17,7 +17,7 @@ class PageViewTests(ClientTestCase):
 
     def test_dashboard_index_is_for_staff_only(self):
         response = self.client.get(reverse('dashboard:page-list'))
-        self.assertTrue('Password' not in response.content)
+        self.assertTrue('Password' not in response.content.decode('utf8'))
 
     def test_dashboard_page_list(self):
         response = self.client.get(reverse('dashboard:page-list'))

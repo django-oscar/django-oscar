@@ -25,7 +25,7 @@ class TestDashboardIndexForStaffUser(ClientTestCase):
                 'dashboard:users-index',)
         for name in urls:
             response = self.client.get(reverse(name))
-            self.assertTrue('Password' not in response.content)
+            self.assertTrue('Password' not in response.content.decode('utf8'))
 
     def test_includes_hourly_report_with_no_orders(self):
         report = IndexView().get_hourly_report()
