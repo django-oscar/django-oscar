@@ -194,7 +194,7 @@ class LineStatusTests(TestCase):
         self.line.save()
 
     def test_all_statuses_class_method(self):
-        self.assertEqual(['A', 'B'], Line.all_statuses())
+        self.assertEqual(['A', 'B'], sorted(Line.all_statuses()))
 
     def test_invalid_status_set_raises_exception(self):
         with self.assertRaises(InvalidLineStatus):
