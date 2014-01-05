@@ -63,7 +63,6 @@ class TestMovingACategory(TestCase):
         if tree is None:
             tree = models.Category.objects.filter(depth=1)
         for node in tree:
-            print node
             self.print_tree(node.get_children())
 
     def test_updates_instance_name(self):
