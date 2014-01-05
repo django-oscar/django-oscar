@@ -1,3 +1,4 @@
+import six
 import json
 
 from django import forms
@@ -98,7 +99,7 @@ class ObjectLookupView(View):
     def format_object(self, obj):
         return {
             'id': obj.pk,
-            'text': unicode(obj),
+            'text': six.text_type(obj),
         }
 
     def initial_filter(self, qs, value):

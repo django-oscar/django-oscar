@@ -1,3 +1,4 @@
+import six
 from django import template
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
@@ -64,4 +65,4 @@ def get_back_button(context):
     if title is None:
         return None
 
-    return {'url': referrer, 'title': unicode(title), 'match': match}
+    return {'url': referrer, 'title': six.text_type(title), 'match': match}

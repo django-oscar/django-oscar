@@ -1,3 +1,4 @@
+import six
 from decimal import Decimal as D, ROUND_DOWN, ROUND_UP
 
 from django.core import exceptions
@@ -921,7 +922,7 @@ class CountCondition(Condition):
     def name(self):
         return self._description % {
             'count': self.value,
-            'range': unicode(self.range).lower()}
+            'range': six.text_type(self.range).lower()}
 
     @property
     def description(self):
@@ -1009,7 +1010,7 @@ class CoverageCondition(Condition):
     def name(self):
         return self._description % {
             'count': self.value,
-            'range': unicode(self.range).lower()}
+            'range': six.text_type(self.range).lower()}
 
     @property
     def description(self):
@@ -1112,7 +1113,7 @@ class ValueCondition(Condition):
     def name(self):
         return self._description % {
             'amount': currency(self.value),
-            'range': unicode(self.range).lower()}
+            'range': six.text_type(self.range).lower()}
 
     @property
     def description(self):

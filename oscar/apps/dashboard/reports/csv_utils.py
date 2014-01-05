@@ -2,6 +2,7 @@
 import codecs
 import csv
 import six
+import warn
 from six.moves import cStringIO
 
 
@@ -21,21 +22,25 @@ class CsvUnicodeWriter(object):
         self.stream = f
         self.encoder = codecs.getincrementalencoder(encoding)()
 
-    def cast_to_str(self, obj):
+    def cast_to_bytes(self, obj):
         if isinstance(obj, six.text_type):
             return obj.encode('utf-8')
         elif isinstance(obj, six.binary_type):
             return obj
         elif hasattr(obj, '__unicode__'):
-            return six.test_type(obj).encode('utf-8')
+            return six.text_type(obj).encode('utf-8')
         elif hasattr(obj, '__str__'):
             return str(obj)
         else:
             raise TypeError('Expecting unicode, str, or object castable'
                             ' to unicode or string, got: %r' % type(obj))
 
+    def cast_to_str(self, obj):
+        warn.warning('cast_to_str deprecated, please use cast_to_bytes instead')
+        return self.cast_to_bytes(obj)
+
     def writerow(self, row):
-        self.writer.writerow([self.cast_to_str(s) for s in row])
+        self.writer.writerow([self.cast_to_bytes(s) for s in row])
         # Fetch UTF-8 output from the queue ...
         data = self.queue.getvalue()
         data = data.decode("utf-8")
@@ -78,7 +83,7 @@ class CsvUnicodeReader(object):
 
     def next(self):
         row = self.reader.next()
-        return [s.encode("utf-8") for s in row]
+        return [six.text_type(s).encode("utf-8") for s in row]
 
     def __iter__(self):
         return self

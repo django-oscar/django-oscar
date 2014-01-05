@@ -1,3 +1,4 @@
+import six
 from django.forms.util import flatatt
 from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
@@ -9,14 +10,14 @@ class ProductSelect(forms.Widget):
     css = 'select2 input-xlarge'
 
     def format_value(self, value):
-        return unicode(value or '')
+        return six.text_type(value or '')
 
     def value_from_datadict(self, data, files, name):
         value = data.get(name, None)
         if value is None:
             return value
         else:
-            return unicode(value)
+            return six.text_type(value)
 
     def render(self, name, value, attrs=None, choices=()):
         attrs = self.build_attrs(attrs, **{
@@ -37,7 +38,7 @@ class ProductSelectMultiple(ProductSelect):
 
     def format_value(self, value):
         if value:
-            return ','.join(map(unicode, filter(bool, value)))
+            return ','.join(map(six.text_type, filter(bool, value)))
         else:
             return ''
 

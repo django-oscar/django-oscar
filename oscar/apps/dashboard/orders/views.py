@@ -1,3 +1,4 @@
+import six
 import datetime
 from decimal import Decimal as D, InvalidOperation
 
@@ -351,7 +352,7 @@ class OrderListView(BulkEditMixin, ListView):
             else:
                 row['billing_address_name'] = ''
 
-            encoded_values = [unicode(value).encode('utf8')
+            encoded_values = [six.text_type(value).encode('utf8')
                               for value in row.values()]
             writer.writerow(encoded_values)
         return response

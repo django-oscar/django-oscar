@@ -1,3 +1,4 @@
+import six
 import logging
 
 from django.http import Http404, HttpResponseRedirect, HttpResponseBadRequest
@@ -590,7 +591,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             # their bankcard has expired, wrong card number - that kind of
             # thing. This type of exception is supposed to set a friendly error
             # message that makes sense to the customer.
-            msg = unicode(e)
+            msg = six.text_type(e)
             logger.warning(
                 "Order #%s: unable to take payment (%s) - restoring basket",
                 order_number, msg)
@@ -605,7 +606,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             # It makes sense to configure the checkout logger to
             # mail admins on an error as this issue warrants some further
             # investigation.
-            msg = unicode(e)
+            msg = six.text_type(e)
             logger.error("Order #%s: payment error (%s)", order_number, msg,
                          exc_info=True)
             self.restore_frozen_basket()
@@ -638,7 +639,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             # to be handled gracefully.
             logger.error("Order #%s: unable to place order - %s",
                          order_number, e, exc_info=True)
-            msg = unicode(e)
+            msg = six.text_type(e)
             self.restore_frozen_basket()
             return self.render_to_response(self.get_context_data(error=msg))
 

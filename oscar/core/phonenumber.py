@@ -37,7 +37,7 @@ class PhoneNumber(phonenumbers.phonenumber.PhoneNumber):
         return self.raw_input
 
     def __str__(self):
-        return str(unicode(self))
+        return str(self.__unicode__())
 
     def original_unicode(self):
         return super(PhoneNumber, self).__unicode__()
