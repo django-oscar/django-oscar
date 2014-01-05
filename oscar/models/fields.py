@@ -1,3 +1,5 @@
+from six import add_metaclass
+
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.fields import CharField, DecimalField, Field
 from django.db.models import SubfieldBase
@@ -58,9 +60,9 @@ class PositiveDecimalField(DecimalField):
         return super(PositiveDecimalField, self).formfield(min_value=0)
 
 
+# necessary for to_python to be called
+@add_metaclass(SubfieldBase)
 class UppercaseCharField(CharField):
-    # necessary for to_python to be called
-    __metaclass__ = SubfieldBase
 
     def to_python(self, value):
         val = super(UppercaseCharField, self).to_python(value)
