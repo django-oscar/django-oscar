@@ -7,6 +7,7 @@ from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django.utils.datastructures import SortedDict
 
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.utils import slugify
@@ -597,17 +598,19 @@ class AbstractLine(models.Model):
         """
         Returns a dict of shipping events that this line has been through
         """
-        status_map = {}
-        for event in self.shipping_events.all():
+        status_map = SortedDict()
+        for event in self.shipping_events.all().order_by('id'):
             event_type = event.event_type
             event_name = event_type.name
             event_quantity = event.line_quantities.get(line=self).quantity
             if event_name in status_map:
                 status_map[event_name]['quantity'] += event_quantity
             else:
-                status_map[event_name] = {'event_type': event_type,
-                                          'name': event_name,
-                                          'quantity': event_quantity}
+                status_map[event_name] = {
+                    'event_type': event_type,
+                    'name': event_name,
+                    'quantity': event_quantity
+                }
         return status_map
 
     # Payment event helpers
