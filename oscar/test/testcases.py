@@ -1,4 +1,4 @@
-import httplib
+from six.moves import http_client
 
 from django.test import TestCase
 from django.test.client import Client
@@ -60,8 +60,8 @@ class ClientTestCase(TestCase):
         return user
 
     def assertIsRedirect(self, response, expected_url=None):
-        self.assertTrue(response.status_code in (httplib.FOUND,
-                                                 httplib.MOVED_PERMANENTLY))
+        self.assertTrue(response.status_code in (http_client.FOUND,
+                                                 http_client.MOVED_PERMANENTLY))
         if expected_url:
             location = URL.from_string(response['Location'])
             self.assertEqual(expected_url, location.path())
@@ -72,11 +72,11 @@ class ClientTestCase(TestCase):
         self.assertEqual(location, reverse(name, kwargs=kwargs))
 
     def assertIsOk(self, response):
-        self.assertEqual(httplib.OK, response.status_code)
+        self.assertEqual(http_client.OK, response.status_code)
 
     def assertNoAccess(self, response):
-        self.assertTrue(response.status_code in (httplib.NOT_FOUND,
-                                                 httplib.FORBIDDEN))
+        self.assertTrue(response.status_code in (http_client.NOT_FOUND,
+                                                 http_client.FORBIDDEN))
 
     def assertInContext(self, response, key):
         self.assertTrue(key in response.context,
@@ -109,8 +109,8 @@ class WebTestCase(WebTest):
     # Custom assertions
 
     def assertIsRedirect(self, response, expected_url=None):
-        self.assertTrue(response.status_code in (httplib.FOUND,
-                                                 httplib.MOVED_PERMANENTLY))
+        self.assertTrue(response.status_code in (http_client.FOUND,
+                                                 http_client.MOVED_PERMANENTLY))
         if expected_url:
             location = URL.from_string(response['Location'])
             self.assertEqual(expected_url, location.path())
