@@ -554,7 +554,7 @@ class AbstractLine(models.Model):
                     event_dict['name'], event_dict['quantity'],
                     self.quantity))
 
-        if last_complete_event_name == status_map.values()[-1]['name']:
+        if last_complete_event_name == list(status_map.values())[-1]['name']:
             return last_complete_event_name
 
         return ', '.join(events)
