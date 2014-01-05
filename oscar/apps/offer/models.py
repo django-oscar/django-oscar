@@ -1,4 +1,5 @@
 import six
+import operator
 from decimal import Decimal as D, ROUND_DOWN, ROUND_UP
 
 from django.core import exceptions
@@ -506,9 +507,10 @@ class Condition(models.Model):
             if not price:
                 continue
             line_tuples.append((price, line))
+        key = operator.itemgetter(0)
         if most_expensive_first:
-            return sorted(line_tuples, reverse=True)
-        return sorted(line_tuples)
+            return sorted(line_tuples, reverse=True, key=key)
+        return sorted(line_tuples, key=key)
 
 
 class Benefit(models.Model):
@@ -726,7 +728,7 @@ class Benefit(models.Model):
             line_tuples.append((price, line))
 
         # We sort lines to be cheapest first to ensure consistent applications
-        return sorted(line_tuples)
+        return sorted(line_tuples, key=operator.itemgetter(0))
 
     def shipping_discount(self, charge):
         return D('0.00')
