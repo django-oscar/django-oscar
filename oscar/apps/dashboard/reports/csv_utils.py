@@ -2,7 +2,7 @@
 import codecs
 import csv
 import six
-import warn
+from warnings import warn
 from six.moves import cStringIO
 
 
@@ -36,7 +36,7 @@ class CsvUnicodeWriter(object):
                             ' to unicode or string, got: %r' % type(obj))
 
     def cast_to_str(self, obj):
-        warn.warning('cast_to_str deprecated, please use cast_to_bytes instead')
+        warn('cast_to_str deprecated, please use cast_to_bytes instead')
         return self.cast_to_bytes(obj)
 
     def writerow(self, row):
