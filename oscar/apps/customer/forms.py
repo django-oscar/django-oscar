@@ -26,7 +26,11 @@ User = get_user_model()
 
 
 def generate_username():
-    uname = ''.join([random.choice(string.letters + string.digits + '_')
+    try:
+        letters = string.ascii_letters
+    except AttributeError:
+        letters = string.letters
+    uname = ''.join([random.choice(letters + string.digits + '_')
                      for i in range(30)])
     try:
         User.objects.get(username=uname)
