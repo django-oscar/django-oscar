@@ -65,7 +65,7 @@ class AbstractProductReview(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ['-delta_votes']
+        ordering = ['-delta_votes', 'id']
         unique_together = (('product', 'user'),)
         verbose_name = _('Product review')
         verbose_name_plural = _('Product reviews')
