@@ -97,7 +97,7 @@ class TestCreateGroupProduct(ProductWebTest):
                                upc="12345")
 
         self.assertEqual(Product.objects.count(), 1)
-        self.assertNotEquals(Product.objects.get(upc='12345').title,
+        self.assertNotEqual(Product.objects.get(upc='12345').title,
                              'Nice T-Shirt')
         self.assertContains(response,
                             "Product with this UPC already exists.")
