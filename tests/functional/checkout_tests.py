@@ -16,6 +16,12 @@ from oscar.apps.voucher.models import Voucher
 from oscar.apps.offer.models import ConditionalOffer
 from oscar.test.basket import add_product
 
+# Python 3 compat
+try:
+    from imp import reload
+except ImportError:
+    pass
+
 
 class CheckoutMixin(object):
 
