@@ -1,3 +1,4 @@
+import six
 from decimal import Decimal as D
 from django.db.models import get_model
 
@@ -91,7 +92,7 @@ class CustomWrapperTests(TestCase):
             price=D('10.00'), partner="Acme", num_in_stock=10)
         stockrecord = product.stockrecords.all()[0]
         self.assertEqual(u"Dummy response",
-                          unicode(stockrecord.availability))
+                          six.text_type(stockrecord.availability))
 
     def test_wrapper_dispatch_date_gets_called(self):
         product = factories.create_product(
