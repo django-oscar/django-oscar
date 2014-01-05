@@ -47,4 +47,4 @@ class ProductSelectMultiple(ProductSelect):
         if value is None:
             return []
         else:
-            return filter(bool, value.split(','))
+            return list(filter(bool, value.split(',')))
