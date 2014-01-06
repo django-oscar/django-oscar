@@ -631,7 +631,6 @@ class AddressChangeStatusView(RedirectView):
     def get(self, request, pk=None, action=None, *args, **kwargs):
         address = get_object_or_404(UserAddress, user=self.request.user,
                                     pk=pk)
-        import ipdb; ipdb.set_trace()
         #  We don't want the user to set an address as the default shipping
         #  address, though they should be able to set it as their billing
         #  address.
