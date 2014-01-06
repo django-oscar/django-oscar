@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block description %}
-    {{ product.description }}
+    {{ product.description|default:"" }}
 {% endblock %}
 
 {% block breadcrumbs %}

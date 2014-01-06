@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block description %}
-    {{ category.description }}
+    {{ category.description|default:"" }}
 {% endblock %}
 
 {% block headertext %}{{ summary }}{% endblock %}
