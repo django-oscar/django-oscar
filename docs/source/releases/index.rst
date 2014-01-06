@@ -2,6 +2,8 @@
 Release notes
 =============
 
+Release notes for each version of Oscar published to PyPI.
+
 .. toctree::
     :maxdepth: 1
 

@@ -12,12 +12,11 @@ earlier.  This release contains some major changes to core APIs which means
 many old APIs are scheduled to be dropped - see the `deprecation plan`_ to avoid any
 nasty surprises.
 
-To upgrade your Oscar site, make sure you study both the `backwards incompatible changes`_ 
-and the `deprecated features`_.  If you have any undocumented issues, please
-let us know on the `mailing list`_.
+When upgrading your Oscar site, make sure you study both the `backwards
+incompatible changes`_ and the `deprecated features`_.  If you encounter any
+undocumented issues, please let us know on the `mailing list`_.
 
 .. _`new features`: `What's new in Oscar 0.6?`_
-.. _`upgrading advice`: `Upgrading notes`_
 .. _`deprecation plan`: `Features deprecated in 0.6`_
 .. _`deprecated features`: `Features deprecated in 0.6`_
 .. _`backwards incompatible changes`: `Backwards incompatible changes in 0.6`_
@@ -29,6 +28,12 @@ Table of contents:
 * `What's new in Oscar 0.6?`_
 * `Backwards incompatible changes in 0.6`_
 * `Features deprecated in 0.6`_
+
+New!
+
+.. contents::
+    :local:
+    :depth: 1
 
 Overview
 ========
@@ -62,17 +67,19 @@ Other notable new features include:
 
 * `Partners can now have addresses`_.
 
-* `Customer wishlists`_
+* `Customer wishlists`_.  Customers can how add products to wishlists and
+  manage them within their account section.
 
 * `New helper methods`_ in the ``EventHandler`` class for order processing.
 
 * `Reworked search app`_ with support for easy faceting.
 
 Also, to help justify Tangent's sponsorship of Oscar, 
-a simple `tracking mechanism`_ has been introduced.
+a simple `tracking mechanism`_ has been introduced to keep track of which sites
+use Oscar.
 
 .. _`Oscar now supports Django 1.5`: `django_support`_
-.. _`Partners can now have addresses`: `Partner addresses`_
+.. _`Partners can now have addresses`: `Partner dashboard & addresses`_
 .. _`Customer wishlists`: `Wishlists`_
 .. _`New helper methods`: `Order processing changes`_
 .. _`tracking mechanism`: `Tracking Oscar sites`_
@@ -83,48 +90,58 @@ What's new in Oscar 0.6?
 Multiple stockrecords per product
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Products can now have multiple stockrecords rather than just one.  This allows a
-product to be fulfilled by one of several partners.  This is a key requirement
-for large-scale e-commerce sites selling millions of products that use many
-different fulfillment partners.  It also allows products to be sold in 
-different currencies.
+Products can now have multiple stockrecords rather than just one.  This is a
+key structural change that paves the way for many advanced features.
 
-This changes means several APIs are `deprecated`_ as they assume there is only
-one stockrecord per product.
+If a product can be fulfilled by multiple partners, a different stockrecord can
+be created for each partner.  This is a common requirement for large-scale
+e-commerce sites selling millions of products that use many different
+fulfillment partners.   
+
+It also allows better support for international sites as stockrecords can be
+created for partners in different countries, who sell in different currencies.
+
+See the `documentation on pricing and availability`_ for more details.
+
+.. warning::
+
+    This changes means several APIs are `deprecated`_ as they assume there is only
+    one stockrecord per product.
 
 .. _`deprecated`: `Features deprecated in 0.6`_
+.. _`documentation on pricing and availability`: topics/prices_and_availability
 
 Pricing and availability
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 When products can have many stockrecords, a process needs to be in place to
 choose which one is selected for a given customer and product.  To handle this,
-a new "strategy" class has been introduced responsible for selecting the appropriate
+a new "strategy" class has been introduced, responsible for selecting the appropriate
 stockrecord for a given customer and product.  
 
 This change also paved the way for reworking how prices, taxes and availability
 are handled.  Instead of using `"partner wrappers"`_, the strategy class is
 responsible for returning availability details and prices for a particular
 product.  New classes known as pricing and availability policies are used to
-encapsulate this information.
+cleanly encapsulate this information.
 
-These changes allows Oscar to dynamically determine prices, partner and availability 
-given customer and product.  This enables several advanced features such as:
+These changes allow Oscar to dynamically determine prices, partner and availability 
+for a given customer and product.  This enables several advanced features such as:
 
 * Fulfilling a product from the partner that offers the best margin.
 * Fulfilling a product from the partner geographically closest to the customer.
+* Automatically switching to a new partner when when stock runs out.
 * Supporting transactions in multiple currencies on the same site.
 * Supporting different tax treatments on the same site (eg UK VAT and US sales
   tax)
 * Having different pricing and availability policies for different customers. 
 
-It also provides a customisation layer for custom price and availability logic.  
-There's a great deal of flexibility.  See the guide to 
-:doc:`prices and availability </topics/prices_and_availability>`
-for more information.
+More generally, it provides a structure for customising how pricing,
+availability work on a per-customer basis.  This gives a great deal of
+flexibiliity.
 
-Note that the :func:`oscar.templatetags.currency_filters.currency` now
-accepts an optional currency parameter.
+See the guide to :doc:`prices and availability </topics/prices_and_availability>`
+for more information.
 
 Permission-based dashboard
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -132,28 +149,28 @@ Permission-based dashboard
 Three changes were necessary to better support marketplace scenarios within
 Oscar:
 
-* Oscar's core :class:`oscar.core.application.Application` class now supports
+* Oscar's core :class:`~oscar.core.application.Application` class now supports
   specifying permissions on a per-view basis. This is done via a new default
   decorator. Legacy behaviour is unchanged.
 
-* The dashboard's menu's are now built dynamically. If the current user does
+* The dashboard's menus are now built dynamically. If the current user does
   not have access to some views in :ref:`OSCAR_DASHBOARD_NAVIGATION`, they will
   be omitted in the menu returned by
   :meth:`oscar.apps.dashboard.nav.create_menu`.
 
 * The index, catalogue and order dashboard views have been modified to allow
-  access to non-staff users. See :doc:`/ref/apps/dashboard` for details.
+  access to non-staff users. See :doc:`the dashboard documentation </ref/apps/dashboard>` for details.
 
-* :attr:`oscar.apps.partner.abstract_models.AbstractPartner.users` was not
+* The relation :attr:`oscar.apps.partner.abstract_models.AbstractPartner.users` was not
   used by core Oscar prior 0.6. It is now used to model access for the
   permission-based dashboard.
 
 Payment models have abstract versions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The :doc:`payment models </ref/apps/payment>` have been split into abstract and
+The models within the :doc:`payment app </ref/apps/payment>` have been split into abstract and
 concrete versions.  This brings them inline with other Oscar apps and allows
-them to be customised.
+them to be customised in the normal way.
 
 Wishlists
 ~~~~~~~~~
@@ -162,22 +179,38 @@ Wishlist functionality has finally landed.  Signed in customers are now able to
 create multiple named wishlists and add products to them.  There is a new
 section in the customer's account where wishlists can be managed.
 
+.. figure:: screenshots/0.6/wishlist-button.png
+
+   *The add-to-wishlist button.*
+
+.. figure:: screenshots/0.6/wishlist-detail.png
+
+   *Editing a wishlist*
+
+See the :doc:`wishlist documentation </ref/apps/wishlists>` for more details.
+
 Partner dashboard & addresses
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Partners can now have addresses.  These are useful for US sales tax where tax
 calculations need to know the origin of a product being shipped.  
+
 A dashboard to handle partners, their users and addresses has been added.
 
 Checkout
 ~~~~~~~~
 
 The :class:`~oscar.apps.checkout.views.PaymentDetailsView` checkout view has
-been restructured slightly to be more flexible.  There is a new
-``build_submission`` method which is responsible for building a dict of all data
-for passing to the ``submit`` method.  This includes the shipping address and
-shipping method which were previously loaded indirectly within the ``submit``
-method.  The ``submit`` method has also been extended to take additional parameters.
+been restructured for flexibility.  There is a new
+:meth:`~oscar.apps.checkout.views.PaymentDetailsView.build_submission` method
+which is responsible for building a dict of all data for passing to the
+``submit`` method.  This includes the shipping address and shipping method
+which were previously loaded indirectly within the ``submit`` method.  
+
+.. warning::
+
+   While not major, the changes to checkout are backwards incompatible.  See the 
+   :ref:`backwards compatibility notes <checkout_incompatibilities>` for more details.
 
 Demo site
 ~~~~~~~~~
@@ -197,16 +230,15 @@ It's features include:
 .. _django-oscar-datacash: https://github.com/tangentlabs/django-oscar-datacash
 .. _django-oscar-stores: https://github.com/tangentlabs/django-oscar-stores
 
-Further reading:
-
-* :doc:`The demo site </internals/sandbox>`.
+See the :doc:`sandbox and demo site documentation </internals/sandbox>` for more details.  A publicly accessible version of the demo site
+is available at http://demo.oscarcommerce.com.
 
 .. _django_support:
 
 Django 1.5, 1.6 and custom user model support
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Oscar now supports Django 1.5 and 1.6.
+Oscar now supports Django 1.5 and, experimentally, 1.6.
 
 Specifically, Oscar supports `custom user models`_, the headline new feature in Django
 1.5.  These can be used standalone or with a one-to-one profile model: Oscar's
@@ -217,6 +249,9 @@ There are some restrictions on what fields a custom user model must have.  For
 instance, Oscar's default auth backend requires the user model to have an email
 and password field.  New Oscar projects are encouraged to use the provided
 abstract user model as the base for their users.
+
+Support for Django 1.6 is considered experimental at the moment as there hasn't
+been time to run thorough tests for all possible incompatibilities.  
 
 Further reading:
 
@@ -229,47 +264,81 @@ Accounts
 ~~~~~~~~
 
 The views and templates of the accounts section have been reworked to be clearer
-and easier to extend.
+and easier to extend.  There is no longer a generic frontpage for the accounts
+section - instead, each subsection has its own page.  The navigation has also
+moved to the left-hand side.
+
+.. figure:: screenshots/0.6/account.png
+
+   *The new-look account section with navigation on the left-hand side.*
 
 Bootstrap-WYSIHTML5 replaced by TinyMCE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-TinyMCE 4.0 is now used in the dashboard for all textareas with class
+`TinyMCE 4.0`_ is now used in the dashboard for all textareas with class
 ``wysiwyg``.  This has better browser support and is easier to customise than
-bootstrap-wysihtml5.
+bootstrap-wysihtml5 (which has now been removed).
 
 It is easy to configure or replace with the HTML editor of your choice.
+
+.. figure:: screenshots/0.6/tinymce.png
+
+   *Textarea with class ``wysiwyg`` now use TinyMCE.*
+
+.. _`TinyMCE 4.0`: http://www.tinymce.com/
 
 Better bankcard handling
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-The bankcard model in the payment app has been greatly improved.
+In 0.5, there were two classes that representing a bankcard.  These have been
+merged - the new version is
+:class:`~oscar.apps.payment.abstract_models.AbstractBankcard`.
+
+An instance of this model is returned by the :attr:`~oscar.apps.payment.forms.BankccardForm.bankcard`` property.
 
 Customer-facing range pages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Ranges can now be flagged as public which means they can be browsed by
-customers. They can be used to created curated collections of products.
-Products can be manually reordered to display products in the specific
-order to customers.
+Ranges can now be flagged as public which means they get a customer-facing
+detail page which shows a range description and allows its products to be
+browsed.
 
-The core :class:`~oscar.apps.offer.models.Range` model has been extended with a
-HTML description field also.
+In the dashboard, the display order of the range's products can be controlled.
+
+To this end, the core :class:`~oscar.apps.offer.models.Range` model has been
+extended with a HTML description field.
+
+.. figure:: screenshots/0.6/range_detail.png
+
+   *A customer-facing range page*
 
 Reworked search app
 ~~~~~~~~~~~~~~~~~~~
 
-Oscar's search app has been reviewed and simplified.  The main view class has
-been reworked to provide better support for faceting, which can be easily
-specified using the ``OSCAR_SEARCH_FACETS`` setting.
+Oscar's search app has been reviewed and simplified.  The main view class 
+(now :class:`~oscar.apps.search.views.FacetedSearchView`)
+has been reworked to provide better support for faceting, which can be easily
+specified using the :ref:`oscar_search_facets` setting.
 
 The ``SuggestionsView`` has been removed as it wasn't being used.  A later
 version of Oscar will include a replacement.
 
+See the :doc:`search app documentation </ref/apps/search>` for more details.
+
 Order processing changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-There are changes to order processing methods
+The core :class:`~oscar.apps.order.processing.EventHandler` class has been
+extended.
+
+* The ``handle_shipping_event`` method now validates a proposed shipping event
+  before saving it.
+
+* The ``handle_payment_event`` method now validates a proposed payment event
+  before saving it.
+
+See the :class:`~oscar.apps.order.processing.EventHandler` for the available
+methods.
 
 Tracking Oscar sites
 ~~~~~~~~~~~~~~~~~~~~
@@ -294,7 +363,7 @@ Minor changes
   this release. Things should now work as expected.
 
 * Oscar uses a cookie to display recently displayed products. This cookie never
-  expired and wasn't a HttpOnly cookie. It is now a HttpOnly cookie and expires
+  expired and wasn't a HttpOnly cookie. It is now a ``HttpOnly`` cookie and expires
   after 7 days. Additionally, two settings have been introduced to configure
   it analogues to the basket cookies:
   ``OSCAR_RECENTLY_VIEWED_COOKIE_LIFETIME`` and
@@ -303,15 +372,40 @@ Minor changes
 Backwards incompatible changes in 0.6
 =====================================
 
-Checkout
-~~~~~~~~
+There were quite a few backwards incompatible changes in Oscar 0.6.  There
+shouldn't be quite as many in future Oscar releases as we approach 1.0.
+
+Additional apps
+~~~~~~~~~~~~~~~
+
+Four new apps are required in your ``INSTALLED_APPS``:
+
+.. code-block:: python
+
+    INSTALLED_APPS = (
+        ...
+        'oscar.apps.wishlists',
+        'oscar.apps.dashboard.pages',
+        'oscar.apps.dashboard.partners',
+        'oscar.apps.dashboard.reviews',
+        ...
+    )
+
+If you are using the ``get_core_apps`` helper function, then these new apps
+will be added automatically. The new wishlists app contains database migrations,
+so you will need to run the ``migrate`` management command.
+
+.. _checkout_incompatibilities:
+
+Checkout app
+~~~~~~~~~~~~
 
 Several changes have been made to the checkout in the name of simplification
 and making things easier to customise.  
 
 The ``PaymentDetailsView`` has been adjusted to explicitly pass variables
 around rather than relying on methods that load them on demand.  This makes
-customisation easier.
+customisation easier and everything more explicit (a good thing).
 
 * The ``submit`` method in
   :class:`~oscar.apps.checkout.views.PaymentDetailsView` has a new signature.
@@ -323,8 +417,8 @@ customisation easier.
     return self.submit(**submission)
 
   If your payment or order submission process requires additional parameters (eg
-  a bankcard), override the ``build_submission`` method to provide them.  The
-  dict returns from the new ``build_submission`` method is also passed to the
+  a bankcard instance), override the ``build_submission`` method to provide them.  The
+  dict returned from the new ``build_submission`` method is also passed to the
   template.
 
 * The ``handle_payment`` method in
@@ -363,33 +457,23 @@ customisation easier.
   method.  The old methods ``order_total_incl_tax`` and
   ``order_total_excl_tax`` have been removed.
 
-Signature changes
-~~~~~~~~~~~~~~~~~
+Other changes:
 
-Several classes and functions have had signature changes:
+* The checkout gateway page has a new option "Register and continue" which allows a customer 
+  to register before checking out.  As part of this change, the option value ``new`` in
+  ``GatewayForm`` has changed to ``guest`` as ``new`` option is used for this feature.
 
-* The ``basket_form`` templatetag has been altered to take the ``request`` as the
-  first parameter, not ``request.basket``.
+* The checkout decorators ``basket_required`` and ``prev_steps_must_be_complete`` have been removed as they were 
+  no longer used.
 
-* The :class:`oscar.apps.customer.forms.EmailAuthenticationForm` form needs to
-  be instantated with a host name so prevent redirects to external sites.
+Shipping app changes
+~~~~~~~~~~~~~~~~~~~~
 
-* The two product review forms, ``SignedInUserProductReviewForm`` and
-  ``AnonymousUserProductReviewForm``, have been replaced by a new
-  :class:`oscar.apps.catalogue.reviews.forms.ProductReviewForm`.
-
-* 3 properties have been removed from
-  :class:`oscar.apps.catalogue.abstract_models.AbstractProductImage` as they
-  were unused: ``resized_image_url``, ``fullsize_url`` and ``thumbnail_url``.
-  Thumbnailing is instead achieved in templates with Sorl.
-
-Loading shipping methods
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-The default implementation of the shipping method repository has been adjusted
-to avoid thread-safety issues.  If you define your own shipping ``Repository``
-class, ensure that your shipping methods are instantiated per-request and not
-at compile time.
+The default implementation of the 
+:class:`~oscar.apps.shipping.repository.Repository` class
+has been adjusted to avoid thread-safety issues.  If you define your own
+shipping ``Repository`` class, ensure that your shipping methods are
+instantiated per-request and not at compile time.
 
 For example, avoid this:
 
@@ -398,6 +482,7 @@ For example, avoid this:
    from oscar.apps.shipping import repository
 
    class Repository(repository.Repository)
+       # Don't instantiate at compile time!
        methods = [SomeMethod(), AnotherMethod()]
 
 Instead, instantiate the methods within ``get_shipping_methods``:
@@ -407,15 +492,30 @@ Instead, instantiate the methods within ``get_shipping_methods``:
    from oscar.apps.shipping import repository
 
    class Repository(repository.Repository)
-       # Note, methods are not instantiated
+       # Note, methods are not instantiated.  The get_shipping_methods
+       # method will instantiate them.
        methods = [SomeMethod, AnotherMethod]
 
-Beware of shipping methods that are configured via constructor parameters, like 
-:class:`~oscar.apps.shipping.methods.FixedPrice`.  Shipping methods will be
-reworked for Oscar 0.7.
+.. warning::
 
-Basket model changes
+    Beware of shipping methods that are configured via constructor parameters, like 
+    :class:`~oscar.apps.shipping.methods.FixedPrice`.  If you are using methods
+    that work this way, ensure you instantiate them at runtime.
+    
+    Shipping methods will be reworked for Oscar 0.7 to avoid these issues.
+
+Address model changes
 ~~~~~~~~~~~~~~~~~~~~~
+
+* The ``UserAddress.salutation`` and ``UserAddress.name`` methods are now
+  properties.
+
+* The ``Country`` model's ``is_highlighted`` column has been renamed to
+  ``display_order`` and is now an integer field to allow fine-grained country
+  selection. 
+
+Basket app changes
+~~~~~~~~~~~~~~~~~~
 
 Several properties of the basket ``Line`` model have been renamed:
 
@@ -425,14 +525,58 @@ Several properties of the basket ``Line`` model have been renamed:
 * ``Line.line_price_incl_tax_and_discounts`` has been renamed to 
   ``Line.line_price_incl_tax_incl_discounts``.
 
-Address model changes
+The :func:`~oscar.templatetags.basket_tags.basket_form` templatetag has been
+altered to take the ``request`` as the first parameter, not ``request.basket``.
+
+Catalogue app changes
 ~~~~~~~~~~~~~~~~~~~~~
 
-* The ``UserAddress.salutation`` and ``UserAddress.name`` methods are now
-  properties.
+3 properties have been removed from
+:class:`oscar.apps.catalogue.abstract_models.AbstractProductImage` as they
+were unused: ``resized_image_url``, ``fullsize_url`` and ``thumbnail_url``.
+Thumbnailing is instead achieved in templates with Sorl.
 
-* The ``Country`` model's `is_highlighted` column is now an integer field to allow
-  fine-grained country selection. 
+* The function ``add_category_from_breadcrumbs`` was not used and has been
+  removed.
+
+* Alternative product class templates now use ``slug`` field instead of
+  ``name.lower()`` to determine their filename.  If you have templates for
+  specific product classes, please update your filenames accordingly
+
+Customer app changes
+~~~~~~~~~~~~~~~~~~~~
+
+The :class:`oscar.apps.customer.forms.EmailAuthenticationForm` form now needs to
+be instantated with a host name so prevent redirects to external sites.
+
+Offer app changes
+~~~~~~~~~~~~~~~~~
+
+The ManyToManyField ``included_product`` of the
+:class:`~oscar.apps.offer.models.Range` model was changed to use ``through``
+relationship:
+
+* Use ``Range.add_product(product)`` instead of
+  ``Range.included_product.add(product)``. 
+* Use ``Range.remove_product(product)`` instead of
+  ``Range.included_product.remove(product)``.
+
+When adding a product into a range, position in the range can be specified
+with ``display_order`` parameter:
+``Range.add_product(product, display_order=3)``
+
+Payment app changes
+~~~~~~~~~~~~~~~~~~~
+
+The balance method on the
+:class:`~oscar.apps.payment.abstract_models.AbstractSource` model is now a property, not a method.
+
+Reviews app changes
+~~~~~~~~~~~~~~~~~~~
+
+The two product review forms, ``SignedInUserProductReviewForm`` and
+``AnonymousUserProductReviewForm``, have been replaced by a new
+:class:`oscar.apps.catalogue.reviews.forms.ProductReviewForm`.
 
 Search app changes
 ~~~~~~~~~~~~~~~~~~
@@ -444,21 +588,6 @@ Some of the names have been simplified.
 
 * The ``MultiFacetedSearchForm`` has been removed in favour of
   ``SearchForm``.
-
-Range model changes
-~~~~~~~~~~~~~~~~~~~
-
-ManyToManyField ``included_product`` of ``Range`` model was changed to use
-``through`` relationship:
-
-* Use ``Range.add_product(product)`` instead of
-  ``Range.included_product.add(product)``. 
-* Use ``Range.remove_product(product)`` instead of
-  ``Range.included_product.remove(product)``.
-
-When adding a product into a range, position in the range can be specified
-with ``display_order`` parameter:
-``Range.add_product(product, display_order=3)``
 
 Renamed templates
 ~~~~~~~~~~~~~~~~~
@@ -509,39 +638,6 @@ Template block changes
 * In ``checkout/checkout.html``, the ``checkout-nav`` block has been renamed
   ``checkout_nav``.
 
-Product model changes
-~~~~~~~~~~~~~~~~~~~~~
-
-* The function ``add_category_from_breadcrumbs`` was not used and has been
-  removed.
-
-Account templates
-~~~~~~~~~~~~~~~~~
-
-The templates for the customer account section have been reworked so that the
-profile page is much simpler.  Content is no longer loaded into tabs on a single
-page; instead, separate pages are used to each section.
-
-Additional apps
-~~~~~~~~~~~~~~~
-
-Four new apps are required in your ``INSTALLED_APPS``:
-
-.. code-block:: python
-
-    INSTALLED_APPS = (
-        ...
-        'oscar.apps.wishlists',
-        'oscar.apps.dashboard.pages',
-        'oscar.apps.dashboard.partners',
-        'oscar.apps.dashboard.reviews',
-        ...
-    )
-
-If you are using the ``get_core_apps`` helper function, then these new apps
-will be added automatically. The new wishlists app contains database migrations,
-so you will need to run the ``migrate`` management command.
-
 Changes to Partner permissions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -560,31 +656,6 @@ introduced permission-based dashboard:
 The permission-based dashboard introduced a new permission:
 
 * ``dashboard_access``
-
-Upgrading notes
-===============
-
-* Alternative product class templates now use ``slug`` field instead of
-  ``name.lower()`` to determine their filename.  If you have templates for
-  specific product classes, please update your filenames accordingly
-
-Checkout app:
-
-* Checkout has a new option "Register and continue". Option value `new` in
-  `GatewayForm` has changed to `guest` as `new` option is used for this feature.
-
-* Payment details - create_billing_address accepts kwargs so data can be passed
-  to it from the final page of checkout.
-
-* The session methods for loading shipping addresses and methods have been made
-  explicit.  The relevant basket *has* to be passed in now.
-
-Payment app:
-
-* The `balance` method on the source object is now a property not a method.
-
-URLs
-~~~~
 
 Migrations
 ~~~~~~~~~~
