@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
+from django.template.loader import render_to_string
 
 from oscar.core.loading import get_classes
 from oscar.views import sort_queryset
@@ -303,10 +304,12 @@ class ProductCreateUpdateView(generic.UpdateView):
         return "?".join(url_parts)
 
     def get_success_url(self):
-        if self.creating:
-            msg = _("Created product '%s'") % self.object.get_title()
-        else:
-            msg = _("Updated product '%s'") % self.object.get_title()
+        msg = render_to_string(
+            'dashboard/catalogue/messages/product_saved.html',
+            {
+                'product': self.object,
+                'creating': self.creating,
+            })
         messages.success(self.request, msg)
         url = reverse('dashboard:catalogue-product-list')
         if self.request.POST.get('action') == 'continue':
