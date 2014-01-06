@@ -44,7 +44,7 @@ setup(name='django-oscar',
           # We ship a simple Haystack implementation (that needs to be
           # improved).  We are using the 2.0-beta release from Github and
           # eagerly anticipating a stable 2.0 release on PyPI.
-          'django-haystack==2.0.0-beta',
+          'django-haystack==2.0.0',
           # Treebeard is used for categories
           'django-treebeard==2.0b2',
           # Sorl is used as the default thumbnailer
