@@ -73,6 +73,8 @@ Default: 20
 
 The number of products to paginate by.
 
+.. _oscar_search_facets:
+
 ``OSCAR_SEARCH_FACETS``
 ------------------------------
 

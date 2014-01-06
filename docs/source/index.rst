@@ -1,4 +1,5 @@
 .. figure:: ../images/logos/oscar.png
+   :align: center
 
 ===================================
 Domain-driven e-commerce for Django
@@ -90,13 +91,20 @@ All you need to start developing an Oscar project.
 
    topics/customisation
    topics/prices_and_availability
-   howto/index
-   ref/apps/index
-   ref/settings
-   ref/signals
    topics/deploying
    topics/translation
    topics/upgrading
+
+Reference:
+
+.. toctree::
+   :maxdepth: 1
+
+   Core functionality </ref/core>
+   Oscar's apps </ref/apps/index>
+   howto/index
+   ref/settings
+   ref/signals
 
 The Oscar open-source project
 =============================
