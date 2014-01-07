@@ -10,4 +10,5 @@ Release notes for each version of Oscar published to PyPI.
     v0.5
     v0.5.1
     v0.5.2
+    v0.5.3
     v0.6

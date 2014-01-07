@@ -1,0 +1,11 @@
+=========================
+Oscar 0.5.3 release notes
+=========================
+
+This is Oscar 0.5.3, a bug-fix release for Oscar 0.5.  
+
+The only change from 0.5.2 is to `pin the dependency on Haystack to version 2.0.0`_.  
+Previously, ``setup.py`` specified ``2.0.0-beta`` but this beta release has now
+been removed from PyPi, stopping Oscar from installing correctly.  
+
+.. _`pin the dependency on Haystack to version 2.0.0`: https://github.com/tangentlabs/django-oscar/commit/40ab98b
