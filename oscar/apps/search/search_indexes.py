@@ -73,3 +73,14 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         Can be used to filter the query set when updating the index
         """
         return 'date_updated'
+
+    def prepare(self, obj):
+        """
+        The original title field is used in auto complete so it needs to be
+        an EdgeNgramField, but we also need to sort based on title,
+        let's just add an extra title field. Notice the _s which turns the
+        dynamicfield into a string.
+        """
+        self.prepared_data = super(ProductIndex, self).prepare(obj)
+        self.prepared_data['title_s'] = obj.title.lower().strip()
+        return self.prepared_data
