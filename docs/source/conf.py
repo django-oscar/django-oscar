@@ -39,7 +39,10 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')
 extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.todo',
               'sphinx.ext.coverage',
-              'sphinx.ext.viewcode']
+              'sphinx.ext.viewcode',
+              'sphinxcontrib.napoleon',
+             ]
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
