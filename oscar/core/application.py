@@ -11,7 +11,10 @@ class Application(object):
     This is subclassed by each app to provide a customisable container for an
     app's views and permissions.
     """
+    #: Namespace name
     name = None
+
+    #: A name that allows the functionality within this app to be disabled
     hidable_feature_name = None
 
     #: Maps view names to a tuple or list of permissions
@@ -41,6 +44,10 @@ class Application(object):
 
         By default, this only allows custom decorators to be specified, but you
         could override this method to do anything you want.
+
+        Args:
+            urlpatterns (list): A list of URL patterns
+
         """
         # Test if this the URLs in the Application instance should be
         # available.  If the feature is hidden then we don't include the URLs.
@@ -61,7 +68,13 @@ class Application(object):
 
     def get_permissions(self, url):
         """
-        Return the permissions for a given URL
+        Return a list of permissions for a given URL name
+
+        Args:
+            url (str): A URL name (eg ``basket.basket``)
+
+        Returns:
+            list: A list of permission strings.
         """
         # url namespaced?
         if url is not None and ':' in url:
