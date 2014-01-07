@@ -145,10 +145,10 @@
     <dynamicField name="*_p" type="location" indexed="true" stored="true"/>
     <dynamicField name="*_coordinate"  type="tdouble" indexed="true"  stored="false"/>
 
-    <field name="category" type="text_en" indexed="true" stored="true" multiValued="false" />
+    <field name="category" type="text_en" indexed="true" stored="true" multiValued="true" />
     <field name="rating" type="long" indexed="true" stored="true" multiValued="false" />
     <field name="rating_exact" type="long" indexed="true" stored="true" multiValued="false" />
-    <field name="category_exact" type="string" indexed="true" stored="true" multiValued="false" />
+    <field name="category_exact" type="string" indexed="true" stored="true" multiValued="true" />
     <field name="product_class" type="text_en" indexed="true" stored="true" multiValued="false" />
     <field name="product_class_exact" type="string" indexed="true" stored="true" multiValued="false" />
     <field name="title" type="edge_ngram" indexed="true" stored="true" multiValued="false" />
