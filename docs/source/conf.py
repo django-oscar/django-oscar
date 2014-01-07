@@ -21,13 +21,11 @@ import sys
 import os
 oscar_folder = os.path.realpath(
     os.path.join(os.path.dirname(__file__), '../..'))
-sandbox_folder = os.path.realpath(
-    os.path.join(os.path.dirname(__file__), '../../sites/sandbox'))
 sys.path.append(oscar_folder)
-sys.path.append(sandbox_folder)
 
-# Specify settings module
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')
+# Specify settings module (which will be picked up from the sandbox)
+from tests.config import configure
+configure()
 
 # -- General configuration -----------------------------------------------------
 
