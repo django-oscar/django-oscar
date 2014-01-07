@@ -15,6 +15,8 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
+
+# Add the project root and sandbox root to the path
 import sys
 import os
 oscar_folder = os.path.realpath(
@@ -24,7 +26,7 @@ sandbox_folder = os.path.realpath(
 sys.path.append(oscar_folder)
 sys.path.append(sandbox_folder)
 
-# Get django settings
+# Specify settings module
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')
 
 # -- General configuration -----------------------------------------------------
@@ -53,7 +55,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'django-oscar'
-copyright = u'Tangent Labs'
+copyright = u'2010-2014, Tangent Labs'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -103,7 +105,14 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+
+# Use RTD theme locally
 html_theme = 'default'
+if not on_rtd:
+    import sphinx_rtd_theme
+    html_theme = 'sphinx_rtd_theme'
+    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
