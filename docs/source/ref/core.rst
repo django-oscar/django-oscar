@@ -32,3 +32,11 @@ Oscar uses a custom price object for easier tax handling.
 
 .. automodule:: oscar.core.prices
     :members: Price
+
+Custom model fields
+-------------------
+
+Oscar uses a few custom model fields.
+
+.. automodule:: oscar.models.fields
+    :members: 

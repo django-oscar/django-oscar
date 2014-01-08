@@ -24,13 +24,6 @@ undocumented issues, please let us know on the `mailing list`_.
 
 Table of contents:
 
-* `Overview`_
-* `What's new in Oscar 0.6?`_
-* `Backwards incompatible changes in 0.6`_
-* `Features deprecated in 0.6`_
-
-New!
-
 .. contents::
     :local:
     :depth: 1
@@ -286,6 +279,19 @@ It is easy to configure or replace with the HTML editor of your choice.
    *Textarea with class ``wysiwyg`` now use TinyMCE.*
 
 .. _`TinyMCE 4.0`: http://www.tinymce.com/
+
+Improved address fields
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The postcode and phone number fields have been improved.
+
+* The postcode field is now validated in the model's 
+  :meth:`~oscar.apps.address.abstract_models.AbstractAddress.clean` method to
+  ensure it is valid for the selected country.
+
+* The phone number field now uses a specialist 
+  :class:`~oscar.models.fields.PhoneNumberField` field class
+  which validates and cleans the phone number.
 
 Better bankcard handling
 ~~~~~~~~~~~~~~~~~~~~~~~~
