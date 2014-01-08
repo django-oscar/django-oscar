@@ -2,7 +2,7 @@
 Oscar 0.6 release notes
 =======================
 
-:release: 2014-01-15
+:release: 2014-01-08
 
 It took a while but it's finally here: welcome to Oscar 0.6!
 
@@ -131,7 +131,7 @@ for a given customer and product.  This enables several advanced features such a
 
 More generally, it provides a structure for customising how pricing,
 availability work on a per-customer basis.  This gives a great deal of
-flexibiliity.
+flexibility.
 
 See the guide to :doc:`prices and availability </topics/prices_and_availability>`
 for more information.
@@ -369,7 +369,7 @@ Minor changes
   this release. Things should now work as expected.
 
 * Oscar uses a cookie to display recently displayed products. This cookie never
-  expired and wasn't a HttpOnly cookie. It is now a ``HttpOnly`` cookie and expires
+  expired and wasn't a ``HttpOnly`` cookie. It is now a ``HttpOnly`` cookie and expires
   after 7 days. Additionally, two settings have been introduced to configure
   it analogues to the basket cookies:
   ``OSCAR_RECENTLY_VIEWED_COOKIE_LIFETIME`` and
@@ -595,6 +595,27 @@ Some of the names have been simplified.
 * The ``MultiFacetedSearchForm`` has been removed in favour of
   ``SearchForm``.
 
+Loading baskets
+~~~~~~~~~~~~~~~
+
+Now that products can have multiple stockrecords, several changes have been made
+to baskets to allow the appropriate stockrecord to be tracked for each basket
+line.  The basket line model has a new field that links to the selected
+stockrecord and the basket itself requires an instance of the strategy class so
+that prices can be calculated for each line.  Hence, if you loading baskets
+and manipulating baskets directly, you need to assign a strategy class in order
+for prices to calculate correctly:
+
+.. code-block:: python
+
+    from oscar.apps.basket import models
+
+    basket = models.Basket.objects.get(id=1)
+    basket.strategy = request.strategy
+
+Without an assigned strategy class, a basket will raise a ``RuntimeError`` when
+attempting to calculate totals.
+
 Renamed templates
 ~~~~~~~~~~~~~~~~~
 
@@ -782,14 +803,14 @@ Several properties and methods of the core
 :class:`~oscar.apps.catalogue.abstract_models.AbstractProduct`  class have been
 deprecated following the change to allow multiple stockrecords per product. 
 
-* :attr:`~oscar.apps.catalogue.abstract_models.AbstractProduct.has_stockrecord`
+* The :attr:`~oscar.apps.catalogue.abstract_models.AbstractProduct.has_stockrecord` property
   no longer makes sense when there can be more than one stockrecord.  It is
   replaced by
   :attr:`~oscar.apps.catalogue.abstract_models.AbstractProduct.has_stockrecords`
 
-* :attr:`~oscar.apps.catalogue.abstract_models.AbstractProduct.stockrecord` is
+* The :attr:`~oscar.apps.catalogue.abstract_models.AbstractProduct.stockrecord` property is
   deprecated since it presumes there is only one stockrecord per product.
-  Choosing the appropriate stockrecord is now the responsiblity of the 
+  Choosing the appropriate stockrecord is now the responsibility of the 
   :ref:`strategy class <strategy_class>`.  A backward compatible version has
   been kept in place that selects the first stockrecord for a product.  This
   will continue to work for sites that only have one stockrecord per product.
@@ -797,10 +818,10 @@ deprecated following the change to allow multiple stockrecords per product.
 All availability logic has been moved to :ref:`availability policies<availability_policies>` 
 which are determined by the :ref:`strategy class <strategy_class>`.
 
-* :attr:`~oscar.apps.catalogue.abstract_models.AbstractProduct.is_available_to_buy` 
+* The :attr:`~oscar.apps.catalogue.abstract_models.AbstractProduct.is_available_to_buy` property
   is deprecated.  The functionality is now part of availability policies.
 
-* :meth:`~oscar.apps.catalogue.abstract_models.AbstractProduct.is_purchase_permitted` 
+* The :meth:`~oscar.apps.catalogue.abstract_models.AbstractProduct.is_purchase_permitted` method
   is deprecated.  The functionality is now part of availability policies.
 
 Checkout session manager
@@ -809,18 +830,26 @@ Checkout session manager
 The ``shipping_method`` method of the
 :class:`~oscar.apps.checkout.utils.CheckoutSessionData` is now deprecated in
 favour of using ``shipping_method_code``.  It is being removed as the
-``CheckoutSessionData`` class should only be responsible for retriving data
+``CheckoutSessionData`` class should only be responsible for retrieving data
 from the session, not loading shipping method instances.
 
 Checkout order placement mixin
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following methods within 
-:class:`~oscar.apps.checkout.mixins.OrderPlacementMixin` are deprecated:
+:class:`~oscar.apps.checkout.mixins.OrderPlacementMixin` are deprecated as the
+flow of placing an order has been changed.
 
 * :meth:`~oscar.apps.checkout.mixins.OrderPlacementMixin.create_shipping_address_from_form_fields`
 * :meth:`~oscar.apps.checkout.mixins.OrderPlacementMixin.create_shipping_address_from_user_address`
 * :meth:`~oscar.apps.checkout.mixins.OrderPlacementMixin.create_user_address`
+
+Bankcard model
+~~~~~~~~~~~~~~
+
+The :attr:`~oscar.apps.payment.abstract_models.AbstractBankcard.card_number`
+is deprecated in favour of using 
+:attr:`~oscar.apps.payment.abstract_models.AbstractBankcard.number`.
 
 "Partner wrappers"
 ~~~~~~~~~~~~~~~~~~
@@ -832,13 +861,14 @@ information for a particular partner, as specified by the
 properties and methods
 which delegated to the appropriate wrapper for the record's partner.
 
-This functionailty is now deprecated in favour of using :ref:`strategy classes <strategy_class>`.  
+This functionality is now deprecated in favour of using :ref:`strategy classes <strategy_class>`.  
 How prices and taxes are determined is not generally a function of the partner,
 and so this system was not a good model.  Strategy classes are much more
 flexible and allow better modelling of taxes and availability.
 
-The following attributes and methods from :class:`~oscar.apps.partner.abstract_models.StockRecord` 
-are deprecated and will be removed for Oscar 0.7.  
+The following properties and methods from :class:`~oscar.apps.partner.abstract_models.StockRecord` 
+are deprecated and will be removed for Oscar 0.7.  These are all convenience
+properties and methods that delegate to the appropriate partner wrapper.
 
 * :attr:`AbstractStockRecord.is_available_to_buy <oscar.apps.partner.abstract_models.AbstractStockRecord.is_available_to_buy>` 
 * :meth:`AbstractStockRecord.is_purchase_permitted <oscar.apps.partner.abstract_models.AbstractStockRecord.is_purchase_permitted>` 
@@ -854,42 +884,6 @@ All the above properties and methods have effectively been moved to the availabi
 policies that a strategy class is responsible for loading.  To upgrade your
 codebase, replace your partner wrapper classes with equivalent 
 :doc:`availability and pricing policies </topics/prices_and_availability>`.
-
-Basket
-~~~~~~~
-
-Now that products can have multiple stockrecords, several changes have been made
-to baskets to allow the appropriate stockrecord to be tracked for each basket
-line.  The basket line model has a new field that links to the selected
-stockrecord and the basket itself requires an instance of the strategy class so
-that prices can be calculated for each line.  Hence, if you are manipulating
-baskets directly, you need to assign a strategy class in order for prices to
-calculate correctly:
-
-.. code-block:: python
-
-    from oscar.apps.basket import models
-
-    basket = models.Basket.objects.get(id=1)
-    basket.strategy = request.strategy
-
-Without an assigned strategy class, a basket will raise a ``RuntimeError`` when
-attempting to calculate totals.
-
-The way a product is added to a basket has also been changed as a ``StockInfo``
-instance is also required.
-
-.. code-block:: python
-
-    from oscar.apps.basket import models
-    from oscar.apps.catalogue import models as product_models
-
-    basket = models.Basket.objects.get(id=1)
-    basket.strategy = request.strategy
-    product = product_models.Product.objects.get(id=1)
-    stockinfo = request.strategy.fetch(product)
-    
-    basket.
 
 Test support extension brought back into core
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

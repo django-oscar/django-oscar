@@ -58,3 +58,6 @@ Utils
 
 .. automodule:: oscar.apps.checkout.calculators
     :members:
+
+.. automodule:: oscar.apps.checkout.utils
+    :members:
