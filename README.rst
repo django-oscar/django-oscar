@@ -28,6 +28,7 @@ Further reading:
 * `Google Group`_ - the mailing list is django-oscar@googlegroups.com
 * `Continuous integration homepage`_ on `travis-ci.org`_
 * `Twitter account for news and updates`_
+* #django-oscar on Freenode (community-run IRC channel)
 * `crate.io page`_
 * `PyPI page`_
 * `Transifex project`_ - translating Oscar made easy
