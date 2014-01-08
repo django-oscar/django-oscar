@@ -110,8 +110,9 @@ class BankcardExpiryMonthField(BankcardMonthField):
         return [("%.2d" % x, "%.2d" % x) for x in six.moves.xrange(1, 13)]
 
     def year_choices(self):
-        return [(x, x) for x in six.moves.xrange(date.today().year,
-                                           date.today().year + self.num_years)]
+        return [(x, x) for x in six.moves.xrange(
+            date.today().year,
+            date.today().year + self.num_years)]
 
     def clean(self, value):
         expiry_date = super(BankcardExpiryMonthField, self).clean(value)
@@ -153,8 +154,9 @@ class BankcardStartingMonthField(BankcardMonthField):
 
     def year_choices(self):
         today = date.today()
-        years = [(x, x) for x in six.moves.xrange(today.year - self.num_years,
-                                            today.year + 1)]
+        years = [(x, x) for x in six.moves.xrange(
+            today.year - self.num_years,
+            today.year + 1)]
         years.insert(0, ("", "--"))
         return years
 

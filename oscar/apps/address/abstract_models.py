@@ -1,6 +1,5 @@
 import re
 import zlib
-import string
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy

@@ -60,8 +60,8 @@ class ClientTestCase(TestCase):
         return user
 
     def assertIsRedirect(self, response, expected_url=None):
-        self.assertTrue(response.status_code in (http_client.FOUND,
-                                                 http_client.MOVED_PERMANENTLY))
+        self.assertTrue(response.status_code in (
+            http_client.FOUND, http_client.MOVED_PERMANENTLY))
         if expected_url:
             location = URL.from_string(response['Location'])
             self.assertEqual(expected_url, location.path())
@@ -109,8 +109,8 @@ class WebTestCase(WebTest):
     # Custom assertions
 
     def assertIsRedirect(self, response, expected_url=None):
-        self.assertTrue(response.status_code in (http_client.FOUND,
-                                                 http_client.MOVED_PERMANENTLY))
+        self.assertTrue(response.status_code in (
+            http_client.FOUND, http_client.MOVED_PERMANENTLY))
         if expected_url:
             location = URL.from_string(response['Location'])
             self.assertEqual(expected_url, location.path())
