@@ -36,12 +36,6 @@ class PhoneNumber(phonenumbers.phonenumber.PhoneNumber):
             return self.format_as(fmt)
         return self.raw_input
 
-    def __str__(self):
-        return str(unicode(self))
-
-    def original_unicode(self):
-        return super(PhoneNumber, self).__unicode__()
-
     def is_valid(self):
         """
         checks whether the number supplied is actually valid
