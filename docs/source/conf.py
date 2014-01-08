@@ -238,7 +238,7 @@ man_pages = [
 ]
 
 # Autodoc settings
-autoclass_content = 'both'
+autoclass_content = 'class'
 
 # Better documenting of Django models
 # See http://djangosnippets.org/snippets/2533/
