@@ -547,7 +547,7 @@ class AbstractLine(models.Model):
 
         events = []
         last_complete_event_name = None
-        for event_dict in status_map.values():
+        for event_dict in reversed(list(status_map.values())):
             if event_dict['quantity'] == self.quantity:
                 events.append(event_dict['name'])
                 last_complete_event_name = event_dict['name']
@@ -556,7 +556,7 @@ class AbstractLine(models.Model):
                     event_dict['name'], event_dict['quantity'],
                     self.quantity))
 
-        if last_complete_event_name == list(status_map.values())[-1]['name']:
+        if last_complete_event_name == list(status_map.values())[0]['name']:
             return last_complete_event_name
 
         return ', '.join(events)
@@ -600,7 +600,7 @@ class AbstractLine(models.Model):
         Returns a dict of shipping events that this line has been through
         """
         status_map = SortedDict()
-        for event in self.shipping_events.all().order_by('id'):
+        for event in self.shipping_events.all():
             event_type = event.event_type
             event_name = event_type.name
             event_quantity = event.line_quantities.get(line=self).quantity
