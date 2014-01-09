@@ -833,7 +833,7 @@ class AbstractShippingEvent(models.Model):
         abstract = True
         verbose_name = _("Shipping Event")
         verbose_name_plural = _("Shipping Events")
-        ordering = ['-date_created']
+        ordering = ['-date_created', '-id']
 
     def __unicode__(self):
         return _("Order #%(number)s, type %(type)s") % {
