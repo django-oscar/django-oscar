@@ -50,8 +50,9 @@ class Emailbackend(ModelBackend):
             # either.  This situation requires intervention by an admin and so
             # we mail them to let them know!
             mail_admins(
-                "There are multiple users with email address: %s" % clean_email,
+                "There are multiple users with email address: %s"
+                % clean_email,
                 ("There are %s users with email %s and the same password "
-                 "which means none of them are able to authenticate") % (len(authenticated_users),
-                                                clean_email))
+                 "which means none of them are able to authenticate")
+                % (len(authenticated_users), clean_email))
         return None

@@ -52,6 +52,20 @@ Default: 20
 
 The number of recently viewed products to store.
 
+``OSCAR_RECENTLY_VIEWED_COOKIE_LIFETIME``
+-----------------------------------------
+
+Default: 604800 (1 week in seconds)
+
+The time to live for the cookie in seconds.
+
+``OSCAR_RECENTLY_VIEWED_COOKIE_NAME``
+-------------------------------------
+
+Default: ``'oscar_history'``
+
+The name of the cookie for showing recently viewed products.
+
 ``OSCAR_PRODUCTS_PER_PAGE``
 ---------------------------
 
@@ -59,13 +73,40 @@ Default: 20
 
 The number of products to paginate by.
 
-``OSCAR_SEARCH_SUGGEST_LIMIT``
+.. _oscar_search_facets:
+
+``OSCAR_SEARCH_FACETS``
 ------------------------------
 
-Default: 10
+A dictionary that specifies the facets to use with the search backend.  It
+needs to be a dict with keys ``fields`` and ``queries`` for field- and
+query-type facets.  The default is::
 
-The number of suggestions that the search 'suggest' function should return
-at maximum.
+    OSCAR_SEARCH_FACETS = {
+        'fields': {
+            # The key for these dicts will be used when passing facet data
+            # to the template. Same for the 'queries' dict below.
+            'category': {
+                'name': _('Category'),
+                'field': 'category'
+            }
+        },
+        'queries': {
+            'price_range': {
+                'name': _('Price range'),
+                'field': 'price',
+                'queries': [
+                    # This is a list of (name, query) tuples where the name will
+                    # be displayed on the front-end.
+                    (_('0 to 40'), '[0 TO 20]'),
+                    (_('20 to 40'), '[20 TO 40]'),
+                    (_('40 to 60'), '[40 TO 60]'),
+                    (_('60+'), '[60 TO *]'),
+                ]
+            }
+        }
+    }
+
 
 ``OSCAR_PROMOTION_POSITIONS``
 -----------------------------
@@ -94,6 +135,8 @@ Default::
     )
 
 Defines the available promotion block types that can be used in Oscar.
+
+.. _OSCAR_DASHBOARD_NAVIGATION:
 
 ``OSCAR_DASHBOARD_NAVIGATION``
 ------------------------------
@@ -296,12 +339,16 @@ The maximum number of products that can be added to a basket at once.
 ``OSCAR_BASKET_COOKIE_OPEN``
 ----------------------------
 
-Default: ``oscar_open_basket``
+Default: ``'oscar_open_basket'``
+
+The name of the cookie for the open basket.
 
 ``OSCAR_BASKET_COOKIE_SAVED``
 -----------------------------
 
-Default: ``oscar_saved_basket``
+Default: ``'oscar_saved_basket'``
+
+The name of the cookie for the saved basket.
 
 Currency settings
 =================

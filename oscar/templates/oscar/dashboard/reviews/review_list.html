@@ -37,7 +37,7 @@
         </form>
     </div>
 
-    {% if review_list|length %}
+    {% if review_list %}
 
         <form action="." method="post">
             {% csrf_token %}
@@ -78,7 +78,7 @@
                         {% endif %}
                         <td>
                             {% if not review.is_anonymous %}
-                                <a href="{% url 'dashboard:user-detail' pk=review.user.id %}">{{ review.review_name }}</a>
+                                <a href="{% url 'dashboard:user-detail' pk=review.user.id %}">{{ review.reviewer_name }}</a>
                             {% else %}
                                 {{ review.name }}
                             {% endif %}

@@ -50,10 +50,11 @@ class CustomerApplication(Application):
     wishlists_update_view = wishlists_views.WishListUpdateView
     wishlists_delete_view = wishlists_views.WishListDeleteView
     wishlists_remove_product_view = wishlists_views.WishListRemoveProduct
-    wishlists_move_product_to_another_view = wishlists_views.WishListMoveProductToAnotherWishList
+    wishlists_move_product_to_another_view \
+        = wishlists_views.WishListMoveProductToAnotherWishList
 
     def get_urls(self):
-        urlpatterns = patterns('',
+        urls = [
             url(r'^$', login_required(self.summary_view.as_view()),
                 name='summary'),
             url(r'^login/$', self.login_view.as_view(), name='login'),
@@ -96,7 +97,8 @@ class CustomerApplication(Application):
             url(r'^addresses/(?P<pk>\d+)/delete/$',
                 login_required(self.address_delete_view.as_view()),
                 name='address-delete'),
-            url(r'^addresses/(?P<pk>\d+)/(?P<action>default_for_(billing|shipping))/$',
+            url(r'^addresses/(?P<pk>\d+)/'
+                r'(?P<action>default_for_(billing|shipping))/$',
                 login_required(self.address_change_status_view.as_view()),
                 name='address-change-status'),
 
@@ -125,9 +127,11 @@ class CustomerApplication(Application):
                 name='notifications-detail'),
 
             # Alerts
-            url(r'^alerts/$', self.alert_list_view.as_view(),
+            url(r'^alerts/$',
+                login_required(self.alert_list_view.as_view()),
                 name='alerts-list'),
-            url(r'^alerts/create/(?P<pk>\d+)/$', self.alert_create_view.as_view(),
+            url(r'^alerts/create/(?P<pk>\d+)/$',
+                self.alert_create_view.as_view(),
                 name='alert-create'),
             url(r'^alerts/confirm/(?P<key>[a-z0-9]+)/$',
                 self.alert_confirm_view.as_view(),
@@ -166,14 +170,16 @@ class CustomerApplication(Application):
             url(r'wishlists/(?P<key>[a-z0-9]+)/lines/(?P<line_pk>\d+)/delete/',
                 login_required(self.wishlists_remove_product_view.as_view()),
                 name='wishlists-remove-product'),
-            url(r'wishlists/(?P<key>[a-z0-9]+)/products/(?P<product_pk>\d+)/delete/',
+            url(r'wishlists/(?P<key>[a-z0-9]+)/products/(?P<product_pk>\d+)/'
+                r'delete/',
                 login_required(self.wishlists_remove_product_view.as_view()),
                 name='wishlists-remove-product'),
-            url(r'wishlists/(?P<key>[a-z0-9]+)/lines/(?P<line_pk>\d+)/move-to/(?P<to_key>[a-z0-9]+)/$',
-                login_required(self.wishlists_move_product_to_another_view.as_view()),
-                name='wishlists-move-product-to-another'),
-            )
-        return self.post_process_urls(urlpatterns)
+            url(r'wishlists/(?P<key>[a-z0-9]+)/lines/(?P<line_pk>\d+)/move-to/'
+                r'(?P<to_key>[a-z0-9]+)/$',
+                login_required(self.wishlists_move_product_to_another_view
+                               .as_view()),
+                name='wishlists-move-product-to-another')]
+        return self.post_process_urls(patterns('', *urls))
 
 
 application = CustomerApplication()

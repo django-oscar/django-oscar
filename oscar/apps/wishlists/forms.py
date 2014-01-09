@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.db.models import get_model
-from django.forms.models import inlineformset_factory, fields_for_model
+from django.forms.models import inlineformset_factory
 
 WishList = get_model('wishlists', 'WishList')
 Line = get_model('wishlists', 'Line')

@@ -6,7 +6,7 @@ from stores.app import application as stores_app
 from stores.dashboard.app import application as dashboard_app
 
 from apps.app import application
-from datacash.app import application as datacash_app
+from datacash.dashboard.app import application as datacash_app
 
 # These need to be imported into this namespace
 from oscar.views import handler500, handler404, handler403

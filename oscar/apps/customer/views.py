@@ -17,8 +17,9 @@ from oscar.views.generic import PostActionMixin
 from oscar.apps.customer.utils import get_password_reset_url
 from oscar.core.loading import get_class, get_profile_class, get_classes
 from oscar.core.compat import get_user_model
-from .mixins import PageTitleMixin, RegisterUserMixin
 
+PageTitleMixin, RegisterUserMixin = get_classes(
+    'customer.mixins', ['PageTitleMixin', 'RegisterUserMixin'])
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 EmailAuthenticationForm, EmailUserCreationForm, OrderSearchForm = get_classes(
     'customer.forms', ['EmailAuthenticationForm', 'EmailUserCreationForm',
@@ -143,12 +144,12 @@ class AccountAuthView(RegisterUserMixin, TemplateView):
         kwargs['prefix'] = self.registration_prefix
         kwargs['initial'] = {
             'redirect_url': self.request.GET.get(self.redirect_field_name, ''),
-            }
+        }
         if request and request.method in ('POST', 'PUT'):
             kwargs.update({
                 'data': request.POST,
                 'files': request.FILES,
-                })
+            })
         return kwargs
 
     def post(self, request, *args, **kwargs):
@@ -203,7 +204,7 @@ class ProfileView(PageTitleMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(ProfileView, self).get_context_data(**kwargs)
-        ctx['profile'] = self.get_profile_fields(self.request.user)
+        ctx['profile_fields'] = self.get_profile_fields(self.request.user)
         return ctx
 
     def get_profile_fields(self, user):
@@ -313,7 +314,7 @@ class ChangePasswordView(PageTitleMixin, FormView):
             'user': self.request.user,
             'site': get_current_site(self.request),
             'reset_url': get_password_reset_url(self.request.user),
-            }
+        }
         msgs = CommunicationEventType.objects.get_and_render(
             code=self.communication_type_code, context=ctx)
         Dispatcher().dispatch_user_messages(self.request.user, msgs)
@@ -426,7 +427,7 @@ class OrderDetailView(PageTitleMixin, PostActionMixin, DetailView):
         return get_object_or_404(self.model, user=self.request.user,
                                  number=self.kwargs['order_number'])
 
-    def do_reorder(self, order):
+    def do_reorder(self, order):  # noqa (too complex (10))
         """
         'Re-order' a previous order.
 
@@ -496,7 +497,8 @@ class OrderLineView(PostActionMixin, DetailView):
 
     def do_reorder(self, line):
         self.response = HttpResponseRedirect(
-            reverse('customer:order', args=(int(self.kwargs['order_number']),)))
+            reverse('customer:order',
+                    args=(int(self.kwargs['order_number']),)))
         basket = self.request.basket
 
         line_available_to_reorder, reason = line.is_available_to_reorder(
@@ -519,7 +521,8 @@ class OrderLineView(PostActionMixin, DetailView):
         basket.add_product(line.product, line.quantity, options)
 
         if line.quantity > 1:
-            msg = _("%(qty)d copies of '%(product)s' have been added to your basket") % {
+            msg = _("%(qty)d copies of '%(product)s' have been added to your"
+                    " basket") % {
                 'qty': line.quantity, 'product': line.product}
         else:
             msg = _("'%s' has been added to your basket") % line.product

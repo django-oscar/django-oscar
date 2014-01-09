@@ -3,14 +3,16 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db.models.loading import get_model
 from django.http import HttpResponseRedirect
-from oscar.core.utils import slugify
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
+
 from django.views.generic import ListView
 
+from oscar.core.utils import slugify
 from oscar.core.validators import URLDoesNotExistValidator
 from oscar.apps.dashboard.pages import forms
+
 
 FlatPage = get_model('flatpages', 'FlatPage')
 Site = get_model('sites', 'Site')
@@ -47,7 +49,8 @@ class PageListView(ListView):
 
         if data['title']:
             queryset = queryset.filter(title__icontains=data['title'])
-            self.desc_ctx['title_filter'] = _(" with title containing '%s'") % data['title']
+            self.desc_ctx['title_filter'] \
+                = _(" with title containing '%s'") % data['title']
 
         return queryset
 
@@ -126,7 +129,7 @@ class PageUpdateView(generic.UpdateView):
     def form_valid(self, form):
         # Ensure saved page is added to the current site
         page = form.save(commit=False)
-        if not page.sites.count():
+        if not page.sites.exists():
             page.sites.add(Site.objects.get_current())
         page.save()
         return HttpResponseRedirect(self.get_success_url())

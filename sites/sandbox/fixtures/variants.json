@@ -1,0 +1,545 @@
+[
+{
+    "pk": 1, 
+    "model": "catalogue.productclass", 
+    "fields": {
+        "track_stock": true, 
+        "options": [], 
+        "requires_shipping": true, 
+        "name": "T-shirt", 
+        "slug": "t-shirt"
+    }
+},
+{
+    "pk": 1, 
+    "model": "catalogue.category", 
+    "fields": {
+        "description": "", 
+        "numchild": 0, 
+        "slug": "clothing", 
+        "depth": 1, 
+        "full_name": "Clothing", 
+        "path": "0001", 
+        "image": "", 
+        "name": "Clothing"
+    }
+},
+{
+    "pk": 1, 
+    "model": "catalogue.productcategory", 
+    "fields": {
+        "category": 1, 
+        "product": 1, 
+        "is_canonical": false
+    }
+},
+{
+    "pk": 2, 
+    "model": "catalogue.productcategory", 
+    "fields": {
+        "category": 1, 
+        "product": 5, 
+        "is_canonical": false
+    }
+},
+{
+    "pk": 3, 
+    "model": "catalogue.productcategory", 
+    "fields": {
+        "category": 1, 
+        "product": 8, 
+        "is_canonical": false
+    }
+},
+{
+    "pk": 1, 
+    "model": "catalogue.product", 
+    "fields": {
+        "status": null, 
+        "rating": null, 
+        "description": "", 
+        "parent": null, 
+        "title": "Oscar T-shirt", 
+        "date_updated": "2013-12-12T16:33:57.426Z", 
+        "related_products": [], 
+        "upc": null, 
+        "score": 0.0, 
+        "is_discountable": true, 
+        "date_created": "2013-12-12T16:33:57.426Z", 
+        "product_options": [], 
+        "slug": "oscar-t-shirt", 
+        "product_class": 1
+    }
+},
+{
+    "pk": 2, 
+    "model": "catalogue.product", 
+    "fields": {
+        "status": null, 
+        "rating": null, 
+        "description": "", 
+        "parent": 1, 
+        "title": "", 
+        "date_updated": "2013-12-12T16:34:14.023Z", 
+        "related_products": [], 
+        "upc": null, 
+        "score": 0.0, 
+        "is_discountable": true, 
+        "date_created": "2013-12-12T16:34:14.023Z", 
+        "product_options": [], 
+        "slug": "oscar-t-shirt", 
+        "product_class": 1
+    }
+},
+{
+    "pk": 3, 
+    "model": "catalogue.product", 
+    "fields": {
+        "status": null, 
+        "rating": null, 
+        "description": "", 
+        "parent": 1, 
+        "title": "", 
+        "date_updated": "2013-12-12T16:34:32.170Z", 
+        "related_products": [], 
+        "upc": null, 
+        "score": 0.0, 
+        "is_discountable": true, 
+        "date_created": "2013-12-12T16:34:32.170Z", 
+        "product_options": [], 
+        "slug": "oscar-t-shirt", 
+        "product_class": 1
+    }
+},
+{
+    "pk": 4, 
+    "model": "catalogue.product", 
+    "fields": {
+        "status": null, 
+        "rating": null, 
+        "description": "", 
+        "parent": 1, 
+        "title": "", 
+        "date_updated": "2013-12-12T17:32:15.016Z", 
+        "related_products": [], 
+        "upc": null, 
+        "score": 0.0, 
+        "is_discountable": true, 
+        "date_created": "2013-12-12T17:32:15.016Z", 
+        "product_options": [], 
+        "slug": "oscar-t-shirt", 
+        "product_class": 1
+    }
+},
+{
+    "pk": 5, 
+    "model": "catalogue.product", 
+    "fields": {
+        "status": null, 
+        "rating": null, 
+        "description": "", 
+        "parent": null, 
+        "title": "commandlinefu T-shirt", 
+        "date_updated": "2013-12-13T11:34:21.810Z", 
+        "related_products": [], 
+        "upc": null, 
+        "score": 0.0, 
+        "is_discountable": true, 
+        "date_created": "2013-12-13T11:34:21.810Z", 
+        "product_options": [], 
+        "slug": "commandlinefu-t-shirt", 
+        "product_class": 1
+    }
+},
+{
+    "pk": 6, 
+    "model": "catalogue.product", 
+    "fields": {
+        "status": null, 
+        "rating": null, 
+        "description": "", 
+        "parent": 5, 
+        "title": "", 
+        "date_updated": "2013-12-13T11:37:08.138Z", 
+        "related_products": [], 
+        "upc": null, 
+        "score": 0.0, 
+        "is_discountable": true, 
+        "date_created": "2013-12-13T11:37:08.138Z", 
+        "product_options": [], 
+        "slug": "commandlinefu-t-shirt", 
+        "product_class": 1
+    }
+},
+{
+    "pk": 7, 
+    "model": "catalogue.product", 
+    "fields": {
+        "status": null, 
+        "rating": null, 
+        "description": "", 
+        "parent": 5, 
+        "title": "", 
+        "date_updated": "2013-12-13T11:37:45.834Z", 
+        "related_products": [], 
+        "upc": null, 
+        "score": 0.0, 
+        "is_discountable": true, 
+        "date_created": "2013-12-13T11:37:45.834Z", 
+        "product_options": [], 
+        "slug": "commandlinefu-t-shirt", 
+        "product_class": 1
+    }
+},
+{
+    "pk": 8, 
+    "model": "catalogue.product", 
+    "fields": {
+        "status": null, 
+        "rating": null, 
+        "description": "", 
+        "parent": null, 
+        "title": "Tangent T-shirt", 
+        "date_updated": "2013-12-13T11:38:15.107Z", 
+        "related_products": [], 
+        "upc": null, 
+        "score": 0.0, 
+        "is_discountable": true, 
+        "date_created": "2013-12-13T11:38:15.107Z", 
+        "product_options": [], 
+        "slug": "tangent-t-shirt", 
+        "product_class": 1
+    }
+},
+{
+    "pk": 9, 
+    "model": "catalogue.product", 
+    "fields": {
+        "status": null, 
+        "rating": null, 
+        "description": "", 
+        "parent": 8, 
+        "title": "", 
+        "date_updated": "2013-12-13T11:38:49.769Z", 
+        "related_products": [], 
+        "upc": null, 
+        "score": 0.0, 
+        "is_discountable": true, 
+        "date_created": "2013-12-13T11:38:49.769Z", 
+        "product_options": [], 
+        "slug": "tangent-t-shirt", 
+        "product_class": 1
+    }
+},
+{
+    "pk": 10, 
+    "model": "catalogue.product", 
+    "fields": {
+        "status": null, 
+        "rating": null, 
+        "description": "", 
+        "parent": 8, 
+        "title": "", 
+        "date_updated": "2013-12-13T11:39:12.859Z", 
+        "related_products": [], 
+        "upc": null, 
+        "score": 0.0, 
+        "is_discountable": true, 
+        "date_created": "2013-12-13T11:39:12.859Z", 
+        "product_options": [], 
+        "slug": "tangent-t-shirt", 
+        "product_class": 1
+    }
+},
+{
+    "pk": 11, 
+    "model": "catalogue.product", 
+    "fields": {
+        "status": null, 
+        "rating": null, 
+        "description": "", 
+        "parent": 8, 
+        "title": "", 
+        "date_updated": "2013-12-13T11:39:53.073Z", 
+        "related_products": [], 
+        "upc": null, 
+        "score": 0.0, 
+        "is_discountable": true, 
+        "date_created": "2013-12-13T11:39:53.073Z", 
+        "product_options": [], 
+        "slug": "tangent-t-shirt", 
+        "product_class": 1
+    }
+},
+{
+    "pk": 1, 
+    "model": "catalogue.productattribute", 
+    "fields": {
+        "code": "size", 
+        "product_class": 1, 
+        "entity_type": null, 
+        "option_group": 1, 
+        "required": true, 
+        "type": "option", 
+        "name": "Size"
+    }
+},
+{
+    "pk": 1, 
+    "model": "catalogue.productattributevalue", 
+    "fields": {
+        "value_date": null, 
+        "value_integer": null, 
+        "product": 2, 
+        "value_float": null, 
+        "value_text": null, 
+        "attribute": 1, 
+        "value_richtext": null, 
+        "value_entity": null, 
+        "value_option": 1, 
+        "value_boolean": null
+    }
+},
+{
+    "pk": 2, 
+    "model": "catalogue.productattributevalue", 
+    "fields": {
+        "value_date": null, 
+        "value_integer": null, 
+        "product": 3, 
+        "value_float": null, 
+        "value_text": null, 
+        "attribute": 1, 
+        "value_richtext": null, 
+        "value_entity": null, 
+        "value_option": 2, 
+        "value_boolean": null
+    }
+},
+{
+    "pk": 3, 
+    "model": "catalogue.productattributevalue", 
+    "fields": {
+        "value_date": null, 
+        "value_integer": null, 
+        "product": 4, 
+        "value_float": null, 
+        "value_text": null, 
+        "attribute": 1, 
+        "value_richtext": null, 
+        "value_entity": null, 
+        "value_option": 3, 
+        "value_boolean": null
+    }
+},
+{
+    "pk": 4, 
+    "model": "catalogue.productattributevalue", 
+    "fields": {
+        "value_date": null, 
+        "value_integer": null, 
+        "product": 6, 
+        "value_float": null, 
+        "value_text": null, 
+        "attribute": 1, 
+        "value_richtext": null, 
+        "value_entity": null, 
+        "value_option": 1, 
+        "value_boolean": null
+    }
+},
+{
+    "pk": 5, 
+    "model": "catalogue.productattributevalue", 
+    "fields": {
+        "value_date": null, 
+        "value_integer": null, 
+        "product": 7, 
+        "value_float": null, 
+        "value_text": null, 
+        "attribute": 1, 
+        "value_richtext": null, 
+        "value_entity": null, 
+        "value_option": 2, 
+        "value_boolean": null
+    }
+},
+{
+    "pk": 6, 
+    "model": "catalogue.productattributevalue", 
+    "fields": {
+        "value_date": null, 
+        "value_integer": null, 
+        "product": 9, 
+        "value_float": null, 
+        "value_text": null, 
+        "attribute": 1, 
+        "value_richtext": null, 
+        "value_entity": null, 
+        "value_option": 1, 
+        "value_boolean": null
+    }
+},
+{
+    "pk": 7, 
+    "model": "catalogue.productattributevalue", 
+    "fields": {
+        "value_date": null, 
+        "value_integer": null, 
+        "product": 10, 
+        "value_float": null, 
+        "value_text": null, 
+        "attribute": 1, 
+        "value_richtext": null, 
+        "value_entity": null, 
+        "value_option": 2, 
+        "value_boolean": null
+    }
+},
+{
+    "pk": 8, 
+    "model": "catalogue.productattributevalue", 
+    "fields": {
+        "value_date": null, 
+        "value_integer": null, 
+        "product": 11, 
+        "value_float": null, 
+        "value_text": null, 
+        "attribute": 1, 
+        "value_richtext": null, 
+        "value_entity": null, 
+        "value_option": 3, 
+        "value_boolean": null
+    }
+},
+{
+    "pk": 1, 
+    "model": "catalogue.attributeoptiongroup", 
+    "fields": {
+        "name": "Sizes"
+    }
+},
+{
+    "pk": 1, 
+    "model": "catalogue.attributeoption", 
+    "fields": {
+        "group": 1, 
+        "option": "Small"
+    }
+},
+{
+    "pk": 2, 
+    "model": "catalogue.attributeoption", 
+    "fields": {
+        "group": 1, 
+        "option": "Medium"
+    }
+},
+{
+    "pk": 3, 
+    "model": "catalogue.attributeoption", 
+    "fields": {
+        "group": 1, 
+        "option": "Large"
+    }
+},
+{
+    "pk": 2, 
+    "model": "partner.partner", 
+    "fields": {
+        "code": "clothing-partner", 
+        "name": "Clothing partner", 
+        "users": []
+    }
+},
+{
+    "pk": 1, 
+    "model": "partner.stockrecord", 
+    "fields": {
+        "price_currency": "GBP", 
+        "product": 6, 
+        "partner_sku": "clf-large", 
+        "price_retail": null, 
+        "date_updated": "2013-12-13T11:37:08.232Z", 
+        "num_in_stock": 0, 
+        "num_allocated": null, 
+        "low_stock_threshold": null, 
+        "date_created": "2013-12-13T11:37:08.232Z", 
+        "partner": 2, 
+        "price_excl_tax": "10", 
+        "cost_price": null
+    }
+},
+{
+    "pk": 2, 
+    "model": "partner.stockrecord", 
+    "fields": {
+        "price_currency": "GBP", 
+        "product": 7, 
+        "partner_sku": "clf-med", 
+        "price_retail": null, 
+        "date_updated": "2013-12-13T11:37:45.928Z", 
+        "num_in_stock": 0, 
+        "num_allocated": null, 
+        "low_stock_threshold": null, 
+        "date_created": "2013-12-13T11:37:45.928Z", 
+        "partner": 2, 
+        "price_excl_tax": "10", 
+        "cost_price": null
+    }
+},
+{
+    "pk": 3, 
+    "model": "partner.stockrecord", 
+    "fields": {
+        "price_currency": "GBP", 
+        "product": 9, 
+        "partner_sku": "tng-small", 
+        "price_retail": null, 
+        "date_updated": "2013-12-13T11:38:49.858Z", 
+        "num_in_stock": 100, 
+        "num_allocated": null, 
+        "low_stock_threshold": null, 
+        "date_created": "2013-12-13T11:38:49.858Z", 
+        "partner": 2, 
+        "price_excl_tax": "15", 
+        "cost_price": null
+    }
+},
+{
+    "pk": 4, 
+    "model": "partner.stockrecord", 
+    "fields": {
+        "price_currency": "GBP", 
+        "product": 10, 
+        "partner_sku": "tng-med", 
+        "price_retail": null, 
+        "date_updated": "2013-12-13T11:39:12.947Z", 
+        "num_in_stock": 200, 
+        "num_allocated": null, 
+        "low_stock_threshold": null, 
+        "date_created": "2013-12-13T11:39:12.947Z", 
+        "partner": 2, 
+        "price_excl_tax": "15", 
+        "cost_price": null
+    }
+},
+{
+    "pk": 5, 
+    "model": "partner.stockrecord", 
+    "fields": {
+        "price_currency": "GBP", 
+        "product": 11, 
+        "partner_sku": "tng-large", 
+        "price_retail": null, 
+        "date_updated": "2013-12-13T11:39:53.162Z", 
+        "num_in_stock": 0, 
+        "num_allocated": null, 
+        "low_stock_threshold": null, 
+        "date_created": "2013-12-13T11:39:53.162Z", 
+        "partner": 2, 
+        "price_excl_tax": "15", 
+        "cost_price": null
+    }
+}
+]

@@ -103,7 +103,7 @@ Analytics partial.  We want to replace this with our own code.  To do this,
 create a new ``base.html`` in your project that subclasses the original::
 
     # yourproject/templates/base.html
-    {% extends oscar/base.html %}
+    {% extends 'oscar/base.html' %}
 
     {% block tracking %}
     <script type="javascript">

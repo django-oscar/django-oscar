@@ -23,9 +23,7 @@ var oscar = (function(o, $) {
     // This block may need removing after reworking of promotions app
     o.promotions = {
         init: function() {
-            $('#myCarousel').carousel({
-                interval: 6000
-            });
+
         }
     };
 
@@ -85,7 +83,6 @@ var oscar = (function(o, $) {
         init: function() {
             if (o.responsive.isDesktop()) {
                 o.responsive.initNav();
-                o.responsive.initCarousel();
             }
         },
         isDesktop: function() {
@@ -105,22 +102,9 @@ var oscar = (function(o, $) {
                 $sidebar.css({ marginTop: $browse.outerHeight() });
             }
         },
-        initCarousel: function() {
-            $('.es-carousel-wrapper').each(function(){
-                var gallery = $(this).parent('.rg-thumbs').length;
-                // Don't apply this to the gallery carousel
-                if (gallery <= 0) {
-                    var imageWidth = 175,
-                        minProducts = 4;
-                    if ($(this).hasClass('wide')) {
-                        minProducts = 5;
-                    }
-                    $(this).elastislide({
-                        imageW: imageWidth,
-                        minItems: minProducts,
-                        onClick: function() {return true;}
-                    });
-                }
+        initSlider: function() {
+            $('.carousel').carousel({
+                interval: 20000
             });
         }
     };
@@ -243,6 +227,7 @@ var oscar = (function(o, $) {
         o.forms.init();
         o.page.init();
         o.responsive.init();
+        o.responsive.initSlider();
         o.compatibility.init();
     };
 

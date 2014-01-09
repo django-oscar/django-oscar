@@ -22,9 +22,17 @@ User = get_user_model()
 class IndexView(TemplateView):
     """
     An overview view which displays several reports about the shop.
+
+    Supports the permission-based dashboard. It is recommended to add a
+    index_nonstaff.html template because Oscar's default template will
+    display potentially sensitive store information.
     """
 
-    template_name = 'dashboard/index.html'
+    def get_template_names(self):
+        if self.request.user.is_staff:
+            return ['dashboard/index.html', ]
+        else:
+            return ['dashboard/index_nonstaff.html', 'dashboard/index.html']
 
     def get_context_data(self, **kwargs):
         ctx = super(IndexView, self).get_context_data(**kwargs)
@@ -37,8 +45,8 @@ class IndexView(TemplateView):
         ``Queryset`` of site offers is filtered by end date greater then
         the current date.
         """
-        return ConditionalOffer.objects.filter(end_datetime__gt=now(),
-                                               offer_type=ConditionalOffer.SITE)
+        return ConditionalOffer.objects.filter(
+            end_datetime__gt=now(), offer_type=ConditionalOffer.SITE)
 
     def get_active_vouchers(self):
         """
@@ -84,7 +92,7 @@ class IndexView(TemplateView):
         """
         # Get datetime for 24 hours agao
         time_now = now().replace(minute=0, second=0)
-        start_time = time_now - timedelta(hours=hours-1)
+        start_time = time_now - timedelta(hours=hours - 1)
 
         orders_last_day = Order.objects.filter(date_placed__gt=start_time)
 
@@ -115,7 +123,7 @@ class IndexView(TemplateView):
 
             y_range = []
             y_axis_steps = max_value / D(str(segments))
-            for idx in reversed(range(segments+1)):
+            for idx in reversed(range(segments + 1)):
                 y_range.append(idx * y_axis_steps)
         else:
             y_range = []
@@ -138,9 +146,11 @@ class IndexView(TemplateView):
         open_alerts = StockAlert.objects.filter(status=StockAlert.OPEN)
         closed_alerts = StockAlert.objects.filter(status=StockAlert.CLOSED)
 
+        total_lines_last_day = Line.objects.filter(
+            order__in=orders_last_day).count()
         stats = {
             'total_orders_last_day': orders_last_day.count(),
-            'total_lines_last_day': Line.objects.filter(order__in=orders_last_day).count(),
+            'total_lines_last_day': total_lines_last_day,
 
             'average_order_costs': orders_last_day.aggregate(
                 Avg('total_incl_tax')

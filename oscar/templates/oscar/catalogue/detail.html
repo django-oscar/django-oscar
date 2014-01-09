@@ -8,20 +8,14 @@
 {% load product_tags %}
 {% load display_tags %}
 {% load i18n %}
-{% load stockrecord_tags %}
-
-{% block extrastyles %}
-    {{ block.super }}
-    <!-- Colorbox (a lightbox plugin) for image galleries -->
-    <link rel="stylesheet" href="{% static "oscar/js/colorbox/colorbox.css" %}" type="text/css" media="screen" charset="utf-8"/>
-{% endblock %}
+{% load purchase_info_tags %}
 
 {% block title %}
     {{ product.title }} | {{ block.super }}
 {% endblock %}
 
 {% block description %}
-    {{ product.description }}
+    {{ product.description|default:""|striptags }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -83,25 +77,25 @@
 
             {% iffeature "reviews" %}
                 {% if product.rating != None %}
-                <h4 class="star-rating {{ product.rating|as_stars }}">
-                    <i class="icon-star"></i>
-                    <i class="icon-star"></i>
-                    <i class="icon-star"></i>
-                    <i class="icon-star"></i>
-                    <i class="icon-star"></i>
+                    <h4 class="star-rating {{ product.rating|as_stars }}">
+                        <i class="icon-star"></i>
+                        <i class="icon-star"></i>
+                        <i class="icon-star"></i>
+                        <i class="icon-star"></i>
+                        <i class="icon-star"></i>
 
-                    <small><a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.id %}">
+                        <small><a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.id %}">
                             {% blocktrans count reviews|length as num_reviews %}
-                            1 custom review
+                            1 customer review
                             {% plural %}
                             {{ num_reviews }} customer reviews
                             {% endblocktrans %}
-                    </a></small>
-                    &nbsp;
+                        </a></small>
+                        &nbsp;
                 {% else %}
                     <h4>
                 {% endif %}
-                {% if not product|has_review_by:user %}
+                {% if product|is_review_permitted:user %}
                     <a id="write_review" href="{% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id %}#addreview" class="btn btn-success btn-small">
                         {% trans "Write a review" %}
                     </a>
@@ -142,7 +136,7 @@
             <th>{% trans "Product class" %}</th><td>{{ product.get_product_class.name }}</td>
         </tr>
 
-        {% session_strategy request product as session %}
+        {% purchase_info_for_product request product as session %}
         {% if session.price.exists %}
             <tr>
                 <th>{% trans "Price (excl. tax)" %}</th><td>{{ session.price.excl_tax|currency:session.price.currency }}</td>
@@ -191,8 +185,14 @@
 
             {% if not reviews %}
                 <p>
-                    {% trans "This product does not have any reviews yet" %} -
-                    <a href="{% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id %}#addreview">{% trans "be the first to write one" %}</a>.
+                    {% if product|is_review_permitted:user %}
+                        {% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id as add_review_url %}
+                            {% blocktrans %}This product does not have any reviews yet" -
+                            <a href="{{ add_review_url }}#addreview">be the first to write one</a>.
+                        {% endblocktrans %}
+                    {% else %}
+                        {% trans "This product does not have any reviews yet" %}.
+                    {% endif %}
                 </p>
             {% else %}
                 <ol class="unstyled review-list">
@@ -207,39 +207,35 @@
         {% endblock product_review %}
     {% endiffeature %}
 
-    {% if product.related_products.count %}
-        <div class="sub-header">
-            <h2>{% trans "Related items" %}</h2>
-        </div>
-        <div class="es-carousel-wrapper">
-            <div class="es-carousel">
-                <ul>
-                    {% for product in product.related_products.all %}
-                    <li>
-                        {% render_product product %}
-                    </li>
-                    {% endfor %}
-                </ul>
+    {% with related_products=product.related_products.all|slice:":6" %}
+        {% if related_products %}
+            <div class="sub-header">
+                <h2>{% trans "Related items" %}</h2>
             </div>
-        </div>
-    {% endif %}
+            <ul class="row-fluid">
+                {% for product in related_products %}
+                <li class="span2 {% if forloop.counter0|divisibleby:"6" %}no-margin{% endif %}">
+                    {% render_product product %}
+                </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
 
-    {% if product.recommended_products.count %}
-        <div class="sub-header">
-            <h2>{% trans "Recommended items" %}</h2>
-        </div>
-        <div class="es-carousel-wrapper">
-            <div class="es-carousel">
-                <ul>
-                    {% for product in product.recommended_products.all %}
-                    <li>
-                        {% render_product product %}
-                    </li>
-                    {% endfor %}
-                </ul>
+    {% with recommended_products=product.recommended_products.all|slice:":6" %}
+        {% if recommended_products %}
+            <div class="sub-header">
+                <h2>{% trans "Recommended items" %}</h2>
             </div>
-        </div>
-    {% endif %}
+            <ul class="row-fluid">
+                {% for product in recommended_products %}
+                <li class="span2 {% if forloop.counter0|divisibleby:"6" %}no-margin{% endif %}">
+                    {% render_product product %}
+                </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
     
     {% recently_viewed_products %}
 
@@ -248,8 +244,4 @@
 
 {% block extrascripts %}
     {{ block.super }}
-    <!-- Responsive gallery js -->
-    <script src="{% static "oscar/js/colorbox/jquery.colorbox-min.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/responsivegallery/jquery.tmpl.min.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/responsivegallery/gallery.js" %}" type="text/javascript" charset="utf-8"></script>
 {% endblock %}

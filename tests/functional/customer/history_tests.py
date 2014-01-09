@@ -1,6 +1,7 @@
-from django.test.client import Client
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.test.client import Client
 
 from oscar.test.factories import create_product
 from oscar.core.compat import get_user_model
@@ -10,6 +11,7 @@ from django.http import HttpRequest
 
 
 User = get_user_model()
+COOKIE_NAME = settings.OSCAR_RECENTLY_VIEWED_COOKIE_NAME
 
 
 class HistoryHelpersTest(TestCase):
@@ -20,12 +22,12 @@ class HistoryHelpersTest(TestCase):
 
     def test_viewing_product_creates_cookie(self):
         response = self.client.get(self.product.get_absolute_url())
-        self.assertTrue(history.COOKIE_NAME in response.cookies)
+        self.assertTrue(COOKIE_NAME in response.cookies)
 
     def test_id_gets_added_to_cookie(self):
         response = self.client.get(self.product.get_absolute_url())
         request = HttpRequest()
-        request.COOKIES[history.COOKIE_NAME] = response.cookies[history.COOKIE_NAME].value
+        request.COOKIES[COOKIE_NAME] = response.cookies[COOKIE_NAME].value
         self.assertTrue(self.product.id in history.extract(request))
 
     def test_get_back_button(self):
@@ -57,8 +59,8 @@ class TestAUserWhoLogsOut(TestCase):
 
     def test_has_their_cookies_deleted_on_logout(self):
         response = self.client.get(self.product.get_absolute_url())
-        self.assertTrue(history.COOKIE_NAME in response.cookies)
+        self.assertTrue(COOKIE_NAME in response.cookies)
 
         response = self.client.get(reverse('customer:logout'))
-        self.assertTrue((history.COOKIE_NAME not in response.cookies)
+        self.assertTrue((COOKIE_NAME not in response.cookies)
                         or not self.client.cookies['oscar_recently_viewed_products'].coded_value)

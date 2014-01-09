@@ -77,7 +77,7 @@ factors, including:
 * The payment method used.
 
 Recipes:
-* :doc:`/howto/how_to_configure_tax`
+* :doc:`/howto/how_to_apply_tax_exemptions`
 
 What availability messages are shown to customers?
 --------------------------------------------------
@@ -179,10 +179,10 @@ restrictions of the country you are operating in.
 Order processing
 ================
 
-How will orders by processed?
+How will orders be processed?
 -----------------------------
 
-Orders can be processing in many ways, including:
+Orders can be processed in many ways, including:
 
 * Manual process.  For instance, a worker in a warehouse may download a picking
   slip from the dashboard and mark products as shipped when they have been put in the van.

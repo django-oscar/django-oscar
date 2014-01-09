@@ -28,7 +28,7 @@
                     {% endif %}</a>
                     <span class="divider">|</span>
             </li>
-            {% if user.is_staff %}
+            {% if user.is_staff or perms.partner.dashboard_access %}
             <li class="hidden-phone">
                 <a href="{% url "dashboard:index" %}">{% trans "Dashboard" %}</a>
                 <span class="divider">|</span>

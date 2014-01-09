@@ -3,7 +3,7 @@
 {% load url from future %}
 {% load thumbnail %}
 {% load i18n %}
-{% load stockrecord_tags %}
+{% load purchase_info_tags %}
 
 {% block shipping_address %}
     <div class="span6">
@@ -68,7 +68,7 @@
         </div>
     </div>
     {% for line in basket.all_lines %}
-        {% session_strategy request line.product as session %}
+        {% purchase_info_for_product request line.product as session %}
         <div class="basket-items">
             <div class="row-fluid">
                 <div class="span1">

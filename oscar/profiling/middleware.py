@@ -63,7 +63,8 @@ class BaseMiddleware(object):
             if 'prof_strip' in request.GET:
                 stats.strip_dirs()
             if 'prof_sort' in request.GET:
-                # See # http://docs.python.org/2/library/profile.html#pstats.Stats.sort_stats
+                # See
+                # http://docs.python.org/2/library/profile.html#pstats.Stats.sort_stats  # noqa
                 # for the fields you can sort on.
                 stats.sort_stats(*request.GET['prof_sort'].split(','))
             else:

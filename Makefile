@@ -14,7 +14,8 @@ sandbox: install
 	# Create database
 	sites/sandbox/manage.py syncdb --noinput
 	sites/sandbox/manage.py migrate
-	# Import some fixtures
+	# Import some fixtures. Order is important as JSON fixtures include primary keys
+	sites/sandbox/manage.py loaddata sites/sandbox/fixtures/variants.json
 	sites/sandbox/manage.py oscar_import_catalogue sites/sandbox/fixtures/*.csv
 	sites/sandbox/manage.py oscar_import_catalogue_images sites/sandbox/fixtures/images.tar.gz
 	sites/sandbox/manage.py loaddata countries.json sites/_fixtures/pages.json sites/_fixtures/auth.json sites/_fixtures/ranges.json sites/_fixtures/offers.json
@@ -84,6 +85,7 @@ puppet:
 	puppet module install --target-dir sites/puppet/modules/ saz-memcached -v 2.0.2
 	puppet module install --target-dir sites/puppet/modules/ puppetlabs/mysql
 	puppet module install --target-dir sites/puppet/modules/ puppetlabs/apache
+	puppet module install --target-dir sites/puppet/modules/ dhutty/nginx
 	git clone git://github.com/akumria/puppet-postgresql.git sites/puppet/modules/postgresql
 	git clone git://github.com/puppetmodules/puppet-module-python.git sites/puppet/modules/python
 	git clone git://github.com/codeinthehole/puppet-userconfig.git sites/puppet/modules/userconfig

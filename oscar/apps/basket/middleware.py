@@ -1,6 +1,5 @@
-import zlib
-
 from django.conf import settings
+from django.core.signing import Signer, BadSignature
 from django.db.models import get_model
 
 from oscar.core.loading import get_class
@@ -77,17 +76,23 @@ class BasketMiddleware(object):
 
     def process_response(self, request, response):
         # Delete any surplus cookies
-        if hasattr(request, 'cookies_to_delete'):
-            for cookie_key in request.cookies_to_delete:
-                response.delete_cookie(cookie_key)
+        cookies_to_delete = getattr(request, 'cookies_to_delete', [])
+        for cookie_key in cookies_to_delete:
+            response.delete_cookie(cookie_key)
+
+        basket_id = request.basket.id if hasattr(request, 'basket') else 0
+
+        # Check if we need to set a cookie. If the cookies is already available
+        # but is set in the cookies_to_delete list then we need to re-set it.
+        has_basket_cookie = (
+            settings.OSCAR_BASKET_COOKIE_OPEN in request.COOKIES
+            and settings.OSCAR_BASKET_COOKIE_OPEN not in cookies_to_delete)
 
         # If a basket has had products added to it, but the user is anonymous
         # then we need to assign it to a cookie
-        if (hasattr(request, 'basket') and request.basket.id > 0
-                and not request.user.is_authenticated()
-                and settings.OSCAR_BASKET_COOKIE_OPEN not in request.COOKIES):
-            cookie = "%s_%s" % (
-                request.basket.id, self.get_basket_hash(request.basket.id))
+        if (basket_id > 0 and not request.user.is_authenticated()
+                and not has_basket_cookie):
+            cookie = self.get_basket_hash(request.basket.id)
             response.set_cookie(
                 settings.OSCAR_BASKET_COOKIE_OPEN, cookie,
                 max_age=settings.OSCAR_BASKET_COOKIE_LIFETIME, httponly=True)
@@ -120,17 +125,12 @@ class BasketMiddleware(object):
         """
         basket = None
         if cookie_key in request.COOKIES:
-            parts = request.COOKIES[cookie_key].split("_")
-            if len(parts) != 2:
-                return basket
-            basket_id, basket_hash = parts
-            if basket_hash == self.get_basket_hash(basket_id):
-                try:
-                    basket = Basket.objects.get(pk=basket_id, owner=None,
-                                                status=Basket.OPEN)
-                except Basket.DoesNotExist:
-                    request.cookies_to_delete.append(cookie_key)
-            else:
+            basket_hash = request.COOKIES[cookie_key]
+            try:
+                basket_id = Signer().unsign(basket_hash)
+                basket = Basket.objects.get(pk=basket_id, owner=None,
+                                            status=Basket.OPEN)
+            except (BadSignature, Basket.DoesNotExist):
                 request.cookies_to_delete.append(cookie_key)
         return basket
 
@@ -139,7 +139,7 @@ class BasketMiddleware(object):
             Applicator().apply(request, basket)
 
     def get_basket_hash(self, basket_id):
-        return str(zlib.crc32(str(basket_id) + settings.SECRET_KEY))
+        return Signer().sign(basket_id)
 
     def ensure_basket_lines_have_stockrecord(self, basket):
         """
@@ -166,6 +166,6 @@ class BasketMiddleware(object):
         line.delete()
 
         # Attempt to re-add to basket with the appropriate stockrecord
-        stock_info = basket.strategy.fetch(product)
+        stock_info = basket.strategy.fetch_for_product(product)
         if stock_info.stockrecord:
             basket.add(product, quantity, options=options)

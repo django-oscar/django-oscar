@@ -9,11 +9,15 @@ OSCAR_BASKET_COOKIE_OPEN = 'oscar_open_basket'
 OSCAR_BASKET_COOKIE_SAVED = 'oscar_saved_basket'
 OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = 10000
 
+# Recently-viewed products
+OSCAR_RECENTLY_VIEWED_COOKIE_LIFETIME = 7 * 24 * 60 * 60
+OSCAR_RECENTLY_VIEWED_COOKIE_NAME = 'oscar_history'
+OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
+
 # Currency
 OSCAR_DEFAULT_CURRENCY = 'GBP'
+OSCAR_CURRENCY_LOCALE = 'en_GB'
 
-# Max number of products to keep on the user's history
-OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 
 # Paths
 OSCAR_IMAGE_FOLDER = 'images/products/%Y/%m/'
@@ -27,9 +31,6 @@ OSCAR_UPLOAD_ROOT = '/tmp'
 # Address settings
 OSCAR_REQUIRED_ADDRESS_FIELDS = ('first_name', 'last_name', 'line1',
                                  'line4', 'postcode', 'country')
-
-# Search settings
-OSCAR_SEARCH_SUGGEST_LIMIT = 10
 
 # Product list settings
 OSCAR_PRODUCTS_PER_PAGE = 20
@@ -200,7 +201,15 @@ OSCAR_SEARCH_FACETS = {
         'category': {
             'name': _('Category'),
             'field': 'category'
-        }
+        },
+        'product_class': {
+            'name': _('Type'),
+            'field': 'product_class'
+        },
+        #'rating': {
+        #    'name': _('Rating'),
+        #    'field': 'rating'
+        #}
     },
     'queries': {
         'price_range': {

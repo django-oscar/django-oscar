@@ -1,12 +1,13 @@
 from django.conf.urls import patterns, url
 
 from oscar.core.application import Application
-from oscar.views.decorators import staff_member_required
 from oscar.apps.dashboard.users import views
 
 
 class UserManagementApplication(Application):
     name = None
+    default_permissions = ['is_staff', ]
+
     index_view = views.IndexView
     user_detail_view = views.UserDetailView
     password_reset_view = views.PasswordResetView
@@ -15,7 +16,7 @@ class UserManagementApplication(Application):
     alert_delete_view = views.ProductAlertDeleteView
 
     def get_urls(self):
-        urlpatterns = patterns('',
+        urls = [
             url(r'^$', self.index_view.as_view(), name='users-index'),
             url(r'^(?P<pk>\d+)/$',
                 self.user_detail_view.as_view(), name='user-detail'),
@@ -33,11 +34,8 @@ class UserManagementApplication(Application):
             url(r'^alerts/(?P<pk>\d+)/update/$',
                 self.alert_update_view.as_view(),
                 name='user-alert-update'),
-        )
-        return self.post_process_urls(urlpatterns)
-
-    def get_url_decorator(self, url_name):
-        return staff_member_required
+        ]
+        return self.post_process_urls(patterns('', *urls))
 
 
 application = UserManagementApplication()

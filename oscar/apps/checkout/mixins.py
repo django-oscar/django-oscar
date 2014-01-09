@@ -145,6 +145,10 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         Compared to self.get_shipping_address(), ShippingAddress is saved and
         makes sure that appropriate UserAddress exists.
         """
+        # For an order that only contains items that don't require shipping we
+        # won't have a shipping address, so we have to check for it.
+        if not shipping_address:
+            return None
         shipping_address.save()
         if user.is_authenticated():
             self.update_address_book(user, shipping_address)
@@ -202,7 +206,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         shipping_addr.save()
         return shipping_addr
 
-    def create_billing_address(self, billing_address=None, shipping_address=None, **kwargs):
+    def create_billing_address(self, billing_address=None,
+                               shipping_address=None, **kwargs):
         """
         Saves any relevant billing data (eg a billing address).
         """
@@ -266,6 +271,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             fzn_basket.thaw()
             if self.request.basket.id != fzn_basket.id:
                 fzn_basket.merge(self.request.basket)
+                # Use same strategy as current request basket
+                fzn_basket.strategy = self.request.basket.strategy
                 self.request.basket = fzn_basket
 
     def send_confirmation_message(self, order, **kwargs):

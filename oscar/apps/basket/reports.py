@@ -23,7 +23,7 @@ class OpenBasketReportCSVFormatter(ReportCSVFormatter):
                       _('Num items'),
                       _('Date of creation'),
                       _('Time since creation'),
-                     ]
+                      ]
         writer.writerow(header_row)
 
         for basket in baskets:
@@ -81,7 +81,7 @@ class SubmittedBasketReportCSVFormatter(ReportCSVFormatter):
                       _('Num items'),
                       _('Date created'),
                       _('Time between creation and submission'),
-                     ]
+                      ]
         writer.writerow(header_row)
 
         for basket in baskets:
@@ -100,7 +100,8 @@ class SubmittedBasketReportCSVFormatter(ReportCSVFormatter):
 
 
 class SubmittedBasketReportHTMLFormatter(ReportHTMLFormatter):
-    filename_template = 'dashboard/reports/partials/submitted_basket_report.html'
+    filename_template = 'dashboard/reports/partials/' \
+        'submitted_basket_report.html'
 
 
 class SubmittedBasketReportGenerator(ReportGenerator):

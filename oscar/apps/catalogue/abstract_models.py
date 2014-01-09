@@ -6,11 +6,13 @@ import warnings
 
 from django.conf import settings
 from django.contrib.staticfiles.finders import find
-from django.core.exceptions import ObjectDoesNotExist, ValidationError, ImproperlyConfigured
+from django.core.exceptions import ValidationError, ImproperlyConfigured
+from django.core.files.base import File
 from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Sum, Count, get_model
 from django.utils.translation import ugettext_lazy as _
+from django.utils.functional import cached_property
 from treebeard.mp_tree import MP_Node
 
 from oscar.core.utils import slugify
@@ -132,7 +134,7 @@ class AbstractCategory(MP_Node):
         Moves the current node and all its descendants to a new position
         relative to another node.
 
-        See https://tabo.pe/projects/django-treebeard/docs/1.61/api.html#treebeard.models.Node.move
+        See https://tabo.pe/projects/django-treebeard/docs/1.61/api.html#treebeard.models.Node.move  # noqa
         """
         super(AbstractCategory, self).move(target, pos)
 
@@ -332,7 +334,10 @@ class AbstractProduct(models.Model):
     #: Determines if a product may be used in an offer. It is illegal to
     #: discount some types of product (e.g. ebooks) and this field helps
     #: merchants from avoiding discounting such products
-    is_discountable = models.BooleanField(_("Is Discountable"), default=True)
+    is_discountable = models.BooleanField(
+        _("Is discountable?"), default=True, help_text=(
+            "This flag indicates if this product can be used in an offer "
+            "or not"))
 
     objects = ProductManager()
     browsable = BrowsableProductManager()
@@ -365,8 +370,11 @@ class AbstractProduct(models.Model):
         if not self.slug:
             self.slug = slugify(self.get_title())
 
-        # Validate attributes if necessary
-        self.attr.validate_attributes()
+        # Allow attribute validation to be skipped.  This is required when
+        # saving a parent product which belongs to a product class with
+        # required attributes.
+        if kwargs.pop('validate_attributes', True):
+            self.attr.validate_attributes()
 
         # Save product
         super(AbstractProduct, self).save(*args, **kwargs)
@@ -391,15 +399,12 @@ class AbstractProduct(models.Model):
         """
         return self.parent_id is None
 
-    @property
+    @cached_property
     def is_group(self):
         """
         Test if this is a top level product and has more than 0 variants
         """
-        # use len() instead of count() in this specific instance
-        # as variants are highly likely to be used after this
-        # which reduces the amount of SQL queries required
-        return self.is_top_level and len(self.variants.all()) > 0
+        return self.is_top_level and self.variants.exists()
 
     @property
     def is_variant(self):
@@ -533,7 +538,7 @@ class AbstractProduct(models.Model):
         """
         Return a product's item class
         """
-        if self.product_class:
+        if self.product_class_id or self.product_class:
             return self.product_class
         if self.parent and self.parent.product_class:
             return self.parent.product_class
@@ -588,19 +593,25 @@ class AbstractProduct(models.Model):
             rating = float(reviews_sum) / reviews_count
         return rating
 
-    def add_category_from_breadcrumbs(self, breadcrumb):
-        from oscar.apps.catalogue.categories import create_from_breadcrumbs
-        category = create_from_breadcrumbs(breadcrumb)
-
-        temp = get_model('catalogue', 'ProductCategory')(
-            category=category, product=self)
-        temp.save()
-    add_category_from_breadcrumbs.alters_data = True
-
     def has_review_by(self, user):
         if user.is_anonymous():
             return False
         return self.reviews.filter(user=user).exists()
+
+    def is_review_permitted(self, user):
+        """
+        Determines whether a user may add a review on this product.
+
+        Default implementation respects OSCAR_ALLOW_ANON_REVIEWS and only
+        allows leaving one review per user and product.
+
+        Override this if you want to alter the default behaviour; e.g. enforce
+        that a user purchased the product to be allowed to leave a review.
+        """
+        if user.is_authenticated() or settings.OSCAR_ALLOW_ANON_REVIEWS:
+            return not self.has_review_by(user)
+        else:
+            return False
 
 
 class ProductRecommendation(models.Model):
@@ -708,7 +719,10 @@ class AbstractProductAttribute(models.Model):
         ("richtext", _("Rich Text")),
         ("date", _("Date")),
         ("option", _("Option")),
-        ("entity", _("Entity")))
+        ("entity", _("Entity")),
+        ("file", _("File")),
+        ("image", _("Image")),
+    )
     type = models.CharField(
         choices=TYPE_CHOICES, default=TYPE_CHOICES[0][0],
         max_length=20, verbose_name=_("Type"))
@@ -731,6 +745,10 @@ class AbstractProductAttribute(models.Model):
     @property
     def is_option(self):
         return self.type == "option"
+
+    @property
+    def is_file(self):
+        return self.type in ["file", "image"]
 
     def _validate_text(self, value):
         if not (type(value) == unicode or type(value) == str):
@@ -779,6 +797,10 @@ class AbstractProductAttribute(models.Model):
                 _("%(enum)s is not a valid choice for %(attr)s") %
                 {'enum': value, 'attr': self})
 
+    def _validate_file(self, value):
+        if value and not isinstance(value, File):
+            raise ValidationError(_("Must be a file field"))
+
     def get_validator(self):
         DATATYPE_VALIDATORS = {
             'text': self._validate_text,
@@ -789,6 +811,8 @@ class AbstractProductAttribute(models.Model):
             'date': self._validate_date,
             'entity': self._validate_entity,
             'option': self._validate_option,
+            'file': self._validate_file,
+            'image': self._validate_file,
         }
 
         return DATATYPE_VALIDATORS[self.type]
@@ -803,16 +827,34 @@ class AbstractProductAttribute(models.Model):
         try:
             value_obj = product.attribute_values.get(attribute=self)
         except get_model('catalogue', 'ProductAttributeValue').DoesNotExist:
-            if value is None or value == '':
+            # FileField uses False for anouncing deletion of the file
+            # not creating a new value
+            delete_file = self.is_file and value is False
+            if value is None or value == '' or delete_file:
                 return
             model = get_model('catalogue', 'ProductAttributeValue')
             value_obj = model.objects.create(product=product, attribute=self)
-        if value is None or value == '':
-            value_obj.delete()
-            return
-        if value != value_obj.value:
-            value_obj.value = value
-            value_obj.save()
+
+        if self.is_file:
+            # File fields in Django are treated differently, see
+            # django.db.models.fields.FileField and method save_form_data
+            if value is None:
+                # No change
+                return
+            elif value is False:
+                # Delete file
+                value_obj.delete()
+            else:
+                # New uploaded file
+                value_obj.value = value
+                value_obj.save()
+        else:
+            if value is None or value == '':
+                value_obj.delete()
+                return
+            if value != value_obj.value:
+                value_obj.value = value
+                value_obj.save()
 
     def validate_value(self, value):
         self.get_validator()(value)
@@ -844,7 +886,7 @@ class AbstractProductAttributeValue(models.Model):
     value_text = models.CharField(
         _('Text'), max_length=255, blank=True, null=True)
     value_integer = models.IntegerField(_('Integer'), blank=True, null=True)
-    value_boolean = models.BooleanField(_('Boolean'), blank=True)
+    value_boolean = models.NullBooleanField(_('Boolean'), blank=True)
     value_float = models.FloatField(_('Float'), blank=True, null=True)
     value_richtext = models.TextField(_('Richtext'), blank=True, null=True)
     value_date = models.DateField(_('Date'), blank=True, null=True)
@@ -854,6 +896,12 @@ class AbstractProductAttributeValue(models.Model):
     value_entity = models.ForeignKey(
         'catalogue.AttributeEntity', blank=True, null=True,
         verbose_name=_("Value Entity"))
+    value_file = models.FileField(
+        upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255,
+        blank=True, null=True)
+    value_image = models.ImageField(
+        upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255,
+        blank=True, null=True)
 
     def _get_value(self):
         return getattr(self, 'value_%s' % self.attribute.type)
@@ -892,6 +940,11 @@ class AbstractAttributeOptionGroup(models.Model):
         abstract = True
         verbose_name = _('Attribute Option Group')
         verbose_name_plural = _('Attribute Option Groups')
+
+    @property
+    def option_summary(self):
+        options = [o.option for o in self.options.all()]
+        return ", ".join(options)
 
 
 class AbstractAttributeOption(models.Model):
@@ -1051,9 +1104,10 @@ class AbstractProductImage(models.Model):
         _("Caption"), max_length=200, blank=True, null=True)
 
     #: Use display_order to determine which is the "primary" image
-    display_order = models.PositiveIntegerField(_("Display Order"), default=0,
-        help_text=_("""An image with a display order of
-                       zero will be the primary image for a product"""))
+    display_order = models.PositiveIntegerField(
+        _("Display Order"), default=0,
+        help_text=_("An image with a display order of zero will be the primary"
+                    " image for a product"))
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     class Meta:
@@ -1071,19 +1125,3 @@ class AbstractProductImage(models.Model):
         Return bool if image display order is 0
         """
         return self.display_order == 0
-
-    def resized_image_url(self, width=None, height=None, **kwargs):
-        return self.original.url
-
-    @property
-    def fullsize_url(self):
-        """
-        Returns the URL path for this image.  This is intended
-        to be overridden in subclasses that want to serve
-        images in a specific way.
-        """
-        return self.resized_image_url()
-
-    @property
-    def thumbnail_url(self):
-        return self.resized_image_url()

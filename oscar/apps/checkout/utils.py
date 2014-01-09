@@ -76,16 +76,23 @@ class CheckoutSessionData(object):
 
     def ship_to_user_address(self, address):
         """
-        Set existing shipping address id to session and unset address fields from session
+        Set existing shipping address id to session and unset address fields
+        from session
         """
         self.reset_shipping_data()
         self._set('shipping', 'user_address_id', address.id)
 
     def ship_to_new_address(self, address_fields):
         """
-        Set new shipping address details to session and unset shipping address id
+        Set new shipping address details to session and unset shipping address
+        id
         """
         self._unset('shipping', 'new_address_fields')
+        phone_number = address_fields.get('phone_number')
+        if phone_number:
+            address_fields = address_fields.copy()
+            address_fields['phone_number'] = unicode(
+                address_fields['phone_number'])
         self._set('shipping', 'new_address_fields', address_fields)
 
     def new_shipping_address_fields(self):
@@ -225,4 +232,3 @@ class CheckoutSessionData(object):
 
     def get_submitted_basket_id(self):
         return self._get('submission', 'basket_id')
-

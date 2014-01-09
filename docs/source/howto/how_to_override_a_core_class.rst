@@ -11,7 +11,7 @@ It builds upon the steps described in :doc:`/topics/customisation`. Please
 read it first and ensure that you've:
 
 * Created a Python module with the the same label
-* Added it as Django app
+* Added it as Django app to ``INSTALLED_APPS``
 
 Example
 -------

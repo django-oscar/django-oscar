@@ -39,14 +39,6 @@ from tests.config import configure
 # No logging
 logging.disable(logging.CRITICAL)
 
-# Warnings: ignore some uninteresting ones but raise an exception on a
-# DeprecationWarnings.
-warnings.simplefilter('default')
-warnings.filterwarnings('error', category=DeprecationWarning)
-for category in [PendingDeprecationWarning, UserWarning, ImportWarning]:
-    warnings.filterwarnings('ignore', category=category)
-
-
 
 def run_tests(verbosity, *test_args):
     from django_nose import NoseTestSuiteRunner
@@ -88,4 +80,15 @@ if __name__ == '__main__':
             args = [arg for arg in args if not arg.startswith('-')]
 
     configure()
-    run_tests(verbosity, *args)
+    with warnings.catch_warnings():
+        # The warnings module in default configuration will never cause tests to
+        # fail, as it never raises an exception.
+        # We alter that behaviour by turning DeprecationWarnings into
+        # exceptions, but exclude warnings triggered by third-party libs
+        # Note: The context manager is not thread safe. Behaviour with multiple
+        # threads is undefined.
+        warnings.filterwarnings('error', category=DeprecationWarning)
+        warnings.filterwarnings('ignore',
+                                r'django.utils.simplejson is deprecated.*',
+                                DeprecationWarning, r'sorl\.thumbnail\.helpers')
+        run_tests(verbosity, *args)

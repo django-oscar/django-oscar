@@ -1,10 +1,9 @@
-
 {% extends "checkout/layout.html" %}
 {% load url from future %}
 {% load currency_filters %}
 {% load thumbnail %}
 {% load i18n %}
-{% load stockrecord_tags %}
+{% load purchase_info_tags %}
 {% load staticfiles %}
 
 {% block title %}
@@ -109,14 +108,14 @@
             </div>
         </div>
         {% for line in basket.all_lines %}
-            {% session_strategy request line.product as session %}
+            {% purchase_info_for_line request line as session %}
             <div class="basket-items">
                 <div class="row-fluid">
                     <div class="span2">
                         <div class="image_container">
                             {% with image=line.product.primary_image %}
                                 {% thumbnail image.original "100x100" upscale=False as thumb %}
-                                <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{% static thumb.url %}" alt="{{ product.get_title }}"></a>
+                                <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
                                 {% endthumbnail %}
                             {% endwith %}
                         </div>

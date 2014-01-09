@@ -21,7 +21,8 @@ class DefaultWrapper(object):
             return True
         return stockrecord.net_stock_level > 0
 
-    def is_purchase_permitted(self, stockrecord, user=None, quantity=1, product=None):
+    def is_purchase_permitted(self, stockrecord, user=None, quantity=1,
+                              product=None):
         """
         Test whether a particular purchase is possible (is a user buying a
         given quantity of the product)
@@ -43,6 +44,7 @@ class DefaultWrapper(object):
         Return the maximum available purchase quantity for a given user
         """
         product = product or stockrecord.product
+
         if not product.get_product_class().track_stock:
             return None
         if stockrecord.num_in_stock is None:
@@ -55,7 +57,8 @@ class DefaultWrapper(object):
 
         This is normally used within CSS to add icons to stock messages
 
-        :param oscar.apps.partner.models.StockRecord stockrecord: stockrecord instance
+        :param oscar.apps.partner.models.StockRecord stockrecord: stockrecord
+        instance
         """
         if stockrecord.net_stock_level > 0:
             return self.CODE_IN_STOCK
@@ -67,7 +70,8 @@ class DefaultWrapper(object):
         """
         Return an availability message for the passed stockrecord.
 
-        :param oscar.apps.partner.models.StockRecord stockrecord: stockrecord instance
+        :param oscar.apps.partner.models.StockRecord stockrecord: stockrecord
+        instance
         """
         if stockrecord.net_stock_level > 0:
             return _("In stock (%d available)") % stockrecord.net_stock_level

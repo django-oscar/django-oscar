@@ -71,7 +71,7 @@
         </div>
     </div>
 
-    {% if orders|length %}
+    {% if orders %}
         <form action="." method="post" class="order_table" id="orders_form">
             {% csrf_token %}
             {% include "dashboard/orders/partials/bulk_edit_form.html" with status=active_status %}

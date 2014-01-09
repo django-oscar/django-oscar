@@ -42,7 +42,9 @@
                                 <td>
                                     {% with image=form.instance.product.primary_image %}
                                         {% thumbnail image.original "100x100" upscale=False as thumb %}
-                                        <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ form.instance.product.get_title }}" /></a>
+                                            <a href="{{ form.instance.product.get_absolute_url }}">
+                                                <img class="thumbnail" src="{{ thumb.url }}" alt="{{ form.instance.product.get_title }}" />
+                                            </a>
                                         {% endthumbnail %}
                                     {% endwith %}
                                 </td>

@@ -2,7 +2,7 @@ from django.conf import settings
 from purl import URL
 
 
-def facet_data(request, form, results):
+def facet_data(request, form, results):  # noqa (too complex (10))
     """
     Convert Haystack's facet data into a more useful datastructure that
     templates can use without having to manually construct URLs
@@ -12,15 +12,18 @@ def facet_data(request, form, results):
     facet_counts = results.facet_counts()
 
     # Field facets
+    valid_facets = [f for f in form.selected_facets if ':' in f]
     selected = dict(
-        map(lambda x: x.split(':'), form.selected_facets))
-    for field, facets in facet_counts['fields'].items():
-        facet_data[field] = []
-        for name, count in facets:
+        map(lambda x: x.split(':', 1), valid_facets))
+    for key, facet in settings.OSCAR_SEARCH_FACETS['fields'].items():
+        facet_data[key] = {
+            'name': facet['name'],
+            'results': []}
+        for name, count in facet_counts['fields'][key]:
             # Ignore zero-count facets for field
             if count == 0:
                 continue
-            field_filter = '%s_exact' % field
+            field_filter = '%s_exact' % facet['field']
             datum = {
                 'name': name,
                 'count': count}
@@ -30,6 +33,9 @@ def facet_data(request, form, results):
                 url = base_url.remove_query_param(
                     'selected_facets', '%s:%s' % (
                         field_filter, name))
+                # Don't carry through pagination params
+                if url.has_query_param('page'):
+                    url = url.remove_query_param('page')
                 datum['deselect_url'] = url.as_string()
             else:
                 # This filter is not selected - built the 'select' URL
@@ -37,13 +43,18 @@ def facet_data(request, form, results):
                 url = base_url.append_query_param(
                     'selected_facets', '%s:%s' % (
                         field_filter, name))
+                # Don't carry through pagination params
+                if url.has_query_param('page'):
+                    url = url.remove_query_param('page')
                 datum['select_url'] = url.as_string()
-            facet_data[field].append(datum)
+            facet_data[key]['results'].append(datum)
 
     # Query facets
     for key, facet in settings.OSCAR_SEARCH_FACETS['queries'].items():
-        facet_data[key] = []
-        for name, query in facet_counts['queries'].items():
+        facet_data[key] = {
+            'name': facet['name'],
+            'results': []}
+        for name, query in facet['queries']:
             field_filter = '%s_exact' % facet['field']
             match = '%s_exact:%s' % (facet['field'], query)
             if match not in facet_counts['queries']:
@@ -67,6 +78,6 @@ def facet_data(request, form, results):
                     url = base_url.append_query_param(
                         'selected_facets', match)
                     datum['select_url'] = url.as_string()
-                facet_data[key].append(datum)
+                facet_data[key]['results'].append(datum)
 
     return facet_data

@@ -15,6 +15,8 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
+
+# Add the project root and sandbox root to the path
 import sys
 import os
 oscar_folder = os.path.realpath(
@@ -24,8 +26,8 @@ sandbox_folder = os.path.realpath(
 sys.path.append(oscar_folder)
 sys.path.append(sandbox_folder)
 
-# Get django settings
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')
+# Specify settings module (which will be picked up from the sandbox)
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings_sphinx')
 
 # -- General configuration -----------------------------------------------------
 
@@ -34,10 +36,13 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc',
-              'sphinx.ext.todo',
-              'sphinx.ext.coverage',
-              'sphinx.ext.viewcode']
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.todo',
+    'sphinx.ext.coverage',
+    'sphinx.ext.viewcode',
+    'sphinxcontrib.napoleon',
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -53,7 +58,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'django-oscar'
-copyright = u'Tangent Labs'
+copyright = u'2010-2014, Tangent Labs'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -103,7 +108,14 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+
+# Use RTD theme locally
 html_theme = 'default'
+if not on_rtd:
+    import sphinx_rtd_theme
+    html_theme = 'sphinx_rtd_theme'
+    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -228,7 +240,7 @@ man_pages = [
 ]
 
 # Autodoc settings
-autoclass_content = 'both'
+autoclass_content = 'class'
 
 # Better documenting of Django models
 # See http://djangosnippets.org/snippets/2533/
@@ -244,6 +256,10 @@ def process_docstring(app, what, name, obj, options, lines):
 
     # Only look at objects that inherit from Django's base model class
     if inspect.isclass(obj) and issubclass(obj, models.Model):
+
+        # Ignore abstract models
+        if not hasattr(obj._meta, '_fields'):
+            return lines
 
         # Grab the field list from the meta class
         fields = obj._meta._fields()

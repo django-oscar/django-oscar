@@ -91,8 +91,8 @@ class UpdateView(BulkEditMixin, generic.RedirectView):
             notification.archive()
         msg = ungettext(
             '%(count)d notification archived',
-            '%(count)d notifications archived', len(notifications)) % {
-                'count': len(notifications)}
+            '%(count)d notifications archived', len(notifications)) \
+            % {'count': len(notifications)}
         messages.success(request, msg)
         return self.get_success_response()
 
@@ -101,7 +101,7 @@ class UpdateView(BulkEditMixin, generic.RedirectView):
             notification.delete()
         msg = ungettext(
             '%(count)d notification deleted',
-            '%(count)d notifications deleted', len(notifications)) % {
-                'count': len(notifications)}
+            '%(count)d notifications deleted', len(notifications)) \
+            % {'count': len(notifications)}
         messages.success(request, msg)
         return self.get_success_response()

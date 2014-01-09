@@ -89,9 +89,11 @@ methods to make this easier.
 
 .. autoclass:: oscar.apps.order.abstract_models.AbstractOrder
    :members: pipeline, all_statuses, available_statuses, set_status
+   :noindex:
 
 .. autoclass:: oscar.apps.order.abstract_models.AbstractLine
    :members: pipeline, all_statuses, available_statuses, set_status
+   :noindex:
 
 Example
 -------

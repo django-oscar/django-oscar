@@ -38,7 +38,7 @@ class OrderCreator(object):
     Places the order by writing out the various models
     """
 
-    def place_order(self, basket, total,
+    def place_order(self, basket, total,  # noqa (too complex (12))
                     user=None, shipping_method=None, shipping_address=None,
                     billing_address=None, order_number=None, status=None,
                     **kwargs):
@@ -60,7 +60,8 @@ class OrderCreator(object):
         except Order.DoesNotExist:
             pass
         else:
-            raise ValueError(_("There is already an order with number %s") % order_number)
+            raise ValueError(_("There is already an order with number %s")
+                             % order_number)
 
         # Ok - everything seems to be in order, let's place the order
         order = self.create_order_model(
@@ -73,7 +74,8 @@ class OrderCreator(object):
         for application in basket.offer_applications:
             # Trigger any deferred benefits from offers and capture the
             # resulting message
-            application['message'] = application['offer'].apply_deferred_benefit(basket)
+            application['message'] \
+                = application['offer'].apply_deferred_benefit(basket)
             # Record offer application results
             if application['result'].affects_shipping:
                 # Skip zero shipping discounts
@@ -94,8 +96,8 @@ class OrderCreator(object):
 
         return order
 
-    def create_order_model(self, user, basket, shipping_address, shipping_method,
-                           billing_address, total,
+    def create_order_model(self, user, basket, shipping_address,
+                           shipping_method, billing_address, total,
                            order_number, status, **extra_order_fields):
         """
         Creates an order model.
@@ -150,17 +152,22 @@ class OrderCreator(object):
             'upc': product.upc,
             'quantity': basket_line.quantity,
             # Price details
-            'line_price_excl_tax': basket_line.line_price_excl_tax_and_discounts,
-            'line_price_incl_tax': basket_line.line_price_incl_tax_and_discounts,
-            'line_price_before_discounts_excl_tax': basket_line.line_price_excl_tax,
-            'line_price_before_discounts_incl_tax': basket_line.line_price_incl_tax,
+            'line_price_excl_tax':
+            basket_line.line_price_excl_tax_incl_discounts,
+            'line_price_incl_tax':
+            basket_line.line_price_incl_tax_incl_discounts,
+            'line_price_before_discounts_excl_tax':
+            basket_line.line_price_excl_tax,
+            'line_price_before_discounts_incl_tax':
+            basket_line.line_price_incl_tax,
             # Reporting details
             'unit_cost_price': stockrecord.cost_price,
             'unit_price_incl_tax': basket_line.unit_price_incl_tax,
             'unit_price_excl_tax': basket_line.unit_price_excl_tax,
             'unit_retail_price': stockrecord.price_retail,
             # Shipping details
-            'est_dispatch_date': basket_line.stockinfo.availability.dispatch_date
+            'est_dispatch_date':
+            basket_line.purchase_info.availability.dispatch_date
         }
         extra_line_fields = extra_line_fields or {}
         if hasattr(settings, 'OSCAR_INITIAL_LINE_STATUS'):

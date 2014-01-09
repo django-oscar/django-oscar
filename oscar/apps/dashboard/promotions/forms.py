@@ -5,11 +5,13 @@ from django.utils.translation import ugettext_lazy as _
 from oscar.apps.promotions.conf import PROMOTION_CLASSES
 
 from oscar.forms.fields import ExtendedURLField
-from oscar.core.loading import get_classes
+from oscar.core.loading import get_classes, get_class
 
-RawHTML, SingleProduct, PagePromotion, HandPickedProductList, OrderedProduct = get_classes('promotions.models',
-    ['RawHTML', 'SingleProduct', 'PagePromotion', 'HandPickedProductList',
-     'OrderedProduct'])
+HandPickedProductList, RawHTML, SingleProduct, PagePromotion, OrderedProduct \
+    = get_classes('promotions.models',
+                  ['HandPickedProductList', 'RawHTML', 'SingleProduct',
+                   'PagePromotion', 'OrderedProduct'])
+ProductSelect = get_class('dashboard.catalogue.widgets', 'ProductSelect')
 
 
 class PromotionTypeSelectForm(forms.Form):
@@ -26,14 +28,28 @@ class RawHTMLForm(forms.ModelForm):
         exclude = ('display_type',)
 
 
+class SingleProductForm(forms.ModelForm):
+    class Meta:
+        model = SingleProduct
+        widgets = {'product': ProductSelect}
+
+
 class HandPickedProductListForm(forms.ModelForm):
     class Meta:
         model = HandPickedProductList
         exclude = ('products',)
 
 
-OrderedProductFormSet = inlineformset_factory(HandPickedProductList,
-                                              OrderedProduct, extra=2)
+class OrderedProductForm(forms.ModelForm):
+    class Meta:
+        model = OrderedProduct
+        widgets = {
+            'product': ProductSelect,
+        }
+
+
+OrderedProductFormSet = inlineformset_factory(
+    HandPickedProductList, OrderedProduct, form=OrderedProductForm, extra=2)
 
 
 class PagePromotionForm(forms.ModelForm):

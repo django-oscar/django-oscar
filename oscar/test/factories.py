@@ -25,12 +25,16 @@ ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 
 
 def create_stockrecord(product=None, price_excl_tax=None, partner_sku=None,
-                       num_in_stock=None, partner_name="Dummy partner",
-                       currency=settings.OSCAR_DEFAULT_CURRENCY):
+                       num_in_stock=None, partner_name=u"Dummy partner",
+                       currency=settings.OSCAR_DEFAULT_CURRENCY,
+                       partner_users=None):
     if product is None:
         product = create_product()
     partner, __ = Partner.objects.get_or_create(
         name=partner_name)
+    if partner_users:
+        for user in partner_users:
+            partner.users.add(user)
     if not price_excl_tax:
         price_excl_tax = D('9.99')
     if not partner_sku:
@@ -41,8 +45,8 @@ def create_stockrecord(product=None, price_excl_tax=None, partner_sku=None,
         price_excl_tax=price_excl_tax, num_in_stock=num_in_stock)
 
 
-def create_stockinfo(record):
-    return strategy.StockInfo(
+def create_purchase_info(record):
+    return strategy.PurchaseInfo(
         price=prices.FixedPrice(
             record.price_currency,
             record.price_excl_tax,
@@ -56,7 +60,8 @@ def create_stockinfo(record):
 def create_product(upc=None, title=u"Dummy title",
                    product_class=u"Dummy item class",
                    partner=u"Dummy partner", partner_sku=None, price=None,
-                   num_in_stock=None, attributes=None, **kwargs):
+                   num_in_stock=None, attributes=None,
+                   partner_users=None, **kwargs):
     """
     Helper method for creating products that are used in tests.
     """
@@ -74,9 +79,12 @@ def create_product(upc=None, title=u"Dummy title",
     product.save()
 
     # Shortcut for creating stockrecord
-    if price is not None or partner_sku or num_in_stock is not None:
-        create_stockrecord(product, price_excl_tax=price,
-                           partner_sku=partner_sku, num_in_stock=num_in_stock)
+    stockrecord_fields = [price, partner_sku, num_in_stock, partner_users]
+    if any([field is not None for field in stockrecord_fields]):
+        create_stockrecord(
+            product, price_excl_tax=price, num_in_stock=num_in_stock,
+            partner_users=partner_users, partner_sku=partner_sku,
+            partner_name=partner)
     return product
 
 
@@ -124,25 +132,26 @@ def create_order(number=None, basket=None, user=None, shipping_address=None,
 
 def create_offer(name="Dummy offer", offer_type="Site",
                  max_basket_applications=None, range=None, condition=None,
-                 benefit=None):
+                 benefit=None, priority=0):
     """
     Helper method for creating an offer
     """
     if range is None:
-        range = models.Range.objects.create(name="All products range",
-                                            includes_all_products=True)
+        range, __ = models.Range.objects.get_or_create(
+            name="All products range", includes_all_products=True)
     if condition is None:
-        condition = models.Condition.objects.create(
+        condition, __ = models.Condition.objects.get_or_create(
             range=range, type=models.Condition.COUNT, value=1)
     if benefit is None:
-        benefit = models.Benefit.objects.create(
+        benefit, __ = models.Benefit.objects.get_or_create(
             range=range, type=models.Benefit.PERCENTAGE, value=20)
     return models.ConditionalOffer.objects.create(
         name=name,
         offer_type=offer_type,
         condition=condition,
         benefit=benefit,
-        max_basket_applications=max_basket_applications)
+        max_basket_applications=max_basket_applications,
+        priority=priority)
 
 
 def create_voucher():

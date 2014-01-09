@@ -2,7 +2,8 @@
 How to configure stock messaging
 ================================
 
-Stock messaging is controlled by an :ref:`availability policy <availabiliy_policies>`
+Stock messaging is controlled by an
+:ref:`availability policy <availability_policies>`
 which is loaded by the :ref:`strategy class <strategy_class>`.
 
 To set custom availability messaging, use your own strategy class to return the

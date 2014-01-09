@@ -1,6 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import generic
-from django.db.models import get_model
+from django.db.models import get_model, Q
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
@@ -8,6 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_classes
 from oscar.views import sort_queryset
+from oscar.views.generic import ObjectLookupView
 
 (ProductForm,
  ProductSearchForm,
@@ -16,16 +17,16 @@ from oscar.views import sort_queryset
  StockAlertSearchForm,
  ProductCategoryFormSet,
  ProductImageFormSet,
- ProductRecommendationFormSet) = get_classes(
-     'dashboard.catalogue.forms',
-     ('ProductForm',
-      'ProductSearchForm',
-      'CategoryForm',
-      'StockRecordFormSet',
-      'StockAlertSearchForm',
-      'ProductCategoryFormSet',
-      'ProductImageFormSet',
-      'ProductRecommendationFormSet'))
+ ProductRecommendationFormSet) \
+    = get_classes('dashboard.catalogue.forms',
+                  ('ProductForm',
+                   'ProductSearchForm',
+                   'CategoryForm',
+                   'StockRecordFormSet',
+                   'StockAlertSearchForm',
+                   'ProductCategoryFormSet',
+                   'ProductImageFormSet',
+                   'ProductRecommendationFormSet'))
 Product = get_model('catalogue', 'Product')
 Category = get_model('catalogue', 'Category')
 ProductImage = get_model('catalogue', 'ProductImage')
@@ -33,9 +34,28 @@ ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductClass = get_model('catalogue', 'ProductClass')
 StockRecord = get_model('partner', 'StockRecord')
 StockAlert = get_model('partner', 'StockAlert')
+Partner = get_model('partner', 'Partner')
+
+
+def filter_products(queryset, user):
+    """
+    Restrict the queryset to products the given user has access to.
+    A staff user is allowed to access all Products.
+    A non-staff user is only allowed access to a product if they are in at
+    least one stock record's partner user list.
+    """
+    if user.is_staff:
+        return queryset
+
+    return queryset.filter(stockrecords__partner__users__pk=user.pk).distinct()
 
 
 class ProductListView(generic.ListView):
+    """
+    Dashboard view of the product list.
+    Supports the permission-based dashboard.
+    """
+
     template_name = 'dashboard/catalogue/product_list.html'
     model = Product
     context_object_name = 'products'
@@ -49,22 +69,32 @@ class ProductListView(generic.ListView):
         ctx['product_classes'] = ProductClass.objects.all()
         ctx['form'] = self.form
         if 'recently_edited' in self.request.GET:
-            ctx['queryset_description'] = _("Last %(num_products)d edited products") \
+            ctx['queryset_description'] \
+                = _("Last %(num_products)d edited products") \
                 % {'num_products': self.recent_products}
         else:
             ctx['queryset_description'] = self.description
 
         return ctx
 
+    def filter_queryset(self, queryset):
+        """
+        Apply any filters to restrict the products that appear on the list
+        """
+        return filter_products(queryset, self.request.user)
+
     def get_queryset(self):
         """
-        Build the queryset for this list and also update the title that
-        describes the queryset
+        Build the queryset for this list
         """
-        description_ctx = {'upc_filter': '',
-                           'title_filter': ''}
-        queryset = self.model.objects.base_queryset().select_related(
-            'stockrecord__partner')
+        queryset = Product.objects.base_queryset()
+        queryset = self.filter_queryset(queryset)
+        queryset = self.apply_search(queryset)
+        queryset = self.apply_ordering(queryset)
+
+        return queryset
+
+    def apply_ordering(self, queryset):
         if 'recently_edited' in self.request.GET:
             # Just show recently edited
             queryset = queryset.order_by('-date_updated')
@@ -73,8 +103,18 @@ class ProductListView(generic.ListView):
             # Allow sorting when all
             queryset = sort_queryset(queryset, self.request,
                                      ['title'], '-date_created')
+        return queryset
+
+    def apply_search(self, queryset):
+        """
+        Filter the queryset and set the description according to the search
+        parameters given
+        """
+        description_ctx = {'upc_filter': '',
+                           'title_filter': ''}
 
         self.form = self.form_class(self.request.GET)
+
         if not self.form.is_valid():
             self.description = self.description_template % description_ctx
             return queryset
@@ -83,13 +123,17 @@ class ProductListView(generic.ListView):
 
         if data['upc']:
             queryset = queryset.filter(upc=data['upc'])
-            description_ctx['upc_filter'] = _(" including an item with UPC '%s'") % data['upc']
+            description_ctx['upc_filter'] = _(
+                " including an item with UPC '%s'") % data['upc']
 
         if data['title']:
-            queryset = queryset.filter(title__icontains=data['title']).distinct()
-            description_ctx['title_filter'] = _(" including an item with title matching '%s'") % data['title']
+            queryset = queryset.filter(
+                title__icontains=data['title']).distinct()
+            description_ctx['title_filter'] = _(
+                " including an item with title matching '%s'") % data['title']
 
         self.description = self.description_template % description_ctx
+
         return queryset
 
 
@@ -112,6 +156,11 @@ class ProductCreateRedirectView(generic.RedirectView):
 
 
 class ProductCreateUpdateView(generic.UpdateView):
+    """
+    Dashboard view that bundles both creating and updating single products.
+    Supports the permission-based dashboard.
+    """
+
     template_name = 'dashboard/catalogue/product_update.html'
     model = Product
     context_object_name = 'product'
@@ -122,6 +171,12 @@ class ProductCreateUpdateView(generic.UpdateView):
     recommendations_formset = ProductRecommendationFormSet
     stockrecord_formset = StockRecordFormSet
 
+    def get_queryset(self):
+        """
+        Filter products that the user doesn't have permission to update
+        """
+        return filter_products(Product.objects.all(), self.request.user)
+
     def get_object(self, queryset=None):
         """
         This parts allows generic.UpdateView to handle creating products as
@@ -129,11 +184,8 @@ class ProductCreateUpdateView(generic.UpdateView):
         is that self.object is None. We emulate this behavior.
         Additionally, self.product_class is set.
         """
-        if 'pk' in self.kwargs:  # UpdateView
-            obj = super(ProductCreateUpdateView, self).get_object(queryset)
-            self.product_class = obj.product_class
-            return obj
-        else:  # CreateView
+        self.creating = not 'pk' in self.kwargs
+        if self.creating:
             try:
                 product_class_id = self.kwargs.get('product_class_id', None)
                 self.product_class = ProductClass.objects.get(
@@ -142,18 +194,25 @@ class ProductCreateUpdateView(generic.UpdateView):
                 raise Http404
             else:
                 return None  # success
+        else:
+            product = super(ProductCreateUpdateView, self).get_object(queryset)
+            self.product_class = product.product_class
+            return product
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
+        ctx['product_class'] = self.product_class
         if 'stockrecord_formset' not in ctx:
             ctx['stockrecord_formset'] = self.stockrecord_formset(
-                self.product_class, instance=self.object)
+                self.product_class, self.request.user, instance=self.object)
         if 'category_formset' not in ctx:
-            ctx['category_formset'] = self.category_formset(instance=self.object)
+            ctx['category_formset'] \
+                = self.category_formset(instance=self.object)
         if 'image_formset' not in ctx:
             ctx['image_formset'] = self.image_formset(instance=self.object)
         if 'recommended_formset' not in ctx:
-            ctx['recommended_formset'] = self.recommendations_formset(instance=self.object)
+            ctx['recommended_formset'] \
+                = self.recommendations_formset(instance=self.object)
         if self.object is None:
             ctx['title'] = _('Create new %s product') % self.product_class.name
         else:
@@ -176,15 +235,13 @@ class ProductCreateUpdateView(generic.UpdateView):
         Short-circuits the regular logic to have one place to have our
         logic to check all forms
         """
-        self.creating = self.object is None
-
         # Need to create the product here because the inline forms need it
         # can't use commit=False because ProductForm does not support it
         if self.creating and form.is_valid():
             self.object = form.save()
 
         stockrecord_formset = self.stockrecord_formset(
-            self.product_class,
+            self.product_class, self.request.user,
             self.request.POST, instance=self.object)
         category_formset = self.category_formset(
             self.request.POST, instance=self.object)
@@ -251,9 +308,9 @@ class ProductCreateUpdateView(generic.UpdateView):
 
     def get_success_url(self):
         if self.creating:
-            msg = _("Created product '%s'") % self.object.title
+            msg = _("Created product '%s'") % self.object.get_title()
         else:
-            msg = _("Updated product '%s'") % self.object.title
+            msg = _("Updated product '%s'") % self.object.get_title()
         messages.success(self.request, msg)
         url = reverse('dashboard:catalogue-product-list')
         if self.request.POST.get('action') == 'continue':
@@ -263,12 +320,22 @@ class ProductCreateUpdateView(generic.UpdateView):
 
 
 class ProductDeleteView(generic.DeleteView):
+    """
+    Dashboard view to delete a product.
+    Supports the permission-based dashboard.
+    """
     template_name = 'dashboard/catalogue/product_delete.html'
     model = Product
     context_object_name = 'product'
 
+    def get_queryset(self):
+        """
+        Filter products that the user doesn't have permission to update
+        """
+        return filter_products(Product.objects.all(), self.request.user)
+
     def get_success_url(self):
-        msg =_("Deleted product '%s'") % self.object.title
+        msg = _("Deleted product '%s'") % self.object.title
         messages.success(self.request, msg)
         return reverse('dashboard:catalogue-product-list')
 
@@ -313,7 +380,8 @@ class CategoryDetailListView(generic.DetailView):
     context_object_name = 'category'
 
     def get_context_data(self, *args, **kwargs):
-        ctx = super(CategoryDetailListView, self).get_context_data(*args, **kwargs)
+        ctx = super(CategoryDetailListView, self).get_context_data(*args,
+                                                                   **kwargs)
         ctx['child_categories'] = self.object.get_children()
         ctx['ancestors'] = self.object.get_ancestors()
         return ctx
@@ -327,7 +395,7 @@ class CategoryListMixin(object):
             return reverse("dashboard:catalogue-category-list")
         else:
             return reverse("dashboard:catalogue-category-detail-list",
-                            args=(parent.pk,))
+                           args=(parent.pk,))
 
 
 class CategoryCreateView(CategoryListMixin, generic.CreateView):
@@ -372,3 +440,14 @@ class CategoryDeleteView(CategoryListMixin, generic.DeleteView):
     def get_success_url(self):
         messages.info(self.request, _("Category deleted successfully"))
         return super(CategoryDeleteView, self).get_success_url()
+
+
+class ProductLookupView(ObjectLookupView):
+    model = Product
+
+    def get_query_set(self):
+        return self.model.browsable.all()
+
+    def lookup_filter(self, qs, term):
+        return qs.filter(Q(title__icontains=term)
+                         | Q(parent__title__icontains=term))

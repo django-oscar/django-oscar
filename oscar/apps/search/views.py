@@ -1,4 +1,3 @@
-from django.http import HttpResponseRedirect
 from django.db.models import get_model
 from haystack import views
 
@@ -8,56 +7,38 @@ Product = get_model('catalogue', 'Product')
 
 
 class FacetedSearchView(views.FacetedSearchView):
+    """
+    A modified version of Haystack's FacetedSearchView
 
+    Note that facets are configured when the ``SearchQuerySet`` is initialised.
+    This takes place in the search application class.
+
+    See
+    http://django-haystack.readthedocs.org/en/v2.1.0/views_and_forms.html#facetedsearchform # noqa
+    """
+
+    # Haystack uses a different class attribute to CBVs
+    template = "search/results.html"
+
+    # Override this method to add the spelling suggestion to the context and to
+    # convert Haystack's default facet data into a more useful structure so we
+    # have to do less work in the template.
     def extra_context(self):
         extra = super(FacetedSearchView, self).extra_context()
 
+        # Show suggestion no matter what.  Haystack 2.1 only shows a suggestion
+        # if there are some results, which seems a bit weird to me
+        if self.results.query.backend.include_spelling:
+            suggestion = self.form.get_suggestion()
+            if suggestion != self.query:
+                extra['suggestion'] = suggestion
+
+        # Convert facet data into a more useful datastructure
         if 'fields' in extra['facets']:
-            # Convert facet data into a more useful datastructure
             extra['facet_data'] = facets.facet_data(
                 self.request, self.form, self.results)
+            has_facets = any([len(data['results']) for
+                              data in extra['facet_data'].values()])
+            extra['has_facets'] = has_facets
 
-        return extra
-
-
-class MultiFacetedSearchView(FacetedSearchView):
-    """
-    Search view for multifaceted searches
-    """
-    template = 'search/results.html'
-
-    def __call__(self, request, *args, **kwargs):
-        """
-        Generates the actual response to the search.
-
-        Relies on internal, overridable methods to construct the response.
-        """
-        # Look for UPC match
-        query = request.GET.get('q', '').strip()
-        try:
-            item = Product._default_manager.get(upc=query)
-        except Product.DoesNotExist:
-            pass
-        else:
-            return HttpResponseRedirect(item.get_absolute_url())
-        return super(MultiFacetedSearchView, self).__call__(request, *args, **kwargs)
-
-    @property
-    def __name__(self):
-        return "MultiFacetedSearchView"
-
-    def extra_context(self):
-        """
-        Adds details about the facets applied
-        """
-        extra = super(MultiFacetedSearchView, self).extra_context()
-
-        if hasattr(self.form, 'cleaned_data') and 'selected_facets' in self.form.cleaned_data:
-            extra['facets_applied'] = []
-            for f in self.form.cleaned_data['selected_facets'].split("|"):
-                facet = f.split(":")
-                extra['facets_applied'].append({
-                    'facet': facet[0][:-6], # removing the _exact suffix that haystack uses for some reason
-                    'value': facet[1].strip('"')
-                })
         return extra

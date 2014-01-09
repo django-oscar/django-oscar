@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.sites.models import get_current_site
 from django.db.models import get_model
@@ -34,8 +33,8 @@ class UpdateView(generic.UpdateView):
 
     def form_invalid(self, form):
         messages.error(self.request,
-            _("The submitted form was not valid, please correct "
-              "the errors and resubmit"))
+                       _("The submitted form was not valid, please correct "
+                         "the errors and resubmit"))
         return super(UpdateView, self).form_invalid(form)
 
     def form_valid(self, form):

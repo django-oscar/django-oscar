@@ -41,7 +41,7 @@ A benefit class must be a proxy class and have the following methods::
             This is used in the dashboard when selecting benefits for offers.
             """
 
-        def apply(self, basket, condition, offer=None):
+        def apply(self, basket, condition, offer):
             """
             Apply the benefit to the passed basket and mark the appropriate
             items as consumed.
@@ -88,7 +88,7 @@ Here's an example of a post-order action benefit::
         
         description = "Changes customer's name"
 
-        def apply(self, basket, condition, offer=None):
+        def apply(self, basket, condition, offer):
             # We need to mark all items from the matched condition as 'consumed'
             # so that they are unavailable to be used with other offers.
             condition.consume_items(basket, ())
@@ -101,4 +101,3 @@ Here's an example of a post-order action benefit::
                 basket.owner.save()
                 return "Your name has been changed to Barry!"
             return "We were unable to change your name as you are not signed in"
-

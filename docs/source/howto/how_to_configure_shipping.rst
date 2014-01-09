@@ -114,6 +114,7 @@ all shipping methods should subclass has API:
 
 .. autoclass:: oscar.apps.shipping.base.ShippingMethod
     :members:
+    :noindex:
 
 Core shipping methods
 ~~~~~~~~~~~~~~~~~~~~~
@@ -122,7 +123,7 @@ The shipping methods that ship with Oscar are:
 
 * ``oscar.apps.shipping.methods.Free``.  No shipping charges.
 
-* ``oscar.apps.shipping.methods.WeightBased``.  This is a model-driven method
+* ``oscar.apps.shipping.models.WeightBased``.  This is a model-driven method
   that uses two models: ``WeightBased`` and ``WeightBand`` to provide charges
   for different weight bands.  By default, the method will calculate the weight
   of a product by looking for a 'weight' attribute although this can be
@@ -131,7 +132,7 @@ The shipping methods that ship with Oscar are:
 * ``oscar.apps.shipping.methods.FixedPrice``.  This simply charges a fixed price for 
   shipping, irrespective of the basket contents.
 
-* ``oscar.apps.shipping.methods.OrderAndItemCharges``.  This is a model which
+* ``oscar.apps.shipping.models.OrderAndItemCharges``.  This is a model which
   specifies a per-order and a per-item level charge.
 
 To apply your domain logic for shipping, you will need to override

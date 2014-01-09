@@ -1,3 +1,19 @@
+# This module is based on django-phone-number-field
+# https://github.com/stefanfoulis/django-phonenumber-field
+#
+# Here is the relevant copyright and permissions notice.
+#
+# Copyright (c) 2011 Stefan Foulis and contributors.
+#
+# Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation
+# files (the "Software"), to deal in the Software without
+# restriction, including without limitation the rights to use,
+# copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following
+# conditions:
+
 from django.core import validators
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -5,10 +21,12 @@ from django.utils.translation import ugettext_lazy as _
 
 import phonenumbers
 
+
 class PhoneNumber(phonenumbers.phonenumber.PhoneNumber):
     """
-    A extended version of phonenumbers.phonenumber.PhoneNumber that provides some neat and more pythonic, easy
-    to access methods. This makes using a PhoneNumber instance much easier, especially in templates and such.
+    A extended version of phonenumbers.phonenumber.PhoneNumber that provides
+    some neat and more pythonic, easy to access methods. This makes using a
+    PhoneNumber instance much easier, especially in templates and such.
     """
     format_map = {
         'E164': phonenumbers.PhoneNumberFormat.E164,
@@ -33,12 +51,6 @@ class PhoneNumber(phonenumbers.phonenumber.PhoneNumber):
         if self.is_valid():
             return self.format_as(fmt)
         return self.raw_input
-
-    def __str__(self):
-        return str(unicode(self))
-
-    def original_unicode(self):
-        return super(PhoneNumber, self).__unicode__()
 
     def is_valid(self):
         """
@@ -77,23 +89,25 @@ class PhoneNumber(phonenumbers.phonenumber.PhoneNumber):
         else:
             return super(PhoneNumber, self).__eq__(other)
 
+
 def to_python(value):
     if value in validators.EMPTY_VALUES:  # None or ''
         phone_number = None
     elif value and isinstance(value, basestring):
         try:
             phone_number = PhoneNumber.from_string(phone_number=value)
-        except phonenumbers.phonenumberutil.NumberParseException, e:
+        except phonenumbers.phonenumberutil.NumberParseException:
             # the string provided is not a valid PhoneNumber.
             phone_number = PhoneNumber(raw_input=value)
     elif isinstance(value, PhoneNumber):
         phone_number = value
     return phone_number
 
+
 class PhoneNumberDescriptor(object):
     """
-    The descriptor for the phone number attribute on the model instance. Returns a PhoneNumber when accessed so you can
-    do stuff like::
+    The descriptor for the phone number attribute on the model instance.
+    Returns a PhoneNumber when accessed so you can do stuff like::
 
         >>> instance.phone_number.as_international
 
@@ -116,6 +130,7 @@ class PhoneNumberDescriptor(object):
 
     def __set__(self, instance, value):
         instance.__dict__[self.field.name] = to_python(value)
+
 
 def validate_international_phonenumber(value):
     phone_number = to_python(value)

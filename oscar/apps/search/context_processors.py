@@ -1,10 +1,10 @@
 from oscar.core.loading import get_class
 
-MultiFacetedSearchForm = get_class('search.forms', 'MultiFacetedSearchForm')
+SearchForm = get_class('search.forms', 'SearchForm')
 
 
 def search_form(request):
     """
     Ensure that the search form is available site wide
     """
-    return {'search_form': MultiFacetedSearchForm(request.GET)}
+    return {'search_form': SearchForm(request.GET)}

@@ -19,7 +19,17 @@ var oscar = (function(o, $) {
             var defaults = {
                 'dateFormat': 'yy-mm-dd',
                 'timeFormat': 'HH:mm',
-                'stepMinute': 15
+                'stepMinute': 15,
+                'tinyConfig': {
+                    statusbar: false,
+                    menubar: false,
+                    plugins: "link",
+                    style_formats: [
+                        {title: 'Heading', block: 'h2'},
+                        {title: 'Subheading', block: 'h3'}
+                    ],
+                    toolbar: "styleselect | bold italic blockquote | bullist numlist | link"
+                }
             };
             o.dashboard.options = $.extend(defaults, options);
 
@@ -49,6 +59,50 @@ var oscar = (function(o, $) {
             $('.form-stacked select').css('width', '95%');
             $('.form-inline select').css('width', '300px');
             $('select').select2({width: 'resolve'});
+            $('input.select2').each(function(i, e) {
+                var opts = {};
+                if($(e).data('ajax-url')) {
+                    opts = {
+                        'ajax': {
+                            'url': $(e).data('ajax-url'),
+                            'dataType': 'json',
+                            'results': function(data, page) {
+                                if((page==1) && !($(e).data('required')=='required')) {
+                                    data.results.unshift({'id': '', 'text': '------------'});
+                                }
+                                return data;
+                            },
+                            'data': function(term, page) {
+                                return {
+                                    'q': term,
+                                    'page': page
+                                };
+                            }
+                        },
+                        'multiple': $(e).data('multiple'),
+                        'initSelection': function(e, callback){
+                            if($(e).val()) {
+                                $.ajax({
+                                    'type': 'GET',
+                                    'url': $(e).data('ajax-url'),
+                                    'data': [{'name': 'initial', 'value': $(e).val()}],
+                                    'success': function(data){
+                                        if(data.results) {
+                                            if($(e).data('multiple')){
+                                                callback(data.results);
+                                            } else {
+                                                callback(data.results[0]);
+                                            }
+                                        }
+                                    },
+                                    'dataType': 'json'
+                                });
+                            }
+                        }
+                    };
+                }
+                $(e).select2(opts);
+            });
 
             o.dashboard.filereader.init();
         },
@@ -78,14 +132,23 @@ var oscar = (function(o, $) {
                         'stepMinute': $ele.data('stepminute')});
                     $ele.datetimepicker(config);
                 });
+
+                var defaultTimepickerConfig = {
+                    'timeFormat': o.dashboard.options.timeFormat,
+                    'stepMinute': o.dashboard.options.stepMinute
+                };
+                $('input[name$="time"]').not('input[name$="datetime"]').each(function(ind, ele) {
+                    var $ele = $(ele),
+                        config = $.extend({}, defaultTimepickerConfig, {
+                        'timeFormat': $ele.data('timeformat'),
+                        'stepMinute': $ele.data('stepminute')});
+                    $ele.timepicker(config);
+                });
             }
         },
         initWYSIWYG: function() {
-            // Use WYSIHTML5 widget on textareas
-            var wysiOptions = {
-                "html": true
-            };
-            $('form.wysiwyg textarea, textarea.wysiwyg').wysihtml5(wysiOptions);
+            // Use TinyMCE by default
+            $('form.wysiwyg textarea, textarea.wysiwyg').tinymce(o.dashboard.options.tinyConfig);
         },
         offers: {
             init: function() {
@@ -134,14 +197,12 @@ var oscar = (function(o, $) {
                 });
             }
         },
-        promotions: {
-            init: function() {
-                $('.promotion_list').sortable({
-                    handle: '.btn-handle',
-                    stop: o.dashboard.promotions.saveOrder
-                });
+        reordering: (function() {
+            var options = {
+                handle: '.btn-handle',
+                submit_url: '#'
             },
-            saveOrder: function(event, ui) {
+            saveOrder = function(event, ui) {
                 // Get the csrf token, otherwise django will not accept the
                 // POST request.
                 var serial = $(this).sortable("serialize"),
@@ -151,13 +212,25 @@ var oscar = (function(o, $) {
                     type: 'POST',
                     data: serial,
                     dataType: "json",
-                    url: '#',
+                    url: options.submit_url,
                     beforeSend: function(xhr, settings) {
                         xhr.setRequestHeader("X-CSRFToken", csrf);
                     }
                 });
-            }
-        },
+            },
+            init = function(user_options) {
+                options = $.extend(options, user_options);
+                $(options.wrapper).sortable({
+                    handle: options.handle,
+                    stop: saveOrder
+                });
+            };
+
+            return {
+                init: init,
+                saveOrder: saveOrder
+            };
+        }()),
         search: {
             init: function() {
                 var searchForm = $(".orders_search"),
