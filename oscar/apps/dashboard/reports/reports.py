@@ -51,27 +51,30 @@ class ReportGenerator(object):
         """
         Filter results based that are within a (possibly open ended) daterange
         """
-        #Nothing to do if we don't have a date field, or a range
-        if not self.date_range_field_name or \
-           (not self.start_date and \
-            not self.end_date):
+        # Nothing to do if we don't have a date field
+        if not self.date_range_field_name:
             return queryset
 
-        #After the start date
+        # After the start date
         if self.start_date:
-            queryset = queryset.filter(**{
+            filter_kwargs = {
                 "%s__gt" % self.date_range_field_name: self.start_date,
-            })
-        #Before the end of the end date
+            }
+            queryset = queryset.filter(**filter_kwargs)
+
+        # Before the end of the end date
         if self.end_date:
-            queryset = queryset.filter(**{
-                "%s__lt" % self.date_range_field_name:datetime.datetime.combine(
-                    self.end_date,
-                    datetime.time(hour=23, minute=59, second=59)
-                )
-            })
-        
+            end_of_end_date = datetime.datetime.combine(
+                self.end_date,
+                datetime.time(hour=23, minute=59, second=59)
+            )
+            filter_kwargs = {
+                "%s__lt" % self.date_range_field_name: end_of_end_date,
+            }
+            queryset = queryset.filter(**filter_kwargs)
+
         return queryset
+
 
 class ReportFormatter(object):
     def format_datetime(self, dt):
