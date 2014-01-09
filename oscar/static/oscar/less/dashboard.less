@@ -974,3 +974,11 @@ textarea.plain {
     background:#222;
   }
 }
+
+// OVERRIDE bootstrap 2.3.1/2.3.2
+// Fix disappearing menu in mobile Android Chrome
+@media (max-width: 480px) {
+  .nav-collapse {
+    -webkit-transform: none;
+  }
+}
