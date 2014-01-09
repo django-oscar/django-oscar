@@ -44,6 +44,7 @@ class OrderReportHTMLFormatter(ReportHTMLFormatter):
 class OrderReportGenerator(ReportGenerator):
     code = 'order_report'
     description = _("Orders placed")
+    date_range_field_name = 'date_placed'
 
     formatters = {
         'CSV_formatter': OrderReportCSVFormatter,
