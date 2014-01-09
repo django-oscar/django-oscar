@@ -3917,3 +3917,8 @@ textarea.plain {
     background: #222;
   }
 }
+@media (max-width: 480px) {
+  .nav-collapse {
+    -webkit-transform: none;
+  }
+}
