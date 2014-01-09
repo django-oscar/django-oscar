@@ -13,7 +13,7 @@ class Command(BaseCommand):
     Check stock records of products for availability and send out alerts
     to customers that have registered for an alert.
     """
-    help = _("Check check for products that are back in "
+    help = _("Check for products that are back in "
              "stock and send out alerts")
 
     def handle(self, **options):

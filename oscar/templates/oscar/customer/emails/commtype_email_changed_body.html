@@ -1,5 +1,7 @@
+{% extends "customer/emails/base.html" %}
 {% load i18n %}
-{% autoescape off %}
+
+{% block body %}{% autoescape off %}
 <p>
     {% blocktrans with email=new_email %}
     You're receiving this email because your email address has been changed to <strong>{{ email }}</strong>.
@@ -13,6 +15,4 @@ http://{{ site.domain }}{{ reset_url }}
 
 <p>{% trans "If it was you who changed the email address, you can ignore this email." %}</p>
 
-<p>{% trans "Thanks for using our site!" %}</p>
-<p>{% blocktrans with name=site.name %}The {{ name }} team{% endblocktrans %}</p>
-{% endautoescape %}
+{% endautoescape %}{% endblock %}

@@ -1,11 +1,21 @@
 from decimal import Decimal as D
 
 from django.test import TestCase
-from django_dynamic_fixture import G
 
-from oscar.apps.offer import models
-from oscar.apps.basket.models import Basket
-from oscar_testsupport.factories import create_product
+from oscar.apps.offer import models, utils
+from oscar.test.basket import add_product
+from oscar.test import factories
+from oscar.apps.shipping import repository, methods
+
+
+class ExcludingTax(methods.Base):
+    charge_excl_tax = D('10.00')
+
+
+class IncludingTax(methods.Base):
+    charge_excl_tax = D('10.00')
+    charge_incl_tax = D('12.00')
+    is_tax_known = True
 
 
 class TestAShippingPercentageDiscountAppliedWithCountCondition(TestCase):
@@ -23,7 +33,7 @@ class TestAShippingPercentageDiscountAppliedWithCountCondition(TestCase):
         self.offer = models.ConditionalOffer(
             condition=self.condition,
             benefit=self.benefit)
-        self.basket = G(Basket)
+        self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):
         result = self.benefit.apply(self.basket, self.condition, self.offer)
@@ -33,17 +43,38 @@ class TestAShippingPercentageDiscountAppliedWithCountCondition(TestCase):
         self.assertTrue(result.affects_shipping)
 
     def test_applies_correctly_to_basket_which_matches_condition(self):
-        for product in [create_product(price=D('12.00'))]:
-            self.basket.add_product(product, 2)
+        add_product(self.basket, D('12.00'), 2)
         result = self.benefit.apply(self.basket, self.condition, self.offer)
         self.assertEqual(2, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
         self.assertTrue(result.affects_shipping)
 
     def test_applies_correctly_to_basket_which_exceeds_condition(self):
-        for product in [create_product(price=D('12.00'))]:
-            self.basket.add_product(product, 3)
+        add_product(self.basket, D('12.00'), 3)
         result = self.benefit.apply(self.basket, self.condition, self.offer)
         self.assertEqual(2, self.basket.num_items_with_discount)
         self.assertEqual(1, self.basket.num_items_without_discount)
         self.assertTrue(result.affects_shipping)
+
+    def test_applies_correctly_to_shipping_method_without_tax(self):
+        add_product(self.basket, D('12.00'), 3)
+
+        # Apply offers to basket
+        utils.Applicator().apply_offers(self.basket, [self.offer])
+
+        repo = repository.Repository()
+        raw_method = ExcludingTax()
+        method = repo.prime_method(self.basket, raw_method)
+        self.assertEqual(D('5.00'), method.charge_excl_tax)
+
+    def test_applies_correctly_to_shipping_method_with_tax(self):
+        add_product(self.basket, D('12.00'), 3)
+
+        # Apply offers to basket
+        utils.Applicator().apply_offers(self.basket, [self.offer])
+
+        repo = repository.Repository()
+        raw_method = IncludingTax()
+        method = repo.prime_method(self.basket, raw_method)
+        self.assertEqual(D('6.00'), method.charge_incl_tax)
+        self.assertEqual(D('5.00'), method.charge_excl_tax)

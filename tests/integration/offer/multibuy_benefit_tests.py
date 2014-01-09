@@ -1,11 +1,11 @@
 from decimal import Decimal as D
 
 from django.test import TestCase
-from django_dynamic_fixture import G
+import mock
 
 from oscar.apps.offer import models
-from oscar.apps.basket.models import Basket
-from oscar_testsupport.factories import create_product
+from oscar.test.basket import add_product, add_products
+from oscar.test import factories
 
 
 class TestAMultibuyDiscountAppliedWithCountCondition(TestCase):
@@ -21,27 +21,27 @@ class TestAMultibuyDiscountAppliedWithCountCondition(TestCase):
             range=range,
             type=models.Benefit.MULTIBUY,
             value=1)
-        self.basket = G(Basket)
+        self.offer = mock.Mock()
+        self.offer.applies_to_tax_exclusive_prices = False
+        self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):
-        result = self.benefit.apply(self.basket, self.condition)
+        result = self.benefit.apply(self.basket, self.condition, self.offer)
         self.assertEqual(D('0.00'), result.discount)
         self.assertEqual(0, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_basket_which_matches_condition(self):
-        for product in [create_product(price=D('12.00'))]:
-            self.basket.add_product(product, 3)
-        result = self.benefit.apply(self.basket, self.condition)
+        add_product(self.basket, D('12.00'), 3)
+        result = self.benefit.apply(self.basket, self.condition, self.offer)
         self.assertEqual(D('12.00'), result.discount)
         self.assertEqual(3, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_basket_which_exceeds_condition(self):
-        for product in [create_product(price=D('4.00')),
-                        create_product(price=D('2.00'))]:
-            self.basket.add_product(product, 4)
-        result = self.benefit.apply(self.basket, self.condition)
+        add_products(self.basket, [
+            (D('4.00'), 4), (D('2.00'), 4)])
+        result = self.benefit.apply(self.basket, self.condition, self.offer)
         self.assertEqual(D('2.00'), result.discount)
         self.assertEqual(3, self.basket.num_items_with_discount)
         self.assertEqual(5, self.basket.num_items_without_discount)
@@ -60,27 +60,26 @@ class TestAMultibuyDiscountAppliedWithAValueCondition(TestCase):
             range=range,
             type=models.Benefit.MULTIBUY,
             value=1)
-        self.basket = G(Basket)
+        self.offer = mock.Mock()
+        self.offer.applies_to_tax_exclusive_prices = False
+        self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):
-        result = self.benefit.apply(self.basket, self.condition)
+        result = self.benefit.apply(self.basket, self.condition, self.offer)
         self.assertEqual(D('0.00'), result.discount)
         self.assertEqual(0, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_basket_which_matches_condition(self):
-        for product in [create_product(price=D('5.00'))]:
-            self.basket.add_product(product, 2)
-        result = self.benefit.apply(self.basket, self.condition)
+        add_product(self.basket, D('5.00'), 2)
+        result = self.benefit.apply(self.basket, self.condition, self.offer)
         self.assertEqual(D('5.00'), result.discount)
         self.assertEqual(2, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_basket_which_exceeds_condition(self):
-        for product in [create_product(price=D('4.00')),
-                        create_product(price=D('2.00'))]:
-            self.basket.add_product(product, 2)
-        result = self.benefit.apply(self.basket, self.condition)
+        add_products(self.basket, [(D('4.00'), 2), (D('2.00'), 2)])
+        result = self.benefit.apply(self.basket, self.condition, self.offer)
         self.assertEqual(D('2.00'), result.discount)
         self.assertEqual(3, self.basket.num_items_with_discount)
         self.assertEqual(1, self.basket.num_items_without_discount)

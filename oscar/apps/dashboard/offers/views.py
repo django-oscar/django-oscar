@@ -1,6 +1,7 @@
 import datetime
+import json
 
-from django.views.generic import (ListView, FormView, DeleteView, DetailView,
+from django.views.generic import (ListView, FormView, DeleteView,
                                   CreateView, UpdateView)
 from django.db.models.loading import get_model
 from django.core.urlresolvers import reverse
@@ -8,8 +9,11 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
+from django.core import serializers
+from django.core.serializers.json import DjangoJSONEncoder
 
 from oscar.core.loading import get_classes, get_class
+from oscar.views import sort_queryset
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 Condition = get_model('offer', 'Condition')
@@ -17,10 +21,10 @@ Range = get_model('offer', 'Range')
 Product = get_model('catalogue', 'Product')
 OrderDiscount = get_model('order', 'OrderDiscount')
 Benefit = get_model('offer', 'Benefit')
-MetaDataForm, ConditionForm, BenefitForm, RestrictionsForm, OfferSearchForm = get_classes(
-    'dashboard.offers.forms', [
-        'MetaDataForm', 'ConditionForm', 'BenefitForm', 'RestrictionsForm',
-        'OfferSearchForm'])
+MetaDataForm, ConditionForm, BenefitForm, RestrictionsForm, OfferSearchForm \
+    = get_classes('dashboard.offers.forms',
+                  ['MetaDataForm', 'ConditionForm', 'BenefitForm',
+                   'RestrictionsForm', 'OfferSearchForm'])
 OrderDiscountCSVFormatter = get_class(
     'dashboard.offers.reports', 'OrderDiscountCSVFormatter')
 
@@ -34,7 +38,9 @@ class OfferListView(ListView):
     def get_queryset(self):
         qs = self.model._default_manager.filter(
             offer_type=ConditionalOffer.SITE)
-        qs = self.sort_queryset(qs)
+        qs = sort_queryset(qs, self.request,
+                           ['name', 'start_datetime', 'end_datetime',
+                            'num_applications', 'total_discount'])
 
         self.description = _("All offers")
 
@@ -57,16 +63,6 @@ class OfferListView(ListView):
             qs = qs.filter(start_date__lte=today, end_date__gte=today)
 
         return qs
-
-    def sort_queryset(self, queryset):
-        sort = self.request.GET.get('sort', None)
-        allowed_sorts = ['name', 'start_date', 'end_date', 'num_applications',
-                         'total_discount']
-        if sort in allowed_sorts:
-            direction = self.request.GET.get('dir', 'desc')
-            sort = ('-' if direction == 'desc' else '') + sort
-            queryset = queryset.order_by(sort)
-        return queryset
 
     def get_context_data(self, **kwargs):
         ctx = super(OfferListView, self).get_context_data(**kwargs)
@@ -95,7 +91,8 @@ class OfferWizardStepView(FormView):
                 request, _("%s step not complete") % (
                     self.previous_view.step_name.title(),))
             return HttpResponseRedirect(self.get_back_url())
-        return super(OfferWizardStepView, self).dispatch(request, *args, **kwargs)
+        return super(OfferWizardStepView, self).dispatch(request, *args,
+                                                         **kwargs)
 
     def is_previous_step_complete(self, request):
         if not self.previous_view:
@@ -112,26 +109,53 @@ class OfferWizardStepView(FormView):
 
     def _store_form_kwargs(self, form):
         session_data = self.request.session.setdefault(self.wizard_name, {})
-        form_kwargs = {'data': form.cleaned_data.copy()}
-        session_data[self._key()] = form_kwargs
+
+        # Adjust kwargs to avoid trying to save the range instance
+        form_data = form.cleaned_data.copy()
+        if 'range' in form_data:
+            form_data['range_id'] = form_data['range'].id
+            del form_data['range']
+        form_kwargs = {'data': form_data}
+        json_data = json.dumps(form_kwargs, cls=DjangoJSONEncoder)
+
+        session_data[self._key()] = json_data
         self.request.session.save()
 
     def _fetch_form_kwargs(self, step_name=None):
         if not step_name:
             step_name = self.step_name
         session_data = self.request.session.setdefault(self.wizard_name, {})
-        return session_data.get(self._key(step_name), {})
+        json_data = session_data.get(self._key(step_name), None)
+        if json_data:
+            form_kwargs = json.loads(json_data)
+            if 'range_id' in form_kwargs['data']:
+                form_kwargs['data']['range'] = Range.objects.get(
+                    id=form_kwargs['data']['range_id'])
+                del form_kwargs['data']['range_id']
+            return form_kwargs
+
+        return {}
 
     def _store_object(self, form):
         session_data = self.request.session.setdefault(self.wizard_name, {})
-        session_data[self._key(is_object=True)] = form.save(commit=False)
+
+        # We don't store the object instance as that is not JSON serialisable.
+        # Instead, we save an alternative form
+        instance = form.save(commit=False)
+        json_qs = serializers.serialize('json', [instance])
+
+        session_data[self._key(is_object=True)] = json_qs
         self.request.session.save()
 
     def _fetch_object(self, step_name, request=None):
         if request is None:
             request = self.request
         session_data = request.session.setdefault(self.wizard_name, {})
-        return session_data.get(self._key(step_name, is_object=True), None)
+        json_qs = session_data.get(self._key(step_name, is_object=True), None)
+        if json_qs:
+            # Recreate model instance from passed data
+            deserialised_obj = list(serializers.deserialize('json', json_qs))
+            return deserialised_obj[0].object
 
     def _fetch_session_offer(self):
         """
@@ -188,7 +212,41 @@ class OfferWizardStepView(FormView):
     def form_valid(self, form):
         self._store_form_kwargs(form)
         self._store_object(form)
-        return super(OfferWizardStepView, self).form_valid(form)
+
+        if self.update and 'save' in form.data:
+            # Save changes to this offer when updating and pressed save button
+            return self.save_offer(self.offer)
+        else:
+            # Proceed to next page
+            return super(OfferWizardStepView, self).form_valid(form)
+
+    def save_offer(self, offer):
+        # We update the offer with the name/description from step 1
+        session_offer = self._fetch_session_offer()
+        offer.name = session_offer.name
+        offer.description = session_offer.description
+
+        # Working around a strange Django issue where saving the related model
+        # in place does not register it correctly and so it has to be saved and
+        # reassigned.
+        benefit = session_offer.benefit
+        benefit.save()
+        condition = session_offer.condition
+        condition.save()
+        offer.benefit = benefit
+        offer.condition = condition
+        offer.save()
+
+        self._flush_session()
+
+        if self.update:
+            msg = _("Offer '%s' updated") % offer.name
+        else:
+            msg = _("Offer '%s' created!") % offer.name
+        messages.success(self.request, msg)
+
+        return HttpResponseRedirect(reverse(
+            'dashboard:offer-detail', kwargs={'pk': offer.pk}))
 
     def get_success_url(self):
         if self.update:
@@ -254,33 +312,7 @@ class OfferRestrictionsView(OfferWizardStepView):
 
     def form_valid(self, form):
         offer = form.save(commit=False)
-
-        # We update the offer with the name/description from step 1
-        session_offer = self._fetch_session_offer()
-        offer.name = session_offer.name
-        offer.description = session_offer.description
-
-        # Working around a strange Django issue where saving the related model
-        # in place does not register it correctly and so it has to be saved and
-        # reassigned.
-        benefit = session_offer.benefit
-        benefit.save()
-        condition = session_offer.condition
-        condition.save()
-        offer.benefit = benefit
-        offer.condition = condition
-        offer.save()
-
-        self._flush_session()
-
-        if self.update:
-            msg = _("Offer '%s' updated") % offer.name
-        else:
-            msg = _("Offer '%s' created!") % offer.name
-        messages.success(self.request, msg)
-
-        return HttpResponseRedirect(reverse(
-            'dashboard:offer-detail', kwargs={'pk': offer.pk}))
+        return self.save_offer(offer)
 
     def get_instance(self):
         return self.offer

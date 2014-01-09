@@ -1,0 +1,38 @@
+{% extends 'oscar/checkout/preview.html' %}
+{% load currency_filters %}
+{% load url from future %}
+{% load i18n %}
+
+{% block payment_method %}
+<div class="span6">
+    <h3>{% trans "Payment" %}</h3>
+	<div class="well well-success" data-behaviours="match-height">
+		<p>{% blocktrans with amount=order_total.incl_tax|currency %}{{ amount }} will be debited from your bankcard.{% endblocktrans %}</p>
+		<div class="alert-actions">
+			<a href="{% url 'checkout:payment-details' %}" class="btn">{% trans "Change payment details" %}</a>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block place_order %}
+<hr/>
+<form method="post" action="{% url 'checkout:preview' %}" id="place-order-form">
+	{% csrf_token %}
+	<input type="hidden" name="action" value="place_order" />
+
+    {% comment %}
+    When submitting sensitive data on the payment details page (eg a bankcard)
+    we don't want to save the data and so we pass the bound form to the preview 
+    template and render it in a hidden div.  Then the payment information will
+    get re-submitted when the user confirms the order.
+    {% endcomment %}
+    <div style="display:none">
+        {% block hiddenforms %}
+		    {{ bankcard_form.as_p }}
+		{% endblock %}
+    </div>
+	<button id='place-order' type="submit" class="pull-right btn btn-primary btn-large js-disable-on-click" data-loading-text="{% trans 'Submitting...' %}">{% trans "Place order" %}</button>
+</form>
+{% endblock place_order %}

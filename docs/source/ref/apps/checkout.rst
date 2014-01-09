@@ -30,9 +30,34 @@ The checkout process comprises the following steps:
 
 8.  **Thank you** - A summary of the order with any relevant tracking information.
 
+Abstract models
+---------------
 
-Customisation
--------------
+None.
 
-The checkout can be customised in many ways as you can extend and override and class from
-Oscar's core using the overriding core classes technique detailed previously.
+Views and mixins
+----------------
+
+.. automodule:: oscar.apps.checkout.views
+    :members:
+
+.. automodule:: oscar.apps.checkout.mixins
+    :members:
+
+.. automodule:: oscar.apps.checkout.session
+    :members:
+
+Forms
+-----
+
+.. automodule:: oscar.apps.checkout.forms
+    :members:
+
+Utils
+-----
+
+.. automodule:: oscar.apps.checkout.calculators
+    :members:
+
+.. automodule:: oscar.apps.checkout.utils
+    :members:

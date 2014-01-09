@@ -121,7 +121,7 @@
         "fields": {
             "range": null,
             "proxy_class": "apps.offers.ChangesOwnerName",
-            "type": null,
+            "type": "",
             "max_affected_items": null,
             "value": null
         }
@@ -143,7 +143,6 @@
         "fields": {
             "included_categories": [],
             "name": "Site",
-            "included_products": [],
             "proxy_class": null,
             "excluded_products": [],
             "classes": [],

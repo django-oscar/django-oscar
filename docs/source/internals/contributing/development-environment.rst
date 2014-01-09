@@ -4,13 +4,25 @@ Setting up the development environment
 
 Fork the repo and run::
 
-    git clone git@github.com:<username>/django-oscar.git
-    cd django-oscar
-    mkvirtualenv oscar  # using virtualenvwrapper
-    make install
+    $ git clone git@github.com:<username>/django-oscar.git
+    $ cd django-oscar
+    $ mkvirtualenv oscar  # needs virtualenvwrapper
+    $ make install
 
-The :doc:`sandbox <sandbox>` site can be used to test our changes in a browser.
-It is easily created with ``make sandbox``.
+If using Ubuntu, the ``python-dev`` package is required for some packages to
+compile.
+
+The :doc:`sandbox </internals/sandbox>` site can be used to test our changes in
+a browser. It is easily created with ``make sandbox``.
+
+Creating migrations
+===================
+
+As the sandbox is a vanilla Oscar site, it is what we use to build migrations
+against::
+
+    $ make sandbox
+    $ sites/sandbox/manage.py schemamigration $YOURAPP --auto
     
 Writing LESS/CSS
 ================
@@ -44,6 +56,10 @@ If you have npm installed already,
 you install LESS using::
 
     npm install less
+
+You can manually compile the CSS files by running::
+
+    make css
 
 .. warning::
 

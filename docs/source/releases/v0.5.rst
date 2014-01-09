@@ -140,6 +140,8 @@ projects):
 * Alternative templates can now be used for different product classes in product
   browsing views.
 
+* jQuery upgraded to 1.9.1
+
 * Bootstrap upgraded to 2.3.1
 
 * The test runner can now be run with tox_.
@@ -174,8 +176,8 @@ Upgrading
 =========
 
 This section describes changes in core Oscar that you need to be aware of if you
-are upgrading from 0.4.  See the :doc:`upgrading guidelines </ref/upgrading>` for
-further details on the steps you need to take.
+are upgrading from 0.4.  See the :doc:`upgrading guidelines </topics/upgrading>`
+for further details on the steps you need to take.
 
 Migrations
 ~~~~~~~~~~

@@ -1,74 +1,68 @@
 {% extends "layout_2_col.html" %}
+
+{% load url from future %}
 {% load currency_filters %}
 {% load thumbnail %}
 {% load product_tags %}
 {% load i18n %}
 
 {% block title %}
-"{{ query }}" | {{ block.super }}
+    "{{ query }}" | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-	<li>
-	<a href="{% url promotions:home %}">{% trans "Home" %}</a>
-	<span class="divider">/</span>
-	</li>
-	<li>
-	{% trans "Search" %}
-	<span class="divider">/</span>
-	</li>
-	<li class="active">{% blocktrans with q=query%}"{{ q }}"{% endblocktrans %}</li>
-</ul>
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'promotions:home' %}">{% trans "Home" %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li>
+            {% trans "Search" %}
+            <span class="divider">/</span>
+        </li>
+        <li class="active">"{{ query }}"</li>
+    </ul>
 {% endblock %}
 
 {% block column_left %}
-    <div class="side_categories" style="padding: 8px 0;">
-        {% if categories %}
-	<ul class="nav nav-list">
-			<li class="nav-header">{% trans "Browse Categories" %}</li>
-	    {% for category in categories %}
-            <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }}</a>
-		{% if category.1 %}
-		<ul>
-			{% for subcategory in category.1 %}
-			<li><a href="{{ subcategory.0.get_absolute_url }}">{{ subcategory.0.name }}</a>
-			{% endfor %}
-		</ul>
-			{% endif %}
-            </li>
+    {% if has_facets %}
+        <h4>{% trans "Refine your search" %}</h4>
+        <dl>
+            {% for field, data in facet_data.items %}
+                {% if data.results %}
+                    {% include 'search/partials/facet.html' with name=data.name items=data.results %}
+                {% endif %}
             {% endfor %}
-	</ul>
-	{% endif %}
-    </div>
+        </dl>
+    {% endif %}
 {% endblock %}
 
-{% block header%}
-<div class="page-header">
-	<h1>{% trans 'Search for' %} '{{ query }}'</h1>
-</div>
+{% block headertext %}
+    {% blocktrans with q=query %}
+        Products matching "{{ q }}"
+    {% endblocktrans %}
 {% endblock %}
 
 {% block content %}
 
-{% if suggestion %}
-    {% trans 'Did you mean' %} <a href="{% url search:search %}?q={{ suggestion }}">{{ suggestion }}</a>?
-{% endif %}
+    {% if suggestion %}
+        {% trans 'Did you mean' %} <a href="{% url 'search:search' %}?q={{ suggestion }}">{{ suggestion }}</a>?
+    {% endif %}
 
-{% if page.object_list %}
-<section>
-	<div class="mod">
-		{% include "search/partials/pagination.html" %}
-		<ol class="products four">
-			{% for result in page.object_list %}
-                <li>{% render_product result.object %}</li>
-			{% endfor %}
-		</ol>
-		{% include "search/partials/pagination.html" %}
-	</div>
-</section>
-{% else %}
-<p>{% trans 'No search results found.' %}</p>
-{% endif %}
+    {% if page.object_list %}
+        <section>
+            <div class="mod">
+                {% include "search/partials/pagination.html" %}
+                <ol class="row-fluid">
+                    {% for result in page.object_list %}
+                        <li class="span3 {% if forloop.counter0|divisibleby:"4" %}no-margin{% endif %}">{% render_product result.object %}</li>
+                    {% endfor %}
+                </ol>
+                {% include "search/partials/pagination.html" %}
+            </div>
+        </section>
+    {% else %}
+        <p>{% trans 'No search results found.' %}</p>
+    {% endif %}
 
 {% endblock %}

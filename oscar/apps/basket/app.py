@@ -14,7 +14,7 @@ class BasketApplication(Application):
     remove_voucher_view = views.VoucherRemoveView
 
     def get_urls(self):
-        urlpatterns = patterns('',
+        urls = [
             url(r'^$', self.summary_view.as_view(), name='summary'),
             url(r'^add/$', self.add_view.as_view(), name='add'),
             url(r'^vouchers/add/$', self.add_voucher_view.as_view(),
@@ -23,8 +23,8 @@ class BasketApplication(Application):
                 self.remove_voucher_view.as_view(), name='vouchers-remove'),
             url(r'^saved/$', login_required(self.saved_view.as_view()),
                 name='saved'),
-        )
-        return self.post_process_urls(urlpatterns)
+        ]
+        return self.post_process_urls(patterns('', *urls))
 
 
 application = BasketApplication()

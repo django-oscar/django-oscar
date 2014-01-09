@@ -4,8 +4,10 @@ from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.shipping.methods import Free
-from oscar.apps.order.exceptions import UnableToPlaceOrder
 from oscar.core.loading import get_class
+from . import exceptions
+
+from decimal import Decimal as D
 
 ShippingAddress = get_model('order', 'ShippingAddress')
 Order = get_model('order', 'Order')
@@ -36,22 +38,18 @@ class OrderCreator(object):
     Places the order by writing out the various models
     """
 
-    def place_order(self, basket, total_incl_tax=None, total_excl_tax=None,
+    def place_order(self, basket, total,  # noqa (too complex (12))
                     user=None, shipping_method=None, shipping_address=None,
-                    billing_address=None, order_number=None, status=None, **kwargs):
+                    billing_address=None, order_number=None, status=None,
+                    **kwargs):
         """
         Placing an order involves creating all the relevant models based on the
         basket and session data.
         """
-        # Only a basket instance is required to place an order - everything else can be set
-        # to defaults
         if basket.is_empty:
             raise ValueError(_("Empty baskets cannot be submitted"))
         if not shipping_method:
             shipping_method = Free()
-        if total_incl_tax is None or total_excl_tax is None:
-            total_incl_tax = basket.total_incl_tax + shipping_method.basket_charge_incl_tax()
-            total_excl_tax = basket.total_excl_tax + shipping_method.basket_charge_excl_tax()
         if not order_number:
             generator = OrderNumberGenerator()
             order_number = generator.order_number(basket)
@@ -62,12 +60,13 @@ class OrderCreator(object):
         except Order.DoesNotExist:
             pass
         else:
-            raise ValueError(_("There is already an order with number %s") % order_number)
+            raise ValueError(_("There is already an order with number %s")
+                             % order_number)
 
         # Ok - everything seems to be in order, let's place the order
         order = self.create_order_model(
             user, basket, shipping_address, shipping_method, billing_address,
-            total_incl_tax, total_excl_tax, order_number, status, **kwargs)
+            total, order_number, status, **kwargs)
         for line in basket.all_lines():
             self.create_line_models(order, line)
             self.update_stock_records(line)
@@ -75,12 +74,17 @@ class OrderCreator(object):
         for application in basket.offer_applications:
             # Trigger any deferred benefits from offers and capture the
             # resulting message
-            application['message'] = application['offer'].apply_deferred_benefit(basket)
+            application['message'] \
+                = application['offer'].apply_deferred_benefit(basket)
             # Record offer application results
             if application['result'].affects_shipping:
+                # Skip zero shipping discounts
+                if shipping_method.discount <= D('0.00'):
+                    continue
                 # If a shipping offer, we need to grab the actual discount off
-                # the shipping method instance
-                application['discount'] = shipping_method.get_discount()['discount']
+                # the shipping method instance, which should be wrapped in an
+                # OfferDiscount instance.
+                application['discount'] = shipping_method.discount
             self.create_discount_model(order, application)
             self.record_discount(application)
 
@@ -92,8 +96,8 @@ class OrderCreator(object):
 
         return order
 
-    def create_order_model(self, user, basket, shipping_address, shipping_method,
-                           billing_address, total_incl_tax, total_excl_tax,
+    def create_order_model(self, user, basket, shipping_address,
+                           shipping_method, billing_address, total,
                            order_number, status, **extra_order_fields):
         """
         Creates an order model.
@@ -101,11 +105,13 @@ class OrderCreator(object):
         order_data = {'basket_id': basket.id,
                       'number': order_number,
                       'site': Site._default_manager.get_current(),
-                      'total_incl_tax': total_incl_tax,
-                      'total_excl_tax': total_excl_tax,
-                      'shipping_incl_tax': shipping_method.basket_charge_incl_tax(),
-                      'shipping_excl_tax': shipping_method.basket_charge_excl_tax(),
-                      'shipping_method': shipping_method.name}
+                      'currency': total.currency,
+                      'total_incl_tax': total.incl_tax,
+                      'total_excl_tax': total.excl_tax,
+                      'shipping_incl_tax': shipping_method.charge_incl_tax,
+                      'shipping_excl_tax': shipping_method.charge_excl_tax,
+                      'shipping_method': shipping_method.name,
+                      'shipping_code': shipping_method.code}
         if shipping_address:
             order_data['shipping_address'] = shipping_address
         if billing_address:
@@ -120,49 +126,54 @@ class OrderCreator(object):
         order.save()
         return order
 
-    def get_partner_for_product(self, product):
-        """
-        Return the partner for a product
-        """
-        if product.has_stockrecord:
-            return product.stockrecord.partner
-        raise UnableToPlaceOrder(_("No partner found for product '%s'") % product)
-
     def create_line_models(self, order, basket_line, extra_line_fields=None):
         """
         Create the batch line model.
 
-        You can set extra fields by passing a dictionary as the extra_line_fields value
+        You can set extra fields by passing a dictionary as the
+        extra_line_fields value
         """
-        partner = self.get_partner_for_product(basket_line.product)
-        stockrecord = basket_line.product.stockrecord
-        line_data = {'order': order,
-                     # Partner details
-                     'partner': partner,
-                     'partner_name': partner.name,
-                     'partner_sku': stockrecord.partner_sku,
-                     # Product details
-                     'product': basket_line.product,
-                     'title': basket_line.product.get_title(),
-                     'upc': basket_line.product.upc,
-                     'quantity': basket_line.quantity,
-                     # Price details
-                     'line_price_excl_tax': basket_line.line_price_excl_tax_and_discounts,
-                     'line_price_incl_tax': basket_line.line_price_incl_tax_and_discounts,
-                     'line_price_before_discounts_excl_tax': basket_line.line_price_excl_tax,
-                     'line_price_before_discounts_incl_tax': basket_line.line_price_incl_tax,
-                     # Reporting details
-                     'unit_cost_price': stockrecord.cost_price,
-                     'unit_price_incl_tax': basket_line.unit_price_incl_tax,
-                     'unit_price_excl_tax': basket_line.unit_price_excl_tax,
-                     'unit_retail_price': stockrecord.price_retail,
-                     # Shipping details
-                     'est_dispatch_date':  basket_line.product.stockrecord.dispatch_date
-                     }
+        product = basket_line.product
+        stockrecord = basket_line.stockrecord
+        if not stockrecord:
+            raise exceptions.UnableToPlaceOrder(
+                "Baket line #%d has no stockrecord" % basket_line.id)
+        partner = stockrecord.partner
+        line_data = {
+            'order': order,
+            # Partner details
+            'partner': partner,
+            'partner_name': partner.name,
+            'partner_sku': stockrecord.partner_sku,
+            'stockrecord': stockrecord,
+            # Product details
+            'product': product,
+            'title': product.get_title(),
+            'upc': product.upc,
+            'quantity': basket_line.quantity,
+            # Price details
+            'line_price_excl_tax':
+            basket_line.line_price_excl_tax_incl_discounts,
+            'line_price_incl_tax':
+            basket_line.line_price_incl_tax_incl_discounts,
+            'line_price_before_discounts_excl_tax':
+            basket_line.line_price_excl_tax,
+            'line_price_before_discounts_incl_tax':
+            basket_line.line_price_incl_tax,
+            # Reporting details
+            'unit_cost_price': stockrecord.cost_price,
+            'unit_price_incl_tax': basket_line.unit_price_incl_tax,
+            'unit_price_excl_tax': basket_line.unit_price_excl_tax,
+            'unit_retail_price': stockrecord.price_retail,
+            # Shipping details
+            'est_dispatch_date':
+            basket_line.purchase_info.availability.dispatch_date
+        }
         extra_line_fields = extra_line_fields or {}
         if hasattr(settings, 'OSCAR_INITIAL_LINE_STATUS'):
             if not (extra_line_fields and 'status' in extra_line_fields):
-                extra_line_fields['status'] = getattr(settings, 'OSCAR_INITIAL_LINE_STATUS')
+                extra_line_fields['status'] = getattr(
+                    settings, 'OSCAR_INITIAL_LINE_STATUS')
         if extra_line_fields:
             line_data.update(extra_line_fields)
 
@@ -174,7 +185,11 @@ class OrderCreator(object):
         return order_line
 
     def update_stock_records(self, line):
-        line.product.stockrecord.allocate(line.quantity)
+        """
+        Update any relevant stock records for this order line
+        """
+        if line.product.get_product_class().track_stock:
+            line.stockrecord.allocate(line.quantity)
 
     def create_additional_line_models(self, order, order_line, basket_line):
         """
@@ -192,21 +207,21 @@ class OrderCreator(object):
         """
         breakdown = basket_line.get_price_breakdown()
         for price_incl_tax, price_excl_tax, quantity in breakdown:
-            LinePrice._default_manager.create(order=order,
-                                              line=order_line,
-                                              quantity=quantity,
-                                              price_incl_tax=price_incl_tax,
-                                              price_excl_tax=price_excl_tax)
+            order_line.prices.create(
+                order=order,
+                quantity=quantity,
+                price_incl_tax=price_incl_tax,
+                price_excl_tax=price_excl_tax)
 
     def create_line_attributes(self, order, order_line, basket_line):
         """
         Creates the batch line attributes.
         """
         for attr in basket_line.attributes.all():
-            LineAttribute._default_manager.create(line=order_line,
-                                                  option=attr.option,
-                                                  type=attr.option.code,
-                                                  value=attr.value)
+            order_line.attributes.create(
+                option=attr.option,
+                type=attr.option.code,
+                value=attr.value)
 
     def create_discount_model(self, order, discount):
 

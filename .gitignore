@@ -1,8 +1,8 @@
 # Packaging
 *.pyc
 *.egg-info
-dist/
-build/
+/dist/
+/build/
 
 # Vagrant
 .vagrant
@@ -21,27 +21,29 @@ build/
 .idea
 
 # Docs
-docs/build/*
+/docs/build/*
 *.pdf
 TODO
 
 # Test files
 .coverage
+.noseids
 coverage.xml
 violations.txt
 nosetests.xml
-htmlcov/*
-.tox/*
+/htmlcov/*
+/.tox/*
 
 # Example sites
 settings_local.py
-sites/sandbox/*.sqlite
-sites/sandbox/assets/
-sites/sandbox/public/
-sites/sandbox/whoosh_index/
-sites/sandbox/logs/
-sites/demo/*.sqlite
-sites/demo/assets/
-sites/demo/public/
-sites/demo/whoosh_index/
+/sites/sandbox/*.sqlite
+/sites/sandbox/assets/
+/sites/sandbox/public/
+/sites/sandbox/whoosh_index/
+/sites/sandbox/logs/
+/sites/demo/*.sqlite
+/sites/demo/assets/
+/sites/demo/public/
+/sites/demo/whoosh_index/
+/sites/demo/logs/
 sites/puppet/modules/

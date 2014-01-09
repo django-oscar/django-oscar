@@ -1,12 +1,12 @@
 from django.conf.urls import patterns, url
 
-from oscar.views.decorators import staff_member_required
 from oscar.core.application import Application
 from oscar.apps.dashboard.vouchers import views
 
 
 class VoucherDashboardApplication(Application):
     name = None
+    default_permissions = ['is_staff', ]
 
     list_view = views.VoucherListView
     create_view = views.VoucherCreateView
@@ -15,7 +15,7 @@ class VoucherDashboardApplication(Application):
     stats_view = views.VoucherStatsView
 
     def get_urls(self):
-        urlpatterns = patterns('',
+        urls = [
             url(r'^$', self.list_view.as_view(), name='voucher-list'),
             url(r'^create/$', self.create_view.as_view(),
                 name='voucher-create'),
@@ -25,11 +25,8 @@ class VoucherDashboardApplication(Application):
                 name='voucher-delete'),
             url(r'^stats/(?P<pk>\d+)/$', self.stats_view.as_view(),
                 name='voucher-stats'),
-        )
-        return self.post_process_urls(urlpatterns)
-
-    def get_url_decorator(self, url_name):
-        return staff_member_required
+        ]
+        return self.post_process_urls(patterns('', *urls))
 
 
 application = VoucherDashboardApplication()

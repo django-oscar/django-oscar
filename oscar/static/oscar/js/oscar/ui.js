@@ -3,7 +3,7 @@ var oscar = (function(o, $) {
     o.messages = {
         addMessage: function(tag, msg) {
             var msgHTML = '<div class="alert fade in alert-' + tag + '">' +
-                '<a href="#" class="close" data-dismiss="alert">x</a>'  + msg +
+                '<a href="#" class="close" data-dismiss="alert">&times;</a>'  + msg +
                 '</div>';
             $('#messages').append($(msgHTML));
         },
@@ -11,15 +11,19 @@ var oscar = (function(o, $) {
         info: function(msg) { o.messages.addMessage('info', msg); },
         success: function(msg) { o.messages.addMessage('success', msg); },
         warning: function(msg) { o.messages.addMessage('warning', msg); },
-        error: function(msg) { o.messages.addMessage('error:', msg); }
+        error: function(msg) { o.messages.addMessage('error', msg); },
+        clear: function() {
+            $('#messages').html('');
+        },
+        scrollTo: function() {
+            $('html').animate({scrollTop: $('#messages').offset().top});
+        }
     };
 
     // This block may need removing after reworking of promotions app
     o.promotions = {
         init: function() {
-            $('#myCarousel').carousel({
-                interval: 6000
-            });
+
         }
     };
 
@@ -59,19 +63,6 @@ var oscar = (function(o, $) {
         }
     };
 
-    o.account = {
-        init: function() {
-            if (document.location.hash) {
-                // Ensure the right tab is open if it is specified in the hash.
-                var hash = document.location.hash.substring(1),
-                $activeClass = $('.account-profile .tabbable'),
-                $li = $('a[href=#' + hash + ']').closest('li');
-                $activeClass.find('.active').removeClass('active');
-                $('#' + hash).add($li).addClass('active');
-            }
-        }
-    };
-
 
     o.page = {
         init: function() {
@@ -92,7 +83,6 @@ var oscar = (function(o, $) {
         init: function() {
             if (o.responsive.isDesktop()) {
                 o.responsive.initNav();
-                o.responsive.initCarousel();
             }
         },
         isDesktop: function() {
@@ -101,8 +91,8 @@ var oscar = (function(o, $) {
         initNav: function() {
             // Initial navigation for desktop
             var $sidebar = $('aside.span3'), 
-                $browse = $('#browse > .dropdown-menu'), 
-                $browseOpen = $browse.parent().find('> button[data-toggle]');
+                $browse = $('[data-navigation="dropdown-menu"]'),
+                $browseOpen = $browse.parent().find('> a[data-toggle]');
             // Set width of nav dropdown to be same as sidebar
             $browse.css('width', $sidebar.outerWidth());
             // Remove click on browse button if menu is currently open
@@ -112,22 +102,9 @@ var oscar = (function(o, $) {
                 $sidebar.css({ marginTop: $browse.outerHeight() });
             }
         },
-        initCarousel: function() {
-            $('.es-carousel-wrapper').each(function(){
-                var gallery = $(this).parent('.rg-thumbs').length;
-                // Don't apply this to the gallery carousel
-                if (gallery <= 0) {
-                    var imageWidth = 175,
-                        minProducts = 4;
-                    if ($(this).hasClass('wide')) {
-                        minProducts = 5;
-                    }
-                    $(this).elastislide({
-                        imageW: imageWidth,
-                        minItems: minProducts,
-                        onClick: function() {return true;}
-                    });
-                }
+        initSlider: function() {
+            $('.carousel').carousel({
+                interval: 20000
             });
         }
     };
@@ -154,7 +131,11 @@ var oscar = (function(o, $) {
 
     o.basket = {
         is_form_being_submitted: false,
-        init: function() {
+        init: function(options) {
+            if (typeof options == 'undefined') {
+                options = {'basketURL': document.URL};
+            }
+            o.basket.url = options.basketURL || document.URL;
             $('#content_inner').on('click', '#basket_formset a[data-behaviours~="remove"]', function(event) {
                 o.basket.checkAndSubmit($(this), 'form', 'DELETE');
                 event.preventDefault();
@@ -186,7 +167,7 @@ var oscar = (function(o, $) {
         submitBasketForm: function(event) {
             $('#messages').html('');
             var payload = $('#basket_formset').serializeArray();
-            $.post('/basket/', payload, o.basket.submitFormSuccess, 'json');
+            $.post(o.basket.url, payload, o.basket.submitFormSuccess, 'json');
             event.preventDefault();
         },
         submitFormSuccess: function(data) {
@@ -223,15 +204,17 @@ var oscar = (function(o, $) {
         gateway: {
             init: function() {
                 var radioWidgets = $('form input[name=options]');
-                o.checkout.gateway.handleRadioSelection(radioWidgets.val());
+                var selectedRadioWidget = $('form input[name=options]:checked');
+                o.checkout.gateway.handleRadioSelection(selectedRadioWidget.val());
                 radioWidgets.change(o.checkout.gateway.handleRadioChange);
+                $('#id_username').focus();
             },
             handleRadioChange: function() {
                 o.checkout.gateway.handleRadioSelection($(this).val());
             },
             handleRadioSelection: function(value) {
                 var pwInput = $('#id_password');
-                if (value == 'new') {
+                if (value == 'anonymous' || value =='new') {
                     pwInput.attr('disabled', 'disabled');
                 } else {
                     pwInput.removeAttr('disabled');
@@ -244,6 +227,7 @@ var oscar = (function(o, $) {
         o.forms.init();
         o.page.init();
         o.responsive.init();
+        o.responsive.initSlider();
         o.compatibility.init();
     };
 

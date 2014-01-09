@@ -1,4 +1,7 @@
 {% extends "layout.html" %}
+
+{% load url from future %}
+
 {% load i18n %}
 {% load product_tags %}
 
@@ -9,14 +12,14 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-	<a href="{% url promotions:home %}">{% trans "Home" %}</a>
+	<a href="{% url 'promotions:home' %}">{% trans "Home" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
         <a href="#">{% trans "Offers" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active">{{ offer.name }}</li>
+    <li class="active">{{ offer.name }}</li>
 </ul>
 {% endblock %}
 
@@ -24,9 +27,9 @@
 
 {% block content %}
 
-	{% if not offer.is_available %}
+    {% if not offer.is_available %}
         <div class="alert alert-error">{% trans " This offer is no longer available." %}</div>
-	{% endif %}
+    {% endif %}
 
     {% if upsell_message %}
     <div class="well">
@@ -39,19 +42,19 @@
     </div>
     {% endif %}
 
-    {% if products.count %}
-		<section>
-			<div class="mod">
-				{% include "partials/pagination.html" %}
-				<ol class="products five">
-					{% for product in products %}
-                    <li>{% render_product product %}</li>
-					{% endfor %}
-				</ol>
-				{% include "partials/pagination.html" %}
-			</div>
-		</section>
+    {% if products %}
+        <section>
+            <div class="mod">
+                {% include "partials/pagination.html" %}
+                <ol class="row-fluid">
+                    {% for product in products %}
+                    <li class="span2 {% if forloop.counter0|divisibleby:"6" %}no-margin{% endif %}">{% render_product product %}</li>
+                    {% endfor %}
+                </ol>
+                {% include "partials/pagination.html" %}
+            </div>
+        </section>
     {% else %}
-	<p class="nonefound">{% trans "No products found." %}</p>
+    <p class="nonefound">{% trans "No products found." %}</p>
     {% endif %}
 {% endblock content %}

@@ -20,4 +20,4 @@ class UserSearch(AbstractUserSearch):
 
 
 # Import receiver functions
-from oscar.apps.analytics.receivers import *
+from oscar.apps.analytics.receivers import *  # noqa

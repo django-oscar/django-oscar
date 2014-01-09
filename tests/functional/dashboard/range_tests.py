@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from oscar.apps.dashboard.ranges import forms
-from oscar_testsupport.factories import create_product
+from oscar.test.factories import create_product
 from oscar.apps.offer.models import Range
 
 
@@ -45,14 +45,14 @@ class RangeProductFormTests(TestCase):
 
     def test_only_dupes_is_invalid(self):
         product = create_product(partner_sku='123123')
-        self.range.included_products.add(product)
+        self.range.add_product(product)
         form = self.submit_form({'query': '123123'})
         self.assertFalse(form.is_valid())
 
     def test_dupe_skus_are_available(self):
         product = create_product(partner_sku='123123')
         create_product(partner_sku='123124')
-        self.range.included_products.add(product)
+        self.range.add_product(product)
         form = self.submit_form({'query': '123123, 123124'})
         self.assertTrue(form.is_valid())
         self.assertTrue('123123' in form.get_duplicate_skus())

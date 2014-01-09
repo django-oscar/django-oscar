@@ -3,10 +3,16 @@ from django.core.urlresolvers import reverse
 
 
 class HomeView(TemplateView):
+    """
+    This is the home page and will typically live at /
+    """
     template_name = 'promotions/home.html'
 
 
 class RecordClickView(RedirectView):
+    """
+    Simple RedirectView that helps recording clicks made on promotions
+    """
     permanent = False
     model = None
 

@@ -6,6 +6,8 @@ from django.http import QueryDict
 from django.utils.translation import ugettext_lazy as _
 from oscar.apps.address.forms import AbstractAddressForm
 
+from oscar.views.generic import PhoneNumberMixin
+
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
 ShippingAddress = get_model('order', 'ShippingAddress')
@@ -27,12 +29,12 @@ class OrderStatsForm(forms.Form):
         date_from = self.cleaned_data['date_from']
         date_to = self.cleaned_data['date_to']
         if date_from and date_to:
-            # We want to include end date so we adjust the date we use with the 'range'
-            # function.
-            self._filters = {'date_placed__range': [date_from,
-                                                    date_to +
-                                                    datetime.timedelta(days=1)]}
-            self._description = _('Orders placed between %(date_from)s and %(date_to)s') % {
+            # We want to include end date so we adjust the date we use with the
+            # 'range' function.
+            self._filters = {'date_placed__range':
+                             [date_from, date_to + datetime.timedelta(days=1)]}
+            self._description = _('Orders placed between %(date_from)s and'
+                                  ' %(date_to)s') % {
                 'date_from': date_from,
                 'date_to': date_to}
         elif date_from and not date_to:
@@ -63,8 +65,11 @@ class OrderSearchForm(forms.Form):
     upc = forms.CharField(required=False, label=_("UPC"))
     partner_sku = forms.CharField(required=False, label=_("Partner SKU"))
 
-    status_choices = (('', '---------'),) + tuple([(v, v) for v in Order.all_statuses()])
-    status = forms.ChoiceField(choices=status_choices, label=_("Status"), required=False)
+    status_choices = (('', '---------'),) + tuple([(v, v)
+                                                   for v
+                                                   in Order.all_statuses()])
+    status = forms.ChoiceField(choices=status_choices, label=_("Status"),
+                               required=False)
 
     date_from = forms.DateField(required=False, label=_("Date from"))
     date_to = forms.DateField(required=False, label=_("Date to"))
@@ -77,8 +82,10 @@ class OrderSearchForm(forms.Form):
 
     format_choices = (('html', _('HTML')),
                       ('csv', _('CSV')),)
-    response_format = forms.ChoiceField(widget=forms.RadioSelect, required=False,
-        choices=format_choices, initial='html', label=_("Get results as"))
+    response_format = forms.ChoiceField(widget=forms.RadioSelect,
+                                        required=False, choices=format_choices,
+                                        initial='html',
+                                        label=_("Get results as"))
 
     def __init__(self, *args, **kwargs):
         # ensure that 'response_format' is always set
@@ -91,11 +98,12 @@ class OrderSearchForm(forms.Form):
         else:
             data = None
 
-        if data and data.get('response_format', None) not in self.format_choices:
-            # handle POST/GET dictionaries, whose are unmutable
-            if isinstance(data, QueryDict):
-                data = data.dict()
-            data['response_format'] = 'html'
+        if data:
+            if data.get('response_format', None) not in self.format_choices:
+                # handle POST/GET dictionaries, whose are unmutable
+                if isinstance(data, QueryDict):
+                    data = data.dict()
+                data['response_format'] = 'html'
 
         super(OrderSearchForm, self).__init__(data, *args, **kwargs)
         self.fields['payment_method'].choices = self.payment_method_choices()
@@ -112,7 +120,7 @@ class OrderNoteForm(forms.ModelForm):
         exclude = ('order', 'user', 'note_type')
 
 
-class ShippingAddressForm(AbstractAddressForm):
+class ShippingAddressForm(PhoneNumberMixin, AbstractAddressForm):
 
     class Meta:
         model = ShippingAddress

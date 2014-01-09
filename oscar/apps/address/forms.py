@@ -1,10 +1,13 @@
 from django.conf import settings
-from django.forms import ModelForm
+from django import forms
 from django.db.models import get_model
+
+from oscar.views.generic import PhoneNumberMixin
 
 UserAddress = get_model('address', 'useraddress')
 
-class AbstractAddressForm(ModelForm):
+
+class AbstractAddressForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         """
@@ -17,8 +20,13 @@ class AbstractAddressForm(ModelForm):
             self.fields[field_name].required = True
 
 
-class UserAddressForm(AbstractAddressForm):
+class UserAddressForm(PhoneNumberMixin, AbstractAddressForm):
 
     class Meta:
         model = UserAddress
-        exclude = ('user', 'num_orders', 'hash', 'search_text')
+        exclude = ('user', 'num_orders', 'hash', 'search_text',
+                   'is_default_for_billing', 'is_default_for_shipping')
+
+    def __init__(self, user, *args, **kwargs):
+        super(UserAddressForm, self).__init__(*args, **kwargs)
+        self.instance.user = user

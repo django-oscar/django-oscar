@@ -6,16 +6,18 @@ from django.core import exceptions
 from django.core.urlresolvers import reverse
 from django.db.models.loading import get_model
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, HttpResponse
 from django.template.loader import render_to_string
 from django.utils.translation import ungettext, ugettext_lazy as _
-from django.views.generic import (ListView, DeleteView, CreateView, UpdateView)
+from django.views.generic import (
+    ListView, DeleteView, CreateView, UpdateView, View)
 
 
 from oscar.views.generic import BulkEditMixin
 from oscar.core.loading import get_classes
 
 Range = get_model('offer', 'Range')
+RangeProduct = get_model('offer', 'RangeProduct')
 Product = get_model('catalogue', 'Product')
 RangeForm, RangeProductForm = get_classes('dashboard.ranges.forms',
                                           ['RangeForm', 'RangeProductForm'])
@@ -89,7 +91,7 @@ class RangeDeleteView(DeleteView):
         return reverse('dashboard:range-list')
 
 
-class RangeProductListView(ListView, BulkEditMixin):
+class RangeProductListView(BulkEditMixin, ListView):
     model = Product
     template_name = 'dashboard/ranges/range_product_list.html'
     context_object_name = 'products'
@@ -108,7 +110,8 @@ class RangeProductListView(ListView, BulkEditMixin):
         return self._range
 
     def get_queryset(self):
-        return self.get_range().included_products.all()
+        products = self.get_range().included_products.all()
+        return products.order_by('rangeproduct__display_order')
 
     def get_context_data(self, **kwargs):
         ctx = super(RangeProductListView, self).get_context_data(**kwargs)
@@ -121,7 +124,7 @@ class RangeProductListView(ListView, BulkEditMixin):
     def remove_selected_products(self, request, products):
         range = self.get_range()
         for product in products:
-            range.included_products.remove(product)
+            range.remove_product(product)
         num_products = len(products)
         messages.success(request, ungettext("Removed %d product from range",
                                             "Removed %d products from range",
@@ -146,7 +149,7 @@ class RangeProductListView(ListView, BulkEditMixin):
             return
 
         for product in products:
-            range.included_products.add(product)
+            range.add_product(product)
 
         num_products = len(products)
         messages.success(request, ungettext("%d product added to range",
@@ -156,12 +159,15 @@ class RangeProductListView(ListView, BulkEditMixin):
         if dupe_skus:
             messages.warning(
                 request,
-                _("The products with SKUs or UPCs matching %s are already in this range") % ", ".join(dupe_skus))
+                _("The products with SKUs or UPCs matching %s are already "
+                  "in this range") % ", ".join(dupe_skus))
 
         missing_skus = form.get_missing_skus()
         if missing_skus:
-            messages.warning(request,
-                             _("No product(s) were found with SKU or UPC matching %s") % ", ".join(missing_skus))
+            messages.warning(
+                request,
+                _("No product(s) were found with SKU or UPC matching %s") %
+                ", ".join(missing_skus))
 
     def handle_file_products(self, request, range, form):
         if not 'file_upload' in request.FILES:
@@ -191,3 +197,21 @@ class RangeProductListView(ListView, BulkEditMixin):
             size=f.size
         )
         return upload
+
+
+class RangeReorderView(View):
+    def post(self, request, pk):
+        order = dict(request.POST).get('product[]')
+        self._save_page_order(order)
+        return HttpResponse(status=200)
+
+    def _save_page_order(self, order):
+        """
+        Save the order of the products within range.
+        """
+        range = get_object_or_404(Range, pk=self.kwargs['pk'])
+        for index, item in enumerate(order):
+            entry = RangeProduct.objects.get(range=range, product__pk=item)
+            if entry.display_order != index:
+                entry.display_order = index
+                entry.save()

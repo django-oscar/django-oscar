@@ -1,0 +1,52 @@
+{% load url from future %}
+{% load reviews_tags %}
+{% load display_tags %}
+{% load thumbnail %}
+{% load staticfiles %}
+{% load i18n %}
+
+<div class="row-fluid">
+    <div class="span2">
+        <div class="image_container">
+            {% with image=product.primary_image %}
+                {% thumbnail image.original "x155" upscale=False as thumb %}
+                    <a href="{{ product.get_absolute_url }}"><img src="{{ thumb.url }}" alt="{{ product.get_title }}" class="thumbnail"></a>
+                {% endthumbnail %}
+            {% endwith %}
+        </div>
+    </div>
+    <div class="span10">
+        <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a></h3>
+        {% include "catalogue/partials/stock_record.html" %}
+
+        {% iffeature "reviews" %}
+            {% if product.rating != None %}
+                <h4 class="star-rating {{ product.rating|as_stars }}">
+                    <i class="icon-star"></i>
+                    <i class="icon-star"></i>
+                    <i class="icon-star"></i>
+                    <i class="icon-star"></i>
+                    <i class="icon-star"></i>
+
+                    <small><a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.id %}">
+                            {% blocktrans count reviews|length as num_reviews %}
+                            1 customer review
+                            {% plural %}
+                            {{ num_reviews }} customer reviews
+                            {% endblocktrans %}
+                    </a></small>
+                    &nbsp;
+            {% else %}
+                <h4>
+            {% endif %}
+            {% if product|is_review_permitted:user %}
+                <a id="write_review" href="{% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id %}#addreview" class="btn btn-success btn-small">
+                    {% trans "Write a review" %}
+                </a>
+            {% endif %}
+            </h4>
+        {% endiffeature %}
+    </div>
+</div>
+
+<hr>

@@ -1,9 +1,12 @@
 from django.test import TestCase
-from django.contrib.auth.models import User
 from django_dynamic_fixture import G
 
 from oscar.apps.customer.models import Notification
 from oscar.apps.customer.notifications import services
+from oscar.core.compat import get_user_model
+
+
+User = get_user_model()
 
 
 class TestANewNotification(TestCase):

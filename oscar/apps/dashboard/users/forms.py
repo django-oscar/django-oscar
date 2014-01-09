@@ -34,6 +34,7 @@ class ProductAlertSearchForm(forms.Form):
         ('', '------------'),
     ) + ProductAlert.STATUS_CHOICES
 
-    status = forms.ChoiceField(required=False, choices=STATUS_CHOICES)
-    name = forms.CharField(required=False)
-    email = forms.EmailField(required=False)
+    status = forms.ChoiceField(required=False, choices=STATUS_CHOICES,
+                               label=_('Status'))
+    name = forms.CharField(required=False, label=_('Name'))
+    email = forms.EmailField(required=False, label=_('Email'))

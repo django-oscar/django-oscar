@@ -68,17 +68,6 @@ h3.app-ico:before {
 td .btn-toolbar {
   margin:0;
 }
-//ICONS
-.icon-large:before {
-  font-size: 18px;
-}
-.btn {
-  .icon-large {
-    position:relative;
-    top:2px;
-    padding-right: 5px;
-  }
-}
 
 // FORM CHANGES
 // -----------
@@ -91,6 +80,9 @@ td .btn-toolbar {
     margin-bottom:@baseLineHeight / 2;
   }
   input[type=text],
+  input[type=number],
+  input[type=email],
+  input[type=url],
   textarea,
   select {
     .box-sizing(border-box);
@@ -153,6 +145,9 @@ td .btn-toolbar {
   .form-horizontal,
   .form-stacked {
     input[type=text],
+    input[type=number],
+    input[type=email],
+    input[type=url],
     textarea {
       width:95%;
     }
@@ -160,6 +155,9 @@ td .btn-toolbar {
   .form-stacked {
     .form-inline {
       input[type=text],
+      input[type=number],
+      input[type=email],
+      input[type=url],
       textarea {
         width:auto;
       }
@@ -198,6 +196,9 @@ input[type=text].hasDatepicker,
       color:#B94A48;
     }
   }
+  input[type=number],
+  input[type=email],
+  input[type=url],
   input[type=text] {
     width: 140px;
   }
@@ -331,9 +332,7 @@ body {
 .navbar-primary .nav {
   > li i {
     color: #dcdcdc;
-    font-family: 'FontAwesome';
     padding-right: 12px;
-    font-size: 16px;
   }
 }
 
@@ -356,10 +355,15 @@ button {
 caption,
 .table-header {
   .clearfix();
+  .icon-large {
+    &:before {
+      font-size: 18px;
+    }
+  }
   h2,h3 {
     font-weight: bold;
     font-size: 14px;
-    line-height: 28px;
+    line-height: normal;
     margin:0;
     > i {
       padding-right: 10px;
@@ -375,7 +379,7 @@ caption,
   padding: 6px 10px;
   .border-radius(3px 3px 0 0);
   text-align: left;
-  line-height: 28px;
+  // line-height: 28px;
   .btn-toolbar {
     margin-top:0;
     margin-bottom:0;
@@ -720,6 +724,8 @@ caption,
 .upload-image {
   .clearfix();
   margin:0;
+  z-index: 1;
+  position: relative;
   li {
     display:block;
     width: 200px;
@@ -769,10 +775,7 @@ caption,
     opacity: 0;
   }
   .input-field input {
-    position: absolute;
-    border-width: 0 0 100px 200px;
-    filter: alpha(opacity=0);
-    -moz-transform: translate(-100px, 0) scale(1);
+    border-width: 0;
     direction: ltr;
     cursor: pointer;
     width: 200px;
@@ -797,9 +800,10 @@ div[data-spy="affix"].affix {
 .bs-docs-sidenav > li > a,
 .bs-docs-sidenav > li > span {
   display: block;
-  margin: 0 0 -1px;
+  margin: 0;
   padding: 8px 14px;
   border: 1px solid #e5e5e5;
+  border-top-width:0;
   color:@linkColor;
   &:hover {
    background:#f1faff;
@@ -820,12 +824,7 @@ div[data-spy="affix"].affix {
   background:#f1faff;
   z-index: 2;
   padding: 9px 15px;
-  border-left: 0;
-  border-right: 0;
   text-shadow: 0 1px 0 rgba(0,0,0,.15);
-  -webkit-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
-     -moz-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
-          box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
   &:hover {
     background:#f1faff;
     color:@linkColor;
@@ -873,77 +872,6 @@ div[data-spy="affix"].affix {
     &:first-child {
       border-top-width:1px;
     }
-  }
-}
-
-
-/* Sidenav for Docs
--------------------------------------------------- */
-div[data-spy="affix"] {
-  width:266px;
-}
-div[data-spy="affix"].affix {
-  top:@baseLineHeight;
-}
-
-.bs-docs-sidenav {
-  padding: 0;
-  background-color: #fff;
-  -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
-     -moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
-          box-shadow: 0 1px 4px rgba(0,0,0,.065);
-}
-.bs-docs-sidenav > li > a {
-  display: block;
-  width: 190px \9;
-  margin: 0 0 -1px;
-  padding: 8px 14px;
-  border: 1px solid #e5e5e5;
-  color:@linkColor;
-  &:hover {
-   background:#f1faff;
-  }
-  i.icon-info-sign {
-    color:#ea0001;
-    font-size:16px;
-  }
-}
-.bs-docs-sidenav > .active > a {
-  font-weight:bold;
-  position: relative;
-  color:@linkColor;
-  background:#f1faff;
-  z-index: 2;
-  padding: 9px 15px;
-  border-left: 0;
-  border-right: 0;
-  text-shadow: 0 1px 0 rgba(0,0,0,.15);
-  -webkit-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
-     -moz-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
-          box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
-  &:hover {
-    background:#f1faff;
-    color:@linkColor;
-  }
-  &:after {
-    border-bottom: 10px solid transparent;
-    border-left: 10px solid #f1faff;
-    border-top: 10px solid transparent;
-    content: "";
-    display: inline-block;
-    position: absolute;
-    right: -9px;
-    top: 9px;
-  }
-  &:before {
-    border-bottom: 11px solid transparent;
-    border-left: 11px solid #ccc;
-    border-top: 11px solid transparent;
-    content: "";
-    display: inline-block;
-    position: absolute;
-    right: -10px;
-    top: 8px;
   }
 }
 
@@ -1044,5 +972,14 @@ textarea.plain {
   }
   .navbar-primary .nav > li > a:hover {
     background:#222;
+  }
+}
+
+// Override for Bootstrap 2.3.1/2.3.2
+// Fix disappearing menu in mobile Android Chrome
+// https://github.com/twbs/bootstrap/issues/11145
+@media (max-width: 480px) {
+  .nav-collapse {
+    -webkit-transform: none;
   }
 }

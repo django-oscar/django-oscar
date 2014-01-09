@@ -1,27 +1,27 @@
-/*** Promotional block styles ***/
+// Promotional block styles
 .promotion_single {
-  .image_container {
-    min-height: 210px;
-    img {
-      max-height: 200px;
+    .image_container {
+        @imagecontainerheight: 210px;
+        min-height: @imagecontainerheight;
+        margin-bottom: @baseLineHeight;
+        img {
+            max-height: @imagecontainerheight - 10;
+        }
     }
-  }
 }
 .sidebar {
-  .promotion_single {
-    h2 {
-      font-size:18px;
-      line-height:22px;
+    .promotion_single {
+        h2 {
+            .h3();
+        }
+        h3 {
+            .h5();
+        }
+        .row-fluid {
+            > [class*="span"] {
+                float:none;
+                width:auto;
+            }
+        }
     }
-    h3 {
-      font-size:14px;
-      line-height:18px;
-    }
-    .row-fluid {
-      > [class*="span"] {
-        float:none;
-        width:auto;
-      } 
-    }
-  }
 }

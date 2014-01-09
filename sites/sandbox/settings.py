@@ -11,7 +11,10 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 SQL_DEBUG = True
 SEND_BROKEN_LINK_EMAILS = False
-THUMBNAIL_DEBUG = True
+
+ALLOWED_HOSTS = ['latest.oscarcommerce.com',
+                 'sandbox.oscar.tangentlabs.co.uk',
+                 'master.oscarcommerce.com']
 
 ADMINS = (
     ('David Winterbottom', 'david.winterbottom@tangentlabs.co.uk'),
@@ -30,16 +33,16 @@ DATABASES = {
         'PASSWORD': '',
         'HOST': '',
         'PORT': '',
+        'ATOMIC_REQUESTS': True
     }
 }
 
 CACHES = {
     'default': {
-        'BACKEND':
-        'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -100,7 +103,9 @@ MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
 STATIC_ROOT = location('public/static')
-STATICFILES_DIRS = ()
+STATICFILES_DIRS = (
+    location('static/'),
+)
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -114,7 +119,8 @@ SECRET_KEY = '$)a7n&o80u!6y5t-+jrd3)3!%vh&shg$wqpjpxc!ar&p#!)n1a'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    # needed by django-treebeard for admin (and potentially other libs)
+    'django.template.loaders.eggs.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -140,7 +146,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
     # Allow languages to be selected
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -150,8 +155,6 @@ MIDDLEWARE_CLASSES = (
     # URL path to print out profile details
     #'oscar.profiling.middleware.ProfileMiddleware',
 )
-
-INTERNAL_IPS = ('127.0.0.1',)
 
 ROOT_URLCONF = 'urls'
 
@@ -170,7 +173,7 @@ TEMPLATE_DIRS = (
 # more details on how to customize your logging configuration.
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
     'formatters': {
         'verbose': {
             'format': '%(levelname)s %(asctime)s %(module)s %(message)s',
@@ -178,6 +181,11 @@ LOGGING = {
         'simple': {
             'format': '[%(asctime)s] %(message)s'
         },
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
     },
     'handlers': {
         'null': {
@@ -216,9 +224,11 @@ LOGGING = {
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
+            'filters': ['require_debug_false'],
         },
     },
     'loggers': {
+        # Django loggers
         'django': {
             'handlers': ['null'],
             'propagate': True,
@@ -229,13 +239,36 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': False,
         },
+        'django.db.backends': {
+            'handlers': ['null'],
+            'propagate': False,
+            'level': 'DEBUG',
+        },
+        # Oscar core loggers
         'oscar.checkout': {
             'handlers': ['console', 'checkout_file'],
+            'propagate': False,
+            'level': 'INFO',
+        },
+        'oscar.catalogue.import': {
+            'handlers': ['console'],
+            'propagate': False,
+            'level': 'INFO',
+        },
+        'oscar.alerts': {
+            'handlers': ['null'],
+            'propagate': False,
+            'level': 'INFO',
+        },
+        # Sandbox logging
+        'gateway': {
+            'handlers': ['gateway_file'],
             'propagate': True,
             'level': 'INFO',
         },
-        'gateway': {
-            'handlers': ['gateway_file'],
+        # Third party
+        'south': {
+            'handlers': ['null'],
             'propagate': True,
             'level': 'INFO',
         },
@@ -244,11 +277,12 @@ LOGGING = {
             'propagate': True,
             'level': 'INFO',
         },
-        'django.db.backends': {
+        # Suppress output of this debug toolbar panel
+        'template_timings_panel': {
             'handlers': ['null'],
-            'propagate': False,
             'level': 'DEBUG',
-        },
+            'propagate': False,
+        }
     }
 }
 
@@ -263,11 +297,12 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     'django.contrib.staticfiles',
     'django_extensions',
+    # Debug toolbar + extensions
     'debug_toolbar',
+    'template_timings_panel',
     'south',
     'rosetta',          # For i18n testing
     'compressor',
-    'apps.user',        # For profile testing
     'apps.gateway',     # For allowing dashboard access
 ]
 from oscar import get_core_apps
@@ -280,7 +315,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-LOGIN_REDIRECT_URL = '/accounts/'
+LOGIN_REDIRECT_URL = '/'
 APPEND_SLASH = True
 
 # Haystack settings
@@ -291,37 +326,39 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
+# =============
+# Debug Toolbar
+# =============
 
-# Allow internal IPs to see the debug toolbar.  This is just for Tangent's QA
-# department to be able to create better issues when something goes wrong.
-def is_internal(request):
-    ip_addr = request.META['REMOTE_ADDR']
-    return ip_addr in INTERNAL_IPS or ip_addr.startswith('192.168')
-
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False,
-    'SHOW_TOOLBAR_CALLBACK': is_internal
-}
-
-AUTH_PROFILE_MODULE = 'user.Profile'
-
+DEBUG_TOOLBAR_PANELS = [
+    'debug_toolbar.panels.versions.VersionsPanel',
+    'debug_toolbar.panels.timer.TimerPanel',
+    'debug_toolbar.panels.settings.SettingsPanel',
+    'debug_toolbar.panels.headers.HeadersPanel',
+    'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    'template_timings_panel.panels.TemplateTimings.TemplateTimings',
+    'debug_toolbar.panels.cache.CachePanel',
+    'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.logging.LoggingPanel',
+    'debug_toolbar.panels.redirects.RedirectsPanel',
+]
 
 # ==============
 # Oscar settings
 # ==============
 
-
 from oscar.defaults import *
-
 
 # Meta
 # ====
 
-OSCAR_SHOP_NAME = 'Oscar Sandbox'
-OSCAR_SHOP_TAGLINE = 'e-Commerce for Django'
+OSCAR_SHOP_TAGLINE = 'Sandbox'
 
 # Enter Google Analytics ID for the tracking to be included in the templates
-#GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
+GOOGLE_ANALYTICS_ID = 'UA-45363517-3'
 
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = True
@@ -342,6 +379,7 @@ OSCAR_ORDER_STATUS_PIPELINE = {
     'Pending': ('Being processed', 'Cancelled',),
     'Being processed': ('Processed', 'Cancelled',),
     'Cancelled': (),
+    'Processed': (),
 }
 
 
@@ -368,6 +406,11 @@ COMPRESS_OFFLINE_CONTEXT = {
     'use_less': USE_LESS,
 }
 
+# We do this to work around an issue in compressor where the LESS files are
+# compiled but compression isn't enabled.  When this happens, the relative URL
+# is wrong between the generated CSS file and other assets:
+# https://github.com/jezdez/django_compressor/issues/226
+COMPRESS_OUTPUT_DIR = 'oscar'
 
 # Logging
 # =======
@@ -377,6 +420,20 @@ LOG_ROOT = location('logs')
 if not os.path.exists(LOG_ROOT):
     os.mkdir(LOG_ROOT)
 
+# Sorl
+# ====
+
+THUMBNAIL_DEBUG = True
+THUMBNAIL_KEY_PREFIX = 'oscar-sandbox'
+
+# Use a custom KV store to handle integrity error
+THUMBNAIL_KVSTORE = 'oscar.sorl_kvstore.ConcurrentKVStore'
+
+# Django 1.6 has switched to JSON serializing for security reasons, but it does not
+# serialize Models. We should resolve this by extending the
+# django/core/serializers/json.Serializer to have the `dumps` function. Also
+# in tests/config.py
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
 # Try and import local settings which can be used to override any of the above.
 try:

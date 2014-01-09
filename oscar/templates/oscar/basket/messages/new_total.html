@@ -1,3 +1,4 @@
+{% load url from future %}
 {% load i18n %}
 {% load currency_filters %}
 
@@ -5,15 +6,17 @@
     {% if basket.is_empty %}
         {% trans "Your basket is now empty" %}
     {% else %}
-        {% blocktrans with total=basket.total_incl_tax|currency %}
-        Basket total now <strong>{{ total }}</strong>.
-        {% endblocktrans %}
+        {% if basket.is_tax_known %}
+            {% trans "Basket total now" %} {{ basket.total_incl_tax|currency:basket.currency }}
+        {% else %}
+            {% trans "Basket total now" %} {{ basket.total_excl_tax|currency:basket.currency }}
+        {% endif %}
     {% endif %}
 </p>
 
-{% if show_buttons %}
+{% if include_buttons %}
 <p>
-    <a href="{% url basket:summary %}" class="btn btn-info">{% trans "View basket" %}</a>
-    <a href="{% url checkout:index %}" class="btn btn-info">{% trans "Checkout now" %}</a>
+    <a href="{% url 'basket:summary' %}" class="btn btn-info">{% trans "View basket" %}</a>
+    <a href="{% url 'checkout:index' %}" class="btn btn-info">{% trans "Checkout now" %}</a>
 </p>
 {% endif %}

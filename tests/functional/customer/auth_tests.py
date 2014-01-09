@@ -1,20 +1,21 @@
 import re
 
-from django.contrib.auth import models
-from django.contrib.auth.models import User
 from django.core import mail
 from django.core.urlresolvers import reverse
 from django_webtest import WebTest
 
-from oscar_testsupport.testcases import WebTestCase
+from oscar.test.testcases import WebTestCase
+from oscar.core.compat import get_user_model
+
+
+User = get_user_model()
 
 
 class TestAUserWhoseForgottenHerPassword(WebTest):
 
     def test_can_reset_her_password(self):
         username, email, password = 'lucy', 'lucy@example.com', 'password'
-        models.User.objects.create_user(
-            username, email, password)
+        User.objects.create_user(username, email, password)
 
         # Fill in password reset form
         page = self.app.get(reverse('password-reset'))
@@ -118,8 +119,8 @@ class TestAnAnonymousUser(WebTestCase):
     def test_can_register(self):
         url = reverse('customer:register')
         form = self.app.get(url).forms['register_form']
-        form['registration-email'] = 'terry@boom.com'
-        form['registration-password1'] = 'hedgehog'
-        form['registration-password2'] = 'hedgehog'
+        form['email'] = 'terry@boom.com'
+        form['password1'] = 'hedgehog'
+        form['password2'] = 'hedgehog'
         response = form.submit()
         self.assertRedirectsTo(response, 'customer:summary')

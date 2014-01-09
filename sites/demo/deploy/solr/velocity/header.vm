@@ -1,0 +1,3 @@
+<div id="head">
+  <span ><a href="#url_for_home#if($request.params.get('debugQuery'))?debugQuery=true#end"><img src="#{url_root}/img/solr.png" id="logo"/></a></span>
+</div>

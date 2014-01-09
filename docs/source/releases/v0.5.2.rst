@@ -1,0 +1,18 @@
+=========================
+Oscar 0.5.2 release notes
+=========================
+
+This is Oscar 0.5.2, a security release for Oscar 0.5.
+
+Insecure use of ``SECRET_KEY`` in basket cookie
+-----------------------------------------------
+
+For anonymous users, the basket ID is stored in a cookie.  Previously, the
+value was signed using a simples CRC32 hash using the ``SECRET_KEY``.  
+However, a good rule of thumb is to never roll your own encryption, and it is
+possible that this method weakens the security of the ``SECRET_KEY``.
+
+`The fix`_ uses Django's cryptographic signing functionality to sign the cookie
+in a more secure manner.
+
+.. _`The fix`: https://github.com/tangentlabs/django-oscar/commit/876f723

@@ -59,10 +59,12 @@ class Dispatcher(object):
 
     def send_user_email_messages(self, user, messages):
         """
-        Sends message to the registered user / customer and collects data in database
+        Sends message to the registered user / customer and collects data in
+        database
         """
         if not user.email:
-            self.logger.warning("Unable to send email messages as user #%d has no email address", user.id)
+            self.logger.warning("Unable to send email messages as user #%d has"
+                                " no email address", user.id)
             return
 
         email = self.send_email_messages(user.email, messages)
@@ -111,3 +113,16 @@ def get_password_reset_url(user, token_generator=default_token_generator):
     return reverse('password-reset-confirm', kwargs={
         'uidb36': int_to_base36(user.id),
         'token': default_token_generator.make_token(user)})
+
+
+def normalise_email(email):
+    """
+    The local part of an email address is case-sensitive, the domain part
+    isn't.  This function lowercases the host and should be used in all email
+    handling.
+    """
+    clean_email = email.strip()
+    if '@' in clean_email:
+        local, host = clean_email.split('@')
+        return local + '@' + host.lower()
+    return clean_email

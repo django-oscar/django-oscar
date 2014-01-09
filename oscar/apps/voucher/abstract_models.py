@@ -3,7 +3,8 @@ import datetime
 
 from django.core import exceptions
 from django.db import models
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
+from oscar.core.compat import AUTH_USER_MODEL
 
 
 class AbstractVoucher(models.Model):
@@ -16,11 +17,12 @@ class AbstractVoucher(models.Model):
     (c) Once per customer
     """
     name = models.CharField(_("Name"), max_length=128,
-        help_text=_("This will be shown in the checkout and basket "
-                    "once the voucher is entered"))
-    code = models.CharField(_("Code"), max_length=128,
-                            db_index=True, unique=True,
-        help_text=_("""Case insensitive / No spaces allowed"""))
+                            help_text=_("This will be shown in the checkout"
+                                        " and basket once the voucher is"
+                                        " entered"))
+    code = models.CharField(_("Code"), max_length=128, db_index=True,
+                            unique=True, help_text=_("Case insensitive / No"
+                                                     " spaces allowed"))
     offers = models.ManyToManyField(
         'offer.ConditionalOffer', related_name='vouchers',
         verbose_name=_("Offers"), limit_choices_to={'offer_type': "Voucher"})
@@ -59,7 +61,7 @@ class AbstractVoucher(models.Model):
 
     def clean(self):
         if (self.start_date and self.end_date and
-            self.start_date > self.end_date):
+                self.start_date > self.end_date):
             raise exceptions.ValidationError(
                 _('End date should be later than start date'))
 
@@ -84,7 +86,7 @@ class AbstractVoucher(models.Model):
         """
         is_available, message = False, ''
         if self.usage == self.SINGLE_USE:
-            is_available = self.applications.count() == 0
+            is_available = not self.applications.exists()
             if not is_available:
                 message = _("This voucher has already been used")
         elif self.usage == self.MULTI_USE:
@@ -95,8 +97,8 @@ class AbstractVoucher(models.Model):
                 message = _(
                     "This voucher is only available to signed in users")
             else:
-                is_available = self.applications.filter(
-                    voucher=self, user=user).count() == 0
+                is_available = not self.applications.filter(
+                    voucher=self, user=user).exists()
                 if not is_available:
                     message = _("You have already used this voucher in "
                                 "a previous order")
@@ -137,10 +139,10 @@ class AbstractVoucherApplication(models.Model):
 
     # It is possible for an anonymous user to apply a voucher so we need to
     # allow the user to be nullable
-    user = models.ForeignKey('auth.User', blank=True, null=True,
+    user = models.ForeignKey(AUTH_USER_MODEL, blank=True, null=True,
                              verbose_name=_("User"))
     order = models.ForeignKey('order.Order', verbose_name=_("Order"))
-    date_created = models.DateField(_("Date Creted"), auto_now_add=True)
+    date_created = models.DateField(_("Date Created"), auto_now_add=True)
 
     class Meta:
         abstract = True

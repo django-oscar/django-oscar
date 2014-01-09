@@ -1,0 +1,28 @@
+{% extends "customer/baseaccountpage.html" %}
+
+{% load url from future %}
+
+
+{% load i18n %}
+
+{% block tabcontent %}
+    {% if emails %}
+        <table class="table table-striped table-bordered">
+            <tr>
+                <th>{% trans 'Subject' %}</th>
+                <th>{% trans 'Date sent' %}</th>
+            </tr>
+            {% for email in emails %}
+                <tr>
+                    <td>
+                        <a href="{% url 'customer:email-detail' email_id=email.id %}">{{ email.subject }}</a>
+                    </td>
+                    <td>{{ email.date_sent }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>{% trans 'No emails found' %}</p>
+    {% endif %}
+{% endblock tabcontent %}
+

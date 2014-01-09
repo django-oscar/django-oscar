@@ -1,0 +1,73 @@
+{% extends "customer/baseaccountpage.html" %}
+{% load url from future %}
+{% load i18n %}
+{% load currency_filters %}
+{% load staticfiles %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'promotions:home' %}">{% trans 'Home' %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li>
+            <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li class="active">{% trans 'Order history' %}</li>
+    </ul>
+{% endblock %}
+
+{% block tabcontent %}
+
+    {% if orders or form.is_bound %}
+        <div class="well">
+            <h3>{% trans "Filter" %}</h3>
+            <form action="." method="get">
+                {% include "partials/form_fields.html" with form=form %}
+                <button type="submit" class="btn btn-primary">{% trans 'Filter results' %}</button>
+                <a href="{% url 'customer:order-list' %}" class="btn">{% trans 'Reset' %}</a>
+            </form>
+        </div>
+    {% endif %}
+
+    {% if orders %}
+        <h3>{{ form.description }}</h3>
+        <table class="table table-striped table-bordered">
+            <tr>
+                <th>{% trans "Order number" %}</th>
+                <th>{% trans "Num items" %}</th>
+                <th>{% trans "Total inc tax" %}</th>
+                <th>{% trans "Date submitted" %}</th>
+            </tr>
+            {% for order in orders %}
+                <tr>
+                    <td><a href="{% url 'customer:order' order_number=order.number %}">{{ order.number }}</a></td>
+                    <td>{{ order.num_items }}</td>
+                    <td>{{ order.total_incl_tax|currency:order.currency }}</td>
+                    <td>{{ order.date_placed }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>{% trans "You haven't placed any orders." %}</p>
+    {% endif %}
+
+    {% include "partials/pagination.html" %}
+
+{% endblock tabcontent %}
+
+{% block extrastyles %}
+    {{ block.super }}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/cupertino/jquery-ui.css">
+{% endblock %}
+
+{% block cdn_scripts %}
+    {{ block.super }}
+    <script src="//code.jquery.com/ui/1.10.3/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+{% endblock %}
+
+{% block onbodyload %}
+    {{ block.super }}
+    $('#id_date_to, #id_date_from').datepicker({'dateFormat': 'yy-mm-dd'});
+{% endblock %}

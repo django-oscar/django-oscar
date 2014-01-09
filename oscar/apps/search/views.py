@@ -1,95 +1,44 @@
-import json
+from django.db.models import get_model
+from haystack import views
 
-from django.http import HttpResponse, HttpResponseRedirect
-from django.views.generic.base import View
-from django.conf import settings
-from haystack.query import SearchQuerySet
-from haystack.views import FacetedSearchView
+from . import facets
 
-from oscar.core.loading import import_module
-product_models = import_module('catalogue.models', ['Product'])
+Product = get_model('catalogue', 'Product')
 
 
-class SuggestionsView(View):
-    u"""
-    Auto suggest view
+class FacetedSearchView(views.FacetedSearchView):
+    """
+    A modified version of Haystack's FacetedSearchView
 
-    Returns the suggestions in JSON format (especially suited for consumption by
-    jQuery autocomplete)
+    Note that facets are configured when the ``SearchQuerySet`` is initialised.
+    This takes place in the search application class.
+
+    See
+    http://django-haystack.readthedocs.org/en/v2.1.0/views_and_forms.html#facetedsearchform # noqa
     """
 
-    suggest_limit = settings.OSCAR_SEARCH_SUGGEST_LIMIT
+    # Haystack uses a different class attribute to CBVs
+    template = "search/results.html"
 
-    def get(self, request):
-        context = self.get_context_data()
-        return self.render_to_response(context)
-
-    def get_context_data(self):
-        '''
-        Creates a list of suggestions
-        '''
-        query_term = self.request.GET['query_term'];
-        query_set = SearchQuerySet().filter(text__contains=query_term)[:self.suggest_limit]
-        context = []
-        for item in query_set:
-            context.append({
-                'label': item.object.title,
-                'url':  item.object.get_absolute_url(),
-            })
-        return context
-
-    def render_to_response(self, context):
-        "Returns a JSON response containing 'context' as payload"
-        return self.get_json_response(self.convert_context_to_json(context))
-
-    def get_json_response(self, content, **httpresponse_kwargs):
-        "Construct an `HttpResponse` object."
-        return HttpResponse(content,
-                            content_type='application/json',
-                            **httpresponse_kwargs)
-
-    def convert_context_to_json(self, context):
-        "Convert the context into a JSON object"
-        return json.dumps(context)
-
-
-class MultiFacetedSearchView(FacetedSearchView):
-    """
-    Search view for multifaceted searches
-    """
-    template = 'search/results.html'
-
-    def __call__(self, request, *args, **kwargs):
-        """
-        Generates the actual response to the search.
-
-        Relies on internal, overridable methods to construct the response.
-        """
-        # Look for UPC match
-        query = request.GET.get('q', '').strip()
-        try:
-            item = product_models.Product._default_manager.get(upc=query)
-            return HttpResponseRedirect(item.get_absolute_url())
-        except product_models.Product.DoesNotExist:
-            pass
-        return super(MultiFacetedSearchView, self).__call__(request, *args, **kwargs)
-
-    @property
-    def __name__(self):
-        return "MultiFacetedSearchView"
-
+    # Override this method to add the spelling suggestion to the context and to
+    # convert Haystack's default facet data into a more useful structure so we
+    # have to do less work in the template.
     def extra_context(self):
-        '''
-        Adds details about the facets applied
-        '''
-        extra = super(MultiFacetedSearchView, self).extra_context()
+        extra = super(FacetedSearchView, self).extra_context()
 
-        if hasattr(self.form, 'cleaned_data') and 'selected_facets' in self.form.cleaned_data:
-            extra['facets_applied'] = []
-            for f in self.form.cleaned_data['selected_facets'].split("|"):
-                facet = f.split(":")
-                extra['facets_applied'].append({
-                    'facet': facet[0][:-6], # removing the _exact suffix that haystack uses for some reason
-                    'value' : facet[1].strip('"')
-                })
+        # Show suggestion no matter what.  Haystack 2.1 only shows a suggestion
+        # if there are some results, which seems a bit weird to me
+        if self.results.query.backend.include_spelling:
+            suggestion = self.form.get_suggestion()
+            if suggestion != self.query:
+                extra['suggestion'] = suggestion
+
+        # Convert facet data into a more useful datastructure
+        if 'fields' in extra['facets']:
+            extra['facet_data'] = facets.facet_data(
+                self.request, self.form, self.results)
+            has_facets = any([len(data['results']) for
+                              data in extra['facet_data'].values()])
+            extra['has_facets'] = has_facets
+
         return extra

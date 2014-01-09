@@ -1,4 +1,7 @@
 {% extends "layout.html" %}
+
+{% load url from future %}
+
 {% load i18n %}
 {% load product_tags %}
 
@@ -9,7 +12,7 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-	<a href="{% url promotions:home %}">{% trans "Home" %}</a>
+	<a href="{% url 'promotions:home' %}">{% trans "Home" %}</a>
         <span class="divider">/</span>
     </li>
     <li class="active">{% trans "Offers" %}</li>
@@ -30,17 +33,13 @@
             <p>{{ offer.description|safe }}</p>
         {% endif %}
         {% if offer.has_products %}
-            <div class="es-carousel-wrapper wide">
-                <div class="es-carousel">
-                    <ul class="products">
-                        {% for product in offer.products|slice:":12" %}
-                        <li>{% render_product product %}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
+            <ul class="row-fluid">
+                {% for product in offer.products|slice:":12" %}
+                <li class="span2 {% if forloop.counter0|divisibleby:"6" %}no-margin{% endif %}">{% render_product product %}</li>
+                {% endfor %}
+            </ul>
             <p>
-                <a class="btn" href="{% url offer:detail offer.slug %}">{% trans "Browse products in offer" %}</a>
+                <a class="btn" href="{% url 'offer:detail' slug=offer.slug %}">{% trans "Browse products in offer" %}</a>
             </p>
         {% endif %}
         <hr/>

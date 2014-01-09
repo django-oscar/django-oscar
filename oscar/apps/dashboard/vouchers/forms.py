@@ -2,6 +2,8 @@ from django import forms
 from django.db.models.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
+from oscar.forms import widgets
+
 Voucher = get_model('voucher', 'Voucher')
 Benefit = get_model('offer', 'Benefit')
 Range = get_model('offer', 'Range')
@@ -14,8 +16,11 @@ class VoucherForm(forms.Form):
     """
     name = forms.CharField(label=_("Name"))
     code = forms.CharField(label=_("Code"))
-    start_date = forms.DateField(label=_("Start date"))
-    end_date = forms.DateField(label=_("End date"))
+
+    start_date = forms.DateField(
+        label=_("Start date"), widget=widgets.DatePickerInput())
+    end_date = forms.DateField(
+        label=_("End date"), widget=widgets.DatePickerInput())
     usage = forms.ChoiceField(choices=Voucher.USAGE_CHOICES, label=_("Usage"))
 
     benefit_range = forms.ModelChoiceField(
@@ -45,7 +50,8 @@ class VoucherForm(forms.Form):
             pass
         else:
             if (not self.voucher) or (voucher.id != self.voucher.id):
-                raise forms.ValidationError(_("The name '%s' is already in use") % name)
+                raise forms.ValidationError(_("The name '%s' is already in"
+                                              " use") % name)
         return name
 
     def clean_code(self):
@@ -58,15 +64,17 @@ class VoucherForm(forms.Form):
             pass
         else:
             if (not self.voucher) or (voucher.id != self.voucher.id):
-                raise forms.ValidationError(_("The code '%s' is already in use") % code)
+                raise forms.ValidationError(_("The code '%s' is already in"
+                                              " use") % code)
         return code
 
     def clean(self):
         cleaned_data = super(VoucherForm, self).clean()
-        start_date = cleaned_data['start_date']
-        end_date = cleaned_data['end_date']
-        if end_date < start_date:
-            raise forms.ValidationError(_("The start date must be before the end date"))
+        start_date = cleaned_data.get('start_date', None)
+        end_date = cleaned_data.get('end_date', None)
+        if start_date and end_date and end_date < start_date:
+            raise forms.ValidationError(_("The start date must be before the"
+                                          " end date"))
         return cleaned_data
 
 

@@ -16,8 +16,8 @@ Condition class.
 At a minimum, a custom condition must:
 
 * have a ``name`` attribute
-* have an ``is_satisified`` method that takes a basket instance and returns a
-  boolean
+* have an ``is_satisfied`` method that takes a basket instance and an offer
+  instance and returns a boolean
 
 It can also implement:
 
@@ -32,7 +32,7 @@ It can also implement:
 
 * a ``is_partially_satisfied`` method that tests to see if the customer's basket
   partially satisfies the condition (ie when you might want to show them an
-  upsel message)
+  upsell message)
 
 Silly example::
 
@@ -44,7 +44,7 @@ Silly example::
         class Meta:
             proxy = True
 
-        def is_satisfied(self, basket):
+        def is_satisfied(self, offer, basket):
             if not basket.owner:
                 return False
             return basket.owner.first_name.lower() == 'barry'
@@ -56,9 +56,9 @@ To make this condition available to be used in offers, do the following::
 
     from oscar.apps.offer.custom import create_condition
 
-    create_range(BasketOwnerCalledBarry)
+    create_condition(BasketOwnerCalledBarry)
 
-Now you should see this range in the dashboard when creating/updating an offer.
+Now you should see this condition in the dashboard when creating/updating an offer.
 
 Deploying custom conditions
 ---------------------------
