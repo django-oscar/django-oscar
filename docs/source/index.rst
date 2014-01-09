@@ -1,9 +1,14 @@
-.. figure:: ../images/logos/oscar.png
-   :align: center
+.. image:: ../images/logos/oscar.png
+   :align: right
 
-===================================
-Domain-driven e-commerce for Django
-===================================
+=====
+Oscar
+=====
+
+-----------------------------------
+Domain driven e-commerce for Django
+-----------------------------------
+
 
 Oscar is an e-commerce framework for Django designed for building
 domain-driven applications.  It is structured so that the core business objects
