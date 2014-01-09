@@ -15,7 +15,6 @@ class python_dependencies {
 		"postgresql-server-dev-9.1",
 		"libmysqlclient-dev",
 		"git-core",
-		"python-dev",
     ]
     package {
         $packages: ensure => installed,
@@ -37,7 +36,7 @@ node precise64 {
 	class {"apache": }
 	class {"apache::mod::wsgi": }
 	file {"/etc/apache2/sites-enabled/vagrant.conf":
-	    source => "/vagrant/sites/sandbox/deploy/apache2/vagrant.conf"
+	    source => "/vagrant/sites/puppet/files/apache.conf"
 	}
 
 	# gunicorn serving WSGI on unix socket
@@ -109,9 +108,9 @@ node precise64 {
 	}
 
 	# MySQL
-	class {"mysql::bindings::python": }
+	class {"mysql::bindings": }
 	class {"mysql::server":
-	    override_options => {"root_password" => "root_password"}
+	    override_options => {"root_password" => "root_password"},
 	}
 	mysql::db {$database_name:
 		user => $user,
