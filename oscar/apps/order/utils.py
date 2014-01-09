@@ -102,7 +102,7 @@ class OrderCreator(object):
         """
         Creates an order model.
         """
-        order_data = {'basket_id': basket.id,
+        order_data = {'basket': basket,
                       'number': order_number,
                       'site': Site._default_manager.get_current(),
                       'currency': total.currency,

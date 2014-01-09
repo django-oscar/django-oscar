@@ -21,8 +21,8 @@ class AbstractOrder(models.Model):
 
     # We track the site that each order is placed within
     site = models.ForeignKey('sites.Site', verbose_name=_("Site"))
-    basket_id = models.PositiveIntegerField(
-        _("Basket ID"), null=True, blank=True)
+    basket = models.ForeignKey('basket.Basket', verbose_name=_("Basket"),
+                               null=True, blank=True, on_delete=models.SET_NULL)
 
     # Orders can be anonymous so we don't always have a customer ID
     user = models.ForeignKey(
