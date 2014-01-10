@@ -114,6 +114,7 @@ all shipping methods should subclass has API:
 
 .. autoclass:: oscar.apps.shipping.base.ShippingMethod
     :members:
+    :noindex:
 
 Core shipping methods
 ~~~~~~~~~~~~~~~~~~~~~

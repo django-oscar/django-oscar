@@ -1,7 +1,7 @@
 from django.db.models import get_model
 from django.core.urlresolvers import reverse
 
-from oscar.test.testcases import ClientTestCase, add_permissions
+from oscar.test.testcases import WebTestCase, add_permissions
 from oscar.test.factories import create_product, create_stockrecord
 
 from django_dynamic_fixture import G
@@ -15,7 +15,7 @@ StockRecord = get_model('partner', 'stockrecord')
 Partner = get_model('partner', 'partner')
 
 
-class TestCatalogueViews(ClientTestCase):
+class TestCatalogueViews(WebTestCase):
     is_staff = True
 
     def test_exist(self):

@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
+from django.template.loader import render_to_string
 
 from oscar.core.loading import get_classes
 from oscar.views import sort_queryset
@@ -171,6 +172,13 @@ class ProductCreateUpdateView(generic.UpdateView):
     recommendations_formset = ProductRecommendationFormSet
     stockrecord_formset = StockRecordFormSet
 
+    def __init__(self, *args, **kwargs):
+        super(ProductCreateUpdateView, self).__init__(*args, **kwargs)
+        self.formsets = {'category_formset': self.category_formset,
+                         'image_formset': self.image_formset,
+                         'recommended_formset': self.recommendations_formset,
+                         'stockrecord_formset': self.stockrecord_formset}
+
     def get_queryset(self):
         """
         Filter products that the user doesn't have permission to update
@@ -202,17 +210,13 @@ class ProductCreateUpdateView(generic.UpdateView):
     def get_context_data(self, **kwargs):
         ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
         ctx['product_class'] = self.product_class
-        if 'stockrecord_formset' not in ctx:
-            ctx['stockrecord_formset'] = self.stockrecord_formset(
-                self.product_class, self.request.user, instance=self.object)
-        if 'category_formset' not in ctx:
-            ctx['category_formset'] \
-                = self.category_formset(instance=self.object)
-        if 'image_formset' not in ctx:
-            ctx['image_formset'] = self.image_formset(instance=self.object)
-        if 'recommended_formset' not in ctx:
-            ctx['recommended_formset'] \
-                = self.recommendations_formset(instance=self.object)
+
+        for ctx_name, formset_class in self.formsets.iteritems():
+            if ctx_name not in ctx:
+                ctx[ctx_name] = formset_class(self.product_class,
+                                              self.request.user,
+                                              instance=self.object)
+
         if self.object is None:
             ctx['title'] = _('Create new %s product') % self.product_class.name
         else:
@@ -224,12 +228,6 @@ class ProductCreateUpdateView(generic.UpdateView):
         kwargs['product_class'] = self.product_class
         return kwargs
 
-    def form_valid(self, form):
-        return self.process_all_forms(form)
-
-    def form_invalid(self, form):
-        return self.process_all_forms(form)
-
     def process_all_forms(self, form):
         """
         Short-circuits the regular logic to have one place to have our
@@ -240,39 +238,45 @@ class ProductCreateUpdateView(generic.UpdateView):
         if self.creating and form.is_valid():
             self.object = form.save()
 
-        stockrecord_formset = self.stockrecord_formset(
-            self.product_class, self.request.user,
-            self.request.POST, instance=self.object)
-        category_formset = self.category_formset(
-            self.request.POST, instance=self.object)
-        image_formset = self.image_formset(
-            self.request.POST, self.request.FILES, instance=self.object)
-        recommended_formset = self.recommendations_formset(
-            self.request.POST, self.request.FILES, instance=self.object)
+        formsets = {}
+        for ctx_name, formset_class in self.formsets.iteritems():
+            formsets[ctx_name] = formset_class(self.product_class,
+                                               self.request.user,
+                                               self.request.POST,
+                                               self.request.FILES,
+                                               instance=self.object)
 
-        is_valid = all([
-            form.is_valid(),
-            category_formset.is_valid(),
-            image_formset.is_valid(),
-            recommended_formset.is_valid(),
-            stockrecord_formset.is_valid(),
-        ])
+        is_valid = form.is_valid() and all([formset.is_valid()
+                                            for formset in formsets.values()])
 
-        if is_valid:
-            return self.forms_valid(
-                form, stockrecord_formset, category_formset,
-                image_formset, recommended_formset)
+        cross_form_validation_result = self.clean(form, formsets)
+        if is_valid and cross_form_validation_result:
+            return self.forms_valid(form, formsets)
         else:
             # delete the temporary product again
-            if self.creating and form.is_valid():
+            if self.creating and self.object and self.object.pk is not None:
                 self.object.delete()
                 self.object = None
-            return self.forms_invalid(
-                form, stockrecord_formset, category_formset,
-                image_formset, recommended_formset)
+            return self.forms_invalid(form, formsets)
 
-    def forms_valid(self, form, stockrecord_formset, category_formset,
-                    image_formset, recommended_formset):
+    # form_valid and form_invalid are called depending on the validation result
+    # of just the product form and redisplay the form respectively return a
+    # redirect to the success URL. In both cases we need to check our formsets
+    # as well, so both methods do the same. process_all_forms then calls
+    # forms_valid or forms_invalid respectively, which do the redisplay or
+    # redirect.
+    form_valid = form_invalid = process_all_forms
+
+    def clean(self, form, formsets):
+        """
+        Perform any cross-form/formset validation. If there are errors, attach
+        errors to a form or a form field so that they are displayed to the user
+        and return False. If everything is valid, return True. This method will
+        be called regardless of whether the individual forms are valid.
+        """
+        return True
+
+    def forms_valid(self, form, formsets):
         """
         Save all changes and display a success url.
         """
@@ -281,23 +285,16 @@ class ProductCreateUpdateView(generic.UpdateView):
             self.object = form.save()
 
         # Save formsets
-        category_formset.save()
-        image_formset.save()
-        recommended_formset.save()
-        stockrecord_formset.save()
+        for formset in formsets.values():
+            formset.save()
 
         return HttpResponseRedirect(self.get_success_url())
 
-    def forms_invalid(self, form, stockrecord_formset, category_formset,
-                      image_formset, recommended_formset):
+    def forms_invalid(self, form, formsets):
         messages.error(self.request,
                        _("Your submitted data was not valid - please "
                          "correct the below errors"))
-        ctx = self.get_context_data(form=form,
-                                    stockrecord_formset=stockrecord_formset,
-                                    category_formset=category_formset,
-                                    image_formset=image_formset,
-                                    recommended_formset=recommended_formset)
+        ctx = self.get_context_data(form=form, **formsets)
         return self.render_to_response(ctx)
 
     def get_url_with_querystring(self, url):
@@ -307,10 +304,12 @@ class ProductCreateUpdateView(generic.UpdateView):
         return "?".join(url_parts)
 
     def get_success_url(self):
-        if self.creating:
-            msg = _("Created product '%s'") % self.object.get_title()
-        else:
-            msg = _("Updated product '%s'") % self.object.get_title()
+        msg = render_to_string(
+            'dashboard/catalogue/messages/product_saved.html',
+            {
+                'product': self.object,
+                'creating': self.creating,
+            })
         messages.success(self.request, msg)
         url = reverse('dashboard:catalogue-product-list')
         if self.request.POST.get('action') == 'continue':

@@ -54,12 +54,46 @@
             {% endfor %}
 
             {% with discounts=order.basket_discounts %}
-                {% if discounts %}
+                {% block discount_totals %}
+                    {% if discounts %}
+                        <tr>
+                            <td colspan="4">{% trans "Basket total (excl. discounts)" %}</td>
+                            <td colspan="2">{{ order.basket_total_before_discounts_incl_tax|currency:order.currency }}</td>
+                        </tr>
+                        {% for discount in discounts %}
+                        <tr>
+                            <td colspan="4">
+                                <span class="label label-success">{% trans "Discount" %}</span>
+                                {{ discount.offer_name }}
+                            </td>
+                            <td colspan="2">- {{ discount.amount|currency:order.currency }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% endif %}
+                {% endblock discount_totals %}
+
+                {% block basket_total %}
+                    {% if discounts %}
+                        <tr>
+                            <th colspan="4">{% trans "Basket total (inc. discounts)" %}</th>
+                            <td colspan="2">{{ order.basket_total_incl_tax|currency:order.currency }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <th colspan="4">{% trans "Basket total" %}</th>
+                            <td colspan="2">{{ order.basket_total_incl_tax|currency:order.currency }}</td>
+                        </tr>
+                    {% endif %}
+                {% endblock basket_total %}
+            {% endwith %}
+
+            {% block shipping_totals %}
+                {% if order.has_shipping_discounts %}
                     <tr>
-                        <td colspan="4">{% trans "Basket total (excl. discounts)" %}</td>
-                        <td colspan="2">{{ order.basket_total_before_discounts_incl_tax|currency:order.currency }}</td>
+                        <td colspan="4">{% trans "Shipping total (excl. discounts)" %}</td>
+                        <td colspan="2">{{ order.shipping_before_discounts_incl_tax|currency:order.currency }}</td>
                     </tr>
-                    {% for discount in discounts %}
+                    {% for discount in order.shipping_discounts %}
                     <tr>
                         <td colspan="4">
                             <span class="label label-success">{% trans "Discount" %}</span>
@@ -69,55 +103,34 @@
                     </tr>
                     {% endfor %}
                     <tr>
-                        <th colspan="4">{% trans "Basket total (inc. discounts)" %}</th>
-                        <td colspan="2">{{ order.basket_total_incl_tax|currency:order.currency }}</td>
+                        <th colspan="4">{% trans "Shipping total (inc. discounts)" %}</th>
+                        <td colspan="2">{{ order.shipping_incl_tax|currency:order.currency }}</td>
                     </tr>
                 {% else %}
                     <tr>
-                        <th colspan="4">{% trans "Basket total" %}</th>
-                        <td colspan="2">{{ order.basket_total_incl_tax|currency:order.currency }}</td>
+                        <th colspan="4">{% trans "Shipping total" %}</th>
+                        <td colspan="2">{{ order.shipping_incl_tax|currency:order.currency }}</td>
                     </tr>
                 {% endif %}
-            {% endwith %}
+            {% endblock %}
 
-            {% if order.has_shipping_discounts %}
+            {% block order_total %}
                 <tr>
-                    <td colspan="4">{% trans "Shipping total (excl. discounts)" %}</td>
-                    <td colspan="2">{{ order.shipping_before_discounts_incl_tax|currency:order.currency }}</td>
+                    <th colspan="4">{% trans 'Order total' %}</th>
+                    <td colspan="2">{{ order.total_incl_tax|currency:order.currency }}</td>
                 </tr>
-                {% for discount in order.shipping_discounts %}
-                <tr>
-                    <td colspan="4">
-                        <span class="label label-success">{% trans "Discount" %}</span>
-                        {{ discount.offer_name }}
-                    </td>
-                    <td colspan="2">- {{ discount.amount|currency:order.currency }}</td>
-                </tr>
-                {% endfor %}
-                <tr>
-                    <th colspan="4">{% trans "Shipping total (inc. discounts)" %}</th>
-                    <td colspan="2">{{ order.shipping_incl_tax|currency:order.currency }}</td>
-                </tr>
-            {% else %}
-                <tr>
-                    <th colspan="4">{% trans "Shipping total" %}</th>
-                    <td colspan="2">{{ order.shipping_incl_tax|currency:order.currency }}</td>
-                </tr>
-            {% endif %}
-
-            <tr>
-                <th colspan="4">{% trans 'Order total' %}</th>
-                <td colspan="2">{{ order.total_incl_tax|currency:order.currency }}</td>
-            </tr>
+            {% endblock order_total %}
         </tbody>
     </table>
 
-    <form id="order_form_{{ order.id }}" action="{% url 'customer:order' order_number=order.number %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="order_id" value="{{ order.id }}" />
-        <input type="hidden" name="action" value="reorder" />
-        <button type="submit" class="btn btn-success">{% trans 'Re-order all items' %}</button>
-    </form>
+    {% block order_actions %}
+        <form id="order_form_{{ order.id }}" action="{% url 'customer:order' order_number=order.number %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="order_id" value="{{ order.id }}" />
+            <input type="hidden" name="action" value="reorder" />
+            <button type="submit" class="btn btn-success">{% trans 'Re-order all items' %}</button>
+        </form>
+    {% endblock order_actions %}
 
     <hr>
 

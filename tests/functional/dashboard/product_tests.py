@@ -130,7 +130,7 @@ class TestCreateChildProduct(ProductWebTest):
 
 
 class TestProductUpdate(ProductWebTest):
-    def test_porduct_update_form(self):
+    def test_product_update_form(self):
         self.product = G(Product)
 
         url = reverse('dashboard:catalogue-product',
@@ -148,10 +148,10 @@ class TestProductUpdate(ProductWebTest):
         product_form['related_products'] = ','.join((str(a.id), str(b.id)))
 
         page = product_form.submit()
-        assert not page.context, page.context['form'].errors
 
         product = Product.objects.get(id=self.product.id)
 
+        self.assertEqual(page.context['product'], self.product)
         self.assertEqual(product.title, 'Nice T-Shirt')
         self.assertEqual(list(product.related_products.all().order_by('title')),
-                          [a, b])
+                         [a, b])

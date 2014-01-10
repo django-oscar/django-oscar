@@ -4,7 +4,7 @@ from decimal import Decimal as D
 from django.core.urlresolvers import reverse
 
 from oscar.test.factories import create_product, create_order
-from oscar.test.testcases import ClientTestCase, WebTestCase
+from oscar.test.testcases import WebTestCase
 from oscar.core.compat import get_user_model
 from oscar.apps.basket.models import Basket
 from oscar.apps.partner import strategy
@@ -131,7 +131,7 @@ class TestASignedInUser(WebTestCase):
         self.assertEqual(0, basket.all_lines().count())
 
 
-class TestReorderingOrderLines(ClientTestCase):
+class TestReorderingOrderLines(WebTestCase):
     # TODO - rework this as a webtest
 
     @patch('django.conf.settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD', 1)

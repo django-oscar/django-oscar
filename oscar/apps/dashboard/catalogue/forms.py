@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError, MultipleObjectsReturned
-from django.forms.models import inlineformset_factory, BaseInlineFormSet
+from django.forms.models import inlineformset_factory
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
 from treebeard.forms import MoveNodeForm, movenodeform_factory
@@ -364,7 +364,15 @@ class ProductCategoryForm(forms.ModelForm):
         model = ProductCategory
 
 
-class BaseProductCategoryFormSet(BaseInlineFormSet):
+BaseProductCategoryFormSet = inlineformset_factory(
+    Product, ProductCategory, form=ProductCategoryForm,
+    fields=('category',), extra=1, can_delete=False)
+
+
+class ProductCategoryFormSet(BaseProductCategoryFormSet):
+
+    def __init__(self, product_class, user, *args, **kwargs):
+        super(ProductCategoryFormSet, self).__init__(*args, **kwargs)
 
     def clean(self):
         if self.instance.is_top_level and self.get_num_categories() == 0:
@@ -383,12 +391,6 @@ class BaseProductCategoryFormSet(BaseInlineFormSet):
                     and not form.cleaned_data.get('DELETE', False)):
                 num_categories += 1
         return num_categories
-
-
-ProductCategoryFormSet = inlineformset_factory(
-    Product, ProductCategory, form=ProductCategoryForm,
-    formset=BaseProductCategoryFormSet, fields=('category',), extra=1,
-    can_delete=False)
 
 
 class ProductImageForm(forms.ModelForm):
@@ -415,8 +417,13 @@ class ProductImageForm(forms.ModelForm):
         return self.prefix.split('-').pop()
 
 
-ProductImageFormSet = inlineformset_factory(
+BaseProductImageFormSet = inlineformset_factory(
     Product, ProductImage, form=ProductImageForm, extra=2)
+
+
+class ProductImageFormSet(BaseProductImageFormSet):
+    def __init__(self, product_class, user, *args, **kwargs):
+        super(ProductImageFormSet, self).__init__(*args, **kwargs)
 
 
 class ProductRecommendationForm(forms.ModelForm):
@@ -427,6 +434,11 @@ class ProductRecommendationForm(forms.ModelForm):
         }
 
 
-ProductRecommendationFormSet = inlineformset_factory(
+BaseProductRecommendationFormSet = inlineformset_factory(
     Product, ProductRecommendation, form=ProductRecommendationForm,
     extra=5, fk_name="primary")
+
+
+class ProductRecommendationFormSet(BaseProductRecommendationFormSet):
+    def __init__(self, product_class, user, *args, **kwargs):
+        super(ProductRecommendationFormSet, self).__init__(*args, **kwargs)

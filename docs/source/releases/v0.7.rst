@@ -1,0 +1,40 @@
+===========================================
+Oscar 0.7 release notes - UNDER DEVELOPMENT
+===========================================
+
+Welcome to Oscar 0.7!
+
+Table of contents:
+
+.. contents::
+    :local:
+    :depth: 1
+
+Python Compatibility
+=====================
+
+Oscar 0.7 has experimental support for Python 3.
+
+What's new in Oscar 0.7?
+========================
+
+Minor changes
+~~~~~~~~~~~~~
+
+Backwards incompatible changes in 0.7
+=====================================
+
+Removal of features deprecated in 0.6
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Renamed templates
+~~~~~~~~~~~~~~~~~
+
+Template block changes
+~~~~~~~~~~~~~~~~~~~~~~
+
+Migrations
+~~~~~~~~~~
+
+Features deprecated in 0.6
+==========================

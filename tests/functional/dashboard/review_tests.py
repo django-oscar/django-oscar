@@ -5,14 +5,14 @@ from django.core.urlresolvers import reverse
 from oscar.core.compat import get_user_model
 from django_dynamic_fixture import get
 
-from oscar.test.testcases import ClientTestCase
+from oscar.test.testcases import WebTestCase
 
 
 ProductReview = get_model('reviews', 'productreview')
 User = get_user_model()
 
 
-class ReviewsDashboardTests(ClientTestCase):
+class ReviewsDashboardTests(WebTestCase):
     is_staff = True
 
     def test_reviews_dashboard_is_accessible_to_staff(self):

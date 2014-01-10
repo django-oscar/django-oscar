@@ -56,4 +56,5 @@ class IndexView(ListView):
 
     def set_list_view_attrs(self, generator, report):
         self.template_name = generator.filename()
-        self.object_list = self.queryset = report
+        queryset = generator.filter_with_date_range(report)
+        self.object_list = self.queryset = queryset

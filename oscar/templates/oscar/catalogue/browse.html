@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block description %}
-    {{ category.description }}
+    {{ category.description|default:""|striptags }}
 {% endblock %}
 
 {% block headertext %}{{ summary }}{% endblock %}

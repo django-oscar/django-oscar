@@ -3,7 +3,7 @@ Prices and availability
 =======================
 
 This page explains how prices and availability are determined in Oscar.  In
-short, it seems quite complicated as there are several parts to it, but what
+short, it seems quite complicated at first as there are several parts to it, but what
 this buys is flexibility: buckets of it.
 
 Overview
@@ -13,8 +13,9 @@ Simpler e-commerce frameworks often tie prices to the product model directly:
 
 .. code-block:: python
 
-   product = Product.objects.get(id=1)
-   print "Price is %.2f" % product.price_incl_tax
+   >>> product = Product.objects.get(id=1)
+   >>> product.price
+   Decimal('17.99')
 
 Oscar, on the other hand, distinguishes products from stockrecords and provides
 a swappable 'strategy' component for selecting the appropriate stockrecord,
@@ -22,9 +23,29 @@ calculating prices and availability information.
 
 .. code-block:: python
 
-   product = Product.objects.get(id=1)
-   stockinfo = strategy.fetch(product)
-   print "Price is %.2f" % stockinfo.price.incl_tax
+   >>> product = Product.objects.get(id=1)
+   >>> info = strategy.fetch_for_product(product)
+
+   # Availability information
+   >>> info.availability.is_available_to_buy
+   True
+   >>> msg = info.availability.is_available_to_buy
+   >>> unicode(msg)
+   u"In stock (58 available)"
+   >>> info.availability.is_purchase_permitted(59)
+   (False, u"A maximum of 58 can be bought")
+
+   # Price information
+   >>> info.price.excl_tax
+   Decimal('17.99')
+   >>> info.price.is_tax_known
+   True
+   >>> info.price.incl_tax
+   Decimal('21.59')
+   >>> info.price.tax
+   Decimal('3.60')
+   >>> info.price.currency
+   'GBP'
 
 The product model captures the core data about the product (title, description,
 images) while a stockrecord represents fulfillment information for one
@@ -47,9 +68,13 @@ The strategy class
 ------------------
 
 Oscar uses a 'strategy' object to determine product availability and pricing.  A
-new strategy instance is assigned to the request by the basket middleware.  A 
-overridable ``Selector`` class determines the appropriate strategy for the
-request.
+new strategy instance is assigned to the request by the basket middleware.  A
+:class:`~oscar.apps.partner.strategy.Selector`
+class determines the appropriate strategy for the
+request.  By modifying the 
+:class:`~oscar.apps.partner.strategy.Selector`
+class, it's possible to return
+different strategies for different customers.
 
 Given a product, the strategy class is responsible for:
 
@@ -57,20 +82,14 @@ Given a product, the strategy class is responsible for:
 - Selecting an "availability policy", an object responsible for
   availability logic (ie is the product available to buy) and customer
   messaging.
-- Selecting the appropriate stockrecord to use for fulfillment
+- Selecting the appropriate stockrecord to use for fulfillment.  If a product
+  can be fulfilled by several fulfilment partners, then each will have their
+  own stockrecord.
 
-These three entities are wrapped up in a ``StockInfo`` object, which is a simple
-named tuple.  The strategy class provides a ``fetch`` method which takes a
-product and returns a ``StockInfo`` instance:
-
-.. code-block:: python
-
-    # ... in view code ...
-
-    stock_info = request.strategy.fetch(product)
-    if stock_info.availability.is_available_to_buy:
-        print "Price incl tax is %s" % stock_info.price.incl_tax
-        print "Selected stockrecord is %s" % stock_info.stockrecord
+These three entities are wrapped up in a ``PurchaseInfo`` object, which is a
+simple named tuple.  The strategy class provides ``fetch_for_product`` and
+``fetch_for_group`` methods which takes a product and returns a ``PurchaseInfo``
+instance:
 
 The strategy class is accessed in several places in Oscar's codebase.  In templates, a
 ``purchase_info_for_product`` template tag is used to load the price and availability
@@ -107,7 +126,7 @@ examples of things you can do with a strategy class:
 
 - Transact in multiple currencies.  The strategy
   class can use the customer's location to select a stockrecord from a local
-  distribution partner and to set the appropriate currency for the price.
+  distribution partner which will be in the local currency of the customer.
 
 - Elegantly handle different tax models.  A strategy can return prices including
   tax for a UK or European visitor, but without tax for US
@@ -128,11 +147,10 @@ with.
 API
 ~~~
 
-A strategy class need only implement one method, as defined by the ``Base``
-class:
+All strategies subclass a common ``Base`` class:
 
 .. autoclass:: oscar.apps.partner.strategy.Base
-   :members:
+   :members: fetch_for_product, fetch_for_group, fetch_for_line
    :noindex:
 
 Oscar also provides a "structured" strategy class which provides overridable

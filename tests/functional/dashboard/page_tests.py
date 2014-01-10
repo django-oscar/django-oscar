@@ -1,9 +1,9 @@
 from django.core.urlresolvers import reverse
 from django.contrib.flatpages.models import FlatPage
-from oscar.test.testcases import ClientTestCase
+from oscar.test.testcases import WebTestCase
 
 
-class PageViewTests(ClientTestCase):
+class PageViewTests(WebTestCase):
     is_anonymous = False
     is_staff = True
 

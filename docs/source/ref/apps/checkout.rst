@@ -35,8 +35,29 @@ Abstract models
 
 None.
 
-Views
------
+Views and mixins
+----------------
 
 .. automodule:: oscar.apps.checkout.views
+    :members:
+
+.. automodule:: oscar.apps.checkout.mixins
+    :members:
+
+.. automodule:: oscar.apps.checkout.session
+    :members:
+
+Forms
+-----
+
+.. automodule:: oscar.apps.checkout.forms
+    :members:
+
+Utils
+-----
+
+.. automodule:: oscar.apps.checkout.calculators
+    :members:
+
+.. automodule:: oscar.apps.checkout.utils
     :members:

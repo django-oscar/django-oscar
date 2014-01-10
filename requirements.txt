@@ -12,6 +12,8 @@ uWSGI==1.9.21.1
 
 # Docs
 Sphinx>=1.1.3,<1.3
+sphinxcontrib-napoleon==0.2.2
+sphinx_rtd_theme
 
 # Testing
 django-dynamic-fixture>=1.6.4,<1.7

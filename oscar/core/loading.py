@@ -15,21 +15,64 @@ class ClassNotFoundError(Exception):
 
 
 def get_class(module_label, classname):
+    """
+    Dynamically import a single class from the given module.
+
+    This is a simple wrapper around `get_classes` for the case of loading a
+    single class.
+
+    Args:
+        module_label (str): Module label comprising the app label and the
+            module name, separated by a dot.  For example, 'catalogue.forms'.
+        classname (str): Name of the class to be imported.
+
+    Returns:
+        The requested class object or `None` if it can't be found
+    """
     return get_classes(module_label, [classname])[0]
 
 
 def get_classes(module_label, classnames):
     """
-    For dynamically importing classes from a module.
+    Dynamically import a list of  classes from the given module.
 
-    Eg. calling get_classes('catalogue.models', ['Product']) will search
-    INSTALLED_APPS for the relevant product app (default is
-    'oscar.apps.catalogue') and then import the classes from there.  If the
-    class can't be found in the overriding module, then we attempt to import it
-    from within oscar.
+    This works by looping over ``INSTALLED_APPS`` and looking for a match
+    against the passed module label.  If the requested class can't be found in
+    the matching module, then we attempt to import it from the corresponding
+    core Oscar app (assuming the matched module isn't in Oscar).
 
-    This is very similar to django.db.models.get_model although that is only
-    for loading models while this method will load any class.
+    This is very similar to ``django.db.models.get_model`` function for
+    dynamically loading models.  This function is more general though as it can
+    load any class from the matching app, not just a model.
+
+    Args:
+        module_label (str): Module label comprising the app label and the
+            module name, separated by a dot.  For example, 'catalogue.forms'.
+        classname (str): Name of the class to be imported.
+
+    Returns:
+        The requested class object or ``None`` if it can't be found
+
+    Examples:
+
+        Load a single class:
+
+        >>> get_class('basket.forms', 'BasketLineForm')
+        oscar.apps.basket.forms.BasketLineForm
+
+        Load a list of classes:
+
+        >>> get_classes('basket.forms', ['BasketLineForm', 'AddToBasketForm'])
+        [oscar.apps.basket.forms.BasketLineForm,
+         oscar.apps.basket.forms.AddToBasketForm]
+
+    Raises:
+
+        AppNotFoundError: If no app is found in ``INSTALLED_APPS`` that matches
+            the passed module label.
+
+        ImportError: If the attempted import of a class raises an
+            ``ImportError``, it is re-raised
     """
     app_module_path = _get_app_module_path(module_label)
     if not app_module_path:

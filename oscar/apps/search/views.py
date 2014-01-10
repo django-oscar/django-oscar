@@ -7,9 +7,22 @@ Product = get_model('catalogue', 'Product')
 
 
 class FacetedSearchView(views.FacetedSearchView):
+    """
+    A modified version of Haystack's FacetedSearchView
+
+    Note that facets are configured when the ``SearchQuerySet`` is initialised.
+    This takes place in the search application class.
+
+    See
+    http://django-haystack.readthedocs.org/en/v2.1.0/views_and_forms.html#facetedsearchform # noqa
+    """
+
     # Haystack uses a different class attribute to CBVs
     template = "search/results.html"
 
+    # Override this method to add the spelling suggestion to the context and to
+    # convert Haystack's default facet data into a more useful structure so we
+    # have to do less work in the template.
     def extra_context(self):
         extra = super(FacetedSearchView, self).extra_context()
 
@@ -20,8 +33,8 @@ class FacetedSearchView(views.FacetedSearchView):
             if suggestion != self.query:
                 extra['suggestion'] = suggestion
 
+        # Convert facet data into a more useful datastructure
         if 'fields' in extra['facets']:
-            # Convert facet data into a more useful datastructure
             extra['facet_data'] = facets.facet_data(
                 self.request, self.form, self.results)
             has_facets = any([len(data['results']) for

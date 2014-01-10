@@ -285,6 +285,9 @@ class AbstractBankcard(models.Model):
 
     @property
     def card_number(self):
+        """
+        The card number
+        """
         import warnings
         warnings.warn(("The `card_number` property is deprecated in favour of "
                        "`number` on the Bankcard model"), DeprecationWarning)

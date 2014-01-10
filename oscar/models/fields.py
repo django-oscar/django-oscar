@@ -56,6 +56,10 @@ class ExtendedURLField(CharField):
 
 
 class PositiveDecimalField(DecimalField):
+    """
+    A simple subclass of ``django.db.models.fields.DecimalField`` that
+    restricts values to be non-negative.
+    """
     def formfield(self, **kwargs):
         return super(PositiveDecimalField, self).formfield(min_value=0)
 
@@ -63,6 +67,10 @@ class PositiveDecimalField(DecimalField):
 # necessary for to_python to be called
 @add_metaclass(SubfieldBase)
 class UppercaseCharField(CharField):
+    """
+    A simple subclass of ``django.db.models.fields.CharField`` that
+    restricts all text to be uppercase.
+    """
 
     def to_python(self, value):
         val = super(UppercaseCharField, self).to_python(value)
@@ -74,18 +82,20 @@ class UppercaseCharField(CharField):
 
 class PhoneNumberField(Field):
     """
-    Copyright (c) 2011 Stefan Foulis and contributors.
-    https://github.com/stefanfoulis/django-phonenumber-field
-
-    Taken from fork https://github.com/maikhoepfel/django-phonenumber-field/
-
-    A international phone number field for django that uses
-    http://pypi.python.org/pypi/phonenumbers for validation.
+    An international phone number.
 
     * Validates a wide range of phone number formats
     * Displays it nicely formatted
     * Can be given a hint for the country, so that it can accept local numbers,
       that are not in an international format
+
+    Note:
+        This field is based on work in django-phonenumber-field:
+        https://github.com/maikhoepfel/django-phonenumber-field/
+
+        See ``oscar/core/phonenumber.py`` for the relevant copyright and
+        permission notice.
+
     """
 
     attr_class = phonenumber.PhoneNumber
