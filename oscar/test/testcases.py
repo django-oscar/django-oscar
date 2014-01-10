@@ -72,8 +72,8 @@ class WebTestCase(WebTest):
 
     def assertNoAccess(self, response):
         self.assertContext(response)
-        self.assertTrue(response.status_code in (httplib.NOT_FOUND,
-                                                 httplib.FORBIDDEN))
+        self.assertTrue(response.status_code in (http_client.NOT_FOUND,
+                                                 http_client.FORBIDDEN))
 
     def assertRedirectUrlName(self, response, name, kwargs=None):
         self.assertIsRedirect(response)
@@ -81,7 +81,7 @@ class WebTestCase(WebTest):
         self.assertEqual(location, reverse(name, kwargs=kwargs))
 
     def assertIsOk(self, response):
-        self.assertEqual(httplib.OK, response.status_code)
+        self.assertEqual(http_client.OK, response.status_code)
 
     def assertContext(self, response):
         self.assertTrue(response.context is not None,
