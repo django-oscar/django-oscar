@@ -1,11 +1,17 @@
 from django.views.generic import ListView
-from django.db.models import get_model
+from django.db.models import get_model, F, Q
 from django import http
 from django.shortcuts import get_object_or_404
 
 from oscar.apps.offer.models import ConditionalOffer, Range
 
 Product = get_model('catalogue', 'Product')
+
+public_offer_q = (
+    Q(num_applications__lt=F('max_global_applications')) | \
+    Q(max_global_applications__isnull=True)) & \
+    Q(status=ConditionalOffer.OPEN) & \
+    Q(offer_type=ConditionalOffer.SITE)
 
 
 class OfferListView(ListView):
@@ -14,8 +20,7 @@ class OfferListView(ListView):
     template_name = 'offer/list.html'
 
     def get_queryset(self):
-        return ConditionalOffer.active.filter(
-            offer_type=ConditionalOffer.SITE)
+        return ConditionalOffer.active.filter(public_offer_q)
 
 
 class OfferDetailView(ListView):
@@ -24,11 +29,9 @@ class OfferDetailView(ListView):
     paginate_by = 20
 
     def get(self, request, *args, **kwargs):
-        try:
-            self.offer = ConditionalOffer.objects.select_related().get(
-                slug=self.kwargs['slug'])
-        except ConditionalOffer.DoesNotExist:
-            raise http.Http404
+        self.offer = get_object_or_404(
+            ConditionalOffer.active.filter(public_offer_q).select_related(),
+            slug=self.kwargs['slug'])
         return super(OfferDetailView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
