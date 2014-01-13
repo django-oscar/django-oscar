@@ -152,7 +152,7 @@ class AbstractSource(models.Model):
         Convenience method for recording debits against this source
         """
         if amount is None:
-            amount = self.balance()
+            amount = self.balance
         self.amount_debited += amount
         self.save()
         self._create_transaction(
