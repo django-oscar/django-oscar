@@ -22,6 +22,11 @@ class TestAPaymentSource(TestCase):
         self.source.allocate(D('100.00'))
         self.source.debit(D('80.00'))
 
+    def test_full_debit_doesnt_error(self):
+        self.source.allocate(D('100.00'))
+        self.source.debit()
+        self.assertEquals(D('0.00'), self.source.balance)
+
     def test_refund_doesnt_error(self):
         self.source.allocate(D('100.00'))
         self.source.debit(D('80.00'))
