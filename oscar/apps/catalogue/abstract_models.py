@@ -413,7 +413,7 @@ class AbstractProduct(models.Model):
 
     @property
     def is_shipping_required(self):
-        return self.product_class.requires_shipping
+        return self.get_product_class().requires_shipping
 
     @property
     def has_stockrecords(self):

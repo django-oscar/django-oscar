@@ -10,7 +10,8 @@ from oscar.apps.catalogue.models import (Product, ProductClass,
 class ProductTests(TestCase):
 
     def setUp(self):
-        self.product_class,_ = ProductClass.objects.get_or_create(name='Clothing')
+        self.product_class, _ = ProductClass.objects.get_or_create(
+            name='Clothing')
 
 
 class ProductCreationTests(ProductTests):
@@ -59,6 +60,19 @@ class VariantProductTests(ProductTests):
     def test_variant_products_inherit_product_class(self):
         p = Product.objects.create(parent=self.parent)
         self.assertEquals("Clothing", p.get_product_class().name)
+
+
+class TestAVariant(TestCase):
+
+    def setUp(self):
+        clothing = ProductClass.objects.create(
+            name='Clothing', requires_shipping=True)
+        self.parent = clothing.products.create(
+            title="Parent")
+        self.variant = self.parent.variants.create()
+
+    def test_delegates_requires_shipping_logic(self):
+        self.assertTrue(self.variant.is_shipping_required)
 
 
 class ProductAttributeCreationTests(TestCase):

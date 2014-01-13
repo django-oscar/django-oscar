@@ -6,6 +6,10 @@ This is Oscar 0.6.1, a bug-fix release for Oscar 0.6.
 
 The following bugs were fixed:
 
-* `#1130`_ - Variant products were not fetching product class from parent.
+* `#1128`_ - Calls to ``Source.debit`` without an ``amount`` argument were
+  failing as ``balance`` was being called as a method instead of a property.
+* `#1130`_ - Variant products were not fetching the product class instance
+  correctly within ``is_shipping_required``.
 
+.. _`#1128`: https://github.com/tangentlabs/django-oscar/issues/1128
 .. _`#1130`: https://github.com/tangentlabs/django-oscar/issues/1130
