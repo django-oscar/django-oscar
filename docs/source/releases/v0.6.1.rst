@@ -1,0 +1,11 @@
+=========================
+Oscar 0.6.1 release notes
+=========================
+
+This is Oscar 0.6.1, a bug-fix release for Oscar 0.6.  
+
+The following bugs were fixed:
+
+* `#1130`_ - Variant products were not fetching product class from parent.
+
+.. _`#1130`: https://github.com/tangentlabs/django-oscar/issues/1130
