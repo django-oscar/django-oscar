@@ -249,6 +249,8 @@ INSTALLED_APPS = [
     # For profile testing
     'apps.user',
     'apps.bigbang',
+    # Sentry (for live demo site)
+    'raven.contrib.django.raven_compat'
 ]
 
 # Include core apps with a few overrides:
@@ -349,5 +351,3 @@ try:
     from settings_local import *
 except ImportError:
     pass
-
-
