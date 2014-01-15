@@ -182,7 +182,7 @@ class WishListDeleteView(PageTitleMixin, DeleteView):
     active_tab = "wishlists"
 
     def get_page_title(self):
-        return u'Delete %s' % self.object.name
+        return _(u'Delete %s') % self.object.name
 
     def get_object(self, queryset=None):
         return get_object_or_404(WishList, owner=self.request.user,
