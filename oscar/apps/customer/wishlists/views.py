@@ -250,38 +250,61 @@ class LineMixin(object):
     * product_pk: The primary key of the product
     """
 
-    def dispatch(self, request, *args, **kwargs):
-        self.wishlist = get_object_or_404(
-            WishList, owner=request.user, key=kwargs['key'])
-        try:
-            if 'line_pk' in kwargs:
-                self.line = self.wishlist.lines.get(pk=kwargs['line_pk'])
-            elif 'product_pk' in kwargs:
-                self.line = self.wishlist.lines.get(
-                    product_id=kwargs['product_pk'])
-        except (ObjectDoesNotExist, MultipleObjectsReturned):
-            raise Http404
+    def fetch_line(self, user, wishlist_key, line_pk=None, product_pk=None):
+        self.wishlist = WishList._default_manager.get(
+            owner=user, key=wishlist_key)
+        if line_pk is not None:
+            self.line = self.wishlist.lines.get(pk=line_pk)
+        else:
+            self.line = self.wishlist.lines.get(product_id=product_pk)
         self.product = self.line.product
-        return super(LineMixin, self).dispatch(request, *args, **kwargs)
 
 
-class WishListRemoveProduct(LineMixin, View):
+class WishListRemoveProduct(LineMixin, PageTitleMixin, DeleteView):
+    template_name = 'customer/wishlists/wishlists_delete_product.html'
+    active_tab = "wishlists"
 
-    def post(self, request, *args, **kwargs):
-        self.line.delete()
+    def get_page_title(self):
+        return _(u'Remove %s') % self.object.product.get_title()
 
+    def get_object(self, queryset=None):
+        self.fetch_line(
+            self.request.user, self.kwargs['key'],
+            self.kwargs.get('line_pk'), self.kwargs.get('product_pk'))
+        return self.line
+
+    def get_context_data(self, **kwargs):
+        ctx = super(WishListRemoveProduct, self).get_context_data(**kwargs)
+        ctx['wishlist'] = self.wishlist
+        ctx['product'] = self.product
+        return ctx
+
+    def get_success_url(self):
         msg = _("'%(title)s' was removed from your '%(name)s' wish list") % {
             'title': self.product.get_title(),
             'name': self.wishlist.name}
         messages.success(self.request, msg)
 
-        default_url = reverse(
-            'customer:wishlists-detail', kwargs={'key': self.wishlist.key})
-        return HttpResponseRedirect(self.request.META.get(
-            'HTTP_REFERER', default_url))
+        # We post directly to this view on product pages; and should send the
+        # user back there if that was the case
+        referrer = self.request.META.get('HTTP_REFERER', '')
+        if self.product.get_absolute_url() in referrer:
+            return referrer
+        else:
+            return reverse(
+                'customer:wishlists-detail', kwargs={'key': self.wishlist.key})
 
 
 class WishListMoveProductToAnotherWishList(LineMixin, View):
+
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            self.fetch_line(request.user, kwargs['key'],
+                            product_pk=kwargs['product_pk'])
+        except (ObjectDoesNotExist, MultipleObjectsReturned):
+            raise Http404
+        return super(WishListMoveProductToAnotherWishList, self).dispatch(
+            request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         to_wishlist = get_object_or_404(
