@@ -5,8 +5,8 @@ Signals
 Oscar implements a number of custom signals that provide useful hook-points for
 adding functionality.
 
-product_viewed
---------------
+``product_viewed``
+------------------
 
 .. class:: oscar.apps.catalogue.signals.product_viewed
 
@@ -30,8 +30,8 @@ Arguments sent with this signal:
 
     The response instance
 
-product_search
---------------
+``product_search``
+------------------
 
 .. class:: oscar.apps.catalogue.signals.product_search
 
@@ -47,8 +47,10 @@ Arguments sent with this signal:
 
     The user in question
 
-basket_addition
----------------
+.. _basket_addition_signal:
+
+``basket_addition``
+-------------------
 
 .. class:: oscar.apps.basket.signals.basket_addition
 
@@ -68,8 +70,8 @@ Arguments sent with this signal:
 
     The user in question
 
-voucher_addition
-----------------
+``voucher_addition``
+--------------------
 
 .. class:: oscar.apps.basket.signals.voucher_addition
 
@@ -85,8 +87,23 @@ Arguments sent with this signal:
 
     The voucher in question
 
-pre_payment
------------
+.. _start_checkout_signal:
+
+``start_checkout``
+------------------
+
+.. class:: oscar.apps.checkout.signals.start_checkout
+
+   Raised when the customer begins the checkout process
+
+Arguments sent with this signal:
+
+.. attribute:: request
+
+    The reuqest instance
+
+``pre_payment``
+---------------
 
 .. class:: oscar.apps.checkout.signals.pre_payment
 
@@ -98,8 +115,8 @@ Arguments sent with this signal:
 
     The view class instance
 
-post_payment
-------------
+``post_payment``
+----------------
 
 .. class:: oscar.apps.checkout.signals.post_payment
 
@@ -111,8 +128,8 @@ Arguments sent with this signal:
 
     The view class instance
 
-order_placed
-------------
+``order_placed``
+----------------
 
 .. class:: oscar.apps.order.signals.order_placed
 
@@ -130,8 +147,8 @@ Arguments sent with this signal:
     The user creating the order (not necessarily the user linked to the order
     instance!)
 
-post_checkout
--------------
+``post_checkout``
+-----------------
 
 .. class:: oscar.apps.checkout.signals.post_checkout
 
@@ -154,8 +171,8 @@ post_checkout
 
     The response instance
 
-review_created
---------------
+``review_created``
+------------------
 
 .. class:: oscar.apps.catalogue.reviews.signals.review_added
 

@@ -13,11 +13,10 @@ from django.views.generic import (DetailView, TemplateView, FormView,
 
 from oscar.apps.shipping.methods import NoShippingRequired
 from oscar.core.loading import get_class, get_classes
+from . import signals
 
 ShippingAddressForm, GatewayForm \
     = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
-pre_payment, post_payment \
-    = get_classes('checkout.signals', ['pre_payment', 'post_payment'])
 OrderNumberGenerator, OrderCreator \
     = get_classes('order.utils', ['OrderNumberGenerator', 'OrderCreator'])
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
@@ -56,8 +55,12 @@ class IndexView(CheckoutSessionMixin, FormView):
 
     def get(self, request, *args, **kwargs):
         # We redirect immediately to shipping address stage if the user is
-        # signed in
+        # signed in.
         if request.user.is_authenticated():
+            # We raise a signal to indicate that the user has entered the
+            # checkout process so analytics tools can track this event.
+            signals.start_checkout.send_robust(
+                sender=self, request=request)
             return self.get_success_response()
         return super(IndexView, self).get(request, *args, **kwargs)
 
@@ -75,6 +78,11 @@ class IndexView(CheckoutSessionMixin, FormView):
             email = form.cleaned_data['username']
             self.checkout_session.set_guest_email(email)
 
+            # We raise a signal to indicate that the user has entered the
+            # checkout process by specifying an email address.
+            signals.start_checkout.send_robust(
+                sender=self, request=self.request, email=email)
+
             if form.is_new_account_checkout():
                 messages.info(
                     self.request,
@@ -88,6 +96,11 @@ class IndexView(CheckoutSessionMixin, FormView):
         else:
             user = form.get_user()
             login(self.request, user)
+
+            # We raise a signal to indicate that the user has entered the checkout
+            # process.
+            signals.start_checkout.send_robust(
+                sender=self, request=self.request)
 
         return self.get_success_response()
 
@@ -578,7 +591,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         error_msg = _("A problem occurred while processing payment for this "
                       "order - no payment has been taken.  Please "
                       "contact customer services if this problem persists")
-        pre_payment.send_robust(sender=self, view=self)
+        signals.pre_payment.send_robust(sender=self, view=self)
 
         try:
             self.handle_payment(order_number, order_total, **payment_kwargs)
@@ -623,7 +636,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             self.preview = False
             return self.render_to_response(
                 self.get_context_data(error=error_msg))
-        post_payment.send_robust(sender=self, view=self)
+        signals.post_payment.send_robust(sender=self, view=self)
 
         # If all is ok with payment, try and place order
         logger.info("Order #%s: payment successful, placing order",
