@@ -159,7 +159,7 @@ class AdvancedSelect(forms.Select):
                 selected_choices.remove(option_value)
         else:
             selected_html = ''
-        return format_html('<option value="{0}"{1}>{2}</option>',
+        return format_html(u'<option value="{0}"{1}>{2}</option>',
                            option_value,
                            selected_html,
                            force_text(option_label))
