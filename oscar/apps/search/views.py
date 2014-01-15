@@ -1,7 +1,7 @@
 from oscar.core.loading import get_model
 from haystack import views
 
-from . import facets
+from . import facets, signals
 
 Product = get_model('catalogue', 'Product')
 
@@ -19,6 +19,17 @@ class FacetedSearchView(views.FacetedSearchView):
 
     # Haystack uses a different class attribute to CBVs
     template = "search/results.html"
+    search_signal = signals.user_search
+
+    def __call__(self, request):
+        response = super(FacetedSearchView, self).__call__(request)
+
+        # Raise a signal for other apps to hook into for analytics
+        self.search_signal.send(
+            sender=self, session=self.request.session,
+            user=self.request.user, query=self.query)
+
+        return response
 
     # Override this method to add the spelling suggestion to the context and to
     # convert Haystack's default facet data into a more useful structure so we
