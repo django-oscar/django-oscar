@@ -255,10 +255,6 @@ class ProductCreateUpdateView(generic.UpdateView):
         if is_valid and cross_form_validation_result:
             return self.forms_valid(form, formsets)
         else:
-            # Delete the temporary product again
-            if self.creating and self.object and self.object.pk is not None:
-                self.object.delete()
-                self.object = None
             return self.forms_invalid(form, formsets)
 
     # form_valid and form_invalid are called depending on the validation result
@@ -293,6 +289,20 @@ class ProductCreateUpdateView(generic.UpdateView):
         return HttpResponseRedirect(self.get_success_url())
 
     def forms_invalid(self, form, formsets):
+        # delete the temporary product again
+        if self.creating and self.object and self.object.pk is not None:
+            self.object.delete()
+            self.object = None
+
+        # We currently don't hold on to images if the other formsets didn't
+        # validate. But as the browser won't re-POST any images, we can do no
+        # better than re-bind the image formset, which means the user will
+        # have to re-select the images
+        image_formset_class = self.formsets.get('image_formset')
+        if 'image_formset' in formsets and image_formset_class is not None:
+            formsets['image_formset'] = image_formset_class(
+                self.product_class, self.request.user, instance=self.object)
+
         messages.error(self.request,
                        _("Your submitted data was not valid - please "
                          "correct the below errors"))
