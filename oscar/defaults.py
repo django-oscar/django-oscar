@@ -61,15 +61,12 @@ OSCAR_MODERATE_REVIEWS = False
 # Accounts
 OSCAR_ACCOUNTS_REDIRECT_URL = 'customer:profile-view'
 
-# This enables sending alert notifications/emails
-# instantly when products get back in stock
-# by listening to stock record update signals
-# this might impact performace for large numbers
-# stock record updates.
-# Alternatively, the management command
-# ``oscar_send_alerts`` can be used to
-# run periodically, e.g. as a cronjob. In this case
-# instant alerts should be disabled.
+# This enables sending alert notifications/emails instantly when products get
+# back in stock by listening to stock record update signals.
+# This might impact performance for large numbers of stock record updates.
+# Alternatively, the management command ``oscar_send_alerts`` can be used to
+# run periodically, e.g. as a cron job. In this case eager alerts should be
+# disabled.
 OSCAR_EAGER_ALERTS = True
 
 # Registration
