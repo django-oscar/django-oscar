@@ -32,6 +32,17 @@ Search improvements
 
 .. _`#370`: https://github.com/tangentlabs/django-oscar/issues/370
 
+Improvements to signals
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Oscar signals have been improved and consolidated, making it easier to hook
+into user journeys and extract analytics.
+
+- The ``basket_addition`` signal now passes the ``request`` as an additional
+  kwarg.
+
+See the :doc:`signals docs </ref/signals>` for more details.
+
 Minor changes
 ~~~~~~~~~~~~~
 

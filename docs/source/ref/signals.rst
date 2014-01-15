@@ -56,6 +56,10 @@ basket_addition
 
 Arguments sent with this signal:
 
+.. attribute:: request
+
+    The request instance
+
 .. attribute:: product
 
     The product being added

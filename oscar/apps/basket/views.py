@@ -327,7 +327,8 @@ class BasketAddView(FormView):
 
         # Send signal for basket addition
         self.add_signal.send(
-            sender=self, product=form.instance, user=self.request.user)
+            sender=self, product=form.instance, user=self.request.user,
+            request=self.request)
 
         return super(BasketAddView, self).form_valid(form)
 
