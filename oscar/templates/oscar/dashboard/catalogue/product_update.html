@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load thumbnail %}
 {% load staticfiles %}
+{% load form_tags %}
 
 
 {% block body_class %}create-page catalogue{% endblock %}
@@ -146,14 +147,29 @@
                             <div class="well product-details">
                                 {% block product_details_content %}
                                     <span class="help-block">{{ form.non_field_errors }}</span>
-                                    {% for field in form %}
-                                        {% if field.is_hidden %}
+                                        {% for field in form.hidden_fields %}
                                             {{ field }}
-                                        {% endif %}
-                                        {% if 'attr' not in field.id_for_label %}
-                                            {% include "partials/form_field.html" with field=field %}
-                                        {% endif %}
-                                    {% endfor %}
+                                        {% endfor %}
+
+                                        {% for field in form.visible_fields %}
+                                            {% if 'attr' not in field.id_for_label %}
+                                                {% comment %}
+                                                    Make the field widget type available to templates so we can mark-up
+                                                    checkboxes differently to other widgets.
+                                                {% endcomment %}
+                                                {% annotate_form_field field %}
+
+                                                {% comment %}
+                                                    We use a separate template for each field so that forms can be rendered
+                                                    field-by-field easily #}
+                                                {% endcomment %}
+                                                {% if field.widget_type == 'CheckboxInput' %}
+                                                    {% include 'partials/form_field_checkbox.html' with field=field %}
+                                                {% else %}
+                                                    {% include 'partials/form_field.html' with field=field %}
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
 
                                     {% with parent=product.parent %}
                                         {% if parent %}
