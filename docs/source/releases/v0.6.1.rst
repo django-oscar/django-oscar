@@ -19,10 +19,22 @@ As of 0.6.1, all foreign keys on the ``Order`` model specify
 
 See `Django's docs`_ for more info on ``on_delete`` options.
 
+Known issues
+============
+
+* Django 1.4 only: The changes in `#1127`_ mean you explicitly need to register
+  a call to ``migrate_alerts_to_users`` when the ``post_save`` signal is
+  emitted for a ``User`` model.
+
 Bug fixes
 =========
 
 The following bugs were fixed:
+
+* `#1127`_ required that the ``migrate_alerts_to_user` function is now
+  explicitly called in Oscar's base User class. It previously was wired up as
+  a ``post_save`` signal receiver on the User model, which does not work in
+  Django 1.5+.
 
 * `#1128`_ - Calls to ``Source.debit`` without an ``amount`` argument were
   failing as ``balance`` was being called as a method instead of a property.
@@ -38,9 +50,11 @@ The following bugs were fixed:
   :class:`~oscar.apps.shipping.models.OrderAndItemCharges` shipping method to
   not count lines that don't require shipping.
 
+.. _`#1127`: https://github.com/tangentlabs/django-oscar/issues/1127
 .. _`#1128`: https://github.com/tangentlabs/django-oscar/issues/1128
 .. _`#1130`: https://github.com/tangentlabs/django-oscar/issues/1130
 .. _`#1132`: https://github.com/tangentlabs/django-oscar/issues/1132
 .. _`#1138`: https://github.com/tangentlabs/django-oscar/issues/1138
 .. _`#1149`: https://github.com/tangentlabs/django-oscar/issues/1149
 .. _`Django's docs`: https://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey.on_delete
+
