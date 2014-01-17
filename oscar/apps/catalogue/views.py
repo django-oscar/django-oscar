@@ -7,7 +7,7 @@ from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_class
-from oscar.apps.catalogue.signals import product_viewed, product_search
+from oscar.apps.catalogue.signals import product_viewed
 
 Product = get_model('catalogue', 'product')
 ProductReview = get_model('reviews', 'ProductReview')
@@ -172,7 +172,6 @@ class ProductListView(ListView):
     context_object_name = "products"
     template_name = 'catalogue/browse.html'
     paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
-    search_signal = product_search
     model = Product
 
     def get_search_query(self):
@@ -180,23 +179,9 @@ class ProductListView(ListView):
         return q.strip() if q else q
 
     def get_queryset(self):
-        q = self.get_search_query()
-        qs = Product.browsable.base_queryset()
-        if q:
-            # Send signal to record this search
-            self.search_signal.send(sender=self, query=q,
-                                    user=self.request.user)
-            return qs.filter(title__icontains=q)
-        else:
-            return qs
+        return self.model.browsable.base_queryset()
 
     def get_context_data(self, **kwargs):
-        context = super(ProductListView, self).get_context_data(**kwargs)
-        q = self.get_search_query()
-        if not q:
-            context['summary'] = _('All products')
-        else:
-            context['summary'] = _("Products matching '%(query)s'") \
-                % {'query': q}
-            context['search_term'] = q
-        return context
+        ctx = super(ProductListView, self).get_context_data(**kwargs)
+        ctx['summary'] = _("Products matching '%(query)s'")
+        return ctx

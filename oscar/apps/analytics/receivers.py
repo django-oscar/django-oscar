@@ -3,12 +3,11 @@ from django.db import IntegrityError
 import logging
 
 from oscar.core.loading import get_class, get_classes
+from oscar.apps.search.signals import user_search
 UserSearch, UserRecord, ProductRecord, UserProductView = get_classes(
     'analytics.models', ['UserSearch', 'UserRecord', 'ProductRecord',
                          'UserProductView'])
-product_viewed, product_search = get_classes('catalogue.signals',
-                                             ['product_viewed',
-                                              'product_search'])
+product_viewed = get_classes('catalogue.signals', ['product_viewed'])
 basket_addition = get_class('basket.signals', 'basket_addition')
 order_placed = get_class('order.signals', 'order_placed')
 
@@ -92,7 +91,7 @@ def _record_user_order(user, order):
                          "get_or_create(user=user)")
 
 
-def _record_user_product_search(user, query):
+def _record_user_search(user, query):
     if user.is_authenticated():
         UserSearch._default_manager.create(user=user, query=query)
 
@@ -107,11 +106,11 @@ def receive_product_view(sender, product, user, **kwargs):
     _record_user_product_view(user, product)
 
 
-@receiver(product_search)
+@receiver(user_search)
 def receive_product_search(sender, query, user, **kwargs):
     if kwargs.get('raw', False):
         return
-    _record_user_product_search(user, query)
+    _record_user_search(user, query)
 
 
 @receiver(basket_addition)
