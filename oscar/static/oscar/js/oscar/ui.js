@@ -51,7 +51,8 @@ var oscar = (function(o, $) {
             // prevent multiple submissions
             $('form[data-behaviours~="lock"]').submit(o.forms.submitIfNotLocked);
 
-            // Disable buttons when they are clicked
+            // Disable buttons when they are clicked and show a "loading" message taken from the
+            // data-loading-text attribute (http://getbootstrap.com/2.3.2/javascript.html#buttons)
             $('.js-disable-on-click').click(function(){$(this).button('loading');});
         },
         submitIfNotLocked: function(event) {
