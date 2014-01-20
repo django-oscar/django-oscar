@@ -2,14 +2,34 @@
 Oscar 0.6.1 release notes
 =========================
 
-This is Oscar 0.6.1, a bug-fix release for Oscar 0.6.  
+This is Oscar 0.6.1.  It fixes one potentially serious data loss issue and a
+few minor bugs.
+
+Possible data loss from deleted users
+-------------------------------------
+
+Before this release, the foreign key from the 
+:class:`~oscar.apps.order.abstract_models.Order` model to the ``User`` model
+did not specify an ``on_delete`` behaviour.  The default is for deletes to
+cascade to related objects, even if the field is nullable.  Hence, deleting a
+user would also delete any orders they had placed.
+
+As of 0.6.1, all foreign keys on the ``Order`` model specify
+``on_delete=SET_NULL`` to avoid orders being deleted accidentally.
+
+See `Django's docs`_ for more info on ``on_delete`` options.
+
+Bug fixes
+=========
 
 The following bugs were fixed:
 
 * `#1128`_ - Calls to ``Source.debit`` without an ``amount`` argument were
   failing as ``balance`` was being called as a method instead of a property.
+
 * `#1130`_ - Variant products were not fetching the product class instance
   correctly within ``is_shipping_required``.
 
 .. _`#1128`: https://github.com/tangentlabs/django-oscar/issues/1128
 .. _`#1130`: https://github.com/tangentlabs/django-oscar/issues/1130
+.. _`Django's docs`: https://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey.on_delete
