@@ -23,6 +23,7 @@ django-nose>=1.1,<1.2
 spec>=0.11.1,<0.12
 WebTest>=2.0,<2.1
 django-webtest>=1.7,<1.8
+tox==1.6.1
 detox==0.9.3
 coveralls>=0.1.1,<0.2
 purl>=0.4
