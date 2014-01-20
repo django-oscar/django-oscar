@@ -111,10 +111,12 @@
                             <td>{{ order.num_items }}</td>
                             <td>{{ order.status|default:"-" }}</td>
                             <td>
-                                {% if not order.is_anonymous %}
+                                {% if order.guest_email %}
+                                    {{ order.guest_email }}
+                                {% elif order.user %}
                                     <a href="{% url 'dashboard:user-detail' pk=order.user.id %}">{{ order.user.get_full_name|default:"-" }}</a>
                                 {% else %}
-                                    {{ order.email }}
+                                    &lt;{% trans "Deleted" %}&gt;
                                 {% endif %}
                             </td>
                             <td>{{ order.shipping_address|default:"-" }}</td>

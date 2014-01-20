@@ -127,7 +127,10 @@ class AbstractOrder(models.Model):
 
     @property
     def is_anonymous(self):
-        return self.user is None
+        # It's possible for an order to be placed by a customer who then
+        # deletes their profile.  Hence, we need to check that a guest email is
+        # set.
+        return self.user is None and bool(self.guest_email)
 
     @property
     def basket_total_before_discounts_incl_tax(self):
