@@ -5,7 +5,7 @@
 
 {% load i18n %}
 
-{% block body_class %}create-page{% endblock %}
+{% block body_class %}{{ block.super }} create-page{% endblock %}
 
 {% block title %}
     {% if offer.pk %}

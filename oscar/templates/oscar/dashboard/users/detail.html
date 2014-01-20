@@ -3,7 +3,7 @@
 {% load currency_filters %}
 {% load i18n %}
 
-{% block body_class %}users{% endblock %}
+{% block body_class %}{{ block.super }} users{% endblock %}
 
 {% block title %}
     {% blocktrans with email=customer.email %}{{ email }}{% endblocktrans %} | {{ block.super }}

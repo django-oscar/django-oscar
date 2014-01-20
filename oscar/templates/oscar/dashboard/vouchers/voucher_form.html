@@ -3,9 +3,7 @@
 {% load currency_filters %}
 {% load i18n %}
 
-{% block body_class %}
-    create-page default
-{% endblock %}
+{% block body_class %}{{ block.super }} create-page{% endblock %}
 
 {% block title %}
     {{ title }} | {% trans "Vouchers" %} | {{ block.super }}

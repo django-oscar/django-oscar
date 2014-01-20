@@ -3,7 +3,7 @@
 {% load url from future %}
 {% load i18n %}
 
-{% block body_class %}catalogue{% endblock %}
+{% block body_class %}{{ block.super }} catalogue{% endblock %}
 
 {% block title %}
 {% trans "Stock alerts" %} | {{ block.super }}

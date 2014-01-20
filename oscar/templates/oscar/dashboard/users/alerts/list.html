@@ -3,7 +3,7 @@
 {% load i18n %}
 {% load currency_filters %}
 
-{% block body_class %}users{% endblock %}
+{% block body_class %}{{ block.super }} users{% endblock %}
 
 {% block title %}
     {% trans "Product alerts" %} | {{ block.super }}
