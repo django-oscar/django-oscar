@@ -370,9 +370,8 @@ class VoucherAddView(FormView):
         self.request.basket.vouchers.add(voucher)
 
         # Raise signal
-        self.add_signal.send(sender=self,
-                             basket=self.request.basket,
-                             voucher=voucher)
+        self.add_signal.send(
+            sender=self, basket=self.request.basket, voucher=voucher)
 
         # Recalculate discounts to see if the voucher gives any
         Applicator().apply(self.request, self.request.basket)
