@@ -43,6 +43,9 @@ Changes to existing signals:
 - The :ref:`basket_addition_signal` signal now passes the ``request`` as an additional
   kwarg.
 
+- The :ref:`user_registered_signal` signal now passes the ``request`` as an additional
+  kwarg.
+
 New signals:
 
 - A :ref:`start_checkout_signal` signal is now raised when the customer begins the

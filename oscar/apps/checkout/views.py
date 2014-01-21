@@ -591,6 +591,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         error_msg = _("A problem occurred while processing payment for this "
                       "order - no payment has been taken.  Please "
                       "contact customer services if this problem persists")
+
         signals.pre_payment.send_robust(sender=self, view=self)
 
         try:
@@ -636,6 +637,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             self.preview = False
             return self.render_to_response(
                 self.get_context_data(error=error_msg))
+
         signals.post_payment.send_robust(sender=self, view=self)
 
         # If all is ok with payment, try and place order

@@ -46,7 +46,8 @@ class RegisterUserMixin(object):
             self.send_registration_email(user)
 
         # Raise signal
-        user_registered.send_robust(sender=self, user=user)
+        user_registered.send_robust(
+            sender=self, request=self.request, user=user)
 
         # We have to authenticate before login
         try:

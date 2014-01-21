@@ -47,6 +47,25 @@ Arguments sent with this signal:
 
     The user in question
 
+.. _user_registered_signal:
+
+``user_registered``
+-------------------
+
+.. class:: oscar.apps.customer.signals.user_registered
+
+   Raised when a user registers
+
+Arguments sent with this signal:
+
+.. attribute:: request
+
+    The request instance
+
+.. attribute:: user
+
+    The user in question
+
 .. _basket_addition_signal:
 
 ``basket_addition``
