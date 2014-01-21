@@ -19,7 +19,11 @@
             <a href="{% url 'dashboard:voucher-list' %}">{% trans "Vouchers" %}</a>
             <span class="divider">/</span>
         </li>
-        <li class="active">{% blocktrans with name=voucher.name %}Delete voucher '{{ name }}'?{% endblocktrans %}</li>
+        <li>
+            <a href="{% url 'dashboard:voucher-stats' pk=voucher.pk %}">{{ voucher }}</a>
+            <span class="divider">/</span>
+        </li>
+        <li class="active">{% trans "Delete?" %}</li>
     </ul>
 {% endblock %}
 
@@ -39,7 +43,7 @@
                 <tr><th>{% trans "Start date" %}</th><td>{{ voucher.start_date }}</td></tr>
                 <tr><th>{% trans "End date" %}</th><td>{{ voucher.end_date }}</td></tr>
                 <tr><th>{% trans "Usage" %}</th><td>{{ voucher.usage }}</td></tr>
-                <tr><th>{% trans "Discount" %}</th><td>{{ voucher.benefit_description }}</td></tr>
+                <tr><th>{% trans "Discount" %}</th><td>{{ voucher.benefit.description|safe }}</td></tr>
             </tbody>
         </table>
         <form action="." method="post">

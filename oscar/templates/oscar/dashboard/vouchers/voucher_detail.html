@@ -4,7 +4,7 @@
 {% load i18n %}
 
 {% block title %}
-    {% blocktrans with name=voucher.name %}Voucher '{{ name }}'{% endblocktrans %} | {% trans "Vouchers" %} | {{ block.super }}
+    {{ voucher }} | {% trans "Vouchers" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -17,12 +17,12 @@
             <a href="{% url 'dashboard:voucher-list' %}">{% trans "Vouchers" %}</a>
             <span class="divider">/</span>
         </li>
-        <li class="active">{% blocktrans with name=voucher.name %}Voucher '{{ name }}'{% endblocktrans %}</li>
+        <li class="active">{{ voucher }}</li>
     </ul>
 {% endblock %}
 
 {% block headertext %}
-    {% blocktrans with name=voucher.name %}Voucher '{{ name }}'{% endblocktrans %}
+    {{ voucher }}
 {% endblock %}
 
 {% block dashboard_content %}
@@ -65,17 +65,15 @@
                 <th>{% trans "Order total" %}</th>
                 <th>{% trans "Discount" %}</th>
                 <th>{% trans "Date placed" %}</th>
-                <th></th>
             </thead>
             <tbody>
                 {% for discount in discounts %}
                     {% with order=discount.order %}
                         <tr>
-                            <td>{{ order.number }}</td>
+                            <td><a href="{% url "dashboard:order-detail" number=order.number %}">{{ order.number }}</a></td>
                             <td>{{ order.total_incl_tax|currency:order.currency }}</td>
                             <td>{{ discount.amount|currency:order.currency }}</td>
                             <td>{{ order.date_placed }}</td>
-                            <td><a href="{% url 'dashboard:order-detail' number=order.number %}" class="btn btn-info">{% trans "View" %}</a></td>
                         </tr>
                     {% endwith %}
                 {% endfor %}
