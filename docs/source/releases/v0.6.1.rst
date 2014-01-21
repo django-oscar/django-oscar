@@ -30,6 +30,11 @@ The following bugs were fixed:
 * `#1130`_ - Variant products were not fetching the product class instance
   correctly within ``is_shipping_required``.
 
+* `#1138`_ - Adjust the 
+  :class:`~oscar.apps.shipping.models.OrderAndItemCharges` shipping method to
+  not count lines that don't require shipping.
+
 .. _`#1128`: https://github.com/tangentlabs/django-oscar/issues/1128
 .. _`#1130`: https://github.com/tangentlabs/django-oscar/issues/1130
+.. _`#1138`: https://github.com/tangentlabs/django-oscar/issues/1138
 .. _`Django's docs`: https://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey.on_delete
