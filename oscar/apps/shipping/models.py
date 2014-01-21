@@ -116,7 +116,7 @@ class WeightBased(ShippingMethod):
 
     @property
     def charge_incl_tax(self):
-        # Note, when weighing the basket, we don't check whether the item
+        # Note, when weighing the basket, we don't check whether the item
         # requires shipping or not.  It is assumed that if something has a
         # weight, then it requires shipping.
         scales = Scales(attribute_code=self.weight_attribute,

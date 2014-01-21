@@ -17,6 +17,3 @@ class StockRecord(AbstractStockRecord):
 
 class StockAlert(AbstractStockAlert):
     pass
-
-
-from oscar.apps.partner.receivers import *  # noqa

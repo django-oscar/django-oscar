@@ -15,7 +15,3 @@ class Notification(abstract_models.AbstractNotification):
 
 class ProductAlert(abstract_models.AbstractProductAlert):
     pass
-
-
-from oscar.apps.customer.history import *  # noqa
-from oscar.apps.customer.alerts.receivers import *  # noqa

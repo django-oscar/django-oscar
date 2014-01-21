@@ -17,7 +17,3 @@ class UserProductView(AbstractUserProductView):
 
 class UserSearch(AbstractUserSearch):
     pass
-
-
-# Import receiver functions
-from oscar.apps.analytics.receivers import *  # noqa

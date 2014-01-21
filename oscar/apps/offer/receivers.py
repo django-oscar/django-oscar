@@ -3,6 +3,7 @@ from django.db.models.signals import m2m_changed
 from django.db.models import get_model
 
 from oscar.apps.basket.abstract_models import AbstractBasket
+
 Voucher = get_model('voucher', 'Voucher')
 OrderDiscount = get_model('order', 'OrderDiscount')
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
