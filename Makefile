@@ -10,6 +10,10 @@ upgrade:
 	python setup.py develop --upgrade
 
 sandbox: install
+	# Remove media
+	-rm -rf sites/sandbox/public/media/images
+	-rm -rf sites/sandbox/public/media/cache
+	-rm -rf sites/sandbox/public/static
 	-rm -f sites/sandbox/db.sqlite
 	# Create database
 	sites/sandbox/manage.py syncdb --noinput
