@@ -3,9 +3,7 @@
 {% load currency_filters %}
 {% load i18n %}
 
-{% block body_class %}
-    create-page
-{% endblock %}
+{% block body_class %}{{ block.super }} create-page{% endblock %}
 
 {% block title %}
     {% blocktrans with name=voucher.name %}Delete voucher '{{ name }}'?{% endblocktrans %} | {% trans "Vouchers" %} | {{ block.super }}

@@ -3,7 +3,7 @@
 {% load currency_filters %}
 {% load i18n %}
 
-{% block body_class %}orders home{% endblock %}
+{% block body_class %}{{ block.super }} orders home{% endblock %}
 
 {% block extrahead %}
     {{ block.super }}

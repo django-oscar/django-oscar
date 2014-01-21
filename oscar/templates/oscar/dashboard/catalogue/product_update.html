@@ -5,7 +5,7 @@
 {% load staticfiles %}
 
 
-{% block body_class %}create-page catalogue{% endblock %}
+{% block body_class %}{{ block.super }} create-page catalogue{% endblock %}
 
 {% block title %}
     {{ title }} | {% trans "Product management" %} | {{ block.super }}

@@ -3,7 +3,7 @@
 {% load url from future %}
 {% load i18n %}
 
-{% block body_class %}create-page pages{% endblock %}
+{% block body_class %}{{ block.super }} create-page pages{% endblock %}
 {% block title %}
 {{ title }} | {{ block.super }}
 {% endblock %}

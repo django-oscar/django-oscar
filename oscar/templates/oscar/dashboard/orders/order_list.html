@@ -4,7 +4,7 @@
 {% load sorting_tags %}
 {% load i18n %}
 
-{% block body_class %}orders{% endblock %}
+{% block body_class %}{{ block.super }} orders{% endblock %}
 
 {% block title %}
     {% trans "Order management" %} | {{ block.super }}
