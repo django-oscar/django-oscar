@@ -24,7 +24,8 @@ Dispatcher = get_class('customer.utils', 'Dispatcher')
 EmailAuthenticationForm, EmailUserCreationForm, OrderSearchForm = get_classes(
     'customer.forms', ['EmailAuthenticationForm', 'EmailUserCreationForm',
                        'OrderSearchForm'])
-ProfileForm = get_class('customer.forms', 'ProfileForm')
+ProfileForm, ConfirmPasswordForm = get_classes(
+    'customer.forms', ['ProfileForm', 'ConfirmPasswordForm'])
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
 user_registered = get_class('customer.signals', 'user_registered')
 Order = get_model('order', 'Order')
@@ -292,6 +293,28 @@ class ProfileUpdateView(PageTitleMixin, FormView):
 
     def get_success_url(self):
         return reverse('customer:profile-view')
+
+
+class ProfileDeleteView(PageTitleMixin, FormView):
+    form_class = ConfirmPasswordForm
+    template_name = 'customer/profile/profile_delete.html'
+    page_title = _('Delete profile')
+    active_tab = 'profile'
+
+    def get_form_kwargs(self):
+        kwargs = super(ProfileDeleteView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        self.request.user.delete()
+        messages.success(
+            self.request,
+            _("Your profile has now been deleted. Thanks for using the site."))
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('promotions:home')
 
 
 class ChangePasswordView(PageTitleMixin, FormView):

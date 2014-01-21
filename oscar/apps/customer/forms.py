@@ -93,6 +93,26 @@ class EmailAuthenticationForm(AuthenticationForm):
         return url
 
 
+class ConfirmPasswordForm(forms.Form):
+    """
+    Extends the standard django AuthenticationForm, to support 75 character
+    usernames. 75 character usernames are needed to support the EmailOrUsername
+    auth backend.
+    """
+    password = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
+
+    def __init__(self, user, *args, **kwargs):
+        super(ConfirmPasswordForm, self).__init__(*args, **kwargs)
+        self.user = user
+
+    def clean_password(self):
+        password = self.cleaned_data['password']
+        if not self.user.check_password(password):
+            raise forms.ValidationError(
+                _("The entered password is not valid!"))
+        return password
+
+
 class CommonPasswordValidator(validators.BaseValidator):
     # See
     # http://www.smartplanet.com/blog/business-brains/top-20-most-common-passwords-of-all-time-revealed-8216123456-8216princess-8216qwerty/4519  # noqa

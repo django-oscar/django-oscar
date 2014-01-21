@@ -21,18 +21,21 @@ class AbstractOrder(models.Model):
 
     # We track the site that each order is placed within
     site = models.ForeignKey('sites.Site', verbose_name=_("Site"))
-    basket = models.ForeignKey('basket.Basket', verbose_name=_("Basket"),
-                               null=True, blank=True, on_delete=models.SET_NULL)
+    basket = models.ForeignKey(
+        'basket.Basket', verbose_name=_("Basket"),
+        null=True, blank=True, on_delete=models.SET_NULL)
 
-    # Orders can be anonymous so we don't always have a customer ID
+    # Orders can be placed without the user authenticating so we don't always
+    # have a customer ID.
     user = models.ForeignKey(
         AUTH_USER_MODEL, related_name='orders', null=True, blank=True,
-        verbose_name=_("User"))
+        verbose_name=_("User"), on_delete=models.SET_NULL)
 
     # Billing address is not always required (eg paying by gift card)
     billing_address = models.ForeignKey(
         'order.BillingAddress', null=True, blank=True,
-        verbose_name=_("Billing Address"))
+        verbose_name=_("Billing Address"),
+        on_delete=models.SET_NULL)
 
     # Total price looks like it could be calculated by adding up the
     # prices of the associated lines, but in some circumstances extra
@@ -56,7 +59,8 @@ class AbstractOrder(models.Model):
     # address is not mandatory.
     shipping_address = models.ForeignKey(
         'order.ShippingAddress', null=True, blank=True,
-        verbose_name=_("Shipping Address"))
+        verbose_name=_("Shipping Address"),
+        on_delete=models.SET_NULL)
     shipping_method = models.CharField(
         _("Shipping method"), max_length=128, null=True, blank=True)
 
@@ -123,7 +127,10 @@ class AbstractOrder(models.Model):
 
     @property
     def is_anonymous(self):
-        return self.user is None
+        # It's possible for an order to be placed by a customer who then
+        # deletes their profile.  Hence, we need to check that a guest email is
+        # set.
+        return self.user is None and bool(self.guest_email)
 
     @property
     def basket_total_before_discounts_incl_tax(self):
