@@ -8,15 +8,15 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Order.basket_alt'
-        db.add_column(u'order_order', 'basket_alt',
-                      self.gf('django.db.models.fields.related.ForeignKey')(to=orm['basket.Basket'], null=True, on_delete=models.SET_NULL, blank=True),
-                      keep_default=False)
+        # Deleting field 'Order.basket_id'
+        db.delete_column(u'order_order', 'basket_id')
 
 
     def backwards(self, orm):
-        # Deleting field 'Order.basket_alt'
-        db.delete_column(u'order_order', 'basket_alt_id')
+        # Adding field 'Order.basket_id'
+        db.add_column(u'order_order', 'basket_id',
+                      self.gf('django.db.models.fields.PositiveIntegerField')(null=True, blank=True),
+                      keep_default=False)
 
 
     models = {
@@ -333,15 +333,14 @@ class Migration(SchemaMigration):
         },
         u'order.order': {
             'Meta': {'ordering': "['-date_placed']", 'object_name': 'Order'},
-            'basket_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'basket_alt': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['basket.Basket']", 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'}),
-            'billing_address': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['order.BillingAddress']", 'null': 'True', 'blank': 'True'}),
+            'billing_address': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['order.BillingAddress']", 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'}),
             'currency': ('django.db.models.fields.CharField', [], {'default': "'GBP'", 'max_length': '12'}),
             'date_placed': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
             'guest_email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'number': ('django.db.models.fields.CharField', [], {'max_length': '128', 'db_index': 'True'}),
-            'shipping_address': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['order.ShippingAddress']", 'null': 'True', 'blank': 'True'}),
+            'shipping_address': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['order.ShippingAddress']", 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'}),
             'shipping_code': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '128', 'blank': 'True'}),
             'shipping_excl_tax': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '12', 'decimal_places': '2'}),
             'shipping_incl_tax': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '12', 'decimal_places': '2'}),
@@ -350,7 +349,7 @@ class Migration(SchemaMigration):
             'status': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'total_excl_tax': ('django.db.models.fields.DecimalField', [], {'max_digits': '12', 'decimal_places': '2'}),
             'total_incl_tax': ('django.db.models.fields.DecimalField', [], {'max_digits': '12', 'decimal_places': '2'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'orders'", 'null': 'True', 'to': u"orm['auth.User']"})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'orders'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['auth.User']"})
         },
         u'order.orderdiscount': {
             'Meta': {'object_name': 'OrderDiscount'},

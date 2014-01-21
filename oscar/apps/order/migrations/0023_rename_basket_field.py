@@ -8,26 +8,10 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-
-        # Changing field 'Order.billing_address'
-        db.alter_column(u'order_order', 'billing_address_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['order.BillingAddress'], null=True, on_delete=models.SET_NULL))
-
-        # Changing field 'Order.user'
-        db.alter_column(u'order_order', 'user_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, on_delete=models.SET_NULL, to=orm['auth.User']))
-
-        # Changing field 'Order.shipping_address'
-        db.alter_column(u'order_order', 'shipping_address_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['order.ShippingAddress'], null=True, on_delete=models.SET_NULL))
+        db.rename_column(u'order_order', 'basket_alt_id', 'basket_id')
 
     def backwards(self, orm):
-
-        # Changing field 'Order.billing_address'
-        db.alter_column(u'order_order', 'billing_address_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['order.BillingAddress'], null=True))
-
-        # Changing field 'Order.user'
-        db.alter_column(u'order_order', 'user_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['auth.User']))
-
-        # Changing field 'Order.shipping_address'
-        db.alter_column(u'order_order', 'shipping_address_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['order.ShippingAddress'], null=True))
+        db.rename_column(u'order_order', 'basket_id', 'basket_alt_id')
 
     models = {
         u'address.country': {

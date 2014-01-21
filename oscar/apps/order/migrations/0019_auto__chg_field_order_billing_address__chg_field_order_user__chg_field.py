@@ -8,10 +8,26 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        db.rename_column(u'order_order', 'basket_alt_id', 'basket_id')
+
+        # Changing field 'Order.billing_address'
+        db.alter_column(u'order_order', 'billing_address_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['order.BillingAddress'], null=True, on_delete=models.SET_NULL))
+
+        # Changing field 'Order.user'
+        db.alter_column(u'order_order', 'user_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, on_delete=models.SET_NULL, to=orm['auth.User']))
+
+        # Changing field 'Order.shipping_address'
+        db.alter_column(u'order_order', 'shipping_address_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['order.ShippingAddress'], null=True, on_delete=models.SET_NULL))
 
     def backwards(self, orm):
-        db.rename_column(u'order_order', 'basket_id', 'basket_alt_id')
+
+        # Changing field 'Order.billing_address'
+        db.alter_column(u'order_order', 'billing_address_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['order.BillingAddress'], null=True))
+
+        # Changing field 'Order.user'
+        db.alter_column(u'order_order', 'user_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['auth.User']))
+
+        # Changing field 'Order.shipping_address'
+        db.alter_column(u'order_order', 'shipping_address_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['order.ShippingAddress'], null=True))
 
     models = {
         u'address.country': {
@@ -52,16 +68,6 @@ class Migration(SchemaMigration):
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
-        },
-        u'basket.basket': {
-            'Meta': {'object_name': 'Basket'},
-            'date_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'date_merged': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'date_submitted': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'owner': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'baskets'", 'null': 'True', 'to': u"orm['auth.User']"}),
-            'status': ('django.db.models.fields.CharField', [], {'default': "'Open'", 'max_length': '128'}),
-            'vouchers': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['voucher.Voucher']", 'null': 'True', 'blank': 'True'})
         },
         u'catalogue.attributeentity': {
             'Meta': {'object_name': 'AttributeEntity'},
@@ -197,68 +203,6 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'sms_template': ('django.db.models.fields.CharField', [], {'max_length': '170', 'null': 'True', 'blank': 'True'})
         },
-        u'offer.benefit': {
-            'Meta': {'object_name': 'Benefit'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'max_affected_items': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'proxy_class': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '255', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
-            'range': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['offer.Range']", 'null': 'True', 'blank': 'True'}),
-            'type': ('django.db.models.fields.CharField', [], {'max_length': '128', 'blank': 'True'}),
-            'value': ('oscar.models.fields.PositiveDecimalField', [], {'null': 'True', 'max_digits': '12', 'decimal_places': '2', 'blank': 'True'})
-        },
-        u'offer.condition': {
-            'Meta': {'object_name': 'Condition'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'proxy_class': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '255', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
-            'range': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['offer.Range']", 'null': 'True', 'blank': 'True'}),
-            'type': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True', 'blank': 'True'}),
-            'value': ('oscar.models.fields.PositiveDecimalField', [], {'null': 'True', 'max_digits': '12', 'decimal_places': '2', 'blank': 'True'})
-        },
-        u'offer.conditionaloffer': {
-            'Meta': {'ordering': "['-priority']", 'object_name': 'ConditionalOffer'},
-            'benefit': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['offer.Benefit']"}),
-            'condition': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['offer.Condition']"}),
-            'date_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'end_datetime': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'max_basket_applications': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'max_discount': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '12', 'decimal_places': '2', 'blank': 'True'}),
-            'max_global_applications': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'max_user_applications': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'}),
-            'num_applications': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'num_orders': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'offer_type': ('django.db.models.fields.CharField', [], {'default': "'Site'", 'max_length': '128'}),
-            'priority': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'redirect_url': ('oscar.models.fields.ExtendedURLField', [], {'max_length': '200', 'blank': 'True'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '128', 'unique': 'True', 'null': 'True'}),
-            'start_datetime': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'status': ('django.db.models.fields.CharField', [], {'default': "'Open'", 'max_length': '64'}),
-            'total_discount': ('django.db.models.fields.DecimalField', [], {'default': "'0.00'", 'max_digits': '12', 'decimal_places': '2'})
-        },
-        u'offer.range': {
-            'Meta': {'object_name': 'Range'},
-            'classes': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'classes'", 'blank': 'True', 'to': u"orm['catalogue.ProductClass']"}),
-            'date_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'excluded_products': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'excludes'", 'blank': 'True', 'to': u"orm['catalogue.Product']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'included_categories': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'includes'", 'blank': 'True', 'to': u"orm['catalogue.Category']"}),
-            'included_products': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'includes'", 'blank': 'True', 'through': u"orm['offer.RangeProduct']", 'to': u"orm['catalogue.Product']"}),
-            'includes_all_products': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_public': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'}),
-            'proxy_class': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '255', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '128', 'unique': 'True', 'null': 'True'})
-        },
-        u'offer.rangeproduct': {
-            'Meta': {'unique_together': "(('range', 'product'),)", 'object_name': 'RangeProduct'},
-            'display_order': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['catalogue.Product']"}),
-            'range': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['offer.Range']"})
-        },
         u'order.billingaddress': {
             'Meta': {'object_name': 'BillingAddress'},
             'country': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['address.Country']"}),
@@ -327,14 +271,14 @@ class Migration(SchemaMigration):
         },
         u'order.order': {
             'Meta': {'ordering': "['-date_placed']", 'object_name': 'Order'},
-            'basket': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['basket.Basket']", 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'}),
-            'billing_address': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['order.BillingAddress']", 'null': 'True', 'blank': 'True'}),
+            'basket_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'billing_address': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['order.BillingAddress']", 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'}),
             'currency': ('django.db.models.fields.CharField', [], {'default': "'GBP'", 'max_length': '12'}),
             'date_placed': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
             'guest_email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'number': ('django.db.models.fields.CharField', [], {'max_length': '128', 'db_index': 'True'}),
-            'shipping_address': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['order.ShippingAddress']", 'null': 'True', 'blank': 'True'}),
+            'shipping_address': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['order.ShippingAddress']", 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'}),
             'shipping_code': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '128', 'blank': 'True'}),
             'shipping_excl_tax': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '12', 'decimal_places': '2'}),
             'shipping_incl_tax': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '12', 'decimal_places': '2'}),
@@ -343,7 +287,7 @@ class Migration(SchemaMigration):
             'status': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'total_excl_tax': ('django.db.models.fields.DecimalField', [], {'max_digits': '12', 'decimal_places': '2'}),
             'total_incl_tax': ('django.db.models.fields.DecimalField', [], {'max_digits': '12', 'decimal_places': '2'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'orders'", 'null': 'True', 'to': u"orm['auth.User']"})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'orders'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['auth.User']"})
         },
         u'order.orderdiscount': {
             'Meta': {'object_name': 'OrderDiscount'},
@@ -459,20 +403,6 @@ class Migration(SchemaMigration):
             'domain': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        u'voucher.voucher': {
-            'Meta': {'object_name': 'Voucher'},
-            'code': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128', 'db_index': 'True'}),
-            'date_created': ('django.db.models.fields.DateField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'end_date': ('django.db.models.fields.DateField', [], {}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'num_basket_additions': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'num_orders': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'offers': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'vouchers'", 'symmetrical': 'False', 'to': u"orm['offer.ConditionalOffer']"}),
-            'start_date': ('django.db.models.fields.DateField', [], {}),
-            'total_discount': ('django.db.models.fields.DecimalField', [], {'default': "'0.00'", 'max_digits': '12', 'decimal_places': '2'}),
-            'usage': ('django.db.models.fields.CharField', [], {'default': "'Multi-use'", 'max_length': '128'})
         }
     }
 
