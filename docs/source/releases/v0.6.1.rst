@@ -20,6 +20,13 @@ deleted accidentally.
 
 See `Django's docs`_ for more info on ``on_delete`` options.
 
+Missing translations
+~~~~~~~~~~~~~~~~~~~~
+
+The 0.6 release failed to include several translations from Transifex due to a
+problem in the way we updated translation files before release.  This
+release rectifies that and includes the latest translation files.
+
 Known issues
 ============
 
