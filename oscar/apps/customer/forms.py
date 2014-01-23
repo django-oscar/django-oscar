@@ -40,11 +40,8 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
     """
     communication_type_code = "PASSWORD_RESET"
 
-    def save(self, domain_override=None,
-             subject_template_name='registration/password_reset_subject.txt',
-             email_template_name='registration/password_reset_email.html',
-             use_https=False, token_generator=default_token_generator,
-             from_email=None, request=None, **kwargs):
+    def save(self, domain_override=None, use_https=False, request=None,
+             **kwargs):
         """
         Generates a one-use only link for resetting password and sends to the
         user.
