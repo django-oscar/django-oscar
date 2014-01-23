@@ -31,6 +31,12 @@ Bug fixes
 
 The following bugs were fixed:
 
+* `#1109`_ - Workaround for a bug in Bootstrap regarding the collapsing of the
+  navigation bar.
+
+* `#1121`_ - Added a confirmation view to removing products from wish lists
+  because one can't POST to it in all cases.
+
 * `#1127`_ required that the ``migrate_alerts_to_user` function is now
   explicitly called in Oscar's base User class. It previously was wired up as
   a ``post_save`` signal receiver on the User model, which does not work in
@@ -46,14 +52,24 @@ The following bugs were fixed:
   displayed correctly now. Also introduced hooks for adding support for e.g.
   ``file`` and ``image`` types.
 
+* `#1133`_ - The order detail page for anonymous checkouts failed to render if
+  reviews were disabled.
+
+* `#1134`_ - Fixed a bug caused where unicode characters in child products'
+  titles were incorrectly handled.
+
 * `#1138`_ - Adjust the 
   :class:`~oscar.apps.shipping.models.OrderAndItemCharges` shipping method to
   not count lines that don't require shipping.
 
+.. _`#1109`: https://github.com/tangentlabs/django-oscar/issues/1109
+.. _`#1121`: https://github.com/tangentlabs/django-oscar/issues/1121
 .. _`#1127`: https://github.com/tangentlabs/django-oscar/issues/1127
 .. _`#1128`: https://github.com/tangentlabs/django-oscar/issues/1128
 .. _`#1130`: https://github.com/tangentlabs/django-oscar/issues/1130
 .. _`#1132`: https://github.com/tangentlabs/django-oscar/issues/1132
+.. _`#1133`: https://github.com/tangentlabs/django-oscar/issues/1133
+.. _`#1134`: https://github.com/tangentlabs/django-oscar/issues/1134
 .. _`#1138`: https://github.com/tangentlabs/django-oscar/issues/1138
 .. _`#1149`: https://github.com/tangentlabs/django-oscar/issues/1149
 .. _`Django's docs`: https://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey.on_delete
