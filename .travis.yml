@@ -10,9 +10,8 @@ env:
     # $TRANSIFEX_PASSWORD for oscar_bot (used in transifex.sh)
     secure: FuIlzEsGJiAwhaIRBmRNsq9eXmuzs25fX6BChknW4lDyVAySWMp0+Zps9Bd0JgfFYUG3Ip+OTmksYIoTUsG25ZJS9cq1IFt3QKUAN70YCI/4ZBLeIdICPEyxq+Km179+NeEXmBUug17RLMLxh3MWfO+RKUHK9yHIPNNpq0dNyoo=
   matrix:
-  - DJANGO_VERSION=1.4.10
-  - DJANGO_VERSION=1.5.4
-  - DJANGO_VERSION=1.6
+  - DJANGO_VERSION=1.5.5
+  - DJANGO_VERSION=1.6.1
 install:
   - easy_install Django==$DJANGO_VERSION
 before_script:
