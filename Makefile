@@ -109,3 +109,7 @@ clean:
 	# Remove files not in source control
 	find . -type f -name "*.pyc" -delete
 	rm -rf nosetests.xml coverage.xml htmlcov *.egg-info *.pdf dist violations.txt
+
+preflight: lint
+    # Bare minimum of tests to run before pushing to master
+	./runtests.py
