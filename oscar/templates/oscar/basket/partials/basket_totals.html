@@ -43,13 +43,13 @@
                                 <td>
                                     {{ discount.voucher.name }} ({{ discount.voucher.code }})
                                     {% if editable %}
-                                        <form action="{% url 'basket:vouchers-remove' pk=discount.voucher.id %}" method="POST">
+                                        <form style="display:inline" action="{% url 'basket:vouchers-remove' pk=discount.voucher.id %}" method="POST">
                                             {% csrf_token %}
                                             <input type="submit" value="{% trans 'Remove' %}" class="btn btn-small btn-danger" />
                                         </form>
                                     {% endif %}
                                 </td>
-                                <td>-{{ discount.discount|currency:basket.currency }}</td>
+                                <td class="align-right">-{{ discount.discount|currency:basket.currency }}</td>
                             </tr>
                         {% endfor %}
                     {% endif %}
