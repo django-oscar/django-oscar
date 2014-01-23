@@ -27,6 +27,8 @@ if 'rosetta' in settings.INSTALLED_APPS:
     )
 
 if settings.DEBUG:
+    import debug_toolbar
+
     # Server statics and uploaded media
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
@@ -35,4 +37,7 @@ if settings.DEBUG:
         url(r'^403$', handler403),
         url(r'^404$', handler404),
         url(r'^500$', handler500)
+    )
+    urlpatterns += patterns('',
+        url(r'^__debug__/', include(debug_toolbar.urls)),
     )
