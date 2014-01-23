@@ -35,4 +35,4 @@ def may_vote(review, user):
 
 @register.filter
 def is_review_permitted(product, user):
-    return product.is_review_permitted(user)
+    return product and product.is_review_permitted(user)

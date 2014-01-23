@@ -107,7 +107,7 @@
                                                 <span class="caret"></span>
                                             </a>
                                             <ul class="dropdown-menu pull-right">
-                                                {% if review.title %}
+                                                {% if review.title and review.product %}
                                                     <li><a href="{% url 'catalogue:reviews-detail' product_slug=review.product.slug product_pk=review.product.id pk=review.id %}">{% trans "View on site" %}</a></li>
                                                 {% endif %}
                                                 <li><a href="{% url 'dashboard:reviews-update' pk=review.id %}">{% trans "Edit" %}</a></li>

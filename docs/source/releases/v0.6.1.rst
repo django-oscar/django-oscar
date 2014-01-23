@@ -14,8 +14,9 @@ did not specify an ``on_delete`` behaviour.  The default is for deletes to
 cascade to related objects, even if the field is nullable.  Hence, deleting a
 user would also delete any orders they had placed.
 
-As of 0.6.1, all foreign keys on the ``Order`` model specify
-``on_delete=SET_NULL`` to avoid orders being deleted accidentally.
+As of 0.6.1, the foreign keys to user, shipping address and billing address on
+the ``Order`` model specify ``on_delete=SET_NULL`` to avoid orders being
+deleted accidentally.
 
 See `Django's docs`_ for more info on ``on_delete`` options.
 
@@ -37,7 +38,7 @@ The following bugs were fixed:
 * `#1121`_ - Added a confirmation view to removing products from wish lists
   because one can't POST to it in all cases.
 
-* `#1127`_ required that the ``migrate_alerts_to_user` function is now
+* `#1127`_ required that the ``migrate_alerts_to_user`` function is now
   explicitly called in Oscar's base User class. It previously was wired up as
   a ``post_save`` signal receiver on the User model, which does not work in
   Django 1.5+.
@@ -62,6 +63,9 @@ The following bugs were fixed:
   :class:`~oscar.apps.shipping.models.OrderAndItemCharges` shipping method to
   not count lines that don't require shipping.
 
+* `#1146`_ - Various templates were adjusted to gracefully handle deleted
+  products.
+
 .. _`#1109`: https://github.com/tangentlabs/django-oscar/issues/1109
 .. _`#1121`: https://github.com/tangentlabs/django-oscar/issues/1121
 .. _`#1127`: https://github.com/tangentlabs/django-oscar/issues/1127
@@ -71,6 +75,7 @@ The following bugs were fixed:
 .. _`#1133`: https://github.com/tangentlabs/django-oscar/issues/1133
 .. _`#1134`: https://github.com/tangentlabs/django-oscar/issues/1134
 .. _`#1138`: https://github.com/tangentlabs/django-oscar/issues/1138
+.. _`#1146`: https://github.com/tangentlabs/django-oscar/issues/1146
 .. _`#1149`: https://github.com/tangentlabs/django-oscar/issues/1149
 .. _`Django's docs`: https://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey.on_delete
 

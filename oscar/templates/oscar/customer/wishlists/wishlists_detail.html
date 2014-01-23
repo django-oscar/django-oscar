@@ -37,21 +37,24 @@
                     </tr>
 
                     {% for form in form %}
-                        {% with line=form.instance %}
+                        {% with line=form.instance product=line.instance.product %}
                             <tr>
                                 <td>
-                                    {% with image=form.instance.product.primary_image %}
-                                        {% thumbnail image.original "100x100" upscale=False as thumb %}
-                                            <a href="{{ form.instance.product.get_absolute_url }}">
-                                                <img class="thumbnail" src="{{ thumb.url }}" alt="{{ form.instance.product.get_title }}" />
-                                            </a>
-                                        {% endthumbnail %}
-                                    {% endwith %}
+                                    {% if product %}
+                                        {% with image=product.primary_image %}
+                                            {% thumbnail image.original "100x100" upscale=False as thumb %}
+                                                <a href="{{ product.get_absolute_url }}">
+                                                    <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}" />
+                                                </a>
+                                            {% endthumbnail %}
+                                        {% endwith %}
+                                    {% endif %}
                                 </td>
                                 <td>
-                                    <a href="{{ line.product.get_absolute_url }}">{{ line.get_title }}</a>
-                                    {% if not line.product %}
-                                        <em>({% trans 'Not available anymore' %})</em>
+                                    {% if product %}
+                                        <a href="{{ line.product.get_absolute_url }}">{{ line.get_title }}</a>
+                                    {% else %}
+                                        <em>{{ line.get_title }} ({% trans 'Not available anymore' %})</em>
                                     {% endif %}
                                 </td>
                                 <td>
@@ -66,7 +69,7 @@
                                 </td>
                                 <td>
                                     <div class="btn-group">
-                                        {% if line.product %}
+                                        {% if product %}
                                             <a class="btn" href="{{ line.product.get_absolute_url }}">{% trans 'View product' %}</a>
                                             <button class="btn dropdown-toggle" data-toggle="dropdown">
                                                 <span class="caret"></span>
