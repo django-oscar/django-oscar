@@ -267,6 +267,12 @@ class ProductCreateUpdateView(generic.UpdateView):
             if self.creating and form.is_valid():
                 self.object.delete()
                 self.object = None
+            # We currently don't hold on to images if the other formsets didn't
+            # validate. But as the browser won't re-POST any images, we can do
+            # no better than re-bind the image formset, which means the user
+            # will have to re-select the images (see #1126)
+            image_formset = self.image_formset(instance=self.object)
+
             return self.forms_invalid(
                 form, stockrecord_formset, category_formset,
                 image_formset, recommended_formset)
