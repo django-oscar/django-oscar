@@ -30,11 +30,17 @@ The following bugs were fixed:
 * `#1130`_ - Variant products were not fetching the product class instance
   correctly within ``is_shipping_required``.
 
+* `#1132`_ and `#1149`_ - Rich text attributes were not supported. Should be
+  displayed correctly now. Also introduced hooks for adding support for e.g.
+  ``file`` and ``image`` types.
+
 * `#1138`_ - Adjust the 
   :class:`~oscar.apps.shipping.models.OrderAndItemCharges` shipping method to
   not count lines that don't require shipping.
 
 .. _`#1128`: https://github.com/tangentlabs/django-oscar/issues/1128
 .. _`#1130`: https://github.com/tangentlabs/django-oscar/issues/1130
+.. _`#1132`: https://github.com/tangentlabs/django-oscar/issues/1132
 .. _`#1138`: https://github.com/tangentlabs/django-oscar/issues/1138
+.. _`#1149`: https://github.com/tangentlabs/django-oscar/issues/1149
 .. _`Django's docs`: https://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey.on_delete
