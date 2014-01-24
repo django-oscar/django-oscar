@@ -1,9 +1,11 @@
 import os
+import sys
 
 # Path helper
 PROJECT_DIR = os.path.dirname(__file__)
 location = lambda x: os.path.join(
     os.path.dirname(os.path.realpath(__file__)), x)
+PY3 = sys.version_info >= (3, 0)
 
 USE_TZ = True
 
@@ -350,6 +352,14 @@ DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.redirects.RedirectsPanel',
 ]
 INTERNAL_IPS = ['127.0.0.1', '::1']
+
+if PY3:
+    # Template timings panel doesn't work with Python 3 atm
+    # https://github.com/orf/django-debug-toolbar-template-timings/issues/18
+    INSTALLED_APPS.remove('template_timings_panel')
+    DEBUG_TOOLBAR_PANELS.remove(
+        'template_timings_panel.panels.TemplateTimings.TemplateTimings')
+
 
 # ==============
 # Oscar settings
