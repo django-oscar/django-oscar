@@ -1,4 +1,5 @@
 from django import template
+from django.forms.fields import Field
 
 register = template.Library()
 
@@ -24,5 +25,6 @@ class FormFieldNode(template.Node):
 
     def render(self, context):
         field = self.field.resolve(context)
-        field.widget_type = field.field.widget.__class__.__name__
+        if isinstance(field, Field):
+            field.widget_type = field.field.widget.__class__.__name__
         return ''
