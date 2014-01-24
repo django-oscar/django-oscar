@@ -1,3 +1,4 @@
+from __future__ import print_function
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import get_model
 
@@ -26,5 +27,5 @@ class Command(BaseCommand):
         }
         messages = CommunicationEventType.objects.get_and_render(
             args[0], ctx)
-        print "Subject: %s\nBody:\n\n%s\nBody HTML:\n\n%s" % (
-            messages['subject'], messages['body'], messages['html'])
+        print("Subject: %s\nBody:\n\n%s\nBody HTML:\n\n%s" % (
+            messages['subject'], messages['body'], messages['html']))

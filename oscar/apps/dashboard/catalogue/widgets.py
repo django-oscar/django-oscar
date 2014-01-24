@@ -3,6 +3,8 @@ from django.forms.util import flatatt
 from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 from django import forms
+from six.moves import filter
+from six.moves import map
 
 
 class ProductSelect(forms.Widget):

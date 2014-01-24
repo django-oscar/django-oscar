@@ -12,6 +12,7 @@ from django.views.generic.base import View
 
 import phonenumbers
 from oscar.core.phonenumber import PhoneNumber
+from six.moves import map
 
 
 class PostActionMixin(object):

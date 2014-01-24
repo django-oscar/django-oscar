@@ -82,7 +82,7 @@ class CsvUnicodeReader(object):
         self.reader = csv.reader(f, dialect=dialect, **kwargs)
 
     def next(self):
-        row = self.reader.next()
+        row = six.advance_iterator(self.reader)
         return [six.text_type(s).encode("utf-8") for s in row]
 
     def __iter__(self):

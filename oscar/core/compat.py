@@ -4,6 +4,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.utils import six
 from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
+from six.moves import map
 
 
 def get_user_model():
@@ -73,7 +74,8 @@ urlparse = _urlparse
 # Code from http://python3porting.com/problems.html
 # Classes renamed to include CSV. Unused 'codecs' import is dropped.
 
-import sys, csv
+import sys
+import csv
 
 PY3 = sys.version > '3'
 

@@ -1,6 +1,8 @@
+from __future__ import print_function
+from __future__ import print_function
 import os
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.core.files import File
 from PIL import Image
 
@@ -26,11 +28,11 @@ class Command(BaseCommand):
 
     def import_image(self, filepath):
         try:
-	    trial = Image.open(filepath)
+            trial = Image.open(filepath)
             trial.verify()
         except IOError:
-            print "%s is not a valid image file" % filepath
-	    return
+            print("%s is not a valid image file" % filepath)
+            return
 
         filename = os.path.basename(filepath)
         name, __ = os.path.splitext(filename)
@@ -44,7 +46,7 @@ class Command(BaseCommand):
         try:
             product = models.Product.objects.get(upc=upc)
         except Exception:
-            print "Product not found: %s" % upc
+            print("Product not found: %s" % upc)
             return
         try:
             product_image = models.ProductImage.objects.get(

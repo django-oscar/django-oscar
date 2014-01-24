@@ -7,6 +7,7 @@ from django.core import exceptions
 
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.models.fields import UppercaseCharField, PhoneNumberField
+from six.moves import filter
 
 
 class AbstractAddress(models.Model):
