@@ -37,7 +37,7 @@
                     </tr>
 
                     {% for form in form %}
-                        {% with line=form.instance product=line.instance.product %}
+                        {% with line=form.instance product=form.instance.product %}
                             <tr>
                                 <td>
                                     {% if product %}
