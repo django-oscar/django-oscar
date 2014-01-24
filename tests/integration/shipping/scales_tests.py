@@ -31,7 +31,7 @@ class TestScales(TestCase):
         basket = Basket()
 
         scales = Scales(attribute_code='weight')
-        self.assertEquals(0, scales.weigh_basket(basket))
+        self.assertEqual(0, scales.weigh_basket(basket))
 
     def test_returns_correct_weight_for_nonempty_basket(self):
         basket = factories.create_basket(empty=True)
@@ -44,7 +44,7 @@ class TestScales(TestCase):
             basket.add(product)
 
         scales = Scales(attribute_code='weight')
-        self.assertEquals(1 + 2, scales.weigh_basket(basket))
+        self.assertEqual(1 + 2, scales.weigh_basket(basket))
 
     def test_returns_correct_weight_for_nonempty_basket_with_line_quantities(self):
         basket = factories.create_basket(empty=True)
@@ -57,4 +57,4 @@ class TestScales(TestCase):
             basket.add(product, quantity=quantity)
 
         scales = Scales(attribute_code='weight')
-        self.assertEquals(1*3 + 2*4, scales.weigh_basket(basket))
+        self.assertEqual(1*3 + 2*4, scales.weigh_basket(basket))

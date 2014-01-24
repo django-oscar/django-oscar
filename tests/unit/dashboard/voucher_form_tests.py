@@ -16,7 +16,7 @@ class TestVoucherForm(test.TestCase):
         form = forms.VoucherForm(data=data)
         try:
             form.is_valid()
-        except Exception, e:
+        except Exception as e:
             import traceback
             self.fail("Validating form failed: %s\n\n%s" % (
                 e.message, traceback.format_exc()))

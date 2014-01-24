@@ -105,10 +105,10 @@ class TestMergingTwoBaskets(TestCase):
         self.main_basket.merge(self.merge_basket)
 
     def test_doesnt_sum_quantities(self):
-        self.assertEquals(1, self.main_basket.num_lines)
+        self.assertEqual(1, self.main_basket.num_lines)
 
     def test_changes_status_of_merge_basket(self):
-        self.assertEquals(Basket.MERGED, self.merge_basket.status)
+        self.assertEqual(Basket.MERGED, self.merge_basket.status)
 
 
 class TestASubmittedBasket(TestCase):

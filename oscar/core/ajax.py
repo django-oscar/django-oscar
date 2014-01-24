@@ -1,3 +1,4 @@
+import six
 from django.contrib import messages
 
 
@@ -35,7 +36,7 @@ class FlashMessages(object):
         payload = {}
         for level, msgs in self.msgs.items():
             tag = messages.DEFAULT_TAGS.get(level, 'info')
-            payload[tag] = map(unicode, msgs)
+            payload[tag] = map(six.text_type, msgs)
         return payload
 
     def apply_to_request(self, request):

@@ -1,3 +1,4 @@
+import six
 import json
 
 from django import forms
@@ -70,7 +71,7 @@ class BulkEditMixin(object):
 
         ids = request.POST.getlist(
             'selected_%s' % self.get_checkbox_object_name())
-        ids = map(int, ids)
+        ids = list(map(int, ids))
         if not ids:
             messages.error(
                 self.request,
@@ -98,7 +99,7 @@ class ObjectLookupView(View):
     def format_object(self, obj):
         return {
             'id': obj.pk,
-            'text': unicode(obj),
+            'text': six.text_type(obj),
         }
 
     def initial_filter(self, qs, value):

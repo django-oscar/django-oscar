@@ -26,7 +26,7 @@ class TestReviewForm(TestCase):
             product=self.product, user=self.reviewer, data=self.data)
         self.assertTrue(form.is_valid())
         review = form.save()
-        self.assertEquals("This product is lovely", review.title)
+        self.assertEqual("This product is lovely", review.title)
 
 
 class TestVoteForm(TestCase):

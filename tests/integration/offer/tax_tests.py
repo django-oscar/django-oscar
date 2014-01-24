@@ -38,7 +38,7 @@ class TestAValueBasedOffer(TestCase):
 
         # Ensure discount is correct
         result = self.offer.apply_benefit(self.basket)
-        self.assertEquals(D('2.40'), result.discount)
+        self.assertEqual(D('2.40'), result.discount)
 
     def test_respects_effective_price_when_taxes_are_known(self):
         # Assign UK style strategy (20% tax)
@@ -49,4 +49,4 @@ class TestAValueBasedOffer(TestCase):
 
         # Ensure discount is calculated against tax-inclusive price
         result = self.offer.apply_benefit(self.basket)
-        self.assertEquals(2 * D('6.00') * D('1.2') * D('0.20'), result.discount)
+        self.assertEqual(2 * D('6.00') * D('1.2') * D('0.20'), result.discount)

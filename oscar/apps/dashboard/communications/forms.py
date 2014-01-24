@@ -36,7 +36,7 @@ class CommunicationEventTypeForm(forms.ModelForm):
     def validate_template(self, value):
         try:
             Template(value)
-        except TemplateSyntaxError, e:
+        except TemplateSyntaxError as e:
             raise forms.ValidationError(e.message)
 
     def clean_email_subject_template(self):

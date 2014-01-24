@@ -52,3 +52,15 @@ def format_html(format_string, *args, **kwargs):
     kwargs_safe = dict([(k, conditional_escape(v)) for (k, v) in
                         six.iteritems(kwargs)])
     return mark_safe(format_string.format(*args_safe, **kwargs_safe))
+
+
+#
+# Python3 compatibility layer
+#
+
+try:
+    import urlparse as _urlparse
+except ImportError:
+    from urllib import parse as _urlparse  # NOQA
+
+urlparse = _urlparse

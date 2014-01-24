@@ -90,7 +90,7 @@ class BasketMiddleware(object):
 
         # If a basket has had products added to it, but the user is anonymous
         # then we need to assign it to a cookie
-        if (basket_id > 0 and not request.user.is_authenticated()
+        if (basket_id and not request.user.is_authenticated()
                 and not has_basket_cookie):
             cookie = self.get_basket_hash(request.basket.id)
             response.set_cookie(

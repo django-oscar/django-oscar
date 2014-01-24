@@ -1,6 +1,5 @@
 import re
 import zlib
-import string
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
@@ -366,7 +365,7 @@ class AbstractAddress(models.Model):
         """
         fields = [self.salutation, self.line1, self.line2,
                   self.line3, self.line4, self.state, self.postcode]
-        fields = map(string.strip, filter(bool, fields))
+        fields = [f.strip() for f in fields if f]
         try:
             fields.append(self.country.name)
         except exceptions.ObjectDoesNotExist:

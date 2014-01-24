@@ -17,8 +17,8 @@ class TestFreeShippping(TestCase):
     def test_is_free_for_empty_basket(self):
         basket = Basket()
         self.method.set_basket(basket)
-        self.assertEquals(D('0.00'), self.method.charge_incl_tax)
-        self.assertEquals(D('0.00'), self.method.charge_excl_tax)
+        self.assertEqual(D('0.00'), self.method.charge_incl_tax)
+        self.assertEqual(D('0.00'), self.method.charge_excl_tax)
 
     def test_includes_tax(self):
         basket = Basket()
@@ -28,8 +28,8 @@ class TestFreeShippping(TestCase):
     def test_shipping_is_free_for_nonempty_basket(self):
         basket = factories.create_basket()
         self.method.set_basket(basket)
-        self.assertEquals(D('0.00'), self.method.charge_incl_tax)
-        self.assertEquals(D('0.00'), self.method.charge_excl_tax)
+        self.assertEqual(D('0.00'), self.method.charge_incl_tax)
+        self.assertEqual(D('0.00'), self.method.charge_excl_tax)
 
 
 @attr('shipping')
@@ -41,8 +41,8 @@ class TestNoShippingRequired(TestCase):
     def test_is_free_for_empty_basket(self):
         basket = Basket()
         self.method.set_basket(basket)
-        self.assertEquals(D('0.00'), self.method.charge_incl_tax)
-        self.assertEquals(D('0.00'), self.method.charge_excl_tax)
+        self.assertEqual(D('0.00'), self.method.charge_incl_tax)
+        self.assertEqual(D('0.00'), self.method.charge_excl_tax)
 
     def test_has_a_different_code_to_free(self):
         self.assertTrue(methods.NoShippingRequired.code !=
@@ -58,7 +58,7 @@ class TestFixedPriceShippingWithoutTax(TestCase):
         self.method.set_basket(basket)
 
     def test_has_correct_charge(self):
-        self.assertEquals(D('10.00'), self.method.charge_excl_tax)
+        self.assertEqual(D('10.00'), self.method.charge_excl_tax)
 
     def test_does_not_include_tax(self):
         self.assertFalse(self.method.is_tax_known)
@@ -77,8 +77,8 @@ class TestFixedPriceShippingWithTax(TestCase):
         self.method.set_basket(basket)
 
     def test_has_correct_charge(self):
-        self.assertEquals(D('10.00'), self.method.charge_excl_tax)
-        self.assertEquals(D('12.00'), self.method.charge_incl_tax)
+        self.assertEqual(D('10.00'), self.method.charge_excl_tax)
+        self.assertEqual(D('12.00'), self.method.charge_incl_tax)
 
     def test_does_include_tax(self):
         self.assertTrue(self.method.is_tax_known)

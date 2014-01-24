@@ -59,7 +59,7 @@ class UpdateView(generic.UpdateView):
         commtype_ctx = self.get_messages_context(form)
         try:
             msgs = commtype.get_messages(commtype_ctx)
-        except TemplateSyntaxError, e:
+        except TemplateSyntaxError as e:
             form.errors['__all__'] = form.error_class([e.message])
             return self.render_to_response(ctx)
 
@@ -75,7 +75,7 @@ class UpdateView(generic.UpdateView):
         commtype_ctx = self.get_messages_context(form)
         try:
             msgs = commtype.get_messages(commtype_ctx)
-        except TemplateSyntaxError, e:
+        except TemplateSyntaxError as e:
             form.errors['__all__'] = form.error_class([e.message])
             return self.render_to_response(ctx)
 

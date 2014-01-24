@@ -65,7 +65,7 @@ class AbstractProductReview(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ['-delta_votes']
+        ordering = ['-delta_votes', 'id']
         unique_together = (('product', 'user'),)
         verbose_name = _('Product review')
         verbose_name_plural = _('Product reviews')
@@ -164,7 +164,7 @@ class AbstractProductReview(models.Model):
         vote = self.votes.model(review=self, user=user, delta=1)
         try:
             vote.full_clean()
-        except ValidationError, e:
+        except ValidationError as e:
             return False, u"%s" % e
         return True, ""
 

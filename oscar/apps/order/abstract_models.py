@@ -7,6 +7,7 @@ from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django.utils.datastructures import SortedDict
 
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.utils import slugify
@@ -275,7 +276,8 @@ class AbstractOrder(models.Model):
         return u"#%s" % (self.number,)
 
     def verification_hash(self):
-        hash = hashlib.md5('%s%s' % (self.number, settings.SECRET_KEY))
+        key = '%s%s' % (self.number, settings.SECRET_KEY)
+        hash = hashlib.md5(key.encode('utf8'))
         return hash.hexdigest()
 
     @property
@@ -554,7 +556,7 @@ class AbstractLine(models.Model):
 
         events = []
         last_complete_event_name = None
-        for event_dict in status_map.values():
+        for event_dict in reversed(list(status_map.values())):
             if event_dict['quantity'] == self.quantity:
                 events.append(event_dict['name'])
                 last_complete_event_name = event_dict['name']
@@ -563,7 +565,7 @@ class AbstractLine(models.Model):
                     event_dict['name'], event_dict['quantity'],
                     self.quantity))
 
-        if last_complete_event_name == status_map.values()[-1]['name']:
+        if last_complete_event_name == list(status_map.values())[0]['name']:
             return last_complete_event_name
 
         return ', '.join(events)
@@ -606,7 +608,7 @@ class AbstractLine(models.Model):
         """
         Returns a dict of shipping events that this line has been through
         """
-        status_map = {}
+        status_map = SortedDict()
         for event in self.shipping_events.all():
             event_type = event.event_type
             event_name = event_type.name
@@ -614,9 +616,11 @@ class AbstractLine(models.Model):
             if event_name in status_map:
                 status_map[event_name]['quantity'] += event_quantity
             else:
-                status_map[event_name] = {'event_type': event_type,
-                                          'name': event_name,
-                                          'quantity': event_quantity}
+                status_map[event_name] = {
+                    'event_type': event_type,
+                    'name': event_name,
+                    'quantity': event_quantity
+                }
         return status_map
 
     # Payment event helpers
