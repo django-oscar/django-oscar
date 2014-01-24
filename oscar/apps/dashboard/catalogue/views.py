@@ -253,7 +253,7 @@ class ProductCreateUpdateView(generic.UpdateView):
         if is_valid and cross_form_validation_result:
             return self.forms_valid(form, formsets)
         else:
-            # delete the temporary product again
+            # Delete the temporary product again
             if self.creating and self.object and self.object.pk is not None:
                 self.object.delete()
                 self.object = None

@@ -33,6 +33,7 @@ class WishListDetailView(PageTitleMixin, FormView):
     """
     This view acts as a DetailView for a wish list and allows updating the
     quantities of products.
+
     It is implemented as FormView because it's easier to adapt a FormView to
     display a product then adapt a DetailView to handle form validation.
     """

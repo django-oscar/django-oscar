@@ -36,8 +36,8 @@
                         <th>{% trans 'Action' %}</th>
                     </tr>
 
-                    {% for form in form %}
-                        {% with line=form.instance product=line.instance.product %}
+                    {% for subform in form %}
+                        {% with line=subform.instance product=subform.instance.product %}
                             <tr>
                                 <td>
                                     {% if product %}
@@ -58,7 +58,7 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {% for field in form %}
+                                    {% for field in subform %}
                                         {{ field }}
                                         {% for error in field.errors %}
                                             <ul class="help-block">
