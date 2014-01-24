@@ -23,7 +23,7 @@ class TestProductDetailPage(WebTestCase):
 
         # Check a wishlist has been created
         wishlists = self.user.wishlists.all()
-        self.assertEquals(1, len(wishlists))
+        self.assertEqual(1, len(wishlists))
 
         wishlist = wishlists[0]
-        self.assertEquals(1, len(wishlist.lines.all()))
+        self.assertEqual(1, len(wishlist.lines.all()))

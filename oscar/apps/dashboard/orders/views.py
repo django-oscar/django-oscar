@@ -1,3 +1,4 @@
+import six
 import datetime
 from decimal import Decimal as D, InvalidOperation
 
@@ -351,7 +352,7 @@ class OrderListView(BulkEditMixin, ListView):
             else:
                 row['billing_address_name'] = ''
 
-            encoded_values = [unicode(value).encode('utf8')
+            encoded_values = [six.text_type(value).encode('utf8')
                               for value in row.values()]
             writer.writerow(encoded_values)
         return response
@@ -480,7 +481,7 @@ class OrderDetailView(DetailView):
         handler = EventHandler(request.user)
         try:
             handler.handle_order_status_change(order, new_status)
-        except PaymentError, e:
+        except PaymentError as e:
             messages.error(request, _("Unable to change order status due to"
                                       " payment error: %s") % e)
         else:
@@ -536,13 +537,13 @@ class OrderDetailView(DetailView):
             EventHandler().handle_shipping_event(order, event_type, lines,
                                                  quantities,
                                                  reference=reference)
-        except InvalidShippingEvent, e:
+        except InvalidShippingEvent as e:
             messages.error(request,
                            _("Unable to create shipping event: %s") % e)
-        except InvalidStatus, e:
+        except InvalidStatus as e:
             messages.error(request,
                            _("Unable to create shipping event: %s") % e)
-        except PaymentError, e:
+        except PaymentError as e:
             messages.error(request, _("Unable to create shipping event due to"
                                       " payment error: %s") % e)
         else:
@@ -570,7 +571,7 @@ class OrderDetailView(DetailView):
         try:
             EventHandler().handle_payment_event(order, event_type, amount,
                                                 lines, quantities)
-        except PaymentError, e:
+        except PaymentError as e:
             messages.error(request, _("Unable to change order status due to"
                                       " payment error: %s") % e)
         else:

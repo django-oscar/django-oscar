@@ -55,11 +55,11 @@ class VariantProductTests(ProductTests):
 
     def test_variant_products_inherit_parent_titles(self):
         p = Product.objects.create(parent=self.parent, product_class=self.product_class)
-        self.assertEquals("Parent product", p.get_title())
+        self.assertEqual("Parent product", p.get_title())
 
     def test_variant_products_inherit_product_class(self):
         p = Product.objects.create(parent=self.parent)
-        self.assertEquals("Clothing", p.get_product_class().name)
+        self.assertEqual("Clothing", p.get_product_class().name)
 
 
 class TestAVariant(TestCase):

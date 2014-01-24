@@ -22,8 +22,8 @@ class TestDefaultStrategy(TestCase):
         product = factories.create_product(price=D('1.99'), num_in_stock=4)
         info = self.strategy.fetch_for_product(product)
         self.assertTrue(info.availability.is_available_to_buy)
-        self.assertEquals(D('1.99'), info.price.excl_tax)
-        self.assertEquals(D('1.99'), info.price.incl_tax)
+        self.assertEqual(D('1.99'), info.price.excl_tax)
+        self.assertEqual(D('1.99'), info.price.incl_tax)
 
     def test_product_which_doesnt_track_stock(self):
         product_class = models.ProductClass.objects.create(
@@ -55,7 +55,7 @@ class TestDefaultStrategyForParentProductWhoseVariantsHaveNoStockRecords(TestCas
         self.assertFalse(self.info.availability.is_available_to_buy)
 
     def test_specifies_correct_availability_code(self):
-        self.assertEquals('unavailable', self.info.availability.code)
+        self.assertEqual('unavailable', self.info.availability.code)
 
     def test_specifies_product_has_no_price(self):
         self.assertFalse(self.info.price.exists)
@@ -76,10 +76,10 @@ class TestDefaultStrategyForParentProductWithInStockVariant(TestCase):
         self.assertTrue(self.info.availability.is_available_to_buy)
 
     def test_specifies_correct_availability_code(self):
-        self.assertEquals('available', self.info.availability.code)
+        self.assertEqual('available', self.info.availability.code)
 
     def test_specifies_product_has_correct_price(self):
-        self.assertEquals(D('10.00'), self.info.price.incl_tax)
+        self.assertEqual(D('10.00'), self.info.price.incl_tax)
 
 
 class TestDefaultStrategyForParentProductWithOutOfStockVariant(TestCase):
@@ -97,7 +97,7 @@ class TestDefaultStrategyForParentProductWithOutOfStockVariant(TestCase):
         self.assertFalse(self.info.availability.is_available_to_buy)
 
     def test_specifies_correct_availability_code(self):
-        self.assertEquals('unavailable', self.info.availability.code)
+        self.assertEqual('unavailable', self.info.availability.code)
 
     def test_specifies_product_has_correct_price(self):
-        self.assertEquals(D('10.00'), self.info.price.incl_tax)
+        self.assertEqual(D('10.00'), self.info.price.incl_tax)

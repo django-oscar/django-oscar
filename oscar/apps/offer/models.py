@@ -1,3 +1,5 @@
+import six
+import operator
 from decimal import Decimal as D, ROUND_DOWN, ROUND_UP
 
 from django.core import exceptions
@@ -24,7 +26,7 @@ def load_proxy(proxy_class):
     module, classname = proxy_class.rsplit('.', 1)
     try:
         mod = import_module(module)
-    except ImportError, e:
+    except ImportError as e:
         raise exceptions.ImproperlyConfigured(
             "Error importing module %s: %s" % (module, e))
     try:
@@ -435,7 +437,7 @@ class Condition(models.Model):
         Return the proxy model
         """
         field_dict = dict(self.__dict__)
-        for field in field_dict.keys():
+        for field in list(field_dict.keys()):
             if field.startswith('_'):
                 del field_dict[field]
 
@@ -505,9 +507,10 @@ class Condition(models.Model):
             if not price:
                 continue
             line_tuples.append((price, line))
+        key = operator.itemgetter(0)
         if most_expensive_first:
-            return sorted(line_tuples, reverse=True)
-        return sorted(line_tuples)
+            return sorted(line_tuples, reverse=True, key=key)
+        return sorted(line_tuples, key=key)
 
 
 class Benefit(models.Model):
@@ -558,7 +561,7 @@ class Benefit(models.Model):
 
     def proxy(self):
         field_dict = dict(self.__dict__)
-        for field in field_dict.keys():
+        for field in list(field_dict.keys()):
             if field.startswith('_'):
                 del field_dict[field]
 
@@ -725,7 +728,7 @@ class Benefit(models.Model):
             line_tuples.append((price, line))
 
         # We sort lines to be cheapest first to ensure consistent applications
-        return sorted(line_tuples)
+        return sorted(line_tuples, key=operator.itemgetter(0))
 
     def shipping_discount(self, charge):
         return D('0.00')
@@ -921,7 +924,7 @@ class CountCondition(Condition):
     def name(self):
         return self._description % {
             'count': self.value,
-            'range': unicode(self.range).lower()}
+            'range': six.text_type(self.range).lower()}
 
     @property
     def description(self):
@@ -1009,7 +1012,7 @@ class CoverageCondition(Condition):
     def name(self):
         return self._description % {
             'count': self.value,
-            'range': unicode(self.range).lower()}
+            'range': six.text_type(self.range).lower()}
 
     @property
     def description(self):
@@ -1112,7 +1115,7 @@ class ValueCondition(Condition):
     def name(self):
         return self._description % {
             'amount': currency(self.value),
-            'range': unicode(self.range).lower()}
+            'range': six.text_type(self.range).lower()}
 
     @property
     def description(self):

@@ -45,7 +45,7 @@ class TestAStaffUser(WebTestCase):
         form['productcategory_set-0-category'] = category.id
         page = form.submit()
 
-        self.assertEquals(Product.objects.count(), 1)
+        self.assertEqual(Product.objects.count(), 1)
 
     def test_can_create_and_continue_editing_a_product(self):
         category = G(Category)
@@ -62,9 +62,9 @@ class TestAStaffUser(WebTestCase):
         form['stockrecords-0-price_excl_tax'] = '13.99'
         page = form.submit('action', index=0)
 
-        self.assertEquals(Product.objects.count(), 1)
+        self.assertEqual(Product.objects.count(), 1)
         product = Product.objects.all()[0]
-        self.assertEquals(product.stockrecords.all()[0].partner, self.partner)
+        self.assertEqual(product.stockrecords.all()[0].partner, self.partner)
         self.assertRedirects(page, reverse('dashboard:catalogue-product',
                                            kwargs={'pk': product.id}))
 
@@ -105,9 +105,9 @@ class TestAStaffUser(WebTestCase):
 
         self.assertRedirects(page, reverse('dashboard:catalogue-product-list'))
 
-        self.assertEquals(Product.objects.count(), 0)
-        self.assertEquals(StockRecord.objects.count(), 0)
-        self.assertEquals(ProductCategory.objects.count(), 0)
+        self.assertEqual(Product.objects.count(), 0)
+        self.assertEqual(StockRecord.objects.count(), 0)
+        self.assertEqual(ProductCategory.objects.count(), 0)
 
         self.assertRaises(Product.DoesNotExist,
                           Product.objects.get, id=product.id)
@@ -132,9 +132,9 @@ class TestAStaffUser(WebTestCase):
 
         self.assertRedirects(page, reverse('dashboard:catalogue-product-list'))
 
-        self.assertEquals(Product.objects.count(), 0)
-        self.assertEquals(StockRecord.objects.count(), 0)
-        self.assertEquals(ProductCategory.objects.count(), 0)
+        self.assertEqual(Product.objects.count(), 0)
+        self.assertEqual(StockRecord.objects.count(), 0)
+        self.assertEqual(ProductCategory.objects.count(), 0)
 
         self.assertRaises(Product.DoesNotExist,
                           Product.objects.get, id=canonical_product.id)

@@ -24,7 +24,7 @@ class ShippingAddressTest(TestCase):
         country = Country.objects.get(iso_3166_1_a2='GB')
         a = ShippingAddress.objects.create(
             last_name='Barrington', line1="75 Smith Road", postcode="N4 8TY", country=country)
-        self.assertEquals("Barrington", a.salutation)
+        self.assertEqual("Barrington", a.salutation)
 
 
 class OrderStatusPipelineTests(TestCase):
@@ -130,24 +130,24 @@ class LineTests(TestCase):
         self.assertEqual(1, history['Dispatched']['quantity'])
 
     def test_shipping_status_is_empty_to_start_with(self):
-        self.assertEquals('', self.line.shipping_status)
+        self.assertEqual('', self.line.shipping_status)
 
     def test_shipping_status_after_full_line_event(self):
         self.event(self.order_placed)
-        self.assertEquals(self.order_placed.name, self.line.shipping_status)
+        self.assertEqual(self.order_placed.name, self.line.shipping_status)
 
     def test_shipping_status_after_two_full_line_events(self):
         type1 = self.order_placed
         self.event(type1)
         type2 = self.dispatched
         self.event(type2)
-        self.assertEquals(type2.name, self.line.shipping_status)
+        self.assertEqual(type2.name, self.line.shipping_status)
 
     def test_shipping_status_after_partial_line_event(self):
         type = self.order_placed
         self.event(type, 3)
         expected = "%s (%d/%d items)" % (type.name, 3, self.line.quantity)
-        self.assertEquals(expected, self.line.shipping_status)
+        self.assertEqual(expected, self.line.shipping_status)
 
     def test_has_passed_shipping_status_after_full_line_event(self):
         type = self.order_placed
@@ -194,7 +194,7 @@ class LineStatusTests(TestCase):
         self.line.save()
 
     def test_all_statuses_class_method(self):
-        self.assertEqual(['A', 'B'], Line.all_statuses())
+        self.assertEqual(['A', 'B'], sorted(Line.all_statuses()))
 
     def test_invalid_status_set_raises_exception(self):
         with self.assertRaises(InvalidLineStatus):
@@ -237,7 +237,7 @@ class ShippingEventQuantityTests(TestCase):
     def test_quantity_defaults_to_all(self):
         event = self.order.shipping_events.create(event_type=self.shipped)
         event_quantity = ShippingEventQuantity.objects.create(event=event, line=self.line)
-        self.assertEquals(self.line.quantity, event_quantity.quantity)
+        self.assertEqual(self.line.quantity, event_quantity.quantity)
 
     def test_event_is_created_ok_when_prerequisites_are_met(self):
         shipped_event = self.order.shipping_events.create(event_type=self.shipped)
@@ -259,7 +259,7 @@ class TestOrderDiscount(TestCase):
         self.assertTrue(discount.voucher is None)
         self.assertTrue(discount.offer is None)
 
-        self.assertEquals(discount.description(), u'')
+        self.assertEqual(discount.description(), u'')
 
     def test_can_be_created_with_an_offer(self):
         offer = create_offer()
@@ -305,7 +305,7 @@ class TestOrderDiscount(TestCase):
         self.assertTrue(discount.voucher is None)
         self.assertTrue(discount.offer is None)
 
-        self.assertEquals(discount.description(), u'Get 200% off')
+        self.assertEqual(discount.description(), u'Get 200% off')
 
     def test_contains_voucher_details_after_voucher_is_deleted(self):
         voucher = create_voucher()
@@ -317,4 +317,4 @@ class TestOrderDiscount(TestCase):
         self.assertTrue(discount.voucher is None)
         self.assertTrue(discount.offer is None)
 
-        self.assertEquals(discount.description(), voucher.code)
+        self.assertEqual(discount.description(), voucher.code)

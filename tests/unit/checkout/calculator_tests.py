@@ -22,7 +22,7 @@ class TestOrderTotalCalculator(TestCase):
         total = self.calculator.calculate(basket, method)
 
         self.assertIsInstance(total, prices.Price)
-        self.assertEquals(D('10.00') + D('5.00'), total.excl_tax)
+        self.assertEqual(D('10.00') + D('5.00'), total.excl_tax)
         self.assertFalse(total.is_tax_known)
         with self.assertRaises(AttributeError):
             total.incl_tax
@@ -39,7 +39,7 @@ class TestOrderTotalCalculator(TestCase):
         total = self.calculator.calculate(basket, method)
 
         self.assertIsInstance(total, prices.Price)
-        self.assertEquals(D('10.00') + D('5.00'), total.excl_tax)
+        self.assertEqual(D('10.00') + D('5.00'), total.excl_tax)
         self.assertTrue(total.is_tax_known)
-        self.assertEquals(D('12.00') + D('5.50'), total.incl_tax)
-        self.assertEquals(D('2.00') + D('0.50'), total.tax)
+        self.assertEqual(D('12.00') + D('5.50'), total.incl_tax)
+        self.assertEqual(D('2.00') + D('0.50'), total.tax)

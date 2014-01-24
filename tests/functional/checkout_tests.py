@@ -16,6 +16,12 @@ from oscar.apps.voucher.models import Voucher
 from oscar.apps.offer.models import ConditionalOffer
 from oscar.test.basket import add_product
 
+# Python 3 compat
+try:
+    from imp import reload
+except ImportError:
+    pass
+
 
 class CheckoutMixin(object):
 
@@ -288,10 +294,10 @@ class TestPlacingOrderUsingAVoucher(WebTestCase, CheckoutMixin):
         self.assertRedirectUrlName(self.response, 'checkout:thank-you')
 
     def test_records_use(self):
-        self.assertEquals(1, self.voucher.num_orders)
+        self.assertEqual(1, self.voucher.num_orders)
 
     def test_records_discount(self):
-        self.assertEquals(1, self.voucher.num_orders)
+        self.assertEqual(1, self.voucher.num_orders)
 
 
 
@@ -312,5 +318,5 @@ class TestPlacingOrderUsingAnOffer(WebTestCase, CheckoutMixin):
         self.assertRedirectUrlName(self.response, 'checkout:thank-you')
 
     def test_records_use(self):
-        self.assertEquals(1, self.offer.num_orders)
-        self.assertEquals(1, self.offer.num_applications)
+        self.assertEqual(1, self.offer.num_orders)
+        self.assertEqual(1, self.offer.num_applications)

@@ -13,7 +13,7 @@ class TestUseFirstStockRecordMixin(TestCase):
     def test_selects_first_stockrecord_for_product(self):
         stockrecord = factories.create_stockrecord(self.product)
         selected = self.mixin.select_stockrecord(self.product)
-        self.assertEquals(selected.id, stockrecord.id)
+        self.assertEqual(selected.id, stockrecord.id)
 
     def test_returns_none_when_no_stock_records(self):
         self.assertIsNone(self.mixin.select_stockrecord(self.product))

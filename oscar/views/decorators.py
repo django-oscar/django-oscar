@@ -1,4 +1,3 @@
-import urlparse
 from functools import wraps
 
 from django.contrib.auth import REDIRECT_FIELD_NAME
@@ -9,6 +8,8 @@ from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
+
+from oscar.core.compat import urlparse
 
 
 def staff_member_required(view_func, login_url=None):

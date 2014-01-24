@@ -57,7 +57,7 @@ class ImportSmokeTest(TestCase):
         self.product = Product.objects.get(upc='9780115531446')
 
     def test_all_rows_are_imported(self):
-        self.assertEquals(10, Product.objects.all().count())
+        self.assertEqual(10, Product.objects.all().count())
 
     def test_class_is_created(self):
         try:
@@ -66,7 +66,7 @@ class ImportSmokeTest(TestCase):
             self.fail()
 
     def test_only_one_class_is_created(self):
-        self.assertEquals(1, ProductClass.objects.all().count())
+        self.assertEqual(1, ProductClass.objects.all().count())
 
     def test_item_is_created(self):
         try:
@@ -75,7 +75,7 @@ class ImportSmokeTest(TestCase):
             self.fail()
 
     def test_title_is_imported(self):
-        self.assertEquals("Prepare for Your Practical Driving Test", self.product.title)
+        self.assertEqual("Prepare for Your Practical Driving Test", self.product.title)
 
     def test_partner_is_created(self):
         try:
@@ -90,15 +90,15 @@ class ImportSmokeTest(TestCase):
             self.fail()
 
     def test_null_fields_are_skipped(self):
-        self.assertEquals("", self.product.description)
+        self.assertEqual("", self.product.description)
 
     def test_price_is_imported(self):
         stockrecord = self.product.stockrecords.all()[0]
-        self.assertEquals(D('10.32'), stockrecord.price_excl_tax)
+        self.assertEqual(D('10.32'), stockrecord.price_excl_tax)
 
     def test_num_in_stock_is_imported(self):
         stockrecord = self.product.stockrecords.all()[0]
-        self.assertEquals(6, stockrecord.num_in_stock)
+        self.assertEqual(6, stockrecord.num_in_stock)
 
 
 class ImportSemicolonDelimitedFileTest(TestCase):

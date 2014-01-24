@@ -8,7 +8,12 @@ def add_product(basket, price=None, quantity=1, product=None):
     """
     Helper to add a product to the basket.
     """
-    if not hasattr(basket, 'strategy'):
+    has_strategy = False
+    try:
+        has_strategy = hasattr(basket, 'strategy')
+    except RuntimeError:
+        pass
+    if not has_strategy:
         basket.strategy = strategy.Default()
     if price is None:
         price = D('1')

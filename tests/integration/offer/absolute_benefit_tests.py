@@ -124,8 +124,9 @@ class TestAnAbsoluteDiscount(TestCase):
         self.assertEqual(D('4.00'), result.discount)
         # Check the discount is applied equally to each line
         line_discounts = [line.discount_value for line in self.basket.all_lines()]
-        self.assertItemsEqual(
-            line_discounts, [D('1.33'), D('1.33'), D('1.34')])
+        self.assertEqual(len(line_discounts), 3)
+        for i, v in enumerate([D('1.33'), D('1.33'), D('1.34')]):
+            self.assertEqual(line_discounts[i], v)
 
 
 class TestAnAbsoluteDiscountWithMaxItemsSetAppliedWithCountCondition(TestCase):

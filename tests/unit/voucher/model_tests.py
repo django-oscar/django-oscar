@@ -9,8 +9,8 @@ from oscar.apps.voucher.models import Voucher
 from oscar.apps.order.models import Order
 from oscar.core.compat import get_user_model
 
-START_DATE = datetime.date(2011, 01, 01)
-END_DATE = datetime.date(2012, 01, 01)
+START_DATE = datetime.date(2011, 1, 1)
+END_DATE = datetime.date(2012, 1, 1)
 User = get_user_model()
 
 
@@ -35,7 +35,7 @@ class TestAVoucher(TestCase):
         self.voucher = Voucher(start_date=START_DATE, end_date=END_DATE)
 
     def test_is_active_between_start_and_end_dates(self):
-        test = datetime.date(2011, 06, 10)
+        test = datetime.date(2011, 6, 10)
         self.assertTrue(self.voucher.is_active(test))
 
     def test_is_active_on_end_date(self):
@@ -45,7 +45,7 @@ class TestAVoucher(TestCase):
         self.assertTrue(self.voucher.is_active(START_DATE))
 
     def test_is_inactive_outside_of_start_and_end_dates(self):
-        test = datetime.date(2012, 03, 10)
+        test = datetime.date(2012, 3, 10)
         self.assertFalse(self.voucher.is_active(test))
 
     def test_increments_total_discount_when_recording_usage(self):
@@ -63,7 +63,7 @@ class TestMultiuseVoucher(TestCase):
 
     def test_is_available_to_same_user_multiple_times(self):
         user, order = G(User), G(Order)
-        for i in xrange(10):
+        for i in range(10):
             self.voucher.record_usage(order, user)
             self.assertTrue(self.voucher.is_available_to_user(user)[0])
 

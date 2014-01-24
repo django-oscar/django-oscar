@@ -88,4 +88,4 @@ if len(sys.argv) > 1 and sys.argv[1] == 'develop':
         "    %s\n\nHappy hacking!") % (mailing_list, mailing_list_url,
                                        docs_url, twitter_url)
     line = '=' * 82
-    print "\n%s\n%s\n%s" % (line, msg, line)
+    print("\n%s\n%s\n%s" % (line, msg, line))
