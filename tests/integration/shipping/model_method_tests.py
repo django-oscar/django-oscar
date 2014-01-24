@@ -32,6 +32,16 @@ class OrderAndItemChargesTests(TestCase):
         self.assertEquals(D('5.00') + D('1.00'),
                           self.method.charge_incl_tax)
 
+    def test_single_item_basket_that_doesnt_require_shipping(self):
+        # Create a product that doesn't require shipping
+        record = factories.create_stockrecord()
+        product = record.product
+        product.product_class.requires_shipping = False
+        product.product_class.save()
+
+        self.basket.add_product(record.product)
+        self.assertEquals(D('5.00'), self.method.charge_incl_tax)
+
     def test_multi_item_basket(self):
         record = factories.create_stockrecord()
         self.basket.add_product(record.product, 7)

@@ -3,22 +3,21 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Can Burak Çilingir <can@canb.net>, 2013
-# serefayar <serefayar@gmail.com>, 2013
+# kwonoh <oh.kwon@datasquare.co.kr>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-01-23 17:18+0000\n"
-"PO-Revision-Date: 2014-01-23 15:43+0000\n"
-"Last-Translator: oscar_bot <maik.hoepfel@tangentsnowball.com>\n"
-"Language-Team: Turkish (http://www.transifex.com/projects/p/django-oscar/"
-"language/tr/)\n"
-"Language: tr\n"
+"PO-Revision-Date: 2014-01-23 17:16+0000\n"
+"Last-Translator: kwonoh <oh.kwon@datasquare.co.kr>\n"
+"Language-Team: Korean (http://www.transifex.com/projects/p/django-oscar/"
+"language/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: defaults.py:88 templates/oscar/dashboard/index.html:17
 #: templates/oscar/dashboard/layout.html:30
@@ -76,18 +75,18 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_list.html:14
 #: templates/oscar/partials/nav_accounts.html:42
 msgid "Dashboard"
-msgstr "Kontrol Paneli"
+msgstr "대시보드"
 
 #: defaults.py:93
 msgid "Catalogue"
-msgstr "Katalog"
+msgstr "카탈로그"
 
 #: defaults.py:97 apps/catalogue/abstract_models.py:351
 #: apps/promotions/models.py:256
 #: templates/oscar/dashboard/promotions/handpickedproductlist_form.html:5
 #: templates/oscar/dashboard/ranges/range_product_list.html:25
 msgid "Products"
-msgstr "Ürünler"
+msgstr "상품"
 
 #: defaults.py:101 apps/catalogue/abstract_models.py:165
 #: apps/catalogue/abstract_models.py:334
@@ -97,31 +96,31 @@ msgstr "Ürünler"
 #: templates/oscar/dashboard/catalogue/category_list.html:44
 #: templates/oscar/dashboard/catalogue/product_update.html:112
 msgid "Categories"
-msgstr "Kategoriler"
+msgstr "카테고리"
 
 #: defaults.py:105 apps/offer/models.py:780
 #: templates/oscar/dashboard/catalogue/product_update.html:126
 #: templates/oscar/dashboard/ranges/range_list.html:29
 msgid "Ranges"
-msgstr "Aralıklar"
+msgstr "범위"
 
 #: defaults.py:109
 msgid "Low stock alerts"
-msgstr "Düşük Stok Uyarısı"
+msgstr "재고 부족 알림"
 
 #: defaults.py:115
 msgid "Fulfilment"
-msgstr "Tedarik"
+msgstr "재고관리"
 
 #: defaults.py:119 templates/oscar/dashboard/orders/order_list.html:10
 #: templates/oscar/dashboard/orders/order_list.html:19
 #: templates/oscar/dashboard/orders/order_list.html:25
 msgid "Order management"
-msgstr "Sipariş Yönetimi"
+msgstr "주문 관리"
 
 #: defaults.py:123 templates/oscar/dashboard/orders/statistics.html:22
 msgid "Statistics"
-msgstr "İstatistikler"
+msgstr "통계"
 
 #: defaults.py:127
 msgid "Partners"
@@ -133,15 +132,15 @@ msgstr ""
 #: templates/oscar/dashboard/users/index.html:14
 #: templates/oscar/dashboard/users/index.html:24
 msgid "Customers"
-msgstr "Müşteriler"
+msgstr "고객"
 
 #: defaults.py:137
 msgid "Customer management"
-msgstr "Müşteri Yönetimi"
+msgstr "고객 관리"
 
 #: defaults.py:141
 msgid "Stock alert requests"
-msgstr " Stok Uyarıları"
+msgstr "재고 알림 요청"
 
 #: defaults.py:147 apps/voucher/abstract_models.py:28
 #: templates/oscar/dashboard/orders/order_detail.html:77
@@ -149,7 +148,7 @@ msgstr " Stok Uyarıları"
 #: templates/oscar/offer/list.html.py:18 templates/oscar/offer/list.html:23
 #: templates/oscar/partials/nav_primary.html:63
 msgid "Offers"
-msgstr "Kampanyalar"
+msgstr "제안"
 
 #: defaults.py:151 templates/oscar/dashboard/offers/offer_delete.html:10
 #: templates/oscar/dashboard/offers/offer_delete.html:20
@@ -160,7 +159,7 @@ msgstr "Kampanyalar"
 #: templates/oscar/dashboard/offers/step_form.html:16
 #: templates/oscar/dashboard/offers/step_form.html:26
 msgid "Offer management"
-msgstr "Kampanya Yönetimi"
+msgstr "제안 관리"
 
 #: defaults.py:155 apps/basket/abstract_models.py:46
 #: apps/voucher/abstract_models.py:57
@@ -172,22 +171,22 @@ msgstr "Kampanya Yönetimi"
 #: templates/oscar/dashboard/vouchers/voucher_form.html:11
 #: templates/oscar/dashboard/vouchers/voucher_form.html:21
 msgid "Vouchers"
-msgstr "Hediye Çekleri"
+msgstr "영수증"
 
 #: defaults.py:161
 msgid "Content"
-msgstr "İçerik"
+msgstr "내용"
 
 #: defaults.py:165 templates/oscar/dashboard/promotions/promotion_list.html:8
 #: templates/oscar/dashboard/promotions/promotion_list.html:13
 #: templates/oscar/dashboard/promotions/promotion_list.html:39
 msgid "Content blocks"
-msgstr "İçerik Blokları"
+msgstr "내용 블럭"
 
 #: defaults.py:169
 #: templates/oscar/dashboard/promotions/pagepromotion_list.html:25
 msgid "Content blocks by page"
-msgstr "Sayfalardaki İçerik Blokları"
+msgstr "페이지 내용 블럭"
 
 #: defaults.py:173 apps/promotions/models.py:92
 #: templates/oscar/dashboard/pages/delete.html:21
@@ -195,11 +194,11 @@ msgstr "Sayfalardaki İçerik Blokları"
 #: templates/oscar/dashboard/pages/index.html:18
 #: templates/oscar/dashboard/pages/update.html:18
 msgid "Pages"
-msgstr "Sayfalar"
+msgstr "페이지"
 
 #: defaults.py:177
 msgid "Email templates"
-msgstr "E-Posta Şablonları"
+msgstr "이메일 템플릿"
 
 #: defaults.py:181 templates/oscar/catalogue/reviews/review_detail.html:6
 #: templates/oscar/catalogue/reviews/review_detail.html:27
@@ -211,18 +210,18 @@ msgstr "E-Posta Şablonları"
 #: templates/oscar/dashboard/users/detail.html:110
 #: templates/oscar/dashboard/users/detail.html:177
 msgid "Reviews"
-msgstr "Yorumlar"
+msgstr "후기"
 
 #: defaults.py:187 templates/oscar/dashboard/reports/index.html:7
 msgid "Reports"
-msgstr "Raporlar"
+msgstr "리포트"
 
 #: defaults.py:199 apps/catalogue/abstract_models.py:164
 #: apps/catalogue/abstract_models.py:180 apps/customer/abstract_models.py:146
 #: templates/oscar/dashboard/catalogue/product_update.html:274
 #: templates/oscar/dashboard/comms/list.html:35
 msgid "Category"
-msgstr "Kategori"
+msgstr "카테고리"
 
 #: defaults.py:203 apps/catalogue/abstract_models.py:729
 #: apps/catalogue/abstract_models.py:1015 apps/offer/models.py:91
@@ -233,7 +232,7 @@ msgstr "Kategori"
 #: templates/oscar/dashboard/promotions/page_detail.html:40
 #: templates/oscar/dashboard/promotions/promotion_list.html:44
 msgid "Type"
-msgstr "Tip"
+msgstr ""
 
 #: defaults.py:213
 msgid "Price range"
@@ -257,23 +256,23 @@ msgstr ""
 
 #: apps/address/abstract_models.py:22
 msgid "Mr"
-msgstr "Bay"
+msgstr "Mr"
 
 #: apps/address/abstract_models.py:23
 msgid "Miss"
-msgstr "Bayan"
+msgstr "Miss"
 
 #: apps/address/abstract_models.py:24
 msgid "Mrs"
-msgstr "Bayan"
+msgstr "Mrs"
 
 #: apps/address/abstract_models.py:25
 msgid "Ms"
-msgstr "Bayan"
+msgstr "Ms"
 
 #: apps/address/abstract_models.py:26
 msgid "Dr"
-msgstr "Doktor"
+msgstr "Dr"
 
 #: apps/address/abstract_models.py:213
 msgctxt "Treatment Pronouns for the customer"
@@ -285,42 +284,42 @@ msgstr ""
 #: templates/oscar/dashboard/partners/partner_user_list.html:47
 #: templates/oscar/dashboard/partners/partner_user_select.html:54
 msgid "First name"
-msgstr "Ad"
+msgstr "이름"
 
 #: apps/address/abstract_models.py:217 apps/customer/abstract_models.py:61
 #: templates/oscar/dashboard/partners/partner_manage.html:57
 #: templates/oscar/dashboard/partners/partner_user_list.html:48
 #: templates/oscar/dashboard/partners/partner_user_select.html:55
 msgid "Last name"
-msgstr "Soyad"
+msgstr "성"
 
 #: apps/address/abstract_models.py:221
 msgid "First line of address"
-msgstr "Adresin ilk satırı"
+msgstr "주소"
 
 #: apps/address/abstract_models.py:223
 msgid "Second line of address"
-msgstr "Adresin ikinci satırı"
+msgstr "상세 주소"
 
 #: apps/address/abstract_models.py:225
 msgid "Third line of address"
-msgstr "Adresin üçüncü satırı"
+msgstr "상세 주소"
 
 #: apps/address/abstract_models.py:226
 msgid "City"
-msgstr "Şehir"
+msgstr "시"
 
 #: apps/address/abstract_models.py:228
 msgid "State/County"
-msgstr "Eyalet/Bölge"
+msgstr "도"
 
 #: apps/address/abstract_models.py:230
 msgid "Post/Zip-code"
-msgstr "Posta Kodu"
+msgstr "우편번호"
 
 #: apps/address/abstract_models.py:231 apps/address/abstract_models.py:401
 msgid "Country"
-msgstr "Ülke"
+msgstr "국가"
 
 #: apps/address/abstract_models.py:236
 msgid "Search text - used only for searching addresses"
@@ -334,14 +333,14 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:414
 #: templates/oscar/dashboard/partners/partner_manage.html:39
 msgid "Address"
-msgstr "Adres"
+msgstr "주소"
 
 #: apps/address/abstract_models.py:245
 #: templates/oscar/dashboard/partners/partner_list.html:48
 #: templates/oscar/dashboard/users/detail.html:109
 #: templates/oscar/dashboard/users/detail.html:150
 msgid "Addresses"
-msgstr "Adresler"
+msgstr "주소"
 
 #: apps/address/abstract_models.py:271
 #, python-format
@@ -355,23 +354,23 @@ msgstr ""
 
 #: apps/address/abstract_models.py:381
 msgid "ISO 3166-1 alpha-2"
-msgstr ""
+msgstr "ISO 3166-1 alpha-2"
 
 #: apps/address/abstract_models.py:383
 msgid "ISO 3166-1 alpha-3"
-msgstr ""
+msgstr "ISO 3166-1 alpha-3"
 
 #: apps/address/abstract_models.py:388
 msgid "ISO 3166-1 numeric"
-msgstr ""
+msgstr "ISO 3166-1 numeric"
 
 #: apps/address/abstract_models.py:389
 msgid "Official name (CAPS)"
-msgstr "Resmi İsim (CAPS)"
+msgstr "공식 명칭 (CAPS)"
 
 #: apps/address/abstract_models.py:390
 msgid "Country name"
-msgstr "Ülke Adı"
+msgstr "국가명"
 
 #: apps/address/abstract_models.py:393
 msgid "Display order"
@@ -383,15 +382,15 @@ msgstr ""
 
 #: apps/address/abstract_models.py:396
 msgid "Is Shipping Country"
-msgstr ""
+msgstr "배송 가능 국가"
 
 #: apps/address/abstract_models.py:402 apps/shipping/models.py:18
 msgid "Countries"
-msgstr "Ülkeler"
+msgstr "국가"
 
 #: apps/address/abstract_models.py:428 models/fields.py:103
 msgid "Phone number"
-msgstr "Telefon Numarası"
+msgstr "전화번호"
 
 #: apps/address/abstract_models.py:429
 msgid "In case we need to call you about your order"
@@ -414,11 +413,11 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_list.html:100
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:6
 msgid "Shipping address"
-msgstr "Teslimat Adresi"
+msgstr "배송지 주소"
 
 #: apps/address/abstract_models.py:439
 msgid "Shipping addresses"
-msgstr "Teslimat Adresleri"
+msgstr "배송지 주소"
 
 #: apps/address/abstract_models.py:464 apps/analytics/abstract_models.py:45
 #: apps/analytics/abstract_models.py:73 apps/analytics/abstract_models.py:89
@@ -432,23 +431,23 @@ msgstr "Teslimat Adresleri"
 #: templates/oscar/dashboard/users/alerts/list.html:47
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:10
 msgid "User"
-msgstr "Kullanıcı"
+msgstr "사용자"
 
 #: apps/address/abstract_models.py:468
 msgid "Default shipping address?"
-msgstr "Varsayılan teslimat adresi?"
+msgstr "기본 배송지 주소"
 
 #: apps/address/abstract_models.py:472
 msgid "Default billing address?"
-msgstr "Varsayılan fatura adresi?"
+msgstr "기본 청구지 주소"
 
 #: apps/address/abstract_models.py:477 apps/offer/models.py:159
 msgid "Number of Orders"
-msgstr "Sipariş adeti"
+msgstr "주문량"
 
 #: apps/address/abstract_models.py:481
 msgid "Address Hash"
-msgstr ""
+msgstr "주소 해시"
 
 #: apps/address/abstract_models.py:483 apps/analytics/abstract_models.py:75
 #: apps/analytics/abstract_models.py:91 apps/basket/abstract_models.py:579
@@ -460,15 +459,15 @@ msgstr ""
 #: apps/promotions/models.py:26 apps/promotions/models.py:327
 #: apps/voucher/abstract_models.py:145
 msgid "Date Created"
-msgstr "Oluşturulma Tarihi"
+msgstr "생성일"
 
 #: apps/address/abstract_models.py:510
 msgid "User address"
-msgstr "Kullanıcı Adresi"
+msgstr "사용자 주소"
 
 #: apps/address/abstract_models.py:511
 msgid "User addresses"
-msgstr "Kullanıcı Adresleri"
+msgstr "사용자 주소"
 
 #: apps/address/abstract_models.py:524
 msgid "This address is already in your address book"
@@ -478,18 +477,18 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:439
 #: templates/oscar/dashboard/orders/order_list.html:101
 msgid "Billing address"
-msgstr "Fatura Adresi"
+msgstr "청구지 주소"
 
 #: apps/address/abstract_models.py:533
 msgid "Billing addresses"
-msgstr "Fatura Adresleri"
+msgstr "청구지 주소"
 
 #: apps/address/abstract_models.py:552 apps/order/abstract_models.py:381
 #: apps/partner/abstract_models.py:131
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:51
 #: templates/oscar/dashboard/orders/line_detail.html:81
 msgid "Partner"
-msgstr "Ortak"
+msgstr "파트너"
 
 #: apps/address/abstract_models.py:556
 msgid "Partner address"
@@ -519,23 +518,23 @@ msgstr ""
 #: templates/oscar/dashboard/users/alerts/list.html:46
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:6
 msgid "Product"
-msgstr "Ürün"
+msgstr "상품"
 
 #: apps/analytics/abstract_models.py:21 apps/analytics/reports.py:21
 #: templates/oscar/dashboard/catalogue/product_update.html:92
 #: templates/oscar/dashboard/reports/partials/product_report.html:9
 msgid "Views"
-msgstr "Görüntülenme"
+msgstr "뷰"
 
 #: apps/analytics/abstract_models.py:23 apps/analytics/abstract_models.py:51
 msgid "Basket Additions"
-msgstr "Alışveriş Sepeti Eklemeleri"
+msgstr "장바구니 추가"
 
 #: apps/analytics/abstract_models.py:25 apps/analytics/reports.py:23
 #: templates/oscar/dashboard/catalogue/product_update.html:100
 #: templates/oscar/dashboard/reports/partials/product_report.html:11
 msgid "Purchases"
-msgstr "Satın almalar"
+msgstr "구매"
 
 #: apps/analytics/abstract_models.py:28 apps/catalogue/abstract_models.py:321
 #: apps/catalogue/reviews/abstract_models.py:26
@@ -544,24 +543,24 @@ msgstr "Satın almalar"
 #: templates/oscar/dashboard/reviews/review_list.html:61
 #: templates/oscar/dashboard/users/detail.html:181
 msgid "Score"
-msgstr "Puan"
+msgstr "점수"
 
 #: apps/analytics/abstract_models.py:33
 msgid "Product record"
-msgstr "Ürün Kaydı"
+msgstr "상품 기록"
 
 #: apps/analytics/abstract_models.py:34
 msgid "Product records"
-msgstr "Ürün Kayıtları"
+msgstr "상품 기록"
 
 #: apps/analytics/abstract_models.py:37
 #, python-format
 msgid "Record for '%s'"
-msgstr "'%s' için kayıt"
+msgstr "'%s'의 기록"
 
 #: apps/analytics/abstract_models.py:49
 msgid "Product Views"
-msgstr "Ürün Görüntüleme"
+msgstr "상품 Views"
 
 #: apps/analytics/abstract_models.py:55 apps/analytics/reports.py:66
 #: apps/order/abstract_models.py:266
@@ -573,23 +572,23 @@ msgstr "Ürün Görüntüleme"
 #: templates/oscar/dashboard/users/detail.html:108
 #: templates/oscar/dashboard/users/detail.html:118
 msgid "Orders"
-msgstr "Siparişler"
+msgstr "주문"
 
 #: apps/analytics/abstract_models.py:57 apps/order/abstract_models.py:458
 msgid "Order Lines"
-msgstr "Sapariş Satırları"
+msgstr ""
 
 #: apps/analytics/abstract_models.py:59
 msgid "Order Items"
-msgstr "Sipariş Kalemleri"
+msgstr "주문 내역"
 
 #: apps/analytics/abstract_models.py:60
 msgid "Total Spent"
-msgstr "Toplam Harcama"
+msgstr ""
 
 #: apps/analytics/abstract_models.py:63
 msgid "Last Order Date"
-msgstr "Son Sipariş Tarihi"
+msgstr "마지막 주문일"
 
 #: apps/analytics/abstract_models.py:67
 msgid "User record"
@@ -610,11 +609,11 @@ msgstr ""
 #: apps/analytics/abstract_models.py:83
 #, python-format
 msgid "%(user)s viewed '%(product)s'"
-msgstr "%(user)s '%(product)s' görüntüledi"
+msgstr "%(user)s가 '%(product)s를 봤습니다."
 
 #: apps/analytics/abstract_models.py:90
 msgid "Search term"
-msgstr "Arama ifadesi"
+msgstr "검색 용어"
 
 #: apps/analytics/abstract_models.py:95
 msgid "User search query"
@@ -622,22 +621,22 @@ msgstr ""
 
 #: apps/analytics/abstract_models.py:96
 msgid "User search queries"
-msgstr "Kullanıcı arama sorguları"
+msgstr "사용자 검색어"
 
 #: apps/analytics/abstract_models.py:99
 #, python-format
 msgid "%(user)s searched for '%(query)s'"
-msgstr "%(user)s '%(query)s' ifadesini aradı"
+msgstr "%(user)s가 '%(query)s'를 검색하였습니다 "
 
 #: apps/analytics/reports.py:22 apps/analytics/reports.py:65
 #: templates/oscar/dashboard/reports/partials/product_report.html:10
 #: templates/oscar/dashboard/reports/partials/user_report.html:12
 msgid "Basket additions"
-msgstr "Alışveriş Sepeti Eklemeleri"
+msgstr "장바구니 추가"
 
 #: apps/analytics/reports.py:40
 msgid "Product analytics"
-msgstr "Ürün Analizleri"
+msgstr "상품 분석"
 
 #: apps/analytics/reports.py:62 apps/basket/reports.py:19
 #: apps/catalogue/abstract_models.py:37 apps/catalogue/abstract_models.py:76
@@ -677,68 +676,68 @@ msgstr "Ürün Analizleri"
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:35
 #: templates/oscar/dashboard/vouchers/voucher_list.html:47
 msgid "Name"
-msgstr "İsim"
+msgstr "이름"
 
 #: apps/analytics/reports.py:63
 #: templates/oscar/customer/profile/profile.html:26
 #: templates/oscar/dashboard/reports/partials/user_report.html:10
 #: templates/oscar/dashboard/users/index.html:73
 msgid "Date registered"
-msgstr "Kayıt tarihi"
+msgstr "등록일"
 
 #: apps/analytics/reports.py:64
 #: templates/oscar/dashboard/reports/partials/user_report.html:11
 msgid "Product views"
-msgstr "Ürün görüntüleme"
+msgstr "상품 Views"
 
 #: apps/analytics/reports.py:67
 #: templates/oscar/dashboard/reports/partials/user_report.html:14
 msgid "Order lines"
-msgstr "Sipariş satırları"
+msgstr ""
 
 #: apps/analytics/reports.py:68
 #: templates/oscar/dashboard/reports/partials/user_report.html:15
 msgid "Order items"
-msgstr "Sipariş kalemleri"
+msgstr "주문 내역"
 
 #: apps/analytics/reports.py:69
 #: templates/oscar/dashboard/reports/partials/user_report.html:16
 #: templates/oscar/dashboard/users/detail.html:82
 msgid "Total spent"
-msgstr "Toplam harcama"
+msgstr "전체 가격"
 
 #: apps/analytics/reports.py:70
 #: templates/oscar/dashboard/reports/partials/user_report.html:17
 msgid "Date of last order"
-msgstr "Son sipariş tarihi"
+msgstr "마지막 주문날짜"
 
 #: apps/analytics/reports.py:92
 msgid "User analytics"
-msgstr "Kullanıcı analizleri"
+msgstr "사용자 분석"
 
 #: apps/basket/abstract_models.py:25 apps/wishlists/abstract_models.py:20
 msgid "Owner"
-msgstr "Sahibi"
+msgstr "소유자"
 
 #: apps/basket/abstract_models.py:33
 msgid "Open - currently active"
-msgstr "Açık - halen aktif"
+msgstr "Open - 현재 활성화됨"
 
 #: apps/basket/abstract_models.py:34
 msgid "Merged - superceded by another basket"
-msgstr "Birleşti - başka bir sepetin yerini aldı"
+msgstr "Merged - 다른 장바구니로 대체됨"
 
 #: apps/basket/abstract_models.py:35
 msgid "Saved - for items to be purchased later"
-msgstr "Kaydedildi - daha sonra satın almak üzere"
+msgstr "Saved - 향후 구매로 저장됨"
 
 #: apps/basket/abstract_models.py:36
 msgid "Frozen - the basket cannot be modified"
-msgstr "Donduruldu - sepet düzenlenemez"
+msgstr "Frozen - 장바구니를 수정할 수 없음"
 
 #: apps/basket/abstract_models.py:37
 msgid "Submitted - has been ordered at the checkout"
-msgstr "Onaylandı - ödemesi gerçekleşti"
+msgstr "Submitted - 주문이 완료됨"
 
 #: apps/basket/abstract_models.py:40 apps/catalogue/abstract_models.py:290
 #: apps/catalogue/abstract_models.py:1073
@@ -766,7 +765,7 @@ msgstr "Onaylandı - ödemesi gerçekleşti"
 #: templates/oscar/dashboard/users/alerts/list.html:48
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:20
 msgid "Status"
-msgstr "Durum"
+msgstr "상태"
 
 #: apps/basket/abstract_models.py:48 apps/basket/reports.py:81
 #: apps/customer/abstract_models.py:308 apps/order/abstract_models.py:778
@@ -782,16 +781,16 @@ msgstr "Durum"
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:24
 #: templates/oscar/dashboard/vouchers/voucher_list.html:52
 msgid "Date created"
-msgstr "Oluşturulma tarihi"
+msgstr "생성일"
 
 #: apps/basket/abstract_models.py:49
 msgid "Date merged"
-msgstr "Birleştirilme tarihi"
+msgstr "합쳐진 날짜"
 
 #: apps/basket/abstract_models.py:50
 #: templates/oscar/customer/order/order_list.html:41
 msgid "Date submitted"
-msgstr "Onaylanma tarihi"
+msgstr "등록일"
 
 #: apps/basket/abstract_models.py:58 apps/basket/abstract_models.py:545
 #: templates/oscar/basket/basket.html:7 templates/oscar/basket/basket.html:16
@@ -801,26 +800,24 @@ msgstr "Onaylanma tarihi"
 #: templates/oscar/checkout/thank_you.html:145
 #: templates/oscar/partials/nav_primary.html:20
 msgid "Basket"
-msgstr "Alışveriş Sepeti"
+msgstr "장바구니"
 
 #: apps/basket/abstract_models.py:59
 #: templates/oscar/dashboard/catalogue/product_update.html:96
 msgid "Baskets"
-msgstr "Alışveriş Sepetleri"
+msgstr "장바구니"
 
 #: apps/basket/abstract_models.py:78
 #, python-format
 msgid "%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)"
-msgstr "%(status)s sepet (sahibi: %(owner)s, kalemler: %(num_lines)d)"
+msgstr ""
 
 #: apps/basket/abstract_models.py:144
 #, python-format
 msgid ""
 "Due to technical limitations we are not able to ship more than %(threshold)d "
 "items in one order."
-msgstr ""
-"Teknik kısıtlamalardan dolayı bir siparişte %(threshold)d adet üründen "
-"fazlasını gönderemiyoruz."
+msgstr "기술적인 문제로 %(threshold)d개 이상을 한 번에 주문할 수 없습니다."
 
 #: apps/basket/abstract_models.py:552
 msgid "Line Reference"
@@ -841,7 +838,7 @@ msgstr ""
 #: templates/oscar/dashboard/orders/line_detail.html:171
 #: templates/oscar/dashboard/orders/order_detail.html:95
 msgid "Quantity"
-msgstr "Adet"
+msgstr "양"
 
 #: apps/basket/abstract_models.py:571 apps/order/abstract_models.py:43
 #: apps/partner/abstract_models.py:142 apps/payment/abstract_models.py:72
@@ -850,19 +847,19 @@ msgstr ""
 
 #: apps/basket/abstract_models.py:573
 msgid "Price excl. Tax"
-msgstr "Vergi hariç fiyat"
+msgstr "세금 제외 가격"
 
 #: apps/basket/abstract_models.py:576
 msgid "Price incl. Tax"
-msgstr "Vergi dahil fiyat"
+msgstr "세금 포함 가격"
 
 #: apps/basket/abstract_models.py:591
 msgid "Basket line"
-msgstr "Sepet satırı"
+msgstr ""
 
 #: apps/basket/abstract_models.py:592
 msgid "Basket lines"
-msgstr "Sepet satırları"
+msgstr ""
 
 #: apps/basket/abstract_models.py:596
 #, python-format
@@ -872,7 +869,7 @@ msgstr ""
 #: apps/basket/abstract_models.py:607
 #, python-format
 msgid "You cannot modify a %s basket"
-msgstr "%s sepetini değiştiremezsiniz"
+msgstr ""
 
 #: apps/basket/abstract_models.py:828
 #, python-format
@@ -892,35 +889,35 @@ msgstr ""
 #: apps/order/abstract_models.py:698 apps/order/abstract_models.py:802
 #: apps/order/abstract_models.py:858
 msgid "Line"
-msgstr "Satır"
+msgstr ""
 
 #: apps/basket/abstract_models.py:845 apps/catalogue/abstract_models.py:722
 #: apps/catalogue/abstract_models.py:995
 #: apps/catalogue/abstract_models.py:1078 apps/order/abstract_models.py:674
 #: apps/order/abstract_models.py:696
 msgid "Option"
-msgstr "Seçenek"
+msgstr "옵션"
 
 #: apps/basket/abstract_models.py:846 apps/offer/models.py:423
 #: apps/offer/models.py:541 apps/order/abstract_models.py:676
 msgid "Value"
-msgstr "Değer"
+msgstr "값"
 
 #: apps/basket/abstract_models.py:850
 msgid "Line attribute"
-msgstr "Satır özelliği"
+msgstr ""
 
 #: apps/basket/abstract_models.py:851
 msgid "Line attributes"
-msgstr "Satır özellikleri"
+msgstr ""
 
 #: apps/basket/forms.py:16
 msgid "Save for Later"
-msgstr "Sonrası için kaydet"
+msgstr "저장"
 
 #: apps/basket/forms.py:64
 msgid "Move to Basket"
-msgstr "Sepete taşı"
+msgstr "장바구니로 옮기기"
 
 #: apps/basket/forms.py:113 apps/catalogue/abstract_models.py:710
 #: apps/catalogue/abstract_models.py:1066 apps/customer/abstract_models.py:136
@@ -933,12 +930,12 @@ msgstr "Sepete taşı"
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:36
 #: templates/oscar/dashboard/vouchers/voucher_list.html:48
 msgid "Code"
-msgstr "Kod"
+msgstr "코드"
 
 #: apps/basket/forms.py:123 apps/basket/forms.py:138
 #: templates/oscar/dashboard/users/detail.html:180
 msgid "Product ID"
-msgstr "Ürün No"
+msgstr "상품 ID"
 
 #: apps/basket/forms.py:132
 msgid "This product is unavailable for purchase"
@@ -946,7 +943,7 @@ msgstr ""
 
 #: apps/basket/forms.py:171
 msgid "Please select a valid product"
-msgstr "Lütfen geçerli bir ürün seçin"
+msgstr "유효한 상품을 선택해주세요"
 
 #: apps/basket/forms.py:193
 #, python-format
@@ -954,16 +951,14 @@ msgid ""
 "Due to technical limitations we are not able to ship more than %(threshold)d "
 "items in one order. Your basket currently has %(basket)d items."
 msgstr ""
-"Teknik kısıtlamalardan dolayı bir siparişte %(threshold)d adet üründen "
-"fazlasını gönderemiyoruz. Sepetinizde şu anda %(basket)d ürün var."
 
 #: apps/basket/forms.py:221
 msgid "Variant"
-msgstr "Varyant"
+msgstr ""
 
 #: apps/basket/reports.py:18 apps/basket/reports.py:76
 msgid "User ID"
-msgstr "Kullanıcı No"
+msgstr "사용자 ID"
 
 #: apps/basket/reports.py:20 apps/catalogue/reviews/abstract_models.py:39
 #: apps/catalogue/reviews/forms.py:11 apps/customer/abstract_models.py:121
@@ -981,17 +976,17 @@ msgstr "Kullanıcı No"
 #: templates/oscar/dashboard/users/detail.html:43
 #: templates/oscar/dashboard/users/index.html:69
 msgid "Email"
-msgstr "Eposta"
+msgstr "이메일"
 
 #: apps/basket/reports.py:21 apps/basket/reports.py:78
 msgid "Basket status"
-msgstr "Sepet Durumu"
+msgstr "장바구니 상태"
 
 #: apps/basket/reports.py:22 apps/basket/reports.py:79
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:10
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:10
 msgid "Num lines"
-msgstr "Satır sayısı"
+msgstr ""
 
 #: apps/basket/reports.py:23 apps/basket/reports.py:80
 #: templates/oscar/customer/order/order_list.html:39
@@ -999,43 +994,43 @@ msgstr "Satır sayısı"
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:11
 #: templates/oscar/dashboard/users/detail.html:123
 msgid "Num items"
-msgstr "Ürün sayısı"
+msgstr ""
 
 #: apps/basket/reports.py:24
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:12
 msgid "Date of creation"
-msgstr "Oluşturma tarihi"
+msgstr "생성일"
 
 #: apps/basket/reports.py:25
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:13
 msgid "Time since creation"
-msgstr "Oluşturulmadan sonra geçen zaman"
+msgstr ""
 
 #: apps/basket/reports.py:57
 msgid "Open baskets"
-msgstr "Açık sepetler"
+msgstr ""
 
 #: apps/basket/reports.py:82
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:13
 msgid "Time between creation and submission"
-msgstr "Oluşturulma ile onaylanma arasındaki zaman"
+msgstr ""
 
 #: apps/basket/reports.py:111
 msgid "Submitted baskets"
-msgstr "Onaylanan sepetler"
+msgstr ""
 
 #: apps/basket/views.py:202
 msgid "You can't save an item for later if you're not logged in!"
-msgstr "Giriş yapmadan sonra işlem yapmak için ürün kaydedemezsiniz"
+msgstr "로그인하지 않아 저장할 수 없습니다"
 
 #: apps/basket/views.py:264
 msgid "Your basket couldn't be updated"
-msgstr "Sepetiniz güncellenemedi"
+msgstr "장바구니를 업데이트 할 수 없습니다"
 
 #: apps/basket/views.py:361
 #, python-format
 msgid "The '%(code)s' voucher has expired"
-msgstr "'%(code)s' kuponunun süresi doldu"
+msgstr ""
 
 #: apps/basket/views.py:390
 msgid "Your basket does not qualify for a voucher discount"
@@ -1044,31 +1039,31 @@ msgstr ""
 #: apps/basket/views.py:395
 #, python-format
 msgid "Voucher '%(code)s' added to basket"
-msgstr "Kupon '%(code)s' sepete eklendi"
+msgstr ""
 
 #: apps/basket/views.py:407
 #, python-format
 msgid "You have already added the '%(code)s' voucher to your basket"
-msgstr "'%(code)s' kuponunu daha önce sepetinize eklediniz"
+msgstr ""
 
 #: apps/basket/views.py:415
 #, python-format
 msgid "No voucher found with code '%(code)s'"
-msgstr "'%(code)s' koduna sahip kupon bulunamadı"
+msgstr ""
 
 #: apps/basket/views.py:423 apps/dashboard/vouchers/forms.py:60
 msgid "Please enter a voucher code"
-msgstr "Lütfen kupon kodunu giriniz"
+msgstr ""
 
 #: apps/basket/views.py:443
 #, python-format
 msgid "No voucher found with id '%d'"
-msgstr "'%d' no'lu kupon bulunamadı"
+msgstr ""
 
 #: apps/basket/views.py:448
 #, python-format
 msgid "Voucher '%s' removed from basket"
-msgstr "Kupon '%s' sepetinizden kaldırıldı"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:38 apps/catalogue/abstract_models.py:80
 #: apps/catalogue/abstract_models.py:223 apps/catalogue/abstract_models.py:285
@@ -1076,28 +1071,28 @@ msgstr "Kupon '%s' sepetinizden kaldırıldı"
 #: apps/catalogue/abstract_models.py:1037 apps/offer/models.py:66
 #: apps/offer/models.py:739 apps/shipping/models.py:12
 msgid "Slug"
-msgstr "Manşet"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:42
 msgid "Requires shipping?"
-msgstr "Teslimat gerekli?"
+msgstr "배송이 필요합니까?"
 
 #: apps/catalogue/abstract_models.py:47
 msgid "Track stock levels?"
-msgstr "Stok seviyelerini izle?"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:53 apps/catalogue/abstract_models.py:1079
 msgid "Options"
-msgstr "Seçenekler"
+msgstr "옵션"
 
 #: apps/catalogue/abstract_models.py:58 apps/catalogue/abstract_models.py:293
 #: apps/catalogue/abstract_models.py:707
 msgid "Product Class"
-msgstr "Ürün Sınıfı"
+msgstr "상품 분류"
 
 #: apps/catalogue/abstract_models.py:59 apps/offer/models.py:759
 msgid "Product Classes"
-msgstr "Ürün Sınıfları"
+msgstr "상품 분류"
 
 #: apps/catalogue/abstract_models.py:77 apps/catalogue/abstract_models.py:286
 #: apps/offer/models.py:67 apps/promotions/models.py:211
@@ -1107,23 +1102,23 @@ msgstr "Ürün Sınıfları"
 #: templates/oscar/dashboard/offers/offer_detail.html:70
 #: templates/oscar/dashboard/offers/summary.html:13
 msgid "Description"
-msgstr "Açıklama"
+msgstr "설명"
 
 #: apps/catalogue/abstract_models.py:78 apps/catalogue/abstract_models.py:725
 #: apps/promotions/models.py:173 apps/promotions/models.py:181
 #: apps/promotions/models.py:182
 #: templates/oscar/dashboard/catalogue/product_list.html:82
 msgid "Image"
-msgstr "Resim"
+msgstr "이미지"
 
 #: apps/catalogue/abstract_models.py:82
 msgid "Full Name"
-msgstr "Tam Ad"
+msgstr "성명"
 
 #: apps/catalogue/abstract_models.py:128
 #, python-format
 msgid "A category with slug '%(slug)s' already exists"
-msgstr "'%(slug)s' manşeti ile bir kategori zaten mevcut"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:181
 msgid "Is Cannonical"
@@ -1131,15 +1126,15 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:187
 msgid "Product Category"
-msgstr "Ürün Kategorisi"
+msgstr "상품 카테고리"
 
 #: apps/catalogue/abstract_models.py:188
 msgid "Product Categories"
-msgstr "Ürün Kategorileri"
+msgstr "상품 카테고리"
 
 #: apps/catalogue/abstract_models.py:200
 msgid "Name Plural"
-msgstr "Çoğul İsim"
+msgstr "복수형 이름"
 
 #: apps/catalogue/abstract_models.py:208 apps/catalogue/abstract_models.py:244
 msgid "Contributor Role"
@@ -1186,7 +1181,7 @@ msgstr ""
 #: templates/oscar/dashboard/catalogue/product_update.html:179
 #: templates/oscar/dashboard/catalogue/product_update.html:201
 msgid "Parent"
-msgstr ""
+msgstr "부모"
 
 #: apps/catalogue/abstract_models.py:277
 msgid ""
@@ -1208,26 +1203,26 @@ msgstr ""
 #: templates/oscar/dashboard/reviews/review_list.html:58
 #: templates/oscar/dashboard/users/detail.html:182
 msgid "Title"
-msgstr "Başlık"
+msgstr "제목"
 
 #: apps/catalogue/abstract_models.py:295
 msgid "Choose what type of product this is"
-msgstr ""
+msgstr "상품의 종류를 선택하세요"
 
 #: apps/catalogue/abstract_models.py:299
 msgid "Attributes"
-msgstr ""
+msgstr "속성"
 
 #: apps/catalogue/abstract_models.py:300
 msgid ""
 "A product attribute is something that this product MUST have, such as a "
 "size, as specified by its class"
-msgstr ""
+msgstr "상품 종류에서 지정된 상품 속성은 반드시 가지고 있어야 합니다"
 
 #: apps/catalogue/abstract_models.py:303
 #: templates/oscar/dashboard/orders/line_detail.html:61
 msgid "Product Options"
-msgstr "Ürün Seçenekleri"
+msgstr "상품 옵션"
 
 #: apps/catalogue/abstract_models.py:304
 msgid ""
@@ -1235,13 +1230,10 @@ msgid ""
 "customer's basket.  This could be something like a personalised message to "
 "be printed on a T-shirt."
 msgstr ""
-"Seçenekler, ürünün müşteri sepetine eklenmesi sırasında ürünle "
-"ilişkilendirilen değerlerdir. Bu, bir tişörtün üzerine basılacak kişiye özel "
-"mesaj gibi birşey olabilir."
 
 #: apps/catalogue/abstract_models.py:311
 msgid "Related Products"
-msgstr "Benzer Ürünler"
+msgstr "관련 상품"
 
 #: apps/catalogue/abstract_models.py:312
 msgid ""
@@ -1252,7 +1244,7 @@ msgstr ""
 #: apps/catalogue/abstract_models.py:318
 #: templates/oscar/dashboard/catalogue/product_update.html:48
 msgid "Recommended Products"
-msgstr "Önerilen Ürünler"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:324
 msgid "Rating"
@@ -1261,7 +1253,7 @@ msgstr ""
 #: apps/catalogue/abstract_models.py:329 apps/customer/abstract_models.py:164
 #: apps/order/abstract_models.py:320
 msgid "Date Updated"
-msgstr "Güncelleme Tarihi"
+msgstr "수정일"
 
 #: apps/catalogue/abstract_models.py:340
 msgid "Is discountable?"
@@ -1273,39 +1265,39 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:496 apps/partner/availability.py:87
 msgid "No stock available"
-msgstr "Stokta yok"
+msgstr "재고 없음"
 
 #: apps/catalogue/abstract_models.py:547
 #: templates/oscar/catalogue/detail.html:137
 #: templates/oscar/dashboard/catalogue/product_list.html:83
 #: templates/oscar/dashboard/orders/line_detail.html:51
 msgid "Product class"
-msgstr "Ürün sınıfı"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:624
 msgid "Primary Product"
-msgstr "Temel Ürün"
+msgstr "주요 상품"
 
 #: apps/catalogue/abstract_models.py:626
 msgid "Recommended Product"
-msgstr "Önerilen Ürün"
+msgstr "추천 상품"
 
 #: apps/catalogue/abstract_models.py:627
 msgid "Ranking"
-msgstr "Sıralama"
+msgstr "순위"
 
 #: apps/catalogue/abstract_models.py:630
 msgid "Product Recommendation"
-msgstr "Ürün Önerisi"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:631
 msgid "Product Recomendations"
-msgstr "Ürün Önerileri"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:659
 #, python-format
 msgid "%(obj)s has no attribute named '%(attr)s'"
-msgstr "%(obj)s '%(attr)s' özelliğine sahip değil"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:668
 #, python-format
@@ -1315,31 +1307,31 @@ msgstr ""
 #: apps/catalogue/abstract_models.py:675
 #, python-format
 msgid "%(attr)s attribute %(err)s"
-msgstr "%(attr)s özellik %(err)s"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:713
 msgid "Code must match ^[a-zA-Z_][0-9a-zA-Z_]*$"
-msgstr "Kod ^[a-zA-Z_][0-9a-zA-Z_]*$ ile eşleşmeli"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:716 apps/catalogue/abstract_models.py:888
 msgid "Text"
-msgstr "Metin"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:717 apps/catalogue/abstract_models.py:889
 msgid "Integer"
-msgstr "Tamsayı"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:718
 msgid "True / False"
-msgstr "Doğru / Yanlış"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:719 apps/catalogue/abstract_models.py:891
 msgid "Float"
-msgstr "Kesirli Sayı"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:720
 msgid "Rich Text"
-msgstr "Zengin Metin"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:721 apps/catalogue/abstract_models.py:893
 #: apps/order/abstract_models.py:350
@@ -1350,11 +1342,11 @@ msgstr "Zengin Metin"
 #: templates/oscar/dashboard/orders/order_detail.html:493
 #: templates/oscar/dashboard/orders/order_detail.html:578
 msgid "Date"
-msgstr "Tarih"
+msgstr "날짜"
 
 #: apps/catalogue/abstract_models.py:723
 msgid "Entity"
-msgstr "Varlık"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:724
 msgid "File"
@@ -1362,78 +1354,78 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:732
 msgid "Option Group"
-msgstr "Özellik Grubu"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:733
 msgid "Select an option group if using type \"Option\""
-msgstr "\"Özellik\" tipi kullanıyorsanız bir özellik grubu seçin"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:736
 msgid "Entity Type"
-msgstr "Varlık Tipi"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:737
 msgid "Select an entity type if using type \"Entity\""
-msgstr "\"Varlık\" tipi kullanıyorsanız bir varlık grubu seçin"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:738
 msgid "Required"
-msgstr "Gerekli"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:743
 msgid "Product Attribute"
-msgstr "Ürün Özelliği"
+msgstr "상품 속성"
 
 #: apps/catalogue/abstract_models.py:744
 #: templates/oscar/dashboard/catalogue/product_update.html:233
 msgid "Product Attributes"
-msgstr "Ürün Özellikleri"
+msgstr "상품 속성"
 
 #: apps/catalogue/abstract_models.py:756
 msgid "Must be str or unicode"
-msgstr "karakter dizisi veya evrensel kod olmalı"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:762
 msgid "Must be a float"
-msgstr "Kesirli sayı olmalı"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:768
 msgid "Must be an integer"
-msgstr "Tamsayı olmalı"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:772
 msgid "Must be a date or datetime"
-msgstr "Tarih veya tarih-zaman olmalı"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:776
 msgid "Must be a boolean"
-msgstr "Doğru/Yanlış değeri almalı"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:781
 msgid "Must be an AttributeEntity model object instance"
-msgstr "AttributeEntity model nesnesi örneği olmalı"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:783
 msgid "Model has not been saved yet"
-msgstr "Model henüz kaydedilmedi"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:786
 #, python-format
 msgid "Entity must be of type %s"
-msgstr "Varlık %s tipinde olmalı"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:791
 msgid "Must be an AttributeOption model object instance"
-msgstr "AttributeOption modeli nesne örneği olmalı"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:793
 msgid "AttributeOption has not been saved yet"
-msgstr "AttributeOption henüz kaydedilmedi"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:798
 #, python-format
 msgid "%(enum)s is not a valid choice for %(attr)s"
-msgstr "%(enum)s %(attr)s için geçerli bir seçim değil"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:803
 msgid "Must be a file field"
@@ -1441,27 +1433,27 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:883
 msgid "Attribute"
-msgstr "Özellik"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:890
 msgid "Boolean"
-msgstr "Doğru/Yanlış"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:892
 msgid "Richtext"
-msgstr "ZenginMetin"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:896
 msgid "Value Option"
-msgstr "Değer Seçeneği"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:899
 msgid "Value Entity"
-msgstr "Değer Varlığı"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:921
 msgid "Product Attribute Value"
-msgstr "Ürün Özellik Değeri"
+msgstr "상품 속성값"
 
 #: apps/catalogue/abstract_models.py:922
 msgid "Product Attribute Values"
@@ -1469,60 +1461,60 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:978
 msgid "Attribute Option Group"
-msgstr "Özellik Seçeneği Grubu"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:979
 msgid "Attribute Option Groups"
-msgstr "Özellik Seçeneği Grupları"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:994
 msgid "Group"
-msgstr "Grup"
+msgstr "그룹"
 
 #: apps/catalogue/abstract_models.py:1002
 msgid "Attribute Option"
-msgstr "Özellik Seçeneği"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:1003
 msgid "Attribute Options"
-msgstr "Özellik Seçenekleri"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:1022
 msgid "Attribute Entity"
-msgstr "Özellik Varlığı"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:1023
 msgid "Attribute Entities"
-msgstr "Özellik Varlıkları"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:1044
 msgid "Attribute Entity Type"
-msgstr "Özellik Varlığı Tipi"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:1045
 msgid "Attribute Entity Types"
-msgstr "Özellik Varlığı Tipleri"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:1070
 msgid "Required - a value for this option must be specified"
-msgstr "Gerekli - bu seçeneğin değeri belirtilmeli"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:1071
 msgid "Optional - a value for this option can be omitted"
-msgstr "İsteğe Bağlı - bu seçeneğin değeri belirtilmeyebilir"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:1139
 msgid "Original"
-msgstr "Özgün"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:1141
 msgid "Caption"
-msgstr "Başlık"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:1145 apps/promotions/models.py:24
 #: apps/promotions/models.py:275 apps/promotions/models.py:315
 msgid "Display Order"
-msgstr "Gösterim Sırası"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:1146
 msgid ""
@@ -1531,42 +1523,42 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:1154
 msgid "Product Image"
-msgstr "Ürün Resmi"
+msgstr "상품 이미지"
 
 #: apps/catalogue/abstract_models.py:1155
 msgid "Product Images"
-msgstr "Ürün Resimleri"
+msgstr "상품 이미지"
 
 #: apps/catalogue/utils.py:60
 #, python-format
 msgid "%(filename)s is not a valid image (%(error)s)"
-msgstr "%(filename)s geçerli bir resim değil (%(error)s)"
+msgstr ""
 
 #: apps/catalogue/utils.py:71
 #, python-format
 msgid "%s is not a valid image archive"
-msgstr "%s geçerli bir resim arşivi değil"
+msgstr ""
 
 #: apps/catalogue/views.py:189 templates/oscar/catalogue/browse.html:26
 #: templates/oscar/partials/nav_primary.html:44
 msgid "All products"
-msgstr "Tüm ürünler"
+msgstr "전체 상품"
 
 #: apps/catalogue/views.py:191
 #, python-format
 msgid "Products matching '%(query)s'"
-msgstr "Ürünler eşleşiyor '%(query)s'"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:29
 msgid "Review title"
-msgstr "Yorum başlığı"
+msgstr "후기 제목"
 
 #: apps/catalogue/reviews/abstract_models.py:31
 #: templates/oscar/customer/email/email_detail.html:25
 #: templates/oscar/customer/notifications/detail.html:29
 #: templates/oscar/dashboard/users/detail.html:183
 msgid "Body"
-msgstr "Gövde"
+msgstr "본문"
 
 #: apps/catalogue/reviews/abstract_models.py:40
 #: apps/dashboard/pages/forms.py:23 apps/dashboard/promotions/forms.py:56
@@ -1577,25 +1569,25 @@ msgstr "URL"
 
 #: apps/catalogue/reviews/abstract_models.py:44
 msgid "Requires moderation"
-msgstr "Onay gerekiyor"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:45
 #: apps/dashboard/reviews/forms.py:10
 msgid "Approved"
-msgstr "Onaylandı"
+msgstr "승인됨"
 
 #: apps/catalogue/reviews/abstract_models.py:46
 #: apps/dashboard/reviews/forms.py:11
 msgid "Rejected"
-msgstr "Reddedildi"
+msgstr "승인거부"
 
 #: apps/catalogue/reviews/abstract_models.py:56
 msgid "Total Votes"
-msgstr "Toplam Oy"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:58
 msgid "Delta Votes"
-msgstr "Delta Oylar"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:70
 msgid "Product review"
@@ -1615,28 +1607,28 @@ msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:183
 msgid "Up"
-msgstr "Yukarı"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:184
 msgid "Down"
-msgstr "Aşağı"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:186
 msgid "Delta"
-msgstr "Delta"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:193
 msgid "Vote"
-msgstr "Oy"
+msgstr "투표"
 
 #: apps/catalogue/reviews/abstract_models.py:194
 #: templates/oscar/dashboard/reviews/review_list.html:62
 msgid "Votes"
-msgstr "Oylar"
+msgstr "투표"
 
 #: apps/catalogue/reviews/abstract_models.py:202
 msgid "You cannot vote on your own reviews"
-msgstr "Kendi yorumunuza oy veremezsiniz"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:205
 msgid "Only signed-in users can vote on reviews"
@@ -1648,7 +1640,7 @@ msgstr ""
 
 #: apps/catalogue/reviews/views.py:31
 msgid "You have already reviewed this product!"
-msgstr "Bu ürüne daha önceden yorum yaptınız"
+msgstr ""
 
 #: apps/catalogue/reviews/views.py:33
 msgid "You can't leave a review for this product."
@@ -1656,15 +1648,15 @@ msgstr ""
 
 #: apps/catalogue/reviews/views.py:58
 msgid "Thank you for reviewing this product"
-msgstr "Ürüne yorum yaptığınız için teşekkür ederiz"
+msgstr ""
 
 #: apps/catalogue/reviews/views.py:96
 msgid "Thanks for voting!"
-msgstr "Oy verdiğiniz için teşekkür ederiz!"
+msgstr ""
 
 #: apps/checkout/forms.py:40
 msgid "My email address is"
-msgstr "Eposta adresim"
+msgstr ""
 
 #: apps/checkout/forms.py:43
 msgid "I am a new customer and want to checkout as a guest"
@@ -1687,32 +1679,32 @@ msgstr ""
 #: apps/checkout/views.py:125 apps/checkout/views.py:253
 #: apps/checkout/views.py:342 apps/checkout/views.py:420
 msgid "You need to add some items to your basket to checkout"
-msgstr "Ödeme yapmak için sepetinizi ürün eklemelisiniz"
+msgstr ""
 
 #: apps/checkout/views.py:132
 msgid "Please either sign in or enter your email address"
-msgstr "Lütfen giriş yapın veya eposta adresinizi girin"
+msgstr ""
 
 #: apps/checkout/views.py:139
 msgid "Your basket does not require a shipping address to be submitted"
-msgstr "Sepetiniz teslimat adresi girmenizi gerektirmiyor"
+msgstr ""
 
 #: apps/checkout/views.py:175
 msgid "Address deleted from your address book"
-msgstr "Adres kaydı adres tefterinizden silindi"
+msgstr ""
 
 #: apps/checkout/views.py:213
 msgid "Address saved"
-msgstr "Adres kaydedildi"
+msgstr ""
 
 #: apps/checkout/views.py:227
 msgid "Address deleted"
-msgstr "Adres silindi"
+msgstr ""
 
 #: apps/checkout/views.py:265 apps/checkout/views.py:351
 #: apps/checkout/views.py:431
 msgid "Please choose a shipping address"
-msgstr "Lütfen teslimat adresini seçiniz"
+msgstr ""
 
 #: apps/checkout/views.py:273
 msgid "Shipping is unavailable for your chosen address - please choose another"
@@ -1720,11 +1712,11 @@ msgstr ""
 
 #: apps/checkout/views.py:313
 msgid "Your submitted shipping method is not permitted"
-msgstr "Belirttiğiniz teslimat yöntemi kabul edilmedi"
+msgstr ""
 
 #: apps/checkout/views.py:358 apps/checkout/views.py:438
 msgid "Please choose a shipping method"
-msgstr "Lütfen teslimat yöntemini seçiniz"
+msgstr ""
 
 #: apps/checkout/views.py:577
 msgid ""
@@ -1734,7 +1726,7 @@ msgstr ""
 
 #: apps/checkout/views.py:704
 msgid "No order found"
-msgstr "Sipariş bulunamadı"
+msgstr ""
 
 #: apps/customer/abstract_models.py:57
 msgid "email address"
@@ -1751,7 +1743,7 @@ msgstr ""
 #: apps/customer/abstract_models.py:67 apps/customer/abstract_models.py:301
 #: templates/oscar/dashboard/users/detail.html:47
 msgid "Active"
-msgstr "Aktif"
+msgstr ""
 
 #: apps/customer/abstract_models.py:68
 msgid ""
@@ -1775,20 +1767,20 @@ msgstr ""
 #: templates/oscar/customer/notifications/detail.html:25
 #: templates/oscar/dashboard/comms/detail.html:94
 msgid "Subject"
-msgstr "Konu"
+msgstr ""
 
 #: apps/customer/abstract_models.py:115
 msgid "Body Text"
-msgstr "İçerik Metni"
+msgstr "본문 텍스트"
 
 #: apps/customer/abstract_models.py:116
 #: templates/oscar/dashboard/comms/detail.html:102
 msgid "Body HTML"
-msgstr "İçerik HTML"
+msgstr "본문 HTML"
 
 #: apps/customer/abstract_models.py:117
 msgid "Date Sent"
-msgstr "Gönderilme Tarihi"
+msgstr "보낸 날짜"
 
 #: apps/customer/abstract_models.py:122
 #: templates/oscar/dashboard/comms/detail.html:21
@@ -1799,106 +1791,106 @@ msgstr "Gönderilme Tarihi"
 #: templates/oscar/dashboard/orders/order_detail.html:78
 #: templates/oscar/dashboard/orders/order_detail.html:561
 msgid "Emails"
-msgstr "Epostalar"
+msgstr "이메일"
 
 #: apps/customer/abstract_models.py:125
 #, python-format
 msgid "Email to %(user)s with subject '%(subject)s'"
-msgstr "%(user)s için '%(subject)s' konulu eposta"
+msgstr "'%(subject)s' 제목으로 %(user)s 에게 이메일 보내기"
 
 #: apps/customer/abstract_models.py:141
 msgid "This is just used for organisational purposes"
-msgstr "Sadece organizasyonel amaçlar için kullanılacaktır"
+msgstr ""
 
 #: apps/customer/abstract_models.py:144
 msgid "Order related"
-msgstr "İlgili sipariş"
+msgstr "주문 관련"
 
 #: apps/customer/abstract_models.py:145
 msgid "User related"
-msgstr "İlgili kullanıcı"
+msgstr "사용자 관련"
 
 #: apps/customer/abstract_models.py:151
 msgid "Email Subject Template"
-msgstr "Eposta Konu Şablonu"
+msgstr "이메일 제목 템플릿"
 
 #: apps/customer/abstract_models.py:153
 msgid "Email Body Template"
-msgstr "Eposta İçerik Şablonu"
+msgstr "이메일 본문 템플릿"
 
 #: apps/customer/abstract_models.py:155
 msgid "Email Body HTML Template"
-msgstr "Eposta İçeriği HTML Şablonu"
+msgstr "이메일 본문 HTML 템플릿"
 
 #: apps/customer/abstract_models.py:156
 msgid "HTML template"
-msgstr "HTML Şablonu"
+msgstr "HTML 템플릿"
 
 #: apps/customer/abstract_models.py:159
 msgid "SMS Template"
-msgstr "SMS Şablonu"
+msgstr "SMS 템플릿"
 
 #: apps/customer/abstract_models.py:161
 msgid "SMS template"
-msgstr "SMS şablonu"
+msgstr "SMS 템플릿"
 
 #: apps/customer/abstract_models.py:176
 msgid "Communication event type"
-msgstr "İletişim olay türü"
+msgstr ""
 
 #: apps/customer/abstract_models.py:177
 msgid "Communication event types"
-msgstr "İletişim olay türleri"
+msgstr ""
 
 #: apps/customer/abstract_models.py:289 apps/wishlists/abstract_models.py:26
 msgid "Key"
-msgstr "Anahtar"
+msgstr ""
 
 #: apps/customer/abstract_models.py:300
 msgid "Not yet confirmed"
-msgstr "Henüz doğrulanmadı"
+msgstr ""
 
 #: apps/customer/abstract_models.py:302
 msgid "Cancelled"
-msgstr "İptal Edildi"
+msgstr ""
 
 #: apps/customer/abstract_models.py:303 apps/partner/abstract_models.py:389
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:41
 msgid "Closed"
-msgstr "Kapatıldı"
+msgstr ""
 
 #: apps/customer/abstract_models.py:309
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:29
 msgid "Date confirmed"
-msgstr "Doğrulanma tarihi"
+msgstr ""
 
 #: apps/customer/abstract_models.py:311
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:35
 msgid "Date cancelled"
-msgstr "İptal Edilme tarihi"
+msgstr ""
 
 #: apps/customer/abstract_models.py:313
 msgid "Date closed"
-msgstr "Kapatılma tarihi"
+msgstr ""
 
 #: apps/customer/forms.py:78
 msgid "Email Address"
-msgstr "Eposta Adresi"
+msgstr ""
 
 #: apps/customer/forms.py:135
 msgid "Please choose a less common password"
-msgstr "Lütfen yaygın olarak kullanılmayan şifre seçiniz"
+msgstr ""
 
 #: apps/customer/forms.py:153 apps/customer/forms.py:313
 #: apps/dashboard/partners/forms.py:117
 #: templates/oscar/customer/profile/profile.html:14
 #: templates/oscar/dashboard/orders/order_detail.html:36
 msgid "Email address"
-msgstr "Eposta adresi"
+msgstr ""
 
 #: apps/customer/forms.py:155 apps/dashboard/partners/forms.py:66
 msgid "Password"
-msgstr "Şifre"
+msgstr "비밀번호"
 
 #: apps/customer/forms.py:159
 msgid "Confirm password"
@@ -1906,11 +1898,11 @@ msgstr ""
 
 #: apps/customer/forms.py:175
 msgid "A user with that email address already exists."
-msgstr "Bu eposta adresi daha önceden kayıt olan bir kullanıcı var"
+msgstr ""
 
 #: apps/customer/forms.py:183 apps/dashboard/partners/forms.py:82
 msgid "The two password fields didn't match."
-msgstr "İki şifre alanı eşleşmiyor"
+msgstr ""
 
 #: apps/customer/forms.py:207 apps/dashboard/orders/forms.py:18
 msgid "From"
@@ -1930,7 +1922,7 @@ msgstr ""
 #: templates/oscar/dashboard/reports/partials/order_report.html:10
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:64
 msgid "Order number"
-msgstr "Sipariş numarası"
+msgstr "주문번호"
 
 #: apps/customer/forms.py:215
 msgid "At least one field is required."
@@ -1939,7 +1931,7 @@ msgstr ""
 #: apps/customer/forms.py:224 apps/dashboard/orders/forms.py:25
 #: apps/dashboard/orders/forms.py:48 apps/dashboard/orders/views.py:141
 msgid "All orders"
-msgstr "Bütün siparişler"
+msgstr ""
 
 #: apps/customer/forms.py:234
 #, python-format
@@ -1951,7 +1943,7 @@ msgstr ""
 #: apps/customer/forms.py:238 apps/dashboard/orders/forms.py:36
 #, python-format
 msgid "Orders placed between %(date_from)s and %(date_to)s"
-msgstr "%(date_from)s ile %(date_to)s tarihleri arasında verilen siparişler"
+msgstr ""
 
 #: apps/customer/forms.py:242
 #, python-format
@@ -1983,24 +1975,24 @@ msgstr ""
 
 #: apps/customer/forms.py:299 apps/customer/forms.py:364
 msgid "A user with this email address already exists"
-msgstr "Bu eposta adresi ile önceden kayıt olan bir kullanıcı var"
+msgstr ""
 
 #: apps/customer/forms.py:383
 msgid "Send notification to"
-msgstr "Duyuru gönder"
+msgstr ""
 
 #: apps/customer/forms.py:385
 msgid "Enter your email"
-msgstr "Epostanızı giriniz"
+msgstr ""
 
 #: apps/customer/forms.py:419
 #, python-format
 msgid "There is already an active stock alert for %s"
-msgstr "%s için önceden tanımlı bir stok uyarısı var"
+msgstr ""
 
 #: apps/customer/forms.py:429
 msgid "You already have an active alert for this product"
-msgstr "Bu ürün için zaten aktif bir uyarınız var"
+msgstr ""
 
 #: apps/customer/views.py:202 templates/oscar/customer/baseaccountpage.html:33
 #: templates/oscar/customer/partials/nav_account.html:21
@@ -2017,7 +2009,7 @@ msgstr ""
 
 #: apps/customer/views.py:311
 msgid "Password updated"
-msgstr "Şifre değiştirildi"
+msgstr ""
 
 #: apps/customer/views.py:336 templates/oscar/customer/baseaccountpage.html:42
 #: templates/oscar/customer/partials/nav_account.html:30
@@ -2036,13 +2028,13 @@ msgstr ""
 #: apps/payment/abstract_models.py:67 apps/voucher/abstract_models.py:144
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:6
 msgid "Order"
-msgstr ""
+msgstr "주문"
 
 #: apps/customer/views.py:477
 #, python-format
 msgid ""
 "All available lines from order %(number)s have been added to your basket"
-msgstr "%(number)s nolu siparişinizdeki bütün ürünler sepetinize eklendi"
+msgstr ""
 
 #: apps/customer/views.py:484
 #, python-format
@@ -2050,18 +2042,16 @@ msgid ""
 "It is not possible to re-order order %(number)s as none of its lines are "
 "available to purchase"
 msgstr ""
-"%(number)s nolu siparişinizi, içindeki ürünlerin hiçbiri satın almaya uygun "
-"değil ise tekrar sipariş edemezsiniz"
 
 #: apps/customer/views.py:524
 #, python-format
 msgid "%(qty)d copies of '%(product)s' have been added to your basket"
-msgstr "'%(product)s' ürününün %(qty)d adet kopyası sepetinize eklendi"
+msgstr ""
 
 #: apps/customer/views.py:528
 #, python-format
 msgid "'%s' has been added to your basket"
-msgstr "'%s' sepetinize eklendi"
+msgstr ""
 
 #: apps/customer/views.py:556 templates/oscar/customer/baseaccountpage.html:39
 #: templates/oscar/customer/partials/nav_account.html:27
@@ -2071,7 +2061,7 @@ msgstr ""
 #: apps/customer/views.py:568 apps/customer/views.py:577
 #: templates/oscar/customer/address/address_list.html:68
 msgid "Add a new address"
-msgstr "Yeni adres ekle"
+msgstr ""
 
 #: apps/customer/views.py:582
 #, python-format
@@ -2083,7 +2073,7 @@ msgstr ""
 #: templates/oscar/checkout/user_address_form.html:6
 #: templates/oscar/checkout/user_address_form.html:18
 msgid "Edit address"
-msgstr "Adresi düzenle"
+msgstr ""
 
 #: apps/customer/views.py:608
 #, python-format
@@ -2109,28 +2099,28 @@ msgstr ""
 
 #: apps/customer/alerts/views.py:70
 msgid "An alert has been created"
-msgstr "Uyarı oluşturuldu"
+msgstr ""
 
 #: apps/customer/alerts/views.py:72
 #, python-format
 msgid "A confirmation email has been sent to %s"
-msgstr "%s adresine doğrulama epostası gönderildi"
+msgstr ""
 
 #: apps/customer/alerts/views.py:90
 msgid "Your stock alert is now active"
-msgstr "Stok uyarısı aktif durumda"
+msgstr ""
 
 #: apps/customer/alerts/views.py:92
 msgid "Your stock alert cannot be confirmed"
-msgstr "Stok uyarısı doğrulanamadı"
+msgstr ""
 
 #: apps/customer/alerts/views.py:125
 msgid "Your stock alert has been cancelled"
-msgstr "Stok uyarısı iptal edildi"
+msgstr ""
 
 #: apps/customer/alerts/views.py:128
 msgid "Your stock alert cannot be cancelled"
-msgstr "Stok uyarısı iptal edilemedi"
+msgstr ""
 
 #: apps/customer/notifications/views.py:21
 #: templates/oscar/customer/baseaccountpage.html:48
@@ -2147,14 +2137,12 @@ msgstr ""
 msgid "%(count)d notification archived"
 msgid_plural "%(count)d notifications archived"
 msgstr[0] ""
-msgstr[1] ""
 
 #: apps/customer/notifications/views.py:103
 #, python-format
 msgid "%(count)d notification deleted"
 msgid_plural "%(count)d notifications deleted"
 msgstr[0] ""
-msgstr[1] ""
 
 #: apps/customer/wishlists/views.py:26
 #: templates/oscar/customer/baseaccountpage.html:51
@@ -2230,7 +2218,7 @@ msgstr ""
 
 #: apps/dashboard/catalogue/forms.py:36
 msgid "Category with the given path already exists."
-msgstr "Belirtilen yol için kategori zaten var"
+msgstr ""
 
 #: apps/dashboard/catalogue/forms.py:147
 msgid ""
@@ -2250,24 +2238,24 @@ msgstr ""
 
 #: apps/dashboard/catalogue/forms.py:348 core/validators.py:89
 msgid "This field is required"
-msgstr "Bu alan gereklidir"
+msgstr ""
 
 #: apps/dashboard/catalogue/forms.py:350
 msgid "Parent products must have a title"
-msgstr "Ana ürünün ismi olmalı"
+msgstr "부모 상품은 반드시 제목을 가지고 있어야 합니다"
 
 #: apps/dashboard/catalogue/forms.py:372
 msgid "A top-level product must have at least one category"
-msgstr "En üst ürünün en azından bir kategorisi olmalı"
+msgstr "최상위 상품은 적어도 한 개 이상의 카테고리를 가지고 있어야 합니다"
 
 #: apps/dashboard/catalogue/forms.py:375
 msgid "A variant product should not have categories"
-msgstr "Varyant ürünün kategorisi olmamalıdır"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:63
 #, python-format
 msgid "Products %(upc_filter)s %(title_filter)s"
-msgstr "Ürün %(upc_filter)s %(title_filter)s"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:73
 #, python-format
@@ -2282,45 +2270,44 @@ msgstr ""
 #: apps/dashboard/catalogue/views.py:133
 #, python-format
 msgid " including an item with title matching '%s'"
-msgstr " İsmi '%s' ile eşleşen ürün dahil"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:146 apps/dashboard/catalogue/views.py:151
 msgid "Please choose a product class"
-msgstr "Lütfen ürün sınıfı seçin"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:217
 #, python-format
 msgid "Create new %s product"
-msgstr "Yeni %s ürünü oluştur"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:300
 msgid "Your submitted data was not valid - please correct the below errors"
 msgstr ""
-"Belirttiğiniz bilgiler geçerli değil - lütfen aşağıdaki hataları düzeltiniz "
 
 #: apps/dashboard/catalogue/views.py:317
 #, fuzzy, python-format
 msgid "Created product '%s'"
-msgstr "'%s' ürünü silindi"
+msgstr "상품 삭제됨 '%s'"
 
 #: apps/dashboard/catalogue/views.py:319
 #, fuzzy, python-format
 msgid "Updated product '%s'"
-msgstr "'%s' ürünü silindi"
+msgstr "상품 삭제됨 '%s'"
 
 #: apps/dashboard/catalogue/views.py:344
 #, python-format
 msgid "Deleted product '%s'"
-msgstr "'%s' ürünü silindi"
+msgstr "상품 삭제됨 '%s'"
 
 #: apps/dashboard/catalogue/views.py:366
 #, python-format
 msgid "Alerts with status \"%s\""
-msgstr "\"%s\" durumu uyarıları"
+msgstr ""
 
 #: apps/dashboard/catalogue/views.py:369
 msgid "All alerts"
-msgstr "Bütün uyarılar"
+msgstr "모든 경고"
 
 #: apps/dashboard/catalogue/views.py:414
 msgid "Add a new category"
@@ -2345,42 +2332,41 @@ msgstr ""
 
 #: apps/dashboard/communications/forms.py:15
 msgid "Email subject template"
-msgstr "Eposta konu şablonu"
+msgstr "이메일 제목 템플릿"
 
 #: apps/dashboard/communications/forms.py:17
 msgid "Email body text template"
-msgstr "Eposta içerik metni şablonu"
+msgstr "이메일 본문 템플릿"
 
 #: apps/dashboard/communications/forms.py:20
 msgid "Email body HTML template"
-msgstr "Eposta içeriği HTML şablonu"
+msgstr "이메일 본문 HTML 템플릿"
 
 #: apps/dashboard/communications/forms.py:25
 msgid "Preview email"
-msgstr "Eposta önizleme"
+msgstr "이메일 미리보기"
 
 #: apps/dashboard/communications/forms.py:67
 msgid "No order found with this number"
-msgstr "Bu numara ile sipariş bulunamadı"
+msgstr "주어진 번호와 일치하는 주문 내용이 없습니다"
 
 #: apps/dashboard/communications/forms.py:76
 msgid "Please enter an email address"
-msgstr "Lütfen bir eposta adresi giriniz"
+msgstr "이메일 주소를 입력해주세요"
 
 #: apps/dashboard/communications/views.py:36
 msgid ""
 "The submitted form was not valid, please correct the errors and resubmit"
 msgstr ""
-"Belirtilen bilgiler geçerli değil, lütfen hataları düzeltip tekrar gönderiniz"
 
 #: apps/dashboard/communications/views.py:45
 msgid "Email saved"
-msgstr "Eposta kaydedildi"
+msgstr "이메일 저장됨"
 
 #: apps/dashboard/communications/views.py:86
 #, python-format
 msgid "A preview email has been sent to %s"
-msgstr "%s adresine önizleme epostası gönderildi"
+msgstr ""
 
 #: apps/dashboard/offers/forms.py:24 apps/dashboard/vouchers/forms.py:21
 #: apps/offer/models.py:113 apps/voucher/abstract_models.py:40
@@ -2388,7 +2374,7 @@ msgstr "%s adresine önizleme epostası gönderildi"
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:41
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:37
 msgid "Start date"
-msgstr "Başlangıç tarihi"
+msgstr "시작일"
 
 #: apps/dashboard/offers/forms.py:27 apps/dashboard/vouchers/forms.py:23
 #: apps/offer/models.py:115 apps/voucher/abstract_models.py:41
@@ -2396,7 +2382,7 @@ msgstr "Başlangıç tarihi"
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:42
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:38
 msgid "End date"
-msgstr "Bitiş Tarihi"
+msgstr "종료일"
 
 #: apps/dashboard/offers/forms.py:47
 msgid "The end date must be after the start date"
@@ -2404,12 +2390,12 @@ msgstr ""
 
 #: apps/dashboard/offers/forms.py:54
 msgid "Custom condition"
-msgstr "Özel koşul"
+msgstr ""
 
 #: apps/dashboard/offers/forms.py:86
 msgid ""
 "Please either choose a range, type and value OR select a custom condition"
-msgstr "Lütfen aralık, tip ve değer ya da özel koşul seçiniz"
+msgstr ""
 
 #: apps/dashboard/offers/forms.py:92
 msgid "A range is required"
@@ -2432,17 +2418,17 @@ msgstr ""
 #: templates/oscar/dashboard/offers/offer_list.html:48
 #: templates/oscar/dashboard/orders/order_detail.html:526
 msgid "Offer name"
-msgstr "Kampanya adı"
+msgstr ""
 
 #: apps/dashboard/offers/forms.py:161
 #: templates/oscar/dashboard/vouchers/voucher_list.html:49
 msgid "Is active?"
-msgstr "Aktif mi?"
+msgstr ""
 
 #: apps/dashboard/offers/reports.py:14
 #: templates/oscar/dashboard/offers/offer_detail.html:109
 msgid "Order date"
-msgstr "Sipariş tarihi"
+msgstr "주문일"
 
 #: apps/dashboard/offers/reports.py:15
 #: templates/oscar/basket/partials/basket_totals.html:193
@@ -2453,131 +2439,131 @@ msgstr "Sipariş tarihi"
 #: templates/oscar/dashboard/orders/order_detail.html:226
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:65
 msgid "Order total"
-msgstr "Sipariş toplamı"
+msgstr "모든 주문"
 
 #: apps/dashboard/offers/reports.py:16
 #: templates/oscar/checkout/shipping_methods.html:25
 #: templates/oscar/dashboard/offers/offer_detail.html:111
 #: templates/oscar/dashboard/offers/offer_list.html:56
 msgid "Cost"
-msgstr "Maliyet"
+msgstr "비용"
 
 #: apps/dashboard/offers/views.py:45
 msgid "All offers"
-msgstr "Bütün kampanyalar"
+msgstr ""
 
 #: apps/dashboard/offers/views.py:58
 #, python-format
 msgid "Offers matching '%s'"
-msgstr "'%s' ile eşleşen kampanyalar"
+msgstr ""
 
 #: apps/dashboard/offers/views.py:91
 #, python-format
 msgid "%s step not complete"
-msgstr "%s adımı tamamlanmadı"
+msgstr ""
 
 #: apps/dashboard/offers/views.py:243
 #, python-format
 msgid "Offer '%s' updated"
-msgstr "'%s' kampanyası güncellendi"
+msgstr ""
 
 #: apps/dashboard/offers/views.py:245
 #, python-format
 msgid "Offer '%s' created!"
-msgstr "'%s' kampanyası oluşturuldu!"
+msgstr ""
 
 #: apps/dashboard/offers/views.py:275
 msgid "Name and description"
-msgstr "İsim ve açıklama"
+msgstr ""
 
 #: apps/dashboard/offers/views.py:291
 #: templates/oscar/dashboard/offers/offer_detail.html:74
 #: templates/oscar/dashboard/offers/offer_list.html:51
 #: templates/oscar/dashboard/offers/summary.html:20
 msgid "Incentive"
-msgstr "Harekete geçiren"
+msgstr ""
 
 #: apps/dashboard/offers/views.py:321
 #: templates/oscar/dashboard/offers/offer_detail.html:84
 #: templates/oscar/dashboard/offers/offer_list.html:54
 #: templates/oscar/dashboard/offers/summary.html:33
 msgid "Restrictions"
-msgstr "Kısıtlamalar"
+msgstr ""
 
 #: apps/dashboard/offers/views.py:330
 msgid "Offer deleted!"
-msgstr "Kampanya silindi!"
+msgstr ""
 
 #: apps/dashboard/offers/views.py:353
 msgid "Offer is already suspended"
-msgstr "Kampanya zaten askıya alındı"
+msgstr ""
 
 #: apps/dashboard/offers/views.py:356
 msgid "Offer suspended"
-msgstr "Kampanya askıya alındı"
+msgstr ""
 
 #: apps/dashboard/offers/views.py:364
 msgid "Offer cannot be reinstated as it is not currently suspended"
-msgstr "Kampanya, askıya alınmış durumda olmadığı için, yeniden kurulamaz"
+msgstr ""
 
 #: apps/dashboard/offers/views.py:368
 msgid "Offer reinstated"
-msgstr "Kampanya yeniden başlatıldı"
+msgstr ""
 
 #: apps/dashboard/offers/views.py:399
 msgid "Range created"
-msgstr "Aralık oluşturuldu"
+msgstr "범위 생성"
 
 #: apps/dashboard/offers/views.py:408
 msgid "Range updated"
-msgstr "Aralık güncellendi"
+msgstr ""
 
 #: apps/dashboard/offers/views.py:418 apps/dashboard/ranges/views.py:90
 msgid "Range deleted"
-msgstr "Aralık silindi"
+msgstr ""
 
 #: apps/dashboard/orders/forms.py:42
 #, python-format
 msgid "Orders placed since %s"
-msgstr "%s tarihinden beri verilen siparişler"
+msgstr ""
 
 #: apps/dashboard/orders/forms.py:45
 #, python-format
 msgid "Orders placed until %s"
-msgstr "%s tarihine kadar verilen siparişler"
+msgstr ""
 
 #: apps/dashboard/orders/forms.py:63 apps/dashboard/reviews/forms.py:29
 msgid "Customer name"
-msgstr "Müşteri adı"
+msgstr ""
 
 #: apps/dashboard/orders/forms.py:64
 msgid "Product name"
-msgstr "Ürün adı"
+msgstr ""
 
 #: apps/dashboard/orders/forms.py:66 apps/order/abstract_models.py:388
 #: apps/partner/abstract_models.py:138
 #: templates/oscar/dashboard/orders/line_detail.html:84
 msgid "Partner SKU"
-msgstr "Ortak  SKU"
+msgstr "파트너 SKU"
 
 #: apps/dashboard/orders/forms.py:74 apps/dashboard/reports/forms.py:22
 #: apps/dashboard/reviews/forms.py:27
 msgid "Date from"
-msgstr "Tarihinden"
+msgstr "시작일"
 
 #: apps/dashboard/orders/forms.py:75 apps/dashboard/reports/forms.py:23
 msgid "Date to"
-msgstr "Tarihine"
+msgstr ""
 
 #: apps/dashboard/orders/forms.py:77 apps/voucher/reports.py:19
 #: templates/oscar/basket/partials/basket_content.html:116
 #: templates/oscar/dashboard/reports/partials/voucher_report.html:9
 msgid "Voucher code"
-msgstr "Kupon kodu"
+msgstr ""
 
 #: apps/dashboard/orders/forms.py:80
 msgid "Payment method"
-msgstr "Ödeme metodu"
+msgstr ""
 
 #: apps/dashboard/orders/forms.py:83 apps/promotions/models.py:149
 msgid "HTML"
@@ -2589,7 +2575,7 @@ msgstr "CSV"
 
 #: apps/dashboard/orders/forms.py:88
 msgid "Get results as"
-msgstr "Sonuçları al"
+msgstr ""
 
 #: apps/dashboard/orders/views.py:108
 #, python-format
@@ -2601,12 +2587,12 @@ msgstr ""
 
 #: apps/dashboard/orders/views.py:155
 msgid "Orders without an order status"
-msgstr "Sipariş durumu olmayan siparişler"
+msgstr ""
 
 #: apps/dashboard/orders/views.py:157
 #, python-format
 msgid "Orders with status '%s'"
-msgstr "Durumu '%s' olan siparişler"
+msgstr ""
 
 #: apps/dashboard/orders/views.py:162
 #, python-format
@@ -2636,17 +2622,17 @@ msgstr ""
 #: apps/dashboard/orders/views.py:184
 #, python-format
 msgid " placed between %(start_date)s and %(end_date)s"
-msgstr "%(start_date)s ile %(end_date)s tarihleri arasında gelen"
+msgstr ""
 
 #: apps/dashboard/orders/views.py:188
 #, python-format
 msgid " placed since %s"
-msgstr "%s beri gelen"
+msgstr ""
 
 #: apps/dashboard/orders/views.py:192
 #, python-format
 msgid " placed before %s"
-msgstr "%s önce gelen"
+msgstr ""
 
 #: apps/dashboard/orders/views.py:195
 #, python-format
@@ -2665,50 +2651,50 @@ msgstr ""
 
 #: apps/dashboard/orders/views.py:324
 msgid "Order value"
-msgstr "Sipariş değeri"
+msgstr ""
 
 #: apps/dashboard/orders/views.py:325
 #: templates/oscar/dashboard/orders/order_detail.html:51
 #: templates/oscar/dashboard/orders/order_list.html:102
 msgid "Date of purchase"
-msgstr "Satın alma tarihi"
+msgstr ""
 
 #: apps/dashboard/orders/views.py:326
 #: templates/oscar/dashboard/orders/order_list.html:97
 msgid "Number of items"
-msgstr "Parça adeti"
+msgstr ""
 
 #: apps/dashboard/orders/views.py:327
 msgid "Order status"
-msgstr "Sipariş durumu"
+msgstr ""
 
 #: apps/dashboard/orders/views.py:328
 msgid "Customer email address"
-msgstr "Müşteri eposta adresi"
+msgstr ""
 
 #: apps/dashboard/orders/views.py:329
 msgid "Deliver to name"
-msgstr "İletilecek kişi"
+msgstr ""
 
 #: apps/dashboard/orders/views.py:330
 msgid "Bill to name"
-msgstr "Fatura edilecek kişi"
+msgstr ""
 
 #: apps/dashboard/orders/views.py:411 views/generic.py:68
 msgid "Invalid action"
-msgstr "Geçersiz işlem"
+msgstr ""
 
 #: apps/dashboard/orders/views.py:431
 msgid "You must select some lines to act on"
-msgstr "İşlem yapmak için satır seçmelisiniz"
+msgstr ""
 
 #: apps/dashboard/orders/views.py:436
 msgid "No valid action submitted"
-msgstr "Geçerli bir işlem gönderilmedi"
+msgstr ""
 
 #: apps/dashboard/orders/views.py:448
 msgid "Note saved"
-msgstr "Not kaydedildi"
+msgstr ""
 
 #: apps/dashboard/orders/views.py:463
 msgid "Note cannot be deleted"
@@ -2833,7 +2819,7 @@ msgstr ""
 
 #: apps/dashboard/partners/forms.py:73
 msgid "Confirm Password"
-msgstr "Şifre Doğrulama"
+msgstr "비밀번호 확인"
 
 #: apps/dashboard/partners/views.py:35
 msgid "All partners"
@@ -3002,11 +2988,11 @@ msgstr ""
 
 #: apps/dashboard/ranges/models.py:14
 msgid "File Path"
-msgstr ""
+msgstr "파일 경로"
 
 #: apps/dashboard/ranges/models.py:15
 msgid "Size"
-msgstr ""
+msgstr "크기"
 
 #: apps/dashboard/ranges/models.py:17
 msgid "Uploaded By"
@@ -3053,14 +3039,12 @@ msgstr ""
 msgid "Removed %d product from range"
 msgid_plural "Removed %d products from range"
 msgstr[0] ""
-msgstr[1] ""
 
 #: apps/dashboard/ranges/views.py:155
 #, python-format
 msgid "%d product added to range"
 msgid_plural "%d products added to range"
 msgstr[0] ""
-msgstr[1] ""
 
 #: apps/dashboard/ranges/views.py:169
 #, python-format
@@ -3146,7 +3130,7 @@ msgstr ""
 #: apps/dashboard/reviews/views.py:126 apps/dashboard/users/views.py:167
 #, python-format
 msgid " with customer name matching '%s'"
-msgstr "müşteri adı '%s' ile eşleşen"
+msgstr ""
 
 #: apps/dashboard/users/views.py:30
 #, python-format
@@ -3507,7 +3491,6 @@ msgstr ""
 msgid " (max %d item)"
 msgid_plural " (max %d items)"
 msgstr[0] ""
-msgstr[1] ""
 
 #: apps/offer/models.py:613
 msgid "Multibuy benefits require a product range"
@@ -3597,7 +3580,6 @@ msgstr ""
 msgid "Buy %(delta)d more product from %(range)s"
 msgid_plural "Buy %(delta)d more products from %(range)s"
 msgstr[0] ""
-msgstr[1] ""
 
 #: apps/offer/models.py:1005
 #, python-format
@@ -3745,7 +3727,7 @@ msgstr ""
 #: apps/order/abstract_models.py:25
 #, fuzzy
 msgid "Basket ID"
-msgstr "Alışveriş Sepeti"
+msgstr "장바구니"
 
 #: apps/order/abstract_models.py:36
 msgid "Billing Address"
@@ -4662,7 +4644,7 @@ msgstr ""
 
 #: apps/voucher/abstract_models.py:24
 msgid "Case insensitive / No spaces allowed"
-msgstr ""
+msgstr "대소문자 구분안함 / 공백불가"
 
 #: apps/voucher/abstract_models.py:33
 msgid "Can be used once by one customer"
@@ -5138,7 +5120,7 @@ msgstr ""
 #: templates/oscar/customer/order/order_detail.html:87
 #: templates/oscar/dashboard/orders/order_detail.html:179
 msgid "Basket total"
-msgstr "Sepet tutarı"
+msgstr ""
 
 #: templates/oscar/basket/partials/basket_totals.html:90
 #: templates/oscar/basket/partials/basket_totals.html:159
@@ -5207,7 +5189,6 @@ msgid_plural ""
 "                            %(num_reviews)s customer reviews\n"
 "                            "
 msgstr[0] ""
-msgstr[1] ""
 
 #: templates/oscar/catalogue/detail.html:101
 #: templates/oscar/catalogue/reviews/review_product.html:44
@@ -5226,7 +5207,7 @@ msgstr ""
 
 #: templates/oscar/catalogue/detail.html:147
 msgid "Price (incl. tax)"
-msgstr ""
+msgstr "가격 (세금포함)"
 
 #: templates/oscar/catalogue/detail.html:154
 msgid "Availability"
@@ -5234,15 +5215,15 @@ msgstr ""
 
 #: templates/oscar/catalogue/detail.html:166
 msgid "Num reviews"
-msgstr ""
+msgstr "후기 개수"
 
 #: templates/oscar/catalogue/detail.html:182
 msgid "See all reviews"
-msgstr ""
+msgstr "전체 후기 보기"
 
 #: templates/oscar/catalogue/detail.html:184
 msgid "Customer Reviews"
-msgstr ""
+msgstr "고객 후기"
 
 #: templates/oscar/catalogue/detail.html:191
 #, python-format
@@ -5259,11 +5240,11 @@ msgstr ""
 
 #: templates/oscar/catalogue/detail.html:214
 msgid "Related items"
-msgstr ""
+msgstr "관련 아이템"
 
 #: templates/oscar/catalogue/detail.html:229
 msgid "Recommended items"
-msgstr ""
+msgstr "추천 아이템"
 
 #: templates/oscar/catalogue/partials/add_to_basket_form.html:13
 #: templates/oscar/catalogue/partials/add_to_basket_form_compact.html:13
@@ -5344,14 +5325,14 @@ msgstr ""
 #: templates/oscar/dashboard/ranges/range_list.html:57
 #: templates/oscar/dashboard/ranges/range_product_list.html:112
 msgid "Yes"
-msgstr ""
+msgstr "네"
 
 #: templates/oscar/catalogue/partials/review.html:46
 #: templates/oscar/dashboard/offers/offer_list.html:69
 #: templates/oscar/dashboard/ranges/range_list.html:59
 #: templates/oscar/dashboard/ranges/range_product_list.html:112
 msgid "No"
-msgstr ""
+msgstr "아니오"
 
 #: templates/oscar/catalogue/partials/review.html:53
 #, python-format
@@ -5366,7 +5347,6 @@ msgid_plural ""
 "found this useful\n"
 "            "
 msgstr[0] ""
-msgstr[1] ""
 
 #: templates/oscar/catalogue/partials/review.html:59
 msgid "This review has no votes."
@@ -5415,7 +5395,7 @@ msgstr ""
 
 #: templates/oscar/checkout/checkout.html:57
 msgid "Change shipping address"
-msgstr ""
+msgstr "배송지 주소 변경"
 
 #: templates/oscar/checkout/checkout.html:74
 msgid "Change shipping method"
@@ -5427,7 +5407,7 @@ msgstr ""
 #: templates/oscar/checkout/thank_you.html:72
 #: templates/oscar/dashboard/orders/order_detail.html:76
 msgid "Payment"
-msgstr ""
+msgstr "결제"
 
 #: templates/oscar/checkout/checkout.html:90
 msgid "Payment details to go here"
@@ -5441,11 +5421,11 @@ msgstr ""
 #: templates/oscar/customer/anon_order.html:54
 #: templates/oscar/dashboard/orders/order_detail.html:74
 msgid "Order contents"
-msgstr ""
+msgstr "주문 내용"
 
 #: templates/oscar/checkout/checkout.html:152
 msgid "Edit order contents"
-msgstr ""
+msgstr "주문 내용 수정"
 
 #: templates/oscar/checkout/gateway.html:7
 msgid "Checkout gateway"
@@ -5704,7 +5684,7 @@ msgstr ""
 
 #: templates/oscar/customer/anon_order.html:35
 msgid "Contact number"
-msgstr ""
+msgstr "연락처"
 
 #: templates/oscar/customer/anon_order.html:41
 #: templates/oscar/dashboard/orders/order_detail.html:79
@@ -5722,7 +5702,7 @@ msgstr ""
 
 #: templates/oscar/customer/anon_order.html:98
 msgid "Basket total (inc. tax)"
-msgstr "Sepet tutarı (vergiler dahil)"
+msgstr ""
 
 #: templates/oscar/customer/baseaccountpage.html:7
 #: templates/oscar/customer/baseaccountpage.html:19
@@ -5982,12 +5962,12 @@ msgstr ""
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:10
 #: templates/oscar/partials/mini_basket.html:6
 msgid "Basket total:"
-msgstr "Sepet tutarı:"
+msgstr "장바구니 전체"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:18
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:11
 msgid "Shipping:"
-msgstr ""
+msgstr "배송지"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:19
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:12
@@ -6094,7 +6074,7 @@ msgstr ""
 
 #: templates/oscar/customer/notifications/detail.html:7
 msgid "Notifications inbox"
-msgstr "Duyuru gelen kutusu"
+msgstr ""
 
 #: templates/oscar/customer/notifications/detail.html:16
 msgid "Sender"
@@ -6160,12 +6140,12 @@ msgstr ""
 #: templates/oscar/customer/order/order_detail.html:69
 #: templates/oscar/dashboard/orders/order_detail.html:152
 msgid "Basket total (excl. discounts)"
-msgstr "Sepet tutarı (indirimler hariç)"
+msgstr ""
 
 #: templates/oscar/customer/order/order_detail.html:82
 #: templates/oscar/dashboard/orders/order_detail.html:171
 msgid "Basket total (inc. discounts)"
-msgstr "Sepet tutarı (indirimler hariç)"
+msgstr ""
 
 #: templates/oscar/customer/order/order_detail.html:95
 #: templates/oscar/dashboard/orders/order_detail.html:190
@@ -6337,15 +6317,15 @@ msgstr ""
 
 #: templates/oscar/dashboard/index.html:23
 msgid "Your Store Statistics"
-msgstr "Dükkanınızın İstatistikleri"
+msgstr ""
 
 #: templates/oscar/dashboard/index.html:29
 msgid "Total Orders"
-msgstr "Toplam Siparişler"
+msgstr ""
 
 #: templates/oscar/dashboard/index.html:30
 msgid "New Customers"
-msgstr "Yeni Müşteriler"
+msgstr ""
 
 #: templates/oscar/dashboard/index.html:31
 msgid "Total Customers"
@@ -6357,17 +6337,17 @@ msgstr ""
 
 #: templates/oscar/dashboard/index.html:36
 msgid "Latest Orders (last 24 hours)"
-msgstr "En Son Siparişler (son 24 saat)"
+msgstr ""
 
 #: templates/oscar/dashboard/index.html:63
 msgid "Orders - Last 24 Hours"
-msgstr "Siparişler - Son 24 Saat"
+msgstr ""
 
 #: templates/oscar/dashboard/index.html:66
 #: templates/oscar/dashboard/index.html:93
 #: templates/oscar/dashboard/orders/statistics.html:43
 msgid "Total orders"
-msgstr "Toplam siparişler"
+msgstr ""
 
 #: templates/oscar/dashboard/index.html:70
 #: templates/oscar/dashboard/index.html:97
@@ -6405,7 +6385,7 @@ msgstr ""
 
 #: templates/oscar/dashboard/index.html:119
 msgid "New customers"
-msgstr "Yeni müşteriler"
+msgstr ""
 
 #: templates/oscar/dashboard/index.html:142
 msgid "View Stock Alerts"
@@ -6549,7 +6529,7 @@ msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_list.html:33
 msgid "Search Products"
-msgstr ""
+msgstr "상품 검색"
 
 #: templates/oscar/dashboard/catalogue/product_list.html:45
 msgid "Create new product"
@@ -6639,7 +6619,7 @@ msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_update.html:233
 msgid "Product class:"
-msgstr "Ürün sınıfı:"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_update.html:236
 msgid "Attribute name"
@@ -7934,7 +7914,7 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:25
 #, fuzzy, python-format
 msgid "Voucher '%(name)s'"
-msgstr "Hediye Çekleri"
+msgstr "영수증"
 
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:49
 msgid "Number of basket additions"

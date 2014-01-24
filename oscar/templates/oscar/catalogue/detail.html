@@ -155,16 +155,10 @@
             </tr>
         {% endif %}
         {% for av in product.attribute_values.all %}
-        <tr>
-            <th>{{ av.attribute.name }}</th>
-            <td>
-                {% if av.attribute.type == "richtext" %}
-                    {{ av.value|safe }}
-                {% else %}
-                    {{ av.value }}
-                {% endif %}
-            </td>
-        </tr>
+            <tr>
+                <th>{{ av.attribute.name }}</th>
+                <td>{{ av.value_as_html }}</td>
+            </tr>
         {% endfor %}
         {% iffeature "reviews" %}
             <tr>

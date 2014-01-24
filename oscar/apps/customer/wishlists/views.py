@@ -265,7 +265,7 @@ class WishListRemoveProduct(LineMixin, PageTitleMixin, DeleteView):
     active_tab = "wishlists"
 
     def get_page_title(self):
-        return _(u'Remove %s') % self.object.product.get_title()
+        return _(u'Remove %s') % self.object.get_title()
 
     def get_object(self, queryset=None):
         self.fetch_line(
@@ -281,14 +281,14 @@ class WishListRemoveProduct(LineMixin, PageTitleMixin, DeleteView):
 
     def get_success_url(self):
         msg = _("'%(title)s' was removed from your '%(name)s' wish list") % {
-            'title': self.product.get_title(),
+            'title': self.line.get_title(),
             'name': self.wishlist.name}
         messages.success(self.request, msg)
 
         # We post directly to this view on product pages; and should send the
         # user back there if that was the case
         referrer = self.request.META.get('HTTP_REFERER', '')
-        if self.product.get_absolute_url() in referrer:
+        if self.product and self.product.get_absolute_url() in referrer:
             return referrer
         else:
             return reverse(

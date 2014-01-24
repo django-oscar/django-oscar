@@ -78,7 +78,8 @@ class OrderAndItemCharges(ShippingMethod):
 
         charge = self.price_per_order
         for line in self._basket.lines.all():
-            charge += line.quantity * self.price_per_item
+            if line.product.is_shipping_required:
+                charge += line.quantity * self.price_per_item
         return charge
 
     @property
@@ -115,6 +116,9 @@ class WeightBased(ShippingMethod):
 
     @property
     def charge_incl_tax(self):
+        # Note, when weighing the basket, we don't check whether the item
+        # requires shipping or not.  It is assumed that if something has a
+        # weight, then it requires shipping.
         scales = Scales(attribute_code=self.weight_attribute,
                         default_weight=self.default_weight)
         weight = scales.weigh_basket(self._basket)

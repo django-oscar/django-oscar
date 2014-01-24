@@ -26,6 +26,7 @@ def delete_image_files(sender, instance, **kwargs):
             except ThumbnailError:
                 pass
 
+
 # connect for all models with ImageFields - add as needed
 models_with_images = [ProductImage, Category]
 for sender in models_with_images:

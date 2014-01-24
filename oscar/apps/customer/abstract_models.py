@@ -13,7 +13,10 @@ from django.utils.translation import ugettext_lazy as _
 from oscar.apps.customer.managers import CommunicationTypeManager
 from oscar.core.compat import AUTH_USER_MODEL
 
+
 if hasattr(auth_models, 'BaseUserManager'):
+    ProductAlert = models.get_model('customer', 'ProductAlert')
+
     # Only define custom UserModel when Django >= 1.5
     class UserManager(auth_models.BaseUserManager):
 
@@ -82,6 +85,23 @@ if hasattr(auth_models, 'BaseUserManager'):
 
         def get_short_name(self):
             return self.first_name
+
+        def _migrate_alerts_to_user(self):
+            """
+            Transfer any active alerts linked to a user's email address to the
+            newly registered user.
+            """
+            alerts = ProductAlert.objects.filter(
+                email=self.email, status=ProductAlert.ACTIVE)
+            alerts.update(user=self, key=None, email=None)
+
+        def save(self, *args, **kwargs):
+            super(AbstractUser, self).save(*args, **kwargs)
+            # Migrate any "anonymous" product alerts to the registered user
+            # Ideally, this would be done via a post-save signal. But we can't
+            # use get_user_model to wire up signals to custom user models
+            # see Oscar ticket #1127, Django ticket #19218
+            self._migrate_alerts_to_user()
 
 
 class AbstractEmail(models.Model):

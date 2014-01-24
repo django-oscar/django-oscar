@@ -26,31 +26,41 @@
         </thead>
         <tbody>
             {% for line in order.lines.all %}
-            <tr>
-                <td>
-                    <p><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></p>
-                    {% iffeature "reviews" %}
-                        {% if line.product|is_review_permitted:user %}
-                            <a class="btn" href="{% url 'catalogue:reviews-add' product_slug=line.product.slug product_pk=line.product.id %}">{% trans 'Write a review' %}</a>
-                        {% endif %}
-                    {% endiffeature %}
-                </td>
-                <td>{{ line.est_dispatch_date|default:"-" }}</td>
-                <td>{{ line.quantity }}</td>
-                <td>{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>
-                <td>{{ line.line_price_before_discounts_incl_tax|currency:order.currency }}</td>
-                <td width="90">
-                    {% if line.product %}
-                    <form id="line_form_{{ line.id }}" action="{% url 'customer:order-line' order_number=order.number line_id=line.id %}" method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="reorder" />
-                        <button class="btn btn-success" type="submit">{% trans 'Re-order' %}</button>
-                    </form>
-                    {% else %}
-                        {% trans 'Not available anymore' %}
-                    {% endif %}
-                </td>
-            </tr>
+                {% with product=line.product %}
+                    <tr>
+                        <td>
+                            {% if product %}
+                                <p>
+                                    <a href="{{ product.get_absolute_url }}">{{ line.description }}</a>
+                                </p>
+                                {% iffeature "reviews" %}
+                                    {% if product|is_review_permitted:user %}
+                                        <a class="btn" href="{% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id %}">{% trans 'Write a review' %}</a>
+                                    {% endif %}
+                                {% endiffeature %}
+                            {% else %}
+                                <p>
+                                    {{ line.description }}
+                                </p>
+                            {% endif %}
+                        </td>
+                        <td>{{ line.est_dispatch_date|default:"-" }}</td>
+                        <td>{{ line.quantity }}</td>
+                        <td>{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>
+                        <td>{{ line.line_price_before_discounts_incl_tax|currency:order.currency }}</td>
+                        <td width="90">
+                            {% if product %}
+                                <form id="line_form_{{ line.id }}" action="{% url 'customer:order-line' order_number=order.number line_id=line.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="reorder" />
+                                    <button class="btn btn-success" type="submit">{% trans 'Re-order' %}</button>
+                                </form>
+                            {% else %}
+                                {% trans 'Not available anymore' %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endwith %}
             {% endfor %}
 
             {% with discounts=order.basket_discounts %}
@@ -136,11 +146,11 @@
 
     <h3>{% trans 'Shipping Method' %}</h3>
     <p>{{ order.shipping_method }}</p>
-    
+
     <hr>
 
     <h3>{% trans 'Shipping Address' %}</h3>
-    
+
     <table class="table table-striped table-bordered">
         <tr>
             <th>{% trans 'Address:' %}</th>
@@ -150,8 +160,8 @@
         <tr>
             <td>
                 <p>{% for field in order.shipping_address.active_address_fields %}
-                {{ field }}<br/>
-                {% endfor %}</p>
+                        {{ field }}<br/>
+                    {% endfor %}</p>
             </td>
             <td><p>{{ order.shipping_address.phone_number }}</p></td>
             <td><p>{{ order.shipping_address.notes }}</p></td>

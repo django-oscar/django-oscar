@@ -1,6 +1,8 @@
 from itertools import chain
 from datetime import datetime, date
 import logging
+from django.utils.html import strip_tags
+from django.utils.safestring import mark_safe
 import os
 import warnings
 
@@ -413,7 +415,7 @@ class AbstractProduct(models.Model):
 
     @property
     def is_shipping_required(self):
-        return self.product_class.requires_shipping
+        return self.get_product_class().requires_shipping
 
     @property
     def has_stockrecords(self):
@@ -433,8 +435,7 @@ class AbstractProduct(models.Model):
         """
         pairs = []
         for value in self.attribute_values.select_related().all():
-            pairs.append("%s: %s" % (value.attribute.name,
-                                     value.value))
+            pairs.append(value.summary())
         return ", ".join(pairs)
 
     # Deprecated stockrecord methods
@@ -921,7 +922,43 @@ class AbstractProductAttributeValue(models.Model):
         verbose_name_plural = _('Product Attribute Values')
 
     def __unicode__(self):
-        return u"%s: %s" % (self.attribute.name, self.value)
+        return self.summary()
+
+    def summary(self):
+        """
+        Gets a string representation of both the attribute and it's value,
+        used e.g in product summaries.
+        """
+        return u"%s: %s" % (self.attribute.name, self.value_as_text)
+
+    @property
+    def value_as_text(self):
+        """
+        Returns a string representation of the attribute's value. To customise
+        e.g. image attribute values, declare a _image_as_text property and
+        return something appropriate.
+        """
+        property_name = '_%s_as_text' % self.attribute.type
+        return getattr(self, property_name, self.value)
+
+    @property
+    def _richtext_as_text(self):
+        return strip_tags(self.value)
+
+    @property
+    def value_as_html(self):
+        """
+        Returns a HTML representation of the attribute's value. To customise
+        e.g. image attribute values, declare a _image_as_html property and
+        return e.g. an <img> tag.
+        Defaults to the _as_text representation.
+        """
+        property_name = '_%s_as_html' % self.attribute.type
+        return getattr(self, property_name, self.value_as_text)
+
+    @property
+    def _richtext_as_html(self):
+        return mark_safe(self.value)
 
 
 class AbstractAttributeOptionGroup(models.Model):
