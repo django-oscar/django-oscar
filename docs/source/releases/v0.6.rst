@@ -300,7 +300,7 @@ In 0.5, there were two classes that representing a bankcard.  These have been
 merged - the new version is
 :class:`~oscar.apps.payment.abstract_models.AbstractBankcard`.
 
-An instance of this model is returned by the :attr:`~oscar.apps.payment.forms.BankccardForm.bankcard`` property.
+An instance of this model is returned by the :attr:`~oscar.apps.payment.forms.BankcardForm.bankcard` property.
 
 Customer-facing range pages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
