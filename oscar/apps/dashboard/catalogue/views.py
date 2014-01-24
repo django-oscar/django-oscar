@@ -305,7 +305,7 @@ class ProductCreateUpdateView(generic.UpdateView):
 
         messages.error(self.request,
                        _("Your submitted data was not valid - please "
-                         "correct the below errors"))
+                         "correct the errors below"))
         ctx = self.get_context_data(form=form, **formsets)
         return self.render_to_response(ctx)
 
