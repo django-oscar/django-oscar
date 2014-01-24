@@ -33,7 +33,7 @@ class TestDelegateToStockRecord(TestCase):
         self.assertTrue(self.price.is_tax_known)
 
     def test_has_correct_price(self):
-        self.assertEquals(self.record.price_excl_tax,
+        self.assertEqual(self.record.price_excl_tax,
                           self.price.excl_tax)
 
 
@@ -46,7 +46,7 @@ class TestFixedPriceWithoutTax(TestCase):
         self.assertFalse(self.price.is_tax_known)
 
     def test_has_correct_price(self):
-        self.assertEquals(D('9.15'), self.price.excl_tax)
+        self.assertEqual(D('9.15'), self.price.excl_tax)
 
     def test_raises_exception_when_asking_for_price_incl_tax(self):
         with self.assertRaises(TaxNotKnown):

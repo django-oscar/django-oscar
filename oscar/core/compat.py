@@ -52,3 +52,91 @@ def format_html(format_string, *args, **kwargs):
     kwargs_safe = dict([(k, conditional_escape(v)) for (k, v) in
                         six.iteritems(kwargs)])
     return mark_safe(format_string.format(*args_safe, **kwargs_safe))
+
+
+#
+# Python3 compatibility layer
+#
+
+try:
+    import urlparse as _urlparse
+except ImportError:
+    from urllib import parse as _urlparse  # NOQA
+
+urlparse = _urlparse
+
+#
+# Unicode compatible wrapper for CSV reader and writer that abstracts away
+# differences between Python 2 and 3. A package like unicodecsv would be
+# preferable, but it's not Python 3 compatible yet.
+
+# Code from http://python3porting.com/problems.html
+# Classes renamed to include CSV. Unused 'codecs' import is dropped.
+
+import sys, csv
+
+PY3 = sys.version > '3'
+
+
+class UnicodeCSVReader:
+    def __init__(self, filename, dialect=csv.excel,
+                 encoding="utf-8", **kw):
+        self.filename = filename
+        self.dialect = dialect
+        self.encoding = encoding
+        self.kw = kw
+
+    def __enter__(self):
+        if PY3:
+            self.f = open(self.filename, 'rt',
+                          encoding=self.encoding, newline='')
+        else:
+            self.f = open(self.filename, 'rb')
+        self.reader = csv.reader(self.f, dialect=self.dialect,
+                                 **self.kw)
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self.f.close()
+
+    def next(self):
+        row = next(self.reader)
+        if PY3:
+            return row
+        return [s.decode("utf-8") for s in row]
+
+    __next__ = next
+
+    def __iter__(self):
+        return self
+
+
+class UnicodeCSVWriter:
+    def __init__(self, filename, dialect=csv.excel,
+                 encoding="utf-8", **kw):
+        self.filename = filename
+        self.dialect = dialect
+        self.encoding = encoding
+        self.kw = kw
+
+    def __enter__(self):
+        if PY3:
+            self.f = open(self.filename, 'wt',
+                          encoding=self.encoding, newline='')
+        else:
+            self.f = open(self.filename, 'wb')
+        self.writer = csv.writer(self.f, dialect=self.dialect,
+                                 **self.kw)
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self.f.close()
+
+    def writerow(self, row):
+        if not PY3:
+            row = [s.encode(self.encoding) for s in row]
+        self.writer.writerow(row)
+
+    def writerows(self, rows):
+        for row in rows:
+            self.writerow(row)

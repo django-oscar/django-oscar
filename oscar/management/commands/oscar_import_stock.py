@@ -31,7 +31,7 @@ class Command(BaseCommand):
             logger.info("Starting stock import")
             logger.info(" - Importing records from '%s'" % args[1])
             importer.handle(args[1])
-        except ImportError, e:
+        except ImportError as e:
             raise CommandError(str(e))
 
     def _get_logger(self):

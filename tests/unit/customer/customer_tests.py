@@ -62,7 +62,7 @@ class TestDispatcher(TestCase):
         dispatcher = Dispatcher()
         dispatcher.dispatch_order_messages(order, messages, et)
 
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
 
         message = mail.outbox[0]
         self.assertIn(order_number, message.body)

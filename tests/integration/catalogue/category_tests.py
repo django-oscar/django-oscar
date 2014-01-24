@@ -63,7 +63,6 @@ class TestMovingACategory(TestCase):
         if tree is None:
             tree = models.Category.objects.filter(depth=1)
         for node in tree:
-            print node
             self.print_tree(node.get_children())
 
     def test_updates_instance_name(self):
@@ -88,19 +87,19 @@ class TestCategoryFactory(TestCase):
         trail = 'Books'
         category = create_from_breadcrumbs(trail)
         self.assertIsNotNone(category)
-        self.assertEquals(category.name, 'Books')
-        self.assertEquals(category.slug, 'books')
+        self.assertEqual(category.name, 'Books')
+        self.assertEqual(category.slug, 'books')
 
     def test_can_create_parent_and_child_categories(self):
         trail = 'Books > Science-Fiction'
         category = create_from_breadcrumbs(trail)
 
         self.assertIsNotNone(category)
-        self.assertEquals(category.name, 'Science-Fiction')
-        self.assertEquals(category.get_depth(), 2)
-        self.assertEquals(category.get_parent().name, 'Books')
-        self.assertEquals(2, models.Category.objects.count())
-        self.assertEquals(category.slug, 'books/science-fiction')
+        self.assertEqual(category.name, 'Science-Fiction')
+        self.assertEqual(category.get_depth(), 2)
+        self.assertEqual(category.get_parent().name, 'Books')
+        self.assertEqual(2, models.Category.objects.count())
+        self.assertEqual(category.slug, 'books/science-fiction')
 
     def test_can_create_multiple_categories(self):
         trail = 'Books > Science-Fiction > Star Trek'
@@ -109,16 +108,16 @@ class TestCategoryFactory(TestCase):
         category = create_from_breadcrumbs(trail)
 
         self.assertIsNotNone(category)
-        self.assertEquals(category.name, 'Popular Science')
-        self.assertEquals(category.get_depth(), 3)
-        self.assertEquals(category.get_parent().name, 'Factual')
-        self.assertEquals(5, models.Category.objects.count())
-        self.assertEquals(category.slug, 'books/factual/popular-science', )
+        self.assertEqual(category.name, 'Popular Science')
+        self.assertEqual(category.get_depth(), 3)
+        self.assertEqual(category.get_parent().name, 'Factual')
+        self.assertEqual(5, models.Category.objects.count())
+        self.assertEqual(category.slug, 'books/factual/popular-science', )
 
     def test_can_use_alternative_separator(self):
         trail = 'Food|Cheese|Blue'
         create_from_breadcrumbs(trail, separator='|')
-        self.assertEquals(3, len(models.Category.objects.all()))
+        self.assertEqual(3, len(models.Category.objects.all()))
 
     def test_updating_subtree_slugs_when_moving_category_to_new_parent(self):
         trail = 'A > B > C'

@@ -1,0 +1,6 @@
+# requirements that aren't compatible with Python 3
+
+-r requirements.txt
+
+detox==0.9.3
+transifex-client==0.10

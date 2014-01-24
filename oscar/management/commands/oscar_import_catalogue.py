@@ -32,5 +32,5 @@ class Command(BaseCommand):
             logger.info(" - Importing records from '%s'" % file_path)
             try:
                 importer.handle(file_path)
-            except CatalogueImportError, e:
+            except CatalogueImportError as e:
                 raise CommandError(str(e))

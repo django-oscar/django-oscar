@@ -1,8 +1,8 @@
 # Development
 django-debug-toolbar>=1.0.1,<1.1
 django-debug-toolbar-template-timings>=0.5.5
-django-extensions>=1.2.0,<1.3.0
-Werkzeug>=0.8.3,<0.9
+django-extensions>=1.3.3,<1.4.0
+Werkzeug>=0.9.4,<0.10
 
 # Sandbox
 Whoosh>=2.5
@@ -19,23 +19,21 @@ sphinx_rtd_theme
 django-dynamic-fixture>=1.6.4,<1.7
 mock>=1.0.1,<1.1
 coverage>=3.6,<3.7
-django-nose>=1.1,<1.2
+django-nose>=1.2,<1.3
 spec>=0.11.1,<0.12
 WebTest>=2.0,<2.1
 django-webtest>=1.7,<1.8
 tox==1.6.1
-detox==0.9.3
 coveralls>=0.1.1,<0.2
 purl>=0.4
 behave==1.2.3
 nose-django-querycount==0.3
 
 # i18n
-transifex-client==0.10
 django-rosetta>=0.7.2
 
 # Misc
 flake8>=2.1
-pyprof2calltree==1.1.0
-ipdb>=0.7,<0.8
-ipython>=0.13.1,<0.14
+pyprof2calltree==1.3.1
+ipdb>=0.8,<0.9
+ipython>=1.1.0,<1.2.0

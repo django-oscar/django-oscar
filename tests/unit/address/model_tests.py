@@ -23,18 +23,18 @@ class TestUserAddress(TestCase):
             title="Dr",
             first_name="Barry",
             last_name='Barrington')
-        self.assertEquals("Dr Barry Barrington", a.salutation)
+        self.assertEqual("Dr Barry Barrington", a.salutation)
 
     def test_strips_whitespace_from_salutation(self):
         a = models.UserAddress(last_name='Barrington')
-        self.assertEquals("Barrington", a.salutation)
+        self.assertEqual("Barrington", a.salutation)
 
     def test_has_name_property(self):
         a = models.UserAddress(
             title="Dr",
             first_name="Barry",
             last_name='Barrington')
-        self.assertEquals("Barry Barrington", a.name)
+        self.assertEqual("Barry Barrington", a.name)
 
     def test_has_summary_property(self):
         a = models.UserAddress(
@@ -44,7 +44,7 @@ class TestUserAddress(TestCase):
             line1="1 King Road",
             line4="London",
             postcode="SW1 9RE")
-        self.assertEquals("Dr Barry Barrington, 1 King Road, London, SW1 9RE",
+        self.assertEqual("Dr Barry Barrington, 1 King Road, London, SW1 9RE",
                           a.summary)
 
     def test_summary_includes_country(self):
@@ -58,7 +58,7 @@ class TestUserAddress(TestCase):
             line4="London",
             postcode="SW1 9RE",
             country=c)
-        self.assertEquals(
+        self.assertEqual(
             "Dr Barry Barrington, 1 King Road, London, SW1 9RE, UNITED KINGDOM",
             a.summary)
 
@@ -85,7 +85,7 @@ class TestUserAddress(TestCase):
     def test_strips_whitespace_in_name_property(self):
         a = models.UserAddress(
             last_name='Barrington')
-        self.assertEquals("Barrington", a.name)
+        self.assertEqual("Barrington", a.name)
 
     def test_uses_city_as_an_alias_of_line4(self):
         a = models.UserAddress(
@@ -102,7 +102,7 @@ class TestUserAddress(TestCase):
             postcode="n4 8ty",
             country=self.country)
         address.clean()
-        self.assertEquals("N4 8TY", address.postcode)
+        self.assertEqual("N4 8TY", address.postcode)
 
     def test_strips_whitespace_when_cleaning(self):
         a = models.UserAddress(
@@ -111,8 +111,8 @@ class TestUserAddress(TestCase):
             postcode="  n4 8ty",
             country=self.country)
         a.clean()
-        self.assertEquals("N4 8TY", a.postcode)
-        self.assertEquals("75 Smith Road", a.line1)
+        self.assertEqual("N4 8TY", a.postcode)
+        self.assertEqual("75 Smith Road", a.line1)
 
     def test_active_address_fields_skips_whitespace_only_fields(self):
         a = models.UserAddress(
@@ -122,7 +122,7 @@ class TestUserAddress(TestCase):
             postcode="  n4 8ty",
             country=self.country)
         active_fields = a.active_address_fields()
-        self.assertEquals("Barrington", active_fields[0])
+        self.assertEqual("Barrington", active_fields[0])
 
     def test_ignores_whitespace_when_hashing(self):
         a1 = models.UserAddress(
@@ -139,7 +139,7 @@ class TestUserAddress(TestCase):
             postcode="N4 8ty",
             country=self.country)
         a2.clean()
-        self.assertEquals(a1.generate_hash(), a2.generate_hash())
+        self.assertEqual(a1.generate_hash(), a2.generate_hash())
 
     def test_populate_shipping_address_doesnt_set_id(self):
         a = models.UserAddress(
@@ -163,7 +163,7 @@ class TestUserAddress(TestCase):
         a.clean()
         sa = ShippingAddress()
         a.populate_alternative_model(sa)
-        self.assertEquals(sa.summary, a.summary)
+        self.assertEqual(sa.summary, a.summary)
 
     def test_summary_is_property(self):
         a = models.UserAddress(
@@ -173,7 +173,7 @@ class TestUserAddress(TestCase):
             postcode="  n4 8ty",
             country=self.country)
         a.clean()
-        self.assertEquals(
+        self.assertEqual(
             u"Terry Barrington, 75 Smith Road, N4 8TY, UNITED KINGDOM",
             a.summary)
 

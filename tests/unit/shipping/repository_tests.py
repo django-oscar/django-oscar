@@ -21,8 +21,8 @@ class TestShippingRepository(TestCase):
 
         method = available_methods[0]
         self.assertTrue(isinstance(method, methods.Free))
-        self.assertEquals(D('0.00'), method.charge_incl_tax)
-        self.assertEquals(D('0.00'), method.charge_excl_tax)
+        self.assertEqual(D('0.00'), method.charge_incl_tax)
+        self.assertEqual(D('0.00'), method.charge_excl_tax)
 
     def test_allows_free_method_to_be_retrieved(self):
         method = self.repo.find_by_code(methods.Free.code, self.basket)

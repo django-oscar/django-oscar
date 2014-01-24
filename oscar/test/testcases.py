@@ -1,4 +1,4 @@
-import httplib
+from six.moves import http_client
 
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import Permission
@@ -58,8 +58,8 @@ class WebTestCase(WebTest):
     # Custom assertions
 
     def assertIsRedirect(self, response, expected_url=None):
-        self.assertTrue(response.status_code in (httplib.FOUND,
-                                                 httplib.MOVED_PERMANENTLY))
+        self.assertTrue(response.status_code in (
+            http_client.FOUND, http_client.MOVED_PERMANENTLY))
         if expected_url:
             location = URL.from_string(response['Location'])
             self.assertEqual(expected_url, location.path())
@@ -72,8 +72,8 @@ class WebTestCase(WebTest):
 
     def assertNoAccess(self, response):
         self.assertContext(response)
-        self.assertTrue(response.status_code in (httplib.NOT_FOUND,
-                                                 httplib.FORBIDDEN))
+        self.assertTrue(response.status_code in (http_client.NOT_FOUND,
+                                                 http_client.FORBIDDEN))
 
     def assertRedirectUrlName(self, response, name, kwargs=None):
         self.assertIsRedirect(response)
@@ -81,7 +81,7 @@ class WebTestCase(WebTest):
         self.assertEqual(location, reverse(name, kwargs=kwargs))
 
     def assertIsOk(self, response):
-        self.assertEqual(httplib.OK, response.status_code)
+        self.assertEqual(http_client.OK, response.status_code)
 
     def assertContext(self, response):
         self.assertTrue(response.context is not None,

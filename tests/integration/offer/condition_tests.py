@@ -56,7 +56,7 @@ class TestCountCondition(OfferTest):
     def test_consumption(self):
         add_product(self.basket, quantity=3)
         self.condition.consume_items(self.offer, self.basket, [])
-        self.assertEquals(1, self.basket.all_lines()[0].quantity_without_discount)
+        self.assertEqual(1, self.basket.all_lines()[0].quantity_without_discount)
 
     def test_is_satisfied_accounts_for_consumed_items(self):
         add_product(self.basket, quantity=3)
@@ -112,12 +112,12 @@ class ValueConditionTest(OfferTest):
     def test_consumption(self):
         add_product(self.basket, D('5'), 3)
         self.condition.consume_items(self.offer, self.basket, [])
-        self.assertEquals(1, self.basket.all_lines()[0].quantity_without_discount)
+        self.assertEqual(1, self.basket.all_lines()[0].quantity_without_discount)
 
     def test_consumption_with_high_value_product(self):
         add_product(self.basket, D('15'), 1)
         self.condition.consume_items(self.offer, self.basket, [])
-        self.assertEquals(0, self.basket.all_lines()[0].quantity_without_discount)
+        self.assertEqual(0, self.basket.all_lines()[0].quantity_without_discount)
 
     def test_is_consumed_respects_quantity_consumed(self):
         add_product(self.basket, D('15'), 1)
@@ -188,7 +188,7 @@ class TestCoverageCondition(TestCase):
         add_product(self.basket, product=self.products[0])
         add_product(self.basket, product=self.products[1])
         self.condition.consume_items(self.offer, self.basket, [])
-        self.assertEquals(0, self.basket.num_items_without_discount)
+        self.assertEqual(0, self.basket.num_items_without_discount)
 
     def test_consumed_items_checks_affected_items(self):
         # Create new offer
@@ -203,8 +203,8 @@ class TestCoverageCondition(TestCase):
 
         self.assertTrue(cond.is_satisfied(self.offer, self.basket))
         cond.consume_items(self.offer, self.basket, [])
-        self.assertEquals(2, self.basket.num_items_without_discount)
+        self.assertEqual(2, self.basket.num_items_without_discount)
 
         self.assertTrue(cond.is_satisfied(self.offer, self.basket))
         cond.consume_items(self.offer, self.basket, [])
-        self.assertEquals(0, self.basket.num_items_without_discount)
+        self.assertEqual(0, self.basket.num_items_without_discount)

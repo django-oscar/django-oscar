@@ -1,5 +1,4 @@
 import string
-import urlparse
 import random
 
 from django import forms
@@ -17,6 +16,8 @@ from django.utils.translation import ugettext_lazy as _
 from oscar.core.loading import get_profile_class, get_class
 from oscar.core.compat import get_user_model
 from oscar.apps.customer.utils import get_password_reset_url, normalise_email
+from oscar.core.compat import urlparse
+
 
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 CommunicationEventType = get_model('customer', 'communicationeventtype')
@@ -25,7 +26,12 @@ User = get_user_model()
 
 
 def generate_username():
-    uname = ''.join([random.choice(string.letters + string.digits + '_')
+    # Python 3 uses ascii_letters. If not available, fallback to letters
+    try:
+        letters = string.ascii_letters
+    except AttributeError:
+        letters = string.letters
+    uname = ''.join([random.choice(letters + string.digits + '_')
                      for i in range(30)])
     try:
         User.objects.get(username=uname)

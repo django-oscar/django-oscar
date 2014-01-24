@@ -1,4 +1,4 @@
-import httplib
+from six.moves import http_client
 
 from django.db.models import get_model
 from django.test import TestCase, Client
@@ -27,7 +27,7 @@ class TestOrderListDashboard(WebTestCase):
         form = page.forms['search_form']
         form['order_number'] = order.number
         response = form.submit()
-        self.assertEqual(httplib.FOUND, response.status_code)
+        self.assertEqual(http_client.FOUND, response.status_code)
 
     def test_downloads_to_csv_without_error(self):
         address = get(ShippingAddress)
@@ -173,4 +173,4 @@ class TemplateTagTests(TestCase):
         ).render(Context({
             'user': user
         }))
-        self.assertEquals(out, "3")
+        self.assertEqual(out, "3")

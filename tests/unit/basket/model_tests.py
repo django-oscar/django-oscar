@@ -29,4 +29,4 @@ class TestANewBasket(TestCase):
         self.assertFalse(self.basket.is_submitted)
 
     def test_has_no_applied_offers(self):
-        self.assertEquals({}, self.basket.applied_offers())
+        self.assertEqual({}, self.basket.applied_offers())
