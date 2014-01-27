@@ -37,7 +37,7 @@ class FlashMessages(object):
         payload = {}
         for level, msgs in self.msgs.items():
             tag = messages.DEFAULT_TAGS.get(level, 'info')
-            payload[tag] = map(six.text_type, msgs)
+            payload[tag] = [six.text_type(msg) for msg in msgs]
         return payload
 
     def apply_to_request(self, request):
