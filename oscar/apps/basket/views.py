@@ -250,7 +250,7 @@ class BasketView(ModelFormSetView):
             RequestContext(self.request, ctx))
         payload = {
             'content_html': basket_html,
-            'messages': flash_messages.to_json()}
+            'messages': flash_messages.as_dict()}
         return HttpResponse(json.dumps(payload),
                             content_type="application/json")
 

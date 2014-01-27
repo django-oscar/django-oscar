@@ -33,7 +33,7 @@ class FlashMessages(object):
     def success(self, message):
         self.add_message(messages.SUCCESS, message)
 
-    def to_json(self):
+    def as_dict(self):
         payload = {}
         for level, msgs in self.msgs.items():
             tag = messages.DEFAULT_TAGS.get(level, 'info')
