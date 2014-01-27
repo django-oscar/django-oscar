@@ -2,7 +2,7 @@ import os
 import django
 
 from django.conf import settings, global_settings
-from oscar import OSCAR_CORE_APPS, OSCAR_MAIN_TEMPLATE_DIR
+import oscar
 
 
 def configure():
@@ -30,7 +30,10 @@ def configure():
                 'django.contrib.staticfiles',
                 'sorl.thumbnail',
                 'compressor',
-            ] + OSCAR_CORE_APPS,
+                # Use a custom partner app to test overriding models.  I can't
+                # find a way of doing this on a per-test basis, so I'm using a
+                # global change.
+            ] + oscar.get_core_apps(['tests._site.apps.partner']),
             'TEMPLATE_CONTEXT_PROCESSORS': (
                 "django.contrib.auth.context_processors.auth",
                 "django.core.context_processors.request",
@@ -47,7 +50,7 @@ def configure():
             ),
             'TEMPLATE_DIRS': (
                 location('templates'),
-                OSCAR_MAIN_TEMPLATE_DIR,
+                oscar.OSCAR_MAIN_TEMPLATE_DIR,
             ),
             'MIDDLEWARE_CLASSES': global_settings.MIDDLEWARE_CLASSES + (
                 'oscar.apps.basket.middleware.BasketMiddleware',

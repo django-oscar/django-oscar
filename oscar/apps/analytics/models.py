@@ -17,3 +17,6 @@ class UserProductView(AbstractUserProductView):
 
 class UserSearch(AbstractUserSearch):
     pass
+
+
+from .receivers import *  # noqa
