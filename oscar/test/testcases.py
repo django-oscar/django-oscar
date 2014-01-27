@@ -44,7 +44,7 @@ class ClientTestCase(TestCase):
 
     def login(self):
         self.user = self.create_user()
-        self.client.login(username=self.username,
+        self.client.login(email=self.email,
                           password=self.password)
 
     def create_user(self, username=None, password=None, email=None,
@@ -55,6 +55,7 @@ class ClientTestCase(TestCase):
         user.is_staff = is_staff or self.is_staff
         user.is_superuser = is_superuser or self.is_superuser
         user.save()
+
         perms = permissions if permissions is not None else self.permissions
         add_permissions(user, perms)
         return user

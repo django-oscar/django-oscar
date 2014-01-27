@@ -1,3 +1,5 @@
+import unittest2
+
 from django.test import TestCase
 from django.contrib.auth import authenticate
 from django.core import mail
@@ -7,6 +9,11 @@ from oscar.core.compat import get_user_model
 User = get_user_model()
 
 
+# Skip these tests for now as they only make sense when there isn't a unique
+# index on the user class.  The test suite currently uses a custom model that
+# *does* have a unique index on email.  When I figure out how to swap the user
+# model per test, we can re-enable this testcase.
+@unittest2.skip
 class TestEmailAuthBackendWhenUsersShareAnEmail(TestCase):
 
     def test_authenticates_when_passwords_are_different(self):

@@ -28,6 +28,7 @@ coveralls>=0.1.1,<0.2
 purl>=0.4
 behave==1.2.3
 nose-django-querycount==0.3
+unittest2==0.5.1  # Needed so that @skip works in Py2.6
 
 # i18n
 transifex-client==0.10
