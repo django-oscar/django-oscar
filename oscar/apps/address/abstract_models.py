@@ -359,13 +359,15 @@ class AbstractAddress(models.Model):
             if field_name in destination_field_names and field_name != 'id':
                 setattr(address_model, field_name, getattr(self, field_name))
 
-    def active_address_fields(self):
+    def active_address_fields(self, include_salutation=True):
         """
         Return the non-empty components of the address, but merging the
         title, first_name and last_name into a single line.
         """
-        fields = [self.salutation, self.line1, self.line2,
-                  self.line3, self.line4, self.state, self.postcode]
+        fields = [self.line1, self.line2, self.line3,
+                  self.line4, self.state, self.postcode]
+        if include_salutation:
+            fields = [self.salutation] + fields
         fields = [f.strip() for f in fields if f]
         try:
             fields.append(self.country.name)
