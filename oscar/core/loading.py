@@ -135,7 +135,7 @@ def _pluck_classes(modules, classnames):
                 klass = getattr(module, classname)
                 break
         if not klass:
-            packages = [m.__name__ for m in modules]
+            packages = [m.__name__ for m in modules if m is not None]
             raise ClassNotFoundError("No class '%s' found in %s" % (
                 classname, ", ".join(packages)))
         klasses.append(klass)
