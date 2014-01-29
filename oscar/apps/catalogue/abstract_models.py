@@ -709,7 +709,8 @@ class AbstractProductAttribute(models.Model):
         _('Code'), max_length=128,
         validators=[RegexValidator(
             regex=r'^[a-zA-Z_][0-9a-zA-Z_]*$',
-            message=_("Code must match ^[a-zA-Z_][0-9a-zA-Z_]*$"))])
+            message=_("Code can only contain the letters a-z, A-Z, digits "
+                      "and underscores, and can't start with a digit"))])
 
     TYPE_CHOICES = (
         ("text", _("Text")),

@@ -194,7 +194,7 @@ class EmailUserCreationForm(forms.ModelForm):
         email = normalise_email(self.cleaned_data['email'])
         if User._default_manager.filter(email=email).exists():
             raise forms.ValidationError(
-                _("A user with that email address already exists."))
+                _("A user with that email address already exists"))
         return email
 
     def clean_password2(self):
