@@ -139,7 +139,7 @@ class SavedBasketTests(TestCase):
         user = User.objects.create_user(username='test', password='pass',
                                         email='test@example.com')
         client = Client()
-        client.login(username=user.username, password='pass')
+        client.login(email=user.email, password='pass')
 
         product = create_product(price=D('10.00'), num_in_stock=2)
         basket = factories.create_basket(empty=True)
@@ -171,7 +171,7 @@ class SavedBasketTests(TestCase):
         user = User.objects.create_user(username='test', password='pass',
                                         email='test@example.com')
         client = Client()
-        client.login(username=user.username, password='pass')
+        client.login(email=user.email, password='pass')
 
         product = create_product(price=D('10.00'), num_in_stock=1)
         basket, created = Basket.open.get_or_create(owner=user)

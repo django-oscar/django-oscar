@@ -1,0 +1,38 @@
+=========================
+Oscar 0.6.2 release notes
+=========================
+
+This is Oscar 0.6.2.  It fixes an unfortunate regression introduced in 0.6.1 as well
+as a couple of bugs.
+
+Overriding models
+-----------------
+
+Commit `fa1f8403`_ changed the way signal receivers were registered.  While
+this helped work around issues with the latest debug toolbar, it also broke the
+way custom models were imported.  This happened as the relocated receiver
+imports caused core models to be imported before local ones.
+
+This is fixed in 0.6.2 by `reverting the original commit`_.  Users of the debug
+toolbar are recommended to follow the `explicit installation instructions`_ to
+avoid any circular import issues that `fa1f8403`_ was introduced to solve..
+
+See `#1159`_ for more details.
+
+Bug fixes
+=========
+
+The following bugs were fixed:
+
+* `#1157`_ - Ensure group products have a price submitted to the search backend
+  when indexing.
+
+* `#1127`_ - Remove a circular dependency bug around importing the `StockAlert`
+  model when indexing.
+
+.. _`#1159`: https://github.com/tangentlabs/django-oscar/issues/1159
+.. _`#1157`: https://github.com/tangentlabs/django-oscar/issues/1157
+.. _`#1127`: https://github.com/tangentlabs/django-oscar/issues/1127
+.. _`fa1f8403`: https://github.com/tangentlabs/django-oscar/commit/fa1f8403fb43af693766acafc520d10932a7f5b0
+.. _`reverting the original commit`: https://github.com/tangentlabs/django-oscar/commit/ec950cf9de16c68858bc095d980e478be8146f79
+.. _`explicit installation instructions`: http://django-debug-toolbar.readthedocs.org/en/latest/installation.html#explicit-setup

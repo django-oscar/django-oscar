@@ -54,14 +54,23 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     # and so we implement that case here.
 
     def prepare_price(self, obj):
-        if obj.has_stockrecords:
+        result = None
+        if obj.is_group:
+            result = strategy.fetch_for_group(obj)
+        elif obj.has_stockrecords:
             result = strategy.fetch_for_product(obj)
+
+        if result:
             if result.price.is_tax_known:
                 return result.price.incl_tax
             return result.price.excl_tax
 
     def prepare_num_in_stock(self, obj):
-        if obj.has_stockrecords:
+        result = None
+        if obj.is_group:
+            # Don't return a stock level for group products
+            return None
+        elif obj.has_stockrecords:
             result = strategy.fetch_for_product(obj)
             return result.stockrecord.net_stock_level
 

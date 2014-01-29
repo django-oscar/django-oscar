@@ -12,7 +12,7 @@ class TestDashboardIndexForAnonUser(WebTestCase):
     is_anonymous = True
 
     def test_is_not_available(self):
-        response = self.client.get(reverse('dashboard:index'), follow=True)
+        response = self.get(reverse('dashboard:index')).follow()
         self.assertContains(response, 'login-username', status_code=200)
 
 
@@ -24,7 +24,7 @@ class TestDashboardIndexForStaffUser(WebTestCase):
                 'dashboard:order-list',
                 'dashboard:users-index',)
         for name in urls:
-            response = self.client.get(reverse(name))
+            response = self.get(reverse(name))
             self.assertTrue('Password' not in response.content.decode('utf8'))
 
     def test_includes_hourly_report_with_no_orders(self):
@@ -50,7 +50,7 @@ class TestDashboardIndexForStaffUser(WebTestCase):
         self.assertEqual(report['max_revenue'], D('60'))
 
     def test_has_stats_vars_in_context(self):
-        response = self.client.get(reverse('dashboard:index'))
+        response = self.get(reverse('dashboard:index'))
 
         self.assertInContext(response, 'total_orders_last_day')
         self.assertInContext(response, 'total_lines_last_day')

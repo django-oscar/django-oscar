@@ -14,10 +14,9 @@ from oscar.apps.customer.managers import CommunicationTypeManager
 from oscar.core.compat import AUTH_USER_MODEL
 
 
+# Only define custom UserManager/UserModel when Django >= 1.5
 if hasattr(auth_models, 'BaseUserManager'):
-    ProductAlert = models.get_model('customer', 'ProductAlert')
 
-    # Only define custom UserModel when Django >= 1.5
     class UserManager(auth_models.BaseUserManager):
 
         def create_user(self, email, password=None, **extra_fields):
@@ -52,7 +51,7 @@ if hasattr(auth_models, 'BaseUserManager'):
         An abstract base user suitable for use in Oscar projects.
 
         This is basically a copy of the core AbstractUser model but without a
-        username field
+        username field and with a unique index on the email field.
         """
         email = models.EmailField(_('email address'), unique=True)
         first_name = models.CharField(
@@ -91,6 +90,7 @@ if hasattr(auth_models, 'BaseUserManager'):
             Transfer any active alerts linked to a user's email address to the
             newly registered user.
             """
+            ProductAlert = self.alerts.model
             alerts = ProductAlert.objects.filter(
                 email=self.email, status=ProductAlert.ACTIVE)
             alerts.update(user=self, key=None, email=None)

@@ -53,7 +53,9 @@ class WebTestCase(WebTest):
     def login(self, username=None, password=None):
         username = username or self.username
         password = password or self.password
-        self.client.login(username=username, password=password)
+        result = self.client.login(email=self.email, password=password)
+        if not result:
+            self.fail("Unable to login")
 
     # Custom assertions
 

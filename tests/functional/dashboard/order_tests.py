@@ -61,11 +61,12 @@ class PermissionBasedDashboardOrderTestsBase(WebTestCase):
         self.order_out = create_order(basket=self.basket_out,
                                       shipping_address=self.address)
 
+
 class PermissionBasedDashboardOrderTestsNoStaff(PermissionBasedDashboardOrderTestsBase):
 
     def test_non_staff_can_only_list_her_orders(self):
         # order-list user1
-        self.client.login(username='user1@example.com', password=self.password)
+        self.client.login(email='user1@example.com', password=self.password)
         response = self.client.get(reverse('dashboard:order-list'))
         self.assertEqual(set(response.context['orders']),
                          set([self.order_in]))
@@ -108,7 +109,7 @@ class PermissionBasedDashboardOrderTestsStaff(PermissionBasedDashboardOrderTests
         for order in orders:
             url = reverse('dashboard:order-detail',
                           kwargs={'number': order.number})
-            self.assertIsOk(self.client.get(url))
+            self.assertIsOk(self.get(url))
 
 
 class OrderDetailTests(WebTestCase):
@@ -124,7 +125,7 @@ class OrderDetailTests(WebTestCase):
         return Order.objects.get(number=self.order.number)
 
     def test_order_detail_page_contains_order(self):
-        response = self.client.get(self.url)
+        response = self.get(self.url)
         self.assertTrue('order' in response.context)
 
     def test_order_status_change(self):
@@ -154,11 +155,11 @@ class LineDetailTests(WebTestCase):
         super(LineDetailTests, self).setUp()
 
     def test_line_detail_page_exists(self):
-        response = self.client.get(self.url)
+        response = self.get(self.url)
         self.assertIsOk(response)
 
     def test_line_in_context(self):
-        response = self.client.get(self.url)
+        response = self.get(self.url)
         self.assertInContext(response, 'line')
 
 
