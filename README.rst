@@ -25,7 +25,8 @@ Further reading:
   experimental but feel free to explore and get a feel for the base Oscar
   install.)
 * `Documentation`_ on the excellent `readthedocs.org`_
-* `Google Group`_ - the mailing list is django-oscar@googlegroups.com
+* `django-oscar group`_ - mailing list for questions and announcements
+* `django-oscar-jobs group`_ - mailing list for job offers
 * `Continuous integration homepage`_ on `travis-ci.org`_
 * `Twitter account for news and updates`_
 * #django-oscar on Freenode (community-run IRC channel)
@@ -63,7 +64,8 @@ PyPI status:
 .. _`travis-ci.org`: http://travis-ci.org/
 .. _`Twitter account for news and updates`: https://twitter.com/#!/django_oscar
 .. _`Twitter account of all commits`: https://twitter.com/#!/oscar_django
-.. _`Google Group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar
+.. _`django-oscar group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar
+.. _`django-oscar-jobs group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar-jobs
 .. _`crate.io page`: https://crate.io/packages/django-oscar/
 .. _`PyPI page`: http://pypi.python.org/pypi/django-oscar/
 .. _`Transifex project`: https://www.transifex.com/projects/p/django-oscar/
