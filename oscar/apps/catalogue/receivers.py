@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.db.models import get_model
+from oscar.core.loading import get_model
 
 from django.db import models
 from django.db.models.signals import post_delete

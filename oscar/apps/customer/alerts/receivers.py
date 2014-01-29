@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.db.models.signals import post_save
 
 

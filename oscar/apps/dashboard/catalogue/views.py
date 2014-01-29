@@ -2,14 +2,14 @@ import six
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import generic
-from django.db.models import get_model, Q
+from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.template.loader import render_to_string
 
-from oscar.core.loading import get_classes
+from oscar.core.loading import get_classes, get_model
 from oscar.views import sort_queryset
 from oscar.views.generic import ObjectLookupView
 

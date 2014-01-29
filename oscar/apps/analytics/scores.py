@@ -1,5 +1,5 @@
 from django.db import connection, transaction
-from django.db.models import get_model
+from oscar.core.loading import get_model
 
 ProductRecord = get_model('analytics', 'ProductRecord')
 Product = get_model('catalogue', 'Product')

@@ -1,7 +1,7 @@
 from six.moves import http_client
 
-from django.db.models import get_model
-from django.test import TestCase, Client
+from oscar.core.loading import get_model
+from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.template import Template, Context
 from django_dynamic_fixture import get, G

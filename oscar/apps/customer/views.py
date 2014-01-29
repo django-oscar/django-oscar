@@ -11,7 +11,7 @@ from django.contrib.auth import logout as auth_logout, login as auth_login
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.sites.models import get_current_site
 from django.conf import settings
-from django.db.models import get_model
+from oscar.core.loading import get_model
 
 from oscar.views.generic import PostActionMixin
 from oscar.apps.customer.utils import get_password_reset_url

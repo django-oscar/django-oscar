@@ -1,4 +1,4 @@
-from django.db.models import get_model
+from oscar.core.loading import get_model
 
 Notification = get_model('customer', 'Notification')
 

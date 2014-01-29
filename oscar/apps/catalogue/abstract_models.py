@@ -13,13 +13,13 @@ from django.core.exceptions import ValidationError, ImproperlyConfigured
 from django.core.files.base import File
 from django.core.validators import RegexValidator
 from django.db import models
-from django.db.models import Sum, Count, get_model
+from django.db.models import Sum, Count
 from django.utils.translation import ugettext_lazy as _
 from django.utils.functional import cached_property
 from treebeard.mp_tree import MP_Node
 
 from oscar.core.utils import slugify
-from oscar.core.loading import get_classes
+from oscar.core.loading import get_classes, get_model
 
 ProductManager, BrowsableProductManager = get_classes(
     'catalogue.managers', ['ProductManager', 'BrowsableProductManager'])

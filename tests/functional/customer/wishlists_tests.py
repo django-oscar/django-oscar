@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.db.models import get_model
+from oscar.core.loading import get_model
 
 from oscar.test.factories import create_product
 from oscar.test.testcases import WebTestCase

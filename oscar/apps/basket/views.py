@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.core.urlresolvers import reverse, resolve
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.views.generic import FormView, View
 from django.utils.translation import ugettext_lazy as _

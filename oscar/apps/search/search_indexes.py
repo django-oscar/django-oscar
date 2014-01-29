@@ -1,4 +1,4 @@
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from haystack import indexes
 
 from oscar.core.loading import get_class

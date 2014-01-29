@@ -3,7 +3,7 @@ import operator
 from decimal import Decimal as D, ROUND_DOWN, ROUND_UP
 
 from django.core import exceptions
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.template.defaultfilters import date as date_filter
 from django.db import models
 from django.utils.timezone import now, get_current_timezone

@@ -3,7 +3,7 @@ import warnings
 
 from django.db import models
 from django.conf import settings
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 from django.utils.importlib import import_module as django_import_module
 from oscar.core.compat import AUTH_USER_MODEL
