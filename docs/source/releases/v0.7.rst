@@ -38,6 +38,9 @@ Backwards incompatible changes in 0.7
   associated basket. It's been refactored to be a nullable ``ForeignKey`` and
   is now called "basket".
 
+* ``ProductCategory.is_canonical`` was an unused ``BooleanField`` and has been
+  dropped.
+
 Removal of features deprecated in 0.6
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -52,6 +55,9 @@ Template block changes
 Migrations
 ~~~~~~~~~~
 
+* Catalogue:
+
+    - ``0014`` - Drops unused ``ProductCategory.is_canonical`` field.
 
 
 Features deprecated in 0.6
