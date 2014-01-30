@@ -29,8 +29,7 @@
     "model": "catalogue.productcategory",
     "fields": {
         "category": 1,
-        "product": 1,
-        "is_canonical": false
+        "product": 1
     }
 },
 {

@@ -29,8 +29,7 @@
     "model": "catalogue.productcategory", 
     "fields": {
         "category": 1, 
-        "product": 1, 
-        "is_canonical": false
+        "product": 1
     }
 },
 {
@@ -38,8 +37,7 @@
     "model": "catalogue.productcategory", 
     "fields": {
         "category": 1, 
-        "product": 5, 
-        "is_canonical": false
+        "product": 5
     }
 },
 {
@@ -47,8 +45,7 @@
     "model": "catalogue.productcategory", 
     "fields": {
         "category": 1, 
-        "product": 8, 
-        "is_canonical": false
+        "product": 8
     }
 },
 {
