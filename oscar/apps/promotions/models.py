@@ -192,8 +192,8 @@ class MultiImage(AbstractPromotion):
     name = models.CharField(_("Name"), max_length=128)
     images = models.ManyToManyField(
         'promotions.Image', null=True, blank=True,
-        help_text=("Choose the Image content blocks that this block will use. "
-                   "(You may need to create some first)."))
+        help_text=_("Choose the Image content blocks that this block will use. "
+                    "(You may need to create some first)."))
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
