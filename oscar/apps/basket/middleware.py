@@ -21,11 +21,10 @@ class BasketMiddleware(object):
         strategy = selector.strategy(
             request=request, user=request.user)
         request.strategy = basket.strategy = strategy
+        request.basket = basket
 
         self.ensure_basket_lines_have_stockrecord(basket)
-
         self.apply_offers_to_basket(request, basket)
-        request.basket = basket
 
     def get_basket(self, request):
         """
