@@ -15,6 +15,7 @@ from oscar.views.generic import ObjectLookupView
 
 (ProductForm,
  ProductSearchForm,
+ ProductClassForm,
  CategoryForm,
  StockRecordFormSet,
  StockAlertSearchForm,
@@ -24,6 +25,7 @@ from oscar.views.generic import ObjectLookupView
     = get_classes('dashboard.catalogue.forms',
                   ('ProductForm',
                    'ProductSearchForm',
+                   'ProductClassForm',
                    'CategoryForm',
                    'StockRecordFormSet',
                    'StockAlertSearchForm',
@@ -462,3 +464,57 @@ class ProductLookupView(ObjectLookupView):
     def lookup_filter(self, qs, term):
         return qs.filter(Q(title__icontains=term)
                          | Q(parent__title__icontains=term))
+
+
+class ProductClassCreateView(generic.CreateView):
+    template_name = 'dashboard/catalogue/product_class_form.html'
+    model = ProductClass
+    form_class = ProductClassForm
+
+    def get_context_data(self, **kwargs):
+        ctx = super(ProductClassCreateView, self).get_context_data(**kwargs)
+        ctx['title'] = _("Add a new product type")
+        return ctx
+
+    def get_success_url(self):
+        messages.info(self.request, _("Product type created successfully"))
+        return reverse("dashboard:catalogue-class-list")
+    
+
+class ProductClassListView(generic.TemplateView):
+    template_name = 'dashboard/catalogue/product_class_list.html'
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(ProductClassListView, self).get_context_data(*args, **kwargs)
+        ctx['title'] = _("Product classes")
+        ctx['classes'] = ProductClass.objects.all()
+        return ctx
+    
+
+class ProductClassUpdateView(generic.UpdateView):
+    template_name = 'dashboard/catalogue/product_class_form.html'
+    model = ProductClass
+    form_class = ProductClassForm
+    
+    def get_context_data(self, **kwargs):
+        ctx = super(ProductClassUpdateView, self).get_context_data(**kwargs)
+        ctx['title'] = _("Update product type '%s'") % self.object.name
+        return ctx
+    
+    def get_success_url(self):
+        messages.info(self.request, _("Product type update successfully"))
+        return reverse("dashboard:catalogue-class-list")
+
+class ProductClassDeleteView(generic.DeleteView):
+    template_name = 'dashboard/catalogue/product_class_delete.html'
+    model = ProductClass
+    form_class = ProductClassForm
+    
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(ProductClassDeleteView, self).get_context_data(*args, **kwargs)
+        ctx['title'] = _("Delete product type '%s'") % self.object.name
+        return ctx
+    
+    def get_success_url(self):
+        messages.info(self.request, _("Product type deleted successfully"))
+        return reverse("dashboard:catalogue-class-list")

@@ -47,9 +47,9 @@
         <div class="well">
             <form action="{% url 'dashboard:catalogue-product-create' %}" method="get" class="form-inline">
                 <span class="control-group">
-                    <label for="id_promotion_type">{% trans "Create a new product of type" %}</label>
+                    <label for="id_promotion_type">{% trans "Create a new product of class" %}</label>
                     <select id="id_promotion_type" name="product_class">
-                        <option> -- {% trans "Choose type" %} --</option>
+                        <option> -- {% trans "Choose class" %} --</option>
                         {% for product_class in product_classes %}
                             <option value="{{ product_class.id }}">{{ product_class.name }}</option>
                         {% endfor %}
