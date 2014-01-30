@@ -18,14 +18,15 @@ class BasketMiddleware(object):
         basket = self.get_basket(request)
 
         # Load stock/price strategy and assign to request and basket
-        strategy = selector.strategy(
-            request=request, user=request.user)
+        strategy = selector.strategy(request=request, user=request.user)
         request.strategy = basket.strategy = strategy
+        # Attach basket to the current request. Pricing policies in
+        # apply_offers_to_basket may depend on it, so it needs to be done
+        # before that is called
+        request.basket = basket
 
         self.ensure_basket_lines_have_stockrecord(basket)
-
         self.apply_offers_to_basket(request, basket)
-        request.basket = basket
 
     def get_basket(self, request):
         """
