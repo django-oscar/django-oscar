@@ -141,7 +141,7 @@ class ObjectLookupView(View):
             qs, more = self.paginate(qs, page, page_limit)
 
         return HttpResponse(json.dumps({
-            'results': map(self.format_object, qs),
+            'results': list(map(self.format_object, qs)),
             'more': more,
         }), mimetype='application/json')
 
