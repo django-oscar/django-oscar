@@ -46,16 +46,16 @@
                     <tr>
                         <th>{% trans "Active" %}?</th>
                         <td>
-                            {% if customer.is_active %}Yes{% else %}No{% endif %}
+                            {{ customer.is_active|yesno:_("Yes,No") }}
                         </td>
                     </tr>
                     <tr>
                         <th>{% trans "Superuser" %}?</th>
-                        <td>{{ customer.is_superuser }}</td>
+                        <td>{{ customer.is_superuser|yesno:_("True,False") }}</td>
                     </tr>
                     <tr>
                         <th>{% trans "Staff" %}?</th>
-                        <td>{{ customer.is_staff }}</td>
+                        <td>{{ customer.is_staff|yesno:_("True,False") }}</td>
                     </tr>
                     <tr>
                         <th>{% trans "Last login" %}</th>
