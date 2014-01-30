@@ -112,8 +112,9 @@ class OfferWizardStepView(FormView):
 
         # Adjust kwargs to avoid trying to save the range instance
         form_data = form.cleaned_data.copy()
-        if 'range' in form_data:
-            form_data['range_id'] = form_data['range'].id
+        range = form_data.get('range', None)
+        if range is not None:
+            form_data['range_id'] = range.id
             del form_data['range']
         form_kwargs = {'data': form_data}
         json_data = json.dumps(form_kwargs, cls=DjangoJSONEncoder)
