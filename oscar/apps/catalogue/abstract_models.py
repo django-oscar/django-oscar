@@ -337,7 +337,7 @@ class AbstractProduct(models.Model):
     #: discount some types of product (e.g. ebooks) and this field helps
     #: merchants from avoiding discounting such products
     is_discountable = models.BooleanField(
-        _("Is discountable?"), default=True, help_text=(
+        _("Is discountable?"), default=True, help_text=_(
             "This flag indicates if this product can be used in an offer "
             "or not"))
 

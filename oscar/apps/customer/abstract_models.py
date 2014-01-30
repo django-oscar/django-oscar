@@ -246,8 +246,8 @@ class AbstractNotification(models.Model):
 
     INBOX, ARCHIVE = 'Inbox', 'Archive'
     choices = (
-        (INBOX, _(INBOX)),
-        (ARCHIVE, _(ARCHIVE)))
+        (INBOX, _('Inbox')),
+        (ARCHIVE, _('Archive')))
     location = models.CharField(max_length=32, choices=choices,
                                 default=INBOX)
 
