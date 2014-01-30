@@ -201,7 +201,7 @@ Alter your ``frobshop/urls.py`` to include Oscar's URLs:
     from oscar.app import application
 
     urlpatterns = patterns('',
-        (r'', include(application.urls))
+        url(r'', include(application.urls))
     )
 
 Database
