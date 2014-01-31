@@ -481,9 +481,10 @@ class ProductClassCreateView(generic.CreateView):
         return reverse("dashboard:catalogue-class-list")
     
 
-class ProductClassListView(generic.TemplateView):
+class ProductClassListView(generic.ListView):
     template_name = 'dashboard/catalogue/product_class_list.html'
-
+    model = ProductClass
+    
     def get_context_data(self, *args, **kwargs):
         ctx = super(ProductClassListView, self).get_context_data(*args, **kwargs)
         ctx['title'] = _("Product classes")
@@ -505,6 +506,7 @@ class ProductClassUpdateView(generic.UpdateView):
         messages.info(self.request, _("Product type update successfully"))
         return reverse("dashboard:catalogue-class-list")
 
+
 class ProductClassDeleteView(generic.DeleteView):
     template_name = 'dashboard/catalogue/product_class_delete.html'
     model = ProductClass
@@ -513,6 +515,12 @@ class ProductClassDeleteView(generic.DeleteView):
     def get_context_data(self, *args, **kwargs):
         ctx = super(ProductClassDeleteView, self).get_context_data(*args, **kwargs)
         ctx['title'] = _("Delete product type '%s'") % self.object.name
+        product_count = self.object.products.count()
+        
+        if product_count > 0:
+            ctx['disallow'] = True
+            ctx['title'] = _("Unable to delete '%s'") % self.object.name
+            messages.error(self.request, _("%i products are assigned to this type") % product_count) 
         return ctx
     
     def get_success_url(self):

@@ -8,21 +8,21 @@
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
             <span class="divider">/</span>
         </li>
-        <li class="active">{% trans "Product class" %}</li>
+        <li class="active">{% trans "Product type" %}</li>
     </ul>
 {% endblock %}
 
 {% block header %}
     <div class="page-header">
-        <a href="{% url 'dashboard:catalogue-class-create' %}" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new product class" %}</a>
-        <h1>{% trans "Product class management" %}</h1>
+        <a href="{% url 'dashboard:catalogue-class-create' %}" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new product type" %}</a>
+        <h1>{% trans "Product type management" %}</h1>
     </div>
 {% endblock header %}
 
 {% block dashboard_content %}
     {% if classes %}
         <table class="table table-striped table-bordered table-hover">
-            <caption><i class="icon-sitemap icon-large"></i>{% trans 'Product classes' %}</caption>
+            <caption><i class="icon-sitemap icon-large"></i>{% trans 'Product types' %}</caption>
             <thead>
                 <tr>
                     <th>{% trans "Name" %}</th>
@@ -46,7 +46,7 @@
                                         <span class="caret"></span>
                                     </a>
                                     <ul class="nav dropdown-menu pull-right">
-                                        <li><a href="{% url 'dashboard:catalogue-class-update' pk=class.id %}">{% trans "Edit product class" %}</a></li>                                    
+                                        <li><a href="{% url 'dashboard:catalogue-class-update' pk=class.id %}">{% trans "Edit product type" %}</a></li>                                    
                                         <li><a href="{% url 'dashboard:catalogue-class-delete' pk=class.id %}">{% trans "Delete" %}</a></li>
                                     </ul>
                                 </div>
@@ -57,6 +57,6 @@
             </tbody>
         </table>
     {% else %}
-        <p>{% trans "There are no categories." %}</p>
+        <p>{% trans "There are no product types." %}</p>
     {% endif %}
 {% endblock dashboard_content %}

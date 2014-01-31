@@ -11,30 +11,34 @@
             <span class="divider">/</span>
         </li>
         <li>
-        <a href="{% url 'dashboard:catalogue-class-list' %}">{% trans "Product class" %}</a>
+        <a href="{% url 'dashboard:catalogue-class-list' %}">{% trans "Product type" %}</a>
         <span class="divider">/</span>
     </li>
-    <li class="active">{% trans "Delete product class?" %}</li>
+    <li class="active">{% trans "Delete product type?" %}</li>
 </ul>
 {% endblock %}
 
 {% block headertext %}
-    {% trans "Delete product class?" %}
+    {% trans title %}
 {% endblock %}
 
 {% block dashboard_content %}
-    <div class="table-header">
-        <h2>{% trans "Delete product class" %}</h2>
-    </div>
-    <form action="." method="post" class="well">
-        {% csrf_token %}
-        {{ form }}
-        {% blocktrans with name=object.name %}
-            <p>Delete product class <strong>{{ name }}</strong> - are you sure?</p>
-        {% endblocktrans %}
-        <div class="form-actions">
-            <button type="submit" class="btn btn-danger">{% trans "Delete" %}</button>
-        {% trans "or" %} <a href="{% url 'dashboard:catalogue-class-list' %}">{% trans "cancel" %}</a>
-    </div>
-</form>
+    {% if disallow %}
+        <p>{% trans "Please make sure all products are assigned to another type before deletion." %}</p>
+    {% else %}
+        <div class="table-header">
+            <h2>{% trans "Delete product type" %}</h2>
+        </div>
+        <form action="." method="post" class="well">
+            {% csrf_token %}
+            {{ form }}
+            {% blocktrans with name=object.name %}
+                <p>Delete product type <strong>{{ name }}</strong> - are you sure?</p>
+            {% endblocktrans %}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-danger">{% trans "Delete" %}</button>
+            {% trans "or" %} <a href="{% url 'dashboard:catalogue-class-list' %}">{% trans "cancel" %}</a>
+            </div>
+        </form>
+    {% endif %}
 {% endblock %}
