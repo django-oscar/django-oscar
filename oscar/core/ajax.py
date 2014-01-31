@@ -1,6 +1,5 @@
 import six
 from django.contrib import messages
-from six.moves import map
 
 
 class FlashMessages(object):
