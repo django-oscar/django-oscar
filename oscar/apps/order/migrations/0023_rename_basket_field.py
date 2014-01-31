@@ -61,7 +61,7 @@ class Migration(SchemaMigration):
             'date_merged': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'date_submitted': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'owner': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'baskets'", 'null': 'True', 'to': u"orm['{}']".format(AUTH_USER_MODEL)}),
+            'owner': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'baskets'", 'null': 'True', 'to': u"orm['{0}']".format(AUTH_USER_MODEL)}),
             'status': ('django.db.models.fields.CharField', [], {'default': "'Open'", 'max_length': '128'}),
             'vouchers': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['voucher.Voucher']", 'null': 'True', 'blank': 'True'})
         },
@@ -345,7 +345,7 @@ class Migration(SchemaMigration):
             'status': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'total_excl_tax': ('django.db.models.fields.DecimalField', [], {'max_digits': '12', 'decimal_places': '2'}),
             'total_incl_tax': ('django.db.models.fields.DecimalField', [], {'max_digits': '12', 'decimal_places': '2'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'orders'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['{}']".format(AUTH_USER_MODEL)})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'orders'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['{0}']".format(AUTH_USER_MODEL)})
         },
         u'order.orderdiscount': {
             'Meta': {'object_name': 'OrderDiscount'},
@@ -368,7 +368,7 @@ class Migration(SchemaMigration):
             'message': ('django.db.models.fields.TextField', [], {}),
             'note_type': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True'}),
             'order': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'notes'", 'to': u"orm['order.Order']"}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['{}']".format(AUTH_USER_MODEL), 'null': 'True'})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['{0}']".format(AUTH_USER_MODEL), 'null': 'True'})
         },
         u'order.paymentevent': {
             'Meta': {'ordering': "['-date_created']", 'object_name': 'PaymentEvent'},
@@ -438,7 +438,7 @@ class Migration(SchemaMigration):
             'code': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '128'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True', 'blank': 'True'}),
-            'users': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'partners'", 'null': 'True', 'symmetrical': 'False', 'to': u"orm['{}']".format(AUTH_USER_MODEL)})
+            'users': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'partners'", 'null': 'True', 'symmetrical': 'False', 'to': u"orm['{0}']".format(AUTH_USER_MODEL)})
         },
         u'partner.stockrecord': {
             'Meta': {'unique_together': "(('partner', 'partner_sku'),)", 'object_name': 'StockRecord'},
