@@ -340,6 +340,7 @@ class ProductCreateUpdateView(generic.UpdateView):
             {
                 'product': self.object,
                 'creating': self.creating,
+                'request': self.request
             })
         messages.success(self.request, msg, extra_tags="safe noicon")
         url = reverse('dashboard:catalogue-product-list')
