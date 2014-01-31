@@ -9,6 +9,8 @@ from oscar.core.compat import AUTH_USER_MODEL, AUTH_USER_MODEL_NAME
 
 class Migration(SchemaMigration):
 
+    depends_on = [('basket', '0001_initial')]
+
     def forwards(self, orm):
         # Adding field 'Order.basket_alt'
         db.add_column(u'order_order', 'basket_alt',
