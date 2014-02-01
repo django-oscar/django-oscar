@@ -443,7 +443,7 @@ BaseProductRecommendationFormSet = inlineformset_factory(
 class ProductRecommendationFormSet(BaseProductRecommendationFormSet):
     def __init__(self, product_class, user, *args, **kwargs):
         super(ProductRecommendationFormSet, self).__init__(*args, **kwargs)
-        
+
 
 class ProductClassForm(forms.ModelForm):
 

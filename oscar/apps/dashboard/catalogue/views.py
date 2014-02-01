@@ -479,29 +479,30 @@ class ProductClassCreateView(generic.CreateView):
     def get_success_url(self):
         messages.info(self.request, _("Product type created successfully"))
         return reverse("dashboard:catalogue-class-list")
-    
+
 
 class ProductClassListView(generic.ListView):
     template_name = 'dashboard/catalogue/product_class_list.html'
     model = ProductClass
-    
+
     def get_context_data(self, *args, **kwargs):
-        ctx = super(ProductClassListView, self).get_context_data(*args, **kwargs)
+        ctx = super(ProductClassListView, self).get_context_data(*args,
+                                                                 **kwargs)
         ctx['title'] = _("Product classes")
         ctx['classes'] = ProductClass.objects.all()
         return ctx
-    
+
 
 class ProductClassUpdateView(generic.UpdateView):
     template_name = 'dashboard/catalogue/product_class_form.html'
     model = ProductClass
     form_class = ProductClassForm
-    
+
     def get_context_data(self, **kwargs):
         ctx = super(ProductClassUpdateView, self).get_context_data(**kwargs)
         ctx['title'] = _("Update product type '%s'") % self.object.name
         return ctx
-    
+
     def get_success_url(self):
         messages.info(self.request, _("Product type update successfully"))
         return reverse("dashboard:catalogue-class-list")
@@ -511,18 +512,21 @@ class ProductClassDeleteView(generic.DeleteView):
     template_name = 'dashboard/catalogue/product_class_delete.html'
     model = ProductClass
     form_class = ProductClassForm
-    
+
     def get_context_data(self, *args, **kwargs):
-        ctx = super(ProductClassDeleteView, self).get_context_data(*args, **kwargs)
+        ctx = super(ProductClassDeleteView, self).get_context_data(*args,
+                                                                   **kwargs)
         ctx['title'] = _("Delete product type '%s'") % self.object.name
         product_count = self.object.products.count()
-        
+
         if product_count > 0:
             ctx['disallow'] = True
             ctx['title'] = _("Unable to delete '%s'") % self.object.name
-            messages.error(self.request, _("%i products are assigned to this type") % product_count) 
+            messages.error(self.request,
+                           _("%i products are assigned this type") %
+                           product_count)
         return ctx
-    
+
     def get_success_url(self):
         messages.info(self.request, _("Product type deleted successfully"))
         return reverse("dashboard:catalogue-class-list")
