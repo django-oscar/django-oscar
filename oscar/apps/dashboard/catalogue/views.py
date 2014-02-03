@@ -124,12 +124,12 @@ class ProductListView(generic.ListView):
 
         data = self.form.cleaned_data
 
-        if data['upc']:
+        if data.get('upc'):
             queryset = queryset.filter(upc=data['upc'])
             description_ctx['upc_filter'] = _(
                 " including an item with UPC '%s'") % data['upc']
 
-        if data['title']:
+        if data.get('title'):
             queryset = queryset.filter(
                 title__icontains=data['title']).distinct()
             description_ctx['title_filter'] = _(
