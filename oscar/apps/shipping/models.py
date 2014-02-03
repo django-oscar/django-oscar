@@ -96,6 +96,10 @@ class OrderAndItemCharges(ShippingMethod):
         # We assume tax is known
         return True
 
+    @property
+    def discount(self):
+        return D('0.00')
+
 
 class WeightBased(ShippingMethod):
     upper_charge = models.DecimalField(
@@ -138,6 +142,10 @@ class WeightBased(ShippingMethod):
     def is_tax_known(self):
         # We assume tax is known
         return True
+
+    @property
+    def discount(self):
+        return D('0.00')
 
     def get_band_for_weight(self, weight):
         """
