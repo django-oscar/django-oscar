@@ -33,6 +33,16 @@
         </div>
         <div class="well">
             <form action="." method="get" class="form-inline">
+                {% comment %}
+                    Add the current query string to the search form so that the
+                    sort order is not reset when searching.
+                {% endcomment %}
+                {% for name, value in request.GET.items %}
+                    {% if name not in form.fields %}
+                        <input type="hidden" name="{{ name }}" value="{{ value }}"/>
+                    {% endif %}
+                {% endfor %}
+
                 {% include "partials/form_fields_inline.html" with form=form %}
                 <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
             </form>
