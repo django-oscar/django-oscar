@@ -3,6 +3,13 @@
 {% load i18n %}
 
 {% block table.thead %}
+<caption>
+    {% block table.caption %}
+        <h3 class="pull-left">
+            <i class="icon-sitemap icon-large"></i>{{ queryset_description }}
+        </h3>
+    {% endblock %}
+</caption>
 <thead>
     <tr>
     {% for column in table.columns %}
