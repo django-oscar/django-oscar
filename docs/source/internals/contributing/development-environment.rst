@@ -15,6 +15,22 @@ compile.
 The :doc:`sandbox </internals/sandbox>` site can be used to test our changes in
 a browser. It is easily created with ``make sandbox``.
 
+If using Ubuntu 64 bit, you could get this exception running the sandbox website: ``decoder jpeg not available``
+To avoid this, install first the following libraries:
+
+    $ sudo apt-get install python-dev libjpeg-dev libfreetype6-dev zlib1g-dev
+
+and symlink the three image libraries into ``/usr/lib:``
+
+    $ sudo ln -s /usr/lib/`uname -i`-linux-gnu/libfreetype.so /usr/lib/
+    $ sudo ln -s /usr/lib/`uname -i`-linux-gnu/libjpeg.so /usr/lib/
+    $ sudo ln -s /usr/lib/`uname -i`-linux-gnu/libz.so /usr/lib/
+
+If you had already installed PIL (you did if you ran ``make install`` previously), reinstall it:
+
+    $ pip uninstall Pillow
+    $ pip install Pillow
+
 Creating migrations
 ===================
 
