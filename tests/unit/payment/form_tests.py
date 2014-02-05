@@ -1,10 +1,15 @@
 import datetime
 
+from django.core.exceptions import ImproperlyConfigured
 from django.test import TestCase
 from django.forms import ValidationError
 
-from oscar.apps.payment import forms, models
 
+from oscar.apps.payment import forms, models
+ # types=[bankcards.VISA, bankcards.VISA_ELECTRON, bankcards.MASTERCARD,
+ #               bankcards.AMEX, bankcards.MAESTRO, bankcards.DINERS_CLUB,
+ #               bankcards.DISCOVER, bankcards.JCB, bankcards.CHINA_UNIONPAY,
+ #               bankcards.SOLO, bankcards.LASER, bankcards.SWITCH]
 
 class TestBankcardNumberField(TestCase):
 
@@ -18,6 +23,22 @@ class TestBankcardNumberField(TestCase):
     def test_rejects_numbers_which_dont_pass_luhn(self):
         with self.assertRaises(ValidationError):
             self.field.clean('1234123412341234')
+
+    def test_amex_accepted_when_allowed(self):
+        # Number taken from http://www.darkcoding.net/credit-card-numbers/
+        self.field = forms.BankcardNumberField(types=['American Express',])
+        self.assertEquals(
+            '348934265521923', self.field.clean('348934265521923'))
+
+    def test_amex_rejected_when_disallowed(self):
+        self.field = forms.BankcardNumberField(types=['Visa',])
+        with self.assertRaises(ValidationError):
+            self.field.clean('348934265521923')
+
+
+    def test_raises_error_for_invalid_card_type(self):
+        with self.assertRaises(ImproperlyConfigured):
+            self.field = forms.BankcardNumberField(types=['American Express', 'Nonsense'])
 
 
 class TestStartingMonthField(TestCase):
@@ -116,7 +137,7 @@ class TestValidBankcardForm(TestCase):
             'number': '1000010000000007',
             'ccv': '123',
             'expiry_month_0': '01',
-            'expiry_month_1': today.year + 1,
+            'expiry_month_1': today.year + 1
         }
         self.form = forms.BankcardForm(data)
         self.assertTrue(self.form.is_valid())
