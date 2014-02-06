@@ -232,7 +232,7 @@ class OrderListView(BulkEditMixin, ListView):
         data = self.form.cleaned_data
 
         if data['order_number']:
-            queryset = self.base_queryset.objects.filter(
+            queryset = self.base_queryset.filter(
                 number__istartswith=data['order_number'])
 
         if data['name']:
