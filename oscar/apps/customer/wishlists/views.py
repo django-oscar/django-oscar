@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.core.exceptions import (
     ObjectDoesNotExist, MultipleObjectsReturned, PermissionDenied)
 from django.core.urlresolvers import reverse
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import (ListView, CreateView, UpdateView, DeleteView,

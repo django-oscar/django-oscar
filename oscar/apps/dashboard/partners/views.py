@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.models import Permission
 from django.core.urlresolvers import reverse_lazy, reverse
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _

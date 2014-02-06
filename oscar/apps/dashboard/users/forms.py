@@ -1,8 +1,10 @@
 from django import forms
-from django.db.models.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
-User = get_model('user', 'User')
+from oscar.core.loading import get_model
+from oscar.core.compat import get_user_model
+
+User = get_user_model()
 ProductAlert = get_model('customer', 'ProductAlert')
 
 

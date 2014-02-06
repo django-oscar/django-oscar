@@ -2,7 +2,7 @@ from decimal import Decimal as D
 import random
 import datetime
 
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.conf import settings
 
 from oscar.apps.partner import strategy, availability, prices

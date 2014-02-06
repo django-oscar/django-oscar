@@ -2,8 +2,7 @@ import sys
 import traceback
 
 from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
-from django.db.models import get_model
+from django.db.models import get_model as django_get_model
 
 
 class AppNotFoundError(Exception):
@@ -158,10 +157,7 @@ def get_profile_class():
     if setting is None:
         return None
     app_label, model_name = settings.AUTH_PROFILE_MODULE.split('.')
-    profile_class = get_model(app_label, model_name)
-    if not profile_class:
-        raise ImproperlyConfigured("Can't import profile model")
-    return profile_class
+    return get_model(app_label, model_name)
 
 
 def feature_hidden(feature_name):
@@ -170,3 +166,17 @@ def feature_hidden(feature_name):
     """
     return (feature_name is not None and
             feature_name in settings.OSCAR_HIDDEN_FEATURES)
+
+
+def get_model(app_label, model_name, *args, **kwargs):
+    """
+    Gets a model class by it's app label and model name. Fails loudly if the
+    model class can't be imported.
+    This is merely a thin wrapper around Django's get_model function.
+    """
+    model = django_get_model(app_label, model_name, *args, **kwargs)
+    if model is None:
+        raise ImportError(
+            "{app_label}.{model_name} could not be imported.".format(
+                app_label=app_label, model_name=model_name))
+    return model

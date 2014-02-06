@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.core.urlresolvers import reverse
 from oscar.core.compat import get_user_model
 from django_dynamic_fixture import get

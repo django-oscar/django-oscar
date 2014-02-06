@@ -2,7 +2,7 @@ import datetime
 
 from django.contrib import messages
 from django.core.urlresolvers import reverse
-from django.db.models.loading import get_model
+from oscar.core.loading import get_model
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import (ListView, FormView, DetailView, DeleteView)

@@ -5,7 +5,7 @@ from django.utils.timezone import now
 from django.contrib import messages
 from django import http
 from django.views import generic
-from django.db.models import get_model
+from oscar.core.loading import get_model
 
 from oscar.apps.customer.mixins import PageTitleMixin
 from oscar.views.generic import BulkEditMixin

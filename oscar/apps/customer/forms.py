@@ -9,7 +9,7 @@ from django.contrib.sites.models import get_current_site
 from django.core import validators
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_profile_class, get_class

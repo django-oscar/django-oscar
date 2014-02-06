@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.db.models import get_model
+from oscar.core.loading import get_model
 
 Voucher = get_model('voucher', 'Voucher')
 VoucherApplication = get_model('voucher', 'VoucherApplication')

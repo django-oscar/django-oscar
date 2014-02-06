@@ -1,5 +1,5 @@
 from django.views.generic import ListView
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django import http
 from django.shortcuts import get_object_or_404
 

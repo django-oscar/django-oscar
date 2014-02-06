@@ -1,7 +1,7 @@
 from os.path import dirname
 from django.test import TestCase
 from django.conf import settings
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.test.utils import override_settings
 
 import oscar

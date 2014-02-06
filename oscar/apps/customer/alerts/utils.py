@@ -4,10 +4,10 @@ from django.core import mail
 from django.conf import settings
 from django.template import loader, Context
 from django.contrib.sites.models import Site
-from django.db.models import get_model, Max
+from django.db.models import Max
 
 from oscar.apps.customer.notifications import services
-from oscar.core.loading import get_class
+from oscar.core.loading import get_class, get_model
 
 ProductAlert = get_model('customer', 'ProductAlert')
 Product = get_model('catalogue', 'Product')

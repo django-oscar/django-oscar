@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.db.models import get_model
+from oscar.core.loading import get_model
 
 Line = get_model('basket', 'line')
 

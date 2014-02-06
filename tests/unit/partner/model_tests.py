@@ -1,6 +1,6 @@
 import six
 from decimal import Decimal as D
-from django.db.models import get_model
+from oscar.core.loading import get_model
 
 from django.test import TestCase
 

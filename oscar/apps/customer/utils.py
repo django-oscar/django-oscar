@@ -3,7 +3,7 @@ import logging
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.core.urlresolvers import reverse
 from django.conf import settings
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.utils.http import int_to_base36
 from django.contrib.auth.tokens import default_token_generator
 

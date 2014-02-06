@@ -1,6 +1,6 @@
 from django.contrib.sites.models import Site
 from django.conf import settings
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.shipping.methods import Free

@@ -1,7 +1,7 @@
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import resolve
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 

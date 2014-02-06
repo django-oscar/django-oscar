@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse, reverse_lazy
 
 from django.contrib import messages
 from django.contrib.auth import login
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.utils.translation import ugettext as _
 from django.views.generic import (DetailView, TemplateView, FormView,
                                   DeleteView, UpdateView)
