@@ -479,6 +479,7 @@ class OrderDetailView(DetailView):
             return self.reload_page_response()
 
         handler = EventHandler(request.user)
+        old_status = order.status
         try:
             handler.handle_order_status_change(order, new_status)
         except PaymentError as e:
@@ -486,7 +487,7 @@ class OrderDetailView(DetailView):
                                       " payment error: %s") % e)
         else:
             msg = _("Order status changed from '%(old_status)s' to"
-                    " '%(new_status)s'") % {'old_status': order.status,
+                    " '%(new_status)s'") % {'old_status': old_status,
                                             'new_status': new_status}
             messages.info(request, msg)
             order.notes.create(user=request.user, message=msg,

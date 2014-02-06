@@ -284,8 +284,9 @@ class AbstractProduct(models.Model):
     slug = models.SlugField(_('Slug'), max_length=255, unique=False)
     description = models.TextField(_('Description'), blank=True, null=True)
 
-    #: Use this field to indicate if the product is inactive or awaiting
-    #: approval
+    #: Status field which is not used by core Oscar. Added because it's commonly
+    #: needed to e.g. indicate if the product is inactive or awaiting
+    #: approval.
     status = models.CharField(_('Status'), max_length=128, blank=True,
                               null=True, db_index=True)
     product_class = models.ForeignKey(
