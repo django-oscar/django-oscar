@@ -154,7 +154,7 @@ class ProductCreateRedirectView(generic.RedirectView):
 
     def get_redirect_url(self, **kwargs):
         product_class_id = self.request.GET.get('product_class')
-        if product_class_id is None or not product_class_id.is_digit():
+        if product_class_id is None or not product_class_id.isdigit():
             return self.get_invalid_product_class_url()
         try:
             product_class = ProductClass.objects.get(id=product_class_id)
