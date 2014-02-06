@@ -148,7 +148,7 @@ var oscar = (function(o, $) {
         },
         initWYSIWYG: function() {
             // Use TinyMCE by default
-            $('form.wysiwyg textarea, textarea.wysiwyg').tinymce(o.dashboard.options.tinyConfig);
+            $('form.wysiwyg textarea, textarea.wysiwyg').not('textarea.no-wysiwyg').tinymce(o.dashboard.options.tinyConfig);
         },
         offers: {
             init: function() {
