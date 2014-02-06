@@ -142,20 +142,26 @@ class ProductListView(generic.ListView):
 
 class ProductCreateRedirectView(generic.RedirectView):
     permanent = False
+    
+    def handle_invalid_product_class(self):
+        messages.error(self.request, _("Please choose a product class"))
+        return reverse('dashboard:catalogue-product-list')
+    
+    def get_product_create_url(self, product_class):
+        """ Allow site to provide custom URL """
+        return reverse('dashboard:catalogue-product-create',
+                       kwargs={'product_class_id': product_class.id})
 
     def get_redirect_url(self, **kwargs):
         product_class_id = self.request.GET.get('product_class', None)
         if not product_class_id or not product_class_id.isdigit():
-            messages.error(self.request, _("Please choose a product class"))
-            return reverse('dashboard:catalogue-product-list')
+            return self.handle_invalid_product_class()
         try:
             product_class = ProductClass.objects.get(id=product_class_id)
         except ProductClass.DoesNotExist:
-            messages.error(self.request, _("Please choose a product class"))
-            return reverse('dashboard:catalogue-product-list')
+            return self.handle_invalid_product_class()
         else:
-            return reverse('dashboard:catalogue-product-create',
-                           kwargs={'product_class_id': product_class.id})
+            return self.get_product_create_url(product_class)
 
 
 class ProductCreateUpdateView(generic.UpdateView):
