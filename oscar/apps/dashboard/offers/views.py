@@ -3,7 +3,7 @@ import json
 
 from django.views.generic import (ListView, FormView, DeleteView,
                                   CreateView, UpdateView)
-from django.db.models.loading import get_model
+from oscar.core.loading import get_model
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import HttpResponseRedirect

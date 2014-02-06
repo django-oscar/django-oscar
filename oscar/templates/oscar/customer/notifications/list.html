@@ -1,12 +1,11 @@
 {% extends "customer/baseaccountpage.html" %}
 {% load i18n %}
-{% load url from future %}
 
 {% block tabcontent %}
 
     <ul class="nav nav-tabs">
-        <li class="{% if list_type == 'inbox' %}active{% endif %}"><a href="{% url 'customer:notifications-inbox' %}">Inbox</a></li>
-        <li class="{% if list_type == 'archive' %}active{% endif %}"><a href="{% url 'customer:notifications-archive' %}">Archive</a></li>
+        <li class="{% if list_type == 'inbox' %}active{% endif %}"><a href="{% url 'customer:notifications-inbox' %}">{% trans 'Inbox' %}</a></li>
+        <li class="{% if list_type == 'archive' %}active{% endif %}"><a href="{% url 'customer:notifications-archive' %}">{% trans 'Archive' %}</a></li>
     </ul>
 
     {% if notifications %}

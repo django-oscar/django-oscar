@@ -3,7 +3,7 @@ from decimal import Decimal as D, ROUND_UP
 
 from django.utils.timezone import now
 from django.views.generic import TemplateView
-from django.db.models.loading import get_model
+from oscar.core.loading import get_model
 from django.db.models import Avg, Sum, Count
 
 from oscar.core.compat import get_user_model

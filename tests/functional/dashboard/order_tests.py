@@ -1,7 +1,7 @@
 from six.moves import http_client
 
-from django.db.models import get_model
-from django.test import TestCase, Client
+from oscar.core.loading import get_model
+from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.template import Template, Context
 from django_dynamic_fixture import get, G
@@ -36,6 +36,12 @@ class TestOrderListDashboard(WebTestCase):
         form = page.forms['orders_form']
         form['selected_order'].checked = True
         form.submit('download_selected')
+
+    def test_allows_order_number_search(self):
+        page = self.get(reverse('dashboard:order-list'))
+        form = page.forms['search_form']
+        form['order_number'] = '+'
+        form.submit()
 
 
 class PermissionBasedDashboardOrderTestsBase(WebTestCase):

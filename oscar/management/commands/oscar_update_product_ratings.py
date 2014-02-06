@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.core.management.base import BaseCommand
-from django.db.models import get_model
+from oscar.core.loading import get_model
 
 Product = get_model('catalogue', 'Product')
 

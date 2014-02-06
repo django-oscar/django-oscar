@@ -2,14 +2,14 @@ import six
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import generic
-from django.db.models import get_model, Q
+from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.template.loader import render_to_string
 
-from oscar.core.loading import get_classes
+from oscar.core.loading import get_classes, get_model
 from oscar.views import sort_queryset
 from oscar.views.generic import ObjectLookupView
 
@@ -124,12 +124,12 @@ class ProductListView(generic.ListView):
 
         data = self.form.cleaned_data
 
-        if data['upc']:
+        if data.get('upc'):
             queryset = queryset.filter(upc=data['upc'])
             description_ctx['upc_filter'] = _(
                 " including an item with UPC '%s'") % data['upc']
 
-        if data['title']:
+        if data.get('title'):
             queryset = queryset.filter(
                 title__icontains=data['title']).distinct()
             description_ctx['title_filter'] = _(
@@ -143,19 +143,25 @@ class ProductListView(generic.ListView):
 class ProductCreateRedirectView(generic.RedirectView):
     permanent = False
 
+    def get_product_create_url(self, product_class):
+        """ Allow site to provide custom URL """
+        return reverse('dashboard:catalogue-product-create',
+                       kwargs={'product_class_id': product_class.id})
+
+    def get_invalid_product_class_url(self):
+        messages.error(self.request, _("Please choose a product class"))
+        return reverse('dashboard:catalogue-product-list')
+
     def get_redirect_url(self, **kwargs):
-        product_class_id = self.request.GET.get('product_class', None)
-        if not product_class_id or not product_class_id.isdigit():
-            messages.error(self.request, _("Please choose a product class"))
-            return reverse('dashboard:catalogue-product-list')
+        product_class_id = self.request.GET.get('product_class')
+        if product_class_id is None or not product_class_id.isdigit():
+            return self.get_invalid_product_class_url()
         try:
             product_class = ProductClass.objects.get(id=product_class_id)
         except ProductClass.DoesNotExist:
-            messages.error(self.request, _("Please choose a product class"))
-            return reverse('dashboard:catalogue-product-list')
+            return self.get_invalid_product_class_url()
         else:
-            return reverse('dashboard:catalogue-product-create',
-                           kwargs={'product_class_id': product_class.id})
+            return self.get_product_create_url(product_class)
 
 
 class ProductCreateUpdateView(generic.UpdateView):

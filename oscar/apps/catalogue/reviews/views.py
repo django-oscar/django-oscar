@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, View
 from django.contrib import messages
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_classes

@@ -1,6 +1,6 @@
 from __future__ import print_function
 from django.core.management.base import BaseCommand, CommandError
-from django.db.models import get_model
+from oscar.core.loading import get_model
 
 from oscar.core.loading import get_class
 Order = get_model('order', 'Order')

@@ -22,7 +22,6 @@ SQL_DEBUG = True
 SEND_BROKEN_LINK_EMAILS = False
 
 ADMINS = (
-    ('David Winterbottom', 'david.winterbottom@tangentlabs.co.uk'),
 )
 EMAIL_SUBJECT_PREFIX = '[Oscar demo] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

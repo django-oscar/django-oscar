@@ -1,11 +1,10 @@
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.core.urlresolvers import reverse
 
 from oscar.test.testcases import WebTestCase, add_permissions
 from oscar.test.factories import create_product, create_stockrecord
 
 from django_dynamic_fixture import G
-from oscar.test.testcases import WebTestCase
 
 Product = get_model('catalogue', 'Product')
 ProductClass = get_model('catalogue', 'ProductClass')

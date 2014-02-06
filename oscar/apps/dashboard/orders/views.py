@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models.loading import get_model
+from oscar.core.loading import get_model
 from django.db.models import fields, Q, Sum, Count
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
@@ -233,7 +233,7 @@ class OrderListView(BulkEditMixin, ListView):
         data = self.form.cleaned_data
 
         if data['order_number']:
-            queryset = self.base_queryset.objects.filter(
+            queryset = self.base_queryset.filter(
                 number__istartswith=data['order_number'])
 
         if data['name']:
@@ -479,6 +479,7 @@ class OrderDetailView(DetailView):
             return self.reload_page_response()
 
         handler = EventHandler(request.user)
+        old_status = order.status
         try:
             handler.handle_order_status_change(order, new_status)
         except PaymentError as e:
@@ -486,7 +487,7 @@ class OrderDetailView(DetailView):
                                       " payment error: %s") % e)
         else:
             msg = _("Order status changed from '%(old_status)s' to"
-                    " '%(new_status)s'") % {'old_status': order.status,
+                    " '%(new_status)s'") % {'old_status': old_status,
                                             'new_status': new_status}
             messages.info(request, msg)
             order.notes.create(user=request.user, message=msg,

@@ -13,13 +13,13 @@ from django.core.exceptions import ValidationError, ImproperlyConfigured
 from django.core.files.base import File
 from django.core.validators import RegexValidator
 from django.db import models
-from django.db.models import Sum, Count, get_model
+from django.db.models import Sum, Count
 from django.utils.translation import ugettext_lazy as _
 from django.utils.functional import cached_property
 from treebeard.mp_tree import MP_Node
 
 from oscar.core.utils import slugify
-from oscar.core.loading import get_classes
+from oscar.core.loading import get_classes, get_model
 
 ProductManager, BrowsableProductManager = get_classes(
     'catalogue.managers', ['ProductManager', 'BrowsableProductManager'])
@@ -284,8 +284,9 @@ class AbstractProduct(models.Model):
     slug = models.SlugField(_('Slug'), max_length=255, unique=False)
     description = models.TextField(_('Description'), blank=True, null=True)
 
-    #: Use this field to indicate if the product is inactive or awaiting
-    #: approval
+    #: Status field which is not used by core Oscar. Added because it's
+    # commonly needed to e.g. indicate if the product is inactive or awaiting
+    #: approval.
     status = models.CharField(_('Status'), max_length=128, blank=True,
                               null=True, db_index=True)
     product_class = models.ForeignKey(

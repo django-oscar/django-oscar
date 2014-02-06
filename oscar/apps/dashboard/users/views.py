@@ -1,4 +1,4 @@
-from django.db.models import Q, get_model
+from django.db.models import Q
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
@@ -10,7 +10,7 @@ from oscar.apps.customer.utils import normalise_email
 
 from oscar.views.generic import BulkEditMixin
 from oscar.core.compat import get_user_model
-from oscar.core.loading import get_class, get_classes
+from oscar.core.loading import get_class, get_classes, get_model
 
 UserSearchForm, ProductAlertSearchForm, ProductAlertUpdateForm = get_classes(
     'dashboard.users.forms', ('UserSearchForm', 'ProductAlertSearchForm',

@@ -1,5 +1,4 @@
 {% load i18n %}
-{% load url from future %}
 <nav class="checkoutNav">
     <ul class="container-fluid">
         <li class="step1 {% if step == 1 %}active{% else %}{% if step > 1 %}visited{% else %}disabled{% endif %}{% endif %}"><i class="icon-checkout-half-wheel hidden-phone"></i><i class="hidden-phone icon-check-alt"></i> {% if step == 2 or step == 3 or step == 4 %}<a href="{% url 'checkout:shipping-address' %}">{% trans "1. Shipping address" %}</a>{% else %}{%  trans "1. Shipping address" %}{% endif %}</li>
