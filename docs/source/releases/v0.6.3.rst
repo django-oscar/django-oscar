@@ -25,6 +25,7 @@ The following issues were fixed:
 
 * `#1186`_ - Fix bug with dashboard order search
 
+.. _`#1127`: https://github.com/tangentlabs/django-oscar/issues/1127
 .. _`#1166`: https://github.com/tangentlabs/django-oscar/issues/1166
 .. _`#1167`: https://github.com/tangentlabs/django-oscar/issues/1167
 .. _`#1176`: https://github.com/tangentlabs/django-oscar/issues/1176
