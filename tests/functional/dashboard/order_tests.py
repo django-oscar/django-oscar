@@ -37,6 +37,12 @@ class TestOrderListDashboard(WebTestCase):
         form['selected_order'].checked = True
         form.submit('download_selected')
 
+    def test_allows_order_number_search(self):
+        page = self.get(reverse('dashboard:order-list'))
+        form = page.forms['search_form']
+        form['order_number'] = '+'
+        form.submit()
+
 
 class PermissionBasedDashboardOrderTestsBase(WebTestCase):
     permissions = ['partner.dashboard_access', ]
