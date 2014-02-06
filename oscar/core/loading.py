@@ -56,14 +56,15 @@ def get_classes(module_label, classnames):
 
         Load a single class:
 
-        >>> get_class('basket.forms', 'BasketLineForm')
-        oscar.apps.basket.forms.BasketLineForm
+        >>> get_class('dashboard.catalogue.forms', 'ProductForm')
+        oscar.apps.dashboard.catalogue.forms.ProductForm
 
         Load a list of classes:
 
-        >>> get_classes('basket.forms', ['BasketLineForm', 'AddToBasketForm'])
-        [oscar.apps.basket.forms.BasketLineForm,
-         oscar.apps.basket.forms.AddToBasketForm]
+        >>> get_classes('dashboard.catalogue.forms',
+        ...             ['ProductForm', 'StockRecordForm'])
+        [oscar.apps.dashboard.catalogue.forms.ProductForm,
+         oscar.apps.dashboard.catalogue.forms.StockRecordForm]
 
     Raises:
 
@@ -73,27 +74,34 @@ def get_classes(module_label, classnames):
         ImportError: If the attempted import of a class raises an
             ``ImportError``, it is re-raised
     """
-    app_module_path = _get_app_module_path(module_label)
-    if not app_module_path:
-        raise AppNotFoundError("No app found matching '%s'" % module_label)
 
-    # Check if app is in oscar
-    if app_module_path.split('.')[0] == 'oscar':
-        # Using core oscar class
-        module_path = 'oscar.apps.%s' % module_label
-        imported_module = __import__(module_path, fromlist=classnames)
-        return _pluck_classes([imported_module], classnames)
+    # e.g. split 'dashboard.catalogue.forms' in 'dashboard.catalogue', 'forms'
+    package, module = module_label.rsplit('.', 1)
 
-    # App must be local - check if module is in local app (it could be in
-    # oscar's)
-    app_label = module_label.split('.')[0]
-    if '.' in app_module_path:
-        base_package = app_module_path.rsplit('.' + app_label, 1)[0]
-        local_app = "%s.%s" % (base_package, module_label)
+    # import from Oscar package (should succeed in most cases)
+    # e.g. 'oscar.apps.dashboard.catalogue.forms'
+    oscar_module_label = "oscar.apps.%s" % module_label
+    oscar_module = _import_oscar_module(oscar_module_label, classnames)
+
+    # returns e.g. 'oscar.apps.dashboard.catalogue',
+    # 'yourproject.apps.dashboard.catalogue' or 'dashboard.catalogue'
+    installed_apps_entry = _get_installed_apps_entry(package)
+    if not installed_apps_entry.startswith('oscar.apps.'):
+        # Attempt to import the classes from the local module
+        # e.g. 'yourproject.dashboard.catalogue.forms'
+        local_module_label = installed_apps_entry + '.' + module
+        local_module = _import_local_module(local_module_label, classnames)
     else:
-        local_app = module_label
+        # The entry is obviously an Oscar one, we don't import again
+        local_module = None
+
+    # return imported classes, giving preference to ones from the local package
+    return _pluck_classes([local_module, oscar_module], classnames)
+
+
+def _import_local_module(local_module_label, classnames):
     try:
-        imported_local_module = __import__(local_app, fromlist=classnames)
+        return __import__(local_module_label, fromlist=classnames)
     except ImportError:
         # There are 2 reasons why there is ImportError:
         #  1. local_app does not exist
@@ -112,17 +120,13 @@ def get_classes(module_label, classnames):
         if len(frames) > 1:
             raise
 
-        # Module not in local app
-        imported_local_module = {}
-    oscar_app = "oscar.apps.%s" % module_label
+
+def _import_oscar_module(oscar_module_label, classnames):
     try:
-        imported_oscar_module = __import__(oscar_app, fromlist=classnames)
+        return __import__(oscar_module_label, fromlist=classnames)
     except ImportError:
         # Oscar does not have this application, can't fallback to it
-        imported_oscar_module = None
-
-    return _pluck_classes([imported_local_module, imported_oscar_module],
-                          classnames)
+        return None
 
 
 def _pluck_classes(modules, classnames):
@@ -141,12 +145,16 @@ def _pluck_classes(modules, classnames):
     return klasses
 
 
-def _get_app_module_path(module_label):
-    app_name = module_label.rsplit(".", 1)[0]
+def _get_installed_apps_entry(app_name):
+    """
+    Walk through INSTALLED_APPS and return the first match. This does depend
+    on the order of INSTALLED_APPS and will break if e.g. 'dashboard.catalogue'
+    comes before 'catalogue' in INSTALLED_APPS.
+    """
     for installed_app in settings.INSTALLED_APPS:
         if installed_app.endswith(app_name):
             return installed_app
-    return None
+    raise AppNotFoundError("No app found matching '%s'" % app_name)
 
 
 def get_profile_class():
