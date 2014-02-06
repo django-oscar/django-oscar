@@ -8,6 +8,8 @@ from oscar.apps.order.models import ShippingAddress
 from oscar.core.compat import get_user_model
 from oscar.apps.address import models
 
+from .factories import UserAddressFactory
+
 
 User = get_user_model()
 
@@ -19,10 +21,7 @@ class TestUserAddress(TestCase):
             iso_3166_1_a2='GB', name="UNITED KINGDOM")
 
     def test_uses_title_firstname_and_lastname_in_salutation(self):
-        a = models.UserAddress(
-            title="Dr",
-            first_name="Barry",
-            last_name='Barrington')
+        a = UserAddressFactory.build()
         self.assertEqual("Dr Barry Barrington", a.salutation)
 
     def test_strips_whitespace_from_salutation(self):
