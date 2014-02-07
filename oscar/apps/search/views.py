@@ -42,3 +42,8 @@ class FacetedSearchView(views.FacetedSearchView):
             extra['has_facets'] = has_facets
 
         return extra
+
+    def get_results(self):
+        # We're only interested in products (there might be other content types
+        # in the Solr index).
+        return super(FacetedSearchView, self).get_results().models(Product)

@@ -18,6 +18,14 @@ Oscar 0.7 has experimental support for Python 3.
 What's new in Oscar 0.7?
 ========================
 
+Search adjustments
+~~~~~~~~~~~~~~~~~~
+
+* Only products are returned by the core search view.  Other content types in
+  your search index are filtered out (`#370`_).
+
+.. _`#370`: https://github.com/tangentlabs/django-oscar/issues/370
+
 Minor changes
 ~~~~~~~~~~~~~
 
@@ -29,7 +37,6 @@ Minor changes
 * Formset handling in
   :class:`~oscar.apps.dashboard.catalogue.views.ProductCreateUpdateView` has
   been simplified and now easily allows adding further formsets.
-
 
 Backwards incompatible changes in 0.7
 =====================================
@@ -58,7 +65,6 @@ Migrations
 * Catalogue:
 
     - ``0014`` - Drops unused ``ProductCategory.is_canonical`` field.
-
 
 Features deprecated in 0.6
 ==========================
