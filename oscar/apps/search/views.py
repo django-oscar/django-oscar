@@ -42,3 +42,11 @@ class FacetedSearchView(views.FacetedSearchView):
             extra['has_facets'] = has_facets
 
         return extra
+
+    def get_results(self):
+        """
+        Limit results to Product objects
+        """
+        results = super(MultiFacetedSearchView, self).get_results()
+
+        return results.models(product_models.Product)
