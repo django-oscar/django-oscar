@@ -3,8 +3,9 @@ import traceback
 
 from django.conf import settings
 from django.db.models import get_model as django_get_model
-from core.exceptions import (ModuleNotFoundError, ClassNotFoundError,
-                             AppNotFoundError)
+
+from oscar.core.exceptions import (ModuleNotFoundError, ClassNotFoundError,
+                                   AppNotFoundError)
 
 
 def get_class(module_label, classname):
