@@ -50,11 +50,10 @@ class TestUserAddress(TestCase):
         self.assertTrue(hash is not None)
 
     def test_can_be_hashed_including_non_ascii(self):
-        a = models.UserAddress(
-            first_name=u"\u0141ukasz Smith",
-            last_name=u'Smith',
-            line1=u"75 Smith Road",
-            postcode=u"n4 8ty")
+        a = UserAddressFactory.create(first_name=u"\u0141ukasz Smith",
+                last_name=u'Smith',
+                line1=u"75 Smith Road",
+                postcode=u"n4 8ty")
         hash = a.generate_hash()
         self.assertTrue(hash is not None)
 
