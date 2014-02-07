@@ -41,7 +41,7 @@ class CatalogueApplication(Application):
             url(r'^products/create/$',
                 self.product_create_redirect_view.as_view(),
                 name='catalogue-product-create'),
-            url(r'^products/create/(?P<product_class_id>\d+)/$',
+            url(r'^products/create/(?P<product_class_slug>[\w-]+)/$',
                 self.product_createupdate_view.as_view(),
                 name='catalogue-product-create'),
             url(r'^products/(?P<pk>\d+)/delete/$',

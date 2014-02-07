@@ -42,10 +42,10 @@ class TestGatewayPage(ProductWebTest):
     def test_redirects_to_form_page_when_valid_query_param(self):
         pclass = G(ProductClass)
         url = reverse('dashboard:catalogue-product-create')
-        response = self.get(url + '?product_class=%d' % pclass.id)
+        response = self.get(url + '?product_class=%s' % pclass.slug)
         self.assertRedirects(response,
                              reverse('dashboard:catalogue-product-create',
-                                     kwargs={'product_class_id': pclass.id}))
+                                     kwargs={'product_class_slug': pclass.slug}))
 
 
 class TestCreateGroupProduct(ProductWebTest):
@@ -57,7 +57,7 @@ class TestCreateGroupProduct(ProductWebTest):
 
     def submit(self, title=None, category=None, upc=None):
         url = reverse('dashboard:catalogue-product-create',
-                      kwargs={'product_class_id': self.pclass.id})
+                      kwargs={'product_class_slug': self.pclass.slug})
 
         product_form = self.get(url).form
 
@@ -113,7 +113,7 @@ class TestCreateChildProduct(ProductWebTest):
 
     def test_categories_are_not_required(self):
         url = reverse('dashboard:catalogue-product-create',
-                      kwargs={'product_class_id': self.pclass.id})
+                      kwargs={'product_class_slug': self.pclass.slug})
         page = self.get(url)
 
         product_form = page.form
