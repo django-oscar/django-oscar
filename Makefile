@@ -99,6 +99,7 @@ css:
 	lessc oscar/static/oscar/less/styles.less > oscar/static/oscar/css/styles.css
 	lessc oscar/static/oscar/less/responsive.less > oscar/static/oscar/css/responsive.css
 	lessc oscar/static/oscar/less/dashboard.less > oscar/static/oscar/css/dashboard.css
+	lessc oscar/static/oscar/less/bootstrap/bootstrap.less > oscar/static/oscar/css/bootstrap.css
 
 demo_css:
 	# Compile CSS for demo site
