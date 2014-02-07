@@ -129,27 +129,25 @@ class TestUserAddress(TestCase):
         self.assertIsNone(sa.id)
 
     def test_populated_shipping_address_has_same_summary_user_address(self):
-        a = models.UserAddress(
-            first_name=" Terry  ",
-            last_name='Barrington',
-            line1="  75 Smith Road  ",
-            postcode="  n4 8ty",
-            country=self.country)
+        a = UserAddressFactory.create(country=self.country,
+            user=self.user)
         a.clean()
         sa = ShippingAddress()
         a.populate_alternative_model(sa)
         self.assertEqual(sa.summary, a.summary)
 
     def test_summary_is_property(self):
-        a = models.UserAddress(
+        a = UserAddressFactory.create(title='', 
+            line4='',
             first_name=" Terry  ",
             last_name='Barrington',
             line1="  75 Smith Road  ",
             postcode="  n4 8ty",
-            country=self.country)
+            country=self.country,
+            user=self.user)
         a.clean()
         self.assertEqual(
-            u"Terry Barrington, 75 Smith Road, N4 8TY, UNITED KINGDOM",
+            "Terry Barrington, 75 Smith Road, N4 8TY, UNITED KINGDOM",
             a.summary)
 
 VALID_POSTCODES = [
