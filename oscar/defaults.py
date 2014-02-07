@@ -203,10 +203,16 @@ OSCAR_SEARCH_FACETS = {
             'name': _('Type'),
             'field': 'product_class'
         },
-        #'rating': {
-        #    'name': _('Rating'),
-        #    'field': 'rating'
-        #}
+        'rating': {
+            'name': _('Rating'),
+            'field': 'rating',
+            # You can specify an 'options' element that will be passed to the
+            # SearchQuerySet.facet() call.  It's hard to get 'missing' to work
+            # correctly though as of Solr's hilarious syntax for selecting
+            # items without a specific facet:
+            # http://wiki.apache.org/solr/SimpleFacetParameters#facet.method
+            # 'options': {'missing': 'true'}
+        }
     },
     'queries': {
         'price_range': {
@@ -220,7 +226,7 @@ OSCAR_SEARCH_FACETS = {
                 (_('40 to 60'), '[40 TO 60]'),
                 (_('60+'), '[60 TO *]'),
             ]
-        }
+        },
     }
 }
 

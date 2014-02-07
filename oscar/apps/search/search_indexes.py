@@ -1,7 +1,7 @@
-from oscar.core.loading import get_model
 from haystack import indexes
+from django.utils.translation import ugettext_lazy as _
 
-from oscar.core.loading import get_class
+from oscar.core.loading import get_model, get_class
 
 # Load default strategy (without a user/request)
 Selector = get_class('partner.strategy', 'Selector')
