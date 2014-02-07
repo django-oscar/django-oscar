@@ -21,7 +21,7 @@ class TestUserAddress(TestCase):
             iso_3166_1_a2='GB', name="UNITED KINGDOM")
 
     def test_uses_title_firstname_and_lastname_in_salutation(self):
-        a = UserAddressFactory.build()
+        a = UserAddressFactory.create()
         self.assertEqual("Dr Barry Barrington", a.salutation)
 
     def test_strips_whitespace_from_salutation(self):
