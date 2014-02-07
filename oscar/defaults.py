@@ -215,7 +215,7 @@ OSCAR_SEARCH_FACETS = {
             'queries': [
                 # This is a list of (name, query) tuples where the name will
                 # be displayed on the front-end.
-                (_('0 to 40'), '[0 TO 20]'),
+                (_('0 to 20'), '[0 TO 20]'),
                 (_('20 to 40'), '[20 TO 40]'),
                 (_('40 to 60'), '[40 TO 60]'),
                 (_('60+'), '[60 TO *]'),
