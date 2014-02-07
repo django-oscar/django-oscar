@@ -33,8 +33,7 @@ var oscar = (function(o, $) {
             };
             o.dashboard.options = $.extend(defaults, options);
 
-            o.dashboard.initDatePickers();
-            o.dashboard.initWYSIWYG();
+            o.dashboard.initWidgets();
 
             $('.scroll-pane').jScrollPane();
 
@@ -55,6 +54,14 @@ var oscar = (function(o, $) {
               $('[data-spy="affix"] a[href="#' + productErrorListener + '"]').append('<i class="icon-info-sign pull-right"></i>');
             });
 
+            o.dashboard.filereader.init();
+        },
+        initWidgets: function() {
+            o.dashboard.initDatePickers();
+            o.dashboard.initWYSIWYG();
+            o.dashboard.initSelects();
+        },
+        initSelects: function() {
             // Adds type/search for select fields
             $('.form-stacked select').css('width', '95%');
             $('.form-inline select').css('width', '300px');
@@ -103,8 +110,6 @@ var oscar = (function(o, $) {
                 }
                 $(e).select2(opts);
             });
-
-            o.dashboard.filereader.init();
         },
         initDatePickers: function() {
             // Use datepicker for all inputs that have 'date' or 'datetime' in the name
