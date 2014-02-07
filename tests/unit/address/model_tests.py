@@ -121,12 +121,8 @@ class TestUserAddress(TestCase):
         self.assertEqual(a1.generate_hash(), a2.generate_hash())
 
     def test_populate_shipping_address_doesnt_set_id(self):
-        a = models.UserAddress(
-            first_name=" Terry  ",
-            last_name='Barrington',
-            line1="  75 Smith Road  ",
-            postcode="  n4 8ty",
-            country=self.country)
+        a = UserAddressFactory.create(country=self.country,
+            user=self.user)
         a.clean()
         sa = ShippingAddress()
         a.populate_alternative_model(sa)
