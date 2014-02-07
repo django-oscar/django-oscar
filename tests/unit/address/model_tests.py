@@ -58,8 +58,7 @@ class TestUserAddress(TestCase):
         self.assertTrue(hash is not None)
 
     def test_strips_whitespace_in_name_property(self):
-        a = models.UserAddress(
-            last_name='Barrington')
+        a = UserAddressFactory.create(first_name='', last_name='Barrington')
         self.assertEqual("Barrington", a.name)
 
     def test_uses_city_as_an_alias_of_line4(self):
