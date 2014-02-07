@@ -66,11 +66,7 @@ class TestUserAddress(TestCase):
         self.assertEqual('London', a.city)
 
     def test_converts_postcode_to_uppercase_when_cleaning(self):
-        address = models.UserAddress(
-            last_name='Barrington',
-            line1="75 Smith Road",
-            postcode="n4 8ty",
-            country=self.country)
+        address = UserAddressFactory.create(postcode="n4 8ty")
         address.clean()
         self.assertEqual("N4 8TY", address.postcode)
 
