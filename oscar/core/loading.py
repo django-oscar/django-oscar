@@ -3,15 +3,8 @@ import traceback
 
 from django.conf import settings
 from django.db.models import get_model as django_get_model
-from core.exceptions import OscarImportError
-
-
-class AppNotFoundError(Exception):
-    pass
-
-
-class ClassNotFoundError(Exception):
-    pass
+from core.exceptions import (ModuleNotFoundError, ClassNotFoundError,
+                             AppNotFoundError)
 
 
 def get_class(module_label, classname):
@@ -96,10 +89,10 @@ def get_classes(module_label, classnames):
         # The entry is obviously an Oscar one, we don't import again
         local_module = None
 
-    if oscar_module == local_module == None:
+    if oscar_module is local_module is None:
         # This intentionally doesn't rise an ImportError, because it would get
         # masked by in some circular import scenarios.
-        raise OscarImportError(
+        raise ModuleNotFoundError(
             "The module with label '%s' could not be imported. This either"
             "means that it indeed does not exist, or you might have a problem"
             " with a circular import." % module_label
