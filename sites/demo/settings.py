@@ -36,10 +36,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'oscar_demo',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
-        'PORT': '',
+        'USER': 'm',
     },
 }
 
@@ -136,6 +133,7 @@ MIDDLEWARE_CLASSES = (
     'oscar.apps.basket.middleware.BasketMiddleware',
 )
 
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
 INTERNAL_IPS = ('127.0.0.1',)
 
 ROOT_URLCONF = 'urls'

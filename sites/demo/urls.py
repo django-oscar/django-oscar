@@ -35,5 +35,9 @@ urlpatterns = patterns('',
 )
 
 if settings.DEBUG:
+    import debug_toolbar
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
+    urlpatterns += patterns('',
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    )
