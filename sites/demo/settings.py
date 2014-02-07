@@ -135,6 +135,10 @@ MIDDLEWARE_CLASSES = (
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 INTERNAL_IPS = ('127.0.0.1',)
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False
+}
+
 
 ROOT_URLCONF = 'urls'
 
@@ -271,10 +275,6 @@ HAYSTACK_CONNECTIONS = {
         'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
         'URL': 'http://127.0.0.1:8983/solr',
     },
-}
-
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False
 }
 
 AUTH_PROFILE_MODULE = 'user.Profile'
