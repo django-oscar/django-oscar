@@ -62,11 +62,7 @@ class TestUserAddress(TestCase):
         self.assertEqual("Barrington", a.name)
 
     def test_uses_city_as_an_alias_of_line4(self):
-        a = models.UserAddress(
-            last_name='Barrington',
-            line1="75 Smith Road",
-            line4="London",
-            postcode="n4 8ty")
+        a = UserAddressFactory.create(line4='London')
         self.assertEqual('London', a.city)
 
     def test_converts_postcode_to_uppercase_when_cleaning(self):
