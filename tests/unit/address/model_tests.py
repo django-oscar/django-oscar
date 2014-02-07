@@ -33,14 +33,8 @@ class TestUserAddress(TestCase):
         self.assertEqual("Barry Barrington", a.name)
 
     def test_has_summary_property(self):
-        a = models.UserAddress(
-            title="Dr",
-            first_name="Barry",
-            last_name='Barrington',
-            line1="1 King Road",
-            line4="London",
-            postcode="SW1 9RE")
-        self.assertEqual("Dr Barry Barrington, 1 King Road, London, SW1 9RE",
+        a = UserAddressFactory.create()
+        self.assertEqual("Dr Barry Barrington, 1 King Road, London, SW1 9RE, UNITED KINGDOM",
                           a.summary)
 
     def test_summary_includes_country(self):
