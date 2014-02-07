@@ -39,16 +39,7 @@ class TestUserAddress(TestCase):
                           a.summary)
 
     def test_summary_includes_country(self):
-        c = models.Country(
-            pk=1, iso_3166_1_a2="GB", name="UNITED KINGDOM")
-        a = models.UserAddress(
-            title="Dr",
-            first_name="Barry",
-            last_name='Barrington',
-            line1="1 King Road",
-            line4="London",
-            postcode="SW1 9RE",
-            country=c)
+        a = UserAddressFactory.create()
         self.assertEqual(
             "Dr Barry Barrington, 1 King Road, London, SW1 9RE, UNITED KINGDOM",
             a.summary)
