@@ -77,12 +77,11 @@ class TestUserAddress(TestCase):
         self.assertEqual("75 Smith Road", a.line1)
 
     def test_active_address_fields_skips_whitespace_only_fields(self):
-        a = models.UserAddress(
-            first_name="   ",
+        a = UserAddressFactory.create(first_name='   ',
             last_name='Barrington',
-            line1="  75 Smith Road  ",
-            postcode="  n4 8ty",
-            country=self.country)
+            line1='  75 Smith Road  ',
+            postcode='  n4 8ty',
+            title='')
         active_fields = a.active_address_fields()
         self.assertEqual("Barrington", active_fields[0])
 
