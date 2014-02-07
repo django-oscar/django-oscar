@@ -71,11 +71,7 @@ class TestUserAddress(TestCase):
         self.assertEqual("N4 8TY", address.postcode)
 
     def test_strips_whitespace_when_cleaning(self):
-        a = models.UserAddress(
-            last_name='Barrington',
-            line1="  75 Smith Road  ",
-            postcode="  n4 8ty",
-            country=self.country)
+        a = UserAddressFactory.create(line1="  75 Smith Road  ", postcode="  n4 8ty")
         a.clean()
         self.assertEqual("N4 8TY", a.postcode)
         self.assertEqual("75 Smith Road", a.line1)
