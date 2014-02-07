@@ -57,14 +57,13 @@ class Importer(object):
                                         % (self._field, lookup_value))
                     stats['num_skipped'] += 1
                 except IOError as e:
+                    stats['num_invalid'] += 1
                     raise ImageImportError(_('%(filename)s is not a valid'
                                              ' image (%(error)s)')
                                            % {'filename': filename,
                                               'error': e})
-                    stats['num_invalid'] += 1
                 except FieldError as e:
                     raise ImageImportError(e)
-                    self._process_image(image_dir, filename)
             if image_dir != dirname:
                 shutil.rmtree(image_dir)
         else:

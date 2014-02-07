@@ -46,7 +46,7 @@ demo: install
 	sites/demo/manage.py create_products --class=Books sites/demo/fixtures/books.csv
 	sites/demo/manage.py create_products --class=Downloads sites/demo/fixtures/downloads.csv
 	sites/demo/manage.py create_products --class=Clothing sites/demo/fixtures/clothing.csv
-	sites/demo/manage.py import_product_images sites/demo/fixtures/images/
+	sites/demo/manage.py oscar_import_catalogue_images sites/demo/fixtures/images.tar.gz
 	# Update search index
 	sites/demo/manage.py clear_index --noinput
 	sites/demo/manage.py update_index catalogue
