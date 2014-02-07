@@ -8,7 +8,7 @@ from oscar.apps.order.models import ShippingAddress
 from oscar.core.compat import get_user_model
 from oscar.apps.address import models
 
-from .factories import UserAddressFactory
+from .factories import UserAddressFactory, CountryFactory
 
 
 User = get_user_model()
@@ -33,8 +33,9 @@ class TestUserAddress(TestCase):
         self.assertEqual("Barry Barrington", a.name)
 
     def test_has_summary_property(self):
-        a = UserAddressFactory.create()
-        self.assertEqual("Dr Barry Barrington, 1 King Road, London, SW1 9RE, UNITED KINGDOM",
+        c = CountryFactory.build(name='')
+        a = UserAddressFactory.build(country=c)
+        self.assertEqual("Dr Barry Barrington, 1 King Road, London, SW1 9RE, ",
                           a.summary)
 
     def test_summary_includes_country(self):
