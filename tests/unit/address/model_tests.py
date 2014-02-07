@@ -45,13 +45,7 @@ class TestUserAddress(TestCase):
             a.summary)
 
     def test_can_be_hashed(self):
-        a = models.UserAddress(
-            title="Dr",
-            first_name="Barry",
-            last_name='Barrington',
-            line1="1 King Road",
-            line4="London",
-            postcode="SW1 9RE")
+        a = UserAddressFactory.create()
         hash = a.generate_hash()
         self.assertTrue(hash is not None)
 
