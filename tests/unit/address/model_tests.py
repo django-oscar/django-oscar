@@ -25,14 +25,11 @@ class TestUserAddress(TestCase):
         self.assertEqual("Dr Barry Barrington", a.salutation)
 
     def test_strips_whitespace_from_salutation(self):
-        a = models.UserAddress(last_name='Barrington')
+        a = UserAddressFactory.create(title='', first_name='', last_name='Barrington')
         self.assertEqual("Barrington", a.salutation)
 
     def test_has_name_property(self):
-        a = models.UserAddress(
-            title="Dr",
-            first_name="Barry",
-            last_name='Barrington')
+        a = UserAddressFactory.create()
         self.assertEqual("Barry Barrington", a.name)
 
     def test_has_summary_property(self):
