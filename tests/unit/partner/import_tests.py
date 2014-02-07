@@ -4,7 +4,7 @@ from django.test import TestCase
 import logging
 
 from oscar.apps.partner.utils import CatalogueImporter
-from oscar.apps.partner.exceptions import ImportError
+from oscar.apps.partner.exceptions import ImportingError
 from oscar.apps.catalogue.models import ProductClass, Product
 from oscar.apps.partner.models import Partner, StockRecord
 from oscar.test.factories import create_product
@@ -29,17 +29,17 @@ class CommandEdgeCasesTest(TestCase):
 
     def test_sending_no_file_argument_raises_exception(self):
         self.importer.afile = None
-        with self.assertRaises(ImportError):
+        with self.assertRaises(ImportingError):
             self.importer.handle()
 
     def test_sending_directory_as_file_raises_exception(self):
         self.importer.afile = "/tmp"
-        with self.assertRaises(ImportError):
+        with self.assertRaises(ImportingError):
             self.importer.handle()
 
     def test_importing_nonexistant_file_raises_exception(self):
         self.importer.afile = "/tmp/catalogue-import.zgvsfsdfsd"
-        with self.assertRaises(ImportError):
+        with self.assertRaises(ImportingError):
             self.importer.handle()
 
 
