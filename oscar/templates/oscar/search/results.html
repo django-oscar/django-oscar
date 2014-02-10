@@ -56,12 +56,16 @@
             {% endfor %}
             {{ search_form.q }}
         </div>
-        {% blocktrans with count=paginator.count %}
-            Found <strong>{{ count }}</strong> results.
-        {% endblocktrans %}
-        <div class="pull-right">
-            {% include "partials/form_field.html" with field=search_form.sort_by %}
-        </div>
+        {% if paginator.count %}
+            {% blocktrans with start=page.start_index end=page.end_index total=paginator.count %}
+                Showing <strong>{{ start }}</strong> to <strong>{{ end }}</strong> of <strong>{{ total }}</strong> results.
+            {% endblocktrans %}
+            <div class="pull-right">
+                {% include "partials/form_field.html" with field=search_form.sort_by %}
+            </div>
+        {% else %}
+            <p>{% trans "Found <strong>0</strong> results." %}</p>
+        {% endif %}
     </form>
 
     {% if page.object_list %}
@@ -72,11 +76,9 @@
                         <li class="span3 {% if forloop.counter0|divisibleby:"4" %}no-margin{% endif %}">{% render_product result.object %}</li>
                     {% endfor %}
                 </ol>
-                {% include "search/partials/pagination.html" %}
+                {% include "partials/pagination.html" with page_obj=page %}
             </div>
         </section>
-    {% else %}
-        <p>{% trans 'No search results found.' %}</p>
     {% endif %}
 
 {% endblock %}
