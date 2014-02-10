@@ -18,8 +18,13 @@ Oscar 0.7 has experimental support for Python 3.
 What's new in Oscar 0.7?
 ========================
 
-Search adjustments
-~~~~~~~~~~~~~~~~~~
+Search improvements
+~~~~~~~~~~~~~~~~~~~
+
+* Search results can be now be sorted
+
+* If you're search backend supports it, spelling suggestions will be shown if
+  the search term doesn't lead to any results.
 
 * Only products are returned by the core search view.  Other content types in
   your search index are filtered out (`#370`_).
