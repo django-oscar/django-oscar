@@ -372,9 +372,6 @@ from oscar.defaults import *
 
 OSCAR_SHOP_TAGLINE = 'Sandbox'
 
-# Enter Google Analytics ID for the tracking to be included in the templates
-GOOGLE_ANALYTICS_ID = 'UA-45363517-3'
-
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = True
 
