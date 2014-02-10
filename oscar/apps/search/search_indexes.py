@@ -1,5 +1,5 @@
 from haystack import indexes
-from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
 from oscar.core.loading import get_model, get_class
 
@@ -82,7 +82,8 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
         # We use Haystack's dynamic fields to ensure that the title field used
         # for sorting is of type "string'.
-        prepared_data['title_s'] = prepared_data['title']
+        if 'solr' in settings.HAYSTACK_CONNECTIONS['default']['ENGINE']:
+            prepared_data['title_s'] = prepared_data['title']
 
         # Use title to for spelling suggestions
         prepared_data['suggestions'] = prepared_data['text']

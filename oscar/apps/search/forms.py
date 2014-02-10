@@ -1,5 +1,6 @@
 from django import forms
 from django.forms.widgets import Input
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from haystack.forms import FacetedSearchForm
 
@@ -33,14 +34,14 @@ class SearchForm(FacetedSearchForm):
     TITLE_A_TO_Z = "title-asc"
     TITLE_Z_TO_A = "title-desc"
 
-    SORT_BY_CHOICES = (
+    SORT_BY_CHOICES = [
         (RELEVANCY, _("Relevancy")),
         (NEWEST, _("Newest")),
         (PRICE_HIGH_TO_LOW, _("Price high To low")),
         (PRICE_LOW_TO_HIGH, _("Price low To high")),
         (TITLE_A_TO_Z, _("Title A to Z")),
         (TITLE_Z_TO_A, _("Title Z to A")),
-    )
+    ]
 
     # Map query params to sorting fields.  Note relevancy isn't included here
     # as we assume results are returned in relevancy order in the absence of an
@@ -52,6 +53,10 @@ class SearchForm(FacetedSearchForm):
         TITLE_A_TO_Z: 'title_s',
         TITLE_Z_TO_A: '-title_s',
     }
+    # Non Solr backends don't support dynamic fields so we just sort on title
+    if 'solr' not in settings.HAYSTACK_CONNECTIONS['default']['ENGINE']:
+        SORT_BY_MAP[TITLE_A_TO_Z] = 'title'
+        SORT_BY_MAP[TITLE_Z_TO_A] = '-title'
 
     sort_by = forms.ChoiceField(
         choices=SORT_BY_CHOICES, widget=forms.Select(), required=False)
