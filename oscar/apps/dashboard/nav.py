@@ -35,7 +35,14 @@ class Node(object):
     def filter(self, user):
         if not self.is_visible(user):
             return None
-        node = Node(self.label, self.url_name, self.access_fn)
+        node = Node(
+            label=self.label,
+            url_name=self.url_name,
+            url_args=self.url_args,
+            url_kwargs=self.url_kwargs,
+            access_fn=self.access_fn,
+            icon=self.icon,
+        )
         for child in self.children:
             if child.is_visible(user):
                 node.add_child(child)
@@ -54,7 +61,7 @@ def get_nodes(user):
     for node in all_nodes:
         filtered_node = node.filter(user)
         if filtered_node:
-            visible_nodes.append(node)
+            visible_nodes.append(filtered_node)
     return visible_nodes
 
 
