@@ -56,6 +56,9 @@
             {% endfor %}
             {{ search_form.q }}
         </div>
+        {% blocktrans with count=paginator.count %}
+            Found <strong>{{ count }}</strong> results.
+        {% endblocktrans %}
         <div class="pull-right">
             {% include "partials/form_field.html" with field=search_form.sort_by %}
         </div>
