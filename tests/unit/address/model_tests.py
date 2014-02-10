@@ -17,16 +17,16 @@ User = get_user_model()
 class TestUserAddress(TestCase):
 
     def setUp(self):
-        self.country = CountryFactory.create()
-        self.user = UserFactory.create()
+        self.country = CountryFactory.build()
+        self.user = UserFactory.build()
 
     def test_uses_title_firstname_and_lastname_in_salutation(self):
-        a = UserAddressFactory.create(country=self.country,
+        a = UserAddressFactory.build(country=self.country,
                 user=self.user)
         self.assertEqual("Dr Barry Barrington", a.salutation)
 
     def test_strips_whitespace_from_salutation(self):
-        a = UserAddressFactory.create(title='', 
+        a = UserAddressFactory.build(title='', 
             first_name='', 
             last_name='Barrington',
             country=self.country,
@@ -34,7 +34,7 @@ class TestUserAddress(TestCase):
         self.assertEqual("Barrington", a.salutation)
 
     def test_has_name_property(self):
-        a = UserAddressFactory.create(country=self.country,
+        a = UserAddressFactory.build(country=self.country,
                 user=self.user)
         self.assertEqual("Barry Barrington", a.name)
 
@@ -45,20 +45,20 @@ class TestUserAddress(TestCase):
                           a.summary)
 
     def test_summary_includes_country(self):
-        a = UserAddressFactory.create(country=self.country,
+        a = UserAddressFactory.build(country=self.country,
                 user=self.user)
         self.assertEqual(
             "Dr Barry Barrington, 1 King Road, London, SW1 9RE, UNITED KINGDOM",
             a.summary)
 
     def test_can_be_hashed(self):
-        a = UserAddressFactory.create(country=self.country,
+        a = UserAddressFactory.build(country=self.country,
             user=self.user)
         hash = a.generate_hash()
         self.assertTrue(hash is not None)
 
     def test_can_be_hashed_including_non_ascii(self):
-        a = UserAddressFactory.create(first_name=u"\u0141ukasz Smith",
+        a = UserAddressFactory.build(first_name=u"\u0141ukasz Smith",
                 last_name=u'Smith',
                 line1=u"75 Smith Road",
                 postcode=u"n4 8ty",
@@ -68,27 +68,27 @@ class TestUserAddress(TestCase):
         self.assertTrue(hash is not None)
 
     def test_strips_whitespace_in_name_property(self):
-        a = UserAddressFactory.create(first_name='', 
+        a = UserAddressFactory.build(first_name='', 
             last_name='Barrington',
             country=self.country,
             user=self.user)
         self.assertEqual("Barrington", a.name)
 
     def test_uses_city_as_an_alias_of_line4(self):
-        a = UserAddressFactory.create(line4='London',
+        a = UserAddressFactory.build(line4='London',
             country=self.country,
             user=self.user)
         self.assertEqual('London', a.city)
 
     def test_converts_postcode_to_uppercase_when_cleaning(self):
-        address = UserAddressFactory.create(postcode="n4 8ty",
+        address = UserAddressFactory.build(postcode="n4 8ty",
             country=self.country,
             user=self.user)
         address.clean()
         self.assertEqual("N4 8TY", address.postcode)
 
     def test_strips_whitespace_when_cleaning(self):
-        a = UserAddressFactory.create(line1="  75 Smith Road  ", 
+        a = UserAddressFactory.build(line1="  75 Smith Road  ", 
             postcode="  n4 8ty",
             country=self.country,
             user=self.user)
@@ -97,7 +97,7 @@ class TestUserAddress(TestCase):
         self.assertEqual("75 Smith Road", a.line1)
 
     def test_active_address_fields_skips_whitespace_only_fields(self):
-        a = UserAddressFactory.create(first_name='   ',
+        a = UserAddressFactory.build(first_name='   ',
             last_name='Barrington',
             line1='  75 Smith Road  ',
             postcode='  n4 8ty',
@@ -108,12 +108,12 @@ class TestUserAddress(TestCase):
         self.assertEqual("Barrington", active_fields[0])
 
     def test_ignores_whitespace_when_hashing(self):
-        a1 = UserAddressFactory.create(first_name='Terry',
+        a1 = UserAddressFactory.build(first_name='Terry',
             last_name='Barrington',
             country=self.country,
             user=self.user)
         a1.clean()
-        a2 = UserAddressFactory.create(first_name='   Terry  ',
+        a2 = UserAddressFactory.build(first_name='   Terry  ',
             last_name='     Barrington',
             country=self.country,
             user=self.user)
@@ -121,7 +121,7 @@ class TestUserAddress(TestCase):
         self.assertEqual(a1.generate_hash(), a2.generate_hash())
 
     def test_populate_shipping_address_doesnt_set_id(self):
-        a = UserAddressFactory.create(country=self.country,
+        a = UserAddressFactory.build(country=self.country,
             user=self.user)
         a.clean()
         sa = ShippingAddress()
@@ -129,7 +129,7 @@ class TestUserAddress(TestCase):
         self.assertIsNone(sa.id)
 
     def test_populated_shipping_address_has_same_summary_user_address(self):
-        a = UserAddressFactory.create(country=self.country,
+        a = UserAddressFactory.build(country=self.country,
             user=self.user)
         a.clean()
         sa = ShippingAddress()
@@ -137,7 +137,7 @@ class TestUserAddress(TestCase):
         self.assertEqual(sa.summary, a.summary)
 
     def test_summary_is_property(self):
-        a = UserAddressFactory.create(title='', 
+        a = UserAddressFactory.build(title='', 
             line4='',
             first_name=" Terry  ",
             last_name='Barrington',
