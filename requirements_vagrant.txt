@@ -1,2 +1,2 @@
-MySQL-python==1.2.4c1
+MySQL-python==1.2.5
 psycopg2==2.4.5
