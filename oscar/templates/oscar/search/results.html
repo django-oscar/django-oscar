@@ -44,9 +44,6 @@
 
 {% block content %}
 
-    {% if suggestion %}
-        {% trans 'Did you mean' %} <a href="{% url 'search:search' %}?q={{ suggestion }}">{{ suggestion }}</a>?
-    {% endif %}
 
     <form method="get" action="." class="form-horizontal">
         {# Render other search params in a hidden block #}
@@ -64,9 +61,18 @@
                 {% include "partials/form_field.html" with field=search_form.sort_by %}
             </div>
         {% else %}
-            <p>{% trans "Found <strong>0</strong> results." %}</p>
+            <p>
+                {% trans "Found <strong>0</strong> results." %}
+                {% if suggestion %}
+                    {% url 'search:search' as search_url %}
+                    {% blocktrans %}
+                        Did you mean <a href="{{ search_url }}?q={{ suggestion }}">"{{ suggestion }}"</a>?
+                    {% endblocktrans %}
+                {% endif %}
+            </p>
         {% endif %}
     </form>
+
 
     {% if page.object_list %}
         <section>

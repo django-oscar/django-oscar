@@ -24,6 +24,9 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     num_in_stock = indexes.IntegerField(null=True, faceted=True)
     rating = indexes.IntegerField(null=True, faceted=True)
 
+    # Spelling suggestions
+    suggestions = indexes.FacetCharField()
+
     date_created = indexes.DateTimeField(model_attr='date_created')
     date_updated = indexes.DateTimeField(model_attr='date_updated')
 
@@ -80,6 +83,9 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         # We use Haystack's dynamic fields to ensure that the title field used
         # for sorting is of type "string'.
         prepared_data['title_s'] = prepared_data['title']
+
+        # Use title to for spelling suggestions
+        prepared_data['suggestions'] = prepared_data['text']
 
         return prepared_data
 
