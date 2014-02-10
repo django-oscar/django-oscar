@@ -107,8 +107,11 @@ and append Oscar's core apps:
         'compressor',
     ] + get_core_apps()
 
+    SITE_ID = 1
+
 Note that Oscar requires ``django.contrib.flatpages`` which isn't
-included by default.
+included by default. ``flatpages`` also requires ``django.contrib.sites``,
+which won't be enabled by default when using Django 1.6 or upwards.
 
 Next, add ``django.contrib.flatpages.middleware.FlatpageFallbackMiddleware`` to
 your ``MIDDLEWARE_CLASSES`` setting:
