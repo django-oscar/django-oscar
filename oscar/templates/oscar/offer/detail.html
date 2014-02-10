@@ -15,7 +15,7 @@
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="#">{% trans "Offers" %}</a>
+        <a href="{% url 'offer:list' %}">{% trans "Offers" %}</a>
         <span class="divider">/</span>
     </li>
     <li class="active">{{ offer.name }}</li>
