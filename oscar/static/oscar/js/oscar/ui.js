@@ -20,6 +20,15 @@ var oscar = (function(o, $) {
         }
     };
 
+    o.search = {
+        init: function() {
+            // Auto-submit (hidden) search form when selecting a new sort-by option
+            $('#id_sort_by').on('change', function() {
+                $(this).closest('form').submit();
+            });
+        }
+    };
+
     // This block may need removing after reworking of promotions app
     o.promotions = {
         init: function() {

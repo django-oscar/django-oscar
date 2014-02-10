@@ -27,7 +27,7 @@ class FacetedSearchView(views.FacetedSearchView):
         extra = super(FacetedSearchView, self).extra_context()
 
         # Show suggestion no matter what.  Haystack 2.1 only shows a suggestion
-        # if there are some results, which seems a bit weird to me
+        # if there are some results, which seems a bit weird to me.
         if self.results.query.backend.include_spelling:
             suggestion = self.form.get_suggestion()
             if suggestion != self.query:
@@ -40,6 +40,10 @@ class FacetedSearchView(views.FacetedSearchView):
             has_facets = any([len(data['results']) for
                               data in extra['facet_data'].values()])
             extra['has_facets'] = has_facets
+
+        # Pass list of selected facets so they can be included in the sorting
+        # form.
+        extra['selected_facets'] = self.request.GET.getlist('selected_facets')
 
         return extra
 

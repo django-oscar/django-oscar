@@ -74,6 +74,15 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
             result = strategy.fetch_for_product(obj)
             return result.stockrecord.net_stock_level
 
+    def prepare(self, obj):
+        prepared_data = super(ProductIndex, self).prepare(obj)
+
+        # We use Haystack's dynamic fields to ensure that the title field used
+        # for sorting is of type "string'.
+        prepared_data['title_s'] = prepared_data['title']
+
+        return prepared_data
+
     def get_updated_field(self):
         """
         Used to specify the field used to determine if an object has been
