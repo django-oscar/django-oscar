@@ -43,7 +43,7 @@ setup(name='django-oscar',
           # We use the ModelFormSetView from django-extra-views for the basket
           # page
           'django-extra-views>=0.2,<0.7',
-          'django-haystack>=2.0.0',
+          'django-haystack>=2.1.0',
           # Treebeard is used for categories
           'django-treebeard==2.0b2',
           # Sorl is used as the default thumbnailer

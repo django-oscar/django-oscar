@@ -43,6 +43,8 @@ Minor changes
   :class:`~oscar.apps.dashboard.catalogue.views.ProductCreateUpdateView` has
   been simplified and now easily allows adding further formsets.
 
+* Increased required version of Django Haystack to 2.1
+
 Backwards incompatible changes in 0.7
 =====================================
 
