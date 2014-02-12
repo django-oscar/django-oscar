@@ -1,10 +1,10 @@
+import six
+from six.moves import map
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
-from django.utils import six
 from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
-from six.moves import map
 
 
 def get_user_model():

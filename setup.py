@@ -43,6 +43,7 @@ setup(name='django-oscar',
           # We use the ModelFormSetView from django-extra-views for the basket
           # page
           'django-extra-views>=0.2,<0.7',
+          # Search support
           'django-haystack>=2.1.0',
           # Treebeard is used for categories
           'django-treebeard==2.0b2',
@@ -58,7 +59,9 @@ setup(name='django-oscar',
           # For manipulating search URLs
           'purl>=0.7',
           # For phone number field
-          'phonenumbers==5.9.2'
+          'phonenumbers==5.9.2',
+          # Python 2 & 3 compatibility helper
+          'six>=1.5.2',
       ],
       # tarballs for unreleased packages
       dependency_links = [

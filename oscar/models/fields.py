@@ -1,7 +1,9 @@
+import six
+
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.fields import CharField, DecimalField, Field
 from django.db.models import SubfieldBase
-from django.utils import six
+from django.utils import six as django_six
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import MaxLengthValidator
 
@@ -62,12 +64,13 @@ class PositiveDecimalField(DecimalField):
         return super(PositiveDecimalField, self).formfield(min_value=0)
 
 
-# necessary for to_python to be called
-@six.add_metaclass(SubfieldBase)
-class UppercaseCharField(CharField):
+class UppercaseCharField(django_six.with_metaclass(SubfieldBase, CharField)):
     """
     A simple subclass of ``django.db.models.fields.CharField`` that
     restricts all text to be uppercase.
+
+    Defined with the with_metaclass helper so that to_python is called
+    https://docs.djangoproject.com/en/1.6/howto/custom-model-fields/#the-subfieldbase-metaclass  # NOQA
     """
 
     def to_python(self, value):
