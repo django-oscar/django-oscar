@@ -234,9 +234,9 @@ if hasattr(settings, 'AUTH_PROFILE_MODULE'):
 
     class UserAndProfileForm(forms.ModelForm):
         first_name = forms.CharField(
-            label=_('First name'), max_length=128, required=False)
+            label=_('First name'), max_length=30, required=False)
         last_name = forms.CharField(
-            label=_('Last name'), max_length=128, required=False)
+            label=_('Last name'), max_length=30, required=False)
         email = forms.EmailField(label=_('Email address'))
 
         # Fields from user model
