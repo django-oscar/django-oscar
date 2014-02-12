@@ -1,12 +1,11 @@
 from django import forms
 from django.contrib.auth.models import Permission
-from django.core import validators
 from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.customer.forms import (EmailUserCreationForm,
-                                       CommonPasswordValidator)
+from oscar.apps.customer.forms import EmailUserCreationForm
 from oscar.core.compat import get_user_model
+from oscar.core.validators import password_validators
 
 User = get_user_model()
 Partner = get_model('partner', 'Partner')
@@ -66,8 +65,7 @@ class ExistingUserForm(forms.ModelForm):
         label=_('Password'),
         widget=forms.PasswordInput,
         required=False,
-        validators=[validators.MinLengthValidator(6),
-                    CommonPasswordValidator()])
+        validators=password_validators)
     password2 = forms.CharField(
         required=False,
         label=_('Confirm Password'),
