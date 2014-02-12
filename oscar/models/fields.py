@@ -1,5 +1,3 @@
-from six import add_metaclass
-
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.fields import CharField, DecimalField, Field
 from django.db.models import SubfieldBase
@@ -65,7 +63,7 @@ class PositiveDecimalField(DecimalField):
 
 
 # necessary for to_python to be called
-@add_metaclass(SubfieldBase)
+@six.add_metaclass(SubfieldBase)
 class UppercaseCharField(CharField):
     """
     A simple subclass of ``django.db.models.fields.CharField`` that
