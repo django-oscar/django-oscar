@@ -57,12 +57,14 @@ class CustomerApplication(Application):
     def get_urls(self):
         urls = [
             # Login, logout and register doesn't require login
-            url(r'^$', login_required(self.summary_view.as_view()),
-                name='summary'),
             url(r'^login/$', self.login_view.as_view(), name='login'),
             url(r'^logout/$', self.logout_view.as_view(), name='logout'),
             url(r'^register/$', self.register_view.as_view(), name='register'),
-            url(r'^change-password/$', self.change_password_view.as_view(),
+
+            url(r'^$', login_required(self.summary_view.as_view()),
+                name='summary'),
+            url(r'^change-password/$',
+                login_required(self.change_password_view.as_view()),
                 name='change-password'),
 
             # Profile
