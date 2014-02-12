@@ -6,7 +6,6 @@ from django.conf import settings
 from django.contrib.auth import forms as auth_forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.sites.models import get_current_site
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
 from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
@@ -295,7 +294,7 @@ if Profile:
             self.user = user
             try:
                 instance = Profile.objects.get(user=user)
-            except ObjectDoesNotExist:
+            except Profile.DoesNotExist:
                 # User has no profile, try a blank one
                 instance = Profile(user=user)
             kwargs['instance'] = instance
