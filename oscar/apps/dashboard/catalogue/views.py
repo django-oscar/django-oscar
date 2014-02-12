@@ -36,7 +36,9 @@ from oscar.views.generic import ObjectLookupView
                    'ProductCategoryFormSet',
                    'ProductImageFormSet',
                    'ProductRecommendationFormSet'))
-ProductTable = get_class('dashboard.catalogue.tables', 'ProductTable')
+ProductTable, CategoryTable \
+    = get_classes('dashboard.catalogue.tables',
+                  ('ProductTable', 'CategoryTable'))
 Product = get_model('catalogue', 'Product')
 Category = get_model('catalogue', 'Category')
 ProductImage = get_model('catalogue', 'ProductImage')
@@ -396,25 +398,37 @@ class StockAlertListView(generic.ListView):
         return self.model.objects.all()
 
 
-class CategoryListView(generic.TemplateView):
+class CategoryListView(SingleTableMixin, generic.TemplateView):
     template_name = 'dashboard/catalogue/category_list.html'
+    table_class = CategoryTable
+    context_table_name = 'categories'
+
+    def get_queryset(self):
+        return Category.get_root_nodes()
 
     def get_context_data(self, *args, **kwargs):
         ctx = super(CategoryListView, self).get_context_data(*args, **kwargs)
         ctx['child_categories'] = Category.get_root_nodes()
+        ctx['queryset_description'] = _("Categories")
         return ctx
 
 
-class CategoryDetailListView(generic.DetailView):
+class CategoryDetailListView(SingleTableMixin, generic.DetailView):
     template_name = 'dashboard/catalogue/category_list.html'
     model = Category
     context_object_name = 'category'
+    table_class = CategoryTable
+    context_table_name = 'categories'
+
+    def get_table_data(self):
+        return self.object.get_children()
 
     def get_context_data(self, *args, **kwargs):
         ctx = super(CategoryDetailListView, self).get_context_data(*args,
                                                                    **kwargs)
         ctx['child_categories'] = self.object.get_children()
         ctx['ancestors'] = self.object.get_ancestors()
+        ctx['queryset_description'] = _("Categories")
         return ctx
 
 
