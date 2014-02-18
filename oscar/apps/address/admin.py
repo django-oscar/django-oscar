@@ -11,4 +11,4 @@ class CountryAdmin(admin.ModelAdmin):
 
 
 admin.site.register(get_model('address', 'useraddress'), UserAddressAdmin)
-admin.site.register(get_model('address', 'country'))
+admin.site.register(get_model('address', 'country'), CountryAdmin)
