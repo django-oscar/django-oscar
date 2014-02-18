@@ -1,3 +1,4 @@
+from django.core.files.uploadedfile import InMemoryUploadedFile
 import re
 import six
 
@@ -37,15 +38,13 @@ class ImageInput(FileInput):
         If *value* contains no valid image URL an empty string will be provided
         in the context.
         """
-        if value is None:
-            value = ''
-
         final_attrs = self.build_attrs(attrs, type=self.input_type, name=name)
-        if value != '':
-            # Only add the 'value' attribute if a value is non-empty.
-            final_attrs['value'] = force_text(self._format_value(value))
-
-        image_url = final_attrs.get('value', '')
+        if not value or isinstance(value, InMemoryUploadedFile):
+            # can't display images that aren't stored
+            image_url = ''
+        else:
+            image_url = final_attrs['value'] = force_text(
+                self._format_value(value))
 
         return render_to_string(self.template_name, Context({
             'input_attrs': flatatt(final_attrs),
