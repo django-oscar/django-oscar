@@ -76,7 +76,7 @@
 
     {% if page.object_list %}
         <section>
-            <div class="mod">
+            <div>
                 <ol class="row-fluid">
                     {% for result in page.object_list %}
                         <li class="span3 {% if forloop.counter0|divisibleby:"4" %}no-margin{% endif %}">{% render_product result.object %}</li>
