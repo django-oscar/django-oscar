@@ -70,6 +70,12 @@ class ProductSearchForm(forms.Form):
     upc = forms.CharField(max_length=16, required=False, label=_('UPC'))
     title = forms.CharField(max_length=255, required=False, label=_('Title'))
 
+    def clean(self):
+        cleaned_data = super(ProductSearchForm, self).clean()
+        cleaned_data['upc'] = cleaned_data['upc'].strip()
+        cleaned_data['title'] = cleaned_data['title'].strip()
+        return cleaned_data
+
 
 class StockRecordForm(forms.ModelForm):
 
