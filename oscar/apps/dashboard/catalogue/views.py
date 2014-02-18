@@ -146,18 +146,18 @@ class ProductCreateRedirectView(generic.RedirectView):
     def get_product_create_url(self, product_class):
         """ Allow site to provide custom URL """
         return reverse('dashboard:catalogue-product-create',
-                       kwargs={'product_class_id': product_class.id})
+                       kwargs={'product_class_slug': product_class.slug})
 
     def get_invalid_product_class_url(self):
         messages.error(self.request, _("Please choose a product class"))
         return reverse('dashboard:catalogue-product-list')
 
     def get_redirect_url(self, **kwargs):
-        product_class_id = self.request.GET.get('product_class')
-        if product_class_id is None or not product_class_id.isdigit():
+        product_class_slug = self.request.GET.get('product_class')
+        if product_class_slug is None:
             return self.get_invalid_product_class_url()
         try:
-            product_class = ProductClass.objects.get(id=product_class_id)
+            product_class = ProductClass.objects.get(slug=product_class_slug)
         except ProductClass.DoesNotExist:
             return self.get_invalid_product_class_url()
         else:
@@ -203,9 +203,10 @@ class ProductCreateUpdateView(generic.UpdateView):
         self.creating = not 'pk' in self.kwargs
         if self.creating:
             try:
-                product_class_id = self.kwargs.get('product_class_id', None)
+                product_class_slug = self.kwargs.get('product_class_slug',
+                                                     None)
                 self.product_class = ProductClass.objects.get(
-                    id=product_class_id)
+                    slug=product_class_slug)
             except ObjectDoesNotExist:
                 raise Http404
             else:
