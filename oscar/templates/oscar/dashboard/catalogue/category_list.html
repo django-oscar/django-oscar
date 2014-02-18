@@ -47,6 +47,7 @@
                     <th>{% trans "Description" %}</th>
                     <th>{% trans "Number of child categories" %}</th>
                     <th></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -55,6 +56,11 @@
                         <td><a href="{% url 'dashboard:catalogue-category-update' category.id %}">{{ category.name }}</a></td>
                         <td>{{ category.description|default:""|striptags|cut:"&nbsp;"|truncatewords:6 }}</td>
                         <td><a href="{% url 'dashboard:catalogue-category-detail-list' pk=category.pk %}">{{ category.get_num_children }}</a></td>
+                        <td>
+                            <div class="btn-toolbar">
+        			<a href="{% url 'dashboard:catalogue-category-create-child' parent=category.pk %}" class="btn"> {% trans "Add child category" %}</a>
+                            </div>
+                        </td>
                         <td>
                             <div class="btn-toolbar">
                                 <div class="btn-group">
