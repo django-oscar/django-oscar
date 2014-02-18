@@ -2872,7 +2872,8 @@ td .btn-toolbar {
 .form-inline {
   margin-bottom: 0;
 }
-.form-inline .help-block:first-child {
+.form-inline .help-block:first-child,
+.form-inline .error-block:first-child {
   display: none;
 }
 .form-inline label {
@@ -2946,11 +2947,13 @@ input[type=text].hasDatepicker,
   padding: 0 0 5px 0;
   list-style: none;
 }
-.form-inline .help-block {
+.form-inline .help-block,
+.form-inline .error-block {
   display: inline-block;
   margin: 0 20px 0 10px;
 }
-.form-inline .help-block li {
+.form-inline .help-block li,
+.form-inline .error-block li {
   list-style: none;
   color: #B94A48;
 }

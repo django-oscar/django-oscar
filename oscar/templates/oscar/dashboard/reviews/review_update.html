@@ -46,7 +46,7 @@
                                 <div class="controls">
                                     {{ field }}
                                     {% for error in field.errors %}
-                                        <span class="help-block">
+                                        <span class="error-block">
                                             {{ error|escape }}
                                         </span>
                                     {% endfor %}
@@ -67,7 +67,7 @@
                                     {{ field.label_tag }}
                                     {{ field }}
                                     {% for error in field.errors %}
-                                        <ul class="help-block">
+                                        <ul class="error-block">
                                             <li>{{ error|escape }}</li>
                                         </ul>
                                     {% endfor %}

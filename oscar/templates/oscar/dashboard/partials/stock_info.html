@@ -3,7 +3,7 @@
     <div>
         {{ field }}
         {% for error in field.errors %}
-            <ul class="help-block">
+            <ul class="error-block">
                 <li>{{ error }}</li>
             </ul>
         {% endfor %}
