@@ -164,7 +164,7 @@ var oscar = (function(o, $) {
         },
         initWYSIWYG: function(el) {
             // Use TinyMCE by default
-            $('form.wysiwyg textarea:visible').tinymce(o.dashboard.options.tinyConfig);
+            $('form.wysiwyg textarea:visible:not(.no-wysiwyg)').tinymce(o.dashboard.options.tinyConfig);
             $(el).find('textarea.wysiwyg:visible').tinymce(o.dashboard.options.tinyConfig);
         },
         offers: {
