@@ -2968,8 +2968,8 @@ input[type=text].hasDatepicker,
 .table {
   background-color: #ffffff;
 }
-.table-striped tbody tr:nth-child(odd) td,
-.table-striped tbody tr:nth-child(odd) th {
+.table-striped tbody > tr:nth-child(odd) > td,
+.table-striped tbody > tr:nth-child(odd) > th {
   background-color: #efefef;
 }
 .table-hover tbody tr:hover td,
