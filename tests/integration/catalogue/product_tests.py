@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 
@@ -34,6 +35,22 @@ class ProductCreationTests(ProductTests):
         product.attr.num_pages = 100
         product.save()
 
+    def test_none_upc_is_represented_as_empty_string(self):
+        product = Product(product_class=self.product_class,
+                          title='testing', upc=None)
+        self.assertEqual(product.upc, u'')
+
+    def test_upc_uniqueness_enforced(self):
+        Product.objects.create(product_class=self.product_class,
+                               title='testing', upc='bah')
+        self.assertRaises(IntegrityError, Product.objects.create,
+                          product_class=self.product_class,
+                          title='testing', upc='bah')
+
+    def test_allow_two_products_without_upc(self):
+        for x in range(2):
+            Product.objects.create(product_class=self.product_class,
+                                   title='testing', upc=None)
 
 class TopLevelProductTests(ProductTests):
 

@@ -102,6 +102,7 @@ Migrations
 * Catalogue:
 
     - ``0014`` - Drops unused ``ProductCategory.is_canonical`` field.
+    - ``0015`` - Turns a product's UPC field into a :class:`oscar.models.fields.NullCharField`
 
 Features deprecated in 0.6
 ==========================

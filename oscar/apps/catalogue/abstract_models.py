@@ -20,6 +20,7 @@ from treebeard.mp_tree import MP_Node
 
 from oscar.core.utils import slugify
 from oscar.core.loading import get_classes, get_model
+from oscar.models.fields import NullCharField
 
 ProductManager, BrowsableProductManager = get_classes(
     'catalogue.managers', ['ProductManager', 'BrowsableProductManager'])
@@ -263,7 +264,7 @@ class AbstractProduct(models.Model):
     while its children would be "Green fleece - size L".
     """
     #: Universal product code
-    upc = models.CharField(
+    upc = NullCharField(
         _("UPC"), max_length=64, blank=True, null=True, unique=True,
         help_text=_("Universal Product Code (UPC) is an identifier for "
                     "a product which is not specific to a particular "
