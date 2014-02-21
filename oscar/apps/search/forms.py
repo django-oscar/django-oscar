@@ -84,7 +84,8 @@ class SearchForm(FacetedSearchForm):
                         field, sqs.query.clean(value)))
 
         if self.is_valid() and 'sort_by' in self.cleaned_data:
-            sort_field = self.SORT_BY_MAP.get(self.cleaned_data['sort_by'], None)
+            sort_field = self.SORT_BY_MAP.get(
+                self.cleaned_data['sort_by'], None)
             if sort_field:
                 sqs = sqs.order_by(sort_field)
 

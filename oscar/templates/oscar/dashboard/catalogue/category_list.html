@@ -73,7 +73,7 @@
                                                 {% trans "Add child category" %}
                                             </a>
                                         </li>
-                                        <li{% if not category.has_children %} class="disabled"{% endif %}">
+                                        <li{% if not category.has_children %} class="disabled"{% endif %}>
                                             <a href="{% url 'dashboard:catalogue-category-detail-list' pk=category.pk %}">
                                                 {% trans "Edit children" %}
                                             </a>

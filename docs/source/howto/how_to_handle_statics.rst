@@ -17,10 +17,10 @@ files.
 Templates
 ---------
 
-Oscar's default templates use the mark-up conventions from Bootstrap project.
-Classes for styling should be separate from classes used for Javascript. The
-latter must be prefixed with ``js-``, and using data attributes is often
-preferable.
+Oscar's default templates use the mark-up conventions from the Bootstrap
+project. Classes for styling should be separate from classes used for
+Javascript. The latter must be prefixed with ``js-``, and using data attributes
+is often preferable.
 
 Frontend vs. Dashboard
 ----------------------
