@@ -10,10 +10,11 @@ Table of contents:
     :local:
     :depth: 1
 
-Python Compatibility
-=====================
+Compatibility
+=============
 
-Oscar 0.7 has experimental support for Python 3.
+Oscar 0.7 has experimental support for Python 3. Support for Django 1.4 has
+been dropped, and support for Django 1.6 is considered stable.
 
 What's new in Oscar 0.7?
 ========================
