@@ -9,8 +9,11 @@ from PIL import Image
 from django.core.files import File
 from django.core.exceptions import FieldError
 from oscar.core.loading import get_model
-from django.db.transaction import commit_on_success
 from django.utils.translation import ugettext_lazy as _
+try:
+    from django.db.transaction import atomic as atomic_compat
+except ImportError:
+    from django.db.transaction import commit_on_success as atomic_compat
 
 from oscar.apps.catalogue.exceptions import (
     ImageImportError, IdenticalImageError, InvalidImageArchive)
@@ -28,7 +31,7 @@ class Importer(object):
         self.logger = logger
         self._field = field
 
-    @commit_on_success  # noqa (too complex (10))
+    @atomic_compat  # noqa (too complex (10))
     def handle(self, dirname):
         stats = {
             'num_processed': 0,

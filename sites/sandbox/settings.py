@@ -12,7 +12,6 @@ USE_TZ = True
 DEBUG = True
 TEMPLATE_DEBUG = True
 SQL_DEBUG = True
-SEND_BROKEN_LINK_EMAILS = False
 
 ALLOWED_HOSTS = ['latest.oscarcommerce.com',
                  'sandbox.oscar.tangentlabs.co.uk',

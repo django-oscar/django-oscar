@@ -19,7 +19,6 @@ location = lambda x: os.path.join(
 DEBUG = True
 TEMPLATE_DEBUG = True
 SQL_DEBUG = True
-SEND_BROKEN_LINK_EMAILS = False
 
 ADMINS = (
 )
