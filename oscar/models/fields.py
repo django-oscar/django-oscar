@@ -23,6 +23,8 @@ else:
     add_introspection_rules([], [
         "^oscar\.models\.fields\.UppercaseCharField$"])
     add_introspection_rules([], [
+        "^oscar\.models\.fields\.NullCharField$"])
+    add_introspection_rules([], [
         "^oscar\.models\.fields\.PhoneNumberField$"])
 
 
@@ -79,6 +81,44 @@ class UppercaseCharField(django_six.with_metaclass(SubfieldBase, CharField)):
             return val.upper()
         else:
             return val
+
+
+class NullCharField(CharField):
+    """
+    CharField that stores '' as None and returns None as ''
+    Useful when using unique=True and forms. Implies null==blank==True.
+
+    When a ModelForm with a CharField with null=True gets saved, the field will
+    be set to '': https://code.djangoproject.com/ticket/9590
+    This breaks usage with unique=True, as '' is considered equal to another
+    field set to ''.
+    """
+    description = "CharField that stores '' as None and returns None as ''"
+
+    # necessary for to_python to be called
+    __metaclass__ = SubfieldBase
+
+    def __init__(self, *args, **kwargs):
+        if not kwargs.get('null', True) or not kwargs.get('blank', True):
+            raise ImproperlyConfigured(
+                "NullCharField implies null==blank==True")
+        kwargs['null'] = kwargs['blank'] = True
+        super(NullCharField, self).__init__(*args, **kwargs)
+
+    def to_python(self, value):
+        if isinstance(value, CharField):
+            return value
+        if value is None:
+            return u""
+        else:
+            return value
+
+    def get_prep_value(self, value):
+        prepped = super(NullCharField, self).get_prep_value(value)
+        if prepped == "":
+            return None
+        else:
+            return prepped
 
 
 class PhoneNumberField(Field):
