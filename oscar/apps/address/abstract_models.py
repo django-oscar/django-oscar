@@ -268,7 +268,7 @@ class AbstractAddress(models.Model):
             country_code = self.country.iso_3166_1_a2
             regex = self.POSTCODES_REGEX.get(country_code, None)
             if regex:
-                msg = ("Addresses in %(country)s require a postcode") % {
+                msg = _("Addresses in %(country)s require a postcode") % {
                     'country': self.country}
                 raise exceptions.ValidationError(msg)
 
