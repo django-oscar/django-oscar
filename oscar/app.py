@@ -54,7 +54,8 @@ class Shop(Application):
                 r'(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
                 login_forbidden(password_reset_confirm),
                 {'post_reset_redirect':
-                 reverse_lazy('password-reset-complete')},
+                 reverse_lazy('password-reset-complete'),
+                 'set_password_form': forms.SetPasswordForm},
                 name='password-reset-confirm'),
             url(r'^password-reset/complete/$',
                 login_forbidden(auth_views.password_reset_complete),

@@ -37,8 +37,8 @@ class TestAUserWhoseForgottenHerPassword(WebTest):
         # Reset password and check we get redirect
         reset_page = self.app.get(path)
         form = reset_page.forms['password_reset_form']
-        form['new_password1'] = 'monkey'
-        form['new_password2'] = 'monkey'
+        form['new_password1'] = 'crazymonkey'
+        form['new_password2'] = 'crazymonkey'
         response = form.submit()
         self.assertEqual(302, response.status_code)
 
@@ -46,7 +46,7 @@ class TestAUserWhoseForgottenHerPassword(WebTest):
         url = reverse('customer:login')
         form = self.app.get(url).forms['login_form']
         form['login-username'] = email
-        form['login-password'] = 'monkey'
+        form['login-password'] = 'crazymonkey'
         response = form.submit('login_submit')
         self.assertEqual(302, response.status_code)
 
