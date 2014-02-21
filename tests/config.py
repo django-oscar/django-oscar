@@ -69,6 +69,7 @@ def configure():
             'LOGIN_REDIRECT_URL': '/accounts/',
             'STATIC_URL': '/static/',
             'COMPRESS_ENABLED': False,
+            'COMPRESS_ROOT': '',  # needed to avoid issue #1214
             'ADMINS': ('admin@example.com',),
             'DEBUG': False,
             'SITE_ID': 1,
