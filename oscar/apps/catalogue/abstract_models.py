@@ -529,6 +529,16 @@ class AbstractProduct(models.Model):
         return None
     get_product_class.short_description = _("Product class")
 
+    def get_categories(self):
+        """
+        Return a product's categories or parent's if there is a parent product.
+        """
+        if self.is_child:
+            return self.parent.categories
+        else:
+            return self.categories
+    get_categories.short_description = _("Categories")
+
     # Images
 
     def get_missing_image(self):

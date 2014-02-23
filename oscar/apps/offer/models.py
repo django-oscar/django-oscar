@@ -863,7 +863,7 @@ class Range(models.Model):
             return True
         test_categories = self.included_categories.all()
         if test_categories:
-            for category in product.categories.all():
+            for category in product.get_categories().all():
                 for test_category in test_categories:
                     if category == test_category \
                             or category.is_descendant_of(test_category):
