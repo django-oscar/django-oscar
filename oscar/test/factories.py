@@ -93,7 +93,7 @@ def create_basket(empty=False):
     basket.strategy = strategy.Default()
     if not empty:
         product = create_product()
-        create_stockrecord(product)
+        create_stockrecord(product, num_in_stock=2)
         basket.add_product(product)
     return basket
 
