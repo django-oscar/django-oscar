@@ -1,7 +1,8 @@
 from django.conf import settings
 from django.core.signing import Signer, BadSignature
-from oscar.core.loading import get_model
+from django.utils.functional import SimpleLazyObject, empty
 
+from oscar.core.loading import get_model
 from oscar.core.loading import get_class
 
 Applicator = get_class('offer.utils', 'Applicator')
@@ -15,18 +16,26 @@ class BasketMiddleware(object):
 
     def process_request(self, request):
         request.cookies_to_delete = []
-        basket = self.get_basket(request)
 
         # Load stock/price strategy and assign to request and basket
         strategy = selector.strategy(request=request, user=request.user)
-        request.strategy = basket.strategy = strategy
-        # Attach basket to the current request. Pricing policies in
-        # apply_offers_to_basket may depend on it, so it needs to be done
-        # before that is called
-        request.basket = basket
+        request.strategy = strategy
 
-        self.ensure_basket_lines_have_stockrecord(basket)
-        self.apply_offers_to_basket(request, basket)
+        def lazy_load_basket():
+            basket = self.get_basket(request)
+            basket.strategy = request.strategy
+
+            request.basket = basket
+
+            # Attach basket to the current request. Pricing policies in
+            # apply_offers_to_basket may depend on it, so it needs to be done
+            # before that is called
+            self.ensure_basket_lines_have_stockrecord(basket)
+            self.apply_offers_to_basket(request, basket)
+
+            return basket
+
+        request.basket = SimpleLazyObject(lazy_load_basket)
 
     def get_basket(self, request):
         """
@@ -80,6 +89,10 @@ class BasketMiddleware(object):
         cookies_to_delete = getattr(request, 'cookies_to_delete', [])
         for cookie_key in cookies_to_delete:
             response.delete_cookie(cookie_key)
+
+        # If the basket was never initialized we can safely return
+        if hasattr(request, 'basket') and request.basket._wrapped is empty:
+            return response
 
         basket_id = request.basket.id if hasattr(request, 'basket') else 0
 
