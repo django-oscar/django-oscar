@@ -21,8 +21,9 @@ class BasketLineForm(forms.ModelForm):
 
     def clean_quantity(self):
         qty = self.cleaned_data['quantity']
-        self.check_max_allowed_quantity(qty)
-        self.check_permission(qty)
+        if qty > 0:
+            self.check_max_allowed_quantity(qty)
+            self.check_permission(qty)
         return qty
 
     def check_max_allowed_quantity(self, qty):
