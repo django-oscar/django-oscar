@@ -14,6 +14,7 @@ from oscar.views import sort_queryset
 from oscar.views.generic import ObjectLookupView
 
 (ProductForm,
+ ProductClassSelectForm,
  ProductSearchForm,
  CategoryForm,
  StockRecordFormSet,
@@ -23,6 +24,7 @@ from oscar.views.generic import ObjectLookupView
  ProductRecommendationFormSet) \
     = get_classes('dashboard.catalogue.forms',
                   ('ProductForm',
+                   'ProductClassSelectForm',
                    'ProductSearchForm',
                    'CategoryForm',
                    'StockRecordFormSet',
@@ -63,14 +65,15 @@ class ProductListView(generic.ListView):
     model = Product
     context_object_name = 'products'
     form_class = ProductSearchForm
+    productclass_form_class = ProductClassSelectForm
     description_template = _(u'Products %(upc_filter)s %(title_filter)s')
     paginate_by = 20
     recent_products = 5
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductListView, self).get_context_data(**kwargs)
-        ctx['product_classes'] = ProductClass.objects.all()
         ctx['form'] = self.form
+        ctx['productclass_form'] = self.productclass_form_class()
         if 'recently_edited' in self.request.GET:
             ctx['queryset_description'] \
                 = _("Last %(num_products)d edited products") \
@@ -142,6 +145,7 @@ class ProductListView(generic.ListView):
 
 class ProductCreateRedirectView(generic.RedirectView):
     permanent = False
+    productclass_form_class = ProductClassSelectForm
 
     def get_product_create_url(self, product_class):
         """ Allow site to provide custom URL """
@@ -153,15 +157,12 @@ class ProductCreateRedirectView(generic.RedirectView):
         return reverse('dashboard:catalogue-product-list')
 
     def get_redirect_url(self, **kwargs):
-        product_class_slug = self.request.GET.get('product_class')
-        if product_class_slug is None:
-            return self.get_invalid_product_class_url()
-        try:
-            product_class = ProductClass.objects.get(slug=product_class_slug)
-        except ProductClass.DoesNotExist:
-            return self.get_invalid_product_class_url()
-        else:
+        form = self.productclass_form_class(self.request.GET)
+        if form.is_valid():
+            product_class = form.cleaned_data['product_class']
             return self.get_product_create_url(product_class)
+        else:
+            return self.get_invalid_product_class_url()
 
 
 class ProductCreateUpdateView(generic.UpdateView):
