@@ -1,9 +1,7 @@
 import datetime
 import json
 
-from django.views.generic import (ListView, FormView, DeleteView,
-                                  CreateView, UpdateView)
-from oscar.core.loading import get_model
+from django.views.generic import ListView, FormView, DeleteView
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import HttpResponseRedirect
@@ -12,7 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 
-from oscar.core.loading import get_classes, get_class
+from oscar.core.loading import get_classes, get_class, get_model
 from oscar.views import sort_queryset
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
