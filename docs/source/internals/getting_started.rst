@@ -63,10 +63,6 @@ database (we use SQLite for simplicity):
         }
     }
 
-Then, add ``oscar.apps.basket.middleware.BasketMiddleware`` to
-``MIDDLEWARE_CLASSES``.  It is also recommended to use
-``django.middleware.transaction.TransactionMiddleware`` too
-
 Now set ``TEMPLATE_CONTEXT_PROCESSORS`` to:
 
 .. code-block:: django
@@ -113,13 +109,17 @@ Note that Oscar requires ``django.contrib.flatpages`` which isn't
 included by default. ``flatpages`` also requires ``django.contrib.sites``,
 which won't be enabled by default when using Django 1.6 or upwards.
 
-Next, add ``django.contrib.flatpages.middleware.FlatpageFallbackMiddleware`` to
-your ``MIDDLEWARE_CLASSES`` setting:
+Next, add ``oscar.apps.basket.middleware.BasketMiddleware``, 
+``django.contrib.flatpages.middleware.FlatpageFallbackMiddleware`` to
+your ``MIDDLEWARE_CLASSES`` setting. It is also recommended to use
+``django.middleware.transaction.TransactionMiddleware``:
 
 .. code-block:: django
 
     MIDDLEWARE_CLASSES = (
         ...
+        'oscar.apps.basket.middleware.BasketMiddleware',
+        'django.middleware.transaction.TransactionMiddleware',  # recommended for oscar
         'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     )
 
