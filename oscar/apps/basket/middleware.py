@@ -98,8 +98,6 @@ class BasketMiddleware(object):
                 and request.basket._wrapped is empty):
             return response
 
-        basket_id = request.basket.id if hasattr(request, 'basket') else 0
-
         # Check if we need to set a cookie. If the cookies is already available
         # but is set in the cookies_to_delete list then we need to re-set it.
         has_basket_cookie = (
@@ -108,7 +106,7 @@ class BasketMiddleware(object):
 
         # If a basket has had products added to it, but the user is anonymous
         # then we need to assign it to a cookie
-        if (basket_id and not request.user.is_authenticated()
+        if (request.basket.id and not request.user.is_authenticated()
                 and not has_basket_cookie):
             cookie = self.get_basket_hash(request.basket.id)
             response.set_cookie(
