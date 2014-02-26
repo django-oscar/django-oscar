@@ -90,8 +90,12 @@ class BasketMiddleware(object):
         for cookie_key in cookies_to_delete:
             response.delete_cookie(cookie_key)
 
+        if not hasattr(request, 'basket'):
+            return response
+
         # If the basket was never initialized we can safely return
-        if hasattr(request, 'basket') and request.basket._wrapped is empty:
+        if (isinstance(request.basket, SimpleLazyObject)
+                and request.basket._wrapped is empty):
             return response
 
         basket_id = request.basket.id if hasattr(request, 'basket') else 0
