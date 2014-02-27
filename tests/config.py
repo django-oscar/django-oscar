@@ -30,6 +30,8 @@ def configure():
                 'django.contrib.staticfiles',
                 'sorl.thumbnail',
                 'compressor',
+                'tests._site.model_tests_app',  # contains models we need for testing
+
                 # Use a custom partner app to test overriding models.  I can't
                 # find a way of doing this on a per-test basis, so I'm using a
                 # global change.
