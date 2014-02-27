@@ -288,7 +288,7 @@ class ProfileUpdateView(PageTitleMixin, FormView):
                 code=self.communication_type_code, context=ctx)
             Dispatcher().dispatch_user_messages(old_user, msgs)
 
-        messages.success(self.request, "Profile updated")
+        messages.success(self.request, _("Profile updated"))
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
