@@ -100,7 +100,8 @@ class AutoSlugField(SlugField):
             self._populate_from = (self._populate_from, )
         slug_field = model_instance._meta.get_field(self.attname)
 
-        if add or self.overwrite:
+        # only set slug if empty and first-time save, or when overwrite=True
+        if add and not getattr(model_instance, self.attname) or self.overwrite:
             # slugify the original field content and set next step to 2
             slug_for_field = lambda field: self.slugify_func(getattr(model_instance, field))  # NOQA
             slug = self.separator.join(map(slug_for_field, self._populate_from))  # NOQA
