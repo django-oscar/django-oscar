@@ -188,67 +188,6 @@ class AbstractProductCategory(models.Model):
         return u"<productcategory for product '%s'>" % self.product
 
 
-class AbstractContributorRole(models.Model):
-    """
-    A role that may be performed by a contributor to a product, eg Author,
-    Actor, Director.
-    """
-    name = models.CharField(_('Name'), max_length=50)
-    name_plural = models.CharField(_('Name Plural'), max_length=50)
-    slug = models.SlugField()
-
-    def __unicode__(self):
-        return self.name
-
-    class Meta:
-        abstract = True
-        verbose_name = _('Contributor Role')
-        verbose_name_plural = _('Contributor Roles')
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super(AbstractContributorRole, self).save(*args, **kwargs)
-
-
-class AbstractContributor(models.Model):
-    """
-    Represents a person or business that has contributed to a product in some
-    way. eg an author.
-    """
-    name = models.CharField(_("Name"), max_length=255)
-    slug = models.SlugField(_("Slug"), max_length=255, unique=False)
-
-    def __unicode__(self):
-        return self.name
-
-    class Meta:
-        abstract = True
-        verbose_name = _('Contributor')
-        verbose_name_plural = _('Contributors')
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super(AbstractContributor, self).save(*args, **kwargs)
-
-
-class AbstractProductContributor(models.Model):
-    product = models.ForeignKey('catalogue.Product', verbose_name=_("Product"))
-    contributor = models.ForeignKey('catalogue.Contributor',
-                                    verbose_name=_("Contributor"))
-    role = models.ForeignKey('catalogue.ContributorRole', blank=True,
-                             null=True, verbose_name=_("Contributor Role"))
-
-    def __unicode__(self):
-        return '%s <- %s - %s' % (self.product, self.role, self.contributor)
-
-    class Meta:
-        abstract = True
-        verbose_name = _('Product Contributor')
-        verbose_name_plural = _('Product Contributors')
-
-
 class AbstractProduct(models.Model):
     """
     The base product object
@@ -282,11 +221,6 @@ class AbstractProduct(models.Model):
     slug = models.SlugField(_('Slug'), max_length=255, unique=False)
     description = models.TextField(_('Description'), blank=True, null=True)
 
-    #: Status field which is not used by core Oscar. Added because it's
-    # commonly needed to e.g. indicate if the product is inactive or awaiting
-    #: approval.
-    status = models.CharField(_('Status'), max_length=128, blank=True,
-                              null=True, db_index=True)
     product_class = models.ForeignKey(
         'catalogue.ProductClass', verbose_name=_('Product Class'), null=True,
         related_name="products",

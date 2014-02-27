@@ -272,7 +272,7 @@ class ProductForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        exclude = ('slug', 'status', 'score', 'product_class',
+        exclude = ('slug', 'score', 'product_class',
                    'recommended_products', 'product_options',
                    'attributes', 'categories')
         widgets = {
@@ -379,7 +379,7 @@ class ProductForm(forms.ModelForm):
 
 
 class StockAlertSearchForm(forms.Form):
-    status = forms.CharField(label=_('Status'))
+    tatus = forms.CharField(label=_('Status'))
 
 
 class ProductCategoryForm(forms.ModelForm):

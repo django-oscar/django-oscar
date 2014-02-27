@@ -20,18 +20,6 @@ class Product(AbstractProduct):
     pass
 
 
-class ContributorRole(AbstractContributorRole):
-    pass
-
-
-class Contributor(AbstractContributor):
-    pass
-
-
-class ProductContributor(AbstractProductContributor):
-    pass
-
-
 class ProductAttribute(AbstractProductAttribute):
     pass
 

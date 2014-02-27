@@ -80,12 +80,26 @@ Bugfixes
 Backwards incompatible changes in 0.7
 =====================================
 
+.. warning::
+
+    Fields and models have been removed from Oscar. If you used them, you must
+    ensure you create/extend the affected models appropriately.
+
+* ``AbstractProduct.status`` was an unused ``CharField`` provided for convenience
+  as it's a commonly required field. But a different field type was often
+  required, and as changing it is much harder than adding a field with the
+  desired type, the field has been removed.
+
+* ``Contributor``, ``ContributorRole``, the through-model ``ProductContributor``
+  and their abstract versions have been removed as they were unused and too
+  specific to the domain of book shops.
+
+* ``ProductCategory.is_canonical`` was an unused ``BooleanField`` and has been
+  removed.
+
 * ``Order.basket_id`` was a ``PositiveIntegerField`` containing the primary key of the
   associated basket. It's been refactored to be a nullable ``ForeignKey`` and
   is now called "basket".
-
-* ``ProductCategory.is_canonical`` was an unused ``BooleanField`` and has been
-  dropped.
 
 * `#1123`_ - The URL structure of ``ProductCreateRedirectView`` has been changed to use
   the product class' slug instead of the primary key. It's necessary to update
@@ -112,6 +126,7 @@ Migrations
     - ``0014`` - Drops unused ``ProductCategory.is_canonical`` field.
     - ``0015`` - Turns a product's UPC field into a :class:`oscar.models.fields.NullCharField`
     - ``0016`` - ``AutoSlugField`` for ``AbstractProductClass`` and ``AbstractOption``
+    - ``0017`` - Removes ``Product.status``, ``Contributor``, ``ContributorRole`` and ``ProductContributor``
 
 * Customer:
 
