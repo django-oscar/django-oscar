@@ -12,6 +12,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.customer.managers import CommunicationTypeManager
 from oscar.core.compat import AUTH_USER_MODEL
+from oscar.models.fields import AutoSlugField
 
 
 # Only define custom UserManager/UserModel when Django >= 1.5
@@ -133,7 +134,8 @@ class AbstractCommunicationEventType(models.Model):
 
     # Code used for looking up this event programmatically.
     # eg. PASSWORD_RESET
-    code = models.SlugField(_('Code'), max_length=128)
+    code = AutoSlugField(_('Code'), max_length=128, unique=True,
+                         populate_from='name')
 
     #: Name is the friendly description of an event for use in the admin
     name = models.CharField(

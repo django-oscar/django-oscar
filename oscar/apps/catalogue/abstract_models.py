@@ -1,12 +1,12 @@
-from itertools import chain
-from datetime import datetime, date
-import logging
-from django.utils.html import strip_tags
-from django.utils.safestring import mark_safe
 import os
 import six
 import warnings
+from itertools import chain
+from datetime import datetime, date
+import logging
 
+from django.utils.html import strip_tags
+from django.utils.safestring import mark_safe
 from django.conf import settings
 from django.contrib.staticfiles.finders import find
 from django.core.exceptions import ValidationError, ImproperlyConfigured
@@ -16,11 +16,12 @@ from django.db import models
 from django.db.models import Sum, Count
 from django.utils.translation import ugettext_lazy as _
 from django.utils.functional import cached_property
+
 from treebeard.mp_tree import MP_Node
 
 from oscar.core.utils import slugify
 from oscar.core.loading import get_classes, get_model
-from oscar.models.fields import NullCharField
+from oscar.models.fields import NullCharField, AutoSlugField
 
 ProductManager, BrowsableProductManager = get_classes(
     'catalogue.managers', ['ProductManager', 'BrowsableProductManager'])
@@ -37,7 +38,8 @@ class AbstractProductClass(models.Model):
     Not necessarily equivalent to top-level categories but usually will be.
     """
     name = models.CharField(_('Name'), max_length=128)
-    slug = models.SlugField(_('Slug'), max_length=128, unique=True)
+    slug = AutoSlugField(_('Slug'), max_length=128, unique=True,
+                         populate_from='name')
 
     #: Some product type don't require shipping (eg digital products) - we use
     #: this field to take some shortcuts in the checkout.
@@ -59,11 +61,6 @@ class AbstractProductClass(models.Model):
         ordering = ['name']
         verbose_name = _("Product Class")
         verbose_name_plural = _("Product Classes")
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        return super(AbstractProductClass, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.name
@@ -1066,7 +1063,8 @@ class AbstractOption(models.Model):
     when add the item to their basket.
     """
     name = models.CharField(_("Name"), max_length=128)
-    code = models.SlugField(_("Code"), max_length=128, unique=True)
+    code = AutoSlugField(_("Code"), max_length=128, unique=True,
+                         populate_from='name')
 
     REQUIRED, OPTIONAL = ('Required', 'Optional')
     TYPE_CHOICES = (
@@ -1083,11 +1081,6 @@ class AbstractOption(models.Model):
 
     def __unicode__(self):
         return self.name
-
-    def save(self, *args, **kwargs):
-        if not self.code:
-            self.code = slugify(self.name)
-        super(AbstractOption, self).save(*args, **kwargs)
 
     @property
     def is_required(self):

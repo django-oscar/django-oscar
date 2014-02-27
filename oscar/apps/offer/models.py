@@ -14,10 +14,11 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 
 from oscar.core.utils import slugify
+from oscar.core.loading import get_class
 from oscar.apps.offer.managers import ActiveOfferManager
 from oscar.templatetags.currency_filters import currency
-from oscar.models.fields import PositiveDecimalField, ExtendedURLField
-from oscar.core.loading import get_class
+from oscar.models.fields import (PositiveDecimalField, ExtendedURLField,
+                                 AutoSlugField)
 
 BrowsableRangeManager = get_class('offer.managers', 'BrowsableRangeManager')
 
@@ -65,7 +66,8 @@ class ConditionalOffer(models.Model):
     name = models.CharField(
         _("Name"), max_length=128, unique=True,
         help_text=_("This is displayed within the customer's basket"))
-    slug = models.SlugField(_("Slug"), max_length=128, unique=True, null=True)
+    slug = AutoSlugField(_("Slug"), max_length=128, unique=True,
+                         populate_from='name')
     description = models.TextField(_("Description"), blank=True,
                                    help_text=_("This is displayed on the offer"
                                                " browsing page"))
@@ -180,9 +182,6 @@ class ConditionalOffer(models.Model):
         # covers these 4 fields (will add support for this in Django 1.5)
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-
         # Check to see if consumption thresholds have been broken
         if not self.is_suspended:
             if self.get_max_applications() == 0:

@@ -10,7 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.datastructures import SortedDict
 
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.core.utils import slugify
+from oscar.models.fields import AutoSlugField
 from . import exceptions
 
 
@@ -739,12 +739,8 @@ class AbstractPaymentEventType(models.Model):
     These are effectively the transaction types.
     """
     name = models.CharField(_("Name"), max_length=128, unique=True)
-    code = models.SlugField(_("Code"), max_length=128, unique=True)
-
-    def save(self, *args, **kwargs):
-        if not self.code:
-            self.code = slugify(self.name)
-        super(AbstractPaymentEventType, self).save(*args, **kwargs)
+    code = AutoSlugField(_("Code"), max_length=128, unique=True,
+                         populate_from='name')
 
     class Meta:
         abstract = True
@@ -897,12 +893,8 @@ class AbstractShippingEventType(models.Model):
     # Name is the friendly description of an event
     name = models.CharField(_("Name"), max_length=255, unique=True)
     # Code is used in forms
-    code = models.SlugField(_("Code"), max_length=128, unique=True)
-
-    def save(self, *args, **kwargs):
-        if not self.code:
-            self.code = slugify(self.name)
-        super(AbstractShippingEventType, self).save(*args, **kwargs)
+    code = AutoSlugField(_("Code"), max_length=128, unique=True,
+                         populate_from='name')
 
     class Meta:
         abstract = True

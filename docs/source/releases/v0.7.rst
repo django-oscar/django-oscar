@@ -61,6 +61,10 @@ Minor changes
 * :class:`~oscar.apps.payment.forms.BankCardNumberField` now allows specifying
   accepted card types (`32b7249`_).
 
+* Several slug fields have been turned into the newly introduced
+  :class:`~oscar.models.fields.AutoSlugField` to ensure that generated slugs
+  are unique.
+
 .. _`b920f8ba`: https://github.com/tangentlabs/django-oscar/commit/b920f8ba288cd2f19bb167db2a012479ba956397
 .. _`ef3ccf08a7`: https://github.com/tangentlabs/django-oscar/commit/ef3ccf08a707ae1250cdb8d5f2dc6f721d020dc4
 .. _`32b7249`: https://github.com/tangentlabs/django-oscar/commit/32b7249e44b40cb1b20d01226f77ae6777a20b91
@@ -107,6 +111,32 @@ Migrations
 
     - ``0014`` - Drops unused ``ProductCategory.is_canonical`` field.
     - ``0015`` - Turns a product's UPC field into a :class:`oscar.models.fields.NullCharField`
+    - ``0016`` - ``AutoSlugField`` for ``AbstractProductClass`` and ``AbstractOption``
+
+* Customer:
+
+    - ``0006`` - ``AutoSlugField`` and ``unique=True`` for ``AbstractCommunicationEventType``
+
+* Offer:
+
+    - ``0029`` - ``AutoSlugField`` for ``ConditionalOffer``
+
+* Order:
+
+    - ``0025`` - ``AutoSlugField`` for ``AbstractPaymentEventType`` and AbstractShippingEventType``
+
+* Partner:
+
+    - ``0011`` - ``AutoSlugField`` for ``AbstractPartner``
+
+* Payment:
+
+    - ``0003`` - ``AutoSlugField`` and ``unique=True`` for ``AbstractSourceType``
+
+* Shipping:
+
+    - ``0006`` - ``AutoSlugField`` for ``ShippingMethod``
+
 
 Features deprecated in 0.6
 ==========================

@@ -5,8 +5,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.core.utils import slugify
 from oscar.templatetags.currency_filters import currency
+from oscar.models.fields import AutoSlugField
 
 from . import bankcards
 
@@ -197,8 +197,8 @@ class AbstractSourceType(models.Model):
     or an internal source such as a managed account.
     """
     name = models.CharField(_("Name"), max_length=128)
-    code = models.SlugField(
-        _("Code"), max_length=128,
+    code = AutoSlugField(
+        _("Code"), max_length=128, populate_from='name', unique=True,
         help_text=_("This is used within forms to identify this source type"))
 
     class Meta:
@@ -208,11 +208,6 @@ class AbstractSourceType(models.Model):
 
     def __unicode__(self):
         return self.name
-
-    def save(self, *args, **kwargs):
-        if not self.code:
-            self.code = slugify(self.name)
-        super(AbstractSourceType, self).save(*args, **kwargs)
 
 
 class AbstractBankcard(models.Model):
