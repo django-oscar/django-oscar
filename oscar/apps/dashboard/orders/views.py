@@ -418,7 +418,7 @@ class OrderDetailView(DetailView):
         line_action = request.POST.get('line_action', '').lower()
         if line_action:
             if line_action not in self.line_actions:
-                messages.error(self.request, "Invalid action")
+                messages.error(self.request, _("Invalid action"))
                 return self.reload_page_response()
             else:
                 line_ids = request.POST.getlist('selected_line')
