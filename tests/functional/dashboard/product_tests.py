@@ -40,19 +40,19 @@ class TestGatewayPage(ProductWebTest):
                              reverse('dashboard:catalogue-product-list'))
 
     def test_redirects_to_form_page_when_valid_query_param(self):
-        pclass = G(ProductClass)
+        pclass = G(ProductClass, slug='books')
         url = reverse('dashboard:catalogue-product-create')
-        response = self.get(url + '?product_class=%s' % pclass.slug)
-        self.assertRedirects(response,
-                             reverse('dashboard:catalogue-product-create',
-                                     kwargs={'product_class_slug': pclass.slug}))
+        response = self.get(url + '?product_class=%s' % pclass.pk)
+        expected_url = reverse('dashboard:catalogue-product-create',
+                               kwargs={'product_class_slug': pclass.slug})
+        self.assertRedirects(response, expected_url)
 
 
 class TestCreateGroupProduct(ProductWebTest):
     is_staff = True
 
     def setUp(self):
-        self.pclass = G(ProductClass)
+        self.pclass = G(ProductClass, slug='books')
         super(TestCreateGroupProduct, self).setUp()
 
     def submit(self, title=None, category=None, upc=None):
@@ -107,7 +107,7 @@ class TestCreateChildProduct(ProductWebTest):
     is_staff = True
 
     def setUp(self):
-        self.pclass = G(ProductClass)
+        self.pclass = G(ProductClass, slug='books')
         self.parent = G(Product, parent=None)
         super(TestCreateChildProduct, self).setUp()
 
