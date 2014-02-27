@@ -11,6 +11,8 @@ from oscar.core import validators
 from oscar.forms import fields
 
 import oscar.core.phonenumber as phonenumber
+# allow importing as oscar.models.fields.AutoSlugField
+from .autoslugfield import AutoSlugField  # noqa
 
 try:
     from south.modelsinspector import add_introspection_rules
@@ -26,6 +28,8 @@ else:
         "^oscar\.models\.fields\.NullCharField$"])
     add_introspection_rules([], [
         "^oscar\.models\.fields\.PhoneNumberField$"])
+    add_introspection_rules([], [
+        "^oscar\.models\.fields\.AutoSlugField$"])
 
 
 class ExtendedURLField(CharField):
