@@ -52,7 +52,6 @@
     "pk": 1, 
     "model": "catalogue.product", 
     "fields": {
-        "status": null, 
         "rating": null, 
         "description": "", 
         "parent": null, 
@@ -72,7 +71,6 @@
     "pk": 2, 
     "model": "catalogue.product", 
     "fields": {
-        "status": null, 
         "rating": null, 
         "description": "", 
         "parent": 1, 
@@ -92,7 +90,6 @@
     "pk": 3, 
     "model": "catalogue.product", 
     "fields": {
-        "status": null, 
         "rating": null, 
         "description": "", 
         "parent": 1, 
@@ -112,7 +109,6 @@
     "pk": 4, 
     "model": "catalogue.product", 
     "fields": {
-        "status": null, 
         "rating": null, 
         "description": "", 
         "parent": 1, 
@@ -132,7 +128,6 @@
     "pk": 5, 
     "model": "catalogue.product", 
     "fields": {
-        "status": null, 
         "rating": null, 
         "description": "", 
         "parent": null, 
@@ -152,7 +147,6 @@
     "pk": 6, 
     "model": "catalogue.product", 
     "fields": {
-        "status": null, 
         "rating": null, 
         "description": "", 
         "parent": 5, 
@@ -172,7 +166,6 @@
     "pk": 7, 
     "model": "catalogue.product", 
     "fields": {
-        "status": null, 
         "rating": null, 
         "description": "", 
         "parent": 5, 
@@ -192,7 +185,6 @@
     "pk": 8, 
     "model": "catalogue.product", 
     "fields": {
-        "status": null, 
         "rating": null, 
         "description": "", 
         "parent": null, 
@@ -212,7 +204,6 @@
     "pk": 9, 
     "model": "catalogue.product", 
     "fields": {
-        "status": null, 
         "rating": null, 
         "description": "", 
         "parent": 8, 
@@ -232,7 +223,6 @@
     "pk": 10, 
     "model": "catalogue.product", 
     "fields": {
-        "status": null, 
         "rating": null, 
         "description": "", 
         "parent": 8, 
@@ -252,7 +242,6 @@
     "pk": 11, 
     "model": "catalogue.product", 
     "fields": {
-        "status": null, 
         "rating": null, 
         "description": "", 
         "parent": 8, 

@@ -36,7 +36,6 @@
     "pk": 1,
     "model": "catalogue.product",
     "fields": {
-        "status": "",
         "rating": null,
         "description": "",
         "parent": null,
@@ -56,7 +55,6 @@
     "pk": 2,
     "model": "catalogue.product",
     "fields": {
-        "status": "",
         "rating": null,
         "description": "",
         "parent": null,
