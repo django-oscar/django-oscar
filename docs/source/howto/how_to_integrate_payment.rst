@@ -34,9 +34,11 @@ created (although this is optional).
 This situation is implemented within the sandbox site for the
 django-oscar-paypal_ extension.  Please use that as a reference.
 
-.. _django-oscar-paypal: https://github.com/tangentlabs/django-oscar-paypal/tree/develop/sandbox
+See also the sandbox for django-oscar-datacash_ which follows a similar pattern.
 
-See also the sandbox for django-oscar-datacash which follows a similar pattern.
+
+.. _django-oscar-paypal: https://github.com/tangentlabs/django-oscar-paypal/tree/master/sandbox
+.. _django-oscar-datacash: https://github.com/tangentlabs/django-oscar-datacash/tree/master/sandbox
 
 Integration into checkout
 -------------------------
