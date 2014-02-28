@@ -3,6 +3,8 @@ import random
 import datetime
 
 from django.conf import settings
+from django.utils import timezone
+
 from oscar.core.loading import get_model
 from oscar.apps.partner import strategy, availability, prices
 from oscar.core.loading import get_class
@@ -148,7 +150,7 @@ def create_offer(name="Dummy offer", offer_type="Site",
         status = models.ConditionalOffer.OPEN
 
     # Create start and end date so offer is active
-    now = datetime.datetime.now()
+    now = timezone.now()
     if start is None:
         start = now - datetime.timedelta(days=1)
     if end is None:
