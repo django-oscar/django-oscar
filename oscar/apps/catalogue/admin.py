@@ -56,7 +56,7 @@ class ProductAttributeAdmin(admin.ModelAdmin):
 
 
 class OptionAdmin(admin.ModelAdmin):
-    exclude = ['code']
+    pass
 
 
 class ProductAttributeValueAdmin(admin.ModelAdmin):
