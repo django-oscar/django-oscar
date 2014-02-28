@@ -75,7 +75,10 @@ Bugfixes
 * Addresses in non-shipping countries can't be selected as default shipping
   address anymore (`be04d46639`_).
 
-.. _be04d46639: https://github.com/tangentlabs/django-oscar/commit/be04d46639da9674959439d053c592af6dd9c5ac
+* Suspended and consumed offers are no longer returned by the "active" offer
+  manager. (`#1228`_).
+
+.. _`#1228`: https://github.com/tangentlabs/django-oscar/issues/1228
 
 Backwards incompatible changes in 0.7
 =====================================
