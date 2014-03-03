@@ -11,13 +11,12 @@ if [ $? -eq 0 ] && [ $TRAVIS_BRANCH == master ]
 then
     echo "Submitting translation files to Transifex"
     make messages
-    # write .transifexrc file
+    pip install "transifex-client==0.10"
+    # Write .transifexrc file
     echo "[https://www.transifex.com]
 hostname = https://www.transifex.com
 password = $TRANSIFEX_PASSWORD
 token =
 username = oscar_bot" > ~/.transifexrc
-    tx push --source --translations --no-interactive
-else
-    echo "Unsuitable branch for submitting to Transifex"
+    tx push --source --translations --no-interactive --skip
 fi
