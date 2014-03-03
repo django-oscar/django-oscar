@@ -2,7 +2,7 @@
 Promotions
 ==========
 
-Promotions are small blocks of content that can link through to other parts of this site.  
+Promotions are small blocks of content that can link through to other parts of this site.
 Examples include:
 
 * A banner image shown on at the top of the homepage that links through to a new offer page

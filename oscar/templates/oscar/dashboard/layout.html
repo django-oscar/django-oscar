@@ -44,7 +44,7 @@
                 <div class="nav-collapse nav-accounts collapse">
                     <ul class="nav pull-right">
                         <li><span>{% trans "Welcome" %} <em>{{ request.user.get_full_name|default:request.user.email }}</em></span></li>
-                        <li><a href="{% url 'promotions:home' %}"><i class="icon-home"></i> {% trans "Return to site" %}</a></li>
+                        <li><a href="{{ homepage_url }}"><i class="icon-home"></i> {% trans "Return to site" %}</a></li>
                         <li><a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "Account" %}</a></li>
                         <li><a href="{% url 'customer:logout' %}"><i class="icon-signout"></i> {% trans "Log out" %}</a></li>
                     </ul>
