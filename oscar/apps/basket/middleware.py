@@ -20,22 +20,37 @@ class BasketMiddleware(object):
         # Load stock/price strategy and assign to request and basket
         strategy = selector.strategy(request=request, user=request.user)
         request.strategy = strategy
+        request._basket_cache = None
 
-        def lazy_load_basket():
-            basket = self.get_basket(request)
-            basket.strategy = request.strategy
+        def lazy_load_basket_full():
+            """Load the basket, process the offers and return the basket
+            instance.
 
-            request.basket = basket
+            """
+            basket = request._basket_cache
+            if not basket:
+                basket = request._basket_cache = self.get_basket(request)
+                basket.strategy = request.strategy
 
             # Attach basket to the current request. Pricing policies in
             # apply_offers_to_basket may depend on it, so it needs to be done
             # before that is called
             self.ensure_basket_lines_have_stockrecord(basket)
             self.apply_offers_to_basket(request, basket)
-
             return basket
 
-        request.basket = SimpleLazyObject(lazy_load_basket)
+        def lazy_load_basket_hash():
+            """Load the basket and return the basket hash"""
+            basket = request._basket_cache
+            if not basket:
+                basket = request._basket_cache = self.get_basket(request)
+                basket.strategy = request.strategy
+
+            if basket.id:
+                return self.get_basket_hash(basket.id)
+
+        request.basket = SimpleLazyObject(lazy_load_basket_full)
+        request.basket_hash = SimpleLazyObject(lazy_load_basket_hash)
 
     def get_basket(self, request):
         """
