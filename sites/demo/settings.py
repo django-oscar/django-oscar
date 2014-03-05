@@ -248,7 +248,6 @@ INSTALLED_APPS = [
     'debug_toolbar',
     # For profile testing
     'apps.user',
-    'apps.bigbang',
     # Sentry (for live demo site)
     'raven.contrib.django.raven_compat'
 ]
