@@ -77,7 +77,7 @@ var oscar = (function(o, $) {
             $('.form-stacked select:visible').css('width', '95%');
             $('.form-inline select:visible').css('width', '300px');
             $(el).find('select:visible').select2({width: 'resolve'});
-            $(el).find('input.select2:visible').each(function(i, e) {
+            $(el).find('input.select2').each(function(i, e) {
                 var opts = {};
                 if($(e).data('ajax-url')) {
                     opts = {
