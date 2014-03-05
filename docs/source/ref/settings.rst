@@ -24,7 +24,7 @@ Default: ``''``
 The tagline that is displayed next to the shop name and in the browser title.
 
 ``OSCAR_HOMEPAGE``
-----------------------
+------------------
 
 Default: ``reverse_lazy('promotions:home')``
 
@@ -154,6 +154,18 @@ Default: see ``oscar.defaults`` (too long to include here).
 
 A list of dashboard navigation elements. Usage is explained in
 :doc:`/howto/how_to_configure_the_dashboard_navigation`.
+
+``OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION``
+-------------------------------------------
+
+Default: ``dashboard.nav.default_access_fn``
+
+``OSCAR_DASHBOARD_NAVIGATION`` allows passing an access function for each node
+which is used to determine whether to show the node for a specific user or not.
+If no access function is defined, the function specified here is used.
+The default function integrates with the permission-based dashboard and shows
+the node if the user will be able to access it. That should be sufficient for
+most cases.
 
 Order settings
 ==============

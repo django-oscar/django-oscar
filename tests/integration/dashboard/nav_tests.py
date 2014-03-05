@@ -1,5 +1,5 @@
 from django.test import TestCase
-from oscar.apps.dashboard.nav import get_nodes
+from oscar.apps.dashboard.menu import get_nodes
 from oscar.core.compat import get_user_model
 
 

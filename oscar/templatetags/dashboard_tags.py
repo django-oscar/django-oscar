@@ -2,7 +2,7 @@ from django import template
 
 from oscar.core.loading import get_class
 Order = get_class('order.models', 'Order')
-get_nodes = get_class('dashboard.nav', 'get_nodes')
+get_nodes = get_class('dashboard.menu', 'get_nodes')
 
 register = template.Library()
 
