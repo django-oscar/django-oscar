@@ -115,9 +115,11 @@ class AbstractBasket(models.Model):
         if self.id is None:
             return self.lines.none()
         if self._lines is None:
-            self._lines = self.lines.select_related(
-                'product', 'product__stockrecord'
-            ).all().prefetch_related('attributes', 'product__images')
+            self._lines = (
+                self.lines
+                .select_related('product', 'stockrecord')
+                .prefetch_related(
+                    'attributes', 'product__images'))
 
             # Assign strategy to each line so it can use it to determine
             # prices.  This is only needed for Django 1.4.5, where accessing
