@@ -4,6 +4,7 @@ from django import forms
 from oscar.core.loading import get_model
 from django.http import QueryDict
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import pgettext_lazy
 from oscar.apps.address.forms import AbstractAddressForm
 
 from oscar.views.generic import PhoneNumberMixin
@@ -15,8 +16,10 @@ SourceType = get_model('payment', 'SourceType')
 
 
 class OrderStatsForm(forms.Form):
-    date_from = forms.DateField(required=False, label=_("From"))
-    date_to = forms.DateField(required=False, label=_("To"))
+    date_from = forms.DateField(
+        required=False, label=pgettext_lazy("start date", "From"))
+    date_to = forms.DateField(
+        required=False, label=pgettext_lazy("end date", "To"))
 
     _filters = _description = None
 

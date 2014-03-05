@@ -11,6 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
 from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from oscar.core.loading import get_profile_class, get_class
 from oscar.core.compat import get_user_model
@@ -226,8 +227,10 @@ class EmailUserCreationForm(forms.ModelForm):
 
 
 class OrderSearchForm(forms.Form):
-    date_from = forms.DateField(required=False, label=_("From"))
-    date_to = forms.DateField(required=False, label=_("To"))
+    date_from = forms.DateField(
+        required=False, label=pgettext_lazy("start date", "From"))
+    date_to = forms.DateField(
+        required=False, label=pgettext_lazy("end date", "To"))
     order_number = forms.CharField(required=False, label=_("Order number"))
 
     def clean(self):
