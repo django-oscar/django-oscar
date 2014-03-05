@@ -196,7 +196,7 @@ class ProductCreateUpdateView(generic.UpdateView):
                 return None  # success
         else:
             product = super(ProductCreateUpdateView, self).get_object(queryset)
-            self.product_class = product.product_class
+            self.product_class = product.get_product_class()
             return product
 
     def get_context_data(self, **kwargs):
