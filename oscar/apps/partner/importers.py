@@ -21,6 +21,9 @@ ProductClass, Product, Category, ProductCategory = get_classes(
 
 
 class StockImporter(object):
+    """
+    Updates stock levels. Currently not used.
+    """
 
     def __init__(self, logger, partner, delimiter):
         self.logger = logger
@@ -104,10 +107,10 @@ class StockImporter(object):
             stats['unchanged_items'] += 1
 
 
-# Deprecated
 class CatalogueImporter(object):
     """
-    A catalogue importer object
+    CSV product importer used to built sandbox. Might not work very well
+    for anything else.
     """
 
     _flush = False

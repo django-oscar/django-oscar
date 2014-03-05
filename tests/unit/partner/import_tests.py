@@ -3,7 +3,7 @@ from decimal import Decimal as D
 from django.test import TestCase
 import logging
 
-from oscar.apps.partner.utils import CatalogueImporter
+from oscar.apps.partner.importers import CatalogueImporter
 from oscar.apps.partner.exceptions import ImportingError
 from oscar.apps.catalogue.models import ProductClass, Product
 from oscar.apps.partner.models import Partner, StockRecord

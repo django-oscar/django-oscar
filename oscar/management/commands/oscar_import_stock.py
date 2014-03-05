@@ -4,7 +4,7 @@ from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 
 from oscar.core.loading import get_class
-StockImporter = get_class('partner.utils', 'StockImporter')
+StockImporter = get_class('partner.importers', 'StockImporter')
 ImportingError = get_class('partner.exceptions', 'ImportingError')
 
 
