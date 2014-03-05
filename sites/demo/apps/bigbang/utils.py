@@ -3,8 +3,15 @@ import datetime
 from django.db.transaction import commit_on_success
 
 from oscar.apps.dashboard.reports.csv_utils import CsvUnicodeReader
-from oscar.apps.catalogue import models, categories
-from oscar.apps.partner import models as partner_models
+from oscar.core.loading import get_class
+from django.db.models import get_model
+from oscar.apps.catalogue import categories
+
+ProductClass = get_model('catalogue', 'ProductClass')
+Product = get_model('catalogue', 'Product')
+ProductCategory = get_model('catalogue', 'ProductCategory')
+StockRecord = get_model('partner', 'StockRecord')
+Partner = get_model('partner', 'Partner')
 
 
 class Importer(object):
@@ -17,7 +24,7 @@ class Importer(object):
 
     @commit_on_success
     def handle(self, product_class_name, filepath):
-        product_class = models.ProductClass.objects.get(
+        product_class = ProductClass.objects.get(
             name=product_class_name)
 
         attribute_codes = []
@@ -35,12 +42,12 @@ class Importer(object):
         is_group = ptype.lower() == 'group'
         if upc:
             try:
-                product = models.Product.objects.get(
+                product = Product.objects.get(
                     upc=upc)
-            except models.Product.DoesNotExist:
-                product = models.Product(upc=upc)
+            except Product.DoesNotExist:
+                product = Product(upc=upc)
         else:
-            product = models.Product()
+            product = Product()
 
         if not is_variant:
             product.title = title
@@ -55,6 +62,8 @@ class Importer(object):
                     code=code)
                 if attr.is_option:
                     value = attr.option_group.options.get(option=value)
+                if attr.type == 'boolean':
+                    value = value == 'T'
                 if attr.type == 'date':
                     value = datetime.datetime.strptime(value, "%d/%m/%Y").date()
                 setattr(product.attr, code, value)
@@ -72,18 +81,18 @@ class Importer(object):
         # Category information
         if category:
             leaf = categories.create_from_breadcrumbs(category)
-            models.ProductCategory.objects.get_or_create(
+            ProductCategory.objects.get_or_create(
                 product=product, category=leaf)
 
         # Stock record
         if partner:
-            partner, __ = partner_models.Partner.objects.get_or_create(
+            partner, __ = Partner.objects.get_or_create(
                 name=partner)
             try:
-                record = partner_models.StockRecord.objects.get(
+                record = StockRecord.objects.get(
                     product=product)
-            except partner_models.StockRecord.DoesNotExist:
-                record = partner_models.StockRecord(
+            except StockRecord.DoesNotExist:
+                record = StockRecord(
                     product=product)
             record.partner = partner
             record.partner_sku = sku
