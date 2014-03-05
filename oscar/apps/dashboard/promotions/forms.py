@@ -27,6 +27,10 @@ class RawHTMLForm(forms.ModelForm):
         model = RawHTML
         exclude = ('display_type',)
 
+    def __init__(self, *args, **kwargs):
+        super(RawHTMLForm, self).__init__(*args, **kwargs)
+        self.fields['body'].widget.attrs['class'] = "no-widget-init"
+
 
 class SingleProductForm(forms.ModelForm):
     class Meta:

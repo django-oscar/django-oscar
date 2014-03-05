@@ -74,10 +74,11 @@ var oscar = (function(o, $) {
         },
         initSelects: function(el) {
             // Adds type/search for select fields
-            $('.form-stacked select:visible').css('width', '95%');
-            $('.form-inline select:visible').css('width', '300px');
-            $(el).find('select:visible').select2({width: 'resolve'});
-            $(el).find('input.select2:visible').each(function(i, e) {
+            var $selects = $(el).find('select').not('.no-widget-init select').not('.no-widget-init');
+            $selects.filter('.form-stacked select').css('width', '95%');
+            $selects.filter('.form-inline select').css('width', '300px');
+            $selects.select2({width: 'resolve'});
+            $(el).find('input.select2').each(function(i, e) {
                 var opts = {};
                 if($(e).data('ajax-url')) {
                     opts = {
@@ -124,9 +125,10 @@ var oscar = (function(o, $) {
         },
         initDatePickers: function(el) {
             // Use datepicker for all inputs that have 'date' or 'datetime' in the name
+            $inputs = $(el).find('input').not('.no-widget-init input').not('.no-widget-init');
             if ($.datepicker) {
                 var defaultDatepickerConfig = {'dateFormat': o.dashboard.options.dateFormat};
-                $(el).find('input[name^="date"]:visible, input[name$="date"]:visible').each(function(ind, ele) {
+                $inputs.filter('[name^="date"], [name$="date"]').each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultDatepickerConfig, {
                             'dateFormat': $ele.data('dateformat')
@@ -140,7 +142,7 @@ var oscar = (function(o, $) {
                     'timeFormat': o.dashboard.options.timeFormat,
                     'stepMinute': o.dashboard.options.stepMinute
                 };
-                $(el).find('input[name$="datetime"]:visible').each(function(ind, ele) {
+                $inputs.filter('[name$="datetime"]').each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultDatetimepickerConfig, {
                         'dateFormat': $ele.data('dateformat'),
@@ -153,7 +155,7 @@ var oscar = (function(o, $) {
                     'timeFormat': o.dashboard.options.timeFormat,
                     'stepMinute': o.dashboard.options.stepMinute
                 };
-                $(el).find('input[name$="time"]:visible').not('input[name$="datetime"]').each(function(ind, ele) {
+                $inputs.filter('[name$="time"]').not('[name$="datetime"]').each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultTimepickerConfig, {
                         'timeFormat': $ele.data('timeformat'),
@@ -164,8 +166,9 @@ var oscar = (function(o, $) {
         },
         initWYSIWYG: function(el) {
             // Use TinyMCE by default
-            $('form.wysiwyg textarea:visible').tinymce(o.dashboard.options.tinyConfig);
-            $(el).find('textarea.wysiwyg:visible').tinymce(o.dashboard.options.tinyConfig);
+            $textareas = $(el).find('textarea').not('.no-widget-init textarea').not('.no-widget-init');
+            $textareas.filter('form.wysiwyg textarea').tinymce(o.dashboard.options.tinyConfig);
+            $textareas.filter('.wysiwyg').tinymce(o.dashboard.options.tinyConfig);
         },
         offers: {
             init: function() {
