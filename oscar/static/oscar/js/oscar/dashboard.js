@@ -74,9 +74,10 @@ var oscar = (function(o, $) {
         },
         initSelects: function(el) {
             // Adds type/search for select fields
-            $('.form-stacked select:visible').css('width', '95%');
-            $('.form-inline select:visible').css('width', '300px');
-            $(el).find('select:visible').select2({width: 'resolve'});
+            var $selects = $(el).find('select:visible');
+            $selects.filter('.form-stacked select:visible').css('width', '95%');
+            $selects.filter('.form-inline select:visible').css('width', '300px');
+            $selects.select2({width: 'resolve'});
             $(el).find('input.select2:visible').each(function(i, e) {
                 var opts = {};
                 if($(e).data('ajax-url')) {
@@ -164,8 +165,9 @@ var oscar = (function(o, $) {
         },
         initWYSIWYG: function(el) {
             // Use TinyMCE by default
-            $('form.wysiwyg textarea:visible').tinymce(o.dashboard.options.tinyConfig);
-            $(el).find('textarea.wysiwyg:visible').tinymce(o.dashboard.options.tinyConfig);
+            $textareas = $(el).find('textarea');
+            $textareas.filter('form.wysiwyg textarea:visible').tinymce(o.dashboard.options.tinyConfig);
+            $textareas.filter('.wysiwyg:visible').tinymce(o.dashboard.options.tinyConfig);
         },
         offers: {
             init: function() {
