@@ -203,7 +203,9 @@ Let us know if you're writing a new one!
 License
 -------
 
-Oscar is released under the permissive `New BSD license`_.
+Oscar is released under the permissive `New BSD license`_ (see summmary_).
+
+.. _summary: https://tldrlegal.com/license/bsd-3-clause-license-(revised)
 
 .. _`New BSD license`: https://github.com/tangentlabs/django-oscar/blob/master/LICENSE
 
