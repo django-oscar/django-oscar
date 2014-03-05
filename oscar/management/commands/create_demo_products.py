@@ -3,7 +3,7 @@ from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 
-from apps.bigbang import utils
+from oscar.apps.partner.importers import DemoSiteImporter
 
 
 class Command(BaseCommand):
@@ -24,7 +24,7 @@ class Command(BaseCommand):
             raise CommandError("Please specify a product class name")
 
         logger.info("Starting %s catalogue import", product_class)
-        importer = utils.Importer(logger)
+        importer = DemoSiteImporter(logger)
         for file_path in args:
             logger.info(" - Importing records from '%s'" % file_path)
             importer.handle(product_class, file_path)
