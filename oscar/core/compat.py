@@ -93,7 +93,7 @@ class UnicodeCSVReader:
             self.f = open(self.filename, 'rt',
                           encoding=self.encoding, newline='')
         else:
-            self.f = open(self.filename, 'rb')
+            self.f = open(self.filename, 'rbU')
         self.reader = csv.reader(self.f, dialect=self.dialect,
                                  **self.kw)
         return self
