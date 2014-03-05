@@ -149,7 +149,7 @@
     {% block emptybasket %}
         <p>
             {% trans "Your basket is empty." %}
-            <a href="{% url 'promotions:home' %}">{% trans "Continue shopping" %}</a>
+            <a href="{{ homepage_url }}">{% trans "Continue shopping" %}</a>
         </p>
     {% endblock %}
 {% endif %}

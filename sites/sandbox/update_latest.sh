@@ -19,7 +19,7 @@ cd sites/sandbox
 ./manage.py collectstatic --noinput
 ./manage.py thumbnail clear
 
-# Load standard fixtures
+# Load standard fixtures
 ./manage.py loaddata ../_fixtures/promotions.json
 
 # Restart Tomcat (to pick up any solr schema changes)

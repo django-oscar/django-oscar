@@ -181,7 +181,7 @@ class AccountAuthView(RegisterUserMixin, TemplateView):
 
 
 class LogoutView(RedirectView):
-    url = reverse_lazy('promotions:home')
+    url = settings.OSCAR_HOMEPAGE
     permanent = False
 
     def get(self, request, *args, **kwargs):
@@ -300,6 +300,7 @@ class ProfileDeleteView(PageTitleMixin, FormView):
     template_name = 'customer/profile/profile_delete.html'
     page_title = _('Delete profile')
     active_tab = 'profile'
+    success_url = settings.OSCAR_HOMEPAGE
 
     def get_form_kwargs(self):
         kwargs = super(ProfileDeleteView, self).get_form_kwargs()
@@ -312,9 +313,6 @@ class ProfileDeleteView(PageTitleMixin, FormView):
             self.request,
             _("Your profile has now been deleted. Thanks for using the site."))
         return HttpResponseRedirect(self.get_success_url())
-
-    def get_success_url(self):
-        return reverse('promotions:home')
 
 
 class ChangePasswordView(PageTitleMixin, FormView):

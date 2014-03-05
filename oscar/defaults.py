@@ -1,7 +1,9 @@
 from django.utils.translation import ugettext_lazy as _
+from django.core.urlresolvers import reverse_lazy
 
 OSCAR_SHOP_NAME = 'Oscar'
 OSCAR_SHOP_TAGLINE = ''
+OSCAR_HOMEPAGE = reverse_lazy('promotions:home')
 
 # Basket settings
 OSCAR_BASKET_COOKIE_LIFETIME = 7 * 24 * 60 * 60
