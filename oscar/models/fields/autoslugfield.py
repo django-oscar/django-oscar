@@ -36,6 +36,7 @@ except ImportError:
 
 from oscar.core.utils import slugify
 
+
 class AutoSlugField(SlugField):
     """ AutoSlugField
 
