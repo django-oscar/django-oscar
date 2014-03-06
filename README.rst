@@ -203,7 +203,7 @@ Let us know if you're writing a new one!
 License
 -------
 
-Oscar is released under the permissive `New BSD license`_ (see summmary_).
+Oscar is released under the permissive `New BSD license`_ (see summary_).
 
 .. _summary: https://tldrlegal.com/license/bsd-3-clause-license-(revised)
 
