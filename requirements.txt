@@ -29,6 +29,7 @@ purl>=0.4
 behave==1.2.3
 nose-django-querycount==0.3
 unittest2==0.5.1  # Needed so that @skip works in Py2.6
+factory-boy==2.3.1
 
 # i18n
 django-rosetta>=0.7.2
