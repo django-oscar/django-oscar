@@ -1,5 +1,4 @@
 from decimal import Decimal
-import datetime
 
 from django.core import exceptions
 from django.db import models
@@ -74,9 +73,7 @@ class AbstractVoucher(models.Model):
         """
         Test whether this voucher is currently active.
         """
-        if not test_datetime:
-            tzinfo = timezone.get_default_timezone()
-            test_datetime = datetime.datetime.now().replace(tzinfo=tzinfo)
+        test_datetime = test_datetime or timezone.now()
         return self.start_datetime <= test_datetime <= self.end_datetime
 
     def is_available_to_user(self, user=None):

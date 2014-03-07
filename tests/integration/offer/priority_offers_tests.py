@@ -1,13 +1,15 @@
+import mock
 import datetime
 
 from django.test import TestCase
-from oscar.core.loading import get_model
-import mock
+from django.utils import timezone
 
+from oscar.core.loading import get_model
 from oscar.apps.offer import utils
 from oscar.test import factories
 
 Voucher = get_model('voucher', 'Voucher')
+
 
 class TestPriorityOffers(TestCase):
     def test_site_offers_are_ordered(self):
@@ -25,8 +27,8 @@ class TestPriorityOffers(TestCase):
         voucher = Voucher.objects.create(
             name="Test voucher",
             code="test",
-            start_date=datetime.date.today(),
-            end_date=datetime.date.today() + datetime.timedelta(days=12))
+            start_datetime=timezone.now(),
+            end_datetime=timezone.now() + datetime.timedelta(days=12))
 
         voucher.offers = [
             factories.create_offer(name="A", priority=0),
