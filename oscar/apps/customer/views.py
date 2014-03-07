@@ -17,6 +17,7 @@ from oscar.views.generic import PostActionMixin
 from oscar.apps.customer.utils import get_password_reset_url
 from oscar.core.loading import get_class, get_profile_class, get_classes
 from oscar.core.compat import get_user_model
+from . import signals
 
 PageTitleMixin, RegisterUserMixin = get_classes(
     'customer.mixins', ['PageTitleMixin', 'RegisterUserMixin'])
@@ -27,7 +28,6 @@ EmailAuthenticationForm, EmailUserCreationForm, OrderSearchForm = get_classes(
 ProfileForm, ConfirmPasswordForm = get_classes(
     'customer.forms', ['ProfileForm', 'ConfirmPasswordForm'])
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
-user_registered = get_class('customer.signals', 'user_registered')
 Order = get_model('order', 'Order')
 Line = get_model('basket', 'Line')
 Basket = get_model('basket', 'Basket')
@@ -164,7 +164,20 @@ class AccountAuthView(RegisterUserMixin, TemplateView):
     def validate_login_form(self):
         form = self.get_login_form(self.request)
         if form.is_valid():
+            user = form.get_user()
+
+            # Grab a reference to the session ID before logging in
+            old_session_key = self.request.session.session_key
+
             auth_login(self.request, form.get_user())
+
+            # Raise signal robustly (we don't want exceptions to crash the
+            # request handling). We use a custom signal as we want to track the
+            # session key before calling login (which cycles the session ID).
+            signals.user_logged_in.send_robust(
+                sender=self, request=self.request, user=user,
+                old_session_key=old_session_key)
+
             return HttpResponseRedirect(form.cleaned_data['redirect_url'])
 
         ctx = self.get_context_data(login_form=form)
