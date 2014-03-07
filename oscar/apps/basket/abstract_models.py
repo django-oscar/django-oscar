@@ -115,9 +115,11 @@ class AbstractBasket(models.Model):
         if self.id is None:
             return self.lines.none()
         if self._lines is None:
-            self._lines = self.lines.select_related(
-                'product', 'product__stockrecord'
-            ).all().prefetch_related('attributes', 'product__images')
+            self._lines = (
+                self.lines
+                .select_related('product', 'stockrecord')
+                .prefetch_related(
+                    'attributes', 'product__images'))
 
             # Assign strategy to each line so it can use it to determine
             # prices.  This is only needed for Django 1.4.5, where accessing
@@ -329,7 +331,7 @@ class AbstractBasket(models.Model):
         base = '%s_%s' % (product.id, stockrecord.id)
         if not options:
             return base
-        return "%s_%s" % (base, zlib.crc32(str(options)))
+        return "%s_%s" % (base, zlib.crc32(repr(options).encode('utf8')))
 
     def _get_total(self, property):
         """
@@ -445,8 +447,7 @@ class AbstractBasket(models.Model):
     @property
     def num_items(self):
         """Return number of items"""
-        return reduce(
-            lambda num, line: num + line.quantity, self.lines.all(), 0)
+        return sum(line.quantity for line in self.lines.all())
 
     @property
     def num_items_without_discount(self):
@@ -607,7 +608,10 @@ class AbstractLine(models.Model):
                 _("You cannot modify a %s basket") % (
                     self.basket.status.lower(),))
         if self.quantity == 0:
-            return self.delete(*args, **kwargs)
+            # 'using' is the only kwarg that save() and delete() share
+            if 'using' in kwargs:
+                return self.delete(using=kwargs['using'])
+            return self.delete()
         return super(AbstractLine, self).save(*args, **kwargs)
 
     # =============

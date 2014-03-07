@@ -11,19 +11,21 @@ from django.contrib.auth import logout as auth_logout, login as auth_login
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.sites.models import get_current_site
 from django.conf import settings
-from django.db.models import get_model
+from oscar.core.loading import get_model
 
 from oscar.views.generic import PostActionMixin
 from oscar.apps.customer.utils import get_password_reset_url
 from oscar.core.loading import get_class, get_profile_class, get_classes
 from oscar.core.compat import get_user_model
-from .mixins import PageTitleMixin, RegisterUserMixin
 
+PageTitleMixin, RegisterUserMixin = get_classes(
+    'customer.mixins', ['PageTitleMixin', 'RegisterUserMixin'])
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 EmailAuthenticationForm, EmailUserCreationForm, OrderSearchForm = get_classes(
     'customer.forms', ['EmailAuthenticationForm', 'EmailUserCreationForm',
                        'OrderSearchForm'])
-ProfileForm = get_class('customer.forms', 'ProfileForm')
+ProfileForm, ConfirmPasswordForm = get_classes(
+    'customer.forms', ['ProfileForm', 'ConfirmPasswordForm'])
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
 user_registered = get_class('customer.signals', 'user_registered')
 Order = get_model('order', 'Order')
@@ -179,7 +181,7 @@ class AccountAuthView(RegisterUserMixin, TemplateView):
 
 
 class LogoutView(RedirectView):
-    url = reverse_lazy('promotions:home')
+    url = settings.OSCAR_HOMEPAGE
     permanent = False
 
     def get(self, request, *args, **kwargs):
@@ -286,11 +288,31 @@ class ProfileUpdateView(PageTitleMixin, FormView):
                 code=self.communication_type_code, context=ctx)
             Dispatcher().dispatch_user_messages(old_user, msgs)
 
-        messages.success(self.request, "Profile updated")
+        messages.success(self.request, _("Profile updated"))
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
         return reverse('customer:profile-view')
+
+
+class ProfileDeleteView(PageTitleMixin, FormView):
+    form_class = ConfirmPasswordForm
+    template_name = 'customer/profile/profile_delete.html'
+    page_title = _('Delete profile')
+    active_tab = 'profile'
+    success_url = settings.OSCAR_HOMEPAGE
+
+    def get_form_kwargs(self):
+        kwargs = super(ProfileDeleteView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        self.request.user.delete()
+        messages.success(
+            self.request,
+            _("Your profile has now been deleted. Thanks for using the site."))
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class ChangePasswordView(PageTitleMixin, FormView):
@@ -633,7 +655,15 @@ class AddressChangeStatusView(RedirectView):
     def get(self, request, pk=None, action=None, *args, **kwargs):
         address = get_object_or_404(UserAddress, user=self.request.user,
                                     pk=pk)
-        setattr(address, 'is_%s' % action, True)
+        #  We don't want the user to set an address as the default shipping
+        #  address, though they should be able to set it as their billing
+        #  address.
+        if address.country.is_shipping_country:
+            setattr(address, 'is_%s' % action, True)
+        elif action == 'default_for_billing':
+            setattr(address, 'is_default_for_billing', True)
+        else:
+            messages.error(request, _('We do not ship to this country'))
         address.save()
         return super(AddressChangeStatusView, self).get(
             request, *args, **kwargs)

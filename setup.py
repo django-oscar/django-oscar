@@ -6,6 +6,7 @@ To release a new version to PyPi:
 - Ensure the version is correctly set in oscar.__init__.py
 - Run: python setup.py sdist upload
 """
+from __future__ import print_function
 
 from setuptools import setup, find_packages
 import os
@@ -14,6 +15,7 @@ import sys
 from oscar import get_version
 
 PROJECT_DIR = os.path.dirname(__file__)
+PY3 = sys.version_info >= (3, 0)
 
 # Change to the current directory to solve an issue installing Oscar on the
 # Vagrant machine.
@@ -41,23 +43,30 @@ setup(name='django-oscar',
           # We use the ModelFormSetView from django-extra-views for the basket
           # page
           'django-extra-views>=0.2,<0.7',
-          'django-haystack>=2.0.0',
+          # Search support
+          'django-haystack>=2.1.0',
           # Treebeard is used for categories
           'django-treebeard==2.0b2',
           # Sorl is used as the default thumbnailer
-          'sorl-thumbnail==11.12',
-          'python-memcached>=1.48,<1.53',
+          'sorl-thumbnail==12.00' if PY3 else 'sorl-thumbnail==11.12',
           # Babel is used for currency formatting
           'Babel>=1.0',
           # Oscar's default templates use compressor (but you can override
           # this)
-          'django-compressor>=1.2',
+          'django-compressor==1.4a1' if PY3 else 'django-compressor==1.3',
           # For converting non-ASCII to ASCII when creating slugs
           'Unidecode>=0.04.12,<0.05',
           # For manipulating search URLs
           'purl>=0.7',
           # For phone number field
-          'phonenumbers==5.8b1'
+          'phonenumbers==5.9.2',
+          # Python 2 & 3 compatibility helper
+          'six>=1.5.2',
+      ],
+      # tarballs for unreleased packages
+      dependency_links = [
+          'http://github.com/mariocesar/sorl-thumbnail/tarball/588837f828a5d9dd999bd6b994331e6285f79ca9#egg=sorl-thumbnail-12.00',
+          'http://github.com/django-compressor/django-compressor/tarball/cdab0d9698cb3c9421f3598822ddc71a57970405#egg=django-compressor-1.4a1',
       ],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
@@ -89,4 +98,4 @@ if len(sys.argv) > 1 and sys.argv[1] == 'develop':
         "    %s\n\nHappy hacking!") % (mailing_list, mailing_list_url,
                                        docs_url, twitter_url)
     line = '=' * 82
-    print "\n%s\n%s\n%s" % (line, msg, line)
+    print(("\n%s\n%s\n%s" % (line, msg, line)))

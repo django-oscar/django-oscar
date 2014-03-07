@@ -1,6 +1,5 @@
 {% extends "layout.html" %}
 
-{% load url from future %}
 {% load history_tags %}
 {% load i18n %}
 
@@ -11,7 +10,7 @@
 {% block breadcrumbs %}
     <ul class="breadcrumb">
         <li>
-            <a href="{% url 'promotions:home' %}">{% trans "Home" %}</a>
+            <a href="{{ homepage_url }}">{% trans "Home" %}</a>
             <span class="divider">/</span>
         </li>
         {% with category=product.categories.all.0 %}

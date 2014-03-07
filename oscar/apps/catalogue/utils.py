@@ -8,9 +8,12 @@ from PIL import Image
 
 from django.core.files import File
 from django.core.exceptions import FieldError
-from django.db.models import get_model
-from django.db.transaction import commit_on_success
+from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
+try:
+    from django.db.transaction import atomic as atomic_compat
+except ImportError:
+    from django.db.transaction import commit_on_success as atomic_compat
 
 from oscar.apps.catalogue.exceptions import (
     ImageImportError, IdenticalImageError, InvalidImageArchive)
@@ -28,7 +31,7 @@ class Importer(object):
         self.logger = logger
         self._field = field
 
-    @commit_on_success  # noqa (too complex (10))
+    @atomic_compat  # noqa (too complex (10))
     def handle(self, dirname):
         stats = {
             'num_processed': 0,
@@ -56,15 +59,14 @@ class Importer(object):
                                         " %s='%s', skipping"
                                         % (self._field, lookup_value))
                     stats['num_skipped'] += 1
-                except IOError, e:
+                except IOError as e:
+                    stats['num_invalid'] += 1
                     raise ImageImportError(_('%(filename)s is not a valid'
                                              ' image (%(error)s)')
                                            % {'filename': filename,
                                               'error': e})
-                    stats['num_invalid'] += 1
-                except FieldError, e:
+                except FieldError as e:
                     raise ImageImportError(e)
-                    self._process_image(image_dir, filename)
             if image_dir != dirname:
                 shutil.rmtree(image_dir)
         else:

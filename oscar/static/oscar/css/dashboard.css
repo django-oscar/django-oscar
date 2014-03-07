@@ -2845,6 +2845,12 @@ td .btn-toolbar {
 }
 .form-horizontal input[type=text],
 .form-stacked input[type=text],
+.form-horizontal input[type=number],
+.form-stacked input[type=number],
+.form-horizontal input[type=email],
+.form-stacked input[type=email],
+.form-horizontal input[type=url],
+.form-stacked input[type=url],
 .form-horizontal textarea,
 .form-stacked textarea,
 .form-horizontal select,
@@ -2866,7 +2872,8 @@ td .btn-toolbar {
 .form-inline {
   margin-bottom: 0;
 }
-.form-inline .help-block:first-child {
+.form-inline .help-block:first-child,
+.form-inline .error-block:first-child {
   display: none;
 }
 .form-inline label {
@@ -2900,11 +2907,20 @@ td .btn-toolbar {
 }
 .create-page .form-horizontal input[type=text],
 .create-page .form-stacked input[type=text],
+.create-page .form-horizontal input[type=number],
+.create-page .form-stacked input[type=number],
+.create-page .form-horizontal input[type=email],
+.create-page .form-stacked input[type=email],
+.create-page .form-horizontal input[type=url],
+.create-page .form-stacked input[type=url],
 .create-page .form-horizontal textarea,
 .create-page .form-stacked textarea {
   width: 95%;
 }
 .create-page .form-stacked .form-inline input[type=text],
+.create-page .form-stacked .form-inline input[type=number],
+.create-page .form-stacked .form-inline input[type=email],
+.create-page .form-stacked .form-inline input[type=url],
 .create-page .form-stacked .form-inline textarea {
   width: auto;
 }
@@ -2931,14 +2947,19 @@ input[type=text].hasDatepicker,
   padding: 0 0 5px 0;
   list-style: none;
 }
-.form-inline .help-block {
+.form-inline .help-block,
+.form-inline .error-block {
   display: inline-block;
   margin: 0 20px 0 10px;
 }
-.form-inline .help-block li {
+.form-inline .help-block li,
+.form-inline .error-block li {
   list-style: none;
   color: #B94A48;
 }
+.form-inline input[type=number],
+.form-inline input[type=email],
+.form-inline input[type=url],
 .form-inline input[type=text] {
   width: 140px;
 }
@@ -3897,5 +3918,10 @@ textarea.plain {
   }
   .navbar-primary .nav > li > a:hover {
     background: #222;
+  }
+}
+@media (max-width: 480px) {
+  .nav-collapse {
+    -webkit-transform: none;
   }
 }

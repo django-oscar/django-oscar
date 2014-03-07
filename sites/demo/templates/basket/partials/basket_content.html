@@ -3,8 +3,7 @@
 {% load thumbnail %}
 {% load currency_filters %}
 {% load staticfiles %}
-{% load url from future %}
-{% load stockrecord_tags %}
+{% load purchase_info_tags %}
 
 {% block basket_form_headers %}
 <div class="basket-title hidden-phone">
@@ -22,7 +21,7 @@
         {{ formset.management_form }}
 
         {% for form in formset %}
-            {% session_strategy request form.instance.product as session %}
+            {% purchase_info_for_product request form.instance.product as session %}
         <div class="basket-items">
             <div class="row-fluid">
                 <div class="span1">

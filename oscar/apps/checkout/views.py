@@ -1,3 +1,4 @@
+import six
 import logging
 
 from django.http import Http404, HttpResponseRedirect, HttpResponseBadRequest
@@ -5,7 +6,7 @@ from django.core.urlresolvers import reverse, reverse_lazy
 
 from django.contrib import messages
 from django.contrib.auth import login
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.utils.translation import ugettext as _
 from django.views.generic import (DetailView, TemplateView, FormView,
                                   DeleteView, UpdateView)
@@ -581,16 +582,16 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
 
         try:
             self.handle_payment(order_number, order_total, **payment_kwargs)
-        except RedirectRequired, e:
+        except RedirectRequired as e:
             # Redirect required (eg PayPal, 3DS)
             logger.info("Order #%s: redirecting to %s", order_number, e.url)
             return HttpResponseRedirect(e.url)
-        except UnableToTakePayment, e:
+        except UnableToTakePayment as e:
             # Something went wrong with payment but in an anticipated way.  Eg
             # their bankcard has expired, wrong card number - that kind of
             # thing. This type of exception is supposed to set a friendly error
             # message that makes sense to the customer.
-            msg = unicode(e)
+            msg = six.text_type(e)
             logger.warning(
                 "Order #%s: unable to take payment (%s) - restoring basket",
                 order_number, msg)
@@ -598,21 +599,21 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             # We re-render the payment details view
             self.preview = False
             return self.render_to_response(self.get_context_data(error=msg))
-        except PaymentError, e:
+        except PaymentError as e:
             # A general payment error - Something went wrong which wasn't
             # anticipated.  Eg, the payment gateway is down (it happens), your
             # credentials are wrong - that king of thing.
             # It makes sense to configure the checkout logger to
             # mail admins on an error as this issue warrants some further
             # investigation.
-            msg = unicode(e)
+            msg = six.text_type(e)
             logger.error("Order #%s: payment error (%s)", order_number, msg,
                          exc_info=True)
             self.restore_frozen_basket()
             self.preview = False
             return self.render_to_response(
                 self.get_context_data(error=error_msg))
-        except Exception, e:
+        except Exception as e:
             # Unhandled exception - hopefully, you will only ever see this in
             # development.
             logger.error(
@@ -631,14 +632,14 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             return self.handle_order_placement(
                 order_number, user, basket, shipping_address, shipping_method,
                 order_total, **order_kwargs)
-        except UnableToPlaceOrder, e:
+        except UnableToPlaceOrder as e:
             # It's possible that something will go wrong while trying to
             # actually place an order.  Not a good situation to be in as a
             # payment transaction may already have taken place, but needs
             # to be handled gracefully.
             logger.error("Order #%s: unable to place order - %s",
                          order_number, e, exc_info=True)
-            msg = unicode(e)
+            msg = six.text_type(e)
             self.restore_frozen_basket()
             return self.render_to_response(self.get_context_data(error=msg))
 
@@ -694,7 +695,7 @@ class ThankYouView(DetailView):
                     number=self.request.GET['order_number'])
             elif 'order_id' in self.request.GET:
                 order = Order._default_manager.get(
-                    id=self.request.GET['orderid'])
+                    id=self.request.GET['order_id'])
 
         if not order:
             if 'checkout_order_id' in self.request.session:

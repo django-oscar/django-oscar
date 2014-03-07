@@ -4,6 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.utils.timezone import now
 from oscar.core.compat import AUTH_USER_MODEL
+from six.moves import filter
 
 Product = models.get_model('catalogue', 'Product')
 

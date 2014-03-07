@@ -31,10 +31,10 @@ class TestUnavailablePolicy(TestCase):
 
     def test_gives_a_reason_for_unavailability(self):
         __, msg = self.availability.is_purchase_permitted(1)
-        self.assertEquals("Unavailable", msg)
+        self.assertEqual("Unavailable", msg)
 
     def test_returns_availability_code(self):
-        self.assertEquals('unavailable', self.availability.code)
+        self.assertEqual('unavailable', self.availability.code)
 
 
 class TestStockRequiredWrapperForRecordWithStock(TestCase):
@@ -55,10 +55,10 @@ class TestStockRequiredWrapperForRecordWithStock(TestCase):
         self.assertFalse(is_permitted)
 
     def test_returns_correct_code(self):
-        self.assertEquals('instock', self.availability.code)
+        self.assertEqual('instock', self.availability.code)
 
     def test_returns_correct_message(self):
-        self.assertEquals('In stock (5 available)', self.availability.message)
+        self.assertEqual('In stock (5 available)', self.availability.message)
 
 
 class TestStockRequiredWrapperForRecordWithoutStock(TestCase):
@@ -74,10 +74,10 @@ class TestStockRequiredWrapperForRecordWithoutStock(TestCase):
         self.assertFalse(is_permitted)
 
     def test_returns_correct_code(self):
-        self.assertEquals('outofstock', self.availability.code)
+        self.assertEqual('outofstock', self.availability.code)
 
     def test_returns_correct_message(self):
-        self.assertEquals('Unavailable', self.availability.message)
+        self.assertEqual('Unavailable', self.availability.message)
 
 
 class TestAvailableWrapper(TestCase):
@@ -93,7 +93,7 @@ class TestAvailableWrapper(TestCase):
         self.assertTrue(is_permitted)
 
     def test_returns_correct_code(self):
-        self.assertEquals('available', self.availability.code)
+        self.assertEqual('available', self.availability.code)
 
     def test_returns_correct_message(self):
-        self.assertEquals('Available', self.availability.message)
+        self.assertEqual('Available', self.availability.message)

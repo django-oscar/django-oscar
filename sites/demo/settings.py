@@ -19,10 +19,8 @@ location = lambda x: os.path.join(
 DEBUG = True
 TEMPLATE_DEBUG = True
 SQL_DEBUG = True
-SEND_BROKEN_LINK_EMAILS = False
 
 ADMINS = (
-    ('David Winterbottom', 'david.winterbottom@tangentlabs.co.uk'),
 )
 EMAIL_SUBJECT_PREFIX = '[Oscar demo] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -37,10 +35,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'oscar_demo',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
-        'PORT': '',
+        'USER': 'm',
     },
 }
 
@@ -137,7 +132,12 @@ MIDDLEWARE_CLASSES = (
     'oscar.apps.basket.middleware.BasketMiddleware',
 )
 
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
 INTERNAL_IPS = ('127.0.0.1',)
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False
+}
+
 
 ROOT_URLCONF = 'urls'
 
@@ -248,7 +248,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     # For profile testing
     'apps.user',
-    'apps.bigbang',
+    # Sentry (for live demo site)
+    'raven.contrib.django.raven_compat'
 ]
 
 # Include core apps with a few overrides:
@@ -272,10 +273,6 @@ HAYSTACK_CONNECTIONS = {
         'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
         'URL': 'http://127.0.0.1:8983/solr',
     },
-}
-
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False
 }
 
 AUTH_PROFILE_MODULE = 'user.Profile'
@@ -341,6 +338,9 @@ new_nav.append(
 OSCAR_DASHBOARD_NAVIGATION = new_nav
 
 GEOIP_PATH = os.path.join(os.path.dirname(__file__), 'geoip')
+
+#default currency for django-oscar-datacash
+DATACASH_CURRENCY = "GBP"
 
 try:
     from settings_local import *

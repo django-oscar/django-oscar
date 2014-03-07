@@ -1,8 +1,7 @@
 {% extends 'dashboard/layout.html' %}
-{% load url from future %}
 {% load i18n %}
 
-{% block body_class %}content-blocks{% endblock %}
+{% block body_class %}{{ block.super }} content-blocks{% endblock %}
 
 {% block title %}
     {% trans "Content blocks" %} | {{ block.super }}

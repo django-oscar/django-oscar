@@ -1,4 +1,3 @@
-{% load url from future %}
 {% load i18n %}
 {% load thumbnail %}
 {% load currency_filters %}
@@ -27,8 +26,8 @@
         <div class="basket-title hidden-phone">
             <div class="row-fluid">
                 <h4 class="span6">{% trans "Items to buy now" %}</h4>
-                <h4 class="span2">{% trans "Quantity" %}</h4>
-                <h4 class="span2 align-right">{% trans "Price" %}</h4>
+                <h4 class="span3">{% trans "Quantity" %}</h4>
+                <h4 class="span1 align-right">{% trans "Price" %}</h4>
                 <h4 class="span2 align-right">{% trans "Total" %}</h4>
             </div>
         </div>
@@ -58,40 +57,43 @@
                                 <h4><a href="{{ product.get_absolute_url }}">{{ line.description }}</a></h4>
                                 <p class="availability {{ session.availability.code }}">{{ session.availability.message }}</p>
                             </div>
-                            <div class="span2">
+                            <div class="span3">
                                 <div class="checkout-quantity control-group {% if form.errors %}error{% endif %}">
                                     {{ form.quantity }}
                                     <button class="btn" type="submit">{% trans "Update" %}</button>
-                                    <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove" class="inline">{% trans "Remove" %}</a>
-                                    {% if request.user.is_authenticated %}
-                                        | <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="save" class="inline">{% trans "Save for later" %}</a>
-                                    {% endif %}
-                                    <div style="display:none">
-                                        {{ form.save_for_later }}
-                                        {{ form.DELETE }}
-                                    </div>
-                                    {% for field_errors in form.errors.values %}
-                                        {% for error in field_errors %}
-                                            <span class="help-block"><i class="icon-exclamation-sign"></i> {{ error }}</span>
+                                    <p>
+                                        <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove" class="inline">{% trans "Remove" %}</a>
+                                        {% if request.user.is_authenticated %}
+                                            | <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="save" class="inline">{% trans "Save for later" %}</a>
+                                        {% endif %}
+                                        <div style="display:none">
+                                            {{ form.save_for_later }}
+                                            {{ form.DELETE }}
+                                        </div>
+                                        {% for field_errors in form.errors.values %}
+                                            {% for error in field_errors %}
+                                                <span class="error-block"><i class="icon-exclamation-sign"></i> {{ error }}</span>
+                                            {% endfor %}
+
                                         {% endfor %}
-                                    {% endfor %}
+                                    </p>
                                 </div>
                             </div>
-                            <div class="span2">
+                            <div class="span1">
                                 <p class="price_color align-right">
-                                    {% if session.price.is_tax_known %}
-                                        {{ session.price.incl_tax|currency:session.price.currency }}
+                                    {% if line.is_tax_known %}
+                                        {{ line.unit_price_incl_tax|currency:line.price_currency }}
                                     {% else %}
-                                        {{ session.price.excl_tax|currency:session.price.currency }}
+                                        {{ line.unit_price_excl_tax|currency:line.price_currency }}
                                     {% endif %}
                                 </p>
                             </div>
                             <div class="span2">
                                 <p class="price_color align-right">
-                                    {% if basket.is_tax_known %}
-                                        {{ line.line_price_incl_tax|currency:basket.currency }}
+                                    {% if line.is_tax_known %}
+                                        {{ line.line_price_incl_tax|currency:line.price_currency }}
                                     {% else %}
-                                        {{ line.line_price_excl_tax|currency:basket.currency }}
+                                        {{ line.line_price_excl_tax|currency:line.price_currency }}
                                     {% endif %}
                                 </p>
                             </div>
@@ -147,7 +149,7 @@
     {% block emptybasket %}
         <p>
             {% trans "Your basket is empty." %}
-            <a href="{% url 'promotions:home' %}">{% trans "Continue shopping" %}</a>
+            <a href="{{ homepage_url }}">{% trans "Continue shopping" %}</a>
         </p>
     {% endblock %}
 {% endif %}

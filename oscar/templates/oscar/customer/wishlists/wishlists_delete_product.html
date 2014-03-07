@@ -1,0 +1,39 @@
+{% extends "customer/baseaccountpage.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li>
+            <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li>
+            <a href="{% url 'customer:wishlists-list' %}">{% trans 'Wish Lists' %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li>
+            <a href="{% url 'customer:wishlists-detail' key=wishlist.key %}">{{ wishlist.name }}</a>
+            <span class="divider">/</span>
+        </li>
+        <li class="active">{% trans "Remove product" %}</li>
+    </ul>
+{% endblock %}
+
+{% block tabcontent %}
+    <form method="post">
+        {% csrf_token %}
+        <p>
+            {% blocktrans with product_name=object.get_title wishlist_name=wishlist.name %}
+                Are you sure you want to delete {{ product_name }} from wish list {{ wishlist_name }}?
+            {% endblocktrans %}
+        </p>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-large btn-danger">{% trans 'Remove' %}</button> {% trans 'or' %} <a href="{{ wishlist.get_absolute_url }}">{% trans 'cancel' %}</a>
+        </div>
+    </form>
+{% endblock tabcontent %}

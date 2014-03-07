@@ -3,7 +3,7 @@ from django.conf import settings
 from django.http import HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_class
@@ -21,6 +21,7 @@ class ProductDetailView(DetailView):
     model = Product
     view_signal = product_viewed
     template_folder = "catalogue"
+    enforce_paths = True
 
     def get(self, request, **kwargs):
         """
@@ -28,13 +29,14 @@ class ProductDetailView(DetailView):
         """
         self.object = product = self.get_object()
 
-        if product.is_variant:
-            return HttpResponsePermanentRedirect(
-                product.parent.get_absolute_url())
+        if self.enforce_paths:
+            if product.is_variant:
+                return HttpResponsePermanentRedirect(
+                    product.parent.get_absolute_url())
 
-        correct_path = product.get_absolute_url()
-        if correct_path != request.path:
-            return HttpResponsePermanentRedirect(correct_path)
+            correct_path = product.get_absolute_url()
+            if correct_path != request.path:
+                return HttpResponsePermanentRedirect(correct_path)
 
         response = super(ProductDetailView, self).get(request, **kwargs)
         self.send_signal(request, response, product)
@@ -119,6 +121,7 @@ class ProductCategoryView(ListView):
     context_object_name = "products"
     template_name = 'catalogue/browse.html'
     paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
+    enforce_paths = True
 
     def get_object(self):
         if 'pk' in self.kwargs:
@@ -129,10 +132,15 @@ class ProductCategoryView(ListView):
 
     def get(self, request, *args, **kwargs):
         self.get_object()
-        correct_path = self.category.get_absolute_url()
-        if correct_path != request.path:
-            return HttpResponsePermanentRedirect(correct_path)
         self.categories = self.get_categories()
+
+        if self.enforce_paths:
+            # Categories are fetched by primary key to allow slug changes
+            # If the slug has indeed changed, issue a redirect
+            correct_path = self.category.get_absolute_url()
+            if correct_path != request.path:
+                return HttpResponsePermanentRedirect(correct_path)
+
         return super(ProductCategoryView, self).get(request, *args, **kwargs)
 
     def get_categories(self):
@@ -175,7 +183,7 @@ class ProductListView(ListView):
         q = self.get_search_query()
         qs = Product.browsable.base_queryset()
         if q:
-            # Send signal to record the view of this product
+            # Send signal to record this search
             self.search_signal.send(sender=self, query=q,
                                     user=self.request.user)
             return qs.filter(title__icontains=q)

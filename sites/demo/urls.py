@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, include
+from django.conf.urls import patterns, include, url
 from django.conf import settings
 from django.contrib import admin
 from django.conf.urls.static import static
@@ -9,12 +9,17 @@ from apps.app import application
 from datacash.dashboard.app import application as datacash_app
 
 # These need to be imported into this namespace
-from oscar.views import handler500, handler404, handler403
+from oscar.views import handler500, handler404, handler403  # noqa
+
+js_info_dict = {
+    'packages': ('stores',),
+}
 
 admin.autodiscover()
 
 urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
+    url(r'^jsi18n/$', 'django.views.i18n.javascript_catalog', js_info_dict),
 
     # Stores extension
     (r'^stores/', include(stores_app.urls)),
@@ -30,5 +35,9 @@ urlpatterns = patterns('',
 )
 
 if settings.DEBUG:
+    import debug_toolbar
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
+    urlpatterns += patterns('',
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    )

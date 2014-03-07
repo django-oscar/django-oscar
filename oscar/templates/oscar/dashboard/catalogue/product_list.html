@@ -1,11 +1,10 @@
 {% extends 'dashboard/layout.html' %}
-{% load url from future %}
 {% load i18n %}
 {% load thumbnail %}
 {% load staticfiles %}
 {% load sorting_tags %}
 
-{% block body_class %}catalogue{% endblock %}
+{% block body_class %}{{ block.super }} catalogue{% endblock %}
 
 {% block title %}
     {% trans "Product management" %} | {{ block.super }}
@@ -34,6 +33,16 @@
         </div>
         <div class="well">
             <form action="." method="get" class="form-inline">
+                {% comment %}
+                    Add the current query string to the search form so that the
+                    sort order is not reset when searching.
+                {% endcomment %}
+                {% for name, value in request.GET.items %}
+                    {% if name not in form.fields %}
+                        <input type="hidden" name="{{ name }}" value="{{ value }}"/>
+                    {% endif %}
+                {% endfor %}
+
                 {% include "partials/form_fields_inline.html" with form=form %}
                 <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
             </form>
@@ -46,15 +55,7 @@
         </div>
         <div class="well">
             <form action="{% url 'dashboard:catalogue-product-create' %}" method="get" class="form-inline">
-                <span class="control-group">
-                    <label for="id_promotion_type">{% trans "Create a new product of type" %}</label>
-                    <select id="id_promotion_type" name="product_class">
-                        <option> -- {% trans "Choose type" %} --</option>
-                        {% for product_class in product_classes %}
-                            <option value="{{ product_class.id }}">{{ product_class.name }}</option>
-                        {% endfor %}
-                    </select>
-                </span>
+                {% include "partials/form_fields_inline.html" with form=productclass_form %}
                 <button class="btn btn-primary" type="submit"><i class="icon-plus"></i> {% trans "New Product" %}</button>
             </form>
         </div>

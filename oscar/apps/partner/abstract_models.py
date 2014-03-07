@@ -3,13 +3,13 @@ import warnings
 
 from django.db import models
 from django.conf import settings
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 from django.utils.importlib import import_module as django_import_module
 from oscar.core.compat import AUTH_USER_MODEL
 
-from oscar.core.utils import slugify
 from oscar.core.loading import get_class
+from oscar.models.fields import AutoSlugField
 from oscar.apps.partner.exceptions import InvalidStockAdjustment
 DefaultWrapper = get_class('partner.wrappers', 'DefaultWrapper')
 
@@ -54,7 +54,8 @@ class AbstractPartner(models.Model):
     setting up an Oscar deployment. Many Oscar deployments will only have one
     fulfillment partner.
     """
-    code = models.SlugField(_("Code"), max_length=128, unique=True)
+    code = AutoSlugField(_("Code"), max_length=128, unique=True,
+                         populate_from='name')
     name = models.CharField(_("Name"), max_length=128, null=True, blank=True)
 
     #: A partner can have users assigned to it. This is used
@@ -68,11 +69,6 @@ class AbstractPartner(models.Model):
         if not self.name:
             return self.code
         return self.name
-
-    def save(self, *args, **kwargs):
-        if not self.code:
-            self.code = slugify(self.name)
-        super(AbstractPartner, self).save(*args, **kwargs)
 
     @property
     def primary_address(self):

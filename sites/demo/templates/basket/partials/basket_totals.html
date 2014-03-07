@@ -1,6 +1,5 @@
 {% load i18n %}
 {% load currency_filters %}
-{% load url from future %}
 
 <div id="basket_totals">
     <table class="table table-bordered">
@@ -80,7 +79,7 @@
                 <td>
                     {% trans "Shipping" %} - {{ shipping_method.name }}
                 </td>
-                <td class="align-right">{{ shipping_method.basket_charge_incl_tax|currency }}</td>
+                <td class="align-right">{{ shipping_method.charge_incl_tax|currency }}</td>
             </tr>
         {% else %}
             {# As shipping is discounted, we break it down into its original charge and a discount #}
@@ -90,7 +89,7 @@
             </tr>
             <tr>
                 <td>{% trans "Shipping total (before discounts)" %}</td>
-                <td class="align-right">{{ shipping_method.basket_charge_incl_tax_before_discount|currency }}</td>
+                <td class="align-right">{{ shipping_method.charge_incl_tax_before_discount|currency }}</td>
             </tr>
             <tr>
                 {% with discount=shipping_method.get_discount %}
@@ -102,7 +101,7 @@
                 <td>
                     {% trans "Shipping total (after discounts)" %}
                 </td>
-                <td class="align-right">{{ shipping_method.basket_charge_incl_tax|currency }}</td>
+                <td class="align-right">{{ shipping_method.charge_incl_tax|currency }}</td>
             </tr>
         {% endif %}
 

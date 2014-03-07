@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
-from django.db.models import get_model
+from oscar.core.loading import get_model
 
 from oscar.models.fields import ExtendedURLField
 
@@ -192,8 +192,9 @@ class MultiImage(AbstractPromotion):
     name = models.CharField(_("Name"), max_length=128)
     images = models.ManyToManyField(
         'promotions.Image', null=True, blank=True,
-        help_text=("Choose the Image content blocks that this block will use. "
-                   "(You may need to create some first)."))
+        help_text=_(
+            "Choose the Image content blocks that this block will use. "
+            "(You may need to create some first)."))
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
@@ -256,8 +257,8 @@ class HandPickedProductList(AbstractProductList):
                                       null=True, verbose_name=_("Products"))
 
     def get_queryset(self):
-        return self.products.order_by('%s.display_order'
-                                      % OrderedProduct._meta.db_table)
+        return self.products.base_queryset()\
+            .order_by('%s.display_order' % OrderedProduct._meta.db_table)
 
     def get_products(self):
         return self.get_queryset()
@@ -295,15 +296,10 @@ class AutomaticProductList(AbstractProductList):
 
     def get_queryset(self):
         Product = get_model('catalogue', 'Product')
+        qs = Product.browsable.base_queryset()
         if self.method == self.BESTSELLING:
-            return (Product.browsable.all()
-                    .select_related('stockrecord__partner')
-                    .prefetch_related('variants', 'images')
-                    .order_by('-score'))
-        return (Product.browsable.all()
-                .select_related('stockrecord__partner')
-                .prefetch_related('variants', 'images')
-                .order_by('-date_created'))
+            return qs.order_by('-score')
+        return qs.order_by('-date_created')
 
     def get_products(self):
         return self.get_queryset()[:self.num_products]

@@ -1,7 +1,9 @@
+import six
+import operator
 from decimal import Decimal as D, ROUND_DOWN, ROUND_UP
 
 from django.core import exceptions
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.template.defaultfilters import date as date_filter
 from django.db import models
 from django.utils.timezone import now, get_current_timezone
@@ -12,10 +14,11 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 
 from oscar.core.utils import slugify
+from oscar.core.loading import get_class
 from oscar.apps.offer.managers import ActiveOfferManager
 from oscar.templatetags.currency_filters import currency
-from oscar.models.fields import PositiveDecimalField, ExtendedURLField
-from oscar.core.loading import get_class
+from oscar.models.fields import (PositiveDecimalField, ExtendedURLField,
+                                 AutoSlugField)
 
 BrowsableRangeManager = get_class('offer.managers', 'BrowsableRangeManager')
 
@@ -24,7 +27,7 @@ def load_proxy(proxy_class):
     module, classname = proxy_class.rsplit('.', 1)
     try:
         mod = import_module(module)
-    except ImportError, e:
+    except ImportError as e:
         raise exceptions.ImproperlyConfigured(
             "Error importing module %s: %s" % (module, e))
     try:
@@ -63,7 +66,8 @@ class ConditionalOffer(models.Model):
     name = models.CharField(
         _("Name"), max_length=128, unique=True,
         help_text=_("This is displayed within the customer's basket"))
-    slug = models.SlugField(_("Slug"), max_length=128, unique=True, null=True)
+    slug = AutoSlugField(_("Slug"), max_length=128, unique=True,
+                         populate_from='name')
     description = models.TextField(_("Description"), blank=True,
                                    help_text=_("This is displayed on the offer"
                                                " browsing page"))
@@ -178,9 +182,6 @@ class ConditionalOffer(models.Model):
         # covers these 4 fields (will add support for this in Django 1.5)
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-
         # Check to see if consumption thresholds have been broken
         if not self.is_suspended:
             if self.get_max_applications() == 0:
@@ -350,7 +351,10 @@ class ConditionalOffer(models.Model):
 
         def hide_time_if_zero(dt):
             # Only show hours/minutes if they have been specified
-            localtime = dt.astimezone(get_current_timezone())
+            if dt.tzinfo:
+                localtime = dt.astimezone(get_current_timezone())
+            else:
+                localtime = dt
             if localtime.hour == 0 and localtime.minute == 0:
                 return date_filter(localtime, settings.DATE_FORMAT)
             return date_filter(localtime, settings.DATETIME_FORMAT)
@@ -435,7 +439,7 @@ class Condition(models.Model):
         Return the proxy model
         """
         field_dict = dict(self.__dict__)
-        for field in field_dict.keys():
+        for field in list(field_dict.keys()):
             if field.startswith('_'):
                 del field_dict[field]
 
@@ -505,9 +509,10 @@ class Condition(models.Model):
             if not price:
                 continue
             line_tuples.append((price, line))
+        key = operator.itemgetter(0)
         if most_expensive_first:
-            return sorted(line_tuples, reverse=True)
-        return sorted(line_tuples)
+            return sorted(line_tuples, reverse=True, key=key)
+        return sorted(line_tuples, key=key)
 
 
 class Benefit(models.Model):
@@ -558,7 +563,7 @@ class Benefit(models.Model):
 
     def proxy(self):
         field_dict = dict(self.__dict__)
-        for field in field_dict.keys():
+        for field in list(field_dict.keys()):
             if field.startswith('_'):
                 del field_dict[field]
 
@@ -725,7 +730,7 @@ class Benefit(models.Model):
             line_tuples.append((price, line))
 
         # We sort lines to be cheapest first to ensure consistent applications
-        return sorted(line_tuples)
+        return sorted(line_tuples, key=operator.itemgetter(0))
 
     def shipping_discount(self, charge):
         return D('0.00')
@@ -881,6 +886,9 @@ class Range(models.Model):
         return self.__class_ids
 
     def num_products(self):
+        # Delegate to a proxy class if one is provided
+        if self.proxy_class:
+            return load_proxy(self.proxy_class)().num_products()
         if self.includes_all_products:
             return None
         return self.included_products.all().count()
@@ -918,7 +926,7 @@ class CountCondition(Condition):
     def name(self):
         return self._description % {
             'count': self.value,
-            'range': unicode(self.range).lower()}
+            'range': six.text_type(self.range).lower()}
 
     @property
     def description(self):
@@ -1006,7 +1014,7 @@ class CoverageCondition(Condition):
     def name(self):
         return self._description % {
             'count': self.value,
-            'range': unicode(self.range).lower()}
+            'range': six.text_type(self.range).lower()}
 
     @property
     def description(self):
@@ -1109,7 +1117,7 @@ class ValueCondition(Condition):
     def name(self):
         return self._description % {
             'amount': currency(self.value),
-            'range': unicode(self.range).lower()}
+            'range': six.text_type(self.range).lower()}
 
     @property
     def description(self):
@@ -1202,7 +1210,7 @@ class ApplicationResult(object):
     # (a) Give a discount off the BASKET total
     # (b) Give a discount off the SHIPPING total
     # (a) Trigger a post-order action
-    BASKET, SHIPPING, POST_ORDER = range(0, 3)
+    BASKET, SHIPPING, POST_ORDER = list(range(0, 3))
     affects = None
 
     @property

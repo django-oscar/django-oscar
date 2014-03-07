@@ -1,16 +1,20 @@
-from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+import six
+
+from django.core.exceptions import ObjectDoesNotExist
 from django.views import generic
-from django.db.models import get_model, Q
+from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
+from django.template.loader import render_to_string
 
-from oscar.core.loading import get_classes
+from oscar.core.loading import get_classes, get_model
 from oscar.views import sort_queryset
 from oscar.views.generic import ObjectLookupView
 
 (ProductForm,
+ ProductClassSelectForm,
  ProductSearchForm,
  CategoryForm,
  StockRecordFormSet,
@@ -20,6 +24,7 @@ from oscar.views.generic import ObjectLookupView
  ProductRecommendationFormSet) \
     = get_classes('dashboard.catalogue.forms',
                   ('ProductForm',
+                   'ProductClassSelectForm',
                    'ProductSearchForm',
                    'CategoryForm',
                    'StockRecordFormSet',
@@ -37,19 +42,17 @@ StockAlert = get_model('partner', 'StockAlert')
 Partner = get_model('partner', 'Partner')
 
 
-def get_queryset_for_user(user):
+def filter_products(queryset, user):
     """
-    Returns all products the given user has access to.
+    Restrict the queryset to products the given user has access to.
     A staff user is allowed to access all Products.
-    A non-staff user is only allowed access to a product if she's in at least
-    one stock record's partner user list.
+    A non-staff user is only allowed access to a product if they are in at
+    least one stock record's partner user list.
     """
-    queryset = Product.objects.base_queryset().order_by('-date_created')
     if user.is_staff:
-        return queryset.all()
-    else:
-        return queryset.filter(
-            stockrecords__partner__users__pk=user.pk).distinct()
+        return queryset
+
+    return queryset.filter(stockrecords__partner__users__pk=user.pk).distinct()
 
 
 class ProductListView(generic.ListView):
@@ -62,14 +65,15 @@ class ProductListView(generic.ListView):
     model = Product
     context_object_name = 'products'
     form_class = ProductSearchForm
+    productclass_form_class = ProductClassSelectForm
     description_template = _(u'Products %(upc_filter)s %(title_filter)s')
     paginate_by = 20
     recent_products = 5
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductListView, self).get_context_data(**kwargs)
-        ctx['product_classes'] = ProductClass.objects.all()
         ctx['form'] = self.form
+        ctx['productclass_form'] = self.productclass_form_class()
         if 'recently_edited' in self.request.GET:
             ctx['queryset_description'] \
                 = _("Last %(num_products)d edited products") \
@@ -79,14 +83,24 @@ class ProductListView(generic.ListView):
 
         return ctx
 
+    def filter_queryset(self, queryset):
+        """
+        Apply any filters to restrict the products that appear on the list
+        """
+        return filter_products(queryset, self.request.user)
+
     def get_queryset(self):
         """
-        Build the queryset for this list and also update the title that
-        describes the queryset
+        Build the queryset for this list
         """
-        description_ctx = {'upc_filter': '',
-                           'title_filter': ''}
-        queryset = get_queryset_for_user(self.request.user)
+        queryset = Product.objects.base_queryset()
+        queryset = self.filter_queryset(queryset)
+        queryset = self.apply_search(queryset)
+        queryset = self.apply_ordering(queryset)
+
+        return queryset
+
+    def apply_ordering(self, queryset):
         if 'recently_edited' in self.request.GET:
             # Just show recently edited
             queryset = queryset.order_by('-date_updated')
@@ -95,44 +109,60 @@ class ProductListView(generic.ListView):
             # Allow sorting when all
             queryset = sort_queryset(queryset, self.request,
                                      ['title'], '-date_created')
+        return queryset
+
+    def apply_search(self, queryset):
+        """
+        Filter the queryset and set the description according to the search
+        parameters given
+        """
+        description_ctx = {'upc_filter': '',
+                           'title_filter': ''}
+
         self.form = self.form_class(self.request.GET)
+
         if not self.form.is_valid():
             self.description = self.description_template % description_ctx
             return queryset
 
         data = self.form.cleaned_data
 
-        if data['upc']:
+        if data.get('upc'):
             queryset = queryset.filter(upc=data['upc'])
             description_ctx['upc_filter'] = _(
                 " including an item with UPC '%s'") % data['upc']
 
-        if data['title']:
+        if data.get('title'):
             queryset = queryset.filter(
                 title__icontains=data['title']).distinct()
             description_ctx['title_filter'] = _(
                 " including an item with title matching '%s'") % data['title']
 
         self.description = self.description_template % description_ctx
+
         return queryset
 
 
 class ProductCreateRedirectView(generic.RedirectView):
     permanent = False
+    productclass_form_class = ProductClassSelectForm
+
+    def get_product_create_url(self, product_class):
+        """ Allow site to provide custom URL """
+        return reverse('dashboard:catalogue-product-create',
+                       kwargs={'product_class_slug': product_class.slug})
+
+    def get_invalid_product_class_url(self):
+        messages.error(self.request, _("Please choose a product class"))
+        return reverse('dashboard:catalogue-product-list')
 
     def get_redirect_url(self, **kwargs):
-        product_class_id = self.request.GET.get('product_class', None)
-        if not product_class_id or not product_class_id.isdigit():
-            messages.error(self.request, _("Please choose a product class"))
-            return reverse('dashboard:catalogue-product-list')
-        try:
-            product_class = ProductClass.objects.get(id=product_class_id)
-        except ProductClass.DoesNotExist:
-            messages.error(self.request, _("Please choose a product class"))
-            return reverse('dashboard:catalogue-product-list')
+        form = self.productclass_form_class(self.request.GET)
+        if form.is_valid():
+            product_class = form.cleaned_data['product_class']
+            return self.get_product_create_url(product_class)
         else:
-            return reverse('dashboard:catalogue-product-create',
-                           kwargs={'product_class_id': product_class.id})
+            return self.get_invalid_product_class_url()
 
 
 class ProductCreateUpdateView(generic.UpdateView):
@@ -151,6 +181,19 @@ class ProductCreateUpdateView(generic.UpdateView):
     recommendations_formset = ProductRecommendationFormSet
     stockrecord_formset = StockRecordFormSet
 
+    def __init__(self, *args, **kwargs):
+        super(ProductCreateUpdateView, self).__init__(*args, **kwargs)
+        self.formsets = {'category_formset': self.category_formset,
+                         'image_formset': self.image_formset,
+                         'recommended_formset': self.recommendations_formset,
+                         'stockrecord_formset': self.stockrecord_formset}
+
+    def get_queryset(self):
+        """
+        Filter products that the user doesn't have permission to update
+        """
+        return filter_products(Product.objects.all(), self.request.user)
+
     def get_object(self, queryset=None):
         """
         This parts allows generic.UpdateView to handle creating products as
@@ -158,41 +201,32 @@ class ProductCreateUpdateView(generic.UpdateView):
         is that self.object is None. We emulate this behavior.
         Additionally, self.product_class is set.
         """
-        user = self.request.user
         self.creating = not 'pk' in self.kwargs
         if self.creating:
             try:
-                product_class_id = self.kwargs.get('product_class_id', None)
+                product_class_slug = self.kwargs.get('product_class_slug',
+                                                     None)
                 self.product_class = ProductClass.objects.get(
-                    id=product_class_id)
+                    slug=product_class_slug)
             except ObjectDoesNotExist:
                 raise Http404
             else:
                 return None  # success
         else:
             product = super(ProductCreateUpdateView, self).get_object(queryset)
-            user = self.request.user
             self.product_class = product.product_class
-            # check user has permission to update Product
-            if user.is_staff or product.is_user_a_partner_user(user):
-                return product
-            else:
-                raise PermissionDenied
+            return product
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
         ctx['product_class'] = self.product_class
-        if 'stockrecord_formset' not in ctx:
-            ctx['stockrecord_formset'] = self.stockrecord_formset(
-                self.product_class, self.request.user, instance=self.object)
-        if 'category_formset' not in ctx:
-            ctx['category_formset'] \
-                = self.category_formset(instance=self.object)
-        if 'image_formset' not in ctx:
-            ctx['image_formset'] = self.image_formset(instance=self.object)
-        if 'recommended_formset' not in ctx:
-            ctx['recommended_formset'] \
-                = self.recommendations_formset(instance=self.object)
+
+        for ctx_name, formset_class in six.iteritems(self.formsets):
+            if ctx_name not in ctx:
+                ctx[ctx_name] = formset_class(self.product_class,
+                                              self.request.user,
+                                              instance=self.object)
+
         if self.object is None:
             ctx['title'] = _('Create new %s product') % self.product_class.name
         else:
@@ -204,12 +238,6 @@ class ProductCreateUpdateView(generic.UpdateView):
         kwargs['product_class'] = self.product_class
         return kwargs
 
-    def form_valid(self, form):
-        return self.process_all_forms(form)
-
-    def form_invalid(self, form):
-        return self.process_all_forms(form)
-
     def process_all_forms(self, form):
         """
         Short-circuits the regular logic to have one place to have our
@@ -220,39 +248,41 @@ class ProductCreateUpdateView(generic.UpdateView):
         if self.creating and form.is_valid():
             self.object = form.save()
 
-        stockrecord_formset = self.stockrecord_formset(
-            self.product_class, self.request.user,
-            self.request.POST, instance=self.object)
-        category_formset = self.category_formset(
-            self.request.POST, instance=self.object)
-        image_formset = self.image_formset(
-            self.request.POST, self.request.FILES, instance=self.object)
-        recommended_formset = self.recommendations_formset(
-            self.request.POST, self.request.FILES, instance=self.object)
+        formsets = {}
+        for ctx_name, formset_class in six.iteritems(self.formsets):
+            formsets[ctx_name] = formset_class(self.product_class,
+                                               self.request.user,
+                                               self.request.POST,
+                                               self.request.FILES,
+                                               instance=self.object)
 
-        is_valid = all([
-            form.is_valid(),
-            category_formset.is_valid(),
-            image_formset.is_valid(),
-            recommended_formset.is_valid(),
-            stockrecord_formset.is_valid(),
-        ])
+        is_valid = form.is_valid() and all([formset.is_valid()
+                                            for formset in formsets.values()])
 
-        if is_valid:
-            return self.forms_valid(
-                form, stockrecord_formset, category_formset,
-                image_formset, recommended_formset)
+        cross_form_validation_result = self.clean(form, formsets)
+        if is_valid and cross_form_validation_result:
+            return self.forms_valid(form, formsets)
         else:
-            # delete the temporary product again
-            if self.creating and form.is_valid():
-                self.object.delete()
-                self.object = None
-            return self.forms_invalid(
-                form, stockrecord_formset, category_formset,
-                image_formset, recommended_formset)
+            return self.forms_invalid(form, formsets)
 
-    def forms_valid(self, form, stockrecord_formset, category_formset,
-                    image_formset, recommended_formset):
+    # form_valid and form_invalid are called depending on the validation result
+    # of just the product form and redisplay the form respectively return a
+    # redirect to the success URL. In both cases we need to check our formsets
+    # as well, so both methods do the same. process_all_forms then calls
+    # forms_valid or forms_invalid respectively, which do the redisplay or
+    # redirect.
+    form_valid = form_invalid = process_all_forms
+
+    def clean(self, form, formsets):
+        """
+        Perform any cross-form/formset validation. If there are errors, attach
+        errors to a form or a form field so that they are displayed to the user
+        and return False. If everything is valid, return True. This method will
+        be called regardless of whether the individual forms are valid.
+        """
+        return True
+
+    def forms_valid(self, form, formsets):
         """
         Save all changes and display a success url.
         """
@@ -261,23 +291,21 @@ class ProductCreateUpdateView(generic.UpdateView):
             self.object = form.save()
 
         # Save formsets
-        category_formset.save()
-        image_formset.save()
-        recommended_formset.save()
-        stockrecord_formset.save()
+        for formset in formsets.values():
+            formset.save()
 
         return HttpResponseRedirect(self.get_success_url())
 
-    def forms_invalid(self, form, stockrecord_formset, category_formset,
-                      image_formset, recommended_formset):
+    def forms_invalid(self, form, formsets):
+        # delete the temporary product again
+        if self.creating and self.object and self.object.pk is not None:
+            self.object.delete()
+            self.object = None
+
         messages.error(self.request,
                        _("Your submitted data was not valid - please "
-                         "correct the below errors"))
-        ctx = self.get_context_data(form=form,
-                                    stockrecord_formset=stockrecord_formset,
-                                    category_formset=category_formset,
-                                    image_formset=image_formset,
-                                    recommended_formset=recommended_formset)
+                         "correct the errors below"))
+        ctx = self.get_context_data(form=form, **formsets)
         return self.render_to_response(ctx)
 
     def get_url_with_querystring(self, url):
@@ -287,10 +315,12 @@ class ProductCreateUpdateView(generic.UpdateView):
         return "?".join(url_parts)
 
     def get_success_url(self):
-        if self.creating:
-            msg = _("Created product '%s'") % self.object.get_title()
-        else:
-            msg = _("Updated product '%s'") % self.object.get_title()
+        msg = render_to_string(
+            'dashboard/catalogue/messages/product_saved.html',
+            {
+                'product': self.object,
+                'creating': self.creating,
+            })
         messages.success(self.request, msg)
         url = reverse('dashboard:catalogue-product-list')
         if self.request.POST.get('action') == 'continue':
@@ -308,13 +338,11 @@ class ProductDeleteView(generic.DeleteView):
     model = Product
     context_object_name = 'product'
 
-    def get_object(self, queryset=None):
-        product = super(ProductDeleteView, self).get_object(queryset)
-        user = self.request.user
-        if user.is_staff or product.is_user_a_partner_user(user):
-            return product
-        else:
-            raise PermissionDenied
+    def get_queryset(self):
+        """
+        Filter products that the user doesn't have permission to update
+        """
+        return filter_products(Product.objects.all(), self.request.user)
 
     def get_success_url(self):
         msg = _("Deleted product '%s'") % self.object.title
@@ -393,6 +421,13 @@ class CategoryCreateView(CategoryListMixin, generic.CreateView):
     def get_success_url(self):
         messages.info(self.request, _("Category created successfully"))
         return super(CategoryCreateView, self).get_success_url()
+
+    def get_initial(self):
+        # set child category if set in the URL kwargs
+        initial = super(CategoryCreateView, self).get_initial()
+        if 'parent' in self.kwargs:
+            initial['_ref_node_id'] = self.kwargs['parent']
+        return initial
 
 
 class CategoryUpdateView(CategoryListMixin, generic.UpdateView):

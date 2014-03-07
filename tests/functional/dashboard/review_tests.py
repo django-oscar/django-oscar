@@ -1,18 +1,18 @@
 from datetime import datetime, timedelta
 
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.core.urlresolvers import reverse
 from oscar.core.compat import get_user_model
 from django_dynamic_fixture import get
 
-from oscar.test.testcases import ClientTestCase
+from oscar.test.testcases import WebTestCase
 
 
 ProductReview = get_model('reviews', 'productreview')
 User = get_user_model()
 
 
-class ReviewsDashboardTests(ClientTestCase):
+class ReviewsDashboardTests(WebTestCase):
     is_staff = True
 
     def test_reviews_dashboard_is_accessible_to_staff(self):
@@ -39,9 +39,9 @@ class ReviewsDashboardTests(ClientTestCase):
         }
         self.client.post(url, post_params)
 
-        self.assertEquals(ProductReview.objects.get(pk=1).status, 0)
-        self.assertEquals(ProductReview.objects.get(pk=2).status, 1)
-        self.assertEquals(ProductReview.objects.get(pk=3).status, 1)
+        self.assertEqual(ProductReview.objects.get(pk=1).status, 0)
+        self.assertEqual(ProductReview.objects.get(pk=2).status, 1)
+        self.assertEqual(ProductReview.objects.get(pk=3).status, 1)
 
     def test_filter_reviews_by_name(self):
         url = reverse('dashboard:reviews-list')
@@ -55,14 +55,14 @@ class ReviewsDashboardTests(ClientTestCase):
 
         response = self.client.get(url, {'name': 'peter'})
 
-        self.assertEquals(len(response.context['review_list']), 1)
-        self.assertEquals(response.context['review_list'][0].user, user1)
+        self.assertEqual(len(response.context['review_list']), 1)
+        self.assertEqual(response.context['review_list'][0].user, user1)
 
         response = self.client.get(url, {'name': 'lois griffin'})
 
-        self.assertEquals(len(response.context['review_list']), 2)
+        self.assertEqual(len(response.context['review_list']), 2)
         for review in response.context['review_list']:
-            self.assertEquals(review.user, user2)
+            self.assertEqual(review.user, user2)
 
     def test_filter_reviews_by_keyword(self):
         url = reverse('dashboard:reviews-list')
@@ -76,7 +76,8 @@ class ReviewsDashboardTests(ClientTestCase):
         get(ProductReview, user=user2, title='Lovely Thing')
 
         response = self.client.get(url, {'keyword': 'argh'})
-        self.assertItemsEqual(response.context['review_list'], [review2])
+        self.assertEqual(len(response.context['review_list']), 1)
+        self.assertEqual(response.context['review_list'][0], review2)
 
         response = self.client.get(url, {'keyword': 'review'})
         self.assertQuerysetContains(response.context['review_list'],
@@ -85,7 +86,9 @@ class ReviewsDashboardTests(ClientTestCase):
     def assertQuerysetContains(self, qs, items):
         qs_ids = [obj.id for obj in qs]
         item_ids = [item.id for item in items]
-        self.assertItemsEqual(qs_ids, item_ids)
+        self.assertEqual(len(qs_ids), len(item_ids))
+        for i, j in zip(qs_ids, item_ids):
+            self.assertEqual(i, j)
 
     def test_filter_reviews_by_date(self):
         now = datetime.now()
@@ -124,13 +127,16 @@ class ReviewsDashboardTests(ClientTestCase):
         review3 = get(ProductReview, user=user2, status=2)
 
         response = self.client.get(url, {'status': 0})
-        self.assertItemsEqual(response.context['review_list'], [review2])
+        self.assertEqual(len(response.context['review_list']), 1)
+        self.assertEqual(response.context['review_list'][0], review2)
 
         response = self.client.get(url, {'status': 1})
-        self.assertItemsEqual(response.context['review_list'], [review1])
+        self.assertEqual(len(response.context['review_list']), 1)
+        self.assertEqual(response.context['review_list'][0], review1)
 
         response = self.client.get(url, {'status': 2})
-        self.assertItemsEqual(response.context['review_list'], [review3])
+        self.assertEqual(len(response.context['review_list']), 1)
+        self.assertEqual(response.context['review_list'][0], review3)
 
         response = self.client.get(url, {'status': 3})
         reviews = response.context['review_list']

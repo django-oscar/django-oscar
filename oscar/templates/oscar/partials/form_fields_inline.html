@@ -1,4 +1,4 @@
-<span class="help-block">{{ form.non_field_errors }}</span>
+<span class="error-block">{{ form.non_field_errors }}</span>
 {% for field in form %}
     {% if field.is_hidden %}
         {{ field }}
@@ -7,7 +7,7 @@
             {{ field.label_tag }}
             {{ field }}
             {% for error in field.errors %}
-                <ul class="help-block">
+                <ul class="error-block">
                     <li>{{ error }}</li>
                 </ul>
             {% endfor %}

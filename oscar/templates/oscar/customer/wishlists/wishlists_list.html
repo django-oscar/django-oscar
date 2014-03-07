@@ -1,6 +1,5 @@
 {% extends "customer/baseaccountpage.html" %}
 {% load i18n %}
-{% load url from future %}
 
 {% block tabcontent %}
     {% if wishlists %}
@@ -24,7 +23,7 @@
                                 <ul class="dropdown-menu">
                                     <li>
                                         <a href="{% url 'customer:wishlists-update' key=wishlist.key %}">
-                                            {% trans 'Edit' %}
+                                            {% trans 'Wish list settings' %}
                                         </a>
                                     </li>
                                     <li>

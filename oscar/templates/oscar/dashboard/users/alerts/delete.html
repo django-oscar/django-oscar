@@ -1,9 +1,8 @@
 {% extends 'dashboard/layout.html' %}
 
-{% load url from future %}
 {% load i18n %}
 
-{% block body_class %}create-page users{% endblock %}
+{% block body_class %}{{ block.super }} create-page users{% endblock %}
 
 {% block title %}
     {% blocktrans with id=alert.id %}Alert #{{ id }}{% endblocktrans %} | {{ block.super }}

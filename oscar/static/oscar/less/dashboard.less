@@ -80,6 +80,9 @@ td .btn-toolbar {
     margin-bottom:@baseLineHeight / 2;
   }
   input[type=text],
+  input[type=number],
+  input[type=email],
+  input[type=url],
   textarea,
   select {
     .box-sizing(border-box);
@@ -97,7 +100,7 @@ td .btn-toolbar {
 }
 .form-inline {
   margin-bottom: 0;
-  .help-block:first-child {
+  .help-block:first-child, .error-block:first-child {
     display:none;
   }
   label {
@@ -142,6 +145,9 @@ td .btn-toolbar {
   .form-horizontal,
   .form-stacked {
     input[type=text],
+    input[type=number],
+    input[type=email],
+    input[type=url],
     textarea {
       width:95%;
     }
@@ -149,6 +155,9 @@ td .btn-toolbar {
   .form-stacked {
     .form-inline {
       input[type=text],
+      input[type=number],
+      input[type=email],
+      input[type=url],
       textarea {
         width:auto;
       }
@@ -179,7 +188,7 @@ input[type=text].hasDatepicker,
   }
 }
 .form-inline {
-  .help-block {
+  .help-block, .error-block {
     display:inline-block;
     margin:0 20px 0 10px;
     li {
@@ -187,6 +196,9 @@ input[type=text].hasDatepicker,
       color:#B94A48;
     }
   }
+  input[type=number],
+  input[type=email],
+  input[type=url],
   input[type=text] {
     width: 140px;
   }
@@ -960,5 +972,14 @@ textarea.plain {
   }
   .navbar-primary .nav > li > a:hover {
     background:#222;
+  }
+}
+
+// Override for Bootstrap 2.3.1/2.3.2
+// Fix disappearing menu in mobile Android Chrome
+// https://github.com/twbs/bootstrap/issues/11145
+@media (max-width: 480px) {
+  .nav-collapse {
+    -webkit-transform: none;
   }
 }

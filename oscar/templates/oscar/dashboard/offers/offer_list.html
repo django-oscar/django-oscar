@@ -1,6 +1,5 @@
 {% extends 'dashboard/layout.html' %}
 
-{% load url from future %}
 {% load currency_filters %}
 {% load sorting_tags %}
 {% load i18n %}
@@ -12,7 +11,7 @@
 {% block breadcrumbs %}
     <ul class="breadcrumb">
         <li>
-            <a href="{% url 'promotions:home' %}">{% trans "Dashboard" %}</a>
+            <a href="{{ homepage_url }}">{% trans "Dashboard" %}</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Offer management" %}</li>

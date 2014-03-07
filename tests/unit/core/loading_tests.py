@@ -1,6 +1,7 @@
 from os.path import dirname
 from django.test import TestCase
 from django.conf import settings
+from oscar.core.loading import get_model
 from django.test.utils import override_settings
 
 import oscar
@@ -113,3 +114,11 @@ class TestGetCoreAppsFunction(TestCase):
         self.assertTrue('apps.dashboard.catalogue' in apps)
         self.assertTrue('oscar.apps.dashboard.catalogue' not in apps)
         self.assertTrue('oscar.apps.catalogue' in apps)
+
+
+class TestOverridingCoreApps(TestCase):
+
+    def test_means_the_overriding_model_is_registered_first(self):
+        klass = get_model('partner', 'StockRecord')
+        self.assertEquals('tests._site.apps.partner.models',
+                          klass.__module__)

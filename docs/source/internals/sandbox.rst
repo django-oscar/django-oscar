@@ -89,7 +89,7 @@ Install Oscar and its dependencies within a virtualenv::
 
     $ git clone git@github.com:tangentlabs/django-oscar.git
     $ cd django-oscar
-    $ mkvirtualenv oscar
+    $ mkvirtualenv oscar  # needs virtualenvwrapper
     (oscar) $ make sandbox
     (oscar) $ sites/sandbox/manage.py runserver
 

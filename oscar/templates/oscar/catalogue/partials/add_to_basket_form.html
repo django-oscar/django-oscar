@@ -1,4 +1,3 @@
-{% load url from future %}
 {% load basket_tags %}
 {% load i18n %}
 {% load purchase_info_tags %}
@@ -23,6 +22,6 @@
             {% include "partials/form_fields.html" with form=alert_form %}
             <button type="submit" class="btn btn-large btn-info btn-block">{% trans "Notify me" %}</button>
         </form>
-        {% include "catalogue/partials/add_to_wishlist.html" %}
     {% endif %}
+    {% include "catalogue/partials/add_to_wishlist.html" %}
 {% endif %}

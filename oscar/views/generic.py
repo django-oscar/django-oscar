@@ -1,3 +1,4 @@
+import six
 import json
 
 from django import forms
@@ -11,6 +12,7 @@ from django.views.generic.base import View
 
 import phonenumbers
 from oscar.core.phonenumber import PhoneNumber
+from six.moves import map
 
 
 class PostActionMixin(object):
@@ -51,14 +53,7 @@ class BulkEditMixin(object):
     def get_checkbox_object_name(self):
         if self.checkbox_object_name:
             return self.checkbox_object_name
-        object_list = self.get_queryset()
-        if hasattr(object_list, 'model'):
-            return smart_str(object_list.model._meta.object_name.lower())
-        else:
-            return None
-
-    def get_queryset(self):
-        pass
+        return smart_str(self.model._meta.object_name.lower())
 
     def get_error_url(self, request):
         return request.META.get('HTTP_REFERER', '.')
@@ -77,7 +72,7 @@ class BulkEditMixin(object):
 
         ids = request.POST.getlist(
             'selected_%s' % self.get_checkbox_object_name())
-        ids = map(int, ids)
+        ids = list(map(int, ids))
         if not ids:
             messages.error(
                 self.request,
@@ -94,7 +89,7 @@ class BulkEditMixin(object):
         return [object_dict[id] for id in ids]
 
     def get_object_dict(self, ids):
-        return self.model.objects.in_bulk(ids)
+        return self.get_queryset().in_bulk(ids)
 
 
 class ObjectLookupView(View):
@@ -105,7 +100,7 @@ class ObjectLookupView(View):
     def format_object(self, obj):
         return {
             'id': obj.pk,
-            'text': unicode(obj),
+            'text': six.text_type(obj),
         }
 
     def initial_filter(self, qs, value):
@@ -146,7 +141,7 @@ class ObjectLookupView(View):
             qs, more = self.paginate(qs, page, page_limit)
 
         return HttpResponse(json.dumps({
-            'results': map(self.format_object, qs),
+            'results': [self.format_object(obj) for obj in qs],
             'more': more,
         }), mimetype='application/json')
 

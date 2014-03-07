@@ -1176,3 +1176,8 @@
     z-index: 1;
   }
 }
+@media (max-width: 480px) {
+  .nav-collapse {
+    -webkit-transform: none;
+  }
+}

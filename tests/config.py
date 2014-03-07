@@ -2,7 +2,7 @@ import os
 import django
 
 from django.conf import settings, global_settings
-from oscar import OSCAR_CORE_APPS, OSCAR_MAIN_TEMPLATE_DIR
+import oscar
 
 
 def configure():
@@ -30,7 +30,12 @@ def configure():
                 'django.contrib.staticfiles',
                 'sorl.thumbnail',
                 'compressor',
-            ] + OSCAR_CORE_APPS,
+                'tests._site.model_tests_app',  # contains models we need for testing
+
+                # Use a custom partner app to test overriding models.  I can't
+                # find a way of doing this on a per-test basis, so I'm using a
+                # global change.
+            ] + oscar.get_core_apps(['tests._site.apps.partner']),
             'TEMPLATE_CONTEXT_PROCESSORS': (
                 "django.contrib.auth.context_processors.auth",
                 "django.core.context_processors.request",
@@ -47,7 +52,7 @@ def configure():
             ),
             'TEMPLATE_DIRS': (
                 location('templates'),
-                OSCAR_MAIN_TEMPLATE_DIR,
+                oscar.OSCAR_MAIN_TEMPLATE_DIR,
             ),
             'MIDDLEWARE_CLASSES': global_settings.MIDDLEWARE_CLASSES + (
                 'oscar.apps.basket.middleware.BasketMiddleware',
@@ -66,12 +71,13 @@ def configure():
             'LOGIN_REDIRECT_URL': '/accounts/',
             'STATIC_URL': '/static/',
             'COMPRESS_ENABLED': False,
+            'COMPRESS_ROOT': '',  # needed to avoid issue #1214
             'ADMINS': ('admin@example.com',),
             'DEBUG': False,
             'SITE_ID': 1,
             'APPEND_SLASH': True,
             'DDF_DEFAULT_DATA_FIXTURE': 'tests.dynamic_fixtures.OscarDynamicDataFixtureClass',
-            'SESSION_SERIALIZER': 'django.contrib.sessions.serializers.PickleSerializer',
+            'SESSION_SERIALIZER': 'django.contrib.sessions.serializers.JSONSerializer',
         }
         if django.VERSION >= (1, 5):
             test_settings['INSTALLED_APPS'] += ['tests._site.myauth', ]

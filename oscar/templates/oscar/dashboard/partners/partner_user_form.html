@@ -1,9 +1,8 @@
 {% extends "dashboard/layout.html" %}
 {% load category_tags %}
 {% load i18n %}
-{% load url from future %}
 
-{% block body_class %}create-page partner{% endblock %}
+{% block body_class %}{{ block.super }} create-page partner{% endblock %}
 
 {% block title %}
     {{ title }} | {{ partner.name }} | {% trans "Partner management" %} | {{ block.super }}

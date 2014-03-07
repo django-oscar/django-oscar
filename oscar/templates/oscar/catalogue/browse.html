@@ -1,6 +1,5 @@
 {% extends "layout_2_col.html" %}
 
-{% load url from future %}
 {% load basket_tags %}
 {% load promotion_tags %}
 {% load category_tags %}
@@ -11,7 +10,7 @@
 {% endblock %}
 
 {% block description %}
-    {{ category.description }}
+    {{ category.description|default:""|striptags }}
 {% endblock %}
 
 {% block headertext %}{{ summary }}{% endblock %}
@@ -19,7 +18,7 @@
 {% block breadcrumbs %}
     <ul class="breadcrumb">
         <li>
-            <a href="{% url "promotions:home" %}">{% trans "Home" %}</a>
+            <a href="{{ homepage_url }}">{% trans "Home" %}</a>
             <span class="divider">/</span>
         </li>
         {% if not category %}
@@ -72,7 +71,7 @@
 
     {% if products %}
         <section>
-            <div class="mod">
+            <div>
                 <ol class="row-fluid">
                     {% for product in products %}
                         <li class="span3 {% if forloop.counter0|divisibleby:"4" %}no-margin{% endif %}">{% render_product product %}</li>

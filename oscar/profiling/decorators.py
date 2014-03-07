@@ -1,3 +1,5 @@
+from __future__ import print_function
+from __future__ import print_function
 import cProfile
 import pstats
 import time
@@ -18,11 +20,11 @@ def profile(fn):
         result = prof.runcall(fn, *args, **kwargs)
         duration = time.time() - start
 
-        print "Function ran in %.6f seconds - output written to %s" % (
-            duration, filepath)
+        print("Function ran in %.6f seconds - output written to %s" % (
+            duration, filepath))
         prof.dump_stats(filepath)
 
-        print "Printing stats"
+        print("Printing stats")
         stats = pstats.Stats(filepath)
         stats.sort_stats('cumulative')
         stats.print_stats()

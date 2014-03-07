@@ -1,6 +1,6 @@
 import datetime
 
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_class
@@ -27,7 +27,7 @@ class OrderReportCSVFormatter(ReportCSVFormatter):
             row = [
                 order.number,
                 '-' if order.is_anonymous else order.user.get_full_name(),
-                order.guest_email if order.is_anonymous else order.user.email,
+                order.email,
                 order.total_incl_tax,
                 self.format_datetime(order.date_placed)]
             writer.writerow(row)
@@ -44,6 +44,7 @@ class OrderReportHTMLFormatter(ReportHTMLFormatter):
 class OrderReportGenerator(ReportGenerator):
     code = 'order_report'
     description = _("Orders placed")
+    date_range_field_name = 'date_placed'
 
     formatters = {
         'CSV_formatter': OrderReportCSVFormatter,

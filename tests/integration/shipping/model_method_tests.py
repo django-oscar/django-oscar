@@ -15,23 +15,37 @@ User = get_user_model()
 class OrderAndItemChargesTests(TestCase):
 
     def setUp(self):
-        self.method = OrderAndItemCharges(price_per_order=D('5.00'), price_per_item=D('1.00'))
+        self.method = OrderAndItemCharges(
+            price_per_order=D('5.00'), price_per_item=D('1.00'))
         self.basket = factories.create_basket(empty=True)
         self.method.set_basket(self.basket)
 
+    def test_tax_is_known(self):
+        self.assertTrue(self.method.is_tax_known)
+
     def test_order_level_charge_for_empty_basket(self):
-        self.assertEquals(D('5.00'), self.method.charge_incl_tax)
+        self.assertEqual(D('5.00'), self.method.charge_incl_tax)
 
     def test_single_item_basket(self):
         record = factories.create_stockrecord()
         self.basket.add_product(record.product)
-        self.assertEquals(D('5.00') + D('1.00'),
+        self.assertEqual(D('5.00') + D('1.00'),
                           self.method.charge_incl_tax)
+
+    def test_single_item_basket_that_doesnt_require_shipping(self):
+        # Create a product that doesn't require shipping
+        record = factories.create_stockrecord()
+        product = record.product
+        product.product_class.requires_shipping = False
+        product.product_class.save()
+
+        self.basket.add_product(record.product)
+        self.assertEquals(D('5.00'), self.method.charge_incl_tax)
 
     def test_multi_item_basket(self):
         record = factories.create_stockrecord()
         self.basket.add_product(record.product, 7)
-        self.assertEquals(D('5.00') + 7*D('1.00'), self.method.charge_incl_tax)
+        self.assertEqual(D('5.00') + 7*D('1.00'), self.method.charge_incl_tax)
 
 
 @attr('shipping')
@@ -43,12 +57,12 @@ class ZeroFreeThresholdTest(TestCase):
         self.method.set_basket(self.basket)
 
     def test_free_shipping_with_empty_basket(self):
-        self.assertEquals(D('0.00'), self.method.charge_incl_tax)
+        self.assertEqual(D('0.00'), self.method.charge_incl_tax)
 
     def test_free_shipping_with_nonempty_basket(self):
         record = factories.create_stockrecord(price_excl_tax=D('5.00'))
         self.basket.add_product(record.product)
-        self.assertEquals(D('0.00'), self.method.charge_incl_tax)
+        self.assertEqual(D('0.00'), self.method.charge_incl_tax)
 
 
 @attr('shipping')
@@ -63,17 +77,17 @@ class NonZeroFreeThresholdTest(TestCase):
     def test_basket_below_threshold(self):
         record = factories.create_stockrecord(price_excl_tax=D('5.00'))
         self.basket.add_product(record.product)
-        self.assertEquals(D('10.00'), self.method.charge_incl_tax)
+        self.assertEqual(D('10.00'), self.method.charge_incl_tax)
 
     def test_basket_on_threshold(self):
         record = factories.create_stockrecord(price_excl_tax=D('5.00'))
         self.basket.add_product(record.product, quantity=4)
-        self.assertEquals(D('0.00'), self.method.charge_incl_tax)
+        self.assertEqual(D('0.00'), self.method.charge_incl_tax)
 
     def test_basket_above_threshold(self):
         record = factories.create_stockrecord(price_excl_tax=D('5.00'))
         self.basket.add_product(record.product, quantity=8)
-        self.assertEquals(D('0.00'), self.method.charge_incl_tax)
+        self.assertEqual(D('0.00'), self.method.charge_incl_tax)
 
 
 @attr('shipping')
@@ -86,6 +100,10 @@ class WeightBasedMethodTests(TestCase):
     def tearDown(self):
         self.standard.delete()
         self.express.delete()
+
+    def test_tax_is_known(self):
+        self.assertTrue(self.standard.is_tax_known)
+        self.assertTrue(self.express.is_tax_known)
 
     def test_get_band_for_lower_weight(self):
         band = self.standard.bands.create(upper_limit=1, charge=D('4.00'))

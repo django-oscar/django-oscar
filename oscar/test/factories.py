@@ -2,9 +2,10 @@ from decimal import Decimal as D
 import random
 import datetime
 
-from django.db.models import get_model
 from django.conf import settings
+from django.utils import timezone
 
+from oscar.core.loading import get_model
 from oscar.apps.partner import strategy, availability, prices
 from oscar.core.loading import get_class
 from oscar.apps.offer import models
@@ -93,7 +94,7 @@ def create_basket(empty=False):
     basket.strategy = strategy.Default()
     if not empty:
         product = create_product()
-        create_stockrecord(product)
+        create_stockrecord(product, num_in_stock=2)
         basket.add_product(product)
     return basket
 
@@ -132,7 +133,7 @@ def create_order(number=None, basket=None, user=None, shipping_address=None,
 
 def create_offer(name="Dummy offer", offer_type="Site",
                  max_basket_applications=None, range=None, condition=None,
-                 benefit=None, priority=0):
+                 benefit=None, priority=0, status=None, start=None, end=None):
     """
     Helper method for creating an offer
     """
@@ -145,8 +146,21 @@ def create_offer(name="Dummy offer", offer_type="Site",
     if benefit is None:
         benefit, __ = models.Benefit.objects.get_or_create(
             range=range, type=models.Benefit.PERCENTAGE, value=20)
+    if status is None:
+        status = models.ConditionalOffer.OPEN
+
+    # Create start and end date so offer is active
+    now = timezone.now()
+    if start is None:
+        start = now - datetime.timedelta(days=1)
+    if end is None:
+        end = now + datetime.timedelta(days=30)
+
     return models.ConditionalOffer.objects.create(
         name=name,
+        start_datetime=start,
+        end_datetime=end,
+        status=status,
         offer_type=offer_type,
         condition=condition,
         benefit=benefit,

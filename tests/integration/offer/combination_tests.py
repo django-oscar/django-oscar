@@ -33,7 +33,7 @@ class TestACountConditionWithPercentageDiscount(TestCase):
 
         self.assertTrue(self.offer.is_condition_satisfied(basket))
         discount = self.offer.apply_benefit(basket)
-        self.assertTrue(discount > 0)
+        self.assertTrue(discount.discount > 0)
         self.assertEqual(3, basket.num_items_with_discount)
         self.assertEqual(0, basket.num_items_without_discount)
         self.assertFalse(self.offer.is_condition_satisfied(basket))
@@ -44,7 +44,7 @@ class TestACountConditionWithPercentageDiscount(TestCase):
 
         self.assertTrue(self.offer.is_condition_satisfied(basket))
         discount = self.offer.apply_benefit(basket)
-        self.assertTrue(discount > 0)
+        self.assertTrue(discount.discount > 0)
         self.assertEqual(3, basket.num_items_with_discount)
         self.assertEqual(1, basket.num_items_without_discount)
         self.assertFalse(self.offer.is_condition_satisfied(basket))
@@ -55,11 +55,11 @@ class TestACountConditionWithPercentageDiscount(TestCase):
 
         # First application
         discount = self.offer.apply_benefit(basket)
-        self.assertTrue(discount > 0)
+        self.assertTrue(discount.discount > 0)
         self.assertEqual(3, basket.num_items_with_discount)
         self.assertEqual(3, basket.num_items_without_discount)
 
         # Second application
         discount = self.offer.apply_benefit(basket)
-        self.assertTrue(discount > 0)
+        self.assertTrue(discount.discount > 0)
         self.assertEqual(6, basket.num_items_with_discount)

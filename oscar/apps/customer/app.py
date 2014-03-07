@@ -30,6 +30,7 @@ class CustomerApplication(Application):
     register_view = views.AccountRegistrationView
     profile_view = views.ProfileView
     profile_update_view = views.ProfileUpdateView
+    profile_delete_view = views.ProfileDeleteView
     change_password_view = views.ChangePasswordView
 
     notification_inbox_view = notification_views.InboxView
@@ -60,7 +61,8 @@ class CustomerApplication(Application):
             url(r'^login/$', self.login_view.as_view(), name='login'),
             url(r'^logout/$', self.logout_view.as_view(), name='logout'),
             url(r'^register/$', self.register_view.as_view(), name='register'),
-            url(r'^change-password/$', self.change_password_view.as_view(),
+            url(r'^change-password/$',
+                login_required(self.change_password_view.as_view()),
                 name='change-password'),
 
             # Profile
@@ -70,6 +72,9 @@ class CustomerApplication(Application):
             url(r'^profile/edit/$',
                 login_required(self.profile_update_view.as_view()),
                 name='profile-update'),
+            url(r'^profile/delete/$',
+                login_required(self.profile_delete_view.as_view()),
+                name='profile-delete'),
 
             # Order history
             url(r'^orders/$',
@@ -179,6 +184,7 @@ class CustomerApplication(Application):
                 login_required(self.wishlists_move_product_to_another_view
                                .as_view()),
                 name='wishlists-move-product-to-another')]
+
         return self.post_process_urls(patterns('', *urls))
 
 

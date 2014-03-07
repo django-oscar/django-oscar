@@ -1,9 +1,8 @@
 {% extends 'dashboard/layout.html' %}
-{% load url from future %}
 {% load currency_filters %}
 {% load i18n %}
 
-{% block body_class %}users{% endblock %}
+{% block body_class %}{{ block.super }} users{% endblock %}
 
 {% block title %}
     {% blocktrans with email=customer.email %}{{ email }}{% endblocktrans %} | {{ block.super }}
@@ -46,16 +45,16 @@
                     <tr>
                         <th>{% trans "Active" %}?</th>
                         <td>
-                            {% if customer.is_active %}Yes{% else %}No{% endif %}
+                            {{ customer.is_active|yesno:_("Yes,No") }}
                         </td>
                     </tr>
                     <tr>
                         <th>{% trans "Superuser" %}?</th>
-                        <td>{{ customer.is_superuser }}</td>
+                        <td>{{ customer.is_superuser|yesno:_("True,False") }}</td>
                     </tr>
                     <tr>
                         <th>{% trans "Staff" %}?</th>
-                        <td>{{ customer.is_staff }}</td>
+                        <td>{{ customer.is_staff|yesno:_("True,False") }}</td>
                     </tr>
                     <tr>
                         <th>{% trans "Last login" %}</th>

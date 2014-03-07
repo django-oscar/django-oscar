@@ -1,8 +1,7 @@
 {% extends 'dashboard/layout.html' %}
-{% load url from future %}
 {% load i18n %}
 
-{% block body_class %}create-page promotions{% endblock %}
+{% block body_class %}{{ block.super }} create-page promotions{% endblock %}
 
 {% block breadcrumbs %}
     <ul class="breadcrumb">

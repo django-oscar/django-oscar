@@ -29,15 +29,13 @@
     "model": "catalogue.productcategory",
     "fields": {
         "category": 1,
-        "product": 1,
-        "is_canonical": false
+        "product": 1
     }
 },
 {
     "pk": 1,
     "model": "catalogue.product",
     "fields": {
-        "status": "",
         "rating": null,
         "description": "",
         "parent": null,
@@ -57,7 +55,6 @@
     "pk": 2,
     "model": "catalogue.product",
     "fields": {
-        "status": "",
         "rating": null,
         "description": "",
         "parent": null,

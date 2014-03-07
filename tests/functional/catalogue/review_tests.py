@@ -74,5 +74,5 @@ class TestACustomer(WebTestCase):
             form['score'] = 5
             form['body'] = 'Loving it, loving it, loving it'
             form.submit()
-            self.assertEquals(receiver.call_count, 1)
+            self.assertEqual(receiver.call_count, 1)
         self.assertEqual(1, self.product.reviews.all().count())

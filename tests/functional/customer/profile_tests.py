@@ -4,10 +4,11 @@ from decimal import Decimal as D
 from django.core.urlresolvers import reverse
 
 from oscar.test.factories import create_product, create_order
-from oscar.test.testcases import ClientTestCase, WebTestCase
+from oscar.test.testcases import WebTestCase
 from oscar.core.compat import get_user_model
 from oscar.apps.basket.models import Basket
 from oscar.apps.partner import strategy
+from oscar.apps.order.models import Order
 
 
 User = get_user_model()
@@ -26,11 +27,31 @@ class TestASignedInUser(WebTestCase):
         response = self.app.get(reverse('customer:profile-view'),
                                 user=self.user)
         self.assertEqual(200, response.status_code)
-        self.assertTrue(self.email in response.content)
+        self.assertTrue(self.email in response.content.decode('utf8'))
+
+    def test_can_delete_their_profile(self):
+        user_id = self.user.id
+        order_id = self.order.id
+
+        profile = self.app.get(reverse('customer:profile-view'),
+                               user=self.user)
+        delete_confirm = profile.click(linkid="delete_profile")
+        form = delete_confirm.forms['delete_profile_form']
+        form['password'] = self.password
+        form.submit()
+
+        # Ensure user is deleted
+        users = User.objects.filter(id=user_id)
+        self.assertEqual(0, len(users))
+
+        # Ensure order isn't deleted
+        users = User.objects.filter(id=user_id)
+        orders = Order.objects.filter(id=order_id)
+        self.assertEqual(1, len(orders))
 
     def test_can_update_their_name(self):
         profile_form_page = self.app.get(reverse('customer:profile-update'),
-                                user=self.user)
+                                         user=self.user)
         self.assertEqual(200, profile_form_page.status_code)
         form = profile_form_page.forms['profile_form']
         form['first_name'] = 'Barry'
@@ -40,7 +61,7 @@ class TestASignedInUser(WebTestCase):
 
     def test_can_update_their_email_address_and_name(self):
         profile_form_page = self.app.get(reverse('customer:profile-update'),
-                                user=self.user)
+                                         user=self.user)
         self.assertEqual(200, profile_form_page.status_code)
         form = profile_form_page.forms['profile_form']
         form['email'] = 'new@example.com'
@@ -57,7 +78,7 @@ class TestASignedInUser(WebTestCase):
     def test_cant_update_their_email_address_if_it_already_exists(self):
         User.objects.create_user(username='testuser', email='new@example.com',
                                  password="somerandompassword")
-        self.assertEquals(User.objects.count(), 2)
+        self.assertEqual(User.objects.count(), 2)
 
         profile_form_page = self.app.get(reverse('customer:profile-update'),
                                 user=self.user)
@@ -131,7 +152,7 @@ class TestASignedInUser(WebTestCase):
         self.assertEqual(0, basket.all_lines().count())
 
 
-class TestReorderingOrderLines(ClientTestCase):
+class TestReorderingOrderLines(WebTestCase):
     # TODO - rework this as a webtest
 
     @patch('django.conf.settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD', 1)
@@ -145,7 +166,7 @@ class TestReorderingOrderLines(ClientTestCase):
 
         basket = Basket.objects.all()[0]
         basket.strategy = strategy.Default()
-        self.assertEquals(len(basket.all_lines()), 1)
+        self.assertEqual(len(basket.all_lines()), 1)
 
         # try to reorder a product
         self.client.post(reverse('customer:order',
@@ -168,11 +189,11 @@ class TestReorderingOrderLines(ClientTestCase):
 
         basket = Basket.objects.all()[0]
         basket.strategy = strategy.Default()
-        self.assertEquals(len(basket.all_lines()), 1)
+        self.assertEqual(len(basket.all_lines()), 1)
 
         self.client.post(reverse('customer:order-line',
                                  args=(order.number, line.pk)),
                          {'action': 'reorder'})
 
-        self.assertEquals(len(basket.all_lines()), 1)
+        self.assertEqual(len(basket.all_lines()), 1)
         self.assertNotEqual(line.product.pk, product.pk)

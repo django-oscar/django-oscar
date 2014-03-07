@@ -1,12 +1,11 @@
 {% extends "customer/baseaccountpage.html" %}
 {% load i18n %}
-{% load url from future %}
 
 {% block tabcontent %}
 
     <ul class="nav nav-tabs">
-        <li class="{% if list_type == 'inbox' %}active{% endif %}"><a href="{% url 'customer:notifications-inbox' %}">Inbox</a></li>
-        <li class="{% if list_type == 'archive' %}active{% endif %}"><a href="{% url 'customer:notifications-archive' %}">Archive</a></li>
+        <li class="{% if list_type == 'inbox' %}active{% endif %}"><a href="{% url 'customer:notifications-inbox' %}">{% trans 'Inbox' %}</a></li>
+        <li class="{% if list_type == 'archive' %}active{% endif %}"><a href="{% url 'customer:notifications-archive' %}">{% trans 'Archive' context 'noun' %}</a></li>
     </ul>
 
     {% if notifications %}
@@ -36,7 +35,7 @@
                             <td>
                                 <a href="{% url 'customer:notifications-detail' pk=notification.pk %}" class="btn btn-info btn-small">{% trans 'View' %}</a>
                                 {% if list_type == 'inbox' %}
-                                    <a class="btn btn-success btn-small" href="#" data-behaviours="archive">{% trans 'Archive' %}</a>
+                                    <a class="btn btn-success btn-small" href="#" data-behaviours="archive">{% trans 'Archive' context 'verb' %}</a>
                                 {% endif %}
                                 <a class="btn btn-danger btn-small "href="#" data-behaviours="delete">{% trans 'Delete' %}</a>
                             </td>
@@ -46,7 +45,7 @@
             </table>
             {% trans "With selected items:" %} 
             {% if list_type == 'inbox' %}
-                <button type="submit" class="btn btn-success" name="action" value="archive">{% trans "Archive" %}</button>
+                <button type="submit" class="btn btn-success" name="action" value="archive">{% trans "Archive" context 'verb' %}</button>
             {% endif %}
             <button type="submit" class="btn btn-danger" name="action" value="delete">{% trans "Delete" %}</button>
         </form>
@@ -63,4 +62,3 @@
     {{ block.super }}
     oscar.notifications.init();
 {% endblock %}
-

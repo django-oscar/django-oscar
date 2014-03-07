@@ -1,7 +1,8 @@
 {% extends "layout.html" %}
-{% load url from future %}
 {% load currency_filters %}
 {% load i18n %}
+{% load reviews_tags %}
+{% load display_tags %}
 
 {% block headertext %}
     {% blocktrans with number=order.number %}Order #{{ number }}{% endblocktrans %}
@@ -60,7 +61,9 @@
             <th>{% trans 'Quantity' %}</th>
             <th>{% trans 'Line price excl. tax' %}</th>
             <th>{% trans 'Line price incl. tax' %}</th>
-            <th></th>
+            {% iffeature "reviews" %}
+                <th></th>
+            {% endiffeature %}
         </tr>
         {% for line in order.lines.all %}
             <tr>
@@ -70,9 +73,13 @@
                 <td>{{ line.quantity }}</td>
                 <td>{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>
                 <td>{{ line.line_price_before_discounts_incl_tax|currency:order.currency }}</td>
-                <td>
-                    <a href="{% url 'catalogue:reviews-add' product_slug=line.product.slug product_pk=line.product.id %}" class="btn btn-primary">{% trans 'Write a review' %}</a>
-                </td>
+                {% iffeature "reviews" %}
+                    <td>
+                        {% if line.product|is_review_permitted:user %}
+                            <a href="{% url 'catalogue:reviews-add' product_slug=line.product.slug product_pk=line.product.id %}" class="btn btn-primary">{% trans 'Write a review' %}</a>
+                        {% endif %}
+                    </td>
+                {% endiffeature %}
             </tr>
         {% endfor %}
         {% for discount in order.discounts.all %}

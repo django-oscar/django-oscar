@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
 
 # Code will only work with Django >= 1.5. See tests/config.py
+import re
 
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.utils.translation import ugettext_lazy as _
+from django.db import models
+from django.core import validators
+from django.contrib.auth.models import BaseUserManager
+
+from oscar.apps.customer.abstract_models import AbstractUser
 
 
 class CustomUserManager(BaseUserManager):
@@ -33,4 +39,14 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractUser):
+    """
+    Custom user based on Oscar's AbstractUser
+    """
+    username = models.CharField(_('username'), max_length=30, unique=True,
+        help_text=_('Required. 30 characters or fewer. Letters, numbers and '
+                    '@/./+/-/_ characters'),
+        validators=[
+            validators.RegexValidator(re.compile('^[\w.@+-]+$'), _('Enter a valid username.'), 'invalid')
+        ])
+
     objects = CustomUserManager()

@@ -1,10 +1,10 @@
 from django import forms
 from django.conf import settings
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.forms.models import modelformset_factory, BaseModelFormSet
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.templatetags.currency_filters import currency
+from oscar.forms import widgets
 
 Line = get_model('basket', 'line')
 Basket = get_model('basket', 'basket')
@@ -21,8 +21,9 @@ class BasketLineForm(forms.ModelForm):
 
     def clean_quantity(self):
         qty = self.cleaned_data['quantity']
-        self.check_max_allowed_quantity(qty)
-        self.check_permission(qty)
+        if qty > 0:
+            self.check_max_allowed_quantity(qty)
+            self.check_permission(qty)
         return qty
 
     def check_max_allowed_quantity(self, qty):
@@ -31,9 +32,9 @@ class BasketLineForm(forms.ModelForm):
             raise forms.ValidationError(reason)
 
     def check_permission(self, qty):
-        is_available, reason \
-            = self.instance.purchase_info.availability.is_purchase_permitted(
-                quantity=qty)
+        policy = self.instance.purchase_info.availability
+        is_available, reason = policy.is_purchase_permitted(
+            quantity=qty)
         if not is_available:
             raise forms.ValidationError(reason)
 
@@ -205,18 +206,21 @@ class AddToBasketForm(forms.Form):
         Currently requires that a stock record exists for the variant
         """
         choices = []
+        disabled_values = []
         for variant in item.variants.all():
-            if variant.has_stockrecord:
-                title = variant.get_title()
-                attr_summary = variant.attribute_summary
-                price = currency(variant.stockrecord.price_incl_tax)
-                if attr_summary:
-                    summary = u"%s (%s) - %s" % (title, attr_summary, price)
-                else:
-                    summary = u"%s - %s" % (title, price)
-                choices.append((variant.id, summary))
-                self.fields['product_id'] = forms.ChoiceField(
-                    choices=tuple(choices), label=_("Variant"))
+            attr_summary = variant.attribute_summary
+            if attr_summary:
+                summary = attr_summary
+            else:
+                summary = variant.get_title()
+            info = self.request.strategy.fetch_for_product(variant)
+            if not info.availability.is_available_to_buy:
+                disabled_values.append(variant.id)
+            choices.append((variant.id, summary))
+
+        self.fields['product_id'] = forms.ChoiceField(
+            choices=tuple(choices), label=_("Variant"),
+            widget=widgets.AdvancedSelect(disabled_values=disabled_values))
 
     def _create_product_fields(self, item):
         """

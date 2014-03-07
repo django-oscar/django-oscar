@@ -1,9 +1,8 @@
 {% extends 'dashboard/layout.html' %}
-{% load url from future %}
 {% load dashboard_tags %}
 {% load i18n %}
 
-{% block body_class %}users{% endblock %}
+{% block body_class %}{{ block.super }} users{% endblock %}
 
 {% block title %}
     {% trans "Customers" %} | {{ block.super }}

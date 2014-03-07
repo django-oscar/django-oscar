@@ -33,8 +33,7 @@ var oscar = (function(o, $) {
             };
             o.dashboard.options = $.extend(defaults, options);
 
-            o.dashboard.initDatePickers();
-            o.dashboard.initWYSIWYG();
+            o.dashboard.initWidgets(window.document);
 
             $('.scroll-pane').jScrollPane();
 
@@ -51,15 +50,35 @@ var oscar = (function(o, $) {
 
             // Adds error icon if there are errors in the product update form
             $('[data-behaviour="affix-nav-errors"] .tab-pane').each(function(){
-              var productErrorListener = $(this).find('[class*="error"]').closest('.tab-pane').attr('id');
+              var productErrorListener = $(this).find('[class*="error"]:not(:empty)').closest('.tab-pane').attr('id');
               $('[data-spy="affix"] a[href="#' + productErrorListener + '"]').append('<i class="icon-info-sign pull-right"></i>');
             });
 
+            o.dashboard.filereader.init();
+        },
+        initWidgets: function(el) {
+            /** Attach widgets to form input.
+             *
+             * This function is called once for the whole page. In that case el is window.document.
+             *
+             * It is also called when input elements have been dynamically added. In that case el
+             * contains the newly added elements.
+             *
+             * If the element selector refers to elements that may be outside of newly added
+             * elements, don't limit to elements within el. Then the operation will be performed
+             * twice for these elements. Make sure that that is harmless.
+             */
+            o.dashboard.initDatePickers(el);
+            o.dashboard.initWYSIWYG(el);
+            o.dashboard.initSelects(el);
+        },
+        initSelects: function(el) {
             // Adds type/search for select fields
-            $('.form-stacked select').css('width', '95%');
-            $('.form-inline select').css('width', '300px');
-            $('select').select2({width: 'resolve'});
-            $('input.select2').each(function(i, e) {
+            var $selects = $(el).find('select').not('.no-widget-init select').not('.no-widget-init');
+            $selects.filter('.form-stacked select').css('width', '95%');
+            $selects.filter('.form-inline select').css('width', '300px');
+            $selects.select2({width: 'resolve'});
+            $(el).find('input.select2').each(function(i, e) {
                 var opts = {};
                 if($(e).data('ajax-url')) {
                     opts = {
@@ -103,14 +122,13 @@ var oscar = (function(o, $) {
                 }
                 $(e).select2(opts);
             });
-
-            o.dashboard.filereader.init();
         },
-        initDatePickers: function() {
+        initDatePickers: function(el) {
             // Use datepicker for all inputs that have 'date' or 'datetime' in the name
+            $inputs = $(el).find('input').not('.no-widget-init input').not('.no-widget-init');
             if ($.datepicker) {
                 var defaultDatepickerConfig = {'dateFormat': o.dashboard.options.dateFormat};
-                $('input[name^="date"], input[name$="date"]').each(function(ind, ele) {
+                $inputs.filter('[name^="date"], [name$="date"]').each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultDatepickerConfig, {
                             'dateFormat': $ele.data('dateformat')
@@ -124,7 +142,7 @@ var oscar = (function(o, $) {
                     'timeFormat': o.dashboard.options.timeFormat,
                     'stepMinute': o.dashboard.options.stepMinute
                 };
-                $('input[name$="datetime"]').each(function(ind, ele) {
+                $inputs.filter('[name$="datetime"]').each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultDatetimepickerConfig, {
                         'dateFormat': $ele.data('dateformat'),
@@ -137,7 +155,7 @@ var oscar = (function(o, $) {
                     'timeFormat': o.dashboard.options.timeFormat,
                     'stepMinute': o.dashboard.options.stepMinute
                 };
-                $('input[name$="time"]').not('input[name$="datetime"]').each(function(ind, ele) {
+                $inputs.filter('[name$="time"]').not('[name$="datetime"]').each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultTimepickerConfig, {
                         'timeFormat': $ele.data('timeformat'),
@@ -146,9 +164,11 @@ var oscar = (function(o, $) {
                 });
             }
         },
-        initWYSIWYG: function() {
+        initWYSIWYG: function(el) {
             // Use TinyMCE by default
-            $('form.wysiwyg textarea, textarea.wysiwyg').tinymce(o.dashboard.options.tinyConfig);
+            $textareas = $(el).find('textarea').not('.no-widget-init textarea').not('.no-widget-init');
+            $textareas.filter('form.wysiwyg textarea').tinymce(o.dashboard.options.tinyConfig);
+            $textareas.filter('.wysiwyg').tinymce(o.dashboard.options.tinyConfig);
         },
         offers: {
             init: function() {
@@ -161,6 +181,7 @@ var oscar = (function(o, $) {
                 var type = $('#id_type').val(),
                     $valueContainer = $('#id_value').parents('.control-group');
                 if (type == 'Multibuy') {
+                    $('#id_value').val('');
                     $valueContainer.hide();
                 } else {
                     $valueContainer.show();

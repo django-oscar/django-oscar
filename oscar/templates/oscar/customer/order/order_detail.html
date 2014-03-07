@@ -1,8 +1,8 @@
 {% extends "customer/baseaccountpage.html" %}
-{% load url from future %}
 {% load currency_filters %}
 {% load display_tags %}
 {% load i18n %}
+{% load reviews_tags %}
 
 {% block extra_breadcrumbs %}
     <li>
@@ -25,38 +25,84 @@
         </thead>
         <tbody>
             {% for line in order.lines.all %}
-            <tr>
-                <td>
-                    <p><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></p>
-                    {% iffeature "reviews" %}
-                        <a class="btn" href="{% url 'catalogue:reviews-add' product_slug=line.product.slug product_pk=line.product.id %}">{% trans 'Write a review' %}</a>
-                    {% endiffeature %}
-                </td>
-                <td>{{ line.est_dispatch_date|default:"-" }}</td>
-                <td>{{ line.quantity }}</td>
-                <td>{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>
-                <td>{{ line.line_price_before_discounts_incl_tax|currency:order.currency }}</td>
-                <td width="90">
-                    {% if line.product %}
-                    <form id="line_form_{{ line.id }}" action="{% url 'customer:order-line' order_number=order.number line_id=line.id %}" method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="reorder" />
-                        <button class="btn btn-success" type="submit">{% trans 'Re-order' %}</button>
-                    </form>
-                    {% else %}
-                        {% trans 'Not available anymore' %}
-                    {% endif %}
-                </td>
-            </tr>
+                {% with product=line.product %}
+                    <tr>
+                        <td>
+                            {% if product %}
+                                <p>
+                                    <a href="{{ product.get_absolute_url }}">{{ line.description }}</a>
+                                </p>
+                                {% iffeature "reviews" %}
+                                    {% if product|is_review_permitted:user %}
+                                        <a class="btn" href="{% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id %}">{% trans 'Write a review' %}</a>
+                                    {% endif %}
+                                {% endiffeature %}
+                            {% else %}
+                                <p>
+                                    {{ line.description }}
+                                </p>
+                            {% endif %}
+                        </td>
+                        <td>{{ line.est_dispatch_date|default:"-" }}</td>
+                        <td>{{ line.quantity }}</td>
+                        <td>{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>
+                        <td>{{ line.line_price_before_discounts_incl_tax|currency:order.currency }}</td>
+                        <td width="90">
+                            {% if product %}
+                                <form id="line_form_{{ line.id }}" action="{% url 'customer:order-line' order_number=order.number line_id=line.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="reorder" />
+                                    <button class="btn btn-success" type="submit">{% trans 'Re-order' %}</button>
+                                </form>
+                            {% else %}
+                                {% trans 'Not available anymore' %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endwith %}
             {% endfor %}
 
             {% with discounts=order.basket_discounts %}
-                {% if discounts %}
+                {% block discount_totals %}
+                    {% if discounts %}
+                        <tr>
+                            <td colspan="4">{% trans "Basket total (excl. discounts)" %}</td>
+                            <td colspan="2">{{ order.basket_total_before_discounts_incl_tax|currency:order.currency }}</td>
+                        </tr>
+                        {% for discount in discounts %}
+                        <tr>
+                            <td colspan="4">
+                                <span class="label label-success">{% trans "Discount" %}</span>
+                                {{ discount.offer_name }}
+                            </td>
+                            <td colspan="2">- {{ discount.amount|currency:order.currency }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% endif %}
+                {% endblock discount_totals %}
+
+                {% block basket_total %}
+                    {% if discounts %}
+                        <tr>
+                            <th colspan="4">{% trans "Basket total (inc. discounts)" %}</th>
+                            <td colspan="2">{{ order.basket_total_incl_tax|currency:order.currency }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <th colspan="4">{% trans "Basket total" %}</th>
+                            <td colspan="2">{{ order.basket_total_incl_tax|currency:order.currency }}</td>
+                        </tr>
+                    {% endif %}
+                {% endblock basket_total %}
+            {% endwith %}
+
+            {% block shipping_totals %}
+                {% if order.has_shipping_discounts %}
                     <tr>
-                        <td colspan="4">{% trans "Basket total (excl. discounts)" %}</td>
-                        <td colspan="2">{{ order.basket_total_before_discounts_incl_tax|currency:order.currency }}</td>
+                        <td colspan="4">{% trans "Shipping total (excl. discounts)" %}</td>
+                        <td colspan="2">{{ order.shipping_before_discounts_incl_tax|currency:order.currency }}</td>
                     </tr>
-                    {% for discount in discounts %}
+                    {% for discount in order.shipping_discounts %}
                     <tr>
                         <td colspan="4">
                             <span class="label label-success">{% trans "Discount" %}</span>
@@ -66,65 +112,44 @@
                     </tr>
                     {% endfor %}
                     <tr>
-                        <th colspan="4">{% trans "Basket total (inc. discounts)" %}</th>
-                        <td colspan="2">{{ order.basket_total_incl_tax|currency:order.currency }}</td>
+                        <th colspan="4">{% trans "Shipping total (inc. discounts)" %}</th>
+                        <td colspan="2">{{ order.shipping_incl_tax|currency:order.currency }}</td>
                     </tr>
                 {% else %}
                     <tr>
-                        <th colspan="4">{% trans "Basket total" %}</th>
-                        <td colspan="2">{{ order.basket_total_incl_tax|currency:order.currency }}</td>
+                        <th colspan="4">{% trans "Shipping total" %}</th>
+                        <td colspan="2">{{ order.shipping_incl_tax|currency:order.currency }}</td>
                     </tr>
                 {% endif %}
-            {% endwith %}
+            {% endblock %}
 
-            {% if order.has_shipping_discounts %}
+            {% block order_total %}
                 <tr>
-                    <td colspan="4">{% trans "Shipping total (excl. discounts)" %}</td>
-                    <td colspan="2">{{ order.shipping_before_discounts_incl_tax|currency:order.currency }}</td>
+                    <th colspan="4">{% trans 'Order total' %}</th>
+                    <td colspan="2">{{ order.total_incl_tax|currency:order.currency }}</td>
                 </tr>
-                {% for discount in order.shipping_discounts %}
-                <tr>
-                    <td colspan="4">
-                        <span class="label label-success">{% trans "Discount" %}</span>
-                        {{ discount.offer_name }}
-                    </td>
-                    <td colspan="2">- {{ discount.amount|currency:order.currency }}</td>
-                </tr>
-                {% endfor %}
-                <tr>
-                    <th colspan="4">{% trans "Shipping total (inc. discounts)" %}</th>
-                    <td colspan="2">{{ order.shipping_incl_tax|currency:order.currency }}</td>
-                </tr>
-            {% else %}
-                <tr>
-                    <th colspan="4">{% trans "Shipping total" %}</th>
-                    <td colspan="2">{{ order.shipping_incl_tax|currency:order.currency }}</td>
-                </tr>
-            {% endif %}
-
-            <tr>
-                <th colspan="4">{% trans 'Order total' %}</th>
-                <td colspan="2">{{ order.total_incl_tax|currency:order.currency }}</td>
-            </tr>
+            {% endblock order_total %}
         </tbody>
     </table>
 
-    <form id="order_form_{{ order.id }}" action="{% url 'customer:order' order_number=order.number %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="order_id" value="{{ order.id }}" />
-        <input type="hidden" name="action" value="reorder" />
-        <button type="submit" class="btn btn-success">{% trans 'Re-order all items' %}</button>
-    </form>
+    {% block order_actions %}
+        <form id="order_form_{{ order.id }}" action="{% url 'customer:order' order_number=order.number %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="order_id" value="{{ order.id }}" />
+            <input type="hidden" name="action" value="reorder" />
+            <button type="submit" class="btn btn-success">{% trans 'Re-order all items' %}</button>
+        </form>
+    {% endblock order_actions %}
 
     <hr>
 
     <h3>{% trans 'Shipping Method' %}</h3>
     <p>{{ order.shipping_method }}</p>
-    
+
     <hr>
 
     <h3>{% trans 'Shipping Address' %}</h3>
-    
+
     <table class="table table-striped table-bordered">
         <tr>
             <th>{% trans 'Address:' %}</th>
@@ -134,8 +159,8 @@
         <tr>
             <td>
                 <p>{% for field in order.shipping_address.active_address_fields %}
-                {{ field }}<br/>
-                {% endfor %}</p>
+                        {{ field }}<br/>
+                    {% endfor %}</p>
             </td>
             <td><p>{{ order.shipping_address.phone_number }}</p></td>
             <td><p>{{ order.shipping_address.notes }}</p></td>

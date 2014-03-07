@@ -16,15 +16,16 @@ class Selector(object):
 
     This can be called in three ways:
 
-        1. Passing a request and user.  This is for determining
-        prices/availability for a normal user browsing the site.
+    #) Passing a request and user.  This is for determining
+       prices/availability for a normal user browsing the site.
 
-        2. Passing just the user.  This is for offline processes that don't
-        have a request instance but do know which user to determine prices for.
+    #) Passing just the user.  This is for offline processes that don't
+       have a request instance but do know which user to determine prices for.
 
-        3. Passing nothing.  This is for offline processes that don't
-        correspond to a specific user.  Eg, determining a price to store in
-        a search index.
+    #) Passing nothing.  This is for offline processes that don't
+       correspond to a specific user.  Eg, determining a price to store in
+       a search index.
+
     """
 
     def strategy(self, request=None, user=None, **kwargs):
@@ -73,6 +74,16 @@ class Base(object):
             "information."
         )
 
+    def fetch_for_group(self, product):
+        """
+        Given a group product, fetch a ``StockInfo`` instance
+        """
+        raise NotImplementedError(
+            "A strategy class must define a fetch_for_group method "
+            "for returning the availability and pricing "
+            "information."
+        )
+
     def fetch_for_line(self, line, stockrecord=None):
         """
         Given a basket line instance, fetch a ``PurchaseInfo`` instance.
@@ -111,6 +122,15 @@ class Structured(Base):
             availability=self.availability_policy(product, stockrecord),
             stockrecord=stockrecord)
 
+    def fetch_for_group(self, product):
+        # Select variants and associated stockrecords
+        variant_stock = self.select_variant_stockrecords(product)
+        return PurchaseInfo(
+            price=self.group_pricing_policy(product, variant_stock),
+            availability=self.group_availability_policy(
+                product, variant_stock),
+            stockrecord=None)
+
     def select_stockrecord(self, product):
         """
         Select the appropriate stockrecord
@@ -118,6 +138,15 @@ class Structured(Base):
         raise NotImplementedError(
             "A structured strategy class must define a "
             "'select_stockrecord' method")
+
+    def select_variant_stockrecords(self, product):
+        """
+        Select appropriate stock record for all variants of a product
+        """
+        records = []
+        for variant in product.variants.all():
+            records.append((variant, self.select_stockrecord(variant)))
+        return records
 
     def pricing_policy(self, product, stockrecord):
         """
@@ -171,6 +200,14 @@ class StockRequired(object):
             return availability.StockRequired(
                 stockrecord.net_stock_level)
 
+    def group_availability_policy(self, product, variant_stock):
+        # A parent product is available if one of its variants is
+        for variant, stockrecord in variant_stock:
+            policy = self.availability_policy(product, stockrecord)
+            if policy.is_available_to_buy:
+                return availability.Available()
+        return availability.Unavailable()
+
 
 class NoTax(object):
     """
@@ -182,6 +219,17 @@ class NoTax(object):
     def pricing_policy(self, product, stockrecord):
         if not stockrecord:
             return prices.Unavailable()
+        return prices.FixedPrice(
+            currency=stockrecord.price_currency,
+            excl_tax=stockrecord.price_excl_tax,
+            tax=D('0.00'))
+
+    def group_pricing_policy(self, product, variant_stock):
+        stockrecords = [x[1] for x in variant_stock if x[1] is not None]
+        if not stockrecords:
+            return prices.Unavailable()
+        # We take price from first record
+        stockrecord = stockrecords[0]
         return prices.FixedPrice(
             currency=stockrecord.price_currency,
             excl_tax=stockrecord.price_excl_tax,
@@ -239,10 +287,11 @@ class Default(UseFirstStockRecord, StockRequired, NoTax, Structured):
 class UK(UseFirstStockRecord, StockRequired, FixedRateTax, Structured):
     """
     Sample strategy for the UK that:
-        - uses the first stockrecord for each product (effectively assuming
+
+    - uses the first stockrecord for each product (effectively assuming
         there is only one).
-        - requires that a product has stock available to be bought
-        - applies a fixed rate of tax on all products
+    - requires that a product has stock available to be bought
+    - applies a fixed rate of tax on all products
 
     This is just a sample strategy used for internal development.  It is not
     recommended to be used in production, especially as the tax rate is
@@ -255,11 +304,12 @@ class UK(UseFirstStockRecord, StockRequired, FixedRateTax, Structured):
 class US(UseFirstStockRecord, StockRequired, DeferredTax, Structured):
     """
     Sample strategy for the US.
-        - uses the first stockrecord for each product (effectively assuming
-        there is only one).
-        - requires that a product has stock available to be bought
-        - doesn't apply a tax to product prices (normally this will be done
-        after the shipping address is entered).
+
+    - uses the first stockrecord for each product (effectively assuming
+      there is only one).
+    - requires that a product has stock available to be bought
+    - doesn't apply a tax to product prices (normally this will be done
+      after the shipping address is entered).
 
     This is just a sample one used for internal development.  It is not
     recommended to be used in production.

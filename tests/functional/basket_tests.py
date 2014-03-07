@@ -1,5 +1,5 @@
 from decimal import Decimal as D
-import httplib
+from six.moves import http_client
 import datetime
 
 from django.conf import settings
@@ -77,14 +77,14 @@ class BasketSummaryViewTests(TestCase):
         self.assertTrue('order_total' in self.response.context)
 
     def test_view_does_not_error(self):
-        self.assertEquals(httplib.OK, self.response.status_code)
+        self.assertEqual(http_client.OK, self.response.status_code)
 
     def test_basket_in_context(self):
         self.assertTrue('basket' in self.response.context)
 
     def test_basket_is_empty(self):
         basket = self.response.context['basket']
-        self.assertEquals(0, basket.num_lines)
+        self.assertEqual(0, basket.num_lines)
 
 
 class BasketThresholdTest(TestCase):
@@ -139,7 +139,7 @@ class SavedBasketTests(TestCase):
         user = User.objects.create_user(username='test', password='pass',
                                         email='test@example.com')
         client = Client()
-        client.login(username=user.username, password='pass')
+        client.login(email=user.email, password='pass')
 
         product = create_product(price=D('10.00'), num_in_stock=2)
         basket = factories.create_basket(empty=True)
@@ -171,7 +171,7 @@ class SavedBasketTests(TestCase):
         user = User.objects.create_user(username='test', password='pass',
                                         email='test@example.com')
         client = Client()
-        client.login(username=user.username, password='pass')
+        client.login(email=user.email, password='pass')
 
         product = create_product(price=D('10.00'), num_in_stock=1)
         basket, created = Basket.open.get_or_create(owner=user)

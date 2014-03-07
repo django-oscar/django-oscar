@@ -3,7 +3,6 @@ from oscar.core.loading import get_class
 SingleProduct = get_class('promotions.models', 'SingleProduct')
 RawHTML = get_class('promotions.models', 'RawHTML')
 Image = get_class('promotions.models', 'Image')
-MultiImage = get_class('promotions.models', 'MultiImage')
 PagePromotion = get_class('promotions.models', 'PagePromotion')
 AutomaticProductList = get_class('promotions.models', 'AutomaticProductList')
 HandPickedProductList = get_class('promotions.models', 'HandPickedProductList')

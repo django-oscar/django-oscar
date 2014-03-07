@@ -4,8 +4,8 @@ from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 
 from oscar.core.loading import get_class
-StockImporter = get_class('partner.utils', 'StockImporter')
-ImportError = get_class('partner.exceptions', 'ImportError')
+StockImporter = get_class('partner.importers', 'StockImporter')
+ImportingError = get_class('partner.exceptions', 'ImportingError')
 
 
 class Command(BaseCommand):
@@ -31,7 +31,7 @@ class Command(BaseCommand):
             logger.info("Starting stock import")
             logger.info(" - Importing records from '%s'" % args[1])
             importer.handle(args[1])
-        except ImportError, e:
+        except ImportingError as e:
             raise CommandError(str(e))
 
     def _get_logger(self):

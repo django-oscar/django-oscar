@@ -1,10 +1,15 @@
 import datetime
 
+from django.core.exceptions import ImproperlyConfigured
 from django.test import TestCase
 from django.forms import ValidationError
 
-from oscar.apps.payment import forms, models
 
+from oscar.apps.payment import forms, models
+ # types=[bankcards.VISA, bankcards.VISA_ELECTRON, bankcards.MASTERCARD,
+ #               bankcards.AMEX, bankcards.MAESTRO, bankcards.DINERS_CLUB,
+ #               bankcards.DISCOVER, bankcards.JCB, bankcards.CHINA_UNIONPAY,
+ #               bankcards.SOLO, bankcards.LASER, bankcards.SWITCH]
 
 class TestBankcardNumberField(TestCase):
 
@@ -12,12 +17,28 @@ class TestBankcardNumberField(TestCase):
         self.field = forms.BankcardNumberField()
 
     def test_strips_non_digits(self):
-        self.assertEquals(
+        self.assertEqual(
             '4111111111111111', self.field.clean('  4111 1111 1111 1111'))
 
     def test_rejects_numbers_which_dont_pass_luhn(self):
         with self.assertRaises(ValidationError):
             self.field.clean('1234123412341234')
+
+    def test_amex_accepted_when_allowed(self):
+        # Number taken from http://www.darkcoding.net/credit-card-numbers/
+        self.field = forms.BankcardNumberField(types=['American Express',])
+        self.assertEquals(
+            '348934265521923', self.field.clean('348934265521923'))
+
+    def test_amex_rejected_when_disallowed(self):
+        self.field = forms.BankcardNumberField(types=['Visa',])
+        with self.assertRaises(ValidationError):
+            self.field.clean('348934265521923')
+
+
+    def test_raises_error_for_invalid_card_type(self):
+        with self.assertRaises(ImproperlyConfigured):
+            self.field = forms.BankcardNumberField(types=['American Express', 'Nonsense'])
 
 
 class TestStartingMonthField(TestCase):
@@ -44,7 +65,7 @@ class TestStartingMonthField(TestCase):
 
     def test_returns_the_first_day_of_month(self):
         start_date = self.field.clean(['01', '2010'])
-        self.assertEquals(1, start_date.day)
+        self.assertEqual(1, start_date.day)
 
 
 class TestExpiryMonthField(TestCase):
@@ -73,11 +94,11 @@ class TestExpiryMonthField(TestCase):
     def test_returns_last_day_of_month(self):
         today = datetime.date.today()
         end_date = self.field.clean(['01', today.year + 1])
-        self.assertEquals(31, end_date.day)
+        self.assertEqual(31, end_date.day)
 
     def test_defaults_to_current_month(self):
         today = datetime.date.today()
-        self.assertEquals(["%.2d" % today.month, today.year],
+        self.assertEqual(["%.2d" % today.month, today.year],
                           self.field.initial)
 
 
@@ -103,8 +124,8 @@ class TestCCVField(TestCase):
     def test_has_meaningful_error_message(self):
         try:
             self.field.clean("asdf")
-        except ValidationError, e:
-            self.assertEquals("Please enter a 3 or 4 digit number",
+        except ValidationError as e:
+            self.assertEqual("Please enter a 3 or 4 digit number",
                               e.messages[0])
 
 
@@ -116,7 +137,7 @@ class TestValidBankcardForm(TestCase):
             'number': '1000010000000007',
             'ccv': '123',
             'expiry_month_0': '01',
-            'expiry_month_1': today.year + 1,
+            'expiry_month_1': today.year + 1
         }
         self.form = forms.BankcardForm(data)
         self.assertTrue(self.form.is_valid())
@@ -127,7 +148,7 @@ class TestValidBankcardForm(TestCase):
     def test_returns_bankcard_with_sensitive_data_intact(self):
         bankcard = self.form.bankcard
         self.assertFalse(bankcard.number.startswith('X'))
-        self.assertEquals('123', bankcard.ccv)
+        self.assertEqual('123', bankcard.ccv)
 
 
 class TestBankcardForm(TestCase):

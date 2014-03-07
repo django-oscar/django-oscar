@@ -7,7 +7,7 @@ class OfferApplications(object):
 
     Each offer application is stored as a dict which has fields for:
 
-    * The offer that led to the successful applicatio
+    * The offer that led to the successful application
     * The result instance
     * The number of times the offer was successfully applied
     """

@@ -1,6 +1,5 @@
 {% extends "oscar/checkout/shipping_methods.html" %}
 {% load currency_filters %}
-{% load url from future %}
 {% load i18n %}
 
 {% block shipping_method %}
@@ -34,7 +33,7 @@
                     {% endif %}
                 </div>
                 <div class="span1">
-                    {{ method.basket_charge_incl_tax|currency }}
+                    {{ method.charge_incl_tax|currency }}
                 </div>
                 <div class="span2">
                     <form method="post" action="{% url 'checkout:shipping-method' %}">

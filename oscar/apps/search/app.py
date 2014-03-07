@@ -34,7 +34,8 @@ class SearchApplication(Application):
         # Build SQS based on the OSCAR_SEARCH_FACETS settings
         sqs = SearchQuerySet()
         for facet in settings.OSCAR_SEARCH_FACETS['fields'].values():
-            sqs = sqs.facet(facet['field'])
+            options = facet.get('options', {})
+            sqs = sqs.facet(facet['field'], **options)
         for facet in settings.OSCAR_SEARCH_FACETS['queries'].values():
             for query in facet['queries']:
                 sqs = sqs.query_facet(facet['field'], query[1])

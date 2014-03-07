@@ -1,5 +1,6 @@
 from django.conf import settings
 from purl import URL
+from six.moves import map
 
 
 def facet_data(request, form, results):  # noqa (too complex (10))
@@ -8,6 +9,9 @@ def facet_data(request, form, results):  # noqa (too complex (10))
     templates can use without having to manually construct URLs
     """
     facet_data = {}
+    if not results:
+        return facet_data
+
     base_url = URL(request.get_full_path())
     facet_counts = results.facet_counts()
 
@@ -33,6 +37,9 @@ def facet_data(request, form, results):  # noqa (too complex (10))
                 url = base_url.remove_query_param(
                     'selected_facets', '%s:%s' % (
                         field_filter, name))
+                # Don't carry through pagination params
+                if url.has_query_param('page'):
+                    url = url.remove_query_param('page')
                 datum['deselect_url'] = url.as_string()
             else:
                 # This filter is not selected - built the 'select' URL
@@ -40,6 +47,9 @@ def facet_data(request, form, results):  # noqa (too complex (10))
                 url = base_url.append_query_param(
                     'selected_facets', '%s:%s' % (
                         field_filter, name))
+                # Don't carry through pagination params
+                if url.has_query_param('page'):
+                    url = url.remove_query_param('page')
                 datum['select_url'] = url.as_string()
             facet_data[key]['results'].append(datum)
 

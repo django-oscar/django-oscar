@@ -1,5 +1,5 @@
 from django import forms
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
 Vote = get_model('reviews', 'vote')
@@ -27,4 +27,17 @@ class VoteForm(forms.ModelForm):
 
     class Meta:
         model = Vote
-        fields = ()
+        fields = ('delta',)
+
+    def __init__(self, review, user, *args, **kwargs):
+        super(VoteForm, self).__init__(*args, **kwargs)
+        self.instance.review = review
+        self.instance.user = user
+
+    @property
+    def is_up_vote(self):
+        return self.cleaned_data['delta'] == Vote.UP
+
+    @property
+    def is_down_vote(self):
+        return self.cleaned_data['delta'] == Vote.DOWN

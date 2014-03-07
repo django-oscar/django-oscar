@@ -1,7 +1,7 @@
 import datetime
 
 from django.test import TestCase
-from django.db.models import get_model
+from oscar.core.loading import get_model
 import mock
 
 from oscar.apps.offer import utils

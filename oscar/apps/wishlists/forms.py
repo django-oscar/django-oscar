@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.forms.models import inlineformset_factory
 
 WishList = get_model('wishlists', 'WishList')

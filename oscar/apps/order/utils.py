@@ -1,6 +1,6 @@
 from django.contrib.sites.models import Site
 from django.conf import settings
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.shipping.methods import Free
@@ -102,7 +102,7 @@ class OrderCreator(object):
         """
         Creates an order model.
         """
-        order_data = {'basket_id': basket.id,
+        order_data = {'basket': basket,
                       'number': order_number,
                       'site': Site._default_manager.get_current(),
                       'currency': total.currency,

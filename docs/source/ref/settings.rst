@@ -23,6 +23,15 @@ Default: ``''``
 
 The tagline that is displayed next to the shop name and in the browser title.
 
+``OSCAR_HOMEPAGE``
+------------------
+
+Default: ``reverse_lazy('promotions:home')``
+
+URL of home page of your site. This value is used for `Home` link in
+navigation and redirection page after logout. Useful if you use a different app
+to serve your homepage.
+
 ``OSCAR_PARTNER_WRAPPERS``
 --------------------------
 
@@ -52,12 +61,28 @@ Default: 20
 
 The number of recently viewed products to store.
 
+``OSCAR_RECENTLY_VIEWED_COOKIE_LIFETIME``
+-----------------------------------------
+
+Default: 604800 (1 week in seconds)
+
+The time to live for the cookie in seconds.
+
+``OSCAR_RECENTLY_VIEWED_COOKIE_NAME``
+-------------------------------------
+
+Default: ``'oscar_history'``
+
+The name of the cookie for showing recently viewed products.
+
 ``OSCAR_PRODUCTS_PER_PAGE``
 ---------------------------
 
 Default: 20
 
 The number of products to paginate by.
+
+.. _oscar_search_facets:
 
 ``OSCAR_SEARCH_FACETS``
 ------------------------------
@@ -129,6 +154,18 @@ Default: see ``oscar.defaults`` (too long to include here).
 
 A list of dashboard navigation elements. Usage is explained in
 :doc:`/howto/how_to_configure_the_dashboard_navigation`.
+
+``OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION``
+-------------------------------------------
+
+Default: ``dashboard.nav.default_access_fn``
+
+``OSCAR_DASHBOARD_NAVIGATION`` allows passing an access function for each node
+which is used to determine whether to show the node for a specific user or not.
+If no access function is defined, the function specified here is used.
+The default function integrates with the permission-based dashboard and shows
+the node if the user will be able to access it. That should be sufficient for
+most cases.
 
 Order settings
 ==============
@@ -212,6 +249,15 @@ List of form fields that a user has to fill out to validate an address field.
 
 Review settings
 ===============
+
+``OSCAR_ALLOW_ANON_REVIEWS``
+----------------------------
+
+Default: ``True``
+
+This setting defines whether an anonymous user can create a review for
+a product without registering first. If it is set to ``True`` anonymous
+users can create product reviews.
 
 ``OSCAR_MODERATE_REVIEWS``
 --------------------------
@@ -314,12 +360,16 @@ The maximum number of products that can be added to a basket at once.
 ``OSCAR_BASKET_COOKIE_OPEN``
 ----------------------------
 
-Default: ``oscar_open_basket``
+Default: ``'oscar_open_basket'``
+
+The name of the cookie for the open basket.
 
 ``OSCAR_BASKET_COOKIE_SAVED``
 -----------------------------
 
-Default: ``oscar_saved_basket``
+Default: ``'oscar_saved_basket'``
+
+The name of the cookie for the saved basket.
 
 Currency settings
 =================

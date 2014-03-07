@@ -1,10 +1,9 @@
 {% extends "dashboard/layout.html" %}
-{% load url from future %}
 {% load currency_filters %}
 {% load sorting_tags %}
 {% load i18n %}
 
-{% block body_class %}reviews{% endblock %}
+{% block body_class %}{{ block.super }} reviews{% endblock %}
 {% block title %}
     {% trans "Reviews" %} | {{ block.super }}
 {% endblock %}
@@ -107,7 +106,7 @@
                                                 <span class="caret"></span>
                                             </a>
                                             <ul class="dropdown-menu pull-right">
-                                                {% if review.title %}
+                                                {% if review.title and review.product %}
                                                     <li><a href="{% url 'catalogue:reviews-detail' product_slug=review.product.slug product_pk=review.product.id pk=review.id %}">{% trans "View on site" %}</a></li>
                                                 {% endif %}
                                                 <li><a href="{% url 'dashboard:reviews-update' pk=review.id %}">{% trans "Edit" %}</a></li>

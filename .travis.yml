@@ -1,25 +1,32 @@
 language: python
+
 python:
-  - 2.6
-  - 2.7
-install:
   - '2.6'
   - '2.7'
+  - '3.3'
+
 env:
   global:
     # $TRANSIFEX_PASSWORD for oscar_bot (used in transifex.sh)
     secure: FuIlzEsGJiAwhaIRBmRNsq9eXmuzs25fX6BChknW4lDyVAySWMp0+Zps9Bd0JgfFYUG3Ip+OTmksYIoTUsG25ZJS9cq1IFt3QKUAN70YCI/4ZBLeIdICPEyxq+Km179+NeEXmBUug17RLMLxh3MWfO+RKUHK9yHIPNNpq0dNyoo=
   matrix:
-  - DJANGO_VERSION=1.4.10
-  - DJANGO_VERSION=1.5.4
-  - DJANGO_VERSION=1.6
+    - DJANGO_VERSION=1.5.5
+    - DJANGO_VERSION=1.6.1
+
+matrix:
+  allow_failures:
+    - python: '3.3'
+
 install:
   - easy_install Django==$DJANGO_VERSION
+
 before_script:
   - mysql -e 'create database oscar_vagrant;'
   - psql -c 'create database oscar_vagrant;' -U postgres
+
 script:
   - make travis
+
 after_success:
   - coveralls
   - ./transifex.sh

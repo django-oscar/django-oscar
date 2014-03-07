@@ -1,8 +1,8 @@
 from django.views.generic import ListView
-from django.db.models import get_model
 from django import http
 from django.shortcuts import get_object_or_404
 
+from oscar.core.loading import get_model
 from oscar.apps.offer.models import ConditionalOffer, Range
 
 Product = get_model('catalogue', 'Product')

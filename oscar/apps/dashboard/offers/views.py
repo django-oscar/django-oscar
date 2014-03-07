@@ -1,9 +1,7 @@
 import datetime
 import json
 
-from django.views.generic import (ListView, FormView, DeleteView,
-                                  CreateView, UpdateView)
-from django.db.models.loading import get_model
+from django.views.generic import ListView, FormView, DeleteView
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import HttpResponseRedirect
@@ -12,7 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 
-from oscar.core.loading import get_classes, get_class
+from oscar.core.loading import get_classes, get_class, get_model
 from oscar.views import sort_queryset
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
@@ -112,8 +110,9 @@ class OfferWizardStepView(FormView):
 
         # Adjust kwargs to avoid trying to save the range instance
         form_data = form.cleaned_data.copy()
-        if 'range' in form_data:
-            form_data['range_id'] = form_data['range'].id
+        range = form_data.get('range', None)
+        if range is not None:
+            form_data['range_id'] = range.id
             del form_data['range']
         form_kwargs = {'data': form_data}
         json_data = json.dumps(form_kwargs, cls=DjangoJSONEncoder)
@@ -383,55 +382,3 @@ class OfferDetailView(ListView):
             return formatter.generate_response(context['order_discounts'],
                                                offer=self.offer)
         return super(OfferDetailView, self).render_to_response(context)
-
-
-class RangeListView(ListView):
-    model = Range
-    context_object_name = 'ranges'
-    template_name = 'dashboard/offers/range_list.html'
-
-
-class RangeCreateView(CreateView):
-    model = Range
-    template_name = 'dashboard/offers/range_form.html'
-
-    def get_success_url(self):
-        messages.success(self.request, _("Range created"))
-        return reverse('dashboard:range-list')
-
-
-class RangeUpdateView(UpdateView):
-    model = Range
-    template_name = 'dashboard/offers/range_form.html'
-
-    def get_success_url(self):
-        messages.success(self.request, _("Range updated"))
-        return reverse('dashboard:range-list')
-
-
-class RangeDeleteView(DeleteView):
-    model = Range
-    template_name = 'dashboard/offers/range_delete.html'
-    context_object_name = 'range'
-
-    def get_success_url(self):
-        messages.warning(self.request, _("Range deleted"))
-        return reverse('dashboard:range-list')
-
-
-class RangeProductListView(ListView):
-    model = Product
-    template_name = 'dashboard/offers/range_product_list.html'
-    context_object_name = 'products'
-
-    def get(self, request, *args, **kwargs):
-        self.range = get_object_or_404(Range, id=self.kwargs['pk'])
-        return super(RangeProductListView, self).get(request, *args, **kwargs)
-
-    def get_queryset(self):
-        return self.range.included_products.all()
-
-    def get_context_data(self, **kwargs):
-        ctx = super(RangeProductListView, self).get_context_data(**kwargs)
-        ctx['range'] = self.range
-        return ctx

@@ -7,9 +7,10 @@ from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django.utils.datastructures import SortedDict
 
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.core.utils import slugify
+from oscar.models.fields import AutoSlugField
 from . import exceptions
 
 
@@ -20,19 +21,24 @@ class AbstractOrder(models.Model):
     number = models.CharField(_("Order number"), max_length=128, db_index=True)
 
     # We track the site that each order is placed within
-    site = models.ForeignKey('sites.Site', verbose_name=_("Site"))
-    basket_id = models.PositiveIntegerField(
-        _("Basket ID"), null=True, blank=True)
+    site = models.ForeignKey('sites.Site', verbose_name=_("Site"), null=True,
+                             on_delete=models.SET_NULL)
 
-    # Orders can be anonymous so we don't always have a customer ID
+    basket = models.ForeignKey(
+        'basket.Basket', verbose_name=_("Basket"),
+        null=True, blank=True, on_delete=models.SET_NULL)
+
+    # Orders can be placed without the user authenticating so we don't always
+    # have a customer ID.
     user = models.ForeignKey(
         AUTH_USER_MODEL, related_name='orders', null=True, blank=True,
-        verbose_name=_("User"))
+        verbose_name=_("User"), on_delete=models.SET_NULL)
 
     # Billing address is not always required (eg paying by gift card)
     billing_address = models.ForeignKey(
         'order.BillingAddress', null=True, blank=True,
-        verbose_name=_("Billing Address"))
+        verbose_name=_("Billing Address"),
+        on_delete=models.SET_NULL)
 
     # Total price looks like it could be calculated by adding up the
     # prices of the associated lines, but in some circumstances extra
@@ -56,7 +62,8 @@ class AbstractOrder(models.Model):
     # address is not mandatory.
     shipping_address = models.ForeignKey(
         'order.ShippingAddress', null=True, blank=True,
-        verbose_name=_("Shipping Address"))
+        verbose_name=_("Shipping Address"),
+        on_delete=models.SET_NULL)
     shipping_method = models.CharField(
         _("Shipping method"), max_length=128, null=True, blank=True)
 
@@ -123,7 +130,10 @@ class AbstractOrder(models.Model):
 
     @property
     def is_anonymous(self):
-        return self.user is None
+        # It's possible for an order to be placed by a customer who then
+        # deletes their profile.  Hence, we need to check that a guest email is
+        # set.
+        return self.user is None and bool(self.guest_email)
 
     @property
     def basket_total_before_discounts_incl_tax(self):
@@ -266,7 +276,8 @@ class AbstractOrder(models.Model):
         return u"#%s" % (self.number,)
 
     def verification_hash(self):
-        hash = hashlib.md5('%s%s' % (self.number, settings.SECRET_KEY))
+        key = '%s%s' % (self.number, settings.SECRET_KEY)
+        hash = hashlib.md5(key.encode('utf8'))
         return hash.hexdigest()
 
     @property
@@ -545,7 +556,7 @@ class AbstractLine(models.Model):
 
         events = []
         last_complete_event_name = None
-        for event_dict in status_map.values():
+        for event_dict in reversed(list(status_map.values())):
             if event_dict['quantity'] == self.quantity:
                 events.append(event_dict['name'])
                 last_complete_event_name = event_dict['name']
@@ -554,7 +565,7 @@ class AbstractLine(models.Model):
                     event_dict['name'], event_dict['quantity'],
                     self.quantity))
 
-        if last_complete_event_name == status_map.values()[-1]['name']:
+        if last_complete_event_name == list(status_map.values())[0]['name']:
             return last_complete_event_name
 
         return ', '.join(events)
@@ -597,7 +608,7 @@ class AbstractLine(models.Model):
         """
         Returns a dict of shipping events that this line has been through
         """
-        status_map = {}
+        status_map = SortedDict()
         for event in self.shipping_events.all():
             event_type = event.event_type
             event_name = event_type.name
@@ -605,9 +616,11 @@ class AbstractLine(models.Model):
             if event_name in status_map:
                 status_map[event_name]['quantity'] += event_quantity
             else:
-                status_map[event_name] = {'event_type': event_type,
-                                          'name': event_name,
-                                          'quantity': event_quantity}
+                status_map[event_name] = {
+                    'event_type': event_type,
+                    'name': event_name,
+                    'quantity': event_quantity
+                }
         return status_map
 
     # Payment event helpers
@@ -726,12 +739,8 @@ class AbstractPaymentEventType(models.Model):
     These are effectively the transaction types.
     """
     name = models.CharField(_("Name"), max_length=128, unique=True)
-    code = models.SlugField(_("Code"), max_length=128, unique=True)
-
-    def save(self, *args, **kwargs):
-        if not self.code:
-            self.code = slugify(self.name)
-        super(AbstractPaymentEventType, self).save(*args, **kwargs)
+    code = AutoSlugField(_("Code"), max_length=128, unique=True,
+                         populate_from='name')
 
     class Meta:
         abstract = True
@@ -884,12 +893,8 @@ class AbstractShippingEventType(models.Model):
     # Name is the friendly description of an event
     name = models.CharField(_("Name"), max_length=255, unique=True)
     # Code is used in forms
-    code = models.SlugField(_("Code"), max_length=128, unique=True)
-
-    def save(self, *args, **kwargs):
-        if not self.code:
-            self.code = slugify(self.name)
-        super(AbstractShippingEventType, self).save(*args, **kwargs)
+    code = AutoSlugField(_("Code"), max_length=128, unique=True,
+                         populate_from='name')
 
     class Meta:
         abstract = True

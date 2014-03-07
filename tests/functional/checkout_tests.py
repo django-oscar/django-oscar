@@ -8,13 +8,19 @@ from django.test.utils import override_settings
 
 from oscar.test.factories import (
     create_product, create_voucher, create_offer)
-from oscar.test.testcases import ClientTestCase
+from oscar.test.testcases import WebTestCase
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import Order
 from oscar.apps.address.models import Country
 from oscar.apps.voucher.models import Voucher
 from oscar.apps.offer.models import ConditionalOffer
 from oscar.test.basket import add_product
+
+# Python 3 compat
+try:
+    from imp import reload
+except ImportError:
+    pass
 
 
 class CheckoutMixin(object):
@@ -58,7 +64,7 @@ class CheckoutMixin(object):
         return self.client.post(reverse('checkout:preview'), {'action': 'place_order'})
 
 
-class DisabledAnonymousCheckoutViewsTests(ClientTestCase):
+class DisabledAnonymousCheckoutViewsTests(WebTestCase):
     is_anonymous = True
 
     def test_index_does_require_login(self):
@@ -83,7 +89,7 @@ class DisabledAnonymousCheckoutViewsTests(ClientTestCase):
             self.assertIsRedirect(response)
 
 
-class EnabledAnonymousCheckoutViewsTests(ClientTestCase, CheckoutMixin):
+class EnabledAnonymousCheckoutViewsTests(WebTestCase, CheckoutMixin):
     is_anonymous = True
 
     def reload_urlconf(self):
@@ -116,7 +122,7 @@ class EnabledAnonymousCheckoutViewsTests(ClientTestCase, CheckoutMixin):
             self.assertEqual('barry@example.com', order.guest_email)
 
 
-class TestShippingAddressView(ClientTestCase, CheckoutMixin):
+class TestShippingAddressView(WebTestCase, CheckoutMixin):
     fixtures = ['countries.json']
 
     def test_pages_returns_200(self):
@@ -157,7 +163,7 @@ class TestShippingAddressView(ClientTestCase, CheckoutMixin):
         self.assertRedirectUrlName(response, 'basket:summary')
 
 
-class TestShippingMethodView(ClientTestCase, CheckoutMixin):
+class TestShippingMethodView(WebTestCase, CheckoutMixin):
     fixtures = ['countries.json']
 
     def test_shipping_method_view_redirects_if_no_shipping_address(self):
@@ -177,7 +183,7 @@ class TestShippingMethodView(ClientTestCase, CheckoutMixin):
         self.assertRedirectUrlName(response, 'basket:summary')
 
 
-class TestPaymentMethodView(ClientTestCase, CheckoutMixin):
+class TestPaymentMethodView(WebTestCase, CheckoutMixin):
 
     def test_view_redirects_if_no_shipping_address(self):
         self.add_product_to_basket()
@@ -197,7 +203,7 @@ class TestPaymentMethodView(ClientTestCase, CheckoutMixin):
         self.assertRedirectUrlName(response, 'basket:summary')
 
 
-class TestPreviewView(ClientTestCase, CheckoutMixin):
+class TestPreviewView(WebTestCase, CheckoutMixin):
 
     def test_user_must_have_a_nonempty_basket(self):
         response = self.client.get(reverse('checkout:preview'))
@@ -224,7 +230,7 @@ class TestPreviewView(ClientTestCase, CheckoutMixin):
         self.assertIsOk(response)
 
 
-class TestPaymentDetailsView(ClientTestCase, CheckoutMixin):
+class TestPaymentDetailsView(WebTestCase, CheckoutMixin):
 
     def test_user_must_have_a_nonempty_basket(self):
         response = self.client.get(reverse('checkout:payment-details'))
@@ -249,7 +255,7 @@ class TestPaymentDetailsView(ClientTestCase, CheckoutMixin):
         self.assertRedirectUrlName(response, 'basket:summary')
 
 
-class TestOrderPlacement(ClientTestCase, CheckoutMixin):
+class TestOrderPlacement(WebTestCase, CheckoutMixin):
 
     def setUp(self):
         super(TestOrderPlacement, self).setUp()
@@ -270,10 +276,10 @@ class TestOrderPlacement(ClientTestCase, CheckoutMixin):
         self.assertEqual(1, len(orders))
 
 
-class TestPlacingOrderUsingAVoucher(ClientTestCase, CheckoutMixin):
+class TestPlacingOrderUsingAVoucher(WebTestCase, CheckoutMixin):
 
     def setUp(self):
-        self.login()
+        super(TestPlacingOrderUsingAVoucher, self).setUp()
         self.add_product_to_basket()
         voucher = create_voucher()
         self.add_voucher_to_basket(voucher)
@@ -288,17 +294,18 @@ class TestPlacingOrderUsingAVoucher(ClientTestCase, CheckoutMixin):
         self.assertRedirectUrlName(self.response, 'checkout:thank-you')
 
     def test_records_use(self):
-        self.assertEquals(1, self.voucher.num_orders)
+        self.assertEqual(1, self.voucher.num_orders)
 
     def test_records_discount(self):
-        self.assertEquals(1, self.voucher.num_orders)
+        self.assertEqual(1, self.voucher.num_orders)
 
 
-class TestPlacingOrderUsingAnOffer(ClientTestCase, CheckoutMixin):
+
+class TestPlacingOrderUsingAnOffer(WebTestCase, CheckoutMixin):
 
     def setUp(self):
+        super(TestPlacingOrderUsingAnOffer, self).setUp()
         offer = create_offer()
-        self.login()
         self.add_product_to_basket()
         self.complete_shipping_address()
         self.complete_shipping_method()
@@ -311,5 +318,5 @@ class TestPlacingOrderUsingAnOffer(ClientTestCase, CheckoutMixin):
         self.assertRedirectUrlName(self.response, 'checkout:thank-you')
 
     def test_records_use(self):
-        self.assertEquals(1, self.offer.num_orders)
-        self.assertEquals(1, self.offer.num_applications)
+        self.assertEqual(1, self.offer.num_orders)
+        self.assertEqual(1, self.offer.num_applications)

@@ -12,9 +12,12 @@ from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.customer.managers import CommunicationTypeManager
 from oscar.core.compat import AUTH_USER_MODEL
+from oscar.models.fields import AutoSlugField
 
+
+# Only define custom UserManager/UserModel when Django >= 1.5
 if hasattr(auth_models, 'BaseUserManager'):
-    # Only define custom UserModel when Django >= 1.5
+
     class UserManager(auth_models.BaseUserManager):
 
         def create_user(self, email, password=None, **extra_fields):
@@ -49,7 +52,7 @@ if hasattr(auth_models, 'BaseUserManager'):
         An abstract base user suitable for use in Oscar projects.
 
         This is basically a copy of the core AbstractUser model but without a
-        username field
+        username field and with a unique index on the email field.
         """
         email = models.EmailField(_('email address'), unique=True)
         first_name = models.CharField(
@@ -83,6 +86,24 @@ if hasattr(auth_models, 'BaseUserManager'):
         def get_short_name(self):
             return self.first_name
 
+        def _migrate_alerts_to_user(self):
+            """
+            Transfer any active alerts linked to a user's email address to the
+            newly registered user.
+            """
+            ProductAlert = self.alerts.model
+            alerts = ProductAlert.objects.filter(
+                email=self.email, status=ProductAlert.ACTIVE)
+            alerts.update(user=self, key=None, email=None)
+
+        def save(self, *args, **kwargs):
+            super(AbstractUser, self).save(*args, **kwargs)
+            # Migrate any "anonymous" product alerts to the registered user
+            # Ideally, this would be done via a post-save signal. But we can't
+            # use get_user_model to wire up signals to custom user models
+            # see Oscar ticket #1127, Django ticket #19218
+            self._migrate_alerts_to_user()
+
 
 class AbstractEmail(models.Model):
     """
@@ -113,7 +134,8 @@ class AbstractCommunicationEventType(models.Model):
 
     # Code used for looking up this event programmatically.
     # eg. PASSWORD_RESET
-    code = models.SlugField(_('Code'), max_length=128)
+    code = AutoSlugField(_('Code'), max_length=128, unique=True,
+                         populate_from='name')
 
     #: Name is the friendly description of an event for use in the admin
     name = models.CharField(
@@ -137,7 +159,8 @@ class AbstractCommunicationEventType(models.Model):
 
     # Template content for SMS messages
     sms_template = models.CharField(_('SMS Template'), max_length=170,
-                                    blank=True, help_text=_("SMS template"))
+                                    blank=True, null=True,
+                                    help_text=_("SMS template"))
 
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
     date_updated = models.DateTimeField(_("Date Updated"), auto_now=True)
@@ -225,8 +248,8 @@ class AbstractNotification(models.Model):
 
     INBOX, ARCHIVE = 'Inbox', 'Archive'
     choices = (
-        (INBOX, _(INBOX)),
-        (ARCHIVE, _(ARCHIVE)))
+        (INBOX, _('Inbox')),
+        (ARCHIVE, _('Archive')))
     location = models.CharField(max_length=32, choices=choices,
                                 default=INBOX)
 
@@ -358,8 +381,8 @@ class AbstractProductAlert(models.Model):
         """
         Get a random generated key based on SHA-1 and email address
         """
-        salt = hashlib.sha1(str(random.random())).hexdigest()
-        return hashlib.sha1(salt + self.email).hexdigest()
+        salt = hashlib.sha1(str(random.random()).encode('utf8')).hexdigest()
+        return hashlib.sha1((salt + self.email).encode('utf8')).hexdigest()
 
     def get_confirm_url(self):
         return reverse('customer:alerts-confirm', kwargs={'key': self.key})

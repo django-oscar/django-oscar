@@ -3,7 +3,7 @@ from django.core import mail
 from django_dynamic_fixture import get
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.test.testcases import ClientTestCase, WebTestCase
+from oscar.test.testcases import WebTestCase
 
 from oscar.apps.dashboard.users.views import IndexView
 from oscar.core.compat import get_user_model
@@ -13,7 +13,7 @@ from webtest import AppError
 User = get_user_model()
 
 
-class IndexViewTests(ClientTestCase):
+class IndexViewTests(WebTestCase):
     is_staff = True
     active_users_ids = []
     inactive_users_ids = []
@@ -32,7 +32,7 @@ class IndexViewTests(ClientTestCase):
     def test_user_list_view(self):
         response = self.client.get(reverse('dashboard:users-index'))
         self.assertInContext(response, 'user_list')
-        self.assertEquals(len(response.context['user_list']), IndexView.paginate_by)
+        self.assertEqual(len(response.context['user_list']), IndexView.paginate_by)
 
     def test_make_active(self):
         params = {'action': 'make_active',
@@ -51,7 +51,7 @@ class IndexViewTests(ClientTestCase):
         self.assertFalse(ex_active.is_active)
 
 
-class DetailViewTests(ClientTestCase):
+class DetailViewTests(WebTestCase):
     is_staff = True
 
     def test_user_detail_view(self):
@@ -92,7 +92,7 @@ class TestDetailViewForStaffUser(WebTestCase):
         self.assertRedirects(response, customer_page_url)
 
         # Check that the reset email has been sent
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
         self.assertIn("Resetting your password", mail.outbox[0].subject)
 
         # Check that success message shows up

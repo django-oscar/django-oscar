@@ -10,7 +10,7 @@ class ActiveOfferManager(models.Manager):
         cutoff = now()
         return super(ActiveOfferManager, self).get_query_set().filter(
             models.Q(end_datetime__gte=cutoff) | models.Q(end_datetime=None),
-            start_datetime__lte=cutoff)
+            start_datetime__lte=cutoff).filter(status=self.model.OPEN)
 
 
 class BrowsableRangeManager(models.Manager):

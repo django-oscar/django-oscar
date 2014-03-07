@@ -1,9 +1,10 @@
 from itertools import chain
 import logging
 
-from django.db.models import get_model, Q
+from django.db.models import Q
 from django.utils.timezone import now
 
+from oscar.core.loading import get_model
 from oscar.apps.offer import results
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')

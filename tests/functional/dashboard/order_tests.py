@@ -1,12 +1,12 @@
-import httplib
+from six.moves import http_client
 
-from django.db.models import get_model
-from django.test import TestCase, Client
+from oscar.core.loading import get_model
+from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.template import Template, Context
 from django_dynamic_fixture import get, G
 
-from oscar.test.testcases import ClientTestCase, WebTestCase
+from oscar.test.testcases import WebTestCase
 from oscar.test.factories import create_order, create_basket
 from oscar.apps.order.models import Order, OrderNote
 from oscar.core.compat import get_user_model
@@ -27,7 +27,7 @@ class TestOrderListDashboard(WebTestCase):
         form = page.forms['search_form']
         form['order_number'] = order.number
         response = form.submit()
-        self.assertEqual(httplib.FOUND, response.status_code)
+        self.assertEqual(http_client.FOUND, response.status_code)
 
     def test_downloads_to_csv_without_error(self):
         address = get(ShippingAddress)
@@ -37,17 +37,22 @@ class TestOrderListDashboard(WebTestCase):
         form['selected_order'].checked = True
         form.submit('download_selected')
 
+    def test_allows_order_number_search(self):
+        page = self.get(reverse('dashboard:order-list'))
+        form = page.forms['search_form']
+        form['order_number'] = '+'
+        form.submit()
 
-class PermissionBasedDashboardOrderTests(ClientTestCase):
+
+class PermissionBasedDashboardOrderTestsBase(WebTestCase):
     permissions = ['partner.dashboard_access', ]
+    username = 'user1@example.com'
 
     def setUp(self):
         """
         Creates two orders. order_in has self.user in it's partner users list.
         """
-        self.client = Client()
-        self.user = self.create_user(username='user1@example.com',
-                                     is_staff=False)
+        super(PermissionBasedDashboardOrderTestsBase, self).setUp()
         self.address = G(ShippingAddress)
         self.basket_in = create_basket()
         self.basket_out = create_basket()
@@ -62,24 +67,12 @@ class PermissionBasedDashboardOrderTests(ClientTestCase):
         self.order_out = create_order(basket=self.basket_out,
                                       shipping_address=self.address)
 
-    def test_staff_user_can_list_all_orders(self):
-        self.is_staff = True
-        self.login()
-        orders = [self.order_in, self.order_out]
-        # order-list
-        response = self.client.get(reverse('dashboard:order-list'))
-        self.assertIsOk(response)
-        self.assertEqual(set(response.context['orders']),
-                         set(orders))
-        # order-detail
-        for order in orders:
-            url = reverse('dashboard:order-detail',
-                          kwargs={'number': order.number})
-            self.assertIsOk(self.client.get(url))
+
+class PermissionBasedDashboardOrderTestsNoStaff(PermissionBasedDashboardOrderTestsBase):
 
     def test_non_staff_can_only_list_her_orders(self):
         # order-list user1
-        self.client.login(username='user1@example.com', password=self.password)
+        self.client.login(email='user1@example.com', password=self.password)
         response = self.client.get(reverse('dashboard:order-list'))
         self.assertEqual(set(response.context['orders']),
                          set([self.order_in]))
@@ -108,7 +101,24 @@ class PermissionBasedDashboardOrderTests(ClientTestCase):
         self.assertNoAccess(self.client.get(url))
 
 
-class OrderDetailTests(ClientTestCase):
+class PermissionBasedDashboardOrderTestsStaff(PermissionBasedDashboardOrderTestsBase):
+    is_staff = True
+
+    def test_staff_user_can_list_all_orders(self):
+        orders = [self.order_in, self.order_out]
+        # order-list
+        response = self.client.get(reverse('dashboard:order-list'))
+        self.assertIsOk(response)
+        self.assertEqual(set(response.context['orders']),
+                         set(orders))
+        # order-detail
+        for order in orders:
+            url = reverse('dashboard:order-detail',
+                          kwargs={'number': order.number})
+            self.assertIsOk(self.get(url))
+
+
+class OrderDetailTests(WebTestCase):
     is_staff = True
 
     def setUp(self):
@@ -121,7 +131,7 @@ class OrderDetailTests(ClientTestCase):
         return Order.objects.get(number=self.order.number)
 
     def test_order_detail_page_contains_order(self):
-        response = self.client.get(self.url)
+        response = self.get(self.url)
         self.assertTrue('order' in response.context)
 
     def test_order_status_change(self):
@@ -140,7 +150,7 @@ class OrderDetailTests(ClientTestCase):
         self.assertEqual(OrderNote.SYSTEM, notes[0].note_type)
 
 
-class LineDetailTests(ClientTestCase):
+class LineDetailTests(WebTestCase):
     is_staff = True
 
     def setUp(self):
@@ -151,11 +161,11 @@ class LineDetailTests(ClientTestCase):
         super(LineDetailTests, self).setUp()
 
     def test_line_detail_page_exists(self):
-        response = self.client.get(self.url)
+        response = self.get(self.url)
         self.assertIsOk(response)
 
     def test_line_in_context(self):
-        response = self.client.get(self.url)
+        response = self.get(self.url)
         self.assertInContext(response, 'line')
 
 
@@ -170,4 +180,4 @@ class TemplateTagTests(TestCase):
         ).render(Context({
             'user': user
         }))
-        self.assertEquals(out, "3")
+        self.assertEqual(out, "3")

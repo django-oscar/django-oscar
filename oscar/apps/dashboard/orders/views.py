@@ -1,3 +1,4 @@
+import six
 import datetime
 from decimal import Decimal as D, InvalidOperation
 
@@ -5,7 +6,7 @@ from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models.loading import get_model
+from oscar.core.loading import get_model
 from django.db.models import fields, Q, Sum, Count
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
@@ -232,7 +233,7 @@ class OrderListView(BulkEditMixin, ListView):
         data = self.form.cleaned_data
 
         if data['order_number']:
-            queryset = self.base_queryset.objects.filter(
+            queryset = self.base_queryset.filter(
                 number__istartswith=data['order_number'])
 
         if data['name']:
@@ -351,7 +352,7 @@ class OrderListView(BulkEditMixin, ListView):
             else:
                 row['billing_address_name'] = ''
 
-            encoded_values = [unicode(value).encode('utf8')
+            encoded_values = [six.text_type(value).encode('utf8')
                               for value in row.values()]
             writer.writerow(encoded_values)
         return response
@@ -417,7 +418,7 @@ class OrderDetailView(DetailView):
         line_action = request.POST.get('line_action', '').lower()
         if line_action:
             if line_action not in self.line_actions:
-                messages.error(self.request, "Invalid action")
+                messages.error(self.request, _("Invalid action"))
                 return self.reload_page_response()
             else:
                 line_ids = request.POST.getlist('selected_line')
@@ -478,14 +479,15 @@ class OrderDetailView(DetailView):
             return self.reload_page_response()
 
         handler = EventHandler(request.user)
+        old_status = order.status
         try:
             handler.handle_order_status_change(order, new_status)
-        except PaymentError, e:
+        except PaymentError as e:
             messages.error(request, _("Unable to change order status due to"
                                       " payment error: %s") % e)
         else:
             msg = _("Order status changed from '%(old_status)s' to"
-                    " '%(new_status)s'") % {'old_status': order.status,
+                    " '%(new_status)s'") % {'old_status': old_status,
                                             'new_status': new_status}
             messages.info(request, msg)
             order.notes.create(user=request.user, message=msg,
@@ -536,13 +538,13 @@ class OrderDetailView(DetailView):
             EventHandler().handle_shipping_event(order, event_type, lines,
                                                  quantities,
                                                  reference=reference)
-        except InvalidShippingEvent, e:
+        except InvalidShippingEvent as e:
             messages.error(request,
                            _("Unable to create shipping event: %s") % e)
-        except InvalidStatus, e:
+        except InvalidStatus as e:
             messages.error(request,
                            _("Unable to create shipping event: %s") % e)
-        except PaymentError, e:
+        except PaymentError as e:
             messages.error(request, _("Unable to create shipping event due to"
                                       " payment error: %s") % e)
         else:
@@ -570,7 +572,7 @@ class OrderDetailView(DetailView):
         try:
             EventHandler().handle_payment_event(order, event_type, amount,
                                                 lines, quantities)
-        except PaymentError, e:
+        except PaymentError as e:
             messages.error(request, _("Unable to change order status due to"
                                       " payment error: %s") % e)
         else:

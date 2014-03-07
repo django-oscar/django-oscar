@@ -1,5 +1,5 @@
 from django import template
-from django.db.models import get_model
+from oscar.core.loading import get_model
 
 register = template.Library()
 Category = get_model('catalogue', 'category')
@@ -100,9 +100,9 @@ class CategoryTreeNode(template.Node):
                 continue
 
             # Update previous node's info
-            info['has_children'] = depth > prev_depth
-            if depth < prev_depth:
-                info['num_to_close'] = range(0, prev_depth - depth)
+            info['has_children'] = prev_depth is None or depth > prev_depth
+            if prev_depth is not None and depth < prev_depth:
+                info['num_to_close'] = list(range(0, prev_depth - depth))
 
             info = {'num_to_close': [],
                     'level': depth - start_depth}
@@ -111,7 +111,7 @@ class CategoryTreeNode(template.Node):
 
         if prev_depth is not None:
             # close last leaf
-            info['num_to_close'] = range(0, prev_depth - start_depth)
+            info['num_to_close'] = list(range(0, prev_depth - start_depth))
             info['has_children'] = prev_depth > prev_depth
 
         return annotated_categories
