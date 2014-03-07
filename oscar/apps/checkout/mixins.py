@@ -2,10 +2,12 @@ import logging
 
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse, NoReverseMatch
+from django.contrib import messages
 from django.contrib.sites.models import Site, get_current_site
 from django.core.exceptions import ObjectDoesNotExist
-from oscar.core.loading import get_model
+from django.utils.translation import ugettext_lazy as _
 
+from oscar.core.loading import get_model
 from oscar.core.loading import get_class
 from oscar.core.decorators import deprecated
 
@@ -108,6 +110,55 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             event_type=event_type, amount=amount,
             reference=reference)
         self._payment_events.append(event)
+
+    def get_error_response(self):
+        # Check that the user's basket is not empty
+        if self.request.basket.is_empty:
+            messages.error(self.request, _(
+                "You need to add some items to your basket to checkout"))
+            return HttpResponseRedirect(reverse('basket:summary'))
+
+        if self.request.basket.is_shipping_required():
+            shipping_address = self.get_shipping_address(
+                self.request.basket)
+            shipping_method = self.get_shipping_method(
+                self.request.basket, shipping_address)
+            # Check that shipping address has been completed
+            if not shipping_address:
+                messages.error(
+                    self.request, _("Please choose a shipping address"))
+                return HttpResponseRedirect(
+                    reverse('checkout:shipping-address'))
+
+            # Check that shipping method has been set
+            if not shipping_method:
+                messages.error(
+                    self.request, _("Please choose a shipping method"))
+                return HttpResponseRedirect(
+                    reverse('checkout:shipping-method'))
+
+    def build_submission(self, **kwargs):
+        """
+        Return a dict of data to submitted to pay for, and create an order
+        """
+        basket = kwargs.get('basket', self.request.basket)
+        shipping_address = self.get_shipping_address(basket)
+        shipping_method = self.get_shipping_method(
+            basket, shipping_address)
+        total = self.get_order_totals(
+            basket, shipping_method=shipping_method)
+        submission = {
+            'user': self.request.user,
+            'basket': basket,
+            'shipping_address': shipping_address,
+            'shipping_method': shipping_method,
+            'order_total': total,
+            'order_kwargs': {},
+            'payment_kwargs': {}}
+        if not submission['user'].is_authenticated():
+            email = self.checkout_session.get_guest_email()
+            submission['order_kwargs']['guest_email'] = email
+        return submission
 
     def handle_successful_order(self, order):
         """
