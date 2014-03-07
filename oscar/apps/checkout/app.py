@@ -16,6 +16,7 @@ class CheckoutApplication(Application):
     shipping_method_view = views.ShippingMethodView
     payment_method_view = views.PaymentMethodView
     payment_details_view = views.PaymentDetailsView
+    order_preview_view = views.OrderPreviewView
     thankyou_view = views.ThankYouView
 
     def get_urls(self):
@@ -41,10 +42,14 @@ class CheckoutApplication(Application):
                 self.payment_method_view.as_view(), name='payment-method'),
             url(r'payment-details/$',
                 self.payment_details_view.as_view(), name='payment-details'),
+            url(r'payment-details/error/$',
+                self.payment_details_view.as_view(),
+                kwargs={'error': True},
+                name='payment-details-error'),
 
             # Preview and thankyou
             url(r'preview/$',
-                self.payment_details_view.as_view(preview=True),
+                self.order_preview_view.as_view(),
                 name='preview'),
             url(r'thank-you/$', self.thankyou_view.as_view(),
                 name='thank-you'),

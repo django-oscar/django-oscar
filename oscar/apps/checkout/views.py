@@ -1,3 +1,4 @@
+from django.shortcuts import redirect
 import six
 import logging
 
@@ -365,24 +366,18 @@ class PaymentMethodView(CheckoutSessionMixin, TemplateView):
         return HttpResponseRedirect(reverse('checkout:payment-details'))
 
 
-# ================
-# Order submission
-# ================
+# ===============
+# Payment preview
+# ===============
 
 
 class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     """
-    For taking the details of payment and creating the order
-
-    The class is deliberately split into fine-grained methods, responsible for
-    only one thing.  This is to make it easier to subclass and override just
-    one component of functionality.
-
-    All projects will need to subclass and customise this class.
+    For taking the details of payment, and as an error page coming from an
+    unsuccessful order submission in OrderPreviewView. In the latter case
+    kwargs['error'] is set to True.
     """
     template_name = 'checkout/payment_details.html'
-    template_name_preview = 'checkout/preview.html'
-    preview = False
 
     def get(self, request, *args, **kwargs):
         error_response = self.get_error_response()
@@ -391,77 +386,78 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         return super(PaymentDetailsView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        # Posting to payment-details isn't the right thing to do
+        return self.get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        # Use the proposed submission as template context data.  Flatten the
+        # order kwargs so they are easily available too.
+        ctx = self.build_submission(**kwargs)
+        ctx.update(kwargs)
+        ctx.update(ctx['order_kwargs'])
+        ctx['error'] = self.get_error_message()
+        return ctx
+
+    def get_error_message(self):
+        # In the future, OrderPreviewView might put a more detailed error
+        # message into the session, which could be read here
+        error_msg = _("A problem occurred while processing payment for this "
+                      "order - no payment has been taken.  Please "
+                      "contact customer services if this problem persists")
+        if self.kwargs.get('error'):
+            return error_msg
+        return None
+
+    def get_default_billing_address(self):
         """
-        This method is designed to be overridden by subclasses which will
-        validate the forms from the payment details page.  If the forms are
-        valid then the method can call submit()
+        Return default billing address for user
+
+        This is useful when the payment details view includes a billing address
+        form - you can use this helper method to prepopulate the form.
+
+        Note, this isn't used in core oscar as there is no billing address form
+        by default.
         """
+        if not self.request.user.is_authenticated():
+            return None
+        try:
+            return self.request.user.addresses.get(is_default_for_billing=True)
+        except UserAddress.DoesNotExist:
+            return None
+
+
+# =============
+# Order Preview
+# =============
+
+
+class OrderPreviewView(OrderPlacementMixin, TemplateView):
+    """
+    For previewing and creating the order
+
+    The class is deliberately split into fine-grained methods, responsible for
+    only one thing.  This is to make it easier to subclass and override just
+    one component of functionality.
+
+    All projects will need to subclass and customise this class.
+    """
+    template_name = 'checkout/preview.html'
+
+    def get(self, request, *args, **kwargs):
+        error_response = self.get_error_response()
+        if error_response:
+            return error_response
+        return super(OrderPreviewView, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
         error_response = self.get_error_response()
         if error_response:
             return error_response
 
-        if self.preview:
-            # We use a custom parameter to indicate if this is an attempt to
-            # place an order.  Without this, we assume a payment form is being
-            # submitted from the payment-details page
-            if request.POST.get('action', '') == 'place_order':
-                # We pull together all the things that are needed to place an
-                # order.
-                submission = self.build_submission()
-                return self.submit(**submission)
-            return self.render_preview(request)
-
-        # Posting to payment-details isn't the right thing to do
-        return self.get(request, *args, **kwargs)
-
-    def get_error_response(self):
-        # Check that the user's basket is not empty
-        if self.request.basket.is_empty:
-            messages.error(self.request, _(
-                "You need to add some items to your basket to checkout"))
-            return HttpResponseRedirect(reverse('basket:summary'))
-
-        if self.request.basket.is_shipping_required():
-            shipping_address = self.get_shipping_address(
-                self.request.basket)
-            shipping_method = self.get_shipping_method(
-                self.request.basket, shipping_address)
-            # Check that shipping address has been completed
-            if not shipping_address:
-                messages.error(
-                    self.request, _("Please choose a shipping address"))
-                return HttpResponseRedirect(
-                    reverse('checkout:shipping-address'))
-
-            # Check that shipping method has been set
-            if not shipping_method:
-                messages.error(
-                    self.request, _("Please choose a shipping method"))
-                return HttpResponseRedirect(
-                    reverse('checkout:shipping-method'))
-
-    def build_submission(self, **kwargs):
-        """
-        Return a dict of data to submitted to pay for, and create an order
-        """
-        basket = kwargs.get('basket', self.request.basket)
-        shipping_address = self.get_shipping_address(basket)
-        shipping_method = self.get_shipping_method(
-            basket, shipping_address)
-        total = self.get_order_totals(
-            basket, shipping_method=shipping_method)
-        submission = {
-            'user': self.request.user,
-            'basket': basket,
-            'shipping_address': shipping_address,
-            'shipping_method': shipping_method,
-            'order_total': total,
-            'order_kwargs': {},
-            'payment_kwargs': {}}
-        if not submission['user'].is_authenticated():
-            email = self.checkout_session.get_guest_email()
-            submission['order_kwargs']['guest_email'] = email
-        return submission
+        # We pull together all the things that are needed to place an
+        # order.
+        submission = self.build_submission()
+        return self.submit(**submission)
 
     def get_context_data(self, **kwargs):
         # Use the proposed submission as template context data.  Flatten the
@@ -470,10 +466,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         ctx.update(kwargs)
         ctx.update(ctx['order_kwargs'])
         return ctx
-
-    def get_template_names(self):
-        return [self.template_name_preview] if self.preview else [
-            self.template_name]
 
     def render_preview(self, request, **kwargs):
         """
@@ -499,23 +491,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             if not is_permitted:
                 return False, reason, reverse('basket:summary')
         return True, None, None
-
-    def get_default_billing_address(self):
-        """
-        Return default billing address for user
-
-        This is useful when the payment details view includes a billing address
-        form - you can use this helper method to prepopulate the form.
-
-        Note, this isn't used in core oscar as there is no billing address form
-        by default.
-        """
-        if not self.request.user.is_authenticated():
-            return None
-        try:
-            return self.request.user.addresses.get(is_default_for_billing=True)
-        except UserAddress.DoesNotExist:
-            return None
 
     def submit(self, user, basket, shipping_address, shipping_method,  # noqa (too complex (10))
                order_total, payment_kwargs=None, order_kwargs=None):
@@ -575,9 +550,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         # Handle payment.  Any payment problems should be handled by the
         # handle_payment method raise an exception, which should be caught
         # within handle_POST and the appropriate forms redisplayed.
-        error_msg = _("A problem occurred while processing payment for this "
-                      "order - no payment has been taken.  Please "
-                      "contact customer services if this problem persists")
         pre_payment.send_robust(sender=self, view=self)
 
         try:
@@ -597,8 +569,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
                 order_number, msg)
             self.restore_frozen_basket()
             # We re-render the payment details view
-            self.preview = False
-            return self.render_to_response(self.get_context_data(error=msg))
+            return redirect('checkout:payment-details-error')
         except PaymentError as e:
             # A general payment error - Something went wrong which wasn't
             # anticipated.  Eg, the payment gateway is down (it happens), your
@@ -610,9 +581,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             logger.error("Order #%s: payment error (%s)", order_number, msg,
                          exc_info=True)
             self.restore_frozen_basket()
-            self.preview = False
-            return self.render_to_response(
-                self.get_context_data(error=error_msg))
+            return redirect('checkout:payment-details-error')
         except Exception as e:
             # Unhandled exception - hopefully, you will only ever see this in
             # development.
@@ -620,9 +589,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
                 "Order #%s: unhandled exception while taking payment (%s)",
                 order_number, e, exc_info=True)
             self.restore_frozen_basket()
-            self.preview = False
-            return self.render_to_response(
-                self.get_context_data(error=error_msg))
+            return redirect('checkout:payment-details-error')
         post_payment.send_robust(sender=self, view=self)
 
         # If all is ok with payment, try and place order
