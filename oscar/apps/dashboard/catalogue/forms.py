@@ -13,6 +13,7 @@ ProductClass = get_model('catalogue', 'ProductClass')
 Category = get_model('catalogue', 'Category')
 StockRecord = get_model('partner', 'StockRecord')
 Partner = get_model('partner', 'Partner')
+ProductClass = get_model('catalogue', 'ProductClass')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductImage = get_model('catalogue', 'ProductImage')
@@ -466,3 +467,9 @@ BaseProductRecommendationFormSet = inlineformset_factory(
 class ProductRecommendationFormSet(BaseProductRecommendationFormSet):
     def __init__(self, product_class, user, *args, **kwargs):
         super(ProductRecommendationFormSet, self).__init__(*args, **kwargs)
+
+
+class ProductClassForm(forms.ModelForm):
+
+    class Meta:
+        model = ProductClass

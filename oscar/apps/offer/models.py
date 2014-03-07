@@ -761,7 +761,7 @@ class Range(models.Model):
         verbose_name=_("Excluded Products"))
     classes = models.ManyToManyField(
         'catalogue.ProductClass', related_name='classes', blank=True,
-        verbose_name=_("Product Classes"))
+        verbose_name=_("Product Types"))
     included_categories = models.ManyToManyField(
         'catalogue.Category', related_name='includes', blank=True,
         verbose_name=_("Included Categories"))

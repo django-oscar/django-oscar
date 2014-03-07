@@ -222,7 +222,7 @@ class AbstractProduct(models.Model):
     description = models.TextField(_('Description'), blank=True, null=True)
 
     product_class = models.ForeignKey(
-        'catalogue.ProductClass', verbose_name=_('Product Class'), null=True,
+        'catalogue.ProductClass', verbose_name=_('Product Type'), null=True,
         related_name="products",
         help_text=_("""Choose what type of product this is"""))
     attributes = models.ManyToManyField(
@@ -637,7 +637,7 @@ class AbstractProductAttribute(models.Model):
     """
     product_class = models.ForeignKey(
         'catalogue.ProductClass', related_name='attributes', blank=True,
-        null=True, verbose_name=_("Product Class"))
+        null=True, verbose_name=_("Product Type"))
     name = models.CharField(_('Name'), max_length=128)
     code = models.SlugField(
         _('Code'), max_length=128,
