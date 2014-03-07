@@ -26,7 +26,6 @@
             <thead>
                 <tr>
                     <th>{% trans "Name" %}</th>
-                    <th>{% trans "Slug" %}</th>
                     <th>{% trans "Requires shipping" %}</th>
                     <th>{% trans "Track stock?" %}</th>
                 </tr>
@@ -35,7 +34,6 @@
                 {% for class in classes %}
                     <tr>
                         <td><a href="{% url 'dashboard:catalogue-class-update' class.id %}">{{ class.name }}</a></td>
-                        <td><a href="{% url 'dashboard:catalogue-class-update' class.id %}">{{ class.slug }}</a></td>
                         <td><a href="{% url 'dashboard:catalogue-class-update' class.id %}">{{ class.requires_shipping|yesno }}</a></td>
                         <td><a href="{% url 'dashboard:catalogue-class-update' class.id %}">{{ class.track_stock|yesno }}</a></td>
                         <td>
