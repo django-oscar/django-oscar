@@ -42,12 +42,13 @@ class RegisterUserMixin(object):
         """
         user = form.save()
 
-        if getattr(settings, 'OSCAR_SEND_REGISTRATION_EMAIL', True):
-            self.send_registration_email(user)
-
-        # Raise signal
+        # Raise signal robustly (we don't want exceptions to crash the request
+        # handling).
         user_registered.send_robust(
             sender=self, request=self.request, user=user)
+
+        if getattr(settings, 'OSCAR_SEND_REGISTRATION_EMAIL', True):
+            self.send_registration_email(user)
 
         # We have to authenticate before login
         try:
