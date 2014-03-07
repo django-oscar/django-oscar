@@ -450,24 +450,14 @@ class OrderPreviewView(OrderPlacementMixin, TemplateView):
         return super(OrderPreviewView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        """
-        This method is designed to be overridden by subclasses which will
-        validate the forms from the payment details page.  If the forms are
-        valid then the method can call submit()
-        """
         error_response = self.get_error_response()
         if error_response:
             return error_response
 
-        # We use a custom parameter to indicate if this is an attempt to
-        # place an order.  Without this, we assume a payment form is being
-        # submitted from the payment-details page
-        if request.POST.get('action', '') == 'place_order':
-            # We pull together all the things that are needed to place an
-            # order.
-            submission = self.build_submission()
-            return self.submit(**submission)
-        return self.render_preview(request)
+        # We pull together all the things that are needed to place an
+        # order.
+        submission = self.build_submission()
+        return self.submit(**submission)
 
     def get_context_data(self, **kwargs):
         # Use the proposed submission as template context data.  Flatten the
