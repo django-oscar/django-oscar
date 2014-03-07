@@ -25,6 +25,11 @@ class CatalogueApplication(Application):
     product_createupdate_view = views.ProductCreateUpdateView
     product_delete_view = views.ProductDeleteView
 
+    product_class_create_view = views.ProductClassCreateView
+    product_class_list_view = views.ProductClassListView
+    product_class_update_view = views.ProductClassUpdateView
+    product_class_delete_view = views.ProductClassDeleteView
+
     category_list_view = views.CategoryListView
     category_detail_list_view = views.CategoryDetailListView
     category_create_view = views.CategoryCreateView
@@ -69,6 +74,19 @@ class CatalogueApplication(Application):
             url(r'^categories/(?P<pk>\d+)/delete/$',
                 self.category_delete_view.as_view(),
                 name='catalogue-category-delete'),
+            url(r'^product-type/create/$',
+                self.product_class_create_view.as_view(),
+                name='catalogue-class-create'),
+            url(r'^product-types/$',
+                self.product_class_list_view.as_view(),
+                name='catalogue-class-list'),
+            url(r'^product-type/(?P<pk>\d+)/update/$',
+                self.product_class_update_view.as_view(),
+                name='catalogue-class-update'),
+            url(r'^product-type/(?P<pk>\d+)/delete/$',
+                self.product_class_delete_view.as_view(),
+                name='catalogue-class-delete'),
+
         ]
         return self.post_process_urls(patterns('', *urls))
 
