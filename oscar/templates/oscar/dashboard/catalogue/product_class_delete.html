@@ -1,5 +1,4 @@
 {% extends 'dashboard/layout.html' %}
-{% load url from future %}
 {% load i18n %}
 
 {% block body_class %}{{ block.super }} create-page{% endblock %}
@@ -19,7 +18,7 @@
 {% endblock %}
 
 {% block headertext %}
-    {% trans title %}
+    {{ title }}
 {% endblock %}
 
 {% block dashboard_content %}
@@ -32,9 +31,9 @@
         <form action="." method="post" class="well">
             {% csrf_token %}
             {{ form }}
-            {% blocktrans with name=object.name %}
-                <p>Delete product type <strong>{{ name }}</strong> - are you sure?</p>
-            {% endblocktrans %}
+            <p>
+                {% blocktrans with name=object.name %}Delete product type <strong>{{ name }}</strong> - are you sure?{% endblocktrans %}
+            </p>
             <div class="form-actions">
                 <button type="submit" class="btn btn-danger">{% trans "Delete" %}</button>
             {% trans "or" %} <a href="{% url 'dashboard:catalogue-class-list' %}">{% trans "cancel" %}</a>

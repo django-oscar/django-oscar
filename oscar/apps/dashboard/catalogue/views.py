@@ -148,12 +148,12 @@ class ProductCreateRedirectView(generic.RedirectView):
     def get_redirect_url(self, **kwargs):
         product_class_id = self.request.GET.get('product_class', None)
         if not product_class_id or not product_class_id.isdigit():
-            messages.error(self.request, _("Please choose a product class"))
+            messages.error(self.request, _("Please choose a product type"))
             return reverse('dashboard:catalogue-product-list')
         try:
             product_class = ProductClass.objects.get(id=product_class_id)
         except ProductClass.DoesNotExist:
-            messages.error(self.request, _("Please choose a product class"))
+            messages.error(self.request, _("Please choose a product type"))
             return reverse('dashboard:catalogue-product-list')
         else:
             return reverse('dashboard:catalogue-product-create',
@@ -483,13 +483,13 @@ class ProductClassCreateView(generic.CreateView):
 
 class ProductClassListView(generic.ListView):
     template_name = 'dashboard/catalogue/product_class_list.html'
+    context_object_name = 'classes'
     model = ProductClass
 
     def get_context_data(self, *args, **kwargs):
         ctx = super(ProductClassListView, self).get_context_data(*args,
                                                                  **kwargs)
-        ctx['title'] = _("Product classes")
-        ctx['classes'] = ProductClass.objects.all()
+        ctx['title'] = _("Product Types")
         return ctx
 
 
@@ -523,7 +523,7 @@ class ProductClassDeleteView(generic.DeleteView):
             ctx['disallow'] = True
             ctx['title'] = _("Unable to delete '%s'") % self.object.name
             messages.error(self.request,
-                           _("%i products are assigned this type") %
+                           _("%i products are still assigned to this type") %
                            product_count)
         return ctx
 

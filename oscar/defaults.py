@@ -98,7 +98,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
                 'url_name': 'dashboard:catalogue-product-list',
             },
             {
-                'label': _('Product types'),
+                'label': _('Product Types'),
                 'url_name': 'dashboard:catalogue-class-list',
             },
             {
