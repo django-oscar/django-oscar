@@ -101,8 +101,8 @@ class VoucherCreateView(FormView):
             name=name,
             code=form.cleaned_data['code'],
             usage=form.cleaned_data['usage'],
-            start_date=form.cleaned_data['start_date'],
-            end_date=form.cleaned_data['end_date'],
+            start_datetime=form.cleaned_data['start_datetime'],
+            end_datetime=form.cleaned_data['end_datetime'],
         )
         voucher.offers.add(offer)
         return HttpResponseRedirect(self.get_success_url())
@@ -152,8 +152,8 @@ class VoucherUpdateView(FormView):
         return {
             'name': voucher.name,
             'code': voucher.code,
-            'start_date': voucher.start_date,
-            'end_date': voucher.end_date,
+            'start_datetime': voucher.start_datetime,
+            'end_datetime': voucher.end_datetime,
             'usage': voucher.usage,
             'benefit_type': benefit.type,
             'benefit_range': benefit.range,
@@ -165,8 +165,8 @@ class VoucherUpdateView(FormView):
         voucher.name = form.cleaned_data['name']
         voucher.code = form.cleaned_data['code']
         voucher.usage = form.cleaned_data['usage']
-        voucher.start_date = form.cleaned_data['start_date']
-        voucher.end_date = form.cleaned_data['end_date']
+        voucher.start_datetime = form.cleaned_data['start_datetime']
+        voucher.end_datetime = form.cleaned_data['end_datetime']
         voucher.save()
 
         offer = voucher.offers.all()[0]

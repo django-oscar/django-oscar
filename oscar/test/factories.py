@@ -175,7 +175,7 @@ def create_voucher():
     voucher = Voucher.objects.create(
         name="Test voucher",
         code="test",
-        start_date=datetime.date.today(),
-        end_date=datetime.date.today() + datetime.timedelta(days=12))
+        start_datetime=timezone.now(),
+        end_datetime=timezone.now() + datetime.timedelta(days=12))
     voucher.offers.add(create_offer(offer_type='Voucher'))
     return voucher

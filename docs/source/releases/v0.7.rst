@@ -73,6 +73,9 @@ Minor changes
   is now settable via
   :doc:`OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION</ref/settings>`.
 
+* Vouchers start and end times are now datetimes instead of dates; allowing
+  "lunch-time deals" etc.
+
 .. _`b920f8ba`: https://github.com/tangentlabs/django-oscar/commit/b920f8ba288cd2f19bb167db2a012479ba956397
 .. _`ef3ccf08a7`: https://github.com/tangentlabs/django-oscar/commit/ef3ccf08a707ae1250cdb8d5f2dc6f721d020dc4
 .. _`32b7249`: https://github.com/tangentlabs/django-oscar/commit/32b7249e44b40cb1b20d01226f77ae6777a20b91
@@ -162,6 +165,12 @@ Migrations
 * Shipping:
 
     - ``0006`` - ``AutoSlugField`` for ``ShippingMethod``
+
+* Voucher:
+
+    - ``0002`` and ``0003`` - Convert ``[start|end]_date`` to
+      ``[start|end]_datetime`` (includes data migration).
+
 
 
 Features deprecated in 0.6

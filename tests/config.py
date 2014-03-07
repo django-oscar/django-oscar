@@ -75,6 +75,7 @@ def configure():
             'ADMINS': ('admin@example.com',),
             'DEBUG': False,
             'SITE_ID': 1,
+            'USE_TZ': 1,
             'APPEND_SLASH': True,
             'DDF_DEFAULT_DATA_FIXTURE': 'tests.dynamic_fixtures.OscarDynamicDataFixtureClass',
             'SESSION_SERIALIZER': 'django.contrib.sessions.serializers.JSONSerializer',

@@ -1,9 +1,9 @@
 from decimal import Decimal
-import datetime
 
 from django.core import exceptions
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 from oscar.core.compat import AUTH_USER_MODEL
 
 
@@ -37,8 +37,8 @@ class AbstractVoucher(models.Model):
     usage = models.CharField(_("Usage"), max_length=128,
                              choices=USAGE_CHOICES, default=MULTI_USE)
 
-    start_date = models.DateField(_('Start date'))
-    end_date = models.DateField(_('End date'))
+    start_datetime = models.DateTimeField(_('Start datetime'))
+    end_datetime = models.DateTimeField(_('End datetime'))
 
     # Audit information
     num_basket_additions = models.PositiveIntegerField(
@@ -60,8 +60,8 @@ class AbstractVoucher(models.Model):
         return self.name
 
     def clean(self):
-        if (self.start_date and self.end_date and
-                self.start_date > self.end_date):
+        if all([self.start_datetime, self.end_datetime,
+                self.start_datetime > self.end_datetime]):
             raise exceptions.ValidationError(
                 _('End date should be later than start date'))
 
@@ -69,13 +69,12 @@ class AbstractVoucher(models.Model):
         self.code = self.code.upper()
         super(AbstractVoucher, self).save(*args, **kwargs)
 
-    def is_active(self, test_date=None):
+    def is_active(self, test_datetime=None):
         """
         Test whether this voucher is currently active.
         """
-        if not test_date:
-            test_date = datetime.date.today()
-        return self.start_date <= test_date <= self.end_date
+        test_datetime = test_datetime or timezone.now()
+        return self.start_datetime <= test_datetime <= self.end_datetime
 
     def is_available_to_user(self, user=None):
         """
