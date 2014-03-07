@@ -1,6 +1,8 @@
 from django import forms
-from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
+
+from oscar.core.loading import get_model
+from oscar.forms import widgets
 
 Voucher = get_model('voucher', 'Voucher')
 Benefit = get_model('offer', 'Benefit')
@@ -29,10 +31,10 @@ class VoucherForm(forms.Form):
     type_choices = (
         (Benefit.PERCENTAGE, _('Percentage off of products in range')),
         (Benefit.FIXED, _('Fixed amount off of products in range')),
-        (Benefit.SHIPPING_PERCENTAGE, 
-                _("Discount is a percentage off of the shipping cost")),
+        (Benefit.SHIPPING_PERCENTAGE,
+         _("Discount is a percentage off of the shipping cost")),
         (Benefit.SHIPPING_ABSOLUTE,
-                _("Discount is a fixed amount of the shipping cost")),
+         _("Discount is a fixed amount of the shipping cost")),
         (Benefit.SHIPPING_FIXED_PRICE, _("Get shipping for a fixed price")),
     )
     benefit_type = forms.ChoiceField(
