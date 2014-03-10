@@ -29,7 +29,7 @@ calculating prices and availability information.
    # Availability information
    >>> info.availability.is_available_to_buy
    True
-   >>> msg = info.availability.is_available_to_buy
+   >>> msg = info.availability.message
    >>> unicode(msg)
    u"In stock (58 available)"
    >>> info.availability.is_purchase_permitted(59)
