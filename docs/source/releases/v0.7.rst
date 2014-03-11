@@ -140,6 +140,12 @@ Backwards incompatible changes in 0.7
   the product class' slug instead of the primary key. It's necessary to update
   URLs pointing to that view.
 
+* ``ProductListView`` has been removed as it wasn't needed any more after the
+  search improvements. The old URL route still works.
+
+* Accessing categories by just slug instead of primary key and slug had been
+  unofficially deprecated for 0.6, and is removed now.
+
 .. _`#1123`: https://github.com/tangentlabs/django-oscar/pull/1123
 
 Removal of features deprecated in 0.6

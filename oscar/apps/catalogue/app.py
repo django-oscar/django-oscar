@@ -22,10 +22,7 @@ class BaseCatalogueApplication(Application):
             url(r'^category/(?P<category_slug>[\w-]+(/[\w-]+)*)_(?P<pk>\d+)/$',
                 self.category_view.as_view(), name='category'),
             url(r'^ranges/(?P<slug>[\w-]+)/$',
-                self.range_view.as_view(), name='range'),
-            # Legacy route for the category view
-            url(r'^(?P<category_slug>[\w-]+(/[\w-]+)*)/$',
-                self.category_view.as_view(), name='category')]
+                self.range_view.as_view(), name='range')]
         urlpatterns += patterns('', *urls)
         return self.post_process_urls(urlpatterns)
 

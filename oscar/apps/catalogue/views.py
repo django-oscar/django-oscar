@@ -126,9 +126,6 @@ class ProductCategoryView(ListView):
     def get_object(self):
         if 'pk' in self.kwargs:
             self.category = get_object_or_404(Category, pk=self.kwargs['pk'])
-        elif 'category_slug' in self.kwargs:
-            self.category = get_object_or_404(
-                Category, slug=self.kwargs['category_slug'])
         else:
             self.category = None
 
