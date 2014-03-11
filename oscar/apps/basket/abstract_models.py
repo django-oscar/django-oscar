@@ -721,14 +721,12 @@ class AbstractLine(models.Model):
         if not hasattr(self, '_info'):
             # Cache the PurchaseInfo instance (note that a strategy instance is
             # assigned to each line by the basket in the all_lines method).
-            self._info = self.strategy.fetch_for_product(
+            self._info = self.basket.strategy.fetch_for_product(
                 self.product, self.stockrecord)
         return self._info
 
     @property
     def is_tax_known(self):
-        if not hasattr(self, 'strategy'):
-            return False
         return self.purchase_info.price.is_tax_known
 
     @property
