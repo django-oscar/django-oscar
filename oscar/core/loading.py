@@ -154,6 +154,11 @@ def get_profile_class():
     """
     Return the profile model class
     """
+    # The AUTH_PROFILE_MODULE setting was deprecated in Django 1.5, but it
+    # makes sense for Oscar to continue to use it. Projects built on Django
+    # 1.4 are likely to have used a profile class and it's very difficult to
+    # upgrade to a single user model. Hence, we should continue to support
+    # having a separate profile class even if Django doesn't.
     setting = getattr(settings, 'AUTH_PROFILE_MODULE', None)
     if setting is None:
         return None

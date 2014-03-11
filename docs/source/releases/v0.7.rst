@@ -26,6 +26,11 @@ Minor changes
 Backwards incompatible changes in 0.7
 =====================================
 
+* Oscar has dropped support for Django 1.4. However, if Oscar continues to
+  support the ``AUTH_PROFILE_MODULE`` setting so sites that use separate
+  profile models aren't forced to convert to a single user model in order to
+  use Oscar 0.7.
+
 * ``Order.basket_id`` was a ``PositiveIntegerField`` containing the primary key of the
   associated basket. It's been refactored to be a nullable ``ForeignKey`` and
   is now called "basket".
