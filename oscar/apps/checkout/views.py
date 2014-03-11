@@ -131,41 +131,24 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
     """
     template_name = 'checkout/shipping_address.html'
     form_class = ShippingAddressForm
-
-    def get(self, request, *args, **kwargs):
-        # Check that the user's basket is not empty
-        if request.basket.is_empty:
-            messages.error(request, _("You need to add some items to your"
-                                      " basket to checkout"))
-            return http.HttpResponseRedirect(reverse('basket:summary'))
-
-        # Check that guests have entered an email address
-        if not request.user.is_authenticated() \
-                and not self.checkout_session.get_guest_email():
-            messages.error(request, _("Please either sign in or enter your"
-                                      " email address"))
-            return http.HttpResponseRedirect(reverse('checkout:index'))
-
-        # Check to see that a shipping address is actually required.  It may
-        # not be if the basket is purely downloads
-        if not request.basket.is_shipping_required():
-            messages.info(request, _("Your basket does not require a shipping"
-                                     " address to be submitted"))
-            return http.HttpResponseRedirect(self.get_success_url())
-
-        return super(ShippingAddressView, self).get(request, *args, **kwargs)
+    pre_conditions = ['check_basket_is_not_empty',
+                      'check_user_email_is_captured',
+                      'check_basket_requires_shipping']
 
     def get_initial(self):
         return self.checkout_session.new_shipping_address_fields()
 
     def get_context_data(self, **kwargs):
-        kwargs = super(ShippingAddressView, self).get_context_data(**kwargs)
+        ctx = super(ShippingAddressView, self).get_context_data(**kwargs)
         if self.request.user.is_authenticated():
             # Look up address book data
-            kwargs['addresses'] = self.get_available_addresses()
-        return kwargs
+            ctx['addresses'] = self.get_available_addresses()
+        return ctx
 
     def get_available_addresses(self):
+        # Include only addresses where the country is flagged as valid for
+        # shipping. Also, use ordering to ensure the default address comes
+        # first.
         return self.request.user.addresses.filter(
             country__is_shipping_country=True).order_by(
             '-is_default_for_shipping')

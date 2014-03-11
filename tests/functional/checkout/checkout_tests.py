@@ -89,6 +89,7 @@ class DisabledAnonymousCheckoutViewsTests(WebTestCase):
             self.assertIsRedirect(response)
 
 
+@override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)
 class EnabledAnonymousCheckoutViewsTests(WebTestCase, CheckoutMixin):
     is_anonymous = True
 
@@ -122,15 +123,6 @@ class EnabledAnonymousCheckoutViewsTests(WebTestCase, CheckoutMixin):
             self.assertEqual('barry@example.com', order.guest_email)
 
 
-@override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)
-class TestIndexView(WebTestCase):
-    is_anonymous = True
-
-    def test_redirects_customers_with_empty_basket(self):
-        response = self.get(reverse('checkout:index'))
-        self.assertIsRedirect(response)
-
-
 class TestShippingAddressView(WebTestCase, CheckoutMixin):
     fixtures = ['countries.json']
 
@@ -143,6 +135,7 @@ class TestShippingAddressView(WebTestCase, CheckoutMixin):
         self.assertFalse(settings.OSCAR_ALLOW_ANON_CHECKOUT)
 
     def test_create_shipping_address_adds_address_to_session(self):
+        self.add_product_to_basket()
         response = self.client.post(reverse('checkout:shipping-address'),
                                             {'last_name': 'Doe',
                                              'first_name': 'John',
@@ -158,6 +151,7 @@ class TestShippingAddressView(WebTestCase, CheckoutMixin):
         self.assertEqual('N1 9RT', session_address['postcode'])
 
     def test_invalid_shipping_address_fails(self):
+        self.add_product_to_basket()
         response = self.client.post(reverse('checkout:shipping-address'),
                                     {'last_name': 'Doe',
                                      'first_name': 'John',

@@ -56,7 +56,27 @@ class CheckoutSessionMixin(object):
             raise exceptions.FailedPreCondition(
                 url=reverse('basket:summary'),
                 message=_(
-                    "You need to add some items to your" " basket to checkout")
+                    "You need to add some items to your basket to checkout")
+            )
+
+    def check_user_email_is_captured(self, request):
+        if not request.user.is_authenticated() \
+                and not self.checkout_session.get_guest_email():
+            raise exceptions.FailedPreCondition(
+                url=reverse('checkout:index'),
+                message=_(
+                    "Please either sign in or enter your email address")
+            )
+
+    def check_basket_requires_shipping(self, request):
+        # Check to see that a shipping address is actually required.  It may
+        # not be if the basket is purely downloads
+        if not request.basket.is_shipping_required():
+            raise exceptions.FailedPreCondition(
+                url=reverse('checkout:shipping-method'),
+                message=_(
+                    "Your basket does not require a shipping"
+                    "address to be submitted")
             )
 
     def get_context_data(self, **kwargs):
