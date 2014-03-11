@@ -162,6 +162,10 @@ Template block changes
 Migrations
 ~~~~~~~~~~
 
+* Address:
+
+    - ``0008`` - Forgotten migration for ``UserAddress.phone_number``
+
 * Catalogue:
 
     - ``0014`` - Drops unused ``ProductCategory.is_canonical`` field.
