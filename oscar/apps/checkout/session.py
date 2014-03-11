@@ -79,6 +79,25 @@ class CheckoutSessionMixin(object):
                     "address to be submitted")
             )
 
+    def check_shipping_data_is_captured(self, request):
+        if not request.basket.is_shipping_required():
+            return
+
+        # Check that shipping address has been completed
+        if not self.checkout_session.is_shipping_address_set():
+            raise exceptions.FailedPreCondition(
+                url=reverse('checkout:shipping-address'),
+                message=_("Please choose a shipping address")
+            )
+
+        # Check that shipping method has been set
+        if not self.checkout_session.is_shipping_method_set(
+                self.request.basket):
+            raise exceptions.FailedPreCondition(
+                url=reverse('checkout:shipping-address'),
+                message=_("Please choose a shipping method")
+            )
+
     def get_context_data(self, **kwargs):
         """
         Assign common template variables to the context.

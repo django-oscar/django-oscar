@@ -174,3 +174,29 @@ class TestShippingMethodView(CheckoutMixin, WebTestCase):
 
         response = self.get(reverse('checkout:shipping-method'))
         self.assertIsOk(response)
+
+
+@override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)
+class TestPaymentMethodView(CheckoutMixin, WebTestCase):
+    is_anonymous = True
+
+    def setUp(self):
+        reload_url_conf()
+        super(TestPaymentMethodView, self).setUp()
+
+    def test_redirects_customers_with_empty_basket(self):
+        response = self.get(reverse('checkout:payment-method'))
+        self.assertRedirectUrlName(response, 'basket:summary')
+
+    def test_redirects_customers_who_have_skipped_guest_form(self):
+        self.add_product_to_basket()
+
+        response = self.get(reverse('checkout:payment-method'))
+        self.assertRedirectUrlName(response, 'checkout:index')
+
+    def test_redirects_customers_who_have_skipped_shipping_address_form(self):
+        self.add_product_to_basket()
+        self.enter_guest_details()
+
+        response = self.get(reverse('checkout:payment-method'))
+        self.assertRedirectUrlName(response, 'checkout:shipping-address')

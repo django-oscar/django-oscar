@@ -246,6 +246,10 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
                       'check_user_email_is_captured', ]
 
     def get(self, request, *args, **kwargs):
+        # These pre-conditions can't easily be factored out into the normal
+        # pre-conditions as they do more than run a test and then raise an
+        # exception if it fails.
+
         # Check that shipping is required at all
         if not request.basket.is_shipping_required():
             self.checkout_session.use_shipping_method(
@@ -329,29 +333,15 @@ class PaymentMethodView(CheckoutSessionMixin, generic.TemplateView):
     This would include setting allocations if payment is to be split
     between multiple sources.
     """
+    pre_conditions = [
+        'check_basket_is_not_empty',
+        'check_user_email_is_captured',
+        'check_shipping_data_is_captured']
 
     def get(self, request, *args, **kwargs):
-        # Check that the user's basket is not empty
-        if request.basket.is_empty:
-            messages.error(request, _("You need to add some items to your"
-                                      " basket to checkout"))
-            return http.HttpResponseRedirect(reverse('basket:summary'))
-
-        shipping_required = request.basket.is_shipping_required()
-
-        # Check that shipping address has been completed
-        if shipping_required \
-                and not self.checkout_session.is_shipping_address_set():
-            messages.error(request, _("Please choose a shipping address"))
-            return http.HttpResponseRedirect(reverse('checkout:shipping-address'))
-
-        # Check that shipping method has been set
-        if shipping_required \
-                and not self.checkout_session.is_shipping_method_set(
-                    self.request.basket):
-            messages.error(request, _("Please choose a shipping method"))
-            return http.HttpResponseRedirect(reverse('checkout:shipping-method'))
-
+        # By default we redirect straight onto the payment details view. Shops
+        # that require a choice of payment method may want to override this
+        # method to implement their specific logic.
         return self.get_success_response()
 
     def get_success_response(self):
