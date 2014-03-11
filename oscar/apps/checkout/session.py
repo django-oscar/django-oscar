@@ -1,6 +1,11 @@
-from oscar.core.loading import get_model
+from django.contrib import messages
+from django import http
+from django.core.exceptions import ImproperlyConfigured
+from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
 
-from oscar.core.loading import get_class
+from oscar.core.loading import get_model, get_class
+from . import exceptions
 
 Repository = get_class('shipping.repository', 'Repository')
 OrderTotalCalculator = get_class(
@@ -15,13 +20,44 @@ class CheckoutSessionMixin(object):
     """
     Mixin to provide common functionality shared between checkout views.
     """
+    # This should be list of method names that get executed before the normal
+    # flow of the view.
+    pre_conditions = None
 
     def dispatch(self, request, *args, **kwargs):
         # Assign the checkout session manager so it's available in all checkout
         # views.
         self.checkout_session = CheckoutSessionData(request)
+
+        # Enforce any pre-conditions for the view.
+        try:
+            self.check_preconditions(request)
+        except exceptions.FailedPreCondition, e:
+            messages.error(request, e.message)
+            return http.HttpResponseRedirect(e.url)
+
         return super(CheckoutSessionMixin, self).dispatch(
             request, *args, **kwargs)
+
+    def check_preconditions(self, request):
+        if self.pre_conditions is None:
+            return
+        for method_name in self.pre_conditions:
+            if not hasattr(self, method_name):
+                raise ImproperlyConfigured(
+                    "There is no method '%s' to call as a pre-condition" % (
+                        method_name))
+            getattr(self, method_name)(request)
+
+    # Re-usable pre-condition validators
+
+    def check_basket_is_not_empty(self, request):
+        if request.basket.is_empty:
+            raise exceptions.FailedPreCondition(
+                url=reverse('basket:summary'),
+                message=_(
+                    "You need to add some items to your" " basket to checkout")
+            )
 
     def get_context_data(self, **kwargs):
         """

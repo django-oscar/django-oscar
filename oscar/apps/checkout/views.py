@@ -50,6 +50,7 @@ class IndexView(CheckoutSessionMixin, generic.FormView):
     template_name = 'checkout/gateway.html'
     form_class = GatewayForm
     success_url = reverse_lazy('checkout:shipping-address')
+    pre_conditions = ['check_basket_is_not_empty']
 
     def get(self, request, *args, **kwargs):
         # We redirect immediately to shipping address stage if the user is
@@ -95,8 +96,8 @@ class IndexView(CheckoutSessionMixin, generic.FormView):
             user = form.get_user()
             login(self.request, user)
 
-            # We raise a signal to indicate that the user has entered the checkout
-            # process.
+            # We raise a signal to indicate that the user has entered the
+            # checkout process.
             signals.start_checkout.send_robust(
                 sender=self, request=self.request)
 
@@ -383,16 +384,20 @@ class PaymentMethodView(CheckoutSessionMixin, generic.TemplateView):
 
 class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
     """
-    For taking the details of payment and creating the order
+    For taking the details of payment and creating the order.
 
     The class is deliberately split into fine-grained methods, responsible for
     only one thing.  This is to make it easier to subclass and override just
     one component of functionality.
 
-    All projects will need to subclass and customise this class.
+    All projects will need to subclass and customise this class as no payment
+    is taken by default.
     """
     template_name = 'checkout/payment_details.html'
     template_name_preview = 'checkout/preview.html'
+
+    # It preview=True, then we render a preview template that shows all order
+    # details ready for submission.
     preview = False
 
     def get(self, request, *args, **kwargs):
@@ -400,6 +405,41 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         if error_response:
             return error_response
         return super(PaymentDetailsView, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        # Use the proposed submission as template context data.  Flatten the
+        # order kwargs so they are easily available too.
+        ctx = self.build_submission(basket=self.request.basket, **kwargs)
+        ctx.update(kwargs)
+        ctx.update(ctx['order_kwargs'])
+        return ctx
+
+    def build_submission(self, **kwargs):
+        """
+        Return a dict of data to submitted to pay for, and create an order
+        """
+        basket = kwargs.get('basket', self.request.basket)
+        shipping_address = self.get_shipping_address(basket)
+        shipping_method = self.get_shipping_method(
+            basket, shipping_address)
+        total = self.get_order_totals(
+            basket, shipping_method=shipping_method)
+        submission = {
+            'user': self.request.user,
+            'basket': basket,
+            'shipping_address': shipping_address,
+            'shipping_method': shipping_method,
+            'order_total': total,
+            'order_kwargs': {},
+            'payment_kwargs': {}}
+        if not submission['user'].is_authenticated():
+            email = self.checkout_session.get_guest_email()
+            submission['order_kwargs']['guest_email'] = email
+        return submission
+
+    def get_template_names(self):
+        return [self.template_name_preview] if self.preview else [
+            self.template_name]
 
     def post(self, request, *args, **kwargs):
         """
@@ -450,41 +490,6 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
                     self.request, _("Please choose a shipping method"))
                 return http.HttpResponseRedirect(
                     reverse('checkout:shipping-method'))
-
-    def build_submission(self, **kwargs):
-        """
-        Return a dict of data to submitted to pay for, and create an order
-        """
-        basket = kwargs.get('basket', self.request.basket)
-        shipping_address = self.get_shipping_address(basket)
-        shipping_method = self.get_shipping_method(
-            basket, shipping_address)
-        total = self.get_order_totals(
-            basket, shipping_method=shipping_method)
-        submission = {
-            'user': self.request.user,
-            'basket': basket,
-            'shipping_address': shipping_address,
-            'shipping_method': shipping_method,
-            'order_total': total,
-            'order_kwargs': {},
-            'payment_kwargs': {}}
-        if not submission['user'].is_authenticated():
-            email = self.checkout_session.get_guest_email()
-            submission['order_kwargs']['guest_email'] = email
-        return submission
-
-    def get_context_data(self, **kwargs):
-        # Use the proposed submission as template context data.  Flatten the
-        # order kwargs so they are easily available too.
-        ctx = self.build_submission(**kwargs)
-        ctx.update(kwargs)
-        ctx.update(ctx['order_kwargs'])
-        return ctx
-
-    def get_template_names(self):
-        return [self.template_name_preview] if self.preview else [
-            self.template_name]
 
     def render_preview(self, request, **kwargs):
         """

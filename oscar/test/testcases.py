@@ -48,8 +48,7 @@ class WebTestCase(WebTest):
             self.user = self.create_user(
                 self.username, self.email, self.password)
             self.user.is_staff = self.is_staff
-            perms = self.permissions
-            add_permissions(self.user, perms)
+            add_permissions(self.user, self.permissions)
             self.user.save()
             self.login()
 
@@ -62,6 +61,8 @@ class WebTestCase(WebTest):
         return self.app.post(url, **kwargs)
 
     def login(self, username=None, password=None):
+        # This needs removing as it's a weird mix of WebTest and the old test
+        # client.
         username = username or self.username
         password = password or self.password
         result = self.client.login(email=self.email, password=password)

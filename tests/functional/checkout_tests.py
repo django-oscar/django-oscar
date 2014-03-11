@@ -122,6 +122,15 @@ class EnabledAnonymousCheckoutViewsTests(WebTestCase, CheckoutMixin):
             self.assertEqual('barry@example.com', order.guest_email)
 
 
+@override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)
+class TestIndexView(WebTestCase):
+    is_anonymous = True
+
+    def test_redirects_customers_with_empty_basket(self):
+        response = self.get(reverse('checkout:index'))
+        self.assertIsRedirect(response)
+
+
 class TestShippingAddressView(WebTestCase, CheckoutMixin):
     fixtures = ['countries.json']
 
@@ -156,7 +165,6 @@ class TestShippingAddressView(WebTestCase, CheckoutMixin):
                                      'country': 'GB',
                                      })
         self.assertIsOk(response)  # no redirect
-
 
     def test_user_must_have_a_nonempty_basket(self):
         response = self.client.get(reverse('checkout:shipping-address'))
@@ -298,7 +306,6 @@ class TestPlacingOrderUsingAVoucher(WebTestCase, CheckoutMixin):
 
     def test_records_discount(self):
         self.assertEqual(1, self.voucher.num_orders)
-
 
 
 class TestPlacingOrderUsingAnOffer(WebTestCase, CheckoutMixin):
