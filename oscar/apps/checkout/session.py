@@ -94,7 +94,7 @@ class CheckoutSessionMixin(object):
         if not self.checkout_session.is_shipping_method_set(
                 self.request.basket):
             raise exceptions.FailedPreCondition(
-                url=reverse('checkout:shipping-address'),
+                url=reverse('checkout:shipping-method'),
                 message=_("Please choose a shipping method")
             )
 

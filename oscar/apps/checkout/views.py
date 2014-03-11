@@ -367,6 +367,11 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
     template_name = 'checkout/payment_details.html'
     template_name_preview = 'checkout/preview.html'
 
+    pre_conditions = [
+        'check_basket_is_not_empty',
+        'check_user_email_is_captured',
+        'check_shipping_data_is_captured']
+
     # It preview=True, then we render a preview template that shows all order
     # details ready for submission.
     preview = False
