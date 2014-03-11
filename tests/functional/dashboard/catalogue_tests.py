@@ -146,7 +146,7 @@ class TestAStaffUser(WebTestCase):
 
     def test_can_list_her_products(self):
         product1 = create_product(partner_users=[self.user, ])
-        product2 = create_product(partner="sneaky", partner_users=[])
+        product2 = create_product(partner_name="sneaky", partner_users=[])
         page = self.get(reverse('dashboard:catalogue-product-list'))
         assert product1 in page.context['object_list']
         assert product2 in page.context['object_list']
@@ -163,8 +163,8 @@ class TestANonStaffUser(TestAStaffUser):
         self.partner.users.add(self.user)
 
     def test_can_list_her_products(self):
-        product1 = create_product(partner="A", partner_users=[self.user, ])
-        product2 = create_product(partner="B", partner_users=[])
+        product1 = create_product(partner_name="A", partner_users=[self.user, ])
+        product2 = create_product(partner_name="B", partner_users=[])
         page = self.get(reverse('dashboard:catalogue-product-list'))
         assert product1 in page.context['object_list']
         assert product2 not in page.context['object_list']
