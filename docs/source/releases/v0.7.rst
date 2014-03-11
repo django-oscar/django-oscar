@@ -111,6 +111,7 @@ Bugfixes
   manager. (`#1228`_).
 
 .. _`#1228`: https://github.com/tangentlabs/django-oscar/issues/1228
+.. _`be04d46639`: https://github.com/tangentlabs/django-oscar/commit/
 
 Backwards incompatible changes in 0.7
 =====================================
@@ -162,6 +163,19 @@ Template block changes
 Migrations
 ~~~~~~~~~~
 
+.. warning::
+
+    The reviews app has not been under migration control so far. Please ensure
+    you follow South's guidelines on how to `convert an app`_. Essentially,
+    you will have to run:
+
+        $ ./manage.py migrate reviews 0001 --fake
+
+
+* Address:
+
+    - ``0008`` - Forgotten migration for ``UserAddress.phone_number``
+
 * Catalogue:
 
     - ``0014`` - Drops unused ``ProductCategory.is_canonical`` field.
@@ -195,11 +209,17 @@ Migrations
 
     - ``0006`` - ``AutoSlugField`` for ``ShippingMethod``
 
+* Reviews:
+
+    - ``0001`` - Initial migration for reviews application. Make sure to follow
+      South's guidelines on how to `convert an app`_.
+
 * Voucher:
 
     - ``0002`` and ``0003`` - Convert ``[start|end]_date`` to
       ``[start|end]_datetime`` (includes data migration).
 
+.. _`convert an app`: http://south.readthedocs.org/en/latest/convertinganapp.html
 
 
 Features deprecated in 0.6
