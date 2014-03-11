@@ -154,7 +154,8 @@ class AbstractCommunicationEventType(models.Model):
     email_body_template = models.TextField(
         _('Email Body Template'), blank=True)
     email_body_html_template = models.TextField(
-        _('Email Body HTML Template'), blank=True, help_text=_("HTML template"))
+        _('Email Body HTML Template'), help_text=_("HTML template"),
+        blank=True)
 
     # Template content for SMS messages
     sms_template = models.CharField(_('SMS Template'), max_length=170,
