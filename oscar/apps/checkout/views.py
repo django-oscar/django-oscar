@@ -376,12 +376,6 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
     # details ready for submission.
     preview = False
 
-    def get(self, request, *args, **kwargs):
-        error_response = self.get_error_response()
-        if error_response:
-            return error_response
-        return super(PaymentDetailsView, self).get(request, *args, **kwargs)
-
     def get_context_data(self, **kwargs):
         # Use the proposed submission as template context data.  Flatten the
         # order kwargs so they are easily available too.
@@ -423,14 +417,9 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         validate the forms from the payment details page.  If the forms are
         valid then the method can call submit()
         """
-        error_response = self.get_error_response()
-        if error_response:
-            return error_response
-
         if self.preview:
             # We use a custom parameter to indicate if this is an attempt to
             # place an order.  Without this, we assume a payment form is being
-            # submitted from the payment-details page
             if request.POST.get('action', '') == 'place_order':
                 # We pull together all the things that are needed to place an
                 # order.
@@ -440,32 +429,6 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
 
         # Posting to payment-details isn't the right thing to do
         return self.get(request, *args, **kwargs)
-
-    def get_error_response(self):
-        # Check that the user's basket is not empty
-        if self.request.basket.is_empty:
-            messages.error(self.request, _(
-                "You need to add some items to your basket to checkout"))
-            return http.HttpResponseRedirect(reverse('basket:summary'))
-
-        if self.request.basket.is_shipping_required():
-            shipping_address = self.get_shipping_address(
-                self.request.basket)
-            shipping_method = self.get_shipping_method(
-                self.request.basket, shipping_address)
-            # Check that shipping address has been completed
-            if not shipping_address:
-                messages.error(
-                    self.request, _("Please choose a shipping address"))
-                return http.HttpResponseRedirect(
-                    reverse('checkout:shipping-address'))
-
-            # Check that shipping method has been set
-            if not shipping_method:
-                messages.error(
-                    self.request, _("Please choose a shipping method"))
-                return http.HttpResponseRedirect(
-                    reverse('checkout:shipping-method'))
 
     def render_preview(self, request, **kwargs):
         """

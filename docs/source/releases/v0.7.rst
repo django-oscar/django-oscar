@@ -58,6 +58,16 @@ New signals:
 
 See the :doc:`signals docs </ref/signals>` for more details.
 
+Checkout changes
+~~~~~~~~~~~~~~~~
+
+The checkout classes have been reworked to clean-up how pre-conditions are
+enforced. Each view class now has a ``pre_conditions`` attribute which is a
+list of method names. Each method is run within the ``dispatch`` method of the
+view.
+
+* The ``PaymentDetails.get_error_response`` method has been removed.
+
 Minor changes
 ~~~~~~~~~~~~~
 
