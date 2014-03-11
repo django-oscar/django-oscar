@@ -9,14 +9,14 @@ from oscar.apps.catalogue.reviews.app import application as reviews_app
 class BaseCatalogueApplication(Application):
     name = 'catalogue'
     detail_view = views.ProductDetailView
-    index_view = views.ProductListView
     category_view = views.ProductCategoryView
     range_view = offer_views.RangeDetailView
 
     def get_urls(self):
         urlpatterns = super(BaseCatalogueApplication, self).get_urls()
         urls = [
-            url(r'^$', self.index_view.as_view(), name='index'),
+            # has different urlname for legacy reasons
+            url(r'^$', self.category_view.as_view(), name='index'),
             url(r'^(?P<product_slug>[\w-]*)_(?P<pk>\d+)/$',
                 self.detail_view.as_view(), name='detail'),
             url(r'^category/(?P<category_slug>[\w-]+(/[\w-]+)*)_(?P<pk>\d+)/$',
