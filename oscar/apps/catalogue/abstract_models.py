@@ -221,10 +221,12 @@ class AbstractProduct(models.Model):
     slug = models.SlugField(_('Slug'), max_length=255, unique=False)
     description = models.TextField(_('Description'), blank=True, null=True)
 
+    #: "Type" of product.
+    #: None for Product variants, they inherit their parent's product class
     product_class = models.ForeignKey(
-        'catalogue.ProductClass', verbose_name=_('Product Type'), null=True,
-        related_name="products",
-        help_text=_("""Choose what type of product this is"""))
+        'catalogue.ProductClass', null=True, on_delete=models.PROTECT,
+        verbose_name=_('Product Type'), related_name="products",
+        help_text=_("Choose what type of product this is"))
     attributes = models.ManyToManyField(
         'catalogue.ProductAttribute',
         through='ProductAttributeValue',

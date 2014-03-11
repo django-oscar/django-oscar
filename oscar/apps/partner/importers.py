@@ -46,8 +46,8 @@ class CatalogueImporter(object):
 
     def _flush_product_data(self):
         u"""Flush out product and stock models"""
-        ProductClass.objects.all().delete()
         Product.objects.all().delete()
+        ProductClass.objects.all().delete()
         Partner.objects.all().delete()
         StockRecord.objects.all().delete()
 

@@ -162,6 +162,7 @@ Migrations
     - ``0015`` - Turns a product's UPC field into a :class:`oscar.models.fields.NullCharField`
     - ``0016`` - ``AutoSlugField`` for ``AbstractProductClass`` and ``AbstractOption``
     - ``0017`` - Removes ``Product.status``, ``Contributor``, ``ContributorRole`` and ``ProductContributor``
+    - ``0018`` - Set ``on_delete=models.PROTECT`` on ``Product.product_class``
 
 * Customer:
 
