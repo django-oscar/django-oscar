@@ -8,7 +8,7 @@ from oscar.apps.catalogue.models import ProductClass, Product
 from oscar.apps.offer.utils import Applicator
 from oscar.apps.order.models import Order
 from oscar.apps.order.utils import OrderCreator
-from oscar.apps.shipping.methods import FixedPrice, Free, Base
+from oscar.apps.shipping.methods import Free, Base
 from oscar.apps.shipping.repository import Repository
 from oscar.core.loading import get_class
 from oscar.test import factories
@@ -112,6 +112,17 @@ class TestSuccessfulOrderCreation(TestCase):
         order = Order.objects.get(number='1234')
         line = order.lines.all()[0]
         self.assertEqual('A', line.status)
+
+    def test_partner_name_is_optional(self):
+        for partner_name, order_number in [('', 'A'), ('p1', 'B')]:
+            self.basket = factories.create_basket(empty=True)
+            product = factories.create_product(partner_name=partner_name)
+            add_product(self.basket, D('12.00'), product=product)
+            place_order(
+                self.creator, basket=self.basket, order_number=order_number)
+            line = Order.objects.get(number=order_number).lines.all()[0]
+            partner = product.stockrecords.all()[0].partner
+            self.assertTrue(partner_name == line.partner_name == partner.name)
 
 
 class TestPlacingOrderForDigitalGoods(TestCase):
