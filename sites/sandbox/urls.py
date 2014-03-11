@@ -12,6 +12,8 @@ from oscar.views import handler500, handler404, handler403
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    # Include admin as convenience. It's unsupported and you should
+    # use the dashboard
     (r'^admin/', include(admin.site.urls)),
     # Custom functionality to allow dashboard users to be created
     (r'^gateway/', include('apps.gateway.urls')),
@@ -25,6 +27,8 @@ if 'rosetta' in settings.INSTALLED_APPS:
     )
 
 if settings.DEBUG:
+    import debug_toolbar
+
     # Server statics and uploaded media
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
@@ -33,4 +37,7 @@ if settings.DEBUG:
         url(r'^403$', handler403),
         url(r'^404$', handler404),
         url(r'^500$', handler500)
+    )
+    urlpatterns += patterns('',
+        url(r'^__debug__/', include(debug_toolbar.urls)),
     )

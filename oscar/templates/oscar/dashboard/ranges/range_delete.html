@@ -1,11 +1,7 @@
 {% extends 'dashboard/layout.html' %}
-{% load url from future %}
-{% load currency_filters %}
 {% load i18n %}
 
-{% block body_class %}
-    create-page
-{% endblock %}
+{% block body_class %}{{ block.super }} create-page{% endblock %}
 
 {% block title %}
     {% blocktrans with name=range.name %}Delete range '{{ name }}'?{% endblocktrans %} | {% trans "Range management" %} | {{ block.super }}
@@ -22,7 +18,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:range-update' range.pk %}">'{{ range.name }}'</a>
+            <a href="{% url 'dashboard:range-update' pk=range.pk %}">'{{ range.name }}'</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Delete?" %}</li>

@@ -1,7 +1,6 @@
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.sites.models import get_current_site
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.shortcuts import get_object_or_404
 from django.template import TemplateSyntaxError
 from django.utils.translation import ugettext_lazy as _
@@ -34,8 +33,8 @@ class UpdateView(generic.UpdateView):
 
     def form_invalid(self, form):
         messages.error(self.request,
-            _("The submitted form was not valid, please correct "
-              "the errors and resubmit"))
+                       _("The submitted form was not valid, please correct "
+                         "the errors and resubmit"))
         return super(UpdateView, self).form_invalid(form)
 
     def form_valid(self, form):
@@ -60,7 +59,7 @@ class UpdateView(generic.UpdateView):
         commtype_ctx = self.get_messages_context(form)
         try:
             msgs = commtype.get_messages(commtype_ctx)
-        except TemplateSyntaxError, e:
+        except TemplateSyntaxError as e:
             form.errors['__all__'] = form.error_class([e.message])
             return self.render_to_response(ctx)
 
@@ -76,7 +75,7 @@ class UpdateView(generic.UpdateView):
         commtype_ctx = self.get_messages_context(form)
         try:
             msgs = commtype.get_messages(commtype_ctx)
-        except TemplateSyntaxError, e:
+        except TemplateSyntaxError as e:
             form.errors['__all__'] = form.error_class([e.message])
             return self.render_to_response(ctx)
 

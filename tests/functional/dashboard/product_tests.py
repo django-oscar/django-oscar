@@ -40,24 +40,24 @@ class TestGatewayPage(ProductWebTest):
                              reverse('dashboard:catalogue-product-list'))
 
     def test_redirects_to_form_page_when_valid_query_param(self):
-        pclass = G(ProductClass)
+        pclass = G(ProductClass, slug='books')
         url = reverse('dashboard:catalogue-product-create')
-        response = self.get(url + '?product_class=%d' % pclass.id)
-        self.assertRedirects(response,
-                             reverse('dashboard:catalogue-product-create',
-                                     kwargs={'product_class_id': pclass.id}))
+        response = self.get(url + '?product_class=%s' % pclass.pk)
+        expected_url = reverse('dashboard:catalogue-product-create',
+                               kwargs={'product_class_slug': pclass.slug})
+        self.assertRedirects(response, expected_url)
 
 
 class TestCreateGroupProduct(ProductWebTest):
     is_staff = True
 
     def setUp(self):
-        self.pclass = G(ProductClass)
+        self.pclass = G(ProductClass, slug='books')
         super(TestCreateGroupProduct, self).setUp()
 
     def submit(self, title=None, category=None, upc=None):
         url = reverse('dashboard:catalogue-product-create',
-                      kwargs={'product_class_id': self.pclass.id})
+                      kwargs={'product_class_slug': self.pclass.slug})
 
         product_form = self.get(url).form
 
@@ -73,20 +73,20 @@ class TestCreateGroupProduct(ProductWebTest):
         response = self.submit(title='')
 
         self.assertContains(response, "Parent products must have a title")
-        self.assertEquals(Product.objects.count(), 0)
+        self.assertEqual(Product.objects.count(), 0)
 
     def test_requires_a_category(self):
         response = self.submit(title="Nice T-Shirt")
         self.assertContains(response,
             "A top-level product must have at least one category")
-        self.assertEquals(Product.objects.count(), 0)
+        self.assertEqual(Product.objects.count(), 0)
 
     def test_doesnt_smoke(self):
         category = G(Category)
         response = self.submit(category=category)
 
         self.assertContains(response, "Parent products must have a title")
-        self.assertEquals(Product.objects.count(), 0)
+        self.assertEqual(Product.objects.count(), 0)
 
     def test_doesnt_allow_duplicate_upc(self):
         G(Product, parent=None, upc="12345")
@@ -96,8 +96,8 @@ class TestCreateGroupProduct(ProductWebTest):
         response = self.submit(title="Nice T-Shirt", category=category,
                                upc="12345")
 
-        self.assertEquals(Product.objects.count(), 1)
-        self.assertNotEquals(Product.objects.get(upc='12345').title,
+        self.assertEqual(Product.objects.count(), 1)
+        self.assertNotEqual(Product.objects.get(upc='12345').title,
                              'Nice T-Shirt')
         self.assertContains(response,
                             "Product with this UPC already exists.")
@@ -107,18 +107,18 @@ class TestCreateChildProduct(ProductWebTest):
     is_staff = True
 
     def setUp(self):
-        self.pclass = G(ProductClass)
-        self.parent = G(Product)
+        self.pclass = G(ProductClass, slug='books')
+        self.parent = G(Product, parent=None)
         super(TestCreateChildProduct, self).setUp()
 
     def test_categories_are_not_required(self):
         url = reverse('dashboard:catalogue-product-create',
-                      kwargs={'product_class_id': self.pclass.id})
+                      kwargs={'product_class_slug': self.pclass.slug})
         page = self.get(url)
 
         product_form = page.form
         product_form['title'] = 'Nice T-Shirt'
-        product_form['parent'] = self.parent.id
+        product_form['parent'] = str(self.parent.id)
         page = product_form.submit()
 
         try:
@@ -126,4 +126,32 @@ class TestCreateChildProduct(ProductWebTest):
         except Product.DoesNotExist:
             self.fail('creating a child product did not work: %s' % page.body)
 
-        self.assertEquals(product.parent, self.parent)
+        self.assertEqual(product.parent, self.parent)
+
+
+class TestProductUpdate(ProductWebTest):
+    def test_product_update_form(self):
+        self.product = G(Product)
+
+        url = reverse('dashboard:catalogue-product',
+                      kwargs={'pk': self.product.id})
+
+        a, b = [G(Product, title='a', parent=None),
+                G(Product, title='b', parent=None)]
+
+        page = self.get(url)
+
+        product_form = page.form
+        product_form['title'] = 'Nice T-Shirt'
+
+        # ProductSelectMultiple widget expects comma separated ids:
+        product_form['related_products'] = ','.join((str(a.id), str(b.id)))
+
+        page = product_form.submit()
+
+        product = Product.objects.get(id=self.product.id)
+
+        self.assertEqual(page.context['product'], self.product)
+        self.assertEqual(product.title, 'Nice T-Shirt')
+        self.assertEqual(list(product.related_products.all().order_by('title')),
+                         [a, b])

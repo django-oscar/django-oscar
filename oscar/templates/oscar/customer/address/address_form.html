@@ -1,0 +1,15 @@
+{% extends "customer/baseaccountpage.html" %}
+
+
+{% load i18n %}
+
+{% block extra_breadcrumbs %}
+	<li>
+		<a href="{% url 'customer:address-list' %}">{% trans 'Address book' %}</a>
+		<span class="divider">/</span>
+	</li>
+{% endblock %}
+
+{% block tabcontent %}
+    {% include "partials/form.html" %}
+{% endblock tabcontent %}

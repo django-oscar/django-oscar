@@ -1,10 +1,9 @@
 {% extends 'dashboard/layout.html' %}
 
-{% load url from future %}
 
 {% load i18n %}
 
-{% block body_class %}promotions{% endblock %}
+{% block body_class %}{{ block.super }} promotions{% endblock %}
 
 {% block title %}
     {% blocktrans %}Content blocks for page {{ page_url }}{% endblocktrans %} | {{ block.super }}
@@ -44,7 +43,7 @@
                 <tbody class="promotion_list">
                     {% for promotion in position.promotions %}
                         <tr id="promo_{{ promotion.pk }}">
-                            <td>{{ promotion.content_object.name }}</td>
+                            <td><a href="{% url 'dashboard:promotion-update' ptype=promotion.content_object.code pk=promotion.pk %}">{{ promotion.content_object.name }}</a></td>
                             <td>{{ promotion.content_object.type }}</td>
                             <td>
                                 <div class="btn-toolbar">
@@ -54,8 +53,8 @@
                                             <span class="caret"></span>
                                         </a>
                                         <ul class="dropdown-menu pull-right">
-                                            <li><a href="{% url 'dashboard:promotion-update' promotion.content_object.code promotion.content_object.id %}">{% trans "Edit" %}</a></li>
-                                            <li><a href="{% url 'dashboard:pagepromotion-delete' promotion.id %}">{% trans "Remove" %}</a></li>
+                                            <li><a href="{% url 'dashboard:promotion-update' ptype=promotion.content_object.code pk=promotion.content_object.id %}">{% trans "Edit" %}</a></li>
+                                            <li><a href="{% url 'dashboard:pagepromotion-delete' pk=promotion.id %}">{% trans "Remove" %}</a></li>
                                         </ul>
                                     </div>
                                     <a href="#" class="btn btn-info btn-handle"><i class="icon-move icon-large"></i> {% trans "Re-order" %}</a>
@@ -73,5 +72,8 @@
 {% endblock dashboard_content %}
 
 {% block onbodyload %}
-    oscar.dashboard.promotions.init();
+    {{ block.super }}
+    oscar.dashboard.reordering.init({
+        wrapper: '.promotion_list'
+    });
 {% endblock %}

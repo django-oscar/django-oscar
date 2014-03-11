@@ -22,12 +22,11 @@ class TestReviewForm(TestCase):
         }
 
     def test_cleans_title(self):
-        instance = self.product.reviews.model(
-            product=self.product)
-        form = forms.ProductReviewForm(data=self.data, instance=instance)
+        form = forms.ProductReviewForm(
+            product=self.product, user=self.reviewer, data=self.data)
         self.assertTrue(form.is_valid())
         review = form.save()
-        self.assertEquals("This product is lovely", review.title)
+        self.assertEqual("This product is lovely", review.title)
 
 
 class TestVoteForm(TestCase):
@@ -43,17 +42,16 @@ class TestVoteForm(TestCase):
             user=self.reviewer)
 
     def test_allows_real_users_to_vote(self):
-        instance = models.Vote(review=self.review, user=self.voter)
-        form = forms.VoteForm(data={}, instance=instance)
+        form = forms.VoteForm(self.review, self.voter, data={'delta': 1})
         self.assertTrue(form.is_valid())
 
     def test_prevents_users_from_voting_more_than_once(self):
         self.review.vote_up(self.voter)
-        instance = models.Vote(review=self.review, user=self.voter)
-        form = forms.VoteForm({}, instance=instance)
+        form = forms.VoteForm(self.review, self.voter, data={'delta': 1})
         self.assertFalse(form.is_valid())
+        self.assertTrue(len(form.errors['__all__']) > 0)
 
     def test_prevents_users_voting_on_their_own_reviews(self):
-        instance = models.Vote(review=self.review, user=self.reviewer)
-        form = forms.VoteForm({}, instance=instance)
+        form = forms.VoteForm(self.review, self.reviewer, data={'delta': 1})
         self.assertFalse(form.is_valid())
+        self.assertTrue(len(form.errors['__all__']) > 0)

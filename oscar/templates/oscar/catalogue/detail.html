@@ -1,27 +1,26 @@
 {% extends "layout.html" %}
 
-{% load url from future %}
-{% load currency_filters %}
 {% load history_tags %}
+{% load currency_filters %}
 {% load reviews_tags %}
 {% load staticfiles %}
 {% load product_tags %}
 {% load display_tags %}
 {% load i18n %}
-
-{% block extrastyles %}
-    <!-- Colorbox (a lightbox plugin) for image galleries -->
-    <link rel="stylesheet" href="{% static "oscar/js/colorbox/colorbox.css" %}" type="text/css" media="screen" charset="utf-8"/>
-{% endblock %}
+{% load purchase_info_tags %}
 
 {% block title %}
     {{ product.title }} | {{ block.super }}
 {% endblock %}
 
+{% block description %}
+    {{ product.description|default:""|striptags }}
+{% endblock %}
+
 {% block breadcrumbs %}
 <ul class="breadcrumb">
 	<li>
-		<a href="{% url 'promotions:home' %}">{% trans "Home" %}</a>
+		<a href="{{ homepage_url }}">{% trans "Home" %}</a>
         <span class="divider">/</span>
     </li>
     {% with category=product.categories.all.0 %}
@@ -67,34 +66,40 @@
             pops out when clicked.  A bit like the Django-Debug-Toolbar button
             {% endcomment %}
             {% if user.is_authenticated and user.is_staff %}
-                <a class="pull-right" href="{% url 'dashboard:catalogue-product' product.id %}"><small><i class="icon-edit"></i> {% trans "Edit this product" %}</small></a>
+                <a class="pull-right hidden-phone" href="{% url 'dashboard:catalogue-product' pk=product.id %}"><small><i class="icon-edit"></i> {% trans "Edit this product" %}</small></a>
             {% endif %}
             <h1>{{ product.get_title }}</h1>
 
             {% block product_stock_record %}
-            {% include "catalogue/partials/stock_record.html" %}
+                {% include "catalogue/partials/stock_record.html" with verbose=1 %}
             {% endblock %}
 
             {% iffeature "reviews" %}
                 {% if product.rating != None %}
-                <p class="star {{ product.rating|as_stars }}">
-                    <small><a href="{% url 'catalogue:reviews-list' product.slug product.id %}">
+                    <h4 class="star-rating {{ product.rating|as_stars }}">
+                        <i class="icon-star"></i>
+                        <i class="icon-star"></i>
+                        <i class="icon-star"></i>
+                        <i class="icon-star"></i>
+                        <i class="icon-star"></i>
+
+                        <small><a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.id %}">
                             {% blocktrans count reviews|length as num_reviews %}
-                            1 custom review
+                            1 customer review
                             {% plural %}
                             {{ num_reviews }} customer reviews
                             {% endblocktrans %}
-                    </a></small>
-                    &nbsp;
+                        </a></small>
+                        &nbsp;
                 {% else %}
-                    <p class="star">
+                    <h4>
                 {% endif %}
-                {% if not product|has_review_by:user %}
-                    <a id="write_review" href="{% url 'catalogue:reviews-add' product.slug product.id %}#addreview" class="btn btn-success btn-small">
+                {% if product|is_review_permitted:user %}
+                    <a id="write_review" href="{% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id %}#addreview" class="btn btn-success btn-small">
                         {% trans "Write a review" %}
                     </a>
                 {% endif %}
-                </p>
+                </h4>
             {% endiffeature %}
 
             <hr/>
@@ -127,25 +132,32 @@
         </tr>
         {% endif %}
         <tr>
-            <th>{% trans "Product class" %}</th><td>{{ product.get_product_class.name }}</td>
+            <th>{% trans "Product Type" %}</th><td>{{ product.get_product_class.name }}</td>
         </tr>
-        {% if product.stockrecord %}
-        <tr>
-            <th>{% trans "Price (excl. tax)" %}</th><td>{{ product.stockrecord.price_excl_tax|currency }}</td>
-        </tr>
-        <tr>
-            <th>{% trans "Price (incl. tax)" %}</th><td>{{ product.stockrecord.price_incl_tax|currency }}</td>
-        </tr>
-        <tr>
-            <th>{% trans "Availability" %}</th>
-            <td>{{ product.stockrecord.availability }}</td>
-        </tr>
+
+        {% purchase_info_for_product request product as session %}
+        {% if session.price.exists %}
+            <tr>
+                <th>{% trans "Price (excl. tax)" %}</th><td>{{ session.price.excl_tax|currency:session.price.currency }}</td>
+            </tr>
+            {% if session.price.is_tax_known %}
+                <tr>
+                    <th>{% trans "Price (incl. tax)" %}</th><td>{{ session.price.incl_tax|currency:session.price.currency }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Tax" %}</th><td>{{ session.price.tax|currency:session.price.currency }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th>{% trans "Availability" %}</th>
+                <td>{{ session.availability.message }}</td>
+            </tr>
         {% endif %}
         {% for av in product.attribute_values.all %}
-        <tr>
-            <th>{{ av.attribute.name }}</th>
-            <td>{{ av.value }}</td>
-        </tr>
+            <tr>
+                <th>{{ av.attribute.name }}</th>
+                <td>{{ av.value_as_html }}</td>
+            </tr>
         {% endfor %}
         {% iffeature "reviews" %}
             <tr>
@@ -165,76 +177,70 @@
         <section>
             <div id="reviews" class="sub-header">
                 {% if reviews|length > 3 %}
-                    <a href="{% url 'catalogue:reviews-list' product.slug product.id %}" class="btn pull-right">{% trans "See all reviews" %}</a>
+                    <a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.id %}" class="btn pull-right">{% trans "See all reviews" %}</a>
                 {% endif %}
                 <h2>{% trans "Customer Reviews" %}</h2>
             </div>
 
             {% if not reviews %}
                 <p>
-                    {% trans "This product does not have any reviews yet" %} -
-                    <a href="{% url 'catalogue:reviews-add' product.slug product.id %}#addreview">{% trans "be the first to write one" %}</a>.
+                    {% if product|is_review_permitted:user %}
+                        {% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id as add_review_url %}
+                            {% blocktrans %}This product does not have any reviews yet" -
+                            <a href="{{ add_review_url }}#addreview">be the first to write one</a>.
+                        {% endblocktrans %}
+                    {% else %}
+                        {% trans "This product does not have any reviews yet" %}.
+                    {% endif %}
                 </p>
             {% else %}
-                <div>
+                <ol class="unstyled review-list">
                     {% for review in reviews|slice:":3" %}
+                        <li>
                         {% include 'catalogue/partials/review.html' %}
+                        </li>
                     {% endfor %}
-                </div>
+                </ol>
             {% endif %}
         </section>
         {% endblock product_review %}
     {% endiffeature %}
 
-    <div class="row-fluid">
-        {% if product.related_products.count %}
-        <div class="span6">
+    {% with related_products=product.related_products.all|slice:":6" %}
+        {% if related_products %}
             <div class="sub-header">
                 <h2>{% trans "Related items" %}</h2>
             </div>
-            <div class="es-carousel-wrapper">
-                <div class="es-carousel">
-                    <ul>
-                        {% for product in product.related_products.all %}
-                        <li>
-                            {% render_product product %}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div>
+            <ul class="row-fluid">
+                {% for product in related_products %}
+                <li class="span2 {% if forloop.counter0|divisibleby:"6" %}no-margin{% endif %}">
+                    {% render_product product %}
+                </li>
+                {% endfor %}
+            </ul>
         {% endif %}
+    {% endwith %}
 
-        {% if product.recommended_products.count %}
-        <div class="span6">
+    {% with recommended_products=product.recommended_products.all|slice:":6" %}
+        {% if recommended_products %}
             <div class="sub-header">
                 <h2>{% trans "Recommended items" %}</h2>
             </div>
-            <div class="es-carousel-wrapper">
-                <div class="es-carousel">
-                    <ul>
-                        {% for product in product.recommended_products.all %}
-                        <li>
-                            {% render_product product %}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div>
+            <ul class="row-fluid">
+                {% for product in recommended_products %}
+                <li class="span2 {% if forloop.counter0|divisibleby:"6" %}no-margin{% endif %}">
+                    {% render_product product %}
+                </li>
+                {% endfor %}
+            </ul>
         {% endif %}
+    {% endwith %}
+    
+    {% recently_viewed_products %}
 
-        {% recently_viewed_products %}
-
-    </div>
 </article><!-- End of product page -->
 {% endblock content %}
 
 {% block extrascripts %}
     {{ block.super }}
-    <!-- Responsive gallery js -->
-    <script src="{% static "oscar/js/colorbox/jquery.colorbox-min.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/responsivegallery/jquery.tmpl.min.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/responsivegallery/gallery.js" %}" type="text/javascript" charset="utf-8"></script>
 {% endblock %}

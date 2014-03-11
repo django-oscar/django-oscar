@@ -1,22 +1,25 @@
 #!/usr/bin/env bash
 
-if [ "$TRAVIS" == "true" ]
+# fail if any command fails
+# http://stackoverflow.com/questions/90418/exit-shell-script-based-on-process-exit-code
+set -e
+set -o pipefail
+
+if [ ! "$TRAVIS" == "true" ]
 then
-  ROOT_PASSWORD=""
-else
-  ROOT_PASSWORD="root_password"
+  mysql -u root --password="root_password" -e "DROP DATABASE IF EXISTS oscar_vagrant; CREATE DATABASE oscar_vagrant"
+  mysql -u root --password="root_password" -e "GRANT ALL PRIVILEGES ON oscar_vagrant.* TO 'travis'@'%' IDENTIFIED BY '';"
+
+  sudo -u postgres psql -c "DROP ROLE IF EXISTS travis"
+  sudo -u postgres psql -c "CREATE ROLE travis LOGIN PASSWORD ''"
+  sudo -u postgres psql -c "DROP DATABASE IF EXISTS oscar_vagrant"
+  sudo -u postgres psql -c "CREATE DATABASE oscar_vagrant"
 fi
 
 # MySQL
-mysql -u root --password=$ROOT_PASSWORD -e "DROP DATABASE IF EXISTS oscar_vagrant; CREATE DATABASE oscar_vagrant"
-mysql -u root --password=$ROOT_PASSWORD -e "GRANT ALL PRIVILEGES ON oscar_vagrant.* TO 'oscar_user'@'%' IDENTIFIED BY 'oscar_password';"
 ./manage.py syncdb --noinput --settings=settings_mysql > /dev/null
 ./manage.py migrate --noinput --settings=settings_mysql
 
 # Postgres
-sudo -u postgres psql -c "DROP DATABASE IF EXISTS oscar_vagrant"
-sudo -u postgres psql -c "CREATE DATABASE oscar_vagrant"
-sudo -u postgres psql -c "DROP ROLE IF EXISTS oscar_user"
-sudo -u postgres psql -c "CREATE ROLE oscar_user LOGIN PASSWORD 'oscar_password'"
 ./manage.py syncdb --noinput --settings=settings_postgres > /dev/null
 ./manage.py migrate --noinput --settings=settings_postgres

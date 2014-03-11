@@ -1,3 +1,5 @@
+from __future__ import print_function
+from __future__ import print_function
 import sys
 import tempfile
 import hotshot
@@ -13,10 +15,10 @@ def profile_this(fn):
         filepath = "/tmp/%s.profile" % fn.__name__
         prof = cProfile.Profile()
         ret = prof.runcall(fn, *args, **kwargs)
-        print "Writing to %s" % filepath
+        print("Writing to %s" % filepath)
         prof.dump_stats(filepath)
 
-        print "Printing stats"
+        print("Printing stats")
         stats = pstats.Stats(filepath)
         stats.sort_stats('cumulative')
         stats.print_stats()
@@ -63,7 +65,8 @@ class BaseMiddleware(object):
             if 'prof_strip' in request.GET:
                 stats.strip_dirs()
             if 'prof_sort' in request.GET:
-                # See # http://docs.python.org/2/library/profile.html#pstats.Stats.sort_stats
+                # See
+                # http://docs.python.org/2/library/profile.html#pstats.Stats.sort_stats  # noqa
                 # for the fields you can sort on.
                 stats.sort_stats(*request.GET['prof_sort'].split(','))
             else:

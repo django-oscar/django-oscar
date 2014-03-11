@@ -19,42 +19,21 @@ var oscar = (function(o, $) {
             var defaults = {
                 'dateFormat': 'yy-mm-dd',
                 'timeFormat': 'HH:mm',
-                'stepMinute': 15
+                'stepMinute': 15,
+                'tinyConfig': {
+                    statusbar: false,
+                    menubar: false,
+                    plugins: "link",
+                    style_formats: [
+                        {title: 'Heading', block: 'h2'},
+                        {title: 'Subheading', block: 'h3'}
+                    ],
+                    toolbar: "styleselect | bold italic blockquote | bullist numlist | link"
+                }
             };
             o.dashboard.options = $.extend(defaults, options);
 
-            // Use datepicker for all inputs that have 'date' or 'datetime' in the name
-            if ($.datepicker) {
-                var defaultDatepickerConfig = {'dateFormat': o.dashboard.options.dateFormat};
-                $('input[name^="date"], input[name$="date"]').each(function(ind, ele) {
-                    var $ele = $(ele),
-                        config = $.extend({}, defaultDatepickerConfig, {
-                            'dateFormat': $ele.data('dateformat')
-                        });
-                    $ele.datepicker(config);
-                });
-            }
-            if ($.ui.timepicker) {
-                var defaultDatetimepickerConfig = {
-                    'dateFormat': o.dashboard.options.dateFormat,
-                    'timeFormat': o.dashboard.options.timeFormat,
-                    'stepMinute': o.dashboard.options.stepMinute
-                };
-                $('input[name$="datetime"]').each(function(ind, ele) {
-                    var $ele = $(ele),
-                        config = $.extend({}, defaultDatetimepickerConfig, {
-                        'dateFormat': $ele.data('dateformat'),
-                        'timeFormat': $ele.data('timeformat'),
-                        'stepMinute': $ele.data('stepminute')});
-                    $ele.datetimepicker(config);
-                });
-            }
-
-            // Use WYSIHTML5 widget on textareas
-            var wysiOptions = {
-                "html": true
-            };
-            $('form.wysiwyg textarea, textarea.wysiwyg').wysihtml5(wysiOptions);
+            o.dashboard.initWidgets(window.document);
 
             $('.scroll-pane').jScrollPane();
 
@@ -68,19 +47,128 @@ var oscar = (function(o, $) {
                 }
                 return false;
             });
-            
+
             // Adds error icon if there are errors in the product update form
             $('[data-behaviour="affix-nav-errors"] .tab-pane').each(function(){
-              var productErrorListener = $(this).find('[class*="error"]').closest('.tab-pane').attr('id');
+              var productErrorListener = $(this).find('[class*="error"]:not(:empty)').closest('.tab-pane').attr('id');
               $('[data-spy="affix"] a[href="#' + productErrorListener + '"]').append('<i class="icon-info-sign pull-right"></i>');
             });
-            
-            // Adds type/search for select fields
-            $('.form-stacked select').css('width', '95%');
-            $('.form-inline select').css('width', '300px');
-            $('select').select2();
 
             o.dashboard.filereader.init();
+        },
+        initWidgets: function(el) {
+            /** Attach widgets to form input.
+             *
+             * This function is called once for the whole page. In that case el is window.document.
+             *
+             * It is also called when input elements have been dynamically added. In that case el
+             * contains the newly added elements.
+             *
+             * If the element selector refers to elements that may be outside of newly added
+             * elements, don't limit to elements within el. Then the operation will be performed
+             * twice for these elements. Make sure that that is harmless.
+             */
+            o.dashboard.initDatePickers(el);
+            o.dashboard.initWYSIWYG(el);
+            o.dashboard.initSelects(el);
+        },
+        initSelects: function(el) {
+            // Adds type/search for select fields
+            var $selects = $(el).find('select').not('.no-widget-init select').not('.no-widget-init');
+            $selects.filter('.form-stacked select').css('width', '95%');
+            $selects.filter('.form-inline select').css('width', '300px');
+            $selects.select2({width: 'resolve'});
+            $(el).find('input.select2').each(function(i, e) {
+                var opts = {};
+                if($(e).data('ajax-url')) {
+                    opts = {
+                        'ajax': {
+                            'url': $(e).data('ajax-url'),
+                            'dataType': 'json',
+                            'results': function(data, page) {
+                                if((page==1) && !($(e).data('required')=='required')) {
+                                    data.results.unshift({'id': '', 'text': '------------'});
+                                }
+                                return data;
+                            },
+                            'data': function(term, page) {
+                                return {
+                                    'q': term,
+                                    'page': page
+                                };
+                            }
+                        },
+                        'multiple': $(e).data('multiple'),
+                        'initSelection': function(e, callback){
+                            if($(e).val()) {
+                                $.ajax({
+                                    'type': 'GET',
+                                    'url': $(e).data('ajax-url'),
+                                    'data': [{'name': 'initial', 'value': $(e).val()}],
+                                    'success': function(data){
+                                        if(data.results) {
+                                            if($(e).data('multiple')){
+                                                callback(data.results);
+                                            } else {
+                                                callback(data.results[0]);
+                                            }
+                                        }
+                                    },
+                                    'dataType': 'json'
+                                });
+                            }
+                        }
+                    };
+                }
+                $(e).select2(opts);
+            });
+        },
+        initDatePickers: function(el) {
+            // Use datepicker for all inputs that have 'date' or 'datetime' in the name
+            $inputs = $(el).find('input').not('.no-widget-init input').not('.no-widget-init');
+            if ($.datepicker) {
+                var defaultDatepickerConfig = {'dateFormat': o.dashboard.options.dateFormat};
+                $inputs.filter('[name^="date"], [name$="date"]').each(function(ind, ele) {
+                    var $ele = $(ele),
+                        config = $.extend({}, defaultDatepickerConfig, {
+                            'dateFormat': $ele.data('dateformat')
+                        });
+                    $ele.datepicker(config);
+                });
+            }
+            if ($.ui.timepicker) {
+                var defaultDatetimepickerConfig = {
+                    'dateFormat': o.dashboard.options.dateFormat,
+                    'timeFormat': o.dashboard.options.timeFormat,
+                    'stepMinute': o.dashboard.options.stepMinute
+                };
+                $inputs.filter('[name$="datetime"]').each(function(ind, ele) {
+                    var $ele = $(ele),
+                        config = $.extend({}, defaultDatetimepickerConfig, {
+                        'dateFormat': $ele.data('dateformat'),
+                        'timeFormat': $ele.data('timeformat'),
+                        'stepMinute': $ele.data('stepminute')});
+                    $ele.datetimepicker(config);
+                });
+
+                var defaultTimepickerConfig = {
+                    'timeFormat': o.dashboard.options.timeFormat,
+                    'stepMinute': o.dashboard.options.stepMinute
+                };
+                $inputs.filter('[name$="time"]').not('[name$="datetime"]').each(function(ind, ele) {
+                    var $ele = $(ele),
+                        config = $.extend({}, defaultTimepickerConfig, {
+                        'timeFormat': $ele.data('timeformat'),
+                        'stepMinute': $ele.data('stepminute')});
+                    $ele.timepicker(config);
+                });
+            }
+        },
+        initWYSIWYG: function(el) {
+            // Use TinyMCE by default
+            $textareas = $(el).find('textarea').not('.no-widget-init textarea').not('.no-widget-init');
+            $textareas.filter('form.wysiwyg textarea').tinymce(o.dashboard.options.tinyConfig);
+            $textareas.filter('.wysiwyg').tinymce(o.dashboard.options.tinyConfig);
         },
         offers: {
             init: function() {
@@ -93,6 +181,7 @@ var oscar = (function(o, $) {
                 var type = $('#id_type').val(),
                     $valueContainer = $('#id_value').parents('.control-group');
                 if (type == 'Multibuy') {
+                    $('#id_value').val('');
                     $valueContainer.hide();
                 } else {
                     $valueContainer.show();
@@ -129,14 +218,12 @@ var oscar = (function(o, $) {
                 });
             }
         },
-        promotions: {
-            init: function() {
-                $('.promotion_list').sortable({
-                    handle: '.btn-handle',
-                    stop: o.dashboard.promotions.saveOrder
-                });
+        reordering: (function() {
+            var options = {
+                handle: '.btn-handle',
+                submit_url: '#'
             },
-            saveOrder: function(event, ui) {
+            saveOrder = function(event, ui) {
                 // Get the csrf token, otherwise django will not accept the
                 // POST request.
                 var serial = $(this).sortable("serialize"),
@@ -146,13 +233,25 @@ var oscar = (function(o, $) {
                     type: 'POST',
                     data: serial,
                     dataType: "json",
-                    url: '#',
+                    url: options.submit_url,
                     beforeSend: function(xhr, settings) {
                         xhr.setRequestHeader("X-CSRFToken", csrf);
                     }
                 });
-            }
-        },
+            },
+            init = function(user_options) {
+                options = $.extend(options, user_options);
+                $(options.wrapper).sortable({
+                    handle: options.handle,
+                    stop: saveOrder
+                });
+            };
+
+            return {
+                init: init,
+                saveOrder: saveOrder
+            };
+        }()),
         search: {
             init: function() {
                 var searchForm = $(".orders_search"),

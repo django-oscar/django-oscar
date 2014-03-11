@@ -1,8 +1,7 @@
-import httplib
+from six.moves import http_client
 
-from django.test import TestCase
-from django.test.client import Client
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import Permission
 from django_webtest import WebTest
 from purl import URL
 
@@ -12,71 +11,47 @@ from oscar.core.compat import get_user_model
 User = get_user_model()
 
 
-class ClientTestCase(TestCase):
+def add_permissions(user, permissions):
     """
-    Helper TestCase for using Django's test client.  The class provides
-    auto-creation of a user to avoid boilerplate code.
+    :param permissions: e.g. ['partner.dashboard_access']
     """
-    username = 'dummyuser'
-    email = 'dummyuser@example.com'
-    password = 'staffpassword'
-    is_anonymous = False
-    is_staff = False
-    is_superuser = False
-
-    def setUp(self):
-        self.client = Client()
-        if not self.is_anonymous:
-            self.login()
-
-    def login(self):
-        self.user = self.create_user()
-        self.client.login(username=self.username,
-                          password=self.password)
-
-    def create_user(self):
-        user = User.objects.create_user(self.username,
-                                        self.email,
-                                        self.password)
-        user.is_staff = self.is_staff
-        user.is_superuser = self.is_superuser
-        user.save()
-        return user
-
-    def assertIsRedirect(self, response, expected_url=None):
-        self.assertTrue(response.status_code in (httplib.FOUND,
-                                                 httplib.MOVED_PERMANENTLY))
-        if expected_url:
-            location = URL.from_string(response['Location'])
-            self.assertEqual(expected_url, location.path())
-
-    def assertRedirectUrlName(self, response, name, kwargs=None):
-        self.assertIsRedirect(response)
-        location = response['Location'].replace('http://testserver', '')
-        self.assertEqual(location, reverse(name, kwargs=kwargs))
-
-    def assertIsOk(self, response):
-        self.assertEqual(httplib.OK, response.status_code)
-
-    def assertInContext(self, response, key):
-        self.assertTrue(key in response.context,
-                        "Context should contain a variable '%s'" % key)
+    for permission in permissions:
+        app_label, _, codename = permission.partition('.')
+        perm = Permission.objects.get(content_type__app_label=app_label,
+                                      codename=codename)
+        user.user_permissions.add(perm)
 
 
 class WebTestCase(WebTest):
     is_staff = False
-    is_anonymous = True
+    is_anonymous = False
     username = 'testuser'
     email = 'testuser@buymore.com'
     password = 'somefancypassword'
+    is_superuser = False
+    permissions = []
+
+    def create_user(self, username=None, email=None, password=None):
+        """
+        Creates a user. But as usernames are optional in newer versions of
+        Django, it only sets it if exists.
+        """
+        kwargs = {'email': email, 'password': password}
+        if 'username' in User._meta.get_all_field_names():
+            kwargs['username'] = username
+        return User.objects.create_user(**kwargs)
 
     def setUp(self):
         self.user = None
+
         if not self.is_anonymous or self.is_staff:
-            self.user = User.objects.create_user(self.username, self.email,
-                                                 self.password)
+            self.user = self.create_user(
+                self.username, self.email, self.password)
             self.user.is_staff = self.is_staff
+            perms = self.permissions
+            add_permissions(self.user, perms)
             self.user.save()
+            self.login()
 
     def get(self, url, **kwargs):
         kwargs.setdefault('user', self.user)
@@ -86,8 +61,46 @@ class WebTestCase(WebTest):
         kwargs.setdefault('user', self.user)
         return self.app.post(url, **kwargs)
 
+    def login(self, username=None, password=None):
+        username = username or self.username
+        password = password or self.password
+        result = self.client.login(email=self.email, password=password)
+        if not result:
+            self.fail("Unable to login")
+
+    # Custom assertions
+
+    def assertIsRedirect(self, response, expected_url=None):
+        self.assertTrue(response.status_code in (
+            http_client.FOUND, http_client.MOVED_PERMANENTLY))
+        if expected_url:
+            location = URL.from_string(response['Location'])
+            self.assertEqual(expected_url, location.path())
+
     def assertRedirectsTo(self, response, url_name):
         self.assertTrue(str(response.status_code).startswith('3'))
         location = response.headers['Location']
         redirect_path = location.replace('http://localhost:80', '')
         self.assertEqual(reverse(url_name), redirect_path)
+
+    def assertNoAccess(self, response):
+        self.assertContext(response)
+        self.assertTrue(response.status_code in (http_client.NOT_FOUND,
+                                                 http_client.FORBIDDEN))
+
+    def assertRedirectUrlName(self, response, name, kwargs=None):
+        self.assertIsRedirect(response)
+        location = response['Location'].replace('http://testserver', '')
+        self.assertEqual(location, reverse(name, kwargs=kwargs))
+
+    def assertIsOk(self, response):
+        self.assertEqual(http_client.OK, response.status_code)
+
+    def assertContext(self, response):
+        self.assertTrue(response.context is not None,
+                        'No context was returned')
+
+    def assertInContext(self, response, key):
+        self.assertContext(response)
+        self.assertTrue(key in response.context,
+                        "Context should contain a variable '%s'" % key)

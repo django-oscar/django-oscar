@@ -1,9 +1,8 @@
 {% extends "dashboard/layout.html" %}
 {% load category_tags %}
 {% load i18n %}
-{% load url from future %}
 
-{% block body_class %}create-page partner{% endblock %}
+{% block body_class %}{{ block.super }} create-page partner{% endblock %}
 
 {% block title %}
     {{ title }} | {{ partner.name }} | {% trans "Partner management" %} | {{ block.super }}
@@ -21,7 +20,7 @@
         </li>
         {% if partner %}
             <li>
-                <a href="{% url 'dashboard:partner-manage' partner.id %}">{{ partner.name }}</a>
+                <a href="{% url 'dashboard:partner-manage' pk=partner.id %}">{{ partner.name }}</a>
                 <span class="divider">/</span>
             </li>
         {% endif %}

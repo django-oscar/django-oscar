@@ -1,28 +1,30 @@
-from urlparse import urlparse
+import json
 
 from django.contrib import messages
 from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.core.urlresolvers import reverse, resolve
-from django.utils import simplejson as json
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.views.generic import FormView, View
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 
 from extra_views import ModelFormSetView
+from oscar.core.compat import urlparse
 from oscar.core import ajax
-from oscar.apps.basket.signals import basket_addition, voucher_addition
-from oscar.templatetags.currency_filters import currency
+from oscar.apps.basket import signals
 from oscar.core.loading import get_class, get_classes
 Applicator = get_class('offer.utils', 'Applicator')
-(BasketLineForm, AddToBasketForm, BasketVoucherForm,
- SavedLineFormSet, SavedLineForm, ProductSelectionForm) = get_classes(
-     'basket.forms', ('BasketLineForm', 'AddToBasketForm',
-                      'BasketVoucherForm', 'SavedLineFormSet',
-                      'SavedLineForm', 'ProductSelectionForm'))
+(BasketLineFormSet, BasketLineForm, AddToBasketForm, BasketVoucherForm,
+ SavedLineFormSet, SavedLineForm, ProductSelectionForm) \
+    = get_classes('basket.forms', ('BasketLineFormSet', 'BasketLineForm',
+                                   'AddToBasketForm', 'BasketVoucherForm',
+                                   'SavedLineFormSet', 'SavedLineForm',
+                                   'ProductSelectionForm'))
 Repository = get_class('shipping.repository', ('Repository'))
+OrderTotalCalculator = get_class(
+    'checkout.calculators', 'OrderTotalCalculator')
 
 
 def get_messages(basket, offers_before, offers_after,
@@ -83,21 +85,29 @@ def apply_messages(request, offers_before):
 class BasketView(ModelFormSetView):
     model = get_model('basket', 'Line')
     basket_model = get_model('basket', 'Basket')
+    formset_class = BasketLineFormSet
     form_class = BasketLineForm
     extra = 0
     can_delete = True
     template_name = 'basket/basket.html'
+
+    def get_formset_kwargs(self):
+        kwargs = super(BasketView, self).get_formset_kwargs()
+        kwargs['strategy'] = self.request.strategy
+        return kwargs
 
     def get_queryset(self):
         return self.request.basket.all_lines()
 
     def get_shipping_methods(self, basket):
         return Repository().get_shipping_methods(
-            self.request.user, self.request.basket)
+            user=self.request.user, basket=self.request.basket,
+            request=self.request)
 
     def get_default_shipping_method(self, basket):
         return Repository().get_default_shipping_method(
-            self.request.user, self.request.basket)
+            user=self.request.user, basket=self.request.basket,
+            request=self.request)
 
     def get_basket_warnings(self, basket):
         """
@@ -115,7 +125,8 @@ class BasketView(ModelFormSetView):
         applied_offers = basket.offer_applications.offers.values()
         msgs = []
         for offer in offers:
-            if offer.is_condition_partially_satisfied(basket) and offer not in applied_offers:
+            if offer.is_condition_partially_satisfied(basket) \
+                    and offer not in applied_offers:
                 data = {
                     'message': offer.get_upsell_message(basket),
                     'offer': offer}
@@ -135,9 +146,8 @@ class BasketView(ModelFormSetView):
         context['shipping_methods'] = self.get_shipping_methods(
             self.request.basket)
 
-        context['order_total_incl_tax'] = (
-            self.request.basket.total_incl_tax +
-            method.basket_charge_incl_tax())
+        context['order_total'] = OrderTotalCalculator().calculate(
+            self.request.basket, method)
         context['basket_warnings'] = self.get_basket_warnings(
             self.request.basket)
         context['upsell_messages'] = self.get_upsell_messages(
@@ -150,10 +160,11 @@ class BasketView(ModelFormSetView):
             except self.basket_model.DoesNotExist:
                 pass
             else:
+                saved_basket.strategy = self.request.basket.strategy
                 if not saved_basket.is_empty:
                     saved_queryset = saved_basket.all_lines().select_related(
                         'product', 'product__stockrecord')
-                    formset = SavedLineFormSet(user=self.request.user,
+                    formset = SavedLineFormSet(strategy=self.request.strategy,
                                                basket=self.request.basket,
                                                queryset=saved_queryset,
                                                prefix='saved')
@@ -190,7 +201,7 @@ class BasketView(ModelFormSetView):
                 else:
                     msg = _("You can't save an item for later if you're "
                             "not logged in!")
-                    messages.error(self.request, msg)
+                    flash_messages.error(self.request, msg)
                     return HttpResponseRedirect(self.get_success_url())
 
         if save_for_later:
@@ -205,6 +216,7 @@ class BasketView(ModelFormSetView):
             # Reload basket and apply offers again
             self.request.basket = get_model('basket', 'Basket').objects.get(
                 id=self.request.basket.id)
+            self.request.basket.strategy = self.request.strategy
             Applicator().apply(self.request, self.request.basket)
             offers_after = self.request.basket.applied_offers()
 
@@ -238,9 +250,9 @@ class BasketView(ModelFormSetView):
             RequestContext(self.request, ctx))
         payload = {
             'content_html': basket_html,
-            'messages': flash_messages.to_json()}
+            'messages': flash_messages.as_dict()}
         return HttpResponse(json.dumps(payload),
-                            mimetype="application/json")
+                            content_type="application/json")
 
     def move_line_to_saved_basket(self, line):
         saved_basket, _ = get_model('basket', 'basket').saved.get_or_create(
@@ -268,7 +280,7 @@ class BasketAddView(FormView):
     form_class = AddToBasketForm
     product_select_form_class = ProductSelectionForm
     product_model = get_model('catalogue', 'product')
-    add_signal = basket_addition
+    add_signal = signals.basket_addition
 
     def get(self, request, *args, **kwargs):
         return HttpResponseRedirect(reverse('basket:summary'))
@@ -293,7 +305,7 @@ class BasketAddView(FormView):
         if url:
             # We only allow internal URLs so we see if the url resolves
             try:
-                resolve(urlparse(url).path)
+                resolve(urlparse.urlparse(url).path)
             except Http404:
                 url = None
         if url is None:
@@ -302,6 +314,7 @@ class BasketAddView(FormView):
 
     def form_valid(self, form):
         offers_before = self.request.basket.applied_offers()
+
         self.request.basket.add_product(
             form.instance, form.cleaned_data['quantity'],
             form.cleaned_options())
@@ -314,7 +327,8 @@ class BasketAddView(FormView):
 
         # Send signal for basket addition
         self.add_signal.send(
-            sender=self, product=form.instance, user=self.request.user)
+            sender=self, product=form.instance, user=self.request.user,
+            request=self.request)
 
         return super(BasketAddView, self).form_valid(form)
 
@@ -336,7 +350,7 @@ class BasketAddView(FormView):
 class VoucherAddView(FormView):
     form_class = BasketVoucherForm
     voucher_model = get_model('voucher', 'voucher')
-    add_signal = voucher_addition
+    add_signal = signals.voucher_addition
 
     def get(self, request, *args, **kwargs):
         return HttpResponseRedirect(reverse('basket:summary'))
@@ -357,9 +371,8 @@ class VoucherAddView(FormView):
         self.request.basket.vouchers.add(voucher)
 
         # Raise signal
-        self.add_signal.send(sender=self,
-                             basket=self.request.basket,
-                             voucher=voucher)
+        self.add_signal.send(
+            sender=self, basket=self.request.basket, voucher=voucher)
 
         # Recalculate discounts to see if the voucher gives any
         Applicator().apply(self.request, self.request.basket)
@@ -413,16 +426,17 @@ class VoucherAddView(FormView):
 
 class VoucherRemoveView(View):
     voucher_model = get_model('voucher', 'voucher')
-
-    def get(self, request, *args, **kwargs):
-        return HttpResponseRedirect(reverse('basket:summary'))
+    remove_signal = signals.voucher_removal
+    http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
-        voucher_id = int(kwargs.pop('pk'))
+        response = HttpResponseRedirect(reverse('basket:summary'))
+
+        voucher_id = kwargs['pk']
         if not request.basket.id:
             # Hacking attempt - the basket must be saved for it to have
             # a voucher in it.
-            return HttpResponseRedirect(reverse('basket:summary'))
+            return response
         try:
             voucher = request.basket.vouchers.get(id=voucher_id)
         except ObjectDoesNotExist:
@@ -430,10 +444,12 @@ class VoucherRemoveView(View):
                 request, _("No voucher found with id '%d'") % voucher_id)
         else:
             request.basket.vouchers.remove(voucher)
-            request.basket.save()
+            self.remove_signal.send(
+                sender=self, basket=request.basket, voucher=voucher)
             messages.info(
                 request, _("Voucher '%s' removed from basket") % voucher.code)
-        return HttpResponseRedirect(reverse('basket:summary'))
+
+        return response
 
 
 class SavedView(ModelFormSetView):
@@ -450,6 +466,7 @@ class SavedView(ModelFormSetView):
     def get_queryset(self):
         try:
             saved_basket = self.basket_model.saved.get(owner=self.request.user)
+            saved_basket.strategy = self.request.strategy
             return saved_basket.all_lines().select_related(
                 'product', 'product__stockrecord')
         except self.basket_model.DoesNotExist:
@@ -462,7 +479,7 @@ class SavedView(ModelFormSetView):
         kwargs = super(SavedView, self).get_formset_kwargs()
         kwargs['prefix'] = 'saved'
         kwargs['basket'] = self.request.basket
-        kwargs['user'] = self.request.user
+        kwargs['strategy'] = self.request.strategy
         return kwargs
 
     def formset_valid(self, formset):

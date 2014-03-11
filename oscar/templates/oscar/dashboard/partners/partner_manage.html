@@ -1,7 +1,6 @@
 {% extends 'dashboard/layout.html' %}
 {% load sorting_tags %}
 {% load i18n %}
-{% load url from future %}
 
 {% block title %}
     {{ partner.name }} | {% trans "Partner management" %} | {{ block.super }}
@@ -48,7 +47,7 @@
     </div>
 
     <h2>{% trans "Users" %}</h2>
-    {% if users.count %}
+    {% if users %}
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>
@@ -61,11 +60,11 @@
             <tbody>
                 {% for user in users %}
                     <tr>
-                        <td><a href="{% url 'dashboard:partner-user-update' partner.pk user.id %}">{{ user.email }}</a></td>
+                        <td><a href="{% url 'dashboard:partner-user-update' partner_pk=partner.pk user_pk=user.id %}">{{ user.email }}</a></td>
                         <td>{{ user.first_name|default:"-" }}</td>
                         <td>{{ user.last_name|default:"-" }}</td>
                         <td>
-                            <form action="{% url 'dashboard:partner-user-unlink' partner.id user.id %}" method="post">
+                            <form action="{% url 'dashboard:partner-user-unlink' partner_pk=partner.id user_pk=user.id %}" method="post">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-danger">{% trans 'Unlink user' %}</button>
                             </form>
@@ -78,8 +77,8 @@
         <p>{% trans "No users linked." %}</p>
     {% endif %}
     <div class="form-actions">
-        <a class="btn btn-info" href="{% url 'dashboard:partner-user-create' partner.pk %}" >{% trans "Link a new user" %}</a>
-        <a class="btn btn-info" href="{% url 'dashboard:partner-user-select' partner.pk %}" >{% trans "Link an existing user" %}</a>
+        <a class="btn btn-info" href="{% url 'dashboard:partner-user-create' partner_pk=partner.pk %}" >{% trans "Link a new user" %}</a>
+        <a class="btn btn-info" href="{% url 'dashboard:partner-user-select' partner_pk=partner.pk %}" >{% trans "Link an existing user" %}</a>
     </div>
 </div>
 {% endblock dashboard_content %}

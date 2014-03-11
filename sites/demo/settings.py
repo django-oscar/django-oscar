@@ -4,8 +4,8 @@ Settings for Oscar's demo site.
 Notes:
 
 * The demo site uses the stores extension which requires a spatial database.
-  The DATABASES settings is not set in this module.  Instead, you should add
-  the appropriate details to your settings_local module.
+  Only the postgis and spatialite backends are tested, but all backends
+  supported by GeoDjango should work.
 
 """
 
@@ -19,10 +19,8 @@ location = lambda x: os.path.join(
 DEBUG = True
 TEMPLATE_DEBUG = True
 SQL_DEBUG = True
-SEND_BROKEN_LINK_EMAILS = False
 
 ADMINS = (
-    ('David', 'david.winterbottom@tangentlabs.co.uk'),
 )
 EMAIL_SUBJECT_PREFIX = '[Oscar demo] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -32,23 +30,18 @@ ALLOWED_HOSTS = ['demo.oscarcommerce.com',
 
 MANAGERS = ADMINS
 
-# Use settings_local to specify your own PostGIS database and creds
+# Use settings_local to override this default
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'oscar_demo',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
-        'PORT': '',
+        'USER': 'm',
     },
 }
 
 CACHES = {
     'default': {
-        'BACKEND':
-        'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
 
@@ -63,7 +56,7 @@ TIME_ZONE = 'Europe/London'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-gb'
 
 LANGUAGES = (
     ('en-gb', 'English'),
@@ -139,7 +132,12 @@ MIDDLEWARE_CLASSES = (
     'oscar.apps.basket.middleware.BasketMiddleware',
 )
 
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
 INTERNAL_IPS = ('127.0.0.1',)
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False
+}
+
 
 ROOT_URLCONF = 'urls'
 
@@ -164,6 +162,11 @@ LOGGING = {
         'simple': {
             'format': '%(levelname)s %(message)s'
         },
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
     },
     'handlers': {
         'null': {
@@ -190,6 +193,7 @@ LOGGING = {
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
+            'filters': ['require_debug_false'],
         },
     },
     'loggers': {
@@ -244,7 +248,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     # For profile testing
     'apps.user',
-    'apps.bigbang',
+    # Sentry (for live demo site)
+    'raven.contrib.django.raven_compat'
 ]
 
 # Include core apps with a few overrides:
@@ -259,19 +264,15 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-LOGIN_REDIRECT_URL = '/accounts/'
+LOGIN_REDIRECT_URL = '/'
 APPEND_SLASH = True
 
-# Haystack settings
+# Haystack settings - we use a local Solr instance running on the default port
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
         'URL': 'http://127.0.0.1:8983/solr',
     },
-}
-
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False
 }
 
 AUTH_PROFILE_MODULE = 'user.Profile'
@@ -283,7 +284,7 @@ OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = True
 
 OSCAR_SHOP_NAME = 'Oscar'
-OSCAR_SHOP_TAGLINE = 'Demo site'
+OSCAR_SHOP_TAGLINE = 'Demo'
 
 COMPRESS_ENABLED = False
 COMPRESS_PRECOMPILERS = (
@@ -303,6 +304,8 @@ USE_TZ = True
 
 # Must be within MEDIA_ROOT for sorl to work
 OSCAR_MISSING_IMAGE_URL = 'image_not_found.jpg'
+
+GOOGLE_ANALYTICS_ID = 'UA-45363517-4'
 
 # Add stores node to navigation
 new_nav = OSCAR_DASHBOARD_NAVIGATION
@@ -335,6 +338,9 @@ new_nav.append(
 OSCAR_DASHBOARD_NAVIGATION = new_nav
 
 GEOIP_PATH = os.path.join(os.path.dirname(__file__), 'geoip')
+
+#default currency for django-oscar-datacash
+DATACASH_CURRENCY = "GBP"
 
 try:
     from settings_local import *

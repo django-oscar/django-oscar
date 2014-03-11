@@ -1,11 +1,7 @@
 {% extends 'dashboard/layout.html' %}
-{% load url from future %}
-{% load currency_filters %}
 {% load i18n %}
 
-{% block body_class %}
-    create-page
-{% endblock %}
+{% block body_class %}{{ block.super }} create-page{% endblock %}
 
 {% block title %}
     {% trans "Delete offer" %} | {% trans "Offer management" %} | {{ block.super }}
@@ -22,7 +18,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:offer-detail' offer.pk %}">'{{ offer.name }}'</a>
+            <a href="{% url 'dashboard:offer-detail' pk=offer.pk %}">'{{ offer.name }}'</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Delete?" %}</li>

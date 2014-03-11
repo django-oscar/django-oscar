@@ -1,13 +1,13 @@
 import re
 import zlib
-import string
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.core import exceptions
 
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.models import fields
+from oscar.models.fields import UppercaseCharField, PhoneNumberField
+from six.moves import filter
 
 
 class AbstractAddress(models.Model):
@@ -35,7 +35,7 @@ class AbstractAddress(models.Model):
         'AI': r'^AI-2640$',
         'AL': r'^[0-9]{4}$',
         'AM': r'^[0-9]{4}$',
-        'AR': r'^([0-9]{4}|[A-Z][0-9]{4}[A-Z]{3}$',
+        'AR': r'^([0-9]{4}|[A-Z][0-9]{4}[A-Z]{3})$',
         'AS': r'^[0-9]{5}(-[0-9]{4}|-[0-9]{6})?$',
         'AT': r'^[0-9]{4}$',
         'AU': r'^[0-9]{4}$',
@@ -84,7 +84,7 @@ class AbstractAddress(models.Model):
         'GB': r'^[A-Z][A-Z0-9]{1,3}[0-9][A-Z]{2}$',
         'GE': r'^[0-9]{4}$',
         'GF': r'^[0-9]{5}$',
-        'GG': r'^([A-Z]{2}[0-9]{2,3}[A-Z]{2}$',
+        'GG': r'^([A-Z]{2}[0-9]{2,3}[A-Z]{2})$',
         'GI': r'^GX111AA$',
         'GL': r'^[0-9]{4}$',
         'GP': r'^[0-9]{5}$',
@@ -224,7 +224,7 @@ class AbstractAddress(models.Model):
         _("Third line of address"), max_length=255, blank=True)
     line4 = models.CharField(_("City"), max_length=255, blank=True)
     state = models.CharField(_("State/County"), max_length=255, blank=True)
-    postcode = fields.UppercaseCharField(
+    postcode = UppercaseCharField(
         _("Post/Zip-code"), max_length=64, blank=True)
     country = models.ForeignKey('address.Country', verbose_name=_("Country"))
 
@@ -266,8 +266,8 @@ class AbstractAddress(models.Model):
             country_code = self.country.iso_3166_1_a2
             regex = self.POSTCODES_REGEX.get(country_code, None)
             if regex:
-                msg = ("Addresses in %(country)s require a postcode") % {
-                    'country': self.country}
+                msg = _("Addresses in %(country)s require a valid postcode") \
+                    % {'country': self.country}
                 raise exceptions.ValidationError(msg)
 
         if self.postcode and self.country_id:
@@ -279,10 +279,11 @@ class AbstractAddress(models.Model):
             # Validate postcode against regext for the country if available
             if regex and not re.match(regex, postcode):
                 msg = _("The postcode '%(postcode)s' is not valid "
-                        "for the %(country)s") % {
-                            'postcode': self.postcode,
-                            'country': self.country}
-                raise exceptions.ValidationError(msg)
+                        "for %(country)s") \
+                    % {'postcode': self.postcode,
+                       'country': self.country}
+                raise exceptions.ValidationError(
+                    {'postcode': [msg]})
 
     def _update_search_text(self):
         search_fields = filter(
@@ -356,14 +357,16 @@ class AbstractAddress(models.Model):
             if field_name in destination_field_names and field_name != 'id':
                 setattr(address_model, field_name, getattr(self, field_name))
 
-    def active_address_fields(self):
+    def active_address_fields(self, include_salutation=True):
         """
         Return the non-empty components of the address, but merging the
         title, first_name and last_name into a single line.
         """
-        fields = [self.salutation, self.line1, self.line2,
-                  self.line3, self.line4, self.state, self.postcode]
-        fields = map(string.strip, filter(bool, fields))
+        fields = [self.line1, self.line2, self.line3,
+                  self.line4, self.state, self.postcode]
+        if include_salutation:
+            fields = [self.salutation] + fields
+        fields = [f.strip() for f in fields if f]
         try:
             fields.append(self.country.name)
         except exceptions.ObjectDoesNotExist:
@@ -379,6 +382,8 @@ class AbstractCountry(models.Model):
                                      primary_key=True)
     iso_3166_1_a3 = models.CharField(_('ISO 3166-1 alpha-3'), max_length=3,
                                      blank=True, db_index=True)
+    # This should have been a CharField as it needs to be padded with zeros to
+    # be 3 digits.  Access via the numeric_code instead.
     iso_3166_1_numeric = models.PositiveSmallIntegerField(
         _('ISO 3166-1 numeric'), null=True, db_index=True)
     name = models.CharField(_('Official name (CAPS)'), max_length=128)
@@ -400,6 +405,17 @@ class AbstractCountry(models.Model):
     def __unicode__(self):
         return self.printable_name or self.name
 
+    @property
+    def code(self):
+        """
+        Shorthand for the ISO 3166 code
+        """
+        return self.iso_3166_1_a2
+
+    @property
+    def numeric_code(self):
+        return u"%.03d" % self.iso_3166_1_numeric
+
 
 class AbstractShippingAddress(AbstractAddress):
     """
@@ -408,12 +424,13 @@ class AbstractShippingAddress(AbstractAddress):
     A shipping address should not be edited once the order has been placed -
     it should be read-only after that.
     """
-    phone_number = models.CharField(
-        _("Phone number"), max_length=32, blank=True)
+    phone_number = PhoneNumberField(
+        _("Phone number"), blank=True,
+        help_text=_("In case we need to call you about your order"))
     notes = models.TextField(
-        blank=True, verbose_name=_('Courier instructions'),
-        help_text=_("For example, leave the parcel in the wheelie bin "
-                    "if I'm not in."))
+        blank=True, verbose_name=_('Instructions'),
+        help_text=_("Tell us anything we should know when delivering "
+                    "your order."))
 
     class Meta:
         abstract = True
@@ -479,15 +496,13 @@ class AbstractUserAddress(AbstractShippingAddress):
 
     def _ensure_defaults_integrity(self):
         if self.is_default_for_shipping:
-            self.__class__._default_manager.filter(
-                user=self.user,
-                is_default_for_shipping=True).update(
-                    is_default_for_shipping=False)
+            self.__class__._default_manager\
+                .filter(user=self.user, is_default_for_shipping=True)\
+                .update(is_default_for_shipping=False)
         if self.is_default_for_billing:
-            self.__class__._default_manager.filter(
-                user=self.user,
-                is_default_for_billing=True).update(
-                    is_default_for_billing=False)
+            self.__class__._default_manager\
+                .filter(user=self.user, is_default_for_billing=True)\
+                .update(is_default_for_billing=False)
 
     class Meta:
         abstract = True
@@ -503,9 +518,10 @@ class AbstractUserAddress(AbstractShippingAddress):
             hash=self.generate_hash())
         if self.id:
             qs = qs.exclude(id=self.id)
-        if qs.count() > 0:
+        if qs.exists():
             raise exceptions.ValidationError({
-                '__all__': [_("This address is already in your address book")]})
+                '__all__': [_("This address is already in your address"
+                              " book")]})
 
 
 class AbstractBillingAddress(AbstractAddress):

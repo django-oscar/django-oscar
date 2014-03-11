@@ -1,10 +1,9 @@
 {% extends 'dashboard/layout.html' %}
-{% load url from future %}
 {% load currency_filters %}
 {% load sorting_tags %}
 {% load i18n %}
 
-{% block body_class %}orders{% endblock %}
+{% block body_class %}{{ block.super }} orders{% endblock %}
 
 {% block title %}
     {% trans "Order management" %} | {{ block.super }}
@@ -41,7 +40,7 @@
                             {{ field.label_tag }}
                             {{ field }}
                             {% for error in field.errors %}
-                                <ul class="help-block">
+                                <ul class="error-block">
                                     <li>{{ error }}</li>
                                 </ul>
                             {% endfor %}
@@ -71,7 +70,7 @@
         </div>
     </div>
 
-    {% if orders|length %}
+    {% if orders %}
         <form action="." method="post" class="order_table" id="orders_form">
             {% csrf_token %}
             {% include "dashboard/orders/partials/bulk_edit_form.html" with status=active_status %}
@@ -106,22 +105,24 @@
                 {% for order in orders %}
                     <tr>
                         <td><input type="checkbox" name="selected_order" class="selected_order" value="{{ order.id }}"/>
-                            <td><a href="{% url 'dashboard:order-detail' order.number %}">{{ order.number }}</a></td>
-                            <td>{{ order.total_incl_tax|currency }}</td>
+                            <td><a href="{% url 'dashboard:order-detail' number=order.number %}">{{ order.number }}</a></td>
+                            <td>{{ order.total_incl_tax|currency:order.currency }}</td>
                             <td>{{ order.num_items }}</td>
                             <td>{{ order.status|default:"-" }}</td>
                             <td>
-                                {% if not order.is_anonymous %}
-                                    <a href="{% url 'dashboard:user-detail' order.user.id %}">{{ order.user.get_full_name }}</a>
+                                {% if order.guest_email %}
+                                    {{ order.guest_email }}
+                                {% elif order.user %}
+                                    <a href="{% url 'dashboard:user-detail' pk=order.user.id %}">{{ order.user.get_full_name|default:"-" }}</a>
                                 {% else %}
-                                    {{ order.email }}
+                                    &lt;{% trans "Deleted" %}&gt;
                                 {% endif %}
                             </td>
                             <td>{{ order.shipping_address|default:"-" }}</td>
                             <td>{{ order.billing_address|default:"-" }}</td>
                             <td>{{ order.date_placed }}</td>
                             <td>
-                                <a class="btn btn-info" href="{% url 'dashboard:order-detail' order.number %}">{% trans "View" %}</a>
+                                <a class="btn btn-info" href="{% url 'dashboard:order-detail' number=order.number %}">{% trans "View" %}</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -142,6 +143,7 @@
     {% endblock dashboard_content %}
 
     {% block onbodyload %}
+        {{ block.super }}
         oscar.dashboard.orders.initTable();
         oscar.dashboard.search.init();
     {% endblock onbodyload %}

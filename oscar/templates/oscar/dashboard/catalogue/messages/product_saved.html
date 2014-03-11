@@ -1,0 +1,16 @@
+{% load i18n %}
+
+{% if creating %}
+    {% blocktrans with name=product.get_title %}
+        Created product '{{ name }}'.
+    {% endblocktrans %}
+{% else %}
+    {% blocktrans with name=product.get_title %}
+        Updated product '{{ name }}'.
+    {% endblocktrans %}
+{% endif %}
+
+<p>
+    <a href="{% url 'dashboard:catalogue-product' pk=product.pk %}" class="btn btn-success">{% trans "Edit again" %}</a>
+    <a href="{% url 'catalogue:detail' product_slug=product.slug pk=product.pk %}" class="btn btn-success">{% trans "View it on the site" %}</a>
+</p>

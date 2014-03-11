@@ -1,11 +1,12 @@
 from decimal import Decimal
 
 from django.db import models
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.core.utils import slugify
+from oscar.templatetags.currency_filters import currency
+from oscar.models.fields import AutoSlugField
 
 from . import bankcards
 
@@ -65,7 +66,8 @@ class AbstractSource(models.Model):
     order = models.ForeignKey(
         'order.Order', related_name='sources', verbose_name=_("Order"))
     source_type = models.ForeignKey(
-        'payment.SourceType', verbose_name=_("Source Type"))
+        'payment.SourceType', verbose_name=_("Source Type"),
+        related_name="sources")
     currency = models.CharField(
         _("Currency"), max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
 
@@ -101,8 +103,9 @@ class AbstractSource(models.Model):
         verbose_name_plural = _("Sources")
 
     def __unicode__(self):
-        description = _("Allocation of %(amount).2f from type %(type)s") % {
-            'amount': self.amount_allocated, 'type': self.source_type}
+        description = _("Allocation of %(amount)s from type %(type)s") % {
+            'amount': currency(self.amount_allocated, self.currency),
+            'type': self.source_type}
         if self.reference:
             description += _(" (reference: %s)") % self.reference
         return description
@@ -124,8 +127,8 @@ class AbstractSource(models.Model):
             self.deferred_txns = []
         self.deferred_txns.append((txn_type, amount, reference, status))
 
-    def _create_transaction(self, txn_type, amount, reference=None,
-                            status=None):
+    def _create_transaction(self, txn_type, amount, reference='',
+                            status=''):
         self.transactions.create(
             txn_type=txn_type, amount=amount,
             reference=reference, status=status)
@@ -134,7 +137,7 @@ class AbstractSource(models.Model):
     # Actions
     # =======
 
-    def allocate(self, amount, reference=None, status=None):
+    def allocate(self, amount, reference='', status=''):
         """
         Convenience method for ring-fencing money against this source
         """
@@ -144,19 +147,19 @@ class AbstractSource(models.Model):
             AbstractTransaction.AUTHORISE, amount, reference, status)
     allocate.alters_data = True
 
-    def debit(self, amount=None, reference=None, status=''):
+    def debit(self, amount=None, reference='', status=''):
         """
         Convenience method for recording debits against this source
         """
         if amount is None:
-            amount = self.balance()
+            amount = self.balance
         self.amount_debited += amount
         self.save()
         self._create_transaction(
             AbstractTransaction.DEBIT, amount, reference, status)
     debit.alters_data = True
 
-    def refund(self, amount, reference=None, status=None):
+    def refund(self, amount, reference='', status=''):
         """
         Convenience method for recording refunds against this source
         """
@@ -194,8 +197,8 @@ class AbstractSourceType(models.Model):
     or an internal source such as a managed account.
     """
     name = models.CharField(_("Name"), max_length=128)
-    code = models.SlugField(
-        _("Code"), max_length=128,
+    code = AutoSlugField(
+        _("Code"), max_length=128, populate_from='name', unique=True,
         help_text=_("This is used within forms to identify this source type"))
 
     class Meta:
@@ -205,11 +208,6 @@ class AbstractSourceType(models.Model):
 
     def __unicode__(self):
         return self.name
-
-    def save(self, *args, **kwargs):
-        if not self.code:
-            self.code = slugify(self.name)
-        super(AbstractSourceType, self).save(*args, **kwargs)
 
 
 class AbstractBankcard(models.Model):
@@ -282,6 +280,9 @@ class AbstractBankcard(models.Model):
 
     @property
     def card_number(self):
+        """
+        The card number
+        """
         import warnings
         warnings.warn(("The `card_number` property is deprecated in favour of "
                        "`number` on the Bankcard model"), DeprecationWarning)

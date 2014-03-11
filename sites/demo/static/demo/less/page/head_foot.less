@@ -1,5 +1,14 @@
 // OSCAR HEADER
 // -----------
+.header {
+  position:relative;
+  z-index: 1;
+}
+//IE9 seems to like more constraints on SVG rather than just attr width and height
+.logo {
+  width:140px;
+  height:108px;
+}
 .header-content {
   height:108px;
   position: relative;
@@ -8,18 +17,18 @@
     font-weight: 300;
     text-transform: capitalize;
     font-size: @baseFontSize;
-    line-height: @baseFontSize;
+    line-height: @baseLineHeight;
     margin:0;
     margin-left:160px;
     position: absolute;
     bottom:0;
+    left:0;
   }
   .logo {
     float:left;
   }
   .btn {
     padding:4px 16px;
-    background: @blueDark;
     span {
       font-weight: normal;
       margin-right:5px;
@@ -76,7 +85,7 @@
 .footer {
   position: relative;
   clear: both;
-  height: @footer-height;
+  min-height: @footer-height;
   background: url(/static/demo/img/ui/wavecut-blue.png) 0 0 repeat @blueDark;
   color:@white;
   a {
@@ -111,6 +120,9 @@
     display:block;
     margin-top:10px;
   }
+}
+.site-by {
+  float:right;
 }
 .social-icons {
   font-size:@headingTwoSize;

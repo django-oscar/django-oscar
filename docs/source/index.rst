@@ -1,8 +1,14 @@
-.. image:: http://img692.imageshack.us/img692/6498/logovf.png
+.. image:: ../images/logos/oscar.png
+   :align: right
 
-===================================
-Domain-driven e-commerce for Django
-===================================
+=====
+Oscar
+=====
+
+-----------------------------------
+Domain driven e-commerce for Django
+-----------------------------------
+
 
 Oscar is an e-commerce framework for Django designed for building
 domain-driven applications.  It is structured so that the core business objects
@@ -29,7 +35,7 @@ Features:
 
 * Vouchers (built on top of the offers framework)
 
-* Comprehensive dashboard
+* Comprehensive dashboard that replaces the Django admin completely
 
 * Support for complex order processing such split payment orders, multi-batch
   shipping, order status pipelines.
@@ -89,12 +95,21 @@ All you need to start developing an Oscar project.
    :maxdepth: 1
 
    topics/customisation
+   topics/prices_and_availability
+   topics/deploying
+   topics/translation
+   topics/upgrading
+
+Reference:
+
+.. toctree::
+   :maxdepth: 1
+
+   Core functionality </ref/core>
+   Oscar's apps </ref/apps/index>
    howto/index
-   ref/apps/index
    ref/settings
    ref/signals
-   ref/upgrading
-   topics/translation
 
 The Oscar open-source project
 =============================

@@ -1,12 +1,12 @@
 from django.conf.urls import patterns, url
 
-from oscar.views.decorators import staff_member_required
 from oscar.core.application import Application
 from oscar.apps.dashboard.partners import views
 
 
 class PartnersDashboardApplication(Application):
     name = None
+    default_permissions = ['is_staff', ]
 
     list_view = views.PartnerListView
     create_view = views.PartnerCreateView
@@ -20,7 +20,7 @@ class PartnersDashboardApplication(Application):
     user_update_view = views.PartnerUserUpdateView
 
     def get_urls(self):
-        urlpatterns = patterns('',
+        urls = [
             url(r'^$', self.list_view.as_view(), name='partner-list'),
             url(r'^create/$', self.create_view.as_view(),
                 name='partner-create'),
@@ -42,11 +42,8 @@ class PartnersDashboardApplication(Application):
             url(r'^(?P<partner_pk>\d+)/users/(?P<user_pk>\d+)/update/$',
                 self.user_update_view.as_view(),
                 name='partner-user-update'),
-        )
-        return self.post_process_urls(urlpatterns)
-
-    def get_url_decorator(self, url_name):
-        return staff_member_required
+        ]
+        return self.post_process_urls(patterns('', *urls))
 
 
 application = PartnersDashboardApplication()

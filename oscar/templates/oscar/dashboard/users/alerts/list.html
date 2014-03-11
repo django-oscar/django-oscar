@@ -1,9 +1,8 @@
 {% extends 'dashboard/layout.html' %}
-{% load url from future %}
 {% load i18n %}
 {% load currency_filters %}
 
-{% block body_class %}users{% endblock %}
+{% block body_class %}{{ block.super }} users{% endblock %}
 
 {% block title %}
     {% trans "Product alerts" %} | {{ block.super }}
@@ -57,7 +56,7 @@
                     </td>
                     <td>
                         {% if alert.user %}
-                            <a href="{% url 'dashboard:user-detail' alert.user.id %}">{{ alert.user.email }}</a>
+                            <a href="{% url 'dashboard:user-detail' pk=alert.user.id %}">{{ alert.user.email }}</a>
                         {% else %}
                             {{ alert.email }} {% trans "(Anonymous)" %}
                         {% endif %}
@@ -75,8 +74,8 @@
                                     <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu pull-right">
-                                    <li><a href="{% url 'dashboard:user-alert-update' alert.id %}">{% trans "Edit" %}</a></li>
-                                    <li><a href="{% url 'dashboard:user-alert-delete' alert.id %}">{% trans "Delete" %}</a></li>
+                                    <li><a href="{% url 'dashboard:user-alert-update' pk=alert.id %}">{% trans "Edit" %}</a></li>
+                                    <li><a href="{% url 'dashboard:user-alert-delete' pk=alert.id %}">{% trans "Delete" %}</a></li>
                                 </ul>
                             </div>
                         </div>

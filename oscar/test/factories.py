@@ -2,8 +2,11 @@ from decimal import Decimal as D
 import random
 import datetime
 
-from django.db.models import get_model
+from django.conf import settings
+from django.utils import timezone
 
+from oscar.core.loading import get_model
+from oscar.apps.partner import strategy, availability, prices
 from oscar.core.loading import get_class
 from oscar.apps.offer import models
 
@@ -22,55 +25,99 @@ ProductAttribute = get_model('catalogue', 'ProductAttribute')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 
 
-def create_product(price=None, title=u"Dummy title",
+def create_stockrecord(product=None, price_excl_tax=None, partner_sku=None,
+                       num_in_stock=None, partner_name=None,
+                       currency=settings.OSCAR_DEFAULT_CURRENCY,
+                       partner_users=None):
+    if product is None:
+        product = create_product()
+    partner, __ = Partner.objects.get_or_create(name=partner_name or '')
+    if partner_users:
+        for user in partner_users:
+            partner.users.add(user)
+    if not price_excl_tax:
+        price_excl_tax = D('9.99')
+    if not partner_sku:
+        partner_sku = 'sku_%d_%d' % (product.id, random.randint(0, 10000))
+    return product.stockrecords.create(
+        partner=partner, partner_sku=partner_sku,
+        price_currency=currency,
+        price_excl_tax=price_excl_tax, num_in_stock=num_in_stock)
+
+
+def create_purchase_info(record):
+    return strategy.PurchaseInfo(
+        price=prices.FixedPrice(
+            record.price_currency,
+            record.price_excl_tax,
+            D('0.00')  # Default to no tax
+        ),
+        availability=availability.DelegateToStockRecord(record),
+        stockrecord=record
+    )
+
+
+def create_product(upc=None, title=u"Dummy title",
                    product_class=u"Dummy item class",
-                   partner=u"Dummy partner", partner_sku=None, upc=None,
-                   num_in_stock=10, attributes=None, **kwargs):
+                   partner_name=None, partner_sku=None, price=None,
+                   num_in_stock=None, attributes=None,
+                   partner_users=None, **kwargs):
     """
     Helper method for creating products that are used in tests.
     """
-    ic, __ = ProductClass._default_manager.get_or_create(name=product_class)
-    item = Product(title=title, product_class=ic, upc=upc, **kwargs)
-
+    product_class, __ = ProductClass._default_manager.get_or_create(
+        name=product_class)
+    product = product_class.products.model(
+        product_class=product_class,
+        title=title, upc=upc, **kwargs)
     if attributes:
-        for key, value in attributes.items():
+        for code, value in attributes.items():
             # Ensure product attribute exists
-            ProductAttribute.objects.get_or_create(
-                name=key, code=key, product_class=ic)
-            setattr(item.attr, key, value)
+            product_class.attributes.get_or_create(
+                name=code, code=code)
+            setattr(product.attr, code, value)
+    product.save()
 
-    item.save()
+    # Shortcut for creating stockrecord
+    stockrecord_fields = [
+        price, partner_sku, partner_name, num_in_stock, partner_users]
+    if any([field is not None for field in stockrecord_fields]):
+        create_stockrecord(
+            product, price_excl_tax=price, num_in_stock=num_in_stock,
+            partner_users=partner_users, partner_sku=partner_sku,
+            partner_name=partner_name)
+    return product
 
-    if price is not None or partner_sku or num_in_stock is not None:
-        if not partner_sku:
-            partner_sku = 'sku_%d_%d' % (item.id, random.randint(0, 10000))
-        if price is None:
-            price = D('10.00')
 
-        partner, __ = Partner._default_manager.get_or_create(name=partner)
-        StockRecord._default_manager.create(
-            product=item, partner=partner, partner_sku=partner_sku,
-            price_excl_tax=price, num_in_stock=num_in_stock)
-    return item
+def create_basket(empty=False):
+    basket = Basket.objects.create()
+    basket.strategy = strategy.Default()
+    if not empty:
+        product = create_product()
+        create_stockrecord(product, num_in_stock=2)
+        basket.add_product(product)
+    return basket
 
 
 def create_order(number=None, basket=None, user=None, shipping_address=None,
                  shipping_method=None, billing_address=None,
-                 total_incl_tax=None, total_excl_tax=None, **kwargs):
+                 total=None, **kwargs):
     """
     Helper method for creating an order for testing
     """
     if not basket:
         basket = Basket.objects.create()
-        basket.add_product(create_product(price=D('10.00')))
+        basket.strategy = strategy.Default()
+        product = create_product()
+        create_stockrecord(
+            product, num_in_stock=10, price_excl_tax=D('10.00'))
+        basket.add_product(product)
     if not basket.id:
         basket.save()
     if shipping_method is None:
         shipping_method = Free()
-    if total_incl_tax is None or total_excl_tax is None:
-        calc = OrderTotalCalculator()
-        total_incl_tax = calc.order_total_incl_tax(basket, shipping_method)
-        total_excl_tax = calc.order_total_excl_tax(basket, shipping_method)
+    if total is None:
+        total = OrderTotalCalculator().calculate(basket, shipping_method)
     order = OrderCreator().place_order(
         order_number=number,
         user=user,
@@ -78,8 +125,7 @@ def create_order(number=None, basket=None, user=None, shipping_address=None,
         shipping_address=shipping_address,
         shipping_method=shipping_method,
         billing_address=billing_address,
-        total_incl_tax=total_incl_tax,
-        total_excl_tax=total_excl_tax,
+        total=total,
         **kwargs)
     basket.set_as_submitted()
     return order
@@ -87,25 +133,39 @@ def create_order(number=None, basket=None, user=None, shipping_address=None,
 
 def create_offer(name="Dummy offer", offer_type="Site",
                  max_basket_applications=None, range=None, condition=None,
-                 benefit=None):
+                 benefit=None, priority=0, status=None, start=None, end=None):
     """
     Helper method for creating an offer
     """
     if range is None:
-        range = models.Range.objects.create(name="All products range",
-                                            includes_all_products=True)
+        range, __ = models.Range.objects.get_or_create(
+            name="All products range", includes_all_products=True)
     if condition is None:
-        condition = models.Condition.objects.create(
+        condition, __ = models.Condition.objects.get_or_create(
             range=range, type=models.Condition.COUNT, value=1)
     if benefit is None:
-        benefit = models.Benefit.objects.create(
+        benefit, __ = models.Benefit.objects.get_or_create(
             range=range, type=models.Benefit.PERCENTAGE, value=20)
+    if status is None:
+        status = models.ConditionalOffer.OPEN
+
+    # Create start and end date so offer is active
+    now = timezone.now()
+    if start is None:
+        start = now - datetime.timedelta(days=1)
+    if end is None:
+        end = now + datetime.timedelta(days=30)
+
     return models.ConditionalOffer.objects.create(
         name=name,
+        start_datetime=start,
+        end_datetime=end,
+        status=status,
         offer_type=offer_type,
         condition=condition,
         benefit=benefit,
-        max_basket_applications=max_basket_applications)
+        max_basket_applications=max_basket_applications,
+        priority=priority)
 
 
 def create_voucher():
@@ -115,7 +175,7 @@ def create_voucher():
     voucher = Voucher.objects.create(
         name="Test voucher",
         code="test",
-        start_date=datetime.date.today(),
-        end_date=datetime.date.today() + datetime.timedelta(days=12))
+        start_datetime=timezone.now(),
+        end_datetime=timezone.now() + datetime.timedelta(days=12))
     voucher.offers.add(create_offer(offer_type='Voucher'))
     return voucher

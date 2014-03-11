@@ -1,22 +1,23 @@
 import string
-import urlparse
 import random
 
 from django import forms
 from django.conf import settings
 from django.contrib.auth import forms as auth_forms
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.models import get_current_site
 from django.core import validators
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from oscar.core.loading import get_profile_class, get_class
 from oscar.core.compat import get_user_model
 from oscar.apps.customer.utils import get_password_reset_url, normalise_email
+from oscar.core.compat import urlparse
+
 
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 CommunicationEventType = get_model('customer', 'communicationeventtype')
@@ -25,7 +26,13 @@ User = get_user_model()
 
 
 def generate_username():
-    uname = ''.join([random.choice(string.letters + string.digits + '_') for i in range(30)])
+    # Python 3 uses ascii_letters. If not available, fallback to letters
+    try:
+        letters = string.ascii_letters
+    except AttributeError:
+        letters = string.letters
+    uname = ''.join([random.choice(letters + string.digits + '_')
+                     for i in range(30)])
     try:
         User.objects.get(username=uname)
         return generate_username()
@@ -34,13 +41,13 @@ def generate_username():
 
 
 class PasswordResetForm(auth_forms.PasswordResetForm):
+    """
+    This form takes the same structure as its parent from django.contrib.auth
+    """
     communication_type_code = "PASSWORD_RESET"
 
-    def save(self, domain_override=None,
-             subject_template_name='registration/password_reset_subject.txt',
-             email_template_name='registration/password_reset_email.html',
-             use_https=False, token_generator=default_token_generator,
-             from_email=None, request=None, **kwargs):
+    def save(self, domain_override=None, use_https=False, request=None,
+             **kwargs):
         """
         Generates a one-use only link for resetting password and sends to the
         user.
@@ -48,7 +55,9 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
         site = get_current_site(request)
         if domain_override is not None:
             site.domain = site.name = domain_override
-        for user in self.users_cache:
+        email = self.cleaned_data['email']
+        users = User._default_manager.filter(email__iexact=email)
+        for user in users:
             # Build reset url
             reset_url = "%s://%s%s" % (
                 'https' if use_https else 'http',
@@ -87,8 +96,29 @@ class EmailAuthenticationForm(AuthenticationForm):
         return url
 
 
+class ConfirmPasswordForm(forms.Form):
+    """
+    Extends the standard django AuthenticationForm, to support 75 character
+    usernames. 75 character usernames are needed to support the EmailOrUsername
+    auth backend.
+    """
+    password = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
+
+    def __init__(self, user, *args, **kwargs):
+        super(ConfirmPasswordForm, self).__init__(*args, **kwargs)
+        self.user = user
+
+    def clean_password(self):
+        password = self.cleaned_data['password']
+        if not self.user.check_password(password):
+            raise forms.ValidationError(
+                _("The entered password is not valid!"))
+        return password
+
+
 class CommonPasswordValidator(validators.BaseValidator):
-    # See http://www.smartplanet.com/blog/business-brains/top-20-most-common-passwords-of-all-time-revealed-8216123456-8216princess-8216qwerty/4519
+    # See
+    # http://www.smartplanet.com/blog/business-brains/top-20-most-common-passwords-of-all-time-revealed-8216123456-8216princess-8216qwerty/4519  # noqa
     forbidden_passwords = [
         'password',
         '1234',
@@ -165,7 +195,7 @@ class EmailUserCreationForm(forms.ModelForm):
         email = normalise_email(self.cleaned_data['email'])
         if User._default_manager.filter(email=email).exists():
             raise forms.ValidationError(
-                _("A user with that email address already exists."))
+                _("A user with that email address already exists"))
         return email
 
     def clean_password2(self):
@@ -196,39 +226,79 @@ class EmailUserCreationForm(forms.ModelForm):
         return user
 
 
-class SearchByDateRangeForm(forms.Form):
-    date_from = forms.DateField(required=False, label=_("From"))
-    date_to = forms.DateField(required=False, label=_("To"))
+class OrderSearchForm(forms.Form):
+    date_from = forms.DateField(
+        required=False, label=pgettext_lazy("start date", "From"))
+    date_to = forms.DateField(
+        required=False, label=pgettext_lazy("end date", "To"))
+    order_number = forms.CharField(required=False, label=_("Order number"))
 
     def clean(self):
-        if self.is_valid() and not self.cleaned_data['date_from'] and not self.cleaned_data['date_to']:
-            raise forms.ValidationError(_("At least one date field is required."))
-        return super(SearchByDateRangeForm, self).clean()
+        if self.is_valid() and not any([self.cleaned_data['date_from'],
+                                        self.cleaned_data['date_to'],
+                                        self.cleaned_data['order_number']]):
+            raise forms.ValidationError(_("At least one field is required."))
+        return super(OrderSearchForm, self).clean()
 
     def description(self):
+        """
+        Uses the form's data to build a useful description of what orders
+        are listed.
+        """
         if not self.is_bound or not self.is_valid():
             return _('All orders')
-        date_from = self.cleaned_data['date_from']
-        date_to = self.cleaned_data['date_to']
+        else:
+            date_from = self.cleaned_data['date_from']
+            date_to = self.cleaned_data['date_to']
+            order_number = self.cleaned_data['order_number']
+            return self._orders_description(date_from, date_to, order_number)
+
+    def _orders_description(self, date_from, date_to, order_number):
         if date_from and date_to:
-            return _('Orders placed between %(date_from)s and %(date_to)s') % {
-                'date_from': date_from,
-                'date_to': date_to}
+            if order_number:
+                desc = _('Orders placed between %(date_from)s and '
+                         '%(date_to)s and order number containing '
+                         '%(order_number)s')
+            else:
+                desc = _('Orders placed between %(date_from)s and '
+                         '%(date_to)s')
         elif date_from:
-            return _('Orders placed since %s') % date_from
+            if order_number:
+                desc = _('Orders placed since %(date_from)s and '
+                         'order number containing %(order_number)s')
+            else:
+                desc = _('Orders placed since %(date_from)s')
         elif date_to:
-            return _('Orders placed until %s') % date_to
+            if order_number:
+                desc = _('Orders placed until %(date_to)s and '
+                         'order number containing %(order_number)s')
+            else:
+                desc = _('Orders placed until %(date_to)s')
+        elif order_number:
+            desc = _('Orders with order number containing %(order_number)s')
+        else:
+            return None
+        params = {
+            'date_from': date_from,
+            'date_to': date_to,
+            'order_number': order_number,
+        }
+        return desc % params
 
     def get_filters(self):
         date_from = self.cleaned_data['date_from']
         date_to = self.cleaned_data['date_to']
+        order_number = self.cleaned_data['order_number']
+        kwargs = {}
         if date_from and date_to:
-            return {'date_placed__range': [date_from, date_to]}
+            kwargs['date_placed__range'] = [date_from, date_to]
         elif date_from and not date_to:
-            return {'date_placed__gt': date_from}
+            kwargs['date_placed__gt'] = date_from
         elif not date_from and date_to:
-            return {'date_placed__lt': date_to}
-        return {}
+            kwargs['date_placed__lt'] = date_to
+        if order_number:
+            kwargs['number__contains'] = order_number
+        return kwargs
 
 
 class UserForm(forms.ModelForm):

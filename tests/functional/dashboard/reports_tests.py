@@ -1,9 +1,9 @@
 from django.core.urlresolvers import reverse
 
-from oscar.test.testcases import ClientTestCase
+from oscar.test.testcases import WebTestCase
 
 
-class ReportsDashboardTests(ClientTestCase):
+class ReportsDashboardTests(WebTestCase):
     is_staff = True
 
     def test_dashboard_is_accessible_to_staff(self):

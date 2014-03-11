@@ -25,9 +25,11 @@ Further reading:
   experimental but feel free to explore and get a feel for the base Oscar
   install.)
 * `Documentation`_ on the excellent `readthedocs.org`_
-* `Google Group`_ - the mailing list is django-oscar@googlegroups.com
+* `django-oscar group`_ - mailing list for questions and announcements
+* `django-oscar-jobs group`_ - mailing list for job offers
 * `Continuous integration homepage`_ on `travis-ci.org`_
 * `Twitter account for news and updates`_
+* #django-oscar on Freenode (community-run IRC channel)
 * `crate.io page`_
 * `PyPI page`_
 * `Transifex project`_ - translating Oscar made easy
@@ -49,6 +51,10 @@ PyPI status:
 .. image:: https://pypip.in/d/django-oscar/badge.png
     :target: https://crate.io/packages/django-oscar/
 
+.. image:: https://d2weczhvl823v0.cloudfront.net/tangentlabs/django-oscar/trend.png 
+    :alt: Bitdeli badge 
+    :target: https://bitdeli.com/free
+
 .. _`Official homepage`: http://oscarcommerce.com
 .. _`Sandbox site`: http://latest.oscarcommerce.com
 .. _`Demo site`: http://demo.oscarcommerce.com
@@ -58,7 +64,8 @@ PyPI status:
 .. _`travis-ci.org`: http://travis-ci.org/
 .. _`Twitter account for news and updates`: https://twitter.com/#!/django_oscar
 .. _`Twitter account of all commits`: https://twitter.com/#!/oscar_django
-.. _`Google Group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar
+.. _`django-oscar group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar
+.. _`django-oscar-jobs group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar-jobs
 .. _`crate.io page`: https://crate.io/packages/django-oscar/
 .. _`PyPI page`: http://pypi.python.org/pypi/django-oscar/
 .. _`Transifex project`: https://www.transifex.com/projects/p/django-oscar/
@@ -182,6 +189,7 @@ The following are community-written extensions:
 * django-oscar-unicredit_ - Integration with the Unicredit payment gateway
 * django-oscar-payments_ - Pluggable payments for Oscar
 * django-oscar-recurly_ - Integration with the Recurly payment gateway
+* oscar-sagepay_ - Payment integration with Sage Pay
 * django-oscar-erp_
 
 Let us know if you're writing a new one!
@@ -190,11 +198,14 @@ Let us know if you're writing a new one!
 .. _django-oscar-erp: https://bitbucket.org/zikzakmedia/django-oscar_erp
 .. _django-oscar-payments: https://github.com/Lacrymology/django-oscar-payments
 .. _django-oscar-recurly: https://github.com/mynameisgabe/django-oscar-recurly
+.. _oscar-sagepay: https://github.com/udox/oscar-sagepay
 
 License
 -------
 
-Oscar is released under the permissive `New BSD license`_.
+Oscar is released under the permissive `New BSD license`_ (see summary_).
+
+.. _summary: https://tldrlegal.com/license/bsd-3-clause-license-(revised)
 
 .. _`New BSD license`: https://github.com/tangentlabs/django-oscar/blob/master/LICENSE
 
@@ -238,10 +249,16 @@ Selected Tangent projects:
 
 Non-Tangent:
 
-* Dolbeau - http://www.dolbeau.ca/
-* Sobusa - http://www.sobusa.fr/
+* Dolbeau - http://www.dolbeau.ca
+* Sobusa - http://www.sobusa.fr
 * Laivee - http://laivee.pl
 * Colinss - http://colinss.com
+* Audio App - https://audioapp.pl
+* Anything Gift - http://www.anythinggift.co.uk
+* FP Sport - http://www.fpsport.it
+* Garmsby - https://garmsby.co.uk
+* Partecipa Cards - http://www.partecipacards.com
+* Chiyome - https://chiyome.com
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/dolbeau.thumb.png
     :target: http://www.dolbeau.ca
@@ -254,6 +271,24 @@ Non-Tangent:
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/colinss.thumb.png
     :target: http://www.colinss.com
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/audioapp.thumb.png
+    :target: https://audioapp.pl
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/anythinggift.thumb.png
+    :target: http://www.anythinggift.co.uk
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/fpsport.thumb.png
+    :target: https://www.fpsport.it
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/garmsby.thumb.png
+    :target: https://garmsby.co.uk
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/partecipacards.thumb.png
+    :target: http://www.partecipacards.com
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/chiyome.thumb.png
+    :target: https://chiyome.com
 
 Many more on the way.  If you use Oscar in production, please let us know.
 

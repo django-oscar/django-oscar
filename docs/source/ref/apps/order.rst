@@ -9,9 +9,16 @@ Abstract models
 
 .. automodule:: oscar.apps.order.abstract_models
     :members:
+    :noindex:
 
-Views
+Order processing
+----------------
+
+.. automodule:: oscar.apps.order.processing
+    :members:
+
+Utils
 -----
 
-None.
-
+.. automodule:: oscar.apps.order.utils
+    :members:

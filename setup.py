@@ -6,6 +6,7 @@ To release a new version to PyPi:
 - Ensure the version is correctly set in oscar.__init__.py
 - Run: python setup.py sdist upload
 """
+from __future__ import print_function
 
 from setuptools import setup, find_packages
 import os
@@ -14,6 +15,7 @@ import sys
 from oscar import get_version
 
 PROJECT_DIR = os.path.dirname(__file__)
+PY3 = sys.version_info >= (3, 0)
 
 # Change to the current directory to solve an issue installing Oscar on the
 # Vagrant machine.
@@ -33,34 +35,39 @@ setup(name='django-oscar',
       packages=find_packages(exclude=["sandbox*", "tests*"]),
       include_package_data=True,
       install_requires=[
-          'django>=1.4.2,<1.6',
+          'django>=1.4.2,<1.7',
           # PIL is required for image fields, Pillow is the "friendly" PIL fork
-          'pillow>=1.7.8,<2.0.0',
+          'pillow>=1.7.8,<2.3',
           # Oscar ships with migrations
-          'South>=0.7.6,<0.8',
+          'South>=0.7.6,<0.9',
           # We use the ModelFormSetView from django-extra-views for the basket
           # page
-          'django-extra-views>=0.2,<0.6',
-          # We ship a simple Haystack implementation (that needs to be
-          # improved).  We are using the 2.0-beta release from Github and
-          # eagerly anticipating a stable 2.0 release on PyPI.
-          'django-haystack==2.0.0-beta',
+          'django-extra-views>=0.2,<0.7',
+          # Search support
+          'django-haystack>=2.1.0',
           # Treebeard is used for categories
-          'django-treebeard==2.0b1',
+          'django-treebeard==2.0b2',
           # Sorl is used as the default thumbnailer
-          'sorl-thumbnail==11.12',
-          'python-memcached>=1.48,<1.52',
+          'sorl-thumbnail==12.00' if PY3 else 'sorl-thumbnail==11.12',
           # Babel is used for currency formatting
-          'Babel>=0.9,<0.10',
+          'Babel>=1.0',
           # Oscar's default templates use compressor (but you can override
           # this)
-          'django-compressor>=1.2,<1.4',
+          'django-compressor==1.4a1' if PY3 else 'django-compressor==1.3',
           # For converting non-ASCII to ASCII when creating slugs
           'Unidecode>=0.04.12,<0.05',
           # For manipulating search URLs
-          'purl>=0.7'
+          'purl>=0.7',
+          # For phone number field
+          'phonenumbers==5.9.2',
+          # Python 2 & 3 compatibility helper
+          'six>=1.5.2',
       ],
-      dependency_links=['https://github.com/toastdriven/django-haystack/tarball/fd83d3f449c2197f93040bb3d7bc6083ea8e48b7#egg=django-haystack-2.0.0-beta'],
+      # tarballs for unreleased packages
+      dependency_links = [
+          'http://github.com/mariocesar/sorl-thumbnail/tarball/588837f828a5d9dd999bd6b994331e6285f79ca9#egg=sorl-thumbnail-12.00',
+          'http://github.com/django-compressor/django-compressor/tarball/cdab0d9698cb3c9421f3598822ddc71a57970405#egg=django-compressor-1.4a1',
+      ],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
           'Development Status :: 4 - Beta',
@@ -91,4 +98,4 @@ if len(sys.argv) > 1 and sys.argv[1] == 'develop':
         "    %s\n\nHappy hacking!") % (mailing_list, mailing_list_url,
                                        docs_url, twitter_url)
     line = '=' * 82
-    print "\n%s\n%s\n%s" % (line, msg, line)
+    print(("\n%s\n%s\n%s" % (line, msg, line)))

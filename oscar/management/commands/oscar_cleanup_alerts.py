@@ -2,7 +2,7 @@ import logging
 from optparse import make_option
 from datetime import timedelta
 
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.utils.timezone import now
 from django.core.management.base import BaseCommand
 
@@ -18,15 +18,11 @@ class Command(BaseCommand):
     help = "Check unconfirmed alerts and clean them up"
 
     option_list = BaseCommand.option_list + (
-        make_option('--days',
-            dest='days',
-            default=0,
-            help='cleanup alerts older then DAYS from now.'),
-        make_option('--hours',
-            dest='hours',
-            default=0,
-            help='cleanup alerts older then HOURS from now.'),
-        )
+        make_option('--days', dest='days', default=0,
+                    help='cleanup alerts older then DAYS from now.'),
+        make_option('--hours', dest='hours', default=0,
+                    help='cleanup alerts older then HOURS from now.'),
+    )
 
     def handle(self, *args, **options):
         """

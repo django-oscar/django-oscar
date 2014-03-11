@@ -1,3 +1,7 @@
+import warnings
+
+from django.utils.encoding import force_text
+
 from oscar.core.loading import get_class
 
 Repository = get_class('shipping.repository', 'Repository')
@@ -74,16 +78,23 @@ class CheckoutSessionData(object):
 
     def ship_to_user_address(self, address):
         """
-        Set existing shipping address id to session and unset address fields from session
+        Set existing shipping address id to session and unset address fields
+        from session
         """
         self.reset_shipping_data()
         self._set('shipping', 'user_address_id', address.id)
 
     def ship_to_new_address(self, address_fields):
         """
-        Set new shipping address details to session and unset shipping address id
+        Set new shipping address details to session and unset shipping address
+        id
         """
         self._unset('shipping', 'new_address_fields')
+        phone_number = address_fields.get('phone_number')
+        if phone_number:
+            address_fields = address_fields.copy()
+            address_fields['phone_number'] = force_text(
+                address_fields['phone_number'])
         self._set('shipping', 'new_address_fields', address_fields)
 
     def new_shipping_address_fields(self):
@@ -107,7 +118,8 @@ class CheckoutSessionData(object):
         """
         new_fields = self.new_shipping_address_fields()
         has_new_address = new_fields is not None
-        has_old_address = self.user_address_id() > 0
+        user_address_id = self.user_address_id()
+        has_old_address = user_address_id is not None and user_address_id > 0
         return has_new_address or has_old_address
 
     # Shipping method
@@ -125,20 +137,31 @@ class CheckoutSessionData(object):
         """
         self._set('shipping', 'method_code', code)
 
-    def shipping_method(self, basket=None):
+    def shipping_method_code(self, basket):
+        """
+        Returns the shipping method code
+        """
+        return self._get('shipping', 'method_code')
+
+    def shipping_method(self, basket):
         """
         Returns the shipping method model based on the
         data stored in the session.
         """
-        if not basket:
-            basket = self.request.basket
-        code = self._get('shipping', 'method_code')
+        warnings.warn((
+            "shipping_method is deprecated as the functionality has "
+            "been moved to the get_shipping_method from the checkout "
+            "session mixin"), DeprecationWarning)
+        code = self.shipping_method_code(basket)
         if not code:
             return None
         return Repository().find_by_code(code, basket)
 
-    def is_shipping_method_set(self):
-        return bool(self._get('shipping', 'method_code'))
+    def is_shipping_method_set(self, basket):
+        """
+        Test if a valid shipping method is stored in the session
+        """
+        return self.shipping_method_code(basket) is not None
 
     # Billing address fields
     # ======================
@@ -212,4 +235,3 @@ class CheckoutSessionData(object):
 
     def get_submitted_basket_id(self):
         return self._get('submission', 'basket_id')
-

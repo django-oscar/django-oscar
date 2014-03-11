@@ -1,7 +1,7 @@
 """
 Vanilla product models
 """
-from oscar.apps.catalogue.abstract_models import *
+from oscar.apps.catalogue.abstract_models import *  # noqa
 
 
 class ProductClass(AbstractProductClass):
@@ -17,18 +17,6 @@ class ProductCategory(AbstractProductCategory):
 
 
 class Product(AbstractProduct):
-    pass
-
-
-class ContributorRole(AbstractContributorRole):
-    pass
-
-
-class Contributor(AbstractContributor):
-    pass
-
-
-class ProductContributor(AbstractProductContributor):
     pass
 
 
@@ -63,4 +51,5 @@ class Option(AbstractOption):
 class ProductImage(AbstractProductImage):
     pass
 
-from .receivers import *
+
+from .receivers import *  # noqa

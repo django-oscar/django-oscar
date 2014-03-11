@@ -39,7 +39,7 @@ class EventHandler(processing.EventHandler):
             datacash_ref = f.fulfill_transaction(
                 order.number, amount, txn.datacash_reference,
                 txn.auth_code)
-        except exceptions.PaymentError, e:
+        except exceptions.PaymentError as e:
             self.create_note(order, "Attempt to settle %.2f failed: %s" % (
                 amount, e))
             raise

@@ -82,15 +82,23 @@ Simple really - follow these steps:
    for determining which shipping methods are returned based on the user, basket and shipping address
    passed in.
 
+Methods
+-------
+
+.. automodule:: oscar.apps.shipping.base
+    :members:
+
+.. automodule:: oscar.apps.shipping.methods
+    :members:
 
 Models
----------------
+------
 
 .. automodule:: oscar.apps.shipping.models
     :members:
 
-Views
------
+Repository
+----------
 
-None.
-
+.. automodule:: oscar.apps.shipping.repository
+    :members:

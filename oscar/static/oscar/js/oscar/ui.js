@@ -3,7 +3,7 @@ var oscar = (function(o, $) {
     o.messages = {
         addMessage: function(tag, msg) {
             var msgHTML = '<div class="alert fade in alert-' + tag + '">' +
-                '<a href="#" class="close" data-dismiss="alert">x</a>'  + msg +
+                '<a href="#" class="close" data-dismiss="alert">&times;</a>'  + msg +
                 '</div>';
             $('#messages').append($(msgHTML));
         },
@@ -11,7 +11,7 @@ var oscar = (function(o, $) {
         info: function(msg) { o.messages.addMessage('info', msg); },
         success: function(msg) { o.messages.addMessage('success', msg); },
         warning: function(msg) { o.messages.addMessage('warning', msg); },
-        error: function(msg) { o.messages.addMessage('error:', msg); },
+        error: function(msg) { o.messages.addMessage('error', msg); },
         clear: function() {
             $('#messages').html('');
         },
@@ -20,12 +20,19 @@ var oscar = (function(o, $) {
         }
     };
 
+    o.search = {
+        init: function() {
+            // Auto-submit (hidden) search form when selecting a new sort-by option
+            $('#id_sort_by').on('change', function() {
+                $(this).closest('form').submit();
+            });
+        }
+    };
+
     // This block may need removing after reworking of promotions app
     o.promotions = {
         init: function() {
-            $('#myCarousel').carousel({
-                interval: 6000
-            });
+
         }
     };
 
@@ -53,8 +60,14 @@ var oscar = (function(o, $) {
             // prevent multiple submissions
             $('form[data-behaviours~="lock"]').submit(o.forms.submitIfNotLocked);
 
-            // Disable buttons when they are clicked
-            $('.js-disable-on-click').click(function(){$(this).button('loading');});
+            // Disable buttons when they are clicked and show a "loading" message taken from the
+            // data-loading-text attribute (http://getbootstrap.com/2.3.2/javascript.html#buttons).
+            // Do not disable if button is inside a form with invalid fields.
+            $('.js-disable-on-click').click(function(){
+                var form = $(this).parents("form");
+                if (!form || $(":invalid", form).length == 0)
+                    $(this).button('loading');
+            });
         },
         submitIfNotLocked: function(event) {
             var $form = $(this);
@@ -62,19 +75,6 @@ var oscar = (function(o, $) {
                 return false;
             }
             $form.data('locked', true);
-        }
-    };
-
-    o.account = {
-        init: function() {
-            if (document.location.hash) {
-                // Ensure the right tab is open if it is specified in the hash.
-                var hash = document.location.hash.substring(1),
-                $activeClass = $('.account-profile .tabbable'),
-                $li = $('a[href=#' + hash + ']').closest('li');
-                $activeClass.find('.active').removeClass('active');
-                $('#' + hash).add($li).addClass('active');
-            }
         }
     };
 
@@ -98,7 +98,6 @@ var oscar = (function(o, $) {
         init: function() {
             if (o.responsive.isDesktop()) {
                 o.responsive.initNav();
-                o.responsive.initCarousel();
             }
         },
         isDesktop: function() {
@@ -107,8 +106,8 @@ var oscar = (function(o, $) {
         initNav: function() {
             // Initial navigation for desktop
             var $sidebar = $('aside.span3'), 
-                $browse = $('#browse > .dropdown-menu'), 
-                $browseOpen = $browse.parent().find('> button[data-toggle]');
+                $browse = $('[data-navigation="dropdown-menu"]'),
+                $browseOpen = $browse.parent().find('> a[data-toggle]');
             // Set width of nav dropdown to be same as sidebar
             $browse.css('width', $sidebar.outerWidth());
             // Remove click on browse button if menu is currently open
@@ -118,22 +117,9 @@ var oscar = (function(o, $) {
                 $sidebar.css({ marginTop: $browse.outerHeight() });
             }
         },
-        initCarousel: function() {
-            $('.es-carousel-wrapper').each(function(){
-                var gallery = $(this).parent('.rg-thumbs').length;
-                // Don't apply this to the gallery carousel
-                if (gallery <= 0) {
-                    var imageWidth = 175,
-                        minProducts = 4;
-                    if ($(this).hasClass('wide')) {
-                        minProducts = 5;
-                    }
-                    $(this).elastislide({
-                        imageW: imageWidth,
-                        minItems: minProducts,
-                        onClick: function() {return true;}
-                    });
-                }
+        initSlider: function() {
+            $('.carousel').carousel({
+                interval: 20000
             });
         }
     };
@@ -197,11 +183,15 @@ var oscar = (function(o, $) {
             $('#messages').html('');
             var payload = $('#basket_formset').serializeArray();
             $.post(o.basket.url, payload, o.basket.submitFormSuccess, 'json');
-            event.preventDefault();
+            if (event) {
+                event.preventDefault();
+            }
         },
         submitFormSuccess: function(data) {
             $('#content_inner').html(data.content_html);
-            $('#messages').html('');
+
+            // Show any flash messages
+            o.messages.clear();
             for (var level in data.messages) {
                 for (var i=0; i<data.messages[level].length; i++) {
                     o.messages[level](data.messages[level][i]);
@@ -256,6 +246,7 @@ var oscar = (function(o, $) {
         o.forms.init();
         o.page.init();
         o.responsive.init();
+        o.responsive.initSlider();
         o.compatibility.init();
     };
 

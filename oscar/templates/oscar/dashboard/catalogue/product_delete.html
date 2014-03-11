@@ -1,6 +1,5 @@
 {% extends 'dashboard/layout.html' %}
 
-{% load url from future %}
 {% load i18n %}
 
 {% block title %}
@@ -10,9 +9,7 @@
     {{ block.super }}
 {% endblock %}
 
-{% block body_class %}
-    create-page
-{% endblock %}
+{% block body_class %}{{ block.super }} create-page{% endblock %}
 
 {% block breadcrumbs %}
     <ul class="breadcrumb">
@@ -25,7 +22,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:catalogue-product' product.pk %}">{{ product.title }}</a>
+            <a href="{% url 'dashboard:catalogue-product' pk=product.pk %}">{{ product.title }}</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Delete?" %}</li>

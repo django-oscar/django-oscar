@@ -14,21 +14,19 @@ doesn't stop there. Almost every aspect of it can be altered.
 :doc:`Various techniques </internals/design-decisions>` are employed to achieve
 that level of adaptability.
 
-To extend the behavior of a Oscar core app, you will at least need to create an
+To extend the behavior of an Oscar core app, you will at least need to create an
 app with the same label. Depending on what should be adapted, different steps
 are necessary beyond that. The steps are detailed below; this overview might
 help you to figure out what needs to be done.
 
-==================================  ====================  ====================================  ========================
-Goals vs. necessary steps           Override model class  Override view class (or change URLs)  Override any other class
-==================================  ====================  ====================================  ========================
-Python module with same label       Necessary             Necessary                             Necessary
-Custom root and local ``app.py``    Not necessary         Necessary                             Not necessary
-Add as Django app                   Necessary             Not necessary                         Necessary
-==================================  ====================  ====================================  ========================
+================================  =============================  =================  =================
+Goals vs. necessary steps         Python module with same label  Add as Django app  Custom ``app.py``
+================================  =============================  =================  =================
+Override a model class            Necessary                      Necessary          Not necessary
+Override any other class or view  Necessary                      Necessary          Not necessary
+Change app URLs or add views      Necessary                      Necessary          Necessary
+================================  =============================  =================  =================
 
-If more complex changes are desired, it is usually easiest to do all of the
-steps.
 Please also refer to the following how-tos for further instructions and examples.
 
 * :doc:`/howto/how_to_customise_models`
@@ -47,16 +45,13 @@ E.g., to create a local version of ``oscar.apps.order``, do the following::
     $ touch yourproject/order/__init__.py
 
 
-Custom root and local ``app.py``
-================================
-
-Root ``app.py``
----------------
+Custom ``app.py``
+=================
 
 Oscar's views and URLs use a tree of 'app' instances, each of which subclass
 :class:`oscar.core.application.Application` and provide ``urls`` property.
-Oscar has a root app instance in ``oscar/app.py`` which can be imported into
-your ``urls.py``::
+Oscar has a root app instance in ``oscar/app.py`` which should already be
+wired up in your ``urls.py``::
 
     # urls.py
     from oscar.app import application
@@ -66,9 +61,12 @@ your ``urls.py``::
        (r'', include(application.urls)),
     )
 
-To get control over the mapping between URLs and views, you need to use a local
-``application`` instance, that (usually) subclasses Oscar's.  Hence, create
-``yourproject/app.py`` with contents::
+Modifying root app
+------------------
+
+If you want to change URLs or views of the root application above, you need to
+replace it with your own ``application`` instance, that (usually) subclasses
+Oscar's.  Hence, create ``yourproject/app.py`` with contents::
 
     # yourproject/app.py
     from oscar.app import Shop
@@ -89,33 +87,32 @@ Now hook this up in your ``urls.py`` instead::
         (r'', include(application.urls)),
     )
 
-This step only needs to be done once. All customisation will only entail
-overriding parts of the newly added ``BaseApplication``.
+Modifying sub-apps
+------------------
 
-Local ``app.py``
-----------------
+Sub-apps such as the ``catalogue`` app are loaded dynamically, just as most
+other classes in Oscar::
 
-If you want to modify a view or change a URL, you need to create an ``app.py``
-for your local app. It will usually inherit from Oscar's version::
+    # oscar/app.py
+    class Shop(Application):
+        name = None
 
-    # yourproject/order/app.py
+        catalogue_app = get_class('catalogue.app', 'application')
+        customer_app = get_class('customer.app', 'application')
+        ...
+
+That means you can leave the root app unchanged, and just need to create another
+``application`` instance. It will usually inherit from Oscar's version::
+
+    # yourproject/promotions/app.py
 
     from oscar.apps.promotions.app import PromotionsApplication as CorePromotionsApplication
+    from .views import MyExtraView
 
     class PromotionsApplication(CorePromotionsApplication):
-        pass
+        extra_view = MyExtraView
 
     application = PromotionsApplication()
-
-and hook it up in your root ``app.py``::
-
-    # yourproject/app.py
-    from oscar.app import Shop
-
-    from yourproject.promotions.app import application as promotions_app
-
-    class BaseApplication(Shop):
-        promotions_app = promotions_app
 
 
 Add as Django app

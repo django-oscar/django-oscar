@@ -1,9 +1,7 @@
 {% extends 'dashboard/layout.html' %}
-{% load url from future %}
-{% load currency_filters %}
 {% load i18n %}
 
-{% block body_class %}content-blocks{% endblock %}
+{% block body_class %}{{ block.super }} content-blocks{% endblock %}
 
 {% block headertext %}
     {% trans "Content block management" %}
@@ -55,7 +53,7 @@
                         <td><a href="{{ page.page_url }}">{{ page.page_url }}</a></td>
                         <td>{{ page.freq }}</td>
                         <td>
-                            <a href="{% url 'dashboard:promotion-list-by-url' page.page_url|urlencode:"" %}" class="btn btn-success">{% trans "Edit" %}</a>
+                            <a href="{% url 'dashboard:promotion-list-by-url' path=page.page_url %}" class="btn btn-success">{% trans "Edit" %}</a>
                         </td>
                         <td> </td>
                     </tr>

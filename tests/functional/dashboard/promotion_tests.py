@@ -1,9 +1,9 @@
 from django.core.urlresolvers import reverse
 
-from oscar.test.testcases import ClientTestCase
+from oscar.test.testcases import WebTestCase
 
 
-class ViewTests(ClientTestCase):
+class ViewTests(WebTestCase):
     is_staff = True
 
     def test_pages_exist(self):

@@ -1,17 +1,21 @@
 from django.contrib import messages
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Permission
 from django.core.urlresolvers import reverse_lazy, reverse
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.template.loader import render_to_string
 from django.views import generic
+
 from oscar.apps.customer.utils import normalise_email
-
-from oscar.apps.dashboard.partners.forms import UserEmailForm, ExistingUserForm, NewUserForm
+from oscar.apps.dashboard.partners.forms import (UserEmailForm,
+                                                 ExistingUserForm, NewUserForm)
 from oscar.core.loading import get_classes
+from oscar.core.compat import get_user_model
+from oscar.views import sort_queryset
 
+User = get_user_model()
 Partner = get_model('partner', 'Partner')
 PartnerSearchForm, PartnerCreateForm, PartnerAddressForm = get_classes(
     'dashboard.partners.forms',
@@ -26,7 +30,7 @@ class PartnerListView(generic.ListView):
 
     def get_queryset(self):
         qs = self.model._default_manager.all()
-        qs = self.sort_queryset(qs)
+        qs = sort_queryset(qs, self.request, ['name'])
 
         self.description = _("All partners")
 
@@ -45,15 +49,6 @@ class PartnerListView(generic.ListView):
             self.is_filtered = True
 
         return qs
-
-    def sort_queryset(self, queryset):
-        sort = self.request.GET.get('sort', None)
-        allowed_sorts = ['name']
-        if sort in allowed_sorts:
-            direction = self.request.GET.get('dir', 'desc')
-            sort = ('-' if direction == 'desc' else '') + sort
-            queryset = queryset.order_by(sort)
-        return queryset
 
     def get_context_data(self, **kwargs):
         ctx = super(PartnerListView, self).get_context_data(**kwargs)
@@ -210,12 +205,28 @@ class PartnerUserSelectView(generic.ListView):
     def get_queryset(self):
         if self.form.is_valid():
             email = normalise_email(self.form.cleaned_data['email'])
-            return User.objects.filter(is_staff=True, email__icontains=email)
+            return User.objects.filter(email__icontains=email)
         else:
             return User.objects.none()
 
 
 class PartnerUserLinkView(generic.View):
+
+    def link_user(self, user, partner):
+        """
+        Links a user to a partner, and adds the dashboard permission if needed.
+
+        Returns False if the user was linked already; True otherwise.
+        """
+        if partner.users.filter(pk=user.pk).exists():
+            return False
+        partner.users.add(user)
+        if not user.is_staff:
+            dashboard_access_perm = Permission.objects.get(
+                codename='dashboard_access',
+                content_type__app_label='partner')
+            user.user_permissions.add(dashboard_access_perm)
+        return True
 
     def get(self, request, user_pk, partner_pk):
         # need to allow GET to make Undo link in PartnerUserUnlinkView work
@@ -223,39 +234,57 @@ class PartnerUserLinkView(generic.View):
 
     def post(self, request, user_pk, partner_pk):
         user = get_object_or_404(User, pk=user_pk)
-        partner = get_object_or_404(Partner, pk=partner_pk)
         name = user.get_full_name() or user.email
-        if not partner.users.filter(pk=user_pk).exists():
-            partner.users.add(user)
+        partner = get_object_or_404(Partner, pk=partner_pk)
+        if self.link_user(user, partner):
             messages.success(
-                request, _("User '%(name)s' was linked to '%(partner_name)s'") %
-                {'name': name, 'partner_name': partner.name})
+                request,
+                _("User '%(name)s' was linked to '%(partner_name)s'")
+                % {'name': name, 'partner_name': partner.name})
         else:
-            messages.error(
-                request, _("User '%(name)s' is already linked to '%(partner_name)s'") %
-                {'name': name, 'partner_name': partner.name})
+            messages.info(
+                request,
+                _("User '%(name)s' is already linked to '%(partner_name)s'")
+                % {'name': name, 'partner_name': partner.name})
         return HttpResponseRedirect(reverse('dashboard:partner-manage',
                                             kwargs={'pk': partner_pk}))
 
 
 class PartnerUserUnlinkView(generic.View):
 
+    def unlink_user(self, user, partner):
+        """
+        Unlinks a user from a partner, and removes the dashboard permission
+        if she's not linked to any other partners.
+
+        Returns False if the user was not linked to the partner; True
+        otherwise.
+        """
+        if not partner.users.filter(pk=user.pk).exists():
+            return False
+        partner.users.remove(user)
+        if not user.is_staff and not user.partners.exists():
+            user.user_permissions.filter(
+                codename='dashboard_access',
+                content_type__app_label='partner').delete()
+        return True
+
     def post(self, request, user_pk, partner_pk):
         user = get_object_or_404(User, pk=user_pk)
         name = user.get_full_name() or user.email
         partner = get_object_or_404(Partner, pk=partner_pk)
-        if partner.users.filter(pk=user_pk).exists():
-            partner.users.remove(user)
+        if self.unlink_user(user, partner):
             msg = render_to_string(
                 'dashboard/partners/messages/user_unlinked.html',
                 {'user_name': name,
                  'partner_name': partner.name,
                  'user_pk': user_pk,
-                 'partner_pk': partner_pk })
+                 'partner_pk': partner_pk})
             messages.success(self.request, msg, extra_tags='safe')
         else:
             messages.error(
-                request, _("User '%(name)s' is not linked to '%(partner_name)s'") %
+                request,
+                _("User '%(name)s' is not linked to '%(partner_name)s'") %
                 {'name': name, 'partner_name': partner.name})
         return HttpResponseRedirect(reverse('dashboard:partner-manage',
                                             kwargs={'pk': partner_pk}))
@@ -273,8 +302,7 @@ class PartnerUserUpdateView(generic.UpdateView):
     def get_object(self, queryset=None):
         return get_object_or_404(User,
                                  pk=self.kwargs['user_pk'],
-                                 partners__pk=self.kwargs['partner_pk'],
-                                 is_staff=True)
+                                 partners__pk=self.kwargs['partner_pk'])
 
     def get_context_data(self, **kwargs):
         ctx = super(PartnerUserUpdateView, self).get_context_data(**kwargs)
@@ -287,5 +315,3 @@ class PartnerUserUpdateView(generic.UpdateView):
         messages.success(self.request,
                          _("User '%s' was updated successfully.") % name)
         return reverse_lazy('dashboard:partner-list')
-
-

@@ -14,7 +14,7 @@ class BasketOwnerCalledBarry(models.Condition):
     class Meta:
         proxy = True
 
-    def is_satisfied(self, basket):
+    def is_satisfied(self, offer, basket):
         if not basket.owner:
             return False
         return basket.owner.first_name.lower() == 'barry'

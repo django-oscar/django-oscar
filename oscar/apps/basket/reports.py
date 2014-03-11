@@ -1,4 +1,4 @@
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 from oscar.core.loading import get_class
 
@@ -21,10 +21,9 @@ class OpenBasketReportCSVFormatter(ReportCSVFormatter):
                       _('Basket status'),
                       _('Num lines'),
                       _('Num items'),
-                      _('Value'),
                       _('Date of creation'),
                       _('Time since creation'),
-                     ]
+                      ]
         writer.writerow(header_row)
 
         for basket in baskets:
@@ -32,13 +31,11 @@ class OpenBasketReportCSVFormatter(ReportCSVFormatter):
                 row = [basket.owner_id, basket.owner.get_full_name(),
                        basket.owner.email,
                        basket.status, basket.num_lines,
-                       basket.num_items, basket.total_incl_tax,
                        self.format_datetime(basket.date_created),
                        basket.time_since_creation]
             else:
                 row = [basket.owner_id, None, None, basket.status,
                        basket.num_lines, basket.num_items,
-                       basket.total_incl_tax,
                        self.format_datetime(basket.date_created),
                        basket.time_since_creation]
             writer.writerow(row)
@@ -58,6 +55,7 @@ class OpenBasketReportGenerator(ReportGenerator):
     """
     code = 'open_baskets'
     description = _('Open baskets')
+    date_range_field_name = 'date_created'
 
     formatters = {
         'CSV_formatter': OpenBasketReportCSVFormatter,
@@ -81,10 +79,9 @@ class SubmittedBasketReportCSVFormatter(ReportCSVFormatter):
                       _('Basket status'),
                       _('Num lines'),
                       _('Num items'),
-                      _('Value'),
                       _('Date created'),
                       _('Time between creation and submission'),
-                     ]
+                      ]
         writer.writerow(header_row)
 
         for basket in baskets:
@@ -93,7 +90,6 @@ class SubmittedBasketReportCSVFormatter(ReportCSVFormatter):
                    basket.status,
                    basket.num_lines,
                    basket.num_items,
-                   basket.total_incl_tax,
                    self.format_datetime(basket.date_created),
                    basket.time_before_submit]
             writer.writerow(row)
@@ -104,7 +100,8 @@ class SubmittedBasketReportCSVFormatter(ReportCSVFormatter):
 
 
 class SubmittedBasketReportHTMLFormatter(ReportHTMLFormatter):
-    filename_template = 'dashboard/reports/partials/submitted_basket_report.html'
+    filename_template = 'dashboard/reports/partials/' \
+        'submitted_basket_report.html'
 
 
 class SubmittedBasketReportGenerator(ReportGenerator):
@@ -113,6 +110,7 @@ class SubmittedBasketReportGenerator(ReportGenerator):
     """
     code = 'submitted_baskets'
     description = _('Submitted baskets')
+    date_range_field_name = 'date_submitted'
 
     formatters = {
         'CSV_formatter': SubmittedBasketReportCSVFormatter,

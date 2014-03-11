@@ -106,6 +106,6 @@ class TestCategoryDashboard(WebTestCase):
         dashboard_index = self.app.get(reverse('dashboard:index'),
                                        user=self.staff)
         category_index = dashboard_index.click("Categories")
-        category_add = category_index.click("New category")
+        category_add = category_index.click("Create new category")
         response = category_add.form.submit()
         self.assertEqual(200, response.status_code)

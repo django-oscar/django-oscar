@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.db.models import get_model
+from oscar.core.loading import get_model
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 Condition = get_model('offer', 'Condition')
@@ -16,7 +16,8 @@ class BenefitAdmin(admin.ModelAdmin):
 
 
 class ConditionalOfferAdmin(admin.ModelAdmin):
-    list_display = ('name', 'offer_type', 'start_datetime', 'end_datetime', 'condition', 'benefit', 'total_discount')
+    list_display = ('name', 'offer_type', 'start_datetime', 'end_datetime',
+                    'condition', 'benefit', 'total_discount')
     list_filter = ('offer_type',)
     readonly_fields = ('total_discount', 'num_orders')
     fieldsets = (

@@ -2,12 +2,13 @@ import datetime
 
 from django.contrib import messages
 from django.core.urlresolvers import reverse
-from django.db.models.loading import get_model
+from oscar.core.loading import get_model
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import (ListView, FormView, DetailView, DeleteView)
 
 from oscar.core.loading import get_class
+from oscar.views import sort_queryset
 
 VoucherForm = get_class('dashboard.vouchers.forms', 'VoucherForm')
 VoucherSearchForm = get_class('dashboard.vouchers.forms', 'VoucherSearchForm')
@@ -27,6 +28,10 @@ class VoucherListView(ListView):
 
     def get_queryset(self):
         qs = self.model.objects.all().order_by('-date_created')
+        qs = sort_queryset(qs, self.request,
+                           ['num_basket_additions', 'num_orders',
+                            'date_created'],
+                           '-date_created')
         self.description_ctx = {'main_filter': _('All vouchers'),
                                 'name_filter': '',
                                 'code_filter': ''}
@@ -43,10 +48,12 @@ class VoucherListView(ListView):
         data = self.form.cleaned_data
         if data['name']:
             qs = qs.filter(name__icontains=data['name'])
-            self.description_ctx['name_filter'] = _("with name matching '%s'") % data['name']
+            self.description_ctx['name_filter'] \
+                = _("with name matching '%s'") % data['name']
         if data['code']:
             qs = qs.filter(code=data['code'])
-            self.description_ctx['code_filter'] = _("with code '%s'") % data['code']
+            self.description_ctx['code_filter'] \
+                = _("with code '%s'") % data['code']
         if data['is_active']:
             today = datetime.date.today()
             qs = qs.filter(start_date__lte=today, end_date__gte=today)
@@ -94,8 +101,8 @@ class VoucherCreateView(FormView):
             name=name,
             code=form.cleaned_data['code'],
             usage=form.cleaned_data['usage'],
-            start_date=form.cleaned_data['start_date'],
-            end_date=form.cleaned_data['end_date'],
+            start_datetime=form.cleaned_data['start_datetime'],
+            end_datetime=form.cleaned_data['end_datetime'],
         )
         voucher.offers.add(offer)
         return HttpResponseRedirect(self.get_success_url())
@@ -112,7 +119,9 @@ class VoucherStatsView(DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super(VoucherStatsView, self).get_context_data(**kwargs)
-        ctx['discounts'] = OrderDiscount.objects.filter(voucher_id=self.object.id).order_by('-order__date_placed')
+        discounts = OrderDiscount.objects.filter(voucher_id=self.object.id)
+        discounts = discounts.order_by('-order__date_placed')
+        ctx['discounts'] = discounts
         return ctx
 
 
@@ -143,8 +152,8 @@ class VoucherUpdateView(FormView):
         return {
             'name': voucher.name,
             'code': voucher.code,
-            'start_date': voucher.start_date,
-            'end_date': voucher.end_date,
+            'start_datetime': voucher.start_datetime,
+            'end_datetime': voucher.end_datetime,
             'usage': voucher.usage,
             'benefit_type': benefit.type,
             'benefit_range': benefit.range,
@@ -156,8 +165,8 @@ class VoucherUpdateView(FormView):
         voucher.name = form.cleaned_data['name']
         voucher.code = form.cleaned_data['code']
         voucher.usage = form.cleaned_data['usage']
-        voucher.start_date = form.cleaned_data['start_date']
-        voucher.end_date = form.cleaned_data['end_date']
+        voucher.start_datetime = form.cleaned_data['start_datetime']
+        voucher.end_datetime = form.cleaned_data['end_datetime']
         voucher.save()
 
         offer = voucher.offers.all()[0]

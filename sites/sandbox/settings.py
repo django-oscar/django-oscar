@@ -1,16 +1,17 @@
 import os
+import sys
 
 # Path helper
 PROJECT_DIR = os.path.dirname(__file__)
 location = lambda x: os.path.join(
     os.path.dirname(os.path.realpath(__file__)), x)
+PY3 = sys.version_info >= (3, 0)
 
 USE_TZ = True
 
 DEBUG = True
 TEMPLATE_DEBUG = True
 SQL_DEBUG = True
-SEND_BROKEN_LINK_EMAILS = False
 
 ALLOWED_HOSTS = ['latest.oscarcommerce.com',
                  'sandbox.oscar.tangentlabs.co.uk',
@@ -33,16 +34,16 @@ DATABASES = {
         'PASSWORD': '',
         'HOST': '',
         'PORT': '',
+        'ATOMIC_REQUESTS': True
     }
 }
 
 CACHES = {
     'default': {
-        'BACKEND':
-        'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -103,7 +104,9 @@ MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
 STATIC_ROOT = location('public/static')
-STATICFILES_DIRS = ()
+STATICFILES_DIRS = (
+    location('static/'),
+)
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -138,13 +141,13 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     # Allow languages to be selected
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -154,7 +157,6 @@ MIDDLEWARE_CLASSES = (
     # URL path to print out profile details
     #'oscar.profiling.middleware.ProfileMiddleware',
 )
-
 
 ROOT_URLCONF = 'urls'
 
@@ -173,7 +175,7 @@ TEMPLATE_DIRS = (
 # more details on how to customize your logging configuration.
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
     'formatters': {
         'verbose': {
             'format': '%(levelname)s %(asctime)s %(module)s %(message)s',
@@ -228,6 +230,7 @@ LOGGING = {
         },
     },
     'loggers': {
+        # Django loggers
         'django': {
             'handlers': ['null'],
             'propagate': True,
@@ -238,9 +241,15 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': False,
         },
+        'django.db.backends': {
+            'handlers': ['null'],
+            'propagate': False,
+            'level': 'DEBUG',
+        },
+        # Oscar core loggers
         'oscar.checkout': {
             'handlers': ['console', 'checkout_file'],
-            'propagate': True,
+            'propagate': False,
             'level': 'INFO',
         },
         'oscar.catalogue.import': {
@@ -248,8 +257,20 @@ LOGGING = {
             'propagate': False,
             'level': 'INFO',
         },
+        'oscar.alerts': {
+            'handlers': ['null'],
+            'propagate': False,
+            'level': 'INFO',
+        },
+        # Sandbox logging
         'gateway': {
             'handlers': ['gateway_file'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+        # Third party
+        'south': {
+            'handlers': ['null'],
             'propagate': True,
             'level': 'INFO',
         },
@@ -258,12 +279,7 @@ LOGGING = {
             'propagate': True,
             'level': 'INFO',
         },
-        'django.db.backends': {
-            'handlers': ['null'],
-            'propagate': False,
-            'level': 'DEBUG',
-        },
-        # suppress output of this debug toolbar panel
+        # Suppress output of this debug toolbar panel
         'template_timings_panel': {
             'handlers': ['null'],
             'level': 'DEBUG',
@@ -285,7 +301,6 @@ INSTALLED_APPS = [
     'django_extensions',
     # Debug toolbar + extensions
     'debug_toolbar',
-    'cache_panel',
     'template_timings_panel',
     'south',
     'rosetta',          # For i18n testing
@@ -302,7 +317,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-LOGIN_REDIRECT_URL = '/accounts/'
+LOGIN_REDIRECT_URL = '/'
 APPEND_SLASH = True
 
 # Haystack settings
@@ -317,32 +332,33 @@ HAYSTACK_CONNECTIONS = {
 # Debug Toolbar
 # =============
 
-INTERNAL_IPS = ('127.0.0.1',)
+# Implicit setup can often lead to problems with circular imports, so we
+# explicitly wire up the toolbar
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
+DEBUG_TOOLBAR_PANELS = [
+    'debug_toolbar.panels.versions.VersionsPanel',
+    'debug_toolbar.panels.timer.TimerPanel',
+    'debug_toolbar.panels.settings.SettingsPanel',
+    'debug_toolbar.panels.headers.HeadersPanel',
+    'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    'template_timings_panel.panels.TemplateTimings.TemplateTimings',
+    'debug_toolbar.panels.cache.CachePanel',
+    'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.logging.LoggingPanel',
+    'debug_toolbar.panels.redirects.RedirectsPanel',
+]
+INTERNAL_IPS = ['127.0.0.1', '::1']
 
+if PY3:
+    # Template timings panel doesn't work with Python 3 atm
+    # https://github.com/orf/django-debug-toolbar-template-timings/issues/18
+    INSTALLED_APPS.remove('template_timings_panel')
+    DEBUG_TOOLBAR_PANELS.remove(
+        'template_timings_panel.panels.TemplateTimings.TemplateTimings')
 
-# Allow internal IPs to see the debug toolbar.  This is just for Tangent's QA
-# department to be able to create better issues when something goes wrong.
-def is_internal(request):
-    ip_addr = request.META['REMOTE_ADDR']
-    return ip_addr in INTERNAL_IPS or ip_addr.startswith('192.168')
-
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False,
-    'SHOW_TOOLBAR_CALLBACK': is_internal
-}
-DEBUG_TOOLBAR_PANELS = (
-    'debug_toolbar.panels.version.VersionDebugPanel',
-    'debug_toolbar.panels.timer.TimerDebugPanel',
-    'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
-    'debug_toolbar.panels.headers.HeaderDebugPanel',
-    'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
-    'debug_toolbar.panels.template.TemplateDebugPanel',
-    'debug_toolbar.panels.sql.SQLDebugPanel',  # Disabled for performance
-    'debug_toolbar.panels.signals.SignalDebugPanel',
-    'debug_toolbar.panels.logger.LoggingPanel',
-    'cache_panel.panel.CacheDebugPanel',
-    #'template_timings_panel.panels.TemplateTimings.TemplateTimings',
-)
 
 # ==============
 # Oscar settings
@@ -353,11 +369,7 @@ from oscar.defaults import *
 # Meta
 # ====
 
-OSCAR_SHOP_NAME = 'Oscar Sandbox'
-OSCAR_SHOP_TAGLINE = 'e-Commerce for Django'
-
-# Enter Google Analytics ID for the tracking to be included in the templates
-#GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
+OSCAR_SHOP_TAGLINE = 'Sandbox'
 
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = True
@@ -378,6 +390,7 @@ OSCAR_ORDER_STATUS_PIPELINE = {
     'Pending': ('Being processed', 'Cancelled',),
     'Being processed': ('Processed', 'Cancelled',),
     'Cancelled': (),
+    'Processed': (),
 }
 
 
@@ -424,6 +437,14 @@ if not os.path.exists(LOG_ROOT):
 THUMBNAIL_DEBUG = True
 THUMBNAIL_KEY_PREFIX = 'oscar-sandbox'
 
+# Use a custom KV store to handle integrity error
+THUMBNAIL_KVSTORE = 'oscar.sorl_kvstore.ConcurrentKVStore'
+
+# Django 1.6 has switched to JSON serializing for security reasons, but it does not
+# serialize Models. We should resolve this by extending the
+# django/core/serializers/json.Serializer to have the `dumps` function. Also
+# in tests/config.py
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
 # Try and import local settings which can be used to override any of the above.
 try:

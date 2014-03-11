@@ -1,5 +1,5 @@
 from django.db import connection, transaction
-from django.db.models import get_model
+from oscar.core.loading import get_model
 
 ProductRecord = get_model('analytics', 'ProductRecord')
 Product = get_model('catalogue', 'Product')
@@ -25,13 +25,13 @@ class Calculator(object):
 
         # Build the "SET ..." part of the SQL statement
         weighted_sum = " + ".join(
-            ["%s*`%s`" % (weight, field) for field, weight
+            ['%s*"%s"' % (weight, field) for field, weight
              in self.weights.items()])
 
         ctx = {'table': ProductRecord._meta.db_table,
                'weighted_total': weighted_sum,
                'total_weight': sum(self.weights.values())}
-        sql = '''UPDATE `%(table)s`
+        sql = '''UPDATE "%(table)s"
                  SET score = %(weighted_total)s / %(total_weight)s''' % ctx
 
         self.logger.debug(sql)

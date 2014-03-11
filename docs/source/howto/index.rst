@@ -18,6 +18,7 @@ Customisation
     how_to_change_a_url
     how_to_customise_a_view
     how_to_configure_the_dashboard_navigation
+    how_to_customise_oscar_communications
 
 Customers
 ---------
@@ -62,6 +63,14 @@ Shipping
 
     how_to_configure_shipping
 
+Order processing
+----------------
+
+.. toctree::
+    :maxdepth: 1
+
+    how_to_set_up_order_processing
+
 Offers
 ------
 
@@ -80,10 +89,3 @@ Appearance
 
     how_to_handle_statics
 
-Complex use cases
------------------
-
-.. toctree::
-   :maxdepth: 1
-
-   multi_dealer_setup

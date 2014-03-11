@@ -1,5 +1,5 @@
 from django import template
-from django.db.models import get_model
+from oscar.core.loading import get_model
 
 from oscar.core.loading import get_class
 
@@ -58,16 +58,6 @@ class BasketFormNode(template.Node):
             initial['product_id'] = product.id
         form = self.form_class(
             request, instance=product, initial=initial)
-
-        # Check that the user has permission to add at least one product to his
-        # basket.
-        if not product.is_group:
-            is_permitted, reason = form.is_purchase_permitted(
-                request.user, product, 1)
-        else:
-            is_permitted, reason = True, ''
-        form.purchase_permitted = is_permitted
-        form.reason = reason
 
         context[self.form_var] = form
         return ''

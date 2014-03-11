@@ -1,5 +1,5 @@
 from decimal import Decimal as D
-import httplib
+from six.moves import http_client
 import datetime
 
 from django.conf import settings
@@ -10,23 +10,28 @@ from oscar.test.factories import create_product
 from oscar.core.compat import get_user_model
 from oscar.apps.basket.models import Basket
 from oscar.apps.basket import reports
+from oscar.test.basket import add_product
+from oscar.test import factories
+from oscar.apps.partner import strategy
 
 
 User = get_user_model()
 
 
-class BasketMergingTests(TestCase):
+class TestBasketMerging(TestCase):
 
     def setUp(self):
-        self.product = create_product()
+        self.product = create_product(num_in_stock=10)
         self.user_basket = Basket()
-        self.user_basket.add_product(self.product)
+        self.user_basket.strategy = strategy.Default()
+        add_product(self.user_basket, product=self.product)
         self.cookie_basket = Basket()
-        self.cookie_basket.add_product(self.product, 2)
+        self.cookie_basket.strategy = strategy.Default()
+        add_product(self.cookie_basket, quantity=2, product=self.product)
         self.user_basket.merge(self.cookie_basket, add_quantities=False)
 
     def test_cookie_basket_has_status_set(self):
-        self.assertEqual('Merged', self.cookie_basket.status)
+        self.assertEqual(Basket.MERGED, self.cookie_basket.status)
 
     def test_lines_are_moved_across(self):
         self.assertEqual(1, self.user_basket.lines.all().count())
@@ -39,7 +44,8 @@ class BasketMergingTests(TestCase):
 class AnonAddToBasketViewTests(TestCase):
 
     def setUp(self):
-        self.product = create_product(price=D('10.00'))
+        self.product = create_product(
+            price=D('10.00'), num_in_stock=10)
         url = reverse('basket:add')
         post_params = {'product_id': self.product.id,
                        'action': 'add',
@@ -51,10 +57,11 @@ class AnonAddToBasketViewTests(TestCase):
         self.assertTrue('oscar_open_basket' in self.response.cookies)
 
     def test_price_is_recorded(self):
-        basket_id = self.response.cookies['oscar_open_basket'].value.split('_')[0]
+        basket_id = self.response.cookies['oscar_open_basket'].value.split(':')[0]
         basket = Basket.objects.get(id=basket_id)
         line = basket.lines.get(product=self.product)
-        self.assertEqual(self.product.stockrecord.price_incl_tax, line.price_incl_tax)
+        stockrecord = self.product.stockrecords.all()[0]
+        self.assertEqual(stockrecord.price_excl_tax, line.price_excl_tax)
 
 
 class BasketSummaryViewTests(TestCase):
@@ -67,17 +74,17 @@ class BasketSummaryViewTests(TestCase):
         self.assertTrue('shipping_method' in self.response.context)
 
     def test_order_total_in_context(self):
-        self.assertTrue('order_total_incl_tax' in self.response.context)
+        self.assertTrue('order_total' in self.response.context)
 
     def test_view_does_not_error(self):
-        self.assertEquals(httplib.OK, self.response.status_code)
+        self.assertEqual(http_client.OK, self.response.status_code)
 
     def test_basket_in_context(self):
         self.assertTrue('basket' in self.response.context)
 
     def test_basket_is_empty(self):
         basket = self.response.context['basket']
-        self.assertEquals(0, basket.num_lines)
+        self.assertEqual(0, basket.num_lines)
 
 
 class BasketThresholdTest(TestCase):
@@ -90,7 +97,7 @@ class BasketThresholdTest(TestCase):
         settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = self._old_threshold
 
     def test_adding_more_than_threshold_raises(self):
-        dummy_product = create_product(price=D('10.00'))
+        dummy_product = create_product(price=D('10.00'), num_in_stock=10)
         url = reverse('basket:add')
         post_params = {'product_id': dummy_product.id,
                        'action': 'add',
@@ -132,14 +139,17 @@ class SavedBasketTests(TestCase):
         user = User.objects.create_user(username='test', password='pass',
                                         email='test@example.com')
         client = Client()
-        client.login(username=user.username, password='pass')
+        client.login(email=user.email, password='pass')
 
         product = create_product(price=D('10.00'), num_in_stock=2)
-        basket, created = Basket.open.get_or_create(owner=user)
-        basket.add_product(product=product, quantity=1)
+        basket = factories.create_basket(empty=True)
+        basket.owner = user
+        basket.save()
+        add_product(basket, product=product)
 
         saved_basket, created = Basket.saved.get_or_create(owner=user)
-        saved_basket.add_product(product=product, quantity=1)
+        saved_basket.strategy = basket.strategy
+        add_product(saved_basket, product=product)
 
         response = client.get(reverse('basket:summary'))
         saved_formset = response.context['saved_formset']
@@ -153,21 +163,22 @@ class SavedBasketTests(TestCase):
             saved_form.add_prefix('move_to_basket'): True,
         }
         response = client.post(reverse('basket:saved'), data=data)
-        self.assertEqual(Basket.open.get(id=basket.id).lines.get(product=product).quantity, 2)
+        self.assertEqual(Basket.open.get(id=basket.id).lines.get(
+            product=product).quantity, 2)
         self.assertRedirects(response, reverse('basket:summary'))
 
     def test_moving_from_saved_basket_more_than_stocklevel_raises(self):
         user = User.objects.create_user(username='test', password='pass',
                                         email='test@example.com')
         client = Client()
-        client.login(username=user.username, password='pass')
+        client.login(email=user.email, password='pass')
 
         product = create_product(price=D('10.00'), num_in_stock=1)
         basket, created = Basket.open.get_or_create(owner=user)
-        basket.add_product(product=product, quantity=1)
+        add_product(basket, product=product)
 
         saved_basket, created = Basket.saved.get_or_create(owner=user)
-        saved_basket.add_product(product=product, quantity=1)
+        add_product(saved_basket, product=product)
 
         response = client.get(reverse('basket:summary'))
         saved_formset = response.context['saved_formset']

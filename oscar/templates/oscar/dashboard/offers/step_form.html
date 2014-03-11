@@ -1,11 +1,10 @@
 {% extends 'dashboard/layout.html' %}
 
-{% load url from future %}
-
 {% load currency_filters %}
+
 {% load i18n %}
 
-{% block body_class %}create-page{% endblock %}
+{% block body_class %}{{ block.super }} create-page{% endblock %}
 
 {% block title %}
     {% if offer.pk %}
@@ -28,7 +27,7 @@
     </li>
     {% if offer.pk %}
     <li>
-        <a href="{% url 'dashboard:offer-detail' offer.pk %}">{{ offer.name }}</a>
+        <a href="{% url 'dashboard:offer-detail' pk=offer.pk %}">{{ offer.name }}</a>
         <span class="divider">/</span>
     </li>
     {% else %}
@@ -69,12 +68,18 @@
                     {% endblock %}
                     {% block form_extradata %}{% endblock %}
                 </div>
+
                 {% block form_actions %}
 
                     <div class="fixed-actions-group">
                         <div class="form-actions">
                             <div class="pull-right">
+                            {% block form_actions_buttons %}
                                 <button class="btn btn-primary" type="submit">{% block submittext %}{% trans "Continue" %}{% endblock %}</button>
+                                {% if offer %}{# When editing offer, show saving button #}
+                                    <button class="btn" name="save" type="submit">{% trans "Save changes" %}</button>
+                                {% endif %}
+                            {% endblock %}
                             </div>
                             <a class="btn" href="{% url 'dashboard:offer-list' %}">{% trans "cancel" %}</a>
                         </div>

@@ -1,23 +1,26 @@
-from django.db.models import Q, get_model
+from django.db.models import Q
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.views.generic import ListView, DetailView, DeleteView, UpdateView
+from django.views.generic import ListView, DetailView, DeleteView, \
+    UpdateView, FormView
+from django.views.generic.detail import SingleObjectMixin
 from oscar.apps.customer.utils import normalise_email
 
 from oscar.views.generic import BulkEditMixin
 from oscar.core.compat import get_user_model
-from oscar.core.loading import get_classes
+from oscar.core.loading import get_class, get_classes, get_model
 
 UserSearchForm, ProductAlertSearchForm, ProductAlertUpdateForm = get_classes(
     'dashboard.users.forms', ('UserSearchForm', 'ProductAlertSearchForm',
                               'ProductAlertUpdateForm'))
+PasswordResetForm = get_class('customer.forms', 'PasswordResetForm')
 ProductAlert = get_model('customer', 'ProductAlert')
 User = get_user_model()
 
 
-class IndexView(ListView, BulkEditMixin):
+class IndexView(BulkEditMixin, ListView):
     template_name = 'dashboard/users/index.html'
     paginate_by = 25
     model = User
@@ -26,6 +29,7 @@ class IndexView(ListView, BulkEditMixin):
     form_class = UserSearchForm
     desc_template = _('%(main_filter)s %(email_filter)s %(name_filter)s')
     description = ''
+    context_object_name = 'user_list'
 
     def get_queryset(self):
         queryset = self.model.objects.all().order_by('-date_joined')
@@ -49,17 +53,21 @@ class IndexView(ListView, BulkEditMixin):
         if data['email']:
             email = normalise_email(data['email'])
             queryset = queryset.filter(email__startswith=email)
-            self.desc_ctx['email_filter'] = _(" with email matching '%s'") % email
+            self.desc_ctx['email_filter'] \
+                = _(" with email matching '%s'") % email
         if data['name']:
-            # If the value is two words, then assume they are first name and last name
+            # If the value is two words, then assume they are first name and
+            # last name
             parts = data['name'].split()
             if len(parts) == 2:
-                queryset = queryset.filter(Q(first_name__istartswith=parts[0]) |
-                                           Q(last_name__istartswith=parts[1])).distinct()
+                condition = Q(first_name__istartswith=parts[0]) \
+                    | Q(last_name__istartswith=parts[1])
             else:
-                queryset = queryset.filter(Q(first_name__istartswith=data['name']) |
-                                           Q(last_name__istartswith=data['name'])).distinct()
-            self.desc_ctx['name_filter'] = _(" with name matching '%s'") % data['name']
+                condition = Q(first_name__istartswith=data['name']) \
+                    | Q(last_name__istartswith=data['name'])
+            queryset = queryset.filter(condition).distinct()
+            self.desc_ctx['name_filter'] \
+                = _(" with name matching '%s'") % data['name']
 
         return queryset
 
@@ -90,6 +98,33 @@ class UserDetailView(DetailView):
     context_object_name = 'customer'
 
 
+class PasswordResetView(SingleObjectMixin, FormView):
+    form_class = PasswordResetForm
+    http_method_names = ['post']
+    model = User
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super(PasswordResetView, self).post(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super(PasswordResetView, self).get_form_kwargs()
+        kwargs['data'] = {'email': self.object.email}
+        return kwargs
+
+    def form_valid(self, form):
+        # The PasswordResetForm's save method sends the reset email
+        form.save(request=self.request)
+        return super(PasswordResetView, self).form_valid(form)
+
+    def get_success_url(self):
+        messages.success(
+            self.request, _("A password reset email has been sent"))
+        return reverse(
+            'dashboard:user-detail', kwargs={'pk': self.object.id}
+        )
+
+
 class ProductAlertListView(ListView):
     model = ProductAlert
     form_class = ProductAlertSearchForm
@@ -111,7 +146,8 @@ class ProductAlertListView(ListView):
 
         if data['status']:
             queryset = queryset.filter(status=data['status']).distinct()
-            self.description += _(" with status matching '%s'") % data['status']
+            self.description \
+                += _(" with status matching '%s'") % data['status']
 
         if data['name']:
             # If the value is two words, then assume they are first name and
@@ -127,14 +163,16 @@ class ProductAlertListView(ListView):
                     Q(user__first_name__istartswith=parts[0]) |
                     Q(user__last_name__istartswith=parts[-1])
                 ).distinct()
-            self.description += _(" with customer name matching '%s'") % data['name']
+            self.description \
+                += _(" with customer name matching '%s'") % data['name']
 
         if data['email']:
             queryset = queryset.filter(
                 Q(user__email__icontains=data['email']) |
                 Q(email__icontains=data['email'])
             )
-            self.description += _(" with customer email matching '%s'") % data['email']
+            self.description \
+                += _(" with customer email matching '%s'") % data['email']
 
         return queryset
 

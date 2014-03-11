@@ -2,14 +2,15 @@ from itertools import chain
 from decimal import Decimal as D
 import hashlib
 
-from django.db import models
-from django.utils import timezone
-from oscar.core.compat import AUTH_USER_MODEL
-from oscar.core.utils import slugify
-from django.utils.translation import ugettext_lazy as _
-from django.db.models import Sum
 from django.conf import settings
+from django.db import models
+from django.db.models import Sum
+from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
+from django.utils.datastructures import SortedDict
 
+from oscar.core.compat import AUTH_USER_MODEL
+from oscar.models.fields import AutoSlugField
 from . import exceptions
 
 
@@ -18,20 +19,36 @@ class AbstractOrder(models.Model):
     The main order model
     """
     number = models.CharField(_("Order number"), max_length=128, db_index=True)
+
     # We track the site that each order is placed within
-    site = models.ForeignKey('sites.Site', verbose_name=_("Site"))
-    basket_id = models.PositiveIntegerField(_("Basket ID"), null=True, blank=True)
-    # Orders can be anonymous so we don't always have a customer ID
-    user = models.ForeignKey(AUTH_USER_MODEL, related_name='orders', null=True, blank=True, verbose_name=_("User"))
+    site = models.ForeignKey('sites.Site', verbose_name=_("Site"), null=True,
+                             on_delete=models.SET_NULL)
+
+    basket = models.ForeignKey(
+        'basket.Basket', verbose_name=_("Basket"),
+        null=True, blank=True, on_delete=models.SET_NULL)
+
+    # Orders can be placed without the user authenticating so we don't always
+    # have a customer ID.
+    user = models.ForeignKey(
+        AUTH_USER_MODEL, related_name='orders', null=True, blank=True,
+        verbose_name=_("User"), on_delete=models.SET_NULL)
+
     # Billing address is not always required (eg paying by gift card)
-    billing_address = models.ForeignKey('order.BillingAddress', null=True, blank=True,
-        verbose_name=_("Billing Address"))
+    billing_address = models.ForeignKey(
+        'order.BillingAddress', null=True, blank=True,
+        verbose_name=_("Billing Address"),
+        on_delete=models.SET_NULL)
 
     # Total price looks like it could be calculated by adding up the
     # prices of the associated lines, but in some circumstances extra
     # order-level charges are added and so we need to store it separately
-    total_incl_tax = models.DecimalField(_("Order total (inc. tax)"), decimal_places=2, max_digits=12)
-    total_excl_tax = models.DecimalField(_("Order total (excl. tax)"), decimal_places=2, max_digits=12)
+    currency = models.CharField(
+        _("Currency"), max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
+    total_incl_tax = models.DecimalField(
+        _("Order total (inc. tax)"), decimal_places=2, max_digits=12)
+    total_excl_tax = models.DecimalField(
+        _("Order total (excl. tax)"), decimal_places=2, max_digits=12)
 
     # Shipping charges
     shipping_incl_tax = models.DecimalField(
@@ -41,42 +58,65 @@ class AbstractOrder(models.Model):
         _("Shipping charge (excl. tax)"), decimal_places=2, max_digits=12,
         default=0)
 
-    # Not all lines are actually shipped (such as downloads), hence shipping address
-    # is not mandatory.
+    # Not all lines are actually shipped (such as downloads), hence shipping
+    # address is not mandatory.
     shipping_address = models.ForeignKey(
         'order.ShippingAddress', null=True, blank=True,
-        verbose_name=_("Shipping Address"))
+        verbose_name=_("Shipping Address"),
+        on_delete=models.SET_NULL)
     shipping_method = models.CharField(
         _("Shipping method"), max_length=128, blank=True)
 
+    # Identifies shipping code
+    shipping_code = models.CharField(blank=True, max_length=128, default="")
+
     # Use this field to indicate that an order is on hold / awaiting payment
     status = models.CharField(_("Status"), max_length=100, blank=True)
-
     guest_email = models.EmailField(_("Guest email address"), blank=True)
 
     # Index added to this field for reporting
     date_placed = models.DateTimeField(auto_now_add=True, db_index=True)
 
-    # Dict of available status changes
-    pipeline = getattr(settings,  'OSCAR_ORDER_STATUS_PIPELINE', {})
-    cascade = getattr(settings,  'OSCAR_ORDER_STATUS_CASCADE', {})
+    #: Order status pipeline.  This should be a dict where each (key, value) #:
+    #: corresponds to a status and a list of possible statuses that can follow
+    #: that one.
+    pipeline = getattr(settings, 'OSCAR_ORDER_STATUS_PIPELINE', {})
+
+    #: Order status cascade pipeline.  This should be a dict where each (key,
+    #: value) pair corresponds to an *order* status and the corresponding
+    #: *line* status that needs to be set when the order is set to the new
+    #: status
+    cascade = getattr(settings, 'OSCAR_ORDER_STATUS_CASCADE', {})
 
     @classmethod
     def all_statuses(cls):
+        """
+        Return all possible statuses for an order
+        """
         return cls.pipeline.keys()
 
     def available_statuses(self):
+        """
+        Return all possible statuses that this order can move to
+        """
         return self.pipeline.get(self.status, ())
 
     def set_status(self, new_status):
+        """
+        Set a new status for this order.
+
+        If the requested status is not valid, then ``InvalidOrderStatus`` is
+        raised.
+        """
         if new_status == self.status:
             return
         if new_status not in self.available_statuses():
-            raise exceptions.InvalidOrderStatus(_("'%(new_status)s' is not a valid status for order %(number)s "
-                                       "(current status: '%(status)s')") % {
-                                            'new_status': new_status,
-                                            'number': self.number,
-                                            'status': self.status})
+            raise exceptions.InvalidOrderStatus(
+                _("'%(new_status)s' is not a valid status for order %(number)s"
+                  " (current status: '%(status)s')")
+                % {'new_status': new_status,
+                   'number': self.number,
+                   'status': self.status})
         self.status = new_status
         if new_status in self.cascade:
             for line in self.lines.all():
@@ -87,7 +127,10 @@ class AbstractOrder(models.Model):
 
     @property
     def is_anonymous(self):
-        return self.user is None
+        # It's possible for an order to be placed by a customer who then
+        # deletes their profile.  Hence, we need to check that a guest email is
+        # set.
+        return self.user is None and bool(self.guest_email)
 
     @property
     def basket_total_before_discounts_incl_tax(self):
@@ -169,6 +212,10 @@ class AbstractOrder(models.Model):
         return num_items
 
     @property
+    def shipping_tax(self):
+        return self.shipping_incl_tax - self.shipping_excl_tax
+
+    @property
     def shipping_status(self):
         events = self.shipping_events.all()
         if not len(events):
@@ -180,7 +227,8 @@ class AbstractOrder(models.Model):
             event_name = event.event_type.name
             if event_name not in map:
                 map[event_name] = []
-            map[event_name] = list(chain(map[event_name], event.line_quantities.all()))
+            map[event_name] = list(chain(map[event_name],
+                                         event.line_quantities.all()))
 
         # Determine last complete event
         status = _("In progress")
@@ -217,10 +265,7 @@ class AbstractOrder(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ['-date_placed',]
-        permissions = (
-            ("can_view", _("Can view orders (eg for reporting)")),
-        )
+        ordering = ['-date_placed']
         verbose_name = _("Order")
         verbose_name_plural = _("Orders")
 
@@ -228,7 +273,9 @@ class AbstractOrder(models.Model):
         return u"#%s" % (self.number,)
 
     def verification_hash(self):
-        return hashlib.md5('%s%s' % (self.number, settings.SECRET_KEY)).hexdigest()
+        key = '%s%s' % (self.number, settings.SECRET_KEY)
+        hash = hashlib.md5(key.encode('utf8'))
+        return hash.hexdigest()
 
     @property
     def email(self):
@@ -261,11 +308,13 @@ class AbstractOrderNote(models.Model):
     This are often used for audit purposes too.  IE, whenever an admin
     makes a change to an order, we create a note to record what happened.
     """
-    order = models.ForeignKey('order.Order', related_name="notes", verbose_name=_("Order"))
+    order = models.ForeignKey('order.Order', related_name="notes",
+                              verbose_name=_("Order"))
 
     # These are sometimes programatically generated so don't need a
     # user everytime
-    user = models.ForeignKey(AUTH_USER_MODEL, null=True, verbose_name=_("User"))
+    user = models.ForeignKey(AUTH_USER_MODEL, null=True,
+                             verbose_name=_("User"))
 
     # We allow notes to be classified although this isn't always needed
     INFO, WARNING, ERROR, SYSTEM = 'Info', 'Warning', 'Error', 'System'
@@ -312,7 +361,8 @@ class AbstractCommunicationEvent(models.Model):
         ordering = ['-date_created']
 
     def __unicode__(self):
-        return _("'%(type)s' event for order #%(number)s") % {'type': self.event_type.name, 'number': self.order.number}
+        return _("'%(type)s' event for order #%(number)s") \
+            % {'type': self.event_type.name, 'number': self.order.number}
 
 
 # LINES
@@ -328,13 +378,19 @@ class AbstractLine(models.Model):
     order = models.ForeignKey(
         'order.Order', related_name='lines', verbose_name=_("Order"))
 
+    #: We keep a link to the stockrecord used for this line which allows us to
+    #: update stocklevels when it ships
+    stockrecord = models.ForeignKey(
+        'partner.StockRecord', on_delete=models.SET_NULL, blank=True,
+        null=True, verbose_name=_("Stock record"))
     # We store the partner, their SKU and the title for cases where the product
     # has been deleted from the catalogue.  We also store the partner name in
     # case the partner gets deleted at a later date.
     partner = models.ForeignKey(
         'partner.Partner', related_name='order_lines', blank=True, null=True,
         on_delete=models.SET_NULL, verbose_name=_("Partner"))
-    partner_name = models.CharField(_("Partner name"), max_length=128)
+    partner_name = models.CharField(
+        _("Partner name"), max_length=128, blank=True)
     partner_sku = models.CharField(_("Partner SKU"), max_length=128)
 
     title = models.CharField(_("Title"), max_length=255)
@@ -398,7 +454,10 @@ class AbstractLine(models.Model):
     est_dispatch_date = models.DateField(
         _("Estimated Dispatch Date"), blank=True, null=True)
 
-    pipeline = getattr(settings,  'OSCAR_LINE_STATUS_PIPELINE', {})
+    #: Order status pipeline.  This should be a dict where each (key, value)
+    #: corresponds to a status and the possible statuses that can follow that
+    #: one.
+    pipeline = getattr(settings, 'OSCAR_LINE_STATUS_PIPELINE', {})
 
     class Meta:
         abstract = True
@@ -415,17 +474,31 @@ class AbstractLine(models.Model):
 
     @classmethod
     def all_statuses(cls):
+        """
+        Return all possible statuses for an order line
+        """
         return cls.pipeline.keys()
 
     def available_statuses(self):
+        """
+        Return all possible statuses that this order line can move to
+        """
         return self.pipeline.get(self.status, ())
 
     def set_status(self, new_status):
+        """
+        Set a new status for this line
+
+        If the requested status is not valid, then ``InvalidLineStatus`` is
+        raised.
+        """
         if new_status == self.status:
             return
         if new_status not in self.available_statuses():
-            raise exceptions.InvalidLineStatus(_("'%(new_status)s' is not a valid status (current status: '%(status)s')") % {
-                                    'new_status': new_status, 'status': self.status})
+            raise exceptions.InvalidLineStatus(
+                _("'%(new_status)s' is not a valid status (current status:"
+                  " '%(status)s')")
+                % {'new_status': new_status, 'status': self.status})
         self.status = new_status
         self.save()
     set_status.alters_data = True
@@ -453,11 +526,13 @@ class AbstractLine(models.Model):
 
     @property
     def discount_incl_tax(self):
-        return self.line_price_before_discounts_incl_tax - self.line_price_incl_tax
+        return self.line_price_before_discounts_incl_tax \
+            - self.line_price_incl_tax
 
     @property
     def discount_excl_tax(self):
-        return self.line_price_before_discounts_excl_tax - self.line_price_excl_tax
+        return self.line_price_before_discounts_excl_tax \
+            - self.line_price_excl_tax
 
     @property
     def line_price_tax(self):
@@ -480,7 +555,7 @@ class AbstractLine(models.Model):
 
         events = []
         last_complete_event_name = None
-        for event_dict in status_map.values():
+        for event_dict in reversed(list(status_map.values())):
             if event_dict['quantity'] == self.quantity:
                 events.append(event_dict['name'])
                 last_complete_event_name = event_dict['name']
@@ -489,7 +564,7 @@ class AbstractLine(models.Model):
                     event_dict['name'], event_dict['quantity'],
                     self.quantity))
 
-        if last_complete_event_name == status_map.values()[-1]['name']:
+        if last_complete_event_name == list(status_map.values())[0]['name']:
             return last_complete_event_name
 
         return ', '.join(events)
@@ -513,8 +588,7 @@ class AbstractLine(models.Model):
         event of the passed type.
         """
         result = self.shipping_event_quantities.filter(
-            event__event_type=event_type).aggregate(
-                Sum('quantity'))
+            event__event_type=event_type).aggregate(Sum('quantity'))
         if result['quantity__sum'] is None:
             return 0
         else:
@@ -533,7 +607,7 @@ class AbstractLine(models.Model):
         """
         Returns a dict of shipping events that this line has been through
         """
-        status_map = {}
+        status_map = SortedDict()
         for event in self.shipping_events.all():
             event_type = event.event_type
             event_name = event_type.name
@@ -541,9 +615,11 @@ class AbstractLine(models.Model):
             if event_name in status_map:
                 status_map[event_name]['quantity'] += event_quantity
             else:
-                status_map[event_name] = {'event_type': event_type,
-                                          'name': event_name,
-                                          'quantity': event_quantity}
+                status_map[event_name] = {
+                    'event_type': event_type,
+                    'name': event_name,
+                    'quantity': event_quantity
+                }
         return status_map
 
     # Payment event helpers
@@ -561,8 +637,7 @@ class AbstractLine(models.Model):
         event of the passed type.
         """
         result = self.payment_event_quantities.filter(
-            event__event_type=event_type).aggregate(
-                Sum('quantity'))
+            event__event_type=event_type).aggregate(Sum('quantity'))
         if result['quantity__sum'] is None:
             return 0
         else:
@@ -572,25 +647,24 @@ class AbstractLine(models.Model):
     def is_product_deleted(self):
         return self.product is None
 
-    def is_available_to_reorder(self, basket, user):
+    def is_available_to_reorder(self, basket, strategy):
         """
-        Test if this line can be re-ordered by the passed user, using the
-        passed basket.
+        Test if this line can be re-ordered using the passed strategy and
+        basket
         """
         if not self.product:
             return False, (_("'%(title)s' is no longer available") %
                            {'title': self.title})
 
-        Line = models.get_model('basket', 'Line')
         try:
             basket_line = basket.lines.get(product=self.product)
-        except Line.DoesNotExist:
+        except basket.lines.model.DoesNotExist:
             desired_qty = self.quantity
         else:
             desired_qty = basket_line.quantity + self.quantity
 
-        is_available, reason = self.product.is_purchase_permitted(
-            user=user,
+        result = strategy.fetch_for_product(self.product)
+        is_available, reason = result.availability.is_purchase_permitted(
             quantity=desired_qty)
         if not is_available:
             return False, reason
@@ -664,19 +738,14 @@ class AbstractPaymentEventType(models.Model):
     These are effectively the transaction types.
     """
     name = models.CharField(_("Name"), max_length=128, unique=True)
-    code = models.SlugField(_("Code"), max_length=128, unique=True)
-    sequence_number = models.PositiveIntegerField(_("Sequence"), default=0)
-
-    def save(self, *args, **kwargs):
-        if not self.code:
-            self.code = slugify(self.name)
-        super(AbstractPaymentEventType, self).save(*args, **kwargs)
+    code = AutoSlugField(_("Code"), max_length=128, unique=True,
+                         populate_from='name')
 
     class Meta:
         abstract = True
         verbose_name = _("Payment Event Type")
         verbose_name_plural = _("Payment Event Types")
-        ordering = ('sequence_number',)
+        ordering = ('name', )
 
     def __unicode__(self):
         return self.name
@@ -822,39 +891,18 @@ class AbstractShippingEventType(models.Model):
     """
     # Name is the friendly description of an event
     name = models.CharField(_("Name"), max_length=255, unique=True)
-
     # Code is used in forms
-    code = models.SlugField(_("Code"), max_length=128, unique=True)
-    is_required = models.BooleanField(
-        _("Is Required"), default=False,
-        help_text=_("This event must be passed before the next "
-                    "shipping event can take place"))
-
-    # The normal order in which these shipping events take place
-    sequence_number = models.PositiveIntegerField(_("Sequence"), default=0)
-
-    def save(self, *args, **kwargs):
-        if not self.code:
-            self.code = slugify(self.name)
-        super(AbstractShippingEventType, self).save(*args, **kwargs)
+    code = AutoSlugField(_("Code"), max_length=128, unique=True,
+                         populate_from='name')
 
     class Meta:
         abstract = True
         verbose_name = _("Shipping Event Type")
         verbose_name_plural = _("Shipping Event Types")
-        ordering = ('sequence_number',)
+        ordering = ('name', )
 
     def __unicode__(self):
         return self.name
-
-    def get_prerequisites(self):
-        """
-        Return event types that must be complete before this one
-        """
-        return self.__class__._default_manager.filter(
-            is_required=True,
-            sequence_number__lt=self.sequence_number).order_by(
-                'sequence_number')
 
 
 # DISCOUNTS

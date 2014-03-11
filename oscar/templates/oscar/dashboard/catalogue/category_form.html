@@ -1,9 +1,8 @@
 {% extends 'dashboard/layout.html' %}
-{% load url from future %}
 {% load category_tags %}
 {% load i18n %}
 
-{% block body_class %}create-page catalogue{% endblock %}
+{% block body_class %}{{ block.super }} create-page catalogue{% endblock %}
 
 {% block title %}
     {{ title }} | {% trans "Category management" %} | {{ block.super }}

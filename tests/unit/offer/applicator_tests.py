@@ -11,7 +11,7 @@ class TestOfferApplicationsWrapper(TestCase):
     def setUp(self):
         offer = models.ConditionalOffer()
         self.applications = OfferApplications()
-        for i in xrange(4):
+        for i in range(4):
             self.applications.add(offer, models.BasketDiscount(D('5.00')))
 
     def test_is_iterable(self):

@@ -1,7 +1,4 @@
 {% extends 'dashboard/layout.html' %}
-
-{% load url from future %}
-{% load currency_filters %}
 {% load i18n %}
 
 {% block title %}
@@ -21,7 +18,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:order-detail' line.order.number %}">#{{ line.order.number }}</a>
+            <a href="{% url 'dashboard:order-detail' number=line.order.number %}">#{{ line.order.number }}</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{% blocktrans with id=line.id %}Line #{{ id }}{% endblocktrans %}</li>
@@ -50,7 +47,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>{% trans "Product class" %}</th><td>{{ line.product.product_class }}</td>
+                    <th>{% trans "Product Type" %}</th><td>{{ line.product.product_class }}</td>
                 </tr>
                 <tr>
                     <th>{% trans "UPC" %}</th><td>{{ line.upc|default:"-" }}</td>
@@ -123,6 +120,10 @@
                             <td>{{ state.event_type.name }}</td>
                             <td>{{ state.quantity }}</td>
                         </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="2">{% trans "No shipping events have occurred." %}</td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -149,6 +150,10 @@
                                 <td>{{ event.notes }}</td>
                                 <td>{{ event.date_created }}</td>
                             {% endwith %}
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4">{% trans "No shipping events have occurred." %}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -177,7 +182,7 @@
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="3">{% trans "No payment events have occurred" %}</td>
+                            <td colspan="3">{% trans "No payment events have occurred." %}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

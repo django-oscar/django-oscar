@@ -3,7 +3,7 @@ import os
 # Use 'final' as the 4th element to indicate
 # a full release
 
-VERSION = (0, 6, 0, 'alpha', 0)
+VERSION = (0, 7, 0, 'dev')
 
 
 def get_short_version():
@@ -12,13 +12,13 @@ def get_short_version():
 
 def get_version():
     version = '%s.%s' % (VERSION[0], VERSION[1])
+    # Append 3rd digit if > 0
     if VERSION[2]:
-        # Append 3rd digit if > 0
         version = '%s.%s' % (version, VERSION[2])
-    if VERSION[3:] == ('alpha', 0):
-        version = '%s pre-alpha' % version
     elif VERSION[3] != 'final':
-        version = '%s %s %s' % (version, VERSION[3], VERSION[4])
+        version = '%s %s' % (version, VERSION[3])
+        if len(VERSION) == 5:
+            version = '%s %s' % (version, VERSION[4])
     return version
 
 
@@ -32,20 +32,21 @@ OSCAR_MAIN_TEMPLATE_DIR = os.path.join(
 OSCAR_CORE_APPS = [
     'oscar',
     'oscar.apps.analytics',
-    'oscar.apps.order',
     'oscar.apps.checkout',
+    'oscar.apps.address',
     'oscar.apps.shipping',
     'oscar.apps.catalogue',
     'oscar.apps.catalogue.reviews',
+    'oscar.apps.partner',
     'oscar.apps.basket',
     'oscar.apps.payment',
     'oscar.apps.offer',
-    'oscar.apps.address',
-    'oscar.apps.partner',
+    'oscar.apps.order',
     'oscar.apps.customer',
     'oscar.apps.promotions',
     'oscar.apps.search',
     'oscar.apps.voucher',
+    'oscar.apps.wishlists',
     'oscar.apps.dashboard',
     'oscar.apps.dashboard.reports',
     'oscar.apps.dashboard.users',
@@ -54,7 +55,9 @@ OSCAR_CORE_APPS = [
     'oscar.apps.dashboard.catalogue',
     'oscar.apps.dashboard.offers',
     'oscar.apps.dashboard.partners',
+    'oscar.apps.dashboard.pages',
     'oscar.apps.dashboard.ranges',
+    'oscar.apps.dashboard.reviews',
     'oscar.apps.dashboard.vouchers',
     'oscar.apps.dashboard.communications',
     # 3rd-party apps that oscar depends on

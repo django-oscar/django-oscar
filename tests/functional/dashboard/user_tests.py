@@ -1,15 +1,19 @@
 from django.core.urlresolvers import reverse
+from django.core import mail
 from django_dynamic_fixture import get
-from oscar.test.testcases import ClientTestCase
+from django.utils.translation import ugettext_lazy as _
+
+from oscar.test.testcases import WebTestCase
 
 from oscar.apps.dashboard.users.views import IndexView
 from oscar.core.compat import get_user_model
 
+from webtest import AppError
 
 User = get_user_model()
 
 
-class IndexViewTests(ClientTestCase):
+class IndexViewTests(WebTestCase):
     is_staff = True
     active_users_ids = []
     inactive_users_ids = []
@@ -28,7 +32,7 @@ class IndexViewTests(ClientTestCase):
     def test_user_list_view(self):
         response = self.client.get(reverse('dashboard:users-index'))
         self.assertInContext(response, 'user_list')
-        self.assertEquals(len(response.context['user_list']), IndexView.paginate_by)
+        self.assertEqual(len(response.context['user_list']), IndexView.paginate_by)
 
     def test_make_active(self):
         params = {'action': 'make_active',
@@ -47,10 +51,52 @@ class IndexViewTests(ClientTestCase):
         self.assertFalse(ex_active.is_active)
 
 
-class DetailViewTests(ClientTestCase):
+class DetailViewTests(WebTestCase):
     is_staff = True
 
     def test_user_detail_view(self):
-        response = self.client.get(reverse('dashboard:user-detail', kwargs={'pk': 1} ))
+        response = self.client.get(reverse('dashboard:user-detail', kwargs={'pk': 1}))
         self.assertInContext(response, 'user')
         self.assertIsOk(response)
+
+
+class TestDetailViewForStaffUser(WebTestCase):
+    is_staff = True
+
+    def setUp(self):
+        self.customer = get(User, username='jane',
+                                  email='jane@example.org',
+                                  password='password')
+        super(TestDetailViewForStaffUser, self).setUp()
+
+    def test_password_reset_url_only_available_via_post(self):
+        try:
+            reset_url = reverse(
+                'dashboard:user-password-reset',
+                kwargs={'pk': self.customer.id}
+            )
+            self.get(reset_url)
+        except AppError as e:
+            self.assertIn('405', e.args[0])
+
+    def test_admin_can_reset_user_passwords(self):
+        customer_page_url = reverse(
+            'dashboard:user-detail',
+            kwargs={'pk': self.customer.id}
+        )
+        customer_page = self.get(customer_page_url)
+        reset_form = customer_page.forms['password_reset_form']
+        response = reset_form.submit()
+
+        # Check that the staff user is redirected back to the customer page
+        self.assertRedirects(response, customer_page_url)
+
+        # Check that the reset email has been sent
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn("Resetting your password", mail.outbox[0].subject)
+
+        # Check that success message shows up
+        self.assertContains(
+            response.follow(),
+            _("A password reset email has been sent")
+        )

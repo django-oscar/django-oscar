@@ -1,3 +1,4 @@
+import six
 from django.contrib import messages
 
 
@@ -31,11 +32,11 @@ class FlashMessages(object):
     def success(self, message):
         self.add_message(messages.SUCCESS, message)
 
-    def to_json(self):
+    def as_dict(self):
         payload = {}
         for level, msgs in self.msgs.items():
             tag = messages.DEFAULT_TAGS.get(level, 'info')
-            payload[tag] = map(unicode, msgs)
+            payload[tag] = [six.text_type(msg) for msg in msgs]
         return payload
 
     def apply_to_request(self, request):

@@ -1,9 +1,7 @@
 {% extends 'dashboard/layout.html' %}
-{% load url from future %}
-{% load currency_filters %}
 {% load i18n %}
 
-{% block body_class %}content-blocks{% endblock %}
+{% block body_class %}{{ block.super }} content-blocks{% endblock %}
 
 {% block title %}
     {% trans "Content blocks" %} | {{ block.super }}
@@ -51,7 +49,7 @@
             <tbody>
                 {% for promotion in promotions %}
                     <tr>
-                        <td><a href="{% url 'dashboard:promotion-update' promotion.code promotion.id %}">{{ promotion.name }}</a></td>
+                        <td><a href="{% url 'dashboard:promotion-update' ptype=promotion.code pk=promotion.id %}">{{ promotion.name }}</a></td>
                         <td>{{ promotion.type }}</td>
                         <td>{{ promotion.num_times_used }}</td>
                         <td>{{ promotion.date_created }}</td>
@@ -63,8 +61,8 @@
                                         <span class="caret"></span>
                                     </a>
                                     <ul class="dropdown-menu pull-right">
-                                        <li><a href="{% url 'dashboard:promotion-update' promotion.code promotion.id %}">{% trans "Edit" %}</a></li>
-                                        <li><a href="{% url 'dashboard:promotion-delete' promotion.code promotion.id %}">{% trans "Delete" %}</a></li>
+                                        <li><a href="{% url 'dashboard:promotion-update' ptype=promotion.code pk=promotion.id %}">{% trans "Edit" %}</a></li>
+                                        <li><a href="{% url 'dashboard:promotion-delete' ptype=promotion.code pk=promotion.id %}">{% trans "Delete" %}</a></li>
                                     </ul>
                                 </div>
                             </div>

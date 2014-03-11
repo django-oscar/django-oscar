@@ -1,6 +1,6 @@
 from decimal import Decimal as D
 
-from django.db.models.loading import get_model
+from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.order import exceptions
@@ -48,7 +48,7 @@ class EventHandler(object):
 
         These should normally be called as part of handling a shipping event.
         It is rare to call to this method directly.  It does make sense for
-        refunds though where the payment event may be unrelated to a particualr
+        refunds though where the payment event may be unrelated to a particular
         shipping event and doesn't directly correspond to a set of lines.
         """
         self.validate_payment_event(
@@ -82,19 +82,19 @@ class EventHandler(object):
             # 'is_shipping_event_permitted' and enforce the correct order of
             # shipping events.
             if not line.is_shipping_event_permitted(event_type, qty):
-                msg = _("The selected quantity for line #%(line_id)s is too large") % {
-                    'line_id': line.id}
+                msg = _("The selected quantity for line #%(line_id)s is too"
+                        " large") % {'line_id': line.id}
                 errors.append(msg)
         if errors:
             raise exceptions.InvalidShippingEvent(", ".join(errors))
 
-    def validate_payment_event(self, order, event_type, lines,
+    def validate_payment_event(self, order, event_type, amount, lines,
                                line_quantities, **kwargs):
         errors = []
         for line, qty in zip(lines, line_quantities):
             if not line.is_payment_event_permitted(event_type, qty):
-                msg = _("The selected quantity for line #%(line_id)s is too large") % {
-                    'line_id': line.id}
+                msg = _("The selected quantity for line #%(line_id)s is too"
+                        " large") % {'line_id': line.id}
                 errors.append(msg)
         if errors:
             raise exceptions.InvalidPaymentEvent(", ".join(errors))
@@ -179,7 +179,9 @@ class EventHandler(object):
         requested allocations.
         """
         for line, qty in zip(lines, line_quantities):
-            record = line.product.stockrecord
+            record = line.stockrecord
+            if not record:
+                return False
             if not record.is_allocation_consumption_possible(qty):
                 return False
         return True
@@ -189,15 +191,16 @@ class EventHandler(object):
         Consume the stock allocations for the passed lines
         """
         for line, qty in zip(lines, line_quantities):
-            if line.product:
-                line.product.stockrecord.consume_allocation(qty)
+            if line.stockrecord:
+                line.stockrecord.consume_allocation(qty)
 
     def cancel_stock_allocations(self, order, lines, line_quantities):
         """
         Cancel the stock allocations for the passed lines
         """
         for line, qty in zip(lines, line_quantities):
-            line.product.stockrecord.cancel_allocation(qty)
+            if line.stockrecord:
+                line.stockrecord.cancel_allocation(qty)
 
     # Model instance creation
     # -----------------------

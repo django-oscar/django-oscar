@@ -27,6 +27,7 @@ TODO
 
 # Test files
 .coverage
+.noseids
 coverage.xml
 violations.txt
 nosetests.xml
@@ -45,3 +46,4 @@ settings_local.py
 /sites/demo/public/
 /sites/demo/whoosh_index/
 /sites/demo/logs/
+sites/puppet/modules/

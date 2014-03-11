@@ -2,6 +2,9 @@
 Writing documentation
 =====================
 
+Directory Structure
+-------------------
+
 The docs are built by calling ``make docs`` from your Oscar directory.
 They live in ``/docs/source``. This directory structure is a
 simplified version of what Django does.
@@ -22,3 +25,12 @@ files should only be created if there's too many files to list them all.
 E.g. ``/index.rst`` directly links to all files in ``topics/`` and
 ``internals/``, but there's an ``index.rst`` both for the files in ``howto/``
 and ``ref/apps/``.
+
+Style guides
+------------
+Oscar currently does not have it's own style guide for writing documentation.
+Please carefully review style guides for `Python`_ and `Django`_.
+
+.. _`Python`: http://docs.python.org/devguide/documenting.html#style-guide
+.. _`Django`: https://docs.djangoproject.com/en/dev/internals/contributing/writing-documentation/
+

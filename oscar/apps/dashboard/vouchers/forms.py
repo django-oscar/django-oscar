@@ -1,7 +1,7 @@
 from django import forms
-from django.db.models.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
+from oscar.core.loading import get_model
 from oscar.forms import widgets
 
 Voucher = get_model('voucher', 'Voucher')
@@ -17,10 +17,11 @@ class VoucherForm(forms.Form):
     name = forms.CharField(label=_("Name"))
     code = forms.CharField(label=_("Code"))
 
-    start_date = forms.DateField(
-        label=_("Start date"), widget=widgets.DatePickerInput())
-    end_date = forms.DateField(
-        label=_("End date"), widget=widgets.DatePickerInput())
+    start_datetime = forms.DateTimeField(
+        widget=widgets.DateTimePickerInput(),
+        label=_("Start datetime"))
+    end_datetime = forms.DateTimeField(
+        label=_("End datetime"), widget=widgets.DateTimePickerInput())
     usage = forms.ChoiceField(choices=Voucher.USAGE_CHOICES, label=_("Usage"))
 
     benefit_range = forms.ModelChoiceField(
@@ -30,6 +31,11 @@ class VoucherForm(forms.Form):
     type_choices = (
         (Benefit.PERCENTAGE, _('Percentage off of products in range')),
         (Benefit.FIXED, _('Fixed amount off of products in range')),
+        (Benefit.SHIPPING_PERCENTAGE,
+         _("Discount is a percentage off of the shipping cost")),
+        (Benefit.SHIPPING_ABSOLUTE,
+         _("Discount is a fixed amount of the shipping cost")),
+        (Benefit.SHIPPING_FIXED_PRICE, _("Get shipping for a fixed price")),
     )
     benefit_type = forms.ChoiceField(
         choices=type_choices,
@@ -50,7 +56,8 @@ class VoucherForm(forms.Form):
             pass
         else:
             if (not self.voucher) or (voucher.id != self.voucher.id):
-                raise forms.ValidationError(_("The name '%s' is already in use") % name)
+                raise forms.ValidationError(_("The name '%s' is already in"
+                                              " use") % name)
         return name
 
     def clean_code(self):
@@ -63,7 +70,8 @@ class VoucherForm(forms.Form):
             pass
         else:
             if (not self.voucher) or (voucher.id != self.voucher.id):
-                raise forms.ValidationError(_("The code '%s' is already in use") % code)
+                raise forms.ValidationError(_("The code '%s' is already in"
+                                              " use") % code)
         return code
 
     def clean(self):
@@ -71,7 +79,8 @@ class VoucherForm(forms.Form):
         start_date = cleaned_data.get('start_date', None)
         end_date = cleaned_data.get('end_date', None)
         if start_date and end_date and end_date < start_date:
-            raise forms.ValidationError(_("The start date must be before the end date"))
+            raise forms.ValidationError(_("The start date must be before the"
+                                          " end date"))
         return cleaned_data
 
 

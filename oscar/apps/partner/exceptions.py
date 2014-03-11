@@ -1,4 +1,4 @@
-class ImportError(Exception):
+class ImportingError(Exception):
     pass
 
 

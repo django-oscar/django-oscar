@@ -19,10 +19,10 @@ class TestReviewForm(TestCase):
     def form(self, **kwargs):
         data = self.data.copy()
         data.update(kwargs)
-        return forms.ProductReviewForm(data=data)
+        return forms.ProductReviewForm(product=None, user=None, data=data)
 
     def test_validates_empty_data_correctly(self):
-        forms.ProductReviewForm(data={}).is_valid()
+        forms.ProductReviewForm(product=None, user=None, data={}).is_valid()
 
     def test_validates_correctly(self):
         self.assertTrue(self.form().is_valid())

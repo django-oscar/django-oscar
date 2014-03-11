@@ -1,9 +1,7 @@
 {% extends 'dashboard/layout.html' %}
-{% load url from future %}
-{% load currency_filters %}
 {% load i18n %}
 
-{% block body_class %}create-page{% endblock %}
+{% block body_class %}{{ block.super }} create-page{% endblock %}
 
 {% block title %}
     {{ title }} | {% trans "Range management" %} | {{ block.super }}
@@ -32,7 +30,7 @@
 {% endblock %}
 
 {% block dashboard_content %}
-    <form action="." method="post" class="form-stacked well">
+    <form action="." method="post" class="form-stacked well wysiwyg">
         {% csrf_token %}
         {% include "partials/form_fields.html" with form=form %}
         {% block form_actions %}

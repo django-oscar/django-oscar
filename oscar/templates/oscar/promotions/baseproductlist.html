@@ -9,15 +9,11 @@
 
     {{ promotion.description|safe }}
 
-    <div class="es-carousel-wrapper">
-        <div class="es-carousel">
-            <ul class="products">
-                {% for product in products %}
-                <li>{% render_product product %}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
+    <ul class="row-fluid">
+        {% for product in products %}
+        <li class="span3 {% if forloop.counter0|divisibleby:"4" %}no-margin{% endif %}">{% render_product product %}</li>
+        {% endfor %}
+    </ul>
 
     {% if block.link_url %}
         <a href="{{ block.link_url }}">{% trans "See more" %}</a>

@@ -54,16 +54,12 @@ a.text-success:focus { color: darken(@successText, 10%); }
 
 
 
-
-
 // Headings
 // -------------------------
 
 h1, h2, h3, h4, h5, h6 {
-  margin: (@baseLineHeight / 2) 0;
   font-family: @headingsFontFamily;
   font-weight: @headingsFontWeight;
-  line-height: @baseLineHeight;
   color: @headingsColor;
   text-rendering: optimizelegibility; // Fix the character spacing for headings
   small {
@@ -72,38 +68,23 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-h1,
-h2,
-h3 { line-height: @baseLineHeight * 2; }
-
-h1 { font-size: @baseFontSize * 2.75; } // ~38px
-h2 { font-size: @baseFontSize * 2.25; } // ~32px
-h3 { font-size: @baseFontSize * 1.75; } // ~24px
-h4 { font-size: @baseFontSize * 1.25; } // ~18px
-h5 { font-size: @baseFontSize; }
-h6 { font-size: @baseFontSize * 0.85; } // ~12px
-
-h1 small { font-size: @baseFontSize * 1.75; } // ~24px
-h2 small { font-size: @baseFontSize * 1.25; } // ~18px
-h3 small { font-size: @baseFontSize; }
-h4 small { font-size: @baseFontSize; }
-
 //Rewrite below or above rather than overwrite.
 
 @headingsFontWeight:    700;
 
-@headingOneSize: 48px;
-@headingTwoSize: 32px;
-@headingThreeSize: 24px;
-@headingFourSize: 16px;
+h1 { font-size: @headingOneSize; line-height: @baseLineHeight * 2.9; }
+h2 { font-size: @headingTwoSize; line-height: @baseLineHeight * 1.9; }
+h3 { font-size: @headingThreeSize; line-height: @baseLineHeight + 10px; }
+h4 { font-size: @headingFourSize; line-height: @baseLineHeight; }
+h5, h6 { font-size: @baseFontSize; line-height: @baseLineHeight; }
 
-h1 { font-size: @headingOneSize; line-height: 58px; }
-h2 { font-size: @headingTwoSize; line-height: 38px; }
-h3 { font-size: @headingThreeSize; line-height: 30px; }
-h4 { font-size: @headingFourSize; line-height: 20px; }
+h1 small { font-size: (@TwoSize / @OneSize) + 0em; } // ~24px
+h2 small { font-size: (@ThreeSize / @TwoSize) + 0em; } // ~18px
+h3 small { font-size: (@baseSize / @ThreeSize) + 0em; }
+h4 small { font-size: (@bodySize / @FourSize) + 0em; }
 
 h1, h2, h3, h4, p, .promotion-block {
-    margin:0 0 30px;
+    margin:0 0 @baseLineHeight;
 }
 
 h1, h2, h3 {

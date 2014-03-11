@@ -21,7 +21,8 @@ class DefaultWrapper(object):
             return True
         return stockrecord.net_stock_level > 0
 
-    def is_purchase_permitted(self, stockrecord, user=None, quantity=1, product=None):
+    def is_purchase_permitted(self, stockrecord, user=None, quantity=1,
+                              product=None):
         """
         Test whether a particular purchase is possible (is a user buying a
         given quantity of the product)
@@ -29,7 +30,7 @@ class DefaultWrapper(object):
         # check, if fetched product is provided, to avoid db call
         product = product or stockrecord.product
         if not self.is_available_to_buy(stockrecord):
-            return False, _("'%s' is not available to purchase") % product.title
+            return False, _("'%s' is unavailable to purchase") % product.title
         max_qty = self.max_purchase_quantity(stockrecord, user, product)
         if max_qty is None:
             return True, None
@@ -43,6 +44,7 @@ class DefaultWrapper(object):
         Return the maximum available purchase quantity for a given user
         """
         product = product or stockrecord.product
+
         if not product.get_product_class().track_stock:
             return None
         if stockrecord.num_in_stock is None:
@@ -55,7 +57,8 @@ class DefaultWrapper(object):
 
         This is normally used within CSS to add icons to stock messages
 
-        :param oscar.apps.partner.models.StockRecord stockrecord: stockrecord instance
+        :param oscar.apps.partner.models.StockRecord stockrecord: stockrecord
+        instance
         """
         if stockrecord.net_stock_level > 0:
             return self.CODE_IN_STOCK
@@ -67,7 +70,8 @@ class DefaultWrapper(object):
         """
         Return an availability message for the passed stockrecord.
 
-        :param oscar.apps.partner.models.StockRecord stockrecord: stockrecord instance
+        :param oscar.apps.partner.models.StockRecord stockrecord: stockrecord
+        instance
         """
         if stockrecord.net_stock_level > 0:
             return _("In stock (%d available)") % stockrecord.net_stock_level

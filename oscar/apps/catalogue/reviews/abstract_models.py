@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Sum, Count
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.catalogue.reviews.managers import ApprovedReviewsManager
 from oscar.core.compat import AUTH_USER_MODEL
@@ -39,13 +39,15 @@ class AbstractProductReview(models.Model):
     email = models.EmailField(_("Email"), blank=True)
     homepage = models.URLField(_("URL"), blank=True)
 
-    FOR_MODERATION, APPROVED, REJECTED = range(0, 3)
+    FOR_MODERATION, APPROVED, REJECTED = list(range(0, 3))
     STATUS_CHOICES = (
         (FOR_MODERATION, _("Requires moderation")),
         (APPROVED, _("Approved")),
         (REJECTED, _("Rejected")),
     )
-    default_status = FOR_MODERATION if settings.OSCAR_MODERATE_REVIEWS else APPROVED
+    default_status = APPROVED
+    if settings.OSCAR_MODERATE_REVIEWS:
+        default_status = FOR_MODERATION
     status = models.SmallIntegerField(
         _("Status"), choices=STATUS_CHOICES, default=default_status)
 
@@ -63,7 +65,7 @@ class AbstractProductReview(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ['-delta_votes']
+        ordering = ['-delta_votes', 'id']
         unique_together = (('product', 'user'),)
         verbose_name = _('Product review')
         verbose_name_plural = _('Product reviews')
@@ -97,7 +99,8 @@ class AbstractProductReview(models.Model):
 
     def delete(self, *args, **kwargs):
         super(AbstractProductReview, self).delete(*args, **kwargs)
-        self.product.update_rating()
+        if self.product is not None:
+            self.product.update_rating()
 
     # Properties
 
@@ -161,7 +164,7 @@ class AbstractProductReview(models.Model):
         vote = self.votes.model(review=self, user=user, delta=1)
         try:
             vote.full_clean()
-        except ValidationError, e:
+        except ValidationError as e:
             return False, u"%s" % e
         return True, ""
 
