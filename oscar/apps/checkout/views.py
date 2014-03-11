@@ -242,14 +242,10 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
     the user can choose the appropriate one.
     """
     template_name = 'checkout/shipping_methods.html'
+    pre_conditions = ['check_basket_is_not_empty',
+                      'check_user_email_is_captured', ]
 
     def get(self, request, *args, **kwargs):
-        # Check that the user's basket is not empty
-        if request.basket.is_empty:
-            messages.error(request, _("You need to add some items to your"
-                                      " basket to checkout"))
-            return http.HttpResponseRedirect(reverse('basket:summary'))
-
         # Check that shipping is required at all
         if not request.basket.is_shipping_required():
             self.checkout_session.use_shipping_method(
@@ -259,17 +255,19 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
         # Check that shipping address has been completed
         if not self.checkout_session.is_shipping_address_set():
             messages.error(request, _("Please choose a shipping address"))
-            return http.HttpResponseRedirect(reverse('checkout:shipping-address'))
+            return http.HttpResponseRedirect(
+                reverse('checkout:shipping-address'))
 
         # Save shipping methods as instance var as we need them both here
         # and when setting the context vars.
         self._methods = self.get_available_shipping_methods()
         if len(self._methods) == 0:
             # No shipping methods available for given address
-            messages.warning(request, _("Shipping is unavailable for your"
-                                        " chosen address - please choose"
-                                        " another"))
-            return http.HttpResponseRedirect(reverse('checkout:shipping-address'))
+            messages.warning(request, _(
+                "Shipping is unavailable for your chosen address - please "
+                "choose another"))
+            return http.HttpResponseRedirect(
+                reverse('checkout:shipping-address'))
         elif len(self._methods) == 1:
             # Only one shipping method - set this and redirect onto the next
             # step
