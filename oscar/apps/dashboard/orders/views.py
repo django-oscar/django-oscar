@@ -41,7 +41,11 @@ def queryset_orders_for_user(user):
     To allow access to an order for a non-staff user, at least one line's
     partner has to have the user in the partner's list.
     """
-    queryset = Order._default_manager.all()
+    queryset = Order._default_manager.select_related(
+            'billing_address', 'billing_address__country',
+            'shipping_address', 'shipping_address__country',
+            'user'
+        ).prefetch_related('lines')
     if user.is_staff:
         return queryset
     else:
