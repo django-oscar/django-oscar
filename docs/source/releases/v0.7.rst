@@ -19,6 +19,11 @@ been dropped, and support for Django 1.6 is considered stable.
 What's new in Oscar 0.7?
 ========================
 
+This release is mostly a maintenance release, fixing a lot of bugs and and doing
+a lot of housekeeping. We have removed a few unused models and fields, and
+removed ``null=True`` on a lot of ``CharFields`` - so please read the
+release notes carefully when upgrading!
+
 Search improvements
 ~~~~~~~~~~~~~~~~~~~
 
@@ -171,10 +176,18 @@ Migrations
 
         $ ./manage.py migrate reviews 0001 --fake
 
+.. warning::
+
+    A lot of Oscar apps have data migrations for CharFields before ``null=True``
+    is removed in the following schema migration. If you have extended such an
+    app and use your own migrations, then you will need to first convert
+    affected ``None``'s to ``''`` yourself; see the data migrations for our
+    approach.
 
 * Address:
 
     - ``0008`` - Forgotten migration for ``UserAddress.phone_number``
+    - ``0009`` & ``0010`` - Data and schema migration for removing ``null=True`` on ``CharFields``
 
 * Catalogue:
 
@@ -183,27 +196,38 @@ Migrations
     - ``0016`` - ``AutoSlugField`` for ``AbstractProductClass`` and ``AbstractOption``
     - ``0017`` - Removes ``Product.status``, ``Contributor``, ``ContributorRole`` and ``ProductContributor``
     - ``0018`` - Set ``on_delete=models.PROTECT`` on ``Product.product_class``
+    - ``0019`` & ``0020`` - Data and schema migration for removing ``null=True`` on ``CharFields``
 
 * Customer:
 
     - ``0006`` - ``AutoSlugField`` and ``unique=True`` for ``AbstractCommunicationEventType``
+    - ``0007`` & ``0008`` - Data and schema migration for removing ``null=True`` on ``CharFields``
 
 * Offer:
 
     - ``0029`` - ``AutoSlugField`` for ``ConditionalOffer``
+    - ``0030`` & ``0031`` - Data and schema migration for removing ``null=True`` on ``CharFields``
+
+
 
 * Order:
 
     - ``0025`` - ``AutoSlugField`` for ``AbstractPaymentEventType`` and AbstractShippingEventType``
     - ``0026`` - Allow ``null=True`` and ``blank=True`` for ``Line.partner_name``
+    - ``0027`` & ``0028`` - Data and schema migration for removing ``null=True`` on ``CharFields``
 
 * Partner:
 
     - ``0011`` - ``AutoSlugField`` for ``AbstractPartner``
+    - ``0012`` & ``0013`` - Data and schema migration for removing ``null=True`` on ``CharFields``
 
 * Payment:
 
     - ``0003`` - ``AutoSlugField`` and ``unique=True`` for ``AbstractSourceType``
+
+* Promotions:
+
+    - ``0004`` & ``0005`` - Data and schema migration for removing ``null=True`` on ``CharFields``
 
 * Shipping:
 
@@ -213,6 +237,7 @@ Migrations
 
     - ``0001`` - Initial migration for reviews application. Make sure to follow
       South's guidelines on how to `convert an app`_.
+    - ``0002`` & ``0003`` - Data and schema migration for removing ``null=True`` on ``CharFields``
 
 * Voucher:
 

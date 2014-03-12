@@ -73,7 +73,7 @@ class AbstractCategory(MP_Node):
     Uses django-treebeard.
     """
     name = models.CharField(_('Name'), max_length=255, db_index=True)
-    description = models.TextField(_('Description'), blank=True, null=True)
+    description = models.TextField(_('Description'), blank=True)
     image = models.ImageField(_('Image'), upload_to='categories', blank=True,
                               null=True, max_length=255)
     slug = models.SlugField(_('Slug'), max_length=255, db_index=True,
@@ -217,9 +217,9 @@ class AbstractProduct(models.Model):
                     "product)."))
 
     # Title is mandatory for canonical products but optional for child products
-    title = models.CharField(_('Title'), max_length=255, blank=True, null=True)
+    title = models.CharField(_('Title'), max_length=255, blank=True)
     slug = models.SlugField(_('Slug'), max_length=255, unique=False)
-    description = models.TextField(_('Description'), blank=True, null=True)
+    description = models.TextField(_('Description'), blank=True)
 
     #: "Type" of product.
     #: None for Product variants, they inherit their parent's product class
@@ -1069,8 +1069,7 @@ class AbstractProductImage(models.Model):
         'catalogue.Product', related_name='images', verbose_name=_("Product"))
     original = models.ImageField(
         _("Original"), upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255)
-    caption = models.CharField(
-        _("Caption"), max_length=200, blank=True, null=True)
+    caption = models.CharField(_("Caption"), max_length=200, blank=True)
 
     #: Use display_order to determine which is the "primary" image
     display_order = models.PositiveIntegerField(
