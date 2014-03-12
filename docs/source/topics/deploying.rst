@@ -38,7 +38,7 @@ Oscar specific configurations with regard to security are in place. See
 deployments behind SSL.
 
 .. _deployment: https://docs.djangoproject.com/en/dev/howto/deployment/
-.. _`Django's guidelines for security`: _https://docs.djangoproject.com/en/dev/topics/security/
+.. _`Django's guidelines for security`: https://docs.djangoproject.com/en/dev/topics/security/
 .. _`cached template loader`: https://docs.djangoproject.com/en/dev/ref/templates/api/#django.template.loaders.cached.Loader
 .. _django-celery: http://www.celeryproject.org/
 .. _django-secure: https://pypi.python.org/pypi/django-secure
