@@ -1,7 +1,8 @@
 from django.conf import settings
 from django.core.signing import Signer, BadSignature
-from django.db.models import get_model
+from django.utils.functional import SimpleLazyObject, empty
 
+from oscar.core.loading import get_model
 from oscar.core.loading import get_class
 
 Applicator = get_class('offer.utils', 'Applicator')
@@ -15,17 +16,26 @@ class BasketMiddleware(object):
 
     def process_request(self, request):
         request.cookies_to_delete = []
-        basket = self.get_basket(request)
 
         # Load stock/price strategy and assign to request and basket
-        strategy = selector.strategy(
-            request=request, user=request.user)
-        request.strategy = basket.strategy = strategy
+        strategy = selector.strategy(request=request, user=request.user)
+        request.strategy = strategy
 
-        self.ensure_basket_lines_have_stockrecord(basket)
+        def lazy_load_basket():
+            basket = self.get_basket(request)
+            basket.strategy = request.strategy
 
-        self.apply_offers_to_basket(request, basket)
-        request.basket = basket
+            request.basket = basket
+
+            # Attach basket to the current request. Pricing policies in
+            # apply_offers_to_basket may depend on it, so it needs to be done
+            # before that is called
+            self.ensure_basket_lines_have_stockrecord(basket)
+            self.apply_offers_to_basket(request, basket)
+
+            return basket
+
+        request.basket = SimpleLazyObject(lazy_load_basket)
 
     def get_basket(self, request):
         """
@@ -80,7 +90,13 @@ class BasketMiddleware(object):
         for cookie_key in cookies_to_delete:
             response.delete_cookie(cookie_key)
 
-        basket_id = request.basket.id if hasattr(request, 'basket') else 0
+        if not hasattr(request, 'basket'):
+            return response
+
+        # If the basket was never initialized we can safely return
+        if (isinstance(request.basket, SimpleLazyObject)
+                and request.basket._wrapped is empty):
+            return response
 
         # Check if we need to set a cookie. If the cookies is already available
         # but is set in the cookies_to_delete list then we need to re-set it.
@@ -90,7 +106,7 @@ class BasketMiddleware(object):
 
         # If a basket has had products added to it, but the user is anonymous
         # then we need to assign it to a cookie
-        if (basket_id > 0 and not request.user.is_authenticated()
+        if (request.basket.id and not request.user.is_authenticated()
                 and not has_basket_cookie):
             cookie = self.get_basket_hash(request.basket.id)
             response.set_cookie(

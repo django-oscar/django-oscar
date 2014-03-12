@@ -1,5 +1,4 @@
 {% extends "checkout/layout.html" %}
-{% load url from future %}
 {% load currency_filters %}
 {% load thumbnail %}
 {% load i18n %}
@@ -283,7 +282,7 @@
                     <p><a onclick="window.print()" href="#" class="btn btn-primary btn-block btn-large">{% trans "Print this page" %}</a></p>
                 </div>
                 <div class="span3 offset6">
-                    <p><a href="{% url 'promotions:home' %}" class="btn btn-primary btn-block btn-large">{% trans "Continue shopping" %}</a></p>
+                    <p><a href="{{ homepage_url }}" class="btn btn-primary btn-block btn-large">{% trans "Continue shopping" %}</a></p>
                 </div>
             </div>
         </div>

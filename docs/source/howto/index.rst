@@ -89,10 +89,3 @@ Appearance
 
     how_to_handle_statics
 
-Complex use cases
------------------
-
-.. toctree::
-   :maxdepth: 1
-
-   multi_dealer_setup

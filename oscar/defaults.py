@@ -1,7 +1,9 @@
 from django.utils.translation import ugettext_lazy as _
+from django.core.urlresolvers import reverse_lazy
 
 OSCAR_SHOP_NAME = 'Oscar'
 OSCAR_SHOP_TAGLINE = ''
+OSCAR_HOMEPAGE = reverse_lazy('promotions:home')
 
 # Basket settings
 OSCAR_BASKET_COOKIE_LIFETIME = 7 * 24 * 60 * 60
@@ -61,15 +63,12 @@ OSCAR_MODERATE_REVIEWS = False
 # Accounts
 OSCAR_ACCOUNTS_REDIRECT_URL = 'customer:profile-view'
 
-# This enables sending alert notifications/emails
-# instantly when products get back in stock
-# by listening to stock record update signals
-# this might impact performace for large numbers
-# stock record updates.
-# Alternatively, the management command
-# ``oscar_send_alerts`` can be used to
-# run periodically, e.g. as a cronjob. In this case
-# instant alerts should be disabled.
+# This enables sending alert notifications/emails instantly when products get
+# back in stock by listening to stock record update signals.
+# This might impact performance for large numbers of stock record updates.
+# Alternatively, the management command ``oscar_send_alerts`` can be used to
+# run periodically, e.g. as a cron job. In this case eager alerts should be
+# disabled.
 OSCAR_EAGER_ALERTS = True
 
 # Registration
@@ -99,6 +98,10 @@ OSCAR_DASHBOARD_NAVIGATION = [
             {
                 'label': _('Products'),
                 'url_name': 'dashboard:catalogue-product-list',
+            },
+            {
+                'label': _('Product Types'),
+                'url_name': 'dashboard:catalogue-class-list',
             },
             {
                 'label': _('Categories'),
@@ -192,6 +195,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
         'url_name': 'dashboard:reports-index',
     },
 ]
+OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION = 'dashboard.nav.default_access_fn'
 
 # Search facets
 OSCAR_SEARCH_FACETS = {
@@ -206,10 +210,16 @@ OSCAR_SEARCH_FACETS = {
             'name': _('Type'),
             'field': 'product_class'
         },
-        #'rating': {
-        #    'name': _('Rating'),
-        #    'field': 'rating'
-        #}
+        'rating': {
+            'name': _('Rating'),
+            'field': 'rating',
+            # You can specify an 'options' element that will be passed to the
+            # SearchQuerySet.facet() call.  It's hard to get 'missing' to work
+            # correctly though as of Solr's hilarious syntax for selecting
+            # items without a specific facet:
+            # http://wiki.apache.org/solr/SimpleFacetParameters#facet.method
+            # 'options': {'missing': 'true'}
+        }
     },
     'queries': {
         'price_range': {
@@ -218,12 +228,12 @@ OSCAR_SEARCH_FACETS = {
             'queries': [
                 # This is a list of (name, query) tuples where the name will
                 # be displayed on the front-end.
-                (_('0 to 40'), '[0 TO 20]'),
+                (_('0 to 20'), '[0 TO 20]'),
                 (_('20 to 40'), '[20 TO 40]'),
                 (_('40 to 60'), '[40 TO 60]'),
                 (_('60+'), '[60 TO *]'),
             ]
-        }
+        },
     }
 }
 

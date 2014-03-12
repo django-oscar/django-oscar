@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.contrib.sites.models import Site, get_current_site
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import get_model
+from oscar.core.loading import get_model
 
 from oscar.core.loading import get_class
 from oscar.core.decorators import deprecated

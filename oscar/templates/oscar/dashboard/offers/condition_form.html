@@ -1,6 +1,5 @@
 {% extends 'dashboard/offers/step_form.html' %}
 
-{% load url from future %}
 
 {% load i18n %}
 
@@ -13,7 +12,7 @@
 {% endblock %}
 
 {% block form_fields %}
-    <span class="help-block">{{ form.non_field_errors }}</span>
+    <span class="error-block">{{ form.non_field_errors }}</span>
 
     {% if form.fields.custom_condition.choices %}
     <h4>{% trans "Build a new condition" %}</h4>

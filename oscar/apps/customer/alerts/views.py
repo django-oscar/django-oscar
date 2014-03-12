@@ -1,6 +1,6 @@
 from django.http import Http404
 from django.views import generic
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _

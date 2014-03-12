@@ -1,6 +1,6 @@
 from django import forms
 from django.conf import settings
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.forms.models import modelformset_factory, BaseModelFormSet
 from django.utils.translation import ugettext_lazy as _
 
@@ -21,8 +21,9 @@ class BasketLineForm(forms.ModelForm):
 
     def clean_quantity(self):
         qty = self.cleaned_data['quantity']
-        self.check_max_allowed_quantity(qty)
-        self.check_permission(qty)
+        if qty > 0:
+            self.check_max_allowed_quantity(qty)
+            self.check_permission(qty)
         return qty
 
     def check_max_allowed_quantity(self, qty):
@@ -31,9 +32,9 @@ class BasketLineForm(forms.ModelForm):
             raise forms.ValidationError(reason)
 
     def check_permission(self, qty):
-        is_available, reason \
-            = self.instance.purchase_info.availability.is_purchase_permitted(
-                quantity=qty)
+        policy = self.instance.purchase_info.availability
+        is_available, reason = policy.is_purchase_permitted(
+            quantity=qty)
         if not is_available:
             raise forms.ValidationError(reason)
 

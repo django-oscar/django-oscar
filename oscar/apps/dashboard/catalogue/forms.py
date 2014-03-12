@@ -1,18 +1,19 @@
 from django import forms
 from django.core.exceptions import ValidationError, MultipleObjectsReturned
 from django.forms.models import inlineformset_factory
-from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
 from treebeard.forms import MoveNodeForm, movenodeform_factory
 
 from oscar.core.utils import slugify
-from oscar.core.loading import get_class
+from oscar.core.loading import get_class, get_model
 from oscar.forms.widgets import ImageInput
 
 Product = get_model('catalogue', 'Product')
+ProductClass = get_model('catalogue', 'ProductClass')
 Category = get_model('catalogue', 'Category')
 StockRecord = get_model('partner', 'StockRecord')
 Partner = get_model('partner', 'Partner')
+ProductClass = get_model('catalogue', 'ProductClass')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductImage = get_model('catalogue', 'ProductImage')
@@ -66,9 +67,35 @@ class BaseCategoryForm(MoveNodeForm):
 CategoryForm = movenodeform_factory(Category, form=BaseCategoryForm)
 
 
+class ProductClassSelectForm(forms.Form):
+    """
+    Form which is used before creating a product to select it's product class
+    """
+
+    product_class = forms.ModelChoiceField(
+        label=_("Create a new product of type"),
+        empty_label=_("-- Choose type --"),
+        queryset=ProductClass.objects.all())
+
+    def __init__(self, *args, **kwargs):
+        """
+        If there's only one product class, pre-select it
+        """
+        super(ProductClassSelectForm, self).__init__(*args, **kwargs)
+        qs = self.fields['product_class'].queryset
+        if not kwargs.get('initial') and len(qs) == 1:
+            self.fields['product_class'].initial = qs[0]
+
+
 class ProductSearchForm(forms.Form):
     upc = forms.CharField(max_length=16, required=False, label=_('UPC'))
     title = forms.CharField(max_length=255, required=False, label=_('Title'))
+
+    def clean(self):
+        cleaned_data = super(ProductSearchForm, self).clean()
+        cleaned_data['upc'] = cleaned_data['upc'].strip()
+        cleaned_data['title'] = cleaned_data['title'].strip()
+        return cleaned_data
 
 
 class StockRecordForm(forms.ModelForm):
@@ -246,7 +273,7 @@ class ProductForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        exclude = ('slug', 'status', 'score', 'product_class',
+        exclude = ('slug', 'score', 'product_class',
                    'recommended_products', 'product_options',
                    'attributes', 'categories')
         widgets = {
@@ -331,8 +358,6 @@ class ProductForm(forms.ModelForm):
         for attribute in self.product_class.attributes.all():
             value = self.cleaned_data['attr_%s' % attribute.code]
             setattr(object.attr, attribute.code, value)
-        if not object.upc:
-            object.upc = None
 
         if self.cleaned_data['is_group']:
             # Don't validate attributes for parent products
@@ -442,3 +467,9 @@ BaseProductRecommendationFormSet = inlineformset_factory(
 class ProductRecommendationFormSet(BaseProductRecommendationFormSet):
     def __init__(self, product_class, user, *args, **kwargs):
         super(ProductRecommendationFormSet, self).__init__(*args, **kwargs)
+
+
+class ProductClassForm(forms.ModelForm):
+
+    class Meta:
+        model = ProductClass

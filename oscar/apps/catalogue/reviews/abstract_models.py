@@ -35,11 +35,11 @@ class AbstractProductReview(models.Model):
         AUTH_USER_MODEL, related_name='reviews', null=True, blank=True)
 
     # Fields to be completed if user is anonymous
-    name = models.CharField(_("Name"), max_length=255, null=True, blank=True)
-    email = models.EmailField(_("Email"), null=True, blank=True)
-    homepage = models.URLField(_("URL"), null=True, blank=True)
+    name = models.CharField(_("Name"), max_length=255, blank=True)
+    email = models.EmailField(_("Email"), blank=True)
+    homepage = models.URLField(_("URL"), blank=True)
 
-    FOR_MODERATION, APPROVED, REJECTED = range(0, 3)
+    FOR_MODERATION, APPROVED, REJECTED = list(range(0, 3))
     STATUS_CHOICES = (
         (FOR_MODERATION, _("Requires moderation")),
         (APPROVED, _("Approved")),
@@ -65,7 +65,7 @@ class AbstractProductReview(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ['-delta_votes']
+        ordering = ['-delta_votes', 'id']
         unique_together = (('product', 'user'),)
         verbose_name = _('Product review')
         verbose_name_plural = _('Product reviews')
@@ -164,7 +164,7 @@ class AbstractProductReview(models.Model):
         vote = self.votes.model(review=self, user=user, delta=1)
         try:
             vote.full_clean()
-        except ValidationError, e:
+        except ValidationError as e:
             return False, u"%s" % e
         return True, ""
 

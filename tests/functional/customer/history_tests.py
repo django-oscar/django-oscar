@@ -55,7 +55,7 @@ class TestAUserWhoLogsOut(TestCase):
         self.product = create_product()
         User.objects.create_user(username=self.username,
                                  email=self.email, password=self.password)
-        self.client.login(username=self.username, password=self.password)
+        self.client.login(email=self.email, password=self.password)
 
     def test_has_their_cookies_deleted_on_logout(self):
         response = self.client.get(self.product.get_absolute_url())

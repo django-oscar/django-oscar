@@ -2,9 +2,10 @@ from decimal import Decimal as D
 import random
 import datetime
 
-from django.db.models import get_model
 from django.conf import settings
+from django.utils import timezone
 
+from oscar.core.loading import get_model
 from oscar.apps.partner import strategy, availability, prices
 from oscar.core.loading import get_class
 from oscar.apps.offer import models
@@ -25,13 +26,12 @@ ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 
 
 def create_stockrecord(product=None, price_excl_tax=None, partner_sku=None,
-                       num_in_stock=None, partner_name=u"Dummy partner",
+                       num_in_stock=None, partner_name=None,
                        currency=settings.OSCAR_DEFAULT_CURRENCY,
                        partner_users=None):
     if product is None:
         product = create_product()
-    partner, __ = Partner.objects.get_or_create(
-        name=partner_name)
+    partner, __ = Partner.objects.get_or_create(name=partner_name or '')
     if partner_users:
         for user in partner_users:
             partner.users.add(user)
@@ -59,7 +59,7 @@ def create_purchase_info(record):
 
 def create_product(upc=None, title=u"Dummy title",
                    product_class=u"Dummy item class",
-                   partner=u"Dummy partner", partner_sku=None, price=None,
+                   partner_name=None, partner_sku=None, price=None,
                    num_in_stock=None, attributes=None,
                    partner_users=None, **kwargs):
     """
@@ -79,12 +79,13 @@ def create_product(upc=None, title=u"Dummy title",
     product.save()
 
     # Shortcut for creating stockrecord
-    stockrecord_fields = [price, partner_sku, num_in_stock, partner_users]
+    stockrecord_fields = [
+        price, partner_sku, partner_name, num_in_stock, partner_users]
     if any([field is not None for field in stockrecord_fields]):
         create_stockrecord(
             product, price_excl_tax=price, num_in_stock=num_in_stock,
             partner_users=partner_users, partner_sku=partner_sku,
-            partner_name=partner)
+            partner_name=partner_name)
     return product
 
 
@@ -93,7 +94,7 @@ def create_basket(empty=False):
     basket.strategy = strategy.Default()
     if not empty:
         product = create_product()
-        create_stockrecord(product)
+        create_stockrecord(product, num_in_stock=2)
         basket.add_product(product)
     return basket
 
@@ -132,7 +133,7 @@ def create_order(number=None, basket=None, user=None, shipping_address=None,
 
 def create_offer(name="Dummy offer", offer_type="Site",
                  max_basket_applications=None, range=None, condition=None,
-                 benefit=None, priority=0):
+                 benefit=None, priority=0, status=None, start=None, end=None):
     """
     Helper method for creating an offer
     """
@@ -145,8 +146,21 @@ def create_offer(name="Dummy offer", offer_type="Site",
     if benefit is None:
         benefit, __ = models.Benefit.objects.get_or_create(
             range=range, type=models.Benefit.PERCENTAGE, value=20)
+    if status is None:
+        status = models.ConditionalOffer.OPEN
+
+    # Create start and end date so offer is active
+    now = timezone.now()
+    if start is None:
+        start = now - datetime.timedelta(days=1)
+    if end is None:
+        end = now + datetime.timedelta(days=30)
+
     return models.ConditionalOffer.objects.create(
         name=name,
+        start_datetime=start,
+        end_datetime=end,
+        status=status,
         offer_type=offer_type,
         condition=condition,
         benefit=benefit,
@@ -161,7 +175,7 @@ def create_voucher():
     voucher = Voucher.objects.create(
         name="Test voucher",
         code="test",
-        start_date=datetime.date.today(),
-        end_date=datetime.date.today() + datetime.timedelta(days=12))
+        start_datetime=timezone.now(),
+        end_datetime=timezone.now() + datetime.timedelta(days=12))
     voucher.offers.add(create_offer(offer_type='Voucher'))
     return voucher

@@ -1,0 +1,88 @@
+=========================
+Oscar 0.6.1 release notes
+=========================
+
+This is Oscar 0.6.1.  It fixes one potentially serious data loss issue and a
+few minor bugs.
+
+Possible data loss from deleted users
+-------------------------------------
+
+Before this release, the foreign key from the 
+:class:`~oscar.apps.order.abstract_models.Order` model to the ``User`` model
+did not specify an ``on_delete`` behaviour.  The default is for deletes to
+cascade to related objects, even if the field is nullable.  Hence, deleting a
+user would also delete any orders they had placed.
+
+As of 0.6.1, the foreign keys to user, shipping address and billing address on
+the ``Order`` model specify ``on_delete=SET_NULL`` to avoid orders being
+deleted accidentally.
+
+See `Django's docs`_ for more info on ``on_delete`` options.
+
+Missing translations
+~~~~~~~~~~~~~~~~~~~~
+
+The 0.6 release failed to include several translations from Transifex due to a
+problem in the way we updated translation files before release.  This
+release rectifies that and includes the latest translation files.
+
+Known issues
+============
+
+* Django 1.4 only: The changes in `#1127`_ mean you explicitly need to register
+  a call to ``migrate_alerts_to_users`` when the ``post_save`` signal is
+  emitted for a ``User`` model.
+
+Bug fixes
+=========
+
+The following bugs were fixed:
+
+* `#1109`_ - Workaround for a bug in Bootstrap regarding the collapsing of the
+  navigation bar.
+
+* `#1121`_ - Added a confirmation view to removing products from wish lists
+  because one can't POST to it in all cases.
+
+* `#1127`_ required that the ``migrate_alerts_to_user`` function is now
+  explicitly called in Oscar's base User class. It previously was wired up as
+  a ``post_save`` signal receiver on the User model, which does not work in
+  Django 1.5+.
+
+* `#1128`_ - Calls to ``Source.debit`` without an ``amount`` argument were
+  failing as ``balance`` was being called as a method instead of a property.
+
+* `#1130`_ - Variant products were not fetching the product class instance
+  correctly within ``is_shipping_required``.
+
+* `#1132`_ and `#1149`_ - Rich text attributes were not supported. Should be
+  displayed correctly now. Also introduced hooks for adding support for e.g.
+  ``file`` and ``image`` types.
+
+* `#1133`_ - The order detail page for anonymous checkouts failed to render if
+  reviews were disabled.
+
+* `#1134`_ - Fixed a bug caused where unicode characters in child products'
+  titles were incorrectly handled.
+
+* `#1138`_ - Adjust the 
+  :class:`~oscar.apps.shipping.models.OrderAndItemCharges` shipping method to
+  not count lines that don't require shipping.
+
+* `#1146`_ - Various templates were adjusted to gracefully handle deleted
+  products.
+
+.. _`#1109`: https://github.com/tangentlabs/django-oscar/issues/1109
+.. _`#1121`: https://github.com/tangentlabs/django-oscar/issues/1121
+.. _`#1127`: https://github.com/tangentlabs/django-oscar/issues/1127
+.. _`#1128`: https://github.com/tangentlabs/django-oscar/issues/1128
+.. _`#1130`: https://github.com/tangentlabs/django-oscar/issues/1130
+.. _`#1132`: https://github.com/tangentlabs/django-oscar/issues/1132
+.. _`#1133`: https://github.com/tangentlabs/django-oscar/issues/1133
+.. _`#1134`: https://github.com/tangentlabs/django-oscar/issues/1134
+.. _`#1138`: https://github.com/tangentlabs/django-oscar/issues/1138
+.. _`#1146`: https://github.com/tangentlabs/django-oscar/issues/1146
+.. _`#1149`: https://github.com/tangentlabs/django-oscar/issues/1149
+.. _`Django's docs`: https://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey.on_delete
+

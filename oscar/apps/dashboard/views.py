@@ -3,7 +3,7 @@ from decimal import Decimal as D, ROUND_UP
 
 from django.utils.timezone import now
 from django.views.generic import TemplateView
-from django.db.models.loading import get_model
+from oscar.core.loading import get_model
 from django.db.models import Avg, Sum, Count
 
 from oscar.core.compat import get_user_model
@@ -53,7 +53,7 @@ class IndexView(TemplateView):
         Get all active vouchers. The returned ``Queryset`` of vouchers
         is filtered by end date greater then the current date.
         """
-        return Voucher.objects.filter(end_date__gt=now())
+        return Voucher.objects.filter(end_datetime__gt=now())
 
     def get_number_of_promotions(self, abstract_base=AbstractPromotion):
         """
@@ -123,7 +123,7 @@ class IndexView(TemplateView):
 
             y_range = []
             y_axis_steps = max_value / D(str(segments))
-            for idx in reversed(range(segments + 1)):
+            for idx in reversed(list(range(segments + 1))):
                 y_range.append(idx * y_axis_steps)
         else:
             y_range = []

@@ -1,5 +1,6 @@
 from django.conf import settings
 from purl import URL
+from six.moves import map
 
 
 def facet_data(request, form, results):  # noqa (too complex (10))
@@ -8,6 +9,9 @@ def facet_data(request, form, results):  # noqa (too complex (10))
     templates can use without having to manually construct URLs
     """
     facet_data = {}
+    if not results:
+        return facet_data
+
     base_url = URL(request.get_full_path())
     facet_counts = results.facet_counts()
 

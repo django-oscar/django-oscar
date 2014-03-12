@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.sites.models import get_current_site
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from oscar.apps.customer.signals import user_registered
 from oscar.core.loading import get_class
 from oscar.core.compat import get_user_model
@@ -42,11 +42,13 @@ class RegisterUserMixin(object):
         """
         user = form.save()
 
+        # Raise signal robustly (we don't want exceptions to crash the request
+        # handling).
+        user_registered.send_robust(
+            sender=self, request=self.request, user=user)
+
         if getattr(settings, 'OSCAR_SEND_REGISTRATION_EMAIL', True):
             self.send_registration_email(user)
-
-        # Raise signal
-        user_registered.send_robust(sender=self, user=user)
 
         # We have to authenticate before login
         try:

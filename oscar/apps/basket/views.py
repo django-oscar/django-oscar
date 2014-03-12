@@ -1,17 +1,17 @@
-from urlparse import urlparse
 import json
 
 from django.contrib import messages
 from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.core.urlresolvers import reverse, resolve
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.views.generic import FormView, View
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 
 from extra_views import ModelFormSetView
+from oscar.core.compat import urlparse
 from oscar.core import ajax
 from oscar.apps.basket import signals
 from oscar.core.loading import get_class, get_classes
@@ -201,7 +201,7 @@ class BasketView(ModelFormSetView):
                 else:
                     msg = _("You can't save an item for later if you're "
                             "not logged in!")
-                    messages.error(self.request, msg)
+                    flash_messages.error(self.request, msg)
                     return HttpResponseRedirect(self.get_success_url())
 
         if save_for_later:
@@ -250,7 +250,7 @@ class BasketView(ModelFormSetView):
             RequestContext(self.request, ctx))
         payload = {
             'content_html': basket_html,
-            'messages': flash_messages.to_json()}
+            'messages': flash_messages.as_dict()}
         return HttpResponse(json.dumps(payload),
                             content_type="application/json")
 
@@ -305,7 +305,7 @@ class BasketAddView(FormView):
         if url:
             # We only allow internal URLs so we see if the url resolves
             try:
-                resolve(urlparse(url).path)
+                resolve(urlparse.urlparse(url).path)
             except Http404:
                 url = None
         if url is None:
@@ -327,7 +327,8 @@ class BasketAddView(FormView):
 
         # Send signal for basket addition
         self.add_signal.send(
-            sender=self, product=form.instance, user=self.request.user)
+            sender=self, product=form.instance, user=self.request.user,
+            request=self.request)
 
         return super(BasketAddView, self).form_valid(form)
 

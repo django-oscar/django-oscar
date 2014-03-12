@@ -1,11 +1,10 @@
 {% extends "customer/baseaccountpage.html" %}
-{% load url from future %}
 {% load i18n %}
 
 {% block breadcrumbs %}
     <ul class="breadcrumb">
         <li>
-            <a href="{% url 'promotions:home' %}">{% trans 'Home' %}</a>
+            <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
             <span class="divider">/</span>
         </li>
         <li>
@@ -34,8 +33,7 @@
         </p>
 
         <div class="form-actions">
-            <button type="submit" class="btn btn-large">{% trans 'Remove' %}</button> {% trans 'or' %} <a href="{{ wishlist.get_absolute_url }}">{% trans 'cancel' %}</a>
+            <button type="submit" class="btn btn-large btn-danger">{% trans 'Remove' %}</button> {% trans 'or' %} <a href="{{ wishlist.get_absolute_url }}">{% trans 'cancel' %}</a>
         </div>
     </form>
 {% endblock tabcontent %}
-

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.db.models import get_model
+from oscar.core.loading import get_model
 
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
@@ -41,7 +41,6 @@ class LinePriceAdmin(admin.ModelAdmin):
 
 class ShippingEventTypeAdmin(admin.ModelAdmin):
     list_display = ('name', )
-    exclude = ('code',)
 
 
 class PaymentEventQuantityInline(admin.TabularInline):
@@ -56,7 +55,7 @@ class PaymentEventAdmin(admin.ModelAdmin):
 
 
 class PaymentEventTypeAdmin(admin.ModelAdmin):
-    exclude = ('code',)
+    pass
 
 
 class OrderNoteAdmin(admin.ModelAdmin):

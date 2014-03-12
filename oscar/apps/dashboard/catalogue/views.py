@@ -1,18 +1,22 @@
+import six
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import generic
-from django.db.models import get_model, Q
+from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.template.loader import render_to_string
 
-from oscar.core.loading import get_classes
+from oscar.core.loading import get_classes, get_model
 from oscar.views import sort_queryset
 from oscar.views.generic import ObjectLookupView
 
 (ProductForm,
+ ProductClassSelectForm,
  ProductSearchForm,
+ ProductClassForm,
  CategoryForm,
  StockRecordFormSet,
  StockAlertSearchForm,
@@ -21,7 +25,9 @@ from oscar.views.generic import ObjectLookupView
  ProductRecommendationFormSet) \
     = get_classes('dashboard.catalogue.forms',
                   ('ProductForm',
+                   'ProductClassSelectForm',
                    'ProductSearchForm',
+                   'ProductClassForm',
                    'CategoryForm',
                    'StockRecordFormSet',
                    'StockAlertSearchForm',
@@ -61,14 +67,15 @@ class ProductListView(generic.ListView):
     model = Product
     context_object_name = 'products'
     form_class = ProductSearchForm
+    productclass_form_class = ProductClassSelectForm
     description_template = _(u'Products %(upc_filter)s %(title_filter)s')
     paginate_by = 20
     recent_products = 5
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductListView, self).get_context_data(**kwargs)
-        ctx['product_classes'] = ProductClass.objects.all()
         ctx['form'] = self.form
+        ctx['productclass_form'] = self.productclass_form_class()
         if 'recently_edited' in self.request.GET:
             ctx['queryset_description'] \
                 = _("Last %(num_products)d edited products") \
@@ -122,12 +129,12 @@ class ProductListView(generic.ListView):
 
         data = self.form.cleaned_data
 
-        if data['upc']:
+        if data.get('upc'):
             queryset = queryset.filter(upc=data['upc'])
             description_ctx['upc_filter'] = _(
                 " including an item with UPC '%s'") % data['upc']
 
-        if data['title']:
+        if data.get('title'):
             queryset = queryset.filter(
                 title__icontains=data['title']).distinct()
             description_ctx['title_filter'] = _(
@@ -140,20 +147,25 @@ class ProductListView(generic.ListView):
 
 class ProductCreateRedirectView(generic.RedirectView):
     permanent = False
+    productclass_form_class = ProductClassSelectForm
+
+    def get_product_create_url(self, product_class):
+        """ Allow site to provide custom URL """
+        return reverse('dashboard:catalogue-product-create',
+                       kwargs={'product_class_slug': product_class.slug})
+
+    def get_invalid_product_class_url(self):
+        messages.error(self.request, _("Please choose a product type"))
+        return reverse('dashboard:catalogue-product-list')
 
     def get_redirect_url(self, **kwargs):
-        product_class_id = self.request.GET.get('product_class', None)
-        if not product_class_id or not product_class_id.isdigit():
-            messages.error(self.request, _("Please choose a product class"))
-            return reverse('dashboard:catalogue-product-list')
-        try:
-            product_class = ProductClass.objects.get(id=product_class_id)
-        except ProductClass.DoesNotExist:
-            messages.error(self.request, _("Please choose a product class"))
-            return reverse('dashboard:catalogue-product-list')
+        form = self.productclass_form_class(self.request.GET)
+        if form.is_valid():
+            product_class = form.cleaned_data['product_class']
+            return self.get_product_create_url(product_class)
+
         else:
-            return reverse('dashboard:catalogue-product-create',
-                           kwargs={'product_class_id': product_class.id})
+            return self.get_invalid_product_class_url()
 
 
 class ProductCreateUpdateView(generic.UpdateView):
@@ -195,23 +207,24 @@ class ProductCreateUpdateView(generic.UpdateView):
         self.creating = not 'pk' in self.kwargs
         if self.creating:
             try:
-                product_class_id = self.kwargs.get('product_class_id', None)
+                product_class_slug = self.kwargs.get('product_class_slug',
+                                                     None)
                 self.product_class = ProductClass.objects.get(
-                    id=product_class_id)
+                    slug=product_class_slug)
             except ObjectDoesNotExist:
                 raise Http404
             else:
                 return None  # success
         else:
             product = super(ProductCreateUpdateView, self).get_object(queryset)
-            self.product_class = product.product_class
+            self.product_class = product.get_product_class()
             return product
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
         ctx['product_class'] = self.product_class
 
-        for ctx_name, formset_class in self.formsets.iteritems():
+        for ctx_name, formset_class in six.iteritems(self.formsets):
             if ctx_name not in ctx:
                 ctx[ctx_name] = formset_class(self.product_class,
                                               self.request.user,
@@ -239,7 +252,7 @@ class ProductCreateUpdateView(generic.UpdateView):
             self.object = form.save()
 
         formsets = {}
-        for ctx_name, formset_class in self.formsets.iteritems():
+        for ctx_name, formset_class in six.iteritems(self.formsets):
             formsets[ctx_name] = formset_class(self.product_class,
                                                self.request.user,
                                                self.request.POST,
@@ -253,10 +266,6 @@ class ProductCreateUpdateView(generic.UpdateView):
         if is_valid and cross_form_validation_result:
             return self.forms_valid(form, formsets)
         else:
-            # delete the temporary product again
-            if self.creating and self.object and self.object.pk is not None:
-                self.object.delete()
-                self.object = None
             return self.forms_invalid(form, formsets)
 
     # form_valid and form_invalid are called depending on the validation result
@@ -291,9 +300,14 @@ class ProductCreateUpdateView(generic.UpdateView):
         return HttpResponseRedirect(self.get_success_url())
 
     def forms_invalid(self, form, formsets):
+        # delete the temporary product again
+        if self.creating and self.object and self.object.pk is not None:
+            self.object.delete()
+            self.object = None
+
         messages.error(self.request,
                        _("Your submitted data was not valid - please "
-                         "correct the below errors"))
+                         "correct the errors below"))
         ctx = self.get_context_data(form=form, **formsets)
         return self.render_to_response(ctx)
 
@@ -411,6 +425,13 @@ class CategoryCreateView(CategoryListMixin, generic.CreateView):
         messages.info(self.request, _("Category created successfully"))
         return super(CategoryCreateView, self).get_success_url()
 
+    def get_initial(self):
+        # set child category if set in the URL kwargs
+        initial = super(CategoryCreateView, self).get_initial()
+        if 'parent' in self.kwargs:
+            initial['_ref_node_id'] = self.kwargs['parent']
+        return initial
+
 
 class CategoryUpdateView(CategoryListMixin, generic.UpdateView):
     template_name = 'dashboard/catalogue/category_form.html'
@@ -450,3 +471,69 @@ class ProductLookupView(ObjectLookupView):
     def lookup_filter(self, qs, term):
         return qs.filter(Q(title__icontains=term)
                          | Q(parent__title__icontains=term))
+
+
+class ProductClassCreateView(generic.CreateView):
+    template_name = 'dashboard/catalogue/product_class_form.html'
+    model = ProductClass
+    form_class = ProductClassForm
+
+    def get_context_data(self, **kwargs):
+        ctx = super(ProductClassCreateView, self).get_context_data(**kwargs)
+        ctx['title'] = _("Add a new product type")
+        return ctx
+
+    def get_success_url(self):
+        messages.info(self.request, _("Product type created successfully"))
+        return reverse("dashboard:catalogue-class-list")
+
+
+class ProductClassListView(generic.ListView):
+    template_name = 'dashboard/catalogue/product_class_list.html'
+    context_object_name = 'classes'
+    model = ProductClass
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(ProductClassListView, self).get_context_data(*args,
+                                                                 **kwargs)
+        ctx['title'] = _("Product Types")
+        return ctx
+
+
+class ProductClassUpdateView(generic.UpdateView):
+    template_name = 'dashboard/catalogue/product_class_form.html'
+    model = ProductClass
+    form_class = ProductClassForm
+
+    def get_context_data(self, **kwargs):
+        ctx = super(ProductClassUpdateView, self).get_context_data(**kwargs)
+        ctx['title'] = _("Update product type '%s'") % self.object.name
+        return ctx
+
+    def get_success_url(self):
+        messages.info(self.request, _("Product type update successfully"))
+        return reverse("dashboard:catalogue-class-list")
+
+
+class ProductClassDeleteView(generic.DeleteView):
+    template_name = 'dashboard/catalogue/product_class_delete.html'
+    model = ProductClass
+    form_class = ProductClassForm
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(ProductClassDeleteView, self).get_context_data(*args,
+                                                                   **kwargs)
+        ctx['title'] = _("Delete product type '%s'") % self.object.name
+        product_count = self.object.products.count()
+
+        if product_count > 0:
+            ctx['disallow'] = True
+            ctx['title'] = _("Unable to delete '%s'") % self.object.name
+            messages.error(self.request,
+                           _("%i products are still assigned to this type") %
+                           product_count)
+        return ctx
+
+    def get_success_url(self):
+        messages.info(self.request, _("Product type deleted successfully"))
+        return reverse("dashboard:catalogue-class-list")

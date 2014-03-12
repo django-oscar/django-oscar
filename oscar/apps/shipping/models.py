@@ -3,13 +3,14 @@ from decimal import Decimal as D
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.core.utils import slugify
 from oscar.apps.shipping import Scales
+from oscar.models.fields import AutoSlugField
 
 
 class ShippingMethod(models.Model):
     # Fields from shipping.base.ShippingMethod must be added here manually.
-    code = models.SlugField(_("Slug"), max_length=128, unique=True)
+    code = AutoSlugField(_("Slug"), max_length=128, unique=True,
+                         populate_from='name')
     name = models.CharField(_("Name"), max_length=128, unique=True)
     description = models.TextField(_("Description"), blank=True)
 
@@ -24,11 +25,6 @@ class ShippingMethod(models.Model):
         abstract = True
         verbose_name = _("Shipping Method")
         verbose_name_plural = _("Shipping Methods")
-
-    def save(self, *args, **kwargs):
-        if not self.code:
-            self.code = slugify(self.name)
-        super(ShippingMethod, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.name
@@ -78,7 +74,8 @@ class OrderAndItemCharges(ShippingMethod):
 
         charge = self.price_per_order
         for line in self._basket.lines.all():
-            charge += line.quantity * self.price_per_item
+            if line.product.is_shipping_required:
+                charge += line.quantity * self.price_per_item
         return charge
 
     @property
@@ -115,6 +112,9 @@ class WeightBased(ShippingMethod):
 
     @property
     def charge_incl_tax(self):
+        # Note, when weighing the basket, we don't check whether the item
+        # requires shipping or not.  It is assumed that if something has a
+        # weight, then it requires shipping.
         scales = Scales(attribute_code=self.weight_attribute,
                         default_weight=self.default_weight)
         weight = scales.weigh_basket(self._basket)

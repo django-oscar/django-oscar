@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.db.models import get_model
+from oscar.core.loading import get_model
 
 from oscar.test.factories import create_product
 from oscar.test.testcases import WebTestCase
@@ -23,7 +23,8 @@ class TestProductDetailPage(WebTestCase):
 
         # Check a wishlist has been created
         wishlists = self.user.wishlists.all()
-        self.assertEquals(1, len(wishlists))
+        self.assertEqual(1, len(wishlists))
 
-        wishlist = wishlists[0]
-        self.assertEquals(1, len(wishlist.lines.all()))
+        lines = wishlists[0].lines.all()
+        self.assertEqual(1, len(lines))
+        self.assertEqual(self.product, lines[0].product)

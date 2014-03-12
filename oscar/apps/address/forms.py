@@ -1,6 +1,6 @@
 from django.conf import settings
 from django import forms
-from django.db.models import get_model
+from oscar.core.loading import get_model
 
 from oscar.views.generic import PhoneNumberMixin
 

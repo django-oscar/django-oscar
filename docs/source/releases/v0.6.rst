@@ -94,7 +94,7 @@ fulfillment partners.
 It also allows better support for international sites as stockrecords can be
 created for partners in different countries, who sell in different currencies.
 
-See the `documentation on pricing and availability`_ for more details.
+See the :doc:`documentation on pricing and availability </topics/prices_and_availability>` for more details.
 
 .. warning::
 
@@ -102,7 +102,6 @@ See the `documentation on pricing and availability`_ for more details.
     one stockrecord per product.
 
 .. _`deprecated`: `Features deprecated in 0.6`_
-.. _`documentation on pricing and availability`: topics/prices_and_availability
 
 Pricing and availability
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -300,7 +299,7 @@ In 0.5, there were two classes that representing a bankcard.  These have been
 merged - the new version is
 :class:`~oscar.apps.payment.abstract_models.AbstractBankcard`.
 
-An instance of this model is returned by the :attr:`~oscar.apps.payment.forms.BankccardForm.bankcard`` property.
+An instance of this model is returned by the :attr:`~oscar.apps.payment.forms.BankcardForm.bankcard` property.
 
 Customer-facing range pages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~

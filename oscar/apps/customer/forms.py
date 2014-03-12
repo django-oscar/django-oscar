@@ -1,22 +1,23 @@
 import string
-import urlparse
 import random
 
 from django import forms
 from django.conf import settings
 from django.contrib.auth import forms as auth_forms
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.models import get_current_site
 from django.core import validators
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from oscar.core.loading import get_profile_class, get_class
 from oscar.core.compat import get_user_model
 from oscar.apps.customer.utils import get_password_reset_url, normalise_email
+from oscar.core.compat import urlparse
+
 
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 CommunicationEventType = get_model('customer', 'communicationeventtype')
@@ -25,7 +26,12 @@ User = get_user_model()
 
 
 def generate_username():
-    uname = ''.join([random.choice(string.letters + string.digits + '_')
+    # Python 3 uses ascii_letters. If not available, fallback to letters
+    try:
+        letters = string.ascii_letters
+    except AttributeError:
+        letters = string.letters
+    uname = ''.join([random.choice(letters + string.digits + '_')
                      for i in range(30)])
     try:
         User.objects.get(username=uname)
@@ -40,11 +46,8 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
     """
     communication_type_code = "PASSWORD_RESET"
 
-    def save(self, domain_override=None,
-             subject_template_name='registration/password_reset_subject.txt',
-             email_template_name='registration/password_reset_email.html',
-             use_https=False, token_generator=default_token_generator,
-             from_email=None, request=None, **kwargs):
+    def save(self, domain_override=None, use_https=False, request=None,
+             **kwargs):
         """
         Generates a one-use only link for resetting password and sends to the
         user.
@@ -192,7 +195,7 @@ class EmailUserCreationForm(forms.ModelForm):
         email = normalise_email(self.cleaned_data['email'])
         if User._default_manager.filter(email=email).exists():
             raise forms.ValidationError(
-                _("A user with that email address already exists."))
+                _("A user with that email address already exists"))
         return email
 
     def clean_password2(self):
@@ -224,8 +227,10 @@ class EmailUserCreationForm(forms.ModelForm):
 
 
 class OrderSearchForm(forms.Form):
-    date_from = forms.DateField(required=False, label=_("From"))
-    date_to = forms.DateField(required=False, label=_("To"))
+    date_from = forms.DateField(
+        required=False, label=pgettext_lazy("start date", "From"))
+    date_to = forms.DateField(
+        required=False, label=pgettext_lazy("end date", "To"))
     order_number = forms.CharField(required=False, label=_("Order number"))
 
     def clean(self):

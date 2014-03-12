@@ -1,3 +1,4 @@
+import six
 import logging
 
 from django.http import Http404, HttpResponseRedirect, HttpResponseBadRequest
@@ -5,18 +6,17 @@ from django.core.urlresolvers import reverse, reverse_lazy
 
 from django.contrib import messages
 from django.contrib.auth import login
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.utils.translation import ugettext as _
 from django.views.generic import (DetailView, TemplateView, FormView,
                                   DeleteView, UpdateView)
 
 from oscar.apps.shipping.methods import NoShippingRequired
 from oscar.core.loading import get_class, get_classes
+from . import signals
 
 ShippingAddressForm, GatewayForm \
     = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
-pre_payment, post_payment \
-    = get_classes('checkout.signals', ['pre_payment', 'post_payment'])
 OrderNumberGenerator, OrderCreator \
     = get_classes('order.utils', ['OrderNumberGenerator', 'OrderCreator'])
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
@@ -55,8 +55,12 @@ class IndexView(CheckoutSessionMixin, FormView):
 
     def get(self, request, *args, **kwargs):
         # We redirect immediately to shipping address stage if the user is
-        # signed in
+        # signed in.
         if request.user.is_authenticated():
+            # We raise a signal to indicate that the user has entered the
+            # checkout process so analytics tools can track this event.
+            signals.start_checkout.send_robust(
+                sender=self, request=request)
             return self.get_success_response()
         return super(IndexView, self).get(request, *args, **kwargs)
 
@@ -74,6 +78,11 @@ class IndexView(CheckoutSessionMixin, FormView):
             email = form.cleaned_data['username']
             self.checkout_session.set_guest_email(email)
 
+            # We raise a signal to indicate that the user has entered the
+            # checkout process by specifying an email address.
+            signals.start_checkout.send_robust(
+                sender=self, request=self.request, email=email)
+
             if form.is_new_account_checkout():
                 messages.info(
                     self.request,
@@ -87,6 +96,11 @@ class IndexView(CheckoutSessionMixin, FormView):
         else:
             user = form.get_user()
             login(self.request, user)
+
+            # We raise a signal to indicate that the user has entered the checkout
+            # process.
+            signals.start_checkout.send_robust(
+                sender=self, request=self.request)
 
         return self.get_success_response()
 
@@ -577,20 +591,21 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         error_msg = _("A problem occurred while processing payment for this "
                       "order - no payment has been taken.  Please "
                       "contact customer services if this problem persists")
-        pre_payment.send_robust(sender=self, view=self)
+
+        signals.pre_payment.send_robust(sender=self, view=self)
 
         try:
             self.handle_payment(order_number, order_total, **payment_kwargs)
-        except RedirectRequired, e:
+        except RedirectRequired as e:
             # Redirect required (eg PayPal, 3DS)
             logger.info("Order #%s: redirecting to %s", order_number, e.url)
             return HttpResponseRedirect(e.url)
-        except UnableToTakePayment, e:
+        except UnableToTakePayment as e:
             # Something went wrong with payment but in an anticipated way.  Eg
             # their bankcard has expired, wrong card number - that kind of
             # thing. This type of exception is supposed to set a friendly error
             # message that makes sense to the customer.
-            msg = unicode(e)
+            msg = six.text_type(e)
             logger.warning(
                 "Order #%s: unable to take payment (%s) - restoring basket",
                 order_number, msg)
@@ -598,21 +613,21 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             # We re-render the payment details view
             self.preview = False
             return self.render_to_response(self.get_context_data(error=msg))
-        except PaymentError, e:
+        except PaymentError as e:
             # A general payment error - Something went wrong which wasn't
             # anticipated.  Eg, the payment gateway is down (it happens), your
             # credentials are wrong - that king of thing.
             # It makes sense to configure the checkout logger to
             # mail admins on an error as this issue warrants some further
             # investigation.
-            msg = unicode(e)
+            msg = six.text_type(e)
             logger.error("Order #%s: payment error (%s)", order_number, msg,
                          exc_info=True)
             self.restore_frozen_basket()
             self.preview = False
             return self.render_to_response(
                 self.get_context_data(error=error_msg))
-        except Exception, e:
+        except Exception as e:
             # Unhandled exception - hopefully, you will only ever see this in
             # development.
             logger.error(
@@ -622,7 +637,8 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             self.preview = False
             return self.render_to_response(
                 self.get_context_data(error=error_msg))
-        post_payment.send_robust(sender=self, view=self)
+
+        signals.post_payment.send_robust(sender=self, view=self)
 
         # If all is ok with payment, try and place order
         logger.info("Order #%s: payment successful, placing order",
@@ -631,14 +647,14 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             return self.handle_order_placement(
                 order_number, user, basket, shipping_address, shipping_method,
                 order_total, **order_kwargs)
-        except UnableToPlaceOrder, e:
+        except UnableToPlaceOrder as e:
             # It's possible that something will go wrong while trying to
             # actually place an order.  Not a good situation to be in as a
             # payment transaction may already have taken place, but needs
             # to be handled gracefully.
             logger.error("Order #%s: unable to place order - %s",
                          order_number, e, exc_info=True)
-            msg = unicode(e)
+            msg = six.text_type(e)
             self.restore_frozen_basket()
             return self.render_to_response(self.get_context_data(error=msg))
 

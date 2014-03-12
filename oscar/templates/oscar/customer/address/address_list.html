@@ -1,6 +1,5 @@
 {% extends "customer/baseaccountpage.html" %}
 {% load i18n %}
-{% load url from future %}
 
 {% block tabcontent %}
 
@@ -39,7 +38,7 @@
                                         </a>
                                     </li>
 
-                                    {% if not address.is_default_for_shipping %}
+                                    {% if address.country.is_shipping_country and not address.is_default_for_shipping %}
                                         <li>
                                             <a href="{% url 'customer:address-change-status' pk=address.id action='default_for_shipping' %}">
                                                 {% trans 'Set as default shipping address' %}

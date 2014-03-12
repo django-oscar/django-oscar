@@ -1,7 +1,7 @@
 import datetime
 
 from django import forms
-from django.db.models.loading import get_model
+from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.forms import widgets

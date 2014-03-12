@@ -1399,10 +1399,12 @@ select:focus:invalid:focus {
 .form-actions:after {
   clear: both;
 }
+.error-block,
 .help-block,
 .help-inline {
   color: #595959;
 }
+.error-block,
 .help-block {
   display: block;
   margin-bottom: 10px;
@@ -1692,6 +1694,7 @@ legend + .control-group {
 .form-horizontal .controls:first-child {
   *padding-left: 180px;
 }
+.form-horizontal .error-block,
 .form-horizontal .help-block {
   margin-bottom: 0;
 }
@@ -1700,7 +1703,13 @@ legend + .control-group {
 .form-horizontal textarea + .help-block,
 .form-horizontal .uneditable-input + .help-block,
 .form-horizontal .input-prepend + .help-block,
-.form-horizontal .input-append + .help-block {
+.form-horizontal .input-append + .help-block,
+.form-horizontal input .error-block,
+.form-horizontal select .error-block,
+.form-horizontal textarea .error-block,
+.form-horizontal .uneditable-input .error-block,
+.form-horizontal .input-prepend .error-block,
+.form-horizontal .input-append .error-block {
   margin-top: 10px;
 }
 .form-horizontal .form-actions {

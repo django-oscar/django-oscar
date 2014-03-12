@@ -1,7 +1,7 @@
 import json
 
 from django.conf import settings
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from django.dispatch import receiver
 
 from oscar.core.loading import get_class
@@ -35,6 +35,10 @@ def extract(request, response=None):
             # This can occur if something messes up the cookie
             if response:
                 response.delete_cookie(cookie_name)
+        else:
+            # Badly written web crawlers send garbage in double quotes
+            if not isinstance(ids, list):
+                ids = []
     return ids
 
 

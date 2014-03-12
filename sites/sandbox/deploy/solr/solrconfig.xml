@@ -780,6 +780,9 @@
        <int name="rows">10</int>
        <str name="df">text</str>
      </lst>
+    <arr name="last-components">
+      <str>spellcheck</str>
+    </arr>
     <!-- In addition to defaults, "appends" params can be specified
          to identify values which should be appended to the list of
          multi-val params from the query (or the existing "defaults").
@@ -1214,7 +1217,7 @@
      -->
   <searchComponent name="spellcheck" class="solr.SpellCheckComponent">
 
-    <str name="queryAnalyzerFieldType">textSpell</str>
+    <str name="queryAnalyzerFieldType">text_general</str>
 
     <!-- Multiple "Spell Checkers" can be declared and used by this
          component
@@ -1223,7 +1226,7 @@
     <!-- a spellchecker built from a field of the main index -->
     <lst name="spellchecker">
       <str name="name">default</str>
-      <str name="field">name</str>
+      <str name="field">suggestions</str>
       <str name="classname">solr.DirectSolrSpellChecker</str>
       <!-- the spellcheck distance measure used, the default is the internal levenshtein -->
       <str name="distanceMeasure">internal</str>
@@ -1245,6 +1248,7 @@
     </lst>
 
     <!-- a spellchecker that can break or combine words.  See "/spell" handler below for usage -->
+    <!--
     <lst name="spellchecker">
       <str name="name">wordbreak</str>
       <str name="classname">solr.WordBreakSolrSpellChecker</str>
@@ -1253,6 +1257,7 @@
       <str name="breakWords">true</str>
       <int name="maxChanges">10</int>
     </lst>
+    -->
 
     <!-- a spellchecker that uses a different distance measure -->
     <!--
@@ -1273,13 +1278,12 @@
           2. freq (Frequency first, then score)
           3. A fully qualified class name
       -->
-    <!--
        <lst name="spellchecker">
          <str name="name">freq</str>
          <str name="field">lowerfilt</str>
          <str name="classname">solr.DirectSolrSpellChecker</str>
          <str name="comparatorClass">freq</str>
-      -->
+       </lst>
 
     <!-- A spellchecker that reads the list of words from a file -->
     <!--

@@ -67,7 +67,7 @@ icon class for the icon to your menu heading::
         },
     ]
 
-You are not resticted to use `Font Awesome`_ icons for you menu heading. Other
+You are not restricted to use `Font Awesome`_ icons for you menu heading. Other
 web fonts will work as well as long as they support the same markup::
 
     <i class="icon-map-marker"></i>
@@ -78,3 +78,12 @@ configuration of your dashboard navigation above.
 
 .. _`Font Awesome`: http://fortawesome.github.com/Font-Awesome/
 .. _`this icon list`: http://fortawesome.github.com/Font-Awesome/#all-icons
+
+Controlling visibility per user
+-------------------------------
+
+By setting ``'access_fn'`` for a node, you can specify a function that will
+get called with the current user. The node will only be displayed if that
+function returns ``True``.
+If no ``'access_fn'`` is specified, ``OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION``
+is used.

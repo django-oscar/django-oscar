@@ -68,6 +68,7 @@ class TestRestockingProduct(TestCase):
         self.stockrecord.save()
 
     def test_closes_open_alert(self):
+        # Set threshold as same as current level
         self.set_threshold(5)
         factories.create_order(basket=self.basket)
 

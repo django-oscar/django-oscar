@@ -32,7 +32,7 @@ class IndexViewTests(WebTestCase):
     def test_user_list_view(self):
         response = self.client.get(reverse('dashboard:users-index'))
         self.assertInContext(response, 'user_list')
-        self.assertEquals(len(response.context['user_list']), IndexView.paginate_by)
+        self.assertEqual(len(response.context['user_list']), IndexView.paginate_by)
 
     def test_make_active(self):
         params = {'action': 'make_active',
@@ -92,7 +92,7 @@ class TestDetailViewForStaffUser(WebTestCase):
         self.assertRedirects(response, customer_page_url)
 
         # Check that the reset email has been sent
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
         self.assertIn("Resetting your password", mail.outbox[0].subject)
 
         # Check that success message shows up

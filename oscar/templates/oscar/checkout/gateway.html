@@ -1,6 +1,5 @@
 {% extends "checkout/layout.html" %}
 
-{% load url from future %}
 {% load i18n %}
 
 {% block title %}
@@ -38,7 +37,7 @@
                         {{ form.password }}
                         <small><a href="{% url 'password-reset' %}" tabindex="-1">{% trans "Get a password reminder" %}</a></small>
                         {% for error in form.password.errors %}
-                            <span class="help-block">{{ error }}</span>
+                            <span class="error-block">{{ error }}</span>
                         {% endfor %}
                     </div>
                 </div>

@@ -1,5 +1,4 @@
 {% extends 'dashboard/layout.html' %}
-{% load url from future %}
 {% load currency_filters %}
 {% load i18n %}
 
@@ -23,7 +22,7 @@
     </ul>
 {% endblock %}
 
-{% block header %}{{ title }}{% endblock %}
+{% block headertext %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
     <div class="table-header">

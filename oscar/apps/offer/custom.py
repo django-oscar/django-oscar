@@ -1,3 +1,5 @@
+import six
+
 from django.core import exceptions
 
 from oscar.apps.offer.models import Range, Condition, Benefit
@@ -34,7 +36,7 @@ def create_range(range_class):
     except Range.DoesNotExist:
         obj = Range(**values)
     else:
-        for key, value in values.iteritems():
+        for key, value in six.iteritems(values):
             setattr(obj, key, value)
     obj.save()
 

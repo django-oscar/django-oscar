@@ -20,6 +20,15 @@ var oscar = (function(o, $) {
         }
     };
 
+    o.search = {
+        init: function() {
+            // Auto-submit (hidden) search form when selecting a new sort-by option
+            $('#id_sort_by').on('change', function() {
+                $(this).closest('form').submit();
+            });
+        }
+    };
+
     // This block may need removing after reworking of promotions app
     o.promotions = {
         init: function() {
@@ -52,8 +61,13 @@ var oscar = (function(o, $) {
             $('form[data-behaviours~="lock"]').submit(o.forms.submitIfNotLocked);
 
             // Disable buttons when they are clicked and show a "loading" message taken from the
-            // data-loading-text attribute (http://getbootstrap.com/2.3.2/javascript.html#buttons)
-            $('.js-disable-on-click').click(function(){$(this).button('loading');});
+            // data-loading-text attribute (http://getbootstrap.com/2.3.2/javascript.html#buttons).
+            // Do not disable if button is inside a form with invalid fields.
+            $('.js-disable-on-click').click(function(){
+                var form = $(this).parents("form");
+                if (!form || $(":invalid", form).length == 0)
+                    $(this).button('loading');
+            });
         },
         submitIfNotLocked: function(event) {
             var $form = $(this);

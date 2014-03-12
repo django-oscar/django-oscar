@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from treebeard.admin import TreeAdmin
 
 AttributeEntity = get_model('catalogue', 'AttributeEntity')
@@ -7,8 +7,6 @@ AttributeEntityType = get_model('catalogue', 'AttributeEntityType')
 AttributeOption = get_model('catalogue', 'AttributeOption')
 AttributeOptionGroup = get_model('catalogue', 'AttributeOptionGroup')
 Category = get_model('catalogue', 'Category')
-ContributorRole = get_model('catalogue', 'ContributorRole')
-Contributor = get_model('catalogue', 'Contributor')
 Option = get_model('catalogue', 'Option')
 Product = get_model('catalogue', 'Product')
 ProductAttribute = get_model('catalogue', 'ProductAttribute')
@@ -40,16 +38,7 @@ class ProductAttributeInline(admin.TabularInline):
 
 class ProductClassAdmin(admin.ModelAdmin):
     list_display = ('name', 'requires_shipping', 'track_stock')
-    prepopulated_fields = {"slug": ("name",)}
     inlines = [ProductAttributeInline]
-
-
-class ContributorAdmin(admin.ModelAdmin):
-    prepopulated_fields = {"slug": ("name",)}
-
-
-class ContributorRoleAdmin(admin.ModelAdmin):
-    prepopulated_fields = {"slug": ("name",)}
 
 
 class ProductAdmin(admin.ModelAdmin):
@@ -66,7 +55,7 @@ class ProductAttributeAdmin(admin.ModelAdmin):
 
 
 class OptionAdmin(admin.ModelAdmin):
-    exclude = ['code']
+    pass
 
 
 class ProductAttributeValueAdmin(admin.ModelAdmin):
@@ -92,8 +81,6 @@ class CategoryAdmin(TreeAdmin):
 
 admin.site.register(ProductClass, ProductClassAdmin)
 admin.site.register(Product, ProductAdmin)
-admin.site.register(ContributorRole, ContributorRoleAdmin)
-admin.site.register(Contributor, ContributorAdmin)
 admin.site.register(ProductAttribute, ProductAttributeAdmin)
 admin.site.register(ProductAttributeValue, ProductAttributeValueAdmin)
 admin.site.register(AttributeOptionGroup, AttributeOptionGroupAdmin)

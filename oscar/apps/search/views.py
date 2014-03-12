@@ -1,7 +1,7 @@
-from django.db.models import get_model
+from oscar.core.loading import get_model
 from haystack import views
 
-from . import facets
+from . import facets, signals
 
 Product = get_model('catalogue', 'Product')
 
@@ -19,6 +19,17 @@ class FacetedSearchView(views.FacetedSearchView):
 
     # Haystack uses a different class attribute to CBVs
     template = "search/results.html"
+    search_signal = signals.user_search
+
+    def __call__(self, request):
+        response = super(FacetedSearchView, self).__call__(request)
+
+        # Raise a signal for other apps to hook into for analytics
+        self.search_signal.send(
+            sender=self, session=self.request.session,
+            user=self.request.user, query=self.query)
+
+        return response
 
     # Override this method to add the spelling suggestion to the context and to
     # convert Haystack's default facet data into a more useful structure so we
@@ -27,7 +38,7 @@ class FacetedSearchView(views.FacetedSearchView):
         extra = super(FacetedSearchView, self).extra_context()
 
         # Show suggestion no matter what.  Haystack 2.1 only shows a suggestion
-        # if there are some results, which seems a bit weird to me
+        # if there are some results, which seems a bit weird to me.
         if self.results.query.backend.include_spelling:
             suggestion = self.form.get_suggestion()
             if suggestion != self.query:
@@ -41,4 +52,13 @@ class FacetedSearchView(views.FacetedSearchView):
                               data in extra['facet_data'].values()])
             extra['has_facets'] = has_facets
 
+        # Pass list of selected facets so they can be included in the sorting
+        # form.
+        extra['selected_facets'] = self.request.GET.getlist('selected_facets')
+
         return extra
+
+    def get_results(self):
+        # We're only interested in products (there might be other content types
+        # in the Solr index).
+        return super(FacetedSearchView, self).get_results().models(Product)

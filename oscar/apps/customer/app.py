@@ -61,7 +61,8 @@ class CustomerApplication(Application):
             url(r'^login/$', self.login_view.as_view(), name='login'),
             url(r'^logout/$', self.logout_view.as_view(), name='logout'),
             url(r'^register/$', self.register_view.as_view(), name='register'),
-            url(r'^change-password/$', self.change_password_view.as_view(),
+            url(r'^change-password/$',
+                login_required(self.change_password_view.as_view()),
                 name='change-password'),
 
             # Profile
@@ -183,6 +184,7 @@ class CustomerApplication(Application):
                 login_required(self.wishlists_move_product_to_another_view
                                .as_view()),
                 name='wishlists-move-product-to-another')]
+
         return self.post_process_urls(patterns('', *urls))
 
 

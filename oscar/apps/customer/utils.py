@@ -1,11 +1,12 @@
 import logging
 
+import django
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.core.urlresolvers import reverse
 from django.conf import settings
-from django.db.models import get_model
-from django.utils.http import int_to_base36
 from django.contrib.auth.tokens import default_token_generator
+
+from oscar.core.loading import get_model
 
 CommunicationEvent = get_model('order', 'CommunicationEvent')
 Email = get_model('customer', 'Email')
@@ -110,9 +111,15 @@ def get_password_reset_url(user, token_generator=default_token_generator):
     """
     Generate a password-reset URL for a given user
     """
-    return reverse('password-reset-confirm', kwargs={
-        'uidb36': int_to_base36(user.id),
-        'token': default_token_generator.make_token(user)})
+    kwargs = {'token': token_generator.make_token(user)}
+    if django.VERSION < (1, 6):
+        from django.utils.http import int_to_base36
+        kwargs['uidb36'] = int_to_base36(user.id)
+    else:
+        from django.utils.http import urlsafe_base64_encode
+        from django.utils.encoding import force_bytes
+        kwargs['uidb64'] = urlsafe_base64_encode(force_bytes(user.id))
+    return reverse('password-reset-confirm', kwargs=kwargs)
 
 
 def normalise_email(email):

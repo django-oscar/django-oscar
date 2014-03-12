@@ -1,4 +1,4 @@
-import httplib
+from six.moves import http_client
 
 from django.core.urlresolvers import reverse
 
@@ -12,7 +12,7 @@ class TestAnAnonymousUser(WebTestCase):
         path = reverse('customer:anon-order', kwargs={'order_number': 1000,
                                                       'hash': '1231231232'})
         response = self.app.get(path, status="*")
-        self.assertEqual(httplib.NOT_FOUND, response.status_code)
+        self.assertEqual(http_client.NOT_FOUND, response.status_code)
 
     def test_can_see_order_status(self):
         order = create_order()
@@ -20,7 +20,7 @@ class TestAnAnonymousUser(WebTestCase):
                        kwargs={'order_number': order.number,
                                'hash': order.verification_hash()})
         response = self.app.get(path)
-        self.assertEqual(httplib.OK, response.status_code)
+        self.assertEqual(http_client.OK, response.status_code)
 
     def test_gets_404_when_using_incorrect_hash(self):
         order = create_order()
@@ -28,4 +28,4 @@ class TestAnAnonymousUser(WebTestCase):
                        kwargs={'order_number': order.number,
                                'hash': 'bad'})
         response = self.app.get(path, status="*")
-        self.assertEqual(httplib.NOT_FOUND, response.status_code)
+        self.assertEqual(http_client.NOT_FOUND, response.status_code)

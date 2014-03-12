@@ -27,7 +27,7 @@ class TestCheckoutSession(TestCase):
 
     def test_stores_guest_email(self):
         self.session_data.set_guest_email('a@a.com')
-        self.assertEquals('a@a.com', self.session_data.get_guest_email())
+        self.assertEqual('a@a.com', self.session_data.get_guest_email())
 
     def test_allows_a_namespace_to_be_flushed(self):
         self.session_data._set('ns', 'a', 1)

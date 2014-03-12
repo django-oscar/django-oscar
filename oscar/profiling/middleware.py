@@ -1,3 +1,5 @@
+from __future__ import print_function
+from __future__ import print_function
 import sys
 import tempfile
 import hotshot
@@ -13,10 +15,10 @@ def profile_this(fn):
         filepath = "/tmp/%s.profile" % fn.__name__
         prof = cProfile.Profile()
         ret = prof.runcall(fn, *args, **kwargs)
-        print "Writing to %s" % filepath
+        print("Writing to %s" % filepath)
         prof.dump_stats(filepath)
 
-        print "Printing stats"
+        print("Printing stats")
         stats = pstats.Stats(filepath)
         stats.sort_stats('cumulative')
         stats.print_stats()

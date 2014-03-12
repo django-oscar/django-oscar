@@ -17,30 +17,36 @@ files.
 Templates
 ---------
 
-Oscar's default templates use the mark-up conventions from Twitter's Bootstrap project.
+Oscar's default templates use the mark-up conventions from the Bootstrap
+project. Classes for styling should be separate from classes used for
+Javascript. The latter must be prefixed with ``js-``, and using data attributes
+is often preferable.
+
+Frontend vs. Dashboard
+----------------------
+
+The frontend and dashboard are intentionally kept very separate. They
+incidentally both use Bootstrap, but may be updated individually.
+The frontend is based on Bootstrap's LESS files and ties it together with
+Oscar-specific styling in ``styles.less``.
+
+On the other hand, ``dashboard.less`` just contains a few customisations that
+are included alongside a copy of stock Bootstrap CSS - and at the time of
+writing, using a different Bootstrap version.
 
 LESS/CSS
 --------
 
-Oscar contains three main LESS files:
-
-* `styles.less`
-* `responsive.less`
-* `dashboard.less`
-
-These use the LESS files that ship with Twitter's Bootstrap project as well as
-some Oscar-specific styling.
-
-A few other CSS files are used to provide styles for javascript libraries.
-
-By default, the CSS files are used rather than the Less ones.  To use Less
-directly, set ``USE_LESS = True`` in your settings file.  You will also need to
-ensure that the ``lessc`` executable is installed and is configured using a
-setting like::
+By default, CSS files compiled from their LESS sources are used rather than the
+LESS ones.  To use Less directly, set ``USE_LESS = True`` in your settings file.
+You will also need to ensure that the ``lessc`` executable is installed and is
+configured using a setting like::
 
     COMPRESS_PRECOMPILERS = (
         ('text/less', 'lessc {infile} {outfile}'),
     )
+
+A few other CSS files are used to provide styles for javascript libraries.
 
 Using offline compression
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -62,24 +68,12 @@ this to your settings file::
 Javascript
 ----------
 
-Oscar uses javascript for progressive enhancements.
+Oscar uses javascript for progressive enhancements. This guide used to document
+exact versions, but quickly became outdated. It is recommended to inspect
+``layout.html`` and ``dashboard/layout.html`` for what is currently included.
 
-For the customer-facing pages,  Oscar uses:
-
-* jQuery 1.7
-* a few selected plugins to provide functionality for the content blocks that can be set-up.
-* the Bootstrap javascript
-* an Oscar-specific JS file (ui.js)
-
-In the dashboard, Oscar uses all the JS assets from the customer side as well
-as:
-
-* jQuery UI 1.8
-* wysihtml5 for HTML textareas
-* an Oscar specific JS file for dashboard functionality (dashboard.js)
-
-Customistation
-==============
+Customisation
+=============
 
 Customising templates
 ---------------------
@@ -87,7 +81,7 @@ Customising templates
 Oscar ships with a complete set of templates (in ``oscar/templates``).  These
 will be available to an Oscar project but can be overridden or modified.
 
-The templates use Twitter's Bootstrap conventions for class names and mark-up.
+The templates use Bootstrap conventions for class names and mark-up.
 
 There is a separate recipe on how to do this.
 

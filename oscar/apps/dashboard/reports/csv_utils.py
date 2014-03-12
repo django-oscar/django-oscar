@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import codecs
 import csv
-import cStringIO
+import six
+from warnings import warn
+from six.moves import cStringIO
 
 
 # These classes are copied from http://docs.python.org/2/library/csv.html
@@ -15,26 +17,30 @@ class CsvUnicodeWriter(object):
 
     def __init__(self, f, dialect=csv.excel, encoding="utf-8", **kwds):
         # Redirect output to a queue
-        self.queue = cStringIO.StringIO()
+        self.queue = cStringIO()
         self.writer = csv.writer(self.queue, dialect=dialect, **kwds)
         self.stream = f
         self.encoder = codecs.getincrementalencoder(encoding)()
 
-    def cast_to_str(self, obj):
-        if isinstance(obj, unicode):
+    def cast_to_bytes(self, obj):
+        if isinstance(obj, six.text_type):
             return obj.encode('utf-8')
-        elif isinstance(obj, str):
+        elif isinstance(obj, six.binary_type):
             return obj
         elif hasattr(obj, '__unicode__'):
-            return unicode(obj).encode('utf-8')
+            return six.text_type(obj).encode('utf-8')
         elif hasattr(obj, '__str__'):
             return str(obj)
         else:
             raise TypeError('Expecting unicode, str, or object castable'
                             ' to unicode or string, got: %r' % type(obj))
 
+    def cast_to_str(self, obj):
+        warn('cast_to_str deprecated, please use cast_to_bytes instead')
+        return self.cast_to_bytes(obj)
+
     def writerow(self, row):
-        self.writer.writerow([self.cast_to_str(s) for s in row])
+        self.writer.writerow([self.cast_to_bytes(s) for s in row])
         # Fetch UTF-8 output from the queue ...
         data = self.queue.getvalue()
         data = data.decode("utf-8")
@@ -76,8 +82,8 @@ class CsvUnicodeReader(object):
         self.reader = csv.reader(f, dialect=dialect, **kwargs)
 
     def next(self):
-        row = self.reader.next()
-        return [unicode(s, "utf-8") for s in row]
+        row = six.advance_iterator(self.reader)
+        return [six.text_type(s).encode("utf-8") for s in row]
 
     def __iter__(self):
         return self

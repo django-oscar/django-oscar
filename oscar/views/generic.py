@@ -1,3 +1,4 @@
+import six
 import json
 
 from django import forms
@@ -11,6 +12,7 @@ from django.views.generic.base import View
 
 import phonenumbers
 from oscar.core.phonenumber import PhoneNumber
+from six.moves import map
 
 
 class PostActionMixin(object):
@@ -70,7 +72,7 @@ class BulkEditMixin(object):
 
         ids = request.POST.getlist(
             'selected_%s' % self.get_checkbox_object_name())
-        ids = map(int, ids)
+        ids = list(map(int, ids))
         if not ids:
             messages.error(
                 self.request,
@@ -98,7 +100,7 @@ class ObjectLookupView(View):
     def format_object(self, obj):
         return {
             'id': obj.pk,
-            'text': unicode(obj),
+            'text': six.text_type(obj),
         }
 
     def initial_filter(self, qs, value):
@@ -139,7 +141,7 @@ class ObjectLookupView(View):
             qs, more = self.paginate(qs, page, page_limit)
 
         return HttpResponse(json.dumps({
-            'results': map(self.format_object, qs),
+            'results': [self.format_object(obj) for obj in qs],
             'more': more,
         }), mimetype='application/json')
 

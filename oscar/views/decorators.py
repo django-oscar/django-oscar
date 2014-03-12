@@ -1,4 +1,3 @@
-import urlparse
 from functools import wraps
 
 from django.contrib.auth import REDIRECT_FIELD_NAME
@@ -9,6 +8,8 @@ from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
+
+from oscar.core.compat import urlparse
 
 
 def staff_member_required(view_func, login_url=None):
@@ -52,8 +53,9 @@ def staff_member_required(view_func, login_url=None):
 
 def check_permissions(user, permissions):
     """
-    Permissions can be a list or a two-tuple of lists. If it is a two-tuple,
-    both permission lists will be evaluated and the outcome will be or'ed.
+    Permissions can be a list or a tuple of lists. If it is a tuple,
+    every permission list will be evaluated and the outcome will be checked
+    for truthiness.
     Each item of the list(s) must be either a valid Django permission name
     (model.codename) or an attribute on the User model
     (e.g. 'is_active', 'is_superuser').
@@ -80,14 +82,13 @@ def check_permissions(user, permissions):
     elif isinstance(permissions, list):
         return _check_one_permission_list(permissions)
     else:
-        return (_check_one_permission_list(permissions[0]) or
-                _check_one_permission_list(permissions[1]))
+        return any(_check_one_permission_list(perm) for perm in permissions)
 
 
 def permissions_required(permissions, login_url=None):
     """
     Decorator that checks if a user has the given permissions.
-    Accepts a list or two-tuple of lists of permissions (see check_permissions
+    Accepts a list or tuple of lists of permissions (see check_permissions
     documentation).
     If the user is not logged in and the test fails, she is redirected to a
     login page. If the user is logged in, she gets a HTTP 403 Permission Denied

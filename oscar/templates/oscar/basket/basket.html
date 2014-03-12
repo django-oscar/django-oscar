@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 {% load thumbnail %}
 {% load i18n %}
-{% load url from future %}
 
 {% block title %}
     {% trans "Basket" %} | {{ block.super }}
@@ -10,7 +9,7 @@
 {% block breadcrumbs %}
     <ul class="breadcrumb">
         <li>
-            <a href="{% url 'promotions:home' %}">{% trans "Home" %}</a>
+            <a href="{{ homepage_url }}">{% trans "Home" %}</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Basket" %}</li>

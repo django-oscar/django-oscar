@@ -1,6 +1,5 @@
 import re
 import zlib
-import string
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
@@ -8,6 +7,7 @@ from django.core import exceptions
 
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.models.fields import UppercaseCharField, PhoneNumberField
+from six.moves import filter
 
 
 class AbstractAddress(models.Model):
@@ -211,23 +211,21 @@ class AbstractAddress(models.Model):
 
     title = models.CharField(
         pgettext_lazy(u"Treatment Pronouns for the customer", u"Title"),
-        max_length=64, choices=TITLE_CHOICES, blank=True, null=True)
-    first_name = models.CharField(
-        _("First name"), max_length=255, blank=True, null=True)
+        max_length=64, choices=TITLE_CHOICES, blank=True)
+    first_name = models.CharField(_("First name"), max_length=255, blank=True)
     last_name = models.CharField(_("Last name"), max_length=255, blank=True)
 
     # We use quite a few lines of an address as they are often quite long and
     # it's easier to just hide the unnecessary ones than add extra ones.
     line1 = models.CharField(_("First line of address"), max_length=255)
     line2 = models.CharField(
-        _("Second line of address"), max_length=255, blank=True, null=True)
+        _("Second line of address"), max_length=255, blank=True)
     line3 = models.CharField(
-        _("Third line of address"), max_length=255, blank=True, null=True)
-    line4 = models.CharField(_("City"), max_length=255, blank=True, null=True)
-    state = models.CharField(
-        _("State/County"), max_length=255, blank=True, null=True)
+        _("Third line of address"), max_length=255, blank=True)
+    line4 = models.CharField(_("City"), max_length=255, blank=True)
+    state = models.CharField(_("State/County"), max_length=255, blank=True)
     postcode = UppercaseCharField(
-        _("Post/Zip-code"), max_length=64, blank=True, null=True)
+        _("Post/Zip-code"), max_length=64, blank=True)
     country = models.ForeignKey('address.Country', verbose_name=_("Country"))
 
     #: A field only used for searching addresses - this contains all the
@@ -359,14 +357,16 @@ class AbstractAddress(models.Model):
             if field_name in destination_field_names and field_name != 'id':
                 setattr(address_model, field_name, getattr(self, field_name))
 
-    def active_address_fields(self):
+    def active_address_fields(self, include_salutation=True):
         """
         Return the non-empty components of the address, but merging the
         title, first_name and last_name into a single line.
         """
-        fields = [self.salutation, self.line1, self.line2,
-                  self.line3, self.line4, self.state, self.postcode]
-        fields = map(string.strip, filter(bool, fields))
+        fields = [self.line1, self.line2, self.line3,
+                  self.line4, self.state, self.postcode]
+        if include_salutation:
+            fields = [self.salutation] + fields
+        fields = [f.strip() for f in fields if f]
         try:
             fields.append(self.country.name)
         except exceptions.ObjectDoesNotExist:
@@ -381,7 +381,7 @@ class AbstractCountry(models.Model):
     iso_3166_1_a2 = models.CharField(_('ISO 3166-1 alpha-2'), max_length=2,
                                      primary_key=True)
     iso_3166_1_a3 = models.CharField(_('ISO 3166-1 alpha-3'), max_length=3,
-                                     null=True, db_index=True)
+                                     blank=True, db_index=True)
     # This should have been a CharField as it needs to be padded with zeros to
     # be 3 digits.  Access via the numeric_code instead.
     iso_3166_1_numeric = models.PositiveSmallIntegerField(
@@ -428,8 +428,7 @@ class AbstractShippingAddress(AbstractAddress):
         _("Phone number"), blank=True,
         help_text=_("In case we need to call you about your order"))
     notes = models.TextField(
-        blank=True, null=True,
-        verbose_name=_('Instructions'),
+        blank=True, verbose_name=_('Instructions'),
         help_text=_("Tell us anything we should know when delivering "
                     "your order."))
 

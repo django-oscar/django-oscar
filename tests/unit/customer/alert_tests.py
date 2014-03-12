@@ -15,7 +15,7 @@ class TestAnAlertForARegisteredUser(TestCase):
         user = G(User)
         product = create_product()
         self.alert = ProductAlert.objects.create(user=user,
-                                            product=product)
+                                                 product=product)
 
     def test_defaults_to_active(self):
         self.assertTrue(self.alert.is_active)

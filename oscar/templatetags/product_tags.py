@@ -14,6 +14,11 @@ def render_product(context, product):
     product class of the passed product.  This allows alternative templates to
     be used for different product classes.
     """
+    if not product:
+        # Search index is returning products that don't exist in the
+        # database...
+        return ''
+
     names = ['catalogue/partials/product/upc-%s.html' % product.upc,
              'catalogue/partials/product/class-%s.html'
              % product.get_product_class().slug,

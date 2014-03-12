@@ -1,6 +1,6 @@
 from decimal import Decimal as D
 
-from django.db.models.loading import get_model
+from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.order import exceptions
@@ -207,7 +207,7 @@ class EventHandler(object):
 
     def create_shipping_event(self, order, event_type, lines, line_quantities,
                               **kwargs):
-        reference = kwargs.get('reference', None)
+        reference = kwargs.get('reference', '')
         event = order.shipping_events.create(
             event_type=event_type, notes=reference)
         try:

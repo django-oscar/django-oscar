@@ -7,9 +7,10 @@ from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django.utils.datastructures import SortedDict
 
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.core.utils import slugify
+from oscar.models.fields import AutoSlugField
 from . import exceptions
 
 
@@ -64,17 +65,14 @@ class AbstractOrder(models.Model):
         verbose_name=_("Shipping Address"),
         on_delete=models.SET_NULL)
     shipping_method = models.CharField(
-        _("Shipping method"), max_length=128, null=True, blank=True)
+        _("Shipping method"), max_length=128, blank=True)
 
     # Identifies shipping code
     shipping_code = models.CharField(blank=True, max_length=128, default="")
 
     # Use this field to indicate that an order is on hold / awaiting payment
-    status = models.CharField(
-        _("Status"), max_length=100, null=True, blank=True)
-
-    guest_email = models.EmailField(
-        _("Guest email address"), null=True, blank=True)
+    status = models.CharField(_("Status"), max_length=100, blank=True)
+    guest_email = models.EmailField(_("Guest email address"), blank=True)
 
     # Index added to this field for reporting
     date_placed = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -275,7 +273,8 @@ class AbstractOrder(models.Model):
         return u"#%s" % (self.number,)
 
     def verification_hash(self):
-        hash = hashlib.md5('%s%s' % (self.number, settings.SECRET_KEY))
+        key = '%s%s' % (self.number, settings.SECRET_KEY)
+        hash = hashlib.md5(key.encode('utf8'))
         return hash.hexdigest()
 
     @property
@@ -319,7 +318,7 @@ class AbstractOrderNote(models.Model):
 
     # We allow notes to be classified although this isn't always needed
     INFO, WARNING, ERROR, SYSTEM = 'Info', 'Warning', 'Error', 'System'
-    note_type = models.CharField(_("Note Type"), max_length=128, null=True)
+    note_type = models.CharField(_("Note Type"), max_length=128, blank=True)
 
     message = models.TextField(_("Message"))
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
@@ -379,21 +378,24 @@ class AbstractLine(models.Model):
     order = models.ForeignKey(
         'order.Order', related_name='lines', verbose_name=_("Order"))
 
+    #: We keep a link to the stockrecord used for this line which allows us to
+    #: update stocklevels when it ships
+    stockrecord = models.ForeignKey(
+        'partner.StockRecord', on_delete=models.SET_NULL, blank=True,
+        null=True, verbose_name=_("Stock record"))
     # We store the partner, their SKU and the title for cases where the product
     # has been deleted from the catalogue.  We also store the partner name in
     # case the partner gets deleted at a later date.
     partner = models.ForeignKey(
         'partner.Partner', related_name='order_lines', blank=True, null=True,
         on_delete=models.SET_NULL, verbose_name=_("Partner"))
-    # We keep a link to the stockrecord used for this line which allows us to
-    # update stocklevels when it ships
-    stockrecord = models.ForeignKey(
-        'partner.StockRecord', on_delete=models.SET_NULL, blank=True,
-        null=True, verbose_name=_("Stock record"))
-    partner_name = models.CharField(_("Partner name"), max_length=128)
+    partner_name = models.CharField(
+        _("Partner name"), max_length=128, blank=True)
     partner_sku = models.CharField(_("Partner SKU"), max_length=128)
 
     title = models.CharField(_("Title"), max_length=255)
+    # UPC can be null because it's usually set as the product's UPC, and that
+    # can be null as well
     upc = models.CharField(_("UPC"), max_length=128, blank=True, null=True)
 
     # We don't want any hard links between orders and the products table so we
@@ -438,16 +440,15 @@ class AbstractLine(models.Model):
 
     # Partner information
     partner_line_reference = models.CharField(
-        _("Partner reference"), max_length=128, blank=True, null=True,
+        _("Partner reference"), max_length=128, blank=True,
         help_text=_("This is the item number that the partner uses "
                     "within their system"))
     partner_line_notes = models.TextField(
-        _("Partner Notes"), blank=True, null=True)
+        _("Partner Notes"), blank=True)
 
     # Partners often want to assign some status to each line to help with their
     # own business processes.
-    status = models.CharField(_("Status"), max_length=255,
-                              null=True, blank=True)
+    status = models.CharField(_("Status"), max_length=255, blank=True)
 
     # Estimated dispatch date - should be set at order time
     est_dispatch_date = models.DateField(
@@ -554,7 +555,7 @@ class AbstractLine(models.Model):
 
         events = []
         last_complete_event_name = None
-        for event_dict in status_map.values():
+        for event_dict in reversed(list(status_map.values())):
             if event_dict['quantity'] == self.quantity:
                 events.append(event_dict['name'])
                 last_complete_event_name = event_dict['name']
@@ -563,7 +564,7 @@ class AbstractLine(models.Model):
                     event_dict['name'], event_dict['quantity'],
                     self.quantity))
 
-        if last_complete_event_name == status_map.values()[-1]['name']:
+        if last_complete_event_name == list(status_map.values())[0]['name']:
             return last_complete_event_name
 
         return ', '.join(events)
@@ -606,7 +607,7 @@ class AbstractLine(models.Model):
         """
         Returns a dict of shipping events that this line has been through
         """
-        status_map = {}
+        status_map = SortedDict()
         for event in self.shipping_events.all():
             event_type = event.event_type
             event_name = event_type.name
@@ -614,9 +615,11 @@ class AbstractLine(models.Model):
             if event_name in status_map:
                 status_map[event_name]['quantity'] += event_quantity
             else:
-                status_map[event_name] = {'event_type': event_type,
-                                          'name': event_name,
-                                          'quantity': event_quantity}
+                status_map[event_name] = {
+                    'event_type': event_type,
+                    'name': event_name,
+                    'quantity': event_quantity
+                }
         return status_map
 
     # Payment event helpers
@@ -735,12 +738,8 @@ class AbstractPaymentEventType(models.Model):
     These are effectively the transaction types.
     """
     name = models.CharField(_("Name"), max_length=128, unique=True)
-    code = models.SlugField(_("Code"), max_length=128, unique=True)
-
-    def save(self, *args, **kwargs):
-        if not self.code:
-            self.code = slugify(self.name)
-        super(AbstractPaymentEventType, self).save(*args, **kwargs)
+    code = AutoSlugField(_("Code"), max_length=128, unique=True,
+                         populate_from='name')
 
     class Meta:
         abstract = True
@@ -829,7 +828,7 @@ class AbstractShippingEvent(models.Model):
     event_type = models.ForeignKey(
         'order.ShippingEventType', verbose_name=_("Event Type"))
     notes = models.TextField(
-        _("Event notes"), blank=True, null=True,
+        _("Event notes"), blank=True,
         help_text=_("This could be the dispatch reference, or a "
                     "tracking number"))
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
@@ -893,12 +892,8 @@ class AbstractShippingEventType(models.Model):
     # Name is the friendly description of an event
     name = models.CharField(_("Name"), max_length=255, unique=True)
     # Code is used in forms
-    code = models.SlugField(_("Code"), max_length=128, unique=True)
-
-    def save(self, *args, **kwargs):
-        if not self.code:
-            self.code = slugify(self.name)
-        super(AbstractShippingEventType, self).save(*args, **kwargs)
+    code = AutoSlugField(_("Code"), max_length=128, unique=True,
+                         populate_from='name')
 
     class Meta:
         abstract = True
@@ -942,18 +937,18 @@ class AbstractOrderDiscount(models.Model):
     offer_id = models.PositiveIntegerField(
         _("Offer ID"), blank=True, null=True)
     offer_name = models.CharField(
-        _("Offer name"), max_length=128, db_index=True, null=True)
+        _("Offer name"), max_length=128, db_index=True, blank=True)
     voucher_id = models.PositiveIntegerField(
         _("Voucher ID"), blank=True, null=True)
     voucher_code = models.CharField(
-        _("Code"), max_length=128, db_index=True, null=True)
+        _("Code"), max_length=128, db_index=True, blank=True)
     frequency = models.PositiveIntegerField(_("Frequency"), null=True)
     amount = models.DecimalField(
         _("Amount"), decimal_places=2, max_digits=12, default=0)
 
     # Post-order offer applications can return a message to indicate what
     # action was taken after the order was placed.
-    message = models.TextField(blank=True, null=True)
+    message = models.TextField(blank=True)
 
     @property
     def is_basket_discount(self):

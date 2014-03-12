@@ -20,18 +20,6 @@ class Product(AbstractProduct):
     pass
 
 
-class ContributorRole(AbstractContributorRole):
-    pass
-
-
-class Contributor(AbstractContributor):
-    pass
-
-
-class ProductContributor(AbstractProductContributor):
-    pass
-
-
 class ProductAttribute(AbstractProductAttribute):
     pass
 
@@ -62,5 +50,6 @@ class Option(AbstractOption):
 
 class ProductImage(AbstractProductImage):
     pass
+
 
 from .receivers import *  # noqa

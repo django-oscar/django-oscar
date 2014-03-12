@@ -22,4 +22,4 @@ class TestPartnerDashboard(WebTestCase):
         form['password2'] = "helloworld"
         form.submit()
 
-        self.assertEquals(1, partner.users.all().count())
+        self.assertEqual(1, partner.users.all().count())

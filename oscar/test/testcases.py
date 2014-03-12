@@ -1,4 +1,4 @@
-import httplib
+from six.moves import http_client
 
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import Permission
@@ -31,11 +31,22 @@ class WebTestCase(WebTest):
     is_superuser = False
     permissions = []
 
+    def create_user(self, username=None, email=None, password=None):
+        """
+        Creates a user. But as usernames are optional in newer versions of
+        Django, it only sets it if exists.
+        """
+        kwargs = {'email': email, 'password': password}
+        if 'username' in User._meta.get_all_field_names():
+            kwargs['username'] = username
+        return User.objects.create_user(**kwargs)
+
     def setUp(self):
         self.user = None
+
         if not self.is_anonymous or self.is_staff:
-            self.user = User.objects.create_user(self.username, self.email,
-                                                 self.password)
+            self.user = self.create_user(
+                self.username, self.email, self.password)
             self.user.is_staff = self.is_staff
             perms = self.permissions
             add_permissions(self.user, perms)
@@ -53,13 +64,15 @@ class WebTestCase(WebTest):
     def login(self, username=None, password=None):
         username = username or self.username
         password = password or self.password
-        self.client.login(username=username, password=password)
+        result = self.client.login(email=self.email, password=password)
+        if not result:
+            self.fail("Unable to login")
 
     # Custom assertions
 
     def assertIsRedirect(self, response, expected_url=None):
-        self.assertTrue(response.status_code in (httplib.FOUND,
-                                                 httplib.MOVED_PERMANENTLY))
+        self.assertTrue(response.status_code in (
+            http_client.FOUND, http_client.MOVED_PERMANENTLY))
         if expected_url:
             location = URL.from_string(response['Location'])
             self.assertEqual(expected_url, location.path())
@@ -72,8 +85,8 @@ class WebTestCase(WebTest):
 
     def assertNoAccess(self, response):
         self.assertContext(response)
-        self.assertTrue(response.status_code in (httplib.NOT_FOUND,
-                                                 httplib.FORBIDDEN))
+        self.assertTrue(response.status_code in (http_client.NOT_FOUND,
+                                                 http_client.FORBIDDEN))
 
     def assertRedirectUrlName(self, response, name, kwargs=None):
         self.assertIsRedirect(response)
@@ -81,7 +94,7 @@ class WebTestCase(WebTest):
         self.assertEqual(location, reverse(name, kwargs=kwargs))
 
     def assertIsOk(self, response):
-        self.assertEqual(httplib.OK, response.status_code)
+        self.assertEqual(http_client.OK, response.status_code)
 
     def assertContext(self, response):
         self.assertTrue(response.context is not None,

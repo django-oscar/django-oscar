@@ -15,6 +15,19 @@ compile.
 The :doc:`sandbox </internals/sandbox>` site can be used to test our changes in
 a browser. It is easily created with ``make sandbox``.
 
+JPEG Support
+------------
+
+On Ubuntu, you need to install a few libraries to get JPEG support with Pillow.
+
+    $ sudo apt-get install python-dev libjpeg-dev libfreetype6-dev zlib1g-dev
+
+If you did already install PIL (you did if you ran ``make install`` previously),
+reinstall it:
+
+    $ pip uninstall Pillow
+    $ pip install Pillow
+
 Creating migrations
 ===================
 

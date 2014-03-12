@@ -60,12 +60,12 @@ class TestAnAnonymousReview(TestCase):
         review = self.review()
         review.save()
         self.assertFalse(review.has_votes)
-        self.assertEquals(0, review.num_up_votes)
-        self.assertEquals(0, review.num_down_votes)
+        self.assertEqual(0, review.num_up_votes)
+        self.assertEqual(0, review.num_down_votes)
 
     def test_has_reviewer_name_property(self):
         review = self.review(name="Dave")
-        self.assertEquals("Dave", review.reviewer_name)
+        self.assertEqual("Dave", review.reviewer_name)
 
 
 @attr('reviews')
@@ -104,7 +104,7 @@ class TestAUserReview(TestCase):
 
     def test_has_reviewer_name_property(self):
         review = self.review()
-        self.assertEquals("Tom Thumb", review.reviewer_name)
+        self.assertEqual("Tom Thumb", review.reviewer_name)
 
 
 @attr('reviews')
@@ -123,14 +123,14 @@ class TestVotingOnAReview(TestCase):
     def test_updates_totals_for_upvote(self):
         self.review.vote_up(self.voter)
         self.assertTrue(self.review.has_votes)
-        self.assertEquals(1, self.review.total_votes)
-        self.assertEquals(1, self.review.delta_votes)
+        self.assertEqual(1, self.review.total_votes)
+        self.assertEqual(1, self.review.delta_votes)
 
     def test_updates_totals_for_downvote(self):
         self.review.vote_down(self.voter)
         self.assertTrue(self.review.has_votes)
-        self.assertEquals(1, self.review.total_votes)
-        self.assertEquals(-1, self.review.delta_votes)
+        self.assertEqual(1, self.review.total_votes)
+        self.assertEqual(-1, self.review.delta_votes)
 
     def test_is_permitted_for_normal_user(self):
         is_allowed, reason = self.review.can_user_vote(self.voter)

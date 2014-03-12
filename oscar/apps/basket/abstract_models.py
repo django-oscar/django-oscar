@@ -115,9 +115,11 @@ class AbstractBasket(models.Model):
         if self.id is None:
             return self.lines.none()
         if self._lines is None:
-            self._lines = self.lines.select_related(
-                'product', 'product__stockrecord'
-            ).all().prefetch_related('attributes', 'product__images')
+            self._lines = (
+                self.lines
+                .select_related('product', 'stockrecord')
+                .prefetch_related(
+                    'attributes', 'product__images'))
         return self._lines
 
     def is_quantity_allowed(self, qty):
@@ -320,7 +322,7 @@ class AbstractBasket(models.Model):
         base = '%s_%s' % (product.id, stockrecord.id)
         if not options:
             return base
-        return "%s_%s" % (base, zlib.crc32(str(options)))
+        return "%s_%s" % (base, zlib.crc32(repr(options).encode('utf8')))
 
     def _get_total(self, property):
         """
@@ -436,8 +438,7 @@ class AbstractBasket(models.Model):
     @property
     def num_items(self):
         """Return number of items"""
-        return reduce(
-            lambda num, line: num + line.quantity, self.lines.all(), 0)
+        return sum(line.quantity for line in self.lines.all())
 
     @property
     def num_items_without_discount(self):

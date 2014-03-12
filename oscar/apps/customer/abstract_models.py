@@ -12,6 +12,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.customer.managers import CommunicationTypeManager
 from oscar.core.compat import AUTH_USER_MODEL
+from oscar.models.fields import AutoSlugField
 
 
 class UserManager(auth_models.BaseUserManager):
@@ -83,6 +84,24 @@ class AbstractUser(auth_models.AbstractBaseUser,
     def get_short_name(self):
         return self.first_name
 
+    def _migrate_alerts_to_user(self):
+        """
+        Transfer any active alerts linked to a user's email address to the
+        newly registered user.
+        """
+        ProductAlert = self.alerts.model
+        alerts = ProductAlert.objects.filter(
+            email=self.email, status=ProductAlert.ACTIVE)
+        alerts.update(user=self, key=None, email=None)
+
+    def save(self, *args, **kwargs):
+        super(AbstractUser, self).save(*args, **kwargs)
+        # Migrate any "anonymous" product alerts to the registered user
+        # Ideally, this would be done via a post-save signal. But we can't
+        # use get_user_model to wire up signals to custom user models
+        # see Oscar ticket #1127, Django ticket #19218
+        self._migrate_alerts_to_user()
+
 
 class AbstractEmail(models.Model):
     """
@@ -93,7 +112,7 @@ class AbstractEmail(models.Model):
                              verbose_name=_("User"))
     subject = models.TextField(_('Subject'), max_length=255)
     body_text = models.TextField(_("Body Text"))
-    body_html = models.TextField(_("Body HTML"), blank=True, null=True)
+    body_html = models.TextField(_("Body HTML"), blank=True)
     date_sent = models.DateTimeField(_("Date Sent"), auto_now_add=True)
 
     class Meta:
@@ -113,7 +132,8 @@ class AbstractCommunicationEventType(models.Model):
 
     # Code used for looking up this event programmatically.
     # eg. PASSWORD_RESET
-    code = models.SlugField(_('Code'), max_length=128)
+    code = AutoSlugField(_('Code'), max_length=128, unique=True,
+                         populate_from='name')
 
     #: Name is the friendly description of an event for use in the admin
     name = models.CharField(
@@ -128,12 +148,12 @@ class AbstractCommunicationEventType(models.Model):
 
     # Template content for emails
     email_subject_template = models.CharField(
-        _('Email Subject Template'), max_length=255, blank=True, null=True)
+        _('Email Subject Template'), max_length=255, blank=True)
     email_body_template = models.TextField(
-        _('Email Body Template'), blank=True, null=True)
+        _('Email Body Template'), blank=True)
     email_body_html_template = models.TextField(
-        _('Email Body HTML Template'), blank=True, null=True,
-        help_text=_("HTML template"))
+        _('Email Body HTML Template'), help_text=_("HTML template"),
+        blank=True)
 
     # Template content for SMS messages
     sms_template = models.CharField(_('SMS Template'), max_length=170,
@@ -172,7 +192,7 @@ class AbstractCommunicationEventType(models.Model):
                      'sms': 'sms_template'}
         for name, attr_name in templates.items():
             field = getattr(self, attr_name, None)
-            if field is not None:
+            if field:
                 # Template content is in a model field
                 templates[name] = Template(field)
             else:
@@ -222,12 +242,12 @@ class AbstractNotification(models.Model):
 
     # Some projects may want to categorise their notifications.  You may want
     # to use this field to show a different icons next to the notification.
-    category = models.CharField(max_length=255, null=True)
+    category = models.CharField(max_length=255, blank=True)
 
     INBOX, ARCHIVE = 'Inbox', 'Archive'
     choices = (
-        (INBOX, _(INBOX)),
-        (ARCHIVE, _(ARCHIVE)))
+        (INBOX, _('Inbox')),
+        (ARCHIVE, _('Archive')))
     location = models.CharField(max_length=32, choices=choices,
                                 default=INBOX)
 
@@ -263,10 +283,10 @@ class AbstractProductAlert(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL, db_index=True, blank=True,
                              null=True, related_name="alerts",
                              verbose_name=_('User'))
-    email = models.EmailField(_("Email"), db_index=True, blank=True, null=True)
+    email = models.EmailField(_("Email"), db_index=True, blank=True)
 
     # This key are used to confirm and cancel alerts for anon users
-    key = models.CharField(_("Key"), max_length=128, null=True, db_index=True)
+    key = models.CharField(_("Key"), max_length=128, blank=True, db_index=True)
 
     # An alert can have two different statuses for authenticated
     # users ``ACTIVE`` and ``INACTIVE`` and anonymous users have an
@@ -359,8 +379,8 @@ class AbstractProductAlert(models.Model):
         """
         Get a random generated key based on SHA-1 and email address
         """
-        salt = hashlib.sha1(str(random.random())).hexdigest()
-        return hashlib.sha1(salt + self.email).hexdigest()
+        salt = hashlib.sha1(str(random.random()).encode('utf8')).hexdigest()
+        return hashlib.sha1((salt + self.email).encode('utf8')).hexdigest()
 
     def get_confirm_url(self):
         return reverse('customer:alerts-confirm', kwargs={'key': self.key})

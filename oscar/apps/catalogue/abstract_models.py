@@ -1,22 +1,27 @@
+import os
+import six
+import warnings
 from itertools import chain
 from datetime import datetime, date
 import logging
-import os
-import warnings
 
+from django.utils.html import strip_tags
+from django.utils.safestring import mark_safe
 from django.conf import settings
 from django.contrib.staticfiles.finders import find
 from django.core.exceptions import ValidationError, ImproperlyConfigured
 from django.core.files.base import File
 from django.core.validators import RegexValidator
 from django.db import models
-from django.db.models import Sum, Count, get_model
+from django.db.models import Sum, Count
 from django.utils.translation import ugettext_lazy as _
 from django.utils.functional import cached_property
+
 from treebeard.mp_tree import MP_Node
 
 from oscar.core.utils import slugify
-from oscar.core.loading import get_classes
+from oscar.core.loading import get_classes, get_model
+from oscar.models.fields import NullCharField, AutoSlugField
 
 ProductManager, BrowsableProductManager = get_classes(
     'catalogue.managers', ['ProductManager', 'BrowsableProductManager'])
@@ -33,7 +38,8 @@ class AbstractProductClass(models.Model):
     Not necessarily equivalent to top-level categories but usually will be.
     """
     name = models.CharField(_('Name'), max_length=128)
-    slug = models.SlugField(_('Slug'), max_length=128, unique=True)
+    slug = AutoSlugField(_('Slug'), max_length=128, unique=True,
+                         populate_from='name')
 
     #: Some product type don't require shipping (eg digital products) - we use
     #: this field to take some shortcuts in the checkout.
@@ -56,11 +62,6 @@ class AbstractProductClass(models.Model):
         verbose_name = _("Product Class")
         verbose_name_plural = _("Product Classes")
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        return super(AbstractProductClass, self).save(*args, **kwargs)
-
     def __unicode__(self):
         return self.name
 
@@ -72,7 +73,7 @@ class AbstractCategory(MP_Node):
     Uses django-treebeard.
     """
     name = models.CharField(_('Name'), max_length=255, db_index=True)
-    description = models.TextField(_('Description'), blank=True, null=True)
+    description = models.TextField(_('Description'), blank=True)
     image = models.ImageField(_('Image'), upload_to='categories', blank=True,
                               null=True, max_length=255)
     slug = models.SlugField(_('Slug'), max_length=255, db_index=True,
@@ -171,83 +172,20 @@ class AbstractCategory(MP_Node):
 
 class AbstractProductCategory(models.Model):
     """
-    Joining model between products and categories.
+    Joining model between products and categories. Exists to allow customising.
     """
     product = models.ForeignKey('catalogue.Product', verbose_name=_("Product"))
     category = models.ForeignKey('catalogue.Category',
                                  verbose_name=_("Category"))
-    is_canonical = models.BooleanField(_('Is Cannonical'), default=False,
-                                       db_index=True)
 
     class Meta:
         abstract = True
-        ordering = ['-is_canonical']
+        ordering = ['product', 'category']
         verbose_name = _('Product Category')
         verbose_name_plural = _('Product Categories')
 
     def __unicode__(self):
         return u"<productcategory for product '%s'>" % self.product
-
-
-class AbstractContributorRole(models.Model):
-    """
-    A role that may be performed by a contributor to a product, eg Author,
-    Actor, Director.
-    """
-    name = models.CharField(_('Name'), max_length=50)
-    name_plural = models.CharField(_('Name Plural'), max_length=50)
-    slug = models.SlugField()
-
-    def __unicode__(self):
-        return self.name
-
-    class Meta:
-        abstract = True
-        verbose_name = _('Contributor Role')
-        verbose_name_plural = _('Contributor Roles')
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super(AbstractContributorRole, self).save(*args, **kwargs)
-
-
-class AbstractContributor(models.Model):
-    """
-    Represents a person or business that has contributed to a product in some
-    way. eg an author.
-    """
-    name = models.CharField(_("Name"), max_length=255)
-    slug = models.SlugField(_("Slug"), max_length=255, unique=False)
-
-    def __unicode__(self):
-        return self.name
-
-    class Meta:
-        abstract = True
-        verbose_name = _('Contributor')
-        verbose_name_plural = _('Contributors')
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super(AbstractContributor, self).save(*args, **kwargs)
-
-
-class AbstractProductContributor(models.Model):
-    product = models.ForeignKey('catalogue.Product', verbose_name=_("Product"))
-    contributor = models.ForeignKey('catalogue.Contributor',
-                                    verbose_name=_("Contributor"))
-    role = models.ForeignKey('catalogue.ContributorRole', blank=True,
-                             null=True, verbose_name=_("Contributor Role"))
-
-    def __unicode__(self):
-        return '%s <- %s - %s' % (self.product, self.role, self.contributor)
-
-    class Meta:
-        abstract = True
-        verbose_name = _('Product Contributor')
-        verbose_name_plural = _('Product Contributors')
 
 
 class AbstractProduct(models.Model):
@@ -262,7 +200,7 @@ class AbstractProduct(models.Model):
     while its children would be "Green fleece - size L".
     """
     #: Universal product code
-    upc = models.CharField(
+    upc = NullCharField(
         _("UPC"), max_length=64, blank=True, null=True, unique=True,
         help_text=_("Universal Product Code (UPC) is an identifier for "
                     "a product which is not specific to a particular "
@@ -279,18 +217,16 @@ class AbstractProduct(models.Model):
                     "product)."))
 
     # Title is mandatory for canonical products but optional for child products
-    title = models.CharField(_('Title'), max_length=255, blank=True, null=True)
+    title = models.CharField(_('Title'), max_length=255, blank=True)
     slug = models.SlugField(_('Slug'), max_length=255, unique=False)
-    description = models.TextField(_('Description'), blank=True, null=True)
+    description = models.TextField(_('Description'), blank=True)
 
-    #: Use this field to indicate if the product is inactive or awaiting
-    #: approval
-    status = models.CharField(_('Status'), max_length=128, blank=True,
-                              null=True, db_index=True)
+    #: "Type" of product.
+    #: None for Product variants, they inherit their parent's product class
     product_class = models.ForeignKey(
-        'catalogue.ProductClass', verbose_name=_('Product Class'), null=True,
-        related_name="products",
-        help_text=_("""Choose what type of product this is"""))
+        'catalogue.ProductClass', null=True, on_delete=models.PROTECT,
+        verbose_name=_('Product Type'), related_name="products",
+        help_text=_("Choose what type of product this is"))
     attributes = models.ManyToManyField(
         'catalogue.ProductAttribute',
         through='ProductAttributeValue',
@@ -317,6 +253,7 @@ class AbstractProduct(models.Model):
 
     # Product score - used by analytics app
     score = models.FloatField(_('Score'), default=0.00, db_index=True)
+
     # Denormalised product rating - used by reviews app.
     # Product has no ratings if rating is None
     rating = models.FloatField(_('Rating'), null=True, editable=False)
@@ -335,7 +272,7 @@ class AbstractProduct(models.Model):
     #: discount some types of product (e.g. ebooks) and this field helps
     #: merchants from avoiding discounting such products
     is_discountable = models.BooleanField(
-        _("Is discountable?"), default=True, help_text=(
+        _("Is discountable?"), default=True, help_text=_(
             "This flag indicates if this product can be used in an offer "
             "or not"))
 
@@ -413,7 +350,7 @@ class AbstractProduct(models.Model):
 
     @property
     def is_shipping_required(self):
-        return self.product_class.requires_shipping
+        return self.get_product_class().requires_shipping
 
     @property
     def has_stockrecords(self):
@@ -433,8 +370,7 @@ class AbstractProduct(models.Model):
         """
         pairs = []
         for value in self.attribute_values.select_related().all():
-            pairs.append("%s: %s" % (value.attribute.name,
-                                     value.value))
+            pairs.append(value.summary())
         return ", ".join(pairs)
 
     # Deprecated stockrecord methods
@@ -669,7 +605,7 @@ class ProductAttributesContainer(object):
             else:
                 try:
                     attribute.validate_value(value)
-                except ValidationError, e:
+                except ValidationError as e:
                     raise ValidationError(
                         _("%(attr)s attribute %(err)s") %
                         {'attr': attribute.code, 'err': e})
@@ -703,13 +639,14 @@ class AbstractProductAttribute(models.Model):
     """
     product_class = models.ForeignKey(
         'catalogue.ProductClass', related_name='attributes', blank=True,
-        null=True, verbose_name=_("Product Class"))
+        null=True, verbose_name=_("Product Type"))
     name = models.CharField(_('Name'), max_length=128)
     code = models.SlugField(
         _('Code'), max_length=128,
         validators=[RegexValidator(
             regex=r'^[a-zA-Z_][0-9a-zA-Z_]*$',
-            message=_("Code must match ^[a-zA-Z_][0-9a-zA-Z_]*$"))])
+            message=_("Code can only contain the letters a-z, A-Z, digits "
+                      "and underscores, and can't start with a digit"))])
 
     TYPE_CHOICES = (
         ("text", _("Text")),
@@ -751,7 +688,7 @@ class AbstractProductAttribute(models.Model):
         return self.type in ["file", "image"]
 
     def _validate_text(self, value):
-        if not (type(value) == unicode or type(value) == str):
+        if not isinstance(value, six.string_types):
             raise ValidationError(_("Must be str or unicode"))
 
     def _validate_float(self, value):
@@ -921,7 +858,43 @@ class AbstractProductAttributeValue(models.Model):
         verbose_name_plural = _('Product Attribute Values')
 
     def __unicode__(self):
-        return u"%s: %s" % (self.attribute.name, self.value)
+        return self.summary()
+
+    def summary(self):
+        """
+        Gets a string representation of both the attribute and it's value,
+        used e.g in product summaries.
+        """
+        return u"%s: %s" % (self.attribute.name, self.value_as_text)
+
+    @property
+    def value_as_text(self):
+        """
+        Returns a string representation of the attribute's value. To customise
+        e.g. image attribute values, declare a _image_as_text property and
+        return something appropriate.
+        """
+        property_name = '_%s_as_text' % self.attribute.type
+        return getattr(self, property_name, self.value)
+
+    @property
+    def _richtext_as_text(self):
+        return strip_tags(self.value)
+
+    @property
+    def value_as_html(self):
+        """
+        Returns a HTML representation of the attribute's value. To customise
+        e.g. image attribute values, declare a _image_as_html property and
+        return e.g. an <img> tag.
+        Defaults to the _as_text representation.
+        """
+        property_name = '_%s_as_html' % self.attribute.type
+        return getattr(self, property_name, self.value_as_text)
+
+    @property
+    def _richtext_as_html(self):
+        return mark_safe(self.value)
 
 
 class AbstractAttributeOptionGroup(models.Model):
@@ -1026,7 +999,8 @@ class AbstractOption(models.Model):
     when add the item to their basket.
     """
     name = models.CharField(_("Name"), max_length=128)
-    code = models.SlugField(_("Code"), max_length=128, unique=True)
+    code = AutoSlugField(_("Code"), max_length=128, unique=True,
+                         populate_from='name')
 
     REQUIRED, OPTIONAL = ('Required', 'Optional')
     TYPE_CHOICES = (
@@ -1043,11 +1017,6 @@ class AbstractOption(models.Model):
 
     def __unicode__(self):
         return self.name
-
-    def save(self, *args, **kwargs):
-        if not self.code:
-            self.code = slugify(self.name)
-        super(AbstractOption, self).save(*args, **kwargs)
 
     @property
     def is_required(self):
@@ -1100,8 +1069,7 @@ class AbstractProductImage(models.Model):
         'catalogue.Product', related_name='images', verbose_name=_("Product"))
     original = models.ImageField(
         _("Original"), upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255)
-    caption = models.CharField(
-        _("Caption"), max_length=200, blank=True, null=True)
+    caption = models.CharField(_("Caption"), max_length=200, blank=True)
 
     #: Use display_order to determine which is the "primary" image
     display_order = models.PositiveIntegerField(
