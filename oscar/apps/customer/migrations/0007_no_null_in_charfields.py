@@ -13,8 +13,6 @@ class Migration(DataMigration):
         orm.ProductAlert.objects.filter(email__isnull=True).update(email='')
         orm.ProductAlert.objects.filter(key__isnull=True).update(key='')
         orm.Email.objects.filter(body_html__isnull=True).update(body_html='')
-        orm.CommunicationEventType.objects.filter(email_body_html_template__isnull=True).update(email_body_html_template='')
-        orm.CommunicationEventType.objects.filter(email_subject_template__isnull=True).update(email_subject_template='')
         orm.Notification.objects.filter(category__isnull=True).update(category='')
 
     def backwards(self, orm):

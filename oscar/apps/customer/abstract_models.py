@@ -147,13 +147,16 @@ class AbstractCommunicationEventType(models.Model):
                                 default=ORDER_RELATED)
 
     # Template content for emails
+    # NOTE: There's an intentional distinction between None and ''. None
+    # instructs Oscar to look for a file-based template, '' is just an empty
+    # template.
     email_subject_template = models.CharField(
-        _('Email Subject Template'), max_length=255, blank=True)
+        _('Email Subject Template'), max_length=255, blank=True, null=True)
     email_body_template = models.TextField(
-        _('Email Body Template'), blank=True)
+        _('Email Body Template'), blank=True, null=True)
     email_body_html_template = models.TextField(
-        _('Email Body HTML Template'), help_text=_("HTML template"),
-        blank=True)
+        _('Email Body HTML Template'), blank=True, null=True,
+        help_text=_("HTML template"))
 
     # Template content for SMS messages
     sms_template = models.CharField(_('SMS Template'), max_length=170,
@@ -192,7 +195,7 @@ class AbstractCommunicationEventType(models.Model):
                      'sms': 'sms_template'}
         for name, attr_name in templates.items():
             field = getattr(self, attr_name, None)
-            if field:
+            if field is not None:
                 # Template content is in a model field
                 templates[name] = Template(field)
             else:

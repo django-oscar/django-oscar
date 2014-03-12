@@ -20,15 +20,6 @@ class Migration(SchemaMigration):
         # Changing field 'Email.body_html'
         db.alter_column(u'customer_email', 'body_html', self.gf('django.db.models.fields.TextField')(default=''))
 
-        # Changing field 'CommunicationEventType.email_body_html_template'
-        db.alter_column(u'customer_communicationeventtype', 'email_body_html_template', self.gf('django.db.models.fields.TextField')(default=''))
-
-        # Changing field 'CommunicationEventType.email_subject_template'
-        db.alter_column(u'customer_communicationeventtype', 'email_subject_template', self.gf('django.db.models.fields.CharField')(default='', max_length=255))
-
-        # Changing field 'CommunicationEventType.email_body_template'
-        db.alter_column(u'customer_communicationeventtype', 'email_body_template', self.gf('django.db.models.fields.TextField')(default=''))
-
         # Changing field 'Notification.category'
         db.alter_column(u'customer_notification', 'category', self.gf('django.db.models.fields.CharField')(default='', max_length=255))
 
@@ -42,15 +33,6 @@ class Migration(SchemaMigration):
 
         # Changing field 'Email.body_html'
         db.alter_column(u'customer_email', 'body_html', self.gf('django.db.models.fields.TextField')(null=True))
-
-        # Changing field 'CommunicationEventType.email_body_html_template'
-        db.alter_column(u'customer_communicationeventtype', 'email_body_html_template', self.gf('django.db.models.fields.TextField')(null=True))
-
-        # Changing field 'CommunicationEventType.email_subject_template'
-        db.alter_column(u'customer_communicationeventtype', 'email_subject_template', self.gf('django.db.models.fields.CharField')(max_length=255, null=True))
-
-        # Changing field 'CommunicationEventType.email_body_template'
-        db.alter_column(u'customer_communicationeventtype', 'email_body_template', self.gf('django.db.models.fields.TextField')(null=True))
 
         # Changing field 'Notification.category'
         db.alter_column(u'customer_notification', 'category', self.gf('django.db.models.fields.CharField')(max_length=255, null=True))
@@ -210,9 +192,9 @@ class Migration(SchemaMigration):
             'code': ('oscar.models.fields.autoslugfield.AutoSlugField', [], {'allow_duplicates': 'False', 'max_length': '128', 'separator': "u'-'", 'blank': 'True', 'unique': 'True', 'populate_from': "'name'", 'overwrite': 'False'}),
             'date_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'date_updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'email_body_html_template': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'email_body_template': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'email_subject_template': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'email_body_html_template': ('django.db.models.fields.TextField', [], {'blank': 'True', 'null': 'True'}),
+            'email_body_template': ('django.db.models.fields.TextField', [], {'blank': 'True', 'null': 'True'}),
+            'email_subject_template': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True', 'null': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'sms_template': ('django.db.models.fields.CharField', [], {'max_length': '170', 'null': 'True', 'blank': 'True'})
