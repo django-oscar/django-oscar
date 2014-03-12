@@ -1,23 +1,20 @@
 from django.conf import settings
+from django.contrib.auth import get_user_model as django_get_user_model
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
 
 
 def get_user_model():
     """
-    Return the User model
+    Return the User model.
 
-    Using this function instead of Django 1.5's get_user_model allows backwards
-    compatibility with Django 1.4.
+    This used to live in compat to support both Django 1.4's fixed User model
+    and custom user models introduced thereafter.
+    Support for Django 1.4 has since been dropped in Oscar, but our
+    get_user_model remains because code relies on us annotating the _meta class
+    with the additional fields, and other code might rely on it as well.
     """
-    try:
-        # Django 1.5+
-        from django.contrib.auth import get_user_model
-    except ImportError:
-        # Django <= 1.4
-        model = User
-    else:
-        model = get_user_model()
+    model = django_get_user_model()
 
     # Test if user model has any custom fields and add attributes to the _meta
     # class

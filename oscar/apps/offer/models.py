@@ -177,10 +177,6 @@ class ConditionalOffer(models.Model):
         verbose_name = _("Conditional offer")
         verbose_name_plural = _("Conditional offers")
 
-        # The way offers are looked up involves the fields (offer_type, status,
-        # start_datetime, end_datetime).  Ideally, you want a DB index that
-        # covers these 4 fields (will add support for this in Django 1.5)
-
     def save(self, *args, **kwargs):
         # Check to see if consumption thresholds have been broken
         if not self.is_suspended:
