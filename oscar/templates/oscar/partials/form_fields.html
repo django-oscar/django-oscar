@@ -1,5 +1,4 @@
 {% load i18n %}
-{% load form_tags %}
 
 {% if form.is_bound and not form.is_valid %}
     <div class="alert alert-error">
@@ -15,24 +14,6 @@
     {% endfor %}
 {% endif %}
 
-{% for field in form.hidden_fields %}
-    {{ field }}
-{% endfor %}
-
-{% for field in form.visible_fields %}
-    {% comment %}
-        Make the field widget type available to templates so we can mark-up
-        checkboxes differently to other widgets.
-    {% endcomment %}
-    {% annotate_form_field field %}
-
-    {% comment %}
-        We use a separate template for each field so that forms can be rendered
-        field-by-field easily #}
-    {% endcomment %}
-    {% if field.widget_type == 'CheckboxInput' %}
-        {% include 'partials/form_field_checkbox.html' with field=field %}
-    {% else %}
-        {% include 'partials/form_field.html' with field=field %}
-    {% endif %}
+{% for field in form %}
+    {% include 'partials/form_field.html' with field=field %}
 {% endfor %}
