@@ -212,6 +212,15 @@ class OrderListView(BulkEditMixin, ListView):
         queryset = sort_queryset(self.base_queryset, self.request,
                                  ['number', 'total_incl_tax'])
 
+        queryset = (
+            queryset
+            .select_related(
+                'billing_address', 'billing_address__country',
+                'shipping_address', 'shipping_address__country',
+                'user'
+            )
+            .prefetch_related('lines'))
+
         # Look for shortcut query filters
         if 'order_status' in self.request.GET:
             self.form = self.form_class()
