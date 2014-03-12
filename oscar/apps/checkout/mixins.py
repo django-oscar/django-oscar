@@ -7,7 +7,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from oscar.core.loading import get_model
 
 from oscar.core.loading import get_class
-from oscar.core.decorators import deprecated
 
 OrderCreator = get_class('order.utils', 'OrderCreator')
 Dispatcher = get_class('customer.utils', 'Dispatcher')
@@ -167,44 +166,6 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             shipping_addr.populate_alternative_model(user_addr)
         user_addr.num_orders += 1
         user_addr.save()
-
-    @deprecated
-    def create_shipping_address_from_form_fields(self, addr_data):
-        """Creates a shipping address model from the saved form fields"""
-        shipping_addr = ShippingAddress(**addr_data)
-        shipping_addr.save()
-        return shipping_addr
-
-    @deprecated
-    def create_user_address(self, session_addr_data):
-        """
-        For signed-in users, we create a user address model which will go
-        into their address book.
-        """
-        if self.request.user.is_authenticated():
-            addr_data = session_addr_data.copy()
-            addr_data['user_id'] = self.request.user.id
-            user_addr = UserAddress(**addr_data)
-            # Check that this address isn't already in the db as we don't want
-            # to fill up the customer address book with duplicate addresses
-            try:
-                UserAddress._default_manager.get(
-                    hash=user_addr.generate_hash())
-            except ObjectDoesNotExist:
-                user_addr.save()
-
-    @deprecated
-    def create_shipping_address_from_user_address(self, addr_id):
-        """Creates a shipping address from a user address"""
-        address = UserAddress._default_manager.get(pk=addr_id)
-        # Increment the number of orders to help determine popularity of orders
-        address.num_orders += 1
-        address.save()
-
-        shipping_addr = ShippingAddress()
-        address.populate_alternative_model(shipping_addr)
-        shipping_addr.save()
-        return shipping_addr
 
     def create_billing_address(self, billing_address=None,
                                shipping_address=None, **kwargs):

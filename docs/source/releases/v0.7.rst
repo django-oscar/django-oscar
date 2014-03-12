@@ -181,6 +181,21 @@ Removal of features deprecated in 0.6
 
 * Django 1.4 support has been removed.
 
+* In :class:`~oscar.apps.checkout.mixins.OrderPlacementMixin`, the following methods
+  have been removed:
+
+  - ``create_shipping_address_from_form_fields`` - This is removed as checkout
+    now requires an unsaved shipping address instance to be passed in (rather
+    than having it created implicitly).
+  - ``create_user_address``  - This is replaced by
+    :meth:`oscar.apps.checkout.mixin.OrderPlacementMixin.update_address_book`.
+  - ``create_shipping_address_from_user_address``
+
+* The :meth:`oscar.apps.checkout.session.CheckoutSessionData.shipping_method`
+  has been removed.  Instead
+  :meth:`oscar.apps.checkout.session.CheckoutSessionMixin.get_shipping_address`
+  provides the same functionality.
+
 Renamed templates
 ~~~~~~~~~~~~~~~~~
 

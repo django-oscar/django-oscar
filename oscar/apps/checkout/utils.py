@@ -1,10 +1,4 @@
-import warnings
-
 from django.utils.encoding import force_text
-
-from oscar.core.loading import get_class
-
-Repository = get_class('shipping.repository', 'Repository')
 
 
 class CheckoutSessionData(object):
@@ -142,20 +136,6 @@ class CheckoutSessionData(object):
         Returns the shipping method code
         """
         return self._get('shipping', 'method_code')
-
-    def shipping_method(self, basket):
-        """
-        Returns the shipping method model based on the
-        data stored in the session.
-        """
-        warnings.warn((
-            "shipping_method is deprecated as the functionality has "
-            "been moved to the get_shipping_method from the checkout "
-            "session mixin"), DeprecationWarning)
-        code = self.shipping_method_code(basket)
-        if not code:
-            return None
-        return Repository().find_by_code(code, basket)
 
     def is_shipping_method_set(self, basket):
         """
