@@ -120,15 +120,6 @@ class AbstractBasket(models.Model):
                 .select_related('product', 'stockrecord')
                 .prefetch_related(
                     'attributes', 'product__images'))
-
-            # Assign strategy to each line so it can use it to determine
-            # prices.  This is only needed for Django 1.4.5, where accessing
-            # self.basket from within the line will create a new basket
-            # instance (with no strategy assigned).  In later version, the
-            # original basket instance is cached and keeps its strategy
-            # property.
-            for line in self._lines:
-                line.strategy = self.strategy
         return self._lines
 
     def is_quantity_allowed(self, qty):
@@ -731,14 +722,12 @@ class AbstractLine(models.Model):
         if not hasattr(self, '_info'):
             # Cache the PurchaseInfo instance (note that a strategy instance is
             # assigned to each line by the basket in the all_lines method).
-            self._info = self.strategy.fetch_for_product(
+            self._info = self.basket.strategy.fetch_for_product(
                 self.product, self.stockrecord)
         return self._info
 
     @property
     def is_tax_known(self):
-        if not hasattr(self, 'strategy'):
-            return False
         return self.purchase_info.price.is_tax_known
 
     @property

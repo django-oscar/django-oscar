@@ -126,6 +126,11 @@ Backwards incompatible changes in 0.7
     Fields and models have been removed from Oscar. If you used them, you must
     ensure you create/extend the affected models appropriately.
 
+* Oscar has dropped support for Django 1.4. However, if Oscar continues to
+  support the ``AUTH_PROFILE_MODULE`` setting so sites that use separate
+  profile models aren't forced to convert to a single user model in order to
+  use Oscar 0.7.
+
 * ``AbstractProduct.status`` was an unused ``CharField`` provided for convenience
   as it's a commonly required field. But a different field type was often
   required, and as changing it is much harder than adding a field with the

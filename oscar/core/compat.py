@@ -1,27 +1,20 @@
-import six
-from six.moves import map
 from django.conf import settings
+from django.contrib.auth import get_user_model as django_get_user_model
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.html import conditional_escape
-from django.utils.safestring import mark_safe
 
 
 def get_user_model():
     """
-    Return the User model
+    Return the User model.
 
-    Using this function instead of Django 1.5's get_user_model allows backwards
-    compatibility with Django 1.4.
+    This used to live in compat to support both Django 1.4's fixed User model
+    and custom user models introduced thereafter.
+    Support for Django 1.4 has since been dropped in Oscar, but our
+    get_user_model remains because code relies on us annotating the _meta class
+    with the additional fields, and other code might rely on it as well.
     """
-    try:
-        # Django 1.5+
-        from django.contrib.auth import get_user_model
-    except ImportError:
-        # Django <= 1.4
-        model = User
-    else:
-        model = get_user_model()
+    model = django_get_user_model()
 
     # Test if user model has any custom fields and add attributes to the _meta
     # class
@@ -43,17 +36,6 @@ try:
 except ValueError:
     raise ImproperlyConfigured("AUTH_USER_MODEL must be of the form"
                                " 'app_label.model_name'")
-
-
-def format_html(format_string, *args, **kwargs):
-    """
-    Backport of format_html from Django 1.5+ to support Django 1.4
-    """
-    args_safe = map(conditional_escape, args)
-    kwargs_safe = dict([(k, conditional_escape(v)) for (k, v) in
-                        six.iteritems(kwargs)])
-    return mark_safe(format_string.format(*args_safe, **kwargs_safe))
-
 
 #
 # Python3 compatibility layer

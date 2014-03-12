@@ -9,12 +9,7 @@ from django.template import Context
 from django.template.loader import render_to_string
 from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
-
-try:
-    from django.utils.html import format_html
-except ImportError:
-    # Django 1.4 compatibility
-    from oscar.core.compat import format_html
+from django.utils.html import format_html
 
 
 class ImageInput(FileInput):

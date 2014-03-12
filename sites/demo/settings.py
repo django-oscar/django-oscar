@@ -275,6 +275,8 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
+# We still use this deprecated Django setting since Oscar needs a way of
+# knowing where the profile class is (if one is used).
 AUTH_PROFILE_MODULE = 'user.Profile'
 
 # Oscar settings
