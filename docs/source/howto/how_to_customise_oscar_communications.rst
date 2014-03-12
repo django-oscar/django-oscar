@@ -19,11 +19,11 @@ to send out to a customer, the client code will do something like this::
     context = {'customer': customer, 'something_else': 'Some more context.'}
 
     try:
-            event_type = CommunicationEventType.objects.get(code=commtype_code)
-        except CommunicationEventType.DoesNotExist:
-            messages = CommunicationEventType.objects.get_and_render(commtype_code, ctx)
-        else:
-            messages = event_type.get_messages(ctx)
+        event_type = CommunicationEventType.objects.get(code=commtype_code)
+    except CommunicationEventType.DoesNotExist:
+        messages = CommunicationEventType.objects.get_and_render(commtype_code, ctx)
+    else:
+        messages = event_type.get_messages(ctx)
 
 What's happening here is:
 
