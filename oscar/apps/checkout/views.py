@@ -15,8 +15,7 @@ from . import signals
 
 ShippingAddressForm, GatewayForm \
     = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
-OrderNumberGenerator, OrderCreator \
-    = get_classes('order.utils', ['OrderNumberGenerator', 'OrderCreator'])
+OrderCreator = get_class('order.utils', 'OrderCreator')
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
 Repository = get_class('shipping.repository', 'Repository')
 AccountAuthView = get_class('customer.views', 'AccountAuthView')
@@ -603,36 +602,6 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             return self.render_preview(
                 self.request, error=msg, **payment_kwargs)
 
-    def generate_order_number(self, basket):
-        """
-        Return a new order number
-        """
-        return OrderNumberGenerator().order_number(basket)
-
-    def freeze_basket(self, basket):
-        """
-        Freeze the basket so it can no longer be modified
-        """
-        # We freeze the basket to prevent it being modified once the payment
-        # process has started.  If your payment fails, then the basket will
-        # need to be "unfrozen".  We also store the basket ID in the session
-        # so the it can be retrieved by multistage checkout processes.
-        basket.freeze()
-
-    def handle_payment(self, order_number, total, **kwargs):
-        """
-        Handle any payment processing and record payment sources and events.
-
-        This method is designed to be overridden within your project.  The
-        default is to do nothing as payment is domain-specific.
-
-        This method is responsible for handling payment and recording the
-        payment sources (using the add_payment_source method) and payment
-        events (using add_payment_event) so they can be
-        linked to the order when it is saved later on.
-        """
-        pass
-
 
 # =========
 # Thank you
@@ -647,7 +616,7 @@ class ThankYouView(generic.DetailView):
     context_object_name = 'order'
 
     def get_object(self):
-        # We allow superusers to force an order thankyou page for testing
+        # We allow superusers to force an order thank-you page for testing
         order = None
         if self.request.user.is_superuser:
             if 'order_number' in self.request.GET:
