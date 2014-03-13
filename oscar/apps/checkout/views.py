@@ -360,6 +360,26 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
     """
     For taking the details of payment and creating the order.
 
+    This view class is used by two separate URLs: 'payment-details' and
+    'preview'. The `preview` class attribute is used to distinguish which is
+    being used.
+
+    If sensitive details are required (eg a bankcard), then the payment details
+    view should submit to the preview URL and a custom implementation of
+    `validate_payment_submission` should be provided.
+
+    - If the form data is valid, then the preview template can be rendered with
+    the payment-details forms re-rendered within a hidden div so they can be
+    re-submitted when the 'place order' button is clicked. This avoids having
+    to write sensitive data to disk anywhere during the process. This can be
+    done by calling `render_preview`, passing in the extra template context
+    vars.
+
+    - If the form data is invalid, then the payment details templates needs to
+    be re-rendered with the relevant error messages. This can be done by
+    calling `render_payment_details`, passing in the form instances to pass to
+    the templates.
+
     The class is deliberately split into fine-grained methods, responsible for
     only one thing.  This is to make it easier to subclass and override just
     one component of functionality.
@@ -384,23 +404,31 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             self.template_name]
 
     def post(self, request, *args, **kwargs):
-        """
-        This method is designed to be overridden by subclasses which will
-        validate the forms from the payment details page.  If the forms are
-        valid then the method can call submit()
-        """
-        if self.preview:
-            # We use a custom parameter to indicate if this is an attempt to
-            # place an order.  Without this, we assume a payment form is being
-            if request.POST.get('action', '') == 'place_order':
-                # We pull together all the things that are needed to place an
-                # order.
-                submission = self.build_submission()
-                return self.submit(**submission)
-            return self.render_preview(request)
+        # Posting to payment-details isn't the right thing to do.  Form
+        # submissions should use the preview URL.
+        if not self.preview:
+            return http.HttpBadRequest()
 
-        # Posting to payment-details isn't the right thing to do
-        return self.get(request, *args, **kwargs)
+        # We use a custom parameter to indicate if this is an attempt to place
+        # an order (normally from the preview page).  Without this, we assume a
+        # payment form is being submitted from the payment details view.
+        if request.POST.get('action', '') == 'place_order':
+            # We pull together all the things that are needed to place an
+            # order.
+            submission = self.build_submission()
+            return self.submit(**submission)
+
+        return self.validate_payment_submission(request)
+
+    def validate_payment_submission(self, request):
+        """
+        This method will need to be overridden by projects that require forms
+        to be submitted on the payment details view.
+        """
+        # No form data to validate by default, so we simply render the preview
+        # page.  If validating form data and it's invalid, then call the
+        # render_payment_details view.
+        return self.render_preview(request)
 
     def render_preview(self, request, **kwargs):
         """
@@ -410,8 +438,19 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         need to pass it back to the view here so it can be stored in hidden
         form inputs.  This avoids ever writing the sensitive data to disk.
         """
-        ctx = self.get_context_data()
-        ctx.update(kwargs)
+        self.preview = True
+        ctx = self.get_context_data(**kwargs)
+        return self.render_to_response(ctx)
+
+    def render_payment_details(self, request, **kwargs):
+        """
+        Show the payment details page
+
+        This method is useful if the submission from the payment details view
+        is invalid and needs to be re-rendered with form errors showing.
+        """
+        self.preview = False
+        ctx = self.get_context_data(**kwargs)
         return self.render_to_response(ctx)
 
     def can_basket_be_submitted(self, basket):

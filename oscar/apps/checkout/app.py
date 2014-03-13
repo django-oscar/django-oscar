@@ -36,7 +36,7 @@ class CheckoutApplication(Application):
             url(r'shipping-method/$',
                 self.shipping_method_view.as_view(), name='shipping-method'),
 
-            # Payment method views
+            # Payment views
             url(r'payment-method/$',
                 self.payment_method_view.as_view(), name='payment-method'),
             url(r'payment-details/$',
