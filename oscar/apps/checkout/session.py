@@ -36,7 +36,8 @@ class CheckoutSessionMixin(object):
         try:
             self.check_preconditions(request)
         except exceptions.FailedPreCondition, e:
-            messages.error(request, e.message)
+            for message in e.messages:
+                messages.warning(request, message)
             return http.HttpResponseRedirect(e.url)
 
         return super(CheckoutSessionMixin, self).dispatch(
@@ -60,6 +61,26 @@ class CheckoutSessionMixin(object):
                 url=reverse('basket:summary'),
                 message=_(
                     "You need to add some items to your basket to checkout")
+            )
+
+    def check_basket_is_valid(self, request):
+        """
+        Check that the basket is permitted to be submitted as an order. That
+        is, all the basket lines are available to buy - nothing has gone out of
+        stock since it was added to the basket.
+        """
+        messages = []
+        strategy = request.strategy
+        for line in request.basket.all_lines():
+            result = strategy.fetch_for_product(line.product)
+            is_permitted, reason = result.availability.is_purchase_permitted(
+                line.quantity)
+            if not is_permitted:
+                messages.append(reason)
+        if messages:
+            raise exceptions.FailedPreCondition(
+                url=reverse('basket:summary'),
+                messages=messages
             )
 
     def check_user_email_is_captured(self, request):
@@ -115,6 +136,9 @@ class CheckoutSessionMixin(object):
         """
         Return a dict of data that contains everything required for an order
         submission.  This includes payment details (if any).
+
+        This can be the right place to perform tax lookups and apply them to
+        the basket.
         """
         basket = kwargs.get('basket', self.request.basket)
         shipping_address = self.get_shipping_address(basket)

@@ -50,7 +50,9 @@ class IndexView(CheckoutSessionMixin, generic.FormView):
     template_name = 'checkout/gateway.html'
     form_class = GatewayForm
     success_url = reverse_lazy('checkout:shipping-address')
-    pre_conditions = ['check_basket_is_not_empty']
+    pre_conditions = [
+        'check_basket_is_not_empty',
+        'check_basket_is_valid']
 
     def get(self, request, *args, **kwargs):
         # We redirect immediately to shipping address stage if the user is
@@ -132,6 +134,7 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
     template_name = 'checkout/shipping_address.html'
     form_class = ShippingAddressForm
     pre_conditions = ['check_basket_is_not_empty',
+                      'check_basket_is_valid',
                       'check_user_email_is_captured',
                       'check_basket_requires_shipping']
 
@@ -243,6 +246,7 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
     """
     template_name = 'checkout/shipping_methods.html'
     pre_conditions = ['check_basket_is_not_empty',
+                      'check_basket_is_valid',
                       'check_user_email_is_captured', ]
 
     def get(self, request, *args, **kwargs):
@@ -338,6 +342,7 @@ class PaymentMethodView(CheckoutSessionMixin, generic.TemplateView):
     """
     pre_conditions = [
         'check_basket_is_not_empty',
+        'check_basket_is_valid',
         'check_user_email_is_captured',
         'check_shipping_data_is_captured']
 
@@ -392,6 +397,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
 
     pre_conditions = [
         'check_basket_is_not_empty',
+        'check_basket_is_valid',
         'check_user_email_is_captured',
         'check_shipping_data_is_captured']
 
@@ -453,19 +459,6 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         ctx = self.get_context_data(**kwargs)
         return self.render_to_response(ctx)
 
-    def can_basket_be_submitted(self, basket):
-        """
-        Check if the basket is permitted to be submitted as an order
-        """
-        strategy = self.request.strategy
-        for line in basket.all_lines():
-            result = strategy.fetch_for_product(line.product)
-            is_permitted, reason = result.availability.is_purchase_permitted(
-                line.quantity)
-            if not is_permitted:
-                return False, reason, reverse('basket:summary')
-        return True, None, None
-
     def get_default_billing_address(self):
         """
         Return default billing address for user
@@ -513,12 +506,6 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             "Basket tax must be set before a user can place an order")
         assert shipping_method.is_tax_known, (
             "Shipping method tax must be set before a user can place an order")
-
-        # Domain-specific checks on the basket
-        is_valid, reason, url = self.can_basket_be_submitted(basket)
-        if not is_valid:
-            messages.error(self.request, reason)
-            return http.HttpResponseRedirect(url)
 
         # We generate the order number first as this will be used
         # in payment requests (ie before the order model has been
