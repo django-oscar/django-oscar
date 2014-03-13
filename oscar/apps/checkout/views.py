@@ -419,6 +419,10 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         # an order (normally from the preview page).  Without this, we assume a
         # payment form is being submitted from the payment details view.
         if request.POST.get('action', '') == 'place_order':
+            # If payment forms were hidden in the preview template, then
+            # we should re-validate them here just in case something has
+            # changed since they were first submitted.
+
             # We pull together all the things that are needed to place an
             # order.
             submission = self.build_submission()
@@ -550,9 +554,11 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
                 "Order #%s: unable to take payment (%s) - restoring basket",
                 order_number, msg)
             self.restore_frozen_basket()
-            # We re-render the payment details view
-            self.preview = False
-            return self.render_to_response(self.get_context_data(error=msg))
+
+            # We assume that the details submitted on the payment details view
+            # were invalid (eg expired bankcard).
+            return self.render_payment_details(
+                self.request, error=msg, **payment_kwargs)
         except PaymentError as e:
             # A general payment error - Something went wrong which wasn't
             # anticipated.  Eg, the payment gateway is down (it happens), your
@@ -564,19 +570,17 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             logger.error("Order #%s: payment error (%s)", order_number, msg,
                          exc_info=True)
             self.restore_frozen_basket()
-            self.preview = False
-            return self.render_to_response(
-                self.get_context_data(error=error_msg))
+            return self.render_preview(
+                self.request, error=error_msg, **payment_kwargs)
         except Exception as e:
             # Unhandled exception - hopefully, you will only ever see this in
-            # development.
+            # development...
             logger.error(
                 "Order #%s: unhandled exception while taking payment (%s)",
                 order_number, e, exc_info=True)
             self.restore_frozen_basket()
-            self.preview = False
-            return self.render_to_response(
-                self.get_context_data(error=error_msg))
+            return self.render_preview(
+                self.request, error=error_msg, **payment_kwargs)
 
         signals.post_payment.send_robust(sender=self, view=self)
 
@@ -592,11 +596,12 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             # actually place an order.  Not a good situation to be in as a
             # payment transaction may already have taken place, but needs
             # to be handled gracefully.
-            logger.error("Order #%s: unable to place order - %s",
-                         order_number, e, exc_info=True)
             msg = six.text_type(e)
+            logger.error("Order #%s: unable to place order - %s",
+                         order_number, msg, exc_info=True)
             self.restore_frozen_basket()
-            return self.render_to_response(self.get_context_data(error=msg))
+            return self.render_preview(
+                self.request, error=msg, **payment_kwargs)
 
     def generate_order_number(self, basket):
         """
