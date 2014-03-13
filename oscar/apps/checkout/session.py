@@ -76,7 +76,13 @@ class CheckoutSessionMixin(object):
             is_permitted, reason = result.availability.is_purchase_permitted(
                 line.quantity)
             if not is_permitted:
-                messages.append(reason)
+                # Create a more meaningful message to show on the basket page
+                msg = (
+                    "'%(title)s' is no longer available to buy (%(reason)s). "
+                    "Please adjust your basket to continue") % {
+                        'title': line.product.get_title(),
+                        'reason': reason}
+                messages.append(msg)
         if messages:
             raise exceptions.FailedPreCondition(
                 url=reverse('basket:summary'),
