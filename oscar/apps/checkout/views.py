@@ -7,8 +7,8 @@ from django.contrib.auth import login
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext as _
 from django.views import generic
-from oscar.core.loading import get_model
 
+from oscar.core.loading import get_model
 from oscar.apps.shipping.methods import NoShippingRequired
 from oscar.core.loading import get_class, get_classes
 from . import signals
@@ -252,6 +252,7 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
 
         # Check that shipping is required at all
         if not request.basket.is_shipping_required():
+            # No shipping required - we store a special code to indicate so.
             self.checkout_session.use_shipping_method(
                 NoShippingRequired().code)
             return self.get_success_response()
@@ -310,7 +311,8 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
         if not is_valid:
             messages.error(request, _("Your submitted shipping method is not"
                                       " permitted"))
-            return http.HttpResponseRedirect(reverse('checkout:shipping-method'))
+            return http.HttpResponseRedirect(
+                reverse('checkout:shipping-method'))
 
         # Save the code for the chosen shipping method in the session
         # and continue to the next step.
@@ -331,7 +333,8 @@ class PaymentMethodView(CheckoutSessionMixin, generic.TemplateView):
     View for a user to choose which payment method(s) they want to use.
 
     This would include setting allocations if payment is to be split
-    between multiple sources.
+    between multiple sources. It's not the place for entering sensitive details
+    like bankcard numbers though - that belongs on the payment details view.
     """
     pre_conditions = [
         'check_basket_is_not_empty',
@@ -375,37 +378,6 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
     # It preview=True, then we render a preview template that shows all order
     # details ready for submission.
     preview = False
-
-    def get_context_data(self, **kwargs):
-        # Use the proposed submission as template context data.  Flatten the
-        # order kwargs so they are easily available too.
-        ctx = self.build_submission(basket=self.request.basket, **kwargs)
-        ctx.update(kwargs)
-        ctx.update(ctx['order_kwargs'])
-        return ctx
-
-    def build_submission(self, **kwargs):
-        """
-        Return a dict of data to submitted to pay for, and create an order
-        """
-        basket = kwargs.get('basket', self.request.basket)
-        shipping_address = self.get_shipping_address(basket)
-        shipping_method = self.get_shipping_method(
-            basket, shipping_address)
-        total = self.get_order_totals(
-            basket, shipping_method=shipping_method)
-        submission = {
-            'user': self.request.user,
-            'basket': basket,
-            'shipping_address': shipping_address,
-            'shipping_method': shipping_method,
-            'order_total': total,
-            'order_kwargs': {},
-            'payment_kwargs': {}}
-        if not submission['user'].is_authenticated():
-            email = self.checkout_session.get_guest_email()
-            submission['order_kwargs']['guest_email'] = email
-        return submission
 
     def get_template_names(self):
         return [self.template_name_preview] if self.preview else [

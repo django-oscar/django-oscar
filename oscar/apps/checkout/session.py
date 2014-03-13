@@ -19,6 +19,9 @@ UserAddress = get_model('address', 'UserAddress')
 class CheckoutSessionMixin(object):
     """
     Mixin to provide common functionality shared between checkout views.
+
+    All checkout views subclass this mixin. It ensures that all relevant
+    checkout information is available in the template context.
     """
     # This should be list of method names that get executed before the normal
     # flow of the view.
@@ -98,23 +101,42 @@ class CheckoutSessionMixin(object):
                 message=_("Please choose a shipping method")
             )
 
-    def get_context_data(self, **kwargs):
-        """
-        Assign common template variables to the context.
-        """
-        ctx = super(CheckoutSessionMixin, self).get_context_data(**kwargs)
+    # Helpers
 
-        basket = self.request.basket
+    def get_context_data(self, **kwargs):
+        # Use the proposed submission as template context data.  Flatten the
+        # order kwargs so they are easily available too.
+        ctx = self.build_submission(basket=self.request.basket, **kwargs)
+        ctx.update(kwargs)
+        ctx.update(ctx['order_kwargs'])
+        return ctx
+
+    def build_submission(self, **kwargs):
+        """
+        Return a dict of data that contains everything required for an order
+        submission.  This includes payment details (if any).
+        """
+        basket = kwargs.get('basket', self.request.basket)
         shipping_address = self.get_shipping_address(basket)
         shipping_method = self.get_shipping_method(
             basket, shipping_address)
-
-        ctx['shipping_address'] = shipping_address
-        ctx['shipping_method'] = shipping_method
-        if basket and shipping_method:
-            ctx['order_total'] = self.get_order_totals(basket, shipping_method)
-
-        return ctx
+        if not shipping_method:
+            total = None
+        else:
+            total = self.get_order_totals(
+                basket, shipping_method=shipping_method)
+        submission = {
+            'user': self.request.user,
+            'basket': basket,
+            'shipping_address': shipping_address,
+            'shipping_method': shipping_method,
+            'order_total': total,
+            'order_kwargs': {},
+            'payment_kwargs': {}}
+        if not submission['user'].is_authenticated():
+            email = self.checkout_session.get_guest_email()
+            submission['order_kwargs']['guest_email'] = email
+        return submission
 
     def get_shipping_address(self, basket):
         """

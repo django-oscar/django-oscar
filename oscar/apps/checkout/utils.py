@@ -53,6 +53,7 @@ class CheckoutSessionData(object):
         self.request.session[self.SESSION_KEY] = {}
 
     # Guest checkout
+    # ==============
 
     def set_guest_email(self, email):
         self._set('guest', 'email', email)
@@ -203,6 +204,7 @@ class CheckoutSessionData(object):
         return self._get('payment', 'method')
 
     # Submission methods
+    # ==================
 
     def set_order_number(self, order_number):
         self._set('submission', 'order_number', order_number)
