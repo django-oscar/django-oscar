@@ -103,6 +103,7 @@ class CheckoutSessionData(object):
         Get user address id from session
         """
         return self._get('shipping', 'user_address_id')
+
     user_address_id = shipping_user_address_id
 
     def is_shipping_address_set(self):
@@ -113,7 +114,7 @@ class CheckoutSessionData(object):
         """
         new_fields = self.new_shipping_address_fields()
         has_new_address = new_fields is not None
-        user_address_id = self.user_address_id()
+        user_address_id = self.shipping_user_address_id()
         has_old_address = user_address_id is not None and user_address_id > 0
         return has_new_address or has_old_address
 
@@ -193,6 +194,20 @@ class CheckoutSessionData(object):
         Return fields for a billing address
         """
         return self._get('billing', 'new_address_fields')
+
+    def is_billing_address_set(self):
+        """
+        Test whether a billing address has been stored in the session.
+
+        This can be from a new address or re-using an existing address.
+        """
+        if self.is_billing_address_same_as_shipping():
+            return True
+        new_fields = self.new_billing_address_fields()
+        has_new_address = new_fields is not None
+        user_address_id = self.billing_user_address_id()
+        has_old_address = user_address_id is not None and user_address_id > 0
+        return has_new_address or has_old_address
 
     # Payment methods
     # ===============

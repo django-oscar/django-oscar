@@ -13,6 +13,7 @@ OrderTotalCalculator = get_class(
 CheckoutSessionData = get_class(
     'checkout.utils', 'CheckoutSessionData')
 ShippingAddress = get_model('order', 'ShippingAddress')
+BillingAddress = get_model('order', 'BillingAddress')
 UserAddress = get_model('address', 'UserAddress')
 
 
@@ -133,7 +134,8 @@ class CheckoutSessionMixin(object):
     def get_context_data(self, **kwargs):
         # Use the proposed submission as template context data.  Flatten the
         # order kwargs so they are easily available too.
-        ctx = self.build_submission(basket=self.request.basket, **kwargs)
+        ctx = self.build_submission(
+            basket=self.request.basket, **kwargs)
         ctx.update(kwargs)
         ctx.update(ctx['order_kwargs'])
         return ctx
@@ -160,9 +162,10 @@ class CheckoutSessionMixin(object):
             'basket': basket,
             'shipping_address': shipping_address,
             'shipping_method': shipping_method,
+            'billing_address': self.get_billing_address(shipping_address),
             'order_total': total,
-            'order_kwargs': {},
-            'payment_kwargs': {}}
+            'order_kwargs': kwargs.get('order_kwargs', {}),
+            'payment_kwargs': kwargs.get('payment_kwargs', {})}
         if not submission['user'].is_authenticated():
             email = self.checkout_session.get_guest_email()
             submission['order_kwargs']['guest_email'] = email
@@ -193,7 +196,7 @@ class CheckoutSessionMixin(object):
         if addr_data:
             # Load address data into a blank shipping address model
             return ShippingAddress(**addr_data)
-        addr_id = self.checkout_session.user_address_id()
+        addr_id = self.checkout_session.shipping_user_address_id()
         if addr_id:
             try:
                 address = UserAddress._default_manager.get(pk=addr_id)
@@ -224,6 +227,39 @@ class CheckoutSessionMixin(object):
         for method in methods:
             if method.code == code:
                 return method
+
+    def get_billing_address(self, shipping_address):
+        """
+        Return an unsaved instance of the billing address (if one exists)
+        """
+        if not self.checkout_session.is_billing_address_set():
+            return None
+        if self.checkout_session.is_billing_address_same_as_shipping():
+            if shipping_address:
+                address = BillingAddress()
+                shipping_address.populate_alternative_model(address)
+                return address
+
+        addr_data = self.checkout_session.new_billing_address_fields()
+        if addr_data:
+            # Load address data into a blank billing address model
+            return BillingAddress(**addr_data)
+        addr_id = self.checkout_session.billing_user_address_id()
+        if addr_id:
+            try:
+                user_address = UserAddress._default_manager.get(pk=addr_id)
+            except UserAddress.DoesNotExist:
+                # An address was selected but now it has disappeared.  This can
+                # happen if the customer flushes their address book midway
+                # through checkout.  No idea why they would do this but it can
+                # happen.  Checkouts are highly vulnerable to race conditions
+                # like this.
+                return None
+            else:
+                # Copy user address data into a blank shipping address instance
+                billing_address = BillingAddress()
+                user_address.populate_alternative_model(billing_address)
+                return billing_address
 
     def get_order_totals(self, basket, shipping_method, **kwargs):
         """

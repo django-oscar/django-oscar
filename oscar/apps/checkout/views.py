@@ -418,18 +418,20 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         # an order (normally from the preview page).  Without this, we assume a
         # payment form is being submitted from the payment details view.
         if request.POST.get('action', '') == 'place_order':
-            # If payment forms were hidden in the preview template, then
-            # we should re-validate them here just in case something has
-            # changed since they were first submitted.
+            return self.handle_preview_submission(request)
+        return self.handle_payment_details_submission(request)
 
-            # We pull together all the things that are needed to place an
-            # order.
-            submission = self.build_submission()
-            return self.submit(**submission)
+    def handle_place_order_submission(self, request):
+        # If payment forms were hidden in the preview template, then we this
+        # method should be overridden the forms can be re-validated here. Just
+        # in case something has changed since they were first submitted.
 
-        return self.validate_payment_submission(request)
+        # We pull together all the things that are needed to place an
+        # order.
+        submission = self.build_submission()
+        return self.submit(**submission)
 
-    def validate_payment_submission(self, request):
+    def handle_payment_details_submission(self, request):
         """
         This method will need to be overridden by projects that require forms
         to be submitted on the payment details view.
@@ -480,7 +482,8 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             return None
 
     def submit(self, user, basket, shipping_address, shipping_method,  # noqa (too complex (10))
-               order_total, payment_kwargs=None, order_kwargs=None):
+               order_total, billing_address=None, payment_kwargs=None,
+               order_kwargs=None):
         """
         Submit a basket for order placement.
 
