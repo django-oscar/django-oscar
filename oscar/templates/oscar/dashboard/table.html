@@ -6,7 +6,7 @@
 <caption>
     {% block table.caption %}
         <h3 class="pull-left">
-            <i class="icon-sitemap icon-large"></i>{{ queryset_description }}
+            <i class="icon-{{ queryset_icon|default:"sitemap" }} icon-large"></i>{{ queryset_description }}
         </h3>
     {% endblock %}
 </caption>
