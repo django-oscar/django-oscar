@@ -13,32 +13,19 @@ from oscar.apps.payment.models import SourceType
 class PaymentDetailsView(views.PaymentDetailsView):
 
     def get_context_data(self, **kwargs):
-        # Add bankcard form to the template context
+        ctx = super(PaymentDetailsView, self).get_context_data(**kwargs)
         if 'bankcard_form' not in kwargs:
-            kwargs['bankcard_form'] = BankcardForm()
-        ctx =  super(PaymentDetailsView, self).get_context_data(**kwargs)
+            ctx['bankcard_form'] = BankcardForm()
         return ctx
 
-    def post(self, request, *args, **kwargs):
-        if request.POST.get('action', '') == 'place_order':
-            return self.do_place_order(request)
-
-        # Check bankcard form is valid
+    def handle_payment_details_submission(self, request):
         bankcard_form = BankcardForm(request.POST)
-        if not bankcard_form.is_valid():
-            # Bancard form invalid, re-render the payment details template
-            self.preview = False
-            ctx = self.get_context_data(**kwargs)
-            ctx['bankcard_form'] = bankcard_form
-            return self.render_to_response(ctx)
+        if bankcard_form.is_valid():
+            return self.render_preview(request, bankcard_form=bankcard_form)
+        return self.render_payment_details(
+            request, bankcard_form=bankcard_form)
 
-        # Render preview page (with completed bankcard form hidden).
-        # Note, we don't write the bankcard details to the session or DB
-        # as a security precaution.
-        return self.render_preview(request, bankcard_form=bankcard_form)
-
-    def do_place_order(self, request):
-        # Double-check the bankcard data is still valid
+    def handle_preview_submission(self, request):
         bankcard_form = BankcardForm(request.POST)
         if not bankcard_form.is_valid():
             # Must be tampering - we don't need to be that friendly with our
@@ -47,23 +34,18 @@ class PaymentDetailsView(views.PaymentDetailsView):
             return http.HttpResponseRedirect(
                 reverse('checkout:payment-details'))
 
-        submission = self.build_submission(bankcard_form)
+        submission = self.build_submission(
+            payment_kwargs={'bankcard_form': bankcard_form})
         return self.submit(**submission)
-
-    def build_submission(self, bankcard_form, **kwargs):
-        # Modify the default submission dict with the bankcard instance
-        submission = super(PaymentDetailsView, self).build_submission()
-        if bankcard_form.is_valid():
-            submission['payment_kwargs']['bankcard'] = bankcard_form.bankcard
-        return submission
 
     def handle_payment(self, order_number, total, **kwargs):
         # Make request to DataCash - if there any problems (eg bankcard
         # not valid / request refused by bank) then an exception would be
         # raised and handled by the parent PaymentDetail view)
         facade = Facade()
+        bankcard = kwargs['bankcard_form'].bankcard
         datacash_ref = facade.pre_authorise(
-            order_number, total.incl_tax, kwargs['bankcard'])
+            order_number, total.incl_tax, bankcard)
 
         # Request was successful - record the "payment source".  As this
         # request was a 'pre-auth', we set the 'amount_allocated' - if we had
