@@ -1,0 +1,3 @@
+* put queryset_icon and queryset_description on the table instead of having them be extra variables in the
+  context
+* grep "mark_safe is needed because"
