@@ -492,13 +492,17 @@ class AbstractProduct(models.Model):
         return MissingProductImage()
 
     def primary_image(self):
-        images = self.images.all()
+        """
+        Returns the primary image for a product. Usually used when one can
+        only display one product image, e.g. in a list of products.
+        """
+        images = self.images.all().order_by('display_order')
         try:
             return images[0]
         except IndexError:
             # We return a dict with fields that mirror the key properties of
             # the ProductImage class so this missing image can be used
-            # interchangably in templates.  Strategy pattern ftw!
+            # interchangeably in templates.  Strategy pattern ftw!
             return {
                 'original': self.get_missing_image(),
                 'caption': '',
