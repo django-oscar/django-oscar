@@ -442,10 +442,10 @@ class AbstractShippingAddress(AbstractAddress):
         """
         Return the order linked to this shipping address
         """
-        orders = self.order_set.all()
-        if not orders:
+        try:
+            return self.order_set.all()[0]
+        except IndexError:
             return None
-        return orders[0]
 
 
 class AbstractUserAddress(AbstractShippingAddress):
@@ -536,10 +536,10 @@ class AbstractBillingAddress(AbstractAddress):
         """
         Return the order linked to this shipping address
         """
-        orders = self.order_set.all()
-        if not orders:
+        try:
+            return self.order_set.all()[0]
+        except IndexError:
             return None
-        return orders[0]
 
 
 class AbstractPartnerAddress(AbstractAddress):
