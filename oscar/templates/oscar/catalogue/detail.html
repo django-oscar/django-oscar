@@ -19,8 +19,8 @@
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
-	<li>
-		<a href="{{ homepage_url }}">{% trans "Home" %}</a>
+    <li>
+        <a href="{{ homepage_url }}">{% trans "Home" %}</a>
         <span class="divider">/</span>
     </li>
     {% with category=product.categories.all.0 %}
@@ -161,7 +161,7 @@
         {% endfor %}
         {% iffeature "reviews" %}
             <tr>
-                <th>{% trans "Num reviews" %}</th>
+                <th>{% trans "Number of reviews" %}</th>
                 <td>{{ reviews_count }}</td>
             </tr>
         {% endiffeature %}
@@ -182,11 +182,11 @@
                 <h2>{% trans "Customer Reviews" %}</h2>
             </div>
 
-            {% if not reviews_count %}
+            {% if reviews_count == 0 %}
                 <p>
                     {% if product|is_review_permitted:user %}
                         {% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id as add_review_url %}
-                            {% blocktrans %}This product does not have any reviews yet" -
+                            {% blocktrans %}This product does not have any reviews yet -
                             <a href="{{ add_review_url }}#addreview">be the first to write one</a>.
                         {% endblocktrans %}
                     {% else %}
