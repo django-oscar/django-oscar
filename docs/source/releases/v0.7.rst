@@ -160,7 +160,11 @@ Backwards incompatible changes in 0.7
 * Accessing categories by just slug instead of primary key and slug had been
   unofficially deprecated for 0.6, and is removed now.
 
+* `#1251`_ - Form related templates have been refactored. If you've modified
+  them, your templates might need updating.
+
 .. _`#1123`: https://github.com/tangentlabs/django-oscar/pull/1123
+.. _`#1251`: https://github.com/tangentlabs/django-oscar/pull/1251
 
 Removal of features deprecated in 0.6
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

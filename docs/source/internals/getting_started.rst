@@ -60,8 +60,12 @@ database (we use SQLite for simplicity):
             'PASSWORD': '',
             'HOST': '',
             'PORT': '',
+            'ATOMIC_REQUESTS': True,  # Django 1.6+
         }
     }
+
+Note that we recommend using ``ATOMIC_REQUESTS`` to tie transactions to
+requests.
 
 Now set ``TEMPLATE_CONTEXT_PROCESSORS`` to:
 
@@ -111,17 +115,20 @@ which won't be enabled by default when using Django 1.6 or upwards.
 
 Next, add ``oscar.apps.basket.middleware.BasketMiddleware``, 
 ``django.contrib.flatpages.middleware.FlatpageFallbackMiddleware`` to
-your ``MIDDLEWARE_CLASSES`` setting. It is also recommended to use
-``django.middleware.transaction.TransactionMiddleware``:
+your ``MIDDLEWARE_CLASSES`` setting. If you're running on Django 1.5, it is
+also recommended to use ``django.middleware.transaction.TransactionMiddleware``:
 
 .. code-block:: django
 
     MIDDLEWARE_CLASSES = (
         ...
         'oscar.apps.basket.middleware.BasketMiddleware',
-        'django.middleware.transaction.TransactionMiddleware',  # recommended for oscar
+        'django.middleware.transaction.TransactionMiddleware',  # Django 1.5 only
         'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     )
+
+If you're running Django 1.6+, you should enable ``ATOMIC_REQUESTS`` instead
+(see database settings above).
 
 More info about `django-flatpages installation`_ at the django-project website.
 
