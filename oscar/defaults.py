@@ -195,7 +195,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
         'url_name': 'dashboard:reports-index',
     },
 ]
-OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION = 'dashboard.nav.default_access_fn'
+OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION = 'oscar.apps.dashboard.nav.default_access_fn'  # noqa
 
 # Search facets
 OSCAR_SEARCH_FACETS = {

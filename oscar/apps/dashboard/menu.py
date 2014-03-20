@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 
-from oscar.core.loading import get_class
+from oscar.core.loading import get_class, import_string
 
 
 Node = get_class('dashboard.nav', 'Node')
@@ -27,8 +27,8 @@ def create_menu(menu_items, parent=None):
     Create the navigation nodes based on a passed list of dicts
     """
     nodes = []
-    access_fn_str = settings.OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION
-    default_fn = get_class(*access_fn_str.rsplit('.', 1))
+    default_fn = import_string(
+        settings.OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION)
     for menu_dict in menu_items:
         try:
             label = menu_dict['label']

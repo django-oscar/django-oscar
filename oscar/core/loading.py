@@ -1,11 +1,52 @@
 import sys
 import traceback
+from importlib import import_module
 
 from django.conf import settings
 from django.db.models import get_model as django_get_model
+from django.utils import six as django_six
 
 from oscar.core.exceptions import (ModuleNotFoundError, ClassNotFoundError,
                                    AppNotFoundError)
+
+
+def import_string(dotted_path):
+    """
+    Import a dotted module path and return the attribute/class designated by
+    the last name in the path. Raise ImportError if the import failed.
+
+    This is backported from unreleased Django 1.7 at
+    47927eb786f432cb069f0b00fd810c465a78fd71. Can be removed once we don't
+    support Django versions below 1.7.
+    """
+    try:
+        module_path, class_name = dotted_path.rsplit('.', 1)
+    except ValueError:
+        msg = "%s doesn't look like a module path" % dotted_path
+        django_six.reraise(ImportError, ImportError(msg), sys.exc_info()[2])
+
+    module = import_module(module_path)
+
+    try:
+        return getattr(module, class_name)
+    except AttributeError:
+        msg = 'Module "%s" does not define a "%s" attribute/class' % (
+            dotted_path, class_name)
+        django_six.reraise(ImportError, ImportError(msg), sys.exc_info()[2])
+    try:
+        module_path, class_name = dotted_path.rsplit('.', 1)
+    except ValueError:
+        msg = "%s doesn't look like a module path" % dotted_path
+        django_six.reraise(ImportError, ImportError(msg), sys.exc_info()[2])
+
+    module = __import__(module_path, fromlist=[class_name])
+
+    try:
+        return getattr(module, class_name)
+    except AttributeError:
+        msg = 'Module "%s" does not define a "%s" attribute/class' % (
+            dotted_path, class_name)
+        django_six.reraise(ImportError, ImportError(msg), sys.exc_info()[2])
 
 
 def get_class(module_label, classname):
