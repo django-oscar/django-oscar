@@ -20,7 +20,7 @@ class TestSlugify(TestCase):
             self.assertEqual('bible', utils.slugify('The Bible'))
 
     def test_handles_unicode(self):
-        self.assertEqual('konig-der-strasse',
+        self.assertEqual(u'könig-der-straße',
                          utils.slugify(u'König der Straße'))
 
     def test_works_with_custom_slugifier(self):

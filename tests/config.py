@@ -86,5 +86,6 @@ def configure():
             test_settings['INSTALLED_APPS'] += ['tests._site.myauth', ]
             test_settings['AUTH_USER_MODEL'] = 'myauth.User'
         test_settings.update(OSCAR_SETTINGS)
+        test_settings['OSCAR_SLUG_FUNCTION'] = 'tests._site.slugify'
 
         settings.configure(**test_settings)
