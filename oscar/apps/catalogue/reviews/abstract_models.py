@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Sum, Count
 from django.utils.translation import ugettext_lazy as _
@@ -70,12 +71,13 @@ class AbstractProductReview(models.Model):
         verbose_name = _('Product review')
         verbose_name_plural = _('Product reviews')
 
-    @models.permalink
     def get_absolute_url(self):
-        return ('catalogue:reviews-detail', (), {
+        kwargs = {
             'product_slug': self.product.slug,
             'product_pk': self.product.id,
-            'pk': self.id})
+            'pk': self.id
+        }
+        return reverse('catalogue:reviews-detail', kwargs=kwargs)
 
     def __unicode__(self):
         return self.title
