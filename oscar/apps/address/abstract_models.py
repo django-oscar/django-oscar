@@ -276,7 +276,7 @@ class AbstractAddress(models.Model):
             country_code = self.country.iso_3166_1_a2
             regex = self.POSTCODES_REGEX.get(country_code, None)
 
-            # Validate postcode against regext for the country if available
+            # Validate postcode against regex for the country if available
             if regex and not re.match(regex, postcode):
                 msg = _("The postcode '%(postcode)s' is not valid "
                         "for %(country)s") \

@@ -10,11 +10,11 @@ from oscar.apps.catalogue.categories import create_from_breadcrumbs
 class TestCategory(TestCase):
 
     def setUp(self):
-        self.products = models.Category.add_root(name="Products")
-        self.books = self.products.add_child(name="Books")
+        self.products = models.Category.add_root(name=u"Pröducts")
+        self.books = self.products.add_child(name=u"Bücher")
 
     def test_includes_parents_name_in_full_name(self):
-        self.assertTrue('Products' in self.books.full_name)
+        self.assertTrue(u'Pröducts' in self.books.full_name)
 
     def test_includes_slug_in_slug(self):
         self.assertTrue(self.products.slug in self.books.slug)
@@ -25,14 +25,7 @@ class TestCategory(TestCase):
 
     def test_enforces_slug_uniqueness(self):
         with self.assertRaises(ValidationError):
-            self.products.add_child(name="Books")
-
-
-class TestANonAsciiCategory(TestCase):
-
-    def test_has_a_nonempty_slug(self):
-        cat = models.Category.add_root(name=u'διακριτικός')
-        self.assertTrue(len(cat.slug) > 0)
+            self.products.add_child(name=u"Bücher")
 
 
 class TestMovingACategory(TestCase):
