@@ -101,6 +101,8 @@ Minor changes
   forgotten when adding tracking of the Python and Django version in 0.7.
   Total information collected now is the versions of Django, Python and Oscar.
 
+* ``OSCAR_SLUG_FUNCTION`` now accepts both string notation and a callable.
+
 Bugfixes
 ~~~~~~~~
 
