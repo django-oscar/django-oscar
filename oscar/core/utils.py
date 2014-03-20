@@ -1,16 +1,28 @@
-from __future__ import absolute_import  # for import below
-import six
+from __future__ import absolute_import  # for logging import below
 import logging
+import six
 
 from django.utils.timezone import get_current_timezone, is_naive, make_aware
-from unidecode import unidecode
 from django.conf import settings
-from django.template.defaultfilters import date as date_filter
+from django.template.defaultfilters import (date as date_filter,
+                                            slugify as django_slugify)
+from unidecode import unidecode
+
+from oscar.core.loading import import_string
+
+
+def default_slugifier(value):
+    """
+    Oscar's default slugifier function.
+    Uses Django's slugify function, but first applies unidecode() to convert
+    non-ASCII strings to ASCII equivalents where possible.
+    """
+    return django_slugify(unidecode(value))
 
 
 def slugify(value):
     """
-    Slugify a string (even if it contains non-ASCII chars)
+    Slugify a string
     """
     # Re-map some strings to avoid important characters being stripped.  Eg
     # remap 'c++' to 'cpp' otherwise it will become 'c'.
@@ -18,15 +30,13 @@ def slugify(value):
         value = value.replace(k, v)
 
     # Allow an alternative slugify function to be specified
-    if hasattr(settings, 'OSCAR_SLUG_FUNCTION'):
-        slugifier = settings.OSCAR_SLUG_FUNCTION
-    else:
-        from django.template import defaultfilters
-        slugifier = defaultfilters.slugify
+    # Recommended way to specify a function is as a string
+    slugifier = getattr(settings, 'OSCAR_SLUG_FUNCTION', default_slugifier)
+    if isinstance(slugifier, six.string_types):
+        slugifier = import_string(slugifier)
 
-    # Use unidecode to convert non-ASCII strings to ASCII equivalents where
-    # possible.
-    value = slugifier(unidecode(six.text_type(value)))
+    # Apply slugifier
+    value = slugifier(six.text_type(value))
 
     # Remove stopwords
     for word in settings.OSCAR_SLUG_BLACKLIST:

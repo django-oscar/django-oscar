@@ -458,17 +458,19 @@ stripped.  For instance::
 ``OSCAR_SLUG_FUNCTION``
 -----------------------
 
-Default: ``django.template.defaultfilters.slugify``
+Default: ``'oscar.core.utils.default_slugifier'``
 
 The slugify function to use.  Note that is used within Oscar's slugify wrapper
-(in ``oscar.core.utils``) which applies the custom map and blacklist.
+(in ``oscar.core.utils``) which applies the custom map and blacklist. You can
+use both string notation or a callable.
 
 Example::
 
     def some_slugify(value)
         pass
 
-    OSCAR_SLUG_FUNCTION = some_slugify
+    OSCAR_SLUG_FUNCTION = some_slugify  # or 'myproject.utils.some_slugify'
+
 
 ``OSCAR_SLUG_BLACKLIST``
 ------------------------
