@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 import os
 import six
 from itertools import chain
@@ -152,10 +153,9 @@ class AbstractCategory(MP_Node):
             ancestors.append(self)
         return ancestors
 
-    @models.permalink
     def get_absolute_url(self):
-        return ('catalogue:category', (),
-                {'category_slug': self.slug, 'pk': self.pk})
+        return reverse('catalogue:category',
+                       kwargs={'category_slug': self.slug, 'pk': self.pk})
 
     class Meta:
         abstract = True
@@ -295,12 +295,12 @@ class AbstractProduct(models.Model):
             return u"%s (%s)" % (self.get_title(), self.attribute_summary)
         return self.get_title()
 
-    @models.permalink
     def get_absolute_url(self):
-        u"""Return a product's absolute url"""
-        return ('catalogue:detail', (), {
-            'product_slug': self.slug,
-            'pk': self.id})
+        """
+        Return a product's absolute url
+        """
+        return reverse('catalogue:detail',
+                       kwargs={'product_slug': self.slug, 'pk': self.id})
 
     def save(self, *args, **kwargs):
         if self.is_top_level and not self.title:
