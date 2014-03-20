@@ -437,7 +437,7 @@ Slug settings
 ``OSCAR_SLUG_MAP``
 ------------------
 
-Default: ``None``
+Default: ``{}``
 
 A dictionary to map strings to more readable versions for including in URL
 slugs.  This mapping is appled before the slugify function.  
@@ -467,7 +467,7 @@ Example::
 ``OSCAR_SLUG_BLACKLIST``
 ------------------------
 
-Default: ``None``
+Default: ``[]``
 
 A list of words to exclude from slugs.
 

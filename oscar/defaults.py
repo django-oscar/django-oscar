@@ -73,6 +73,11 @@ OSCAR_FROM_EMAIL = 'oscar@example.com'
 # Offers
 OSCAR_OFFER_BLACKLIST_PRODUCT = None
 
+# Slug handling
+OSCAR_SLUG_FUNCTION = 'oscar.core.utils.default_slugifier'
+OSCAR_SLUG_MAP = {}
+OSCAR_SLUG_BLACKLIST = []
+
 # Cookies
 OSCAR_COOKIES_DELETE_ON_LOGOUT = ['oscar_recently_viewed_products', ]
 

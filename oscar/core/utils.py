@@ -14,9 +14,8 @@ def slugify(value):
     """
     # Re-map some strings to avoid important characters being stripped.  Eg
     # remap 'c++' to 'cpp' otherwise it will become 'c'.
-    if hasattr(settings, 'OSCAR_SLUG_MAP'):
-        for k, v in settings.OSCAR_SLUG_MAP.items():
-            value = value.replace(k, v)
+    for k, v in settings.OSCAR_SLUG_MAP.items():
+        value = value.replace(k, v)
 
     # Allow an alternative slugify function to be specified
     if hasattr(settings, 'OSCAR_SLUG_FUNCTION'):
@@ -30,10 +29,9 @@ def slugify(value):
     value = slugifier(unidecode(six.text_type(value)))
 
     # Remove stopwords
-    if hasattr(settings, 'OSCAR_SLUG_BLACKLIST'):
-        for word in settings.OSCAR_SLUG_BLACKLIST:
-            value = value.replace(word + '-', '')
-            value = value.replace('-' + word, '')
+    for word in settings.OSCAR_SLUG_BLACKLIST:
+        value = value.replace(word + '-', '')
+        value = value.replace('-' + word, '')
 
     return value
 
