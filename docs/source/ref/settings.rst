@@ -158,7 +158,7 @@ A list of dashboard navigation elements. Usage is explained in
 ``OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION``
 -------------------------------------------
 
-Default: ``dashboard.nav.default_access_fn``
+Default: ``oscar.apps.dashboard.nav.default_access_fn``
 
 ``OSCAR_DASHBOARD_NAVIGATION`` allows passing an access function for each node
 which is used to determine whether to show the node for a specific user or not.
