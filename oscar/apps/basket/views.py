@@ -97,7 +97,9 @@ class BasketView(ModelFormSetView):
         return kwargs
 
     def get_queryset(self):
-        return self.request.basket.all_lines()
+        return self.request.basket.all_lines(
+            prefetch_related=('attributes', 'product__images')
+            )
 
     def get_shipping_methods(self, basket):
         return Repository().get_shipping_methods(
