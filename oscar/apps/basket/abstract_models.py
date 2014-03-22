@@ -115,7 +115,8 @@ class AbstractBasket(models.Model):
         if self.id is None:
             return self.lines.none()
         if self._lines is None:
-            self._lines = self.lines.select_related('product', 'stockrecord')
+            self._lines = self.lines.select_related('product', 'stockrecord').\
+                                order_by('pk')
         if prefetch_related and not self._lines._prefetch_done:
             lines = self._lines
             # inplace prefetch
