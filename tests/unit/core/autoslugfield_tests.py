@@ -33,6 +33,7 @@ from oscar.core.loading import get_model
 
 SluggedTestModel = get_model('model_tests_app', 'sluggedtestmodel')
 ChildSluggedTestModel = get_model('model_tests_app', 'childsluggedtestmodel')
+CustomSluggedTestModel = get_model('model_tests_app', 'CustomSluggedTestModel')
 
 
 class AutoSlugFieldTest(TestCase):
@@ -123,6 +124,15 @@ class AutoSlugFieldTest(TestCase):
         o = SluggedTestModel(title='foo')
         o.save()
         self.assertEqual(o.slug, 'foo-3')
+
+    def test_separator_and_uppercase_options(self):
+        m = CustomSluggedTestModel(title="Password reset")
+        m.save()
+        self.assertEqual(m.slug, 'PASSWORD_RESET')
+
+        m = CustomSluggedTestModel(title="Password reset")
+        m.save()
+        self.assertEqual(m.slug, 'PASSWORD_RESET_2')
 
     @unittest.skipIf(django.VERSION[0] <= 1 and django.VERSION[1] <= 6,
                      "Migrations are handled by south in Django <1.7")
