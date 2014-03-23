@@ -424,7 +424,7 @@
                             </tr>
                             <tr>
                                 <th>{% trans "Instructions" %}</th>
-                                <td>{{ order.shipping_address.notes|default:"-" }}</td>
+                                <td>{{ order.shipping_address.notes|default:"-"|linebreaks }}</td>
                             </tr>
                         </tbody>
                     </table>
