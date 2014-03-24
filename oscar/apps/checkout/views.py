@@ -373,16 +373,16 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
     `validate_payment_submission` should be provided.
 
     - If the form data is valid, then the preview template can be rendered with
-    the payment-details forms re-rendered within a hidden div so they can be
-    re-submitted when the 'place order' button is clicked. This avoids having
-    to write sensitive data to disk anywhere during the process. This can be
-    done by calling `render_preview`, passing in the extra template context
-    vars.
+      the payment-details forms re-rendered within a hidden div so they can be
+      re-submitted when the 'place order' button is clicked. This avoids having
+      to write sensitive data to disk anywhere during the process. This can be
+      done by calling `render_preview`, passing in the extra template context
+      vars.
 
     - If the form data is invalid, then the payment details templates needs to
-    be re-rendered with the relevant error messages. This can be done by
-    calling `render_payment_details`, passing in the form instances to pass to
-    the templates.
+      be re-rendered with the relevant error messages. This can be done by
+      calling `render_payment_details`, passing in the form instances to pass
+      to the templates.
 
     The class is deliberately split into fine-grained methods, responsible for
     only one thing.  This is to make it easier to subclass and override just
@@ -423,25 +423,33 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         return self.handle_payment_details_submission(request)
 
     def handle_place_order_submission(self, request):
-        # If payment forms were hidden in the preview template, then this
-        # method should be overridden the forms can be re-validated here. Just
-        # in case something has changed since they were first submitted.
+        """
+        Handle a request to place an order.
 
-        # We pull together all the things that are needed to place an
-        # order.
-        submission = self.build_submission()
-        return self.submit(**submission)
+        This method is normally called after the customer has clicked "place
+        order" on the preview page. It's responsible for (re-)validating any
+        form information then building the submission dict to pass to the
+        `submit` method.
+
+        If forms are submitted on your payment details view, you should
+        override this method to ensure they are valid before extracting their
+        data into the submission dict and passing it onto `submit`.
+        """
+        return self.submit(**self.build_submission())
 
     def handle_payment_details_submission(self, request):
         """
+        Handle a request to submit payment details.
+
         This method will need to be overridden by projects that require forms
         to be submitted on the payment details view.  The new version of this
         method should validate the submitted form data and:
 
-            - If the form data is valid, show the preview view with the forms
-            re-rendered in the page
-            - If the form data is invalid, show the payment details view with
-            the form errors showing.
+        - If the form data is valid, show the preview view with the forms
+          re-rendered in the page
+        - If the form data is invalid, show the payment details view with
+          the form errors showing.
+
         """
         # No form data to validate by default, so we simply render the preview
         # page.  If validating form data and it's invalid, then call the
