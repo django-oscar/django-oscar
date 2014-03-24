@@ -9,9 +9,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_model
 from oscar.apps.address.forms import AbstractAddressForm
-from . import bankcards
-
 from oscar.views.generic import PhoneNumberMixin
+from . import bankcards
 
 Country = get_model('address', 'Country')
 BillingAddress = get_model('order', 'BillingAddress')

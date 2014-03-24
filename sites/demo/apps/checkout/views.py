@@ -7,6 +7,7 @@ from datacash.facade import Facade
 from oscar.apps.checkout import views, exceptions
 from oscar.apps.payment.forms import BankcardForm, BillingAddressForm
 from oscar.apps.payment.models import SourceType
+from oscar.apps.order.models import BillingAddress
 
 
 # Customise the core PaymentDetailsView to integrate Datacash
@@ -26,13 +27,24 @@ class PaymentDetailsView(views.PaymentDetailsView):
         if 'bankcard_form' not in kwargs:
             ctx['bankcard_form'] = BankcardForm()
         if 'billing_address_form' not in kwargs:
-            ctx['billing_address_form'] = BillingAddressForm()
+            ctx['billing_address_form'] = self.get_billing_address_form()
         elif kwargs['billing_address_form'].is_valid():
             # On the preview view, we extract the billing address into the
             # template context so we can show it to the customer.
             ctx['billing_address'] = kwargs[
                 'billing_address_form'].save(commit=False)
         return ctx
+
+    def get_billing_address_form(self):
+        """
+        Return an instantiated billing address form
+        """
+        addr = self.get_default_billing_address()
+        if not addr:
+            return BillingAddressForm()
+        billing_addr = BillingAddress()
+        addr.populate_alternative_model(billing_addr)
+        return BillingAddressForm(instance=billing_addr)
 
     def handle_payment_details_submission(self, request):
         # Validate the submitted forms
