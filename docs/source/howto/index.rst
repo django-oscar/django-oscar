@@ -53,7 +53,7 @@ Payment
     :maxdepth: 1
 
     how_to_integrate_payment
-    how_to_apply_tax_exemptions
+    how_to_handle_us_taxes
 
 Shipping
 --------
