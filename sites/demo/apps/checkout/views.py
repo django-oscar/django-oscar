@@ -4,13 +4,19 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from datacash.facade import Facade
 
-from oscar.apps.checkout import views
+from oscar.apps.checkout import views, exceptions
 from oscar.apps.payment.forms import BankcardForm, BillingAddressForm
 from oscar.apps.payment.models import SourceType
 
 
 # Customise the core PaymentDetailsView to integrate Datacash
 class PaymentDetailsView(views.PaymentDetailsView):
+
+    def check_payment_data_is_captured(self, request):
+        if request.method != "POST":
+            raise exceptions.FailedPreCondition(
+                url=reverse('checkout:payment-details'),
+                message=_("Please enter your payment details"))
 
     def get_context_data(self, **kwargs):
         ctx = super(PaymentDetailsView, self).get_context_data(**kwargs)

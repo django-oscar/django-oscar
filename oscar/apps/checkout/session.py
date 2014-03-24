@@ -45,14 +45,21 @@ class CheckoutSessionMixin(object):
             request, *args, **kwargs)
 
     def check_preconditions(self, request):
-        if self.pre_conditions is None:
-            return
-        for method_name in self.pre_conditions:
+        pre_conditions = self.get_preconditions(request)
+        for method_name in pre_conditions:
             if not hasattr(self, method_name):
                 raise ImproperlyConfigured(
                     "There is no method '%s' to call as a pre-condition" % (
                         method_name))
             getattr(self, method_name)(request)
+
+    def get_preconditions(self, request):
+        """
+        Return the pre-condition method names to run for this view
+        """
+        if self.pre_conditions is None:
+            return []
+        return self.pre_conditions
 
     # Re-usable pre-condition validators
 
@@ -80,9 +87,10 @@ class CheckoutSessionMixin(object):
                 # Create a more meaningful message to show on the basket page
                 msg = (
                     "'%(title)s' is no longer available to buy (%(reason)s). "
-                    "Please adjust your basket to continue") % {
-                        'title': line.product.get_title(),
-                        'reason': reason}
+                    "Please adjust your basket to continue"
+                ) % {
+                    'title': line.product.get_title(),
+                    'reason': reason}
                 messages.append(msg)
         if messages:
             raise exceptions.FailedPreCondition(
@@ -128,6 +136,14 @@ class CheckoutSessionMixin(object):
                 url=reverse('checkout:shipping-method'),
                 message=_("Please choose a shipping method")
             )
+
+    def check_payment_data_is_captured(self, request):
+        # We don't collect payment data by default so we don't have anything to
+        # validate here. If your shop requires forms to be submitted on the
+        # payment details page, then override this method to check that the
+        # relevant data is available. Often just enforcing that the preview
+        # view is only accessible from a POST request is sufficient.
+        pass
 
     # Helpers
 
