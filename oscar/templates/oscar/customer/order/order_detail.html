@@ -163,7 +163,7 @@
                     {% endfor %}</p>
             </td>
             <td><p>{{ order.shipping_address.phone_number }}</p></td>
-            <td><p>{{ order.shipping_address.notes }}</p></td>
+            <td><p>{{ order.shipping_address.notes|linebreaks }}</p></td>
         </tr>
     </table>
 {% endblock tabcontent %}

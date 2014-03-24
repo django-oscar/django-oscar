@@ -35,7 +35,7 @@
                                 </a>
                             {% else %}
                                 <a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "Account" %}</a>
-                            {% endif %}</a>
+                            {% endif %}
                         </li>
                         {% if user.is_staff or perms.partner.dashboard_access %}
                             <li class="hidden-phone"><a href="{% url 'dashboard:index' %}"><i class="icon-list-ul"></i> {% trans "Dashboard" %}</a></li>
