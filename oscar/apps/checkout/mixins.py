@@ -178,7 +178,9 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         """
         Saves any relevant billing data (eg a billing address).
         """
-        return None
+        if billing_address is not None:
+            billing_address.save()
+            return billing_address
 
     def save_payment_details(self, order):
         """

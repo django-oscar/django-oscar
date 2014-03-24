@@ -162,13 +162,14 @@ class CheckoutSessionMixin(object):
             'basket': basket,
             'shipping_address': shipping_address,
             'shipping_method': shipping_method,
-            'billing_address': self.get_billing_address(shipping_address),
             'order_total': total,
-            'order_kwargs': kwargs.get('order_kwargs', {}),
-            'payment_kwargs': kwargs.get('payment_kwargs', {})}
+            'order_kwargs': {},
+            'payment_kwargs': {}}
         if not submission['user'].is_authenticated():
             email = self.checkout_session.get_guest_email()
             submission['order_kwargs']['guest_email'] = email
+        # Allow overrides to be passed in
+        submission.update(kwargs)
         return submission
 
     def get_shipping_address(self, basket):

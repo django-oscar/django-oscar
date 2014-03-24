@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from datacash.facade import Facade
 
 from oscar.apps.checkout import views
-from oscar.apps.payment.forms import BankcardForm
+from oscar.apps.payment.forms import BankcardForm, BillingAddressForm
 from oscar.apps.payment.models import SourceType
 
 
@@ -14,29 +14,61 @@ class PaymentDetailsView(views.PaymentDetailsView):
 
     def get_context_data(self, **kwargs):
         ctx = super(PaymentDetailsView, self).get_context_data(**kwargs)
+        # Ensure newly instantiated instances of the bankcard and billing
+        # address forms are passed to the template context (when they aren't
+        # already specified).
         if 'bankcard_form' not in kwargs:
             ctx['bankcard_form'] = BankcardForm()
+        if 'billing_address_form' not in kwargs:
+            ctx['billing_address_form'] = BillingAddressForm()
+        elif kwargs['billing_address_form'].is_valid():
+            # On the preview view, we extract the billing address into the
+            # template context so we can show it to the customer.
+            ctx['billing_address'] = kwargs[
+                'billing_address_form'].save(commit=False)
         return ctx
 
     def handle_payment_details_submission(self, request):
+        # Validate the submitted forms
         bankcard_form = BankcardForm(request.POST)
-        if bankcard_form.is_valid():
-            return self.render_preview(request, bankcard_form=bankcard_form)
+        address_form = BillingAddressForm(request.POST)
+
+        if address_form.is_valid() and bankcard_form.is_valid():
+            # If both forms are valid, we render the preview view with the
+            # forms hidden within the page. This seems odd but means we don't
+            # have to store sensitive details on the server.
+            return self.render_preview(
+                request, bankcard_form=bankcard_form,
+                billing_address_form=address_form)
+
+        # Forms are invalid - show them to the customer along with the
+        # validation errors.
         return self.render_payment_details(
-            request, bankcard_form=bankcard_form)
+            request, bankcard_form=bankcard_form,
+            billing_address_form=address_form)
 
-    def handle_preview_submission(self, request):
+    def handle_place_order_submission(self, request):
         bankcard_form = BankcardForm(request.POST)
-        if not bankcard_form.is_valid():
-            # Must be tampering - we don't need to be that friendly with our
-            # error message.
-            messages.error(request, _("Invalid submission"))
-            return http.HttpResponseRedirect(
-                reverse('checkout:payment-details'))
+        address_form = BillingAddressForm(request.POST)
+        if address_form.is_valid() and bankcard_form.is_valid():
+            # Forms still valid, let's submit an order
+            submission = self.build_submission(
+                order_kwargs={
+                    'billing_address': address_form.save(commit=False),
+                },
+                payment_kwargs={
+                    'bankcard_form': bankcard_form,
+                    'billing_address_form': address_form
+                }
+            )
+            return self.submit(**submission)
 
-        submission = self.build_submission(
-            payment_kwargs={'bankcard_form': bankcard_form})
-        return self.submit(**submission)
+        # Must be DOM tampering as these forms were valid and were rendered in
+        # a hidden element.  Hence, we don't need to be that friendly with our
+        # error message.
+        messages.error(request, _("Invalid submission"))
+        return http.HttpResponseRedirect(
+            reverse('checkout:payment-details'))
 
     def handle_payment(self, order_number, total, **kwargs):
         # Make request to DataCash - if there any problems (eg bankcard
