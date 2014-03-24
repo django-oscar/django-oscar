@@ -1,3 +1,4 @@
+import six
 import hashlib
 import random
 
@@ -133,7 +134,8 @@ class AbstractCommunicationEventType(models.Model):
     # Code used for looking up this event programmatically.
     # eg. PASSWORD_RESET
     code = AutoSlugField(_('Code'), max_length=128, unique=True,
-                         populate_from='name')
+                         populate_from='name', separator=six.u("_"),
+                         uppercase=True)
 
     #: Name is the friendly description of an event for use in the admin
     name = models.CharField(
