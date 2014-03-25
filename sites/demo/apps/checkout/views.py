@@ -29,7 +29,9 @@ class PaymentDetailsView(views.PaymentDetailsView):
         if 'bankcard_form' not in kwargs:
             ctx['bankcard_form'] = BankcardForm()
         if 'billing_address_form' not in kwargs:
-            ctx['billing_address_form'] = self.get_billing_address_form()
+            ctx['billing_address_form'] = self.get_billing_address_form(
+                ctx['shipping_address']
+            )
         elif kwargs['billing_address_form'].is_valid():
             # On the preview view, we extract the billing address into the
             # template context so we can show it to the customer.
@@ -37,21 +39,24 @@ class PaymentDetailsView(views.PaymentDetailsView):
                 'billing_address_form'].save(commit=False)
         return ctx
 
-    def get_billing_address_form(self):
+    def get_billing_address_form(self, shipping_address):
         """
         Return an instantiated billing address form
         """
         addr = self.get_default_billing_address()
         if not addr:
-            return BillingAddressForm()
+            return BillingAddressForm(shipping_address=shipping_address)
         billing_addr = BillingAddress()
         addr.populate_alternative_model(billing_addr)
-        return BillingAddressForm(instance=billing_addr)
+        return BillingAddressForm(shipping_address=shipping_address,
+                                  instance=billing_addr)
 
     def handle_payment_details_submission(self, request):
         # Validate the submitted forms
         bankcard_form = BankcardForm(request.POST)
-        address_form = BillingAddressForm(request.POST)
+        shipping_address = self.get_shipping_address(
+            self.request.basket)
+        address_form = BillingAddressForm(shipping_address, request.POST)
 
         if address_form.is_valid() and bankcard_form.is_valid():
             # If both forms are valid, we render the preview view with the
@@ -69,7 +74,9 @@ class PaymentDetailsView(views.PaymentDetailsView):
 
     def handle_place_order_submission(self, request):
         bankcard_form = BankcardForm(request.POST)
-        address_form = BillingAddressForm(request.POST)
+        shipping_address = self.get_shipping_address(
+            self.request.basket)
+        address_form = BillingAddressForm(shipping_address, request.POST)
         if address_form.is_valid() and bankcard_form.is_valid():
             # Forms still valid, let's submit an order
             submission = self.build_submission(

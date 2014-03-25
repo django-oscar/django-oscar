@@ -1,6 +1,7 @@
 from django import forms
 
 from oscar.apps.payment import forms as payment_forms
+from oscar.apps.order.models import BillingAddress
 
 
 class BillingAddressForm(payment_forms.BillingAddressForm):
@@ -16,7 +17,10 @@ class BillingAddressForm(payment_forms.BillingAddressForm):
     same_as_shipping = forms.ChoiceField(
         widget=forms.RadioSelect, choices=CHOICES, initial=SAME_AS_SHIPPING)
 
-    def __init__(self, data=None, *args, **kwargs):
+    def __init__(self, shipping_address, data=None, *args, **kwargs):
+        # Store a reference to the shipping address
+        self.shipping_address = shipping_address
+
         super(BillingAddressForm, self).__init__(data, *args, **kwargs)
 
         # If using same address as shipping, we don't need require any of the
@@ -31,3 +35,13 @@ class BillingAddressForm(payment_forms.BillingAddressForm):
         if self.cleaned_data.get('same_as_shipping') == self.SAME_AS_SHIPPING:
             return
         super(BillingAddressForm, self)._post_clean()
+
+    def save(self, commit=True):
+        if self.cleaned_data.get('same_as_shipping') == self.SAME_AS_SHIPPING:
+            # Convert shipping address into billing address
+            billing_addr = BillingAddress()
+            self.shipping_address.populate_alternative_model(billing_addr)
+            if commit:
+                billing_addr.save()
+            return billing_addr
+        return super(BillingAddressForm, self).save(commit)
