@@ -112,6 +112,9 @@ and append Oscar's core apps:
 Note that Oscar requires ``django.contrib.flatpages`` which isn't
 included by default. ``flatpages`` also requires ``django.contrib.sites``,
 which won't be enabled by default when using Django 1.6 or upwards.
+More info about installing ``flatpages`` is in the `Django docs`_.
+
+.. _`Django docs`: https://docs.djangoproject.com/en/dev/ref/contrib/flatpages/#installation
 
 Next, add ``oscar.apps.basket.middleware.BasketMiddleware``, 
 ``django.contrib.flatpages.middleware.FlatpageFallbackMiddleware`` to
@@ -130,9 +133,6 @@ also recommended to use ``django.middleware.transaction.TransactionMiddleware``:
 If you're running Django 1.6+, you should enable ``ATOMIC_REQUESTS`` instead
 (see database settings above).
 
-More info about `django-flatpages installation`_ at the django-project website.
-
-.. _`django-flatpages installation`: https://docs.djangoproject.com/en/dev/ref/contrib/flatpages/#installation
 
 .. tip::
 
@@ -165,11 +165,10 @@ path in ``MEDIA_ROOT`` exists. An example from the Sandbox site:
     MEDIA_ROOT = location("public/media")
     MEDIA_URL = '/media/'
 
-Verify your ``staticfiles`` settings and ensure that files in ``MEDIA_ROOT``
-get served:
+Now verify your ``staticfiles`` `settings`_ and ensure that files in ``MEDIA_ROOT``
+get served.
 
-* `staticfiles in Django 1.3 and 1.4 <https://docs.djangoproject.com/en/1.3/howto/static-files/#serving-other-directories>`_
-* `staticfiles in Django 1.5 <https://docs.djangoproject.com/en/1.5/howto/static-files/#serving-files-uploaded-by-a-user>`_
+_`settings`: https://docs.djangoproject.com/en/1.5/howto/static-files/#serving-files-uploaded-by-a-user
 
 Modify your ``TEMPLATE_DIRS`` to include the main Oscar template directory:
 

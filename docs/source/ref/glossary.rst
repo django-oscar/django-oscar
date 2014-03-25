@@ -45,20 +45,35 @@ This is a work-in-progress list of commonly used terms when discussing Oscar.
 
     Product Class
 
+        Product classes are an important concept in Oscar. Each product is
+        assigned to exactly one product class. For instance, product classes
+        could be Books, DVDs, and Toys.
+
+        Settings on a product class decide whether stock levels are
+        :attr:`tracked <oscar.apps.catalogue.abstract_models.AbstractProductClass.track_stock>`
+        for the associated products, and whether they
+        :attr:`require shipping <oscar.apps.catalogue.abstract_models.AbstractProductClass.requires_shipping>`.
+        So if you have products that require shipping and ones which don't,
+        you'll need at least two product classes.
+
         Used for defining
         :class:`options <oscar.apps.catalogue.abstract_models.AbstractOption>`
         and
         :class:`attributes <oscar.apps.catalogue.abstract_models.AbstractProductAttribute>`
         for a subset of products.
-        For instance, product classes could be Books, DVDs, and Toys.
-        A product can only belong to one product class.
 
     Product Category
 
-        Categories and subcategories are used to organise your catalogue.
-        They're merely used for navigational purposes; no logic in Oscar cares
-        about the category.
+        Categories and subcategories are used to semantically organise your
+        catalogue. They're merely used for navigational purposes; no business
+        logic in Oscar considers a product's category.
         For instance, if you're a book shop, you could have categories such as
         fiction, romance, and children's books. If you'd sell both books and
         e-books, they could be of a different :term:`Product Class`, but in the
         same category.
+
+    Product Options
+
+        Options are values that can be associated with a item when it is added
+        to a customer's basket.  This could be something like a personalised
+        message to be printed on a T-shirt.

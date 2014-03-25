@@ -68,7 +68,8 @@ class AbstractProductClass(models.Model):
 
 class AbstractCategory(MP_Node):
     """
-    A product category.
+    A product category. Merely used for navigational purposes; has no
+    effects on business logic.
 
     Uses django-treebeard.
     """
@@ -199,7 +200,7 @@ class AbstractProduct(models.Model):
     For example, a canonical product would have a title like "Green fleece"
     while its children would be "Green fleece - size L".
     """
-    #: Universal product code
+
     upc = NullCharField(
         _("UPC"), max_length=64, blank=True, null=True, unique=True,
         help_text=_("Universal Product Code (UPC) is an identifier for "
@@ -1000,7 +1001,7 @@ class AbstractOption(models.Model):
 
     This is not the same as an 'attribute' as options do not have a fixed value
     for a particular item.  Instead, option need to be specified by a customer
-    when add the item to their basket.
+    when they add the item to their basket.
     """
     name = models.CharField(_("Name"), max_length=128)
     code = AutoSlugField(_("Code"), max_length=128, unique=True,
