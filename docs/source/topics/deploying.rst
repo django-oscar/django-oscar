@@ -40,6 +40,12 @@ Oscar specific configurations with regard to security are in place. See
 `django-secure`_ is a nice app that comes with a few sanity checks for
 deployments behind SSL.
 
+Search Engine Optimisation
+--------------------------
+
+A basic example of what a sitemap for Oscar could look like has been added
+to the sandbox site. Have a look at ``sites/sandbox/urls.py`` for inspiration.
+
 .. _deployment: https://docs.djangoproject.com/en/dev/howto/deployment/
 .. _`Django's guidelines for security`: https://docs.djangoproject.com/en/dev/topics/security/
 .. _`cached template loader`: https://docs.djangoproject.com/en/dev/ref/templates/api/#django.template.loaders.cached.Loader
