@@ -13,7 +13,7 @@ class TestAnAdmin(WebTestCase):
     def setUp(self):
         self.staff = G(User, is_staff=True, username='1234')
         self.commtype = CommunicationEventType.objects.create(
-            code='PASSWORD_RESET', name="Password reset",
+            name="Password reset",
             category=CommunicationEventType.USER_RELATED)
 
     def test_can_preview_an_email(self):
