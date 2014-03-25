@@ -8,10 +8,10 @@
 
     {% block payment_details_content %}
     <form action="{% url 'checkout:preview' %}" class="payment-details form-horizontal" method="post">
+        {% csrf_token %}
 
         <div class="well well-info">
             <h3>{% trans "Bankcard" %}</h3>
-            {% csrf_token %}
             {% include 'partials/form_fields.html' with form=bankcard_form %}
             <div class="alert alert-warning">
                 <h4>{% trans "Demo site help" %}</h4>
@@ -21,11 +21,32 @@
 
         <div class="well well-info">
             <h3>{% trans "Billing address" %}</h3>
-            {% csrf_token %}
-            {% include 'partials/form_fields.html' with form=billing_address_form %}
+            {{ billing_address_form.non_field_errors }}
+
+            <p>
+            {{ form.same_as_shipping.errors }}
+            {{ billing_address_form.same_as_shipping.0 }}
+            {{ billing_address_form.same_as_shipping.1 }}
+            </p>
+
+            <div id="billing_address_form" style="display:none">
+                {% include 'partials/form_field.html' with field=billing_address_form.line1 %}
+                {% include 'partials/form_field.html' with field=billing_address_form.line2 %}
+                {% include 'partials/form_field.html' with field=billing_address_form.line3 %}
+                {% include 'partials/form_field.html' with field=billing_address_form.line4 %}
+                {% include 'partials/form_field.html' with field=billing_address_form.state %}
+                {% include 'partials/form_field.html' with field=billing_address_form.country %}
+            </div>
         </div>
 
         <button type="submit" class="pull-right btn btn-large btn-primary">{% trans "Continue" %}</button>
     </form>
     {% endblock %}
 {% endblock payment_details %}
+
+{% block onbodyload %}
+    {# Toggle visibility of the billing address form #}
+    $("input[name='same_as_shipping']").change(function(){
+        $("#billing_address_form").toggle();
+    });
+{% endblock %}

@@ -5,9 +5,11 @@ from django.utils.translation import ugettext_lazy as _
 from datacash.facade import Facade
 
 from oscar.apps.checkout import views, exceptions
-from oscar.apps.payment.forms import BankcardForm, BillingAddressForm
+from oscar.apps.payment.forms import BankcardForm
 from oscar.apps.payment.models import SourceType
 from oscar.apps.order.models import BillingAddress
+
+from .forms import BillingAddressForm
 
 
 # Customise the core PaymentDetailsView to integrate Datacash
