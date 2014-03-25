@@ -17,8 +17,8 @@ Product = get_model('catalogue', 'product')
 
 class CreateProductReview(CreateView):
     template_name = "catalogue/reviews/review_form.html"
-    model = get_model('reviews', 'ProductReview')
-    product_model = get_model('catalogue', 'product')
+    model = ProductReview
+    product_model = Product
     form_class = ProductReviewForm
     view_signal = review_added
 
@@ -108,8 +108,8 @@ class ProductReviewList(ListView):
     """
     template_name = 'catalogue/reviews/review_list.html'
     context_object_name = "reviews"
-    model = get_model('reviews', 'productreview')
-    product_model = get_model('catalogue', 'product')
+    model = ProductReview
+    product_model = Product
     paginate_by = 20
 
     def get_queryset(self):

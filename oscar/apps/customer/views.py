@@ -382,7 +382,6 @@ class EmailDetailView(PageTitleMixin, DetailView):
     active_tab = 'emails'
 
     def get_object(self, queryset=None):
-        """Return an order object or 404"""
         return get_object_or_404(Email, user=self.request.user,
                                  id=self.kwargs['email_id'])
 
@@ -525,7 +524,6 @@ class OrderLineView(PostActionMixin, DetailView):
     """Customer order line"""
 
     def get_object(self, queryset=None):
-        """Return an order object or 404"""
         order = get_object_or_404(Order, user=self.request.user,
                                   number=self.kwargs['order_number'])
         return order.lines.get(id=self.kwargs['line_id'])

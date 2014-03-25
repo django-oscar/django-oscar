@@ -77,7 +77,7 @@ factors, including:
 * The payment method used.
 
 Recipes:
-* :doc:`/howto/how_to_apply_tax_exemptions`
+* :doc:`/howto/how_to_handle_us_taxes`
 
 What availability messages are shown to customers?
 --------------------------------------------------
