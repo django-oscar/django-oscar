@@ -13,11 +13,15 @@
         <div class="nav-collapse account-collapse collapse">
             <div class="container-fluid">
                 {% if LANGUAGES|length > 1 %}
-                    <form id="language_selector" class="pull-left navbar-form" action="/i18n/setlang/" method="post">
+                    <form id="language_selector" class="pull-left navbar-form" action="{% url 'set_language' %}" method="post">
                         {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ language_neutral_url_path }}" />
                         <select name="language">
-                            {% for language in LANGUAGES %}
-                            <option value="{{ language.0 }}" {% if LANGUAGE_CODE == language.0 %}selected="selected"{% endif %}>{{ language.1 }}</option>
+                            {% get_language_info_list for LANGUAGES as languages %}
+                            {% for language in languages %}
+                                <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE%} selected="selected"{% endif %}>
+                                    {{ language.name_local }}
+                                </option>
                             {% endfor %}
                         </select>
                         <button class="btn" type="submit">{% trans "Go" %}</button>
@@ -47,6 +51,5 @@
                 </ul>
             </div>
         </div>
-
     </div>
 </div>

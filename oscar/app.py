@@ -25,7 +25,6 @@ class Shop(Application):
 
     def get_urls(self):
         urls = [
-            (r'^i18n/', include('django.conf.urls.i18n')),
             (r'^catalogue/', include(self.catalogue_app.urls)),
             (r'^basket/', include(self.basket_app.urls)),
             (r'^checkout/', include(self.checkout_app.urls)),

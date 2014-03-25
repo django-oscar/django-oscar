@@ -202,7 +202,9 @@ The last addition to the settings file is to import all of Oscar's default setti
 URLs
 ----
 
-Alter your ``frobshop/urls.py`` to include Oscar's URLs:
+Alter your ``frobshop/urls.py`` to include Oscar's URLs. If you have more than
+one language set your Django settings for ``LANGUAGES``, you will also need to
+include Django's i18n URLs:
 
 .. code-block:: django
 
@@ -210,6 +212,7 @@ Alter your ``frobshop/urls.py`` to include Oscar's URLs:
     from oscar.app import application
 
     urlpatterns = patterns('',
+        (r'^i18n/', include('django.conf.urls.i18n')),
         url(r'', include(application.urls))
     )
 
