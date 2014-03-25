@@ -54,6 +54,16 @@ class BaseBasketLineFormSet(BaseModelFormSet):
         return super(BaseBasketLineFormSet, self)._construct_form(
             i, strategy=self.strategy, **kwargs)
 
+    def _should_delete_form(self, form):
+        """
+        Quantity of zero is treated as if the user checked the DELETE checkbox,
+        which results in the basket line being deleted
+        """
+        if super(BaseBasketLineFormSet, self)._should_delete_form(form):
+            return True
+        if self.can_delete and 'quantity' in form.cleaned_data:
+            return form.cleaned_data['quantity'] == 0
+
 
 BasketLineFormSet = modelformset_factory(
     Line, form=BasketLineForm, formset=BaseBasketLineFormSet, extra=0,
