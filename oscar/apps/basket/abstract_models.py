@@ -594,15 +594,10 @@ class AbstractLine(models.Model):
                 'quantity': self.quantity}
 
     def save(self, *args, **kwargs):
-        """
-        Saves a line or deletes if the quantity is 0
-        """
         if not self.basket.can_be_edited:
             raise PermissionDenied(
                 _("You cannot modify a %s basket") % (
                     self.basket.status.lower(),))
-        if self.quantity == 0:
-            return self.delete(*args, **kwargs)
         return super(AbstractLine, self).save(*args, **kwargs)
 
     # =============
