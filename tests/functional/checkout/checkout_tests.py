@@ -89,40 +89,6 @@ class DisabledAnonymousCheckoutViewsTests(WebTestCase):
             self.assertIsRedirect(response)
 
 
-@override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)
-class EnabledAnonymousCheckoutViewsTests(WebTestCase, CheckoutMixin):
-    is_anonymous = True
-
-    def reload_urlconf(self):
-        if settings.ROOT_URLCONF in sys.modules:
-            reload(sys.modules[settings.ROOT_URLCONF])
-        return import_module(settings.ROOT_URLCONF)
-
-    def add_product_to_basket(self):
-        product = create_product(price=D('12.00'), num_in_stock=10)
-        self.client.post(reverse('basket:add'), {'product_id': product.id,
-                                                 'quantity': 1})
-
-    def test_shipping_address_does_require_session_email_address(self):
-        with override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True):
-            self.reload_urlconf()
-            url = reverse('checkout:shipping-address')
-            response = self.client.get(url)
-            self.assertIsRedirect(response)
-
-    def test_email_address_is_saved_with_order(self):
-        with override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True):
-            self.reload_urlconf()
-            self.add_product_to_basket()
-            self.complete_guest_email_form('barry@example.com')
-            self.complete_shipping_address()
-            self.complete_shipping_method()
-            response = self.client.post(reverse('checkout:preview'), {'action': 'place_order'})
-            response = self.client.get(reverse('checkout:thank-you'))
-            order = response.context['order']
-            self.assertEqual('barry@example.com', order.guest_email)
-
-
 class TestShippingAddressView(WebTestCase, CheckoutMixin):
     fixtures = ['countries.json']
 

@@ -42,9 +42,9 @@ class CheckoutMixin(object):
         form = detail_page.forms['add_to_basket_form']
         form.submit()
 
-    def enter_guest_details(self):
+    def enter_guest_details(self, email='guest@example.com'):
         index_page = self.get(reverse('checkout:index'))
-        index_page.form['username'] = 'guest@example.com'
+        index_page.form['username'] = email
         index_page.form.submit()
 
     def enter_shipping_address(self):
@@ -59,6 +59,8 @@ class CheckoutMixin(object):
         form['postcode'] = 'N12 9RT'
         form.submit()
 
+    def enter_shipping_method(self):
+        self.get(reverse('checkout:shipping-method'))
 
 @override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)
 class TestIndexView(CheckoutMixin, WebTestCase):
@@ -296,3 +298,24 @@ class TestPaymentDetailsView(CheckoutMixin, WebTestCase):
 
         response = self.get(reverse('checkout:payment-details'))
         self.assertRedirectUrlName(response, 'checkout:shipping-method')
+
+
+@override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)
+class TestPlacingOrder(CheckoutMixin, WebTestCase):
+    is_anonymous = True
+
+    def setUp(self):
+        reload_url_conf()
+        super(TestPlacingOrder, self).setUp()
+
+    def test_saves_guest_email_with_order(self):
+        self.add_product_to_basket()
+        self.enter_guest_details('hello@egg.com')
+        self.enter_shipping_address()
+
+        page = self.get(reverse('checkout:shipping-method')).follow().follow()
+        preview = page.click(linkid="view_preview")
+        thank_you = preview.forms['place-order-form'].submit().follow()
+
+        order = thank_you.context['order']
+        self.assertEqual('hello@egg.com', order.guest_email)

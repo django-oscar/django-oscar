@@ -3,7 +3,12 @@ from django.utils.encoding import force_text
 
 class CheckoutSessionData(object):
     """
-    Class responsible for marshalling all the checkout session data
+    Responsible for marshalling all the checkout session data
+
+    Multi-stage checkouts often require several forms to be submitted and their
+    data persisted until the final order is placed. This class helps store and
+    organise checkout form data until it is required to write out the final
+    order.
     """
     SESSION_KEY = 'checkout_data'
 
@@ -13,12 +18,15 @@ class CheckoutSessionData(object):
             self.request.session[self.SESSION_KEY] = {}
 
     def _check_namespace(self, namespace):
+        """
+        Ensure a namespace within the session dict is initialised
+        """
         if namespace not in self.request.session[self.SESSION_KEY]:
             self.request.session[self.SESSION_KEY][namespace] = {}
 
     def _get(self, namespace, key, default=None):
         """
-        Return session value or None
+        Return a value from within a namespace
         """
         self._check_namespace(namespace)
         if key in self.request.session[self.SESSION_KEY][namespace]:
@@ -27,7 +35,7 @@ class CheckoutSessionData(object):
 
     def _set(self, namespace, key, value):
         """
-        Set session value
+        Set a namespaced value
         """
         self._check_namespace(namespace)
         self.request.session[self.SESSION_KEY][namespace][key] = value
@@ -35,7 +43,7 @@ class CheckoutSessionData(object):
 
     def _unset(self, namespace, key):
         """
-        Unset session value
+        Remove a namespaced value
         """
         self._check_namespace(namespace)
         if key in self.request.session[self.SESSION_KEY][namespace]:
@@ -43,12 +51,15 @@ class CheckoutSessionData(object):
             self.request.session.modified = True
 
     def _flush_namespace(self, namespace):
+        """
+        Flush a namespace
+        """
         self.request.session[self.SESSION_KEY][namespace] = {}
         self.request.session.modified = True
 
     def flush(self):
         """
-        Delete session key
+        Flush all session data
         """
         self.request.session[self.SESSION_KEY] = {}
 
@@ -73,16 +84,14 @@ class CheckoutSessionData(object):
 
     def ship_to_user_address(self, address):
         """
-        Set existing shipping address id to session and unset address fields
-        from session
+        Use an user address (from an address book) as the shipping address.
         """
         self.reset_shipping_data()
         self._set('shipping', 'user_address_id', address.id)
 
     def ship_to_new_address(self, address_fields):
         """
-        Set new shipping address details to session and unset shipping address
-        id
+        Use a manually entered address as the shipping address
         """
         self._unset('shipping', 'new_address_fields')
         phone_number = address_fields.get('phone_number')
@@ -94,16 +103,17 @@ class CheckoutSessionData(object):
 
     def new_shipping_address_fields(self):
         """
-        Get shipping address fields from session
+        Return shipping address fields
         """
         return self._get('shipping', 'new_address_fields')
 
     def shipping_user_address_id(self):
         """
-        Get user address id from session
+        Return user address id
         """
         return self._get('shipping', 'user_address_id')
 
+    # Legacy accessor
     user_address_id = shipping_user_address_id
 
     def is_shipping_address_set(self):
@@ -135,7 +145,7 @@ class CheckoutSessionData(object):
 
     def shipping_method_code(self, basket):
         """
-        Returns the shipping method code
+        Return the shipping method code
         """
         return self._get('shipping', 'method_code')
 
