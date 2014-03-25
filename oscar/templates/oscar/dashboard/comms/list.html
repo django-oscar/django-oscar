@@ -38,11 +38,11 @@
             <tbody>
                 {% for commtype in commtypes %}
                     <tr>
-                        <td><a href="{% url 'dashboard:comms-update' commtype.code|lower %}">{{ commtype.code }}</a></td>
+                        <td><a href="{% url 'dashboard:comms-update' commtype.code %}">{{ commtype.code }}</a></td>
                         <td>{{ commtype.name }}</td>
                         <td>{{ commtype.category }}</td>
                         <td>
-                            <a class="btn btn-success" href="{% url 'dashboard:comms-update' code=commtype.code|lower %}">{% trans "Edit" %}</a>
+                            <a class="btn btn-success" href="{% url 'dashboard:comms-update' commtype.code %}">{% trans "Edit" %}</a>
                         </td>
                     </tr>
                 {% endfor %}

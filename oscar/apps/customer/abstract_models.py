@@ -131,11 +131,13 @@ class AbstractCommunicationEventType(models.Model):
     A 'type' of communication.  Like a order confirmation email.
     """
 
-    # Code used for looking up this event programmatically.
-    # eg. PASSWORD_RESET
-    code = AutoSlugField(_('Code'), max_length=128, unique=True,
-                         populate_from='name', separator=six.u("_"),
-                         uppercase=True)
+    #: Code used for looking up this event programmatically.
+    # e.g. PASSWORD_RESET. AutoSlugField uppercases the code for us because
+    # it's a useful convention that's been enforced in previous Oscar versions
+    code = AutoSlugField(
+        _('Code'), max_length=128, unique=True, populate_from='name',
+        separator=six.u("_"), uppercase=True, editable=True,
+        help_text=_("Code used for looking up this event programmatically"))
 
     #: Name is the friendly description of an event for use in the admin
     name = models.CharField(
