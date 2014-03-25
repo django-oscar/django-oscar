@@ -78,6 +78,11 @@ OSCAR_FROM_EMAIL = 'oscar@example.com'
 # Offers
 OSCAR_OFFER_BLACKLIST_PRODUCT = None
 
+# Slug handling
+OSCAR_SLUG_FUNCTION = 'oscar.core.utils.default_slugifier'
+OSCAR_SLUG_MAP = {}
+OSCAR_SLUG_BLACKLIST = []
+
 # Cookies
 OSCAR_COOKIES_DELETE_ON_LOGOUT = ['oscar_recently_viewed_products', ]
 
@@ -195,7 +200,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
         'url_name': 'dashboard:reports-index',
     },
 ]
-OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION = 'dashboard.nav.default_access_fn'
+OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION = 'oscar.apps.dashboard.nav.default_access_fn'  # noqa
 
 # Search facets
 OSCAR_SEARCH_FACETS = {

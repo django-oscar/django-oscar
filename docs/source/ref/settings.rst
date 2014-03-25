@@ -158,7 +158,7 @@ A list of dashboard navigation elements. Usage is explained in
 ``OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION``
 -------------------------------------------
 
-Default: ``dashboard.nav.default_access_fn``
+Default: ``oscar.apps.dashboard.nav.default_access_fn``
 
 ``OSCAR_DASHBOARD_NAVIGATION`` allows passing an access function for each node
 which is used to determine whether to show the node for a specific user or not.
@@ -443,7 +443,7 @@ Slug settings
 ``OSCAR_SLUG_MAP``
 ------------------
 
-Default: ``None``
+Default: ``{}``
 
 A dictionary to map strings to more readable versions for including in URL
 slugs.  This mapping is appled before the slugify function.  
@@ -458,22 +458,24 @@ stripped.  For instance::
 ``OSCAR_SLUG_FUNCTION``
 -----------------------
 
-Default: ``django.template.defaultfilters.slugify``
+Default: ``'oscar.core.utils.default_slugifier'``
 
 The slugify function to use.  Note that is used within Oscar's slugify wrapper
-(in ``oscar.core.utils``) which applies the custom map and blacklist.
+(in ``oscar.core.utils``) which applies the custom map and blacklist. You can
+use both string notation or a callable.
 
 Example::
 
     def some_slugify(value)
         pass
 
-    OSCAR_SLUG_FUNCTION = some_slugify
+    OSCAR_SLUG_FUNCTION = some_slugify  # or 'myproject.utils.some_slugify'
+
 
 ``OSCAR_SLUG_BLACKLIST``
 ------------------------
 
-Default: ``None``
+Default: ``[]``
 
 A list of words to exclude from slugs.
 

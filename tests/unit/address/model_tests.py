@@ -23,32 +23,32 @@ class TestUserAddress(TestCase):
     def test_uses_title_firstname_and_lastname_in_salutation(self):
         a = UserAddressFactory.build(country=self.country,
                 user=self.user)
-        self.assertEqual("Dr Barry Barrington", a.salutation)
+        self.assertEqual(u"Dr Bärry Bärrington", a.salutation)
 
     def test_strips_whitespace_from_salutation(self):
         a = UserAddressFactory.build(title='', 
             first_name='', 
-            last_name='Barrington',
+            last_name=u'Bärrington',
             country=self.country,
             user=self.user)
-        self.assertEqual("Barrington", a.salutation)
+        self.assertEqual(u"Bärrington", a.salutation)
 
     def test_has_name_property(self):
         a = UserAddressFactory.build(country=self.country,
                 user=self.user)
-        self.assertEqual("Barry Barrington", a.name)
+        self.assertEqual(u"Bärry Bärrington", a.name)
 
     def test_has_summary_property(self):
         c = CountryFactory.build(name='')
         a = UserAddressFactory.build(country=c)
-        self.assertEqual("Dr Barry Barrington, 1 King Road, London, SW1 9RE, ",
+        self.assertEqual(u"Dr Bärry Bärrington, 1 King Roäd, Löndön, SW1 9RE, ",
                           a.summary)
 
     def test_summary_includes_country(self):
         a = UserAddressFactory.build(country=self.country,
                 user=self.user)
         self.assertEqual(
-            "Dr Barry Barrington, 1 King Road, London, SW1 9RE, UNITED KINGDOM",
+            u"Dr Bärry Bärrington, 1 King Roäd, Löndön, SW1 9RE, UNITED KINGDOM",
             a.summary)
 
     def test_can_be_hashed(self):
@@ -69,16 +69,16 @@ class TestUserAddress(TestCase):
 
     def test_strips_whitespace_in_name_property(self):
         a = UserAddressFactory.build(first_name='', 
-            last_name='Barrington',
+            last_name=u'Bärrington',
             country=self.country,
             user=self.user)
-        self.assertEqual("Barrington", a.name)
+        self.assertEqual(u"Bärrington", a.name)
 
     def test_uses_city_as_an_alias_of_line4(self):
-        a = UserAddressFactory.build(line4='London',
+        a = UserAddressFactory.build(line4=u'Löndön',
             country=self.country,
             user=self.user)
-        self.assertEqual('London', a.city)
+        self.assertEqual(u'Löndön', a.city)
 
     def test_converts_postcode_to_uppercase_when_cleaning(self):
         address = UserAddressFactory.build(postcode="n4 8ty",
@@ -98,23 +98,23 @@ class TestUserAddress(TestCase):
 
     def test_active_address_fields_skips_whitespace_only_fields(self):
         a = UserAddressFactory.build(first_name='   ',
-            last_name='Barrington',
+            last_name=u'Bärrington',
             line1='  75 Smith Road  ',
             postcode='  n4 8ty',
             title='',
             country=self.country,
             user=self.user)
         active_fields = a.active_address_fields()
-        self.assertEqual("Barrington", active_fields[0])
+        self.assertEqual(u"Bärrington", active_fields[0])
 
     def test_ignores_whitespace_when_hashing(self):
         a1 = UserAddressFactory.build(first_name='Terry',
-            last_name='Barrington',
+            last_name=u'Bärrington',
             country=self.country,
             user=self.user)
         a1.clean()
         a2 = UserAddressFactory.build(first_name='   Terry  ',
-            last_name='     Barrington',
+            last_name=u'     Bärrington',
             country=self.country,
             user=self.user)
         a2.clean()
@@ -140,14 +140,14 @@ class TestUserAddress(TestCase):
         a = UserAddressFactory.build(title='', 
             line4='',
             first_name=" Terry  ",
-            last_name='Barrington',
+            last_name=u'Bärrington',
             line1="  75 Smith Road  ",
             postcode="  n4 8ty",
             country=self.country,
             user=self.user)
         a.clean()
         self.assertEqual(
-            "Terry Barrington, 75 Smith Road, N4 8TY, UNITED KINGDOM",
+            u"Terry Bärrington, 75 Smith Road, N4 8TY, UNITED KINGDOM",
             a.summary)
 
 VALID_POSTCODES = [
