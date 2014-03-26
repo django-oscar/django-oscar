@@ -76,7 +76,7 @@ def get_classes(module_label, classnames):
     # import from Oscar package (should succeed in most cases)
     # e.g. 'oscar.apps.dashboard.catalogue.forms'
     oscar_module_label = "oscar.apps.%s" % module_label
-    oscar_module = _import_oscar_module(oscar_module_label, classnames)
+    oscar_module = _import_module(oscar_module_label, classnames)
 
     # returns e.g. 'oscar.apps.dashboard.catalogue',
     # 'yourproject.apps.dashboard.catalogue' or 'dashboard.catalogue'
@@ -85,7 +85,7 @@ def get_classes(module_label, classnames):
         # Attempt to import the classes from the local module
         # e.g. 'yourproject.dashboard.catalogue.forms'
         local_module_label = installed_apps_entry + '.' + module
-        local_module = _import_local_module(local_module_label, classnames)
+        local_module = _import_module(local_module_label, classnames)
     else:
         # The entry is obviously an Oscar one, we don't import again
         local_module = None
@@ -103,15 +103,16 @@ def get_classes(module_label, classnames):
     return _pluck_classes([local_module, oscar_module], classnames)
 
 
-def _import_local_module(local_module_label, classnames):
+def _import_module(module_label, classnames):
     try:
-        return __import__(local_module_label, fromlist=classnames)
+        return __import__(module_label, fromlist=classnames)
     except ImportError:
         # There are 2 reasons why there is ImportError:
-        #  1. local_app does not exist
-        #  2. local_app exists but is corrupted (ImportError inside of the app)
+        #  1. module does not exist
+        #  2. module exists but is corrupted (ImportError inside of the app)
         #
         # Obviously, for the reason #1 we want to fall back to use Oscar app.
+        # If there is no Oscar app, the import is ignored.
         # For the reason #2 we want to propagate error (the dev obviously wants
         # to override app and not use Oscar app)
         #
@@ -123,14 +124,6 @@ def _import_local_module(local_module_label, classnames):
         frames = traceback.extract_tb(exc_traceback)
         if len(frames) > 1:
             raise
-
-
-def _import_oscar_module(oscar_module_label, classnames):
-    try:
-        return __import__(oscar_module_label, fromlist=classnames)
-    except ImportError:
-        # Oscar does not have this application, can't fallback to it
-        return None
 
 
 def _pluck_classes(modules, classnames):
