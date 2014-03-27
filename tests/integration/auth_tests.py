@@ -1,4 +1,4 @@
-import unittest2
+import unittest
 
 from django.test import TestCase
 from django.contrib.auth import authenticate
@@ -13,7 +13,7 @@ User = get_user_model()
 # index on the user class.  The test suite currently uses a custom model that
 # *does* have a unique index on email.  When I figure out how to swap the user
 # model per test, we can re-enable this testcase.
-@unittest2.skip
+@unittest.skip
 class TestEmailAuthBackendWhenUsersShareAnEmail(TestCase):
 
     def test_authenticates_when_passwords_are_different(self):
