@@ -12,7 +12,7 @@ class TestACustomUserModel(TestCase):
     def test_can_be_created_without_error(self):
         try:
             self.user_klass.objects.create_user('_', 'a@a.com', 'pa55w0rd')
-        except Exception, e:
+        except Exception as e:
             self.fail("Unable to create user model: %s" % e)
 
     def test_extra_field_is_accessible(self):

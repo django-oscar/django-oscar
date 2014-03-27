@@ -40,7 +40,7 @@ class OrderAndItemChargesTests(TestCase):
         product.product_class.save()
 
         self.basket.add_product(record.product)
-        self.assertEquals(D('5.00'), self.method.charge_incl_tax)
+        self.assertEqual(D('5.00'), self.method.charge_incl_tax)
 
     def test_multi_item_basket(self):
         record = factories.create_stockrecord()

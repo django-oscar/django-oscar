@@ -24,10 +24,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 
+import unittest
 import django
 from django.db import models
-from django.utils import unittest
-from django.utils.unittest.case import TestCase
+from django.test import TestCase
 
 from oscar.core.loading import get_model
 

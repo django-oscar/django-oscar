@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
-import StringIO
+from six.moves import cStringIO
+from six import text_type
 
 from django.test import TestCase
 
@@ -17,12 +18,12 @@ class TestCsvWriter(TestCase):
         rows = [
             [s, s.encode('utf-8'), unicodeobj(), 123, datetime.date.today()]
         ]
-        f = StringIO.StringIO()
+        f = cStringIO()
         CsvUnicodeWriter(f).writerows(rows)
         f.seek(0)
         self.assertEqual(
             f.read().decode('utf-8-sig').strip(),
-            u','.join((s, s, s, u'123', unicode(datetime.date.today())))
+            u','.join((s, s, s, u'123', text_type(datetime.date.today())))
         )
-        f = StringIO.StringIO()
+        f = cStringIO()
         self.assertRaises(TypeError, CsvUnicodeWriter(f).writerows, [object()])

@@ -120,5 +120,5 @@ class TestOverridingCoreApps(TestCase):
 
     def test_means_the_overriding_model_is_registered_first(self):
         klass = get_model('partner', 'StockRecord')
-        self.assertEquals('tests._site.apps.partner.models',
+        self.assertEqual('tests._site.apps.partner.models',
                           klass.__module__)

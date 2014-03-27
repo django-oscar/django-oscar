@@ -27,7 +27,7 @@ class TestBankcardNumberField(TestCase):
     def test_amex_accepted_when_allowed(self):
         # Number taken from http://www.darkcoding.net/credit-card-numbers/
         self.field = forms.BankcardNumberField(types=['American Express',])
-        self.assertEquals(
+        self.assertEqual(
             '348934265521923', self.field.clean('348934265521923'))
 
     def test_amex_rejected_when_disallowed(self):
