@@ -65,8 +65,8 @@ setup(name='django-oscar',
       ],
       # tarballs for unreleased packages
       dependency_links = [
-          'http://github.com/mariocesar/sorl-thumbnail/tarball/588837f828a5d9dd999bd6b994331e6285f79ca9#egg=sorl-thumbnail-12.00',
-          'http://github.com/django-compressor/django-compressor/tarball/cdab0d9698cb3c9421f3598822ddc71a57970405#egg=django-compressor-1.4a1',
+          'http://github.com/mariocesar/sorl-thumbnail/tarball/34e1ffa2a1bcbf048541dd28db3a78d9d9b93ad7#egg=sorl-thumbnail-12.00',
+          'http://github.com/django-compressor/django-compressor/tarball/aba8c5f6b59dd78831d2bf1e53222f8475b2f9f8#egg=django-compressor-1.4a1',
       ],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[

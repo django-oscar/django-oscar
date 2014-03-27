@@ -81,6 +81,10 @@ def configure():
             'APPEND_SLASH': True,
             'DDF_DEFAULT_DATA_FIXTURE': 'tests.dynamic_fixtures.OscarDynamicDataFixtureClass',
             'SESSION_SERIALIZER': 'django.contrib.sessions.serializers.JSONSerializer',
+
+            # temporary workaround for issue in sorl-thumbnail in Python 3
+            # https://github.com/mariocesar/sorl-thumbnail/pull/254
+            'THUMBNAIL_DEBUG': False,
         }
         if django.VERSION >= (1, 5):
             test_settings['INSTALLED_APPS'] += ['tests._site.myauth', ]
