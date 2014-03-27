@@ -43,6 +43,21 @@ except ValueError:
     raise ImproperlyConfigured("AUTH_USER_MODEL must be of the form"
                                " 'app_label.model_name'")
 
+VALID_USER_FORM_FIELD_NAMES = set([field.name for field in User._meta.fields])
+
+
+def existing_user_fields(fields):
+    """
+    Starting with Django 1.6, the User model can be overridden  and it is no
+    longer safe to assume the User model has certain fields. This helper
+    function assists in writing portable forms Meta.fields definitions
+    when those contain fields on the User model
+    """
+    return list(set(fields) & VALID_USER_FORM_FIELD_NAMES)
+
+#
+# Python3 compatibility layer
+#
 
 def format_html(format_string, *args, **kwargs):
     """
