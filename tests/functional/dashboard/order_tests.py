@@ -69,36 +69,40 @@ class PermissionBasedDashboardOrderTestsBase(WebTestCase):
 
 
 class PermissionBasedDashboardOrderTestsNoStaff(PermissionBasedDashboardOrderTestsBase):
+    is_staff = False
 
     def test_non_staff_can_only_list_her_orders(self):
         # order-list user1
-        self.client.login(email='user1@example.com', password=self.password)
-        response = self.client.get(reverse('dashboard:order-list'))
+        response = self.get(reverse('dashboard:order-list'))
         self.assertEqual(set(response.context['orders']),
                          set([self.order_in]))
+
         # order-detail user2
         url = reverse('dashboard:order-detail',
                       kwargs={'number': self.order_in.number})
-        self.assertIsOk(self.client.get(url))
+        self.assertIsOk(self.get(url))
+
         url = reverse('dashboard:order-detail',
                       kwargs={'number': self.order_out.number})
-        self.assertNoAccess(self.client.get(url))
+        self.assertNoAccess(self.get(url, status="*"))
+
         # order-line-detail user2
         url = reverse('dashboard:order-line-detail',
                       kwargs={'number': self.order_in.number,
                               'line_id': self.order_in.lines.all()[0].pk})
-        self.assertIsOk(self.client.get(url))
+        self.assertIsOk(self.get(url))
         url = reverse('dashboard:order-line-detail',
                       kwargs={'number': self.order_out.number,
                               'line_id': self.order_out.lines.all()[0].pk})
-        self.assertNoAccess(self.client.get(url))
+        self.assertNoAccess(self.get(url, status="*"))
+
         # order-shipping-address
         url = reverse('dashboard:order-shipping-address',
                       kwargs={'number': self.order_in.number})
-        self.assertIsOk(self.client.get(url))
+        self.assertIsOk(self.get(url))
         url = reverse('dashboard:order-shipping-address',
                       kwargs={'number': self.order_out.number})
-        self.assertNoAccess(self.client.get(url))
+        self.assertNoAccess(self.get(url, status="*"))
 
 
 class PermissionBasedDashboardOrderTestsStaff(PermissionBasedDashboardOrderTestsBase):
@@ -107,7 +111,7 @@ class PermissionBasedDashboardOrderTestsStaff(PermissionBasedDashboardOrderTests
     def test_staff_user_can_list_all_orders(self):
         orders = [self.order_in, self.order_out]
         # order-list
-        response = self.client.get(reverse('dashboard:order-list'))
+        response = self.get(reverse('dashboard:order-list'))
         self.assertIsOk(response)
         self.assertEqual(set(response.context['orders']),
                          set(orders))
@@ -121,10 +125,16 @@ class PermissionBasedDashboardOrderTestsStaff(PermissionBasedDashboardOrderTests
 class OrderDetailTests(WebTestCase):
     is_staff = True
 
+    # CSRF disabled as we're using self.post directly rather than submitting a
+    # form. This is done as the order status changing view doesn't have a
+    # corresponding form within the dashboard.
+    csrf_checks = False
+
     def setUp(self):
         Order.pipeline = {'A': ('B', 'C')}
         self.order = create_order(status='A')
-        self.url = reverse('dashboard:order-detail', kwargs={'number': self.order.number})
+        self.url = reverse('dashboard:order-detail',
+                           kwargs={'number': self.order.number})
         super(OrderDetailTests, self).setUp()
 
     def fetch_order(self):
@@ -137,14 +147,14 @@ class OrderDetailTests(WebTestCase):
     def test_order_status_change(self):
         params = {'order_action': 'change_order_status',
                   'new_status': 'B'}
-        response = self.client.post(self.url, params)
+        response = self.post(self.url, params=params)
         self.assertIsRedirect(response)
         self.assertEqual('B', self.fetch_order().status)
 
     def test_order_status_change_creates_system_note(self):
         params = {'order_action': 'change_order_status',
                   'new_status': 'B'}
-        self.client.post(self.url, params)
+        self.post(self.url, params=params)
         notes = self.order.notes.all()
         self.assertEqual(1, len(notes))
         self.assertEqual(OrderNote.SYSTEM, notes[0].note_type)
@@ -156,8 +166,9 @@ class LineDetailTests(WebTestCase):
     def setUp(self):
         self.order = create_order()
         self.line = self.order.lines.all()[0]
-        self.url = reverse('dashboard:order-line-detail', kwargs={'number': self.order.number,
-                                                                  'line_id': self.line.id})
+        self.url = reverse('dashboard:order-line-detail',
+                           kwargs={'number': self.order.number,
+                                   'line_id': self.line.id})
         super(LineDetailTests, self).setUp()
 
     def test_line_detail_page_exists(self):

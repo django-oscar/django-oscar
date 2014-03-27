@@ -13,10 +13,12 @@ User = get_user_model()
 
 def add_permissions(user, permissions):
     """
+    Grant permissions to the passed user
+
     :param permissions: e.g. ['partner.dashboard_access']
     """
     for permission in permissions:
-        app_label, _, codename = permission.partition('.')
+        app_label, __, codename = permission.partition('.')
         perm = Permission.objects.get(content_type__app_label=app_label,
                                       codename=codename)
         user.user_permissions.add(perm)
@@ -25,32 +27,34 @@ def add_permissions(user, permissions):
 class WebTestCase(WebTest):
     is_staff = False
     is_anonymous = False
+    is_superuser = False
+
     username = 'testuser'
     email = 'testuser@buymore.com'
     password = 'somefancypassword'
-    is_superuser = False
     permissions = []
-
-    def create_user(self, username=None, email=None, password=None):
-        """
-        Creates a user. But as usernames are optional in newer versions of
-        Django, it only sets it if exists.
-        """
-        kwargs = {'email': email, 'password': password}
-        if 'username' in User._meta.get_all_field_names():
-            kwargs['username'] = username
-        return User.objects.create_user(**kwargs)
 
     def setUp(self):
         self.user = None
 
-        if not self.is_anonymous or self.is_staff:
+        if not self.is_anonymous:
             self.user = self.create_user(
                 self.username, self.email, self.password)
             self.user.is_staff = self.is_staff
             add_permissions(self.user, self.permissions)
             self.user.save()
-            self.login()
+
+    def create_user(self, username=None, email=None, password=None):
+        """
+        Create a user for use in a test.
+
+        As usernames are optional in newer versions of Django, it only sets it
+        if exists.
+        """
+        kwargs = {'email': email, 'password': password}
+        if 'username' in User._meta.get_all_field_names():
+            kwargs['username'] = username
+        return User.objects.create_user(**kwargs)
 
     def get(self, url, **kwargs):
         kwargs.setdefault('user', self.user)
@@ -59,15 +63,6 @@ class WebTestCase(WebTest):
     def post(self, url, **kwargs):
         kwargs.setdefault('user', self.user)
         return self.app.post(url, **kwargs)
-
-    def login(self, username=None, password=None):
-        # This needs removing as it's a weird mix of WebTest and the old test
-        # client.
-        username = username or self.username
-        password = password or self.password
-        result = self.client.login(email=self.email, password=password)
-        if not result:
-            self.fail("Unable to login")
 
     # Custom assertions
 

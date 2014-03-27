@@ -1,13 +1,12 @@
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from django.test.client import Client
+from django.http import HttpRequest
 
 from oscar.test.factories import create_product
 from oscar.core.compat import get_user_model
 from oscar.apps.customer  import history
 from oscar.templatetags.history_tags import get_back_button
-from django.http import HttpRequest
 
 
 User = get_user_model()
@@ -17,7 +16,6 @@ COOKIE_NAME = settings.OSCAR_RECENTLY_VIEWED_COOKIE_NAME
 class HistoryHelpersTest(TestCase):
 
     def setUp(self):
-        self.client = Client()
         self.product = create_product()
 
     def test_viewing_product_creates_cookie(self):
@@ -51,7 +49,6 @@ class TestAUserWhoLogsOut(TestCase):
     email = 'customer@example.com'
 
     def setUp(self):
-        self.client = Client()
         self.product = create_product()
         User.objects.create_user(username=self.username,
                                  email=self.email, password=self.password)
