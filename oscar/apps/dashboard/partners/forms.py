@@ -50,7 +50,9 @@ class NewUserForm(EmailUserCreationForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'password1', 'password2')
+        # from Django 1.6 the User model can be overridden not to have these fields
+        # without the explicit check here this class def crashes the app
+        fields = [field for field in ['first_name', 'last_name', 'email', 'password1', 'password2'] if hasattr(User, field)]
 
 
 class ExistingUserForm(forms.ModelForm):
@@ -108,7 +110,9 @@ class ExistingUserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'password1', 'password2')
+        # from Django 1.6 the User model can be overridden not to have these fields
+        # without the explicit check here this class def crashes the app
+        fields = [field for field in ['first_name', 'last_name', 'password1', 'password2'] if hasattr(User, field)]
 
 
 class UserEmailForm(forms.Form):
