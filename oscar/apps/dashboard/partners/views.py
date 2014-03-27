@@ -9,17 +9,17 @@ from django.template.loader import render_to_string
 from django.views import generic
 
 from oscar.apps.customer.utils import normalise_email
-from oscar.apps.dashboard.partners.forms import (UserEmailForm,
-                                                 ExistingUserForm, NewUserForm)
 from oscar.core.loading import get_classes
 from oscar.core.compat import get_user_model
 from oscar.views import sort_queryset
 
 User = get_user_model()
 Partner = get_model('partner', 'Partner')
-PartnerSearchForm, PartnerCreateForm, PartnerAddressForm = get_classes(
-    'dashboard.partners.forms',
-    ['PartnerSearchForm', 'PartnerCreateForm', 'PartnerAddressForm'])
+(PartnerSearchForm, PartnerCreateForm, PartnerAddressForm,
+ NewUserForm, UserEmailForm, ExistingUserForm) = get_classes(
+     'dashboard.partners.forms',
+     ['PartnerSearchForm', 'PartnerCreateForm', 'PartnerAddressForm',
+      'NewUserForm', 'UserEmailForm', 'ExistingUserForm'])
 
 
 class PartnerListView(generic.ListView):
