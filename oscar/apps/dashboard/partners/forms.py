@@ -1,9 +1,10 @@
 from django import forms
 from django.contrib.auth.models import Permission
 from django.core import validators
-from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
+from oscar.core.compat import existing_user_fields
+from oscar.core.loading import get_model
 from oscar.apps.customer.forms import (EmailUserCreationForm,
                                        CommonPasswordValidator)
 from oscar.core.compat import get_user_model
@@ -50,7 +51,8 @@ class NewUserForm(EmailUserCreationForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'password1', 'password2')
+        fields = existing_user_fields(
+            ['first_name', 'last_name', 'email']) + ['password1', 'password2']
 
 
 class ExistingUserForm(forms.ModelForm):
@@ -108,7 +110,8 @@ class ExistingUserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'password1', 'password2')
+        fields = existing_user_fields(
+            ['first_name', 'last_name']) + ['password1', 'password2']
 
 
 class UserEmailForm(forms.Form):
