@@ -76,7 +76,7 @@ class TestPreviewView(CheckoutMixin, WebTestCase):
         payment_details = self.get(
             reverse('checkout:shipping-method')).follow().follow()
         preview = payment_details.click(linkid="view_preview")
-        preview.forms['place-order-form'].submit().follow()
+        preview.forms['place_order_form'].submit().follow()
 
         self.assertEqual(1, Order.objects.all().count())
 

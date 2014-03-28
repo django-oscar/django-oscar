@@ -277,7 +277,7 @@ class TestPlacingOrder(CheckoutMixin, WebTestCase):
 
         page = self.get(reverse('checkout:shipping-method')).follow().follow()
         preview = page.click(linkid="view_preview")
-        thank_you = preview.forms['place-order-form'].submit().follow()
+        thank_you = preview.forms['place_order_form'].submit().follow()
 
         order = thank_you.context['order']
         self.assertEqual('hello@egg.com', order.guest_email)

@@ -58,4 +58,4 @@ class CheckoutMixin(object):
         payment_details = self.get(
             reverse('checkout:shipping-method')).follow().follow()
         preview = payment_details.click(linkid="view_preview")
-        return preview.forms['place-order-form'].submit().follow()
+        return preview.forms['place_order_form'].submit().follow()
