@@ -400,7 +400,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         'check_user_email_is_captured',
         'check_shipping_data_is_captured')
 
-    # It preview=True, then we render a preview template that shows all order
+    # If preview=True, then we render a preview template that shows all order
     # details ready for submission.
     preview = False
 

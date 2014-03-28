@@ -36,7 +36,7 @@ class CheckoutSessionMixin(object):
         # Enforce any pre-conditions for the view.
         try:
             self.check_preconditions(request)
-        except exceptions.FailedPreCondition, e:
+        except exceptions.FailedPreCondition as e:
             for message in e.messages:
                 messages.warning(request, message)
             return http.HttpResponseRedirect(e.url)
@@ -85,7 +85,7 @@ class CheckoutSessionMixin(object):
                 line.quantity)
             if not is_permitted:
                 # Create a more meaningful message to show on the basket page
-                msg = (
+                msg = _(
                     "'%(title)s' is no longer available to buy (%(reason)s). "
                     "Please adjust your basket to continue"
                 ) % {
