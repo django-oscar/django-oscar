@@ -5,13 +5,8 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models import get_model
 
-
-class AppNotFoundError(Exception):
-    pass
-
-
-class ClassNotFoundError(Exception):
-    pass
+from oscar.core.exceptions import (ModuleNotFoundError, ClassNotFoundError,
+                                   AppNotFoundError)
 
 
 def get_class(module_label, classname):
@@ -34,7 +29,7 @@ def get_class(module_label, classname):
 
 def get_classes(module_label, classnames):
     """
-    Dynamically import a list of  classes from the given module.
+    Dynamically import a list of classes from the given module.
 
     This works by looping over ``INSTALLED_APPS`` and looking for a match
     against the passed module label.  If the requested class can't be found in
@@ -57,14 +52,15 @@ def get_classes(module_label, classnames):
 
         Load a single class:
 
-        >>> get_class('basket.forms', 'BasketLineForm')
-        oscar.apps.basket.forms.BasketLineForm
+        >>> get_class('dashboard.catalogue.forms', 'ProductForm')
+        oscar.apps.dashboard.catalogue.forms.ProductForm
 
         Load a list of classes:
 
-        >>> get_classes('basket.forms', ['BasketLineForm', 'AddToBasketForm'])
-        [oscar.apps.basket.forms.BasketLineForm,
-         oscar.apps.basket.forms.AddToBasketForm]
+        >>> get_classes('dashboard.catalogue.forms',
+        ...             ['ProductForm', 'StockRecordForm'])
+        [oscar.apps.dashboard.catalogue.forms.ProductForm,
+         oscar.apps.dashboard.catalogue.forms.StockRecordForm]
 
     Raises:
 
@@ -74,35 +70,55 @@ def get_classes(module_label, classnames):
         ImportError: If the attempted import of a class raises an
             ``ImportError``, it is re-raised
     """
-    app_module_path = _get_app_module_path(module_label)
-    if not app_module_path:
-        raise AppNotFoundError("No app found matching '%s'" % module_label)
 
-    # Check if app is in oscar
-    if app_module_path.split('.')[0] == 'oscar':
-        # Using core oscar class
-        module_path = 'oscar.apps.%s' % module_label
-        imported_module = __import__(module_path, fromlist=classnames)
-        return _pluck_classes([imported_module], classnames)
+    # e.g. split 'dashboard.catalogue.forms' in 'dashboard.catalogue', 'forms'
+    package, module = module_label.rsplit('.', 1)
 
-    # App must be local - check if module is in local app (it could be in
-    # oscar's)
-    app_label = module_label.split('.')[0]
-    if '.' in app_module_path:
-        base_package = app_module_path.rsplit('.' + app_label, 1)[0]
-        local_app = "%s.%s" % (base_package, module_label)
+    # import from Oscar package (should succeed in most cases)
+    # e.g. 'oscar.apps.dashboard.catalogue.forms'
+    oscar_module_label = "oscar.apps.%s" % module_label
+    oscar_module = _import_module(oscar_module_label, classnames)
+
+    # returns e.g. 'oscar.apps.dashboard.catalogue',
+    # 'yourproject.apps.dashboard.catalogue' or 'dashboard.catalogue'
+    installed_apps_entry = _get_installed_apps_entry(package)
+    if installed_apps_entry.startswith('oscar.apps.'):
+        # The entry is obviously an Oscar one, we don't import again
+        local_module = None
     else:
-        local_app = module_label
+        # Attempt to import the classes from the local module
+        # e.g. 'yourproject.dashboard.catalogue.forms'
+        local_module_label = installed_apps_entry + '.' + module
+        local_module = _import_module(local_module_label, classnames)
+
+    if oscar_module is local_module is None:
+        # This intentionally doesn't raise an ImportError, because that could
+        # get masked in some circular import scenarios.
+        raise ModuleNotFoundError(
+            "The module with label '%s' could not be imported. This either"
+            "means that it indeed does not exist, or you might have a problem"
+            " with a circular import." % module_label
+        )
+
+    # return imported classes, giving preference to ones from the local package
+    return _pluck_classes([local_module, oscar_module], classnames)
+
+
+def _import_module(module_label, classnames):
+    """
+    Imports the module with the given name.
+    Returns None if the module doesn't exist, but propagates any import errors.
+    """
     try:
-        imported_local_module = __import__(local_app, fromlist=classnames)
+        return __import__(module_label, fromlist=classnames)
     except ImportError:
-        # There are 2 reasons why there is ImportError:
-        #  1. local_app does not exist
-        #  2. local_app exists but is corrupted (ImportError inside of the app)
+        # There are 2 reasons why there could be an ImportError:
         #
-        # Obviously, for the reason #1 we want to fall back to use Oscar app.
-        # For the reason #2 we want to propagate error (the dev obviously wants
-        # to override app and not use Oscar app)
+        #  1. Module does not exist. In that case, we ignore the import and
+        #     return None
+        #  2. Module exists but another ImportError occurred when trying to
+        #     import the module. In that case, it is important to propagate the
+        #     error.
         #
         # ImportError does not provide easy way to distinguish those two cases.
         # Fortunately, the traceback of the ImportError starts at __import__
@@ -113,20 +129,13 @@ def get_classes(module_label, classnames):
         if len(frames) > 1:
             raise
 
-        # Module not in local app
-        imported_local_module = {}
-    oscar_app = "oscar.apps.%s" % module_label
-    try:
-        imported_oscar_module = __import__(oscar_app, fromlist=classnames)
-    except ImportError:
-        # Oscar does not have this application, can't fallback to it
-        imported_oscar_module = None
-
-    return _pluck_classes([imported_local_module, imported_oscar_module],
-                          classnames)
-
 
 def _pluck_classes(modules, classnames):
+    """
+    Gets a list of class names and a list of modules to pick from.
+    For each class name, will return the class from the first module that has a
+    matching class.
+    """
     klasses = []
     for classname in classnames:
         klass = None
@@ -135,19 +144,23 @@ def _pluck_classes(modules, classnames):
                 klass = getattr(module, classname)
                 break
         if not klass:
-            packages = [m.__name__ for m in modules]
+            packages = [m.__name__ for m in modules if m is not None]
             raise ClassNotFoundError("No class '%s' found in %s" % (
                 classname, ", ".join(packages)))
         klasses.append(klass)
     return klasses
 
 
-def _get_app_module_path(module_label):
-    app_name = module_label.rsplit(".", 1)[0]
+def _get_installed_apps_entry(app_name):
+    """
+    Walk through INSTALLED_APPS and return the first match. This does depend
+    on the order of INSTALLED_APPS and will break if e.g. 'dashboard.catalogue'
+    comes before 'catalogue' in INSTALLED_APPS.
+    """
     for installed_app in settings.INSTALLED_APPS:
         if installed_app.endswith(app_name):
             return installed_app
-    return None
+    raise AppNotFoundError("No app found matching '%s'" % app_name)
 
 
 def get_profile_class():
