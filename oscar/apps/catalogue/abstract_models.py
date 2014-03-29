@@ -497,7 +497,13 @@ class AbstractProduct(models.Model):
         Returns the primary image for a product. Usually used when one can
         only display one product image, e.g. in a list of products.
         """
-        images = self.images.all().order_by('display_order')
+        images = self.images.all()
+        ordering = self.images.model.Meta.ordering
+        if not ordering or ordering[0] != 'display_order':
+            # Only apply order_by() if a custom model doesn't use default
+            # ordering. Applying order_by() busts the prefetch cache of
+            # the ProductManager
+            images = images.order_by('display_order')
         try:
             return images[0]
         except IndexError:
@@ -1086,6 +1092,8 @@ class AbstractProductImage(models.Model):
     class Meta:
         abstract = True
         unique_together = ("product", "display_order")
+        # Any custom models should ensure that this ordering is unchanged, or
+        # your query count will explode. See AbstractProduct.primary_image.
         ordering = ["display_order"]
         verbose_name = _('Product Image')
         verbose_name_plural = _('Product Images')
