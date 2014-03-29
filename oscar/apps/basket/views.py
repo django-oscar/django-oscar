@@ -97,7 +97,12 @@ class BasketView(ModelFormSetView):
         return kwargs
 
     def get_queryset(self):
-        return self.request.basket.all_lines()
+        return self.request.basket.all_lines(
+            prefetch_related=(
+                'product__images', 
+                'product__stockrecords'
+                )
+            )
 
     def get_shipping_methods(self, basket):
         return Repository().get_shipping_methods(
@@ -162,8 +167,12 @@ class BasketView(ModelFormSetView):
             else:
                 saved_basket.strategy = self.request.basket.strategy
                 if not saved_basket.is_empty:
-                    saved_queryset = saved_basket.all_lines().select_related(
-                        'product', 'product__stockrecord')
+                    saved_queryset = saved_basket.all_lines(
+                        prefetch_related=(
+                            'product__images', 
+                            'product__stockrecords'
+                            )
+                        )
                     formset = SavedLineFormSet(strategy=self.request.strategy,
                                                basket=self.request.basket,
                                                queryset=saved_queryset,

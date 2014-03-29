@@ -104,7 +104,7 @@ class AbstractBasket(models.Model):
 
     strategy = property(_get_strategy, _set_strategy)
 
-    def all_lines(self):
+    def all_lines(self, prefetch_related=None):
         """
         Return a cached set of basket lines.
 
@@ -115,11 +115,16 @@ class AbstractBasket(models.Model):
         if self.id is None:
             return self.lines.none()
         if self._lines is None:
-            self._lines = (
-                self.lines
-                .select_related('product', 'stockrecord')
-                .prefetch_related(
-                    'attributes', 'product__images'))
+            self._lines = self.lines.select_related('product', 'stockrecord').\
+                                order_by('pk')
+        if prefetch_related and not self._lines._prefetch_done:
+            lines = self._lines
+            # inplace prefetch
+            if not lines._prefetch_related_lookups:
+                lines._prefetch_related_lookups.extend(prefetch_related)
+            if lines._result_cache is not None:
+                # force preferch if lines already in the cache
+                lines._prefetch_related_objects()
         return self._lines
 
     def is_quantity_allowed(self, qty):
@@ -433,12 +438,12 @@ class AbstractBasket(models.Model):
     @property
     def num_lines(self):
         """Return number of lines"""
-        return self.lines.all().count()
+        return len(self.all_lines())
 
     @property
     def num_items(self):
         """Return number of items"""
-        return sum(line.quantity for line in self.lines.all())
+        return sum(line.quantity for line in self.all_lines())
 
     @property
     def num_items_without_discount(self):
