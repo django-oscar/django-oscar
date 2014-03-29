@@ -33,6 +33,7 @@ Please also refer to the following how-tos for further instructions and examples
 * :doc:`/howto/how_to_change_a_url`
 * :doc:`/howto/how_to_customise_a_view`
 * :doc:`/howto/how_to_override_a_core_class`
+* :doc:`/howto/how_to_customise_a_mixin`
 
 Python module with same label
 =============================
