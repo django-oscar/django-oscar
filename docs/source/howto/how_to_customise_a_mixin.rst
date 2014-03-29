@@ -23,7 +23,7 @@ This behaviour is defined as `handle_successful_order` function in
 `oscar.apps.checkout.mixins.OrderPlacementMixin`.
 
 To customize that, you should do the obvious steps first, create a `checkout` module and add it
-to ``INSTALLED_APPS``. After that, create the customized mixin in `mixins.py` file in your module:
+to ``INSTALLED_APPS``. After that, create the customized mixin in `mixins.py` file in your module::
 
     # myproject/checkout/mixins.py
     from oscar.apps.checkout.mixins import OrderPlacementMixin as CoreOrderPlacementMixin
@@ -35,7 +35,7 @@ to ``INSTALLED_APPS``. After that, create the customized mixin in `mixins.py` fi
             return super(OrderPlacementMixin, self).handle_successful_order(order)
 
 That mixin is used by `oscar.apps.checkout.views.PaymentDetailsView` view, so create a new
-view in ``myproject.checkout.views`` that subclasses that core view:
+view in ``myproject.checkout.views`` that subclasses that core view::
 
     # myproject/checkout/views.py
     from oscar.apps.checkout.views import PaymentDetailsView as CorePaymentDetailsView
@@ -45,7 +45,7 @@ view in ``myproject.checkout.views`` that subclasses that core view:
 
 `pass` is used since we don't want to override anything in the view class itself, we only
 want to inherit the new mixin we created. Be aware of the order of multi inheritance, since
-it has a vital role here:
+it has a vital role here::
 
     # myproject/checkout/views.py
     from oscar.apps.checkout.views import PaymentDetailsView as CorePaymentDetailsView
