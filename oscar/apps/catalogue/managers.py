@@ -1,19 +1,41 @@
 from django.db import models
 
 
-class ProductManager(models.Manager):
+class ProductQuerySet(models.query.QuerySet):
 
     def base_queryset(self):
         """
-        Return ``QuerySet`` with related content pre-loaded.
+        Applies select_related and prefetch_related for appropriate related
+        Models
         """
-        return self.get_query_set().select_related('product_class')\
+        return self.select_related('product_class')\
             .prefetch_related('variants',
                               'product_options',
                               'product_class__options',
                               'stockrecords',
                               'images',
-                              ).all()
+                              )
+
+    def browsable(self):
+        """
+        Excludes non-canonical Products.
+        """
+        return self.filter(parent=None)
+
+
+class ProductManager(models.Manager):
+    """
+    Uses ProductQuerySet and proxies its methods to allow chaining
+    """
+
+    def get_queryset(self):
+        return ProductQuerySet(self.model, using=self._db)
+
+    def browsable(self):
+        return self.get_queryset().browsable()
+
+    def base_queryset(self):
+        return self.get_queryset().base_queryset()
 
 
 class BrowsableProductManager(ProductManager):
@@ -21,6 +43,5 @@ class BrowsableProductManager(ProductManager):
     Excludes non-canonical products
     """
 
-    def get_query_set(self):
-        return super(BrowsableProductManager, self).get_query_set().filter(
-            parent=None)
+    def get_queryset(self):
+        return super(BrowsableProductManager, self).get_queryset().browsable()
