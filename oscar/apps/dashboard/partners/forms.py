@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.models import Permission
+from django.contrib.auth.models import Permission, User as DefaultUserModel
 from django.core import validators
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
@@ -52,7 +52,7 @@ class NewUserForm(EmailUserCreationForm):
         model = User
         # from Django 1.6 the User model can be overridden not to have these fields
         # without the explicit check here this class def crashes the app
-        fields = [field for field in ['first_name', 'last_name', 'email', 'password1', 'password2'] if hasattr(User, field)]
+        fields = ('first_name', 'last_name', 'email', 'password1', 'password2') if User == DefaultUserModel else '__all__'
 
 
 class ExistingUserForm(forms.ModelForm):
@@ -112,7 +112,7 @@ class ExistingUserForm(forms.ModelForm):
         model = User
         # from Django 1.6 the User model can be overridden not to have these fields
         # without the explicit check here this class def crashes the app
-        fields = [field for field in ['first_name', 'last_name', 'password1', 'password2'] if hasattr(User, field)]
+        fields = ('first_name', 'last_name', 'password1', 'password2') if User == DefaultUserModel else '__all__'
 
 
 class UserEmailForm(forms.Form):
