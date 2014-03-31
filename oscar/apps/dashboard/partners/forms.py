@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.models import Permission, User as DefaultUserModel
+from django.contrib.auth.models import Permission
 from django.core import validators
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
@@ -28,6 +28,12 @@ ROLE_CHOICES = (
 )
 
 
+# from Django 1.6 the User model can be overridden and it is no longer safe to assume the User model has certain fields
+VALID_USER_FORM_FIELD_NAMES = [field.name for field in User._meta.fields] + ['password1', 'password2']  # password confirmation
+def valid_user_form_fields(fields):
+    return tuple(set(fields) & set(VALID_USER_FORM_FIELD_NAMES))
+
+
 class NewUserForm(EmailUserCreationForm):
     role = forms.ChoiceField(choices=ROLE_CHOICES, widget=forms.RadioSelect,
                              label=_('User role'), initial='limited')
@@ -50,10 +56,7 @@ class NewUserForm(EmailUserCreationForm):
 
     class Meta:
         model = User
-        # from Django 1.6 the User model can be overridden not to have these fields
-        # without the explicit check here this class def crashes the app
-        fields = ('first_name', 'last_name', 'email', 'password1', 'password2') if User == DefaultUserModel else '__all__'
-
+        fields = valid_user_form_fields(['first_name', 'last_name', 'email', 'password1', 'password2'])
 
 class ExistingUserForm(forms.ModelForm):
     """
@@ -110,9 +113,7 @@ class ExistingUserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        # from Django 1.6 the User model can be overridden not to have these fields
-        # without the explicit check here this class def crashes the app
-        fields = ('first_name', 'last_name', 'password1', 'password2') if User == DefaultUserModel else '__all__'
+        fields = valid_user_form_fields(['first_name', 'last_name', 'password1', 'password2'])
 
 
 class UserEmailForm(forms.Form):
