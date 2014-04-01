@@ -37,7 +37,8 @@ except ValueError:
     raise ImproperlyConfigured("AUTH_USER_MODEL must be of the form"
                                " 'app_label.model_name'")
 
-VALID_USER_FORM_FIELD_NAMES = set([field.name for field in User._meta.fields])
+_user_fields = get_user_model()._meta.fields
+VALID_USER_FORM_FIELD_NAMES = set([field.name for field in _user_fields])
 
 
 def existing_user_fields(fields):
