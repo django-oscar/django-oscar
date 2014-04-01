@@ -31,7 +31,7 @@ var oscar = (function(o, $) {
                     toolbar: "styleselect | bold italic blockquote | bullist numlist | link"
                 }
             };
-            o.dashboard.options = $.extend(defaults, options);
+            o.dashboard.options = $.extend(true, defaults, options);
 
             o.dashboard.initDatePickers();
             o.dashboard.initWYSIWYG();
