@@ -31,7 +31,7 @@ ROLE_CHOICES = (
 # from Django 1.6 the User model can be overridden and it is no longer safe to assume the User model has certain fields
 VALID_USER_FORM_FIELD_NAMES = [field.name for field in User._meta.fields]
 def valid_user_form_fields(fields):
-    return tuple(set(fields) & set(VALID_USER_FORM_FIELD_NAMES))
+    return list(set(fields) & set(VALID_USER_FORM_FIELD_NAMES))
 
 
 class NewUserForm(EmailUserCreationForm):
