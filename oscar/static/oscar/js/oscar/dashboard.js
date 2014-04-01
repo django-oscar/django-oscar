@@ -35,8 +35,6 @@ var oscar = (function(o, $) {
 
             o.dashboard.initWidgets(window.document);
 
-            $('.scroll-pane').jScrollPane();
-
             $(".category-select ul").prev('a').on('click', function(){
                 var $this = $(this),
                 plus = $this.hasClass('ico_expand');
