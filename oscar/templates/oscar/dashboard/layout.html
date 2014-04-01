@@ -132,10 +132,9 @@
     {% endcomment %}
     {% block trackerimage %}
         {% if call_home and not debug %}
-            <img src="//oscar-static.tangentlabs.co.uk/tracker.gif" style="display:none" />
+            <img src="//oscar-static.tangentlabs.co.uk/tracker.gif?{{ call_home }}" style="display:none" />
         {% endif %}
     {% endblock %}
-
 {% endblock %}
 
 {% block extrascripts %}
