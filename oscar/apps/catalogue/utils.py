@@ -8,13 +8,10 @@ from PIL import Image
 
 from django.core.files import File
 from django.core.exceptions import FieldError
-from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
-try:
-    from django.db.transaction import atomic as atomic_compat
-except ImportError:
-    from django.db.transaction import commit_on_success as atomic_compat
 
+from oscar.core.loading import get_model
+from oscar.core.compat import atomic_compat
 from oscar.apps.catalogue.exceptions import (
     ImageImportError, IdenticalImageError, InvalidImageArchive)
 

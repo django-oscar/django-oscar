@@ -56,6 +56,14 @@ def existing_user_fields(fields):
     user_field_names = [field.name for field in user_fields]
     return list(set(fields) & set(user_field_names))
 
+
+# Make backwards-compatible atomic decorator available
+try:
+    from django.db.transaction import atomic as atomic_compat
+except ImportError:
+    from django.db.transaction import commit_on_success as atomic_compat
+atomic_compat = atomic_compat
+
 #
 # Python3 compatibility layer
 #
