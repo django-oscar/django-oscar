@@ -31,7 +31,7 @@ class TestUnavailablePolicy(TestCase):
 
     def test_gives_a_reason_for_unavailability(self):
         __, msg = self.availability.is_purchase_permitted(1)
-        self.assertEqual("Unavailable", msg)
+        self.assertEqual("unavailable", msg)
 
     def test_returns_availability_code(self):
         self.assertEqual('unavailable', self.availability.code)

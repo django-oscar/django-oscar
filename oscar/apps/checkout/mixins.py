@@ -4,16 +4,15 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.contrib.sites.models import Site, get_current_site
 from django.core.exceptions import ObjectDoesNotExist
-from oscar.core.loading import get_model
 
-from oscar.core.loading import get_class
-from oscar.core.decorators import deprecated
+from oscar.core.loading import get_class, get_model
 
 OrderCreator = get_class('order.utils', 'OrderCreator')
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 CheckoutSessionMixin = get_class('checkout.session', 'CheckoutSessionMixin')
 ShippingAddress = get_model('order', 'ShippingAddress')
 CommunicationEvent = get_model('order', 'CommunicationEvent')
+OrderNumberGenerator = get_class('order.utils', 'OrderNumberGenerator')
 PaymentEventType = get_model('order', 'PaymentEventType')
 PaymentEvent = get_model('order', 'PaymentEvent')
 PaymentEventQuantity = get_model('order', 'PaymentEventQuantity')
@@ -31,17 +30,71 @@ logger = logging.getLogger('oscar.checkout')
 class OrderPlacementMixin(CheckoutSessionMixin):
     """
     Mixin which provides functionality for placing orders.
+
+    Any view class which needs to place an order should use this mixin.
     """
     # Any payment sources should be added to this list as part of the
-    # _handle_payment method.  If the order is placed successfully, then
-    # they will be persisted.
+    # handle_payment method.  If the order is placed successfully, then
+    # they will be persisted. We need to have the order instance before the
+    # payment sources can be saved.
     _payment_sources = None
 
+    # Any payment events should be added to this list as part of the
+    # handle_payment method.
     _payment_events = None
 
     # Default code for the email to send after successful checkout
     communication_type_code = 'ORDER_PLACED'
+
     view_signal = post_checkout
+
+    # Payment handling methods
+    # ------------------------
+
+    def handle_payment(self, order_number, total, **kwargs):
+        """
+        Handle any payment processing and record payment sources and events.
+
+        This method is designed to be overridden within your project.  The
+        default is to do nothing as payment is domain-specific.
+
+        This method is responsible for handling payment and recording the
+        payment sources (using the add_payment_source method) and payment
+        events (using add_payment_event) so they can be
+        linked to the order when it is saved later on.
+        """
+        pass
+
+    def add_payment_source(self, source):
+        """
+        Record a payment source for this order
+        """
+        if self._payment_sources is None:
+            self._payment_sources = []
+        self._payment_sources.append(source)
+
+    def add_payment_event(self, event_type_name, amount, reference=''):
+        """
+        Record a payment event for creation once the order is placed
+        """
+        event_type, __ = PaymentEventType.objects.get_or_create(
+            name=event_type_name)
+        # We keep a local cache of (unsaved) payment events
+        if self._payment_events is None:
+            self._payment_events = []
+        event = PaymentEvent(
+            event_type=event_type, amount=amount,
+            reference=reference)
+        self._payment_events.append(event)
+
+    # Placing order methods
+    # ---------------------
+
+    def generate_order_number(self, basket):
+        """
+        Return a new order number
+        """
+        return OrderNumberGenerator().order_number(basket)
 
     def handle_order_placement(self, order_number, user, basket,
                                shipping_address, shipping_method,
@@ -90,54 +143,6 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         self.save_payment_details(order)
         return order
 
-    def add_payment_source(self, source):
-        if self._payment_sources is None:
-            self._payment_sources = []
-        self._payment_sources.append(source)
-
-    def add_payment_event(self, event_type_name, amount, reference=''):
-        """
-        Record a payment event for creation once the order is placed
-        """
-        event_type, __ = PaymentEventType.objects.get_or_create(
-            name=event_type_name)
-        # We keep a local cache of payment events
-        if self._payment_events is None:
-            self._payment_events = []
-        event = PaymentEvent(
-            event_type=event_type, amount=amount,
-            reference=reference)
-        self._payment_events.append(event)
-
-    def handle_successful_order(self, order):
-        """
-        Handle the various steps required after an order has been successfully
-        placed.
-
-        Override this view if you want to perform custom actions when an
-        order is submitted.
-        """
-        # Send confirmation message (normally an email)
-        self.send_confirmation_message(order)
-
-        # Flush all session data
-        self.checkout_session.flush()
-
-        # Save order id in session so thank-you page can load it
-        self.request.session['checkout_order_id'] = order.id
-
-        response = HttpResponseRedirect(self.get_success_url())
-        self.send_signal(self.request, response, order)
-        return response
-
-    def send_signal(self, request, response, order):
-        self.view_signal.send(
-            sender=self, order=order, user=request.user,
-            request=request, response=response)
-
-    def get_success_url(self):
-        return reverse('checkout:thank-you')
-
     def create_shipping_address(self, user, shipping_address):
         """
         Create and return the shipping address for the current order.
@@ -168,50 +173,14 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         user_addr.num_orders += 1
         user_addr.save()
 
-    @deprecated
-    def create_shipping_address_from_form_fields(self, addr_data):
-        """Creates a shipping address model from the saved form fields"""
-        shipping_addr = ShippingAddress(**addr_data)
-        shipping_addr.save()
-        return shipping_addr
-
-    @deprecated
-    def create_user_address(self, session_addr_data):
-        """
-        For signed-in users, we create a user address model which will go
-        into their address book.
-        """
-        if self.request.user.is_authenticated():
-            addr_data = session_addr_data.copy()
-            addr_data['user_id'] = self.request.user.id
-            user_addr = UserAddress(**addr_data)
-            # Check that this address isn't already in the db as we don't want
-            # to fill up the customer address book with duplicate addresses
-            try:
-                UserAddress._default_manager.get(
-                    hash=user_addr.generate_hash())
-            except ObjectDoesNotExist:
-                user_addr.save()
-
-    @deprecated
-    def create_shipping_address_from_user_address(self, addr_id):
-        """Creates a shipping address from a user address"""
-        address = UserAddress._default_manager.get(pk=addr_id)
-        # Increment the number of orders to help determine popularity of orders
-        address.num_orders += 1
-        address.save()
-
-        shipping_addr = ShippingAddress()
-        address.populate_alternative_model(shipping_addr)
-        shipping_addr.save()
-        return shipping_addr
-
     def create_billing_address(self, billing_address=None,
                                shipping_address=None, **kwargs):
         """
         Saves any relevant billing data (eg a billing address).
         """
-        return None
+        if billing_address is not None:
+            billing_address.save()
+            return billing_address
 
     def save_payment_details(self, order):
         """
@@ -251,29 +220,37 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     def get_initial_order_status(self, basket):
         return None
 
-    def get_submitted_basket(self):
-        basket_id = self.checkout_session.get_submitted_basket_id()
-        return Basket._default_manager.get(pk=basket_id)
+    # Post-order methods
+    # ------------------
 
-    def restore_frozen_basket(self):
+    def handle_successful_order(self, order):
         """
-        Restores a frozen basket as the sole OPEN basket.  Note that this also
-        merges in any new products that have been added to a basket that has
-        been created while payment.
+        Handle the various steps required after an order has been successfully
+        placed.
+
+        Override this view if you want to perform custom actions when an
+        order is submitted.
         """
-        try:
-            fzn_basket = self.get_submitted_basket()
-        except Basket.DoesNotExist:
-            # Strange place.  The previous basket stored in the session does
-            # not exist.
-            pass
-        else:
-            fzn_basket.thaw()
-            if self.request.basket.id != fzn_basket.id:
-                fzn_basket.merge(self.request.basket)
-                # Use same strategy as current request basket
-                fzn_basket.strategy = self.request.basket.strategy
-                self.request.basket = fzn_basket
+        # Send confirmation message (normally an email)
+        self.send_confirmation_message(order)
+
+        # Flush all session data
+        self.checkout_session.flush()
+
+        # Save order id in session so thank-you page can load it
+        self.request.session['checkout_order_id'] = order.id
+
+        response = HttpResponseRedirect(self.get_success_url())
+        self.send_signal(self.request, response, order)
+        return response
+
+    def send_signal(self, request, response, order):
+        self.view_signal.send(
+            sender=self, order=order, user=request.user,
+            request=request, response=response)
+
+    def get_success_url(self):
+        return reverse('checkout:thank-you')
 
     def send_confirmation_message(self, order, **kwargs):
         code = self.communication_type_code
@@ -319,3 +296,40 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         else:
             logger.warning("Order #%s - no %s communication event type",
                            order.number, code)
+
+    # Basket helpers
+    # --------------
+
+    def get_submitted_basket(self):
+        basket_id = self.checkout_session.get_submitted_basket_id()
+        return Basket._default_manager.get(pk=basket_id)
+
+    def freeze_basket(self, basket):
+        """
+        Freeze the basket so it can no longer be modified
+        """
+        # We freeze the basket to prevent it being modified once the payment
+        # process has started.  If your payment fails, then the basket will
+        # need to be "unfrozen".  We also store the basket ID in the session
+        # so the it can be retrieved by multistage checkout processes.
+        basket.freeze()
+
+    def restore_frozen_basket(self):
+        """
+        Restores a frozen basket as the sole OPEN basket.  Note that this also
+        merges in any new products that have been added to a basket that has
+        been created while payment.
+        """
+        try:
+            fzn_basket = self.get_submitted_basket()
+        except Basket.DoesNotExist:
+            # Strange place.  The previous basket stored in the session does
+            # not exist.
+            pass
+        else:
+            fzn_basket.thaw()
+            if self.request.basket.id != fzn_basket.id:
+                fzn_basket.merge(self.request.basket)
+                # Use same strategy as current request basket
+                fzn_basket.strategy = self.request.basket.strategy
+                self.request.basket = fzn_basket

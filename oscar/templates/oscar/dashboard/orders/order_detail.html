@@ -86,7 +86,7 @@
                 <div class="table-header">
                     <h3>{% trans "Items ordered" %}</h3>
                 </div>
-                <form action="." method="post" class="form-inline">
+                <form id="order_lines_form" action="." method="post" class="form-inline">
                     {% csrf_token %}
                     {% block order_lines %}
                         <table class="table table-striped table-bordered table-hover">
