@@ -37,9 +37,6 @@ except ValueError:
     raise ImproperlyConfigured("AUTH_USER_MODEL must be of the form"
                                " 'app_label.model_name'")
 
-_user_fields = get_user_model()._meta.fields
-VALID_USER_FORM_FIELD_NAMES = set([field.name for field in _user_fields])
-
 
 def existing_user_fields(fields):
     """
@@ -47,8 +44,17 @@ def existing_user_fields(fields):
     longer safe to assume the User model has certain fields. This helper
     function assists in writing portable forms Meta.fields definitions
     when those contain fields on the User model
+
+    Usage:
+    class UserForm(forms.Form):
+        ...
+        class Meta:
+            # won't break if first_name is not defined on User model
+            fields = existing_user_fields(['first_name', 'last_name'])
     """
-    return list(set(fields) & VALID_USER_FORM_FIELD_NAMES)
+    user_fields = get_user_model()._meta.fields
+    user_field_names = [field.name for field in user_fields]
+    return list(set(fields) & set(user_field_names))
 
 #
 # Python3 compatibility layer
