@@ -97,7 +97,15 @@ More info about installing ``flatpages`` is in the `Django docs`_.
 
 .. _`Django docs`: https://docs.djangoproject.com/en/dev/ref/contrib/flatpages/#installation
 
-Next, add ``oscar.apps.basket.middleware.BasketMiddleware``, 
+.. tip::
+
+    Oscar's default templates use django-compressor_ but it's optional really.
+    You may decide to use your own templates that don't use compressor.  Hence
+    why it is not one of the 'core apps'.
+
+.. _django-compressor: https://github.com/jezdez/django_compressor
+
+Next, add ``oscar.apps.basket.middleware.BasketMiddleware`` and
 ``django.contrib.flatpages.middleware.FlatpageFallbackMiddleware`` to
 your ``MIDDLEWARE_CLASSES`` setting. If you're running on Django 1.5, it is
 also recommended to use ``django.middleware.transaction.TransactionMiddleware``:
@@ -111,19 +119,10 @@ also recommended to use ``django.middleware.transaction.TransactionMiddleware``:
         'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     )
 
-If you're running Django 1.6+, you should enable ``ATOMIC_REQUESTS`` instead
-(see database settings above).
+If you're running Django 1.6 or above, you should enable ``ATOMIC_REQUESTS``
+instead (see database settings above).
 
-
-.. tip::
-
-    Oscar's default templates use django-compressor_ but it's optional really.
-    You may decide to use your own templates that don't use compressor.  Hence
-    why it is not one of the 'core apps'.
-
-.. _django-compressor: https://github.com/jezdez/django_compressor
-
-Now set your auth backends to:
+Set your auth backends to:
 
 .. code-block:: django
 
@@ -135,7 +134,7 @@ Now set your auth backends to:
 to allow customers to sign in using an email address rather than a username.
 
 Set ``MEDIA_ROOT`` and ``MEDIA_URL`` to your environment, and make sure the
-path in ``MEDIA_ROOT`` exists. An example from the Sandbox site:
+path in ``MEDIA_ROOT`` exists. An example from the sandbox site:
 
 .. code-block:: django
 
@@ -146,8 +145,8 @@ path in ``MEDIA_ROOT`` exists. An example from the Sandbox site:
     MEDIA_ROOT = location("public/media")
     MEDIA_URL = '/media/'
 
-Now verify your ``staticfiles`` `settings`_ and ensure that files in ``MEDIA_ROOT``
-get served.
+Now verify your ``staticfiles`` `settings`_ and ensure that files in
+``MEDIA_ROOT`` get served.
 
 _`settings`: https://docs.djangoproject.com/en/1.5/howto/static-files/#serving-files-uploaded-by-a-user
 
@@ -283,8 +282,6 @@ want to build.
 The quickest way to set them up is to log into the Django admin
 interface at http://127.0.0.1:8000/admin/ and create instances of both there.
 For a deployment setup, we recommend creating them as `data migration`_.
-
-.. _data migration: http://codeinthehole.com/writing/prefer-data-migrations-to-initial-data/
 
 Defining the order pipeline
 ===========================
