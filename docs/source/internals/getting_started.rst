@@ -11,8 +11,8 @@ scratch and have decided to use Oscar.  Let's call this shop 'frobshop'
     :doc:`Sandbox site <sandbox>` in case you have trouble with
     the below instructions.
 
-Install by hand
-===============
+Install Oscar and its dependencies
+==================================
 
 Install Oscar (which will install Django as a dependency), then create the
 project:
@@ -44,30 +44,11 @@ recommended to install Oscar in a virtualenv.
 
     .. _Instructions: http://www.google.com/search?q=install+pil+with+jpeg+support
 
-Settings
---------
+Django settings
+===============
 
-Now edit your settings file ``frobshop.frobshop.settings.py`` to specify a
-database (we use SQLite for simplicity):
-
-.. code-block:: django
-
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': 'db.sqlite3',
-            'USER': '',
-            'PASSWORD': '',
-            'HOST': '',
-            'PORT': '',
-            'ATOMIC_REQUESTS': True,  # Django 1.6+
-        }
-    }
-
-Note that we recommend using ``ATOMIC_REQUESTS`` to tie transactions to
-requests.
-
-Now set ``TEMPLATE_CONTEXT_PROCESSORS`` to:
+Edit your settings file ``frobshop.frobshop.settings.py`` to specify
+``TEMPLATE_CONTEXT_PROCESSORS``:
 
 .. code-block:: django
 
@@ -180,19 +161,6 @@ Modify your ``TEMPLATE_DIRS`` to include the main Oscar template directory:
         OSCAR_MAIN_TEMPLATE_DIR,
     )
 
-Oscar currently uses Haystack for search so you need to specify:
-
-.. code-block:: django
-
-    HAYSTACK_CONNECTIONS = {
-        'default': {
-            'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
-        },
-    }
-
-When moving towards production, you'll obviously need to switch to a real search
-backend.
-
 The last addition to the settings file is to import all of Oscar's default settings:
 
 .. code-block:: django
@@ -200,7 +168,7 @@ The last addition to the settings file is to import all of Oscar's default setti
     from oscar.defaults import *
 
 URLs
-----
+====
 
 Alter your ``frobshop/urls.py`` to include Oscar's URLs. If you have more than
 one language set your Django settings for ``LANGUAGES``, you will also need to
@@ -216,8 +184,56 @@ include Django's i18n URLs:
         url(r'', include(application.urls))
     )
 
+Search backend
+==============
+If you're happy with basic search for now, you can just use Haystack's simple
+backend:
+
+.. code-block:: django
+
+    HAYSTACK_CONNECTIONS = {
+        'default': {
+            'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+        },
+    }
+
+Oscar uses Haystack to abstract away from different search backends.
+Unfortunately, writing backend-agnostic code is nonetheless hard and
+Apache Sorl is the only supported production-grade backend. Your Haystack
+config could look something like this:
+
+.. code-block:: django
+
+    HAYSTACK_CONNECTIONS = {
+        'default': {
+            'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+            'URL': 'http://127.0.0.1:8983/solr',
+            'INCLUDE_SPELLING': True,
+        },
+    }
+
+
 Database
---------
+========
+
+Check your database settings. A quick way to get started is to use SQLite:
+
+.. code-block:: django
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'db.sqlite3',
+            'USER': '',
+            'PASSWORD': '',
+            'HOST': '',
+            'PORT': '',
+            'ATOMIC_REQUESTS': True,  # Django 1.6+
+        }
+    }
+
+Note that we recommend using ``ATOMIC_REQUESTS`` to tie transactions to
+requests.
 
 Then create the database and the shop should be browsable:
 
@@ -227,10 +243,11 @@ Then create the database and the shop should be browsable:
     $ python manage.py migrate
     $ python manage.py runserver
 
-You should now have a running Oscar install that you can browse.
+You should now have an empty, but running Oscar install that you can browse at
+http://localhost:8000.
 
 Fixtures
---------
+========
 
 The default checkout process requires a shipping address with a country.  Oscar
 uses a model for countries with flags that indicate which are valid shipping
@@ -255,7 +272,7 @@ migration`_.
 
 
 Creating product classes and fulfillment partners
--------------------------------------------------
+=================================================
 
 Every Oscar deployment needs at least one
 :class:`product class <oscar.apps.catalogue.abstract_models.AbstractProductClass>`
@@ -270,7 +287,7 @@ For a deployment setup, we recommend creating them as `data migration`_.
 .. _data migration: http://codeinthehole.com/writing/prefer-data-migrations-to-initial-data/
 
 Defining the order pipeline
----------------------------
+===========================
 
 The order management in Oscar relies on the order pipeline that
 defines all the statuses an order can have and the possible transitions
