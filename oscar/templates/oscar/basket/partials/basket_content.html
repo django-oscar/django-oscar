@@ -114,7 +114,7 @@
 
                 <div id="voucher_form_container" style="display:none">
                     <h4>{% trans "Voucher code" %}</h4>
-                    <form action="{% url 'basket:vouchers-add' %}" method="post">
+                    <form id="voucher_form" action="{% url 'basket:vouchers-add' %}" method="post">
                         {% csrf_token %}
                         {% include "partials/form_fields.html" with form=voucher_form %}
                         <button type="submit" class="btn btn-info">{% trans "Add voucher" %}</button>

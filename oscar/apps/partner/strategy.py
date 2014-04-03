@@ -219,6 +219,9 @@ class NoTax(object):
     def pricing_policy(self, product, stockrecord):
         if not stockrecord:
             return prices.Unavailable()
+        # Check stockrecord has the appropriate data
+        if not stockrecord.price_excl_tax:
+            return prices.Unavailable()
         return prices.FixedPrice(
             currency=stockrecord.price_currency,
             excl_tax=stockrecord.price_excl_tax,

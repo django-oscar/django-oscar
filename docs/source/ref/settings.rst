@@ -326,7 +326,7 @@ Example::
 
     def is_expensive(product):
         if product.has_stockrecord:
-            return product.stockrecord.price_incl_tax < D('1000.00')
+            return product.stockrecord.price_incl_tax > D('1000.00')
         return False
 
     # Don't allow expensive products to be in offers

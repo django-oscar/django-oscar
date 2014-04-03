@@ -161,18 +161,16 @@ class TestReorderingOrderLines(WebTestCase):
         line = order.lines.all()[0]
 
         product = create_product(price=D('12.00'))
-        self.client.post(reverse('basket:add'), {'product_id': product.id,
-                                                 'quantity': 1})
+        product_page = self.get(line.product.get_absolute_url())
+        product_page.forms['add_to_basket_form'].submit()
 
         basket = Basket.objects.all()[0]
         basket.strategy = strategy.Default()
         self.assertEqual(len(basket.all_lines()), 1)
 
-        # try to reorder a product
-        self.client.post(reverse('customer:order',
-                                 args=(order.number,)),
-                         {'order_id': order.pk,
-                          'action': 'reorder'})
+        # Try to reorder the whole order
+        order_page = self.get(reverse('customer:order', args=(order.number,)))
+        order_page.forms['order_form_%s' % order.id].submit()
 
         self.assertEqual(len(basket.all_lines()), 1)
         self.assertNotEqual(line.product.pk, product.pk)
@@ -182,18 +180,17 @@ class TestReorderingOrderLines(WebTestCase):
         order = create_order(user=self.user)
         line = order.lines.all()[0]
 
-        # add a product
         product = create_product(price=D('12.00'))
-        self.client.post(reverse('basket:add'), {'product_id': product.id,
-                                                 'quantity': 1})
+        product_page = self.get(line.product.get_absolute_url())
+        product_page.forms['add_to_basket_form'].submit()
 
         basket = Basket.objects.all()[0]
         basket.strategy = strategy.Default()
         self.assertEqual(len(basket.all_lines()), 1)
 
-        self.client.post(reverse('customer:order-line',
-                                 args=(order.number, line.pk)),
-                         {'action': 'reorder'})
+        # Try to reorder a line
+        order_page = self.get(reverse('customer:order', args=(order.number,)))
+        order_page.forms['line_form_%s' % line.id].submit()
 
         self.assertEqual(len(basket.all_lines()), 1)
         self.assertNotEqual(line.product.pk, product.pk)

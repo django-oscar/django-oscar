@@ -17,7 +17,7 @@ without a cache backend.
 
 If your memory constraints are tight and you can only run one Python worker,
 LocMemCache will usually outperform external cache backends due to the lower
-overhead. But once you can scale beyond one worker, it makes good sense to
+overhead. But once you can scale beyond one worker, it might make good sense to
 switch to something like memcached or redis.
 
 Blocking in views should be avoided if possible. That is especially true for
@@ -26,6 +26,9 @@ for switching out the blocking SMTP backend to a custom non-blocking solution.
 Possible options are storing emails in a database or cache for later consumption
 or triggering an external worker, e.g. via `django-celery`_.
 `django_post-office`_ works nicely.
+
+For backwards-compatibility reasons, Django doesn't enable database connection
+pooling by default. Performance is likely to improve when enabled.
 
 Security
 --------
@@ -37,8 +40,14 @@ Oscar specific configurations with regard to security are in place. See
 `django-secure`_ is a nice app that comes with a few sanity checks for
 deployments behind SSL.
 
+Search Engine Optimisation
+--------------------------
+
+A basic example of what a sitemap for Oscar could look like has been added
+to the sandbox site. Have a look at ``sites/sandbox/urls.py`` for inspiration.
+
 .. _deployment: https://docs.djangoproject.com/en/dev/howto/deployment/
-.. _`Django's guidelines for security`: _https://docs.djangoproject.com/en/dev/topics/security/
+.. _`Django's guidelines for security`: https://docs.djangoproject.com/en/dev/topics/security/
 .. _`cached template loader`: https://docs.djangoproject.com/en/dev/ref/templates/api/#django.template.loaders.cached.Loader
 .. _django-celery: http://www.celeryproject.org/
 .. _django-secure: https://pypi.python.org/pypi/django-secure

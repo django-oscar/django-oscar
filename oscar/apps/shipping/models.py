@@ -19,6 +19,7 @@ class ShippingMethod(models.Model):
                                        blank=True, verbose_name=_("Countries"))
 
     is_discounted = False
+    discount = D('0.00')
     _basket = None
 
     class Meta:

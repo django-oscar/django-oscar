@@ -51,7 +51,10 @@ class ProductDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductDetailView, self).get_context_data(**kwargs)
-        ctx['reviews'] = self.get_reviews()
+        reviews = self.get_reviews()
+        ctx['reviews'] = reviews
+        # to be sure .count() query will be made only once
+        ctx['reviews_count'] = reviews.count()
         ctx['alert_form'] = self.get_alert_form()
         ctx['has_active_alert'] = self.get_alert_status()
 
@@ -112,11 +115,6 @@ def get_product_base_queryset():
 class ProductCategoryView(ListView):
     """
     Browse products in a given category
-
-    Category URLs used to be based on solely the slug. Renaming the category
-    or any of the parent categories would break the URL. Hence, the new URLs
-    consist of both the slug and category PK (compare product URLs).
-    The legacy way still works to not break existing systems.
     """
     context_object_name = "products"
     template_name = 'catalogue/browse.html'
@@ -125,8 +123,17 @@ class ProductCategoryView(ListView):
 
     def get_object(self):
         if 'pk' in self.kwargs:
+            # Usual way to reach a category page. We just look at the primary
+            # key in case the slug changed. If it did, get() will redirect
+            # appropriately
             self.category = get_object_or_404(Category, pk=self.kwargs['pk'])
+        elif 'category_slug' in self.kwargs:
+            # For SEO reasons, we allow chopping off bits of the URL. If that
+            # happened, no primary key will be available.
+            self.category = get_object_or_404(
+                Category, slug=self.kwargs['category_slug'])
         else:
+            # If neither slug nor primary key are given, we show all products
             self.category = None
 
     def get(self, request, *args, **kwargs):

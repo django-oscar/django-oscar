@@ -68,12 +68,13 @@ class AbstractProductClass(models.Model):
 
 class AbstractCategory(MP_Node):
     """
-    A product category.
+    A product category. Merely used for navigational purposes; has no
+    effects on business logic.
 
     Uses django-treebeard.
     """
     name = models.CharField(_('Name'), max_length=255, db_index=True)
-    description = models.TextField(_('Description'), blank=True, null=True)
+    description = models.TextField(_('Description'), blank=True)
     image = models.ImageField(_('Image'), upload_to='categories', blank=True,
                               null=True, max_length=255)
     slug = models.SlugField(_('Slug'), max_length=255, db_index=True,
@@ -199,7 +200,7 @@ class AbstractProduct(models.Model):
     For example, a canonical product would have a title like "Green fleece"
     while its children would be "Green fleece - size L".
     """
-    #: Universal product code
+
     upc = NullCharField(
         _("UPC"), max_length=64, blank=True, null=True, unique=True,
         help_text=_("Universal Product Code (UPC) is an identifier for "
@@ -217,9 +218,9 @@ class AbstractProduct(models.Model):
                     "product)."))
 
     # Title is mandatory for canonical products but optional for child products
-    title = models.CharField(_('Title'), max_length=255, blank=True, null=True)
+    title = models.CharField(_('Title'), max_length=255, blank=True)
     slug = models.SlugField(_('Slug'), max_length=255, unique=False)
-    description = models.TextField(_('Description'), blank=True, null=True)
+    description = models.TextField(_('Description'), blank=True)
 
     #: "Type" of product.
     #: None for Product variants, they inherit their parent's product class
@@ -492,13 +493,23 @@ class AbstractProduct(models.Model):
         return MissingProductImage()
 
     def primary_image(self):
+        """
+        Returns the primary image for a product. Usually used when one can
+        only display one product image, e.g. in a list of products.
+        """
         images = self.images.all()
+        ordering = self.images.model.Meta.ordering
+        if not ordering or ordering[0] != 'display_order':
+            # Only apply order_by() if a custom model doesn't use default
+            # ordering. Applying order_by() busts the prefetch cache of
+            # the ProductManager
+            images = images.order_by('display_order')
         try:
             return images[0]
         except IndexError:
             # We return a dict with fields that mirror the key properties of
             # the ProductImage class so this missing image can be used
-            # interchangably in templates.  Strategy pattern ftw!
+            # interchangeably in templates.  Strategy pattern ftw!
             return {
                 'original': self.get_missing_image(),
                 'caption': '',
@@ -996,7 +1007,7 @@ class AbstractOption(models.Model):
 
     This is not the same as an 'attribute' as options do not have a fixed value
     for a particular item.  Instead, option need to be specified by a customer
-    when add the item to their basket.
+    when they add the item to their basket.
     """
     name = models.CharField(_("Name"), max_length=128)
     code = AutoSlugField(_("Code"), max_length=128, unique=True,
@@ -1069,8 +1080,7 @@ class AbstractProductImage(models.Model):
         'catalogue.Product', related_name='images', verbose_name=_("Product"))
     original = models.ImageField(
         _("Original"), upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255)
-    caption = models.CharField(
-        _("Caption"), max_length=200, blank=True, null=True)
+    caption = models.CharField(_("Caption"), max_length=200, blank=True)
 
     #: Use display_order to determine which is the "primary" image
     display_order = models.PositiveIntegerField(
@@ -1082,6 +1092,8 @@ class AbstractProductImage(models.Model):
     class Meta:
         abstract = True
         unique_together = ("product", "display_order")
+        # Any custom models should ensure that this ordering is unchanged, or
+        # your query count will explode. See AbstractProduct.primary_image.
         ordering = ["display_order"]
         verbose_name = _('Product Image')
         verbose_name_plural = _('Product Images')

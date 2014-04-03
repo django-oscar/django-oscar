@@ -82,6 +82,7 @@ def facet_data(request, form, results):  # noqa (too complex (10))
                     url = base_url.append_query_param(
                         'selected_facets', match)
                     datum['select_url'] = url.as_string()
-                facet_data[key]['results'].append(datum)
+
+            facet_data[key]['results'].append(datum)
 
     return facet_data

@@ -259,6 +259,7 @@ Non-Tangent:
 * Garmsby - https://garmsby.co.uk
 * Partecipa Cards - http://www.partecipacards.com
 * Chiyome - https://chiyome.com
+* Bike Parts Market - https://www.bikepartsmarket.com
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/dolbeau.thumb.png
     :target: http://www.dolbeau.ca
@@ -289,6 +290,9 @@ Non-Tangent:
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/chiyome.thumb.png
     :target: https://chiyome.com
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/bpm.thumb.png
+    :target: https://www.bikepartsmarket.com
 
 Many more on the way.  If you use Oscar in production, please let us know.
 

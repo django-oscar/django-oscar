@@ -783,18 +783,18 @@
   }
 }
 @media (max-width: 767px) {
-  body {
-    padding-left: 20px;
-    padding-right: 20px;
+  .logo {
+    width: 100px;
+    height: auto;
   }
-  .navbar-fixed-top,
-  .navbar-fixed-bottom,
-  .navbar-static-top {
-    margin-left: -20px;
-    margin-right: -20px;
+  .header {
+    background: #F2F2F2;
   }
-  .container-fluid {
-    padding: 0;
+  .header > .container-fluid {
+    padding: 0 20px;
+  }
+  .header-content {
+    height: 78px;
   }
   .dl-horizontal dt {
     float: none;
@@ -878,6 +878,76 @@
   .modal.fade.in {
     top: 20px;
   }
+  .flexslider .slides li {
+    display: block;
+    margin-bottom: 20px;
+  }
+  .flexslider .slides li {
+    margin-bottom: 20px;
+  }
+  .product-carousel .product_pod,
+  .product-carousel .flexslider {
+    padding: 0;
+  }
+  .product-carousel .product_pod .product_price {
+    left: 0;
+    width: 100%;
+  }
+  .products-viewed li {
+    width: auto;
+  }
+  .promotion_single .single-content {
+    padding: 30px 0 0;
+  }
+  .widget-shipping,
+  .widget-delivery {
+    padding: 20px;
+  }
+  .category-title div,
+  .category-title {
+    height: auto;
+    position: static;
+    background: none;
+  }
+  .category-title div {
+    width: 100%;
+  }
+  .category-title h1 {
+    border-bottom: 4px #595959 solid;
+  }
+  .category-title h1,
+  .category-title p {
+    margin: 0 0 20px !important;
+    color: #595959;
+  }
+  .footer {
+    height: auto;
+  }
+  .site-by {
+    float: none;
+    margin-left: 20px;
+  }
+  .checkoutNav {
+    margin: 30px 0 0;
+    background: #10283f;
+    border-top: 0;
+    border-bottom: 0;
+  }
+  .checkoutNav ul li {
+    text-align: left;
+    width: auto;
+    color: #10283f;
+    display: none;
+  }
+  .checkoutNav ul li.active {
+    color: #ffffff;
+    display: block;
+    padding: 10px 0;
+  }
+  .payment-details select {
+    display: block;
+    margin-bottom: 20px;
+  }
 }
 @media (max-width: 480px) {
   .nav-collapse {
@@ -930,7 +1000,35 @@
     position: static;
   }
 }
-@media (max-width: 767px) {
+@media (max-width: 979px) {
+  body {
+    font-size: 0.75em;
+  }
+  .widget-delivery .free-delivery,
+  .widget-shipping .free-delivery {
+    font-size: 1.5em;
+  }
+  .widget-image-link h3 {
+    font-size: 1.3em;
+  }
+  .footer-links h3 {
+    margin-bottom: 0;
+  }
+  .footer-links h3 a {
+    display: block;
+  }
+  .footer-links > li {
+    float: none;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  .category-title div {
+    background-position: 90% 0;
+  }
+  .category-title p,
+  .category-title h1 {
+    margin-right: 15%;
+  }
   body {
     padding-top: 0;
   }
@@ -948,7 +1046,8 @@
   .navbar-fixed-bottom .navbar-inner {
     padding: 5px;
   }
-  .navbar .container {
+  .navbar .container,
+  .navbar .container-fluid {
     width: auto;
     padding: 0;
   }
@@ -1053,16 +1152,6 @@
     float: none;
     padding: 10px 15px;
     margin: 10px 0;
-    border-top: 1px solid #f2f2f2;
-    border-bottom: 1px solid #f2f2f2;
-    -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 0 rgba(255,255,255,.1);
-    -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 0 rgba(255,255,255,.1);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 0 rgba(255,255,255,.1);
-  }
-  .navbar-inverse .nav-collapse .navbar-form,
-  .navbar-inverse .nav-collapse .navbar-search {
-    border-top-color: #10283f;
-    border-bottom-color: #10283f;
   }
   .navbar .nav-collapse .nav.pull-right {
     float: none;
@@ -1075,13 +1164,43 @@
   }
   .navbar .btn-navbar {
     display: block;
+    padding-right: 20px;
+    padding-left: 20px;
   }
   .navbar-static .navbar-inner {
     padding-left: 10px;
     padding-right: 10px;
   }
+  .navbar-fixed-top .navbar-inner,
+  .navbar-fixed-bottom .navbar-inner,
+  .navbar-static-top .navbar-inner,
+  .nav-profile .navbar-inner,
+  .nav-primary .navbar-inner {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .navbar-fixed-top .nav,
+  .navbar-fixed-bottom .nav,
+  .navbar-static-top .nav,
+  .nav-profile .nav,
+  .nav-primary .nav {
+    padding: 20px;
+  }
+  .navbar.primary .navbar-inner {
+    min-height: 40px;
+  }
+  .navbar.primary .nav > li > a.dropdown-toggle,
+  .navbar.primary .nav > li > a {
+    padding: 9px 20px;
+  }
+  .header-content > div {
+    width: auto;
+  }
+  .header-content h3 {
+    display: none;
+  }
 }
-@media (min-width: 768px) {
+@media (min-width: 980px) {
   .nav-collapse.collapse {
     height: auto !important;
     overflow: visible !important;

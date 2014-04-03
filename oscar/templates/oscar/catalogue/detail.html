@@ -19,8 +19,8 @@
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
-	<li>
-		<a href="{{ homepage_url }}">{% trans "Home" %}</a>
+    <li>
+        <a href="{{ homepage_url }}">{% trans "Home" %}</a>
         <span class="divider">/</span>
     </li>
     {% with category=product.categories.all.0 %}
@@ -84,7 +84,7 @@
                         <i class="icon-star"></i>
 
                         <small><a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.id %}">
-                            {% blocktrans count reviews|length as num_reviews %}
+                            {% blocktrans count reviews_count as num_reviews %}
                             1 customer review
                             {% plural %}
                             {{ num_reviews }} customer reviews
@@ -161,8 +161,8 @@
         {% endfor %}
         {% iffeature "reviews" %}
             <tr>
-                <th>{% trans "Num reviews" %}</th>
-                <td>{{ reviews.count|default:0 }}</td>
+                <th>{% trans "Number of reviews" %}</th>
+                <td>{{ reviews_count }}</td>
             </tr>
         {% endiffeature %}
         <tr>
@@ -176,17 +176,17 @@
         {% block product_review %}
         <section>
             <div id="reviews" class="sub-header">
-                {% if reviews|length > 3 %}
+                {% if reviews_count > 3 %}
                     <a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.id %}" class="btn pull-right">{% trans "See all reviews" %}</a>
                 {% endif %}
                 <h2>{% trans "Customer Reviews" %}</h2>
             </div>
 
-            {% if not reviews %}
+            {% if reviews_count == 0 %}
                 <p>
                     {% if product|is_review_permitted:user %}
                         {% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id as add_review_url %}
-                            {% blocktrans %}This product does not have any reviews yet" -
+                            {% blocktrans %}This product does not have any reviews yet -
                             <a href="{{ add_review_url }}#addreview">be the first to write one</a>.
                         {% endblocktrans %}
                     {% else %}

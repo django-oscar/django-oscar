@@ -1,27 +1,20 @@
-import six
-from six.moves import map
 from django.conf import settings
+from django.contrib.auth import get_user_model as django_get_user_model
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.html import conditional_escape
-from django.utils.safestring import mark_safe
 
 
 def get_user_model():
     """
-    Return the User model
+    Return the User model.
 
-    Using this function instead of Django 1.5's get_user_model allows backwards
-    compatibility with Django 1.4.
+    This used to live in compat to support both Django 1.4's fixed User model
+    and custom user models introduced thereafter.
+    Support for Django 1.4 has since been dropped in Oscar, but our
+    get_user_model remains because code relies on us annotating the _meta class
+    with the additional fields, and other code might rely on it as well.
     """
-    try:
-        # Django 1.5+
-        from django.contrib.auth import get_user_model
-    except ImportError:
-        # Django <= 1.4
-        model = User
-    else:
-        model = get_user_model()
+    model = django_get_user_model()
 
     # Test if user model has any custom fields and add attributes to the _meta
     # class
@@ -45,15 +38,31 @@ except ValueError:
                                " 'app_label.model_name'")
 
 
-def format_html(format_string, *args, **kwargs):
+def existing_user_fields(fields):
     """
-    Backport of format_html from Django 1.5+ to support Django 1.4
-    """
-    args_safe = map(conditional_escape, args)
-    kwargs_safe = dict([(k, conditional_escape(v)) for (k, v) in
-                        six.iteritems(kwargs)])
-    return mark_safe(format_string.format(*args_safe, **kwargs_safe))
+    Starting with Django 1.6, the User model can be overridden  and it is no
+    longer safe to assume the User model has certain fields. This helper
+    function assists in writing portable forms Meta.fields definitions
+    when those contain fields on the User model
 
+    Usage:
+    class UserForm(forms.Form):
+        ...
+        class Meta:
+            # won't break if first_name is not defined on User model
+            fields = existing_user_fields(['first_name', 'last_name'])
+    """
+    user_fields = get_user_model()._meta.fields
+    user_field_names = [field.name for field in user_fields]
+    return list(set(fields) & set(user_field_names))
+
+
+# Make backwards-compatible atomic decorator available
+try:
+    from django.db.transaction import atomic as atomic_compat
+except ImportError:
+    from django.db.transaction import commit_on_success as atomic_compat
+atomic_compat = atomic_compat
 
 #
 # Python3 compatibility layer

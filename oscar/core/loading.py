@@ -76,23 +76,23 @@ def get_classes(module_label, classnames):
     # import from Oscar package (should succeed in most cases)
     # e.g. 'oscar.apps.dashboard.catalogue.forms'
     oscar_module_label = "oscar.apps.%s" % module_label
-    oscar_module = _import_oscar_module(oscar_module_label, classnames)
+    oscar_module = _import_module(oscar_module_label, classnames)
 
     # returns e.g. 'oscar.apps.dashboard.catalogue',
     # 'yourproject.apps.dashboard.catalogue' or 'dashboard.catalogue'
     installed_apps_entry = _get_installed_apps_entry(package)
-    if not installed_apps_entry.startswith('oscar.apps.'):
+    if installed_apps_entry.startswith('oscar.apps.'):
+        # The entry is obviously an Oscar one, we don't import again
+        local_module = None
+    else:
         # Attempt to import the classes from the local module
         # e.g. 'yourproject.dashboard.catalogue.forms'
         local_module_label = installed_apps_entry + '.' + module
-        local_module = _import_local_module(local_module_label, classnames)
-    else:
-        # The entry is obviously an Oscar one, we don't import again
-        local_module = None
+        local_module = _import_module(local_module_label, classnames)
 
     if oscar_module is local_module is None:
-        # This intentionally doesn't rise an ImportError, because it would get
-        # masked by in some circular import scenarios.
+        # This intentionally doesn't raise an ImportError, because that could
+        # get masked in some circular import scenarios.
         raise ModuleNotFoundError(
             "The module with label '%s' could not be imported. This either"
             "means that it indeed does not exist, or you might have a problem"
@@ -103,17 +103,21 @@ def get_classes(module_label, classnames):
     return _pluck_classes([local_module, oscar_module], classnames)
 
 
-def _import_local_module(local_module_label, classnames):
+def _import_module(module_label, classnames):
+    """
+    Imports the module with the given name.
+    Returns None if the module doesn't exist, but propagates any import errors.
+    """
     try:
-        return __import__(local_module_label, fromlist=classnames)
+        return __import__(module_label, fromlist=classnames)
     except ImportError:
-        # There are 2 reasons why there is ImportError:
-        #  1. local_app does not exist
-        #  2. local_app exists but is corrupted (ImportError inside of the app)
+        # There are 2 reasons why there could be an ImportError:
         #
-        # Obviously, for the reason #1 we want to fall back to use Oscar app.
-        # For the reason #2 we want to propagate error (the dev obviously wants
-        # to override app and not use Oscar app)
+        #  1. Module does not exist. In that case, we ignore the import and
+        #     return None
+        #  2. Module exists but another ImportError occurred when trying to
+        #     import the module. In that case, it is important to propagate the
+        #     error.
         #
         # ImportError does not provide easy way to distinguish those two cases.
         # Fortunately, the traceback of the ImportError starts at __import__
@@ -125,15 +129,12 @@ def _import_local_module(local_module_label, classnames):
             raise
 
 
-def _import_oscar_module(oscar_module_label, classnames):
-    try:
-        return __import__(oscar_module_label, fromlist=classnames)
-    except ImportError:
-        # Oscar does not have this application, can't fallback to it
-        return None
-
-
 def _pluck_classes(modules, classnames):
+    """
+    Gets a list of class names and a list of modules to pick from.
+    For each class name, will return the class from the first module that has a
+    matching class.
+    """
     klasses = []
     for classname in classnames:
         klass = None
@@ -165,6 +166,11 @@ def get_profile_class():
     """
     Return the profile model class
     """
+    # The AUTH_PROFILE_MODULE setting was deprecated in Django 1.5, but it
+    # makes sense for Oscar to continue to use it. Projects built on Django
+    # 1.4 are likely to have used a profile class and it's very difficult to
+    # upgrade to a single user model. Hence, we should continue to support
+    # having a separate profile class even if Django doesn't.
     setting = getattr(settings, 'AUTH_PROFILE_MODULE', None)
     if setting is None:
         return None

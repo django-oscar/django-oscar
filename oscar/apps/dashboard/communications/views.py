@@ -1,7 +1,6 @@
 from django.contrib import messages
 from django.contrib.sites.models import get_current_site
 from oscar.core.loading import get_model
-from django.shortcuts import get_object_or_404
 from django.template import TemplateSyntaxError
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
@@ -26,10 +25,7 @@ class UpdateView(generic.UpdateView):
     template_name = 'dashboard/comms/detail.html'
     context_object_name = 'commtype'
     success_url = '.'
-
-    def get_object(self, **kwargs):
-        return get_object_or_404(self.model,
-                                 code=self.kwargs['code'].upper())
+    slug_field = 'code'
 
     def form_invalid(self, form):
         messages.error(self.request,

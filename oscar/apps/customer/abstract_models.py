@@ -1,3 +1,4 @@
+import six
 import hashlib
 import random
 
@@ -15,94 +16,92 @@ from oscar.core.compat import AUTH_USER_MODEL
 from oscar.models.fields import AutoSlugField
 
 
-# Only define custom UserManager/UserModel when Django >= 1.5
-if hasattr(auth_models, 'BaseUserManager'):
+class UserManager(auth_models.BaseUserManager):
 
-    class UserManager(auth_models.BaseUserManager):
-
-        def create_user(self, email, password=None, **extra_fields):
-            """
-            Creates and saves a User with the given username, email and
-            password.
-            """
-            now = timezone.now()
-            if not email:
-                raise ValueError('The given email must be set')
-            email = UserManager.normalize_email(email)
-            user = self.model(
-                email=email, is_staff=False, is_active=True,
-                is_superuser=False,
-                last_login=now, date_joined=now, **extra_fields)
-
-            user.set_password(password)
-            user.save(using=self._db)
-            return user
-
-        def create_superuser(self, email, password, **extra_fields):
-            u = self.create_user(email, password, **extra_fields)
-            u.is_staff = True
-            u.is_active = True
-            u.is_superuser = True
-            u.save(using=self._db)
-            return u
-
-    class AbstractUser(auth_models.AbstractBaseUser,
-                       auth_models.PermissionsMixin):
+    def create_user(self, email, password=None, **extra_fields):
         """
-        An abstract base user suitable for use in Oscar projects.
-
-        This is basically a copy of the core AbstractUser model but without a
-        username field and with a unique index on the email field.
+        Creates and saves a User with the given username, email and
+        password.
         """
-        email = models.EmailField(_('email address'), unique=True)
-        first_name = models.CharField(
-            _('First name'), max_length=255, blank=True)
-        last_name = models.CharField(
-            _('Last name'), max_length=255, blank=True)
-        is_staff = models.BooleanField(
-            _('Staff status'), default=False,
-            help_text=_('Designates whether the user can log into this admin '
-                        'site.'))
-        is_active = models.BooleanField(
-            _('Active'), default=True,
-            help_text=_('Designates whether this user should be treated as '
-                        'active. Unselect this instead of deleting accounts.'))
-        date_joined = models.DateTimeField(_('date joined'),
-                                           default=timezone.now)
+        now = timezone.now()
+        if not email:
+            raise ValueError('The given email must be set')
+        email = UserManager.normalize_email(email)
+        user = self.model(
+            email=email, is_staff=False, is_active=True,
+            is_superuser=False,
+            last_login=now, date_joined=now, **extra_fields)
 
-        objects = UserManager()
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
 
-        USERNAME_FIELD = 'email'
+    def create_superuser(self, email, password, **extra_fields):
+        u = self.create_user(email, password, **extra_fields)
+        u.is_staff = True
+        u.is_active = True
+        u.is_superuser = True
+        u.save(using=self._db)
+        return u
 
-        class Meta:
-            verbose_name = _('User')
-            verbose_name_plural = _('Users')
-            abstract = True
 
-        def get_full_name(self):
-            full_name = '%s %s' % (self.first_name, self.last_name)
-            return full_name.strip()
+class AbstractUser(auth_models.AbstractBaseUser,
+                   auth_models.PermissionsMixin):
+    """
+    An abstract base user suitable for use in Oscar projects.
 
-        def get_short_name(self):
-            return self.first_name
+    This is basically a copy of the core AbstractUser model but without a
+    username field
+    """
+    email = models.EmailField(_('email address'), unique=True)
+    first_name = models.CharField(
+        _('First name'), max_length=255, blank=True)
+    last_name = models.CharField(
+        _('Last name'), max_length=255, blank=True)
+    is_staff = models.BooleanField(
+        _('Staff status'), default=False,
+        help_text=_('Designates whether the user can log into this admin '
+                    'site.'))
+    is_active = models.BooleanField(
+        _('Active'), default=True,
+        help_text=_('Designates whether this user should be treated as '
+                    'active. Unselect this instead of deleting accounts.'))
+    date_joined = models.DateTimeField(_('date joined'),
+                                       default=timezone.now)
 
-        def _migrate_alerts_to_user(self):
-            """
-            Transfer any active alerts linked to a user's email address to the
-            newly registered user.
-            """
-            ProductAlert = self.alerts.model
-            alerts = ProductAlert.objects.filter(
-                email=self.email, status=ProductAlert.ACTIVE)
-            alerts.update(user=self, key=None, email=None)
+    objects = UserManager()
 
-        def save(self, *args, **kwargs):
-            super(AbstractUser, self).save(*args, **kwargs)
-            # Migrate any "anonymous" product alerts to the registered user
-            # Ideally, this would be done via a post-save signal. But we can't
-            # use get_user_model to wire up signals to custom user models
-            # see Oscar ticket #1127, Django ticket #19218
-            self._migrate_alerts_to_user()
+    USERNAME_FIELD = 'email'
+
+    class Meta:
+        verbose_name = _('User')
+        verbose_name_plural = _('Users')
+        abstract = True
+
+    def get_full_name(self):
+        full_name = '%s %s' % (self.first_name, self.last_name)
+        return full_name.strip()
+
+    def get_short_name(self):
+        return self.first_name
+
+    def _migrate_alerts_to_user(self):
+        """
+        Transfer any active alerts linked to a user's email address to the
+        newly registered user.
+        """
+        ProductAlert = self.alerts.model
+        alerts = ProductAlert.objects.filter(
+            email=self.email, status=ProductAlert.ACTIVE)
+        alerts.update(user=self, key=None, email=None)
+
+    def save(self, *args, **kwargs):
+        super(AbstractUser, self).save(*args, **kwargs)
+        # Migrate any "anonymous" product alerts to the registered user
+        # Ideally, this would be done via a post-save signal. But we can't
+        # use get_user_model to wire up signals to custom user models
+        # see Oscar ticket #1127, Django ticket #19218
+        self._migrate_alerts_to_user()
 
 
 class AbstractEmail(models.Model):
@@ -114,7 +113,7 @@ class AbstractEmail(models.Model):
                              verbose_name=_("User"))
     subject = models.TextField(_('Subject'), max_length=255)
     body_text = models.TextField(_("Body Text"))
-    body_html = models.TextField(_("Body HTML"), blank=True, null=True)
+    body_html = models.TextField(_("Body HTML"), blank=True)
     date_sent = models.DateTimeField(_("Date Sent"), auto_now_add=True)
 
     class Meta:
@@ -132,10 +131,13 @@ class AbstractCommunicationEventType(models.Model):
     A 'type' of communication.  Like a order confirmation email.
     """
 
-    # Code used for looking up this event programmatically.
-    # eg. PASSWORD_RESET
-    code = AutoSlugField(_('Code'), max_length=128, unique=True,
-                         populate_from='name')
+    #: Code used for looking up this event programmatically.
+    # e.g. PASSWORD_RESET. AutoSlugField uppercases the code for us because
+    # it's a useful convention that's been enforced in previous Oscar versions
+    code = AutoSlugField(
+        _('Code'), max_length=128, unique=True, populate_from='name',
+        separator=six.u("_"), uppercase=True, editable=True,
+        help_text=_("Code used for looking up this event programmatically"))
 
     #: Name is the friendly description of an event for use in the admin
     name = models.CharField(
@@ -149,6 +151,9 @@ class AbstractCommunicationEventType(models.Model):
                                 default=ORDER_RELATED)
 
     # Template content for emails
+    # NOTE: There's an intentional distinction between None and ''. None
+    # instructs Oscar to look for a file-based template, '' is just an empty
+    # template.
     email_subject_template = models.CharField(
         _('Email Subject Template'), max_length=255, blank=True, null=True)
     email_body_template = models.TextField(
@@ -244,7 +249,7 @@ class AbstractNotification(models.Model):
 
     # Some projects may want to categorise their notifications.  You may want
     # to use this field to show a different icons next to the notification.
-    category = models.CharField(max_length=255, null=True)
+    category = models.CharField(max_length=255, blank=True)
 
     INBOX, ARCHIVE = 'Inbox', 'Archive'
     choices = (
@@ -285,10 +290,10 @@ class AbstractProductAlert(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL, db_index=True, blank=True,
                              null=True, related_name="alerts",
                              verbose_name=_('User'))
-    email = models.EmailField(_("Email"), db_index=True, blank=True, null=True)
+    email = models.EmailField(_("Email"), db_index=True, blank=True)
 
     # This key are used to confirm and cancel alerts for anon users
-    key = models.CharField(_("Key"), max_length=128, null=True, db_index=True)
+    key = models.CharField(_("Key"), max_length=128, blank=True, db_index=True)
 
     # An alert can have two different statuses for authenticated
     # users ``ACTIVE`` and ``INACTIVE`` and anonymous users have an

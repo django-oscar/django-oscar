@@ -32,7 +32,11 @@
 
 <form action="." method="post" class="well form-stacked wysiwyg" enctype="multipart/form-data">
     {% csrf_token %}
-    {% include 'partials/form.html' %}
+    {% include 'partials/form_fields.html' with form=form %}
+    <div class="form-actions">
+        <button class="btn btn-large btn-primary" type="submit">{% trans "Save" %}</button>
+        {% trans "or" %} <a href="{% url 'dashboard:page-list' %}">{% trans "cancel" %}</a>.
+    </div>
 </form>
 
 {% endblock dashboard_content %}

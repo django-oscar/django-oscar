@@ -83,3 +83,13 @@ class TestProductCategoryView(WebTestCase):
         response = self.app.get(wrong_url)
         self.assertEqual(http_client.MOVED_PERMANENTLY, response.status_code)
         self.assertTrue(self.category.get_absolute_url() in response.location)
+
+    def test_can_chop_off_last_part_of_url(self):
+        child_category = self.category.add_child(name='Cool products')
+        full_url = child_category.get_absolute_url()
+        chopped_url = full_url.rsplit('/', 2)[0]
+        parent_url = self.category.get_absolute_url()
+        response = self.app.get(chopped_url).follow()  # fails if no redirect
+        self.assertTrue(response.url.endswith(parent_url))
+
+

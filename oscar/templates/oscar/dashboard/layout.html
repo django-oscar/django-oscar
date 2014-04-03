@@ -132,10 +132,9 @@
     {% endcomment %}
     {% block trackerimage %}
         {% if call_home and not debug %}
-            <img src="//oscar-static.tangentlabs.co.uk/tracker.gif" style="display:none" />
+            <img src="//oscar-static.tangentlabs.co.uk/tracker.gif?{{ call_home }}" style="display:none" />
         {% endif %}
     {% endblock %}
-
 {% endblock %}
 
 {% block extrascripts %}
@@ -146,7 +145,6 @@
     {% compress js %}
         {# jQuery plugins #}
         <script src="{% static "oscar/js/mousewheel/jquery.mousewheel.min.js" %}" type="text/javascript" charset="utf-8"></script>
-        <script src="{% static "oscar/js/scrollpane/jquery.jscrollpane.min.js" %}" type="text/javascript" charset="utf-8"></script>
         {# The CSS for the timepicker is embedded in dashboard.less #}
         <script src="{% static "oscar/js/timepicker/jquery-ui-timepicker-addon.min.js" %}" type="text/javascript" charset="utf-8"></script>
         <script src="{% static "oscar/js/select2/select2.js" %}" type="text/javascript" charset="utf-8"></script>

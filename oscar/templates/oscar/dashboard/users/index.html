@@ -38,7 +38,7 @@
 
     {% block users_list %}
         {% if user_list %}
-            <form action="." method="post" class="form-inline">
+            <form id="user_list_form" action="." method="post" class="form-inline">
                 {% csrf_token %}
                 <table class="table table-striped table-bordered table-hover">
                     <caption>

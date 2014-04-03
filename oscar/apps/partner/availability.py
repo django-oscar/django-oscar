@@ -39,7 +39,7 @@ class Base(object):
 
         Should return a boolean and a reason
         """
-        return False, _("Unavailable")
+        return False, _("unavailable")
 
 
 # Common availability policies
@@ -84,9 +84,9 @@ class StockRequired(Base):
 
     def is_purchase_permitted(self, quantity):
         if self.num_available == 0:
-            return False, _("No stock available")
+            return False, _("no stock available")
         if quantity > self.num_available:
-            msg = _("A maximum of %(max)d can be bought") % {
+            msg = _("a maximum of %(max)d can be bought") % {
                 'max': self.num_available}
             return False, msg
         return True, ""

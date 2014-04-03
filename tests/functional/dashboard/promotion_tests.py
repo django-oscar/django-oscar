@@ -13,11 +13,11 @@ class ViewTests(WebTestCase):
                 reverse('dashboard:promotion-create-image'),
                ]
         for url in urls:
-            self.assertIsOk(self.client.get(url))
+            self.assertIsOk(self.get(url))
 
     def test_create_redirects(self):
         base_url = reverse('dashboard:promotion-create-redirect')
         types = ['rawhtml', 'singleproduct', 'image']
         for p_type in types:
             url = '%s?promotion_type=%s' % (base_url, p_type)
-            self.assertIsRedirect(self.client.get(url))
+            self.assertIsRedirect(self.get(url))

@@ -5,7 +5,7 @@
 // Components: Icons / Fonts
 @import "font-awesome/font-awesome.less"; // Replaced sprites with font-awesome
 @import "font-awesome/font-awesome-ie7.less";
-@import url("http://fonts.googleapis.com/css?family=Open+Sans:700,300");
+@import url("//fonts.googleapis.com/css?family=Open+Sans:700,300");
 
 // FONT FOR THE DASHBOARD
 // -----------------------------
@@ -74,7 +74,7 @@ td .btn-toolbar {
 .form-horizontal,
 .form-stacked {
   .control-label {
-      text-align: left;
+    text-align: left;
   }
   .control-group {
     margin-bottom:@baseLineHeight / 2;
@@ -518,7 +518,7 @@ caption,
 }
 // DASHBOARD GRAPH
 // ----------------
-#order-graph {
+#order_graph {
     position: relative;
     margin-bottom: 5em;
     width: 99%;
@@ -723,64 +723,64 @@ caption,
 }
 .upload-image {
   .clearfix();
-  margin:0;
+  margin:0;
   z-index: 1;
   position: relative;
   li {
-    display:block;
-    width: 200px;
-    margin:0 1% 2%;
-    float: left;
-    text-align:center;
-    > div {
-      padding: 4px;
-      background: #ccc;
-      margin-bottom: 10px;
-      + label,
-      + label + input {
-        display: none;
-      }
-    }
-  }
-  div {
-    background:#fff;
-    position: relative;
-    width: 200px;
-    height: 200px;
-    z-index: 200;
-  }
+   display:block;
+   width: 200px;
+   margin:0 1% 2%;
+   float: left;
+   text-align:center;
+   > div {
+     padding: 4px;
+     background: #ccc;
+     margin-bottom: 10px;
+     + label,
+     + label + input {
+       display: none;
+     }
+   }
+ }
+  div {
+    background:#fff;
+    position: relative;
+    width: 200px;
+    height: 200px;
+    z-index: 200;
+  }
   img {
-    position: absolute;
-    margin:auto;
-    top: 0;
-    max-height:200px;
-    max-width:200px;
-    width: auto;
-    height: auto;
-    left: 0;
-  }
-  .image-input {
-    z-index: 800;
-  }
-  .image-input button {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    .border-radius(0);
-  }
+   position: absolute;
+   margin:auto;
+     top: 0;
+     max-height:200px;
+     max-width:200px;
+     width: auto;
+     height: auto;
+     left: 0;
+ }
+  .image-input {
+    z-index: 800;
+  }
+  .image-input button {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    .border-radius(0);
+  }
   .input-field {
-    position: relative;
-    z-index: 1000;
-    opacity: 0;
-  }
+   position: relative;
+   z-index: 1000;
+   opacity: 0;
+ }
   .input-field input {
-    border-width: 0;
-    direction: ltr;
-    cursor: pointer;
-    width: 200px;
-    height: 200px;
-  }
+    border-width: 0;
+    direction: ltr;
+    cursor: pointer;
+    width: 200px;
+    height: 200px;
+ }
 }
 // SIDE NAV CREATE PAGES
 // ----------------
@@ -877,34 +877,6 @@ div[data-spy="affix"].affix {
 
 // PLUGINS
 // -----
-
-/* TINY SCROLL BAR */
- .scroll-pane {
-	height: 200px;
-	overflow: auto;
-	background:lighten(@grayLighter, 5%);
-	.border-radius(5px);
-	border:2px solid lighten(@grayLight, 20%);
- }
- .scroll-pane:focus {
-	outline:none;
- }
- .jspContainer{overflow:hidden;position:relative}
- .jspPane{position:absolute}
- .jspVerticalBar{position:absolute;top:0;right:0;width:10px;height:100%;background:red}
- .jspHorizontalBar{position:absolute;bottom:0;left:0;width:100%;height:10px;background:red}
- .jspVerticalBar *,.jspHorizontalBar *{margin:0;padding:0}
- .jspCap{display:none}.jspHorizontalBar .jspCap{float:left}
- .jspTrack{background:#efefef;position:relative}
- .jspDrag{background:#ccc;position:relative;top:0;left:0;cursor:pointer;.border-radius(5px);}
- .jspHorizontalBar .jspTrack,.jspHorizontalBar .jspDrag{float:left;height:100%}
- .jspArrow{background:#50506d;text-indent:-20000px;display:block;cursor:pointer}
- .jspArrow.jspDisabled{cursor:default;background:#80808d}
- .jspVerticalBar .jspArrow{height:10px}
- .jspHorizontalBar .jspArrow{width:10px;float:left;height:100%}
- .jspVerticalBar .jspArrow:focus{outline:0}
- .jspCorner{background:#eeeef4;float:left;height:100%}
- * html .jspCorner{margin:0 -3px 0 0}
 
 /* Changes for wysihtml5 */
 textarea {
