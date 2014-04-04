@@ -15,11 +15,13 @@ from oscar.views import sort_queryset
 
 User = get_user_model()
 Partner = get_model('partner', 'Partner')
-(PartnerSearchForm, PartnerCreateForm, PartnerAddressForm,
- NewUserForm, UserEmailForm, ExistingUserForm) = get_classes(
-     'dashboard.partners.forms',
-     ['PartnerSearchForm', 'PartnerCreateForm', 'PartnerAddressForm',
-      'NewUserForm', 'UserEmailForm', 'ExistingUserForm'])
+(
+    PartnerSearchForm, PartnerCreateForm, PartnerAddressForm,
+    NewUserForm, UserEmailForm, ExistingUserForm
+) = get_classes(
+    'dashboard.partners.forms',
+    ['PartnerSearchForm', 'PartnerCreateForm', 'PartnerAddressForm',
+     'NewUserForm', 'UserEmailForm', 'ExistingUserForm'])
 
 
 class PartnerListView(generic.ListView):

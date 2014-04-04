@@ -42,9 +42,9 @@ def queryset_orders_for_user(user):
     partner has to have the user in the partner's list.
     """
     queryset = Order._default_manager.select_related(
-            'billing_address', 'billing_address__country',
-            'shipping_address', 'shipping_address__country',
-            'user'
+        'billing_address', 'billing_address__country',
+        'shipping_address', 'shipping_address__country',
+        'user'
         ).prefetch_related('lines')
     if user.is_staff:
         return queryset

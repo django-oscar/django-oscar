@@ -28,7 +28,7 @@ class ProductManager(models.Manager):
     Uses ProductQuerySet and proxies its methods to allow chaining
 
     Once Django 1.7 lands, this class can probably be removed:
-    https://docs.djangoproject.com/en/dev/releases/1.7/#calling-custom-queryset-methods-from-the-manager  #n oqa
+    https://docs.djangoproject.com/en/dev/releases/1.7/#calling-custom-queryset-methods-from-the-manager  # noqa
     """
 
     def get_queryset(self):
