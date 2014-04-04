@@ -22,30 +22,48 @@ class TestUserAddress(TestCase):
 
     def test_uses_title_firstname_and_lastname_in_salutation(self):
         a = UserAddressFactory.build(country=self.country,
+                title='Dr',
+                first_name='Barry',
+                last_name='Barrington',
                 user=self.user)
         self.assertEqual("Dr Barry Barrington", a.salutation)
 
     def test_strips_whitespace_from_salutation(self):
-        a = UserAddressFactory.build(title='', 
-            first_name='', 
-            last_name='Barrington',
-            country=self.country,
-            user=self.user)
+        a = UserAddressFactory.build(title='',
+                first_name='',
+                last_name='Barrington',
+                country=self.country,
+                user=self.user)
         self.assertEqual("Barrington", a.salutation)
 
     def test_has_name_property(self):
         a = UserAddressFactory.build(country=self.country,
+                first_name='Barry',
+                last_name='Barrington',
                 user=self.user)
         self.assertEqual("Barry Barrington", a.name)
 
     def test_has_summary_property(self):
         c = CountryFactory.build(name='')
-        a = UserAddressFactory.build(country=c)
+        a = UserAddressFactory.build(country=c,
+                title='Dr',
+                first_name='Barry',
+                last_name='Barrington',
+                line1='1 King Road',
+                line4='London',
+                postcode='SW1 9RE')
         self.assertEqual("Dr Barry Barrington, 1 King Road, London, SW1 9RE, ",
                           a.summary)
 
     def test_summary_includes_country(self):
-        a = UserAddressFactory.build(country=self.country,
+        c = CountryFactory.build(name='UNITED KINGDOM')
+        a = UserAddressFactory.build(country=c,
+                title='Dr',
+                first_name='Barry',
+                last_name='Barrington',
+                line1='1 King Road',
+                line4='London',
+                postcode='SW1 9RE',
                 user=self.user)
         self.assertEqual(
             "Dr Barry Barrington, 1 King Road, London, SW1 9RE, UNITED KINGDOM",
