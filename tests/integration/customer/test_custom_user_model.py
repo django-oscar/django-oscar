@@ -1,4 +1,5 @@
 from django.test import TestCase
+
 from oscar.apps.customer.forms import ProfileForm
 from oscar.core.compat import get_user_model, existing_user_fields
 
@@ -22,4 +23,3 @@ class TestACustomUserModel(TestCase):
         form = ProfileForm(self.user_klass())
         expected_fields = set(['first_name', 'last_name', 'email'])
         self.assertTrue(expected_fields == set(form.fields))
-

@@ -57,16 +57,15 @@ def existing_user_fields(fields):
     return list(set(fields) & set(user_field_names))
 
 
+# Python3 compatibility layer
+
+
 # Make backwards-compatible atomic decorator available
 try:
     from django.db.transaction import atomic as atomic_compat
 except ImportError:
     from django.db.transaction import commit_on_success as atomic_compat
 atomic_compat = atomic_compat
-
-#
-# Python3 compatibility layer
-#
 
 try:
     import urlparse as _urlparse
