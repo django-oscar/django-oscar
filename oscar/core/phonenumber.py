@@ -121,6 +121,7 @@ class PhoneNumberDescriptor(object):
         >>> instance.phone_number = PhoneNumber(...)
     or
         >>> instance.phone_number = '+414204242'
+
     """
 
     def __init__(self, field):

@@ -134,13 +134,13 @@ class PhoneNumberField(Field):
     * Can be given a hint for the country, so that it can accept local numbers,
       that are not in an international format
 
-    Note:
-        This field is based on work in django-phonenumber-field:
-        https://github.com/maikhoepfel/django-phonenumber-field/
+    Notes
+    -----
+    This field is based on work in django-phonenumber-field
+    https://github.com/maikhoepfel/django-phonenumber-field/
 
-        See ``oscar/core/phonenumber.py`` for the relevant copyright and
-        permission notice.
-
+    See ``oscar/core/phonenumber.py`` for the relevant copyright and
+    permission notice.
     """
 
     attr_class = phonenumber.PhoneNumber
