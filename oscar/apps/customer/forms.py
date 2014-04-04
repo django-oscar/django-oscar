@@ -331,10 +331,8 @@ Profile = get_profile_class()
 if Profile:
 
     class UserAndProfileForm(forms.ModelForm):
-        email = forms.EmailField(label=_('Email address'), required=True)
 
         def __init__(self, user, *args, **kwargs):
-            self.user = user
             try:
                 instance = Profile.objects.get(user=user)
             except ObjectDoesNotExist:
@@ -344,13 +342,10 @@ if Profile:
 
             super(UserAndProfileForm, self).__init__(*args, **kwargs)
 
-            # Get a list of profile fields to help with ordering later
+            # Get profile field names to help with ordering later
             profile_field_names = self.fields.keys()
-            del profile_field_names[profile_field_names.index('email')]
 
-            self.fields['email'].initial = self.instance.user.email
-
-            # Add user fields (we look for core user fields first)
+            # Get user field names (we look for core user fields first)
             core_field_names = set([f.name for f in User._meta.fields])
             user_field_names = ['email']
             for field_name in ('first_name', 'last_name'):
@@ -361,10 +356,13 @@ if Profile:
             # Store user fields so we know what to save later
             self.user_field_names = user_field_names
 
-            # Add additional user fields
+            # Add additional user form fields
             additional_fields = forms.fields_for_model(
                 User, fields=user_field_names)
             self.fields.update(additional_fields)
+
+            # Ensure email is required and initialised correctly
+            self.fields['email'].required = True
 
             # Set initial values
             for field_name in user_field_names:
@@ -380,7 +378,7 @@ if Profile:
         def clean_email(self):
             email = normalise_email(self.cleaned_data['email'])
             if User._default_manager.filter(
-                    email=email).exclude(id=self.user.id).exists():
+                    email=email).exclude(id=self.instance.user.id).exists():
                 raise ValidationError(
                     _("A user with this email address already exists"))
             return email
