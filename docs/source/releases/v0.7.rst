@@ -173,7 +173,10 @@ Bugfixes
 * Suspended and consumed offers are no longer returned by the "active" offer
   manager. (`#1228`_).
 
+* Products can now be removed from categories (`#1289`_).
+
 .. _`#1228`: https://github.com/tangentlabs/django-oscar/issues/1228
+.. _`#1289`: https://github.com/tangentlabs/django-oscar/issues/1289
 .. _`be04d46639`: https://github.com/tangentlabs/django-oscar/commit/
 
 Backwards incompatible changes in 0.7
