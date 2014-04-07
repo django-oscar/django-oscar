@@ -198,8 +198,8 @@ backend:
 
 Oscar uses Haystack to abstract away from different search backends.
 Unfortunately, writing backend-agnostic code is nonetheless hard and
-Apache Sorl is the only supported production-grade backend. Your Haystack
-config could look something like this:
+Apache Solr is currently the only supported production-grade backend. Your
+Haystack config could look something like this:
 
 .. code-block:: django
 
@@ -211,6 +211,9 @@ config could look something like this:
         },
     }
 
+Oscar includes a sample schema to get started with Solr. More information can
+be found in the
+:doc:`recipe on getting Solr up and running</howto/how_to_setup_solr>`.
 
 Database
 ========

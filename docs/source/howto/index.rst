@@ -90,3 +90,11 @@ Appearance
 
     how_to_handle_statics
 
+Deployment and setup
+--------------------
+
+.. toctree::
+    :maxdepth: 1
+
+    how_to_setup_solr
+
