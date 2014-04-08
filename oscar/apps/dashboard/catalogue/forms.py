@@ -387,16 +387,18 @@ class ProductCategoryForm(forms.ModelForm):
 
     class Meta:
         model = ProductCategory
+        fields = ('category', )
 
 
 BaseProductCategoryFormSet = inlineformset_factory(
-    Product, ProductCategory, form=ProductCategoryForm,
-    fields=('category',), extra=1, can_delete=False)
+    Product, ProductCategory, form=ProductCategoryForm, extra=1,
+    can_delete=True)
 
 
 class ProductCategoryFormSet(BaseProductCategoryFormSet):
 
     def __init__(self, product_class, user, *args, **kwargs):
+        # This function just exists to drop the extra arguments
         super(ProductCategoryFormSet, self).__init__(*args, **kwargs)
 
     def clean(self):
@@ -419,6 +421,7 @@ class ProductCategoryFormSet(BaseProductCategoryFormSet):
 
 
 class ProductImageForm(forms.ModelForm):
+
     class Meta:
         model = ProductImage
         exclude = ('display_order',)
