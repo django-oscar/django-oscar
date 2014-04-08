@@ -23,6 +23,8 @@ install:
 before_script:
   - mysql -e 'create database oscar_vagrant;'
   - psql -c 'create database oscar_vagrant;' -U postgres
+  - psql -c 'create database oscar_demo;' -U postgres
+  - psql -c 'CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;' -U postgres -d oscar_demo
 
 script:
   - make travis

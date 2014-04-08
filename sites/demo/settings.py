@@ -35,7 +35,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'oscar_demo',
-        'USER': 'm',
+        'USER': 'postgres',
+        'ATOMIC_REQUESTS': True
     },
 }
 
