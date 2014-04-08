@@ -127,6 +127,9 @@ Minor changes
 
 * Customers can delete their profiles from within the account section.
 
+* Customers are prevented from using short or common passwords when changing
+  their password in their account (`#1202`_)
+
 * :attr:`~oscar.core.application.Application.permissions_map` now supports more than two
   lists to evaluate permissions.
 
@@ -181,6 +184,7 @@ Minor changes
   extended to submit the Python and Django version in use.
   Tracking is still easily disabled by setting ``OSCAR_TRACKING`` to ``False``.
 
+.. _`#1202`: https://github.com/tangentlabs/django-oscar/pull/1202
 .. _`b920f8ba`: https://github.com/tangentlabs/django-oscar/commit/b920f8ba288cd2f19bb167db2a012479ba956397
 .. _`ef3ccf08a7`: https://github.com/tangentlabs/django-oscar/commit/ef3ccf08a707ae1250cdb8d5f2dc6f721d020dc4
 .. _`32b7249`: https://github.com/tangentlabs/django-oscar/commit/32b7249e44b40cb1b20d01226f77ae6777a20b91
