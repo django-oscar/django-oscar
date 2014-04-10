@@ -3,6 +3,7 @@ language: python
 python:
   - '2.7'
   - '3.3'
+  - '3.4'
 
 env:
   global:
@@ -15,6 +16,7 @@ env:
 matrix:
   allow_failures:
     - python: '3.3'
+    - python: '3.4'
 
 install:
   - easy_install Django==$DJANGO_VERSION
