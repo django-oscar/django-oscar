@@ -152,4 +152,4 @@ to implement your custom shipping charge logic.
 .. tip::
 
     Most of the shipping logic should live in the repository class, the method
-    instance is only responsble for returning the charge for a given basket.
+    instance is only responsible for returning the charge for a given basket.
