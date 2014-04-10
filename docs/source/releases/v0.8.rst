@@ -1,0 +1,75 @@
+===========================================
+Oscar 0.8 release notes - UNDER DEVELOPMENT
+===========================================
+
+Welcome to Oscar 0.8!
+
+Table of contents:
+
+.. contents::
+    :local:
+    :depth: 1
+
+Compatibility
+=============
+
+
+What's new in Oscar 0.8?
+========================
+
+Minor changes
+-------------
+
+* The models of the shipping app now have abstract base classes, similar to
+  the rest of Oscar.
+
+Bugfixes
+~~~~~~~~
+
+
+Backwards incompatible changes in 0.8
+=====================================
+
+* The legacy ``ShippingMethod`` name of the interface of the shipping app has
+  been removed. Inherit from ``shipping.base.Base`` for the class instead, and
+  inherit from ``shipping.abstract_models.AbstractBase`` for model-based
+  shipping methods.
+
+Removal of features deprecated in 0.7
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Renamed templates
+~~~~~~~~~~~~~~~~~
+
+Template block changes
+~~~~~~~~~~~~~~~~~~~~~~
+
+Migrations
+~~~~~~~~~~
+
+* Address:
+
+* Catalogue:
+
+* Customer:
+
+* Offer:
+
+* Order:
+
+* Partner:
+
+* Payment:
+
+* Promotions:
+
+* Shipping:
+
+* Reviews:
+
+* Voucher:
+
+
+Features deprecated in 0.8
+==========================
