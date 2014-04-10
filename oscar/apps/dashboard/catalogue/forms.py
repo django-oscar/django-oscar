@@ -353,17 +353,15 @@ class ProductForm(forms.ModelForm):
         return queryset
 
     def save(self):
+        """
+        Set product class and attributes before saving
+        """
         product = super(ProductForm, self).save(commit=False)
         product.product_class = self.product_class
         for attribute in self.product_class.attributes.all():
             value = self.cleaned_data['attr_%s' % attribute.code]
             setattr(product.attr, attribute.code, value)
-
-        if self.cleaned_data['is_group']:
-            # Don't validate attributes for parent products
-            product.save(validate_attributes=False)
-        else:
-            product.save()
+        product.save()
         self.save_m2m()
         return product
 
