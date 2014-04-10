@@ -353,19 +353,19 @@ class ProductForm(forms.ModelForm):
         return queryset
 
     def save(self):
-        object = super(ProductForm, self).save(commit=False)
-        object.product_class = self.product_class
+        product = super(ProductForm, self).save(commit=False)
+        product.product_class = self.product_class
         for attribute in self.product_class.attributes.all():
             value = self.cleaned_data['attr_%s' % attribute.code]
-            setattr(object.attr, attribute.code, value)
+            setattr(product.attr, attribute.code, value)
 
         if self.cleaned_data['is_group']:
             # Don't validate attributes for parent products
-            object.save(validate_attributes=False)
+            product.save(validate_attributes=False)
         else:
-            object.save()
+            product.save()
         self.save_m2m()
-        return object
+        return product
 
     def clean(self):
         data = self.cleaned_data
