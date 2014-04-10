@@ -1,3 +1,4 @@
+# coding=utf-8
 from django.db import IntegrityError
 from django.test import TestCase
 from django.core.exceptions import ValidationError
@@ -52,17 +53,24 @@ class ProductCreationTests(ProductTests):
             Product.objects.create(product_class=self.product_class,
                                    title='testing', upc=None)
 
+
 class TopLevelProductTests(ProductTests):
 
     def test_top_level_products_must_have_titles(self):
         self.assertRaises(ValidationError, Product.objects.create, product_class=self.product_class)
+
+    def test_top_level_products_are_part_of_browsable_set(self):
+        product = Product.objects.create(
+            product_class=self.product_class, title=u"Kopfhörer")
+        self.assertEquals(set([product]), set(Product.browsable.all()))
 
 
 class VariantProductTests(ProductTests):
 
     def setUp(self):
         super(VariantProductTests, self).setUp()
-        self.parent = Product.objects.create(title="Parent product", product_class=self.product_class)
+        self.parent = Product.objects.create(
+            title="Parent product", product_class=self.product_class)
 
     def test_variant_products_dont_need_titles(self):
         Product.objects.create(parent=self.parent, product_class=self.product_class)
@@ -77,6 +85,11 @@ class VariantProductTests(ProductTests):
     def test_variant_products_inherit_product_class(self):
         p = Product.objects.create(parent=self.parent)
         self.assertEqual("Clothing", p.get_product_class().name)
+
+    def test_variant_products_are_not_part_of_browsable_set(self):
+        Product.objects.create(
+            product_class=self.product_class, parent=self.parent)
+        self.assertEquals(set([self.parent]), set(Product.browsable.all()))
 
 
 class TestAVariant(TestCase):

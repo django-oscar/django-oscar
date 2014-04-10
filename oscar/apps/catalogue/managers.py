@@ -40,6 +40,8 @@ class ProductManager(models.Manager):
     def base_queryset(self):
         return self.get_queryset().base_queryset()
 
+    get_query_set = get_queryset  # Django 1.5 compatibility fix
+
 
 class BrowsableProductManager(ProductManager):
     """
@@ -50,3 +52,5 @@ class BrowsableProductManager(ProductManager):
 
     def get_queryset(self):
         return super(BrowsableProductManager, self).get_queryset().browsable()
+
+    get_query_set = get_queryset  # Django 1.5 compatibility fix
