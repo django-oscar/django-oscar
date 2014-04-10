@@ -8,8 +8,10 @@ from oscar.apps.shipping import Scales
 from oscar.models.fields import AutoSlugField
 
 
-class ShippingMethod(models.Model):
-    # Fields from shipping.base.ShippingMethod must be added here manually.
+class AbstractBase(models.Model):
+    """
+    Implements the interface declared by shipping.base.Base
+    """
     code = AutoSlugField(_("Slug"), max_length=128, unique=True,
                          populate_from='name')
     name = models.CharField(_("Name"), max_length=128, unique=True)
@@ -35,7 +37,7 @@ class ShippingMethod(models.Model):
         self._basket = basket
 
 
-class AbstractOrderAndItemCharges(ShippingMethod):
+class AbstractOrderAndItemCharges(AbstractBase):
     """
     Standard shipping method
 
@@ -96,7 +98,7 @@ class AbstractOrderAndItemCharges(ShippingMethod):
         return True
 
 
-class AbstractWeightBased(ShippingMethod):
+class AbstractWeightBased(AbstractBase):
     upper_charge = models.DecimalField(
         _("Upper Charge"), decimal_places=2, max_digits=12, null=True,
         help_text=_("This is the charge when the weight of the basket "

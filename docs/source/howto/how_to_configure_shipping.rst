@@ -109,10 +109,10 @@ The repository class is responsible for return shipping method instances.  Oscar
 defines several of these but it is easy to write your own, their interface is
 simple.
 
-The base shipping method class ``oscar.apps.shipping.base.ShippingMethod`` (that
+The base shipping method class ``oscar.apps.shipping.base.Base`` (that
 all shipping methods should subclass has API:
 
-.. autoclass:: oscar.apps.shipping.base.ShippingMethod
+.. autoclass:: oscar.apps.shipping.base.Base
     :members:
     :noindex:
 
