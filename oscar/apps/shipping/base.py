@@ -74,7 +74,3 @@ class Base(object):
             "in v0.7"),
             DeprecationWarning)
         return self.charge_incl_tax
-
-
-# For backwards compatibility, keep an alias called "ShippingMethod"
-ShippingMethod = Base
