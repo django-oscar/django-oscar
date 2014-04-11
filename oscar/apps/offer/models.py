@@ -3,7 +3,6 @@ import operator
 from decimal import Decimal as D, ROUND_DOWN, ROUND_UP
 
 from django.core import exceptions
-from oscar.core.loading import get_model
 from django.template.defaultfilters import date as date_filter
 from django.db import models
 from django.utils.timezone import now, get_current_timezone
@@ -14,7 +13,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 
 from oscar.core.utils import slugify
-from oscar.core.loading import get_class
+from oscar.core.loading import get_class, get_model
 from oscar.apps.offer.managers import ActiveOfferManager
 from oscar.templatetags.currency_filters import currency
 from oscar.models.fields import (PositiveDecimalField, ExtendedURLField,
