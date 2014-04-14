@@ -15,17 +15,22 @@ selector = Selector()
 class BasketMiddleware(object):
 
     def process_request(self, request):
+        # Keep track of cookies that need to be deleted (which can only be done
+        # when we're processing the response instance).
         request.cookies_to_delete = []
 
-        # Load stock/price strategy and assign to request and basket
+        # Load stock/price strategy and assign to request (it will later be
+        # assigned to the basket too).
         strategy = selector.strategy(request=request, user=request.user)
         request.strategy = strategy
+
+        # We lazily load the basket so use a private variable to hold the
+        # cached instance.
         request._basket_cache = None
 
-        def lazy_load_basket_full():
-            """Load the basket, process the offers and return the basket
-            instance.
-
+        def lazy_load_basket():
+            """
+            Return the basket after applying offers.
             """
             basket = request._basket_cache
             if not basket:
@@ -37,10 +42,13 @@ class BasketMiddleware(object):
             # before that is called
             self.ensure_basket_lines_have_stockrecord(basket)
             self.apply_offers_to_basket(request, basket)
+
             return basket
 
         def lazy_load_basket_hash():
-            """Load the basket and return the basket hash"""
+            """
+            Load the basket and return the basket hash
+            """
             basket = request._basket_cache
             if not basket:
                 basket = request._basket_cache = self.get_basket(request)
@@ -49,12 +57,14 @@ class BasketMiddleware(object):
             if basket.id:
                 return self.get_basket_hash(basket.id)
 
-        request.basket = SimpleLazyObject(lazy_load_basket_full)
+        # Use Django's SimpleLazyObject to only performing the loading work
+        # when the attribute is accessed.
+        request.basket = SimpleLazyObject(lazy_load_basket)
         request.basket_hash = SimpleLazyObject(lazy_load_basket_hash)
 
     def get_basket(self, request):
         """
-        Return an open basket for this request
+        Return the open basket for this request
         """
         manager = Basket.open
         cookie_basket = self.get_cookie_basket(
@@ -186,6 +196,15 @@ class BasketMiddleware(object):
                 self.ensure_line_has_stockrecord(basket, line)
 
     def ensure_line_has_stockrecord(self, basket, line):
+        """
+        Ensure a given basket line has an appropriate stockrecord
+
+        This is achieved by deleting the old line and re-adding it to the
+        basket.
+
+        This is to handle the backwards compatibility issue introduced in v0.6
+        where basket lines began to require a stockrecord.
+        """
         # Get details off line before deleting it
         product = line.product
         quantity = line.quantity
