@@ -53,8 +53,6 @@ class ProductDetailView(DetailView):
         ctx = super(ProductDetailView, self).get_context_data(**kwargs)
         reviews = self.get_reviews()
         ctx['reviews'] = reviews
-        # to be sure .count() query will be made only once
-        ctx['reviews_count'] = reviews.count()
         ctx['alert_form'] = self.get_alert_form()
         ctx['has_active_alert'] = self.get_alert_status()
 

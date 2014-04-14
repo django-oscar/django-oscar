@@ -84,7 +84,7 @@
                         <i class="icon-star"></i>
 
                         <small><a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.id %}">
-                            {% blocktrans count reviews_count as num_reviews %}
+                            {% blocktrans count product.num_approved_reviews as num_reviews %}
                             1 customer review
                             {% plural %}
                             {{ num_reviews }} customer reviews
@@ -162,7 +162,7 @@
         {% iffeature "reviews" %}
             <tr>
                 <th>{% trans "Number of reviews" %}</th>
-                <td>{{ reviews_count }}</td>
+                <td>{{ product.num_approved_reviews }}</td>
             </tr>
         {% endiffeature %}
         <tr>
@@ -176,13 +176,13 @@
         {% block product_review %}
         <section>
             <div id="reviews" class="sub-header">
-                {% if reviews_count > 3 %}
+                {% if product.num_approved_reviews > 3 %}
                     <a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.id %}" class="btn pull-right">{% trans "See all reviews" %}</a>
                 {% endif %}
                 <h2>{% trans "Customer Reviews" %}</h2>
             </div>
 
-            {% if reviews_count == 0 %}
+            {% if product.num_approved_reviews == 0 %}
                 <p>
                     {% if product|is_review_permitted:user %}
                         {% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id as add_review_url %}

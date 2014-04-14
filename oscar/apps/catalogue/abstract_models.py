@@ -560,6 +560,10 @@ class AbstractProduct(models.Model):
         else:
             return False
 
+    @cached_property
+    def num_approved_reviews(self):
+        return self.reviews.filter(
+            status=self.reviews.model.APPROVED).count()
 
 class ProductRecommendation(models.Model):
     """
