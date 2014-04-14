@@ -1,24 +1,25 @@
 {% extends "partials/google_analytics.html" %}
+{% load l10n %}
 
 {% block extratracking %}
     ga('require', 'ecommerce', 'ecommerce.js');
     ga('ecommerce:addTransaction', {
       'id': '{{ order.number|escapejs }}',
       'affiliation': '{{ shop_name|escapejs }}',
-      'revenue': '{{ order.total_incl_tax|escapejs }}',
-      'shipping': '{{ order.shipping_incl_tax|escapejs }}',
-      'tax': '{{ order.total_tax|escapejs }}',
+      'revenue': '{{ order.total_incl_tax|unlocalize|escapejs }}',
+      'shipping': '{{ order.shipping_incl_tax|unlocalize|escapejs }}',
+      'tax': '{{ order.total_tax|unlocalize|escapejs }}',
       'currency': '{{ order.currency|escapejs }}'
     });
 
     {% for line in order.lines.all %}
     ga('ecommerce:addItem', {
-      'id': '{{ order.number }}',
+      'id': '{{ order.number|escapejs }}',
       'name': '{{ line.title|escapejs }}',
       'sku': '{{ line.partner_sku|escapejs }}',
       'category': '{{ line.category|default:"Uncategorised"|escapejs }}',
-      'price': '{{ line.unit_price_incl_tax }}',
-      'quantity': '{{ line.quantity }}'
+      'price': '{{ line.unit_price_incl_tax|unlocalize|escapejs }}',
+      'quantity': '{{ line.quantity|escapejs }}'
     });
     {% endfor %}
     ga('ecommerce:send');
