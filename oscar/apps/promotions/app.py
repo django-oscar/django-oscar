@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from oscar.core.application import Application
 from oscar.apps.promotions.views import HomeView, RecordClickView
@@ -21,7 +21,7 @@ class PromotionsApplication(Application):
                 name='keyword-click'),
             url(r'^$', self.home_view.as_view(), name='home'),
         ]
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = PromotionsApplication()

@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.conf import settings
 from django.contrib import admin
 from django.conf.urls.static import static
@@ -17,28 +17,28 @@ js_info_dict = {
 
 admin.autodiscover()
 
-urlpatterns = patterns('',
-    (r'^admin/', include(admin.site.urls)),
-    (r'^i18n/', include('django.conf.urls.i18n')),
+urlpatterns = [
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^jsi18n/$', 'django.views.i18n.javascript_catalog', js_info_dict),
 
     # Stores extension
-    (r'^stores/', include(stores_app.urls)),
-    (r'^dashboard/stores/', include(dashboard_app.urls)),
+    url(r'^stores/', include(stores_app.urls)),
+    url(r'^dashboard/stores/', include(dashboard_app.urls)),
 
     # PayPal extension
-    (r'^checkout/paypal/', include('paypal.express.urls')),
+    url(r'^checkout/paypal/', include('paypal.express.urls')),
 
     # Datacash extension
-    (r'^dashboard/datacash/', include(datacash_app.urls)),
+    url(r'^dashboard/datacash/', include(datacash_app.urls)),
 
-    (r'', include(application.urls)),
-)
+    url(r'', include(application.urls)),
+]
 
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
-    urlpatterns += patterns('',
+    urlpatterns += [
         url(r'^__debug__/', include(debug_toolbar.urls)),
-    )
+    ]

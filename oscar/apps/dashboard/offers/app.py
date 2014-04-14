@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.offers import views
@@ -49,7 +49,7 @@ class OffersDashboardApplication(Application):
             url(r'^(?P<pk>\d+)/$', self.detail_view.as_view(),
                 name='offer-detail'),
         ]
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = OffersDashboardApplication()

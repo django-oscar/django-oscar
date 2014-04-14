@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
@@ -49,7 +49,7 @@ class CheckoutApplication(Application):
             url(r'thank-you/$', self.thankyou_view.as_view(),
                 name='thank-you'),
         ]
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
     def get_url_decorator(self, pattern):
         if not settings.OSCAR_ALLOW_ANON_CHECKOUT:

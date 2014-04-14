@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from oscar.core.application import Application
 from . import views
@@ -22,7 +22,7 @@ class ProductReviewsApplication(Application):
                 name='reviews-vote'),
             url(r'^$', self.list_view.as_view(), name='reviews-list'),
         ]
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = ProductReviewsApplication()

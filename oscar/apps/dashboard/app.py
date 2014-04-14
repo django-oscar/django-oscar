@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url, include
 
 from oscar.apps.dashboard import views
 from oscar.core.application import Application
@@ -41,7 +41,7 @@ class DashboardApplication(Application):
             url(r'^vouchers/', include(self.vouchers_app.urls)),
             url(r'^comms/', include(self.comms_app.urls)),
         ]
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = DashboardApplication()

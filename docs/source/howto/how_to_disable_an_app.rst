@@ -11,10 +11,10 @@ over the URLs structure.  So your root ``urls.py`` should have::
     # urls.py
     from myproject.app import application
 
-    urlpatterns = patterns('',
+    urlpatterns = [
         ...
-        (r'', include(application.urls)),
-    )
+        url(r'', include(application.urls)),
+    ]
 
 where ``application`` is a subclass of ``oscar.app.Shop`` which overrides the 
 link to the dashboard app::

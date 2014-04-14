@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from django.views import generic
 
@@ -185,7 +185,7 @@ class CustomerApplication(Application):
                                .as_view()),
                 name='wishlists-move-product-to-another')]
 
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = CustomerApplication()
