@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from oscar.apps.offer import views
 from oscar.core.application import Application
@@ -15,7 +15,7 @@ class OfferApplication(Application):
             url(r'^(?P<slug>[\w-]+)/$', self.detail_view.as_view(),
                 name='detail'),
         ]
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = OfferApplication()

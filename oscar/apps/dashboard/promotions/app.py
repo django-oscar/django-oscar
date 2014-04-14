@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.promotions import views
@@ -50,7 +50,7 @@ class PromotionsDashboardApplication(Application):
                     getattr(self, 'delete_%s_view' % code).as_view(),
                     name='promotion-delete')]
 
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = PromotionsDashboardApplication()

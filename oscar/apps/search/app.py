@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.conf import settings
 
 from haystack.query import SearchQuerySet
@@ -17,14 +17,13 @@ class SearchApplication(Application):
 
         # The form class has to be passed to the __init__ method as that is how
         # Haystack works.  It's slightly different to normal CBVs.
-        urlpatterns = patterns(
-            '',
+        urlpatterns = [
             url(r'^$', search_view_factory(
                 view_class=self.search_view,
                 form_class=self.search_form,
                 searchqueryset=self.get_sqs()),
                 name='search'),
-        )
+        ]
         return self.post_process_urls(urlpatterns)
 
     def get_sqs(self):

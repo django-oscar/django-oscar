@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.communications import views
@@ -17,7 +17,7 @@ class CommsDashboardApplication(Application):
             url(r'^(?P<slug>\w+)/$', self.update_view.as_view(),
                 name='comms-update'),
         ]
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = CommsDashboardApplication()

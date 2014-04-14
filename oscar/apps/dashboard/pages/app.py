@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.pages import views
@@ -25,7 +25,7 @@ class FlatPageManagementApplication(Application):
             url(r'^delete/(?P<pk>\d+)/$',
                 self.delete_view.as_view(), name='page-delete')
         ]
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = FlatPageManagementApplication()

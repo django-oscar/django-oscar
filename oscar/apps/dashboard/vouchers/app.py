@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.vouchers import views
@@ -26,7 +26,7 @@ class VoucherDashboardApplication(Application):
             url(r'^stats/(?P<pk>\d+)/$', self.stats_view.as_view(),
                 name='voucher-stats'),
         ]
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = VoucherDashboardApplication()

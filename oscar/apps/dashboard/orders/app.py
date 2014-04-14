@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.orders import views
@@ -37,7 +37,7 @@ class OrdersDashboardApplication(Application):
                 self.shipping_address_view.as_view(),
                 name='order-shipping-address'),
         ]
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = OrdersDashboardApplication()

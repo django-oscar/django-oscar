@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.catalogue import views
@@ -88,7 +88,7 @@ class CatalogueApplication(Application):
                 name='catalogue-class-delete'),
 
         ]
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = CatalogueApplication()

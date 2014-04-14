@@ -30,11 +30,11 @@ application, so we need to replace that. Hence, to use
 
         # Override get_urls method
         def get_urls(self):
-            urlpatterns = patterns('',
-                (r'^catalog/', include(self.catalogue_app.urls)),
+            urlpatterns = [
+                url(r'^catalog/', include(self.catalogue_app.urls)),
 
                 ... # all the remaining URLs, removed for simplicity
-            )
+            ]
             return urlpatterns
 
     application = MyShop()
@@ -44,10 +44,10 @@ Now modify your root ``urls.py`` to use your new application instance::
     # urls.py
     from myproject.app import application
 
-    urlpatterns = patterns('',
+    urlpatterns = [
        ... # Your other URLs
-       (r'', include(application.urls)),
-    )
+       url(r'', include(application.urls)),
+    ]
 
 All URLs containing ``catalogue`` previously are now displayed as ``catalog``.
 

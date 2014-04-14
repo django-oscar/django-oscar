@@ -57,10 +57,10 @@ wired up in your ``urls.py``::
     # urls.py
     from oscar.app import application
 
-    urlpatterns = patterns('',
-       ... # Your other URLs
-       (r'', include(application.urls)),
-    )
+    urlpatterns = [
+        ... # Your other URLs
+        url(r'', include(application.urls)),
+    ]
 
 Modifying root app
 ------------------
@@ -83,10 +83,10 @@ Now hook this up in your ``urls.py`` instead::
     # urls.py
     from yourproject.app import application
 
-    urlpatterns = patterns('',
+    urlpatterns = [
         ...
-        (r'', include(application.urls)),
-    )
+        url(r'', include(application.urls)),
+    ]
 
 Modifying sub-apps
 ------------------

@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.reviews import views
@@ -20,7 +20,7 @@ class ReviewsApplication(Application):
             url(r'^(?P<pk>\d+)/delete/$', self.delete_view.as_view(),
                 name='reviews-delete'),
         ]
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = ReviewsApplication()

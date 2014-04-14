@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.users import views
@@ -35,7 +35,7 @@ class UserManagementApplication(Application):
                 self.alert_update_view.as_view(),
                 name='user-alert-update'),
         ]
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = UserManagementApplication()

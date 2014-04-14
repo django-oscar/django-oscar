@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.partners import views
@@ -43,7 +43,7 @@ class PartnersDashboardApplication(Application):
                 self.user_update_view.as_view(),
                 name='partner-user-update'),
         ]
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = PartnersDashboardApplication()

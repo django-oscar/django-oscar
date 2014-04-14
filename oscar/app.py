@@ -1,7 +1,7 @@
 # flake8: noqa, because URL syntax is more readable with long lines
 
 import django
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url, include
 from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse_lazy
 
@@ -25,13 +25,13 @@ class Shop(Application):
 
     def get_urls(self):
         urls = [
-            (r'^catalogue/', include(self.catalogue_app.urls)),
-            (r'^basket/', include(self.basket_app.urls)),
-            (r'^checkout/', include(self.checkout_app.urls)),
-            (r'^accounts/', include(self.customer_app.urls)),
-            (r'^search/', include(self.search_app.urls)),
-            (r'^dashboard/', include(self.dashboard_app.urls)),
-            (r'^offers/', include(self.offer_app.urls)),
+            url(r'^catalogue/', include(self.catalogue_app.urls)),
+            url(r'^basket/', include(self.basket_app.urls)),
+            url(r'^checkout/', include(self.checkout_app.urls)),
+            url(r'^accounts/', include(self.customer_app.urls)),
+            url(r'^search/', include(self.search_app.urls)),
+            url(r'^dashboard/', include(self.dashboard_app.urls)),
+            url(r'^offers/', include(self.offer_app.urls)),
 
             # Password reset - as we're using Django's default view functions,
             # we can't namespace these urls as that prevents
@@ -72,9 +72,9 @@ class Shop(Application):
             url(r'^password-reset/complete/$',
                 login_forbidden(auth_views.password_reset_complete),
                 name='password-reset-complete'),
-            (r'', include(self.promotions_app.urls)),
+            url(r'', include(self.promotions_app.urls)),
         ]
-        return patterns('', *urls)
+        return urls
 
 
 # 'shop' kept for legacy projects - 'application' is a better name

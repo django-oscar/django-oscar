@@ -1,7 +1,5 @@
 import six
 
-from django.conf.urls import patterns
-
 from oscar.core.loading import feature_hidden
 from oscar.views.decorators import permissions_required
 
@@ -35,7 +33,7 @@ class Application(object):
         """
         Return the url patterns for this app.
         """
-        return patterns('')
+        return []
 
     def post_process_urls(self, urlpatterns):
         """
@@ -54,7 +52,7 @@ class Application(object):
         # Test if this the URLs in the Application instance should be
         # available.  If the feature is hidden then we don't include the URLs.
         if feature_hidden(self.hidable_feature_name):
-            return patterns('')
+            return []
 
         for pattern in urlpatterns:
             if hasattr(pattern, 'url_patterns'):

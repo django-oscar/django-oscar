@@ -175,13 +175,13 @@ include Django's i18n URLs:
 
 .. code-block:: django
 
-    from django.conf.urls import patterns, include, url
+    from django.conf.urls import include, url
     from oscar.app import application
 
-    urlpatterns = patterns('',
-        (r'^i18n/', include('django.conf.urls.i18n')),
+    urlpatterns = [
+        url(r'^i18n/', include('django.conf.urls.i18n')),
         url(r'', include(application.urls))
-    )
+    ]
 
 Search backend
 ==============

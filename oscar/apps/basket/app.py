@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 
 from oscar.apps.basket import views
@@ -24,7 +24,7 @@ class BasketApplication(Application):
             url(r'^saved/$', login_required(self.saved_view.as_view()),
                 name='saved'),
         ]
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = BasketApplication()
