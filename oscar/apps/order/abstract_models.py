@@ -370,22 +370,18 @@ class AbstractCommunicationEvent(models.Model):
 
 class AbstractLine(models.Model):
     """
-    A order line (basically a product and a quantity)
-
-    Not using a line model as it's difficult to capture and payment
-    information when it splits across a line.
+    An order line
     """
     order = models.ForeignKey(
         'order.Order', related_name='lines', verbose_name=_("Order"))
 
-    #: We keep a link to the stockrecord used for this line which allows us to
-    #: update stocklevels when it ships
-    stockrecord = models.ForeignKey(
-        'partner.StockRecord', on_delete=models.SET_NULL, blank=True,
-        null=True, verbose_name=_("Stock record"))
-    # We store the partner, their SKU and the title for cases where the product
-    # has been deleted from the catalogue.  We also store the partner name in
-    # case the partner gets deleted at a later date.
+    # PARTNER INFORMATION
+    # -------------------
+    # We store the partner and various detail their SKU and the title for cases
+    # where the product has been deleted from the catalogue (but we still need
+    # the data for reporting).  We also store the partner name in case the
+    # partner gets deleted at a later date.
+
     partner = models.ForeignKey(
         'partner.Partner', related_name='order_lines', blank=True, null=True,
         on_delete=models.SET_NULL, verbose_name=_("Partner"))
@@ -393,17 +389,38 @@ class AbstractLine(models.Model):
         _("Partner name"), max_length=128, blank=True)
     partner_sku = models.CharField(_("Partner SKU"), max_length=128)
 
-    title = models.CharField(_("Title"), max_length=255)
-    # UPC can be null because it's usually set as the product's UPC, and that
-    # can be null as well
-    upc = models.CharField(_("UPC"), max_length=128, blank=True, null=True)
+    # A line reference is the ID that a partner uses to represent this
+    # particular line (it's not the same as a SKU).
+    partner_line_reference = models.CharField(
+        _("Partner reference"), max_length=128, blank=True,
+        help_text=_("This is the item number that the partner uses "
+                    "within their system"))
+    partner_line_notes = models.TextField(
+        _("Partner Notes"), blank=True)
+
+    # We keep a link to the stockrecord used for this line which allows us to
+    # update stocklevels when it ships
+    stockrecord = models.ForeignKey(
+        'partner.StockRecord', on_delete=models.SET_NULL, blank=True,
+        null=True, verbose_name=_("Stock record"))
+
+    # PRODUCT INFORMATION
+    # -------------------
 
     # We don't want any hard links between orders and the products table so we
     # allow this link to be NULLable.
     product = models.ForeignKey(
         'catalogue.Product', on_delete=models.SET_NULL, blank=True, null=True,
         verbose_name=_("Product"))
+    title = models.CharField(_("Title"), max_length=255)
+    # UPC can be null because it's usually set as the product's UPC, and that
+    # can be null as well
+    upc = models.CharField(_("UPC"), max_length=128, blank=True, null=True)
+
     quantity = models.PositiveIntegerField(_("Quantity"), default=1)
+
+    # REPORTING INFORMATION
+    # ---------------------
 
     # Price information (these fields are actually redundant as the information
     # can be calculated from the LinePrice models
@@ -420,7 +437,6 @@ class AbstractLine(models.Model):
         _("Price before discounts (excl. tax)"),
         decimal_places=2, max_digits=12)
 
-    # REPORTING FIELDS
     # Cost price (the price charged by the fulfilment partner for this
     # product).
     unit_cost_price = models.DecimalField(
@@ -437,14 +453,6 @@ class AbstractLine(models.Model):
     unit_retail_price = models.DecimalField(
         _("Unit Retail Price"), decimal_places=2, max_digits=12,
         blank=True, null=True)
-
-    # Partner information
-    partner_line_reference = models.CharField(
-        _("Partner reference"), max_length=128, blank=True,
-        help_text=_("This is the item number that the partner uses "
-                    "within their system"))
-    partner_line_notes = models.TextField(
-        _("Partner Notes"), blank=True)
 
     # Partners often want to assign some status to each line to help with their
     # own business processes.
