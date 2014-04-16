@@ -20,18 +20,11 @@ dropped; it works with Python 2.7, Python 3.3 and Python 3.4.
 What's new in Oscar 0.8?
 ========================
 
-Minor changes
--------------
+Minor cleanup around shipping methods
+-------------------------------------
 
 * The models of the shipping app now have abstract base classes, similar to
   the rest of Oscar.
-
-Bugfixes
-~~~~~~~~
-
-
-Backwards incompatible changes in 0.8
-=====================================
 
 * The legacy ``ShippingMethod`` name of the interface of the shipping app has
   been removed. Inherit from ``shipping.base.Base`` for the class instead, and
@@ -39,7 +32,22 @@ Backwards incompatible changes in 0.8
   shipping methods.
 
 * ``oscar.apps.shipping.Scales`` has been renamed and moved to
-  ``oscar.apps.shippings.scales.Scale``, and is now overridable.
+  ``oscar.apps.shipping.scales.Scale``, and is now overridable.
+
+* ``WeightBand.upper_limit`` is now a ``DecimalField``, just like the other
+  weight-related fields.
+
+Minor changes
+-------------
+
+Bugfixes
+~~~~~~~~
+
+Backwards incompatible changes in 0.8
+=====================================
+
+* The ``shipping`` app saw a few renames; please see the section above.
+
 
 Removal of features deprecated in 0.7
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -71,6 +79,8 @@ Migrations
 * Promotions:
 
 * Shipping:
+
+    - ``0007`` - Change ``WeightBand.upper_limit`` from ``FloatField`` to ``DecimalField``
 
 * Reviews:
 

@@ -108,8 +108,8 @@ class AbstractWeightBased(AbstractBase):
 
     weight_attribute = 'weight'
     default_weight = models.DecimalField(
-        _("Default Weight"), decimal_places=2, max_digits=12,
-        default=D('0.00'),
+        _("Default Weight"), decimal_places=3, max_digits=12,
+        default=D('0.000'),
         help_text=_("Default product weight in Kg when no weight attribute "
                     "is defined"))
 
@@ -160,13 +160,12 @@ class AbstractWeightBand(models.Model):
     """
     Represents a weight band which are used by the WeightBasedShipping method.
     """
-    method = models.ForeignKey('shipping.WeightBased', related_name='bands',
-                               verbose_name=_("Method"))
-    upper_limit = models.FloatField(_("Upper Limit"),
-                                    help_text=_("""Enter upper limit of this
-                                                weight band in Kg, the lower
-                                                limit will be determine by the
-                                                other weight bands"""))
+    method = models.ForeignKey(
+        'shipping.WeightBased', related_name='bands', verbose_name=_("Method"))
+    upper_limit = models.DecimalField(
+        _("Upper Limit"), decimal_places=3, max_digits=12,
+        help_text=_("Enter upper limit of this weight band in kg. The lower "
+                    "limit will be determined by the other weight bands."))
     charge = models.DecimalField(_("Charge"), decimal_places=2, max_digits=12)
 
     @property
@@ -174,7 +173,7 @@ class AbstractWeightBand(models.Model):
         lower_bands = self.method.bands.filter(
             upper_limit__lt=self.upper_limit).order_by('-upper_limit')
         if not lower_bands:
-            return D('0.00')
+            return D('0.000')
         return lower_bands[0].upper_limit
 
     @property
@@ -188,4 +187,4 @@ class AbstractWeightBand(models.Model):
         verbose_name_plural = _("Weight Bands")
 
     def __unicode__(self):
-        return _('Charge for weights up to %sKg') % (self.upper_limit,)
+        return _('Charge for weights up to %s kg') % (self.upper_limit,)
