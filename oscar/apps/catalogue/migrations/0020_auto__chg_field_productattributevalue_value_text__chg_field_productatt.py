@@ -123,8 +123,8 @@ class Migration(SchemaMigration):
             'value_image': ('django.db.models.fields.files.ImageField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'value_integer': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'value_option': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['catalogue.AttributeOption']", 'null': 'True', 'blank': 'True'}),
-            'value_richtext': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'value_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
+            'value_richtext': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'value_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'})
         },
         u'catalogue.productcategory': {
             'Meta': {'ordering': "['product', 'category']", 'object_name': 'ProductCategory'},
