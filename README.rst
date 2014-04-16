@@ -30,7 +30,6 @@ Further reading:
 * `Continuous integration homepage`_ on `travis-ci.org`_
 * `Twitter account for news and updates`_
 * #django-oscar on Freenode (community-run IRC channel)
-* `crate.io page`_
 * `PyPI page`_
 * `Transifex project`_ - translating Oscar made easy
 
@@ -46,10 +45,10 @@ Continuous integration status:
 PyPI status:
 
 .. image:: https://pypip.in/v/django-oscar/badge.png
-    :target: https://crate.io/packages/django-oscar/
+    :target: https://pypi.python.org/pypi/django-oscar/
 
 .. image:: https://pypip.in/d/django-oscar/badge.png
-    :target: https://crate.io/packages/django-oscar/
+    :target: https://pypi.python.org/pypi/django-oscar/
 
 .. image:: https://d2weczhvl823v0.cloudfront.net/tangentlabs/django-oscar/trend.png 
     :alt: Bitdeli badge 
@@ -66,8 +65,7 @@ PyPI status:
 .. _`Twitter account of all commits`: https://twitter.com/#!/oscar_django
 .. _`django-oscar group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar
 .. _`django-oscar-jobs group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar-jobs
-.. _`crate.io page`: https://crate.io/packages/django-oscar/
-.. _`PyPI page`: http://pypi.python.org/pypi/django-oscar/
+.. _`PyPI page`: https://pypi.python.org/pypi/django-oscar/
 .. _`Transifex project`: https://www.transifex.com/projects/p/django-oscar/
 
 Oscar was written by `David Winterbottom`_ (`@codeinthehole`_) and is developed
@@ -146,8 +144,6 @@ The following extensions are stable and ready for use:
   locator etc)
 * django-oscar-easyrec_ - Recomendations using EasyRec_
   locator etc)
-* django-oscar-testsupport_ - Testing utilities for Oscar extensions
-  (deprecated)
 
 .. _django-oscar-datacash: https://github.com/tangentlabs/django-oscar-datacash
 .. _django-oscar-paymentexpress: https://github.com/tangentlabs/django-oscar-paymentexpress
@@ -161,7 +157,6 @@ The following extensions are stable and ready for use:
 .. _django-oscar-jirafe: https://github.com/tangentlabs/django-oscar-jirafe
 .. _Jirafe: https://jirafe.com/
 .. _django-oscar-accounts: https://github.com/tangentlabs/django-oscar-accounts
-.. _django-oscar-testsupport: https://github.com/tangentlabs/django-oscar-testsupport
 .. _django-oscar-easyrec: https://github.com/tangentlabs/django-oscar-easyrec
 .. _EasyRec: http://easyrec.org/
 
