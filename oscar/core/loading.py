@@ -84,7 +84,7 @@ def get_classes(module_label, classnames):
         package, module = module_label.rsplit('.', 1)
     else:
         # Importing from top-level modules is not supported, e.g.
-        # get_class('shipping', 'Scales'). That should be easy to fix,
+        # get_class('shipping', 'Scale'). That should be easy to fix,
         # but @maikhoepfel had a stab and could not get it working reliably.
         # Overridable classes in a __init__.py might not be a good idea anyway.
         raise ValueError(

@@ -38,6 +38,9 @@ Backwards incompatible changes in 0.8
   inherit from ``shipping.abstract_models.AbstractBase`` for model-based
   shipping methods.
 
+* ``oscar.apps.shipping.Scales`` has been renamed and moved to
+  ``oscar.apps.shippings.scales.Scale``, and is now overridable.
+
 Removal of features deprecated in 0.7
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

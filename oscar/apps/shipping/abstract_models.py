@@ -4,8 +4,10 @@ from decimal import Decimal as D
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.shipping import Scales
+from oscar.core.loading import get_class
 from oscar.models.fields import AutoSlugField
+
+Scale = get_class('shipping.scales', 'Scale')
 
 
 class AbstractBase(models.Model):
@@ -121,9 +123,9 @@ class AbstractWeightBased(AbstractBase):
         # Note, when weighing the basket, we don't check whether the item
         # requires shipping or not.  It is assumed that if something has a
         # weight, then it requires shipping.
-        scales = Scales(attribute_code=self.weight_attribute,
-                        default_weight=self.default_weight)
-        weight = scales.weigh_basket(self._basket)
+        scale = Scale(attribute_code=self.weight_attribute,
+                       default_weight=self.default_weight)
+        weight = scale.weigh_basket(self._basket)
         band = self.get_band_for_weight(weight)
         if not band:
             if self.bands.all().exists() and self.upper_charge:
