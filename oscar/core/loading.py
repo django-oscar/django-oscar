@@ -70,13 +70,25 @@ def get_classes(module_label, classnames):
             ``ImportError``, it is re-raised
     """
 
-    # e.g. split 'dashboard.catalogue.forms' in 'dashboard.catalogue', 'forms'
-    package, module = module_label.rsplit('.', 1)
-
     # import from Oscar package (should succeed in most cases)
     # e.g. 'oscar.apps.dashboard.catalogue.forms'
     oscar_module_label = "oscar.apps.%s" % module_label
     oscar_module = _import_module(oscar_module_label, classnames)
+
+    # Split module_label into the section that we expect to find in
+    # INSTALLED_APPS (package) and the rest (module)
+    # e.g. split 'dashboard.catalogue.forms' in 'dashboard.catalogue', 'forms'
+    # It is assumed that any imported module is only ever one level below
+    # package, e.g. 'dashboard.catalogue.forms.widgets' will break
+    if '.' in module_label:
+        package, module = module_label.rsplit('.', 1)
+    else:
+        # Importing from top-level modules is not supported, e.g.
+        # get_class('shipping', 'Scales'). That should be easy to fix,
+        # but @maikhoepfel had a stab and could not get it working reliably.
+        # Overridable classes in a __init__.py might not be a good idea anyway.
+        raise ValueError(
+            "Importing from top-level modules is not supported")
 
     # returns e.g. 'oscar.apps.dashboard.catalogue',
     # 'yourproject.apps.dashboard.catalogue' or 'dashboard.catalogue'
