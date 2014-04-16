@@ -329,6 +329,7 @@ Migrations
 
     - ``0006`` - ``AutoSlugField`` and ``unique=True`` for ``AbstractCommunicationEventType``
     - ``0007`` & ``0008`` - Data and schema migration for removing ``null=True`` on ``CharFields``
+    - ``0009`` - Migration caused by ``CommunicationEventType.code`` separator change
 
 * Offer:
 
