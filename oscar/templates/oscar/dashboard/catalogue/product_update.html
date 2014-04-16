@@ -219,34 +219,16 @@
                             {% block product_attributes_content %}
                                 <table class="table table-striped table-bordered">
                                     <caption>
-                                        {% trans "Product Attributes" %}  <span class="label label-success">{% trans "Product Type:" %} {{ product_class }}</span>
+                                        {% trans "Product Attributes" %}
+                                        <span class="label label-success">
+                                            {% trans "Product Type:" %} {{ product_class }}
+                                        </span>
                                     </caption>
-                                    <tr>
-                                        <th width="20%">{% trans "Attribute name" %}</th>
-                                        <th>{% trans "Attribute option" %}</th>
-                                    </tr>
                                     {% for field in form %}
                                         {% if 'attr' in field.id_for_label %}
                                             <tr>
                                                 <td>
-                                                    {{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}
-                                                </td>
-                                                <td>
-                                                    {% if field.is_hidden %}
-                                                        {{ field }}
-                                                    {% else %}
-                                                        {{ field }}
-                                                        {% for error in field.errors %}
-                                                            <span class="error-block">
-                                                                {{ error }}
-                                                            </span>
-                                                        {% endfor %}
-                                                        {% if field.help_text %}
-                                                            <span class='help-block'>
-                                                                {{ field.help_text }}
-                                                            </span>
-                                                        {% endif %}
-                                                    {% endif %}
+                                                    {% include "partials/form_field.html" %}
                                                 </td>
                                             </tr>
                                         {% endif %}
@@ -372,7 +354,6 @@
                             {% endblock recommended_products_content %}
                         </div>
                     {% endblock recommended_products %}
-
                 </div>
             </div>
         </div>
