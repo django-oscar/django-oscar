@@ -12,7 +12,8 @@ from oscar.forms import fields
 
 import oscar.core.phonenumber as phonenumber
 # allow importing as oscar.models.fields.AutoSlugField
-from .autoslugfield import AutoSlugField  # noqa
+from .autoslugfield import AutoSlugField
+AutoSlugField = AutoSlugField
 
 try:
     from south.modelsinspector import add_introspection_rules
@@ -87,7 +88,7 @@ class UppercaseCharField(django_six.with_metaclass(SubfieldBase, CharField)):
             return val
 
 
-class NullCharField(CharField):
+class NullCharField(django_six.with_metaclass(SubfieldBase, CharField)):
     """
     CharField that stores '' as None and returns None as ''
     Useful when using unique=True and forms. Implies null==blank==True.
@@ -99,9 +100,6 @@ class NullCharField(CharField):
     """
     description = "CharField that stores '' as None and returns None as ''"
 
-    # necessary for to_python to be called
-    __metaclass__ = SubfieldBase
-
     def __init__(self, *args, **kwargs):
         if not kwargs.get('null', True) or not kwargs.get('blank', True):
             raise ImproperlyConfigured(
@@ -110,19 +108,12 @@ class NullCharField(CharField):
         super(NullCharField, self).__init__(*args, **kwargs)
 
     def to_python(self, value):
-        if isinstance(value, CharField):
-            return value
-        if value is None:
-            return u""
-        else:
-            return value
+        val = super(NullCharField, self).to_python(value)
+        return val if val is not None else u''
 
     def get_prep_value(self, value):
         prepped = super(NullCharField, self).get_prep_value(value)
-        if prepped == "":
-            return None
-        else:
-            return prepped
+        return prepped if prepped != u"" else None
 
 
 class PhoneNumberField(Field):
@@ -166,7 +157,7 @@ class PhoneNumberField(Field):
         """
         value = phonenumber.to_python(value)
         if value is None:
-            return ''
+            return u''
         return value.as_e164 if value.is_valid() else value.raw_input
 
     def contribute_to_class(self, cls, name):
