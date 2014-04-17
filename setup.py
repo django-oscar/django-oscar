@@ -77,7 +77,12 @@ setup(name='django-oscar',
           'License :: OSI Approved :: BSD License',
           'Operating System :: Unix',
           'Programming Language :: Python',
-          'Topic :: Other/Nonlisted Topic']
+          'Programming Language :: Python :: 2',
+          'Programming Language :: Python :: 2.7',
+          'Programming Language :: Python :: 3',
+          'Programming Language :: Python :: 3.3',
+          'Programming Language :: Python :: 3.4',
+          'Topic :: Software Development :: Libraries :: Application Frameworks']
       )
 
 # Show contributing instructions if being installed in 'develop' mode
