@@ -1,4 +1,3 @@
-import six
 import datetime
 from decimal import Decimal as D, InvalidOperation
 
@@ -6,7 +5,6 @@ from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from oscar.core.loading import get_model
 from django.db.models import fields, Q, Sum, Count
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
@@ -14,12 +12,12 @@ from django.utils.datastructures import SortedDict
 from django.views.generic import ListView, DetailView, UpdateView, FormView
 from django.conf import settings
 
-from oscar.core.loading import get_class
+from oscar.core.loading import get_class, get_model
 from oscar.core.utils import format_datetime
+from oscar.core.compat import UnicodeCSVWriter
 from oscar.apps.dashboard.orders import forms
 from oscar.views import sort_queryset
 from oscar.views.generic import BulkEditMixin
-from oscar.apps.dashboard.reports.csv_utils import CsvUnicodeWriter
 from oscar.apps.payment.exceptions import PaymentError
 from oscar.apps.order.exceptions import InvalidShippingEvent, InvalidStatus
 
@@ -323,7 +321,7 @@ class OrderListView(BulkEditMixin, ListView):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename=%s' \
             % self.get_download_filename(request)
-        writer = CsvUnicodeWriter(response, delimiter=',')
+        writer = UnicodeCSVWriter(open_file=response)
 
         meta_data = (('number', _('Order number')),
                      ('value', _('Order value')),
@@ -355,10 +353,7 @@ class OrderListView(BulkEditMixin, ListView):
                 row['billing_address_name'] = order.billing_address.name
             else:
                 row['billing_address_name'] = ''
-
-            encoded_values = [six.text_type(value).encode('utf8')
-                              for value in row.values()]
-            writer.writerow(encoded_values)
+            writer.writerow(row)
         return response
 
 

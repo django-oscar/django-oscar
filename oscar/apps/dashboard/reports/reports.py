@@ -3,8 +3,8 @@ import datetime
 from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.dashboard.reports.csv_utils import CsvUnicodeWriter
 from oscar.core import utils
+from oscar.core.compat import UnicodeCSVWriter
 
 
 class ReportGenerator(object):
@@ -94,7 +94,7 @@ class ReportFormatter(object):
 class ReportCSVFormatter(ReportFormatter):
 
     def get_csv_writer(self, file_handle, **kwargs):
-        return CsvUnicodeWriter(file_handle, **kwargs)
+        return UnicodeCSVWriter(open_file=file_handle, **kwargs)
 
     def generate_response(self, objects, **kwargs):
         response = HttpResponse(content_type='text/csv')
