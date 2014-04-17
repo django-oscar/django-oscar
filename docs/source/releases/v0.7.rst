@@ -335,6 +335,7 @@ Migrations
 
     - ``0029`` - ``AutoSlugField`` for ``ConditionalOffer``
     - ``0030`` & ``0031`` - Data and schema migration for removing ``null=True`` on ``CharFields``
+    - ``0032`` - Changing ``proxy_class`` fields to ``NullCharField``
 
 * Order:
 
