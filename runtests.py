@@ -92,4 +92,7 @@ if __name__ == '__main__':
         warnings.filterwarnings('ignore',
                                 r'django.utils.simplejson is deprecated.*',
                                 DeprecationWarning, r'sorl\.thumbnail\.helpers')
+        warnings.filterwarnings('ignore',
+                                r'cgi.parse_qsl is deprecated.*',
+                                DeprecationWarning, r'webtest\.app')
         run_tests(verbosity, *args)

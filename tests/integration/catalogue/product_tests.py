@@ -62,7 +62,7 @@ class TopLevelProductTests(ProductTests):
     def test_top_level_products_are_part_of_browsable_set(self):
         product = Product.objects.create(
             product_class=self.product_class, title=u"Kopfhörer")
-        self.assertEquals(set([product]), set(Product.browsable.all()))
+        self.assertEqual(set([product]), set(Product.browsable.all()))
 
 
 class VariantProductTests(ProductTests):
@@ -89,7 +89,7 @@ class VariantProductTests(ProductTests):
     def test_variant_products_are_not_part_of_browsable_set(self):
         Product.objects.create(
             product_class=self.product_class, parent=self.parent)
-        self.assertEquals(set([self.parent]), set(Product.browsable.all()))
+        self.assertEqual(set([self.parent]), set(Product.browsable.all()))
 
 
 class TestAVariant(TestCase):
