@@ -231,7 +231,7 @@ class ConditionalOffer(models.Model):
         if self.end_datetime:
             predicates.append(test_date > self.end_datetime)
         if any(predicates):
-            return 0
+            return False
         return self.get_max_applications(user) > 0
 
     def is_condition_satisfied(self, basket):
