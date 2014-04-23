@@ -59,12 +59,12 @@ setup(name='django-oscar',
           # For manipulating search URLs
           'purl>=0.7',
           # For phone number field
-          'phonenumbers==5.9.2',
+          'phonenumbers>=5.9.2,<=6.0.0a',
           # Python 2 & 3 compatibility helper
           'six>=1.5.2',
       ],
       # tarballs for unreleased packages
-      dependency_links = [
+      dependency_links=[
           'http://github.com/mariocesar/sorl-thumbnail/tarball/588837f828a5d9dd999bd6b994331e6285f79ca9#egg=sorl-thumbnail-12.00',
           'http://github.com/django-compressor/django-compressor/tarball/cdab0d9698cb3c9421f3598822ddc71a57970405#egg=django-compressor-1.4a1',
       ],
