@@ -1,6 +1,6 @@
-===========================================
-Oscar 0.7 release notes - UNDER DEVELOPMENT
-===========================================
+=======================
+Oscar 0.7 release notes
+=======================
 
 Welcome to Oscar 0.7!
 
@@ -19,19 +19,24 @@ Table of contents:
     :local:
     :depth: 1
 
+.. _overview:
+
 Overview
 ========
 
-This largely a maintenance release, fixing minor issues, merging long-standing
-pull requests and other housekeeping. There are no notable headline features.
+Oscar 0.7 is largely a maintenance release, fixing minor issues, merging
+long-standing pull requests and other housekeeping. 
 
 As part of the clean-up, we have removed a few unused models and model fields,
-and removed ``null=True`` on a lot of ``CharFields`` - so please read the
-release notes carefully when upgrading! 
+as well as removing ``null=True`` from a load of ``CharFields`` - so please read the
+release notes carefully when upgrading as some schema migrations may need some
+care. 
 
-Also, ensure you test your checkout implementation after upgrading as the core
-Oscar checkout view classes have been reorganised slightly.  Any upgrading work
-should be minor but be diligent.
+Further, ensure you test your checkout implementation carefully after upgrading
+as the core Oscar checkout view classes have been reorganised slightly.  Any
+upgrading work should be minor but be diligent.
+
+.. _compatibility:
 
 Compatibility
 =============
@@ -51,7 +56,7 @@ Search improvements
 
 Several improvements have been made to Oscar's default search functionality:
 
-* Search results can be now be sorted
+* Search results can be now be sorted.
 
 * If your search backend supports it, spelling suggestions will be shown if
   the original search term doesn't lead to any results.
@@ -61,13 +66,13 @@ Several improvements have been made to Oscar's default search functionality:
 
 .. _`#370`: https://github.com/tangentlabs/django-oscar/issues/370
 
-Improvements to signals
-~~~~~~~~~~~~~~~~~~~~~~~
+Extended signals
+~~~~~~~~~~~~~~~~
 
-Oscar signals have been improved and consolidated, making it easier to hook
-into user journeys and extract analytics.
+Oscar's signals have been improved and consolidated, making it easier to hook
+into user journeys and extract analytics information.
 
-Changes to existing signals:
+Changes to existing signals include:
 
 - The :ref:`basket_addition_signal` signal now passes the ``request`` as an additional
   kwarg.
@@ -82,24 +87,24 @@ New signals:
 
 See the :doc:`signals docs </ref/signals>` for more details.
 
-Checkout improvements
-~~~~~~~~~~~~~~~~~~~~~
+Checkout reorganisation
+~~~~~~~~~~~~~~~~~~~~~~~
 
 The checkout classes have been reworked to clean-up how pre-conditions are
 enforced. Each view class now has a ``pre_conditions`` attribute which is an
-iterable of method names. Each method is run within the ``dispatch`` method of the
-view and will redirect the customer back to the appropriate view if the check
-fails.
+iterable of method names (as strings). Each method is run within the
+``dispatch`` method of the view and will redirect the customer back to the
+appropriate view if the check fails. 
 
-This change allows several of the core views to have simpler implementations.
-For instance, these methods have been removed:
+This change makes pre-conditions easier to customise and simplifies the core
+checkout views.  Consequently, the following methods are no longer required and
+have been removed:
 
-* The ``PaymentDetails.get_error_response`` method has been removed.
-* The ``PaymentDetails.can_basket_be_submitted`` method has been removed as its
-  functionality is replaced the new pre-conditions validation.
+* ``PaymentDetails.get_error_response``
+* ``PaymentDetails.can_basket_be_submitted``
 
-Further, the ``PaymentDetailsView`` has been re-organised to make extension
-easier. For instance, several new methods have been introduced to allow
+Further, the ``PaymentDetailsView`` has been re-organised for extensibility.
+For instance, several new methods have been introduced to allow
 fine-grained overriding of functionality:
 
 * :func:`~oscar.apps.checkout.views.PaymentDetailsView.handle_payment_details_submission` - 
@@ -117,12 +122,14 @@ The implementation of
 :func:`~oscar.apps.checkout.views.PaymentDetailsView.submit` has been improved
 to handle payment errors in a more customer friendly way.  If an exception is
 raised during payment, the payment details page is now loaded with the
-original forms passed to the template (so form errors can be displayed).
+original forms passed to the template (so form validation errors can be displayed).
 
 Finally, the ``billing_address`` kwarg to
 :func:`~oscar.apps.checkout.views.PaymentDetailsView.submit`` has been removed.
 If you want to pass a billing address to be saved against the order, then pass
 it as part of the ``order_kwargs`` option.
+
+.. _minor_changes:
 
 Minor changes
 ~~~~~~~~~~~~~
@@ -131,7 +138,7 @@ Minor changes
   :attr:`~oscar.apps.catalogue.abstract_models.Product.num_approved_reviews`
   property to avoid unnecessary SQL queries when rendering templates (`#1299`_)
 
-* Customers can delete their profiles from within the account section.
+* Customers can delete their profiles from within their account section.
 
 * Customers are prevented from using short or common passwords when changing
   their password in their account (`#1202`_)
@@ -200,7 +207,7 @@ Minor changes
 Bugfixes
 ~~~~~~~~
 
-* Addresses in non-shipping countries can't be selected as default shipping
+* Addresses in non-shipping countries can no longer be selected as default shipping
   address anymore (`be04d46639`_).
 
 * Suspended and consumed offers are no longer returned by the "active" offer
