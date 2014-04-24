@@ -565,6 +565,7 @@ class AbstractProduct(models.Model):
         return self.reviews.filter(
             status=self.reviews.model.APPROVED).count()
 
+
 class ProductRecommendation(models.Model):
     """
     'Through' model for product recommendations

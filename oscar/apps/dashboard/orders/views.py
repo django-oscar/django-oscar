@@ -448,8 +448,7 @@ class OrderDetailView(DetailView):
                     qty = int(qty)
                 except ValueError:
                     messages.error(
-                        self.request, _(
-                            "The entered quantity for line #%s is not valid") % line.id)
+                        self.request, _("The entered quantity for line #%s is not valid") % line.id)
                     return self.reload_page_response()
                 if qty <= 0:
                     messages.error(
@@ -459,8 +458,10 @@ class OrderDetailView(DetailView):
                 elif qty > line.quantity:
                     messages.error(
                         self.request, _(
-                            "The entered quantity for line #%s should not be "
-                            "higher than %s") % (line.id, line.quantity))
+                            "The entered quantity for line #(line_id)%s "
+                            "should not be higher than %(quantity)s") % {
+                                'line_id': line.id,
+                                'quantity': line.quantity})
                     return self.reload_page_response()
 
                 line_quantities.append(int(qty))
@@ -639,7 +640,6 @@ class OrderDetailView(DetailView):
         else:
             messages.info(request, _("Payment event created"))
         return self.reload_page_response()
-
 
 
 class LineDetailView(DetailView):
