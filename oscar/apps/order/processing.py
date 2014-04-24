@@ -1,8 +1,8 @@
 from decimal import Decimal as D
 
-from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
+from oscar.core.loading import get_model
 from oscar.apps.order import exceptions
 
 ShippingEventQuantity = get_model('order', 'ShippingEventQuantity')
