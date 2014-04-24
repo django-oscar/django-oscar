@@ -97,6 +97,7 @@
                             <thead>
                                 <tr>
                                     <th>{% trans "Select" %}</th>
+                                    <th>{% trans "Line ID" %}</th>
                                     <th>{% trans "Quantity" %}</th>
                                     <th>{% trans "Product" %}</th>
                                     <th>{% trans "UPC" %}</th>
@@ -114,8 +115,9 @@
                                     <tr>
                                         <td>
                                             <input type="checkbox" name="selected_line" value="{{ line.id }}" />
-                                            <input type="text" name="selected_line_qty_{{ line.id }}" value="{{ line.quantity }}" class="span1" size="2" />
+                                            <input type="text" name="selected_line_qty_{{ line.id }}" value="{{ line.quantity }}" class="span1" size="2" style="width:40px" />
                                         </td>
+                                        <td><a href="{% url 'dashboard:order-line-detail' number=order.number line_id=line.id %}">#{{ line.id }}</a></td>
                                         <td>{{ line.quantity }}</td>
                                         <td>
                                             {% if line.product %}
@@ -144,7 +146,7 @@
                                 {% endfor %}
 
                                 <tr>
-                                    <td colspan="7"></td>
+                                    <td colspan="8"></td>
                                     <th>{% trans "Discount" %}</th>
                                     <td style="text-align: right">{{ order.total_discount_excl_tax|currency:order.currency }}</td>
                                     <td style="text-align: right">{{ order.total_discount_incl_tax|currency:order.currency }}</td>
@@ -153,7 +155,7 @@
                                 {% with discounts=order.basket_discounts %}
                                     {% if discounts %}
                                         <tr>
-                                            <td colspan="7"></td>
+                                            <td colspan="8"></td>
                                             <th>{% trans "Basket total (excl. discounts)" %}</th>
                                             <td style="text-align: right">{{ order.basket_total_before_discounts_excl_tax|currency:order.currency }}</td>
                                             <td style="text-align: right">{{ order.basket_total_before_discounts_incl_tax|currency:order.currency }}</td>
@@ -161,7 +163,7 @@
                                         </tr>
                                         {% for discount in discounts %}
                                             <tr>
-                                                <td colspan="7"></td>
+                                                <td colspan="8"></td>
                                                 <td>
                                                     <span class="label label-success">{% trans "Discount" %}</span>
                                                     {{ discount.offer_name }}
@@ -172,7 +174,7 @@
                                             </tr>
                                         {% endfor %}
                                         <tr>
-                                            <td colspan="7"></td>
+                                            <td colspan="8"></td>
                                             <th>{% trans "Basket total (inc. discounts)" %}</th>
                                             <th style="text-align: right">{{ order.basket_total_excl_tax|currency:order.currency }}</th>
                                             <th style="text-align: right">{{ order.basket_total_incl_tax|currency:order.currency }}</th>
@@ -180,7 +182,7 @@
                                         </tr>
                                     {% else %}
                                         <tr>
-                                            <td colspan="7"></td>
+                                            <td colspan="8"></td>
                                             <th>{% trans "Basket total" %}</th>
                                             <th style="text-align: right">{{ order.basket_total_excl_tax|currency:order.currency }}</th>
                                             <th style="text-align: right">{{ order.basket_total_incl_tax|currency:order.currency }}</th>
@@ -191,7 +193,7 @@
 
                                 {% if order.has_shipping_discounts %}
                                     <tr>
-                                        <td colspan="7"></td>
+                                        <td colspan="8"></td>
                                         <td>{% trans "Shipping total (excl. discounts)" %}</td>
                                         <td style="text-align: right">{{ order.shipping_before_discounts_excl_tax|currency:order.currency }}</td>
                                         <td style="text-align: right">{{ order.shipping_before_discounts_incl_tax|currency:order.currency }}</td>
@@ -199,7 +201,7 @@
                                     </tr>
                                     {% for discount in order.shipping_discounts %}
                                         <tr>
-                                            <td colspan="7"></td>
+                                            <td colspan="8"></td>
                                             <td>
                                                 <span class="label label-success">{% trans "Discount" %}</span>
                                                 {{ discount.offer_name }}
@@ -210,7 +212,7 @@
                                         </tr>
                                     {% endfor %}
                                     <tr>
-                                        <td colspan="7"></td>
+                                        <td colspan="8"></td>
                                         <th>{% trans "Shipping total (inc. discounts)" %}</th>
                                         <th style="text-align: right">{{ order.shipping_excl_tax|currency:order.currency }}</th>
                                         <th style="text-align: right">{{ order.shipping_incl_tax|currency:order.currency }}</th>
@@ -218,7 +220,7 @@
                                     </tr>
                                 {% else %}
                                     <tr>
-                                        <td colspan="7"></td>
+                                        <td colspan="8"></td>
                                         <th>{% trans "Shipping total" %}</th>
                                         <th style="text-align: right">{{ order.shipping_excl_tax|currency:order.currency }}</th>
                                         <th style="text-align: right">{{ order.shipping_incl_tax|currency:order.currency }}</th>
@@ -227,7 +229,7 @@
                                 {% endif %}
 
                                 <tr>
-                                    <td colspan="7"></td>
+                                    <td colspan="8"></td>
                                     <th>{% trans "Order total" %}</th>
                                     <th style="text-align: right">{{ order.total_excl_tax|currency:order.currency }}</th>
                                     <th style="text-align: right">{{ order.total_incl_tax|currency:order.currency }}</th>
