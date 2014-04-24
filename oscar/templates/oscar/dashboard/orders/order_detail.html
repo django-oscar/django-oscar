@@ -27,6 +27,7 @@
 {% endblock  %}
 
 {% block dashboard_content %}
+    {% block customer_information %}
     <table class="table table-striped table-bordered table-hover">
         <caption><i class="icon-group icon-large"></i>{% trans "Customer Information" %}</caption>
         {% if order.guest_email %}
@@ -44,7 +45,9 @@
             <tr><td>{% trans "Customer has deleted their account." %}</td></tr>
         {% endif %}
     </table>
+    {% endblock customer_information %}
 
+    {% block order_information %}
     <table class="table table-striped table-bordered table-hover">
         <caption><i class="icon-shopping-cart icon-large"></i>{% trans "Order information" %}</caption>
         <tr>
@@ -60,6 +63,7 @@
             <td>{{ order.status|default:"N/A" }}</td>
         </tr>
     </table>
+    {% endblock order_information %}
 
     {% block additional_order_information %}
     {% endblock additional_order_information %}
@@ -233,7 +237,7 @@
                         </table>
                     {% endblock order_lines %}
 
-                    {% comment %} 
+                    {% comment %}
                         This is the important block within this template: you will almost certainly want to
                         override this block to provide your own form widgets that suit your order processing
                         flow.  The default contents shows a range of widgets - more than is sensible really.
