@@ -41,7 +41,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         return self.get_model().browsable.base_queryset()
 
     def prepare_product_class(self, obj):
-        return obj.product_class.name
+        return obj.get_product_class().name
 
     def prepare_category(self, obj):
         categories = obj.categories.all()
