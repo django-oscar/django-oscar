@@ -2,6 +2,8 @@ import os
 from settings import *
 import dj_database_url
 
+INSTALLED_APPS += ('gunicorn',)
+
 OSCAR_SHOP_TAGLINE = 'SmallsLIVE'
 
 TIME_ZONE = 'America/New_York'
@@ -42,12 +44,4 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
-
-# Static asset configuration
-STATIC_ROOT = os.path.join(BASE_DIR, 'public', 'static')
-STATIC_URL = '/static/'
-
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
 

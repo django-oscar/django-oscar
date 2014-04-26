@@ -1,1 +1,1 @@
-web: python sites/sandbox/manage.py syncdb --noinput; python sites/sandbox/manage.py migrate --noinput; gunicorn --pythonpath sites/sandbox --pythonpath . sites.sandbox.wsgi
+web: python sites/sandbox/manage.py syncdb --noinput; python sites/sandbox/manage.py migrate --noinput; gunicorn --pythonpath sites sandbox.wsgi
