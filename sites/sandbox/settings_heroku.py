@@ -2,6 +2,8 @@ import os
 from settings import *
 import dj_database_url
 
+DEBUG = True
+
 INSTALLED_APPS += ('gunicorn',)
 
 OSCAR_SHOP_TAGLINE = 'SmallsLIVE'
