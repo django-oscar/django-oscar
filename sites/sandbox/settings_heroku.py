@@ -4,7 +4,7 @@ import dj_database_url
 
 DEBUG = True
 
-INSTALLED_APPS += ('gunicorn',)
+INSTALLED_APPS += ('gunicorn', 'dj_database_url')
 
 OSCAR_SHOP_TAGLINE = 'SmallsLIVE'
 
