@@ -1,1 +1,1 @@
-web: python sites/sandbox/manage.py syncdb --noinput; python sites/sandbox/manage.py migrate --noinput; gunicorn --pythonpath sites/sandbox smallslivestore.wsgi
+web: python sites/sandbox/manage.py syncdb --noinput; python sites/sandbox/manage.py migrate --noinput; gunicorn --pythonpath sites/sandbox wsgi.py
