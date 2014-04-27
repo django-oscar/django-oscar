@@ -124,7 +124,7 @@ class AbstractWeightBased(AbstractBase):
         # requires shipping or not.  It is assumed that if something has a
         # weight, then it requires shipping.
         scale = Scale(attribute_code=self.weight_attribute,
-                       default_weight=self.default_weight)
+                      default_weight=self.default_weight)
         weight = scale.weigh_basket(self._basket)
         band = self.get_band_for_weight(weight)
         if not band:

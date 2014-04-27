@@ -23,7 +23,7 @@ class Emailbackend(ModelBackend):
 
     def authenticate(self, email=None, password=None, *args, **kwargs):
         if email is None:
-            if not 'username' in kwargs or kwargs['username'] is None:
+            if 'username' not in kwargs or kwargs['username'] is None:
                 return None
             clean_email = normalise_email(kwargs['username'])
         else:

@@ -472,7 +472,7 @@ class OrderDetailView(DetailView):
             messages.error(request, _("The new status '%s' is not valid")
                            % new_status)
             return self.reload_page_response()
-        if not new_status in order.available_statuses():
+        if new_status not in order.available_statuses():
             messages.error(request, _("The new status '%s' is not valid for"
                                       " this order") % new_status)
             return self.reload_page_response()

@@ -170,7 +170,7 @@ class RangeProductListView(BulkEditMixin, ListView):
                 ", ".join(missing_skus))
 
     def handle_file_products(self, request, range, form):
-        if not 'file_upload' in request.FILES:
+        if 'file_upload' not in request.FILES:
             return
         upload = self.create_upload_object(request, range)
         upload.process()

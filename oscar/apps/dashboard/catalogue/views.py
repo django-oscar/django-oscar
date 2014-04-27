@@ -204,7 +204,7 @@ class ProductCreateUpdateView(generic.UpdateView):
         is that self.object is None. We emulate this behavior.
         Additionally, self.product_class is set.
         """
-        self.creating = not 'pk' in self.kwargs
+        self.creating = 'pk' not in self.kwargs
         if self.creating:
             try:
                 product_class_slug = self.kwargs.get('product_class_slug',
