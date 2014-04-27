@@ -1,1 +1,1 @@
-web: python sites/sandbox/manage.py syncdb --noinput; python sites/sandbox/manage.py migrate --noinput; gunicorn --pythonpath sites sandbox.wsgi
+web: python sites/sandbox/manage.py syncdb --noinput --settings=settings_heroku; python sites/sandbox/manage.py migrate --noinput --settings=settings_heroku; python sites/sandbox/manage.py clear_index --noinput; python sites/sandbox/manage.py update_index catalogue; gunicorn --pythonpath sites sandbox.wsgi
