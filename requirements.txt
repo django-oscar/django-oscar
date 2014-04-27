@@ -46,5 +46,4 @@ dj-database-url==0.3.0
 dj-static==0.0.5
 gunicorn==18.0
 psycopg2==2.5.1
-sorl-thumbnail==11.12.1b
 raven==4.2.1
