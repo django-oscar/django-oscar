@@ -67,4 +67,4 @@ language_neutral_sitemaps = {
 base_sitemaps = {}
 for language, __ in settings.LANGUAGES:
     for name, sitemap_class in language_neutral_sitemaps.items():
-        base_sitemaps['{}-{}'.format(name, language)] = sitemap_class(language)
+        base_sitemaps['{0}-{1}'.format(name, language)] = sitemap_class(language)
