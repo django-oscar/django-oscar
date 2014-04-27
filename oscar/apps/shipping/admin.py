@@ -5,8 +5,13 @@ from oscar.apps.shipping.models import (
 
 
 class OrderChargesAdmin(admin.ModelAdmin):
+    filter_horizontal = ('countries', )
     list_display = ('name', 'description', 'price_per_order', 'price_per_item',
                     'free_shipping_threshold')
+
+
+class WeightBasedAdmin(admin.ModelAdmin):
+    filter_horizontal = ('countries', )
 
 
 class WeightBandAdmin(admin.ModelAdmin):
@@ -14,5 +19,5 @@ class WeightBandAdmin(admin.ModelAdmin):
 
 
 admin.site.register(OrderAndItemCharges, OrderChargesAdmin)
-admin.site.register(WeightBased)
+admin.site.register(WeightBased, WeightBasedAdmin)
 admin.site.register(WeightBand, WeightBandAdmin)

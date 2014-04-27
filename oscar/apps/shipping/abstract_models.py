@@ -31,6 +31,7 @@ class AbstractBase(models.Model):
         abstract = True
         verbose_name = _("Shipping Method")
         verbose_name_plural = _("Shipping Methods")
+        ordering = ['name']
 
     def __unicode__(self):
         return self.name
@@ -65,7 +66,7 @@ class AbstractOrderAndItemCharges(AbstractBase):
 
     _basket = None
 
-    class Meta:
+    class Meta(AbstractBase.Meta):
         abstract = True
         verbose_name = _("Order and Item Charge")
         verbose_name_plural = _("Order and Item Charges")
@@ -113,7 +114,7 @@ class AbstractWeightBased(AbstractBase):
         help_text=_("Default product weight in Kg when no weight attribute "
                     "is defined"))
 
-    class Meta:
+    class Meta(AbstractBase.Meta):
         abstract = True
         verbose_name = _("Weight-based Shipping Method")
         verbose_name_plural = _("Weight-based Shipping Methods")
@@ -182,7 +183,7 @@ class AbstractWeightBand(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ['upper_limit']
+        ordering = ['method', 'upper_limit']
         verbose_name = _("Weight Band")
         verbose_name_plural = _("Weight Bands")
 
