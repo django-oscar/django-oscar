@@ -1,0 +1,1 @@
+web: python sites/sandbox/manage.py syncdb --noinput --settings=settings_heroku; python sites/sandbox/manage.py migrate --noinput --settings=settings_heroku; python sites/sandbox/manage.py clear_index --noinput --settings=settings_heroku; python sites/sandbox/manage.py update_index catalogue --settings=settings_heroku; gunicorn --pythonpath sites sandbox.wsgi
