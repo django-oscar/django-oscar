@@ -382,7 +382,7 @@ Default: ``GBP``
 This should be the symbol of the currency you wish Oscar to use by default.
 This will be used by the currency templatetag.
 
-``OSCAR_CURRENCY_LOCALE``
+``OSCAR_CURRENCY_FORMAT``
 -------------------------
 
 Default: ``None``
@@ -390,15 +390,7 @@ Default: ``None``
 This can be used to customise currency formatting. The value will be passed to
 the ``format_currency`` function from the `Babel library`_.
 
-.. _`Babel library`: http://babel.edgewall.org/wiki/ApiDocs/0.9/babel.numbers#babel.numbers:format_decimal
-
-``OSCAR_CURRENCY_FORMAT``
--------------------------
-
-Default: ``None``
-
-This can be used to customise currency formatting. The value will be passed to
-the ``format_currency`` function from the Babel library.
+.. _`Babel library`: http://babel.pocoo.org/docs/api/numbers/#babel.numbers.format_currency
 
 Upload/media settings
 =====================

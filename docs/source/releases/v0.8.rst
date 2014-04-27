@@ -40,6 +40,10 @@ Minor cleanup around shipping methods
 Minor changes
 -------------
 
+* The ``OSCAR_CURRENCY_LOCALE`` setting has been removed. The locale is now
+  automatically determined from the current language. This ensures prices are
+  always shown in the correct format when switching languages.
+
 Bugfixes
 ~~~~~~~~
 
