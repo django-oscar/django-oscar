@@ -1,52 +1,17 @@
-import six
-from django.forms.util import flatatt
-from django.core.urlresolvers import reverse
-from django.utils.safestring import mark_safe
-from django import forms
-from six.moves import filter
-from six.moves import map
+from django.core.urlresolvers import reverse_lazy
+
+from oscar.forms.widgets import RemoteSelect, MultipleRemoteSelect
 
 
-class ProductSelect(forms.Widget):
-    is_multiple = False
-    css = 'select2 input-xlarge'
-
-    def format_value(self, value):
-        return six.text_type(value or '')
-
-    def value_from_datadict(self, data, files, name):
-        value = data.get(name, None)
-        if value is None:
-            return value
-        else:
-            return six.text_type(value)
-
-    def render(self, name, value, attrs=None, choices=()):
-        attrs = self.build_attrs(attrs, **{
-            'type': 'hidden',
-            'class': self.css,
-            'name': name,
-            'data-ajax-url': reverse('dashboard:catalogue-product-lookup'),
-            'data-multiple': 'multiple' if self.is_multiple else '',
-            'value': self.format_value(value),
-            'data-required': 'required' if self.is_required else '',
-        })
-        return mark_safe(u'<input %s>' % flatatt(attrs))
+class ProductSelect(RemoteSelect):
+    # Implemented as separate class instead of just calling
+    # AjaxSelect(data_url=...) for overridability and backwards compatibility
+    lookup_url = reverse_lazy('dashboard:catalogue-product-lookup')
 
 
-class ProductSelectMultiple(ProductSelect):
+class ProductSelectMultiple(MultipleRemoteSelect):
+    # Implemented as separate class instead of just calling
+    # AjaxSelect(data_url=...) for overridability and backwards compatibility
+    lookup_url = reverse_lazy('dashboard:catalogue-product-lookup')
     is_multiple = True
     css = 'select2 input-xxlarge'
-
-    def format_value(self, value):
-        if value:
-            return ','.join(map(six.text_type, filter(bool, value)))
-        else:
-            return ''
-
-    def value_from_datadict(self, data, files, name):
-        value = data.get(name, None)
-        if value is None:
-            return []
-        else:
-            return list(filter(bool, value.split(',')))
