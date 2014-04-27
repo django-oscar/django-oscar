@@ -29,7 +29,7 @@ Further reading:
 * `django-oscar-jobs group`_ - mailing list for job offers
 * `Continuous integration homepage`_ on `travis-ci.org`_
 * `Twitter account for news and updates`_
-* #django-oscar on Freenode (community-run IRC channel)
+* #django-oscar on Freenode (community-run IRC channel) with `public logs`_
 * `PyPI page`_
 * `Transifex project`_ - translating Oscar made easy
 
@@ -62,7 +62,7 @@ PyPI status:
 .. _`Continuous integration homepage`: http://travis-ci.org/#!/tangentlabs/django-oscar
 .. _`travis-ci.org`: http://travis-ci.org/
 .. _`Twitter account for news and updates`: https://twitter.com/#!/django_oscar
-.. _`Twitter account of all commits`: https://twitter.com/#!/oscar_django
+.. _`public logs`: https://botbot.me/freenode/django-oscar/
 .. _`django-oscar group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar
 .. _`django-oscar-jobs group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar-jobs
 .. _`PyPI page`: https://pypi.python.org/pypi/django-oscar/
