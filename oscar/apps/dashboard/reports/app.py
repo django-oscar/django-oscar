@@ -1,14 +1,14 @@
 from django.conf.urls import url
 
 from oscar.core.application import Application
-from oscar.apps.dashboard.reports import views
+from oscar.core.loading import get_class
 
 
 class ReportsApplication(Application):
     name = None
     default_permissions = ['is_staff', ]
 
-    index_view = views.IndexView
+    index_view = get_class('dashboard.reports.views', 'IndexView')
 
     def get_urls(self):
         urls = [

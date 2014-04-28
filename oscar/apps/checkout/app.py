@@ -3,20 +3,22 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
 from oscar.core.application import Application
-from oscar.apps.checkout import views
+from oscar.core.loading import get_class
 
 
 class CheckoutApplication(Application):
     name = 'checkout'
 
-    index_view = views.IndexView
-    shipping_address_view = views.ShippingAddressView
-    user_address_update_view = views.UserAddressUpdateView
-    user_address_delete_view = views.UserAddressDeleteView
-    shipping_method_view = views.ShippingMethodView
-    payment_method_view = views.PaymentMethodView
-    payment_details_view = views.PaymentDetailsView
-    thankyou_view = views.ThankYouView
+    index_view = get_class('checkout.views', 'IndexView')
+    shipping_address_view = get_class('checkout.views', 'ShippingAddressView')
+    user_address_update_view = get_class('checkout.views',
+                                         'UserAddressUpdateView')
+    user_address_delete_view = get_class('checkout.views',
+                                         'UserAddressDeleteView')
+    shipping_method_view = get_class('checkout.views', 'ShippingMethodView')
+    payment_method_view = get_class('checkout.views', 'PaymentMethodView')
+    payment_details_view = get_class('checkout.views', 'PaymentDetailsView')
+    thankyou_view = get_class('checkout.views', 'ThankYouView')
 
     def get_urls(self):
         urls = [

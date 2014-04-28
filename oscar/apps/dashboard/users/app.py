@@ -1,19 +1,23 @@
 from django.conf.urls import url
 
 from oscar.core.application import Application
-from oscar.apps.dashboard.users import views
+from oscar.core.loading import get_class
 
 
 class UserManagementApplication(Application):
     name = None
     default_permissions = ['is_staff', ]
 
-    index_view = views.IndexView
-    user_detail_view = views.UserDetailView
-    password_reset_view = views.PasswordResetView
-    alert_list_view = views.ProductAlertListView
-    alert_update_view = views.ProductAlertUpdateView
-    alert_delete_view = views.ProductAlertDeleteView
+    index_view = get_class('dashboard.users.views', 'IndexView')
+    user_detail_view = get_class('dashboard.users.views', 'UserDetailView')
+    password_reset_view = get_class('dashboard.users.views',
+                                    'PasswordResetView')
+    alert_list_view = get_class('dashboard.users.views',
+                                'ProductAlertListView')
+    alert_update_view = get_class('dashboard.users.views',
+                                  'ProductAlertUpdateView')
+    alert_delete_view = get_class('dashboard.users.views',
+                                  'ProductAlertDeleteView')
 
     def get_urls(self):
         urls = [

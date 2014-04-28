@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from oscar.core.application import Application
-from oscar.apps.dashboard.catalogue import views
+from oscar.core.loading import get_class
 
 
 class CatalogueApplication(Application):
@@ -19,24 +19,38 @@ class CatalogueApplication(Application):
                                      ['partner.dashboard_access']),
     }
 
-    product_list_view = views.ProductListView
-    product_lookup_view = views.ProductLookupView
-    product_create_redirect_view = views.ProductCreateRedirectView
-    product_createupdate_view = views.ProductCreateUpdateView
-    product_delete_view = views.ProductDeleteView
+    product_list_view = get_class('dashboard.catalogue.views',
+                                  'ProductListView')
+    product_lookup_view = get_class('dashboard.catalogue.views',
+                                    'ProductLookupView')
+    product_create_redirect_view = get_class('dashboard.catalogue.views',
+                                             'ProductCreateRedirectView')
+    product_createupdate_view = get_class('dashboard.catalogue.views',
+                                          'ProductCreateUpdateView')
+    product_delete_view = get_class('dashboard.catalogue.views',
+                                    'ProductDeleteView')
 
-    product_class_create_view = views.ProductClassCreateView
-    product_class_list_view = views.ProductClassListView
-    product_class_update_view = views.ProductClassUpdateView
-    product_class_delete_view = views.ProductClassDeleteView
+    product_class_create_view = get_class('dashboard.catalogue.views',
+                                          'ProductClassCreateView')
+    product_class_list_view = get_class('dashboard.catalogue.views',
+                                        'ProductClassListView')
+    product_class_update_view = get_class('dashboard.catalogue.views',
+                                          'ProductClassUpdateView')
+    product_class_delete_view = get_class('dashboard.catalogue.views',
+                                          'ProductClassDeleteView')
 
-    category_list_view = views.CategoryListView
-    category_detail_list_view = views.CategoryDetailListView
-    category_create_view = views.CategoryCreateView
-    category_update_view = views.CategoryUpdateView
-    category_delete_view = views.CategoryDeleteView
+    category_list_view = get_class('dashboard.catalogue.views',
+                                   'CategoryListView')
+    category_detail_list_view = get_class('dashboard.catalogue.views',
+                                          'CategoryDetailListView')
+    category_create_view = get_class('dashboard.catalogue.views',
+                                     'CategoryCreateView')
+    category_update_view = get_class('dashboard.catalogue.views',
+                                     'CategoryUpdateView')
+    category_delete_view = get_class('dashboard.catalogue.views',
+                                     'CategoryDeleteView')
 
-    stock_alert_view = views.StockAlertListView
+    stock_alert_view = get_class('dashboard.catalogue.views', 'StockAlertListView')
 
     def get_urls(self):
         urls = [
