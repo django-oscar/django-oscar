@@ -110,20 +110,7 @@ def get_classes(module_label, classnames):
         ImportError: If the attempted import of a class raises an
             ``ImportError``, it is re-raised
     """
-
-    # import from Oscar package (should succeed in most cases)
-    # e.g. 'oscar.apps.dashboard.catalogue.forms'
-    oscar_module_label = "oscar.apps.%s" % module_label
-    oscar_module = _import_module(oscar_module_label, classnames)
-
-    # Split module_label into the section that we expect to find in
-    # INSTALLED_APPS (package) and the rest (module)
-    # e.g. split 'dashboard.catalogue.forms' in 'dashboard.catalogue', 'forms'
-    # It is assumed that any imported module is only ever one level below
-    # package, e.g. 'dashboard.catalogue.forms.widgets' will break
-    if '.' in module_label:
-        package, module = module_label.rsplit('.', 1)
-    else:
+    if '.' not in module_label:
         # Importing from top-level modules is not supported, e.g.
         # get_class('shipping', 'Scale'). That should be easy to fix,
         # but @maikhoepfel had a stab and could not get it working reliably.
@@ -131,21 +118,28 @@ def get_classes(module_label, classnames):
         raise ValueError(
             "Importing from top-level modules is not supported")
 
+    # import from Oscar package (should succeed in most cases)
+    # e.g. 'oscar.apps.dashboard.catalogue.forms'
+    oscar_module_label = "oscar.apps.%s" % module_label
+    oscar_module = _import_module(oscar_module_label, classnames)
+
     # returns e.g. 'oscar.apps.dashboard.catalogue',
-    # 'yourproject.apps.dashboard.catalogue' or 'dashboard.catalogue'
-    installed_apps_entry = _get_installed_apps_entry(package)
+    # 'yourproject.apps.dashboard.catalogue' or 'dashboard.catalogue',
+    # depending on what is set in INSTALLED_APPS
+    installed_apps_entry, app_name = _find_installed_apps_entry(module_label)
     if installed_apps_entry.startswith('oscar.apps.'):
         # The entry is obviously an Oscar one, we don't import again
         local_module = None
     else:
         # Attempt to import the classes from the local module
         # e.g. 'yourproject.dashboard.catalogue.forms'
-        local_module_label = installed_apps_entry + '.' + module
+        sub_module = module_label.replace(app_name, '')
+        local_module_label = installed_apps_entry + sub_module
         local_module = _import_module(local_module_label, classnames)
 
     if oscar_module is local_module is None:
-        # This intentionally doesn't raise an ImportError, because that could
-        # get masked in some circular import scenarios.
+        # This intentionally doesn't raise an ImportError, because ImportError
+        # can get masked in complex circular import scenarios.
         raise ModuleNotFoundError(
             "The module with label '%s' could not be imported. This either"
             "means that it indeed does not exist, or you might have a problem"
@@ -205,14 +199,38 @@ def _pluck_classes(modules, classnames):
 
 def _get_installed_apps_entry(app_name):
     """
-    Walk through INSTALLED_APPS and return the first match. This does depend
-    on the order of INSTALLED_APPS and will break if e.g. 'dashboard.catalogue'
-    comes before 'catalogue' in INSTALLED_APPS.
+    Given an app name (e.g. 'catalogue'), walk through INSTALLED_APPS
+    and return the first match, or None.
+    This does depend on the order of INSTALLED_APPS and will break if
+    e.g. 'dashboard.catalogue' comes before 'catalogue' in INSTALLED_APPS.
     """
     for installed_app in settings.INSTALLED_APPS:
         if installed_app.endswith(app_name):
             return installed_app
-    raise AppNotFoundError("No app found matching '%s'" % app_name)
+    return None
+
+
+def _find_installed_apps_entry(module_label):
+    """
+    Given a module label, finds the best matching INSTALLED_APPS entry.
+
+    This is made trickier by the fact that we don't know what part of the
+    module_label is part of the INSTALLED_APPS entry. So we try all possible
+    combinations, trying the longer versions first. E.g. for
+    'dashboard.catalogue.forms', 'dashboard.catalogue' is attempted before
+    'dashboard'
+    """
+    modules = module_label.split('.')
+    # if module_label is 'dashboard.catalogue.forms.widgets', combinations
+    # will be ['dashboard.catalogue.forms', 'dashboard.catalogue', 'dashboard']
+    combinations = [
+        '.'.join(modules[:-count]) for count in range(1, len(modules))]
+    for app_name in combinations:
+        entry = _get_installed_apps_entry(app_name)
+        if entry:
+            return entry, app_name
+    raise AppNotFoundError(
+        "Couldn't find an app to import %s from" % module_label)
 
 
 def get_profile_class():
