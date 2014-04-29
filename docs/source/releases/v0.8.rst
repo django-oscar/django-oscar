@@ -37,6 +37,14 @@ Minor cleanup around shipping methods
 * ``WeightBand.upper_limit`` is now a ``DecimalField``, just like the other
   weight-related fields.
 
+Customisation improvements
+--------------------------
+
+Oscar's views are now dynamically imported. This means that they can be
+overridden like most other classes in Oscar; overridding the related
+Application instance is not necessary any more. Updated instructions are
+available in :doc:`/topics/customisation`.
+
 Minor changes
 -------------
 
@@ -53,7 +61,7 @@ Backwards incompatible changes in 0.8
 * The ``shipping`` app saw a few renames; please see the section above.
 
 
-Removal of features deprecated in 0.7
+Removal of features deprecated in 0.8
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 

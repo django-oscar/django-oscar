@@ -8,21 +8,22 @@ your project.  It builds upon the steps described in
 
 * Created a Python module with the the same label
 * Added it as Django app to ``INSTALLED_APPS``
-* Use custom ``app.py``
 
 Example
 -------
 
-Create a new homepage view class in ``myproject.promotions.views`` - you can subclass
-Oscar's view if you like::
+Create a new homepage view class in ``myproject.promotions.views`` - you can
+subclass Oscar's view if you like::
 
     from oscar.apps.promotions.views import HomeView as CoreHomeView
 
     class HomeView(CoreHomeView):
         template_name = 'promotions/new-homeview.html'
 
-In this example, we set a new template location but it's possible to customise the view
-in any imaginable way.
+In this example, we set a new template location but it's possible to customise
+the view in any imaginable way.
+As long as the view has the same name and is in an app with the same name, it
+will get picked up automatically by Oscar.
 
 If you want to change the template, create the alternative template
 ``new-homeview.html``.  This could either be
@@ -35,15 +36,3 @@ now, put something simple in there, such as::
             <p>You have successfully overridden the homepage template.</p>
         </body>
     </html>
-
-Now you can hook it up in your local ``app.py``::
-
-    # myproject/promotions/app.py
-    from oscar.apps.promotions.app import PromotionsApplication as CorePromotionsApplication
-
-    from myproject.promotions.views import HomeView
-
-    class PromotionsApplication(CorePromotionsApplication):
-        home_view  = HomeView
-
-    application = PromotionsApplication()
