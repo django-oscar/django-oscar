@@ -403,37 +403,35 @@ class OrderDetailView(DetailView):
         return forms.OrderNoteForm(post_data, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        order = self.object
+        def reload_with_error(msg):
+            messages.error(self.request, msg)
+            return self.reload_page_response()
+
+        order = self.object = self.get_object()
 
         # Look for order-level action
         order_action = request.POST.get('order_action', '').lower()
         if order_action:
-            if order_action not in self.order_actions:
-                messages.error(self.request, _("Invalid action"))
-                return self.reload_page_response()
-            else:
+            if order_action in self.order_actions:
                 return getattr(self, order_action)(request, order)
+            else:
+                return reload_with_error(_("Invalid action"))
 
         # Look for line-level action
         line_action = request.POST.get('line_action', '').lower()
         if line_action:
             if line_action not in self.line_actions:
-                messages.error(self.request, _("Invalid action"))
-                return self.reload_page_response()
+                return reload_with_error(_("Invalid action"))
 
             # Load requested lines
             line_ids = request.POST.getlist('selected_line')
             if len(line_ids) == 0:
-                messages.error(
-                    self.request, _("You must select some lines to act on"))
-                return self.reload_page_response()
+                return reload_with_error(
+                    _("You must select some lines to act on"))
 
             lines = order.lines.filter(id__in=line_ids)
             if len(line_ids) != len(lines):
-                messages.error(
-                    self.request, _("Invalid lines requested"))
-                return self.reload_page_response()
+                return reload_with_error(_("Invalid lines requested"))
 
             # Build list of line quantities
             line_quantities = []
@@ -442,30 +440,24 @@ class OrderDetailView(DetailView):
                 try:
                     qty = int(qty)
                 except ValueError:
-                    messages.error(
-                        self.request, _("The entered quantity for line #%s is not valid") % line.id)
-                    return self.reload_page_response()
-                if qty <= 0:
-                    messages.error(
-                        self.request, _(
-                            "The entered quantity for line #%s is not valid") % line.id)
-                    return self.reload_page_response()
+                    qty = None
+                if qty is None or qty <= 0:
+                    return reload_with_error(
+                        _("The entered quantity for line #%s is not valid")
+                        % line.id)
                 elif qty > line.quantity:
-                    messages.error(
-                        self.request, _(
-                            "The entered quantity for line #(line_id)%s "
-                            "should not be higher than %(quantity)s") % {
-                                'line_id': line.id,
-                                'quantity': line.quantity})
-                    return self.reload_page_response()
+                    return reload_with_error(
+                        _("The entered quantity for line #(line_id)%s "
+                          "should not be higher than %(quantity)s") % {
+                            'line_id': line.id,
+                            'quantity': line.quantity})
 
-                line_quantities.append(int(qty))
+                line_quantities.append(qty)
 
             return getattr(self, line_action)(
                 request, order, lines, line_quantities)
 
-        messages.error(request, _("No valid action submitted"))
-        return self.reload_page_response()
+        return reload_with_error(_("No valid action submitted"))
 
     def reload_page_response(self, fragment=None):
         url = reverse('dashboard:order-detail', kwargs={'number':
