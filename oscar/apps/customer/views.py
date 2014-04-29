@@ -33,7 +33,6 @@ Line = get_model('basket', 'Line')
 Basket = get_model('basket', 'Basket')
 UserAddress = get_model('address', 'UserAddress')
 Email = get_model('customer', 'Email')
-UserAddress = get_model('address', 'UserAddress')
 ProductAlert = get_model('customer', 'ProductAlert')
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
 
@@ -49,7 +48,7 @@ class AccountSummaryView(RedirectView):
     """
     View that exists for legacy reasons and customisability. It commonly gets
     called when the user clicks on "Account" in the navbar, and can be
-    overriden to determine to what sub-page the user is directed without
+    overridden to determine to what sub-page the user is directed without
     having to change a lot of templates.
     """
     url = reverse_lazy(settings.OSCAR_ACCOUNTS_REDIRECT_URL)

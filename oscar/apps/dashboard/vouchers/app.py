@@ -1,18 +1,18 @@
 from django.conf.urls import url
 
 from oscar.core.application import Application
-from oscar.apps.dashboard.vouchers import views
+from oscar.core.loading import get_class
 
 
 class VoucherDashboardApplication(Application):
     name = None
     default_permissions = ['is_staff', ]
 
-    list_view = views.VoucherListView
-    create_view = views.VoucherCreateView
-    update_view = views.VoucherUpdateView
-    delete_view = views.VoucherDeleteView
-    stats_view = views.VoucherStatsView
+    list_view = get_class('dashboard.vouchers.views', 'VoucherListView')
+    create_view = get_class('dashboard.vouchers.views', 'VoucherCreateView')
+    update_view = get_class('dashboard.vouchers.views', 'VoucherUpdateView')
+    delete_view = get_class('dashboard.vouchers.views', 'VoucherDeleteView')
+    stats_view = get_class('dashboard.vouchers.views', 'VoucherStatsView')
 
     def get_urls(self):
         urls = [

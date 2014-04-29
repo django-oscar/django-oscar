@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from oscar.core.application import Application
-from oscar.apps.dashboard.orders import views
+from oscar.core.loading import get_class
 
 
 class OrdersDashboardApplication(Application):
@@ -16,11 +16,12 @@ class OrdersDashboardApplication(Application):
         'order-shipping-address': (['is_staff'], ['partner.dashboard_access']),
     }
 
-    order_list_view = views.OrderListView
-    order_detail_view = views.OrderDetailView
-    shipping_address_view = views.ShippingAddressUpdateView
-    line_detail_view = views.LineDetailView
-    order_stats_view = views.OrderStatsView
+    order_list_view = get_class('dashboard.orders.views', 'OrderListView')
+    order_detail_view = get_class('dashboard.orders.views', 'OrderDetailView')
+    shipping_address_view = get_class('dashboard.orders.views',
+                                      'ShippingAddressUpdateView')
+    line_detail_view = get_class('dashboard.orders.views', 'LineDetailView')
+    order_stats_view = get_class('dashboard.orders.views', 'OrderStatsView')
 
     def get_urls(self):
         urls = [

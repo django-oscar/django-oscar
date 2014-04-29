@@ -1,6 +1,5 @@
 from django.conf.urls import url, include
 
-from oscar.apps.dashboard import views
 from oscar.core.application import Application
 from oscar.core.loading import get_class
 
@@ -11,7 +10,7 @@ class DashboardApplication(Application):
         'index': (['is_staff'], ['partner.dashboard_access']),
     }
 
-    index_view = views.IndexView
+    index_view = get_class('dashboard.views', 'IndexView')
     reports_app = get_class('dashboard.reports.app', 'application')
     orders_app = get_class('dashboard.orders.app', 'application')
     users_app = get_class('dashboard.users.app', 'application')

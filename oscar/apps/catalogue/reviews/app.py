@@ -1,17 +1,17 @@
 from django.conf.urls import url
 
 from oscar.core.application import Application
-from . import views
+from oscar.core.loading import get_class
 
 
 class ProductReviewsApplication(Application):
     name = None
     hidable_feature_name = "reviews"
 
-    detail_view = views.ProductReviewDetail
-    create_view = views.CreateProductReview
-    vote_view = views.AddVoteView
-    list_view = views.ProductReviewList
+    detail_view = get_class('catalogue.reviews.views', 'ProductReviewDetail')
+    create_view = get_class('catalogue.reviews.views', 'CreateProductReview')
+    vote_view = get_class('catalogue.reviews.views', 'AddVoteView')
+    list_view = get_class('catalogue.reviews.views', 'ProductReviewList')
 
     def get_urls(self):
         urls = [

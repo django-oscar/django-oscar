@@ -1,13 +1,13 @@
 from django.conf.urls import url
 
-from oscar.apps.offer import views
 from oscar.core.application import Application
+from oscar.core.loading import get_class
 
 
 class OfferApplication(Application):
     name = 'offer'
-    detail_view = views.OfferDetailView
-    list_view = views.OfferListView
+    detail_view = get_class('offer.views', 'OfferDetailView')
+    list_view = get_class('offer.views', 'OfferListView')
 
     def get_urls(self):
         urls = [

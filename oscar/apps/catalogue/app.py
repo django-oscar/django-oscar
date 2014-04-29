@@ -1,16 +1,15 @@
 from django.conf.urls import url, include
 
 from oscar.core.application import Application
-from oscar.apps.catalogue import views
-from oscar.apps.offer import views as offer_views
+from oscar.core.loading import get_class
 from oscar.apps.catalogue.reviews.app import application as reviews_app
 
 
 class BaseCatalogueApplication(Application):
     name = 'catalogue'
-    detail_view = views.ProductDetailView
-    category_view = views.ProductCategoryView
-    range_view = offer_views.RangeDetailView
+    detail_view = get_class('catalogue.views', 'ProductDetailView')
+    category_view = get_class('catalogue.views', 'ProductCategoryView')
+    range_view = get_class('offer.views', 'RangeDetailView')
 
     def get_urls(self):
         urlpatterns = super(BaseCatalogueApplication, self).get_urls()
