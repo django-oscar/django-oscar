@@ -134,6 +134,8 @@ it as part of the ``order_kwargs`` option.
 Minor changes
 ~~~~~~~~~~~~~
 
+* Oscar's LESS files now use Bootstrap 2.3.2 (Oscar 0.6 uses 2.1.1).
+
 * The product model now has a 
   :attr:`~oscar.apps.catalogue.abstract_models.Product.num_approved_reviews`
   property to avoid unnecessary SQL queries when rendering templates (`#1299`_)
