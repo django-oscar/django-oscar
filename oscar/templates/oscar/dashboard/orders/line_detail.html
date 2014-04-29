@@ -177,7 +177,7 @@
                             {% with event=event_qty.event %}
                                 <td>{{ event.event_type.name }}</td>
                                 <td>{{ event_qty.quantity }}</td>
-                                <td>{{ event.date }}</td>
+                                <td>{{ event.date_created }}</td>
                             {% endwith %}
                         </tr>
                     {% empty %}

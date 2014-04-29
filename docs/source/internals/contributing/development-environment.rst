@@ -12,24 +12,27 @@ Fork the repo and run::
 If using Ubuntu, the ``python-dev`` package is required for some packages to
 compile.
 
-The :doc:`sandbox </internals/sandbox>` site can be used to test our changes in
-a browser. It is easily created with ``make sandbox``.
+The :doc:`sandbox </internals/sandbox>` site can be used to examine changes
+locally.  It is easily created by running::
+
+    $ make sandbox
 
 JPEG Support
 ------------
 
-On Ubuntu, you need to install a few libraries to get JPEG support with Pillow.
+On Ubuntu, you need to install a few libraries to get JPEG support with
+Pillow::
 
     $ sudo apt-get install python-dev libjpeg-dev libfreetype6-dev zlib1g-dev
 
-If you did already install PIL (you did if you ran ``make install`` previously),
-reinstall it:
+If you already installed PIL (you did if you ran ``make install`` previously),
+reinstall it::
 
     $ pip uninstall Pillow
     $ pip install Pillow
 
 Creating migrations
-===================
+-------------------
 
 As the sandbox is a vanilla Oscar site, it is what we use to build migrations
 against::
@@ -38,9 +41,9 @@ against::
     $ sites/sandbox/manage.py schemamigration $YOURAPP --auto
     
 Writing LESS/CSS
-================
+----------------
 
-Oscar's CSS files are build using LESS_.  However, the sandbox defaults to
+Oscar's CSS files are built using LESS_.  However, the sandbox defaults to
 serving CSS files directly, bypassing LESS compilation.
 
 .. _LESS: http://lesscss.org/

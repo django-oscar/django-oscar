@@ -16,8 +16,7 @@ from oscar.core.utils import slugify
 from oscar.core.loading import get_class, get_model
 from oscar.apps.offer.managers import ActiveOfferManager
 from oscar.templatetags.currency_filters import currency
-from oscar.models.fields import (PositiveDecimalField, ExtendedURLField,
-                                 AutoSlugField)
+from oscar.models import fields
 
 BrowsableRangeManager = get_class('offer.managers', 'BrowsableRangeManager')
 
@@ -65,8 +64,8 @@ class ConditionalOffer(models.Model):
     name = models.CharField(
         _("Name"), max_length=128, unique=True,
         help_text=_("This is displayed within the customer's basket"))
-    slug = AutoSlugField(_("Slug"), max_length=128, unique=True,
-                         populate_from='name')
+    slug = fields.AutoSlugField(
+        _("Slug"), max_length=128, unique=True, populate_from='name')
     description = models.TextField(_("Description"), blank=True,
                                    help_text=_("This is displayed on the offer"
                                                " browsing page"))
@@ -161,7 +160,8 @@ class ConditionalOffer(models.Model):
     num_orders = models.PositiveIntegerField(
         _("Number of Orders"), default=0)
 
-    redirect_url = ExtendedURLField(_("URL redirect (optional)"), blank=True)
+    redirect_url = fields.ExtendedURLField(
+        _("URL redirect (optional)"), blank=True)
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     objects = models.Manager()
@@ -230,7 +230,7 @@ class ConditionalOffer(models.Model):
         if self.end_datetime:
             predicates.append(test_date > self.end_datetime)
         if any(predicates):
-            return 0
+            return False
         return self.get_max_applications(user) > 0
 
     def is_condition_satisfied(self, basket):
@@ -419,11 +419,11 @@ class Condition(models.Model):
         'offer.Range', verbose_name=_("Range"), null=True, blank=True)
     type = models.CharField(_('Type'), max_length=128, choices=TYPE_CHOICES,
                             blank=True)
-    value = PositiveDecimalField(_('Value'), decimal_places=2, max_digits=12,
-                                 null=True, blank=True)
+    value = fields.PositiveDecimalField(
+        _('Value'), decimal_places=2, max_digits=12, null=True, blank=True)
 
-    proxy_class = models.CharField(_("Custom class"), null=True, blank=True,
-                                   max_length=255, unique=True, default=None)
+    proxy_class = fields.NullCharField(
+        _("Custom class"), max_length=255, unique=True, default=None)
 
     class Meta:
         verbose_name = _("Condition")
@@ -537,7 +537,7 @@ class Benefit(models.Model):
     # The value to use with the designated type.  This can be either an integer
     # (eg for multibuy) or a decimal (eg an amount) which is slightly
     # confusing.
-    value = PositiveDecimalField(
+    value = fields.PositiveDecimalField(
         _("Value"), decimal_places=2, max_digits=12, null=True, blank=True)
 
     # If this is not set, then there is no upper limit on how many products
@@ -549,8 +549,8 @@ class Benefit(models.Model):
 
     # A custom benefit class can be used instead.  This means the
     # type/value/max_affected_items fields should all be None.
-    proxy_class = models.CharField(_("Custom class"), null=True, blank=True,
-                                   max_length=255, unique=True, default=None)
+    proxy_class = fields.NullCharField(
+        _("Custom class"), max_length=255, unique=True, default=None)
 
     class Meta:
         verbose_name = _("Benefit")
@@ -762,9 +762,8 @@ class Range(models.Model):
         verbose_name=_("Included Categories"))
 
     # Allow a custom range instance to be specified
-    proxy_class = models.CharField(
-        _("Custom class"), null=True, blank=True, max_length=255,
-        default=None, unique=True)
+    proxy_class = fields.NullCharField(
+        _("Custom class"), max_length=255, default=None, unique=True)
 
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
@@ -893,7 +892,7 @@ class Range(models.Model):
         """
         Test whether this product can be edited in the dashboard
         """
-        return self.proxy_class is None
+        return not self.proxy_class
 
 
 class RangeProduct(models.Model):

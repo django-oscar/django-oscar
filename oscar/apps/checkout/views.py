@@ -553,9 +553,8 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         self.freeze_basket(basket)
         self.checkout_session.set_submitted_basket(basket)
 
-        # Handle payment.  Any payment problems should be handled by the
-        # handle_payment method raise an exception, which should be caught
-        # within handle_POST and the appropriate forms redisplayed.
+        # We define a general error message for when an unanticipated payment
+        # error occurs.
         error_msg = _("A problem occurred while processing payment for this "
                       "order - no payment has been taken.  Please "
                       "contact customer services if this problem persists")

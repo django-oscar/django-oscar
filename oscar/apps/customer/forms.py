@@ -6,8 +6,6 @@ from django.conf import settings
 from django.contrib.auth import forms as auth_forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.sites.models import get_current_site
-from django.core import validators
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
@@ -15,6 +13,7 @@ from django.utils.translation import pgettext_lazy
 from oscar.core.loading import get_profile_class, get_class, get_model
 from oscar.core.compat import get_user_model, existing_user_fields, urlparse
 from oscar.apps.customer.utils import get_password_reset_url, normalise_email
+from oscar.core.validators import password_validators
 
 
 Dispatcher = get_class('customer.utils', 'Dispatcher')
@@ -70,6 +69,20 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
             Dispatcher().dispatch_user_messages(user, messages)
 
 
+class SetPasswordForm(auth_forms.SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super(SetPasswordForm, self).__init__(*args, **kwargs)
+        # Enforce password validations for the new password
+        self.fields['new_password1'].validators += password_validators
+
+
+class PasswordChangeForm(auth_forms.PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super(PasswordChangeForm, self).__init__(*args, **kwargs)
+        # Enforce password validations for the new password
+        self.fields['new_password1'].validators += password_validators
+
+
 class EmailAuthenticationForm(AuthenticationForm):
     """
     Extends the standard django AuthenticationForm, to support 75 character
@@ -114,68 +127,11 @@ class ConfirmPasswordForm(forms.Form):
         return password
 
 
-class CommonPasswordValidator(validators.BaseValidator):
-    # See
-    # http://www.smartplanet.com/blog/business-brains/top-20-most-common-passwords-of-all-time-revealed-8216123456-8216princess-8216qwerty/4519  # noqa
-    forbidden_passwords = [
-        'password',
-        '1234',
-        '12345'
-        '123456',
-        '123456y',
-        '123456789',
-        'iloveyou',
-        'princess',
-        'monkey',
-        'rockyou',
-        'babygirl',
-        'monkey',
-        'qwerty',
-        '654321',
-        'dragon',
-        'pussy',
-        'baseball',
-        'football',
-        'letmein',
-        'monkey',
-        '696969',
-        'abc123',
-        'qwe123',
-        'qweasd',
-        'mustang',
-        'michael',
-        'shadow',
-        'master',
-        'jennifer',
-        '111111',
-        '2000',
-        'jordan',
-        'superman'
-        'harley'
-    ]
-    message = _("Please choose a less common password")
-    code = 'password'
-
-    def __init__(self, password_file=None):
-        self.limit_value = password_file
-
-    def clean(self, value):
-        return value.strip()
-
-    def compare(self, value, limit):
-        return value in self.forbidden_passwords
-
-    def get_forbidden_passwords(self):
-        if self.limit_value is None:
-            return self.forbidden_passwords
-
-
 class EmailUserCreationForm(forms.ModelForm):
     email = forms.EmailField(label=_('Email address'))
     password1 = forms.CharField(
         label=_('Password'), widget=forms.PasswordInput,
-        validators=[validators.MinLengthValidator(6),
-                    CommonPasswordValidator()])
+        validators=password_validators)
     password2 = forms.CharField(
         label=_('Confirm password'), widget=forms.PasswordInput)
     redirect_url = forms.CharField(
@@ -331,26 +287,21 @@ Profile = get_profile_class()
 if Profile:
 
     class UserAndProfileForm(forms.ModelForm):
-        email = forms.EmailField(label=_('Email address'), required=True)
 
         def __init__(self, user, *args, **kwargs):
-            self.user = user
             try:
                 instance = Profile.objects.get(user=user)
-            except ObjectDoesNotExist:
+            except Profile.DoesNotExist:
                 # User has no profile, try a blank one
                 instance = Profile(user=user)
             kwargs['instance'] = instance
 
             super(UserAndProfileForm, self).__init__(*args, **kwargs)
 
-            # Get a list of profile fields to help with ordering later
+            # Get profile field names to help with ordering later
             profile_field_names = self.fields.keys()
-            del profile_field_names[profile_field_names.index('email')]
 
-            self.fields['email'].initial = self.instance.user.email
-
-            # Add user fields (we look for core user fields first)
+            # Get user field names (we look for core user fields first)
             core_field_names = set([f.name for f in User._meta.fields])
             user_field_names = ['email']
             for field_name in ('first_name', 'last_name'):
@@ -361,10 +312,13 @@ if Profile:
             # Store user fields so we know what to save later
             self.user_field_names = user_field_names
 
-            # Add additional user fields
+            # Add additional user form fields
             additional_fields = forms.fields_for_model(
                 User, fields=user_field_names)
             self.fields.update(additional_fields)
+
+            # Ensure email is required and initialised correctly
+            self.fields['email'].required = True
 
             # Set initial values
             for field_name in user_field_names:
@@ -380,7 +334,7 @@ if Profile:
         def clean_email(self):
             email = normalise_email(self.cleaned_data['email'])
             if User._default_manager.filter(
-                    email=email).exclude(id=self.user.id).exists():
+                    email=email).exclude(id=self.instance.user.id).exists():
                 raise ValidationError(
                     _("A user with this email address already exists"))
             return email

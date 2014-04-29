@@ -54,19 +54,28 @@ class Shop(Application):
             urls.append(
                 url(r'^password-reset/confirm/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$',
                     login_forbidden(auth_views.password_reset_confirm),
-                    {'post_reset_redirect': reverse_lazy('password-reset-complete')},
+                    {
+                        'post_reset_redirect': reverse_lazy('password-reset-complete'),
+                        'set_password_form': forms.SetPasswordForm,
+                    },
                     name='password-reset-confirm'))
         else:
             urls.append(
                 url(r'^password-reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
                     login_forbidden(auth_views.password_reset_confirm),
-                    {'post_reset_redirect': reverse_lazy('password-reset-complete')},
+                    {
+                        'post_reset_redirect': reverse_lazy('password-reset-complete'),
+                        'set_password_form': forms.SetPasswordForm,
+                    },
                     name='password-reset-confirm'))
             if django.VERSION < (1, 7):
                 urls.append(
                     url(r'^password-reset/confirm/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$',
                         login_forbidden(auth_views.password_reset_confirm_uidb36),
-                        {'post_reset_redirect': reverse_lazy('password-reset-complete')}))
+                        {
+                            'post_reset_redirect': reverse_lazy('password-reset-complete'),
+                            'set_password_form': forms.SetPasswordForm,
+                        }))
 
         urls += [
             url(r'^password-reset/complete/$',

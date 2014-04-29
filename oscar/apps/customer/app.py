@@ -71,11 +71,12 @@ class CustomerApplication(Application):
 
     def get_urls(self):
         urls = [
-            url(r'^$', login_required(self.summary_view.as_view()),
-                name='summary'),
+            # Login, logout and register doesn't require login
             url(r'^login/$', self.login_view.as_view(), name='login'),
             url(r'^logout/$', self.logout_view.as_view(), name='logout'),
             url(r'^register/$', self.register_view.as_view(), name='register'),
+            url(r'^$', login_required(self.summary_view.as_view()),
+                name='summary'),
             url(r'^change-password/$',
                 login_required(self.change_password_view.as_view()),
                 name='change-password'),
@@ -131,6 +132,7 @@ class CustomerApplication(Application):
                 name='email-detail'),
 
             # Notifications
+            # Redirect to notification inbox
             url(r'^notifications/$', generic.RedirectView.as_view(
                 url='/accounts/notifications/inbox/')),
             url(r'^notifications/inbox/$',
@@ -147,6 +149,8 @@ class CustomerApplication(Application):
                 name='notifications-detail'),
 
             # Alerts
+            # Alerts can be setup by anonymous users: some views do not
+            # require login
             url(r'^alerts/$',
                 login_required(self.alert_list_view.as_view()),
                 name='alerts-list'),
@@ -179,6 +183,7 @@ class CustomerApplication(Application):
             url(r'wishlists/create/with-product/(?P<product_pk>\d+)/$',
                 login_required(self.wishlists_create_view.as_view()),
                 name='wishlists-create-with-product'),
+            # Wishlists can be publicly shared, no login required
             url(r'wishlists/(?P<key>[a-z0-9]+)/$',
                 self.wishlists_detail_view.as_view(), name='wishlists-detail'),
             url(r'wishlists/(?P<key>[a-z0-9]+)/update/$',

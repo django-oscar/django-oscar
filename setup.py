@@ -35,9 +35,9 @@ setup(name='django-oscar',
       packages=find_packages(exclude=["sandbox*", "tests*"]),
       include_package_data=True,
       install_requires=[
-          'django>=1.4.2,<1.7',
+          'django>=1.5.7,<1.7',
           # PIL is required for image fields, Pillow is the "friendly" PIL fork
-          'pillow>=1.7.8,<2.3',
+          'pillow>=1.7.8,<2.5',
           # Oscar ships with migrations
           'South>=0.7.6,<0.9',
           # We use the ModelFormSetView from django-extra-views for the basket
@@ -46,11 +46,11 @@ setup(name='django-oscar',
           # Search support
           'django-haystack>=2.1.0',
           # Treebeard is used for categories
-          'django-treebeard==2.0b2',
+          'django-treebeard==2.0',
           # Sorl is used as the default thumbnailer
           'sorl-thumbnail==12.00' if PY3 else 'sorl-thumbnail==11.12',
           # Babel is used for currency formatting
-          'Babel>=1.0',
+          'Babel>=1.0,<1.4',
           # Oscar's default templates use compressor (but you can override
           # this)
           'django-compressor==1.4a1' if PY3 else 'django-compressor==1.3',
@@ -59,7 +59,7 @@ setup(name='django-oscar',
           # For manipulating search URLs
           'purl>=0.7',
           # For phone number field
-          'phonenumbers==5.9.2',
+          'phonenumbers>=5.9.2,<=6.0.0a',
           # Python 2 & 3 compatibility helper
           'six>=1.5.2',
       ],

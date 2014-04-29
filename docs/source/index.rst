@@ -6,24 +6,33 @@ Oscar
 =====
 
 -----------------------------------
-Domain driven e-commerce for Django
+Domain-driven e-commerce for Django
 -----------------------------------
 
+Oscar is an e-commerce framework for building domain-driven applications. It
+has flexibility baked into its core so that complicated requirements can be
+elegantly captured. You can tame a spaghetti domain without writing spaghetti
+code.
 
-Oscar is an e-commerce framework for Django designed for building
-domain-driven applications.  It is structured so that the core business objects
-can be customised to suit the domain at hand.  In this way, your application
-can accurately model its domain, making feature development and maintenance
-much easier.
+Oscar is maintained by `Tangent Snowball`_, who are experts in building complex
+transactional sites for both B2C and B2B markets. Years of e-commerce
+hard-earned experience informs Oscar's design. 
+
+.. _`Tangent Snowball`: http://www.tangentsnowball.com/
+
+Oscar is "domain-driven" in the sense that the core business objects can be
+customised to suit the domain at hand. In this way, your application can
+accurately capture the subtleties of its domain, making feature development and
+maintenance much easier.
 
 Features:
 
-* Any product type can be handled, including downloadable products,
+* Any product type can be handled including downloadable products,
   subscriptions, variant products (e.g., a T-shirt in different sizes and colours).
 
 * Customisable products, such as T-shirts with personalised messages.
 
-* Can be used for large catalogues - Oscar is used in production by sites with
+* Large catalogue support - Oscar is used in production by sites with
   more than 20 million products.
 
 * Multiple fulfillment partners for the same product.
@@ -51,10 +60,10 @@ Oscar is a good choice if your domain has non-trivial business logic.  Oscar's
 flexibility means it's straightforward to implement business rules that would be
 difficult to apply in other frameworks.  
 
-Example requirements that Oscar applications already handle:
+Example requirements that Oscar projects already handle:
 
 * Paying for an order with multiple payment sources (e.g., using a bankcard,
-  voucher, gift card and business account).
+  voucher, gift card and points account).
 
 * Complex access control rules governing who can view and order what.
 
@@ -68,9 +77,8 @@ Example requirements that Oscar applications already handle:
 * Dynamically priced products (eg where the price is provided by an external
   service).
 
-Oscar is developed by `Tangent Labs`_, a London-based digital agency.  It is
-used in production in several applications to sell everything from beer mats to
-ipads.  The `source is on GitHub`_ - contributions welcome.
+Oscar is used in production in several applications to sell everything from beer
+mats to iPads.  The `source is on GitHub`_ - contributions are always welcome.
 
 .. _`Tangent Labs`: http://www.tangentlabs.co.uk
 .. _`source is on GitHub`: https://github.com/tangentlabs/django-oscar

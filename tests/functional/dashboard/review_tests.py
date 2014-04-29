@@ -1,8 +1,9 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 
-from oscar.core.loading import get_model
 from django.core.urlresolvers import reverse
+from django.utils import timezone
 from oscar.core.compat import get_user_model
+from oscar.core.loading import get_model
 from django_dynamic_fixture import get
 
 from oscar.test.testcases import WebTestCase
@@ -87,7 +88,15 @@ class ReviewsDashboardTests(WebTestCase):
             self.assertEqual(i, j)
 
     def test_filter_reviews_by_date(self):
-        now = datetime.now()
+        def n_days_ago(days):
+            """
+            The tests below pass timestamps as GET parameters, but the
+            ProductReviewSearchForm doesn't recognize the timezone notation.
+            """
+            return timezone.make_naive(
+                now - timedelta(days=days), timezone=timezone.utc)
+
+        now = timezone.now()
         review1 = get(ProductReview)
         review2 = get(ProductReview)
         review2.date_created = now - timedelta(days=2)
@@ -97,17 +106,17 @@ class ReviewsDashboardTests(WebTestCase):
         review3.save()
 
         url = reverse('dashboard:reviews-list')
-        response = self.get(url, params={'date_from': now - timedelta(days=5)})
+        response = self.get(url, params={'date_from': n_days_ago(5)})
         self.assertQuerysetContains(response.context['review_list'],
                                     [review1, review2])
 
-        response = self.get(url, params={'date_to': now - timedelta(days=5)})
+        response = self.get(url, params={'date_to': n_days_ago(5)})
         self.assertQuerysetContains(response.context['review_list'],
                                     [review3])
 
         response = self.get(url, params={
-            'date_from': now - timedelta(days=12),
-            'date_to': now - timedelta(days=9)
+            'date_from': n_days_ago(12),
+            'date_to': n_days_ago(9),
         })
         self.assertQuerysetContains(response.context['review_list'],
                                     [review3])

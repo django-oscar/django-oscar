@@ -1,8 +1,17 @@
-===========================================
-Oscar 0.7 release notes - UNDER DEVELOPMENT
-===========================================
+=======================
+Oscar 0.7 release notes
+=======================
 
 Welcome to Oscar 0.7!
+
+These release notes cover the :ref:`new features <what_is_new>` as well as
+:ref:`backwards incompatible changes <incompatible_changes>` that you'll want to be aware of when
+upgrading from Oscar 0.6 or earlier.  
+
+If you encounter any undocumented issues, please let us know on the `mailing
+list`_.
+
+.. _`mailing list`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar
 
 Table of contents:
 
@@ -10,40 +19,60 @@ Table of contents:
     :local:
     :depth: 1
 
+.. _overview:
+
+Overview
+========
+
+Oscar 0.7 is largely a maintenance release, fixing minor issues, merging
+long-standing pull requests and other housekeeping. 
+
+As part of the clean-up, we have removed a few unused models and model fields,
+as well as removing ``null=True`` from a load of ``CharFields`` - so please read the
+release notes carefully when upgrading as some schema migrations may need some
+care. 
+
+Further, ensure you test your checkout implementation carefully after upgrading
+as the core Oscar checkout view classes have been reorganised slightly.  Any
+upgrading work should be minor but be diligent.
+
+.. _compatibility:
+
 Compatibility
 =============
 
-Oscar 0.7 has experimental support for Python 3. Support for Django 1.4 has
-been dropped, and support for Django 1.6 is considered stable.
+Oscar 0.7 has experimental support for Python 3. 
+
+Support for Django 1.4 has been dropped, and support for Django 1.6 is
+now considered stable.
+
+.. _what_is_new:
 
 What's new in Oscar 0.7?
 ========================
 
-This release is mostly a maintenance release, fixing a lot of bugs and and doing
-a lot of housekeeping. We have removed a few unused models and fields, and
-removed ``null=True`` on a lot of ``CharFields`` - so please read the
-release notes carefully when upgrading!
-
 Search improvements
 ~~~~~~~~~~~~~~~~~~~
 
-* Search results can be now be sorted
+Several improvements have been made to Oscar's default search functionality:
 
-* If you're search backend supports it, spelling suggestions will be shown if
-  the search term doesn't lead to any results.
+* Search results can be now be sorted.
+
+* If your search backend supports it, spelling suggestions will be shown if
+  the original search term doesn't lead to any results.
 
 * Only products are returned by the core search view.  Other content types in
   your search index are filtered out (`#370`_).
 
 .. _`#370`: https://github.com/tangentlabs/django-oscar/issues/370
 
-Improvements to signals
-~~~~~~~~~~~~~~~~~~~~~~~
+Extended signals
+~~~~~~~~~~~~~~~~
 
-Oscar signals have been improved and consolidated, making it easier to hook
-into user journeys and extract analytics.
+Oscar's signals have been improved and consolidated, making it easier to hook
+into user journeys and extract analytics information.
 
-Changes to existing signals:
+Changes to existing signals include:
 
 - The :ref:`basket_addition_signal` signal now passes the ``request`` as an additional
   kwarg.
@@ -58,25 +87,25 @@ New signals:
 
 See the :doc:`signals docs </ref/signals>` for more details.
 
-Checkout improvements
-~~~~~~~~~~~~~~~~~~~~~
+Checkout reorganisation
+~~~~~~~~~~~~~~~~~~~~~~~
 
 The checkout classes have been reworked to clean-up how pre-conditions are
-enforced. Each view class now has a ``pre_conditions`` attribute which is a
-list of method names. Each method is run within the ``dispatch`` method of the
-view and will redirect the customer back to the appropriate view if the check
-fails.
+enforced. Each view class now has a ``pre_conditions`` attribute which is an
+iterable of method names (as strings). Each method is run within the
+``dispatch`` method of the view and will redirect the customer back to the
+appropriate view if the check fails. 
 
-This change allows several of the core views to have simpler implementations.
-For instance, these methods have been removed:
+This change makes pre-conditions easier to customise and simplifies the core
+checkout views.  Consequently, the following methods are no longer required and
+have been removed:
 
-* The ``PaymentDetails.get_error_response`` method has been removed.
-* The ``PaymentDetails.can_basket_be_submitted`` method has been removed as its
-  functionality is replaced the new pre-conditions validation.
+* ``PaymentDetails.get_error_response``
+* ``PaymentDetails.can_basket_be_submitted``
 
-Further, the ``PaymentDetailsView`` has been re-organised to make extension easier. For
-instance, several new methods have been introduced to allow fine-grained
-overriding of functionality:
+Further, the ``PaymentDetailsView`` has been re-organised for extensibility.
+For instance, several new methods have been introduced to allow
+fine-grained overriding of functionality:
 
 * :func:`~oscar.apps.checkout.views.PaymentDetailsView.handle_payment_details_submission` - 
   This is responsible for validating any forms submitted from the payment
@@ -93,17 +122,28 @@ The implementation of
 :func:`~oscar.apps.checkout.views.PaymentDetailsView.submit` has been improved
 to handle payment errors in a more customer friendly way.  If an exception is
 raised during payment, the payment details page is now loaded with the
-original forms passed to the template (so form errors can be displayed).
+original forms passed to the template (so form validation errors can be displayed).
 
 Finally, the ``billing_address`` kwarg to
 :func:`~oscar.apps.checkout.views.PaymentDetailsView.submit`` has been removed.
 If you want to pass a billing address to be saved against the order, then pass
 it as part of the ``order_kwargs`` option.
 
+.. _minor_changes:
+
 Minor changes
 ~~~~~~~~~~~~~
 
-* Customers can delete their profiles from within the account section.
+* Oscar's LESS files now use Bootstrap 2.3.2 (Oscar 0.6 uses 2.1.1).
+
+* The product model now has a 
+  :attr:`~oscar.apps.catalogue.abstract_models.Product.num_approved_reviews`
+  property to avoid unnecessary SQL queries when rendering templates (`#1299`_)
+
+* Customers can delete their profiles from within their account section.
+
+* Customers are prevented from using short or common passwords when changing
+  their password in their account (`#1202`_)
 
 * :attr:`~oscar.core.application.Application.permissions_map` now supports more than two
   lists to evaluate permissions.
@@ -159,6 +199,8 @@ Minor changes
   extended to submit the Python and Django version in use.
   Tracking is still easily disabled by setting ``OSCAR_TRACKING`` to ``False``.
 
+.. _`#1202`: https://github.com/tangentlabs/django-oscar/pull/1202
+.. _`#1299`: https://github.com/tangentlabs/django-oscar/pull/1299
 .. _`b920f8ba`: https://github.com/tangentlabs/django-oscar/commit/b920f8ba288cd2f19bb167db2a012479ba956397
 .. _`ef3ccf08a7`: https://github.com/tangentlabs/django-oscar/commit/ef3ccf08a707ae1250cdb8d5f2dc6f721d020dc4
 .. _`32b7249`: https://github.com/tangentlabs/django-oscar/commit/32b7249e44b40cb1b20d01226f77ae6777a20b91
@@ -167,7 +209,7 @@ Minor changes
 Bugfixes
 ~~~~~~~~
 
-* Addresses in non-shipping countries can't be selected as default shipping
+* Addresses in non-shipping countries can no longer be selected as default shipping
   address anymore (`be04d46639`_).
 
 * Suspended and consumed offers are no longer returned by the "active" offer
@@ -178,6 +220,8 @@ Bugfixes
 .. _`#1228`: https://github.com/tangentlabs/django-oscar/issues/1228
 .. _`#1289`: https://github.com/tangentlabs/django-oscar/issues/1289
 .. _`be04d46639`: https://github.com/tangentlabs/django-oscar/commit/
+
+.. _incompatible_changes:
 
 Backwards incompatible changes in 0.7
 =====================================
@@ -231,6 +275,9 @@ Backwards incompatible changes in 0.7
  * jScrollPane, which was used to style the dashboard's scroll bars, has been
    removed.
 
+ * The methods ``get_error_response`` and ``can_basket_be_submitted`` have been
+   removed from the ``PaymentDetailsView`` view class in checkout
+
 .. _`#1123`: https://github.com/tangentlabs/django-oscar/pull/1123
 .. _`#1251`: https://github.com/tangentlabs/django-oscar/pull/1251
 
@@ -253,12 +300,6 @@ Removal of features deprecated in 0.6
   has been removed.  Instead
   :meth:`oscar.apps.checkout.session.CheckoutSessionMixin.get_shipping_address`
   provides the same functionality.
-
-Renamed templates
-~~~~~~~~~~~~~~~~~
-
-Template block changes
-~~~~~~~~~~~~~~~~~~~~~~
 
 Migrations
 ~~~~~~~~~~
@@ -297,11 +338,13 @@ Migrations
 
     - ``0006`` - ``AutoSlugField`` and ``unique=True`` for ``AbstractCommunicationEventType``
     - ``0007`` & ``0008`` - Data and schema migration for removing ``null=True`` on ``CharFields``
+    - ``0009`` - Migration caused by ``CommunicationEventType.code`` separator change
 
 * Offer:
 
     - ``0029`` - ``AutoSlugField`` for ``ConditionalOffer``
     - ``0030`` & ``0031`` - Data and schema migration for removing ``null=True`` on ``CharFields``
+    - ``0032`` - Changing ``proxy_class`` fields to ``NullCharField``
 
 * Order:
 
@@ -338,6 +381,3 @@ Migrations
       ``[start|end]_datetime`` (includes data migration).
 
 .. _`convert an app`: http://south.readthedocs.org/en/latest/convertinganapp.html
-
-Features deprecated in 0.7
-==========================

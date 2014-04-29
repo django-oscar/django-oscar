@@ -1,6 +1,7 @@
 import datetime
 
 from django.test import TestCase
+from django.utils import timezone
 
 from oscar.test import factories
 from oscar.apps.offer import models
@@ -10,7 +11,7 @@ class TestActiveOfferManager(TestCase):
 
     def test_includes_offers_in_date_range(self):
         # Create offer that is available but with the wrong status
-        now = datetime.datetime.now()
+        now = timezone.now()
         start = now - datetime.timedelta(days=1)
         end = now + datetime.timedelta(days=1)
         factories.create_offer(start=start, end=end)
@@ -20,7 +21,7 @@ class TestActiveOfferManager(TestCase):
 
     def test_filters_out_expired_offers(self):
         # Create offer that is available but with the wrong status
-        now = datetime.datetime.now()
+        now = timezone.now()
         start = now - datetime.timedelta(days=3)
         end = now - datetime.timedelta(days=1)
         factories.create_offer(start=start, end=end)
@@ -30,7 +31,7 @@ class TestActiveOfferManager(TestCase):
 
     def test_filters_out_offers_yet_to_start(self):
         # Create offer that is available but with the wrong status
-        now = datetime.datetime.now()
+        now = timezone.now()
         start = now + datetime.timedelta(days=1)
         end = now + datetime.timedelta(days=3)
         factories.create_offer(start=start, end=end)

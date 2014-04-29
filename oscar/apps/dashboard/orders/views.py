@@ -19,7 +19,8 @@ from oscar.apps.dashboard.orders import forms
 from oscar.views import sort_queryset
 from oscar.views.generic import BulkEditMixin
 from oscar.apps.payment.exceptions import PaymentError
-from oscar.apps.order.exceptions import InvalidShippingEvent, InvalidStatus
+from oscar.apps.order.exceptions import (
+    InvalidShippingEvent, InvalidStatus, InvalidPaymentEvent)
 
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
@@ -360,6 +361,7 @@ class OrderListView(BulkEditMixin, ListView):
 class OrderDetailView(DetailView):
     """
     Dashboard view to display a single order.
+
     Supports the permission-based dashboard.
     """
     model = Order
@@ -419,19 +421,48 @@ class OrderDetailView(DetailView):
             if line_action not in self.line_actions:
                 messages.error(self.request, _("Invalid action"))
                 return self.reload_page_response()
-            else:
-                line_ids = request.POST.getlist('selected_line')
-                line_quantities = []
-                for line_id in line_ids:
-                    qty = request.POST.get('selected_line_qty_%s' % line_id)
-                    line_quantities.append(int(qty))
-                lines = order.lines.filter(id__in=line_ids)
-                if not lines.exists():
-                    messages.error(self.request,
-                                   _("You must select some lines to act on"))
+
+            # Load requested lines
+            line_ids = request.POST.getlist('selected_line')
+            if len(line_ids) == 0:
+                messages.error(
+                    self.request, _("You must select some lines to act on"))
+                return self.reload_page_response()
+
+            lines = order.lines.filter(id__in=line_ids)
+            if len(line_ids) != len(lines):
+                messages.error(
+                    self.request, _("Invalid lines requested"))
+                return self.reload_page_response()
+
+            # Build list of line quantities
+            line_quantities = []
+            for line in lines:
+                qty = request.POST.get('selected_line_qty_%s' % line.id)
+                try:
+                    qty = int(qty)
+                except ValueError:
+                    messages.error(
+                        self.request, _("The entered quantity for line #%s is not valid") % line.id)
                     return self.reload_page_response()
-                return getattr(self, line_action)(request, order, lines,
-                                                  line_quantities)
+                if qty <= 0:
+                    messages.error(
+                        self.request, _(
+                            "The entered quantity for line #%s is not valid") % line.id)
+                    return self.reload_page_response()
+                elif qty > line.quantity:
+                    messages.error(
+                        self.request, _(
+                            "The entered quantity for line #(line_id)%s "
+                            "should not be higher than %(quantity)s") % {
+                                'line_id': line.id,
+                                'quantity': line.quantity})
+                    return self.reload_page_response()
+
+                line_quantities.append(int(qty))
+
+            return getattr(self, line_action)(
+                request, order, lines, line_quantities)
 
         messages.error(request, _("No valid action submitted"))
         return self.reload_page_response()
@@ -551,6 +582,9 @@ class OrderDetailView(DetailView):
         return self.reload_page_response()
 
     def create_order_payment_event(self, request, order):
+        """
+        Create a payment event for the whole order
+        """
         amount_str = request.POST.get('amount', None)
         try:
             amount = D(amount_str)
@@ -559,26 +593,10 @@ class OrderDetailView(DetailView):
             return self.reload_page_response()
         return self._create_payment_event(request, order, amount)
 
-    def _create_payment_event(self, request, order, amount, lines=None,
-                              quantities=None):
-        code = request.POST['payment_event_type']
-        try:
-            event_type = PaymentEventType._default_manager.get(code=code)
-        except PaymentEventType.DoesNotExist:
-            messages.error(request, _("The event type '%s' is not valid")
-                           % code)
-            return self.reload_page_response()
-        try:
-            EventHandler().handle_payment_event(order, event_type, amount,
-                                                lines, quantities)
-        except PaymentError as e:
-            messages.error(request, _("Unable to change order status due to"
-                                      " payment error: %s") % e)
-        else:
-            messages.info(request, _("Payment event created"))
-        return self.reload_page_response()
-
     def create_payment_event(self, request, order, lines, quantities):
+        """
+        Create a payment event for a subset of order lines
+        """
         amount_str = request.POST.get('amount', None)
 
         # If no amount passed, then we add up the total of the selected lines
@@ -595,6 +613,28 @@ class OrderDetailView(DetailView):
 
         return self._create_payment_event(request, order, amount, lines,
                                           quantities)
+
+    def _create_payment_event(self, request, order, amount, lines=None,
+                              quantities=None):
+        code = request.POST.get('payment_event_type')
+        try:
+            event_type = PaymentEventType._default_manager.get(code=code)
+        except PaymentEventType.DoesNotExist:
+            messages.error(
+                request, _("The event type '%s' is not valid") % code)
+            return self.reload_page_response()
+        try:
+            EventHandler().handle_payment_event(
+                order, event_type, amount, lines, quantities)
+        except PaymentError as e:
+            messages.error(request, _("Unable to create payment event due to"
+                                      " payment error: %s") % e)
+        except InvalidPaymentEvent as e:
+            messages.error(
+                request, _("Unable to create payment event: %s") % e)
+        else:
+            messages.info(request, _("Payment event created"))
+        return self.reload_page_response()
 
 
 class LineDetailView(DetailView):
