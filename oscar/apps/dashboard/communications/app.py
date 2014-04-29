@@ -3,6 +3,7 @@ from django.conf.urls import url
 from oscar.core.application import Application
 from oscar.core.loading import get_class
 
+
 class CommsDashboardApplication(Application):
     name = None
     default_permissions = ['is_staff', ]

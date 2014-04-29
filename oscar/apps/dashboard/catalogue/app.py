@@ -50,7 +50,8 @@ class CatalogueApplication(Application):
     category_delete_view = get_class('dashboard.catalogue.views',
                                      'CategoryDeleteView')
 
-    stock_alert_view = get_class('dashboard.catalogue.views', 'StockAlertListView')
+    stock_alert_view = get_class('dashboard.catalogue.views',
+                                 'StockAlertListView')
 
     def get_urls(self):
         urls = [

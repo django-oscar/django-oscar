@@ -9,11 +9,16 @@ class PromotionsDashboardApplication(Application):
     name = None
     default_permissions = ['is_staff', ]
 
-    list_view = get_class('dashboard.promotions.views', 'ListView')
-    page_list = get_class('dashboard.promotions.views', 'PageListView')
-    page_detail = get_class('dashboard.promotions.views', 'PageDetailView')
-    create_redirect_view = get_class('dashboard.promotions.views', 'CreateRedirectView')
-    delete_page_promotion_view = get_class('dashboard.promotions.views', 'DeletePagePromotionView')
+    list_view = get_class('dashboard.promotions.views',
+                          'ListView')
+    page_list = get_class('dashboard.promotions.views',
+                          'PageListView')
+    page_detail = get_class('dashboard.promotions.views',
+                            'PageDetailView')
+    create_redirect_view = get_class('dashboard.promotions.views',
+                                     'CreateRedirectView')
+    delete_page_promotion_view = get_class('dashboard.promotions.views',
+                                           'DeletePagePromotionView')
 
     # Dynamically set the CRUD views for all promotion classes
     view_names = (

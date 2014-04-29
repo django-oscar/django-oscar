@@ -13,11 +13,16 @@ class PartnersDashboardApplication(Application):
     manage_view = get_class('dashboard.partners.views', 'PartnerManageView')
     delete_view = get_class('dashboard.partners.views', 'PartnerDeleteView')
 
-    user_link_view = get_class('dashboard.partners.views', 'PartnerUserLinkView')
-    user_unlink_view = get_class('dashboard.partners.views', 'PartnerUserUnlinkView')
-    user_create_view = get_class('dashboard.partners.views', 'PartnerUserCreateView')
-    user_select_view = get_class('dashboard.partners.views', 'PartnerUserSelectView')
-    user_update_view = get_class('dashboard.partners.views', 'PartnerUserUpdateView')
+    user_link_view = get_class('dashboard.partners.views',
+                               'PartnerUserLinkView')
+    user_unlink_view = get_class('dashboard.partners.views',
+                                 'PartnerUserUnlinkView')
+    user_create_view = get_class('dashboard.partners.views',
+                                 'PartnerUserCreateView')
+    user_select_view = get_class('dashboard.partners.views',
+                                 'PartnerUserSelectView')
+    user_update_view = get_class('dashboard.partners.views',
+                                 'PartnerUserUpdateView')
 
     def get_urls(self):
         urls = [
