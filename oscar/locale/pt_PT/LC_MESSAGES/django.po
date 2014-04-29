@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-24 22:33+0100\n"
+"POT-Creation-Date: 2014-04-29 10:58+0100\n"
 "PO-Revision-Date: 2014-04-16 16:49+0000\n"
 "Last-Translator: oscar_bot <maik.hoepfel@tangentsnowball.com>\n"
 "Language-Team: Portuguese (Portugal) (http://www.transifex.com/projects/p/"
@@ -25,8 +25,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: defaults.py:90 templates/oscar/dashboard/index.html:16
-#: templates/oscar/dashboard/layout.html:29
-#: templates/oscar/dashboard/layout.html:109
+#: templates/oscar/dashboard/layout.html:31
+#: templates/oscar/dashboard/layout.html:111
 #: templates/oscar/dashboard/catalogue/category_delete.html:9
 #: templates/oscar/dashboard/catalogue/category_form.html:14
 #: templates/oscar/dashboard/catalogue/category_list.html:14
@@ -1323,9 +1323,10 @@ msgid "%(attr)s attribute %(err)s"
 msgstr "%(attr)s attributo %(err)s"
 
 #: apps/catalogue/abstract_models.py:664
+#, fuzzy
 msgid ""
-"Code can only contain the letters a-z, A-Z, digits and underscores, and "
-"can't start with a digit"
+"Code can only contain the letters a-z, A-Z, digits, minus and underscores, "
+"and can't start with a digit"
 msgstr ""
 "O código só pode conter letras de a-z, A-Z, números, underscores e não pode "
 "começar com um número"
@@ -6032,7 +6033,7 @@ msgstr "Total do carrinho (com impostos)"
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:11
 #: templates/oscar/customer/wishlists/wishlists_detail.html:12
 #: templates/oscar/customer/wishlists/wishlists_form.html:11
-#: templates/oscar/dashboard/layout.html:48
+#: templates/oscar/dashboard/layout.html:50
 #: templates/oscar/partials/nav_accounts.html:37
 #: templates/oscar/partials/nav_accounts.html:41
 msgid "Account"
@@ -6837,15 +6838,15 @@ msgstr "Ofertas do <em>Site</em> Activas"
 msgid "Active <em>Vouchers</em>"
 msgstr "<em>Vouchers</em> Activos"
 
-#: templates/oscar/dashboard/layout.html:46
+#: templates/oscar/dashboard/layout.html:48
 msgid "Welcome"
 msgstr "Olá"
 
-#: templates/oscar/dashboard/layout.html:47
+#: templates/oscar/dashboard/layout.html:49
 msgid "Return to site"
 msgstr "Voltar ao site"
 
-#: templates/oscar/dashboard/layout.html:49
+#: templates/oscar/dashboard/layout.html:51
 msgid "Log out"
 msgstr "Sair"
 

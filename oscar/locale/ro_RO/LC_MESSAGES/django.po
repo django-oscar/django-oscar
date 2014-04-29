@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-24 22:33+0100\n"
-"PO-Revision-Date: 2014-04-23 09:43+0000\n"
+"POT-Creation-Date: 2014-04-29 10:58+0100\n"
+"PO-Revision-Date: 2014-04-28 15:33+0000\n"
 "Last-Translator: Atr3ides <atreidesone@gmail.com>\n"
 "Language-Team: Romanian (Romania) (http://www.transifex.com/projects/p/"
 "django-oscar/language/ro_RO/)\n"
@@ -21,8 +21,8 @@ msgstr ""
 "2:1));\n"
 
 #: defaults.py:90 templates/oscar/dashboard/index.html:16
-#: templates/oscar/dashboard/layout.html:29
-#: templates/oscar/dashboard/layout.html:109
+#: templates/oscar/dashboard/layout.html:31
+#: templates/oscar/dashboard/layout.html:111
 #: templates/oscar/dashboard/catalogue/category_delete.html:9
 #: templates/oscar/dashboard/catalogue/category_form.html:14
 #: templates/oscar/dashboard/catalogue/category_list.html:14
@@ -208,7 +208,7 @@ msgstr "Pagina"
 
 #: defaults.py:183
 msgid "Email templates"
-msgstr ""
+msgstr "Sabloane email"
 
 #: defaults.py:187 templates/oscar/catalogue/reviews/review_detail.html:5
 #: templates/oscar/catalogue/reviews/review_detail.html:26
@@ -220,11 +220,11 @@ msgstr ""
 #: templates/oscar/dashboard/users/detail.html:109
 #: templates/oscar/dashboard/users/detail.html:176
 msgid "Reviews"
-msgstr ""
+msgstr "Recenzii"
 
 #: defaults.py:193 templates/oscar/dashboard/reports/index.html:6
 msgid "Reports"
-msgstr ""
+msgstr "Rapoarte"
 
 #: defaults.py:206 apps/catalogue/abstract_models.py:164
 #: apps/catalogue/abstract_models.py:180 apps/customer/abstract_models.py:150
@@ -270,23 +270,23 @@ msgstr ""
 
 #: apps/address/abstract_models.py:22
 msgid "Mr"
-msgstr ""
+msgstr "Dl"
 
 #: apps/address/abstract_models.py:23
 msgid "Miss"
-msgstr ""
+msgstr "Dra"
 
 #: apps/address/abstract_models.py:24
 msgid "Mrs"
-msgstr ""
+msgstr "Dna"
 
 #: apps/address/abstract_models.py:25
 msgid "Ms"
-msgstr ""
+msgstr "Dna"
 
 #: apps/address/abstract_models.py:26
 msgid "Dr"
-msgstr ""
+msgstr "Dr"
 
 #: apps/address/abstract_models.py:213
 msgctxt "Treatment Pronouns for the customer"
@@ -298,42 +298,42 @@ msgstr ""
 #: templates/oscar/dashboard/partners/partner_user_list.html:46
 #: templates/oscar/dashboard/partners/partner_user_select.html:53
 msgid "First name"
-msgstr ""
+msgstr "Prenume"
 
 #: apps/address/abstract_models.py:216 apps/customer/abstract_models.py:60
 #: templates/oscar/dashboard/partners/partner_manage.html:56
 #: templates/oscar/dashboard/partners/partner_user_list.html:47
 #: templates/oscar/dashboard/partners/partner_user_select.html:54
 msgid "Last name"
-msgstr ""
+msgstr "Nume"
 
 #: apps/address/abstract_models.py:220
 msgid "First line of address"
-msgstr ""
+msgstr "Adresa linia 1"
 
 #: apps/address/abstract_models.py:222
 msgid "Second line of address"
-msgstr ""
+msgstr "Adresa linia 2"
 
 #: apps/address/abstract_models.py:224
 msgid "Third line of address"
-msgstr ""
+msgstr "Adresa linia 3"
 
 #: apps/address/abstract_models.py:225
 msgid "City"
-msgstr ""
+msgstr "Oras"
 
 #: apps/address/abstract_models.py:226
 msgid "State/County"
-msgstr ""
+msgstr "Judet"
 
 #: apps/address/abstract_models.py:228
 msgid "Post/Zip-code"
-msgstr ""
+msgstr "Cod postal"
 
 #: apps/address/abstract_models.py:229 apps/address/abstract_models.py:401
 msgid "Country"
-msgstr ""
+msgstr "Tara"
 
 #: apps/address/abstract_models.py:234
 msgid "Search text - used only for searching addresses"
@@ -347,14 +347,14 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:421
 #: templates/oscar/dashboard/partners/partner_manage.html:38
 msgid "Address"
-msgstr ""
+msgstr "Adresa"
 
 #: apps/address/abstract_models.py:243
 #: templates/oscar/dashboard/partners/partner_list.html:47
 #: templates/oscar/dashboard/users/detail.html:108
 #: templates/oscar/dashboard/users/detail.html:149
 msgid "Addresses"
-msgstr ""
+msgstr "Adrese"
 
 #: apps/address/abstract_models.py:269
 #, python-format
@@ -368,23 +368,23 @@ msgstr ""
 
 #: apps/address/abstract_models.py:381
 msgid "ISO 3166-1 alpha-2"
-msgstr ""
+msgstr "ISO 3166-1 alpha-2"
 
 #: apps/address/abstract_models.py:383
 msgid "ISO 3166-1 alpha-3"
-msgstr ""
+msgstr "ISO 3166-1 alpha-3"
 
 #: apps/address/abstract_models.py:388
 msgid "ISO 3166-1 numeric"
-msgstr ""
+msgstr "ISO 3166-1 numeric"
 
 #: apps/address/abstract_models.py:389
 msgid "Official name (CAPS)"
-msgstr ""
+msgstr "Nume oficial (CAPS)"
 
 #: apps/address/abstract_models.py:390
 msgid "Country name"
-msgstr ""
+msgstr "Numele tarii"
 
 #: apps/address/abstract_models.py:393
 msgid "Display order"
@@ -396,15 +396,15 @@ msgstr ""
 
 #: apps/address/abstract_models.py:396
 msgid "Is Shipping Country"
-msgstr ""
+msgstr "Livrare in aceasta tara"
 
 #: apps/address/abstract_models.py:402 apps/shipping/models.py:19
 msgid "Countries"
-msgstr ""
+msgstr "Tari"
 
 #: apps/address/abstract_models.py:428 models/fields/__init__.py:150
 msgid "Phone number"
-msgstr ""
+msgstr "Numar telefon"
 
 #: apps/address/abstract_models.py:429
 msgid "In case we need to call you about your order"
@@ -427,11 +427,11 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_list.html:99
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:5
 msgid "Shipping address"
-msgstr ""
+msgstr "Adresa livrare"
 
 #: apps/address/abstract_models.py:438
 msgid "Shipping addresses"
-msgstr ""
+msgstr "Adrese livrare"
 
 #: apps/address/abstract_models.py:463 apps/analytics/abstract_models.py:45
 #: apps/analytics/abstract_models.py:73 apps/analytics/abstract_models.py:89
@@ -445,23 +445,23 @@ msgstr ""
 #: templates/oscar/dashboard/users/alerts/list.html:46
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:10
 msgid "User"
-msgstr ""
+msgstr "Utilizator"
 
 #: apps/address/abstract_models.py:467
 msgid "Default shipping address?"
-msgstr ""
+msgstr "Adresa livrare implicita?"
 
 #: apps/address/abstract_models.py:471
 msgid "Default billing address?"
-msgstr ""
+msgstr "Adresa facturare implicita?"
 
 #: apps/address/abstract_models.py:476 apps/offer/models.py:162
 msgid "Number of Orders"
-msgstr ""
+msgstr "Numar Comenzi"
 
 #: apps/address/abstract_models.py:480
 msgid "Address Hash"
-msgstr ""
+msgstr "Hash Adresa"
 
 #: apps/address/abstract_models.py:482 apps/analytics/abstract_models.py:75
 #: apps/analytics/abstract_models.py:91 apps/basket/abstract_models.py:571
@@ -473,15 +473,15 @@ msgstr ""
 #: apps/promotions/models.py:26 apps/promotions/models.py:328
 #: apps/voucher/abstract_models.py:144
 msgid "Date Created"
-msgstr ""
+msgstr "Data Crearii"
 
 #: apps/address/abstract_models.py:509
 msgid "User address"
-msgstr ""
+msgstr "Adresa utilizator"
 
 #: apps/address/abstract_models.py:510
 msgid "User addresses"
-msgstr ""
+msgstr "Adrese utilizator"
 
 #: apps/address/abstract_models.py:523
 msgid "This address is already in your address book"
@@ -492,11 +492,11 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:446
 #: templates/oscar/dashboard/orders/order_list.html:100
 msgid "Billing address"
-msgstr ""
+msgstr "Adresa facturare"
 
 #: apps/address/abstract_models.py:532
 msgid "Billing addresses"
-msgstr ""
+msgstr "Adrese facturare"
 
 #: apps/address/abstract_models.py:551 apps/order/abstract_models.py:391
 #: apps/partner/abstract_models.py:125
@@ -534,17 +534,17 @@ msgstr ""
 #: templates/oscar/dashboard/users/alerts/list.html:45
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:6
 msgid "Product"
-msgstr ""
+msgstr "Produs"
 
 #: apps/analytics/abstract_models.py:21 apps/analytics/reports.py:21
 #: templates/oscar/dashboard/catalogue/product_update.html:94
 #: templates/oscar/dashboard/reports/partials/product_report.html:9
 msgid "Views"
-msgstr ""
+msgstr "Vizualizari"
 
 #: apps/analytics/abstract_models.py:23 apps/analytics/abstract_models.py:51
 msgid "Basket Additions"
-msgstr ""
+msgstr "Adaugari la Cos"
 
 #: apps/analytics/abstract_models.py:25 apps/analytics/reports.py:23
 #: templates/oscar/dashboard/catalogue/product_update.html:102
@@ -559,7 +559,7 @@ msgstr ""
 #: templates/oscar/dashboard/reviews/review_list.html:60
 #: templates/oscar/dashboard/users/detail.html:180
 msgid "Score"
-msgstr ""
+msgstr "Scor"
 
 #: apps/analytics/abstract_models.py:33
 msgid "Product record"
@@ -1184,7 +1184,7 @@ msgstr ""
 #: templates/oscar/dashboard/reviews/review_list.html:57
 #: templates/oscar/dashboard/users/detail.html:181
 msgid "Title"
-msgstr ""
+msgstr "Titlu"
 
 #: apps/catalogue/abstract_models.py:229 apps/catalogue/abstract_models.py:658
 #: templates/oscar/catalogue/detail.html:136
@@ -1298,8 +1298,8 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:664
 msgid ""
-"Code can only contain the letters a-z, A-Z, digits and underscores, and "
-"can't start with a digit"
+"Code can only contain the letters a-z, A-Z, digits, minus and underscores, "
+"and can't start with a digit"
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:668 apps/catalogue/abstract_models.py:840
@@ -5009,8 +5009,9 @@ msgstr ""
 
 #: templates/oscar/basket/messages/new_total.html:9
 #: templates/oscar/basket/messages/new_total.html:11
+#, fuzzy
 msgid "Basket total now"
-msgstr ""
+msgstr "Adaugari la Cos"
 
 #: templates/oscar/basket/messages/new_total.html:18
 #: templates/oscar/basket/partials/basket_quick.html:38
@@ -5873,7 +5874,7 @@ msgstr ""
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:11
 #: templates/oscar/customer/wishlists/wishlists_detail.html:12
 #: templates/oscar/customer/wishlists/wishlists_form.html:11
-#: templates/oscar/dashboard/layout.html:48
+#: templates/oscar/dashboard/layout.html:50
 #: templates/oscar/partials/nav_accounts.html:37
 #: templates/oscar/partials/nav_accounts.html:41
 msgid "Account"
@@ -6610,15 +6611,15 @@ msgstr ""
 msgid "Active <em>Vouchers</em>"
 msgstr ""
 
-#: templates/oscar/dashboard/layout.html:46
+#: templates/oscar/dashboard/layout.html:48
 msgid "Welcome"
 msgstr ""
 
-#: templates/oscar/dashboard/layout.html:47
+#: templates/oscar/dashboard/layout.html:49
 msgid "Return to site"
 msgstr ""
 
-#: templates/oscar/dashboard/layout.html:49
+#: templates/oscar/dashboard/layout.html:51
 msgid "Log out"
 msgstr ""
 

@@ -15,9 +15,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-24 22:32+0100\n"
-"PO-Revision-Date: 2014-04-23 07:31+0000\n"
-"Last-Translator: 이혜민 <luccasya@datasquare.co.kr>\n"
+"POT-Creation-Date: 2014-04-29 10:58+0100\n"
+"PO-Revision-Date: 2014-04-27 13:30+0000\n"
+"Last-Translator: oscar_bot <maik.hoepfel@tangentsnowball.com>\n"
 "Language-Team: Korean (http://www.transifex.com/projects/p/django-oscar/"
 "language/ko/)\n"
 "Language: ko\n"
@@ -27,8 +27,8 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: defaults.py:90 templates/oscar/dashboard/index.html:16
-#: templates/oscar/dashboard/layout.html:29
-#: templates/oscar/dashboard/layout.html:109
+#: templates/oscar/dashboard/layout.html:31
+#: templates/oscar/dashboard/layout.html:111
 #: templates/oscar/dashboard/catalogue/category_delete.html:9
 #: templates/oscar/dashboard/catalogue/category_form.html:14
 #: templates/oscar/dashboard/catalogue/category_list.html:14
@@ -1035,7 +1035,7 @@ msgstr "생성일로 부터"
 
 #: apps/basket/reports.py:57
 msgid "Open baskets"
-msgstr "열린 장바구니"
+msgstr "오픈 장바구니"
 
 #: apps/basket/reports.py:83
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:13
@@ -1044,7 +1044,7 @@ msgstr "생성과 등록 사이 시간"
 
 #: apps/basket/reports.py:112
 msgid "Submitted baskets"
-msgstr "주문완료된 장바구니"
+msgstr "등록된 장바구니"
 
 #: apps/basket/views.py:202
 msgid "You can't save an item for later if you're not logged in!"
@@ -1316,9 +1316,10 @@ msgid "%(attr)s attribute %(err)s"
 msgstr "%(attr)s 속성 %(err)s"
 
 #: apps/catalogue/abstract_models.py:664
+#, fuzzy
 msgid ""
-"Code can only contain the letters a-z, A-Z, digits and underscores, and "
-"can't start with a digit"
+"Code can only contain the letters a-z, A-Z, digits, minus and underscores, "
+"and can't start with a digit"
 msgstr ""
 "코드는 알파벳 대문자, 소문자, 숫자 그리고 _ 표시만 가능하며, 숫자로 시작할 "
 "수 없습니다."
@@ -1999,7 +2000,7 @@ msgstr ""
 #: apps/customer/forms.py:230
 #, python-format
 msgid "Orders placed until %(date_to)s"
-msgstr "%(date_to)s 이전에 생성된 주문"
+msgstr "%(date_to)s 이전에 주문된 주문"
 
 #: apps/customer/forms.py:232
 #, python-format
@@ -2598,12 +2599,12 @@ msgstr "복원된 행사"
 #: apps/dashboard/orders/forms.py:45
 #, python-format
 msgid "Orders placed since %s"
-msgstr "%s 이후에 생성된 주문"
+msgstr "%s 이후에 주문된 주문"
 
 #: apps/dashboard/orders/forms.py:48
 #, python-format
 msgid "Orders placed until %s"
-msgstr "%s 이전에 생성된 주문"
+msgstr "%s 이전에 주문된 주문"
 
 #: apps/dashboard/orders/forms.py:66 apps/dashboard/reviews/forms.py:29
 msgid "Customer name"
@@ -4209,7 +4210,7 @@ msgstr "주문일"
 
 #: apps/order/reports.py:46
 msgid "Orders placed"
-msgstr "생성된 주문"
+msgstr "주문된 주문"
 
 #: apps/order/utils.py:50
 msgid "Empty baskets cannot be submitted"
@@ -5961,7 +5962,7 @@ msgstr "장바구니 총합 (세금 포함)"
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:11
 #: templates/oscar/customer/wishlists/wishlists_detail.html:12
 #: templates/oscar/customer/wishlists/wishlists_form.html:11
-#: templates/oscar/dashboard/layout.html:48
+#: templates/oscar/dashboard/layout.html:50
 #: templates/oscar/partials/nav_accounts.html:37
 #: templates/oscar/partials/nav_accounts.html:41
 msgid "Account"
@@ -6748,15 +6749,15 @@ msgstr "활성화 <em>사이트</em> 행사"
 msgid "Active <em>Vouchers</em>"
 msgstr "활성화 쿠폰"
 
-#: templates/oscar/dashboard/layout.html:46
+#: templates/oscar/dashboard/layout.html:48
 msgid "Welcome"
 msgstr "환영합니다"
 
-#: templates/oscar/dashboard/layout.html:47
+#: templates/oscar/dashboard/layout.html:49
 msgid "Return to site"
 msgstr "사이트로 돌아가기"
 
-#: templates/oscar/dashboard/layout.html:49
+#: templates/oscar/dashboard/layout.html:51
 msgid "Log out"
 msgstr "로그아웃"
 

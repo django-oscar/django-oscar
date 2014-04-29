@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-24 22:29+0100\n"
+"POT-Creation-Date: 2014-04-29 10:56+0100\n"
 "PO-Revision-Date: 2014-04-16 16:49+0000\n"
 "Last-Translator: oscar_bot <maik.hoepfel@tangentsnowball.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/projects/p/django-oscar/"
@@ -27,8 +27,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: defaults.py:90 templates/oscar/dashboard/index.html:16
-#: templates/oscar/dashboard/layout.html:29
-#: templates/oscar/dashboard/layout.html:109
+#: templates/oscar/dashboard/layout.html:31
+#: templates/oscar/dashboard/layout.html:111
 #: templates/oscar/dashboard/catalogue/category_delete.html:9
 #: templates/oscar/dashboard/catalogue/category_form.html:14
 #: templates/oscar/dashboard/catalogue/category_list.html:14
@@ -1320,8 +1320,8 @@ msgstr "%(attr)s atributo %(err)s"
 
 #: apps/catalogue/abstract_models.py:664
 msgid ""
-"Code can only contain the letters a-z, A-Z, digits and underscores, and "
-"can't start with a digit"
+"Code can only contain the letters a-z, A-Z, digits, minus and underscores, "
+"and can't start with a digit"
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:668 apps/catalogue/abstract_models.py:840
@@ -2765,11 +2765,10 @@ msgid "The entered quantity for line #%s is not valid"
 msgstr "El tipo de evento '%s' no es valido "
 
 #: apps/dashboard/orders/views.py:461
-#, fuzzy
 msgid ""
 "The entered quantity for line #(line_id)%s should not be higher than "
 "%(quantity)s"
-msgstr "El tipo de evento '%s' no es valido "
+msgstr ""
 
 #: apps/dashboard/orders/views.py:472
 msgid "No valid action submitted"
@@ -5960,7 +5959,7 @@ msgstr "Total cistella (incl. impost):"
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:11
 #: templates/oscar/customer/wishlists/wishlists_detail.html:12
 #: templates/oscar/customer/wishlists/wishlists_form.html:11
-#: templates/oscar/dashboard/layout.html:48
+#: templates/oscar/dashboard/layout.html:50
 #: templates/oscar/partials/nav_accounts.html:37
 #: templates/oscar/partials/nav_accounts.html:41
 msgid "Account"
@@ -6729,15 +6728,15 @@ msgstr ""
 msgid "Active <em>Vouchers</em>"
 msgstr ""
 
-#: templates/oscar/dashboard/layout.html:46
+#: templates/oscar/dashboard/layout.html:48
 msgid "Welcome"
 msgstr "Bienvenido"
 
-#: templates/oscar/dashboard/layout.html:47
+#: templates/oscar/dashboard/layout.html:49
 msgid "Return to site"
 msgstr "Volver a la tienda"
 
-#: templates/oscar/dashboard/layout.html:49
+#: templates/oscar/dashboard/layout.html:51
 msgid "Log out"
 msgstr "Salir"
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-24 22:29+0100\n"
+"POT-Creation-Date: 2014-04-29 10:56+0100\n"
 "PO-Revision-Date: 2014-04-16 16:49+0000\n"
 "Last-Translator: oscar_bot <maik.hoepfel@tangentsnowball.com>\n"
 "Language-Team: Czech (Czech Republic) (http://www.transifex.com/projects/p/"
@@ -20,8 +20,8 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: defaults.py:90 templates/oscar/dashboard/index.html:16
-#: templates/oscar/dashboard/layout.html:29
-#: templates/oscar/dashboard/layout.html:109
+#: templates/oscar/dashboard/layout.html:31
+#: templates/oscar/dashboard/layout.html:111
 #: templates/oscar/dashboard/catalogue/category_delete.html:9
 #: templates/oscar/dashboard/catalogue/category_form.html:14
 #: templates/oscar/dashboard/catalogue/category_list.html:14
@@ -1317,9 +1317,10 @@ msgid "%(attr)s attribute %(err)s"
 msgstr "%(attr)s atribut %(err)s"
 
 #: apps/catalogue/abstract_models.py:664
+#, fuzzy
 msgid ""
-"Code can only contain the letters a-z, A-Z, digits and underscores, and "
-"can't start with a digit"
+"Code can only contain the letters a-z, A-Z, digits, minus and underscores, "
+"and can't start with a digit"
 msgstr ""
 "Kód může obsahovat pouze písmena a-z, A-Z, čísla, podtržítka a nesmí začánat "
 "číslicí"
@@ -6011,7 +6012,7 @@ msgstr "Košík celkem (vč. DPH)"
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:11
 #: templates/oscar/customer/wishlists/wishlists_detail.html:12
 #: templates/oscar/customer/wishlists/wishlists_form.html:11
-#: templates/oscar/dashboard/layout.html:48
+#: templates/oscar/dashboard/layout.html:50
 #: templates/oscar/partials/nav_accounts.html:37
 #: templates/oscar/partials/nav_accounts.html:41
 msgid "Account"
@@ -6809,15 +6810,15 @@ msgstr "Aktivní <em>nabídky</em>"
 msgid "Active <em>Vouchers</em>"
 msgstr "Aktivní <em>kupóny</em>"
 
-#: templates/oscar/dashboard/layout.html:46
+#: templates/oscar/dashboard/layout.html:48
 msgid "Welcome"
 msgstr "Vítejte"
 
-#: templates/oscar/dashboard/layout.html:47
+#: templates/oscar/dashboard/layout.html:49
 msgid "Return to site"
 msgstr "Zpět na stránky"
 
-#: templates/oscar/dashboard/layout.html:49
+#: templates/oscar/dashboard/layout.html:51
 msgid "Log out"
 msgstr "Odhlásit se"
 
