@@ -152,30 +152,21 @@ The following extensions are stable and ready for use:
 .. _django-oscar-paypal: https://github.com/tangentlabs/django-oscar-paypal
 .. _`Express Checkout`: https://www.paypal.com/uk/cgi-bin/webscr?cmd=_additional-payment-ref-impl1
 .. _`PayFlow Pro`: https://merchant.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=merchant/payment_gateway
-.. _django-oscar-gocardless: https://github.com/tangentlabs/django-oscar-gocardless
-.. _GoCardless: https://gocardless.com/
-.. _django-oscar-jirafe: https://github.com/tangentlabs/django-oscar-jirafe
-.. _Jirafe: https://jirafe.com/
 .. _django-oscar-accounts: https://github.com/tangentlabs/django-oscar-accounts
 .. _django-oscar-easyrec: https://github.com/tangentlabs/django-oscar-easyrec
 .. _EasyRec: http://easyrec.org/
 
 The following extensions are in development by Tangent:
 
-* django-oscar-stripe_ - Integration with the Stripe_ payment gateway
-* django-oscar-gocardless_ - Integration with the GoCardless_ payment gateway
-* django-oscar-jirafe_ - Integration with the Jirafe_ analytics package
 * django-oscar-parachute_ - Import scripts for migrating away from non-Oscar
   platforms.
 * django-oscar-eway_ - Integration with the eWay_ payment gateway.
 * django-oscar-approval_ - Approval workflow for authorising new
   orders/products.
 
-.. _django-oscar-stripe: https://github.com/tangentlabs/django-oscar-stripe
 .. _django-oscar-stores: https://github.com/tangentlabs/django-oscar-stores
 .. _django-oscar-parachute: https://github.com/tangentlabs/django-oscar-parachute
 .. _django-oscar-approval: https://github.com/tangentlabs/django-oscar-approval
-.. _Stripe: https://stripe.com
 .. _django-oscar-eway: https://github.com/tangentlabs/django-oscar-eway
 .. _eWay: https://www.eway.com.au
 
