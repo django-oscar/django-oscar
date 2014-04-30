@@ -1,13 +1,9 @@
 # These targets are not files
-.PHONY: install upgrade sandbox demo coverage ci i18n lint travis docs
+.PHONY: install sandbox geoip demo docs coverage lint travis messages compiledmessages puppet css clean preflight
 
 install:
 	pip install -r requirements.txt
 	python setup.py develop
-
-upgrade:
-	pip install --upgrade -r requirements.txt --use-mirrors
-	python setup.py develop --upgrade
 
 sandbox: install
 	# Remove media
@@ -58,11 +54,6 @@ docs:
 coverage:
 	coverage run ./runtests.py --with-xunit
 	coverage xml -i
-
-# We probably should use upgrade instead of install here but we have a conflict
-# around django versions which conflicts with tox.  Use install for now until
-# upgrade can run without conflict.
-ci: install lint coverage
 
 lint:
 	./lint.sh
