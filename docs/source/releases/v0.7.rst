@@ -308,9 +308,7 @@ Migrations
 
     The reviews app has not been under migration control so far. Please ensure
     you follow South's guidelines on how to `convert an app`_. Essentially,
-    you will have to run:
-
-        $ ./manage.py migrate reviews 0001 --fake
+    you will have to run: ``$ ./manage.py migrate reviews 0001 --fake``
 
 .. warning::
 
