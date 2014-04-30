@@ -413,6 +413,8 @@ Default: ``images/promotions/``
 
 The folder within ``MEDIA_ROOT`` used for uploaded promotion images.
 
+.. _missing-image-label:
+
 ``OSCAR_MISSING_IMAGE_URL``
 ---------------------------
 

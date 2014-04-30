@@ -133,22 +133,15 @@ Set your auth backends to:
 
 to allow customers to sign in using an email address rather than a username.
 
-Set ``MEDIA_ROOT`` and ``MEDIA_URL`` to your environment, and make sure the
-path in ``MEDIA_ROOT`` exists. An example from the sandbox site:
+Ensure that your media and static files are `configured correctly`_. This means
+at the least setting ``MEDIA_URL`` and ``STATIC_URL``. If you're serving files
+locally, you'll also need to set ``MEDIA_ROOT`` and ``STATIC_ROOT``.
+Check out the `sandbox settings`_ for a working example. If you're serving
+files from a remote storage (e.g. Amazon S3), you must manually copy a
+:ref:`"Image not found" image <missing-image-label>` into ``MEDIA_ROOT``.
 
-.. code-block:: django
-
-
-    PROJECT_DIR = os.path.dirname(__file__)
-    location = lambda x: os.path.join(
-        os.path.dirname(os.path.realpath(__file__)), x)
-    MEDIA_ROOT = location("public/media")
-    MEDIA_URL = '/media/'
-
-Now verify your ``staticfiles`` `settings`_ and ensure that files in
-``MEDIA_ROOT`` get served.
-
-_`settings`: https://docs.djangoproject.com/en/1.5/howto/static-files/#serving-files-uploaded-by-a-user
+.. _`configured correctly`: https://docs.djangoproject.com/en/1.7/howto/static-files/
+.. _sandbox settings: https://github.com/tangentlabs/django-oscar/blob/3a5160a86c9b14c940c76a224a28cd37dd29f7f1/sites/sandbox/settings.py#L99
 
 Modify your ``TEMPLATE_DIRS`` to include the main Oscar template directory:
 
