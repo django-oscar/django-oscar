@@ -272,11 +272,11 @@ Backwards incompatible changes in 0.7
 
         (r'^i18n/', include('django.conf.urls.i18n')),
 
- * jScrollPane, which was used to style the dashboard's scroll bars, has been
-   removed.
+* jScrollPane, which was used to style the dashboard's scroll bars, has been
+  removed.
 
- * The methods ``get_error_response`` and ``can_basket_be_submitted`` have been
-   removed from the ``PaymentDetailsView`` view class in checkout
+* The methods ``get_error_response`` and ``can_basket_be_submitted`` have been
+  removed from the ``PaymentDetailsView`` view class in checkout
 
 .. _`#1123`: https://github.com/tangentlabs/django-oscar/pull/1123
 .. _`#1251`: https://github.com/tangentlabs/django-oscar/pull/1251
