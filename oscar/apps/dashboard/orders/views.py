@@ -447,7 +447,7 @@ class OrderDetailView(DetailView):
                         % line.id)
                 elif qty > line.quantity:
                     return reload_with_error(
-                        _("The entered quantity for line #(line_id)%s "
+                        _("The entered quantity for line #%(line_id)s "
                           "should not be higher than %(quantity)s") % {
                             'line_id': line.id,
                             'quantity': line.quantity})
