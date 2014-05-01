@@ -9,6 +9,7 @@ from oscar.core.loading import get_model
 from oscar.apps.partner import strategy, availability, prices
 from oscar.core.loading import get_class
 from oscar.apps.offer import models
+from oscar.test.newfactories import *  # noqa
 
 Basket = get_model('basket', 'Basket')
 Free = get_class('shipping.methods', 'Free')
