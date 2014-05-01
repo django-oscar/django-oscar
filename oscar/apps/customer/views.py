@@ -1,7 +1,5 @@
 from django.shortcuts import get_object_or_404
-from django.views.generic import (TemplateView, ListView, DetailView,
-                                  CreateView, UpdateView, DeleteView,
-                                  FormView, RedirectView)
+from django.views import generic
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, Http404
@@ -10,8 +8,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import logout as auth_logout, login as auth_login
 from django.contrib.sites.models import get_current_site
 from django.conf import settings
-from oscar.core.loading import get_model
 
+from oscar.core.loading import get_model
 from oscar.views.generic import PostActionMixin
 from oscar.apps.customer.utils import get_password_reset_url
 from oscar.core.loading import get_class, get_profile_class, get_classes
@@ -44,7 +42,7 @@ User = get_user_model()
 # =======
 
 
-class AccountSummaryView(RedirectView):
+class AccountSummaryView(generic.RedirectView):
     """
     View that exists for legacy reasons and customisability. It commonly gets
     called when the user clicks on "Account" in the navbar, and can be
@@ -54,7 +52,7 @@ class AccountSummaryView(RedirectView):
     url = reverse_lazy(settings.OSCAR_ACCOUNTS_REDIRECT_URL)
 
 
-class AccountRegistrationView(RegisterUserMixin, FormView):
+class AccountRegistrationView(RegisterUserMixin, generic.FormView):
     form_class = EmailUserCreationForm
     template_name = 'customer/registration.html'
     redirect_field_name = 'next'
@@ -89,7 +87,7 @@ class AccountRegistrationView(RegisterUserMixin, FormView):
             form.cleaned_data['redirect_url'])
 
 
-class AccountAuthView(RegisterUserMixin, TemplateView):
+class AccountAuthView(RegisterUserMixin, generic.TemplateView):
     """
     This is actually a slightly odd double form view
     """
@@ -192,7 +190,7 @@ class AccountAuthView(RegisterUserMixin, TemplateView):
         return self.render_to_response(ctx)
 
 
-class LogoutView(RedirectView):
+class LogoutView(generic.RedirectView):
     url = settings.OSCAR_HOMEPAGE
     permanent = False
 
@@ -210,7 +208,7 @@ class LogoutView(RedirectView):
 # Profile
 # =============
 
-class ProfileView(PageTitleMixin, TemplateView):
+class ProfileView(PageTitleMixin, generic.TemplateView):
     template_name = 'customer/profile/profile.html'
     page_title = _('Profile')
     active_tab = 'profile'
@@ -260,7 +258,7 @@ class ProfileView(PageTitleMixin, TemplateView):
         }
 
 
-class ProfileUpdateView(PageTitleMixin, FormView):
+class ProfileUpdateView(PageTitleMixin, generic.FormView):
     form_class = ProfileForm
     template_name = 'customer/profile/profile_form.html'
     communication_type_code = 'EMAIL_CHANGED'
@@ -308,7 +306,7 @@ class ProfileUpdateView(PageTitleMixin, FormView):
         return reverse('customer:profile-view')
 
 
-class ProfileDeleteView(PageTitleMixin, FormView):
+class ProfileDeleteView(PageTitleMixin, generic.FormView):
     form_class = ConfirmPasswordForm
     template_name = 'customer/profile/profile_delete.html'
     page_title = _('Delete profile')
@@ -328,7 +326,7 @@ class ProfileDeleteView(PageTitleMixin, FormView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ChangePasswordView(PageTitleMixin, FormView):
+class ChangePasswordView(PageTitleMixin, generic.FormView):
     form_class = PasswordChangeForm
     template_name = 'customer/profile/change_password_form.html'
     communication_type_code = 'PASSWORD_CHANGED'
@@ -363,7 +361,7 @@ class ChangePasswordView(PageTitleMixin, FormView):
 # Email history
 # =============
 
-class EmailHistoryView(PageTitleMixin, ListView):
+class EmailHistoryView(PageTitleMixin, generic.ListView):
     context_object_name = "emails"
     template_name = 'customer/email/email_list.html'
     paginate_by = 20
@@ -374,7 +372,7 @@ class EmailHistoryView(PageTitleMixin, ListView):
         return Email._default_manager.filter(user=self.request.user)
 
 
-class EmailDetailView(PageTitleMixin, DetailView):
+class EmailDetailView(PageTitleMixin, generic.DetailView):
     """Customer email"""
     template_name = "customer/email/email_detail.html"
     context_object_name = 'email'
@@ -393,7 +391,7 @@ class EmailDetailView(PageTitleMixin, DetailView):
 # Order history
 # =============
 
-class OrderHistoryView(PageTitleMixin, ListView):
+class OrderHistoryView(PageTitleMixin, generic.ListView):
     """
     Customer order history
     """
@@ -443,7 +441,7 @@ class OrderHistoryView(PageTitleMixin, ListView):
         return ctx
 
 
-class OrderDetailView(PageTitleMixin, PostActionMixin, DetailView):
+class OrderDetailView(PageTitleMixin, PostActionMixin, generic.DetailView):
     model = Order
     active_tab = 'orders'
 
@@ -519,7 +517,7 @@ class OrderDetailView(PageTitleMixin, PostActionMixin, DetailView):
                 {'number': order.number})
 
 
-class OrderLineView(PostActionMixin, DetailView):
+class OrderLineView(PostActionMixin, generic.DetailView):
     """Customer order line"""
 
     def get_object(self, queryset=None):
@@ -562,7 +560,7 @@ class OrderLineView(PostActionMixin, DetailView):
         messages.info(self.request, msg)
 
 
-class AnonymousOrderDetailView(DetailView):
+class AnonymousOrderDetailView(generic.DetailView):
     model = Order
     template_name = "customer/anon_order.html"
 
@@ -579,7 +577,7 @@ class AnonymousOrderDetailView(DetailView):
 # Address book
 # ------------
 
-class AddressListView(PageTitleMixin, ListView):
+class AddressListView(PageTitleMixin, generic.ListView):
     """Customer address book"""
     context_object_name = "addresses"
     template_name = 'customer/address/address_list.html'
@@ -592,7 +590,7 @@ class AddressListView(PageTitleMixin, ListView):
         return UserAddress._default_manager.filter(user=self.request.user)
 
 
-class AddressCreateView(PageTitleMixin, CreateView):
+class AddressCreateView(PageTitleMixin, generic.CreateView):
     form_class = UserAddressForm
     model = UserAddress
     template_name = 'customer/address/address_form.html'
@@ -615,7 +613,7 @@ class AddressCreateView(PageTitleMixin, CreateView):
         return reverse('customer:address-list')
 
 
-class AddressUpdateView(PageTitleMixin, UpdateView):
+class AddressUpdateView(PageTitleMixin, generic.UpdateView):
     form_class = UserAddressForm
     model = UserAddress
     template_name = 'customer/address/address_form.html'
@@ -641,7 +639,7 @@ class AddressUpdateView(PageTitleMixin, UpdateView):
         return reverse('customer:address-list')
 
 
-class AddressDeleteView(PageTitleMixin, DeleteView):
+class AddressDeleteView(PageTitleMixin, generic.DeleteView):
     model = UserAddress
     template_name = "customer/address/address_delete.html"
     page_title = _('Delete address?')
@@ -657,7 +655,7 @@ class AddressDeleteView(PageTitleMixin, DeleteView):
         return reverse('customer:address-list')
 
 
-class AddressChangeStatusView(RedirectView):
+class AddressChangeStatusView(generic.RedirectView):
     """
     Sets an address as default_for_(billing|shipping)
     """
