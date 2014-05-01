@@ -342,9 +342,19 @@ OSCAR_DASHBOARD_NAVIGATION = new_nav
 
 GEOIP_PATH = os.path.join(os.path.dirname(__file__), 'geoip')
 
-#default currency for django-oscar-datacash
-DATACASH_CURRENCY = "GBP"
+# Note, client and password are omitted here. They are assigned in
+# settings_local but kept out of source control.
+DATACASH_HOST = 'testserver.datacash.com'
+DATACASH_CLIENT = ''
+DATACASH_PASSWORD = ''
+DATACASH_USE_CV2AVS = True
+DATACASH_CURRENCY = 'GBP'
 
+# Some mildly sensitive settings are kept out this file, such as the secret
+# key, paypal credentials and datacash credentials.  If you want to test the
+# full checkout process of the demo site locally then then you'll need to
+# assign your own payment gateway details in settings_local.py. This may
+# involve signing up for a Datacash or PayPal account.
 try:
     from settings_local import *
 except ImportError:
