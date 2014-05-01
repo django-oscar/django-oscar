@@ -51,7 +51,7 @@ Customisation improvements
 --------------------------
 
 Oscar's views are now dynamically imported. This means that they can be
-overridden like most other classes in Oscar; overridding the related
+overridden like most other classes in Oscar; overriding the related
 Application instance is not necessary any more. Updated instructions are
 available in :doc:`/topics/customisation`.
 
@@ -63,6 +63,10 @@ Minor changes
 * The ``OSCAR_CURRENCY_LOCALE`` setting has been removed. The locale is now
   automatically determined from the current language. This ensures prices are
   always shown in the correct format when switching languages.
+
+* The login and registration view now redirects staff users to the dashboard
+  after logging in. It also employs flash messages to welcome returning and
+  newly registered users.
 
 Bugfixes
 ~~~~~~~~
