@@ -10,12 +10,22 @@ Table of contents:
     :local:
     :depth: 1
 
+.. _overview:
+
+Overview
+========
+
+.. _compatibility:
+
 Compatibility
 =============
 
-Oscar 0.8 is compatible with Django 1.5-1.7. Support for Python 2.6 has been
-dropped; it works with Python 2.7, Python 3.3 and Python 3.4.
+Oscar 0.8 is compatible with Django 1.5-1.7. 
 
+Support for Python 2.6 has been dropped; it works with Python 2.7, Python 3.3
+and Python 3.4.
+
+.. _what_is_new:
 
 What's new in Oscar 0.8?
 ========================
@@ -45,6 +55,8 @@ overridden like most other classes in Oscar; overridding the related
 Application instance is not necessary any more. Updated instructions are
 available in :doc:`/topics/customisation`.
 
+.. _minor_changes:
+
 Minor changes
 -------------
 
@@ -55,49 +67,27 @@ Minor changes
 Bugfixes
 ~~~~~~~~
 
+
+.. _backwards_incompatible_changes:
+
 Backwards incompatible changes in 0.8
 =====================================
 
 * The ``shipping`` app saw a few renames; please see the section above.
 
+.. _removal_of_deprecated_features:
 
 Removal of features deprecated in 0.8
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-Renamed templates
-~~~~~~~~~~~~~~~~~
-
-Template block changes
-~~~~~~~~~~~~~~~~~~~~~~
-
 Migrations
 ~~~~~~~~~~
-
-* Address:
-
-* Catalogue:
-
-* Customer:
-
-* Offer:
-
-* Order:
-
-* Partner:
-
-* Payment:
-
-* Promotions:
 
 * Shipping:
 
     - ``0007`` - Change ``WeightBand.upper_limit`` from ``FloatField`` to ``DecimalField``
 
-* Reviews:
-
-* Voucher:
-
+.. _deprecated_features:
 
 Features deprecated in 0.8
 ==========================
