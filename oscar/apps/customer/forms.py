@@ -99,12 +99,11 @@ class EmailAuthenticationForm(AuthenticationForm):
 
     def clean_redirect_url(self):
         url = self.cleaned_data['redirect_url'].strip()
-        if not url:
-            return settings.LOGIN_REDIRECT_URL
-        host = urlparse.urlparse(url)[1]
-        if host and host != self.host:
-            return settings.LOGIN_REDIRECT_URL
-        return url
+        if url:
+            # Ensure URL is not to a different host
+            host = urlparse.urlparse(url)[1]
+            if host and host == self.host:
+                return url
 
 
 class ConfirmPasswordForm(forms.Form):

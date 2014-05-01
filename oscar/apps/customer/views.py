@@ -112,6 +112,16 @@ class AccountAuthView(RegisterUserMixin, generic.TemplateView):
             ctx['registration_form'] = self.get_registration_form()
         return ctx
 
+    def post(self, request, *args, **kwargs):
+        # Use the name of the submit button to determine which form to validate
+        if u'login_submit' in request.POST:
+            return self.validate_login_form()
+        elif u'registration_submit' in request.POST:
+            return self.validate_registration_form()
+        return http.HttpResponseBadRequest()
+
+    # LOGIN
+
     def get_login_form(self, bind_data=False):
         return self.login_form_class(
             **self.get_login_form_kwargs(bind_data))
@@ -129,6 +139,49 @@ class AccountAuthView(RegisterUserMixin, generic.TemplateView):
                 'files': self.request.FILES,
             })
         return kwargs
+
+    def validate_login_form(self):
+        form = self.get_login_form(bind_data=True)
+        if form.is_valid():
+            user = form.get_user()
+
+            # Grab a reference to the session ID before logging in
+            old_session_key = self.request.session.session_key
+
+            auth_login(self.request, form.get_user())
+
+            # Raise signal robustly (we don't want exceptions to crash the
+            # request handling). We use a custom signal as we want to track the
+            # session key before calling login (which cycles the session ID).
+            signals.user_logged_in.send_robust(
+                sender=self, request=self.request, user=user,
+                old_session_key=old_session_key)
+
+            msg = self.get_login_success_message(form)
+            messages.success(self.request, msg)
+
+            url = self.get_login_success_url(form)
+            return http.HttpResponseRedirect(url)
+
+        ctx = self.get_context_data(login_form=form)
+        return self.render_to_response(ctx)
+
+    def get_login_success_message(self, form):
+        return _("Welcome back")
+
+    def get_login_success_url(self, form):
+        redirect_url = form.cleaned_data['redirect_url']
+        if redirect_url:
+            return redirect_url
+
+        # Redirect staff members to dashboard as that's the most likely place
+        # they'll want to visit if they're logging in.
+        if self.request.user.is_staff:
+            return reverse('dashboard:index')
+
+        return settings.LOGIN_REDIRECT_URL
+
+    # REGISTRATION
 
     def get_registration_form(self, bind_data=False):
         return self.registration_form_class(
@@ -148,44 +201,25 @@ class AccountAuthView(RegisterUserMixin, generic.TemplateView):
             })
         return kwargs
 
-    def post(self, request, *args, **kwargs):
-        # Use the name of the submit button to determine which form to validate
-        if u'login_submit' in request.POST:
-            return self.validate_login_form()
-        elif u'registration_submit' in request.POST:
-            return self.validate_registration_form()
-        return http.HttpBadRequest()
-
-    def validate_login_form(self):
-        form = self.get_login_form(bind_data=True)
-        if form.is_valid():
-            user = form.get_user()
-
-            # Grab a reference to the session ID before logging in
-            old_session_key = self.request.session.session_key
-
-            auth_login(self.request, form.get_user())
-
-            # Raise signal robustly (we don't want exceptions to crash the
-            # request handling). We use a custom signal as we want to track the
-            # session key before calling login (which cycles the session ID).
-            signals.user_logged_in.send_robust(
-                sender=self, request=self.request, user=user,
-                old_session_key=old_session_key)
-
-            return http.HttpResponseRedirect(form.cleaned_data['redirect_url'])
-
-        ctx = self.get_context_data(login_form=form)
-        return self.render_to_response(ctx)
-
     def validate_registration_form(self):
         form = self.get_registration_form(bind_data=True)
         if form.is_valid():
             self.register_user(form)
-            return http.HttpResponseRedirect(form.cleaned_data['redirect_url'])
+
+            msg = self.get_registration_success_message(form)
+            messages.success(self.request, msg)
+
+            url = self.get_registration_success_url(form)
+            return http.HttpResponseRedirect(url)
 
         ctx = self.get_context_data(registration_form=form)
         return self.render_to_response(ctx)
+
+    def get_registration_success_message(self, form):
+        return _("Thanks for registering!")
+
+    def get_registration_success_url(self, form):
+        return settings.LOGIN_REDIRECT_URL
 
 
 class LogoutView(generic.RedirectView):
