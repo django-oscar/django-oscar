@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.views import generic
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponseRedirect, Http404
+from django import http
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import logout as auth_logout, login as auth_login
@@ -59,7 +59,7 @@ class AccountRegistrationView(RegisterUserMixin, generic.FormView):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
-            return HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
+            return http.HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
         return super(AccountRegistrationView, self).get(
             request, *args, **kwargs)
 
@@ -83,13 +83,14 @@ class AccountRegistrationView(RegisterUserMixin, generic.FormView):
 
     def form_valid(self, form):
         self.register_user(form)
-        return HttpResponseRedirect(
+        return http.HttpResponseRedirect(
             form.cleaned_data['redirect_url'])
 
 
 class AccountAuthView(RegisterUserMixin, generic.TemplateView):
     """
-    This is actually a slightly odd double form view
+    This is actually a slightly odd double form view that allows a customer to
+    either login or register.
     """
     template_name = 'customer/login_registration.html'
     login_prefix, registration_prefix = 'login', 'registration'
@@ -99,54 +100,51 @@ class AccountAuthView(RegisterUserMixin, generic.TemplateView):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
-            return HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
+            return http.HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
         return super(AccountAuthView, self).get(
             request, *args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
         ctx = super(AccountAuthView, self).get_context_data(*args, **kwargs)
-        ctx.update(kwargs)
-
-        # Don't pass request as we don't want to trigger validation of BOTH
-        # forms.
         if 'login_form' not in kwargs:
             ctx['login_form'] = self.get_login_form()
         if 'registration_form' not in kwargs:
             ctx['registration_form'] = self.get_registration_form()
         return ctx
 
-    def get_login_form(self, request=None):
-        return self.login_form_class(**self.get_login_form_kwargs(request))
+    def get_login_form(self, bind_data=False):
+        return self.login_form_class(
+            **self.get_login_form_kwargs(bind_data))
 
-    def get_login_form_kwargs(self, request=None):
+    def get_login_form_kwargs(self, bind_data=False):
         kwargs = {}
         kwargs['host'] = self.request.get_host()
         kwargs['prefix'] = self.login_prefix
         kwargs['initial'] = {
             'redirect_url': self.request.GET.get(self.redirect_field_name, ''),
         }
-        if request and request.method in ('POST', 'PUT'):
+        if bind_data and self.request.method in ('POST', 'PUT'):
             kwargs.update({
-                'data': request.POST,
-                'files': request.FILES,
+                'data': self.request.POST,
+                'files': self.request.FILES,
             })
         return kwargs
 
-    def get_registration_form(self, request=None):
+    def get_registration_form(self, bind_data=False):
         return self.registration_form_class(
-            **self.get_registration_form_kwargs(request))
+            **self.get_registration_form_kwargs(bind_data))
 
-    def get_registration_form_kwargs(self, request=None):
+    def get_registration_form_kwargs(self, bind_data=False):
         kwargs = {}
         kwargs['host'] = self.request.get_host()
         kwargs['prefix'] = self.registration_prefix
         kwargs['initial'] = {
             'redirect_url': self.request.GET.get(self.redirect_field_name, ''),
         }
-        if request and request.method in ('POST', 'PUT'):
+        if bind_data and self.request.method in ('POST', 'PUT'):
             kwargs.update({
-                'data': request.POST,
-                'files': request.FILES,
+                'data': self.request.POST,
+                'files': self.request.FILES,
             })
         return kwargs
 
@@ -156,10 +154,10 @@ class AccountAuthView(RegisterUserMixin, generic.TemplateView):
             return self.validate_login_form()
         elif u'registration_submit' in request.POST:
             return self.validate_registration_form()
-        return self.get(request)
+        return http.HttpBadRequest()
 
     def validate_login_form(self):
-        form = self.get_login_form(self.request)
+        form = self.get_login_form(bind_data=True)
         if form.is_valid():
             user = form.get_user()
 
@@ -175,16 +173,16 @@ class AccountAuthView(RegisterUserMixin, generic.TemplateView):
                 sender=self, request=self.request, user=user,
                 old_session_key=old_session_key)
 
-            return HttpResponseRedirect(form.cleaned_data['redirect_url'])
+            return http.HttpResponseRedirect(form.cleaned_data['redirect_url'])
 
         ctx = self.get_context_data(login_form=form)
         return self.render_to_response(ctx)
 
     def validate_registration_form(self):
-        form = self.get_registration_form(self.request)
+        form = self.get_registration_form(bind_data=True)
         if form.is_valid():
             self.register_user(form)
-            return HttpResponseRedirect(form.cleaned_data['redirect_url'])
+            return http.HttpResponseRedirect(form.cleaned_data['redirect_url'])
 
         ctx = self.get_context_data(registration_form=form)
         return self.render_to_response(ctx)
@@ -207,6 +205,7 @@ class LogoutView(generic.RedirectView):
 # =============
 # Profile
 # =============
+
 
 class ProfileView(PageTitleMixin, generic.TemplateView):
     template_name = 'customer/profile/profile.html'
@@ -300,7 +299,7 @@ class ProfileUpdateView(PageTitleMixin, generic.FormView):
             Dispatcher().dispatch_user_messages(old_user, msgs)
 
         messages.success(self.request, _("Profile updated"))
-        return HttpResponseRedirect(self.get_success_url())
+        return http.HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
         return reverse('customer:profile-view')
@@ -323,7 +322,7 @@ class ProfileDeleteView(PageTitleMixin, generic.FormView):
         messages.success(
             self.request,
             _("Your profile has now been deleted. Thanks for using the site."))
-        return HttpResponseRedirect(self.get_success_url())
+        return http.HttpResponseRedirect(self.get_success_url())
 
 
 class ChangePasswordView(PageTitleMixin, generic.FormView):
@@ -351,7 +350,7 @@ class ChangePasswordView(PageTitleMixin, generic.FormView):
             code=self.communication_type_code, context=ctx)
         Dispatcher().dispatch_user_messages(self.request.user, msgs)
 
-        return HttpResponseRedirect(self.get_success_url())
+        return http.HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
         return reverse('customer:profile-view')
@@ -422,7 +421,7 @@ class OrderHistoryView(PageTitleMixin, generic.ListView):
                 except Order.DoesNotExist:
                     pass
                 else:
-                    return HttpResponseRedirect(
+                    return http.HttpResponseRedirect(
                         reverse('customer:order',
                                 kwargs={'order_number': order.number}))
         else:
@@ -484,7 +483,7 @@ class OrderDetailView(PageTitleMixin, PostActionMixin, generic.DetailView):
             total_quantity)
         if not is_quantity_allowed:
             messages.warning(self.request, reason)
-            self.response = HttpResponseRedirect(
+            self.response = http.HttpResponseRedirect(
                 reverse('customer:order-list'))
             return
 
@@ -502,13 +501,13 @@ class OrderDetailView(PageTitleMixin, PostActionMixin, generic.DetailView):
             basket.add_product(line.product, line.quantity, options)
 
         if len(lines_to_add) > 0:
-            self.response = HttpResponseRedirect(reverse('basket:summary'))
+            self.response = http.HttpResponseRedirect(reverse('basket:summary'))
             messages.info(
                 self.request,
                 _("All available lines from order %(number)s "
                   "have been added to your basket") % {'number': order.number})
         else:
-            self.response = HttpResponseRedirect(
+            self.response = http.HttpResponseRedirect(
                 reverse('customer:order-list'))
             messages.warning(
                 self.request,
@@ -526,7 +525,7 @@ class OrderLineView(PostActionMixin, generic.DetailView):
         return order.lines.get(id=self.kwargs['line_id'])
 
     def do_reorder(self, line):
-        self.response = HttpResponseRedirect(
+        self.response = http.HttpResponseRedirect(
             reverse('customer:order',
                     args=(int(self.kwargs['order_number']),)))
         basket = self.request.basket
@@ -540,7 +539,7 @@ class OrderLineView(PostActionMixin, generic.DetailView):
 
         # We need to pass response to the get_or_create... method
         # as a new basket might need to be created
-        self.response = HttpResponseRedirect(reverse('basket:summary'))
+        self.response = http.HttpResponseRedirect(reverse('basket:summary'))
 
         # Convert line attributes into basket options
         options = []
@@ -569,7 +568,7 @@ class AnonymousOrderDetailView(generic.DetailView):
         order = get_object_or_404(self.model, user=None,
                                   number=self.kwargs['order_number'])
         if self.kwargs['hash'] != order.verification_hash():
-            raise Http404()
+            raise http.Http404()
         return order
 
 
