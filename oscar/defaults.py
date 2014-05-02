@@ -120,7 +120,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
         'icon': 'icon-shopping-cart',
         'children': [
             {
-                'label': _('Order management'),
+                'label': _('Orders'),
                 'url_name': 'dashboard:order-list',
             },
             {
@@ -138,7 +138,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
         'icon': 'icon-group',
         'children': [
             {
-                'label': _('Customer management'),
+                'label': _('Customers'),
                 'url_name': 'dashboard:users-index',
             },
             {
@@ -152,7 +152,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
         'icon': 'icon-bullhorn',
         'children': [
             {
-                'label': _('Offer management'),
+                'label': _('Offers'),
                 'url_name': 'dashboard:offer-list',
             },
             {

@@ -6,7 +6,7 @@
 {% block body_class %}{{ block.super }} orders{% endblock %}
 
 {% block title %}
-    {% trans "Order management" %} | {{ block.super }}
+    {% trans "Orders" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -15,13 +15,13 @@
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
             <span class="divider">/</span>
         </li>
-        <li class="active">{% trans "Order management" %}</li>
+        <li class="active">{% trans "Orders" %}</li>
     </ul>
 {% endblock %}
 
 {% block header %}
     <div class="page-header">
-        <h1>{% trans "Order management" %}</h1>
+        <h1>{% trans "Orders" %}</h1>
     </div>
 {% endblock header %}
 

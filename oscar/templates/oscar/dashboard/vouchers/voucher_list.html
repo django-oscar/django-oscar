@@ -4,23 +4,23 @@
 {% load i18n %}
 
 {% block title %}
-{{ description }} | {{ block.super }}
+    {{ description }} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li class="active">{{ description }}</li>
-</ul>
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li class="active">{{ description }}</li>
+    </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
     <a href="{% url 'dashboard:voucher-create' %}" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new voucher" %}</a>
-    <h1>{% trans "Voucher management" %}</h1>
+    <h1>{% trans "Vouchers" %}</h1>
 </div>
 {% endblock header %}
 

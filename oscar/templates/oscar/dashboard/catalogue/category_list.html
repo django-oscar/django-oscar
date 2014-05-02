@@ -5,7 +5,7 @@
 {% block body_class %}{{ block.super }} catalogue{% endblock %}
 
 {% block title %}
-    {% trans "Category management" %} | {{ block.super }}
+    {% trans "Categories" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -21,7 +21,7 @@
 {% block header %}
     <div class="page-header">
         <a href="{% url 'dashboard:catalogue-category-create' %}" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new category" %}</a>
-        <h1>{% trans "Category management" %}</h1>
+        <h1>{% trans "Categories" %}</h1>
     </div>
 {% endblock header %}
 

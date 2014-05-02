@@ -8,7 +8,7 @@
 {% block body_class %}{{ block.super }} create-page catalogue{% endblock %}
 
 {% block title %}
-    {{ title }} | {% trans "Product management" %} | {{ block.super }}
+    {{ title }} | {% trans "Products" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -18,7 +18,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:catalogue-product-list' %}">{% trans "Product management" %}</a>
+            <a href="{% url 'dashboard:catalogue-product-list' %}">{% trans "Products" %}</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{{ title }}</li>

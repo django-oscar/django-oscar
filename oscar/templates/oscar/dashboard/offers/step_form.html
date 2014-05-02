@@ -12,7 +12,7 @@
     {% else %}
         {% trans "Create new offer" %}:
     {% endif %}
-    {{ title }} | {% trans "Offer management" %} | {{ block.super }}
+    {{ title }} | {% trans "Offers" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -22,7 +22,7 @@
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url 'dashboard:offer-list' %}">{% trans "Offer management" %}</a>
+        <a href="{% url 'dashboard:offer-list' %}">{% trans "Offers" %}</a>
         <span class="divider">/</span>
     </li>
     {% if offer.pk %}

@@ -4,7 +4,7 @@
 
 {% block title %}
     {% blocktrans with name=offer.name %}
-        {{ name }} | Offer management
+        {{ name }} | Offers
     {% endblocktrans %} | {{ block.super }}
 {% endblock %}
 
@@ -15,7 +15,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:offer-list' %}">{% trans "Offer management" %}</a>
+            <a href="{% url 'dashboard:offer-list' %}">{% trans "Offers" %}</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{{ offer.name }}</li>

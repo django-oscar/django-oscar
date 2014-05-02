@@ -4,7 +4,7 @@
 {% block body_class %}{{ block.super }} create-page{% endblock %}
 
 {% block title %}
-    {{ title }} | {% trans "Range management" %} | {{ block.super }}
+    {{ title }} | {% trans "Ranges" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -14,7 +14,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:range-list' %}">{% trans "Range management" %}</a>
+            <a href="{% url 'dashboard:range-list' %}">{% trans "Ranges" %}</a>
             <span class="divider">/</span>
         </li>
         {% if range %}

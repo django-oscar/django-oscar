@@ -4,7 +4,7 @@
 {% block body_class %}{{ block.super }} create-page{% endblock %}
 
 {% block title %}
-    {% trans "Delete partner" %} | {% trans "Partner management" %} | {{ block.super }}
+    {% trans "Delete partner" %} | {% trans "Partners" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -14,7 +14,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:partner-list' %}">{% trans "Partner management" %}</a>
+            <a href="{% url 'dashboard:partner-list' %}">{% trans "Partners" %}</a>
             <span class="divider">/</span>
         </li>
         <li>

@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block title %}
-    {% trans "Partner management" %} | {{ block.super }}
+    {% trans "Partners" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -12,14 +12,14 @@
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
             <span class="divider">/</span>
         </li>
-        <li class="active">{% trans "Partner management" %}</li>
+        <li class="active">{% trans "Partners" %}</li>
     </ul>
 {% endblock %}
 
 {% block header %}
     <div class="page-header">
         <a href="{% url 'dashboard:partner-create' %}" class="btn btn-large btn-primary pull-right"><i class="icon-plus"></i> {% trans "Create new partner" %}</a>
-        <h1>{% trans "Partner management" %}</h1>
+        <h1>{% trans "Partners" %}</h1>
     </div>
 {% endblock header %}
 
