@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from oscar.core.loading import get_model
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import (ListView, FormView, DetailView, DeleteView)
+from django.views import generic
 
 from oscar.core.loading import get_class
 from oscar.views import sort_queryset
@@ -19,7 +19,7 @@ Condition = get_model('offer', 'Condition')
 OrderDiscount = get_model('order', 'OrderDiscount')
 
 
-class VoucherListView(ListView):
+class VoucherListView(generic.ListView):
     model = Voucher
     context_object_name = 'vouchers'
     template_name = 'dashboard/vouchers/voucher_list.html'
@@ -37,7 +37,8 @@ class VoucherListView(ListView):
                                 'code_filter': ''}
 
         # If form not submitted, return early
-        if 'name' not in self.request.GET:
+        is_form_submitted = 'name' in self.request.GET
+        if not is_form_submitted:
             self.form = self.form_class()
             return qs
 
@@ -71,7 +72,7 @@ class VoucherListView(ListView):
         return ctx
 
 
-class VoucherCreateView(FormView):
+class VoucherCreateView(generic.FormView):
     model = Voucher
     template_name = 'dashboard/vouchers/voucher_form.html'
     form_class = VoucherForm
@@ -115,7 +116,7 @@ class VoucherCreateView(FormView):
         return reverse('dashboard:voucher-list')
 
 
-class VoucherStatsView(DetailView):
+class VoucherStatsView(generic.DetailView):
     model = Voucher
     template_name = 'dashboard/vouchers/voucher_detail.html'
     context_object_name = 'voucher'
@@ -128,9 +129,9 @@ class VoucherStatsView(DetailView):
         return ctx
 
 
-class VoucherUpdateView(FormView):
-    model = Voucher
+class VoucherUpdateView(generic.FormView):
     template_name = 'dashboard/vouchers/voucher_form.html'
+    model = Voucher
     form_class = VoucherForm
 
     def get_voucher(self):
@@ -140,7 +141,8 @@ class VoucherUpdateView(FormView):
 
     def get_context_data(self, **kwargs):
         ctx = super(VoucherUpdateView, self).get_context_data(**kwargs)
-        ctx['title'] = _('Update voucher')
+        ctx['title'] = self.voucher.name
+        ctx['voucher'] = self.voucher
         return ctx
 
     def get_form_kwargs(self):
@@ -189,7 +191,7 @@ class VoucherUpdateView(FormView):
         return reverse('dashboard:voucher-list')
 
 
-class VoucherDeleteView(DeleteView):
+class VoucherDeleteView(generic.DeleteView):
     model = Voucher
     template_name = 'dashboard/vouchers/voucher_delete.html'
     context_object_name = 'voucher'

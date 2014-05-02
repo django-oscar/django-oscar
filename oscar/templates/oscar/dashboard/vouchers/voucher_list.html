@@ -13,6 +13,12 @@
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
             <span class="divider">/</span>
         </li>
+        {% if form.is_bound %}
+            <li>
+                <a href="{% url 'dashboard:voucher-list' %}">{% trans "Vouchers" %}</a>
+                <span class="divider">/</span>
+            </li>
+        {% endif %}
         <li class="active">{{ description }}</li>
     </ul>
 {% endblock %}
@@ -45,7 +51,7 @@
     <tr>
         <th>{% trans "Name" %}</th>
         <th>{% trans "Code" %}</th>
-        <th>{% trans "Is active?" %}</th>
+        <th>{% trans "Status" %}</th>
         <th>{% anchor 'num_basket_additions' _("Num baskets") %}</th>
         <th>{% anchor 'num_orders' _("Num orders") %}</th>
         <th>{% anchor 'date_created' _("Date created") %}</th>
@@ -54,8 +60,16 @@
         {% for voucher in vouchers %}
         <tr>
             <td><a href="{% url 'dashboard:voucher-stats' voucher.id %}">{{ voucher.name }}</a></td>
-            <td>{{ voucher.code }}</td>
-        <td>{{ voucher.is_active|yesno:_("True,False") }}</td>
+            <td>
+                <span class="label label-inverse">{{ voucher.code }}</span>
+            </td>
+            <td>
+                {% if voucher.is_active %}
+                    <span class="label label-success">{% trans "Active" %}</span>
+                {% else %}
+                    <span class="label">{% trans "Inactive" %}</span>
+                {% endif %}
+            </td>
             <td>{{ voucher.num_basket_additions }}</td>
             <td>{{ voucher.num_orders }}</td>
             <td>{{ voucher.date_created }}</td>

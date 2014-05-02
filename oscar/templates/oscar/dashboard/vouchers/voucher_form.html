@@ -18,7 +18,13 @@
             <a href="{% url 'dashboard:voucher-list' %}">{% trans "Vouchers" %}</a>
             <span class="divider">/</span>
         </li>
-        <li class="active">{{ title }}</li>
+        {% if voucher %}
+        <li>
+            <a href="{% url 'dashboard:voucher-stats' pk=voucher.id %}">{{ voucher }}</a>
+            <span class="divider">/</span>
+        </li>
+    {% endif %}
+    <li class="active">{% trans "Edit" %}</li>
     </ul>
 {% endblock %}
 
@@ -26,7 +32,13 @@
 
 {% block dashboard_content %}
     <div class="table-header">
-        <h2><i class="icon-money icon-large"></i>{{ title }}</h2>
+        <h2><i class="icon-money icon-large"></i>
+            {% if voucher %}
+                {% trans "Edit voucher" %}
+            {% else %}
+                {% trans "Create voucher" %}
+            {% endif %}
+        </h2>
     </div>
     <form action="." method="post" class="well form-stacked">
         {% csrf_token %}
