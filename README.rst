@@ -50,8 +50,8 @@ PyPI status:
 .. image:: https://pypip.in/d/django-oscar/badge.png
     :target: https://pypi.python.org/pypi/django-oscar/
 
-.. image:: https://d2weczhvl823v0.cloudfront.net/tangentlabs/django-oscar/trend.png 
-    :alt: Bitdeli badge 
+.. image:: https://d2weczhvl823v0.cloudfront.net/tangentlabs/django-oscar/trend.png
+    :alt: Bitdeli badge
     :target: https://bitdeli.com/free
 
 .. _`Official homepage`: http://oscarcommerce.com
@@ -206,7 +206,7 @@ Selected Tangent projects:
 * Tata Group - http://www.landmarkonthenet.com
 * Carlsberg - Their global "We Deliver More" platform is powered by Oscar (but
   is a B2B site and not browsable by the public)
-* Chocolate Box - https://www.thechocolatebox.com.au
+* Chocolate Box - https://www.chocolatebox.com.au
 * The UK Labour party - http://shop.labour.org.uk
 * Meridian Audio - http://www.meridian-audio.co.uk
 * Which Rightchoice - http://www.whichrightchoice.com
@@ -219,7 +219,7 @@ Selected Tangent projects:
     :target: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/carlsberg.cch.png
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/chocolatebox.thumb.png
-    :target: https://www.thechocolatebox.com.au
+    :target: https://www.chocolatebox.com.au
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/labourshop.thumb.png
     :target: https://shop.labour.org.uk
