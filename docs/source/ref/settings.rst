@@ -446,7 +446,7 @@ stripped.  For instance::
 
     OSCAR_SLUG_MAP = {
         'c++': 'cpp',
-        'f#': 'fshared',
+        'f#': 'fsharp',
     }
 
 ``OSCAR_SLUG_FUNCTION``
