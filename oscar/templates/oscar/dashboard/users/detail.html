@@ -4,9 +4,7 @@
 
 {% block body_class %}{{ block.super }} users{% endblock %}
 
-{% block title %}
-    {% blocktrans with email=customer.email %}{{ email }}{% endblocktrans %} | {{ block.super }}
-{% endblock %}
+{% block title %}{{ customer.email }} | {{ block.super }}{% endblock %}
 
 {% block breadcrumbs %}
     <ul class="breadcrumb">
@@ -18,13 +16,11 @@
             <a href="{% url 'dashboard:users-index' %}">{% trans "Customers" %}</a>
             <span class="divider">/</span>
         </li>
-        <li class="active">{% blocktrans with email=customer.email %}{{ email }}{% endblocktrans %}</li>
+        <li class="active">{{ customer.email }}</li>
     </ul>
 {% endblock %}
 
-{% block headertext %}
-    {% blocktrans with email=customer.email %}{{ email }}{% endblocktrans %}
-{% endblock %}
+{% block headertext %}{{ customer.email }}{% endblock %}
 
 {% block dashboard_content %}
     <div class="row-fluid">
@@ -85,16 +81,18 @@
                             <th>{% trans "Reviews written" %}</th>
                             <td>{{ customer.reviews.count }}</td>
                         </tr>
-                        <tr>
-                            <th>{% trans "Actions" %}</th>
-                            <td>
-                                <form id="password_reset_form" action="{% url 'dashboard:user-password-reset' pk=customer.id %}" method="post" class="form-horizontal">
-                                    {% csrf_token %}
-                                    {% include 'partials/form_fields.html' %}
-                                    <button type="submit" class="btn btn-primary btn-large">{% trans 'Send password reset email' %}</button>
-                                </form>
-                            </td>
-                        </tr>
+                        {% if customer.email %}
+                            <tr>
+                                <th>{% trans "Actions" %}</th>
+                                <td>
+                                    <form id="password_reset_form" action="{% url 'dashboard:user-password-reset' pk=customer.id %}" method="post" class="form-horizontal">
+                                        {% csrf_token %}
+                                        {% include 'partials/form_fields.html' %}
+                                        <button type="submit" class="btn btn-primary btn-large">{% trans 'Send password reset email' %}</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endif %}
                     {% endwith %}
                 </table>
             </div>
