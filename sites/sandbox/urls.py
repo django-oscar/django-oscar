@@ -33,12 +33,6 @@ urlpatterns += i18n_patterns('',
     url(r'', include(shop.urls)),
 )
 
-# Allow rosetta to be used to add translations
-if 'rosetta' in settings.INSTALLED_APPS:
-    urlpatterns += [
-        url(r'^rosetta/', include('rosetta.urls')),
-    ]
-
 if settings.DEBUG:
     import debug_toolbar
 

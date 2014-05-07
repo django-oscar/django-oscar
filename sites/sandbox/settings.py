@@ -82,10 +82,6 @@ LANGUAGES = (
     ('el', gettext_noop('Greek')),
 )
 
-ROSETTA_STORAGE_CLASS = 'rosetta.storage.SessionRosettaStorage'
-ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS = True
-ROSETTA_REQUIRES_AUTH = False
-
 SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
@@ -312,8 +308,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'template_timings_panel',
     'south',
-    'rosetta',          # For i18n testing
-    'compressor',
+    'compressor',       # Oscar's templates use compressor
     'apps.gateway',     # For allowing dashboard access
 ]
 from oscar import get_core_apps
