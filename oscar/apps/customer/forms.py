@@ -53,8 +53,9 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
         if domain_override is not None:
             site.domain = site.name = domain_override
         email = self.cleaned_data['email']
-        users = User._default_manager.filter(email__iexact=email)
-        for user in users:
+        active_users = User._default_manager.filter(
+            email__iexact=email, is_active=True)
+        for user in active_users:
             # Build reset url
             reset_url = "%s://%s%s" % (
                 'https' if use_https else 'http',
