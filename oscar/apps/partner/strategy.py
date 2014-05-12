@@ -258,6 +258,18 @@ class FixedRateTax(object):
             excl_tax=stockrecord.price_excl_tax,
             tax=tax)
 
+    def group_pricing_policy(self, product, variant_stock):
+        stockrecords = [x[1] for x in variant_stock if x[1] is not None]
+        if not stockrecords:
+            return prices.Unavailable()
+        # We take price from first record
+        stockrecord = stockrecords[0]
+        tax = (stockrecord.price_excl_tax * self.rate).quantize(self.exponent)
+        return prices.FixedPrice(
+            currency=stockrecord.price_currency,
+            excl_tax=stockrecord.price_excl_tax,
+            tax=tax)
+
 
 class DeferredTax(object):
     """
