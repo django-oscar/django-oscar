@@ -103,6 +103,7 @@ All you need to start developing an Oscar project.
    :maxdepth: 1
 
    topics/customisation
+   topics/class_loading_explained
    topics/prices_and_availability
    topics/deploying
    topics/translation

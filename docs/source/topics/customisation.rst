@@ -12,7 +12,10 @@ application.
 But as Oscar is built as a highly customisable and extendable framework, it
 doesn't stop there. Almost every aspect of it can be altered.
 :doc:`Various techniques </internals/design-decisions>` are employed to achieve
-that level of adaptability.
+that level of adaptability. Especially recommended is familiarising yourself
+with the concept of
+:doc:`dynamic class loading</topics/class_loading_explained>`, as it underpins
+most of what is detailed below.
 
 To extend the behavior of an Oscar core app, you will at least need to create an
 app with the same label, and replace it in ``INSTALLED_APPS``.
