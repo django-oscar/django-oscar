@@ -1,6 +1,6 @@
-=======================
-How to customise a view
-=======================
+=================================
+How to customise an existing view
+=================================
 
 Oscar has many views. This How-to describes how to customise one of them for
 your project.  It builds upon the steps described in
@@ -8,6 +8,7 @@ your project.  It builds upon the steps described in
 
 * Created a Python module with the the same label
 * Added it as Django app to ``INSTALLED_APPS``
+* Added a ``models.py`` and ``admin.py``
 
 Example
 -------
@@ -22,8 +23,8 @@ subclass Oscar's view if you like::
 
 In this example, we set a new template location but it's possible to customise
 the view in any imaginable way.
-As long as the view has the same name and is in an app with the same name, it
-will get picked up automatically by Oscar.
+As long as the view has the same name as the view you're replacing, and is in
+an app with the same name, it will get picked up automatically by Oscar.
 
 If you want to change the template, create the alternative template
 ``new-homeview.html``.  This could either be

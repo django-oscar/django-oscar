@@ -39,7 +39,7 @@ Custom shipping charges
 -----------------------
 
 In order to control shipping logic for your project, you need to define your own
-repository class (see :doc:`how_to_override_a_core_class`).  It normally makes
+repository class (see :doc:`/topics/customisation`).  It normally makes
 sense to subclass the core ``Repository`` class and override the
 ``get_shipping_methods`` and ``find_by_code`` methods.
 
@@ -136,7 +136,7 @@ The shipping methods that ship with Oscar are:
   specifies a per-order and a per-item level charge.
 
 To apply your domain logic for shipping, you will need to override
-the default repository class (see :doc:`how_to_override_a_core_class`) and alter
+the default repository class (see :doc:`/topics/customisation`) and alter
 the implementation of the ``get_shipping_methods`` method.  This method
 should return a list of "shipping method" classes already instantiated
 and holding a reference to the basket instance.
