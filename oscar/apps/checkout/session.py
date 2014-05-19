@@ -112,10 +112,7 @@ class CheckoutSessionMixin(object):
         # not be if the basket is purely downloads
         if not request.basket.is_shipping_required():
             raise exceptions.FailedPreCondition(
-                url=reverse('checkout:shipping-method'),
-                message=_(
-                    "Your basket does not require a shipping"
-                    "address to be submitted")
+                url=reverse('checkout:shipping-method')
             )
 
     def check_shipping_data_is_captured(self, request):
