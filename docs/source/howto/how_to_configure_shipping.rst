@@ -123,17 +123,15 @@ The shipping methods that ship with Oscar are:
 
 * ``oscar.apps.shipping.methods.Free``.  No shipping charges.
 
-* ``oscar.apps.shipping.models.WeightBased``.  This is a model-driven method
-  that uses two models: ``WeightBased`` and ``WeightBand`` to provide charges
-  for different weight bands.  By default, the method will calculate the weight
-  of a product by looking for a 'weight' attribute although this can be
-  configured.  
-
 * ``oscar.apps.shipping.methods.FixedPrice``.  This simply charges a fixed price for 
   shipping, irrespective of the basket contents.
 
-* ``oscar.apps.shipping.models.OrderAndItemCharges``.  This is a model which
-  specifies a per-order and a per-item level charge.
+* ``oscar.apps.shipping.methods.OfferDiscount``. This applies a discount
+  to an existing shipping method's charges.
+
+* ``oscar.apps.shipping.methods.TaxExclusiveOfferDiscount``. Children of ``OfferDiscount``
+
+* ``oscar.apps.shipping.methods.TaxInclusiveOfferDiscount``.  Children of ``OfferDiscount``
 
 To apply your domain logic for shipping, you will need to override
 the default repository class (see :doc:`/topics/customisation`) and alter
