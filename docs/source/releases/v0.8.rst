@@ -15,6 +15,8 @@ Table of contents:
 Overview
 ========
 
+Oscar now has a demo site customised for the US!
+
 .. _compatibility:
 
 Compatibility
@@ -54,6 +56,16 @@ Oscar's views are now dynamically imported. This means that they can be
 overridden like most other classes in Oscar; overriding the related
 Application instance is not necessary any more. Updated instructions are
 available in :doc:`/topics/customisation`.
+
+US demo site
+------------
+
+To help developers building sites for the US, a new example Oscar site has been
+included in the repo. This customises core Oscar to treat all prices as
+excluding tax and then calculate and apply taxes once the shipping address is
+known.
+
+See :ref:`us_site` for more information.
 
 .. _minor_changes:
 
