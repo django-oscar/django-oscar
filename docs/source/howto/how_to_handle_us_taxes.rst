@@ -5,17 +5,24 @@ How to handle US taxes
 When trading in the US, taxes aren't known until the customer's shipping
 address has been entered.  This scenario requires two changes from core Oscar.
 
-First, the site strategy should return all prices without tax when the customer
-is based in the US.  See 
-:doc:`the documentation on strategies </topics/prices_and_availability>`
-for guidance on how to replace strategies.
+Ensure your site strategy returns prices without taxes applied
+--------------------------------------------------------------
 
-Second, the 
-:class:`~oscar.apps.checkout.views.PaymentDetailsView`
-checkout view should be
-overridden to calculate taxes on the basket within the 
-:func:`~oscar.apps.checkout.views.PaymentDetailsView.build_submission`
-method.
+First, the site strategy should return all prices without tax when the customer
+is based in the US.  Oscar provides a :class:`~oscar.apps.partner.strategy.US`
+strategy class that uses the :class:`~oscar.apps.partner.strategy.DeferredTax`
+mixin to indicate that prices don't include taxes.
+
+See :doc:`the documentation on strategies </topics/prices_and_availability>`
+for further guidance on how to replace strategies.
+
+Adjust checkout views to apply taxes once they are known
+--------------------------------------------------------
+
+Second, the :class:`~oscar.apps.checkout.views.PaymentDetailsView`
+checkout view should be overridden within your project to calculate taxes on
+the basket within the
+:func:`~oscar.apps.checkout.views.PaymentDetailsView.build_submission` method.
 
 .. code-block:: python
 
@@ -23,7 +30,7 @@ method.
 
     from . import tax
 
-    # Override core Oscar view class
+    # Override the core Oscar view class
     class PaymentDetailsView(views.PaymentDetailsView):
         
         # Override build_submission to ensure taxes are applied before
