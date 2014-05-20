@@ -22,8 +22,8 @@ Compatibility
 
 Oscar 0.8 is compatible with Django 1.5-1.7. 
 
-Support for Python 2.6 has been dropped; it works with Python 2.7, Python 3.3
-and Python 3.4.
+Support for Python 2.6 has been dropped; Oscar works with Python 2.7, 3.3
+and 3.4.
 
 .. _what_is_new:
 
@@ -68,9 +68,11 @@ Minor changes
   after logging in. It also employs flash messages to welcome returning and
   newly registered users.
 
+* The basket middleware now assigns a ``basket_hash`` attribute to the
+  ``request`` instance. This provides a hook for basket caching.
+
 Bugfixes
 ~~~~~~~~
-
 
 .. _backwards_incompatible_changes:
 
