@@ -270,6 +270,10 @@ class AbstractBasket(models.Model):
         basket.date_merged = now()
         basket._lines = None
         basket.save()
+        # Ensure all vouchers are moved to the new basket
+        for voucher in basket.vouchers.all():
+            basket.vouchers.remove(voucher)
+            self.vouchers.add(voucher)
     merge.alters_data = True
 
     def freeze(self):

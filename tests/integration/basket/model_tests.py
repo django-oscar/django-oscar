@@ -123,3 +123,14 @@ class TestASubmittedBasket(TestCase):
 
     def test_can_be_edited(self):
         self.assertFalse(self.basket.can_be_edited)
+
+
+class TestMergingAVoucherBasket(TestCase):
+
+    def test_transfers_vouchers_to_new_basket(self):
+        baskets = [factories.BasketFactory(), factories.BasketFactory()]
+        voucher = factories.VoucherFactory()
+        baskets[0].vouchers.add(voucher)
+        baskets[1].merge(baskets[0])
+
+        self.assertEqual(1, baskets[1].vouchers.all().count())
