@@ -145,6 +145,7 @@ class Structured(Base):
         """
         records = []
         for variant in product.variants.all():
+            # Use tuples of (variant product, stockrecord)
             records.append((variant, self.select_stockrecord(variant)))
         return records
 
@@ -155,6 +156,11 @@ class Structured(Base):
         raise NotImplementedError(
             "A structured strategy class must define a "
             "'pricing_policy' method")
+
+    def group_pricing_policy(self, produt, variant_stock):
+        raise NotImplementedError(
+            "A structured strategy class must define a "
+            "'group_pricing_policy' method")
 
     def availability_policy(self, product, stockrecord):
         """
@@ -262,9 +268,11 @@ class FixedRateTax(object):
         stockrecords = [x[1] for x in variant_stock if x[1] is not None]
         if not stockrecords:
             return prices.Unavailable()
+
         # We take price from first record
         stockrecord = stockrecords[0]
         tax = (stockrecord.price_excl_tax * self.rate).quantize(self.exponent)
+
         return prices.FixedPrice(
             currency=stockrecord.price_currency,
             excl_tax=stockrecord.price_excl_tax,
@@ -281,6 +289,18 @@ class DeferredTax(object):
     def pricing_policy(self, product, stockrecord):
         if not stockrecord:
             return prices.Unavailable()
+        return prices.FixedPrice(
+            currency=stockrecord.price_currency,
+            excl_tax=stockrecord.price_excl_tax)
+
+    def group_pricing_policy(self, product, variant_stock):
+        stockrecords = [x[1] for x in variant_stock if x[1] is not None]
+        if not stockrecords:
+            return prices.Unavailable()
+
+        # We take price from first record
+        stockrecord = stockrecords[0]
+
         return prices.FixedPrice(
             currency=stockrecord.price_currency,
             excl_tax=stockrecord.price_excl_tax)
