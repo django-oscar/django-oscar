@@ -1,0 +1,2930 @@
+[
+    {
+        "pk": "GB", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "GBR", 
+            "name": "UNITED KINGDOM", 
+            "printable_name": "United Kingdom of Great Britain and Northern Ireland", 
+            "display_order": 1, 
+            "iso_3166_1_numeric": 826, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "AF", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "AFG", 
+            "name": "AFGHANISTAN", 
+            "printable_name": "Afghanistan", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 4, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "AX", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ALA", 
+            "name": "ALAND ISLANDS", 
+            "printable_name": "\u00c5land Islands", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 248, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "AL", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ALB", 
+            "name": "ALBANIA", 
+            "printable_name": "Albania", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 8, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "DZ", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "DZA", 
+            "name": "ALGERIA", 
+            "printable_name": "Algeria", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 12, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "AS", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ASM", 
+            "name": "AMERICAN SAMOA", 
+            "printable_name": "American Samoa", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 16, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "AD", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "AND", 
+            "name": "ANDORRA", 
+            "printable_name": "Andorra", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 20, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "AO", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "AGO", 
+            "name": "ANGOLA", 
+            "printable_name": "Angola", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 24, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "AI", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "AIA", 
+            "name": "ANGUILLA", 
+            "printable_name": "Anguilla", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 660, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "AQ", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ATA", 
+            "name": "ANTARCTICA", 
+            "printable_name": "Antarctica", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 10, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "AG", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ATG", 
+            "name": "ANTIGUA AND BARBUDA", 
+            "printable_name": "Antigua and Barbuda", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 28, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "AR", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ARG", 
+            "name": "ARGENTINA", 
+            "printable_name": "Argentina", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 32, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "AM", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ARM", 
+            "name": "ARMENIA", 
+            "printable_name": "Armenia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 51, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "AW", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ABW", 
+            "name": "ARUBA", 
+            "printable_name": "Aruba", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 533, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "AU", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "AUS", 
+            "name": "AUSTRALIA", 
+            "printable_name": "Australia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 36, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "AT", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "AUT", 
+            "name": "AUSTRIA", 
+            "printable_name": "Austria", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 40, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "AZ", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "AZE", 
+            "name": "AZERBAIJAN", 
+            "printable_name": "Azerbaijan", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 31, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "BS", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "BHS", 
+            "name": "BAHAMAS", 
+            "printable_name": "Bahamas", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 44, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "BH", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "BHR", 
+            "name": "BAHRAIN", 
+            "printable_name": "Bahrain", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 48, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "BD", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "BGD", 
+            "name": "BANGLADESH", 
+            "printable_name": "Bangladesh", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 50, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "BB", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "BRB", 
+            "name": "BARBADOS", 
+            "printable_name": "Barbados", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 52, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "BY", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "BLR", 
+            "name": "BELARUS", 
+            "printable_name": "Belarus", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 112, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "BE", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "BEL", 
+            "name": "BELGIUM", 
+            "printable_name": "Belgium", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 56, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "BZ", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "BLZ", 
+            "name": "BELIZE", 
+            "printable_name": "Belize", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 84, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "BJ", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "BEN", 
+            "name": "BENIN", 
+            "printable_name": "Benin", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 204, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "BM", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "BMU", 
+            "name": "BERMUDA", 
+            "printable_name": "Bermuda", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 60, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "BT", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "BTN", 
+            "name": "BHUTAN", 
+            "printable_name": "Bhutan", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 64, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "BO", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "BOL", 
+            "name": "BOLIVIA", 
+            "printable_name": "Bolivia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 68, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "BA", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "BIH", 
+            "name": "BOSNIA AND HERZEGOVINA", 
+            "printable_name": "Bosnia and Herzegovina", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 70, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "BW", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "BWA", 
+            "name": "BOTSWANA", 
+            "printable_name": "Botswana", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 72, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "BV", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "BVT", 
+            "name": "BOUVET ISLAND", 
+            "printable_name": "Bouvet Island", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 74, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "BR", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "BRA", 
+            "name": "BRAZIL", 
+            "printable_name": "Brazil", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 76, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "IO", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "IOT", 
+            "name": "BRITISH INDIAN OCEAN TERRITORY", 
+            "printable_name": "British Indian Ocean Territory", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 86, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "BN", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "BRN", 
+            "name": "BRUNEI DARUSSALAM", 
+            "printable_name": "Brunei Darussalam", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 96, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "BG", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "BGR", 
+            "name": "BULGARIA", 
+            "printable_name": "Bulgaria", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 100, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "BF", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "BFA", 
+            "name": "BURKINA FASO", 
+            "printable_name": "Burkina Faso", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 854, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "BI", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "BDI", 
+            "name": "BURUNDI", 
+            "printable_name": "Burundi", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 108, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "KH", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "KHM", 
+            "name": "CAMBODIA", 
+            "printable_name": "Cambodia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 116, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "CM", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "CMR", 
+            "name": "CAMEROON", 
+            "printable_name": "Cameroon", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 120, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "CA", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "CAN", 
+            "name": "CANADA", 
+            "printable_name": "Canada", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 124, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "CV", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "CPV", 
+            "name": "CAPE VERDE", 
+            "printable_name": "Cape Verde", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 132, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "KY", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "CYM", 
+            "name": "CAYMAN ISLANDS", 
+            "printable_name": "Cayman Islands", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 136, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "CF", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "CAF", 
+            "name": "CENTRAL AFRICAN REPUBLIC", 
+            "printable_name": "Central African Republic", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 140, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "TD", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "TCD", 
+            "name": "CHAD", 
+            "printable_name": "Chad", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 148, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "CL", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "CHL", 
+            "name": "CHILE", 
+            "printable_name": "Chile", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 152, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "CN", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "CHN", 
+            "name": "CHINA", 
+            "printable_name": "China", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 156, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "CX", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "CXR", 
+            "name": "CHRISTMAS ISLAND", 
+            "printable_name": "Christmas Island", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 162, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "CC", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "CCK", 
+            "name": "COCOS (KEELING) ISLANDS", 
+            "printable_name": "Cocos (Keeling) Islands", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 166, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "CO", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "COL", 
+            "name": "COLOMBIA", 
+            "printable_name": "Colombia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 170, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "KM", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "COM", 
+            "name": "COMOROS", 
+            "printable_name": "Comoros", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 174, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "CG", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "COG", 
+            "name": "CONGO", 
+            "printable_name": "Congo", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 178, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "CD", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "COD", 
+            "name": "CONGO, THE DEMOCRATIC REPUBLIC OF THE", 
+            "printable_name": "Democratic Republic of the Congo", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 180, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "CK", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "COK", 
+            "name": "COOK ISLANDS", 
+            "printable_name": "Cook Islands", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 184, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "CR", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "CRI", 
+            "name": "COSTA RICA", 
+            "printable_name": "Costa Rica", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 188, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "CI", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "CIV", 
+            "name": "COTE D'IVOIRE", 
+            "printable_name": "C\u00f4te d'Ivoire", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 384, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "HR", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "HRV", 
+            "name": "CROATIA", 
+            "printable_name": "Croatia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 191, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "CU", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "CUB", 
+            "name": "CUBA", 
+            "printable_name": "Cuba", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 192, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "CY", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "CYP", 
+            "name": "CYPRUS", 
+            "printable_name": "Cyprus", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 196, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "CZ", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "CZE", 
+            "name": "CZECH REPUBLIC", 
+            "printable_name": "Czech Republic", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 203, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "DK", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "DNK", 
+            "name": "DENMARK", 
+            "printable_name": "Denmark", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 208, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "DJ", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "DJI", 
+            "name": "DJIBOUTI", 
+            "printable_name": "Djibouti", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 262, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "DM", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "DMA", 
+            "name": "DOMINICA", 
+            "printable_name": "Dominica", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 212, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "DO", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "DOM", 
+            "name": "DOMINICAN REPUBLIC", 
+            "printable_name": "Dominican Republic", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 214, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "EC", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ECU", 
+            "name": "ECUADOR", 
+            "printable_name": "Ecuador", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 218, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "EG", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "EGY", 
+            "name": "EGYPT", 
+            "printable_name": "Egypt", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 818, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "SV", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "SLV", 
+            "name": "EL SALVADOR", 
+            "printable_name": "El Salvador", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 222, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "GQ", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "GNQ", 
+            "name": "EQUATORIAL GUINEA", 
+            "printable_name": "Equatorial Guinea", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 226, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "ER", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ERI", 
+            "name": "ERITREA", 
+            "printable_name": "Eritrea", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 232, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "EE", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "EST", 
+            "name": "ESTONIA", 
+            "printable_name": "Estonia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 233, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "ET", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ETH", 
+            "name": "ETHIOPIA", 
+            "printable_name": "Ethiopia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 231, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "FK", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "FLK", 
+            "name": "FALKLAND ISLANDS (MALVINAS)", 
+            "printable_name": "Falkland Islands (Malvinas)", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 238, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "FO", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "FRO", 
+            "name": "FAROE ISLANDS", 
+            "printable_name": "Faeroe Islands", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 234, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "FJ", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "FJI", 
+            "name": "FIJI", 
+            "printable_name": "Fiji", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 242, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "FI", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "FIN", 
+            "name": "FINLAND", 
+            "printable_name": "Finland", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 246, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "FR", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "FRA", 
+            "name": "FRANCE", 
+            "printable_name": "France", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 250, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "GF", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "GUF", 
+            "name": "FRENCH GUIANA", 
+            "printable_name": "French Guiana", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 254, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "PF", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "PYF", 
+            "name": "FRENCH POLYNESIA", 
+            "printable_name": "French Polynesia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 258, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "TF", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ATF", 
+            "name": "FRENCH SOUTHERN TERRITORIES", 
+            "printable_name": "French Southern Territories", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 260, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "GA", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "GAB", 
+            "name": "GABON", 
+            "printable_name": "Gabon", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 266, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "GM", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "GMB", 
+            "name": "GAMBIA", 
+            "printable_name": "Gambia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 270, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "GE", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "GEO", 
+            "name": "GEORGIA", 
+            "printable_name": "Georgia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 268, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "DE", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "DEU", 
+            "name": "GERMANY", 
+            "printable_name": "Germany", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 276, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "GH", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "GHA", 
+            "name": "GHANA", 
+            "printable_name": "Ghana", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 288, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "GI", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "GIB", 
+            "name": "GIBRALTAR", 
+            "printable_name": "Gibraltar", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 292, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "GR", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "GRC", 
+            "name": "GREECE", 
+            "printable_name": "Greece", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 300, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "GL", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "GRL", 
+            "name": "GREENLAND", 
+            "printable_name": "Greenland", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 304, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "GD", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "GRD", 
+            "name": "GRENADA", 
+            "printable_name": "Grenada", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 308, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "GP", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "GLP", 
+            "name": "GUADELOUPE", 
+            "printable_name": "Guadeloupe", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 312, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "GU", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "GUM", 
+            "name": "GUAM", 
+            "printable_name": "Guam", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 316, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "GT", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "GTM", 
+            "name": "GUATEMALA", 
+            "printable_name": "Guatemala", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 320, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "GG", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "GGY", 
+            "name": "GUERNSEY", 
+            "printable_name": "Guernsey", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 831, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "GN", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "GIN", 
+            "name": "GUINEA", 
+            "printable_name": "Guinea", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 324, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "GW", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "GNB", 
+            "name": "GUINEA-BISSAU", 
+            "printable_name": "Guinea-Bissau", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 624, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "GY", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "GUY", 
+            "name": "GUYANA", 
+            "printable_name": "Guyana", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 328, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "HT", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "HTI", 
+            "name": "HAITI", 
+            "printable_name": "Haiti", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 332, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "HM", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "HMD", 
+            "name": "HEARD ISLAND AND MCDONALD ISLANDS", 
+            "printable_name": "Heard Island and Mcdonald Islands", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 334, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "VA", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "VAT", 
+            "name": "HOLY SEE (VATICAN CITY STATE)", 
+            "printable_name": "Holy See", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 336, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "HN", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "HND", 
+            "name": "HONDURAS", 
+            "printable_name": "Honduras", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 340, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "HK", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "HKG", 
+            "name": "HONG KONG", 
+            "printable_name": "Hong Kong Special Administrative Region of China", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 344, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "HU", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "HUN", 
+            "name": "HUNGARY", 
+            "printable_name": "Hungary", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 348, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "IS", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ISL", 
+            "name": "ICELAND", 
+            "printable_name": "Iceland", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 352, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "IN", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "IND", 
+            "name": "INDIA", 
+            "printable_name": "India", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 356, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "ID", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "IDN", 
+            "name": "INDONESIA", 
+            "printable_name": "Indonesia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 360, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "IR", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "IRN", 
+            "name": "IRAN, ISLAMIC REPUBLIC OF", 
+            "printable_name": "Iran, Islamic Republic of", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 364, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "IQ", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "IRQ", 
+            "name": "IRAQ", 
+            "printable_name": "Iraq", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 368, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "IE", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "IRL", 
+            "name": "IRELAND", 
+            "printable_name": "Ireland", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 372, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "IM", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "IMN", 
+            "name": "ISLE OF MAN", 
+            "printable_name": "Isle of Man", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 833, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "IL", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ISR", 
+            "name": "ISRAEL", 
+            "printable_name": "Israel", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 376, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "IT", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ITA", 
+            "name": "ITALY", 
+            "printable_name": "Italy", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 380, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "JM", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "JAM", 
+            "name": "JAMAICA", 
+            "printable_name": "Jamaica", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 388, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "JP", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "JPN", 
+            "name": "JAPAN", 
+            "printable_name": "Japan", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 392, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "JE", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "JEY", 
+            "name": "JERSEY", 
+            "printable_name": "Jersey", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 832, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "JO", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "JOR", 
+            "name": "JORDAN", 
+            "printable_name": "Jordan", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 400, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "KZ", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "KAZ", 
+            "name": "KAZAKHSTAN", 
+            "printable_name": "Kazakhstan", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 398, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "KE", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "KEN", 
+            "name": "KENYA", 
+            "printable_name": "Kenya", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 404, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "KI", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "KIR", 
+            "name": "KIRIBATI", 
+            "printable_name": "Kiribati", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 296, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "KP", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "PRK", 
+            "name": "KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF", 
+            "printable_name": "Democratic People's Republic of Korea", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 408, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "KR", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "KOR", 
+            "name": "KOREA, REPUBLIC OF", 
+            "printable_name": "Republic of Korea", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 410, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "KW", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "KWT", 
+            "name": "KUWAIT", 
+            "printable_name": "Kuwait", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 414, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "KG", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "KGZ", 
+            "name": "KYRGYZSTAN", 
+            "printable_name": "Kyrgyzstan", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 417, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "LA", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "LAO", 
+            "name": "LAO PEOPLE'S DEMOCRATIC REPUBLIC", 
+            "printable_name": "Lao People's Democratic Republic", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 418, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "LV", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "LVA", 
+            "name": "LATVIA", 
+            "printable_name": "Latvia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 428, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "LB", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "LBN", 
+            "name": "LEBANON", 
+            "printable_name": "Lebanon", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 422, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "LS", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "LSO", 
+            "name": "LESOTHO", 
+            "printable_name": "Lesotho", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 426, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "LR", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "LBR", 
+            "name": "LIBERIA", 
+            "printable_name": "Liberia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 430, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "LY", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "LBY", 
+            "name": "LIBYAN ARAB JAMAHIRIYA", 
+            "printable_name": "Libyan Arab Jamahiriya", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 434, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "LI", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "LIE", 
+            "name": "LIECHTENSTEIN", 
+            "printable_name": "Liechtenstein", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 438, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "LT", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "LTU", 
+            "name": "LITHUANIA", 
+            "printable_name": "Lithuania", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 440, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "LU", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "LUX", 
+            "name": "LUXEMBOURG", 
+            "printable_name": "Luxembourg", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 442, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "MO", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MAC", 
+            "name": "MACAO", 
+            "printable_name": "Macao Special Administrative Region of China", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 446, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "MK", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MKD", 
+            "name": "MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF", 
+            "printable_name": "The former Yugoslav Republic of Macedonia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 807, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "MG", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MDG", 
+            "name": "MADAGASCAR", 
+            "printable_name": "Madagascar", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 450, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "MW", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MWI", 
+            "name": "MALAWI", 
+            "printable_name": "Malawi", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 454, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "MY", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MYS", 
+            "name": "MALAYSIA", 
+            "printable_name": "Malaysia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 458, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "MV", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MDV", 
+            "name": "MALDIVES", 
+            "printable_name": "Maldives", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 462, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "ML", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MLI", 
+            "name": "MALI", 
+            "printable_name": "Mali", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 466, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "MT", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MLT", 
+            "name": "MALTA", 
+            "printable_name": "Malta", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 470, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "MH", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MHL", 
+            "name": "MARSHALL ISLANDS", 
+            "printable_name": "Marshall Islands", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 584, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "MQ", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MTQ", 
+            "name": "MARTINIQUE", 
+            "printable_name": "Martinique", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 474, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "MR", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MRT", 
+            "name": "MAURITANIA", 
+            "printable_name": "Mauritania", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 478, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "MU", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MUS", 
+            "name": "MAURITIUS", 
+            "printable_name": "Mauritius", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 480, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "YT", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MYT", 
+            "name": "MAYOTTE", 
+            "printable_name": "Mayotte", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 175, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "MX", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MEX", 
+            "name": "MEXICO", 
+            "printable_name": "Mexico", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 484, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "FM", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "FSM", 
+            "name": "MICRONESIA, FEDERATED STATES OF", 
+            "printable_name": "Micronesia, Federated States of", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 583, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "MD", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MDA", 
+            "name": "MOLDOVA, REPUBLIC OF", 
+            "printable_name": "Republic of Moldova", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 498, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "MC", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MCO", 
+            "name": "MONACO", 
+            "printable_name": "Monaco", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 492, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "MN", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MNG", 
+            "name": "MONGOLIA", 
+            "printable_name": "Mongolia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 496, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "ME", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MNE", 
+            "name": "MONTENEGRO", 
+            "printable_name": "Montenegro", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 499, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "MS", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MSR", 
+            "name": "MONTSERRAT", 
+            "printable_name": "Montserrat", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 500, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "MA", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MAR", 
+            "name": "MOROCCO", 
+            "printable_name": "Morocco", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 504, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "MZ", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MOZ", 
+            "name": "MOZAMBIQUE", 
+            "printable_name": "Mozambique", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 508, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "MM", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MMR", 
+            "name": "MYANMAR", 
+            "printable_name": "Myanmar", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 104, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "NA", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "NAM", 
+            "name": "NAMIBIA", 
+            "printable_name": "Namibia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 516, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "NR", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "NRU", 
+            "name": "NAURU", 
+            "printable_name": "Nauru", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 520, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "NP", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "NPL", 
+            "name": "NEPAL", 
+            "printable_name": "Nepal", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 524, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "NL", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "NLD", 
+            "name": "NETHERLANDS", 
+            "printable_name": "Netherlands", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 528, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "AN", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ANT", 
+            "name": "NETHERLANDS ANTILLES", 
+            "printable_name": "Netherlands Antilles", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 530, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "NC", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "NCL", 
+            "name": "NEW CALEDONIA", 
+            "printable_name": "New Caledonia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 540, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "NZ", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "NZL", 
+            "name": "NEW ZEALAND", 
+            "printable_name": "New Zealand", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 554, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "NI", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "NIC", 
+            "name": "NICARAGUA", 
+            "printable_name": "Nicaragua", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 558, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "NE", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "NER", 
+            "name": "NIGER", 
+            "printable_name": "Niger", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 562, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "NG", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "NGA", 
+            "name": "NIGERIA", 
+            "printable_name": "Nigeria", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 566, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "NU", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "NIU", 
+            "name": "NIUE", 
+            "printable_name": "Niue", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 570, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "NF", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "NFK", 
+            "name": "NORFOLK ISLAND", 
+            "printable_name": "Norfolk Island", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 574, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "MP", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "MNP", 
+            "name": "NORTHERN MARIANA ISLANDS", 
+            "printable_name": "Northern Mariana Islands", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 580, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "NO", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "NOR", 
+            "name": "NORWAY", 
+            "printable_name": "Norway", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 578, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "OM", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "OMN", 
+            "name": "OMAN", 
+            "printable_name": "Oman", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 512, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "PK", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "PAK", 
+            "name": "PAKISTAN", 
+            "printable_name": "Pakistan", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 586, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "PW", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "PLW", 
+            "name": "PALAU", 
+            "printable_name": "Palau", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 585, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "PS", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "PSE", 
+            "name": "PALESTINIAN TERRITORY, OCCUPIED", 
+            "printable_name": "Occupied Palestinian Territory", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 275, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "PA", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "PAN", 
+            "name": "PANAMA", 
+            "printable_name": "Panama", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 591, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "PG", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "PNG", 
+            "name": "PAPUA NEW GUINEA", 
+            "printable_name": "Papua New Guinea", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 598, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "PY", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "PRY", 
+            "name": "PARAGUAY", 
+            "printable_name": "Paraguay", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 600, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "PE", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "PER", 
+            "name": "PERU", 
+            "printable_name": "Peru", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 604, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "PH", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "PHL", 
+            "name": "PHILIPPINES", 
+            "printable_name": "Philippines", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 608, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "PN", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "PCN", 
+            "name": "PITCAIRN", 
+            "printable_name": "Pitcairn", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 612, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "PL", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "POL", 
+            "name": "POLAND", 
+            "printable_name": "Poland", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 616, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "PT", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "PRT", 
+            "name": "PORTUGAL", 
+            "printable_name": "Portugal", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 620, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "PR", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "PRI", 
+            "name": "PUERTO RICO", 
+            "printable_name": "Puerto Rico", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 630, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "QA", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "QAT", 
+            "name": "QATAR", 
+            "printable_name": "Qatar", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 634, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "RE", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "REU", 
+            "name": "REUNION", 
+            "printable_name": "R\u00e9union", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 638, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "RO", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ROU", 
+            "name": "ROMANIA", 
+            "printable_name": "Romania", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 642, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "RU", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "RUS", 
+            "name": "RUSSIAN FEDERATION", 
+            "printable_name": "Russian Federation", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 643, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "RW", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "RWA", 
+            "name": "RWANDA", 
+            "printable_name": "Rwanda", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 646, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "SH", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "SHN", 
+            "name": "SAINT HELENA", 
+            "printable_name": "Saint Helena", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 654, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "KN", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "KNA", 
+            "name": "SAINT KITTS AND NEVIS", 
+            "printable_name": "Saint Kitts and Nevis", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 659, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "LC", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "LCA", 
+            "name": "SAINT LUCIA", 
+            "printable_name": "Saint Lucia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 662, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "PM", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "SPM", 
+            "name": "SAINT PIERRE AND MIQUELON", 
+            "printable_name": "Saint Pierre and Miquelon", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 666, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "VC", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "VCT", 
+            "name": "SAINT VINCENT AND THE GRENADINES", 
+            "printable_name": "Saint Vincent and the Grenadines", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 670, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "WS", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "WSM", 
+            "name": "SAMOA", 
+            "printable_name": "Samoa", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 882, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "SM", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "SMR", 
+            "name": "SAN MARINO", 
+            "printable_name": "San Marino", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 674, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "ST", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "STP", 
+            "name": "SAO TOME AND PRINCIPE", 
+            "printable_name": "Sao Tome and Principe", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 678, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "SA", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "SAU", 
+            "name": "SAUDI ARABIA", 
+            "printable_name": "Saudi Arabia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 682, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "SN", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "SEN", 
+            "name": "SENEGAL", 
+            "printable_name": "Senegal", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 686, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "RS", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "SRB", 
+            "name": "SERBIA", 
+            "printable_name": "Serbia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 688, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "SC", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "SYC", 
+            "name": "SEYCHELLES", 
+            "printable_name": "Seychelles", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 690, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "SL", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "SLE", 
+            "name": "SIERRA LEONE", 
+            "printable_name": "Sierra Leone", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 694, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "SG", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "SGP", 
+            "name": "SINGAPORE", 
+            "printable_name": "Singapore", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 702, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "SK", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "SVK", 
+            "name": "SLOVAKIA", 
+            "printable_name": "Slovakia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 703, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "SI", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "SVN", 
+            "name": "SLOVENIA", 
+            "printable_name": "Slovenia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 705, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "SB", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "SLB", 
+            "name": "SOLOMON ISLANDS", 
+            "printable_name": "Solomon Islands", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 90, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "SO", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "SOM", 
+            "name": "SOMALIA", 
+            "printable_name": "Somalia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 706, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "ZA", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ZAF", 
+            "name": "SOUTH AFRICA", 
+            "printable_name": "South Africa", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 710, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "GS", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "SGS", 
+            "name": "SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS", 
+            "printable_name": "South Georgia and the South Sandwich Islands", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 239, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "ES", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ESP", 
+            "name": "SPAIN", 
+            "printable_name": "Spain", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 724, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "LK", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "LKA", 
+            "name": "SRI LANKA", 
+            "printable_name": "Sri Lanka", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 144, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "SD", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "SDN", 
+            "name": "SUDAN", 
+            "printable_name": "Sudan", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 736, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "SR", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "SUR", 
+            "name": "SURINAME", 
+            "printable_name": "Suriname", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 740, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "SJ", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "SJM", 
+            "name": "SVALBARD AND JAN MAYEN", 
+            "printable_name": "Svalbard and Jan Mayen Islands", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 744, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "SZ", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "SWZ", 
+            "name": "SWAZILAND", 
+            "printable_name": "Swaziland", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 748, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "SE", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "SWE", 
+            "name": "SWEDEN", 
+            "printable_name": "Sweden", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 752, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "CH", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "CHE", 
+            "name": "SWITZERLAND", 
+            "printable_name": "Switzerland", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 756, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "SY", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "SYR", 
+            "name": "SYRIAN ARAB REPUBLIC", 
+            "printable_name": "Syrian Arab Republic", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 760, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "TW", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "TWN", 
+            "name": "TAIWAN, PROVINCE OF CHINA", 
+            "printable_name": "Taiwan, Province of China", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 158, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "TJ", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "TJK", 
+            "name": "TAJIKISTAN", 
+            "printable_name": "Tajikistan", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 762, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "TZ", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "TZA", 
+            "name": "TANZANIA, UNITED REPUBLIC OF", 
+            "printable_name": "United Republic of Tanzania", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 834, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "TH", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "THA", 
+            "name": "THAILAND", 
+            "printable_name": "Thailand", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 764, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "TL", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "TLS", 
+            "name": "TIMOR-LESTE", 
+            "printable_name": "Timor-Leste", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 626, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "TG", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "TGO", 
+            "name": "TOGO", 
+            "printable_name": "Togo", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 768, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "TK", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "TKL", 
+            "name": "TOKELAU", 
+            "printable_name": "Tokelau", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 772, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "TO", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "TON", 
+            "name": "TONGA", 
+            "printable_name": "Tonga", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 776, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "TT", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "TTO", 
+            "name": "TRINIDAD AND TOBAGO", 
+            "printable_name": "Trinidad and Tobago", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 780, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "TN", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "TUN", 
+            "name": "TUNISIA", 
+            "printable_name": "Tunisia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 788, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "TR", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "TUR", 
+            "name": "TURKEY", 
+            "printable_name": "Turkey", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 792, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "TM", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "TKM", 
+            "name": "TURKMENISTAN", 
+            "printable_name": "Turkmenistan", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 795, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "TC", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "TCA", 
+            "name": "TURKS AND CAICOS ISLANDS", 
+            "printable_name": "Turks and Caicos Islands", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 796, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "TV", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "TUV", 
+            "name": "TUVALU", 
+            "printable_name": "Tuvalu", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 798, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "UG", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "UGA", 
+            "name": "UGANDA", 
+            "printable_name": "Uganda", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 800, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "UA", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "UKR", 
+            "name": "UKRAINE", 
+            "printable_name": "Ukraine", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 804, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "AE", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ARE", 
+            "name": "UNITED ARAB EMIRATES", 
+            "printable_name": "The United Arab Emirates",
+            "display_order": 0, 
+            "iso_3166_1_numeric": 784, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "US", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "USA", 
+            "name": "UNITED STATES", 
+            "printable_name": "The United States of America",
+            "display_order": 0, 
+            "iso_3166_1_numeric": 840, 
+            "is_shipping_country": true
+        }
+    }, 
+    {
+        "pk": "UM", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "UMI", 
+            "name": "UNITED STATES MINOR OUTLYING ISLANDS", 
+            "printable_name": "The United States Minor Outlying Islands",
+            "display_order": 0, 
+            "iso_3166_1_numeric": 581, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "UY", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "URY", 
+            "name": "URUGUAY", 
+            "printable_name": "Uruguay", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 858, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "UZ", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "UZB", 
+            "name": "UZBEKISTAN", 
+            "printable_name": "Uzbekistan", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 860, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "VU", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "VUT", 
+            "name": "VANUATU", 
+            "printable_name": "Vanuatu", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 548, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "VE", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "VEN", 
+            "name": "VENEZUELA", 
+            "printable_name": "Venezuela (Bolivarian Republic of)", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 862, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "VN", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "VNM", 
+            "name": "VIET NAM", 
+            "printable_name": "Viet Nam", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 704, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "VG", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "VGB", 
+            "name": "VIRGIN ISLANDS, BRITISH", 
+            "printable_name": "British Virgin Islands", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 92, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "VI", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "VIR", 
+            "name": "VIRGIN ISLANDS, U.S.", 
+            "printable_name": "United States Virgin Islands", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 850, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "WF", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "WLF", 
+            "name": "WALLIS AND FUTUNA", 
+            "printable_name": "Wallis and Futuna Islands", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 876, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "EH", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ESH", 
+            "name": "WESTERN SAHARA", 
+            "printable_name": "Western Sahara", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 732, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "YE", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "YEM", 
+            "name": "YEMEN", 
+            "printable_name": "Yemen", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 887, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "ZM", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ZMB", 
+            "name": "ZAMBIA", 
+            "printable_name": "Zambia", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 894, 
+            "is_shipping_country": false
+        }
+    }, 
+    {
+        "pk": "ZW", 
+        "model": "address.country", 
+        "fields": {
+            "iso_3166_1_a3": "ZWE", 
+            "name": "ZIMBABWE", 
+            "printable_name": "Zimbabwe", 
+            "display_order": 0, 
+            "iso_3166_1_numeric": 716, 
+            "is_shipping_country": false
+        }
+    }
+]

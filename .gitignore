@@ -46,4 +46,6 @@ settings_local.py
 /sites/demo/public/
 /sites/demo/whoosh_index/
 /sites/demo/logs/
+/sites/us/public/
+/sites/us/logs/
 sites/puppet/modules/
