@@ -486,7 +486,7 @@ class Condition(models.Model):
         """
         Determines whether the condition can be applied to a given basket line
         """
-        if not line.stockrecord:
+        if not line.stockrecord_id:
             return False
         product = line.product
         return self.range.contains_product(product) and product.is_discountable

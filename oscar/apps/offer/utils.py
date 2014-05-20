@@ -83,7 +83,7 @@ class Applicator(object):
         # Using select_related with the condition/benefit ranges doesn't seem
         # to work.  I think this is because both the related objects have the
         # FK to range with the same name.
-        return qs.select_related('condition', 'condition__range', 'benefit')
+        return qs.select_related('condition', 'benefit')
 
     def get_basket_offers(self, basket, user):
         """

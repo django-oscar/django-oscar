@@ -192,7 +192,7 @@ class BasketMiddleware(object):
         if not basket.id:
             return
         for line in basket.all_lines():
-            if not line.stockrecord:
+            if not line.stockrecord_id:
                 self.ensure_line_has_stockrecord(basket, line)
 
     def ensure_line_has_stockrecord(self, basket, line):
