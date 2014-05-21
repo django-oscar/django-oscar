@@ -13,10 +13,10 @@ class Migration(SchemaMigration):
         # We no longer want to allow null values for basket line stockrecords.
         # This is slightly tricky as Django/South wants us to specify a
         # default. When this migration runs, there shouldn't be any null values
-        # so the default (of 0) should never be applied. Note that you will
+        # so the default (of '') should never be applied. Note that you will
         # probably want to run a clean-up command before running this
         # migration.
-        db.alter_column(u'basket_line', 'stockrecord_id', self.gf('django.db.models.fields.related.ForeignKey')(default=0, to=orm['partner.StockRecord']))
+        db.alter_column(u'basket_line', 'stockrecord_id', self.gf('django.db.models.fields.related.ForeignKey')(default='', to=orm['partner.StockRecord']))
 
     def backwards(self, orm):
 
