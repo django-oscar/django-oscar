@@ -304,6 +304,18 @@
                     {% endblock line_actions %}
                 </form>
 
+                <form action="." method="post">
+                    {% csrf_token %}
+                    {% block order_actions %}
+                        <div class="well">
+                            <h3><i class="icon-warning"></i> {% trans "Change order status" %}:</h3>
+                            {% include "partials/form_fields.html" with form=order_status_form %}
+                            <input type="hidden" value="change_order_status" name="order_action" />
+                            <input type="submit" value="{% trans "Change status" %}" class="btn btn-primary" />
+                        </div>
+                    {% endblock %}
+                </form>
+
                 {% block shipping_events %}
                     <div class="table-header">
                         <h3>{% trans "Shipping Events" %}</h3>
