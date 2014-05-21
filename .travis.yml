@@ -22,8 +22,10 @@ install:
   - easy_install Django==$DJANGO_VERSION
 
 before_script:
+    # Create testing databases for running migrations against
   - mysql -e 'create database oscar_vagrant;'
   - psql -c 'create database oscar_vagrant;' -U postgres
+    # Create database for building demo site
   - psql -c 'create database oscar_demo;' -U postgres
   - psql -c 'CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;' -U postgres -d oscar_demo
 
