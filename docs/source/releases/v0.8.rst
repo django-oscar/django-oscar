@@ -10,14 +10,14 @@ Table of contents:
     :local:
     :depth: 1
 
-.. _overview:
+.. _overview_of_0.8:
 
 Overview
 ========
 
 Oscar now has a demo site customised for the US!
 
-.. _compatibility:
+.. _compatibility_of_0.8:
 
 Compatibility
 =============
@@ -27,7 +27,7 @@ Oscar 0.8 is compatible with Django 1.5-1.7.
 Support for Python 2.6 has been dropped; Oscar works with Python 2.7, 3.3
 and 3.4.
 
-.. _what_is_new:
+.. _new_in_0.8:
 
 What's new in Oscar 0.8?
 ========================
@@ -67,7 +67,7 @@ known.
 
 See :ref:`us_site` for more information.
 
-.. _minor_changes:
+.. _minor_changes_in_0.8:
 
 Minor changes
 -------------
@@ -86,7 +86,7 @@ Minor changes
 Bugfixes
 ~~~~~~~~
 
-.. _backwards_incompatible_changes:
+.. _incompatible_changes_in_0.8:
 
 Backwards incompatible changes in 0.8
 =====================================
@@ -94,9 +94,6 @@ Backwards incompatible changes in 0.8
 * The ``shipping`` app saw a few renames; please see the section above.
 
 .. _removal_of_deprecated_features:
-
-Removal of features deprecated in 0.8
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Migrations
 ~~~~~~~~~~

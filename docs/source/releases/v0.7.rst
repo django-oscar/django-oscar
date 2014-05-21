@@ -4,8 +4,8 @@ Oscar 0.7 release notes
 
 Welcome to Oscar 0.7!
 
-These release notes cover the :ref:`new features <what_is_new>` as well as
-:ref:`backwards incompatible changes <incompatible_changes>` that you'll want to be aware of when
+These release notes cover the :ref:`new features <new_in_0.7>` as well as
+:ref:`backwards incompatible changes <incompatible_changes_in_0.7>` that you'll want to be aware of when
 upgrading from Oscar 0.6 or earlier.  
 
 If you encounter any undocumented issues, please let us know on the `mailing
@@ -19,7 +19,7 @@ Table of contents:
     :local:
     :depth: 1
 
-.. _overview:
+.. _overview_of_0.7:
 
 Overview
 ========
@@ -36,7 +36,7 @@ Further, ensure you test your checkout implementation carefully after upgrading
 as the core Oscar checkout view classes have been reorganised slightly.  Any
 upgrading work should be minor but be diligent.
 
-.. _compatibility:
+.. _compatibility_of_0.7:
 
 Compatibility
 =============
@@ -46,7 +46,7 @@ Oscar 0.7 has experimental support for Python 3.
 Support for Django 1.4 has been dropped, and support for Django 1.6 is
 now considered stable.
 
-.. _what_is_new:
+.. _new_in_0.7:
 
 What's new in Oscar 0.7?
 ========================
@@ -129,7 +129,7 @@ Finally, the ``billing_address`` kwarg to
 If you want to pass a billing address to be saved against the order, then pass
 it as part of the ``order_kwargs`` option.
 
-.. _minor_changes:
+.. _minor_changes_in_0.7:
 
 Minor changes
 ~~~~~~~~~~~~~
@@ -221,7 +221,7 @@ Bugfixes
 .. _`#1289`: https://github.com/tangentlabs/django-oscar/issues/1289
 .. _`be04d46639`: https://github.com/tangentlabs/django-oscar/commit/
 
-.. _incompatible_changes:
+.. _incompatible_changes_in_0.7:
 
 Backwards incompatible changes in 0.7
 =====================================
