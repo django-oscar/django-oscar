@@ -51,7 +51,9 @@ class TestForkAppFunction(TestCase):
             expected_string = 'from oscar.apps.order.%s import *' % module
             self.assertTrue(expected_string in contents)
 
-    def test_copies_in_migrations(self):
-        customisation.fork_app('order', self.tmp_folder)
-        migration_path = os.path.join(self.tmp_folder, 'order', 'migrations')
-        self.assertTrue(os.path.exists(migration_path))
+    def test_copies_in_migrations_when_needed(self):
+        for app, has_models in [('order', True), ('search', False)]:
+            customisation.fork_app(app, self.tmp_folder)
+            migration_path = os.path.join(self.tmp_folder, app, 'migrations')
+            self.assertEqual(has_models, os.path.exists(migration_path))
+

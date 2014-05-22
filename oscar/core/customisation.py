@@ -27,31 +27,36 @@ def fork_app(app_label, folder_path, logger=None):
             "command again")
 
     # Create folder
-    app_folder_path = os.path.join(folder_path, app_label)
-    if os.path.exists(app_folder_path):
+    local_app_folder_path = os.path.join(folder_path, app_label)
+    oscar_app_folder_path = os.path.join(oscar.__path__[0], 'apps', app_label)
+    if os.path.exists(local_app_folder_path):
         raise ValueError(
-            "There is already a '%s' folder! Aborting!" % app_folder_path)
-    logger.info("Creating folder %s" % app_folder_path)
-    os.mkdir(app_folder_path)
+            "There is already a '%s' folder! Aborting!" % local_app_folder_path)
+    logger.info("Creating folder %s" % local_app_folder_path)
+    os.mkdir(local_app_folder_path)
 
     # Create minimum app files
-    logger.info("Creating __init__.py, admin.py and models.py modules")
-    create_file(os.path.join(app_folder_path, '__init__.py'))
-    create_file(os.path.join(app_folder_path, 'admin.py'),
+    logger.info("Creating __init__.py and admin.py")
+    create_file(os.path.join(local_app_folder_path, '__init__.py'))
+    create_file(os.path.join(local_app_folder_path, 'admin.py'),
                 "from oscar.apps.%s.admin import *  # noqa" % app_label)
-    create_file(
-        os.path.join(app_folder_path, 'models.py'),
-        "from oscar.apps.%s.models import *  # noqa" % app_label)
 
-    # Migrations
-    source = os.path.join(
-        oscar.__path__[0], 'apps', app_label, 'migrations')
-    destination = os.path.join(app_folder_path, 'migrations')
-    logger.info("Copying migrations from %s to %s", source, destination)
-    shutil.copytree(source, destination)
+    # Only create models.py and migrations if it exists in the Oscar app
+    oscar_models_path = os.path.join(oscar_app_folder_path, 'models.py')
+    if os.path.exists(oscar_models_path):
+        # Migrations
+        source = os.path.join(oscar_app_folder_path, 'migrations')
+        destination = os.path.join(local_app_folder_path, 'migrations')
+        logger.info("Creating models.py and copying migrations from %s to %s",
+                    source, destination)
+        shutil.copytree(source, destination)
+
+        create_file(
+            os.path.join(local_app_folder_path, 'models.py'),
+            "from oscar.apps.%s.models import *  # noqa" % app_label)
 
     # Final step needs to be done by hand
-    app_package = app_folder_path.replace('/', '.')
+    app_package = local_app_folder_path.replace('/', '.')
     msg = (
         "The final step is to add '%s' to INSTALLED_APPS "
         "(replacing the equivalent Oscar app). This can be "
