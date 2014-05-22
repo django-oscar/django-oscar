@@ -32,8 +32,32 @@ and 3.4.
 What's new in Oscar 0.8?
 ========================
 
-Minor cleanup around shipping methods
--------------------------------------
+Customisation just got easier!
+------------------------------
+
+* Oscar's views are now dynamically imported. This means that they can be
+  overridden like most other classes in Oscar; overriding the related
+  Application instance is not necessary any more.
+
+* A new management command, ``oscar_fork_app``, has been introduced to help
+  with the all-to-common pattern of forking an Oscar app to override one of
+  it's classes.
+
+* The documentation around :doc:`/topics/customisation` has been given an
+  overhaul to incorporate the changes.
+
+US demo site
+------------
+
+To help developers building sites for the US, a new example Oscar site has been
+included in the repo. This customises core Oscar to treat all prices as
+excluding tax and then calculate and apply taxes once the shipping address is
+known.
+
+See :ref:`us_site` for more information.
+
+Cleanup around shipping methods
+-------------------------------
 
 * The models of the shipping app now have abstract base classes, similar to
   the rest of Oscar.
@@ -48,24 +72,6 @@ Minor cleanup around shipping methods
 
 * ``WeightBand.upper_limit`` is now a ``DecimalField``, just like the other
   weight-related fields.
-
-Customisation improvements
---------------------------
-
-Oscar's views are now dynamically imported. This means that they can be
-overridden like most other classes in Oscar; overriding the related
-Application instance is not necessary any more. Updated instructions are
-available in :doc:`/topics/customisation`.
-
-US demo site
-------------
-
-To help developers building sites for the US, a new example Oscar site has been
-included in the repo. This customises core Oscar to treat all prices as
-excluding tax and then calculate and apply taxes once the shipping address is
-known.
-
-See :ref:`us_site` for more information.
 
 .. _minor_changes_in_0.8:
 

@@ -51,9 +51,9 @@ In practice
 -----------
 
 For ``get_class`` to pick up the customised class, the Oscar apps need to be
-overridden. Unfortunately, that involves slightly more steps than just changing
-the entry in ``INSTALLED_APPS``. The process is detailed and illustrated with
-examples in :doc:`/topics/customisation`.
+forked. The process is detailed and illustrated with examples in
+:doc:`/topics/customisation`. It is usually enough to call ``oscar_fork_app``
+and replace the app in ``INSTALLED_APPS``.
 
 Using ``get_class`` in your own code
 ------------------------------------
