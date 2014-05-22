@@ -133,7 +133,7 @@
         are, of course, welcome to remove this tracker - but please email the mailing list if you have a production site using Oscar.
     {% endcomment %}
     {% block trackerimage %}
-        {% if call_home and not debug %}
+        {% if call_home %}
             <img src="//oscar-static.tangentlabs.co.uk/tracker.gif?{{ call_home }}" style="display:none" />
         {% endif %}
     {% endblock %}

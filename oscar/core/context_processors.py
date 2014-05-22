@@ -1,8 +1,10 @@
-from django.utils.safestring import mark_safe
+import oscar
 import re
 import platform
 import django
+from urllib import urlencode
 from django.conf import settings
+from django.utils.safestring import mark_safe
 
 
 def strip_language_code(request):
@@ -20,20 +22,21 @@ def strip_language_code(request):
 
 def usage_statistics_string():
     """
-    For Oscar development, it is helpful to know which versions of Django and
-    Python are in use, and which can be safely deprecated or removed. If
-    tracking is enabled, this function builds a query string with that
-    information. It is used in dashboard/layout.html with an invisible
+    For Oscar development, it is helpful to know which versions of Oscar,
+    Django and Python are in use, and which can be safely deprecated or
+    removed. If tracking is enabled, this function builds a query string with
+    that information. It is used in dashboard/layout.html with an invisible
     tracker pixel.
-    If tracking is disabled, the tracker pixel does not get requested and
-    no information is collected.
+    If you're developing locally or tracking is disabled, the tracker pixel
+    does not get rendered and no information is collected.
     """
-    if getattr(settings, 'OSCAR_TRACKING', True):
-        query_str = 'django={django_ver}&python={python_ver}'.format(
-            django_ver=django.get_version(),
-            python_ver=platform.python_version(),
-        )
-        return mark_safe(query_str)
+    if not settings.DEBUG and getattr(settings, 'OSCAR_TRACKING', True):
+        params = {
+            'django': django.get_version(),
+            'python': platform.python_version(),
+            'oscar': oscar.get_version(),
+        }
+        return mark_safe(urlencode(params))
     else:
         return None
 

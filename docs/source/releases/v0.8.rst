@@ -89,6 +89,10 @@ Minor changes
 * The basket middleware now assigns a ``basket_hash`` attribute to the
   ``request`` instance. This provides a hook for basket caching.
 
+* The tracking pixel now also reports the Oscar version in use. This was
+  forgotten when adding tracking of the Python and Django version in 0.7.
+  Total information collected now is the versions of Django, Python and Oscar.
+
 Bugfixes
 ~~~~~~~~
 
