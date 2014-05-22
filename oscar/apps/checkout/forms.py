@@ -25,7 +25,7 @@ class ShippingAddressForm(PhoneNumberMixin, AbstractAddressForm):
 
         # No need to show country dropdown if there is only one option
         if len(countries) == 1:
-            del self.fields['country']
+            self.fields.pop('country', None)
             self.instance.country = countries[0]
         else:
             self.fields['country'].queryset = countries
