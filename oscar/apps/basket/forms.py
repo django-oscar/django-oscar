@@ -144,7 +144,10 @@ class ProductSelectionForm(forms.Form):
 
 
 class AddToBasketForm(forms.Form):
-    # We set required=False as validation happens later on
+    # It looks a little weird having a product ID here but it's because the
+    # product passed to the constructor is the *parent* when dealing with
+    # variant products. This product ID is the actual product we want to add to
+    # the basket. We set required=False as validation happens later on
     product_id = forms.IntegerField(widget=forms.HiddenInput(), required=False,
                                     min_value=1, label=_("Product ID"))
     quantity = forms.IntegerField(initial=1, min_value=1, label=_('Quantity'))
@@ -217,7 +220,10 @@ class AddToBasketForm(forms.Form):
         return options
 
     def clean(self):
-        # Check product exists
+        # Check product exists - we do this here rather than in a
+        # clean_product_id method as the product ID is normally hidden and
+        # so the error message won't be visible. Checking here means the error
+        # message is treated as a "non-field error".
         try:
             product = Product.objects.get(
                 id=self.cleaned_data.get('product_id', None))
@@ -225,7 +231,7 @@ class AddToBasketForm(forms.Form):
             raise forms.ValidationError(
                 _("Please select a valid product"))
 
-        # Check user has permission to this the desired quantity to their
+        # Check user has permission to add the desired quantity to their
         # basket.
         current_qty = self.basket.product_quantity(product)
         desired_qty = current_qty + self.cleaned_data.get('quantity', 1)

@@ -46,3 +46,32 @@ class TestBasketLineForm(TestCase):
         invalid_qty = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD + 1
         form = self.build_form(quantity=invalid_qty)
         self.assertFalse(form.is_valid())
+
+
+class TestAddToBasketForm(TestCase):
+
+    def test_allows_a_product_quantity_to_be_increased(self):
+        basket = factories.create_basket()
+        product = basket.all_lines()[0].product
+
+        # Add more of the same product
+        data = {
+            'product_id': product.id,
+            'quantity': 1
+        }
+        form = forms.AddToBasketForm(
+            basket=basket, product=product, data=data)
+        self.assertTrue(form.is_valid())
+
+    def test_checks_whether_passed_product_id_matches_a_real_product(self):
+        basket = factories.create_basket()
+        product = basket.all_lines()[0].product
+
+        # Add more of the same product
+        data = {
+            'product_id': product.id,
+            'quantity': -1
+        }
+        form = forms.AddToBasketForm(
+            basket=basket, product=product, data=data)
+        self.assertFalse(form.is_valid())
