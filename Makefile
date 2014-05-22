@@ -55,8 +55,9 @@ us_site: install
 	sites/us/manage.py reset_db --router=default --noinput
 	sites/us/manage.py syncdb --noinput
 	sites/us/manage.py migrate
-	# Import some core fixtures
+	# Import some fixtures
 	sites/us/manage.py loaddata sites/us/fixtures/*.json
+	sites/us/manage.py loaddata sites/_fixtures/auth.json sites/_fixtures/ranges.json 
 	# Create catalogue (using a fixture from the demo site)
 	sites/us/manage.py create_demo_products --class=Books sites/demo/fixtures/books.csv
 
