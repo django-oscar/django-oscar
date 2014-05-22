@@ -10,3 +10,5 @@ class ShippingAddressForm(checkout_forms.ShippingAddressForm):
     def __init__(self, *args, **kwargs):
         super(ShippingAddressForm, self).__init__(*args, **kwargs)
         self.fields['postcode'].label = _("Zip code")
+        self.fields['state'].help_text = _(
+            "Only orders going to New Jersey are liable for Sales tax")
