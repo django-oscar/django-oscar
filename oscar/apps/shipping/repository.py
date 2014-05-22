@@ -80,6 +80,7 @@ class Repository(object):
                     # be assigned directly to the method instance.
                     return methods.TaxExclusiveOfferDiscount(
                         method, discount['offer'])
+
         return method
 
     def find_by_code(self, code, basket):

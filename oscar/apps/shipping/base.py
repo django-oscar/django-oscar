@@ -45,6 +45,9 @@ class Base(object):
     is_discounted = False
     discount = D('0.00')
 
+    # Tax - we use a property with a getter and a setter. When tax is only
+    # known later on, it can be assigned directly to the tax attribute.
+
     def _get_tax(self):
         return self.charge_incl_tax - self.charge_excl_tax
 
@@ -58,19 +61,3 @@ class Base(object):
 
     def set_basket(self, basket):
         self.basket = basket
-
-    def basket_charge_excl_tax(self):
-        warnings.warn((
-            "Use the charge_excl_tax property not basket_charge_excl_tax. "
-            "Basket.basket_charge_excl_tax will be removed "
-            "in v0.7"),
-            DeprecationWarning)
-        return self.charge_excl_tax
-
-    def basket_charge_incl_tax(self):
-        warnings.warn((
-            "Use the charge_incl_tax property not basket_charge_incl_tax. "
-            "Basket.basket_charge_incl_tax will be removed "
-            "in v0.7"),
-            DeprecationWarning)
-        return self.charge_incl_tax

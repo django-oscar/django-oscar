@@ -85,9 +85,15 @@ class OfferDiscount(Base):
     def charge_excl_tax_before_discount(self):
         return self.method.charge_excl_tax
 
-    @property
-    def is_tax_known(self):
+    # Property for is_tax_known
+
+    def _get_is_tax_known(self):
         return self.method.is_tax_known
+
+    def _set_is_tax_known(self, value):
+        self.method.is_tax_known = value
+
+    is_tax_known = property(_get_is_tax_known, _set_is_tax_known)
 
     @property
     def effective_discount(self):
@@ -98,10 +104,6 @@ class OfferDiscount(Base):
 
     @property
     def charge_excl_tax(self):
-        raise NotImplemented()
-
-    @property
-    def charge_incl_tax(self):
         raise NotImplemented()
 
 
@@ -117,13 +119,6 @@ class TaxExclusiveOfferDiscount(OfferDiscount):
         parent_charge = self.method.charge_excl_tax
         discount = self.offer.shipping_discount(parent_charge)
         return parent_charge - discount
-
-    @property
-    def charge_incl_tax(self):
-        """
-        Tax needs to be assigned later on
-        """
-        return self.charge_excl_tax + self.tax
 
 
 class TaxInclusiveOfferDiscount(OfferDiscount):
