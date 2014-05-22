@@ -575,11 +575,15 @@ class ProductRecommendation(models.Model):
         verbose_name=_("Primary Product"))
     recommendation = models.ForeignKey(
         'catalogue.Product', verbose_name=_("Recommended Product"))
-    ranking = models.PositiveSmallIntegerField(_('Ranking'), default=0)
+    ranking = models.PositiveSmallIntegerField(
+        _('Ranking'), default=0,
+        help_text=_('Determines order of the products. A product with a higher'
+                    ' value will appear before one with a lower ranking.'))
 
     class Meta:
         verbose_name = _('Product Recommendation')
         verbose_name_plural = _('Product Recomendations')
+        ordering = ['primary', '-ranking']
 
 
 class ProductAttributesContainer(object):
