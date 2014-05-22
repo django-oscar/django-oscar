@@ -94,18 +94,19 @@ Backwards incompatible changes in 0.8
 * The ``shipping`` app saw a few renames; please see the section above.
 
 Basket line stockrecords
-~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------
 
-The ``stockrecord`` field of basket ``Line`` model is no longer nullable. There
-is a migration that makes the appropriate schema change but, before that runs,
-you may need to clean up your ``basket_line`` table to ensure that all existing
-null values are replaced or removed. 
+The basket line model got a reference to the stockrecord in Oscar 0.6. The
+basket middleware since then updated basket lines to have stockrecords if
+one was missing. If any lines are still missing a stockrecord, we'd expect them
+to be from from submitted baskets or from old, abandoned baskets.
+This updating of basket lines has been removed for 0.8 as it incurs additional
+database queries. Oscar 0.8 now also enforces the stockrecord by making it
+the ``stockrecord`` field of basket ``Line`` model no longer nullable.
 
-The basket middleware in Oscar 0.6 updated basket lines to have stockrecords if
-one was missing so any lines without one should be either from submitted
-baskets (which we don't care about any more) or from old, abandoned baskets.
-This part of the basket middleware has been removed for 0.8 as it incurs
-unnecessary database queries.
+There is a migration that makes the appropriate schema change but, before that
+runs, you may need to clean up your ``basket_line`` table to ensure that all
+existing null values are replaced or removed.
 
 Here's a simple script you could run before upgrading which should ensure there
 are no nulls in your ``basket_line`` table:
