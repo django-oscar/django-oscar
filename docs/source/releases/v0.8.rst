@@ -73,6 +73,10 @@ Cleanup around shipping methods
 * ``WeightBand.upper_limit`` is now a ``DecimalField``, just like the other
   weight-related fields.
 
+* The Django admin interface for the ``WeightBased`` shipping method has been
+  made slightly more useful. Contributions for a dedicated dashboard app are
+  most welcome!
+
 .. _minor_changes_in_0.8:
 
 Minor changes

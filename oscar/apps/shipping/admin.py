@@ -10,14 +10,14 @@ class OrderChargesAdmin(admin.ModelAdmin):
                     'free_shipping_threshold')
 
 
+class WeightBandInline(admin.TabularInline):
+    model = WeightBand
+
+
 class WeightBasedAdmin(admin.ModelAdmin):
     filter_horizontal = ('countries', )
-
-
-class WeightBandAdmin(admin.ModelAdmin):
-    list_display = ('method', 'weight_from', 'weight_to', 'charge')
+    inlines = [WeightBandInline]
 
 
 admin.site.register(OrderAndItemCharges, OrderChargesAdmin)
 admin.site.register(WeightBased, WeightBasedAdmin)
-admin.site.register(WeightBand, WeightBandAdmin)
