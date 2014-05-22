@@ -287,7 +287,7 @@ INSTALLED_APPS = [
 ]
 from oscar import get_core_apps
 INSTALLED_APPS = INSTALLED_APPS + get_core_apps(
-    ['apps.partner', 'apps.checkout'])
+    ['apps.partner', 'apps.checkout', 'apps.shipping'])
 
 # Add Oscar's custom auth backend so users can sign in using their email
 # address.
