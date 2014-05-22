@@ -20,7 +20,8 @@ from oscar.views import sort_queryset
 from oscar.views.generic import BulkEditMixin
 from oscar.apps.payment.exceptions import PaymentError
 from oscar.apps.order.exceptions import (
-    InvalidShippingEvent, InvalidStatus, InvalidPaymentEvent)
+    InvalidShippingEvent, InvalidStatus, InvalidPaymentEvent,
+    InvalidOrderStatus)
 
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
@@ -367,6 +368,9 @@ class OrderDetailView(DetailView):
     model = Order
     context_object_name = 'order'
     template_name = 'dashboard/orders/order_detail.html'
+
+    # These strings are method names that are allowed to be called from a
+    # submitted form.
     order_actions = ('save_note', 'delete_note', 'change_order_status',
                      'create_order_payment_event')
     line_actions = ('change_line_statuses', 'create_shipping_event',
@@ -456,7 +460,9 @@ class OrderDetailView(DetailView):
         ctx['line_statuses'] = Line.all_statuses()
         ctx['shipping_event_types'] = ShippingEventType.objects.all()
         ctx['payment_event_types'] = PaymentEventType.objects.all()
+
         ctx['payment_transactions'] = self.get_payment_transactions()
+
         return ctx
 
     # Data fetching methods for template context
@@ -466,16 +472,19 @@ class OrderDetailView(DetailView):
             source__order=self.object)
 
     def get_order_note_form(self):
-        post_data = None
-        kwargs = {}
+        kwargs = {
+            'order': self.object,
+            'user': self.request.user,
+            'data': None
+        }
         if self.request.method == 'POST':
-            post_data = self.request.POST
+            kwargs['data'] = self.request.POST
         note_id = self.kwargs.get('note_id', None)
         if note_id:
             note = get_object_or_404(OrderNote, order=self.object, id=note_id)
             if note.is_editable():
                 kwargs['instance'] = note
-        return forms.OrderNoteForm(post_data, **kwargs)
+        return forms.OrderNoteForm(**kwargs)
 
     def get_order_status_form(self):
         data = None
@@ -487,14 +496,11 @@ class OrderDetailView(DetailView):
 
     def save_note(self, request, order):
         form = self.get_order_note_form()
-        success_msg = _("Note saved")
         if form.is_valid():
-            note = form.save(commit=False)
-            note.user = request.user
-            note.order = order
-            note.save()
-            messages.success(self.request, success_msg)
+            form.save()
+            messages.success(self.request, _("Note saved"))
             return self.reload_page(fragment='notes')
+
         ctx = self.get_context_data(note_form=form, active_tab='notes')
         return self.render_to_response(ctx)
 
@@ -527,9 +533,15 @@ class OrderDetailView(DetailView):
             messages.error(
                 request, _("Unable to change order status due to "
                            "payment error: %s") % e)
+        except InvalidOrderStatus as e:
+            # The form should validate against this, so we should only end up
+            # here during race conditions.
+            messages.error(
+                request, _("Unable to change order status as the requested "
+                           "new status is not valid"))
         else:
             messages.info(request, success_msg)
-        return self.reload_page(fragment='activity')
+        return self.reload_page()
 
     def create_order_payment_event(self, request, order):
         """
