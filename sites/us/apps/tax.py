@@ -27,7 +27,9 @@ def apply_to(submission):
 
     # We don't charge sales tax on shipping
     shipping_method = submission['shipping_method']
-    shipping_method.tax = D('0.00')
+    if shipping_method is not None:
+        shipping_method.tax = calculate_tax(
+            shipping_method.charge_excl_tax, rate)
 
 
 def calculate_tax(price, rate):
