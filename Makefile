@@ -32,7 +32,7 @@ demo: install
 	pip install -r requirements_demo.txt
 	# Create database
 	# Breaks on Travis because of https://github.com/django-extensions/django-extensions/issues/489
-	if [ -z "$TRAVIS" ]; then sites/demo/manage.py reset_db --router=default --noinput; fi
+	if [ -z "$(TRAVIS)" ]; then sites/demo/manage.py reset_db --router=default --noinput; fi
 	sites/demo/manage.py syncdb --noinput
 	sites/demo/manage.py migrate
 	# Import some core fixtures
@@ -70,13 +70,15 @@ coverage:
 lint:
 	./lint.sh
 
+testmigrations:
+	pip install -r requirements_vagrant.txt
+	cd sites/sandbox && ./test_migrations.sh
+
 # It is important that this target only depends on install
 # (instead of upgrade) because we install Django in the .travis.yml
 # and upgrade would overwrite it.  We also build the sandbox as part of this target
 # to catch any errors that might come from that build process.
-travis: install lint coverage sandbox demo
-	pip install -r requirements_vagrant.txt
-	cd sites/sandbox && ./test_migrations.sh
+travis: install lint coverage sandbox demo testmigrations
 
 messages:
 	# Create the .po files used for i18n

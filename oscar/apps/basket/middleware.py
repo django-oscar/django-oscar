@@ -36,7 +36,6 @@ class BasketMiddleware(object):
             """
             basket = self.get_basket(request)
             basket.strategy = request.strategy
-            self.ensure_basket_lines_have_stockrecord(basket)
             self.apply_offers_to_basket(request, basket)
 
             return basket
@@ -187,41 +186,3 @@ class BasketMiddleware(object):
 
     def get_basket_hash(self, basket_id):
         return Signer().sign(basket_id)
-
-    def ensure_basket_lines_have_stockrecord(self, basket):
-        """
-        Ensure each basket line has a stockrecord.
-
-        This is to handle the backwards compatibility issue introduced in v0.6
-        where basket lines began to require a stockrecord.
-        """
-        if not basket.id:
-            return
-        for line in basket.all_lines():
-            if not line.stockrecord_id:
-                self.ensure_line_has_stockrecord(basket, line)
-
-    def ensure_line_has_stockrecord(self, basket, line):
-        """
-        Ensure a given basket line has an appropriate stockrecord
-
-        This is achieved by deleting the old line and re-adding it to the
-        basket.
-
-        This is to handle the backwards compatibility issue introduced in v0.6
-        where basket lines began to require a stockrecord.
-        """
-        # Get details off line before deleting it
-        product = line.product
-        quantity = line.quantity
-        options = []
-        for attr in line.attributes.all():
-            options.append({
-                'option': attr.option,
-                'value': attr.value})
-        line.delete()
-
-        # Attempt to re-add to basket with the appropriate stockrecord
-        stock_info = basket.strategy.fetch_for_product(product)
-        if stock_info.stockrecord:
-            basket.add(product, quantity, options=options)
