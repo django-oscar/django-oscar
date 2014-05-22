@@ -15,7 +15,6 @@ from django.conf import settings
 from oscar.core.loading import get_class, get_model
 from oscar.core.utils import format_datetime
 from oscar.core.compat import UnicodeCSVWriter
-from oscar.apps.dashboard.orders import forms
 from oscar.views import sort_queryset
 from oscar.views.generic import BulkEditMixin
 from oscar.apps.payment.exceptions import PaymentError
@@ -32,6 +31,12 @@ ShippingEventType = get_model('order', 'ShippingEventType')
 PaymentEventType = get_model('order', 'PaymentEventType')
 EventHandler = get_class('order.processing', 'EventHandler')
 Partner = get_model('partner', 'Partner')
+OrderStatsForm = get_class('dashboard.orders.forms', 'OrderStatsForm')
+OrderSearchForm = get_class('dashboard.orders.forms', 'OrderSearchForm')
+OrderNoteForm = get_class('dashboard.orders.forms', 'OrderNoteForm')
+ShippingAddressForm = get_class(
+    'dashboard.orders.forms', 'ShippingAddressForm')
+OrderStatusForm = get_class('dashboard.orders.forms', 'OrderStatusForm')
 
 
 def queryset_orders_for_user(user):
@@ -66,7 +71,7 @@ class OrderStatsView(FormView):
     Supports the permission-based dashboard.
     """
     template_name = 'dashboard/orders/statistics.html'
-    form_class = forms.OrderStatsForm
+    form_class = OrderStatsForm
 
     def get(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -109,7 +114,7 @@ class OrderListView(BulkEditMixin, ListView):
     model = Order
     context_object_name = 'orders'
     template_name = 'dashboard/orders/order_list.html'
-    form_class = forms.OrderSearchForm
+    form_class = OrderSearchForm
     desc_template = _("%(main_filter)s %(name_filter)s %(title_filter)s"
                       "%(upc_filter)s %(sku_filter)s %(date_filter)s"
                       "%(voucher_filter)s %(payment_filter)s"
@@ -484,13 +489,13 @@ class OrderDetailView(DetailView):
             note = get_object_or_404(OrderNote, order=self.object, id=note_id)
             if note.is_editable():
                 kwargs['instance'] = note
-        return forms.OrderNoteForm(**kwargs)
+        return OrderNoteForm(**kwargs)
 
     def get_order_status_form(self):
         data = None
         if self.request.method == 'POST':
             data = self.request.POST
-        return forms.OrderStatusForm(order=self.object, data=data)
+        return OrderStatusForm(order=self.object, data=data)
 
     # Order-level actions
 
@@ -723,7 +728,7 @@ class ShippingAddressUpdateView(UpdateView):
     model = ShippingAddress
     context_object_name = 'address'
     template_name = 'dashboard/orders/shippingaddress_form.html'
-    form_class = forms.ShippingAddressForm
+    form_class = ShippingAddressForm
 
     def get_object(self, queryset=None):
         order = get_order_for_user_or_404(self.request.user,
