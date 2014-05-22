@@ -41,13 +41,15 @@ class TestForkAppFunction(TestCase):
         filepath = os.path.join(self.tmp_folder, 'order', '__init__.py')
         self.assertTrue(os.path.exists(filepath))
 
-    def test_creates_models_file(self):
+    def test_creates_models_and_admin_file(self):
         customisation.fork_app('order', self.tmp_folder)
-        filepath = os.path.join(self.tmp_folder, 'order', 'models.py')
-        self.assertTrue(os.path.exists(filepath))
+        for module in ['models', 'admin']:
+            filepath = os.path.join(self.tmp_folder, 'order', '%s.py' % module)
+            self.assertTrue(os.path.exists(filepath))
 
-        contents = open(filepath).read()
-        self.assertTrue('from oscar.apps.order.models import *' in contents)
+            contents = open(filepath).read()
+            expected_string = 'from oscar.apps.order.%s import *' % module
+            self.assertTrue(expected_string in contents)
 
     def test_copies_in_migrations(self):
         customisation.fork_app('order', self.tmp_folder)

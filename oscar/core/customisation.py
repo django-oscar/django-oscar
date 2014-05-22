@@ -35,11 +35,13 @@ def fork_app(app_label, folder_path, logger=None):
     os.mkdir(app_folder_path)
 
     # Create minimum app files
-    logger.info("Creating __init__.py and models.py modules")
+    logger.info("Creating __init__.py, admin.py and models.py modules")
     create_file(os.path.join(app_folder_path, '__init__.py'))
+    create_file(os.path.join(app_folder_path, 'admin.py'),
+                "from oscar.apps.%s.admin import *  # noqa" % app_label)
     create_file(
         os.path.join(app_folder_path, 'models.py'),
-        "from oscar.apps.%s.models import *" % app_label)
+        "from oscar.apps.%s.models import *  # noqa" % app_label)
 
     # Migrations
     source = os.path.join(
