@@ -2,9 +2,9 @@ from django.conf import settings
 from django.http import HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView
-from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
+from oscar.core.loading import get_model
 from oscar.core.loading import get_class
 from oscar.apps.catalogue.signals import product_viewed
 

@@ -149,23 +149,67 @@ class AddToBasketForm(forms.Form):
                                     min_value=1, label=_("Product ID"))
     quantity = forms.IntegerField(initial=1, min_value=1, label=_('Quantity'))
 
-    def __init__(self, request, instance, *args, **kwargs):
+    def __init__(self, basket, product, *args, **kwargs):
         super(AddToBasketForm, self).__init__(*args, **kwargs)
-        self.request = request
-        self.basket = request.basket
-        self.instance = instance
-        if instance:
-            if instance.is_group:
-                self._create_group_product_fields(instance)
+        self.basket = basket
+        self.product = product
+        if product:
+            if product.is_group:
+                self._create_group_product_fields(product)
             else:
-                self._create_product_fields(instance)
+                self._create_product_fields(product)
+
+    # Dynamic form building method
+
+    def _create_group_product_fields(self, product):
+        """
+        Adds the fields for a "group"-type product (eg, a parent product with a
+        list of variants.
+
+        Currently requires that a stock record exists for the variant
+        """
+        choices = []
+        disabled_values = []
+        for variant in product.variants.all():
+            attr_summary = variant.attribute_summary
+            if attr_summary:
+                summary = attr_summary
+            else:
+                summary = variant.get_title()
+            info = self.request.strategy.fetch_for_product(variant)
+            if not info.availability.is_available_to_buy:
+                disabled_values.append(variant.id)
+            choices.append((variant.id, summary))
+
+        self.fields['product_id'] = forms.ChoiceField(
+            choices=tuple(choices), label=_("Variant"),
+            widget=widgets.AdvancedSelect(disabled_values=disabled_values))
+
+    def _create_product_fields(self, product):
+        """
+        Add the product option fields.
+        """
+        for option in product.options:
+            self._add_option_field(product, option)
+
+    def _add_option_field(self, product, option):
+        """
+        Creates the appropriate form field for the product option.
+
+        This is designed to be overridden so that specific widgets can be used
+        for certain types of options.
+        """
+        kwargs = {'required': option.is_required}
+        self.fields[option.code] = forms.CharField(**kwargs)
+
+    # Cleaning
 
     def cleaned_options(self):
         """
         Return submitted options in a clean format
         """
         options = []
-        for option in self.instance.options:
+        for option in self.product.options:
             if option.code in self.cleaned_data:
                 options.append({
                     'option': option,
@@ -185,7 +229,7 @@ class AddToBasketForm(forms.Form):
         # basket.
         current_qty = self.basket.product_quantity(product)
         desired_qty = current_qty + self.cleaned_data.get('quantity', 1)
-        result = self.request.strategy.fetch_for_product(product)
+        result = self.basket.strategy.fetch_for_product(product)
         is_permitted, reason = result.availability.is_purchase_permitted(
             desired_qty)
         if not is_permitted:
@@ -208,48 +252,12 @@ class AddToBasketForm(forms.Form):
                        'basket': total_basket_quantity})
         return qty
 
-    def _create_group_product_fields(self, item):
-        """
-        Adds the fields for a "group"-type product (eg, a parent product with a
-        list of variants.
-
-        Currently requires that a stock record exists for the variant
-        """
-        choices = []
-        disabled_values = []
-        for variant in item.variants.all():
-            attr_summary = variant.attribute_summary
-            if attr_summary:
-                summary = attr_summary
-            else:
-                summary = variant.get_title()
-            info = self.request.strategy.fetch_for_product(variant)
-            if not info.availability.is_available_to_buy:
-                disabled_values.append(variant.id)
-            choices.append((variant.id, summary))
-
-        self.fields['product_id'] = forms.ChoiceField(
-            choices=tuple(choices), label=_("Variant"),
-            widget=widgets.AdvancedSelect(disabled_values=disabled_values))
-
-    def _create_product_fields(self, item):
-        """
-        Add the product option fields.
-        """
-        for option in item.options:
-            self._add_option_field(item, option)
-
-    def _add_option_field(self, item, option):
-        """
-        Creates the appropriate form field for the product option.
-
-        This is designed to be overridden so that specific widgets can be used
-        for certain types of options.
-        """
-        kwargs = {'required': option.is_required}
-        self.fields[option.code] = forms.CharField(**kwargs)
 
 
 class SimpleAddToBasketForm(AddToBasketForm):
+    """
+    Simpified version of the add to basket form where the quantity is defaulted
+    to 1 and rendered in a hidden widget
+    """
     quantity = forms.IntegerField(
         initial=1, min_value=1, widget=forms.HiddenInput, label=_('Quantity'))

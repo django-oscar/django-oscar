@@ -274,27 +274,34 @@ class BasketView(ModelFormSetView):
 
 class BasketAddView(FormView):
     """
-    Handles the add-to-basket operation, shouldn't be accessed via
-    GET because there's nothing sensible to render.
+    Handles the add-to-basket submissions, which are triggered from various
+    parts of the site. The add-to-basket form is loaded into templates using
+    a templatetag from module basket_tags.py.
     """
     form_class = AddToBasketForm
     product_select_form_class = ProductSelectionForm
     product_model = get_model('catalogue', 'product')
     add_signal = signals.basket_addition
-
-    def get(self, request, *args, **kwargs):
-        return HttpResponseRedirect(reverse('basket:summary'))
+    http_method_names = ['post']
 
     def get_form_kwargs(self):
         kwargs = super(BasketAddView, self).get_form_kwargs()
         product_select_form = self.product_select_form_class(self.request.POST)
 
         if product_select_form.is_valid():
-            kwargs['instance'] = product_select_form.cleaned_data['product_id']
+            kwargs['product'] = product_select_form.cleaned_data['product_id']
         else:
-            kwargs['instance'] = None
-        kwargs['request'] = self.request
+            kwargs['product'] = None
+        kwargs['basket'] = self.request.basket
         return kwargs
+
+    def form_invalid(self, form):
+        msgs = []
+        for error in form.errors.values():
+            msgs.append(error.as_text())
+        messages.error(self.request, ",".join(msgs))
+        return HttpResponseRedirect(
+            self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
 
     def get_success_url(self):
         url = None
@@ -316,7 +323,7 @@ class BasketAddView(FormView):
         offers_before = self.request.basket.applied_offers()
 
         self.request.basket.add_product(
-            form.instance, form.cleaned_data['quantity'],
+            form.product, form.cleaned_data['quantity'],
             form.cleaned_options())
 
         messages.success(self.request, self.get_success_message(form),
@@ -327,7 +334,7 @@ class BasketAddView(FormView):
 
         # Send signal for basket addition
         self.add_signal.send(
-            sender=self, product=form.instance, user=self.request.user,
+            sender=self, product=form.product, user=self.request.user,
             request=self.request)
 
         return super(BasketAddView, self).form_valid(form)
@@ -335,16 +342,8 @@ class BasketAddView(FormView):
     def get_success_message(self, form):
         return render_to_string(
             'basket/messages/addition.html',
-            {'product': form.instance,
+            {'product': form.product,
              'quantity': form.cleaned_data['quantity']})
-
-    def form_invalid(self, form):
-        msgs = []
-        for error in form.errors.values():
-            msgs.append(error.as_text())
-        messages.error(self.request, ",".join(msgs))
-        return HttpResponseRedirect(
-            self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
 
 
 class VoucherAddView(FormView):
