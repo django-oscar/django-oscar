@@ -313,7 +313,7 @@
                     {% endblock line_actions %}
                 </form>
 
-                <form action="." method="post">
+                <form action="." method="post" id="order_status_form">
                     {% csrf_token %}
                     {% block order_actions %}
                         <div class="well">
@@ -646,7 +646,7 @@
                         </table>
                     {% endwith %}
 
-                    <form action=".?note={{ note_id }}" method="post" class="form-stacked">
+                    <form id="order_note_form" action=".?note={{ note_id }}" method="post" class="form-stacked">
                         {% csrf_token %}
                         <input type="hidden" value="save_note" name="order_action" />
                         {% include "partials/form_fields.html" with form=note_form %}
