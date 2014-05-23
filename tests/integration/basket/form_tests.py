@@ -75,8 +75,8 @@ class TestAddToBasketForm(TestCase):
         product = factories.ProductFactory()
 
         # Build a 4-level mock monster so we can force the return value of
-        # whether the product is available to buy. This is a serious code and
-        # needs to be remedied.
+        # whether the product is available to buy. This is a serious code smell
+        # and needs to be remedied.
         info = mock.Mock()
         info.availability = mock.Mock()
         info.availability.is_purchase_permitted = mock.Mock(
@@ -89,3 +89,22 @@ class TestAddToBasketForm(TestCase):
             basket=basket, product=product, data=data)
         self.assertFalse(form.is_valid())
         self.assertEqual('Not on your nelly!', form.errors['__all__'][0])
+
+    def test_mixed_currency_baskets_are_not_permitted(self):
+        # Ensure basket is one currency
+        basket = mock.Mock()
+        basket.currency = 'GBP'
+        basket.num_items = 1
+
+        # Ensure new product has different currency
+        info = mock.Mock()
+        info.price.currency = 'EUR'
+        basket.strategy.fetch_for_product = mock.Mock(
+            return_value=info)
+
+        product = factories.ProductFactory()
+
+        data = {'quantity': 1}
+        form = forms.AddToBasketForm(
+            basket=basket, product=product, data=data)
+        self.assertFalse(form.is_valid())
