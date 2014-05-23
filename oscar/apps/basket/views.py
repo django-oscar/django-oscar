@@ -1,4 +1,5 @@
 import json
+from six.moves.urllib import parse
 
 from django.contrib import messages
 from django.template.loader import render_to_string
@@ -11,7 +12,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 
 from extra_views import ModelFormSetView
-from oscar.core.compat import urlparse
 from oscar.core import ajax
 from oscar.apps.basket import signals
 from oscar.core.loading import get_class, get_classes
@@ -305,7 +305,7 @@ class BasketAddView(FormView):
         if url:
             # We only allow internal URLs so we see if the url resolves
             try:
-                resolve(urlparse.urlparse(url).path)
+                resolve(parse.urlparse(url).path)
             except Http404:
                 url = None
         if url is None:

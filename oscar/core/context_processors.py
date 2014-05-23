@@ -2,7 +2,7 @@ import oscar
 import re
 import platform
 import django
-from urllib import urlencode
+from six.moves.urllib import parse
 from django.conf import settings
 from django.utils.safestring import mark_safe
 
@@ -36,7 +36,7 @@ def usage_statistics_string():
             'python': platform.python_version(),
             'oscar': oscar.get_version(),
         }
-        return mark_safe(urlencode(params))
+        return mark_safe(parse.urlencode(params))
     else:
         return None
 

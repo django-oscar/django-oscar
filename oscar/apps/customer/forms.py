@@ -1,5 +1,6 @@
 import string
 import random
+from six.moves.urllib import parse
 
 from django import forms
 from django.conf import settings
@@ -11,7 +12,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
 from oscar.core.loading import get_profile_class, get_class, get_model
-from oscar.core.compat import get_user_model, existing_user_fields, urlparse
+from oscar.core.compat import get_user_model, existing_user_fields
 from oscar.apps.customer.utils import get_password_reset_url, normalise_email
 from oscar.core.validators import password_validators
 
@@ -102,7 +103,7 @@ class EmailAuthenticationForm(AuthenticationForm):
         url = self.cleaned_data['redirect_url'].strip()
         if url:
             # Ensure URL is not to a different host
-            host = urlparse.urlparse(url)[1]
+            host = parse.urlparse(url)[1]
             if host and host == self.host:
                 return url
 
@@ -164,7 +165,7 @@ class EmailUserCreationForm(forms.ModelForm):
         url = self.cleaned_data['redirect_url'].strip()
         if not url:
             return settings.LOGIN_REDIRECT_URL
-        host = urlparse.urlparse(url)[1]
+        host = parse.urlparse(url)[1]
         if host and self.host and host != self.host:
             return settings.LOGIN_REDIRECT_URL
         return url

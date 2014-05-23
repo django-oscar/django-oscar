@@ -1,11 +1,12 @@
 import six
+from six.moves.urllib import parse
+
 from django import template
 from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import resolve, Resolver404
 
 from oscar.apps.customer import history
-from oscar.core.compat import urlparse
 
 Site = get_model('sites', 'Site')
 
@@ -40,7 +41,7 @@ def get_back_button(context):
         return None
 
     try:
-        url = urlparse.urlparse(referrer)
+        url = parse.urlparse(referrer)
     except:
         return None
 

@@ -69,13 +69,6 @@ except ImportError:
     from django.db.transaction import commit_on_success as atomic_compat
 atomic_compat = atomic_compat
 
-try:
-    import urlparse as _urlparse
-except ImportError:
-    from urllib import parse as _urlparse  # NOQA
-
-urlparse = _urlparse
-
 """
 Unicode compatible wrapper for CSV reader and writer that abstracts away
 differences between Python 2 and 3. A package like unicodecsv would be
