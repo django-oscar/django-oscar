@@ -150,9 +150,23 @@ are no nulls in your ``basket_line`` table:
 Migrations
 ~~~~~~~~~~
 
+* Catalogue:
+
+    - ``0021`` - Add ``unique_together`` to ``ProductAttributeValue``,
+      ``ProductRecommendation`` and ``ProductCategory``
+
+* Order:
+
+    - ``0029`` - Add ``unique_together`` to ``PaymentEventQuantity`` and ``ShippingEventQuantity``
+
+* Promotions:
+
+    - ``0006`` - Add ``unique_together`` to ``OrderedProduct``
+
 * Shipping:
 
     - ``0007`` - Change ``WeightBand.upper_limit`` from ``FloatField`` to ``DecimalField``
+
 
 .. _deprecated_features:
 

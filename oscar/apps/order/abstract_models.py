@@ -818,6 +818,7 @@ class PaymentEventQuantity(models.Model):
     class Meta:
         verbose_name = _("Payment Event Quantity")
         verbose_name_plural = _("Payment Event Quantities")
+        unique_together = ('event', 'line')
 
 
 # SHIPPING EVENTS
@@ -874,6 +875,7 @@ class ShippingEventQuantity(models.Model):
     class Meta:
         verbose_name = _("Shipping Event Quantity")
         verbose_name_plural = _("Shipping Event Quantities")
+        unique_together = ('event', 'line')
 
     def save(self, *args, **kwargs):
         # Default quantity to full quantity of line

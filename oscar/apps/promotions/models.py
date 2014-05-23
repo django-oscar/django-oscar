@@ -279,6 +279,7 @@ class OrderedProduct(models.Model):
         ordering = ('display_order',)
         verbose_name = _("Ordered Product")
         verbose_name_plural = _("Ordered Product")
+        unique_together = ('list', 'product')
 
 
 class AutomaticProductList(AbstractProductList):

@@ -183,6 +183,7 @@ class AbstractProductCategory(models.Model):
         ordering = ['product', 'category']
         verbose_name = _('Product Category')
         verbose_name_plural = _('Product Categories')
+        unique_together = ('product', 'category')
 
     def __unicode__(self):
         return u"<productcategory for product '%s'>" % self.product
@@ -525,6 +526,7 @@ class ProductRecommendation(models.Model):
         verbose_name = _('Product Recommendation')
         verbose_name_plural = _('Product Recomendations')
         ordering = ['primary', '-ranking']
+        unique_together = ('primary', 'recommendation')
 
 
 class ProductAttributesContainer(object):
@@ -817,6 +819,7 @@ class AbstractProductAttributeValue(models.Model):
         abstract = True
         verbose_name = _('Product Attribute Value')
         verbose_name_plural = _('Product Attribute Values')
+        unique_together = ('attribute', 'product')
 
     def __unicode__(self):
         return self.summary()

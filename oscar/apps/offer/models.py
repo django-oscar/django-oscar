@@ -902,7 +902,7 @@ class RangeProduct(models.Model):
     display_order = models.IntegerField(default=0)
 
     class Meta:
-        unique_together = (('range', 'product'),)
+        unique_together = ('range', 'product')
 
 # ==========
 # Conditions
