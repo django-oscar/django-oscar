@@ -1,24 +1,13 @@
-import six
 from decimal import Decimal as D
 from oscar.core.loading import get_model
 
 from django.test import TestCase
 
-from oscar.test import factories, decorators
-from oscar.apps.partner import abstract_models
+from oscar.test import factories
 
 Partner = get_model('partner', 'Partner')
 PartnerAddress = get_model('partner', 'PartnerAddress')
 Country = get_model('address', 'Country')
-
-
-class DummyWrapper(object):
-
-    def availability(self, stockrecord):
-        return 'Dummy response'
-
-    def dispatch_date(self, stockrecord):
-        return "Another dummy response"
 
 
 class TestStockRecord(TestCase):

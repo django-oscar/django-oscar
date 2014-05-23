@@ -17,6 +17,10 @@ Overview
 
 Oscar now has a demo site customised for the US!
 
+Lots of methods deprecated in the 0.6 release have now been removed.
+Specifically, the partner "wrapper" functionality is now gone. All price and
+availability logic now needs to be handled with strategies.
+
 .. _compatibility_of_0.8:
 
 Compatibility

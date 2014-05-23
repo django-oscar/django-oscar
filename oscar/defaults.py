@@ -38,9 +38,6 @@ OSCAR_PRODUCTS_PER_PAGE = 20
 # Checkout
 OSCAR_ALLOW_ANON_CHECKOUT = False
 
-# Partners
-OSCAR_PARTNER_WRAPPERS = {}
-
 # Promotions
 COUNTDOWN, LIST, SINGLE_PRODUCT, TABBED_BLOCK = (
     'Countdown', 'List', 'SingleProduct', 'TabbedBlock')
