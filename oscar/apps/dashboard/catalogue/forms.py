@@ -365,17 +365,6 @@ class ProductForm(forms.ModelForm):
         self.save_m2m()
         return product
 
-    def clean(self):
-        data = self.cleaned_data
-        if 'parent' not in data and not data['title']:
-            raise forms.ValidationError(_("This field is required"))
-        elif 'parent' in data and data['parent'] is None and not data['title']:
-            raise forms.ValidationError(_("Parent products must have a title"))
-        # Calling the clean() method of BaseForm here is required to apply
-        # checks for 'unique' field. This prevents e.g. the UPC field from
-        # raising a DatabaseError.
-        return super(ProductForm, self).clean()
-
 
 class StockAlertSearchForm(forms.Form):
     status = forms.CharField(label=_('Status'))

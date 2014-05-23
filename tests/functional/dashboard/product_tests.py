@@ -72,7 +72,7 @@ class TestCreateGroupProduct(ProductWebTest):
     def test_title_is_required(self):
         response = self.submit(title='')
 
-        self.assertContains(response, "Parent products must have a title")
+        self.assertContains(response, "Canonical products must have a title")
         self.assertEqual(Product.objects.count(), 0)
 
     def test_requires_a_category(self):
@@ -85,7 +85,7 @@ class TestCreateGroupProduct(ProductWebTest):
         category = G(Category)
         response = self.submit(category=category)
 
-        self.assertContains(response, "Parent products must have a title")
+        self.assertContains(response, "Canonical products must have a title")
         self.assertEqual(Product.objects.count(), 0)
 
     def test_doesnt_allow_duplicate_upc(self):

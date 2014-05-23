@@ -57,7 +57,8 @@ class ProductCreationTests(ProductTests):
 class TopLevelProductTests(ProductTests):
 
     def test_top_level_products_must_have_titles(self):
-        self.assertRaises(ValidationError, Product.objects.create, product_class=self.product_class)
+        product = Product.objects.create(product_class=self.product_class)
+        self.assertRaises(ValidationError, product.clean)
 
     def test_top_level_products_are_part_of_browsable_set(self):
         product = Product.objects.create(
