@@ -53,7 +53,8 @@ def create_purchase_info(record):
             record.price_excl_tax,
             D('0.00')  # Default to no tax
         ),
-        availability=availability.DelegateToStockRecord(record),
+        availability=availability.StockRequired(
+            record.net_stock_level),
         stockrecord=record
     )
 

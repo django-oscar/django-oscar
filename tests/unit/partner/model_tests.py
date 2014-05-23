@@ -28,10 +28,6 @@ class TestStockRecord(TestCase):
         self.stockrecord = factories.create_stockrecord(
             self.product, price_excl_tax=D('10.00'), num_in_stock=10)
 
-    @decorators.ignore_deprecation_warnings
-    def test_get_price_incl_tax_defaults_to_no_tax(self):
-        self.assertEqual(D('10.00'), self.stockrecord.price_incl_tax)
-
     def test_get_price_excl_tax_returns_correct_value(self):
         self.assertEqual(D('10.00'), self.stockrecord.price_excl_tax)
 
@@ -68,38 +64,6 @@ class TestStockRecord(TestCase):
         self.stockrecord.cancel_allocation(6)
         self.assertEqual(0, self.stockrecord.num_allocated)
         self.assertEqual(10, self.stockrecord.num_in_stock)
-
-    @decorators.ignore_deprecation_warnings
-    def test_max_purchase_quantity(self):
-        self.assertEqual(10, self.stockrecord.max_purchase_quantity())
-
-
-@decorators.ignore_deprecation_warnings
-class CustomWrapperTests(TestCase):
-    """
-    Partner wrappers are deprecated.  This testcase will be removed/rewritten
-    in Oscar 0.7.
-    """
-
-    def setUp(self):
-        abstract_models.partner_wrappers = {1: DummyWrapper()}
-
-    def tearDown(self):
-        abstract_models.partner_wrappers = None
-
-    def test_wrapper_availability_gets_called(self):
-        product = factories.create_product(
-            price=D('10.00'), partner_name="Acme", num_in_stock=10)
-        stockrecord = product.stockrecords.all()[0]
-        self.assertEqual(u"Dummy response",
-                          six.text_type(stockrecord.availability))
-
-    def test_wrapper_dispatch_date_gets_called(self):
-        product = factories.create_product(
-            price=D('10.00'), partner_name="Acme", num_in_stock=10)
-        stockrecord = product.stockrecords.all()[0]
-        self.assertEqual("Another dummy response",
-                          stockrecord.dispatch_date)
 
 
 class TestPartnerAddress(TestCase):

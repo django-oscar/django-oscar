@@ -162,3 +162,17 @@ These methods have been removed:
 * ``oscar.apps.catalogue.abstract_models.AbstractProduct.is_available_to_buy``
 * ``oscar.apps.catalogue.abstract_models.AbstractProduct.is_purchase_permitted``
 * ``oscar.apps.catalogue.views.get_product_base_queryset``
+* ``oscar.apps.partner.abstract_models.AbstractStockRecord.is_available_to_buy``
+* ``oscar.apps.partner.abstract_models.AbstractStockRecord.is_purchase_permitted``
+* ``oscar.apps.partner.abstract_models.AbstractStockRecord.availability_code``
+* ``oscar.apps.partner.abstract_models.AbstractStockRecord.availability``
+* ``oscar.apps.partner.abstract_models.AbstractStockRecord.max_purchase_quantity``
+* ``oscar.apps.partner.abstract_models.AbstractStockRecord.dispatch_date``
+* ``oscar.apps.partner.abstract_models.AbstractStockRecord.lead_time``
+* ``oscar.apps.partner.abstract_models.AbstractStockRecord.price_incl_tax``
+* ``oscar.apps.partner.abstract_models.AbstractStockRecord.price_tax``
+
+These classes have been removed
+
+* ``oscar.apps.partner.prices.DelegateToStockRecord``
+* ``oscar.apps.partner.availability.DelegateToStockRecord``

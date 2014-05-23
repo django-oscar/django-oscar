@@ -2,7 +2,7 @@ from django.test import TestCase
 from decimal import Decimal as D
 
 from oscar.core.prices import TaxNotKnown
-from oscar.apps.partner import prices, models
+from oscar.apps.partner import prices
 
 
 class TestUnavailable(TestCase):
@@ -20,21 +20,6 @@ class TestUnavailable(TestCase):
         self.assertIsNone(self.price.incl_tax)
         self.assertIsNone(self.price.excl_tax)
         self.assertIsNone(self.price.tax)
-
-
-class TestDelegateToStockRecord(TestCase):
-
-    def setUp(self):
-        self.record = models.StockRecord(
-            price_excl_tax=D('12.99'))
-        self.price = prices.DelegateToStockRecord(self.record)
-
-    def test_assumes_tax_is_known(self):
-        self.assertTrue(self.price.is_tax_known)
-
-    def test_has_correct_price(self):
-        self.assertEqual(self.record.price_excl_tax,
-                          self.price.excl_tax)
 
 
 class TestFixedPriceWithoutTax(TestCase):
