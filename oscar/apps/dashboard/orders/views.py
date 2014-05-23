@@ -18,19 +18,17 @@ from oscar.core.compat import UnicodeCSVWriter
 from oscar.views import sort_queryset
 from oscar.views.generic import BulkEditMixin
 from oscar.apps.payment.exceptions import PaymentError
-from oscar.apps.order.exceptions import (
-    InvalidShippingEvent, InvalidStatus, InvalidPaymentEvent,
-    InvalidOrderStatus)
+from oscar.apps.order import exceptions as order_exceptions
 
+Partner = get_model('partner', 'Partner')
+Transaction = get_model('payment', 'Transaction')
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
 ShippingAddress = get_model('order', 'ShippingAddress')
-Transaction = get_model('payment', 'Transaction')
 Line = get_model('order', 'Line')
 ShippingEventType = get_model('order', 'ShippingEventType')
 PaymentEventType = get_model('order', 'PaymentEventType')
 EventHandler = get_class('order.processing', 'EventHandler')
-Partner = get_model('partner', 'Partner')
 OrderStatsForm = get_class('dashboard.orders.forms', 'OrderStatsForm')
 OrderSearchForm = get_class('dashboard.orders.forms', 'OrderSearchForm')
 OrderNoteForm = get_class('dashboard.orders.forms', 'OrderNoteForm')
@@ -431,14 +429,14 @@ class OrderDetailView(DetailView):
             except ValueError:
                 qty = None
             if qty is None or qty <= 0:
-                return self.reload_page(error=_(
-                    "The entered quantity for line #%s is not valid") % line.id)
+                error_msg = _("The entered quantity for line #%s is not valid")
+                return self.reload_page(error=error_msg % line.id)
             elif qty > line.quantity:
-                return self.reload_page(error=_(
+                error_msg = _(
                     "The entered quantity for line #%(line_id)s "
-                    "should not be higher than %(quantity)s") % {
-                        'line_id': line.id,
-                        'quantity': line.quantity})
+                    "should not be higher than %(quantity)s")
+                kwargs = {'line_id': line.id, 'quantity': line.quantity}
+                return self.reload_page(error=error_msg % kwargs)
 
             line_quantities.append(qty)
 
@@ -538,7 +536,7 @@ class OrderDetailView(DetailView):
             messages.error(
                 request, _("Unable to change order status due to "
                            "payment error: %s") % e)
-        except InvalidOrderStatus as e:
+        except order_exceptions.InvalidOrderStatus as e:
             # The form should validate against this, so we should only end up
             # here during race conditions.
             messages.error(
@@ -606,10 +604,10 @@ class OrderDetailView(DetailView):
             EventHandler().handle_shipping_event(order, event_type, lines,
                                                  quantities,
                                                  reference=reference)
-        except InvalidShippingEvent as e:
+        except order_exceptions.InvalidShippingEvent as e:
             messages.error(request,
                            _("Unable to create shipping event: %s") % e)
-        except InvalidStatus as e:
+        except order_exceptions.InvalidStatus as e:
             messages.error(request,
                            _("Unable to create shipping event: %s") % e)
         except PaymentError as e:
@@ -655,7 +653,7 @@ class OrderDetailView(DetailView):
         except PaymentError as e:
             messages.error(request, _("Unable to create payment event due to"
                                       " payment error: %s") % e)
-        except InvalidPaymentEvent as e:
+        except order_exceptions.InvalidPaymentEvent as e:
             messages.error(
                 request, _("Unable to create payment event: %s") % e)
         else:
