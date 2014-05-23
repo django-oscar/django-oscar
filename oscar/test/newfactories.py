@@ -9,17 +9,21 @@ In 2020, when all tests use the new factory-boy factories, we can rename this
 module to factories.py and drop the old ones.
 """
 import datetime
+from decimal import Decimal as D
 
 from django.utils.timezone import now
 import factory
 
 from oscar.apps.address import models as address_models
 from oscar.apps.basket import models as basket_models
+from oscar.apps.catalogue import models as catalogue_models
+from oscar.apps.partner import models as partner_models
 from oscar.apps.voucher import models as voucher_models
 from oscar.core.compat import get_user_model
 
 __all__ = ["UserFactory", "CountryFactory", "UserAddressFactory",
-           "BasketFactory", "VoucherFactory"]
+           "BasketFactory", "VoucherFactory", "ProductFactory",
+           "StockRecordFactory"]
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -67,3 +71,35 @@ class VoucherFactory(factory.DjangoModelFactory):
 
     start_datetime = now() - datetime.timedelta(days=1)
     end_datetime = now() - datetime.timedelta(days=10)
+
+
+class ProductClassFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = catalogue_models.ProductClass
+
+    name = "Books"
+    requires_shipping = True
+    track_stock = True
+
+
+class ProductFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = catalogue_models.Product
+
+    upc = "9780802130204"
+    title = "A confederacy of dunces"
+    product_class = factory.SubFactory(ProductClassFactory)
+
+
+class PartnerFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = partner_models.Partner
+
+    name = "Gardners"
+
+
+class StockRecordFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = partner_models.StockRecord
+
+    partner = factory.SubFactory(PartnerFactory)
+    partner_sku = "book12345"
+    price_currency = "GBP"
+    price_excl_tax = D('9.99')
+    num_in_stock = 100
