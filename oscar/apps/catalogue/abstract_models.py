@@ -1,6 +1,5 @@
 import os
 import six
-import warnings
 from itertools import chain
 from datetime import datetime, date
 import logging
@@ -373,64 +372,6 @@ class AbstractProduct(models.Model):
         for value in self.attribute_values.select_related().all():
             pairs.append(value.summary())
         return ", ".join(pairs)
-
-    # Deprecated stockrecord methods
-
-    @property
-    def has_stockrecord(self):
-        """
-        Test if this product has a stock record
-        """
-        warnings.warn(("Product.has_stockrecord is deprecated in favour of "
-                       "using the stockrecord template tag.  It will be "
-                       "removed in v0.8"), DeprecationWarning)
-        return self.num_stockrecords > 0
-
-    @property
-    def stockrecord(self):
-        """
-        Return the stockrecord associated with this product.  For backwards
-        compatibility, this defaults to choosing the first stockrecord found.
-        """
-        # This is the old way of fetching a stockrecord, when they were
-        # one-to-one with a product.
-        warnings.warn(("Product.stockrecord is deprecated in favour of "
-                       "using the stockrecord template tag.  It will be "
-                       "removed in v0.7"), DeprecationWarning)
-        try:
-            return self.stockrecords.all()[0]
-        except IndexError:
-            return None
-
-    @property
-    def is_available_to_buy(self):
-        """
-        Test whether this product is available to be purchased
-        """
-        warnings.warn(("Product.is_available_to_buy is deprecated in favour "
-                       "of using the stockrecord template tag.  It will be "
-                       "removed in v0.7"), DeprecationWarning)
-        if self.is_group:
-            # If any one of this product's variants is available, then we treat
-            # this product as available.
-            for variant in self.variants.select_related('stockrecord').all():
-                if variant.is_available_to_buy:
-                    return True
-            return False
-        if not self.get_product_class().track_stock:
-            return True
-        return self.has_stockrecord and self.stockrecord.is_available_to_buy
-
-    def is_purchase_permitted(self, user, quantity):
-        """
-        Test whether this product can be bought by the passed user.
-        """
-        warnings.warn(("Product.is_purchase_permitted is deprecated in favour "
-                       "of using a partner strategy.  It will be "
-                       "removed in v0.7"), DeprecationWarning)
-        if not self.has_stockrecords:
-            return False, _("No stock available")
-        return self.stockrecord.is_purchase_permitted(user, quantity, self)
 
     @property
     def min_variant_price_incl_tax(self):

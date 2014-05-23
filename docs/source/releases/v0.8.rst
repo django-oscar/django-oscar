@@ -152,5 +152,13 @@ Migrations
 
 .. _deprecated_features:
 
-Features deprecated in 0.8
-==========================
+Removal of deprecated features
+------------------------------
+
+These methods have been removed:
+
+* ``oscar.apps.catalogue.abstract_models.AbstractProduct.has_stockrecord``
+* ``oscar.apps.catalogue.abstract_models.AbstractProduct.stockrecord``
+* ``oscar.apps.catalogue.abstract_models.AbstractProduct.is_available_to_buy``
+* ``oscar.apps.catalogue.abstract_models.AbstractProduct.is_purchase_permitted``
+* ``oscar.apps.catalogue.views.get_product_base_queryset``

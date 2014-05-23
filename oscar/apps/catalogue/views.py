@@ -1,4 +1,3 @@
-import warnings
 from django.conf import settings
 from django.http import HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404
@@ -97,17 +96,6 @@ class ProductDetailView(DetailView):
             '%s/detail-for-class-%s.html' % (
                 self.template_folder, self.object.get_product_class().slug),
             '%s/detail.html' % (self.template_folder)]
-
-
-def get_product_base_queryset():
-    """
-    Deprecated. Kept only for backwards compatibility.
-    Product.browsable.base_queryset() should be used instead.
-    """
-    warnings.warn(("`get_product_base_queryset` is deprecated in favour of"
-                   "`base_queryset` on Product's managers. It will be removed"
-                   "in Oscar 0.7."), DeprecationWarning)
-    return Product.browsable.base_queryset()
 
 
 class ProductCategoryView(ListView):
