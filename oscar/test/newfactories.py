@@ -84,7 +84,7 @@ class ProductClassFactory(factory.DjangoModelFactory):
 class ProductFactory(factory.DjangoModelFactory):
     FACTORY_FOR = catalogue_models.Product
 
-    upc = "9780802130204"
+    upc = factory.Sequence(lambda n: '978080213020%d' % n)
     title = "A confederacy of dunces"
     product_class = factory.SubFactory(ProductClassFactory)
 
@@ -99,7 +99,7 @@ class StockRecordFactory(factory.DjangoModelFactory):
     FACTORY_FOR = partner_models.StockRecord
 
     partner = factory.SubFactory(PartnerFactory)
-    partner_sku = "book12345"
+    partner_sku = factory.Sequence(lambda n: 'unit%d' % n)
     price_currency = "GBP"
     price_excl_tax = D('9.99')
     num_in_stock = 100
