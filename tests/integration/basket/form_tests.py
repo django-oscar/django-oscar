@@ -53,7 +53,6 @@ class TestAddToBasketForm(TestCase):
     def test_allows_a_product_quantity_to_be_increased(self):
         basket = factories.create_basket()
         product = basket.all_lines()[0].product
-        info = basket.strategy.fetch_for_product(product)
 
         # Add more of the same product
         data = {
@@ -61,13 +60,12 @@ class TestAddToBasketForm(TestCase):
             'quantity': 1
         }
         form = forms.AddToBasketForm(
-            basket=basket, product=product, purchase_info=info, data=data)
+            basket=basket, product=product, data=data)
         self.assertTrue(form.is_valid())
 
     def test_checks_whether_passed_product_id_matches_a_real_product(self):
         basket = factories.create_basket()
         product = basket.all_lines()[0].product
-        info = basket.strategy.fetch_for_product(product)
 
         # Add more of the same product
         data = {
@@ -75,5 +73,5 @@ class TestAddToBasketForm(TestCase):
             'quantity': -1
         }
         form = forms.AddToBasketForm(
-            basket=basket, product=product, purchase_info=info, data=data)
+            basket=basket, product=product, data=data)
         self.assertFalse(form.is_valid())

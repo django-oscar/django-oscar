@@ -130,41 +130,25 @@ class BasketVoucherForm(forms.Form):
         return self.cleaned_data['code'].strip().upper()
 
 
-class ProductSelectionForm(forms.Form):
-    product_id = forms.IntegerField(min_value=1, label=_("Product ID"))
-
-    def clean_product_id(self):
-        id = self.cleaned_data['product_id']
-
-        try:
-            return Product.objects.get(pk=id)
-        except Product.DoesNotExist:
-            raise forms.ValidationError(
-                _("This product is unavailable for purchase"))
-
-
 class AddToBasketForm(forms.Form):
-    # It looks a little weird having a product ID here but it's because the
-    # product passed to the constructor is the *parent* when dealing with
-    # variant products. This product ID is the actual product we want to add to
-    # the basket (which can be different from the parent). We set
-    # required=False as validation happens later on
-    product_id = forms.IntegerField(widget=forms.HiddenInput(), required=False,
-                                    min_value=1, label=_("Product ID"))
     quantity = forms.IntegerField(initial=1, min_value=1, label=_('Quantity'))
 
-    def __init__(self, basket, product, purchase_info, *args, **kwargs):
-        super(AddToBasketForm, self).__init__(*args, **kwargs)
+    def __init__(self, basket, product, *args, **kwargs):
+        # Note, the product passed in here isn't necessarily the product being added
+        # to the basket. For group products, it is the *parent* product that gets
+        # passed to the form. An optional product_id param is passed to
+        # indicate the ID of the variant being added to the basket
         self.basket = basket
-        self.product = product
-        self.purchase_info = purchase_info
-        if product:
-            if product.is_group:
-                self._create_group_product_fields(product)
-            else:
-                self._create_product_fields(product)
+        self.base_product = product
 
-    # Dynamic form building method
+        super(AddToBasketForm, self).__init__(*args, **kwargs)
+
+        # Dynamically build fields
+        if product.is_group:
+            self._create_group_product_fields(product)
+        self._create_product_fields(product)
+
+    # Dynamic form building methods
 
     def _create_group_product_fields(self, product):
         """
@@ -176,17 +160,22 @@ class AddToBasketForm(forms.Form):
         choices = []
         disabled_values = []
         for variant in product.variants.all():
+            # Build a description of the variant, including any pertinent
+            # attributes
             attr_summary = variant.attribute_summary
             if attr_summary:
                 summary = attr_summary
             else:
                 summary = variant.get_title()
+
+            # Check if it is available to buy
             info = self.basket.strategy.fetch_for_product(variant)
             if not info.availability.is_available_to_buy:
                 disabled_values.append(variant.id)
+
             choices.append((variant.id, summary))
 
-        self.fields['product_id'] = forms.ChoiceField(
+        self.fields['variant_id'] = forms.ChoiceField(
             choices=tuple(choices), label=_("Variant"),
             widget=widgets.AdvancedSelect(disabled_values=disabled_values))
 
@@ -209,7 +198,22 @@ class AddToBasketForm(forms.Form):
 
     # Cleaning
 
+    def clean_variant_id(self):
+        try:
+            variant = self.base_product.variants.get(
+                id=self.cleaned_data['variant_id'])
+        except Product.DoesNotExist:
+            raise forms.ValidationError(
+                _("Please select a valid product"))
+
+        # To avoid duplicate SQL queries, we cache a copy of the loaded variant
+        # product as we're going to need it later.
+        self.variant = variant
+
+        return self.cleaned_data['variant_id']
+
     def clean_quantity(self):
+        # Check that the proposed new line quantity is sensible
         qty = self.cleaned_data['quantity']
         basket_threshold = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD
         if basket_threshold:
@@ -224,23 +228,21 @@ class AddToBasketForm(forms.Form):
                        'basket': total_basket_quantity})
         return qty
 
-    def clean(self):
-        # Check product exists - we do this here rather than in a
-        # clean_product_id method as the product ID is normally hidden and
-        # so the error message won't be visible. Checking here means the error
-        # message is treated as a "non-field error".
-        try:
-            product = Product.objects.get(
-                id=self.cleaned_data.get('product_id', None))
-        except Product.DoesNotExist:
-            raise forms.ValidationError(
-                _("Please select a valid product"))
+    @property
+    def product(self):
+        """
+        The actual product being added to the basket
+        """
+        # Note, the variant attribute is saved in the clean_variant_id method
+        return getattr(self, 'variant', self.base_product)
 
+    def clean(self):
         # Check user has permission to add the desired quantity to their
         # basket.
-        current_qty = self.basket.product_quantity(product)
+        current_qty = self.basket.product_quantity(self.product)
         desired_qty = current_qty + self.cleaned_data.get('quantity', 1)
-        is_permitted, reason = self.purchase_info.availability.is_purchase_permitted(
+        info = self.basket.strategy.fetch_for_product(self.product)
+        is_permitted, reason = info.availability.is_purchase_permitted(
             desired_qty)
         if not is_permitted:
             raise forms.ValidationError(reason)
@@ -254,7 +256,7 @@ class AddToBasketForm(forms.Form):
         Return submitted options in a clean format
         """
         options = []
-        for option in self.product.options:
+        for option in self.base_product.options:
             if option.code in self.cleaned_data:
                 options.append({
                     'option': option,

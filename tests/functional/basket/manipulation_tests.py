@@ -28,3 +28,11 @@ class TestAddingToBasket(WebTestCase):
 
         detail_page = self.get(parent.get_absolute_url())
         form = detail_page.forms['add_to_basket_form']
+        response = form.submit()
+
+        self.assertIsRedirect(response)
+        baskets = models.Basket.objects.all()
+        self.assertEqual(1, len(baskets))
+
+        basket = baskets[0]
+        self.assertEqual(1, basket.num_items)

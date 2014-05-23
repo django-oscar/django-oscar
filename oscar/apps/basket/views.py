@@ -9,6 +9,7 @@ from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.views.generic import FormView, View
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
+from django import shortcuts
 
 from extra_views import ModelFormSetView
 from oscar.core.compat import urlparse
@@ -17,11 +18,10 @@ from oscar.apps.basket import signals
 from oscar.core.loading import get_class, get_classes
 Applicator = get_class('offer.utils', 'Applicator')
 (BasketLineFormSet, BasketLineForm, AddToBasketForm, BasketVoucherForm,
- SavedLineFormSet, SavedLineForm, ProductSelectionForm) \
+ SavedLineFormSet, SavedLineForm) \
     = get_classes('basket.forms', ('BasketLineFormSet', 'BasketLineForm',
                                    'AddToBasketForm', 'BasketVoucherForm',
-                                   'SavedLineFormSet', 'SavedLineForm',
-                                   'ProductSelectionForm'))
+                                   'SavedLineFormSet', 'SavedLineForm'))
 Repository = get_class('shipping.repository', ('Repository'))
 OrderTotalCalculator = get_class(
     'checkout.calculators', 'OrderTotalCalculator')
@@ -279,24 +279,19 @@ class BasketAddView(FormView):
     a templatetag from module basket_tags.py.
     """
     form_class = AddToBasketForm
-    product_select_form_class = ProductSelectionForm
     product_model = get_model('catalogue', 'product')
     add_signal = signals.basket_addition
     http_method_names = ['post']
 
+    def post(self, request, *args, **kwargs):
+        self.product = shortcuts.get_object_or_404(
+            self.product_model, pk=kwargs['pk'])
+        return super(BasketAddView, self).post(request, *args, **kwargs)
+
     def get_form_kwargs(self):
         kwargs = super(BasketAddView, self).get_form_kwargs()
-        product_select_form = self.product_select_form_class(self.request.POST)
-
-        if product_select_form.is_valid():
-            product = product_select_form.cleaned_data['product_id']
-        else:
-            # This is an error case as no product exists with this product ID.
-            raise Http404()
-        kwargs['product'] = product
         kwargs['basket'] = self.request.basket
-        kwargs['purchase_info'] = self.request.strategy.fetch_for_product(
-            product)
+        kwargs['product'] = self.product
         return kwargs
 
     def form_invalid(self, form):
