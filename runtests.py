@@ -90,11 +90,7 @@ if __name__ == '__main__':
         # threads is undefined.
         warnings.filterwarnings('error', category=DeprecationWarning)
         warnings.filterwarnings('error', category=RuntimeWarning)
-        warnings.filterwarnings('ignore',
-                                r'django.utils.simplejson is deprecated.*',
-                                DeprecationWarning,
-                                r'(sorl\.thumbnail\.helpers|compressor\.cache)')
-        warnings.filterwarnings('ignore',
-                                r'cgi.parse_qsl is deprecated.*',
-                                DeprecationWarning, r'webtest\.app')
+        libs = r'(sorl\.thumbnail.*|bs4.*|webtest.*)'
+        warnings.filterwarnings(
+            'ignore', r'.*', DeprecationWarning, libs)
         run_tests(verbosity, *args)
