@@ -25,7 +25,7 @@ class TestMigrations(TestCase):
                 s = f.read()
                 return 'auth.User' in s or 'auth.user' in s
 
-        matches = filter(check_for_auth_model, self.migration_filenames)
+        matches = list(filter(check_for_auth_model, self.migration_filenames))
 
         if matches:
             pretty_matches = '\n'.join(
