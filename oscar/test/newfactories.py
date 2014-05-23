@@ -17,7 +17,7 @@ import factory
 from oscar.apps.address import models as address_models
 from oscar.apps.basket import models as basket_models
 from oscar.apps.catalogue import models as catalogue_models
-from oscar.apps.partner import models as partner_models
+from oscar.apps.partner import models as partner_models, strategy
 from oscar.apps.voucher import models as voucher_models
 from oscar.core.compat import get_user_model
 
@@ -61,6 +61,10 @@ class UserAddressFactory(factory.DjangoModelFactory):
 
 class BasketFactory(factory.DjangoModelFactory):
     FACTORY_FOR = basket_models.Basket
+
+    @factory.post_generation
+    def set_strategy(self, create, extracted, **kwargs):
+        self.strategy = strategy.Default()
 
 
 class VoucherFactory(factory.DjangoModelFactory):
