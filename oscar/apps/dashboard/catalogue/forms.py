@@ -352,12 +352,15 @@ class ProductForm(forms.ModelForm):
             queryset = queryset.exclude(pk=self.instance.pk)
         return queryset
 
+    def clean(self):
+        self.instance.product_class = self.product_class
+        return super(ProductForm, self).clean()
+
     def save(self):
         """
         Set product class and attributes before saving
         """
         product = super(ProductForm, self).save(commit=False)
-        product.product_class = self.product_class
         for attribute in self.product_class.attributes.all():
             value = self.cleaned_data['attr_%s' % attribute.code]
             setattr(product.attr, attribute.code, value)

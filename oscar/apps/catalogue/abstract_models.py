@@ -305,6 +305,9 @@ class AbstractProduct(models.Model):
     def clean(self):
         if self.is_top_level and not self.title:
             raise ValidationError(_("Canonical products must have a title"))
+        if self.is_top_level and not self.product_class:
+            raise ValidationError(
+                _("Canonical products must have a product class"))
         if not self.is_group:
             self.attr.validate_attributes()
 

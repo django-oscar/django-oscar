@@ -57,7 +57,11 @@ class ProductCreationTests(ProductTests):
 class TopLevelProductTests(ProductTests):
 
     def test_top_level_products_must_have_titles(self):
-        product = Product.objects.create(product_class=self.product_class)
+        product = Product(product_class=self.product_class)
+        self.assertRaises(ValidationError, product.clean)
+
+    def test_top_level_products_must_have_product_class(self):
+        product = Product(title=u"Kopfhörer")
         self.assertRaises(ValidationError, product.clean)
 
     def test_top_level_products_are_part_of_browsable_set(self):
