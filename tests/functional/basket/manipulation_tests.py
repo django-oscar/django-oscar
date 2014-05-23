@@ -18,3 +18,13 @@ class TestAddingToBasket(WebTestCase):
 
         basket = baskets[0]
         self.assertEqual(1, basket.num_items)
+
+    def test_works_for_variant_product(self):
+        parent = factories.ProductFactory()
+        for x in range(3):
+            variant = factories.ProductFactory(parent=parent)
+            factories.StockRecordFactory(
+                product=variant)
+
+        detail_page = self.get(parent.get_absolute_url())
+        form = detail_page.forms['add_to_basket_form']
