@@ -74,7 +74,7 @@ class PartnerCreateView(generic.CreateView):
         messages.success(self.request,
                          _("Partner '%s' was created successfully.") %
                          self.object.name)
-        return reverse_lazy('dashboard:partner-list')
+        return reverse('dashboard:partner-list')
 
 
 class PartnerManageView(generic.TemplateView):
@@ -142,7 +142,7 @@ class PartnerDeleteView(generic.DeleteView):
         messages.success(self.request,
                          _("Partner '%s' was deleted successfully.") %
                          self.object.name)
-        return reverse_lazy('dashboard:partner-list')
+        return reverse('dashboard:partner-list')
 
 
 # =============
@@ -176,7 +176,7 @@ class PartnerUserCreateView(generic.CreateView):
         name = self.object.get_full_name() or self.object.email
         messages.success(self.request,
                          _("User '%s' was created successfully.") % name)
-        return reverse_lazy('dashboard:partner-list')
+        return reverse('dashboard:partner-list')
 
 
 class PartnerUserSelectView(generic.ListView):
@@ -315,4 +315,4 @@ class PartnerUserUpdateView(generic.UpdateView):
         name = self.object.get_full_name() or self.object.email
         messages.success(self.request,
                          _("User '%s' was updated successfully.") % name)
-        return reverse_lazy('dashboard:partner-list')
+        return reverse('dashboard:partner-list')

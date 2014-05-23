@@ -107,9 +107,6 @@ class IndexView(CheckoutSessionMixin, generic.FormView):
     def get_success_response(self):
         return http.HttpResponseRedirect(self.get_success_url())
 
-    def get_success_url(self):
-        return self.success_url
-
 
 # ================
 # SHIPPING ADDRESS
