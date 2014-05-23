@@ -303,22 +303,6 @@ class BasketAddView(FormView):
         return HttpResponseRedirect(
             self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
 
-    def get_success_url(self):
-        url = None
-        if self.request.POST.get('next'):
-            url = self.request.POST.get('next')
-        elif 'HTTP_REFERER' in self.request.META:
-            url = self.request.META['HTTP_REFERER']
-        if url:
-            # We only allow internal URLs so we see if the url resolves
-            try:
-                resolve(urlparse.urlparse(url).path)
-            except Http404:
-                url = None
-        if url is None:
-            url = reverse('basket:summary')
-        return url
-
     def form_valid(self, form):
         offers_before = self.request.basket.applied_offers()
 
@@ -344,6 +328,23 @@ class BasketAddView(FormView):
             'basket/messages/addition.html',
             {'product': form.product,
              'quantity': form.cleaned_data['quantity']})
+
+    def get_success_url(self):
+        url = None
+        if self.request.POST.get('next'):
+            url = self.request.POST.get('next')
+        elif 'HTTP_REFERER' in self.request.META:
+            url = self.request.META['HTTP_REFERER']
+        if url:
+            # We only allow internal URLs so we see if the url resolves
+            try:
+                resolve(urlparse.urlparse(url).path)
+            except Http404:
+                url = None
+        if url is None:
+            url = reverse('basket:summary')
+        return url
+
 
 
 class VoucherAddView(FormView):
