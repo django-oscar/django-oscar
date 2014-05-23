@@ -289,10 +289,14 @@ class BasketAddView(FormView):
         product_select_form = self.product_select_form_class(self.request.POST)
 
         if product_select_form.is_valid():
-            kwargs['product'] = product_select_form.cleaned_data['product_id']
+            product = product_select_form.cleaned_data['product_id']
         else:
-            kwargs['product'] = None
+            # This is an error case as no product exists with this product ID.
+            raise Http404()
+        kwargs['product'] = product
         kwargs['basket'] = self.request.basket
+        kwargs['purchase_info'] = self.request.strategy.fetch_for_product(
+            product)
         return kwargs
 
     def form_invalid(self, form):
@@ -344,7 +348,6 @@ class BasketAddView(FormView):
         if url is None:
             url = reverse('basket:summary')
         return url
-
 
 
 class VoucherAddView(FormView):

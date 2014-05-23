@@ -147,15 +147,17 @@ class AddToBasketForm(forms.Form):
     # It looks a little weird having a product ID here but it's because the
     # product passed to the constructor is the *parent* when dealing with
     # variant products. This product ID is the actual product we want to add to
-    # the basket. We set required=False as validation happens later on
+    # the basket (which can be different from the parent). We set
+    # required=False as validation happens later on
     product_id = forms.IntegerField(widget=forms.HiddenInput(), required=False,
                                     min_value=1, label=_("Product ID"))
     quantity = forms.IntegerField(initial=1, min_value=1, label=_('Quantity'))
 
-    def __init__(self, basket, product, *args, **kwargs):
+    def __init__(self, basket, product, purchase_info, *args, **kwargs):
         super(AddToBasketForm, self).__init__(*args, **kwargs)
         self.basket = basket
         self.product = product
+        self.purchase_info = purchase_info
         if product:
             if product.is_group:
                 self._create_group_product_fields(product)
@@ -207,17 +209,20 @@ class AddToBasketForm(forms.Form):
 
     # Cleaning
 
-    def cleaned_options(self):
-        """
-        Return submitted options in a clean format
-        """
-        options = []
-        for option in self.product.options:
-            if option.code in self.cleaned_data:
-                options.append({
-                    'option': option,
-                    'value': self.cleaned_data[option.code]})
-        return options
+    def clean_quantity(self):
+        qty = self.cleaned_data['quantity']
+        basket_threshold = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD
+        if basket_threshold:
+            total_basket_quantity = self.basket.num_items
+            max_allowed = basket_threshold - total_basket_quantity
+            if qty > max_allowed:
+                raise forms.ValidationError(
+                    _("Due to technical limitations we are not able to ship"
+                      " more than %(threshold)d items in one order. Your"
+                      " basket currently has %(basket)d items.")
+                    % {'threshold': basket_threshold,
+                       'basket': total_basket_quantity})
+        return qty
 
     def clean(self):
         # Check product exists - we do this here rather than in a
@@ -235,29 +240,26 @@ class AddToBasketForm(forms.Form):
         # basket.
         current_qty = self.basket.product_quantity(product)
         desired_qty = current_qty + self.cleaned_data.get('quantity', 1)
-        result = self.basket.strategy.fetch_for_product(product)
-        is_permitted, reason = result.availability.is_purchase_permitted(
+        is_permitted, reason = self.purchase_info.availability.is_purchase_permitted(
             desired_qty)
         if not is_permitted:
             raise forms.ValidationError(reason)
 
         return self.cleaned_data
 
-    def clean_quantity(self):
-        qty = self.cleaned_data['quantity']
-        basket_threshold = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD
-        if basket_threshold:
-            total_basket_quantity = self.basket.num_items
-            max_allowed = basket_threshold - total_basket_quantity
-            if qty > max_allowed:
-                raise forms.ValidationError(
-                    _("Due to technical limitations we are not able to ship"
-                      " more than %(threshold)d items in one order. Your"
-                      " basket currently has %(basket)d items.")
-                    % {'threshold': basket_threshold,
-                       'basket': total_basket_quantity})
-        return qty
+    # Helpers
 
+    def cleaned_options(self):
+        """
+        Return submitted options in a clean format
+        """
+        options = []
+        for option in self.product.options:
+            if option.code in self.cleaned_data:
+                options.append({
+                    'option': option,
+                    'value': self.cleaned_data[option.code]})
+        return options
 
 
 class SimpleAddToBasketForm(AddToBasketForm):
