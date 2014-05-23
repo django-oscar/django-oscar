@@ -298,7 +298,9 @@ class BasketAddView(FormView):
         msgs = []
         for error in form.errors.values():
             msgs.append(error.as_text())
-        messages.error(self.request, ",".join(msgs))
+        clean_msgs = [m.replace('* ', '') for m in msgs if m.startswith('* ')]
+        messages.error(self.request, ",".join(clean_msgs))
+
         return HttpResponseRedirect(
             self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
 
