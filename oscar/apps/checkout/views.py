@@ -129,6 +129,7 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
     """
     template_name = 'checkout/shipping_address.html'
     form_class = ShippingAddressForm
+    success_url = reverse_lazy('checkout:shipping-method')
     pre_conditions = ('check_basket_is_not_empty',
                       'check_basket_is_valid',
                       'check_user_email_is_captured',
@@ -163,14 +164,13 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
             if action == 'ship_to':
                 # User has selected a previous address to ship to
                 self.checkout_session.ship_to_user_address(address)
-                return http.HttpResponseRedirect(self.get_success_url())
+                return self.get_success_response()
             elif action == 'delete':
                 # Delete the selected address
                 address.delete()
                 messages.info(self.request, _("Address deleted from your"
                                               " address book"))
-                return http.HttpResponseRedirect(
-                    reverse('checkout:shipping-method'))
+                return self.get_success_response()
             else:
                 return http.HttpResponseBadRequest()
         else:
@@ -185,8 +185,8 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
         self.checkout_session.ship_to_new_address(address_fields)
         return super(ShippingAddressView, self).form_valid(form)
 
-    def get_success_url(self):
-        return reverse('checkout:shipping-method')
+    def get_success_response(self):
+        return http.HttpResponseRedirect(self.get_success_url())
 
 
 class UserAddressUpdateView(CheckoutSessionMixin, generic.UpdateView):
