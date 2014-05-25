@@ -241,6 +241,7 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
     the user can choose the appropriate one.
     """
     template_name = 'checkout/shipping_methods.html'
+    success_url = reverse_lazy('checkout:payment-method')
     pre_conditions = ('check_basket_is_not_empty',
                       'check_basket_is_valid',
                       'check_user_email_is_captured', )
@@ -320,7 +321,7 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
         return self.get_success_response()
 
     def get_success_response(self):
-        return http.HttpResponseRedirect(reverse('checkout:payment-method'))
+        return http.HttpResponseRedirect(self.get_success_url())
 
 
 # ==============
