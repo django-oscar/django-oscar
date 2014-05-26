@@ -285,3 +285,6 @@ class CheckoutSessionMixin(object):
         """
         return OrderTotalCalculator(self.request).calculate(
             basket, shipping_method, **kwargs)
+
+    def get_success_response(self):
+        return http.HttpResponseRedirect(self.get_success_url())
