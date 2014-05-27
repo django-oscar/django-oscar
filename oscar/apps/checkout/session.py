@@ -2,6 +2,7 @@ from django.contrib import messages
 from django import http
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse
+from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_model, get_class
@@ -285,3 +286,18 @@ class CheckoutSessionMixin(object):
         """
         return OrderTotalCalculator(self.request).calculate(
             basket, shipping_method, **kwargs)
+
+    def get_success_response(self):
+        return http.HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        """
+        Django FormMixin get_success_url copy
+        """
+        if self.success_url:
+            # Forcing possible reverse_lazy evaluation
+            url = force_text(self.success_url)
+        else:
+            raise ImproperlyConfigured(
+                "No URL to redirect to. Provide a success_url.")
+        return url
