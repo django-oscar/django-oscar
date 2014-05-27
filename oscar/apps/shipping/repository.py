@@ -29,6 +29,7 @@ class Repository(object):
         """
         if not basket.is_shipping_required():
             return [methods.NoShippingRequired()]
+
         # We need to instantiate each method class to avoid thread-safety
         # issues
         methods_ = [klass() for klass in self.methods]
@@ -66,8 +67,6 @@ class Repository(object):
         """
         Prime an individual method instance
         """
-        method.set_basket(basket)
-
         # If the basket has a shipping offer, wrap the shipping method with a
         # decorating class that applies the offer discount to the shipping
         # charge.

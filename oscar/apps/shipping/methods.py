@@ -2,6 +2,8 @@ from decimal import Decimal as D
 
 from django.utils.translation import ugettext_lazy as _
 
+from oscar.core import prices
+
 
 class Base(object):
     """
@@ -28,47 +30,48 @@ class Base(object):
     #  during checkout.  Can contain HTML.
     description = ''
 
-    #: Shipping charge including taxes
-    charge_excl_tax = D('0.00')
-
-    #: Shipping charge excluding taxes
-    charge_incl_tax = None
-
-    #: Whether we now the shipping tax applicable (and hence whether
-    #  charge_incl_tax returns a value.
-    is_tax_known = False
-
     # END OF CORE INTERFACE
     # ---------------------
 
     # These are not intended to be overridden and are used to track shipping
     # discounts.
-    is_discounted = False
-    discount = D('0.00')
+    #is_discounted = False
+    #discount = D('0.00')
+
+    def calculate(self, basket):
+        """
+        Return the shipping charge for the given basket
+        """
+        raise NotImplemented()
 
     # Tax - we use a property with a getter and a setter. When tax is only
     # known later on, it can be assigned directly to the tax attribute.
 
-    def _get_tax(self):
-        return self.charge_incl_tax - self.charge_excl_tax
+    #def _get_tax(self):
+    #    return self.charge_incl_tax - self.charge_excl_tax
 
-    def _set_tax(self, value):
-        # Tax can be set later on in territories where it is now known up
-        # front.
-        self.charge_incl_tax = self.charge_excl_tax + value
-        self.is_tax_known = True
+    #def _set_tax(self, value):
+    #    # Tax can be set later on in territories where it is now known up
+    #    # front.
+    #    self.charge_incl_tax = self.charge_excl_tax + value
+    #    self.is_tax_known = True
 
-    tax = property(_get_tax, _set_tax)
+    #tax = property(_get_tax, _set_tax)
 
-    def set_basket(self, basket):
-        self.basket = basket
+    #def set_basket(self, basket):
+    #    self.basket = basket
 
 
 class Free(Base):
     code = 'free-shipping'
     name = _('Free shipping')
-    is_tax_known = True
-    charge_incl_tax = charge_excl_tax = D('0.00')
+
+    def calculate(self, basket):
+        # If the charge is free then tax must be free (musn't it?) and so we
+        # immediately set the tax to zero
+        return prices.Price(
+            currency=basket.currency,
+            excl_tax=D('0.00'), tax=D('0.00'))
 
 
 class NoShippingRequired(Free):
@@ -85,10 +88,14 @@ class FixedPrice(Base):
     name = _('Fixed price shipping')
 
     def __init__(self, charge_excl_tax, charge_incl_tax=None):
-        self.charge_excl_tax = charge_excl_tax
-        if charge_incl_tax is not None:
-            self.charge_incl_tax = charge_incl_tax
-            self.is_tax_known = True
+        self._excl_tax = charge_excl_tax
+        self._incl_tax = charge_incl_tax
+
+    def calculate(self, basket):
+        return prices.Price(
+            currency=basket.currency,
+            excl_tax=self._excl_tax,
+            incl_tax=self._incl_tax)
 
 
 class OfferDiscount(Base):
