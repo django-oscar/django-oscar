@@ -122,39 +122,52 @@ class PermissionBasedDashboardOrderTestsStaff(PermissionBasedDashboardOrderTests
             self.assertIsOk(self.get(url))
 
 
-class OrderDetailTests(WebTestCase):
+class TestOrderDetailPage(WebTestCase):
     is_staff = True
 
-    # CSRF disabled as we're using self.post directly rather than submitting a
-    # form. This is done as the order status changing view doesn't have a
-    # corresponding form within the dashboard.
-    csrf_checks = False
+    def setUp(self):
+        super(TestOrderDetailPage, self).setUp()
+        self.order = create_order()
+        url = reverse('dashboard:order-detail',
+                      kwargs={'number': self.order.number})
+        self.page = self.get(url)
+
+    def test_contains_order(self):
+        self.assertTrue('order' in self.page.context)
+
+    def test_allows_notes_to_be_added(self):
+        form = self.page.forms['order_note_form']
+        form['message'] = "boom"
+        response = form.submit()
+        self.assertIsRedirect(response)
+        notes = self.order.notes.all()
+        self.assertEqual(1, len(notes))
+
+
+class TestChangingOrderStatus(WebTestCase):
+    is_staff = True
 
     def setUp(self):
+        super(TestChangingOrderStatus, self).setUp()
+
         Order.pipeline = {'A': ('B', 'C')}
         self.order = create_order(status='A')
-        self.url = reverse('dashboard:order-detail',
-                           kwargs={'number': self.order.number})
-        super(OrderDetailTests, self).setUp()
+        url = reverse('dashboard:order-detail',
+                      kwargs={'number': self.order.number})
 
-    def fetch_order(self):
+        page = self.get(url)
+        form = page.forms['order_status_form']
+        form['new_status'] = 'B'
+        self.response = form.submit()
+
+    def reload_order(self):
         return Order.objects.get(number=self.order.number)
 
-    def test_order_detail_page_contains_order(self):
-        response = self.get(self.url)
-        self.assertTrue('order' in response.context)
+    def test_works(self):
+        self.assertIsRedirect(self.response)
+        self.assertEqual('B', self.reload_order().status)
 
-    def test_order_status_change(self):
-        params = {'order_action': 'change_order_status',
-                  'new_status': 'B'}
-        response = self.post(self.url, params=params)
-        self.assertIsRedirect(response)
-        self.assertEqual('B', self.fetch_order().status)
-
-    def test_order_status_change_creates_system_note(self):
-        params = {'order_action': 'change_order_status',
-                  'new_status': 'B'}
-        self.post(self.url, params=params)
+    def test_creates_system_note(self):
         notes = self.order.notes.all()
         self.assertEqual(1, len(notes))
         self.assertEqual(OrderNote.SYSTEM, notes[0].note_type)

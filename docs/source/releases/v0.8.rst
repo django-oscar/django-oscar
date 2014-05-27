@@ -103,6 +103,12 @@ Minor changes
 
 * ``OSCAR_SLUG_FUNCTION`` now accepts both string notation and a callable.
 
+* The default templates now allow the order status to be changed on the
+  dashboard order detail page.
+
+* The forms for the order dashboard views are now loaded dynamically so they
+  can be overridden.
+
 Bugfixes
 ~~~~~~~~
 
@@ -164,7 +170,9 @@ are no nulls in your ``basket_line`` table:
         else:
             line.delete()
 
-.. _removal_of_deprecated_features:
+* The ``reload_page_response`` method of 
+  :class:`~oscar.apps.dashboard.orders.views.OrderDetailView`
+  has been renamed to ``reload_page``.
 
 Migrations
 ~~~~~~~~~~
@@ -187,8 +195,7 @@ Migrations
 
     - ``0007`` - Change ``WeightBand.upper_limit`` from ``FloatField`` to ``DecimalField``
 
-
-.. _deprecated_features:
+.. _deprecated_features_in_0.8:
 
 Removal of deprecated features
 ------------------------------
