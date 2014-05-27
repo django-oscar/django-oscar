@@ -119,6 +119,14 @@ Backwards incompatible changes in 0.8
   just extend the ``Calculator`` class and adjust the weights.
 * ``Product.score`` was just duplicating ``ProductRecord.score`` and has been
   removed. Use ``Product.stats.score`` instead.
+* Oscar has child products to model tightly coupled products, and
+  ``Product.recommended_products`` to model products that are loosely related
+  (e.g. used for upselling). ``Product.related_products`` was a
+  third option that sat somewhere in between, and which was not well supported.
+  We fear it adds confusion, and in the spirit of keeping Oscare core lean,
+  has been removed. If you're using it, switch to
+  ``Product.recommended_products`` or just add the field back to your
+  custom Product instance and ``ProductForm`` when migrating.
 
 .. _rewritten: https://github.com/tangentlabs/django-oscar/commit/d8b4dbfed17be90846ea4bc47b5f7b39ad944c24
 

@@ -20,6 +20,10 @@ class Product(AbstractProduct):
     pass
 
 
+class ProductRecommendation(AbstractProductRecommendation):
+    pass
+
+
 class ProductAttribute(AbstractProductAttribute):
     pass
 

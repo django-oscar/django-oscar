@@ -169,19 +169,6 @@
         </div><!-- /span6 -->
     </div><!-- /row-fluid -->
     
-    {% with products=product.related_products.all|slice:":6" %}
-        {% if products %}
-            <div class="sub-header">
-                <h2>{% trans "Related items" %}</h2>
-            </div>
-            <ol class="row-fluid">
-                {% for product in products %}
-                <li class="span2 {% if forloop.counter0|divisibleby:"6" %}no-margin{% endif %}">{% render_product product %}</li>
-                {% endfor %}
-            </ol>
-        {% endif %}
-    {% endwith %}
-
     {% with products=product.recommended_products.all|slice:":6" %}
         {% if products %}
             <div class="sub-header">

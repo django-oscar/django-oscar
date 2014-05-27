@@ -13,7 +13,6 @@ ProductClass = get_model('catalogue', 'ProductClass')
 Category = get_model('catalogue', 'Category')
 StockRecord = get_model('partner', 'StockRecord')
 Partner = get_model('partner', 'Partner')
-ProductClass = get_model('catalogue', 'ProductClass')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductImage = get_model('catalogue', 'ProductImage')
@@ -278,7 +277,6 @@ class ProductForm(forms.ModelForm):
                    'attributes', 'categories')
         widgets = {
             'parent': ProductSelect,
-            'related_products': ProductSelectMultiple,
         }
 
     def __init__(self, product_class, data=None, *args, **kwargs):
@@ -301,13 +299,10 @@ class ProductForm(forms.ModelForm):
         is_parent = data and data.get('is_group', '') == 'on'
         self.add_attribute_fields(is_parent)
 
-        related_products = self.fields.get('related_products', None)
         parent = self.fields.get('parent', None)
 
         if parent is not None:
             parent.queryset = self.get_parent_products_queryset()
-        if related_products is not None:
-            related_products.queryset = self.get_related_products_queryset()
         if 'title' in self.fields:
             self.fields['title'].widget = forms.TextInput(
                 attrs={'autocomplete': 'off'})
@@ -336,9 +331,6 @@ class ProductForm(forms.ModelForm):
 
     def get_attribute_field(self, attribute):
         return self.FIELD_FACTORIES[attribute.type](attribute)
-
-    def get_related_products_queryset(self):
-        return Product.browsable.order_by('title')
 
     def get_parent_products_queryset(self):
         """

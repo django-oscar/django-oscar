@@ -241,16 +241,12 @@ class AbstractProduct(models.Model):
                     "something like a personalised message to be printed on "
                     "a T-shirt."))
 
-    related_products = models.ManyToManyField(
-        'catalogue.Product', related_name='relations', blank=True,
-        verbose_name=_("Related Products"),
-        help_text=_("Related items are things like different formats of the "
-                    "same book.  Grouping them together allows better linking "
-                    "between products on the site."))
-
     recommended_products = models.ManyToManyField(
         'catalogue.Product', through='ProductRecommendation', blank=True,
-        verbose_name=_("Recommended Products"))
+        verbose_name=_("Recommended Products"),
+        help_text=_("These products are products that are in some way related"
+                    "to the product. They can be a different version of the"
+                    "same product, or e.g. accessories for upselling."))
 
     # Denormalised product rating - used by reviews app.
     # Product has no ratings if rating is None
@@ -505,7 +501,7 @@ class AbstractProduct(models.Model):
             status=self.reviews.model.APPROVED).count()
 
 
-class ProductRecommendation(models.Model):
+class AbstractProductRecommendation(models.Model):
     """
     'Through' model for product recommendations
     """
@@ -520,6 +516,7 @@ class ProductRecommendation(models.Model):
                     ' value will appear before one with a lower ranking.'))
 
     class Meta:
+        abstract = True
         verbose_name = _('Product Recommendation')
         verbose_name_plural = _('Product Recomendations')
         ordering = ['primary', '-ranking']
