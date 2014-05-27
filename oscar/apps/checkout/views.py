@@ -1,3 +1,4 @@
+from django.shortcuts import redirect
 import six
 import logging
 
@@ -102,10 +103,10 @@ class IndexView(CheckoutSessionMixin, generic.FormView):
             signals.start_checkout.send_robust(
                 sender=self, request=self.request)
 
-        return self.get_success_response()
+        return redirect(self.get_success_url())
 
     def get_success_response(self):
-        return http.HttpResponseRedirect(self.get_success_url())
+        return redirect(self.get_success_url())
 
 
 # ================
@@ -164,13 +165,13 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
             if action == 'ship_to':
                 # User has selected a previous address to ship to
                 self.checkout_session.ship_to_user_address(address)
-                return self.get_success_response()
+                return redirect(self.get_success_url())
             elif action == 'delete':
                 # Delete the selected address
                 address.delete()
                 messages.info(self.request, _("Address deleted from your"
                                               " address book"))
-                return self.get_success_response()
+                return redirect(self.get_success_url())
             else:
                 return http.HttpResponseBadRequest()
         else:
@@ -185,9 +186,6 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
         self.checkout_session.ship_to_new_address(address_fields)
         return super(ShippingAddressView, self).form_valid(form)
 
-    def get_success_response(self):
-        return http.HttpResponseRedirect(self.get_success_url())
-
 
 class UserAddressUpdateView(CheckoutSessionMixin, generic.UpdateView):
     """
@@ -195,6 +193,7 @@ class UserAddressUpdateView(CheckoutSessionMixin, generic.UpdateView):
     """
     template_name = 'checkout/user_address_form.html'
     form_class = UserAddressForm
+    success_url = reverse_lazy('checkout:shipping-address')
 
     def get_queryset(self):
         return self.request.user.addresses.all()
@@ -206,7 +205,7 @@ class UserAddressUpdateView(CheckoutSessionMixin, generic.UpdateView):
 
     def get_success_url(self):
         messages.info(self.request, _("Address saved"))
-        return reverse('checkout:shipping-address')
+        return super(UserAddressUpdateView, self).get_success_url()
 
 
 class UserAddressDeleteView(CheckoutSessionMixin, generic.DeleteView):
@@ -214,13 +213,14 @@ class UserAddressDeleteView(CheckoutSessionMixin, generic.DeleteView):
     Delete an address from a user's addressbook.
     """
     template_name = 'checkout/user_address_delete.html'
+    success_url = reverse_lazy('checkout:shipping-address')
 
     def get_queryset(self):
         return self.request.user.addresses.all()
 
     def get_success_url(self):
         messages.info(self.request, _("Address deleted"))
-        return reverse('checkout:shipping-address')
+        return super(UserAddressDeleteView, self).get_success_url()
 
 
 # ===============
@@ -260,8 +260,7 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
         # Check that shipping address has been completed
         if not self.checkout_session.is_shipping_address_set():
             messages.error(request, _("Please choose a shipping address"))
-            return http.HttpResponseRedirect(
-                reverse('checkout:shipping-address'))
+            return redirect('checkout:shipping-address')
 
         # Save shipping methods as instance var as we need them both here
         # and when setting the context vars.
@@ -271,8 +270,7 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
             messages.warning(request, _(
                 "Shipping is unavailable for your chosen address - please "
                 "choose another"))
-            return http.HttpResponseRedirect(
-                reverse('checkout:shipping-address'))
+            return redirect('checkout:shipping-address')
         elif len(self._methods) == 1:
             # Only one shipping method - set this and redirect onto the next
             # step
@@ -311,8 +309,7 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
         if not is_valid:
             messages.error(request, _("Your submitted shipping method is not"
                                       " permitted"))
-            return http.HttpResponseRedirect(
-                reverse('checkout:shipping-method'))
+            return redirect('checkout:shipping-method')
 
         # Save the code for the chosen shipping method in the session
         # and continue to the next step.
@@ -320,7 +317,7 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
         return self.get_success_response()
 
     def get_success_response(self):
-        return http.HttpResponseRedirect(reverse('checkout:payment-method'))
+        return redirect('checkout:payment-method')
 
 
 # ==============
@@ -349,7 +346,7 @@ class PaymentMethodView(CheckoutSessionMixin, generic.TemplateView):
         return self.get_success_response()
 
     def get_success_response(self):
-        return http.HttpResponseRedirect(reverse('checkout:payment-details'))
+        return redirect('checkout:payment-details')
 
 
 # ================
@@ -417,7 +414,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         # Posting to payment-details isn't the right thing to do.  Form
         # submissions should use the preview URL.
         if not self.preview:
-            return http.HttpBadRequest()
+            return http.HttpResponseBadRequest()
 
         # We use a custom parameter to indicate if this is an attempt to place
         # an order (normally from the preview page).  Without this, we assume a
@@ -563,7 +560,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         except RedirectRequired as e:
             # Redirect required (eg PayPal, 3DS)
             logger.info("Order #%s: redirecting to %s", order_number, e.url)
-            return http.HttpResponseRedirect(e.url)
+            return redirect(e.url)
         except UnableToTakePayment as e:
             # Something went wrong with payment but in an anticipated way.  Eg
             # their bankcard has expired, wrong card number - that kind of
