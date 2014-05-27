@@ -297,7 +297,7 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
         # and the shipping address.  I haven't come across a scenario that
         # doesn't fit this system.
         return Repository().get_shipping_methods(
-            user=self.request.user, basket=self.request.basket,
+            basket=self.request.basket, user=self.request.user,
             shipping_addr=self.get_shipping_address(self.request.basket),
             request=self.request)
 

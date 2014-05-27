@@ -240,7 +240,7 @@ class CheckoutSessionMixin(object):
         """
         code = self.checkout_session.shipping_method_code(basket)
         methods = Repository().get_shipping_methods(
-            user=self.request.user, basket=basket,
+            basket=basket, user=self.request.user,
             shipping_addr=shipping_address, request=self.request)
         for method in methods:
             if method.code == code:

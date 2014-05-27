@@ -5,13 +5,13 @@ from django.contrib import messages
 from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.core.urlresolvers import reverse, resolve
-from oscar.core.loading import get_model
 from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.views.generic import FormView, View
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
-
 from extra_views import ModelFormSetView
+
+from oscar.core.loading import get_model
 from oscar.core import ajax
 from oscar.apps.basket import signals
 from oscar.core.loading import get_class, get_classes
@@ -101,7 +101,7 @@ class BasketView(ModelFormSetView):
 
     def get_shipping_methods(self, basket):
         return Repository().get_shipping_methods(
-            user=self.request.user, basket=self.request.basket,
+            basket=self.request.basket, user=self.request.user,
             request=self.request)
 
     def get_default_shipping_method(self, basket):

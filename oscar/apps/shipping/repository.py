@@ -17,7 +17,7 @@ class Repository(object):
 
     # API
 
-    def get_shipping_methods(self, user, basket, shipping_addr=None,
+    def get_shipping_methods(self, basket, user=None, shipping_addr=None,
                              request=None, **kwargs):
         """
         Return a list of all applicable shipping method objects
@@ -41,7 +41,7 @@ class Repository(object):
         the customer an indication of what their order will cost.
         """
         shipping_methods = self.get_shipping_methods(
-            user, basket, shipping_addr=shipping_addr,
+            basket, user, shipping_addr=shipping_addr,
             request=request, **kwargs)
         if len(shipping_methods) == 0:
             raise ImproperlyConfigured(
