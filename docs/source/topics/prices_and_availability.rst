@@ -193,7 +193,7 @@ There is a base class that defines the interface a pricing policy should have:
 There are also several policies that accommodate common scenarios:
 
 .. automodule:: oscar.apps.partner.prices
-   :members: Unavailable, FixedPrice, DelegateToStockRecord
+   :members: Unavailable, FixedPrice 
    :noindex:
 
 .. _availability_policies:
@@ -215,7 +215,7 @@ The base class defines the interface:
 There are also several pre-defined availability policies:
 
 .. automodule:: oscar.apps.partner.availability
-   :members: Unavailable, Available, StockRequired, DelegateToStockRecord
+   :members: Unavailable, Available, StockRequired
    :noindex:
 
 Strategy mixins
