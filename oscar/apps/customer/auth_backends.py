@@ -1,5 +1,4 @@
 from django.contrib.auth.backends import ModelBackend
-from django.core.mail import mail_admins
 from django.core.exceptions import ImproperlyConfigured
 from oscar.apps.customer.utils import normalise_email
 
@@ -34,25 +33,21 @@ class Emailbackend(ModelBackend):
             return None
 
         # Since Django doesn't enforce emails to be unique, we look for all
-        # matching users and try to authenticate them all.  If we get more than
-        # one success, then we mail admins as this is a problem.
-        authenticated_users = []
+        # matching users and try to authenticate them all. Note that we
+        # intentionally allow multiple users with the same email address
+        # (has been a requirement in larger system deployments),
+        # we just enforce that they don't share the same password.
         matching_users = User.objects.filter(email=clean_email)
-        for user in matching_users:
-            if user.check_password(password):
-                authenticated_users.append(user)
+        authenticated_users = [
+            user for user in matching_users if user.check_password(password)]
         if len(authenticated_users) == 1:
             # Happy path
             return authenticated_users[0]
         elif len(authenticated_users) > 1:
             # This is the problem scenario where we have multiple users with
-            # the same email address AND password.  We can't safely authentiate
-            # either.  This situation requires intervention by an admin and so
-            # we mail them to let them know!
-            mail_admins(
-                "There are multiple users with email address: %s"
-                % clean_email,
-                ("There are %s users with email %s and the same password "
-                 "which means none of them are able to authenticate")
-                % (len(authenticated_users), clean_email))
+            # the same email address AND password. We can't safely authenticate
+            # either.
+            raise User.MultipleObjectsReturned(
+                "There are multiple users with the given email address and "
+                "password")
         return None
