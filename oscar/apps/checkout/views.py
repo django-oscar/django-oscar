@@ -299,14 +299,16 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
             shipping_addr=self.get_shipping_address(self.request.basket),
             request=self.request)
 
+    def is_valid_shipping_method(self, method_code):
+        for method in self.get_available_shipping_methods():
+            if method.code == method_code:
+                return True
+        return False
+
     def post(self, request, *args, **kwargs):
         # Need to check that this code is valid for this user
         method_code = request.POST.get('method_code', None)
-        is_valid = False
-        for method in self.get_available_shipping_methods():
-            if method.code == method_code:
-                is_valid = True
-        if not is_valid:
+        if not self.is_valid_shipping_method(method_code):
             messages.error(request, _("Your submitted shipping method is not"
                                       " permitted"))
             return redirect('checkout:shipping-method')
