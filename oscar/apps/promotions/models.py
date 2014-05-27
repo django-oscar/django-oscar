@@ -297,9 +297,9 @@ class AutomaticProductList(AbstractProductList):
 
     def get_queryset(self):
         Product = get_model('catalogue', 'Product')
-        qs = Product.browsable.base_queryset()
+        qs = Product.browsable.base_queryset().select_related('stats')
         if self.method == self.BESTSELLING:
-            return qs.order_by('-score')
+            return qs.order_by('-stats__score')
         return qs.order_by('-date_created')
 
     def get_products(self):

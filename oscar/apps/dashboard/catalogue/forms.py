@@ -273,7 +273,7 @@ class ProductForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        exclude = ('slug', 'score', 'product_class',
+        exclude = ('slug', 'product_class',
                    'recommended_products', 'product_options',
                    'attributes', 'categories')
         widgets = {

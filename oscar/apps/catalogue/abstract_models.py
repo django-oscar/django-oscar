@@ -252,9 +252,6 @@ class AbstractProduct(models.Model):
         'catalogue.Product', through='ProductRecommendation', blank=True,
         verbose_name=_("Recommended Products"))
 
-    # Product score - used by analytics app
-    score = models.FloatField(_('Score'), default=0.00, db_index=True)
-
     # Denormalised product rating - used by reviews app.
     # Product has no ratings if rating is None
     rating = models.FloatField(_('Rating'), null=True, editable=False)

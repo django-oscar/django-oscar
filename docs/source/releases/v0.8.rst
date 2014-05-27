@@ -112,6 +112,15 @@ Backwards incompatible changes in 0.8
 =====================================
 
 * The ``shipping`` app saw a few renames; please see the section above.
+* The ``oscar_calculate_scores`` command has been `rewritten`_ to use the ORM
+  instead of raw SQL. That exposed a bug in the previous calculations,
+  where purchases got weighed less than any other event. When you upgrade,
+  your total scores will be change. If you rely on the old behaviour,
+  just extend the ``Calculator`` class and adjust the weights.
+* ``Product.score`` was just duplicating ``ProductRecord.score`` and has been
+  removed. Use ``Product.stats.score`` instead.
+
+.. _rewritten: https://github.com/tangentlabs/django-oscar/commit/d8b4dbfed17be90846ea4bc47b5f7b39ad944c24
 
 Basket line stockrecords
 ------------------------
@@ -156,6 +165,7 @@ Migrations
 
     - ``0021`` - Add ``unique_together`` to ``ProductAttributeValue``,
       ``ProductRecommendation`` and ``ProductCategory``
+    - ``0022`` - Remove ``Product.score`` field.
 
 * Order:
 
