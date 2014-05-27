@@ -258,7 +258,7 @@ INSTALLED_APPS = INSTALLED_APPS + get_core_apps(
     ['apps.shipping', 'apps.order'])
 
 AUTHENTICATION_BACKENDS = (
-    'oscar.apps.customer.auth_backends.Emailbackend',
+    'oscar.apps.customer.auth_backends.EmailBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 

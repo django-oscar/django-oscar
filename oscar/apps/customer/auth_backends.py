@@ -9,11 +9,11 @@ User = get_user_model()
 if hasattr(User, 'REQUIRED_FIELDS'):
     if not (User.USERNAME_FIELD == 'email' or 'email' in User.REQUIRED_FIELDS):
         raise ImproperlyConfigured(
-            "Emailbackend: Your User model must have an email"
+            "EmailBackend: Your User model must have an email"
             " field with blank=False")
 
 
-class Emailbackend(ModelBackend):
+class EmailBackend(ModelBackend):
     """
     Custom auth backend that uses an email address and password
 
@@ -51,3 +51,6 @@ class Emailbackend(ModelBackend):
                 "There are multiple users with the given email address and "
                 "password")
         return None
+
+# Deprecated in Oscar 0.8: Spelling
+Emailbackend = EmailBackend
