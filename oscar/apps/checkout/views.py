@@ -317,6 +317,7 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
         # Save the code for the chosen shipping method in the session
         # and continue to the next step.
         self.checkout_session.use_shipping_method(method_code)
+
         return self.get_success_response()
 
     def get_success_response(self):

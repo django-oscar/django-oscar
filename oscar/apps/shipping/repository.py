@@ -15,6 +15,8 @@ class Repository(object):
     # that isn't thread safe.
     methods = (methods.Free,)
 
+    # API
+
     def get_shipping_methods(self, user, basket, shipping_addr=None,
                              request=None, **kwargs):
         """
@@ -47,6 +49,8 @@ class Repository(object):
 
         # Choose the cheapest method by default
         return min(shipping_methods, key=lambda method: method.charge_excl_tax)
+
+    # Helpers
 
     def prime_methods(self, basket, methods):
         """
@@ -82,16 +86,3 @@ class Repository(object):
                         method, discount['offer'])
 
         return method
-
-    def find_by_code(self, code, basket):
-        """
-        Return the appropriate Method object for the given code
-        """
-        for method_class in self.methods:
-            if method_class.code == code:
-                method = method_class()
-                return self.prime_method(basket, method)
-
-        # Check for NoShippingRequired as that is a special case
-        if code == methods.NoShippingRequired.code:
-            return self.prime_method(basket, methods.NoShippingRequired())

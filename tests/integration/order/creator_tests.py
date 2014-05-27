@@ -8,7 +8,7 @@ from oscar.apps.catalogue.models import ProductClass, Product
 from oscar.apps.offer.utils import Applicator
 from oscar.apps.order.models import Order
 from oscar.apps.order.utils import OrderCreator
-from oscar.apps.shipping.methods import Free, Base
+from oscar.apps.shipping.methods import Free, FixedPrice
 from oscar.apps.shipping.repository import Repository
 from oscar.core.loading import get_class
 from oscar.test import factories
@@ -149,17 +149,6 @@ class TestPlacingOrderForDigitalGoods(TestCase):
         self.assertTrue(stockrecord.num_allocated is None)
 
 
-class Fixed(Base):
-    code = 'test'
-    charge_incl_tax = charge_excl_tax = D('5.00')
-    is_tax_known = True
-
-
-class StubRepository(Repository):
-    """ Custom shipping methods """
-    methods = (Fixed, Free)
-
-
 class TestShippingOfferForOrder(TestCase):
 
     def setUp(self):
@@ -179,8 +168,8 @@ class TestShippingOfferForOrder(TestCase):
         add_product(self.basket, D('12.00'))
         self.apply_20percent_shipping_offer()
 
-        # Normal shipping 5.00
-        shipping = StubRepository().find_by_code('test', self.basket)
+        shipping = FixedPrice(D('5.00'), D('5.00'))
+        shipping = Repository().prime_method(self.basket, shipping)
 
         place_order(self.creator,
                     basket=self.basket,
@@ -196,8 +185,8 @@ class TestShippingOfferForOrder(TestCase):
         add_product(self.basket, D('12.00'))
         self.apply_20percent_shipping_offer()
 
-        # Free shipping
-        shipping = StubRepository().find_by_code(Free.code, self.basket)
+        shipping = Free()
+        shipping = Repository().prime_method(self.basket, shipping)
 
         place_order(self.creator,
                     basket=self.basket,
