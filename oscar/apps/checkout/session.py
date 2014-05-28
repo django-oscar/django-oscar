@@ -165,8 +165,9 @@ class CheckoutSessionMixin(object):
         shipping_method = self.get_shipping_method(
             basket, shipping_address)
         if not shipping_method:
-            total = None
+            total = shipping_charge = None
         else:
+            shipping_charge = shipping_method.calculate(basket)
             total = self.get_order_totals(
                 basket, shipping_method=shipping_method)
         submission = {
@@ -174,6 +175,7 @@ class CheckoutSessionMixin(object):
             'basket': basket,
             'shipping_address': shipping_address,
             'shipping_method': shipping_method,
+            'shipping_charge': shipping_charge,
             'order_total': total,
             'order_kwargs': {},
             'payment_kwargs': {}}

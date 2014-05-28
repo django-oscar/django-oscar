@@ -503,7 +503,8 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             return None
 
     def submit(self, user, basket, shipping_address, shipping_method,  # noqa (too complex (10))
-               order_total, payment_kwargs=None, order_kwargs=None):
+               shipping_charge, order_total, payment_kwargs=None,
+               order_kwargs=None):
         """
         Submit a basket for order placement.
 
@@ -530,8 +531,8 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         # Taxes must be known at this point
         assert basket.is_tax_known, (
             "Basket tax must be set before a user can place an order")
-        assert shipping_method.is_tax_known, (
-            "Shipping method tax must be set before a user can place an order")
+        assert shipping_charge.is_tax_known, (
+            "Shipping charge tax must be set before a user can place an order")
 
         # We generate the order number first as this will be used
         # in payment requests (ie before the order model has been
@@ -611,7 +612,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         try:
             return self.handle_order_placement(
                 order_number, user, basket, shipping_address, shipping_method,
-                order_total, **order_kwargs)
+                shipping_charge, order_total, **order_kwargs)
         except UnableToPlaceOrder as e:
             # It's possible that something will go wrong while trying to
             # actually place an order.  Not a good situation to be in as a

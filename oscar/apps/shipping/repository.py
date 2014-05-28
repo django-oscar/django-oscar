@@ -48,8 +48,8 @@ class Repository(object):
             raise ImproperlyConfigured(
                 _("You need to define some shipping methods"))
 
-        # Choose the cheapest method by default
-        return min(shipping_methods, key=lambda method: method.charge_excl_tax)
+        # Assume first returned method is default
+        return shipping_methods[0]
 
     # Helpers
 
