@@ -2,6 +2,7 @@
 
 {% load currency_filters %}
 {% load i18n %}
+{% load shipping_tags %}
 
 {% block title %}
     {% trans "Shipping method" %} | {{ block.super }}
@@ -34,20 +35,20 @@
                     {% endif %}
                     {% if method.is_discounted %}
                         <small>
-                            {% with discount=method.get_discount %}
-                                {% blocktrans with amount=discount.discount|currency:basket.currency name=discount.name %}
-                                    This includes a discount of {{ amount }} as
-                                    your basket qualifies for the '{{ name }}' offer.
-                                {% endblocktrans %}
-                            {% endwith %}
+                            {% shipping_charge_discount method basket as discount %}
+                            {% blocktrans with amount=discount|currency:basket.currency name=method.discount_name %}
+                                This includes a discount of <strong>{{ amount }}</strong> as
+                                your basket qualifies for the <strong>{{ name }}</strong> offer.
+                            {% endblocktrans %}
                         </small>
                     {% endif %}
                 </div>
                 <div class="span1">
-                    {% if method.is_tax_known %}
-                        {{ method.charge_incl_tax|currency:basket.currency }}
+                    {% shipping_charge method basket as charge %}
+                    {% if charge.is_tax_known %}
+                        {{ charge.incl_tax|currency:basket.currency }}
                     {% else %}
-                        {{ method.charge_excl_tax|currency:basket.currency }}
+                        {{ charge.excl_tax|currency:basket.currency }}
                     {% endif %}
                 </div>
                 <div class="span3">

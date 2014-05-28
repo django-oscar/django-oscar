@@ -149,7 +149,6 @@ class BasketView(ModelFormSetView):
         context['shipping_charge'] = shipping_charge
         if method.is_discounted:
             context['shipping_charge_excl_discount'] = method.calculate_excl_discount(shipping_charge)
-            context['shipping_discount'] = method.discount(self.request.basket)
 
         context['order_total'] = OrderTotalCalculator().calculate(
             self.request.basket, shipping_charge)

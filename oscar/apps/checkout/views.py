@@ -290,12 +290,12 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
 
     def get_available_shipping_methods(self):
         """
-        Returns all applicable shipping method objects
-        for a given basket.
+        Returns all applicable shipping method objects for a given basket.
         """
         # Shipping methods can depend on the user, the contents of the basket
-        # and the shipping address.  I haven't come across a scenario that
-        # doesn't fit this system.
+        # and the shipping address (so we pass all these things to the
+        # repository).  I haven't come across a scenario that doesn't fit this
+        # system.
         return Repository().get_shipping_methods(
             basket=self.request.basket, user=self.request.user,
             shipping_addr=self.get_shipping_address(self.request.basket),

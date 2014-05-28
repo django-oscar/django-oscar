@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load currency_filters %}
+{% load shipping_tags %}
 
 <div id="basket_totals">
     <table class="table table-condensed">
@@ -97,7 +98,7 @@
                         {% endif %}
                     </th>
                 </tr>
-                {% if not shipping_discount %}
+                {% if not shipping_method.is_discounted %}
                     <tr>
                         <th class="total">
                             {{ shipping_method.name }}
@@ -111,6 +112,8 @@
                         </th>
                     </tr>
                 {% else %}
+                    {% shipping_charge_discount shipping_method basket as shipping_discount %}
+                    {% shipping_charge_excl_discount shipping_method basket as shipping_charge_excl_discount %}
                     {# As shipping is discounted, we break it down into its original charge and a discount #}
                     <tr>
                         <th class="total">{% trans "Shipping method" %}</th>
