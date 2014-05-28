@@ -1,5 +1,3 @@
-from decimal import Decimal as D
-
 from oscar.apps.checkout import session
 from apps import tax
 
@@ -17,8 +15,7 @@ class CheckoutSessionMixin(session.CheckoutSessionMixin):
 
             # Recalculate order total to ensure we have a tax-inclusive total
             submission['order_total'] = self.get_order_totals(
-                submission['basket'],
-                shipping_method=submission['shipping_method'])
+                submission['basket'], submission['shipping_charge'])
 
         return submission
 
