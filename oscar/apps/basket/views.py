@@ -146,8 +146,9 @@ class BasketView(ModelFormSetView):
         context['shipping_methods'] = self.get_shipping_methods(
             self.request.basket)
 
+        shipping_charge = method.calculate(self.request.basket)
         context['order_total'] = OrderTotalCalculator().calculate(
-            self.request.basket, method)
+            self.request.basket, shipping_charge)
         context['basket_warnings'] = self.get_basket_warnings(
             self.request.basket)
         context['upsell_messages'] = self.get_upsell_messages(

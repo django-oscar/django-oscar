@@ -28,7 +28,7 @@ def place_order(creator, **kwargs):
 
     shipping_charge = kwargs['shipping_method'].calculate(kwargs['basket'])
     kwargs['total'] = calculators.OrderTotalCalculator().calculate(
-        basket=kwargs['basket'], shipping_method=kwargs['shipping_method'])
+        basket=kwargs['basket'], shipping_charge=shipping_charge)
     kwargs['shipping_charge'] = shipping_charge
 
     return creator.place_order(**kwargs)

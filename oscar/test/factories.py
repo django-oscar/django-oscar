@@ -119,9 +119,9 @@ def create_order(number=None, basket=None, user=None, shipping_address=None,
         basket.save()
     if shipping_method is None:
         shipping_method = Free()
-    if total is None:
-        total = OrderTotalCalculator().calculate(basket, shipping_method)
     shipping_charge = shipping_method.calculate(basket)
+    if total is None:
+        total = OrderTotalCalculator().calculate(basket, shipping_charge)
     order = OrderCreator().place_order(
         order_number=number,
         user=user,

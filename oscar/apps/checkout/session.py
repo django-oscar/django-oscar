@@ -285,5 +285,6 @@ class CheckoutSessionMixin(object):
         """
         Returns the total for the order with and without tax (as a tuple)
         """
+        shipping_charge = shipping_method.calculate(basket)
         return OrderTotalCalculator(self.request).calculate(
-            basket, shipping_method, **kwargs)
+            basket, shipping_charge, **kwargs)
