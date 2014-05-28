@@ -11,8 +11,9 @@ class Repository(object):
     Repository class responsible for returning ShippingMethod
     objects for a given user, basket etc
     """
-    # Note, don't instantiate your shipping methods here (at class-level) as
-    # that isn't thread safe.
+
+    # We default to just free shipping. Customise this class and override this
+    # property to add your own shipping methods.
     methods = (methods.Free,)
 
     # API
@@ -29,9 +30,6 @@ class Repository(object):
         """
         if not basket.is_shipping_required():
             return [methods.NoShippingRequired()]
-
-        # We need to instantiate each method class to avoid thread-safety
-        # issues
         methods_ = [klass() for klass in self.methods]
         return self.prime_methods(basket, methods_)
 
@@ -60,8 +58,7 @@ class Repository(object):
         This involves injecting the basket instance into each and adding any
         discount wrappers.
         """
-        return [self.prime_method(basket, method) for
-                method in methods]
+        return [self.prime_method(basket, method) for method in methods]
 
     def prime_method(self, basket, method):
         """
