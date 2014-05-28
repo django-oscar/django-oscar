@@ -169,7 +169,7 @@
                     <tr>
                         <th class="total">{% trans "Shipping" %}</th>
                         <th class="total align-right">
-                            {{ shipping_method.tax|currency:basket.currency }}
+                            {{ shipping_charge.tax|currency:basket.currency }}
                         </th>
                     </tr>
                 {% endif %}

@@ -190,7 +190,7 @@ class CheckoutSessionMixin(object):
         else:
             shipping_charge = shipping_method.calculate(basket)
             total = self.get_order_totals(
-                basket, shipping_method=shipping_method)
+                basket, shipping_charge=shipping_charge)
         submission = {
             'user': self.request.user,
             'basket': basket,
@@ -302,10 +302,9 @@ class CheckoutSessionMixin(object):
                 user_address.populate_alternative_model(billing_address)
                 return billing_address
 
-    def get_order_totals(self, basket, shipping_method, **kwargs):
+    def get_order_totals(self, basket, shipping_charge, **kwargs):
         """
         Returns the total for the order with and without tax (as a tuple)
         """
-        shipping_charge = shipping_method.calculate(basket)
         return OrderTotalCalculator(self.request).calculate(
             basket, shipping_charge, **kwargs)
