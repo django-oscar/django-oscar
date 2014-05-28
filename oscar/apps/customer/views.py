@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.views import generic
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist
@@ -297,6 +297,7 @@ class ProfileUpdateView(PageTitleMixin, generic.FormView):
     communication_type_code = 'EMAIL_CHANGED'
     page_title = _('Edit Profile')
     active_tab = 'profile'
+    success_url = reverse_lazy('customer:profile-view')
 
     def get_form_kwargs(self):
         kwargs = super(ProfileUpdateView, self).get_form_kwargs()
@@ -333,10 +334,7 @@ class ProfileUpdateView(PageTitleMixin, generic.FormView):
             Dispatcher().dispatch_user_messages(old_user, msgs)
 
         messages.success(self.request, _("Profile updated"))
-        return http.HttpResponseRedirect(self.get_success_url())
-
-    def get_success_url(self):
-        return reverse('customer:profile-view')
+        return redirect(self.get_success_url())
 
 
 class ProfileDeleteView(PageTitleMixin, generic.FormView):
@@ -365,6 +363,7 @@ class ChangePasswordView(PageTitleMixin, generic.FormView):
     communication_type_code = 'PASSWORD_CHANGED'
     page_title = _('Change Password')
     active_tab = 'profile'
+    success_url = reverse_lazy('customer:profile-view')
 
     def get_form_kwargs(self):
         kwargs = super(ChangePasswordView, self).get_form_kwargs()
@@ -384,10 +383,7 @@ class ChangePasswordView(PageTitleMixin, generic.FormView):
             code=self.communication_type_code, context=ctx)
         Dispatcher().dispatch_user_messages(self.request.user, msgs)
 
-        return http.HttpResponseRedirect(self.get_success_url())
-
-    def get_success_url(self):
-        return reverse('customer:profile-view')
+        return redirect(self.get_success_url())
 
 
 # =============
@@ -517,8 +513,7 @@ class OrderDetailView(PageTitleMixin, PostActionMixin, generic.DetailView):
             total_quantity)
         if not is_quantity_allowed:
             messages.warning(self.request, reason)
-            self.response = http.HttpResponseRedirect(
-                reverse('customer:order-list'))
+            self.response = redirect('customer:order-list')
             return
 
         # Add any warnings
@@ -535,14 +530,13 @@ class OrderDetailView(PageTitleMixin, PostActionMixin, generic.DetailView):
             basket.add_product(line.product, line.quantity, options)
 
         if len(lines_to_add) > 0:
-            self.response = http.HttpResponseRedirect(reverse('basket:summary'))
+            self.response = redirect('basket:summary')
             messages.info(
                 self.request,
                 _("All available lines from order %(number)s "
                   "have been added to your basket") % {'number': order.number})
         else:
-            self.response = http.HttpResponseRedirect(
-                reverse('customer:order-list'))
+            self.response = redirect('customer:order-list')
             messages.warning(
                 self.request,
                 _("It is not possible to re-order order %(number)s "
