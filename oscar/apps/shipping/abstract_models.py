@@ -4,10 +4,10 @@ from decimal import Decimal as D
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.core.loading import get_class
+from oscar.core import prices, loading
 from oscar.models.fields import AutoSlugField
 
-Scale = get_class('shipping.scales', 'Scale')
+Scale = loading.get_class('shipping.scales', 'Scale')
 
 
 class AbstractBase(models.Model):
@@ -23,10 +23,6 @@ class AbstractBase(models.Model):
     countries = models.ManyToManyField('address.Country', null=True,
                                        blank=True, verbose_name=_("Countries"))
 
-    is_discounted = False
-    discount = D('0.00')
-    _basket = None
-
     class Meta:
         abstract = True
         verbose_name = _("Shipping Method")
@@ -35,9 +31,6 @@ class AbstractBase(models.Model):
 
     def __unicode__(self):
         return self.name
-
-    def set_basket(self, basket):
-        self._basket = basket
 
 
 class AbstractOrderAndItemCharges(AbstractBase):
@@ -64,41 +57,28 @@ class AbstractOrderAndItemCharges(AbstractBase):
         _("Free Shipping"), decimal_places=2, max_digits=12, blank=True,
         null=True)
 
-    _basket = None
-
     class Meta(AbstractBase.Meta):
         abstract = True
         verbose_name = _("Order and Item Charge")
         verbose_name_plural = _("Order and Item Charges")
 
-    @property
-    def charge_incl_tax(self):
-        """
-        Return basket total including tax
-        """
+    def calculate(self, basket):
         if (self.free_shipping_threshold is not None and
-                self._basket.total_incl_tax >= self.free_shipping_threshold):
-            return D('0.00')
+                basket.total_incl_tax >= self.free_shipping_threshold):
+            return prices.Price(
+                currency=basket.currency, excl_tax=D('0.00'),
+                incl_tax=D('0.00'))
 
         charge = self.price_per_order
-        for line in self._basket.lines.all():
+        for line in basket.lines.all():
             if line.product.is_shipping_required:
                 charge += line.quantity * self.price_per_item
-        return charge
 
-    @property
-    def charge_excl_tax(self):
-        """
-        Return basket total excluding tax.
-
-        Default implementation assumes shipping is tax free.
-        """
-        return self.charge_incl_tax
-
-    @property
-    def is_tax_known(self):
-        # We assume tax is known
-        return True
+        # Zero tax is assumed...
+        return prices.Price(
+            currency=basket.currency,
+            excl_tax=charge,
+            incl_tax=charge)
 
 
 class AbstractWeightBased(AbstractBase):
@@ -107,7 +87,11 @@ class AbstractWeightBased(AbstractBase):
         help_text=_("This is the charge when the weight of the basket "
                     "is greater than all the weight bands"""))
 
+    # The attribute code to use to look up the weight of a product
     weight_attribute = 'weight'
+
+    # The default weight to use (in Kg) when a product doesn't have a weight
+    # attribute.
     default_weight = models.DecimalField(
         _("Default Weight"), decimal_places=3, max_digits=12,
         default=D('0.000'),
@@ -119,30 +103,25 @@ class AbstractWeightBased(AbstractBase):
         verbose_name = _("Weight-based Shipping Method")
         verbose_name_plural = _("Weight-based Shipping Methods")
 
-    @property
-    def charge_incl_tax(self):
+    def calculate(self, basket):
         # Note, when weighing the basket, we don't check whether the item
         # requires shipping or not.  It is assumed that if something has a
         # weight, then it requires shipping.
         scale = Scale(attribute_code=self.weight_attribute,
                       default_weight=self.default_weight)
-        weight = scale.weigh_basket(self._basket)
+        weight = scale.weigh_basket(basket)
         band = self.get_band_for_weight(weight)
         if not band:
             if self.bands.all().exists() and self.upper_charge:
-                return self.upper_charge
+                charge = self.upper_charge
             else:
-                return D('0.00')
-        return band.charge
+                charge = D('0.00')
 
-    @property
-    def charge_excl_tax(self):
-        return self.charge_incl_tax
-
-    @property
-    def is_tax_known(self):
-        # We assume tax is known
-        return True
+        # Zero tax is assumed...
+        return prices.Price(
+            currency=basket.currency,
+            excl_tax=charge,
+            incl_tax=charge)
 
     def get_band_for_weight(self, weight):
         """
