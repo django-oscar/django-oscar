@@ -13,6 +13,7 @@ from oscar.core.loading import get_model
 from oscar.apps.shipping.methods import NoShippingRequired
 from oscar.core.loading import get_class, get_classes
 from . import signals
+from .exceptions import FailedPreCondition
 
 ShippingAddressForm, GatewayForm \
     = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
@@ -126,7 +127,7 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
 
     Alternatively, the user can enter a SHIPPING address directly which will be
     saved in the session and later saved as ShippingAddress model when the
-    order is sucessfully submitted.
+    order is successfully submitted.
     """
     template_name = 'checkout/shipping_address.html'
     form_class = ShippingAddressForm
@@ -317,7 +318,17 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
         return self.get_success_response()
 
     def get_success_response(self):
-        return redirect('checkout:payment-method')
+        """
+        If payment is necessary, this redirects to choosing a payment method.
+        If not, this redirects straight to the order preview screen.
+        """
+        # Retrofit the existing check to decide about payment necessity
+        try:
+            self.check_payment_is_necessary(self.request)
+        except FailedPreCondition as e:
+            return http.HttpResponseRedirect(e.url)
+        else:
+            return redirect('checkout:payment-method')
 
 
 # ==============
@@ -337,7 +348,8 @@ class PaymentMethodView(CheckoutSessionMixin, generic.TemplateView):
         'check_basket_is_not_empty',
         'check_basket_is_valid',
         'check_user_email_is_captured',
-        'check_shipping_data_is_captured']
+        'check_shipping_data_is_captured',
+        'check_payment_is_necessary']
 
     def get(self, request, *args, **kwargs):
         # By default we redirect straight onto the payment details view. Shops
@@ -360,7 +372,8 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
 
     This view class is used by two separate URLs: 'payment-details' and
     'preview'. The `preview` class attribute is used to distinguish which is
-    being used.
+    being used. Chronologically, `payment-details` (preview=False) comes before
+    `preview` (preview=True).
 
     If sensitive details are required (eg a bankcard), then the payment details
     view should submit to the preview URL and a custom implementation of
@@ -402,8 +415,10 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         if self.preview:
             # The preview view needs to ensure payment information has been
             # correctly captured.
-            self.pre_conditions.append('check_payment_data_is_captured')
-        return self.pre_conditions
+            return self.pre_conditions + ['check_payment_data_is_captured']
+        else:
+            # Payment details should only be collected if necessary
+            return self.pre_conditions + ['check_payment_is_necessary']
 
     def post(self, request, *args, **kwargs):
         # Posting to payment-details isn't the right thing to do.  Form

@@ -134,12 +134,30 @@ class CheckoutSessionMixin(object):
                 message=_("Please choose a shipping method")
             )
 
+    def check_payment_is_necessary(self, request):
+        shipping_address = self.get_shipping_address(request.basket)
+        shipping_method = self.get_shipping_method(
+            request.basket, shipping_address)
+        total = self.get_order_totals(request.basket, shipping_method)
+        if total.excl_tax == 0:
+            raise exceptions.FailedPreCondition(
+                url=reverse('checkout:preview'),
+                message=_("Payment is not necessary for this order")
+            )
+
     def check_payment_data_is_captured(self, request):
         # We don't collect payment data by default so we don't have anything to
         # validate here. If your shop requires forms to be submitted on the
         # payment details page, then override this method to check that the
         # relevant data is available. Often just enforcing that the preview
         # view is only accessible from a POST request is sufficient.
+
+        # Skip check if payment isn't necessary
+        try:
+            self.check_payment_is_necessary(request)
+        except exceptions.FailedPreCondition:
+            return
+        # Validate payment data here
         pass
 
     # Helpers
@@ -236,7 +254,7 @@ class CheckoutSessionMixin(object):
         Return the selected shipping method instance from this checkout session
 
         The shipping address is passed as we need to check that the method
-        stored in the session is still valid for the shippinga address.
+        stored in the session is still valid for the shipping address.
         """
         code = self.checkout_session.shipping_method_code(basket)
         methods = Repository().get_shipping_methods(
@@ -281,7 +299,7 @@ class CheckoutSessionMixin(object):
 
     def get_order_totals(self, basket, shipping_method, **kwargs):
         """
-        Returns the total for the order with and without tax (as a tuple)
+        Returns the total for the order with and without tax
         """
         return OrderTotalCalculator(self.request).calculate(
             basket, shipping_method, **kwargs)
