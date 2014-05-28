@@ -29,6 +29,11 @@
                 </div>
                 {% if shipping_address %}
                     <div class="well well-info">
+                        {% block shipping_address_actions %}
+                            <a href="{% url 'checkout:shipping-address' %}" class="pull-right">
+                                {% trans "Change" %}
+                            </a>
+                        {% endblock %}
                         <h4>{% trans "Address" %}</h4>
                         <address>
                             {% for field in shipping_address.active_address_fields %}
@@ -50,17 +55,16 @@
                             <h4>{% trans "Instructions" %}</h4>
                             <p>{{ shipping_address.notes|linebreaks }}</p>
                         {% endif %}
-
-                        {% block shipping_address_actions %}
-                            <div class="alert-actions">
-                                <a href="{% url 'checkout:shipping-address' %}" class="btn">{% trans "Change shipping address" %}</a>
-                            </div>
-                        {% endblock %}
                     </div>
                 {% endif %}
 
                 {% if shipping_method %}
                     <div class="well well-info">
+                        {% block shipping_method_actions %}
+                            <a href="{% url 'checkout:shipping-method' %}" class="pull-right">
+                                {% trans "Change" %}
+                            </a>
+                        {% endblock %}
                         <h4>{% trans "Shipping method" %}</h4>
                         <p>{{ shipping_method.name }}
                             {% if shipping_method.description %}
@@ -68,11 +72,6 @@
                             {% endif %}
                         </p>
 
-                        {% block shipping_method_actions %}
-                            <div class="alert-actions">
-                                <a href="{% url 'checkout:shipping-method' %}" class="btn">{% trans "Change shipping method" %}</a>
-                            </div>
-                        {% endblock %}
                     </div>
                 {% endif %}
             </div>
@@ -85,11 +84,11 @@
                     <h2>{% trans "Payment" %}</h2>
                 </div>
                 <div class="well well-success">
+                    <a href="{% url 'checkout:payment-details' %}" class="pull-right">
+                        {% trans "Change" %}
+                    </a>
                     <h4>{% trans "Payment" %}</h4>
                     <p>{% trans "Payment details to go here" %}</p>
-                    <div class="alert-actions">
-                        <a href="{% url 'checkout:payment-details' %}" class="btn">{% trans "Change payment details" %}</a>
-                    </div>
                 </div>
             </div>
         {% endblock payment_method %}
@@ -97,6 +96,12 @@
 
     {% block order_contents %}
         <div class="sub-header">
+            {% block order_contents_actions %}
+                <a href="{% url 'basket:summary' %}" class="pull-right">
+                    {% trans "Edit order contents" %}
+                </a>
+            {% endblock %}
+
             <h2>{% trans "Order contents" %}</h2>
         </div>
         <div class="basket-title">
@@ -145,12 +150,6 @@
                 {% include 'basket/partials/basket_totals.html' %}
             </div>
         </div>
-
-        {% block order_contents_actions %}
-            <div class="form-actions">
-                <a href="{% url 'basket:summary' %}" class="btn">{% trans "Edit order contents" %}</a>
-            </div>
-        {% endblock %}
 
     {% endblock order_contents %}
 
