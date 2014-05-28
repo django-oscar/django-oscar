@@ -134,6 +134,27 @@ class CheckoutSessionMixin(object):
                 message=_("Please choose a shipping method")
             )
 
+        # Check that the previously chosen shipping address is still valid
+        shipping_address = self.get_shipping_address(
+            basket=self.request.basket)
+        if not shipping_address:
+            raise exceptions.FailedPreCondition(
+                url=reverse('checkout:shipping-address'),
+                message=_("Your previously chosen shipping address is "
+                          "no longer valid.  Please choose another one")
+            )
+
+        # Check that a *valid* shipping method has been set
+        shipping_method = self.get_shipping_method(
+            basket=self.request.basket,
+            shipping_address=shipping_address)
+        if not shipping_method:
+            raise exceptions.FailedPreCondition(
+                url=reverse('checkout:shipping-method'),
+                message=_("Your previously chosen shipping method is "
+                          "no longer valid.  Please choose another one")
+            )
+
     def check_payment_data_is_captured(self, request):
         # We don't collect payment data by default so we don't have anything to
         # validate here. If your shop requires forms to be submitted on the
