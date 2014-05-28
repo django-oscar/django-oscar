@@ -50,9 +50,9 @@ class IndexView(CheckoutSessionMixin, generic.FormView):
     template_name = 'checkout/gateway.html'
     form_class = GatewayForm
     success_url = reverse_lazy('checkout:shipping-address')
-    pre_conditions = (
+    pre_conditions = [
         'check_basket_is_not_empty',
-        'check_basket_is_valid')
+        'check_basket_is_valid']
 
     def get(self, request, *args, **kwargs):
         # We redirect immediately to shipping address stage if the user is
@@ -131,10 +131,10 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
     template_name = 'checkout/shipping_address.html'
     form_class = ShippingAddressForm
     success_url = reverse_lazy('checkout:shipping-method')
-    pre_conditions = ('check_basket_is_not_empty',
+    pre_conditions = ['check_basket_is_not_empty',
                       'check_basket_is_valid',
                       'check_user_email_is_captured',
-                      'check_basket_requires_shipping')
+                      'check_basket_requires_shipping']
 
     def get_initial(self):
         return self.checkout_session.new_shipping_address_fields()
@@ -241,9 +241,9 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
     the user can choose the appropriate one.
     """
     template_name = 'checkout/shipping_methods.html'
-    pre_conditions = ('check_basket_is_not_empty',
+    pre_conditions = ['check_basket_is_not_empty',
                       'check_basket_is_valid',
-                      'check_user_email_is_captured', )
+                      'check_user_email_is_captured', ]
 
     def get(self, request, *args, **kwargs):
         # These pre-conditions can't easily be factored out into the normal
@@ -333,11 +333,11 @@ class PaymentMethodView(CheckoutSessionMixin, generic.TemplateView):
     between multiple sources. It's not the place for entering sensitive details
     like bankcard numbers though - that belongs on the payment details view.
     """
-    pre_conditions = (
+    pre_conditions = [
         'check_basket_is_not_empty',
         'check_basket_is_valid',
         'check_user_email_is_captured',
-        'check_shipping_data_is_captured')
+        'check_shipping_data_is_captured']
 
     def get(self, request, *args, **kwargs):
         # By default we redirect straight onto the payment details view. Shops
@@ -388,27 +388,22 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
     template_name = 'checkout/payment_details.html'
     template_name_preview = 'checkout/preview.html'
 
-    pre_conditions = (
+    pre_conditions = [
         'check_basket_is_not_empty',
         'check_basket_is_valid',
         'check_user_email_is_captured',
-        'check_shipping_data_is_captured')
+        'check_shipping_data_is_captured']
 
     # If preview=True, then we render a preview template that shows all order
     # details ready for submission.
     preview = False
 
     def get_preconditions(self, request):
-        if not self.preview:
-            return self.pre_conditions
-        # The preview view needs to ensure payment information has been
-        # correctly captured.
-        return self.pre_conditions + (
-            'check_payment_data_is_captured',)
-
-    def get_template_names(self):
-        return [self.template_name_preview] if self.preview else [
-            self.template_name]
+        if self.preview:
+            # The preview view needs to ensure payment information has been
+            # correctly captured.
+            self.pre_conditions.append('check_payment_data_is_captured')
+        return self.pre_conditions
 
     def post(self, request, *args, **kwargs):
         # Posting to payment-details isn't the right thing to do.  Form
@@ -619,6 +614,10 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             self.restore_frozen_basket()
             return self.render_preview(
                 self.request, error=msg, **payment_kwargs)
+
+    def get_template_names(self):
+        return [self.template_name_preview] if self.preview else [
+            self.template_name]
 
 
 # =========
