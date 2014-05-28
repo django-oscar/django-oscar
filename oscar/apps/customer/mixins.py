@@ -1,3 +1,5 @@
+import logging
+
 from django.conf import settings
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.sites.models import get_current_site
@@ -9,6 +11,8 @@ from oscar.core.compat import get_user_model
 User = get_user_model()
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
 Dispatcher = get_class('customer.utils', 'Dispatcher')
+
+logger = logging.getLogger('oscar.customer')
 
 
 class PageTitleMixin(object):
@@ -60,11 +64,15 @@ class RegisterUserMixin(object):
             # multiple times in quick succession.  This leads to both requests
             # passing the uniqueness check and creating users (as the first one
             # hasn't committed when the second one runs the check).  We retain
-            # the first one and delete the dupes.
+            # the first one and deactivate the dupes.
+            logger.warning(
+                'Multiple users with identical email address and password'
+                'were found. Marking all but one as not active.')
             users = User.objects.filter(email=user.email)
             user = users[0]
             for u in users[1:]:
-                u.delete()
+                u.is_active = False
+                u.save()
 
         auth_login(self.request, user)
 
