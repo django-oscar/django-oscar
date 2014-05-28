@@ -37,9 +37,9 @@ def create_stockrecord(product=None, price_excl_tax=None, partner_sku=None,
     if partner_users:
         for user in partner_users:
             partner.users.add(user)
-    if not price_excl_tax:
+    if price_excl_tax is None:
         price_excl_tax = D('9.99')
-    if not partner_sku:
+    if partner_sku is None:
         partner_sku = 'sku_%d_%d' % (product.id, random.randint(0, 10000))
     return product.stockrecords.create(
         partner=partner, partner_sku=partner_sku,
