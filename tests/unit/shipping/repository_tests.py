@@ -18,8 +18,8 @@ class TestDefaultShippingRepository(TestCase):
 
         available_methods = self.repo.get_shipping_methods(
             basket=basket)
-        self.assertEqual(1, len(available_methods))
 
+        self.assertEqual(1, len(available_methods))
         method = available_methods[0]
         self.assertTrue(isinstance(method, methods.Free))
 
@@ -30,7 +30,7 @@ class TestDefaultShippingRepository(TestCase):
 
         available_methods = self.repo.get_shipping_methods(
             basket=basket)
-        self.assertEqual(1, len(available_methods))
 
+        self.assertEqual(1, len(available_methods))
         method = available_methods[0]
         self.assertTrue(isinstance(method, methods.NoShippingRequired))

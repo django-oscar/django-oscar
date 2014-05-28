@@ -71,7 +71,7 @@ class Repository(object):
         # decorating class that applies the offer discount to the shipping
         # charge.
         if basket.offer_applications.shipping_discounts:
-            # We assume there is only one shipping discount available
+            # We only consider the first shipping discount
             discount = basket.offer_applications.shipping_discounts[0]
             if method.charge_excl_tax > D('0.00'):
                 if method.is_tax_known:
