@@ -67,21 +67,24 @@ class Repository(object):
         """
         Prime an individual method instance
         """
-        # If the basket has a shipping offer, wrap the shipping method with a
-        # decorating class that applies the offer discount to the shipping
-        # charge.
-        if basket.offer_applications.shipping_discounts:
-            # We only consider the first shipping discount
-            discount = basket.offer_applications.shipping_discounts[0]
-            if method.charge_excl_tax > D('0.00'):
-                if method.is_tax_known:
-                    return methods.TaxInclusiveOfferDiscount(
-                        method, discount['offer'])
-                else:
-                    # When returning a tax exclusive discount, it is assumed
-                    # that this will be used to calculate taxes which will then
-                    # be assigned directly to the method instance.
-                    return methods.TaxExclusiveOfferDiscount(
-                        method, discount['offer'])
+        if not basket.has_shipping_discounts:
+            return method
 
-        return method
+        # If the basket has qualified for shipping discount, wrap the shipping
+        # method with a decorating class that applies the offer discount to the
+        # shipping charge.
+        discount = basket.shipping_discounts[0]
+        charge = method.calculate(basket)
+        if charge.excl_tax == D('0.00'):
+            # No need to wrap zero shipping charges
+            return method
+
+        if charge.is_tax_known:
+            return methods.TaxInclusiveOfferDiscount(
+                method, discount['offer'])
+        else:
+            # When returning a tax exclusive discount, it is assumed
+            # that this will be used to calculate taxes which will then
+            # be assigned directly to the method instance.
+            return methods.TaxExclusiveOfferDiscount(
+                method, discount['offer'])

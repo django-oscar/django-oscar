@@ -33,6 +33,12 @@ class Base(object):
         """
         raise NotImplemented()
 
+    def discount(self, basket):
+        """
+        Return the discount on the standard shipping charge
+        """
+        return D('0.00')
+
 
 class Free(Base):
     code = 'free-shipping'
@@ -59,15 +65,22 @@ class FixedPrice(Base):
     code = 'fixed-price-shipping'
     name = _('Fixed price shipping')
 
-    def __init__(self, charge_excl_tax, charge_incl_tax=None):
-        self._excl_tax = charge_excl_tax
-        self._incl_tax = charge_incl_tax
+    # Charges can be either declared by subclassing and overriding the
+    # class attributes or by passing them to the constructor
+    charge_excl_tax = None
+    charge_incl_tax = None
+
+    def __init__(self, charge_excl_tax=None, charge_incl_tax=None):
+        if charge_excl_tax is not None:
+            self.charge_excl_tax = charge_excl_tax
+        if charge_incl_tax is not None:
+            self.charge_incl_tax = charge_incl_tax
 
     def calculate(self, basket):
         return prices.Price(
             currency=basket.currency,
-            excl_tax=self._excl_tax,
-            incl_tax=self._incl_tax)
+            excl_tax=self.charge_excl_tax,
+            incl_tax=self.charge_incl_tax)
 
 
 class OfferDiscount(Base):
@@ -94,36 +107,6 @@ class OfferDiscount(Base):
     def description(self):
         return self.method.description
 
-    #@property
-    #def is_discounted(self):
-    #    # We check to see if the discount is non-zero.  It is possible to have
-    #    # zero shipping already in which case this the offer does not lead to
-    #    # any further discount.
-    #    return self.discount > 0
-
-    #@property
-    #def discount(self):
-    #    return self.get_discount()['discount']
-
-    #def get_discount(self):
-    #    # Return a 'discount' dictionary in the same form as that used by the
-    #    # OfferApplications class
-    #    return {
-    #        'offer': self.offer,
-    #        'result': None,
-    #        'name': self.offer.name,
-    #        'description': '',
-    #        'voucher': self.offer.get_voucher(),
-    #        'freq': 1,
-    #        'discount': self.effective_discount}
-
-    @property
-    def effective_discount(self):
-        """
-        The discount value.
-        """
-        raise NotImplemented()
-
 
 class TaxExclusiveOfferDiscount(OfferDiscount):
 
@@ -135,10 +118,9 @@ class TaxExclusiveOfferDiscount(OfferDiscount):
             currency=base_charge.currency,
             excl_tax=excl_tax)
 
-    @property
-    def effective_discount(self):
-        parent_charge = self.method.charge_excl_tax
-        return self.offer.shipping_discount(parent_charge)
+    def discount(self, basket):
+        base_charge = self.method.calculate(basket)
+        return self.offer.shipping_discount(base_charge.excl_tax)
 
 
 class TaxInclusiveOfferDiscount(OfferDiscount):
@@ -160,11 +142,10 @@ class TaxInclusiveOfferDiscount(OfferDiscount):
             return D('0.00')
         # We assume we can linearly scale down the excl tax price before
         # discount.
-        excl_tax = base_charge.excl_tax * (incl_tax /
-                                           base_charge.incl_tax)
+        excl_tax = base_charge.excl_tax * (
+            incl_tax / base_charge.incl_tax)
         return excl_tax.quantize(D('0.01'))
 
-    #@property
-    #def effective_discount(self):
-    #    parent_charge = self.method.charge_incl_tax
-    #    return self.offer.shipping_discount(parent_charge)
+    def discount(self, basket):
+        base_charge = self.method.calculate(basket)
+        return self.offer.shipping_discount(base_charge.incl_tax)

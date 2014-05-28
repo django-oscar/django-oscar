@@ -31,4 +31,3 @@ class TestAPerUserConditionalOffer(TestCase):
         order = create_order(user=self.user)
         G(OrderDiscount, order=order, offer_id=self.offer.id, frequency=5)
         self.assertEqual(0, self.offer.get_max_applications(self.user))
-

@@ -1,13 +1,14 @@
+from decimal import Decimal as D
+
 from django.contrib.sites.models import Site
 from django.conf import settings
-from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.shipping.methods import Free
+from oscar.core.loading import get_model
 from oscar.core.loading import get_class
 from . import exceptions
 
-from decimal import Decimal as D
 
 ShippingAddress = get_model('order', 'ShippingAddress')
 Order = get_model('order', 'Order')
@@ -39,9 +40,9 @@ class OrderCreator(object):
     """
 
     def place_order(self, basket, total,  # noqa (too complex (12))
-                    user=None, shipping_method=None, shipping_address=None,
-                    billing_address=None, order_number=None, status=None,
-                    **kwargs):
+                    user=None, shipping_method=None, shipping_charge=None,
+                    shipping_address=None, billing_address=None,
+                    order_number=None, status=None, **kwargs):
         """
         Placing an order involves creating all the relevant models based on the
         basket and session data.
@@ -65,12 +66,13 @@ class OrderCreator(object):
 
         # Ok - everything seems to be in order, let's place the order
         order = self.create_order_model(
-            user, basket, shipping_address, shipping_method, billing_address,
-            total, order_number, status, **kwargs)
+            user, basket, shipping_address, shipping_method, shipping_charge,
+            billing_address, total, order_number, status, **kwargs)
         for line in basket.all_lines():
             self.create_line_models(order, line)
             self.update_stock_records(line)
 
+        # Record any discounts associated with this order
         for application in basket.offer_applications:
             # Trigger any deferred benefits from offers and capture the
             # resulting message
@@ -79,12 +81,13 @@ class OrderCreator(object):
             # Record offer application results
             if application['result'].affects_shipping:
                 # Skip zero shipping discounts
-                if shipping_method.discount <= D('0.00'):
+                shipping_discount = shipping_method.discount(basket)
+                if shipping_discount <= D('0.00'):
                     continue
                 # If a shipping offer, we need to grab the actual discount off
                 # the shipping method instance, which should be wrapped in an
                 # OfferDiscount instance.
-                application['discount'] = shipping_method.discount
+                application['discount'] = shipping_discount
             self.create_discount_model(order, application)
             self.record_discount(application)
 
@@ -97,10 +100,10 @@ class OrderCreator(object):
         return order
 
     def create_order_model(self, user, basket, shipping_address,
-                           shipping_method, billing_address, total,
-                           order_number, status, **extra_order_fields):
+                           shipping_method, shipping_charge, billing_address,
+                           total, order_number, status, **extra_order_fields):
         """
-        Creates an order model.
+        Create an order model.
         """
         order_data = {'basket': basket,
                       'number': order_number,
@@ -108,8 +111,8 @@ class OrderCreator(object):
                       'currency': total.currency,
                       'total_incl_tax': total.incl_tax,
                       'total_excl_tax': total.excl_tax,
-                      'shipping_incl_tax': shipping_method.charge_incl_tax,
-                      'shipping_excl_tax': shipping_method.charge_excl_tax,
+                      'shipping_incl_tax': shipping_charge.incl_tax,
+                      'shipping_excl_tax': shipping_charge.excl_tax,
                       'shipping_method': shipping_method.name,
                       'shipping_code': shipping_method.code}
         if shipping_address:

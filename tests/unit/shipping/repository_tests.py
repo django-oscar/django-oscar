@@ -14,7 +14,7 @@ class TestDefaultShippingRepository(TestCase):
     def test_returns_free_when_basket_is_non_empty(self):
         basket = mock.Mock()
         basket.is_shipping_required = mock.Mock(return_value=True)
-        basket.offer_applications.shipping_discounts = ()
+        basket.has_shipping_discounts = False
 
         available_methods = self.repo.get_shipping_methods(
             basket=basket)
@@ -26,7 +26,7 @@ class TestDefaultShippingRepository(TestCase):
     def test_returns_no_shipping_required_when_basket_does_not_require_shipping(self):
         basket = mock.Mock()
         basket.is_shipping_required = mock.Mock(return_value=False)
-        basket.offer_applications.shipping_discounts = ()
+        basket.has_shipping_discounts = False
 
         available_methods = self.repo.get_shipping_methods(
             basket=basket)

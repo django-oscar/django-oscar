@@ -406,6 +406,10 @@ class AbstractBasket(models.Model):
         return self.offer_applications.voucher_discounts
 
     @property
+    def has_shipping_discounts(self):
+        return len(self.shipping_discounts) > 0
+
+    @property
     def shipping_discounts(self):
         """
         Return discounts from vouchers
