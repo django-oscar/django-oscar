@@ -24,10 +24,6 @@ class TestOrderTotalCalculator(TestCase):
         self.assertIsInstance(total, prices.Price)
         self.assertEqual(D('10.00') + D('5.00'), total.excl_tax)
         self.assertFalse(total.is_tax_known)
-        with self.assertRaises(AttributeError):
-            total.incl_tax
-        with self.assertRaises(AttributeError):
-            total.tax
 
     def test_returns_correct_totals_when_tax_is_known(self):
         basket = mock.Mock()
