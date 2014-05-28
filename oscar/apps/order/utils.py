@@ -40,7 +40,7 @@ class OrderCreator(object):
     """
 
     def place_order(self, basket, total,  # noqa (too complex (12))
-                    user=None, shipping_method=None, shipping_charge=None,
+                    shipping_method, shipping_charge, user=None,
                     shipping_address=None, billing_address=None,
                     order_number=None, status=None, **kwargs):
         """
@@ -49,8 +49,6 @@ class OrderCreator(object):
         """
         if basket.is_empty:
             raise ValueError(_("Empty baskets cannot be submitted"))
-        if not shipping_method:
-            shipping_method = Free()
         if not order_number:
             generator = OrderNumberGenerator()
             order_number = generator.order_number(basket)
