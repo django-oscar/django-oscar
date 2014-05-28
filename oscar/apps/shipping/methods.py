@@ -27,6 +27,9 @@ class Base(object):
     #  during checkout.  Can contain HTML.
     description = ''
 
+    #: Whether the charge includes a discount
+    is_discounted = False
+
     def calculate(self, basket):
         """
         Return the shipping charge for the given basket
@@ -88,6 +91,7 @@ class OfferDiscount(Base):
     Wrapper class that applies a discount to an existing shipping method's
     charges
     """
+    is_discounted = True
 
     def __init__(self, method, offer):
         self.method = method
@@ -104,8 +108,15 @@ class OfferDiscount(Base):
         return self.method.name
 
     @property
+    def discount_name(self):
+        return self.offer.name
+
+    @property
     def description(self):
         return self.method.description
+
+    def calculate_excl_discount(self, basket):
+        return self.method.calculate(basket)
 
 
 class TaxExclusiveOfferDiscount(OfferDiscount):

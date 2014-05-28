@@ -1,4 +1,3 @@
-
 {% load i18n %}
 {% load currency_filters %}
 
@@ -98,16 +97,16 @@
                         {% endif %}
                     </th>
                 </tr>
-                {% if not shipping_method.is_discounted %}
+                {% if not shipping_discount %}
                     <tr>
                         <th class="total">
                             {{ shipping_method.name }}
                         </th>
                         <th class="total align-right">
-                            {% if not show_tax_separately and shipping_method.is_tax_known %}
-                                {{ shipping_method.charge_incl_tax|currency:basket.currency }}
+                            {% if not show_tax_separately and shipping_charge.is_tax_known %}
+                                {{ shipping_charge.incl_tax|currency:basket.currency }}
                             {% else %}
-                                {{ shipping_method.charge_excl_tax|currency:basket.currency }}
+                                {{ shipping_charge.excl_tax|currency:basket.currency }}
                             {% endif %}
                         </th>
                     </tr>
@@ -120,29 +119,27 @@
                     <tr>
                         <td>{% trans "Shipping total (before discounts)" %}</td>
                         <td class="align-right">
-                            {% if not show_tax_separately and shipping_method.is_tax_known %}
-                                {{ shipping_method.charge_incl_tax_before_discount|currency:basket.currency }}
+                            {% if not show_tax_separately and shipping_charge_excl_discount.is_tax_known %}
+                                {{ shipping_charge_excl_discount.incl_tax|currency:basket.currency }}
                             {% else %}
-                                {{ shipping_method.charge_excl_tax_before_discount|currency:basket.currency }}
+                                {{ shipping_charge_excl_discount.excl_tax|currency:basket.currency }}
                             {% endif %}
                         </td>
                     </tr>
                     {# This section needs adjustment to when taxes are shown separately #}
                     <tr>
-                        {% with discount=shipping_method.get_discount %}
-                            <td class="basket-discount"><span class="label label-success">{% trans "Discount" %}</span> {{ discount.name }}</td>
-                            <td class="align-right">-{{ discount.discount|currency:basket.currency }}</td>
-                        {% endwith %}
+                        <td class="basket-discount"><span class="label label-success">{% trans "Discount" %}</span> {{ shipping_method.discount_name }}</td>
+                        <td class="align-right">-{{ shipping_discount|currency:basket.currency }}</td>
                     </tr>
                     <tr>
                         <th class="total">
                             {% trans "Shipping total (after discounts)" %}
                         </th>
                         <th class="total align-right">
-                            {% if not show_tax_separately and shipping_method.is_tax_known %}
-                                {{ shipping_method.charge_incl_tax|currency:basket.currency }}
+                            {% if not show_tax_separately and shipping_charge.is_tax_known %}
+                                {{ shipping_charge.incl_tax|currency:basket.currency }}
                             {% else %}
-                                {{ shipping_method.charge_excl_tax|currency:basket.currency }}
+                                {{ shipping_charge.excl_tax|currency:basket.currency }}
                             {% endif %}
                         </th>
                     </tr>
