@@ -70,7 +70,7 @@ If you do not have ``mkvirtualenv``, then replace that line with:
 .. code-block:: bash
 
     $ virtualenv oscar
-    $ . ./oscar/bin/activate
+    $ source ./oscar/bin/activate
     (oscar) $
 
 The sandbox site (initialised with a sample set of products) will be available
