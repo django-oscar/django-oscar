@@ -16,7 +16,7 @@ class BasketApplication(Application):
     def get_urls(self):
         urls = [
             url(r'^$', self.summary_view.as_view(), name='summary'),
-            url(r'^add/$', self.add_view.as_view(), name='add'),
+            url(r'^add/(?P<pk>\d+)/$', self.add_view.as_view(), name='add'),
             url(r'^vouchers/add/$', self.add_voucher_view.as_view(),
                 name='vouchers-add'),
             url(r'^vouchers/(?P<pk>\d+)/remove/$',

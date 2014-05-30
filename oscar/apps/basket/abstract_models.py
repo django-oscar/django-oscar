@@ -713,8 +713,7 @@ class AbstractLine(models.Model):
         Return the stock/price info
         """
         if not hasattr(self, '_info'):
-            # Cache the PurchaseInfo instance (note that a strategy instance is
-            # assigned to each line by the basket in the all_lines method).
+            # Cache the PurchaseInfo instance.
             self._info = self.basket.strategy.fetch_for_product(
                 self.product, self.stockrecord)
         return self._info

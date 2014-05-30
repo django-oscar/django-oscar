@@ -46,3 +46,65 @@ class TestBasketLineForm(TestCase):
         invalid_qty = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD + 1
         form = self.build_form(quantity=invalid_qty)
         self.assertFalse(form.is_valid())
+
+
+class TestAddToBasketForm(TestCase):
+
+    def test_allows_a_product_quantity_to_be_increased(self):
+        basket = factories.create_basket()
+        product = basket.all_lines()[0].product
+
+        # Add more of the same product
+        data = {'quantity': 1}
+        form = forms.AddToBasketForm(
+            basket=basket, product=product, data=data)
+        self.assertTrue(form.is_valid())
+
+    def test_checks_whether_passed_product_id_matches_a_real_product(self):
+        basket = factories.create_basket()
+        product = basket.all_lines()[0].product
+
+        # Add more of the same product
+        data = {'quantity': -1}
+        form = forms.AddToBasketForm(
+            basket=basket, product=product, data=data)
+        self.assertFalse(form.is_valid())
+
+    def test_checks_if_purchase_is_permitted(self):
+        basket = factories.BasketFactory()
+        product = factories.ProductFactory()
+
+        # Build a 4-level mock monster so we can force the return value of
+        # whether the product is available to buy. This is a serious code smell
+        # and needs to be remedied.
+        info = mock.Mock()
+        info.availability = mock.Mock()
+        info.availability.is_purchase_permitted = mock.Mock(
+            return_value=(False, "Not on your nelly!"))
+        basket.strategy.fetch_for_product = mock.Mock(
+            return_value=info)
+
+        data = {'quantity': 1}
+        form = forms.AddToBasketForm(
+            basket=basket, product=product, data=data)
+        self.assertFalse(form.is_valid())
+        self.assertEqual('Not on your nelly!', form.errors['__all__'][0])
+
+    def test_mixed_currency_baskets_are_not_permitted(self):
+        # Ensure basket is one currency
+        basket = mock.Mock()
+        basket.currency = 'GBP'
+        basket.num_items = 1
+
+        # Ensure new product has different currency
+        info = mock.Mock()
+        info.price.currency = 'EUR'
+        basket.strategy.fetch_for_product = mock.Mock(
+            return_value=info)
+
+        product = factories.ProductFactory()
+
+        data = {'quantity': 1}
+        form = forms.AddToBasketForm(
+            basket=basket, product=product, data=data)
+        self.assertFalse(form.is_valid())

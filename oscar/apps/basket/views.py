@@ -5,23 +5,22 @@ from django.contrib import messages
 from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.core.urlresolvers import reverse, resolve
-from oscar.core.loading import get_model
 from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.views.generic import FormView, View
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
+from django import shortcuts
 
 from extra_views import ModelFormSetView
 from oscar.core import ajax
 from oscar.apps.basket import signals
-from oscar.core.loading import get_class, get_classes
+from oscar.core.loading import get_class, get_classes, get_model
 Applicator = get_class('offer.utils', 'Applicator')
 (BasketLineFormSet, BasketLineForm, AddToBasketForm, BasketVoucherForm,
- SavedLineFormSet, SavedLineForm, ProductSelectionForm) \
+ SavedLineFormSet, SavedLineForm) \
     = get_classes('basket.forms', ('BasketLineFormSet', 'BasketLineForm',
                                    'AddToBasketForm', 'BasketVoucherForm',
-                                   'SavedLineFormSet', 'SavedLineForm',
-                                   'ProductSelectionForm'))
+                                   'SavedLineFormSet', 'SavedLineForm'))
 Repository = get_class('shipping.repository', ('Repository'))
 OrderTotalCalculator = get_class(
     'checkout.calculators', 'OrderTotalCalculator')
@@ -274,49 +273,41 @@ class BasketView(ModelFormSetView):
 
 class BasketAddView(FormView):
     """
-    Handles the add-to-basket operation, shouldn't be accessed via
-    GET because there's nothing sensible to render.
+    Handles the add-to-basket submissions, which are triggered from various
+    parts of the site. The add-to-basket form is loaded into templates using
+    a templatetag from module basket_tags.py.
     """
     form_class = AddToBasketForm
-    product_select_form_class = ProductSelectionForm
     product_model = get_model('catalogue', 'product')
     add_signal = signals.basket_addition
+    http_method_names = ['post']
 
-    def get(self, request, *args, **kwargs):
-        return HttpResponseRedirect(reverse('basket:summary'))
+    def post(self, request, *args, **kwargs):
+        self.product = shortcuts.get_object_or_404(
+            self.product_model, pk=kwargs['pk'])
+        return super(BasketAddView, self).post(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super(BasketAddView, self).get_form_kwargs()
-        product_select_form = self.product_select_form_class(self.request.POST)
-
-        if product_select_form.is_valid():
-            kwargs['instance'] = product_select_form.cleaned_data['product_id']
-        else:
-            kwargs['instance'] = None
-        kwargs['request'] = self.request
+        kwargs['basket'] = self.request.basket
+        kwargs['product'] = self.product
         return kwargs
 
-    def get_success_url(self):
-        url = None
-        if self.request.POST.get('next'):
-            url = self.request.POST.get('next')
-        elif 'HTTP_REFERER' in self.request.META:
-            url = self.request.META['HTTP_REFERER']
-        if url:
-            # We only allow internal URLs so we see if the url resolves
-            try:
-                resolve(parse.urlparse(url).path)
-            except Http404:
-                url = None
-        if url is None:
-            url = reverse('basket:summary')
-        return url
+    def form_invalid(self, form):
+        msgs = []
+        for error in form.errors.values():
+            msgs.append(error.as_text())
+        clean_msgs = [m.replace('* ', '') for m in msgs if m.startswith('* ')]
+        messages.error(self.request, ",".join(clean_msgs))
+
+        return HttpResponseRedirect(
+            self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
 
     def form_valid(self, form):
         offers_before = self.request.basket.applied_offers()
 
         self.request.basket.add_product(
-            form.instance, form.cleaned_data['quantity'],
+            form.product, form.cleaned_data['quantity'],
             form.cleaned_options())
 
         messages.success(self.request, self.get_success_message(form),
@@ -327,7 +318,7 @@ class BasketAddView(FormView):
 
         # Send signal for basket addition
         self.add_signal.send(
-            sender=self, product=form.instance, user=self.request.user,
+            sender=self, product=form.product, user=self.request.user,
             request=self.request)
 
         return super(BasketAddView, self).form_valid(form)
@@ -335,16 +326,24 @@ class BasketAddView(FormView):
     def get_success_message(self, form):
         return render_to_string(
             'basket/messages/addition.html',
-            {'product': form.instance,
+            {'product': form.product,
              'quantity': form.cleaned_data['quantity']})
 
-    def form_invalid(self, form):
-        msgs = []
-        for error in form.errors.values():
-            msgs.append(error.as_text())
-        messages.error(self.request, ",".join(msgs))
-        return HttpResponseRedirect(
-            self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
+    def get_success_url(self):
+        url = None
+        if self.request.POST.get('next'):
+            url = self.request.POST.get('next')
+        elif 'HTTP_REFERER' in self.request.META:
+            url = self.request.META['HTTP_REFERER']
+        if url:
+            # We only allow internal URLs so we see if the url resolves
+            try:
+                resolve(urlparse.urlparse(url).path)
+            except Http404:
+                url = None
+        if url is None:
+            url = reverse('basket:summary')
+        return url
 
 
 class VoucherAddView(FormView):

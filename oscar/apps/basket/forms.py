@@ -130,70 +130,90 @@ class BasketVoucherForm(forms.Form):
         return self.cleaned_data['code'].strip().upper()
 
 
-class ProductSelectionForm(forms.Form):
-    product_id = forms.IntegerField(min_value=1, label=_("Product ID"))
-
-    def clean_product_id(self):
-        id = self.cleaned_data['product_id']
-
-        try:
-            return Product.objects.get(pk=id)
-        except Product.DoesNotExist:
-            raise forms.ValidationError(
-                _("This product is unavailable for purchase"))
-
-
 class AddToBasketForm(forms.Form):
-    # We set required=False as validation happens later on
-    product_id = forms.IntegerField(widget=forms.HiddenInput(), required=False,
-                                    min_value=1, label=_("Product ID"))
     quantity = forms.IntegerField(initial=1, min_value=1, label=_('Quantity'))
 
-    def __init__(self, request, instance, *args, **kwargs):
+    def __init__(self, basket, product, *args, **kwargs):
+        # Note, the product passed in here isn't necessarily the product being added
+        # to the basket. For group products, it is the *parent* product that gets
+        # passed to the form. An optional product_id param is passed to
+        # indicate the ID of the variant being added to the basket
+        self.basket = basket
+        self.base_product = product
+
         super(AddToBasketForm, self).__init__(*args, **kwargs)
-        self.request = request
-        self.basket = request.basket
-        self.instance = instance
-        if instance:
-            if instance.is_group:
-                self._create_group_product_fields(instance)
+
+        # Dynamically build fields
+        if product.is_group:
+            self._create_group_product_fields(product)
+        self._create_product_fields(product)
+
+    # Dynamic form building methods
+
+    def _create_group_product_fields(self, product):
+        """
+        Adds the fields for a "group"-type product (eg, a parent product with a
+        list of variants.
+
+        Currently requires that a stock record exists for the variant
+        """
+        choices = []
+        disabled_values = []
+        for variant in product.variants.all():
+            # Build a description of the variant, including any pertinent
+            # attributes
+            attr_summary = variant.attribute_summary
+            if attr_summary:
+                summary = attr_summary
             else:
-                self._create_product_fields(instance)
+                summary = variant.get_title()
 
-    def cleaned_options(self):
-        """
-        Return submitted options in a clean format
-        """
-        options = []
-        for option in self.instance.options:
-            if option.code in self.cleaned_data:
-                options.append({
-                    'option': option,
-                    'value': self.cleaned_data[option.code]})
-        return options
+            # Check if it is available to buy
+            info = self.basket.strategy.fetch_for_product(variant)
+            if not info.availability.is_available_to_buy:
+                disabled_values.append(variant.id)
 
-    def clean(self):
-        # Check product exists
+            choices.append((variant.id, summary))
+
+        self.fields['variant_id'] = forms.ChoiceField(
+            choices=tuple(choices), label=_("Variant"),
+            widget=widgets.AdvancedSelect(disabled_values=disabled_values))
+
+    def _create_product_fields(self, product):
+        """
+        Add the product option fields.
+        """
+        for option in product.options:
+            self._add_option_field(product, option)
+
+    def _add_option_field(self, product, option):
+        """
+        Creates the appropriate form field for the product option.
+
+        This is designed to be overridden so that specific widgets can be used
+        for certain types of options.
+        """
+        kwargs = {'required': option.is_required}
+        self.fields[option.code] = forms.CharField(**kwargs)
+
+    # Cleaning
+
+    def clean_variant_id(self):
         try:
-            product = Product.objects.get(
-                id=self.cleaned_data.get('product_id', None))
+            variant = self.base_product.variants.get(
+                id=self.cleaned_data['variant_id'])
         except Product.DoesNotExist:
             raise forms.ValidationError(
                 _("Please select a valid product"))
 
-        # Check user has permission to this the desired quantity to their
-        # basket.
-        current_qty = self.basket.product_quantity(product)
-        desired_qty = current_qty + self.cleaned_data.get('quantity', 1)
-        result = self.request.strategy.fetch_for_product(product)
-        is_permitted, reason = result.availability.is_purchase_permitted(
-            desired_qty)
-        if not is_permitted:
-            raise forms.ValidationError(reason)
+        # To avoid duplicate SQL queries, we cache a copy of the loaded variant
+        # product as we're going to need it later.
+        self.variant = variant
 
-        return self.cleaned_data
+        return self.cleaned_data['variant_id']
 
     def clean_quantity(self):
+        # Check that the proposed new line quantity is sensible
         qty = self.cleaned_data['quantity']
         basket_threshold = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD
         if basket_threshold:
@@ -208,48 +228,53 @@ class AddToBasketForm(forms.Form):
                        'basket': total_basket_quantity})
         return qty
 
-    def _create_group_product_fields(self, item):
+    @property
+    def product(self):
         """
-        Adds the fields for a "group"-type product (eg, a parent product with a
-        list of variants.
+        The actual product being added to the basket
+        """
+        # Note, the variant attribute is saved in the clean_variant_id method
+        return getattr(self, 'variant', self.base_product)
 
-        Currently requires that a stock record exists for the variant
-        """
-        choices = []
-        disabled_values = []
-        for variant in item.variants.all():
-            attr_summary = variant.attribute_summary
-            if attr_summary:
-                summary = attr_summary
-            else:
-                summary = variant.get_title()
-            info = self.request.strategy.fetch_for_product(variant)
-            if not info.availability.is_available_to_buy:
-                disabled_values.append(variant.id)
-            choices.append((variant.id, summary))
+    def clean(self):
+        info = self.basket.strategy.fetch_for_product(self.product)
 
-        self.fields['product_id'] = forms.ChoiceField(
-            choices=tuple(choices), label=_("Variant"),
-            widget=widgets.AdvancedSelect(disabled_values=disabled_values))
+        # Check currencies are sensible
+        if self.basket.currency and info.price.currency != self.basket.currency:
+            raise forms.ValidationError(
+                _("This product cannot be added to the basket as its currency "
+                  "isn't the same as other products in your basket"))
 
-    def _create_product_fields(self, item):
-        """
-        Add the product option fields.
-        """
-        for option in item.options:
-            self._add_option_field(item, option)
+        # Check user has permission to add the desired quantity to their
+        # basket.
+        current_qty = self.basket.product_quantity(self.product)
+        desired_qty = current_qty + self.cleaned_data.get('quantity', 1)
+        is_permitted, reason = info.availability.is_purchase_permitted(
+            desired_qty)
+        if not is_permitted:
+            raise forms.ValidationError(reason)
 
-    def _add_option_field(self, item, option):
-        """
-        Creates the appropriate form field for the product option.
+        return self.cleaned_data
 
-        This is designed to be overridden so that specific widgets can be used
-        for certain types of options.
+    # Helpers
+
+    def cleaned_options(self):
         """
-        kwargs = {'required': option.is_required}
-        self.fields[option.code] = forms.CharField(**kwargs)
+        Return submitted options in a clean format
+        """
+        options = []
+        for option in self.base_product.options:
+            if option.code in self.cleaned_data:
+                options.append({
+                    'option': option,
+                    'value': self.cleaned_data[option.code]})
+        return options
 
 
 class SimpleAddToBasketForm(AddToBasketForm):
+    """
+    Simpified version of the add to basket form where the quantity is defaulted
+    to 1 and rendered in a hidden widget
+    """
     quantity = forms.IntegerField(
         initial=1, min_value=1, widget=forms.HiddenInput, label=_('Quantity'))
