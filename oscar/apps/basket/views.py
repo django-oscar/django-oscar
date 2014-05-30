@@ -338,7 +338,7 @@ class BasketAddView(FormView):
         if url:
             # We only allow internal URLs so we see if the url resolves
             try:
-                resolve(urlparse.urlparse(url).path)
+                resolve(parse.urlparse(url).path)
             except Http404:
                 url = None
         if url is None:
