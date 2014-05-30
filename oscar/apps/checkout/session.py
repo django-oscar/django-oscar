@@ -1,3 +1,5 @@
+from decimal import Decimal as D
+
 from django.contrib import messages
 from django import http
 from django.core.exceptions import ImproperlyConfigured
@@ -25,8 +27,14 @@ class CheckoutSessionMixin(object):
     checkout information is available in the template context.
     """
     # This should be list of method names that get executed before the normal
-    # flow of the view.
+    # flow of the view. Each method should check some condition has been met.
+    # If not, then an exception is raised that indicates the URL the customer
+    # should be redirect to.
     pre_conditions = None
+
+    # Skip conditions check whether the view should be skipped. They work in
+    # the same way as pre-conditions.
+    skip_conditions = None
 
     def dispatch(self, request, *args, **kwargs):
         # Assign the checkout session manager so it's available in all checkout
@@ -39,6 +47,12 @@ class CheckoutSessionMixin(object):
         except exceptions.FailedPreCondition as e:
             for message in e.messages:
                 messages.warning(request, message)
+            return http.HttpResponseRedirect(e.url)
+
+        # Check if this view should be skipped
+        try:
+            self.check_skip_conditions(request)
+        except exceptions.PassedSkipCondition as e:
             return http.HttpResponseRedirect(e.url)
 
         return super(CheckoutSessionMixin, self).dispatch(
@@ -60,6 +74,23 @@ class CheckoutSessionMixin(object):
         if self.pre_conditions is None:
             return []
         return self.pre_conditions
+
+    def check_skip_conditions(self, request):
+        skip_conditions = self.get_skip_conditions(request)
+        for method_name in skip_conditions:
+            if not hasattr(self, method_name):
+                raise ImproperlyConfigured(
+                    "There is no method '%s' to call as a skip-condition" % (
+                        method_name))
+            getattr(self, method_name)(request)
+
+    def get_skip_conditions(self, request):
+        """
+        Return the skip-condition method names to run for this view
+        """
+        if self.skip_conditions is None:
+            return []
+        return self.skip_conditions
 
     # Re-usable pre-condition validators
 
@@ -107,14 +138,6 @@ class CheckoutSessionMixin(object):
                     "Please either sign in or enter your email address")
             )
 
-    def check_basket_requires_shipping(self, request):
-        # Check to see that a shipping address is actually required.  It may
-        # not be if the basket is purely downloads
-        if not request.basket.is_shipping_required():
-            raise exceptions.FailedPreCondition(
-                url=reverse('checkout:shipping-method')
-            )
-
     def check_shipping_data_is_captured(self, request):
         if not request.basket.is_shipping_required():
             return
@@ -134,31 +157,34 @@ class CheckoutSessionMixin(object):
                 message=_("Please choose a shipping method")
             )
 
-    def check_payment_is_necessary(self, request):
-        shipping_address = self.get_shipping_address(request.basket)
-        shipping_method = self.get_shipping_method(
-            request.basket, shipping_address)
-        total = self.get_order_totals(request.basket, shipping_method)
-        if total.excl_tax == 0:
-            raise exceptions.FailedPreCondition(
-                url=reverse('checkout:preview'),
-                message=_("Payment is not necessary for this order")
-            )
-
     def check_payment_data_is_captured(self, request):
         # We don't collect payment data by default so we don't have anything to
         # validate here. If your shop requires forms to be submitted on the
         # payment details page, then override this method to check that the
         # relevant data is available. Often just enforcing that the preview
         # view is only accessible from a POST request is sufficient.
-
-        # Skip check if payment isn't necessary
-        try:
-            self.check_payment_is_necessary(request)
-        except exceptions.FailedPreCondition:
-            return
-        # Validate payment data here
         pass
+
+    # Re-usable skip conditions
+
+    def skip_unless_basket_requires_shipping(self, request):
+        # Check to see that a shipping address is actually required.  It may
+        # not be if the basket is purely downloads
+        if not request.basket.is_shipping_required():
+            raise exceptions.PassedSkipCondition(
+                url=reverse('checkout:payment-method')
+            )
+
+    def skip_unless_payment_is_required(self, request):
+        # Check to see if payment is actually required for this order.
+        shipping_address = self.get_shipping_address(request.basket)
+        shipping_method = self.get_shipping_method(
+            request.basket, shipping_address)
+        total = self.get_order_totals(request.basket, shipping_method)
+        if total.excl_tax == D('0.00'):
+            raise exceptions.PassedSkipCondition(
+                url=reverse('checkout:preview')
+            )
 
     # Helpers
 

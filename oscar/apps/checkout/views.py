@@ -134,8 +134,8 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
     success_url = reverse_lazy('checkout:shipping-method')
     pre_conditions = ['check_basket_is_not_empty',
                       'check_basket_is_valid',
-                      'check_user_email_is_captured',
-                      'check_basket_requires_shipping']
+                      'check_user_email_is_captured']
+    skip_conditions = ['skip_unless_basket_requires_shipping']
 
     def get_initial(self):
         return self.checkout_session.new_shipping_address_fields()
@@ -244,7 +244,7 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
     template_name = 'checkout/shipping_methods.html'
     pre_conditions = ['check_basket_is_not_empty',
                       'check_basket_is_valid',
-                      'check_user_email_is_captured', ]
+                      'check_user_email_is_captured',]
 
     def get(self, request, *args, **kwargs):
         # These pre-conditions can't easily be factored out into the normal
@@ -338,8 +338,8 @@ class PaymentMethodView(CheckoutSessionMixin, generic.TemplateView):
         'check_basket_is_not_empty',
         'check_basket_is_valid',
         'check_user_email_is_captured',
-        'check_shipping_data_is_captured',
-        'check_payment_is_necessary']
+        'check_shipping_data_is_captured']
+    skip_conditions = ['skip_unless_payment_is_required']
 
     def get(self, request, *args, **kwargs):
         # By default we redirect straight onto the payment details view. Shops
@@ -391,6 +391,8 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
     template_name = 'checkout/payment_details.html'
     template_name_preview = 'checkout/preview.html'
 
+    # These conditions are extended at runtime depending on whether we are in
+    # 'preview' mode or not.
     pre_conditions = [
         'check_basket_is_not_empty',
         'check_basket_is_valid',
@@ -406,9 +408,13 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             # The preview view needs to ensure payment information has been
             # correctly captured.
             return self.pre_conditions + ['check_payment_data_is_captured']
-        else:
+        return super(PaymentDetailsView, self).get_pre_conditions(request)
+
+    def get_skip_conditions(self, request):
+        if not self.preview:
             # Payment details should only be collected if necessary
-            return self.pre_conditions + ['check_payment_is_necessary']
+            return ['skip_unless_payment_is_required']
+        return super(PaymentDetailsView, self).get_skip_conditions(request)
 
     def post(self, request, *args, **kwargs):
         # Posting to payment-details isn't the right thing to do.  Form
