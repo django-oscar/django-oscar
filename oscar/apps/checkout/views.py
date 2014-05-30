@@ -318,17 +318,7 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
         return self.get_success_response()
 
     def get_success_response(self):
-        """
-        If payment is necessary, this redirects to choosing a payment method.
-        If not, this redirects straight to the order preview screen.
-        """
-        # Retrofit the existing check to decide about payment necessity
-        try:
-            self.check_payment_is_necessary(self.request)
-        except FailedPreCondition as e:
-            return http.HttpResponseRedirect(e.url)
-        else:
-            return redirect('checkout:payment-method')
+        return redirect('checkout:payment-method')
 
 
 # ==============
