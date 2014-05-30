@@ -35,7 +35,7 @@ class CheckoutSessionMixin(object):
 
         # Enforce any pre-conditions for the view.
         try:
-            self.check_preconditions(request)
+            self.check_pre_conditions(request)
         except exceptions.FailedPreCondition as e:
             for message in e.messages:
                 messages.warning(request, message)
@@ -44,8 +44,8 @@ class CheckoutSessionMixin(object):
         return super(CheckoutSessionMixin, self).dispatch(
             request, *args, **kwargs)
 
-    def check_preconditions(self, request):
-        pre_conditions = self.get_preconditions(request)
+    def check_pre_conditions(self, request):
+        pre_conditions = self.get_pre_conditions(request)
         for method_name in pre_conditions:
             if not hasattr(self, method_name):
                 raise ImproperlyConfigured(
@@ -53,7 +53,7 @@ class CheckoutSessionMixin(object):
                         method_name))
             getattr(self, method_name)(request)
 
-    def get_preconditions(self, request):
+    def get_pre_conditions(self, request):
         """
         Return the pre-condition method names to run for this view
         """

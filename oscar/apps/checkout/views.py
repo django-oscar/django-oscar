@@ -411,7 +411,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
     # details ready for submission.
     preview = False
 
-    def get_preconditions(self, request):
+    def get_pre_conditions(self, request):
         if self.preview:
             # The preview view needs to ensure payment information has been
             # correctly captured.
