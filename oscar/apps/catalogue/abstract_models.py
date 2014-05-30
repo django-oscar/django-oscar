@@ -244,9 +244,8 @@ class AbstractProduct(models.Model):
     recommended_products = models.ManyToManyField(
         'catalogue.Product', through='ProductRecommendation', blank=True,
         verbose_name=_("Recommended Products"),
-        help_text=_("These products are products that are in some way related"
-                    "to the product. They can be a different version of the"
-                    "same product, or e.g. accessories for upselling."))
+        help_text=_("These are products that are recommended to accompany the "
+                    "main product."))
 
     # Denormalised product rating - used by reviews app.
     # Product has no ratings if rating is None
