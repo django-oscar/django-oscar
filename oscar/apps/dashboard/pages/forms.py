@@ -11,7 +11,7 @@ class PageSearchForm(forms.Form):
     """
     Search form to filter pages by *title.
     """
-    title = forms.CharField(required=False, label=_("Title"))
+    title = forms.CharField(required=False, label=_("Page title"))
 
 
 class PageUpdateForm(forms.ModelForm):

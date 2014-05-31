@@ -228,7 +228,7 @@ class AbstractProductList(AbstractPromotion):
     Abstract superclass for promotions which are essentially a list
     of products.
     """
-    name = models.CharField(_("Title"), max_length=255)
+    name = models.CharField(_("List title"), max_length=255)
     description = models.TextField(_("Description"), blank=True)
     link_url = ExtendedURLField(_('Link URL'), blank=True)
     link_text = models.CharField(_("Link text"), max_length=255, blank=True)
@@ -325,7 +325,7 @@ class OrderedProductList(HandPickedProductList):
 class TabbedBlock(AbstractPromotion):
 
     _type = 'Tabbed block'
-    name = models.CharField(_("Title"), max_length=255)
+    name = models.CharField(_("Block title"), max_length=255)
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     class Meta:

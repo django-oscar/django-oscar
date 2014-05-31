@@ -10,7 +10,7 @@ ProductAlert = get_model('customer', 'ProductAlert')
 
 class UserSearchForm(forms.Form):
     email = forms.CharField(required=False, label=_("Email"))
-    name = forms.CharField(required=False, label=_("Name"))
+    name = forms.CharField(required=False, label=_("User name"))
 
 
 class ProductAlertUpdateForm(forms.ModelForm):

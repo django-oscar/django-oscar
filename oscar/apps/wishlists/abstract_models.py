@@ -112,7 +112,7 @@ class AbstractLine(models.Model):
         blank=True, null=True)
     quantity = models.PositiveIntegerField(_('Quantity'), default=1)
     #: Store the title in case product gets deleted
-    title = models.CharField(_("Title"), max_length=255)
+    title = models.CharField(_("Product title"), max_length=255)
 
     def __unicode__(self):
         return u'%sx %s on %s' % (self.quantity, self.title,
