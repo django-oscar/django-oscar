@@ -218,7 +218,7 @@ class AbstractProduct(models.Model):
                     "product)."))
 
     # Title is mandatory for canonical products but optional for child products
-    title = models.CharField(_('Title'), max_length=255, blank=True)
+    title = models.CharField(_('Product title'), max_length=255, blank=True)
     slug = models.SlugField(_('Slug'), max_length=255, unique=False)
     description = models.TextField(_('Description'), blank=True)
 
@@ -403,7 +403,7 @@ class AbstractProduct(models.Model):
         if not title and self.parent_id:
             title = self.parent.title
         return title
-    get_title.short_description = _("Title")
+    get_title.short_description = _("Product title")
 
     def get_product_class(self):
         """
