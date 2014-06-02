@@ -3,7 +3,7 @@ from decimal import Decimal as D
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.shipping import methods
+from oscar.apps.shipping import methods as shipping_methods
 
 
 class Repository(object):
@@ -11,87 +11,83 @@ class Repository(object):
     Repository class responsible for returning ShippingMethod
     objects for a given user, basket etc
     """
-    # Note, don't instantiate your shipping methods here (at class-level) as
-    # that isn't thread safe.
-    methods = (methods.Free,)
 
-    def get_shipping_methods(self, user, basket, shipping_addr=None,
-                             request=None, **kwargs):
+    # We default to just free shipping. Customise this class and override this
+    # property to add your own shipping methods. This should be a list of
+    # instantiated shipping methods.
+    methods = (shipping_methods.Free(),)
+
+    # API
+
+    def get_shipping_methods(self, basket, shipping_addr=None, **kwargs):
         """
-        Return a list of all applicable shipping method objects
-        for a given basket, address etc.
-
-        We default to returning the ``Method`` models that have been defined
-        but this behaviour can easily be overridden by subclassing this class
-        and overriding this method.
+        Return a list of all applicable shipping method instances for a given
+        basket, address etc.
         """
         if not basket.is_shipping_required():
-            return [methods.NoShippingRequired()]
-        # We need to instantiate each method class to avoid thread-safety
-        # issues
-        methods_ = [klass() for klass in self.methods]
-        return self.prime_methods(basket, methods_)
+            # Special case! Baskets that don't require shipping get a special
+            # shipping method.
+            return [shipping_methods.NoShippingRequired()]
 
-    def get_default_shipping_method(self, user, basket, shipping_addr=None,
-                                    request=None, **kwargs):
+        methods = self.get_available_shipping_methods(
+            basket=basket, shipping_addr=shipping_addr, **kwargs)
+        if basket.has_shipping_discounts:
+            methods = self.apply_shipping_offers(basket, methods)
+        return methods
+
+    def get_default_shipping_method(self, basket, shipping_addr=None,
+                                    **kwargs):
         """
         Return a 'default' shipping method to show on the basket page to give
         the customer an indication of what their order will cost.
         """
         shipping_methods = self.get_shipping_methods(
-            user, basket, shipping_addr=shipping_addr,
-            request=request, **kwargs)
+            basket, shipping_addr=shipping_addr, **kwargs)
         if len(shipping_methods) == 0:
             raise ImproperlyConfigured(
                 _("You need to define some shipping methods"))
 
-        # Choose the cheapest method by default
-        return min(shipping_methods, key=lambda method: method.charge_excl_tax)
+        # Assume first returned method is default
+        return shipping_methods[0]
 
-    def prime_methods(self, basket, methods):
+    # Helpers
+
+    def get_available_shipping_methods(
+            self, basket, shipping_addr=None, **kwargs):
         """
-        Prime a list of shipping method instances
-
-        This involves injecting the basket instance into each and adding any
-        discount wrappers.
+        Return a list of all applicable shipping method instances for a given
+        basket, address etc. This method is intended to be overridden.
         """
-        return [self.prime_method(basket, method) for
-                method in methods]
+        return self.methods
 
-    def prime_method(self, basket, method):
+    def apply_shipping_offers(self, basket, methods):
         """
-        Prime an individual method instance
+        Apply shipping offers to the passed set of methods
         """
-        method.set_basket(basket)
+        # We default to only applying the first shipping discount.
+        offer = basket.shipping_discounts[0]['offer']
+        return [self.apply_shipping_offer(basket, method, offer)
+                for method in methods]
 
-        # If the basket has a shipping offer, wrap the shipping method with a
-        # decorating class that applies the offer discount to the shipping
-        # charge.
-        if basket.offer_applications.shipping_discounts:
-            # We assume there is only one shipping discount available
-            discount = basket.offer_applications.shipping_discounts[0]
-            if method.charge_excl_tax > D('0.00'):
-                if method.is_tax_known:
-                    return methods.TaxInclusiveOfferDiscount(
-                        method, discount['offer'])
-                else:
-                    # When returning a tax exclusive discount, it is assumed
-                    # that this will be used to calculate taxes which will then
-                    # be assigned directly to the method instance.
-                    return methods.TaxExclusiveOfferDiscount(
-                        method, discount['offer'])
-
-        return method
-
-    def find_by_code(self, code, basket):
+    def apply_shipping_offer(self, basket, method, offer):
         """
-        Return the appropriate Method object for the given code
+        Wrap a shipping method with an offer discount wrapper (as long as the
+        shipping charge is non-zero).
         """
-        for method_class in self.methods:
-            if method_class.code == code:
-                method = method_class()
-                return self.prime_method(basket, method)
+        # If the basket has qualified for shipping discount, wrap the shipping
+        # method with a decorating class that applies the offer discount to the
+        # shipping charge.
+        charge = method.calculate(basket)
+        if charge.excl_tax == D('0.00'):
+            # No need to wrap zero shipping charges
+            return method
 
-        # Check for NoShippingRequired as that is a special case
-        if code == methods.NoShippingRequired.code:
-            return self.prime_method(basket, methods.NoShippingRequired())
+        if charge.is_tax_known:
+            return shipping_methods.TaxInclusiveOfferDiscount(
+                method, offer)
+        else:
+            # When returning a tax exclusive discount, it is assumed
+            # that this will be used to calculate taxes which will then
+            # be assigned directly to the method instance.
+            return shipping_methods.TaxExclusiveOfferDiscount(
+                method, offer)

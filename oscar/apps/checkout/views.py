@@ -288,14 +288,14 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
 
     def get_available_shipping_methods(self):
         """
-        Returns all applicable shipping method objects
-        for a given basket.
+        Returns all applicable shipping method objects for a given basket.
         """
         # Shipping methods can depend on the user, the contents of the basket
-        # and the shipping address.  I haven't come across a scenario that
-        # doesn't fit this system.
+        # and the shipping address (so we pass all these things to the
+        # repository).  I haven't come across a scenario that doesn't fit this
+        # system.
         return Repository().get_shipping_methods(
-            user=self.request.user, basket=self.request.basket,
+            basket=self.request.basket, user=self.request.user,
             shipping_addr=self.get_shipping_address(self.request.basket),
             request=self.request)
 
@@ -316,6 +316,7 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
         # Save the code for the chosen shipping method in the session
         # and continue to the next step.
         self.checkout_session.use_shipping_method(method_code)
+
         return self.get_success_response()
 
     def get_success_response(self):
@@ -501,7 +502,8 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             return None
 
     def submit(self, user, basket, shipping_address, shipping_method,  # noqa (too complex (10))
-               order_total, payment_kwargs=None, order_kwargs=None):
+               shipping_charge, order_total, payment_kwargs=None,
+               order_kwargs=None):
         """
         Submit a basket for order placement.
 
@@ -528,8 +530,8 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         # Taxes must be known at this point
         assert basket.is_tax_known, (
             "Basket tax must be set before a user can place an order")
-        assert shipping_method.is_tax_known, (
-            "Shipping method tax must be set before a user can place an order")
+        assert shipping_charge.is_tax_known, (
+            "Shipping charge tax must be set before a user can place an order")
 
         # We generate the order number first as this will be used
         # in payment requests (ie before the order model has been
@@ -609,7 +611,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         try:
             return self.handle_order_placement(
                 order_number, user, basket, shipping_address, shipping_method,
-                order_total, **order_kwargs)
+                shipping_charge, order_total, **order_kwargs)
         except UnableToPlaceOrder as e:
             # It's possible that something will go wrong while trying to
             # actually place an order.  Not a good situation to be in as a

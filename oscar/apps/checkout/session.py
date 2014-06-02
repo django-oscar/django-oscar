@@ -134,6 +134,27 @@ class CheckoutSessionMixin(object):
                 message=_("Please choose a shipping method")
             )
 
+        # Check that the previously chosen shipping address is still valid
+        shipping_address = self.get_shipping_address(
+            basket=self.request.basket)
+        if not shipping_address:
+            raise exceptions.FailedPreCondition(
+                url=reverse('checkout:shipping-address'),
+                message=_("Your previously chosen shipping address is "
+                          "no longer valid.  Please choose another one")
+            )
+
+        # Check that a *valid* shipping method has been set
+        shipping_method = self.get_shipping_method(
+            basket=self.request.basket,
+            shipping_address=shipping_address)
+        if not shipping_method:
+            raise exceptions.FailedPreCondition(
+                url=reverse('checkout:shipping-method'),
+                message=_("Your previously chosen shipping method is "
+                          "no longer valid.  Please choose another one")
+            )
+
     def check_payment_data_is_captured(self, request):
         # We don't collect payment data by default so we don't have anything to
         # validate here. If your shop requires forms to be submitted on the
@@ -165,15 +186,17 @@ class CheckoutSessionMixin(object):
         shipping_method = self.get_shipping_method(
             basket, shipping_address)
         if not shipping_method:
-            total = None
+            total = shipping_charge = None
         else:
+            shipping_charge = shipping_method.calculate(basket)
             total = self.get_order_totals(
-                basket, shipping_method=shipping_method)
+                basket, shipping_charge=shipping_charge)
         submission = {
             'user': self.request.user,
             'basket': basket,
             'shipping_address': shipping_address,
             'shipping_method': shipping_method,
+            'shipping_charge': shipping_charge,
             'order_total': total,
             'order_kwargs': {},
             'payment_kwargs': {}}
@@ -240,7 +263,7 @@ class CheckoutSessionMixin(object):
         """
         code = self.checkout_session.shipping_method_code(basket)
         methods = Repository().get_shipping_methods(
-            user=self.request.user, basket=basket,
+            basket=basket, user=self.request.user,
             shipping_addr=shipping_address, request=self.request)
         for method in methods:
             if method.code == code:
@@ -279,9 +302,9 @@ class CheckoutSessionMixin(object):
                 user_address.populate_alternative_model(billing_address)
                 return billing_address
 
-    def get_order_totals(self, basket, shipping_method, **kwargs):
+    def get_order_totals(self, basket, shipping_charge, **kwargs):
         """
         Returns the total for the order with and without tax (as a tuple)
         """
         return OrderTotalCalculator(self.request).calculate(
-            basket, shipping_method, **kwargs)
+            basket, shipping_charge, **kwargs)

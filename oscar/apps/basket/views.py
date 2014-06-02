@@ -10,8 +10,8 @@ from django.views.generic import FormView, View
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 from django import shortcuts
-
 from extra_views import ModelFormSetView
+
 from oscar.core import ajax
 from oscar.apps.basket import signals
 from oscar.core.loading import get_class, get_classes, get_model
@@ -100,12 +100,12 @@ class BasketView(ModelFormSetView):
 
     def get_shipping_methods(self, basket):
         return Repository().get_shipping_methods(
-            user=self.request.user, basket=self.request.basket,
+            basket=self.request.basket, user=self.request.user,
             request=self.request)
 
     def get_default_shipping_method(self, basket):
         return Repository().get_default_shipping_method(
-            user=self.request.user, basket=self.request.basket,
+            basket=self.request.basket, user=self.request.user,
             request=self.request)
 
     def get_basket_warnings(self, basket):
@@ -140,13 +140,17 @@ class BasketView(ModelFormSetView):
         # cost.  It is also important for PayPal Express where the customer
         # gets redirected away from the basket page and needs to see what the
         # estimated order total is beforehand.
-        method = self.get_default_shipping_method(self.request.basket)
-        context['shipping_method'] = method
         context['shipping_methods'] = self.get_shipping_methods(
             self.request.basket)
+        method = self.get_default_shipping_method(self.request.basket)
+        context['shipping_method'] = method
+        shipping_charge = method.calculate(self.request.basket)
+        context['shipping_charge'] = shipping_charge
+        if method.is_discounted:
+            context['shipping_charge_excl_discount'] = method.calculate_excl_discount(shipping_charge)
 
         context['order_total'] = OrderTotalCalculator().calculate(
-            self.request.basket, method)
+            self.request.basket, shipping_charge)
         context['basket_warnings'] = self.get_basket_warnings(
             self.request.basket)
         context['upsell_messages'] = self.get_upsell_messages(

@@ -8,7 +8,7 @@ from oscar.apps.catalogue.models import ProductClass, Product
 from oscar.apps.offer.utils import Applicator
 from oscar.apps.order.models import Order
 from oscar.apps.order.utils import OrderCreator
-from oscar.apps.shipping.methods import Free, Base
+from oscar.apps.shipping.methods import Free, FixedPrice
 from oscar.apps.shipping.repository import Repository
 from oscar.core.loading import get_class
 from oscar.test import factories
@@ -25,9 +25,12 @@ def place_order(creator, **kwargs):
     """
     if 'shipping_method' not in kwargs:
         kwargs['shipping_method'] = Free()
-    if 'total' not in kwargs:
-        kwargs['total'] = calculators.OrderTotalCalculator().calculate(
-            basket=kwargs['basket'], shipping_method=kwargs['shipping_method'])
+
+    shipping_charge = kwargs['shipping_method'].calculate(kwargs['basket'])
+    kwargs['total'] = calculators.OrderTotalCalculator().calculate(
+        basket=kwargs['basket'], shipping_charge=shipping_charge)
+    kwargs['shipping_charge'] = shipping_charge
+
     return creator.place_order(**kwargs)
 
 
@@ -53,9 +56,6 @@ class TestSuccessfulOrderCreation(TestCase):
     def setUp(self):
         self.creator = OrderCreator()
         self.basket = factories.create_basket(empty=True)
-
-    def tearDown(self):
-        Order.objects.all().delete()
 
     def test_saves_shipping_code(self):
         add_product(self.basket, D('12.00'))
@@ -84,19 +84,6 @@ class TestSuccessfulOrderCreation(TestCase):
         order = Order.objects.get(number='1234')
         self.assertEqual(order.total_incl_tax, self.basket.total_incl_tax)
         self.assertEqual(order.total_excl_tax, self.basket.total_excl_tax)
-
-    def test_defaults_to_setting_totals_to_basket_totals(self):
-        add_product(self.basket, D('12.00'))
-        method = Mock()
-        method.is_discounted = False
-        method.charge_incl_tax = D('2.00')
-        method.charge_excl_tax = D('2.00')
-
-        place_order(self.creator, basket=self.basket, order_number='1234',
-                    shipping_method=method)
-        order = Order.objects.get(number='1234')
-        self.assertEqual(order.total_incl_tax, self.basket.total_incl_tax + D('2.00'))
-        self.assertEqual(order.total_excl_tax, self.basket.total_excl_tax + D('2.00'))
 
     def test_uses_default_order_status_from_settings(self):
         add_product(self.basket, D('12.00'))
@@ -130,8 +117,6 @@ class TestPlacingOrderForDigitalGoods(TestCase):
     def setUp(self):
         self.creator = OrderCreator()
         self.basket = factories.create_basket(empty=True)
-        self.shipping_method = Free()
-        self.shipping_method.set_basket(self.basket)
 
     def test_does_not_allocate_stock(self):
         ProductClass.objects.create(
@@ -149,17 +134,6 @@ class TestPlacingOrderForDigitalGoods(TestCase):
         self.assertTrue(stockrecord.num_allocated is None)
 
 
-class Fixed(Base):
-    code = 'test'
-    charge_incl_tax = charge_excl_tax = D('5.00')
-    is_tax_known = True
-
-
-class StubRepository(Repository):
-    """ Custom shipping methods """
-    methods = (Fixed, Free)
-
-
 class TestShippingOfferForOrder(TestCase):
 
     def setUp(self):
@@ -174,13 +148,15 @@ class TestShippingOfferForOrder(TestCase):
             range=range, type=Benefit.SHIPPING_PERCENTAGE, value=20)
         offer = factories.create_offer(range=range, benefit=benefit)
         Applicator().apply_offers(self.basket, [offer])
+        return offer
 
     def test_shipping_offer_is_applied(self):
         add_product(self.basket, D('12.00'))
-        self.apply_20percent_shipping_offer()
+        offer = self.apply_20percent_shipping_offer()
 
-        # Normal shipping 5.00
-        shipping = StubRepository().find_by_code('test', self.basket)
+        shipping = FixedPrice(D('5.00'), D('5.00'))
+        shipping = Repository().apply_shipping_offer(
+            self.basket, shipping, offer)
 
         place_order(self.creator,
                     basket=self.basket,
@@ -194,10 +170,11 @@ class TestShippingOfferForOrder(TestCase):
 
     def test_zero_shipping_discount_is_not_created(self):
         add_product(self.basket, D('12.00'))
-        self.apply_20percent_shipping_offer()
+        offer = self.apply_20percent_shipping_offer()
 
-        # Free shipping
-        shipping = StubRepository().find_by_code(Free.code, self.basket)
+        shipping = Free()
+        shipping = Repository().apply_shipping_offer(
+            self.basket, shipping, offer)
 
         place_order(self.creator,
                     basket=self.basket,

@@ -98,7 +98,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
 
     def handle_order_placement(self, order_number, user, basket,
                                shipping_address, shipping_method,
-                               order_total, **kwargs):
+                               shipping_charge, order_total, **kwargs):
         """
         Write out the order models and return the appropriate HTTP response
 
@@ -107,14 +107,15 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         can happen when a basket gets frozen.
         """
         order = self.place_order(
-            order_number, user, basket, shipping_address, shipping_method,
-            order_total, **kwargs)
+            order_number=order_number, user=user, basket=basket,
+            shipping_address=shipping_address, shipping_method=shipping_method,
+            shipping_charge=shipping_charge, order_total=order_total, **kwargs)
         basket.submit()
         return self.handle_successful_order(order)
 
     def place_order(self, order_number, user, basket, shipping_address,
-                    shipping_method, order_total, billing_address=None,
-                    **kwargs):
+                    shipping_method, shipping_charge, order_total,
+                    billing_address=None, **kwargs):
         """
         Writes the order out to the DB including the payment models
         """
@@ -138,6 +139,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             basket=basket,
             shipping_address=shipping_address,
             shipping_method=shipping_method,
+            shipping_charge=shipping_charge,
             total=order_total,
             billing_address=billing_address,
             status=status, **kwargs)

@@ -8,14 +8,13 @@ from oscar.test import factories
 from oscar.apps.shipping import repository, methods
 
 
-class ExcludingTax(methods.Base):
+class ExcludingTax(methods.FixedPrice):
     charge_excl_tax = D('10.00')
 
 
-class IncludingTax(methods.Base):
+class IncludingTax(methods.FixedPrice):
     charge_excl_tax = D('10.00')
     charge_incl_tax = D('12.00')
-    is_tax_known = True
 
 
 class TestAShippingPercentageDiscountAppliedWithCountCondition(TestCase):
@@ -64,8 +63,9 @@ class TestAShippingPercentageDiscountAppliedWithCountCondition(TestCase):
 
         repo = repository.Repository()
         raw_method = ExcludingTax()
-        method = repo.prime_method(self.basket, raw_method)
-        self.assertEqual(D('5.00'), method.charge_excl_tax)
+        method = repo.apply_shipping_offer(self.basket, raw_method, self.offer)
+        charge = method.calculate(self.basket)
+        self.assertEqual(D('5.00'), charge.excl_tax)
 
     def test_applies_correctly_to_shipping_method_with_tax(self):
         add_product(self.basket, D('12.00'), 3)
@@ -75,6 +75,7 @@ class TestAShippingPercentageDiscountAppliedWithCountCondition(TestCase):
 
         repo = repository.Repository()
         raw_method = IncludingTax()
-        method = repo.prime_method(self.basket, raw_method)
-        self.assertEqual(D('6.00'), method.charge_incl_tax)
-        self.assertEqual(D('5.00'), method.charge_excl_tax)
+        method = repo.apply_shipping_offer(self.basket, raw_method, self.offer)
+        charge = method.calculate(self.basket)
+        self.assertEqual(D('6.00'), charge.incl_tax)
+        self.assertEqual(D('5.00'), charge.excl_tax)

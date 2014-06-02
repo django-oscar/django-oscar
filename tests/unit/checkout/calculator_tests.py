@@ -17,26 +17,27 @@ class TestOrderTotalCalculator(TestCase):
         basket = mock.Mock()
         basket.total_excl_tax = D('10.00')
         basket.is_tax_known = False
-        method = methods.FixedPrice(D('5.00'))
 
-        total = self.calculator.calculate(basket, method)
+        shipping_charge = prices.Price(
+            currency=basket.currency, excl_tax=D('5.00'))
+
+        total = self.calculator.calculate(basket, shipping_charge)
 
         self.assertIsInstance(total, prices.Price)
         self.assertEqual(D('10.00') + D('5.00'), total.excl_tax)
         self.assertFalse(total.is_tax_known)
-        with self.assertRaises(AttributeError):
-            total.incl_tax
-        with self.assertRaises(AttributeError):
-            total.tax
 
     def test_returns_correct_totals_when_tax_is_known(self):
         basket = mock.Mock()
         basket.total_excl_tax = D('10.00')
         basket.total_incl_tax = D('12.00')
         basket.is_tax_known = True
-        method = methods.FixedPrice(D('5.00'), D('5.50'))
 
-        total = self.calculator.calculate(basket, method)
+        shipping_charge = prices.Price(
+            currency=basket.currency, excl_tax=D('5.00'),
+            tax=D('0.50'))
+
+        total = self.calculator.calculate(basket, shipping_charge)
 
         self.assertIsInstance(total, prices.Price)
         self.assertEqual(D('10.00') + D('5.00'), total.excl_tax)

@@ -25,11 +25,10 @@ def apply_to(submission):
         unit_tax = (line_tax / line.quantity).quantize(D('0.01'))
         line.purchase_info.price.tax = unit_tax
 
-    # We don't charge sales tax on shipping
-    shipping_method = submission['shipping_method']
-    if shipping_method is not None:
-        shipping_method.tax = calculate_tax(
-            shipping_method.charge_excl_tax, rate)
+    shipping_charge = submission['shipping_charge']
+    if shipping_charge is not None:
+        shipping_charge.tax = calculate_tax(
+            shipping_charge.excl_tax, rate)
 
 
 def calculate_tax(price, rate):
