@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.utils.importlib import import_module
 import mock
+from oscar.apps.shipping import methods
 
 from oscar.test.testcases import WebTestCase
 from oscar.test import factories
@@ -70,7 +71,7 @@ class TestShippingAddressView(CheckoutMixin, WebTestCase):
         self.enter_guest_details()
 
         response = self.get(reverse('checkout:shipping-address'))
-        self.assertRedirectUrlName(response, 'checkout:shipping-method')
+        self.assertRedirectUrlName(response, 'checkout:payment-method')
 
     def test_redirects_customers_with_invalid_basket(self):
         # Add product to basket but then remove its stock so it is not
@@ -142,16 +143,14 @@ class TestShippingMethodView(CheckoutMixin, WebTestCase):
         self.assertIsOk(response)
 
     @mock.patch('oscar.apps.checkout.views.Repository')
-    def test_redirects_customers_when_only_one_shipping_methods_available(self, mock_repo):
+    def test_redirects_customers_when_only_one_shipping_method_is_available(self, mock_repo):
         self.add_product_to_basket()
         self.enter_guest_details()
         self.enter_shipping_address()
 
         # Ensure one shipping method available
-        method = mock.MagicMock()
-        method.code = 'm'
         instance = mock_repo.return_value
-        instance.get_shipping_methods.return_value = [method]
+        instance.get_shipping_methods.return_value = [methods.Free()]
 
         response = self.get(reverse('checkout:shipping-method'))
         self.assertRedirectUrlName(response, 'checkout:payment-method')
