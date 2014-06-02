@@ -13,6 +13,7 @@ from oscar.core.loading import get_model
 from oscar.apps.shipping.methods import NoShippingRequired
 from oscar.core.loading import get_class, get_classes
 from . import signals
+from .exceptions import FailedPreCondition
 
 ShippingAddressForm, GatewayForm \
     = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
@@ -50,9 +51,9 @@ class IndexView(CheckoutSessionMixin, generic.FormView):
     template_name = 'checkout/gateway.html'
     form_class = GatewayForm
     success_url = reverse_lazy('checkout:shipping-address')
-    pre_conditions = (
+    pre_conditions = [
         'check_basket_is_not_empty',
-        'check_basket_is_valid')
+        'check_basket_is_valid']
 
     def get(self, request, *args, **kwargs):
         # We redirect immediately to shipping address stage if the user is
@@ -126,15 +127,15 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
 
     Alternatively, the user can enter a SHIPPING address directly which will be
     saved in the session and later saved as ShippingAddress model when the
-    order is sucessfully submitted.
+    order is successfully submitted.
     """
     template_name = 'checkout/shipping_address.html'
     form_class = ShippingAddressForm
     success_url = reverse_lazy('checkout:shipping-method')
-    pre_conditions = ('check_basket_is_not_empty',
+    pre_conditions = ['check_basket_is_not_empty',
                       'check_basket_is_valid',
-                      'check_user_email_is_captured',
-                      'check_basket_requires_shipping')
+                      'check_user_email_is_captured']
+    skip_conditions = ['skip_unless_basket_requires_shipping']
 
     def get_initial(self):
         return self.checkout_session.new_shipping_address_fields()
@@ -241,9 +242,9 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
     the user can choose the appropriate one.
     """
     template_name = 'checkout/shipping_methods.html'
-    pre_conditions = ('check_basket_is_not_empty',
+    pre_conditions = ['check_basket_is_not_empty',
                       'check_basket_is_valid',
-                      'check_user_email_is_captured', )
+                      'check_user_email_is_captured',]
 
     def get(self, request, *args, **kwargs):
         # These pre-conditions can't easily be factored out into the normal
@@ -336,11 +337,12 @@ class PaymentMethodView(CheckoutSessionMixin, generic.TemplateView):
     between multiple sources. It's not the place for entering sensitive details
     like bankcard numbers though - that belongs on the payment details view.
     """
-    pre_conditions = (
+    pre_conditions = [
         'check_basket_is_not_empty',
         'check_basket_is_valid',
         'check_user_email_is_captured',
-        'check_shipping_data_is_captured')
+        'check_shipping_data_is_captured']
+    skip_conditions = ['skip_unless_payment_is_required']
 
     def get(self, request, *args, **kwargs):
         # By default we redirect straight onto the payment details view. Shops
@@ -363,7 +365,8 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
 
     This view class is used by two separate URLs: 'payment-details' and
     'preview'. The `preview` class attribute is used to distinguish which is
-    being used.
+    being used. Chronologically, `payment-details` (preview=False) comes before
+    `preview` (preview=True).
 
     If sensitive details are required (eg a bankcard), then the payment details
     view should submit to the preview URL and a custom implementation of
@@ -391,27 +394,30 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
     template_name = 'checkout/payment_details.html'
     template_name_preview = 'checkout/preview.html'
 
-    pre_conditions = (
+    # These conditions are extended at runtime depending on whether we are in
+    # 'preview' mode or not.
+    pre_conditions = [
         'check_basket_is_not_empty',
         'check_basket_is_valid',
         'check_user_email_is_captured',
-        'check_shipping_data_is_captured')
+        'check_shipping_data_is_captured']
 
     # If preview=True, then we render a preview template that shows all order
     # details ready for submission.
     preview = False
 
-    def get_preconditions(self, request):
-        if not self.preview:
-            return self.pre_conditions
-        # The preview view needs to ensure payment information has been
-        # correctly captured.
-        return self.pre_conditions + (
-            'check_payment_data_is_captured',)
+    def get_pre_conditions(self, request):
+        if self.preview:
+            # The preview view needs to ensure payment information has been
+            # correctly captured.
+            return self.pre_conditions + ['check_payment_data_is_captured']
+        return super(PaymentDetailsView, self).get_pre_conditions(request)
 
-    def get_template_names(self):
-        return [self.template_name_preview] if self.preview else [
-            self.template_name]
+    def get_skip_conditions(self, request):
+        if not self.preview:
+            # Payment details should only be collected if necessary
+            return ['skip_unless_payment_is_required']
+        return super(PaymentDetailsView, self).get_skip_conditions(request)
 
     def post(self, request, *args, **kwargs):
         # Posting to payment-details isn't the right thing to do.  Form
@@ -623,6 +629,10 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             self.restore_frozen_basket()
             return self.render_preview(
                 self.request, error=msg, **payment_kwargs)
+
+    def get_template_names(self):
+        return [self.template_name_preview] if self.preview else [
+            self.template_name]
 
 
 # =========
