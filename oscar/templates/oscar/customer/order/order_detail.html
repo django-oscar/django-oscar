@@ -158,9 +158,11 @@
         </tr>
         <tr>
             <td>
-                <p>{% for field in order.shipping_address.active_address_fields %}
+                <p>
+                    {% for field in order.shipping_address.active_address_fields %}
                         {{ field }}<br/>
-                    {% endfor %}</p>
+                    {% endfor %}
+                </p>
             </td>
             <td><p>{{ order.shipping_address.phone_number }}</p></td>
             <td><p>{{ order.shipping_address.notes|linebreaks }}</p></td>
