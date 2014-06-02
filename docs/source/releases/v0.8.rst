@@ -60,6 +60,14 @@ known.
 
 See :ref:`us_site` for more information.
 
+Checkout improvements
+---------------------
+
+The checkout process now skips payment if the order total is zero (e.g. when
+ordering free products or using a voucher). As part of that, checkout views
+now evaluate *pre-conditions* (as before) and newly introduced
+*skip conditions*. This should make customising the checkout flow easier.
+
 Cleanup around shipping methods
 -------------------------------
 
@@ -129,7 +137,7 @@ Backwards incompatible changes in 0.8
   ``Product.recommended_products`` to model products that are loosely related
   (e.g. used for upselling). ``Product.related_products`` was a
   third option that sat somewhere in between, and which was not well supported.
-  We fear it adds confusion, and in the spirit of keeping Oscare core lean,
+  We fear it adds confusion, and in the spirit of keeping Oscar core lean,
   has been removed. If you're using it, switch to
   ``Product.recommended_products`` or just add the field back to your
   custom Product instance and ``ProductForm`` when migrating.

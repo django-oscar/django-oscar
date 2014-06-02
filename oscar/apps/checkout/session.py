@@ -26,14 +26,23 @@ class CheckoutSessionMixin(object):
     All checkout views subclass this mixin. It ensures that all relevant
     checkout information is available in the template context.
     """
-    # This should be list of method names that get executed before the normal
-    # flow of the view. Each method should check some condition has been met.
-    # If not, then an exception is raised that indicates the URL the customer
-    # should be redirect to.
+
+    # A pre-condition is a condition that MUST be met in order for a view
+    # to be available. If it isn't then the customer should be redirected
+    # to a view *earlier* in the chain.
+    # pre_conditions is a list of method names that get executed before the
+    # normal flow of the view. Each method should check some condition has been
+    # met. If not, then an exception is raised that indicates the URL the
+    # customer will be redirected to.
+
     pre_conditions = None
 
-    # Skip conditions check whether the view should be skipped. They work in
-    # the same way as pre-conditions.
+    # A *skip* condition is a condition that MUST NOT be met in order for a
+    # view to be available. If the condition is met, this means the view MUST
+    # be skipped and the customer should be redirected to a view *later* in
+    # the chain.
+    # Skip conditions work similar to pre-conditions, and get evaluated after
+    # pre-conditions have been evaluated.
     skip_conditions = None
 
     def dispatch(self, request, *args, **kwargs):
