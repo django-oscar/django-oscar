@@ -280,9 +280,9 @@ class ProductForm(forms.ModelForm):
         }
 
     def __init__(self, product_class, data=None, *args, **kwargs):
-        self.product_class = product_class
-        self.set_initial_attribute_values(kwargs)
+        self.set_initial_attribute_values(product_class, kwargs)
         super(ProductForm, self).__init__(data, *args, **kwargs)
+        self.instance.product_class = product_class
 
         # Set the initial value of the is_group field.  This isn't watertight:
         # if the product is intended to be a parent product but doesn't have
@@ -307,12 +307,16 @@ class ProductForm(forms.ModelForm):
             self.fields['title'].widget = forms.TextInput(
                 attrs={'autocomplete': 'off'})
 
-    def set_initial_attribute_values(self, kwargs):
+    def set_initial_attribute_values(self, product_class, kwargs):
+        """
+        Update the kwargs['initial'] value to have the initial values based on
+        the product instance's attributes
+        """
         if kwargs.get('instance', None) is None:
             return
         if 'initial' not in kwargs:
             kwargs['initial'] = {}
-        for attribute in self.product_class.attributes.all():
+        for attribute in product_class.attributes.all():
             try:
                 value = kwargs['instance'].attribute_values.get(
                     attribute=attribute).value
@@ -322,7 +326,7 @@ class ProductForm(forms.ModelForm):
                 kwargs['initial']['attr_%s' % attribute.code] = value
 
     def add_attribute_fields(self, is_parent=False):
-        for attribute in self.product_class.attributes.all():
+        for attribute in self.instance.product_class.attributes.all():
             self.fields['attr_%s' % attribute.code] \
                 = self.get_attribute_field(attribute)
             # Attributes are not required for a parent product
@@ -349,24 +353,12 @@ class ProductForm(forms.ModelForm):
         Set product class and attributes before saving
         """
         product = super(ProductForm, self).save(commit=False)
-        product.product_class = self.product_class
-        for attribute in self.product_class.attributes.all():
+        for attribute in self.instance.product_class.attributes.all():
             value = self.cleaned_data['attr_%s' % attribute.code]
             setattr(product.attr, attribute.code, value)
         product.save()
         self.save_m2m()
         return product
-
-    def clean(self):
-        data = self.cleaned_data
-        if 'parent' not in data and not data['title']:
-            raise forms.ValidationError(_("This field is required"))
-        elif 'parent' in data and data['parent'] is None and not data['title']:
-            raise forms.ValidationError(_("Parent products must have a title"))
-        # Calling the clean() method of BaseForm here is required to apply
-        # checks for 'unique' field. This prevents e.g. the UPC field from
-        # raising a DatabaseError.
-        return super(ProductForm, self).clean()
 
 
 class StockAlertSearchForm(forms.Form):
