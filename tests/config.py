@@ -87,6 +87,11 @@ def configure():
             # temporary workaround for issue in sorl-thumbnail in Python 3
             # https://github.com/mariocesar/sorl-thumbnail/pull/254
             'THUMBNAIL_DEBUG': False,
+
+            'OSCAR_INITIAL_ORDER_STATUS': 'A',
+            'OSCAR_ORDER_STATUS_PIPELINE': {'A': ('B',), 'B': ()},
+            'OSCAR_INITIAL_LINE_STATUS': 'a',
+            'OSCAR_LINE_STATUS_PIPELINE': {'a': ('b', ), 'b': ()},
         }
         if django.VERSION >= (1, 5):
             test_settings['INSTALLED_APPS'] += ['tests._site.myauth', ]

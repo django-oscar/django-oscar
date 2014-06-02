@@ -398,7 +398,7 @@ class OrderDetailView(DetailView):
         # Look for line-level action
         if 'line_action' in request.POST:
             return self.handle_line_action(
-                request, order, request.POST['order_action'])
+                request, order, request.POST['line_action'])
 
         return self.reload_page(error=_("No valid action submitted"))
 

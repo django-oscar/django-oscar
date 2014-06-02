@@ -1,4 +1,5 @@
 from six.moves import http_client
+from django.conf import settings
 
 from oscar.core.loading import get_model
 from django.test import TestCase
@@ -127,13 +128,14 @@ class TestOrderDetailPage(WebTestCase):
 
     def setUp(self):
         super(TestOrderDetailPage, self).setUp()
+        # ensures that initial statuses are as expected
         self.order = create_order()
         url = reverse('dashboard:order-detail',
                       kwargs={'number': self.order.number})
         self.page = self.get(url)
 
     def test_contains_order(self):
-        self.assertTrue('order' in self.page.context)
+        self.assertEquals(self.page.context['order'], self.order)
 
     def test_allows_notes_to_be_added(self):
         form = self.page.forms['order_note_form']
@@ -142,6 +144,30 @@ class TestOrderDetailPage(WebTestCase):
         self.assertIsRedirect(response)
         notes = self.order.notes.all()
         self.assertEqual(1, len(notes))
+
+    def test_allows_line_status_to_be_changed(self):
+        line = self.order.lines.all()[0]
+        self.assertEqual(line.status, settings.OSCAR_INITIAL_LINE_STATUS)
+
+        form = self.page.forms['order_lines_form']
+        form['line_action'] = 'change_line_statuses'
+        form['new_status'] = new_status = 'b'
+        form['selected_line'] = [line.pk]
+        form.submit()
+        # fetch line again
+        self.assertEqual(self.order.lines.all()[0].status, new_status)
+
+    def test_allows_order_status_to_be_changed(self):
+        form = self.page.forms['order_status_form']
+        self.assertEqual(
+            self.order.status, settings.OSCAR_INITIAL_ORDER_STATUS)
+
+        form = self.page.forms['order_status_form']
+        form['new_status'] = new_status = 'B'
+        form.submit()
+
+        # fetch order again
+        self.assertEqual(Order.objects.get(pk=self.order.pk).status, new_status)
 
 
 class TestChangingOrderStatus(WebTestCase):
