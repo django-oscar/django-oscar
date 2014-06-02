@@ -1,6 +1,10 @@
-===========================================
-Oscar 0.8 release notes - UNDER DEVELOPMENT
-===========================================
+=======================
+Oscar 0.8 release notes
+=======================
+
+.. warning::
+
+   Since v0.8 has not been released yet, these release notes are still a work-in-progress.
 
 Welcome to Oscar 0.8!
 
