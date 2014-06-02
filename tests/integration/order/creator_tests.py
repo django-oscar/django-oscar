@@ -148,13 +148,15 @@ class TestShippingOfferForOrder(TestCase):
             range=range, type=Benefit.SHIPPING_PERCENTAGE, value=20)
         offer = factories.create_offer(range=range, benefit=benefit)
         Applicator().apply_offers(self.basket, [offer])
+        return offer
 
     def test_shipping_offer_is_applied(self):
         add_product(self.basket, D('12.00'))
-        self.apply_20percent_shipping_offer()
+        offer = self.apply_20percent_shipping_offer()
 
         shipping = FixedPrice(D('5.00'), D('5.00'))
-        shipping = Repository().prime_method(self.basket, shipping)
+        shipping = Repository().apply_shipping_offer(
+            self.basket, shipping, offer)
 
         place_order(self.creator,
                     basket=self.basket,
@@ -168,10 +170,11 @@ class TestShippingOfferForOrder(TestCase):
 
     def test_zero_shipping_discount_is_not_created(self):
         add_product(self.basket, D('12.00'))
-        self.apply_20percent_shipping_offer()
+        offer = self.apply_20percent_shipping_offer()
 
         shipping = Free()
-        shipping = Repository().prime_method(self.basket, shipping)
+        shipping = Repository().apply_shipping_offer(
+            self.basket, shipping, offer)
 
         place_order(self.creator,
                     basket=self.basket,

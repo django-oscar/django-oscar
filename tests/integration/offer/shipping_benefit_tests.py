@@ -40,9 +40,7 @@ class StubRepository(Repository):
     in order to use a non-free default shipping method.  This allows the
     shipping discounts to be tested.
     """
-    def get_shipping_methods(self, basket):
-        methods = [FixedPrice(D('10.00'), D('10.00'))]
-        return self.prime_methods(basket, methods)
+    methods = [FixedPrice(D('10.00'), D('10.00'))]
 
 
 class TestAnOfferWithAShippingBenefit(TestCase):

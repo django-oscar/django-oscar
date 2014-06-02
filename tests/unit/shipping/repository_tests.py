@@ -34,3 +34,13 @@ class TestDefaultShippingRepository(TestCase):
         self.assertEqual(1, len(available_methods))
         method = available_methods[0]
         self.assertTrue(isinstance(method, methods.NoShippingRequired))
+
+    def test_returns_free_shipping_as_default(self):
+        basket = mock.Mock()
+        basket.is_shipping_required = mock.Mock(return_value=True)
+        basket.has_shipping_discounts = False
+
+        method = self.repo.get_default_shipping_method(
+            basket=basket)
+
+        self.assertTrue(isinstance(method, methods.Free))

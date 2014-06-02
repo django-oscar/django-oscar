@@ -63,7 +63,7 @@ class TestAShippingPercentageDiscountAppliedWithCountCondition(TestCase):
 
         repo = repository.Repository()
         raw_method = ExcludingTax()
-        method = repo.prime_method(self.basket, raw_method)
+        method = repo.apply_shipping_offer(self.basket, raw_method, self.offer)
         charge = method.calculate(self.basket)
         self.assertEqual(D('5.00'), charge.excl_tax)
 
@@ -75,7 +75,7 @@ class TestAShippingPercentageDiscountAppliedWithCountCondition(TestCase):
 
         repo = repository.Repository()
         raw_method = IncludingTax()
-        method = repo.prime_method(self.basket, raw_method)
+        method = repo.apply_shipping_offer(self.basket, raw_method, self.offer)
         charge = method.calculate(self.basket)
         self.assertEqual(D('6.00'), charge.incl_tax)
         self.assertEqual(D('5.00'), charge.excl_tax)

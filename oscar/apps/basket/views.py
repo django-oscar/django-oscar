@@ -106,7 +106,7 @@ class BasketView(ModelFormSetView):
 
     def get_default_shipping_method(self, basket):
         return Repository().get_default_shipping_method(
-            user=self.request.user, basket=self.request.basket,
+            basket=self.request.basket, user=self.request.user,
             request=self.request)
 
     def get_basket_warnings(self, basket):
