@@ -12,7 +12,7 @@ class Repository(object):
     objects for a given user, basket etc
     """
 
-    # We default to just free shipping. Customise this class and override this
+    # We default to just free shipping. Customise this class and override this
     # property to add your own shipping methods.
     methods = (methods.Free,)
 
