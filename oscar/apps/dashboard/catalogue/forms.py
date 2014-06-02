@@ -285,6 +285,7 @@ class ProductForm(forms.ModelForm):
         self.product_class = product_class
         self.set_initial_attribute_values(kwargs)
         super(ProductForm, self).__init__(data, *args, **kwargs)
+        self.instance.product_class = self.product_class
 
         # Set the initial value of the is_group field.  This isn't watertight:
         # if the product is intended to be a parent product but doesn't have
@@ -351,10 +352,6 @@ class ProductForm(forms.ModelForm):
             # Prevent selecting itself as parent
             queryset = queryset.exclude(pk=self.instance.pk)
         return queryset
-
-    def clean(self):
-        self.instance.product_class = self.product_class
-        return super(ProductForm, self).clean()
 
     def save(self):
         """

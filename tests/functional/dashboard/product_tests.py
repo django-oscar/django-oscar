@@ -81,12 +81,11 @@ class TestCreateGroupProduct(ProductWebTest):
             "A top-level product must have at least one category")
         self.assertEqual(Product.objects.count(), 0)
 
-    def test_doesnt_smoke(self):
+    def test_for_smoke(self):
         category = G(Category)
-        response = self.submit(category=category)
-
-        self.assertContains(response, "Canonical products must have a title")
-        self.assertEqual(Product.objects.count(), 0)
+        response = self.submit(title='testing', category=category)
+        self.assertIsRedirect(response)
+        self.assertEqual(Product.objects.count(), 1)
 
     def test_doesnt_allow_duplicate_upc(self):
         G(Product, parent=None, upc="12345")
