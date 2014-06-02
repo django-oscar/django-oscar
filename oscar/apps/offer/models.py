@@ -454,10 +454,18 @@ class Condition(models.Model):
 
     @property
     def name(self):
+        """
+        A plaintext description of the condition.
+
+        This is used in the dropdowns within the offer dashboard.
+        """
         return self.description
 
     @property
     def description(self):
+        """
+        A (optionally HTML) description of the condition.
+        """
         return self.proxy().description
 
     def consume_items(self, offer, basket, affected_lines):
