@@ -85,9 +85,6 @@ Simple really - follow these steps:
 Methods
 -------
 
-.. automodule:: oscar.apps.shipping.base
-    :members:
-
 .. automodule:: oscar.apps.shipping.methods
     :members:
 
