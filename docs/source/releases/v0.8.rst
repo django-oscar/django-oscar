@@ -57,18 +57,19 @@ Reworked shipping app
 
 Several parts of the shipping app have been changed. The most important is a
 change to the API of shipping methods to avoid a potential thread safety issue.
+Any existing Oscar sites with custom shipping methods will need to adjust them
+to confirm to the new API.
 
 Other changes to the shipping app include:
 
 * All shipping models now have abstract base classes, similar to
-  the rest of Oscar.
+  the rest of Oscar, allowing them to be customised in the standard way.
 
-* ``WeightBand.upper_limit`` is now a ``DecimalField``, just like the other
+* The ``WeightBand.upper_limit`` model field is now a ``DecimalField``, just like the other
   weight-related fields.
 
 * The Django admin interface for the ``WeightBased`` shipping method has been
-  made slightly more useful. Contributions for a dedicated dashboard app are
-  most welcome!
+  made slightly more useful. 
 
 See the 
 :ref:`backwards incompatible changes <incompatible_shipping_changes_in_0.8>` 
@@ -124,16 +125,16 @@ Backwards incompatible changes in 0.8
 
 .. _incompatible_shipping_changes_in_0.8:
 
-Shipping app
-------------
+Shipping
+--------
 
 The shipping method API has been altered to avoid potential thread-safety
 issues. Prior to v0.8, shipping methods had a ``set_basket`` method which
-allowed a basket instance to be assigned to the method. This was really a
-crutch to allow templates to have easy access to shipping charges. However, it
-was also a design problem as shipping methods could be instantiated at
-compile-time leading to a thread safety issue where multiple threads could
-assign a basket to the same shipping method instance.
+allowed a basket instance to be assigned. This was really a crutch to allow
+templates to have easy access to shipping charges. However, it was also a
+design problem as shipping methods could be instantiated at compile-time
+leading to a thread safety issue where multiple threads could assign a basket
+to the same shipping method instance.
 
 In Oscar 0.8, shipping methods are stateless services that have a method
 :func:`~oscar.apps.shipping.methods.Base.calculate` that takes a basket and
@@ -143,28 +144,27 @@ shipping charges to be accessed from templates.
 This API change does require quite a few changes as both the shipping method
 and shipping charge now need to be passed around separately:
 
-* The :class:`~oscar.apps.order.utils.OrderCreator` class now requires the
-  ``shipping_charge`` to be passed to ``place_order``.
-
-* The :class:`~oscar.apps.order.utils.OrderCreator` class no longer defaults to
-  free shipping: a shipping method and charge has to be explicitly passed in.
-
-* The signature of the :class:`~oscar.apps.checkout.calculators.OrderTotalCalculator` 
-  class has changed to accept the shipping charge rather than a shipping
-  method instance.
-
-* The signature of the
-  :func:`~oscar.apps.checkout.session.CheckoutSessionMixin.get_order_totals` 
-  method has changed to accept the shipping charge rather than a shipping
-  method instance.
-
-Other potentially breaking changes to the shipping app:
-
 * Shipping methods no longer have ``charge_excl_tax``,
   ``charge_incl_tax`` and ``is_tax_known`` properties.
 
-* The ``Base`` shipping method class now lives in
-  ``oscar.apps.shipping.methods``.
+* The :class:`~oscar.apps.order.utils.OrderCreator` class now requires the
+  ``shipping_charge`` to be passed to ``place_order``.
+
+* The signature of the :class:`~oscar.apps.checkout.calculators.OrderTotalCalculator` 
+  class has changed to accept ``shipping_charge`` rather than a
+  ``shipping_method`` instance.
+
+* The signature of the
+  :func:`~oscar.apps.checkout.session.CheckoutSessionMixin.get_order_totals` 
+  method has changed to accept the ``shipping_charge`` rather than a
+  ``shipping_method`` instance.
+
+Other potentially breaking changes related to shipping include:
+
+* The :class:`~oscar.apps.order.utils.OrderCreator` class no longer defaults to
+  free shipping: a shipping method and charge have to be explicitly passed in.
+
+* The ``Base`` shipping method class now lives in ``oscar.apps.shipping.methods``.
 
 * The ``find_by_code`` method of the shipping ``Repository`` class has been
   removed as it is no longer used. 
@@ -184,14 +184,15 @@ Other potentially breaking changes to the shipping app:
 Misc
 ----
 
-* The ``shipping`` app saw a few renames; please see the section above.
 * The ``oscar_calculate_scores`` command has been `rewritten`_ to use the ORM
   instead of raw SQL. That exposed a bug in the previous calculations,
   where purchases got weighed less than any other event. When you upgrade,
   your total scores will be change. If you rely on the old behaviour,
   just extend the ``Calculator`` class and adjust the weights.
+
 * ``Product.score`` was just duplicating ``ProductRecord.score`` and has been
   removed. Use ``Product.stats.score`` instead.
+
 * Oscar has child products to model tightly coupled products, and
   ``Product.recommended_products`` to model products that are loosely related
   (e.g. used for upselling). ``Product.related_products`` was a
