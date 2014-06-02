@@ -210,7 +210,8 @@ class CheckoutSessionMixin(object):
         shipping_address = self.get_shipping_address(request.basket)
         shipping_method = self.get_shipping_method(
             request.basket, shipping_address)
-        total = self.get_order_totals(request.basket, shipping_method)
+        shipping_charge = shipping_method.calculate(request.basket)
+        total = self.get_order_totals(request.basket, shipping_charge)
         if total.excl_tax == D('0.00'):
             raise exceptions.PassedSkipCondition(
                 url=reverse('checkout:preview')
