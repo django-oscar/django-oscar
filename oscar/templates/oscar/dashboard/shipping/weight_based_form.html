@@ -42,16 +42,14 @@
 {% endblock %}
 
 {% block dashboard_content %}
-    <div class="well">
-        <form action="." method="post" class="form-stacked">
-            {% csrf_token %}
-            {% include "partials/form_fields.html" with form=form %}
-            {% block form_actions %}
-                <div class="form-actions">
-                    <button class="btn btn-primary btn-large" type="submit">{% trans "Save" %}</button> {% trans "or" %}
-                    <a href="{% url 'dashboard:shipping-method-list' %}">{% trans "cancel" %}</a>
-                </div>
-            {% endblock form_actions %}
-        </form>
-    </div>
+    <form action="." method="post" class="form-stacked well wysiwyg">
+        {% csrf_token %}
+        {% include "partials/form_fields.html" with form=form %}
+        {% block form_actions %}
+            <div class="form-actions">
+                <button class="btn btn-primary btn-large" type="submit">{% trans "Save" %}</button> {% trans "or" %}
+                <a href="{% url 'dashboard:shipping-method-list' %}">{% trans "cancel" %}</a>
+            </div>
+        {% endblock form_actions %}
+    </form>
 {% endblock %}

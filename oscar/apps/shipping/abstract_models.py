@@ -139,6 +139,10 @@ class AbstractWeightBased(AbstractBase):
         return bands[0]
 
     @property
+    def num_bands(self):
+        return self.bands.all().count()
+
+    @property
     def max_upper_limit(self):
         """
         Return the max upper_limit from this method's weight bands
