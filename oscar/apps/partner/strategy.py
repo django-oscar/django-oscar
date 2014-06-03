@@ -30,7 +30,7 @@ class Selector(object):
 
     def strategy(self, request=None, user=None, **kwargs):
         """
-        Return an instanticated strategy instance
+        Return an instantiated strategy instance
         """
         # Default to the backwards-compatible strategy of picking the first
         # stockrecord but charging zero tax.
@@ -221,60 +221,39 @@ class NoTax(object):
     This mixin specifies zero tax and uses the ``price_excl_tax`` from the
     stockrecord.
     """
+    price_class = prices.FixedPrice
+    rate = None
 
     def pricing_policy(self, product, stockrecord):
         # Check stockrecord has the appropriate data
         if not stockrecord or stockrecord.price_excl_tax is None:
             return prices.Unavailable()
-        return prices.FixedPrice(
+        return self.price_class(
             currency=stockrecord.price_currency,
             excl_tax=stockrecord.price_excl_tax,
-            tax=D('0.00'))
+            tax_rate=self.rate)
 
     def group_pricing_policy(self, product, variant_stock):
         stockrecords = [x[1] for x in variant_stock if x[1] is not None]
-        if not stockrecords:
+        if not stockrecords or stockrecords[0].price_excl_tax is None:
             return prices.Unavailable()
         # We take price from first record
         stockrecord = stockrecords[0]
-        return prices.FixedPrice(
+        return self.price_class(
             currency=stockrecord.price_currency,
             excl_tax=stockrecord.price_excl_tax,
-            tax=D('0.00'))
+            tax_rate=self.rate)
 
 
-class FixedRateTax(object):
+class FixedRateTax(NoTax):
     """
     Pricing policy mixin for use with the ``Structured`` base strategy.  This
     mixin applies a fixed rate tax to the base price from the product's
     stockrecord.  The price_incl_tax is quantized to two decimal places.
     Rounding behaviour is Decimal's default
     """
+    price_class = prices.TaxInclusiveFixedPrice
     rate = D('0')  # Subclass and specify the correct rate
-    exponent = D('0.01')  # Default to two decimal places
-
-    def pricing_policy(self, product, stockrecord):
-        if not stockrecord:
-            return prices.Unavailable()
-        tax = (stockrecord.price_excl_tax * self.rate).quantize(self.exponent)
-        return prices.TaxInclusiveFixedPrice(
-            currency=stockrecord.price_currency,
-            excl_tax=stockrecord.price_excl_tax,
-            tax=tax)
-
-    def group_pricing_policy(self, product, variant_stock):
-        stockrecords = [x[1] for x in variant_stock if x[1] is not None]
-        if not stockrecords:
-            return prices.Unavailable()
-
-        # We take price from first record
-        stockrecord = stockrecords[0]
-        tax = (stockrecord.price_excl_tax * self.rate).quantize(self.exponent)
-
-        return prices.FixedPrice(
-            currency=stockrecord.price_currency,
-            excl_tax=stockrecord.price_excl_tax,
-            tax=tax)
 
 
 class DeferredTax(object):
@@ -330,7 +309,7 @@ class UK(UseFirstStockRecord, StockRequired, FixedRateTax, Structured):
     recommended to be used in production, especially as the tax rate is
     hard-coded.
     """
-    # Use UK VAT rate (as of December 2013)
+    # Use UK VAT rate (as of June 2014)
     rate = D('0.20')
 
 
