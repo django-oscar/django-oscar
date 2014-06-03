@@ -61,6 +61,7 @@
                             <td>{{ band.charge|currency }}</td>
                             <td>
                                 <a href="{% url 'dashboard:shipping-method-band-edit' method_pk=band.method.pk pk=band.pk %}" class="btn btn-primary">{% trans "Edit" %}</a>
+                                <a href="{% url 'dashboard:shipping-method-band-delete' method_pk=band.method.pk pk=band.pk %}" class="btn btn-danger">{% trans "Delete" %}</a>
                             </td>
                         </tr>
                     {% endfor %}

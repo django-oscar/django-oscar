@@ -75,6 +75,9 @@ class WeightBandUpdateView(generic.UpdateView):
         return super(WeightBandUpdateView, self).dispatch(
             request, *args, **kwargs)
 
+    def get_queryset(self):
+        return self.method.bands.all()
+
     def get_form_kwargs(self, **kwargs):
         kwargs = super(WeightBandUpdateView, self).get_form_kwargs(**kwargs)
         kwargs['method'] = self.method
@@ -82,6 +85,26 @@ class WeightBandUpdateView(generic.UpdateView):
 
     def get_success_url(self):
         messages.success(self.request, _("Weight band updated"))
+        return reverse('dashboard:shipping-method-detail',
+                       kwargs={'pk': self.method.pk})
+
+
+class WeightBandDeleteView(generic.DeleteView):
+    model = WeightBased
+    template_name = "dashboard/shipping/weight_band_delete.html"
+    context_object_name = "band"
+
+    def dispatch(self, request, *args, **kwargs):
+        self.method = shortcuts.get_object_or_404(
+            WeightBased, pk=kwargs['method_pk'])
+        return super(WeightBandDeleteView, self).dispatch(
+            request, *args, **kwargs)
+
+    def get_queryset(self):
+        return self.method.bands.all()
+
+    def get_success_url(self):
+        messages.success(self.request, _("Weight band deleted"))
         return reverse('dashboard:shipping-method-detail',
                        kwargs={'pk': self.method.pk})
 

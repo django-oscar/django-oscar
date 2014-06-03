@@ -12,15 +12,17 @@ class ShippingDashboardApplication(Application):
         'dashboard.shipping.views', 'WeightBasedListView')
     weight_method_create_view = get_class(
         'dashboard.shipping.views', 'WeightBasedCreateView')
-    weight_method_detail_view = get_class(
-        'dashboard.shipping.views', 'WeightBasedDetailView')
     weight_method_edit_view = get_class(
         'dashboard.shipping.views', 'WeightBasedUpdateView')
     weight_method_delete_view = get_class(
         'dashboard.shipping.views', 'WeightBasedDeleteView')
-
+    # This doubles as the weight_band create view
+    weight_method_detail_view = get_class(
+        'dashboard.shipping.views', 'WeightBasedDetailView')
     weight_band_edit_view = get_class(
         'dashboard.shipping.views', 'WeightBandUpdateView')
+    weight_band_delete_view = get_class(
+        'dashboard.shipping.views', 'WeightBandDeleteView')
 
     def get_urls(self):
         urlpatterns = [
@@ -41,6 +43,9 @@ class ShippingDashboardApplication(Application):
             url(r'^weight-based/(?P<method_pk>\d+)/bands/(?P<pk>\d+)/$',
                 self.weight_band_edit_view.as_view(),
                 name='shipping-method-band-edit'),
+            url(r'^weight-based/(?P<method_pk>\d+)/bands/(?P<pk>\d+)/delete/$',
+                self.weight_band_delete_view.as_view(),
+                name='shipping-method-band-delete'),
         ]
         return self.post_process_urls(urlpatterns)
 
