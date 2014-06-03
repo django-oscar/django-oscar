@@ -70,21 +70,37 @@ class FixedPrice(Base):
     """
     exists = True
 
-    def __init__(self, currency, excl_tax, tax=None):
+    def __init__(self, currency, excl_tax, tax_rate=None):
         self.currency = currency
-        self.excl_tax = excl_tax
-        self.tax = tax
+        self._excl_tax = excl_tax
+        self.tax_rate = tax_rate
 
-    @property
-    def incl_tax(self):
-        if self.is_tax_known:
-            return self.excl_tax + self.tax
-        raise prices.TaxNotKnown(
-            "Can't calculate price.incl_tax as tax isn't known")
+    def calculate_total(self, quantity):
+        """
+        Implements a naive linear pricing. Override this function to implement
+        e.g. bulk pricing.
+        Defaults to quantizing with the same precision as the unit price.
+        """
+        return (self._excl_tax * quantity).quantize(self._excl_tax)
+
+    def calculate_tax(self, total_excl_tax):
+        """
+        Calculates tax, given a non-tax total.
+        Defaults to quantizing with the same precision as the given total,
+        which should be the precision of the prices.
+        """
+        if self.tax_rate is None:
+            return None
+        return (total_excl_tax * self.tax_rate).quantize(total_excl_tax)
+
+    def get_price(self, quantity=1):
+        total_excl_tax = self.calculate_total(quantity)
+        tax = self.calculate_tax(total_excl_tax)
+        return prices.Price(self.currency, total_excl_tax, tax=tax)
 
     @property
     def is_tax_known(self):
-        return self.tax is not None
+        return self.tax_rate is not None
 
 
 class TaxInclusiveFixedPrice(FixedPrice):
@@ -95,15 +111,13 @@ class TaxInclusiveFixedPrice(FixedPrice):
     """
     exists = is_tax_known = True
 
-    def __init__(self, currency, excl_tax, tax):
-        self.currency = currency
-        self.excl_tax = excl_tax
-        self.tax = tax
-
-    @property
-    def incl_tax(self):
-        return self.excl_tax + self.tax
+    def __init__(self, currency, excl_tax, tax_rate):
+        if tax_rate is None:
+            raise ValueError("You must specify a tax rate for "
+                             "TaxInclusiveFixedPrice. It may be zero.")
+        super(TaxInclusiveFixedPrice, self).__init__(
+            currency, excl_tax, tax_rate)
 
     @property
     def effective_price(self):
-        return self.incl_tax
+        return self.get_price().incl_tax
