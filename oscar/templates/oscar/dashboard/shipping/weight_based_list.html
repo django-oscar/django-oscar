@@ -18,7 +18,7 @@
 
 {% block header %}
     <div class="page-header">
-        <a href="" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new shipping charge" %}</a>
+        <a href="{% url 'dashboard:shipping-method-create' %}" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new shipping charge" %}</a>
         <h1>{% trans "Shipping methods" %}</h1>
     </div>
 {% endblock header %}
@@ -40,7 +40,7 @@
                 {% for method in methods %}
                     <tr>
                         <td>{{ method.name }}</td>
-                        <td>{{ method.description|safe }}</td>
+                        <td>{{ method.description|safe|default:"-" }}</td>
                         <td>{{ method.upper_charge|currency }}</td>
                         <td>{{ method.default_weight }}</td>
                         <td></td>
