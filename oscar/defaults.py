@@ -133,6 +133,10 @@ OSCAR_DASHBOARD_NAVIGATION = [
                 'label': _('Partners'),
                 'url_name': 'dashboard:partner-list',
             },
+            {
+                'label': _('Shipping charges'),
+                'url_name': 'dashboard:shipping-method-list',
+            },
         ]
     },
     {
