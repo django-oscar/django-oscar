@@ -83,52 +83,51 @@ mats to iPads.  The `source is on GitHub`_ - contributions are always welcome.
 .. _`Tangent Labs`: http://www.tangentlabs.co.uk
 .. _`source is on GitHub`: https://github.com/tangentlabs/django-oscar
 
-First steps
-===========
 .. toctree::
-   :maxdepth: 1
+   :hidden:
+   :maxdepth: 2
 
-   internals/sandbox
    internals/getting_started
    topics/key_questions
-   internals/getting_help
-   ref/glossary
+   topics/customisation
+   ref/index
+   internals/contributing/index
+   releases/index
+
+First steps
+===========
+
+- :doc:`internals/sandbox`
+- :doc:`internals/getting_started`
+- :doc:`topics/key_questions`
+- :doc:`internals/getting_help`
+- :doc:`ref/glossary`
 
 Using Oscar
 ===========
 
 All you need to start developing an Oscar project.
 
-.. toctree::
-   :maxdepth: 1
-
-   topics/customisation
-   topics/class_loading_explained
-   topics/prices_and_availability
-   topics/deploying
-   topics/translation
-   topics/upgrading
+- :doc:`topics/customisation`
+- :doc:`topics/class_loading_explained`
+- :doc:`topics/prices_and_availability`
+- :doc:`topics/deploying`
+- :doc:`topics/translation`
+- :doc:`topics/upgrading`
 
 Reference:
 
-.. toctree::
-   :maxdepth: 1
-
-   Core functionality </ref/core>
-   Oscar's apps </ref/apps/index>
-   howto/index
-   ref/settings
-   ref/signals
+- :doc:`Core functionality </ref/core>`
+- :doc:`Oscar's apps </ref/apps/index>`
+- :doc:`howto/index`
+- :doc:`ref/settings`
+- :doc:`ref/signals`
 
 The Oscar open-source project
 =============================
 
 Learn about the ideas behind Oscar and how you can contribute.
 
-.. toctree::
-   :maxdepth: 1
-
-   internals/design-decisions
-   releases/index
-   internals/contributing/index
-   
+- :doc:`internals/design-decisions`
+- :doc:`releases/index`
+- :doc:`internals/contributing/index`
