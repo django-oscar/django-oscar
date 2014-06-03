@@ -16,3 +16,11 @@ class TestPriceObject(TestCase):
         price = Price('USD', D('10.00'))
         price.tax = D('2.00')
         self.assertEqual(D('12.00'), price.incl_tax)
+
+    def test_quantizes_amounts(self):
+        price = Price('USD', D('6.004'))
+        self.assertEqual(D('6.00'), price.excl_tax)
+
+    def test_quantizes_as_late_as_possible(self):
+        price = Price('USD', D('6.004'), tax=D('0.004'))
+        self.assertEqual(D('6.01'), price.incl_tax)

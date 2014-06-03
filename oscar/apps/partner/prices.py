@@ -81,7 +81,7 @@ class FixedPrice(Base):
         e.g. bulk pricing.
         Defaults to quantizing with the same precision as the unit price.
         """
-        return (self._excl_tax * quantity).quantize(self._excl_tax)
+        return self._excl_tax * quantity
 
     def calculate_tax(self, total_excl_tax):
         """
@@ -91,7 +91,7 @@ class FixedPrice(Base):
         """
         if self.tax_rate is None:
             return None
-        return (total_excl_tax * self.tax_rate).quantize(total_excl_tax)
+        return total_excl_tax * self.tax_rate
 
     def get_price(self, quantity=1):
         total_excl_tax = self.calculate_total(quantity)

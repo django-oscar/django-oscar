@@ -11,7 +11,7 @@ from oscar.test.basket import add_product
 class TestAValueBasedOffer(TestCase):
 
     def setUp(self):
-        # Get 20% if spending more than 20.00
+        # Get 20% if spending more than 10.00
         range = models.Range.objects.create(
             name="All products", includes_all_products=True)
         condition = models.Condition.objects.create(
