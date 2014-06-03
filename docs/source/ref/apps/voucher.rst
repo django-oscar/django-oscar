@@ -1,6 +1,6 @@
-=======
-Voucher
-=======
+======================
+``oscar.apps.voucher``
+======================
 
 Oscar ships with broad support for vouchers, which are handled by this app.
 

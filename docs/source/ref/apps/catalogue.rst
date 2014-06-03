@@ -1,6 +1,6 @@
-=========
-Catalogue
-=========
+========================
+``oscar.apps.catalogue``
+========================
 
 This is an essential Oscar app which exposes functionality to manage your
 product catalogue.

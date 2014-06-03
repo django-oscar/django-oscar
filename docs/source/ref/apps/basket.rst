@@ -1,6 +1,6 @@
-======
-Basket
-======
+=====================
+``oscar.apps.basket``
+=====================
 
 The basket app handles shopping baskets, which essentially are a collection of
 products that hopefully end up being ordered.

@@ -1,6 +1,6 @@
-========
-Customer
-========
+=======================
+``oscar.apps.customer``
+=======================
 
 The customer app bundles communication with customers. This includes models
 to record product alerts and sent emails. It also contains the views that

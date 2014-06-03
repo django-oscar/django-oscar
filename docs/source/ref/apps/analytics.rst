@@ -1,6 +1,6 @@
-=========
-Analytics
-=========
+========================
+``oscar.apps.analytics``
+========================
 
 The ``oscar.analytics`` module provides a few simple models for gathering analytics data
 on products and users.  It listens for signals from other apps, and creates/updates simple

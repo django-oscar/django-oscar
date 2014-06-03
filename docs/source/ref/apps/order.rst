@@ -1,6 +1,6 @@
-=====
-Order
-=====
+====================
+``oscar.apps.order``
+====================
 
 The order app handles processing of orders.
 

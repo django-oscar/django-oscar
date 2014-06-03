@@ -1,6 +1,6 @@
-=========
-Dashboard
-=========
+========================
+``oscar.apps.dashboard``
+========================
 
 The dashboard is the backend interface for managing the store. That includes the
 product catalogue, orders and stock, offers etc. It is intended as a

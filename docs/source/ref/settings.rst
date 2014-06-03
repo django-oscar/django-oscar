@@ -1,6 +1,6 @@
-==============
-Oscar settings
-==============
+========
+Settings
+========
 
 This is a comprehensive list of all the settings Oscar provides.  All settings
 are optional.
