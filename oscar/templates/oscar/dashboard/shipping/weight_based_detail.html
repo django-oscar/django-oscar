@@ -1,0 +1,87 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+{% load currency_filters %}
+
+{% block title %}
+    {{ method.name }} | {{ block.super }} 
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:shipping-method-list' %}">{% trans "Shipping methods" %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li class="active">{{ method.name }}</li>
+    </ul>
+{% endblock %}
+
+{% block headertext %}
+    {{ method.name }}
+{% endblock %}
+
+{% block dashboard_content %}
+    <div class="well">
+        <h2>{% trans "Shipping method" %}</h2>
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th>{% trans "Name" %}</th>
+                    <td>{{ method.name }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Description" %}</th>
+                    <td>{{ method.description|safe|default:"-" }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Default product weight (Kg)" %}</th>
+                    <td>{{ method.default_weight }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>{% trans "Weight bands" %}</h2>
+        {% if method.bands.all.count %}
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>{% trans "Weight range (Kg)" %}</th>
+                        <th>{% trans "Charge" %}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for band in method.bands.all %}
+                        <tr>
+                            <td>{{ band.weight_from|floatformat:3 }} - {{ band.weight_to|floatformat:3 }}</td>
+                            <td>{{ band.charge|currency }}</td>
+                            <td>
+                                <a href="{% url 'dashboard:shipping-method-band-edit' method_pk=band.method.pk pk=band.pk %}" class="btn btn-primary">{% trans "Edit" %}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td>{{ method.max_upper_limit|floatformat:3 }} - &infin;</td>
+                        <td>{{ method.upper_charge|currency }}</td>
+                        <td>
+                            <a href="{% url 'dashboard:shipping-method-edit' pk=method.pk %}" class="btn btn-primary">{% trans "Edit" %}</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        {% else %}
+            <p>{% trans "No weight bands have been added yet." %}</p>
+        {% endif %}
+
+        <h2>{% trans "Add a new weight band" %}</h2>
+        <form action="." method="post">
+            {% csrf_token %}
+            {% include "partials/form_fields.html" with form=form %}
+            <button type="submit" class="btn btn-primary">Add weight band</button>
+        </form>
+    </div>
+{% endblock %}

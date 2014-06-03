@@ -40,7 +40,7 @@
                 {% for method in methods %}
                     <tr>
                         <td>
-                            <a href="{% url 'dashboard:shipping-method-edit' pk=method.pk %}">{{ method.name }}</a></td>
+                            <a href="{% url 'dashboard:shipping-method-detail' pk=method.pk %}">{{ method.name }}</a></td>
                         <td>{{ method.description|safe|default:"-" }}</td>
                         <td>{{ method.upper_charge|currency }}</td>
                         <td>{{ method.default_weight }}</td>

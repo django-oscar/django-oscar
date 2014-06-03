@@ -3,12 +3,9 @@
 {% load currency_filters %}
 
 {% block title %}
-    {% if method %}
-        {{ method.name }}
-    {% else %}
-        {% trans "Create a new shipping method" %}
-    {% endif %}
-    | {{ block.super }} 
+    {% trans "Edit weight band" %} |
+    {{ band.method.name }} |
+    {{ block.super }} 
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -21,24 +18,16 @@
             <a href="{% url 'dashboard:shipping-method-list' %}">{% trans "Shipping methods" %}</a>
             <span class="divider">/</span>
         </li>
-        {% if method %}
-            <li>
-                {{ method.name }} 
-                <span class="divider">/</span>
-            </li>
-            <li class="active">{% trans "Edit" %}</li>
-        {% else %}
-            <li class="active">{% trans "Create a new shipping method" %}</li>
-        {% endif %}
+        <li>
+            {{ band.method.name }} 
+            <span class="divider">/</span>
+        </li>
+        <li class="active">{% trans "Edit weight band" %}</li>
     </ul>
 {% endblock %}
 
 {% block headertext %}
-    {% if method %}
-        {{ method.name }}
-    {% else %}
-        {% trans "Create a new shipping method" %}
-    {% endif %}
+    {% trans "Edit weight band" %}
 {% endblock %}
 
 {% block dashboard_content %}
