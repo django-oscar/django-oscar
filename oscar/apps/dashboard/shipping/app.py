@@ -12,6 +12,8 @@ class ShippingDashboardApplication(Application):
         'dashboard.shipping.views', 'WeightBasedListView')
     weight_method_create_view = get_class(
         'dashboard.shipping.views', 'WeightBasedCreateView')
+    weight_method_edit_view = get_class(
+        'dashboard.shipping.views', 'WeightBasedUpdateView')
 
     def get_urls(self):
         urlpatterns = [
@@ -20,6 +22,9 @@ class ShippingDashboardApplication(Application):
             url(r'^weight-based/create/$',
                 self.weight_method_create_view.as_view(),
                 name='shipping-method-create'),
+            url(r'^weight-based/edit/(?P<pk>\d+)/$',
+                self.weight_method_edit_view.as_view(),
+                name='shipping-method-edit'),
         ]
         return self.post_process_urls(urlpatterns)
 

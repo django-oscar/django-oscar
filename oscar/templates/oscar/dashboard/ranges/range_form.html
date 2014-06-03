@@ -26,7 +26,7 @@
 {% endblock %}
 
 {% block headertext %}
-{% if range %}{{ range.name }}{% else %}{% trans "Create new range" %}{% endif %}
+    {% if range %}{{ range.name }}{% else %}{% trans "Create new range" %}{% endif %}
 {% endblock %}
 
 {% block dashboard_content %}

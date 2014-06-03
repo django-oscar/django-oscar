@@ -3,7 +3,12 @@
 {% load currency_filters %}
 
 {% block title %}
-    {% trans "Create a new shipping method" %} | {{ block.super }}
+    {% if method %}
+        {{ method.name }}
+    {% else %}
+        {% trans "Create a new shipping method" %}
+    {% endif %}
+    | {{ block.super }} 
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -16,12 +21,24 @@
             <a href="{% url 'dashboard:shipping-method-list' %}">{% trans "Shipping methods" %}</a>
             <span class="divider">/</span>
         </li>
-        <li class="active">{% trans "Create a new shipping method" %}</li>
+        {% if method %}
+            <li>
+                {{ method.name }} 
+                <span class="divider">/</span>
+            </li>
+            <li class="active">{% trans "Edit" %}</li>
+        {% else %}
+            <li class="active">{% trans "Create a new shipping method" %}</li>
+        {% endif %}
     </ul>
 {% endblock %}
 
 {% block headertext %}
-    {% trans "Create a new shipping method" %}
+    {% if method %}
+        {{ method.name }}
+    {% else %}
+        {% trans "Create a new shipping method" %}
+    {% endif %}
 {% endblock %}
 
 {% block dashboard_content %}
@@ -36,4 +53,3 @@
         {% endblock form_actions %}
     </form>
 {% endblock %}
-

@@ -39,11 +39,14 @@
             <tbody>
                 {% for method in methods %}
                     <tr>
-                        <td>{{ method.name }}</td>
+                        <td>
+                            <a href="{% url 'dashboard:shipping-method-edit' pk=method.pk %}">{{ method.name }}</a></td>
                         <td>{{ method.description|safe|default:"-" }}</td>
                         <td>{{ method.upper_charge|currency }}</td>
                         <td>{{ method.default_weight }}</td>
-                        <td></td>
+                        <td>
+                            <a href="{% url 'dashboard:shipping-method-edit' pk=method.pk %}" class="btn">{% trans "Edit" %}</a>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
