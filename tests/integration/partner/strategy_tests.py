@@ -16,15 +16,15 @@ class TestDefaultStrategy(TestCase):
         product = factories.create_product()
         info = self.strategy.fetch_for_product(product)
         self.assertFalse(info.availability.is_available_to_buy)
-        self.assertIsNone(info.price.excl_tax)
+        self.assertIsNone(info.price.get_unit_price().excl_tax)
 
     def test_one_stockrecord(self):
         price = D('1.99')
         product = factories.create_product(price=price, num_in_stock=4)
         info = self.strategy.fetch_for_product(product)
         self.assertTrue(info.availability.is_available_to_buy)
-        self.assertEqual(price, info.price.excl_tax)
-        self.assertEqual(price, info.price.incl_tax)
+        self.assertEqual(price, info.price.get_unit_price().excl_tax)
+        self.assertEqual(price, info.price.get_unit_price().incl_tax)
 
     def test_product_which_doesnt_track_stock(self):
         product_class = models.ProductClass.objects.create(
@@ -40,7 +40,7 @@ class TestDefaultStrategy(TestCase):
         line = Line(product=product)
         info = self.strategy.fetch_for_line(line)
         self.assertFalse(info.availability.is_available_to_buy)
-        self.assertIsNone(info.price.excl_tax)
+        self.assertIsNone(info.price.get_unit_price().excl_tax)
 
     def test_free_product_is_available_to_buy(self):
         product = factories.create_product(price=D('0'), num_in_stock=1)
@@ -86,7 +86,7 @@ class TestDefaultStrategyForParentProductWithInStockVariant(TestCase):
         self.assertEqual('available', self.info.availability.code)
 
     def test_specifies_product_has_correct_price(self):
-        self.assertEqual(D('10.00'), self.info.price.incl_tax)
+        self.assertEqual(D('10.00'), self.info.price.get_unit_price().excl_tax)
 
 
 class TestDefaultStrategyForParentProductWithOutOfStockVariant(TestCase):
@@ -107,4 +107,4 @@ class TestDefaultStrategyForParentProductWithOutOfStockVariant(TestCase):
         self.assertEqual('unavailable', self.info.availability.code)
 
     def test_specifies_product_has_correct_price(self):
-        self.assertEqual(D('10.00'), self.info.price.incl_tax)
+        self.assertEqual(D('10.00'), self.info.price.get_unit_price().excl_tax)

@@ -18,6 +18,7 @@ class TestAddingAProductToABasket(TestCase):
             currency='GBP',
             product=self.product, price_excl_tax=D('10.00'))
         self.purchase_info = factories.create_purchase_info(self.record)
+        self.unit_price = self.purchase_info.price.get_unit_price()
         self.basket.add(self.product)
 
     def test_creates_a_line(self):
@@ -25,8 +26,8 @@ class TestAddingAProductToABasket(TestCase):
 
     def test_sets_line_prices(self):
         line = self.basket.lines.all()[0]
-        self.assertEqual(line.price_incl_tax, self.purchase_info.price.incl_tax)
-        self.assertEqual(line.price_excl_tax, self.purchase_info.price.excl_tax)
+        self.assertEqual(line.price_incl_tax, self.unit_price.incl_tax)
+        self.assertEqual(line.price_excl_tax, self.unit_price.excl_tax)
 
     def test_means_another_currency_product_cannot_be_added(self):
         product = factories.create_product()
