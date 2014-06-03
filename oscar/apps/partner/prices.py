@@ -22,13 +22,16 @@ class Base(object):
     @property
     def effective_price(self):
         # Default to using the price excluding tax for calculations
-        return self.get_price().excl_tax
+        return self.get_unit_price().excl_tax
 
-    def get_price(self, quantity=1):
+    def get_price(self, quantity):
         """
         Returns a oscar.core.prices.Price instance for a given quantity.
         """
         return prices.Price(currency=None, excl_tax=None)
+
+    def get_unit_price(self):
+        return self.get_price(1)
 
     def __repr__(self):
         return "%s(%r)" % (self.__class__.__name__, self.__dict__)
@@ -41,7 +44,7 @@ class Base(object):
         warnings.warn(
             "The excl_tax property is deprecated. "
             "Use get_price(qty).excl_tax instead.", DeprecationWarning)
-        return self.get_price().excl_tax
+        return self.get_unit_price().excl_tax
 
     #: Price for single unit including tax
     @property
@@ -49,7 +52,7 @@ class Base(object):
         warnings.warn(
             "The incl_tax property is deprecated. "
             "Use get_price(qty).incl_tax instead.", DeprecationWarning)
-        return self.get_price().incl_tax
+        return self.get_unit_price().incl_tax
 
     #: Price tax for single unit
     @property
@@ -57,7 +60,7 @@ class Base(object):
         warnings.warn(
             "The tax property is deprecated. "
             "Use get_price(qty).tax instead.", DeprecationWarning)
-        return self.get_price().tax
+        return self.get_unit_price().tax
 
 
 class Unavailable(Base):
@@ -103,7 +106,7 @@ class FixedPrice(Base):
             return None
         return total_excl_tax * self.tax_rate
 
-    def get_price(self, quantity=1):
+    def get_price(self, quantity):
         total_excl_tax = self.calculate_total(quantity)
         tax = self.calculate_tax(total_excl_tax)
         return prices.Price(self.currency, total_excl_tax, tax=tax)
@@ -130,4 +133,4 @@ class TaxInclusiveFixedPrice(FixedPrice):
 
     @property
     def effective_price(self):
-        return self.get_price().incl_tax
+        return self.get_unit_price().incl_tax
