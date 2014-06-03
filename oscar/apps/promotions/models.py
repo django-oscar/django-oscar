@@ -229,7 +229,7 @@ class AbstractProductList(AbstractPromotion):
     of products.
     """
     name = models.CharField(
-        pgettext_lazy(u"Promotion product list title", "Title"),
+        pgettext_lazy(u"Promotion product list title", u"Title"),
         max_length=255)
     description = models.TextField(_("Description"), blank=True)
     link_url = ExtendedURLField(_('Link URL'), blank=True)

@@ -27,7 +27,7 @@ class AbstractProductReview(models.Model):
     score = models.SmallIntegerField(_("Score"), choices=SCORE_CHOICES)
 
     title = models.CharField(
-        verbose_name=pgettext_lazy(u"Product review title", "Title"),
+        verbose_name=pgettext_lazy(u"Product review title", u"Title"),
         max_length=255, validators=[validators.non_whitespace])
 
     body = models.TextField(_("Body"))
