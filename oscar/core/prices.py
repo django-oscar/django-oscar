@@ -10,34 +10,39 @@ class Price(object):
     Simple price class that encapsulates a price and its tax information
 
     Attributes:
-        incl_tax (Decimal): Price including taxes
+        incl_tax (Decimal): Price including taxes. None if tax is not known.
         excl_tax (Decimal): Price excluding taxes
-        tax (Decimal): Tax amount
+        tax (Decimal): Tax amount, or None if tax is not known.
         is_tax_known (bool): Whether tax is known
         currency (str): 3 character currency code
+
+    Price instances should be treated as read-only instances, as pricing
+    policies are responsible for calculating tax and quantity pricing.
     """
 
     def __init__(self, currency, excl_tax, incl_tax=None, tax=None):
         self.currency = currency
         self.excl_tax = excl_tax
         if incl_tax is not None:
-            self.incl_tax = incl_tax
+            self._incl_tax = incl_tax
             self.is_tax_known = True
         elif tax is not None:
-            self.incl_tax = excl_tax + tax
+            self._incl_tax = excl_tax + tax
             self.is_tax_known = True
         else:
-            self.incl_tax = None
             self.is_tax_known = False
 
-    def _get_tax(self):
-        return self.incl_tax - self.excl_tax
+    @property
+    def tax(self):
+        if self.is_tax_known:
+            return self.incl_tax - self.excl_tax
+        raise TaxNotKnown
 
-    def _set_tax(self, value):
-        self.incl_tax = self.excl_tax + value
-        self.is_tax_known = True
-
-    tax = property(_get_tax, _set_tax)
+    @property
+    def incl_tax(self):
+        if self.is_tax_known:
+            return self._incl_tax
+        raise TaxNotKnown
 
     def __repr__(self):
         if self.is_tax_known:
