@@ -1,4 +1,29 @@
+import warnings
 from decimal import Decimal as D
+
+
+class WarningDecimal(D):
+    """
+    This is a helper class that is not used by default. Currently, non-linear
+    prices don't work with offers, which should be addressed at some point.
+    To easily spot places in the codebase where a price is multiplied
+    (instead of using get_price()), replace the regular Decimal class with this
+    in the Price class below.
+
+    Aliasing to WD is recommended.
+    """
+
+    def __mul__(self, other, context=None):
+        warnings.warn(
+            "You are multiplying a price. You should use "
+            "get_price(quantity) instead.", RuntimeWarning)
+        return super(WarningDecimal, self).__mul__(other, context)
+
+    __rmul__ = __mul__
+
+    def quantize(self, *args, **kwargs):
+        result = super(WarningDecimal, self).quantize(*args, **kwargs)
+        return WarningDecimal(result)
 
 
 class TaxNotKnown(Exception):
@@ -6,6 +31,7 @@ class TaxNotKnown(Exception):
     Exception for when a tax-inclusive price is requested but we don't know
     what the tax applicable is (yet).
     """
+    pass
 
 
 class Price(object):
@@ -45,7 +71,7 @@ class Price(object):
     @property
     def tax(self):
         if self.is_tax_known:
-            return (self.incl_tax - self.excl_tax).quantize(self.exponent)
+            return D(self.incl_tax - self.excl_tax).quantize(self.exponent)
         raise TaxNotKnown
 
     @tax.setter

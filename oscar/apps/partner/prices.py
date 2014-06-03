@@ -1,3 +1,5 @@
+import warnings
+
 from oscar.core import prices
 
 
@@ -37,6 +39,7 @@ class Base(object):
     #: Price for single unit excluding tax
     @property
     def excl_tax(self):
+        warnings.warn("The excl_tax property is ")
         return self.get_price().excl_tax
 
     #: Price for single unit including tax
