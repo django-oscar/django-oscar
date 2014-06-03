@@ -23,8 +23,8 @@ class Price(object):
         is_tax_known (bool): Whether tax is known
         currency (str): 3 character currency code
 
-    Price instances should be treated as read-only instances, as pricing
-    policies are responsible for calculating tax and quantity pricing.
+    Price instances are intentionally read-only apart from setting and clearing
+    tax.
     """
 
     def __init__(self, currency, excl_tax, incl_tax=None, tax=None,
@@ -34,12 +34,8 @@ class Price(object):
         self._excl_tax = excl_tax
         if incl_tax is not None:
             self._incl_tax = incl_tax
-            self.is_tax_known = True
-        elif tax is not None:
-            self._incl_tax = excl_tax + tax
-            self.is_tax_known = True
         else:
-            self.is_tax_known = False
+            self.tax = tax
 
     @property
     def excl_tax(self):
@@ -49,14 +45,27 @@ class Price(object):
     @property
     def tax(self):
         if self.is_tax_known:
-            return (self.incl_tax - self._excl_tax).quantize(self.exponent)
+            return (self.incl_tax - self.excl_tax).quantize(self.exponent)
         raise TaxNotKnown
+
+    @tax.setter
+    def tax(self, value):
+        if value is None:
+            self._incl_tax = None  # clears any tax
+        elif self._excl_tax is None:
+            raise ValueError("Can't set a tax for unset base price")
+        else:
+            self._incl_tax = self._excl_tax + value
 
     @property
     def incl_tax(self):
         if self.is_tax_known:
             return D(self._incl_tax).quantize(self.exponent)
         raise TaxNotKnown
+
+    @property
+    def is_tax_known(self):
+        return self._excl_tax is not None and self._incl_tax is not None
 
     def __repr__(self):
         if self.is_tax_known:

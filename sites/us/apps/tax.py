@@ -16,8 +16,7 @@ def apply_to(submission):
     # New Jersey and New York. In reality, you'll probably want to use a tax
     # service like Avalara to look up the taxes for a given submission.
     shipping_address = submission['shipping_address']
-    rate = STATE_TAX_RATES.get(
-        shipping_address.state, ZERO)
+    rate = STATE_TAX_RATES.get(shipping_address.state, ZERO)
     for line in submission['basket'].all_lines():
         line_tax = calculate_tax(
             line.line_price_excl_tax_incl_discounts, rate)
