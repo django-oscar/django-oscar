@@ -629,6 +629,7 @@ class AddressCreateView(PageTitleMixin, generic.CreateView):
     template_name = 'customer/address/address_form.html'
     active_tab = 'addresses'
     page_title = _('Add a new address')
+    success_url = reverse_lazy('customer:address-list')
 
     def get_form_kwargs(self):
         kwargs = super(AddressCreateView, self).get_form_kwargs()
@@ -643,7 +644,7 @@ class AddressCreateView(PageTitleMixin, generic.CreateView):
     def get_success_url(self):
         messages.success(self.request,
                          _("Address '%s' created") % self.object.summary)
-        return reverse('customer:address-list')
+        return super(AddressCreateView, self).get_success_url()
 
 
 class AddressUpdateView(PageTitleMixin, generic.UpdateView):
@@ -652,6 +653,7 @@ class AddressUpdateView(PageTitleMixin, generic.UpdateView):
     template_name = 'customer/address/address_form.html'
     active_tab = 'addresses'
     page_title = _('Edit address')
+    success_url = reverse_lazy('customer:address-list')
 
     def get_form_kwargs(self):
         kwargs = super(AddressUpdateView, self).get_form_kwargs()
@@ -669,7 +671,7 @@ class AddressUpdateView(PageTitleMixin, generic.UpdateView):
     def get_success_url(self):
         messages.success(self.request,
                          _("Address '%s' updated") % self.object.summary)
-        return reverse('customer:address-list')
+        return super(AddressUpdateView, self).get_success_url()
 
 
 class AddressDeleteView(PageTitleMixin, generic.DeleteView):
@@ -678,6 +680,7 @@ class AddressDeleteView(PageTitleMixin, generic.DeleteView):
     page_title = _('Delete address?')
     active_tab = 'addresses'
     context_object_name = 'address'
+    success_url = reverse_lazy('customer:address-list')
 
     def get_queryset(self):
         return UserAddress._default_manager.filter(user=self.request.user)
@@ -685,7 +688,7 @@ class AddressDeleteView(PageTitleMixin, generic.DeleteView):
     def get_success_url(self):
         messages.success(self.request,
                          _("Address '%s' deleted") % self.object.summary)
-        return reverse('customer:address-list')
+        return super(AddressDeleteView, self).get_success_url()
 
 
 class AddressChangeStatusView(generic.RedirectView):
