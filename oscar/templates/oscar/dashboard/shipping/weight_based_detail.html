@@ -44,6 +44,11 @@
             </tbody>
         </table>
 
+        <p>
+            <a id="edit_method" href="{% url 'dashboard:shipping-method-edit' pk=method.pk %}" class="btn btn-primary">Edit shipping method</a>
+            <a id="delete_method" href="{% url 'dashboard:shipping-method-delete' pk=method.pk %}" class="btn btn-danger">Delete shipping method</a>
+        </p>
+
         <h2>{% trans "Weight bands" %}</h2>
         {% if method.bands.all.count %}
             <table class="table table-bordered">
@@ -60,8 +65,8 @@
                             <td>{{ band.weight_from|floatformat:3 }} - {{ band.weight_to|floatformat:3 }}</td>
                             <td>{{ band.charge|currency }}</td>
                             <td>
-                                <a href="{% url 'dashboard:shipping-method-band-edit' method_pk=band.method.pk pk=band.pk %}" class="btn btn-primary">{% trans "Edit" %}</a>
-                                <a href="{% url 'dashboard:shipping-method-band-delete' method_pk=band.method.pk pk=band.pk %}" class="btn btn-danger">{% trans "Delete" %}</a>
+                                <a id="edit_band_{{ band.id }}" href="{% url 'dashboard:shipping-method-band-edit' method_pk=band.method.pk pk=band.pk %}" class="btn btn-primary">{% trans "Edit" %}</a>
+                                <a id="delete_band_{{ band.id }}" href="{% url 'dashboard:shipping-method-band-delete' method_pk=band.method.pk pk=band.pk %}" class="btn btn-danger">{% trans "Delete" %}</a>
                             </td>
                         </tr>
                     {% endfor %}

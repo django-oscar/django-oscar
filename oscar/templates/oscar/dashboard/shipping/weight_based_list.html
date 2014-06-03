@@ -18,7 +18,7 @@
 
 {% block header %}
     <div class="page-header">
-        <a href="{% url 'dashboard:shipping-method-create' %}" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new shipping charge" %}</a>
+        <a id="create_new_shipping_method" href="{% url 'dashboard:shipping-method-create' %}" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new shipping charge" %}</a>
         <h1>{% trans "Shipping methods" %}</h1>
     </div>
 {% endblock header %}

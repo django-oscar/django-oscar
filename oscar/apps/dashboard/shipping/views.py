@@ -23,7 +23,8 @@ class WeightBasedCreateView(generic.CreateView):
 
     def get_success_url(self):
         messages.success(self.request, _("Shipping method created"))
-        return reverse('dashboard:shipping-method-list')
+        return reverse('dashboard:shipping-method-detail',
+                       kwargs={'pk': self.object.pk})
 
 
 class WeightBasedDetailView(generic.CreateView):
@@ -60,7 +61,8 @@ class WeightBasedUpdateView(generic.UpdateView):
 
     def get_success_url(self):
         messages.success(self.request, _("Shipping method updated"))
-        return reverse('dashboard:shipping-method-list')
+        return reverse('dashboard:shipping-method-detail',
+                       kwargs={'pk': self.object.pk})
 
 
 class WeightBandUpdateView(generic.UpdateView):
