@@ -33,23 +33,30 @@ class Base(object):
     def __repr__(self):
         return "%s(%r)" % (self.__class__.__name__, self.__dict__)
 
-    ## Deprecated attributes ##
-    # TODO Raise DeprecationWarning
+    # -- Deprecated attributes -- #
 
     #: Price for single unit excluding tax
     @property
     def excl_tax(self):
-        warnings.warn("The excl_tax property is ")
+        warnings.warn(
+            "The excl_tax property is deprecated. "
+            "Use get_price(qty).excl_tax instead.", DeprecationWarning)
         return self.get_price().excl_tax
 
     #: Price for single unit including tax
     @property
     def incl_tax(self):
+        warnings.warn(
+            "The incl_tax property is deprecated. "
+            "Use get_price(qty).incl_tax instead.", DeprecationWarning)
         return self.get_price().incl_tax
 
     #: Price tax for single unit
     @property
     def tax(self):
+        warnings.warn(
+            "The tax property is deprecated. "
+            "Use get_price(qty).tax instead.", DeprecationWarning)
         return self.get_price().tax
 
 
