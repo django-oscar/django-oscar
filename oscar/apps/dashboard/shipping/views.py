@@ -32,3 +32,13 @@ class WeightBasedUpdateView(generic.UpdateView):
     def get_success_url(self):
         messages.success(self.request, _("Shipping method updated"))
         return reverse('dashboard:shipping-method-list')
+
+
+class WeightBasedDeleteView(generic.DeleteView):
+    model = WeightBased
+    template_name = "dashboard/shipping/weight_based_delete.html"
+    context_object_name = "method"
+
+    def get_success_url(self):
+        messages.success(self.request, _("Shipping method deleted"))
+        return reverse('dashboard:shipping-method-list')

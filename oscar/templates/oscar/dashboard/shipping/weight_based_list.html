@@ -45,7 +45,8 @@
                         <td>{{ method.upper_charge|currency }}</td>
                         <td>{{ method.default_weight }}</td>
                         <td>
-                            <a href="{% url 'dashboard:shipping-method-edit' pk=method.pk %}" class="btn">{% trans "Edit" %}</a>
+                            <a href="{% url 'dashboard:shipping-method-edit' pk=method.pk %}" class="btn btn-primary">{% trans "Edit" %}</a>
+                            <a href="{% url 'dashboard:shipping-method-delete' pk=method.pk %}" class="btn btn-danger">{% trans "Delete" %}</a>
                         </td>
                     </tr>
                 {% endfor %}
