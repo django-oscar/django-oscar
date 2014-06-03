@@ -27,9 +27,6 @@ class Base(object):
     #: Price tax
     tax = None
 
-    #: Retail price
-    retail = None
-
     #: Price currency (3 char code)
     currency = None
 
