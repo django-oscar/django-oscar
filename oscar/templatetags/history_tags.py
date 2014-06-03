@@ -2,10 +2,10 @@ import six
 from six.moves.urllib import parse
 
 from django import template
-from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import resolve, Resolver404
 
+from oscar.core.loading import get_model
 from oscar.apps.customer import history
 
 Site = get_model('sites', 'Site')
