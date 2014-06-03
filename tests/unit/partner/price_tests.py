@@ -15,11 +15,11 @@ class TestUnavailable(TestCase):
 
     def test_means_prices_dont_exist(self):
         self.assertFalse(self.price.exists)
-
-    def test_means_price_attributes_are_none(self):
-        self.assertIsNone(self.price.incl_tax)
         self.assertIsNone(self.price.excl_tax)
-        self.assertIsNone(self.price.tax)
+
+    def test_means_tax_cant_be_acccessed(self):
+        self.assertRaises(TaxNotKnown, getattr, self.price, 'incl_tax')
+        self.assertRaises(TaxNotKnown, getattr, self.price, 'tax')
 
 
 class TestFixedPriceWithoutTax(TestCase):

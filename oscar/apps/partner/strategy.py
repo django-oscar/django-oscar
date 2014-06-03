@@ -220,6 +220,10 @@ class NoTax(object):
     Pricing policy mixin for use with the ``Structured`` base strategy.
     This mixin specifies zero tax and uses the ``price_excl_tax`` from the
     stockrecord.
+
+    Note that if you use this mixin, access to the Price.incl_tax and Price.tax
+    attributes will throw a TaxNotKnown exception. If you want a tax of 0%,
+    use the FixedRateTax mixin below.
     """
     price_class = prices.FixedPrice
     rate = None
@@ -288,7 +292,7 @@ class DeferredTax(object):
 # charge tax!
 
 
-class Default(UseFirstStockRecord, StockRequired, NoTax, Structured):
+class Default(UseFirstStockRecord, StockRequired, FixedRateTax, Structured):
     """
     Default stock/price strategy that uses the first found stockrecord for a
     product, ensures that stock is available (unless the product class
