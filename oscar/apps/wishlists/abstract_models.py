@@ -3,7 +3,7 @@ import random
 import six
 
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.core.urlresolvers import reverse
 
 from oscar.core.compat import AUTH_USER_MODEL
@@ -112,7 +112,8 @@ class AbstractLine(models.Model):
         blank=True, null=True)
     quantity = models.PositiveIntegerField(_('Quantity'), default=1)
     #: Store the title in case product gets deleted
-    title = models.CharField(_("Product title"), max_length=255)
+    title = models.CharField(
+        pgettext_lazy(u"Product title", u"Title"), max_length=255)
 
     def __unicode__(self):
         return u'%sx %s on %s' % (self.quantity, self.title,

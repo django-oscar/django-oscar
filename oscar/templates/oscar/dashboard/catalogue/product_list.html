@@ -77,8 +77,13 @@
                 <table class="table table-striped table-bordered">
                     {% block product_list_header %}
                         <tr>
-                            <th>{% if 'recently_edited' in request.GET %}{% trans "Product title" %}
-                                {% else %}{% anchor 'title' _("Product title") %}{% endif %}</th>
+                            <th>
+                                {% if 'recently_edited' in request.GET %}
+                                    {% trans "Title" context "Product title" %}
+                                {% else %}
+                                    {% anchor 'title' _("Title") %}
+                                {% endif %}
+                            </th>
                             <th>{% trans "UPC" %}</th>
                             <th>{% trans "Image" %}</th>
                             <th>{% trans "Product Type" %}</th>

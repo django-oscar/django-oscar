@@ -37,7 +37,7 @@
             </div>
             <table class="table table-striped table-bordered">
                 <tr>
-                    <th>{% trans "Product title" %}</th>
+                    <th>{% trans "Title" context "Product title" %}</th>
                     <td>
                         {% if line.product %}
                             <a href="{{ line.product.get_absolute_url }}">{{ line.title }}</a>

@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Sum, Count
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 
 from oscar.apps.catalogue.reviews.managers import ApprovedReviewsManager
 from oscar.core.compat import AUTH_USER_MODEL
@@ -27,8 +27,9 @@ class AbstractProductReview(models.Model):
     score = models.SmallIntegerField(_("Score"), choices=SCORE_CHOICES)
 
     title = models.CharField(
-        max_length=255, verbose_name=_("Review title"),
-        validators=[validators.non_whitespace])
+        verbose_name=pgettext_lazy(u"Product review title", "Title"),
+        max_length=255, validators=[validators.non_whitespace])
+
     body = models.TextField(_("Body"))
 
     # User information.
@@ -36,7 +37,9 @@ class AbstractProductReview(models.Model):
         AUTH_USER_MODEL, related_name='reviews', null=True, blank=True)
 
     # Fields to be completed if user is anonymous
-    name = models.CharField(_("Name"), max_length=255, blank=True)
+    name = models.CharField(
+        pgettext_lazy(u"Anonymous reviewer name", u"Name"),
+        max_length=255, blank=True)
     email = models.EmailField(_("Email"), blank=True)
     homepage = models.URLField(_("URL"), blank=True)
 

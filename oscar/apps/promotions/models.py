@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
@@ -228,7 +228,9 @@ class AbstractProductList(AbstractPromotion):
     Abstract superclass for promotions which are essentially a list
     of products.
     """
-    name = models.CharField(_("List title"), max_length=255)
+    name = models.CharField(
+        pgettext_lazy(u"Promotion product list title", "Title"),
+        max_length=255)
     description = models.TextField(_("Description"), blank=True)
     link_url = ExtendedURLField(_('Link URL'), blank=True)
     link_text = models.CharField(_("Link text"), max_length=255, blank=True)
@@ -325,7 +327,8 @@ class OrderedProductList(HandPickedProductList):
 class TabbedBlock(AbstractPromotion):
 
     _type = 'Tabbed block'
-    name = models.CharField(_("Block title"), max_length=255)
+    name = models.CharField(
+        pgettext_lazy(u"Tabbed block title", u"Title"), max_length=255)
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     class Meta:

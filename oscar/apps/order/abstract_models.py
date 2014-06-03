@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.utils.datastructures import SortedDict
 
 from oscar.core.compat import AUTH_USER_MODEL
@@ -412,7 +412,8 @@ class AbstractLine(models.Model):
     product = models.ForeignKey(
         'catalogue.Product', on_delete=models.SET_NULL, blank=True, null=True,
         verbose_name=_("Product"))
-    title = models.CharField(_("Product title"), max_length=255)
+    title = models.CharField(
+        pgettext_lazy(u"Product title", u"Title"), max_length=255)
     # UPC can be null because it's usually set as the product's UPC, and that
     # can be null as well
     upc = models.CharField(_("UPC"), max_length=128, blank=True, null=True)

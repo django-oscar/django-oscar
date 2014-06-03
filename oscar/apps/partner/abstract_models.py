@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.models.fields import AutoSlugField
@@ -18,7 +18,8 @@ class AbstractPartner(models.Model):
     """
     code = AutoSlugField(_("Code"), max_length=128, unique=True,
                          populate_from='name')
-    name = models.CharField(_("Partner name"), max_length=128, blank=True)
+    name = models.CharField(
+        pgettext_lazy(u"Partner's name", u"Name"), max_length=128, blank=True)
 
     #: A partner can have users assigned to it. This is used
     #: for access modelling in the permission-based dashboard

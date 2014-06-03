@@ -14,7 +14,7 @@ from django.core.files.base import File
 from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Sum, Count
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.utils.functional import cached_property
 
 from treebeard.mp_tree import MP_Node
@@ -400,7 +400,7 @@ class AbstractProduct(models.Model):
         if not title and self.parent_id:
             title = self.parent.title
         return title
-    get_title.short_description = _("Product title")
+    get_title.short_description = pgettext_lazy(u"Product title", u"Title")
 
     def get_product_class(self):
         """
