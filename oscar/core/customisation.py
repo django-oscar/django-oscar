@@ -31,7 +31,8 @@ def fork_app(app_label, folder_path, logger=None):
     oscar_app_folder_path = os.path.join(oscar.__path__[0], 'apps', app_label)
     if os.path.exists(local_app_folder_path):
         raise ValueError(
-            "There is already a '%s' folder! Aborting!" % local_app_folder_path)
+            "There is already a '%s' folder! Aborting!" %
+            local_app_folder_path)
     logger.info("Creating folder %s" % local_app_folder_path)
     os.mkdir(local_app_folder_path)
 

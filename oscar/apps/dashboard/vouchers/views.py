@@ -65,9 +65,10 @@ class VoucherListView(generic.ListView):
     def get_context_data(self, **kwargs):
         ctx = super(VoucherListView, self).get_context_data(**kwargs)
         if self.form.is_bound:
-            ctx['description'] = self.description_template % self.description_ctx
+            description = self.description_template % self.description_ctx
         else:
-            ctx['description'] = _("Vouchers")
+            description = _("Vouchers")
+        ctx['description'] = description
         ctx['form'] = self.form
         return ctx
 

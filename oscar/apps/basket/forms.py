@@ -134,10 +134,10 @@ class AddToBasketForm(forms.Form):
     quantity = forms.IntegerField(initial=1, min_value=1, label=_('Quantity'))
 
     def __init__(self, basket, product, *args, **kwargs):
-        # Note, the product passed in here isn't necessarily the product being added
-        # to the basket. For group products, it is the *parent* product that gets
-        # passed to the form. An optional product_id param is passed to
-        # indicate the ID of the variant being added to the basket
+        # Note, the product passed in here isn't necessarily the product being
+        # added to the basket. For group products, it is the *parent* product
+        # that gets passed to the form. An optional product_id param is passed
+        # to indicate the ID of the variant being added to the basket.
         self.basket = basket
         self.base_product = product
 
@@ -240,7 +240,8 @@ class AddToBasketForm(forms.Form):
         info = self.basket.strategy.fetch_for_product(self.product)
 
         # Check currencies are sensible
-        if self.basket.currency and info.price.currency != self.basket.currency:
+        if (self.basket.currency and
+                info.price.currency != self.basket.currency):
             raise forms.ValidationError(
                 _("This product cannot be added to the basket as its currency "
                   "isn't the same as other products in your basket"))
@@ -273,8 +274,8 @@ class AddToBasketForm(forms.Form):
 
 class SimpleAddToBasketForm(AddToBasketForm):
     """
-    Simpified version of the add to basket form where the quantity is defaulted
-    to 1 and rendered in a hidden widget
+    Simplified version of the add to basket form where the quantity is
+    defaulted to 1 and rendered in a hidden widget
     """
     quantity = forms.IntegerField(
         initial=1, min_value=1, widget=forms.HiddenInput, label=_('Quantity'))

@@ -67,6 +67,7 @@ CategoryForm = movenodeform_factory(Category, form=BaseCategoryForm)
 
 
 class ProductClassSelectForm(forms.Form):
+
     """
     Form which is used before creating a product to select it's product class
     """
@@ -88,7 +89,8 @@ class ProductClassSelectForm(forms.Form):
 
 class ProductSearchForm(forms.Form):
     upc = forms.CharField(max_length=16, required=False, label=_('UPC'))
-    title = forms.CharField(max_length=255, required=False, label=_('Product title'))
+    title = forms.CharField(
+        max_length=255, required=False, label=_('Product title'))
 
     def clean(self):
         cleaned_data = super(ProductSearchForm, self).clean()
@@ -432,11 +434,13 @@ BaseProductImageFormSet = inlineformset_factory(
 
 
 class ProductImageFormSet(BaseProductImageFormSet):
+
     def __init__(self, product_class, user, *args, **kwargs):
         super(ProductImageFormSet, self).__init__(*args, **kwargs)
 
 
 class ProductRecommendationForm(forms.ModelForm):
+
     class Meta:
         model = ProductRecommendation
         widgets = {
@@ -450,6 +454,7 @@ BaseProductRecommendationFormSet = inlineformset_factory(
 
 
 class ProductRecommendationFormSet(BaseProductRecommendationFormSet):
+
     def __init__(self, product_class, user, *args, **kwargs):
         super(ProductRecommendationFormSet, self).__init__(*args, **kwargs)
 

@@ -13,7 +13,6 @@ from oscar.core.loading import get_model
 from oscar.apps.shipping.methods import NoShippingRequired
 from oscar.core.loading import get_class, get_classes
 from . import signals
-from .exceptions import FailedPreCondition
 
 ShippingAddressForm, GatewayForm \
     = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
@@ -244,7 +243,7 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
     template_name = 'checkout/shipping_methods.html'
     pre_conditions = ['check_basket_is_not_empty',
                       'check_basket_is_valid',
-                      'check_user_email_is_captured',]
+                      'check_user_email_is_captured']
 
     def get(self, request, *args, **kwargs):
         # These pre-conditions can't easily be factored out into the normal

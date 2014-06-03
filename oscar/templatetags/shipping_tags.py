@@ -40,7 +40,7 @@ def build_node(node_class, token):
             "{%% %(tag)r method basket as "
             "name %%}" % {'tag': tokens[0]})
 
-    method_var, basket_var, name_var  = tokens[1], tokens[2], tokens[4]
+    method_var, basket_var, name_var = tokens[1], tokens[2], tokens[4]
     return node_class(method_var, basket_var, name_var)
 
 
