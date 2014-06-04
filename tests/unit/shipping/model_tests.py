@@ -32,10 +32,10 @@ class TestWeightBand(TestCase):
         band = models.WeightBand(upper_limit=D('-0.1'))
         with self.assertRaises(ValidationError) as cm:
             band.full_clean()
-        self.assertTrue('upper_limit' in cm.exception.error_dict)
+        self.assertTrue('upper_limit' in cm.exception.message_dict)
 
     def test_doesnt_allow_negative_charge(self):
         band = models.WeightBand(charge=D('-0.1'))
         with self.assertRaises(ValidationError) as cm:
             band.full_clean()
-        self.assertTrue('charge' in cm.exception.error_dict)
+        self.assertTrue('charge' in cm.exception.message_dict)
