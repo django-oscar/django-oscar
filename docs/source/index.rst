@@ -92,7 +92,7 @@ mats to iPads.  The `source is on GitHub`_ - contributions are always welcome.
    topics/customisation
    ref/index
    contributing/index
-   releases/index
+   Releases <releases/index>
 
 First steps
 ===========
