@@ -226,6 +226,12 @@ Other potentially breaking changes related to shipping include:
 * ``oscar.apps.shipping.Scales`` has been renamed and moved to
   ``oscar.apps.shipping.scales.Scale``, and is now overridable.
 
+
+Template tags
+-------------
+
+The ``image_tags`` module has been removed as it is no longer used.
+
 Misc
 ----
 
