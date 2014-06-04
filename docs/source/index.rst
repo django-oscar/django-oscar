@@ -91,7 +91,7 @@ mats to iPads.  The `source is on GitHub`_ - contributions are always welcome.
    topics/key_questions
    topics/customisation
    ref/index
-   internals/contributing/index
+   contributing/index
    releases/index
 
 First steps
@@ -130,4 +130,4 @@ Learn about the ideas behind Oscar and how you can contribute.
 
 - :doc:`internals/design-decisions`
 - :doc:`releases/index`
-- :doc:`internals/contributing/index`
+- :doc:`contributing/index`

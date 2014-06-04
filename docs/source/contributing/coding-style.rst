@@ -26,6 +26,9 @@ URLs
 * Create pages should have 'create' as the final path segment; e.g.
   ``/dashboard/notifications/create/``
 
+* Delete pages should have 'delete' as the final path segment; e.g.
+  ``/dashboard/notifications/1/delete/``
+
 * URL names use dashes not underscores.
 
 * Update pages are sometimes the same as detail pages (i.e., when in the
@@ -33,12 +36,12 @@ URLs
   ``/dashboard/notifications/3/``.  If there is a distinction between the detail
   page and the update page, use ``/dashboard/notifications/3/update/``.
 
-* Delete pages; e.g., ``/dashboard/notifications/3/delete/``
-
 View class names
 ----------------
 
-Classes should be named according to::
+Classes should be named according to:
+
+.. code-block:: python
 
     '%s%sView' % (class_name, verb)
 

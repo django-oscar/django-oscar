@@ -1,13 +1,13 @@
-=====================
-Contributing to Oscar
-=====================
+============
+Contributing
+============
 
 You're thinking of helping out. That's brilliant - thank you for your time! You
 can contribute in many ways:
 
-* Join the `django-oscar`_ mailing list and answer questions.
+* Join the `django-oscar`_ mailing list and help answer questions.
 
-* :doc:`Report bugs <bugs-and-features>` in our `ticket tracker`_.
+* :doc:`Report bugs <bugs-and-features>` in our `issue tracker`_.
 
 * :doc:`Submit pull requests <submitting-pull-requests>` for new and/or
   fixed behavior.
@@ -20,18 +20,16 @@ can contribute in many ways:
   and go ahead!
 
 .. _django-oscar: http://groups.google.com/group/django-oscar
-.. _ticket tracker: https://github.com/tangentlabs/django-oscar/issues
+.. _issue tracker: https://github.com/tangentlabs/django-oscar/issues
 .. _Transifex: https://www.transifex.com/projects/p/django-oscar/
-
-Overview
---------
 
 .. toctree::
    :maxdepth: 1
+   :hidden:
    
-   development-environment
-   bugs-and-features
-   coding-style
+   Reporting bugs <bugs-and-features>
    submitting-pull-requests
-   running-tests
-   writing-documentation
+   Development environment <development-environment>
+   Testing <running-tests>
+   coding-style
+   Documentation <writing-documentation>

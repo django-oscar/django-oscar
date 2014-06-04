@@ -5,31 +5,41 @@ Test suite
 Running tests
 -------------
 
-Oscar uses a nose_ testrunner which can be invoked using::
+Oscar uses a nose_ testrunner which can be invoked using:
+
+.. code-block:: bash
 
     $ ./runtests.py
 
 .. _nose: http://nose.readthedocs.org/en/latest/
 
 To run a subset of tests, you can use filesystem or module paths.  These two
-commands will run the same set of tests::
+commands will run the same set of tests:
+
+.. code-block:: bash
 
     $ ./runtests.py tests/unit/offer/availability_tests.py
     $ ./runtests.py tests.unit.offer.availability_tests
 
-To run an individual test class, use one of::
+To run an individual test class, use one of:
+
+.. code-block:: bash
 
     $ ./runtests.py tests/unit/offer/availability_tests.py:TestAPerUserConditionalOffer
     $ ./runtests.py tests.unit.offer.availability_tests:TestAPerUserConditionalOffer
 
 (Note the ':'.)
 
-To run an individual test, use one of::
+To run an individual test, use one of:
+
+.. code-block:: bash
 
     $ ./runtests.py tests/unit/offer/availability_tests.py:TestAPerUserConditionalOffer.test_is_available_with_no_applications
     $ ./runtests.py tests.unit.offer.availability_tests:TestAPerUserConditionalOffer.test_is_available_with_no_applications
 
-To check if the number of queries changes::
+To check if the number of queries changes:
+
+.. code-block:: bash
 
     $ ./runtests.py --with-querycount
 
@@ -40,7 +50,9 @@ is recommended for further analysis.
 Testing against different setups
 --------------------------------
 
-To run all tests against multiple versions of Django and Python, use detox_::
+To run all tests against multiple versions of Django and Python, use detox_:
+
+.. code-block:: bash
 
     $ detox
 
@@ -71,9 +83,11 @@ Tests are split into 3 folders:
 Naming tests
 ------------
 
-When running a subset of tests, Oscar uses the spec_ plugin.  It is a good
+When running a subset of tests, Oscar can use the spec_ plugin.  It is a good
 practice to name your test cases and methods so that the spec output reads well.
-For example::
+For example:
+
+.. code-block:: bash
 
     $ ./runtests.py tests/unit/offer/benefit_tests.py:TestAbsoluteDiscount
     nosetests --verbosity 1 tests/unit/offer/benefit_tests.py:TestAbsoluteDiscount -s -x --with-spec
