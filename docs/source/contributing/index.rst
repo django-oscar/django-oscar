@@ -33,3 +33,4 @@ can contribute in many ways:
    Testing <running-tests>
    coding-style
    Documentation <writing-documentation>
+   translation
