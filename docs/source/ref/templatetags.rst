@@ -20,9 +20,9 @@ Load these filters using ``{% load category_filters %}``.
 Reviews filters
 ~~~~~~~~~~~~~~~
 
-Load these tags using ``{% load reviews_tags %}``.
+Load these tags using ``{% load reviews_filters %}``.
 
-.. automodule:: oscar.templatetags.reviews_tags
+.. automodule:: oscar.templatetags.reviews_filters
    :members: as_stars, may_vote, is_review_permitted
 
 

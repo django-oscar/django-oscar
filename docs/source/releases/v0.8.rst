@@ -227,10 +227,15 @@ Other potentially breaking changes related to shipping include:
   ``oscar.apps.shipping.scales.Scale``, and is now overridable.
 
 
-Template tags
--------------
+Template tags and filters
+-------------------------
 
-The ``image_tags`` module has been removed as it is no longer used.
+Documenting Oscar's template tags and filters brought several issues to light:
+
+* The ``image_tags`` module has been removed as it is no longer used.
+
+* The ``reviews_tags`` module has been renamed to ``reviews_filters`` since it
+  only contains filters.
 
 Misc
 ----
