@@ -91,7 +91,9 @@ mats to iPads.  The `source is on GitHub`_ - contributions are always welcome.
    topics/key_questions
    topics/customisation
    ref/index
+   deployment
    support
+   upgrading
    contributing/index
    Releases <releases/index>
 
