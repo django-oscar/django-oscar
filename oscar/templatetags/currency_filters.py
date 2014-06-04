@@ -8,7 +8,7 @@ from babel.numbers import format_currency
 register = template.Library()
 
 
-@register.filter(name='currency')
+@register.filter
 def currency(value, currency=None):
     """
     Format decimal value as currency

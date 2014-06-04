@@ -1,6 +1,5 @@
-from django.template import Library, Node, Variable
+from django.template import Library, Node, Variable, RequestContext
 from django.template.loader import select_template
-from django.template import RequestContext
 
 
 register = Library()
@@ -20,9 +19,7 @@ class PromotionNode(Node):
         return template.render(ctx)
 
 
-def get_promotion_html(parser, token):
-    _, promotion = token.split_contents()
+@register.tag
+def render_promotion(parser, token):
+    __, promotion = token.split_contents()
     return PromotionNode(promotion)
-
-
-register.tag('render_promotion', get_promotion_html)

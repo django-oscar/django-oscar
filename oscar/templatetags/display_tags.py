@@ -5,6 +5,7 @@ from oscar.core.loading import feature_hidden
 register = template.Library()
 
 
+@register.tag
 def get_parameters(parser, token):
     """
     {% get_parameters except_field %}
@@ -39,10 +40,7 @@ class GetParametersNode(template.Node):
         return get_params
 
 
-get_parameters = register.tag(get_parameters)
-
-
-@register.tag()
+@register.tag
 def iffeature(parser, token):
     nodelist = parser.parse(('endiffeature',))
     try:

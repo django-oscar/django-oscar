@@ -21,6 +21,7 @@ sort_directions = {
 }
 
 
+@register.tag
 def anchor(parser, token):
     bits = token.split_contents()
     if len(bits) < 2:
@@ -60,6 +61,3 @@ class SortAnchorNode(template.Node):
         if icon:
             title = u"%s %s" % (title, icon)
         return u'<a href="%s">%s</a>' % (href, title)
-
-
-anchor = register.tag(anchor)

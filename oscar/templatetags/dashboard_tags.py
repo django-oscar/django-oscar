@@ -7,7 +7,8 @@ get_nodes = get_class('dashboard.menu', 'get_nodes')
 register = template.Library()
 
 
-def get_num_user_orders(parser, token):
+@register.tag
+def num_orders(parser, token):
     try:
         tag_name, user = token.split_contents()
         return NumUserOrdersNode(user)
@@ -24,9 +25,7 @@ class NumUserOrdersNode(template.Node):
         return Order.objects.filter(user=self.user.resolve(context)).count()
 
 
-register.tag('num_orders', get_num_user_orders)
-
-
+@register.tag
 def dashboard_navigation(parser, token):
     return DashboardNavigationNode()
 
@@ -36,6 +35,3 @@ class DashboardNavigationNode(template.Node):
     def render(self, context):
         context['nav_items'] = get_nodes(context['user'])
         return ''
-
-
-register.tag('dashboard_navigation', dashboard_navigation)

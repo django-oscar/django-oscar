@@ -4,8 +4,8 @@ from django import template
 register = template.Library()
 
 
-@register.tag(name="wishlists_containing_product")
-def do_basket_form(parse, token):
+@register.tag
+def wishlists_containing_product(parse, token):
     """
     Template tag for adding the user's wishlists form to the
     template context so it can be rendered.

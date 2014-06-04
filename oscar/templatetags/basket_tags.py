@@ -12,8 +12,8 @@ register = template.Library()
 QNT_SINGLE, QNT_MULTIPLE = 'single', 'multiple'
 
 
-@register.tag(name="basket_form")
-def do_basket_form(parse, token):
+@register.tag
+def basket_form(parse, token):
     """
     Template tag for adding the add-to-basket form to the
     template context so it can be rendered.

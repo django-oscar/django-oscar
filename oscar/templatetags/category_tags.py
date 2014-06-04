@@ -9,8 +9,8 @@ Category = get_model('catalogue', 'category')
 NODE_CACHE = {}
 
 
-@register.tag(name="category_tree")  # noqa (too complex (14))
-def do_category_list(parse, token):
+@register.tag  # noqa (too complex (14))
+def category_tree(parse, token):
     tokens = token.split_contents()
     error_msg = ("%r tag uses the following syntax: {%% category_tree "
                  "[depth=n] [parent=<parent_category>] as categories %%}"
