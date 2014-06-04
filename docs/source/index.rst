@@ -91,6 +91,7 @@ mats to iPads.  The `source is on GitHub`_ - contributions are always welcome.
    topics/key_questions
    topics/customisation
    ref/index
+   support
    contributing/index
    Releases <releases/index>
 
@@ -100,7 +101,6 @@ First steps
 - :doc:`internals/sandbox`
 - :doc:`internals/getting_started`
 - :doc:`topics/key_questions`
-- :doc:`internals/getting_help`
 - :doc:`ref/glossary`
 
 Using Oscar
