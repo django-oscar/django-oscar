@@ -7,8 +7,28 @@ register = template.Library()
 @register.tag
 def shipping_charge(parse, token):
     """
-    Template tag for calculating the shipping charge for a given shipping
-    method and basket, and injecting it into the template context.
+    Injects the shipping charge into the template context:
+
+    Usage:
+
+    .. code-block:: html+django
+
+        {% shipping_charge shipping_method basket as name %}
+        Shipping charge is {{ name }}.
+
+    The arguments are:
+
+    ===================  =====================================================
+    Argument             Description
+    ===================  =====================================================
+    ``shipping_method``  The shipping method instance
+    ``basket``           The basket instance to calculate shipping charges for
+    ``name``             The variable name to assign the charge to
+    ===================  =====================================================
+
+    `Example usage in Oscar's templates`__
+
+    __ https://github.com/tangentlabs/django-oscar/search?q=shipping_charge+path%3A%2Foscar%2Ftemplates&type=Code
     """
     return build_node(ShippingChargeNode, token)
 
@@ -16,8 +36,28 @@ def shipping_charge(parse, token):
 @register.tag
 def shipping_charge_discount(parse, token):
     """
-    Template tag for calculating the shipping discount for a given shipping
-    method and basket, and injecting it into the template context.
+    Injects the shipping discount into the template context:
+
+    Usage:
+
+    .. code-block:: html+django
+
+        {% shipping_discount shipping_method basket as name %}
+        Shipping discount is {{ charge }}.
+
+    The arguments are:
+
+    ===================  =====================================================
+    Argument             Description
+    ===================  =====================================================
+    ``shipping_method``  The shipping method instance
+    ``basket``           The basket instance to calculate shipping charges for
+    ``name``             The variable name to assign the charge to
+    ===================  =====================================================
+
+    `Example usage in Oscar's templates`__
+
+    __ https://github.com/tangentlabs/django-oscar/search?q=shipping_discount+path%3A%2Foscar%2Ftemplates&type=Code
     """
     return build_node(ShippingChargeDiscountNode, token)
 
@@ -25,9 +65,29 @@ def shipping_charge_discount(parse, token):
 @register.tag
 def shipping_charge_excl_discount(parse, token):
     """
-    Template tag for calculating the shipping charge (excluding discounts) for
-    a given shipping method and basket, and injecting it into the template
-    context.
+    Injects the shipping charge with no discounts applied into the template
+    context:
+
+    Usage:
+
+    .. code-block:: html+django
+
+        {% shipping_charge_excl_discount shipping_method basket as name %}
+        Shipping discount is {{ name }}.
+
+    The arguments are:
+
+    ===================  =====================================================
+    Argument             Description
+    ===================  =====================================================
+    ``shipping_method``  The shipping method instance
+    ``basket``           The basket instance to calculate shipping charge for
+    ``name``             The variable name to assign the charge to
+    ===================  =====================================================
+
+    `Example usage in Oscar's templates`__
+
+    __ https://github.com/tangentlabs/django-oscar/search?q=shipping_charge_excl_discount+path%3A%2Foscar%2Ftemplates&type=Code
     """
     return build_node(ShippingChargeExclDiscountNode, token)
 

@@ -8,7 +8,25 @@ register = template.Library()
 @register.tag
 def get_parameters(parser, token):
     """
-    {% get_parameters except_field %}
+    Renders the query parameters with the exception of the passed one
+
+    Usage:
+
+    .. code-block:: html+django
+
+        <a href="?{% get_parameters key %}&key=1">...</a>
+
+    The arguments are:
+
+    ===================  =====================================================
+    Argument             Description
+    ===================  =====================================================
+    ``key``              The query param to ignore
+    ===================  =====================================================
+
+    `Example usage in Oscar's templates`__
+
+    __ https://github.com/tangentlabs/django-oscar/search?q=get_parameters+path%3A%2Foscar%2Ftemplates&type=Code
     """
 
     args = token.split_contents()
@@ -42,6 +60,29 @@ class GetParametersNode(template.Node):
 
 @register.tag
 def iffeature(parser, token):
+    """
+    Only renders the contained mark-up if the specified feature is enabled.
+
+    Usage:
+
+    .. code-block:: html+django
+
+        {% iffeature feature_name %}
+            ...
+        {% endiffeature %}
+
+    The arguments are:
+
+    ===================  =====================================================
+    Argument             Description
+    ===================  =====================================================
+    ``feature_name``     The feature name to test for
+    ===================  =====================================================
+
+    `Example usage in Oscar's templates`__
+
+    __ https://github.com/tangentlabs/django-oscar/search?q=get_parameters+path%3A%2Foscar%2Ftemplates&type=Code
+    """
     nodelist = parser.parse(('endiffeature',))
     try:
         tag_name, app_name, = token.split_contents()

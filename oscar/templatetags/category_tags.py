@@ -11,6 +11,29 @@ NODE_CACHE = {}
 
 @register.tag  # noqa (too complex (14))
 def category_tree(parse, token):
+    """
+    Injects a category tree into the template context:
+
+    Usage:
+
+    .. code-block:: html+django
+
+        {% category_tree [depth] [parent] as name %}
+
+    The arguments are:
+
+    ===================  =====================================================
+    Argument             Description
+    ===================  =====================================================
+    ``depth``            How deep within the tree to fetch
+    ``parent``           The root category instance
+    ``name``             The variable name to assign to
+    ===================  =====================================================
+
+    `Example usage in Oscar's templates`__
+
+    __ https://github.com/tangentlabs/django-oscar/search?q=category_tree+path%3A%2Foscar%2Ftemplates&type=Code
+    """
     tokens = token.split_contents()
     error_msg = ("%r tag uses the following syntax: {%% category_tree "
                  "[depth=n] [parent=<parent_category>] as categories %%}"

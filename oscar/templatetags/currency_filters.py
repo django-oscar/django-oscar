@@ -11,7 +11,26 @@ register = template.Library()
 @register.filter
 def currency(value, currency=None):
     """
-    Format decimal value as currency
+    Format a decimal value as a currency
+
+    For example:
+
+    .. code-block:: html+django
+
+        {{ total|currency:"GBP" }}
+
+    or using the core :class:`~oscar.core.prices.Price` class:
+
+    .. code-block:: html+django
+
+        {{ price.incl_tax|currency:price.currency }}
+
+    If the arg is committed, then the currency is taken from the
+    ``OSCAR_DEFAULT_CURRENCY`` setting.
+
+    `Example usage in Oscar's templates`__
+
+    __ https://github.com/tangentlabs/django-oscar/search?q=currency+path%3A%2Foscar%2Ftemplates&type=Code
     """
     try:
         value = D(value)

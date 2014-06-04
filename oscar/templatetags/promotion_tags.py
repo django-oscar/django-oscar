@@ -21,5 +21,24 @@ class PromotionNode(Node):
 
 @register.tag
 def render_promotion(parser, token):
+    """
+    Render a promotion HTML snippet.
+
+    Usage:
+
+    .. code-block:: html+django
+
+        {% render_product promotion %}
+
+    ===================  =====================================================
+    Argument             Description
+    ===================  =====================================================
+    ``promotion``        The promotion instance to render
+    ===================  =====================================================
+
+    `Example usage in Oscar's templates`__
+
+    __ https://github.com/tangentlabs/django-oscar/search?q=render_promotion+path%3A%2Foscar%2Ftemplates&type=Code
+    """
     __, promotion = token.split_contents()
     return PromotionNode(promotion)

@@ -1,7 +1,6 @@
 from django import template
-from oscar.core.loading import get_model
 
-from oscar.core.loading import get_class
+from oscar.core.loading import get_class, get_model
 
 AddToBasketForm = get_class('basket.forms', 'AddToBasketForm')
 SimpleAddToBasketForm = get_class('basket.forms', 'SimpleAddToBasketForm')
@@ -15,8 +14,27 @@ QNT_SINGLE, QNT_MULTIPLE = 'single', 'multiple'
 @register.tag
 def basket_form(parse, token):
     """
-    Template tag for adding the add-to-basket form to the
-    template context so it can be rendered.
+    Injects a add-to-basket form into the template context:
+
+    Usage:
+
+    .. code-block:: html+django
+
+        {% basket_form request product as name %}
+
+    The arguments are:
+
+    ===================  =====================================================
+    Argument             Description
+    ===================  =====================================================
+    ``request``          The request instance
+    ``product``          A product instance
+    ``name``             The variable name to assign to
+    ===================  =====================================================
+
+    `Example usage in Oscar's templates`__
+
+    __ https://github.com/tangentlabs/django-oscar/search?q=basket_form+path%3A%2Foscar%2Ftemplates&type=Code
     """
     tokens = token.split_contents()
     if len(tokens) < 4 or tokens[3] != 'as':
