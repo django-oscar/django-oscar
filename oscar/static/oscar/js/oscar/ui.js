@@ -22,10 +22,16 @@ var oscar = (function(o, $) {
 
     o.search = {
         init: function() {
+            o.search.initSortWidget();
+            o.search.initFacetWidgets();
+        },
+        initSortWidget: function() {
             // Auto-submit (hidden) search form when selecting a new sort-by option
             $('#id_sort_by').on('change', function() {
                 $(this).closest('form').submit();
             });
+        },
+        initFacetWidgets: function() {
             // Bind events to facet checkboxes
             $('.facet_checkbox').on('change', function() {
                 window.location.href = $(this).next('.facet_url').val();
