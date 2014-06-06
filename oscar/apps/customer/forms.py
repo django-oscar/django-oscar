@@ -89,7 +89,7 @@ class EmailAuthenticationForm(AuthenticationForm):
     usernames. 75 character usernames are needed to support the EmailOrUsername
     auth backend.
     """
-    username = forms.EmailField(label=_('Email Address'))
+    username = forms.EmailField(label=_('Email address'))
     redirect_url = forms.CharField(
         widget=forms.HiddenInput, required=False)
 
