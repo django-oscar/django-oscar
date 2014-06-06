@@ -16,9 +16,9 @@
                 <input class="facet_url" type="hidden" name="url_for_{{ item.name }}" value="{{ item.select_url }}" />
                 <a href="{{ item.select_url }}">{{ item.name }}</a> 
             {% endif %}
-            {% if item.show_count %}
-                ({{ item.count }})
-            {% endif %}
+        {% endif %}
+        {% if item.show_count %}
+            ({{ item.count }})
         {% endif %}
     </dd>
 {% endfor %}

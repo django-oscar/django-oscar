@@ -55,25 +55,36 @@ def facet_data(request, form, results):  # noqa (too complex (10))
         facet_data[key] = {
             'name': facet['name'],
             'results': []}
+        # Loop over the queries in OSCAR_SEARCH_FACETS rather than the returned
+        # facet information from the search backend.
         for field_value, query in facet['queries']:
             field_name = '%s_exact' % facet['field']
+            is_faceted_already = field_name in selected_facets
+
             match = '%s_exact:%s' % (facet['field'], query)
             if match not in facet_counts['queries']:
+                # This query was not returned
                 datum = {
                     'name': field_value,
                     'count': 0,
+                    'show_count': True,
+                    'disabled': True,
                 }
             else:
+                count = facet_counts['queries'][match]
                 datum = {
                     'name': field_value,
-                    'count': facet_counts['queries'][match],
+                    'count': count,
+                    'show_count': not is_faceted_already,
+                    'disabled': count == 0 and not is_faceted_already,
                 }
-                if selected_facets.get(field_name, None) == query:
+                if query in selected_facets.get(field_name, []):
                     # Selected
                     datum['selected'] = True
                     url = base_url.remove_query_param(
                         'selected_facets', match)
                     datum['deselect_url'] = url.as_string()
+                    datum['show_count'] = True
                 else:
                     datum['selected'] = False
                     url = base_url.append_query_param(

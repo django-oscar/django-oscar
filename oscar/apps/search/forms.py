@@ -90,9 +90,11 @@ class SearchForm(FacetedSearchForm):
                 continue
             if field == 'price_exact':
                 # Don't wrap value in speech marks and don't clean value
-                sqs = sqs.narrow(u'%s:%s' % (field, value))
+                sqs = sqs.narrow(u'%s:(%s)' % (
+                    field, " OR ".join(values)))
             else:
-                clean_values = ['"%s"' % sqs.query.clean(val) for val in values]
+                clean_values = [
+                    '"%s"' % sqs.query.clean(val) for val in values]
                 sqs = sqs.narrow(u'%s:(%s)' % (
                     field, " OR ".join(clean_values)))
 
