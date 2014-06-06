@@ -13,8 +13,7 @@ class FacetedSearchView(views.FacetedSearchView):
     Note that facets are configured when the ``SearchQuerySet`` is initialised.
     This takes place in the search application class.
 
-    See
-    http://django-haystack.readthedocs.org/en/v2.1.0/views_and_forms.html#facetedsearchform # noqa
+    See http://django-haystack.readthedocs.org/en/v2.1.0/views_and_forms.html#facetedsearchform # noqa
     """
 
     # Haystack uses a different class attribute to CBVs

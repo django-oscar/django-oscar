@@ -26,6 +26,10 @@ var oscar = (function(o, $) {
             $('#id_sort_by').on('change', function() {
                 $(this).closest('form').submit();
             });
+            // Bind events to facet checkboxes
+            $('.facet_checkbox').on('change', function() {
+                window.location.href = $(this).next('.facet_url').val();
+            });
         }
     };
 
