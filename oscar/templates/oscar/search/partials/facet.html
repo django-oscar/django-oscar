@@ -3,21 +3,22 @@
 <dt>{{ name }}</dt>
 {% for item in items %}
     <dd>
-        {% with item_count=item.count %}
-            {% if item.selected %}
-                <input class="facet_checkbox" type="checkbox" name="{{ item.name }}" checked />
-                <input class="facet_url" type="hidden" name="url_for_{{ item.name }}" value="{{ item.deselect_url }}" />
-                <strong>{{ item.name }} ({{ item_count }})</strong>
+        {% if item.selected %}
+            <input class="facet_checkbox" type="checkbox" name="{{ item.name }}" checked />
+            <input class="facet_url" type="hidden" name="url_for_{{ item.name }}" value="{{ item.deselect_url }}" />
+            <strong>{{ item.name }}</strong>
+        {% else %}
+            {% if item.disabled %}
+                <input type="checkbox" name="{{ item.name }}" disabled />
+                {{ item.name }} 
             {% else %}
-                {% if item.disabled %}
-                    <input type="checkbox" name="{{ item.name }}" disabled />
-                    {{ item.name }} (0)
-                {% else %}
-                    <input class="facet_checkbox" type="checkbox" name="{{ item.name }}" />
-                    <input class="facet_url" type="hidden" name="url_for_{{ item.name }}" value="{{ item.select_url }}" />
-                    <a href="{{ item.select_url }}">{{ item.name }}</a> ({{ item_count }})
-                {% endif %}
+                <input class="facet_checkbox" type="checkbox" name="{{ item.name }}" />
+                <input class="facet_url" type="hidden" name="url_for_{{ item.name }}" value="{{ item.select_url }}" />
+                <a href="{{ item.select_url }}">{{ item.name }}</a> 
             {% endif %}
-        {% endwith %}
+            {% if item.show_count %}
+                ({{ item.count }})
+            {% endif %}
+        {% endif %}
     </dd>
 {% endfor %}

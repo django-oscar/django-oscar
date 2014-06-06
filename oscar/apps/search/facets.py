@@ -26,6 +26,7 @@ def facet_data(request, form, results):  # noqa (too complex (10))
             datum = {
                 'name': field_value,
                 'count': count,
+                'show_count': not is_faceted_already,
                 'disabled': count == 0 and not is_faceted_already}
             if field_value in selected_facets.get(field_name, []):
                 # This filter is selected - build the 'deselect' URL
