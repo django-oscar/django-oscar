@@ -2,6 +2,12 @@
 Changelog
 =========
 
+0.4.15 - 2014-06/06
+-------------------
+
+Pin Haystack to a release that exists! The old beta release that Oscar used to
+pin to is no longer on PyPI.
+
 0.4.14 - 2013-12-17
 -------------------
 
