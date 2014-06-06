@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from django import forms
 from django.forms.widgets import Input
 from django.conf import settings
@@ -61,6 +63,18 @@ class SearchForm(FacetedSearchForm):
     sort_by = forms.ChoiceField(
         choices=SORT_BY_CHOICES, widget=forms.Select(), required=False)
 
+    @property
+    def selected_multi_facets(self):
+        # Process selected facets into a dict(field->[*values]) to handle
+        # multi-faceting
+        selected_multi_facets = defaultdict(list)
+        for facet_kv in self.selected_facets:
+            if ":" not in facet_kv:
+                continue
+            field, value = facet_kv.split(':', 1)
+            selected_multi_facets[field].append(value)
+        return selected_multi_facets
+
     def search(self):
         # We replace the 'search' method from FacetedSearchForm, so that we can
         # handle range queries
@@ -71,17 +85,16 @@ class SearchForm(FacetedSearchForm):
 
         # We need to process each facet to ensure that the field name and the
         # value are quoted correctly and separately:
-        for facet in self.selected_facets:
-            if ":" not in facet:
+        for field, values in self.selected_multi_facets.items():
+            if not values:
                 continue
-            field, value = facet.split(":", 1)
-            if value:
-                if field == 'price_exact':
-                    # Don't wrap value in speech marks and don't clean value
-                    sqs = sqs.narrow(u'%s:%s' % (field, value))
-                else:
-                    sqs = sqs.narrow(u'%s:"%s"' % (
-                        field, sqs.query.clean(value)))
+            if field == 'price_exact':
+                # Don't wrap value in speech marks and don't clean value
+                sqs = sqs.narrow(u'%s:%s' % (field, value))
+            else:
+                clean_values = ['"%s"' % sqs.query.clean(val) for val in values]
+                sqs = sqs.narrow(u'%s:(%s)' % (
+                    field, " OR ".join(clean_values)))
 
         if self.is_valid() and 'sort_by' in self.cleaned_data:
             sort_field = self.SORT_BY_MAP.get(

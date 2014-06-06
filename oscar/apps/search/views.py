@@ -39,6 +39,7 @@ class FacetedSearchView(views.FacetedSearchView):
         # Show suggestion no matter what.  Haystack 2.1 only shows a suggestion
         # if there are some results, which seems a bit weird to me.
         if self.results.query.backend.include_spelling:
+            # Note, this triggers an extra call to the search backend
             suggestion = self.form.get_suggestion()
             if suggestion != self.query:
                 extra['suggestion'] = suggestion
