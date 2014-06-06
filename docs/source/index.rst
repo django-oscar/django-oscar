@@ -87,49 +87,13 @@ mats to iPads.  The `source is on GitHub`_ - contributions are always welcome.
    :hidden:
    :maxdepth: 2
 
-   internals/getting_started
-   topics/key_questions
-   topics/customisation
+   Is Oscar right for me? <intro>
+   Getting started <getting_started/index>
+   Customising <customising/index>
+   E-commerce topics <topics/index>
    ref/index
-   deployment
+   Deploying <deployment>
    support
    upgrading
    contributing/index
    Releases <releases/index>
-
-First steps
-===========
-
-- :doc:`internals/sandbox`
-- :doc:`internals/getting_started`
-- :doc:`topics/key_questions`
-- :doc:`ref/glossary`
-
-Using Oscar
-===========
-
-All you need to start developing an Oscar project.
-
-- :doc:`topics/customisation`
-- :doc:`topics/class_loading_explained`
-- :doc:`topics/prices_and_availability`
-- :doc:`topics/deploying`
-- :doc:`topics/translation`
-- :doc:`topics/upgrading`
-
-Reference:
-
-- :doc:`Core functionality </ref/core>`
-- :doc:`Oscar's apps </ref/apps/index>`
-- :doc:`howto/index`
-- :doc:`ref/settings`
-- :doc:`ref/signals`
-
-The Oscar open-source project
-=============================
-
-Learn about the ideas behind Oscar and how you can contribute.
-
-- :doc:`internals/design-decisions`
-- :doc:`releases/index`
-- :doc:`contributing/index`
