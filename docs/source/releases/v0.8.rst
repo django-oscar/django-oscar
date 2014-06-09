@@ -176,15 +176,16 @@ Shipping
 The shipping method API has been altered to avoid potential thread-safety
 issues. Prior to v0.8, shipping methods had a ``set_basket`` method which
 allowed a basket instance to be assigned. This was really a crutch to allow
-templates to have easy access to shipping charges. However, it was also a
+templates to have easy access to shipping charges (as they could be read
+straight off the shipping method instance). However, it was also a
 design problem as shipping methods could be instantiated at compile-time
 leading to a thread safety issue where multiple threads could assign a basket
 to the same shipping method instance.
 
 In Oscar 0.8, shipping methods are stateless services that have a method
 :func:`~oscar.apps.shipping.methods.Base.calculate` that takes a basket and
-returns a ``Price`` instance.  New template tags are provided that allow these
-shipping charges to be accessed from templates.
+returns a ``Price`` instance.  New :doc:`template tags </ref/templatetags/>` are
+provided that allow these shipping charges to be accessed from templates.
 
 This API change does require quite a few changes as both the shipping method
 and shipping charge now need to be passed around separately:
@@ -203,6 +204,49 @@ and shipping charge now need to be passed around separately:
   :func:`~oscar.apps.checkout.session.CheckoutSessionMixin.get_order_totals` 
   method has changed to accept the ``shipping_charge`` rather than a
   ``shipping_method`` instance.
+
+Another key change is in the shipping repository object. The
+``get_shipping_methods`` method has been split in two to simplify the exercise
+of providing new shipping methods. The best practice for Oscar 0.8 is to 
+override the ``methods`` attribute if the same set of shipping methods is
+available to everyone:
+
+.. code-block:: python
+
+    from oscar.apps.shipping import repository, methods
+
+    class Standard(methods.FixedPrice):
+        code = "standard"
+        name = "Standard"
+        charge_excl_tax = D('10.00')
+
+
+    class Express(methods.FixedPrice):
+        code = "express"
+        name = "Express"
+        charge_excl_tax = D('20.00')
+
+    class Repository(repository.Repository):
+        methods = [Standard(), Express()]
+        
+or to override ``get_available_shipping_methods`` if the available shipping
+methods if only available conditionally:
+
+.. code-block:: python
+
+    from oscar.apps.shipping import repository
+
+    class Repository(repository.Repository):
+        
+        def get_available_shipping_methods(
+                self, basket, shipping_addr=None, **kwargs):
+            methods = [Standard()]
+            if shipping_addr.country.code == 'US':
+                # Express only available in the US
+                methods.append(Express())
+            return methods
+
+Note that shipping address should be passed around as instances not classes.
 
 Other potentially breaking changes related to shipping include:
 
