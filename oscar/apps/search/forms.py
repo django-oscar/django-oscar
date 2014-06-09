@@ -108,11 +108,14 @@ class SearchForm(FacetedSearchForm):
         for field, values in self.selected_multi_facets.items():
             if not values:
                 continue
-            if field == 'price_exact':
-                # Don't wrap value in speech marks and don't clean value
+            if field in VALID_FACET_QUERIES:
+                # Query facet - don't wrap value in speech marks and don't
+                # clean value. Query values should have been validated by this
+                # point and so we don't need to escape them.
                 sqs = sqs.narrow(u'%s:(%s)' % (
                     field, " OR ".join(values)))
             else:
+                # Field facet - clean and quote the values
                 clean_values = [
                     '"%s"' % sqs.query.clean(val) for val in values]
                 sqs = sqs.narrow(u'%s:(%s)' % (
