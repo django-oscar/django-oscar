@@ -48,7 +48,9 @@ class FacetedSearchView(views.FacetedSearchView):
         # Convert facet data into a more useful datastructure
         if 'fields' in extra['facets']:
             munger = FacetMunger(
-                self.request.get_full_path(), self.form, self.results)
+                self.request.get_full_path(),
+                self.form.selected_multi_facets,
+                self.results.facet_counts())
             extra['facet_data'] = munger.facet_data()
             has_facets = any([len(data['results']) for
                               data in extra['facet_data'].values()])

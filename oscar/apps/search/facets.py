@@ -4,16 +4,12 @@ from purl import URL
 
 class FacetMunger(object):
 
-    def __init__(self, path, form, results):
+    def __init__(self, path, selected_multi_facets, facet_counts):
         self.base_url = URL(path)
-        self.facet_counts = results.facet_counts()
-        self.selected_facets = form.selected_multi_facets
-        self.results = results
+        self.selected_facets = selected_multi_facets
+        self.facet_counts = facet_counts
 
     def facet_data(self):
-        if not self.results:
-            return {}
-
         facet_data = {}
         self.munge_field_facets(facet_data)
         self.munge_query_facets(facet_data)
@@ -33,28 +29,25 @@ class FacetMunger(object):
             datum = {
                 'name': field_value,
                 'count': count,
+                # We don't show facet counts if a this field is already being
+                # faceted (as we don't know them)
                 'show_count': not is_faceted_already,
-                'disabled': count == 0 and not is_faceted_already}
+                'disabled': count == 0 and not is_faceted_already,
+                'selected': False
+            }
             if field_value in self.selected_facets.get(field_name, []):
                 # This filter is selected - build the 'deselect' URL
                 datum['selected'] = True
                 url = self.base_url.remove_query_param(
                     'selected_facets', '%s:%s' % (
                         field_name, field_value))
-                # Don't carry through pagination params
-                if url.has_query_param('page'):
-                    url = url.remove_query_param('page')
-                datum['deselect_url'] = url.as_string()
+                datum['deselect_url'] = self.strip_pagination(url)
             else:
                 # This filter is not selected - built the 'select' URL
-                datum['selected'] = False
                 url = self.base_url.append_query_param(
                     'selected_facets', '%s:%s' % (
                         field_name, field_value))
-                # Don't carry through pagination params
-                if url.has_query_param('page'):
-                    url = url.remove_query_param('page')
-                datum['select_url'] = url.as_string()
+                datum['select_url'] = self.strip_pagination(url)
 
             clean_data[key]['results'].append(datum)
 
@@ -72,7 +65,7 @@ class FacetMunger(object):
             field_name = '%s_exact' % facet['field']
             is_faceted_already = field_name in self.selected_facets
 
-            match = '%s_exact:%s' % (facet['field'], query)
+            match = '%s:%s' % (field_name, query)
             if match not in self.facet_counts['queries']:
                 # This query was not returned
                 datum = {
@@ -88,17 +81,22 @@ class FacetMunger(object):
                     'count': count,
                     'show_count': not is_faceted_already,
                     'disabled': count == 0 and not is_faceted_already,
+                    'selected': False,
                 }
                 if query in self.selected_facets.get(field_name, []):
                     # Selected
                     datum['selected'] = True
+                    datum['show_count'] = True
                     url = self.base_url.remove_query_param(
                         'selected_facets', match)
-                    datum['deselect_url'] = url.as_string()
-                    datum['show_count'] = True
+                    datum['deselect_url'] = self.strip_pagination(url)
                 else:
-                    datum['selected'] = False
                     url = self.base_url.append_query_param(
                         'selected_facets', match)
-                    datum['select_url'] = url.as_string()
+                    datum['select_url'] = self.strip_pagination(url)
             clean_data[key]['results'].append(datum)
+
+    def strip_pagination(self, url):
+        if url.has_query_param('page'):
+            url = url.remove_query_param('page')
+        return url.as_string()
