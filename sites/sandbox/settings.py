@@ -330,6 +330,14 @@ HAYSTACK_CONNECTIONS = {
         'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
     },
 }
+# Here's a sample Haystack config if using Solr (which is recommended)
+#HAYSTACK_CONNECTIONS = {
+#    'default': {
+#        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+#        'URL': u'http://127.0.0.1:8983/solr/oscar_latest/',
+#        'INCLUDE_SPELLING': True
+#    },
+#}
 
 # =============
 # Debug Toolbar

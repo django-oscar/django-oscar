@@ -42,7 +42,7 @@ Haystack provides an abstraction layer on top of different search backends and
 integrates with Django. Your Haystack connection settings in your
 ``settings.py`` for the config above should look like this:
 
-.. code-block:: django
+.. code-block:: python
 
     HAYSTACK_CONNECTIONS = {
         'default': {
@@ -63,6 +63,6 @@ If all is well, you should now be able to rebuild the search index.
     Indexing 201 Products
 
 The products being indexed twice is caused by a low-priority bug in Oscar and
-can be safely ignored.
-If the indexing succeeded, search in Oscar will be working. Search for any
-term in the search box on your Oscar site, and you should get results.
+can be safely ignored.  If the indexing succeeded, search in Oscar will be
+working. Search for any term in the search box on your Oscar site, and you
+should get results.
