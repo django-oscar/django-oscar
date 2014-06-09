@@ -17,6 +17,14 @@ class SearchInput(Input):
     input_type = 'search'
 
 
+# Build a dict of valid queries
+VALID_FACET_QUERIES = defaultdict(list)
+for facet in settings.OSCAR_SEARCH_FACETS['queries'].values():
+    field_name = "%s_exact" % facet['field']
+    queries = [t[1] for t in facet['queries']]
+    VALID_FACET_QUERIES[field_name].extend(queries)
+
+
 class SearchForm(FacetedSearchForm):
     """
     In Haystack, the search form is used for interpretting
@@ -65,14 +73,26 @@ class SearchForm(FacetedSearchForm):
 
     @property
     def selected_multi_facets(self):
+        """
+        Validate and return the selected facets
+        """
         # Process selected facets into a dict(field->[*values]) to handle
         # multi-faceting
         selected_multi_facets = defaultdict(list)
+
         for facet_kv in self.selected_facets:
             if ":" not in facet_kv:
                 continue
-            field, value = facet_kv.split(':', 1)
-            selected_multi_facets[field].append(value)
+            field_name, value = facet_kv.split(':', 1)
+
+            # Validate query facets as they as passed unescaped to Solr
+            if field_name in VALID_FACET_QUERIES:
+                if value not in VALID_FACET_QUERIES[field_name]:
+                    # Invalid query value
+                    continue
+
+            selected_multi_facets[field_name].append(value)
+
         return selected_multi_facets
 
     def search(self):
