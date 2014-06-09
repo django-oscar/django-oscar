@@ -60,11 +60,15 @@
 {% endblock %}
 
 {% block content %}
-    {% if category.description %}
+    {% if category.description or category.image %}
         <div class="row-fluid">
-            <div class="span9"><p>{{ category.description|safe }}</p></div>
-            {% if category.image %}
+            {% if category.description and not category.image %}
+                <div class="span12">{{ category.description|safe }}</div>
+            {% elif category.description and category.image %}
+                <div class="span9">{{ category.description|safe }}</div>
                 <div class="span3"><img src="{{ category.image.url }}" alt="{{ summary }}" /></div>
+            {% elif category.image %}
+                <div class="span12"><img src="{{ category.image.url }}" alt="{{ summary }}" /></div>
             {% endif %}
         </div>
     {% endif %}
