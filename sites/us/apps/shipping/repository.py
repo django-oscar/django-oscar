@@ -16,17 +16,13 @@ class Express(methods.FixedPrice):
 
 
 class Repository(repository.Repository):
-    methods = [Standard, Express]
 
-    def get_shipping_methods(self, basket, user=None, shipping_addr=None,
-                             request=None, **kwargs):
-        methods = super(Repository, self).get_shipping_methods(
-            basket, user, shipping_addr, request, **kwargs)
-
+    def get_available_shipping_methods(
+            self, basket, shipping_addr=None, **kwargs):
+        methods = [Standard(), Express()]
         if shipping_addr:
             item_methods = models.OrderAndItemCharges.objects.filter(
                 countries=shipping_addr.country)
-            for method in item_methods:
-                methods.append(self.prime_method(basket, method))
+            methods.extend(list(item_methods))
 
         return methods
