@@ -2,7 +2,12 @@
 Changelog
 =========
 
-0.4.15 - 2014-06/06
+0.4.16 - 2014-06-10
+-------------------
+
+Switch to Pillow (as the pinned version of PIL no longer exists).
+
+0.4.15 - 2014-06-06
 -------------------
 
 Pin Haystack to a release that exists! The old beta release that Oscar used to
