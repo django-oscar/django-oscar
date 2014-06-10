@@ -26,7 +26,8 @@ setup(name='django-oscar',
       include_package_data=True,
       install_requires=[
           'django>=1.4,<1.5',
-          'PIL==1.1.7',
+          # PIL is required for image fields, Pillow is the "friendly" PIL fork
+          'pillow>=>=1.7.8,<2.3',
           'South>=0.7.6,<0.8',
           'django-extra-views>=0.2,<0.6',
           'django-haystack==2.0.0',
