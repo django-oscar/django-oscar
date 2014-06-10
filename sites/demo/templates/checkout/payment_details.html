@@ -23,18 +23,24 @@
             <h3>{% trans "Billing address" %}</h3>
             {{ billing_address_form.non_field_errors }}
 
-            <p>
-            {{ form.same_as_shipping.errors }}
-            {{ billing_address_form.same_as_shipping.0 }}
-            {{ billing_address_form.same_as_shipping.1 }}
-            </p>
-
-            <div id="billing_address_form" style="display:none">
+            {% if basket.is_shipping_required %}
+                <p>
+                {{ billing_address_form.same_as_shipping.0 }}
+                {{ billing_address_form.same_as_shipping.1 }}
+                </p>
+                <div id="billing_address_form" style="display:none">
+            {% else %}
+                <div style="">
+                    {{ billing_address_form.same_as_shipping }}
+                </div>
+                <div id="billing_address_form">
+            {% endif %}
                 {% include 'partials/form_field.html' with field=billing_address_form.line1 %}
                 {% include 'partials/form_field.html' with field=billing_address_form.line2 %}
                 {% include 'partials/form_field.html' with field=billing_address_form.line3 %}
                 {% include 'partials/form_field.html' with field=billing_address_form.line4 %}
                 {% include 'partials/form_field.html' with field=billing_address_form.state %}
+                {% include 'partials/form_field.html' with field=billing_address_form.postcode %}
                 {% include 'partials/form_field.html' with field=billing_address_form.country %}
             </div>
         </div>
