@@ -42,7 +42,7 @@ Haystack provides an abstraction layer on top of different search backends and
 integrates with Django. Your Haystack connection settings in your
 ``settings.py`` for the config above should look like this:
 
-.. code-block:: django
+.. code-block:: python
 
     HAYSTACK_CONNECTIONS = {
         'default': {
