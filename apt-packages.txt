@@ -1,6 +1,0 @@
-python-software-properties
-python-pip
-python-setuptools
-python-dev
-build-essential
-python
