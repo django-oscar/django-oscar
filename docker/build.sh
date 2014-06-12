@@ -23,6 +23,7 @@ TO_COPY=(
     Dockerfile
     apt-packages.txt
     supervisord.conf
+    cronfile
     ../README.rst
     ../setup.py
     ../requirements.txt

@@ -25,6 +25,10 @@ RUN cd /code && make sandbox_base
 # the container.
 EXPOSE 8000 8983
 
+# Put cronjob in place
+RUN mv /code/cronfile /etc/cron.d/
+RUN chmod 600 /etc/cron.d/cronfile
+
 # Run supervisor once the container is built
 RUN mv /code/supervisord.conf /etc/supervisor/conf.d/
-CMD ["/usr/bin/supervisord"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
