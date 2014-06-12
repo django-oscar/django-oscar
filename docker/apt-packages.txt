@@ -9,3 +9,8 @@ libjpeg-dev
 libfreetype6-dev
 zlib1g-dev
 git-core
+default-jre-headless
+libxml2-dev 
+libxslt1-dev
+supervisor
+wget

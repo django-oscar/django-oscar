@@ -8,8 +8,8 @@
 # copying only the things we need into a temp folder and running "docker build"
 # from there.
 
-# The image tag can be optionally passed in
-TAG=${1:-oscar_latest}
+# The image repo can be optionally passed in
+REPO=${1:-django_oscar_sandbox}
 
 # Change to directory of this script
 cd "$(dirname "$0")"
@@ -22,6 +22,7 @@ echo "Creating context in $TMP_DIR"
 TO_COPY=(
     Dockerfile
     apt-packages.txt
+    supervisord.conf
     ../README.rst
     ../setup.py
     ../requirements.txt
@@ -31,17 +32,25 @@ TO_COPY=(
 )
 cp -r ${TO_COPY[@]} $TMP_DIR
 
-echo "Building docker container tagged $TAG"
+# Use docker-specific local settings
+mv $TMP_DIR/sites/sandbox/settings_{docker,local}.py
+
+echo "Building docker container named $REPO"
 cd $TMP_DIR
-IMAGE_ID=$(docker build -t $TAG .)
+docker build --rm=true -t $REPO .
 
 echo "Removing temp folder $TMP_DIR"
 rm -rf $TMP_DIR
 
-echo "You can now run the Django server within this container by doing this"
-echo "$ docker run -it -p 8000:8000 $TAG /code/sites/sandbox/runserver 0.0.0.0:8000"
+echo
+echo "You can now run this container using"
+echo
+echo "$ docker run -it -p 8000 -p 8983 $REPO"
+echo
+echo "See the output of 'docker ps' to see which host port is being used"
 if [[ `uname` -eq "Darwin" ]]; 
 then
-    echo "You will also need to forward port 8000 of the boot2docker VM"
+    echo
+    echo "OSX users will also need to port forward from the boot2docker VM"
     echo "See https://github.com/boot2docker/boot2docker/blob/master/doc/WORKAROUNDS.md"
 fi
