@@ -45,7 +45,7 @@ rm -rf $TMP_DIR
 echo
 echo "You can now run this container using"
 echo
-echo "$ docker run -it -p 8000 -p 8983 $REPO"
+echo "$ docker run -P $REPO"
 echo
 echo "See the output of 'docker ps' to see which host port is being used"
 if [[ `uname` -eq "Darwin" ]]; 
