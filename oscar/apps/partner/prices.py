@@ -92,15 +92,12 @@ class FixedPrice(Base):
         """
         Implements a naive linear pricing. Override this function to implement
         e.g. bulk pricing.
-        Defaults to quantizing with the same precision as the unit price.
         """
         return self._excl_tax * quantity
 
     def calculate_tax(self, total_excl_tax):
         """
         Calculates tax, given a non-tax total.
-        Defaults to quantizing with the same precision as the given total,
-        which should be the precision of the prices.
         """
         if self.tax_rate is None:
             return None
