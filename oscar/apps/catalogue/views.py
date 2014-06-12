@@ -91,6 +91,9 @@ class ProductDetailView(DetailView):
         This allows alternative templates to be provided for a per-product
         and a per-item-class basis.
         """
+        if self.template_name:
+            return [self.template_name]
+
         return [
             '%s/detail-for-upc-%s.html' % (
                 self.template_folder, self.object.upc),
