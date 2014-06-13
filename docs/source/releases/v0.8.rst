@@ -17,7 +17,7 @@ Table of contents:
 .. _overview_of_0.8:
 
 Overview
-========
+--------
 
 Oscar now has a demo site customised for the US!
 
@@ -34,7 +34,7 @@ availability logic now needs to be handled with strategies.
 .. _compatibility_of_0.8:
 
 Compatibility
-=============
+-------------
 
 Oscar 0.8 is compatible with Django 1.5-1.7. 
 
@@ -44,10 +44,10 @@ and 3.4.
 .. _new_in_0.8:
 
 What's new in Oscar 0.8?
-========================
+------------------------
 
 Customisation just got easier!
-------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * Oscar's views are now dynamically imported. This means that they can be
   overridden like most other classes in Oscar; overriding the related
@@ -61,7 +61,7 @@ Customisation just got easier!
   overhaul to incorporate the changes.
 
 Reworked shipping app
----------------------
+~~~~~~~~~~~~~~~~~~~~~
 
 Several parts of the shipping app have been changed. The most important is a
 change to the API of shipping methods to avoid a potential thread safety issue.
@@ -86,7 +86,7 @@ for the shipping app and the
 for more information.
 
 US demo site
-------------
+~~~~~~~~~~~~
 
 To help developers building sites for the US, a new example Oscar site has been
 included in the repo. This customises core Oscar to treat all prices as
@@ -96,7 +96,7 @@ known.
 See :ref:`us_site` for more information.
 
 Basket additions clean-up
--------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The forms and views around adding things to your basket has been vigorously
 reworked. This cleans up some very old code there and ensures variant products
@@ -107,7 +107,7 @@ The changes do require changing the constructor signature of the
 :ref:`basket_app_changes`.
 
 Checkout improvements
----------------------
+~~~~~~~~~~~~~~~~~~~~~
 
 The checkout process now skips payment if the order total is zero (e.g. when
 ordering free products or using a voucher). As part of that, checkout views
@@ -115,7 +115,7 @@ now evaluate *pre-conditions* (as before) and newly introduced
 *skip conditions*. This should make customising the checkout flow easier.
 
 Cleanup around shipping methods
--------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * The models of the shipping app now have abstract base classes, similar to
   the rest of Oscar.
@@ -138,7 +138,7 @@ Cleanup around shipping methods
 .. _minor_changes_in_0.8:
 
 Minor changes
--------------
+~~~~~~~~~~~~~
 
 * The ``OSCAR_CURRENCY_LOCALE`` setting has been removed. The locale is now
   automatically determined from the current language. This ensures prices are
@@ -166,12 +166,12 @@ Minor changes
 .. _incompatible_changes_in_0.8:
 
 Backwards incompatible changes in 0.8
-=====================================
+-------------------------------------
 
 .. _incompatible_shipping_changes_in_0.8:
 
 Shipping
---------
+~~~~~~~~
 
 The shipping method API has been altered to avoid potential thread-safety
 issues. Prior to v0.8, shipping methods had a ``set_basket`` method which
@@ -227,7 +227,7 @@ Other potentially breaking changes related to shipping include:
   ``oscar.apps.shipping.scales.Scale``, and is now overridable.
 
 Misc
-----
+~~~~
 
 * The ``oscar_calculate_scores`` command has been `rewritten`_ to use the ORM
   instead of raw SQL. That exposed a bug in the previous calculations,
@@ -250,7 +250,7 @@ Misc
 .. _rewritten: https://github.com/tangentlabs/django-oscar/commit/d8b4dbfed17be90846ea4bc47b5f7b39ad944c24
 
 Basket line stockrecords
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 The basket line model got a reference to the stockrecord in Oscar 0.6. The
 basket middleware since then updated basket lines to have stockrecords if
@@ -290,7 +290,7 @@ are no nulls in your ``basket_line`` table:
 .. _basket_app_changes:
 
 Basket app changes
-------------------
+~~~~~~~~~~~~~~~~~~
 
 - The ``basket:add`` URL now required the primary key of the "base" product to
   be included. This allows the same form to be used for both GET and POST
@@ -306,7 +306,7 @@ Basket app changes
 .. _8ba283e8: https://github.com/tangentlabs/django-oscar/commit/8ba283e8c4239e4eff95da5e8097a17ecfadf5f5
 
 Migrations
-----------
+~~~~~~~~~~
 
 * Catalogue:
 
@@ -329,7 +329,7 @@ Migrations
 .. _deprecated_features_in_0.8:
 
 Removal of deprecated features
-------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 These methods have been removed:
 
