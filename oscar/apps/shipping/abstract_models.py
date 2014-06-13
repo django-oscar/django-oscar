@@ -92,13 +92,13 @@ class AbstractWeightBased(AbstractBase):
     # The attribute code to use to look up the weight of a product
     weight_attribute = 'weight'
 
-    # The default weight to use (in Kg) when a product doesn't have a weight
+    # The default weight to use (in kg) when a product doesn't have a weight
     # attribute.
     default_weight = models.DecimalField(
         _("Default Weight"), decimal_places=3, max_digits=12,
         default=D('0.000'),
         validators=[MinValueValidator(D('0.00'))],
-        help_text=_("Default product weight in Kg when no weight attribute "
+        help_text=_("Default product weight in kg when no weight attribute "
                     "is defined"))
 
     class Meta(AbstractBase.Meta):
