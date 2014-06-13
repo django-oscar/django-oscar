@@ -3,6 +3,7 @@ from decimal import Decimal as D
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.core.validators import MinValueValidator
 
 from oscar.core import prices, loading
 from oscar.models.fields import AutoSlugField
@@ -84,17 +85,19 @@ class AbstractOrderAndItemCharges(AbstractBase):
 class AbstractWeightBased(AbstractBase):
     upper_charge = models.DecimalField(
         _("Upper Charge"), decimal_places=2, max_digits=12, null=True,
+        validators=[MinValueValidator(D('0.00'))],
         help_text=_("This is the charge when the weight of the basket "
-                    "is greater than all the weight bands"""))
+                    "is greater than all the weight bands"))
 
     # The attribute code to use to look up the weight of a product
     weight_attribute = 'weight'
 
-    # The default weight to use (in kg) when a product doesn't have a weight
+    # The default weight to use (in kg) when a product doesn't have a weight
     # attribute.
     default_weight = models.DecimalField(
         _("Default Weight"), decimal_places=3, max_digits=12,
         default=D('0.000'),
+        validators=[MinValueValidator(D('0.00'))],
         help_text=_("Default product weight in kg when no weight attribute "
                     "is defined"))
 
@@ -135,6 +138,19 @@ class AbstractWeightBased(AbstractBase):
             return None
         return bands[0]
 
+    @property
+    def num_bands(self):
+        return self.bands.all().count()
+
+    @property
+    def max_upper_limit(self):
+        """
+        Return the max upper_limit from this method's weight bands
+        """
+        bands = self.bands.all().order_by('-upper_limit')
+        if bands:
+            return bands[0].upper_limit
+
 
 class AbstractWeightBand(models.Model):
     """
@@ -144,9 +160,12 @@ class AbstractWeightBand(models.Model):
         'shipping.WeightBased', related_name='bands', verbose_name=_("Method"))
     upper_limit = models.DecimalField(
         _("Upper Limit"), decimal_places=3, max_digits=12,
+        validators=[MinValueValidator(D('0.00'))],
         help_text=_("Enter upper limit of this weight band in kg. The lower "
                     "limit will be determined by the other weight bands."))
-    charge = models.DecimalField(_("Charge"), decimal_places=2, max_digits=12)
+    charge = models.DecimalField(
+        _("Charge"), decimal_places=2, max_digits=12,
+        validators=[MinValueValidator(D('0.00'))])
 
     @property
     def weight_from(self):
