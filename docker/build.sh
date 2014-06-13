@@ -38,7 +38,7 @@ mv $TMP_DIR/sites/sandbox/settings_{docker,local}.py
 
 echo "Building docker container named $REPO"
 cd $TMP_DIR
-docker build --rm=true -t $REPO .
+docker build --rm=true --tag=$REPO .
 
 echo "Removing temp folder $TMP_DIR"
 rm -rf $TMP_DIR
