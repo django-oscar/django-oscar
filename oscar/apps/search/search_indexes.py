@@ -24,6 +24,9 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     num_in_stock = indexes.IntegerField(null=True, faceted=True)
     rating = indexes.IntegerField(null=True, faceted=True)
 
+    # Fields for boosting
+    score = indexes.FloatField()
+
     # Spelling suggestions
     suggestions = indexes.FacetCharField()
 
@@ -76,6 +79,9 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         elif obj.has_stockrecords:
             result = strategy.fetch_for_product(obj)
             return result.stockrecord.net_stock_level
+
+    def prepare_score(self, obj):
+        return obj.score
 
     def prepare(self, obj):
         prepared_data = super(ProductIndex, self).prepare(obj)
