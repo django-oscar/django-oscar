@@ -12,7 +12,6 @@ class AbstractProductRecord(models.Model):
     This used be auto-merchandising to display the most popular
     products.
     """
-
     product = models.OneToOneField(
         'catalogue.Product', verbose_name=_("Product"),
         related_name='stats')
