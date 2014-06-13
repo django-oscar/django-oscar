@@ -25,7 +25,8 @@ Things that have been heavily rewritten:
 
 - Adding product to the basket
 
-Shipping functionality got a thorough re-working.
+Shipping functionality got a thorough re-working including a new dashboard for
+weight-based shipping methods.
 
 Lots of methods deprecated in the 0.6 release have now been removed.
 Specifically, the partner "wrapper" functionality is now gone. All price and
@@ -63,8 +64,8 @@ Customisation just got easier!
 Reworked shipping app
 ~~~~~~~~~~~~~~~~~~~~~
 
-Several parts of the shipping app have been changed. The most important is a
-change to the API of shipping methods to avoid a potential thread safety issue.
+Several parts of the shipping app have been altered The most important change is a
+to the API of shipping methods to avoid a potential thread safety issue.
 Any existing Oscar sites with custom shipping methods will need to adjust them
 to confirm to the new API.
 
@@ -84,6 +85,28 @@ See the
 for the shipping app and the 
 :doc:`guide to configuring shipping </howto/how_to_configure_shipping>` 
 for more information.
+
+Dashboard for weight-based shipping methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There is a new dashboard for weight-based shipping methods. It isn't enabled by
+default as weight-based shipping methods are enabled by default. To add it to
+the dashboard menu, include this snippet in your ``OSCAR_DASHBOARD_NAVIGATION``
+setting:
+
+.. code-block:: python
+
+    OSCAR_DASHBOARD_NAVIGATION = [
+        ...
+        {
+            'label': _('Shipping charges'),
+            'url_name': 'dashboard:shipping-method-list',
+        },
+        ...
+    ]
+
+You'll also need to modify your shipping repository class to return weight-based
+shipping methods too.
 
 US demo site
 ~~~~~~~~~~~~
