@@ -201,7 +201,7 @@ class BasketView(ModelFormSetView):
                 else:
                     msg = _("You can't save an item for later if you're "
                             "not logged in!")
-                    flash_messages.error(self.request, msg)
+                    flash_messages.error(msg)
                     return HttpResponseRedirect(self.get_success_url())
 
         if save_for_later:
