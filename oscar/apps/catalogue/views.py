@@ -22,6 +22,7 @@ class ProductDetailView(DetailView):
     view_signal = product_viewed
     template_folder = "catalogue"
     enforce_paths = True
+    enforce_parent = True
 
     def get(self, request, **kwargs):
         """
@@ -29,11 +30,11 @@ class ProductDetailView(DetailView):
         """
         self.object = product = self.get_object()
 
-        if self.enforce_paths:
-            if product.is_variant:
-                return HttpResponsePermanentRedirect(
-                    product.parent.get_absolute_url())
+        if self.enforce_parent and product.is_variant:
+            return HttpResponsePermanentRedirect(
+                product.parent.get_absolute_url())
 
+        if self.enforce_paths:
             correct_path = product.get_absolute_url()
             if correct_path != request.path:
                 return HttpResponsePermanentRedirect(correct_path)
