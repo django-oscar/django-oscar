@@ -304,6 +304,13 @@ Misc
   ``Product.recommended_products`` or just add the field back to your
   custom Product instance and ``ProductForm`` when migrating.
 
+* The ``basket_form`` template tag code has been greatly simplified. Because of
+  that, the syntax needed to change slightly.
+
+  Before: ``{% basket_form request product as basket_form single %}``
+
+  After: ``{% basket_form request product 'single' as basket_form %}``
+
 .. _rewritten: https://github.com/tangentlabs/django-oscar/commit/d8b4dbfed17be90846ea4bc47b5f7b39ad944c24
 
 Basket line stockrecords
