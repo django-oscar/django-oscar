@@ -5,7 +5,7 @@ from nose.plugins.attrib import attr
 
 from oscar.apps.shipping.models import OrderAndItemCharges, WeightBased
 from oscar.core.compat import get_user_model
-from oscar.test import factories, newfactories
+from oscar.test import factories
 
 
 User = get_user_model()
@@ -165,8 +165,8 @@ class WeightBasedMethodTests(TestCase):
         self.assertTrue(charge.is_tax_known)
 
     def test_simple_shipping_cost_scenario_handled_correctly(self):
-        basket = newfactories.BasketFactory()
-        product_attribute_value = newfactories.ProductAttributeValueFactory(
+        basket = factories.BasketFactory()
+        product_attribute_value = factories.ProductAttributeValueFactory(
             value_float=2.5)
         basket.add_product(product_attribute_value.product)
 
@@ -177,8 +177,8 @@ class WeightBasedMethodTests(TestCase):
         self.assertEqual(expected_charge, charge.excl_tax)
 
     def test_overflow_shipping_cost_scenario_handled_correctly(self):
-        basket = newfactories.BasketFactory()
-        product_attribute_value = newfactories.ProductAttributeValueFactory(
+        basket = factories.BasketFactory()
+        product_attribute_value = factories.ProductAttributeValueFactory(
             value_float=2.5)
         basket.add_product(product_attribute_value.product)
 

@@ -23,16 +23,17 @@ from oscar.core.compat import get_user_model
 
 __all__ = ["UserFactory", "CountryFactory", "UserAddressFactory",
            "BasketFactory", "VoucherFactory", "ProductFactory",
-           "StockRecordFactory"]
+           "StockRecordFactory", "ProductAttributeFactory",
+           "ProductAttributeValueFactory"]
 
 
 class UserFactory(factory.DjangoModelFactory):
     FACTORY_FOR = get_user_model()
 
-    email = 'the_j_meister@example.com'
+    username = factory.Sequence(lambda n: 'the_j_meister nummer %d' % n)
+    email = factory.Sequence(lambda n: 'example_%s@example.com' % n)
     first_name = 'joseph'
     last_name = 'winterbottom'
-    username = 'the_j_meister'
     password = factory.PostGenerationMethodCall('set_password', 'skelebrain')
     is_active = True
     is_superuser = False
