@@ -64,23 +64,12 @@ Customisation just got easier!
 Reworked shipping app
 ~~~~~~~~~~~~~~~~~~~~~
 
-Several parts of the shipping app have been altered The most important change is a
+Several parts of the shipping app have been altered. The most important change is a
 to the API of shipping methods to avoid a potential thread safety issue.
 Any existing Oscar sites with custom shipping methods will need to adjust them
-to confirm to the new API.
+to confirm to the new API. The new API and the other changes are detailed below.
 
-Other changes to the shipping app include:
-
-* All shipping models now have abstract base classes, similar to
-  the rest of Oscar, allowing them to be customised in the standard way.
-
-* The ``WeightBand.upper_limit`` model field is now a ``DecimalField``, just like the other
-  weight-related fields.
-
-* The Django admin interface for the ``WeightBased`` shipping method has been
-  made slightly more useful. 
-
-See the 
+See the
 :ref:`backwards incompatible changes <incompatible_shipping_changes_in_0.8>` 
 for the shipping app and the 
 :doc:`guide to configuring shipping </howto/how_to_configure_shipping>` 
@@ -153,10 +142,6 @@ Cleanup around shipping methods
 
 * ``WeightBand.upper_limit`` is now a ``DecimalField``, just like the other
   weight-related fields.
-
-* The Django admin interface for the ``WeightBased`` shipping method has been
-  made slightly more useful. Contributions for a dedicated dashboard app are
-  most welcome!
 
 .. _minor_changes_in_0.8:
 
@@ -272,6 +257,11 @@ methods if only available conditionally:
 Note that shipping address should be passed around as instances not classes.
 
 Other potentially breaking changes related to shipping include:
+
+* Weight based shipping methods used to have an ``upper_charge`` field which was
+  returned if no weight band matched. That doesn't work very well in practice,
+  and has been removed. Instead, charges from bands are now added together to
+  match the weight of the basket.
 
 * The :class:`~oscar.apps.order.utils.OrderCreator` class no longer defaults to
   free shipping: a shipping method and charge have to be explicitly passed in.

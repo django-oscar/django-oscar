@@ -107,13 +107,7 @@ class AbstractWeightBased(AbstractBase):
         scale = Scale(attribute_code=self.weight_attribute,
                       default_weight=self.default_weight)
         weight = scale.weigh_basket(basket)
-        band = self.get_band_for_weight(weight)
-        if band is not None:
-            charge = band.charge
-        elif self.bands.all().exists() and self.upper_charge:
-            charge = self.upper_charge
-        else:
-            charge = D('0.00')
+        charge = self.get_charge(weight)
 
         # Zero tax is assumed...
         return prices.Price(
@@ -121,30 +115,57 @@ class AbstractWeightBased(AbstractBase):
             excl_tax=charge,
             incl_tax=charge)
 
+    def get_charge(self, weight):
+        """
+        Calculates shipping charges for a given weight.
+
+        If there is one or more matching weight band for a given weight, the
+        charge of the closest matching weight band is returned.
+
+        If the weight exceeds the top weight band, the top weight band charge
+        is added until a matching weight band is found. This models the concept
+        of "sending as many of the large boxes as needed".
+
+        Please note that it is assumed that the closest matching weight band
+        is the most cost-effective one, and that the top weight band is more
+        cost effective than e.g. sending out two smaller parcels.
+        Without that assumption, determining the cheapest shipping solution
+        becomes an instance of the bin packing problem. The bin packing problem
+        is NP-hard and solving it is left as an exercise to the reader.
+        """
+        weight = D(weight)  # weight really should be stored as a decimal
+        if not weight or not self.bands.exists():
+            return D('0.00')
+
+        top_band = self.top_band
+        if weight < top_band.upper_limit:
+            band = self.get_band_for_weight(weight)
+            return band.charge
+        else:
+            quotient, remaining_weight = divmod(weight, top_band.upper_limit)
+            remainder_band = self.get_band_for_weight(remaining_weight)
+            return quotient * top_band.charge + remainder_band.charge
+
     def get_band_for_weight(self, weight):
         """
-        Return the weight band for a given weight
+        Return the closest matching weight band for a given weight.
         """
-        bands = self.bands.filter(
-            upper_limit__gte=weight).order_by('upper_limit')[:1]
-        # Query return only one row, so we can evaluate it
-        if not bands:
-            # No band for this weight
+        try:
+            return self.bands.filter(
+                upper_limit__gte=weight).order_by('upper_limit')[0]
+        except IndexError:
             return None
-        return bands[0]
 
     @property
     def num_bands(self):
-        return self.bands.all().count()
+        return self.bands.count()
 
     @property
-    def max_upper_limit(self):
-        """
-        Return the max upper_limit from this method's weight bands
-        """
-        bands = self.bands.all().order_by('-upper_limit')
-        if bands:
-            return bands[0].upper_limit
+    def top_band(self):
+        try:
+            return self.bands.order_by('-upper_limit')[0]
+        except IndexError:
+            return None
 
 
 class AbstractWeightBand(models.Model):
