@@ -111,3 +111,17 @@ class ProductFactory(factory.DjangoModelFactory):
     stockrecords = factory.RelatedFactory(StockRecordFactory, 'product')
 
 
+class ProductAttributeFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = catalogue_models.ProductAttribute
+
+    code = name = 'weight'
+    product_class = factory.SubFactory(ProductClassFactory)
+    type = "float"
+
+
+class ProductAttributeValueFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = catalogue_models.ProductAttributeValue
+
+    attribute = factory.SubFactory(ProductAttributeFactory)
+    product = factory.SubFactory(ProductFactory)
+

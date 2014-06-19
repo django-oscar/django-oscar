@@ -114,11 +114,12 @@ class AbstractWeightBased(AbstractBase):
                       default_weight=self.default_weight)
         weight = scale.weigh_basket(basket)
         band = self.get_band_for_weight(weight)
-        if not band:
-            if self.bands.all().exists() and self.upper_charge:
-                charge = self.upper_charge
-            else:
-                charge = D('0.00')
+        if band is not None:
+            charge = band.charge
+        elif self.bands.all().exists() and self.upper_charge:
+            charge = self.upper_charge
+        else:
+            charge = D('0.00')
 
         # Zero tax is assumed...
         return prices.Price(

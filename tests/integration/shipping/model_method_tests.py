@@ -5,7 +5,7 @@ from nose.plugins.attrib import attr
 
 from oscar.apps.shipping.models import OrderAndItemCharges, WeightBased
 from oscar.core.compat import get_user_model
-from oscar.test import factories
+from oscar.test import factories, newfactories
 
 
 User = get_user_model()
@@ -163,3 +163,15 @@ class WeightBasedMethodTests(TestCase):
         charge = self.standard.calculate(basket)
         self.assertEqual(D('0.00'), charge.incl_tax)
         self.assertTrue(charge.is_tax_known)
+
+    def test_correct_charge_returned(self):
+        basket = newfactories.BasketFactory()
+        product_attribute_value = newfactories.ProductAttributeValueFactory(
+            value_float=0.5)
+        basket.add_product(product_attribute_value.product)
+
+        expected_charge = D('4.00')
+        self.standard.bands.create(upper_limit=1, charge=expected_charge)
+        charge = self.standard.calculate(basket)
+
+        self.assertEqual(expected_charge, charge.excl_tax)
