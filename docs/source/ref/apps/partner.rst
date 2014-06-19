@@ -1,6 +1,6 @@
-=======
-Partner
-=======
+======================
+``oscar.apps.partner``
+======================
 
 The partner app mostly provides three abstract models.
 :class:`oscar.apps.partner.abstract_models.AbstractPartner` and

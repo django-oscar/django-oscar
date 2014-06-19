@@ -2,6 +2,8 @@
 Submitting pull requests
 ========================
 
+Here are a few tips:
+
 * To avoid disappointment, new features should be discussed on the mailing list
   (django-oscar@googlegroups.com) before serious work starts. 
 

@@ -3,7 +3,7 @@ from django import template
 register = template.Library()
 
 
-@register.filter(name='ellipses_page_range')
+@register.filter
 def ellipses_page_range(page, args="1,2"):
     """
     Creates digg-style page_range for pagination

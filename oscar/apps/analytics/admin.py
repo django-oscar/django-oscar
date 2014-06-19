@@ -1,9 +1,10 @@
 from django.contrib import admin
+
 from oscar.core.loading import get_model
 
 
 class ProductRecordAdmin(admin.ModelAdmin):
-    list_display = ('product', 'num_views', 'num_basket_additions',
+    list_display = ('product', 'score', 'num_views', 'num_basket_additions',
                     'num_purchases')
 
 

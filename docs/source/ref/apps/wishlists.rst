@@ -1,6 +1,6 @@
-=========
-Wishlists
-=========
+========================
+``oscar.apps.wishlists``
+========================
 
 The wishlists app allows signed-in users to create one or more wishlists.  A
 user can add a product to their wishlist from the product detail page and manage

@@ -6,10 +6,30 @@ register = template.Library()
 @register.tag
 def annotate_form_field(parser, token):
     """
-    Set an attribute on a form field with the widget type
+    Sets a ``widget_type`` attribute on a form field so templates can handle
+    widgets differently.
 
-    This means templates can use the widget type to render things differently
-    if they want to.  Django doesn't make this available by default.
+    Usage:
+
+    .. code-block:: html+django
+
+        {% annotate_form_field field %}
+
+        {% if field.widget_type == 'CheckboxInput %}
+            ...
+        {% endif %}
+
+    The arguments are:
+
+    ===================  =====================================================
+    Argument             Description
+    ===================  =====================================================
+    ``field``            The form field to annotate
+    ===================  =====================================================
+
+    `Example usage in Oscar's templates`__
+
+    __ https://github.com/tangentlabs/django-oscar/search?q=annotate_form_field+path%3A%2Foscar%2Ftemplates&type=Code
     """
     args = token.split_contents()
     if len(args) < 2:

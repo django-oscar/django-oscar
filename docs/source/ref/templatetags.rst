@@ -1,74 +1,132 @@
-=============
+=========================
+Template tags and filters
+=========================
+
+.. contents::
+    :local:
+    :depth: 2
+
+
+Template filters
+----------------
+
+Currency filters
+~~~~~~~~~~~~~~~~
+
+Load these filters using ``{% load category_filters %}``.
+
+.. autofunction:: oscar.templatetags.currency_filters.currency
+
+Reviews filters
+~~~~~~~~~~~~~~~
+
+Load these tags using ``{% load reviews_filters %}``.
+
+.. automodule:: oscar.templatetags.reviews_filters
+   :members: as_stars, may_vote, is_review_permitted
+
+
 Template tags
-=============
+-------------
+
+Basket tags
+~~~~~~~~~~~
+
+Load these tags using ``{% load basket_tags %}``.
+
+.. autofunction:: oscar.templatetags.basket_tags.basket_form
+
+Category tags
+~~~~~~~~~~~~~
+
+Load these tags using ``{% load category_tags %}``.
+
+.. autofunction:: oscar.templatetags.category_tags.category_tree
 
 Shipping tags
--------------
+~~~~~~~~~~~~~
 
 Load these tags using ``{% load shipping_tags %}``.
 
-``shipping_charge``
-~~~~~~~~~~~~~~~~~~~
+.. automodule:: oscar.templatetags.shipping_tags
+   :members: shipping_charge, shipping_charge_discount, shipping_charge_excl_discount
 
-Injects the shipping charge into the template context:
+Dashboard tags
+~~~~~~~~~~~~~~
 
-Usage:
+Load these tags using ``{% load dashboard_tags %}``.
 
-.. code-block:: html+django
+.. automodule:: oscar.templatetags.dashboard_tags
+   :members: num_orders, dashboard_navigation
 
-   {% shipping_charge shipping_method basket as name %}
-   Shipping charge is {{ name }}.
+Display tags
+~~~~~~~~~~~~
 
-The arguments are:
+Load these tags using ``{% load display_tags %}``.
 
-===================  =====================================================
-Argument             Description
-===================  =====================================================
-``shipping_method``  The shipping method instance
-``basket``           The basket instance to calculate shipping charges for
-``name``             The variable name to assign the charge to
-===================  =====================================================
+.. automodule:: oscar.templatetags.display_tags
+   :members: get_parameters, iffeature
 
-``shipping_charge_discount``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Form tags
+~~~~~~~~~
 
-Injects the shipping discount into the template context:
+Load these tags using ``{% load form_tags %}``.
 
-Usage:
+.. automodule:: oscar.templatetags.form_tags
+   :members: annotate_form_field
 
-.. code-block:: html+django
+History tags
+~~~~~~~~~~~~
 
-   {% shipping_discount shipping_method basket as name %}
-   Shipping discount is {{ charge }}.
+Load these tags using ``{% load history_tags %}``.
 
-The arguments are:
+.. automodule:: oscar.templatetags.history_tags
+   :members: recently_viewed_products, get_back_button
 
-===================  =====================================================
-Argument             Description
-===================  =====================================================
-``shipping_method``  The shipping method instance
-``basket``           The basket instance to calculate shipping charges for
-``name``             The variable name to assign the charge to
-===================  =====================================================
+Product tags
+~~~~~~~~~~~~
 
-``shipping_charge_excl_discount``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Load these tags using ``{% load product_tags %}``.
 
-Injects the shipping charges with no discounts applied into the template context:
+.. automodule:: oscar.templatetags.product_tags
+   :members: render_product
 
-Usage:
+Promotion tags
+~~~~~~~~~~~~~~
 
-.. code-block:: html+django
+Load these tags using ``{% load product_tags %}``.
 
-   {% shipping_charge_excl_discount shipping_method basket as name %}
-   Shipping discount is {{ name }}.
+.. automodule:: oscar.templatetags.promotion_tags
+   :members: render_promotion
 
-The arguments are:
+Purchase info tags
+~~~~~~~~~~~~~~~~~~
 
-===================  =====================================================
-Argument             Description
-===================  =====================================================
-``shipping_method``  The shipping method instance
-``basket``           The basket instance to calculate shipping charges for
-``name``             The variable name to assign the charge to
-===================  =====================================================
+Load these tags using ``{% load purchase_info_tags %}``.
+
+.. automodule:: oscar.templatetags.purchase_info_tags
+   :members: purchase_info_for_product, purchase_info_for_line
+
+Sorting tags
+~~~~~~~~~~~~
+
+Load these tags using ``{% load sorting_tags %}``.
+
+.. automodule:: oscar.templatetags.sorting_tags
+   :members: anchor
+
+String filters
+~~~~~~~~~~~~~~
+
+Load these filters using ``{% load string_filters %}``.
+
+.. automodule:: oscar.templatetags.string_filters
+   :members: split
+
+Wishlist tags
+~~~~~~~~~~~~~
+
+Load these tags using ``{% load wishlist_tags %}``.
+
+.. automodule:: oscar.templatetags.wishlist_tags
+   :members: wishlists_containing_product

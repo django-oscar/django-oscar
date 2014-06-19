@@ -25,5 +25,8 @@ class Calculator(object):
         total_weight = float(sum(self.weights.values()))
         weighted_fields = [
             self.weights[name] * F(name) for name in self.weights.keys()]
-        ProductRecord.objects.update(
+        num_updated_records = ProductRecord.objects.update(
             score=sum(weighted_fields)/total_weight)
+        self.logger.info(
+            "Updated %d product record%s", num_updated_records,
+            "" if num_updated_records == 1 else "s")

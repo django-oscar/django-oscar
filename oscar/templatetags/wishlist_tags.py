@@ -4,11 +4,28 @@ from django import template
 register = template.Library()
 
 
-@register.tag(name="wishlists_containing_product")
-def do_basket_form(parse, token):
+@register.tag
+def wishlists_containing_product(parse, token):
     """
-    Template tag for adding the user's wishlists form to the
-    template context so it can be rendered.
+    Inject the wishlists that contain a given product into the template context.
+
+    Usage:
+
+    .. code-block:: html+django
+
+        {% wishlists_containing_product wishlists product as name %}
+
+    ===================  =====================================================
+    Argument             Description
+    ===================  =====================================================
+    ``wishlists``        An iterable of wishlist instances.
+    ``product``          The product to test for.
+    ``name``             The variable name to assign to
+    ===================  =====================================================
+
+    `Example usage in Oscar's templates`__
+
+    __ https://github.com/tangentlabs/django-oscar/search?q=wishlists_containing_product+path%3A%2Foscar%2Ftemplates&type=Code
     """
     tokens = token.split_contents()
     if len(tokens) != 5:

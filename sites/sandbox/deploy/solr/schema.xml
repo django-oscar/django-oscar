@@ -158,6 +158,7 @@
     <field name="upc" type="text_en" indexed="true" stored="true" multiValued="false" />
     <field name="price" type="tdouble" indexed="true" stored="true" multiValued="false" sortMissingLast="true" />
     <field name="price_exact" type="tdouble" indexed="true" stored="true" multiValued="false" />
+    <field name="score" type="float" indexed="true" stored="true" multiValued="false" />
     <field name="num_in_stock" type="long" indexed="true" stored="true" multiValued="false" />
     <field name="num_in_stock_exact" type="long" indexed="true" stored="true" multiValued="false" />
     <field name="date_created" type="date" indexed="true" stored="true" multiValued="false" />

@@ -7,8 +7,25 @@ register = template.Library()
 @register.tag
 def purchase_info_for_product(parse, token):
     """
-    Template tag for fetching the appropriate ``PurchaseInfo`` instance for a
-    product and returning it to the context
+    Return the ``PurchaseInfo`` instance for a given product.
+
+    Usage:
+
+    .. code-block:: html+django
+
+    {% purchase_info_for_product request product as name %}
+
+    ===================  =====================================================
+    Argument             Description
+    ===================  =====================================================
+    ``request``          The request instance
+    ``product``          The product instance
+    ``name``             The variable name to assign to
+    ===================  =====================================================
+
+    `Example usage in Oscar's templates`__
+
+    __ https://github.com/tangentlabs/django-oscar/search?q=purchase_info_for_product+path%3A%2Foscar%2Ftemplates&type=Code
     """
     tokens = token.split_contents()
     if len(tokens) != 5 or tokens[3] != 'as':
@@ -46,8 +63,25 @@ class StrategyNode(template.Node):
 @register.tag
 def purchase_info_for_line(parse, token):
     """
-    Template tag for fetching the appropriate ``PurchaseInfo`` instance for a
-    basket line and returning it to the context
+    Return the ``PurchaseInfo`` instance for a given basket line.
+
+    Usage:
+
+    .. code-block:: html+django
+
+    {% purchase_info_for_line request line as name %}
+
+    ===================  =====================================================
+    Argument             Description
+    ===================  =====================================================
+    ``request``          The request instance
+    ``line``             The basket line instance
+    ``name``             The variable name to assign to
+    ===================  =====================================================
+
+    `Example usage in Oscar's templates`__
+
+    __ https://github.com/tangentlabs/django-oscar/search?q=purchase_info_for_line+path%3A%2Foscar%2Ftemplates&type=Code
     """
     tokens = token.split_contents()
     if len(tokens) < 5 or tokens[3] != 'as':

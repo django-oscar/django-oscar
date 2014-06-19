@@ -1,6 +1,6 @@
-======
-Search
-======
+=====================
+``oscar.apps.search``
+=====================
 
 Oscar provides a search view that extends Haystack's ``FacetedSearchView`` to
 provide better support for faceting.  

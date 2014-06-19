@@ -1,6 +1,6 @@
-======
-Offers
-======
+====================
+``oscar.apps.offer``
+====================
 
 Oscar ships with a powerful and flexible offers engine which is contained in the
 offers app.  It is based around the concept of 'conditional offers' - that is,

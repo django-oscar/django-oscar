@@ -83,52 +83,17 @@ mats to iPads.  The `source is on GitHub`_ - contributions are always welcome.
 .. _`Tangent Labs`: http://www.tangentlabs.co.uk
 .. _`source is on GitHub`: https://github.com/tangentlabs/django-oscar
 
-First steps
-===========
 .. toctree::
-   :maxdepth: 1
+   :hidden:
+   :maxdepth: 2
 
-   internals/sandbox
-   internals/getting_started
-   topics/key_questions
-   internals/getting_help
-   ref/glossary
-
-Using Oscar
-===========
-
-All you need to start developing an Oscar project.
-
-.. toctree::
-   :maxdepth: 1
-
-   topics/customisation
-   topics/class_loading_explained
-   topics/prices_and_availability
-   topics/deploying
-   topics/translation
-   topics/upgrading
-
-Reference:
-
-.. toctree::
-   :maxdepth: 1
-
-   Core functionality </ref/core>
-   Oscar's apps </ref/apps/index>
-   howto/index
-   ref/settings
-   ref/signals
-
-The Oscar open-source project
-=============================
-
-Learn about the ideas behind Oscar and how you can contribute.
-
-.. toctree::
-   :maxdepth: 1
-
-   internals/design-decisions
-   releases/index
-   internals/contributing/index
-   
+   Is Oscar right for me? <intro>
+   Getting started <getting_started/index>
+   Customising <customising/index>
+   E-commerce topics <topics/index>
+   ref/index
+   Deploying <deployment>
+   support
+   upgrading
+   contributing/index
+   Releases <releases/index>

@@ -1,6 +1,6 @@
-=======
-Address
-=======
+======================
+``oscar.apps.address``
+======================
 
 The address app provides core address models - it doesn't provide any views or
 other functionality.  Of the 5 abstract models, only 2 have a non-abstract

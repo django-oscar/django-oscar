@@ -1,22 +1,22 @@
-from django.core.urlresolvers import reverse
 import os
 import six
 from itertools import chain
 from datetime import datetime, date
 import logging
 
+from django.core.urlresolvers import reverse
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.conf import settings
 from django.contrib.staticfiles.finders import find
-from django.core.exceptions import ValidationError, ImproperlyConfigured
+from django.core.exceptions import (
+    ValidationError, ImproperlyConfigured, ObjectDoesNotExist)
 from django.core.files.base import File
 from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Sum, Count
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.utils.functional import cached_property
-
 from treebeard.mp_tree import MP_Node
 
 from oscar.core.utils import slugify
@@ -495,6 +495,13 @@ class AbstractProduct(models.Model):
     def num_approved_reviews(self):
         return self.reviews.filter(
             status=self.reviews.model.APPROVED).count()
+
+    @cached_property
+    def score(self):
+        try:
+            return self.stats.score
+        except ObjectDoesNotExist:
+            return 0
 
 
 class AbstractProductRecommendation(models.Model):

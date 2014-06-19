@@ -1,6 +1,6 @@
-==========
-Promotions
-==========
+=========================
+``oscar.apps.promotions``
+=========================
 
 Promotions are small blocks of content that can link through to other parts of this site.
 Examples include:

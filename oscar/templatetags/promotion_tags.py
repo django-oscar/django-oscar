@@ -1,6 +1,5 @@
-from django.template import Library, Node, Variable
+from django.template import Library, Node, Variable, RequestContext
 from django.template.loader import select_template
-from django.template import RequestContext
 
 
 register = Library()
@@ -20,9 +19,26 @@ class PromotionNode(Node):
         return template.render(ctx)
 
 
-def get_promotion_html(parser, token):
-    _, promotion = token.split_contents()
+@register.tag
+def render_promotion(parser, token):
+    """
+    Render a promotion HTML snippet.
+
+    Usage:
+
+    .. code-block:: html+django
+
+        {% render_product promotion %}
+
+    ===================  =====================================================
+    Argument             Description
+    ===================  =====================================================
+    ``promotion``        The promotion instance to render
+    ===================  =====================================================
+
+    `Example usage in Oscar's templates`__
+
+    __ https://github.com/tangentlabs/django-oscar/search?q=render_promotion+path%3A%2Foscar%2Ftemplates&type=Code
+    """
+    __, promotion = token.split_contents()
     return PromotionNode(promotion)
-
-
-register.tag('render_promotion', get_promotion_html)

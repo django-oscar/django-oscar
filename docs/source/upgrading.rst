@@ -1,6 +1,6 @@
----------
+=========
 Upgrading
----------
+=========
 
 This document explains some of the issues that can be encountered whilst
 upgrading Oscar.
