@@ -77,6 +77,22 @@ class VoucherFactory(factory.DjangoModelFactory):
     end_datetime = now() - datetime.timedelta(days=10)
 
 
+class PartnerFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = partner_models.Partner
+
+    name = "Gardners"
+
+
+class StockRecordFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = partner_models.StockRecord
+
+    partner = factory.SubFactory(PartnerFactory)
+    partner_sku = factory.Sequence(lambda n: 'unit%d' % n)
+    price_currency = "GBP"
+    price_excl_tax = D('9.99')
+    num_in_stock = 100
+
+
 class ProductClassFactory(factory.DjangoModelFactory):
     FACTORY_FOR = catalogue_models.ProductClass
 
@@ -92,18 +108,6 @@ class ProductFactory(factory.DjangoModelFactory):
     title = "A confederacy of dunces"
     product_class = factory.SubFactory(ProductClassFactory)
 
-
-class PartnerFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = partner_models.Partner
-
-    name = "Gardners"
+    stockrecords = factory.RelatedFactory(StockRecordFactory, 'product')
 
 
-class StockRecordFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = partner_models.StockRecord
-
-    partner = factory.SubFactory(PartnerFactory)
-    partner_sku = factory.Sequence(lambda n: 'unit%d' % n)
-    price_currency = "GBP"
-    price_excl_tax = D('9.99')
-    num_in_stock = 100
