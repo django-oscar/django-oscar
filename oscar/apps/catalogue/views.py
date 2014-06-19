@@ -28,14 +28,9 @@ class ProductDetailView(DetailView):
         """
         self.object = product = self.get_object()
 
-        if self.enforce_paths:
-            if product.is_variant:
-                return HttpResponsePermanentRedirect(
-                    product.parent.get_absolute_url())
-
-            expected_path = product.get_absolute_url()
-            if expected_path != urlquote(request.path):
-                return HttpResponsePermanentRedirect(expected_path)
+        redirect = self.redirect_if_necessary(request.path, product)
+        if redirect is not None:
+            return redirect
 
         response = super(ProductDetailView, self).get(request, **kwargs)
         self.send_signal(request, response, product)
@@ -47,6 +42,16 @@ class ProductDetailView(DetailView):
             return self.object
         else:
             return super(ProductDetailView, self).get_object(queryset)
+
+    def redirect_if_necessary(self, current_path, product):
+        if self.enforce_paths:
+            if product.is_variant:
+                return HttpResponsePermanentRedirect(
+                    product.parent.get_absolute_url())
+
+            expected_path = product.get_absolute_url()
+            if expected_path != urlquote(current_path):
+                return HttpResponsePermanentRedirect(expected_path)
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductDetailView, self).get_context_data(**kwargs)
@@ -124,13 +129,18 @@ class ProductCategoryView(ListView):
 
     def get(self, request, *args, **kwargs):
         self.get_object()
+        redirect = self.redirect_if_necessary(request.path, self.category)
+        if redirect is not None:
+            return redirect
+        return super(ProductCategoryView, self).get(request, *args, **kwargs)
+
+    def redirect_if_necessary(self, current_path, category):
         if self.enforce_paths and self.category is not None:
             # Categories are fetched by primary key to allow slug changes.
             # If the slug has indeed changed, issue a redirect.
             expected_path = self.category.get_absolute_url()
-            if expected_path != urlquote(request.path):
+            if expected_path != urlquote(current_path):
                 return HttpResponsePermanentRedirect(expected_path)
-        return super(ProductCategoryView, self).get(request, *args, **kwargs)
 
     def get_categories(self):
         """
