@@ -43,7 +43,7 @@
                 <dl class='bar-chart'> 
                     {% for item in hourly_report_dict.order_total_hourly %}
                         <dd class='bar-layer'>
-                            <em>{{ item.end_time|date:"gA"|lower }}</em>
+                            <em>{{ item.end_time|time }}</em>
                             <span style="height: {{ item.percentage }}%;" >
                                 <p{% if item.percentage == 0 %} style="display: none;"{% endif %}>{{ item.total_incl_tax|currency }}</p>
                             </span>
