@@ -83,12 +83,6 @@ class AbstractOrderAndItemCharges(AbstractBase):
 
 
 class AbstractWeightBased(AbstractBase):
-    upper_charge = models.DecimalField(
-        _("Upper Charge"), decimal_places=2, max_digits=12, null=True,
-        validators=[MinValueValidator(D('0.00'))],
-        help_text=_("This is the charge when the weight of the basket "
-                    "is greater than all the weight bands"))
-
     # The attribute code to use to look up the weight of a product
     weight_attribute = 'weight'
 

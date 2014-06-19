@@ -164,14 +164,14 @@ class WeightBasedMethodTests(TestCase):
         self.assertEqual(D('0.00'), charge.incl_tax)
         self.assertTrue(charge.is_tax_known)
 
-    def test_correct_charge_returned(self):
+    def test_simple_shipping_cost_scenario_handled_correctly(self):
         basket = newfactories.BasketFactory()
         product_attribute_value = newfactories.ProductAttributeValueFactory(
-            value_float=0.5)
+            value_float=2.5)
         basket.add_product(product_attribute_value.product)
 
-        expected_charge = D('4.00')
-        self.standard.bands.create(upper_limit=1, charge=expected_charge)
+        expected_charge = D('3.00')
+        self.standard.bands.create(upper_limit=3, charge=expected_charge)
         charge = self.standard.calculate(basket)
 
         self.assertEqual(expected_charge, charge.excl_tax)

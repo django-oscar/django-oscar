@@ -31,7 +31,6 @@
                 <tr>
                     <th>{% trans "Name" %}</th>
                     <th>{% trans "Number of weight bands" %}</th>
-                    <th>{% trans "Upper charge" %}</th>
                     <th>{% trans "Default weight (kg)" %}</th>
                     <th></th>
                 </tr>
@@ -43,7 +42,6 @@
                             <a href="{% url 'dashboard:shipping-method-detail' pk=method.pk %}">{{ method.name }}</a>
                         </td>
                         <td>{{ method.num_bands }}</td>
-                        <td>{{ method.upper_charge|currency }}</td>
                         <td>{{ method.default_weight }}</td>
                         <td>
                             <a href="{% url 'dashboard:shipping-method-detail' pk=method.pk %}" class="btn">{% trans "View" %}</a>

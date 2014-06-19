@@ -8,22 +8,11 @@ from oscar.apps.shipping import models
 
 class TestWeightBasedMethod(TestCase):
 
-    def test_doesnt_allow_negative_upper_charge(self):
-        method = models.WeightBased(
-            name="Dummy", upper_charge=D('-12.00'))
-        with self.assertRaises(ValidationError):
-            method.full_clean()
-
     def test_doesnt_allow_negative_default_weights(self):
         method = models.WeightBased(
-            name="Dummy", upper_charge=D('0.00'),
-            default_weight=D('-0.1'))
+            name="Dummy", default_weight=D('-0.1'))
         with self.assertRaises(ValidationError):
             method.full_clean()
-
-    def test_max_upper_limit_defaults_to_none(self):
-        method = models.WeightBased()
-        self.assertIsNone(method.max_upper_limit)
 
 
 class TestWeightBand(TestCase):

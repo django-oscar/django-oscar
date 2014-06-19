@@ -15,7 +15,6 @@ class TestShippingMethodDashboard(WebTestCase):
         # Create a shipping method
         create_page = list_page.click(linkid="create_new_shipping_method")
         create_page.form['name'] = 'My method'
-        create_page.form['upper_charge'] = '25.00'
         detail_page = create_page.form.submit().follow()
         self.assertInContext(detail_page, 'method')
         self.assertEqual(1, models.WeightBased.objects.all().count())

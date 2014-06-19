@@ -392,6 +392,7 @@ Migrations
 * Shipping:
 
     - ``0007`` - Change ``WeightBand.upper_limit`` from ``FloatField`` to ``DecimalField``
+    - ``0008`` - Drop ``WeightBased.upper_charge`` field.
 
 .. _deprecated_features_in_0.8:
 

@@ -49,10 +49,6 @@
                     <th>{% trans "Default product weight (kg)" %}</th>
                     <td>{{ method.default_weight }}</td>
                 </tr>
-                <tr>
-                    <th>{% trans "Upper charge" %}</th>
-                    <td>{{ method.upper_charge|currency }}</td>
-                </tr>
             </tbody>
         </table>
 
@@ -82,13 +78,6 @@
                             </td>
                         </tr>
                     {% endfor %}
-                    <tr>
-                        <td>{{ method.max_upper_limit|floatformat:3 }} - &infin;</td>
-                        <td>{{ method.upper_charge|currency }}</td>
-                        <td>
-                            <a href="{% url 'dashboard:shipping-method-edit' pk=method.pk %}" class="btn btn-primary">{% trans "Edit" %}</a>
-                        </td>
-                    </tr>
                 </tbody>
             </table>
         {% else %}
