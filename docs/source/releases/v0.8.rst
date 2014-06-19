@@ -292,6 +292,10 @@ Misc
   your total scores will be change. If you rely on the old behaviour,
   just extend the ``Calculator`` class and adjust the weights.
 
+* ``Order.order_number`` now has ``unique=True`` set. If order numbers are
+  not unique in your database, you need to remedy that before migrating. By
+  default, Oscar creates unique order numbers.
+
 * ``Product.score`` was just duplicating ``ProductRecord.score`` and has been
   removed. Use ``Product.stats.score`` instead.
 
@@ -381,6 +385,7 @@ Migrations
 * Order:
 
     - ``0029`` - Add ``unique_together`` to ``PaymentEventQuantity`` and ``ShippingEventQuantity``
+    - ``0030`` - Set ``unique=True`` for ``Order.order_number``
 
 * Promotions:
 
