@@ -193,13 +193,26 @@ class AbstractProduct(models.Model):
     """
     The base product object
 
-    If an item has no parent, then it is the "canonical" or abstract version
-    of a product which essentially represents a set of products.  If a
-    product has a parent then it is a specific version of a catalogue.
+    There's three kinds of products; they're distinguished by the structure
+    field.
 
-    For example, a canonical product would have a title like "Green fleece"
-    while its children would be "Green fleece - size L".
+    - A stand alone product. Regular product that lives by itself.
+    - A child product. All child products have a parent product. They're a
+      specific version of the parent.
+    - A parent product. It essentially represents a set of products.
+
+    An example could be a yoga course, which is a parent product. The different
+    times/locations of the courses would be associated with the child products.
     """
+    STANDALONE, PARENT, CHILD = 'standalone', 'parent', 'child'
+    STRUCTURE_CHOICES = (
+        (STANDALONE, _('Stand-alone product')),
+        (PARENT, _('Parent product')),
+        (CHILD, _('Child product'))
+    )
+    structure = models.CharField(
+        _("Product structure"), max_length=10, choices=STRUCTURE_CHOICES,
+        default=STANDALONE)
 
     upc = NullCharField(
         _("UPC"), max_length=64, blank=True, null=True, unique=True,
@@ -207,23 +220,22 @@ class AbstractProduct(models.Model):
                     "a product which is not specific to a particular "
                     " supplier. Eg an ISBN for a book."))
 
-    # No canonical product should have a stock record as they cannot be bought.
     parent = models.ForeignKey(
         'self', null=True, blank=True, related_name='variants',
-        verbose_name=_("Parent"),
+        verbose_name=_("Parent product"),
         help_text=_("Only choose a parent product if this is a 'variant' of "
-                    "a canonical catalogue.  For example if this is a size "
+                    "a product.  For example if this is a size "
                     "4 of a particular t-shirt.  Leave blank if this is a "
-                    "CANONICAL PRODUCT (ie there is only one version of this "
-                    "product)."))
+                    "stand-alone product (i.e. there is only one version of"
+                    " this product)."))
 
     # Title is mandatory for canonical products but optional for child products
     title = models.CharField(_('Product title'), max_length=255, blank=True)
     slug = models.SlugField(_('Slug'), max_length=255, unique=False)
     description = models.TextField(_('Description'), blank=True)
 
-    #: "Type" of product.
-    #: None for Product variants, they inherit their parent's product class
+    #: "Kind" of product, e.g. T-Shirt, Book, etc.
+    #: None for child products, they inherit their parent's product class
     product_class = models.ForeignKey(
         'catalogue.ProductClass', null=True, on_delete=models.PROTECT,
         verbose_name=_('Product Type'), related_name="products",
@@ -232,7 +244,7 @@ class AbstractProduct(models.Model):
         'catalogue.ProductAttribute',
         through='ProductAttributeValue',
         verbose_name=_("Attributes"),
-        help_text=_("A product attribute is something that this product MUST "
+        help_text=_("A product attribute is something that this product may "
                     "have, such as a size, as specified by its class"))
     product_options = models.ManyToManyField(
         'catalogue.Option', blank=True, verbose_name=_("Product Options"),
@@ -251,11 +263,11 @@ class AbstractProduct(models.Model):
     # Product has no ratings if rating is None
     rating = models.FloatField(_('Rating'), null=True, editable=False)
 
-    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
+    date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
 
     # This field is used by Haystack to reindex search
-    date_updated = models.DateTimeField(_("Date Updated"), auto_now=True,
-                                        db_index=True)
+    date_updated = models.DateTimeField(
+        _("Date updated"), auto_now=True, db_index=True)
 
     categories = models.ManyToManyField(
         'catalogue.Category', through='ProductCategory',
