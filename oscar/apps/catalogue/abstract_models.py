@@ -221,7 +221,7 @@ class AbstractProduct(models.Model):
                     " supplier. Eg an ISBN for a book."))
 
     parent = models.ForeignKey(
-        'self', null=True, blank=True, related_name='variants',
+        'self', null=True, blank=True, related_name='children',
         verbose_name=_("Parent product"),
         help_text=_("Only choose a parent product if this is a 'variant' of "
                     "a product.  For example if this is a size "
@@ -322,6 +322,18 @@ class AbstractProduct(models.Model):
         self.attr.save()
 
     # Properties
+
+    @property
+    def is_standalone(self):
+        return self.structure == self.STANDALONE
+
+    @property
+    def is_parent(self):
+        return self.structure == self.PARENT
+
+    @property
+    def is_child(self):
+        return self.structure == self.CHILD
 
     @property
     def options(self):
