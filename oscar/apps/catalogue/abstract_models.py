@@ -308,12 +308,24 @@ class AbstractProduct(models.Model):
                        kwargs={'product_slug': self.slug, 'pk': self.id})
 
     def clean(self):
-        if self.is_top_level and not self.title:
-            raise ValidationError(_("Canonical products must have a title"))
-        if self.is_top_level and not self.product_class:
+        if self.is_child:
+            if self.parent_id and not self.parent.is_parent:
+                raise ValidationError(
+                    _("You can only assign child products to parent products."))
+            if not self.parent_id:
+                raise ValidationError(_("A child product needs a parent."))
+        else:  # stand-alone and parent products
+            if not self.title:
+                raise ValidationError(_("Your product must have a title."))
+            if not self.product_class:
+                raise ValidationError(
+                    _("Your product must have a product class."))
+
+        if self.is_parent and self.has_stockrecords:
             raise ValidationError(
-                _("Canonical products must have a product class"))
-        if not self.is_group:
+                _("A parent product can't have stockrecords."))
+
+        if not self.is_parent:
             self.attr.validate_attributes()
 
     def save(self, *args, **kwargs):
