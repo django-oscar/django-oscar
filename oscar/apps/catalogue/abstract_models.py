@@ -18,6 +18,7 @@ from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.utils.functional import cached_property
 
 from treebeard.mp_tree import MP_Node
+from oscar.core.decorators import deprecated
 
 from oscar.core.utils import slugify
 from oscar.core.loading import get_classes, get_model
@@ -344,25 +345,6 @@ class AbstractProduct(models.Model):
         return self.product_options.all()
 
     @property
-    def is_top_level(self):
-        """
-        Test if this product is a parent (who may or may not have children)
-        """
-        return self.parent_id is None
-
-    @cached_property
-    def is_group(self):
-        """
-        Test if this is a top level product and has more than 0 variants
-        """
-        return self.is_top_level and self.variants.exists()
-
-    @property
-    def is_variant(self):
-        """Return True if a product is not a top level product"""
-        return not self.is_top_level
-
-    @property
     def is_shipping_required(self):
         return self.get_product_class().requires_shipping
 
@@ -413,6 +395,38 @@ class AbstractProduct(models.Model):
             return None
         prices.sort()
         return prices[0]
+
+    # Deprecated properties
+
+    @property
+    @deprecated
+    def variants(self):
+        """
+        Provide backwards-compatible way to access a parent products children
+        """
+        return self.children
+
+    @property
+    @deprecated
+    def is_top_level(self):
+        """
+        Test if this product is a stand-alone or parent product
+        """
+        return self.is_standalone or self.is_parent
+
+    @property
+    @deprecated
+    def is_group(self):
+        """
+        Test if this is a top level product and has more than 0 variants
+        """
+        return self.is_parent
+
+    @property
+    def is_variant(self):
+        """Return True if a product is not a top level product"""
+        return self.is_child
+
 
     # Wrappers
 
