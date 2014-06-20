@@ -35,8 +35,8 @@ class StrategyNode(template.Node):
         except template.VariableDoesNotExist:
             return ''
 
-        if product.is_group:
-            context[self.name_var] = request.strategy.fetch_for_group(product)
+        if product.is_parent:
+            context[self.name_var] = request.strategy.fetch_for_parent(product)
         else:
             context[self.name_var] = request.strategy.fetch_for_product(
                 product)

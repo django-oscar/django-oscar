@@ -296,7 +296,7 @@ class AbstractProduct(models.Model):
         self.attr = ProductAttributesContainer(product=self)
 
     def __unicode__(self):
-        if self.is_variant:
+        if self.is_child:
             return u"%s (%s)" % (self.get_title(), self.attribute_summary)
         return self.get_title()
 

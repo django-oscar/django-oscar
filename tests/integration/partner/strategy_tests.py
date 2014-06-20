@@ -55,7 +55,7 @@ class TestDefaultStrategyForParentProductWhoseVariantsHaveNoStockRecords(TestCas
         parent = factories.create_product()
         for x in range(3):
             factories.create_product(parent=parent)
-        self.info = self.strategy.fetch_for_group(parent)
+        self.info = self.strategy.fetch_for_parent(parent)
 
     def test_specifies_product_is_unavailable(self):
         self.assertFalse(self.info.availability.is_available_to_buy)
@@ -76,7 +76,7 @@ class TestDefaultStrategyForParentProductWithInStockVariant(TestCase):
                                  num_in_stock=3)
         for x in range(2):
             factories.create_product(parent=parent)
-        self.info = self.strategy.fetch_for_group(parent)
+        self.info = self.strategy.fetch_for_parent(parent)
 
     def test_specifies_product_is_available(self):
         self.assertTrue(self.info.availability.is_available_to_buy)
@@ -97,7 +97,7 @@ class TestDefaultStrategyForParentProductWithOutOfStockVariant(TestCase):
                                  num_in_stock=0)
         for x in range(2):
             factories.create_product(parent=parent)
-        self.info = self.strategy.fetch_for_group(parent)
+        self.info = self.strategy.fetch_for_parent(parent)
 
     def test_specifies_product_is_unavailable(self):
         self.assertFalse(self.info.availability.is_available_to_buy)

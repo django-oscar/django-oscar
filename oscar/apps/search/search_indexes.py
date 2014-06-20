@@ -58,7 +58,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_price(self, obj):
         result = None
-        if obj.is_group:
+        if obj.is_parent:
             result = strategy.fetch_for_group(obj)
         elif obj.has_stockrecords:
             result = strategy.fetch_for_product(obj)
@@ -70,7 +70,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_num_in_stock(self, obj):
         result = None
-        if obj.is_group:
+        if obj.is_parent:
             # Don't return a stock level for group products
             return None
         elif obj.has_stockrecords:

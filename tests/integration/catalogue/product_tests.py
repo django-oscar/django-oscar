@@ -87,27 +87,27 @@ class VariantProductTests(ProductTests):
         p = Product.objects.create(parent=self.parent, product_class=self.product_class)
         self.assertEqual("Parent product", p.get_title())
 
-    def test_variant_products_inherit_product_class(self):
+    def test_child_products_inherit_product_class(self):
         p = Product.objects.create(parent=self.parent)
         self.assertEqual("Clothing", p.get_product_class().name)
 
-    def test_variant_products_are_not_part_of_browsable_set(self):
+    def test_child_products_are_not_part_of_browsable_set(self):
         Product.objects.create(
             product_class=self.product_class, parent=self.parent)
         self.assertEqual(set([self.parent]), set(Product.browsable.all()))
 
 
-class TestAVariant(TestCase):
+class TestAChildProduct(TestCase):
 
     def setUp(self):
         clothing = ProductClass.objects.create(
             name='Clothing', requires_shipping=True)
         self.parent = clothing.products.create(
-            title="Parent")
-        self.variant = self.parent.variants.create()
+            title="Parent", structure=Product.PARENT)
+        self.child = self.parent.children.create()
 
     def test_delegates_requires_shipping_logic(self):
-        self.assertTrue(self.variant.is_shipping_required)
+        self.assertTrue(self.child.is_shipping_required)
 
 
 class ProductAttributeCreationTests(TestCase):

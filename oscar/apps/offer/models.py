@@ -401,7 +401,7 @@ class ConditionalOffer(models.Model):
             return Product.browsable.select_related('product_class',
                                                     'stockrecord')\
                 .filter(is_discountable=True)\
-                .prefetch_related('variants', 'images',
+                .prefetch_related('children', 'images',
                                   'product_class__options', 'product_options')
         return cond_range.included_products.filter(is_discountable=True)
 

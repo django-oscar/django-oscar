@@ -144,36 +144,36 @@ class AddToBasketForm(forms.Form):
         super(AddToBasketForm, self).__init__(*args, **kwargs)
 
         # Dynamically build fields
-        if product.is_group:
-            self._create_group_product_fields(product)
+        if product.is_parent:
+            self._create_parent_product_fields(product)
         self._create_product_fields(product)
 
     # Dynamic form building methods
 
-    def _create_group_product_fields(self, product):
+    def _create_parent_product_fields(self, product):
         """
         Adds the fields for a "group"-type product (eg, a parent product with a
-        list of variants.
+        list of children.
 
-        Currently requires that a stock record exists for the variant
+        Currently requires that a stock record exists for the children
         """
         choices = []
         disabled_values = []
-        for variant in product.variants.all():
-            # Build a description of the variant, including any pertinent
+        for child in product.children.all():
+            # Build a description of the child, including any pertinent
             # attributes
-            attr_summary = variant.attribute_summary
+            attr_summary = child.attribute_summary
             if attr_summary:
                 summary = attr_summary
             else:
-                summary = variant.get_title()
+                summary = child.get_title()
 
             # Check if it is available to buy
-            info = self.basket.strategy.fetch_for_product(variant)
+            info = self.basket.strategy.fetch_for_product(child)
             if not info.availability.is_available_to_buy:
-                disabled_values.append(variant.id)
+                disabled_values.append(child.id)
 
-            choices.append((variant.id, summary))
+            choices.append((child.id, summary))
 
         self.fields['variant_id'] = forms.ChoiceField(
             choices=tuple(choices), label=_("Variant"),
@@ -200,13 +200,13 @@ class AddToBasketForm(forms.Form):
 
     def clean_variant_id(self):
         try:
-            variant = self.base_product.variants.get(
+            variant = self.base_product.children.get(
                 id=self.cleaned_data['variant_id'])
         except Product.DoesNotExist:
             raise forms.ValidationError(
                 _("Please select a valid product"))
 
-        # To avoid duplicate SQL queries, we cache a copy of the loaded variant
+        # To avoid duplicate SQL queries, we cache a copy of the loaded child
         # product as we're going to need it later.
         self.variant = variant
 
