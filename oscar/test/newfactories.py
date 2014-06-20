@@ -125,4 +125,3 @@ class ProductAttributeValueFactory(factory.DjangoModelFactory):
 
     attribute = factory.SubFactory(ProductAttributeFactory)
     product = factory.SubFactory(ProductFactory)
-

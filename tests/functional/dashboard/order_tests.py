@@ -135,7 +135,7 @@ class TestOrderDetailPage(WebTestCase):
         self.page = self.get(url)
 
     def test_contains_order(self):
-        self.assertEquals(self.page.context['order'], self.order)
+        self.assertEqual(self.page.context['order'], self.order)
 
     def test_allows_notes_to_be_added(self):
         form = self.page.forms['order_note_form']
