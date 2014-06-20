@@ -21,12 +21,13 @@ class TestProductDetailView(WebTestCase):
         self.assertTrue(p.get_absolute_url() in response.location)
 
     def test_variant_to_parent_redirect(self):
-        parent_product = create_product()
+        parent_product = create_product(structure='parent')
         kwargs = {'product_slug': parent_product.slug,
                   'pk': parent_product.id}
         parent_product_url = reverse('catalogue:detail', kwargs=kwargs)
 
-        variant = create_product(title="Variant 1", parent=parent_product)
+        variant = create_product(
+            title="Variant 1", structure='child', parent=parent_product)
         kwargs = {'product_slug': variant.slug,
                   'pk': variant.id}
         variant_url = reverse('catalogue:detail', kwargs=kwargs)
