@@ -320,11 +320,11 @@ class ProductForm(forms.ModelForm):
 
     def get_parent_products_queryset(self):
         """
-        :return: Canonical products excluding this product
+        :return: Parent products, minus this product
         """
         # Not using Product.browsable because a deployment might override
         # that manager to respect a status field or such like
-        queryset = Product._default_manager.filter(parent=None)
+        queryset = Product._default_manager.filter(structure=Product.PARENT)
         if self.instance.pk is not None:
             # Prevent selecting itself as parent
             queryset = queryset.exclude(pk=self.instance.pk)
@@ -366,12 +366,13 @@ class ProductCategoryFormSet(BaseProductCategoryFormSet):
         super(ProductCategoryFormSet, self).__init__(*args, **kwargs)
 
     def clean(self):
-        if self.instance.is_top_level and self.get_num_categories() == 0:
+        if not self.instance.is_child and self.get_num_categories() == 0:
             raise forms.ValidationError(
-                _("A top-level product must have at least one category"))
-        if self.instance.is_variant and self.get_num_categories() > 0:
+                _("Stand-alone and parent products "
+                  "must have at least one category"))
+        if self.instance.is_child and self.get_num_categories() > 0:
             raise forms.ValidationError(
-                _("A variant product should not have categories"))
+                _("A child product should not have categories"))
 
     def get_num_categories(self):
         num_categories = 0
