@@ -5,6 +5,8 @@ from . import availability, prices
 
 
 # A container for policies
+from oscar.core.decorators import deprecated
+
 PurchaseInfo = namedtuple(
     'PurchaseInfo', ['price', 'availability', 'stockrecord'])
 
@@ -74,9 +76,9 @@ class Base(object):
             "information."
         )
 
-    def fetch_for_group(self, product):
+    def fetch_for_parent(self, product):
         """
-        Given a group product, fetch a ``StockInfo`` instance
+        Given a parent product, fetch a ``StockInfo`` instance
         """
         raise NotImplementedError(
             "A strategy class must define a fetch_for_group method "
@@ -122,14 +124,16 @@ class Structured(Base):
             availability=self.availability_policy(product, stockrecord),
             stockrecord=stockrecord)
 
-    def fetch_for_group(self, product):
-        # Select variants and associated stockrecords
-        variant_stock = self.select_variant_stockrecords(product)
+    def fetch_for_parent(self, product):
+        # Select children and associated stockrecords
+        children_stock = self.select_children_stockrecords(product)
         return PurchaseInfo(
-            price=self.group_pricing_policy(product, variant_stock),
+            price=self.group_pricing_policy(product, children_stock),
             availability=self.group_availability_policy(
-                product, variant_stock),
+                product, children_stock),
             stockrecord=None)
+
+    fetch_for_group = deprecated(fetch_for_parent)
 
     def select_stockrecord(self, product):
         """
@@ -139,15 +143,17 @@ class Structured(Base):
             "A structured strategy class must define a "
             "'select_stockrecord' method")
 
-    def select_variant_stockrecords(self, product):
+    def select_children_stockrecords(self, product):
         """
-        Select appropriate stock record for all variants of a product
+        Select appropriate stock record for all children of a product
         """
         records = []
-        for variant in product.variants.all():
-            # Use tuples of (variant product, stockrecord)
-            records.append((variant, self.select_stockrecord(variant)))
+        for child in product.children.all():
+            # Use tuples of (child product, stockrecord)
+            records.append((child, self.select_stockrecord(child)))
         return records
+
+    select_variant_stockrecords = deprecated(select_children_stockrecords)
 
     def pricing_policy(self, product, stockrecord):
         """
