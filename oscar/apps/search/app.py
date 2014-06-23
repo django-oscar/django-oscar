@@ -1,10 +1,9 @@
 from django.conf.urls import url
-from django.conf import settings
-from haystack.query import SearchQuerySet
 from haystack.views import search_view_factory
 
 from oscar.core.application import Application
 from oscar.core.loading import get_class
+from oscar.apps.search import facets
 
 
 class SearchApplication(Application):
@@ -29,15 +28,7 @@ class SearchApplication(Application):
         """
         Return the SQS required by a the Haystack search view
         """
-        # Build SQS based on the OSCAR_SEARCH_FACETS settings
-        sqs = SearchQuerySet()
-        for facet in settings.OSCAR_SEARCH_FACETS['fields'].values():
-            options = facet.get('options', {})
-            sqs = sqs.facet(facet['field'], **options)
-        for facet in settings.OSCAR_SEARCH_FACETS['queries'].values():
-            for query in facet['queries']:
-                sqs = sqs.query_facet(facet['field'], query[1])
-        return sqs
+        return facets.base_sqs()
 
 
 application = SearchApplication()

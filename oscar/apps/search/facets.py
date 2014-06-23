@@ -1,5 +1,20 @@
 from django.conf import settings
 from purl import URL
+from haystack.query import SearchQuerySet
+
+
+def base_sqs():
+    """
+    Return the base SearchQuerySet for Haystack searches.
+    """
+    sqs = SearchQuerySet()
+    for facet in settings.OSCAR_SEARCH_FACETS['fields'].values():
+        options = facet.get('options', {})
+        sqs = sqs.facet(facet['field'], **options)
+    for facet in settings.OSCAR_SEARCH_FACETS['queries'].values():
+        for query in facet['queries']:
+            sqs = sqs.query_facet(facet['field'], query[1])
+    return sqs
 
 
 class FacetMunger(object):

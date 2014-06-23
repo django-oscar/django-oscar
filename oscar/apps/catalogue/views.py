@@ -4,15 +4,18 @@ from django.http import HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView
 from django.utils.translation import ugettext_lazy as _
+from haystack import query
 
 from oscar.core.loading import get_class, get_model
 from oscar.apps.catalogue.signals import product_viewed
+from oscar.apps.search import facets
 
 Product = get_model('catalogue', 'product')
 ProductReview = get_model('reviews', 'ProductReview')
 Category = get_model('catalogue', 'category')
 ProductAlert = get_model('customer', 'ProductAlert')
 ProductAlertForm = get_class('customer.forms', 'ProductAlertForm')
+FacetMunger = get_class('search.facets', 'FacetMunger')
 
 
 class ProductDetailView(DetailView):
@@ -96,6 +99,47 @@ class ProductDetailView(DetailView):
             '%s/detail-for-class-%s.html' % (
                 self.template_folder, self.object.get_product_class().slug),
             '%s/detail.html' % (self.template_folder)]
+
+
+class FacetedProductCategoryView(ListView):
+    context_object_name = "products"
+    template_name = 'catalogue/category.html'
+    paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
+
+    def dispatch(self, request, *args, **kwargs):
+        self.category = get_object_or_404(Category, pk=self.kwargs['pk'])
+        return super(FacetedProductCategoryView, self).dispatch(
+            request, *args, **kwargs)
+
+    def get_queryset(self):
+        # We build a list of this category and all descendents (TODO put this
+        # method onto the category itself as it's needed in a few places).
+        categories = list(self.category.get_descendants()) + [self.category]
+        # We use 'narrow' API to ensure Solr's 'fq' filtering is used.
+        pattern = ' OR '.join(['"%s"' % c.full_name for c in categories])
+        sqs = facets.base_sqs()
+        sqs = sqs.narrow(
+            'category_exact:(%s)' % pattern).load_all()
+        return sqs
+
+    def get_context_data(self, **kwargs):
+        ctx = super(FacetedProductCategoryView,
+                    self).get_context_data(**kwargs)
+        ctx['category'] = self.category
+
+        # Pluck the product instances off the search result objects.
+        ctx[self.context_object_name] = [r.object for r in ctx['object_list']]
+
+        munger = FacetMunger(
+            self.request.get_full_path(),
+            {},
+            self.object_list.facet_counts())
+        ctx['facet_data'] = munger.facet_data()
+        has_facets = any([len(data['results']) for
+                          data in ctx['facet_data'].values()])
+        ctx['has_facets'] = has_facets
+
+        return ctx
 
 
 class ProductCategoryView(ListView):
