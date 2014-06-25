@@ -3,7 +3,7 @@ How to create a custom range
 ============================
 
 Oscar ships with a range model that represents a set of products from your
-catalogue.  Using the dashbaord, this can be configured to be:
+catalogue.  Using the dashboard, this can be configured to be:
 
 1.  The whole catalogue
 2.  A subset of products selected by ID/SKU (CSV uploads can be used to do this)
