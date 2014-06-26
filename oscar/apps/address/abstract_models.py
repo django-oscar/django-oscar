@@ -285,11 +285,18 @@ class AbstractAddress(models.Model):
                     {'postcode': [msg]})
 
     def _update_search_text(self):
+        search_text_field = self._meta.get_field('search_text')
         search_fields = filter(
             bool, [self.first_name, self.last_name,
                    self.line1, self.line2, self.line3, self.line4,
                    self.state, self.postcode, self.country.name])
-        self.search_text = ' '.join(search_fields)
+        # Check for the final length of the concatenated search text
+        value = ' '.join(search_fields)
+        max_length = search_text_field.max_length
+        if len(value) > max_length:
+            # Strip the text to the last possible whitespace
+            value = value[:value[:max_length].rfind(' ')]
+        self.search_text = value
 
     # Properties
 
