@@ -7,6 +7,7 @@ from oscar.apps.catalogue.models import (Product, ProductClass,
                                          ProductAttribute,
                                          AttributeOptionGroup,
                                          AttributeOption)
+from oscar.test import factories
 
 
 class ProductTests(TestCase):
@@ -112,35 +113,17 @@ class TestAVariant(TestCase):
 
 class ProductAttributeCreationTests(TestCase):
 
-    def setUp(self):
-        self.product_class,_ = ProductClass.objects.get_or_create(
-            name='Clothing'
-        )
-        self.option_group = AttributeOptionGroup.objects.create(name='group')
-        self.option_1 = AttributeOption.objects.create(group=self.option_group, option='first')
-        self.option_2 = AttributeOption.objects.create(group=self.option_group, option='second')
-
     def test_validating_option_attribute(self):
-        pa = ProductAttribute.objects.create(product_class=self.product_class,
-                                             name='test group',
-                                             code='test_group',
-                                             type='option',
-                                             option_group=self.option_group)
+        option_group = factories.AttributeOptionGroupFactory()
+        option_1 = factories.AttributeOptionFactory(group=option_group)
+        option_2 = factories.AttributeOptionFactory(group=option_group)
+        pa = factories.ProductAttribute(
+            type='option', option_group=option_group)
 
         self.assertRaises(ValidationError, pa.get_validator(), 'invalid')
+        pa.get_validator()(option_1)
+        pa.get_validator()(option_2)
 
-        try:
-            pa.get_validator()(self.option_1)
-        except ValidationError:
-            self.fail("valid option '%s' not validated" % self.option_1)
-
-        try:
-            pa.get_validator()(self.option_2)
-        except ValidationError:
-            self.fail("valid option '%s' not validated" % self.option_1)
-
-        invalid_option = AttributeOption()
-        invalid_option.option = 'invalid option'
-        self.assertRaises(ValidationError, pa.get_validator(),
-                          invalid_option)
-
+        invalid_option = AttributeOption(option='invalid option')
+        self.assertRaises(
+            ValidationError, pa.get_validator(), invalid_option)
