@@ -643,6 +643,7 @@ class AbstractProductAttribute(models.Model):
     def _validate_text(self, value):
         if not isinstance(value, six.string_types):
             raise ValidationError(_("Must be str or unicode"))
+    _validate_richtext = _validate_text
 
     def _validate_float(self, value):
         try:
@@ -680,8 +681,8 @@ class AbstractProductAttribute(models.Model):
                 _("Must be an AttributeOption model object instance"))
         if not value.pk:
             raise ValidationError(_("AttributeOption has not been saved yet"))
-        valid_values = self.option_group.options.values_list('option',
-                                                             flat=True)
+        valid_values = self.option_group.options.values_list(
+            'option', flat=True)
         if value.option not in valid_values:
             raise ValidationError(
                 _("%(enum)s is not a valid choice for %(attr)s") %
@@ -690,40 +691,27 @@ class AbstractProductAttribute(models.Model):
     def _validate_file(self, value):
         if value and not isinstance(value, File):
             raise ValidationError(_("Must be a file field"))
+    _validate_image = _validate_file
 
-    def get_validator(self):
-        DATATYPE_VALIDATORS = {
-            'text': self._validate_text,
-            'integer': self._validate_int,
-            'boolean': self._validate_bool,
-            'float': self._validate_float,
-            'richtext': self._validate_text,
-            'date': self._validate_date,
-            'entity': self._validate_entity,
-            'option': self._validate_option,
-            'file': self._validate_file,
-            'image': self._validate_file,
-        }
-
-        return DATATYPE_VALIDATORS[self.type]
+    def validate_value(self, value):
+        validator = getattr(self, '_validate_%s' % self.type)
+        validator(value)
 
     def __unicode__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        super(AbstractProductAttribute, self).save(*args, **kwargs)
-
     def save_value(self, product, value):
+        ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
         try:
             value_obj = product.attribute_values.get(attribute=self)
-        except get_model('catalogue', 'ProductAttributeValue').DoesNotExist:
-            # FileField uses False for anouncing deletion of the file
+        except ProductAttributeValue.DoesNotExist:
+            # FileField uses False for announcing deletion of the file
             # not creating a new value
             delete_file = self.is_file and value is False
             if value is None or value == '' or delete_file:
                 return
-            model = get_model('catalogue', 'ProductAttributeValue')
-            value_obj = model.objects.create(product=product, attribute=self)
+            value_obj = ProductAttributeValue.objects.create(
+                product=product, attribute=self)
 
         if self.is_file:
             # File fields in Django are treated differently, see
@@ -745,19 +733,6 @@ class AbstractProductAttribute(models.Model):
             if value != value_obj.value:
                 value_obj.value = value
                 value_obj.save()
-
-    def validate_value(self, value):
-        self.get_validator()(value)
-
-    def is_value_valid(self, value):
-        """
-        Check whether the passed value is valid for this attribute
-        """
-        if self.type == 'option':
-            valid_values = self.option_group.options.values_list('option',
-                                                                 flat=True)
-            return value in valid_values
-        return True
 
 
 class AbstractProductAttributeValue(models.Model):

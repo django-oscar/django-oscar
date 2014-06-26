@@ -120,10 +120,10 @@ class ProductAttributeCreationTests(TestCase):
         pa = factories.ProductAttribute(
             type='option', option_group=option_group)
 
-        self.assertRaises(ValidationError, pa.get_validator(), 'invalid')
-        pa.get_validator()(option_1)
-        pa.get_validator()(option_2)
+        self.assertRaises(ValidationError, pa.validate_value, 'invalid')
+        pa.validate_value(option_1)
+        pa.validate_value(option_2)
 
         invalid_option = AttributeOption(option='invalid option')
         self.assertRaises(
-            ValidationError, pa.get_validator(), invalid_option)
+            ValidationError, pa.validate_value, invalid_option)
