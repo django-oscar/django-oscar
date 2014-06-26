@@ -230,9 +230,8 @@ class AbstractAddress(models.Model):
 
     #: A field only used for searching addresses - this contains all the
     #: relevant fields.  This is effectively a poor man's Solr text field.
-    search_text = models.CharField(
-        _("Search text - used only for searching addresses"),
-        max_length=1000, editable=False)
+    search_text = models.TextField(
+        _("Search text - used only for searching addresses"), editable=False)
 
     def __unicode__(self):
         return self.summary

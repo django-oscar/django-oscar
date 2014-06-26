@@ -376,6 +376,10 @@ Basket app changes
 Migrations
 ~~~~~~~~~~
 
+* Address:
+
+    - ``0011`` - ``AbstractAddress.search_text`` turned into a ``TextField``.
+
 * Catalogue:
 
     - ``0021`` - Add ``unique_together`` to ``ProductAttributeValue``,
@@ -386,6 +390,11 @@ Migrations
 
     - ``0029`` - Add ``unique_together`` to ``PaymentEventQuantity`` and ``ShippingEventQuantity``
     - ``0030`` - Set ``unique=True`` for ``Order.order_number``
+    - ``0031`` - ``AbstractAddress.search_text`` turned into a ``TextField``.
+
+* Partner:
+
+    - ``0014`` - ``AbstractAddress.search_text`` turned into a ``TextField``.
 
 * Promotions:
 
