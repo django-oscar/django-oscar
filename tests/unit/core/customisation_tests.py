@@ -57,3 +57,17 @@ class TestForkAppFunction(TestCase):
             migration_path = os.path.join(self.tmp_folder, app, 'migrations')
             self.assertEqual(has_models, os.path.exists(migration_path))
 
+
+class TestForkStaticsFunction(TestCase):
+
+    def setUp(self):
+        self.tmp_folder = tempfile.mkdtemp()
+
+    def test_raises_exception_for_folder_that_already_exists(self):
+        with self.assertRaises(ValueError):
+            customisation.fork_statics(self.tmp_folder)
+
+    def test_creates_a_new_folder(self):
+        destination = self.tmp_folder + '/static'
+        customisation.fork_statics(destination)
+        self.assertTrue(os.path.exists(destination))

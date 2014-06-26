@@ -1,10 +1,9 @@
-from __future__ import print_function
 import logging
 import os
-import shutil
 
-from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
+
+from oscar.core import customisation
 
 
 logger = logging.getLogger(__name__)
@@ -12,11 +11,11 @@ logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     """
-    Copy Oscar's statics into local project so they can be used as a base for
-    styling a new site.
+    Copy Oscar's statics into the local project so they can be used as a base
+    for styling a new site.
     """
     args = '<destination folder>'
-    help = "Copy Oscar's static files"
+    help = "Copy Oscar's static files to a given destination"
 
     def handle(self, *args, **options):
         # Determine where to copy to
@@ -25,16 +24,14 @@ class Command(BaseCommand):
             destination = os.path.join(os.getcwd(), folder)
         else:
             destination = folder
-        if os.path.exists(destination):
-            raise CommandError(
-                "The folder %s already exists - aborting!" % destination)
 
-        source = os.path.realpath(
-            os.path.join(os.path.dirname(__file__), '../../static'))
-        print("Copying Oscar's static files to %s" % (destination,))
-        shutil.copytree(source, destination)
+        # Use a stdout logger
+        logger = logging.getLogger(__name__)
+        stream = logging.StreamHandler(self.stdout)
+        logger.addHandler(stream)
+        logger.setLevel(logging.DEBUG)
 
-        # Check if this new folder is in STATICFILES_DIRS
-        if destination not in settings.STATICFILES_DIRS:
-            print(("You need to add %s to STATICFILES_DIRS in order for your "
-                   "local overrides to be picked up") % destination)
+        try:
+            customisation.fork_statics(destination, logger=logger)
+        except Exception, e:
+            raise CommandError(e.message)

@@ -4,7 +4,33 @@ import shutil
 import logging
 import textwrap
 
+from django.conf import settings
+
 import oscar
+
+
+def fork_statics(folder_path, logger=None):
+    """
+    Create a copy of Oscar's static files
+    """
+    if logger is None:
+        logger = logging.getLogger(__name__)
+
+    if os.path.exists(folder_path):
+        raise ValueError(
+            "The folder %s already exists - aborting!" % folder_path)
+
+    source = os.path.realpath(
+        os.path.join(os.path.dirname(__file__), '../static'))
+    logger.info("Copying Oscar's static files to %s", folder_path)
+    shutil.copytree(source, folder_path)
+
+    # Check if this new folder is in STATICFILES_DIRS
+    if folder_path not in settings.STATICFILES_DIRS:
+        logger.warning((
+            "You need to add '%s' to STATICFILES_DIRS in order for your "
+            "local overrides to be picked up") % folder_path)
+
 
 
 def fork_app(app_label, folder_path, logger=None):
