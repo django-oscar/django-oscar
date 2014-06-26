@@ -296,8 +296,8 @@ class AbstractAddress(models.Model):
         max_length = search_text_field.max_length
         if len(value) > max_length:
             # Strip the text to the last possible whitespace
-            search_text = value[:value[:max_length].rfind(' ')]
-        self.search_text = search_text
+            value = value[:value[:max_length].rfind(' ')]
+        self.search_text = value
 
     # Properties
 
