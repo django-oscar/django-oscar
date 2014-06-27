@@ -631,7 +631,7 @@
                                         <td class="span2">
                                             {% if note.is_editable %}
                                                 &nbsp;<a href="{% url 'dashboard:order-detail-note' number=order.number note_id=note.id %}#notes" class="btn btn-info">{% trans "Edit" %}</a>
-                                                <form action="." method="post" class="pull-left">
+                                                <form action="." method="post" class="pull-left flat">
                                                     {% csrf_token %}
                                                     <input type="hidden" name="order_action" value="delete_note" />
                                                     <input type="hidden" name="note_id" value="{{ note.id }}" />
