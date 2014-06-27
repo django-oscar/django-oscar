@@ -27,6 +27,9 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.PositiveIntegerField')(null=True, blank=True),
                       keep_default=False)
 
+
+        # Changing field 'ProductAttributeValue.value_text'
+        db.alter_column(u'catalogue_productattributevalue', 'value_text', self.gf('django.db.models.fields.TextField')(null=True))
         # Deleting field 'ProductAttribute.entity_type'
         db.delete_column(u'catalogue_productattribute', 'entity_type_id')
 
@@ -60,6 +63,9 @@ class Migration(SchemaMigration):
         # Deleting field 'ProductAttributeValue.entity_object_id'
         db.delete_column(u'catalogue_productattributevalue', 'entity_object_id')
 
+
+        # Changing field 'ProductAttributeValue.value_text'
+        db.alter_column(u'catalogue_productattributevalue', 'value_text', self.gf('django.db.models.fields.CharField')(max_length=255, null=True))
         # Adding field 'ProductAttribute.entity_type'
         db.add_column(u'catalogue_productattribute', 'entity_type',
                       self.gf('django.db.models.fields.related.ForeignKey')(to=orm['catalogue.AttributeEntityType'], null=True, blank=True),
@@ -140,7 +146,7 @@ class Migration(SchemaMigration):
             'value_integer': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'value_option': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['catalogue.AttributeOption']", 'null': 'True', 'blank': 'True'}),
             'value_richtext': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'value_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'})
+            'value_text': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
         },
         u'catalogue.productcategory': {
             'Meta': {'ordering': "['product', 'category']", 'unique_together': "(('product', 'category'),)", 'object_name': 'ProductCategory'},

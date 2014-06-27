@@ -395,6 +395,8 @@ Migrations
     - ``0021`` - Add ``unique_together`` to ``ProductAttributeValue``,
       ``ProductRecommendation`` and ``ProductCategory``
     - ``0022`` - Remove ``Product.score`` field.
+    - ``0024`` - Change ``ProductAttributeValue.value_text`` to a ``TextField``
+      and do entity attribute changes and model deletions.
 
 * Order:
 
