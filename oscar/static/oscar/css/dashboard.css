@@ -2750,6 +2750,7 @@ h3.app-ico:before {
 .btn-group > .dropdown-menu,
 .btn {
   font-size: 12px;
+  font-family: inherit;
 }
 .btn-warning,
 .btn-success,
@@ -2766,6 +2767,7 @@ h3.app-ico:before {
   border-color: #e6e6e6 #e6e6e6 #bfbfbf;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  text-shadow: none;
   color: inherit;
   *color: #333;
 }
