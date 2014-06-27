@@ -385,6 +385,7 @@ Migrations
     - ``0021`` - Add ``unique_together`` to ``ProductAttributeValue``,
       ``ProductRecommendation`` and ``ProductCategory``
     - ``0022`` - Remove ``Product.score`` field.
+    - ``0023`` - Drop ``Product.related_products``.
 
 * Order:
 
