@@ -1,7 +1,6 @@
 import os
 
 # Path helper
-PROJECT_DIR = os.path.dirname(__file__)
 location = lambda x: os.path.join(
     os.path.dirname(os.path.realpath(__file__)), x)
 
@@ -21,7 +20,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(os.path.dirname(__file__), 'db.sqlite'),
+        'NAME': location('db.sqlite'),
         'USER': '',
         'PASSWORD': '',
         'HOST': '',
@@ -303,7 +302,7 @@ APPEND_SLASH = True
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+        'PATH': location('whoosh_index'),
     },
 }
 
