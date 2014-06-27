@@ -7976,7 +7976,7 @@ input[type="number"][id*="quantity"] {
   bottom: 20px;
   left: 20px;
 }
-.choose-block .btn-remove-address {
+.choose-block .address-controls {
   position: absolute;
   top: 20px;
   right: 20px;

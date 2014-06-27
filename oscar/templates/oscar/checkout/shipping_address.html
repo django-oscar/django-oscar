@@ -42,8 +42,16 @@
                                         {% else %}
                                             <button type="submit" class="btn btn-primary ship-address">{% trans "Ship to this address" %}</button>
                                         {% endif %}
-                                        <a href="{% url 'checkout:user-address-update' pk=address.id %}">{% trans "Edit address" %}</a>
-                                        <a href="{% url 'checkout:user-address-delete' pk=address.id %}" class="btn btn-small btn-remove-address">{% trans "Delete" %}</a>
+                                        
+                                        <div class="btn-group address-controls">
+                                            <a href="{% url 'checkout:user-address-update' pk=address.id %}" class="btn btn-small">{% trans "Edit address" %}</a>
+                                            <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="{% url 'checkout:user-address-delete' pk=address.id %}" class="btn-remove-address">{% trans "Delete" %}</a></li>
+                                            </ul>
+                                        </div>
                                     </form>
                                 </div>
                             </li>
