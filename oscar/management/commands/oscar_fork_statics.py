@@ -1,21 +1,16 @@
-import logging
 import os
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import CommandError
 
 from oscar.core import customisation
+from oscar.management import base
 
 
-logger = logging.getLogger(__name__)
-
-
-class Command(BaseCommand):
-    """
-    Copy Oscar's statics into the local project so they can be used as a base
-    for styling a new site.
-    """
+class Command(base.OscarBaseCommand):
     args = '<destination folder>'
-    help = "Copy Oscar's static files to a given destination"
+    help = (
+        "Copy Oscar's static files to a given destination so they can be "
+        "used as a base for styling a new site")
 
     def handle(self, *args, **options):
         # Determine where to copy to
@@ -25,13 +20,9 @@ class Command(BaseCommand):
         else:
             destination = folder
 
-        # Use a stdout logger
-        logger = logging.getLogger(__name__)
-        stream = logging.StreamHandler(self.stdout)
-        logger.addHandler(stream)
-        logger.setLevel(logging.DEBUG)
-
+        logger = self.logger(__name__)
         try:
             customisation.fork_statics(destination, logger=logger)
         except Exception, e:
+            logger.error(e.message, exc_info=True)
             raise CommandError(e.message)

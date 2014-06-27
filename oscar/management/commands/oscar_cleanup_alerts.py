@@ -1,37 +1,31 @@
-import logging
 from optparse import make_option
 from datetime import timedelta
 
-from oscar.core.loading import get_model
 from django.utils.timezone import now
 from django.core.management.base import BaseCommand
 
+from oscar.management import base
+from oscar.core.loading import get_model
+
 ProductAlert = get_model('customer', 'ProductAlert')
 
-logger = logging.getLogger(__name__)
 
 
-class Command(BaseCommand):
-    """
-    Command to remove all stale unconfirmed alerts
-    """
-    help = "Check unconfirmed alerts and clean them up"
+class Command(base.OscarBaseCommand):
+    help = "Remove stale, unconfirmed alerts"
 
     option_list = BaseCommand.option_list + (
         make_option('--days', dest='days', default=0,
-                    help='cleanup alerts older then DAYS from now.'),
+                    help='Remove alerts older then DAYS.'),
         make_option('--hours', dest='hours', default=0,
-                    help='cleanup alerts older then HOURS from now.'),
+                    help='Remove alerts older then HOURS.'),
     )
 
     def handle(self, *args, **options):
-        """
-        Generate a threshold date from the input options or 24 hours
-        if no options specified. All alerts that have the
-        status ``UNCONFIRMED`` and have been created before the
-        threshold date will be removed assuming that the emails
-        are wrong or the customer changed their mind.
-        """
+        # Generate a threshold date from the input options or 24 hours
+        # if no options specified. All alerts that have the
+        # status ``UNCONFIRMED`` and have been created before the
+        # threshold date will be removed.
         delta = timedelta(days=int(options['days']),
                           hours=int(options['hours']))
         if not delta:
@@ -39,6 +33,7 @@ class Command(BaseCommand):
 
         threshold_date = now() - delta
 
+        logger = self.logger(__name__)
         logger.info('Deleting unconfirmed alerts older than %s',
                     threshold_date.strftime("%Y-%m-%d %H:%M"))
 

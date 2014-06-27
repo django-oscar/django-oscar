@@ -1,11 +1,12 @@
 import logging
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import CommandError
 
+from oscar.management import base
 from oscar.core import customisation
 
 
-class Command(BaseCommand):
+class Command(base.OscarBaseCommand):
     args = '<app label> <destination folder>'
     help = (
         "Create a local version of one of Oscar's app so it can "
@@ -18,16 +19,13 @@ class Command(BaseCommand):
                 "You must specify an app label and a folder to create "
                 "the new app in")
 
-        # Use a stdout logger
-        logger = logging.getLogger(__name__)
-        stream = logging.StreamHandler(self.stdout)
-        logger.addHandler(stream)
-        logger.setLevel(logging.DEBUG)
-
+        logger = self.logger(__name__)
         app_label, folder_path = args[:2]
         try:
-            customisation.fork_app(app_label, folder_path, logger)
+            customisation.fork_app(
+                app_label, folder_path, logger)
         except Exception as e:
             # e.g. IOError doesn't have a message
+            logger.error(e.message, exc_info=True)
             message = e.message if e.message else unicode(e)
             raise CommandError(message)
