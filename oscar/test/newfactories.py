@@ -26,7 +26,7 @@ __all__ = ["UserFactory", "CountryFactory", "UserAddressFactory",
            "BasketFactory", "VoucherFactory", "ProductFactory",
            "StockRecordFactory", "ProductAttributeFactory",
            "ProductAttributeValueFactory", "AttributeOptionGroupFactory",
-           "AttributeOptionFactory"]
+           "AttributeOptionFactory", "PartnerFactory"]
 
 
 class UserFactory(factory.DjangoModelFactory):

@@ -2,8 +2,6 @@ from django.contrib import admin
 from oscar.core.loading import get_model
 from treebeard.admin import TreeAdmin
 
-AttributeEntity = get_model('catalogue', 'AttributeEntity')
-AttributeEntityType = get_model('catalogue', 'AttributeEntityType')
 AttributeOption = get_model('catalogue', 'AttributeOption')
 AttributeOptionGroup = get_model('catalogue', 'AttributeOptionGroup')
 Category = get_model('catalogue', 'Category')
@@ -71,10 +69,6 @@ class AttributeOptionGroupAdmin(admin.ModelAdmin):
     inlines = [AttributeOptionInline, ]
 
 
-class AttributeEntityAdmin(admin.ModelAdmin):
-    list_display = ('name', )
-
-
 class CategoryAdmin(TreeAdmin):
     pass
 
@@ -84,8 +78,6 @@ admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductAttribute, ProductAttributeAdmin)
 admin.site.register(ProductAttributeValue, ProductAttributeValueAdmin)
 admin.site.register(AttributeOptionGroup, AttributeOptionGroupAdmin)
-admin.site.register(AttributeEntity, AttributeEntityAdmin)
-admin.site.register(AttributeEntityType)
 admin.site.register(Option, OptionAdmin)
 admin.site.register(ProductImage)
 admin.site.register(Category, CategoryAdmin)

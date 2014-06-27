@@ -5,7 +5,6 @@ from django.core.exceptions import ValidationError
 
 from oscar.apps.catalogue.models import (Product, ProductClass,
                                          ProductAttribute,
-                                         AttributeOptionGroup,
                                          AttributeOption)
 from oscar.test import factories
 
@@ -127,3 +126,12 @@ class ProductAttributeCreationTests(TestCase):
         invalid_option = AttributeOption(option='invalid option')
         self.assertRaises(
             ValidationError, pa.validate_value, invalid_option)
+
+    def test_entity_attributes(self):
+        unrelated_object = factories.PartnerFactory()
+        attribute = factories.ProductAttributeFactory(type='entity')
+
+        attribute_value = factories.ProductAttributeValueFactory(
+            attribute=attribute, value_entity=unrelated_object)
+
+        self.assertEqual(attribute_value.value, unrelated_object)

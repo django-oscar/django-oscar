@@ -319,6 +319,12 @@ Misc
   trivial ``ProductAttribute.get_validator`` and the unused
   ``ProductAttribute.is_value_valid`` methods have been removed.
 
+* It is now possible to use product attributes to add a relation to arbitrary
+  model instances. There was some (presumably broken) support for it before,
+  but you should now be able to use product attributes of type ``entity`` as
+  expected. There's currently no frontend or dashboard support for it, as there
+  is no good default behaviour.
+
 .. _rewritten: https://github.com/tangentlabs/django-oscar/commit/d8b4dbfed17be90846ea4bc47b5f7b39ad944c24
 
 Basket line stockrecords

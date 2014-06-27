@@ -57,7 +57,7 @@
         "parent": null, 
         "title": "Oscar T-shirt", 
         "date_updated": "2013-12-12T16:33:57.426Z", 
-        "upc": null, 
+        "upc": "", 
         "is_discountable": true, 
         "date_created": "2013-12-12T16:33:57.426Z", 
         "product_options": [], 
@@ -74,7 +74,7 @@
         "parent": 1, 
         "title": "", 
         "date_updated": "2013-12-12T16:34:14.023Z", 
-        "upc": null, 
+        "upc": "", 
         "is_discountable": true, 
         "date_created": "2013-12-12T16:34:14.023Z", 
         "product_options": [], 
@@ -91,7 +91,7 @@
         "parent": 1, 
         "title": "", 
         "date_updated": "2013-12-12T16:34:32.170Z", 
-        "upc": null, 
+        "upc": "", 
         "is_discountable": true, 
         "date_created": "2013-12-12T16:34:32.170Z", 
         "product_options": [], 
@@ -108,7 +108,7 @@
         "parent": 1, 
         "title": "", 
         "date_updated": "2013-12-12T17:32:15.016Z", 
-        "upc": null, 
+        "upc": "", 
         "is_discountable": true, 
         "date_created": "2013-12-12T17:32:15.016Z", 
         "product_options": [], 
@@ -125,7 +125,7 @@
         "parent": null, 
         "title": "commandlinefu T-shirt", 
         "date_updated": "2013-12-13T11:34:21.810Z", 
-        "upc": null, 
+        "upc": "", 
         "is_discountable": true, 
         "date_created": "2013-12-13T11:34:21.810Z", 
         "product_options": [], 
@@ -142,7 +142,7 @@
         "parent": 5, 
         "title": "", 
         "date_updated": "2013-12-13T11:37:08.138Z", 
-        "upc": null, 
+        "upc": "", 
         "is_discountable": true, 
         "date_created": "2013-12-13T11:37:08.138Z", 
         "product_options": [], 
@@ -159,7 +159,7 @@
         "parent": 5, 
         "title": "", 
         "date_updated": "2013-12-13T11:37:45.834Z", 
-        "upc": null, 
+        "upc": "", 
         "is_discountable": true, 
         "date_created": "2013-12-13T11:37:45.834Z", 
         "product_options": [], 
@@ -176,7 +176,7 @@
         "parent": null, 
         "title": "Tangent T-shirt", 
         "date_updated": "2013-12-13T11:38:15.107Z", 
-        "upc": null, 
+        "upc": "", 
         "is_discountable": true, 
         "date_created": "2013-12-13T11:38:15.107Z", 
         "product_options": [], 
@@ -193,7 +193,7 @@
         "parent": 8, 
         "title": "", 
         "date_updated": "2013-12-13T11:38:49.769Z", 
-        "upc": null, 
+        "upc": "", 
         "is_discountable": true, 
         "date_created": "2013-12-13T11:38:49.769Z", 
         "product_options": [], 
@@ -210,7 +210,7 @@
         "parent": 8, 
         "title": "", 
         "date_updated": "2013-12-13T11:39:12.859Z", 
-        "upc": null, 
+        "upc": "", 
         "is_discountable": true, 
         "date_created": "2013-12-13T11:39:12.859Z", 
         "product_options": [], 
@@ -227,7 +227,7 @@
         "parent": 8, 
         "title": "", 
         "date_updated": "2013-12-13T11:39:53.073Z", 
-        "upc": null, 
+        "upc": "", 
         "is_discountable": true, 
         "date_created": "2013-12-13T11:39:53.073Z", 
         "product_options": [], 
@@ -239,11 +239,10 @@
     "pk": 1, 
     "model": "catalogue.productattribute", 
     "fields": {
-        "code": "size", 
-        "product_class": 1, 
-        "entity_type": null, 
-        "option_group": 1, 
         "required": true, 
+        "product_class": 1, 
+        "option_group": 1, 
+        "code": "size", 
         "type": "option", 
         "name": "Size"
     }
@@ -256,12 +255,15 @@
         "value_integer": null, 
         "product": 2, 
         "value_float": null, 
+        "entity_content_type": null, 
         "value_text": null, 
         "attribute": 1, 
         "value_richtext": null, 
-        "value_entity": null, 
+        "entity_object_id": null, 
+        "value_image": "", 
         "value_option": 1, 
-        "value_boolean": null
+        "value_boolean": null, 
+        "value_file": ""
     }
 },
 {
@@ -272,12 +274,15 @@
         "value_integer": null, 
         "product": 3, 
         "value_float": null, 
+        "entity_content_type": null, 
         "value_text": null, 
         "attribute": 1, 
         "value_richtext": null, 
-        "value_entity": null, 
+        "entity_object_id": null, 
+        "value_image": "", 
         "value_option": 2, 
-        "value_boolean": null
+        "value_boolean": null, 
+        "value_file": ""
     }
 },
 {
@@ -288,12 +293,15 @@
         "value_integer": null, 
         "product": 4, 
         "value_float": null, 
+        "entity_content_type": null, 
         "value_text": null, 
         "attribute": 1, 
         "value_richtext": null, 
-        "value_entity": null, 
+        "entity_object_id": null, 
+        "value_image": "", 
         "value_option": 3, 
-        "value_boolean": null
+        "value_boolean": null, 
+        "value_file": ""
     }
 },
 {
@@ -304,12 +312,15 @@
         "value_integer": null, 
         "product": 6, 
         "value_float": null, 
+        "entity_content_type": null, 
         "value_text": null, 
         "attribute": 1, 
         "value_richtext": null, 
-        "value_entity": null, 
+        "entity_object_id": null, 
+        "value_image": "", 
         "value_option": 1, 
-        "value_boolean": null
+        "value_boolean": null, 
+        "value_file": ""
     }
 },
 {
@@ -320,12 +331,15 @@
         "value_integer": null, 
         "product": 7, 
         "value_float": null, 
+        "entity_content_type": null, 
         "value_text": null, 
         "attribute": 1, 
         "value_richtext": null, 
-        "value_entity": null, 
+        "entity_object_id": null, 
+        "value_image": "", 
         "value_option": 2, 
-        "value_boolean": null
+        "value_boolean": null, 
+        "value_file": ""
     }
 },
 {
@@ -336,12 +350,15 @@
         "value_integer": null, 
         "product": 9, 
         "value_float": null, 
+        "entity_content_type": null, 
         "value_text": null, 
         "attribute": 1, 
         "value_richtext": null, 
-        "value_entity": null, 
+        "entity_object_id": null, 
+        "value_image": "", 
         "value_option": 1, 
-        "value_boolean": null
+        "value_boolean": null, 
+        "value_file": ""
     }
 },
 {
@@ -352,12 +369,15 @@
         "value_integer": null, 
         "product": 10, 
         "value_float": null, 
+        "entity_content_type": null, 
         "value_text": null, 
         "attribute": 1, 
         "value_richtext": null, 
-        "value_entity": null, 
+        "entity_object_id": null, 
+        "value_image": "", 
         "value_option": 2, 
-        "value_boolean": null
+        "value_boolean": null, 
+        "value_file": ""
     }
 },
 {
@@ -368,12 +388,15 @@
         "value_integer": null, 
         "product": 11, 
         "value_float": null, 
+        "entity_content_type": null, 
         "value_text": null, 
         "attribute": 1, 
         "value_richtext": null, 
-        "value_entity": null, 
+        "entity_object_id": null, 
+        "value_image": "", 
         "value_option": 3, 
-        "value_boolean": null
+        "value_boolean": null, 
+        "value_file": ""
     }
 },
 {
