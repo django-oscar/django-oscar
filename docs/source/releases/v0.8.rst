@@ -171,6 +171,11 @@ Minor changes
 * The forms for the order dashboard views are now loaded dynamically so they
   can be overridden.
 
+* Introduced a ``OSCAR_DELETE_IMAGE_FILES`` settings which makes deleting
+  image files and thumbnails upon deleting of a model with an ``ImageField``
+  optional. It usually is desired behaviour, but can slow down an app when
+  using a remote storage.
+
 .. _incompatible_changes_in_0.8:
 
 Backwards incompatible changes in 0.8
