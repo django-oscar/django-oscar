@@ -57,6 +57,11 @@ h3.app-ico:before {
    color:inherit;
    *color: #333;
   }
+  &:focus {
+    .buttonBackground(darken(@white, 15%),@white);
+    background-position:0 0;
+    color:#333;
+  }
 }
 .btn-primary {
   .buttonBackground(#0083C9, #005096);
@@ -108,6 +113,12 @@ td .btn-toolbar {
   }
   .control-group {
     margin-right:10px;
+  }
+}
+.form-stacked {
+  .error-block {
+    display:block;
+    color:#b94a48;
   }
 }
 .fields-full {
