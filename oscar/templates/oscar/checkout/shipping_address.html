@@ -62,12 +62,14 @@
     {% endif %}
 
     {% block new_address_form %}
-        <form action="{% url 'checkout:shipping-address' %}" method="post" id="new_shipping_address">
+        <form action="{% url 'checkout:shipping-address' %}" method="post" id="new_shipping_address" class="form form-horizontal">
             <div class="well">
                 {% csrf_token %}
                 {% include "partials/form_fields.html" with form=form %}
-                <button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
-                {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
+                <div class="controls">
+                    <button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
+                    {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
+                </div>
             </div>
         </form>
     {% endblock %}
