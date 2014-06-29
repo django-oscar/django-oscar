@@ -28,7 +28,6 @@ def configure():
                 'django.contrib.sites',
                 'django.contrib.flatpages',
                 'django.contrib.staticfiles',
-                'sorl.thumbnail',
                 'compressor',
                 'tests._site.model_tests_app',  # contains models we need for testing
 
