@@ -1,4 +1,3 @@
-from django.dispatch import receiver
 from django.db.models.signals import post_save
 
 from oscar.core.loading import get_classes
@@ -6,7 +5,6 @@ StockRecord, StockAlert = get_classes('partner.models', ['StockRecord',
                                                          'StockAlert'])
 
 
-@receiver(post_save, sender=StockRecord)
 def update_stock_alerts(sender, instance, created, **kwargs):
     """
     Update low-stock alerts
@@ -25,3 +23,7 @@ def update_stock_alerts(sender, instance, created, **kwargs):
                                   threshold=stockrecord.low_stock_threshold)
     elif not stockrecord.is_below_threshold and alert:
         alert.close()
+
+
+def register():
+    post_save.connect(update_stock_alerts, sender=StockRecord)

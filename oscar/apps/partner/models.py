@@ -27,4 +27,6 @@ if 'partner.StockAlert' not in settings.OSCAR_OVERRIDE_MODELS:
 
 
 if django.VERSION < (1, 7):
-    from oscar.apps.partner.receivers import *  # noqa
+    from oscar.apps.partner import receivers
+
+    receivers.register()

@@ -11,5 +11,6 @@ def track_voucher_removal(basket, voucher, **kwargs):
     voucher.save()
 
 
-signals.voucher_addition.connect(track_voucher_addition)
-signals.voucher_removal.connect(track_voucher_removal)
+def register():
+    signals.voucher_addition.connect(track_voucher_addition)
+    signals.voucher_removal.connect(track_voucher_removal)
