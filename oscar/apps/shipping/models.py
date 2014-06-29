@@ -1,13 +1,18 @@
+from django.conf import settings
+
 from oscar.apps.shipping import abstract_models
 
 
-class OrderAndItemCharges(abstract_models.AbstractOrderAndItemCharges):
-    pass
+if 'shipping.OrderAndItemCharges' not in settings.OSCAR_OVERRIDE_MODELS:
+    class OrderAndItemCharges(abstract_models.AbstractOrderAndItemCharges):
+        pass
 
 
-class WeightBased(abstract_models.AbstractWeightBased):
-    pass
+if 'shipping.WeightBased' not in settings.OSCAR_OVERRIDE_MODELS:
+    class WeightBased(abstract_models.AbstractWeightBased):
+        pass
 
 
-class WeightBand(abstract_models.AbstractWeightBand):
-    pass
+if 'shipping.WeightBand' not in settings.OSCAR_OVERRIDE_MODELS:
+    class WeightBand(abstract_models.AbstractWeightBand):
+        pass

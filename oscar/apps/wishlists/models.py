@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
+from django.conf import settings
+
 from .abstract_models import *  # noqa
 
 
-class WishList(AbstractWishList):
-    pass
+if 'wishlists.WishList' not in settings.OSCAR_OVERRIDE_MODELS:
+    class WishList(AbstractWishList):
+        pass
 
 
-class Line(AbstractLine):
-    pass
+if 'wishlists.Line' not in settings.OSCAR_OVERRIDE_MODELS:
+    class Line(AbstractLine):
+        pass

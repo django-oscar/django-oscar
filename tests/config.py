@@ -37,7 +37,8 @@ def configure():
                 # global change.
             ] + oscar.get_core_apps([
                 'tests._site.apps.partner',
-                'tests._site.apps.customer']),
+                'tests._site.apps.customer'
+            ]),
             'TEMPLATE_CONTEXT_PROCESSORS': (
                 "django.contrib.auth.context_processors.auth",
                 "django.core.context_processors.request",
@@ -92,6 +93,10 @@ def configure():
             'OSCAR_ORDER_STATUS_PIPELINE': {'A': ('B',), 'B': ()},
             'OSCAR_INITIAL_LINE_STATUS': 'a',
             'OSCAR_LINE_STATUS_PIPELINE': {'a': ('b', ), 'b': ()},
+            'OSCAR_OVERRIDE_MODELS': [
+                'partner.StockRecord',
+            ]
+
         }
         if django.VERSION >= (1, 5):
             test_settings['INSTALLED_APPS'] += ['tests._site.myauth', ]

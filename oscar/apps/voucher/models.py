@@ -1,10 +1,14 @@
+from django.conf import settings
+
 from oscar.apps.voucher.abstract_models import (
     AbstractVoucher, AbstractVoucherApplication)
 
 
-class Voucher(AbstractVoucher):
-    pass
+if 'voucher.Voucher' not in settings.OSCAR_OVERRIDE_MODELS:
+    class Voucher(AbstractVoucher):
+        pass
 
 
-class VoucherApplication(AbstractVoucherApplication):
-    pass
+if 'voucher.VoucherApplication' not in settings.OSCAR_OVERRIDE_MODELS:
+    class VoucherApplication(AbstractVoucherApplication):
+        pass

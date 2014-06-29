@@ -1,20 +1,25 @@
+from django.conf import settings
+
 from oscar.apps.customer import abstract_models
 
-
-class Email(abstract_models.AbstractEmail):
-    pass
-
-
-class CommunicationEventType(abstract_models.AbstractCommunicationEventType):
-    pass
+if 'customer.Email' not in settings.OSCAR_OVERRIDE_MODELS:
+    class Email(abstract_models.AbstractEmail):
+        pass
 
 
-class Notification(abstract_models.AbstractNotification):
-    pass
+if 'customer.CommunicationEventType' not in settings.OSCAR_OVERRIDE_MODELS:
+    class CommunicationEventType(abstract_models.AbstractCommunicationEventType):
+        pass
 
 
-class ProductAlert(abstract_models.AbstractProductAlert):
-    pass
+if 'customer.Notification' not in settings.OSCAR_OVERRIDE_MODELS:
+    class Notification(abstract_models.AbstractNotification):
+        pass
+
+
+if 'customer.ProductAlert' not in settings.OSCAR_OVERRIDE_MODELS:
+    class ProductAlert(abstract_models.AbstractProductAlert):
+        pass
 
 
 from oscar.apps.customer.history import *  # noqa

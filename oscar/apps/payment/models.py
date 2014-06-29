@@ -1,17 +1,23 @@
+from django.conf import settings
+
 from . import abstract_models
 
 
-class Transaction(abstract_models.AbstractTransaction):
-    pass
+if 'payment.Transaction' not in settings.OSCAR_OVERRIDE_MODELS:
+    class Transaction(abstract_models.AbstractTransaction):
+        pass
 
 
-class Source(abstract_models.AbstractSource):
-    pass
+if 'payment.Source' not in settings.OSCAR_OVERRIDE_MODELS:
+    class Source(abstract_models.AbstractSource):
+        pass
 
 
-class SourceType(abstract_models.AbstractSourceType):
-    pass
+if 'payment.SourceType' not in settings.OSCAR_OVERRIDE_MODELS:
+    class SourceType(abstract_models.AbstractSourceType):
+        pass
 
 
-class Bankcard(abstract_models.AbstractBankcard):
-    pass
+if 'payment.Bankcard' not in settings.OSCAR_OVERRIDE_MODELS:
+    class Bankcard(abstract_models.AbstractBankcard):
+        pass
