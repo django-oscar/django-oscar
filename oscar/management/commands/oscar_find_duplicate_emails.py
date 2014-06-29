@@ -1,4 +1,5 @@
 from collections import Counter
+import string
 
 from django.core.management.base import BaseCommand
 from oscar.core.compat import get_user_model
@@ -6,13 +7,14 @@ from oscar.core.compat import get_user_model
 User = get_user_model()
 
 
+# This command is not currently documented in the Sphinx docs.
 class Command(BaseCommand):
     help = ('Finds email addresses that are used by more than one user. '
             'Casing is ignored.')
 
     def handle(self, *args, **options):
         emails = User.objects.values_list('email', flat=True)
-        emails = map(lambda x: x.lower(), emails)
+        emails = map(string.lower, emails)
         duplicates = sorted([
             (email, count) for email, count in Counter(emails).most_common()
             if count > 1])
