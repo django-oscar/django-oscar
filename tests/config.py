@@ -13,7 +13,8 @@ def configure():
         location = lambda x: os.path.join(
             os.path.dirname(os.path.realpath(__file__)), x)
 
-        test_settings = {
+        test_settings = OSCAR_SETTINGS.copy()
+        test_settings.update({
             'DATABASES': {
                 'default': {
                     'ENGINE': 'django.db.backends.sqlite3',
@@ -96,10 +97,9 @@ def configure():
                 'partner.StockRecord',
             ]
 
-        }
+        })
         if django.VERSION >= (1, 5):
             test_settings['INSTALLED_APPS'] += ['tests._site.myauth', ]
             test_settings['AUTH_USER_MODEL'] = 'myauth.User'
-        test_settings.update(OSCAR_SETTINGS)
 
         settings.configure(**test_settings)
