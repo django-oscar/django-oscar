@@ -386,9 +386,6 @@ if not os.path.exists(LOG_ROOT):
 THUMBNAIL_DEBUG = True
 THUMBNAIL_KEY_PREFIX = 'oscar-us-sandbox'
 
-# Use a custom KV store to handle integrity error
-THUMBNAIL_KVSTORE = 'oscar.sorl_kvstore.ConcurrentKVStore'
-
 # Django 1.6 has switched to JSON serializing for security reasons, but it does not
 # serialize Models. We should resolve this by extending the
 # django/core/serializers/json.Serializer to have the `dumps` function. Also
