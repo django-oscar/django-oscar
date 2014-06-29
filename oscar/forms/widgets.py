@@ -128,7 +128,7 @@ class DateTimePickerInput(forms.DateTimeInput):
         include_seconds = kwargs.pop('include_seconds', False)
         super(DateTimePickerInput, self).__init__(*args, **kwargs)
 
-        if not include_seconds:
+        if self.format and not include_seconds:
             self.format = re.sub(':?%S', '', self.format)
         add_js_formats(self)
 
