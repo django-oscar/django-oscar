@@ -62,10 +62,11 @@ class AbstractPartner(models.Model):
         return self.primary_address
 
     class Meta:
+        abstract = True
+        app_label = 'partner'
         permissions = (('dashboard_access', 'Can access dashboard'), )
         verbose_name = _('Fulfillment partner')
         verbose_name_plural = _('Fulfillment partners')
-        abstract = True
 
     def __unicode__(self):
         return self.display_name
@@ -150,6 +151,7 @@ class AbstractStockRecord(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'partner'
         unique_together = ('partner', 'partner_sku')
         verbose_name = _("Stock record")
         verbose_name_plural = _("Stock records")
@@ -248,6 +250,7 @@ class AbstractStockAlert(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'partner'
         ordering = ('-date_created',)
         verbose_name = _('Stock Alert')
         verbose_name_plural = _('Stock Alerts')

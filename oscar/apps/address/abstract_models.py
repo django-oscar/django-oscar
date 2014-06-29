@@ -564,5 +564,6 @@ class AbstractPartnerAddress(AbstractAddress):
 
     class Meta:
         abstract = True
+        app_label = 'partner'
         verbose_name = _("Partner address")
         verbose_name_plural = _("Partner addresses")

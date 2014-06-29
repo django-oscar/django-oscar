@@ -267,6 +267,7 @@ class AbstractOrder(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         ordering = ['-date_placed']
         verbose_name = _("Order")
         verbose_name_plural = _("Orders")
@@ -331,6 +332,7 @@ class AbstractOrderNote(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         verbose_name = _("Order Note")
         verbose_name_plural = _("Order Notes")
 
@@ -358,6 +360,7 @@ class AbstractCommunicationEvent(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         verbose_name = _("Communication Event")
         verbose_name_plural = _("Communication Events")
         ordering = ['-date_created']
@@ -472,6 +475,7 @@ class AbstractLine(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         verbose_name = _("Order Line")
         verbose_name_plural = _("Order Lines")
 
@@ -697,6 +701,7 @@ class AbstractLineAttribute(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         verbose_name = _("Line Attribute")
         verbose_name_plural = _("Line Attributes")
 
@@ -728,6 +733,7 @@ class AbstractLinePrice(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         ordering = ('id',)
         verbose_name = _("Line Price")
         verbose_name_plural = _("Line Prices")
@@ -754,6 +760,7 @@ class AbstractPaymentEventType(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         verbose_name = _("Payment Event Type")
         verbose_name_plural = _("Payment Event Types")
         ordering = ('name', )
@@ -795,6 +802,7 @@ class AbstractPaymentEvent(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         verbose_name = _("Payment Event")
         verbose_name_plural = _("Payment Events")
         ordering = ['-date_created']
@@ -819,6 +827,7 @@ class PaymentEventQuantity(models.Model):
     quantity = models.PositiveIntegerField(_("Quantity"))
 
     class Meta:
+        app_label = 'order'
         verbose_name = _("Payment Event Quantity")
         verbose_name_plural = _("Payment Event Quantities")
         unique_together = ('event', 'line')
@@ -847,6 +856,7 @@ class AbstractShippingEvent(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         verbose_name = _("Shipping Event")
         verbose_name_plural = _("Shipping Events")
         ordering = ['-date_created']
@@ -876,6 +886,7 @@ class ShippingEventQuantity(models.Model):
     quantity = models.PositiveIntegerField(_("Quantity"))
 
     class Meta:
+        app_label = 'order'
         verbose_name = _("Shipping Event Quantity")
         verbose_name_plural = _("Shipping Event Quantities")
         unique_together = ('event', 'line')
@@ -910,6 +921,7 @@ class AbstractShippingEventType(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         verbose_name = _("Shipping Event Type")
         verbose_name_plural = _("Shipping Event Types")
         ordering = ('name', )
@@ -977,6 +989,7 @@ class AbstractOrderDiscount(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         verbose_name = _("Order Discount")
         verbose_name_plural = _("Order Discounts")
 
