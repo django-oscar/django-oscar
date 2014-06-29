@@ -22,6 +22,8 @@ from oscar.apps.partner import models as partner_models, strategy
 from oscar.apps.voucher import models as voucher_models
 from oscar.core.compat import get_user_model
 
+from tests._site.apps.partner.models import StockRecord
+
 __all__ = ["UserFactory", "CountryFactory", "UserAddressFactory",
            "BasketFactory", "VoucherFactory", "ProductFactory",
            "StockRecordFactory", "ProductAttributeFactory",
@@ -88,7 +90,7 @@ class PartnerFactory(factory.DjangoModelFactory):
 
 
 class StockRecordFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = partner_models.StockRecord
+    FACTORY_FOR = StockRecord
 
     partner = factory.SubFactory(PartnerFactory)
     partner_sku = factory.Sequence(lambda n: 'unit%d' % n)
