@@ -261,11 +261,6 @@ LOGGING = {
             'propagate': False,
             'level': 'INFO',
         },
-        'oscar.management.commands.oscar_calculate_scores': {
-            'handlers': ['console'],
-            'propagate': False,
-            'level': 'INFO',
-        },
         'oscar.alerts': {
             'handlers': ['null'],
             'propagate': False,
