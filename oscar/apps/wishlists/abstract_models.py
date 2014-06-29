@@ -78,9 +78,10 @@ class AbstractWishList(models.Model):
         return user == self.owner
 
     class Meta:
+        abstract = True
+        app_label = 'wishlists'
         ordering = ('owner', 'date_created', )
         verbose_name = _('Wish List')
-        abstract = True
 
     def get_absolute_url(self):
         return reverse('customer:wishlists-detail', kwargs={
@@ -127,5 +128,6 @@ class AbstractLine(models.Model):
 
     class Meta:
         abstract = True
-        verbose_name = _('Wish list line')
+        app_label = 'wishlists'
         unique_together = (('wishlist', 'product'), )
+        verbose_name = _('Wish list line')

@@ -60,6 +60,7 @@ class AbstractProductClass(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         ordering = ['name']
         verbose_name = _("Product Class")
         verbose_name_plural = _("Product Classes")
@@ -161,6 +162,7 @@ class AbstractCategory(MP_Node):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         ordering = ['full_name']
         verbose_name = _('Category')
         verbose_name_plural = _('Categories')
@@ -182,6 +184,7 @@ class AbstractProductCategory(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         ordering = ['product', 'category']
         verbose_name = _('Product Category')
         verbose_name_plural = _('Product Categories')
@@ -276,6 +279,7 @@ class AbstractProduct(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         ordering = ['-date_created']
         verbose_name = _('Product')
         verbose_name_plural = _('Products')
@@ -515,6 +519,7 @@ class AbstractProductRecommendation(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         verbose_name = _('Product Recommendation')
         verbose_name_plural = _('Product Recomendations')
         ordering = ['primary', '-ranking']
@@ -626,6 +631,7 @@ class AbstractProductAttribute(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         ordering = ['code']
         verbose_name = _('Product Attribute')
         verbose_name_plural = _('Product Attributes')
@@ -777,6 +783,7 @@ class AbstractProductAttributeValue(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         verbose_name = _('Product Attribute Value')
         verbose_name_plural = _('Product Attribute Values')
         unique_together = ('attribute', 'product')
@@ -843,6 +850,7 @@ class AbstractAttributeOptionGroup(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         verbose_name = _('Attribute Option Group')
         verbose_name_plural = _('Attribute Option Groups')
 
@@ -867,6 +875,7 @@ class AbstractAttributeOption(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         verbose_name = _('Attribute Option')
         verbose_name_plural = _('Attribute Options')
 
@@ -897,6 +906,7 @@ class AbstractOption(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         verbose_name = _("Option")
         verbose_name_plural = _("Options")
 
@@ -965,6 +975,7 @@ class AbstractProductImage(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         unique_together = ("product", "display_order")
         # Any custom models should ensure that this ordering is unchanged, or
         # your query count will explode. See AbstractProduct.primary_image.

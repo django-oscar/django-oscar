@@ -74,9 +74,9 @@ class AbstractUser(auth_models.AbstractBaseUser,
     USERNAME_FIELD = 'email'
 
     class Meta:
+        abstract = True
         verbose_name = _('User')
         verbose_name_plural = _('Users')
-        abstract = True
 
     def get_full_name(self):
         full_name = '%s %s' % (self.first_name, self.last_name)
@@ -118,6 +118,7 @@ class AbstractEmail(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'customer'
         verbose_name = _('Email')
         verbose_name_plural = _('Emails')
 
@@ -180,6 +181,7 @@ class AbstractCommunicationEventType(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'customer'
         verbose_name = _("Communication event type")
         verbose_name_plural = _("Communication event types")
 
@@ -262,8 +264,9 @@ class AbstractNotification(models.Model):
     date_read = models.DateTimeField(blank=True, null=True)
 
     class Meta:
-        ordering = ('-date_sent',)
         abstract = True
+        app_label = 'customer'
+        ordering = ('-date_sent',)
 
     def __unicode__(self):
         return self.subject
@@ -321,6 +324,7 @@ class AbstractProductAlert(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'customer'
 
     @property
     def is_anonymous(self):
