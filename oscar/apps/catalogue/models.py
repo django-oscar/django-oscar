@@ -1,3 +1,5 @@
+import django
+
 """
 Vanilla product models
 """
@@ -48,4 +50,5 @@ class ProductImage(AbstractProductImage):
     pass
 
 
-from .receivers import *  # noqa
+if django.VERSION < (1, 7):
+    from . import receivers

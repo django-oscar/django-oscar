@@ -1,3 +1,5 @@
+import django
+
 from oscar.apps.analytics.abstract_models import (
     AbstractProductRecord, AbstractUserRecord,
     AbstractUserProductView, AbstractUserSearch)
@@ -19,4 +21,5 @@ class UserSearch(AbstractUserSearch):
     pass
 
 
-from .receivers import *  # noqa
+if django.VERSION < (1, 7):
+    from . import receivers  # noqa
