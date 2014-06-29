@@ -1,3 +1,4 @@
+import django
 from django.conf import settings
 
 from oscar.apps.address.abstract_models import AbstractPartnerAddress
@@ -25,4 +26,5 @@ if not 'partner.StockAlert' in settings.OSCAR_OVERRIDE_MODELS:
         pass
 
 
-from oscar.apps.partner.receivers import *  # noqa
+if django.VERSION < (1, 7):
+    from oscar.apps.partner.receivers import *  # noqa

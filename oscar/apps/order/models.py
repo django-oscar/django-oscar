@@ -4,7 +4,6 @@ from oscar.apps.order.abstract_models import *  # noqa
 from oscar.apps.address.abstract_models import (AbstractShippingAddress,
                                                 AbstractBillingAddress)
 
-
 if 'order.Order' not in settings.OSCAR_OVERRIDE_MODELS:
     class Order(AbstractOrder):
         pass

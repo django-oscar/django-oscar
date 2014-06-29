@@ -1,3 +1,4 @@
+import django
 from django.conf import settings
 
 from oscar.apps.customer import abstract_models
@@ -22,5 +23,6 @@ if 'customer.ProductAlert' not in settings.OSCAR_OVERRIDE_MODELS:
         pass
 
 
-from oscar.apps.customer.history import *  # noqa
-from oscar.apps.customer.alerts.receivers import *  # noqa
+if django.VERSION < (1, 7):
+    from oscar.apps.customer.history import *  # noqa
+    from oscar.apps.customer.alerts.receivers import *  # noqa

@@ -1,6 +1,7 @@
 """
 Vanilla product models
 """
+import django
 from django.conf import settings
 
 from oscar.apps.catalogue.abstract_models import *  # noqa
@@ -60,4 +61,5 @@ if 'catalogue.ProductImage' not in settings.OSCAR_OVERRIDE_MODELS:
     class ProductImage(AbstractProductImage):
         pass
 
-from .receivers import *  # noqa
+if django.VERSION < (1, 7):
+    from .receivers import *  # noqa

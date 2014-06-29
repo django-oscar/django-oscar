@@ -1,3 +1,4 @@
+import django
 from django.conf import settings
 
 from oscar.apps.analytics.abstract_models import (
@@ -25,4 +26,5 @@ if 'analytics.UserSearch' not in settings.OSCAR_OVERRIDE_MODELS:
         pass
 
 
-from .receivers import *  # noqa
+if django.VERSION < (1, 7):
+    from .receivers import *  # noqa
