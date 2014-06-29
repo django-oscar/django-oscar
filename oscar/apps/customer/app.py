@@ -149,7 +149,7 @@ class CustomerApplication(Application):
                 name='notifications-detail'),
 
             # Alerts
-            # Alerts can be setup by anonymous users: some views do not
+            # Alerts can be setup by anonymous users and so some views do not
             # require login
             url(r'^alerts/$',
                 login_required(self.alert_list_view.as_view()),

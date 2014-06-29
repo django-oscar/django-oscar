@@ -1,10 +1,9 @@
-from django.http import Http404
+from django import http
 from django.views import generic
 from oscar.core.loading import get_model
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
-from django import http
 
 from oscar.core.loading import get_class
 from oscar.apps.customer.alerts import utils
@@ -31,27 +30,24 @@ class ProductAlertListView(PageTitleMixin, generic.ListView):
 
 class ProductAlertCreateView(generic.CreateView):
     """
-    View to create a new product alert based on a registered user
-    or an email address provided by an anonymous user.
+    Create a new product alert.
+
+    This view is normally only POSTed to from the product detail page.
     """
     model = ProductAlert
     form_class = ProductAlertForm
     template_name = 'customer/alerts/form.html'
 
-    def get_context_data(self, **kwargs):
-        ctx = super(ProductAlertCreateView, self).get_context_data(**kwargs)
-        ctx['product'] = self.product
-        ctx['alert_form'] = ctx.pop('form')
-        return ctx
+    def dispatch(self, request, *args, **kwargs):
+        self.product = get_object_or_404(Product, pk=self.kwargs['pk'])
+        return super(ProductAlertCreateView, self).dispatch(
+            request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        product = get_object_or_404(Product, pk=self.kwargs['pk'])
-        return http.HttpResponseRedirect(product.get_absolute_url())
-
-    def post(self, request, *args, **kwargs):
-        self.product = get_object_or_404(Product, pk=self.kwargs['pk'])
-        return super(ProductAlertCreateView, self).post(request, *args,
-                                                        **kwargs)
+        # There's no point rendering this page from a GET request as it looks
+        # identical to the product detail page. So we just redirect back to the
+        # main product detail page.
+        return http.HttpResponseRedirect(self.product.get_absolute_url())
 
     def get_form_kwargs(self):
         kwargs = super(ProductAlertCreateView, self).get_form_kwargs()
@@ -59,9 +55,16 @@ class ProductAlertCreateView(generic.CreateView):
         kwargs['product'] = self.product
         return kwargs
 
+    def get_context_data(self, **kwargs):
+        ctx = super(ProductAlertCreateView, self).get_context_data(**kwargs)
+        ctx['product'] = self.product
+        ctx['alert_form'] = ctx.pop('form')
+        return ctx
+
     def form_valid(self, form):
         response = super(ProductAlertCreateView, self).form_valid(form)
         if self.object.is_anonymous:
+            # We require anonymous users to confirm their alert request.
             utils.send_alert_confirmation(self.object)
         return response
 
@@ -114,7 +117,7 @@ class ProductAlertCancelView(generic.RedirectView):
                                            user=self.request.user,
                                            pk=kwargs['pk'])
         else:
-            raise Http404
+            raise http.Http404
         self.update_alert()
         return super(ProductAlertCancelView, self).get(request, *args,
                                                        **kwargs)

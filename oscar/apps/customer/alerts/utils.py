@@ -16,9 +16,32 @@ Selector = get_class('partner.strategy', 'Selector')
 logger = logging.getLogger('oscar.alerts')
 
 
+def send_alert_confirmation(alert):
+    """
+    Send an alert confirmation email.
+    """
+    logger.info("Sending alert confirmation email to %s for alert #%d",
+                alert.email, alert.id)
+    ctx = Context({
+        'alert': alert,
+        'site': Site.objects.get_current(),
+    })
+    subject_tpl = loader.get_template(
+        'customer/alerts/emails/confirmation_subject.txt')
+    body_tpl = loader.get_template(
+        'customer/alerts/emails/confirmation_body.txt')
+    mail.send_mail(
+        subject_tpl.render(ctx).strip(),
+        body_tpl.render(ctx),
+        settings.OSCAR_FROM_EMAIL,
+        [alert.email],
+    )
+
+
 def send_alerts():
     """
-    Send out product alerts
+    Send out product alerts for any products that have have active
+    alerts.
     """
     products = Product.objects.filter(
         productalert__status=ProductAlert.ACTIVE
@@ -26,26 +49,6 @@ def send_alerts():
     logger.info("Found %d products with active alerts", products.count())
     for product in products:
         send_product_alerts(product)
-
-
-def send_alert_confirmation(alert):
-    """
-    Send an alert confirmation email.
-    """
-    ctx = Context({
-        'alert': alert,
-        'site': Site.objects.get_current(),
-    })
-    subject_tpl = loader.get_template('customer/alerts/emails/'
-                                      'confirmation_subject.txt')
-    body_tpl = loader.get_template('customer/alerts/emails/'
-                                   'confirmation_body.txt')
-    mail.send_mail(
-        subject_tpl.render(ctx).strip(),
-        body_tpl.render(ctx),
-        settings.OSCAR_FROM_EMAIL,
-        [alert.email],
-    )
 
 
 def send_product_alerts(product):
