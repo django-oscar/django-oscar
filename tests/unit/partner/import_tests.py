@@ -1,16 +1,19 @@
 import os
 from decimal import Decimal as D
 from django.test import TestCase
+from django.db.models import get_model
 import logging
 
 from oscar.apps.partner.importers import CatalogueImporter
 from oscar.apps.partner.exceptions import ImportingError
 from oscar.apps.catalogue.models import ProductClass, Product
-from oscar.apps.partner.models import Partner, StockRecord
+from oscar.apps.partner.models import Partner
 from oscar.test.factories import create_product
 
 TEST_BOOKS_CSV = os.path.join(os.path.dirname(__file__), 'fixtures/books-small.csv')
 TEST_BOOKS_SEMICOLON_CSV = os.path.join(os.path.dirname(__file__), 'fixtures/books-small-semicolon.csv')
+
+StockRecord = get_model('partner', 'StockRecord')
 
 
 class NullHandler(logging.Handler):
