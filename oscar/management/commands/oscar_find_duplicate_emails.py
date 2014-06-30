@@ -7,7 +7,8 @@ from oscar.core.compat import get_user_model
 User = get_user_model()
 
 
-# This command is not currently documented in the Sphinx docs.
+# This command is not currently documented in the Sphinx docs as it's just a
+# helper command.
 class Command(BaseCommand):
     help = ('Finds email addresses that are used by more than one user. '
             'Casing is ignored.')

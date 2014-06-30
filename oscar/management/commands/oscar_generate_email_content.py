@@ -1,8 +1,8 @@
 from __future__ import print_function
 from django.core.management.base import BaseCommand, CommandError
-from oscar.core.loading import get_model
 
-from oscar.core.loading import get_class
+from oscar.core.loading import get_model, get_class
+
 Order = get_model('order', 'Order')
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
 Dispatcher = get_class('customer.utils', 'Dispatcher')
@@ -14,7 +14,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if len(args) != 2:
-            raise CommandError("Please select a event type and order number")
+            raise CommandError("Please select an event type and order number")
 
         try:
             order = Order.objects.get(number=args[1])

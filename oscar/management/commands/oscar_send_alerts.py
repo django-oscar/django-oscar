@@ -1,25 +1,19 @@
-import logging
-
-from django.utils.translation import ugettext_lazy as _
-from django.core.management.base import BaseCommand
-
 from oscar.apps.customer.alerts import utils
+from oscar.management import base
 
-logger = logging.getLogger(__name__)
 
-
-class Command(BaseCommand):
+class Command(base.OscarBaseCommand):
     """
     Check stock records of products for availability and send out alerts
     to customers that have registered for an alert.
     """
-    help = _("Check for products that are back in "
-             "stock and send out alerts")
+    help = "Check for products that are back in stock and send out alerts"
+    logger_name = 'oscar.alerts'
 
-    def handle(self, **options):
+    def run(self, *args, **options):
         """
         Check all products with active product alerts for
         availability and send out email alerts when a product is
         available to buy.
         """
-        utils.send_alerts()
+        utils.send_alerts(self.logger)

@@ -1,5 +1,3 @@
-import logging
-
 from django.core.management.base import CommandError
 
 from oscar.management import base
@@ -18,14 +16,9 @@ class Command(base.OscarBaseCommand):
             raise CommandError(
                 "You must specify an app label and a folder to create "
                 "the new app in")
+        super(Command, self).handle(*args, **options)
 
-        logger = self.logger(__name__)
+    def run(self, *args, **options):
         app_label, folder_path = args[:2]
-        try:
-            customisation.fork_app(
-                app_label, folder_path, logger)
-        except Exception as e:
-            # e.g. IOError doesn't have a message
-            logger.error(e.message, exc_info=True)
-            message = e.message if e.message else unicode(e)
-            raise CommandError(message)
+        customisation.fork_app(
+            app_label, folder_path, self.logger)
