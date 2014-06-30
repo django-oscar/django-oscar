@@ -261,11 +261,6 @@ LOGGING = {
             'propagate': False,
             'level': 'INFO',
         },
-        'oscar.alerts': {
-            'handlers': ['null'],
-            'propagate': False,
-            'level': 'INFO',
-        },
         # Sandbox logging
         'gateway': {
             'handlers': ['gateway_file'],
