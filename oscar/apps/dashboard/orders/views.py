@@ -123,7 +123,7 @@ class OrderListView(BulkEditMixin, ListView):
     current_view = 'dashboard:order-list'
     order_actions = ('save_note', 'delete_note', 'change_order_status',
                      'create_order_payment_event')
-    
+
     def dispatch(self, request, *args, **kwargs):
         # base_queryset is equal to all orders the user is allowed to access
         self.base_queryset = queryset_orders_for_user(
@@ -305,6 +305,7 @@ class OrderListView(BulkEditMixin, ListView):
         ctx = super(OrderListView, self).get_context_data(**kwargs)
         ctx['queryset_description'] = self.description
         ctx['form'] = self.form
+        ctx['order_statuses'] = Order.all_statuses()
         return ctx
 
     def is_csv_download(self):
