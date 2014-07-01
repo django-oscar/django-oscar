@@ -371,12 +371,6 @@ class OrderListView(BulkEditMixin, ListView):
         # Look for order-level action
         order_action = request.POST.get('order_action', '').lower()
         
-        print "------------------------------"
-        print order_action
-        print "------------------------------"
-        print self.order_actions
-        print "------------------------------"
-
         if order_action:
             if order_action not in self.order_actions:
                 messages.error(self.request, _("Invalid action"))
