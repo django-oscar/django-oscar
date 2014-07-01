@@ -123,7 +123,7 @@
                                 {% for line in order.lines.all %}
                                     <tr>
                                         <td>
-                                            <input type="checkbox" name="selected_line" value="{{ line.id }}" />
+                                            <input type="checkbox" name="selected_line_id" value="{{ line.id }}" />
                                             <input type="text" name="selected_line_qty_{{ line.id }}" value="{{ line.quantity }}" class="span1" size="2" style="width:40px" />
                                         </td>
                                         <td><a href="{% url 'dashboard:order-line-detail' number=order.number line_id=line.id %}">#{{ line.id }}</a></td>
