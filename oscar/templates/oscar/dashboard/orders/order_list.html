@@ -130,6 +130,65 @@
                 </tbody>
             </table>
             {% endblock order_list %}
+          
+            {% block order_actions %}
+                <div class="well">
+                    <h3>{% trans "With selected orders" %}:</h3>
+
+                    <div class="control-group">
+                        <div class="controls">
+                            <label class="radio inline">
+                                <input type="radio" name="order_action" value="change_order_statuses" /> {% trans "Change line status to" %}
+                            </label>
+                            <label class="radio inline">
+                                <select name="new_status">
+                                    <option value=""> -- {% trans "choose new status" %} -- </option>
+                                    {% for status in order_statuses %}
+                                        <option>{{ status }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <label class="radio inline">
+                                <input type="radio" name="order_action" value="create_shipping_event" /> {% trans "Create shipping event" %}
+                            </label>
+                            <label class="radio inline">
+                                <select name="shipping_event_type">
+                                    <option value=""> -- {% trans "choose event type" %} -- </option>
+                                    {% for event_type in shipping_event_types %}
+                                        <option value="{{ event_type.code }}">{{ event_type.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                            <label class="radio inline">
+                                {% trans "with reference" %} <input type="text" name="reference" value="" />
+                            </label>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <label class="radio inline">
+                                <input type="radio" name="order_action" value="create_payment_event" /> {% trans "Create payment event" %}
+                            </label>
+                            <label class="radio inline">
+                                <select name="payment_event_type">
+                                    <option value=""> -- {% trans "choose event type" %} -- </option>
+                                    {% for event_type in payment_event_types %}
+                                        <option value="{{ event_type.code }}">{{ event_type.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                            <label class="radio inline">
+                                {% trans "with amount" %} <input type="text" name="amount" value="" />
+                            </label>
+                        </div>
+                    </div>
+                    <input type="submit" value="{% trans "Go!" %}" class="btn btn-primary" />
+                </div>
+            {% endblock order_actions %}
 
             {% include "dashboard/orders/partials/bulk_edit_form.html" with status=active_status %}
             {% include "partials/pagination.html" %}
