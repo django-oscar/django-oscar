@@ -412,7 +412,7 @@ class OrderDetailView(DetailView):
             return self.reload_page(error=_("Invalid action"))
 
         # Load requested lines
-        line_ids = request.POST.getlist('selected_line')
+        line_ids = request.POST.getlist('selected_line_id')
         if len(line_ids) == 0:
             return self.reload_page(error=_(
                 "You must select some lines to act on"))
