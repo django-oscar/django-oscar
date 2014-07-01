@@ -584,6 +584,7 @@ class OrderDetailView(DetailView):
                                                'new_status': new_status}
             msgs.append(msg)
             line.set_status(new_status)
+            line.save()
         message = "\n".join(msgs)
         messages.info(request, message)
         order.notes.create(user=request.user, message=message,
