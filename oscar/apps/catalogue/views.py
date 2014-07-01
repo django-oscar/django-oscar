@@ -115,7 +115,8 @@ class FacetedProductCategoryView(ListView):
         # We build a list of this category and all descendents (TODO put this
         # method onto the category itself as it's needed in a few places).
         categories = list(self.category.get_descendants()) + [self.category]
-        # We use 'narrow' API to ensure Solr's 'fq' filtering is used.
+        # We use 'narrow' API to ensure Solr's 'fq' filtering is used as
+        # opposed to filtering using 'q'.
         pattern = ' OR '.join(['"%s"' % c.full_name for c in categories])
         sqs = facets.base_sqs()
         sqs = sqs.narrow(
@@ -130,9 +131,10 @@ class FacetedProductCategoryView(ListView):
         # Pluck the product instances off the search result objects.
         ctx[self.context_object_name] = [r.object for r in ctx['object_list']]
 
+        # Use the FacetMunger to convert Haystack's awkward facet data into
+        # something the templates can use.
         munger = FacetMunger(
-            self.request.get_full_path(),
-            {},
+            self.request.get_full_path(), {},
             self.object_list.facet_counts())
         ctx['facet_data'] = munger.facet_data()
         has_facets = any([len(data['results']) for

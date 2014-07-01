@@ -79,6 +79,24 @@
         </div>
     {% endif %}
 
+    {% if paginator.count %}
+        {% if paginator.num_pages > 1 %}
+            {% blocktrans with start=page_obj.start_index end=page_obj.end_index num_results=paginator.count %}
+                <strong>{{ num_results }}</strong> results - showing <strong>{{ start }}</strong> to <strong>{{ end }}</strong>.
+            {% endblocktrans %}
+        {% else %}
+            {% blocktrans count num_results=paginator.count %}
+                <strong>1</strong> result.
+            {% plural %}
+                <strong>{{ num_results }}</strong> results. 
+            {% endblocktrans %}
+        {% endif %}
+    {% else %}
+        <p>
+            {% trans "<strong>0</strong> results." %}
+        </p>
+    {% endif %}
+
     {% if products %}
         <section>
             <div>
