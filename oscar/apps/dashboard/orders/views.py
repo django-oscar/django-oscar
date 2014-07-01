@@ -103,7 +103,6 @@ class OrderStatsView(FormView):
         }
         return stats
 
-
 class OrderListView(BulkEditMixin, ListView):
     """
     Dashboard view for a list of orders.
@@ -119,8 +118,10 @@ class OrderListView(BulkEditMixin, ListView):
                       "%(status_filter)s")
     paginate_by = 25
     description = ''
-    actions = ('download_selected_orders',)
+    actions = ('download_selected_orders','change_order_statuses',)
     current_view = 'dashboard:order-list'
+    order_actions = ('save_note', 'delete_note',
+                     'create_order_payment_event')
 
     def dispatch(self, request, *args, **kwargs):
         # base_queryset is equal to all orders the user is allowed to access
@@ -303,6 +304,7 @@ class OrderListView(BulkEditMixin, ListView):
         ctx = super(OrderListView, self).get_context_data(**kwargs)
         ctx['queryset_description'] = self.description
         ctx['form'] = self.form
+        ctx['order_statuses'] = Order.all_statuses()
         return ctx
 
     def is_csv_download(self):
@@ -361,6 +363,46 @@ class OrderListView(BulkEditMixin, ListView):
             writer.writerow(row)
         return response
 
+    def get_success_url(self, fragment=None):
+        # Need to change this to be a proper get_success_url
+        url = reverse('dashboard:order-list', kwargs={})
+        if fragment:
+            url += '#' + fragment
+        return HttpResponseRedirect(url)
+
+    def change_order_statuses(self, request, orders):
+        order_ids = request.POST.getlist('selected_order')
+        orders = Order.objects.filter(pk__in=order_ids)
+        for order in orders:
+            self.change_order_status(request, order)
+        return self.get_success_url()
+
+    def change_order_status(self, request, order):
+        new_status = request.POST['new_status'].strip()
+        if not new_status:
+            messages.error(request, _("The new status '%s' is not valid")
+                           % new_status)
+            return self.get_success_url()
+        if not new_status in order.available_statuses():
+            messages.error(request, _("The new status '%s' is not valid for"
+                                      " this order") % new_status)
+            return self.get_success_url()
+
+        handler = EventHandler(request.user)
+        old_status = order.status
+        try:
+            handler.handle_order_status_change(order, new_status)
+        except PaymentError as e:
+            messages.error(request, _("Unable to change order status due to"
+                                      " payment error: %s") % e)
+        else:
+            msg = _("Order status changed from '%(old_status)s' to"
+                    " '%(new_status)s'") % {'old_status': old_status,
+                                            'new_status': new_status}
+            messages.info(request, msg)
+            order.notes.create(user=request.user, message=msg,
+                               note_type=OrderNote.SYSTEM)
+        return self.get_success_url(fragment='activity')
 
 class OrderDetailView(DetailView):
     """
