@@ -121,6 +121,8 @@ class OrderListView(BulkEditMixin, ListView):
     description = ''
     actions = ('download_selected_orders',)
     current_view = 'dashboard:order-list'
+    order_actions = ('save_note', 'delete_note', 'change_order_statuses',
+                     'create_order_payment_event')
 
     def dispatch(self, request, *args, **kwargs):
         # base_queryset is equal to all orders the user is allowed to access
@@ -303,6 +305,7 @@ class OrderListView(BulkEditMixin, ListView):
         ctx = super(OrderListView, self).get_context_data(**kwargs)
         ctx['queryset_description'] = self.description
         ctx['form'] = self.form
+        ctx['order_statuses'] = Order.all_statuses()
         return ctx
 
     def is_csv_download(self):
@@ -361,6 +364,55 @@ class OrderListView(BulkEditMixin, ListView):
             writer.writerow(row)
         return response
 
+    def post(self, request, *args, **kwargs):
+
+        order_ids = request.POST.getlist('selected_order')
+        orders = Order.objects.filter(pk__in=order_ids)
+        # Look for order-level action
+        order_action = request.POST.get('order_action', '').lower()
+        
+        if order_action:
+            if order_action not in self.order_actions:
+                messages.error(self.request, _("Invalid action"))
+                return self.reload_page_response()
+            else:
+                for order in orders:
+                    self.change_order_statuses(request, order)
+                return getattr(self, order_action)(request, order)
+        return self.reload_page_response()
+
+    def reload_page_response(self, fragment=None):
+        url = reverse('dashboard:order-list', kwargs={})
+        if fragment:
+            url += '#' + fragment
+        return HttpResponseRedirect(url)
+
+    def change_order_statuses(self, request, order):
+        new_status = request.POST['new_status'].strip()
+        if not new_status:
+            messages.error(request, _("The new status '%s' is not valid")
+                           % new_status)
+            return self.reload_page_response()
+        if not new_status in order.available_statuses():
+            messages.error(request, _("The new status '%s' is not valid for"
+                                      " this order") % new_status)
+            return self.reload_page_response()
+
+        handler = EventHandler(request.user)
+        old_status = order.status
+        try:
+            handler.handle_order_status_change(order, new_status)
+        except PaymentError as e:
+            messages.error(request, _("Unable to change order status due to"
+                                      " payment error: %s") % e)
+        else:
+            msg = _("Order status changed from '%(old_status)s' to"
+                    " '%(new_status)s'") % {'old_status': old_status,
+                                            'new_status': new_status}
+            messages.info(request, msg)
+            order.notes.create(user=request.user, message=msg,
+                               note_type=OrderNote.SYSTEM)
+        return self.reload_page_response(fragment='activity')
 
 class OrderDetailView(DetailView):
     """
@@ -374,8 +426,6 @@ class OrderDetailView(DetailView):
 
     # These strings are method names that are allowed to be called from a
     # submitted form.
-    order_actions = ('save_note', 'delete_note', 'change_order_status',
-                     'create_order_payment_event')
     line_actions = ('change_line_statuses', 'create_shipping_event',
                     'create_payment_event')
 
@@ -412,7 +462,7 @@ class OrderDetailView(DetailView):
             return self.reload_page(error=_("Invalid action"))
 
         # Load requested lines
-        line_ids = request.POST.getlist('selected_line')
+        line_ids = request.POST.getlist('selected_line_id')
         if len(line_ids) == 0:
             return self.reload_page(error=_(
                 "You must select some lines to act on"))
