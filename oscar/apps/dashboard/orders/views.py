@@ -362,6 +362,55 @@ class OrderListView(BulkEditMixin, ListView):
             writer.writerow(row)
         return response
 
+    def post(self, request, *args, **kwargs):
+
+        order_ids = request.POST.getlist('selected_order')
+        orders = Order.objects.filter(pk__in=order_ids)
+        # Look for order-level action
+        order_action = request.POST.get('order_action', '').lower()
+        
+        if order_action:
+            if order_action not in self.order_actions:
+                messages.error(self.request, _("Invalid action"))
+                return self.reload_page_response()
+            else:
+                for order in orders:
+                    self.change_order_statuses(request, order)
+                return getattr(self, order_action)(request, order)
+        return self.reload_page_response()
+
+    def reload_page_response(self, fragment=None):
+        url = reverse('dashboard:order-list', kwargs={})
+        if fragment:
+            url += '#' + fragment
+        return HttpResponseRedirect(url)
+
+    def change_order_statuses(self, request, order):
+        new_status = request.POST['new_status'].strip()
+        if not new_status:
+            messages.error(request, _("The new status '%s' is not valid")
+                           % new_status)
+            return self.reload_page_response()
+        if not new_status in order.available_statuses():
+            messages.error(request, _("The new status '%s' is not valid for"
+                                      " this order") % new_status)
+            return self.reload_page_response()
+
+        handler = EventHandler(request.user)
+        old_status = order.status
+        try:
+            handler.handle_order_status_change(order, new_status)
+        except PaymentError as e:
+            messages.error(request, _("Unable to change order status due to"
+                                      " payment error: %s") % e)
+        else:
+            msg = _("Order status changed from '%(old_status)s' to"
+                    " '%(new_status)s'") % {'old_status': old_status,
+                                            'new_status': new_status}
+            messages.info(request, msg)
+            order.notes.create(user=request.user, message=msg,
+                               note_type=OrderNote.SYSTEM)
+        return self.reload_page_response(fragment='activity')
 
 class OrderDetailView(DetailView):
     """
