@@ -121,7 +121,9 @@ class OrderListView(BulkEditMixin, ListView):
     description = ''
     actions = ('download_selected_orders',)
     current_view = 'dashboard:order-list'
-
+    order_actions = ('save_note', 'delete_note', 'change_order_status',
+                     'create_order_payment_event')
+    
     def dispatch(self, request, *args, **kwargs):
         # base_queryset is equal to all orders the user is allowed to access
         self.base_queryset = queryset_orders_for_user(
