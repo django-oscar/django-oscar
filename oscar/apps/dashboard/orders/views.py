@@ -121,6 +121,8 @@ class OrderListView(BulkEditMixin, ListView):
     description = ''
     actions = ('download_selected_orders',)
     current_view = 'dashboard:order-list'
+    order_actions = ('save_note', 'delete_note', 'change_order_statuses',
+                     'create_order_payment_event')
 
     def dispatch(self, request, *args, **kwargs):
         # base_queryset is equal to all orders the user is allowed to access
@@ -424,8 +426,6 @@ class OrderDetailView(DetailView):
 
     # These strings are method names that are allowed to be called from a
     # submitted form.
-    order_actions = ('save_note', 'delete_note', 'change_order_status',
-                     'create_order_payment_event')
     line_actions = ('change_line_statuses', 'create_shipping_event',
                     'create_payment_event')
 
