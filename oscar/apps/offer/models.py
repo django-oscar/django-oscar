@@ -1366,7 +1366,7 @@ class AbsoluteDiscountBenefit(Benefit):
         verbose_name = _("Absolute discount benefit")
         verbose_name_plural = _("Absolute discount benefits")
 
-    def apply(self, basket, condition, offer, discount_amount=None,  # noqa (too complex (10))
+    def apply(self, basket, condition, offer, discount_amount=None,
               max_total_discount=None):
         if discount_amount is None:
             discount_amount = self.value
@@ -1374,8 +1374,6 @@ class AbsoluteDiscountBenefit(Benefit):
         # Fetch basket lines that are in the range and available to be used in
         # an offer.
         line_tuples = self.get_applicable_lines(offer, basket)
-        if not line_tuples:
-            return ZERO_DISCOUNT
 
         # Determine which lines can have the discount applied to them
         max_affected_items = self._effective_max_affected_items()
