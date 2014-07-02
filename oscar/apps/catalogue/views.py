@@ -1,3 +1,4 @@
+from django.utils.functional import cached_property
 from django.utils.http import urlquote
 from django.conf import settings
 from django.http import HttpResponsePermanentRedirect
@@ -110,55 +111,15 @@ class ProductDetailView(DetailView):
             '%s/detail.html' % (self.template_folder)]
 
 
-class FacetedProductCategoryView(ListView):
-    context_object_name = "products"
-    template_name = 'catalogue/category.html'
-    paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
-
-    def dispatch(self, request, *args, **kwargs):
-        self.category = get_object_or_404(Category, pk=self.kwargs['pk'])
-        return super(FacetedProductCategoryView, self).dispatch(
-            request, *args, **kwargs)
-
-    def get_queryset(self):
-        categories = self.category.get_descendants_and_self()
-        # We use 'narrow' API to ensure Solr's 'fq' filtering is used as
-        # opposed to filtering using 'q'.
-        pattern = ' OR '.join(['"%s"' % c.full_name for c in categories])
-        sqs = facets.base_sqs()
-        sqs = sqs.narrow(
-            'category_exact:(%s)' % pattern).load_all()
-        return sqs
-
-    def get_context_data(self, **kwargs):
-        ctx = super(FacetedProductCategoryView,
-                    self).get_context_data(**kwargs)
-        ctx['category'] = self.category
-
-        # Pluck the product instances off the search result objects.
-        ctx[self.context_object_name] = [r.object for r in ctx['object_list']]
-
-        # Use the FacetMunger to convert Haystack's awkward facet data into
-        # something the templates can use.
-        munger = FacetMunger(
-            self.request.get_full_path(), {},
-            self.object_list.facet_counts())
-        ctx['facet_data'] = munger.facet_data()
-        has_facets = any([len(data['results']) for
-                          data in ctx['facet_data'].values()])
-        ctx['has_facets'] = has_facets
-
-        return ctx
-
-
 class ProductCategoryView(ListView):
     """
     Browse products in a given category
     """
     context_object_name = "products"
-    template_name = 'catalogue/browse.html'
+    template_name = 'catalogue/category.html'
     paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
     enforce_paths = True
+    use_search_backend = True
 
     def get_object(self):
         if 'pk' in self.kwargs:
@@ -193,8 +154,12 @@ class ProductCategoryView(ListView):
     def get_categories(self):
         """
         Return a list of the current category and it's ancestors
+        TODO: Should be cached as it's called twice.
         """
-        return self.category.get_descendants_and_self()
+        if self.category is not None:
+            return self.category.get_descendants_and_self()
+        else:
+            return []
 
     def get_summary(self):
         """
@@ -202,15 +167,52 @@ class ProductCategoryView(ListView):
         """
         return self.category.name if self.category else _('All products')
 
+    def get_search_queryset(self):
+        sqs = facets.base_sqs()
+        categories = self.get_categories()
+        if categories:
+            # We use 'narrow' API to ensure Solr's 'fq' filtering is used as
+            # opposed to filtering using 'q'.
+            pattern = ' OR '.join(['"%s"' % c.full_name for c in categories])
+            sqs = sqs.narrow('category_exact:(%s)' % pattern)
+        return sqs.load_all()
+
+    def get_search_context_data(self, paginated_results):
+        # Use the FacetMunger to convert Haystack's awkward facet data into
+        # something the templates can use.
+        munger = FacetMunger(
+            self.request.get_full_path(), {}, self.object_list.facet_counts())
+        facet_data = munger.facet_data()
+        has_facets = any([data['results'] for data in facet_data.values()])
+
+        # Pluck the product instances off the search result objects.
+        # TODO: Doesn't this cost one query per result? Investigate.
+        objects = [r.object for r in paginated_results]
+
+        return {
+            'facet_data': facet_data,
+            'has_facets': has_facets,
+            self.context_object_name: objects,
+        }
+
     def get_context_data(self, **kwargs):
         context = super(ProductCategoryView, self).get_context_data(**kwargs)
         context['category'] = self.category
         context['summary'] = self.get_summary()
+        if self.use_search_backend:
+            context.update(
+                self.get_search_context_data(context['object_list']))
         return context
 
-    def get_queryset(self):
+    def get_model_queryset(self):
         qs = Product.browsable.base_queryset()
         if self.category is not None:
             categories = self.get_categories()
             qs = qs.filter(categories__in=categories).distinct()
         return qs
+
+    def get_queryset(self):
+        if self.use_search_backend:
+            return self.get_search_queryset()
+        else:
+            return self.get_model_queryset()

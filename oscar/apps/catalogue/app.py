@@ -8,7 +8,7 @@ from oscar.apps.catalogue.reviews.app import application as reviews_app
 class BaseCatalogueApplication(Application):
     name = 'catalogue'
     detail_view = get_class('catalogue.views', 'ProductDetailView')
-    category_view = get_class('catalogue.views', 'FacetedProductCategoryView')
+    category_view = get_class('catalogue.views', 'ProductCategoryView')
     range_view = get_class('offer.views', 'RangeDetailView')
 
     def get_urls(self):
