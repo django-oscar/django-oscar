@@ -1291,7 +1291,7 @@ class PercentageDiscountBenefit(Benefit):
     def name(self):
         return self._description % {
             'value': self.value,
-            'range': self.range.name.lower()}
+            'range': self.range.name}
 
     @property
     def description(self):
