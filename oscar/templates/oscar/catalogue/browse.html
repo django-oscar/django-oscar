@@ -38,9 +38,9 @@
 {% block column_left %}
     {% category_tree as tree_categories %}
     {% if tree_categories %}
-        <div class="side_categories" style="padding: 8px 0;">
+        <h4>{% trans "Show results for" %}</h4>
+        <div class="side_categories">
             <ul class="nav nav-list">
-                <li class="nav-header">{% trans "Browse categories" %}</li>
                 {% for tree_category, info in tree_categories %}
                     <li>
                     {% if tree_category.pk == category.pk %}
@@ -58,14 +58,14 @@
         </div>
     {% endif %}
     {% if has_facets %}
-        <h4>{% trans "Refine your search" %}</h4>
-        <dl>
+        <h4>{% trans "Refine by" %}</h4>
+        <div class="side_categories">
             {% for field, data in facet_data.items %}
                 {% if data.results %}
                     {% include 'search/partials/facet.html' with name=data.name items=data.results %}
                 {% endif %}
             {% endfor %}
-        </dl>
+        </div>
     {% endif %}
 {% endblock %}
 
