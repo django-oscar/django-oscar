@@ -211,10 +211,6 @@ OSCAR_SEARCH_FACETS = {
     'fields': {
         # The key for these dicts will be used when passing facet data
         # to the template. Same for the 'queries' dict below.
-        'category': {
-            'name': _('Category'),
-            'field': 'category'
-        },
         'product_class': {
             'name': _('Type'),
             'field': 'product_class'
