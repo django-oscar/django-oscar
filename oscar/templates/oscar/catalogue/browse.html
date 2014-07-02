@@ -24,7 +24,7 @@
         {% if not category %}
             <li class="active">{% trans "All products" %}</li>
         {% else %}
-            {% for category in category.get_ancestors|slice:":-1" %}
+            {% for category in category.get_ancestors %}
                 <li>
                     <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
                     <span class="divider">/</span>

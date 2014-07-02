@@ -149,11 +149,21 @@ class AbstractCategory(MP_Node):
         reloaded_self.update_slug()
         reloaded_self.update_children_slugs()
 
-    def get_ancestors(self, include_self=True):
-        ancestors = list(super(AbstractCategory, self).get_ancestors())
-        if include_self:
-            ancestors.append(self)
-        return ancestors
+    def get_ancestors_and_self(self):
+        """
+        Gets ancestors and includes itself. Use treebeard's get_ancestors
+        if you don't want to include the category itself. It's a separate
+        function as it's commonly used in templates.
+        """
+        return list(self.get_ancestors()) + [self]
+
+    def get_descendants_and_self(self):
+        """
+        Gets descendants and includes itself. Use treebeard's get_descendants
+        if you don't want to include the category itself. It's a separate
+        function as it's commonly used in templates.
+        """
+        return list(self.get_descendants()) + [self]
 
     def get_absolute_url(self):
         return reverse('catalogue:category',

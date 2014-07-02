@@ -121,9 +121,7 @@ class FacetedProductCategoryView(ListView):
             request, *args, **kwargs)
 
     def get_queryset(self):
-        # We build a list of this category and all descendents (TODO put this
-        # method onto the category itself as it's needed in a few places).
-        categories = list(self.category.get_descendants()) + [self.category]
+        categories = self.category.get_descendants_and_self()
         # We use 'narrow' API to ensure Solr's 'fq' filtering is used as
         # opposed to filtering using 'q'.
         pattern = ' OR '.join(['"%s"' % c.full_name for c in categories])
@@ -196,7 +194,7 @@ class ProductCategoryView(ListView):
         """
         Return a list of the current category and it's ancestors
         """
-        return list(self.category.get_descendants()) + [self.category]
+        return self.category.get_descendants_and_self()
 
     def get_summary(self):
         """
