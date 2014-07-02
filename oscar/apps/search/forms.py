@@ -27,7 +27,7 @@ for facet in settings.OSCAR_SEARCH_FACETS['queries'].values():
 
 class SearchForm(FacetedSearchForm):
     """
-    In Haystack, the search form is used for interpretting
+    In Haystack, the search form is used for interpreting
     and sub-filtering the SQS.
     """
     # Use a tabindex of 1 so that users can hit tab on any page and it will
@@ -98,7 +98,6 @@ class SearchForm(FacetedSearchForm):
     def search(self):
         # We replace the 'search' method from FacetedSearchForm, so that we can
         # handle range queries
-
         # Note, we call super on a parent class as the default faceted view
         # escapes everything (which doesn't work for price range queries)
         sqs = super(FacetedSearchForm, self).search()
@@ -128,3 +127,13 @@ class SearchForm(FacetedSearchForm):
                 sqs = sqs.order_by(sort_field)
 
         return sqs
+
+
+class BrowseCategoryForm(SearchForm):
+    """
+    Variant of SearchForm that returns all products (instead of none) if no
+    query is specified.
+    """
+
+    def no_query_found(self):
+        return self.searchqueryset

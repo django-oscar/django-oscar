@@ -1,11 +1,9 @@
-from django.utils.functional import cached_property
 from django.utils.http import urlquote
 from django.conf import settings
 from django.http import HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404
-from django.views.generic import ListView, DetailView
+from django.views.generic import DetailView, ListView
 from django.utils.translation import ugettext_lazy as _
-from haystack import query
 
 from oscar.core.loading import get_class, get_model
 from oscar.apps.catalogue.signals import product_viewed
@@ -17,6 +15,7 @@ Category = get_model('catalogue', 'category')
 ProductAlert = get_model('customer', 'ProductAlert')
 ProductAlertForm = get_class('customer.forms', 'ProductAlertForm')
 FacetMunger = get_class('search.facets', 'FacetMunger')
+BrowseCategoryForm = get_class('search.forms', 'BrowseCategoryForm')
 
 
 class ProductDetailView(DetailView):
@@ -120,6 +119,7 @@ class ProductCategoryView(ListView):
     paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
     enforce_paths = True
     use_search_backend = True
+    form_class = BrowseCategoryForm
 
     def get_object(self):
         if 'pk' in self.kwargs:
@@ -137,6 +137,7 @@ class ProductCategoryView(ListView):
             self.category = None
 
     def get(self, request, *args, **kwargs):
+        # fetch the category; return 404 or redirect as needed
         self.get_object()
         redirect = self.redirect_if_necessary(request.path, self.category)
         if redirect is not None:
@@ -144,10 +145,10 @@ class ProductCategoryView(ListView):
         return super(ProductCategoryView, self).get(request, *args, **kwargs)
 
     def redirect_if_necessary(self, current_path, category):
-        if self.enforce_paths and self.category is not None:
+        if self.enforce_paths and category is not None:
             # Categories are fetched by primary key to allow slug changes.
             # If the slug has indeed changed, issue a redirect.
-            expected_path = self.category.get_absolute_url()
+            expected_path = category.get_absolute_url()
             if expected_path != urlquote(current_path):
                 return HttpResponsePermanentRedirect(expected_path)
 
@@ -175,24 +176,28 @@ class ProductCategoryView(ListView):
             # opposed to filtering using 'q'.
             pattern = ' OR '.join(['"%s"' % c.full_name for c in categories])
             sqs = sqs.narrow('category_exact:(%s)' % pattern)
-        return sqs.load_all()
+        return sqs
 
     def get_search_context_data(self, paginated_results):
         # Use the FacetMunger to convert Haystack's awkward facet data into
         # something the templates can use.
+        # Note that the FacetMunger accesses object_list (unpaginated results),
+        # whereas we use the paginated search results to populate the context
+        # with products
+
         munger = FacetMunger(
             self.request.get_full_path(), {}, self.object_list.facet_counts())
         facet_data = munger.facet_data()
         has_facets = any([data['results'] for data in facet_data.values()])
 
         # Pluck the product instances off the search result objects.
-        # TODO: Doesn't this cost one query per result? Investigate.
         objects = [r.object for r in paginated_results]
 
         return {
             'facet_data': facet_data,
             'has_facets': has_facets,
             self.context_object_name: objects,
+            'form': self.search_form,
         }
 
     def get_context_data(self, **kwargs):
@@ -200,8 +205,7 @@ class ProductCategoryView(ListView):
         context['category'] = self.category
         context['summary'] = self.get_summary()
         if self.use_search_backend:
-            context.update(
-                self.get_search_context_data(context['object_list']))
+            context.update(self.get_search_context_data(context['object_list']))
         return context
 
     def get_model_queryset(self):
@@ -213,6 +217,16 @@ class ProductCategoryView(ListView):
 
     def get_queryset(self):
         if self.use_search_backend:
-            return self.get_search_queryset()
+            self.search_form = self.get_search_form(self.request)
+            # returns empty query set if form is invalid
+            return self.search_form.search()
         else:
             return self.get_model_queryset()
+
+    def get_search_form(self, request):
+        kwargs = {
+            'data': request.GET,
+            'selected_facets': self.request.GET.getlist("selected_facets"),
+            'searchqueryset': self.get_search_queryset()
+        }
+        return self.form_class(**kwargs)

@@ -79,23 +79,38 @@
         </div>
     {% endif %}
 
-    {% if paginator.count %}
-        {% if paginator.num_pages > 1 %}
-            {% blocktrans with start=page_obj.start_index end=page_obj.end_index num_results=paginator.count %}
-                <strong>{{ num_results }}</strong> results - showing <strong>{{ start }}</strong> to <strong>{{ end }}</strong>.
-            {% endblocktrans %}
+    <form method="get" class="form-horizontal">
+        {# Render other search params in a hidden block #}
+        <div style="display:none">
+            {% for value in selected_facets %}
+                <input name="selected_facets" value="{{ value }}" />
+            {% endfor %}
+            {{ form.q }}
+        </div>
+
+        {% if paginator.count %}
+            {% if paginator.num_pages > 1 %}
+                {% blocktrans with start=page_obj.start_index end=page_obj.end_index num_results=paginator.count %}
+                    <strong>{{ num_results }}</strong> results - showing <strong>{{ start }}</strong> to <strong>{{ end }}</strong>.
+                {% endblocktrans %}
+            {% else %}
+                {% blocktrans count num_results=paginator.count %}
+                    <strong>1</strong> result.
+                {% plural %}
+                    <strong>{{ num_results }}</strong> results.
+                {% endblocktrans %}
+            {% endif %}
+            {% if form %}
+                <div class="pull-right">
+                    {% include "partials/form_field.html" with field=form.sort_by %}
+                </div>
+            {% endif %}
         {% else %}
-            {% blocktrans count num_results=paginator.count %}
-                <strong>1</strong> result.
-            {% plural %}
-                <strong>{{ num_results }}</strong> results. 
-            {% endblocktrans %}
+            <p>
+                {% trans "<strong>0</strong> results." %}
+            </p>
         {% endif %}
-    {% else %}
-        <p>
-            {% trans "<strong>0</strong> results." %}
-        </p>
-    {% endif %}
+    </form>
 
     {% if products %}
         <section>
@@ -112,3 +127,8 @@
         <p class="nonefound">{% trans "No products found." %}</p>
     {% endif %}
 {% endblock content %}
+
+{% block onbodyload %}
+    {{ block.super }}
+    oscar.search.init();
+{% endblock %}
