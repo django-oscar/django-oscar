@@ -43,15 +43,15 @@ def create_range(range_class):
     return obj
 
 
-def create_condition(condition_class):
+def create_condition(condition_class, **kwargs):
     """
     Create a custom condition instance
     """
     return Condition.objects.create(
-        proxy_class=_class_path(condition_class))
+        proxy_class=_class_path(condition_class), **kwargs)
 
 
-def create_benefit(benefit_class):
+def create_benefit(benefit_class, **kwargs):
     """
     Create a custom benefit instance
     """
@@ -61,4 +61,4 @@ def create_benefit(benefit_class):
         raise RuntimeError("Your custom benefit must implement its own "
                            "'description' property")
     return Benefit.objects.create(
-        proxy_class=_class_path(benefit_class))
+        proxy_class=_class_path(benefit_class), **kwargs)
