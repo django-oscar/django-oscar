@@ -370,7 +370,6 @@ class OrderListView(BulkEditMixin, ListView):
         orders = Order.objects.filter(pk__in=order_ids)
         # Look for order-level action
         order_action = request.POST.get('order_action', '').lower()
-        
         if order_action:
             if order_action not in self.order_actions:
                 messages.error(self.request, _("Invalid action"))
@@ -378,7 +377,7 @@ class OrderListView(BulkEditMixin, ListView):
             else:
                 for order in orders:
                     self.change_order_statuses(request, order)
-                return getattr(self, order_action)(request, order)
+                # return getattr(self, order_action)(request, order)
         return self.reload_page_response()
 
     def reload_page_response(self, fragment=None):
