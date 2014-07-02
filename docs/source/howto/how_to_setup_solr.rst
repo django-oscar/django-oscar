@@ -32,7 +32,7 @@ You should then be able to start Solr by running:
 
 .. code-block:: bash
 
-    $ cd ../../..
+    $ cd ../..
     $ java -jar start.jar
 
 Integrating with Haystack
