@@ -116,7 +116,7 @@ class ProductCategoryView(ListView):
     Browse products in a given category
     """
     context_object_name = "products"
-    template_name = 'catalogue/category.html'
+    template_name = 'catalogue/browse.html'
     paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
     enforce_paths = True
     use_search_backend = True
