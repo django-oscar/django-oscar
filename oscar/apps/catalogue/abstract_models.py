@@ -16,6 +16,8 @@ from django.db import models
 from django.db.models import Sum, Count
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.utils.functional import cached_property
+from django.contrib.contenttypes.generic import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 from treebeard.mp_tree import MP_Node
 
@@ -620,10 +622,6 @@ class AbstractProductAttribute(models.Model):
         'catalogue.AttributeOptionGroup', blank=True, null=True,
         verbose_name=_("Option Group"),
         help_text=_('Select an option group if using type "Option"'))
-    entity_type = models.ForeignKey(
-        'catalogue.AttributeEntityType', blank=True, null=True,
-        verbose_name=_("Entity Type"),
-        help_text=_('Select an entity type if using type "Entity"'))
     required = models.BooleanField(_('Required'), default=False)
 
     class Meta:
@@ -643,6 +641,7 @@ class AbstractProductAttribute(models.Model):
     def _validate_text(self, value):
         if not isinstance(value, six.string_types):
             raise ValidationError(_("Must be str or unicode"))
+    _validate_richtext = _validate_text
 
     def _validate_float(self, value):
         try:
@@ -665,14 +664,9 @@ class AbstractProductAttribute(models.Model):
             raise ValidationError(_("Must be a boolean"))
 
     def _validate_entity(self, value):
-        if not isinstance(value, get_model('catalogue', 'AttributeEntity')):
-            raise ValidationError(
-                _("Must be an AttributeEntity model object instance"))
-        if not value.pk:
-            raise ValidationError(_("Model has not been saved yet"))
-        if value.type != self.entity_type:
-            raise ValidationError(
-                _("Entity must be of type %s" % self.entity_type.name))
+        # This feels rather naive
+        if not isinstance(value, models.Model):
+            raise ValidationError(_("Must be a model instance"))
 
     def _validate_option(self, value):
         if not isinstance(value, get_model('catalogue', 'AttributeOption')):
@@ -680,8 +674,8 @@ class AbstractProductAttribute(models.Model):
                 _("Must be an AttributeOption model object instance"))
         if not value.pk:
             raise ValidationError(_("AttributeOption has not been saved yet"))
-        valid_values = self.option_group.options.values_list('option',
-                                                             flat=True)
+        valid_values = self.option_group.options.values_list(
+            'option', flat=True)
         if value.option not in valid_values:
             raise ValidationError(
                 _("%(enum)s is not a valid choice for %(attr)s") %
@@ -690,40 +684,27 @@ class AbstractProductAttribute(models.Model):
     def _validate_file(self, value):
         if value and not isinstance(value, File):
             raise ValidationError(_("Must be a file field"))
+    _validate_image = _validate_file
 
-    def get_validator(self):
-        DATATYPE_VALIDATORS = {
-            'text': self._validate_text,
-            'integer': self._validate_int,
-            'boolean': self._validate_bool,
-            'float': self._validate_float,
-            'richtext': self._validate_text,
-            'date': self._validate_date,
-            'entity': self._validate_entity,
-            'option': self._validate_option,
-            'file': self._validate_file,
-            'image': self._validate_file,
-        }
-
-        return DATATYPE_VALIDATORS[self.type]
+    def validate_value(self, value):
+        validator = getattr(self, '_validate_%s' % self.type)
+        validator(value)
 
     def __unicode__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        super(AbstractProductAttribute, self).save(*args, **kwargs)
-
     def save_value(self, product, value):
+        ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
         try:
             value_obj = product.attribute_values.get(attribute=self)
-        except get_model('catalogue', 'ProductAttributeValue').DoesNotExist:
-            # FileField uses False for anouncing deletion of the file
+        except ProductAttributeValue.DoesNotExist:
+            # FileField uses False for announcing deletion of the file
             # not creating a new value
             delete_file = self.is_file and value is False
             if value is None or value == '' or delete_file:
                 return
-            model = get_model('catalogue', 'ProductAttributeValue')
-            value_obj = model.objects.create(product=product, attribute=self)
+            value_obj = ProductAttributeValue.objects.create(
+                product=product, attribute=self)
 
         if self.is_file:
             # File fields in Django are treated differently, see
@@ -746,19 +727,6 @@ class AbstractProductAttribute(models.Model):
                 value_obj.value = value
                 value_obj.save()
 
-    def validate_value(self, value):
-        self.get_validator()(value)
-
-    def is_value_valid(self, value):
-        """
-        Check whether the passed value is valid for this attribute
-        """
-        if self.type == 'option':
-            valid_values = self.option_group.options.values_list('option',
-                                                                 flat=True)
-            return value in valid_values
-        return True
-
 
 class AbstractProductAttributeValue(models.Model):
     """
@@ -768,13 +736,12 @@ class AbstractProductAttributeValue(models.Model):
 
     For example: number_of_pages = 295
     """
-    attribute = models.ForeignKey('catalogue.ProductAttribute',
-                                  verbose_name=_("Attribute"))
+    attribute = models.ForeignKey(
+        'catalogue.ProductAttribute', verbose_name=_("Attribute"))
     product = models.ForeignKey(
         'catalogue.Product', related_name='attribute_values',
         verbose_name=_("Product"))
-    value_text = models.CharField(
-        _('Text'), max_length=255, blank=True, null=True)
+    value_text = models.TextField(_('Text'), blank=True, null=True)
     value_integer = models.IntegerField(_('Integer'), blank=True, null=True)
     value_boolean = models.NullBooleanField(_('Boolean'), blank=True)
     value_float = models.FloatField(_('Float'), blank=True, null=True)
@@ -783,15 +750,18 @@ class AbstractProductAttributeValue(models.Model):
     value_option = models.ForeignKey(
         'catalogue.AttributeOption', blank=True, null=True,
         verbose_name=_("Value Option"))
-    value_entity = models.ForeignKey(
-        'catalogue.AttributeEntity', blank=True, null=True,
-        verbose_name=_("Value Entity"))
     value_file = models.FileField(
         upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255,
         blank=True, null=True)
     value_image = models.ImageField(
         upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255,
         blank=True, null=True)
+    value_entity = GenericForeignKey(
+        'entity_content_type', 'entity_object_id')
+    entity_content_type = models.ForeignKey(
+        ContentType, null=True, blank=True, editable=False)
+    entity_object_id = models.PositiveIntegerField(
+        null=True, blank=True, editable=False)
 
     def _get_value(self):
         return getattr(self, 'value_%s' % self.attribute.type)
@@ -834,6 +804,14 @@ class AbstractProductAttributeValue(models.Model):
     @property
     def _richtext_as_text(self):
         return strip_tags(self.value)
+
+    @property
+    def _entity_as_text(self):
+        """
+        Returns the unicode representation of the related model. You likely
+        want to customise this (and maybe _entity_as_html) if you use entities.
+        """
+        return unicode(self.value)
 
     @property
     def value_as_html(self):
@@ -891,53 +869,6 @@ class AbstractAttributeOption(models.Model):
         abstract = True
         verbose_name = _('Attribute Option')
         verbose_name_plural = _('Attribute Options')
-
-
-class AbstractAttributeEntity(models.Model):
-    """
-    Provides an attribute type to enable relationships with other models
-    """
-    name = models.CharField(_("Name"), max_length=255)
-    slug = models.SlugField(
-        _("Slug"), max_length=255, unique=False, blank=True)
-    type = models.ForeignKey(
-        'catalogue.AttributeEntityType', related_name='entities',
-        verbose_name=_("Type"))
-
-    def __unicode__(self):
-        return self.name
-
-    class Meta:
-        abstract = True
-        verbose_name = _('Attribute Entity')
-        verbose_name_plural = _('Attribute Entities')
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super(AbstractAttributeEntity, self).save(*args, **kwargs)
-
-
-class AbstractAttributeEntityType(models.Model):
-    """
-    Provides the name of the model involved in an entity relationship
-    """
-    name = models.CharField(_("Name"), max_length=255)
-    slug = models.SlugField(
-        _("Slug"), max_length=255, unique=False, blank=True)
-
-    def __unicode__(self):
-        return self.name
-
-    class Meta:
-        abstract = True
-        verbose_name = _('Attribute Entity Type')
-        verbose_name_plural = _('Attribute Entity Types')
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super(AbstractAttributeEntityType, self).save(*args, **kwargs)
 
 
 class AbstractOption(models.Model):

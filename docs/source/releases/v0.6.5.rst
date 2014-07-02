@@ -1,0 +1,16 @@
+=========================
+Oscar 0.6.5 release notes
+=========================
+
+This is Oscar 0.6.5, a minor security release. If you rely on the
+``permissions_required`` decorator or the
+``Application.permissions_map`` and ``Application.default_permissions`` syntax,
+you must upgrade.
+
+Bug fixes
+=========
+
+* The ``permissions_required`` decorator now handles both methods and
+  properties on the User model. Previously, it wasn't supported, but a
+  docstring showed ``is_anonymous`` as an example, which is a
+  method.

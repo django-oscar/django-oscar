@@ -57,11 +57,7 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
         active_users = User._default_manager.filter(
             email__iexact=email, is_active=True)
         for user in active_users:
-            # Build reset url
-            reset_url = "%s://%s%s" % (
-                'https' if use_https else 'http',
-                site.domain,
-                get_password_reset_url(user))
+            reset_url = self.get_reset_url(site, request, user, use_https)
             ctx = {
                 'user': user,
                 'site': site,
@@ -69,6 +65,16 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
             messages = CommunicationEventType.objects.get_and_render(
                 code=self.communication_type_code, context=ctx)
             Dispatcher().dispatch_user_messages(user, messages)
+
+    def get_reset_url(self, site, request, user, use_https):
+        # the request argument isn't used currently, but implementors might
+        # need it to determine the correct subdomain
+        reset_url = "%s://%s%s" % (
+            'https' if use_https else 'http',
+            site.domain,
+            get_password_reset_url(user))
+
+        return reset_url
 
 
 class SetPasswordForm(auth_forms.SetPasswordForm):
@@ -91,7 +97,7 @@ class EmailAuthenticationForm(AuthenticationForm):
     usernames. 75 character usernames are needed to support the EmailOrUsername
     auth backend.
     """
-    username = forms.EmailField(label=_('Email Address'))
+    username = forms.EmailField(label=_('Email address'))
     redirect_url = forms.CharField(
         widget=forms.HiddenInput, required=False)
 

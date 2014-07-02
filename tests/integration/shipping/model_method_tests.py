@@ -163,3 +163,27 @@ class WeightBasedMethodTests(TestCase):
         charge = self.standard.calculate(basket)
         self.assertEqual(D('0.00'), charge.incl_tax)
         self.assertTrue(charge.is_tax_known)
+
+    def test_simple_shipping_cost_scenario_handled_correctly(self):
+        basket = factories.BasketFactory()
+        product_attribute_value = factories.ProductAttributeValueFactory(
+            value_float=2.5)
+        basket.add_product(product_attribute_value.product)
+
+        expected_charge = D('3.00')
+        self.standard.bands.create(upper_limit=3, charge=expected_charge)
+        charge = self.standard.calculate(basket)
+
+        self.assertEqual(expected_charge, charge.excl_tax)
+
+    def test_overflow_shipping_cost_scenario_handled_correctly(self):
+        basket = factories.BasketFactory()
+        product_attribute_value = factories.ProductAttributeValueFactory(
+            value_float=2.5)
+        basket.add_product(product_attribute_value.product)
+
+        self.standard.bands.create(upper_limit=1, charge=D('1.00'))
+        self.standard.bands.create(upper_limit=2, charge=D('2.00'))
+        charge = self.standard.calculate(basket)
+
+        self.assertEqual(D('1.00') + D('2.00'), charge.excl_tax)

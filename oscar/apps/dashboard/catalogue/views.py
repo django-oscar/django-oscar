@@ -130,15 +130,22 @@ class ProductListView(generic.ListView):
         data = self.form.cleaned_data
 
         if data.get('upc'):
-            queryset = queryset.filter(upc=data['upc'])
-            description_ctx['upc_filter'] = _(
-                " including an item with UPC '%s'") % data['upc']
+            # If there's an exact UPC match, it returns just the matched
+            # product. Otherwise does a broader icontains search.
+            qs_match = queryset.filter(upc=data['upc'])
+            if qs_match.exists():
+                queryset = qs_match
+                description_ctx['upc_filter'] = _(
+                    " with UPC '%s'") % data['upc']
+            else:
+                queryset = queryset.filter(upc__icontains=data['upc'])
+                description_ctx['upc_filter'] = _(
+                    " including an item with UPC containing '%s'") % data['upc']
 
         if data.get('title'):
-            queryset = queryset.filter(
-                title__icontains=data['title']).distinct()
+            queryset = queryset.filter(title__icontains=data['title'])
             description_ctx['title_filter'] = _(
-                " including an item with title matching '%s'") % data['title']
+                " including an item with title containing '%s'") % data['title']
 
         self.description = self.description_template % description_ctx
 

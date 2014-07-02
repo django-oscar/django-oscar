@@ -91,6 +91,7 @@ First steps
    internals/sandbox
    internals/getting_started
    topics/key_questions
+   topics/modelling_your_catalogue
    internals/getting_help
    ref/glossary
 
@@ -108,6 +109,7 @@ All you need to start developing an Oscar project.
    topics/deploying
    topics/translation
    topics/upgrading
+   topics/fork_app
 
 Reference:
 
@@ -119,6 +121,7 @@ Reference:
    howto/index
    ref/settings
    ref/signals
+   ref/templatetags
 
 The Oscar open-source project
 =============================

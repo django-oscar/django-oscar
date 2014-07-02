@@ -3,6 +3,7 @@ from decimal import Decimal as D
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.core.validators import MinValueValidator
 
 from oscar.core import prices, loading
 from oscar.models.fields import AutoSlugField
@@ -82,11 +83,6 @@ class AbstractOrderAndItemCharges(AbstractBase):
 
 
 class AbstractWeightBased(AbstractBase):
-    upper_charge = models.DecimalField(
-        _("Upper Charge"), decimal_places=2, max_digits=12, null=True,
-        help_text=_("This is the charge when the weight of the basket "
-                    "is greater than all the weight bands"""))
-
     # The attribute code to use to look up the weight of a product
     weight_attribute = 'weight'
 
@@ -95,6 +91,7 @@ class AbstractWeightBased(AbstractBase):
     default_weight = models.DecimalField(
         _("Default Weight"), decimal_places=3, max_digits=12,
         default=D('0.000'),
+        validators=[MinValueValidator(D('0.00'))],
         help_text=_("Default product weight in kg when no weight attribute "
                     "is defined"))
 
@@ -110,12 +107,7 @@ class AbstractWeightBased(AbstractBase):
         scale = Scale(attribute_code=self.weight_attribute,
                       default_weight=self.default_weight)
         weight = scale.weigh_basket(basket)
-        band = self.get_band_for_weight(weight)
-        if not band:
-            if self.bands.all().exists() and self.upper_charge:
-                charge = self.upper_charge
-            else:
-                charge = D('0.00')
+        charge = self.get_charge(weight)
 
         # Zero tax is assumed...
         return prices.Price(
@@ -123,17 +115,57 @@ class AbstractWeightBased(AbstractBase):
             excl_tax=charge,
             incl_tax=charge)
 
+    def get_charge(self, weight):
+        """
+        Calculates shipping charges for a given weight.
+
+        If there is one or more matching weight band for a given weight, the
+        charge of the closest matching weight band is returned.
+
+        If the weight exceeds the top weight band, the top weight band charge
+        is added until a matching weight band is found. This models the concept
+        of "sending as many of the large boxes as needed".
+
+        Please note that it is assumed that the closest matching weight band
+        is the most cost-effective one, and that the top weight band is more
+        cost effective than e.g. sending out two smaller parcels.
+        Without that assumption, determining the cheapest shipping solution
+        becomes an instance of the bin packing problem. The bin packing problem
+        is NP-hard and solving it is left as an exercise to the reader.
+        """
+        weight = D(weight)  # weight really should be stored as a decimal
+        if not weight or not self.bands.exists():
+            return D('0.00')
+
+        top_band = self.top_band
+        if weight < top_band.upper_limit:
+            band = self.get_band_for_weight(weight)
+            return band.charge
+        else:
+            quotient, remaining_weight = divmod(weight, top_band.upper_limit)
+            remainder_band = self.get_band_for_weight(remaining_weight)
+            return quotient * top_band.charge + remainder_band.charge
+
     def get_band_for_weight(self, weight):
         """
-        Return the weight band for a given weight
+        Return the closest matching weight band for a given weight.
         """
-        bands = self.bands.filter(
-            upper_limit__gte=weight).order_by('upper_limit')[:1]
-        # Query return only one row, so we can evaluate it
-        if not bands:
-            # No band for this weight
+        try:
+            return self.bands.filter(
+                upper_limit__gte=weight).order_by('upper_limit')[0]
+        except IndexError:
             return None
-        return bands[0]
+
+    @property
+    def num_bands(self):
+        return self.bands.count()
+
+    @property
+    def top_band(self):
+        try:
+            return self.bands.order_by('-upper_limit')[0]
+        except IndexError:
+            return None
 
 
 class AbstractWeightBand(models.Model):
@@ -144,9 +176,12 @@ class AbstractWeightBand(models.Model):
         'shipping.WeightBased', related_name='bands', verbose_name=_("Method"))
     upper_limit = models.DecimalField(
         _("Upper Limit"), decimal_places=3, max_digits=12,
+        validators=[MinValueValidator(D('0.00'))],
         help_text=_("Enter upper limit of this weight band in kg. The lower "
                     "limit will be determined by the other weight bands."))
-    charge = models.DecimalField(_("Charge"), decimal_places=2, max_digits=12)
+    charge = models.DecimalField(
+        _("Charge"), decimal_places=2, max_digits=12,
+        validators=[MinValueValidator(D('0.00'))])
 
     @property
     def weight_from(self):

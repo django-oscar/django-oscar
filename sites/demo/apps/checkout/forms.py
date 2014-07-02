@@ -17,11 +17,22 @@ class BillingAddressForm(payment_forms.BillingAddressForm):
     same_as_shipping = forms.ChoiceField(
         widget=forms.RadioSelect, choices=CHOICES, initial=SAME_AS_SHIPPING)
 
+    class Meta(payment_forms.BillingAddressForm):
+        model = BillingAddress
+        exclude = ('serach_text', 'first_name', 'last_name')
+
     def __init__(self, shipping_address, data=None, *args, **kwargs):
         # Store a reference to the shipping address
         self.shipping_address = shipping_address
 
         super(BillingAddressForm, self).__init__(data, *args, **kwargs)
+
+        # If no shipping address (eg a download), then force the
+        # 'same_as_shipping' field to have a certain value.
+        if shipping_address is None:
+            self.fields['same_as_shipping'].choices = (
+                (self.NEW_ADDRESS, 'Enter a new address'),)
+            self.fields['same_as_shipping'].initial = self.NEW_ADDRESS
 
         # If using same address as shipping, we don't need require any of the
         # required billing address fields.

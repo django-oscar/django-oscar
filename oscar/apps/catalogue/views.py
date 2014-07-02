@@ -31,14 +31,9 @@ class ProductDetailView(DetailView):
         """
         self.object = product = self.get_object()
 
-        if self.enforce_paths:
-            if product.is_variant:
-                return HttpResponsePermanentRedirect(
-                    product.parent.get_absolute_url())
-
-            expected_path = product.get_absolute_url()
-            if expected_path != urlquote(request.path):
-                return HttpResponsePermanentRedirect(expected_path)
+        redirect = self.redirect_if_necessary(request.path, product)
+        if redirect is not None:
+            return redirect
 
         response = super(ProductDetailView, self).get(request, **kwargs)
         self.send_signal(request, response, product)
@@ -50,6 +45,16 @@ class ProductDetailView(DetailView):
             return self.object
         else:
             return super(ProductDetailView, self).get_object(queryset)
+
+    def redirect_if_necessary(self, current_path, product):
+        if self.enforce_paths:
+            if product.is_variant:
+                return HttpResponsePermanentRedirect(
+                    product.parent.get_absolute_url())
+
+            expected_path = product.get_absolute_url()
+            if expected_path != urlquote(current_path):
+                return HttpResponsePermanentRedirect(expected_path)
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductDetailView, self).get_context_data(**kwargs)
@@ -86,13 +91,17 @@ class ProductDetailView(DetailView):
         """
         Return a list of possible templates.
 
-        We try 2 options before defaulting to catalogue/detail.html:
+        If an overriding class sets a template name, we use that. Otherwise,
+        we try 2 options before defaulting to catalogue/detail.html:
             1). detail-for-upc-<upc>.html
             2). detail-for-class-<classname>.html
 
         This allows alternative templates to be provided for a per-product
         and a per-item-class basis.
         """
+        if self.template_name:
+            return [self.template_name]
+
         return [
             '%s/detail-for-upc-%s.html' % (
                 self.template_folder, self.object.upc),
@@ -170,13 +179,18 @@ class ProductCategoryView(ListView):
 
     def get(self, request, *args, **kwargs):
         self.get_object()
+        redirect = self.redirect_if_necessary(request.path, self.category)
+        if redirect is not None:
+            return redirect
+        return super(ProductCategoryView, self).get(request, *args, **kwargs)
+
+    def redirect_if_necessary(self, current_path, category):
         if self.enforce_paths and self.category is not None:
             # Categories are fetched by primary key to allow slug changes.
             # If the slug has indeed changed, issue a redirect.
             expected_path = self.category.get_absolute_url()
-            if expected_path != urlquote(request.path):
+            if expected_path != urlquote(current_path):
                 return HttpResponsePermanentRedirect(expected_path)
-        return super(ProductCategoryView, self).get(request, *args, **kwargs)
 
     def get_categories(self):
         """

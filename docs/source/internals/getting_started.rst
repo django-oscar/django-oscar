@@ -147,7 +147,12 @@ Modify your ``TEMPLATE_DIRS`` to include the main Oscar template directory:
 
 .. code-block:: django
 
+    import os
     from oscar import OSCAR_MAIN_TEMPLATE_DIR
+
+    location = lambda x: os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), x)
+
     TEMPLATE_DIRS = (
         location('templates'),
         OSCAR_MAIN_TEMPLATE_DIR,

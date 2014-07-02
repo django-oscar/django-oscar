@@ -17,7 +17,7 @@ Table of contents:
 .. _overview_of_0.8:
 
 Overview
-========
+--------
 
 Oscar now has a demo site customised for the US!
 
@@ -25,7 +25,8 @@ Things that have been heavily rewritten:
 
 - Adding product to the basket
 
-Shipping functionality got a thorough re-working.
+Shipping functionality got a thorough re-working including a new dashboard for
+weight-based shipping methods.
 
 Lots of methods deprecated in the 0.6 release have now been removed.
 Specifically, the partner "wrapper" functionality is now gone. All price and
@@ -34,7 +35,7 @@ availability logic now needs to be handled with strategies.
 .. _compatibility_of_0.8:
 
 Compatibility
-=============
+-------------
 
 Oscar 0.8 is compatible with Django 1.5-1.7. 
 
@@ -44,10 +45,10 @@ and 3.4.
 .. _new_in_0.8:
 
 What's new in Oscar 0.8?
-========================
+------------------------
 
 Customisation just got easier!
-------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * Oscar's views are now dynamically imported. This means that they can be
   overridden like most other classes in Oscar; overriding the related
@@ -61,32 +62,43 @@ Customisation just got easier!
   overhaul to incorporate the changes.
 
 Reworked shipping app
----------------------
+~~~~~~~~~~~~~~~~~~~~~
 
-Several parts of the shipping app have been changed. The most important is a
-change to the API of shipping methods to avoid a potential thread safety issue.
+Several parts of the shipping app have been altered. The most important change is a
+to the API of shipping methods to avoid a potential thread safety issue.
 Any existing Oscar sites with custom shipping methods will need to adjust them
-to confirm to the new API.
+to confirm to the new API. The new API and the other changes are detailed below.
 
-Other changes to the shipping app include:
-
-* All shipping models now have abstract base classes, similar to
-  the rest of Oscar, allowing them to be customised in the standard way.
-
-* The ``WeightBand.upper_limit`` model field is now a ``DecimalField``, just like the other
-  weight-related fields.
-
-* The Django admin interface for the ``WeightBased`` shipping method has been
-  made slightly more useful. 
-
-See the 
+See the
 :ref:`backwards incompatible changes <incompatible_shipping_changes_in_0.8>` 
 for the shipping app and the 
 :doc:`guide to configuring shipping </howto/how_to_configure_shipping>` 
 for more information.
 
+Dashboard for weight-based shipping methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There is a new dashboard for weight-based shipping methods. It isn't enabled by
+default as weight-based shipping methods are enabled by default. To add it to
+the dashboard menu, include this snippet in your ``OSCAR_DASHBOARD_NAVIGATION``
+setting:
+
+.. code-block:: python
+
+    OSCAR_DASHBOARD_NAVIGATION = [
+        ...
+        {
+            'label': _('Shipping charges'),
+            'url_name': 'dashboard:shipping-method-list',
+        },
+        ...
+    ]
+
+You'll also need to modify your shipping repository class to return weight-based
+shipping methods too.
+
 US demo site
-------------
+~~~~~~~~~~~~
 
 To help developers building sites for the US, a new example Oscar site has been
 included in the repo. This customises core Oscar to treat all prices as
@@ -96,7 +108,7 @@ known.
 See :ref:`us_site` for more information.
 
 Basket additions clean-up
--------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The forms and views around adding things to your basket has been vigorously
 reworked. This cleans up some very old code there and ensures variant products
@@ -107,7 +119,7 @@ The changes do require changing the constructor signature of the
 :ref:`basket_app_changes`.
 
 Checkout improvements
----------------------
+~~~~~~~~~~~~~~~~~~~~~
 
 The checkout process now skips payment if the order total is zero (e.g. when
 ordering free products or using a voucher). As part of that, checkout views
@@ -115,7 +127,7 @@ now evaluate *pre-conditions* (as before) and newly introduced
 *skip conditions*. This should make customising the checkout flow easier.
 
 Cleanup around shipping methods
--------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * The models of the shipping app now have abstract base classes, similar to
   the rest of Oscar.
@@ -131,14 +143,10 @@ Cleanup around shipping methods
 * ``WeightBand.upper_limit`` is now a ``DecimalField``, just like the other
   weight-related fields.
 
-* The Django admin interface for the ``WeightBased`` shipping method has been
-  made slightly more useful. Contributions for a dedicated dashboard app are
-  most welcome!
-
 .. _minor_changes_in_0.8:
 
 Minor changes
--------------
+~~~~~~~~~~~~~
 
 * The ``OSCAR_CURRENCY_LOCALE`` setting has been removed. The locale is now
   automatically determined from the current language. This ensures prices are
@@ -163,28 +171,34 @@ Minor changes
 * The forms for the order dashboard views are now loaded dynamically so they
   can be overridden.
 
+* Introduced a ``OSCAR_DELETE_IMAGE_FILES`` settings which makes deleting
+  image files and thumbnails upon deleting of a model with an ``ImageField``
+  optional. It usually is desired behaviour, but can slow down an app when
+  using a remote storage.
+
 .. _incompatible_changes_in_0.8:
 
 Backwards incompatible changes in 0.8
-=====================================
+-------------------------------------
 
 .. _incompatible_shipping_changes_in_0.8:
 
 Shipping
---------
+~~~~~~~~
 
 The shipping method API has been altered to avoid potential thread-safety
 issues. Prior to v0.8, shipping methods had a ``set_basket`` method which
 allowed a basket instance to be assigned. This was really a crutch to allow
-templates to have easy access to shipping charges. However, it was also a
+templates to have easy access to shipping charges (as they could be read
+straight off the shipping method instance). However, it was also a
 design problem as shipping methods could be instantiated at compile-time
 leading to a thread safety issue where multiple threads could assign a basket
 to the same shipping method instance.
 
 In Oscar 0.8, shipping methods are stateless services that have a method
 :func:`~oscar.apps.shipping.methods.Base.calculate` that takes a basket and
-returns a ``Price`` instance.  New template tags are provided that allow these
-shipping charges to be accessed from templates.
+returns a ``Price`` instance.  New :doc:`template tags </ref/templatetags/>` are
+provided that allow these shipping charges to be accessed from templates.
 
 This API change does require quite a few changes as both the shipping method
 and shipping charge now need to be passed around separately:
@@ -204,7 +218,55 @@ and shipping charge now need to be passed around separately:
   method has changed to accept the ``shipping_charge`` rather than a
   ``shipping_method`` instance.
 
+Another key change is in the shipping repository object. The
+``get_shipping_methods`` method has been split in two to simplify the exercise
+of providing new shipping methods. The best practice for Oscar 0.8 is to 
+override the ``methods`` attribute if the same set of shipping methods is
+available to everyone:
+
+.. code-block:: python
+
+    from oscar.apps.shipping import repository, methods
+
+    class Standard(methods.FixedPrice):
+        code = "standard"
+        name = "Standard"
+        charge_excl_tax = D('10.00')
+
+
+    class Express(methods.FixedPrice):
+        code = "express"
+        name = "Express"
+        charge_excl_tax = D('20.00')
+
+    class Repository(repository.Repository):
+        methods = [Standard(), Express()]
+        
+or to override ``get_available_shipping_methods`` if the available shipping
+methods if only available conditionally:
+
+.. code-block:: python
+
+    from oscar.apps.shipping import repository
+
+    class Repository(repository.Repository):
+        
+        def get_available_shipping_methods(
+                self, basket, shipping_addr=None, **kwargs):
+            methods = [Standard()]
+            if shipping_addr.country.code == 'US':
+                # Express only available in the US
+                methods.append(Express())
+            return methods
+
+Note that shipping address should be passed around as instances not classes.
+
 Other potentially breaking changes related to shipping include:
+
+* Weight based shipping methods used to have an ``upper_charge`` field which was
+  returned if no weight band matched. That doesn't work very well in practice,
+  and has been removed. Instead, charges from bands are now added together to
+  match the weight of the basket.
 
 * The :class:`~oscar.apps.order.utils.OrderCreator` class no longer defaults to
   free shipping: a shipping method and charge have to be explicitly passed in.
@@ -227,13 +289,17 @@ Other potentially breaking changes related to shipping include:
   ``oscar.apps.shipping.scales.Scale``, and is now overridable.
 
 Misc
-----
+~~~~
 
 * The ``oscar_calculate_scores`` command has been `rewritten`_ to use the ORM
   instead of raw SQL. That exposed a bug in the previous calculations,
   where purchases got weighed less than any other event. When you upgrade,
   your total scores will be change. If you rely on the old behaviour,
   just extend the ``Calculator`` class and adjust the weights.
+
+* ``Order.order_number`` now has ``unique=True`` set. If order numbers are
+  not unique in your database, you need to remedy that before migrating. By
+  default, Oscar creates unique order numbers.
 
 * ``Product.score`` was just duplicating ``ProductRecord.score`` and has been
   removed. Use ``Product.stats.score`` instead.
@@ -247,10 +313,27 @@ Misc
   ``Product.recommended_products`` or just add the field back to your
   custom Product instance and ``ProductForm`` when migrating.
 
+* The ``basket_form`` template tag code has been greatly simplified. Because of
+  that, the syntax needed to change slightly.
+
+  Before: ``{% basket_form request product as basket_form single %}``
+
+  After: ``{% basket_form request product 'single' as basket_form %}``
+
+* Product attribute validation has been cleaned up. As part of that, the
+  trivial ``ProductAttribute.get_validator`` and the unused
+  ``ProductAttribute.is_value_valid`` methods have been removed.
+
+* It is now possible to use product attributes to add a relation to arbitrary
+  model instances. There was some (presumably broken) support for it before,
+  but you should now be able to use product attributes of type ``entity`` as
+  expected. There's currently no frontend or dashboard support for it, as there
+  is no good default behaviour.
+
 .. _rewritten: https://github.com/tangentlabs/django-oscar/commit/d8b4dbfed17be90846ea4bc47b5f7b39ad944c24
 
 Basket line stockrecords
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 The basket line model got a reference to the stockrecord in Oscar 0.6. The
 basket middleware since then updated basket lines to have stockrecords if
@@ -290,7 +373,7 @@ are no nulls in your ``basket_line`` table:
 .. _basket_app_changes:
 
 Basket app changes
-------------------
+~~~~~~~~~~~~~~~~~~
 
 - The ``basket:add`` URL now required the primary key of the "base" product to
   be included. This allows the same form to be used for both GET and POST
@@ -306,17 +389,30 @@ Basket app changes
 .. _8ba283e8: https://github.com/tangentlabs/django-oscar/commit/8ba283e8c4239e4eff95da5e8097a17ecfadf5f5
 
 Migrations
-----------
+~~~~~~~~~~
+
+* Address:
+
+    - ``0011`` - ``AbstractAddress.search_text`` turned into a ``TextField``.
 
 * Catalogue:
 
     - ``0021`` - Add ``unique_together`` to ``ProductAttributeValue``,
       ``ProductRecommendation`` and ``ProductCategory``
     - ``0022`` - Remove ``Product.score`` field.
+    - ``0023`` - Drop ``Product.related_products``.
+    - ``0024`` - Change ``ProductAttributeValue.value_text`` to a ``TextField``
+      and do entity attribute changes and model deletions.
 
 * Order:
 
     - ``0029`` - Add ``unique_together`` to ``PaymentEventQuantity`` and ``ShippingEventQuantity``
+    - ``0030`` - Set ``unique=True`` for ``Order.order_number``
+    - ``0031`` - ``AbstractAddress.search_text`` turned into a ``TextField``.
+
+* Partner:
+
+    - ``0014`` - ``AbstractAddress.search_text`` turned into a ``TextField``.
 
 * Promotions:
 
@@ -325,11 +421,12 @@ Migrations
 * Shipping:
 
     - ``0007`` - Change ``WeightBand.upper_limit`` from ``FloatField`` to ``DecimalField``
+    - ``0008`` - Drop ``WeightBased.upper_charge`` field.
 
 .. _deprecated_features_in_0.8:
 
 Removal of deprecated features
-------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 These methods have been removed:
 

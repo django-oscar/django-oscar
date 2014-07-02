@@ -1,8 +1,6 @@
 import os
-import sys
 
 # Path helper
-PROJECT_DIR = os.path.dirname(__file__)
 location = lambda x: os.path.join(
     os.path.dirname(os.path.realpath(__file__)), x)
 
@@ -28,7 +26,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(os.path.dirname(__file__), 'db.sqlite'),
+        'NAME': location('db.sqlite'),
         'USER': '',
         'PASSWORD': '',
         'HOST': '',
@@ -327,7 +325,7 @@ APPEND_SLASH = True
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+        'PATH': location('whoosh_index'),
     },
 }
 # Here's a sample Haystack config if using Solr (which is recommended)
@@ -451,9 +449,6 @@ if not os.path.exists(LOG_ROOT):
 
 THUMBNAIL_DEBUG = True
 THUMBNAIL_KEY_PREFIX = 'oscar-sandbox'
-
-# Use a custom KV store to handle integrity error
-THUMBNAIL_KVSTORE = 'oscar.sorl_kvstore.ConcurrentKVStore'
 
 # Django 1.6 has switched to JSON serializing for security reasons, but it does not
 # serialize Models. We should resolve this by extending the

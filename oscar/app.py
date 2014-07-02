@@ -23,6 +23,9 @@ class Shop(Application):
     dashboard_app = get_class('dashboard.app', 'application')
     offer_app = get_class('offer.app', 'application')
 
+    password_reset_form = get_class('customer.forms', 'PasswordResetForm')
+    set_password_form = get_class('customer.forms', 'SetPasswordForm')
+
     def get_urls(self):
         urls = [
             url(r'^catalogue/', include(self.catalogue_app.urls)),
@@ -38,7 +41,7 @@ class Shop(Application):
             # the reverse function from working.
             url(r'^password-reset/$',
                 login_forbidden(auth_views.password_reset),
-                {'password_reset_form': forms.PasswordResetForm,
+                {'password_reset_form': self.password_reset_form,
                  'post_reset_redirect': reverse_lazy('password-reset-done')},
                 name='password-reset'),
             url(r'^password-reset/done/$',
@@ -56,7 +59,7 @@ class Shop(Application):
                     login_forbidden(auth_views.password_reset_confirm),
                     {
                         'post_reset_redirect': reverse_lazy('password-reset-complete'),
-                        'set_password_form': forms.SetPasswordForm,
+                        'set_password_form': self.set_password_form,
                     },
                     name='password-reset-confirm'))
         else:
@@ -65,7 +68,7 @@ class Shop(Application):
                     login_forbidden(auth_views.password_reset_confirm),
                     {
                         'post_reset_redirect': reverse_lazy('password-reset-complete'),
-                        'set_password_form': forms.SetPasswordForm,
+                        'set_password_form': self.set_password_form,
                     },
                     name='password-reset-confirm'))
             if django.VERSION < (1, 7):
@@ -74,7 +77,7 @@ class Shop(Application):
                         login_forbidden(auth_views.password_reset_confirm_uidb36),
                         {
                             'post_reset_redirect': reverse_lazy('password-reset-complete'),
-                            'set_password_form': forms.SetPasswordForm,
+                            'set_password_form': self.set_password_form,
                         }))
 
         urls += [

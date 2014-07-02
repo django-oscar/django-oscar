@@ -18,11 +18,13 @@ class AbstractOrder(models.Model):
     """
     The main order model
     """
-    number = models.CharField(_("Order number"), max_length=128, db_index=True)
+    number = models.CharField(
+        _("Order number"), max_length=128, db_index=True, unique=True)
 
     # We track the site that each order is placed within
-    site = models.ForeignKey('sites.Site', verbose_name=_("Site"), null=True,
-                             on_delete=models.SET_NULL)
+    site = models.ForeignKey(
+        'sites.Site', verbose_name=_("Site"), null=True,
+        on_delete=models.SET_NULL)
 
     basket = models.ForeignKey(
         'basket.Basket', verbose_name=_("Basket"),

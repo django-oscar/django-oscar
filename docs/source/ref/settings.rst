@@ -85,7 +85,7 @@ The number of products to paginate by.
 .. _oscar_search_facets:
 
 ``OSCAR_SEARCH_FACETS``
-------------------------------
+-----------------------
 
 A dictionary that specifies the facets to use with the search backend.  It
 needs to be a dict with keys ``fields`` and ``queries`` for field- and
@@ -404,6 +404,15 @@ The location within the ``MEDIA_ROOT`` folder that is used to store product imag
 The folder name can contain date format strings as described in the `Django Docs`_.
 
 .. _`Django Docs`: https://docs.djangoproject.com/en/dev/ref/models/fields/#filefield
+
+``OSCAR_DELETE_IMAGE_FILES``
+----------------------------
+
+Default: ``True``
+
+If enabled, a ``post_delete`` hook will attempt to delete any image files and
+created thumbnails when a model with an ``ImageField`` is deleted. This is
+usually desired, but might not be what you want when using a remote storage.
 
 
 ``OSCAR_PROMOTION_FOLDER``

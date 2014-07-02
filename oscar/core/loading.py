@@ -205,7 +205,9 @@ def _get_installed_apps_entry(app_name):
     e.g. 'dashboard.catalogue' comes before 'catalogue' in INSTALLED_APPS.
     """
     for installed_app in settings.INSTALLED_APPS:
-        if installed_app.endswith(app_name):
+        # match root-level apps ('catalogue') or apps with same name at end
+        # ('shop.catalogue'), but don't match 'fancy_catalogue'
+        if installed_app == app_name or installed_app.endswith('.' + app_name):
             return installed_app
     return None
 
