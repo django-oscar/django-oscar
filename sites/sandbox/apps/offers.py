@@ -11,7 +11,7 @@ class ChangesOwnerName(models.Benefit):
         return models.PostOrderAction(
             "You will have your name changed to Barry!")
 
-    def apply_deferred(self, basket):
+    def apply_deferred(self, basket, order, application):
         if basket.owner:
             basket.owner.first_name = "Barry"
             basket.owner.save()
