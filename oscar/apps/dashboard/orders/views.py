@@ -376,7 +376,7 @@ class OrderListView(BulkEditMixin, ListView):
                 return self.reload_page_response()
             else:
                 for order in orders:
-                    self.change_order_statuses(request, order)
+                    self.change_order_status(request, order)
                 # return getattr(self, order_action)(request, order)
         return self.reload_page_response()
 
@@ -386,7 +386,7 @@ class OrderListView(BulkEditMixin, ListView):
             url += '#' + fragment
         return HttpResponseRedirect(url)
 
-    def change_order_statuses(self, request, order):
+    def change_order_status(self, request, order):
         new_status = request.POST['new_status'].strip()
         if not new_status:
             messages.error(request, _("The new status '%s' is not valid")
