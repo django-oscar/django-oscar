@@ -131,21 +131,32 @@
             </table>
             {% endblock order_list %}
           
-            <form action="." method="post" id="order_status_form">
-                    {% csrf_token %}
-                    {% block order_actions %}
-                        <div class="well">
-                            <h3><i class="icon-warning"></i> {% trans "Change order status" %}:</h3>
-                            {% if order_status_form.has_choices %}
-                                {% include "partials/form_fields.html" with form=order_status_form %}
-                                <input type="hidden" value="change_order_status" name="order_action" />
-                                <input type="submit" value="{% trans "Change status" %}" class="btn btn-primary" />
-                            {% else %}
-                                {% trans "This order can't have its status changed." %}
-                            {% endif %}
+            
+            {% block order_actions %}
+                <div class="well">
+                    <h3><i class="icon-warning"></i> {% trans "Change order status" %}:</h3>
+                    {% if order_statuses %}
+                        <div class="control-group">
+                            <div class="controls">
+                                
+                            <select name="new_status">
+                                <option value=""> -- {% trans "choose new status" %} -- </option>
+                                {% for status in order_statuses %}
+                                    <option>{{ status }}</option>
+                                {% endfor %}
+                            </select>
+                                
+                            </div>
                         </div>
-                    {% endblock %}
-            </form>
+                        
+                        <input type="hidden" value="change_order_statuses" name="order_action" />
+                        <input type="submit" value="{% trans "Change status" %}" class="btn btn-primary" />
+                    {% else %}
+                        {% trans "This order can't have its status changed." %}
+                    {% endif %}
+                </div>
+            {% endblock %}
+           
 
             {% include "dashboard/orders/partials/bulk_edit_form.html" with status=active_status %}
             {% include "partials/pagination.html" %}
