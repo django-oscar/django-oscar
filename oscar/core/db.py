@@ -1,6 +1,8 @@
 from django.db.models import base
 from django.apps.registry import apps
 
+from django.utils.six import add_metaclass
+
 
 class ModelBase(base.ModelBase):
     def __new__(cls, name, bases, attrs):
@@ -34,5 +36,6 @@ class ModelBase(base.ModelBase):
         return super(ModelBase, cls).__new__(cls, name, bases, attrs)
 
 
+@add_metaclass(ModelBase)
 class Model(base.Model):
-    __metaclass__ = ModelBase
+    pass
