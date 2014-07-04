@@ -119,8 +119,10 @@ class UserEmailForm(forms.Form):
 
 
 class PartnerAddressForm(forms.ModelForm):
+    name = forms.CharField(
+        required=False, label=pgettext_lazy(u"Partner's name", u"Name"))
 
     class Meta:
-        fields = ('line1', 'line2', 'line3', 'line4',
+        fields = ('name', 'line1', 'line2', 'line3', 'line4',
                   'state', 'postcode', 'country')
         model = PartnerAddress
