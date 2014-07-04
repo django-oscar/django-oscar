@@ -103,7 +103,6 @@ class OrderStatsView(FormView):
         }
         return stats
 
-
 class OrderListView(BulkEditMixin, ListView):
     """
     Dashboard view for a list of orders.
@@ -119,9 +118,9 @@ class OrderListView(BulkEditMixin, ListView):
                       "%(status_filter)s")
     paginate_by = 25
     description = ''
-    actions = ('download_selected_orders',)
+    actions = ('download_selected_orders','change_order_statuses')
     current_view = 'dashboard:order-list'
-    order_actions = ('save_note', 'delete_note', 'change_order_statuses',
+    order_actions = ('save_note', 'delete_note',
                      'create_order_payment_event')
 
     def dispatch(self, request, *args, **kwargs):
@@ -412,7 +411,6 @@ class OrderListView(BulkEditMixin, ListView):
             order.notes.create(user=request.user, message=msg,
                                note_type=OrderNote.SYSTEM)
         return self.reload_page_response(fragment='activity')
-
 
 class OrderDetailView(DetailView):
     """
