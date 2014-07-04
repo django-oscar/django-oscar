@@ -35,13 +35,13 @@
 
 {% block content %}
 
-    <section>        
+    <section>
         {% include 'catalogue/reviews/review_product.html' %}
 
         {% if reviews %}
             <h4>{% trans "Sort by:" %}</h4>
             <form action="." method="get" class="form-inline">
-                <select name="sort_by">
+                <select name="sort_by" class="form-control">
                     <option value="score">{% trans "Score" %}</option>
                     <option value="recency">{% trans "Recency" %}</option>
                 </select>
