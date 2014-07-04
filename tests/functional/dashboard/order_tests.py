@@ -211,7 +211,7 @@ class TestChangingOrderStatusFromFormOnOrderDetailVew(WebTestCase):
         page = self.get(url)
         form = page.forms['orders_form']
         form['new_status'] = 'B'
-        form['order_action'] = 'change_order_statuses'
+        form['action'] = 'change_order_statuses' # change this to make the checkbox checked
         form['selected_order'] = self.order.pk
         self.response = form.submit()
 
