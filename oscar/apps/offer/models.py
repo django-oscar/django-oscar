@@ -14,6 +14,7 @@ from django.conf import settings
 
 from oscar.core.utils import slugify
 from oscar.core.loading import get_class, get_model
+from oscar.core.db import Model
 from oscar.apps.offer.managers import ActiveOfferManager
 from oscar.templatetags.currency_filters import currency
 from oscar.models import fields
@@ -57,7 +58,7 @@ def apply_discount(line, discount, quantity):
     line.discount(discount, quantity, incl_tax=False)
 
 
-class ConditionalOffer(models.Model):
+class ConditionalOffer(Model):
     """
     A conditional offer (eg buy 1, get 10% off)
     """
@@ -172,6 +173,7 @@ class ConditionalOffer(models.Model):
     _voucher = None
 
     class Meta:
+        app_label = 'offer'
         ordering = ['-priority']
         verbose_name = _("Conditional offer")
         verbose_name_plural = _("Conditional offers")
@@ -406,7 +408,7 @@ class ConditionalOffer(models.Model):
         return cond_range.included_products.filter(is_discountable=True)
 
 
-class Condition(models.Model):
+class Condition(Model):
     COUNT, VALUE, COVERAGE = ("Count", "Value", "Coverage")
     TYPE_CHOICES = (
         (COUNT, _("Depends on number of items in basket that are in "
@@ -426,6 +428,7 @@ class Condition(models.Model):
         _("Custom class"), max_length=255, unique=True, default=None)
 
     class Meta:
+        app_label = 'offer'
         verbose_name = _("Condition")
         verbose_name_plural = _("Conditions")
 
@@ -518,7 +521,7 @@ class Condition(models.Model):
         return sorted(line_tuples, key=key)
 
 
-class Benefit(models.Model):
+class Benefit(Model):
     range = models.ForeignKey(
         'offer.Range', null=True, blank=True, verbose_name=_("Range"))
 
@@ -561,6 +564,7 @@ class Benefit(models.Model):
         _("Custom class"), max_length=255, unique=True, default=None)
 
     class Meta:
+        app_label = 'offer'
         verbose_name = _("Benefit")
         verbose_name_plural = _("Benefits")
 
@@ -739,7 +743,7 @@ class Benefit(models.Model):
         return D('0.00')
 
 
-class Range(models.Model):
+class Range(Model):
     """
     Represents a range of products that can be used within an offer
     """
@@ -783,6 +787,7 @@ class Range(models.Model):
     browsable = BrowsableRangeManager()
 
     class Meta:
+        app_label = 'offer'
         verbose_name = _("Range")
         verbose_name_plural = _("Ranges")
 
@@ -903,13 +908,14 @@ class Range(models.Model):
         return not self.proxy_class
 
 
-class RangeProduct(models.Model):
+class RangeProduct(Model):
     """ Allow ordering products inside ranges """
     range = models.ForeignKey('offer.Range')
     product = models.ForeignKey('catalogue.Product')
     display_order = models.IntegerField(default=0)
 
     class Meta:
+        app_label = 'offer'
         unique_together = ('range', 'product')
 
 # ==========
@@ -937,6 +943,7 @@ class CountCondition(Condition):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Count Condition")
         verbose_name_plural = _("Count Conditions")
@@ -1025,6 +1032,7 @@ class CoverageCondition(Condition):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Coverage Condition")
         verbose_name_plural = _("Coverage Conditions")
@@ -1128,6 +1136,7 @@ class ValueCondition(Condition):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Value Condition")
         verbose_name_plural = _("Value Conditions")
@@ -1300,6 +1309,7 @@ class PercentageDiscountBenefit(Benefit):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Percentage discount benefit")
         verbose_name_plural = _("Percentage discount benefits")
@@ -1348,6 +1358,7 @@ class AbsoluteDiscountBenefit(Benefit):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Absolute discount benefit")
         verbose_name_plural = _("Absolute discount benefits")
@@ -1426,6 +1437,7 @@ class FixedPriceBenefit(Benefit):
         return self.__unicode__()
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Fixed price benefit")
         verbose_name_plural = _("Fixed price benefits")
@@ -1492,6 +1504,7 @@ class MultibuyDiscountBenefit(Benefit):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Multibuy discount benefit")
         verbose_name_plural = _("Multibuy discount benefits")
@@ -1523,6 +1536,7 @@ class ShippingBenefit(Benefit):
         return SHIPPING_DISCOUNT
 
     class Meta:
+        app_label = 'offer'
         proxy = True
 
 
@@ -1535,6 +1549,7 @@ class ShippingAbsoluteDiscountBenefit(ShippingBenefit):
             'amount': currency(self.value)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Shipping absolute discount benefit")
         verbose_name_plural = _("Shipping absolute discount benefits")
@@ -1552,6 +1567,7 @@ class ShippingFixedPriceBenefit(ShippingBenefit):
             'amount': currency(self.value)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Fixed price shipping benefit")
         verbose_name_plural = _("Fixed price shipping benefits")
@@ -1571,6 +1587,7 @@ class ShippingPercentageDiscountBenefit(ShippingBenefit):
             'value': self.value}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Shipping percentage discount benefit")
         verbose_name_plural = _("Shipping percentage discount benefits")

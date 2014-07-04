@@ -11,10 +11,11 @@ from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from oscar.apps.basket.managers import OpenBasketManager, SavedBasketManager
 from oscar.apps.offer import results
 from oscar.core.compat import AUTH_USER_MODEL
+from oscar.core.db import Model
 from oscar.templatetags.currency_filters import currency
 
 
-class AbstractBasket(models.Model):
+class AbstractBasket(Model):
     """
     Basket object
     """
@@ -538,7 +539,7 @@ class AbstractBasket(models.Model):
             return 0
 
 
-class AbstractLine(models.Model):
+class AbstractLine(Model):
     """
     A line of a basket (product and a quantity)
     """
@@ -824,7 +825,7 @@ class AbstractLine(models.Model):
                 return warning % product_prices
 
 
-class AbstractLineAttribute(models.Model):
+class AbstractLineAttribute(Model):
     """
     An attribute of a basket line
     """

@@ -4,13 +4,14 @@ import zlib
 from django.db import models
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.core import exceptions
-
-from oscar.core.compat import AUTH_USER_MODEL
-from oscar.models.fields import UppercaseCharField, PhoneNumberField
 from six.moves import filter
 
+from oscar.core.db import Model
+from oscar.core.compat import AUTH_USER_MODEL
+from oscar.models.fields import UppercaseCharField, PhoneNumberField
 
-class AbstractAddress(models.Model):
+
+class AbstractAddress(Model):
     """
     Superclass address object
 
@@ -238,6 +239,7 @@ class AbstractAddress(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'address'
         verbose_name = _('Address')
         verbose_name_plural = _('Addresses')
 
@@ -373,7 +375,7 @@ class AbstractAddress(models.Model):
         return fields
 
 
-class AbstractCountry(models.Model):
+class AbstractCountry(Model):
     """
     International Organization for Standardization (ISO) 3166-1 Country list.
     """
@@ -397,9 +399,10 @@ class AbstractCountry(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'address'
+        ordering = ('-display_order', 'name',)
         verbose_name = _('Country')
         verbose_name_plural = _('Countries')
-        ordering = ('-display_order', 'name',)
 
     def __unicode__(self):
         return self.printable_name or self.name
@@ -433,6 +436,7 @@ class AbstractShippingAddress(AbstractAddress):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         verbose_name = _("Shipping address")
         verbose_name_plural = _("Shipping addresses")
 
@@ -505,10 +509,11 @@ class AbstractUserAddress(AbstractShippingAddress):
 
     class Meta:
         abstract = True
-        verbose_name = _("User address")
-        verbose_name_plural = _("User addresses")
+        app_label = 'address'
         ordering = ['-num_orders']
         unique_together = ('user', 'hash')
+        verbose_name = _("User address")
+        verbose_name_plural = _("User addresses")
 
     def validate_unique(self, exclude=None):
         super(AbstractAddress, self).validate_unique(exclude)
@@ -527,6 +532,7 @@ class AbstractBillingAddress(AbstractAddress):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         verbose_name = _("Billing address")
         verbose_name_plural = _("Billing addresses")
 

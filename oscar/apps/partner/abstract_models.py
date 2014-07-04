@@ -2,12 +2,13 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 
-from oscar.core.compat import AUTH_USER_MODEL
-from oscar.models.fields import AutoSlugField
 from oscar.apps.partner.exceptions import InvalidStockAdjustment
+from oscar.core.compat import AUTH_USER_MODEL
+from oscar.core.db import Model
+from oscar.models.fields import AutoSlugField
 
 
-class AbstractPartner(models.Model):
+class AbstractPartner(Model):
     """
     A fulfillment partner. An individual or company who can fulfil products.
     E.g. for physical goods, somebody with a warehouse and means of delivery.
@@ -72,7 +73,7 @@ class AbstractPartner(models.Model):
         return self.display_name
 
 
-class AbstractStockRecord(models.Model):
+class AbstractStockRecord(Model):
     """
     A stock record.
 
@@ -221,7 +222,7 @@ class AbstractStockRecord(models.Model):
         return self.net_stock_level < self.low_stock_threshold
 
 
-class AbstractStockAlert(models.Model):
+class AbstractStockAlert(Model):
     """
     A stock alert. E.g. used to notify users when a product is 'back in stock'.
     """

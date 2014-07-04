@@ -6,12 +6,13 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.validators import MinValueValidator
 
 from oscar.core import prices, loading
+from oscar.core.db import Model
 from oscar.models.fields import AutoSlugField
 
 Scale = loading.get_class('shipping.scales', 'Scale')
 
 
-class AbstractBase(models.Model):
+class AbstractBase(Model):
     """
     Implements the interface declared by shipping.base.Base
     """
@@ -171,7 +172,7 @@ class AbstractWeightBased(AbstractBase):
             return None
 
 
-class AbstractWeightBand(models.Model):
+class AbstractWeightBand(Model):
     """
     Represents a weight band which are used by the WeightBasedShipping method.
     """

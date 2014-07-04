@@ -1,13 +1,16 @@
 import os
 import re
+
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.utils.timezone import now
-from oscar.core.compat import AUTH_USER_MODEL
 from six.moves import filter
 
+from oscar.core.db import Model
+from oscar.core.compat import AUTH_USER_MODEL
 
-class RangeProductFileUpload(models.Model):
+
+class RangeProductFileUpload(Model):
     range = models.ForeignKey('offer.Range', related_name='file_uploads',
                               verbose_name=_("Range"))
     filepath = models.CharField(_("File Path"), max_length=255)
@@ -37,6 +40,7 @@ class RangeProductFileUpload(models.Model):
         _("Number of Duplicate SKUs"), null=True)
 
     class Meta:
+        app_label = 'ranges'
         ordering = ('-date_uploaded',)
         verbose_name = _("Range Product Uploaded File")
         verbose_name_plural = _("Range Product Uploaded Files")

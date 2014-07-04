@@ -4,10 +4,12 @@ from django.core import exceptions
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+
 from oscar.core.compat import AUTH_USER_MODEL
+from oscar.core.db import Model
 
 
-class AbstractVoucher(models.Model):
+class AbstractVoucher(Model):
     """
     A voucher.  This is simply a link to a collection of offers.
 
@@ -129,7 +131,7 @@ class AbstractVoucher(models.Model):
         return self.offers.all()[0].benefit
 
 
-class AbstractVoucherApplication(models.Model):
+class AbstractVoucherApplication(Model):
     """
     For tracking how often a voucher has been used
     """

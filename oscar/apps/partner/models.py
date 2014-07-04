@@ -6,24 +6,20 @@ from oscar.apps.partner.abstract_models import (
     AbstractPartner, AbstractStockRecord, AbstractStockAlert)
 
 
-if 'partner.Partner' not in settings.OSCAR_OVERRIDE_MODELS:
-    class Partner(AbstractPartner):
-        pass
+class Partner(AbstractPartner):
+    pass
 
 
-if 'partner.PartnerAddress' not in settings.OSCAR_OVERRIDE_MODELS:
-    class PartnerAddress(AbstractPartnerAddress):
-        pass
+class PartnerAddress(AbstractPartnerAddress):
+    pass
 
 
-if 'partner.StockRecord' not in settings.OSCAR_OVERRIDE_MODELS:
-    class StockRecord(AbstractStockRecord):
-        pass
+class StockRecord(AbstractStockRecord):
+    pass
 
 
-if 'partner.StockAlert' not in settings.OSCAR_OVERRIDE_MODELS:
-    class StockAlert(AbstractStockAlert):
-        pass
+class StockAlert(AbstractStockAlert):
+    pass
 
 
 if django.VERSION < (1, 7):

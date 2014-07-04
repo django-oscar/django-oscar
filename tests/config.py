@@ -93,9 +93,6 @@ def configure():
             'OSCAR_ORDER_STATUS_PIPELINE': {'A': ('B',), 'B': ()},
             'OSCAR_INITIAL_LINE_STATUS': 'a',
             'OSCAR_LINE_STATUS_PIPELINE': {'a': ('b', ), 'b': ()},
-            'OSCAR_OVERRIDE_MODELS': [
-                'partner.StockRecord',
-            ]
 
         })
         if django.VERSION >= (1, 5):
