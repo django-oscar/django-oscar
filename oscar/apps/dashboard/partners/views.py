@@ -77,61 +77,39 @@ class PartnerCreateView(generic.CreateView):
         return reverse('dashboard:partner-list')
 
 
-class PartnerManageView(generic.TemplateView):
+class PartnerManageView(generic.UpdateView):
     """
     This multi-purpose view renders out a form to edit the partner's details,
     the associated address and a list of all associated users.
     """
     template_name = 'dashboard/partners/partner_manage.html'
-    partner_form_class = PartnerCreateForm
-    address_form_class = PartnerAddressForm
+    form_class = PartnerAddressForm
+    success_url = reverse_lazy('dashboard:partner-list')
 
-    def dispatch(self, request, *args, **kwargs):
-        self.partner = self.object = get_object_or_404(
-            Partner, pk=kwargs['pk'])
-        self.address = self.partner.primary_address
-        if self.address is None:
-            self.address = self.partner.addresses.model(partner=self.partner)
-        return super(PartnerManageView, self).dispatch(
-            request, *args, **kwargs)
+    def get_object(self, queryset=None):
+        self.partner = get_object_or_404(Partner, pk=self.kwargs['pk'])
+        address = self.partner.primary_address
+        if address is None:
+            address = self.partner.addresses.model(partner=self.partner)
+        return address
 
-    def get(self, request, *args, **kwargs):
-        partner_form = self.partner_form_class(instance=self.partner)
-        address_form = self.address_form_class(instance=self.address)
-        context = self.get_context_data(partner_form, address_form)
-        return self.render_to_response(context)
+    def get_initial(self):
+        return {'name': self.partner.name}
 
-    def get_context_data(self, partner_form, address_form, **kwargs):
+    def get_context_data(self, **kwargs):
         ctx = super(PartnerManageView, self).get_context_data(**kwargs)
-        ctx['partner'] = self.object
-        ctx['title'] = self.object.name
-        ctx['users'] = self.object.users.all()
-        ctx['partner_form'] = partner_form
-        ctx['address_form'] = address_form
+        ctx['partner'] = self.partner
+        ctx['title'] = self.partner.name
+        ctx['users'] = self.partner.users.all()
         return ctx
 
-    def post(self, request, *args, **kwargs):
-        if request.POST['submit'] == 'partner_form':
-            partner_form = self.partner_form_class(
-                request.POST, instance=self.partner)
-            if partner_form.is_valid():
-                self.partner = self.object = partner_form.save()
-                messages.success(
-                    self.request, _("Partner '%s' was updated successfully.") %
-                    self.object.name)
-            address_form = self.address_form_class(instance=self.address)
-        else:
-            address_form = self.address_form_class(
-                request.POST, instance=self.address)
-            if address_form.is_valid():
-                address_form.save()
-                messages.success(
-                    self.request, _("Address was updated successfully."))
-            partner_form = self.partner_form_class(instance=self.partner)
-
-        context = self.get_context_data(partner_form, address_form)
-
-        return self.render_to_response(context)
+    def form_valid(self, form):
+        messages.success(
+            self.request, _("Partner '%s' was updated successfully.") %
+            self.partner.name)
+        self.partner.name = form.cleaned_data['name']
+        self.partner.save()
+        return super(PartnerManageView, self).form_valid(form)
 
 
 class PartnerDeleteView(generic.DeleteView):

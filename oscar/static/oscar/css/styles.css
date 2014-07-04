@@ -7605,6 +7605,9 @@ form:after {
 form:after {
   clear: both;
 }
+form.flat {
+  margin: 0;
+}
 .select-open {
   width: 300px!important;
 }
@@ -7622,6 +7625,9 @@ form:after {
 }
 .control-label.required span {
   color: #FF0000;
+}
+.navbar-static-top.navbar .nav > li > a {
+  padding: 10px 0 10px 20px;
 }
 .header {
   position: relative;
@@ -7970,7 +7976,7 @@ input[type="number"][id*="quantity"] {
   bottom: 20px;
   left: 20px;
 }
-.choose-block .btn-remove-address {
+.choose-block .address-controls {
   position: absolute;
   top: 20px;
   right: 20px;

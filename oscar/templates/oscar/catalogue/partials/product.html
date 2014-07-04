@@ -29,7 +29,7 @@
         {% endblock %}
 
         {% block product_title %}
-            <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:4 }}</a></h3>
+            <h3><a href="{{ product.get_absolute_url }}" title="{{ product.get_title }}">{{ product.get_title|truncatewords:4 }}</a></h3>
         {% endblock %}
 
         {% block product_price %}

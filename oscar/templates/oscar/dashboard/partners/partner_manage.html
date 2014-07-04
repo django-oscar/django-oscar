@@ -23,28 +23,7 @@
 {% block headertext %}{{ partner.name }}{% endblock %}
 
 {% block dashboard_content %}
-    <div class="row-fluid">
-        <div class="span6">
-            <h2>{% trans "Details" %}</h2>
-            <form class="form-stacked" method="post">
-                {% csrf_token %}
-                {% include 'partials/form_fields.html' with form=partner_form %}
-                <div class="form-actions">
-                    <button class="btn btn-large btn-primary" type="submit" name="submit" value="partner_form">{% trans "Save" %}</button>
-                </div>
-            </form>
-        </div>
-        <div class="span6">
-            <h2>{% trans "Address" %}</h2>
-            <form class="form-stacked" method="post">
-                {% csrf_token %}
-                {% include 'partials/form_fields.html' with form=address_form %}
-                <div class="form-actions">
-                    <button class="btn btn-large btn-primary" type="submit" name="submit" value="address_form">{% trans "Save" %}</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    {% include 'partials/form.html' %}
 
     <h2>{% trans "Users" %}</h2>
     {% if users %}
@@ -80,5 +59,4 @@
         <a class="btn btn-info" href="{% url 'dashboard:partner-user-create' partner_pk=partner.pk %}" >{% trans "Link a new user" %}</a>
         <a class="btn btn-info" href="{% url 'dashboard:partner-user-select' partner_pk=partner.pk %}" >{% trans "Link an existing user" %}</a>
     </div>
-</div>
 {% endblock dashboard_content %}
