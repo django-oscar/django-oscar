@@ -363,25 +363,6 @@ class OrderListView(BulkEditMixin, ListView):
             writer.writerow(row)
         return response
 
-    """
-    def post(self, request, *args, **kwargs):
-
-        order_ids = request.POST.getlist('selected_order')
-        orders = Order.objects.filter(pk__in=order_ids)
-        # Look for order-level action
-        order_action = request.POST.get('order_action', '').lower()
-        if order_action:
-            if order_action not in self.order_actions:
-                messages.error(self.request, _("Invalid action"))
-                return self.reload_page_response()
-            else:
-                for order in orders:
-                    self.change_order_status(request, order)
-                # return getattr(self, order_action)(request, order)
-        return self.reload_page_response()
-
-    """
-
     def get_success_url(self, fragment=None):
         # Need to change this to be a proper get_success_url
         url = reverse('dashboard:order-list', kwargs={})
@@ -390,6 +371,10 @@ class OrderListView(BulkEditMixin, ListView):
         return HttpResponseRedirect(url)
 
     def change_order_statuses(self, request, orders):
+        order_ids = request.POST.getlist('selected_order')
+        orders = Order.objects.filter(pk__in=order_ids)
+        for order in orders:
+            self.change_order_status(request, order)
         return self.get_success_url()
 
     def change_order_status(self, request, order):
