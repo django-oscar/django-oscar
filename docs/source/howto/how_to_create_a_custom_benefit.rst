@@ -53,7 +53,7 @@ A benefit class must be a proxy class and have the following methods::
             ``oscar.apps.offer.models.ApplicationResult``
             """
 
-        def apply_deferred(self, basket):
+        def apply_deferred(self, basket, order, application):
             """
             Perform a 'post-order action' if one is defined for this benefit
 
@@ -95,7 +95,7 @@ Here's an example of a post-order action benefit::
             return models.PostOrderAction(
                 "You will have your name changed to Barry!")
 
-        def apply_deferred(self, basket):
+        def apply_deferred(self, basket, order, application):
             if basket.owner:
                 basket.owner.first_name = "Barry"
                 basket.owner.save()

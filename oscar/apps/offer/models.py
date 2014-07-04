@@ -251,12 +251,12 @@ class ConditionalOffer(models.Model):
         return self.benefit.proxy().apply(
             basket, self.condition.proxy(), self)
 
-    def apply_deferred_benefit(self, basket):
+    def apply_deferred_benefit(self, basket, order, application):
         """
         Applies any deferred benefits.  These are things like adding loyalty
         points to somone's account.
         """
-        return self.benefit.proxy().apply_deferred(basket)
+        return self.benefit.proxy().apply_deferred(basket, order, application)
 
     def set_voucher(self, voucher):
         self._voucher = voucher
@@ -605,7 +605,7 @@ class Benefit(models.Model):
     def apply(self, basket, condition, offer):
         return ZERO_DISCOUNT
 
-    def apply_deferred(self, basket):
+    def apply_deferred(self, basket, order, application):
         return None
 
     def clean(self):
