@@ -58,7 +58,12 @@ def configure():
             ),
             'TEMPLATE_LOADERS': (('django.template.loaders.cached.Loader',
                                      global_settings.TEMPLATE_LOADERS),),
-            'MIDDLEWARE_CLASSES': global_settings.MIDDLEWARE_CLASSES + (
+            'MIDDLEWARE_CLASSES': (
+                'django.middleware.common.CommonMiddleware',
+                'django.contrib.sessions.middleware.SessionMiddleware',
+                'django.middleware.csrf.CsrfViewMiddleware',
+                'django.contrib.auth.middleware.AuthenticationMiddleware',
+                'django.contrib.messages.middleware.MessageMiddleware',
                 'oscar.apps.basket.middleware.BasketMiddleware',
             ),
             'AUTHENTICATION_BACKENDS': (
