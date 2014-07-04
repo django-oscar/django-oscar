@@ -1,5 +1,5 @@
-from oscar.apps.customer.apps import CustomerConfig
+from oscar.apps.customer import config
 
 
-class CustomerConfig(CustomerConfig):
+class CustomerConfig(config.CustomerConfig):
     name = 'tests._site.apps.customer'
