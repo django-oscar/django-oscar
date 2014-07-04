@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 Factories using factory boy.
 
@@ -24,8 +25,9 @@ from oscar.core.compat import get_user_model
 __all__ = ["UserFactory", "CountryFactory", "UserAddressFactory",
            "BasketFactory", "VoucherFactory", "ProductFactory",
            "StockRecordFactory", "ProductAttributeFactory",
-           "ProductAttributeValueFactory", "ProductCategoryFactory",
-           "CategoryFactory"]
+           "ProductAttributeValueFactory", "AttributeOptionGroupFactory",
+           "AttributeOptionFactory", "PartnerFactory",
+           "ProductCategoryFactory", "CategoryFactory"]
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -139,9 +141,24 @@ class ProductAttributeFactory(factory.DjangoModelFactory):
     type = "float"
 
 
+class AttributeOptionGroupFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = catalogue_models.AttributeOptionGroup
+
+    name = u'Grüppchen'
+
+
+class AttributeOptionFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = catalogue_models.AttributeOption
+
+    # Ideally we'd get_or_create a AttributeOptionGroup here, but I'm not
+    # aware of how to not create a unique option group for each call of the
+    # factory
+
+    option = factory.Sequence(lambda n: 'Option %d' % n)
+
+
 class ProductAttributeValueFactory(factory.DjangoModelFactory):
     FACTORY_FOR = catalogue_models.ProductAttributeValue
 
     attribute = factory.SubFactory(ProductAttributeFactory)
     product = factory.SubFactory(ProductFactory)
-

@@ -36,7 +36,6 @@
         "fields": {
             "code": "author",
             "product_class": 2,
-            "entity_type": null,
             "option_group": null,
             "required": false,
             "type": "text",
@@ -49,8 +48,7 @@
         "fields": {
             "code": "binding", 
             "product_class": 2, 
-            "entity_type": null, 
-            "option_group": null, 
+            "option_group": null,
             "required": false, 
             "type": "text", 
             "name": "Binding"
@@ -62,8 +60,7 @@
         "fields": {
             "code": "format", 
             "product_class": 3, 
-            "entity_type": null, 
-            "option_group": 1, 
+            "option_group": 1,
             "required": true, 
             "type": "option", 
             "name": "Format"
@@ -75,8 +72,7 @@
         "fields": {
             "code": "language", 
             "product_class": 2, 
-            "entity_type": null, 
-            "option_group": null, 
+            "option_group": null,
             "required": false, 
             "type": "text", 
             "name": "Language"
@@ -88,8 +84,7 @@
         "fields": {
             "code": "number_of_pages", 
             "product_class": 2, 
-            "entity_type": null, 
-            "option_group": null, 
+            "option_group": null,
             "required": false, 
             "type": "integer", 
             "name": "Number of pages"
@@ -101,7 +96,6 @@
         "fields": {
             "code": "publication_date",
             "product_class": 2,
-            "entity_type": null,
             "option_group": null,
             "required": false,
             "type": "date",
@@ -114,8 +108,7 @@
         "fields": {
             "code": "publisher", 
             "product_class": 2, 
-            "entity_type": null, 
-            "option_group": null, 
+            "option_group": null,
             "required": false, 
             "type": "text", 
             "name": "Publisher"
@@ -127,8 +120,7 @@
         "fields": {
             "code": "size", 
             "product_class": 4, 
-            "entity_type": null, 
-            "option_group": null, 
+            "option_group": null,
             "required": false, 
             "type": "text", 
             "name": "Size"
@@ -140,7 +132,6 @@
         "fields": {
             "code": "weight",
             "product_class": 2,
-            "entity_type": null,
             "option_group": null,
             "required": false,
             "type": "integer",

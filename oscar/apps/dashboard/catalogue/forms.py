@@ -224,10 +224,11 @@ def _attr_multi_option_field(attribute):
 
 
 def _attr_entity_field(attribute):
-    return forms.ModelChoiceField(
-        label=attribute.name,
-        required=attribute.required,
-        queryset=attribute.entity_type.entities.all())
+    # Product entities don't have out-of-the-box supported in the ProductForm.
+    # There is no ModelChoiceField for generic foreign keys, and there's no
+    # good default behaviour anyway; offering a choice of *all* model instances
+    # is hardly useful.
+    return None
 
 
 def _attr_numeric_field(attribute):
@@ -309,11 +310,12 @@ class ProductForm(forms.ModelForm):
 
     def add_attribute_fields(self, is_parent=False):
         for attribute in self.instance.product_class.attributes.all():
-            self.fields['attr_%s' % attribute.code] \
-                = self.get_attribute_field(attribute)
-            # Attributes are not required for a parent product
-            if is_parent:
-                self.fields['attr_%s' % attribute.code].required = False
+            field = self.get_attribute_field(attribute)
+            if field:
+                self.fields['attr_%s' % attribute.code] = field
+                # Attributes are not required for a parent product
+                if is_parent:
+                    self.fields['attr_%s' % attribute.code].required = False
 
     def get_attribute_field(self, attribute):
         return self.FIELD_FACTORIES[attribute.type](attribute)

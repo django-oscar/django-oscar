@@ -40,14 +40,6 @@ class AttributeOption(AbstractAttributeOption):
     pass
 
 
-class AttributeEntity(AbstractAttributeEntity):
-    pass
-
-
-class AttributeEntityType(AbstractAttributeEntityType):
-    pass
-
-
 class Option(AbstractOption):
     pass
 

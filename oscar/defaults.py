@@ -22,6 +22,7 @@ OSCAR_DEFAULT_CURRENCY = 'GBP'
 # Paths
 OSCAR_IMAGE_FOLDER = 'images/products/%Y/%m/'
 OSCAR_PROMOTION_FOLDER = 'images/promotions/'
+OSCAR_DELETE_IMAGE_FILES = True
 
 # Copy this image from oscar/static/img to your MEDIA_ROOT folder.
 # It needs to be there so Sorl can resize it.
@@ -137,10 +138,10 @@ OSCAR_DASHBOARD_NAVIGATION = [
             # be confusing. Weight-based shipping methods aren't hooked into
             # the shipping repository by default (as it would make
             # customising the repository slightly more difficult).
-            #{
-            #    'label': _('Shipping charges'),
-            #    'url_name': 'dashboard:shipping-method-list',
-            #},
+            # {
+            #     'label': _('Shipping charges'),
+            #     'url_name': 'dashboard:shipping-method-list',
+            # },
         ]
     },
     {

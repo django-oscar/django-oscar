@@ -2,7 +2,6 @@ from django import shortcuts
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
-from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
 from oscar.core.loading import get_model, get_class
