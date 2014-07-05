@@ -36,6 +36,7 @@ ChildSluggedTestModel = get_model('model_tests_app', 'childsluggedtestmodel')
 CustomSluggedTestModel = get_model('model_tests_app', 'CustomSluggedTestModel')
 
 
+
 class AutoSlugFieldTest(TestCase):
     def tearDown(self):
         super(AutoSlugFieldTest, self).tearDown()
@@ -134,19 +135,20 @@ class AutoSlugFieldTest(TestCase):
         m.save()
         self.assertEqual(m.slug, 'PASSWORD_RESET_2')
 
-    @unittest.skipIf(django.VERSION[0] <= 1 and django.VERSION[1] <= 6,
+    @unittest.skipIf(django.VERSION < (1, 7),
                      "Migrations are handled by south in Django <1.7")
     def test_17_migration(self):
         """
         Tests making migrations with Django 1.7+'s migration framework
         """
+
+        import oscar
         from django.db import migrations
         from django.db.migrations.writer import MigrationWriter
         from django.utils import six
         from oscar.models.fields import AutoSlugField
-
         fields = {
-            'autoslugfield': AutoSlugField(),
+            'autoslugfield': AutoSlugField(populate_from='otherfield'),
         }
 
         migration = type(str("Migration"), (migrations.Migration,), {
@@ -163,5 +165,23 @@ class AutoSlugFieldTest(TestCase):
                               "Migration as_string returned unicode")
         # We don't test the output formatting - that's too fragile.
         # Just make sure it runs for now, and that things look alright.
-        result = self.safe_exec(output)
+        context = {
+            'migrations': migrations,
+            'oscar': oscar,
+        }
+        result = self.safe_exec(output, context=context)
         self.assertIn("Migration", result)
+
+    def safe_exec(self, string, value=None, context=None):
+        l = {}
+        g = globals()
+        g.update(context)
+        try:
+            exec(string, g, l)
+        except Exception as e:
+            if value:
+                self.fail("Could not exec %r (from value %r): %s" % (
+                    string.strip(), value, e))
+            else:
+                self.fail("Could not exec %r: %s" % (string.strip(), e))
+        return l
