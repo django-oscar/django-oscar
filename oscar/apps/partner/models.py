@@ -1,5 +1,4 @@
 import django
-from django.conf import settings
 
 from oscar.apps.address.abstract_models import AbstractPartnerAddress
 from oscar.apps.partner.abstract_models import (

@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-from django.conf import settings
-
-from .abstract_models import *  # noqa
+from oscar.apps.wishlists.abstract_models import *  # NOQA
 
 
 class WishList(AbstractWishList):

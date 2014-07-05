@@ -1,5 +1,3 @@
-from django.conf import settings
-
 from oscar.apps.basket.abstract_models import (
     AbstractBasket, AbstractLine, AbstractLineAttribute)
 

@@ -1,5 +1,3 @@
-from django.conf import settings
-
 from oscar.apps.voucher.abstract_models import (
     AbstractVoucher, AbstractVoucherApplication)
 

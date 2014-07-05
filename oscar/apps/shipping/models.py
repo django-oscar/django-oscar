@@ -1,5 +1,3 @@
-from django.conf import settings
-
 from oscar.apps.shipping import abstract_models
 
 
