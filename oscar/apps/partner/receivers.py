@@ -1,8 +1,9 @@
 from django.db.models.signals import post_save
 
-from oscar.core.loading import get_classes
-StockRecord, StockAlert = get_classes('partner.models', ['StockRecord',
-                                                         'StockAlert'])
+from oscar.core.loading import get_model
+
+StockAlert = get_model('partner', 'StockAlert')
+StockRecord = get_model('partner', 'StockRecord')
 
 
 def update_stock_alerts(sender, instance, created, **kwargs):

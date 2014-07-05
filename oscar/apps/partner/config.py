@@ -1,6 +1,5 @@
 from django.apps import AppConfig
 
-from oscar.apps.partner import receivers
 
 
 class PartnerConfig(AppConfig):
@@ -8,6 +7,8 @@ class PartnerConfig(AppConfig):
     name = 'oscar.apps.partner'
 
     def ready(self):
+        from oscar.apps.partner import receivers
+
         receivers.register()
 
         return super(PartnerConfig, self).ready()
