@@ -122,6 +122,7 @@ class TestGetCoreAppsFunction(TestCase):
         self.assertTrue('apps.shipping' in apps)
         self.assertTrue('oscar.apps.shipping' not in apps)
 
+    @skipUnless(django.VERSION < (1, 7), "< Django 1.7")
     def test_uses_dashboard_override_when_specified(self):
         apps = oscar.get_core_apps(overrides=['apps.dashboard.catalogue'])
         self.assertTrue('apps.dashboard.catalogue' in apps)
