@@ -138,7 +138,7 @@ class OrderListView(BulkEditMixin, ListView):
                 pass
             else:
                 return redirect(
-                    'dashboard:order-detail', kwargs={'number': order.number})
+                    'dashboard:order-detail', number=order.number)
         return super(OrderListView, self).get(request, *args, **kwargs)
 
     def get_desc_context(self, data=None):  # noqa (too complex (16))
