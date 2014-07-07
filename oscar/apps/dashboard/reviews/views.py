@@ -22,7 +22,6 @@ class ReviewListView(BulkEditMixin, generic.ListView):
     form_class = forms.ProductReviewSearchForm
     review_form_class = forms.DashboardProductReviewForm
     paginate_by = 25
-    current_view = 'dashboard:reviews-list'
     actions = ('update_selected_review_status',)
     checkbox_object_name = 'review'
     desc_template = _("%(main_filter)s %(date_filter)s %(status_filter)s"

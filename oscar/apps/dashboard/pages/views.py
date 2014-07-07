@@ -23,7 +23,6 @@ class PageListView(ListView):
     View for listing all existing flatpages.
     """
     template_name = 'dashboard/pages/index.html'
-    current_view = 'dashboard:pages-index'
     model = FlatPage
     form_class = forms.PageSearchForm
     paginate_by = 25

@@ -1,5 +1,6 @@
 from django.db.models import Q
 from django.contrib import messages
+from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
@@ -25,7 +26,6 @@ class IndexView(BulkEditMixin, ListView):
     paginate_by = 25
     model = User
     actions = ('make_active', 'make_inactive', )
-    current_view = 'dashboard:users-index'
     form_class = UserSearchForm
     desc_template = _('%(main_filter)s %(email_filter)s %(name_filter)s')
     description = ''
@@ -89,7 +89,7 @@ class IndexView(BulkEditMixin, ListView):
                 user.is_active = value
                 user.save()
         messages.info(self.request, _("Users' status successfully changed"))
-        return HttpResponseRedirect(reverse(self.current_view))
+        return redirect('dashboard:users-index')
 
 
 class UserDetailView(DetailView):

@@ -120,7 +120,6 @@ class OrderListView(BulkEditMixin, ListView):
     paginate_by = 25
     description = ''
     actions = ('download_selected_orders', 'change_order_statuses')
-    current_view = 'dashboard:order-list'
 
     def dispatch(self, request, *args, **kwargs):
         # base_queryset is equal to all orders the user is allowed to access
