@@ -649,7 +649,7 @@ class AbstractProductAttribute(models.Model):
         except ValueError:
             raise ValidationError(_("Must be a float"))
 
-    def _validate_int(self, value):
+    def _validate_integer(self, value):
         try:
             int(value)
         except ValueError:
@@ -664,7 +664,6 @@ class AbstractProductAttribute(models.Model):
             raise ValidationError(_("Must be a boolean"))
 
     def _validate_entity(self, value):
-        # This feels rather naive
         if not isinstance(value, models.Model):
             raise ValidationError(_("Must be a model instance"))
 
