@@ -656,21 +656,33 @@ class AbstractProductAttribute(models.Model):
             message=_("Code can only contain the letters a-z, A-Z, digits, "
                       "minus and underscores, and can't start with a digit"))])
 
+    # Attribute types
+    TEXT = "text"
+    INTEGER = "integer"
+    BOOLEAN = "boolean"
+    FLOAT = "float"
+    RICHTEXT = "richtext"
+    DATE = "date"
+    OPTION = "option"
+    ENTITY = "entity"
+    FILE = "file"
+    IMAGE = "image"
     TYPE_CHOICES = (
-        ("text", _("Text")),
-        ("integer", _("Integer")),
-        ("boolean", _("True / False")),
-        ("float", _("Float")),
-        ("richtext", _("Rich Text")),
-        ("date", _("Date")),
-        ("option", _("Option")),
-        ("entity", _("Entity")),
-        ("file", _("File")),
-        ("image", _("Image")),
+        (TEXT, _("Text")),
+        (INTEGER, _("Integer")),
+        (BOOLEAN, _("True / False")),
+        (FLOAT, _("Float")),
+        (RICHTEXT, _("Rich Text")),
+        (DATE, _("Date")),
+        (OPTION, _("Option")),
+        (ENTITY, _("Entity")),
+        (FILE, _("File")),
+        (IMAGE, _("Image")),
     )
     type = models.CharField(
         choices=TYPE_CHOICES, default=TYPE_CHOICES[0][0],
         max_length=20, verbose_name=_("Type"))
+
     option_group = models.ForeignKey(
         'catalogue.AttributeOptionGroup', blank=True, null=True,
         verbose_name=_("Option Group"),
@@ -685,11 +697,11 @@ class AbstractProductAttribute(models.Model):
 
     @property
     def is_option(self):
-        return self.type == "option"
+        return self.type == self.OPTION
 
     @property
     def is_file(self):
-        return self.type in ["file", "image"]
+        return self.type in [self.FILE, self.IMAGE]
 
     def __unicode__(self):
         return self.name
@@ -784,9 +796,9 @@ class AbstractProductAttribute(models.Model):
 
 class AbstractProductAttributeValue(models.Model):
     """
-    The "through" model for the m2m relationship between catalogue.Product
-    and catalogue.ProductAttribute.
-    This specifies the value of the attribute for a particular product
+    The "through" model for the m2m relationship between catalogue.Product and
+    catalogue.ProductAttribute.  This specifies the value of the attribute for
+    a particular product
 
     For example: number_of_pages = 295
     """
@@ -795,6 +807,7 @@ class AbstractProductAttributeValue(models.Model):
     product = models.ForeignKey(
         'catalogue.Product', related_name='attribute_values',
         verbose_name=_("Product"))
+
     value_text = models.TextField(_('Text'), blank=True, null=True)
     value_integer = models.IntegerField(_('Integer'), blank=True, null=True)
     value_boolean = models.NullBooleanField(_('Boolean'), blank=True)
@@ -812,6 +825,7 @@ class AbstractProductAttributeValue(models.Model):
         blank=True, null=True)
     value_entity = GenericForeignKey(
         'entity_content_type', 'entity_object_id')
+
     entity_content_type = models.ForeignKey(
         ContentType, null=True, blank=True, editable=False)
     entity_object_id = models.PositiveIntegerField(
@@ -821,7 +835,7 @@ class AbstractProductAttributeValue(models.Model):
         return getattr(self, 'value_%s' % self.attribute.type)
 
     def _set_value(self, new_value):
-        if self.attribute.type == 'option' and isinstance(new_value, str):
+        if self.attribute.is_option and isinstance(new_value, str):
             # Need to look up instance of AttributeOption
             new_value = self.attribute.option_group.options.get(
                 option=new_value)
@@ -872,8 +886,7 @@ class AbstractProductAttributeValue(models.Model):
         """
         Returns a HTML representation of the attribute's value. To customise
         e.g. image attribute values, declare a _image_as_html property and
-        return e.g. an <img> tag.
-        Defaults to the _as_text representation.
+        return e.g. an <img> tag.  Defaults to the _as_text representation.
         """
         property_name = '_%s_as_html' % self.attribute.type
         return getattr(self, property_name, self.value_as_text)
