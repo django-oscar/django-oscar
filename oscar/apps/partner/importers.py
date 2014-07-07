@@ -210,7 +210,7 @@ class DemoSiteImporter(object):
 
         product.save()
 
-        # Save a reference to last group product
+        # Save a reference to last parent product
         if is_parent:
             self.parent = product
 

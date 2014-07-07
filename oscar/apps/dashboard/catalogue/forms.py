@@ -277,7 +277,7 @@ class ProductForm(forms.ModelForm):
         self.instance.product_class = product_class
 
         # This is quite nasty.  We use the raw posted data to determine if the
-        # product is a group product, as this changes the validation rules we
+        # product is a parent product, as this changes the validation rules we
         # want to apply.
         is_parent = data and data.get('structure', '') == 'parent'
         self.add_attribute_fields(is_parent)

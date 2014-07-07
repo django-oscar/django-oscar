@@ -137,7 +137,7 @@ class AddToBasketForm(forms.Form):
         # Note, the product passed in here isn't necessarily the product being
         # added to the basket. For group products, it is the *parent* product
         # that gets passed to the form. An optional product_id param is passed
-        # to indicate the ID of the variant being added to the basket.
+        # to indicate the ID of the child product being added to the basket.
         self.basket = basket
         self.base_product = product
 
@@ -175,8 +175,8 @@ class AddToBasketForm(forms.Form):
 
             choices.append((child.id, summary))
 
-        self.fields['variant_id'] = forms.ChoiceField(
-            choices=tuple(choices), label=_("Variant"),
+        self.fields['child_id'] = forms.ChoiceField(
+            choices=tuple(choices), label=_("Child product"),
             widget=widgets.AdvancedSelect(disabled_values=disabled_values))
 
     def _create_product_fields(self, product):
@@ -198,19 +198,19 @@ class AddToBasketForm(forms.Form):
 
     # Cleaning
 
-    def clean_variant_id(self):
+    def clean_child_id(self):
         try:
-            variant = self.base_product.children.get(
-                id=self.cleaned_data['variant_id'])
+            child = self.base_product.children.get(
+                id=self.cleaned_data['child_id'])
         except Product.DoesNotExist:
             raise forms.ValidationError(
                 _("Please select a valid product"))
 
         # To avoid duplicate SQL queries, we cache a copy of the loaded child
         # product as we're going to need it later.
-        self.variant = variant
+        self.child_product = child
 
-        return self.cleaned_data['variant_id']
+        return self.cleaned_data['child_id']
 
     def clean_quantity(self):
         # Check that the proposed new line quantity is sensible
@@ -233,8 +233,9 @@ class AddToBasketForm(forms.Form):
         """
         The actual product being added to the basket
         """
-        # Note, the variant attribute is saved in the clean_variant_id method
-        return getattr(self, 'variant', self.base_product)
+        # Note, the child product attribute is saved in the clean_child_id
+        # method
+        return getattr(self, 'child_product', self.base_product)
 
     def clean(self):
         info = self.basket.strategy.fetch_for_product(self.product)

@@ -34,7 +34,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         return get_model('catalogue', 'Product')
 
     def index_queryset(self, using=None):
-        # Only index browsable products (not each individual variant)
+        # Only index browsable products (not each individual child product)
         return self.get_model().browsable.order_by('-date_updated')
 
     def read_queryset(self, using=None):
@@ -59,7 +59,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_price(self, obj):
         result = None
         if obj.is_parent:
-            result = strategy.fetch_for_group(obj)
+            result = strategy.fetch_for_parent(obj)
         elif obj.has_stockrecords:
             result = strategy.fetch_for_product(obj)
 
@@ -71,7 +71,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_num_in_stock(self, obj):
         result = None
         if obj.is_parent:
-            # Don't return a stock level for group products
+            # Don't return a stock level for parent products
             return None
         elif obj.has_stockrecords:
             result = strategy.fetch_for_product(obj)

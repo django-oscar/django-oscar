@@ -52,7 +52,7 @@ class TestDefaultStrategyForParentProductWhoseVariantsHaveNoStockRecords(TestCas
 
     def setUp(self):
         self.strategy = strategy.Default()
-        parent = factories.create_product()
+        parent = factories.create_product(structure='parent')
         for x in range(3):
             factories.create_product(parent=parent)
         self.info = self.strategy.fetch_for_parent(parent)
@@ -71,7 +71,7 @@ class TestDefaultStrategyForParentProductWithInStockVariant(TestCase):
 
     def setUp(self):
         self.strategy = strategy.Default()
-        parent = factories.create_product()
+        parent = factories.create_product(structure='parent')
         factories.create_product(parent=parent, price=D('10.00'),
                                  num_in_stock=3)
         for x in range(2):
@@ -92,9 +92,9 @@ class TestDefaultStrategyForParentProductWithOutOfStockVariant(TestCase):
 
     def setUp(self):
         self.strategy = strategy.Default()
-        parent = factories.create_product()
-        factories.create_product(parent=parent, price=D('10.00'),
-                                 num_in_stock=0)
+        parent = factories.create_product(structure='parent')
+        factories.create_product(
+            parent=parent, price=D('10.00'), num_in_stock=0)
         for x in range(2):
             factories.create_product(parent=parent)
         self.info = self.strategy.fetch_for_parent(parent)

@@ -226,8 +226,8 @@ class AbstractProduct(models.Model):
     parent = models.ForeignKey(
         'self', null=True, blank=True, related_name='children',
         verbose_name=_("Parent product"),
-        help_text=_("Only choose a parent product if this is a 'variant' of "
-                    "a product.  For example if this is a size "
+        help_text=_("Only choose a parent product if you're creating a child "
+                    "product.  For example if this is a size "
                     "4 of a particular t-shirt.  Leave blank if this is a "
                     "stand-alone product (i.e. there is only one version of"
                     " this product)."))
@@ -311,18 +311,21 @@ class AbstractProduct(models.Model):
 
     def clean(self):
         if self.is_child:
+            if not self.parent_id:
+                raise ValidationError(_("A child product needs a parent."))
             if self.parent_id and not self.parent.is_parent:
                 raise ValidationError(
                     _("You can only assign child products to parent products.")
                 )
-            if not self.parent_id:
-                raise ValidationError(_("A child product needs a parent."))
         else:  # stand-alone and parent products
             if not self.title:
                 raise ValidationError(_("Your product must have a title."))
             if not self.product_class:
                 raise ValidationError(
                     _("Your product must have a product class."))
+            if self.parent_id:
+                raise ValidationError(
+                    _("Only child products can have a parent."))
 
         if self.is_parent and self.has_stockrecords:
             raise ValidationError(

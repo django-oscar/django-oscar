@@ -68,7 +68,7 @@
             {% if product.is_group %}
                 <h3>{% trans "Please select your varieties" %}</h3>
                 
-                {% with variants=product.variants.all %}
+                {% with variants=product.children.all %}
                     {% if variants|length > 0 %}
                           
                             {% for variant in variants %}

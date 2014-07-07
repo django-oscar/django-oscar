@@ -75,25 +75,33 @@ class VariantProductTests(ProductTests):
     def setUp(self):
         super(VariantProductTests, self).setUp()
         self.parent = Product.objects.create(
-            title="Parent product", product_class=self.product_class)
+            title="Parent product", product_class=self.product_class,
+            structure=Product.PARENT)
 
-    def test_variant_products_dont_need_titles(self):
-        Product.objects.create(parent=self.parent, product_class=self.product_class)
+    def test_child_products_dont_need_titles(self):
+        Product.objects.create(
+            parent=self.parent, product_class=self.product_class,
+            structure=Product.CHILD)
 
-    def test_variant_products_dont_need_a_product_class(self):
-        Product.objects.create(parent=self.parent)
+    def test_child_products_dont_need_a_product_class(self):
+        Product.objects.create(
+            parent=self.parent, structure=Product.CHILD)
 
     def test_variant_products_inherit_parent_titles(self):
-        p = Product.objects.create(parent=self.parent, product_class=self.product_class)
+        p = Product.objects.create(
+            parent=self.parent, product_class=self.product_class,
+            structure=Product.CHILD)
         self.assertEqual("Parent product", p.get_title())
 
     def test_child_products_inherit_product_class(self):
-        p = Product.objects.create(parent=self.parent)
+        p = Product.objects.create(
+            parent=self.parent, structure=Product.CHILD)
         self.assertEqual("Clothing", p.get_product_class().name)
 
     def test_child_products_are_not_part_of_browsable_set(self):
         Product.objects.create(
-            product_class=self.product_class, parent=self.parent)
+            product_class=self.product_class, parent=self.parent,
+            structure=Product.CHILD)
         self.assertEqual(set([self.parent]), set(Product.browsable.all()))
 
 
@@ -104,7 +112,7 @@ class TestAChildProduct(TestCase):
             name='Clothing', requires_shipping=True)
         self.parent = clothing.products.create(
             title="Parent", structure=Product.PARENT)
-        self.child = self.parent.children.create()
+        self.child = self.parent.children.create(structure=Product.CHILD)
 
     def test_delegates_requires_shipping_logic(self):
         self.assertTrue(self.child.is_shipping_required)
