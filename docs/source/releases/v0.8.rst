@@ -224,9 +224,10 @@ The following methods and properties have been deprecated:
 * ``Product.is_variant`` - Use ``is_child`` instead.
 * ``Product.is_top_level`` - Test for ``is_standalone`` and/or ``is_parent`` instead.
 * ``Strategy.fetch_for_group`` - Use ``fetch_for_parent`` instead.
+* ``Strategy.group_[pricing|availability]_policy`` - Use
+  ``parent_[pricing|availability]_policy`` instead.
 * ``Strategy.select_variant_stockrecords`` - Use
   ``select_children_stockrecords`` instead.
-*
 
 Shipping
 ~~~~~~~~

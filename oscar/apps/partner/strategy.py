@@ -128,8 +128,8 @@ class Structured(Base):
         # Select children and associated stockrecords
         children_stock = self.select_children_stockrecords(product)
         return PurchaseInfo(
-            price=self.group_pricing_policy(product, children_stock),
-            availability=self.group_availability_policy(
+            price=self.parent_pricing_policy(product, children_stock),
+            availability=self.parent_availability_policy(
                 product, children_stock),
             stockrecord=None)
 
@@ -163,10 +163,11 @@ class Structured(Base):
             "A structured strategy class must define a "
             "'pricing_policy' method")
 
-    def group_pricing_policy(self, product, children_stock):
+    def parent_pricing_policy(self, product, children_stock):
         raise NotImplementedError(
             "A structured strategy class must define a "
-            "'group_pricing_policy' method")
+            "'parent_pricing_policy' method")
+    group_pricing_policy = deprecated(parent_pricing_policy)
 
     def availability_policy(self, product, stockrecord):
         """
@@ -175,6 +176,12 @@ class Structured(Base):
         raise NotImplementedError(
             "A structured strategy class must define a "
             "'availability_policy' method")
+
+    def parent_availability_policy(self, product, children_stock):
+        raise NotImplementedError(
+            "A structured strategy class must define a "
+            "'parent_availability_policy' method")
+    group_availability_policy = deprecated(parent_availability_policy)
 
 
 # Mixins - these can be used to construct the appropriate strategy class
@@ -212,7 +219,7 @@ class StockRequired(object):
             return availability.StockRequired(
                 stockrecord.net_stock_level)
 
-    def group_availability_policy(self, product, children_stock):
+    def parent_availability_policy(self, product, children_stock):
         # A parent product is available if one of its children is
         for child, stockrecord in children_stock:
             policy = self.availability_policy(product, stockrecord)
@@ -237,7 +244,7 @@ class NoTax(object):
             excl_tax=stockrecord.price_excl_tax,
             tax=D('0.00'))
 
-    def group_pricing_policy(self, product, children_stock):
+    def parent_pricing_policy(self, product, children_stock):
         stockrecords = [x[1] for x in children_stock if x[1] is not None]
         if not stockrecords:
             return prices.Unavailable()
@@ -268,7 +275,7 @@ class FixedRateTax(object):
             excl_tax=stockrecord.price_excl_tax,
             tax=tax)
 
-    def group_pricing_policy(self, product, children_stock):
+    def parent_pricing_policy(self, product, children_stock):
         stockrecords = [x[1] for x in children_stock if x[1] is not None]
         if not stockrecords:
             return prices.Unavailable()
@@ -297,7 +304,7 @@ class DeferredTax(object):
             currency=stockrecord.price_currency,
             excl_tax=stockrecord.price_excl_tax)
 
-    def group_pricing_policy(self, product, children_stock):
+    def parent_pricing_policy(self, product, children_stock):
         stockrecords = [x[1] for x in children_stock if x[1] is not None]
         if not stockrecords:
             return prices.Unavailable()
