@@ -13,6 +13,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.customer.managers import CommunicationTypeManager
 from oscar.core.compat import AUTH_USER_MODEL
+from oscar.core.db import Model
 from oscar.models.fields import AutoSlugField
 
 
@@ -74,9 +75,9 @@ class AbstractUser(auth_models.AbstractBaseUser,
     USERNAME_FIELD = 'email'
 
     class Meta:
+        abstract = True
         verbose_name = _('User')
         verbose_name_plural = _('Users')
-        abstract = True
 
     def get_full_name(self):
         full_name = '%s %s' % (self.first_name, self.last_name)
@@ -104,7 +105,7 @@ class AbstractUser(auth_models.AbstractBaseUser,
         self._migrate_alerts_to_user()
 
 
-class AbstractEmail(models.Model):
+class AbstractEmail(Model):
     """
     This is a record of all emails sent to a customer.
     Normally, we only record order-related emails.
@@ -118,6 +119,7 @@ class AbstractEmail(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'customer'
         verbose_name = _('Email')
         verbose_name_plural = _('Emails')
 
@@ -126,7 +128,7 @@ class AbstractEmail(models.Model):
             'user': self.user.username, 'subject': self.subject}
 
 
-class AbstractCommunicationEventType(models.Model):
+class AbstractCommunicationEventType(Model):
     """
     A 'type' of communication.  Like a order confirmation email.
     """
@@ -180,6 +182,7 @@ class AbstractCommunicationEventType(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'customer'
         verbose_name = _("Communication event type")
         verbose_name_plural = _("Communication event types")
 
@@ -236,7 +239,7 @@ class AbstractCommunicationEventType(models.Model):
         return self.category == self.USER_RELATED
 
 
-class AbstractNotification(models.Model):
+class AbstractNotification(Model):
     recipient = models.ForeignKey(AUTH_USER_MODEL,
                                   related_name='notifications', db_index=True)
 
@@ -262,8 +265,9 @@ class AbstractNotification(models.Model):
     date_read = models.DateTimeField(blank=True, null=True)
 
     class Meta:
-        ordering = ('-date_sent',)
         abstract = True
+        app_label = 'customer'
+        ordering = ('-date_sent',)
 
     def __unicode__(self):
         return self.subject
@@ -278,7 +282,7 @@ class AbstractNotification(models.Model):
         return self.date_read is not None
 
 
-class AbstractProductAlert(models.Model):
+class AbstractProductAlert(Model):
     """
     An alert for when a product comes back in stock
     """
@@ -321,6 +325,7 @@ class AbstractProductAlert(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'customer'
 
     @property
     def is_anonymous(self):

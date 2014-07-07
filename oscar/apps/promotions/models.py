@@ -4,15 +4,16 @@ from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
-from oscar.core.loading import get_model
 
+from oscar.core.db import Model
+from oscar.core.loading import get_model
 from oscar.models.fields import ExtendedURLField
 
 
 # Linking models - these link promotions to content (eg pages, or keywords)
 
 
-class LinkedPromotion(models.Model):
+class LinkedPromotion(Model):
 
     # We use generic foreign key to link to a promotion model
     content_type = models.ForeignKey(ContentType)
@@ -27,6 +28,7 @@ class LinkedPromotion(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'promotions'
         ordering = ['-clicks']
         verbose_name = _("Linked Promotion")
         verbose_name_plural = _("Linked Promotions")
@@ -52,6 +54,7 @@ class PagePromotion(LinkedPromotion):
                        kwargs={'page_promotion_id': self.id})
 
     class Meta:
+        app_label = 'promotions'
         verbose_name = _("Page Promotion")
         verbose_name_plural = _("Page Promotions")
 
@@ -75,13 +78,14 @@ class KeywordPromotion(LinkedPromotion):
                        kwargs={'keyword_promotion_id': self.id})
 
     class Meta:
+        app_label = 'promotions'
         verbose_name = _("Keyword Promotion")
         verbose_name_plural = _("Keyword Promotions")
 
     # Different model types for each type of promotion
 
 
-class AbstractPromotion(models.Model):
+class AbstractPromotion(Model):
     """
     Abstract base promotion that defines the interface
     that subclasses must implement.
@@ -93,6 +97,7 @@ class AbstractPromotion(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'promotions'
         verbose_name = _("Promotion")
         verbose_name_plural = _("Promotions")
 
@@ -150,6 +155,7 @@ class RawHTML(AbstractPromotion):
     date_created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        app_label = 'promotions'
         verbose_name = _('Raw HTML')
         verbose_name_plural = _('Raw HTML')
 
@@ -178,6 +184,7 @@ class Image(AbstractPromotion):
         return self.name
 
     class Meta:
+        app_label = 'promotions'
         verbose_name = _("Image")
         verbose_name_plural = _("Image")
 
@@ -201,6 +208,7 @@ class MultiImage(AbstractPromotion):
         return self.name
 
     class Meta:
+        app_label = 'promotions'
         verbose_name = _("Multi Image")
         verbose_name_plural = _("Multi Images")
 
@@ -219,6 +227,7 @@ class SingleProduct(AbstractPromotion):
         return {'product': self.product}
 
     class Meta:
+        app_label = 'promotions'
         verbose_name = _("Single Product")
         verbose_name_plural = _("Single Product")
 
@@ -238,6 +247,7 @@ class AbstractProductList(AbstractPromotion):
 
     class Meta:
         abstract = True
+        app_label = 'promotions'
         verbose_name = _("Product List")
         verbose_name_plural = _("Product Lists")
 
@@ -266,11 +276,12 @@ class HandPickedProductList(AbstractProductList):
         return self.get_queryset()
 
     class Meta:
+        app_label = 'promotions'
         verbose_name = _("Hand Picked Product List")
         verbose_name_plural = _("Hand Picked Product Lists")
 
 
-class OrderedProduct(models.Model):
+class OrderedProduct(Model):
 
     list = models.ForeignKey('promotions.HandPickedProductList',
                              verbose_name=_("List"))
@@ -278,10 +289,11 @@ class OrderedProduct(models.Model):
     display_order = models.PositiveIntegerField(_('Display Order'), default=0)
 
     class Meta:
+        app_label = 'promotions'
         ordering = ('display_order',)
+        unique_together = ('list', 'product')
         verbose_name = _("Ordered Product")
         verbose_name_plural = _("Ordered Product")
-        unique_together = ('list', 'product')
 
 
 class AutomaticProductList(AbstractProductList):
@@ -308,6 +320,7 @@ class AutomaticProductList(AbstractProductList):
         return self.get_queryset()[:self.num_products]
 
     class Meta:
+        app_label = 'promotions'
         verbose_name = _("Automatic Product List")
         verbose_name_plural = _("Automatic Product Lists")
 
@@ -319,6 +332,7 @@ class OrderedProductList(HandPickedProductList):
     display_order = models.PositiveIntegerField(_('Display Order'), default=0)
 
     class Meta:
+        app_label = 'promotions'
         ordering = ('display_order',)
         verbose_name = _("Ordered Product List")
         verbose_name_plural = _("Ordered Product Lists")
@@ -332,5 +346,6 @@ class TabbedBlock(AbstractPromotion):
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     class Meta:
+        app_label = 'promotions'
         verbose_name = _("Tabbed Block")
         verbose_name_plural = _("Tabbed Blocks")

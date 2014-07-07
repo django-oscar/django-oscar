@@ -1,3 +1,5 @@
+import django
+
 from oscar.apps.address.abstract_models import AbstractPartnerAddress
 from oscar.apps.partner.abstract_models import (
     AbstractPartner, AbstractStockRecord, AbstractStockAlert)
@@ -19,4 +21,7 @@ class StockAlert(AbstractStockAlert):
     pass
 
 
-from oscar.apps.partner.receivers import *  # noqa
+if django.VERSION < (1, 7):
+    from oscar.apps.partner import receivers
+
+    receivers.register()

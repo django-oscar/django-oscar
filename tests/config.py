@@ -13,7 +13,8 @@ def configure():
         location = lambda x: os.path.join(
             os.path.dirname(os.path.realpath(__file__)), x)
 
-        test_settings = {
+        test_settings = OSCAR_SETTINGS.copy()
+        test_settings.update({
             'DATABASES': {
                 'default': {
                     'ENGINE': 'django.db.backends.sqlite3',
@@ -28,7 +29,6 @@ def configure():
                 'django.contrib.sites',
                 'django.contrib.flatpages',
                 'django.contrib.staticfiles',
-                'sorl.thumbnail',
                 'compressor',
                 'tests._site.model_tests_app',  # contains models we need for testing
 
@@ -37,7 +37,8 @@ def configure():
                 # global change.
             ] + oscar.get_core_apps([
                 'tests._site.apps.partner',
-                'tests._site.apps.customer']),
+                'tests._site.apps.customer'
+            ]),
             'TEMPLATE_CONTEXT_PROCESSORS': (
                 "django.contrib.auth.context_processors.auth",
                 "django.core.context_processors.request",
@@ -58,7 +59,12 @@ def configure():
             ),
             'TEMPLATE_LOADERS': (('django.template.loaders.cached.Loader',
                                      global_settings.TEMPLATE_LOADERS),),
-            'MIDDLEWARE_CLASSES': global_settings.MIDDLEWARE_CLASSES + (
+            'MIDDLEWARE_CLASSES': (
+                'django.middleware.common.CommonMiddleware',
+                'django.contrib.sessions.middleware.SessionMiddleware',
+                'django.middleware.csrf.CsrfViewMiddleware',
+                'django.contrib.auth.middleware.AuthenticationMiddleware',
+                'django.contrib.messages.middleware.MessageMiddleware',
                 'oscar.apps.basket.middleware.BasketMiddleware',
             ),
             'AUTHENTICATION_BACKENDS': (
@@ -92,10 +98,10 @@ def configure():
             'OSCAR_ORDER_STATUS_PIPELINE': {'A': ('B',), 'B': ()},
             'OSCAR_INITIAL_LINE_STATUS': 'a',
             'OSCAR_LINE_STATUS_PIPELINE': {'a': ('b', ), 'b': ()},
-        }
+
+        })
         if django.VERSION >= (1, 5):
             test_settings['INSTALLED_APPS'] += ['tests._site.myauth', ]
             test_settings['AUTH_USER_MODEL'] = 'myauth.User'
-        test_settings.update(OSCAR_SETTINGS)
 
         settings.configure(**test_settings)

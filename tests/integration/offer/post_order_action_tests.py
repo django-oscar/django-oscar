@@ -12,6 +12,7 @@ from oscar.test.basket import add_product
 class CustomAction(models.Benefit):
 
     class Meta:
+        app_label = 'offer'
         proxy = True
 
     def apply(self, basket, condition, offer):

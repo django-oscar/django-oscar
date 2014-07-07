@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from django.conf import settings
 
 if settings.OSCAR_DELETE_IMAGE_FILES:
@@ -29,7 +27,6 @@ if settings.OSCAR_DELETE_IMAGE_FILES:
                     thumbnail.delete(fieldfile)
                 except ThumbnailError:
                     pass
-
 
     # connect for all models with ImageFields - add as needed
     models_with_images = [ProductImage, Category]

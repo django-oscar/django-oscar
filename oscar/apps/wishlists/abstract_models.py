@@ -7,9 +7,10 @@ from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.core.urlresolvers import reverse
 
 from oscar.core.compat import AUTH_USER_MODEL
+from oscar.core.db import Model
 
 
-class AbstractWishList(models.Model):
+class AbstractWishList(Model):
     """
     Represents a user's wish lists of products.
 
@@ -78,9 +79,10 @@ class AbstractWishList(models.Model):
         return user == self.owner
 
     class Meta:
+        abstract = True
+        app_label = 'wishlists'
         ordering = ('owner', 'date_created', )
         verbose_name = _('Wish List')
-        abstract = True
 
     def get_absolute_url(self):
         return reverse('customer:wishlists-detail', kwargs={
@@ -100,7 +102,7 @@ class AbstractWishList(models.Model):
             line.save()
 
 
-class AbstractLine(models.Model):
+class AbstractLine(Model):
     """
     One entry in a wish list. Similar to order lines or basket lines.
     """
@@ -127,5 +129,6 @@ class AbstractLine(models.Model):
 
     class Meta:
         abstract = True
-        verbose_name = _('Wish list line')
+        app_label = 'wishlists'
         unique_together = (('wishlist', 'product'), )
+        verbose_name = _('Wish list line')

@@ -6,12 +6,13 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.validators import MinValueValidator
 
 from oscar.core import prices, loading
+from oscar.core.db import Model
 from oscar.models.fields import AutoSlugField
 
 Scale = loading.get_class('shipping.scales', 'Scale')
 
 
-class AbstractBase(models.Model):
+class AbstractBase(Model):
     """
     Implements the interface declared by shipping.base.Base
     """
@@ -26,9 +27,10 @@ class AbstractBase(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'shipping'
+        ordering = ['name']
         verbose_name = _("Shipping Method")
         verbose_name_plural = _("Shipping Methods")
-        ordering = ['name']
 
     def __unicode__(self):
         return self.name
@@ -60,6 +62,7 @@ class AbstractOrderAndItemCharges(AbstractBase):
 
     class Meta(AbstractBase.Meta):
         abstract = True
+        app_label = 'shipping'
         verbose_name = _("Order and Item Charge")
         verbose_name_plural = _("Order and Item Charges")
 
@@ -97,6 +100,7 @@ class AbstractWeightBased(AbstractBase):
 
     class Meta(AbstractBase.Meta):
         abstract = True
+        app_label = 'shipping'
         verbose_name = _("Weight-based Shipping Method")
         verbose_name_plural = _("Weight-based Shipping Methods")
 
@@ -168,7 +172,7 @@ class AbstractWeightBased(AbstractBase):
             return None
 
 
-class AbstractWeightBand(models.Model):
+class AbstractWeightBand(Model):
     """
     Represents a weight band which are used by the WeightBasedShipping method.
     """
@@ -197,6 +201,7 @@ class AbstractWeightBand(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'shipping'
         ordering = ['method', 'upper_limit']
         verbose_name = _("Weight Band")
         verbose_name_plural = _("Weight Bands")

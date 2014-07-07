@@ -63,7 +63,7 @@ if __name__ == '__main__':
             num_cores = multiprocessing.cpu_count()
         except NotImplementedError:
             num_cores = 4  # Guess
-        args = ['--nocapture', '--stop', '--processes=%s' % num_cores]
+        args = ['--nocapture', '--processes=%s' % num_cores]
     else:
         # Some args/options specified.  Check to see if any nose options have
         # been specified.  If they have, then don't set any
@@ -72,7 +72,7 @@ if __name__ == '__main__':
             # Default options:
             # --stop Abort on first error/failure
             # --nocapture Don't capture STDOUT
-            args.extend(['--nocapture', '--stop'])
+            args.extend(['--nocapture'])
         else:
             # Remove options as nose will pick these up from sys.argv
             for arg in args:
@@ -82,6 +82,8 @@ if __name__ == '__main__':
 
     configure()
     with warnings.catch_warnings():
+        from django.utils.deprecation import RemovedInDjango18Warning
+
         # The warnings module in default configuration will never cause tests
         # to fail, as it never raises an exception.  We alter that behaviour by
         # turning DeprecationWarnings into exceptions, but exclude warnings
@@ -89,6 +91,7 @@ if __name__ == '__main__':
         # safe. Behaviour with multiple threads is undefined.
         warnings.filterwarnings('error', category=DeprecationWarning)
         warnings.filterwarnings('error', category=RuntimeWarning)
+        warnings.filterwarnings('ignore', category=RemovedInDjango18Warning)
         libs = r'(sorl\.thumbnail.*|bs4.*|webtest.*)'
         warnings.filterwarnings(
             'ignore', r'.*', DeprecationWarning, libs)

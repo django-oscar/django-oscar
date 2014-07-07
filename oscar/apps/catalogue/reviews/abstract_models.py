@@ -6,11 +6,12 @@ from django.db.models import Sum, Count
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 
 from oscar.apps.catalogue.reviews.managers import ApprovedReviewsManager
-from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core import validators
+from oscar.core.compat import AUTH_USER_MODEL
+from oscar.core.db import Model
 
 
-class AbstractProductReview(models.Model):
+class AbstractProductReview(Model):
     """
     A review of a product
 
@@ -69,6 +70,7 @@ class AbstractProductReview(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'reviews'
         ordering = ['-delta_votes', 'id']
         unique_together = (('product', 'user'),)
         verbose_name = _('Product review')
@@ -174,7 +176,7 @@ class AbstractProductReview(models.Model):
         return True, ""
 
 
-class AbstractVote(models.Model):
+class AbstractVote(Model):
     """
     Records user ratings as yes/no vote.
 
@@ -193,6 +195,7 @@ class AbstractVote(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'reviews'
         ordering = ['-date_created']
         unique_together = (('user', 'review'),)
         verbose_name = _('Vote')

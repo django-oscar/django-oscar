@@ -12,6 +12,7 @@ User = get_user_model()
 class BasketOwnerCalledBarry(models.Condition):
 
     class Meta:
+        app_label = 'offer'
         proxy = True
 
     def is_satisfied(self, offer, basket):

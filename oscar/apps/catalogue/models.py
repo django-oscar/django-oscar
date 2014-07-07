@@ -1,6 +1,8 @@
 """
 Vanilla product models
 """
+import django
+
 from oscar.apps.catalogue.abstract_models import *  # noqa
 
 
@@ -47,5 +49,5 @@ class Option(AbstractOption):
 class ProductImage(AbstractProductImage):
     pass
 
-
-from .receivers import *  # noqa
+if django.VERSION < (1, 7):
+    from .receivers import *  # noqa

@@ -1,4 +1,4 @@
-from . import abstract_models
+from oscar.apps.payment import abstract_models
 
 
 class Transaction(abstract_models.AbstractTransaction):

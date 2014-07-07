@@ -1,14 +1,17 @@
 from os.path import dirname
+from unittest import skipUnless
+
+import django
 from django.test import TestCase
 from django.conf import settings
-from oscar.core.loading import get_model
 from django.test.utils import override_settings
 
 import oscar
-from tests import temporary_python_path
+from oscar.core.loading import get_model
 from oscar.core.loading import (
     AppNotFoundError,
     get_classes, get_class, ClassNotFoundError)
+from tests import temporary_python_path
 
 
 class TestClassLoading(TestCase):
@@ -37,6 +40,7 @@ class TestClassLoading(TestCase):
         with self.assertRaises(ClassNotFoundError):
             get_class('catalogue.models', 'Monkey')
 
+    @skipUnless(django.VERSION < (1, 7), "Django < 1.7")
     def test_raise_importerror_if_app_raises_importerror(self):
         installed_apps = list(settings.INSTALLED_APPS)
         installed_apps.insert(0, 'tests._site.import_error_app.catalogue')
@@ -118,6 +122,7 @@ class TestGetCoreAppsFunction(TestCase):
         self.assertTrue('apps.shipping' in apps)
         self.assertTrue('oscar.apps.shipping' not in apps)
 
+    @skipUnless(django.VERSION < (1, 7), "< Django 1.7")
     def test_uses_dashboard_override_when_specified(self):
         apps = oscar.get_core_apps(overrides=['apps.dashboard.catalogue'])
         self.assertTrue('apps.dashboard.catalogue' in apps)

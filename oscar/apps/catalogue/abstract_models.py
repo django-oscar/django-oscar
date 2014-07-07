@@ -18,9 +18,9 @@ from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.utils.functional import cached_property
 from django.contrib.contenttypes.generic import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-
 from treebeard.mp_tree import MP_Node
 
+from oscar.core.db import Model
 from oscar.core.utils import slugify
 from oscar.core.loading import get_classes, get_model
 from oscar.models.fields import NullCharField, AutoSlugField
@@ -29,7 +29,7 @@ ProductManager, BrowsableProductManager = get_classes(
     'catalogue.managers', ['ProductManager', 'BrowsableProductManager'])
 
 
-class AbstractProductClass(models.Model):
+class AbstractProductClass(Model):
     """
     Used for defining options and attributes for a subset of products.
     E.g. Books, DVDs and Toys. A product can only belong to one product class.
@@ -60,6 +60,7 @@ class AbstractProductClass(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         ordering = ['name']
         verbose_name = _("Product Class")
         verbose_name_plural = _("Product Classes")
@@ -161,6 +162,7 @@ class AbstractCategory(MP_Node):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         ordering = ['full_name']
         verbose_name = _('Category')
         verbose_name_plural = _('Categories')
@@ -172,7 +174,7 @@ class AbstractCategory(MP_Node):
         return self.get_children().count()
 
 
-class AbstractProductCategory(models.Model):
+class AbstractProductCategory(Model):
     """
     Joining model between products and categories. Exists to allow customising.
     """
@@ -182,6 +184,7 @@ class AbstractProductCategory(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         ordering = ['product', 'category']
         verbose_name = _('Product Category')
         verbose_name_plural = _('Product Categories')
@@ -191,7 +194,7 @@ class AbstractProductCategory(models.Model):
         return u"<productcategory for product '%s'>" % self.product
 
 
-class AbstractProduct(models.Model):
+class AbstractProduct(Model):
     """
     The base product object
 
@@ -276,6 +279,7 @@ class AbstractProduct(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         ordering = ['-date_created']
         verbose_name = _('Product')
         verbose_name_plural = _('Products')
@@ -499,7 +503,7 @@ class AbstractProduct(models.Model):
             status=self.reviews.model.APPROVED).count()
 
 
-class AbstractProductRecommendation(models.Model):
+class AbstractProductRecommendation(Model):
     """
     'Through' model for product recommendations
     """
@@ -515,6 +519,7 @@ class AbstractProductRecommendation(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         verbose_name = _('Product Recommendation')
         verbose_name_plural = _('Product Recomendations')
         ordering = ['primary', '-ranking']
@@ -587,7 +592,7 @@ class ProductAttributesContainer(object):
                 attribute.save_value(self.product, value)
 
 
-class AbstractProductAttribute(models.Model):
+class AbstractProductAttribute(Model):
     """
     Defines an attribute for a product class. (For example, number_of_pages for
     a 'book' class)
@@ -626,6 +631,7 @@ class AbstractProductAttribute(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         ordering = ['code']
         verbose_name = _('Product Attribute')
         verbose_name_plural = _('Product Attributes')
@@ -665,7 +671,7 @@ class AbstractProductAttribute(models.Model):
 
     def _validate_entity(self, value):
         # This feels rather naive
-        if not isinstance(value, models.Model):
+        if not isinstance(value, Model):
             raise ValidationError(_("Must be a model instance"))
 
     def _validate_option(self, value):
@@ -728,7 +734,7 @@ class AbstractProductAttribute(models.Model):
                 value_obj.save()
 
 
-class AbstractProductAttributeValue(models.Model):
+class AbstractProductAttributeValue(Model):
     """
     The "through" model for the m2m relationship between catalogue.Product
     and catalogue.ProductAttribute.
@@ -777,6 +783,7 @@ class AbstractProductAttributeValue(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         verbose_name = _('Product Attribute Value')
         verbose_name_plural = _('Product Attribute Values')
         unique_together = ('attribute', 'product')
@@ -829,7 +836,7 @@ class AbstractProductAttributeValue(models.Model):
         return mark_safe(self.value)
 
 
-class AbstractAttributeOptionGroup(models.Model):
+class AbstractAttributeOptionGroup(Model):
     """
     Defines a group of options that collectively may be used as an
     attribute type
@@ -843,6 +850,7 @@ class AbstractAttributeOptionGroup(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         verbose_name = _('Attribute Option Group')
         verbose_name_plural = _('Attribute Option Groups')
 
@@ -852,7 +860,7 @@ class AbstractAttributeOptionGroup(models.Model):
         return ", ".join(options)
 
 
-class AbstractAttributeOption(models.Model):
+class AbstractAttributeOption(Model):
     """
     Provides an option within an option group for an attribute type
     Examples: In a Language group, English, Greek, French
@@ -867,11 +875,12 @@ class AbstractAttributeOption(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         verbose_name = _('Attribute Option')
         verbose_name_plural = _('Attribute Options')
 
 
-class AbstractOption(models.Model):
+class AbstractOption(Model):
     """
     An option that can be selected for a particular item when the product
     is added to the basket.
@@ -897,6 +906,7 @@ class AbstractOption(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         verbose_name = _("Option")
         verbose_name_plural = _("Options")
 
@@ -946,7 +956,7 @@ class MissingProductImage(object):
                                            settings.MEDIA_ROOT))
 
 
-class AbstractProductImage(models.Model):
+class AbstractProductImage(Model):
     """
     An image of a product
     """
@@ -965,6 +975,7 @@ class AbstractProductImage(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         unique_together = ("product", "display_order")
         # Any custom models should ensure that this ordering is unchanged, or
         # your query count will explode. See AbstractProduct.primary_image.
