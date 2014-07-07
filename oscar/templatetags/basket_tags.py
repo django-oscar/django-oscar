@@ -18,7 +18,7 @@ def basket_form(request, product, quantity_type='single'):
         return ''
 
     initial = {}
-    if not product.is_group:
+    if not product.is_parent:
         initial['product_id'] = product.id
 
     form_class = AddToBasketForm

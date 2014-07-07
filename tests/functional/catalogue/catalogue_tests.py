@@ -20,21 +20,22 @@ class TestProductDetailView(WebTestCase):
         self.assertEqual(http_client.MOVED_PERMANENTLY, response.status_code)
         self.assertTrue(p.get_absolute_url() in response.location)
 
-    def test_variant_to_parent_redirect(self):
-        parent_product = create_product()
+    def test_child_to_parent_redirect(self):
+        parent_product = create_product(structure='parent')
         kwargs = {'product_slug': parent_product.slug,
                   'pk': parent_product.id}
         parent_product_url = reverse('catalogue:detail', kwargs=kwargs)
 
-        variant = create_product(title="Variant 1", parent=parent_product)
-        kwargs = {'product_slug': variant.slug,
-                  'pk': variant.id}
-        variant_url = reverse('catalogue:detail', kwargs=kwargs)
+        child = create_product(
+            title="Variant 1", structure='child', parent=parent_product)
+        kwargs = {'product_slug': child.slug,
+                  'pk': child.id}
+        child_url = reverse('catalogue:detail', kwargs=kwargs)
 
         response = self.app.get(parent_product_url)
         self.assertEqual(http_client.OK, response.status_code)
 
-        response = self.app.get(variant_url)
+        response = self.app.get(child_url)
         self.assertEqual(http_client.MOVED_PERMANENTLY, response.status_code)
 
 

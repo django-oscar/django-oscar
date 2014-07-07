@@ -1,5 +1,6 @@
 from django.core.urlresolvers import reverse
 from django_dynamic_fixture import G
+from oscar.test import factories
 
 from oscar.test.testcases import WebTestCase
 from oscar.core.compat import get_user_model
@@ -48,12 +49,12 @@ class TestGatewayPage(ProductWebTest):
         self.assertRedirects(response, expected_url)
 
 
-class TestCreateGroupProduct(ProductWebTest):
+class TestCreateParentProduct(ProductWebTest):
     is_staff = True
 
     def setUp(self):
         self.pclass = G(ProductClass, slug='books')
-        super(TestCreateGroupProduct, self).setUp()
+        super(TestCreateParentProduct, self).setUp()
 
     def submit(self, title=None, category=None, upc=None):
         url = reverse('dashboard:catalogue-product-create',
@@ -63,6 +64,7 @@ class TestCreateGroupProduct(ProductWebTest):
 
         product_form['title'] = title
         product_form['upc'] = upc
+        product_form['structure'] = 'parent'
 
         if category:
             product_form['productcategory_set-0-category'] = category.id
@@ -72,13 +74,13 @@ class TestCreateGroupProduct(ProductWebTest):
     def test_title_is_required(self):
         response = self.submit(title='')
 
-        self.assertContains(response, "Canonical products must have a title")
+        self.assertContains(response, "must have a title")
         self.assertEqual(Product.objects.count(), 0)
 
     def test_requires_a_category(self):
         response = self.submit(title="Nice T-Shirt")
         self.assertContains(response,
-            "A top-level product must have at least one category")
+            "must have at least one category")
         self.assertEqual(Product.objects.count(), 0)
 
     def test_for_smoke(self):
@@ -107,7 +109,7 @@ class TestCreateChildProduct(ProductWebTest):
 
     def setUp(self):
         self.pclass = G(ProductClass, slug='books')
-        self.parent = G(Product, parent=None)
+        self.parent = G(Product, structure='parent')
         super(TestCreateChildProduct, self).setUp()
 
     def test_categories_are_not_required(self):
@@ -116,36 +118,32 @@ class TestCreateChildProduct(ProductWebTest):
         page = self.get(url)
 
         product_form = page.form
-        product_form['title'] = 'Nice T-Shirt'
+        product_form['structure'] = 'child'
+        product_form['title'] = expected_title = 'Nice T-Shirt'
         product_form['parent'] = str(self.parent.id)
-        page = product_form.submit()
+        product_form.submit()
 
         try:
-            product = Product.objects.get(title='Nice T-Shirt')
+            product = Product.objects.get(title=expected_title)
         except Product.DoesNotExist:
-            self.fail('creating a child product did not work: %s' % page.body)
+            self.fail('creating a child product did not work')
 
         self.assertEqual(product.parent, self.parent)
 
 
 class TestProductUpdate(ProductWebTest):
-    def test_product_update_form(self):
-        self.product = G(Product)
 
+    def test_product_update_form(self):
+        self.product = factories.ProductFactory()
         url = reverse('dashboard:catalogue-product',
                       kwargs={'pk': self.product.id})
 
-        a, b = [G(Product, title='a', parent=None),
-                G(Product, title='b', parent=None)]
-
         page = self.get(url)
-
         product_form = page.form
-        product_form['title'] = 'Nice T-Shirt'
-
+        product_form['title'] = expected_title = 'Nice T-Shirt'
         page = product_form.submit()
 
         product = Product.objects.get(id=self.product.id)
 
         self.assertEqual(page.context['product'], self.product)
-        self.assertEqual(product.title, 'Nice T-Shirt')
+        self.assertEqual(product.title, expected_title)

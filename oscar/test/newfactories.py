@@ -26,7 +26,8 @@ __all__ = ["UserFactory", "CountryFactory", "UserAddressFactory",
            "BasketFactory", "VoucherFactory", "ProductFactory",
            "StockRecordFactory", "ProductAttributeFactory",
            "ProductAttributeValueFactory", "AttributeOptionGroupFactory",
-           "AttributeOptionFactory", "PartnerFactory"]
+           "AttributeOptionFactory", "PartnerFactory",
+           "ProductCategoryFactory", "CategoryFactory"]
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -104,14 +105,32 @@ class ProductClassFactory(factory.DjangoModelFactory):
     track_stock = True
 
 
+class CategoryFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = catalogue_models.Category
+
+    name = factory.Sequence(lambda n: 'Category %d' % n)
+
+    # Very naive handling of treebeard node fields. Works though!
+    depth = 0
+    path = factory.Sequence(lambda n: '%04d' % n)
+
+
+class ProductCategoryFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = catalogue_models.ProductCategory
+
+    category = factory.SubFactory(CategoryFactory)
+
+
 class ProductFactory(factory.DjangoModelFactory):
     FACTORY_FOR = catalogue_models.Product
 
+    structure = catalogue_models.Product.STANDALONE
     upc = factory.Sequence(lambda n: '978080213020%d' % n)
     title = "A confederacy of dunces"
     product_class = factory.SubFactory(ProductClassFactory)
 
     stockrecords = factory.RelatedFactory(StockRecordFactory, 'product')
+    categories = factory.RelatedFactory(ProductCategoryFactory, 'product')
 
 
 class ProductAttributeFactory(factory.DjangoModelFactory):

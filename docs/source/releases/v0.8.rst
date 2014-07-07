@@ -61,6 +61,25 @@ Customisation just got easier!
 * The documentation around :doc:`/topics/customisation` has been given an
   overhaul to incorporate the changes.
 
+Explicit differentiation of child, parent and stand-alone products
+------------------------------------------------------------------
+
+In some edge cases, it was difficult to decide whether e.g. a product is a
+parent product (previously known as group product) without children or a
+stand-alone product (which never has children). To make that distinction
+easier, a ``structure`` field has been introduced on the ``AbstractProduct``
+class. In that process, naming for the three different product structures
+has been altered to be:
+
+    - A stand alone product. Regular product that lives by itself.
+    - A child product. All child products have a parent product. They're a
+      specific version of the parent. Previously known as product variant.
+    - A parent product. It essentially represents a set of products.
+      Previously also known as group product.
+
+Some properties and method names have also been updated to the new naming. The
+old ones will throw a deprecation warning.
+
 Reworked shipping app
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -142,7 +161,10 @@ Cleanup around shipping methods
 
 * ``WeightBand.upper_limit`` is now a ``DecimalField``, just like the other
   weight-related fields.
-
+    - Stand-alone product: Products that "stand by themselves", neither have
+      parent nor children.
+    - Parent product: An overarching product, previously known as group product.
+    - Child products: Products related to a common parent product
 .. _minor_changes_in_0.8:
 
 Minor changes
@@ -182,6 +204,30 @@ Backwards incompatible changes in 0.8
 -------------------------------------
 
 .. _incompatible_shipping_changes_in_0.8:
+
+Product structure
+~~~~~~~~~~~~~~~~~
+
+Generally, backwards compatibility has been preserved. Two changes are
+unavoidable:
+
+* You now need to explicitly set product structure when creating a product;
+  the default is a stand-alone product.
+* The related_name for child products was altered from ``variants`` to
+  ``children``. A ``variants`` property has been provided (and will throw a
+  deprecation warning), but if you used the old related name in a query lookup
+  (e.g. ``products.filter(variants__title='foo')``, you will have to change it
+  to ``children``.
+
+The following methods and properties have been deprecated:
+* ``Product.is_parent`` - Use ``is_group`` instead.
+* ``Product.is_variant`` - Use ``is_child`` instead.
+* ``Product.is_top_level`` - Test for ``is_standalone`` and/or ``is_parent`` instead.
+* ``Strategy.fetch_for_group`` - Use ``fetch_for_parent`` instead.
+* ``Strategy.group_[pricing|availability]_policy`` - Use
+  ``parent_[pricing|availability]_policy`` instead.
+* ``Strategy.select_variant_stockrecords`` - Use
+  ``select_children_stockrecords`` instead.
 
 Shipping
 ~~~~~~~~
@@ -391,6 +437,12 @@ Basket app changes
 Migrations
 ~~~~~~~~~~
 
+.. warning::
+
+    The catalogue app has a data migration to determine the product structure.
+    Please double-check it's outcome and make sure to do something similar
+    if you have forked the catalogue app.
+
 * Address:
 
     - ``0011`` - ``AbstractAddress.search_text`` turned into a ``TextField``.
@@ -403,6 +455,7 @@ Migrations
     - ``0023`` - Drop ``Product.related_products``.
     - ``0024`` - Change ``ProductAttributeValue.value_text`` to a ``TextField``
       and do entity attribute changes and model deletions.
+    - ``0025`` & ``0026`` - Schema & data migration to determine and save Product structure.
 
 * Order:
 

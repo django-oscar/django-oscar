@@ -28,7 +28,7 @@ maintenance much easier.
 Features:
 
 * Any product type can be handled including downloadable products,
-  subscriptions, variant products (e.g., a T-shirt in different sizes and colours).
+  subscriptions, child products (e.g., a T-shirt in different sizes and colours).
 
 * Customisable products, such as T-shirts with personalised messages.
 

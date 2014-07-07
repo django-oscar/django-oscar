@@ -73,11 +73,12 @@ def create_product(upc=None, title=u"Dùｍϻϒ title",
     product = product_class.products.model(
         product_class=product_class,
         title=title, upc=upc, **kwargs)
+    if kwargs.get('parent') and not 'structure' in kwargs:
+        product.structure = 'child'
     if attributes:
         for code, value in attributes.items():
             # Ensure product attribute exists
-            product_class.attributes.get_or_create(
-                name=code, code=code)
+            product_class.attributes.get_or_create(name=code, code=code)
             setattr(product.attr, code, value)
     product.save()
 
