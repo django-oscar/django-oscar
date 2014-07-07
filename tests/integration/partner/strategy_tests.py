@@ -3,6 +3,7 @@ from decimal import Decimal as D
 
 from oscar.apps.partner import strategy
 from oscar.apps.catalogue import models
+from oscar.apps.partner import prices
 from oscar.test import factories
 from oscar.apps.basket.models import Line
 
@@ -16,14 +17,15 @@ class TestDefaultStrategy(TestCase):
         product = factories.create_product()
         info = self.strategy.fetch_for_product(product)
         self.assertFalse(info.availability.is_available_to_buy)
-        self.assertIsNone(info.price.incl_tax)
+        self.assertIsNone(info.price.get_unit_price().excl_tax)
 
     def test_one_stockrecord(self):
-        product = factories.create_product(price=D('1.99'), num_in_stock=4)
+        price = D('1.99')
+        product = factories.create_product(price=price, num_in_stock=4)
         info = self.strategy.fetch_for_product(product)
         self.assertTrue(info.availability.is_available_to_buy)
-        self.assertEqual(D('1.99'), info.price.excl_tax)
-        self.assertEqual(D('1.99'), info.price.incl_tax)
+        self.assertEqual(price, info.price.get_unit_price().excl_tax)
+        self.assertEqual(price, info.price.get_unit_price().incl_tax)
 
     def test_product_which_doesnt_track_stock(self):
         product_class = models.ProductClass.objects.create(
@@ -39,7 +41,7 @@ class TestDefaultStrategy(TestCase):
         line = Line(product=product)
         info = self.strategy.fetch_for_line(line)
         self.assertFalse(info.availability.is_available_to_buy)
-        self.assertIsNone(info.price.incl_tax)
+        self.assertIsNone(info.price.get_unit_price().excl_tax)
 
     def test_free_product_is_available_to_buy(self):
         product = factories.create_product(price=D('0'), num_in_stock=1)
@@ -85,7 +87,7 @@ class TestDefaultStrategyForParentProductWithInStockVariant(TestCase):
         self.assertEqual('available', self.info.availability.code)
 
     def test_specifies_product_has_correct_price(self):
-        self.assertEqual(D('10.00'), self.info.price.incl_tax)
+        self.assertEqual(D('10.00'), self.info.price.get_unit_price().excl_tax)
 
 
 class TestDefaultStrategyForParentProductWithOutOfStockVariant(TestCase):
@@ -106,4 +108,43 @@ class TestDefaultStrategyForParentProductWithOutOfStockVariant(TestCase):
         self.assertEqual('unavailable', self.info.availability.code)
 
     def test_specifies_product_has_correct_price(self):
-        self.assertEqual(D('10.00'), self.info.price.incl_tax)
+        self.assertEqual(D('10.00'), self.info.price.get_unit_price().excl_tax)
+
+
+# Setup for non-linear pricing tests
+
+
+class DiscountingPricingPolicy(prices.FixedPrice):
+
+    def calculate_total(self, quantity):
+        """
+        Gives 10% discount on orders over 10 units
+        """
+        if quantity <= 10:
+            discount = D('0')
+        else:
+            discount = D('0.1')
+        return self._excl_tax * quantity * (D(1) - discount)
+
+
+class DiscountingNoTax(strategy.NoTax):
+
+    price_class = DiscountingPricingPolicy
+
+
+class NonLinearStrategy(
+    strategy.UseFirstStockRecord, strategy.StockRequired,
+    DiscountingNoTax, strategy.Structured):
+    pass
+
+
+class TestNonLinearPricingStrategy(TestCase):
+
+    def test_higher_quantities_are_discounted(self):
+        self.strategy = NonLinearStrategy()
+        price = D('1.99')
+        product = factories.create_product(price=price, num_in_stock=1)
+        info = self.strategy.fetch_for_product(product)
+
+        self.assertEqual(price, info.price.get_unit_price().excl_tax)
+        self.assertNotEqual(price*11, info.price.get_price(11).excl_tax)

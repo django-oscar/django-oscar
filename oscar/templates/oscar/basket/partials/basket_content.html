@@ -195,9 +195,9 @@
                             <div class="span2 align-center">
                                 <p class="price_color">
                                     {% if saved.price.is_tax_known %}
-                                        {{ saved.price.incl_tax|currency:saved.price.currency }}
+                                        {{ saved.price.get_unit_price.incl_tax|currency:saved.price.currency }}
                                     {% else %}
-                                        {{ saved.price.excl_tax|currency:saved.price.currency }}
+                                        {{ saved.price.get_unit_price.excl_tax|currency:saved.price.currency }}
                                     {% endif %}
                                 </p>
                             </div>

@@ -107,9 +107,11 @@ class AbstractStockRecord(models.Model):
         _("Price (excl. tax)"), decimal_places=2, max_digits=12,
         blank=True, null=True)
 
-    #: Retail price for this item.  This is simply the recommended price from
-    #: the manufacturer.  If this is used, it is for display purposes only.
-    #: This prices is the NOT the price charged to the customer.
+    #: Retail price for this item. Not used by Oscar, included for convenience.
+    #: This can be used for the recommended price from the manufacturer, for
+    #: displayed purposes; e.g. "Save $x over the recommended retail price!")
+    #: How and where you use this, and whether tax is included is entirely up
+    #: to you.
     price_retail = models.DecimalField(
         _("Price (retail)"), decimal_places=2, max_digits=12,
         blank=True, null=True)

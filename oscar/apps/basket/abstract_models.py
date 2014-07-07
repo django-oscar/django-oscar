@@ -171,7 +171,8 @@ class AbstractBasket(models.Model):
         # Ensure that all lines are the same currency
         price_currency = self.currency
         stock_info = self.strategy.fetch_for_product(product)
-        if price_currency and stock_info.price.currency != price_currency:
+        price = stock_info.price.get_unit_price()
+        if price_currency and price.currency != price_currency:
             raise ValueError((
                 "Basket lines must all have the same currency. Proposed "
                 "line has currency %s, while basket has currency %s")
@@ -191,11 +192,11 @@ class AbstractBasket(models.Model):
         # audit and sometimes caching.
         defaults = {
             'quantity': quantity,
-            'price_excl_tax': stock_info.price.excl_tax,
-            'price_currency': stock_info.price.currency,
+            'price_excl_tax': price.excl_tax,
+            'price_currency': price.currency,
         }
-        if stock_info.price.is_tax_known:
-            defaults['price_incl_tax'] = stock_info.price.incl_tax
+        if price.is_tax_known:
+            defaults['price_incl_tax'] = price.incl_tax
 
         line, created = self.lines.get_or_create(
             line_reference=line_ref,
@@ -721,8 +722,18 @@ class AbstractLine(models.Model):
         return self._info
 
     @property
+    def unit_price(self):
+        return self.purchase_info.price.get_unit_price()
+
+    @property
+    def line_price(self):
+        return self.purchase_info.price.get_price(self.quantity)
+
+    # Most of the properties below should be deprecated at some point
+
+    @property
     def is_tax_known(self):
-        return self.purchase_info.price.is_tax_known
+        return self.unit_price.is_tax_known
 
     @property
     def unit_effective_price(self):
@@ -733,19 +744,19 @@ class AbstractLine(models.Model):
 
     @property
     def unit_price_excl_tax(self):
-        return self.purchase_info.price.excl_tax
+        return self.unit_price.excl_tax
 
     @property
     def unit_price_incl_tax(self):
-        return self.purchase_info.price.incl_tax
+        return self.unit_price.incl_tax
 
     @property
     def unit_tax(self):
-        return self.purchase_info.price.tax
+        return self.unit_price.tax
 
     @property
     def line_price_excl_tax(self):
-        return self.quantity * self.unit_price_excl_tax
+        return self.line_price.excl_tax
 
     @property
     def line_price_excl_tax_incl_discounts(self):
@@ -769,11 +780,11 @@ class AbstractLine(models.Model):
 
     @property
     def line_tax(self):
-        return self.quantity * self.unit_tax
+        return self.line_price.tax
 
     @property
     def line_price_incl_tax(self):
-        return self.quantity * self.unit_price_incl_tax
+        return self.line_price.incl_tax
 
     @property
     def description(self):
@@ -795,20 +806,19 @@ class AbstractLine(models.Model):
             msg = u"'%(product)s' is no longer available"
             return _(msg) % {'product': self.product.get_title()}
 
-        if not self.price_incl_tax:
-            return
-        if not self.purchase_info.price.is_tax_known:
+        if not self.is_tax_known:
             return
 
         # Compare current price to price when added to basket
-        current_price_incl_tax = self.purchase_info.price.incl_tax
-        if current_price_incl_tax != self.price_incl_tax:
+        new_price_incl_tax = self.unit_price.incl_tax
+        old_price_incl_tax = self.price_incl_tax
+        if new_price_incl_tax != old_price_incl_tax:
             product_prices = {
                 'product': self.product.get_title(),
-                'old_price': currency(self.price_incl_tax),
-                'new_price': currency(current_price_incl_tax)
+                'old_price': currency(old_price_incl_tax),
+                'new_price': currency(new_price_incl_tax)
             }
-            if current_price_incl_tax > self.price_incl_tax:
+            if new_price_incl_tax > old_price_incl_tax:
                 warning = _("The price of '%(product)s' has increased from"
                             " %(old_price)s to %(new_price)s since you added"
                             " it to your basket")

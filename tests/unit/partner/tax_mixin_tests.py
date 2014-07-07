@@ -4,6 +4,7 @@ from django.test import TestCase
 import mock
 
 from oscar.apps.partner import strategy
+from oscar.core import prices
 
 
 class TestNoTaxMixin(TestCase):
@@ -19,15 +20,17 @@ class TestNoTaxMixin(TestCase):
             self.product, None)
         self.assertFalse(policy.exists)
 
-    def test_returns_zero_tax(self):
+    def test_doesnt_return_tax(self):
         policy = self.mixin.pricing_policy(
             self.product, self.stockrecord)
-        self.assertEqual(D('0.00'), policy.tax)
+        with self.assertRaises(prices.TaxNotKnown):
+            policy.get_unit_price().tax
 
-    def test_doesnt_add_tax_to_net_price(self):
+    def test_doesnt_have_tax_inclusive_price(self):
         policy = self.mixin.pricing_policy(
             self.product, self.stockrecord)
-        self.assertEqual(D('12.00'), policy.incl_tax)
+        with self.assertRaises(prices.TaxNotKnown):
+            policy.get_unit_price().incl_tax
 
 
 class TestFixedRateTaxMixin(TestCase):
@@ -48,9 +51,9 @@ class TestFixedRateTaxMixin(TestCase):
         policy = self.mixin.pricing_policy(
             self.product, self.stockrecord)
         self.assertEqual(self.mixin.rate * self.stockrecord.price_excl_tax,
-                          policy.tax)
+                         policy.get_unit_price().tax)
 
     def test_adds_tax_to_net_price(self):
         policy = self.mixin.pricing_policy(
             self.product, self.stockrecord)
-        self.assertEqual(D('13.20'), policy.incl_tax)
+        self.assertEqual(D('13.20'), policy.get_unit_price().incl_tax)

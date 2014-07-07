@@ -123,10 +123,10 @@
                 </tr>
                 {% if session.availability.is_available_to_buy %}
                 <tr>
-                    <th>{% trans "Price (excl. tax)" %}</th><td>{{ session.price.excl_tax|currency }}</td>
+                    <th>{% trans "Price (excl. tax)" %}</th><td>{{ session.price.get_unit_price.excl_tax|currency }}</td>
                 </tr>
                 <tr>
-                    <th>{% trans "Price (incl. tax)" %}</th><td>{{ session.price.incl_tax|currency }}</td>
+                    <th>{% trans "Price (incl. tax)" %}</th><td>{{ session.price.get_unit_price.incl_tax|currency }}</td>
                 </tr>
                 <tr>
                     <th>{% trans "Availability" %}</th>

@@ -137,17 +137,19 @@
 
         {% purchase_info_for_product request product as session %}
         {% if session.price.exists %}
-            <tr>
-                <th>{% trans "Price (excl. tax)" %}</th><td>{{ session.price.excl_tax|currency:session.price.currency }}</td>
-            </tr>
-            {% if session.price.is_tax_known %}
+            {% with price=session.price.get_unit_price %}
                 <tr>
-                    <th>{% trans "Price (incl. tax)" %}</th><td>{{ session.price.incl_tax|currency:session.price.currency }}</td>
+                    <th>{% trans "Price (excl. tax)" %}</th><td>{{ price.excl_tax|currency:price.currency }}</td>
                 </tr>
-                <tr>
-                    <th>{% trans "Tax" %}</th><td>{{ session.price.tax|currency:session.price.currency }}</td>
-                </tr>
-            {% endif %}
+                {% if price.is_tax_known %}
+                    <tr>
+                        <th>{% trans "Price (incl. tax)" %}</th><td>{{ price.incl_tax|currency:price.currency }}</td>
+                    </tr>
+                    <tr>
+                        <th>{% trans "Tax" %}</th><td>{{ price.tax|currency:price.currency }}</td>
+                    </tr>
+                {% endif %}
+            {% endwith %}
             <tr>
                 <th>{% trans "Availability" %}</th>
                 <td>{{ session.availability.message }}</td>

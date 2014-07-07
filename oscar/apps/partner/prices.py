@@ -1,3 +1,5 @@
+import warnings
+
 from oscar.core import prices
 
 
@@ -12,29 +14,53 @@ class Base(object):
     #: Whether tax is known
     is_tax_known = False
 
-    #: Price excluding tax
-    excl_tax = None
-
-    #: Price including tax
-    incl_tax = None
-
-    #: Price to use for offer calculations
-    @property
-    def effective_price(self):
-        # Default to using the price excluding tax for calculations
-        return self.excl_tax
-
-    #: Price tax
-    tax = None
-
-    #: Retail price
-    retail = None
-
     #: Price currency (3 char code)
     currency = None
 
+    #: Price for single unit to use for offer calculations
+    #: Note that offers app currently won't work with non-linear prices!
+    @property
+    def effective_price(self):
+        # Default to using the price excluding tax for calculations
+        return self.get_unit_price().excl_tax
+
+    def get_price(self, quantity):
+        """
+        Returns a oscar.core.prices.Price instance for a given quantity.
+        """
+        return prices.Price(currency=None, excl_tax=None)
+
+    def get_unit_price(self):
+        return self.get_price(1)
+
     def __repr__(self):
         return "%s(%r)" % (self.__class__.__name__, self.__dict__)
+
+    # -- Deprecated attributes -- #
+
+    #: Price for single unit excluding tax
+    @property
+    def excl_tax(self):
+        warnings.warn(
+            "The excl_tax property is deprecated. "
+            "Use get_price(qty).excl_tax instead.", DeprecationWarning)
+        return self.get_unit_price().excl_tax
+
+    #: Price for single unit including tax
+    @property
+    def incl_tax(self):
+        warnings.warn(
+            "The incl_tax property is deprecated. "
+            "Use get_price(qty).incl_tax instead.", DeprecationWarning)
+        return self.get_unit_price().incl_tax
+
+    #: Price tax for single unit
+    @property
+    def tax(self):
+        warnings.warn(
+            "The tax property is deprecated. "
+            "Use get_price(qty).tax instead.", DeprecationWarning)
+        return self.get_unit_price().tax
 
 
 class Unavailable(Base):
@@ -57,21 +83,34 @@ class FixedPrice(Base):
     """
     exists = True
 
-    def __init__(self, currency, excl_tax, tax=None):
+    def __init__(self, currency, excl_tax, tax_rate=None):
         self.currency = currency
-        self.excl_tax = excl_tax
-        self.tax = tax
+        self._excl_tax = excl_tax
+        self.tax_rate = tax_rate
 
-    @property
-    def incl_tax(self):
-        if self.is_tax_known:
-            return self.excl_tax + self.tax
-        raise prices.TaxNotKnown(
-            "Can't calculate price.incl_tax as tax isn't known")
+    def calculate_total(self, quantity):
+        """
+        Implements a naive linear pricing. Override this function to implement
+        e.g. bulk pricing.
+        """
+        return self._excl_tax * quantity
+
+    def calculate_tax(self, total_excl_tax):
+        """
+        Calculates tax, given a non-tax total.
+        """
+        if self.tax_rate is None:
+            return None
+        return total_excl_tax * self.tax_rate
+
+    def get_price(self, quantity):
+        total_excl_tax = self.calculate_total(quantity)
+        tax = self.calculate_tax(total_excl_tax)
+        return prices.Price(self.currency, total_excl_tax, tax=tax)
 
     @property
     def is_tax_known(self):
-        return self.tax is not None
+        return self.tax_rate is not None
 
 
 class TaxInclusiveFixedPrice(FixedPrice):
@@ -82,15 +121,13 @@ class TaxInclusiveFixedPrice(FixedPrice):
     """
     exists = is_tax_known = True
 
-    def __init__(self, currency, excl_tax, tax):
-        self.currency = currency
-        self.excl_tax = excl_tax
-        self.tax = tax
-
-    @property
-    def incl_tax(self):
-        return self.excl_tax + self.tax
+    def __init__(self, currency, excl_tax, tax_rate):
+        if tax_rate is None:
+            raise ValueError("You must specify a tax rate for "
+                             "TaxInclusiveFixedPrice. It may be zero.")
+        super(TaxInclusiveFixedPrice, self).__init__(
+            currency, excl_tax, tax_rate)
 
     @property
     def effective_price(self):
-        return self.incl_tax
+        return self.get_unit_price().incl_tax

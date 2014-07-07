@@ -6,12 +6,12 @@
 {% purchase_info_for_product request product as session %}
 
 {% if session.price.exists %}
-    {% if session.price.excl_tax == 0 %}
+    {% if session.price.get_unit_price.excl_tax == 0 %}
         <h2 class="price_color">{% trans "Free" %}</h2>
     {% elif session.price.is_tax_known %}
-        <h2 class="price_color">{{ session.price.incl_tax|currency:session.price.currency }}</h2>
+        <h2 class="price_color">{{ session.price.get_unit_price.incl_tax|currency:session.price.currency }}</h2>
     {% else %}
-        <h2 class="price_color">{{ session.price.excl_tax|currency:session.price.currency }}</h2>
+        <h2 class="price_color">{{ session.price.get_unit_price.excl_tax|currency:session.price.currency }}</h2>
     {% endif %}
 {% else %}
     <h2 class="price_color">&nbsp;</h2>
