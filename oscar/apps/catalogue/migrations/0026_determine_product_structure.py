@@ -10,7 +10,7 @@ class Migration(DataMigration):
         for product in orm.Product.objects.all():
             if product.parent:
                 product.structure = 'child'
-            elif product.variants.exists():
+            elif product.children.exists():
                 product.structure = 'parent'
             else:
                 product.structure = 'standalone'
