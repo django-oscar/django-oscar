@@ -221,6 +221,13 @@ class AbstractBankcard(models.Model):
 
         2.  To keep a record of a user's bankcards and allow them to be
             re-used.  This is normally done using the 'partner reference'.
+
+    .. warning::
+
+        Some of the fields of this model (name, expiry_date) are considered
+        "cardholder data" under PCI DSS v2. Hence, if you use this model and
+        store those fields then the requirements for PCI compliance will be
+        more stringent.
     """
     user = models.ForeignKey(AUTH_USER_MODEL, related_name='bankcards',
                              verbose_name=_("User"))
