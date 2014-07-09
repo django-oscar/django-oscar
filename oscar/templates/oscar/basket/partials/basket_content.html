@@ -26,9 +26,11 @@
         <div class="basket-title hidden-phone">
             <div class="row-fluid">
                 <h4 class="span6">{% trans "Items to buy now" %}</h4>
-                <h4 class="span3">{% trans "Quantity" %}</h4>
-                <h4 class="span1 align-right">{% trans "Price" %}</h4>
-                <h4 class="span2 align-right">{% trans "Total" %}</h4>
+                <h4 class="span2">{% trans "Quantity" %}</h4>
+                <h4 class="span1 align-right">{% trans "Unit excl tax" %}</h4>
+                <h4 class="span1 align-right">{% trans "Unit incl" %}</h4>
+                <h4 class="span1 align-right">{% trans "Total excl tax" %}</h4>
+                <h4 class="span1 align-right">{% trans "Total incl tax" %}</h4>
             </div>
         </div>
     {% endblock %}
@@ -57,7 +59,7 @@
                                 <h4><a href="{{ product.get_absolute_url }}">{{ line.description }}</a></h4>
                                 <p class="availability {{ session.availability.code }}">{{ session.availability.message }}</p>
                             </div>
-                            <div class="span3">
+                            <div class="span2">
                                 <div class="checkout-quantity control-group {% if form.errors %}error{% endif %}">
                                     {{ form.quantity }}
                                     <button class="btn" type="submit">{% trans "Update" %}</button>
@@ -81,20 +83,22 @@
                             </div>
                             <div class="span1">
                                 <p class="price_color align-right">
-                                    {% if line.is_tax_known %}
-                                        {{ line.unit_price_incl_tax|currency:line.price_currency }}
-                                    {% else %}
-                                        {{ line.unit_price_excl_tax|currency:line.price_currency }}
-                                    {% endif %}
+                                    {{ line.unit_price_excl_tax|currency:line.price_currency }}
                                 </p>
                             </div>
-                            <div class="span2">
+                            <div class="span1">
                                 <p class="price_color align-right">
-                                    {% if line.is_tax_known %}
-                                        {{ line.line_price_incl_tax|currency:line.price_currency }}
-                                    {% else %}
+                                    {{ line.unit_price_incl_tax|currency:line.price_currency }}
+                                </p>
+                            </div>
+                            <div class="span1">
+                                <p class="price_color align-right">
                                         {{ line.line_price_excl_tax|currency:line.price_currency }}
-                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="span1">
+                                <p class="price_color align-right">
+                                        {{ line.line_price_incl_tax|currency:line.price_currency }}
                                 </p>
                             </div>
                         </div>

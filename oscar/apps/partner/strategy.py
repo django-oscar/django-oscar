@@ -36,7 +36,7 @@ class Selector(object):
         """
         # Default to the backwards-compatible strategy of picking the first
         # stockrecord but charging zero tax.
-        return Default(request)
+        return RoundingIssue(request)
 
 
 class Base(object):
@@ -360,3 +360,41 @@ class US(UseFirstStockRecord, StockRequired, DeferredTax, Structured):
     This is just a sample one used for internal development.  It is not
     recommended to be used in production.
     """
+
+
+class CustomTax(object):
+    rate = D('0')  # Subclass and specify the correct rate
+    exponent = D('0.01')  # Default to two decimal places
+
+    def pricing_policy(self, product, stockrecord):
+        if not stockrecord:
+            return prices.Unavailable()
+        # We assume price_excl_tax actually *includes* tax for the sake of this
+        # exercise.
+        price_incl_tax = stockrecord.price_excl_tax
+        price_excl_tax = (price_incl_tax / (1 + self.rate)).quantize(
+            self.exponent)
+        tax = price_incl_tax - price_excl_tax
+        return prices.TaxInclusiveFixedPrice(
+            currency=stockrecord.price_currency,
+            excl_tax=price_excl_tax,
+            tax=tax)
+
+    def parent_pricing_policy(self, product, children_stock):
+        stockrecords = [x[1] for x in children_stock if x[1] is not None]
+        if not stockrecords:
+            return prices.Unavailable()
+
+        # We take price from first record
+        stockrecord = stockrecords[0]
+        tax = (stockrecord.price_excl_tax * self.rate).quantize(self.exponent)
+
+        return prices.FixedPrice(
+            currency=stockrecord.price_currency,
+            excl_tax=stockrecord.price_excl_tax,
+            tax=tax)
+
+
+class RoundingIssue(
+        UseFirstStockRecord, StockRequired, CustomTax, Structured):
+    rate = D('0.05')
