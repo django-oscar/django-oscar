@@ -16,7 +16,6 @@ class TestCountCondition(OfferTest):
         self.condition = models.CountCondition(
             range=self.range, type="Count", value=2)
         self.offer = mock.Mock()
-        self.offer.applies_to_tax_exclusive_prices = False
 
     def test_is_not_satified_by_empty_basket(self):
         self.assertFalse(self.condition.is_satisfied(self.offer, self.basket))
@@ -70,7 +69,6 @@ class ValueConditionTest(OfferTest):
         self.condition = models.ValueCondition(
             range=self.range, type="Value", value=D('10.00'))
         self.offer = mock.Mock()
-        self.offer.applies_to_tax_exclusive_prices = False
         self.item = factories.create_product(price=D('5.00'))
         self.expensive_item = factories.create_product(price=D('15.00'))
 
@@ -138,7 +136,6 @@ class TestCoverageCondition(TestCase):
         self.condition = models.CoverageCondition(
             range=self.range, type="Coverage", value=2)
         self.offer = mock.Mock()
-        self.offer.applies_to_tax_exclusive_prices = False
 
     def test_empty_basket_fails(self):
         self.assertFalse(self.condition.is_satisfied(self.offer, self.basket))

@@ -22,7 +22,6 @@ class TestAMultibuyDiscountAppliedWithCountCondition(TestCase):
             type=models.Benefit.MULTIBUY,
             value=1)
         self.offer = mock.Mock()
-        self.offer.applies_to_tax_exclusive_prices = False
         self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):
@@ -61,7 +60,6 @@ class TestAMultibuyDiscountAppliedWithAValueCondition(TestCase):
             type=models.Benefit.MULTIBUY,
             value=1)
         self.offer = mock.Mock()
-        self.offer.applies_to_tax_exclusive_prices = False
         self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):
