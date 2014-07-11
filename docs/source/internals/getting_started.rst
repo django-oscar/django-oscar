@@ -167,9 +167,13 @@ The last addition to the settings file is to import all of Oscar's default setti
 URLs
 ====
 
-Alter your ``frobshop/urls.py`` to include Oscar's URLs. If you have more than
-one language set your Django settings for ``LANGUAGES``, you will also need to
-include Django's i18n URLs:
+Alter your ``frobshop/urls.py`` to include Oscar's URLs. You can also include
+the Django admin for debugging purposes. But please note that Oscar makes no
+attempts at having that be a workable interface; admin integration exists
+to ease the life of developers.
+
+If you have more than one language set your Django settings for ``LANGUAGES``,
+you will also need to include Django's i18n URLs:
 
 .. code-block:: django
 
@@ -178,7 +182,12 @@ include Django's i18n URLs:
 
     urlpatterns = [
         url(r'^i18n/', include('django.conf.urls.i18n')),
-        url(r'', include(application.urls))
+
+        # The Django admin is not officially supported; expect breakage.
+        # Nonetheless, it's often useful for debugging.
+        url(r'^admin/', include(admin.site.urls)),
+
+        url(r'', include(application.urls)),
     ]
 
 Search backend
