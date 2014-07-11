@@ -1,8 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.models import Permission
 from django.core.urlresolvers import reverse_lazy, reverse
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.template.loader import render_to_string
 from django.views import generic
@@ -191,22 +190,6 @@ class PartnerUserSelectView(generic.ListView):
 
 class PartnerUserLinkView(generic.View):
 
-    def link_user(self, user, partner):
-        """
-        Links a user to a partner, and adds the dashboard permission if needed.
-
-        Returns False if the user was linked already; True otherwise.
-        """
-        if partner.users.filter(pk=user.pk).exists():
-            return False
-        partner.users.add(user)
-        if not user.is_staff:
-            dashboard_access_perm = Permission.objects.get(
-                codename='dashboard_access',
-                content_type__app_label='partner')
-            user.user_permissions.add(dashboard_access_perm)
-        return True
-
     def get(self, request, user_pk, partner_pk):
         # need to allow GET to make Undo link in PartnerUserUnlinkView work
         return self.post(request, user_pk, partner_pk)
@@ -225,8 +208,23 @@ class PartnerUserLinkView(generic.View):
                 request,
                 _("User '%(name)s' is already linked to '%(partner_name)s'")
                 % {'name': name, 'partner_name': partner.name})
-        return HttpResponseRedirect(reverse('dashboard:partner-manage',
-                                            kwargs={'pk': partner_pk}))
+        return redirect('dashboard:partner-manage', pk=partner_pk)
+
+    def link_user(self, user, partner):
+        """
+        Links a user to a partner, and adds the dashboard permission if needed.
+
+        Returns False if the user was linked already; True otherwise.
+        """
+        if partner.users.filter(pk=user.pk).exists():
+            return False
+        partner.users.add(user)
+        if not user.is_staff:
+            dashboard_access_perm = Permission.objects.get(
+                codename='dashboard_access',
+                content_type__app_label='partner')
+            user.user_permissions.add(dashboard_access_perm)
+        return True
 
 
 class PartnerUserUnlinkView(generic.View):
@@ -265,8 +263,7 @@ class PartnerUserUnlinkView(generic.View):
                 request,
                 _("User '%(name)s' is not linked to '%(partner_name)s'") %
                 {'name': name, 'partner_name': partner.name})
-        return HttpResponseRedirect(reverse('dashboard:partner-manage',
-                                            kwargs={'pk': partner_pk}))
+        return redirect('dashboard:partner-manage', pk=partner_pk)
 
 
 # =====

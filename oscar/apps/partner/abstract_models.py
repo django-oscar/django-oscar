@@ -62,7 +62,7 @@ class AbstractPartner(models.Model):
         return self.primary_address
 
     class Meta:
-        permissions = (('dashboard_access', _('Can access dashboard')), )
+        permissions = (('dashboard_access', 'Can access dashboard'), )
         verbose_name = _('Fulfillment partner')
         verbose_name_plural = _('Fulfillment partners')
         abstract = True
