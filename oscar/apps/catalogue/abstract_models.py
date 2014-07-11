@@ -310,29 +310,40 @@ class AbstractProduct(models.Model):
                        kwargs={'product_slug': self.slug, 'pk': self.id})
 
     def clean(self):
-        if self.is_child:
-            if not self.parent_id:
-                raise ValidationError(_("A child product needs a parent."))
-            if self.parent_id and not self.parent.is_parent:
-                raise ValidationError(
-                    _("You can only assign child products to parent products.")
-                )
-        else:  # stand-alone and parent products
-            if not self.title:
-                raise ValidationError(_("Your product must have a title."))
-            if not self.product_class:
-                raise ValidationError(
-                    _("Your product must have a product class."))
-            if self.parent_id:
-                raise ValidationError(
-                    _("Only child products can have a parent."))
-
-        if self.is_parent and self.has_stockrecords:
-            raise ValidationError(
-                _("A parent product can't have stockrecords."))
-
+        # call clean method for product structure
+        getattr(self, '_clean_%s' % self.structure)()
         if not self.is_parent:
             self.attr.validate_attributes()
+
+    def _clean_standalone(self):
+        """
+        Validates a stand-alone product
+        """
+        if not self.title:
+            raise ValidationError(_("Your product must have a title."))
+        if not self.product_class:
+            raise ValidationError(_("Your product must have a product class."))
+        if self.parent_id:
+            raise ValidationError(_("Only child products can have a parent."))
+
+    def _clean_child(self):
+        """
+        Validates a child product
+        """
+        if not self.parent_id:
+            raise ValidationError(_("A child product needs a parent."))
+        if self.parent_id and not self.parent.is_parent:
+            raise ValidationError(
+                _("You can only assign child products to parent products."))
+
+    def _clean_parent(self):
+        """
+        Validates a parent product.
+        """
+        self._clean_standalone()
+        if self.has_stockrecords:
+            raise ValidationError(
+                _("A parent product can't have stockrecords."))
 
     def save(self, *args, **kwargs):
         if not self.slug:

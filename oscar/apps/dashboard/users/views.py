@@ -2,7 +2,6 @@ from django.db.models import Q
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
-from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic import ListView, DetailView, DeleteView, \
     UpdateView, FormView

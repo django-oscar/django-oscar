@@ -140,12 +140,14 @@ class ProductListView(generic.ListView):
             else:
                 queryset = queryset.filter(upc__icontains=data['upc'])
                 description_ctx['upc_filter'] = _(
-                    " including an item with UPC containing '%s'") % data['upc']
+                    " including an item with "
+                    "UPC containing '%s'") % data['upc']
 
         if data.get('title'):
             queryset = queryset.filter(title__icontains=data['title'])
             description_ctx['title_filter'] = _(
-                " including an item with title containing '%s'") % data['title']
+                " including an item with "
+                "title containing '%s'") % data['title']
 
         self.description = self.description_template % description_ctx
 
