@@ -18,7 +18,8 @@ sandbox: install
 	sites/sandbox/manage.py loaddata sites/sandbox/fixtures/variants.json
 	sites/sandbox/manage.py oscar_import_catalogue sites/sandbox/fixtures/*.csv
 	sites/sandbox/manage.py oscar_import_catalogue_images sites/sandbox/fixtures/images.tar.gz
-	sites/sandbox/manage.py loaddata countries.json sites/_fixtures/pages.json sites/_fixtures/auth.json sites/_fixtures/ranges.json sites/_fixtures/offers.json
+	sites/sandbox/manage.py oscar_populate_countries
+	sites/sandbox/manage.py loaddata sites/_fixtures/pages.json sites/_fixtures/auth.json sites/_fixtures/ranges.json sites/_fixtures/offers.json
 	sites/sandbox/manage.py clear_index --noinput
 	sites/sandbox/manage.py update_index catalogue
 
@@ -36,7 +37,8 @@ demo: install
 	sites/demo/manage.py syncdb --noinput
 	sites/demo/manage.py migrate
 	# Import some core fixtures
-	sites/demo/manage.py loaddata countries.json sites/_fixtures/pages.json
+	sites/demo/manage.py oscar_populate_countries
+	sites/demo/manage.py loaddata sites/_fixtures/pages.json
 	# Create catalogue (create product classes from fixture than import CSV files)
 	sites/demo/manage.py loaddata sites/_fixtures/auth.json sites/demo/fixtures/offers.json
 	sites/demo/manage.py loaddata sites/demo/fixtures/product-classes.json sites/demo/fixtures/product-attributes.json sites/demo/fixtures/shipping-event-types.json
@@ -56,6 +58,7 @@ us_site: install
 	sites/us/manage.py syncdb --noinput
 	sites/us/manage.py migrate
 	# Import some fixtures
+	sites/us/manage.py oscar_populate_countries
 	sites/us/manage.py loaddata sites/us/fixtures/*.json
 	sites/us/manage.py loaddata sites/_fixtures/auth.json sites/_fixtures/ranges.json 
 	# Create catalogue (using a fixture from the demo site)

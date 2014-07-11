@@ -387,8 +387,7 @@ class AbstractCountry(models.Model):
     iso_3166_1_numeric = models.CharField(
         _('ISO 3166-1 numeric'), blank=True, max_length=3)
 
-    #: The commonly used name
-    #: e.g. 'United Kingdom'
+    #: The commonly used name; e.g. 'United Kingdom'
     printable_name = models.CharField(_('Country name'), max_length=128)
     #: The full official name of a country
     #: e.g. 'United Kingdom of Great Britain and Northern Ireland'
@@ -405,7 +404,7 @@ class AbstractCountry(models.Model):
         abstract = True
         verbose_name = _('Country')
         verbose_name_plural = _('Countries')
-        ordering = ('-display_order', 'name',)
+        ordering = ('-display_order', 'printable_name',)
 
     def __unicode__(self):
         return self.printable_name or self.name

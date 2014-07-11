@@ -200,6 +200,10 @@ Minor changes
   optional. It usually is desired behaviour, but can slow down an app when
   using a remote storage.
 
+* Oscar now ships with a ``oscar_populate_countries`` management command to
+  populate the country databases. It replaces the ``countries.json`` fixture.
+  The command relies on the ``pycountry`` library being installed.
+
 .. _incompatible_changes_in_0.8:
 
 Backwards incompatible changes in 0.8
