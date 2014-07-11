@@ -454,6 +454,7 @@ Migrations
 * Address:
 
     - ``0011`` - ``AbstractAddress.search_text`` turned into a ``TextField``.
+    - ``0012`` - ``AbstractCountry``: Removed two unused indexes & turns numeric code into ``CharField``
 
 * Catalogue:
 
