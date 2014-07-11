@@ -5,7 +5,7 @@ install:
 	pip install -r requirements.txt
 	python setup.py develop
 
-sandbox: install
+sandbox_base: install
 	# Remove media
 	-rm -rf sites/sandbox/public/media/images
 	-rm -rf sites/sandbox/public/media/cache
@@ -19,6 +19,8 @@ sandbox: install
 	sites/sandbox/manage.py oscar_import_catalogue sites/sandbox/fixtures/*.csv
 	sites/sandbox/manage.py oscar_import_catalogue_images sites/sandbox/fixtures/images.tar.gz
 	sites/sandbox/manage.py loaddata countries.json sites/_fixtures/pages.json sites/_fixtures/auth.json sites/_fixtures/ranges.json sites/_fixtures/offers.json
+
+sandbox: sandbox_base
 	sites/sandbox/manage.py clear_index --noinput
 	sites/sandbox/manage.py update_index catalogue
 
@@ -114,6 +116,7 @@ clean:
 	# Remove files not in source control
 	find . -type f -name "*.pyc" -delete
 	rm -rf nosetests.xml coverage.xml htmlcov *.egg-info *.pdf dist violations.txt
+	-rm -rf sites/sandbox/logs/* sites/demo/logs/* sites/us/logs/*
 
 preflight: lint
     # Bare minimum of tests to run before pushing to master

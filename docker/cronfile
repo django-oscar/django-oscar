@@ -1,0 +1,2 @@
+# Rebuild Solr index every 5 minutes
+*/5 * * * * root /code/sites/sandbox/manage.py rebuild_index --noinput
