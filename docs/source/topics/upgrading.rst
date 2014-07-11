@@ -5,13 +5,6 @@ Upgrading
 This document explains some of the issues that can be encountered whilst
 upgrading Oscar.
 
-.. note::
-
-    Detailed upgrade instructions for specific releases can be found on the `Github
-    wiki`_.
-
-.. _`Github wiki`: https://github.com/tangentlabs/django-oscar/wiki/Upgrading
-
 Migrations
 ----------
 
@@ -37,14 +30,44 @@ For instance,  if you have ``oscar.apps.core.shipping`` in your
 
 to migrate your shipping app.
 
-Migrating customised apps
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Migrating customised apps (models unchanged)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For apps that you are customising, you need to create a new migration that picks
-up the changes in the core Oscar models.
-For instance,  if you have an app ``myproject.shipping`` that replaces
-``oscar.apps.shipping`` in your ``INSTALLED_APPS`` then you can simply run::
+If you have customised an app, but have not touched the models nor migrations,
+you're best off copying the migrations from Oscar.  This approach has the
+advantage of pulling in any data migrations.
+Find the updated(!) Oscar in your virtualenv or clone the Oscar repo at the
+correct version tag. Then find the migrations, copy them across, and migrate as
+usual.  You will have to adapt paths, but something akin to this will work::
+
+    $ cdsitepackages oscar/apps/shipping/migrations
+    $ copy *.py <your_project>/myshop/shipping/migrations/
+
+Migrating customised apps (models changed)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+At this point, you have essentially forked away from Oscar's migrations. Read
+the release notes carefully and see if it includes data migrations. If not,
+it's as easy as::
 
     ./manage.py schemamigration shipping --auto
 
 to create the appropriate migration.
+
+But if there is data migrations, you will need to look into what they do, and
+likely will have to imitate what they're doing. You can't just copy across the
+entire data migration (because the South's fake ORM snapshot will be wrong),
+but you can usually create a data migration like this::
+
+    ./manage.py datamigration shipping descriptive_name
+
+and then copy the code portion from Oscar's migration into your newly
+created migration.
+
+If there's also schema migrations, then you need to also create a schema
+migration::
+
+    ./manage.py schemamigration shipping --auto
+
+The fun part is figuring out if you have to create the schema migration before
+or after the data migration.

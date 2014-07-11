@@ -161,10 +161,12 @@ Cleanup around shipping methods
 
 * ``WeightBand.upper_limit`` is now a ``DecimalField``, just like the other
   weight-related fields.
+
     - Stand-alone product: Products that "stand by themselves", neither have
       parent nor children.
     - Parent product: An overarching product, previously known as group product.
     - Child products: Products related to a common parent product
+
 .. _minor_changes_in_0.8:
 
 Minor changes
@@ -220,6 +222,7 @@ unavoidable:
   to ``children``.
 
 The following methods and properties have been deprecated:
+
 * ``Product.is_parent`` - Use ``is_group`` instead.
 * ``Product.is_variant`` - Use ``is_child`` instead.
 * ``Product.is_top_level`` - Test for ``is_standalone`` and/or ``is_parent`` instead.
@@ -442,6 +445,11 @@ Migrations
     The catalogue app has a data migration to determine the product structure.
     Please double-check it's outcome and make sure to do something similar
     if you have forked the catalogue app.
+
+.. note::
+
+    Be sure to read the detailed instructions for
+    :doc:`handling migrations </topics/upgrading>`.
 
 * Address:
 
