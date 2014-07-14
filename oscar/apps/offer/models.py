@@ -444,6 +444,14 @@ class Condition(models.Model):
         """
         Return the proxy model
         """
+        klassmap = {
+            self.COUNT: CountCondition,
+            self.VALUE: ValueCondition,
+            self.COVERAGE: CoverageCondition}
+        # Short-circuit logic if current class is already a proxy class.
+        if self.__class__ in klassmap.values():
+            return self
+
         field_dict = dict(self.__dict__)
         for field in list(field_dict.keys()):
             if field.startswith('_'):
@@ -451,11 +459,10 @@ class Condition(models.Model):
 
         if self.proxy_class:
             klass = load_proxy(self.proxy_class)
+            # Short-circuit again.
+            if self.__class__ == klass:
+                return self
             return klass(**field_dict)
-        klassmap = {
-            self.COUNT: CountCondition,
-            self.VALUE: ValueCondition,
-            self.COVERAGE: CoverageCondition}
         if self.type in klassmap:
             return klassmap[self.type](**field_dict)
         raise RuntimeError("Unrecognised condition type (%s)" % self.type)
@@ -581,14 +588,6 @@ class Benefit(models.Model):
         verbose_name_plural = _("Benefits")
 
     def proxy(self):
-        field_dict = dict(self.__dict__)
-        for field in list(field_dict.keys()):
-            if field.startswith('_'):
-                del field_dict[field]
-
-        if self.proxy_class:
-            klass = load_proxy(self.proxy_class)
-            return klass(**field_dict)
         klassmap = {
             self.PERCENTAGE: PercentageDiscountBenefit,
             self.FIXED: AbsoluteDiscountBenefit,
@@ -597,6 +596,22 @@ class Benefit(models.Model):
             self.SHIPPING_ABSOLUTE: ShippingAbsoluteDiscountBenefit,
             self.SHIPPING_FIXED_PRICE: ShippingFixedPriceBenefit,
             self.SHIPPING_PERCENTAGE: ShippingPercentageDiscountBenefit}
+        # Short-circuit logic if current class is already a proxy class.
+        if self.__class__ in klassmap.values():
+            return self
+
+        field_dict = dict(self.__dict__)
+        for field in list(field_dict.keys()):
+            if field.startswith('_'):
+                del field_dict[field]
+
+        if self.proxy_class:
+            klass = load_proxy(self.proxy_class)
+            # Short-circuit again.
+            if self.__class__ == klass:
+                return self
+            return klass(**field_dict)
+
         if self.type in klassmap:
             return klassmap[self.type](**field_dict)
         raise RuntimeError("Unrecognised benefit type (%s)" % self.type)
