@@ -202,7 +202,7 @@ class CheckoutSessionMixin(object):
         # not be if the basket is purely downloads
         if not request.basket.is_shipping_required():
             raise exceptions.PassedSkipCondition(
-                url=reverse('checkout:payment-method')
+                url=reverse('checkout:shipping-method')
             )
 
     def skip_unless_payment_is_required(self, request):
