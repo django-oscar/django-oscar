@@ -533,6 +533,8 @@ caption,
   border-color: #ede181;
   color: #333;
 }
+@import 'page/alerts.less';
+
 // DASHBOARD GRAPH
 // ----------------
 #order_graph {
@@ -739,11 +741,11 @@ caption,
   overflow:visible;
 }
 .upload-image {
-  .clearfix();
+  .clearfix();
   margin:0;
   z-index: 1;
   position: relative;
-  li {
+  li {
    display:block;
    width: 200px;
    margin:0 1% 2%;
@@ -766,7 +768,7 @@ caption,
     height: 200px;
     z-index: 200;
   }
-  img {
+  img {
    position: absolute;
    margin:auto;
      top: 0;
@@ -786,12 +788,12 @@ caption,
     left: 0;
     .border-radius(0);
   }
-  .input-field {
+  .input-field {
    position: relative;
    z-index: 1000;
    opacity: 0;
  }
-  .input-field input {
+  .input-field input {
     border-width: 0;
     direction: ltr;
     cursor: pointer;

@@ -5577,6 +5577,25 @@ input[type="submit"].btn.btn-mini {
 .alert-block p + p {
   margin-top: 5px;
 }
+/* additional styles for alert content. Used by both public side and dashboard */
+.alert .alertinner {
+  position: relative;
+}
+.alert .alertinner.wicon {
+  padding-left: 0.5em;
+  margin-left: 0.5em;
+}
+.alert .alertinner [class*="icon-"] {
+  position: absolute;
+  top: 0.3em;
+  right: 100%;
+}
+.alert .alertinner p {
+  margin: 10px 0 0 0;
+}
+.alert .alertinner p:first-child {
+  margin: 0;
+}
 .nav {
   margin-left: 0;
   margin-bottom: 20px;
