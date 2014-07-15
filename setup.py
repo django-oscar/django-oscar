@@ -48,7 +48,7 @@ setup(name='django-oscar',
           # Treebeard is used for categories
           'django-treebeard==2.0',
           # Sorl is used as the default thumbnailer
-          'sorl-thumbnail==11.12.1b' if PY3 else 'sorl-thumbnail==11.12',
+          'sorl-thumbnail==11.12.1b',
           # Babel is used for currency formatting
           'Babel>=1.0,<1.4',
           # Oscar's default templates use compressor (but you can override
