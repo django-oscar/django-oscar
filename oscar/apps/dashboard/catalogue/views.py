@@ -333,7 +333,7 @@ class ProductCreateUpdateView(generic.UpdateView):
                 'product': self.object,
                 'creating': self.creating,
             })
-        messages.success(self.request, msg)
+        messages.success(self.request, msg, extra_tags="safe noicon")
         url = reverse('dashboard:catalogue-product-list')
         if self.request.POST.get('action') == 'continue':
             url = reverse('dashboard:catalogue-product',
