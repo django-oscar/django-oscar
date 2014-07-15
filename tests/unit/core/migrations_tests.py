@@ -2,18 +2,23 @@
 import os
 import re
 
+import unittest
+import django
+
 from django.test import TestCase
 
 import oscar.apps
 
 
-class TestMigrations(TestCase):
+@unittest.skipIf(
+    django.VERSION[:2] >= (1, 7), "South is not supported in Django 1.7")
+class TestSouthMigrations(TestCase):
 
     def setUp(self):
         self.root_path = os.path.dirname(oscar.apps.__file__)
         self.migration_filenames = []
         for path, __, migrations in os.walk(self.root_path):
-            if path.endswith('migrations'):
+            if path.endswith('south_migrations'):
                 paths = [
                     os.path.join(path, migration) for migration in migrations
                     if migration.endswith('.py') and migration != '__init__.py']

@@ -1,6 +1,8 @@
 import os
 import tempfile
+import unittest
 
+import django
 from django.test import TestCase
 from django.conf import settings
 
@@ -54,6 +56,7 @@ class TestForkAppFunction(TestCase):
     def test_copies_in_migrations_when_needed(self):
         for app, has_models in [('order', True), ('search', False)]:
             customisation.fork_app(app, self.tmp_folder)
-            migration_path = os.path.join(self.tmp_folder, app, 'migrations')
+            migration_path = os.path.join(
+                self.tmp_folder, app, 'migrations')
             self.assertEqual(has_models, os.path.exists(migration_path))
 
