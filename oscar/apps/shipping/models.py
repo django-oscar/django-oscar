@@ -1,3 +1,4 @@
+from oscar.core.loading import model_registered
 from oscar.apps.shipping import abstract_models
 
 
