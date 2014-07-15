@@ -31,6 +31,7 @@ def configure():
                 'django.contrib.staticfiles',
                 'compressor',
                 'tests._site.model_tests_app',  # contains models we need for testing
+                'tests._site.myauth',
 
                 # Use a custom partner app to test overriding models.  I can't
                 # find a way of doing this on a per-test basis, so I'm using a
@@ -38,6 +39,7 @@ def configure():
             ] + oscar.get_core_apps([
                 'tests._site.apps.partner',
                 'tests._site.apps.customer']),
+            'AUTH_USER_MODEL': 'myauth.User',
             'TEMPLATE_CONTEXT_PROCESSORS': (
                 "django.contrib.auth.context_processors.auth",
                 "django.core.context_processors.request",
@@ -102,8 +104,5 @@ def configure():
             # suite is run with nose anyway, so the value does not matter.
             'TEST_RUNNER': 'foobar',
         })
-        if django.VERSION >= (1, 5):
-            test_settings['INSTALLED_APPS'] += ['tests._site.myauth', ]
-            test_settings['AUTH_USER_MODEL'] = 'myauth.User'
 
         settings.configure(**test_settings)
