@@ -12,6 +12,7 @@ env:
   matrix:
     - DJANGO_VERSION=1.5.8
     - DJANGO_VERSION=1.6.5
+    - DJANGO_VERSION=https://www.djangoproject.com/download/1.7c1/tarball/
 
 matrix:
   allow_failures:

@@ -35,7 +35,7 @@ setup(name='django-oscar',
       packages=find_packages(exclude=["sandbox*", "tests*"]),
       include_package_data=True,
       install_requires=[
-          'django>=1.5.7,<1.7',
+          'django>=1.5.7,<1.8',
           # PIL is required for image fields, Pillow is the "friendly" PIL fork
           'pillow>=1.7.8,<2.5',
           # Oscar ships with migrations
