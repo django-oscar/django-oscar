@@ -10,11 +10,8 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 SQL_DEBUG = True
 
-ADMINS = ()
 EMAIL_SUBJECT_PREFIX = '[Oscar US sandbox] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-MANAGERS = ADMINS
 
 # Use a Sqlite database by default
 DATABASES = {

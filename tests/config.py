@@ -81,7 +81,6 @@ def configure():
             'STATIC_URL': '/static/',
             'COMPRESS_ENABLED': False,
             'COMPRESS_ROOT': '',  # needed to avoid issue #1214
-            'ADMINS': ('admin@example.com',),
             'DEBUG': False,
             'SITE_ID': 1,
             'USE_TZ': 1,
@@ -97,6 +96,11 @@ def configure():
             'OSCAR_ORDER_STATUS_PIPELINE': {'A': ('B',), 'B': ()},
             'OSCAR_INITIAL_LINE_STATUS': 'a',
             'OSCAR_LINE_STATUS_PIPELINE': {'a': ('b', ), 'b': ()},
+
+            # Setting this explicitly prevents Django 1.7+ from showing a
+            # warning regarding a changed default test runner. The Oscar test
+            # suite is run with nose anyway, so the value does not matter.
+            'TEST_RUNNER': 'foobar',
         })
         if django.VERSION >= (1, 5):
             test_settings['INSTALLED_APPS'] += ['tests._site.myauth', ]

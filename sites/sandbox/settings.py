@@ -14,6 +14,7 @@ ALLOWED_HOSTS = ['latest.oscarcommerce.com',
                  'sandbox.oscar.tangentlabs.co.uk',
                  'master.oscarcommerce.com']
 
+# This is needed for the hosted version of the sandbox
 ADMINS = (
     ('David Winterbottom', 'david.winterbottom@tangentlabs.co.uk'),
 )
@@ -40,6 +41,12 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
+
+# Django 1.7 changes the test runner default and tries to be helpful by
+# alerting the user if the project looks like a pre-1.7 Django project by
+# looking at various settings. We don't have any tests for the sandbox,
+# but setting an explicit test runner disables the warning
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 
 # Local time zone for this installation. Choices can be found here:

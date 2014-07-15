@@ -19,15 +19,11 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 SQL_DEBUG = True
 
-ADMINS = (
-)
 EMAIL_SUBJECT_PREFIX = '[Oscar demo] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ALLOWED_HOSTS = ['demo.oscarcommerce.com',
                  'demo.oscar.tangentlabs.co.uk']
-
-MANAGERS = ADMINS
 
 # Use settings_local to override this default
 DATABASES = {
@@ -38,6 +34,8 @@ DATABASES = {
         'ATOMIC_REQUESTS': True
     },
 }
+
+SITE_ID = 1
 
 CACHES = {
     'default': {
@@ -61,8 +59,6 @@ LANGUAGE_CODE = 'en-gb'
 LANGUAGES = (
     ('en-gb', 'English'),
 )
-
-SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
