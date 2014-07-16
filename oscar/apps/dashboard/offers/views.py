@@ -34,8 +34,8 @@ class OfferListView(ListView):
     form_class = OfferSearchForm
 
     def get_queryset(self):
-        qs = self.model._default_manager.filter(
-            offer_type=ConditionalOffer.SITE)
+        qs = self.model._default_manager.exclude(
+            offer_type=ConditionalOffer.VOUCHER)
         qs = sort_queryset(qs, self.request,
                            ['name', 'start_datetime', 'end_datetime',
                             'num_applications', 'total_discount'])
