@@ -75,7 +75,6 @@ class AbstractUser(auth_models.AbstractBaseUser,
 
     class Meta:
         abstract = True
-        app_label = 'customer'
         verbose_name = _('User')
         verbose_name_plural = _('Users')
 
