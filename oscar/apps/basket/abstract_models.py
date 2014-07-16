@@ -653,7 +653,7 @@ class AbstractLine(models.Model):
         """
         Return a breakdown of line prices after discounts have been applied.
 
-        Returns a list of (unit_price_incl_tx, unit_price_excl_tax, quantity)
+        Returns a list of (unit_price_incl_tax, unit_price_excl_tax, quantity)
         tuples.
         """
         if not self.is_tax_known:
