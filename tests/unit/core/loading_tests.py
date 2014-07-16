@@ -38,9 +38,13 @@ class TestClassLoading(TestCase):
             get_class('catalogue.models', 'Monkey')
 
     def test_raise_importerror_if_app_raises_importerror(self):
-        installed_apps = list(settings.INSTALLED_APPS)
-        installed_apps.insert(0, 'tests._site.import_error_app.catalogue')
-        with override_settings(INSTALLED_APPS=installed_apps):
+        """
+        This tests that Oscar doesn't fall back to using the Oscar catalogue
+        app if the overriding app throws an ImportError.
+        """
+        apps = list(settings.INSTALLED_APPS)
+        apps[apps.index('oscar.apps.catalogue')] = 'tests._site.import_error_app.catalogue'
+        with override_settings(INSTALLED_APPS=apps):
             with self.assertRaises(ImportError):
                 get_class('catalogue.app', 'CatalogueApplication')
 
