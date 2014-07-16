@@ -7639,14 +7639,14 @@ form.flat {
   padding: 0 0 5px 0;
   list-style: none;
 }
-.controls .error-block {
+.error-block {
   color: #b94a48;
 }
 .control-label.required span {
   color: #FF0000;
 }
 .navbar-static-top.navbar .nav > li > a {
-  padding: 10px 0 10px 15px;
+  padding: 10px 15px;
 }
 .header {
   position: relative;
