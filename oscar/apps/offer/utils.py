@@ -61,8 +61,9 @@ class Applicator(object):
         user_offers = self.get_user_offers(request.user)
         session_offers = self.get_session_offers(request)
 
-        return list(chain(
-            session_offers, basket_offers, user_offers, site_offers))
+        return list(sorted(chain(
+            session_offers, basket_offers, user_offers, site_offers),
+            key=lambda o: o.priority, reverse=True))
 
     def get_site_offers(self):
         """
