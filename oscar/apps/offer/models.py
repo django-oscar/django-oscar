@@ -12,7 +12,6 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
-from oscar.core.loading import model_registered
 from oscar.core.utils import slugify
 from oscar.core.loading import get_class, get_model
 from oscar.apps.offer.managers import ActiveOfferManager
@@ -288,7 +287,7 @@ class ConditionalOffer(models.Model):
         return min(limits)
 
     def get_num_user_applications(self, user):
-        OrderDiscount = models.get_model('order', 'OrderDiscount')
+        OrderDiscount = get_model('order', 'OrderDiscount')
         aggregates = OrderDiscount.objects.filter(offer_id=self.id,
                                                   order__user=user)\
             .aggregate(total=models.Sum('frequency'))
