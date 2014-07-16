@@ -93,6 +93,7 @@ class AbstractPromotion(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'promotions'
         verbose_name = _("Promotion")
         verbose_name_plural = _("Promotions")
 
@@ -150,6 +151,7 @@ class RawHTML(AbstractPromotion):
     date_created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        app_label = 'promotions'
         verbose_name = _('Raw HTML')
         verbose_name_plural = _('Raw HTML')
 
@@ -178,6 +180,7 @@ class Image(AbstractPromotion):
         return self.name
 
     class Meta:
+        app_label = 'promotions'
         verbose_name = _("Image")
         verbose_name_plural = _("Image")
 
@@ -201,6 +204,7 @@ class MultiImage(AbstractPromotion):
         return self.name
 
     class Meta:
+        app_label = 'promotions'
         verbose_name = _("Multi Image")
         verbose_name_plural = _("Multi Images")
 
@@ -219,8 +223,9 @@ class SingleProduct(AbstractPromotion):
         return {'product': self.product}
 
     class Meta:
-        verbose_name = _("Single Product")
-        verbose_name_plural = _("Single Product")
+        app_label = 'promotions'
+        verbose_name = _("Single product")
+        verbose_name_plural = _("Single product")
 
 
 class AbstractProductList(AbstractPromotion):
@@ -238,8 +243,9 @@ class AbstractProductList(AbstractPromotion):
 
     class Meta:
         abstract = True
-        verbose_name = _("Product List")
-        verbose_name_plural = _("Product Lists")
+        app_label = 'promotions'
+        verbose_name = _("Product list")
+        verbose_name_plural = _("Product lists")
 
     def __unicode__(self):
         return self.name
@@ -266,6 +272,7 @@ class HandPickedProductList(AbstractProductList):
         return self.get_queryset()
 
     class Meta:
+        app_label = 'promotions'
         verbose_name = _("Hand Picked Product List")
         verbose_name_plural = _("Hand Picked Product Lists")
 
@@ -278,10 +285,11 @@ class OrderedProduct(models.Model):
     display_order = models.PositiveIntegerField(_('Display Order'), default=0)
 
     class Meta:
+        app_label = 'promotions'
         ordering = ('display_order',)
-        verbose_name = _("Ordered Product")
-        verbose_name_plural = _("Ordered Product")
         unique_together = ('list', 'product')
+        verbose_name = _("Ordered product")
+        verbose_name_plural = _("Ordered product")
 
 
 class AutomaticProductList(AbstractProductList):
@@ -308,8 +316,9 @@ class AutomaticProductList(AbstractProductList):
         return self.get_queryset()[:self.num_products]
 
     class Meta:
-        verbose_name = _("Automatic Product List")
-        verbose_name_plural = _("Automatic Product Lists")
+        app_label = 'promotions'
+        verbose_name = _("Automatic product list")
+        verbose_name_plural = _("Automatic product lists")
 
 
 class OrderedProductList(HandPickedProductList):
@@ -319,6 +328,7 @@ class OrderedProductList(HandPickedProductList):
     display_order = models.PositiveIntegerField(_('Display Order'), default=0)
 
     class Meta:
+        app_label = 'promotions'
         ordering = ('display_order',)
         verbose_name = _("Ordered Product List")
         verbose_name_plural = _("Ordered Product Lists")
@@ -332,5 +342,6 @@ class TabbedBlock(AbstractPromotion):
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     class Meta:
+        app_label = 'promotions'
         verbose_name = _("Tabbed Block")
         verbose_name_plural = _("Tabbed Blocks")

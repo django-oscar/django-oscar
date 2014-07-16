@@ -75,6 +75,7 @@ class AbstractUser(auth_models.AbstractBaseUser,
 
     class Meta:
         abstract = True
+        app_label = 'customer'
         verbose_name = _('User')
         verbose_name_plural = _('Users')
 
@@ -267,6 +268,8 @@ class AbstractNotification(models.Model):
         abstract = True
         app_label = 'customer'
         ordering = ('-date_sent',)
+        verbose_name = _('Notification')
+        verbose_name_plural = _('Notifications')
 
     def __unicode__(self):
         return self.subject
@@ -325,6 +328,9 @@ class AbstractProductAlert(models.Model):
     class Meta:
         abstract = True
         app_label = 'customer'
+        verbose_name = _('Product alert')
+        verbose_name_plural = _('Product alerts')
+
 
     @property
     def is_anonymous(self):

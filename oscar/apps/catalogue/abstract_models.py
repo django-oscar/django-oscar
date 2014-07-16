@@ -63,8 +63,8 @@ class AbstractProductClass(models.Model):
         abstract = True
         app_label = 'catalogue'
         ordering = ['name']
-        verbose_name = _("Product Class")
-        verbose_name_plural = _("Product Classes")
+        verbose_name = _("Product class")
+        verbose_name_plural = _("Product classes")
 
     def __unicode__(self):
         return self.name
@@ -187,9 +187,9 @@ class AbstractProductCategory(models.Model):
         abstract = True
         app_label = 'catalogue'
         ordering = ['product', 'category']
-        verbose_name = _('Product Category')
-        verbose_name_plural = _('Product Categories')
         unique_together = ('product', 'category')
+        verbose_name = _('Product category')
+        verbose_name_plural = _('Product categories')
 
     def __unicode__(self):
         return u"<productcategory for product '%s'>" % self.product
@@ -584,10 +584,10 @@ class AbstractProductRecommendation(models.Model):
     class Meta:
         abstract = True
         app_label = 'catalogue'
-        verbose_name = _('Product Recommendation')
-        verbose_name_plural = _('Product Recomendations')
         ordering = ['primary', '-ranking']
         unique_together = ('primary', 'recommendation')
+        verbose_name = _('Product recommendation')
+        verbose_name_plural = _('Product recomendations')
 
 
 class ProductAttributesContainer(object):
@@ -709,8 +709,8 @@ class AbstractProductAttribute(models.Model):
         abstract = True
         app_label = 'catalogue'
         ordering = ['code']
-        verbose_name = _('Product Attribute')
-        verbose_name_plural = _('Product Attributes')
+        verbose_name = _('Product attribute')
+        verbose_name_plural = _('Product attributes')
 
     @property
     def is_option(self):
@@ -863,9 +863,9 @@ class AbstractProductAttributeValue(models.Model):
     class Meta:
         abstract = True
         app_label = 'catalogue'
-        verbose_name = _('Product Attribute Value')
-        verbose_name_plural = _('Product Attribute Values')
         unique_together = ('attribute', 'product')
+        verbose_name = _('Product attribute value')
+        verbose_name_plural = _('Product attribute values')
 
     def __unicode__(self):
         return self.summary()
@@ -929,8 +929,8 @@ class AbstractAttributeOptionGroup(models.Model):
     class Meta:
         abstract = True
         app_label = 'catalogue'
-        verbose_name = _('Attribute Option Group')
-        verbose_name_plural = _('Attribute Option Groups')
+        verbose_name = _('Attribute option group')
+        verbose_name_plural = _('Attribute option groups')
 
     @property
     def option_summary(self):
@@ -954,8 +954,8 @@ class AbstractAttributeOption(models.Model):
     class Meta:
         abstract = True
         app_label = 'catalogue'
-        verbose_name = _('Attribute Option')
-        verbose_name_plural = _('Attribute Options')
+        verbose_name = _('Attribute option')
+        verbose_name_plural = _('Attribute options')
 
 
 class AbstractOption(models.Model):
@@ -1054,12 +1054,12 @@ class AbstractProductImage(models.Model):
     class Meta:
         abstract = True
         app_label = 'catalogue'
-        unique_together = ("product", "display_order")
         # Any custom models should ensure that this ordering is unchanged, or
         # your query count will explode. See AbstractProduct.primary_image.
         ordering = ["display_order"]
-        verbose_name = _('Product Image')
-        verbose_name_plural = _('Product Images')
+        unique_together = ("product", "display_order")
+        verbose_name = _('Product image')
+        verbose_name_plural = _('Product images')
 
     def __unicode__(self):
         return u"Image of '%s'" % self.product

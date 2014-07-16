@@ -252,5 +252,5 @@ class AbstractStockAlert(models.Model):
         abstract = True
         app_label = 'partner'
         ordering = ('-date_created',)
-        verbose_name = _('Stock Alert')
-        verbose_name_plural = _('Stock Alerts')
+        verbose_name = _('Stock alert')
+        verbose_name_plural = _('Stock alerts')

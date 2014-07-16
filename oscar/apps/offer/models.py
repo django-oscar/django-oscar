@@ -173,6 +173,7 @@ class ConditionalOffer(models.Model):
     _voucher = None
 
     class Meta:
+        app_label = 'offer'
         ordering = ['-priority']
         verbose_name = _("Conditional offer")
         verbose_name_plural = _("Conditional offers")
@@ -427,6 +428,7 @@ class Condition(models.Model):
         _("Custom class"), max_length=255, unique=True, default=None)
 
     class Meta:
+        app_label = 'offer'
         verbose_name = _("Condition")
         verbose_name_plural = _("Conditions")
 
@@ -562,6 +564,7 @@ class Benefit(models.Model):
         _("Custom class"), max_length=255, unique=True, default=None)
 
     class Meta:
+        app_label = 'offer'
         verbose_name = _("Benefit")
         verbose_name_plural = _("Benefits")
 
@@ -784,6 +787,7 @@ class Range(models.Model):
     browsable = BrowsableRangeManager()
 
     class Meta:
+        app_label = 'offer'
         verbose_name = _("Range")
         verbose_name_plural = _("Ranges")
 
@@ -911,6 +915,7 @@ class RangeProduct(models.Model):
     display_order = models.IntegerField(default=0)
 
     class Meta:
+        app_label = 'offer'
         unique_together = ('range', 'product')
 
 # ==========
@@ -939,8 +944,8 @@ class CountCondition(Condition):
 
     class Meta:
         proxy = True
-        verbose_name = _("Count Condition")
-        verbose_name_plural = _("Count Conditions")
+        verbose_name = _("Count condition")
+        verbose_name_plural = _("Count conditions")
 
     def is_satisfied(self, offer, basket):
         """
@@ -1130,8 +1135,8 @@ class ValueCondition(Condition):
 
     class Meta:
         proxy = True
-        verbose_name = _("Value Condition")
-        verbose_name_plural = _("Value Conditions")
+        verbose_name = _("Value condition")
+        verbose_name_plural = _("Value conditions")
 
     def is_satisfied(self, offer, basket):
         """
