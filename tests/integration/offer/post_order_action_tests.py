@@ -19,7 +19,7 @@ class CustomAction(models.Benefit):
         return models.PostOrderAction(
             "Something will happen")
 
-    def apply_deferred(self, basket):
+    def apply_deferred(self, basket, order, application):
         return "Something happened"
 
     @property

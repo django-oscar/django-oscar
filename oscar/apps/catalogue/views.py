@@ -48,7 +48,7 @@ class ProductDetailView(DetailView):
 
     def redirect_if_necessary(self, current_path, product):
         if self.enforce_paths:
-            if product.is_variant:
+            if product.is_child:
                 return HttpResponsePermanentRedirect(
                     product.parent.get_absolute_url())
 

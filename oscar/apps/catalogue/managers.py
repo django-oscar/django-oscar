@@ -9,7 +9,7 @@ class ProductQuerySet(models.query.QuerySet):
         models to save on queries
         """
         return self.select_related('product_class')\
-            .prefetch_related('variants',
+            .prefetch_related('children',
                               'product_options',
                               'product_class__options',
                               'stockrecords',

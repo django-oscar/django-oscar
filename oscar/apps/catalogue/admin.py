@@ -40,9 +40,8 @@ class ProductClassAdmin(admin.ModelAdmin):
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('get_title', 'upc', 'get_product_class', 'is_top_level',
-                    'is_variant', 'attribute_summary',
-                    'date_created')
+    list_display = ('get_title', 'upc', 'get_product_class', 'structure',
+                    'attribute_summary', 'date_created')
     prepopulated_fields = {"slug": ("title",)}
     inlines = [AttributeInline, CategoryInline, ProductRecommendationInline]
 

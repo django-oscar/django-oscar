@@ -318,6 +318,11 @@ Migrations
     affected ``None``'s to ``''`` yourself; see the data migrations for our
     approach.
 
+.. note::
+
+    Be sure to read the detailed instructions for
+    :doc:`handling migrations </topics/upgrading>`.
+
 * Address:
 
     - ``0008`` - Forgotten migration for ``UserAddress.phone_number``

@@ -149,21 +149,26 @@ class CheckoutSessionMixin(object):
 
     def check_shipping_data_is_captured(self, request):
         if not request.basket.is_shipping_required():
+            # Even without shipping being required, we still need to check that
+            # a shipping method code has been set.
+            if not self.checkout_session.is_shipping_method_set(
+                    self.request.basket):
+                raise exceptions.FailedPreCondition(
+                    url=reverse('checkout:shipping-method'),
+                )
             return
 
+        # Basket requires shipping: check address and method are captured and
+        # valid.
+        self.check_a_valid_shipping_address_is_captured()
+        self.check_a_valid_shipping_method_is_captured()
+
+    def check_a_valid_shipping_address_is_captured(self):
         # Check that shipping address has been completed
         if not self.checkout_session.is_shipping_address_set():
             raise exceptions.FailedPreCondition(
                 url=reverse('checkout:shipping-address'),
                 message=_("Please choose a shipping address")
-            )
-
-        # Check that shipping method has been set
-        if not self.checkout_session.is_shipping_method_set(
-                self.request.basket):
-            raise exceptions.FailedPreCondition(
-                url=reverse('checkout:shipping-method'),
-                message=_("Please choose a shipping method")
             )
 
         # Check that the previously chosen shipping address is still valid
@@ -176,7 +181,18 @@ class CheckoutSessionMixin(object):
                           "no longer valid.  Please choose another one")
             )
 
+    def check_a_valid_shipping_method_is_captured(self):
+        # Check that shipping method has been set
+        if not self.checkout_session.is_shipping_method_set(
+                self.request.basket):
+            raise exceptions.FailedPreCondition(
+                url=reverse('checkout:shipping-method'),
+                message=_("Please choose a shipping method")
+            )
+
         # Check that a *valid* shipping method has been set
+        shipping_address = self.get_shipping_address(
+            basket=self.request.basket)
         shipping_method = self.get_shipping_method(
             basket=self.request.basket,
             shipping_address=shipping_address)
@@ -202,7 +218,7 @@ class CheckoutSessionMixin(object):
         # not be if the basket is purely downloads
         if not request.basket.is_shipping_required():
             raise exceptions.PassedSkipCondition(
-                url=reverse('checkout:payment-method')
+                url=reverse('checkout:shipping-method')
             )
 
     def skip_unless_payment_is_required(self, request):
@@ -211,6 +227,13 @@ class CheckoutSessionMixin(object):
         shipping_method = self.get_shipping_method(
             request.basket, shipping_address)
         shipping_charge = shipping_method.calculate(request.basket)
+        #if shipping_method:
+        #    shipping_charge = shipping_method.calculate(request.basket)
+        #else:
+        #    # It's unusual to get here as a shipping method should be set by
+        #    # the time this skip-condition is called. In the absence of any
+        #    # other evidence, we assume the shipping charge is zero.
+        #    shipping_charge = D('0.00')
         total = self.get_order_totals(request.basket, shipping_charge)
         if total.excl_tax == D('0.00'):
             raise exceptions.PassedSkipCondition(

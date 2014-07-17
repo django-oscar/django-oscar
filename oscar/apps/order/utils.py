@@ -74,7 +74,8 @@ class OrderCreator(object):
             # Trigger any deferred benefits from offers and capture the
             # resulting message
             application['message'] \
-                = application['offer'].apply_deferred_benefit(basket)
+                = application['offer'].apply_deferred_benefit(basket, order,
+                                                              application)
             # Record offer application results
             if application['result'].affects_shipping:
                 # Skip zero shipping discounts

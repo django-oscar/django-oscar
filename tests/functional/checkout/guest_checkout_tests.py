@@ -71,7 +71,7 @@ class TestShippingAddressView(CheckoutMixin, WebTestCase):
         self.enter_guest_details()
 
         response = self.get(reverse('checkout:shipping-address'))
-        self.assertRedirectUrlName(response, 'checkout:payment-method')
+        self.assertRedirectUrlName(response, 'checkout:shipping-method')
 
     def test_redirects_customers_with_invalid_basket(self):
         # Add product to basket but then remove its stock so it is not

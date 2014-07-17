@@ -47,7 +47,6 @@ class BulkEditMixin(object):
 
     # Permitted methods that can be used to act on the selected objects
     actions = None
-    current_view = None
     checkbox_object_name = None
 
     def get_checkbox_object_name(self):

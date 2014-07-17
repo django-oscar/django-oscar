@@ -46,10 +46,10 @@
             <p>Delete product <strong>{{ title }}</strong> - are you sure?</p>
         {% endblocktrans %}
 
-        {% if product.is_group %}
+        {% if product.is_parent %}
             <p> {% trans "This will also delete the following variant products:" %}
                 <ul>
-                    {% for variant in product.variants.all %}
+                    {% for variant in product.children.all %}
                         <li><strong>{{ variant.title }}</strong></li>
                     {% endfor %}
                 </ul>

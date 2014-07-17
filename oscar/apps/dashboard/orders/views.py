@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import fields, Q, Sum, Count
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.utils.datastructures import SortedDict
 from django.views.generic import ListView, DetailView, UpdateView, FormView
 from django.conf import settings
@@ -119,8 +119,7 @@ class OrderListView(BulkEditMixin, ListView):
                       "%(status_filter)s")
     paginate_by = 25
     description = ''
-    actions = ('download_selected_orders',)
-    current_view = 'dashboard:order-list'
+    actions = ('download_selected_orders', 'change_order_statuses')
 
     def dispatch(self, request, *args, **kwargs):
         # base_queryset is equal to all orders the user is allowed to access
@@ -138,9 +137,8 @@ class OrderListView(BulkEditMixin, ListView):
             except Order.DoesNotExist:
                 pass
             else:
-                url = reverse('dashboard:order-detail',
-                              kwargs={'number': order.number})
-                return HttpResponseRedirect(url)
+                return redirect(
+                    'dashboard:order-detail', number=order.number)
         return super(OrderListView, self).get(request, *args, **kwargs)
 
     def get_desc_context(self, data=None):  # noqa (too complex (16))
@@ -303,6 +301,7 @@ class OrderListView(BulkEditMixin, ListView):
         ctx = super(OrderListView, self).get_context_data(**kwargs)
         ctx['queryset_description'] = self.description
         ctx['form'] = self.form
+        ctx['order_statuses'] = Order.all_statuses()
         return ctx
 
     def is_csv_download(self):
@@ -360,6 +359,37 @@ class OrderListView(BulkEditMixin, ListView):
                 row['billing_address_name'] = ''
             writer.writerow(row)
         return response
+
+    def change_order_statuses(self, request, orders):
+        for order in orders:
+            self.change_order_status(request, order)
+        return redirect('dashboard:order-list')
+
+    def change_order_status(self, request, order):
+        # This method is pretty similar to what
+        # OrderDetailView.change_order_status does. Ripe for refactoring.
+        new_status = request.POST['new_status'].strip()
+        if not new_status:
+            messages.error(request, _("The new status '%s' is not valid")
+                           % new_status)
+        elif new_status not in order.available_statuses():
+            messages.error(request, _("The new status '%s' is not valid for"
+                                      " this order") % new_status)
+        else:
+            handler = EventHandler(request.user)
+            old_status = order.status
+            try:
+                handler.handle_order_status_change(order, new_status)
+            except PaymentError as e:
+                messages.error(request, _("Unable to change order status due"
+                                          " to payment error: %s") % e)
+            else:
+                msg = _("Order status changed from '%(old_status)s' to"
+                        " '%(new_status)s'") % {'old_status': old_status,
+                                                'new_status': new_status}
+                messages.info(request, msg)
+                order.notes.create(
+                    user=request.user, message=msg, note_type=OrderNote.SYSTEM)
 
 
 class OrderDetailView(DetailView):

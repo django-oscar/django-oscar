@@ -2750,6 +2750,7 @@ h3.app-ico:before {
 .btn-group > .dropdown-menu,
 .btn {
   font-size: 12px;
+  font-family: inherit;
 }
 .btn-warning,
 .btn-success,
@@ -2766,6 +2767,7 @@ h3.app-ico:before {
   border-color: #e6e6e6 #e6e6e6 #bfbfbf;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  text-shadow: none;
   color: inherit;
   *color: #333;
 }
@@ -2802,6 +2804,49 @@ h3.app-ico:before {
 .btn-info:active {
   color: inherit;
   *color: #333;
+}
+.btn-warning:focus,
+.btn-success:focus,
+.btn-info:focus {
+  background-color: #e8e8e8;
+  background-image: -moz-linear-gradient(top, #d9d9d9, #ffffff);
+  background-image: -ms-linear-gradient(top, #d9d9d9, #ffffff);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#d9d9d9), to(#ffffff));
+  background-image: -webkit-linear-gradient(top, #d9d9d9, #ffffff);
+  background-image: -o-linear-gradient(top, #d9d9d9, #ffffff);
+  background-image: linear-gradient(top, #d9d9d9, #ffffff);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d9d9d9', endColorstr='#ffffff', GradientType=0);
+  border-color: #ffffff #ffffff #d9d9d9;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  background-position: 0 0;
+  color: #333;
+}
+.btn-warning:focus:hover,
+.btn-success:focus:hover,
+.btn-info:focus:hover,
+.btn-warning:focus:active,
+.btn-success:focus:active,
+.btn-info:focus:active,
+.btn-warning:focus.active,
+.btn-success:focus.active,
+.btn-info:focus.active,
+.btn-warning:focus.disabled,
+.btn-success:focus.disabled,
+.btn-info:focus.disabled,
+.btn-warning:focus[disabled],
+.btn-success:focus[disabled],
+.btn-info:focus[disabled] {
+  background-color: #ffffff;
+}
+.btn-warning:focus:active,
+.btn-success:focus:active,
+.btn-info:focus:active,
+.btn-warning:focus.active,
+.btn-success:focus.active,
+.btn-info:focus.active {
+  background-color: #e6e6e6 \9;
 }
 .btn-primary {
   background-color: #006fb5;
@@ -2882,9 +2927,16 @@ td .btn-toolbar {
 .form-inline .control-group {
   margin-right: 10px;
 }
+.form-stacked .error-block {
+  display: block;
+  color: #b94a48;
+}
 .fields-full input[type=text],
 .fields-full textarea {
   width: 100%;
+}
+form.flat {
+  margin: 0;
 }
 .well .form-actions,
 .tabbable.dashboard .tab-content .form-actions {
@@ -2897,7 +2949,7 @@ td .btn-toolbar {
   border-top-color: #ccc;
 }
 .tabbable.dashboard .tab-content .form-actions {
-  bottom: -29px;
+  bottom: -50px;
   left: -29px;
   padding-left: 29px;
   padding-right: 29px;

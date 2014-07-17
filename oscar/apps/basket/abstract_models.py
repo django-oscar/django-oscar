@@ -617,8 +617,6 @@ class AbstractLine(models.Model):
     def discount(self, discount_value, affected_quantity, incl_tax=True):
         """
         Apply a discount to this line
-
-        Note that it only makes sense to apply
         """
         if incl_tax:
             if self._discount_excl_tax > 0:

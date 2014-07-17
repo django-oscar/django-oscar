@@ -167,9 +167,13 @@ The last addition to the settings file is to import all of Oscar's default setti
 URLs
 ====
 
-Alter your ``frobshop/urls.py`` to include Oscar's URLs. If you have more than
-one language set your Django settings for ``LANGUAGES``, you will also need to
-include Django's i18n URLs:
+Alter your ``frobshop/urls.py`` to include Oscar's URLs. You can also include
+the Django admin for debugging purposes. But please note that Oscar makes no
+attempts at having that be a workable interface; admin integration exists
+to ease the life of developers.
+
+If you have more than one language set your Django settings for ``LANGUAGES``,
+you will also need to include Django's i18n URLs:
 
 .. code-block:: django
 
@@ -178,7 +182,12 @@ include Django's i18n URLs:
 
     urlpatterns = [
         url(r'^i18n/', include('django.conf.urls.i18n')),
-        url(r'', include(application.urls))
+
+        # The Django admin is not officially supported; expect breakage.
+        # Nonetheless, it's often useful for debugging.
+        url(r'^admin/', include(admin.site.urls)),
+
+        url(r'', include(application.urls)),
     ]
 
 Search backend
@@ -251,24 +260,23 @@ Fixtures
 
 The default checkout process requires a shipping address with a country.  Oscar
 uses a model for countries with flags that indicate which are valid shipping
-countries and so the ``address_country`` database table must be populated before
+countries and so the ``country`` database table must be populated before
 a customer can check out.
 
-This is easily achieved using fixtures.  Oscar ships with a ``countries.json``
-fixture that loads most countries from the `ISO 3166 standard`_.  This can loaded
-via::
+The easiest way to achieve this is to use country data from the `pycountry`_
+package. Oscar ships with a management command to parse that data::
 
-    $ python manage.py loaddata countries
+.. code-block:: bash
 
-Note however that this file only sets the UK as a valid shipping country.  If
-you want other countries to be available, it would make more sense to take a
-copy of Oscar's countries fixture and edit it as you see it before loading it.
+    $ pip install pycountry
+    [...]
+    $ python manage.py oscar_populate_countries
 
-Further, a simple way of loading countries for your project is to use a `data
-migration`_.
+By default, this command will mark all countries as a shipping country. Call
+it with the ``--no-shipping`` option to prevent that. You then need to
+manually mark at least one country as a shipping country.
 
-.. _`ISO 3166 standard`: http://en.wikipedia.org/wiki/ISO_3166
-.. _`data migration`: http://codeinthehole.com/writing/prefer-data-migrations-to-initial-data/
+.. _pycountry: https://pypi.python.org/pypi/pycountry
 
 
 Creating product classes and fulfillment partners

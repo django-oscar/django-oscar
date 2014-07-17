@@ -114,11 +114,12 @@ class TestAStaffUser(WebTestCase):
         self.assertRaises(ProductCategory.DoesNotExist,
                           ProductCategory.objects.get, id=product_category.id)
 
-    def test_can_delete_a_canonical_product(self):
-        canonical_product = create_product(title="Canonical Product",
-                                           partner_users=[self.user,])
+    def test_can_delete_a_parent_product(self):
+        parent_product = create_product(
+            title="Canonical Product", partner_users=[self.user,],
+            structure='parent')
 
-        product = create_product(title="Variant 1", parent=canonical_product)
+        product = create_product(title="Variant 1", parent=parent_product)
         stockrecord = create_stockrecord(product)
 
         category = Category.add_root(name='Test Category')
@@ -126,7 +127,7 @@ class TestAStaffUser(WebTestCase):
             category=category, product=product)
 
         page = self.get(reverse('dashboard:catalogue-product-delete',
-                                args=(canonical_product.id,))).form.submit()
+                                args=(parent_product.id,))).form.submit()
 
         self.assertRedirects(page, reverse('dashboard:catalogue-product-list'))
 
@@ -135,7 +136,7 @@ class TestAStaffUser(WebTestCase):
         self.assertEqual(ProductCategory.objects.count(), 0)
 
         self.assertRaises(Product.DoesNotExist,
-                          Product.objects.get, id=canonical_product.id)
+                          Product.objects.get, id=parent_product.id)
 
         self.assertRaises(Product.DoesNotExist,
                           Product.objects.get, id=product.id)

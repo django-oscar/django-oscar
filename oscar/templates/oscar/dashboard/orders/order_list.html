@@ -54,7 +54,7 @@
 
         <div class="modal hide fade" id="SearchModal">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h3>{% trans "Advanced Search" %}</h3>
             </div>
             <form action="." method="get" class="form-horizontal">
@@ -90,7 +90,8 @@
 
                 <thead>
                     <tr>
-                        <th>{% trans "Select all" %}</th>
+                        <th></th>
+                        <th></th>
                         <th>{% anchor 'number' _("Order number") %}</th>
                         <th>{% anchor 'total_incl_tax' _("Total inc tax") %}</th>
                         <th>{% trans "Number of items" %}</th>
@@ -99,7 +100,6 @@
                         <th>{% trans "Shipping address" %}</th>
                         <th>{% trans "Billing address" %}</th>
                         <th>{% trans "Date of purchase" %}</th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -130,6 +130,32 @@
                 </tbody>
             </table>
             {% endblock order_list %}
+          
+            {% block order_actions %}
+                <div class="well">
+                    <h3><i class="icon-warning"></i> {% trans "Change order status" %}:</h3>
+                    {% if order_statuses %}
+                        <div class="control-group">
+                            <div class="controls">
+                                
+                            <select name="new_status">
+                                <option value=""> -- {% trans "choose new status" %} -- </option>
+                                {% for status in order_statuses %}
+                                    <option>{{ status }}</option>
+                                {% endfor %}
+                            </select>
+                                
+                            </div>
+                        </div>
+                        
+                        <input type="checkbox" value="change_order_statuses" name="action" />
+                        <input type="submit" value="{% trans "Change status" %}" class="btn btn-primary" />
+                    {% else %}
+                        {% trans "This order can't have its status changed." %}
+                    {% endif %}
+                </div>
+            {% endblock %}
+           
 
             {% include "dashboard/orders/partials/bulk_edit_form.html" with status=active_status %}
             {% include "partials/pagination.html" %}

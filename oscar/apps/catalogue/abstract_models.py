@@ -20,6 +20,7 @@ from django.contrib.contenttypes.generic import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
 from treebeard.mp_tree import MP_Node
+from oscar.core.decorators import deprecated
 
 from oscar.core.utils import slugify
 from oscar.core.loading import get_classes, get_model
@@ -205,13 +206,26 @@ class AbstractProduct(models.Model):
     """
     The base product object
 
-    If an item has no parent, then it is the "canonical" or abstract version
-    of a product which essentially represents a set of products.  If a
-    product has a parent then it is a specific version of a catalogue.
+    There's three kinds of products; they're distinguished by the structure
+    field.
 
-    For example, a canonical product would have a title like "Green fleece"
-    while its children would be "Green fleece - size L".
+    - A stand alone product. Regular product that lives by itself.
+    - A child product. All child products have a parent product. They're a
+      specific version of the parent.
+    - A parent product. It essentially represents a set of products.
+
+    An example could be a yoga course, which is a parent product. The different
+    times/locations of the courses would be associated with the child products.
     """
+    STANDALONE, PARENT, CHILD = 'standalone', 'parent', 'child'
+    STRUCTURE_CHOICES = (
+        (STANDALONE, _('Stand-alone product')),
+        (PARENT, _('Parent product')),
+        (CHILD, _('Child product'))
+    )
+    structure = models.CharField(
+        _("Product structure"), max_length=10, choices=STRUCTURE_CHOICES,
+        default=STANDALONE)
 
     upc = NullCharField(
         _("UPC"), max_length=64, blank=True, null=True, unique=True,
@@ -219,23 +233,22 @@ class AbstractProduct(models.Model):
                     "a product which is not specific to a particular "
                     " supplier. Eg an ISBN for a book."))
 
-    # No canonical product should have a stock record as they cannot be bought.
     parent = models.ForeignKey(
-        'self', null=True, blank=True, related_name='variants',
-        verbose_name=_("Parent"),
-        help_text=_("Only choose a parent product if this is a 'variant' of "
-                    "a canonical catalogue.  For example if this is a size "
+        'self', null=True, blank=True, related_name='children',
+        verbose_name=_("Parent product"),
+        help_text=_("Only choose a parent product if you're creating a child "
+                    "product.  For example if this is a size "
                     "4 of a particular t-shirt.  Leave blank if this is a "
-                    "CANONICAL PRODUCT (ie there is only one version of this "
-                    "product)."))
+                    "stand-alone product (i.e. there is only one version of"
+                    " this product)."))
 
     # Title is mandatory for canonical products but optional for child products
     title = models.CharField(_('Product title'), max_length=255, blank=True)
     slug = models.SlugField(_('Slug'), max_length=255, unique=False)
     description = models.TextField(_('Description'), blank=True)
 
-    #: "Type" of product.
-    #: None for Product variants, they inherit their parent's product class
+    #: "Kind" of product, e.g. T-Shirt, Book, etc.
+    #: None for child products, they inherit their parent's product class
     product_class = models.ForeignKey(
         'catalogue.ProductClass', null=True, on_delete=models.PROTECT,
         verbose_name=_('Product Type'), related_name="products",
@@ -244,7 +257,7 @@ class AbstractProduct(models.Model):
         'catalogue.ProductAttribute',
         through='ProductAttributeValue',
         verbose_name=_("Attributes"),
-        help_text=_("A product attribute is something that this product MUST "
+        help_text=_("A product attribute is something that this product may "
                     "have, such as a size, as specified by its class"))
     product_options = models.ManyToManyField(
         'catalogue.Option', blank=True, verbose_name=_("Product Options"),
@@ -263,11 +276,11 @@ class AbstractProduct(models.Model):
     # Product has no ratings if rating is None
     rating = models.FloatField(_('Rating'), null=True, editable=False)
 
-    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
+    date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
 
     # This field is used by Haystack to reindex search
-    date_updated = models.DateTimeField(_("Date Updated"), auto_now=True,
-                                        db_index=True)
+    date_updated = models.DateTimeField(
+        _("Date updated"), auto_now=True, db_index=True)
 
     categories = models.ManyToManyField(
         'catalogue.Category', through='ProductCategory',
@@ -295,7 +308,7 @@ class AbstractProduct(models.Model):
         self.attr = ProductAttributesContainer(product=self)
 
     def __unicode__(self):
-        if self.is_variant:
+        if self.is_child:
             return u"%s (%s)" % (self.get_title(), self.attribute_summary)
         return self.get_title()
 
@@ -307,13 +320,40 @@ class AbstractProduct(models.Model):
                        kwargs={'product_slug': self.slug, 'pk': self.id})
 
     def clean(self):
-        if self.is_top_level and not self.title:
-            raise ValidationError(_("Canonical products must have a title"))
-        if self.is_top_level and not self.product_class:
-            raise ValidationError(
-                _("Canonical products must have a product class"))
-        if not self.is_group:
+        # call clean method for product structure
+        getattr(self, '_clean_%s' % self.structure)()
+        if not self.is_parent:
             self.attr.validate_attributes()
+
+    def _clean_standalone(self):
+        """
+        Validates a stand-alone product
+        """
+        if not self.title:
+            raise ValidationError(_("Your product must have a title."))
+        if not self.product_class:
+            raise ValidationError(_("Your product must have a product class."))
+        if self.parent_id:
+            raise ValidationError(_("Only child products can have a parent."))
+
+    def _clean_child(self):
+        """
+        Validates a child product
+        """
+        if not self.parent_id:
+            raise ValidationError(_("A child product needs a parent."))
+        if self.parent_id and not self.parent.is_parent:
+            raise ValidationError(
+                _("You can only assign child products to parent products."))
+
+    def _clean_parent(self):
+        """
+        Validates a parent product.
+        """
+        self._clean_standalone()
+        if self.has_stockrecords:
+            raise ValidationError(
+                _("A parent product can't have stockrecords."))
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -324,31 +364,24 @@ class AbstractProduct(models.Model):
     # Properties
 
     @property
+    def is_standalone(self):
+        return self.structure == self.STANDALONE
+
+    @property
+    def is_parent(self):
+        return self.structure == self.PARENT
+
+    @property
+    def is_child(self):
+        return self.structure == self.CHILD
+
+    @property
     def options(self):
         pclass = self.get_product_class()
         if pclass:
             return list(chain(self.product_options.all(),
                               self.get_product_class().options.all()))
         return self.product_options.all()
-
-    @property
-    def is_top_level(self):
-        """
-        Test if this product is a parent (who may or may not have children)
-        """
-        return self.parent_id is None
-
-    @cached_property
-    def is_group(self):
-        """
-        Test if this is a top level product and has more than 0 variants
-        """
-        return self.is_top_level and self.variants.exists()
-
-    @property
-    def is_variant(self):
-        """Return True if a product is not a top level product"""
-        return not self.is_top_level
 
     @property
     def is_shipping_required(self):
@@ -401,6 +434,37 @@ class AbstractProduct(models.Model):
             return None
         prices.sort()
         return prices[0]
+
+    # Deprecated properties
+
+    @property
+    @deprecated
+    def variants(self):
+        """
+        Provide backwards-compatible way to access a parent products children
+        """
+        return self.children
+
+    @property
+    @deprecated
+    def is_top_level(self):
+        """
+        Test if this product is a stand-alone or parent product
+        """
+        return self.is_standalone or self.is_parent
+
+    @property
+    @deprecated
+    def is_group(self):
+        """
+        Test if this is a top level product and has more than 0 variants
+        """
+        return self.is_parent
+
+    @property
+    def is_variant(self):
+        """Return True if a product is not a top level product"""
+        return self.is_child
 
     # Wrappers
 
@@ -613,21 +677,33 @@ class AbstractProductAttribute(models.Model):
             message=_("Code can only contain the letters a-z, A-Z, digits, "
                       "minus and underscores, and can't start with a digit"))])
 
+    # Attribute types
+    TEXT = "text"
+    INTEGER = "integer"
+    BOOLEAN = "boolean"
+    FLOAT = "float"
+    RICHTEXT = "richtext"
+    DATE = "date"
+    OPTION = "option"
+    ENTITY = "entity"
+    FILE = "file"
+    IMAGE = "image"
     TYPE_CHOICES = (
-        ("text", _("Text")),
-        ("integer", _("Integer")),
-        ("boolean", _("True / False")),
-        ("float", _("Float")),
-        ("richtext", _("Rich Text")),
-        ("date", _("Date")),
-        ("option", _("Option")),
-        ("entity", _("Entity")),
-        ("file", _("File")),
-        ("image", _("Image")),
+        (TEXT, _("Text")),
+        (INTEGER, _("Integer")),
+        (BOOLEAN, _("True / False")),
+        (FLOAT, _("Float")),
+        (RICHTEXT, _("Rich Text")),
+        (DATE, _("Date")),
+        (OPTION, _("Option")),
+        (ENTITY, _("Entity")),
+        (FILE, _("File")),
+        (IMAGE, _("Image")),
     )
     type = models.CharField(
         choices=TYPE_CHOICES, default=TYPE_CHOICES[0][0],
         max_length=20, verbose_name=_("Type"))
+
     option_group = models.ForeignKey(
         'catalogue.AttributeOptionGroup', blank=True, null=True,
         verbose_name=_("Option Group"),
@@ -642,63 +718,11 @@ class AbstractProductAttribute(models.Model):
 
     @property
     def is_option(self):
-        return self.type == "option"
+        return self.type == self.OPTION
 
     @property
     def is_file(self):
-        return self.type in ["file", "image"]
-
-    def _validate_text(self, value):
-        if not isinstance(value, six.string_types):
-            raise ValidationError(_("Must be str or unicode"))
-    _validate_richtext = _validate_text
-
-    def _validate_float(self, value):
-        try:
-            float(value)
-        except ValueError:
-            raise ValidationError(_("Must be a float"))
-
-    def _validate_int(self, value):
-        try:
-            int(value)
-        except ValueError:
-            raise ValidationError(_("Must be an integer"))
-
-    def _validate_date(self, value):
-        if not (isinstance(value, datetime) or isinstance(value, date)):
-            raise ValidationError(_("Must be a date or datetime"))
-
-    def _validate_bool(self, value):
-        if not type(value) == bool:
-            raise ValidationError(_("Must be a boolean"))
-
-    def _validate_entity(self, value):
-        # This feels rather naive
-        if not isinstance(value, models.Model):
-            raise ValidationError(_("Must be a model instance"))
-
-    def _validate_option(self, value):
-        if not isinstance(value, get_model('catalogue', 'AttributeOption')):
-            raise ValidationError(
-                _("Must be an AttributeOption model object instance"))
-        if not value.pk:
-            raise ValidationError(_("AttributeOption has not been saved yet"))
-        valid_values = self.option_group.options.values_list(
-            'option', flat=True)
-        if value.option not in valid_values:
-            raise ValidationError(
-                _("%(enum)s is not a valid choice for %(attr)s") %
-                {'enum': value, 'attr': self})
-
-    def _validate_file(self, value):
-        if value and not isinstance(value, File):
-            raise ValidationError(_("Must be a file field"))
-    _validate_image = _validate_file
-
-    def validate_value(self, value):
-        validator = getattr(self, '_validate_%s' % self.type)
-        validator(value)
+        return self.type in [self.FILE, self.IMAGE]
 
     def __unicode__(self):
         return self.name
@@ -737,12 +761,65 @@ class AbstractProductAttribute(models.Model):
                 value_obj.value = value
                 value_obj.save()
 
+    def validate_value(self, value):
+        validator = getattr(self, '_validate_%s' % self.type)
+        validator(value)
+
+    # Validators
+
+    def _validate_text(self, value):
+        if not isinstance(value, six.string_types):
+            raise ValidationError(_("Must be str or unicode"))
+    _validate_richtext = _validate_text
+
+    def _validate_float(self, value):
+        try:
+            float(value)
+        except ValueError:
+            raise ValidationError(_("Must be a float"))
+
+    def _validate_integer(self, value):
+        try:
+            int(value)
+        except ValueError:
+            raise ValidationError(_("Must be an integer"))
+
+    def _validate_date(self, value):
+        if not (isinstance(value, datetime) or isinstance(value, date)):
+            raise ValidationError(_("Must be a date or datetime"))
+
+    def _validate_boolean(self, value):
+        if not type(value) == bool:
+            raise ValidationError(_("Must be a boolean"))
+
+    def _validate_entity(self, value):
+        if not isinstance(value, models.Model):
+            raise ValidationError(_("Must be a model instance"))
+
+    def _validate_option(self, value):
+        if not isinstance(value, get_model('catalogue', 'AttributeOption')):
+            raise ValidationError(
+                _("Must be an AttributeOption model object instance"))
+        if not value.pk:
+            raise ValidationError(_("AttributeOption has not been saved yet"))
+        valid_values = self.option_group.options.values_list(
+            'option', flat=True)
+        if value.option not in valid_values:
+            raise ValidationError(
+                _("%(enum)s is not a valid choice for %(attr)s") %
+                {'enum': value, 'attr': self})
+
+    def _validate_file(self, value):
+        if value and not isinstance(value, File):
+            raise ValidationError(_("Must be a file field"))
+    _validate_image = _validate_file
+
 
 class AbstractProductAttributeValue(models.Model):
     """
-    The "through" model for the m2m relationship between catalogue.Product
-    and catalogue.ProductAttribute.
-    This specifies the value of the attribute for a particular product
+    The "through" model for the m2m relationship between catalogue.Product and
+    catalogue.ProductAttribute.  This specifies the value of the attribute for
+    a particular product
 
     For example: number_of_pages = 295
     """
@@ -751,6 +828,7 @@ class AbstractProductAttributeValue(models.Model):
     product = models.ForeignKey(
         'catalogue.Product', related_name='attribute_values',
         verbose_name=_("Product"))
+
     value_text = models.TextField(_('Text'), blank=True, null=True)
     value_integer = models.IntegerField(_('Integer'), blank=True, null=True)
     value_boolean = models.NullBooleanField(_('Boolean'), blank=True)
@@ -768,6 +846,7 @@ class AbstractProductAttributeValue(models.Model):
         blank=True, null=True)
     value_entity = GenericForeignKey(
         'entity_content_type', 'entity_object_id')
+
     entity_content_type = models.ForeignKey(
         ContentType, null=True, blank=True, editable=False)
     entity_object_id = models.PositiveIntegerField(
@@ -777,7 +856,7 @@ class AbstractProductAttributeValue(models.Model):
         return getattr(self, 'value_%s' % self.attribute.type)
 
     def _set_value(self, new_value):
-        if self.attribute.type == 'option' and isinstance(new_value, str):
+        if self.attribute.is_option and isinstance(new_value, str):
             # Need to look up instance of AttributeOption
             new_value = self.attribute.option_group.options.get(
                 option=new_value)
@@ -828,8 +907,7 @@ class AbstractProductAttributeValue(models.Model):
         """
         Returns a HTML representation of the attribute's value. To customise
         e.g. image attribute values, declare a _image_as_html property and
-        return e.g. an <img> tag.
-        Defaults to the _as_text representation.
+        return e.g. an <img> tag.  Defaults to the _as_text representation.
         """
         property_name = '_%s_as_html' % self.attribute.type
         return getattr(self, property_name, self.value_as_text)

@@ -42,8 +42,8 @@ partner.  The setting should be a dict from parter name to a path to a "wrapper"
 class.  For example::
 
     OSCAR_PARTNER_WRAPPERS = {
-        'Acme': 'myproject.partners.AcmeWrapper'
-        'Omnicorp': 'myproject.partners.OmnicorpWrapper'
+        'Acme': 'myproject.partners.AcmeWrapper',
+        'Omnicorp': 'myproject.partners.OmnicorpWrapper',
     }
 
 The wrapper class should subclass ``oscar.apps.partner.wrappers.DefaultWrapper``
@@ -471,8 +471,8 @@ backwards-compatibility.
 Example::
 
     # in myproject.utils
-    def some_slugify(value)
-        pass
+    def some_slugify(value):
+        return value
 
     # in settings.py
     OSCAR_SLUG_FUNCTION = 'myproject.utils.some_slugify'

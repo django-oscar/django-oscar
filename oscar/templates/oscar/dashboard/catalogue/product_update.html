@@ -45,7 +45,7 @@
                             {% endif %}
                             <li{% if not product %} class="active"{% endif %}><a href="#product_details" data-toggle="tab">{% trans 'Product details' %}</a></li>
                             <li><a href="#product_recommended" data-toggle="tab">{% trans 'Recommended Products' %}</a></li>
-                            {% if product.variants.exists %}
+                            {% if product.children.exists %}
                                 <li><a href="#product_variants" data-toggle="tab">{% trans 'Product variants' %}</a></li>
                             {% endif %}
                             <li><a href="#product_attributes" data-toggle="tab">{% trans 'Product attributes' %}</a></li>
@@ -178,7 +178,7 @@
                     {% endblock product_details %}
 
                     {% block product_variants %}
-                        {% with variants=product.variants.all %}
+                        {% with variants=product.children.all %}
                             {% if variants %}
                                 <div class="tab-pane" id="product_variants">
                                     {% block product_variants_content %}

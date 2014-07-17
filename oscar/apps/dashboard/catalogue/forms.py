@@ -247,17 +247,6 @@ def _attr_image_field(attribute):
 
 
 class ProductForm(forms.ModelForm):
-
-    # We need a special field to distinguish between group and standalone
-    # products.  It's impossible to tell when the product is first created.
-    # This is quite clunky but will be replaced when #693 is complete.
-    is_group = forms.BooleanField(
-        label=_("Is group product?"),
-        required=False,
-        help_text=_(
-            "Check this if this product is a group/parent product "
-            "that has variants (eg different sizes/colours available)"))
-
     FIELD_FACTORIES = {
         "text": _attr_text_field,
         "richtext": _attr_textarea_field,
@@ -275,9 +264,9 @@ class ProductForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        exclude = ('slug', 'product_class',
-                   'recommended_products', 'product_options',
-                   'attributes', 'categories')
+        fields = [
+            'structure', 'upc', 'parent', 'title', 'description',
+            'is_discountable']
         widgets = {
             'parent': ProductSelect,
         }
@@ -287,25 +276,16 @@ class ProductForm(forms.ModelForm):
         super(ProductForm, self).__init__(data, *args, **kwargs)
         self.instance.product_class = product_class
 
-        # Set the initial value of the is_group field.  This isn't watertight:
-        # if the product is intended to be a parent product but doesn't have
-        # any variants then we can't distinguish it from a standalone product
-        # and this checkbox won't have the right value.  This will be addressed
-        # in #693
-        instance = kwargs.get('instance', None)
-        if instance:
-            self.fields['is_group'].initial = instance.is_group
-
         # This is quite nasty.  We use the raw posted data to determine if the
-        # product is a group product, as this changes the validation rules we
+        # product is a parent product, as this changes the validation rules we
         # want to apply.
-        is_parent = data and data.get('is_group', '') == 'on'
+        is_parent = data and data.get('structure', '') == 'parent'
         self.add_attribute_fields(is_parent)
 
         parent = self.fields.get('parent', None)
-
         if parent is not None:
             parent.queryset = self.get_parent_products_queryset()
+
         if 'title' in self.fields:
             self.fields['title'].widget = forms.TextInput(
                 attrs={'autocomplete': 'off'})
@@ -342,11 +322,11 @@ class ProductForm(forms.ModelForm):
 
     def get_parent_products_queryset(self):
         """
-        :return: Canonical products excluding this product
+        :return: Parent products, minus this product
         """
         # Not using Product.browsable because a deployment might override
         # that manager to respect a status field or such like
-        queryset = Product._default_manager.filter(parent=None)
+        queryset = Product._default_manager.filter(structure=Product.PARENT)
         if self.instance.pk is not None:
             # Prevent selecting itself as parent
             queryset = queryset.exclude(pk=self.instance.pk)
@@ -388,12 +368,13 @@ class ProductCategoryFormSet(BaseProductCategoryFormSet):
         super(ProductCategoryFormSet, self).__init__(*args, **kwargs)
 
     def clean(self):
-        if self.instance.is_top_level and self.get_num_categories() == 0:
+        if not self.instance.is_child and self.get_num_categories() == 0:
             raise forms.ValidationError(
-                _("A top-level product must have at least one category"))
-        if self.instance.is_variant and self.get_num_categories() > 0:
+                _("Stand-alone and parent products "
+                  "must have at least one category"))
+        if self.instance.is_child and self.get_num_categories() > 0:
             raise forms.ValidationError(
-                _("A variant product should not have categories"))
+                _("A child product should not have categories"))
 
     def get_num_categories(self):
         num_categories = 0

@@ -42,8 +42,16 @@
                                         {% else %}
                                             <button type="submit" class="btn btn-primary ship-address">{% trans "Ship to this address" %}</button>
                                         {% endif %}
-                                        <a href="{% url 'checkout:user-address-update' pk=address.id %}">{% trans "Edit address" %}</a>
-                                        <a href="{% url 'checkout:user-address-delete' pk=address.id %}" class="btn btn-small btn-remove-address">{% trans "Delete" %}</a>
+                                        
+                                        <div class="btn-group address-controls">
+                                            <a href="{% url 'checkout:user-address-update' pk=address.id %}" class="btn btn-small">{% trans "Edit address" %}</a>
+                                            <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="{% url 'checkout:user-address-delete' pk=address.id %}" class="btn-remove-address">{% trans "Delete" %}</a></li>
+                                            </ul>
+                                        </div>
                                     </form>
                                 </div>
                             </li>
@@ -62,12 +70,14 @@
     {% endif %}
 
     {% block new_address_form %}
-        <form action="{% url 'checkout:shipping-address' %}" method="post" id="new_shipping_address">
+        <form action="{% url 'checkout:shipping-address' %}" method="post" id="new_shipping_address" class="form form-horizontal">
             <div class="well">
                 {% csrf_token %}
                 {% include "partials/form_fields.html" with form=form %}
-                <button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
-                {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
+                <div class="controls">
+                    <button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
+                    {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
+                </div>
             </div>
         </form>
     {% endblock %}

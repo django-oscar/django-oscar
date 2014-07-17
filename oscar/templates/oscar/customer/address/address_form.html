@@ -11,5 +11,7 @@
 {% endblock %}
 
 {% block tabcontent %}
-    {% include "partials/form.html" %}
+    {% with style='horizontal' %}
+        {% include "partials/form.html" %}
+    {% endwith %}
 {% endblock tabcontent %}

@@ -406,7 +406,6 @@ OSCAR_ORDER_STATUS_CASCADE = {
     'Complete': 'Shipped',
 }
 
-
 # LESS/CSS/statics
 # ================
 

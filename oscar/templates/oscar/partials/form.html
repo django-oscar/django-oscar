@@ -6,6 +6,6 @@
     {% include 'partials/form_fields.html' %}
     <div class="form-actions">
         <button class="btn btn-large btn-primary" type="submit">{% trans "Save" %}</button>
-        {% trans "or" %} <a href="#" onclick="history.go(-1);return false" >{% trans "cancel" %}</a>.
+        {% trans "or" %} <a href="#" onclick="window.history.go(-1);return false" >{% trans "cancel" %}</a>.
     </div>
 </form>

@@ -5,23 +5,21 @@ from django.test import TestCase
 from django.utils import timezone
 import mock
 
-from oscar.apps.address.models import Country
 from oscar.apps.order.models import ShippingAddress, Order, Line, \
         ShippingEvent, ShippingEventType, ShippingEventQuantity, OrderNote, \
         OrderDiscount
 from oscar.apps.order.exceptions import (InvalidOrderStatus, InvalidLineStatus,
                                          InvalidShippingEvent)
-from oscar.test.factories import create_order, create_offer, create_voucher, create_basket
+from oscar.test.factories import create_order, create_offer, create_voucher, create_basket, CountryFactory
 from oscar.test.basket import add_product
 
 ORDER_PLACED = 'order_placed'
 
 
 class ShippingAddressTest(TestCase):
-    fixtures = ['countries.json']
 
     def test_titleless_salutation_is_stripped(self):
-        country = Country.objects.get(iso_3166_1_a2='GB')
+        country = CountryFactory()
         a = ShippingAddress.objects.create(
             last_name='Barrington', line1="75 Smith Road", postcode="N4 8TY", country=country)
         self.assertEqual("Barrington", a.salutation)

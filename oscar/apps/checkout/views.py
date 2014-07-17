@@ -1,17 +1,16 @@
-from django.shortcuts import redirect
 import six
 import logging
 
 from django import http
+from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth import login
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext as _
 from django.views import generic
 
-from oscar.core.loading import get_model
 from oscar.apps.shipping.methods import NoShippingRequired
-from oscar.core.loading import get_class, get_classes
+from oscar.core.loading import get_class, get_classes, get_model
 from . import signals
 
 ShippingAddressForm, GatewayForm \
@@ -248,7 +247,7 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
     def get(self, request, *args, **kwargs):
         # These pre-conditions can't easily be factored out into the normal
         # pre-conditions as they do more than run a test and then raise an
-        # exception if it fails.
+        # exception on failure.
 
         # Check that shipping is required at all
         if not request.basket.is_shipping_required():

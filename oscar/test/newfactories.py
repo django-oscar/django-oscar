@@ -20,13 +20,15 @@ from oscar.apps.basket import models as basket_models
 from oscar.apps.catalogue import models as catalogue_models
 from oscar.apps.partner import models as partner_models, strategy
 from oscar.apps.voucher import models as voucher_models
+from oscar.apps.offer import models as offer_models
 from oscar.core.compat import get_user_model
 
 __all__ = ["UserFactory", "CountryFactory", "UserAddressFactory",
            "BasketFactory", "VoucherFactory", "ProductFactory",
            "StockRecordFactory", "ProductAttributeFactory",
            "ProductAttributeValueFactory", "AttributeOptionGroupFactory",
-           "AttributeOptionFactory", "PartnerFactory"]
+           "AttributeOptionFactory", "PartnerFactory",
+           "ProductCategoryFactory", "CategoryFactory", "RangeFactory"]
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -104,14 +106,32 @@ class ProductClassFactory(factory.DjangoModelFactory):
     track_stock = True
 
 
+class CategoryFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = catalogue_models.Category
+
+    name = factory.Sequence(lambda n: 'Category %d' % n)
+
+    # Very naive handling of treebeard node fields. Works though!
+    depth = 0
+    path = factory.Sequence(lambda n: '%04d' % n)
+
+
+class ProductCategoryFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = catalogue_models.ProductCategory
+
+    category = factory.SubFactory(CategoryFactory)
+
+
 class ProductFactory(factory.DjangoModelFactory):
     FACTORY_FOR = catalogue_models.Product
 
+    structure = catalogue_models.Product.STANDALONE
     upc = factory.Sequence(lambda n: '978080213020%d' % n)
     title = "A confederacy of dunces"
     product_class = factory.SubFactory(ProductClassFactory)
 
     stockrecords = factory.RelatedFactory(StockRecordFactory, 'product')
+    categories = factory.RelatedFactory(ProductCategoryFactory, 'product')
 
 
 class ProductAttributeFactory(factory.DjangoModelFactory):
@@ -143,3 +163,10 @@ class ProductAttributeValueFactory(factory.DjangoModelFactory):
 
     attribute = factory.SubFactory(ProductAttributeFactory)
     product = factory.SubFactory(ProductFactory)
+
+
+class RangeFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = offer_models.Range
+
+    name = factory.Sequence(lambda n: 'Range %d' % n)
+    slug = factory.Sequence(lambda n: 'range-%d' % n)

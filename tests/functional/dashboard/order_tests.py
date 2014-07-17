@@ -198,6 +198,34 @@ class TestChangingOrderStatus(WebTestCase):
         self.assertEqual(1, len(notes))
         self.assertEqual(OrderNote.SYSTEM, notes[0].note_type)
 
+class TestChangingOrderStatusFromFormOnOrderDetailVew(WebTestCase):
+    is_staff = True
+
+    def setUp(self):
+        super(TestChangingOrderStatusFromFormOnOrderDetailVew, self).setUp()
+
+        Order.pipeline = {'A': ('B', 'C'), 'B': ('A', 'C'),'C': ('A', 'B')}
+        self.order = create_order(status='A')
+        url = reverse('dashboard:order-list')
+
+        page = self.get(url)
+        form = page.forms['orders_form']
+        form['new_status'] = 'B'
+        form.set('action', True, index=1)
+        form['selected_order'] = self.order.pk
+        self.response = form.submit()
+
+    def reload_order(self):
+        return Order.objects.get(number=self.order.number)
+
+    def test_works(self):
+        self.assertIsRedirect(self.response)
+        self.assertEqual('B', self.reload_order().status)
+
+    def test_creates_system_note(self):
+        notes = self.order.notes.all()
+        self.assertEqual(1, len(notes))
+        self.assertEqual(OrderNote.SYSTEM, notes[0].note_type)
 
 class LineDetailTests(WebTestCase):
     is_staff = True
