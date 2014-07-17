@@ -1,11 +1,11 @@
 from six.moves import http_client
+from django.conf import settings
 
 from django.core.urlresolvers import reverse
 from oscar.apps.catalogue.models import Category
 from oscar.test.testcases import WebTestCase
 
 from oscar.test.factories import create_product
-from oscar.apps.catalogue.views import ProductCategoryView
 
 
 class TestProductDetailView(WebTestCase):
@@ -56,7 +56,7 @@ class TestProductListView(WebTestCase):
         self.assertContains(page, "Unavailable")
 
     def test_shows_pagination_navigation_for_multiple_pages(self):
-        per_page = ProductCategoryView.paginate_by
+        per_page = settings.OSCAR_PRODUCTS_PER_PAGE
         title = u"Product #%d"
         for idx in range(0, int(1.5 * per_page)):
             create_product(title=title % idx)

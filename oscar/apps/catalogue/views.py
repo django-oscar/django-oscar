@@ -14,6 +14,8 @@ Category = get_model('catalogue', 'category')
 ProductAlert = get_model('customer', 'ProductAlert')
 ProductAlertForm = get_class('customer.forms', 'ProductAlertForm')
 ProductSearchHandler = get_class('catalogue.handlers', 'ProductSearchHandler')
+SimpleProductSearchHandler = get_class(
+    'catalogue.handlers', 'SimpleProductSearchHandler')
 
 
 class ProductDetailView(DetailView):
@@ -116,6 +118,16 @@ class ProductCategoryView(TemplateView):
     template_name = 'catalogue/browse.html'
     enforce_paths = True
 
+    def get(self, request, *args, **kwargs):
+        # fetch the category; return 404 or redirect as needed
+        self.get_object()
+        redirect = self.redirect_if_necessary(request.path, self.category)
+        if redirect is not None:
+            return redirect
+        self.search_handler = self.get_search_handler(
+            self.get_categories(), request.GET, request.get_full_path())
+        return super(ProductCategoryView, self).get(request, *args, **kwargs)
+
     def get_object(self):
         if 'pk' in self.kwargs:
             # Usual way to reach a category page. We just look at the primary
@@ -131,16 +143,6 @@ class ProductCategoryView(TemplateView):
             # If neither slug nor primary key are given, we show all products
             self.category = None
 
-    def get(self, request, *args, **kwargs):
-        # fetch the category; return 404 or redirect as needed
-        self.get_object()
-        redirect = self.redirect_if_necessary(request.path, self.category)
-        if redirect is not None:
-            return redirect
-        self.search_handler = ProductSearchHandler(
-            self.get_categories(), request.GET, request.get_full_path())
-        return super(ProductCategoryView, self).get(request, *args, **kwargs)
-
     def redirect_if_necessary(self, current_path, category):
         if self.enforce_paths and category is not None:
             # Categories are fetched by primary key to allow slug changes.
@@ -148,6 +150,20 @@ class ProductCategoryView(TemplateView):
             expected_path = category.get_absolute_url()
             if expected_path != urlquote(current_path):
                 return HttpResponsePermanentRedirect(expected_path)
+
+    def get_search_handler(self, *args, **kwargs):
+        """
+        This automatically determines the correct search handler to use.
+        Currently only Solr is supported as a search backend, so it falls
+        back to rudimentary category browsing if that isn't enabled.
+        """
+        handler_class = SimpleProductSearchHandler
+        try:
+            if 'Solr' in settings.HAYSTACK_CONNECTIONS['default']['ENGINE']:
+                handler_class = ProductSearchHandler
+        except KeyError:
+            pass
+        return handler_class(*args, **kwargs)
 
     def get_categories(self):
         """

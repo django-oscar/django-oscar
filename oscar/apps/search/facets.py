@@ -26,8 +26,11 @@ class FacetMunger(object):
 
     def facet_data(self):
         facet_data = {}
-        self.munge_field_facets(facet_data)
-        self.munge_query_facets(facet_data)
+        # Haystack can return an empty dict for facet_counts when e.g. Solr
+        # isn't running. Skip facet munging in that case.
+        if self.facet_counts:
+            self.munge_field_facets(facet_data)
+            self.munge_query_facets(facet_data)
         return facet_data
 
     def munge_field_facets(self, clean_data):
