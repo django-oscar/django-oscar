@@ -1,7 +1,7 @@
 from oscar.core.loading import get_model, get_class
 from haystack import views
 
-from . import facets, signals
+from . import signals
 
 Product = get_model('catalogue', 'Product')
 FacetMunger = get_class('search.facets', 'FacetMunger')
@@ -45,7 +45,7 @@ class FacetedSearchView(views.FacetedSearchView):
             if suggestion != self.query:
                 extra['suggestion'] = suggestion
 
-        # Convert facet data into a more useful datastructure
+        # Convert facet data into a more useful data structure
         if 'fields' in extra['facets']:
             munger = FacetMunger(
                 self.request.get_full_path(),

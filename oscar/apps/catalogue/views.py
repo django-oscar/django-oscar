@@ -2,20 +2,18 @@ from django.utils.http import urlquote
 from django.conf import settings
 from django.http import HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, TemplateView
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_class, get_model
 from oscar.apps.catalogue.signals import product_viewed
-from oscar.apps.search import facets
 
 Product = get_model('catalogue', 'product')
 ProductReview = get_model('reviews', 'ProductReview')
 Category = get_model('catalogue', 'category')
 ProductAlert = get_model('customer', 'ProductAlert')
 ProductAlertForm = get_class('customer.forms', 'ProductAlertForm')
-FacetMunger = get_class('search.facets', 'FacetMunger')
-BrowseCategoryForm = get_class('search.forms', 'BrowseCategoryForm')
+ProductSearchHandler = get_class('catalogue.handlers', 'ProductSearchHandler')
 
 
 class ProductDetailView(DetailView):
@@ -110,16 +108,13 @@ class ProductDetailView(DetailView):
             '%s/detail.html' % (self.template_folder)]
 
 
-class ProductCategoryView(ListView):
+class ProductCategoryView(TemplateView):
     """
     Browse products in a given category
     """
     context_object_name = "products"
     template_name = 'catalogue/browse.html'
-    paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
     enforce_paths = True
-    use_search_backend = True
-    form_class = BrowseCategoryForm
 
     def get_object(self):
         if 'pk' in self.kwargs:
@@ -142,6 +137,8 @@ class ProductCategoryView(ListView):
         redirect = self.redirect_if_necessary(request.path, self.category)
         if redirect is not None:
             return redirect
+        self.search_handler = ProductSearchHandler(
+            self.get_categories(), request.GET, request.get_full_path())
         return super(ProductCategoryView, self).get(request, *args, **kwargs)
 
     def redirect_if_necessary(self, current_path, category):
@@ -155,7 +152,6 @@ class ProductCategoryView(ListView):
     def get_categories(self):
         """
         Return a list of the current category and it's ancestors
-        TODO: Should be cached as it's called twice.
         """
         if self.category is not None:
             return self.category.get_descendants_and_self()
@@ -168,65 +164,11 @@ class ProductCategoryView(ListView):
         """
         return self.category.name if self.category else _('All products')
 
-    def get_search_queryset(self):
-        sqs = facets.base_sqs()
-        categories = self.get_categories()
-        if categories:
-            # We use 'narrow' API to ensure Solr's 'fq' filtering is used as
-            # opposed to filtering using 'q'.
-            pattern = ' OR '.join(['"%s"' % c.full_name for c in categories])
-            sqs = sqs.narrow('category_exact:(%s)' % pattern)
-        return sqs
-
-    def get_search_context_data(self, paginated_results):
-        # Use the FacetMunger to convert Haystack's awkward facet data into
-        # something the templates can use.
-        # Note that the FacetMunger accesses object_list (unpaginated results),
-        # whereas we use the paginated search results to populate the context
-        # with products
-
-        munger = FacetMunger(
-            self.request.get_full_path(), {}, self.object_list.facet_counts())
-        facet_data = munger.facet_data()
-        has_facets = any([data['results'] for data in facet_data.values()])
-
-        # Pluck the product instances off the search result objects.
-        objects = [r.object for r in paginated_results]
-
-        return {
-            'facet_data': facet_data,
-            'has_facets': has_facets,
-            self.context_object_name: objects,
-            'form': self.search_form,
-        }
-
     def get_context_data(self, **kwargs):
         context = super(ProductCategoryView, self).get_context_data(**kwargs)
         context['category'] = self.category
         context['summary'] = self.get_summary()
-        if self.use_search_backend:
-            context.update(self.get_search_context_data(context['object_list']))
+        search_context = self.search_handler.get_search_context_data(
+            self.context_object_name)
+        context.update(search_context)
         return context
-
-    def get_model_queryset(self):
-        qs = Product.browsable.base_queryset()
-        if self.category is not None:
-            categories = self.get_categories()
-            qs = qs.filter(categories__in=categories).distinct()
-        return qs
-
-    def get_queryset(self):
-        if self.use_search_backend:
-            self.search_form = self.get_search_form(self.request)
-            # returns empty query set if form is invalid
-            return self.search_form.search()
-        else:
-            return self.get_model_queryset()
-
-    def get_search_form(self, request):
-        kwargs = {
-            'data': request.GET,
-            'selected_facets': self.request.GET.getlist("selected_facets"),
-            'searchqueryset': self.get_search_queryset()
-        }
-        return self.form_class(**kwargs)
