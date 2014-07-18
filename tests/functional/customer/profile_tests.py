@@ -76,29 +76,28 @@ class TestASignedInUser(WebTestCase):
         self.assertEqual('Chuckle', user.last_name)
 
     def test_cant_update_their_email_address_if_it_already_exists(self):
-        User.objects.create_user(username='testuser', email='new@example.com',
-                                 password="somerandompassword")
+        # create a user to "block" new@example.com
+        User.objects.create_user(
+            username='testuser', email='new@example.com',
+            password="somerandompassword")
         self.assertEqual(User.objects.count(), 2)
 
-        profile_form_page = self.app.get(reverse('customer:profile-update'),
-                                user=self.user)
-        self.assertEqual(200, profile_form_page.status_code)
-        form = profile_form_page.forms['profile_form']
-        form['email'] = 'new@example.com'
-        form['first_name'] = 'Barry'
-        form['last_name'] = 'Chuckle'
-        response = form.submit()
+        for email in ['new@example.com', 'New@Example.com']:
+            profile_form_page = self.app.get(
+                reverse('customer:profile-update'), user=self.user)
+            form = profile_form_page.forms['profile_form']
+            form['email'] = email
+            form['first_name'] = 'Barry'
+            form['last_name'] = 'Chuckle'
+            response = form.submit()
 
-        user = User.objects.get(id=self.user.id)
-        self.assertEqual(self.email, user.email)
-
-        try:
-            User.objects.get(email='new@example.com')
-        except User.MultipleObjectsReturned:
-            self.fail("email for user changed to existing one")
-
-        self.assertContains(response,
-                            'A user with this email address already exists')
+            # assert that the original user's email address is unchanged
+            user = User.objects.get(id=self.user.id)
+            self.assertEqual(self.email, user.email)
+            self.assertEquals(
+                User.objects.filter(email__iexact='new@example.com').count(), 1)
+            self.assertContains(
+                response, 'A user with this email address already exists')
 
     def test_can_change_their_password(self):
         new_password = 'bubblesgopop'

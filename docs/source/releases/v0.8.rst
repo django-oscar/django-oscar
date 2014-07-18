@@ -349,6 +349,24 @@ Other potentially breaking changes related to shipping include:
 * ``oscar.apps.shipping.Scales`` has been renamed and moved to
   ``oscar.apps.shipping.scales.Scale``, and is now overridable.
 
+Email address handling
+----------------------
+
+In theory, the local part of an email is case-sensitive. In practice, many
+users don't know about this and most email servers don't consider the
+capitalisation. Because of this, Oscar now disregards capitalisation when
+looking up emails (e.g. when a user logs in).
+Storing behaviour is unaltered: When a user's email address is stored (e.g.
+when registering or checking out), the local part is unaltered and
+the host portion is lowercased.
+
+.. warning::
+
+   Those changes mean you might now have multiple users with email addresses
+   that Oscar considers identical. Please use the new
+   ``oscar_find_duplicate_emails`` management command to check your database
+   and deal with any conflicts accordingly.
+
 Misc
 ~~~~
 

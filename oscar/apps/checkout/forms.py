@@ -56,7 +56,7 @@ class GatewayForm(AuthenticationForm):
                 del self.errors['password']
             if 'username' in self.cleaned_data:
                 email = normalise_email(self.cleaned_data['username'])
-                if User._default_manager.filter(email=email).exists():
+                if User._default_manager.filter(email__iexact=email).exists():
                     msg = "A user with that email address already exists"
                     self._errors["username"] = self.error_class([msg])
             return self.cleaned_data
