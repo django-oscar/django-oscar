@@ -47,10 +47,10 @@
         {% endblocktrans %}
 
         {% if product.is_parent %}
-            <p> {% trans "This will also delete the following variant products:" %}
+            <p> {% trans "This will also delete the following child products:" %}
                 <ul>
-                    {% for variant in product.children.all %}
-                        <li><strong>{{ variant.title }}</strong></li>
+                    {% for child in product.children.all %}
+                        <li><strong>{{ child.title }}</strong></li>
                     {% endfor %}
                 </ul>
             </p>

@@ -1080,7 +1080,7 @@
     padding-right: 10px;
   }
 }
-@media (min-width: 767px + 1) {
+@media (min-width: 768px) {
   .nav-collapse.collapse {
     height: auto !important;
     overflow: visible !important;
