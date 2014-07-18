@@ -70,11 +70,12 @@ class BasketMiddleware(object):
                 and request.basket._wrapped is empty):
             return response
 
+        cookie_key = self.get_cookie_key(request)
         # Check if we need to set a cookie. If the cookies is already available
         # but is set in the cookies_to_delete list then we need to re-set it.
         has_basket_cookie = (
-            settings.OSCAR_BASKET_COOKIE_OPEN in request.COOKIES
-            and settings.OSCAR_BASKET_COOKIE_OPEN not in cookies_to_delete)
+            cookie_key in request.COOKIES
+            and cookie_key not in cookies_to_delete)
 
         # If a basket has had products added to it, but the user is anonymous
         # then we need to assign it to a cookie
@@ -82,9 +83,18 @@ class BasketMiddleware(object):
                 and not has_basket_cookie):
             cookie = self.get_basket_hash(request.basket.id)
             response.set_cookie(
-                settings.OSCAR_BASKET_COOKIE_OPEN, cookie,
+                cookie_key, cookie,
                 max_age=settings.OSCAR_BASKET_COOKIE_LIFETIME, httponly=True)
         return response
+
+    def get_cookie_key(self, request):
+        """
+        Returns the cookie name to use for storing a cookie basket.
+
+        The method serves as a useful hook in multi-site scenarios where
+        different baskets might be needed.
+        """
+        return settings.OSCAR_BASKET_COOKIE_OPEN
 
     def process_template_response(self, request, response):
         if hasattr(response, 'context_data'):
@@ -114,8 +124,8 @@ class BasketMiddleware(object):
             return request._basket_cache
 
         manager = Basket.open
-        cookie_basket = self.get_cookie_basket(
-            settings.OSCAR_BASKET_COOKIE_OPEN, request, manager)
+        cookie_key = self.get_cookie_key(request)
+        cookie_basket = self.get_cookie_basket(cookie_key, request, manager)
 
         if hasattr(request, 'user') and request.user.is_authenticated():
             # Signed-in user: if they have a cookie basket too, it means
@@ -137,8 +147,7 @@ class BasketMiddleware(object):
 
             if cookie_basket:
                 self.merge_baskets(basket, cookie_basket)
-                request.cookies_to_delete.append(
-                    settings.OSCAR_BASKET_COOKIE_OPEN)
+                request.cookies_to_delete.append(cookie_key)
 
         elif cookie_basket:
             # Anonymous user with a basket tied to the cookie
