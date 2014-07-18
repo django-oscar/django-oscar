@@ -364,13 +364,6 @@ Default: ``'oscar_open_basket'``
 
 The name of the cookie for the open basket.
 
-``OSCAR_BASKET_COOKIE_SAVED``
------------------------------
-
-Default: ``'oscar_saved_basket'``
-
-The name of the cookie for the saved basket.
-
 Currency settings
 =================
 
