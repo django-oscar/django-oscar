@@ -1,5 +1,6 @@
 from django.core.paginator import Paginator, InvalidPage
 from django.utils.translation import ugettext_lazy as _
+from haystack import connections
 
 from oscar.core.loading import get_class
 from . import facets
@@ -55,7 +56,7 @@ class SearchHandler(object):
         """
         if not hasattr(self, '_results'):
             self.search_form = self.get_search_form()
-            # returns empty query set if form is invalid
+            # Returns empty query set if form is invalid.
             self._results = self.search_form.search()
         return self._results
 
@@ -93,8 +94,8 @@ class SearchHandler(object):
             if page == 'last':
                 page_number = paginator.num_pages
             else:
-                raise ValueError(
-                    _("Page is not 'last', nor can it be converted to an int."))
+                raise ValueError(_(
+                    "Page is not 'last', nor can it be converted to an int."))
         try:
             page = paginator.page(page_number)
             return paginator, page
@@ -112,6 +113,47 @@ class SearchHandler(object):
         """
         return self.paginator_class(queryset, self.paginate_by)
 
+    def bulk_fetch_results(self, paginated_results):
+        """
+        This method gets paginated search results and returns a list of Django
+        objects in the same order.
+
+        It preserves the order without doing any ordering in Python, even
+        when more than one Django model are returned in the search results. It
+        also uses the same queryset that was used to populate the search
+        queryset, so any select_related/prefetch_related optimisations are
+        in effect.
+
+        It is heavily based on Haystack's SearchQuerySet.post_process_results,
+        but works on the paginated results instead of all of them.
+        """
+
+        objects = []
+
+        models_pks = loaded_objects = {}
+        for result in paginated_results:
+            models_pks.setdefault(result.model, []).append(result.pk)
+
+        search_backend_alias = self._results.query.backend.connection_alias
+        for model in models_pks:
+            ui = connections[search_backend_alias].get_unified_index()
+            index = ui.get_index(model)
+            queryset = index.read_queryset(using=search_backend_alias)
+            loaded_objects[model] = queryset.in_bulk(models_pks[model])
+
+        for result in paginated_results:
+            model_objects = loaded_objects.get(result.model, {})
+            try:
+                result._object = model_objects[int(result.pk)]
+            except KeyError:
+                # The object was either deleted since we indexed or should
+                # be ignored; fail silently.
+                pass
+            else:
+                objects.append(result._object)
+
+        return objects
+
     # Accessing the search results and meta data
 
     def get_paginated_objects(self):
@@ -120,8 +162,7 @@ class SearchHandler(object):
         """
         if not hasattr(self, '_object_list'):
             paginated_results = self.page.object_list
-            # Pluck the product instances off the search result objects.
-            self._object_list = [r.object for r in paginated_results]
+            self._object_list = self.bulk_fetch_results(paginated_results)
         return self._object_list
 
     def get_search_context_data(self, context_object_name=None):
