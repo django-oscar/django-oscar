@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
-from apps.customer.utils import normalise_email
+
+from oscar.apps.customer.utils import normalise_email
 
 
 class GatewayForm(forms.Form):
