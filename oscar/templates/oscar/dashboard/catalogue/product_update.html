@@ -162,9 +162,11 @@
                                         <tr>
                                             <th>{% trans "Partner" %}</th>
                                             <th>{% trans "SKU" %}</th>
-                                            <th>{% trans "Num in stock" %}</th>
-                                            <th>{% trans "Num allocated" %}</th>
-                                            <th>{% trans "Low stock threshold" %}</th>
+                                            {% if product_class.track_stock %}
+                                                <th>{% trans "Num in stock" %}</th>
+                                                <th>{% trans "Num allocated" %}</th>
+                                                <th>{% trans "Low stock threshold" %}</th>
+                                            {% endif %}
                                             <th>{% trans "Currency" %}</th>
                                             <th>{% trans "Cost price" %}</th>
                                             <th>{% trans "Price (excl tax)" %}</th>
@@ -176,7 +178,7 @@
                                         {% for stockrecord_form in stockrecord_formset %}
                                             {% if stockrecord_form.non_field_errors %}
                                             <tr>
-                                                <td colspan="10">
+                                                <td colspan="{% if product_class.track_stock %}10{% else %}7{% endif %}">
                                                     {% for error in stockrecord_form.non_field_errors  %}
                                                         <span class="error-block errorlist"><i class="icon-exclamation-sign"></i> {{ error }}</span>
                                                     {% endfor %}
@@ -186,15 +188,11 @@
                                             <tr>
                                                 <td>{% include "partials/form_field.html" with field=stockrecord_form.partner nolabel=True %}</td>
                                                 <td>{% include "partials/form_field.html" with field=stockrecord_form.partner_sku nolabel=True %}</td>
-                                                <td>
-                                                    {% if stockrecord_form.num_in_stock %}
-                                                        {% include "partials/form_field.html" with field=stockrecord_form.num_in_stock nolabel=True %}
-                                                    {% else %}
-                                                        -
-                                                    {% endif %}
-                                                </td>
-                                                <td>{{ stockrecord_form.instance.num_allocated|default:"-" }}</td>
-                                                <td>{% include "partials/form_field.html" with field=stockrecord_form.low_stock_threshold nolabel=True %}</td>
+                                                {% if product_class.track_stock %}
+                                                    <td>{% include "partials/form_field.html" with field=stockrecord_form.num_in_stock nolabel=True %}</td>
+                                                    <td>{{ stockrecord_form.instance.num_allocated|default:"-" }}</td>
+                                                    <td>{% include "partials/form_field.html" with field=stockrecord_form.low_stock_threshold nolabel=True %}</td>
+                                                {% endif %}
                                                 <td>{% include "partials/form_field.html" with field=stockrecord_form.price_currency nolabel=True %}</td>
                                                 <td>{% include "partials/form_field.html" with field=stockrecord_form.cost_price nolabel=True %}</td>
                                                 <td>{% include "partials/form_field.html" with field=stockrecord_form.price_excl_tax nolabel=True %}</td>
