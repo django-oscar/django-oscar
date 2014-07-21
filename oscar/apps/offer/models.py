@@ -744,7 +744,8 @@ class Range(models.Model):
     Represents a range of products that can be used within an offer
     """
     name = models.CharField(_("Name"), max_length=128, unique=True)
-    slug = models.SlugField(_('Slug'), max_length=128, unique=True, null=True)
+    slug = fields.AutoSlugField(
+        _("Slug"), max_length=128, unique=True, populate_from="name")
 
     description = models.TextField(blank=True)
 
@@ -793,11 +794,7 @@ class Range(models.Model):
         return reverse('catalogue:range', kwargs={
             'slug': self.slug})
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-
-        # Save Range
+    def _save(self, *args, **kwargs):
         super(Range, self).save(*args, **kwargs)
 
     def add_product(self, product, display_order=None):

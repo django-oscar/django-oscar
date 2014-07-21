@@ -496,6 +496,10 @@ Migrations
       and do entity attribute changes and model deletions.
     - ``0025`` & ``0026`` - Schema & data migration to determine and save Product structure.
 
+* Offer:
+
+    - ``0033`` - Use an ``AutoSlug`` field for ``Range`` models
+
 * Order:
 
     - ``0029`` - Add ``unique_together`` to ``PaymentEventQuantity`` and ``ShippingEventQuantity``
