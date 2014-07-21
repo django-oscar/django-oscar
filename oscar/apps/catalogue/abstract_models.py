@@ -68,6 +68,10 @@ class AbstractProductClass(models.Model):
     def __unicode__(self):
         return self.name
 
+    @property
+    def has_attributes(self):
+        return self.attributes.exists()
+
 
 class AbstractCategory(MP_Node):
     """
