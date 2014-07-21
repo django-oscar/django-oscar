@@ -135,11 +135,11 @@ class AddToBasketForm(forms.Form):
 
     def __init__(self, basket, product, *args, **kwargs):
         # Note, the product passed in here isn't necessarily the product being
-        # added to the basket. For group products, it is the *parent* product
+        # added to the basket. For child products, it is the *parent* product
         # that gets passed to the form. An optional product_id param is passed
         # to indicate the ID of the child product being added to the basket.
         self.basket = basket
-        self.base_product = product
+        self.parent_product = product
 
         super(AddToBasketForm, self).__init__(*args, **kwargs)
 
@@ -200,7 +200,7 @@ class AddToBasketForm(forms.Form):
 
     def clean_child_id(self):
         try:
-            child = self.base_product.children.get(
+            child = self.parent_product.children.get(
                 id=self.cleaned_data['child_id'])
         except Product.DoesNotExist:
             raise forms.ValidationError(
@@ -235,7 +235,7 @@ class AddToBasketForm(forms.Form):
         """
         # Note, the child product attribute is saved in the clean_child_id
         # method
-        return getattr(self, 'child_product', self.base_product)
+        return getattr(self, 'child_product', self.parent_product)
 
     def clean(self):
         info = self.basket.strategy.fetch_for_product(self.product)
@@ -265,7 +265,7 @@ class AddToBasketForm(forms.Form):
         Return submitted options in a clean format
         """
         options = []
-        for option in self.base_product.options:
+        for option in self.parent_product.options:
             if option.code in self.cleaned_data:
                 options.append({
                     'option': option,
