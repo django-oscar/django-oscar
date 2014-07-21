@@ -93,6 +93,7 @@ class TestAnAuthenticatedUser(WebTestCase):
 
 
 class TestAnAnonymousUser(WebTestCase):
+    is_anonymous = True
 
     def assertCanLogin(self, email, password):
         url = reverse('customer:login')
@@ -121,10 +122,18 @@ class TestAnAnonymousUser(WebTestCase):
         url = reverse('customer:register')
         form = self.app.get(url).forms['register_form']
         form['email'] = 'terry@boom.com'
-        form['password1'] = 'hedgehog'
-        form['password2'] = 'hedgehog'
+        form['password1'] = form['password2'] = 'hedgehog'
         response = form.submit()
         self.assertRedirectsTo(response, 'customer:summary')
+
+    def test_casing_of_local_part_of_email_is_preserved(self):
+        url = reverse('customer:register')
+        form = self.app.get(url).forms['register_form']
+        form['email'] = 'Terry@Boom.com'
+        form['password1'] = form['password2'] = 'hedgehog'
+        form.submit()
+        user = User.objects.all()[0]
+        self.assertEquals(user.email, 'Terry@boom.com')
 
 
 class TestAStaffUser(WebTestCase):

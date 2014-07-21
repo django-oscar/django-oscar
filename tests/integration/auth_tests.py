@@ -9,6 +9,28 @@ from oscar.core.compat import get_user_model
 User = get_user_model()
 
 
+class TestEmailAuthBackend(TestCase):
+
+    def test_authenticates_multiple_users(self):
+        password = 'lookmanohands'
+        users = [
+            User.objects.create_user(email, email, password=password)
+            for email in ['user1@example.com', 'user2@example.com']]
+        for created_user in users:
+            user = authenticate(username=created_user.email, password=password)
+            self.assertEquals(user, created_user)
+
+    def test_authenticates_different_email_spelling(self):
+        email = password = 'person@example.com'
+        created_user = User.objects.create_user(
+            'user1', email, password=password)
+
+        for email_variation in [
+            'Person@example.com', 'Person@EXAMPLE.COM', 'person@Example.com']:
+            user = authenticate(username=email_variation, password=password)
+            self.assertEquals(user, created_user)
+
+
 # Skip these tests for now as they only make sense when there isn't a unique
 # index on the user class.  The test suite currently uses a custom model that
 # *does* have a unique index on email.  When I figure out how to swap the user

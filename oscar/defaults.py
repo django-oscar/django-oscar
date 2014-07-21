@@ -8,7 +8,6 @@ OSCAR_HOMEPAGE = reverse_lazy('promotions:home')
 # Basket settings
 OSCAR_BASKET_COOKIE_LIFETIME = 7 * 24 * 60 * 60
 OSCAR_BASKET_COOKIE_OPEN = 'oscar_open_basket'
-OSCAR_BASKET_COOKIE_SAVED = 'oscar_saved_basket'
 OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = 10000
 
 # Recently-viewed products

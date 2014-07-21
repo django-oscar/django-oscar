@@ -51,7 +51,7 @@ class IndexView(BulkEditMixin, ListView):
 
         if data['email']:
             email = normalise_email(data['email'])
-            queryset = queryset.filter(email__startswith=email)
+            queryset = queryset.filter(email__istartswith=email)
             self.desc_ctx['email_filter'] \
                 = _(" with email matching '%s'") % email
         if data['name']:

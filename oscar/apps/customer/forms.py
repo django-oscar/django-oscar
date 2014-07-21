@@ -153,8 +153,11 @@ class EmailUserCreationForm(forms.ModelForm):
         super(EmailUserCreationForm, self).__init__(*args, **kwargs)
 
     def clean_email(self):
+        """
+        Checks for existing users with the supplied email address.
+        """
         email = normalise_email(self.cleaned_data['email'])
-        if User._default_manager.filter(email=email).exists():
+        if User._default_manager.filter(email__iexact=email).exists():
             raise forms.ValidationError(
                 _("A user with that email address already exists"))
         return email
@@ -280,9 +283,10 @@ class UserForm(forms.ModelForm):
         """
         email = normalise_email(self.cleaned_data['email'])
         if User._default_manager.filter(
-                email=email).exclude(id=self.user.id).exists():
+                email__iexact=email).exclude(id=self.user.id).exists():
             raise ValidationError(
                 _("A user with this email address already exists"))
+        # Save the email unaltered
         return email
 
     class Meta:
@@ -340,8 +344,10 @@ if Profile:
 
         def clean_email(self):
             email = normalise_email(self.cleaned_data['email'])
-            if User._default_manager.filter(
-                    email=email).exclude(id=self.instance.user.id).exists():
+
+            users_with_email = User._default_manager.filter(
+                email__iexact=email).exclude(id=self.instance.user.id)
+            if users_with_email.exists():
                 raise ValidationError(
                     _("A user with this email address already exists"))
             return email
@@ -392,7 +398,7 @@ class ProductAlertForm(forms.ModelForm):
         if email:
             try:
                 ProductAlert.objects.get(
-                    product=self.product, email=email,
+                    product=self.product, email__iexact=email,
                     status=ProductAlert.ACTIVE)
             except ProductAlert.DoesNotExist:
                 pass

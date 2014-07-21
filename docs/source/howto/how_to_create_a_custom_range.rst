@@ -30,7 +30,7 @@ A custom range must:
 
 Example::
 
-    class ExclamatoryProducts(object)
+    class ExclamatoryProducts(object):
         name = "Products including a '!'"
 
         def contains_product(self, product):

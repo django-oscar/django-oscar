@@ -8,13 +8,7 @@
                 <legend>{% trans "Leave a product review" %}</legend>
                 {% csrf_token %}
                 
-                {% comment %}
-                {% include "partials/form_fields.html" with form=form %}
-                {% endcomment %}
-
-
                 {% include 'partials/form_field.html' with field=form.title %}
-
 
                 <div class="reviewrating control-group {% if form.score.errors %}error{% endif %}">
                     <label for="{{ form.score.auto_id }}" class="control-label required">
@@ -45,9 +39,9 @@
                 {% include 'partials/form_field.html' with field=form.email %}
 
 
-                <button type="submit"  class="btn btn-primary">{% trans "Submit" %}</button>
+                <button type="submit" class="btn btn-primary btn-large">{% trans "Save review" %}</button>
                 {% trans "or" %}
-                <a href="{{ product.get_absolute_url }}" >{% trans "cancel" %}</a>
+                <a href="{{ product.get_absolute_url }}">{% trans "cancel" %}</a>
             </fieldset>
         </form>
     </div>
