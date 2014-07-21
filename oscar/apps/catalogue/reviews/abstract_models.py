@@ -165,7 +165,7 @@ class AbstractProductReview(models.Model):
         review
         """
         if not user.is_authenticated():
-            return False, u"Only signed in users can vote"
+            return False, _(u"Only signed in users can vote")
         vote = self.votes.model(review=self, user=user, delta=1)
         try:
             vote.full_clean()
