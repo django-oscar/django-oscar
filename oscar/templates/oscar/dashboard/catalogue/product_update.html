@@ -216,27 +216,22 @@
                                     {% block child_products_content %}
                                         <table class='table table-striped table-bordered'>
                                             <caption>{% trans "Variants" %}</caption>
-                                            {% with parent=product.parent %}
-                                                {% if parent %}
-                                                    <tr>
-                                                        <th colspan="3">{% trans "Parent" %}</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>{{ parent.title }}</td>
-                                                        <td></td>
-                                                        <td><a href="{% url 'dashboard:catalogue-product' pk=parent.id %}" class="btn btn-primary" title="{% blocktrans %}Edit {{ parent.title }}{% endblocktrans %}">{% trans "Edit" %}</a></td>
-                                                    </tr>
-                                                {% endif %}
-                                            {% endwith %}
-                                            <tr>
-                                                <th colspan="3">{% trans "Children" %}</th>
-                                            </tr>
-
                                             {% for child in children %}
                                                 <tr>
                                                     <td>{{ child.get_title }}</td>
                                                     <td>{{ child.attribute_summary }}</td>
                                                     <td><a href="{% url 'dashboard:catalogue-product' pk=child.id %}" class="btn btn-primary">{% trans "Edit" %}</a></td>
+                                                </tr>
+                                            {% empty %}
+                                                <tr>
+                                                    <td colspan="3">
+                                                        {% url 'dashboard:catalogue-product-create' product_class.slug as create_url %}
+                                                        {% blocktrans %}
+                                                            This product does not have any variants. To add variants, please ensure that the product structure is set to
+                                                            parent product and finish editing the current product. Then <a href="{{ create_url }}">create</a> one or more
+                                                            child products and select the current product as parent.
+                                                        {% endblocktrans %}
+                                                    </td>
                                                 </tr>
                                             {% endfor %}
                                         </table>
