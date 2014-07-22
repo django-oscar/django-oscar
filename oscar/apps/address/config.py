@@ -6,4 +6,3 @@ class AddressConfig(AppConfig):
     label = 'address'
     name = 'oscar.apps.address'
     verbose_name = _('Address')
-

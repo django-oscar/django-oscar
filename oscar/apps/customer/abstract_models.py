@@ -330,7 +330,6 @@ class AbstractProductAlert(models.Model):
         verbose_name = _('Product alert')
         verbose_name_plural = _('Product alerts')
 
-
     @property
     def is_anonymous(self):
         return self.user is None

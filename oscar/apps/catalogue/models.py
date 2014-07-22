@@ -63,4 +63,4 @@ if not model_registered('catalogue', 'ProductImage'):
 
 
 if django.VERSION < (1, 7):
-    from . import receivers
+    from . import receivers  # noqa

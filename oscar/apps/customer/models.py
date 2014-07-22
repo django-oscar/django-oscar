@@ -11,8 +11,7 @@ if not model_registered('customer', 'Email'):
 
 if not model_registered('customer', 'CommunicationEventType'):
     class CommunicationEventType(
-        abstract_models.AbstractCommunicationEventType):
-
+            abstract_models.AbstractCommunicationEventType):
         pass
 
 

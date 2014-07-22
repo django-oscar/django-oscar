@@ -227,9 +227,9 @@ class CheckoutSessionMixin(object):
         shipping_method = self.get_shipping_method(
             request.basket, shipping_address)
         shipping_charge = shipping_method.calculate(request.basket)
-        #if shipping_method:
-        #    shipping_charge = shipping_method.calculate(request.basket)
-        #else:
+        # if shipping_method:
+        #     shipping_charge = shipping_method.calculate(request.basket)
+        # else:
         #    # It's unusual to get here as a shipping method should be set by
         #    # the time this skip-condition is called. In the absence of any
         #    # other evidence, we assume the shipping charge is zero.
