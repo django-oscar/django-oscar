@@ -6,7 +6,7 @@
     <table class="table table-condensed">
         <tbody>
             <tr>
-                <th colspan="2"><h4>{% trans "Basket" %}</h4></th>
+                <th colspan="2"><h3>{% trans "Basket" %}</h3></th>
             </tr>
             {% with offer_discounts=basket.offer_discounts voucher_discounts=basket.grouped_voucher_discounts %}
                 {% block discount_totals %}
@@ -36,7 +36,7 @@
 
                         {% if voucher_discounts %}
                             <tr>
-                                <th colspan="2"><h4>{% trans "Vouchers" %}</h4></th>
+                                <th colspan="2"><h3>{% trans "Vouchers" %}</h3></th>
                             </tr>
                             {% for discount in voucher_discounts %}
                                 <tr>
@@ -92,7 +92,7 @@
 
                 <tr>
                     <th colspan="2">
-                        <h4>{% trans "Shipping" %}</h4>
+                        <h3>{% trans "Shipping" %}</h3>
                         {% if shipping_methods|length > 1 and editable %}
                             <small>{% trans "Alternative shipping methods can be chosen during checkout" %}</small>
                         {% endif %}
@@ -157,7 +157,7 @@
                     </tr>
                     <tr>
                         <th colspan="2">
-                            <h4>{% trans "Tax" %}</h4>
+                            <h3>{% trans "Tax" %}</h3>
                         </th>
                     </tr>
                     <tr>
@@ -182,7 +182,7 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <th><h4>{% trans "Post order actions" %}</h4><small>{% trans "These will be applied once your order is placed." %}</small></th>
+                        <th><h3>{% trans "Post order actions" %}</h3><small>{% trans "These will be applied once your order is placed." %}</small></th>
                         <td></td>
                     </tr>
                     {% for discount in basket.post_order_actions %}
@@ -202,15 +202,15 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <th class="total"><h4>{% trans "Order total" %}</h4></th>
+                    <th class="total"><h3>{% trans "Order total" %}</h3></th>
                     <td class="total align-right">
-                        <h4 class="price_color">
+                        <h3 class="price_color">
                             {% if order_total.is_tax_known %}
                                 {{ order_total.incl_tax|currency:basket.currency }}
                             {% else %}
                                 {{ order_total.excl_tax|currency:basket.currency }}
                             {% endif %}
-                        </h4>
+                        </h3>
                     </td>
                 </tr>
                 {% if not order_total.is_tax_known %}
