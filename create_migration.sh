@@ -7,8 +7,9 @@
 
 pip uninstall Django South -y
 
-# Commit of the stable/1.7.x branch that contains fix for https://code.djangoproject.com/ticket/23041
-pip install https://github.com/django/django/archive/2c6ef625ad73c38769f086733356e37a938b69c3.zip
+# Commit of the stable/1.7.x branch that contains fix for https://code.djangoproject.com/ticket/23041,
+# but doesn't suffer from https://code.djangoproject.com/ticket/23014
+pip install https://github.com/django/django/archive/88135a8cf7d587b88e47f1223cf01c7698b52b74.zip
 rm -f sites/sandbox/db.sqlite
 sites/sandbox/manage.py migrate
 sites/sandbox/manage.py makemigrations analytics checkout address shipping catalogue reviews partner basket payment offer order customer promotions search voucher wishlists

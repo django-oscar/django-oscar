@@ -11,7 +11,7 @@ env:
     secure: FuIlzEsGJiAwhaIRBmRNsq9eXmuzs25fX6BChknW4lDyVAySWMp0+Zps9Bd0JgfFYUG3Ip+OTmksYIoTUsG25ZJS9cq1IFt3QKUAN70YCI/4ZBLeIdICPEyxq+Km179+NeEXmBUug17RLMLxh3MWfO+RKUHK9yHIPNNpq0dNyoo=
   matrix:
     - DJANGO_VERSION=1.6.5
-    - DJANGO_VERSION=https://github.com/django/django/archive/2c6ef625ad73c38769f086733356e37a938b69c3.zip
+    - DJANGO_VERSION=https://github.com/django/django/archive/88135a8cf7d587b88e47f1223cf01c7698b52b74.zip
 
 matrix:
   allow_failures:
