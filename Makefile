@@ -12,6 +12,7 @@ sandbox: install
 	-rm -rf sites/sandbox/public/static
 	-rm -f sites/sandbox/db.sqlite
 	# Create database
+	# 'syncdb' is identical to migrate in Django 1.7+; but calling it twice should have no effect
 	sites/sandbox/manage.py syncdb --noinput
 	sites/sandbox/manage.py migrate
 	# Import some fixtures. Order is important as JSON fixtures include primary keys
