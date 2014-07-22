@@ -4,7 +4,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.core import exceptions
 from django.core.urlresolvers import reverse
-from oscar.core.loading import get_model
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, HttpResponse
 from django.template.loader import render_to_string
@@ -14,14 +13,14 @@ from django.views.generic import (
 
 
 from oscar.views.generic import BulkEditMixin
-from oscar.core.loading import get_classes
+from oscar.core.loading import get_classes, get_model
 
 Range = get_model('offer', 'Range')
 RangeProduct = get_model('offer', 'RangeProduct')
+RangeProductFileUpload = get_model('offer', 'RangeProductFileUpload')
 Product = get_model('catalogue', 'Product')
 RangeForm, RangeProductForm = get_classes('dashboard.ranges.forms',
                                           ['RangeForm', 'RangeProductForm'])
-RangeProductFileUpload = get_model('ranges', 'RangeProductFileUpload')
 
 
 class RangeListView(ListView):

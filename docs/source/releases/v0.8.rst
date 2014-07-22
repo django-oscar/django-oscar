@@ -450,6 +450,14 @@ Migrations
     Please double-check it's outcome and make sure to do something similar
     if you have forked the catalogue app.
 
+.. warning::
+
+    The ``RangeProductFileUpload`` model has been moved from the ranges
+    dashboard app to the offers app. The migrations that have been naively
+    drop and re-create the model; any data is lost! This is probably not an
+    issue, as the model is only used while an range upload is in progress. If
+    you need to keep the data, ensure you migrate it across.
+
 .. note::
 
     Be sure to read the detailed instructions for
@@ -470,6 +478,10 @@ Migrations
       and do entity attribute changes and model deletions.
     - ``0025`` & ``0026`` - Schema & data migration to determine and save Product structure.
 
+* Offer:
+
+    - ``0033`` - Add moved ``RangedProductFileUpload`` model.
+
 * Order:
 
     - ``0029`` - Add ``unique_together`` to ``PaymentEventQuantity`` and ``ShippingEventQuantity``
@@ -483,6 +495,11 @@ Migrations
 * Promotions:
 
     - ``0006`` - Add ``unique_together`` to ``OrderedProduct``
+
+* Ranges dashboard:
+
+    - ``0003`` - Drop ``RangeProductFileUpload`` from ``ranges`` app. This is
+                 a destructive change!
 
 * Shipping:
 
