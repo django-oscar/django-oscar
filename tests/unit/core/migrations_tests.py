@@ -40,7 +40,8 @@ class TestSouthMigrations(TestCase):
 
     def test_no_duplicate_migration_numbers(self):
         # pull app name and migration number
-        regexp = re.compile(r'^.+oscar/apps/([\w/]+)/migrations/(\d{4}).+$')
+        regexp = re.compile(
+            r'^.+oscar/apps/([\w/]+)/south_migrations/(\d{4}).+$')
         keys = []
         for migration in self.migration_filenames:
             match = regexp.match(migration)

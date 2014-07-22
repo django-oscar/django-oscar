@@ -45,16 +45,16 @@ def fork_app(app_label, folder_path, logger=None):
     # Only create models.py and migrations if it exists in the Oscar app
     oscar_models_path = os.path.join(oscar_app_folder_path, 'models.py')
     if os.path.exists(oscar_models_path):
-        # Migrations
-        source = os.path.join(oscar_app_folder_path, 'migrations')
-        destination = os.path.join(local_app_folder_path, 'migrations')
-        logger.info("Creating models.py and copying migrations from %s to %s",
-                    source, destination)
-        shutil.copytree(source, destination)
-
+        logger.info(
+            "Creating models.py and copying South and native migrations")
         create_file(
             os.path.join(local_app_folder_path, 'models.py'),
             "from oscar.apps.%s.models import *  # noqa" % app_label)
+
+        for migrations_path in ['migrations', 'south_migrations']:
+            source = os.path.join(oscar_app_folder_path, migrations_path)
+            destination = os.path.join(local_app_folder_path, migrations_path)
+            shutil.copytree(source, destination)
 
     # Final step needs to be done by hand
     app_package = local_app_folder_path.replace('/', '.')
