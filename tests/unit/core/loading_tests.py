@@ -1,14 +1,15 @@
 from os.path import dirname
+import unittest
+
+import django
 from django.test import TestCase
 from django.conf import settings
-from oscar.core.loading import get_model
 from django.test.utils import override_settings
 
 import oscar
-from tests import temporary_python_path
 from oscar.core.loading import (
-    AppNotFoundError,
-    get_classes, get_class, ClassNotFoundError)
+    get_model, AppNotFoundError, get_classes, get_class, ClassNotFoundError)
+from tests import temporary_python_path
 
 
 class TestClassLoading(TestCase):
@@ -135,3 +136,28 @@ class TestOverridingCoreApps(TestCase):
         klass = get_model('partner', 'StockRecord')
         self.assertEqual('tests._site.apps.partner.models',
                           klass.__module__)
+
+
+@unittest.skipIf(django.VERSION < (1, 7), "Django 1.7 introduced app registry")
+class TestAppLabelsForModels(TestCase):
+
+    def test_all_oscar_models_have_app_labels(self):
+        from django.apps import apps
+        models = apps.get_models()
+        missing = []
+        for model in models:
+            # Ignore non-Oscar models
+            if not 'oscar' in repr(model):
+                continue
+            # Don't know how to get the actual model's Meta class. But if
+            # the parent doesn't have a Meta class, it's doesn't have an
+            # base in Oscar anyway and is not intended to be overridden
+            abstract_model = model.__base__
+            meta_class = getattr(abstract_model, 'Meta', None)
+            if meta_class is None:
+                continue
+
+            if not hasattr(meta_class, 'app_label'):
+                missing.append(model)
+        if missing:
+            self.fail("Those models don't have an app_label set: %s" % missing)
