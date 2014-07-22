@@ -37,7 +37,8 @@ availability logic now needs to be handled with strategies.
 Compatibility
 -------------
 
-Oscar 0.8 is compatible with Django 1.5-1.7. 
+Oscar 0.8 drops supports for Django 1.5, and is compatible with Django 1.6 and
+Django 1.7.
 
 Support for Python 2.6 has been dropped; Oscar works with Python 2.7, 3.3
 and 3.4.
