@@ -27,6 +27,7 @@ class LinkedPromotion(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'promotions'
         ordering = ['-clicks']
         verbose_name = _("Linked Promotion")
         verbose_name_plural = _("Linked Promotions")
@@ -51,7 +52,7 @@ class PagePromotion(LinkedPromotion):
         return reverse('promotions:page-click',
                        kwargs={'page_promotion_id': self.id})
 
-    class Meta:
+    class Meta(LinkedPromotion.Meta):
         verbose_name = _("Page Promotion")
         verbose_name_plural = _("Page Promotions")
 
@@ -74,7 +75,7 @@ class KeywordPromotion(LinkedPromotion):
         return reverse('promotions:keyword-click',
                        kwargs={'keyword_promotion_id': self.id})
 
-    class Meta:
+    class Meta(LinkedPromotion.Meta):
         verbose_name = _("Keyword Promotion")
         verbose_name_plural = _("Keyword Promotions")
 
