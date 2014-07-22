@@ -27,7 +27,7 @@
         <p>{% trans "There are no site offers at the moment." %}</p>
     {% else %}
         {% for offer in offers %}
-        <h4>{{ offer.name }}</h4>
+        <h2>{{ offer.name }}</h2>
         {% if offer.description %}
             <p>{{ offer.description|safe }}</p>
         {% endif %}
