@@ -180,6 +180,15 @@ class LineTests(TestCase):
             # Total quantity is too high
             self.event(type, 2)
 
+    def test_handles_product_deletion_gracefully(self):
+        product = self.line.product
+        product.delete()
+        line = Line.objects.get(pk=self.line.pk)
+        self.assertIsNone(line.product)
+        self.assertIsNone(line.stockrecord)
+        self.assertEqual(product.title, line.title)
+        self.assertEqual(product.upc, line.upc)
+
 
 class LineStatusTests(TestCase):
 
