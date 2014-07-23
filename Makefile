@@ -122,3 +122,10 @@ clean:
 preflight: lint
     # Bare minimum of tests to run before pushing to master
 	./runtests.py
+
+todo:
+	# Look for areas of the code that need updating when some event has taken place (like 
+	# Oscar dropping support for a Django version)
+	-grep -rnH TODO *.txt
+	-grep -rnH TODO oscar/apps/
+	-grep -rnH "django.VERSION" oscar/apps
