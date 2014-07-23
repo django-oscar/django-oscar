@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 import django
 
@@ -106,3 +107,20 @@ def configure():
         })
 
         settings.configure(**test_settings)
+
+
+# It can sometimes be useful to be able to drop into the configured Django
+# environment of the test suite. It might e.g. be useful to drop into the
+# shell with ./config.py shell_plus or create missing migrations with
+# ./config.py makemigrations
+
+if __name__ == '__main__':
+    import sys
+    from django.core.management import call_command
+    args = sys.argv[1:]
+
+    if args:
+        configure()  # configure Django settings
+        if hasattr(django, 'setup'):
+            django.setup()  # initialise app registry for Django 1.7+
+        call_command(*args)
