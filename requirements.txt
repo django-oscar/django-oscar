@@ -9,6 +9,7 @@ Whoosh>=2.5
 pysolr>=3.1
 requests==2.1
 uWSGI==1.9.21.1
+South>=1.0,<1.1
 
 # Docs
 Sphinx==1.2.2
