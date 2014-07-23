@@ -1,13 +1,13 @@
-from oscar.core.loading import model_registered
+from oscar.core.loading import is_model_registered
 from oscar.apps.address.abstract_models import (
     AbstractUserAddress, AbstractCountry)
 
 
-if not model_registered('address', 'UserAddress'):
+if not is_model_registered('address', 'UserAddress'):
     class UserAddress(AbstractUserAddress):
         pass
 
 
-if not model_registered('address', 'Country'):
+if not is_model_registered('address', 'Country'):
     class Country(AbstractCountry):
         pass

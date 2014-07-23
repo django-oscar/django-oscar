@@ -1,26 +1,26 @@
 import django
 
-from oscar.core.loading import model_registered
+from oscar.core.loading import is_model_registered
 from oscar.apps.customer import abstract_models
 
 
-if not model_registered('customer', 'Email'):
+if not is_model_registered('customer', 'Email'):
     class Email(abstract_models.AbstractEmail):
         pass
 
 
-if not model_registered('customer', 'CommunicationEventType'):
+if not is_model_registered('customer', 'CommunicationEventType'):
     class CommunicationEventType(
             abstract_models.AbstractCommunicationEventType):
         pass
 
 
-if not model_registered('customer', 'Notification'):
+if not is_model_registered('customer', 'Notification'):
     class Notification(abstract_models.AbstractNotification):
         pass
 
 
-if not model_registered('customer', 'ProductAlert'):
+if not is_model_registered('customer', 'ProductAlert'):
     class ProductAlert(abstract_models.AbstractProductAlert):
         pass
 

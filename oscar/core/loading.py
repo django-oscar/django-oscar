@@ -260,7 +260,7 @@ def feature_hidden(feature_name):
 
 
 # The following section is concerned with offering both the
-# get_model(app_label, model_name) and model_registered(app_label, model_name)
+# get_model(app_label, model_name) and is_model_registered(app_label, model_name)
 # methods. Because the Django internals dramatically changed in the Django 1.7
 # app refactor, we distinguish based on the Django version and declare
 # a total of four methods that hopefully do mostly the same
@@ -283,7 +283,7 @@ if django.VERSION < (1, 7):
                     app_label=app_label, model_name=model_name))
         return model
 
-    def model_registered(app_label, model_name):
+    def is_model_registered(app_label, model_name):
         """
         Checks whether a given model is registered. This is used to only
         register Oscar models if they aren't overridden by a forked app.
@@ -305,7 +305,7 @@ else:
         """
         return apps.get_registered_model(app_label, model_name)
 
-    def model_registered(app_label, model_name):
+    def is_model_registered(app_label, model_name):
         """
         Checks whether a given model is registered. This is used to only
         register Oscar models if they aren't overridden by a forked app.

@@ -3,61 +3,61 @@ import django
 """
 Vanilla product models
 """
-from oscar.core.loading import model_registered
+from oscar.core.loading import is_model_registered
 from oscar.apps.catalogue.abstract_models import *  # noqa
 
 
-if not model_registered('catalogue', 'ProductClass'):
+if not is_model_registered('catalogue', 'ProductClass'):
     class ProductClass(AbstractProductClass):
         pass
 
 
-if not model_registered('catalogue', 'Category'):
+if not is_model_registered('catalogue', 'Category'):
     class Category(AbstractCategory):
         pass
 
 
-if not model_registered('catalogue', 'ProductCategory'):
+if not is_model_registered('catalogue', 'ProductCategory'):
     class ProductCategory(AbstractProductCategory):
         pass
 
 
-if not model_registered('catalogue', 'Product'):
+if not is_model_registered('catalogue', 'Product'):
     class Product(AbstractProduct):
         pass
 
 
-if not model_registered('catalogue', 'ProductRecommendation'):
+if not is_model_registered('catalogue', 'ProductRecommendation'):
     class ProductRecommendation(AbstractProductRecommendation):
         pass
 
 
-if not model_registered('catalogue', 'ProductAttribute'):
+if not is_model_registered('catalogue', 'ProductAttribute'):
     class ProductAttribute(AbstractProductAttribute):
         pass
 
 
-if not model_registered('catalogue', 'ProductAttributeValue'):
+if not is_model_registered('catalogue', 'ProductAttributeValue'):
     class ProductAttributeValue(AbstractProductAttributeValue):
         pass
 
 
-if not model_registered('catalogue', 'AttributeOptionGroup'):
+if not is_model_registered('catalogue', 'AttributeOptionGroup'):
     class AttributeOptionGroup(AbstractAttributeOptionGroup):
         pass
 
 
-if not model_registered('catalogue', 'AttributeOption'):
+if not is_model_registered('catalogue', 'AttributeOption'):
     class AttributeOption(AbstractAttributeOption):
         pass
 
 
-if not model_registered('catalogue', 'Option'):
+if not is_model_registered('catalogue', 'Option'):
     class Option(AbstractOption):
         pass
 
 
-if not model_registered('catalogue', 'ProductImage'):
+if not is_model_registered('catalogue', 'ProductImage'):
     class ProductImage(AbstractProductImage):
         pass
 
