@@ -1121,3 +1121,13 @@ class AbstractProductImage(models.Model):
         Return bool if image display order is 0
         """
         return self.display_order == 0
+
+    def delete(self, *args, **kwargs):
+        """
+        Always keep the display_order as consecutive integers. This avoids
+        issue #855.
+        """
+        super(AbstractProductImage, self).delete(*args, **kwargs)
+        for idx, image in enumerate(self.product.images.all()):
+            image.display_order = idx
+            image.save()
