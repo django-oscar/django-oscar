@@ -305,7 +305,7 @@ class WishListMoveProductToAnotherWishList(LineMixin, View):
     def dispatch(self, request, *args, **kwargs):
         try:
             self.fetch_line(request.user, kwargs['key'],
-                            product_pk=kwargs['product_pk'])
+                            line_pk=kwargs['line_pk'])
         except (ObjectDoesNotExist, MultipleObjectsReturned):
             raise Http404
         return super(WishListMoveProductToAnotherWishList, self).dispatch(
