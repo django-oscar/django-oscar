@@ -40,7 +40,7 @@ def fork_app(app_label, folder_path, logger=None):
     logger.info("Creating __init__.py and admin.py")
     create_file(os.path.join(local_app_folder_path, '__init__.py'))
     create_file(os.path.join(local_app_folder_path, 'admin.py'),
-                "from oscar.apps.%s.admin import *  # noqa" % app_label)
+                "from oscar.apps.%s.admin import *  # noqa\n" % app_label)
 
     # Only create models.py and migrations if it exists in the Oscar app
     oscar_models_path = os.path.join(oscar_app_folder_path, 'models.py')
@@ -54,7 +54,7 @@ def fork_app(app_label, folder_path, logger=None):
 
         create_file(
             os.path.join(local_app_folder_path, 'models.py'),
-            "from oscar.apps.%s.models import *  # noqa" % app_label)
+            "from oscar.apps.%s.models import *  # noqa\n" % app_label)
 
     # Final step needs to be done by hand
     app_package = local_app_folder_path.replace('/', '.')
