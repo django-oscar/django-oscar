@@ -24,7 +24,7 @@ def fork_app(app_label, folder_path, logger=None):
     if not os.path.exists(folder_path):
         raise ValueError(
             "The folder '%s' does not exist. Please create it then run this "
-            "command again")
+            "command again" % folder_path)
 
     # Create folder
     local_app_folder_path = os.path.join(folder_path, app_label)
