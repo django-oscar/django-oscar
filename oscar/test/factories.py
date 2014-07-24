@@ -26,6 +26,8 @@ ProductClass = get_model('catalogue', 'ProductClass')
 ProductAttribute = get_model('catalogue', 'ProductAttribute')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 
+ProductImage = get_model('catalogue', 'ProductImage')
+
 
 def create_stockrecord(product=None, price_excl_tax=None, partner_sku=None,
                        num_in_stock=None, partner_name=None,
@@ -91,6 +93,32 @@ def create_product(upc=None, title=u"Dùｍϻϒ title",
             partner_users=partner_users, partner_sku=partner_sku,
             partner_name=partner_name)
     return product
+
+
+def create_product_image(product=None,
+                         original=None,
+                         caption='Dummy Caption',
+                         display_order=None,
+                         ):
+    if not product:
+        product = create_product()
+    if not original:
+        original = None  # FIXME change?
+    if not display_order:
+        if not product.images.all():
+            display_order = 0
+        else:
+            display_order = max(product.images.all())+1
+
+    i_kwargs = {'product_id': product.id,
+                'original': original,
+                'display_order': display_order,
+                'caption': caption, }
+
+    product_image = ProductImage(**i_kwargs)
+    product_image.save()
+
+    return product_image
 
 
 def create_basket(empty=False):
