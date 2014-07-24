@@ -50,7 +50,7 @@ def fork_app(app_label, folder_path, logger=None):
     if not exists(folder_path):
         raise ValueError(
             "The folder '%s' does not exist. Please create it then run this "
-            "command again")
+            "command again" % folder_path)
 
     # Create folder
     local_app_path = join(folder_path, app_label)
@@ -62,7 +62,7 @@ def fork_app(app_label, folder_path, logger=None):
     app_package = local_app_path.replace('/', '.')
     logger.info("Enabling Django admin integration")
     create_file(join(local_app_path, 'admin.py'),
-                "from oscar.apps.%s.admin import *  # noqa" % app_label)
+                "from oscar.apps.%s.admin import *  # noqa\n" % app_label)
     logger.info("Inheriting app config")
     inherit_app_config(local_app_path, app_package, app_label)
 
@@ -73,7 +73,7 @@ def fork_app(app_label, folder_path, logger=None):
             "Creating models.py and copying South and native migrations")
         create_file(
             join(local_app_path, 'models.py'),
-            "from oscar.apps.%s.models import *  # noqa" % app_label)
+            "from oscar.apps.%s.models import *  # noqa\n" % app_label)
 
         for migrations_path in ['migrations', 'south_migrations']:
             source = join(oscar_app_path, migrations_path)
