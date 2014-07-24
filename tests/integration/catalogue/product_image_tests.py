@@ -16,6 +16,9 @@ class TestProductImages(TestCase):
         self.im_4 = factories.create_product_image(product=self.product,
                                                    display_order=3)
 
+    def tearDown(self):
+        self.product.delete()
+
     def test_images_are_in_consecutive_order(self):
         self.product.images.all()[2].delete()
 
