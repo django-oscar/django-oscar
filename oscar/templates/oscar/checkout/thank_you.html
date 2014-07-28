@@ -24,7 +24,7 @@
     <p>
         {% blocktrans with number=order.number %}
         Your order has been placed and a confirmation email has been sent - your order number is
-        <span class="label label-success">{{ order.number }}</span>
+        <span class="label label-success">{{ number }}</span>
         {% endblocktrans %}
     </p>
     <p>{% trans "Please make a note of this reference or print this page and quote it in any communication with us regarding your order." %}</p>
