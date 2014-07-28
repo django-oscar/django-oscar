@@ -690,6 +690,7 @@ class AddressChangeStatusView(generic.RedirectView):
     Sets an address as default_for_(billing|shipping)
     """
     url = reverse_lazy('customer:address-list')
+    permanent = False
 
     def get(self, request, pk=None, action=None, *args, **kwargs):
         address = get_object_or_404(UserAddress, user=self.request.user,
