@@ -24,6 +24,9 @@ class AbstractBase(models.Model):
     countries = models.ManyToManyField('address.Country', null=True,
                                        blank=True, verbose_name=_("Countries"))
 
+    # We need this to mimic the interface of the Base shipping method
+    is_discounted = False
+
     class Meta:
         abstract = True
         verbose_name = _("Shipping Method")
