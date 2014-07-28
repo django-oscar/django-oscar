@@ -276,7 +276,7 @@ Here's an example ``strategy.py`` module which is used to charge VAT on prices.
         """
 
         def strategy(self, request=None, user=None, **kwargs):
-            return UKStrategy(territory)
+            return UKStrategy()
 
 
     class IncludingVAT(strategy.FixedRateTax):
