@@ -89,7 +89,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('structure', models.CharField(default=b'standalone', max_length=10, verbose_name='Product structure', choices=[(b'standalone', 'Stand-alone product'), (b'parent', 'Parent product'), (b'child', 'Child product')])),
                 ('upc', oscar.models.fields.NullCharField(max_length=64, help_text='Universal Product Code (UPC) is an identifier for a product which is not specific to a particular  supplier. Eg an ISBN for a book.', unique=True, verbose_name='UPC')),
-                ('title', models.CharField(max_length=255, verbose_name='Product title', blank=True)),
+                ('title', models.CharField(max_length=255, verbose_name='Title', blank=True)),
                 ('slug', models.SlugField(max_length=255, verbose_name='Slug')),
                 ('description', models.TextField(verbose_name='Description', blank=True)),
                 ('rating', models.FloatField(verbose_name='Rating', null=True, editable=False)),

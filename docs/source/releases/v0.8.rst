@@ -551,6 +551,7 @@ Migrations
 * Offer:
 
     - ``0033`` - Use an ``AutoSlug`` field for ``Range`` models
+    - ``0034`` - Add moved ``RangedProductFileUpload`` model.
 
 * Order:
 

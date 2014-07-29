@@ -221,7 +221,7 @@ class Migration(SchemaMigration):
             'is_public': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'}),
             'proxy_class': ('oscar.models.fields.NullCharField', [], {'default': 'None', 'max_length': '255', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '128', 'unique': 'True', 'null': 'True'})
+            'slug': ('oscar.models.fields.autoslugfield.AutoSlugField', [], {'allow_duplicates': 'False', 'max_length': '128', 'separator': "u'-'", 'blank': 'True', 'unique': 'True', 'populate_from': "'name'", 'overwrite': 'False'})
         },
         'offer.rangeproduct': {
             'Meta': {'unique_together': "(('range', 'product'),)", 'object_name': 'RangeProduct'},
