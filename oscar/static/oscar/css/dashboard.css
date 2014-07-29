@@ -3383,6 +3383,25 @@ caption > i,
   border-color: #ede181;
   color: #333;
 }
+/* additional styles for alert content. Used by both public side and dashboard */
+.alert .alertinner {
+  position: relative;
+}
+.alert .alertinner.wicon {
+  padding-left: 0.5em;
+  margin-left: 0.5em;
+}
+.alert .alertinner [class*="icon-"] {
+  position: absolute;
+  top: 0.3em;
+  right: 100%;
+}
+.alert .alertinner p {
+  margin: 10px 0 0 0;
+}
+.alert .alertinner p:first-child {
+  margin: 0;
+}
 #order_graph {
   position: relative;
   margin-bottom: 5em;
