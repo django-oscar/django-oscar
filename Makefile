@@ -12,6 +12,7 @@ sandbox: install
 	-rm -rf sites/sandbox/public/static
 	-rm -f sites/sandbox/db.sqlite
 	# Create database
+	# 'syncdb' is identical to migrate in Django 1.7+; but calling it twice should have no effect
 	sites/sandbox/manage.py syncdb --noinput
 	sites/sandbox/manage.py migrate
 	# Import some fixtures. Order is important as JSON fixtures include primary keys
@@ -121,3 +122,10 @@ clean:
 preflight: lint
     # Bare minimum of tests to run before pushing to master
 	./runtests.py
+
+todo:
+	# Look for areas of the code that need updating when some event has taken place (like 
+	# Oscar dropping support for a Django version)
+	-grep -rnH TODO *.txt
+	-grep -rnH TODO oscar/apps/
+	-grep -rnH "django.VERSION" oscar/apps

@@ -2,9 +2,11 @@ from decimal import Decimal as D
 
 from django.test import TestCase
 
-from oscar.apps.partner.models import StockRecord, StockAlert
+from oscar.apps.partner.models import StockAlert
 from oscar.test.basket import add_product
 from oscar.test import factories
+
+from tests._site.apps.partner.models import StockRecord
 
 
 class TestPlacingAnOrder(TestCase):

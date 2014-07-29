@@ -402,6 +402,7 @@ class AbstractCountry(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'address'
         verbose_name = _('Country')
         verbose_name_plural = _('Countries')
         ordering = ('-display_order', 'printable_name',)
@@ -446,6 +447,8 @@ class AbstractShippingAddress(AbstractAddress):
 
     class Meta:
         abstract = True
+        # ShippingAddress is registered in order/models.py
+        app_label = 'order'
         verbose_name = _("Shipping address")
         verbose_name_plural = _("Shipping addresses")
 
@@ -518,6 +521,7 @@ class AbstractUserAddress(AbstractShippingAddress):
 
     class Meta:
         abstract = True
+        app_label = 'address'
         verbose_name = _("User address")
         verbose_name_plural = _("User addresses")
         ordering = ['-num_orders']
@@ -540,6 +544,8 @@ class AbstractBillingAddress(AbstractAddress):
 
     class Meta:
         abstract = True
+        # BillingAddress is registered in order/models.py
+        app_label = 'order'
         verbose_name = _("Billing address")
         verbose_name_plural = _("Billing addresses")
 
@@ -564,5 +570,6 @@ class AbstractPartnerAddress(AbstractAddress):
 
     class Meta:
         abstract = True
+        app_label = 'partner'
         verbose_name = _("Partner address")
         verbose_name_plural = _("Partner addresses")

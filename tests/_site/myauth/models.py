@@ -52,3 +52,6 @@ class User(AbstractUser):
         _('Nobody needs me'), max_length=5, blank=True)
 
     objects = CustomUserManager()
+
+    class Meta:
+        app_label = 'myauth'

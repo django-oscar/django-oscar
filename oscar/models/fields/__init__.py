@@ -61,6 +61,19 @@ class ExtendedURLField(CharField):
         defaults.update(kwargs)
         return super(ExtendedURLField, self).formfield(**defaults)
 
+    def deconstruct(self):
+        """
+        deconstruct() is needed by Django's migration framework
+        """
+        name, path, args, kwargs = super(ExtendedURLField, self).deconstruct()
+        # Add verify_exists to kwargs if it's not the default value.
+        if self.verify_exists is not None:
+            kwargs['verify_exists'] = self.verify_exists
+        # We have a default value for max_length; remove it in that case
+        if self.max_length == 200:
+            del kwargs['max_length']
+        return name, path, args, kwargs
+
 
 class PositiveDecimalField(DecimalField):
     """
@@ -115,6 +128,15 @@ class NullCharField(django_six.with_metaclass(SubfieldBase, CharField)):
         prepped = super(NullCharField, self).get_prep_value(value)
         return prepped if prepped != u"" else None
 
+    def deconstruct(self):
+        """
+        deconstruct() is needed by Django's migration framework
+        """
+        name, path, args, kwargs = super(NullCharField, self).deconstruct()
+        del kwargs['null']
+        del kwargs['blank']
+        return name, path, args, kwargs
+
 
 class PhoneNumberField(Field):
     """
@@ -163,3 +185,12 @@ class PhoneNumberField(Field):
     def contribute_to_class(self, cls, name):
         super(PhoneNumberField, self).contribute_to_class(cls, name)
         setattr(cls, self.name, self.descriptor_class(self))
+
+    def deconstruct(self):
+        """
+        deconstruct() is needed by Django's migration framework
+        """
+        name, path, args, kwargs = super(PhoneNumberField, self).deconstruct()
+        if self.max_length == 128:
+            del kwargs['max_length']
+        return name, path, args, kwargs

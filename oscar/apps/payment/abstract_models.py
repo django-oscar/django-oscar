@@ -46,9 +46,10 @@ class AbstractTransaction(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'payment'
+        ordering = ['-date_created']
         verbose_name = _("Transaction")
         verbose_name_plural = _("Transactions")
-        ordering = ['-date_created']
 
 
 class AbstractSource(models.Model):
@@ -99,6 +100,7 @@ class AbstractSource(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'payment'
         verbose_name = _("Source")
         verbose_name_plural = _("Sources")
 
@@ -203,6 +205,7 @@ class AbstractSourceType(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'payment'
         verbose_name = _("Source Type")
         verbose_name_plural = _("Source Types")
 
@@ -271,6 +274,7 @@ class AbstractBankcard(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'payment'
         verbose_name = _("Bankcard")
         verbose_name_plural = _("Bankcards")
 

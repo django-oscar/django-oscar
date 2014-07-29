@@ -2,8 +2,8 @@ import sys
 import traceback
 from importlib import import_module
 
+import django
 from django.conf import settings
-from django.db.models import get_model as django_get_model
 from django.utils import six as django_six
 
 from oscar.core.exceptions import (ModuleNotFoundError, ClassNotFoundError,
@@ -259,15 +259,63 @@ def feature_hidden(feature_name):
             feature_name in settings.OSCAR_HIDDEN_FEATURES)
 
 
-def get_model(app_label, model_name, *args, **kwargs):
-    """
-    Gets a model class by it's app label and model name. Fails loudly if the
-    model class can't be imported.
-    This is merely a thin wrapper around Django's get_model function.
-    """
-    model = django_get_model(app_label, model_name, *args, **kwargs)
-    if model is None:
-        raise ImportError(
-            "{app_label}.{model_name} could not be imported.".format(
-                app_label=app_label, model_name=model_name))
-    return model
+# The following section is concerned with offering both the
+# get_model(app_label, model_name) and
+# is_model_registered(app_label, model_name) methods. Because the Django
+# internals dramatically changed in the Django 1.7 app refactor, we distinguish
+# based on the Django version and declare a total of four methods that
+# hopefully do mostly the same
+
+
+if django.VERSION < (1, 7):
+
+    from django.db.models import get_model as django_get_model
+
+    def get_model(app_label, model_name, *args, **kwargs):
+        """
+        Gets a model class by it's app label and model name. Fails loudly if
+        the model class can't be imported.
+        This is merely a thin wrapper around Django's get_model function.
+        Raises LookupError if model isn't found.
+        """
+        model = django_get_model(app_label, model_name, *args, **kwargs)
+        if model is None:
+            raise LookupError(
+                "{app_label}.{model_name} could not be imported.".format(
+                    app_label=app_label, model_name=model_name))
+        return model
+
+    def is_model_registered(app_label, model_name):
+        """
+        Checks whether a given model is registered. This is used to only
+        register Oscar models if they aren't overridden by a forked app.
+        """
+        return bool(django_get_model(app_label, model_name, seed_cache=False))
+
+else:
+
+    from django.apps import apps
+
+    def get_model(app_label, model_name):
+        """
+        Fetches a Django model using the app registry.
+
+        This doesn't require that an app with the given app label exists,
+        which makes it safe to call when the registry is being populated.
+        All other methods to access models might raise an exception about the
+        registry not being ready yet.
+        Raises LookupError if model isn't found.
+        """
+        return apps.get_registered_model(app_label, model_name)
+
+    def is_model_registered(app_label, model_name):
+        """
+        Checks whether a given model is registered. This is used to only
+        register Oscar models if they aren't overridden by a forked app.
+        """
+        try:
+            apps.get_registered_model(app_label, model_name)
+        except LookupError:
+            return False
+        else:
+            return True

@@ -1,6 +1,8 @@
 import os
 import tempfile
+import unittest
 
+import django
 from django.test import TestCase
 from django.conf import settings
 
@@ -23,7 +25,7 @@ class TestForkAppFunction(TestCase):
         with self.assertRaises(ValueError):
             customisation.fork_app('order', 'does_not_exist')
 
-    def test_raises_exception_if_app_has_alredy_been_forked(self):
+    def test_raises_exception_if_app_has_already_been_forked(self):
         # We piggyback on another test which means a custom app is already in
         # the settings we use for the test suite. We just check that's still
         # the case here.
@@ -43,17 +45,23 @@ class TestForkAppFunction(TestCase):
 
     def test_creates_models_and_admin_file(self):
         customisation.fork_app('order', self.tmp_folder)
-        for module in ['models', 'admin']:
+        for module, expected_string in [
+            ('models', 'from oscar.apps.order.models import *'),
+            ('admin', 'from oscar.apps.order.admin import *'),
+            ('config', 'OrderConfig')]:
             filepath = os.path.join(self.tmp_folder, 'order', '%s.py' % module)
             self.assertTrue(os.path.exists(filepath))
 
             contents = open(filepath).read()
-            expected_string = 'from oscar.apps.order.%s import *' % module
             self.assertTrue(expected_string in contents)
 
     def test_copies_in_migrations_when_needed(self):
         for app, has_models in [('order', True), ('search', False)]:
             customisation.fork_app(app, self.tmp_folder)
-            migration_path = os.path.join(self.tmp_folder, app, 'migrations')
-            self.assertEqual(has_models, os.path.exists(migration_path))
+            native_migration_path = os.path.join(
+                self.tmp_folder, app, 'migrations')
+            self.assertEqual(has_models, os.path.exists(native_migration_path))
+            south_migration_path = os.path.join(
+                self.tmp_folder, app, 'south_migrations')
+            self.assertEqual(has_models, os.path.exists(south_migration_path))
 

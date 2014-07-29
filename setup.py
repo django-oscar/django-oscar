@@ -35,11 +35,9 @@ setup(name='django-oscar',
       packages=find_packages(exclude=["sandbox*", "tests*"]),
       include_package_data=True,
       install_requires=[
-          'django>=1.5.7,<1.7',
+          'django>=1.6.5,<1.8',
           # PIL is required for image fields, Pillow is the "friendly" PIL fork
           'pillow>=1.7.8,<2.5',
-          # Oscar ships with migrations
-          'South>=0.7.6,<0.9',
           # We use the ModelFormSetView from django-extra-views for the basket
           # page
           'django-extra-views>=0.2,<0.7',
@@ -48,7 +46,7 @@ setup(name='django-oscar',
           # Treebeard is used for categories
           'django-treebeard==2.0',
           # Sorl is used as the default thumbnailer
-          'sorl-thumbnail==11.12.1b' if PY3 else 'sorl-thumbnail==11.12',
+          'sorl-thumbnail==11.12.1b',
           # Babel is used for currency formatting
           'Babel>=1.0,<1.4',
           # Oscar's default templates use compressor (but you can override

@@ -29,6 +29,7 @@ class AbstractProductRecord(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'analytics'
         ordering = ['-num_purchases']
         verbose_name = _('Product record')
         verbose_name_plural = _('Product records')
@@ -64,6 +65,7 @@ class AbstractUserRecord(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'analytics'
         verbose_name = _('User record')
         verbose_name_plural = _('User records')
 
@@ -76,6 +78,7 @@ class AbstractUserProductView(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'analytics'
         verbose_name = _('User product view')
         verbose_name_plural = _('User product views')
 
@@ -92,6 +95,7 @@ class AbstractUserSearch(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'analytics'
         verbose_name = _("User search query")
         verbose_name_plural = _("User search queries")
 

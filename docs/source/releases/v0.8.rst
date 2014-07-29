@@ -37,7 +37,8 @@ availability logic now needs to be handled with strategies.
 Compatibility
 -------------
 
-Oscar 0.8 is compatible with Django 1.5-1.7. 
+Oscar 0.8 drops supports for Django 1.5, and is compatible with Django 1.6 and
+Django 1.7.
 
 Support for Python 2.6 has been dropped; Oscar works with Python 2.7, 3.3
 and 3.4.
@@ -79,6 +80,18 @@ has been altered to be:
 
 Some properties and method names have also been updated to the new naming. The
 old ones will throw a deprecation warning.
+
+Django 1.7 support
+------------------
+
+Oscar 0.8 comes with support for Django 1.7 out of the box. The app refactor
+and the new migration framework are both great improvements to Django. Oscar
+now ships with sets of migrations both for South and the new native
+migrations framework.
+Unfortunately, the changes in Django required a few breaking changes when
+upgrading Oscar both for users staying on Django 1.6 and for users upgrading to
+Django 1.7 at the same time. These are detailed in the section for
+backwards-incompatible changes.
 
 Reworked shipping app
 ~~~~~~~~~~~~~~~~~~~~~
@@ -204,12 +217,44 @@ Minor changes
   populate the country databases. It replaces the ``countries.json`` fixture.
   The command relies on the ``pycountry`` library being installed.
 
+* It is now possible to use product attributes to add a relation to arbitrary
+  model instances. There was some (presumably broken) support for it before,
+  but you should now be able to use product attributes of type ``entity`` as
+  expected. There's currently no frontend or dashboard support for it, as there
+  is no good default behaviour.
+
 .. _incompatible_changes_in_0.8:
 
 Backwards incompatible changes in 0.8
 -------------------------------------
 
-.. _incompatible_shipping_changes_in_0.8:
+Migrations
+~~~~~~~~~~
+
+* South is not a dependency of Oscar anymore: This means it won't get installed
+  automatically when you install Oscar. If you are on Django 1.6 and want to
+  use South, you will need to explicitly install it and add it to your
+  requirements.
+* Only South >= 1.0 is supported: South 1.0 is a backwards compatible release
+  explicitly released to help with the upgrade path to Django 1.7. Please make
+  sure you update accordingly if you intend to keep using South. Older versions
+  of South will look in the wrong directories and will break with this Oscar
+  release.
+* Rename your South ``migrations`` directories: To avoid
+  clashes between Django's migrations and South's migrations, you should rename
+  all your South migrations directories (including those of forked Oscar apps)
+  to ``south_migrations``. South 1.0 will check those first before falling back
+  to ``migrations``.
+* Upgrading to new-style migrations: If you're upgrading to Django 1.7, you
+  will need to follow the `instructions to upgrade from South`_ for your own
+  apps. For any forked Oscar apps, you will need to copy Oscar's initial
+  migrations into your emptied ``migrations`` directory first, because Oscar's
+  set of migrations depend on each other. You can then create migrations for
+  your changes by calling ``./manage.py makemigrations``. Django should
+  detect that the database layout already matches the state of migrations; so
+  a call to ``migrate`` should fake the migrations.
+
+.. _instructions to upgrade from South: https://docs.djangoproject.com/en/1.7/topics/migrations/#upgrading-from-south
 
 Product structure
 ~~~~~~~~~~~~~~~~~
@@ -243,6 +288,8 @@ the following renaming pattern:
 * ``product_variants`` becomes ``child_products``
 * ``variants`` becomes ``children``
 * ``variant`` becomes ``child``
+
+.. _incompatible_shipping_changes_in_0.8:
 
 Shipping
 ~~~~~~~~
@@ -367,6 +414,23 @@ the host portion is lowercased.
    ``oscar_find_duplicate_emails`` management command to check your database
    and deal with any conflicts accordingly.
 
+Django 1.7 support
+------------------
+
+If you have any plans to upgrade to Django 1.7, more changes beyond
+addressing migrations are necessary:
+
+* You should be aware that Django 1.7 now enforces uniqueness of app labels.
+  Oscar dashboard apps now ship with app configs that set their app label
+  to ``{oldname}_dashboard``.
+* If you have forked any Oscar apps, you must add app configs to them, and
+  have them inherit from the Oscar one. See the appropriate section in
+  :doc:`/topics/fork_app` for an example.
+* Double-check that you address migrations as detailed above.
+* Django now enforces that no calls happen to the model registry during
+  app startup. This mostly means that you should avoid module-level calls to
+  ``get_model``, as that only works with a fully initialised model registry.
+
 Misc
 ~~~~
 
@@ -403,11 +467,15 @@ Misc
   trivial ``ProductAttribute.get_validator`` and the unused
   ``ProductAttribute.is_value_valid`` methods have been removed.
 
-* It is now possible to use product attributes to add a relation to arbitrary
-  model instances. There was some (presumably broken) support for it before,
-  but you should now be able to use product attributes of type ``entity`` as
-  expected. There's currently no frontend or dashboard support for it, as there
-  is no good default behaviour.
+* The ``RangeProductFileUpload`` model has been moved from the ranges
+  dashboard app to the offers app. The migrations that have been naively
+  drop and re-create the model; any data is lost! This is probably not an
+  issue, as the model is only used while an range upload is in progress. If
+  you need to keep the data, ensure you migrate it across.
+
+* ``oscar.core.loading.get_model`` now raises a ``LookupError`` instead of an
+  ``ImportError`` if a model can't be found. That brings it more in line with
+  what Django does since the app refactor.
 
 .. _rewritten: https://github.com/tangentlabs/django-oscar/commit/d8b4dbfed17be90846ea4bc47b5f7b39ad944c24
 
@@ -478,6 +546,12 @@ Migrations
 
 .. note::
 
+    The migration numbers below refer to the numbers of the South migrations.
+    Oscar 0.8 ships with a set of new initial migrations for Django's new
+    native migrations framework. They include all the changes detailed below.
+
+.. note::
+
     Be sure to read the detailed instructions for
     :doc:`handling migrations </topics/upgrading>`.
 
@@ -499,6 +573,7 @@ Migrations
 * Offer:
 
     - ``0033`` - Use an ``AutoSlug`` field for ``Range`` models
+    - ``0034`` - Add moved ``RangedProductFileUpload`` model.
 
 * Order:
 
@@ -513,6 +588,11 @@ Migrations
 * Promotions:
 
     - ``0006`` - Add ``unique_together`` to ``OrderedProduct``
+
+* Ranges dashboard:
+
+    - ``0003`` - Drop ``RangeProductFileUpload`` from ``ranges`` app. This is
+                 a destructive change!
 
 * Shipping:
 

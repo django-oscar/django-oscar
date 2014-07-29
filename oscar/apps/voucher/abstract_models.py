@@ -51,8 +51,9 @@ class AbstractVoucher(models.Model):
     date_created = models.DateField(auto_now_add=True)
 
     class Meta:
-        get_latest_by = 'date_created'
         abstract = True
+        app_label = 'voucher'
+        get_latest_by = 'date_created'
         verbose_name = _("Voucher")
         verbose_name_plural = _("Vouchers")
 
@@ -145,6 +146,7 @@ class AbstractVoucherApplication(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'voucher'
         verbose_name = _("Voucher Application")
         verbose_name_plural = _("Voucher Applications")
 

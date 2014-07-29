@@ -69,6 +69,7 @@ class AbstractProductReview(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'reviews'
         ordering = ['-delta_votes', 'id']
         unique_together = (('product', 'user'),)
         verbose_name = _('Product review')
@@ -193,6 +194,7 @@ class AbstractVote(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'reviews'
         ordering = ['-date_created']
         unique_together = (('user', 'review'),)
         verbose_name = _('Vote')

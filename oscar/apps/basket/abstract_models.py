@@ -55,6 +55,7 @@ class AbstractBasket(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'basket'
         verbose_name = _('Basket')
         verbose_name_plural = _('Baskets')
 
@@ -584,6 +585,7 @@ class AbstractLine(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'basket'
         unique_together = ("basket", "line_reference")
         verbose_name = _('Basket line')
         verbose_name_plural = _('Basket lines')
@@ -831,5 +833,6 @@ class AbstractLineAttribute(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'basket'
         verbose_name = _('Line attribute')
         verbose_name_plural = _('Line attributes')
