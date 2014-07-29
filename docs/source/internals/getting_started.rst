@@ -120,7 +120,7 @@ also recommended to use ``django.middleware.transaction.TransactionMiddleware``:
     )
 
 If you're running Django 1.6 or above, you should enable ``ATOMIC_REQUESTS``
-instead (see database settings above).
+instead (see database settings below).
 
 Set your auth backends to:
 
