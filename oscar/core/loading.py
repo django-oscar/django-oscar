@@ -260,10 +260,11 @@ def feature_hidden(feature_name):
 
 
 # The following section is concerned with offering both the
-# get_model(app_label, model_name) and is_model_registered(app_label, model_name)
-# methods. Because the Django internals dramatically changed in the Django 1.7
-# app refactor, we distinguish based on the Django version and declare
-# a total of four methods that hopefully do mostly the same
+# get_model(app_label, model_name) and
+# is_model_registered(app_label, model_name) methods. Because the Django
+# internals dramatically changed in the Django 1.7 app refactor, we distinguish
+# based on the Django version and declare a total of four methods that
+# hopefully do mostly the same
 
 
 if django.VERSION < (1, 7):
@@ -275,10 +276,11 @@ if django.VERSION < (1, 7):
         Gets a model class by it's app label and model name. Fails loudly if
         the model class can't be imported.
         This is merely a thin wrapper around Django's get_model function.
+        Raises LookupError if model isn't found.
         """
         model = django_get_model(app_label, model_name, *args, **kwargs)
         if model is None:
-            raise ImportError(
+            raise LookupError(
                 "{app_label}.{model_name} could not be imported.".format(
                     app_label=app_label, model_name=model_name))
         return model
@@ -302,6 +304,7 @@ else:
         which makes it safe to call when the registry is being populated.
         All other methods to access models might raise an exception about the
         registry not being ready yet.
+        Raises LookupError if model isn't found.
         """
         return apps.get_registered_model(app_label, model_name)
 

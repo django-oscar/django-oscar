@@ -455,6 +455,10 @@ Misc
   issue, as the model is only used while an range upload is in progress. If
   you need to keep the data, ensure you migrate it across.
 
+* ``oscar.core.loading.get_model`` now raises a ``LookupError`` instead of an
+  ``ImportError`` if a model can't be found. That brings it more in line with
+  what Django does since the app refactor.
+
 .. _rewritten: https://github.com/tangentlabs/django-oscar/commit/d8b4dbfed17be90846ea4bc47b5f7b39ad944c24
 
 Basket line stockrecords
