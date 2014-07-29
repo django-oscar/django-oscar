@@ -257,7 +257,7 @@ class PartnerUserUnlinkView(generic.View):
                  'partner_name': partner.name,
                  'user_pk': user_pk,
                  'partner_pk': partner_pk})
-            messages.success(self.request, msg, extra_tags='safe')
+            messages.success(self.request, msg, extra_tags='safe noicon')
         else:
             messages.error(
                 request,

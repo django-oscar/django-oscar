@@ -37,7 +37,8 @@ class EmailBackend(ModelBackend):
         # intentionally allow multiple users with the same email address
         # (has been a requirement in larger system deployments),
         # we just enforce that they don't share the same password.
-        matching_users = User.objects.filter(email=clean_email)
+        # We make a case-insensitive match when looking for emails.
+        matching_users = User.objects.filter(email__iexact=clean_email)
         authenticated_users = [
             user for user in matching_users if user.check_password(password)]
         if len(authenticated_users) == 1:

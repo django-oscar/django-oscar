@@ -8,9 +8,9 @@
                 <legend>{% trans "Leave a product review" %}</legend>
                 {% csrf_token %}
                 {% include "partials/form_fields.html" with form=form %}
-                <button type="submit"  class="btn btn-primary">{% trans "Submit" %}</button>
+                <button type="submit" class="btn btn-primary btn-large">{% trans "Save review" %}</button>
                 {% trans "or" %}
-                <a href="{{ product.get_absolute_url }}" >{% trans "cancel" %}</a>
+                <a href="{{ product.get_absolute_url }}">{% trans "cancel" %}</a>
             </fieldset>
         </form>
     </div>

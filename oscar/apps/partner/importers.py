@@ -184,7 +184,7 @@ class DemoSiteImporter(object):
 
         if is_child:
             product.structure = Product.CHILD
-            # Assign parent for variants
+            # Assign parent for children
             product.parent = self.parent
         elif is_parent:
             product.structure = Product.PARENT

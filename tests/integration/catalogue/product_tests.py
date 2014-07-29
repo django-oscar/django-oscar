@@ -87,7 +87,7 @@ class VariantProductTests(ProductTests):
         Product.objects.create(
             parent=self.parent, structure=Product.CHILD)
 
-    def test_variant_products_inherit_parent_titles(self):
+    def test_child_products_inherit_parent_titles(self):
         p = Product.objects.create(
             parent=self.parent, product_class=self.product_class,
             structure=Product.CHILD)

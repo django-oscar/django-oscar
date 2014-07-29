@@ -20,6 +20,7 @@ from oscar.apps.basket import models as basket_models
 from oscar.apps.catalogue import models as catalogue_models
 from oscar.apps.partner import models as partner_models, strategy
 from oscar.apps.voucher import models as voucher_models
+from oscar.apps.offer import models as offer_models
 from oscar.core.compat import get_user_model
 
 from tests._site.apps.partner.models import StockRecord
@@ -29,7 +30,7 @@ __all__ = ["UserFactory", "CountryFactory", "UserAddressFactory",
            "StockRecordFactory", "ProductAttributeFactory",
            "ProductAttributeValueFactory", "AttributeOptionGroupFactory",
            "AttributeOptionFactory", "PartnerFactory",
-           "ProductCategoryFactory", "CategoryFactory"]
+           "ProductCategoryFactory", "CategoryFactory", "RangeFactory"]
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -164,3 +165,10 @@ class ProductAttributeValueFactory(factory.DjangoModelFactory):
 
     attribute = factory.SubFactory(ProductAttributeFactory)
     product = factory.SubFactory(ProductFactory)
+
+
+class RangeFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = offer_models.Range
+
+    name = factory.Sequence(lambda n: 'Range %d' % n)
+    slug = factory.Sequence(lambda n: 'range-%d' % n)

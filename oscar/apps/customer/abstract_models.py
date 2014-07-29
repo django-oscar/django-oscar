@@ -124,7 +124,7 @@ class AbstractEmail(models.Model):
 
     def __unicode__(self):
         return _("Email to %(user)s with subject '%(subject)s'") % {
-            'user': self.user.username, 'subject': self.subject}
+            'user': self.user.get_username(), 'subject': self.subject}
 
 
 class AbstractCommunicationEventType(models.Model):

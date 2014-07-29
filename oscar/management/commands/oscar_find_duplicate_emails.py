@@ -20,7 +20,7 @@ class Command(BaseCommand):
             for email, __ in duplicates:
                 users = User.objects.filter(email__iexact=email)
                 user_strings = [
-                    "{} (#{})".format(user.username, user.pk)
+                    "{} (#{})".format(user.get_username(), user.pk)
                     for user in users]
                 print("{email} is assigned to: {pk_list}".format(
                     email=email, pk_list=u", ".join(user_strings)))

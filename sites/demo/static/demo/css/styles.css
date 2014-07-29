@@ -5226,29 +5226,29 @@ you can use the generic selector below, but it's slower:
   color: #97a5a3;
   font-size: 1.1428571428571428em;
 }
-.variant-product {
+.child-product {
   *zoom: 1;
 }
-.variant-product:before,
-.variant-product:after {
+.child-product:before,
+.child-product:after {
   display: table;
   content: "";
   line-height: 0;
 }
-.variant-product:after {
+.child-product:after {
   clear: both;
 }
-.variant-product h4 {
+.child-product h4 {
   color: #024872;
 }
-.variant-product p,
-.variant-product h4 {
+.child-product p,
+.child-product h4 {
   margin-bottom: 15px;
 }
-.variant-product .price_color {
+.child-product .price_color {
   font-size: 1.7142857142857142em;
 }
-.variant-product .image_container {
+.child-product .image_container {
   background: #ffffff;
   line-height: 80px;
   min-height: 80px;
@@ -5256,14 +5256,14 @@ you can use the generic selector below, but it's slower:
   border: 1px solid #ddd;
   float: left;
 }
-.variant-product .image_container img {
+.child-product .image_container img {
   max-height: 70px;
   max-width: 98%;
 }
-.variant-product > div:first-child + div {
+.child-product > div:first-child + div {
   margin-left: 100px;
 }
-.variant-form label {
+.child-form label {
   display: block;
 }
 .form-notify .btn {

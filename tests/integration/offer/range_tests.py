@@ -73,3 +73,12 @@ class TestPartialRange(TestCase):
         self.range.classes.add(self.prod.get_product_class())
         self.range.excluded_products.add(self.prod)
         self.assertFalse(self.range.contains_product(self.prod))
+
+
+class TestRangeModle(TestCase):
+
+    def test_ensures_unique_slugs_are_used(self):
+        first_range = models.Range.objects.create(name="Foo")
+        first_range.name = "Bar"
+        first_range.save()
+        models.Range.objects.create(name="Foo")

@@ -5,7 +5,7 @@ How to add views or change URLs or permissions
 Oscar has many views and associated URLs.  Often you want to customise these
 URLs for your domain, or add additional views to an app.
 
-This How-to describes how to do just that.
+This how-to describes how to do just that.
 It builds upon the steps described in :doc:`/topics/customisation`. Please
 read it first and ensure that you've:
 
@@ -19,8 +19,8 @@ The application class
 Each Oscar app comes with an application instance which inherits from
 :class:`oscar.core.application.Application`. They're mainly used to gather
 URLs (with the correct permissions) for each Oscar app. This structure makes
-Oscar apps more modular as each app is responsible for it's own URLs. And as
-it is a class, it can be overridden as any other Oscar class; hence making
+Oscar apps more modular as each app is responsible for its own URLs. And as
+it is a class, it can be overridden like any other Oscar class; hence making
 it straightforward to change URLs or add new views.
 Each app instance exposes a ``urls`` property, which is used to access the
 list of URLs of an app.
@@ -37,15 +37,16 @@ illustrates this nicely::
 
         catalogue_app = get_class('catalogue.app', 'application')
         basket_app = get_class('basket.app', 'application')
-        ...
+        # ...
 
         def get_urls(self):
             urls = [
                 url(r'^catalogue/', include(self.catalogue_app.urls)),
                 url(r'^basket/', include(self.basket_app.urls)),
-                ...
+                # ...
+            ]
 
-The root app pulls in the URLs from it's children. That means to add
+The root app pulls in the URLs from its children. That means to add
 all Oscar URLs to your Django project, you only need to include the ``urls``
 property from the root app::
 
@@ -53,7 +54,7 @@ property from the root app::
     from oscar.app import application
 
     urlpatterns = [
-        ... # Your other URLs
+        # Your other URLs
         url(r'', include(application.urls)),
     ]
 
@@ -69,7 +70,7 @@ other classes in Oscar::
 
         catalogue_app = get_class('catalogue.app', 'application')
         customer_app = get_class('customer.app', 'application')
-        ...
+        # ...
 
 That means you just need to create another
 ``application`` instance. It will usually inherit from Oscar's version. Say
@@ -103,8 +104,8 @@ instead of Oscar's default instance.  Hence, create a subclass of Oscar's main
         def get_urls(self):
             urlpatterns = [
                 url(r'^catalog/', include(self.catalogue_app.urls)),
-
-                ... # all the remaining URLs, removed for simplicity
+                # all the remaining URLs, removed for simplicity
+                # ...
             ]
             return urlpatterns
 
@@ -117,7 +118,7 @@ it to use your new application instance instead of Oscar's default::
     from myproject.app import application
 
     urlpatterns = [
-       ... # Your other URLs
+       # Your other URLs
        url(r'', include(application.urls)),
     ]
 

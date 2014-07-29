@@ -265,8 +265,9 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = [
-            'structure', 'upc', 'parent', 'title', 'description',
-            'is_discountable']
+            'title', 'upc', 'description',
+            'is_discountable',
+            'structure', 'parent']
         widgets = {
             'parent': ProductSelect,
         }
