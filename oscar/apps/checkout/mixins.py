@@ -235,7 +235,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         order is submitted.
         """
         # Send confirmation message (normally an email)
-        self.send_confirmation_message(order)
+        self.send_order_message(order, self.communication_type_code)
 
         # Flush all session data
         self.checkout_session.flush()
@@ -255,8 +255,41 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     def get_success_url(self):
         return reverse('checkout:thank-you')
 
-    def send_confirmation_message(self, order, **kwargs):
-        code = self.communication_type_code
+    def send_order_message(self, order, code, recipient=None):
+        if recipient is None:
+            # default recipient is the customer
+            if order.is_anonymous:
+                recipient = order.guest_email
+            else:
+                recipient = order.user
+
+        context = self.get_email_context(order)
+
+        try:
+            event_type = CommunicationEventType.objects.get(code=code)
+        except CommunicationEventType.DoesNotExist:
+            event_type = CommunicationEventType(code=code)
+        else:
+            # Create CommunicationEvent
+            CommunicationEvent._default_manager.create(
+                order=order, event_type=event_type)
+
+        messages = event_type.get_messages(context)
+
+        if not messages or not messages['body']:
+            logger.warning("Order #%s - no %s communication event type",
+                           order.number, code)
+            return
+
+        logger.info("Order #%s - sending %s messages", order.number, code)
+
+        dispatcher = Dispatcher(logger)
+        if isinstance(recipient, six.string_types):
+            dispatcher.send_email_messages(recipient, messages)
+        else:
+            dispatcher.dispatch_user_messages(recipient, messages)
+
+    def get_email_context(self, order):
         ctx = {'user': self.request.user,
                'order': order,
                'site': get_current_site(self.request),
@@ -276,29 +309,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
                 site = Site.objects.get_current()
                 ctx['status_url'] = 'http://%s%s' % (site.domain, path)
 
-        try:
-            event_type = CommunicationEventType.objects.get(code=code)
-        except CommunicationEventType.DoesNotExist:
-            # No event-type in database, attempt to find templates for this
-            # type and render them immediately to get the messages.  Since we
-            # have not CommunicationEventType to link to, we can't create a
-            # CommunicationEvent instance.
-            messages = CommunicationEventType.objects.get_and_render(code, ctx)
-            event_type = None
-        else:
-            # Create CommunicationEvent
-            CommunicationEvent._default_manager.create(
-                order=order, event_type=event_type)
-            messages = event_type.get_messages(ctx)
-
-        if messages and messages['body']:
-            logger.info("Order #%s - sending %s messages", order.number, code)
-            dispatcher = Dispatcher(logger)
-            dispatcher.dispatch_order_messages(order, messages,
-                                               event_type, **kwargs)
-        else:
-            logger.warning("Order #%s - no %s communication event type",
-                           order.number, code)
+        return ctx
 
     # Basket helpers
     # --------------
