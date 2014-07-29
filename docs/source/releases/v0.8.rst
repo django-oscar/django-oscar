@@ -90,7 +90,8 @@ now ships with sets of migrations both for South and the new native
 migrations framework.
 Unfortunately, the changes in Django required a few breaking changes when
 upgrading Oscar both for users staying on Django 1.6 and for users upgrading to
-Django 1.7 at the same time.
+Django 1.7 at the same time. These are detailed in the section for
+backwards-incompatible changes.
 
 Reworked shipping app
 ~~~~~~~~~~~~~~~~~~~~~
@@ -412,6 +413,23 @@ the host portion is lowercased.
    that Oscar considers identical. Please use the new
    ``oscar_find_duplicate_emails`` management command to check your database
    and deal with any conflicts accordingly.
+
+Django 1.7 support
+------------------
+
+If you have any plans to upgrade to Django 1.7, more changes beyond
+addressing migrations are necessary:
+
+* You should be aware that Django 1.7 now enforces uniqueness of app labels.
+  Oscar dashboard apps now ship with app configs that set their app label
+  to ``{oldname}_dashboard``.
+* If you have forked any Oscar apps, you must add app configs to them, and
+  have them inherit from the Oscar one. See the appropriate section in
+  :doc:`/topics/fork_app` for an example.
+* Double-check that you address migrations as detailed above.
+* Django now enforces that no calls happen to the model registry during
+  app startup. This mostly means that you should avoid module-level calls to
+  ``get_model``, as that only works with a fully initialised model registry.
 
 Misc
 ~~~~
