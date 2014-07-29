@@ -275,10 +275,11 @@ if django.VERSION < (1, 7):
         Gets a model class by it's app label and model name. Fails loudly if
         the model class can't be imported.
         This is merely a thin wrapper around Django's get_model function.
+        Raises LookupError if model isn't found.
         """
         model = django_get_model(app_label, model_name, *args, **kwargs)
         if model is None:
-            raise ImportError(
+            raise LookupError(
                 "{app_label}.{model_name} could not be imported.".format(
                     app_label=app_label, model_name=model_name))
         return model
@@ -302,6 +303,7 @@ else:
         which makes it safe to call when the registry is being populated.
         All other methods to access models might raise an exception about the
         registry not being ready yet.
+        Raises LookupError if model isn't found.
         """
         return apps.get_registered_model(app_label, model_name)
 
