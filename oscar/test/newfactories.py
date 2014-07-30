@@ -15,15 +15,8 @@ from decimal import Decimal as D
 from django.utils.timezone import now
 import factory
 
-from oscar.apps.address import models as address_models
-from oscar.apps.basket import models as basket_models
-from oscar.apps.catalogue import models as catalogue_models
-from oscar.apps.partner import models as partner_models, strategy
-from oscar.apps.voucher import models as voucher_models
-from oscar.apps.offer import models as offer_models
+from oscar.core.loading import get_model, get_class
 from oscar.core.compat import get_user_model
-
-from tests._site.apps.partner.models import StockRecord
 
 __all__ = ["UserFactory", "CountryFactory", "UserAddressFactory",
            "BasketFactory", "VoucherFactory", "ProductFactory",
@@ -31,6 +24,8 @@ __all__ = ["UserFactory", "CountryFactory", "UserAddressFactory",
            "ProductAttributeValueFactory", "AttributeOptionGroupFactory",
            "AttributeOptionFactory", "PartnerFactory",
            "ProductCategoryFactory", "CategoryFactory", "RangeFactory"]
+
+Selector = get_class('partner.strategy', 'Selector')
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -47,14 +42,14 @@ class UserFactory(factory.DjangoModelFactory):
 
 
 class CountryFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = address_models.Country
+    FACTORY_FOR = get_model('address', 'Country')
 
     iso_3166_1_a2 = 'GB'
     name = "UNITED KINGDOM"
 
 
 class UserAddressFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = address_models.UserAddress
+    FACTORY_FOR = get_model('address', 'UserAddress')
 
     title = "Dr"
     first_name = "Barry"
@@ -67,15 +62,16 @@ class UserAddressFactory(factory.DjangoModelFactory):
 
 
 class BasketFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = basket_models.Basket
+    FACTORY_FOR = get_model('basket', 'Basket')
 
     @factory.post_generation
     def set_strategy(self, create, extracted, **kwargs):
-        self.strategy = strategy.Default()
+        # Load default strategy (without a user/request)
+        self.strategy = Selector().strategy()
 
 
 class VoucherFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = voucher_models.Voucher
+    FACTORY_FOR = get_model('voucher', 'Voucher')
 
     name = "My voucher"
     code = "MYVOUCHER"
@@ -85,13 +81,13 @@ class VoucherFactory(factory.DjangoModelFactory):
 
 
 class PartnerFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = partner_models.Partner
+    FACTORY_FOR = get_model('partner', 'Partner')
 
     name = "Gardners"
 
 
 class StockRecordFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = StockRecord
+    FACTORY_FOR = get_model('partner', 'StockRecord')
 
     partner = factory.SubFactory(PartnerFactory)
     partner_sku = factory.Sequence(lambda n: 'unit%d' % n)
@@ -101,7 +97,7 @@ class StockRecordFactory(factory.DjangoModelFactory):
 
 
 class ProductClassFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = catalogue_models.ProductClass
+    FACTORY_FOR = get_model('catalogue', 'ProductClass')
 
     name = "Books"
     requires_shipping = True
@@ -109,7 +105,7 @@ class ProductClassFactory(factory.DjangoModelFactory):
 
 
 class CategoryFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = catalogue_models.Category
+    FACTORY_FOR = get_model('catalogue', 'Category')
 
     name = factory.Sequence(lambda n: 'Category %d' % n)
 
@@ -119,15 +115,15 @@ class CategoryFactory(factory.DjangoModelFactory):
 
 
 class ProductCategoryFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = catalogue_models.ProductCategory
+    FACTORY_FOR = get_model('catalogue', 'ProductCategory')
 
     category = factory.SubFactory(CategoryFactory)
 
 
 class ProductFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = catalogue_models.Product
+    FACTORY_FOR = get_model('catalogue', 'Product')
 
-    structure = catalogue_models.Product.STANDALONE
+    structure = FACTORY_FOR.STANDALONE
     upc = factory.Sequence(lambda n: '978080213020%d' % n)
     title = "A confederacy of dunces"
     product_class = factory.SubFactory(ProductClassFactory)
@@ -137,7 +133,7 @@ class ProductFactory(factory.DjangoModelFactory):
 
 
 class ProductAttributeFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = catalogue_models.ProductAttribute
+    FACTORY_FOR = get_model('catalogue', 'ProductAttribute')
 
     code = name = 'weight'
     product_class = factory.SubFactory(ProductClassFactory)
@@ -145,13 +141,13 @@ class ProductAttributeFactory(factory.DjangoModelFactory):
 
 
 class AttributeOptionGroupFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = catalogue_models.AttributeOptionGroup
+    FACTORY_FOR = get_model('catalogue', 'AttributeOptionGroup')
 
     name = u'Grüppchen'
 
 
 class AttributeOptionFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = catalogue_models.AttributeOption
+    FACTORY_FOR = get_model('catalogue', 'AttributeOption')
 
     # Ideally we'd get_or_create a AttributeOptionGroup here, but I'm not
     # aware of how to not create a unique option group for each call of the
@@ -161,14 +157,14 @@ class AttributeOptionFactory(factory.DjangoModelFactory):
 
 
 class ProductAttributeValueFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = catalogue_models.ProductAttributeValue
+    FACTORY_FOR = get_model('catalogue', 'ProductAttributeValue')
 
     attribute = factory.SubFactory(ProductAttributeFactory)
     product = factory.SubFactory(ProductFactory)
 
 
 class RangeFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = offer_models.Range
+    FACTORY_FOR = get_model('offer', 'Range')
 
     name = factory.Sequence(lambda n: 'Range %d' % n)
     slug = factory.Sequence(lambda n: 'range-%d' % n)
