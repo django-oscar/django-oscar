@@ -102,8 +102,6 @@ def create_product_image(product=None,
                          ):
     if not product:
         product = create_product()
-    if not original:
-        original = None  # FIXME change?
     if not display_order:
         if not product.images.all():
             display_order = 0
@@ -111,15 +109,12 @@ def create_product_image(product=None,
             display_order = max(
                 [i.display_order for i in product.images.all()])+1
 
-    i_kwargs = {'product_id': product.id,
-                'original': original,
-                'display_order': display_order,
-                'caption': caption, }
+    kwargs = {'product_id': product.id,
+              'original': original,
+              'display_order': display_order,
+              'caption': caption, }
 
-    product_image = ProductImage(**i_kwargs)
-    product_image.save()
-
-    return product_image
+    return ProductImage.objects.create(**kwargs)
 
 
 def create_basket(empty=False):
