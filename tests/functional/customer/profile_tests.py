@@ -94,7 +94,7 @@ class TestASignedInUser(WebTestCase):
             # assert that the original user's email address is unchanged
             user = User.objects.get(id=self.user.id)
             self.assertEqual(self.email, user.email)
-            self.assertEquals(
+            self.assertEqual(
                 User.objects.filter(email__iexact='new@example.com').count(), 1)
             self.assertContains(
                 response, 'A user with this email address already exists')
