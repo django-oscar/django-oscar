@@ -42,12 +42,9 @@ CACHES = {
     }
 }
 
-# Django 1.7 changes the test runner default and tries to be helpful by
-# alerting the user if the project looks like a pre-1.7 Django project by
-# looking at various settings. We don't have any tests for the sandbox,
-# but setting an explicit test runner disables the warning
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-
+# Prevent Django 1.7+ from showing a warning regarding a changed default test
+# runner. The Oscar test suite is run with nose, so it does not matter.
+SILENCED_SYSTEM_CHECKS = ['1_6.W001', ]
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name

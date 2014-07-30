@@ -43,6 +43,10 @@ CACHES = {
     }
 }
 
+# Prevent Django 1.7+ from showing a warning regarding a changed default test
+# runner. The Oscar test suite is run with nose, so it does not matter.
+SILENCED_SYSTEM_CHECKS = ['1_6.W001', ]
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -231,7 +235,6 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     # Oscar dependencies
     'compressor',
-    'south',
     # Oscar extensions
     'stores',
     'paypal',
@@ -244,6 +247,11 @@ INSTALLED_APPS = [
     # Sentry (for live demo site)
     'raven.contrib.django.raven_compat'
 ]
+
+# South is only supported in Django < 1.7
+import django
+if django.VERSION < (1, 7):
+    INSTALLED_APPS.append('south')
 
 # Include core apps with a few overrides:
 # - a shipping override app to provide some shipping methods

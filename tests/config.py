@@ -102,8 +102,8 @@ def configure():
 
             # Setting this explicitly prevents Django 1.7+ from showing a
             # warning regarding a changed default test runner. The Oscar test
-            # suite is run with nose anyway, so the value does not matter.
-            'TEST_RUNNER': 'foobar',
+            # suite is run with nose, so it does not matter.
+            'SILENCED_SYSTEM_CHECKS': ['1_6.W001'],
         })
 
         settings.configure(**test_settings)
