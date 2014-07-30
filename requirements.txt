@@ -18,7 +18,6 @@ sphinx_rtd_theme==0.1.6
 
 # Testing
 django-dynamic-fixture>=1.7,<1.8
-mock>=1.0.1,<1.1
 coverage>=3.6,<3.7
 
 # Need to run against a custom version of django-nose a new version comes
@@ -34,7 +33,6 @@ tox==1.6.1
 coveralls>=0.1.1,<0.2
 purl>=0.4
 behave==1.2.3
-factory-boy==2.3.1
 
 # Misc
 flake8>=2.2.2

@@ -60,6 +60,10 @@ setup(name='django-oscar',
           'phonenumbers>=5.9.2,<=6.0.0a',
           # Python 2 & 3 compatibility helper
           'six>=1.5.2',
+          # Used for oscar.test.contextmanagers.mock_signal_receiver
+          'mock>=1.0.1,<1.1',
+          # Used for oscar.test.newfactories
+          'factory-boy>=2.3.1,<2.4',
       ],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
