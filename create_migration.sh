@@ -16,9 +16,7 @@ echo "Uninstalling Django(==$DJANGO_VERSION) and South(==$SOUTH_VERSION)"
 pip uninstall Django South -y
 
 echo "Generating Django-native (>=1.7) migrations"
-# Commit of the stable/1.7.x branch that contains fix for https://code.djangoproject.com/ticket/23041,
-# but doesn't suffer from https://code.djangoproject.com/ticket/23014
-pip install https://github.com/django/django/archive/88135a8cf7d587b88e47f1223cf01c7698b52b74.zip
+pip install https://www.djangoproject.com/download/1.7c2/tarball/
 rm -f sites/sandbox/db.sqlite
 sites/sandbox/manage.py migrate
 sites/sandbox/manage.py makemigrations ${APPS[@]}

@@ -11,7 +11,7 @@ env:
     secure: FuIlzEsGJiAwhaIRBmRNsq9eXmuzs25fX6BChknW4lDyVAySWMp0+Zps9Bd0JgfFYUG3Ip+OTmksYIoTUsG25ZJS9cq1IFt3QKUAN70YCI/4ZBLeIdICPEyxq+Km179+NeEXmBUug17RLMLxh3MWfO+RKUHK9yHIPNNpq0dNyoo=
   matrix:
     - DJANGO=Django==1.6.5
-    - DJANGO=https://github.com/django/django/archive/88135a8cf7d587b88e47f1223cf01c7698b52b74.zip
+    - DJANGO=https://www.djangoproject.com/download/1.7c2/tarball/
 
 matrix:
   allow_failures:
