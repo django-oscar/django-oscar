@@ -21,13 +21,13 @@ def inherit_app_config(local_app_path, app_package, app_label):
     config_name = app_label.title() + 'Config'
     create_file(
         join(local_app_path, '__init__.py'),
-        "default_app_config = '{app_package}.config.{config_name}'\n\n".format(
+        "default_app_config = '{app_package}.config.{config_name}'\n".format(
             app_package=app_package, config_name=config_name))
     create_file(
         join(local_app_path, 'config.py'),
-        "from oscar.apps.{app_label} import config\n\n"
+        "from oscar.apps.{app_label} import config\n\n\n"
         "class {config_name}(config.{config_name}):\n"
-        "    name = '{app_package}.config.{config_name}'\n".format(
+        "    name = '{app_package}'\n".format(
             app_package=app_package,
             app_label=app_label,
             config_name=config_name))
