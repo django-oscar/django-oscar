@@ -5,6 +5,9 @@ cd /var/www/oscar/builds/latest
 git pull --ff-only 2> /dev/null
 [ $? -gt 0 ] && echo "Git pull failed" >&2 && exit 1
 
+# Remove existing pyc files
+find . -type f -name "*.pyc" -delete
+
 # Update any dependencies
 source ../../virtualenvs/latest/bin/activate
 python setup.py develop
