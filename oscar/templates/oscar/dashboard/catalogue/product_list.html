@@ -87,9 +87,7 @@
                             <th>{% trans "UPC" %}</th>
                             <th>{% trans "Image" %}</th>
                             <th>{% trans "Product Type" %}</th>
-                            <th>{% trans "Status" %}</th>
-                            <th>{% trans "Parent" %}</th>
-                            <th>{% trans "Children" %}</th>
+                            <th>{% trans "Variants" %}</th>
                             <th>{% trans "Stock records" %}</th>
                             <th></th>
                         </tr>
@@ -113,16 +111,20 @@
                                     {% endif %}
                                 </td>
                                 <td>{{ product.get_product_class.name }}</td>
-                                <td>{{ product.status|default:"-" }}</td>
                                 <td>
-                                    {% if product.parent.id %}
-                                        <a href="{% url 'dashboard:catalogue-product' pk=product.parent.id %}">{{ product.parent.title }}</a>
-                                    {% else %}
+                                    {% if product.is_standalone %}
                                         -
+                                    {% else %}
+                                        {{ product.children.count }}
                                     {% endif %}
                                 </td>
-                                <td>{{ product.children.count }}</td>
-                                <td>{{ product.stockrecords.count }}</td>
+                                <td>
+                                    {% if product.is_parent %}
+                                        -
+                                    {% else %}
+                                        {{ product.stockrecords.count }}
+                                    {% endif %}
+                                </td>
                                 <td>
                                     <div class="btn-toolbar">
                                         <div class="btn-group">

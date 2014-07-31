@@ -95,7 +95,7 @@ class ProductListView(generic.ListView):
         """
         Build the queryset for this list
         """
-        queryset = Product.objects.base_queryset()
+        queryset = Product.browsable.base_queryset()
         queryset = self.filter_queryset(queryset)
         queryset = self.apply_search(queryset)
         queryset = self.apply_ordering(queryset)
