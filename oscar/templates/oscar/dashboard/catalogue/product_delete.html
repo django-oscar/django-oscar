@@ -42,15 +42,18 @@
     <form action="." method="post" class="well">
         {% csrf_token %}
 
-        {% blocktrans with title=product.title %}
-            <p>Delete product <strong>{{ title }}</strong> - are you sure?</p>
-        {% endblocktrans %}
+        <p>
+            {% blocktrans with title=product.get_title %}
+                Delete product <strong>{{ title }}</strong> - are you sure?
+            {% endblocktrans %}
+        </p>
 
         {% if product.is_parent %}
-            <p> {% trans "This will also delete the following child products:" %}
+            <p>
+                {% trans "This will also delete the following child products:" %}
                 <ul>
                     {% for child in product.children.all %}
-                        <li><strong>{{ child.title }}</strong></li>
+                        <li><strong>{{ child.get_title }}</strong></li>
                     {% endfor %}
                 </ul>
             </p>
