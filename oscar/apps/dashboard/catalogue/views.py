@@ -245,6 +245,17 @@ class ProductCreateUpdateView(generic.UpdateView):
             ctx['title'] = ctx['product'].get_title()
         return ctx
 
+    def get_initial(self):
+        """
+        A newly created product does not have child products and hence
+        must be a stand-alone product. This is the default value for
+        Oscar's stock Product model, but other views rely on it being set to
+        stand-alone, so we ensure this here.
+        """
+        initial = super(ProductCreateUpdateView, self).get_initial()
+        initial['structure'] = Product.STANDALONE
+        return initial
+
     def get_form_kwargs(self):
         kwargs = super(ProductCreateUpdateView, self).get_form_kwargs()
         kwargs['product_class'] = self.product_class
@@ -259,6 +270,9 @@ class ProductCreateUpdateView(generic.UpdateView):
         # can't use commit=False because ProductForm does not support it
         if self.creating and form.is_valid():
             self.object = form.save()
+            if not self.object.is_standalone:
+                self.object.structure = Product.STANDALONE
+                self.object.save()
 
         formsets = {}
         for ctx_name, formset_class in six.iteritems(self.formsets):
@@ -343,7 +357,8 @@ class ProductCreateUpdateView(generic.UpdateView):
 
 class ProductDeleteView(generic.DeleteView):
     """
-    Dashboard view to delete a product.
+    Dashboard view to delete a product. Has special logic for deleting the
+    last child product.
     Supports the permission-based dashboard.
     """
     template_name = 'dashboard/catalogue/product_delete.html'
@@ -356,6 +371,17 @@ class ProductDeleteView(generic.DeleteView):
         """
         return filter_products(Product.objects.all(), self.request.user)
 
+    def handle_deleting_last_child(self, parent):
+        """
+        If the last child product is deleted, this view defaults to turning
+        the parent product into a standalone product. While this is appropriate
+        for many scenarios, it is intentionally easily overridable and not
+        automatically done in e.g. a Product's delete() method as it is more
+        a UX helper than hard business logic.
+        """
+        parent.structure = parent.STANDALONE
+        parent.save()
+
     def get_success_url(self):
         """
         When deleting child products, this view redirects to editing the
@@ -363,6 +389,12 @@ class ProductDeleteView(generic.DeleteView):
         product list view.
         """
         if self.object.is_child:
+            # Detect if the child product about to be deleted is the last
+            # child product. get_success_url is called by Django's
+            # DeletionMixin before the product is deleted.
+            parent = self.object.parent
+            if parent.children.count() == 1:
+                self.handle_deleting_last_child(parent)
             msg = _("Deleted product variant '%s'") % self.object.get_title()
             messages.success(self.request, msg)
             return reverse(
