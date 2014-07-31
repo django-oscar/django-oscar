@@ -322,23 +322,23 @@ class AbstractProduct(models.Model):
         """
         Validate a product. Those are the rules:
 
-        +---------------+-------------+--------------+------------+
-        |               | stand alone | parent       | child      |
-        +---------------+-------------+--------------+------------+
-        | title         | required    | required     | optional   |
-        +---------------+-------------+--------------+------------+
-        | product class | required    | must be None | required   |
-        +---------------+-------------+--------------+------------+
-        | parent        | forbidden   | forbidden    | required   |
-        +---------------+-------------+--------------+------------+
-        | stockrecords  | 0 or more   | forbidden    | required   |
-        +---------------+-------------+--------------+------------+
-        | categories    | 1 or more   | 1 or more    | forbidden  |
-        +---------------+-------------+--------------+------------+
-        | attributes    | optional    | optional     | optional   |
-        +---------------+-------------+--------------+------------+
-        | rec. products | optional    | optional     | unsupported|
-        +---------------+-------------+--------------+------------+
+        +---------------+-------------+--------------+--------------+
+        |               | stand alone | parent       | child        |
+        +---------------+-------------+--------------+--------------+
+        | title         | required    | required     | optional     |
+        +---------------+-------------+--------------+--------------+
+        | product class | required    | required     | must be None |
+        +---------------+-------------+--------------+--------------+
+        | parent        | forbidden   | forbidden    | required     |
+        +---------------+-------------+--------------+--------------+
+        | stockrecords  | 0 or more   | forbidden    | required     |
+        +---------------+-------------+--------------+--------------+
+        | categories    | 1 or more   | 1 or more    | forbidden    |
+        +---------------+-------------+--------------+--------------+
+        | attributes    | optional    | optional     | optional     |
+        +---------------+-------------+--------------+--------------+
+        | rec. products | optional    | optional     | unsupported  |
+        +---------------+-------------+--------------+--------------+
 
         Because the validation logic is quite complex, validation is delegated
         to the sub method appropriate for the product's structure.
@@ -367,6 +367,9 @@ class AbstractProduct(models.Model):
         if self.parent_id and not self.parent.is_parent:
             raise ValidationError(
                 _("You can only assign child products to parent products."))
+        if self.product_class:
+            raise ValidationError(
+                _("A child product can't have a product class."))
 
     def _clean_parent(self):
         """
@@ -519,13 +522,12 @@ class AbstractProduct(models.Model):
 
     def get_product_class(self):
         """
-        Return a product's item class
+        Return a product's item class. Child products inherit their parent's.
         """
-        if self.product_class_id or self.product_class:
-            return self.product_class
-        if self.parent and self.parent.product_class:
+        if self.is_child:
             return self.parent.product_class
-        return None
+        else:
+            return self.product_class
     get_product_class.short_description = _("Product class")
 
     # Images
