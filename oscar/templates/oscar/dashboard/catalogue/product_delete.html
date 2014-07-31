@@ -43,9 +43,15 @@
         {% csrf_token %}
 
         <p>
-            {% blocktrans with title=product.get_title %}
-                Delete product <strong>{{ title }}</strong> - are you sure?
-            {% endblocktrans %}
+            {% if product.is_child %}
+                {% blocktrans with title=product.get_title %}
+                    Delete product variant <strong>{{ title }}</strong> - are you sure?
+                {% endblocktrans %}
+            {% else %}
+                {% blocktrans with title=product.get_title %}
+                    Delete product <strong>{{ title }}</strong> - are you sure?
+                {% endblocktrans %}
+            {% endif %}
         </p>
 
         {% if product.is_parent %}

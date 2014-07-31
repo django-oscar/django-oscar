@@ -242,7 +242,14 @@
                                             <tr>
                                                 <td>{{ child.get_title }}</td>
                                                 <td>{{ child.attribute_summary }}</td>
-                                                <td><a href="{% url 'dashboard:catalogue-product' pk=child.id %}" class="btn btn-primary">{% trans "Edit" %}</a></td>
+                                                <td>
+                                                    <a href="{% url 'dashboard:catalogue-product' pk=child.id %}" class="btn btn-primary">
+                                                        {% trans "Edit" %}
+                                                    </a>
+                                                    <a href="{% url 'dashboard:catalogue-product-delete' pk=child.id %}" class="btn btn-danger">
+                                                        {% trans "Delete" %}
+                                                    </a>
+                                                </td>
                                             </tr>
                                         {% empty %}
                                             <tr>

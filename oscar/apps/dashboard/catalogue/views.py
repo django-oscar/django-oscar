@@ -357,9 +357,21 @@ class ProductDeleteView(generic.DeleteView):
         return filter_products(Product.objects.all(), self.request.user)
 
     def get_success_url(self):
-        msg = _("Deleted product '%s'") % self.object.title
-        messages.success(self.request, msg)
-        return reverse('dashboard:catalogue-product-list')
+        """
+        When deleting child products, this view redirects to editing the
+        parent product. When deleting any other product, it redirects to the
+        product list view.
+        """
+        if self.object.is_child:
+            msg = _("Deleted product variant '%s'") % self.object.get_title()
+            messages.success(self.request, msg)
+            return reverse(
+                'dashboard:catalogue-product',
+                kwargs={'pk': self.object.parent_id})
+        else:
+            msg = _("Deleted product '%s'") % self.object.title
+            messages.success(self.request, msg)
+            return reverse('dashboard:catalogue-product-list')
 
 
 class StockAlertListView(generic.ListView):
