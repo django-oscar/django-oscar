@@ -322,19 +322,23 @@ class AbstractProduct(models.Model):
         """
         Validate a product. Those are the rules:
 
-        +---------------+-------------+--------------+-----------+
-        |               | stand alone | parent       | child     |
-        +---------------+-------------+--------------+-----------+
-        | title         | required    | required     | optional  |
-        +---------------+-------------+--------------+-----------+
-        | product class | required    | must be None | required  |
-        +---------------+-------------+--------------+-----------+
-        | parent        | forbidden   | forbidden    | required  |
-        +---------------+-------------+--------------+-----------+
-        | stockrecords  | 0 or more   | forbidden    | required  |
-        +---------------+-------------+--------------+-----------+
-        | categories    | 1 or more   | 1 or more    | forbidden |
-        +---------------+-------------+--------------+-----------+
+        +---------------+-------------+--------------+------------+
+        |               | stand alone | parent       | child      |
+        +---------------+-------------+--------------+------------+
+        | title         | required    | required     | optional   |
+        +---------------+-------------+--------------+------------+
+        | product class | required    | must be None | required   |
+        +---------------+-------------+--------------+------------+
+        | parent        | forbidden   | forbidden    | required   |
+        +---------------+-------------+--------------+------------+
+        | stockrecords  | 0 or more   | forbidden    | required   |
+        +---------------+-------------+--------------+------------+
+        | categories    | 1 or more   | 1 or more    | forbidden  |
+        +---------------+-------------+--------------+------------+
+        | attributes    | optional    | optional     | optional   |
+        +---------------+-------------+--------------+------------+
+        | rec. products | optional    | optional     | unsupported|
+        +---------------+-------------+--------------+------------+
 
         Because the validation logic is quite complex, validation is delegated
         to the sub method appropriate for the product's structure.
