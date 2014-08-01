@@ -287,6 +287,8 @@ class AbstractProduct(models.Model):
     #: Determines if a product may be used in an offer. It is illegal to
     #: discount some types of product (e.g. ebooks) and this field helps
     #: merchants from avoiding discounting such products
+    #: Note that this flag is ignored for child products; they inherit from
+    #: the parent product.
     is_discountable = models.BooleanField(
         _("Is discountable?"), default=True, help_text=_(
             "This flag indicates if this product can be used in an offer "
@@ -525,7 +527,7 @@ class AbstractProduct(models.Model):
         """
         return self._min_child_price('price_excl_tax')
 
-    # Wrappers
+    # Wrappers for child products
 
     def get_title(self):
         """
@@ -546,6 +548,16 @@ class AbstractProduct(models.Model):
         else:
             return self.product_class
     get_product_class.short_description = _("Product class")
+
+    def get_is_discountable(self):
+        """
+        At the moment, is_discountable can't be set individually for child
+        products; they inherit it from their parent.
+        """
+        if self.is_child:
+            return self.parent.is_discountable
+        else:
+            return self.is_discountable
 
     # Images
 

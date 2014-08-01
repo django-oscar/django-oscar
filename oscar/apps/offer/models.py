@@ -502,7 +502,8 @@ class Condition(models.Model):
         if not line.stockrecord_id:
             return False
         product = line.product
-        return self.range.contains_product(product) and product.is_discountable
+        return (self.range.contains_product(product)
+                and product.get_is_discountable())
 
     def get_applicable_lines(self, offer, basket, most_expensive_first=True):
         """
