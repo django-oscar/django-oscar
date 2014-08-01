@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 import six
 
 from django.views import generic
@@ -238,8 +238,7 @@ class ProductCreateUpdateView(generic.UpdateView):
                 self.product_class = get_object_or_404(
                     ProductClass, slug=product_class_slug)
             else:
-                self.parent = get_object_or_404(
-                    Product, pk=parent_pk, structure=Product.PARENT)
+                self.parent = self.get_and_check_parent(parent_pk)
                 self.product_class = self.parent.product_class
 
             return None  # success
@@ -248,6 +247,19 @@ class ProductCreateUpdateView(generic.UpdateView):
             self.product_class = product.get_product_class()
             self.parent = product.parent
             return product
+
+    def get_and_check_parent(self, parent_pk):
+        """
+        Fetches the specified "parent" product and ensures that it can be
+        indeed be turned into a parent product if needed.
+        """
+        parent = get_object_or_404(Product, pk=parent_pk)
+        is_valid, reason = parent.can_be_parent(give_reason=True)
+        if is_valid:
+            return parent
+        else:
+            messages.error(self.request, reason)
+            return redirect('dashboard:catalogue-product-list')
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
@@ -325,12 +337,7 @@ class ProductCreateUpdateView(generic.UpdateView):
         parent's structure accordingly.
         """
         if self.creating:
-            # When creating the first child product, the parent product needs
-            # to be implicitly converted from a standalone product to a
-            # parent product
-            if self.parent and not self.parent.is_parent:
-                self.parent.structure = Product.PARENT
-                self.parent.save()
+            self.handle_adding_child(self.parent)
         else:
             # a just created product was already saved in process_all_forms()
             self.object = form.save()
@@ -340,6 +347,16 @@ class ProductCreateUpdateView(generic.UpdateView):
             formset.save()
 
         return HttpResponseRedirect(self.get_success_url())
+
+    def handle_adding_child(self, parent):
+        """
+        When creating the first child product, the parent product needs
+        to be implicitly converted from a standalone product to a
+        parent product.
+        """
+        if not parent.is_parent:
+            parent.structure = Product.PARENT
+            parent.save()
 
     def forms_invalid(self, form, formsets):
         # delete the temporary product again

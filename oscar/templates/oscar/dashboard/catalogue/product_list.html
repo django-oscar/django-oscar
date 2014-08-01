@@ -134,13 +134,26 @@
                                             </a>
                                             <ul class="dropdown-menu pull-right">
                                                 <li>
-                                                    <a href="{% url 'dashboard:catalogue-product' pk=product.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}">{% trans "Edit" %}</a>
+                                                    <a href="{% url 'dashboard:catalogue-product' pk=product.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}">
+                                                        {% trans "Edit" %}
+                                                    </a>
                                                 </li>
-                                                <li> 
-                                                    <a href="{{ product.get_absolute_url }}"> {% trans "View on site" %}</a>
+                                                {% if product.can_be_parent %}
+                                                    <li>
+                                                        <a href="{% url 'dashboard:catalogue-product-create-child' product.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}">
+                                                            {% trans "Add variant" %}
+                                                        </a>
+                                                    </li>
+                                                {% endif %}
+                                                <li>
+                                                    <a href="{{ product.get_absolute_url }}">
+                                                        {% trans "View on site" %}
+                                                    </a>
                                                 </li>
                                                 <li>
-                                                    <a href="{% url 'dashboard:catalogue-product-delete' pk=product.id %}">{% trans "Delete" %}</a>
+                                                    <a href="{% url 'dashboard:catalogue-product-delete' pk=product.id %}">
+                                                        {% trans "Delete" %}
+                                                    </a>
                                                 </li>
                                             </ul>
                                         </div>

@@ -400,6 +400,23 @@ class AbstractProduct(models.Model):
     def is_child(self):
         return self.structure == self.CHILD
 
+    def can_be_parent(self, give_reason=False):
+        """
+        Helps decide if a the product can be turned into a parent product.
+        """
+        reason = None
+        if self.is_child:
+            reason = _('The specified parent product is a child product.')
+        if self.has_stockrecords:
+            reason = _(
+                "One can't add a child product to a product with stock"
+                " records.")
+        is_valid = reason is None
+        if give_reason:
+            return is_valid, reason
+        else:
+            return is_valid
+
     @property
     def options(self):
         pclass = self.get_product_class()
