@@ -274,11 +274,11 @@ class ProductForm(forms.ModelForm):
         super(ProductForm, self).__init__(data, *args, **kwargs)
         if parent:
             self.instance.parent = parent
-            # We need to set the correct product structure explicitly, because
-            # attribute validation relies on get_product_class to fetch the
-            # attributes, and the tightened get_product_class relies on the
-            # structure being set correctly to return the product class.
+            # We need to set the correct product structures explicitly to pass
+            # attribute validation and child product validation. Note that
+            # those changes are not persisted.
             self.instance.structure = Product.CHILD
+            self.instance.parent.structure = Product.PARENT
         else:
             # Only set product class for non-child products
             self.instance.product_class = product_class

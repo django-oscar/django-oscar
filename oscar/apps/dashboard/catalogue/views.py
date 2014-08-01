@@ -354,7 +354,10 @@ class ProductCreateUpdateView(generic.UpdateView):
         to be implicitly converted from a standalone product to a
         parent product.
         """
-        if not parent.is_parent:
+        # ProductForm eagerly sets the future parent's structure to PARENT to
+        # pass validation, but it's not persisted in the database. We ensure
+        # it's persisted by calling save()
+        if parent is not None:
             parent.structure = Product.PARENT
             parent.save()
 
@@ -377,6 +380,13 @@ class ProductCreateUpdateView(generic.UpdateView):
         return "?".join(url_parts)
 
     def get_success_url(self):
+        """
+        Renders a success message and redirects depending on the button:
+        - Standard case is pressing "Save"; redirects to the product list
+        - When "Save and continue" is pressed, we stay on the same page
+        - When "Create (another) child product" is pressed, it redirects
+          to a new product creation page
+        """
         msg = render_to_string(
             'dashboard/catalogue/messages/product_saved.html',
             {
@@ -384,10 +394,21 @@ class ProductCreateUpdateView(generic.UpdateView):
                 'creating': self.creating,
             })
         messages.success(self.request, msg, extra_tags="safe noicon")
-        url = reverse('dashboard:catalogue-product-list')
-        if self.request.POST.get('action') == 'continue':
-            url = reverse('dashboard:catalogue-product',
-                          kwargs={"pk": self.object.id})
+
+        action = self.request.POST.get('action')
+        if action == 'continue':
+            url = reverse(
+                'dashboard:catalogue-product', kwargs={"pk": self.object.id})
+        elif action == 'create-another-child' and self.parent:
+            url = reverse(
+                'dashboard:catalogue-product-create-child',
+                kwargs={'parent_pk': self.parent.pk})
+        elif action == 'create-child':
+            url = reverse(
+                'dashboard:catalogue-product-create-child',
+                kwargs={'parent_pk': self.object.pk})
+        else:
+            url = reverse('dashboard:catalogue-product-list')
         return self.get_url_with_querystring(url)
 
 
