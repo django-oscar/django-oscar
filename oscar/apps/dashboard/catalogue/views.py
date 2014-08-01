@@ -265,20 +265,26 @@ class ProductCreateUpdateView(generic.UpdateView):
         ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
         ctx['product_class'] = self.product_class
         ctx['parent'] = self.parent
+        ctx['title'] = self.get_page_title()
 
         for ctx_name, formset_class in six.iteritems(self.formsets):
             if ctx_name not in ctx:
                 ctx[ctx_name] = formset_class(self.product_class,
                                               self.request.user,
                                               instance=self.object)
-
-        if self.object is not None:
-            ctx['title'] = self.object.get_title()
-        elif self.parent is not None:
-            ctx['title'] = _('Create new variant of %s') % self.parent.title
-        else:
-            ctx['title'] = _('Create new %s product') % self.product_class.name
         return ctx
+
+    def get_page_title(self):
+        if self.creating:
+            if self.parent is None:
+                return _('Create new %s product') % self.product_class.name
+            else:
+                return _('Create new variant of %s') % self.parent.title
+        else:
+            if self.object.title:
+                return self.object.title
+            else:
+                return _('Editing variant of %s') % self.parent.title
 
     def get_form_kwargs(self):
         kwargs = super(ProductCreateUpdateView, self).get_form_kwargs()
