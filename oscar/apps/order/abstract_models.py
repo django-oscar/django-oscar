@@ -637,7 +637,9 @@ class AbstractLine(models.Model):
 
     def is_payment_event_permitted(self, event_type, quantity):
         """
-        Test whether a payment event with the given quantity is permitted
+        Test whether a payment event with the given quantity is permitted.
+
+        Allow each payment event type to occur only once per quantity.
         """
         current_qty = self.payment_event_quantity(event_type)
         return (current_qty + quantity) <= self.quantity
