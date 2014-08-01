@@ -113,14 +113,12 @@ class TestCreateChildProduct(ProductWebTest):
         super(TestCreateChildProduct, self).setUp()
 
     def test_categories_are_not_required(self):
-        url = reverse('dashboard:catalogue-product-create',
-                      kwargs={'product_class_slug': self.pclass.slug})
+        url = reverse('dashboard:catalogue-product-create-child',
+                      kwargs={'parent_pk': self.parent.pk})
         page = self.get(url)
 
         product_form = page.form
-        product_form['structure'] = 'child'
         product_form['title'] = expected_title = 'Nice T-Shirt'
-        product_form['parent'] = str(self.parent.id)
         product_form.submit()
 
         try:
