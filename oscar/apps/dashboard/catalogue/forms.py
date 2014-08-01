@@ -279,6 +279,8 @@ class ProductForm(forms.ModelForm):
             # those changes are not persisted.
             self.instance.structure = Product.CHILD
             self.instance.parent.structure = Product.PARENT
+
+            self.delete_non_child_fields()
         else:
             # Only set product class for non-child products
             self.instance.product_class = product_class
@@ -335,6 +337,15 @@ class ProductForm(forms.ModelForm):
         Gets the correct form field for a given attribute type.
         """
         return self.FIELD_FACTORIES[attribute.type](attribute)
+
+    def delete_non_child_fields(self):
+        """
+        Deletes any fields not needed for child products. Override this if
+        you want to e.g. keep the description field.
+        """
+        for field_name in ['description', 'is_discountable']:
+            if field_name in self.fields:
+                del self.fields[field_name]
 
     def _post_clean(self):
         """

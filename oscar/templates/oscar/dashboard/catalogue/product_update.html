@@ -101,12 +101,11 @@
                                         {{ field }}
                                     {% endfor %}
 
-                                    {% include 'partials/form_field.html' with field=form.title %}
-                                    {% include 'partials/form_field.html' with field=form.upc %}
-                                    {% if not parent %}
-                                        {% include 'partials/form_field.html' with field=form.description %}
-                                    {% endif %}
-                                    {% include 'partials/form_field.html' with field=form.is_discountable %}
+                                    {% for field in form.visible_fields %}
+                                        {% if 'attr' not in field.id_for_label %}
+                                            {% include 'partials/form_field.html' with field=field %}
+                                        {% endif %}
+                                    {% endfor %}
                                 {% endblock product_details_content %}
                             </div>
                         </div>
