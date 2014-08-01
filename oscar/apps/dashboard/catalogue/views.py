@@ -1,9 +1,9 @@
+from django.shortcuts import get_object_or_404
 import six
 
-from django.core.exceptions import ObjectDoesNotExist
 from django.views import generic
 from django.db.models import Q
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
@@ -179,7 +179,17 @@ class ProductCreateRedirectView(generic.RedirectView):
 
 class ProductCreateUpdateView(generic.UpdateView):
     """
-    Dashboard view that bundles both creating and updating single products.
+    Dashboard view that is can both create and update products of all kinds.
+    It can be used in three different ways, each of them with a unique URL
+    pattern:
+    - When creating a new standalone product, this view is called with the
+      desired product class
+    - When editing an existing product, this view is called with the product's
+      primary key. If the product is a child product, the template considerably
+      reduces the available form fields.
+    - When creating a new child product, this view is called with the parent's
+      primary key.
+
     Supports the permission-based dashboard.
     """
 
@@ -211,27 +221,38 @@ class ProductCreateUpdateView(generic.UpdateView):
         This parts allows generic.UpdateView to handle creating products as
         well. The only distinction between an UpdateView and a CreateView
         is that self.object is None. We emulate this behavior.
-        Additionally, self.product_class is set.
+
+        This method is also responsible for setting self.product_class and
+        self.parent.
         """
         self.creating = 'pk' not in self.kwargs
         if self.creating:
-            try:
-                product_class_slug = self.kwargs.get('product_class_slug',
-                                                     None)
-                self.product_class = ProductClass.objects.get(
-                    slug=product_class_slug)
-            except ObjectDoesNotExist:
-                raise Http404
+            # Specifying a parent product is only done when creating a child
+            # product.
+            parent_pk = self.kwargs.get('parent_pk')
+            if parent_pk is None:
+                self.parent = None
+                # A product class needs to be specified when creating a
+                # standalone product.
+                product_class_slug = self.kwargs.get('product_class_slug')
+                self.product_class = get_object_or_404(
+                    ProductClass, slug=product_class_slug)
             else:
-                return None  # success
+                self.parent = get_object_or_404(
+                    Product, pk=parent_pk, structure=Product.PARENT)
+                self.product_class = self.parent.product_class
+
+            return None  # success
         else:
             product = super(ProductCreateUpdateView, self).get_object(queryset)
             self.product_class = product.get_product_class()
+            self.parent = product.parent
             return product
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
         ctx['product_class'] = self.product_class
+        ctx['parent'] = self.parent
 
         for ctx_name, formset_class in six.iteritems(self.formsets):
             if ctx_name not in ctx:
@@ -239,26 +260,18 @@ class ProductCreateUpdateView(generic.UpdateView):
                                               self.request.user,
                                               instance=self.object)
 
-        if self.object is None:
-            ctx['title'] = _('Create new %s product') % self.product_class.name
+        if self.object is not None:
+            ctx['title'] = self.object.get_title()
+        elif self.parent is not None:
+            ctx['title'] = _('Create new variant of %s') % self.parent.title
         else:
-            ctx['title'] = ctx['product'].get_title()
+            ctx['title'] = _('Create new %s product') % self.product_class.name
         return ctx
-
-    def get_initial(self):
-        """
-        A newly created product does not have child products and hence
-        must be a stand-alone product. This is the default value for
-        Oscar's stock Product model, but other views rely on it being set to
-        stand-alone, so we ensure this here.
-        """
-        initial = super(ProductCreateUpdateView, self).get_initial()
-        initial['structure'] = Product.STANDALONE
-        return initial
 
     def get_form_kwargs(self):
         kwargs = super(ProductCreateUpdateView, self).get_form_kwargs()
         kwargs['product_class'] = self.product_class
+        kwargs['parent'] = self.parent
         return kwargs
 
     def process_all_forms(self, form):
@@ -270,9 +283,6 @@ class ProductCreateUpdateView(generic.UpdateView):
         # can't use commit=False because ProductForm does not support it
         if self.creating and form.is_valid():
             self.object = form.save()
-            if not self.object.is_standalone:
-                self.object.structure = Product.STANDALONE
-                self.object.save()
 
         formsets = {}
         for ctx_name, formset_class in six.iteritems(self.formsets):
@@ -311,8 +321,17 @@ class ProductCreateUpdateView(generic.UpdateView):
     def forms_valid(self, form, formsets):
         """
         Save all changes and display a success url.
+        When creating the first child product, this method also sets the new
+        parent's structure accordingly.
         """
-        if not self.creating:
+        if self.creating:
+            # When creating the first child product, the parent product needs
+            # to be implicitly converted from a standalone product to a
+            # parent product
+            if self.parent and not self.parent.is_parent:
+                self.parent.structure = Product.PARENT
+                self.parent.save()
+        else:
             # a just created product was already saved in process_all_forms()
             self.object = form.save()
 

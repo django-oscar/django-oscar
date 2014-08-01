@@ -21,10 +21,10 @@
             <a href="{% url 'dashboard:catalogue-product-list' %}">{% trans "Products" %}</a>
             <span class="divider">/</span>
         </li>
-        {% if product.is_child %}
+        {% if parent %}
             <li>
-                <a href="{% url 'dashboard:catalogue-product' product.parent_id %}">
-                    {{ product.parent.title }}
+                <a href="{% url 'dashboard:catalogue-product' parent.id %}">
+                    {{ parent.title }}
                 </a>
                 <span class="divider">/</span>
             </li>
@@ -56,31 +56,31 @@
                             {% endcomment %}
                             {% block tabs %}
                                 <li class="active"><a href="#product_details" data-toggle="tab">{% trans 'Product details' %}</a></li>
-                                {% if not product.is_child %}
+                                {% if not parent %}
                                     <li><a href="#product_category" data-toggle="tab">{% trans 'Categories' %}</a></li>
                                 {% endif %}
                                 {% if product_class.has_attributes %}
                                     <li><a href="#product_attributes" data-toggle="tab">{% trans 'Attributes' %}</a></li>
                                 {% endif %}
-                                {% if not product.is_child %}
+                                {% if not parent %}
                                     <li><a href="#product_images" data-toggle="tab">{% trans 'Images' %}</a></li>
                                 {% endif %}
                                 {% if not product.is_parent %}
                                     <li><a href="#product_stock" data-toggle="tab">{% trans 'Stock and pricing' %}</a></li>
                                 {% endif %}
-                                {% if not product.is_child %}
+                                {% if not parent %}
                                     <li><a href="#child_products" data-toggle="tab">{% trans 'Variants' %}</a></li>
                                 {% endif %}
-                                {% if not product.is_child %}
+                                {% if not parent %}
                                     <li><a href="#product_recommended" data-toggle="tab">{% trans 'Upselling' %}</a></li>
                                 {% endif %}
                             {% endblock tabs %}
                         </ul>
                     </div>
-                    {% if product.is_child %}
-                        {% url 'dashboard:catalogue-product' pk=product.parent.id as parent_url %}
-                        {% blocktrans with title=product.parent.title %}
-                            You are currently editing a child product of
+                    {% if parent %}
+                        {% url 'dashboard:catalogue-product' pk=parent.id as parent_url %}
+                        {% blocktrans with title=parent.title %}
+                            You are currently editing a product variant of
                             <a href="{{ parent_url }}">{{ title }}</a>.
                         {% endblocktrans %}
                     {% endif %}
@@ -103,7 +103,7 @@
 
                                     {% include 'partials/form_field.html' with field=form.title %}
                                     {% include 'partials/form_field.html' with field=form.upc %}
-                                    {% if not product.is_child %}
+                                    {% if not parent %}
                                         {% include 'partials/form_field.html' with field=form.description %}
                                     {% endif %}
                                     {% include 'partials/form_field.html' with field=form.is_discountable %}
@@ -238,10 +238,17 @@
                                 {% block child_products_content %}
                                     <table class='table table-striped table-bordered'>
                                         <caption>{% trans "Variants" %}</caption>
+                                        <tr>
+                                            <th>{% trans "Title" %}</th>
+                                            <th>{% trans "Attributes" %}</th>
+                                            <th>{% trans "Stock records" %}</th>
+                                            <th>&nbsp;</th>
+                                        </tr>
                                         {% for child in children %}
                                             <tr>
                                                 <td>{{ child.get_title }}</td>
                                                 <td>{{ child.attribute_summary }}</td>
+                                                <td>{{ child.stockrecords.count }}</td>
                                                 <td>
                                                     <a href="{% url 'dashboard:catalogue-product' pk=child.id %}" class="btn btn-primary">
                                                         {% trans "Edit" %}
