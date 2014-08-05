@@ -6,6 +6,8 @@ from django.core.urlresolvers import reverse
 from django.views.generic import ListView, DetailView, DeleteView, \
     UpdateView, FormView
 from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.edit import FormMixin
+
 from oscar.apps.customer.utils import normalise_email
 
 from oscar.views.generic import BulkEditMixin
@@ -20,7 +22,7 @@ ProductAlert = get_model('customer', 'ProductAlert')
 User = get_user_model()
 
 
-class IndexView(BulkEditMixin, ListView):
+class IndexView(BulkEditMixin, FormMixin, ListView):
     template_name = 'dashboard/users/index.html'
     paginate_by = 25
     model = User
@@ -34,6 +36,19 @@ class IndexView(BulkEditMixin, ListView):
         queryset = self.model.objects.all().order_by('-date_joined')
         return self.process_search(queryset)
 
+    def get_form_kwargs(self):
+        """
+        Pass GET data to form if search form was submitted
+        """
+        kwargs = super(IndexView, self).get_form_kwargs()
+
+        if 'search' in self.request.GET:
+            kwargs.update({
+                'data': self.request.GET,
+            })
+
+        return kwargs
+
     def process_search(self, queryset):
         self.desc_ctx = {
             'main_filter': _('All users'),
@@ -41,11 +56,8 @@ class IndexView(BulkEditMixin, ListView):
             'name_filter': '',
         }
 
-        if 'search' not in self.request.GET:
-            self.form = self.form_class()
-            return queryset
-
-        self.form = self.form_class(self.request.GET)
+        form_class = self.get_form_class()
+        self.form = self.get_form(form_class)
 
         if not self.form.is_valid():
             return queryset
