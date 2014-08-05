@@ -1222,7 +1222,7 @@ class ApplicationResult(object):
     # (a) Give a discount off the BASKET total
     # (b) Give a discount off the SHIPPING total
     # (a) Trigger a post-order action
-    BASKET, SHIPPING, POST_ORDER = list(range(0, 3))
+    BASKET, SHIPPING, POST_ORDER = 0, 1, 2
     affects = None
 
     @property

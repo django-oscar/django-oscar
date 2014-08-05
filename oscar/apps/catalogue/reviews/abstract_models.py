@@ -45,7 +45,7 @@ class AbstractProductReview(models.Model):
     email = models.EmailField(_("Email"), blank=True)
     homepage = models.URLField(_("URL"), blank=True)
 
-    FOR_MODERATION, APPROVED, REJECTED = list(range(0, 3))
+    FOR_MODERATION, APPROVED, REJECTED = 0, 1, 2
     STATUS_CHOICES = (
         (FOR_MODERATION, _("Requires moderation")),
         (APPROVED, _("Approved")),

@@ -123,7 +123,7 @@ class IndexView(TemplateView):
 
             y_range = []
             y_axis_steps = max_value / D(str(segments))
-            for idx in reversed(list(range(segments + 1))):
+            for idx in reversed(range(segments + 1)):
                 y_range.append(idx * y_axis_steps)
         else:
             y_range = []

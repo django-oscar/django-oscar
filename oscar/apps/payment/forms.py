@@ -1,7 +1,6 @@
 from datetime import date
 from calendar import monthrange
 import re
-import six
 
 from django import forms
 from django.core.exceptions import ImproperlyConfigured
@@ -124,10 +123,10 @@ class BankcardExpiryMonthField(BankcardMonthField):
         super(BankcardExpiryMonthField, self).__init__(*args, **_kwargs)
 
     def month_choices(self):
-        return [("%.2d" % x, "%.2d" % x) for x in six.moves.xrange(1, 13)]
+        return [("%.2d" % x, "%.2d" % x) for x in range(1, 13)]
 
     def year_choices(self):
-        return [(x, x) for x in six.moves.xrange(
+        return [(x, x) for x in range(
             date.today().year,
             date.today().year + self.num_years)]
 
@@ -165,13 +164,13 @@ class BankcardStartingMonthField(BankcardMonthField):
         super(BankcardStartingMonthField, self).__init__(*args, **_kwargs)
 
     def month_choices(self):
-        months = [("%.2d" % x, "%.2d" % x) for x in six.moves.xrange(1, 13)]
+        months = [("%.2d" % x, "%.2d" % x) for x in range(1, 13)]
         months.insert(0, ("", "--"))
         return months
 
     def year_choices(self):
         today = date.today()
-        years = [(x, x) for x in six.moves.xrange(
+        years = [(x, x) for x in range(
             today.year - self.num_years,
             today.year + 1)]
         years.insert(0, ("", "--"))
