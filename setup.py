@@ -6,8 +6,6 @@ To release a new version to PyPi:
 - Ensure the version is correctly set in oscar.__init__.py
 - Run: python setup.py sdist upload
 """
-from __future__ import print_function
-
 from setuptools import setup, find_packages
 import os
 import sys

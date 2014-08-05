@@ -1,5 +1,7 @@
 import logging
 
+import six
+
 from django.core.management.base import BaseCommand, CommandError
 
 from oscar.core import customisation
@@ -29,5 +31,5 @@ class Command(BaseCommand):
             customisation.fork_app(app_label, folder_path, logger)
         except Exception as e:
             # e.g. IOError doesn't have a message
-            message = e.message if e.message else unicode(e)
+            message = e.message if e.message else six.text_type(e)
             raise CommandError(message)

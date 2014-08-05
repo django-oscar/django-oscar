@@ -16,7 +16,6 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.core.utils import slugify
 from oscar.core.loading import get_class, get_model
 from oscar.apps.offer.managers import ActiveOfferManager
 from oscar.templatetags.currency_filters import currency
