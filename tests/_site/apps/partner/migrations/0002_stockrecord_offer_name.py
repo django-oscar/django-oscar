@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='stockrecord',
             name='offer_name',
-            field=models.CharField(max_length=128, null=True, blank=True),
+            field=models.CharField(blank=True, max_length=128, null=True),
             preserve_default=True,
         ),
     ]
