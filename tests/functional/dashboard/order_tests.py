@@ -2,9 +2,7 @@ from six.moves import http_client
 from django.conf import settings
 
 from oscar.core.loading import get_model
-from django.test import TestCase
 from django.core.urlresolvers import reverse
-from django.template import Template, Context
 from django_dynamic_fixture import get, G
 
 from oscar.test.testcases import WebTestCase
@@ -245,17 +243,3 @@ class LineDetailTests(WebTestCase):
     def test_line_in_context(self):
         response = self.get(self.url)
         self.assertInContext(response, 'line')
-
-
-class TemplateTagTests(TestCase):
-    def test_get_num_orders(self):
-        user = get(User)
-        for i in range(1, 4):
-            get(Order, user=user)
-        out = Template(
-            "{% load dashboard_tags %}"
-            "{% num_orders user %}"
-        ).render(Context({
-            'user': user
-        }))
-        self.assertEqual(out, "3")

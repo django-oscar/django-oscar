@@ -83,7 +83,7 @@
                                 <td>{{ user.is_active|yesno:_("True,False") }}</td>
                                 <td>{{ user.is_staff|yesno:_("True,False") }}</td>
                                 <td>{{ user.date_joined|date }}</td>
-                                <td>{% num_orders user %}</td>
+                                <td>{% user.orders.count %}</td>
                                 <td>
                                     <a href="{% url 'dashboard:user-detail' pk=user.id %}" class="btn btn-info">{% trans "View" %}</a>
                                 </td>
