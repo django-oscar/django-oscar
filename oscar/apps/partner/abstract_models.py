@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 
 from oscar.core.compat import AUTH_USER_MODEL
@@ -7,6 +8,7 @@ from oscar.models.fields import AutoSlugField
 from oscar.apps.partner.exceptions import InvalidStockAdjustment
 
 
+@python_2_unicode_compatible
 class AbstractPartner(models.Model):
     """
     A fulfillment partner. An individual or company who can fulfil products.
@@ -68,10 +70,11 @@ class AbstractPartner(models.Model):
         verbose_name = _('Fulfillment partner')
         verbose_name_plural = _('Fulfillment partners')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.display_name
 
 
+@python_2_unicode_compatible
 class AbstractStockRecord(models.Model):
     """
     A stock record.
@@ -142,7 +145,7 @@ class AbstractStockRecord(models.Model):
     date_updated = models.DateTimeField(_("Date updated"), auto_now=True,
                                         db_index=True)
 
-    def __unicode__(self):
+    def __str__(self):
         msg = u"Partner: %s, product: %s" % (
             self.partner.display_name, self.product,)
         if self.partner_sku:
@@ -221,6 +224,7 @@ class AbstractStockRecord(models.Model):
         return self.net_stock_level < self.low_stock_threshold
 
 
+@python_2_unicode_compatible
 class AbstractStockAlert(models.Model):
     """
     A stock alert. E.g. used to notify users when a product is 'back in stock'.
@@ -244,7 +248,7 @@ class AbstractStockAlert(models.Model):
         self.save()
     close.alters_data = True
 
-    def __unicode__(self):
+    def __str__(self):
         return _('<stockalert for "%(stock)s" status %(status)s>') \
             % {'stock': self.stockrecord, 'status': self.status}
 

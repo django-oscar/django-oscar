@@ -2,6 +2,7 @@
 from decimal import Decimal as D
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import MinValueValidator
 
@@ -11,6 +12,7 @@ from oscar.models.fields import AutoSlugField
 Scale = loading.get_class('shipping.scales', 'Scale')
 
 
+@python_2_unicode_compatible
 class AbstractBase(models.Model):
     """
     Implements the interface declared by shipping.base.Base
@@ -34,7 +36,7 @@ class AbstractBase(models.Model):
         verbose_name = _("Shipping Method")
         verbose_name_plural = _("Shipping Methods")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -174,6 +176,7 @@ class AbstractWeightBased(AbstractBase):
             return None
 
 
+@python_2_unicode_compatible
 class AbstractWeightBand(models.Model):
     """
     Represents a weight band which are used by the WeightBasedShipping method.
@@ -208,5 +211,5 @@ class AbstractWeightBand(models.Model):
         verbose_name = _("Weight Band")
         verbose_name_plural = _("Weight Bands")
 
-    def __unicode__(self):
+    def __str__(self):
         return _('Charge for weights up to %s kg') % (self.upper_limit,)

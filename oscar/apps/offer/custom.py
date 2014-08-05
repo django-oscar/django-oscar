@@ -55,7 +55,7 @@ def create_benefit(benefit_class):
     """
     Create a custom benefit instance
     """
-    # The custom benefit_class must override __unicode__ and description to
+    # The custom benefit_class must override __str__ and description to
     # avoid a recursion error
     if benefit_class.description is Benefit.description:
         raise RuntimeError("Your custom benefit must implement its own "

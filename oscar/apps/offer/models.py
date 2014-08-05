@@ -7,6 +7,7 @@ from decimal import Decimal as D, ROUND_DOWN, ROUND_UP
 from django.core import exceptions
 from django.template.defaultfilters import date as date_filter
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now, get_current_timezone
 from django.utils.translation import ungettext, ugettext_lazy as _
 from django.utils.importlib import import_module
@@ -60,6 +61,7 @@ def apply_discount(line, discount, quantity):
     line.discount(discount, quantity, incl_tax=False)
 
 
+@python_2_unicode_compatible
 class ConditionalOffer(models.Model):
     """
     A conditional offer (eg buy 1, get 10% off)
@@ -193,7 +195,7 @@ class ConditionalOffer(models.Model):
     def get_absolute_url(self):
         return reverse('offer:detail', kwargs={'slug': self.slug})
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def clean(self):
@@ -410,6 +412,7 @@ class ConditionalOffer(models.Model):
         return cond_range.included_products.filter(is_discountable=True)
 
 
+@python_2_unicode_compatible
 class Condition(models.Model):
     COUNT, VALUE, COVERAGE = ("Count", "Value", "Coverage")
     TYPE_CHOICES = (
@@ -454,7 +457,7 @@ class Condition(models.Model):
             return klassmap[self.type](**field_dict)
         return self
 
-    def __unicode__(self):
+    def __str__(self):
         return self.proxy().name
 
     @property
@@ -523,6 +526,7 @@ class Condition(models.Model):
         return sorted(line_tuples, key=key)
 
 
+@python_2_unicode_compatible
 class Benefit(models.Model):
     range = models.ForeignKey(
         'offer.Range', null=True, blank=True, verbose_name=_("Range"))
@@ -591,7 +595,7 @@ class Benefit(models.Model):
             return klassmap[self.type](**field_dict)
         raise RuntimeError("Unrecognised benefit type (%s)" % self.type)
 
-    def __unicode__(self):
+    def __str__(self):
         name = self.proxy().name
         if self.max_affected_items:
             name += ungettext(
@@ -745,6 +749,7 @@ class Benefit(models.Model):
         return D('0.00')
 
 
+@python_2_unicode_compatible
 class Range(models.Model):
     """
     Represents a range of products that can be used within an offer
@@ -794,7 +799,7 @@ class Range(models.Model):
         verbose_name = _("Range")
         verbose_name_plural = _("Ranges")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_absolute_url(self):
@@ -1422,13 +1427,13 @@ class FixedPriceBenefit(Benefit):
     _description = _("The products that meet the condition are sold "
                      "for %(amount)s")
 
-    def __unicode__(self):
+    def __str__(self):
         return self._description % {
             'amount': currency(self.value)}
 
     @property
     def description(self):
-        return self.__unicode__()
+        return six.text_type(self)
 
     class Meta:
         proxy = True

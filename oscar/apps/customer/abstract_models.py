@@ -9,6 +9,7 @@ from django.db import models
 from django.template import Template, Context, TemplateDoesNotExist
 from django.template.loader import get_template
 from django.utils import timezone
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.customer.managers import CommunicationTypeManager
@@ -104,6 +105,7 @@ class AbstractUser(auth_models.AbstractBaseUser,
         self._migrate_alerts_to_user()
 
 
+@python_2_unicode_compatible
 class AbstractEmail(models.Model):
     """
     This is a record of all emails sent to a customer.
@@ -122,11 +124,12 @@ class AbstractEmail(models.Model):
         verbose_name = _('Email')
         verbose_name_plural = _('Emails')
 
-    def __unicode__(self):
-        return _("Email to %(user)s with subject '%(subject)s'") % {
+    def __str__(self):
+        return _(u"Email to %(user)s with subject '%(subject)s'") % {
             'user': self.user.get_username(), 'subject': self.subject}
 
 
+@python_2_unicode_compatible
 class AbstractCommunicationEventType(models.Model):
     """
     A 'type' of communication.  Like a order confirmation email.
@@ -228,7 +231,7 @@ class AbstractCommunicationEventType(models.Model):
 
         return messages
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def is_order_related(self):
@@ -238,6 +241,7 @@ class AbstractCommunicationEventType(models.Model):
         return self.category == self.USER_RELATED
 
 
+@python_2_unicode_compatible
 class AbstractNotification(models.Model):
     recipient = models.ForeignKey(AUTH_USER_MODEL,
                                   related_name='notifications', db_index=True)
@@ -270,7 +274,7 @@ class AbstractNotification(models.Model):
         verbose_name = _('Notification')
         verbose_name_plural = _('Notifications')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.subject
 
     def archive(self):
