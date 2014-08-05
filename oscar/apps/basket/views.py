@@ -121,7 +121,7 @@ class BasketView(ModelFormSetView):
 
     def get_upsell_messages(self, basket):
         offers = Applicator().get_offers(self.request, basket)
-        applied_offers = basket.offer_applications.offers.values()
+        applied_offers = list(basket.offer_applications.offers.values())
         msgs = []
         for offer in offers:
             if offer.is_condition_partially_satisfied(basket) \

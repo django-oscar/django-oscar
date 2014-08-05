@@ -97,7 +97,7 @@ class AbstractOrder(models.Model):
         """
         Return all possible statuses for an order
         """
-        return cls.pipeline.keys()
+        return list(cls.pipeline.keys())
 
     def available_statuses(self):
         """
@@ -497,7 +497,7 @@ class AbstractLine(models.Model):
         """
         Return all possible statuses for an order line
         """
-        return cls.pipeline.keys()
+        return list(cls.pipeline.keys())
 
     def available_statuses(self):
         """

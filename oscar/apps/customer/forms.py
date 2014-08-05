@@ -310,7 +310,7 @@ if Profile:
             super(UserAndProfileForm, self).__init__(*args, **kwargs)
 
             # Get profile field names to help with ordering later
-            profile_field_names = self.fields.keys()
+            profile_field_names = list(self.fields.keys())
 
             # Get user field names (we look for core user fields first)
             core_field_names = set([f.name for f in User._meta.fields])

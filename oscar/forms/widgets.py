@@ -73,7 +73,7 @@ def datetime_format_to_js_date_format(format):
         '%d': 'dd',
         '%H:%M': '',
     }
-    for search, replace in six.iteritems(replacements):
+    for search, replace in replacements.items():
         converted = converted.replace(search, replace)
     return converted.strip()
 
@@ -91,7 +91,7 @@ def datetime_format_to_js_time_format(format):
         '%H': 'HH',
         '%M': 'mm',
     }
-    for search, replace in six.iteritems(replacements):
+    for search, replace in replacements.items():
         converted = converted.replace(search, replace)
 
     converted = re.sub('[-/][^%]', '', converted)

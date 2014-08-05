@@ -36,6 +36,7 @@ def create_range(range_class):
     except Range.DoesNotExist:
         obj = Range(**values)
     else:
+        # Using iteritems because the range could potentially be rather big
         for key, value in six.iteritems(values):
             setattr(obj, key, value)
     obj.save()

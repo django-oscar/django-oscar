@@ -1,5 +1,3 @@
-import six
-
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import generic
 from django.db.models import Q
@@ -233,7 +231,7 @@ class ProductCreateUpdateView(generic.UpdateView):
         ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
         ctx['product_class'] = self.product_class
 
-        for ctx_name, formset_class in six.iteritems(self.formsets):
+        for ctx_name, formset_class in self.formsets.items():
             if ctx_name not in ctx:
                 ctx[ctx_name] = formset_class(self.product_class,
                                               self.request.user,
@@ -261,7 +259,7 @@ class ProductCreateUpdateView(generic.UpdateView):
             self.object = form.save()
 
         formsets = {}
-        for ctx_name, formset_class in six.iteritems(self.formsets):
+        for ctx_name, formset_class in self.formsets.items():
             formsets[ctx_name] = formset_class(self.product_class,
                                                self.request.user,
                                                self.request.POST,
