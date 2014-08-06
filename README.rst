@@ -175,6 +175,7 @@ The following are community-written extensions:
 * django-oscar-unicredit_ - Integration with the Unicredit payment gateway
 * django-oscar-payments_ - Pluggable payments for Oscar
 * django-oscar-recurly_ - Integration with the Recurly payment gateway
+* django-oscar-adyen_ - Integration with the Adyen payment gateway
 * oscar-sagepay_ - Payment integration with Sage Pay
 * django-oscar-erp_
 
@@ -184,6 +185,7 @@ Let us know if you're writing a new one!
 .. _django-oscar-erp: https://bitbucket.org/zikzakmedia/django-oscar_erp
 .. _django-oscar-payments: https://github.com/Lacrymology/django-oscar-payments
 .. _django-oscar-recurly: https://github.com/mynameisgabe/django-oscar-recurly
+.. _django-oscar-adyen: https://github.com/oscaro/django-oscar-adyen
 .. _oscar-sagepay: https://github.com/udox/oscar-sagepay
 
 License
