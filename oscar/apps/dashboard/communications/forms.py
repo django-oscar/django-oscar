@@ -1,3 +1,5 @@
+import six
+
 from django import forms
 from oscar.core.loading import get_model
 from django.template import Template, TemplateSyntaxError
@@ -37,7 +39,7 @@ class CommunicationEventTypeForm(forms.ModelForm):
         try:
             Template(value)
         except TemplateSyntaxError as e:
-            raise forms.ValidationError(e.message)
+            raise forms.ValidationError(six.text_type(e))
 
     def clean_email_subject_template(self):
         subject = self.cleaned_data['email_subject_template']

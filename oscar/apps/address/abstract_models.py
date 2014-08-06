@@ -2,6 +2,7 @@ import re
 import zlib
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.core import exceptions
 
@@ -10,6 +11,7 @@ from oscar.models.fields import UppercaseCharField, PhoneNumberField
 from six.moves import filter
 
 
+@python_2_unicode_compatible
 class AbstractAddress(models.Model):
     """
     Superclass address object
@@ -233,7 +235,7 @@ class AbstractAddress(models.Model):
     search_text = models.TextField(
         _("Search text - used only for searching addresses"), editable=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.summary
 
     class Meta:
@@ -373,6 +375,7 @@ class AbstractAddress(models.Model):
         return fields
 
 
+@python_2_unicode_compatible
 class AbstractCountry(models.Model):
     """
     International Organization for Standardization (ISO) 3166-1 Country list.
@@ -407,7 +410,7 @@ class AbstractCountry(models.Model):
         verbose_name_plural = _('Countries')
         ordering = ('-display_order', 'printable_name',)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.printable_name or self.name
 
     @property

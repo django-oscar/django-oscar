@@ -18,7 +18,7 @@ class TestEmailAuthBackend(TestCase):
             for email in ['user1@example.com', 'user2@example.com']]
         for created_user in users:
             user = authenticate(username=created_user.email, password=password)
-            self.assertEquals(user, created_user)
+            self.assertEqual(user, created_user)
 
     def test_authenticates_different_email_spelling(self):
         email = password = 'person@example.com'
@@ -28,7 +28,7 @@ class TestEmailAuthBackend(TestCase):
         for email_variation in [
             'Person@example.com', 'Person@EXAMPLE.COM', 'person@Example.com']:
             user = authenticate(username=email_variation, password=password)
-            self.assertEquals(user, created_user)
+            self.assertEqual(user, created_user)
 
 
 # Skip these tests for now as they only make sense when there isn't a unique

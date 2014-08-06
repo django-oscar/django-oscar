@@ -9,21 +9,21 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('catalogue', '0001_initial'),
-        ('contenttypes', '__latest__'),
+        ('contenttypes', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
             name='AutomaticProductList',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=255, verbose_name='Title')),
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('name', models.CharField(verbose_name='Title', max_length=255)),
                 ('description', models.TextField(verbose_name='Description', blank=True)),
                 ('link_url', oscar.models.fields.ExtendedURLField(verbose_name='Link URL', blank=True)),
-                ('link_text', models.CharField(max_length=255, verbose_name='Link text', blank=True)),
+                ('link_text', models.CharField(verbose_name='Link text', blank=True, max_length=255)),
                 ('date_created', models.DateTimeField(auto_now_add=True)),
-                ('method', models.CharField(max_length=128, verbose_name='Method', choices=[(b'Bestselling', 'Bestselling products'), (b'RecentlyAdded', 'Recently added products')])),
-                ('num_products', models.PositiveSmallIntegerField(default=4, verbose_name='Number of Products')),
+                ('method', models.CharField(verbose_name='Method', choices=[('Bestselling', 'Bestselling products'), ('RecentlyAdded', 'Recently added products')], max_length=128)),
+                ('num_products', models.PositiveSmallIntegerField(verbose_name='Number of Products', default=4)),
             ],
             options={
                 'verbose_name': 'Automatic product list',
@@ -34,11 +34,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='HandPickedProductList',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=255, verbose_name='Title')),
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('name', models.CharField(verbose_name='Title', max_length=255)),
                 ('description', models.TextField(verbose_name='Description', blank=True)),
                 ('link_url', oscar.models.fields.ExtendedURLField(verbose_name='Link URL', blank=True)),
-                ('link_text', models.CharField(max_length=255, verbose_name='Link text', blank=True)),
+                ('link_text', models.CharField(verbose_name='Link text', blank=True, max_length=255)),
                 ('date_created', models.DateTimeField(auto_now_add=True)),
             ],
             options={
@@ -50,10 +50,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Image',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=128, verbose_name='Name')),
-                ('link_url', oscar.models.fields.ExtendedURLField(help_text='This is where this promotion links to', verbose_name='Link URL', blank=True)),
-                ('image', models.ImageField(upload_to=b'images/promotions/', max_length=255, verbose_name='Image')),
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('name', models.CharField(verbose_name='Name', max_length=128)),
+                ('link_url', oscar.models.fields.ExtendedURLField(verbose_name='Link URL', blank=True, help_text='This is where this promotion links to')),
+                ('image', models.ImageField(verbose_name='Image', upload_to='images/promotions/', max_length=255)),
                 ('date_created', models.DateTimeField(auto_now_add=True)),
             ],
             options={
@@ -65,31 +65,31 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='KeywordPromotion',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
                 ('object_id', models.PositiveIntegerField()),
-                ('position', models.CharField(help_text=b'Position on page', max_length=100, verbose_name='Position')),
-                ('display_order', models.PositiveIntegerField(default=0, verbose_name='Display Order')),
-                ('clicks', models.PositiveIntegerField(default=0, verbose_name='Clicks')),
-                ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date Created')),
-                ('keyword', models.CharField(max_length=200, verbose_name='Keyword')),
-                ('filter', models.CharField(max_length=200, verbose_name='Filter', blank=True)),
+                ('position', models.CharField(verbose_name='Position', help_text='Position on page', max_length=100)),
+                ('display_order', models.PositiveIntegerField(verbose_name='Display Order', default=0)),
+                ('clicks', models.PositiveIntegerField(verbose_name='Clicks', default=0)),
+                ('date_created', models.DateTimeField(verbose_name='Date Created', auto_now_add=True)),
+                ('keyword', models.CharField(verbose_name='Keyword', max_length=200)),
+                ('filter', models.CharField(verbose_name='Filter', blank=True, max_length=200)),
                 ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
             ],
             options={
-                'ordering': [b'-clicks'],
-                'abstract': False,
                 'verbose_name': 'Keyword Promotion',
                 'verbose_name_plural': 'Keyword Promotions',
+                'ordering': ['-clicks'],
+                'abstract': False,
             },
             bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='MultiImage',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=128, verbose_name='Name')),
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('name', models.CharField(verbose_name='Name', max_length=128)),
                 ('date_created', models.DateTimeField(auto_now_add=True)),
-                ('images', models.ManyToManyField(to='promotions.Image', null=True, blank=True)),
+                ('images', models.ManyToManyField(blank=True, to='promotions.Image', null=True)),
             ],
             options={
                 'verbose_name': 'Multi Image',
@@ -100,20 +100,20 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='OrderedProduct',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('display_order', models.PositiveIntegerField(default=0, verbose_name='Display Order')),
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('display_order', models.PositiveIntegerField(verbose_name='Display Order', default=0)),
             ],
             options={
-                'ordering': (b'display_order',),
                 'verbose_name': 'Ordered product',
                 'verbose_name_plural': 'Ordered product',
+                'ordering': ('display_order',),
             },
             bases=(models.Model,),
         ),
         migrations.AddField(
             model_name='handpickedproductlist',
             name='products',
-            field=models.ManyToManyField(to='catalogue.Product', null=True, verbose_name='Products', through='promotions.OrderedProduct', blank=True),
+            field=models.ManyToManyField(verbose_name='Products', through='promotions.OrderedProduct', blank=True, to='catalogue.Product', null=True),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -130,47 +130,47 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='orderedproduct',
-            unique_together=set([(b'list', b'product')]),
+            unique_together=set([('list', 'product')]),
         ),
         migrations.CreateModel(
             name='OrderedProductList',
             fields=[
-                ('handpickedproductlist_ptr', models.OneToOneField(auto_created=True, primary_key=True, serialize=False, to='promotions.HandPickedProductList')),
-                ('display_order', models.PositiveIntegerField(default=0, verbose_name='Display Order')),
+                ('handpickedproductlist_ptr', models.OneToOneField(primary_key=True, serialize=False, auto_created=True, to='promotions.HandPickedProductList')),
+                ('display_order', models.PositiveIntegerField(verbose_name='Display Order', default=0)),
             ],
             options={
-                'ordering': (b'display_order',),
                 'verbose_name': 'Ordered Product List',
                 'verbose_name_plural': 'Ordered Product Lists',
+                'ordering': ('display_order',),
             },
             bases=('promotions.handpickedproductlist',),
         ),
         migrations.CreateModel(
             name='PagePromotion',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
                 ('object_id', models.PositiveIntegerField()),
-                ('position', models.CharField(help_text=b'Position on page', max_length=100, verbose_name='Position')),
-                ('display_order', models.PositiveIntegerField(default=0, verbose_name='Display Order')),
-                ('clicks', models.PositiveIntegerField(default=0, verbose_name='Clicks')),
-                ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date Created')),
-                ('page_url', oscar.models.fields.ExtendedURLField(max_length=128, verbose_name='Page URL', verify_exists=True, db_index=True)),
+                ('position', models.CharField(verbose_name='Position', help_text='Position on page', max_length=100)),
+                ('display_order', models.PositiveIntegerField(verbose_name='Display Order', default=0)),
+                ('clicks', models.PositiveIntegerField(verbose_name='Clicks', default=0)),
+                ('date_created', models.DateTimeField(verbose_name='Date Created', auto_now_add=True)),
+                ('page_url', oscar.models.fields.ExtendedURLField(verbose_name='Page URL', verify_exists=True, db_index=True, max_length=128)),
                 ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
             ],
             options={
-                'ordering': [b'-clicks'],
-                'abstract': False,
                 'verbose_name': 'Page Promotion',
                 'verbose_name_plural': 'Page Promotions',
+                'ordering': ['-clicks'],
+                'abstract': False,
             },
             bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='RawHTML',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=128, verbose_name='Name')),
-                ('display_type', models.CharField(help_text='This can be used to have different types of HTML blocks (eg different widths)', max_length=128, verbose_name='Display type', blank=True)),
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('name', models.CharField(verbose_name='Name', max_length=128)),
+                ('display_type', models.CharField(verbose_name='Display type', blank=True, help_text='This can be used to have different types of HTML blocks (eg different widths)', max_length=128)),
                 ('body', models.TextField(verbose_name='HTML')),
                 ('date_created', models.DateTimeField(auto_now_add=True)),
             ],
@@ -183,8 +183,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SingleProduct',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=128, verbose_name='Name')),
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('name', models.CharField(verbose_name='Name', max_length=128)),
                 ('description', models.TextField(verbose_name='Description', blank=True)),
                 ('date_created', models.DateTimeField(auto_now_add=True)),
                 ('product', models.ForeignKey(to='catalogue.Product')),
@@ -198,9 +198,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TabbedBlock',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=255, verbose_name='Title')),
-                ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date Created')),
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('name', models.CharField(verbose_name='Title', max_length=255)),
+                ('date_created', models.DateTimeField(verbose_name='Date Created', auto_now_add=True)),
             ],
             options={
                 'verbose_name': 'Tabbed Block',
