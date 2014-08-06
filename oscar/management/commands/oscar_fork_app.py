@@ -30,6 +30,4 @@ class Command(BaseCommand):
         try:
             customisation.fork_app(app_label, folder_path, logger)
         except Exception as e:
-            # e.g. IOError doesn't have a message
-            message = e.message if e.message else six.text_type(e)
-            raise CommandError(message)
+            raise CommandError(six.text_type(e))
