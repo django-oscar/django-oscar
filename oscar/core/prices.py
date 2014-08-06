@@ -30,6 +30,13 @@ class Price(object):
             self.incl_tax = None
             self.is_tax_known = False
 
+    def __eq__(self, other):
+        """
+        two price objects are equal iff currency, price.excl_tax and tax match
+        """
+        return self.currency == other.currency and self.excl_tax == other.excl_tax  and self.is_tax_known and self.tax == other.tax
+
+
     def _get_tax(self):
         return self.incl_tax - self.excl_tax
 
