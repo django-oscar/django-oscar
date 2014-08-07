@@ -1,10 +1,9 @@
-from django.db.models import get_model
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
 from django_tables2 import Table, Column, LinkColumn, TemplateColumn, A
 
-from oscar.core.loading import get_class
+from oscar.core.loading import get_class, get_model
 
 DashboardTable = get_class('dashboard.tables', 'DashboardTable')
 Product = get_model('catalogue', 'Product')
@@ -32,9 +31,10 @@ class ProductTable(Table):
 
     class Meta(DashboardTable.Meta):
         model = Product
-        fields = ('upc', 'status')
-        sequence = ('title', 'upc', 'image', 'product_class', 'status',
-                    'parent', 'children', 'stock_records', '...', 'actions')
+        fields = ('upc', 'date_created')
+        sequence = ('title', 'upc', 'image', 'product_class',
+                    'parent', 'children', 'stock_records', '...', 'date_created', 'actions')
+        order_by = '-date_created'
 
 
 class CategoryTable(Table):
