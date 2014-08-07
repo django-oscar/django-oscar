@@ -26,10 +26,9 @@ class TestPriceObject(TestCase):
             self.assertEqual(price, price)
 
     def test_price_equals_formats(self):
-        price1 = Price('currency=USD', excl_tax=D('10.00'), tax=D('2.00'))
+        price1 = Price(currency='USD', excl_tax=D('10.00'), tax=D('2.00'))
         price2 = Price(currency='USD', excl_tax=D('10.00'), incl_tax=D('12.00'))
         self.assertEqual(price1, price2)
-
 
     def test_price_equals_currency_matters(self):
         price1 = Price(currency='EUR', excl_tax=D('10.00'), tax=D('2.00'))
@@ -42,9 +41,7 @@ class TestPriceObject(TestCase):
             Price(currency='USD', excl_tax=D('10.00'), tax=D('2.00')),
             Price(currency='USD', excl_tax=D('10.00'), incl_tax=D('12.00')),
             Price(currency='USD', excl_tax=D('10.00'), tax=D('8.00'))
-            )
+        )
         prices_product = product(prices, prices)
         for price1, price2 in prices_product:
-            result1 = price1 == price2
-            result2 = price2 == price1
-            self.assertEqual(result1, result2)
+            self.assertEqual(price1 == price2, price2 == price1)
