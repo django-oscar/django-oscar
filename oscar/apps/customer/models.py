@@ -26,5 +26,5 @@ if not is_model_registered('customer', 'ProductAlert'):
 
 
 if django.VERSION < (1, 7):
-    from oscar.apps.customer.history import *  # noqa
+    from .receivers import *  # noqa
     from .alerts import receivers  # noqa

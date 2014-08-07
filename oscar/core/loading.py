@@ -278,6 +278,15 @@ if django.VERSION < (1, 7):
         This is merely a thin wrapper around Django's get_model function.
         Raises LookupError if model isn't found.
         """
+
+        # The snippet below is not useful in production, but helpful to
+        # investigate circular import issues
+        # from django.db.models.loading import app_cache_ready
+        # if not app_cache_ready():
+        #     print(
+        #         "%s.%s accessed before app cache is fully populated!" %
+        #         (app_label, model_name))
+
         model = django_get_model(app_label, model_name, *args, **kwargs)
         if model is None:
             raise LookupError(
