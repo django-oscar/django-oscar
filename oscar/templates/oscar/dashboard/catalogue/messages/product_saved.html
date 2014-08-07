@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load django_tables2 %}
 
 <p>
 {% if creating %}
@@ -13,6 +14,6 @@
 </p>
 
 <p>
-    <a href="{% url 'dashboard:catalogue-product' pk=product.pk %}" class="btn btn-success">{% trans "Edit again" %}</a>
+    <a href="{% url 'dashboard:catalogue-product' pk=product.pk %}{% querystring %}" class="btn btn-success">{% trans "Edit again" %}</a>
     <a href="{{ product.get_absolute_url }}" class="btn btn-success">{% trans "View it on the site" %}</a>
 </p>

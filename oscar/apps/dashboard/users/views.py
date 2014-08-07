@@ -4,8 +4,11 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.views.generic import ListView, DetailView, DeleteView, \
-    UpdateView, FormView
+    UpdateView, FormView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
+
+from django_tables2 import SingleTableMixin
+
 from oscar.apps.customer.utils import normalise_email
 
 from oscar.views.generic import BulkEditMixin
@@ -16,19 +19,21 @@ UserSearchForm, ProductAlertSearchForm, ProductAlertUpdateForm = get_classes(
     'dashboard.users.forms', ('UserSearchForm', 'ProductAlertSearchForm',
                               'ProductAlertUpdateForm'))
 PasswordResetForm = get_class('customer.forms', 'PasswordResetForm')
+UserTable = get_class('dashboard.users.tables', 'UserTable')
 ProductAlert = get_model('customer', 'ProductAlert')
 User = get_user_model()
 
 
-class IndexView(BulkEditMixin, ListView):
+class IndexView(BulkEditMixin, SingleTableMixin, TemplateView):
     template_name = 'dashboard/users/index.html'
-    paginate_by = 25
+    table_pagination = True
     model = User
     actions = ('make_active', 'make_inactive', )
     form_class = UserSearchForm
+    table_class = UserTable
+    context_table_name = 'users'
     desc_template = _('%(main_filter)s %(email_filter)s %(name_filter)s')
     description = ''
-    context_object_name = 'user_list'
 
     def get_queryset(self):
         queryset = self.model.objects.all().order_by('-date_joined')
@@ -74,6 +79,7 @@ class IndexView(BulkEditMixin, ListView):
         context = super(IndexView, self).get_context_data(**kwargs)
         context['form'] = self.form
         context['queryset_description'] = self.desc_template % self.desc_ctx
+        context['queryset_icon'] = 'group'
         return context
 
     def make_inactive(self, request, users):

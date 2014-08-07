@@ -27,10 +27,11 @@ def configure():
                 'django.contrib.admin',
                 'django.contrib.contenttypes',
                 'django.contrib.sessions',
-                'django.contrib.sites',
+              'django.contrib.sites',
                 'django.contrib.flatpages',
                 'django.contrib.staticfiles',
                 'compressor',
+                'django_tables2',
                 'tests._site.model_tests_app',  # contains models we need for testing
                 'tests._site.myauth',
 

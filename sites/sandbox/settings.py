@@ -309,6 +309,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'template_timings_panel',
     'compressor',       # Oscar's templates use compressor
+    'django_tables2',
     'apps.gateway',     # For allowing dashboard access
 ]
 from oscar import get_core_apps
