@@ -32,13 +32,14 @@ class IndexView(BulkEditMixin, FormMixin, ListView):
     description = ''
     context_object_name = 'user_list'
 
-    def get_queryset(self):
-        queryset = self.model.objects.all().order_by('-date_joined')
-        return self.process_search(queryset)
+    def dispatch(self, request, *args, **kwargs):
+        form_class = self.get_form_class()
+        self.form = self.get_form(form_class)
+        return super(IndexView, self).dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         """
-        Pass GET data to form if search form was submitted
+        Only bind search form if it was submitted.
         """
         kwargs = super(IndexView, self).get_form_kwargs()
 
@@ -49,24 +50,26 @@ class IndexView(BulkEditMixin, FormMixin, ListView):
 
         return kwargs
 
-    def process_search(self, queryset):
+    def get_queryset(self):
+        queryset = self.model.objects.all().order_by('-date_joined')
+        return self.apply_search(queryset)
+
+    def apply_search(self, queryset):
+        # Set initial queryset description, used for template context
         self.desc_ctx = {
             'main_filter': _('All users'),
             'email_filter': '',
             'name_filter': '',
         }
-
-        form_class = self.get_form_class()
-        self.form = self.get_form(form_class)
-
-        if not self.form.is_valid():
+        if self.form.is_valid():
+            return self.apply_search_filters(queryset, self.form.cleaned_data)
+        else:
             return queryset
 
-        data = self.form.cleaned_data
-
-        return self.filter_by_search(queryset, data)
-
-    def filter_by_search(self, queryset, data):
+    def apply_search_filters(self, queryset, data):
+        """
+        Function is split out to allow customisation with little boilerplate.
+        """
         if data['email']:
             email = normalise_email(data['email'])
             queryset = queryset.filter(email__istartswith=email)
