@@ -21,7 +21,7 @@ class TestPriceObject(TestCase):
         for price in (
             Price(currency='USD', excl_tax=D('10.00')), 
             Price(currency='USD', excl_tax=D('10.00'), tax=D('2.00')),
-            Price(currency='USD', excl_tax=D('10.00'), excl_tax=D('12.00')),
+            Price(currency='USD', excl_tax=D('10.00'), incl_tax=D('12.00')),
             ):
             self.assertEqual(price, price)
 
