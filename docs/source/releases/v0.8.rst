@@ -223,6 +223,12 @@ Minor changes
   expected. There's currently no frontend or dashboard support for it, as there
   is no good default behaviour.
 
+* Oscar has a new dependency, django-tables2_. It's a handy library that helps
+  when displaying tabular data, allowing sorting, etc. It also makes it easier
+  to adapt e.g. the product list view in the dashboard to additional fields.
+
+.. _django-tables2: http://django-tables2.readthedocs.org/en/latest/
+
 .. _incompatible_changes_in_0.8:
 
 Backwards incompatible changes in 0.8
