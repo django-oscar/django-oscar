@@ -34,14 +34,13 @@ class TestPriceObject(TestCase):
     def test_price_equals_currency_matters(self):
         price1 = Price('EUR', incl_tax=D('10.00'), tax=D('2.00'))
         price2 = Price('USD', incl_tax=D('10.00'), tax=D('2.00'))
-        
         self.assertNotEquals(price1, price2)
         
     def test_price_equals_transitivity(self):
         prices = (
-            Price('EUR', incl_tax=D('10.00'), tax=D('2.00'))
-            Price('USD', incl_tax=D('10.00'), tax=D('2.00'))
-            Price('USD', icl_tax=D('10.00'), excl_tax=D('8.00'))
+            Price('EUR', incl_tax=D('10.00'), tax=D('2.00')),
+            Price('USD', incl_tax=D('10.00'), tax=D('2.00')),
+            Price('USD', icl_tax=D('10.00'), excl_tax=D('8.00')),
             Price('USD', icl_tax=D('10.00'), tax=D('8.00'))
             )
         prices_product = product(prices, prices)
