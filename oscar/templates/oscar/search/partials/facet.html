@@ -1,20 +1,26 @@
 {% load i18n %}
 
-<dt>{{ name }}</dt>
-{% for item in items %}
-<dd>
-    {% with item_count=item.count %}
-        {% if item.selected %}
-            <strong>{{ item.name }} ({{ item_count }})</strong>
-            <small><a href="{{ item.deselect_url }}">{% trans "Remove" %}</a></small>
-        {% else %}
-                {% if item_count %}
-                    <a href="{{ item.select_url }}">{{ item.name }}</a> ({{ item_count }})
+<dl>
+    <dt class="nav-header">{{ name }}</dt>
+    {% for item in items %}
+        <dd>
+            {% if item.selected %}
+                <input class="facet_checkbox" type="checkbox" name="{{ item.name }}" checked />
+                <input class="facet_url" type="hidden" name="url_for_{{ item.name }}" value="{{ item.deselect_url }}" />
+                <strong>{{ item.name }}</strong>
+            {% else %}
+                {% if item.disabled %}
+                    <input type="checkbox" name="{{ item.name }}" disabled />
+                    {{ item.name }}
                 {% else %}
-                    {{ item.name }} (0)
+                    <input class="facet_checkbox" type="checkbox" name="{{ item.name }}" />
+                    <input class="facet_url" type="hidden" name="url_for_{{ item.name }}" value="{{ item.select_url }}" />
+                    <a href="{{ item.select_url }}">{{ item.name }}</a>
                 {% endif %}
-        {% endif %}
-    {% endwith %}
-</dd>
-{% endfor %}
-
+            {% endif %}
+            {% if item.show_count %}
+                ({{ item.count }})
+            {% endif %}
+        </dd>
+    {% endfor %}
+</dl>

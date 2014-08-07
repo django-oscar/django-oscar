@@ -1,9 +1,10 @@
-from oscar.core.loading import get_model
+from oscar.core.loading import get_model, get_class
 from haystack import views
 
-from . import facets, signals
+from . import signals
 
 Product = get_model('catalogue', 'Product')
+FacetMunger = get_class('search.facets', 'FacetMunger')
 
 
 class FacetedSearchView(views.FacetedSearchView):
@@ -13,8 +14,7 @@ class FacetedSearchView(views.FacetedSearchView):
     Note that facets are configured when the ``SearchQuerySet`` is initialised.
     This takes place in the search application class.
 
-    See
-    http://django-haystack.readthedocs.org/en/v2.1.0/views_and_forms.html#facetedsearchform # noqa
+    See http://django-haystack.readthedocs.org/en/v2.1.0/views_and_forms.html#facetedsearchform # noqa
     """
 
     # Haystack uses a different class attribute to CBVs
@@ -40,14 +40,18 @@ class FacetedSearchView(views.FacetedSearchView):
         # Show suggestion no matter what.  Haystack 2.1 only shows a suggestion
         # if there are some results, which seems a bit weird to me.
         if self.results.query.backend.include_spelling:
+            # Note, this triggers an extra call to the search backend
             suggestion = self.form.get_suggestion()
             if suggestion != self.query:
                 extra['suggestion'] = suggestion
 
-        # Convert facet data into a more useful datastructure
+        # Convert facet data into a more useful data structure
         if 'fields' in extra['facets']:
-            extra['facet_data'] = facets.facet_data(
-                self.request, self.form, self.results)
+            munger = FacetMunger(
+                self.request.get_full_path(),
+                self.form.selected_multi_facets,
+                self.results.facet_counts())
+            extra['facet_data'] = munger.facet_data()
             has_facets = any([len(data['results']) for
                               data in extra['facet_data'].values()])
             extra['has_facets'] = has_facets

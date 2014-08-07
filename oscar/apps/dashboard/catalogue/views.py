@@ -403,7 +403,7 @@ class CategoryDetailListView(generic.DetailView):
         ctx = super(CategoryDetailListView, self).get_context_data(*args,
                                                                    **kwargs)
         ctx['child_categories'] = self.object.get_children()
-        ctx['ancestors'] = self.object.get_ancestors()
+        ctx['ancestors'] = self.object.get_ancestors_and_self()
         return ctx
 
 

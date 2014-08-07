@@ -2,7 +2,7 @@ from django.utils.http import urlquote
 from django.conf import settings
 from django.http import HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404
-from django.views.generic import ListView, DetailView
+from django.views.generic import DetailView, TemplateView
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_class, get_model
@@ -13,6 +13,9 @@ ProductReview = get_model('reviews', 'ProductReview')
 Category = get_model('catalogue', 'category')
 ProductAlert = get_model('customer', 'ProductAlert')
 ProductAlertForm = get_class('customer.forms', 'ProductAlertForm')
+ProductSearchHandler = get_class('catalogue.handlers', 'ProductSearchHandler')
+SimpleProductSearchHandler = get_class(
+    'catalogue.handlers', 'SimpleProductSearchHandler')
 
 
 class ProductDetailView(DetailView):
@@ -110,14 +113,23 @@ class ProductDetailView(DetailView):
             '%s/detail.html' % (self.template_folder)]
 
 
-class ProductCategoryView(ListView):
+class ProductCategoryView(TemplateView):
     """
     Browse products in a given category
     """
     context_object_name = "products"
     template_name = 'catalogue/browse.html'
-    paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
     enforce_paths = True
+
+    def get(self, request, *args, **kwargs):
+        # fetch the category; return 404 or redirect as needed
+        self.get_object()
+        redirect = self.redirect_if_necessary(request.path, self.category)
+        if redirect is not None:
+            return redirect
+        self.search_handler = self.get_search_handler(
+            self.get_categories(), request.GET, request.get_full_path())
+        return super(ProductCategoryView, self).get(request, *args, **kwargs)
 
     def get_object(self):
         if 'pk' in self.kwargs:
@@ -134,26 +146,36 @@ class ProductCategoryView(ListView):
             # If neither slug nor primary key are given, we show all products
             self.category = None
 
-    def get(self, request, *args, **kwargs):
-        self.get_object()
-        redirect = self.redirect_if_necessary(request.path, self.category)
-        if redirect is not None:
-            return redirect
-        return super(ProductCategoryView, self).get(request, *args, **kwargs)
-
     def redirect_if_necessary(self, current_path, category):
-        if self.enforce_paths and self.category is not None:
+        if self.enforce_paths and category is not None:
             # Categories are fetched by primary key to allow slug changes.
             # If the slug has indeed changed, issue a redirect.
-            expected_path = self.category.get_absolute_url()
+            expected_path = category.get_absolute_url()
             if expected_path != urlquote(current_path):
                 return HttpResponsePermanentRedirect(expected_path)
+
+    def get_search_handler(self, *args, **kwargs):
+        """
+        This automatically determines the correct search handler to use.
+        Currently only Solr is supported as a search backend, so it falls
+        back to rudimentary category browsing if that isn't enabled.
+        """
+        handler_class = SimpleProductSearchHandler
+        try:
+            if 'Solr' in settings.HAYSTACK_CONNECTIONS['default']['ENGINE']:
+                handler_class = ProductSearchHandler
+        except KeyError:
+            pass
+        return handler_class(*args, **kwargs)
 
     def get_categories(self):
         """
         Return a list of the current category and it's ancestors
         """
-        return list(self.category.get_descendants()) + [self.category]
+        if self.category is not None:
+            return self.category.get_descendants_and_self()
+        else:
+            return []
 
     def get_summary(self):
         """
@@ -165,11 +187,7 @@ class ProductCategoryView(ListView):
         context = super(ProductCategoryView, self).get_context_data(**kwargs)
         context['category'] = self.category
         context['summary'] = self.get_summary()
+        search_context = self.search_handler.get_search_context_data(
+            self.context_object_name)
+        context.update(search_context)
         return context
-
-    def get_queryset(self):
-        qs = Product.browsable.base_queryset()
-        if self.category is not None:
-            categories = self.get_categories()
-            qs = qs.filter(categories__in=categories).distinct()
-        return qs
