@@ -31,7 +31,7 @@
     <div class="well">
         <form action="." method="get" class="form-inline">
             {% include "partials/form_fields_inline.html" with form=form %}
-            <input type="submit" value="{% trans "Search" %}" class="btn btn-primary"/>
+            <button type="submit" name="search" class="btn btn-primary">{% trans "Search" %}</button>
             <a href="{% url 'dashboard:users-index' %}" class="btn">{% trans "Reset" %}</a>
         </form>
     </div>
