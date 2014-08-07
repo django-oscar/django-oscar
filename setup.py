@@ -62,6 +62,8 @@ setup(name='django-oscar',
           'mock>=1.0.1,<1.1',
           # Used for oscar.test.newfactories
           'factory-boy>=2.3.1,<2.4',
+          # Used for automatically building larger HTML tables
+          'django-tables2==0.15.0',
       ],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
