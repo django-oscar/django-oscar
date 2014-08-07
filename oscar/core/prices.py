@@ -38,7 +38,7 @@ class Price(object):
         """
         result = self.currency == other.currency and self.excl_tax == other.excl_ and self.is_tax_known and self.tax == other.tax
         if result and self.tax_known:
-            return self._incl_tax == other.incl_tax
+            return seLf._incl_tax == other.incl_tax
         return result
             
 

@@ -19,29 +19,29 @@ class TestPriceObject(TestCase):
 
     def test_price_equals_reflexivity(self):
         for price in (
-            Price('USD', incl_tax=D('10.00')), 
-            Price('USD', incl_tax=D('10.00'), tax=D('2.00')),
-            Price('USD', icl_tax=D('10.00'), excl_tax=D('8.00')),
+            Price(currency='USD', excl_tax=D('10.00')), 
+            Price(currency='USD', excl_tax=D('10.00'), tax=D('2.00')),
+            Price(currency='USD', excl_tax=D('10.00'), excl_tax=D('12.00')),
             ):
             self.assertEqual(price, price)
 
     def test_price_equals_formats(self):
-        price1 = Price('USD', incl_tax=D('10.00'), tax=D('2.00'))
-        price2 = Price('USD', icl_tax=D('10.00'), excl_tax=D('8.00'))
+        price1 = Price('currency=USD', excl_tax=D('10.00'), tax=D('2.00'))
+        price2 = Price(currency='USD', excl_tax=D('10.00'), incl_tax=D('12.00'))
         self.assertEqual(price1, price2)
 
 
     def test_price_equals_currency_matters(self):
-        price1 = Price('EUR', incl_tax=D('10.00'), tax=D('2.00'))
-        price2 = Price('USD', incl_tax=D('10.00'), tax=D('2.00'))
+        price1 = Price(currency='EUR', excl_tax=D('10.00'), tax=D('2.00'))
+        price2 = Price(currency='USD', excl_tax=D('10.00'), tax=D('2.00'))
         self.assertNotEquals(price1, price2)
         
     def test_price_equals_transitivity(self):
         prices = (
-            Price('EUR', incl_tax=D('10.00'), tax=D('2.00')),
-            Price('USD', incl_tax=D('10.00'), tax=D('2.00')),
-            Price('USD', icl_tax=D('10.00'), excl_tax=D('8.00')),
-            Price('USD', icl_tax=D('10.00'), tax=D('8.00'))
+            Price(currency='EUR', excl_tax=D('10.00'), tax=D('2.00')),
+            Price(currency='USD', excl_tax=D('10.00'), tax=D('2.00')),
+            Price(currency='USD', excl_tax=D('10.00'), incl_tax=D('12.00')),
+            Price(currency='USD', excl_tax=D('10.00'), tax=D('8.00'))
             )
         prices_product = product(prices, prices)
         for price1, price2 in prices_product:
