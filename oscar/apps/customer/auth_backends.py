@@ -1,7 +1,9 @@
+import warnings
+
 from django.contrib.auth.backends import ModelBackend
 from django.core.exceptions import ImproperlyConfigured
-from oscar.apps.customer.utils import normalise_email
 
+from oscar.apps.customer.utils import normalise_email
 from oscar.core.compat import get_user_model
 
 User = get_user_model()
@@ -53,5 +55,14 @@ class EmailBackend(ModelBackend):
                 "password")
         return None
 
-# Deprecated in Oscar 0.8: Spelling
-Emailbackend = EmailBackend
+
+# Deprecated since Oscar 0.8 because of the spelling.
+class Emailbackend(EmailBackend):
+
+    def __init__(self):
+        warnings.warn(
+            "Oscar's auth backend EmailBackend has been renamed in Oscar 0.8 "
+            " and you're using the old name of Emailbackend. Please rename "
+            " all references; most likely in the AUTH_BACKENDS setting.",
+            DeprecationWarning)
+        super(Emailbackend, self).__init__()
