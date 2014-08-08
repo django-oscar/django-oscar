@@ -2,7 +2,6 @@ import json
 
 from django.conf import settings
 from oscar.core.loading import get_model
-from django.dispatch import receiver
 
 from oscar.core.loading import get_class
 

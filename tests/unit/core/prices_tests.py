@@ -33,7 +33,7 @@ class TestPriceObject(TestCase):
     def test_price_equals_currency_matters(self):
         price1 = Price(currency='EUR', excl_tax=D('10.00'), tax=D('2.00'))
         price2 = Price(currency='USD', excl_tax=D('10.00'), tax=D('2.00'))
-        self.assertNotEquals(price1, price2)
+        self.assertNotEqual(price1, price2)
         
     def test_price_equals_transitivity(self):
         prices = (
