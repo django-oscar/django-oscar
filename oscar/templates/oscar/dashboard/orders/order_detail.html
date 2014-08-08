@@ -89,7 +89,6 @@
                 <li class="{% if active_tab == 'shipping' %}active{% endif %}"><a href="#shipping" data-toggle="tab">{% trans "Shipping" %}</a></li>
                 <li class="{% if active_tab == 'payment' %}active{% endif %}"><a href="#payment" data-toggle="tab">{% trans "Payment" %}</a></li>
                 <li class="{% if active_tab == 'discounts' %}active{% endif %}"><a href="#discounts" data-toggle="tab">{% trans "Discounts" %}</a></li>
-                <li class="{% if active_tab == 'emails' %}active{% endif %}"><a href="#emails" data-toggle="tab">{% trans "Emails" %}</a></li>
                 <li class="{% if active_tab == 'notes' %}active{% endif %}"><a href="#notes" data-toggle="tab">{% trans "Notes" %}</a></li>
             {% endblock nav_tabs %}
         </ul>
@@ -596,17 +595,6 @@
                         {% endif %}
                     {% endwith %}
 
-                {% endblock %}
-            </div>
-
-            <div class="tab-pane {% if active_tab == 'emails' %}active{% endif %}" id="emails">
-                {% block tab_emails %}
-                    <div class="table-header">
-                        <h3>{% trans "Emails" %}</h3>
-                    </div>
-                    <table class="table table-striped table-bordered table-hover">
-                        <tr><td>{% trans "No email data available." %}</td></tr>
-                    </table>
                 {% endblock %}
             </div>
 
