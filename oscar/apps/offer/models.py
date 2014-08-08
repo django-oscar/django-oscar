@@ -843,13 +843,6 @@ class Range(models.Model):
         """
         Check whether the passed product is part of this range
         """
-        # We look for shortcircuit checks first before
-        # the tests that require more database queries.
-
-        if settings.OSCAR_OFFER_BLACKLIST_PRODUCT and \
-                settings.OSCAR_OFFER_BLACKLIST_PRODUCT(product):
-            return False
-
         # Delegate to a proxy class if one is provided
         if self.proxy_class:
             return load_proxy(self.proxy_class)().contains_product(product)

@@ -490,6 +490,12 @@ Misc
   and not running an English locale, you will need to migrate the existing
   data to the English values.
 
+* Support for the ``OSCAR_OFFER_BLACKLIST_PRODUCT`` setting has been removed.
+  It was only partially supported: it prevented products from being
+  added to a range, but offers could be applied to the products nonetheless.
+  To prevent an offer being applied to a product, use ``is_discountable`` or
+  override ``get_is_discountable`` on your product instances.
+
 .. _rewritten: https://github.com/tangentlabs/django-oscar/commit/d8b4dbfed17be90846ea4bc47b5f7b39ad944c24
 
 Basket line stockrecords
