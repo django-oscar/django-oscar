@@ -149,10 +149,17 @@ class AbstractCommunicationEventType(models.Model):
         help_text=_("This is just used for organisational purposes"))
 
     # We allow communication types to be categorised
-    ORDER_RELATED = _('Order related')
-    USER_RELATED = _('User related')
-    category = models.CharField(_('Category'), max_length=255,
-                                default=ORDER_RELATED)
+    # For backwards-compatibility, the choice values are quite verbose
+    ORDER_RELATED = 'Order related'
+    USER_RELATED = 'User related'
+    CATEGORY_CHOICES = (
+        (ORDER_RELATED, _('Order related')),
+        (USER_RELATED, _('User related'))
+    )
+
+    category = models.CharField(
+        _('Category'), max_length=255, default=ORDER_RELATED,
+        choices=CATEGORY_CHOICES)
 
     # Template content for emails
     # NOTE: There's an intentional distinction between None and ''. None

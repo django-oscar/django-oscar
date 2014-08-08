@@ -484,6 +484,12 @@ Misc
   ``ImportError`` if a model can't be found. That brings it more in line with
   what Django does since the app refactor.
 
+* ``CommunicationEventType.category`` was storing a localised string, which
+  breaks when switching locale. It now uses ``choices`` to map between the
+  value and a localised string. Unfortunately, if you're using this feature
+  and not running an English locale, you will need to migrate the existing
+  data to the English values.
+
 .. _rewritten: https://github.com/tangentlabs/django-oscar/commit/d8b4dbfed17be90846ea4bc47b5f7b39ad944c24
 
 Basket line stockrecords
