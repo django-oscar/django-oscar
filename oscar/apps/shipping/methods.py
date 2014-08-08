@@ -44,6 +44,9 @@ class Base(object):
 
 
 class Free(Base):
+    """
+    This shipping method specifies that shipping is free.
+    """
     code = 'free-shipping'
     name = _('Free shipping')
 
@@ -65,6 +68,10 @@ class NoShippingRequired(Free):
 
 
 class FixedPrice(Base):
+    """
+    This shipping method indicates that shipping costs a fixed price and
+    requires no special calculation.
+    """
     code = 'fixed-price-shipping'
     name = _('Fixed price shipping')
 
@@ -88,8 +95,8 @@ class FixedPrice(Base):
 
 class OfferDiscount(Base):
     """
-    Wrapper class that applies a discount to an existing shipping method's
-    charges
+    Wrapper class that applies a discount to an existing shipping 
+    method's charges.
     """
     is_discounted = True
 
@@ -120,6 +127,9 @@ class OfferDiscount(Base):
 
 
 class TaxExclusiveOfferDiscount(OfferDiscount):
+    """
+    Wrapper class which extends OfferDiscount to be exclusive of tax.
+    """
 
     def calculate(self, basket):
         base_charge = self.method.calculate(basket)
@@ -135,6 +145,9 @@ class TaxExclusiveOfferDiscount(OfferDiscount):
 
 
 class TaxInclusiveOfferDiscount(OfferDiscount):
+    """
+    Wrapper class which extends OfferDiscount to be inclusive of tax.
+    """
 
     def calculate(self, basket):
         base_charge = self.method.calculate(basket)
