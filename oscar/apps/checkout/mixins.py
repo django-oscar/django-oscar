@@ -11,7 +11,6 @@ OrderCreator = get_class('order.utils', 'OrderCreator')
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 CheckoutSessionMixin = get_class('checkout.session', 'CheckoutSessionMixin')
 ShippingAddress = get_model('order', 'ShippingAddress')
-CommunicationEvent = get_model('order', 'CommunicationEvent')
 OrderNumberGenerator = get_class('order.utils', 'OrderNumberGenerator')
 PaymentEventType = get_model('order', 'PaymentEventType')
 PaymentEvent = get_model('order', 'PaymentEvent')
@@ -286,9 +285,6 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             messages = CommunicationEventType.objects.get_and_render(code, ctx)
             event_type = None
         else:
-            # Create CommunicationEvent
-            CommunicationEvent._default_manager.create(
-                order=order, event_type=event_type)
             messages = event_type.get_messages(ctx)
 
         if messages and messages['body']:
