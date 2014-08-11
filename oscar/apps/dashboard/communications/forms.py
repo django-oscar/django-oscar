@@ -6,8 +6,6 @@ from django.template import Template, TemplateSyntaxError
 from django.utils.translation import ugettext_lazy as _
 from oscar.apps.customer.utils import normalise_email
 
-from oscar.forms import widgets
-
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
 Order = get_model('order', 'Order')
 
@@ -20,7 +18,7 @@ class CommunicationEventTypeForm(forms.ModelForm):
         widget=forms.widgets.Textarea(attrs={'class': 'plain'}))
     email_body_html_template = forms.CharField(
         label=_("Email body HTML template"), required=True,
-        widget=widgets.WYSIWYGTextArea)
+        widget=forms.Textarea)
 
     preview_order_number = forms.CharField(
         label=_("Order number"), required=False)
@@ -86,4 +84,7 @@ class CommunicationEventTypeForm(forms.ModelForm):
 
     class Meta:
         model = CommunicationEventType
-        exclude = ('code', 'category', 'sms_template')
+        fields = [
+            'name', 'email_subject_template', 'email_body_template',
+            'email_body_html_template', 'preview_order_number', 'preview_email'
+        ]
