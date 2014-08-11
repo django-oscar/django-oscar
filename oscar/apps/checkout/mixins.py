@@ -234,7 +234,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         order is submitted.
         """
         # Send confirmation message (normally an email)
-        self.send_confirmation_message(order)
+        self.send_confirmation_message(order, self.communication_type_code)
 
         # Flush all session data
         self.checkout_session.flush()
@@ -254,27 +254,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     def get_success_url(self):
         return reverse('checkout:thank-you')
 
-    def send_confirmation_message(self, order, **kwargs):
-        code = self.communication_type_code
-        ctx = {'user': self.request.user,
-               'order': order,
-               'site': get_current_site(self.request),
-               'lines': order.lines.all()}
-
-        if not self.request.user.is_authenticated():
-            # Attempt to add the anon order status URL to the email template
-            # ctx.
-            try:
-                path = reverse('customer:anon-order',
-                               kwargs={'order_number': order.number,
-                                       'hash': order.verification_hash()})
-            except NoReverseMatch:
-                # We don't care that much if we can't resolve the URL
-                pass
-            else:
-                site = Site.objects.get_current()
-                ctx['status_url'] = 'http://%s%s' % (site.domain, path)
-
+    def send_confirmation_message(self, order, code, **kwargs):
+        ctx = self.get_message_context(order)
         try:
             event_type = CommunicationEventType.objects.get(code=code)
         except CommunicationEventType.DoesNotExist:
@@ -295,6 +276,29 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         else:
             logger.warning("Order #%s - no %s communication event type",
                            order.number, code)
+
+    def get_message_context(self, order):
+        ctx = {
+            'user': self.request.user,
+            'order': order,
+            'site': get_current_site(self.request),
+            'lines': order.lines.all()
+        }
+
+        if not self.request.user.is_authenticated():
+            # Attempt to add the anon order status URL to the email template
+            # ctx.
+            try:
+                path = reverse('customer:anon-order',
+                               kwargs={'order_number': order.number,
+                                       'hash': order.verification_hash()})
+            except NoReverseMatch:
+                # We don't care that much if we can't resolve the URL
+                pass
+            else:
+                site = Site.objects.get_current()
+                ctx['status_url'] = 'http://%s%s' % (site.domain, path)
+        return ctx
 
     # Basket helpers
     # --------------
