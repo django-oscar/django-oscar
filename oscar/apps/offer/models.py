@@ -413,6 +413,10 @@ class ConditionalOffer(models.Model):
 
 @python_2_unicode_compatible
 class Condition(models.Model):
+    """
+    A condition for an offer to be applied. You can either specify a custom
+    proxy class, or need to specify a type, range and value.
+    """
     COUNT, VALUE, COVERAGE = ("Count", "Value", "Coverage")
     TYPE_CHOICES = (
         (COUNT, _("Depends on number of items in basket that are in "
@@ -454,7 +458,7 @@ class Condition(models.Model):
             self.COVERAGE: CoverageCondition}
         if self.type in klassmap:
             return klassmap[self.type](**field_dict)
-        return self
+        raise RuntimeError("Unrecognised condition type (%s)" % self.type)
 
     def __str__(self):
         return self.proxy().name
