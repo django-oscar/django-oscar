@@ -439,7 +439,16 @@ class AbstractShippingAddress(AbstractAddress):
 
     A shipping address should not be edited once the order has been placed -
     it should be read-only after that.
+
+    NOTE:
+    ShippingAddress is a model of the order app. But moving it there is tricky
+    due to circular import issues that are amplified by get_model/get_class
+    calls pre-Django 1.7 to register receivers. So...
+    TODO: Once Django 1.6 support is dropped, move AbstractBillingAddress and
+    AbstractShippingAddress to the order app, and move
+    PartnerAddress to the partner app.
     """
+
     phone_number = PhoneNumberField(
         _("Phone number"), blank=True,
         help_text=_("In case we need to call you about your order"))
@@ -544,7 +553,6 @@ class AbstractUserAddress(AbstractShippingAddress):
 
 
 class AbstractBillingAddress(AbstractAddress):
-
     class Meta:
         abstract = True
         # BillingAddress is registered in order/models.py
