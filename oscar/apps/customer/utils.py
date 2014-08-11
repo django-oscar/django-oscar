@@ -9,7 +9,6 @@ from django.utils.encoding import force_bytes
 
 from oscar.core.loading import get_model
 
-CommunicationEvent = get_model('order', 'CommunicationEvent')
 Email = get_model('customer', 'Email')
 
 
@@ -27,26 +26,6 @@ class Dispatcher(object):
         """
         if messages['subject'] and messages['body']:
             self.send_email_messages(recipient, messages)
-
-    def dispatch_order_messages(self, order, messages, event_type=None,
-                                **kwargs):
-        """
-        Dispatch order-related messages to the customer
-        """
-        if order.is_anonymous:
-            if 'email_address' in kwargs:
-                self.send_email_messages(kwargs['email_address'], messages)
-            elif order.guest_email:
-                self.send_email_messages(order.guest_email, messages)
-            else:
-                return
-        else:
-            self.dispatch_user_messages(order.user, messages)
-
-        # Create order comms event for audit
-        if event_type:
-            CommunicationEvent._default_manager.create(order=order,
-                                                       event_type=event_type)
 
     def dispatch_user_messages(self, user, messages):
         """
