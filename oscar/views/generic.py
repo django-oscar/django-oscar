@@ -1,4 +1,4 @@
-import six
+from django.utils import six
 import json
 
 from django import forms
@@ -12,7 +12,7 @@ from django.views.generic.base import View
 
 import phonenumbers
 from oscar.core.phonenumber import PhoneNumber
-from six.moves import map
+from django.utils.six.moves import map
 
 
 class PostActionMixin(object):

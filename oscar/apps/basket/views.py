@@ -1,5 +1,5 @@
 import json
-from six.moves.urllib import parse
+from django.utils.six.moves.urllib import parse
 
 from django.contrib import messages
 from django.template.loader import render_to_string

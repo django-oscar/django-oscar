@@ -1,6 +1,6 @@
 import os
 import re
-import six
+from django.utils import six
 import operator
 from decimal import Decimal as D, ROUND_DOWN, ROUND_UP
 

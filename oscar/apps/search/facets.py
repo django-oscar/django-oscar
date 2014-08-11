@@ -1,6 +1,6 @@
 from django.conf import settings
 from purl import URL
-from six.moves import map
+from django.utils.six.moves import map
 
 
 def facet_data(request, form, results):  # noqa (too complex (10))

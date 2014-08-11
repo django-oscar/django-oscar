@@ -1,7 +1,7 @@
 import re
-import six
-from six.moves import filter
-from six.moves import map
+from django.utils import six
+from django.utils.six.moves import filter
+from django.utils.six.moves import map
 
 import django
 from django import forms

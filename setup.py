@@ -56,8 +56,6 @@ setup(name='django-oscar',
           'purl>=0.7',
           # For phone number field
           'phonenumbers>=5.9.2,<=6.0.0a',
-          # Python 2 & 3 compatibility helper
-          'six>=1.5.2',
           # Used for oscar.test.contextmanagers.mock_signal_receiver
           'mock>=1.0.1,<1.1',
           # Used for oscar.test.newfactories

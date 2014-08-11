@@ -1,5 +1,5 @@
 import os
-import six
+from django.utils import six
 from itertools import chain
 from datetime import datetime, date
 import logging

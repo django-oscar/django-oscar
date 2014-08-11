@@ -1,4 +1,4 @@
-from six.moves import http_client
+from django.utils.six.moves import http_client
 from django.conf import settings
 
 from oscar.core.loading import get_model

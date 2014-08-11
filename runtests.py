@@ -35,7 +35,7 @@ import logging
 import warnings
 
 from tests.config import configure
-from six.moves import map
+from django.utils.six.moves import map
 
 # No logging
 logging.disable(logging.CRITICAL)

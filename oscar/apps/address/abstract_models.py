@@ -8,7 +8,7 @@ from django.core import exceptions
 
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.models.fields import UppercaseCharField, PhoneNumberField
-from six.moves import filter
+from django.utils.six.moves import filter
 
 
 @python_2_unicode_compatible

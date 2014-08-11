@@ -1,6 +1,6 @@
 import string
 import random
-from six.moves.urllib import parse
+from django.utils.six.moves.urllib import parse
 
 from django import forms
 from django.conf import settings

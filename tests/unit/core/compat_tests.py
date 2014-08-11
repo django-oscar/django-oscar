@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
-import six
-from six.moves import cStringIO
+from django.utils import six
+from django.utils.six.moves import cStringIO
 import unittest
 
 import django

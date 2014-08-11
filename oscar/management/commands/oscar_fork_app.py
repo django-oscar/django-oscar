@@ -1,6 +1,6 @@
 import logging
 
-import six
+from django.utils import six
 
 from django.core.management.base import BaseCommand, CommandError
 

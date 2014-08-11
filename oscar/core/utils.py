@@ -1,6 +1,6 @@
 from __future__ import absolute_import  # for logging import below
 import logging
-import six
+from django.utils import six
 
 from django.utils.timezone import get_current_timezone, is_naive, make_aware
 from django.conf import settings
