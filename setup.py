@@ -37,10 +37,11 @@ setup(name='django-oscar',
           # PIL is required for image fields, Pillow is the "friendly" PIL fork
           'pillow>=1.7.8,<2.5',
           # We use the ModelFormSetView from django-extra-views for the basket
-          # page
-          'django-extra-views>=0.2,<0.7',
+          # page. 0.6.5 pins version of six, which causes issues:
+          # https://github.com/AndrewIngram/django-extra-views/pull/85
+          'django-extra-views>=0.2,<0.6.5',
           # Search support
-          'django-haystack>=2.1.0',
+          'django-haystack>=2.1.0,<2.3.0',
           # Treebeard is used for categories
           'django-treebeard==2.0',
           # Sorl is used as the default thumbnailer
