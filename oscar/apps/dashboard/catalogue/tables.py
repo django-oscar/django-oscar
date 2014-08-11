@@ -37,6 +37,8 @@ class ProductTable(Table):
         template_name='dashboard/catalogue/product_row_actions.html',
         orderable=False)
 
+    icon = "sitemap"
+
     class Meta(DashboardTable.Meta):
         model = Product
         fields = ('upc', 'date_updated')
@@ -60,6 +62,9 @@ class CategoryTable(Table):
     actions = TemplateColumn(
         template_name='dashboard/catalogue/category_row_actions.html',
         orderable=False)
+
+    icon = "sitemap"
+    caption = _("Categories")
 
     class Meta(DashboardTable.Meta):
         model = Category

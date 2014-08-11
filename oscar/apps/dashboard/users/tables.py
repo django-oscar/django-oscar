@@ -21,5 +21,7 @@ class UserTable(Table):
         template_name='dashboard/users/user_row_actions.html',
         verbose_name=' ')
 
+    icon = "group"
+
     class Meta(DashboardTable.Meta):
         template = 'dashboard/users/table.html'
