@@ -132,9 +132,16 @@ class BasketView(ModelFormSetView):
                 msgs.append(data)
         return msgs
 
+    def get_basket_voucher_form(self):
+        """
+        This is a separate method so that it's easy to e.g. not return a form
+        if there are no vouchers available.
+        """
+        return BasketVoucherForm()
+
     def get_context_data(self, **kwargs):
         context = super(BasketView, self).get_context_data(**kwargs)
-        context['voucher_form'] = BasketVoucherForm()
+        context['voucher_form'] = self.get_basket_voucher_form()
 
         # Shipping information is included to give an idea of the total order
         # cost.  It is also important for PayPal Express where the customer
