@@ -14,10 +14,6 @@ class TestWholeSiteRange(TestCase):
     def test_all_products_range(self):
         self.assertTrue(self.range.contains_product(self.prod))
 
-    def test_all_products_range_with_exception(self):
-        self.range.excluded_products.add(self.prod)
-        self.assertFalse(self.range.contains_product(self.prod))
-
     def test_whitelisting(self):
         self.range.add_product(self.prod)
         self.assertTrue(self.range.contains_product(self.prod))

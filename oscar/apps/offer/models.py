@@ -1,6 +1,5 @@
 import os
 import re
-from django.utils import six
 import operator
 from decimal import Decimal as D, ROUND_DOWN, ROUND_UP
 
@@ -11,6 +10,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now, get_current_timezone
 from django.utils.translation import ungettext, ugettext_lazy as _
 from django.utils.importlib import import_module
+from django.utils import six
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -806,11 +806,8 @@ class Range(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('catalogue:range', kwargs={
-            'slug': self.slug})
-
-    def _save(self, *args, **kwargs):
-        super(Range, self).save(*args, **kwargs)
+        return reverse(
+            'catalogue:range', kwargs={'slug': self.slug})
 
     def add_product(self, product, display_order=None):
         """ Add product to the range
@@ -818,18 +815,10 @@ class Range(models.Model):
         When adding product that is already in the range, prevent re-adding it.
         If display_order is specified, update it.
 
-        Standard display_order for a new product in the range (0) puts
+        Default display_order for a new product in the range is 0; this puts
         the product at the top of the list.
-
-        display_order needs to be tested for None because
-
-          >>> display_order = 0
-          >>> not display_order
-          True
-          >>> display_order is None
-          False
         """
-        initial_order = 0 if display_order is None else display_order
+        initial_order = display_order or 0
         relation, __ = RangeProduct.objects.get_or_create(
             range=self, product=product,
             defaults={'display_order': initial_order})

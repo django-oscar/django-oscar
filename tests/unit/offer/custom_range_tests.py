@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 from oscar.test.factories import create_product
 from django.db import IntegrityError
@@ -39,7 +40,7 @@ class TestACustomRange(TestCase):
     def test_must_have_a_text_name(self):
         try:
             custom.create_range(CustomRangeLazy)
-        except Exception:
+        except ValidationError:
             pass
         else:
             self.fail("Range can't have ugettext titles")
