@@ -1,3 +1,4 @@
+import itertools
 import os
 import re
 import operator
@@ -403,12 +404,11 @@ class ConditionalOffer(models.Model):
         cond_range = self.condition.range
         if cond_range.includes_all_products:
             # Return ALL the products
-            return Product.browsable.select_related('product_class',
-                                                    'stockrecord')\
-                .filter(is_discountable=True)\
-                .prefetch_related('children', 'images',
-                                  'product_class__options', 'product_options')
-        return cond_range.included_products.filter(is_discountable=True)
+            queryset = Product.browsable
+        else:
+            queryset = cond_range.included_products
+        return queryset.filter(is_discountable=True).exclude(
+            structure=Product.CHILD)
 
 
 @python_2_unicode_compatible
@@ -755,7 +755,10 @@ class Benefit(models.Model):
 @python_2_unicode_compatible
 class Range(models.Model):
     """
-    Represents a range of products that can be used within an offer
+    Represents a range of products that can be used within an offer.
+
+    Ranges only support adding parent or stand-alone products. Offers will
+    consider child products automatically.
     """
     name = models.CharField(_("Name"), max_length=128, unique=True)
     slug = fields.AutoSlugField(
@@ -818,6 +821,10 @@ class Range(models.Model):
         Default display_order for a new product in the range is 0; this puts
         the product at the top of the list.
         """
+        if product.is_child:
+            raise ValueError(
+                "Ranges can only contain parent and stand-alone products.")
+
         initial_order = display_order or 0
         relation, __ = RangeProduct.objects.get_or_create(
             range=self, product=product,
@@ -829,13 +836,20 @@ class Range(models.Model):
             relation.save()
 
     def remove_product(self, product):
-        """ Remove product from range """
+        """
+        Remove product from range. To save on queries, this function does not
+        check if the product is in fact in the range.
+        """
         RangeProduct.objects.filter(range=self, product=product).delete()
 
     def contains_product(self, product):  # noqa (too complex (12))
         """
-        Check whether the passed product is part of this range
+        Check whether the passed product is part of this range.
         """
+        # Child products are never part of the range, but the parent may be.
+        if product.is_child:
+            product = product.parent
+
         # Delegate to a proxy class if one is provided
         if self.proxy_class:
             return load_proxy(self.proxy_class)().contains_product(product)
@@ -862,23 +876,39 @@ class Range(models.Model):
     # Shorter alias
     contains = contains_product
 
+    def __get_pks_and_child_pks(self, queryset):
+        """
+        Expects a product queryset; gets the primary keys of the passed
+        products and their children.
+
+        Verbose, but database and memory friendly.
+        """
+        # One query to get parent and children; [(4, None), (5, 10), (5, 11)]
+        pk_tuples_iterable = queryset.values_list('pk', 'children__pk')
+        # Flatten list without unpacking; [4, None, 5, 10, 5, 11]
+        flat_iterable = itertools.chain.from_iterable(pk_tuples_iterable)
+        # Ensure uniqueness and remove None; {4, 5, 10, 11}
+        return set(flat_iterable) - {None}
+
     def _included_product_ids(self):
+        if not self.id:
+            return []
         if self.__included_product_ids is None:
-            self.__included_product_ids = [row['id'] for row in
-                                           self.included_products.values('id')]
+            self.__included_product_ids = self.__get_pks_and_child_pks(
+                self.included_products)
         return self.__included_product_ids
 
     def _excluded_product_ids(self):
         if not self.id:
             return []
         if self.__excluded_product_ids is None:
-            self.__excluded_product_ids = [row['id'] for row in
-                                           self.excluded_products.values('id')]
+            self.__excluded_product_ids = self.__get_pks_and_child_pks(
+                self.excluded_products)
         return self.__excluded_product_ids
 
     def _class_ids(self):
         if None == self.__class_ids:
-            self.__class_ids = [row['id'] for row in self.classes.values('id')]
+            self.__class_ids = self.classes.values_list('pk', flat=True)
         return self.__class_ids
 
     def num_products(self):

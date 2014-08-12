@@ -28,19 +28,31 @@ class TestPartialRange(TestCase):
     def setUp(self):
         self.range = models.Range.objects.create(
             name="All products", includes_all_products=False)
-        self.prod = create_product()
+        self.parent = create_product(structure='parent')
+        self.child = create_product(structure='child', parent=self.parent)
 
     def test_empty_list(self):
-        self.assertFalse(self.range.contains_product(self.prod))
+        self.assertFalse(self.range.contains_product(self.parent))
+        self.assertFalse(self.range.contains_product(self.child))
 
     def test_included_classes(self):
-        self.range.classes.add(self.prod.get_product_class())
-        self.assertTrue(self.range.contains_product(self.prod))
+        self.range.classes.add(self.parent.get_product_class())
+        self.assertTrue(self.range.contains_product(self.parent))
+        self.assertTrue(self.range.contains_product(self.child))
+
+    def test_includes(self):
+        self.range.add_product(self.parent)
+        self.assertTrue(self.range.contains_product(self.parent))
+        self.assertTrue(self.range.contains_product(self.child))
+
+    def test_cant_add_child_product(self):
+        self.assertRaises(ValueError, self.range.add_product, self.child)
 
     def test_included_class_with_exception(self):
-        self.range.classes.add(self.prod.get_product_class())
-        self.range.excluded_products.add(self.prod)
-        self.assertFalse(self.range.contains_product(self.prod))
+        self.range.classes.add(self.parent.get_product_class())
+        self.range.excluded_products.add(self.parent)
+        self.assertFalse(self.range.contains_product(self.parent))
+        self.assertFalse(self.range.contains_product(self.child))
 
 
 class TestRangeModel(TestCase):
