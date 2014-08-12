@@ -60,7 +60,7 @@ setup(name='django-oscar',
           # Used for oscar.test.contextmanagers.mock_signal_receiver
           'mock>=1.0.1,<1.1',
           # Used for oscar.test.newfactories
-          'factory-boy>=2.3.1,<2.4',
+          'factory-boy>=2.4.1,<2.5',
           # Used for automatically building larger HTML tables
           'django-tables2==0.15.0',
       ],
