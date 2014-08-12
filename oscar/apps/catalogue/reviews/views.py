@@ -1,11 +1,11 @@
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, View
 from django.contrib import messages
 from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_classes
+from oscar.core.utils import redirect_to_referrer
 from oscar.apps.catalogue.reviews.signals import review_added
 
 ProductReviewForm, VoteForm = get_classes(
@@ -32,7 +32,7 @@ class CreateProductReview(CreateView):
             else:
                 message = _("You can't leave a review for this product.")
             messages.warning(self.request, message)
-            return HttpResponseRedirect(self.product.get_absolute_url())
+            return redirect(self.product.get_absolute_url())
 
         return super(CreateProductReview, self).dispatch(
             request, *args, **kwargs)
@@ -98,8 +98,7 @@ class AddVoteView(View):
             for error_list in form.errors.values():
                 for msg in error_list:
                     messages.error(request, msg)
-        return HttpResponseRedirect(
-            request.META.get('HTTP_REFERER', product.get_absolute_url()))
+        return redirect_to_referrer(request.META, product.get_absolute_url())
 
 
 class ProductReviewList(ListView):

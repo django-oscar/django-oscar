@@ -1,18 +1,21 @@
-from django.utils import six
 import json
 
 from django import forms
 from django.core import validators
 from django.core.exceptions import ValidationError
+from django.shortcuts import redirect
 from django.utils.encoding import smart_str
 from django.contrib import messages
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse
+from django.utils import six
+from django.utils.six.moves import map
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import View
 
 import phonenumbers
+
+from oscar.core.utils import safe_referrer
 from oscar.core.phonenumber import PhoneNumber
-from django.utils.six.moves import map
 
 
 class PostActionMixin(object):
@@ -55,10 +58,10 @@ class BulkEditMixin(object):
         return smart_str(self.model._meta.object_name.lower())
 
     def get_error_url(self, request):
-        return request.META.get('HTTP_REFERER', '.')
+        return safe_referrer(request.META, '.')
 
     def get_success_url(self, request):
-        return request.META.get('HTTP_REFERER', '.')
+        return safe_referrer(request.META, '.')
 
     def post(self, request, *args, **kwargs):
         # Dynamic dispatch pattern - we forward POST requests onto a method
@@ -67,7 +70,7 @@ class BulkEditMixin(object):
         action = request.POST.get(self.action_param, '').lower()
         if not self.actions or action not in self.actions:
             messages.error(self.request, _("Invalid action"))
-            return HttpResponseRedirect(self.get_error_url(request))
+            return redirect(self.get_error_url(request))
 
         ids = request.POST.getlist(
             'selected_%s' % self.get_checkbox_object_name())
@@ -77,7 +80,7 @@ class BulkEditMixin(object):
                 self.request,
                 _("You need to select some %ss")
                 % self.get_checkbox_object_name())
-            return HttpResponseRedirect(self.get_error_url(request))
+            return redirect(self.get_error_url(request))
 
         objects = self.get_objects(ids)
         return getattr(self, action)(request, objects)
