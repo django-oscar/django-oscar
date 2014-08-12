@@ -1,4 +1,5 @@
 from django.core import exceptions
+from django.db import IntegrityError
 
 from oscar.apps.offer.models import Range, Condition, Benefit
 
@@ -23,22 +24,11 @@ def create_range(range_class):
         raise exceptions.ValidationError(
             "Custom ranges must have text names (not ugettext proxies)")
 
-    # In Django versions further than 1.6 it will be update_or_create
-    # https://docs.djangoproject.com/en/dev/ref/models/querysets/#update-or-create # noqa
-    values = {
-        'name': range_class.name,
-        'proxy_class': _class_path(range_class),
-    }
     try:
-        obj = Range.objects.get(**values)
-    except Range.DoesNotExist:
-        obj = Range(**values)
-    else:
-        for key, value in values.items():
-            setattr(obj, key, value)
-    obj.save()
-
-    return obj
+        return Range.objects.create(
+            name=range_class.name, proxy_class=_class_path(range_class))
+    except IntegrityError:
+        raise ValueError("The passed range already exists in the database.")
 
 
 def create_condition(condition_class):
