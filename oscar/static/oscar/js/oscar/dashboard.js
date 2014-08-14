@@ -134,7 +134,7 @@ var oscar = (function(o, $) {
                     $ele.datepicker(config);
                 });
             }
-            if ($.ui.timepicker) {
+            if ($.fn.datetimepicker) {
                 var defaultDatetimepickerConfig = {
                     'dateFormat': o.dashboard.options.dateFormat,
                     'timeFormat': o.dashboard.options.timeFormat,
@@ -149,15 +149,18 @@ var oscar = (function(o, $) {
                     $ele.datetimepicker(config);
                 });
 
+            }
+            if ($.fn.timepicker) {
                 var defaultTimepickerConfig = {
-                    'timeFormat': o.dashboard.options.timeFormat,
-                    'stepMinute': o.dashboard.options.stepMinute
+                    'minuteStep': o.dashboard.options.stepMinute,
+                    'showMeridian': false,
+                    'showInputs': false,
+                    'disableMousewheel': true,
                 };
                 $inputs.filter('[name$="time"]').not('[name$="datetime"]').each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultTimepickerConfig, {
-                        'timeFormat': $ele.data('timeformat'),
-                        'stepMinute': $ele.data('stepminute')});
+                        'minuteStep': $ele.data('stepminute')});
                     $ele.timepicker(config);
                 });
             }
