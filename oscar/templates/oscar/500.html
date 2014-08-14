@@ -2,14 +2,14 @@
 {% load i18n %}
 
 {% block title %}
-{% trans 'Server error!' %} | {{ block.super }}
+    {% trans 'Server error!' %} | {{ block.super }}
 {% endblock %}
 
 {% block error_heading %}
-{% trans "Server error!" %}
+    {% trans "Server error!" %}
 {% endblock %}
 
 {% block error_message %}
-<p>{% trans "We're sorry but something went terribly wrong." %}</p>
-<p>{% trans "This incident has been logged and will be addressed by an engineer as soon as possible." %}</p>
+    <p>{% trans "We're sorry but something went terribly wrong and we've been unable to generate the page you requested." %}</p>
+    <p>{% trans "This incident has been logged and will be addressed by an engineer as soon as possible." %}</p>
 {% endblock %}
