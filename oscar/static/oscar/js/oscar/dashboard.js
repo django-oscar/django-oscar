@@ -18,7 +18,7 @@ var oscar = (function(o, $) {
             // Run initialisation that should take place on every page of the dashboard.
             var defaults = {
                 'dateFormat': 'yy-mm-dd',
-                'timeFormat': 'HH:mm',
+                'timeFormat': 'hh:ii',
                 'datetimeFormat': 'yy-mm-dd hh:ii',
                 'stepMinute': 15,
                 'tinyConfig': {
@@ -157,18 +157,23 @@ var oscar = (function(o, $) {
                 });
 
             }
-            if ($.fn.timepicker) {
+            if ($.fn.datetimepicker) {
                 var defaultTimepickerConfig = {
+                    'format': o.dashboard.options.timeFormat,
                     'minuteStep': o.dashboard.options.stepMinute,
-                    'showMeridian': false,
-                    'showInputs': false,
-                    'disableMousewheel': true,
+                    'autoclose': true
                 };
                 $inputs.filter('[name$="time"]').not('[name$="datetime"]').each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultTimepickerConfig, {
-                        'minuteStep': $ele.data('stepminute')});
-                    $ele.timepicker(config);
+                          'format': $ele.data('datetimeformat'),
+                          'minuteStep': $ele.data('stepminute'),
+                          'startView': 1,
+                          'maxView': 1,
+                          'formatViewType': 'time'
+                        });
+                    $ele.datetimepicker(config);
+                    $ele.css('width', '125px');
                 });
             }
         },
