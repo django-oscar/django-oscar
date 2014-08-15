@@ -66,15 +66,7 @@ def datetime_format_to_js_date_format(format):
     the JS date picker we use.
     """
     format = format.split()[0]
-    converted = format
-    replacements = {
-        '%Y': 'yy',
-        '%m': 'mm',
-        '%d': 'dd',
-    }
-    for search, replace in six.iteritems(replacements):
-        converted = converted.replace(search, replace)
-    return converted.strip()
+    return datetime_format_to_js_datetime_format(format)
 
 
 def datetime_format_to_js_time_format(format):

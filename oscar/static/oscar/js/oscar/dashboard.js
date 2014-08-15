@@ -125,14 +125,19 @@ var oscar = (function(o, $) {
         initDatePickers: function(el) {
             // Use datepicker for all inputs that have 'date' or 'datetime' in the name
             $inputs = $(el).find('input').not('.no-widget-init input').not('.no-widget-init');
-            if ($.datepicker) {
-                var defaultDatepickerConfig = {'dateFormat': o.dashboard.options.dateFormat};
+            if ($.fn.datetimepicker) {
+                var defaultDatepickerConfig = {
+                    'format': o.dashboard.options.dateFormat,
+                    'autoclose': true,
+                    'minView': 2
+                };
                 $inputs.filter('[name^="date"], [name$="date"]').each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultDatepickerConfig, {
-                            'dateFormat': $ele.data('dateformat')
+                            'format': $ele.data('dateformat')
                         });
-                    $ele.datepicker(config);
+                    $ele.datetimepicker(config);
+                    $ele.css('width', '125px');
                 });
             }
             if ($.fn.datetimepicker) {

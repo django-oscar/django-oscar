@@ -2979,13 +2979,6 @@ form.flat {
 .create-page label {
   font-weight: bold;
 }
-input[type=text].hasDatepicker,
-.create-page input[type=text].hasDatepicker,
-.form-inline input[type=text].hasDatepicker,
-.form-horizontal input[type=text].hasDatepicker,
-.form-stacked input[type=text].hasDatepicker {
-  width: 125px;
-}
 .wysihtml5-sandbox {
   border: 1px solid #ccc!important;
 }
