@@ -97,6 +97,28 @@ def datetime_format_to_js_time_format(format):
     return converted.strip()
 
 
+def datetime_format_to_js_datetime_format(format):
+    """
+    Convert a Python datetime format to a time format suitable for use with
+    the datetime picker we use, http://www.malot.fr/bootstrap-datetimepicker/.
+    """
+    converted = format
+    replacements = {
+        '%Y': 'yyyy',
+        '%y': 'yy',
+        '%m': 'mm',
+        '%d': 'dd',
+        '%H': 'hh',
+        '%I': 'HH',
+        '%M': 'ii',
+        '%S': 'ss',
+    }
+    for search, replace in six.iteritems(replacements):
+        converted = converted.replace(search, replace)
+
+    return converted.strip()
+
+
 class DatePickerInput(forms.DateInput):
     """
     A widget that passes the date format to the JS date picker in a data
@@ -154,10 +176,8 @@ class DateTimePickerInput(forms.DateTimeInput):
             # For django >= 1.7
             format = format or formats.get_format(self.format_key)[0]
 
-        attrs.update({
-            'data-dateFormat': datetime_format_to_js_date_format(format),
-            'data-timeFormat': datetime_format_to_js_time_format(format)
-        })
+        attrs.update({'data-datetimeFormat':
+                      datetime_format_to_js_datetime_format(format)})
 
         return super(DateTimePickerInput, self).render(name, value, attrs)
 

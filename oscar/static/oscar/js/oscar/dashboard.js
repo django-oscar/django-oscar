@@ -19,6 +19,7 @@ var oscar = (function(o, $) {
             var defaults = {
                 'dateFormat': 'yy-mm-dd',
                 'timeFormat': 'HH:mm',
+                'datetimeFormat': 'yy-mm-dd hh:ii',
                 'stepMinute': 15,
                 'tinyConfig': {
                     statusbar: false,
@@ -136,17 +137,18 @@ var oscar = (function(o, $) {
             }
             if ($.fn.datetimepicker) {
                 var defaultDatetimepickerConfig = {
-                    'dateFormat': o.dashboard.options.dateFormat,
-                    'timeFormat': o.dashboard.options.timeFormat,
-                    'stepMinute': o.dashboard.options.stepMinute
+                    'format': o.dashboard.options.datetimeFormat,
+                    'minuteStep': o.dashboard.options.stepMinute,
+                    'autoclose': true
                 };
                 $inputs.filter('[name$="datetime"]').each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultDatetimepickerConfig, {
-                        'dateFormat': $ele.data('dateformat'),
-                        'timeFormat': $ele.data('timeformat'),
-                        'stepMinute': $ele.data('stepminute')});
+                          'format': $ele.data('datetimeformat'),
+                          'minuteStep': $ele.data('stepminute')
+                        });
                     $ele.datetimepicker(config);
+                    $ele.css('width', '125px');
                 });
 
             }
