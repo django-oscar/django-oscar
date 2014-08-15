@@ -161,5 +161,8 @@
 
 {% block onbodyload %}
     {{ block.super }}
-    oscar.dashboard.init();
+    options = {
+      'languageCode': '{{ LANGUAGE_CODE }}'
+    };
+    oscar.dashboard.init(options);
 {% endblock %}

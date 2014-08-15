@@ -17,6 +17,7 @@ var oscar = (function(o, $) {
         init: function(options) {
             // Run initialisation that should take place on every page of the dashboard.
             var defaults = {
+                'languageCode': 'en',
                 'dateFormat': 'yy-mm-dd',
                 'timeFormat': 'hh:ii',
                 'datetimeFormat': 'yy-mm-dd hh:ii',
@@ -129,6 +130,7 @@ var oscar = (function(o, $) {
                 var defaultDatepickerConfig = {
                     'format': o.dashboard.options.dateFormat,
                     'autoclose': true,
+                    'language': o.dashboard.options.languageCode,
                     'minView': 2
                 };
                 $inputs.filter('[name^="date"], [name$="date"]').each(function(ind, ele) {
@@ -144,7 +146,8 @@ var oscar = (function(o, $) {
                 var defaultDatetimepickerConfig = {
                     'format': o.dashboard.options.datetimeFormat,
                     'minuteStep': o.dashboard.options.stepMinute,
-                    'autoclose': true
+                    'autoclose': true,
+                    'language': o.dashboard.options.languageCode
                 };
                 $inputs.filter('[name$="datetime"]').each(function(ind, ele) {
                     var $ele = $(ele),
@@ -161,7 +164,8 @@ var oscar = (function(o, $) {
                 var defaultTimepickerConfig = {
                     'format': o.dashboard.options.timeFormat,
                     'minuteStep': o.dashboard.options.stepMinute,
-                    'autoclose': true
+                    'autoclose': true,
+                    'language': o.dashboard.options.languageCode
                 };
                 $inputs.filter('[name$="time"]').not('[name$="datetime"]').each(function(ind, ele) {
                     var $ele = $(ele),
