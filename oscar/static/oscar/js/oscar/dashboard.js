@@ -140,8 +140,7 @@ var oscar = (function(o, $) {
                     $ele.datetimepicker(config);
                     $ele.find('input').css('width', '125px');
                 });
-            }
-            if ($.fn.datetimepicker) {
+
                 var defaultDatetimepickerConfig = {
                     'format': o.dashboard.options.datetimeFormat,
                     'minuteStep': o.dashboard.options.stepMinute,
@@ -159,8 +158,6 @@ var oscar = (function(o, $) {
                     $ele.find('input').css('width', '125px');
                 });
 
-            }
-            if ($.fn.datetimepicker) {
                 var defaultTimepickerConfig = {
                     'format': o.dashboard.options.timeFormat,
                     'minuteStep': o.dashboard.options.stepMinute,
