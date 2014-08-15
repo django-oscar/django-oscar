@@ -124,8 +124,6 @@ var oscar = (function(o, $) {
             });
         },
         initDatePickers: function(el) {
-            // Use datepicker for all inputs that have 'date' or 'datetime' in the name
-            $inputs = $(el).find('input').not('.no-widget-init input').not('.no-widget-init');
             if ($.fn.datetimepicker) {
                 var defaultDatepickerConfig = {
                     'format': o.dashboard.options.dateFormat,
@@ -169,17 +167,18 @@ var oscar = (function(o, $) {
                     'autoclose': true,
                     'language': o.dashboard.options.languageCode
                 };
-                $inputs.filter('[name$="time"]').not('[name$="datetime"]').each(function(ind, ele) {
+                $times = $(el).find('[data-oscarWidget="time"]').not('.no-widget-init').not('.no-widget-init *')
+                $times.each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultTimepickerConfig, {
-                          'format': $ele.data('datetimeformat'),
+                          'format': $ele.data('timeformat'),
                           'minuteStep': $ele.data('stepminute'),
                           'startView': 1,
                           'maxView': 1,
                           'formatViewType': 'time'
                         });
                     $ele.datetimepicker(config);
-                    $ele.css('width', '125px');
+                    $ele.find('input').css('width', '125px');
                 });
             }
         },
