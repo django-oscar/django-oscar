@@ -24,9 +24,8 @@ def compare_time_format(format, expected):
 
 def test_datetime_to_time_format_conversion():
     format_testcases = (
-        ('%Y-%m-%d', ''),
         ('%Y-%m-%d %H:%M', 'HH:mm'),
-        ('%d/%m/%Y', ''),
+        ('%H:%M', 'HH:mm'),
     )
     for format, expected in format_testcases:
         yield compare_time_format, format, expected
