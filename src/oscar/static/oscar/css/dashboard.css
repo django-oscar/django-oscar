@@ -2790,20 +2790,6 @@ td .btn-toolbar {
 .form-stacked .control-group {
   margin-bottom: 9px;
 }
-.form-horizontal input[type=text],
-.form-stacked input[type=text],
-.form-horizontal input[type=number],
-.form-stacked input[type=number],
-.form-horizontal input[type=email],
-.form-stacked input[type=email],
-.form-horizontal input[type=url],
-.form-stacked input[type=url],
-.form-horizontal textarea,
-.form-stacked textarea,
-.form-horizontal select,
-.form-stacked select {
-  font-size: 12px;
-}
 .form-horizontal textarea,
 .form-stacked textarea {
   max-height: 200px;
