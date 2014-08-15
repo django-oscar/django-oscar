@@ -133,13 +133,14 @@ var oscar = (function(o, $) {
                     'language': o.dashboard.options.languageCode,
                     'minView': 2
                 };
-                $inputs.filter('[name^="date"], [name$="date"]').each(function(ind, ele) {
+                $dates = $(el).find('[data-oscarWidget="date"]').not('.no-widget-init').not('.no-widget-init *')
+                $dates.each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultDatepickerConfig, {
                             'format': $ele.data('dateformat')
                         });
                     $ele.datetimepicker(config);
-                    $ele.css('width', '125px');
+                    $ele.find('input').css('width', '125px');
                 });
             }
             if ($.fn.datetimepicker) {
@@ -149,14 +150,15 @@ var oscar = (function(o, $) {
                     'autoclose': true,
                     'language': o.dashboard.options.languageCode
                 };
-                $inputs.filter('[name$="datetime"]').each(function(ind, ele) {
+                $datetimes = $(el).find('[data-oscarWidget="datetime"]').not('.no-widget-init').not('.no-widget-init *')
+                $datetimes.each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultDatetimepickerConfig, {
                           'format': $ele.data('datetimeformat'),
                           'minuteStep': $ele.data('stepminute')
                         });
                     $ele.datetimepicker(config);
-                    $ele.css('width', '125px');
+                    $ele.find('input').css('width', '125px');
                 });
 
             }

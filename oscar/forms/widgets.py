@@ -117,9 +117,6 @@ class DatePickerInput(forms.DateInput):
     attribute.
     """
     def render(self, name, value, attrs=None):
-        if attrs is None:
-            attrs = {}
-
         format = self.format
         if hasattr(self, 'manual_format'):
             # For django <= 1.6.5, see https://code.djangoproject.com/ticket/21173
@@ -129,11 +126,21 @@ class DatePickerInput(forms.DateInput):
             # For django >= 1.7
             format = format or formats.get_format(self.format_key)[0]
 
-        attrs.update({
-            'data-dateFormat': datetime_format_to_js_date_format(format)
-        })
+        input = super(DatePickerInput, self).render(name, value, attrs)
 
-        return super(DatePickerInput, self).render(name, value, attrs)
+        attrs = {'data-oscarWidget': 'date',
+                 'data-dateFormat':
+                 datetime_format_to_js_date_format(format),
+                 }
+
+        div = format_html('<div class="input-append date"{}>', flatatt(attrs))
+        return mark_safe('{div}'
+                         ' {input}'
+                         ' <span class="add-on">'
+                         '  <i class="icon-calendar"></i>'
+                         ' </span>'
+                         '</div>'
+                         .format(div=div, input=input))
 
 
 class DateTimePickerInput(forms.DateTimeInput):
@@ -156,9 +163,6 @@ class DateTimePickerInput(forms.DateTimeInput):
             self.format = re.sub(':?%S', '', self.format)
 
     def render(self, name, value, attrs=None):
-        if attrs is None:
-            attrs = {}
-
         format = self.format
         if hasattr(self, 'manual_format'):
             # For django <= 1.6.5, see https://code.djangoproject.com/ticket/21173
@@ -168,10 +172,21 @@ class DateTimePickerInput(forms.DateTimeInput):
             # For django >= 1.7
             format = format or formats.get_format(self.format_key)[0]
 
-        attrs.update({'data-datetimeFormat':
-                      datetime_format_to_js_datetime_format(format)})
+        input = super(DateTimePickerInput, self).render(name, value, attrs)
 
-        return super(DateTimePickerInput, self).render(name, value, attrs)
+        attrs = {'data-oscarWidget': 'datetime',
+                 'data-datetimeFormat':
+                 datetime_format_to_js_datetime_format(format),
+                 }
+
+        div = format_html('<div class="input-append date"{}>', flatatt(attrs))
+        return mark_safe('{div}'
+                         ' {input}'
+                         ' <span class="add-on">'
+                         '  <i class="icon-calendar"></i>'
+                         ' </span>'
+                         '</div>'
+                         .format(div=div, input=input))
 
 
 class AdvancedSelect(forms.Select):
