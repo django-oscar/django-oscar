@@ -238,9 +238,6 @@ Selected Tangent projects:
 Non-Tangent:
 
 * Dolbeau - http://www.dolbeau.ca
-* Sobusa - http://www.sobusa.fr
-* Laivee - http://laivee.pl
-* Colinss - http://colinss.com
 * Audio App - https://audioapp.pl
 * Anything Gift - http://www.anythinggift.co.uk
 * FP Sport - http://www.fpsport.it
@@ -252,15 +249,6 @@ Non-Tangent:
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/dolbeau.thumb.png
     :target: http://www.dolbeau.ca
 
-.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/sobusa.thumb.png
-    :target: http://www.sobusa.fr
-
-.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/laivee.thumb.png
-    :target: http://www.laivee.pl
-
-.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/colinss.thumb.png
-    :target: http://www.colinss.com
-
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/audioapp.thumb.png
     :target: https://audioapp.pl
 
@@ -268,7 +256,7 @@ Non-Tangent:
     :target: http://www.anythinggift.co.uk
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/fpsport.thumb.png
-    :target: https://www.fpsport.it
+    :target: http://www.fpsport.it
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/garmsby.thumb.png
     :target: https://garmsby.co.uk
