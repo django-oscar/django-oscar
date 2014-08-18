@@ -3,10 +3,7 @@
 {% load i18n %}
 
 {% block title %}
-    {% blocktrans with title=product.get_title %}
-        Delete {{ title}}?
-    {% endblocktrans %} |
-    {{ block.super }}
+    {{ title }} | {{ block.super }}
 {% endblock %}
 
 {% block body_class %}{{ block.super }} create-page{% endblock %}
@@ -22,22 +19,18 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:catalogue-product' pk=product.pk %}">{{ product.title }}</a>
+            <a href="{% url 'dashboard:catalogue-product' pk=product.pk %}">{{ product.get_title }}</a>
             <span class="divider">/</span>
         </li>
-        <li class="active">{% trans "Delete?" %}</li>
+        <li class="active">{{ title }}</li>
     </ul>
 {% endblock %}
 
-{% block header %}
-    <div class="page-header">
-        <h1>{% trans "Delete product?" %}</h1>
-    </div>
-{% endblock header%}
+{% block headertext %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
     <div class="table-header">
-        <h2>{% trans "Delete product" %}</h2>
+        <h2>{{ title }}</h2>
     </div>
     <form action="." method="post" class="well">
         {% csrf_token %}

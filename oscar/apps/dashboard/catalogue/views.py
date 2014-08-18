@@ -434,6 +434,14 @@ class ProductDeleteView(generic.DeleteView):
         """
         return filter_products(Product.objects.all(), self.request.user)
 
+    def get_context_data(self, **kwargs):
+        ctx = super(ProductDeleteView, self).get_context_data(**kwargs)
+        if self.object.is_child:
+            ctx['title'] = _("Delete product variant?")
+        else:
+            ctx['title'] = _("Delete product?")
+        return ctx
+
     def handle_deleting_last_child(self, parent):
         """
         If the last child product is deleted, this view defaults to turning
