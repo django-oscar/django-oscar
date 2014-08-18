@@ -3487,38 +3487,6 @@ caption > i,
 .ico_expand + ul {
   height: 0px;
 }
-.category-selected {
-  margin: 0;
-}
-.category-selected li {
-  display: block;
-  width: 150px;
-  *zoom: 1;
-  margin-bottom: 9px;
-}
-.category-selected li:before,
-.category-selected li:after {
-  display: table;
-  content: "";
-}
-.category-selected li:after {
-  clear: both;
-}
-.category-selected span {
-  float: right;
-  display: block;
-  background: #999999;
-  color: white;
-  padding: 1px 0 3px;
-  -webkit-border-radius: 15px;
-  -moz-border-radius: 15px;
-  border-radius: 15px;
-  font-size: 12px;
-  line-height: 11px;
-  width: 15px;
-  font-weight: bold;
-  text-align: center;
-}
 #product_category select {
   width: 350px;
 }
