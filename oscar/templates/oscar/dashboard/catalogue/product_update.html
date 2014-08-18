@@ -38,6 +38,21 @@
 {% block dashboard_content %}
     <form action="{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" method="post" class="form-stacked wysiwyg fixed-actions" enctype="multipart/form-data" data-behaviour="affix-nav-errors" autocomplete="off">
         {% csrf_token %}
+
+        {% if parent %}
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="alert alert-info">
+                        {% url 'dashboard:catalogue-product' pk=parent.id as parent_url %}
+                        {% blocktrans with title=parent.title %}
+                            You are currently editing a product variant of
+                            <a href="{{ parent_url }}">{{ title }}</a>.
+                        {% endblocktrans %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
         <div class="row-fluid">
 
             {% block tab_nav %}
@@ -77,13 +92,6 @@
                             {% endblock tabs %}
                         </ul>
                     </div>
-                    {% if parent %}
-                        {% url 'dashboard:catalogue-product' pk=parent.id as parent_url %}
-                        {% blocktrans with title=parent.title %}
-                            You are currently editing a product variant of
-                            <a href="{{ parent_url }}">{{ title }}</a>.
-                        {% endblocktrans %}
-                    {% endif %}
                 </div>
             {% endblock tab_nav %}
 
