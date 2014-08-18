@@ -115,9 +115,8 @@ class ProductListView(SingleTableMixin, generic.TemplateView):
 
     def apply_ordering(self, queryset):
         if 'recently_edited' in self.request.GET:
-            # Just show recently edited
-            queryset = queryset.order_by('-date_updated')
-            queryset = queryset[:self.recent_products]
+            fifth_product = list(Product.objects.order_by('-date_updated')[:5])[-1]
+            queryset = queryset.filter(date_updated__gte=fifth_product.date_updated)
 
         return queryset
 
