@@ -25,10 +25,10 @@ h2 {
 }
 body {
   font-family: @dashFontFamily;
-  font-size: 12px;
+  font-size: @baseFontSize;
 }
 label, input, button, select, textarea {
-  font-size: 12px;
+  font-size: @baseFontSize;
 }
 h3 {
   font-size: 20px;
@@ -44,7 +44,7 @@ h3.app-ico:before {
 .btn-group > .btn,
 .btn-group > .dropdown-menu,
 .btn {
-  font-size:12px;
+  font-size:@baseFontSize;
   font-family:inherit;
 }
 .btn-primary {
@@ -229,7 +229,7 @@ body {
     padding-left:  20px;
     padding-right: 20px;
     min-height: 50px;
-    font-size: 12px;
+    font-size: @baseFontSize;
     #gradient > .vertical(#373737, #242424);
     border: none;
     .brand {
@@ -288,7 +288,7 @@ body {
         border-right: 1px solid @grayDarker;
         .border-radius(0);
         color: #DCDCDC;
-        font-size: 12px;
+        font-size: @baseFontSize;
         padding: 15px;
         .caret {
           border-top-color: #DCDCDC;
@@ -320,7 +320,7 @@ body {
 .navbar-primary .nav {
   > li i {
     color: #dcdcdc;
-    padding-right: 12px;
+    padding-right: @baseFontSize;
   }
 }
 
@@ -391,7 +391,7 @@ caption,
       margin-bottom: 15px;
       padding: 12px;
       color: #878787;
-      font-size: 12px;
+      font-size: @baseFontSize;
       span {
         display: inline-block;
         font-weight: bold;

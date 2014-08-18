@@ -2726,14 +2726,14 @@ h2 {
 }
 body {
   font-family: "Open Sans", 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 12px;
+  font-size: 13px;
 }
 label,
 input,
 button,
 select,
 textarea {
-  font-size: 12px;
+  font-size: 13px;
 }
 h3 {
   font-size: 20px;
@@ -2747,7 +2747,7 @@ h3.app-ico:before {
 .btn-group > .btn,
 .btn-group > .dropdown-menu,
 .btn {
-  font-size: 12px;
+  font-size: 13px;
   font-family: inherit;
 }
 .btn-primary {
@@ -2929,7 +2929,7 @@ body {
   padding-left: 20px;
   padding-right: 20px;
   min-height: 50px;
-  font-size: 12px;
+  font-size: 13px;
   background-color: #2f2f2f;
   background-image: -moz-linear-gradient(top, #373737, #242424);
   background-image: -ms-linear-gradient(top, #373737, #242424);
@@ -3002,7 +3002,7 @@ body {
   -moz-border-radius: 0;
   border-radius: 0;
   color: #DCDCDC;
-  font-size: 12px;
+  font-size: 13px;
   padding: 15px;
 }
 .navbar-primary .nav > li > a .caret {
@@ -3043,7 +3043,7 @@ body {
 }
 .navbar-primary .nav > li i {
   color: #dcdcdc;
-  padding-right: 12px;
+  padding-right: 13px;
 }
 .navbar-primary .nav > li > a:hover .caret {
   border-top-color: #B2DEF2;
@@ -3138,7 +3138,7 @@ caption > i,
   margin-bottom: 15px;
   padding: 12px;
   color: #878787;
-  font-size: 12px;
+  font-size: 13px;
 }
 .content-block .order-graph-details label:before,
 .content-block .order-graph-details label:after {
