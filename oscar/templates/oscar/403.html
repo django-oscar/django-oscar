@@ -2,13 +2,13 @@
 {% load i18n %}
 
 {% block title %}
-{% trans 'Permission denied!' %} | {{ block.super }}
+    {% trans 'Permission denied!' %} | {{ block.super }}
 {% endblock %}
 
 {% block error_heading %}
-{% trans "Permission denied!" %}
+    {% trans "Permission denied!" %}
 {% endblock %}
 
 {% block error_message %}
-<p>{% trans "We're sorry but you are not permitted to access this page." %}</p>
+    <p>{% trans "We're sorry but you are not permitted to access this page." %}</p>
 {% endblock %}
