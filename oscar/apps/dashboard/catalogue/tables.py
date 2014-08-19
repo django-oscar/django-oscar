@@ -12,28 +12,36 @@ Category = get_model('catalogue', 'Category')
 
 class ProductTable(Table):
     title = TemplateColumn(
+        verbose_name=_('Title'),
         template_name='dashboard/catalogue/product_row_title.html',
-        order_by='title', accessor=A('get_title'))
+        order_by='title', accessor=A('title'))
     image = TemplateColumn(
+        verbose_name=_('Image'),
         template_name='dashboard/catalogue/product_row_image.html',
         orderable=False)
-    product_class = Column(verbose_name=_("Type"),
-                           accessor=A('get_product_class.name'),
-                           order_by=('product_class__name'))
-    parent = LinkColumn('dashboard:catalogue-product',
-                        verbose_name=_("Parent"), args=[A('parent.pk')],
-                        accessor=A('parent.title'))
-    children = Column(accessor=A('children.count'), orderable=False)
-    stock_records = Column(accessor=A('stockrecords.count'), orderable=False)
+    product_class = Column(
+        verbose_name=_('Product type'),
+        accessor=A('product_class'),
+        order_by='product_class__name')
+    variants = TemplateColumn(
+        verbose_name=_("Variants"),
+        template_name='dashboard/catalogue/product_row_variants.html',
+        orderable=False
+    )
+    stock_records = Column(
+        verbose_name=_('Stock records'),
+        accessor=A('stockrecords.count'),
+        orderable=False)
     actions = TemplateColumn(
+        verbose_name=_('Actions'),
         template_name='dashboard/catalogue/product_row_actions.html',
         orderable=False)
 
     class Meta(DashboardTable.Meta):
         model = Product
         fields = ('upc', 'date_created')
-        sequence = ('title', 'upc', 'image', 'product_class',
-                    'parent', 'children', 'stock_records', '...', 'date_created', 'actions')
+        sequence = ('title', 'upc', 'image', 'product_class', 'variants',
+                    'stock_records', '...', 'date_created', 'actions')
         order_by = '-date_created'
 
 
