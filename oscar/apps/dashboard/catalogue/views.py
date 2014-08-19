@@ -277,14 +277,17 @@ class ProductCreateUpdateView(generic.UpdateView):
     def get_page_title(self):
         if self.creating:
             if self.parent is None:
-                return _('Create new %s product') % self.product_class.name
+                return _('Create new %(product_class)s product') % {
+                    'product_class': self.product_class.name}
             else:
-                return _('Create new variant of %s') % self.parent.title
+                return _('Create new variant of %(parent_product)s') % {
+                    'parent_product': self.parent.title}
         else:
             if self.object.title:
                 return self.object.title
             else:
-                return _('Editing variant of %s') % self.parent.title
+                return _('Editing variant of %(parent_product)s') % {
+                    'parent_product': self.parent.title}
 
     def get_form_kwargs(self):
         kwargs = super(ProductCreateUpdateView, self).get_form_kwargs()
