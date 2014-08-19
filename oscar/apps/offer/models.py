@@ -461,23 +461,25 @@ class Condition(models.Model):
         raise RuntimeError("Unrecognised condition type (%s)" % self.type)
 
     def __str__(self):
-        return self.proxy().name
+        return self.name
 
     @property
     def name(self):
         """
-        A plaintext description of the condition.
+        A plaintext description of the condition. Every proxy class has to
+        implement it.
 
         This is used in the dropdowns within the offer dashboard.
         """
-        return self.description
+        return self.proxy().name
 
     @property
     def description(self):
         """
-        A (optionally HTML) description of the condition.
+        A description of the condition.
+        Defaults to the name. May contain HTML.
         """
-        return self.proxy().description
+        return self.name
 
     def consume_items(self, offer, basket, affected_lines):
         pass
@@ -600,21 +602,25 @@ class Benefit(models.Model):
         raise RuntimeError("Unrecognised benefit type (%s)" % self.type)
 
     def __str__(self):
-        name = self.proxy().name
-        if self.max_affected_items:
-            name += ungettext(
-                " (max %d item)",
-                " (max %d items)",
-                self.max_affected_items) % self.max_affected_items
-        return name
+        return self.name
 
     @property
     def name(self):
-        return self.description
+        """
+        A plaintext description of the benefit. Every proxy class has to
+        implement it.
+
+        This is used in the dropdowns within the offer dashboard.
+        """
+        return self.proxy().name
 
     @property
     def description(self):
-        return self.proxy().description
+        """
+        A description of the benefit.
+        Defaults to the name. May contain HTML.
+        """
+        return self.name
 
     def apply(self, basket, condition, offer):
         return ZERO_DISCOUNT
@@ -1443,13 +1449,10 @@ class FixedPriceBenefit(Benefit):
     _description = _("The products that meet the condition are sold "
                      "for %(amount)s")
 
-    def __str__(self):
+    @property
+    def name(self):
         return self._description % {
             'amount': currency(self.value)}
-
-    @property
-    def description(self):
-        return six.text_type(self)
 
     class Meta:
         proxy = True
@@ -1556,7 +1559,7 @@ class ShippingAbsoluteDiscountBenefit(ShippingBenefit):
     _description = _("%(amount)s off shipping cost")
 
     @property
-    def description(self):
+    def name(self):
         return self._description % {
             'amount': currency(self.value)}
 
@@ -1573,7 +1576,7 @@ class ShippingFixedPriceBenefit(ShippingBenefit):
     _description = _("Get shipping for %(amount)s")
 
     @property
-    def description(self):
+    def name(self):
         return self._description % {
             'amount': currency(self.value)}
 
@@ -1592,7 +1595,7 @@ class ShippingPercentageDiscountBenefit(ShippingBenefit):
     _description = _("%(value)s%% off of shipping cost")
 
     @property
-    def description(self):
+    def name(self):
         return self._description % {
             'value': self.value}
 
