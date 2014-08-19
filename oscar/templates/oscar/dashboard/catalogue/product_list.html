@@ -64,12 +64,6 @@
 
     {% if products %}
         {% block product_list %}
-            {% block tabs %}
-                <ul class="nav nav-tabs">
-                    <li{% if 'recently_edited' not in request.GET %} class="active"{% endif %}> <a href=".">{% trans "All" %}</a> </li>
-                    <li{% if 'recently_edited' in request.GET %} class="active"{% endif %}> <a href="?recently_edited=1">{% trans "Recently edited" %}</a> </li>
-                </ul>
-            {% endblock %}
             <form action="." method="post">
                 {% csrf_token %}
                 {% render_table products %}

@@ -39,10 +39,10 @@ class ProductTable(Table):
 
     class Meta(DashboardTable.Meta):
         model = Product
-        fields = ('upc', 'date_created')
+        fields = ('upc', 'date_updated')
         sequence = ('title', 'upc', 'image', 'product_class', 'variants',
-                    'stock_records', '...', 'date_created', 'actions')
-        order_by = '-date_created'
+                    'stock_records', '...', 'date_updated', 'actions')
+        order_by = '-date_updated'
 
 
 class CategoryTable(Table):

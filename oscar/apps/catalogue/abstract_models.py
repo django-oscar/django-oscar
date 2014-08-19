@@ -254,7 +254,7 @@ class AbstractProduct(models.Model):
     #: None for child products, they inherit their parent's product class
     product_class = models.ForeignKey(
         'catalogue.ProductClass', null=True, on_delete=models.PROTECT,
-        verbose_name=_('Product Type'), related_name="products",
+        verbose_name=_('Product type'), related_name="products",
         help_text=_("Choose what type of product this is"))
     attributes = models.ManyToManyField(
         'catalogue.ProductAttribute',

@@ -70,7 +70,6 @@ class ProductListView(SingleTableMixin, generic.TemplateView):
     form_class = ProductSearchForm
     productclass_form_class = ProductClassSelectForm
     description_template = _(u'Products %(upc_filter)s %(title_filter)s')
-    recent_products = 5
     table_class = ProductTable
     context_table_name = 'products'
 
@@ -78,20 +77,8 @@ class ProductListView(SingleTableMixin, generic.TemplateView):
         ctx = super(ProductListView, self).get_context_data(**kwargs)
         ctx['form'] = self.form
         ctx['productclass_form'] = self.productclass_form_class()
-        if 'recently_edited' in self.request.GET:
-            ctx['queryset_description'] \
-                = _("Last %(num_products)d edited products") \
-                % {'num_products': self.recent_products}
-        else:
-            ctx['queryset_description'] = self.description
-
+        ctx['queryset_description'] = self.description
         return ctx
-
-    def get_table(self, **kwargs):
-        if 'recently_edited' in self.request.GET:
-            kwargs.update(dict(orderable=False))
-
-        return super(ProductListView, self).get_table(**kwargs)
 
     def get_table_pagination(self):
         return dict(per_page=20)
@@ -109,16 +96,6 @@ class ProductListView(SingleTableMixin, generic.TemplateView):
         queryset = Product.browsable.base_queryset()
         queryset = self.filter_queryset(queryset)
         queryset = self.apply_search(queryset)
-        queryset = self.apply_ordering(queryset)
-
-        return queryset
-
-    def apply_ordering(self, queryset):
-        if 'recently_edited' in self.request.GET:
-            # Just show recently edited
-            queryset = queryset.order_by('-date_updated')
-            queryset = queryset[:self.recent_products]
-
         return queryset
 
     def apply_search(self, queryset):
