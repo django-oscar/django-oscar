@@ -80,7 +80,7 @@
         "date_created": "2013-12-12T16:34:14.023Z", 
         "product_options": [], 
         "slug": "oscar-t-shirt", 
-        "product_class": 1,
+        "product_class": null,
         "structure": "child"
     }
 },
@@ -98,7 +98,7 @@
         "date_created": "2013-12-12T16:34:32.170Z", 
         "product_options": [], 
         "slug": "oscar-t-shirt", 
-        "product_class": 1,
+        "product_class": null,
         "structure": "child"
     }
 },
@@ -116,7 +116,7 @@
         "date_created": "2013-12-12T17:32:15.016Z", 
         "product_options": [], 
         "slug": "oscar-t-shirt", 
-        "product_class": 1,
+        "product_class": null,
         "structure": "child"
     }
 },
@@ -152,7 +152,7 @@
         "date_created": "2013-12-13T11:37:08.138Z", 
         "product_options": [], 
         "slug": "commandlinefu-t-shirt", 
-        "product_class": 1,
+        "product_class": null,
         "structure": "child"
     }
 },
@@ -170,7 +170,7 @@
         "date_created": "2013-12-13T11:37:45.834Z", 
         "product_options": [], 
         "slug": "commandlinefu-t-shirt", 
-        "product_class": 1,
+        "product_class": null,
         "structure": "child"
     }
 },
@@ -206,7 +206,7 @@
         "date_created": "2013-12-13T11:38:49.769Z", 
         "product_options": [], 
         "slug": "tangent-t-shirt", 
-        "product_class": 1,
+        "product_class": null,
         "structure": "child"
     }
 },
@@ -224,7 +224,7 @@
         "date_created": "2013-12-13T11:39:12.859Z", 
         "product_options": [], 
         "slug": "tangent-t-shirt", 
-        "product_class": 1,
+        "product_class": null,
         "structure": "child"
     }
 },
@@ -242,7 +242,7 @@
         "date_created": "2013-12-13T11:39:53.073Z", 
         "product_options": [], 
         "slug": "tangent-t-shirt", 
-        "product_class": 1,
+        "product_class": null,
         "structure": "child"
     }
 },
