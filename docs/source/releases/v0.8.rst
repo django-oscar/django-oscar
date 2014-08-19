@@ -237,7 +237,12 @@ Minor changes
   when displaying tabular data, allowing sorting, etc. It also makes it easier
   to adapt e.g. the product list view in the dashboard to additional fields.
 
+* ``jquery-ui-datepicker`` has been replaced in the dashboard by
+  bootstrap-datetimepicker_. We still ship with ``jquery-ui-datepicker`` and
+  ``JQuery UI`` as it's in use in the frontend.
+
 .. _django-tables2: http://django-tables2.readthedocs.org/en/latest/
+.. _bootstrap-datetimepicker: http://jdewit.github.io/bootstrap-timepicker/
 
 .. _incompatible_changes_in_0.8:
 
