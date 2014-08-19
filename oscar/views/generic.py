@@ -159,6 +159,18 @@ class PhoneNumberMixin(object):
 
     phone_number = forms.CharField(max_length=32, required=False)
 
+    def get_country(self):
+        if hasattr(self.instance, 'country'):
+            return self.instance.country
+
+        if hasattr(self.fields.get('country'), 'queryset'):
+            return self.fields['country'].queryset[0]
+
+        return self.cleaned_data.get('country')
+
+    def get_region_code(self, country):
+        return country.iso_3166_1_a2
+
     def clean_phone_number(self):
         number = self.cleaned_data['phone_number']
 
@@ -171,12 +183,7 @@ class PhoneNumberMixin(object):
             phone_number = PhoneNumber.from_string(number)
         except phonenumbers.NumberParseException:
             # Try hinting with the shipping country
-            if hasattr(self.instance, 'country'):
-                country = self.instance.country
-            elif hasattr(self.fields.get('country'), 'queryset'):
-                country = self.fields['country'].queryset[0]
-            else:
-                country = None
+            country = self.get_country()
 
             if not country:
                 # There is no shipping country, not a valid international
@@ -184,9 +191,7 @@ class PhoneNumberMixin(object):
                 raise ValidationError(
                     _(u'This is not a valid international phone format.'))
 
-            country = self.cleaned_data.get('country', country)
-
-            region_code = country.iso_3166_1_a2
+            region_code = self.get_region_code(country)
             # The PhoneNumber class does not allow specifying
             # the region. So we drop down to the underlying phonenumbers
             # library, which luckily allows parsing into a PhoneNumber
