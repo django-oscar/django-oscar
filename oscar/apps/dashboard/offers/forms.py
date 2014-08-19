@@ -30,8 +30,7 @@ class RestrictionsForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(RestrictionsForm, self).__init__(*args, **kwargs)
         today = datetime.date.today()
-        self.fields['start_datetime'].initial = today.strftime(
-            self.fields['start_datetime'].widget.format)
+        self.fields['start_datetime'].initial = today
 
     class Meta:
         model = ConditionalOffer
