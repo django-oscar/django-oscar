@@ -24,14 +24,13 @@ __all__ = ["UserFactory", "CountryFactory", "UserAddressFactory",
            "ProductAttributeFactory", "ProductAttributeValueFactory",
            "AttributeOptionGroupFactory",
            "AttributeOptionFactory", "PartnerFactory",
-           "ProductCategoryFactory", "CategoryFactory", "RangeFactory"]
+           "ProductCategoryFactory", "CategoryFactory", "RangeFactory",
+           "ProductClassFactory"]
 
 Selector = get_class('partner.strategy', 'Selector')
 
 
 class UserFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = get_user_model()
-
     username = factory.Sequence(lambda n: 'the_j_meister nummer %d' % n)
     email = factory.Sequence(lambda n: 'example_%s@example.com' % n)
     first_name = 'joseph'
@@ -41,17 +40,19 @@ class UserFactory(factory.DjangoModelFactory):
     is_superuser = False
     is_staff = False
 
+    class Meta:
+        model = get_user_model()
+
 
 class CountryFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = get_model('address', 'Country')
-
     iso_3166_1_a2 = 'GB'
     name = "UNITED KINGDOM"
 
+    class Meta:
+        model = get_model('address', 'Country')
+
 
 class UserAddressFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = get_model('address', 'UserAddress')
-
     title = "Dr"
     first_name = "Barry"
     last_name = 'Barrington'
@@ -61,70 +62,81 @@ class UserAddressFactory(factory.DjangoModelFactory):
     country = factory.SubFactory(CountryFactory)
     user = factory.SubFactory(UserFactory)
 
+    class Meta:
+        model = get_model('address', 'UserAddress')
+
 
 class BasketFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = get_model('basket', 'Basket')
-
     @factory.post_generation
     def set_strategy(self, create, extracted, **kwargs):
         # Load default strategy (without a user/request)
         self.strategy = Selector().strategy()
 
+    class Meta:
+        model = get_model('basket', 'Basket')
+
 
 class VoucherFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = get_model('voucher', 'Voucher')
-
     name = "My voucher"
     code = "MYVOUCHER"
 
     start_datetime = now() - datetime.timedelta(days=1)
     end_datetime = now() - datetime.timedelta(days=10)
 
+    class Meta:
+        model = get_model('voucher', 'Voucher')
+
 
 class PartnerFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = get_model('partner', 'Partner')
-
     name = "Gardners"
+
+    class Meta:
+        model = get_model('partner', 'Partner')
 
 
 class StockRecordFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = get_model('partner', 'StockRecord')
-
     partner = factory.SubFactory(PartnerFactory)
     partner_sku = factory.Sequence(lambda n: 'unit%d' % n)
     price_currency = "GBP"
     price_excl_tax = D('9.99')
     num_in_stock = 100
 
+    class Meta:
+        model = get_model('partner', 'StockRecord')
+
 
 class ProductClassFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = get_model('catalogue', 'ProductClass')
-
     name = "Books"
     requires_shipping = True
     track_stock = True
 
+    class Meta:
+        model = get_model('catalogue', 'ProductClass')
+
 
 class CategoryFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = get_model('catalogue', 'Category')
-
     name = factory.Sequence(lambda n: 'Category %d' % n)
 
     # Very naive handling of treebeard node fields. Works though!
     depth = 0
     path = factory.Sequence(lambda n: '%04d' % n)
 
+    class Meta:
+        model = get_model('catalogue', 'Category')
+
 
 class ProductCategoryFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = get_model('catalogue', 'ProductCategory')
-
     category = factory.SubFactory(CategoryFactory)
+
+    class Meta:
+        model = get_model('catalogue', 'ProductCategory')
 
 
 class ProductFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = get_model('catalogue', 'Product')
+    class Meta:
+        model = get_model('catalogue', 'Product')
 
-    structure = FACTORY_FOR.STANDALONE
+    structure = Meta.model.STANDALONE
     upc = factory.Sequence(lambda n: '978080213020%d' % n)
     title = "A confederacy of dunces"
     product_class = factory.SubFactory(ProductClassFactory)
@@ -134,38 +146,43 @@ class ProductFactory(factory.DjangoModelFactory):
 
 
 class ProductAttributeFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = get_model('catalogue', 'ProductAttribute')
-
     code = name = 'weight'
     product_class = factory.SubFactory(ProductClassFactory)
     type = "float"
 
+    class Meta:
+        model = get_model('catalogue', 'ProductAttribute')
+
 
 class AttributeOptionGroupFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = get_model('catalogue', 'AttributeOptionGroup')
-
     name = u'Grüppchen'
+
+    class Meta:
+        model = get_model('catalogue', 'AttributeOptionGroup')
 
 
 class AttributeOptionFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = get_model('catalogue', 'AttributeOption')
-
     # Ideally we'd get_or_create a AttributeOptionGroup here, but I'm not
     # aware of how to not create a unique option group for each call of the
     # factory
 
     option = factory.Sequence(lambda n: 'Option %d' % n)
 
+    class Meta:
+        model = get_model('catalogue', 'AttributeOption')
+
 
 class ProductAttributeValueFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = get_model('catalogue', 'ProductAttributeValue')
-
     attribute = factory.SubFactory(ProductAttributeFactory)
     product = factory.SubFactory(ProductFactory)
 
+    class Meta:
+        model = get_model('catalogue', 'ProductAttributeValue')
+
 
 class RangeFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = get_model('offer', 'Range')
-
     name = factory.Sequence(lambda n: 'Range %d' % n)
     slug = factory.Sequence(lambda n: 'range-%d' % n)
+
+    class Meta:
+        model = get_model('offer', 'Range')

@@ -25,7 +25,7 @@ THE SOFTWARE.
 """
 
 import re
-import six
+from django.utils import six
 
 from django.db.models import SlugField
 

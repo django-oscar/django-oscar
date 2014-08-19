@@ -1,4 +1,4 @@
-import six
+from django.utils import six
 
 from django.conf import settings
 from django.contrib.auth import get_user_model as django_get_user_model

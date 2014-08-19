@@ -1,5 +1,5 @@
-import six
-from six.moves.urllib import parse
+from django.utils import six
+from django.utils.six.moves.urllib import parse
 
 from django import template
 from oscar.core.loading import get_model

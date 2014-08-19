@@ -27,7 +27,7 @@ def configure():
                 'django.contrib.admin',
                 'django.contrib.contenttypes',
                 'django.contrib.sessions',
-                'django.contrib.sites',
+              'django.contrib.sites',
                 'django.contrib.flatpages',
                 'django.contrib.staticfiles',
                 'compressor',

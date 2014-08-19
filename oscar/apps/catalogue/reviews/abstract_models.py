@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Sum, Count
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 
 from oscar.apps.catalogue.reviews.managers import ApprovedReviewsManager
@@ -10,6 +11,7 @@ from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core import validators
 
 
+@python_2_unicode_compatible
 class AbstractProductReview(models.Model):
     """
     A review of a product
@@ -43,7 +45,7 @@ class AbstractProductReview(models.Model):
     email = models.EmailField(_("Email"), blank=True)
     homepage = models.URLField(_("URL"), blank=True)
 
-    FOR_MODERATION, APPROVED, REJECTED = list(range(0, 3))
+    FOR_MODERATION, APPROVED, REJECTED = 0, 1, 2
     STATUS_CHOICES = (
         (FOR_MODERATION, _("Requires moderation")),
         (APPROVED, _("Approved")),
@@ -83,7 +85,7 @@ class AbstractProductReview(models.Model):
         }
         return reverse('catalogue:reviews-detail', kwargs=kwargs)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def clean(self):
@@ -175,6 +177,7 @@ class AbstractProductReview(models.Model):
         return True, ""
 
 
+@python_2_unicode_compatible
 class AbstractVote(models.Model):
     """
     Records user ratings as yes/no vote.
@@ -200,7 +203,7 @@ class AbstractVote(models.Model):
         verbose_name = _('Vote')
         verbose_name_plural = _('Votes')
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s vote for %s" % (self.delta, self.review)
 
     def clean(self):

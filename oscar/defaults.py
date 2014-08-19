@@ -70,9 +70,6 @@ OSCAR_EAGER_ALERTS = True
 OSCAR_SEND_REGISTRATION_EMAIL = True
 OSCAR_FROM_EMAIL = 'oscar@example.com'
 
-# Offers
-OSCAR_OFFER_BLACKLIST_PRODUCT = None
-
 # Slug handling
 OSCAR_SLUG_FUNCTION = 'oscar.core.utils.default_slugifier'
 OSCAR_SLUG_MAP = {}

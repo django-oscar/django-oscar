@@ -46,3 +46,11 @@ class Price(object):
                 self.incl_tax, self.tax)
         return "%s(currency=%r, excl_tax=%r)" % (
             self.__class__.__name__, self.currency, self.excl_tax)
+
+    def __eq__(self, other):
+        """
+        Two price objects are equal if currency, price.excl_tax and tax match.
+        """
+        return (self.currency == other.currency and
+                self.excl_tax == other.excl_tax and
+                self.incl_tax == other.incl_tax)

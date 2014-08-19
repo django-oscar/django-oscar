@@ -26,16 +26,18 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-import six
+from django.utils import six
 
 from django.core import validators
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import python_2_unicode_compatible
 
 import phonenumbers
 
 
+@python_2_unicode_compatible
 class PhoneNumber(phonenumbers.phonenumber.PhoneNumber):
     """
     A extended version of phonenumbers.phonenumber.PhoneNumber that provides
@@ -58,16 +60,13 @@ class PhoneNumber(phonenumbers.phonenumber.PhoneNumber):
                            keep_raw_input=True, numobj=phone_number_obj)
         return phone_number_obj
 
-    def __unicode__(self):
+    def __str__(self):
         format_string = getattr(
             settings, 'PHONENUMBER_DEFAULT_FORMAT', 'INTERNATIONAL')
         fmt = self.format_map[format_string]
         if self.is_valid():
             return self.format_as(fmt)
         return self.raw_input
-
-    def __str__(self):
-        return str(self.__unicode__())
 
     def is_valid(self):
         """
@@ -98,7 +97,7 @@ class PhoneNumber(phonenumbers.phonenumber.PhoneNumber):
         return self.format_as(phonenumbers.PhoneNumberFormat.RFC3966)
 
     def __len__(self):
-        return len(self.__unicode__())
+        return len(six.text_type(self))
 
     def __eq__(self, other):
         if type(other) == PhoneNumber:

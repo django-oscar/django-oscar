@@ -37,11 +37,12 @@ availability logic now needs to be handled with strategies.
 Compatibility
 -------------
 
-Oscar 0.8 drops supports for Django 1.5, and is compatible with Django 1.6 and
-Django 1.7.
+This release adds support for Django 1.7. Per our policy of always supporting
+two versions of Django, support for Django 1.5 has been dropped.
 
-Support for Python 2.6 has been dropped; Oscar works with Python 2.7, 3.3
-and 3.4.
+This release also adds full Python 3.3 and 3.4 support. But due to South
+not supporting Python 3, Python 3 support is only supported in combination
+with Django 1.7 and it's new migration framework.
 
 .. _new_in_0.8:
 
@@ -231,6 +232,12 @@ Minor changes
   but you should now be able to use product attributes of type ``entity`` as
   expected. There's currently no frontend or dashboard support for it, as there
   is no good default behaviour.
+
+* Oscar has a new dependency, django-tables2_. It's a handy library that helps
+  when displaying tabular data, allowing sorting, etc. It also makes it easier
+  to adapt e.g. the product list view in the dashboard to additional fields.
+
+.. _django-tables2: http://django-tables2.readthedocs.org/en/latest/
 
 .. _incompatible_changes_in_0.8:
 
@@ -492,6 +499,18 @@ Misc
 * ``oscar.core.loading.get_model`` now raises a ``LookupError`` instead of an
   ``ImportError`` if a model can't be found. That brings it more in line with
   what Django does since the app refactor.
+
+* ``CommunicationEventType.category`` was storing a localised string, which
+  breaks when switching locale. It now uses ``choices`` to map between the
+  value and a localised string. Unfortunately, if you're using this feature
+  and not running an English locale, you will need to migrate the existing
+  data to the English values.
+
+* Support for the ``OSCAR_OFFER_BLACKLIST_PRODUCT`` setting has been removed.
+  It was only partially supported: it prevented products from being
+  added to a range, but offers could be applied to the products nonetheless.
+  To prevent an offer being applied to a product, use ``is_discountable`` or
+  override ``get_is_discountable`` on your product instances.
 
 .. _rewritten: https://github.com/tangentlabs/django-oscar/commit/d8b4dbfed17be90846ea4bc47b5f7b39ad944c24
 

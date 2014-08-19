@@ -115,7 +115,7 @@ var oscar = (function(o, $) {
         },
         initNav: function() {
             // Initial navigation for desktop
-            var $sidebar = $('aside.span3'), 
+            var $sidebar = $('aside.span3'),
                 $browse = $('[data-navigation="dropdown-menu"]'),
                 $browseOpen = $browse.parent().find('> a[data-toggle]');
             // Set width of nav dropdown to be same as sidebar
@@ -212,6 +212,7 @@ var oscar = (function(o, $) {
         showVoucherForm: function() {
             $('#voucher_form_container').show();
             $('#voucher_form_link').hide();
+            $('#id_code').focus();
         },
         hideVoucherForm: function() {
             $('#voucher_form_container').hide();

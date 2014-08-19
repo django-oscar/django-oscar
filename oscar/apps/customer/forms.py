@@ -1,6 +1,5 @@
 import string
 import random
-from six.moves.urllib import parse
 
 from django import forms
 from django.conf import settings
@@ -8,6 +7,7 @@ from django.contrib.auth import forms as auth_forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.sites.models import get_current_site
 from django.core.exceptions import ValidationError
+from django.utils.http import is_safe_url
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
@@ -107,11 +107,8 @@ class EmailAuthenticationForm(AuthenticationForm):
 
     def clean_redirect_url(self):
         url = self.cleaned_data['redirect_url'].strip()
-        if url:
-            # Ensure URL is not to a different host
-            host = parse.urlparse(url)[1]
-            if host and host == self.host:
-                return url
+        if url and is_safe_url(url):
+            return url
 
 
 class ConfirmPasswordForm(forms.Form):
@@ -172,12 +169,9 @@ class EmailUserCreationForm(forms.ModelForm):
 
     def clean_redirect_url(self):
         url = self.cleaned_data['redirect_url'].strip()
-        if not url:
-            return settings.LOGIN_REDIRECT_URL
-        host = parse.urlparse(url)[1]
-        if host and self.host and host != self.host:
-            return settings.LOGIN_REDIRECT_URL
-        return url
+        if url and is_safe_url(url):
+            return url
+        return settings.LOGIN_REDIRECT_URL
 
     def save(self, commit=True):
         user = super(EmailUserCreationForm, self).save(commit=False)
@@ -310,7 +304,7 @@ if Profile:
             super(UserAndProfileForm, self).__init__(*args, **kwargs)
 
             # Get profile field names to help with ordering later
-            profile_field_names = self.fields.keys()
+            profile_field_names = list(self.fields.keys())
 
             # Get user field names (we look for core user fields first)
             core_field_names = set([f.name for f in User._meta.fields])

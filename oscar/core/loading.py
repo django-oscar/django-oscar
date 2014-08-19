@@ -4,7 +4,7 @@ from importlib import import_module
 
 import django
 from django.conf import settings
-from django.utils import six as django_six
+from django.utils import six
 
 from oscar.core.exceptions import (ModuleNotFoundError, ClassNotFoundError,
                                    AppNotFoundError)
@@ -23,7 +23,7 @@ def import_string(dotted_path):
         module_path, class_name = dotted_path.rsplit('.', 1)
     except ValueError:
         msg = "%s doesn't look like a module path" % dotted_path
-        django_six.reraise(ImportError, ImportError(msg), sys.exc_info()[2])
+        six.reraise(ImportError, ImportError(msg), sys.exc_info()[2])
 
     module = import_module(module_path)
 
@@ -32,12 +32,12 @@ def import_string(dotted_path):
     except AttributeError:
         msg = 'Module "%s" does not define a "%s" attribute/class' % (
             dotted_path, class_name)
-        django_six.reraise(ImportError, ImportError(msg), sys.exc_info()[2])
+        six.reraise(ImportError, ImportError(msg), sys.exc_info()[2])
     try:
         module_path, class_name = dotted_path.rsplit('.', 1)
     except ValueError:
         msg = "%s doesn't look like a module path" % dotted_path
-        django_six.reraise(ImportError, ImportError(msg), sys.exc_info()[2])
+        six.reraise(ImportError, ImportError(msg), sys.exc_info()[2])
 
     module = __import__(module_path, fromlist=[class_name])
 
@@ -46,7 +46,7 @@ def import_string(dotted_path):
     except AttributeError:
         msg = 'Module "%s" does not define a "%s" attribute/class' % (
             dotted_path, class_name)
-        django_six.reraise(ImportError, ImportError(msg), sys.exc_info()[2])
+        six.reraise(ImportError, ImportError(msg), sys.exc_info()[2])
 
 
 def get_class(module_label, classname):
@@ -278,6 +278,15 @@ if django.VERSION < (1, 7):
         This is merely a thin wrapper around Django's get_model function.
         Raises LookupError if model isn't found.
         """
+
+        # The snippet below is not useful in production, but helpful to
+        # investigate circular import issues
+        # from django.db.models.loading import app_cache_ready
+        # if not app_cache_ready():
+        #     print(
+        #         "%s.%s accessed before app cache is fully populated!" %
+        #         (app_label, model_name))
+
         model = django_get_model(app_label, model_name, *args, **kwargs)
         if model is None:
             raise LookupError(

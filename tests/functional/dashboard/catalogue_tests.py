@@ -149,8 +149,10 @@ class TestAStaffUser(WebTestCase):
         product1 = create_product(partner_users=[self.user, ])
         product2 = create_product(partner_name="sneaky", partner_users=[])
         page = self.get(reverse('dashboard:catalogue-product-list'))
-        assert product1 in page.context['object_list']
-        assert product2 in page.context['object_list']
+        products_on_page = [row.record for row
+                            in page.context['products'].page.object_list]
+        assert product1 in products_on_page
+        assert product2 in products_on_page
 
 
 class TestANonStaffUser(TestAStaffUser):
@@ -167,8 +169,10 @@ class TestANonStaffUser(TestAStaffUser):
         product1 = create_product(partner_name="A", partner_users=[self.user, ])
         product2 = create_product(partner_name="B", partner_users=[])
         page = self.get(reverse('dashboard:catalogue-product-list'))
-        assert product1 in page.context['object_list']
-        assert product2 not in page.context['object_list']
+        products_on_page = [row.record for row
+                            in page.context['products'].page.object_list]
+        assert product1 in products_on_page
+        assert product2 not in products_on_page
 
     def test_can_create_a_product_without_stockrecord(self):
         pass

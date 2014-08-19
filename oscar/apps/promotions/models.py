@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
@@ -38,6 +39,7 @@ class LinkedPromotion(models.Model):
     record_click.alters_data = True
 
 
+@python_2_unicode_compatible
 class PagePromotion(LinkedPromotion):
     """
     A promotion embedded on a particular page.
@@ -45,7 +47,7 @@ class PagePromotion(LinkedPromotion):
     page_url = ExtendedURLField(
         _('Page URL'), max_length=128, db_index=True, verify_exists=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s on %s" % (self.content_object, self.page_url)
 
     def get_link(self):
@@ -134,6 +136,7 @@ class AbstractPromotion(models.Model):
         return page_count + keyword_count
 
 
+@python_2_unicode_compatible
 class RawHTML(AbstractPromotion):
     """
     Simple promotion - just raw HTML
@@ -156,10 +159,11 @@ class RawHTML(AbstractPromotion):
         verbose_name = _('Raw HTML')
         verbose_name_plural = _('Raw HTML')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class Image(AbstractPromotion):
     """
     An image promotion is simply a named image which has an optional
@@ -177,7 +181,7 @@ class Image(AbstractPromotion):
         max_length=255)
     date_created = models.DateTimeField(auto_now_add=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -186,6 +190,7 @@ class Image(AbstractPromotion):
         verbose_name_plural = _("Image")
 
 
+@python_2_unicode_compatible
 class MultiImage(AbstractPromotion):
     """
     A multi-image promotion is simply a collection of image promotions
@@ -201,7 +206,7 @@ class MultiImage(AbstractPromotion):
             "(You may need to create some first)."))
     date_created = models.DateTimeField(auto_now_add=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -210,6 +215,7 @@ class MultiImage(AbstractPromotion):
         verbose_name_plural = _("Multi Images")
 
 
+@python_2_unicode_compatible
 class SingleProduct(AbstractPromotion):
     _type = 'Single product'
     name = models.CharField(_("Name"), max_length=128)
@@ -217,7 +223,7 @@ class SingleProduct(AbstractPromotion):
     description = models.TextField(_("Description"), blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def template_context(self, request):
@@ -229,6 +235,7 @@ class SingleProduct(AbstractPromotion):
         verbose_name_plural = _("Single product")
 
 
+@python_2_unicode_compatible
 class AbstractProductList(AbstractPromotion):
     """
     Abstract superclass for promotions which are essentially a list
@@ -248,7 +255,7 @@ class AbstractProductList(AbstractPromotion):
         verbose_name = _("Product list")
         verbose_name_plural = _("Product lists")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def template_context(self, request):

@@ -1,6 +1,7 @@
 {% extends 'dashboard/layout.html' %}
 {% load dashboard_tags %}
 {% load i18n %}
+{% load render_table from django_tables2 %}
 
 {% block body_class %}{{ block.super }} users{% endblock %}
 
@@ -31,69 +32,17 @@
     <div class="well">
         <form action="." method="get" class="form-inline">
             {% include "partials/form_fields_inline.html" with form=form %}
-            <input type="submit" value="{% trans "Search" %}" class="btn btn-primary"/>
+            <button type="submit" name="search" class="btn btn-primary">{% trans "Search" %}</button>
             <a href="{% url 'dashboard:users-index' %}" class="btn">{% trans "Reset" %}</a>
         </form>
     </div>
 
     {% block users_list %}
-        {% if user_list %}
-            <form id="user_list_form" action="." method="post" class="form-inline">
-                {% csrf_token %}
-                <table class="table table-striped table-bordered table-hover">
-                    <caption>
-                        <h3 class="pull-left">
-                            <i class="icon-group icon-large"></i>
-                            {% if queryset_description != "All users" %}
-                                {{ queryset_description }}
-                            {% endif %}
-                        </h3>
-                        <div class="pull-right">
-                            <div class="form-inline">
-                                <i class="icon-refresh"></i> {% trans "Bulk Actions" %}
-                                <label for="inlineCheckboxes">{% trans "With selected customers:" %}</label>
-                                <label>
-                                    <input type="radio" name="action" value="make_active" /> {% trans "Make active" %}
-                                </label>
-                                <label>
-                                    <input type="radio" name="action" value="make_inactive" /> {% trans "Make inactive" %}
-                                </label>
-                                <input type="submit" value="{% trans "Go!" %}" class="btn btn-primary" />
-                            </div>
-                        </div>
-                    </caption>
-                    <tr>
-                        {% block user_list_header %}
-                            <th></th>
-                            <th>{% trans "Email" %}</th>
-                            <th>{% trans "Name" %}</th>
-                            <th>{% trans "Active?" %}</th>
-                            <th>{% trans "Staff?" %}</th>
-                            <th>{% trans "Date registered" %}</th>
-                            <th>{% trans "Num Orders" %}</th>
-                            <th></th>
-                        {% endblock %}
-                    </tr>
-                    {% for user in user_list %}
-                        <tr>
-                            {% block user_list_row %}
-                                <td><input type="checkbox" name="selected_user" class="selected_user" value="{{ user.id }}"/></td>
-                                <td><a href="{% url 'dashboard:user-detail' pk=user.id %}">{{ user.email }}</a></td>
-                                <td>{{ user.get_full_name|default:"-" }}</td>
-                                <td>{{ user.is_active|yesno:_("True,False") }}</td>
-                                <td>{{ user.is_staff|yesno:_("True,False") }}</td>
-                                <td>{{ user.date_joined|date }}</td>
-                                <td>{% num_orders user %}</td>
-                                <td>
-                                    <a href="{% url 'dashboard:user-detail' pk=user.id %}" class="btn btn-info">{% trans "View" %}</a>
-                                </td>
-                            {% endblock %}
-                        </tr>
-                    {% endfor %}
-                </table>
-                {% include "partials/pagination.html" %}
-            </form>
-
+        {% if users.data %}
+          <form id="user_list_form" action="." method="post" class="form-inline">
+            {% csrf_token %}
+            {% render_table users %}
+          </form>
         {% else %}
             <table class="table table-striped table-bordered table-hover">
                 <caption>{{ queryset_description }}</caption>

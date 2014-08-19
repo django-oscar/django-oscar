@@ -8,5 +8,5 @@ class CustomerConfig(AppConfig):
     verbose_name = _('Customer')
 
     def ready(self):
-        from oscar.apps.customer import history  # noqa
+        from . import receivers  # noqa
         from .alerts import receivers  # noqa

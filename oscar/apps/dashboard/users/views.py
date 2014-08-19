@@ -4,10 +4,13 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.views.generic import ListView, DetailView, DeleteView, \
-    UpdateView, FormView
+    UpdateView, FormView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
-from oscar.apps.customer.utils import normalise_email
+from django.views.generic.edit import FormMixin
 
+from django_tables2 import SingleTableMixin
+
+from oscar.apps.customer.utils import normalise_email
 from oscar.views.generic import BulkEditMixin
 from oscar.core.compat import get_user_model
 from oscar.core.loading import get_class, get_classes, get_model
@@ -16,39 +19,60 @@ UserSearchForm, ProductAlertSearchForm, ProductAlertUpdateForm = get_classes(
     'dashboard.users.forms', ('UserSearchForm', 'ProductAlertSearchForm',
                               'ProductAlertUpdateForm'))
 PasswordResetForm = get_class('customer.forms', 'PasswordResetForm')
+UserTable = get_class('dashboard.users.tables', 'UserTable')
 ProductAlert = get_model('customer', 'ProductAlert')
 User = get_user_model()
 
 
-class IndexView(BulkEditMixin, ListView):
+class IndexView(BulkEditMixin, SingleTableMixin, FormMixin, TemplateView):
     template_name = 'dashboard/users/index.html'
-    paginate_by = 25
+    table_pagination = True
     model = User
     actions = ('make_active', 'make_inactive', )
     form_class = UserSearchForm
+    table_class = UserTable
+    context_table_name = 'users'
     desc_template = _('%(main_filter)s %(email_filter)s %(name_filter)s')
     description = ''
-    context_object_name = 'user_list'
+
+    def dispatch(self, request, *args, **kwargs):
+        form_class = self.get_form_class()
+        self.form = self.get_form(form_class)
+        return super(IndexView, self).dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        """
+        Only bind search form if it was submitted.
+        """
+        kwargs = super(IndexView, self).get_form_kwargs()
+
+        if 'search' in self.request.GET:
+            kwargs.update({
+                'data': self.request.GET,
+            })
+
+        return kwargs
 
     def get_queryset(self):
         queryset = self.model.objects.all().order_by('-date_joined')
+        return self.apply_search(queryset)
+
+    def apply_search(self, queryset):
+        # Set initial queryset description, used for template context
         self.desc_ctx = {
             'main_filter': _('All users'),
             'email_filter': '',
             'name_filter': '',
         }
-
-        if 'email' not in self.request.GET:
-            self.form = self.form_class()
+        if self.form.is_valid():
+            return self.apply_search_filters(queryset, self.form.cleaned_data)
+        else:
             return queryset
 
-        self.form = self.form_class(self.request.GET)
-
-        if not self.form.is_valid():
-            return queryset
-
-        data = self.form.cleaned_data
-
+    def apply_search_filters(self, queryset, data):
+        """
+        Function is split out to allow customisation with little boilerplate.
+        """
         if data['email']:
             email = normalise_email(data['email'])
             queryset = queryset.filter(email__istartswith=email)
@@ -74,6 +98,7 @@ class IndexView(BulkEditMixin, ListView):
         context = super(IndexView, self).get_context_data(**kwargs)
         context['form'] = self.form
         context['queryset_description'] = self.desc_template % self.desc_ctx
+        context['queryset_icon'] = 'group'
         return context
 
     def make_inactive(self, request, users):

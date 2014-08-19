@@ -133,7 +133,7 @@ class TestAnAnonymousUser(WebTestCase):
         form['password1'] = form['password2'] = 'hedgehog'
         form.submit()
         user = User.objects.all()[0]
-        self.assertEquals(user.email, 'Terry@boom.com')
+        self.assertEqual(user.email, 'Terry@boom.com')
 
 
 class TestAStaffUser(WebTestCase):

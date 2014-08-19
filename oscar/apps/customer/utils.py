@@ -43,10 +43,10 @@ class Dispatcher(object):
         else:
             self.dispatch_user_messages(order.user, messages)
 
-        # Create order comms event for audit
-        if event_type:
-            CommunicationEvent._default_manager.create(order=order,
-                                                       event_type=event_type)
+        # Create order communications event for audit
+        if event_type is not None:
+            CommunicationEvent._default_manager.create(
+                order=order, event_type=event_type)
 
     def dispatch_user_messages(self, user, messages):
         """

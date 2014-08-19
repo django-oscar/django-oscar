@@ -1,15 +1,14 @@
-from six.moves import http_client
+from django.utils.six.moves import http_client
 from django.conf import settings
 
 from oscar.core.loading import get_model
-from django.test import TestCase
 from django.core.urlresolvers import reverse
-from django.template import Template, Context
 from django_dynamic_fixture import get, G
 
 from oscar.test.testcases import WebTestCase
 from oscar.test.factories import create_order, create_basket
-from oscar.apps.order.models import Order, OrderNote
+from oscar.apps.order.models import Order, OrderNote, PaymentEvent, \
+    PaymentEventType
 from oscar.core.compat import get_user_model
 
 
@@ -130,6 +129,7 @@ class TestOrderDetailPage(WebTestCase):
         super(TestOrderDetailPage, self).setUp()
         # ensures that initial statuses are as expected
         self.order = create_order()
+        self.event_type = PaymentEventType.objects.create(name='foo')
         url = reverse('dashboard:order-detail',
                       kwargs={'number': self.order.number})
         self.page = self.get(url)
@@ -169,6 +169,16 @@ class TestOrderDetailPage(WebTestCase):
         # fetch order again
         self.assertEqual(Order.objects.get(pk=self.order.pk).status, new_status)
 
+    def test_allows_creating_payment_event(self):
+        line = self.order.lines.all()[0]
+        form = self.page.forms['order_lines_form']
+        form['line_action'] = 'create_payment_event'
+        form['selected_line'] = [line.pk]
+        form['payment_event_type'] = self.event_type.code
+        form.submit()
+
+        self.assertTrue(PaymentEvent.objects.exists())
+
 
 class TestChangingOrderStatus(WebTestCase):
     is_staff = True
@@ -197,6 +207,7 @@ class TestChangingOrderStatus(WebTestCase):
         notes = self.order.notes.all()
         self.assertEqual(1, len(notes))
         self.assertEqual(OrderNote.SYSTEM, notes[0].note_type)
+
 
 class TestChangingOrderStatusFromFormOnOrderDetailVew(WebTestCase):
     is_staff = True
@@ -227,6 +238,7 @@ class TestChangingOrderStatusFromFormOnOrderDetailVew(WebTestCase):
         self.assertEqual(1, len(notes))
         self.assertEqual(OrderNote.SYSTEM, notes[0].note_type)
 
+
 class LineDetailTests(WebTestCase):
     is_staff = True
 
@@ -245,17 +257,3 @@ class LineDetailTests(WebTestCase):
     def test_line_in_context(self):
         response = self.get(self.url)
         self.assertInContext(response, 'line')
-
-
-class TemplateTagTests(TestCase):
-    def test_get_num_orders(self):
-        user = get(User)
-        for i in range(1, 4):
-            get(Order, user=user)
-        out = Template(
-            "{% load dashboard_tags %}"
-            "{% num_orders user %}"
-        ).render(Context({
-            'user': user
-        }))
-        self.assertEqual(out, "3")

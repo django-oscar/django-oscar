@@ -11,12 +11,14 @@ env:
     secure: FuIlzEsGJiAwhaIRBmRNsq9eXmuzs25fX6BChknW4lDyVAySWMp0+Zps9Bd0JgfFYUG3Ip+OTmksYIoTUsG25ZJS9cq1IFt3QKUAN70YCI/4ZBLeIdICPEyxq+Km179+NeEXmBUug17RLMLxh3MWfO+RKUHK9yHIPNNpq0dNyoo=
   matrix:
     - DJANGO=Django==1.6.5
-    - DJANGO=https://www.djangoproject.com/download/1.7c2/tarball/
+    - DJANGO=https://www.djangoproject.com/download/1.7c2/tarball/#egg=Django
 
 matrix:
   allow_failures:
-    - python: '3.3'
-    - python: '3.4'
+    - env: "DJANGO=Django==1.6.5"
+      python: '3.3'
+    - env: "DJANGO=Django==1.6.5"
+      python: '3.4'
 
 install:
   - easy_install $DJANGO

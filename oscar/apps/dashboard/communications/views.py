@@ -1,3 +1,5 @@
+from django.utils import six
+
 from django.contrib import messages
 from django.contrib.sites.models import get_current_site
 from oscar.core.loading import get_model
@@ -56,7 +58,7 @@ class UpdateView(generic.UpdateView):
         try:
             msgs = commtype.get_messages(commtype_ctx)
         except TemplateSyntaxError as e:
-            form.errors['__all__'] = form.error_class([e.message])
+            form.errors['__all__'] = form.error_class([six.text_type(e)])
             return self.render_to_response(ctx)
 
         ctx['show_preview'] = True
@@ -72,7 +74,7 @@ class UpdateView(generic.UpdateView):
         try:
             msgs = commtype.get_messages(commtype_ctx)
         except TemplateSyntaxError as e:
-            form.errors['__all__'] = form.error_class([e.message])
+            form.errors['__all__'] = form.error_class([six.text_type(e)])
             return self.render_to_response(ctx)
 
         email = form.cleaned_data['preview_email']

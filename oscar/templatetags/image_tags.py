@@ -1,5 +1,3 @@
-import six
-
 from django import template
 from django.conf import settings
 from django.db.models.fields.files import ImageFieldFile
@@ -50,7 +48,7 @@ class DynamicImageNode(template.Node):
             ext = path[path.rfind('.') + 1:]
             ext_changed = False
 
-            for key, v in six.iteritems(self.params):
+            for key, v in self.params.items():
                 value = v.resolve(context)
                 if key == u'format':
                     ext = value

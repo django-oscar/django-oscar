@@ -312,26 +312,6 @@ used in Oscar's default templates but could be used to include static assets
 Offer settings
 ==============
 
-``OSCAR_OFFER_BLACKLIST_PRODUCT``
----------------------------------
-
-Default: ``None``
-
-A function which takes a product as its sole parameter and returns a boolean
-indicating if the product is blacklisted from offers or not.
-
-Example::
-
-    from decimal import Decimal as D
-
-    def is_expensive(product):
-        if product.has_stockrecord:
-            return product.stockrecord.price_incl_tax > D('1000.00')
-        return False
-
-    # Don't allow expensive products to be in offers
-    OSCAR_OFFER_BLACKLIST_PRODUCT = is_expensive
-
 ``OSCAR_OFFER_ROUNDING_FUNCTION``
 ---------------------------------
 

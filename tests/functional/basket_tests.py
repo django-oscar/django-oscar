@@ -1,5 +1,5 @@
 from decimal import Decimal as D
-from six.moves import http_client
+from django.utils.six.moves import http_client
 import datetime
 
 from django.conf import settings

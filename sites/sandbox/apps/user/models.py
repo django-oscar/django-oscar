@@ -5,6 +5,7 @@ sandbox
 
 from django.db import models
 from django.utils import timezone
+from django.utils.encoding import python_2_unicode_compatible
 
 from oscar.core import compat
 from oscar.apps.customer import abstract_models
@@ -49,6 +50,7 @@ else:
             return self.create_user(email, password)
 
     # A user model which doesn't extend AbstractUser
+    @python_2_unicode_compatible
     class CustomUserModel(AbstractBaseUser):
         name = models.CharField(max_length=255, blank=True)
         email = models.EmailField(unique=True)
@@ -58,7 +60,7 @@ else:
 
         objects = CustomUserManager()
 
-        def __unicode__(self):
+        def __str__(self):
             return self.email
 
         def get_full_name(self):

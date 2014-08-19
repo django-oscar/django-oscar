@@ -32,7 +32,7 @@ def do_category_list(parse, token):
         if tokens[3] != 'as':
             raise template.TemplateSyntaxError(error_msg)
         p_name_was = None
-        for i in range(1, 3):
+        for i in 1, 2:
             p_name, p_var = tokens[i].split('=')
             if p_name_was is not None and p_name == p_name_was:
                 # raise error if same arg is given twice

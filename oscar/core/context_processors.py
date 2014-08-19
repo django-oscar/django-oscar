@@ -2,7 +2,7 @@ import oscar
 import re
 import platform
 import django
-from six.moves.urllib import parse
+from django.utils.six.moves.urllib import parse
 from django.conf import settings
 from django.utils.safestring import mark_safe
 

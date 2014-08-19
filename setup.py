@@ -6,8 +6,6 @@ To release a new version to PyPi:
 - Ensure the version is correctly set in oscar.__init__.py
 - Run: python setup.py sdist upload
 """
-from __future__ import print_function
-
 from setuptools import setup, find_packages
 import os
 import sys
@@ -39,10 +37,11 @@ setup(name='django-oscar',
           # PIL is required for image fields, Pillow is the "friendly" PIL fork
           'pillow>=1.7.8,<2.5',
           # We use the ModelFormSetView from django-extra-views for the basket
-          # page
-          'django-extra-views>=0.2,<0.7',
+          # page. 0.6.5 pins version of six, which causes issues:
+          # https://github.com/AndrewIngram/django-extra-views/pull/85
+          'django-extra-views>=0.2,<0.6.5',
           # Search support
-          'django-haystack>=2.1.0',
+          'django-haystack>=2.1.0,<2.3.0',
           # Treebeard is used for categories
           'django-treebeard==2.0',
           # Sorl is used as the default thumbnailer
@@ -58,12 +57,12 @@ setup(name='django-oscar',
           'purl>=0.7',
           # For phone number field
           'phonenumbers>=5.9.2,<=6.0.0a',
-          # Python 2 & 3 compatibility helper
-          'six>=1.5.2',
           # Used for oscar.test.contextmanagers.mock_signal_receiver
           'mock>=1.0.1,<1.1',
           # Used for oscar.test.newfactories
-          'factory-boy>=2.3.1,<2.4',
+          'factory-boy>=2.4.1,<2.5',
+          # Used for automatically building larger HTML tables
+          'django-tables2>=0.15.0,<0.16',
       ],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[

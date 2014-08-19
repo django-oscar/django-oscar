@@ -1,21 +1,22 @@
+import itertools
 import os
 import re
-import six
 import operator
 from decimal import Decimal as D, ROUND_DOWN, ROUND_UP
 
 from django.core import exceptions
 from django.template.defaultfilters import date as date_filter
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now, get_current_timezone
 from django.utils.translation import ungettext, ugettext_lazy as _
 from django.utils.importlib import import_module
+from django.utils import six
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.core.utils import slugify
 from oscar.core.loading import get_class, get_model
 from oscar.apps.offer.managers import ActiveOfferManager
 from oscar.templatetags.currency_filters import currency
@@ -60,6 +61,7 @@ def apply_discount(line, discount, quantity):
     line.discount(discount, quantity, incl_tax=False)
 
 
+@python_2_unicode_compatible
 class ConditionalOffer(models.Model):
     """
     A conditional offer (eg buy 1, get 10% off)
@@ -193,7 +195,7 @@ class ConditionalOffer(models.Model):
     def get_absolute_url(self):
         return reverse('offer:detail', kwargs={'slug': self.slug})
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def clean(self):
@@ -402,15 +404,19 @@ class ConditionalOffer(models.Model):
         cond_range = self.condition.range
         if cond_range.includes_all_products:
             # Return ALL the products
-            return Product.browsable.select_related('product_class',
-                                                    'stockrecord')\
-                .filter(is_discountable=True)\
-                .prefetch_related('children', 'images',
-                                  'product_class__options', 'product_options')
-        return cond_range.included_products.filter(is_discountable=True)
+            queryset = Product.browsable
+        else:
+            queryset = cond_range.included_products
+        return queryset.filter(is_discountable=True).exclude(
+            structure=Product.CHILD)
 
 
+@python_2_unicode_compatible
 class Condition(models.Model):
+    """
+    A condition for an offer to be applied. You can either specify a custom
+    proxy class, or need to specify a type, range and value.
+    """
     COUNT, VALUE, COVERAGE = ("Count", "Value", "Coverage")
     TYPE_CHOICES = (
         (COUNT, _("Depends on number of items in basket that are in "
@@ -452,9 +458,9 @@ class Condition(models.Model):
             self.COVERAGE: CoverageCondition}
         if self.type in klassmap:
             return klassmap[self.type](**field_dict)
-        return self
+        raise RuntimeError("Unrecognised condition type (%s)" % self.type)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.proxy().name
 
     @property
@@ -524,6 +530,7 @@ class Condition(models.Model):
         return sorted(line_tuples, key=key)
 
 
+@python_2_unicode_compatible
 class Benefit(models.Model):
     range = models.ForeignKey(
         'offer.Range', null=True, blank=True, verbose_name=_("Range"))
@@ -592,7 +599,7 @@ class Benefit(models.Model):
             return klassmap[self.type](**field_dict)
         raise RuntimeError("Unrecognised benefit type (%s)" % self.type)
 
-    def __unicode__(self):
+    def __str__(self):
         name = self.proxy().name
         if self.max_affected_items:
             name += ungettext(
@@ -746,9 +753,13 @@ class Benefit(models.Model):
         return D('0.00')
 
 
+@python_2_unicode_compatible
 class Range(models.Model):
     """
-    Represents a range of products that can be used within an offer
+    Represents a range of products that can be used within an offer.
+
+    Ranges only support adding parent or stand-alone products. Offers will
+    consider child products automatically.
     """
     name = models.CharField(_("Name"), max_length=128, unique=True)
     slug = fields.AutoSlugField(
@@ -795,15 +806,12 @@ class Range(models.Model):
         verbose_name = _("Range")
         verbose_name_plural = _("Ranges")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('catalogue:range', kwargs={
-            'slug': self.slug})
-
-    def _save(self, *args, **kwargs):
-        super(Range, self).save(*args, **kwargs)
+        return reverse(
+            'catalogue:range', kwargs={'slug': self.slug})
 
     def add_product(self, product, display_order=None):
         """ Add product to the range
@@ -811,18 +819,14 @@ class Range(models.Model):
         When adding product that is already in the range, prevent re-adding it.
         If display_order is specified, update it.
 
-        Standard display_order for a new product in the range (0) puts
+        Default display_order for a new product in the range is 0; this puts
         the product at the top of the list.
-
-        display_order needs to be tested for None because
-
-          >>> display_order = 0
-          >>> not display_order
-          True
-          >>> display_order is None
-          False
         """
-        initial_order = 0 if display_order is None else display_order
+        if product.is_child:
+            raise ValueError(
+                "Ranges can only contain parent and stand-alone products.")
+
+        initial_order = display_order or 0
         relation, __ = RangeProduct.objects.get_or_create(
             range=self, product=product,
             defaults={'display_order': initial_order})
@@ -833,19 +837,19 @@ class Range(models.Model):
             relation.save()
 
     def remove_product(self, product):
-        """ Remove product from range """
+        """
+        Remove product from range. To save on queries, this function does not
+        check if the product is in fact in the range.
+        """
         RangeProduct.objects.filter(range=self, product=product).delete()
 
     def contains_product(self, product):  # noqa (too complex (12))
         """
-        Check whether the passed product is part of this range
+        Check whether the passed product is part of this range.
         """
-        # We look for shortcircuit checks first before
-        # the tests that require more database queries.
-
-        if settings.OSCAR_OFFER_BLACKLIST_PRODUCT and \
-                settings.OSCAR_OFFER_BLACKLIST_PRODUCT(product):
-            return False
+        # Child products are never part of the range, but the parent may be.
+        if product.is_child:
+            product = product.parent
 
         # Delegate to a proxy class if one is provided
         if self.proxy_class:
@@ -863,7 +867,7 @@ class Range(models.Model):
             return True
         test_categories = self.included_categories.all()
         if test_categories:
-            for category in product.categories.all():
+            for category in product.get_categories().all():
                 for test_category in test_categories:
                     if category == test_category \
                             or category.is_descendant_of(test_category):
@@ -873,23 +877,39 @@ class Range(models.Model):
     # Shorter alias
     contains = contains_product
 
+    def __get_pks_and_child_pks(self, queryset):
+        """
+        Expects a product queryset; gets the primary keys of the passed
+        products and their children.
+
+        Verbose, but database and memory friendly.
+        """
+        # One query to get parent and children; [(4, None), (5, 10), (5, 11)]
+        pk_tuples_iterable = queryset.values_list('pk', 'children__pk')
+        # Flatten list without unpacking; [4, None, 5, 10, 5, 11]
+        flat_iterable = itertools.chain.from_iterable(pk_tuples_iterable)
+        # Ensure uniqueness and remove None; {4, 5, 10, 11}
+        return set(flat_iterable) - {None}
+
     def _included_product_ids(self):
+        if not self.id:
+            return []
         if self.__included_product_ids is None:
-            self.__included_product_ids = [row['id'] for row in
-                                           self.included_products.values('id')]
+            self.__included_product_ids = self.__get_pks_and_child_pks(
+                self.included_products)
         return self.__included_product_ids
 
     def _excluded_product_ids(self):
         if not self.id:
             return []
         if self.__excluded_product_ids is None:
-            self.__excluded_product_ids = [row['id'] for row in
-                                           self.excluded_products.values('id')]
+            self.__excluded_product_ids = self.__get_pks_and_child_pks(
+                self.excluded_products)
         return self.__excluded_product_ids
 
     def _class_ids(self):
         if None == self.__class_ids:
-            self.__class_ids = [row['id'] for row in self.classes.values('id')]
+            self.__class_ids = self.classes.values_list('pk', flat=True)
         return self.__class_ids
 
     def num_products(self):
@@ -1218,7 +1238,7 @@ class ApplicationResult(object):
     # (a) Give a discount off the BASKET total
     # (b) Give a discount off the SHIPPING total
     # (a) Trigger a post-order action
-    BASKET, SHIPPING, POST_ORDER = list(range(0, 3))
+    BASKET, SHIPPING, POST_ORDER = 0, 1, 2
     affects = None
 
     @property
@@ -1423,13 +1443,13 @@ class FixedPriceBenefit(Benefit):
     _description = _("The products that meet the condition are sold "
                      "for %(amount)s")
 
-    def __unicode__(self):
+    def __str__(self):
         return self._description % {
             'amount': currency(self.value)}
 
     @property
     def description(self):
-        return self.__unicode__()
+        return six.text_type(self)
 
     class Meta:
         proxy = True
