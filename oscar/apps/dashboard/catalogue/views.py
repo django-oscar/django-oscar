@@ -69,7 +69,6 @@ class ProductListView(SingleTableMixin, generic.TemplateView):
     template_name = 'dashboard/catalogue/product_list.html'
     form_class = ProductSearchForm
     productclass_form_class = ProductClassSelectForm
-    description_template = _(u'Products %(upc_filter)s %(title_filter)s')
     table_class = ProductTable
     context_table_name = 'products'
 
@@ -77,8 +76,13 @@ class ProductListView(SingleTableMixin, generic.TemplateView):
         ctx = super(ProductListView, self).get_context_data(**kwargs)
         ctx['form'] = self.form
         ctx['productclass_form'] = self.productclass_form_class()
-        ctx['queryset_description'] = self.description
+        ctx['queryset_description'] = self.get_description(self.form)
         return ctx
+
+    def get_description(self, form):
+        if form.is_valid() and any(form.cleaned_data.values()):
+            return _('Product search results')
+        return _('Products')
 
     def get_table_pagination(self):
         return dict(per_page=20)
@@ -103,13 +107,9 @@ class ProductListView(SingleTableMixin, generic.TemplateView):
         Filter the queryset and set the description according to the search
         parameters given
         """
-        description_ctx = {'upc_filter': '',
-                           'title_filter': ''}
-
         self.form = self.form_class(self.request.GET)
 
         if not self.form.is_valid():
-            self.description = self.description_template % description_ctx
             return queryset
 
         data = self.form.cleaned_data
@@ -120,21 +120,11 @@ class ProductListView(SingleTableMixin, generic.TemplateView):
             qs_match = queryset.filter(upc=data['upc'])
             if qs_match.exists():
                 queryset = qs_match
-                description_ctx['upc_filter'] = _(
-                    " with UPC '%s'") % data['upc']
             else:
                 queryset = queryset.filter(upc__icontains=data['upc'])
-                description_ctx['upc_filter'] = _(
-                    " including an item with "
-                    "UPC containing '%s'") % data['upc']
 
         if data.get('title'):
             queryset = queryset.filter(title__icontains=data['title'])
-            description_ctx['title_filter'] = _(
-                " including an item with "
-                "title containing '%s'") % data['title']
-
-        self.description = self.description_template % description_ctx
 
         return queryset
 
