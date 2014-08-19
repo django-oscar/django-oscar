@@ -2,7 +2,7 @@ from oscar.core.loading import get_model
 from django.core.urlresolvers import reverse
 
 from oscar.test.testcases import WebTestCase, add_permissions
-from oscar.test.factories import create_product, create_stockrecord
+from oscar.test.factories import create_product, create_stockrecord, ProductAttributeFactory
 
 from django_dynamic_fixture import G
 
@@ -90,6 +90,22 @@ class TestAStaffUser(WebTestCase):
             if product.has_stockrecords:
                 self.fail('Product has stock records but should not')
 
+    def test_can_create_product_with_required_attributes(self):
+        category = G(Category)
+        attribute = ProductAttributeFactory(required=True)
+        product_class = attribute.product_class
+        page = self.get(reverse('dashboard:catalogue-product-create',
+                                args=(product_class.slug,)))
+        form = page.form
+        form['upc'] = '123456'
+        form['title'] = 'new product'
+        form['attr_weight'] = '5'
+        form['productcategory_set-0-category'] = category.id
+
+        page = form.submit()
+
+        self.assertEqual(Product.objects.count(), 1)
+
     def test_can_delete_an_individual_product(self):
         product = create_product()
         stockrecord = create_stockrecord(product, partner_users=[self.user, ])
@@ -174,10 +190,15 @@ class TestANonStaffUser(TestAStaffUser):
         assert product1 in products_on_page
         assert product2 not in products_on_page
 
+    # Tests below can't work because they don't create a stockrecord
+
     def test_can_create_a_product_without_stockrecord(self):
         pass
 
     def test_can_update_a_product_without_stockrecord(self):
+        pass
+
+    def test_can_create_product_with_required_attributes(self):
         pass
 
     def test_can_submit_an_invalid_product_update_and_returns_to_update_page(self):

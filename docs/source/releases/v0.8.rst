@@ -242,7 +242,7 @@ Minor changes
   ``JQuery UI`` as it's in use in the frontend.
 
 .. _django-tables2: http://django-tables2.readthedocs.org/en/latest/
-.. _bootstrap-datetimepicker: http://jdewit.github.io/bootstrap-timepicker/
+.. _bootstrap-datetimepicker: http://www.malot.fr/bootstrap-datetimepicker/
 
 .. _incompatible_changes_in_0.8:
 
