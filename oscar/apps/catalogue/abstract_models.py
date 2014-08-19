@@ -292,6 +292,8 @@ class AbstractProduct(models.Model):
     #: Determines if a product may be used in an offer. It is illegal to
     #: discount some types of product (e.g. ebooks) and this field helps
     #: merchants from avoiding discounting such products
+    #: Note that this flag is ignored for child products; they inherit from
+    #: the parent product.
     is_discountable = models.BooleanField(
         _("Is discountable?"), default=True, help_text=_(
             "This flag indicates if this product can be used in an offer "
@@ -327,19 +329,23 @@ class AbstractProduct(models.Model):
         """
         Validate a product. Those are the rules:
 
-        +---------------+-------------+--------------+-----------+
-        |               | stand alone | parent       | child     |
-        +---------------+-------------+--------------+-----------+
-        | title         | required    | required     | optional  |
-        +---------------+-------------+--------------+-----------+
-        | product class | required    | must be None | required  |
-        +---------------+-------------+--------------+-----------+
-        | parent        | forbidden   | forbidden    | required  |
-        +---------------+-------------+--------------+-----------+
-        | stockrecords  | 0 or more   | forbidden    | required  |
-        +---------------+-------------+--------------+-----------+
-        | categories    | 1 or more   | 1 or more    | forbidden |
-        +---------------+-------------+--------------+-----------+
+        +---------------+-------------+--------------+--------------+
+        |               | stand alone | parent       | child        |
+        +---------------+-------------+--------------+--------------+
+        | title         | required    | required     | optional     |
+        +---------------+-------------+--------------+--------------+
+        | product class | required    | required     | must be None |
+        +---------------+-------------+--------------+--------------+
+        | parent        | forbidden   | forbidden    | required     |
+        +---------------+-------------+--------------+--------------+
+        | stockrecords  | 0 or more   | forbidden    | required     |
+        +---------------+-------------+--------------+--------------+
+        | categories    | 1 or more   | 1 or more    | forbidden    |
+        +---------------+-------------+--------------+--------------+
+        | attributes    | optional    | optional     | optional     |
+        +---------------+-------------+--------------+--------------+
+        | rec. products | optional    | optional     | unsupported  |
+        +---------------+-------------+--------------+--------------+
 
         Because the validation logic is quite complex, validation is delegated
         to the sub method appropriate for the product's structure.
@@ -368,6 +374,9 @@ class AbstractProduct(models.Model):
         if self.parent_id and not self.parent.is_parent:
             raise ValidationError(
                 _("You can only assign child products to parent products."))
+        if self.product_class:
+            raise ValidationError(
+                _("A child product can't have a product class."))
 
     def _clean_parent(self):
         """
@@ -397,6 +406,23 @@ class AbstractProduct(models.Model):
     @property
     def is_child(self):
         return self.structure == self.CHILD
+
+    def can_be_parent(self, give_reason=False):
+        """
+        Helps decide if a the product can be turned into a parent product.
+        """
+        reason = None
+        if self.is_child:
+            reason = _('The specified parent product is a child product.')
+        if self.has_stockrecords:
+            reason = _(
+                "One can't add a child product to a product with stock"
+                " records.")
+        is_valid = reason is None
+        if give_reason:
+            return is_valid, reason
+        else:
+            return is_valid
 
     @property
     def options(self):
@@ -506,7 +532,7 @@ class AbstractProduct(models.Model):
         """
         return self._min_child_price('price_excl_tax')
 
-    # Wrappers
+    # Wrappers for child products
 
     def get_title(self):
         """
@@ -520,14 +546,23 @@ class AbstractProduct(models.Model):
 
     def get_product_class(self):
         """
-        Return a product's item class
+        Return a product's item class. Child products inherit their parent's.
         """
-        if self.product_class_id or self.product_class:
-            return self.product_class
-        if self.parent and self.parent.product_class:
+        if self.is_child:
             return self.parent.product_class
-        return None
+        else:
+            return self.product_class
     get_product_class.short_description = _("Product class")
+
+    def get_is_discountable(self):
+        """
+        At the moment, is_discountable can't be set individually for child
+        products; they inherit it from their parent.
+        """
+        if self.is_child:
+            return self.parent.is_discountable
+        else:
+            return self.is_discountable
 
     def get_categories(self):
         """

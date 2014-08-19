@@ -20,8 +20,9 @@ from oscar.core.compat import get_user_model
 
 __all__ = ["UserFactory", "CountryFactory", "UserAddressFactory",
            "BasketFactory", "VoucherFactory", "ProductFactory",
-           "StockRecordFactory", "ProductAttributeFactory",
-           "ProductAttributeValueFactory", "AttributeOptionGroupFactory",
+           "ProductClassFactory", "StockRecordFactory",
+           "ProductAttributeFactory", "ProductAttributeValueFactory",
+           "AttributeOptionGroupFactory",
            "AttributeOptionFactory", "PartnerFactory",
            "ProductCategoryFactory", "CategoryFactory", "RangeFactory",
            "ProductClassFactory"]

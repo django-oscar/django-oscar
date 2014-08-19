@@ -82,6 +82,15 @@ has been altered to be:
 Some properties and method names have also been updated to the new naming. The
 old ones will throw a deprecation warning.
 
+Better handling of child products in product dashboard
+------------------------------------------------------
+Together with the changes above, the dashboard experience for child products
+has been improved. The difference between a parent product and a stand-alone
+product is hidden from the user; a user can now add and remove child products
+on any suitable product. When the first child product is added, a stand-alone
+product becomes a parent product; and vice versa.
+In the front-end, the old name of "product variants" has been kept.
+
 Django 1.7 support
 ------------------
 
@@ -295,6 +304,13 @@ the following renaming pattern:
 * ``product_variants`` becomes ``child_products``
 * ``variants`` becomes ``children``
 * ``variant`` becomes ``child``
+
+Product editing
+---------------
+The dashboard improvements for child products meant slight changes to both
+``ProductCreateUpdateView`` and ``ProductForm``. Notably, ``ProductForm`` now
+gets a ``parent`` kwarg. Please review your customisations for compatibility
+with the updated code.
 
 .. _incompatible_shipping_changes_in_0.8:
 

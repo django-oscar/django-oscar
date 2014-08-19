@@ -70,13 +70,15 @@ class TopLevelProductTests(ProductTests):
         self.assertEqual(set([product]), set(Product.browsable.all()))
 
 
-class VariantProductTests(ProductTests):
+class ChildProductTests(ProductTests):
 
     def setUp(self):
-        super(VariantProductTests, self).setUp()
+        super(ChildProductTests, self).setUp()
         self.parent = Product.objects.create(
-            title="Parent product", product_class=self.product_class,
-            structure=Product.PARENT)
+            title="Parent product",
+            product_class=self.product_class,
+            structure=Product.PARENT,
+            is_discountable=False)
 
     def test_child_products_dont_need_titles(self):
         Product.objects.create(
@@ -84,19 +86,16 @@ class VariantProductTests(ProductTests):
             structure=Product.CHILD)
 
     def test_child_products_dont_need_a_product_class(self):
-        Product.objects.create(
-            parent=self.parent, structure=Product.CHILD)
+        Product.objects.create(parent=self.parent, structure=Product.CHILD)
 
-    def test_child_products_inherit_parent_titles(self):
+    def test_child_products_inherit_fields(self):
         p = Product.objects.create(
-            parent=self.parent, product_class=self.product_class,
-            structure=Product.CHILD)
+            parent=self.parent,
+            structure=Product.CHILD,
+            is_discountable=True)
         self.assertEqual("Parent product", p.get_title())
-
-    def test_child_products_inherit_product_class(self):
-        p = Product.objects.create(
-            parent=self.parent, structure=Product.CHILD)
         self.assertEqual("Clothing", p.get_product_class().name)
+        self.assertEqual(False, p.get_is_discountable())
 
     def test_child_products_are_not_part_of_browsable_set(self):
         Product.objects.create(
