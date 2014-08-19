@@ -1,15 +1,46 @@
 {% load i18n %}
 
 <p>
-{% if creating %}
-    {% blocktrans with name=product.get_title %}
-        Created product '{{ name }}'.
-    {% endblocktrans %}
-{% else %}
-    {% blocktrans with name=product.get_title %}
-        Updated product '{{ name }}'.
-    {% endblocktrans %}
-{% endif %}
+{% with name=product.title parent_name=product.parent.title %}
+    {% if product.is_child %}
+
+        {% if creating %}
+            {% if product.title %}
+                {% blocktrans %}
+                    Created product variant '{{ name }}'.
+                {% endblocktrans %}
+            {% else %}
+                {% blocktrans %}
+                    Created variant of '{{ parent_name }}'.
+                {% endblocktrans %}
+            {% endif %}
+        {% else %}
+            {% if product.title %}
+                {% blocktrans %}
+                    Updated product variant '{{ name }}'.
+                {% endblocktrans %}
+            {% else %}
+                {% blocktrans %}
+                    Updated a variant of '{{ parent_name }}'.
+                {% endblocktrans %}
+            {% endif %}
+        {% endif %}
+
+    {% else %}
+
+        {% if creating %}
+            {% blocktrans %}
+                Created product '{{ name }}'.
+            {% endblocktrans %}
+        {% else %}
+            {% blocktrans %}
+                Updated product '{{ name }}'.
+            {% endblocktrans %}
+        {% endif %}
+
+    {% endif %}
+{% endwith %}
+
 </p>
 
 <p>
