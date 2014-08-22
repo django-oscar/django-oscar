@@ -10,10 +10,6 @@
     {{ summary }} | {{ block.super }}
 {% endblock %}
 
-{% block description %}
-    {{ category.description|default:""|striptags }}
-{% endblock %}
-
 {% block headertext %}{{ summary }}{% endblock %}
 
 {% block breadcrumbs %}
@@ -22,17 +18,7 @@
             <a href="{{ homepage_url }}">{% trans "Home" %}</a>
             <span class="divider">/</span>
         </li>
-        {% if not category %}
-            <li class="active">{% trans "All products" %}</li>
-        {% else %}
-            {% for category in category.get_ancestors %}
-                <li>
-                    <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
-                    <span class="divider">/</span>
-                </li>
-            {% endfor %}
-            <li class="active">{{ category.name }}</li>
-        {% endif %}
+        <li class="active">{{ summary }}</li>
     </ul>
 {% endblock breadcrumbs %}
 
@@ -71,14 +57,6 @@
 {% endblock %}
 
 {% block content %}
-    {% if category.description %}
-        <div class="row-fluid">
-            <div class="span9"><p>{{ category.description|safe }}</p></div>
-            {% if category.image %}
-                <div class="span3"><img src="{{ category.image.url }}" alt="{{ category.name }}" /></div>
-            {% endif %}
-        </div>
-    {% endif %}
 
     <form method="get" class="form-horizontal">
         {# Render other search params in a hidden block #}
@@ -127,6 +105,7 @@
     {% else %}
         <p class="nonefound">{% trans "No products found." %}</p>
     {% endif %}
+
 {% endblock content %}
 
 {% block onbodyload %}

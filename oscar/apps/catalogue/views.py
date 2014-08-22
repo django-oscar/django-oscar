@@ -141,7 +141,7 @@ class ProductCategoryView(TemplateView):
     specified.
     """
     context_object_name = "products"
-    template_name = 'catalogue/browse.html'
+    template_name = 'catalogue/category.html'
     enforce_paths = True
 
     def get(self, request, *args, **kwargs):
@@ -185,16 +185,9 @@ class ProductCategoryView(TemplateView):
         """
         return self.category.get_descendants_and_self()
 
-    def get_summary(self):
-        """
-        Summary to be shown in template
-        """
-        return self.category.name
-
     def get_context_data(self, **kwargs):
         context = super(ProductCategoryView, self).get_context_data(**kwargs)
         context['category'] = self.category
-        context['summary'] = self.get_summary()
         search_context = self.search_handler.get_search_context_data(
             self.context_object_name)
         context.update(search_context)
