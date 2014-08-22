@@ -38,6 +38,7 @@ class SearchForm(FacetedSearchForm):
 
     # Search
     RELEVANCY = "relevancy"
+    TOP_RATED = "rating"
     NEWEST = "newest"
     PRICE_HIGH_TO_LOW = "price-desc"
     PRICE_LOW_TO_HIGH = "price-asc"
@@ -46,6 +47,7 @@ class SearchForm(FacetedSearchForm):
 
     SORT_BY_CHOICES = [
         (RELEVANCY, _("Relevancy")),
+        (TOP_RATED, _("Customer rating")),
         (NEWEST, _("Newest")),
         (PRICE_HIGH_TO_LOW, _("Price high to low")),
         (PRICE_LOW_TO_HIGH, _("Price low to high")),
@@ -57,6 +59,7 @@ class SearchForm(FacetedSearchForm):
     # as we assume results are returned in relevancy order in the absence of an
     # explicit sort field being passed to the search backend.
     SORT_BY_MAP = {
+        TOP_RATED: '-rating',
         NEWEST: '-date_created',
         PRICE_HIGH_TO_LOW: '-price',
         PRICE_LOW_TO_HIGH: 'price',
