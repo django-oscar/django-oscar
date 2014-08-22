@@ -1,0 +1,19 @@
+{% extends 'dashboard/table.html' %}
+{% load i18n %}
+
+{% block table.caption %}
+  {{ block.super }}
+  <div class="pull-right">
+      <div class="form-inline">
+          <i class="icon-refresh"></i> {% trans "Bulk Actions" %}
+          <label for="inlineCheckboxes">{% trans "With selected customers:" %}</label>
+          <label>
+              <input type="radio" name="action" value="make_active" /> {% trans "Make active" %}
+          </label>
+          <label>
+              <input type="radio" name="action" value="make_inactive" /> {% trans "Make inactive" %}
+          </label>
+          <input type="submit" value="{% trans "Go!" %}" class="btn btn-primary" />
+      </div>
+  </div>
+{% endblock %}

@@ -23,7 +23,12 @@ class ProductDetailView(DetailView):
     model = Product
     view_signal = product_viewed
     template_folder = "catalogue"
+
+    # Whether to redirect to the URL with the right path
     enforce_paths = True
+
+    # Whether to redirect child products to their parent's URL
+    enforce_parent = True
 
     def get(self, request, **kwargs):
         """
@@ -47,22 +52,20 @@ class ProductDetailView(DetailView):
             return super(ProductDetailView, self).get_object(queryset)
 
     def redirect_if_necessary(self, current_path, product):
-        if self.enforce_paths:
-            if product.is_child:
-                return HttpResponsePermanentRedirect(
-                    product.parent.get_absolute_url())
+        if self.enforce_parent and product.is_child:
+            return HttpResponsePermanentRedirect(
+                product.parent.get_absolute_url())
 
+        if self.enforce_paths:
             expected_path = product.get_absolute_url()
             if expected_path != urlquote(current_path):
                 return HttpResponsePermanentRedirect(expected_path)
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductDetailView, self).get_context_data(**kwargs)
-        reviews = self.get_reviews()
-        ctx['reviews'] = reviews
+        ctx['reviews'] = self.get_reviews()
         ctx['alert_form'] = self.get_alert_form()
         ctx['has_active_alert'] = self.get_alert_status()
-
         return ctx
 
     def get_alert_status(self):

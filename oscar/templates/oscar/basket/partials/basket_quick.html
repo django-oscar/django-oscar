@@ -20,7 +20,7 @@
                         </div>
                     </div>
                     <div class="span6">
-                        <h5><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h5>
+                        <p><strong><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></strong></p>
                     </div>
                     <div class="span1 align-center"><strong>{% trans "Qty" %}</strong> {{ line.quantity }}</div>
                     <div class="span2 price_color align-right">{{ line.unit_price_excl_tax|currency:request.basket.currency }}</div>
@@ -28,13 +28,13 @@
             </li>
         {% endfor %}
         <li class="form-actions">
-            <h4 class="align-right">
+            <p class="align-right">
                 {% if request.basket.is_tax_known %}
                     <small>{% trans "Total:" %} {{ request.basket.total_incl_tax|currency:request.basket.currency }}</small> 
                 {% else %}
                     <small>{% trans "Total:" %} {{ request.basket.total_excl_tax|currency:request.basket.currency }}</small> 
                 {% endif %}
-            </h4>
+            </p>
             <p class="pull-left"><a href="{% url 'basket:summary' %}" class="btn btn-info btn-small">{% trans "View basket" %}</a></p>
             <p class="pull-right"><a href="{% url 'checkout:index' %}" class="btn btn-primary btn-small"><i class="icon-shopping-cart"></i> {% trans "Checkout" %}</a></p>
         </li>

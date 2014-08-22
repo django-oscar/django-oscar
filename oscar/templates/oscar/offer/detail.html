@@ -31,13 +31,19 @@
     {% endif %}
 
     {% if upsell_message %}
-    <div class="well">
+    <div class="row-fluid">
         {% if offer.description %}
-            <p>{{ offer.description|safe }}</p>
-            <hr/>
+            <div class="span7">
+                <p>{{ offer.description|safe }}</p>
+            </div>
         {% endif %}
-        <h3><i class="icon-exclamation-sign icon-large"></i> {% trans "What you need to do" %}</h3>
-        <p>{{ upsell_message }}</p>
+            <div class="span5">
+                <div class="well">
+                    <h2 class="h4"><i class="icon-exclamation-sign icon-large"></i> {% trans "What you need to do" %}</h2>
+                    <p>{{ upsell_message }}</p>
+                </div>
+            </div>
+        </div>
     </div>
     {% endif %}
 

@@ -3,15 +3,15 @@ from django.contrib import messages
 from django.core.exceptions import (
     ObjectDoesNotExist, MultipleObjectsReturned, PermissionDenied)
 from django.core.urlresolvers import reverse
-from oscar.core.loading import get_model
-from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.http import Http404
+from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import (ListView, CreateView, UpdateView, DeleteView,
                                   View, FormView)
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.customer.mixins import PageTitleMixin
-from oscar.core.loading import get_classes
+from oscar.core.loading import get_classes, get_model
+from oscar.core.utils import redirect_to_referrer, safe_referrer
 
 WishList = get_model('wishlists', 'WishList')
 Line = get_model('wishlists', 'Line')
@@ -76,8 +76,7 @@ class WishListDetailView(PageTitleMixin, FormView):
             else:
                 subform.save()
         messages.success(self.request, _('Quantities updated.'))
-        return HttpResponseRedirect(reverse('customer:wishlists-detail',
-                                            kwargs={'key': self.object.key}))
+        return redirect('customer:wishlists-detail', key=self.object.key)
 
 
 class WishListCreateView(PageTitleMixin, CreateView):
@@ -101,7 +100,7 @@ class WishListCreateView(PageTitleMixin, CreateView):
             except ObjectDoesNotExist:
                 messages.error(
                     request, _("The requested product no longer exists"))
-                return HttpResponseRedirect(reverse('wishlists-create'))
+                return redirect('wishlists-create')
         return super(WishListCreateView, self).dispatch(
             request, *args, **kwargs)
 
@@ -125,7 +124,7 @@ class WishListCreateView(PageTitleMixin, CreateView):
         else:
             msg = _("Your wishlist has been created")
         messages.success(self.request, msg)
-        return HttpResponseRedirect(wishlist.get_absolute_url())
+        return redirect(wishlist.get_absolute_url())
 
 
 class WishListCreateWithProductView(View):
@@ -147,8 +146,7 @@ class WishListCreateWithProductView(View):
         messages.success(
             request, _("%(title)s has been added to your wishlist") % {
                 'title': product.get_title()})
-        return HttpResponseRedirect(request.META.get(
-            'HTTP_REFERER', wishlist.get_absolute_url()))
+        return redirect_to_referrer(request.META, wishlist.get_absolute_url())
 
 
 class WishListUpdateView(PageTitleMixin, UpdateView):
@@ -237,9 +235,8 @@ class WishListAddProduct(View):
         self.wishlist.add(self.product)
         msg = _("'%s' was added to your wish list.") % self.product.get_title()
         messages.success(self.request, msg)
-        return HttpResponseRedirect(
-            self.request.META.get('HTTP_REFERER',
-                                  self.product.get_absolute_url()))
+        return redirect_to_referrer(
+            self.request.META, self.product.get_absolute_url())
 
 
 class LineMixin(object):
@@ -292,8 +289,9 @@ class WishListRemoveProduct(LineMixin, PageTitleMixin, DeleteView):
 
         # We post directly to this view on product pages; and should send the
         # user back there if that was the case
-        referrer = self.request.META.get('HTTP_REFERER', '')
-        if self.product and self.product.get_absolute_url() in referrer:
+        referrer = safe_referrer(self.request.META, '')
+        if (referrer and self.product and
+                self.product.get_absolute_url() in referrer):
             return referrer
         else:
             return reverse(
@@ -305,7 +303,7 @@ class WishListMoveProductToAnotherWishList(LineMixin, View):
     def dispatch(self, request, *args, **kwargs):
         try:
             self.fetch_line(request.user, kwargs['key'],
-                            product_pk=kwargs['product_pk'])
+                            line_pk=kwargs['line_pk'])
         except (ObjectDoesNotExist, MultipleObjectsReturned):
             raise Http404
         return super(WishListMoveProductToAnotherWishList, self).dispatch(
@@ -324,5 +322,4 @@ class WishListMoveProductToAnotherWishList(LineMixin, View):
 
         default_url = reverse(
             'customer:wishlists-detail', kwargs={'key': self.wishlist.key})
-        return HttpResponseRedirect(self.request.META.get(
-            'HTTP_REFERER', default_url))
+        return redirect_to_referrer(self.request.META, default_url)

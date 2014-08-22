@@ -5,7 +5,6 @@ from django.utils.translation import ugettext_lazy as _
 
 from oscar.test.testcases import WebTestCase
 
-from oscar.apps.dashboard.users.views import IndexView
 from oscar.core.compat import get_user_model
 
 from webtest import AppError
@@ -33,8 +32,7 @@ class IndexViewTests(WebTestCase):
 
     def test_user_list_view(self):
         response = self.get(reverse('dashboard:users-index'))
-        self.assertInContext(response, 'user_list')
-        self.assertEqual(len(response.context['user_list']), IndexView.paginate_by)
+        self.assertInContext(response, 'users')
 
     def test_make_active(self):
         params = {'action': 'make_active',

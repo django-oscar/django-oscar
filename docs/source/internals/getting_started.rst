@@ -84,7 +84,6 @@ and append Oscar's core apps:
         'django.contrib.staticfiles',
         'django.contrib.flatpages',
         ...
-        'south',
         'compressor',
     ] + get_core_apps()
 
@@ -107,20 +106,15 @@ More info about installing ``flatpages`` is in the `Django docs`_.
 
 Next, add ``oscar.apps.basket.middleware.BasketMiddleware`` and
 ``django.contrib.flatpages.middleware.FlatpageFallbackMiddleware`` to
-your ``MIDDLEWARE_CLASSES`` setting. If you're running on Django 1.5, it is
-also recommended to use ``django.middleware.transaction.TransactionMiddleware``:
+your ``MIDDLEWARE_CLASSES`` setting.
 
 .. code-block:: django
 
     MIDDLEWARE_CLASSES = (
         ...
         'oscar.apps.basket.middleware.BasketMiddleware',
-        'django.middleware.transaction.TransactionMiddleware',  # Django 1.5 only
         'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     )
-
-If you're running Django 1.6 or above, you should enable ``ATOMIC_REQUESTS``
-instead (see database settings above).
 
 Set your auth backends to:
 
@@ -237,7 +231,7 @@ Check your database settings. A quick way to get started is to use SQLite:
             'PASSWORD': '',
             'HOST': '',
             'PORT': '',
-            'ATOMIC_REQUESTS': True,  # Django 1.6+
+            'ATOMIC_REQUESTS': True,
         }
     }
 
@@ -255,8 +249,32 @@ Then create the database and the shop should be browsable:
 You should now have an empty, but running Oscar install that you can browse at
 http://localhost:8000.
 
-Fixtures
-========
+Migrations
+----------
+
+Oscar ships with two sets of migrations. If you're running Django 1.7, you
+don't need to do anything; Django's migration framework will detect them
+automatically and will do the right thing.
+If you're running Django 1.6, you need to install `South`_::
+
+.. code-block:: bash
+
+    $ pip install South
+
+And you need to add it to your installed apps:
+
+.. code-block:: django
+
+    INSTALLED_APPS = [
+        ...
+        'south',
+    ] + get_core_apps()
+
+.. _South: http://south.readthedocs.org/en/latest/
+
+
+Initial data
+============
 
 The default checkout process requires a shipping address with a country.  Oscar
 uses a model for countries with flags that indicate which are valid shipping

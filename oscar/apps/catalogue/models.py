@@ -1,51 +1,66 @@
+import django
+
 """
 Vanilla product models
 """
+from oscar.core.loading import is_model_registered
 from oscar.apps.catalogue.abstract_models import *  # noqa
 
 
-class ProductClass(AbstractProductClass):
-    pass
+if not is_model_registered('catalogue', 'ProductClass'):
+    class ProductClass(AbstractProductClass):
+        pass
 
 
-class Category(AbstractCategory):
-    pass
+if not is_model_registered('catalogue', 'Category'):
+    class Category(AbstractCategory):
+        pass
 
 
-class ProductCategory(AbstractProductCategory):
-    pass
+if not is_model_registered('catalogue', 'ProductCategory'):
+    class ProductCategory(AbstractProductCategory):
+        pass
 
 
-class Product(AbstractProduct):
-    pass
+if not is_model_registered('catalogue', 'Product'):
+    class Product(AbstractProduct):
+        pass
 
 
-class ProductRecommendation(AbstractProductRecommendation):
-    pass
+if not is_model_registered('catalogue', 'ProductRecommendation'):
+    class ProductRecommendation(AbstractProductRecommendation):
+        pass
 
 
-class ProductAttribute(AbstractProductAttribute):
-    pass
+if not is_model_registered('catalogue', 'ProductAttribute'):
+    class ProductAttribute(AbstractProductAttribute):
+        pass
 
 
-class ProductAttributeValue(AbstractProductAttributeValue):
-    pass
+if not is_model_registered('catalogue', 'ProductAttributeValue'):
+    class ProductAttributeValue(AbstractProductAttributeValue):
+        pass
 
 
-class AttributeOptionGroup(AbstractAttributeOptionGroup):
-    pass
+if not is_model_registered('catalogue', 'AttributeOptionGroup'):
+    class AttributeOptionGroup(AbstractAttributeOptionGroup):
+        pass
 
 
-class AttributeOption(AbstractAttributeOption):
-    pass
+if not is_model_registered('catalogue', 'AttributeOption'):
+    class AttributeOption(AbstractAttributeOption):
+        pass
 
 
-class Option(AbstractOption):
-    pass
+if not is_model_registered('catalogue', 'Option'):
+    class Option(AbstractOption):
+        pass
 
 
-class ProductImage(AbstractProductImage):
-    pass
+if not is_model_registered('catalogue', 'ProductImage'):
+    class ProductImage(AbstractProductImage):
+        pass
 
 
-from .receivers import *  # noqa
+if django.VERSION < (1, 7):
+    from . import receivers  # noqa

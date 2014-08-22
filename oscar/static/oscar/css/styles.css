@@ -5577,6 +5577,25 @@ input[type="submit"].btn.btn-mini {
 .alert-block p + p {
   margin-top: 5px;
 }
+/* additional styles for alert content. Used by both public side and dashboard */
+.alert .alertinner {
+  position: relative;
+}
+.alert .alertinner.wicon {
+  padding-left: 0.5em;
+  margin-left: 0.5em;
+}
+.alert .alertinner [class*="icon-"] {
+  position: absolute;
+  top: 0.3em;
+  right: 100%;
+}
+.alert .alertinner p {
+  margin: 10px 0 0 0;
+}
+.alert .alertinner p:first-child {
+  margin: 0;
+}
 .nav {
   margin-left: 0;
   margin-bottom: 20px;
@@ -7478,6 +7497,11 @@ body {
   margin: 0px auto;
   max-width: 960px;
 }
+.row-fluid {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
 .page {
   background: #ffffff;
   -webkit-border-radius: 0 0 6px 6px;
@@ -7620,14 +7644,29 @@ form.flat {
   padding: 0 0 5px 0;
   list-style: none;
 }
-.controls .error-block {
+.error-block {
   color: #b94a48;
 }
 .control-label.required span {
   color: #FF0000;
 }
+/* weird alternative to btn-block for specific use on the product page, where btn-block would cause a vertical misalignment when product size options are shown */
+.btn-add-to-basket {
+  width: 100%;
+}
+/* star rating functionality for product review page */
+.reviewrating select {
+  display: none;
+}
+.reviewrating .star-rating {
+  margin-bottom: 10px;
+  font-size: 280%;
+}
+.reviewrating .star-rating i {
+  cursor: pointer;
+}
 .navbar-static-top.navbar .nav > li > a {
-  padding: 10px 0 10px 20px;
+  padding: 10px 15px;
 }
 .header {
   position: relative;

@@ -25,10 +25,10 @@
     {% block basket_form_headers %}
         <div class="basket-title hidden-phone">
             <div class="row-fluid">
-                <h4 class="span6">{% trans "Items to buy now" %}</h4>
-                <h4 class="span3">{% trans "Quantity" %}</h4>
-                <h4 class="span1 align-right">{% trans "Price" %}</h4>
-                <h4 class="span2 align-right">{% trans "Total" %}</h4>
+                <h2 class="span6 h3">{% trans "Items to buy now" %}</h2>
+                <p class="span3 h3">{% trans "Quantity" %}</p>
+                <p class="span1 h3 align-right">{% trans "Price" %}</p>
+                <p class="span2 h3 align-right">{% trans "Total" %}</p>
             </div>
         </div>
     {% endblock %}
@@ -54,13 +54,15 @@
                                 {% endwith %}
                             </div>
                             <div class="span4">
-                                <h4><a href="{{ product.get_absolute_url }}">{{ line.description }}</a></h4>
+                                <h3><a href="{{ product.get_absolute_url }}">{{ line.description }}</a></h3>
                                 <p class="availability {{ session.availability.code }}">{{ session.availability.message }}</p>
                             </div>
                             <div class="span3">
                                 <div class="checkout-quantity control-group {% if form.errors %}error{% endif %}">
-                                    {{ form.quantity }}
-                                    <button class="btn" type="submit">{% trans "Update" %}</button>
+                                    <p>
+                                        {{ form.quantity }}
+                                        <button class="btn" type="submit">{% trans "Update" %}</button>
+                                    </p>
                                     <p>
                                         <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove" class="inline">{% trans "Remove" %}</a>
                                         {% if request.user.is_authenticated %}
@@ -106,22 +108,25 @@
 
     <div class="row-fluid">
         {% block vouchers %}
-            <div class="span6">
-                <div class="sub-header">
-                    <h2>{% trans "Voucher/promo code" %}</h2>
-                </div>
-                <p id="voucher_form_link"><a href="#voucher" class="btn btn-full">{% trans "I have a voucher code..." %}</a></p>
+            {# Hide the entire section if a custom BasketView doesn't pass in a voucher form #}
+            {% if voucher_form %}
+                <div class="span6">
+                    <div class="sub-header">
+                        <h2>{% trans "Voucher/promo code" %}</h2>
+                    </div>
+                    <p id="voucher_form_link"><a href="#voucher" class="btn btn-full">{% trans "I have a voucher code..." %}</a></p>
 
-                <div id="voucher_form_container" style="display:none">
-                    <h4>{% trans "Voucher code" %}</h4>
-                    <form id="voucher_form" action="{% url 'basket:vouchers-add' %}" method="post">
-                        {% csrf_token %}
-                        {% include "partials/form_fields.html" with form=voucher_form %}
-                        <button type="submit" class="btn btn-info">{% trans "Add voucher" %}</button>
-                        {% trans "or" %} <a href="#" id="voucher_form_cancel">{% trans "cancel" %}</a>
-                    </form>
+                    <div id="voucher_form_container" style="display:none">
+                        <h3>{% trans "Voucher code" %}</h3>
+                        <form id="voucher_form" action="{% url 'basket:vouchers-add' %}" method="post">
+                            {% csrf_token %}
+                            {% include "partials/form_fields.html" with form=voucher_form %}
+                            <button type="submit" class="btn btn-info">{% trans "Add voucher" %}</button>
+                            {% trans "or" %} <a href="#" id="voucher_form_cancel">{% trans "cancel" %}</a>
+                        </form>
+                    </div>
                 </div>
-            </div>
+            {% endif %}
         {% endblock vouchers %}
 
         {% block baskettotals %}
@@ -158,11 +163,11 @@
     {% if request.user.is_authenticated and saved_formset %}
         <div class="well">
             <div class="sub-header">
-                <h3>{% trans "To buy later" %}</h3>
+                <h2>{% trans "Items to buy later" %}</h2>
             </div>
             <div class="row-fluid basket-title hidden-phone">
-                <h4 class="span8">{% trans "Items" %}</h4>
-                <h4 class="span2 align-center">{% trans "Price" %}</h4>
+                <p class="span8 h4">{% trans "Items" %}</p>
+                <p class="span2 h4 align-center">{% trans "Price" %}</p>
                 <div class="span2">&nbsp;</div>
             </div>
             <form action="{% url 'basket:saved' %}" method="post" class="form-stacked later_summary" id="saved_basket_formset">
@@ -183,7 +188,7 @@
                                 {% endwith %}
                             </div>
                             <div class="span6">
-                                <h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
+                                <h3><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h3>
                                 <p class="availability {{ session.availability.code }}">{{ session.availability.message }}</p>
                                 <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove">{% trans "Remove" %}</a>
                                 <div style="display:none">

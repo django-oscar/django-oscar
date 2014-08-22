@@ -9,6 +9,7 @@ Whoosh>=2.5
 pysolr>=3.1
 requests==2.1
 uWSGI==1.9.21.1
+South>=1.0,<1.1
 
 # Docs
 Sphinx==1.2.2
@@ -17,9 +18,14 @@ sphinx_rtd_theme==0.1.6
 
 # Testing
 django-dynamic-fixture>=1.7,<1.8
-mock>=1.0.1,<1.1
 coverage>=3.6,<3.7
-django-nose>=1.2,<1.3
+
+# Need to run against a custom version of django-nose a new version comes
+# with support for Django 1.7 
+# See https://github.com/django-nose/django-nose/pull/161/
+# TODO: Pin to official release when django-nose 1.3 is released
+https://github.com/brad/django-nose/archive/django_1.7.zip#egg=django-nose
+
 spec>=0.11.1,<0.12
 WebTest>=2.0,<2.1
 django-webtest>=1.7,<1.8
@@ -27,13 +33,13 @@ tox==1.6.1
 coveralls>=0.1.1,<0.2
 purl>=0.4
 behave==1.2.3
-factory-boy==2.3.1
 
 # Misc
-flake8>=2.1
+flake8>=2.2.2
 pyprof2calltree==1.3.1
 ipdb>=0.8,<0.9
 ipython>=1.1.0,<1.2.0
+django-tables2==0.15.0
 
 # Country data
 pycountry>=1.8,<2.0

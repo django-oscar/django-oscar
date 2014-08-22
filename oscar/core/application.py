@@ -1,5 +1,3 @@
-import six
-
 from oscar.core.loading import feature_hidden
 from oscar.views.decorators import permissions_required
 
@@ -26,7 +24,7 @@ class Application(object):
     def __init__(self, app_name=None, **kwargs):
         self.app_name = app_name
         # Set all kwargs as object attributes
-        for key, value in six.iteritems(kwargs):
+        for key, value in kwargs.items():
             setattr(self, key, value)
 
     def get_urls(self):

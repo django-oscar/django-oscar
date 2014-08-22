@@ -1,4 +1,4 @@
-from six.moves import http_client
+from django.utils.six.moves import http_client
 
 from django.core.urlresolvers import reverse
 

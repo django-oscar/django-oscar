@@ -14,6 +14,7 @@ ALLOWED_HOSTS = ['latest.oscarcommerce.com',
                  'sandbox.oscar.tangentlabs.co.uk',
                  'master.oscarcommerce.com']
 
+# This is needed for the hosted version of the sandbox
 ADMINS = (
     ('David Winterbottom', 'david.winterbottom@tangentlabs.co.uk'),
 )
@@ -41,6 +42,9 @@ CACHES = {
     }
 }
 
+# Prevent Django 1.7+ from showing a warning regarding a changed default test
+# runner. The Oscar test suite is run with nose, so it does not matter.
+SILENCED_SYSTEM_CHECKS = ['1_6.W001', ]
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -304,12 +308,17 @@ INSTALLED_APPS = [
     # Debug toolbar + extensions
     'debug_toolbar',
     'template_timings_panel',
-    'south',
     'compressor',       # Oscar's templates use compressor
     'apps.gateway',     # For allowing dashboard access
 ]
 from oscar import get_core_apps
 INSTALLED_APPS = INSTALLED_APPS + get_core_apps()
+
+# As we use the sandbox to create both South migrations and native ones,
+# the sandbox needs to work both with Django < 1.7 and 1.7
+import django
+if django.VERSION < (1, 7):
+    INSTALLED_APPS.append('south')
 
 # Add Oscar's custom auth backend so users can sign in using their email
 # address.

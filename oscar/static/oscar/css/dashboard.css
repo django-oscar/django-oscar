@@ -2900,12 +2900,7 @@ td .btn-toolbar {
 .form-stacked textarea,
 .form-horizontal select,
 .form-stacked select {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -ms-box-sizing: border-box;
-  box-sizing: border-box;
   font-size: 12px;
-  min-height: 35px;
 }
 .form-horizontal textarea,
 .form-stacked textarea {
@@ -2979,13 +2974,6 @@ form.flat {
 .create-page label {
   font-weight: bold;
 }
-input[type=text].hasDatepicker,
-.create-page input[type=text].hasDatepicker,
-.form-inline input[type=text].hasDatepicker,
-.form-horizontal input[type=text].hasDatepicker,
-.form-stacked input[type=text].hasDatepicker {
-  width: 125px;
-}
 .wysihtml5-sandbox {
   border: 1px solid #ccc!important;
 }
@@ -3022,6 +3010,12 @@ input[type=text].hasDatepicker,
 }
 .table {
   background-color: #ffffff;
+}
+.table thead tr th.asc i:before {
+  content: "\f077";
+}
+.table thead tr th.desc i:before {
+  content: "\f078";
 }
 .table-striped tbody tr:nth-child(odd) td,
 .table-striped tbody tr:nth-child(odd) th {
@@ -3382,6 +3376,25 @@ caption > i,
   background-color: #fff49f;
   border-color: #ede181;
   color: #333;
+}
+/* additional styles for alert content. Used by both public side and dashboard */
+.alert .alertinner {
+  position: relative;
+}
+.alert .alertinner.wicon {
+  padding-left: 0.5em;
+  margin-left: 0.5em;
+}
+.alert .alertinner [class*="icon-"] {
+  position: absolute;
+  top: 0.3em;
+  right: 100%;
+}
+.alert .alertinner p {
+  margin: 10px 0 0 0;
+}
+.alert .alertinner p:first-child {
+  margin: 0;
 }
 #order_graph {
   position: relative;
@@ -3814,38 +3827,6 @@ textarea {
 }
 textarea.plain {
   font-family: monospace;
-}
-/* css for timepicker */
-.ui-timepicker-div .ui-widget-header {
-  margin-bottom: 8px;
-}
-.ui-timepicker-div dl {
-  text-align: left;
-}
-.ui-timepicker-div dl dt {
-  height: 25px;
-  margin-bottom: -25px;
-}
-.ui-timepicker-div dl dd {
-  margin: 0 10px 10px 65px;
-}
-.ui-timepicker-div td {
-  font-size: 90%;
-}
-.ui-tpicker-grid-label {
-  background: none;
-  border: none;
-  margin: 0;
-  padding: 0;
-}
-.ui-timepicker-rtl {
-  direction: rtl;
-}
-.ui-timepicker-rtl dl {
-  text-align: right;
-}
-.ui-timepicker-rtl dl dd {
-  margin: 0 65px 10px 10px;
 }
 @media (max-width: 1300px) {
   div[data-spy="affix"] {

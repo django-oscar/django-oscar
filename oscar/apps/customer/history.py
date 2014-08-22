@@ -2,11 +2,9 @@ import json
 
 from django.conf import settings
 from oscar.core.loading import get_model
-from django.dispatch import receiver
 
 from oscar.core.loading import get_class
 
-Product = get_model('catalogue', 'Product')
 product_viewed = get_class('catalogue.signals', 'product_viewed')
 
 
@@ -15,6 +13,11 @@ def get(request):
     Return a list of recently viewed products
     """
     ids = extract(request)
+
+    # Needs to live in local scope because receivers in this module get
+    # registered during model initialisation
+    # TODO Move this back to global scope once Django < 1.7 support is removed
+    Product = get_model('catalogue', 'Product')
 
     # Reordering as the ID order gets messed up in the query
     product_dict = Product.browsable.in_bulk(ids)
@@ -67,15 +70,3 @@ def update(product, request, response):
         json.dumps(updated_ids),
         max_age=settings.OSCAR_RECENTLY_VIEWED_COOKIE_LIFETIME,
         httponly=True)
-
-
-# Receivers
-
-@receiver(product_viewed)
-def receive_product_view(sender, product, user, request, response, **kwargs):
-    """
-    Receiver to handle viewing single product pages
-
-    Requires the request and response objects due to dependence on cookies
-    """
-    return update(product, request, response)

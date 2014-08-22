@@ -5,8 +5,13 @@
     {{ flatpage.title}} | {{ block.super }}
 {% endblock %}
 
-{% block headertext %}
-    {{ flatpage.title }}
+{% block header%}
+    <div class="page-header action">
+        {% if user.is_authenticated and user.is_staff %}
+            <a class="pull-right hidden-phone" href="{% url 'dashboard:page-update' pk=flatpage.id %}"><small><i class="icon-edit"></i> {% trans "Edit this page" %}</small></a>
+        {% endif %}
+        <h1>{{ flatpage.title }}</h1>
+    </div>
 {% endblock %}
 
 {% block breadcrumbs %}

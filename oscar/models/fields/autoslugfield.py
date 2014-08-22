@@ -25,7 +25,7 @@ THE SOFTWARE.
 """
 
 import re
-import six
+from django.utils import six
 
 from django.db.models import SlugField
 
@@ -177,16 +177,17 @@ class AutoSlugField(SlugField):
             'separator': repr(self.separator),
             'overwrite': repr(self.overwrite),
             'allow_duplicates': repr(self.allow_duplicates),
-            })
+        })
         # That's our definition!
         return (field_class, args, kwargs)
 
     def deconstruct(self):
         name, path, args, kwargs = super(AutoSlugField, self).deconstruct()
-        kwargs.update({
-            'populate_from': repr(self._populate_from),
-            'separator': repr(self.separator),
-            'overwrite': repr(self.overwrite),
-            'allow_duplicates': repr(self.allow_duplicates),
-            })
+        kwargs['populate_from'] = self._populate_from
+        if not self.separator == six.u('-'):
+            kwargs['separator'] = self.separator
+        if self.overwrite is not False:
+            kwargs['overwrite'] = True
+        if self.allow_duplicates is not False:
+            kwargs['allow_duplicates'] = True
         return name, path, args, kwargs

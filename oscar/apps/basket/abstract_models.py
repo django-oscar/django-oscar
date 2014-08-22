@@ -4,6 +4,7 @@ import zlib
 from django.db import models
 from django.db.models import Sum
 from django.conf import settings
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
@@ -14,6 +15,7 @@ from oscar.core.compat import AUTH_USER_MODEL
 from oscar.templatetags.currency_filters import currency
 
 
+@python_2_unicode_compatible
 class AbstractBasket(models.Model):
     """
     Basket object
@@ -55,6 +57,7 @@ class AbstractBasket(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'basket'
         verbose_name = _('Basket')
         verbose_name_plural = _('Baskets')
 
@@ -73,7 +76,7 @@ class AbstractBasket(models.Model):
         self._lines = None
         self.offer_applications = results.OfferApplications()
 
-    def __unicode__(self):
+    def __str__(self):
         return _(
             u"%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)") \
             % {'status': self.status,
@@ -537,6 +540,7 @@ class AbstractBasket(models.Model):
             return 0
 
 
+@python_2_unicode_compatible
 class AbstractLine(models.Model):
     """
     A line of a basket (product and a quantity)
@@ -584,11 +588,12 @@ class AbstractLine(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'basket'
         unique_together = ("basket", "line_reference")
         verbose_name = _('Basket line')
         verbose_name_plural = _('Basket lines')
 
-    def __unicode__(self):
+    def __str__(self):
         return _(
             u"Basket #%(basket_id)d, Product #%(product_id)d, quantity"
             u" %(quantity)d") % {'basket_id': self.basket.pk,
@@ -831,5 +836,6 @@ class AbstractLineAttribute(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'basket'
         verbose_name = _('Line attribute')
         verbose_name_plural = _('Line attributes')

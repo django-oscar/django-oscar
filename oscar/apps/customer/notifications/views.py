@@ -1,12 +1,11 @@
-from django.core.urlresolvers import reverse
 from django.utils.html import strip_tags
 from django.utils.translation import ugettext_lazy as _, ungettext
 from django.utils.timezone import now
 from django.contrib import messages
-from django import http
 from django.views import generic
-from oscar.core.loading import get_model
 
+from oscar.core.loading import get_model
+from oscar.core.utils import redirect_to_referrer
 from oscar.apps.customer.mixins import PageTitleMixin
 from oscar.views.generic import BulkEditMixin
 
@@ -82,9 +81,8 @@ class UpdateView(BulkEditMixin, generic.RedirectView):
             recipient=self.request.user).in_bulk(ids)
 
     def get_success_response(self):
-        default = reverse('customer:notifications-inbox')
-        return http.HttpResponseRedirect(
-            self.request.META.get('HTTP_REFERER', default))
+        return redirect_to_referrer(
+            self.request.META, 'customer:notifications-inbox')
 
     def archive(self, request, notifications):
         for notification in notifications:

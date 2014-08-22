@@ -6,6 +6,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.utils.datastructures import SortedDict
 
@@ -14,6 +15,7 @@ from oscar.models.fields import AutoSlugField
 from . import exceptions
 
 
+@python_2_unicode_compatible
 class AbstractOrder(models.Model):
     """
     The main order model
@@ -95,7 +97,7 @@ class AbstractOrder(models.Model):
         """
         Return all possible statuses for an order
         """
-        return cls.pipeline.keys()
+        return list(cls.pipeline.keys())
 
     def available_statuses(self):
         """
@@ -267,11 +269,12 @@ class AbstractOrder(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         ordering = ['-date_placed']
         verbose_name = _("Order")
         verbose_name_plural = _("Orders")
 
-    def __unicode__(self):
+    def __str__(self):
         return u"#%s" % (self.number,)
 
     def verification_hash(self):
@@ -303,6 +306,7 @@ class AbstractOrder(models.Model):
             category=AbstractOrderDiscount.DEFERRED)
 
 
+@python_2_unicode_compatible
 class AbstractOrderNote(models.Model):
     """
     A note against an order.
@@ -331,10 +335,11 @@ class AbstractOrderNote(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         verbose_name = _("Order Note")
         verbose_name_plural = _("Order Notes")
 
-    def __unicode__(self):
+    def __str__(self):
         return u"'%s' (%s)" % (self.message[0:50], self.user)
 
     def is_editable(self):
@@ -344,6 +349,7 @@ class AbstractOrderNote(models.Model):
         return delta.seconds < self.editable_lifetime
 
 
+@python_2_unicode_compatible
 class AbstractCommunicationEvent(models.Model):
     """
     An order-level event involving a communication to the customer, such
@@ -358,11 +364,12 @@ class AbstractCommunicationEvent(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         verbose_name = _("Communication Event")
         verbose_name_plural = _("Communication Events")
         ordering = ['-date_created']
 
-    def __unicode__(self):
+    def __str__(self):
         return _("'%(type)s' event for order #%(number)s") \
             % {'type': self.event_type.name, 'number': self.order.number}
 
@@ -370,6 +377,7 @@ class AbstractCommunicationEvent(models.Model):
 # LINES
 
 
+@python_2_unicode_compatible
 class AbstractLine(models.Model):
     """
     An order line
@@ -472,10 +480,11 @@ class AbstractLine(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         verbose_name = _("Order Line")
         verbose_name_plural = _("Order Lines")
 
-    def __unicode__(self):
+    def __str__(self):
         if self.product:
             title = self.product.title
         else:
@@ -488,7 +497,7 @@ class AbstractLine(models.Model):
         """
         Return all possible statuses for an order line
         """
-        return cls.pipeline.keys()
+        return list(cls.pipeline.keys())
 
     def available_statuses(self):
         """
@@ -637,7 +646,9 @@ class AbstractLine(models.Model):
 
     def is_payment_event_permitted(self, event_type, quantity):
         """
-        Test whether a payment event with the given quantity is permitted
+        Test whether a payment event with the given quantity is permitted.
+
+        Allow each payment event type to occur only once per quantity.
         """
         current_qty = self.payment_event_quantity(event_type)
         return (current_qty + quantity) <= self.quantity
@@ -682,6 +693,7 @@ class AbstractLine(models.Model):
         return True, None
 
 
+@python_2_unicode_compatible
 class AbstractLineAttribute(models.Model):
     """
     An attribute of a line
@@ -697,13 +709,15 @@ class AbstractLineAttribute(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         verbose_name = _("Line Attribute")
         verbose_name_plural = _("Line Attributes")
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s = %s" % (self.type, self.value)
 
 
+@python_2_unicode_compatible
 class AbstractLinePrice(models.Model):
     """
     For tracking the prices paid for each unit within a line.
@@ -728,11 +742,12 @@ class AbstractLinePrice(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         ordering = ('id',)
         verbose_name = _("Line Price")
         verbose_name_plural = _("Line Prices")
 
-    def __unicode__(self):
+    def __str__(self):
         return _("Line '%(number)s' (quantity %(qty)d) price %(price)s") % {
             'number': self.line,
             'qty': self.quantity,
@@ -742,6 +757,7 @@ class AbstractLinePrice(models.Model):
 # PAYMENT EVENTS
 
 
+@python_2_unicode_compatible
 class AbstractPaymentEventType(models.Model):
     """
     Payment event types are things like 'Paid', 'Failed', 'Refunded'.
@@ -754,14 +770,16 @@ class AbstractPaymentEventType(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         verbose_name = _("Payment Event Type")
         verbose_name_plural = _("Payment Event Types")
         ordering = ('name', )
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class AbstractPaymentEvent(models.Model):
     """
     A payment event for an order
@@ -795,11 +813,12 @@ class AbstractPaymentEvent(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         verbose_name = _("Payment Event")
         verbose_name_plural = _("Payment Events")
         ordering = ['-date_created']
 
-    def __unicode__(self):
+    def __str__(self):
         return _("Payment event for order %s") % self.order
 
     def num_affected_lines(self):
@@ -819,6 +838,7 @@ class PaymentEventQuantity(models.Model):
     quantity = models.PositiveIntegerField(_("Quantity"))
 
     class Meta:
+        app_label = 'order'
         verbose_name = _("Payment Event Quantity")
         verbose_name_plural = _("Payment Event Quantities")
         unique_together = ('event', 'line')
@@ -827,6 +847,7 @@ class PaymentEventQuantity(models.Model):
 # SHIPPING EVENTS
 
 
+@python_2_unicode_compatible
 class AbstractShippingEvent(models.Model):
     """
     An event is something which happens to a group of lines such as
@@ -847,11 +868,12 @@ class AbstractShippingEvent(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         verbose_name = _("Shipping Event")
         verbose_name_plural = _("Shipping Events")
         ordering = ['-date_created']
 
-    def __unicode__(self):
+    def __str__(self):
         return _("Order #%(number)s, type %(type)s") % {
             'number': self.order.number,
             'type': self.event_type}
@@ -860,6 +882,7 @@ class AbstractShippingEvent(models.Model):
         return self.lines.count()
 
 
+@python_2_unicode_compatible
 class ShippingEventQuantity(models.Model):
     """
     A "through" model linking lines to shipping events.
@@ -876,6 +899,7 @@ class ShippingEventQuantity(models.Model):
     quantity = models.PositiveIntegerField(_("Quantity"))
 
     class Meta:
+        app_label = 'order'
         verbose_name = _("Shipping Event Quantity")
         verbose_name_plural = _("Shipping Event Quantities")
         unique_together = ('event', 'line')
@@ -890,12 +914,13 @@ class ShippingEventQuantity(models.Model):
             raise exceptions.InvalidShippingEvent
         super(ShippingEventQuantity, self).save(*args, **kwargs)
 
-    def __unicode__(self):
+    def __str__(self):
         return _("%(product)s - quantity %(qty)d") % {
             'product': self.line.product,
             'qty': self.quantity}
 
 
+@python_2_unicode_compatible
 class AbstractShippingEventType(models.Model):
     """
     A type of shipping/fulfillment event
@@ -910,17 +935,19 @@ class AbstractShippingEventType(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         verbose_name = _("Shipping Event Type")
         verbose_name_plural = _("Shipping Event Types")
         ordering = ('name', )
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
 # DISCOUNTS
 
 
+@python_2_unicode_compatible
 class AbstractOrderDiscount(models.Model):
     """
     A discount against an order.
@@ -977,6 +1004,7 @@ class AbstractOrderDiscount(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'order'
         verbose_name = _("Order Discount")
         verbose_name_plural = _("Order Discounts")
 
@@ -993,7 +1021,7 @@ class AbstractOrderDiscount(models.Model):
 
         super(AbstractOrderDiscount, self).save(**kwargs)
 
-    def __unicode__(self):
+    def __str__(self):
         return _("Discount of %(amount)r from order %(order)s") % {
             'amount': self.amount, 'order': self.order}
 

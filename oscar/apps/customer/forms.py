@@ -1,6 +1,5 @@
 import string
 import random
-from six.moves.urllib import parse
 
 from django import forms
 from django.conf import settings
@@ -8,6 +7,7 @@ from django.contrib.auth import forms as auth_forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.sites.models import get_current_site
 from django.core.exceptions import ValidationError
+from django.utils.http import is_safe_url
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
@@ -107,11 +107,8 @@ class EmailAuthenticationForm(AuthenticationForm):
 
     def clean_redirect_url(self):
         url = self.cleaned_data['redirect_url'].strip()
-        if url:
-            # Ensure URL is not to a different host
-            host = parse.urlparse(url)[1]
-            if host and host == self.host:
-                return url
+        if url and is_safe_url(url):
+            return url
 
 
 class ConfirmPasswordForm(forms.Form):
@@ -153,8 +150,11 @@ class EmailUserCreationForm(forms.ModelForm):
         super(EmailUserCreationForm, self).__init__(*args, **kwargs)
 
     def clean_email(self):
+        """
+        Checks for existing users with the supplied email address.
+        """
         email = normalise_email(self.cleaned_data['email'])
-        if User._default_manager.filter(email=email).exists():
+        if User._default_manager.filter(email__iexact=email).exists():
             raise forms.ValidationError(
                 _("A user with that email address already exists"))
         return email
@@ -169,12 +169,9 @@ class EmailUserCreationForm(forms.ModelForm):
 
     def clean_redirect_url(self):
         url = self.cleaned_data['redirect_url'].strip()
-        if not url:
-            return settings.LOGIN_REDIRECT_URL
-        host = parse.urlparse(url)[1]
-        if host and self.host and host != self.host:
-            return settings.LOGIN_REDIRECT_URL
-        return url
+        if url and is_safe_url(url):
+            return url
+        return settings.LOGIN_REDIRECT_URL
 
     def save(self, commit=True):
         user = super(EmailUserCreationForm, self).save(commit=False)
@@ -280,9 +277,10 @@ class UserForm(forms.ModelForm):
         """
         email = normalise_email(self.cleaned_data['email'])
         if User._default_manager.filter(
-                email=email).exclude(id=self.user.id).exists():
+                email__iexact=email).exclude(id=self.user.id).exists():
             raise ValidationError(
                 _("A user with this email address already exists"))
+        # Save the email unaltered
         return email
 
     class Meta:
@@ -306,7 +304,7 @@ if Profile:
             super(UserAndProfileForm, self).__init__(*args, **kwargs)
 
             # Get profile field names to help with ordering later
-            profile_field_names = self.fields.keys()
+            profile_field_names = list(self.fields.keys())
 
             # Get user field names (we look for core user fields first)
             core_field_names = set([f.name for f in User._meta.fields])
@@ -340,8 +338,10 @@ if Profile:
 
         def clean_email(self):
             email = normalise_email(self.cleaned_data['email'])
-            if User._default_manager.filter(
-                    email=email).exclude(id=self.instance.user.id).exists():
+
+            users_with_email = User._default_manager.filter(
+                email__iexact=email).exclude(id=self.instance.user.id)
+            if users_with_email.exists():
                 raise ValidationError(
                     _("A user with this email address already exists"))
             return email
@@ -392,7 +392,7 @@ class ProductAlertForm(forms.ModelForm):
         if email:
             try:
                 ProductAlert.objects.get(
-                    product=self.product, email=email,
+                    product=self.product, email__iexact=email,
                     status=ProductAlert.ACTIVE)
             except ProductAlert.DoesNotExist:
                 pass

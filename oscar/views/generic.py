@@ -1,18 +1,21 @@
-import six
 import json
 
 from django import forms
 from django.core import validators
 from django.core.exceptions import ValidationError
+from django.shortcuts import redirect
 from django.utils.encoding import smart_str
 from django.contrib import messages
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse
+from django.utils import six
+from django.utils.six.moves import map
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import View
 
 import phonenumbers
+
+from oscar.core.utils import safe_referrer
 from oscar.core.phonenumber import PhoneNumber
-from six.moves import map
 
 
 class PostActionMixin(object):
@@ -55,10 +58,10 @@ class BulkEditMixin(object):
         return smart_str(self.model._meta.object_name.lower())
 
     def get_error_url(self, request):
-        return request.META.get('HTTP_REFERER', '.')
+        return safe_referrer(request.META, '.')
 
     def get_success_url(self, request):
-        return request.META.get('HTTP_REFERER', '.')
+        return safe_referrer(request.META, '.')
 
     def post(self, request, *args, **kwargs):
         # Dynamic dispatch pattern - we forward POST requests onto a method
@@ -67,7 +70,7 @@ class BulkEditMixin(object):
         action = request.POST.get(self.action_param, '').lower()
         if not self.actions or action not in self.actions:
             messages.error(self.request, _("Invalid action"))
-            return HttpResponseRedirect(self.get_error_url(request))
+            return redirect(self.get_error_url(request))
 
         ids = request.POST.getlist(
             'selected_%s' % self.get_checkbox_object_name())
@@ -77,7 +80,7 @@ class BulkEditMixin(object):
                 self.request,
                 _("You need to select some %ss")
                 % self.get_checkbox_object_name())
-            return HttpResponseRedirect(self.get_error_url(request))
+            return redirect(self.get_error_url(request))
 
         objects = self.get_objects(ids)
         return getattr(self, action)(request, objects)
@@ -156,6 +159,18 @@ class PhoneNumberMixin(object):
 
     phone_number = forms.CharField(max_length=32, required=False)
 
+    def get_country(self):
+        if hasattr(self.instance, 'country'):
+            return self.instance.country
+
+        if hasattr(self.fields.get('country'), 'queryset'):
+            return self.fields['country'].queryset[0]
+
+        return self.cleaned_data.get('country')
+
+    def get_region_code(self, country):
+        return country.iso_3166_1_a2
+
     def clean_phone_number(self):
         number = self.cleaned_data['phone_number']
 
@@ -168,12 +183,7 @@ class PhoneNumberMixin(object):
             phone_number = PhoneNumber.from_string(number)
         except phonenumbers.NumberParseException:
             # Try hinting with the shipping country
-            if hasattr(self.instance, 'country'):
-                country = self.instance.country
-            elif hasattr(self.fields.get('country'), 'queryset'):
-                country = self.fields['country'].queryset[0]
-            else:
-                country = None
+            country = self.get_country()
 
             if not country:
                 # There is no shipping country, not a valid international
@@ -181,9 +191,7 @@ class PhoneNumberMixin(object):
                 raise ValidationError(
                     _(u'This is not a valid international phone format.'))
 
-            country = self.cleaned_data.get('country', country)
-
-            region_code = country.iso_3166_1_a2
+            region_code = self.get_region_code(country)
             # The PhoneNumber class does not allow specifying
             # the region. So we drop down to the underlying phonenumbers
             # library, which luckily allows parsing into a PhoneNumber

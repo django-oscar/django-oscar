@@ -85,7 +85,7 @@ For more complex logic, override the ``get_available_shipping_methods`` method:
                self, basket, user=None, shipping_addr=None, 
                request=None, **kwargs):
            methods = (methods.Standard())
-           if shipping_addr and shipping.addr.country.code == 'GB':
+           if shipping_addr and shipping_addr.country.code == 'GB':
                # Express is only available in the UK
                methods = (methods.Standard(), methods.Express())
            return methods

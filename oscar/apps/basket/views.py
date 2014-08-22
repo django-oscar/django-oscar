@@ -1,20 +1,24 @@
 import json
-from six.moves.urllib import parse
 
+from django import shortcuts
 from django.contrib import messages
+from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.template import RequestContext
-from django.core.urlresolvers import reverse, resolve
-from django.http import HttpResponseRedirect, Http404, HttpResponse
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse
 from django.views.generic import FormView, View
+from django.utils.http import is_safe_url
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
-from django import shortcuts
+
 from extra_views import ModelFormSetView
 
 from oscar.core import ajax
+from oscar.core.utils import redirect_to_referrer, safe_referrer
 from oscar.apps.basket import signals
 from oscar.core.loading import get_class, get_classes, get_model
+
 Applicator = get_class('offer.utils', 'Applicator')
 (BasketLineFormSet, BasketLineForm, AddToBasketForm, BasketVoucherForm,
  SavedLineFormSet, SavedLineForm) \
@@ -121,7 +125,7 @@ class BasketView(ModelFormSetView):
 
     def get_upsell_messages(self, basket):
         offers = Applicator().get_offers(self.request, basket)
-        applied_offers = basket.offer_applications.offers.values()
+        applied_offers = list(basket.offer_applications.offers.values())
         msgs = []
         for offer in offers:
             if offer.is_condition_partially_satisfied(basket) \
@@ -132,9 +136,16 @@ class BasketView(ModelFormSetView):
                 msgs.append(data)
         return msgs
 
+    def get_basket_voucher_form(self):
+        """
+        This is a separate method so that it's easy to e.g. not return a form
+        if there are no vouchers available.
+        """
+        return BasketVoucherForm()
+
     def get_context_data(self, **kwargs):
         context = super(BasketView, self).get_context_data(**kwargs)
-        context['voucher_form'] = BasketVoucherForm()
+        context['voucher_form'] = self.get_basket_voucher_form()
 
         # Shipping information is included to give an idea of the total order
         # cost.  It is also important for PayPal Express where the customer
@@ -176,7 +187,7 @@ class BasketView(ModelFormSetView):
         return context
 
     def get_success_url(self):
-        return self.request.META.get('HTTP_REFERER', reverse('basket:summary'))
+        return safe_referrer(self.request.META, 'basket:summary')
 
     def formset_valid(self, formset):
         # Store offers before any changes are made so we can inform the user of
@@ -206,11 +217,11 @@ class BasketView(ModelFormSetView):
                     msg = _("You can't save an item for later if you're "
                             "not logged in!")
                     flash_messages.error(msg)
-                    return HttpResponseRedirect(self.get_success_url())
+                    return redirect(self.get_success_url())
 
         if save_for_later:
             # No need to call super if we're moving lines to the saved basket
-            response = HttpResponseRedirect(self.get_success_url())
+            response = redirect(self.get_success_url())
         else:
             # Save changes to basket as per normal
             response = super(BasketView, self).formset_valid(formset)
@@ -305,8 +316,7 @@ class BasketAddView(FormView):
         clean_msgs = [m.replace('* ', '') for m in msgs if m.startswith('* ')]
         messages.error(self.request, ",".join(clean_msgs))
 
-        return HttpResponseRedirect(
-            self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
+        return redirect_to_referrer(self.request.META, 'basket:summary')
 
     def form_valid(self, form):
         offers_before = self.request.basket.applied_offers()
@@ -335,20 +345,10 @@ class BasketAddView(FormView):
              'quantity': form.cleaned_data['quantity']})
 
     def get_success_url(self):
-        url = None
-        if self.request.POST.get('next'):
-            url = self.request.POST.get('next')
-        elif 'HTTP_REFERER' in self.request.META:
-            url = self.request.META['HTTP_REFERER']
-        if url:
-            # We only allow internal URLs so we see if the url resolves
-            try:
-                resolve(parse.urlparse(url).path)
-            except Http404:
-                url = None
-        if url is None:
-            url = reverse('basket:summary')
-        return url
+        post_url = self.request.POST.get('next')
+        if post_url and is_safe_url(post_url):
+            return post_url
+        return safe_referrer(self.request.META, 'basket:summary')
 
 
 class VoucherAddView(FormView):
@@ -357,7 +357,7 @@ class VoucherAddView(FormView):
     add_signal = signals.voucher_addition
 
     def get(self, request, *args, **kwargs):
-        return HttpResponseRedirect(reverse('basket:summary'))
+        return redirect('basket:summary')
 
     def apply_voucher_to_basket(self, voucher):
         if not voucher.is_active():
@@ -402,9 +402,7 @@ class VoucherAddView(FormView):
     def form_valid(self, form):
         code = form.cleaned_data['code']
         if not self.request.basket.id:
-            return HttpResponseRedirect(
-                self.request.META.get('HTTP_REFERER',
-                                      reverse('basket:summary')))
+            return redirect_to_referrer(self.request.META, 'basket:summary')
         if self.request.basket.contains_voucher(code):
             messages.error(
                 self.request,
@@ -420,12 +418,11 @@ class VoucherAddView(FormView):
                         'code': code})
             else:
                 self.apply_voucher_to_basket(voucher)
-        return HttpResponseRedirect(
-            self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
+        return redirect_to_referrer(self.request.META, 'basket:summary')
 
     def form_invalid(self, form):
         messages.error(self.request, _("Please enter a voucher code"))
-        return HttpResponseRedirect(reverse('basket:summary') + '#voucher')
+        return redirect(reverse('basket:summary') + '#voucher')
 
 
 class VoucherRemoveView(View):
@@ -434,7 +431,7 @@ class VoucherRemoveView(View):
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
-        response = HttpResponseRedirect(reverse('basket:summary'))
+        response = redirect('basket:summary')
 
         voucher_id = kwargs['pk']
         if not request.basket.id:
@@ -465,7 +462,7 @@ class SavedView(ModelFormSetView):
     can_delete = True
 
     def get(self, request, *args, **kwargs):
-        return HttpResponseRedirect(reverse('basket:summary'))
+        return redirect('basket:summary')
 
     def get_queryset(self):
         try:
@@ -477,7 +474,7 @@ class SavedView(ModelFormSetView):
             return []
 
     def get_success_url(self):
-        return self.request.META.get('HTTP_REFERER', reverse('basket:summary'))
+        return safe_referrer(self.request.META, 'basket:summary')
 
     def get_formset_kwargs(self):
         kwargs = super(SavedView, self).get_formset_kwargs()
@@ -504,7 +501,7 @@ class SavedView(ModelFormSetView):
             # As we're changing the basket, we need to check if it qualifies
             # for any new offers.
             apply_messages(self.request, offers_before)
-            response = HttpResponseRedirect(self.get_success_url())
+            response = redirect(self.get_success_url())
         else:
             response = super(SavedView, self).formset_valid(formset)
         return response
@@ -515,5 +512,4 @@ class SavedView(ModelFormSetView):
             '\n'.join(
                 error for ed in formset.errors for el
                 in ed.values() for error in el))
-        return HttpResponseRedirect(
-            self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
+        return redirect_to_referrer(self.request.META, 'basket:summary')

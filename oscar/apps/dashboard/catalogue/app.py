@@ -64,6 +64,9 @@ class CatalogueApplication(Application):
             url(r'^products/create/(?P<product_class_slug>[\w-]+)/$',
                 self.product_createupdate_view.as_view(),
                 name='catalogue-product-create'),
+            url(r'^products/(?P<parent_pk>[-\d]+)/create-variant/$',
+                self.product_createupdate_view.as_view(),
+                name='catalogue-product-create-child'),
             url(r'^products/(?P<pk>\d+)/delete/$',
                 self.product_delete_view.as_view(),
                 name='catalogue-product-delete'),
@@ -101,7 +104,6 @@ class CatalogueApplication(Application):
             url(r'^product-type/(?P<pk>\d+)/delete/$',
                 self.product_class_delete_view.as_view(),
                 name='catalogue-class-delete'),
-
         ]
         return self.post_process_urls(urls)
 

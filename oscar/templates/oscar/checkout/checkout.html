@@ -34,7 +34,7 @@
                                 {% trans "Change" %}
                             </a>
                         {% endblock %}
-                        <h4>{% trans "Address" %}</h4>
+                        <h3>{% trans "Address" %}</h3>
                         <address>
                             {% for field in shipping_address.active_address_fields %}
                                 {{ field }}<br/>
@@ -65,7 +65,7 @@
                                 {% trans "Change" %}
                             </a>
                         {% endblock %}
-                        <h4>{% trans "Shipping method" %}</h4>
+                        <h3>{% trans "Shipping method" %}</h3>
                         <p>{{ shipping_method.name }}
                             {% if shipping_method.description %}
                                 - {{ shipping_method.description|safe }}
@@ -87,7 +87,7 @@
                     <a href="{% url 'checkout:payment-details' %}" class="pull-right">
                         {% trans "Change" %}
                     </a>
-                    <h4>{% trans "Payment" %}</h4>
+                    <h3>{% trans "Payment" %}</h3>
                     <p>{% trans "Payment details to go here" %}</p>
                 </div>
             </div>
@@ -106,9 +106,9 @@
         </div>
         <div class="basket-title">
             <div class="row-fluid">
-                <h4 class="span9">{% trans "Product" %}</h4>
-                <h4 class="span1 align-center">{% trans "Quantity" %}</h4>
-                <h4 class="span2 align-right">{% trans "Price" %}</h4>
+                <p class="span9 h4">{% trans "Product" %}</p>
+                <p class="span1 h4 align-center">{% trans "Quantity" %}</p>
+                <p class="span2 h4 align-right">{% trans "Price" %}</p>
             </div>
         </div>
         {% for line in basket.all_lines %}
@@ -125,7 +125,7 @@
                         </div>
                     </div>
                     <div class="span7">
-                        <h4><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h4>
+                        <h3><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h3>
                         <span class="availability {{ session.availability.code }}">{{ session.availability.message }}</span>
                     </div>
                     <div class="span1 align-center">
@@ -147,6 +147,9 @@
         <div class="row-fluid">
             <div class="span6">&nbsp;</div>
             <div class="span6">
+                <div class="sub-header">
+                    <h2>{% trans 'Totals' %}</h2>
+                </div>
                 {% include 'basket/partials/basket_totals.html' %}
             </div>
         </div>

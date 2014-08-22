@@ -1,9 +1,8 @@
-import six
 
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.fields import CharField, DecimalField, Field
 from django.db.models import SubfieldBase
-from django.utils import six as django_six
+from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import MaxLengthValidator
 
@@ -61,6 +60,19 @@ class ExtendedURLField(CharField):
         defaults.update(kwargs)
         return super(ExtendedURLField, self).formfield(**defaults)
 
+    def deconstruct(self):
+        """
+        deconstruct() is needed by Django's migration framework
+        """
+        name, path, args, kwargs = super(ExtendedURLField, self).deconstruct()
+        # Add verify_exists to kwargs if it's not the default value.
+        if self.verify_exists is not None:
+            kwargs['verify_exists'] = self.verify_exists
+        # We have a default value for max_length; remove it in that case
+        if self.max_length == 200:
+            del kwargs['max_length']
+        return name, path, args, kwargs
+
 
 class PositiveDecimalField(DecimalField):
     """
@@ -71,7 +83,7 @@ class PositiveDecimalField(DecimalField):
         return super(PositiveDecimalField, self).formfield(min_value=0)
 
 
-class UppercaseCharField(django_six.with_metaclass(SubfieldBase, CharField)):
+class UppercaseCharField(six.with_metaclass(SubfieldBase, CharField)):
     """
     A simple subclass of ``django.db.models.fields.CharField`` that
     restricts all text to be uppercase.
@@ -88,7 +100,7 @@ class UppercaseCharField(django_six.with_metaclass(SubfieldBase, CharField)):
             return val
 
 
-class NullCharField(django_six.with_metaclass(SubfieldBase, CharField)):
+class NullCharField(six.with_metaclass(SubfieldBase, CharField)):
     """
     CharField that stores '' as None and returns None as ''
     Useful when using unique=True and forms. Implies null==blank==True.
@@ -114,6 +126,15 @@ class NullCharField(django_six.with_metaclass(SubfieldBase, CharField)):
     def get_prep_value(self, value):
         prepped = super(NullCharField, self).get_prep_value(value)
         return prepped if prepped != u"" else None
+
+    def deconstruct(self):
+        """
+        deconstruct() is needed by Django's migration framework
+        """
+        name, path, args, kwargs = super(NullCharField, self).deconstruct()
+        del kwargs['null']
+        del kwargs['blank']
+        return name, path, args, kwargs
 
 
 class PhoneNumberField(Field):
@@ -163,3 +184,12 @@ class PhoneNumberField(Field):
     def contribute_to_class(self, cls, name):
         super(PhoneNumberField, self).contribute_to_class(cls, name)
         setattr(cls, self.name, self.descriptor_class(self))
+
+    def deconstruct(self):
+        """
+        deconstruct() is needed by Django's migration framework
+        """
+        name, path, args, kwargs = super(PhoneNumberField, self).deconstruct()
+        if self.max_length == 128:
+            del kwargs['max_length']
+        return name, path, args, kwargs

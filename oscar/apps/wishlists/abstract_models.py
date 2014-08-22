@@ -1,14 +1,16 @@
 import hashlib
 import random
-import six
+from django.utils import six
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.core.urlresolvers import reverse
 
 from oscar.core.compat import AUTH_USER_MODEL
 
 
+@python_2_unicode_compatible
 class AbstractWishList(models.Model):
     """
     Represents a user's wish lists of products.
@@ -48,7 +50,7 @@ class AbstractWishList(models.Model):
     date_created = models.DateTimeField(
         _('Date created'), auto_now_add=True, editable=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s's Wish List '%s'" % (self.owner, self.name)
 
     def save(self, *args, **kwargs):
@@ -78,9 +80,10 @@ class AbstractWishList(models.Model):
         return user == self.owner
 
     class Meta:
+        abstract = True
+        app_label = 'wishlists'
         ordering = ('owner', 'date_created', )
         verbose_name = _('Wish List')
-        abstract = True
 
     def get_absolute_url(self):
         return reverse('customer:wishlists-detail', kwargs={
@@ -100,6 +103,7 @@ class AbstractWishList(models.Model):
             line.save()
 
 
+@python_2_unicode_compatible
 class AbstractLine(models.Model):
     """
     One entry in a wish list. Similar to order lines or basket lines.
@@ -115,7 +119,7 @@ class AbstractLine(models.Model):
     title = models.CharField(
         pgettext_lazy(u"Product title", u"Title"), max_length=255)
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%sx %s on %s' % (self.quantity, self.title,
                                   self.wishlist.name)
 
@@ -127,5 +131,6 @@ class AbstractLine(models.Model):
 
     class Meta:
         abstract = True
-        verbose_name = _('Wish list line')
+        app_label = 'wishlists'
         unique_together = (('wishlist', 'product'), )
+        verbose_name = _('Wish list line')

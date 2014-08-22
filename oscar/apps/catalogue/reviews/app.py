@@ -1,4 +1,5 @@
 from django.conf.urls import url
+from django.contrib.auth.decorators import login_required
 
 from oscar.core.application import Application
 from oscar.core.loading import get_class
@@ -17,8 +18,10 @@ class ProductReviewsApplication(Application):
         urls = [
             url(r'^(?P<pk>\d+)/$', self.detail_view.as_view(),
                 name='reviews-detail'),
-            url(r'^add/$', self.create_view.as_view(), name='reviews-add'),
-            url(r'^(?P<pk>\d+)/vote/$', self.vote_view.as_view(),
+            url(r'^add/$', self.create_view.as_view(),
+                name='reviews-add'),
+            url(r'^(?P<pk>\d+)/vote/$',
+                login_required(self.vote_view.as_view()),
                 name='reviews-vote'),
             url(r'^$', self.list_view.as_view(), name='reviews-list'),
         ]

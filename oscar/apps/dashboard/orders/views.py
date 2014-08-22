@@ -655,9 +655,7 @@ class OrderDetailView(DetailView):
 
         # If no amount passed, then we add up the total of the selected lines
         if not amount_str:
-            amount = D('0.00')
-            for line, quantity in zip(lines, quantities):
-                amount += int(quantity) * line.line_price_incl_tax
+            amount = sum([line.line_price_incl_tax for line in lines])
         else:
             try:
                 amount = D(amount_str)

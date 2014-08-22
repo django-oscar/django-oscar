@@ -23,10 +23,29 @@ form {
     }
 }
 
-.controls .error-block {
+.error-block {
     color: #b94a48;
 }
 
 .control-label.required span {
     color: #FF0000;
+}
+
+/* weird alternative to btn-block for specific use on the product page, where btn-block would cause a vertical misalignment when product size options are shown */
+.btn-add-to-basket {
+    width:100%;
+}
+
+/* star rating functionality for product review page */
+.reviewrating {
+    select {
+        display:none;
+    }
+    .star-rating {
+        margin-bottom:10px;
+        font-size:280%;
+        i {
+            cursor:pointer;
+        }
+    }
 }

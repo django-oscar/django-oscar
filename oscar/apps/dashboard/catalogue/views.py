@@ -1,16 +1,16 @@
-import six
-
-from django.core.exceptions import ObjectDoesNotExist
 from django.views import generic
 from django.db.models import Q
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
+from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
 
 from oscar.core.loading import get_classes, get_model
-from oscar.views import sort_queryset
+
+from django_tables2 import SingleTableMixin
+
 from oscar.views.generic import ObjectLookupView
 
 (ProductForm,
@@ -34,6 +34,9 @@ from oscar.views.generic import ObjectLookupView
                    'ProductCategoryFormSet',
                    'ProductImageFormSet',
                    'ProductRecommendationFormSet'))
+ProductTable, CategoryTable \
+    = get_classes('dashboard.catalogue.tables',
+                  ('ProductTable', 'CategoryTable'))
 Product = get_model('catalogue', 'Product')
 Category = get_model('catalogue', 'Category')
 ProductImage = get_model('catalogue', 'ProductImage')
@@ -57,33 +60,32 @@ def filter_products(queryset, user):
     return queryset.filter(stockrecords__partner__users__pk=user.pk).distinct()
 
 
-class ProductListView(generic.ListView):
+class ProductListView(SingleTableMixin, generic.TemplateView):
     """
     Dashboard view of the product list.
     Supports the permission-based dashboard.
     """
 
     template_name = 'dashboard/catalogue/product_list.html'
-    model = Product
-    context_object_name = 'products'
     form_class = ProductSearchForm
     productclass_form_class = ProductClassSelectForm
-    description_template = _(u'Products %(upc_filter)s %(title_filter)s')
-    paginate_by = 20
-    recent_products = 5
+    table_class = ProductTable
+    context_table_name = 'products'
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductListView, self).get_context_data(**kwargs)
         ctx['form'] = self.form
         ctx['productclass_form'] = self.productclass_form_class()
-        if 'recently_edited' in self.request.GET:
-            ctx['queryset_description'] \
-                = _("Last %(num_products)d edited products") \
-                % {'num_products': self.recent_products}
-        else:
-            ctx['queryset_description'] = self.description
-
+        ctx['queryset_description'] = self.get_description(self.form)
         return ctx
+
+    def get_description(self, form):
+        if form.is_valid() and any(form.cleaned_data.values()):
+            return _('Product search results')
+        return _('Products')
+
+    def get_table_pagination(self):
+        return dict(per_page=20)
 
     def filter_queryset(self, queryset):
         """
@@ -95,22 +97,9 @@ class ProductListView(generic.ListView):
         """
         Build the queryset for this list
         """
-        queryset = Product.objects.base_queryset()
+        queryset = Product.browsable.base_queryset()
         queryset = self.filter_queryset(queryset)
         queryset = self.apply_search(queryset)
-        queryset = self.apply_ordering(queryset)
-
-        return queryset
-
-    def apply_ordering(self, queryset):
-        if 'recently_edited' in self.request.GET:
-            # Just show recently edited
-            queryset = queryset.order_by('-date_updated')
-            queryset = queryset[:self.recent_products]
-        else:
-            # Allow sorting when all
-            queryset = sort_queryset(queryset, self.request,
-                                     ['title'], '-date_created')
         return queryset
 
     def apply_search(self, queryset):
@@ -118,13 +107,9 @@ class ProductListView(generic.ListView):
         Filter the queryset and set the description according to the search
         parameters given
         """
-        description_ctx = {'upc_filter': '',
-                           'title_filter': ''}
-
         self.form = self.form_class(self.request.GET)
 
         if not self.form.is_valid():
-            self.description = self.description_template % description_ctx
             return queryset
 
         data = self.form.cleaned_data
@@ -135,21 +120,11 @@ class ProductListView(generic.ListView):
             qs_match = queryset.filter(upc=data['upc'])
             if qs_match.exists():
                 queryset = qs_match
-                description_ctx['upc_filter'] = _(
-                    " with UPC '%s'") % data['upc']
             else:
                 queryset = queryset.filter(upc__icontains=data['upc'])
-                description_ctx['upc_filter'] = _(
-                    " including an item with "
-                    "UPC containing '%s'") % data['upc']
 
         if data.get('title'):
             queryset = queryset.filter(title__icontains=data['title'])
-            description_ctx['title_filter'] = _(
-                " including an item with "
-                "title containing '%s'") % data['title']
-
-        self.description = self.description_template % description_ctx
 
         return queryset
 
@@ -179,7 +154,17 @@ class ProductCreateRedirectView(generic.RedirectView):
 
 class ProductCreateUpdateView(generic.UpdateView):
     """
-    Dashboard view that bundles both creating and updating single products.
+    Dashboard view that is can both create and update products of all kinds.
+    It can be used in three different ways, each of them with a unique URL
+    pattern:
+    - When creating a new standalone product, this view is called with the
+      desired product class
+    - When editing an existing product, this view is called with the product's
+      primary key. If the product is a child product, the template considerably
+      reduces the available form fields.
+    - When creating a new child product, this view is called with the parent's
+      primary key.
+
     Supports the permission-based dashboard.
     """
 
@@ -211,43 +196,78 @@ class ProductCreateUpdateView(generic.UpdateView):
         This parts allows generic.UpdateView to handle creating products as
         well. The only distinction between an UpdateView and a CreateView
         is that self.object is None. We emulate this behavior.
-        Additionally, self.product_class is set.
+
+        This method is also responsible for setting self.product_class and
+        self.parent.
         """
         self.creating = 'pk' not in self.kwargs
         if self.creating:
-            try:
-                product_class_slug = self.kwargs.get('product_class_slug',
-                                                     None)
-                self.product_class = ProductClass.objects.get(
-                    slug=product_class_slug)
-            except ObjectDoesNotExist:
-                raise Http404
+            # Specifying a parent product is only done when creating a child
+            # product.
+            parent_pk = self.kwargs.get('parent_pk')
+            if parent_pk is None:
+                self.parent = None
+                # A product class needs to be specified when creating a
+                # standalone product.
+                product_class_slug = self.kwargs.get('product_class_slug')
+                self.product_class = get_object_or_404(
+                    ProductClass, slug=product_class_slug)
             else:
-                return None  # success
+                self.parent = self.get_and_check_parent(parent_pk)
+                self.product_class = self.parent.product_class
+
+            return None  # success
         else:
             product = super(ProductCreateUpdateView, self).get_object(queryset)
             self.product_class = product.get_product_class()
+            self.parent = product.parent
             return product
+
+    def get_and_check_parent(self, parent_pk):
+        """
+        Fetches the specified "parent" product and ensures that it can be
+        indeed be turned into a parent product if needed.
+        """
+        parent = get_object_or_404(Product, pk=parent_pk)
+        is_valid, reason = parent.can_be_parent(give_reason=True)
+        if is_valid:
+            return parent
+        else:
+            messages.error(self.request, reason)
+            return redirect('dashboard:catalogue-product-list')
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
         ctx['product_class'] = self.product_class
+        ctx['parent'] = self.parent
+        ctx['title'] = self.get_page_title()
 
-        for ctx_name, formset_class in six.iteritems(self.formsets):
+        for ctx_name, formset_class in self.formsets.items():
             if ctx_name not in ctx:
                 ctx[ctx_name] = formset_class(self.product_class,
                                               self.request.user,
                                               instance=self.object)
-
-        if self.object is None:
-            ctx['title'] = _('Create new %s product') % self.product_class.name
-        else:
-            ctx['title'] = ctx['product'].get_title()
         return ctx
+
+    def get_page_title(self):
+        if self.creating:
+            if self.parent is None:
+                return _('Create new %(product_class)s product') % {
+                    'product_class': self.product_class.name}
+            else:
+                return _('Create new variant of %(parent_product)s') % {
+                    'parent_product': self.parent.title}
+        else:
+            if self.object.title:
+                return self.object.title
+            else:
+                return _('Editing variant of %(parent_product)s') % {
+                    'parent_product': self.parent.title}
 
     def get_form_kwargs(self):
         kwargs = super(ProductCreateUpdateView, self).get_form_kwargs()
         kwargs['product_class'] = self.product_class
+        kwargs['parent'] = self.parent
         return kwargs
 
     def process_all_forms(self, form):
@@ -261,7 +281,7 @@ class ProductCreateUpdateView(generic.UpdateView):
             self.object = form.save()
 
         formsets = {}
-        for ctx_name, formset_class in six.iteritems(self.formsets):
+        for ctx_name, formset_class in self.formsets.items():
             formsets[ctx_name] = formset_class(self.product_class,
                                                self.request.user,
                                                self.request.POST,
@@ -297,8 +317,12 @@ class ProductCreateUpdateView(generic.UpdateView):
     def forms_valid(self, form, formsets):
         """
         Save all changes and display a success url.
+        When creating the first child product, this method also sets the new
+        parent's structure accordingly.
         """
-        if not self.creating:
+        if self.creating:
+            self.handle_adding_child(self.parent)
+        else:
             # a just created product was already saved in process_all_forms()
             self.object = form.save()
 
@@ -307,6 +331,19 @@ class ProductCreateUpdateView(generic.UpdateView):
             formset.save()
 
         return HttpResponseRedirect(self.get_success_url())
+
+    def handle_adding_child(self, parent):
+        """
+        When creating the first child product, the parent product needs
+        to be implicitly converted from a standalone product to a
+        parent product.
+        """
+        # ProductForm eagerly sets the future parent's structure to PARENT to
+        # pass validation, but it's not persisted in the database. We ensure
+        # it's persisted by calling save()
+        if parent is not None:
+            parent.structure = Product.PARENT
+            parent.save()
 
     def forms_invalid(self, form, formsets):
         # delete the temporary product again
@@ -327,23 +364,43 @@ class ProductCreateUpdateView(generic.UpdateView):
         return "?".join(url_parts)
 
     def get_success_url(self):
+        """
+        Renders a success message and redirects depending on the button:
+        - Standard case is pressing "Save"; redirects to the product list
+        - When "Save and continue" is pressed, we stay on the same page
+        - When "Create (another) child product" is pressed, it redirects
+          to a new product creation page
+        """
         msg = render_to_string(
             'dashboard/catalogue/messages/product_saved.html',
             {
                 'product': self.object,
                 'creating': self.creating,
+                'request': self.request
             })
         messages.success(self.request, msg, extra_tags="safe noicon")
-        url = reverse('dashboard:catalogue-product-list')
-        if self.request.POST.get('action') == 'continue':
-            url = reverse('dashboard:catalogue-product',
-                          kwargs={"pk": self.object.id})
+
+        action = self.request.POST.get('action')
+        if action == 'continue':
+            url = reverse(
+                'dashboard:catalogue-product', kwargs={"pk": self.object.id})
+        elif action == 'create-another-child' and self.parent:
+            url = reverse(
+                'dashboard:catalogue-product-create-child',
+                kwargs={'parent_pk': self.parent.pk})
+        elif action == 'create-child':
+            url = reverse(
+                'dashboard:catalogue-product-create-child',
+                kwargs={'parent_pk': self.object.pk})
+        else:
+            url = reverse('dashboard:catalogue-product-list')
         return self.get_url_with_querystring(url)
 
 
 class ProductDeleteView(generic.DeleteView):
     """
-    Dashboard view to delete a product.
+    Dashboard view to delete a product. Has special logic for deleting the
+    last child product.
     Supports the permission-based dashboard.
     """
     template_name = 'dashboard/catalogue/product_delete.html'
@@ -356,10 +413,63 @@ class ProductDeleteView(generic.DeleteView):
         """
         return filter_products(Product.objects.all(), self.request.user)
 
+    def get_context_data(self, **kwargs):
+        ctx = super(ProductDeleteView, self).get_context_data(**kwargs)
+        if self.object.is_child:
+            ctx['title'] = _("Delete product variant?")
+        else:
+            ctx['title'] = _("Delete product?")
+        return ctx
+
+    def delete(self, request, *args, **kwargs):
+        # We override the core delete method and don't call super in order to
+        # apply more sophisticated logic around handling child products.
+        # Calling super makes it difficult to test if the product being deleted
+        # is the last child.
+
+        self.object = self.get_object()
+
+        # Before performing the delete, record whether this product is the last
+        # child.
+        is_last_child = False
+        if self.object.is_child:
+            parent = self.object.parent
+            is_last_child = parent.children.count() == 1
+
+        self.object.delete()
+
+        # If the product being deleted is the last child, then pass control
+        # to a method than can adjust the parent itself.
+        if is_last_child:
+            self.handle_deleting_last_child(parent)
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def handle_deleting_last_child(self, parent):
+        # If the last child product is deleted, this view defaults to turning
+        # the parent product into a standalone product. While this is
+        # appropriate for many scenarios, it is intentionally easily
+        # overridable and not automatically done in e.g. a Product's delete()
+        # method as it is more a UX helper than hard business logic.
+        parent.structure = parent.STANDALONE
+        parent.save()
+
     def get_success_url(self):
-        msg = _("Deleted product '%s'") % self.object.title
-        messages.success(self.request, msg)
-        return reverse('dashboard:catalogue-product-list')
+        """
+        When deleting child products, this view redirects to editing the
+        parent product. When deleting any other product, it redirects to the
+        product list view.
+        """
+        if self.object.is_child:
+            msg = _("Deleted product variant '%s'") % self.object.get_title()
+            messages.success(self.request, msg)
+            return reverse(
+                'dashboard:catalogue-product',
+                kwargs={'pk': self.object.parent_id})
+        else:
+            msg = _("Deleted product '%s'") % self.object.title
+            messages.success(self.request, msg)
+            return reverse('dashboard:catalogue-product-list')
 
 
 class StockAlertListView(generic.ListView):
@@ -387,25 +497,37 @@ class StockAlertListView(generic.ListView):
         return self.model.objects.all()
 
 
-class CategoryListView(generic.TemplateView):
+class CategoryListView(SingleTableMixin, generic.TemplateView):
     template_name = 'dashboard/catalogue/category_list.html'
+    table_class = CategoryTable
+    context_table_name = 'categories'
+
+    def get_queryset(self):
+        return Category.get_root_nodes()
 
     def get_context_data(self, *args, **kwargs):
         ctx = super(CategoryListView, self).get_context_data(*args, **kwargs)
         ctx['child_categories'] = Category.get_root_nodes()
+        ctx['queryset_description'] = _("Categories")
         return ctx
 
 
-class CategoryDetailListView(generic.DetailView):
+class CategoryDetailListView(SingleTableMixin, generic.DetailView):
     template_name = 'dashboard/catalogue/category_list.html'
     model = Category
     context_object_name = 'category'
+    table_class = CategoryTable
+    context_table_name = 'categories'
+
+    def get_table_data(self):
+        return self.object.get_children()
 
     def get_context_data(self, *args, **kwargs):
         ctx = super(CategoryDetailListView, self).get_context_data(*args,
                                                                    **kwargs)
         ctx['child_categories'] = self.object.get_children()
         ctx['ancestors'] = self.object.get_ancestors_and_self()
+        ctx['queryset_description'] = _("Categories")
         return ctx
 
 

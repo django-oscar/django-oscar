@@ -48,37 +48,27 @@ class Shop(Application):
                 login_forbidden(auth_views.password_reset_done),
                 name='password-reset-done')]
 
-        # Django <=1.5: uses uidb36 to encode the user's primary key
+        # Django <=1.5: uses uidb36 to encode the user's primary key (support has been removed)
         # Django 1.6:   uses uidb64 to encode the user's primary key, but
         #               but supports legacy links
         # Django > 1.7: used uidb64 to encode the user's primary key
         # see https://docs.djangoproject.com/en/dev/releases/1.6/#django-contrib-auth-password-reset-uses-base-64-encoding-of-user-pk
-        if django.VERSION < (1, 6):
+        urls.append(
+            url(r'^password-reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
+                login_forbidden(auth_views.password_reset_confirm),
+                {
+                    'post_reset_redirect': reverse_lazy('password-reset-complete'),
+                    'set_password_form': self.set_password_form,
+                },
+                name='password-reset-confirm'))
+        if django.VERSION < (1, 7):
             urls.append(
                 url(r'^password-reset/confirm/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$',
-                    login_forbidden(auth_views.password_reset_confirm),
+                    login_forbidden(auth_views.password_reset_confirm_uidb36),
                     {
                         'post_reset_redirect': reverse_lazy('password-reset-complete'),
                         'set_password_form': self.set_password_form,
-                    },
-                    name='password-reset-confirm'))
-        else:
-            urls.append(
-                url(r'^password-reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
-                    login_forbidden(auth_views.password_reset_confirm),
-                    {
-                        'post_reset_redirect': reverse_lazy('password-reset-complete'),
-                        'set_password_form': self.set_password_form,
-                    },
-                    name='password-reset-confirm'))
-            if django.VERSION < (1, 7):
-                urls.append(
-                    url(r'^password-reset/confirm/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$',
-                        login_forbidden(auth_views.password_reset_confirm_uidb36),
-                        {
-                            'post_reset_redirect': reverse_lazy('password-reset-complete'),
-                            'set_password_form': self.set_password_form,
-                        }))
+                    }))
 
         urls += [
             url(r'^password-reset/complete/$',

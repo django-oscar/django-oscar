@@ -39,8 +39,8 @@
         {% include 'catalogue/reviews/review_product.html' %}
 
         {% if reviews %}
-            <h4>{% trans "Sort by:" %}</h4>
             <form action="." method="get" class="form-inline">
+                <label for="sort_by">{% trans "Sort by:" %}</label>
                 <select name="sort_by">
                     <option value="score">{% trans "Score" %}</option>
                     <option value="recency">{% trans "Recency" %}</option>

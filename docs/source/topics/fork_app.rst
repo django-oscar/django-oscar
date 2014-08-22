@@ -52,3 +52,23 @@ the core app's ``admin.py`` (which will run the register code)::
     import oscar.apps.order.admin
 
 This isn't great but we haven't found a better way as of yet.
+
+Django 1.7+: Use supplied app config
+====================================
+
+Oscar ships with an app config for each app, which sets app labels and
+runs startup code. You need to make sure that happens.
+
+.. code-block: django
+
+    # yourproject/order/config.py
+
+    from oscar.apps.order import config
+
+
+    class OrderConfig(config.OrderConfig):
+        name = 'yourproject.order'
+
+    # yourproject/order/__init__.py
+
+    default_app_config = 'yourproject.order.config.OrderConfig'

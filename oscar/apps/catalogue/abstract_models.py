@@ -1,6 +1,5 @@
-from django.core.urlresolvers import reverse
 import os
-import six
+from django.utils import six
 from itertools import chain
 from datetime import datetime, date
 import logging
@@ -11,17 +10,19 @@ from django.conf import settings
 from django.contrib.staticfiles.finders import find
 from django.core.exceptions import ValidationError, ImproperlyConfigured
 from django.core.files.base import File
+from django.core.urlresolvers import reverse
 from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Sum, Count
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.utils.functional import cached_property
 from django.contrib.contenttypes.generic import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
 from treebeard.mp_tree import MP_Node
-from oscar.core.decorators import deprecated
 
+from oscar.core.decorators import deprecated
 from oscar.core.utils import slugify
 from oscar.core.loading import get_classes, get_model
 from oscar.models.fields import NullCharField, AutoSlugField
@@ -30,6 +31,7 @@ ProductManager, BrowsableProductManager = get_classes(
     'catalogue.managers', ['ProductManager', 'BrowsableProductManager'])
 
 
+@python_2_unicode_compatible
 class AbstractProductClass(models.Model):
     """
     Used for defining options and attributes for a subset of products.
@@ -61,14 +63,20 @@ class AbstractProductClass(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         ordering = ['name']
-        verbose_name = _("Product Class")
-        verbose_name_plural = _("Product Classes")
+        verbose_name = _("Product class")
+        verbose_name_plural = _("Product classes")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
+    @property
+    def has_attributes(self):
+        return self.attributes.exists()
 
+
+@python_2_unicode_compatible
 class AbstractCategory(MP_Node):
     """
     A product category. Merely used for navigational purposes; has no
@@ -88,7 +96,7 @@ class AbstractCategory(MP_Node):
     _slug_separator = '/'
     _full_name_separator = ' > '
 
-    def __unicode__(self):
+    def __str__(self):
         return self.full_name
 
     def update_slug(self, commit=True):
@@ -172,6 +180,7 @@ class AbstractCategory(MP_Node):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         ordering = ['full_name']
         verbose_name = _('Category')
         verbose_name_plural = _('Categories')
@@ -183,6 +192,7 @@ class AbstractCategory(MP_Node):
         return self.get_children().count()
 
 
+@python_2_unicode_compatible
 class AbstractProductCategory(models.Model):
     """
     Joining model between products and categories. Exists to allow customising.
@@ -193,15 +203,17 @@ class AbstractProductCategory(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         ordering = ['product', 'category']
-        verbose_name = _('Product Category')
-        verbose_name_plural = _('Product Categories')
         unique_together = ('product', 'category')
+        verbose_name = _('Product category')
+        verbose_name_plural = _('Product categories')
 
-    def __unicode__(self):
+    def __str__(self):
         return u"<productcategory for product '%s'>" % self.product
 
 
+@python_2_unicode_compatible
 class AbstractProduct(models.Model):
     """
     The base product object
@@ -243,7 +255,8 @@ class AbstractProduct(models.Model):
                     " this product)."))
 
     # Title is mandatory for canonical products but optional for child products
-    title = models.CharField(_('Product title'), max_length=255, blank=True)
+    title = models.CharField(pgettext_lazy(u'Product title', u'Title'),
+                             max_length=255, blank=True)
     slug = models.SlugField(_('Slug'), max_length=255, unique=False)
     description = models.TextField(_('Description'), blank=True)
 
@@ -251,7 +264,7 @@ class AbstractProduct(models.Model):
     #: None for child products, they inherit their parent's product class
     product_class = models.ForeignKey(
         'catalogue.ProductClass', null=True, on_delete=models.PROTECT,
-        verbose_name=_('Product Type'), related_name="products",
+        verbose_name=_('Product type'), related_name="products",
         help_text=_("Choose what type of product this is"))
     attributes = models.ManyToManyField(
         'catalogue.ProductAttribute',
@@ -289,6 +302,8 @@ class AbstractProduct(models.Model):
     #: Determines if a product may be used in an offer. It is illegal to
     #: discount some types of product (e.g. ebooks) and this field helps
     #: merchants from avoiding discounting such products
+    #: Note that this flag is ignored for child products; they inherit from
+    #: the parent product.
     is_discountable = models.BooleanField(
         _("Is discountable?"), default=True, help_text=_(
             "This flag indicates if this product can be used in an offer "
@@ -299,6 +314,7 @@ class AbstractProduct(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         ordering = ['-date_created']
         verbose_name = _('Product')
         verbose_name_plural = _('Products')
@@ -307,7 +323,7 @@ class AbstractProduct(models.Model):
         super(AbstractProduct, self).__init__(*args, **kwargs)
         self.attr = ProductAttributesContainer(product=self)
 
-    def __unicode__(self):
+    def __str__(self):
         if self.is_child:
             return u"%s (%s)" % (self.get_title(), self.attribute_summary)
         return self.get_title()
@@ -320,7 +336,30 @@ class AbstractProduct(models.Model):
                        kwargs={'product_slug': self.slug, 'pk': self.id})
 
     def clean(self):
-        # call clean method for product structure
+        """
+        Validate a product. Those are the rules:
+
+        +---------------+-------------+--------------+--------------+
+        |               | stand alone | parent       | child        |
+        +---------------+-------------+--------------+--------------+
+        | title         | required    | required     | optional     |
+        +---------------+-------------+--------------+--------------+
+        | product class | required    | required     | must be None |
+        +---------------+-------------+--------------+--------------+
+        | parent        | forbidden   | forbidden    | required     |
+        +---------------+-------------+--------------+--------------+
+        | stockrecords  | 0 or more   | forbidden    | required     |
+        +---------------+-------------+--------------+--------------+
+        | categories    | 1 or more   | 1 or more    | forbidden    |
+        +---------------+-------------+--------------+--------------+
+        | attributes    | optional    | optional     | optional     |
+        +---------------+-------------+--------------+--------------+
+        | rec. products | optional    | optional     | unsupported  |
+        +---------------+-------------+--------------+--------------+
+
+        Because the validation logic is quite complex, validation is delegated
+        to the sub method appropriate for the product's structure.
+        """
         getattr(self, '_clean_%s' % self.structure)()
         if not self.is_parent:
             self.attr.validate_attributes()
@@ -345,6 +384,9 @@ class AbstractProduct(models.Model):
         if self.parent_id and not self.parent.is_parent:
             raise ValidationError(
                 _("You can only assign child products to parent products."))
+        if self.product_class:
+            raise ValidationError(
+                _("A child product can't have a product class."))
 
     def _clean_parent(self):
         """
@@ -374,6 +416,23 @@ class AbstractProduct(models.Model):
     @property
     def is_child(self):
         return self.structure == self.CHILD
+
+    def can_be_parent(self, give_reason=False):
+        """
+        Helps decide if a the product can be turned into a parent product.
+        """
+        reason = None
+        if self.is_child:
+            reason = _('The specified parent product is a child product.')
+        if self.has_stockrecords:
+            reason = _(
+                "One can't add a child product to a product with stock"
+                " records.")
+        is_valid = reason is None
+        if give_reason:
+            return is_valid, reason
+        else:
+            return is_valid
 
     @property
     def options(self):
@@ -409,33 +468,33 @@ class AbstractProduct(models.Model):
         return ", ".join(pairs)
 
     @property
-    def min_variant_price_incl_tax(self):
+    def min_child_price_incl_tax(self):
         """
-        Return minimum variant price including tax
+        Return minimum child product price including tax
         """
-        return self._min_variant_price('price_incl_tax')
+        return self._min_child_price('price_incl_tax')
 
     @property
-    def min_variant_price_excl_tax(self):
+    def min_child_price_excl_tax(self):
         """
-        Return minimum variant price excluding tax
+        Return minimum child product price excluding tax
         """
-        return self._min_variant_price('price_excl_tax')
+        return self._min_child_price('price_excl_tax')
 
-    def _min_variant_price(self, property):
+    def _min_child_price(self, property):
         """
-        Return minimum variant price
+        Return minimum child product price
         """
         prices = []
-        for variant in self.variants.all():
-            if variant.has_stockrecords:
-                prices.append(getattr(variant.stockrecord, property))
+        for child in self.children.all():
+            if child.has_stockrecords:
+                prices.append(getattr(child.stockrecord, property))
         if not prices:
             return None
         prices.sort()
         return prices[0]
 
-    # Deprecated properties
+    # The properties below are based on deprecated naming conventions
 
     @property
     @deprecated
@@ -457,16 +516,33 @@ class AbstractProduct(models.Model):
     @deprecated
     def is_group(self):
         """
-        Test if this is a top level product and has more than 0 variants
+        Test if this is a parent product
         """
         return self.is_parent
 
     @property
+    @deprecated
     def is_variant(self):
         """Return True if a product is not a top level product"""
         return self.is_child
 
-    # Wrappers
+    @property
+    @deprecated
+    def min_variant_price_incl_tax(self):
+        """
+        Return minimum variant price including tax
+        """
+        return self._min_child_price('price_incl_tax')
+
+    @property
+    @deprecated
+    def min_variant_price_excl_tax(self):
+        """
+        Return minimum variant price excluding tax
+        """
+        return self._min_child_price('price_excl_tax')
+
+    # Wrappers for child products
 
     def get_title(self):
         """
@@ -480,14 +556,33 @@ class AbstractProduct(models.Model):
 
     def get_product_class(self):
         """
-        Return a product's item class
+        Return a product's item class. Child products inherit their parent's.
         """
-        if self.product_class_id or self.product_class:
-            return self.product_class
-        if self.parent and self.parent.product_class:
+        if self.is_child:
             return self.parent.product_class
-        return None
+        else:
+            return self.product_class
     get_product_class.short_description = _("Product class")
+
+    def get_is_discountable(self):
+        """
+        At the moment, is_discountable can't be set individually for child
+        products; they inherit it from their parent.
+        """
+        if self.is_child:
+            return self.parent.is_discountable
+        else:
+            return self.is_discountable
+
+    def get_categories(self):
+        """
+        Return a product's categories or parent's if there is a parent product.
+        """
+        if self.is_child:
+            return self.parent.categories
+        else:
+            return self.categories
+    get_categories.short_description = _("Categories")
 
     # Images
 
@@ -589,10 +684,11 @@ class AbstractProductRecommendation(models.Model):
 
     class Meta:
         abstract = True
-        verbose_name = _('Product Recommendation')
-        verbose_name_plural = _('Product Recomendations')
+        app_label = 'catalogue'
         ordering = ['primary', '-ranking']
         unique_together = ('primary', 'recommendation')
+        verbose_name = _('Product recommendation')
+        verbose_name_plural = _('Product recomendations')
 
 
 class ProductAttributesContainer(object):
@@ -614,7 +710,7 @@ class ProductAttributesContainer(object):
 
     def __getattr__(self, name):
         if not name.startswith('_') and not self.initialised:
-            values = list(self.get_values().select_related('attribute'))
+            values = self.get_values().select_related('attribute')
             for v in values:
                 setattr(self, v.attribute.code, v.value)
             self.initialised = True
@@ -661,6 +757,7 @@ class ProductAttributesContainer(object):
                 attribute.save_value(self.product, value)
 
 
+@python_2_unicode_compatible
 class AbstractProductAttribute(models.Model):
     """
     Defines an attribute for a product class. (For example, number_of_pages for
@@ -712,9 +809,10 @@ class AbstractProductAttribute(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         ordering = ['code']
-        verbose_name = _('Product Attribute')
-        verbose_name_plural = _('Product Attributes')
+        verbose_name = _('Product attribute')
+        verbose_name_plural = _('Product attributes')
 
     @property
     def is_option(self):
@@ -724,7 +822,7 @@ class AbstractProductAttribute(models.Model):
     def is_file(self):
         return self.type in [self.FILE, self.IMAGE]
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def save_value(self, product, value):
@@ -815,6 +913,7 @@ class AbstractProductAttribute(models.Model):
     _validate_image = _validate_file
 
 
+@python_2_unicode_compatible
 class AbstractProductAttributeValue(models.Model):
     """
     The "through" model for the m2m relationship between catalogue.Product and
@@ -866,11 +965,12 @@ class AbstractProductAttributeValue(models.Model):
 
     class Meta:
         abstract = True
-        verbose_name = _('Product Attribute Value')
-        verbose_name_plural = _('Product Attribute Values')
+        app_label = 'catalogue'
         unique_together = ('attribute', 'product')
+        verbose_name = _('Product attribute value')
+        verbose_name_plural = _('Product attribute values')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.summary()
 
     def summary(self):
@@ -900,7 +1000,7 @@ class AbstractProductAttributeValue(models.Model):
         Returns the unicode representation of the related model. You likely
         want to customise this (and maybe _entity_as_html) if you use entities.
         """
-        return unicode(self.value)
+        return six.text_type(self.value)
 
     @property
     def value_as_html(self):
@@ -917,6 +1017,7 @@ class AbstractProductAttributeValue(models.Model):
         return mark_safe(self.value)
 
 
+@python_2_unicode_compatible
 class AbstractAttributeOptionGroup(models.Model):
     """
     Defines a group of options that collectively may be used as an
@@ -926,13 +1027,14 @@ class AbstractAttributeOptionGroup(models.Model):
     """
     name = models.CharField(_('Name'), max_length=128)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
         abstract = True
-        verbose_name = _('Attribute Option Group')
-        verbose_name_plural = _('Attribute Option Groups')
+        app_label = 'catalogue'
+        verbose_name = _('Attribute option group')
+        verbose_name_plural = _('Attribute option groups')
 
     @property
     def option_summary(self):
@@ -940,6 +1042,7 @@ class AbstractAttributeOptionGroup(models.Model):
         return ", ".join(options)
 
 
+@python_2_unicode_compatible
 class AbstractAttributeOption(models.Model):
     """
     Provides an option within an option group for an attribute type
@@ -950,15 +1053,17 @@ class AbstractAttributeOption(models.Model):
         verbose_name=_("Group"))
     option = models.CharField(_('Option'), max_length=255)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.option
 
     class Meta:
         abstract = True
-        verbose_name = _('Attribute Option')
-        verbose_name_plural = _('Attribute Options')
+        app_label = 'catalogue'
+        verbose_name = _('Attribute option')
+        verbose_name_plural = _('Attribute options')
 
 
+@python_2_unicode_compatible
 class AbstractOption(models.Model):
     """
     An option that can be selected for a particular item when the product
@@ -985,10 +1090,11 @@ class AbstractOption(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'catalogue'
         verbose_name = _("Option")
         verbose_name_plural = _("Options")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @property
@@ -1034,6 +1140,7 @@ class MissingProductImage(object):
                                            settings.MEDIA_ROOT))
 
 
+@python_2_unicode_compatible
 class AbstractProductImage(models.Model):
     """
     An image of a product
@@ -1053,14 +1160,15 @@ class AbstractProductImage(models.Model):
 
     class Meta:
         abstract = True
-        unique_together = ("product", "display_order")
+        app_label = 'catalogue'
         # Any custom models should ensure that this ordering is unchanged, or
         # your query count will explode. See AbstractProduct.primary_image.
         ordering = ["display_order"]
-        verbose_name = _('Product Image')
-        verbose_name_plural = _('Product Images')
+        unique_together = ("product", "display_order")
+        verbose_name = _('Product image')
+        verbose_name_plural = _('Product images')
 
-    def __unicode__(self):
+    def __str__(self):
         return u"Image of '%s'" % self.product
 
     def is_primary(self):
@@ -1068,3 +1176,13 @@ class AbstractProductImage(models.Model):
         Return bool if image display order is 0
         """
         return self.display_order == 0
+
+    def delete(self, *args, **kwargs):
+        """
+        Always keep the display_order as consecutive integers. This avoids
+        issue #855.
+        """
+        super(AbstractProductImage, self).delete(*args, **kwargs)
+        for idx, image in enumerate(self.product.images.all()):
+            image.display_order = idx
+            image.save()

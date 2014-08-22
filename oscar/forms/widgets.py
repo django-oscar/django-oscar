@@ -1,14 +1,13 @@
-from django.core.files.uploadedfile import InMemoryUploadedFile
 import re
-import six
-from six.moves import filter
-from six.moves import map
-
 from django import forms
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.forms.util import flatatt
 from django.forms.widgets import FileInput
 from django.template import Context
 from django.template.loader import render_to_string
+from django.utils import formats, six
+from django.utils.six.moves import filter
+from django.utils.six.moves import map
 from django.utils.encoding import force_text
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
@@ -61,76 +60,170 @@ class WYSIWYGTextArea(forms.Textarea):
 
 def datetime_format_to_js_date_format(format):
     """
-    Convert a Python datetime format to a date format suitable for use with JS
-    date pickers
+    Convert a Python datetime format to a date format suitable for use with
+    the JS date picker we use.
     """
-    converted = format
-    replacements = {
-        '%Y': 'yy',
-        '%m': 'mm',
-        '%d': 'dd',
-        '%H:%M': '',
-    }
-    for search, replace in six.iteritems(replacements):
-        converted = converted.replace(search, replace)
-    return converted.strip()
+    format = format.split()[0]
+    return datetime_format_to_js_datetime_format(format)
 
 
 def datetime_format_to_js_time_format(format):
     """
-    Convert a Python datetime format to a time format suitable for use with JS
-    date pickers
+    Convert a Python datetime format to a time format suitable for use with the
+    JS time picker we use.
+    """
+    try:
+        format = format.split()[1]
+    except IndexError:
+        pass
+    converted = format
+    replacements = {
+        '%H': 'hh',
+        '%I': 'HH',
+        '%M': 'ii',
+        '%S': 'ss',
+    }
+    for search, replace in replacements.items():
+        converted = converted.replace(search, replace)
+    return converted.strip()
+
+
+def datetime_format_to_js_datetime_format(format):
+    """
+    Convert a Python datetime format to a time format suitable for use with
+    the datetime picker we use, http://www.malot.fr/bootstrap-datetimepicker/.
     """
     converted = format
     replacements = {
-        '%Y': '',
-        '%m': '',
-        '%d': '',
-        '%H': 'HH',
-        '%M': 'mm',
+        '%Y': 'yyyy',
+        '%y': 'yy',
+        '%m': 'mm',
+        '%d': 'dd',
+        '%H': 'hh',
+        '%I': 'HH',
+        '%M': 'ii',
+        '%S': 'ss',
     }
-    for search, replace in six.iteritems(replacements):
+    for search, replace in replacements.items():
         converted = converted.replace(search, replace)
-
-    converted = re.sub('[-/][^%]', '', converted)
 
     return converted.strip()
 
 
-def add_js_formats(widget):
+class TimePickerInput(forms.TimeInput):
     """
-    Set data attributes for date and time format on a widget
+    A widget that passes the date format to the JS date picker in a data
+    attribute.
     """
-    attrs = {
-        'data-dateFormat': datetime_format_to_js_date_format(
-            widget.format),
-        'data-timeFormat': datetime_format_to_js_time_format(
-            widget.format)
-    }
-    widget.attrs.update(attrs)
+    def render(self, name, value, attrs=None):
+        format = self.format
+        if hasattr(self, 'manual_format'):
+            # For django <= 1.6.5, see
+            # https://code.djangoproject.com/ticket/21173
+            if self.is_localized and not self.manual_format:
+                format = force_text(
+                    formats.get_format('DATE_INPUT_FORMATS')[0])
+        else:
+            # For django >= 1.7
+            format = format or formats.get_format(self.format_key)[0]
+
+        input = super(TimePickerInput, self).render(name, value, attrs)
+
+        attrs = {'data-oscarWidget': 'time',
+                 'data-timeFormat':
+                 datetime_format_to_js_time_format(format),
+                 }
+
+        div = format_html('<div class="input-append date"{}>', flatatt(attrs))
+        return mark_safe('{div}'
+                         ' {input}'
+                         ' <span class="add-on">'
+                         '  <i class="icon-time"></i>'
+                         ' </span>'
+                         '</div>'
+                         .format(div=div, input=input))
 
 
 class DatePickerInput(forms.DateInput):
     """
-    DatePicker input that uses the jQuery UI datepicker.  Data attributes are
-    used to pass the date format to the JS
+    A widget that passes the date format to the JS date picker in a data
+    attribute.
     """
-    def __init__(self, *args, **kwargs):
-        super(DatePickerInput, self).__init__(*args, **kwargs)
-        add_js_formats(self)
+    def render(self, name, value, attrs=None):
+        format = self.format
+        if hasattr(self, 'manual_format'):
+            # For django <= 1.6.5, see
+            # https://code.djangoproject.com/ticket/21173
+            if self.is_localized and not self.manual_format:
+                format = force_text(
+                    formats.get_format('DATE_INPUT_FORMATS')[0])
+        else:
+            # For django >= 1.7
+            format = format or formats.get_format(self.format_key)[0]
+
+        input = super(DatePickerInput, self).render(name, value, attrs)
+
+        attrs = {'data-oscarWidget': 'date',
+                 'data-dateFormat':
+                 datetime_format_to_js_date_format(format),
+                 }
+
+        div = format_html('<div class="input-append date"{}>', flatatt(attrs))
+        return mark_safe('{div}'
+                         ' {input}'
+                         ' <span class="add-on">'
+                         '  <i class="icon-calendar"></i>'
+                         ' </span>'
+                         '</div>'
+                         .format(div=div, input=input))
 
 
 class DateTimePickerInput(forms.DateTimeInput):
-    # Build a widget which uses the locale datetime format but without seconds.
-    # We also use data attributes to pass these formats to the JS datepicker.
+    """
+    A widget that passes the datetime format to the JS datetime picker in a
+    data attribute.
 
+    It also removes seconds by default. However this only works with widgets
+    without localize=True.
+
+    For localized widgets refer to
+    https://docs.djangoproject.com/en/1.6/topics/i18n/formatting/#creating-custom-format-files # noqa
+    instead to override the format.
+    """
     def __init__(self, *args, **kwargs):
         include_seconds = kwargs.pop('include_seconds', False)
         super(DateTimePickerInput, self).__init__(*args, **kwargs)
 
-        if not include_seconds:
+        if not include_seconds and self.format:
             self.format = re.sub(':?%S', '', self.format)
-        add_js_formats(self)
+
+    def render(self, name, value, attrs=None):
+        format = self.format
+        if hasattr(self, 'manual_format'):
+            # For django <= 1.6.5, see
+            # https://code.djangoproject.com/ticket/21173
+            if self.is_localized and not self.manual_format:
+                format = force_text(
+                    formats.get_format('DATETIME_INPUT_FORMATS')[0])
+        else:
+            # For django >= 1.7
+            format = format or formats.get_format(self.format_key)[0]
+
+        input = super(DateTimePickerInput, self).render(name, value, attrs)
+
+        attrs = {'data-oscarWidget': 'datetime',
+                 'data-datetimeFormat':
+                 datetime_format_to_js_datetime_format(format),
+                 }
+
+        div = format_html('<div class="input-append date"{}>', flatatt(attrs))
+        return mark_safe('{div}'
+                         ' {input}'
+                         ' <span class="add-on">'
+                         '  <i class="icon-calendar"></i>'
+                         ' </span>'
+                         '</div>'
+                         .format(div=div, input=input))
 
 
 class AdvancedSelect(forms.Select):

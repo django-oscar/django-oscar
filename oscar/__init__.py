@@ -64,6 +64,7 @@ OSCAR_CORE_APPS = [
     'haystack',
     'treebeard',
     'sorl.thumbnail',
+    'django_tables2',
 ]
 
 

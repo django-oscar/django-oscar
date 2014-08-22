@@ -1,6 +1,6 @@
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 from oscar.test.factories import create_product
-from django.db import IntegrityError
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.offer import custom
@@ -28,18 +28,14 @@ class CustomRangeLazy(object):
 
 class TestACustomRange(TestCase):
 
-    def test_creating_unique_custom_range(self):
+    def test_creating_duplicate_range_fails(self):
         custom.create_range(CustomRange)
-        try:
-            custom.create_range(CustomRange)
-        except IntegrityError:
-            self.fail(
-                'IntegrityError when added the same CustomRange as existing')
+        self.assertRaises(ValueError, custom.create_range, CustomRange)
 
     def test_must_have_a_text_name(self):
         try:
             custom.create_range(CustomRangeLazy)
-        except Exception:
+        except ValidationError:
             pass
         else:
             self.fail("Range can't have ugettext titles")

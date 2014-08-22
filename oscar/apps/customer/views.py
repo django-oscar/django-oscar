@@ -9,10 +9,11 @@ from django.contrib.auth import logout as auth_logout, login as auth_login
 from django.contrib.sites.models import get_current_site
 from django.conf import settings
 
-from oscar.core.loading import get_model
+from oscar.core.utils import safe_referrer
 from oscar.views.generic import PostActionMixin
 from oscar.apps.customer.utils import get_password_reset_url
-from oscar.core.loading import get_class, get_profile_class, get_classes
+from oscar.core.loading import (
+    get_class, get_profile_class, get_classes, get_model)
 from oscar.core.compat import get_user_model
 from . import signals
 
@@ -59,7 +60,7 @@ class AccountRegistrationView(RegisterUserMixin, generic.FormView):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
-            return http.HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
+            return redirect(settings.LOGIN_REDIRECT_URL)
         return super(AccountRegistrationView, self).get(
             request, *args, **kwargs)
 
@@ -78,13 +79,12 @@ class AccountRegistrationView(RegisterUserMixin, generic.FormView):
     def get_context_data(self, *args, **kwargs):
         ctx = super(AccountRegistrationView, self).get_context_data(
             *args, **kwargs)
-        ctx['cancel_url'] = self.request.META.get('HTTP_REFERER', None)
+        ctx['cancel_url'] = safe_referrer(self.request.META, '')
         return ctx
 
     def form_valid(self, form):
         self.register_user(form)
-        return http.HttpResponseRedirect(
-            form.cleaned_data['redirect_url'])
+        return redirect(form.cleaned_data['redirect_url'])
 
 
 class AccountAuthView(RegisterUserMixin, generic.TemplateView):
@@ -100,7 +100,7 @@ class AccountAuthView(RegisterUserMixin, generic.TemplateView):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
-            return http.HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
+            return redirect(settings.LOGIN_REDIRECT_URL)
         return super(AccountAuthView, self).get(
             request, *args, **kwargs)
 
@@ -160,8 +160,7 @@ class AccountAuthView(RegisterUserMixin, generic.TemplateView):
             msg = self.get_login_success_message(form)
             messages.success(self.request, msg)
 
-            url = self.get_login_success_url(form)
-            return http.HttpResponseRedirect(url)
+            return redirect(self.get_login_success_url(form))
 
         ctx = self.get_context_data(login_form=form)
         return self.render_to_response(ctx)
@@ -209,8 +208,7 @@ class AccountAuthView(RegisterUserMixin, generic.TemplateView):
             msg = self.get_registration_success_message(form)
             messages.success(self.request, msg)
 
-            url = self.get_registration_success_url(form)
-            return http.HttpResponseRedirect(url)
+            return redirect(self.get_registration_success_url(form))
 
         ctx = self.get_context_data(registration_form=form)
         return self.render_to_response(ctx)
@@ -354,7 +352,7 @@ class ProfileDeleteView(PageTitleMixin, generic.FormView):
         messages.success(
             self.request,
             _("Your profile has now been deleted. Thanks for using the site."))
-        return http.HttpResponseRedirect(self.get_success_url())
+        return redirect(self.get_success_url())
 
 
 class ChangePasswordView(PageTitleMixin, generic.FormView):
@@ -451,9 +449,8 @@ class OrderHistoryView(PageTitleMixin, generic.ListView):
                 except Order.DoesNotExist:
                     pass
                 else:
-                    return http.HttpResponseRedirect(
-                        reverse('customer:order',
-                                kwargs={'order_number': order.number}))
+                    return redirect(
+                        'customer:order', order_number=order.number)
         else:
             self.form = self.form_class()
         return super(OrderHistoryView, self).get(request, *args, **kwargs)
@@ -553,9 +550,8 @@ class OrderLineView(PostActionMixin, generic.DetailView):
         return order.lines.get(id=self.kwargs['line_id'])
 
     def do_reorder(self, line):
-        self.response = http.HttpResponseRedirect(
-            reverse('customer:order',
-                    args=(int(self.kwargs['order_number']),)))
+        self.response = redirect(
+            'customer:order', int(self.kwargs['order_number']))
         basket = self.request.basket
 
         line_available_to_reorder, reason = line.is_available_to_reorder(
@@ -567,7 +563,7 @@ class OrderLineView(PostActionMixin, generic.DetailView):
 
         # We need to pass response to the get_or_create... method
         # as a new basket might need to be created
-        self.response = http.HttpResponseRedirect(reverse('basket:summary'))
+        self.response = redirect('basket:summary')
 
         # Convert line attributes into basket options
         options = []
@@ -690,6 +686,7 @@ class AddressChangeStatusView(generic.RedirectView):
     Sets an address as default_for_(billing|shipping)
     """
     url = reverse_lazy('customer:address-list')
+    permanent = False
 
     def get(self, request, pk=None, action=None, *args, **kwargs):
         address = get_object_or_404(UserAddress, user=self.request.user,

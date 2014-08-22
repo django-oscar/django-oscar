@@ -1,7 +1,8 @@
-from six.moves import http_client
 from django.conf import settings
-
 from django.core.urlresolvers import reverse
+from django.utils.six.moves import http_client
+from django.utils.six.moves import http_client
+
 from oscar.apps.catalogue.models import Category
 from oscar.test.testcases import WebTestCase
 

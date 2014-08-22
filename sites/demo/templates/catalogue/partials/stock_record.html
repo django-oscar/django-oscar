@@ -5,7 +5,7 @@
 {% purchase_info_for_product request product as session %}
 
 {% if product.is_group %}
-    <span>{% blocktrans with product.min_variant_price_incl_tax|currency as price %} <i>From</i> {{ price }}{% endblocktrans %}</span>
+    <span>{% blocktrans with product.min_child_price_incl_tax|currency as price %} <i>From</i> {{ price }}{% endblocktrans %}</span>
 {% else %}
     <span>{% if session.price.retail > session.price.incl_tax %}<del>{{ session.price.retail|currency }}</del>{% endif %} {{ session.price.incl_tax|currency }}</span>
 {% endif %}

@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
@@ -11,6 +12,7 @@ from oscar.models.fields import AutoSlugField
 from . import bankcards
 
 
+@python_2_unicode_compatible
 class AbstractTransaction(models.Model):
     """
     A transaction for a particular payment source.
@@ -39,18 +41,20 @@ class AbstractTransaction(models.Model):
     status = models.CharField(_("Status"), max_length=128, blank=True)
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return _(u"%(type)s of %(amount).2f") % {
             'type': self.txn_type,
             'amount': self.amount}
 
     class Meta:
         abstract = True
+        app_label = 'payment'
+        ordering = ['-date_created']
         verbose_name = _("Transaction")
         verbose_name_plural = _("Transactions")
-        ordering = ['-date_created']
 
 
+@python_2_unicode_compatible
 class AbstractSource(models.Model):
     """
     A source of payment for an order.
@@ -99,10 +103,11 @@ class AbstractSource(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'payment'
         verbose_name = _("Source")
         verbose_name_plural = _("Sources")
 
-    def __unicode__(self):
+    def __str__(self):
         description = _("Allocation of %(amount)s from type %(type)s") % {
             'amount': currency(self.amount_allocated, self.currency),
             'type': self.source_type}
@@ -189,6 +194,7 @@ class AbstractSource(models.Model):
         return self.amount_debited - self.amount_refunded
 
 
+@python_2_unicode_compatible
 class AbstractSourceType(models.Model):
     """
     A type of payment source.
@@ -203,13 +209,15 @@ class AbstractSourceType(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'payment'
         verbose_name = _("Source Type")
         verbose_name_plural = _("Source Types")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class AbstractBankcard(models.Model):
     """
     Model representing a user's bankcard.  This is used for two purposes:
@@ -253,7 +261,7 @@ class AbstractBankcard(models.Model):
     issue_number = None
     ccv = None
 
-    def __unicode__(self):
+    def __str__(self):
         return _(u"%(card_type)s %(number)s (Expires: %(expiry)s)") % {
             'card_type': self.card_type,
             'number': self.number,
@@ -271,6 +279,7 @@ class AbstractBankcard(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'payment'
         verbose_name = _("Bankcard")
         verbose_name_plural = _("Bankcards")
 

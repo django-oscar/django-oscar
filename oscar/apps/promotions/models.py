@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
@@ -27,6 +28,7 @@ class LinkedPromotion(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'promotions'
         ordering = ['-clicks']
         verbose_name = _("Linked Promotion")
         verbose_name_plural = _("Linked Promotions")
@@ -37,6 +39,7 @@ class LinkedPromotion(models.Model):
     record_click.alters_data = True
 
 
+@python_2_unicode_compatible
 class PagePromotion(LinkedPromotion):
     """
     A promotion embedded on a particular page.
@@ -44,14 +47,14 @@ class PagePromotion(LinkedPromotion):
     page_url = ExtendedURLField(
         _('Page URL'), max_length=128, db_index=True, verify_exists=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s on %s" % (self.content_object, self.page_url)
 
     def get_link(self):
         return reverse('promotions:page-click',
                        kwargs={'page_promotion_id': self.id})
 
-    class Meta:
+    class Meta(LinkedPromotion.Meta):
         verbose_name = _("Page Promotion")
         verbose_name_plural = _("Page Promotions")
 
@@ -74,7 +77,7 @@ class KeywordPromotion(LinkedPromotion):
         return reverse('promotions:keyword-click',
                        kwargs={'keyword_promotion_id': self.id})
 
-    class Meta:
+    class Meta(LinkedPromotion.Meta):
         verbose_name = _("Keyword Promotion")
         verbose_name_plural = _("Keyword Promotions")
 
@@ -93,6 +96,7 @@ class AbstractPromotion(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'promotions'
         verbose_name = _("Promotion")
         verbose_name_plural = _("Promotions")
 
@@ -132,6 +136,7 @@ class AbstractPromotion(models.Model):
         return page_count + keyword_count
 
 
+@python_2_unicode_compatible
 class RawHTML(AbstractPromotion):
     """
     Simple promotion - just raw HTML
@@ -150,13 +155,15 @@ class RawHTML(AbstractPromotion):
     date_created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        app_label = 'promotions'
         verbose_name = _('Raw HTML')
         verbose_name_plural = _('Raw HTML')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class Image(AbstractPromotion):
     """
     An image promotion is simply a named image which has an optional
@@ -174,14 +181,16 @@ class Image(AbstractPromotion):
         max_length=255)
     date_created = models.DateTimeField(auto_now_add=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
+        app_label = 'promotions'
         verbose_name = _("Image")
         verbose_name_plural = _("Image")
 
 
+@python_2_unicode_compatible
 class MultiImage(AbstractPromotion):
     """
     A multi-image promotion is simply a collection of image promotions
@@ -197,14 +206,16 @@ class MultiImage(AbstractPromotion):
             "(You may need to create some first)."))
     date_created = models.DateTimeField(auto_now_add=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
+        app_label = 'promotions'
         verbose_name = _("Multi Image")
         verbose_name_plural = _("Multi Images")
 
 
+@python_2_unicode_compatible
 class SingleProduct(AbstractPromotion):
     _type = 'Single product'
     name = models.CharField(_("Name"), max_length=128)
@@ -212,17 +223,19 @@ class SingleProduct(AbstractPromotion):
     description = models.TextField(_("Description"), blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def template_context(self, request):
         return {'product': self.product}
 
     class Meta:
-        verbose_name = _("Single Product")
-        verbose_name_plural = _("Single Product")
+        app_label = 'promotions'
+        verbose_name = _("Single product")
+        verbose_name_plural = _("Single product")
 
 
+@python_2_unicode_compatible
 class AbstractProductList(AbstractPromotion):
     """
     Abstract superclass for promotions which are essentially a list
@@ -238,10 +251,11 @@ class AbstractProductList(AbstractPromotion):
 
     class Meta:
         abstract = True
-        verbose_name = _("Product List")
-        verbose_name_plural = _("Product Lists")
+        app_label = 'promotions'
+        verbose_name = _("Product list")
+        verbose_name_plural = _("Product lists")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def template_context(self, request):
@@ -266,6 +280,7 @@ class HandPickedProductList(AbstractProductList):
         return self.get_queryset()
 
     class Meta:
+        app_label = 'promotions'
         verbose_name = _("Hand Picked Product List")
         verbose_name_plural = _("Hand Picked Product Lists")
 
@@ -278,10 +293,11 @@ class OrderedProduct(models.Model):
     display_order = models.PositiveIntegerField(_('Display Order'), default=0)
 
     class Meta:
+        app_label = 'promotions'
         ordering = ('display_order',)
-        verbose_name = _("Ordered Product")
-        verbose_name_plural = _("Ordered Product")
         unique_together = ('list', 'product')
+        verbose_name = _("Ordered product")
+        verbose_name_plural = _("Ordered product")
 
 
 class AutomaticProductList(AbstractProductList):
@@ -308,8 +324,9 @@ class AutomaticProductList(AbstractProductList):
         return self.get_queryset()[:self.num_products]
 
     class Meta:
-        verbose_name = _("Automatic Product List")
-        verbose_name_plural = _("Automatic Product Lists")
+        app_label = 'promotions'
+        verbose_name = _("Automatic product list")
+        verbose_name_plural = _("Automatic product lists")
 
 
 class OrderedProductList(HandPickedProductList):
@@ -319,6 +336,7 @@ class OrderedProductList(HandPickedProductList):
     display_order = models.PositiveIntegerField(_('Display Order'), default=0)
 
     class Meta:
+        app_label = 'promotions'
         ordering = ('display_order',)
         verbose_name = _("Ordered Product List")
         verbose_name_plural = _("Ordered Product Lists")
@@ -332,5 +350,6 @@ class TabbedBlock(AbstractPromotion):
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     class Meta:
+        app_label = 'promotions'
         verbose_name = _("Tabbed Block")
         verbose_name_plural = _("Tabbed Blocks")

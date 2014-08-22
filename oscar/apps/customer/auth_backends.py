@@ -1,7 +1,9 @@
+import warnings
+
 from django.contrib.auth.backends import ModelBackend
 from django.core.exceptions import ImproperlyConfigured
-from oscar.apps.customer.utils import normalise_email
 
+from oscar.apps.customer.utils import normalise_email
 from oscar.core.compat import get_user_model
 
 User = get_user_model()
@@ -37,7 +39,8 @@ class EmailBackend(ModelBackend):
         # intentionally allow multiple users with the same email address
         # (has been a requirement in larger system deployments),
         # we just enforce that they don't share the same password.
-        matching_users = User.objects.filter(email=clean_email)
+        # We make a case-insensitive match when looking for emails.
+        matching_users = User.objects.filter(email__iexact=clean_email)
         authenticated_users = [
             user for user in matching_users if user.check_password(password)]
         if len(authenticated_users) == 1:
@@ -52,5 +55,14 @@ class EmailBackend(ModelBackend):
                 "password")
         return None
 
-# Deprecated in Oscar 0.8: Spelling
-Emailbackend = EmailBackend
+
+# Deprecated since Oscar 0.8 because of the spelling.
+class Emailbackend(EmailBackend):
+
+    def __init__(self):
+        warnings.warn(
+            "Oscar's auth backend EmailBackend has been renamed in Oscar 0.8 "
+            " and you're using the old name of Emailbackend. Please rename "
+            " all references; most likely in the AUTH_BACKENDS setting.",
+            DeprecationWarning)
+        super(Emailbackend, self).__init__()

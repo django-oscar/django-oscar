@@ -11,7 +11,6 @@ OrderCreator = get_class('order.utils', 'OrderCreator')
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 CheckoutSessionMixin = get_class('checkout.session', 'CheckoutSessionMixin')
 ShippingAddress = get_model('order', 'ShippingAddress')
-CommunicationEvent = get_model('order', 'CommunicationEvent')
 OrderNumberGenerator = get_class('order.utils', 'OrderNumberGenerator')
 PaymentEventType = get_model('order', 'PaymentEventType')
 PaymentEvent = get_model('order', 'PaymentEvent')
@@ -235,7 +234,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         order is submitted.
         """
         # Send confirmation message (normally an email)
-        self.send_confirmation_message(order)
+        self.send_confirmation_message(order, self.communication_type_code)
 
         # Flush all session data
         self.checkout_session.flush()
@@ -255,12 +254,36 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     def get_success_url(self):
         return reverse('checkout:thank-you')
 
-    def send_confirmation_message(self, order, **kwargs):
-        code = self.communication_type_code
-        ctx = {'user': self.request.user,
-               'order': order,
-               'site': get_current_site(self.request),
-               'lines': order.lines.all()}
+    def send_confirmation_message(self, order, code, **kwargs):
+        ctx = self.get_message_context(order)
+        try:
+            event_type = CommunicationEventType.objects.get(code=code)
+        except CommunicationEventType.DoesNotExist:
+            # No event-type in database, attempt to find templates for this
+            # type and render them immediately to get the messages.  Since we
+            # have not CommunicationEventType to link to, we can't create a
+            # CommunicationEvent instance.
+            messages = CommunicationEventType.objects.get_and_render(code, ctx)
+            event_type = None
+        else:
+            messages = event_type.get_messages(ctx)
+
+        if messages and messages['body']:
+            logger.info("Order #%s - sending %s messages", order.number, code)
+            dispatcher = Dispatcher(logger)
+            dispatcher.dispatch_order_messages(order, messages,
+                                               event_type, **kwargs)
+        else:
+            logger.warning("Order #%s - no %s communication event type",
+                           order.number, code)
+
+    def get_message_context(self, order):
+        ctx = {
+            'user': self.request.user,
+            'order': order,
+            'site': get_current_site(self.request),
+            'lines': order.lines.all()
+        }
 
         if not self.request.user.is_authenticated():
             # Attempt to add the anon order status URL to the email template
@@ -275,30 +298,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             else:
                 site = Site.objects.get_current()
                 ctx['status_url'] = 'http://%s%s' % (site.domain, path)
-
-        try:
-            event_type = CommunicationEventType.objects.get(code=code)
-        except CommunicationEventType.DoesNotExist:
-            # No event-type in database, attempt to find templates for this
-            # type and render them immediately to get the messages.  Since we
-            # have not CommunicationEventType to link to, we can't create a
-            # CommunicationEvent instance.
-            messages = CommunicationEventType.objects.get_and_render(code, ctx)
-            event_type = None
-        else:
-            # Create CommunicationEvent
-            CommunicationEvent._default_manager.create(
-                order=order, event_type=event_type)
-            messages = event_type.get_messages(ctx)
-
-        if messages and messages['body']:
-            logger.info("Order #%s - sending %s messages", order.number, code)
-            dispatcher = Dispatcher(logger)
-            dispatcher.dispatch_order_messages(order, messages,
-                                               event_type, **kwargs)
-        else:
-            logger.warning("Order #%s - no %s communication event type",
-                           order.number, code)
+        return ctx
 
     # Basket helpers
     # --------------

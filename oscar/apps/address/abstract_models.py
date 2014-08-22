@@ -2,14 +2,16 @@ import re
 import zlib
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.core import exceptions
 
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.models.fields import UppercaseCharField, PhoneNumberField
-from six.moves import filter
+from django.utils.six.moves import filter
 
 
+@python_2_unicode_compatible
 class AbstractAddress(models.Model):
     """
     Superclass address object
@@ -233,7 +235,7 @@ class AbstractAddress(models.Model):
     search_text = models.TextField(
         _("Search text - used only for searching addresses"), editable=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.summary
 
     class Meta:
@@ -373,6 +375,7 @@ class AbstractAddress(models.Model):
         return fields
 
 
+@python_2_unicode_compatible
 class AbstractCountry(models.Model):
     """
     International Organization for Standardization (ISO) 3166-1 Country list.
@@ -402,11 +405,12 @@ class AbstractCountry(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'address'
         verbose_name = _('Country')
         verbose_name_plural = _('Countries')
         ordering = ('-display_order', 'printable_name',)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.printable_name or self.name
 
     @property
@@ -435,7 +439,16 @@ class AbstractShippingAddress(AbstractAddress):
 
     A shipping address should not be edited once the order has been placed -
     it should be read-only after that.
+
+    NOTE:
+    ShippingAddress is a model of the order app. But moving it there is tricky
+    due to circular import issues that are amplified by get_model/get_class
+    calls pre-Django 1.7 to register receivers. So...
+    TODO: Once Django 1.6 support is dropped, move AbstractBillingAddress and
+    AbstractShippingAddress to the order app, and move
+    PartnerAddress to the partner app.
     """
+
     phone_number = PhoneNumberField(
         _("Phone number"), blank=True,
         help_text=_("In case we need to call you about your order"))
@@ -446,6 +459,8 @@ class AbstractShippingAddress(AbstractAddress):
 
     class Meta:
         abstract = True
+        # ShippingAddress is registered in order/models.py
+        app_label = 'order'
         verbose_name = _("Shipping address")
         verbose_name_plural = _("Shipping addresses")
 
@@ -518,6 +533,7 @@ class AbstractUserAddress(AbstractShippingAddress):
 
     class Meta:
         abstract = True
+        app_label = 'address'
         verbose_name = _("User address")
         verbose_name_plural = _("User addresses")
         ordering = ['-num_orders']
@@ -537,9 +553,10 @@ class AbstractUserAddress(AbstractShippingAddress):
 
 
 class AbstractBillingAddress(AbstractAddress):
-
     class Meta:
         abstract = True
+        # BillingAddress is registered in order/models.py
+        app_label = 'order'
         verbose_name = _("Billing address")
         verbose_name_plural = _("Billing addresses")
 
@@ -564,5 +581,6 @@ class AbstractPartnerAddress(AbstractAddress):
 
     class Meta:
         abstract = True
+        app_label = 'partner'
         verbose_name = _("Partner address")
         verbose_name_plural = _("Partner addresses")

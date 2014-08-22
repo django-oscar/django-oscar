@@ -1,4 +1,4 @@
-import six
+from django.utils import six
 from django.contrib import messages
 
 

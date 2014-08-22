@@ -92,9 +92,7 @@ td .btn-toolbar {
   input[type=url],
   textarea,
   select {
-    .box-sizing(border-box);
     font-size:12px;
-    min-height: 35px;
   }
   textarea {
     max-height:200px;
@@ -183,13 +181,6 @@ form.flat {
     font-weight:bold;
   }
 }
-input[type=text].hasDatepicker,
-.create-page input[type=text].hasDatepicker,
-.form-inline input[type=text].hasDatepicker,
-.form-horizontal input[type=text].hasDatepicker,
-.form-stacked input[type=text].hasDatepicker {
-    width: 125px;
-}
 .wysihtml5-sandbox {
     border:1px solid #ccc!important;
 }
@@ -228,6 +219,12 @@ input[type=text].hasDatepicker,
 }
 .table {
   background-color: @white;
+}
+.table thead tr th.asc i:before {
+  content: "\f077";
+}
+.table thead tr th.desc i:before {
+  content: "\f078";
 }
 .table-striped tbody tr:nth-child(odd) td,
 .table-striped tbody tr:nth-child(odd) th {
@@ -533,6 +530,8 @@ caption,
   border-color: #ede181;
   color: #333;
 }
+@import 'page/alerts.less';
+
 // DASHBOARD GRAPH
 // ----------------
 #order_graph {
@@ -739,11 +738,11 @@ caption,
   overflow:visible;
 }
 .upload-image {
-  .clearfix();
+  .clearfix();
   margin:0;
   z-index: 1;
   position: relative;
-  li {
+  li {
    display:block;
    width: 200px;
    margin:0 1% 2%;
@@ -766,7 +765,7 @@ caption,
     height: 200px;
     z-index: 200;
   }
-  img {
+  img {
    position: absolute;
    margin:auto;
      top: 0;
@@ -786,12 +785,12 @@ caption,
     left: 0;
     .border-radius(0);
   }
-  .input-field {
+  .input-field {
    position: relative;
    z-index: 1000;
    opacity: 0;
  }
-  .input-field input {
+  .input-field input {
     border-width: 0;
     direction: ltr;
     cursor: pointer;
@@ -917,18 +916,6 @@ textarea {
 textarea.plain {
 	font-family: monospace;
 }
-// DATETIMEPICKER
-/* css for timepicker */
-.ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
-.ui-timepicker-div dl { text-align: left; }
-.ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; }
-.ui-timepicker-div dl dd { margin: 0 10px 10px 65px; }
-.ui-timepicker-div td { font-size: 90%; }
-.ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
-
-.ui-timepicker-rtl{ direction: rtl; }
-.ui-timepicker-rtl dl { text-align: right; }
-.ui-timepicker-rtl dl dd { margin: 0 65px 10px 10px; }
 
 // RESPONSIVE
 // ---------

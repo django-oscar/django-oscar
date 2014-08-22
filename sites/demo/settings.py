@@ -19,15 +19,11 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 SQL_DEBUG = True
 
-ADMINS = (
-)
 EMAIL_SUBJECT_PREFIX = '[Oscar demo] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ALLOWED_HOSTS = ['demo.oscarcommerce.com',
                  'demo.oscar.tangentlabs.co.uk']
-
-MANAGERS = ADMINS
 
 # Use settings_local to override this default
 DATABASES = {
@@ -39,11 +35,17 @@ DATABASES = {
     },
 }
 
+SITE_ID = 1
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
+
+# Prevent Django 1.7+ from showing a warning regarding a changed default test
+# runner. The Oscar test suite is run with nose, so it does not matter.
+SILENCED_SYSTEM_CHECKS = ['1_6.W001', ]
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -61,8 +63,6 @@ LANGUAGE_CODE = 'en-gb'
 LANGUAGES = (
     ('en-gb', 'English'),
 )
-
-SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
@@ -235,7 +235,6 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     # Oscar dependencies
     'compressor',
-    'south',
     # Oscar extensions
     'stores',
     'paypal',
@@ -248,6 +247,11 @@ INSTALLED_APPS = [
     # Sentry (for live demo site)
     'raven.contrib.django.raven_compat'
 ]
+
+# South is only supported in Django < 1.7
+import django
+if django.VERSION < (1, 7):
+    INSTALLED_APPS.append('south')
 
 # Include core apps with a few overrides:
 # - a shipping override app to provide some shipping methods

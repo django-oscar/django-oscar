@@ -1,403 +1,291 @@
-# encoding: utf-8
-import datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
-class Migration(SchemaMigration):
-
-    def forwards(self, orm):
-
-        # Adding model 'ProductRecommendation'
-        db.create_table('catalogue_productrecommendation', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('primary', self.gf('django.db.models.fields.related.ForeignKey')(related_name='primary_recommendations', to=orm['catalogue.Product'])),
-            ('recommendation', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['catalogue.Product'])),
-            ('ranking', self.gf('django.db.models.fields.PositiveSmallIntegerField')(default=0)),
-        ))
-        db.send_create_signal('catalogue', ['ProductRecommendation'])
-
-        # Adding model 'ProductClass'
-        db.create_table('catalogue_productclass', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=128)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(unique=True, max_length=128, db_index=True)),
-        ))
-        db.send_create_signal('catalogue', ['ProductClass'])
-
-        # Adding M2M table for field options on 'ProductClass'
-        db.create_table('catalogue_productclass_options', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('productclass', models.ForeignKey(orm['catalogue.productclass'], null=False)),
-            ('option', models.ForeignKey(orm['catalogue.option'], null=False))
-        ))
-        db.create_unique('catalogue_productclass_options', ['productclass_id', 'option_id'])
-
-        # Adding model 'Category'
-        db.create_table('catalogue_category', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('path', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255)),
-            ('depth', self.gf('django.db.models.fields.PositiveIntegerField')()),
-            ('numchild', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=255, db_index=True)),
-            ('slug',
-             self.gf('django.db.models.fields.SlugField')(max_length=255, db_index=True)),
-            ('full_name',
-             self.gf('django.db.models.fields.CharField')(max_length=255, db_index=True)),
-        ))
-        db.send_create_signal('catalogue', ['Category'])
-
-        # Adding model 'ProductCategory'
-        db.create_table('catalogue_productcategory', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('product', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['catalogue.Product'])),
-            ('category', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['catalogue.Category'])),
-            ('is_canonical', self.gf('django.db.models.fields.BooleanField')(default=False, db_index=True)),
-        ))
-        db.send_create_signal('catalogue', ['ProductCategory'])
-
-        # Adding model 'Product'
-        db.create_table('catalogue_product', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('upc', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=64, null=True, blank=True)),
-            ('parent', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='variants', null=True, to=orm['catalogue.Product'])),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(max_length=255, db_index=True)),
-            ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('product_class', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['catalogue.ProductClass'], null=True)),
-            ('score', self.gf('django.db.models.fields.FloatField')(default=0.0, db_index=True)),
-            ('date_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('date_updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, db_index=True, blank=True)),
-        ))
-        db.send_create_signal('catalogue', ['Product'])
-
-        # Adding M2M table for field product_options on 'Product'
-        db.create_table('catalogue_product_product_options', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('product', models.ForeignKey(orm['catalogue.product'], null=False)),
-            ('option', models.ForeignKey(orm['catalogue.option'], null=False))
-        ))
-        db.create_unique('catalogue_product_product_options', ['product_id', 'option_id'])
-
-        # Adding M2M table for field related_products on 'Product'
-        db.create_table('catalogue_product_related_products', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('from_product', models.ForeignKey(orm['catalogue.product'], null=False)),
-            ('to_product', models.ForeignKey(orm['catalogue.product'], null=False))
-        ))
-        db.create_unique('catalogue_product_related_products', ['from_product_id', 'to_product_id'])
-
-        # Adding model 'ContributorRole'
-        db.create_table('catalogue_contributorrole', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('name_plural', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(max_length=50, db_index=True)),
-        ))
-        db.send_create_signal('catalogue', ['ContributorRole'])
-
-        # Adding model 'Contributor'
-        db.create_table('catalogue_contributor', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(max_length=255, db_index=True)),
-        ))
-        db.send_create_signal('catalogue', ['Contributor'])
-
-        # Adding model 'ProductContributor'
-        db.create_table('catalogue_productcontributor', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('product', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['catalogue.Product'])),
-            ('contributor', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['catalogue.Contributor'])),
-            ('role', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['catalogue.ContributorRole'])),
-        ))
-        db.send_create_signal('catalogue', ['ProductContributor'])
-
-        # Adding model 'ProductAttribute'
-        db.create_table('catalogue_productattribute', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('product_class', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='attributes', null=True, to=orm['catalogue.ProductClass'])),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=128)),
-            ('code', self.gf('django.db.models.fields.SlugField')(max_length=128, db_index=True)),
-            ('type', self.gf('django.db.models.fields.CharField')(default='text', max_length=20)),
-            ('option_group', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['catalogue.AttributeOptionGroup'], null=True, blank=True)),
-            ('entity_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['catalogue.AttributeEntityType'], null=True, blank=True)),
-            ('required', self.gf('django.db.models.fields.BooleanField')(default=False)),
-        ))
-        db.send_create_signal('catalogue', ['ProductAttribute'])
-
-        # Adding model 'ProductAttributeValue'
-        db.create_table('catalogue_productattributevalue', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('attribute', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['catalogue.ProductAttribute'])),
-            ('product', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['catalogue.Product'])),
-            ('value_text', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
-            ('value_integer', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
-            ('value_boolean', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('value_float', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
-            ('value_richtext', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('value_date', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
-            ('value_option', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['catalogue.AttributeOption'], null=True, blank=True)),
-            ('value_entity', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['catalogue.AttributeEntity'], null=True, blank=True)),
-        ))
-        db.send_create_signal('catalogue', ['ProductAttributeValue'])
-
-        # Adding model 'AttributeOptionGroup'
-        db.create_table('catalogue_attributeoptiongroup', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=128)),
-        ))
-        db.send_create_signal('catalogue', ['AttributeOptionGroup'])
-
-        # Adding model 'AttributeOption'
-        db.create_table('catalogue_attributeoption', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('group', self.gf('django.db.models.fields.related.ForeignKey')(related_name='options', to=orm['catalogue.AttributeOptionGroup'])),
-            ('option', self.gf('django.db.models.fields.CharField')(max_length=255)),
-        ))
-        db.send_create_signal('catalogue', ['AttributeOption'])
-
-        # Adding model 'AttributeEntity'
-        db.create_table('catalogue_attributeentity', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(db_index=True, max_length=255, blank=True)),
-            ('type', self.gf('django.db.models.fields.related.ForeignKey')(related_name='entities', to=orm['catalogue.AttributeEntityType'])),
-        ))
-        db.send_create_signal('catalogue', ['AttributeEntity'])
-
-        # Adding model 'AttributeEntityType'
-        db.create_table('catalogue_attributeentitytype', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(db_index=True, max_length=255, blank=True)),
-        ))
-        db.send_create_signal('catalogue', ['AttributeEntityType'])
-
-        # Adding model 'Option'
-        db.create_table('catalogue_option', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=128)),
-            ('code', self.gf('django.db.models.fields.SlugField')(max_length=128, db_index=True)),
-            ('type', self.gf('django.db.models.fields.CharField')(default='Required', max_length=128)),
-        ))
-        db.send_create_signal('catalogue', ['Option'])
-
-        # Adding model 'ProductImage'
-        db.create_table('catalogue_productimage', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('product', self.gf('django.db.models.fields.related.ForeignKey')(related_name='images', to=orm['catalogue.Product'])),
-            ('original', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
-            ('caption', self.gf('django.db.models.fields.CharField')(max_length=200, null=True, blank=True)),
-            ('display_order', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
-            ('date_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-        ))
-        db.send_create_signal('catalogue', ['ProductImage'])
-
-        # Adding unique constraint on 'ProductImage', fields ['product', 'display_order']
-        db.create_unique('catalogue_productimage', ['product_id', 'display_order'])
+from django.db import models, migrations
+import oscar.models.fields
+import django.core.validators
+import django.db.models.deletion
+import oscar.models.fields.autoslugfield
 
 
-    def backwards(self, orm):
+class Migration(migrations.Migration):
 
-        # Removing unique constraint on 'ProductImage', fields ['product', 'display_order']
-        db.delete_unique('catalogue_productimage', ['product_id', 'display_order'])
+    dependencies = [
+        ('contenttypes', '0001_initial'),
+    ]
 
-        # Deleting model 'ProductRecommendation'
-        db.delete_table('catalogue_productrecommendation')
-
-        # Deleting model 'ProductClass'
-        db.delete_table('catalogue_productclass')
-
-        # Removing M2M table for field options on 'ProductClass'
-        db.delete_table('catalogue_productclass_options')
-
-        # Deleting model 'Category'
-        db.delete_table('catalogue_category')
-
-        # Deleting model 'ProductCategory'
-        db.delete_table('catalogue_productcategory')
-
-        # Deleting model 'Product'
-        db.delete_table('catalogue_product')
-
-        # Removing M2M table for field product_options on 'Product'
-        db.delete_table('catalogue_product_product_options')
-
-        # Removing M2M table for field related_products on 'Product'
-        db.delete_table('catalogue_product_related_products')
-
-        # Deleting model 'ContributorRole'
-        db.delete_table('catalogue_contributorrole')
-
-        # Deleting model 'Contributor'
-        db.delete_table('catalogue_contributor')
-
-        # Deleting model 'ProductContributor'
-        db.delete_table('catalogue_productcontributor')
-
-        # Deleting model 'ProductAttribute'
-        db.delete_table('catalogue_productattribute')
-
-        # Deleting model 'ProductAttributeValue'
-        db.delete_table('catalogue_productattributevalue')
-
-        # Deleting model 'AttributeOptionGroup'
-        db.delete_table('catalogue_attributeoptiongroup')
-
-        # Deleting model 'AttributeOption'
-        db.delete_table('catalogue_attributeoption')
-
-        # Deleting model 'AttributeEntity'
-        db.delete_table('catalogue_attributeentity')
-
-        # Deleting model 'AttributeEntityType'
-        db.delete_table('catalogue_attributeentitytype')
-
-        # Deleting model 'Option'
-        db.delete_table('catalogue_option')
-
-        # Deleting model 'ProductImage'
-        db.delete_table('catalogue_productimage')
-
-
-    models = {
-        'catalogue.attributeentity': {
-            'Meta': {'object_name': 'AttributeEntity'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'db_index': 'True', 'max_length': '255', 'blank': 'True'}),
-            'type': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'entities'", 'to': "orm['catalogue.AttributeEntityType']"})
-        },
-        'catalogue.attributeentitytype': {
-            'Meta': {'object_name': 'AttributeEntityType'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'db_index': 'True', 'max_length': '255', 'blank': 'True'})
-        },
-        'catalogue.attributeoption': {
-            'Meta': {'object_name': 'AttributeOption'},
-            'group': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'options'", 'to': "orm['catalogue.AttributeOptionGroup']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'option': ('django.db.models.fields.CharField', [], {'max_length': '255'})
-        },
-        'catalogue.attributeoptiongroup': {
-            'Meta': {'object_name': 'AttributeOptionGroup'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '128'})
-        },
-        'catalogue.category': {
-            'Meta': {'ordering': "['name']", 'object_name': 'Category'},
-            'depth': ('django.db.models.fields.PositiveIntegerField', [], {}),
-            'full_name': ('django.db.models.fields.CharField', [],
-                          {'max_length': '255', 'db_index': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'db_index': 'True'}),
-            'numchild': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'path': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length':
-                                                               '255', 'db_index': 'True'})
-        },
-        'catalogue.contributor': {
-            'Meta': {'object_name': 'Contributor'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '255', 'db_index': 'True'})
-        },
-        'catalogue.contributorrole': {
-            'Meta': {'object_name': 'ContributorRole'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'name_plural': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '50', 'db_index': 'True'})
-        },
-        'catalogue.option': {
-            'Meta': {'object_name': 'Option'},
-            'code': ('django.db.models.fields.SlugField', [], {'max_length': '128', 'db_index': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'type': ('django.db.models.fields.CharField', [], {'default': "'Required'", 'max_length': '128'})
-        },
-        'catalogue.product': {
-            'Meta': {'ordering': "['-date_created']", 'object_name': 'Product'},
-            'attributes': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['catalogue.ProductAttribute']", 'through': "orm['catalogue.ProductAttributeValue']", 'symmetrical': 'False'}),
-            'categories': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['catalogue.Category']", 'through': "orm['catalogue.ProductCategory']", 'symmetrical': 'False'}),
-            'date_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'date_updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'db_index': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'parent': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'variants'", 'null': 'True', 'to': "orm['catalogue.Product']"}),
-            'product_class': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.ProductClass']", 'null': 'True'}),
-            'product_options': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['catalogue.Option']", 'symmetrical': 'False', 'blank': 'True'}),
-            'recommended_products': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['catalogue.Product']", 'symmetrical': 'False', 'through': "orm['catalogue.ProductRecommendation']", 'blank': 'True'}),
-            'related_products': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'relations'", 'blank': 'True', 'to': "orm['catalogue.Product']"}),
-            'score': ('django.db.models.fields.FloatField', [], {'default': '0.0', 'db_index': 'True'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '255', 'db_index': 'True'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
-            'upc': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '64', 'null': 'True', 'blank': 'True'})
-        },
-        'catalogue.productattribute': {
-            'Meta': {'ordering': "['code']", 'object_name': 'ProductAttribute'},
-            'code': ('django.db.models.fields.SlugField', [], {'max_length': '128', 'db_index': 'True'}),
-            'entity_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.AttributeEntityType']", 'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'option_group': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.AttributeOptionGroup']", 'null': 'True', 'blank': 'True'}),
-            'product_class': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'attributes'", 'null': 'True', 'to': "orm['catalogue.ProductClass']"}),
-            'required': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'type': ('django.db.models.fields.CharField', [], {'default': "'text'", 'max_length': '20'})
-        },
-        'catalogue.productattributevalue': {
-            'Meta': {'object_name': 'ProductAttributeValue'},
-            'attribute': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.ProductAttribute']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.Product']"}),
-            'value_boolean': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'value_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'value_entity': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.AttributeEntity']", 'null': 'True', 'blank': 'True'}),
-            'value_float': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
-            'value_integer': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'value_option': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.AttributeOption']", 'null': 'True', 'blank': 'True'}),
-            'value_richtext': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'value_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'})
-        },
-        'catalogue.productcategory': {
-            'Meta': {'ordering': "['-is_canonical']", 'object_name': 'ProductCategory'},
-            'category': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.Category']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_canonical': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_index': 'True'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.Product']"})
-        },
-        'catalogue.productclass': {
-            'Meta': {'ordering': "['name']", 'object_name': 'ProductClass'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'options': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['catalogue.Option']", 'symmetrical': 'False', 'blank': 'True'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '128', 'db_index': 'True'})
-        },
-        'catalogue.productcontributor': {
-            'Meta': {'object_name': 'ProductContributor'},
-            'contributor': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.Contributor']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.Product']"}),
-            'role': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.ContributorRole']"})
-        },
-        'catalogue.productimage': {
-            'Meta': {'ordering': "['display_order']", 'unique_together': "(('product', 'display_order'),)", 'object_name': 'ProductImage'},
-            'caption': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
-            'date_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'display_order': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'original': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'images'", 'to': "orm['catalogue.Product']"})
-        },
-        'catalogue.productrecommendation': {
-            'Meta': {'object_name': 'ProductRecommendation'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'primary': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'primary_recommendations'", 'to': "orm['catalogue.Product']"}),
-            'ranking': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'}),
-            'recommendation': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.Product']"})
-        }
-    }
-
-    complete_apps = ['catalogue']
+    operations = [
+        migrations.CreateModel(
+            name='AttributeOption',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('option', models.CharField(verbose_name='Option', max_length=255)),
+            ],
+            options={
+                'verbose_name': 'Attribute option',
+                'verbose_name_plural': 'Attribute options',
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='AttributeOptionGroup',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('name', models.CharField(verbose_name='Name', max_length=128)),
+            ],
+            options={
+                'verbose_name': 'Attribute option group',
+                'verbose_name_plural': 'Attribute option groups',
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='attributeoption',
+            name='group',
+            field=models.ForeignKey(verbose_name='Group', to='catalogue.AttributeOptionGroup'),
+            preserve_default=True,
+        ),
+        migrations.CreateModel(
+            name='Category',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('path', models.CharField(unique=True, max_length=255)),
+                ('depth', models.PositiveIntegerField()),
+                ('numchild', models.PositiveIntegerField(default=0)),
+                ('name', models.CharField(verbose_name='Name', db_index=True, max_length=255)),
+                ('description', models.TextField(verbose_name='Description', blank=True)),
+                ('image', models.ImageField(verbose_name='Image', upload_to='categories', blank=True, null=True, max_length=255)),
+                ('slug', models.SlugField(editable=False, verbose_name='Slug', max_length=255)),
+                ('full_name', models.CharField(editable=False, verbose_name='Full Name', db_index=True, max_length=255)),
+            ],
+            options={
+                'verbose_name': 'Category',
+                'verbose_name_plural': 'Categories',
+                'ordering': ['full_name'],
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Option',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('name', models.CharField(verbose_name='Name', max_length=128)),
+                ('code', oscar.models.fields.autoslugfield.AutoSlugField(editable=False, verbose_name='Code', blank=True, max_length=128, populate_from='name', unique=True)),
+                ('type', models.CharField(verbose_name='Status', choices=[('Required', 'Required - a value for this option must be specified'), ('Optional', 'Optional - a value for this option can be omitted')], default='Required', max_length=128)),
+            ],
+            options={
+                'verbose_name': 'Option',
+                'verbose_name_plural': 'Options',
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Product',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('structure', models.CharField(verbose_name='Product structure', choices=[('standalone', 'Stand-alone product'), ('parent', 'Parent product'), ('child', 'Child product')], default='standalone', max_length=10)),
+                ('upc', oscar.models.fields.NullCharField(verbose_name='UPC', max_length=64, help_text='Universal Product Code (UPC) is an identifier for a product which is not specific to a particular  supplier. Eg an ISBN for a book.', unique=True)),
+                ('title', models.CharField(verbose_name='Title', blank=True, max_length=255)),
+                ('slug', models.SlugField(verbose_name='Slug', max_length=255)),
+                ('description', models.TextField(verbose_name='Description', blank=True)),
+                ('rating', models.FloatField(editable=False, verbose_name='Rating', null=True)),
+                ('date_created', models.DateTimeField(verbose_name='Date created', auto_now_add=True)),
+                ('date_updated', models.DateTimeField(verbose_name='Date updated', auto_now=True, db_index=True)),
+                ('is_discountable', models.BooleanField(verbose_name='Is discountable?', help_text='This flag indicates if this product can be used in an offer or not', default=True)),
+                ('parent', models.ForeignKey(verbose_name='Parent product', blank=True, help_text="Only choose a parent product if you're creating a child product.  For example if this is a size 4 of a particular t-shirt.  Leave blank if this is a stand-alone product (i.e. there is only one version of this product).", to='catalogue.Product', null=True)),
+                ('product_options', models.ManyToManyField(verbose_name='Product Options', blank=True, to='catalogue.Option')),
+            ],
+            options={
+                'verbose_name': 'Product',
+                'verbose_name_plural': 'Products',
+                'ordering': ['-date_created'],
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='ProductAttribute',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('name', models.CharField(verbose_name='Name', max_length=128)),
+                ('code', models.SlugField(verbose_name='Code', validators=[django.core.validators.RegexValidator(regex='^[a-zA-Z\\-_][0-9a-zA-Z\\-_]*$', message="Code can only contain the letters a-z, A-Z, digits, minus and underscores, and can't start with a digit")], max_length=128)),
+                ('type', models.CharField(verbose_name='Type', choices=[('text', 'Text'), ('integer', 'Integer'), ('boolean', 'True / False'), ('float', 'Float'), ('richtext', 'Rich Text'), ('date', 'Date'), ('option', 'Option'), ('entity', 'Entity'), ('file', 'File'), ('image', 'Image')], default='text', max_length=20)),
+                ('required', models.BooleanField(verbose_name='Required', default=False)),
+                ('option_group', models.ForeignKey(verbose_name='Option Group', blank=True, help_text='Select an option group if using type "Option"', to='catalogue.AttributeOptionGroup', null=True)),
+            ],
+            options={
+                'verbose_name': 'Product attribute',
+                'verbose_name_plural': 'Product attributes',
+                'ordering': ['code'],
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='ProductAttributeValue',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('value_text', models.TextField(verbose_name='Text', blank=True, null=True)),
+                ('value_integer', models.IntegerField(verbose_name='Integer', blank=True, null=True)),
+                ('value_boolean', models.NullBooleanField(verbose_name='Boolean')),
+                ('value_float', models.FloatField(verbose_name='Float', blank=True, null=True)),
+                ('value_richtext', models.TextField(verbose_name='Richtext', blank=True, null=True)),
+                ('value_date', models.DateField(verbose_name='Date', blank=True, null=True)),
+                ('value_file', models.FileField(null=True, upload_to='images/products/%Y/%m/', blank=True, max_length=255)),
+                ('value_image', models.ImageField(null=True, upload_to='images/products/%Y/%m/', blank=True, max_length=255)),
+                ('entity_object_id', models.PositiveIntegerField(editable=False, blank=True, null=True)),
+                ('attribute', models.ForeignKey(verbose_name='Attribute', to='catalogue.ProductAttribute')),
+                ('entity_content_type', models.ForeignKey(editable=False, blank=True, to='contenttypes.ContentType', null=True)),
+            ],
+            options={
+                'verbose_name': 'Product attribute value',
+                'verbose_name_plural': 'Product attribute values',
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='product',
+            name='attributes',
+            field=models.ManyToManyField(verbose_name='Attributes', through='catalogue.ProductAttributeValue', to='catalogue.ProductAttribute'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='productattributevalue',
+            name='product',
+            field=models.ForeignKey(verbose_name='Product', to='catalogue.Product'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='productattributevalue',
+            name='value_option',
+            field=models.ForeignKey(verbose_name='Value Option', blank=True, to='catalogue.AttributeOption', null=True),
+            preserve_default=True,
+        ),
+        migrations.AlterUniqueTogether(
+            name='productattributevalue',
+            unique_together=set([('attribute', 'product')]),
+        ),
+        migrations.CreateModel(
+            name='ProductCategory',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('category', models.ForeignKey(verbose_name='Category', to='catalogue.Category')),
+            ],
+            options={
+                'verbose_name': 'Product category',
+                'verbose_name_plural': 'Product categories',
+                'ordering': ['product', 'category'],
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='product',
+            name='categories',
+            field=models.ManyToManyField(verbose_name='Categories', through='catalogue.ProductCategory', to='catalogue.Category'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='productcategory',
+            name='product',
+            field=models.ForeignKey(verbose_name='Product', to='catalogue.Product'),
+            preserve_default=True,
+        ),
+        migrations.AlterUniqueTogether(
+            name='productcategory',
+            unique_together=set([('product', 'category')]),
+        ),
+        migrations.CreateModel(
+            name='ProductClass',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('name', models.CharField(verbose_name='Name', max_length=128)),
+                ('slug', oscar.models.fields.autoslugfield.AutoSlugField(editable=False, verbose_name='Slug', blank=True, max_length=128, populate_from='name', unique=True)),
+                ('requires_shipping', models.BooleanField(verbose_name='Requires shipping?', default=True)),
+                ('track_stock', models.BooleanField(verbose_name='Track stock levels?', default=True)),
+                ('options', models.ManyToManyField(verbose_name='Options', blank=True, to='catalogue.Option')),
+            ],
+            options={
+                'verbose_name': 'Product class',
+                'verbose_name_plural': 'Product classes',
+                'ordering': ['name'],
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='productattribute',
+            name='product_class',
+            field=models.ForeignKey(verbose_name='Product Type', blank=True, to='catalogue.ProductClass', null=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='product',
+            name='product_class',
+            field=models.ForeignKey(verbose_name='Product Type', on_delete=django.db.models.deletion.PROTECT, help_text='Choose what type of product this is', to='catalogue.ProductClass', null=True),
+            preserve_default=True,
+        ),
+        migrations.CreateModel(
+            name='ProductImage',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('original', models.ImageField(verbose_name='Original', upload_to='images/products/%Y/%m/', max_length=255)),
+                ('caption', models.CharField(verbose_name='Caption', blank=True, max_length=200)),
+                ('display_order', models.PositiveIntegerField(verbose_name='Display Order', help_text='An image with a display order of zero will be the primary image for a product', default=0)),
+                ('date_created', models.DateTimeField(verbose_name='Date Created', auto_now_add=True)),
+                ('product', models.ForeignKey(verbose_name='Product', to='catalogue.Product')),
+            ],
+            options={
+                'verbose_name': 'Product image',
+                'verbose_name_plural': 'Product images',
+                'ordering': ['display_order'],
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AlterUniqueTogether(
+            name='productimage',
+            unique_together=set([('product', 'display_order')]),
+        ),
+        migrations.CreateModel(
+            name='ProductRecommendation',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('ranking', models.PositiveSmallIntegerField(verbose_name='Ranking', help_text='Determines order of the products. A product with a higher value will appear before one with a lower ranking.', default=0)),
+            ],
+            options={
+                'verbose_name': 'Product recommendation',
+                'verbose_name_plural': 'Product recomendations',
+                'ordering': ['primary', '-ranking'],
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='product',
+            name='recommended_products',
+            field=models.ManyToManyField(verbose_name='Recommended Products', through='catalogue.ProductRecommendation', blank=True, to='catalogue.Product'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='productrecommendation',
+            name='primary',
+            field=models.ForeignKey(verbose_name='Primary Product', to='catalogue.Product'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='productrecommendation',
+            name='recommendation',
+            field=models.ForeignKey(verbose_name='Recommended Product', to='catalogue.Product'),
+            preserve_default=True,
+        ),
+        migrations.AlterUniqueTogether(
+            name='productrecommendation',
+            unique_together=set([('primary', 'recommendation')]),
+        ),
+    ]

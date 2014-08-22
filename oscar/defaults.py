@@ -8,7 +8,6 @@ OSCAR_HOMEPAGE = reverse_lazy('promotions:home')
 # Basket settings
 OSCAR_BASKET_COOKIE_LIFETIME = 7 * 24 * 60 * 60
 OSCAR_BASKET_COOKIE_OPEN = 'oscar_open_basket'
-OSCAR_BASKET_COOKIE_SAVED = 'oscar_saved_basket'
 OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = 10000
 
 # Recently-viewed products
@@ -70,9 +69,6 @@ OSCAR_EAGER_ALERTS = True
 # Registration
 OSCAR_SEND_REGISTRATION_EMAIL = True
 OSCAR_FROM_EMAIL = 'oscar@example.com'
-
-# Offers
-OSCAR_OFFER_BLACKLIST_PRODUCT = None
 
 # Slug handling
 OSCAR_SLUG_FUNCTION = 'oscar.core.utils.default_slugifier'

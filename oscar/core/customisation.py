@@ -1,10 +1,36 @@
 from __future__ import absolute_import
 import os
+from os.path import join, exists
 import shutil
 import logging
 import textwrap
 
 import oscar
+
+
+def create_local_app_folder(local_app_path):
+    if exists(local_app_path):
+        raise ValueError(
+            "There is already a '%s' folder! Aborting!" % local_app_path)
+    os.mkdir(local_app_path)
+
+
+def inherit_app_config(local_app_path, app_package, app_label):
+    # This only works for non-dashboard apps; but then the fork_app command
+    # doesn't support them anyway
+    config_name = app_label.title() + 'Config'
+    create_file(
+        join(local_app_path, '__init__.py'),
+        "default_app_config = '{app_package}.config.{config_name}'\n".format(
+            app_package=app_package, config_name=config_name))
+    create_file(
+        join(local_app_path, 'config.py'),
+        "from oscar.apps.{app_label} import config\n\n\n"
+        "class {config_name}(config.{config_name}):\n"
+        "    name = '{app_package}'\n".format(
+            app_package=app_package,
+            app_label=app_label,
+            config_name=config_name))
 
 
 def fork_app(app_label, folder_path, logger=None):
@@ -21,47 +47,44 @@ def fork_app(app_label, folder_path, logger=None):
         raise ValueError("There is no Oscar app with label '%s'" % app_label)
 
     # Check folder exists
-    if not os.path.exists(folder_path):
+    if not exists(folder_path):
         raise ValueError(
             "The folder '%s' does not exist. Please create it then run this "
-            "command again")
+            "command again" % folder_path)
 
     # Create folder
-    local_app_folder_path = os.path.join(folder_path, app_label)
-    oscar_app_folder_path = os.path.join(oscar.__path__[0], 'apps', app_label)
-    if os.path.exists(local_app_folder_path):
-        raise ValueError(
-            "There is already a '%s' folder! Aborting!" %
-            local_app_folder_path)
-    logger.info("Creating folder %s" % local_app_folder_path)
-    os.mkdir(local_app_folder_path)
+    local_app_path = join(folder_path, app_label)
+    oscar_app_path = join(oscar.__path__[0], 'apps', app_label)
+    logger.info("Creating folder %s" % local_app_path)
+    create_local_app_folder(local_app_path)
 
     # Create minimum app files
-    logger.info("Creating __init__.py and admin.py")
-    create_file(os.path.join(local_app_folder_path, '__init__.py'))
-    create_file(os.path.join(local_app_folder_path, 'admin.py'),
-                "from oscar.apps.%s.admin import *  # noqa" % app_label)
+    app_package = local_app_path.replace('/', '.')
+    logger.info("Enabling Django admin integration")
+    create_file(join(local_app_path, 'admin.py'),
+                "from oscar.apps.%s.admin import *  # noqa\n" % app_label)
+    logger.info("Inheriting app config")
+    inherit_app_config(local_app_path, app_package, app_label)
 
     # Only create models.py and migrations if it exists in the Oscar app
-    oscar_models_path = os.path.join(oscar_app_folder_path, 'models.py')
-    if os.path.exists(oscar_models_path):
-        # Migrations
-        source = os.path.join(oscar_app_folder_path, 'migrations')
-        destination = os.path.join(local_app_folder_path, 'migrations')
-        logger.info("Creating models.py and copying migrations from %s to %s",
-                    source, destination)
-        shutil.copytree(source, destination)
-
+    oscar_models_path = join(oscar_app_path, 'models.py')
+    if exists(oscar_models_path):
+        logger.info(
+            "Creating models.py and copying South and native migrations")
         create_file(
-            os.path.join(local_app_folder_path, 'models.py'),
-            "from oscar.apps.%s.models import *  # noqa" % app_label)
+            join(local_app_path, 'models.py'),
+            "from oscar.apps.%s.models import *  # noqa\n" % app_label)
+
+        for migrations_path in ['migrations', 'south_migrations']:
+            source = join(oscar_app_path, migrations_path)
+            destination = join(local_app_path, migrations_path)
+            shutil.copytree(source, destination)
 
     # Final step needs to be done by hand
-    app_package = local_app_folder_path.replace('/', '.')
     msg = (
         "The final step is to add '%s' to INSTALLED_APPS "
         "(replacing the equivalent Oscar app). This can be "
-        "acheived using Oscar's get_core_apps function - eg:"
+        "achieved using Oscar's get_core_apps function - e.g.:"
     ) % app_package
     snippet = (
         "  # settings.py\n"

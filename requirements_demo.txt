@@ -1,7 +1,7 @@
 # Oscar extensions
 django-oscar-stores==0.5.1
-django-oscar-paypal==0.8
-django-oscar-datacash==0.8.1
+django-oscar-paypal==0.9.1
+django-oscar-datacash==0.8.3
 
 # We need PostGIS as the stores extension uses GeoDjango.
 psycopg2==2.5.1
@@ -9,7 +9,4 @@ psycopg2==2.5.1
 # To use Solr, we need pysolr
 pysolr==3.1
 
-lxml==3.2.4
-cssselect==0.9.1
-BeautifulSoup==3.2.1
 raven==4.0.3

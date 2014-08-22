@@ -226,14 +226,13 @@ class CheckoutSessionMixin(object):
         shipping_address = self.get_shipping_address(request.basket)
         shipping_method = self.get_shipping_method(
             request.basket, shipping_address)
-        shipping_charge = shipping_method.calculate(request.basket)
-        #if shipping_method:
-        #    shipping_charge = shipping_method.calculate(request.basket)
-        #else:
-        #    # It's unusual to get here as a shipping method should be set by
-        #    # the time this skip-condition is called. In the absence of any
-        #    # other evidence, we assume the shipping charge is zero.
-        #    shipping_charge = D('0.00')
+        if shipping_method:
+            shipping_charge = shipping_method.calculate(request.basket)
+        else:
+            # It's unusual to get here as a shipping method should be set by
+            # the time this skip-condition is called. In the absence of any
+            # other evidence, we assume the shipping charge is zero.
+            shipping_charge = D('0.00')
         total = self.get_order_totals(request.basket, shipping_charge)
         if total.excl_tax == D('0.00'):
             raise exceptions.PassedSkipCondition(

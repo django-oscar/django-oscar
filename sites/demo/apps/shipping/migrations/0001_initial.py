@@ -1,83 +1,76 @@
-# encoding: utf-8
-import datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
-class Migration(SchemaMigration):
-
-    def forwards(self, orm):
-
-        # Adding model 'OrderAndItemCharges'
-        db.create_table('shipping_orderanditemcharges', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('code', self.gf('django.db.models.fields.SlugField')(unique=True, max_length=128, db_index=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=128)),
-            ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
-            ('price_per_order', self.gf('django.db.models.fields.DecimalField')(default='0.00', max_digits=12, decimal_places=2)),
-            ('price_per_item', self.gf('django.db.models.fields.DecimalField')(default='0.00', max_digits=12, decimal_places=2)),
-            ('free_shipping_threshold', self.gf('django.db.models.fields.DecimalField')(null=True, max_digits=12, decimal_places=2, blank=True)),
-        ))
-        db.send_create_signal('shipping', ['OrderAndItemCharges'])
-
-        # Adding model 'WeightBased'
-        db.create_table('shipping_weightbased', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('code', self.gf('django.db.models.fields.SlugField')(unique=True, max_length=128, db_index=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=128)),
-            ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
-            ('upper_charge', self.gf('django.db.models.fields.DecimalField')(null=True, max_digits=12, decimal_places=2)),
-        ))
-        db.send_create_signal('shipping', ['WeightBased'])
-
-        # Adding model 'WeightBand'
-        db.create_table('shipping_weightband', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('method', self.gf('django.db.models.fields.related.ForeignKey')(related_name='bands', to=orm['shipping.WeightBased'])),
-            ('upper_limit', self.gf('django.db.models.fields.FloatField')()),
-            ('charge', self.gf('django.db.models.fields.DecimalField')(max_digits=12, decimal_places=2)),
-        ))
-        db.send_create_signal('shipping', ['WeightBand'])
+from django.db import models, migrations
+from decimal import Decimal
+import django.core.validators
+import oscar.models.fields.autoslugfield
 
 
-    def backwards(self, orm):
+class Migration(migrations.Migration):
 
-        # Deleting model 'OrderAndItemCharges'
-        db.delete_table('shipping_orderanditemcharges')
+    dependencies = [
+        ('address', '0001_initial'),
+    ]
 
-        # Deleting model 'WeightBased'
-        db.delete_table('shipping_weightbased')
-
-        # Deleting model 'WeightBand'
-        db.delete_table('shipping_weightband')
-
-
-    models = {
-        'shipping.orderanditemcharges': {
-            'Meta': {'object_name': 'OrderAndItemCharges'},
-            'code': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '128', 'db_index': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'free_shipping_threshold': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '12', 'decimal_places': '2', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'}),
-            'price_per_item': ('django.db.models.fields.DecimalField', [], {'default': "'0.00'", 'max_digits': '12', 'decimal_places': '2'}),
-            'price_per_order': ('django.db.models.fields.DecimalField', [], {'default': "'0.00'", 'max_digits': '12', 'decimal_places': '2'})
-        },
-        'shipping.weightband': {
-            'Meta': {'ordering': "['upper_limit']", 'object_name': 'WeightBand'},
-            'charge': ('django.db.models.fields.DecimalField', [], {'max_digits': '12', 'decimal_places': '2'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'method': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'bands'", 'to': "orm['shipping.WeightBased']"}),
-            'upper_limit': ('django.db.models.fields.FloatField', [], {})
-        },
-        'shipping.weightbased': {
-            'Meta': {'object_name': 'WeightBased'},
-            'code': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '128', 'db_index': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'}),
-            'upper_charge': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '12', 'decimal_places': '2'})
-        }
-    }
-
-    complete_apps = ['shipping']
+    operations = [
+        migrations.CreateModel(
+            name='OrderAndItemCharges',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('code', oscar.models.fields.autoslugfield.AutoSlugField(editable=False, verbose_name='Slug', blank=True, max_length=128, populate_from='name', unique=True)),
+                ('name', models.CharField(verbose_name='Name', unique=True, max_length=128)),
+                ('description', models.TextField(verbose_name='Description', blank=True)),
+                ('price_per_order', models.DecimalField(verbose_name='Price per order', max_digits=12, decimal_places=2, default=Decimal('0.00'))),
+                ('price_per_item', models.DecimalField(verbose_name='Price per item', max_digits=12, decimal_places=2, default=Decimal('0.00'))),
+                ('free_shipping_threshold', models.DecimalField(verbose_name='Free Shipping', max_digits=12, decimal_places=2, blank=True, null=True)),
+                ('countries', models.ManyToManyField(verbose_name='Countries', blank=True, to='address.Country', null=True)),
+            ],
+            options={
+                'verbose_name': 'Order and Item Charge',
+                'verbose_name_plural': 'Order and Item Charges',
+                'ordering': ['name'],
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='WeightBand',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('upper_limit', models.DecimalField(verbose_name='Upper Limit', max_digits=12, decimal_places=3, validators=[django.core.validators.MinValueValidator(Decimal('0.00'))], help_text='Enter upper limit of this weight band in kg. The lower limit will be determined by the other weight bands.')),
+                ('charge', models.DecimalField(verbose_name='Charge', max_digits=12, decimal_places=2, validators=[django.core.validators.MinValueValidator(Decimal('0.00'))])),
+            ],
+            options={
+                'verbose_name': 'Weight Band',
+                'verbose_name_plural': 'Weight Bands',
+                'ordering': ['method', 'upper_limit'],
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='WeightBased',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('code', oscar.models.fields.autoslugfield.AutoSlugField(editable=False, verbose_name='Slug', blank=True, max_length=128, populate_from='name', unique=True)),
+                ('name', models.CharField(verbose_name='Name', unique=True, max_length=128)),
+                ('description', models.TextField(verbose_name='Description', blank=True)),
+                ('default_weight', models.DecimalField(verbose_name='Default Weight', decimal_places=3, default=Decimal('0.000'), max_digits=12, validators=[django.core.validators.MinValueValidator(Decimal('0.00'))], help_text='Default product weight in kg when no weight attribute is defined')),
+                ('countries', models.ManyToManyField(verbose_name='Countries', blank=True, to='address.Country', null=True)),
+            ],
+            options={
+                'verbose_name': 'Weight-based Shipping Method',
+                'verbose_name_plural': 'Weight-based Shipping Methods',
+                'ordering': ['name'],
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='weightband',
+            name='method',
+            field=models.ForeignKey(verbose_name='Method', to='shipping.WeightBased'),
+            preserve_default=True,
+        ),
+    ]

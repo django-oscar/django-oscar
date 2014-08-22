@@ -1,4 +1,4 @@
-import six
+from django.utils import six
 import hashlib
 import random
 
@@ -9,6 +9,7 @@ from django.db import models
 from django.template import Template, Context, TemplateDoesNotExist
 from django.template.loader import get_template
 from django.utils import timezone
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.customer.managers import CommunicationTypeManager
@@ -74,9 +75,9 @@ class AbstractUser(auth_models.AbstractBaseUser,
     USERNAME_FIELD = 'email'
 
     class Meta:
+        abstract = True
         verbose_name = _('User')
         verbose_name_plural = _('Users')
-        abstract = True
 
     def get_full_name(self):
         full_name = '%s %s' % (self.first_name, self.last_name)
@@ -104,6 +105,7 @@ class AbstractUser(auth_models.AbstractBaseUser,
         self._migrate_alerts_to_user()
 
 
+@python_2_unicode_compatible
 class AbstractEmail(models.Model):
     """
     This is a record of all emails sent to a customer.
@@ -118,14 +120,16 @@ class AbstractEmail(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'customer'
         verbose_name = _('Email')
         verbose_name_plural = _('Emails')
 
-    def __unicode__(self):
-        return _("Email to %(user)s with subject '%(subject)s'") % {
-            'user': self.user.username, 'subject': self.subject}
+    def __str__(self):
+        return _(u"Email to %(user)s with subject '%(subject)s'") % {
+            'user': self.user.get_username(), 'subject': self.subject}
 
 
+@python_2_unicode_compatible
 class AbstractCommunicationEventType(models.Model):
     """
     A 'type' of communication.  Like a order confirmation email.
@@ -145,10 +149,17 @@ class AbstractCommunicationEventType(models.Model):
         help_text=_("This is just used for organisational purposes"))
 
     # We allow communication types to be categorised
-    ORDER_RELATED = _('Order related')
-    USER_RELATED = _('User related')
-    category = models.CharField(_('Category'), max_length=255,
-                                default=ORDER_RELATED)
+    # For backwards-compatibility, the choice values are quite verbose
+    ORDER_RELATED = 'Order related'
+    USER_RELATED = 'User related'
+    CATEGORY_CHOICES = (
+        (ORDER_RELATED, _('Order related')),
+        (USER_RELATED, _('User related'))
+    )
+
+    category = models.CharField(
+        _('Category'), max_length=255, default=ORDER_RELATED,
+        choices=CATEGORY_CHOICES)
 
     # Template content for emails
     # NOTE: There's an intentional distinction between None and ''. None
@@ -180,6 +191,7 @@ class AbstractCommunicationEventType(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'customer'
         verbose_name = _("Communication event type")
         verbose_name_plural = _("Communication event types")
 
@@ -226,7 +238,7 @@ class AbstractCommunicationEventType(models.Model):
 
         return messages
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def is_order_related(self):
@@ -236,6 +248,7 @@ class AbstractCommunicationEventType(models.Model):
         return self.category == self.USER_RELATED
 
 
+@python_2_unicode_compatible
 class AbstractNotification(models.Model):
     recipient = models.ForeignKey(AUTH_USER_MODEL,
                                   related_name='notifications', db_index=True)
@@ -262,10 +275,13 @@ class AbstractNotification(models.Model):
     date_read = models.DateTimeField(blank=True, null=True)
 
     class Meta:
-        ordering = ('-date_sent',)
         abstract = True
+        app_label = 'customer'
+        ordering = ('-date_sent',)
+        verbose_name = _('Notification')
+        verbose_name_plural = _('Notifications')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.subject
 
     def archive(self):
@@ -321,6 +337,9 @@ class AbstractProductAlert(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'customer'
+        verbose_name = _('Product alert')
+        verbose_name_plural = _('Product alerts')
 
     @property
     def is_anonymous(self):

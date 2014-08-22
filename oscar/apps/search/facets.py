@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.utils.six.moves import map
 from purl import URL
 from haystack.query import SearchQuerySet
 
