@@ -517,6 +517,11 @@ Misc
   To prevent an offer being applied to a product, use ``is_discountable`` or
   override ``get_is_discountable`` on your product instances.
 
+* ``Category.get_ancestors`` used to return a list of ancestors and would
+  default to include itself. For consistency with get_descendants and to avoid
+  having to slice the results in templates, it now returns a queryset of the
+  ancestors; use ``Category.get_ancestors_and_self`` for the old behaviour.
+
 .. _rewritten: https://github.com/tangentlabs/django-oscar/commit/d8b4dbfed17be90846ea4bc47b5f7b39ad944c24
 
 Basket line stockrecords

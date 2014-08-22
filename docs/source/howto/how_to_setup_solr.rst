@@ -32,7 +32,7 @@ You should then be able to start Solr by running:
 
 .. code-block:: bash
 
-    $ cd ../../..
+    $ cd ../..
     $ java -jar start.jar
 
 Integrating with Haystack
@@ -63,6 +63,6 @@ If all is well, you should now be able to rebuild the search index.
     Indexing 201 Products
 
 The products being indexed twice is caused by a low-priority bug in Oscar and
-can be safely ignored.
-If the indexing succeeded, search in Oscar will be working. Search for any
-term in the search box on your Oscar site, and you should get results.
+can be safely ignored.  If the indexing succeeded, search in Oscar will be
+working. Search for any term in the search box on your Oscar site, and you
+should get results.

@@ -1,9 +1,9 @@
 from haystack import indexes
-from django.conf import settings
 
 from oscar.core.loading import get_model, get_class
 
 # Load default strategy (without a user/request)
+is_solr_supported = get_class('search.features', 'is_solr_supported')
 Selector = get_class('partner.strategy', 'Selector')
 strategy = Selector().strategy()
 
@@ -69,7 +69,6 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
             return result.price.excl_tax
 
     def prepare_num_in_stock(self, obj):
-        result = None
         if obj.is_parent:
             # Don't return a stock level for parent products
             return None
@@ -82,7 +81,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
         # We use Haystack's dynamic fields to ensure that the title field used
         # for sorting is of type "string'.
-        if 'solr' in settings.HAYSTACK_CONNECTIONS['default']['ENGINE']:
+        if is_solr_supported():
             prepared_data['title_s'] = prepared_data['title']
 
         # Use title to for spelling suggestions

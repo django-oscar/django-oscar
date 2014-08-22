@@ -12,7 +12,7 @@
             <span class="divider">/</span>
         </li>
         {% with category=product.categories.all.0 %}
-            {% for c in category.get_ancestors %}
+            {% for c in category.get_ancestors_and_self %}
                 <li>
                     <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
                     <span class="divider">/</span>
