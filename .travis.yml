@@ -10,14 +10,14 @@ env:
     # $TRANSIFEX_PASSWORD for oscar_bot (used in transifex.sh)
     secure: FuIlzEsGJiAwhaIRBmRNsq9eXmuzs25fX6BChknW4lDyVAySWMp0+Zps9Bd0JgfFYUG3Ip+OTmksYIoTUsG25ZJS9cq1IFt3QKUAN70YCI/4ZBLeIdICPEyxq+Km179+NeEXmBUug17RLMLxh3MWfO+RKUHK9yHIPNNpq0dNyoo=
   matrix:
-    - DJANGO=Django==1.6.5
-    - DJANGO=https://www.djangoproject.com/download/1.7c2/tarball/#egg=Django
+    - DJANGO=Django==1.6.6
+    - DJANGO=https://www.djangoproject.com/download/1.7c3/tarball/#egg=Django
 
 matrix:
   allow_failures:
-    - env: "DJANGO=Django==1.6.5"
+    - env: "DJANGO=Django==1.6.6"
       python: '3.3'
-    - env: "DJANGO=Django==1.6.5"
+    - env: "DJANGO=Django==1.6.6"
       python: '3.4'
 
 install:
