@@ -111,6 +111,30 @@ class ProductDetailView(DetailView):
             '%s/detail.html' % (self.template_folder)]
 
 
+class CatalogueView(TemplateView):
+    """
+    Browse all products in the catalogue
+    """
+    context_object_name = "products"
+    template_name = 'catalogue/browse.html'
+
+    def get(self, request, *args, **kwargs):
+        self.search_handler = self.get_search_handler(
+            self.request.GET, request.get_full_path(), [])
+        return super(CatalogueView, self).get(request, *args, **kwargs)
+
+    def get_search_handler(self, *args, **kwargs):
+        return get_product_search_handler_class()(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        ctx = {}
+        ctx['summary'] = _("All products")
+        search_context = self.search_handler.get_search_context_data(
+            self.context_object_name)
+        ctx.update(search_context)
+        return ctx
+
+
 class ProductCategoryView(TemplateView):
     """
     Browse products in a given category (or all products if no category is
@@ -136,17 +160,14 @@ class ProductCategoryView(TemplateView):
             # key in case the slug changed. If it did, get() will redirect
             # appropriately
             self.category = get_object_or_404(Category, pk=self.kwargs['pk'])
-        elif 'category_slug' in self.kwargs:
+        else:
             # For SEO reasons, we allow chopping off bits of the URL. If that
             # happened, no primary key will be available.
             self.category = get_object_or_404(
                 Category, slug=self.kwargs['category_slug'])
-        else:
-            # If neither slug nor primary key are given, we show all products
-            self.category = None
 
     def redirect_if_necessary(self, current_path, category):
-        if self.enforce_paths and category is not None:
+        if self.enforce_paths:
             # Categories are fetched by primary key to allow slug changes.
             # If the slug has changed, issue a redirect.
             expected_path = category.get_absolute_url()
@@ -160,16 +181,13 @@ class ProductCategoryView(TemplateView):
         """
         Return a list of the current category and its ancestors
         """
-        if self.category is not None:
-            return self.category.get_descendants_and_self()
-        else:
-            return []
+        return self.category.get_descendants_and_self()
 
     def get_summary(self):
         """
         Summary to be shown in template
         """
-        return self.category.name if self.category else _('All products')
+        return self.category.name
 
     def get_context_data(self, **kwargs):
         context = super(ProductCategoryView, self).get_context_data(**kwargs)
