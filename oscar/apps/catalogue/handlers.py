@@ -17,7 +17,7 @@ class ProductSearchHandler(SearchHandler):
     model_whitelist = [Product]
     paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
 
-    def __init__(self, categories, request_data, full_path):
+    def __init__(self, request_data, full_path, categories=None):
         self.categories = categories
         super(ProductSearchHandler, self).__init__(request_data, full_path)
 
@@ -37,10 +37,13 @@ class SimpleProductSearchHandler(MultipleObjectMixin):
     A basic implementation of the full-featured SearchHandler that has no
     faceting support, but doesn't require a Haystack backend. It only
     supports category browsing.
+
+    Note that is meant as a replacement search handler and not as a view
+    mixin; the mixin just does most of what we need it to do.
     """
     paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
 
-    def __init__(self, categories, request_data, *args, **kwargs):
+    def __init__(self, request_data, full_path, categories=None):
         self.categories = categories
         self.kwargs = {'page': request_data.get('page', 1)}
         self.object_list = self.get_queryset()

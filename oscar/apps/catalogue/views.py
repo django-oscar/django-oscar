@@ -129,7 +129,7 @@ class ProductCategoryView(TemplateView):
         if redirect is not None:
             return redirect
         self.search_handler = self.get_search_handler(
-            self.get_categories(), request.GET, request.get_full_path())
+            request.GET, request.get_full_path(), self.get_categories())
         return super(ProductCategoryView, self).get(request, *args, **kwargs)
 
     def get_object(self):
