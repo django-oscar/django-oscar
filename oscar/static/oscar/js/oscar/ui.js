@@ -63,15 +63,18 @@ var oscar = (function(o, $) {
             // Disable buttons when they are clicked and show a "loading" message taken from the
             // data-loading-text attribute (http://getbootstrap.com/2.3.2/javascript.html#buttons).
             // Do not disable if button is inside a form with invalid fields.
-            $('.js-disable-on-click').click(function(){
+            // This uses a delegated event so that it keeps working for forms that are reloaded
+            // via AJAX: https://api.jquery.com/on/#direct-and-delegated-events
+            $(document.body).on('click', '.js-disable-on-click', function(){
                 var form = $(this).parents("form");
                 if (!form || $(":invalid", form).length == 0)
                     $(this).button('loading');
             });
             // stuff for star rating on review page
             // show clickable stars instead of a select dropdown for product rating
-            if($('.reviewrating').length){
-                $('.reviewrating').find('.star-rating i').on('click',o.forms.reviewRatingClick);
+            ratings = $('.reviewrating');
+            if(ratings.length){
+                ratings.find('.star-rating i').on('click',o.forms.reviewRatingClick);
             }
         },
         submitIfNotLocked: function(event) {
