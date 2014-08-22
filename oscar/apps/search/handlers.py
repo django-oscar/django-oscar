@@ -41,37 +41,40 @@ class SearchHandler(object):
     page_kwarg = 'page'
 
     def __init__(self, request_data, full_path):
-        self.request_data = request_data
         self.full_path = full_path
 
         # trigger the search
-        search_results = self.get_search_results()
-        self.paginator, self.page = self.paginate_queryset(search_results)
+        search_queryset = self.get_search_queryset()
+        self.search_form = self.get_search_form(
+            request_data, search_queryset)
+        self.results = self.get_search_results(self.search_form)
+        self.paginator, self.page = self.paginate_queryset(
+            self.results, request_data)
 
     # Search related methods
 
-    def get_search_results(self):
+    def get_search_results(self, search_form):
         """
-        Performs the actual search, using Haystack's search form.
+        Performs the actual search, using Haystack's search form. Returns
+        a SearchQuerySet. The SQS is empty if the form is invalid.
         """
-        if not hasattr(self, '_results'):
-            self.search_form = self.get_search_form()
-            # Returns empty query set if form is invalid.
-            self._results = self.search_form.search()
-        return self._results
+        return search_form.search()
 
-    def get_search_form(self):
+    def get_search_form(self, request_data, search_queryset):
         """
         Returns a bound version of Haystack's search form.
         """
         kwargs = {
-            'data': self.request_data,
-            'selected_facets': self.request_data.getlist("selected_facets"),
-            'searchqueryset': self.get_search_queryset()
+            'data': request_data,
+            'selected_facets': request_data.getlist("selected_facets"),
+            'searchqueryset': search_queryset
         }
         return self.form_class(**kwargs)
 
     def get_search_queryset(self):
+        """
+        Returns the search queryset that is used as a base for the search.
+        """
         sqs = facets.base_sqs()
         if self.model_whitelist:
             # limit queryset to specified list of models
@@ -80,14 +83,14 @@ class SearchHandler(object):
 
     # Pagination related methods
 
-    def paginate_queryset(self, queryset):
+    def paginate_queryset(self, queryset, request_data):
         """
         Paginate the search results. This is a simplified version of
         Django's MultipleObjectMixin.paginate_queryset
         """
         paginator = self.get_paginator(queryset)
         page_kwarg = self.page_kwarg
-        page = self.request_data.get(page_kwarg, 1)
+        page = request_data.get(page_kwarg, 1)
         try:
             page_number = int(page)
         except ValueError:
@@ -113,6 +116,8 @@ class SearchHandler(object):
         """
         return self.paginator_class(queryset, self.paginate_by)
 
+    # Accessing the search results and meta data
+
     def bulk_fetch_results(self, paginated_results):
         """
         This method gets paginated search results and returns a list of Django
@@ -134,7 +139,7 @@ class SearchHandler(object):
         for result in paginated_results:
             models_pks.setdefault(result.model, []).append(result.pk)
 
-        search_backend_alias = self._results.query.backend.connection_alias
+        search_backend_alias = self.results.query.backend.connection_alias
         for model in models_pks:
             ui = connections[search_backend_alias].get_unified_index()
             index = ui.get_index(model)
@@ -154,16 +159,12 @@ class SearchHandler(object):
 
         return objects
 
-    # Accessing the search results and meta data
-
     def get_paginated_objects(self):
         """
         Returns a paginated list of Django model instances.
         """
-        if not hasattr(self, '_object_list'):
-            paginated_results = self.page.object_list
-            self._object_list = self.bulk_fetch_results(paginated_results)
-        return self._object_list
+        paginated_results = self.page.object_list
+        return self.bulk_fetch_results(paginated_results)
 
     def get_search_context_data(self, context_object_name=None):
         """
@@ -189,7 +190,7 @@ class SearchHandler(object):
         munger = FacetMunger(
             self.full_path,
             self.search_form.selected_multi_facets,
-            self.get_search_results().facet_counts())
+            self.results.facet_counts())
         facet_data = munger.facet_data()
         has_facets = any([data['results'] for data in facet_data.values()])
 
