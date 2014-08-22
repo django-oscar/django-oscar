@@ -4,7 +4,7 @@ from django.views.generic.list import MultipleObjectMixin
 from oscar.core.loading import get_class, get_model
 
 BrowseCategoryForm = get_class('search.forms', 'BrowseCategoryForm')
-SearchHandler = get_class('search.handlers', 'SearchHandler')
+SearchHandler = get_class('search.search_handlers', 'SearchHandler')
 Product = get_model('catalogue', 'Product')
 
 

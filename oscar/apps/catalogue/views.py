@@ -13,9 +13,10 @@ ProductReview = get_model('reviews', 'ProductReview')
 Category = get_model('catalogue', 'category')
 ProductAlert = get_model('customer', 'ProductAlert')
 ProductAlertForm = get_class('customer.forms', 'ProductAlertForm')
-ProductSearchHandler = get_class('catalogue.handlers', 'ProductSearchHandler')
+ProductSearchHandler = get_class(
+    'catalogue.search_handlers', 'ProductSearchHandler')
 SimpleProductSearchHandler = get_class(
-    'catalogue.handlers', 'SimpleProductSearchHandler')
+    'catalogue.search_handlers', 'SimpleProductSearchHandler')
 
 
 class ProductDetailView(DetailView):
