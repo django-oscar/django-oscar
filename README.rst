@@ -213,6 +213,7 @@ Selected Tangent projects:
 * Meridian Audio - http://www.meridian-audio.co.uk
 * Which Rightchoice - http://www.whichrightchoice.com
 * Freetix - http://www.freetix.com.au/
+* Nails inc US - http://www.nailsinc.com/us/
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/landmark.thumb.png
     :target: http://www.landmarkonthenet.com
@@ -234,6 +235,9 @@ Selected Tangent projects:
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/freetix.thumb.png
     :target: http://www.freetix.com.au/
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/nailsinc.thumb.png
+    :target: http://www.nailsinc.com/us/
 
 Non-Tangent:
 
