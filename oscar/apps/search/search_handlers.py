@@ -1,5 +1,6 @@
 from django.core.paginator import Paginator, InvalidPage
 from django.utils.translation import ugettext_lazy as _
+
 from haystack import connections
 
 from oscar.core.loading import get_class

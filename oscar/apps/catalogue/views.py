@@ -1,5 +1,4 @@
 from django.utils.http import urlquote
-from django.conf import settings
 from django.http import HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, TemplateView
@@ -13,10 +12,8 @@ ProductReview = get_model('reviews', 'ProductReview')
 Category = get_model('catalogue', 'category')
 ProductAlert = get_model('customer', 'ProductAlert')
 ProductAlertForm = get_class('customer.forms', 'ProductAlertForm')
-ProductSearchHandler = get_class(
-    'catalogue.search_handlers', 'ProductSearchHandler')
-SimpleProductSearchHandler = get_class(
-    'catalogue.search_handlers', 'SimpleProductSearchHandler')
+get_product_search_handler_class = get_class(
+    'catalogue.search_handlers', 'get_product_search_handler_class')
 
 
 class ProductDetailView(DetailView):
@@ -157,19 +154,7 @@ class ProductCategoryView(TemplateView):
                 return HttpResponsePermanentRedirect(expected_path)
 
     def get_search_handler(self, *args, **kwargs):
-        """
-        Determine the search handler to use.
-
-        Currently only Solr is supported as a search backend, so it falls
-        back to rudimentary category browsing if that isn't enabled.
-        """
-        handler_class = SimpleProductSearchHandler
-        try:
-            if 'Solr' in settings.HAYSTACK_CONNECTIONS['default']['ENGINE']:
-                handler_class = ProductSearchHandler
-        except KeyError:
-            pass
-        return handler_class(*args, **kwargs)
+        return get_product_search_handler_class()(*args, **kwargs)
 
     def get_categories(self):
         """

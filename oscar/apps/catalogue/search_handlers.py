@@ -5,7 +5,23 @@ from oscar.core.loading import get_class, get_model
 
 BrowseCategoryForm = get_class('search.forms', 'BrowseCategoryForm')
 SearchHandler = get_class('search.search_handlers', 'SearchHandler')
+is_solr_supported = get_class('search.features', 'is_solr_supported')
 Product = get_model('catalogue', 'Product')
+
+
+def get_product_search_handler_class():
+    """
+    Determine the search handler to use.
+
+    Currently only Solr is supported as a search backend, so it falls
+    back to rudimentary category browsing if that isn't enabled.
+    """
+    # Use get_class to ensure overridability
+    if is_solr_supported():
+        return get_class('catalogue.search_handlers', 'ProductSearchHandler')
+    else:
+        return get_class(
+            'catalogue.search_handlers', 'SimpleProductSearchHandler')
 
 
 class ProductSearchHandler(SearchHandler):
