@@ -146,25 +146,27 @@ class ProductCategoryView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         # Fetch the category; return 404 or redirect as needed
-        self.get_object()
+        self.category = self.get_category()
         redirect = self.redirect_if_necessary(request.path, self.category)
         if redirect is not None:
             return redirect
+
         self.search_handler = self.get_search_handler(
             request.GET, request.get_full_path(), self.get_categories())
+
         return super(ProductCategoryView, self).get(request, *args, **kwargs)
 
-    def get_object(self):
+    def get_category(self):
         if 'pk' in self.kwargs:
             # Usual way to reach a category page. We just look at the primary
             # key in case the slug changed. If it did, get() will redirect
             # appropriately
-            self.category = get_object_or_404(Category, pk=self.kwargs['pk'])
+            filters = {'pk': self.kwargs['pk']}
         else:
             # For SEO reasons, we allow chopping off bits of the URL. If that
             # happened, no primary key will be available.
-            self.category = get_object_or_404(
-                Category, slug=self.kwargs['category_slug'])
+            filters = {'slug': self.kwargs['category_slug']}
+        return get_object_or_404(Category, **filters)
 
     def redirect_if_necessary(self, current_path, category):
         if self.enforce_paths:
