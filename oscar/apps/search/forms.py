@@ -4,7 +4,12 @@ from django import forms
 from django.forms.widgets import Input
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+
 from haystack.forms import FacetedSearchForm
+
+from oscar.core.loading import get_class
+
+is_solr_supported = get_class('search.features', 'is_solr_supported')
 
 
 class SearchInput(Input):
@@ -67,7 +72,7 @@ class SearchForm(FacetedSearchForm):
         TITLE_Z_TO_A: '-title_s',
     }
     # Non Solr backends don't support dynamic fields so we just sort on title
-    if 'solr' not in settings.HAYSTACK_CONNECTIONS['default']['ENGINE']:
+    if not is_solr_supported():
         SORT_BY_MAP[TITLE_A_TO_Z] = 'title'
         SORT_BY_MAP[TITLE_Z_TO_A] = '-title'
 
