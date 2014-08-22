@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.views.generic.list import MultipleObjectMixin
-from oscar.core.loading import get_class, get_model
 
+from oscar.core.loading import get_class, get_model
 
 BrowseCategoryForm = get_class('search.forms', 'BrowseCategoryForm')
 SearchHandler = get_class('search.handlers', 'SearchHandler')
@@ -10,8 +10,8 @@ Product = get_model('catalogue', 'Product')
 
 class ProductSearchHandler(SearchHandler):
     """
-    A search handler that is specialised for searching Oscar products.
-    Comes with automatic category filtering.
+    Search handler specialised for searching products.  Comes with optional
+    category filtering.
     """
     form_class = BrowseCategoryForm
     model_whitelist = [Product]
@@ -52,6 +52,8 @@ class SimpleProductSearchHandler(MultipleObjectMixin):
         return qs
 
     def get_search_context_data(self, context_object_name):
+        # Set the context_object_name instance property as it's needed
+        # internally by MultipleObjectMixin
         self.context_object_name = context_object_name
         context = self.get_context_data(object_list=self.object_list)
         context[context_object_name] = context['page_obj'].object_list

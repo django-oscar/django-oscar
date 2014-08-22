@@ -11,16 +11,15 @@ FacetMunger = get_class('search.facets', 'FacetMunger')
 
 class SearchHandler(object):
     """
-    A class that is concerned with performing a search and paginate the
+    A class that is concerned with performing a search and paginating the
     results. The search is triggered upon initialisation (mainly to have a
-    predictable point to process any errors).
-    Search results are cached, so they can be accessed multiple times without
-    incurring any overhead.
+    predictable point to process any errors).  Search results are cached, so
+    they can be accessed multiple times without incurring any overhead.
 
-    The raison d'etre for this third way to interface with Haystack is that
+    The raison d'etre for this third way to interface with Haystack is
     two-fold. The Haystack search form doesn't do enough for our needs, and
     basing a view off a Haystack search view is unnecessarily invasive.
-    Furthermore, using our own search handler does mean it is easy to swap
+    Furthermore, using our own search handler means it is easy to swap
     out Haystack, which has been considered before.
 
     Usage:
@@ -44,7 +43,7 @@ class SearchHandler(object):
         self.request_data = request_data
         self.full_path = full_path
 
-        # trigger the search
+        # Trigger the search
         search_results = self.get_search_results()
         self.paginator, self.page = self.paginate_queryset(search_results)
 
@@ -52,7 +51,7 @@ class SearchHandler(object):
 
     def get_search_results(self):
         """
-        Performs the actual search, using Haystack's search form.
+        Perform the actual search using Haystack's search form.
         """
         if not hasattr(self, '_results'):
             self.search_form = self.get_search_form()
@@ -62,7 +61,7 @@ class SearchHandler(object):
 
     def get_search_form(self):
         """
-        Returns a bound version of Haystack's search form.
+        Return a bound version of Haystack's search form.
         """
         kwargs = {
             'data': self.request_data,
@@ -74,7 +73,7 @@ class SearchHandler(object):
     def get_search_queryset(self):
         sqs = facets.base_sqs()
         if self.model_whitelist:
-            # limit queryset to specified list of models
+            # Limit queryset to specified list of models
             sqs = sqs.models(*self.model_whitelist)
         return sqs
 
@@ -98,18 +97,18 @@ class SearchHandler(object):
                     "Page is not 'last', nor can it be converted to an int."))
         try:
             page = paginator.page(page_number)
-            return paginator, page
         except InvalidPage as e:
             raise ValueError(
                 _('Invalid page (%(page_number)s): %(message)s') % {
                     'page_number': page_number,
                     'message': str(e)
                 })
+        return paginator, page
 
     def get_paginator(self, queryset):
         """
-        Returns a paginator. Override this to set settings like
-        orphans, allow_empty, etc.
+        Return a paginator. Override this to set settings like orphans,
+        allow_empty, etc.
         """
         return self.paginator_class(queryset, self.paginate_by)
 
@@ -127,7 +126,6 @@ class SearchHandler(object):
         It is heavily based on Haystack's SearchQuerySet.post_process_results,
         but works on the paginated results instead of all of them.
         """
-
         objects = []
 
         models_pks = loaded_objects = {}
@@ -158,7 +156,7 @@ class SearchHandler(object):
 
     def get_paginated_objects(self):
         """
-        Returns a paginated list of Django model instances.
+        Return a paginated list of Django model instances.
         """
         if not hasattr(self, '_object_list'):
             paginated_results = self.page.object_list
@@ -167,7 +165,7 @@ class SearchHandler(object):
 
     def get_search_context_data(self, context_object_name=None):
         """
-        Returns meta data about the search in a dictionary useful to populate
+        Return metadata about the search in a dictionary useful to populate
         template contexts. If you pass in a context_object_name, the dictionary
         will also contain the actual list of found objects.
 
