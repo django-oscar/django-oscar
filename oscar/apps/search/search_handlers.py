@@ -42,6 +42,7 @@ class SearchHandler(object):
 
     def __init__(self, request_data, full_path):
         self.full_path = full_path
+        self.request_data = request_data
 
         # Triggers the search.
         search_queryset = self.get_search_queryset()
@@ -196,6 +197,11 @@ class SearchHandler(object):
         context = {
             'facet_data': facet_data,
             'has_facets': has_facets,
+            # This is a serious code smell; we just pass through the selected
+            # facets data to the view again, and the template adds those
+            # as fields to the form. This hack ensures that facets stay
+            # selected when changing relevancy.
+            'selected_facets': self.request_data.getlist('selected_facets'),
             'form': self.search_form,
             'paginator': self.paginator,
             'page_obj': self.page,
