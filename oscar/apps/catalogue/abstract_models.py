@@ -1,6 +1,5 @@
 import os
 from django.utils import six
-from itertools import chain
 from datetime import datetime, date
 import logging
 
@@ -324,9 +323,12 @@ class AbstractProduct(models.Model):
         self.attr = ProductAttributesContainer(product=self)
 
     def __str__(self):
-        if self.is_child:
+        if self.title:
+            return self.title
+        if self.attribute_summary:
             return u"%s (%s)" % (self.get_title(), self.attribute_summary)
-        return self.get_title()
+        else:
+            return self.get_title()
 
     def get_absolute_url(self):
         """
@@ -465,9 +467,8 @@ class AbstractProduct(models.Model):
         """
         Return a string of all of a product's attributes
         """
-        pairs = []
-        for value in self.attribute_values.select_related().all():
-            pairs.append(value.summary())
+        attributes = self.attribute_values.select_related().all()
+        pairs = [attribute.summary() for attribute in attributes]
         return ", ".join(pairs)
 
     @property

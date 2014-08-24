@@ -176,7 +176,7 @@ class AddToBasketForm(forms.Form):
             choices.append((child.id, summary))
 
         self.fields['child_id'] = forms.ChoiceField(
-            choices=tuple(choices), label=_("Child product"),
+            choices=tuple(choices), label=_("Variant"),
             widget=widgets.AdvancedSelect(disabled_values=disabled_values))
 
     def _create_product_fields(self, product):
