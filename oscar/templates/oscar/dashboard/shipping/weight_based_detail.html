@@ -53,8 +53,12 @@
         </table>
 
         <p>
-            <a id="edit_method" href="{% url 'dashboard:shipping-method-edit' pk=method.pk %}" class="btn btn-primary">Edit shipping method</a>
-            <a id="delete_method" href="{% url 'dashboard:shipping-method-delete' pk=method.pk %}" class="btn btn-danger">Delete shipping method</a>
+            <a id="edit_method" href="{% url 'dashboard:shipping-method-edit' pk=method.pk %}" class="btn btn-primary">
+                {% trans 'Edit shipping method' %}
+            </a>
+            <a id="delete_method" href="{% url 'dashboard:shipping-method-delete' pk=method.pk %}" class="btn btn-danger">
+                {% trans 'Delete shipping method' %}
+            </a>
         </p>
 
         <h2>{% trans "Weight bands" %}</h2>
@@ -88,7 +92,7 @@
         <form action="." method="post">
             {% csrf_token %}
             {% include "partials/form_fields.html" with form=form %}
-            <button type="submit" class="btn btn-primary">Add weight band</button>
+            <button type="submit" class="btn btn-primary">{% trans 'Add weight band' %}</button>
         </form>
     </div>
 {% endblock %}

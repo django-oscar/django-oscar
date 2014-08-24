@@ -47,7 +47,7 @@
                             {% endif %}
                         </td>
                         {% if range.includes_all_products %}
-                            <td>All</td>
+                            <td>{% trans 'All' %}</td>
                         {% else %}
                             <td>{{ range.num_products|default:"-" }}</td>
                         {% endif %}
