@@ -57,8 +57,9 @@ class AbstractProductClass(models.Model):
     #: These are the options (set by the user when they add to basket) for this
     #: item class.  For instance, a product class of "SMS message" would always
     #: require a message to be specified before it could be bought.
-    options = models.ManyToManyField('catalogue.Option', blank=True,
-                                     verbose_name=_("Options"))
+    #: Note that you can also set options on a per-product level.
+    options = models.ManyToManyField(
+        'catalogue.Option', blank=True, verbose_name=_("Options"))
 
     class Meta:
         abstract = True
@@ -271,8 +272,9 @@ class AbstractProduct(models.Model):
         verbose_name=_("Attributes"),
         help_text=_("A product attribute is something that this product may "
                     "have, such as a size, as specified by its class"))
+    #: It's possible to have options product class-wide, and per product.
     product_options = models.ManyToManyField(
-        'catalogue.Option', blank=True, verbose_name=_("Product Options"),
+        'catalogue.Option', blank=True, verbose_name=_("Product options"),
         help_text=_("Options are values that can be associated with a item "
                     "when it is added to a customer's basket.  This could be "
                     "something like a personalised message to be printed on "
@@ -358,6 +360,8 @@ class AbstractProduct(models.Model):
         +---------------+-------------+--------------+--------------+
         | rec. products | optional    | optional     | unsupported  |
         +---------------+-------------+--------------+--------------+
+        | options       | optional    | optional     | forbidden    |
+        +---------------+-------------+--------------+--------------+
 
         Because the validation logic is quite complex, validation is delegated
         to the sub method appropriate for the product's structure.
@@ -392,6 +396,10 @@ class AbstractProduct(models.Model):
         if self.pk and self.categories.exists():
             raise ValidationError(
                 _("A child product can't have a category assigned."))
+        # Note that we only forbid options on product level
+        if self.pk and self.product_options.exists():
+            raise ValidationError(
+                _("A child product can't have options."))
 
     def _clean_parent(self):
         """
@@ -441,11 +449,12 @@ class AbstractProduct(models.Model):
 
     @property
     def options(self):
-        pclass = self.get_product_class()
-        if pclass:
-            return list(chain(self.product_options.all(),
-                              self.get_product_class().options.all()))
-        return self.product_options.all()
+        """
+        Returns a set of all valid options for this product.
+        It's possible to have options product class-wide, and per product.
+        """
+        pclass_options = self.get_product_class().options.all()
+        return set(pclass_options) or set(self.product_options.all())
 
     @property
     def is_shipping_required(self):
@@ -940,7 +949,7 @@ class AbstractProductAttributeValue(models.Model):
     value_date = models.DateField(_('Date'), blank=True, null=True)
     value_option = models.ForeignKey(
         'catalogue.AttributeOption', blank=True, null=True,
-        verbose_name=_("Value Option"))
+        verbose_name=_("Value option"))
     value_file = models.FileField(
         upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255,
         blank=True, null=True)
