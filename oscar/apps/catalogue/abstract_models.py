@@ -348,7 +348,7 @@ class AbstractProduct(models.Model):
         +---------------+-------------+--------------+--------------+
         | parent        | forbidden   | forbidden    | required     |
         +---------------+-------------+--------------+--------------+
-        | stockrecords  | 0 or more   | forbidden    | required     |
+        | stockrecords  | 0 or more   | forbidden    | 0 or more    |
         +---------------+-------------+--------------+--------------+
         | categories    | 1 or more   | 1 or more    | forbidden    |
         +---------------+-------------+--------------+--------------+
@@ -451,11 +451,11 @@ class AbstractProduct(models.Model):
         """
         Test if this product has any stockrecords
         """
-        return self.num_stockrecords > 0
+        return self.stockrecords.exists()
 
     @property
     def num_stockrecords(self):
-        return self.stockrecords.all().count()
+        return self.stockrecords.count()
 
     @property
     def attribute_summary(self):

@@ -28,9 +28,9 @@ class ProductTable(Table):
         template_name='dashboard/catalogue/product_row_variants.html',
         orderable=False
     )
-    stock_records = Column(
+    stock_records = TemplateColumn(
         verbose_name=_('Stock records'),
-        accessor=A('stockrecords.count'),
+        template_name='dashboard/catalogue/product_row_stockrecords.html',
         orderable=False)
     actions = TemplateColumn(
         verbose_name=_('Actions'),
