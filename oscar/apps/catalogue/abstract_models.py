@@ -387,6 +387,9 @@ class AbstractProduct(models.Model):
         if self.product_class:
             raise ValidationError(
                 _("A child product can't have a product class."))
+        if self.pk and self.categories.exists():
+            raise ValidationError(
+                _("A child product can't have a category assigned."))
 
     def _clean_parent(self):
         """
