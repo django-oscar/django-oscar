@@ -49,8 +49,18 @@ class SearchHandler(object):
         self.search_form = self.get_search_form(
             request_data, search_queryset)
         self.results = self.get_search_results(self.search_form)
-        self.paginator, self.page = self.paginate_queryset(
-            self.results, request_data)
+        try:
+            self.paginator, self.page = self.paginate_queryset(
+                self.results, request_data)
+        except UnicodeDecodeError:
+            # Workaround for pysolr 3.1 not supporting and failing hard on
+            # Solr 4.0 error messages
+            # https://github.com/toastdriven/pysolr/pull/127
+            # https://github.com/toastdriven/pysolr/pull/113
+            # TODO: Remove once pysolr 3.2 is released
+            self.results = search_queryset
+            self.paginator, self.page = self.paginate_queryset(
+                self.results, request_data)
 
     # Search related methods
 
