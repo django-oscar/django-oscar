@@ -14,24 +14,6 @@ Table of contents:
     :local:
     :depth: 1
 
-.. _overview_of_0.8:
-
-Overview
---------
-
-Oscar now has a demo site customised for the US!
-
-Things that have been heavily rewritten:
-
-- Adding product to the basket
-
-Shipping functionality got a thorough re-working including a new dashboard for
-weight-based shipping methods.
-
-Lots of methods deprecated in the 0.6 release have now been removed.
-Specifically, the partner "wrapper" functionality is now gone. All price and
-availability logic now needs to be handled with strategies.
-
 .. _compatibility_of_0.8:
 
 Compatibility
@@ -49,6 +31,35 @@ with Django 1.7 and it's new migration framework.
 What's new in Oscar 0.8?
 ------------------------
 
+Explicit differentiation of child, parent and stand-alone products
+------------------------------------------------------------------
+
+In some edge cases, it was difficult to decide whether e.g. a product is a
+parent product (previously known as group product) without children or a
+stand-alone product (which never has children). To make that distinction
+easier, a ``structure`` field has been introduced on the ``AbstractProduct``
+class. In that process, naming for the three different product structures
+has been altered to be:
+
+    - A stand alone product. Regular product that lives by itself.
+    - A parent product. It essentially represents a set of products.
+      Previously also known as group product.
+    - A child product. All child products have a parent product. They're a
+      specific version of the parent. Previously known as product variant.
+
+Some properties and method names have also been updated to the new naming. The
+old ones will throw a deprecation warning.
+
+Better handling of child products in product dashboard
+------------------------------------------------------
+
+Together with the changes above, the dashboard experience for child products
+has been improved. The difference between a parent product and a stand-alone
+product is hidden from the user; a user can now add and remove child products
+on any suitable product. When the first child product is added, a stand-alone
+product becomes a parent product; and vice versa.
+In the front-end, the old name of "product variants" has been kept.
+
 Customisation just got easier!
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -63,34 +74,6 @@ Customisation just got easier!
 * The documentation around :doc:`/topics/customisation` has been given an
   overhaul to incorporate the changes.
 
-Explicit differentiation of child, parent and stand-alone products
-------------------------------------------------------------------
-
-In some edge cases, it was difficult to decide whether e.g. a product is a
-parent product (previously known as group product) without children or a
-stand-alone product (which never has children). To make that distinction
-easier, a ``structure`` field has been introduced on the ``AbstractProduct``
-class. In that process, naming for the three different product structures
-has been altered to be:
-
-    - A stand alone product. Regular product that lives by itself.
-    - A child product. All child products have a parent product. They're a
-      specific version of the parent. Previously known as product variant.
-    - A parent product. It essentially represents a set of products.
-      Previously also known as group product.
-
-Some properties and method names have also been updated to the new naming. The
-old ones will throw a deprecation warning.
-
-Better handling of child products in product dashboard
-------------------------------------------------------
-Together with the changes above, the dashboard experience for child products
-has been improved. The difference between a parent product and a stand-alone
-product is hidden from the user; a user can now add and remove child products
-on any suitable product. When the first child product is added, a stand-alone
-product becomes a parent product; and vice versa.
-In the front-end, the old name of "product variants" has been kept.
-
 Django 1.7 support
 ------------------
 
@@ -103,25 +86,11 @@ upgrading Oscar both for users staying on Django 1.6 and for users upgrading to
 Django 1.7 at the same time. These are detailed in the section for
 backwards-incompatible changes.
 
-Reworked shipping app
-~~~~~~~~~~~~~~~~~~~~~
-
-Several parts of the shipping app have been altered. The most important change is a
-to the API of shipping methods to avoid a potential thread safety issue.
-Any existing Oscar sites with custom shipping methods will need to adjust them
-to confirm to the new API. The new API and the other changes are detailed below.
-
-See the
-:ref:`backwards incompatible changes <incompatible_shipping_changes_in_0.8>` 
-for the shipping app and the 
-:doc:`guide to configuring shipping </howto/how_to_configure_shipping>` 
-for more information.
-
 Dashboard for weight-based shipping methods
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 There is a new dashboard for weight-based shipping methods. It isn't enabled by
-default as weight-based shipping methods are enabled by default. To add it to
+default as weight-based shipping methods are not enabled by default. To add it to
 the dashboard menu, include this snippet in your ``OSCAR_DASHBOARD_NAVIGATION``
 setting:
 
@@ -137,7 +106,7 @@ setting:
     ]
 
 You'll also need to modify your shipping repository class to return weight-based
-shipping methods too.
+shipping methods.
 
 US demo site
 ~~~~~~~~~~~~
@@ -148,6 +117,28 @@ excluding tax and then calculate and apply taxes once the shipping address is
 known.
 
 See :ref:`us_site` for more information.
+
+Faceting for category browsing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+If Oscar is running with a Solr-powered search backend, the category browsing now offers faceting
+(e.g. filter by price range, or product type).
+This is implemented via a new ``SearchHandler`` interface, which will eventually replace the
+tight coupling between Haystack and Oscar. It therefore paves the way for better support for
+other search engines.
+
+Reworked shipping app
+~~~~~~~~~~~~~~~~~~~~~
+
+Several parts of the shipping app have been altered. The most important change is a
+to the API of shipping methods to avoid a potential thread safety issue.
+Any existing Oscar sites with custom shipping methods will need to adjust them
+to confirm to the new API. The new API and the other changes are detailed below.
+
+See the
+:ref:`backwards incompatible changes <incompatible_shipping_changes_in_0.8>`
+for the shipping app and the
+:doc:`guide to configuring shipping </howto/how_to_configure_shipping>`
+for more information.
 
 Basket additions clean-up
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -168,27 +159,11 @@ ordering free products or using a voucher). As part of that, checkout views
 now evaluate *pre-conditions* (as before) and newly introduced
 *skip conditions*. This should make customising the checkout flow easier.
 
-Cleanup around shipping methods
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* The models of the shipping app now have abstract base classes, similar to
-  the rest of Oscar.
-
-* The legacy ``ShippingMethod`` name of the interface of the shipping app has
-  been removed. Inherit from ``shipping.base.Base`` for the class instead, and
-  inherit from ``shipping.abstract_models.AbstractBase`` for model-based
-  shipping methods.
-
-* ``oscar.apps.shipping.Scales`` has been renamed and moved to
-  ``oscar.apps.shipping.scales.Scale``, and is now overridable.
-
-* ``WeightBand.upper_limit`` is now a ``DecimalField``, just like the other
-  weight-related fields.
-
-    - Stand-alone product: Products that "stand by themselves", neither have
-      parent nor children.
-    - Parent product: An overarching product, previously known as group product.
-    - Child products: Products related to a common parent product
+Out with the old, in with the new
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Lots of methods deprecated in the 0.6 release have now been removed.
+Specifically, the partner "wrapper" functionality is now gone. All price and
+availability logic now needs to be handled with strategies.
 
 .. _minor_changes_in_0.8:
 
@@ -240,6 +215,8 @@ Minor changes
 * ``jquery-ui-datepicker`` has been replaced in the dashboard by
   bootstrap-datetimepicker_. We still ship with ``jquery-ui-datepicker`` and
   ``JQuery UI`` as it's in use in the frontend.
+
+* ... and dozens of bugs fixed!
 
 .. _django-tables2: http://django-tables2.readthedocs.org/en/latest/
 .. _bootstrap-datetimepicker: http://www.malot.fr/bootstrap-datetimepicker/
@@ -305,6 +282,7 @@ The following methods and properties have been deprecated:
 
 Furthermore, CSS classes and template blocks have been updated. Please follow
 the following renaming pattern:
+
 * ``variant-product`` becomes ``child-product``
 * ``product_variants`` becomes ``child_products``
 * ``variants`` becomes ``children``
@@ -423,6 +401,15 @@ Other potentially breaking changes related to shipping include:
 
 * ``oscar.apps.shipping.Scales`` has been renamed and moved to
   ``oscar.apps.shipping.scales.Scale``, and is now overridable.
+
+* The models of the shipping app now have abstract base classes, similar to
+  the rest of Oscar.
+
+* The legacy ``ShippingMethod`` name of the interface of the shipping app has
+  been removed. Inherit from ``shipping.base.Base`` for the class instead, and
+  inherit from ``shipping.abstract_models.AbstractBase`` for model-based
+  shipping methods.
+
 
 Email address handling
 ----------------------
