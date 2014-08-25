@@ -80,8 +80,6 @@ var oscar = (function(o, $) {
         initSelects: function(el) {
             // Adds type/search for select fields
             var $selects = $(el).find('select').not('.no-widget-init select').not('.no-widget-init');
-            $selects.filter('.form-stacked select').css('width', '95%');
-            $selects.filter('.form-inline select').css('width', '300px');
             $selects.select2({width: 'resolve'});
             $(el).find('input.select2').each(function(i, e) {
                 var opts = {};
