@@ -3279,6 +3279,10 @@ caption > i,
 .alert .alertinner p:first-child {
   margin: 0;
 }
+.nav-tabs {
+  /* pull up tab-content well to tabs so there's no gap between them */
+  margin-bottom: -1px;
+}
 #order_graph {
   position: relative;
   margin-bottom: 5em;
