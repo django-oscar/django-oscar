@@ -2782,9 +2782,6 @@ h3.app-ico:before {
 td .btn-toolbar {
   margin: 0;
 }
-.form-stacked .control-label {
-  text-align: left;
-}
 .form-stacked .control-group {
   margin-bottom: 9px;
 }
