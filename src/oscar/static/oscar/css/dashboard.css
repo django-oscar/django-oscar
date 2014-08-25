@@ -2782,15 +2782,12 @@ h3.app-ico:before {
 td .btn-toolbar {
   margin: 0;
 }
-.form-horizontal .control-label,
 .form-stacked .control-label {
   text-align: left;
 }
-.form-horizontal .control-group,
 .form-stacked .control-group {
   margin-bottom: 9px;
 }
-.form-horizontal textarea,
 .form-stacked textarea {
   max-height: 200px;
 }
@@ -2840,15 +2837,10 @@ form.flat {
 .well form .form-actions {
   bottom: -39px;
 }
-.create-page .form-horizontal input[type=text],
 .create-page .form-stacked input[type=text],
-.create-page .form-horizontal input[type=number],
 .create-page .form-stacked input[type=number],
-.create-page .form-horizontal input[type=email],
 .create-page .form-stacked input[type=email],
-.create-page .form-horizontal input[type=url],
 .create-page .form-stacked input[type=url],
-.create-page .form-horizontal textarea,
 .create-page .form-stacked textarea {
   width: 95%;
 }
@@ -3493,9 +3485,6 @@ caption > i,
 }
 #product_category select {
   width: 350px;
-}
-.catalogue .tab-content {
-  overflow: visible;
 }
 .upload-image {
   *zoom: 1;
