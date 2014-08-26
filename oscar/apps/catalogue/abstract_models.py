@@ -476,7 +476,7 @@ class AbstractProduct(models.Model):
         """
         Return a string of all of a product's attributes
         """
-        attributes = self.attribute_values.select_related().all()
+        attributes = self.attribute_values.all()
         pairs = [attribute.summary() for attribute in attributes]
         return ", ".join(pairs)
 
