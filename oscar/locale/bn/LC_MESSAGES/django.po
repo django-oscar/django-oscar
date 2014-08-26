@@ -3,8 +3,6 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Alan Kesselmann <alan.kesselmann@gmail.com>, 2014
-# Alan Kesselmann <alan.kesselmann@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
@@ -12,9 +10,9 @@ msgstr ""
 "POT-Creation-Date: 2014-08-26 14:06+0100\n"
 "PO-Revision-Date: 2014-08-26 10:37+0000\n"
 "Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
-"Language-Team: Estonian (http://www.transifex.com/projects/p/django-oscar/"
-"language/et/)\n"
-"Language: et\n"
+"Language-Team: Bengali (http://www.transifex.com/projects/p/django-oscar/"
+"language/bn/)\n"
+"Language: bn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -86,12 +84,12 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_list.html:13
 #: templates/oscar/partials/nav_accounts.html:45
 msgid "Dashboard"
-msgstr "Töölaud"
+msgstr ""
 
 #: defaults.py:92 apps/catalogue/config.py:8
 #: apps/dashboard/catalogue/config.py:8
 msgid "Catalogue"
-msgstr "Kataloog"
+msgstr ""
 
 #: defaults.py:96 apps/catalogue/abstract_models.py:321
 #: apps/dashboard/catalogue/views.py:85 apps/promotions/models.py:273
@@ -104,7 +102,7 @@ msgstr "Kataloog"
 #: templates/oscar/dashboard/promotions/handpickedproductlist_form.html:5
 #: templates/oscar/dashboard/ranges/range_product_list.html:24
 msgid "Products"
-msgstr "Tooted"
+msgstr ""
 
 #: defaults.py:100 apps/dashboard/catalogue/views.py:630
 #: apps/offer/models.py:807
@@ -123,7 +121,7 @@ msgstr ""
 #: templates/oscar/dashboard/catalogue/category_list.html:25
 #: templates/oscar/dashboard/catalogue/product_update.html:76
 msgid "Categories"
-msgstr "Kategooriad"
+msgstr ""
 
 #: defaults.py:108 apps/offer/models.py:828
 #: templates/oscar/dashboard/ranges/range_delete.html:7
@@ -136,15 +134,15 @@ msgstr "Kategooriad"
 #: templates/oscar/dashboard/ranges/range_list.html:28
 #: templates/oscar/dashboard/ranges/range_product_list.html:17
 msgid "Ranges"
-msgstr "Vahemikud"
+msgstr ""
 
 #: defaults.py:112
 msgid "Low stock alerts"
-msgstr "Madala varu teavitused"
+msgstr ""
 
 #: defaults.py:118
 msgid "Fulfilment"
-msgstr "Täitmine"
+msgstr ""
 
 #: defaults.py:122 apps/analytics/abstract_models.py:58
 #: apps/analytics/reports.py:66 apps/order/abstract_models.py:275
@@ -159,11 +157,11 @@ msgstr "Täitmine"
 #: templates/oscar/dashboard/users/detail.html:105
 #: templates/oscar/dashboard/users/detail.html:115
 msgid "Orders"
-msgstr "Tellimused"
+msgstr ""
 
 #: defaults.py:126 templates/oscar/dashboard/orders/statistics.html:21
 msgid "Statistics"
-msgstr "Statistika"
+msgstr ""
 
 #: defaults.py:130 templates/oscar/dashboard/partners/partner_delete.html:7
 #: templates/oscar/dashboard/partners/partner_delete.html:17
@@ -189,11 +187,11 @@ msgstr ""
 #: templates/oscar/dashboard/users/index.html:14
 #: templates/oscar/dashboard/users/index.html:24
 msgid "Customers"
-msgstr "Kliendid"
+msgstr ""
 
 #: defaults.py:152
 msgid "Stock alert requests"
-msgstr "Varu teavituste päringud"
+msgstr ""
 
 #: defaults.py:158 defaults.py:162 apps/voucher/abstract_models.py:30
 #: templates/oscar/dashboard/offers/offer_delete.html:7
@@ -208,7 +206,7 @@ msgstr "Varu teavituste päringud"
 #: templates/oscar/offer/list.html.py:17 templates/oscar/offer/list.html:22
 #: templates/oscar/partials/nav_primary.html:62
 msgid "Offers"
-msgstr "Pakkumised"
+msgstr ""
 
 #: defaults.py:166 apps/basket/abstract_models.py:48
 #: apps/dashboard/vouchers/views.py:70 apps/voucher/abstract_models.py:60
@@ -222,11 +220,11 @@ msgstr "Pakkumised"
 #: templates/oscar/dashboard/vouchers/voucher_list.html:18
 #: templates/oscar/dashboard/vouchers/voucher_list.html:29
 msgid "Vouchers"
-msgstr "Vautšer"
+msgstr ""
 
 #: defaults.py:172
 msgid "Content"
-msgstr "Sisu"
+msgstr ""
 
 #: defaults.py:176 templates/oscar/dashboard/promotions/delete.html:18
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:13
@@ -239,12 +237,12 @@ msgstr "Sisu"
 #: templates/oscar/dashboard/promotions/promotion_list.html:22
 #: templates/oscar/dashboard/promotions/promotion_list.html:38
 msgid "Content blocks"
-msgstr "Sisu blokid"
+msgstr ""
 
 #: defaults.py:180
 #: templates/oscar/dashboard/promotions/pagepromotion_list.html:24
 msgid "Content blocks by page"
-msgstr "Sisu blokid lehe kaupa"
+msgstr ""
 
 #: defaults.py:184 apps/promotions/models.py:95
 #: templates/oscar/dashboard/pages/delete.html:18
@@ -253,11 +251,11 @@ msgstr "Sisu blokid lehe kaupa"
 #: templates/oscar/dashboard/pages/index.html:24
 #: templates/oscar/dashboard/pages/update.html:17
 msgid "Pages"
-msgstr "Lehed"
+msgstr ""
 
 #: defaults.py:188
 msgid "Email templates"
-msgstr "E-kirjade mallid"
+msgstr ""
 
 #: defaults.py:192 templates/oscar/catalogue/reviews/review_detail.html:5
 #: templates/oscar/catalogue/reviews/review_detail.html:26
@@ -270,11 +268,11 @@ msgstr "E-kirjade mallid"
 #: templates/oscar/dashboard/users/detail.html:107
 #: templates/oscar/dashboard/users/detail.html:174
 msgid "Reviews"
-msgstr "Arvustused"
+msgstr ""
 
 #: defaults.py:198 templates/oscar/dashboard/reports/index.html:6
 msgid "Reports"
-msgstr "Raportid"
+msgstr ""
 
 #: defaults.py:211 apps/catalogue/abstract_models.py:815
 #: apps/offer/models.py:98 apps/offer/models.py:430 apps/offer/models.py:565
@@ -284,7 +282,7 @@ msgstr "Raportid"
 #: templates/oscar/dashboard/promotions/page_detail.html:39
 #: templates/oscar/dashboard/promotions/promotion_list.html:43
 msgid "Type"
-msgstr "Tüüp"
+msgstr ""
 
 #: defaults.py:215 apps/catalogue/abstract_models.py:291
 msgid "Rating"
@@ -312,7 +310,7 @@ msgstr ""
 
 #: apps/address/abstract_models.py:24
 msgid "Mr"
-msgstr "Hr."
+msgstr ""
 
 #: apps/address/abstract_models.py:25
 msgid "Miss"
@@ -320,7 +318,7 @@ msgstr ""
 
 #: apps/address/abstract_models.py:26
 msgid "Mrs"
-msgstr "Pr."
+msgstr ""
 
 #: apps/address/abstract_models.py:27
 msgid "Ms"
@@ -340,42 +338,42 @@ msgstr ""
 #: templates/oscar/dashboard/partners/partner_user_list.html:46
 #: templates/oscar/dashboard/partners/partner_user_select.html:53
 msgid "First name"
-msgstr "Eesnimi"
+msgstr ""
 
 #: apps/address/abstract_models.py:218 apps/customer/abstract_models.py:61
 #: templates/oscar/dashboard/partners/partner_manage.html:35
 #: templates/oscar/dashboard/partners/partner_user_list.html:47
 #: templates/oscar/dashboard/partners/partner_user_select.html:54
 msgid "Last name"
-msgstr "Perenimi"
+msgstr ""
 
 #: apps/address/abstract_models.py:222
 msgid "First line of address"
-msgstr "Esimene aadressi rida"
+msgstr ""
 
 #: apps/address/abstract_models.py:224
 msgid "Second line of address"
-msgstr "Teine aadressi rida"
+msgstr ""
 
 #: apps/address/abstract_models.py:226
 msgid "Third line of address"
-msgstr "Kolmass aadressirida"
+msgstr ""
 
 #: apps/address/abstract_models.py:227
 msgid "City"
-msgstr "Linn"
+msgstr ""
 
 #: apps/address/abstract_models.py:228
 msgid "State/County"
-msgstr "Maakond"
+msgstr ""
 
 #: apps/address/abstract_models.py:230
 msgid "Post/Zip-code"
-msgstr "Posti sihtnumber"
+msgstr ""
 
 #: apps/address/abstract_models.py:231 apps/address/abstract_models.py:409
 msgid "Country"
-msgstr "Riik"
+msgstr ""
 
 #: apps/address/abstract_models.py:236
 msgid "Search text - used only for searching addresses"
@@ -388,14 +386,14 @@ msgstr ""
 #: templates/oscar/customer/address/address_list.html:10
 #: templates/oscar/dashboard/orders/order_detail.html:448
 msgid "Address"
-msgstr "Aadress"
+msgstr ""
 
 #: apps/address/abstract_models.py:244
 #: templates/oscar/dashboard/partners/partner_list.html:47
 #: templates/oscar/dashboard/users/detail.html:106
 #: templates/oscar/dashboard/users/detail.html:147
 msgid "Addresses"
-msgstr "Aadressid"
+msgstr ""
 
 #: apps/address/abstract_models.py:270
 #, python-format
@@ -409,19 +407,19 @@ msgstr ""
 
 #: apps/address/abstract_models.py:387
 msgid "ISO 3166-1 alpha-2"
-msgstr "ISO 3166-1 alpha-2"
+msgstr ""
 
 #: apps/address/abstract_models.py:389
 msgid "ISO 3166-1 alpha-3"
-msgstr "ISO 3166-1 alpha-3"
+msgstr ""
 
 #: apps/address/abstract_models.py:391
 msgid "ISO 3166-1 numeric"
-msgstr "ISO 3166-1 numeric"
+msgstr ""
 
 #: apps/address/abstract_models.py:394
 msgid "Country name"
-msgstr "Riigi nimi"
+msgstr ""
 
 #: apps/address/abstract_models.py:397
 msgid "Official name"
@@ -441,11 +439,11 @@ msgstr ""
 
 #: apps/address/abstract_models.py:410 apps/shipping/abstract_models.py:27
 msgid "Countries"
-msgstr "Riigid"
+msgstr ""
 
 #: apps/address/abstract_models.py:453 models/fields/__init__.py:162
 msgid "Phone number"
-msgstr "Telefoninumber"
+msgstr ""
 
 #: apps/address/abstract_models.py:454
 msgid "In case we need to call you about your order"
@@ -468,11 +466,11 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_list.html:100
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:5
 msgid "Shipping address"
-msgstr "Tarne aadress"
+msgstr ""
 
 #: apps/address/abstract_models.py:465
 msgid "Shipping addresses"
-msgstr "Tarne aadressid"
+msgstr ""
 
 #: apps/address/abstract_models.py:490 apps/analytics/abstract_models.py:48
 #: apps/analytics/abstract_models.py:78 apps/analytics/abstract_models.py:96
@@ -486,23 +484,23 @@ msgstr "Tarne aadressid"
 #: templates/oscar/dashboard/users/alerts/list.html:46
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:10
 msgid "User"
-msgstr "Kasutaja"
+msgstr ""
 
 #: apps/address/abstract_models.py:494
 msgid "Default shipping address?"
-msgstr "Vaikimisi tarne aadress"
+msgstr ""
 
 #: apps/address/abstract_models.py:498
 msgid "Default billing address?"
-msgstr "Vaikimisi arve aadress"
+msgstr ""
 
 #: apps/address/abstract_models.py:503 apps/offer/models.py:166
 msgid "Number of Orders"
-msgstr "Tellimuste arv"
+msgstr ""
 
 #: apps/address/abstract_models.py:507
 msgid "Address Hash"
-msgstr "Aadressi võti"
+msgstr ""
 
 #: apps/address/abstract_models.py:509 apps/analytics/abstract_models.py:80
 #: apps/analytics/abstract_models.py:98 apps/basket/abstract_models.py:580
@@ -513,15 +511,15 @@ msgstr "Aadressi võti"
 #: apps/promotions/models.py:27 apps/promotions/models.py:350
 #: apps/voucher/abstract_models.py:148
 msgid "Date Created"
-msgstr "Loomise kuupäev"
+msgstr ""
 
 #: apps/address/abstract_models.py:537
 msgid "User address"
-msgstr "Kasutaja aadress"
+msgstr ""
 
 #: apps/address/abstract_models.py:538
 msgid "User addresses"
-msgstr "Kasutaja aadressid"
+msgstr ""
 
 #: apps/address/abstract_models.py:551
 msgid "This address is already in your address book"
@@ -532,11 +530,11 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:476
 #: templates/oscar/dashboard/orders/order_list.html:101
 msgid "Billing address"
-msgstr "Arve aadress"
+msgstr ""
 
 #: apps/address/abstract_models.py:561
 msgid "Billing addresses"
-msgstr "Arve aadressid"
+msgstr ""
 
 #: apps/address/abstract_models.py:580 apps/order/abstract_models.py:397
 #: apps/partner/abstract_models.py:92 apps/partner/config.py:8
@@ -574,21 +572,21 @@ msgstr ""
 #: templates/oscar/dashboard/users/alerts/list.html:45
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:6
 msgid "Product"
-msgstr "Toode"
+msgstr ""
 
 #: apps/analytics/abstract_models.py:23 apps/analytics/reports.py:21
 #: templates/oscar/dashboard/reports/partials/product_report.html:9
 msgid "Views"
-msgstr "Vaated"
+msgstr ""
 
 #: apps/analytics/abstract_models.py:25 apps/analytics/abstract_models.py:54
 msgid "Basket Additions"
-msgstr "Ostukorvi täiendused"
+msgstr ""
 
 #: apps/analytics/abstract_models.py:27 apps/analytics/reports.py:23
 #: templates/oscar/dashboard/reports/partials/product_report.html:11
 msgid "Purchases"
-msgstr "Ostud"
+msgstr ""
 
 #: apps/analytics/abstract_models.py:30
 #: apps/catalogue/reviews/abstract_models.py:29
@@ -597,40 +595,40 @@ msgstr "Ostud"
 #: templates/oscar/dashboard/reviews/review_list.html:60
 #: templates/oscar/dashboard/users/detail.html:178
 msgid "Score"
-msgstr "Tulemus"
+msgstr ""
 
 #: apps/analytics/abstract_models.py:36
 msgid "Product record"
-msgstr "Toote salvestis"
+msgstr ""
 
 #: apps/analytics/abstract_models.py:37
 msgid "Product records"
-msgstr "Toodete salvestised"
+msgstr ""
 
 #: apps/analytics/abstract_models.py:40
 #, python-format
 msgid "Record for '%s'"
-msgstr "'%s' salvestis"
+msgstr ""
 
 #: apps/analytics/abstract_models.py:52
 msgid "Product Views"
-msgstr "Toote vaated"
+msgstr ""
 
 #: apps/analytics/abstract_models.py:60 apps/order/abstract_models.py:485
 msgid "Order Lines"
-msgstr "Tellimuste read"
+msgstr ""
 
 #: apps/analytics/abstract_models.py:62
 msgid "Order Items"
-msgstr "Tellimuste osad"
+msgstr ""
 
 #: apps/analytics/abstract_models.py:63
 msgid "Total Spent"
-msgstr "Kogu kulu"
+msgstr ""
 
 #: apps/analytics/abstract_models.py:66
 msgid "Last Order Date"
-msgstr "Viimase tellimuse kuupäev"
+msgstr ""
 
 #: apps/analytics/abstract_models.py:71
 msgid "User record"
@@ -651,11 +649,11 @@ msgstr ""
 #: apps/analytics/abstract_models.py:89
 #, python-format
 msgid "%(user)s viewed '%(product)s'"
-msgstr "%(user)s vaatas '%(product)s'"
+msgstr ""
 
 #: apps/analytics/abstract_models.py:97
 msgid "Search term"
-msgstr "Otsingusõna"
+msgstr ""
 
 #: apps/analytics/abstract_models.py:103
 msgid "User search query"
@@ -663,12 +661,12 @@ msgstr ""
 
 #: apps/analytics/abstract_models.py:104
 msgid "User search queries"
-msgstr "Kasutaja otsingud"
+msgstr ""
 
 #: apps/analytics/abstract_models.py:107
 #, python-format
 msgid "%(user)s searched for '%(query)s'"
-msgstr "%(user)s otsis '%(query)s'"
+msgstr ""
 
 #: apps/analytics/config.py:8
 msgid "Analytics"
@@ -678,11 +676,11 @@ msgstr ""
 #: templates/oscar/dashboard/reports/partials/product_report.html:10
 #: templates/oscar/dashboard/reports/partials/user_report.html:12
 msgid "Basket additions"
-msgstr "Ostukorvi lisad"
+msgstr ""
 
 #: apps/analytics/reports.py:40
 msgid "Product analytics"
-msgstr "Toote analüütika"
+msgstr ""
 
 #: apps/analytics/reports.py:62 apps/basket/reports.py:19
 #: apps/catalogue/abstract_models.py:44 apps/catalogue/abstract_models.py:87
@@ -720,67 +718,67 @@ msgstr "Toote analüütika"
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:34
 #: templates/oscar/dashboard/vouchers/voucher_list.html:52
 msgid "Name"
-msgstr "Nimi"
+msgstr ""
 
 #: apps/analytics/reports.py:63
 #: templates/oscar/customer/profile/profile.html:25
 #: templates/oscar/dashboard/reports/partials/user_report.html:10
 msgid "Date registered"
-msgstr "Registreerimis kuupäev"
+msgstr ""
 
 #: apps/analytics/reports.py:64
 #: templates/oscar/dashboard/reports/partials/user_report.html:11
 msgid "Product views"
-msgstr "Toote vaated"
+msgstr ""
 
 #: apps/analytics/reports.py:67
 #: templates/oscar/dashboard/reports/partials/user_report.html:14
 msgid "Order lines"
-msgstr "Tellimuse read"
+msgstr ""
 
 #: apps/analytics/reports.py:68
 #: templates/oscar/dashboard/reports/partials/user_report.html:15
 msgid "Order items"
-msgstr "Tellimuse osad"
+msgstr ""
 
 #: apps/analytics/reports.py:69
 #: templates/oscar/dashboard/reports/partials/user_report.html:16
 #: templates/oscar/dashboard/users/detail.html:77
 msgid "Total spent"
-msgstr "Kogu kulu"
+msgstr ""
 
 #: apps/analytics/reports.py:70
 #: templates/oscar/dashboard/reports/partials/user_report.html:17
 msgid "Date of last order"
-msgstr "Viimase tellimuse kuupäev"
+msgstr ""
 
 #: apps/analytics/reports.py:92
 msgid "User analytics"
-msgstr "Kasutaja analüütika"
+msgstr ""
 
 #: apps/basket/abstract_models.py:27 apps/wishlists/abstract_models.py:23
 msgid "Owner"
-msgstr "Omanik"
+msgstr ""
 
 #: apps/basket/abstract_models.py:35
 msgid "Open - currently active"
-msgstr "Avatud - hetkel aktiivne"
+msgstr ""
 
 #: apps/basket/abstract_models.py:36
 msgid "Merged - superceded by another basket"
-msgstr "Liidetud - ülekantud teisele ostukorvile"
+msgstr ""
 
 #: apps/basket/abstract_models.py:37
 msgid "Saved - for items to be purchased later"
-msgstr "Salvestatud - tulevaseks ostuks"
+msgstr ""
 
 #: apps/basket/abstract_models.py:38
 msgid "Frozen - the basket cannot be modified"
-msgstr "Külmutatud - ostukorvi ei saa muuta"
+msgstr ""
 
 #: apps/basket/abstract_models.py:39
 msgid "Submitted - has been ordered at the checkout"
-msgstr "Esitatud - tellitud läbi ostuprotsessi"
+msgstr ""
 
 #: apps/basket/abstract_models.py:42 apps/catalogue/abstract_models.py:1101
 #: apps/catalogue/reviews/abstract_models.py:58
@@ -807,7 +805,7 @@ msgstr "Esitatud - tellitud läbi ostuprotsessi"
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:20
 #: templates/oscar/dashboard/vouchers/voucher_list.html:54
 msgid "Status"
-msgstr "Staatus"
+msgstr ""
 
 #: apps/basket/abstract_models.py:50 apps/basket/reports.py:82
 #: apps/catalogue/abstract_models.py:293 apps/customer/abstract_models.py:331
@@ -824,16 +822,16 @@ msgstr "Staatus"
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:24
 #: templates/oscar/dashboard/vouchers/voucher_list.html:57
 msgid "Date created"
-msgstr "Loomise kuupäev"
+msgstr ""
 
 #: apps/basket/abstract_models.py:51
 msgid "Date merged"
-msgstr "Liitmise kuupäev"
+msgstr ""
 
 #: apps/basket/abstract_models.py:52
 #: templates/oscar/customer/order/order_list.html:42
 msgid "Date submitted"
-msgstr "Esitamise kuupäev"
+msgstr ""
 
 #: apps/basket/abstract_models.py:61 apps/basket/abstract_models.py:549
 #: apps/basket/config.py:8 apps/order/abstract_models.py:32
@@ -844,16 +842,16 @@ msgstr "Esitamise kuupäev"
 #: templates/oscar/checkout/thank_you.html:170
 #: templates/oscar/partials/nav_primary.html:19
 msgid "Basket"
-msgstr "Ostukorv"
+msgstr ""
 
 #: apps/basket/abstract_models.py:62
 msgid "Baskets"
-msgstr "Ostukorvid"
+msgstr ""
 
 #: apps/basket/abstract_models.py:81
 #, python-format
 msgid "%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)"
-msgstr "%(status)s ostukorv (omanik: %(owner)s, ridu: %(num_lines)d)"
+msgstr ""
 
 #: apps/basket/abstract_models.py:140
 #, python-format
@@ -861,12 +859,10 @@ msgid ""
 "Due to technical limitations we are not able to ship more than %(threshold)d "
 "items in one order."
 msgstr ""
-"Tehniliste piirangute tõttu ei ole meil võimalik saata rohkem, kui "
-"%(threshold)d asja ühe tellimusega."
 
 #: apps/basket/abstract_models.py:556
 msgid "Line Reference"
-msgstr "Rea viide"
+msgstr ""
 
 #: apps/basket/abstract_models.py:566 apps/basket/forms.py:134
 #: apps/basket/forms.py:282 apps/order/abstract_models.py:431
@@ -883,7 +879,7 @@ msgstr "Rea viide"
 #: templates/oscar/dashboard/orders/line_detail.html:170
 #: templates/oscar/dashboard/orders/order_detail.html:110
 msgid "Quantity"
-msgstr "Kogus"
+msgstr ""
 
 #: apps/basket/abstract_models.py:572 apps/order/abstract_models.py:51
 #: apps/partner/abstract_models.py:103 apps/payment/abstract_models.py:76
@@ -893,19 +889,19 @@ msgstr ""
 
 #: apps/basket/abstract_models.py:574
 msgid "Price excl. Tax"
-msgstr "Hind ilma maksuta"
+msgstr ""
 
 #: apps/basket/abstract_models.py:577
 msgid "Price incl. Tax"
-msgstr "Hind maksuga"
+msgstr ""
 
 #: apps/basket/abstract_models.py:593
 msgid "Basket line"
-msgstr "Ostukorvi rida"
+msgstr ""
 
 #: apps/basket/abstract_models.py:594
 msgid "Basket lines"
-msgstr "Ostukorvi read"
+msgstr ""
 
 #: apps/basket/abstract_models.py:598
 #, python-format
@@ -915,7 +911,7 @@ msgstr ""
 #: apps/basket/abstract_models.py:606
 #, python-format
 msgid "You cannot modify a %s basket"
-msgstr "Ei saa muuta %s ostukorvi"
+msgstr ""
 
 #: apps/basket/abstract_models.py:817
 #, python-format
@@ -935,35 +931,35 @@ msgstr ""
 #: apps/order/abstract_models.py:732 apps/order/abstract_models.py:837
 #: apps/order/abstract_models.py:898
 msgid "Line"
-msgstr "Rida"
+msgstr ""
 
 #: apps/basket/abstract_models.py:834 apps/catalogue/abstract_models.py:808
 #: apps/catalogue/abstract_models.py:1067
 #: apps/catalogue/abstract_models.py:1107 apps/order/abstract_models.py:706
 #: apps/order/abstract_models.py:730
 msgid "Option"
-msgstr "Valik"
+msgstr ""
 
 #: apps/basket/abstract_models.py:835 apps/offer/models.py:433
 #: apps/offer/models.py:571 apps/order/abstract_models.py:708
 msgid "Value"
-msgstr "Hind"
+msgstr ""
 
 #: apps/basket/abstract_models.py:840
 msgid "Line attribute"
-msgstr "Rea tunnus"
+msgstr ""
 
 #: apps/basket/abstract_models.py:841
 msgid "Line attributes"
-msgstr "Rea tunnused"
+msgstr ""
 
 #: apps/basket/forms.py:16
 msgid "Save for Later"
-msgstr "Salvesta hilisemaks"
+msgstr ""
 
 #: apps/basket/forms.py:75
 msgid "Move to Basket"
-msgstr "Pane ostukorvi"
+msgstr ""
 
 #: apps/basket/forms.py:124 apps/catalogue/abstract_models.py:784
 #: apps/catalogue/abstract_models.py:1093 apps/customer/abstract_models.py:142
@@ -976,15 +972,15 @@ msgstr "Pane ostukorvi"
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:35
 #: templates/oscar/dashboard/vouchers/voucher_list.html:53
 msgid "Code"
-msgstr "Kood"
+msgstr ""
 
 #: apps/basket/forms.py:179
 msgid "Variant"
-msgstr "Variant"
+msgstr ""
 
 #: apps/basket/forms.py:207
 msgid "Please select a valid product"
-msgstr "Palun vali lubatud toode"
+msgstr ""
 
 #: apps/basket/forms.py:224
 #, python-format
@@ -992,9 +988,6 @@ msgid ""
 "Due to technical limitations we are not able to ship more than %(threshold)d "
 "items in one order. Your basket currently has %(basket)d items."
 msgstr ""
-"Tehniliste piirangute tõttu ei ole meil võimalik tarnida rohkem, kui "
-"%(threshold)d ühikud ühe tellimusega. Teie ostukorv sisaldab %(basket)d "
-"ühikut."
 
 #: apps/basket/forms.py:247
 msgid ""
@@ -1004,7 +997,7 @@ msgstr ""
 
 #: apps/basket/reports.py:18 apps/basket/reports.py:77
 msgid "User ID"
-msgstr "Kasutaja ID"
+msgstr ""
 
 #: apps/basket/reports.py:20 apps/catalogue/reviews/abstract_models.py:45
 #: apps/catalogue/reviews/forms.py:11 apps/customer/abstract_models.py:124
@@ -1021,17 +1014,17 @@ msgstr "Kasutaja ID"
 #: templates/oscar/dashboard/reports/partials/user_report.html:8
 #: templates/oscar/dashboard/users/detail.html:38
 msgid "Email"
-msgstr "E-kiri"
+msgstr ""
 
 #: apps/basket/reports.py:21 apps/basket/reports.py:79
 msgid "Basket status"
-msgstr "Ostukorvi staatus"
+msgstr ""
 
 #: apps/basket/reports.py:22 apps/basket/reports.py:80
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:10
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:10
 msgid "Num lines"
-msgstr "Ridade arv"
+msgstr ""
 
 #: apps/basket/reports.py:23 apps/basket/reports.py:81
 #: templates/oscar/customer/order/order_list.html:40
@@ -1039,98 +1032,98 @@ msgstr "Ridade arv"
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:11
 #: templates/oscar/dashboard/users/detail.html:120
 msgid "Num items"
-msgstr "Toodete arv"
+msgstr ""
 
 #: apps/basket/reports.py:24
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:12
 msgid "Date of creation"
-msgstr "Loomise kuupäev"
+msgstr ""
 
 #: apps/basket/reports.py:25
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:13
 msgid "Time since creation"
-msgstr "Loomisest möödunud aeg"
+msgstr ""
 
 #: apps/basket/reports.py:57
 msgid "Open baskets"
-msgstr "Avatud ostukorvid"
+msgstr ""
 
 #: apps/basket/reports.py:83
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:13
 msgid "Time between creation and submission"
-msgstr "Loomise ja esitamise ajavahemik"
+msgstr ""
 
 #: apps/basket/reports.py:112
 msgid "Submitted baskets"
-msgstr "Esitatud ostukorvid"
+msgstr ""
 
 #: apps/basket/views.py:217
 msgid "You can't save an item for later if you're not logged in!"
-msgstr "Toote salvestamine hilisemaks ei ole võimalik sisse logimata!"
+msgstr ""
 
 #: apps/basket/views.py:279
 msgid "Your basket couldn't be updated"
-msgstr "Teie ostukorvi ei olnud võimalik uuendada"
+msgstr ""
 
 #: apps/basket/views.py:366
 #, python-format
 msgid "The '%(code)s' voucher has expired"
-msgstr "Vautšer '%(code)s' on aegunud"
+msgstr ""
 
 #: apps/basket/views.py:394
 msgid "Your basket does not qualify for a voucher discount"
-msgstr "Teie ostukorv ei kvalifitseeru vautžeri soodustuse saamiseks"
+msgstr ""
 
 #: apps/basket/views.py:399
 #, python-format
 msgid "Voucher '%(code)s' added to basket"
-msgstr "Vautšer '%(code)s' lisati ostukorvi"
+msgstr ""
 
 #: apps/basket/views.py:409
 #, python-format
 msgid "You have already added the '%(code)s' voucher to your basket"
-msgstr "Vautšer '%(code)s' on juba ostukorvi lisatud"
+msgstr ""
 
 #: apps/basket/views.py:417
 #, python-format
 msgid "No voucher found with code '%(code)s'"
-msgstr "'%(code)s' koodiga vautšerit ei ole"
+msgstr ""
 
 #: apps/basket/views.py:424 apps/dashboard/vouchers/forms.py:66
 msgid "Please enter a voucher code"
-msgstr "Palun sisesta vautšeri kood"
+msgstr ""
 
 #: apps/basket/views.py:445
 #, python-format
 msgid "No voucher found with id '%d'"
-msgstr "Sellise id'ga '%d' vautšerit ei leidu"
+msgstr ""
 
 #: apps/basket/views.py:451
 #, python-format
 msgid "Voucher '%s' removed from basket"
-msgstr "Vautšer '%s' eemaldati ostukorvist"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:45 apps/catalogue/abstract_models.py:91
 #: apps/catalogue/abstract_models.py:260 apps/offer/models.py:73
 #: apps/offer/models.py:787 apps/shipping/abstract_models.py:20
 msgid "Slug"
-msgstr "veebiaadressi osa"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:50
 msgid "Requires shipping?"
-msgstr "Vajab tarnet?"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:55
 msgid "Track stock levels?"
-msgstr "Jälgi varu tasemeid?"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:62 apps/catalogue/abstract_models.py:1108
 msgid "Options"
-msgstr "Valikud"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:68 apps/catalogue/abstract_models.py:578
 msgid "Product class"
-msgstr "Toote tüüp"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:69
 msgid "Product classes"
@@ -1143,29 +1136,29 @@ msgstr ""
 #: templates/oscar/dashboard/offers/summary.html:12
 #: templates/oscar/dashboard/shipping/weight_based_detail.html:37
 msgid "Description"
-msgstr "Kirjeldus"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:89 apps/catalogue/abstract_models.py:811
 #: apps/dashboard/catalogue/tables.py:19 apps/promotions/models.py:180
 #: apps/promotions/models.py:189 apps/promotions/models.py:190
 msgid "Image"
-msgstr "Pilt"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:93
 msgid "Full Name"
-msgstr "Täisnimi"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:139
 #, python-format
 msgid "A category with slug '%(slug)s' already exists"
-msgstr "Kategooria veebiaadressi osaga '%(slug)s' on juba olemas"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:185 apps/catalogue/abstract_models.py:202
 #: apps/customer/abstract_models.py:161
 #: templates/oscar/dashboard/catalogue/product_update.html:127
 #: templates/oscar/dashboard/comms/list.html:34
 msgid "Category"
-msgstr "Kategooria"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:209
 msgid "Product category"
@@ -1198,16 +1191,13 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:112
 #: templates/oscar/dashboard/ranges/range_product_list.html:97
 msgid "UPC"
-msgstr "UTK"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:244
 msgid ""
 "Universal Product Code (UPC) is an identifier for a product which is not "
 "specific to a particular  supplier. Eg an ISBN for a book."
 msgstr ""
-"Universaalne Toote Kood (UTK) on toote identifikaator, mis ei ole mingi "
-"kindla tootegrupi või tarnija spetsiifiline. Näiteks nagu ISBN kood raamatu "
-"puhul."
 
 #: apps/catalogue/abstract_models.py:251
 msgid ""
@@ -1231,14 +1221,14 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:268
 msgid "Choose what type of product this is"
-msgstr "Vali toote tüüp"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:272
 #: templates/oscar/dashboard/catalogue/product_update.html:79
 #: templates/oscar/dashboard/catalogue/product_update.html:147
 #: templates/oscar/dashboard/catalogue/product_update.html:258
 msgid "Attributes"
-msgstr "Omadused"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:273
 msgid ""
@@ -1256,12 +1246,10 @@ msgid ""
 "customer's basket.  This could be something like a personalised message to "
 "be printed on a T-shirt."
 msgstr ""
-"Valikud on väärtused, mida saab lisada ostukorvis olevale tootele. See võib "
-"näiteks olla personaliseeritud tekst, mis trükitake T-särgile"
 
 #: apps/catalogue/abstract_models.py:285
 msgid "Recommended Products"
-msgstr "Soovitatavad tooted"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:286
 msgid "These are products that are recommended to accompany the main product."
@@ -1325,15 +1313,15 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:690
 msgid "Primary Product"
-msgstr "Esmane toode"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:692
 msgid "Recommended Product"
-msgstr "Soovitatav toode"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:694
 msgid "Ranking"
-msgstr "Järjestus"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:695
 msgid ""
@@ -1352,7 +1340,7 @@ msgstr ""
 #: apps/catalogue/abstract_models.py:732
 #, python-format
 msgid "%(obj)s has no attribute named '%(attr)s'"
-msgstr "%(obj)s 'l puudub omadus '%(attr)s'"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:741
 #, python-format
@@ -1362,7 +1350,7 @@ msgstr ""
 #: apps/catalogue/abstract_models.py:748
 #, python-format
 msgid "%(attr)s attribute %(err)s"
-msgstr "%(attr)s omaduse %(err)s"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:781
 #: templates/oscar/catalogue/detail.html:112
@@ -1380,23 +1368,23 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:802 apps/catalogue/abstract_models.py:944
 msgid "Text"
-msgstr "Tekst"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:803 apps/catalogue/abstract_models.py:945
 msgid "Integer"
-msgstr "Täisarv"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:804
 msgid "True / False"
-msgstr "Õige / Väär"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:805 apps/catalogue/abstract_models.py:947
 msgid "Float"
-msgstr "Komaga arv"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:806
 msgid "Rich Text"
-msgstr "Vormindatud tekst"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:807 apps/catalogue/abstract_models.py:949
 #: apps/order/abstract_models.py:363
@@ -1407,11 +1395,11 @@ msgstr "Vormindatud tekst"
 #: templates/oscar/dashboard/orders/order_detail.html:531
 #: templates/oscar/dashboard/orders/order_detail.html:611
 msgid "Date"
-msgstr "Kuupäev"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:809
 msgid "Entity"
-msgstr "Üksus"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:810
 msgid "File"
@@ -1419,15 +1407,15 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:819
 msgid "Option Group"
-msgstr "Valikute grupp"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:820
 msgid "Select an option group if using type \"Option\""
-msgstr "Vali valikute grupp, kui kasutad tüüpi \"Valik\""
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:821
 msgid "Required"
-msgstr "Kohustuslik"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:827
 msgid "Product attribute"
@@ -1439,23 +1427,23 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:883
 msgid "Must be str or unicode"
-msgstr "Peab olema string või unikodeeritud string"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:890
 msgid "Must be a float"
-msgstr "Peab olema komaga arv"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:896
 msgid "Must be an integer"
-msgstr "Peab olema täisarv"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:900
 msgid "Must be a date or datetime"
-msgstr "Peab olema kuupäev või kuupäev&kellaaeg"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:904
 msgid "Must be a boolean"
-msgstr "Peab olema tõeväärtus"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:908
 msgid "Must be a model instance"
@@ -1467,12 +1455,12 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:915
 msgid "AttributeOption has not been saved yet"
-msgstr "Omaduse valikut ei ole veel savestatud"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:920
 #, python-format
 msgid "%(enum)s is not a valid choice for %(attr)s"
-msgstr "%(enum)s ei ole omaduse %(attr)s lubatud valik"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:925
 msgid "Must be a file field"
@@ -1480,15 +1468,15 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:939
 msgid "Attribute"
-msgstr "Omadus"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:946
 msgid "Boolean"
-msgstr "Tõeväärtus"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:948
 msgid "Richtext"
-msgstr "Vormindatud tekst"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:952
 msgid "Value option"
@@ -1512,7 +1500,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:1066
 msgid "Group"
-msgstr "Grupp"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:1075
 msgid "Attribute option"
@@ -1524,24 +1512,24 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:1098
 msgid "Required - a value for this option must be specified"
-msgstr "Kohustuslik - selle valiku väärtus on vaja sisestada"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:1099
 msgid "Optional - a value for this option can be omitted"
-msgstr "Valikuline - selle väärtuse valimine on valikuline"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:1164
 msgid "Original"
-msgstr "Originaal"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:1165
 msgid "Caption"
-msgstr "Pealkiri"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:1169 apps/promotions/models.py:25
 #: apps/promotions/models.py:293 apps/promotions/models.py:336
 msgid "Display Order"
-msgstr "Esitamise järjekord"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:1170
 msgid ""
@@ -1559,16 +1547,16 @@ msgstr ""
 #: apps/catalogue/utils.py:61
 #, python-format
 msgid "%(filename)s is not a valid image (%(error)s)"
-msgstr "%(filename)s ei ole korrektne pilt (%(error)s)"
+msgstr ""
 
 #: apps/catalogue/utils.py:70
 #, python-format
 msgid "%s is not a valid image archive"
-msgstr "%s ei ole korrektne pildi arhiiv"
+msgstr ""
 
 #: apps/catalogue/views.py:131 templates/oscar/partials/nav_primary.html:43
 msgid "All products"
-msgstr "Kõik tooted"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:32
 #: templates/oscar/dashboard/reviews/review_delete.html:38
@@ -1582,7 +1570,7 @@ msgstr ""
 #: templates/oscar/customer/notifications/detail.html:29
 #: templates/oscar/dashboard/users/detail.html:180
 msgid "Body"
-msgstr "Sisu"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:43
 msgctxt "Anonymous reviewer name"
@@ -1594,29 +1582,29 @@ msgstr ""
 #: models/fields/__init__.py:36 templates/oscar/dashboard/pages/index.html:52
 #: templates/oscar/dashboard/promotions/pagepromotion_list.html:45
 msgid "URL"
-msgstr "Aadress"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:50
 msgid "Requires moderation"
-msgstr "Vajab ülevaatamist"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:51
 #: apps/dashboard/reviews/forms.py:10
 msgid "Approved"
-msgstr "Heaks kiidetud"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:52
 #: apps/dashboard/reviews/forms.py:11
 msgid "Rejected"
-msgstr "Tagasi lükatud"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:62
 msgid "Total Votes"
-msgstr "Häälte arv"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:64
 msgid "Delta Votes"
-msgstr "Häälte vahe"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:77
 msgid "Product review"
@@ -1640,28 +1628,28 @@ msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:192
 msgid "Up"
-msgstr "Üles"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:193
 msgid "Down"
-msgstr "Alla"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:195
 msgid "Delta"
-msgstr "Vahe"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:203
 msgid "Vote"
-msgstr "Hääl"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:204
 #: templates/oscar/dashboard/reviews/review_list.html:61
 msgid "Votes"
-msgstr "Hääled"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:212
 msgid "You cannot vote on your own reviews"
-msgstr "Oma arvustuste hääletamine ei ole lubatud"
+msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:215
 msgid "Only signed-in users can vote on reviews"
@@ -1673,7 +1661,7 @@ msgstr ""
 
 #: apps/catalogue/reviews/views.py:31
 msgid "You have already reviewed this product!"
-msgstr "Sa oled juba seda toodet arvustanud"
+msgstr ""
 
 #: apps/catalogue/reviews/views.py:33
 msgid "You can't leave a review for this product."
@@ -1681,11 +1669,11 @@ msgstr ""
 
 #: apps/catalogue/reviews/views.py:58
 msgid "Thank you for reviewing this product"
-msgstr "Tänan, et arvustasite seda toodet"
+msgstr ""
 
 #: apps/catalogue/reviews/views.py:96
 msgid "Thanks for voting!"
-msgstr "Täname, et hääletasite"
+msgstr ""
 
 #: apps/checkout/config.py:8
 #: templates/oscar/basket/partials/basket_quick.html:39
@@ -1695,7 +1683,7 @@ msgstr ""
 
 #: apps/checkout/forms.py:40
 msgid "My email address is"
-msgstr "Minu e-maili aadress on"
+msgstr ""
 
 #: apps/checkout/forms.py:43
 msgid "I am a new customer and want to checkout as a guest"
@@ -1711,7 +1699,7 @@ msgstr ""
 
 #: apps/checkout/session.py:111
 msgid "You need to add some items to your basket to checkout"
-msgstr "Ostu sooritamiseks on vajalik ostukorvis toodete olemasolu"
+msgstr ""
 
 #: apps/checkout/session.py:129
 #, python-format
@@ -1722,11 +1710,11 @@ msgstr ""
 
 #: apps/checkout/session.py:147
 msgid "Please either sign in or enter your email address"
-msgstr "Palun logi sisse või sisesta oma e-maili aadress"
+msgstr ""
 
 #: apps/checkout/session.py:171 apps/checkout/views.py:261
 msgid "Please choose a shipping address"
-msgstr "Palun vali tarne aadress"
+msgstr ""
 
 #: apps/checkout/session.py:180
 msgid ""
@@ -1736,7 +1724,7 @@ msgstr ""
 
 #: apps/checkout/session.py:190
 msgid "Please choose a shipping method"
-msgstr "Palun vali tarne meetod"
+msgstr ""
 
 #: apps/checkout/session.py:202
 msgid ""
@@ -1752,15 +1740,15 @@ msgstr ""
 
 #: apps/checkout/views.py:171
 msgid "Address deleted from your address book"
-msgstr "Aadress on aadressiraamatust kustutatud"
+msgstr ""
 
 #: apps/checkout/views.py:206
 msgid "Address saved"
-msgstr "Aadress salvestatud"
+msgstr ""
 
 #: apps/checkout/views.py:221
 msgid "Address deleted"
-msgstr "Aadress kustutatud"
+msgstr ""
 
 #: apps/checkout/views.py:270
 msgid "Shipping is unavailable for your chosen address - please choose another"
@@ -1768,7 +1756,7 @@ msgstr ""
 
 #: apps/checkout/views.py:311
 msgid "Your submitted shipping method is not permitted"
-msgstr "Sinu valitud tarnemeetod ei ole lubatud"
+msgstr ""
 
 #: apps/checkout/views.py:560
 msgid ""
@@ -1778,7 +1766,7 @@ msgstr ""
 
 #: apps/checkout/views.py:664
 msgid "No order found"
-msgstr "Tellimust ei leitud"
+msgstr ""
 
 #: apps/customer/abstract_models.py:57
 msgid "email address"
@@ -1796,7 +1784,7 @@ msgstr ""
 #: templates/oscar/dashboard/users/detail.html:42
 #: templates/oscar/dashboard/vouchers/voucher_list.html:68
 msgid "Active"
-msgstr "Aktiivne"
+msgstr ""
 
 #: apps/customer/abstract_models.py:68
 msgid ""
@@ -1820,20 +1808,20 @@ msgstr ""
 #: templates/oscar/customer/notifications/detail.html:25
 #: templates/oscar/dashboard/comms/detail.html:91
 msgid "Subject"
-msgstr "Teema"
+msgstr ""
 
 #: apps/customer/abstract_models.py:117
 msgid "Body Text"
-msgstr "Sisu tekst"
+msgstr ""
 
 #: apps/customer/abstract_models.py:118
 #: templates/oscar/dashboard/comms/detail.html:99
 msgid "Body HTML"
-msgstr "Sisu HTML"
+msgstr ""
 
 #: apps/customer/abstract_models.py:119
 msgid "Date Sent"
-msgstr "Saatmise kuupäev"
+msgstr ""
 
 #: apps/customer/abstract_models.py:125
 #: templates/oscar/dashboard/comms/detail.html:18
@@ -1842,12 +1830,12 @@ msgstr "Saatmise kuupäev"
 #: templates/oscar/dashboard/comms/list.html:22
 #: templates/oscar/dashboard/comms/list.html:28
 msgid "Emails"
-msgstr "E-kirjad"
+msgstr ""
 
 #: apps/customer/abstract_models.py:128
 #, python-format
 msgid "Email to %(user)s with subject '%(subject)s'"
-msgstr "E-mail %(user)s'le teemaga '%(subject)s'"
+msgstr ""
 
 #: apps/customer/abstract_models.py:144
 msgid "Code used for looking up this event programmatically"
@@ -1855,51 +1843,51 @@ msgstr ""
 
 #: apps/customer/abstract_models.py:149
 msgid "This is just used for organisational purposes"
-msgstr "Seda kasutatakse vaid organisatoorsetel eesmärkidel"
+msgstr ""
 
 #: apps/customer/abstract_models.py:156
 msgid "Order related"
-msgstr "Tellmiusega seotu"
+msgstr ""
 
 #: apps/customer/abstract_models.py:157
 msgid "User related"
-msgstr "Kasutajaga seotu"
+msgstr ""
 
 #: apps/customer/abstract_models.py:169
 msgid "Email Subject Template"
-msgstr "E-maili teema maill"
+msgstr ""
 
 #: apps/customer/abstract_models.py:171
 msgid "Email Body Template"
-msgstr "E-maili sisu mall"
+msgstr ""
 
 #: apps/customer/abstract_models.py:173
 msgid "Email Body HTML Template"
-msgstr "E-maili HTML sisu mall"
+msgstr ""
 
 #: apps/customer/abstract_models.py:174
 msgid "HTML template"
-msgstr "HTML mall"
+msgstr ""
 
 #: apps/customer/abstract_models.py:177
 msgid "SMS Template"
-msgstr "SMS mall"
+msgstr ""
 
 #: apps/customer/abstract_models.py:179
 msgid "SMS template"
-msgstr "SMS mall"
+msgstr ""
 
 #: apps/customer/abstract_models.py:182 apps/order/abstract_models.py:331
 msgid "Date Updated"
-msgstr "Uuendamise kuupäev"
+msgstr ""
 
 #: apps/customer/abstract_models.py:195
 msgid "Communication event type"
-msgstr "Kommunikatsioonisündmuse tüüp"
+msgstr ""
 
 #: apps/customer/abstract_models.py:196
 msgid "Communication event types"
-msgstr "Kommunikatsioonisündmuste tüüpid"
+msgstr ""
 
 #: apps/customer/abstract_models.py:269
 #: templates/oscar/customer/notifications/list.html:7
@@ -1924,34 +1912,34 @@ msgstr ""
 
 #: apps/customer/abstract_models.py:312 apps/wishlists/abstract_models.py:29
 msgid "Key"
-msgstr "Võti"
+msgstr ""
 
 #: apps/customer/abstract_models.py:323
 msgid "Not yet confirmed"
-msgstr "Kinnitamata"
+msgstr ""
 
 #: apps/customer/abstract_models.py:325
 msgid "Cancelled"
-msgstr "Tühistatud"
+msgstr ""
 
 #: apps/customer/abstract_models.py:326 apps/partner/abstract_models.py:239
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:40
 msgid "Closed"
-msgstr "Suletud"
+msgstr ""
 
 #: apps/customer/abstract_models.py:332
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:29
 msgid "Date confirmed"
-msgstr "Kinnitamise kuupäev"
+msgstr ""
 
 #: apps/customer/abstract_models.py:334
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:35
 msgid "Date cancelled"
-msgstr "Tühistamise kuupäev"
+msgstr ""
 
 #: apps/customer/abstract_models.py:336
 msgid "Date closed"
-msgstr "Sulgemise kuupäev"
+msgstr ""
 
 #: apps/customer/abstract_models.py:341
 msgid "Product alert"
@@ -1977,12 +1965,12 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:41
 #: templates/oscar/dashboard/orders/order_detail.html:47
 msgid "Email address"
-msgstr "E-maili aadress"
+msgstr ""
 
 #: apps/customer/forms.py:120 apps/customer/forms.py:137
 #: apps/dashboard/partners/forms.py:67
 msgid "Password"
-msgstr "Parool"
+msgstr ""
 
 #: apps/customer/forms.py:130
 msgid "The entered password is not valid!"
@@ -1998,7 +1986,7 @@ msgstr ""
 
 #: apps/customer/forms.py:167 apps/dashboard/partners/forms.py:82
 msgid "The two password fields didn't match."
-msgstr "Kahe parooli välja sisu ei kattu"
+msgstr ""
 
 #: apps/customer/forms.py:189 apps/dashboard/orders/forms.py:20
 msgctxt "start date"
@@ -2029,7 +2017,7 @@ msgstr ""
 #: apps/customer/forms.py:207 apps/dashboard/orders/forms.py:28
 #: apps/dashboard/orders/forms.py:51 apps/dashboard/orders/views.py:147
 msgid "All orders"
-msgstr "Kõik tellimused"
+msgstr ""
 
 #: apps/customer/forms.py:217
 #, python-format
@@ -2041,7 +2029,7 @@ msgstr ""
 #: apps/customer/forms.py:221 apps/dashboard/orders/forms.py:39
 #, python-format
 msgid "Orders placed between %(date_from)s and %(date_to)s"
-msgstr "%(date_from)s ja %(date_to)s vahel esitatud tellimused"
+msgstr ""
 
 #: apps/customer/forms.py:225
 #, python-format
@@ -2077,20 +2065,20 @@ msgstr ""
 
 #: apps/customer/forms.py:365
 msgid "Send notification to"
-msgstr "Saada teavitus "
+msgstr ""
 
 #: apps/customer/forms.py:367
 msgid "Enter your email"
-msgstr "Sisesta oma e-maili aadress"
+msgstr ""
 
 #: apps/customer/forms.py:401
 #, python-format
 msgid "There is already an active stock alert for %s"
-msgstr "%s aktiivne varu teavitus juba eksisteerib"
+msgstr ""
 
 #: apps/customer/forms.py:411
 msgid "You already have an active alert for this product"
-msgstr "Sul juba on sellele tootele aktiivne teavitus"
+msgstr ""
 
 #: apps/customer/views.py:169
 msgid "Welcome back"
@@ -2127,7 +2115,7 @@ msgstr ""
 
 #: apps/customer/views.py:373
 msgid "Password updated"
-msgstr "Parool on uuendatud"
+msgstr ""
 
 #: apps/customer/views.py:395 templates/oscar/customer/baseaccountpage.html:41
 #: templates/oscar/customer/partials/nav_account.html:29
@@ -2153,7 +2141,7 @@ msgstr ""
 #, python-format
 msgid ""
 "All available lines from order %(number)s have been added to your basket"
-msgstr "All saadaolevad read tellimusest %(number)s on sinu ostukorvi lisatud"
+msgstr ""
 
 #: apps/customer/views.py:539
 #, python-format
@@ -2161,18 +2149,16 @@ msgid ""
 "It is not possible to re-order order %(number)s as none of its lines are "
 "available to purchase"
 msgstr ""
-"Tellimust %(number)s ei ole võimalik taas-tellida kuna ühtegi tema ridadest "
-"ei ole ostuks saadaval"
 
 #: apps/customer/views.py:577
 #, python-format
 msgid "%(qty)d copies of '%(product)s' have been added to your basket"
-msgstr "%(qty)d koopiat tootest '%(product)s' on lisatud sinu ostukorvi"
+msgstr ""
 
 #: apps/customer/views.py:581
 #, python-format
 msgid "'%s' has been added to your basket"
-msgstr "'%s' lisati sinu ostukorvi"
+msgstr ""
 
 #: apps/customer/views.py:609 templates/oscar/customer/baseaccountpage.html:38
 #: templates/oscar/customer/partials/nav_account.html:26
@@ -2182,7 +2168,7 @@ msgstr ""
 #: apps/customer/views.py:621 apps/customer/views.py:631
 #: templates/oscar/customer/address/address_list.html:67
 msgid "Add a new address"
-msgstr "Lisa uus aadress"
+msgstr ""
 
 #: apps/customer/views.py:636
 #, python-format
@@ -2194,7 +2180,7 @@ msgstr ""
 #: templates/oscar/checkout/user_address_form.html:5
 #: templates/oscar/checkout/user_address_form.html:17
 msgid "Edit address"
-msgstr "Halda aadressi"
+msgstr ""
 
 #: apps/customer/views.py:663
 #, python-format
@@ -2224,12 +2210,12 @@ msgstr ""
 
 #: apps/customer/alerts/views.py:70
 msgid "An alert has been created"
-msgstr "Häire on loodud"
+msgstr ""
 
 #: apps/customer/alerts/views.py:72
 #, python-format
 msgid "A confirmation email has been sent to %s"
-msgstr "Kinnituse e-kiri on saadetud aadressile %s"
+msgstr ""
 
 #: apps/customer/alerts/views.py:90
 msgid "Your stock alert is now active"
@@ -2366,7 +2352,7 @@ msgstr ""
 #: apps/dashboard/catalogue/tables.py:15
 #: templates/oscar/dashboard/catalogue/product_update.html:257
 msgid "Title"
-msgstr "Tiitel"
+msgstr ""
 
 #: apps/dashboard/catalogue/tables.py:27
 #: templates/oscar/dashboard/catalogue/product_update.html:88
@@ -2705,12 +2691,12 @@ msgstr ""
 #: apps/dashboard/orders/forms.py:45
 #, python-format
 msgid "Orders placed since %s"
-msgstr "Tellimused alates %s"
+msgstr ""
 
 #: apps/dashboard/orders/forms.py:48
 #, python-format
 msgid "Orders placed until %s"
-msgstr "Tellimused kuni %s"
+msgstr ""
 
 #: apps/dashboard/orders/forms.py:66 apps/dashboard/reviews/forms.py:29
 msgid "Customer name"
@@ -3053,7 +3039,7 @@ msgstr ""
 
 #: apps/dashboard/partners/forms.py:73
 msgid "Confirm Password"
-msgstr "Parooli kinnitus"
+msgstr ""
 
 #: apps/dashboard/partners/views.py:35
 msgid "All partners"
@@ -5084,11 +5070,11 @@ msgstr ""
 
 #: core/validators.py:89
 msgid "This field is required"
-msgstr "See väli on kohustuslik"
+msgstr ""
 
 #: core/validators.py:132
 msgid "Please choose a less common password"
-msgstr "Palun vali vähem esinev parool"
+msgstr ""
 
 #: management/commands/oscar_send_alerts.py:16
 msgid "Check for products that are back in stock and send out alerts"
@@ -5640,10 +5626,6 @@ msgid ""
 "\">'%(name)s'</a> wishlist.</span>\n"
 "                "
 msgstr ""
-"\n"
-"                    <span class=\"pull-left\">Toode on <a href=\"%(url)s"
-"\">'%(name)s'</a> soovnimekirjas.</span>\n"
-"                "
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:46
 msgid "Please login to add products to a wish list."
@@ -7360,7 +7342,7 @@ msgstr ""
 
 #: templates/oscar/dashboard/orders/line_detail.html:60
 msgid "Product Options"
-msgstr "Toote valikud"
+msgstr ""
 
 #: templates/oscar/dashboard/orders/line_detail.html:73
 msgid "Partner details"
@@ -8367,7 +8349,7 @@ msgstr ""
 
 #: templates/oscar/dashboard/users/detail.html:177
 msgid "Product ID"
-msgstr "Toote ID"
+msgstr ""
 
 #: templates/oscar/dashboard/users/detail.html:193
 msgid "This customer has not written any reviews yet."
