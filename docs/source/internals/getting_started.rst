@@ -255,7 +255,7 @@ Migrations
 Oscar ships with two sets of migrations. If you're running Django 1.7, you
 don't need to do anything; Django's migration framework will detect them
 automatically and will do the right thing.
-If you're running Django 1.6, you need to install `South`_::
+If you're running Django 1.6, you need to install `South`_:
 
 .. code-block:: bash
 
@@ -282,7 +282,7 @@ countries and so the ``country`` database table must be populated before
 a customer can check out.
 
 The easiest way to achieve this is to use country data from the `pycountry`_
-package. Oscar ships with a management command to parse that data::
+package. Oscar ships with a management command to parse that data:
 
 .. code-block:: bash
 
@@ -309,6 +309,8 @@ want to build.
 The quickest way to set them up is to log into the Django admin
 interface at http://127.0.0.1:8000/admin/ and create instances of both there.
 For a deployment setup, we recommend creating them as `data migration`_.
+
+.. _`data migration`: http://codeinthehole.com/writing/prefer-data-migrations-to-initial-data/
 
 Defining the order pipeline
 ===========================

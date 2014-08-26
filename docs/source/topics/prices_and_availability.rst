@@ -88,7 +88,7 @@ Given a product, the strategy class is responsible for:
 
 These three entities are wrapped up in a ``PurchaseInfo`` object, which is a
 simple named tuple.  The strategy class provides ``fetch_for_product`` and
-``fetch_for_group`` methods which takes a product and returns a ``PurchaseInfo``
+``fetch_for_parent`` methods which takes a product and returns a ``PurchaseInfo``
 instance:
 
 The strategy class is accessed in several places in Oscar's codebase.  In templates, a
@@ -150,7 +150,7 @@ API
 All strategies subclass a common ``Base`` class:
 
 .. autoclass:: oscar.apps.partner.strategy.Base
-   :members: fetch_for_product, fetch_for_group, fetch_for_line
+   :members: fetch_for_product, fetch_for_parent, fetch_for_line
    :noindex:
 
 Oscar also provides a "structured" strategy class which provides overridable

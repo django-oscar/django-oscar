@@ -81,7 +81,7 @@ class Base(object):
         Given a parent product, fetch a ``StockInfo`` instance
         """
         raise NotImplementedError(
-            "A strategy class must define a fetch_for_group method "
+            "A strategy class must define a fetch_for_parent method "
             "for returning the availability and pricing "
             "information."
         )
