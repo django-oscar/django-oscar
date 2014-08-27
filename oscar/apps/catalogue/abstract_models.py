@@ -282,7 +282,7 @@ class AbstractProduct(models.Model):
 
     recommended_products = models.ManyToManyField(
         'catalogue.Product', through='ProductRecommendation', blank=True,
-        verbose_name=_("Recommended Products"),
+        verbose_name=_("Recommended products"),
         help_text=_("These are products that are recommended to accompany the "
                     "main product."))
 
@@ -476,7 +476,7 @@ class AbstractProduct(models.Model):
         """
         Return a string of all of a product's attributes
         """
-        attributes = self.attribute_values.select_related().all()
+        attributes = self.attribute_values.all()
         pairs = [attribute.summary() for attribute in attributes]
         return ", ".join(pairs)
 
@@ -687,9 +687,9 @@ class AbstractProductRecommendation(models.Model):
     """
     primary = models.ForeignKey(
         'catalogue.Product', related_name='primary_recommendations',
-        verbose_name=_("Primary Product"))
+        verbose_name=_("Primary product"))
     recommendation = models.ForeignKey(
-        'catalogue.Product', verbose_name=_("Recommended Product"))
+        'catalogue.Product', verbose_name=_("Recommended product"))
     ranking = models.PositiveSmallIntegerField(
         _('Ranking'), default=0,
         help_text=_('Determines order of the products. A product with a higher'
@@ -778,7 +778,7 @@ class AbstractProductAttribute(models.Model):
     """
     product_class = models.ForeignKey(
         'catalogue.ProductClass', related_name='attributes', blank=True,
-        null=True, verbose_name=_("Product Type"))
+        null=True, verbose_name=_("Product type"))
     name = models.CharField(_('Name'), max_length=128)
     code = models.SlugField(
         _('Code'), max_length=128,
@@ -1166,10 +1166,10 @@ class AbstractProductImage(models.Model):
 
     #: Use display_order to determine which is the "primary" image
     display_order = models.PositiveIntegerField(
-        _("Display Order"), default=0,
+        _("Display order"), default=0,
         help_text=_("An image with a display order of zero will be the primary"
                     " image for a product"))
-    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
+    date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
 
     class Meta:
         abstract = True

@@ -10,25 +10,25 @@ from decimal import Decimal
 class Migration(migrations.Migration):
 
     dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('order', '0001_initial'),
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
             name='Bankcard',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
-                ('card_type', models.CharField(verbose_name='Card Type', max_length=128)),
-                ('name', models.CharField(verbose_name='Name', blank=True, max_length=255)),
-                ('number', models.CharField(verbose_name='Number', max_length=32)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('card_type', models.CharField(max_length=128, verbose_name='Card Type')),
+                ('name', models.CharField(max_length=255, verbose_name='Name', blank=True)),
+                ('number', models.CharField(max_length=32, verbose_name='Number')),
                 ('expiry_date', models.DateField(verbose_name='Expiry Date')),
-                ('partner_reference', models.CharField(verbose_name='Partner Reference', blank=True, max_length=255)),
-                ('user', models.ForeignKey(verbose_name='User', to=settings.AUTH_USER_MODEL)),
+                ('partner_reference', models.CharField(max_length=255, verbose_name='Partner Reference', blank=True)),
+                ('user', models.ForeignKey(verbose_name='User', related_name='bankcards', to=settings.AUTH_USER_MODEL)),
             ],
             options={
-                'verbose_name': 'Bankcard',
                 'verbose_name_plural': 'Bankcards',
+                'verbose_name': 'Bankcard',
                 'abstract': False,
             },
             bases=(models.Model,),
@@ -36,18 +36,18 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Source',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
-                ('currency', models.CharField(verbose_name='Currency', default='GBP', max_length=12)),
-                ('amount_allocated', models.DecimalField(verbose_name='Amount Allocated', max_digits=12, decimal_places=2, default=Decimal('0.00'))),
-                ('amount_debited', models.DecimalField(verbose_name='Amount Debited', max_digits=12, decimal_places=2, default=Decimal('0.00'))),
-                ('amount_refunded', models.DecimalField(verbose_name='Amount Refunded', max_digits=12, decimal_places=2, default=Decimal('0.00'))),
-                ('reference', models.CharField(verbose_name='Reference', blank=True, max_length=128)),
-                ('label', models.CharField(verbose_name='Label', blank=True, max_length=128)),
-                ('order', models.ForeignKey(verbose_name='Order', to='order.Order')),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('currency', models.CharField(default='GBP', max_length=12, verbose_name='Currency')),
+                ('amount_allocated', models.DecimalField(default=Decimal('0.00'), max_digits=12, decimal_places=2, verbose_name='Amount Allocated')),
+                ('amount_debited', models.DecimalField(default=Decimal('0.00'), max_digits=12, decimal_places=2, verbose_name='Amount Debited')),
+                ('amount_refunded', models.DecimalField(default=Decimal('0.00'), max_digits=12, decimal_places=2, verbose_name='Amount Refunded')),
+                ('reference', models.CharField(max_length=128, verbose_name='Reference', blank=True)),
+                ('label', models.CharField(max_length=128, verbose_name='Label', blank=True)),
+                ('order', models.ForeignKey(verbose_name='Order', related_name='sources', to='order.Order')),
             ],
             options={
-                'verbose_name': 'Source',
                 'verbose_name_plural': 'Sources',
+                'verbose_name': 'Source',
                 'abstract': False,
             },
             bases=(models.Model,),
@@ -55,13 +55,32 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SourceType',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
-                ('name', models.CharField(verbose_name='Name', max_length=128)),
-                ('code', oscar.models.fields.autoslugfield.AutoSlugField(editable=False, verbose_name='Code', blank=True, max_length=128, populate_from='name', help_text='This is used within forms to identify this source type', unique=True)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(max_length=128, verbose_name='Name')),
+                ('code', oscar.models.fields.autoslugfield.AutoSlugField(populate_from='name', unique=True, verbose_name='Code', editable=False, max_length=128, help_text='This is used within forms to identify this source type', blank=True)),
             ],
             options={
-                'verbose_name': 'Source Type',
                 'verbose_name_plural': 'Source Types',
+                'verbose_name': 'Source Type',
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Transaction',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('txn_type', models.CharField(max_length=128, verbose_name='Type', blank=True)),
+                ('amount', models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Amount')),
+                ('reference', models.CharField(max_length=128, verbose_name='Reference', blank=True)),
+                ('status', models.CharField(max_length=128, verbose_name='Status', blank=True)),
+                ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date Created')),
+                ('source', models.ForeignKey(verbose_name='Source', related_name='transactions', to='payment.Source')),
+            ],
+            options={
+                'ordering': ['-date_created'],
+                'verbose_name_plural': 'Transactions',
+                'verbose_name': 'Transaction',
                 'abstract': False,
             },
             bases=(models.Model,),
@@ -69,26 +88,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='source',
             name='source_type',
-            field=models.ForeignKey(verbose_name='Source Type', to='payment.SourceType'),
+            field=models.ForeignKey(verbose_name='Source Type', related_name='sources', to='payment.SourceType'),
             preserve_default=True,
-        ),
-        migrations.CreateModel(
-            name='Transaction',
-            fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
-                ('txn_type', models.CharField(verbose_name='Type', blank=True, max_length=128)),
-                ('amount', models.DecimalField(verbose_name='Amount', max_digits=12, decimal_places=2)),
-                ('reference', models.CharField(verbose_name='Reference', blank=True, max_length=128)),
-                ('status', models.CharField(verbose_name='Status', blank=True, max_length=128)),
-                ('date_created', models.DateTimeField(verbose_name='Date Created', auto_now_add=True)),
-                ('source', models.ForeignKey(verbose_name='Source', to='payment.Source')),
-            ],
-            options={
-                'verbose_name': 'Transaction',
-                'verbose_name_plural': 'Transactions',
-                'ordering': ['-date_created'],
-                'abstract': False,
-            },
-            bases=(models.Model,),
         ),
     ]

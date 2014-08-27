@@ -95,7 +95,7 @@ class FixedPrice(Base):
 
 class OfferDiscount(Base):
     """
-    Wrapper class that applies a discount to an existing shipping 
+    Wrapper class that applies a discount to an existing shipping
     method's charges.
     """
     is_discounted = True

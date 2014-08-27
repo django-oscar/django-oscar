@@ -38,6 +38,12 @@ a basket only contains lines from one partner.
 Please note that the dashboard currently ignores any other permissions,
 including `Django's default permissions`_.
 
+.. note::
+
+  The permission-based dashboard currently does not support parent or child
+  products. Supporting this requires a modelling change. If you require this,
+  please get in touch so we can first learn about your use case.
+
 .. _Django's default permissions: https://docs.djangoproject.com/en/dev/topics/auth/default/#default-permissions
 
 

@@ -622,6 +622,15 @@ class AbstractLine(models.Model):
             quantity = self.quantity
         return self.shipping_event_quantity(event_type) == quantity
 
+    def get_event_quantity(self, event):
+        """
+        Fetches the ShippingEventQuantity instance for this line
+
+        Exists as a separate method so it can be overridden to avoid
+        the DB query that's caused by get().
+        """
+        return event.line_quantities.get(line=self)
+
     @property
     def shipping_event_breakdown(self):
         """
@@ -631,7 +640,7 @@ class AbstractLine(models.Model):
         for event in self.shipping_events.all():
             event_type = event.event_type
             event_name = event_type.name
-            event_quantity = event.line_quantities.get(line=self).quantity
+            event_quantity = self.get_event_quantity(event).quantity
             if event_name in status_map:
                 status_map[event_name]['quantity'] += event_quantity
             else:

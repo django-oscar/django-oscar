@@ -185,6 +185,24 @@ class ProductCreateUpdateView(generic.UpdateView):
                          'recommended_formset': self.recommendations_formset,
                          'stockrecord_formset': self.stockrecord_formset}
 
+    def dispatch(self, request, *args, **kwargs):
+        resp = super(ProductCreateUpdateView, self).dispatch(
+            request, *args, **kwargs)
+        return self.check_objects_or_redirect() or resp
+
+    def check_objects_or_redirect(self):
+        """
+        Allows checking the objects fetched by get_object and redirect
+        if they don't satisfy our needs.
+        Is used to redirect when create a new variant and the specified
+        parent product can't actually be turned into a parent product.
+        """
+        if self.creating and self.parent is not None:
+            is_valid, reason = self.parent.can_be_parent(give_reason=True)
+            if not is_valid:
+                messages.error(self.request, reason)
+                return redirect('dashboard:catalogue-product-list')
+
     def get_queryset(self):
         """
         Filter products that the user doesn't have permission to update
@@ -213,7 +231,7 @@ class ProductCreateUpdateView(generic.UpdateView):
                 self.product_class = get_object_or_404(
                     ProductClass, slug=product_class_slug)
             else:
-                self.parent = self.get_and_check_parent(parent_pk)
+                self.parent = get_object_or_404(Product, pk=parent_pk)
                 self.product_class = self.parent.product_class
 
             return None  # success
@@ -222,19 +240,6 @@ class ProductCreateUpdateView(generic.UpdateView):
             self.product_class = product.get_product_class()
             self.parent = product.parent
             return product
-
-    def get_and_check_parent(self, parent_pk):
-        """
-        Fetches the specified "parent" product and ensures that it can be
-        indeed be turned into a parent product if needed.
-        """
-        parent = get_object_or_404(Product, pk=parent_pk)
-        is_valid, reason = parent.can_be_parent(give_reason=True)
-        if is_valid:
-            return parent
-        else:
-            messages.error(self.request, reason)
-            return redirect('dashboard:catalogue-product-list')
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
@@ -436,6 +441,7 @@ class ProductDeleteView(generic.DeleteView):
             parent = self.object.parent
             is_last_child = parent.children.count() == 1
 
+        # This also deletes any child products.
         self.object.delete()
 
         # If the product being deleted is the last child, then pass control
