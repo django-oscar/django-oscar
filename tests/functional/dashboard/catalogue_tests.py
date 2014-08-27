@@ -170,6 +170,26 @@ class TestAStaffUser(WebTestCase):
         assert product1 in products_on_page
         assert product2 in products_on_page
 
+    def test_can_create_a_child_product(self):
+        parent_product = create_product(structure='parent')
+        url = reverse(
+            'dashboard:catalogue-product-create-child',
+            kwargs={'parent_pk': parent_product.pk})
+        form = self.get(url).form
+        form.submit()
+
+        self.assertEqual(Product.objects.count(), 2)
+
+    def test_cant_create_child_product_for_invalid_parents(self):
+        # Creates a product with stockrecords.
+        invalid_parent = create_product(partner_users=[self.user])
+        self.assertFalse(invalid_parent.can_be_parent())
+        url = reverse(
+            'dashboard:catalogue-product-create-child',
+            kwargs={'parent_pk': invalid_parent.pk})
+        self.assertRedirects(
+            self.get(url), reverse('dashboard:catalogue-product-list'))
+
 
 class TestANonStaffUser(TestAStaffUser):
     is_staff = False
