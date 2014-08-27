@@ -2,8 +2,8 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import oscar.core.validators
 import django.db.models.deletion
+import oscar.core.validators
 from django.conf import settings
 
 
@@ -18,45 +18,41 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProductReview',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('score', models.SmallIntegerField(verbose_name='Score', choices=[(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5)])),
-                ('title', models.CharField(verbose_name='Title', validators=[oscar.core.validators.non_whitespace], max_length=255)),
+                ('title', models.CharField(max_length=255, verbose_name='Title', validators=[oscar.core.validators.non_whitespace])),
                 ('body', models.TextField(verbose_name='Body')),
-                ('name', models.CharField(verbose_name='Name', blank=True, max_length=255)),
-                ('email', models.EmailField(verbose_name='Email', blank=True, max_length=75)),
+                ('name', models.CharField(max_length=255, verbose_name='Name', blank=True)),
+                ('email', models.EmailField(max_length=75, verbose_name='Email', blank=True)),
                 ('homepage', models.URLField(verbose_name='URL', blank=True)),
-                ('status', models.SmallIntegerField(verbose_name='Status', choices=[(0, 'Requires moderation'), (1, 'Approved'), (2, 'Rejected')], default=1)),
-                ('total_votes', models.IntegerField(verbose_name='Total Votes', default=0)),
-                ('delta_votes', models.IntegerField(verbose_name='Delta Votes', db_index=True, default=0)),
+                ('status', models.SmallIntegerField(default=1, verbose_name='Status', choices=[(0, 'Requires moderation'), (1, 'Approved'), (2, 'Rejected')])),
+                ('total_votes', models.IntegerField(default=0, verbose_name='Total Votes')),
+                ('delta_votes', models.IntegerField(default=0, db_index=True, verbose_name='Delta Votes')),
                 ('date_created', models.DateTimeField(auto_now_add=True)),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, to='catalogue.Product', null=True)),
-                ('user', models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('product', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, related_name='reviews', to='catalogue.Product', null=True)),
+                ('user', models.ForeignKey(null=True, related_name='reviews', to=settings.AUTH_USER_MODEL, blank=True)),
             ],
             options={
-                'verbose_name': 'Product review',
-                'verbose_name_plural': 'Product reviews',
                 'ordering': ['-delta_votes', 'id'],
+                'verbose_name_plural': 'Product reviews',
+                'verbose_name': 'Product review',
                 'abstract': False,
             },
             bases=(models.Model,),
         ),
-        migrations.AlterUniqueTogether(
-            name='productreview',
-            unique_together=set([('product', 'user')]),
-        ),
         migrations.CreateModel(
             name='Vote',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('delta', models.SmallIntegerField(verbose_name='Delta', choices=[(1, 'Up'), (-1, 'Down')])),
                 ('date_created', models.DateTimeField(auto_now_add=True)),
-                ('review', models.ForeignKey(to='reviews.ProductReview')),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('review', models.ForeignKey(related_name='votes', to='reviews.ProductReview')),
+                ('user', models.ForeignKey(related_name='review_votes', to=settings.AUTH_USER_MODEL)),
             ],
             options={
-                'verbose_name': 'Vote',
-                'verbose_name_plural': 'Votes',
                 'ordering': ['-date_created'],
+                'verbose_name_plural': 'Votes',
+                'verbose_name': 'Vote',
                 'abstract': False,
             },
             bases=(models.Model,),
@@ -64,5 +60,9 @@ class Migration(migrations.Migration):
         migrations.AlterUniqueTogether(
             name='vote',
             unique_together=set([('user', 'review')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='productreview',
+            unique_together=set([('product', 'user')]),
         ),
     ]
