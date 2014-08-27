@@ -441,6 +441,7 @@ class ProductDeleteView(generic.DeleteView):
             parent = self.object.parent
             is_last_child = parent.children.count() == 1
 
+        # This also deletes any child products.
         self.object.delete()
 
         # If the product being deleted is the last child, then pass control

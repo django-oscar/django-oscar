@@ -83,7 +83,7 @@
                                 {% if not product.is_parent %}
                                     <li><a href="#product_stock" data-toggle="tab">{% trans 'Stock and pricing' %}</a></li>
                                 {% endif %}
-                                {% if not parent %}
+                                {% if user.is_staff and not parent %}
                                     <li><a href="#child_products" data-toggle="tab">{% trans 'Variants' %}</a></li>
                                 {% endif %}
                                 {% if not parent %}
