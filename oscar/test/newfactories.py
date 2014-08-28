@@ -12,12 +12,11 @@ module to factories.py and drop the old ones.
 import datetime
 from decimal import Decimal as D
 
-from django.conf import settings
 from django.utils.timezone import now
-
 import factory
 
-from oscar.core.loading import get_class
+from oscar.core.loading import get_model, get_class
+from oscar.core.compat import get_user_model
 
 __all__ = ["UserFactory", "CountryFactory", "UserAddressFactory",
            "BasketFactory", "VoucherFactory", "ProductFactory",
@@ -42,7 +41,7 @@ class UserFactory(factory.DjangoModelFactory):
     is_staff = False
 
     class Meta:
-        model = settings.AUTH_USER_MODEL
+        model = get_user_model()
 
 
 class CountryFactory(factory.DjangoModelFactory):
@@ -50,7 +49,7 @@ class CountryFactory(factory.DjangoModelFactory):
     name = "UNITED KINGDOM"
 
     class Meta:
-        model = 'address.Country'
+        model = get_model('address', 'Country')
 
 
 class UserAddressFactory(factory.DjangoModelFactory):
@@ -64,7 +63,7 @@ class UserAddressFactory(factory.DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
 
     class Meta:
-        model = 'address.UserAddress'
+        model = get_model('address', 'UserAddress')
 
 
 class BasketFactory(factory.DjangoModelFactory):
@@ -74,7 +73,7 @@ class BasketFactory(factory.DjangoModelFactory):
         self.strategy = Selector().strategy()
 
     class Meta:
-        model = 'basket.Basket'
+        model = get_model('basket', 'Basket')
 
 
 class VoucherFactory(factory.DjangoModelFactory):
@@ -85,14 +84,14 @@ class VoucherFactory(factory.DjangoModelFactory):
     end_datetime = now() - datetime.timedelta(days=10)
 
     class Meta:
-        model = 'voucher.Voucher'
+        model = get_model('voucher', 'Voucher')
 
 
 class PartnerFactory(factory.DjangoModelFactory):
     name = "Gardners"
 
     class Meta:
-        model = 'partner.Partner'
+        model = get_model('partner', 'Partner')
 
 
 class StockRecordFactory(factory.DjangoModelFactory):
@@ -103,7 +102,7 @@ class StockRecordFactory(factory.DjangoModelFactory):
     num_in_stock = 100
 
     class Meta:
-        model = 'partner.StockRecord'
+        model = get_model('partner', 'StockRecord')
 
 
 class ProductClassFactory(factory.DjangoModelFactory):
@@ -112,7 +111,7 @@ class ProductClassFactory(factory.DjangoModelFactory):
     track_stock = True
 
     class Meta:
-        model = 'catalogue.ProductClass'
+        model = get_model('catalogue', 'ProductClass')
 
 
 class CategoryFactory(factory.DjangoModelFactory):
@@ -123,21 +122,21 @@ class CategoryFactory(factory.DjangoModelFactory):
     path = factory.Sequence(lambda n: '%04d' % n)
 
     class Meta:
-        model = 'catalogue.Category'
+        model = get_model('catalogue', 'Category')
 
 
 class ProductCategoryFactory(factory.DjangoModelFactory):
     category = factory.SubFactory(CategoryFactory)
 
     class Meta:
-        model = 'catalogue.ProductCategory'
+        model = get_model('catalogue', 'ProductCategory')
 
 
 class ProductFactory(factory.DjangoModelFactory):
     class Meta:
-        model = 'catalogue.Product'
+        model = get_model('catalogue', 'Product')
 
-    structure = 'standalone'
+    structure = Meta.model.STANDALONE
     upc = factory.Sequence(lambda n: '978080213020%d' % n)
     title = "A confederacy of dunces"
     product_class = factory.SubFactory(ProductClassFactory)
@@ -152,14 +151,14 @@ class ProductAttributeFactory(factory.DjangoModelFactory):
     type = "float"
 
     class Meta:
-        model = 'catalogue.ProductAttribute'
+        model = get_model('catalogue', 'ProductAttribute')
 
 
 class AttributeOptionGroupFactory(factory.DjangoModelFactory):
     name = u'Grüppchen'
 
     class Meta:
-        model = 'catalogue.AttributeOptionGroup'
+        model = get_model('catalogue', 'AttributeOptionGroup')
 
 
 class AttributeOptionFactory(factory.DjangoModelFactory):
@@ -170,7 +169,7 @@ class AttributeOptionFactory(factory.DjangoModelFactory):
     option = factory.Sequence(lambda n: 'Option %d' % n)
 
     class Meta:
-        model = 'catalogue.AttributeOption'
+        model = get_model('catalogue', 'AttributeOption')
 
 
 class ProductAttributeValueFactory(factory.DjangoModelFactory):
@@ -178,7 +177,7 @@ class ProductAttributeValueFactory(factory.DjangoModelFactory):
     product = factory.SubFactory(ProductFactory)
 
     class Meta:
-        model = 'catalogue.ProductAttributeValue'
+        model = get_model('catalogue', 'ProductAttributeValue')
 
 
 class RangeFactory(factory.DjangoModelFactory):
@@ -186,4 +185,4 @@ class RangeFactory(factory.DjangoModelFactory):
     slug = factory.Sequence(lambda n: 'range-%d' % n)
 
     class Meta:
-        model = 'offer.Range'
+        model = get_model('offer', 'Range')
