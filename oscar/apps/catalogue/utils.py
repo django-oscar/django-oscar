@@ -20,6 +20,8 @@ Product = get_model('catalogue', 'product')
 ProductImage = get_model('catalogue', 'productimage')
 
 
+# This is an old class only really intended to be used by the internal sandbox
+# site. It's not recommended to be used by your project.
 class Importer(object):
 
     allowed_extensions = ['.jpeg', '.jpg', '.gif', '.png']
@@ -52,7 +54,7 @@ class Importer(object):
                                         % (self._field, lookup_value))
                     stats['num_skipped'] += 1
                 except IdenticalImageError:
-                    self.logger.warning(" - Identical image already exists for"
+                    self.logger.warning("Identical image already exists for"
                                         " %s='%s', skipping"
                                         % (self._field, lookup_value))
                     stats['num_skipped'] += 1
@@ -139,7 +141,7 @@ class Importer(object):
         im = ProductImage(product=item, display_order=next_index)
         im.original.save(filename, new_file, save=False)
         im.save()
-        self.logger.info(' - Image added to "%s"' % item)
+        self.logger.debug('Image added to "%s"' % item)
 
     def _fetch_item(self, filename):
         kwargs = {self._field: self._get_lookup_value_from_filename(filename)}

@@ -205,7 +205,7 @@ LOGGING = {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'verbose'
+            'formatter': 'simple'
         },
         'checkout_file': {
             'level': 'INFO',
