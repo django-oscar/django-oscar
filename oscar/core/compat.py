@@ -6,9 +6,21 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
 
 
+# A setting that can be used in foreign key declarations
+AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
+# Two additional settings that are useful in South migrations when
+# specifying the user model in the FakeORM
+try:
+    AUTH_USER_APP_LABEL, AUTH_USER_MODEL_NAME = AUTH_USER_MODEL.rsplit('.', 1)
+except ValueError:
+    raise ImproperlyConfigured("AUTH_USER_MODEL must be of the form"
+                               " 'app_label.model_name'")
+
+
 def get_user_model():
     """
-    Return the User model.
+    Return the User model. Doesn't require the app cache to be fully
+    initialised.
 
     This used to live in compat to support both Django 1.4's fixed User model
     and custom user models introduced thereafter.
@@ -16,7 +28,22 @@ def get_user_model():
     get_user_model remains because code relies on us annotating the _meta class
     with the additional fields, and other code might rely on it as well.
     """
-    model = django_get_user_model()
+
+    # As Oscar uses get_user_model all over the codebase, we need to be able to
+    # fetch the model without Django checking if the app cache is ready.
+    # Pre-Django 1.7, that check doesn't happen anyway and we can just use
+    # get_user_model. In Django 1.7, we revert to get_registered_model, which
+    # is the last remaining call to get into the model registry without
+    # Django enforcing that it's fully populated.
+    try:
+        from django.apps import apps
+    except ImportError:
+        # Django <1.7
+        model = django_get_user_model()
+    else:
+        # Django >=1.7
+        model = apps.get_registered_model(
+            AUTH_USER_APP_LABEL, AUTH_USER_MODEL_NAME)
 
     # Test if user model has any custom fields and add attributes to the _meta
     # class
@@ -27,17 +54,6 @@ def get_user_model():
     model._meta.additional_fields = new_fields
 
     return model
-
-
-# A setting that can be used in foreign key declarations
-AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
-# Two additional settings that are useful in South migrations when
-# specifying the user model in the FakeORM
-try:
-    AUTH_USER_APP_LABEL, AUTH_USER_MODEL_NAME = AUTH_USER_MODEL.rsplit('.', 1)
-except ValueError:
-    raise ImproperlyConfigured("AUTH_USER_MODEL must be of the form"
-                               " 'app_label.model_name'")
 
 
 def existing_user_fields(fields):
