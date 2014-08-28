@@ -1,6 +1,6 @@
 from functools import wraps
-from django.utils.six.moves.urllib import parse
 
+from django.utils.six.moves.urllib import parse
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render
@@ -94,6 +94,7 @@ def permissions_required(permissions, login_url=None):
     Decorator that checks if a user has the given permissions.
     Accepts a list or tuple of lists of permissions (see check_permissions
     documentation).
+
     If the user is not logged in and the test fails, she is redirected to a
     login page. If the user is logged in, she gets a HTTP 403 Permission Denied
     message, analogous to Django's permission_required decorator.
