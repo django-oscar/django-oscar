@@ -54,6 +54,12 @@ PyPI status:
     :alt: Bitdeli badge
     :target: https://bitdeli.com/free
 
+Docs status:
+
+.. image:: https://readthedocs.org/projects/django-oscar/badge/
+   :target: https://readthedocs.org/projects/django-oscar/
+   :alt: Documentation Status
+
 .. _`Official homepage`: http://oscarcommerce.com
 .. _`Sandbox site`: http://latest.oscarcommerce.com
 .. _`Demo site`: http://demo.oscarcommerce.com
