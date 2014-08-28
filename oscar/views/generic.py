@@ -96,7 +96,7 @@ class BulkEditMixin(object):
 
 class ObjectLookupView(View):
     """Base view for json lookup for objects"""
-    def get_query_set(self):
+    def get_queryset(self):
         return self.model.objects.all()
 
     def format_object(self, obj):
@@ -130,7 +130,7 @@ class ObjectLookupView(View):
 
     def get(self, request):
         self.request = request
-        qs = self.get_query_set()
+        qs = self.get_queryset()
 
         initial, q, page, page_limit = self.get_args()
 
