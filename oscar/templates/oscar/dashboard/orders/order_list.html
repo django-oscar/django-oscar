@@ -148,7 +148,7 @@
                             </div>
                         </div>
                         
-                        <input type="checkbox" value="change_order_statuses" name="action" />
+                        <input type="hidden" value="change_order_statuses" name="action" />
                         <input type="submit" value="{% trans "Change status" %}" class="btn btn-primary" />
                     {% else %}
                         {% trans "This order can't have its status changed." %}
