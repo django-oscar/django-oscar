@@ -69,8 +69,12 @@ var oscar = (function(o, $) {
              * twice for these elements. Make sure that that is harmless.
              */
             o.dashboard.initDatePickers(el);
+            o.dashboard.initMasks(el);
             o.dashboard.initWYSIWYG(el);
             o.dashboard.initSelects(el);
+        },
+        initMasks: function(el) {
+            $(el).find(':input').inputmask()
         },
         initSelects: function(el) {
             // Adds type/search for select fields
