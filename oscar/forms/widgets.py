@@ -112,21 +112,30 @@ def datetime_format_to_js_datetime_format(format):
     return converted.strip()
 
 
-class TimePickerInput(forms.TimeInput):
-    """
-    A widget that passes the date format to the JS date picker in a data
-    attribute.
-    """
-    def render(self, name, value, attrs=None):
+class DateTimeWidgetMixin(object):
+    def get_format(self):
         format = self.format
         if hasattr(self, 'manual_format'):
-            # For django <= 1.6.5, see https://code.djangoproject.com/ticket/21173
+            # For django <= 1.6.5
+            # see https://code.djangoproject.com/ticket/21173
             if self.is_localized and not self.manual_format:
-                format = force_text(formats.get_format('TIME_INPUT_FORMATS')[0])
+                format = force_text(formats.get_format(self.format_key)[0])
         else:
             # For django >= 1.7
             format = format or formats.get_format(self.format_key)[0]
 
+        return format
+
+
+class TimePickerInput(DateTimeWidgetMixin, forms.TimeInput):
+    """
+    A widget that passes the date format to the JS date picker in a data
+    attribute.
+    """
+    format_key = 'TIME_INPUT_FORMATS'
+
+    def render(self, name, value, attrs=None):
+        format = self.get_format()
         input = super(TimePickerInput, self).render(name, value, attrs)
 
         attrs = {'data-oscarWidget': 'time',
@@ -144,21 +153,15 @@ class TimePickerInput(forms.TimeInput):
                          .format(div=div, input=input))
 
 
-class DatePickerInput(forms.DateInput):
+class DatePickerInput(DateTimeWidgetMixin, forms.DateInput):
     """
     A widget that passes the date format to the JS date picker in a data
     attribute.
     """
-    def render(self, name, value, attrs=None):
-        format = self.format
-        if hasattr(self, 'manual_format'):
-            # For django <= 1.6.5, see https://code.djangoproject.com/ticket/21173
-            if self.is_localized and not self.manual_format:
-                format = force_text(formats.get_format('DATE_INPUT_FORMATS')[0])
-        else:
-            # For django >= 1.7
-            format = format or formats.get_format(self.format_key)[0]
+    format_key = 'DATE_INPUT_FORMATS'
 
+    def render(self, name, value, attrs=None):
+        format = self.get_format()
         input = super(DatePickerInput, self).render(name, value, attrs)
 
         attrs = {'data-oscarWidget': 'date',
@@ -176,7 +179,7 @@ class DatePickerInput(forms.DateInput):
                          .format(div=div, input=input))
 
 
-class DateTimePickerInput(forms.DateTimeInput):
+class DateTimePickerInput(DateTimeWidgetMixin, forms.DateTimeInput):
     """
     A widget that passes the datetime format to the JS datetime picker in a
     data attribute.
@@ -188,6 +191,8 @@ class DateTimePickerInput(forms.DateTimeInput):
     https://docs.djangoproject.com/en/1.6/topics/i18n/formatting/#creating-custom-format-files # noqa
     instead to override the format.
     """
+    format_key = 'DATETIME_INPUT_FORMATS'
+
     def __init__(self, *args, **kwargs):
         include_seconds = kwargs.pop('include_seconds', False)
         super(DateTimePickerInput, self).__init__(*args, **kwargs)
@@ -196,15 +201,7 @@ class DateTimePickerInput(forms.DateTimeInput):
             self.format = re.sub(':?%S', '', self.format)
 
     def render(self, name, value, attrs=None):
-        format = self.format
-        if hasattr(self, 'manual_format'):
-            # For django <= 1.6.5, see https://code.djangoproject.com/ticket/21173
-            if self.is_localized and not self.manual_format:
-                format = force_text(formats.get_format('DATETIME_INPUT_FORMATS')[0])
-        else:
-            # For django >= 1.7
-            format = format or formats.get_format(self.format_key)[0]
-
+        format = self.get_format()
         input = super(DateTimePickerInput, self).render(name, value, attrs)
 
         attrs = {'data-oscarWidget': 'datetime',
