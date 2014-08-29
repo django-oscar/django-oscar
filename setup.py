@@ -39,7 +39,7 @@ setup(name='django-oscar',
           # PIL is required for image fields, Pillow is the "friendly" PIL fork
           'pillow>=1.7.8,<2.5',
           # Oscar ships with migrations
-          'South>=0.7.6,<0.9',
+          'South>=0.7.6',
           # We use the ModelFormSetView from django-extra-views for the basket
           # page
           'django-extra-views>=0.2,<0.7',
@@ -53,7 +53,7 @@ setup(name='django-oscar',
           'Babel>=1.0,<1.4',
           # Oscar's default templates use compressor (but you can override
           # this)
-          'django-compressor==1.4a1' if PY3 else 'django-compressor==1.3',
+          'django-compressor>=1.4' if PY3 else 'django-compressor>=1.3',
           # For converting non-ASCII to ASCII when creating slugs
           'Unidecode>=0.04.12,<0.05',
           # For manipulating search URLs
@@ -66,7 +66,6 @@ setup(name='django-oscar',
       # tarballs for unreleased packages
       dependency_links=[
           'http://github.com/mariocesar/sorl-thumbnail/tarball/588837f828a5d9dd999bd6b994331e6285f79ca9#egg=sorl-thumbnail-12.00',
-          'http://github.com/django-compressor/django-compressor/tarball/cdab0d9698cb3c9421f3598822ddc71a57970405#egg=django-compressor-1.4a1',
       ],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
