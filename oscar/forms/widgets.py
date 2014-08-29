@@ -112,6 +112,29 @@ def datetime_format_to_js_datetime_format(format):
     return converted.strip()
 
 
+def datetime_format_to_js_input_mask(format):
+    # taken from
+    # http://stackoverflow.com/questions/15175142/how-can-i-do-multiple-substitutions-using-regex-in-python  # noqa
+    def multiple_replace(dict, text):
+        # Create a regular expression  from the dictionary keys
+        regex = re.compile("(%s)" % "|".join(map(re.escape, dict.keys())))
+
+        # For each match, look-up corresponding value in dictionary
+        return regex.sub(lambda mo: dict[mo.string[mo.start():mo.end()]], text)
+
+    replacements = {
+        '%Y': 'y',
+        '%y': '99',
+        '%m': 'm',
+        '%d': 'd',
+        '%H': 'h',
+        '%I': 'h',
+        '%M': 's',
+        '%S': 's',
+    }
+    return multiple_replace(replacements, format).strip()
+
+
 class DateTimeWidgetMixin(object):
     def get_format(self):
         format = self.format
@@ -126,6 +149,15 @@ class DateTimeWidgetMixin(object):
 
         return format
 
+    def gett_attrs(self, attrs, format):
+        if not attrs:
+            attrs = {}
+
+        attrs['data-inputmask'] = "'mask': '{mask}'".format(
+            mask=datetime_format_to_js_input_mask(format))
+
+        return attrs
+
 
 class TimePickerInput(DateTimeWidgetMixin, forms.TimeInput):
     """
@@ -136,7 +168,8 @@ class TimePickerInput(DateTimeWidgetMixin, forms.TimeInput):
 
     def render(self, name, value, attrs=None):
         format = self.get_format()
-        input = super(TimePickerInput, self).render(name, value, attrs)
+        input = super(TimePickerInput, self).render(
+            name, value, self.gett_attrs(attrs, format))
 
         attrs = {'data-oscarWidget': 'time',
                  'data-timeFormat':
@@ -162,7 +195,8 @@ class DatePickerInput(DateTimeWidgetMixin, forms.DateInput):
 
     def render(self, name, value, attrs=None):
         format = self.get_format()
-        input = super(DatePickerInput, self).render(name, value, attrs)
+        input = super(DatePickerInput, self).render(
+            name, value, self.gett_attrs(attrs, format))
 
         attrs = {'data-oscarWidget': 'date',
                  'data-dateFormat':
@@ -202,7 +236,8 @@ class DateTimePickerInput(DateTimeWidgetMixin, forms.DateTimeInput):
 
     def render(self, name, value, attrs=None):
         format = self.get_format()
-        input = super(DateTimePickerInput, self).render(name, value, attrs)
+        input = super(DateTimePickerInput, self).render(
+            name, value, self.gett_attrs(attrs, format))
 
         attrs = {'data-oscarWidget': 'datetime',
                  'data-datetimeFormat':
