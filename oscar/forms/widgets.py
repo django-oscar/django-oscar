@@ -122,7 +122,7 @@ class TimePickerInput(forms.TimeInput):
         if hasattr(self, 'manual_format'):
             # For django <= 1.6.5, see https://code.djangoproject.com/ticket/21173
             if self.is_localized and not self.manual_format:
-                format = force_text(formats.get_format('DATE_INPUT_FORMATS')[0])
+                format = force_text(formats.get_format('TIME_INPUT_FORMATS')[0])
         else:
             # For django >= 1.7
             format = format or formats.get_format(self.format_key)[0]
