@@ -1,5 +1,5 @@
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, ugettext_noop
 
 from django_tables2 import Column, LinkColumn, TemplateColumn, A
 
@@ -64,7 +64,8 @@ class CategoryTable(DashboardTable):
         orderable=False)
 
     icon = "sitemap"
-    caption = _("Categories")
+    caption_singular = ugettext_noop("{count} Category")
+    caption_plural = ugettext_noop("{count} Categories")
 
     class Meta(DashboardTable.Meta):
         model = Category
