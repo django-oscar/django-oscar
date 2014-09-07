@@ -28,8 +28,12 @@ What's new in Oscar 1.1?
 ------------------------
 
 * The frontend templates have been updated to use Bootstrap 3 instead of version 2 (`#1576`_)
+* The icon and caption of `django-tables2` tables can be set directly on the `Table` object, if it
+  derives from :class:`~oscar.apps.dashboard.tables.DashboardTable`. The caption can be localized
+  in singular and plural. (`#1482`_)
 
 .. _`#1576`: https://github.com/django-oscar/django-oscar/pull/1576
+.. _`#1482`: https://github.com/django-oscar/django-oscar/pull/1482
 
 
 .. _minor_changes_in_1.1:
