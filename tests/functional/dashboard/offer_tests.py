@@ -29,8 +29,7 @@ class TestAnAdmin(testcases.WebTestCase):
         condition_page = benefit_form.submit().follow()
         condition_form = condition_page.form
         condition_form['range'] = self.range.id
-        condition_form['type'] = "Count"
-        condition_form['value'] = "3"
+        condition_form['type'] = "None"
 
         restrictions_page = condition_form.submit().follow()
         restrictions_page.form.submit()
@@ -39,7 +38,8 @@ class TestAnAdmin(testcases.WebTestCase):
         self.assertEqual(1, len(offers))
         offer = offers[0]
         self.assertEqual("Test offer", offer.name)
-        self.assertEqual(3, offer.condition.value)
+        self.assertEqual(None, offer.condition.value)
+        self.assertEqual('None', offer.condition.type)
         self.assertEqual(25, offer.benefit.value)
 
     def test_can_update_an_existing_offer(self):

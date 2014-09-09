@@ -17,9 +17,8 @@ class TestOfferApplicator(TestCase):
         self.applicator = Applicator()
         self.basket = factories.create_basket(empty=True)
         rng = G(models.Range, includes_all_products=True)
-        self.condition = G(models.Condition, range=rng, type="Value",
-                           value=D('100'), proxy_class=None)
-        self.benefit = G(models.Benefit, range=rng, type="Absolute",
+        self.condition = G(models.Condition, range=rng, type="None", proxy_class=None)
+        self.benefit = G(models.Benefit, range=rng, type="Percentage",
                          value=D('10'))
 
     def test_applies_offer_multiple_times_by_default(self):

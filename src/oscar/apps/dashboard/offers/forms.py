@@ -67,10 +67,10 @@ class ConditionForm(forms.ModelForm):
             if condition:
                 self.fields['custom_condition'].initial = condition.id
         else:
-            # No custom conditions and so the type/range/value fields
+            # No custom conditions and so the type/range fields
             # are no longer optional
-            for field in ('type', 'range', 'value'):
-                self.fields[field].required = True
+            self.fields['type'].required = True
+            self.fields['range'].required = True
 
     class Meta:
         model = Condition
