@@ -87,8 +87,7 @@ class VoucherCreateView(generic.FormView):
         # Create offer and benefit
         condition = Condition.objects.create(
             range=form.cleaned_data['benefit_range'],
-            type=Condition.COUNT,
-            value=1
+            type=Condition.NONE
         )
         benefit = Benefit.objects.create(
             range=form.cleaned_data['benefit_range'],

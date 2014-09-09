@@ -17,15 +17,14 @@ class IncludingTax(methods.FixedPrice):
     charge_incl_tax = D('12.00')
 
 
-class TestAShippingPercentageDiscountAppliedWithCountCondition(TestCase):
+class TestAShippingPercentageDiscountAppliedWithNoneCondition(TestCase):
 
     def setUp(self):
         range = models.Range.objects.create(
             name="All products", includes_all_products=True)
-        self.condition = models.CountCondition.objects.create(
+        self.condition = models.NoneCondition.objects.create(
             range=range,
-            type=models.Condition.COUNT,
-            value=2)
+            type=models.Condition.NONE)
         self.benefit = models.ShippingPercentageDiscountBenefit.objects.create(
             type=models.Benefit.SHIPPING_PERCENTAGE,
             value=50)
@@ -44,15 +43,15 @@ class TestAShippingPercentageDiscountAppliedWithCountCondition(TestCase):
     def test_applies_correctly_to_basket_which_matches_condition(self):
         add_product(self.basket, D('12.00'), 2)
         result = self.benefit.apply(self.basket, self.condition, self.offer)
-        self.assertEqual(2, self.basket.num_items_with_discount)
-        self.assertEqual(0, self.basket.num_items_without_discount)
+        self.assertEqual(0, self.basket.num_items_with_discount)
+        self.assertEqual(2, self.basket.num_items_without_discount)
         self.assertTrue(result.affects_shipping)
 
     def test_applies_correctly_to_basket_which_exceeds_condition(self):
         add_product(self.basket, D('12.00'), 3)
         result = self.benefit.apply(self.basket, self.condition, self.offer)
-        self.assertEqual(2, self.basket.num_items_with_discount)
-        self.assertEqual(1, self.basket.num_items_without_discount)
+        self.assertEqual(0, self.basket.num_items_with_discount)
+        self.assertEqual(3, self.basket.num_items_without_discount)
         self.assertTrue(result.affects_shipping)
 
     def test_applies_correctly_to_shipping_method_without_tax(self):
