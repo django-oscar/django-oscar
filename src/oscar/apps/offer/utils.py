@@ -1,3 +1,4 @@
+from contextlib import contextmanager
 from itertools import chain
 import logging
 
@@ -16,6 +17,124 @@ class OfferApplicationError(Exception):
     pass
 
 
+class Line(object):
+    """
+    A product and quantity used in offer discount calculation.
+    """
+    def __init__(self, reference, product, stockrecord, quantity, price):
+        self.reference = reference
+        self.product = product
+        self.stockrecord = stockrecord
+        self.quantity = quantity
+        self.price = price
+        self.benefits = []
+
+    def add_benefit(self, transaction_id, benefit, quantity, discount):
+        self.benefits.append((transaction_id, benefit, quantity, discount))
+
+    def remove_benefits(self, transaction_id):
+        self.benefits = filter(
+            lambda (c_transaction_id, condition, quantity, discount):
+            c_transaction_id != transaction_id,
+            self.benefits)
+
+    def quantity_with_benefits(self):
+        return sum(map(lambda b: b[2], self.benefits))
+
+    def quantity_without_benefits(self):
+        return self.quantity - self.quantity_with_benefits()
+
+    def quantity_available_for_benefit(self):
+        return (self.quantity
+                - self.quantity_with_benefits())
+
+    def is_available_for_benefit(self):
+        return self.quantity_available_for_benefit() > 0
+
+    def get_discount_value(self):
+        return sum(b[3] for b in self.benefits)
+
+    def get_discounted_price(self):
+        return self.price - self.get_discount_value()
+
+
+class SetOfLines(object):
+    @classmethod
+    def from_basket(cls, basket):
+        return cls([
+            Line(line.line_reference, line.product, line.stockrecord,
+                 line.quantity, line.unit_effective_price)
+            for line in basket.all_lines()])
+
+    def __init__(self, lines):
+        self.lines = list(lines)
+        self.transaction_id = 0
+
+    def __iter__(self):
+        return self.lines.__iter__()
+
+    def __len__(self):
+        return len(self.lines)
+
+    def add_line(self, line):
+        self.lines.append(line)
+
+    @contextmanager
+    def begin_transaction(self):
+        set_of_lines = self
+
+        self.transaction_id += 1
+
+        class Transaction(object):
+            def rollback(self):
+                set_of_lines.rollback_transaction()
+
+        yield Transaction()
+
+    def rollback_transaction(self):
+        """
+        Remove all conditions and benefits with the current transaction id.
+        """
+        for line in self.lines:
+            line.remove_benefits(self.transaction_id)
+
+    def mark_for_benefit(self, line, benefit, quantity, discount):
+        """
+        Mark `quantity` items of `line` for a discount amount of `discount`
+        from `benefit`.
+        """
+        if discount == 0:
+            return
+
+        line.add_benefit(self.transaction_id, benefit, quantity, discount)
+
+    def get_lines_available_for_benefit(self):
+        """
+        Return only those lines that can be used to satisfy a condition.
+        """
+        # We sort lines to be cheapest first to ensure consistent applications
+        return sorted(
+            [line for line in self.lines
+             if (line.stockrecord
+                 and line.price
+                 and line.product.is_discountable
+                 and line.is_available_for_benefit())],
+            key=lambda line: line.price)
+
+    @property
+    def num_items_with_benefit(self):
+        return sum(line.quantity_with_benefits() for line in self.lines)
+
+    @property
+    def num_items_without_benefit(self):
+        return sum(line.quantity_without_benefits() for line in self.lines)
+
+    def get_line_by_reference(self, reference):
+        for line in self.lines:
+            if line.reference == reference:
+                return line
+
+
 class Applicator(object):
 
     def apply(self, basket, user=None, request=None):
@@ -26,17 +145,31 @@ class Applicator(object):
         are dependent on the user (eg session-based offers).
         """
         offers = self.get_offers(basket, user, request)
-        self.apply_offers(basket, offers)
+        self.apply_offers_to_basket(basket, offers)
 
-    def apply_offers(self, basket, offers):
+    def apply_offers_to_basket(self, basket, offers):
+        set_of_lines = SetOfLines.from_basket(basket)
+
+        applications = self.apply_offers(set_of_lines, offers, basket.owner)
+        basket_lines_by_ref = {line.line_reference: line
+                               for line in basket.all_lines()}
+        for line in set_of_lines:
+            basket_lines_by_ref[line.reference].discount(
+                line.get_discount_value(), line.quantity_with_benefits(),
+                incl_tax=False)
+        # Store this list of discounts with the basket so it can be
+        # rendered in templates
+        basket.offer_applications = applications
+
+    def apply_offers(self, set_of_lines, offers, user=None):
         applications = results.OfferApplications()
         for offer in offers:
             num_applications = 0
             # Keep applying the offer until either
             # (a) We reach the max number of applications for the offer.
             # (b) The benefit can't be applied successfully.
-            while num_applications < offer.get_max_applications(basket.owner):
-                result = offer.apply_benefit(basket)
+            while num_applications < offer.get_max_applications(user):
+                result = offer.apply_benefit(set_of_lines)
                 num_applications += 1
                 if not result.is_successful:
                     break
@@ -44,9 +177,7 @@ class Applicator(object):
                 if result.is_final:
                     break
 
-        # Store this list of discounts with the basket so it can be
-        # rendered in templates
-        basket.offer_applications = applications
+        return applications
 
     def get_offers(self, basket, user=None, request=None):
         """
@@ -65,10 +196,7 @@ class Applicator(object):
             session_offers, basket_offers, user_offers, site_offers),
             key=lambda o: o.priority, reverse=True))
 
-    def get_site_offers(self):
-        """
-        Return site offers that are available to all users
-        """
+    def get_available_offers(self):
         cutoff = now()
         date_based = Q(
             Q(start_datetime__lte=cutoff),
@@ -79,12 +207,18 @@ class Applicator(object):
 
         qs = ConditionalOffer.objects.filter(
             date_based | nondate_based,
-            offer_type=ConditionalOffer.SITE,
             status=ConditionalOffer.OPEN)
         # Using select_related with the condition/benefit ranges doesn't seem
         # to work.  I think this is because both the related objects have the
         # FK to range with the same name.
         return qs.select_related('condition', 'benefit')
+
+    def get_site_offers(self):
+        """
+        Return site offers that are available to all users
+        """
+        queryset = self.get_available_offers()
+        return queryset.filter(offer_type=ConditionalOffer.SITE)
 
     def get_basket_offers(self, basket, user):
         """

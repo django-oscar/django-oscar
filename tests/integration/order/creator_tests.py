@@ -147,7 +147,7 @@ class TestShippingOfferForOrder(TestCase):
         benefit = Benefit.objects.create(
             range=range, type=Benefit.SHIPPING_PERCENTAGE, value=20)
         offer = factories.create_offer(range=range, benefit=benefit)
-        Applicator().apply_offers(self.basket, [offer])
+        Applicator().apply_offers_to_basket(self.basket, [offer])
         return offer
 
     def test_shipping_offer_is_applied(self):
