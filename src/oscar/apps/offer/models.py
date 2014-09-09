@@ -1,7 +1,6 @@
 import itertools
 import os
 import re
-import operator
 from decimal import Decimal as D, ROUND_DOWN
 
 from django.core import exceptions
@@ -44,22 +43,6 @@ def range_anchor(range):
     return u'<a href="%s">%s</a>' % (
         reverse('dashboard:range-update', kwargs={'pk': range.pk}),
         range.name)
-
-
-def unit_price(offer, line):
-    """
-    Return the relevant price for a given basket line.
-
-    This is required so offers can apply in circumstances where tax isn't known
-    """
-    return line.unit_effective_price
-
-
-def apply_discount(line, discount, quantity):
-    """
-    Apply a given discount to the passed basket
-    """
-    line.discount(discount, quantity, incl_tax=False)
 
 
 @python_2_unicode_compatible
@@ -240,23 +223,31 @@ class ConditionalOffer(models.Model):
             return False
         return self.get_max_applications(user) > 0
 
-    def is_condition_satisfied(self, basket):
-        return self.condition.proxy().is_satisfied(self, basket)
-
     def is_condition_partially_satisfied(self, basket):
         return self.condition.proxy().is_partially_satisfied(self, basket)
 
     def get_upsell_message(self, basket):
         return self.condition.proxy().get_upsell_message(self, basket)
 
-    def apply_benefit(self, basket):
+    def apply_benefit(self, set_of_lines):
         """
-        Applies the benefit to the given basket and returns the discount.
+        Applies the benefit to the given set of lines and returns the discount.
         """
-        if not self.is_condition_satisfied(basket):
-            return ZERO_DISCOUNT
-        return self.benefit.proxy().apply(
-            basket, self.condition.proxy(), self)
+        condition = self.condition.proxy()
+        benefit = self.benefit.proxy()
+
+        with set_of_lines.begin_transaction() as transaction:
+            if not condition.is_satisfied(set_of_lines):
+                transaction.rollback()
+                return ZERO_DISCOUNT
+
+            result = benefit.apply(set_of_lines)
+
+            if not result:
+                transaction.rollback()
+                return ZERO_DISCOUNT
+
+        return result
 
     def apply_deferred_benefit(self, basket, order, application):
         """
@@ -482,13 +473,12 @@ class Condition(models.Model):
         """
         return self.name
 
-    def consume_items(self, offer, basket, affected_lines):
-        pass
-
-    def is_satisfied(self, offer, basket):
+    def is_satisfied(self, set_of_lines):
         """
-        Determines whether a given basket meets this condition.  This is
-        stubbed in this top-class object.  The subclassing proxies are
+        Determine whether a given set of lines meets this condition.  Mark the
+        quantity of items that are needed to meet this condition.
+
+        This is stubbed in this top-class object.  The subclassing proxies are
         responsible for implementing it correctly.
         """
         return False
@@ -503,34 +493,6 @@ class Condition(models.Model):
 
     def get_upsell_message(self, offer, basket):
         return None
-
-    def can_apply_condition(self, line):
-        """
-        Determines whether the condition can be applied to a given basket line
-        """
-        if not line.stockrecord_id:
-            return False
-        product = line.product
-        return (self.range.contains_product(product)
-                and product.get_is_discountable())
-
-    def get_applicable_lines(self, offer, basket, most_expensive_first=True):
-        """
-        Return line data for the lines that can be consumed by this condition
-        """
-        line_tuples = []
-        for line in basket.all_lines():
-            if not self.can_apply_condition(line):
-                continue
-
-            price = unit_price(offer, line)
-            if not price:
-                continue
-            line_tuples.append((price, line))
-        key = operator.itemgetter(0)
-        if most_expensive_first:
-            return sorted(line_tuples, reverse=True, key=key)
-        return sorted(line_tuples, key=key)
 
 
 @python_2_unicode_compatible
@@ -623,8 +585,14 @@ class Benefit(models.Model):
         """
         return self.name
 
-    def apply(self, basket, condition, offer):
-        return ZERO_DISCOUNT
+    def apply(self, set_of_lines):
+        """
+        Apply a discount to lines.
+
+        Return `False` if no discount could be applied. This frees up the lines
+        used in the condition for other offers.
+        """
+        return False
 
     def apply_deferred(self, basket, order, application):
         return None
@@ -721,40 +689,15 @@ class Benefit(models.Model):
         """
         return self.max_affected_items if self.max_affected_items else 10000
 
-    def can_apply_benefit(self, line):
+    def filter_lines(self, set_of_lines):
         """
-        Determines whether the benefit can be applied to a given basket line
+        Return only those lines that can be used for this benefit.
         """
-        return line.stockrecord and line.product.is_discountable
-
-    def get_applicable_lines(self, offer, basket, range=None):
-        """
-        Return the basket lines that are available to be discounted
-
-        :basket: The basket
-        :range: The range of products to use for filtering.  The fixed-price
-                benefit ignores its range and uses the condition range
-        """
-        if range is None:
-            range = self.range
-        line_tuples = []
-        for line in basket.all_lines():
-            product = line.product
-
-            if (not range.contains(product) or
-                    not self.can_apply_benefit(line)):
-                continue
-
-            price = unit_price(offer, line)
-            if not price:
-                # Avoid zero price products
-                continue
-            if line.quantity_without_discount == 0:
-                continue
-            line_tuples.append((price, line))
-
         # We sort lines to be cheapest first to ensure consistent applications
-        return sorted(line_tuples, key=operator.itemgetter(0))
+        return sorted([line for line
+                       in set_of_lines.get_lines_available_for_benefit()
+                       if self.range.contains_product(line.product)],
+                      key=lambda line: line.price)
 
     def shipping_discount(self, charge):
         return D('0.00')
@@ -1010,9 +953,9 @@ class NoneCondition(Condition):
         verbose_name = _("No Condition")
         verbose_name_plural = _("No Conditions")
 
-    def is_satisfied(self, offer, basket):
+    def is_satisfied(self, set_of_lines):
         """
-        Determines whether a given basket meets this condition
+        Determines whether a given set of lines meets this condition
         """
         return True
 
@@ -1128,42 +1071,50 @@ class PercentageDiscountBenefit(Benefit):
         verbose_name = _("Percentage discount benefit")
         verbose_name_plural = _("Percentage discount benefits")
 
-    def apply(self, basket, condition, offer, discount_percent=None,
+    def apply(self, set_of_lines, discount_percent=None,
               max_total_discount=None):
+        """
+        Apply a discount of `discount_percent` (defaults to `self.value`)
+        percent to all items in the range, but limiting
+            * the maximum total discount to `max_total_discount`
+            * the maximum number of items discounted to
+              `self.max_affected_items`
+        """
         if discount_percent is None:
             discount_percent = self.value
 
         discount_amount_available = max_total_discount
 
-        line_tuples = self.get_applicable_lines(offer, basket)
+        discount = 0
+        affected_quantity_allowed = self._effective_max_affected_items()
 
-        discount = D('0.00')
-        affected_items = 0
-        max_affected_items = self._effective_max_affected_items()
-        affected_lines = []
-        for price, line in line_tuples:
-            if affected_items >= max_affected_items:
+        for line in self.filter_lines(set_of_lines):
+            if affected_quantity_allowed == 0:
                 break
+
             if discount_amount_available == 0:
                 break
 
-            quantity_affected = min(line.quantity_without_discount,
-                                    max_affected_items - affected_items)
-            line_discount = self.round(discount_percent / D('100.0') * price
-                                       * int(quantity_affected))
+            affected_quantity = min(line.quantity_available_for_benefit(),
+                                    affected_quantity_allowed)
+
+            line_discount = self.round(discount_percent / D('100.0')
+                                       * line.price
+                                       * affected_quantity)
 
             if discount_amount_available is not None:
                 line_discount = min(line_discount, discount_amount_available)
                 discount_amount_available -= line_discount
 
-            apply_discount(line, line_discount, quantity_affected)
+            set_of_lines.mark_for_benefit(line, self, affected_quantity,
+                                          line_discount)
 
-            affected_lines.append((line, line_discount, quantity_affected))
-            affected_items += quantity_affected
+            affected_quantity_allowed -= affected_quantity
             discount += line_discount
 
-        if discount > 0:
-            condition.consume_items(offer, basket, affected_lines)
+        if discount == 0:
+            return False
+
         return BasketDiscount(discount)
 
 
@@ -1174,8 +1125,7 @@ class PercentageDiscountBenefit(Benefit):
 
 class ShippingBenefit(Benefit):
 
-    def apply(self, basket, condition, offer):
-        condition.consume_items(offer, basket, affected_lines=())
+    def apply(self, set_of_lines):
         return SHIPPING_DISCOUNT
 
     class Meta:

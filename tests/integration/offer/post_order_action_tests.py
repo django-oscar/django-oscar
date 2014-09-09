@@ -14,8 +14,7 @@ class CustomAction(models.Benefit):
     class Meta:
         proxy = True
 
-    def apply(self, basket, condition, offer):
-        condition.consume_items(offer, basket, ())
+    def apply(self, set_of_lines):
         return models.PostOrderAction(
             "Something will happen")
 
