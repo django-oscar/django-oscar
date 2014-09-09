@@ -79,7 +79,7 @@
         "model": "offer.condition",
         "fields": {
             "range": 1,
-            "type": "Count",
+            "type": "None",
             "proxy_class": null,
             "value": "3"
         }
@@ -89,7 +89,7 @@
         "model": "offer.condition",
         "fields": {
             "range": 1,
-            "type": "Count",
+            "type": "None",
             "proxy_class": null,
             "value": "1"
         }
@@ -99,7 +99,7 @@
         "model": "offer.condition",
         "fields": {
             "range": 1,
-            "type": "Count",
+            "type": "None",
             "proxy_class": null,
             "value": "1"
         }
@@ -110,9 +110,9 @@
         "fields": {
             "range": 1,
             "proxy_class": null,
-            "type": "Multibuy",
+            "type": "Percentage",
             "max_affected_items": null,
-            "value": null
+            "value": 15
         }
     },
     {

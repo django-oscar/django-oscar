@@ -16,8 +16,7 @@ class TestAValueBasedOffer(TestCase):
             name="All products", includes_all_products=True)
         condition = models.Condition.objects.create(
             range=range,
-            type=models.Condition.VALUE,
-            value=D('10.00'))
+            type=models.Condition.NONE)
         benefit = models.Benefit.objects.create(
             range=range,
             type=models.Benefit.PERCENTAGE,
