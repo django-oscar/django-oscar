@@ -121,7 +121,7 @@ Set your auth backends to:
 .. code-block:: django
 
     AUTHENTICATION_BACKENDS = (
-        'oscar.apps.customer.auth_backends.EmailBackend',
+        'oscar.apps.customer.auth_backends.Emailbackend',
         'django.contrib.auth.backends.ModelBackend',
     )
 
