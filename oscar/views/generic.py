@@ -145,7 +145,7 @@ class ObjectLookupView(View):
         return HttpResponse(json.dumps({
             'results': [self.format_object(obj) for obj in qs],
             'more': more,
-        }), mimetype='application/json')
+        }), content_type='application/json')
 
 
 class PhoneNumberMixin(object):
