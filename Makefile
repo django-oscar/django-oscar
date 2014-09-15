@@ -79,11 +79,10 @@ testmigrations:
 	pip install -r requirements_vagrant.txt
 	cd sites/sandbox && ./test_migrations.sh
 
-# It is important that this target only depends on install
-# (instead of upgrade) because we install Django in the .travis.yml
-# and upgrade would overwrite it.  We also build the sandbox as part of this target
-# to catch any errors that might come from that build process.
-travis: install lint coverage sandbox demo testmigrations
+# This target is run on Travis.ci. We lint, test and build the sandbox/demo sites as well 
+# as testing migrations apply correctly. We don't call 'install' first as that is run 
+# as a separate part of the Travis build process.
+travis: lint coverage sandbox demo testmigrations
 
 messages:
 	# Create the .po files used for i18n
