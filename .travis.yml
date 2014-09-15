@@ -15,7 +15,6 @@ env:
     install:
         - make install
         - easy_install $DJANGO
-
     before_script:
         # Create testing databases for running migrations against
         - mysql -e 'create database oscar_vagrant;'
@@ -23,10 +22,8 @@ env:
         # Create database for building demo site
         - psql -c 'create database oscar_demo;' -U postgres
         - psql -c 'CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;' -U postgres -d oscar_demo
-
     script:
         - make travis
-
     after_success:
         - coveralls
         # TODO: Re-enable once 0.8 final is released
