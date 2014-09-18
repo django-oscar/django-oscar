@@ -165,6 +165,11 @@ class AbstractBasket(models.Model):
         The 'options' list should contains dicts with keys 'option' and 'value'
         which link the relevant product.Option model and string value
         respectively.
+
+        Returns (line, created).
+          line: the matching basket line
+          created: whether the line was created or updated
+
         """
         if options is None:
             options = []
@@ -213,6 +218,9 @@ class AbstractBasket(models.Model):
             line.quantity += quantity
             line.save()
         self.reset_offer_applications()
+
+        # Returning the line is useful when overriding this method.
+        return line, created
     add_product.alters_data = True
     add = add_product
 
