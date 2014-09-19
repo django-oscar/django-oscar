@@ -76,7 +76,7 @@ class SearchForm(FacetedSearchForm):
         SORT_BY_MAP[TITLE_A_TO_Z] = 'title'
         SORT_BY_MAP[TITLE_Z_TO_A] = '-title'
 
-    sort_by = forms.ChoiceField(
+    sort_by = forms.ChoiceField( label=_("Sort by"),
         choices=SORT_BY_CHOICES, widget=forms.Select(), required=False)
 
     @property
