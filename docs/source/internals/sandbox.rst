@@ -65,6 +65,14 @@ Install Oscar and its dependencies within a virtualenv:
     (oscar) $ make sandbox
     (oscar) $ sites/sandbox/manage.py runserver
 
+.. warning::
+    
+    Note, these instructions will install the head of Oscar's 'master' branch,
+    not an official release. Occasionally the sandbox installation process
+    breaks while support for a new version of Django is being added (often due
+    dependency conflicts with 3rd party libraries). Please ask on the mailing
+    list if you have problems.
+
 If you do not have ``mkvirtualenv``, then replace that line with:
 
 .. code-block:: bash
