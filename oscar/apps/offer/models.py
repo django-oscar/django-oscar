@@ -1702,8 +1702,8 @@ class RangeProductFileUpload(models.Model):
         """
         all_ids = set(self.extract_ids())
         products = self.range.included_products.all()
-        existing_skus = products.values_list('stockrecord__partner_sku',
-                                             flat=True)
+        existing_skus = products.values_list(
+            'stockrecords__partner_sku', flat=True)
         existing_skus = set(filter(bool, existing_skus))
         existing_upcs = products.values_list('upc', flat=True)
         existing_upcs = set(filter(bool, existing_upcs))
@@ -1712,14 +1712,14 @@ class RangeProductFileUpload(models.Model):
 
         Product = models.get_model('catalogue', 'Product')
         products = Product._default_manager.filter(
-            models.Q(stockrecord__partner_sku__in=new_ids) |
+            models.Q(stockrecords__partner_sku__in=new_ids) |
             models.Q(upc__in=new_ids))
         for product in products:
             self.range.add_product(product)
 
         # Processing stats
-        found_skus = products.values_list('stockrecord__partner_sku',
-                                          flat=True)
+        found_skus = products.values_list(
+            'stockrecords__partner_sku', flat=True)
         found_skus = set(filter(bool, found_skus))
         found_upcs = set(filter(bool, products.values_list('upc', flat=True)))
         found_ids = found_skus.union(found_upcs)
