@@ -211,6 +211,9 @@ Minor changes
   expected. There's currently no frontend or dashboard support for it, as there
   is no good default behaviour.
 
+* Payment extensions can now raise a ``UserCancelled`` payment exception to
+  differentiate between the intended user action and any other errors.
+
 * Oscar has a new dependency, django-tables2_. It's a handy library that helps
   when displaying tabular data, allowing sorting, etc. It also makes it easier
   to adapt e.g. the product list view in the dashboard to additional fields.
