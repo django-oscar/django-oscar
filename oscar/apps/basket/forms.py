@@ -1,6 +1,7 @@
 from django import forms
 from django.conf import settings
 from django.forms.models import modelformset_factory, BaseModelFormSet
+from django.db.models import Sum
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_model
@@ -88,12 +89,12 @@ class SavedLineForm(forms.ModelForm):
         if not cleaned_data['move_to_basket']:
             # skip further validation (see issue #666)
             return cleaned_data
-        try:
-            line = self.basket.lines.get(product=self.instance.product)
-        except Line.DoesNotExist:
-            desired_qty = self.instance.quantity
-        else:
-            desired_qty = self.instance.quantity + line.quantity
+
+        # Get total quantity of all lines with this product (there's normally
+        # only one but there can be more if you allow product options).
+        lines = self.basket.lines.filter(product=self.instance.product)
+        current_qty = lines.aggregate(Sum('quantity'))['quantity__sum']
+        desired_qty = current_qty + self.instance.quantity
 
         result = self.strategy.fetch_for_product(self.instance.product)
         is_available, reason = result.availability.is_purchase_permitted(
