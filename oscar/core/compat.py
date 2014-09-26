@@ -1,9 +1,10 @@
 from django.utils import six
 
 from django.conf import settings
-from django.contrib.auth import get_user_model as django_get_user_model
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
+
+from oscar.core.loading import get_model
 
 
 # A setting that can be used in foreign key declarations
@@ -29,21 +30,15 @@ def get_user_model():
     with the additional fields, and other code might rely on it as well.
     """
 
-    # As Oscar uses get_user_model all over the codebase, we need to be able to
-    # fetch the model without Django checking if the app cache is ready.
-    # Pre-Django 1.7, that check doesn't happen anyway and we can just use
-    # get_user_model. In Django 1.7, we revert to get_registered_model, which
-    # is the last remaining call to get into the model registry without
-    # Django enforcing that it's fully populated.
     try:
-        from django.apps import apps
-    except ImportError:
-        # Django <1.7
-        model = django_get_user_model()
-    else:
-        # Django >=1.7
-        model = apps.get_registered_model(
-            AUTH_USER_APP_LABEL, AUTH_USER_MODEL_NAME)
+        model = get_model(AUTH_USER_APP_LABEL, AUTH_USER_MODEL_NAME)
+    except LookupError:
+        # Convert exception to an ImproperlyConfigured exception for
+        # backwards compatibility with previous Oscar versions and the
+        # original get_user_model method in Django.
+        raise ImproperlyConfigured(
+            "AUTH_USER_MODEL refers to model '%s' that has not been installed"
+            % settings.AUTH_USER_MODEL)
 
     # Test if user model has any custom fields and add attributes to the _meta
     # class
