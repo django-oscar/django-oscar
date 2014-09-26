@@ -144,8 +144,7 @@ class CatalogueView(TemplateView):
 
 class ProductCategoryView(TemplateView):
     """
-    Browse products in a given category (or all products if no category is
-    specified.
+    Browse products in a given category
     """
     context_object_name = "products"
     template_name = 'catalogue/category.html'
