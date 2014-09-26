@@ -273,9 +273,10 @@ class AbstractBankcard(models.Model):
         self.issue_number = kwargs.pop('issue_number', None)
         self.ccv = kwargs.pop('ccv', None)
         super(AbstractBankcard, self).__init__(*args, **kwargs)
-        self.card_type = bankcards.bankcard_type(self.number)
-        if self.card_type is None:
-            self.card_type = 'Unknown card type'
+        if self.id is None:
+            self.card_type = bankcards.bankcard_type(self.number)
+            if self.card_type is None:
+                self.card_type = 'Unknown card type'
 
     class Meta:
         abstract = True
