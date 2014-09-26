@@ -93,7 +93,7 @@ class SavedLineForm(forms.ModelForm):
         # Get total quantity of all lines with this product (there's normally
         # only one but there can be more if you allow product options).
         lines = self.basket.lines.filter(product=self.instance.product)
-        current_qty = lines.aggregate(Sum('quantity'))['quantity__sum']
+        current_qty = lines.aggregate(Sum('quantity'))['quantity__sum'] or 0
         desired_qty = current_qty + self.instance.quantity
 
         result = self.strategy.fetch_for_product(self.instance.product)
