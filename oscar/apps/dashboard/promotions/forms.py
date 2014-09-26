@@ -35,6 +35,7 @@ class RawHTMLForm(forms.ModelForm):
 class SingleProductForm(forms.ModelForm):
     class Meta:
         model = SingleProduct
+        fields = ['name', 'product', 'description']
         widgets = {'product': ProductSelect}
 
 
@@ -47,6 +48,7 @@ class HandPickedProductListForm(forms.ModelForm):
 class OrderedProductForm(forms.ModelForm):
     class Meta:
         model = OrderedProduct
+        fields = ['list', 'product', 'display_order']
         widgets = {
             'product': ProductSelect,
         }
