@@ -443,6 +443,7 @@ class ProductRecommendationForm(forms.ModelForm):
 
     class Meta:
         model = ProductRecommendation
+        fields = ['primary', 'recommendation', 'ranking']
         widgets = {
             'recommendation': ProductSelect,
         }
@@ -463,3 +464,4 @@ class ProductClassForm(forms.ModelForm):
 
     class Meta:
         model = ProductClass
+        fields = ['name', 'requires_shipping', 'track_stock', 'options']
