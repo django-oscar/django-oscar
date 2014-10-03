@@ -7775,6 +7775,9 @@ a:hover .thumbnail {
   color: #46a546;
   font-weight: bold;
 }
+.product_main .price_color {
+  font-size: 26px;
+}
 .product_pod .price_color {
   margin-top: 0;
 }
