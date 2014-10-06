@@ -94,12 +94,12 @@ compiledmessages:
 
 css:
 	# Compile CSS files from LESS
-	lessc oscar/static/oscar/less/styles.less > oscar/static/oscar/css/styles.css
-	lessc oscar/static/oscar/less/responsive.less > oscar/static/oscar/css/responsive.css
-	lessc oscar/static/oscar/less/dashboard.less > oscar/static/oscar/css/dashboard.css
+	lessc --source-map --source-map-less-inline oscar/static/oscar/less/styles.less oscar/static/oscar/css/styles.css
+	lessc --source-map --source-map-less-inline oscar/static/oscar/less/responsive.less oscar/static/oscar/css/responsive.css
+	lessc --source-map --source-map-less-inline oscar/static/oscar/less/dashboard.less oscar/static/oscar/css/dashboard.css
 	# Compile CSS for demo site
-	lessc sites/demo/static/demo/less/styles.less > sites/demo/static/demo/css/styles.css
-	lessc sites/demo/static/demo/less/responsive.less > sites/demo/static/demo/css/responsive.css
+	lessc --source-map --source-map-less-inline sites/demo/static/demo/less/styles.less sites/demo/static/demo/css/styles.css
+	lessc --source-map --source-map-less-inline sites/demo/static/demo/less/responsive.less sites/demo/static/demo/css/responsive.css
 
 clean:
 	# Remove files not in source control
