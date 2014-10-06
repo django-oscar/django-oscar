@@ -1,5 +1,5 @@
 # These targets are not files
-.PHONY: install sandbox geoip demo docs coverage lint travis messages compiledmessages puppet css clean preflight
+.PHONY: install sandbox geoip demo docs coverage lint travis messages compiledmessages css clean preflight
 
 install:
 	pip install -r requirements.txt
@@ -91,18 +91,6 @@ messages:
 compiledmessages:
 	# Compile the gettext files
 	cd oscar; django-admin.py compilemessages
-
-puppet:
-	# Install puppet modules required to set-up a Vagrant box
-	mkdir -p sites/puppet/modules
-	rm -rf sites/puppet/modules/*
-	puppet module install --target-dir sites/puppet/modules/ saz-memcached -v 2.0.2
-	puppet module install --target-dir sites/puppet/modules/ puppetlabs/mysql
-	puppet module install --target-dir sites/puppet/modules/ puppetlabs/apache
-	puppet module install --target-dir sites/puppet/modules/ dhutty/nginx
-	git clone git://github.com/akumria/puppet-postgresql.git sites/puppet/modules/postgresql
-	git clone git://github.com/puppetmodules/puppet-module-python.git sites/puppet/modules/python
-	git clone git://github.com/codeinthehole/puppet-userconfig.git sites/puppet/modules/userconfig
 
 css:
 	# Compile CSS files from LESS
