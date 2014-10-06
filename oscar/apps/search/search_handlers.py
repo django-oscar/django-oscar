@@ -30,6 +30,7 @@ class SearchHandler(object):
         context = handler.get_search_context_data()
 
     Error handling:
+
         You need to catch a ValueError which gets thrown when an invalid
         page number is supplied.
     """
