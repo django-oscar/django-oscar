@@ -133,10 +133,6 @@ node precise64 {
 	    venv => $virtualenv,
 		require => Python::Venv::Isolate[$virtualenv]
 	}
-	python::pip::requirements {"/vagrant/requirements_less.txt":
-	    venv => $virtualenv,
-		require => Python::Venv::Isolate[$virtualenv]
-	}
     exec {"install-oscar":
 	    command => "$virtualenv/bin/python /vagrant/setup.py develop",
 		require => Python::Venv::Isolate[$virtualenv]
