@@ -3,8 +3,8 @@ from decimal import Decimal
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
-from django.conf import settings
 
+from oscar.core.utils import get_default_currency
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.templatetags.currency_filters import currency
 from oscar.models.fields import AutoSlugField
@@ -73,7 +73,7 @@ class AbstractSource(models.Model):
         'payment.SourceType', verbose_name=_("Source Type"),
         related_name="sources")
     currency = models.CharField(
-        _("Currency"), max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
+        _("Currency"), max_length=12, default=get_default_currency)
 
     # Track the various amounts associated with this source
     amount_allocated = models.DecimalField(
