@@ -1,0 +1,3 @@
+# Those dependencies are needed for the test_migrations.sh script
+PyMySQL==0.6.2
+psycopg2==2.4.5

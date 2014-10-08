@@ -76,7 +76,7 @@ lint:
 	./lint.sh
 
 testmigrations:
-	pip install -r requirements_vagrant.txt
+	pip install -r requirements_migrations.txt
 	cd sites/sandbox && ./test_migrations.sh
 
 # This target is run on Travis.ci. We lint, test and build the sandbox/demo sites as well 
