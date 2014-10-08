@@ -69,45 +69,40 @@
             {% if product.is_group %}
                 <h3>{% trans "Please select your varieties" %}</h3>
                 
-                {% with children=product.children.all %}
-                    {% if children|length > 0 %}
-                          
-                            {% for child in children %}
-                            <div class="child-product well">
+                {% for child in product.children.all %}
+                    {% purchase_info_for_product request product as child_session %}
 
-                                {% with image=child.primary_image %}
-                                {% thumbnail image.original "70x70" upscale=False as thumb %}
+                    <div class="child-product well">
+
+                        {% with image=child.primary_image %}
+                            {% thumbnail image.original "70x70" upscale=False as thumb %}
                                 <div class="image_container">
                                     <img src="{{ thumb.url }}" alt="{{ child.get_title }}" data-description="{% if image.caption %}{{ image.caption }}{% endif %}">
                                 </div>
-                                {% endthumbnail %}
-                                {% endwith %}
+                            {% endthumbnail %}
+                        {% endwith %}
 
-                                <div>
-                                    <h4>{{ child.title }}</h4>
+                        <div>
+                            <h4>{{ child.attribute_summary }}</h4>
 
-                                    {% include "catalogue/partials/child_stock_record.html" with class="span5" product=child %}
-                                    
-                                    <div class="child-form">
-                                        {% if child.is_available_to_buy %}
-                                        {% basket_form request child as basket_form %}
-                                        <form action="{% url 'basket:add' %}" method="post" class="form-inline">
-                                            {% csrf_token %}
-                                            {% include "partials/form_fields_inline.html" with form=basket_form %}
-                                            <button type="submit" class="btn btn-primary" value="Add to basket">{% trans "Add to bag" %}</button>
-                                        </form>
-                                        <span itemprop="availability" content="in_stock"></span>
-                                        {% else %}
-                                        <p>{% trans "You can get an email alert when this product is back in stock." %}</p>
-                                        {% include "catalogue/partials/alerts_form.html" with product=child %}
-                                        {% endif %}
-                                    </div>
-                                </div>
+                            {% include "catalogue/partials/child_stock_record.html" with product=child %}
+
+                            <div class="child-form">
+                                {% if child_session.availability.is_available_to_buy %}
+                                    {% basket_form request child as basket_form %}
+                                    <form action="{% url 'basket:add' pk=child.pk %}" method="post" class="form-inline">
+                                        {% csrf_token %}
+                                        {% include "partials/form_fields_inline.html" with form=basket_form %}
+                                        <button type="submit" class="btn btn-primary" value="Add to basket">{% trans "Add to bag" %}</button>
+                                    </form>
+                                {% else %}
+                                    <p>{% trans "You can get an email alert when this product is back in stock." %}</p>
+                                    {% include "catalogue/partials/alerts_form.html" with product=child %}
+                                {% endif %}
                             </div>
-                            {% endfor %}
-
-                    {% endif %}
-                {% endwith %}
+                        </div>
+                    </div>
+                {% endfor %}
 
             {% endif %}
     
