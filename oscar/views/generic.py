@@ -197,8 +197,8 @@ class PhoneNumberMixin(object):
             # library, which luckily allows parsing into a PhoneNumber
             # instance
             try:
-                phone_number = PhoneNumber.from_string(number,
-                                                       region=region_code)
+                phone_number = PhoneNumber.from_string(
+                    number, region=region_code)
                 if not phone_number.is_valid():
                     raise ValidationError(
                         _(u'This is not a valid local phone format for %s.')
