@@ -2,6 +2,8 @@ from django import forms
 from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
+from .choice_lists import SORT_REVIEWS_BY_CHOICES, SORT_BY_SCORE
+
 Vote = get_model('reviews', 'vote')
 ProductReview = get_model('reviews', 'productreview')
 
@@ -24,7 +26,6 @@ class ProductReviewForm(forms.ModelForm):
 
 
 class VoteForm(forms.ModelForm):
-
     class Meta:
         model = Vote
         fields = ('delta',)
@@ -41,3 +42,13 @@ class VoteForm(forms.ModelForm):
     @property
     def is_down_vote(self):
         return self.cleaned_data['delta'] == Vote.DOWN
+
+
+class SortReviewsForm(forms.Form):
+    sort_by = forms.ChoiceField(
+        choices=SORT_REVIEWS_BY_CHOICES,
+        label=_('Sort by'),
+        initial=SORT_BY_SCORE,
+    )
+
+

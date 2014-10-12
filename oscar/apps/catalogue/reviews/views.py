@@ -8,8 +8,8 @@ from oscar.core.loading import get_classes
 from oscar.core.utils import redirect_to_referrer
 from oscar.apps.catalogue.reviews.signals import review_added
 
-ProductReviewForm, VoteForm = get_classes(
-    'catalogue.reviews.forms', ['ProductReviewForm', 'VoteForm'])
+ProductReviewForm, VoteForm, SortReviewsForm = get_classes(
+    'catalogue.reviews.forms', ['ProductReviewForm', 'VoteForm', 'SortReviewsForm'])
 Vote = get_model('reviews', 'vote')
 ProductReview = get_model('reviews', 'ProductReview')
 Product = get_model('catalogue', 'product')
@@ -122,4 +122,5 @@ class ProductReviewList(ListView):
         context = super(ProductReviewList, self).get_context_data(**kwargs)
         context['product'] = get_object_or_404(
             self.product_model, pk=self.kwargs['product_pk'])
+        context['form'] = SortReviewsForm(self.request.GET)
         return context
