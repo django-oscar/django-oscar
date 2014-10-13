@@ -1,11 +1,11 @@
 # These targets are not files
-.PHONY: install sandbox geoip demo docs coverage lint travis messages compiledmessages css clean preflight
+.PHONY: install sandbox geoip demo docs coverage lint travis messages compiledmessages css clean preflight make_sandbox make_demo
 
 install:
 	pip install -r requirements.txt
 	python setup.py develop
 
-sandbox: install
+build_sandbox:
 	# Remove media
 	-rm -rf sites/sandbox/public/media/images
 	-rm -rf sites/sandbox/public/media/cache
@@ -25,12 +25,14 @@ sandbox: install
 	sites/sandbox/manage.py clear_index --noinput
 	sites/sandbox/manage.py update_index catalogue
 
+sandbox: install build_sandbox
+
 geoip:
 	wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
 	gunzip GeoLiteCity.dat.gz
 	mv GeoLiteCity.dat sites/demo/geoip
 
-demo: install
+build_demo:
 	# Install additional requirements
 	pip install -r requirements_demo.txt
 	# Create database
@@ -51,6 +53,8 @@ demo: install
 	# Update search index
 	sites/demo/manage.py clear_index --noinput
 	sites/demo/manage.py update_index catalogue
+
+demo: install build_demo
 
 us_site: install
 	# Install additional requirements
@@ -80,10 +84,10 @@ testmigrations:
 	pip install -r requirements_migrations.txt
 	cd sites/sandbox && ./test_migrations.sh
 
-# This target is run on Travis.ci. We lint, test and build the sandbox/demo sites as well 
-# as testing migrations apply correctly. We don't call 'install' first as that is run 
-# as a separate part of the Travis build process.
-travis: lint coverage sandbox demo testmigrations
+# This target is run on Travis.ci. We lint, test and build the sandbox/demo
+# sites as well as testing migrations apply correctly. We don't call 'install'
+# first as that is run as a separate part of the Travis build process.
+travis: lint coverage build_sandbox build_demo testmigrations
 
 messages:
 	# Create the .po files used for i18n
