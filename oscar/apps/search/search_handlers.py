@@ -48,8 +48,8 @@ class SearchHandler(object):
 
     Error handling:
 
-        You need to catch a ValueError which gets thrown when an invalid
-        page number is supplied.
+        You need to catch an InvalidPage exception which gets thrown when an
+        invalid page number is supplied.
     """
 
     form_class = None
@@ -118,17 +118,10 @@ class SearchHandler(object):
             if page == 'last':
                 page_number = paginator.num_pages
             else:
-                raise ValueError(_(
+                raise InvalidPage(_(
                     "Page is not 'last', nor can it be converted to an int."))
-        try:
-            page = paginator.page(page_number)
-        except InvalidPage as e:
-            raise ValueError(
-                _('Invalid page (%(page_number)s): %(message)s') % {
-                    'page_number': page_number,
-                    'message': str(e)
-                })
-        return paginator, page
+        # This can also raise an InvalidPage exception.
+        return paginator, paginator.page(page_number)
 
     def get_paginator(self, queryset):
         """
