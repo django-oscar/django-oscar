@@ -9,6 +9,23 @@ from . import facets
 
 FacetMunger = get_class('search.facets', 'FacetMunger')
 
+# Workaround for pysolr 3.1 not supporting and failing hard on
+# Solr 4.0 error messages
+# https://github.com/toastdriven/pysolr/pull/127
+# https://github.com/toastdriven/pysolr/pull/113
+# TODO: Remove in Oscar 0.9
+try:
+    import pysolr
+except ImportError:
+    pass
+else:
+    if pysolr.__version__[:2] < (3, 2):
+        import logging
+        logger = logging.getLogger()
+        logger.warning(
+            "You're running an old version of pysolr that is causing issues "
+            "with Oscar. Please upgrade to 3.2 or higher.")
+
 
 class SearchHandler(object):
     """
@@ -50,18 +67,10 @@ class SearchHandler(object):
         self.search_form = self.get_search_form(
             request_data, search_queryset)
         self.results = self.get_search_results(self.search_form)
-        try:
-            self.paginator, self.page = self.paginate_queryset(
-                self.results, request_data)
-        except UnicodeDecodeError:
-            # Workaround for pysolr 3.1 not supporting and failing hard on
-            # Solr 4.0 error messages
-            # https://github.com/toastdriven/pysolr/pull/127
-            # https://github.com/toastdriven/pysolr/pull/113
-            # TODO: Remove once pysolr 3.2 is released
-            self.results = search_queryset
-            self.paginator, self.page = self.paginate_queryset(
-                self.results, request_data)
+        # If below raises an UnicodeDecodeError, you're running pysolr < 3.2
+        # with Solr 4.
+        self.paginator, self.page = self.paginate_queryset(
+            self.results, request_data)
 
     # Search related methods
 
