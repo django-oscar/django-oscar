@@ -181,10 +181,14 @@ class SearchHandler(object):
 
     def get_paginated_objects(self):
         """
-        Return a paginated list of Django model instances.
+        Return a paginated list of Django model instances. The call is cached.
         """
-        paginated_results = self.page.object_list
-        return self.bulk_fetch_results(paginated_results)
+        if hasattr(self, '_objects'):
+            return self._objects
+        else:
+            paginated_results = self.page.object_list
+            self._objects = self.bulk_fetch_results(paginated_results)
+        return self._objects
 
     def get_search_context_data(self, context_object_name=None):
         """
