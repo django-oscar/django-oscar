@@ -14,7 +14,7 @@
         "shipping_excl_tax": "0.00",
         "user": 1,
         "shipping_address": 1,
-        "basket": 1,
+        "basket": null,
         "shipping_code": "free-shipping",
         "shipping_incl_tax": "0.00"
     },
