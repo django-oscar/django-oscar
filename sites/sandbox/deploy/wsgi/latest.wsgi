@@ -17,9 +17,8 @@ with open(activate_this) as f:
 
 # Set environmental variable for Django and fire WSGI handler
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
-import django.core.handlers.wsgi
-_application = django.core.handlers.wsgi.WSGIHandler()
+if sys.platform != "win32":
+    os.environ['PYTHON_EGG_CACHE'] = '/tmp/.python-eggs'
 
-def application(environ, start_response):
-    environ['PATH_INFO'] = urllib.parse.unquote(environ['REQUEST_URI'].split('?')[0])
-    return _application(environ, start_response)
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
