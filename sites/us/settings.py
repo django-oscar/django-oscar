@@ -346,12 +346,7 @@ OSCAR_ALLOW_ANON_CHECKOUT = True
 # We default to using CSS files, rather than the LESS files that generate them.
 # If you want to develop Oscar's CSS, then set USE_LESS=True and
 # COMPRESS_ENABLED=False in your settings_local module and ensure you have
-# 'lessc' installed.  You can do this by running:
-#
-#    pip install -r requirements_less.txt
-#
-# which will install node.js and less in your virtualenv.
-
+# 'lessc' installed.
 USE_LESS = False
 
 COMPRESS_ENABLED = True

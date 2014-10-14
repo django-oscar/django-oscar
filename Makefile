@@ -1,5 +1,5 @@
 # These targets are not files
-.PHONY: install sandbox geoip demo docs coverage lint travis messages compiledmessages puppet css clean preflight
+.PHONY: install sandbox geoip demo docs coverage lint travis messages compiledmessages css clean preflight
 
 install:
 	pip install -r requirements.txt
@@ -21,6 +21,7 @@ sandbox: install
 	sites/sandbox/manage.py oscar_import_catalogue_images sites/sandbox/fixtures/images.tar.gz
 	sites/sandbox/manage.py oscar_populate_countries
 	sites/sandbox/manage.py loaddata sites/_fixtures/pages.json sites/_fixtures/auth.json sites/_fixtures/ranges.json sites/_fixtures/offers.json
+	sites/sandbox/manage.py loaddata sites/sandbox/fixtures/orders.json
 	sites/sandbox/manage.py clear_index --noinput
 	sites/sandbox/manage.py update_index catalogue
 
@@ -76,7 +77,7 @@ lint:
 	./lint.sh
 
 testmigrations:
-	pip install -r requirements_vagrant.txt
+	pip install -r requirements_migrations.txt
 	cd sites/sandbox && ./test_migrations.sh
 
 # This target is run on Travis.ci. We lint, test and build the sandbox/demo sites as well 
@@ -92,26 +93,14 @@ compiledmessages:
 	# Compile the gettext files
 	cd oscar; django-admin.py compilemessages
 
-puppet:
-	# Install puppet modules required to set-up a Vagrant box
-	mkdir -p sites/puppet/modules
-	rm -rf sites/puppet/modules/*
-	puppet module install --target-dir sites/puppet/modules/ saz-memcached -v 2.0.2
-	puppet module install --target-dir sites/puppet/modules/ puppetlabs/mysql
-	puppet module install --target-dir sites/puppet/modules/ puppetlabs/apache
-	puppet module install --target-dir sites/puppet/modules/ dhutty/nginx
-	git clone git://github.com/akumria/puppet-postgresql.git sites/puppet/modules/postgresql
-	git clone git://github.com/puppetmodules/puppet-module-python.git sites/puppet/modules/python
-	git clone git://github.com/codeinthehole/puppet-userconfig.git sites/puppet/modules/userconfig
-
 css:
 	# Compile CSS files from LESS
-	lessc oscar/static/oscar/less/styles.less > oscar/static/oscar/css/styles.css
-	lessc oscar/static/oscar/less/responsive.less > oscar/static/oscar/css/responsive.css
-	lessc oscar/static/oscar/less/dashboard.less > oscar/static/oscar/css/dashboard.css
+	lessc --source-map --source-map-less-inline oscar/static/oscar/less/styles.less oscar/static/oscar/css/styles.css
+	lessc --source-map --source-map-less-inline oscar/static/oscar/less/responsive.less oscar/static/oscar/css/responsive.css
+	lessc --source-map --source-map-less-inline oscar/static/oscar/less/dashboard.less oscar/static/oscar/css/dashboard.css
 	# Compile CSS for demo site
-	lessc sites/demo/static/demo/less/styles.less > sites/demo/static/demo/css/styles.css
-	lessc sites/demo/static/demo/less/responsive.less > sites/demo/static/demo/css/responsive.css
+	lessc --source-map --source-map-less-inline sites/demo/static/demo/less/styles.less sites/demo/static/demo/css/styles.css
+	lessc --source-map --source-map-less-inline sites/demo/static/demo/less/responsive.less sites/demo/static/demo/css/responsive.css
 
 clean:
 	# Remove files not in source control

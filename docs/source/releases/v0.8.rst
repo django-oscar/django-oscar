@@ -26,6 +26,9 @@ This release also adds full Python 3.3 and 3.4 support. But due to South
 not supporting Python 3, Python 3 support is only supported in combination
 with Django 1.7 and it's new migration framework.
 
+If you're using ``pysolr`` for search, you need to upgrade to version 3.2 or
+later.
+
 .. _new_in_0.8:
 
 What's new in Oscar 0.8?

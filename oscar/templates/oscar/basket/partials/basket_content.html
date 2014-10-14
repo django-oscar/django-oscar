@@ -117,7 +117,6 @@
                     <p id="voucher_form_link"><a href="#voucher" class="btn btn-full">{% trans "I have a voucher code..." %}</a></p>
 
                     <div id="voucher_form_container" style="display:none">
-                        <h3>{% trans "Voucher code" %}</h3>
                         <form id="voucher_form" action="{% url 'basket:vouchers-add' %}" method="post">
                             {% csrf_token %}
                             {% include "partials/form_fields.html" with form=voucher_form %}
