@@ -278,12 +278,15 @@ INSTALLED_APPS = [
     # Debug toolbar + extensions
     'debug_toolbar',
     'template_timings_panel',
-    'south',
     'compressor',       # Oscar's templates use compressor
 ]
 from oscar import get_core_apps
 INSTALLED_APPS = INSTALLED_APPS + get_core_apps(
     ['apps.partner', 'apps.checkout', 'apps.shipping'])
+
+import django
+if django.VERSION < (1, 7):
+    INSTALLED_APPS.append('south')
 
 # Add Oscar's custom auth backend so users can sign in using their email
 # address.
