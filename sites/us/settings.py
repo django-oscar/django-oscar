@@ -130,7 +130,7 @@ MIDDLEWARE_CLASSES = (
     'oscar.apps.basket.middleware.BasketMiddleware',
     # Enable the ProfileMiddleware, then add ?cprofile to any
     # URL path to print out profile details
-    #'oscar.profiling.middleware.ProfileMiddleware',
+    # 'oscar.profiling.middleware.ProfileMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -331,7 +331,7 @@ INTERNAL_IPS = ['127.0.0.1', '::1']
 # Oscar settings
 # ==============
 
-from oscar.defaults import *
+from oscar.defaults import *  # noqa
 
 # Meta
 # ====
@@ -378,14 +378,16 @@ if not os.path.exists(LOG_ROOT):
 THUMBNAIL_DEBUG = True
 THUMBNAIL_KEY_PREFIX = 'oscar-us-sandbox'
 
-# Django 1.6 has switched to JSON serializing for security reasons, but it does not
-# serialize Models. We should resolve this by extending the
-# django/core/serializers/json.Serializer to have the `dumps` function. Also
-# in tests/config.py
+# Django 1.6 has switched to JSON serializing for security reasons, but it does
+# not serialize Models. We should resolve this by extending the
+# django/core/serializers/json.Serializer to have the `dumps` function. Also in
+# tests/config.py
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 # Try and import local settings which can be used to override any of the above.
 try:
-    from settings_local import *
+    from settings_local import *  # noqa
 except ImportError:
     pass
