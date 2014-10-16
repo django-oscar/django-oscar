@@ -9,13 +9,7 @@
 {% endblock title %}
 
 {% block checkout_nav %}
-<div class="navbar navbar-static-top navbar-inverse nav-checkout">
-    <div class="navbar-inner">
-        <ul class="nav row-fluid visible-phone">
-            <li class="active span12"><span class="navbar-text">{% trans "Confirmation" %}</span></li>
-        </ul>
-    </div><!-- /navbar-inner -->
-</div><!-- /navbar -->
+    {% include 'checkout/nav.html' with step=5 %}
 {% endblock %}
 
 {% block checkout_title %}{% trans "Order confirmation" %}{% endblock %}
