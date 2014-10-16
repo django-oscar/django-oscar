@@ -26,7 +26,6 @@ RedirectRequired, UnableToTakePayment, PaymentError \
 UnableToPlaceOrder = get_class('order.exceptions', 'UnableToPlaceOrder')
 OrderPlacementMixin = get_class('checkout.mixins', 'OrderPlacementMixin')
 CheckoutSessionMixin = get_class('checkout.session', 'CheckoutSessionMixin')
-
 Order = get_model('order', 'Order')
 ShippingAddress = get_model('order', 'ShippingAddress')
 CommunicationEvent = get_model('order', 'CommunicationEvent')
@@ -35,6 +34,7 @@ PaymentEvent = get_model('order', 'PaymentEvent')
 UserAddress = get_model('address', 'UserAddress')
 Basket = get_model('basket', 'Basket')
 Email = get_model('customer', 'Email')
+Country = get_model('address', 'Country')
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
 
 # Standard logger for checkout events
@@ -136,7 +136,17 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
     skip_conditions = ['skip_unless_basket_requires_shipping']
 
     def get_initial(self):
-        return self.checkout_session.new_shipping_address_fields()
+        initial = self.checkout_session.new_shipping_address_fields()
+        if initial:
+            # Convert the primary key stored in the session into a Country instance
+            try:
+                initial['country'] = Country.objects.get(
+                    iso_3166_1_a2=initial.pop('country_id'))
+            except Country.DoesNotExist:
+                # Hmm, the previously selected Country no longer exists. We ignore
+                # this.
+                pass
+        return initial
 
     def get_context_data(self, **kwargs):
         ctx = super(ShippingAddressView, self).get_context_data(**kwargs)
