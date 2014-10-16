@@ -7618,6 +7618,7 @@ form.flat {
 }
 .error-block {
   color: #b94a48;
+  margin-top: 6px;
 }
 .control-label.required span {
   color: #FF0000;
