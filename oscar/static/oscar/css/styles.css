@@ -7463,6 +7463,7 @@ a.badge:focus {
 }
 body {
   background-color: #eeeeee;
+  padding-bottom: 50px;
 }
 .container-fluid {
   padding: 0px;
