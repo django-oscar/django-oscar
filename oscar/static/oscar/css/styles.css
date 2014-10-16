@@ -7939,6 +7939,7 @@ input[type="number"][id*="quantity"] {
 .basket-items {
   border-bottom: 1px solid #e5e5e5;
   padding: 10px;
+  margin-bottom: 20px;
 }
 .basket-items:nth-child(even) {
   background: #f8f8f8;
