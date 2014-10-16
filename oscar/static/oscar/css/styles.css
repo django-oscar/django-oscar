@@ -7996,6 +7996,21 @@ input[type="number"][id*="quantity"] {
   top: 20px;
   right: 20px;
 }
+#new_shipping_address #id_title {
+  width: auto;
+}
+#new_shipping_address #id_line1,
+#new_shipping_address #id_line2,
+#new_shipping_address #id_line3 {
+  width: 300px;
+}
+#new_shipping_address #id_postcode {
+  width: 100px;
+}
+#new_shipping_address #id_notes {
+  width: 400px;
+  height: 100px;
+}
 .nav-checkout {
   text-align: center;
 }
