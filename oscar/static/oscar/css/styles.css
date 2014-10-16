@@ -7847,6 +7847,10 @@ a:hover .thumbnail {
 .btn-wishlist {
   margin-bottom: 20px;
 }
+#add_review_form #id_title,
+#add_review_form #id_body {
+  width: 500px;
+}
 .review {
   margin-bottom: 20px;
   *zoom: 1;
