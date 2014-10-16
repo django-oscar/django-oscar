@@ -8002,18 +8002,24 @@ input[type="number"][id*="quantity"] {
   top: 20px;
   right: 20px;
 }
-#new_shipping_address #id_title {
+#new_shipping_address #id_title,
+#update_user_address #id_title {
   width: auto;
 }
 #new_shipping_address #id_line1,
+#update_user_address #id_line1,
 #new_shipping_address #id_line2,
-#new_shipping_address #id_line3 {
+#update_user_address #id_line2,
+#new_shipping_address #id_line3,
+#update_user_address #id_line3 {
   width: 300px;
 }
-#new_shipping_address #id_postcode {
+#new_shipping_address #id_postcode,
+#update_user_address #id_postcode {
   width: 100px;
 }
-#new_shipping_address #id_notes {
+#new_shipping_address #id_notes,
+#update_user_address #id_notes {
   width: 400px;
   height: 100px;
 }
