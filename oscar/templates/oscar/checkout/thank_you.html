@@ -5,23 +5,29 @@
 {% load staticfiles %}
 
 {% block title %}
-    {% trans "Confirmation of order" %} {{ order.number }} | {{ block.super }}
+    {% blocktrans with number=order.number %}
+        Order {{ number }}: confirmation
+    {% endblocktrans %} | {{ block.super }}
 {% endblock title %}
 
 {% block checkout_nav %}
     {% include 'checkout/nav.html' with step=5 %}
 {% endblock %}
 
-{% block checkout_title %}{% trans "Order confirmation" %}{% endblock %}
+{% block checkout_title %}
+    {% blocktrans with number=order.number %}
+        Order {{ number }}: confirmation
+    {% endblocktrans %}
+{% endblock %}
 
 {% block content %}
-    <p>
+    <p class="lead">
         {% blocktrans with number=order.number %}
         Your order has been placed and a confirmation email has been sent - your order number is
-        <span class="label label-success">{{ number }}</span>
+        <strong>{{ number }}</strong>.
         {% endblocktrans %}
+        {% trans "Please make a note of this reference or print this page and quote it in any communication with us regarding your order." %}</p>
     </p>
-    <p>{% trans "Please make a note of this reference or print this page and quote it in any communication with us regarding your order." %}</p>
 
     <div class="row-fluid shipping-payment">
         <div class="span6">
@@ -49,7 +55,7 @@
                         {% endif %}
 
                         {% if order.shipping_address.notes %}
-                            <h4>{% trans "Note" %}</h4>
+                            <h4>{% trans "Instructions" %}</h4>
                             <p>{{ order.shipping_address.notes|linebreaks }}</p>
                         {% endif %}
                     {% else %}
@@ -104,13 +110,12 @@
     </div>
 
     <div class="sub-header">
-        <h2>{% trans "Order details" %}</h2>
+        <h2>{% trans "Order contents" %}</h2>
     </div>
 
     <div class="basket-title">
         <div class="row-fluid">
-            <p class="span6 h4">{% trans "Items purchased" %}</p>
-            <p class="span3 h4 align-center">{% trans "Estimated dispatch date" %}</p>
+            <p class="span9 h4">{% trans "Items purchased" %}</p>
             <p class="span1 h4 align-center">{% trans "Quantity" %}</p>
             <p class="span2 h4 align-right">{% trans "Total" %}</p>
         </div>
@@ -128,11 +133,16 @@
                         {% endwith %}
                     </div>
                 </div>
-                <div class="span4">
+                <div class="span7">
                     <h3><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h3>
-                </div>
-                <div class="span3 align-center">
-                    {{ line.est_dispatch_date|default:"-" }}
+                    <p>
+                    {% if line.upc %}{{ line.upc }}<br/>{% endif %}
+                    {% if line.est_dispatch_date %}
+                        {% blocktrans with date=line.est_dispatch_date %}
+                            Estimated dispatch: <strong>{{ date }}</strong>
+                        {% endblocktrans %}
+                    {% endif %}
+                    </p>
                 </div>
                 <div class="span1 align-center">
                     {{ line.quantity }}
@@ -201,6 +211,10 @@
                         {% endwith %}
 
                         {% block shipping_total %}
+                            <tr>
+                                <th>&nbsp;</th>
+                                <td></td>
+                            </tr>
                             <tr>
                                 <th colspan="2"><h3>{% trans "Shipping" %}</h3></th>
                             </tr>
@@ -287,9 +301,8 @@
             <div class="sub-header">
                 <h2>{% trans "Tracking your order" %}</h2>
             </div>
-            <p>{% trans "You can track the status of your order" as track_status_label %}
-                <a href="{% url 'customer:anon-order' order_number=order.number hash=order.verification_hash %}">{{ track_status_label }}</a>.
-            </p>
+            <p>{% trans "You can track the status of your order" %}</p>
+            <a class="btn btn-primary" href="{% url 'customer:anon-order' order_number=order.number hash=order.verification_hash %}">{% trans "View order status" %}</a>.
         {% endif %}
     {% endblock %}
 
