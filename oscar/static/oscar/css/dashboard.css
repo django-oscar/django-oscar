@@ -3240,6 +3240,7 @@ caption > i,
   background: #ffffff;
 }
 .content-block .order-graph-details label {
+  cursor: default;
   background-color: #F8F8F8;
   border: 1px solid #ccc;
   *zoom: 1;
