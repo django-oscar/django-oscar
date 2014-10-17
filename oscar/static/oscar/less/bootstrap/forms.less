@@ -397,13 +397,11 @@ select:focus:invalid {
 // HELP TEXT
 // ---------
 
-.error-block,
 .help-block,
 .help-inline {
   color: lighten(@textColor, 15%); // lighten the text some for contrast
 }
 
-.error-block,
 .help-block {
   display: block; // account for any element using help-block
   margin-bottom: @baseLineHeight / 2;
@@ -671,7 +669,6 @@ legend + .control-group {
     }
   }
   // Remove bottom margin on block level help text since that's accounted for on .control-group
-  .error-block,
   .help-block {
     margin-bottom: 0;
   }
@@ -682,7 +679,7 @@ legend + .control-group {
   .uneditable-input,
   .input-prepend,
   .input-append {
-    + .help-block, .error-block {
+    + .help-block {
       margin-top: @baseLineHeight / 2;
     }
   }
