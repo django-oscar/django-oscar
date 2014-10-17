@@ -56,7 +56,7 @@ setup(name='django-oscar',
           # For manipulating search URLs
           'purl>=0.7',
           # For phone number field
-          'phonenumbers>=5.9.2,<=6.0.0a',
+          'phonenumbers>=6.3.0,<7.0.0',
           # Used for oscar.test.contextmanagers.mock_signal_receiver
           'mock>=1.0.1,<1.1',
           # Used for oscar.test.newfactories
