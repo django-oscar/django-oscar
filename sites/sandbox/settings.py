@@ -315,7 +315,8 @@ INSTALLED_APPS = [
     'apps.gateway',     # For allowing dashboard access
 ]
 from oscar import get_core_apps
-INSTALLED_APPS = INSTALLED_APPS + get_core_apps()
+INSTALLED_APPS = INSTALLED_APPS + get_core_apps(['apps.catalogue',
+                                                 'apps.dashboard.catalogue'])
 
 # As we use the sandbox to create both South migrations and native ones,
 # the sandbox needs to work both with Django < 1.7 and 1.7
@@ -456,6 +457,9 @@ if not os.path.exists(LOG_ROOT):
 
 THUMBNAIL_DEBUG = True
 THUMBNAIL_KEY_PREFIX = 'oscar-sandbox'
+
+
+OSCAR_DELETE_IMAGE_FILES = False
 
 # Django 1.6 has switched to JSON serializing for security reasons, but it does not
 # serialize Models. We should resolve this by extending the
