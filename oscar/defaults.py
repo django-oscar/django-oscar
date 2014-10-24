@@ -87,48 +87,59 @@ OSCAR_DASHBOARD_NAVIGATION = {
         'label': _('Dashboard'),
         'icon': 'icon-th-list',
         'url_name': 'dashboard:index',
+        'order': 1,
     },
     'catalogue': {
         'label': _('Catalogue'),
         'icon': 'icon-sitemap',
+        'order': 2,
         'children': {
             'products': {
                 'label': _('Products'),
                 'url_name': 'dashboard:catalogue-product-list',
+                'order': 1,
             },
             'product_types': {
                 'label': _('Product Types'),
                 'url_name': 'dashboard:catalogue-class-list',
+                'order': 2,
             },
             'categories': {
                 'label': _('Categories'),
                 'url_name': 'dashboard:catalogue-category-list',
+                'order': 3,
             },
             'ranges': {
                 'label': _('Ranges'),
                 'url_name': 'dashboard:range-list',
+                'order': 4,
             },
             'stock_alerts': {
                 'label': _('Low stock alerts'),
                 'url_name': 'dashboard:stock-alert-list',
+                'order': 5,
             },
         }
     },
     'fulfilment': {
         'label': _('Fulfilment'),
         'icon': 'icon-shopping-cart',
+        'order': 3,
         'children': {
             'orders': {
                 'label': _('Orders'),
                 'url_name': 'dashboard:order-list',
+                'order': 1,
             },
             'statistics': {
                 'label': _('Statistics'),
                 'url_name': 'dashboard:order-stats',
+                'order': 2,
             },
             'partners': {
                 'label': _('Partners'),
                 'url_name': 'dashboard:partner-list',
+                'order': 3,
             },
             # The shipping method dashboard is disabled by default as it might
             # be confusing. Weight-based shipping methods aren't hooked into
@@ -143,54 +154,66 @@ OSCAR_DASHBOARD_NAVIGATION = {
     'customers': {
         'label': _('Customers'),
         'icon': 'icon-group',
+        'order': 4,
         'children': {
             'customers': {
                 'label': _('Customers'),
                 'url_name': 'dashboard:users-index',
+                'order': 1,
             },
             'stock_alerts': {
                 'label': _('Stock alert requests'),
                 'url_name': 'dashboard:user-alert-list',
+                'order': 2,
             },
         }
     },
     'offers': {
         'label': _('Offers'),
         'icon': 'icon-bullhorn',
+        'order': 5,
         'children': {
             'offers': {
                 'label': _('Offers'),
                 'url_name': 'dashboard:offer-list',
+                'order': 1,
             },
             'vouchers': {
                 'label': _('Vouchers'),
                 'url_name': 'dashboard:voucher-list',
+                'order': 2,
             },
         },
     },
     'content': {
         'label': _('Content'),
         'icon': 'icon-folder-close',
+        'order': 6,
         'children': {
             'content_blocks': {
                 'label': _('Content blocks'),
                 'url_name': 'dashboard:promotion-list',
+                'order': 1,
             },
             'content_blocks_by_page': {
                 'label': _('Content blocks by page'),
                 'url_name': 'dashboard:promotion-list-by-page',
+                'order': 2,
             },
             'pages': {
                 'label': _('Pages'),
                 'url_name': 'dashboard:page-list',
+                'order': 3,
             },
             'email_templates': {
                 'label': _('Email templates'),
                 'url_name': 'dashboard:comms-list',
+                'order': 4,
             },
             'reviews': {
                 'label': _('Reviews'),
                 'url_name': 'dashboard:reviews-list',
+                'order': 5,
             },
         }
     },
@@ -198,6 +221,7 @@ OSCAR_DASHBOARD_NAVIGATION = {
         'label': _('Reports'),
         'icon': 'icon-bar-chart',
         'url_name': 'dashboard:reports-index',
+        'order': 7,
     },
 }
 OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION = 'oscar.apps.dashboard.nav.default_access_fn'  # noqa

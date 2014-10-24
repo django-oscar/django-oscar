@@ -29,7 +29,16 @@ def create_menu(menu_items, parent=None):
     nodes = []
     default_fn = import_string(
         settings.OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION)
-    for key, menu_dict in menu_items.items():
+
+    try:
+        menu_dicts = menu_items.values()
+    except AttributeError:
+        # the navigation setting used to be a list, so this is here for
+        # backwards compatibility
+        # TODO remove in oscar 0.9
+        menu_dicts = menu_items
+
+    for menu_dict in menu_dicts:
         try:
             label = menu_dict['label']
         except KeyError:
@@ -37,18 +46,21 @@ def create_menu(menu_items, parent=None):
                 "No label specified for menu item in dashboard")
 
         children = menu_dict.get('children', [])
+        order = menu_dict.get('order', None)
         if children:
             node = Node(label=label, icon=menu_dict.get('icon', None),
-                        access_fn=menu_dict.get('access_fn', default_fn))
+                        access_fn=menu_dict.get('access_fn', default_fn),
+                        order=order)
             create_menu(children, parent=node)
         else:
             node = Node(label=label, icon=menu_dict.get('icon', None),
                         url_name=menu_dict.get('url_name', None),
                         url_kwargs=menu_dict.get('url_kwargs', None),
                         url_args=menu_dict.get('url_args', None),
+                        order=order,
                         access_fn=menu_dict.get('access_fn', default_fn))
         if parent is None:
             nodes.append(node)
         else:
             parent.add_child(node)
-    return nodes
+    return sorted(nodes, key=lambda node: node.order)
