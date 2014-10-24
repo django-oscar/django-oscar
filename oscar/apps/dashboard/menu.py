@@ -29,7 +29,7 @@ def create_menu(menu_items, parent=None):
     nodes = []
     default_fn = import_string(
         settings.OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION)
-    for menu_dict in menu_items:
+    for key, menu_dict in menu_items.items():
         try:
             label = menu_dict['label']
         except KeyError:

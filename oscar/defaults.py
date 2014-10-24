@@ -82,51 +82,51 @@ OSCAR_COOKIES_DELETE_ON_LOGOUT = ['oscar_recently_viewed_products', ]
 OSCAR_HIDDEN_FEATURES = []
 
 # Menu structure of the dashboard navigation
-OSCAR_DASHBOARD_NAVIGATION = [
-    {
+OSCAR_DASHBOARD_NAVIGATION = {
+    'index': {
         'label': _('Dashboard'),
         'icon': 'icon-th-list',
         'url_name': 'dashboard:index',
     },
-    {
+    'catalogue': {
         'label': _('Catalogue'),
         'icon': 'icon-sitemap',
-        'children': [
-            {
+        'children': {
+            'products': {
                 'label': _('Products'),
                 'url_name': 'dashboard:catalogue-product-list',
             },
-            {
+            'product_types': {
                 'label': _('Product Types'),
                 'url_name': 'dashboard:catalogue-class-list',
             },
-            {
+            'categories': {
                 'label': _('Categories'),
                 'url_name': 'dashboard:catalogue-category-list',
             },
-            {
+            'ranges': {
                 'label': _('Ranges'),
                 'url_name': 'dashboard:range-list',
             },
-            {
+            'stock_alerts': {
                 'label': _('Low stock alerts'),
                 'url_name': 'dashboard:stock-alert-list',
             },
-        ]
+        }
     },
-    {
+    'fulfilment': {
         'label': _('Fulfilment'),
         'icon': 'icon-shopping-cart',
-        'children': [
-            {
+        'children': {
+            'orders': {
                 'label': _('Orders'),
                 'url_name': 'dashboard:order-list',
             },
-            {
+            'statistics': {
                 'label': _('Statistics'),
                 'url_name': 'dashboard:order-stats',
             },
-            {
+            'partners': {
                 'label': _('Partners'),
                 'url_name': 'dashboard:partner-list',
             },
@@ -138,68 +138,68 @@ OSCAR_DASHBOARD_NAVIGATION = [
             #     'label': _('Shipping charges'),
             #     'url_name': 'dashboard:shipping-method-list',
             # },
-        ]
+        }
     },
-    {
+    'customers': {
         'label': _('Customers'),
         'icon': 'icon-group',
-        'children': [
-            {
+        'children': {
+            'customers': {
                 'label': _('Customers'),
                 'url_name': 'dashboard:users-index',
             },
-            {
+            'stock_alerts': {
                 'label': _('Stock alert requests'),
                 'url_name': 'dashboard:user-alert-list',
             },
-        ]
+        }
     },
-    {
+    'offers': {
         'label': _('Offers'),
         'icon': 'icon-bullhorn',
-        'children': [
-            {
+        'children': {
+            'offers': {
                 'label': _('Offers'),
                 'url_name': 'dashboard:offer-list',
             },
-            {
+            'vouchers': {
                 'label': _('Vouchers'),
                 'url_name': 'dashboard:voucher-list',
             },
-        ],
+        },
     },
-    {
+    'content': {
         'label': _('Content'),
         'icon': 'icon-folder-close',
-        'children': [
-            {
+        'children': {
+            'content_blocks': {
                 'label': _('Content blocks'),
                 'url_name': 'dashboard:promotion-list',
             },
-            {
+            'content_blocks_by_page': {
                 'label': _('Content blocks by page'),
                 'url_name': 'dashboard:promotion-list-by-page',
             },
-            {
+            'pages': {
                 'label': _('Pages'),
                 'url_name': 'dashboard:page-list',
             },
-            {
+            'email_templates': {
                 'label': _('Email templates'),
                 'url_name': 'dashboard:comms-list',
             },
-            {
+            'reviews': {
                 'label': _('Reviews'),
                 'url_name': 'dashboard:reviews-list',
             },
-        ]
+        }
     },
-    {
+    'reports': {
         'label': _('Reports'),
         'icon': 'icon-bar-chart',
         'url_name': 'dashboard:reports-index',
     },
-]
+}
 OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION = 'oscar.apps.dashboard.nav.default_access_fn'  # noqa
 
 # Search facets
