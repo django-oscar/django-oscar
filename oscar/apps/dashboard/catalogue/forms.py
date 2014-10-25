@@ -7,6 +7,7 @@ from treebeard.forms import MoveNodeForm, movenodeform_factory
 from oscar.core.utils import slugify
 from oscar.core.loading import get_class, get_model
 from oscar.forms.widgets import ImageInput
+from oscar.apps.catalogue.utils import attribute_widget_factory
 
 Product = get_model('catalogue', 'Product')
 ProductClass = get_model('catalogue', 'ProductClass')
@@ -176,90 +177,7 @@ class StockRecordFormSet(BaseStockRecordFormSet):
                       "you're associated with."))
 
 
-def _attr_text_field(attribute):
-    return forms.CharField(label=attribute.name,
-                           required=attribute.required)
-
-
-def _attr_textarea_field(attribute):
-    return forms.CharField(label=attribute.name,
-                           widget=forms.Textarea(),
-                           required=attribute.required)
-
-
-def _attr_integer_field(attribute):
-    return forms.IntegerField(label=attribute.name,
-                              required=attribute.required)
-
-
-def _attr_boolean_field(attribute):
-    return forms.BooleanField(label=attribute.name,
-                              required=attribute.required)
-
-
-def _attr_float_field(attribute):
-    return forms.FloatField(label=attribute.name,
-                            required=attribute.required)
-
-
-def _attr_date_field(attribute):
-    return forms.DateField(label=attribute.name,
-                           required=attribute.required,
-                           widget=forms.widgets.DateInput)
-
-
-def _attr_option_field(attribute):
-    return forms.ModelChoiceField(
-        label=attribute.name,
-        required=attribute.required,
-        queryset=attribute.option_group.options.all())
-
-
-def _attr_multi_option_field(attribute):
-    return forms.ModelMultipleChoiceField(
-        label=attribute.name,
-        required=attribute.required,
-        queryset=attribute.option_group.options.all())
-
-
-def _attr_entity_field(attribute):
-    # Product entities don't have out-of-the-box supported in the ProductForm.
-    # There is no ModelChoiceField for generic foreign keys, and there's no
-    # good default behaviour anyway; offering a choice of *all* model instances
-    # is hardly useful.
-    return None
-
-
-def _attr_numeric_field(attribute):
-    return forms.FloatField(label=attribute.name,
-                            required=attribute.required)
-
-
-def _attr_file_field(attribute):
-    return forms.FileField(
-        label=attribute.name, required=attribute.required)
-
-
-def _attr_image_field(attribute):
-    return forms.ImageField(
-        label=attribute.name, required=attribute.required)
-
-
 class ProductForm(forms.ModelForm):
-    FIELD_FACTORIES = {
-        "text": _attr_text_field,
-        "richtext": _attr_textarea_field,
-        "integer": _attr_integer_field,
-        "boolean": _attr_boolean_field,
-        "float": _attr_float_field,
-        "date": _attr_date_field,
-        "option": _attr_option_field,
-        "multi_option": _attr_multi_option_field,
-        "entity": _attr_entity_field,
-        "numeric": _attr_numeric_field,
-        "file": _attr_file_field,
-        "image": _attr_image_field,
-    }
 
     class Meta:
         model = Product
@@ -336,7 +254,7 @@ class ProductForm(forms.ModelForm):
         """
         Gets the correct form field for a given attribute type.
         """
-        return self.FIELD_FACTORIES[attribute.type](attribute)
+        return attribute_widget_factory(attribute.type)(attribute)
 
     def delete_non_child_fields(self):
         """

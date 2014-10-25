@@ -9,6 +9,7 @@ from PIL import Image
 from django.core.files import File
 from django.core.exceptions import FieldError
 from django.utils.translation import ugettext_lazy as _
+from django import forms
 
 from oscar.core.loading import get_model
 from oscar.core.compat import atomic_compat
@@ -149,3 +150,94 @@ class Importer(object):
 
     def _get_lookup_value_from_filename(self, filename):
         return os.path.splitext(filename)[0]
+
+
+def _attr_text_field(attribute):
+    return forms.CharField(label=attribute.name,
+                           required=attribute.required)
+
+
+def _attr_textarea_field(attribute):
+    return forms.CharField(label=attribute.name,
+                           widget=forms.Textarea(),
+                           required=attribute.required)
+
+
+def _attr_integer_field(attribute):
+    return forms.IntegerField(label=attribute.name,
+                              required=attribute.required)
+
+
+def _attr_boolean_field(attribute):
+    return forms.BooleanField(label=attribute.name,
+                              required=attribute.required)
+
+
+def _attr_float_field(attribute):
+    return forms.FloatField(label=attribute.name,
+                            required=attribute.required)
+
+
+def _attr_date_field(attribute):
+    return forms.DateField(label=attribute.name,
+                           required=attribute.required,
+                           widget=forms.widgets.DateInput)
+
+
+def _attr_option_field(attribute):
+    queryset_options = attribute.option_group.options.all()
+    return forms.ModelChoiceField(label=attribute.name,
+                                  required=attribute.required,
+                                  queryset=queryset_options)
+
+
+def _attr_multi_option_field(attribute):
+    queryset_options = attribute.option_group.options.all()
+    return forms.ModelMultipleChoiceField(label=attribute.name,
+                                          required=attribute.required,
+                                          queryset=queryset_options)
+
+
+def _attr_entity_field(attribute):
+    # Product entities don't have out-of-the-box supported in the ProductForm.
+    # There is no ModelChoiceField for generic foreign keys, and there's no
+    # good default behaviour anyway; offering a choice of *all* model instances
+    # is hardly useful.
+    return None
+
+
+def _attr_numeric_field(attribute):
+    return forms.FloatField(label=attribute.name,
+                            required=attribute.required)
+
+
+def _attr_file_field(attribute):
+    return forms.FileField(label=attribute.name,
+                           required=attribute.required)
+
+
+def _attr_image_field(attribute):
+    return forms.ImageField(label=attribute.name,
+                            required=attribute.required)
+
+
+def _not_correct_field(attribute):
+    raise FieldError
+
+
+def attribute_widget_factory(type):
+
+    return {
+        "text": _attr_text_field,
+        "richtext": _attr_textarea_field,
+        "integer": _attr_integer_field,
+        "boolean": _attr_boolean_field,
+        "float": _attr_float_field,
+        "date": _attr_date_field,
+        "option": _attr_option_field,
+        "multi_option": _attr_multi_option_field,
+        "entity": _attr_entity_field,
+        "numeric": _attr_numeric_field,
+        "file": _attr_file_field,
+        "image": _attr_image_field,
+        }.get(type, _not_correct_field)

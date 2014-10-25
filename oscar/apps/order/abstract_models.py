@@ -1,3 +1,5 @@
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
 from itertools import chain
 from decimal import Decimal as D
 import hashlib
@@ -713,8 +715,42 @@ class AbstractLineAttribute(models.Model):
     option = models.ForeignKey(
         'catalogue.Option', null=True, on_delete=models.SET_NULL,
         related_name="line_attributes", verbose_name=_("Option"))
-    type = models.CharField(_("Type"), max_length=128)
-    value = models.CharField(_("Value"), max_length=255)
+
+    value_text = models.TextField(_('Text'), blank=True, null=True)
+    value_integer = models.IntegerField(_('Integer'), blank=True, null=True)
+    value_boolean = models.NullBooleanField(_('Boolean'), blank=True)
+    value_float = models.FloatField(_('Float'), blank=True, null=True)
+    value_richtext = models.TextField(_('Richtext'), blank=True, null=True)
+    value_date = models.DateField(_('Date'), blank=True, null=True)
+    value_option = models.ForeignKey('catalogue.AttributeOption', blank=True,
+                                     null=True, verbose_name=_("Value option"),
+                                     related_name='order_value_option')
+    value_file = models.FileField(
+        upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255,
+        blank=True, null=True)
+    value_image = models.ImageField(
+        upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255,
+        blank=True, null=True)
+    value_entity = GenericForeignKey(
+        'entity_content_type', 'entity_object_id')
+
+    entity_content_type = models.ForeignKey(
+        ContentType, null=True, blank=True, editable=False,
+        related_name='order_entity_content')
+    entity_object_id = models.PositiveIntegerField(
+        null=True, blank=True, editable=False)
+
+    def _get_value(self):
+        return getattr(self, 'value_%s' % self.option.type)
+
+    def _set_value(self, new_value):
+        if self.option.is_option and isinstance(new_value, str):
+            # Need to look up instance of AttributeOption
+            new_value = self.option.option_group.options.get(
+                option=new_value)
+        setattr(self, 'value_%s' % self.option.type, new_value)
+
+    value = property(_get_value, _set_value)
 
     class Meta:
         abstract = True
@@ -723,7 +759,7 @@ class AbstractLineAttribute(models.Model):
         verbose_name_plural = _("Line Attributes")
 
     def __str__(self):
-        return "%s = %s" % (self.type, self.value)
+        return "%s" % (self.value)
 
 
 @python_2_unicode_compatible

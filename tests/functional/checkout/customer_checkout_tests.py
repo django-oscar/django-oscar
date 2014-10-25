@@ -79,6 +79,24 @@ class TestPreviewView(CheckoutMixin, WebTestCase):
         preview.forms['place_order_form'].submit().follow()
 
         self.assertEqual(1, Order.objects.all().count())
+        
+    def test_allows_order_with_options_to_be_placed(self):
+        self.add_product_with_option_to_basket()
+        self.enter_shipping_address()
+
+        payment_details = self.get(
+        reverse('checkout:shipping-method')).follow().follow()
+        preview = payment_details.click(linkid="view_preview")
+        preview.forms['place_order_form'].submit().follow()
+        
+        orders = Order.objects.all()
+        self.assertEqual(1, orders.count())    
+        order = orders[0]
+        lines = order.lines.all()
+        self.assertEqual(1, lines.count())
+        line = lines[0]
+        attributes = line.attributes.all()
+        self.assertEqual(1, attributes.count())
 
 
 class TestPlacingAnOrderUsingAVoucher(CheckoutMixin, WebTestCase):

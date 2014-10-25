@@ -22,6 +22,17 @@ class CheckoutMixin(object):
         detail_page = self.get(product.get_absolute_url())
         form = detail_page.forms['add_to_basket_form']
         form.submit()
+        
+    def add_product_with_option_to_basket(self, product=None):
+        if product is None:
+            product = factories.create_product(price=D('12.00'),
+                                               num_in_stock=10)
+        option = factories.OptionFactory()        
+        product.product_options.add(option)
+        detail_page = self.get(product.get_absolute_url())
+        form = detail_page.forms['add_to_basket_form']
+        form['weight'] = 12.0
+        form.submit()
 
     def add_voucher_to_basket(self, voucher=None):
         if voucher is None:

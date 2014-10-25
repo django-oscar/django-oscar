@@ -25,7 +25,7 @@ __all__ = ["UserFactory", "CountryFactory", "UserAddressFactory",
            "AttributeOptionGroupFactory",
            "AttributeOptionFactory", "PartnerFactory",
            "ProductCategoryFactory", "CategoryFactory", "RangeFactory",
-           "ProductClassFactory"]
+           "ProductClassFactory", "OptionFactory"]
 
 Selector = get_class('partner.strategy', 'Selector')
 
@@ -186,3 +186,12 @@ class RangeFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = get_model('offer', 'Range')
+
+
+class OptionFactory(factory.DjangoModelFactory):
+    code = name = 'weight'
+    type = "float"
+    required = False
+
+    class Meta:
+        model = get_model('catalogue', 'Option')
