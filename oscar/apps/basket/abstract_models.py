@@ -8,7 +8,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.generic import GenericForeignKey
 from oscar.apps.basket.managers import OpenBasketManager, SavedBasketManager
 from oscar.apps.offer import results
 from oscar.core.utils import get_default_currency
