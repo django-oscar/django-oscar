@@ -48,9 +48,10 @@ class Shop(Application):
                 login_forbidden(auth_views.password_reset_done),
                 name='password-reset-done')]
 
-        # Django <=1.5: uses uidb36 to encode the user's primary key (support has been removed)
+        # Django <=1.5: uses uidb36 to encode the user's primary key (support
+        #               has been removed)
         # Django 1.6:   uses uidb64 to encode the user's primary key, but
-        #               but supports legacy links
+        #               supports legacy links
         # Django > 1.7: used uidb64 to encode the user's primary key
         # see https://docs.djangoproject.com/en/dev/releases/1.6/#django-contrib-auth-password-reset-uses-base-64-encoding-of-user-pk
         urls.append(

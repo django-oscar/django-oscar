@@ -984,6 +984,7 @@ class CountCondition(Condition):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Count condition")
         verbose_name_plural = _("Count conditions")
@@ -1072,6 +1073,7 @@ class CoverageCondition(Condition):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Coverage Condition")
         verbose_name_plural = _("Coverage Conditions")
@@ -1175,6 +1177,7 @@ class ValueCondition(Condition):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Value condition")
         verbose_name_plural = _("Value conditions")
@@ -1347,6 +1350,7 @@ class PercentageDiscountBenefit(Benefit):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Percentage discount benefit")
         verbose_name_plural = _("Percentage discount benefits")
@@ -1409,6 +1413,7 @@ class AbsoluteDiscountBenefit(Benefit):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Absolute discount benefit")
         verbose_name_plural = _("Absolute discount benefits")
@@ -1487,6 +1492,7 @@ class FixedPriceBenefit(Benefit):
             'amount': currency(self.value)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Fixed price benefit")
         verbose_name_plural = _("Fixed price benefits")
@@ -1553,6 +1559,7 @@ class MultibuyDiscountBenefit(Benefit):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Multibuy discount benefit")
         verbose_name_plural = _("Multibuy discount benefits")
@@ -1584,6 +1591,7 @@ class ShippingBenefit(Benefit):
         return SHIPPING_DISCOUNT
 
     class Meta:
+        app_label = 'offer'
         proxy = True
 
 
@@ -1596,6 +1604,7 @@ class ShippingAbsoluteDiscountBenefit(ShippingBenefit):
             'amount': currency(self.value)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Shipping absolute discount benefit")
         verbose_name_plural = _("Shipping absolute discount benefits")
@@ -1613,6 +1622,7 @@ class ShippingFixedPriceBenefit(ShippingBenefit):
             'amount': currency(self.value)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Fixed price shipping benefit")
         verbose_name_plural = _("Fixed price shipping benefits")
@@ -1632,6 +1642,7 @@ class ShippingPercentageDiscountBenefit(ShippingBenefit):
             'value': self.value}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Shipping percentage discount benefit")
         verbose_name_plural = _("Shipping percentage discount benefits")
@@ -1671,6 +1682,7 @@ class RangeProductFileUpload(models.Model):
         _("Number of Duplicate SKUs"), null=True)
 
     class Meta:
+        app_label = 'offer'
         ordering = ('-date_uploaded',)
         verbose_name = _("Range Product Uploaded File")
         verbose_name_plural = _("Range Product Uploaded Files")

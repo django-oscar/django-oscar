@@ -315,7 +315,29 @@ else:
         registry not being ready yet.
         Raises LookupError if model isn't found.
         """
-        return apps.get_registered_model(app_label, model_name)
+        try:
+            return apps.get_registered_model(app_label, model_name)
+        except LookupError:
+            # This is the fun bit. get_registered_model expectedly fails if
+            # it's called while the models are being loaded and the requested
+            # model hasn't been loaded yet.
+            # We try to detect that case, and then nudge the registry into
+            # loading the model. This should have the same effect as
+            # importing the correct models.py, but feels slightly less
+            # hackish. We're still relying on private Django APIs.
+            if not apps.models_ready and app_label in apps.app_configs.keys():
+                # We detected our corner case. Let's attempt to load the
+                # models. The code is taken
+                # from django.apps.registry.Apps.populate().
+                app_config = apps.app_configs[app_label]
+                all_models = apps.all_models[app_config.label]
+                app_config.import_models(all_models)
+                # We expect this to work now. Fingers crossed.
+                return apps.get_registered_model(app_label, model_name)
+            else:
+                # This must be a different case (e.g. the model really doesn't
+                # exist). We just re-raise the exception.
+                raise
 
     def is_model_registered(app_label, model_name):
         """

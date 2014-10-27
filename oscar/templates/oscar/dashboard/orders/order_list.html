@@ -82,8 +82,7 @@
                     <div class="pull-right">
                         <div class="form-inline">
                             <label>{% trans "Download selected orders as a CSV" %}</label>
-                            <input type="hidden" name="action" value="download_selected_orders" />
-                            <button type="submit" class="btn btn-primary" name="download_selected">{% trans "Download" %}</button>
+                            <button type="submit" class="btn btn-primary" name="action" value="download_selected_orders">{% trans "Download" %}</button>
                         </div>
                     </div>
                 </caption>
@@ -147,9 +146,7 @@
                                 
                             </div>
                         </div>
-                        
-                        <input type="hidden" value="change_order_statuses" name="action" />
-                        <input type="submit" value="{% trans "Change status" %}" class="btn btn-primary" />
+                        <button type="submit" name="action" value="change_order_statuses" class="btn btn-primary">{% trans "Change status" %}</button>
                     {% else %}
                         {% trans "This order can't have its status changed." %}
                     {% endif %}
