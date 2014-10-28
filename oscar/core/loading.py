@@ -304,6 +304,8 @@ if django.VERSION < (1, 7):
 else:
 
     from django.apps import apps
+    from django.apps.config import MODELS_MODULE_NAME
+    from django.core.exceptions import AppRegistryNotReady
 
     def get_model(app_label, model_name):
         """
@@ -316,23 +318,21 @@ else:
         Raises LookupError if model isn't found.
         """
         try:
-            return apps.get_registered_model(app_label, model_name)
-        except LookupError:
-            # This is the fun bit. get_registered_model expectedly fails if
-            # it's called while the models are being loaded and the requested
-            # model hasn't been loaded yet.
-            # We try to detect that case, and then nudge the registry into
-            # loading the model. This should have the same effect as
-            # importing the correct models.py, but feels slightly less
-            # hackish. We're still relying on private Django APIs.
-            if not apps.models_ready and app_label in apps.app_configs.keys():
-                # We detected our corner case. Let's attempt to load the
-                # models. The code is taken
-                # from django.apps.registry.Apps.populate().
-                app_config = apps.app_configs[app_label]
-                all_models = apps.all_models[app_config.label]
-                app_config.import_models(all_models)
-                # We expect this to work now. Fingers crossed.
+            return apps.get_model(app_label, model_name)
+        except AppRegistryNotReady:
+            if apps.apps_ready and not apps.models_ready:
+                # If this function is called while `apps.populate()` is
+                # loading models, ensure that the module that defines the
+                # target model has been imported and try looking the model up
+                # in the app registry. This effectively emulates
+                # `from path.to.app.models import Model` where we use
+                # `Model = get_model('app', 'Model')` instead.
+                app_config = apps.get_app_config(app_label)
+                # `app_config.import_models()` cannot be used here because it
+                # would interfere with `apps.populate()`.
+                import_module('%s.%s' % (app_config.name, MODELS_MODULE_NAME))
+                # In order to account for case-insensitivity of model_name,
+                # look up the model through a private API of the app registry.
                 return apps.get_registered_model(app_label, model_name)
             else:
                 # This must be a different case (e.g. the model really doesn't
