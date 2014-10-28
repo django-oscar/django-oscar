@@ -183,6 +183,12 @@ class SearchHandler(object):
             self._objects = self.bulk_fetch_results(paginated_results)
         return self._objects
 
+    def get_facet_munger(self):
+        return FacetMunger(
+            self.full_path,
+            self.search_form.selected_multi_facets,
+            self.results.facet_counts())
+
     def get_search_context_data(self, context_object_name=None):
         """
         Return metadata about the search in a dictionary useful to populate
@@ -204,10 +210,7 @@ class SearchHandler(object):
         # Note that the FacetMunger accesses object_list (unpaginated results),
         # whereas we use the paginated search results to populate the context
         # with products
-        munger = FacetMunger(
-            self.full_path,
-            self.search_form.selected_multi_facets,
-            self.results.facet_counts())
+        munger = self.get_facet_munger()
         facet_data = munger.facet_data()
         has_facets = any([data['results'] for data in facet_data.values()])
 
