@@ -13,18 +13,18 @@ Starting Solr
 =============
 
 You first need to fetch and extract Solr. The schema included with Oscar
-is tested with Solr 4.7.1:
+is tested with Solr 4.10.1:
 
 .. code-block:: bash
 
-    $ wget http://apache.mirror.anlx.net/lucene/solr/4.7.1/solr-4.7.1.tgz
-    $ tar xzf solr-4.7.1.tgz
+    $ wget http://mirrors.ukfast.co.uk/sites/ftp.apache.org/lucene/solr/4.10.1/solr-4.10.1.tgz
+    $ tar xzf solr-4.10.1.tgz
 
 Next, replace the example configuration with Oscar's.
 
 .. code-block:: bash
 
-    $ cd solr-4.7.1/example/solr/collection1
+    $ cd solr-4.10.1/example/solr/collection1
     $ mv conf conf.original
     $ ln -s <your_oscar_checkout>/sites/<sandbox|demo>/deploy/solr conf
 
