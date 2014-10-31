@@ -19,7 +19,7 @@
             <h3>{% trans 'Register' %}</h3>
             {% csrf_token %}
             {% include "partials/form_fields.html" with form=registration_form %}
-            <button name="registration_submit" type="submit" value="Register" class="btn btn-primary js-disable-on-click" data-loading-text="{%trans 'Registering...' %}">{% trans 'Register' %}</button>
+            <button name="registration_submit" type="submit" value="Register" class="btn btn-primary" data-loading-text="{%trans 'Registering...' %}">{% trans 'Register' %}</button>
         </form>
     </div>
 </div>    
