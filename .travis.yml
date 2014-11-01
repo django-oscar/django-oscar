@@ -14,8 +14,8 @@ env:
         - DJANGO=Django==1.7
 
 install:
-    - make install
     - easy_install $DJANGO
+    - make install
 
 before_script:
     # Create testing databases for running migrations against
