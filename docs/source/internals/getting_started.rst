@@ -68,8 +68,8 @@ Edit your settings file ``frobshop.frobshop.settings.py`` to specify
         'oscar.core.context_processors.metadata',
     )
 
-Next, modify ``INSTALLED_APPS`` to be a list, add ``South`` and ``compressor``
-and append Oscar's core apps:
+Next, modify ``INSTALLED_APPS`` to be a list, add ``django.contrib.sites``, ``django.contrib.flatpages`` and ``compressor``
+and append Oscar's core apps. Also set ``SITE_ID``:
 
 .. code-block:: django
 
@@ -238,17 +238,6 @@ Check your database settings. A quick way to get started is to use SQLite:
 Note that we recommend using ``ATOMIC_REQUESTS`` to tie transactions to
 requests.
 
-Then create the database and the shop should be browsable:
-
-.. code-block:: bash
-
-    $ python manage.py syncdb --noinput
-    $ python manage.py migrate
-    $ python manage.py runserver
-
-You should now have an empty, but running Oscar install that you can browse at
-http://localhost:8000.
-
 Migrations
 ----------
 
@@ -271,6 +260,20 @@ And you need to add it to your installed apps:
     ] + get_core_apps()
 
 .. _South: http://south.readthedocs.org/en/latest/
+
+Create Database
+---------------
+
+Then create the database and the shop should be browsable:
+
+.. code-block:: bash
+
+    $ python manage.py syncdb --noinput  # Only needed for Django 1.6
+    $ python manage.py migrate
+    $ python manage.py runserver
+
+You should now have an empty, but running Oscar install that you can browse at
+http://localhost:8000.
 
 
 Initial data
