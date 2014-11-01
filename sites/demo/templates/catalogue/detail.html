@@ -21,7 +21,7 @@
     {% if user.is_authenticated and user.is_staff %}
         <div class="row-fluid">
             <div class="well">
-                <a href="{% url 'dashboard:catalogue-product' product.id %}"><button class="btn btn-success btn-full">{% trans "Edit this product" %}</button></a>
+                <a href="{% url 'dashboard:catalogue-product' product.id %}"><button class="btn btn-success btn-full" data-loading-text="{% trans 'Submitting...' %}">{% trans "Edit this product" %}</button></a>
             </div>
         </div>
     {% endif %}
@@ -93,7 +93,7 @@
                                     <form action="{% url 'basket:add' pk=child.pk %}" method="post" class="form-inline">
                                         {% csrf_token %}
                                         {% include "partials/form_fields_inline.html" with form=basket_form %}
-                                        <button type="submit" class="btn btn-primary" value="Add to basket">{% trans "Add to bag" %}</button>
+                                        <button type="submit" class="btn btn-primary" value="Add to basket" data-loading-text="{% trans 'Adding...' %}">{% trans "Add to bag" %}</button>
                                     </form>
                                 {% else %}
                                     <p>{% trans "You can get an email alert when this product is back in stock." %}</p>
