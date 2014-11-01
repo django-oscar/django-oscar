@@ -39,7 +39,7 @@
                 {% include 'partials/form_field.html' with field=form.email %}
 
 
-                <button type="submit" class="btn btn-primary btn-large">{% trans "Save review" %}</button>
+                <button type="submit" class="btn btn-primary btn-large" data-loading-text="{% trans 'Saving...' %}">{% trans "Save review" %}</button>
                 {% trans "or" %}
                 <a href="{{ product.get_absolute_url }}">{% trans "cancel" %}</a>
             </fieldset>

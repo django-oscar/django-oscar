@@ -45,9 +45,9 @@
             </table>
             {% trans "With selected items:" %} 
             {% if list_type == 'inbox' %}
-                <button type="submit" class="btn btn-success" name="action" value="archive">{% trans "Archive" context 'verb' %}</button>
+                <button type="submit" class="btn btn-success" name="action" value="archive" data-loading-text="{% trans 'Archiving...' %}">{% trans "Archive" context 'verb' %}</button>
             {% endif %}
-            <button type="submit" class="btn btn-danger" name="action" value="delete">{% trans "Delete" %}</button>
+            <button type="submit" class="btn btn-danger" name="action" value="delete" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button>
         </form>
 
         {% include "partials/pagination.html" %}

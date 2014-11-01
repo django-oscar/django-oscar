@@ -25,7 +25,7 @@
             <form action="." method="get" class="form-horizontal">
                 {% include "partials/form_fields.html" with form=form %}
                 <div class="controls">
-                    <button type="submit" class="btn btn-primary">{% trans 'Filter results' %}</button>
+                    <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Filtering...' %}">{% trans 'Filter results' %}</button>
                     <a href="{% url 'customer:order-list' %}" class="btn">{% trans 'Reset' %}</a>
                 </div>
             </form>

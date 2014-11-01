@@ -40,7 +40,7 @@
             </p>
         {% endif %}
         <div class="form-actions">
-            <button class="btn btn-large btn-primary" type="submit">{% trans "Save" %}</button>
+            <button class="btn btn-large btn-primary" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
             {% trans "or" %} <a href="#" onclick="history.go(-1);return false" >{% trans "cancel" %}</a>.
         </div>
     </form>
