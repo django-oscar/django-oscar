@@ -92,7 +92,7 @@
         <form action="." method="post">
             {% csrf_token %}
             {% include "partials/form_fields.html" with form=form %}
-            <button type="submit" class="btn btn-primary">{% trans 'Add weight band' %}</button>
+            <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Adding...' %}">{% trans 'Add weight band' %}</button>
         </form>
     </div>
 {% endblock %}

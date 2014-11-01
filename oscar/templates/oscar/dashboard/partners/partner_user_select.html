@@ -33,7 +33,7 @@
         <div class="well">
             <form action="." method="get" class="form-inline">
                 {% include 'partials/form_fields_inline.html' with form=form %}
-                <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+                <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
                 {% if form.is_bound %}
                     <a class="btn" href="{% url 'dashboard:partner-user-select' partner_pk=partner.id %}" >{% trans "Reset" %}</a>
                 {% endif %}
@@ -71,7 +71,7 @@
                                         {% else %}
                                             <form action="{% url 'dashboard:partner-user-link' partner_pk=partner.id user_pk=user.id %}" method="post">
                                                 {% csrf_token %}
-                                                <button type="submit" class="btn btn-primary">{% trans 'Link user' %}</button>
+                                                <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Linking...' %}">{% trans 'Link user' %}</button>
                                             </form>
                                         {% endif %}
                                     </td>
