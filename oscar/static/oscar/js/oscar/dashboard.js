@@ -36,6 +36,7 @@ var oscar = (function(o, $) {
             o.dashboard.options = $.extend(true, defaults, options);
 
             o.dashboard.initWidgets(window.document);
+            o.dashboard.initForms();
 
             $(".category-select ul").prev('a').on('click', function(){
                 var $this = $(this),
@@ -188,6 +189,18 @@ var oscar = (function(o, $) {
             $textareas = $(el).find('textarea').not('.no-widget-init textarea').not('.no-widget-init');
             $textareas.filter('form.wysiwyg textarea').tinymce(o.dashboard.options.tinyConfig);
             $textareas.filter('.wysiwyg').tinymce(o.dashboard.options.tinyConfig);
+        },
+        initForms: function() {
+            // Disable buttons when they are clicked and show a "loading" message taken from the
+            // data-loading-text attribute (http://getbootstrap.com/2.3.2/javascript.html#buttons).
+            // Do not disable if button is inside a form with invalid fields.
+            // This uses a delegated event so that it keeps working for forms that are reloaded
+            // via AJAX: https://api.jquery.com/on/#direct-and-delegated-events
+            $(document.body).on('click', '[data-loading-text]', function(){
+                var form = $(this).parents("form");
+                if (!form || $(":invalid", form).length == 0)
+                    $(this).button('loading');
+            });
         },
         offers: {
             init: function() {
