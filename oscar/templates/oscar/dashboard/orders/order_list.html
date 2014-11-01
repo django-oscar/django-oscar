@@ -64,7 +64,7 @@
                 </div>
                 <div class="modal-footer">
                     <a href="#" class="btn" data-dismiss="modal">{% trans "Close" %}</a>
-                    <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+                    <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
                 </div>
             </form>
         </div>
@@ -82,7 +82,7 @@
                     <div class="pull-right">
                         <div class="form-inline">
                             <label>{% trans "Download selected orders as a CSV" %}</label>
-                            <button type="submit" class="btn btn-primary" name="action" value="download_selected_orders">{% trans "Download" %}</button>
+                            <button type="submit" class="btn btn-primary" name="action" value="download_selected_orders" data-loading-text="{% trans 'Submitting...' %}">{% trans "Download" %}</button>
                         </div>
                     </div>
                 </caption>
@@ -146,7 +146,7 @@
                                 
                             </div>
                         </div>
-                        <button type="submit" name="action" value="change_order_statuses" class="btn btn-primary">{% trans "Change status" %}</button>
+                        <button type="submit" name="action" value="change_order_statuses" class="btn btn-primary" data-loading-text="{% trans 'Changing...' %}">{% trans "Change status" %}</button>
                     {% else %}
                         {% trans "This order can't have its status changed." %}
                     {% endif %}

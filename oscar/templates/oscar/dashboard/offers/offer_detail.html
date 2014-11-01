@@ -27,9 +27,9 @@
         <form id="status_form" class="pull-right" method="post" action=".">
             {% csrf_token %}
             {% if offer.is_suspended %}
-                <button type="submit" class="btn btn-success" name="unsuspend">{% trans "Reinstate offer" %}</button>
+                <button type="submit" class="btn btn-success" name="unsuspend" data-loading-text="{% trans 'Reinstating...' %}">{% trans "Reinstate offer" %}</button>
             {% else %}
-                <button type="submit" class="btn" name="suspend">{% trans "Suspend offer" %}</button>
+                <button type="submit" class="btn" name="suspend" data-loading-text="{% trans 'Suspending...' %}">{% trans "Suspend offer" %}</button>
             {% endif %}
             <a class="btn btn-danger" href="{% url 'dashboard:offer-delete' pk=offer.pk %}">{% trans "Delete offer" %}</a>
         </form>

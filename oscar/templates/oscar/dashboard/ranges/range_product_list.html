@@ -46,7 +46,7 @@
                 <input type="hidden" name="action" value="add_products"/>
                 {% include 'partials/form_fields.html' with form=form %}
                 <div class="controls">
-                    <button type="submit" class="btn btn-primary">{% trans "Go!" %}</button>
+                    <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Running...' %}">{% trans "Go!" %}</button>
                 </div>
             </form>
 
@@ -88,7 +88,7 @@
                             <h3 class="pull-left">{% trans "Products in range" %}</h3>
                             <div class="pull-right">
                                 <input type="hidden" name="action" value="remove_selected_products" />
-                                <button type="submit" class="btn">{% trans "Remove selected products" %}</button>
+                                <button type="submit" class="btn" data-loading-text="{% trans 'Removing...' %}">{% trans "Remove selected products" %}</button>
                             </div>
                         </caption>
                         <thead>
