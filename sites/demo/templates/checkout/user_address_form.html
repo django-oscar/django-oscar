@@ -15,7 +15,7 @@
             </div>
         </div>
     </div>
-    <button type="submit" class="btn btn-large btn-primary pull-right">{% trans "Save" %}</button>
+    <button type="submit" class="btn btn-large btn-primary pull-right" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
     {% trans "or" %} <a href="{% url 'checkout:shipping-address' %}">{% trans "cancel" %}</a>.
 </form>
 {% endblock shipping_address %}

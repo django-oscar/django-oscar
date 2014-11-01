@@ -32,7 +32,7 @@
                     <form action="{% url 'basket:add' %}" method="post">
                         {% csrf_token %}
                         {{ basket_form.as_p }}
-                        <button type="submit" class="btn btn-large btn-primary btn-full">{% trans "Add to basket" %}</button>
+                        <button type="submit" class="btn btn-large btn-primary btn-full" data-loading-text="{% trans 'Adding...' %}">{% trans "Add to basket" %}</button>
                     </form>
                 {% else %}
                     <span class="btn btn-large btn-info disabled">{% trans "Out of Stock" %}</span>
