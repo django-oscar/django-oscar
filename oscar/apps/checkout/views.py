@@ -1,4 +1,3 @@
-from django.utils import six
 import logging
 
 from django import http
@@ -7,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext as _
+from django.utils import six
 from django.views import generic
 
 from oscar.apps.shipping.methods import NoShippingRequired
@@ -138,13 +138,14 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
     def get_initial(self):
         initial = self.checkout_session.new_shipping_address_fields()
         if initial:
-            # Convert the primary key stored in the session into a Country instance
+            # Convert the primary key stored in the session into a Country
+            # instance
             try:
                 initial['country'] = Country.objects.get(
                     iso_3166_1_a2=initial.pop('country_id'))
             except Country.DoesNotExist:
-                # Hmm, the previously selected Country no longer exists. We ignore
-                # this.
+                # Hmm, the previously selected Country no longer exists. We
+                # ignore this.
                 pass
         return initial
 
