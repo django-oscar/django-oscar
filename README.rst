@@ -303,15 +303,3 @@ Snowball`_ site.
 
 .. _`oscar@tangentlabs.co.uk`: mailto:oscar@tangentlabs.co.uk
 .. _`Tangent Snowball`: http://www.tangentsnowball.com/products/oscar
-
-Want to get paid to work on Oscar?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-`Tangent Labs`_ are currently looking for python hackers to work on Oscar as well
-as some of other internal products and e-commerce projects.  If this sounds
-interesting, please email `recruitment@tangentlabs.co.uk`_.
-
-The position is in Tangent's London offices and you must have the appropriate
-visas to work in the UK.
-
-.. _`recruitment@tangentlabs.co.uk`: mailto:recruitment@tangentlabs.co.uk
