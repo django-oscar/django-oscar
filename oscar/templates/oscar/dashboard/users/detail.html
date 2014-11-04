@@ -23,7 +23,7 @@
 {% block headertext %}{{ customer.email }}{% endblock %}
 
 {% block dashboard_content %}
-    <div class="row-fluid">
+    <div class="row">
         {% block user_general_info %}
             <div class="">
                 <div class="table-header">
@@ -145,7 +145,7 @@
                     {% block user_addresses %}
                         <div id="user_addresses" class="tab-pane">
                             <h2>{% trans "Addresses" %}</h2>
-                            <div class="row-fluid">
+                            <div class="row">
                                 {% for address in customer.addresses.all %}
 
                                     <div class="span3">
@@ -158,7 +158,7 @@
                                     {% if forloop.counter|divisibleby:4 %}
                                     </div>
                                     {% if not forloop.last %}
-                                        <div class="row-fluid">
+                                        <div class="row">
                                         {% endif %}
                                     {% endif %}
                                 {% empty %}

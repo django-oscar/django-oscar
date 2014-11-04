@@ -21,13 +21,11 @@
 <ul class="breadcrumb">
     <li>
         <a href="{{ homepage_url }}">{% trans "Home" %}</a>
-        <span class="divider">/</span>
     </li>
     {% with category=product.categories.all.0 %}
         {% for c in category.get_ancestors_and_self %}
         <li>
             <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
-            <span class="divider">/</span>
         </li>
         {% endfor %}
         <li class="active">{{ product.title }}</li>
@@ -51,16 +49,16 @@
 
 <article class="product_page"><!-- Start of product page -->
 
-    <div class="row-fluid">
+    <div class="row">
 
         {% block product_gallery %}
-        <div class="span6">
+        <div class="col-sm-6">
             {% include "catalogue/partials/gallery.html" %}
         </div>
         {% endblock %}
 
         {% block product_main %}
-        <div class="span6">
+        <div class="col-sm-6">
             {% comment %}
             This is a but clunky here.  Better to have some kind of JS-driven dashboard menu that 
             pops out when clicked.  A bit like the Django-Debug-Toolbar button
@@ -83,10 +81,10 @@
             {% block product_basket_form %}
                 {% include "catalogue/partials/add_to_basket_form.html" %}
             {% endblock %}
-        </div><!-- /span6 -->
+        </div><!-- /col-sm-6 -->
         {% endblock %}
 
-    </div><!-- /row-fluid -->
+    </div><!-- /row -->
 
     {% block product_description %}
         {% if product.description %}
@@ -183,9 +181,9 @@
             <div class="sub-header">
                 <h2>{% trans "Recommended items" %}</h2>
             </div>
-            <ul class="row-fluid">
+            <ul class="row">
                 {% for product in recommended_products %}
-                <li class="span2 {% if forloop.counter0|divisibleby:"6" %}no-margin{% endif %}">
+                <li class="col-sm-2 {% if forloop.counter0|divisibleby:"6" %}no-margin{% endif %}">
                     {% render_product product %}
                 </li>
                 {% endfor %}

@@ -21,7 +21,7 @@
         <div class="well">
             {% csrf_token %}
             {% include "partials/form_fields.html" with form=form %}
-            <button type="submit" class="btn btn-large btn-primary">{% trans "Save" %}</button>
+            <button type="submit" class="btn btn-lg btn-primary">{% trans "Save" %}</button>
             {% trans "or" %} <a href="{% url 'checkout:shipping-address' %}">{% trans "cancel" %}</a>.
         </div>
     </form>

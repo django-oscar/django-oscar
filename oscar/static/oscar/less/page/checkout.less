@@ -16,7 +16,7 @@ input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
 // Basket items like table headers
 .basket-title {
     clear:both;
-    border-bottom:1px solid lighten(@grayLight, 30%);
+    border-bottom:1px solid lighten(@gray-light, 30%);
     padding:0 10px;
     h4 {
         margin:0;
@@ -25,10 +25,10 @@ input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
 
 // Basket items
 .basket-items {
-    border-bottom:1px solid lighten(@grayLight, 30%);
+    border-bottom:1px solid lighten(@gray-light, 30%);
     padding:10px;
     &:nth-child(even) {
-        background:lighten(@grayLighter, 4%);
+        background:lighten(@gray-lighter, 4%);
     }
     img {
         margin-left:auto;
@@ -36,6 +36,7 @@ input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
     }
     .price_color {
         .h4();
+        color:@brand-success;
         font-weight:bold;
     }
 }
@@ -70,19 +71,19 @@ input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
         span:first-child {
         display:block;
         font-weight:bold;
-        margin-bottom:@baseLineHeight / 2;
+        margin-bottom:@line-height-computed / 2;
         }
     }
     .btn-primary,
     .btn-success {
         position:absolute;
-        bottom: @gridGutterWidth;
-        left: @gridGutterWidth;
+        bottom: @grid-gutter-width;
+        left: @grid-gutter-width;
     }
     .address-controls {
         position:absolute;
-        top: @gridGutterWidth;
-        right: @gridGutterWidth;
+        top: @grid-gutter-width;
+        right: @grid-gutter-width;
     }
 }
 

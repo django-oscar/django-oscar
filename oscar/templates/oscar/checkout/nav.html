@@ -2,9 +2,9 @@
 
 <div class="navbar navbar-static-top navbar-inverse nav-checkout">
     <div class="navbar-inner">
-        <ul class="nav row-fluid">
+        <ul class="nav row">
             {% spaceless %}
-                <li class="step1 {% if step == 1 %}active{% else %}{% if step == 2 %}previous{% else %}{% if step > 1 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} span3">
+                <li class="step1 {% if step == 1 %}active{% else %}{% if step == 2 %}previous{% else %}{% if step > 1 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} col-sm-3">
                     {% if step == 2 or step == 3 or step == 4 %}
                         <a href="{% url 'checkout:shipping-address' %}">
                             <i class="visible-phone icon-chevron-left"></i>
@@ -19,7 +19,7 @@
                     {% endif %}
                 </li>
 
-                <li class="step2 {% if step == 2 %}active{% else %}{% if step == 3 %}previous{% else %}{% if step > 2 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} span3">
+                <li class="step2 {% if step == 2 %}active{% else %}{% if step == 3 %}previous{% else %}{% if step > 2 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} col-sm-3">
                     {% if step == 3 or step == 4 %}
                         <a href="{% url 'checkout:shipping-method' %}">
                             <i class="visible-phone icon-chevron-left"></i>
@@ -34,7 +34,7 @@
                     {% endif %}
                 </li>
 
-                <li class="step3 {% if step == 3 %}active{% else %}{% if step == 4 %}previous{% else %}{% if step > 3 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} span3">
+                <li class="step3 {% if step == 3 %}active{% else %}{% if step == 4 %}previous{% else %}{% if step > 3 %}visited{% else %}disabled{% endif %}{% endif %}{% endif %} col-sm-3">
                     {% if step == 4 %}
                         <a href="{% url 'checkout:payment-details' %}">
                             <i class="visible-phone icon-chevron-left"></i>
@@ -49,7 +49,7 @@
                     {% endif %}
                 </li>
 
-                <li class="step4 {% if step == 4 %}active{% else %}disabled{% endif %} span3">
+                <li class="step4 {% if step == 4 %}active{% else %}disabled{% endif %} col-sm-3">
                     <span class="navbar-text">
                         {% trans "4. Confirmation" %}
                     </span>

@@ -1,10 +1,6 @@
 // OSCAR HEADER
 // -----------
 
-.navbar-static-top.navbar .nav > li > a {
-  padding:10px 15px;
-}
-
 .header {
     position:relative;
     z-index:2;
@@ -15,6 +11,10 @@
         line-height:inherit;
         margin:0;
         font-size:30px;
+    }
+
+    .navbar-static-top {
+        margin-bottom: 0; // remove 18px margin for default navbar
     }
 }
 
@@ -32,6 +32,8 @@
         width:400px;
         padding-bottom:0px;
         max-width:none;
+        z-index: 9999;
+
         li {
             display:block;
         }
@@ -41,7 +43,7 @@
 // Basket Mini Item
 .basket-mini-item {
     li {
-        border-top:1px solid @grayLighter;
+        border-top:1px solid @gray-lighter;
         padding:10px 15px;
         &:first-child {
             border-top:none;
@@ -58,7 +60,7 @@
         }
     }
     a {
-        color:@linkColor;
+        color:@link-color;
         font-weight:inherit;
         white-space:normal;
         &.btn {
@@ -71,7 +73,7 @@
         border-radius: 0 0px 6px 6px;
         margin:0px;
         h4 {
-            margin-bottom:@baseLineHeight / 2;
+            margin-bottom:@line-height-computed / 2;
         }
     }
 }

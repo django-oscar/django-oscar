@@ -12,11 +12,9 @@
     <ul class="breadcrumb">
         <li>
             <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
-            <span class="divider">/</span>
         </li>
         {% block extra_breadcrumbs %}{% endblock %}
         <li class="active">{{ page_title }}</li>

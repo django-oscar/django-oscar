@@ -2,15 +2,17 @@
 // -----------
 
 body {
-    background-color: @grayLighter;
+    background-color: @gray-lighter;
 }
+
 .container-fluid {
-    padding:0px;
-    margin:0px auto;
+    padding: 0px;
+    //margin:0px auto;
     // Here is the page width: editable in page/mixins.less
-    max-width:@oscarpagewidth;
+    max-width: @oscarpagewidth;
 }
-.row-fluid {
+
+.row {
     .box-sizing(border-box);
 }
 
@@ -28,6 +30,6 @@ body {
 // Some padding for the inner container
 // Also useful for mobile
 .page_inner {
-    padding:@gridGutterWidth;
+    padding:@grid-gutter-width;
     .clearfix();
 }

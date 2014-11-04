@@ -11,10 +11,10 @@
         <link rel="stylesheet" href="{% static "oscar/css/bootstrap.min.css" %}" />
         {% if use_less %}
             <link rel="stylesheet" type="text/less" href="{% static "oscar/less/dashboard.less" %}" />
-            <link rel="stylesheet" type="text/less" href="{% static "oscar/less/responsive.less" %}" />
+            <link rel="stylesheet" type="text/less" href="{% static "oscar/less/responsive-bootstrap2.less" %}" />
         {% else %}
             <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard.css" %}" />
-            <link rel="stylesheet" type="text/css" href="{% static "oscar/css/responsive.css" %}" />
+            <link rel="stylesheet" type="text/css" href="{% static "oscar/css/responsive-bootstrap2.css" %}" />
         {% endif %}
     {% endcompress %}
 {% endblock %}
@@ -139,6 +139,16 @@
             <img src="//oscar-static.tangentlabs.co.uk/tracker.gif?{{ call_home }}" style="display:none" />
         {% endif %}
     {% endblock %}
+{% endblock %}
+
+{# Local scripts #}
+{% block scripts %}
+    {% compress js %}
+    <!-- Twitter Bootstrap -->
+    <script type="text/javascript" src="{% static "oscar/js/bootstrap2/bootstrap.min.js" %}"></script>
+    <!-- Oscar -->
+    <script src="{% static "oscar/js/oscar/ui.js" %}" type="text/javascript" charset="utf-8"></script>
+    {% endcompress %}
 {% endblock %}
 
 {% block extrascripts %}
