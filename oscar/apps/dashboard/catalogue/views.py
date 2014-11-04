@@ -656,31 +656,6 @@ class ProductClassCreateUpdateView(generic.UpdateView):
 
     form_valid = form_invalid = process_all_forms
 
-    def get_title(self):
-        if self.creating:
-            title = _("Add a new product type")
-        else:
-            title = _("Update product type '%s'") % self.object.name
-
-        return title
-
-    def get_success_url(self):
-        if self.creating:
-            messages.info(self.request, _("Product type created successfully"))
-            return reverse("dashboard:catalogue-class-list")
-        else:
-            messages.info(self.request, _("Product type updated successfully"))
-            return reverse("dashboard:catalogue-class-list")
-
-    def get_object(self, queryset=None):
-        self.creating = 'pk' not in self.kwargs
-        if self.creating:
-            return None
-
-        product_class = get_object_or_404(ProductClass, pk=self.kwargs['pk'])
-
-        return product_class
-
     def get_context_data(self, *args, **kwargs):
         ctx = super(ProductClassCreateUpdateView, self).get_context_data(
             *args, **kwargs)
@@ -692,6 +667,37 @@ class ProductClassCreateUpdateView(generic.UpdateView):
         ctx["title"] = self.get_title()
 
         return ctx
+
+
+class ProductClassCreateView(ProductClassCreateUpdateView):
+
+    creating = True
+
+    def get_object(self):
+        return None
+
+    def get_title(self):
+        return _("Add a new product type")
+
+    def get_success_url(self):
+        messages.info(self.request, _("Product type created successfully"))
+        return reverse("dashboard:catalogue-class-list")
+
+
+class ProductClassUpdateView(ProductClassCreateUpdateView):
+
+    creating = False
+
+    def get_title(self):
+        return _("Update product type '%s'") % self.object.name
+
+    def get_success_url(self):
+        messages.info(self.request, _("Product type updated successfully"))
+        return reverse("dashboard:catalogue-class-list")
+
+    def get_object(self):
+        product_class = get_object_or_404(ProductClass, pk=self.kwargs['pk'])
+        return product_class
 
 
 class ProductClassListView(generic.ListView):

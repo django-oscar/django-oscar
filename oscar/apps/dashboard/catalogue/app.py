@@ -30,8 +30,10 @@ class CatalogueApplication(Application):
     product_delete_view = get_class('dashboard.catalogue.views',
                                     'ProductDeleteView')
 
-    product_class_createupdate_view = get_class('dashboard.catalogue.views',
-                                                'ProductClassCreateUpdateView')
+    product_class_create_view = get_class('dashboard.catalogue.views',
+                                          'ProductClassCreateView')
+    product_class_update_view = get_class('dashboard.catalogue.views',
+                                          'ProductClassUpdateView')
     product_class_list_view = get_class('dashboard.catalogue.views',
                                         'ProductClassListView')
     product_class_delete_view = get_class('dashboard.catalogue.views',
@@ -91,13 +93,13 @@ class CatalogueApplication(Application):
                 self.category_delete_view.as_view(),
                 name='catalogue-category-delete'),
             url(r'^product-type/create/$',
-                self.product_class_createupdate_view.as_view(),
+                self.product_class_create_view.as_view(),
                 name='catalogue-class-create'),
             url(r'^product-types/$',
                 self.product_class_list_view.as_view(),
                 name='catalogue-class-list'),
             url(r'^product-type/(?P<pk>\d+)/update/$',
-                self.product_class_createupdate_view.as_view(),
+                self.product_class_update_view.as_view(),
                 name='catalogue-class-update'),
             url(r'^product-type/(?P<pk>\d+)/delete/$',
                 self.product_class_delete_view.as_view(),
