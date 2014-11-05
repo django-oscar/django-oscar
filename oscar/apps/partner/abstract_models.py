@@ -1,8 +1,8 @@
 from django.db import models
-from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 
+from oscar.core.utils import get_default_currency
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.models.fields import AutoSlugField
 from oscar.apps.partner.exceptions import InvalidStockAdjustment
@@ -100,7 +100,7 @@ class AbstractStockRecord(models.Model):
 
     # Price info:
     price_currency = models.CharField(
-        _("Currency"), max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
+        _("Currency"), max_length=12, default=get_default_currency)
 
     # This is the base price for calculations - tax should be applied by the
     # appropriate method.  We don't store tax here as its calculation is highly

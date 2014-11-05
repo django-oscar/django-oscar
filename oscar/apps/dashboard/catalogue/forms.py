@@ -354,8 +354,11 @@ class ProductForm(forms.ModelForm):
         """
         product_class = self.instance.get_product_class()
         for attribute in product_class.attributes.all():
-            value = self.cleaned_data['attr_%s' % attribute.code]
-            setattr(self.instance.attr, attribute.code, value)
+            field_name = 'attr_%s' % attribute.code
+            # An empty text field won't show up in cleaned_data.
+            if field_name in self.cleaned_data:
+                value = self.cleaned_data[field_name]
+                setattr(self.instance.attr, attribute.code, value)
         super(ProductForm, self)._post_clean()
 
 
@@ -440,6 +443,7 @@ class ProductRecommendationForm(forms.ModelForm):
 
     class Meta:
         model = ProductRecommendation
+        fields = ['primary', 'recommendation', 'ranking']
         widgets = {
             'recommendation': ProductSelect,
         }
@@ -460,3 +464,4 @@ class ProductClassForm(forms.ModelForm):
 
     class Meta:
         model = ProductClass
+        fields = ['name', 'requires_shipping', 'track_stock', 'options']

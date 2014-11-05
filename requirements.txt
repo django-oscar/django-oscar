@@ -6,7 +6,7 @@ Werkzeug>=0.9.4,<0.10
 
 # Sandbox
 Whoosh>=2.5
-pysolr>=3.1
+pysolr>=3.2,<3.3
 requests==2.1
 uWSGI==1.9.21.1
 South>=1.0,<1.1

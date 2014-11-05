@@ -7,11 +7,11 @@
     {% else %}
         {% if basket.is_tax_known %}
             {% blocktrans with total=basket.total_incl_tax|currency:basket.currency %}
-            Basket total now <strong>{{ total }}</strong>
+            Your basket total is now <strong>{{ total }}</strong>
             {% endblocktrans %}
         {% else %}
             {% blocktrans with total=basket.total_excl_tax|currency:basket.currency %}
-            Basket total now <strong>{{ total }}</strong>
+            Your basket total is now <strong>{{ total }}</strong>
             {% endblocktrans %}
         {% endif %}
     {% endif %}

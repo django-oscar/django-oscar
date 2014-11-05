@@ -10,6 +10,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.utils.datastructures import SortedDict
 
+from oscar.core.utils import get_default_currency
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.models.fields import AutoSlugField
 from . import exceptions
@@ -48,7 +49,7 @@ class AbstractOrder(models.Model):
     # prices of the associated lines, but in some circumstances extra
     # order-level charges are added and so we need to store it separately
     currency = models.CharField(
-        _("Currency"), max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
+        _("Currency"), max_length=12, default=get_default_currency)
     total_incl_tax = models.DecimalField(
         _("Order total (inc. tax)"), decimal_places=2, max_digits=12)
     total_excl_tax = models.DecimalField(

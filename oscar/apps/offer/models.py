@@ -7,6 +7,7 @@ from decimal import Decimal as D, ROUND_DOWN, ROUND_UP
 from django.core import exceptions
 from django.template.defaultfilters import date as date_filter
 from django.db import models
+from django.db.models.query import Q
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now, get_current_timezone
 from django.utils.translation import ungettext, ugettext_lazy as _
@@ -818,6 +819,7 @@ class Range(models.Model):
     __included_product_ids = None
     __excluded_product_ids = None
     __class_ids = None
+    __category_ids = None
 
     objects = models.Manager()
     browsable = BrowsableRangeManager()
@@ -933,13 +935,50 @@ class Range(models.Model):
             self.__class_ids = self.classes.values_list('pk', flat=True)
         return self.__class_ids
 
+    def _category_ids(self):
+        if self.__category_ids is None:
+            category_ids_list = list(
+                self.included_categories.values_list('pk', flat=True))
+            for category in self.included_categories.all():
+                children_ids = category.get_descendants().values_list(
+                    'pk', flat=True)
+                category_ids_list.extend(list(children_ids))
+
+            self.__category_ids = category_ids_list
+
+        return self.__category_ids
+
     def num_products(self):
         # Delegate to a proxy class if one is provided
         if self.proxy_class:
             return load_proxy(self.proxy_class)().num_products()
         if self.includes_all_products:
             return None
-        return self.included_products.all().count()
+        return self.all_products().count()
+
+    def all_products(self):
+        """
+        Return a queryset containing all the products in the
+        included_products plus the products contained in the
+        included classes and included categories,
+        minus the products in excluded_products.
+        """
+
+        if self.proxy_class:
+            return load_proxy(self.proxy_class)().all_products()
+
+        Product = get_model("catalogue", "Product")
+        if self.includes_all_products:
+            # do not return child products
+            return Product.objects.filter(structure__in=[Product.PARENT,
+                                                         Product.STANDALONE])
+
+        product_set = Product.objects.filter(
+            Q(id__in=self._included_product_ids()) |
+            Q(product_class_id__in=self._class_ids()) |
+            Q(productcategory__category_id__in=self._category_ids())
+        ).exclude(id__in=self._excluded_product_ids())
+        return product_set
 
     @property
     def is_editable(self):
@@ -984,6 +1023,7 @@ class CountCondition(Condition):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Count condition")
         verbose_name_plural = _("Count conditions")
@@ -1072,6 +1112,7 @@ class CoverageCondition(Condition):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Coverage Condition")
         verbose_name_plural = _("Coverage Conditions")
@@ -1175,6 +1216,7 @@ class ValueCondition(Condition):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Value condition")
         verbose_name_plural = _("Value conditions")
@@ -1347,6 +1389,7 @@ class PercentageDiscountBenefit(Benefit):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Percentage discount benefit")
         verbose_name_plural = _("Percentage discount benefits")
@@ -1409,6 +1452,7 @@ class AbsoluteDiscountBenefit(Benefit):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Absolute discount benefit")
         verbose_name_plural = _("Absolute discount benefits")
@@ -1487,6 +1531,7 @@ class FixedPriceBenefit(Benefit):
             'amount': currency(self.value)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Fixed price benefit")
         verbose_name_plural = _("Fixed price benefits")
@@ -1553,6 +1598,7 @@ class MultibuyDiscountBenefit(Benefit):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Multibuy discount benefit")
         verbose_name_plural = _("Multibuy discount benefits")
@@ -1584,6 +1630,7 @@ class ShippingBenefit(Benefit):
         return SHIPPING_DISCOUNT
 
     class Meta:
+        app_label = 'offer'
         proxy = True
 
 
@@ -1596,6 +1643,7 @@ class ShippingAbsoluteDiscountBenefit(ShippingBenefit):
             'amount': currency(self.value)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Shipping absolute discount benefit")
         verbose_name_plural = _("Shipping absolute discount benefits")
@@ -1613,6 +1661,7 @@ class ShippingFixedPriceBenefit(ShippingBenefit):
             'amount': currency(self.value)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Fixed price shipping benefit")
         verbose_name_plural = _("Fixed price shipping benefits")
@@ -1632,6 +1681,7 @@ class ShippingPercentageDiscountBenefit(ShippingBenefit):
             'value': self.value}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Shipping percentage discount benefit")
         verbose_name_plural = _("Shipping percentage discount benefits")
@@ -1671,6 +1721,7 @@ class RangeProductFileUpload(models.Model):
         _("Number of Duplicate SKUs"), null=True)
 
     class Meta:
+        app_label = 'offer'
         ordering = ('-date_uploaded',)
         verbose_name = _("Range Product Uploaded File")
         verbose_name_plural = _("Range Product Uploaded Files")
