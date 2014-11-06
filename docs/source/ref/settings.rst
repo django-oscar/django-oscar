@@ -32,28 +32,6 @@ URL of home page of your site. This value is used for `Home` link in
 navigation and redirection page after logout. Useful if you use a different app
 to serve your homepage.
 
-``OSCAR_PARTNER_WRAPPERS``
---------------------------
-
-Default: ``{}``
-
-This is an important setting which defines availability for each fulfillment
-partner.  The setting should be a dict from parter name to a path to a "wrapper"
-class.  For example::
-
-    OSCAR_PARTNER_WRAPPERS = {
-        'Acme': 'myproject.partners.AcmeWrapper',
-        'Omnicorp': 'myproject.partners.OmnicorpWrapper',
-    }
-
-The wrapper class should subclass ``oscar.apps.partner.wrappers.DefaultWrapper``
-and override the appropriate methods to control availability behaviour.
-
-.. warning::
-
-   This settings has been deprecated for Oscar 0.6.  Use :ref:`strategy classes <strategy_class>` 
-   instead to provide availability and pricing information.
-
 ``OSCAR_RECENTLY_VIEWED_PRODUCTS``
 ----------------------------------
 

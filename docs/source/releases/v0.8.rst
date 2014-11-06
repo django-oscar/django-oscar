@@ -270,6 +270,8 @@ Minor changes
 Backwards incompatible changes in 0.8
 -------------------------------------
 
+.. _product_structure_changes_in_0.8:
+
 Product structure
 ~~~~~~~~~~~~~~~~~
 
@@ -680,6 +682,14 @@ Migrations
 
 .. _deprecated_features_in_0.8:
 
+Deprecated features
+~~~~~~~~~~~~~~~~~~~
+
+The following features have been deprecated in this release:
+
+* Many attributes concerning product structure. Please see the
+  `product structure changes <product_structure_changes_in_0.8>`_ for details.
+
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -699,8 +709,10 @@ These methods have been removed:
 * ``oscar.apps.partner.abstract_models.AbstractStockRecord.lead_time``
 * ``oscar.apps.partner.abstract_models.AbstractStockRecord.price_incl_tax``
 * ``oscar.apps.partner.abstract_models.AbstractStockRecord.price_tax``
+* ``oscar.apps.payment.abstract_models.AbstractBankcard.card_number``
 
-These classes have been removed
+These classes have been removed:
 
 * ``oscar.apps.partner.prices.DelegateToStockRecord``
 * ``oscar.apps.partner.availability.DelegateToStockRecord``
+* ``oscar.apps.payment.utils.Bankcard``

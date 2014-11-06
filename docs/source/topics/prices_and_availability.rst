@@ -56,12 +56,6 @@ availability.
 By using your own custom strategy class, a wide range of pricing, tax and
 availability problems can be easily solved.
 
-.. note::
-
-    Oscar's handling of prices and availability was reworked for v0.6.  
-    The old APIs are still available but considered deprecated and
-    will be removed in Oscar 0.7.
-
 .. _strategy_class:
 
 The strategy class

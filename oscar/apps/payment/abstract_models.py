@@ -298,16 +298,6 @@ class AbstractBankcard(models.Model):
         self.start_date = self.issue_number = self.ccv = None
 
     @property
-    def card_number(self):
-        """
-        The card number
-        """
-        import warnings
-        warnings.warn(("The `card_number` property is deprecated in favour of "
-                       "`number` on the Bankcard model"), DeprecationWarning)
-        return self.number
-
-    @property
     def cvv(self):
         return self.ccv
 

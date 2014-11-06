@@ -535,9 +535,9 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
 
         :basket: The basket to submit.
         :payment_kwargs: Additional kwargs to pass to the handle_payment
-        method. It normally makes sense to pass form instances (rather than
-        model instances) so that the forms can be re-rendered correctly if
-        payment fails.
+                         method. It normally makes sense to pass form
+                         instances (rather than model instances) so that the
+                         forms can be re-rendered correctly if payment fails.
         :order_kwargs: Additional kwargs to pass to the place_order method
         """
         if payment_kwargs is None:
