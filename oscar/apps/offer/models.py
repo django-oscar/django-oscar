@@ -7,6 +7,7 @@ from decimal import Decimal as D, ROUND_DOWN, ROUND_UP
 from django.core import exceptions
 from django.template.defaultfilters import date as date_filter
 from django.db import models
+from django.db.models.query import Q
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now, get_current_timezone
 from django.utils.translation import ungettext, ugettext_lazy as _
@@ -818,6 +819,7 @@ class Range(models.Model):
     __included_product_ids = None
     __excluded_product_ids = None
     __class_ids = None
+    __category_ids = None
 
     objects = models.Manager()
     browsable = BrowsableRangeManager()
@@ -933,13 +935,50 @@ class Range(models.Model):
             self.__class_ids = self.classes.values_list('pk', flat=True)
         return self.__class_ids
 
+    def _category_ids(self):
+        if self.__category_ids is None:
+            category_ids_list = list(
+                self.included_categories.values_list('pk', flat=True))
+            for category in self.included_categories.all():
+                children_ids = category.get_descendants().values_list(
+                    'pk', flat=True)
+                category_ids_list.extend(list(children_ids))
+
+            self.__category_ids = category_ids_list
+
+        return self.__category_ids
+
     def num_products(self):
         # Delegate to a proxy class if one is provided
         if self.proxy_class:
             return load_proxy(self.proxy_class)().num_products()
         if self.includes_all_products:
             return None
-        return self.included_products.all().count()
+        return self.all_products().count()
+
+    def all_products(self):
+        """
+        Return a queryset containing all the products in the
+        included_products plus the products contained in the
+        included classes and included categories,
+        minus the products in excluded_products.
+        """
+
+        if self.proxy_class:
+            return load_proxy(self.proxy_class)().all_products()
+
+        Product = get_model("catalogue", "Product")
+        if self.includes_all_products:
+            # do not return child products
+            return Product.objects.filter(structure__in=[Product.PARENT,
+                                                         Product.STANDALONE])
+
+        product_set = Product.objects.filter(
+            Q(id__in=self._included_product_ids()) |
+            Q(product_class_id__in=self._class_ids()) |
+            Q(productcategory__category_id__in=self._category_ids())
+        ).exclude(id__in=self._excluded_product_ids())
+        return product_set
 
     @property
     def is_editable(self):
