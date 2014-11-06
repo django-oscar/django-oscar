@@ -312,32 +312,30 @@ GOOGLE_ANALYTICS_ID = 'UA-45363517-4'
 
 # Add stores node to navigation
 new_nav = OSCAR_DASHBOARD_NAVIGATION
-new_nav.append(
-    {
-        'label': 'Stores',
-        'icon': 'icon-shopping-cart',
-        'children': [
-            {
-                'label': 'Stores',
-                'url_name': 'stores-dashboard:store-list',
-            },
-            {
-                'label': 'Store groups',
-                'url_name': 'stores-dashboard:store-group-list',
-            },
-        ]
-    })
-new_nav.append(
-    {
-        'label': 'Datacash',
-        'icon': 'icon-globe',
-        'children': [
-            {
-                'label': 'Transactions',
-                'url_name': 'datacash-transaction-list',
-            },
-        ]
-    })
+new_nav['stores'] = {
+    'label': 'Stores',
+    'icon': 'icon-shopping-cart',
+    'children': [
+        {
+            'label': 'Stores',
+            'url_name': 'stores-dashboard:store-list',
+        },
+        {
+            'label': 'Store groups',
+            'url_name': 'stores-dashboard:store-group-list',
+        },
+    ]
+}
+new_nav['datacash'] = {
+    'label': 'Datacash',
+    'icon': 'icon-globe',
+    'children': [
+        {
+            'label': 'Transactions',
+            'url_name': 'datacash-transaction-list',
+        },
+    ]
+}
 OSCAR_DASHBOARD_NAVIGATION = new_nav
 
 GEOIP_PATH = os.path.join(os.path.dirname(__file__), 'geoip')

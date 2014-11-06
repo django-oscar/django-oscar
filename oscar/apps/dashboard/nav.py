@@ -12,7 +12,7 @@ class Node(object):
     """
 
     def __init__(self, label, url_name=None, url_args=None, url_kwargs=None,
-                 access_fn=None, icon=None):
+                 access_fn=None, icon=None, order=None):
         self.label = label
         self.icon = icon
         self.url_name = url_name
@@ -20,6 +20,7 @@ class Node(object):
         self.url_kwargs = url_kwargs
         self.access_fn = access_fn
         self.children = []
+        self.order = order
 
     @property
     def is_heading(self):
@@ -32,6 +33,7 @@ class Node(object):
 
     def add_child(self, node):
         self.children.append(node)
+        self.children.sort(key=lambda node: node.order)
 
     def is_visible(self, user):
         return self.access_fn is None or self.access_fn(
