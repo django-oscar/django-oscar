@@ -1,14 +1,19 @@
 import os
 import tempfile
-import unittest
 
-import django
 from django.test import TestCase
 from django.conf import settings
 
 from oscar.core import customisation
 
 VALID_FOLDER_PATH = 'tests/_site/apps'
+
+
+class TestUtilities(TestCase):
+
+    def test_subfolder_extraction(self):
+        folders = list(customisation.subfolders('/var/www/eggs'))
+        self.assertEqual(folders, ['/var', '/var/www', '/var/www/eggs'])
 
 
 class TestForkAppFunction(TestCase):
@@ -19,11 +24,6 @@ class TestForkAppFunction(TestCase):
     def test_raises_exception_for_nonexistant_app_label(self):
         with self.assertRaises(ValueError):
             customisation.fork_app('sillytown', 'somefolder')
-
-    def test_raises_exception_for_nonexistant_folder(self):
-        assert not os.path.exists('does_not_exist')
-        with self.assertRaises(ValueError):
-            customisation.fork_app('order', 'does_not_exist')
 
     def test_raises_exception_if_app_has_already_been_forked(self):
         # We piggyback on another test which means a custom app is already in
@@ -42,6 +42,15 @@ class TestForkAppFunction(TestCase):
         customisation.fork_app('order', self.tmp_folder)
         filepath = os.path.join(self.tmp_folder, 'order', '__init__.py')
         self.assertTrue(os.path.exists(filepath))
+
+    def test_handles_dashboard_app(self):
+        # Dashboard apps are fiddly as they aren't identified by a single app
+        # label.
+        customisation.fork_app('dashboard.catalogue', self.tmp_folder)
+        # Check __init__.py created (and supporting folders)
+        init_path = os.path.join(self.tmp_folder,
+                                 'dashboard/catalogue/__init__.py')
+        self.assertTrue(os.path.exists(init_path))
 
     def test_creates_models_and_admin_file(self):
         customisation.fork_app('order', self.tmp_folder)
