@@ -517,8 +517,8 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             return None
 
     def submit(self, user, basket, shipping_address, shipping_method,  # noqa (too complex (10))
-               shipping_charge, order_total, payment_kwargs=None,
-               order_kwargs=None):
+               shipping_charge, billing_address, order_total,
+               payment_kwargs=None, order_kwargs=None):
         """
         Submit a basket for order placement.
 
@@ -534,7 +534,10 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
            - If payment is unsuccessful, show an appropriate error message
 
         :basket: The basket to submit.
-        :payment_kwargs: Additional kwargs to pass to the handle_payment method
+        :payment_kwargs: Additional kwargs to pass to the handle_payment
+        method. It normally makes sense to pass form instances (rather than
+        model instances) so that the forms can be re-rendered correctly if
+        payment fails.
         :order_kwargs: Additional kwargs to pass to the place_order method
         """
         if payment_kwargs is None:
@@ -626,7 +629,7 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
         try:
             return self.handle_order_placement(
                 order_number, user, basket, shipping_address, shipping_method,
-                shipping_charge, order_total, **order_kwargs)
+                shipping_charge, billing_address, order_total, **order_kwargs)
         except UnableToPlaceOrder as e:
             # It's possible that something will go wrong while trying to
             # actually place an order.  Not a good situation to be in as a
