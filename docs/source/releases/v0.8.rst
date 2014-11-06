@@ -24,7 +24,7 @@ two versions of Django, support for Django 1.5 has been dropped.
 
 This release also adds full Python 3.3 and 3.4 support. But due to South
 not supporting Python 3, Python 3 support is only supported in combination
-with Django 1.7 and it's new migration framework.
+with Django 1.7 and its new migration framework.
 
 If you're using ``pysolr`` for search, you need to upgrade to version 3.2 or
 later.
@@ -88,6 +88,15 @@ Unfortunately, the changes in Django required a few breaking changes when
 upgrading Oscar both for users staying on Django 1.6 and for users upgrading to
 Django 1.7 at the same time. These are detailed in the section for
 backwards-incompatible changes.
+
+Billing addresses explicitly passed around checkout
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``build_submission`` method used in checkout now has a ``billing_address``
+key and the signatures for the ``submit`` and ``handle_order_placement`` methods
+have been extended to include it as a keyword argument. While this change should
+be backwards compatible, it's worth being aware of the method signature changes
+in case it affects your checkout implementation.
 
 Dashboard for weight-based shipping methods
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -261,6 +261,7 @@ class CheckoutSessionMixin(object):
         shipping_address = self.get_shipping_address(basket)
         shipping_method = self.get_shipping_method(
             basket, shipping_address)
+        billing_address = self.get_billing_address(shipping_address)
         if not shipping_method:
             total = shipping_charge = None
         else:
@@ -273,9 +274,18 @@ class CheckoutSessionMixin(object):
             'shipping_address': shipping_address,
             'shipping_method': shipping_method,
             'shipping_charge': shipping_charge,
+            'billing_address': billing_address,
             'order_total': total,
             'order_kwargs': {},
             'payment_kwargs': {}}
+
+        # If there is a billing address, add it to the payment kwargs as calls
+        # to payment gateways generally require the billing address. Note, that
+        # it normally makes sense to pass the form instance that captures the
+        # billing address information. That way, if payment fails, you can
+        # render bound forms in the template to make re-submission easier.
+        if billing_address:
+            submission['payment_kwargs']['billing_address'] = billing_address
 
         # Allow overrides to be passed in
         submission.update(kwargs)
@@ -348,6 +358,13 @@ class CheckoutSessionMixin(object):
     def get_billing_address(self, shipping_address):
         """
         Return an unsaved instance of the billing address (if one exists)
+
+        This method only returns a billing address if the session has been used
+        to store billing address information. It's also possible to capture
+        billing address information as part of the payment details forms, which
+        never get stored in the session. In that circumstance, the billing
+        address can be set directly in the build_submission dict (see Oscar's
+        demo site for an example of this approach).
         """
         if not self.checkout_session.is_billing_address_set():
             return None
@@ -359,10 +376,15 @@ class CheckoutSessionMixin(object):
 
         addr_data = self.checkout_session.new_billing_address_fields()
         if addr_data:
-            # Load address data into a blank billing address model
+            # A new billing address has been entered - load address data into a
+            # blank billing address model.
             return BillingAddress(**addr_data)
+
         addr_id = self.checkout_session.billing_user_address_id()
         if addr_id:
+            # An address from the user's address book has been selected as the
+            # billing address - load it and convert it into a billing address
+            # instance.
             try:
                 user_address = UserAddress._default_manager.get(pk=addr_id)
             except UserAddress.DoesNotExist:
