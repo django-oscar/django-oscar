@@ -1,11 +1,11 @@
 =======================
-Oscar 0.8 release notes
+Oscar 1.0 release notes
 =======================
 
-:release: 2014-11-06
+:release: 2014-11-07
 
-Welcome to Oscar 0.8!  It's been 7 months and some 800 commits since 0.7 and
-lots of work has gone into 0.8. This release makes quite a few changes,
+Welcome to Oscar 1.0!  It's been 7 months and some 800 commits since 0.7 and
+lots of work has gone into 1.0. This release makes quite a few changes,
 especially around supporting Django 1.7 with its app refactor and new migrations
 support.
 
@@ -15,6 +15,8 @@ Oscar from being a Tangent-sponsored project to a more community-driven one,
 similar to Django itself. The core team is growing too to accommodate new
 contributors from outside Tangent. This is an exciting change and we're hopeful
 that Oscar can continue to grow and prosper.
+To mark this departure, this release has been renamed from 0.8 (under which
+we released three beta version) to 1.0.
 
 .. _`as you might have seen`: https://groups.google.com/forum/#!searchin/django-oscar/organisation/django-oscar/6H7ByzRAkRY/6055EDottBAJ
 .. _`Github organisation`: https://github.com/django-oscar/django-oscar
@@ -26,7 +28,7 @@ Table of contents:
     :depth: 1
 
 
-.. _compatibility_of_0.8:
+.. _compatibility_of_1.0:
 
 Compatibility
 -------------
@@ -42,9 +44,9 @@ If you're using ``pysolr`` for search, you'll need to upgrade to version 3.2 or
 later.
 
 
-.. _new_in_0.8:
+.. _new_in_1.0:
 
-What's new in Oscar 0.8?
+What's new in Oscar 1.0?
 ------------------------
 
 Explicit differentiation of child, parent and stand-alone products
@@ -100,7 +102,7 @@ overhaul to incorporate the changes.
 Django 1.7 support
 ~~~~~~~~~~~~~~~~~~
 
-Oscar 0.8 comes with support for Django 1.7 out of the box. The app refactor
+Oscar 1.0 comes with support for Django 1.7 out of the box. The app refactor
 and the new migration framework are both great improvements to Django. Oscar
 now ships with sets of migrations both for South and the new native
 migrations framework.
@@ -175,7 +177,7 @@ adjust them to confirm to the new API. The new API and the other changes are
 detailed below.
 
 See the
-:ref:`backwards incompatible changes <incompatible_shipping_changes_in_0.8>`
+:ref:`backwards incompatible changes <incompatible_shipping_changes_in_1.0>`
 for the shipping app and the
 :doc:`guide to configuring shipping </howto/how_to_configure_shipping>`
 for more information.
@@ -207,7 +209,7 @@ Specifically, the partner "wrapper" functionality is now gone. All price and
 availability logic now needs to be handled with strategies.
 
 
-.. _minor_changes_in_0.8:
+.. _minor_changes_in_1.0:
 
 Minor changes
 ~~~~~~~~~~~~~
@@ -270,12 +272,12 @@ Minor changes
 .. _bootstrap-datetimepicker: http://www.malot.fr/bootstrap-datetimepicker/
 
 
-.. _incompatible_changes_in_0.8:
+.. _incompatible_changes_in_1.0:
 
-Backwards incompatible changes in 0.8
+Backwards incompatible changes in 1.0
 -------------------------------------
 
-.. _product_structure_changes_in_0.8:
+.. _product_structure_changes_in_1.0:
 
 Product structure
 ~~~~~~~~~~~~~~~~~
@@ -321,13 +323,13 @@ The dashboard improvements for child products meant slight changes to both
 gets a ``parent`` kwarg. Please review your customisations for compatibility
 with the updated code.
 
-.. _incompatible_shipping_changes_in_0.8:
+.. _incompatible_shipping_changes_in_1.0:
 
 Shipping
 ~~~~~~~~
 
 The shipping method API has been altered to avoid potential thread-safety
-issues. Prior to v0.8, shipping methods had a ``set_basket`` method which
+issues. Prior to v1.0, shipping methods had a ``set_basket`` method which
 allowed a basket instance to be assigned. This was really a crutch to allow
 templates to have easy access to shipping charges (as they could be read
 straight off the shipping method instance). However, it was also a
@@ -335,7 +337,7 @@ design problem as shipping methods could be instantiated at compile-time
 leading to a thread safety issue where multiple threads could assign a basket
 to the same shipping method instance.
 
-In Oscar 0.8, shipping methods are stateless services that have a method
+In Oscar 1.0, shipping methods are stateless services that have a method
 :func:`~oscar.apps.shipping.methods.Base.calculate` that takes a basket and
 returns a ``Price`` instance.  New :doc:`template tags </ref/templatetags/>` are
 provided that allow these shipping charges to be accessed from templates.
@@ -360,7 +362,7 @@ and shipping charge now need to be passed around separately:
 
 Another key change is in the shipping repository object. The
 ``get_shipping_methods`` method has been split in two to simplify the exercise
-of providing new shipping methods. The best practice for Oscar 0.8 is to 
+of providing new shipping methods. The best practice for Oscar 1.0 is to
 override the ``methods`` attribute if the same set of shipping methods is
 available to everyone:
 
@@ -446,8 +448,8 @@ The basket line model got a reference to the stockrecord in Oscar 0.6. The
 basket middleware since then updated basket lines to have stockrecords if
 one was missing. If any lines are still missing a stockrecord, we'd expect them
 to be from from submitted baskets or from old, abandoned baskets.
-This updating of basket lines has been removed for 0.8 as it incurs additional
-database queries. Oscar 0.8 now also enforces the stockrecord by making it
+This updating of basket lines has been removed for 1.0 as it incurs additional
+database queries. Oscar 1.0 now also enforces the stockrecord by making it
 the ``stockrecord`` field of basket ``Line`` model no longer nullable.
 
 There is a migration that makes the appropriate schema change but, before that
@@ -641,7 +643,7 @@ Migrations
 .. note::
 
     The migration numbers below refer to the numbers of the South migrations.
-    Oscar 0.8 ships with a set of new initial migrations for Django's new
+    Oscar 1.0 ships with a set of new initial migrations for Django's new
     native migrations framework. They include all the changes detailed below.
 
 .. note::
@@ -693,7 +695,7 @@ Migrations
     - ``0007`` - Change ``WeightBand.upper_limit`` from ``FloatField`` to ``DecimalField``
     - ``0008`` - Drop ``WeightBased.upper_charge`` field.
 
-.. _deprecated_features_in_0.8:
+.. _deprecated_features_in_1.0:
 
 Deprecated features
 ~~~~~~~~~~~~~~~~~~~
@@ -701,7 +703,7 @@ Deprecated features
 The following features have been deprecated in this release:
 
 * Many attributes concerning product structure. Please see the
-  `product structure changes <product_structure_changes_in_0.8>`_ for details.
+  `product structure changes <product_structure_changes_in_1.0>`_ for details.
 
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
