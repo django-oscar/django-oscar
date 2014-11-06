@@ -2,6 +2,8 @@
 Oscar 0.7 release notes
 =======================
 
+:release: 2014-04-29
+
 Welcome to Oscar 0.7!
 
 These release notes cover the :ref:`new features <new_in_0.7>` as well as
