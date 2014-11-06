@@ -2,8 +2,7 @@
 .PHONY: install sandbox geoip demo docs coverage lint travis messages compiledmessages puppet css clean preflight
 
 install:
-	pip install -r requirements.txt
-	python setup.py develop
+	pip install -e . -r requirements.txt
 
 sandbox: install
 	# Remove media

@@ -14,8 +14,7 @@ env:
         - DJANGO=Django==1.7
 
 install:
-    - make install
-    - easy_install $DJANGO
+    - pip install -e . -r requirements.txt $DJANGO
 
 before_script:
     # Create testing databases for running migrations against

@@ -1,3 +1,5 @@
+# These requirements are only necessary when developing on Oscar.
+
 # Development
 django-debug-toolbar>=1.2.1,<1.3
 django-debug-toolbar-template-timings==0.6.1
