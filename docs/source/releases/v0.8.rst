@@ -110,6 +110,11 @@ upgrading Oscar both for users staying on Django 1.6 and for users upgrading to
 Django 1.7 at the same time. These are detailed in the section for
 backwards-incompatible changes.
 
+The changes in Django 1.7 meant quite a bit of effort to support both versions
+of Django, so it's very probable that Django 1.6 support will be removed in
+the next release of Oscar. Django 1.7 has notable improvements, so with that
+in mind, we can only recommend upgrading now.
+
 Billing addresses explicitly passed around checkout
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -567,7 +572,7 @@ Misc
   removed as it is no longer used. 
 
 * The parameters for
-  :func:`oscar.apps.shipping.respository.Repository.get_shipping_methods`
+  :func:`oscar.apps.shipping.repository.Repository.get_shipping_methods`
   have been re-ordered to reflect which are the most important.
 
 * The legacy ``ShippingMethod`` name of the interface of the shipping app has
@@ -585,6 +590,14 @@ Misc
   been removed. Inherit from ``shipping.base.Base`` for the class instead, and
   inherit from ``shipping.abstract_models.AbstractBase`` for model-based
   shipping methods.
+
+* Oscar's ``models.py`` files now define ``__all__``, and it's dynamically
+  set to only expose unregistered models (which should be what you want) to
+  the namespace. This is important to keep the namespace clean while doing
+  star imports like ``from oscar.apps.catalogue.models import *``. You will
+  have to check your imports to ensure you're not accidentally relying on
+  e.g. a ``datetime`` import that's pulled in via the star import. Any such
+  import errors will cause a loud failure and should be easy to spot and fix.
 
 .. _rewritten: https://github.com/tangentlabs/django-oscar/commit/d8b4dbfed17be90846ea4bc47b5f7b39ad944c24
 
