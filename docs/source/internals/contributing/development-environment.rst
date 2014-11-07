@@ -56,22 +56,11 @@ If you want to develop the LESS files, set::
 in ``sites/sandbox/settings_local.py``.  This will cause Oscar to use
 `django-compressor`_ to compile the LESS files as they are requested.  For this to
 work, you will need to ensure that the LESS compiler ``lessc`` is installed.
-This can be acheived by running::
-
-    pip install -r requirements_less.txt
-
-.. _`django-compressor`: http://django_compressor.readthedocs.org/en/latest/
-
-which will install the `virtual-node`_ and `virtual-less`_ packages, which will
-install node.js and LESS in your virtualenv.  
-
-.. _`virtual-node`: https://github.com/elbaschid/virtual-node
-.. _`virtual-less`: https://github.com/elbaschid/virtual-less
-
-If you have npm installed already,
-you install LESS using::
+Using npm, install LESS using::
 
     npm install less
+
+.. _`django-compressor`: http://django_compressor.readthedocs.org/en/latest/
 
 You can manually compile the CSS files by running::
 

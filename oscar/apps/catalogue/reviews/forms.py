@@ -41,3 +41,18 @@ class VoteForm(forms.ModelForm):
     @property
     def is_down_vote(self):
         return self.cleaned_data['delta'] == Vote.DOWN
+
+
+class SortReviewsForm(forms.Form):
+    SORT_BY_SCORE = 'score'
+    SORT_BY_RECENCY = 'recency'
+    SORT_REVIEWS_BY_CHOICES = (
+        (SORT_BY_SCORE, _('Score')),
+        (SORT_BY_RECENCY, _('Recency')),
+    )
+
+    sort_by = forms.ChoiceField(
+        choices=SORT_REVIEWS_BY_CHOICES,
+        label=_('Sort by'),
+        initial=SORT_BY_SCORE,
+    )

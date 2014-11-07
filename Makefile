@@ -1,10 +1,10 @@
 # These targets are not files
-.PHONY: install sandbox geoip demo docs coverage lint travis messages compiledmessages puppet css clean preflight
+.PHONY: install sandbox geoip demo docs coverage lint travis messages compiledmessages css clean preflight make_sandbox make_demo
 
 install:
 	pip install -e . -r requirements.txt
 
-sandbox: install
+build_sandbox:
 	# Remove media
 	-rm -rf sites/sandbox/public/media/images
 	-rm -rf sites/sandbox/public/media/cache
@@ -20,15 +20,18 @@ sandbox: install
 	sites/sandbox/manage.py oscar_import_catalogue_images sites/sandbox/fixtures/images.tar.gz
 	sites/sandbox/manage.py oscar_populate_countries
 	sites/sandbox/manage.py loaddata sites/_fixtures/pages.json sites/_fixtures/auth.json sites/_fixtures/ranges.json sites/_fixtures/offers.json
+	sites/sandbox/manage.py loaddata sites/sandbox/fixtures/orders.json
 	sites/sandbox/manage.py clear_index --noinput
 	sites/sandbox/manage.py update_index catalogue
+
+sandbox: install build_sandbox
 
 geoip:
 	wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
 	gunzip GeoLiteCity.dat.gz
 	mv GeoLiteCity.dat sites/demo/geoip
 
-demo: install
+build_demo:
 	# Install additional requirements
 	pip install -r requirements_demo.txt
 	# Create database
@@ -49,6 +52,8 @@ demo: install
 	# Update search index
 	sites/demo/manage.py clear_index --noinput
 	sites/demo/manage.py update_index catalogue
+
+demo: install build_demo
 
 us_site: install
 	# Install additional requirements
@@ -75,13 +80,13 @@ lint:
 	./lint.sh
 
 testmigrations:
-	pip install -r requirements_vagrant.txt
+	pip install -r requirements_migrations.txt
 	cd sites/sandbox && ./test_migrations.sh
 
-# This target is run on Travis.ci. We lint, test and build the sandbox/demo sites as well 
-# as testing migrations apply correctly. We don't call 'install' first as that is run 
-# as a separate part of the Travis build process.
-travis: lint coverage sandbox demo testmigrations
+# This target is run on Travis.ci. We lint, test and build the sandbox/demo
+# sites as well as testing migrations apply correctly. We don't call 'install'
+# first as that is run as a separate part of the Travis build process.
+travis: lint coverage build_sandbox build_demo testmigrations
 
 messages:
 	# Create the .po files used for i18n
@@ -91,26 +96,14 @@ compiledmessages:
 	# Compile the gettext files
 	cd oscar; django-admin.py compilemessages
 
-puppet:
-	# Install puppet modules required to set-up a Vagrant box
-	mkdir -p sites/puppet/modules
-	rm -rf sites/puppet/modules/*
-	puppet module install --target-dir sites/puppet/modules/ saz-memcached -v 2.0.2
-	puppet module install --target-dir sites/puppet/modules/ puppetlabs/mysql
-	puppet module install --target-dir sites/puppet/modules/ puppetlabs/apache
-	puppet module install --target-dir sites/puppet/modules/ dhutty/nginx
-	git clone git://github.com/akumria/puppet-postgresql.git sites/puppet/modules/postgresql
-	git clone git://github.com/puppetmodules/puppet-module-python.git sites/puppet/modules/python
-	git clone git://github.com/codeinthehole/puppet-userconfig.git sites/puppet/modules/userconfig
-
 css:
 	# Compile CSS files from LESS
-	lessc oscar/static/oscar/less/styles.less > oscar/static/oscar/css/styles.css
-	lessc oscar/static/oscar/less/responsive.less > oscar/static/oscar/css/responsive.css
-	lessc oscar/static/oscar/less/dashboard.less > oscar/static/oscar/css/dashboard.css
+	lessc --source-map --source-map-less-inline oscar/static/oscar/less/styles.less oscar/static/oscar/css/styles.css
+	lessc --source-map --source-map-less-inline oscar/static/oscar/less/responsive.less oscar/static/oscar/css/responsive.css
+	lessc --source-map --source-map-less-inline oscar/static/oscar/less/dashboard.less oscar/static/oscar/css/dashboard.css
 	# Compile CSS for demo site
-	lessc sites/demo/static/demo/less/styles.less > sites/demo/static/demo/css/styles.css
-	lessc sites/demo/static/demo/less/responsive.less > sites/demo/static/demo/css/responsive.css
+	lessc --source-map --source-map-less-inline sites/demo/static/demo/less/styles.less sites/demo/static/demo/css/styles.css
+	lessc --source-map --source-map-less-inline sites/demo/static/demo/less/responsive.less sites/demo/static/demo/css/responsive.css
 
 clean:
 	# Remove files not in source control

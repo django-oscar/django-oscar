@@ -181,13 +181,13 @@
         "rating": null, 
         "description": "", 
         "parent": null, 
-        "title": "Tangent T-shirt", 
+        "title": "Django T-shirt",
         "date_updated": "2013-12-13T11:38:15.107Z", 
         "upc": "", 
         "is_discountable": true, 
         "date_created": "2013-12-13T11:38:15.107Z", 
         "product_options": [], 
-        "slug": "tangent-t-shirt", 
+        "slug": "django-t-shirt",
         "product_class": 1,
         "structure": "parent"
     }
@@ -205,7 +205,7 @@
         "is_discountable": true, 
         "date_created": "2013-12-13T11:38:49.769Z", 
         "product_options": [], 
-        "slug": "tangent-t-shirt", 
+        "slug": "django-t-shirt",
         "product_class": null,
         "structure": "child"
     }
@@ -223,7 +223,7 @@
         "is_discountable": true, 
         "date_created": "2013-12-13T11:39:12.859Z", 
         "product_options": [], 
-        "slug": "tangent-t-shirt", 
+        "slug": "django-t-shirt",
         "product_class": null,
         "structure": "child"
     }
@@ -241,7 +241,7 @@
         "is_discountable": true, 
         "date_created": "2013-12-13T11:39:53.073Z", 
         "product_options": [], 
-        "slug": "tangent-t-shirt", 
+        "slug": "django-t-shirt",
         "product_class": null,
         "structure": "child"
     }

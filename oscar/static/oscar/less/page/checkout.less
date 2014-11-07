@@ -27,6 +27,7 @@ input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
 .basket-items {
     border-bottom:1px solid lighten(@grayLight, 30%);
     padding:10px;
+    margin-bottom:20px;
     &:nth-child(even) {
         background:lighten(@grayLighter, 4%);
     }
@@ -83,6 +84,23 @@ input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
         position:absolute;
         top: @gridGutterWidth;
         right: @gridGutterWidth;
+    }
+}
+
+// Checkout shipping address form
+#new_shipping_address, #update_user_address {
+    #id_title {
+        width: auto;
+    }
+    #id_line1, #id_line2, #id_line3 {
+        width: 300px;
+    }
+    #id_postcode {
+        width: 100px;
+    }
+    #id_notes {
+        width: 400px;
+        height: 100px;
     }
 }
 

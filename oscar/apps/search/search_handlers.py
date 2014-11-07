@@ -9,6 +9,23 @@ from . import facets
 
 FacetMunger = get_class('search.facets', 'FacetMunger')
 
+# Workaround for pysolr 3.1 not supporting and failing hard on
+# Solr 4.0 error messages
+# https://github.com/toastdriven/pysolr/pull/127
+# https://github.com/toastdriven/pysolr/pull/113
+# TODO: Remove in Oscar 0.9
+try:
+    import pysolr
+except ImportError:
+    pass
+else:
+    if pysolr.__version__[:2] < (3, 2):
+        import logging
+        logger = logging.getLogger()
+        logger.warning(
+            "You're running an old version of pysolr that is causing issues "
+            "with Oscar. Please upgrade to 3.2 or higher.")
+
 
 class SearchHandler(object):
     """
@@ -30,8 +47,9 @@ class SearchHandler(object):
         context = handler.get_search_context_data()
 
     Error handling:
-        You need to catch a ValueError which gets thrown when an invalid
-        page number is supplied.
+
+        You need to catch an InvalidPage exception which gets thrown when an
+        invalid page number is supplied.
     """
 
     form_class = None
@@ -49,18 +67,10 @@ class SearchHandler(object):
         self.search_form = self.get_search_form(
             request_data, search_queryset)
         self.results = self.get_search_results(self.search_form)
-        try:
-            self.paginator, self.page = self.paginate_queryset(
-                self.results, request_data)
-        except UnicodeDecodeError:
-            # Workaround for pysolr 3.1 not supporting and failing hard on
-            # Solr 4.0 error messages
-            # https://github.com/toastdriven/pysolr/pull/127
-            # https://github.com/toastdriven/pysolr/pull/113
-            # TODO: Remove once pysolr 3.2 is released
-            self.results = search_queryset
-            self.paginator, self.page = self.paginate_queryset(
-                self.results, request_data)
+        # If below raises an UnicodeDecodeError, you're running pysolr < 3.2
+        # with Solr 4.
+        self.paginator, self.page = self.paginate_queryset(
+            self.results, request_data)
 
     # Search related methods
 
@@ -108,17 +118,10 @@ class SearchHandler(object):
             if page == 'last':
                 page_number = paginator.num_pages
             else:
-                raise ValueError(_(
+                raise InvalidPage(_(
                     "Page is not 'last', nor can it be converted to an int."))
-        try:
-            page = paginator.page(page_number)
-        except InvalidPage as e:
-            raise ValueError(
-                _('Invalid page (%(page_number)s): %(message)s') % {
-                    'page_number': page_number,
-                    'message': str(e)
-                })
-        return paginator, page
+        # This can also raise an InvalidPage exception.
+        return paginator, paginator.page(page_number)
 
     def get_paginator(self, queryset):
         """
@@ -171,10 +174,20 @@ class SearchHandler(object):
 
     def get_paginated_objects(self):
         """
-        Return a paginated list of Django model instances.
+        Return a paginated list of Django model instances. The call is cached.
         """
-        paginated_results = self.page.object_list
-        return self.bulk_fetch_results(paginated_results)
+        if hasattr(self, '_objects'):
+            return self._objects
+        else:
+            paginated_results = self.page.object_list
+            self._objects = self.bulk_fetch_results(paginated_results)
+        return self._objects
+
+    def get_facet_munger(self):
+        return FacetMunger(
+            self.full_path,
+            self.search_form.selected_multi_facets,
+            self.results.facet_counts())
 
     def get_search_context_data(self, context_object_name=None):
         """
@@ -197,10 +210,7 @@ class SearchHandler(object):
         # Note that the FacetMunger accesses object_list (unpaginated results),
         # whereas we use the paginated search results to populate the context
         # with products
-        munger = FacetMunger(
-            self.full_path,
-            self.search_form.selected_multi_facets,
-            self.results.facet_counts())
+        munger = self.get_facet_munger()
         facet_data = munger.facet_data()
         has_facets = any([data['results'] for data in facet_data.values()])
 

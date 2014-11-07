@@ -130,7 +130,7 @@ MIDDLEWARE_CLASSES = (
     'oscar.apps.basket.middleware.BasketMiddleware',
     # Enable the ProfileMiddleware, then add ?cprofile to any
     # URL path to print out profile details
-    #'oscar.profiling.middleware.ProfileMiddleware',
+    # 'oscar.profiling.middleware.ProfileMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -278,12 +278,15 @@ INSTALLED_APPS = [
     # Debug toolbar + extensions
     'debug_toolbar',
     'template_timings_panel',
-    'south',
     'compressor',       # Oscar's templates use compressor
 ]
 from oscar import get_core_apps
 INSTALLED_APPS = INSTALLED_APPS + get_core_apps(
     ['apps.partner', 'apps.checkout', 'apps.shipping'])
+
+import django
+if django.VERSION < (1, 7):
+    INSTALLED_APPS.append('south')
 
 # Add Oscar's custom auth backend so users can sign in using their email
 # address.
@@ -331,7 +334,7 @@ INTERNAL_IPS = ['127.0.0.1', '::1']
 # Oscar settings
 # ==============
 
-from oscar.defaults import *
+from oscar.defaults import *  # noqa
 
 # Meta
 # ====
@@ -346,12 +349,7 @@ OSCAR_ALLOW_ANON_CHECKOUT = True
 # We default to using CSS files, rather than the LESS files that generate them.
 # If you want to develop Oscar's CSS, then set USE_LESS=True and
 # COMPRESS_ENABLED=False in your settings_local module and ensure you have
-# 'lessc' installed.  You can do this by running:
-#
-#    pip install -r requirements_less.txt
-#
-# which will install node.js and less in your virtualenv.
-
+# 'lessc' installed.
 USE_LESS = False
 
 COMPRESS_ENABLED = True
@@ -383,14 +381,16 @@ if not os.path.exists(LOG_ROOT):
 THUMBNAIL_DEBUG = True
 THUMBNAIL_KEY_PREFIX = 'oscar-us-sandbox'
 
-# Django 1.6 has switched to JSON serializing for security reasons, but it does not
-# serialize Models. We should resolve this by extending the
-# django/core/serializers/json.Serializer to have the `dumps` function. Also
-# in tests/config.py
+# Django 1.6 has switched to JSON serializing for security reasons, but it does
+# not serialize Models. We should resolve this by extending the
+# django/core/serializers/json.Serializer to have the `dumps` function. Also in
+# tests/config.py
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 # Try and import local settings which can be used to override any of the above.
 try:
-    from settings_local import *
+    from settings_local import *  # noqa
 except ImportError:
     pass

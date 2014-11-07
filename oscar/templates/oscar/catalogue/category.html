@@ -29,7 +29,6 @@
 {% endblock breadcrumbs %}
 
 {% block content %}
-
     {% if category.description %}
         <div class="row-fluid">
             <div class="span9"><p>{{ category.description|safe }}</p></div>
@@ -38,7 +37,5 @@
             {% endif %}
         </div>
     {% endif %}
-
     {{ block.super }}
-
 {% endblock %}

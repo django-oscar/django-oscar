@@ -96,7 +96,7 @@ class BulkEditMixin(object):
 
 class ObjectLookupView(View):
     """Base view for json lookup for objects"""
-    def get_query_set(self):
+    def get_queryset(self):
         return self.model.objects.all()
 
     def format_object(self, obj):
@@ -130,7 +130,7 @@ class ObjectLookupView(View):
 
     def get(self, request):
         self.request = request
-        qs = self.get_query_set()
+        qs = self.get_queryset()
 
         initial, q, page, page_limit = self.get_args()
 
@@ -153,20 +153,19 @@ class PhoneNumberMixin(object):
     Validation mixin for forms with a phone number, and optionally a country.
     It tries to validate the phone number, and on failure tries to validate it
     using a hint (the country provided), and treating it as a local number.
-
-    It looks for ``self.country``, or ``self.fields['country'].queryset``
     """
 
     phone_number = forms.CharField(max_length=32, required=False)
 
     def get_country(self):
-        if hasattr(self.instance, 'country'):
+        # If the form data contains valid country information, we use that.
+        if hasattr(self, 'cleaned_data') and 'country' in self.cleaned_data:
+            return self.cleaned_data['country']
+        # Oscar hides the field if there's only one country. Then (and only
+        # then!) can we consider a country on the model instance.
+        elif 'country' not in self.fields and hasattr(
+                self.instance, 'country'):
             return self.instance.country
-
-        if hasattr(self.fields.get('country'), 'queryset'):
-            return self.fields['country'].queryset[0]
-
-        return self.cleaned_data.get('country')
 
     def get_region_code(self, country):
         return country.iso_3166_1_a2
@@ -184,21 +183,21 @@ class PhoneNumberMixin(object):
         except phonenumbers.NumberParseException:
             # Try hinting with the shipping country
             country = self.get_country()
+            region_code = self.get_region_code(country)
 
-            if not country:
+            if not region_code:
                 # There is no shipping country, not a valid international
                 # number
                 raise ValidationError(
                     _(u'This is not a valid international phone format.'))
 
-            region_code = self.get_region_code(country)
             # The PhoneNumber class does not allow specifying
             # the region. So we drop down to the underlying phonenumbers
             # library, which luckily allows parsing into a PhoneNumber
             # instance
             try:
-                phone_number = PhoneNumber.from_string(number,
-                                                       region=region_code)
+                phone_number = PhoneNumber.from_string(
+                    number, region=region_code)
                 if not phone_number.is_valid():
                     raise ValidationError(
                         _(u'This is not a valid local phone format for %s.')

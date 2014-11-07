@@ -130,13 +130,18 @@
     </div><!-- /container -->
 
     {% comment %}
-        This block includes a single pixel from one of Tangent's servers.  We use the referer header to determine which sites are
-        using Oscar.  Since Tangent sponsor Oscar's development, this is an important metric to help justify the investment.  You
-        are, of course, welcome to remove this tracker - but please email the mailing list if you have a production site using Oscar.
+        This block includes a single pixel from one of the django-oscar
+        organisation's servers. It's included to keep track of which sites are
+        running Oscar in production, and what versions of Python and Django are
+        used. This provides useful data when deciding which versions of Python
+        and Django to support.
+
+        You are, of course, welcome to remove this tracker. To do so, set
+        OSCAR_TRACKING=False in your settings.
     {% endcomment %}
     {% block trackerimage %}
         {% if call_home %}
-            <img src="//oscar-static.tangentlabs.co.uk/tracker.gif?{{ call_home }}" style="display:none" />
+            <img src="//analytics.oscarcommerce.com/tracker.gif?{{ call_home }}" style="display:none" />
         {% endif %}
     {% endblock %}
 {% endblock %}
@@ -145,6 +150,7 @@
     {{ block.super }}
 
     <script src="//code.jquery.com/ui/1.10.3/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+    <script>window.jQuery.ui || document.write('<script src="{% static "oscar/js/jquery/jquery-ui-1.10.3.min.js" %}"><\/script>')</script>
 
     {% compress js %}
         {# jQuery plugins #}
@@ -156,6 +162,7 @@
         <script src="{% static "oscar/js/oscar/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
     {% endcompress %}
 
+    {# We don't use a fallback for tinyMCE as it dynamically loads several other files #}
     <script src="//tinymce.cachefly.net/4.0/tinymce.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="//tinymce.cachefly.net/4.0/jquery.tinymce.min.js" type="text/javascript" charset="utf-8"></script>
 

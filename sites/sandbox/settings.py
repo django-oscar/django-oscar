@@ -11,12 +11,11 @@ TEMPLATE_DEBUG = True
 SQL_DEBUG = True
 
 ALLOWED_HOSTS = ['latest.oscarcommerce.com',
-                 'sandbox.oscar.tangentlabs.co.uk',
                  'master.oscarcommerce.com']
 
 # This is needed for the hosted version of the sandbox
 ADMINS = (
-    ('David Winterbottom', 'david.winterbottom@tangentlabs.co.uk'),
+    ('David Winterbottom', 'david.winterbottom@gmail.com'),
 )
 EMAIL_SUBJECT_PREFIX = '[Oscar sandbox] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -424,11 +423,7 @@ OSCAR_ORDER_STATUS_CASCADE = {
 # We default to using CSS files, rather than the LESS files that generate them.
 # If you want to develop Oscar's CSS, then set USE_LESS=True and
 # COMPRESS_ENABLED=False in your settings_local module and ensure you have
-# 'lessc' installed.  You can do this by running:
-#
-#    pip install -r requirements_less.txt
-#
-# which will install node.js and less in your virtualenv.
+# 'lessc' installed.
 
 USE_LESS = False
 

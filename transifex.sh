@@ -18,5 +18,5 @@ hostname = https://www.transifex.com
 password = $TRANSIFEX_PASSWORD
 token =
 username = oscar_bot" > ~/.transifexrc
-    tx push --source --translations --no-interactive --skip
+    tx push --source --no-interactive
 fi

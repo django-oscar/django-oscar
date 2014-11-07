@@ -20,9 +20,7 @@
   width: 100%;
   min-height: 28px;
   /* Make inputs at least the height of their button counterpart */
-
   /* Makes inputs behave like true block-level elements */
-
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
@@ -82,7 +80,7 @@
 /* makes the font 33% larger relative to the icon container */
 .icon-large:before {
   vertical-align: -10%;
-  font-size: 1.3333333333333333em;
+  font-size: 1.33333333em;
 }
 /* makes sure icons active on rollover in links */
 a [class^="icon-"],
@@ -93,16 +91,16 @@ a [class*=" icon-"] {
 [class^="icon-"].icon-fixed-width,
 [class*=" icon-"].icon-fixed-width {
   display: inline-block;
-  width: 1.1428571428571428em;
+  width: 1.14285714em;
   text-align: right;
-  padding-right: 0.2857142857142857em;
+  padding-right: 0.28571429em;
 }
 [class^="icon-"].icon-fixed-width.icon-large,
 [class*=" icon-"].icon-fixed-width.icon-large {
-  width: 1.4285714285714286em;
+  width: 1.42857143em;
 }
 .icons-ul {
-  margin-left: 2.142857142857143em;
+  margin-left: 2.14285714em;
   list-style-type: none;
 }
 .icons-ul > li {
@@ -110,8 +108,8 @@ a [class*=" icon-"] {
 }
 .icons-ul .icon-li {
   position: absolute;
-  left: -2.142857142857143em;
-  width: 2.142857142857143em;
+  left: -2.14285714em;
+  width: 2.14285714em;
   text-align: center;
   line-height: inherit;
 }
@@ -1533,7 +1531,7 @@ a .icon-flip-vertical:before {
  *  Work: Lead Product Designer @ Kyruus - http://kyruus.com
  */
 .lt-ie8 .icon-large {
-  font-size: 1.3333333333333333em;
+  font-size: 1.33333333em;
   margin-top: -4px;
   padding-top: 3px;
   margin-bottom: -4px;
@@ -3031,7 +3029,6 @@ body {
 .container-fluid.dashboard {
   margin: 0 auto;
   /*  max-width: 1170px;*/
-
   position: relative;
   padding: 0 20px;
 }
@@ -3243,6 +3240,7 @@ caption > i,
   background: #ffffff;
 }
 .content-block .order-graph-details label {
+  cursor: default;
   background-color: #F8F8F8;
   border: 1px solid #ccc;
   *zoom: 1;
@@ -3864,3 +3862,4 @@ textarea.plain {
     -webkit-transform: none;
   }
 }
+/*# sourceMappingURL=dashboard.css.map */

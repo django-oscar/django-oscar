@@ -9,11 +9,8 @@ from oscar.core.loading import get_class
 from . import exceptions
 
 
-ShippingAddress = get_model('order', 'ShippingAddress')
 Order = get_model('order', 'Order')
 Line = get_model('order', 'Line')
-LinePrice = get_model('order', 'LinePrice')
-LineAttribute = get_model('order', 'LineAttribute')
 OrderDiscount = get_model('order', 'OrderDiscount')
 order_placed = get_class('order.signals', 'order_placed')
 

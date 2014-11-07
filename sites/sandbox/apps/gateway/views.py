@@ -47,6 +47,6 @@ class GatewayView(generic.FormView):
             'password': password
         }))
         send_mail('Dashboard access to Oscar sandbox',
-                  msg, 'blackhole@sandbox.qa.tangentlabs.co.uk',
+                  msg, 'blackhole@latest.oscarcommerce.com',
                   [real_email])
 

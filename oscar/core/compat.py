@@ -1,32 +1,10 @@
 from django.utils import six
 
 from django.conf import settings
-from django.contrib.auth import get_user_model as django_get_user_model
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
 
-
-def get_user_model():
-    """
-    Return the User model.
-
-    This used to live in compat to support both Django 1.4's fixed User model
-    and custom user models introduced thereafter.
-    Support for Django 1.4 has since been dropped in Oscar, but our
-    get_user_model remains because code relies on us annotating the _meta class
-    with the additional fields, and other code might rely on it as well.
-    """
-    model = django_get_user_model()
-
-    # Test if user model has any custom fields and add attributes to the _meta
-    # class
-    core_fields = set([f.name for f in User._meta.fields])
-    model_fields = set([f.name for f in model._meta.fields])
-    new_fields = model_fields.difference(core_fields)
-    model._meta.has_additional_fields = len(new_fields) > 0
-    model._meta.additional_fields = new_fields
-
-    return model
+from oscar.core.loading import get_model
 
 
 # A setting that can be used in foreign key declarations
@@ -38,6 +16,39 @@ try:
 except ValueError:
     raise ImproperlyConfigured("AUTH_USER_MODEL must be of the form"
                                " 'app_label.model_name'")
+
+
+def get_user_model():
+    """
+    Return the User model. Doesn't require the app cache to be fully
+    initialised.
+
+    This used to live in compat to support both Django 1.4's fixed User model
+    and custom user models introduced thereafter.
+    Support for Django 1.4 has since been dropped in Oscar, but our
+    get_user_model remains because code relies on us annotating the _meta class
+    with the additional fields, and other code might rely on it as well.
+    """
+
+    try:
+        model = get_model(AUTH_USER_APP_LABEL, AUTH_USER_MODEL_NAME)
+    except LookupError:
+        # Convert exception to an ImproperlyConfigured exception for
+        # backwards compatibility with previous Oscar versions and the
+        # original get_user_model method in Django.
+        raise ImproperlyConfigured(
+            "AUTH_USER_MODEL refers to model '%s' that has not been installed"
+            % settings.AUTH_USER_MODEL)
+
+    # Test if user model has any custom fields and add attributes to the _meta
+    # class
+    core_fields = set([f.name for f in User._meta.fields])
+    model_fields = set([f.name for f in model._meta.fields])
+    new_fields = model_fields.difference(core_fields)
+    model._meta.has_additional_fields = len(new_fields) > 0
+    model._meta.additional_fields = new_fields
+
+    return model
 
 
 def existing_user_fields(fields):

@@ -12,13 +12,34 @@ def create_local_app_folder(local_app_path):
     if exists(local_app_path):
         raise ValueError(
             "There is already a '%s' folder! Aborting!" % local_app_path)
-    os.mkdir(local_app_path)
+    for folder in subfolders(local_app_path):
+        if not exists(folder):
+            os.mkdir(folder)
+            init_path = join(folder, '__init__.py')
+            if not exists(init_path):
+                create_file(init_path)
+
+
+def subfolders(path):
+    """
+    Decompose a path string into a list of subfolders
+
+    Eg Convert 'apps/dashboard/ranges' into
+       ['apps', 'apps/dashboard', 'apps/dashboard/ranges']
+    """
+    folders = []
+    while path not in ('/', ''):
+        folders.append(path)
+        path = os.path.dirname(path)
+    folders.reverse()
+    return folders
 
 
 def inherit_app_config(local_app_path, app_package, app_label):
-    # This only works for non-dashboard apps; but then the fork_app command
-    # doesn't support them anyway
-    config_name = app_label.title() + 'Config'
+    if 'dashboard' in app_label:
+        config_name = '%sDashboardConfig' % app_label.split('.').pop().title()
+    else:
+        config_name = app_label.title() + 'Config'
     create_file(
         join(local_app_path, '__init__.py'),
         "default_app_config = '{app_package}.config.{config_name}'\n".format(
@@ -33,52 +54,54 @@ def inherit_app_config(local_app_path, app_package, app_label):
             config_name=config_name))
 
 
-def fork_app(app_label, folder_path, logger=None):
+def fork_app(label, folder_path, logger=None):
     """
     Create a custom version of one of Oscar's apps
+
+    The first argument isn't strictly an app label as we allow things like
+    'catalogue' or 'dashboard.ranges'.
     """
     if logger is None:
         logger = logging.getLogger(__name__)
 
-    # Check app_label is valid
-    app_labels = [x.split('.').pop() for x in oscar.OSCAR_CORE_APPS if
-                  x.startswith('oscar')]
-    if app_label not in app_labels:
-        raise ValueError("There is no Oscar app with label '%s'" % app_label)
-
-    # Check folder exists
-    if not exists(folder_path):
-        raise ValueError(
-            "The folder '%s' does not exist. Please create it then run this "
-            "command again" % folder_path)
+    # Check label is valid
+    valid_labels = [x.replace('oscar.apps.', '') for x in oscar.OSCAR_CORE_APPS
+                    if x.startswith('oscar')]
+    if label not in valid_labels:
+        raise ValueError("There is no Oscar app that matches '%s'" % label)
 
     # Create folder
-    local_app_path = join(folder_path, app_label)
-    oscar_app_path = join(oscar.__path__[0], 'apps', app_label)
-    logger.info("Creating folder %s" % local_app_path)
+    label_folder = label.replace('.', '/')  # eg 'dashboard/ranges'
+    local_app_path = join(folder_path, label_folder)
+    logger.info("Creating package %s" % local_app_path)
     create_local_app_folder(local_app_path)
 
     # Create minimum app files
     app_package = local_app_path.replace('/', '.')
-    logger.info("Enabling Django admin integration")
-    create_file(join(local_app_path, 'admin.py'),
-                "from oscar.apps.%s.admin import *  # noqa\n" % app_label)
-    logger.info("Inheriting app config")
-    inherit_app_config(local_app_path, app_package, app_label)
+
+    oscar_app_path = join(oscar.__path__[0], 'apps', label_folder)
+    if exists(os.path.join(oscar_app_path, 'admin.py')):
+        logger.info("Creating admin.py")
+        create_file(join(local_app_path, 'admin.py'),
+                    "from oscar.apps.%s.admin import *  # noqa\n" % label)
+
+    logger.info("Creating app config")
+    inherit_app_config(local_app_path, app_package, label)
 
     # Only create models.py and migrations if it exists in the Oscar app
     oscar_models_path = join(oscar_app_path, 'models.py')
     if exists(oscar_models_path):
-        logger.info(
-            "Creating models.py and copying South and native migrations")
+        logger.info("Creating models.py")
         create_file(
             join(local_app_path, 'models.py'),
-            "from oscar.apps.%s.models import *  # noqa\n" % app_label)
+            "from oscar.apps.%s.models import *  # noqa\n" % label)
 
         for migrations_path in ['migrations', 'south_migrations']:
             source = join(oscar_app_path, migrations_path)
-            destination = join(local_app_path, migrations_path)
-            shutil.copytree(source, destination)
+            if exists(source):
+                logger.info("Creating %s folder", migrations_path)
+                destination = join(local_app_path, migrations_path)
+                shutil.copytree(source, destination)
 
     # Final step needs to be done by hand
     msg = (

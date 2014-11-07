@@ -1,8 +1,9 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
+# alexeyismirnov <alexey@gmail.com>, 2013
 # alexeyismirnov <alexey@gmail.com>, 2013
 # alexeyismirnov <alexey@gmail.com>, 2013
 # danielchu <danielchu82@gmail.com>, 2014
@@ -13,11 +14,15 @@
 # echochan <echochan522@hotmail.com>, 2014
 # Emanuele Bertoldi <emanuele.bertoldi@gmail.com>, 2013-2014
 # guoqiao <guoqiao@gmail.com>, 2014
+# guoqiao <guoqiao@gmail.com>, 2014
+# phiree yuen <phiree@gmail.com>, 2014
 # Song Jin <songjin@hotmail.com>, 2014
 # Song Jin <songjin@hotmail.com>, 2014
 # sunsong <sunsongxp@gmail.com>, 2014
+# sunsong <sunsongxp@gmail.com>, 2014
 # TIMCHOU <tim0405@gmail.com>, 2014
 # TIMCHOU <tim0405@gmail.com>, 2014
+# wujiang27 <wujiang27@gmail.com>, 2014
 # wujiang27 <wujiang27@gmail.com>, 2014
 # wujiang27 <wujiang27@gmail.com>, 2014
 # 昕 邹 <sin2624+transifex@gmail.com>, 2013
@@ -25,306 +30,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-26 14:06+0100\n"
-"PO-Revision-Date: 2014-08-26 10:37+0000\n"
-"Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/django-"
-"oscar/language/zh_CN/)\n"
-"Language: zh_CN\n"
+"POT-Creation-Date: 2014-10-23 17:09+0200\n"
+"PO-Revision-Date: 2014-10-23 15:10+0000\n"
+"Last-Translator: Maik Hoepfel <m@maikhoepfel.de>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/django-oscar/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#: defaults.py:87 apps/dashboard/config.py:8
-#: templates/oscar/dashboard/index.html:16
-#: templates/oscar/dashboard/layout.html:33
-#: templates/oscar/dashboard/layout.html:113
-#: templates/oscar/dashboard/catalogue/category_delete.html:9
-#: templates/oscar/dashboard/catalogue/category_form.html:14
-#: templates/oscar/dashboard/catalogue/category_list.html:15
-#: templates/oscar/dashboard/catalogue/product_class_delete.html:9
-#: templates/oscar/dashboard/catalogue/product_class_form.html:12
-#: templates/oscar/dashboard/catalogue/product_class_list.html:8
-#: templates/oscar/dashboard/catalogue/product_delete.html:14
-#: templates/oscar/dashboard/catalogue/product_list.html:17
-#: templates/oscar/dashboard/catalogue/product_update.html:17
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:14
-#: templates/oscar/dashboard/comms/detail.html:14
-#: templates/oscar/dashboard/comms/list.html:13
-#: templates/oscar/dashboard/offers/offer_delete.html:13
-#: templates/oscar/dashboard/offers/offer_detail.html:14
-#: templates/oscar/dashboard/offers/offer_list.html:14
-#: templates/oscar/dashboard/offers/step_form.html:21
-#: templates/oscar/dashboard/orders/line_detail.html:13
-#: templates/oscar/dashboard/orders/order_detail.html:14
-#: templates/oscar/dashboard/orders/order_list.html:15
-#: templates/oscar/dashboard/orders/shippingaddress_form.html:11
-#: templates/oscar/dashboard/orders/statistics.html:14
-#: templates/oscar/dashboard/pages/delete.html:14
-#: templates/oscar/dashboard/pages/index.html:14
-#: templates/oscar/dashboard/pages/update.html:13
-#: templates/oscar/dashboard/partners/partner_delete.html:13
-#: templates/oscar/dashboard/partners/partner_form.html:14
-#: templates/oscar/dashboard/partners/partner_list.html:12
-#: templates/oscar/dashboard/partners/partner_manage.html:12
-#: templates/oscar/dashboard/partners/partner_user_form.html:14
-#: templates/oscar/dashboard/partners/partner_user_list.html:12
-#: templates/oscar/dashboard/partners/partner_user_select.html:12
-#: templates/oscar/dashboard/promotions/delete.html:14
-#: templates/oscar/dashboard/promotions/delete_pagepromotion.html:9
-#: templates/oscar/dashboard/promotions/form.html:9
-#: templates/oscar/dashboard/promotions/page_detail.html:15
-#: templates/oscar/dashboard/promotions/pagepromotion_list.html:17
-#: templates/oscar/dashboard/promotions/promotion_list.html:19
-#: templates/oscar/dashboard/ranges/range_delete.html:13
-#: templates/oscar/dashboard/ranges/range_form.html:13
-#: templates/oscar/dashboard/ranges/range_list.html:11
-#: templates/oscar/dashboard/ranges/range_product_list.html:13
-#: templates/oscar/dashboard/reports/index.html:12
-#: templates/oscar/dashboard/reviews/review_delete.html:14
-#: templates/oscar/dashboard/reviews/review_list.html:14
-#: templates/oscar/dashboard/reviews/review_update.html:14
-#: templates/oscar/dashboard/shipping/weight_band_delete.html:14
-#: templates/oscar/dashboard/shipping/weight_band_form.html:14
-#: templates/oscar/dashboard/shipping/weight_based_delete.html:11
-#: templates/oscar/dashboard/shipping/weight_based_detail.html:12
-#: templates/oscar/dashboard/shipping/weight_based_form.html:17
-#: templates/oscar/dashboard/shipping/weight_based_list.html:12
-#: templates/oscar/dashboard/users/detail.html:12
-#: templates/oscar/dashboard/users/index.html:21
-#: templates/oscar/dashboard/users/alerts/delete.html:14
-#: templates/oscar/dashboard/users/alerts/list.html:14
-#: templates/oscar/dashboard/users/alerts/update.html:13
-#: templates/oscar/dashboard/vouchers/voucher_delete.html:14
-#: templates/oscar/dashboard/vouchers/voucher_detail.html:12
-#: templates/oscar/dashboard/vouchers/voucher_form.html:14
-#: templates/oscar/dashboard/vouchers/voucher_list.html:13
-#: templates/oscar/partials/nav_accounts.html:45
-msgid "Dashboard"
-msgstr "仪表板"
-
-#: defaults.py:92 apps/catalogue/config.py:8
-#: apps/dashboard/catalogue/config.py:8
-msgid "Catalogue"
-msgstr "目录"
-
-#: defaults.py:96 apps/catalogue/abstract_models.py:321
-#: apps/dashboard/catalogue/views.py:85 apps/promotions/models.py:273
-#: templates/oscar/dashboard/catalogue/product_delete.html:18
-#: templates/oscar/dashboard/catalogue/product_list.html:11
-#: templates/oscar/dashboard/catalogue/product_list.html:20
-#: templates/oscar/dashboard/catalogue/product_list.html:26
-#: templates/oscar/dashboard/catalogue/product_update.html:11
-#: templates/oscar/dashboard/catalogue/product_update.html:21
-#: templates/oscar/dashboard/promotions/handpickedproductlist_form.html:5
-#: templates/oscar/dashboard/ranges/range_product_list.html:24
-msgid "Products"
-msgstr "产品"
-
-#: defaults.py:100 apps/dashboard/catalogue/views.py:630
-#: apps/offer/models.py:807
-#: templates/oscar/dashboard/catalogue/product_class_list.html:25
-msgid "Product Types"
-msgstr "商品种类"
-
-#: defaults.py:104 apps/catalogue/abstract_models.py:186
-#: apps/catalogue/abstract_models.py:301 apps/catalogue/abstract_models.py:598
-#: apps/dashboard/catalogue/views.py:511 apps/dashboard/catalogue/views.py:530
-#: templates/oscar/dashboard/catalogue/category_delete.html:13
-#: templates/oscar/dashboard/catalogue/category_form.html:8
-#: templates/oscar/dashboard/catalogue/category_form.html:18
-#: templates/oscar/dashboard/catalogue/category_list.html:9
-#: templates/oscar/dashboard/catalogue/category_list.html:18
-#: templates/oscar/dashboard/catalogue/category_list.html:25
-#: templates/oscar/dashboard/catalogue/product_update.html:76
-msgid "Categories"
-msgstr "分类"
-
-#: defaults.py:108 apps/offer/models.py:828
-#: templates/oscar/dashboard/ranges/range_delete.html:7
-#: templates/oscar/dashboard/ranges/range_delete.html:17
-#: templates/oscar/dashboard/ranges/range_form.html:7
-#: templates/oscar/dashboard/ranges/range_form.html:17
-#: templates/oscar/dashboard/ranges/range_list.html:5
-#: templates/oscar/dashboard/ranges/range_list.html:14
-#: templates/oscar/dashboard/ranges/range_list.html:21
-#: templates/oscar/dashboard/ranges/range_list.html:28
-#: templates/oscar/dashboard/ranges/range_product_list.html:17
-msgid "Ranges"
-msgstr "范围"
-
-#: defaults.py:112
-msgid "Low stock alerts"
-msgstr "低库存警报"
-
-#: defaults.py:118
-msgid "Fulfilment"
-msgstr "实行"
-
-#: defaults.py:122 apps/analytics/abstract_models.py:58
-#: apps/analytics/reports.py:66 apps/order/abstract_models.py:275
-#: templates/oscar/dashboard/orders/line_detail.html:17
-#: templates/oscar/dashboard/orders/order_detail.html:18
-#: templates/oscar/dashboard/orders/order_list.html:9
-#: templates/oscar/dashboard/orders/order_list.html:18
-#: templates/oscar/dashboard/orders/order_list.html:24
-#: templates/oscar/dashboard/orders/shippingaddress_form.html:15
-#: templates/oscar/dashboard/orders/statistics.html:18
-#: templates/oscar/dashboard/reports/partials/user_report.html:13
-#: templates/oscar/dashboard/users/detail.html:105
-#: templates/oscar/dashboard/users/detail.html:115
-msgid "Orders"
-msgstr "订单"
-
-#: defaults.py:126 templates/oscar/dashboard/orders/statistics.html:21
-msgid "Statistics"
-msgstr "统计"
-
-#: defaults.py:130 templates/oscar/dashboard/partners/partner_delete.html:7
-#: templates/oscar/dashboard/partners/partner_delete.html:17
-#: templates/oscar/dashboard/partners/partner_form.html:8
-#: templates/oscar/dashboard/partners/partner_form.html:18
-#: templates/oscar/dashboard/partners/partner_list.html:6
-#: templates/oscar/dashboard/partners/partner_list.html:15
-#: templates/oscar/dashboard/partners/partner_list.html:22
-#: templates/oscar/dashboard/partners/partner_manage.html:6
-#: templates/oscar/dashboard/partners/partner_manage.html:16
-#: templates/oscar/dashboard/partners/partner_user_form.html:8
-#: templates/oscar/dashboard/partners/partner_user_form.html:18
-#: templates/oscar/dashboard/partners/partner_user_list.html:6
-#: templates/oscar/dashboard/partners/partner_user_list.html:16
-#: templates/oscar/dashboard/partners/partner_user_select.html:6
-#: templates/oscar/dashboard/partners/partner_user_select.html:16
-msgid "Partners"
-msgstr "供货商"
-
-#: defaults.py:144 defaults.py:148 templates/oscar/dashboard/index.html:112
-#: templates/oscar/dashboard/users/detail.html:16
-#: templates/oscar/dashboard/users/index.html:9
-#: templates/oscar/dashboard/users/index.html:14
-#: templates/oscar/dashboard/users/index.html:24
-msgid "Customers"
-msgstr "顾客"
-
-#: defaults.py:152
-msgid "Stock alert requests"
-msgstr "库存警报请求"
-
-#: defaults.py:158 defaults.py:162 apps/voucher/abstract_models.py:30
-#: templates/oscar/dashboard/offers/offer_delete.html:7
-#: templates/oscar/dashboard/offers/offer_delete.html:17
-#: templates/oscar/dashboard/offers/offer_detail.html:18
-#: templates/oscar/dashboard/offers/offer_list.html:8
-#: templates/oscar/dashboard/offers/offer_list.html:17
-#: templates/oscar/dashboard/offers/offer_list.html:24
-#: templates/oscar/dashboard/offers/step_form.html:15
-#: templates/oscar/dashboard/offers/step_form.html:25
-#: templates/oscar/offer/detail.html:18 templates/oscar/offer/list.html:8
-#: templates/oscar/offer/list.html.py:17 templates/oscar/offer/list.html:22
-#: templates/oscar/partials/nav_primary.html:62
-msgid "Offers"
-msgstr "促销"
-
-#: defaults.py:166 apps/basket/abstract_models.py:48
-#: apps/dashboard/vouchers/views.py:70 apps/voucher/abstract_models.py:60
-#: templates/oscar/basket/partials/basket_totals.html:39
-#: templates/oscar/dashboard/vouchers/voucher_delete.html:8
-#: templates/oscar/dashboard/vouchers/voucher_delete.html:18
-#: templates/oscar/dashboard/vouchers/voucher_detail.html:6
-#: templates/oscar/dashboard/vouchers/voucher_detail.html:16
-#: templates/oscar/dashboard/vouchers/voucher_form.html:8
-#: templates/oscar/dashboard/vouchers/voucher_form.html:18
-#: templates/oscar/dashboard/vouchers/voucher_list.html:18
-#: templates/oscar/dashboard/vouchers/voucher_list.html:29
-msgid "Vouchers"
-msgstr "优惠券"
-
-#: defaults.py:172
-msgid "Content"
-msgstr "内容"
-
-#: defaults.py:176 templates/oscar/dashboard/promotions/delete.html:18
-#: templates/oscar/dashboard/promotions/delete_pagepromotion.html:13
-#: templates/oscar/dashboard/promotions/form.html:13
-#: templates/oscar/dashboard/promotions/page_detail.html:19
-#: templates/oscar/dashboard/promotions/pagepromotion_list.html:7
-#: templates/oscar/dashboard/promotions/pagepromotion_list.html:21
-#: templates/oscar/dashboard/promotions/promotion_list.html:7
-#: templates/oscar/dashboard/promotions/promotion_list.html:12
-#: templates/oscar/dashboard/promotions/promotion_list.html:22
-#: templates/oscar/dashboard/promotions/promotion_list.html:38
-msgid "Content blocks"
-msgstr "内容块"
-
-#: defaults.py:180
-#: templates/oscar/dashboard/promotions/pagepromotion_list.html:24
-msgid "Content blocks by page"
-msgstr "内容块(按页)"
-
-#: defaults.py:184 apps/promotions/models.py:95
-#: templates/oscar/dashboard/pages/delete.html:18
-#: templates/oscar/dashboard/pages/index.html:8
-#: templates/oscar/dashboard/pages/index.html:17
-#: templates/oscar/dashboard/pages/index.html:24
-#: templates/oscar/dashboard/pages/update.html:17
-msgid "Pages"
-msgstr "页"
-
-#: defaults.py:188
-msgid "Email templates"
-msgstr "邮件模版"
-
-#: defaults.py:192 templates/oscar/catalogue/reviews/review_detail.html:5
-#: templates/oscar/catalogue/reviews/review_detail.html:26
-#: templates/oscar/dashboard/reviews/review_delete.html:8
-#: templates/oscar/dashboard/reviews/review_delete.html:18
-#: templates/oscar/dashboard/reviews/review_list.html:8
-#: templates/oscar/dashboard/reviews/review_list.html:17
-#: templates/oscar/dashboard/reviews/review_list.html:23
-#: templates/oscar/dashboard/reviews/review_update.html:18
-#: templates/oscar/dashboard/users/detail.html:107
-#: templates/oscar/dashboard/users/detail.html:174
-msgid "Reviews"
-msgstr "评价"
-
-#: defaults.py:198 templates/oscar/dashboard/reports/index.html:6
-msgid "Reports"
-msgstr "报告"
-
-#: defaults.py:211 apps/catalogue/abstract_models.py:815
-#: apps/offer/models.py:98 apps/offer/models.py:430 apps/offer/models.py:565
-#: apps/order/abstract_models.py:707 apps/payment/abstract_models.py:37
-#: templates/oscar/dashboard/orders/order_detail.html:563
-#: templates/oscar/dashboard/orders/order_detail.html:613
-#: templates/oscar/dashboard/promotions/page_detail.html:39
-#: templates/oscar/dashboard/promotions/promotion_list.html:43
-msgid "Type"
-msgstr "类型"
-
-#: defaults.py:215 apps/catalogue/abstract_models.py:291
-msgid "Rating"
-msgstr "等级"
-
-#: defaults.py:227
-msgid "Price range"
-msgstr "价格范围"
-
-#: defaults.py:232
-msgid "0 to 20"
-msgstr "0到20"
-
-#: defaults.py:233
-msgid "20 to 40"
-msgstr "20到40"
-
-#: defaults.py:234
-msgid "40 to 60"
-msgstr "40到60"
-
-#: defaults.py:235
-msgid "60+"
-msgstr "60+"
 
 #: apps/address/abstract_models.py:24
 msgid "Mr"
@@ -400,16 +114,17 @@ msgstr "搜索文本- 只用来搜索地址"
 #: apps/address/abstract_models.py:243 apps/address/config.py:8
 #: templates/oscar/checkout/checkout.html:37
 #: templates/oscar/checkout/thank_you.html:39
-#: templates/oscar/customer/anon_order.html:25
 #: templates/oscar/customer/address/address_list.html:10
+#: templates/oscar/customer/anon_order.html:25
+#: templates/oscar/customer/order/order_detail.html:155
 #: templates/oscar/dashboard/orders/order_detail.html:448
 msgid "Address"
 msgstr "地址"
 
 #: apps/address/abstract_models.py:244
 #: templates/oscar/dashboard/partners/partner_list.html:47
-#: templates/oscar/dashboard/users/detail.html:106
-#: templates/oscar/dashboard/users/detail.html:147
+#: templates/oscar/dashboard/users/detail.html:108
+#: templates/oscar/dashboard/users/detail.html:149
 msgid "Addresses"
 msgstr "地址"
 
@@ -443,7 +158,7 @@ msgstr "国家名称"
 msgid "Official name"
 msgstr ""
 
-#: apps/address/abstract_models.py:400
+#: apps/address/abstract_models.py:400 apps/catalogue/abstract_models.py:1169
 msgid "Display order"
 msgstr "显示订单"
 
@@ -481,7 +196,7 @@ msgstr "发货时您有什么需要请告诉我们"
 #: templates/oscar/checkout/shipping_address.html:5
 #: templates/oscar/checkout/shipping_address.html:12
 #: templates/oscar/customer/anon_order.html:21
-#: templates/oscar/dashboard/orders/order_list.html:100
+#: templates/oscar/dashboard/orders/order_list.html:99
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:5
 msgid "Shipping address"
 msgstr "送货地址"
@@ -494,7 +209,7 @@ msgstr "送货地址"
 #: apps/analytics/abstract_models.py:78 apps/analytics/abstract_models.py:96
 #: apps/basket/reports.py:78 apps/customer/abstract_models.py:79
 #: apps/customer/abstract_models.py:115 apps/customer/abstract_models.py:308
-#: apps/order/abstract_models.py:39 apps/order/abstract_models.py:323
+#: apps/order/abstract_models.py:40 apps/order/abstract_models.py:324
 #: apps/payment/abstract_models.py:241 apps/voucher/abstract_models.py:146
 #: templates/oscar/dashboard/orders/order_detail.html:612
 #: templates/oscar/dashboard/reviews/review_delete.html:40
@@ -521,13 +236,12 @@ msgid "Address Hash"
 msgstr "地址哈希值"
 
 #: apps/address/abstract_models.py:509 apps/analytics/abstract_models.py:80
-#: apps/analytics/abstract_models.py:98 apps/basket/abstract_models.py:580
-#: apps/catalogue/abstract_models.py:1172 apps/customer/abstract_models.py:181
-#: apps/offer/models.py:170 apps/offer/models.py:816
-#: apps/order/abstract_models.py:330 apps/order/abstract_models.py:867
-#: apps/partner/abstract_models.py:243 apps/payment/abstract_models.py:42
-#: apps/promotions/models.py:27 apps/promotions/models.py:350
-#: apps/voucher/abstract_models.py:148
+#: apps/analytics/abstract_models.py:98 apps/basket/abstract_models.py:589
+#: apps/customer/abstract_models.py:181 apps/offer/models.py:170
+#: apps/offer/models.py:816 apps/order/abstract_models.py:331
+#: apps/order/abstract_models.py:877 apps/partner/abstract_models.py:243
+#: apps/payment/abstract_models.py:42 apps/promotions/models.py:27
+#: apps/promotions/models.py:350 apps/voucher/abstract_models.py:148
 msgid "Date Created"
 msgstr "创建日期"
 
@@ -546,7 +260,7 @@ msgstr "您的地址簿已经有这个地址了"
 #: apps/address/abstract_models.py:560
 #: templates/oscar/checkout/thank_you.html:99
 #: templates/oscar/dashboard/orders/order_detail.html:476
-#: templates/oscar/dashboard/orders/order_list.html:101
+#: templates/oscar/dashboard/orders/order_list.html:100
 msgid "Billing address"
 msgstr "账单地址"
 
@@ -554,7 +268,7 @@ msgstr "账单地址"
 msgid "Billing addresses"
 msgstr "账单地址"
 
-#: apps/address/abstract_models.py:580 apps/order/abstract_models.py:397
+#: apps/address/abstract_models.py:580 apps/order/abstract_models.py:398
 #: apps/partner/abstract_models.py:92 apps/partner/config.py:8
 #: templates/oscar/dashboard/catalogue/product_update.html:194
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:50
@@ -571,15 +285,15 @@ msgid "Partner addresses"
 msgstr "供货商地址"
 
 #: apps/analytics/abstract_models.py:19 apps/analytics/abstract_models.py:79
-#: apps/analytics/reports.py:20 apps/basket/abstract_models.py:560
+#: apps/analytics/reports.py:20 apps/basket/abstract_models.py:569
 #: apps/catalogue/abstract_models.py:200 apps/catalogue/abstract_models.py:320
 #: apps/catalogue/abstract_models.py:942
-#: apps/catalogue/abstract_models.py:1162 apps/order/abstract_models.py:424
+#: apps/catalogue/abstract_models.py:1162 apps/order/abstract_models.py:425
 #: apps/partner/abstract_models.py:90 apps/promotions/models.py:292
 #: apps/wishlists/abstract_models.py:114
 #: templates/oscar/checkout/checkout.html:109
-#: templates/oscar/customer/anon_order.html:58
 #: templates/oscar/customer/alerts/alert_list.html:12
+#: templates/oscar/customer/anon_order.html:58
 #: templates/oscar/customer/order/order_detail.html:18
 #: templates/oscar/customer/wishlists/wishlists_detail.html:33
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:49
@@ -608,10 +322,10 @@ msgstr "购买"
 
 #: apps/analytics/abstract_models.py:30
 #: apps/catalogue/reviews/abstract_models.py:29
-#: templates/oscar/catalogue/reviews/review_list.html:45
+#: apps/catalogue/reviews/forms.py:50
 #: templates/oscar/dashboard/reviews/review_delete.html:41
 #: templates/oscar/dashboard/reviews/review_list.html:60
-#: templates/oscar/dashboard/users/detail.html:178
+#: templates/oscar/dashboard/users/detail.html:180
 msgid "Score"
 msgstr "评分"
 
@@ -632,7 +346,22 @@ msgstr "'%s'的记录"
 msgid "Product Views"
 msgstr "产品视图"
 
-#: apps/analytics/abstract_models.py:60 apps/order/abstract_models.py:485
+#: apps/analytics/abstract_models.py:58 apps/analytics/reports.py:66
+#: apps/order/abstract_models.py:276 defaults.py:122
+#: templates/oscar/dashboard/orders/line_detail.html:17
+#: templates/oscar/dashboard/orders/order_detail.html:18
+#: templates/oscar/dashboard/orders/order_list.html:9
+#: templates/oscar/dashboard/orders/order_list.html:18
+#: templates/oscar/dashboard/orders/order_list.html:24
+#: templates/oscar/dashboard/orders/shippingaddress_form.html:15
+#: templates/oscar/dashboard/orders/statistics.html:18
+#: templates/oscar/dashboard/reports/partials/user_report.html:13
+#: templates/oscar/dashboard/users/detail.html:107
+#: templates/oscar/dashboard/users/detail.html:117
+msgid "Orders"
+msgstr "订单"
+
+#: apps/analytics/abstract_models.py:60 apps/order/abstract_models.py:486
 msgid "Order Lines"
 msgstr "订单行"
 
@@ -708,7 +437,7 @@ msgstr "产品分析"
 #: apps/customer/abstract_models.py:148 apps/dashboard/users/forms.py:42
 #: apps/dashboard/vouchers/forms.py:17 apps/dashboard/vouchers/forms.py:88
 #: apps/offer/models.py:70 apps/offer/models.py:785
-#: apps/order/abstract_models.py:767 apps/order/abstract_models.py:931
+#: apps/order/abstract_models.py:777 apps/order/abstract_models.py:941
 #: apps/order/reports.py:21 apps/payment/abstract_models.py:205
 #: apps/payment/abstract_models.py:245 apps/promotions/models.py:145
 #: apps/promotions/models.py:175 apps/promotions/models.py:201
@@ -761,7 +490,7 @@ msgstr "订单条目"
 
 #: apps/analytics/reports.py:69
 #: templates/oscar/dashboard/reports/partials/user_report.html:16
-#: templates/oscar/dashboard/users/detail.html:77
+#: templates/oscar/dashboard/users/detail.html:78
 msgid "Total spent"
 msgstr "总花费"
 
@@ -774,60 +503,75 @@ msgstr "上次订单日期"
 msgid "User analytics"
 msgstr "用户分析"
 
-#: apps/basket/abstract_models.py:27 apps/wishlists/abstract_models.py:23
+#: apps/basket/abstract_models.py:28 apps/wishlists/abstract_models.py:23
 msgid "Owner"
 msgstr "所有者"
 
-#: apps/basket/abstract_models.py:35
+#: apps/basket/abstract_models.py:36
 msgid "Open - currently active"
 msgstr "打开 - 当前可用"
 
-#: apps/basket/abstract_models.py:36
+#: apps/basket/abstract_models.py:37
 msgid "Merged - superceded by another basket"
 msgstr "合并 - 被另一个购物车替代"
 
-#: apps/basket/abstract_models.py:37
+#: apps/basket/abstract_models.py:38
 msgid "Saved - for items to be purchased later"
 msgstr "已保存 - 等待付款购买"
 
-#: apps/basket/abstract_models.py:38
+#: apps/basket/abstract_models.py:39
 msgid "Frozen - the basket cannot be modified"
 msgstr "冻结 - 购物车当前无法修改"
 
-#: apps/basket/abstract_models.py:39
+#: apps/basket/abstract_models.py:40
 msgid "Submitted - has been ordered at the checkout"
 msgstr "提交 - 已经提交订单"
 
-#: apps/basket/abstract_models.py:42 apps/catalogue/abstract_models.py:1101
+#: apps/basket/abstract_models.py:43 apps/catalogue/abstract_models.py:1101
 #: apps/catalogue/reviews/abstract_models.py:58
-#: apps/customer/abstract_models.py:328 apps/dashboard/catalogue/forms.py:363
+#: apps/customer/abstract_models.py:328 apps/dashboard/catalogue/forms.py:366
 #: apps/dashboard/orders/forms.py:74 apps/dashboard/reviews/forms.py:13
 #: apps/dashboard/reviews/forms.py:26 apps/dashboard/users/forms.py:41
-#: apps/offer/models.py:103 apps/offer/models.py:1659
-#: apps/order/abstract_models.py:78 apps/order/abstract_models.py:470
+#: apps/offer/models.py:103 apps/offer/models.py:1670
+#: apps/order/abstract_models.py:79 apps/order/abstract_models.py:471
 #: apps/partner/abstract_models.py:241 apps/payment/abstract_models.py:41
+#: templates/oscar/customer/alerts/alert_list.html:13
 #: templates/oscar/customer/anon_order.html:14
 #: templates/oscar/customer/anon_order.html:59
-#: templates/oscar/customer/alerts/alert_list.html:13
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:54
 #: templates/oscar/dashboard/orders/line_detail.html:77
 #: templates/oscar/dashboard/orders/order_detail.html:66
 #: templates/oscar/dashboard/orders/order_detail.html:113
 #: templates/oscar/dashboard/orders/order_detail.html:530
-#: templates/oscar/dashboard/orders/order_list.html:98
+#: templates/oscar/dashboard/orders/order_list.html:97
 #: templates/oscar/dashboard/orders/statistics.html:59
 #: templates/oscar/dashboard/reviews/review_delete.html:43
 #: templates/oscar/dashboard/reviews/review_list.html:62
-#: templates/oscar/dashboard/users/detail.html:123
 #: templates/oscar/dashboard/users/alerts/list.html:47
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:20
+#: templates/oscar/dashboard/users/detail.html:125
 #: templates/oscar/dashboard/vouchers/voucher_list.html:54
 msgid "Status"
 msgstr "状态"
 
-#: apps/basket/abstract_models.py:50 apps/basket/reports.py:82
-#: apps/catalogue/abstract_models.py:293 apps/customer/abstract_models.py:331
-#: apps/order/abstract_models.py:812 apps/partner/abstract_models.py:144
+#: apps/basket/abstract_models.py:49 apps/dashboard/vouchers/views.py:70
+#: apps/voucher/abstract_models.py:60 defaults.py:166
+#: templates/oscar/basket/partials/basket_totals.html:39
+#: templates/oscar/dashboard/vouchers/voucher_delete.html:8
+#: templates/oscar/dashboard/vouchers/voucher_delete.html:18
+#: templates/oscar/dashboard/vouchers/voucher_detail.html:6
+#: templates/oscar/dashboard/vouchers/voucher_detail.html:16
+#: templates/oscar/dashboard/vouchers/voucher_form.html:8
+#: templates/oscar/dashboard/vouchers/voucher_form.html:18
+#: templates/oscar/dashboard/vouchers/voucher_list.html:18
+#: templates/oscar/dashboard/vouchers/voucher_list.html:29
+msgid "Vouchers"
+msgstr "优惠券"
+
+#: apps/basket/abstract_models.py:51 apps/basket/reports.py:82
+#: apps/catalogue/abstract_models.py:293
+#: apps/catalogue/abstract_models.py:1172 apps/customer/abstract_models.py:331
+#: apps/order/abstract_models.py:822 apps/partner/abstract_models.py:144
 #: apps/wishlists/abstract_models.py:51
 #: templates/oscar/customer/alerts/alert_list.html:14
 #: templates/oscar/dashboard/promotions/promotion_list.html:45
@@ -835,24 +579,24 @@ msgstr "状态"
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:12
 #: templates/oscar/dashboard/reviews/review_delete.html:44
 #: templates/oscar/dashboard/reviews/review_list.html:63
-#: templates/oscar/dashboard/users/detail.html:181
 #: templates/oscar/dashboard/users/alerts/list.html:48
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:24
+#: templates/oscar/dashboard/users/detail.html:183
 #: templates/oscar/dashboard/vouchers/voucher_list.html:57
 msgid "Date created"
 msgstr "创建日期"
 
-#: apps/basket/abstract_models.py:51
+#: apps/basket/abstract_models.py:52
 msgid "Date merged"
 msgstr "合并日期"
 
-#: apps/basket/abstract_models.py:52
+#: apps/basket/abstract_models.py:53
 #: templates/oscar/customer/order/order_list.html:42
 msgid "Date submitted"
 msgstr "提交日期"
 
-#: apps/basket/abstract_models.py:61 apps/basket/abstract_models.py:549
-#: apps/basket/config.py:8 apps/order/abstract_models.py:32
+#: apps/basket/abstract_models.py:62 apps/basket/abstract_models.py:558
+#: apps/basket/config.py:8 apps/order/abstract_models.py:33
 #: templates/oscar/basket/basket.html:6 templates/oscar/basket/basket.html:15
 #: templates/oscar/basket/basket.html:23
 #: templates/oscar/basket/partials/basket_totals.html:9
@@ -862,30 +606,30 @@ msgstr "提交日期"
 msgid "Basket"
 msgstr "购物车"
 
-#: apps/basket/abstract_models.py:62
+#: apps/basket/abstract_models.py:63
 msgid "Baskets"
 msgstr "购物车"
 
-#: apps/basket/abstract_models.py:81
+#: apps/basket/abstract_models.py:82
 #, python-format
 msgid "%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)"
 msgstr "%(status)s 购物车 (属于: %(owner)s, 商品数: %(num_lines)d)"
 
-#: apps/basket/abstract_models.py:140
+#: apps/basket/abstract_models.py:141
 #, python-format
 msgid ""
-"Due to technical limitations we are not able to ship more than %(threshold)d "
-"items in one order."
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order."
 msgstr "由于技术原因，单个订单不能超过%(threshold)d件商品。"
 
-#: apps/basket/abstract_models.py:556
+#: apps/basket/abstract_models.py:565
 msgid "Line Reference"
 msgstr "产品线引用"
 
-#: apps/basket/abstract_models.py:566 apps/basket/forms.py:134
-#: apps/basket/forms.py:282 apps/order/abstract_models.py:431
-#: apps/order/abstract_models.py:733 apps/order/abstract_models.py:838
-#: apps/order/abstract_models.py:899 apps/wishlists/abstract_models.py:117
+#: apps/basket/abstract_models.py:575 apps/basket/forms.py:135
+#: apps/basket/forms.py:283 apps/order/abstract_models.py:432
+#: apps/order/abstract_models.py:743 apps/order/abstract_models.py:848
+#: apps/order/abstract_models.py:909 apps/wishlists/abstract_models.py:117
 #: templates/oscar/basket/partials/basket_content.html:29
 #: templates/oscar/checkout/checkout.html:110
 #: templates/oscar/checkout/thank_you.html:120
@@ -899,95 +643,91 @@ msgstr "产品线引用"
 msgid "Quantity"
 msgstr "数量"
 
-#: apps/basket/abstract_models.py:572 apps/order/abstract_models.py:51
+#: apps/basket/abstract_models.py:581 apps/order/abstract_models.py:52
 #: apps/partner/abstract_models.py:103 apps/payment/abstract_models.py:76
 #: templates/oscar/dashboard/catalogue/product_update.html:201
 msgid "Currency"
 msgstr "货币"
 
-#: apps/basket/abstract_models.py:574
+#: apps/basket/abstract_models.py:583
 msgid "Price excl. Tax"
 msgstr "价格（不含税）"
 
-#: apps/basket/abstract_models.py:577
+#: apps/basket/abstract_models.py:586
 msgid "Price incl. Tax"
 msgstr "价格（含税）"
 
-#: apps/basket/abstract_models.py:593
+#: apps/basket/abstract_models.py:602
 msgid "Basket line"
 msgstr "购物篮线"
 
-#: apps/basket/abstract_models.py:594
+#: apps/basket/abstract_models.py:603
 msgid "Basket lines"
 msgstr "购物车线"
 
-#: apps/basket/abstract_models.py:598
+#: apps/basket/abstract_models.py:607
 #, python-format
 msgid "Basket #%(basket_id)d, Product #%(product_id)d, quantity %(quantity)d"
 msgstr "购物篮 #%(basket_id)d, 商品 #%(product_id)d, 数量 %(quantity)d"
 
-#: apps/basket/abstract_models.py:606
+#: apps/basket/abstract_models.py:615
 #, python-format
 msgid "You cannot modify a %s basket"
 msgstr "您不能修改一个%s购物车"
 
-#: apps/basket/abstract_models.py:817
+#: apps/basket/abstract_models.py:826
 #, python-format
 msgid ""
-"The price of '%(product)s' has increased from %(old_price)s to %(new_price)s "
-"since you added it to your basket"
-msgstr ""
-"'%(product)s' 的价格在您添加到购物篮之后，已经从%(old_price)s升"
-"到%(new_price)s"
+"The price of '%(product)s' has increased from %(old_price)s to %(new_price)s"
+" since you added it to your basket"
+msgstr "'%(product)s' 的价格在您添加到购物篮之后，已经从%(old_price)s升到%(new_price)s"
 
-#: apps/basket/abstract_models.py:822
+#: apps/basket/abstract_models.py:831
 #, python-format
 msgid ""
-"The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s "
-"since you added it to your basket"
-msgstr ""
-"'%(product)s' 的价格在您添加到购物篮之后，已经从%(old_price)s降"
-"到%(new_price)s"
+"The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s"
+" since you added it to your basket"
+msgstr "'%(product)s' 的价格在您添加到购物篮之后，已经从%(old_price)s降到%(new_price)s"
 
-#: apps/basket/abstract_models.py:833 apps/order/abstract_models.py:703
-#: apps/order/abstract_models.py:732 apps/order/abstract_models.py:837
-#: apps/order/abstract_models.py:898
+#: apps/basket/abstract_models.py:842 apps/order/abstract_models.py:713
+#: apps/order/abstract_models.py:742 apps/order/abstract_models.py:847
+#: apps/order/abstract_models.py:908
 msgid "Line"
 msgstr "行"
 
-#: apps/basket/abstract_models.py:834 apps/catalogue/abstract_models.py:808
+#: apps/basket/abstract_models.py:843 apps/catalogue/abstract_models.py:808
 #: apps/catalogue/abstract_models.py:1067
-#: apps/catalogue/abstract_models.py:1107 apps/order/abstract_models.py:706
-#: apps/order/abstract_models.py:730
+#: apps/catalogue/abstract_models.py:1107 apps/order/abstract_models.py:716
+#: apps/order/abstract_models.py:740
 msgid "Option"
 msgstr "选项"
 
-#: apps/basket/abstract_models.py:835 apps/offer/models.py:433
-#: apps/offer/models.py:571 apps/order/abstract_models.py:708
+#: apps/basket/abstract_models.py:844 apps/offer/models.py:433
+#: apps/offer/models.py:571 apps/order/abstract_models.py:718
 msgid "Value"
 msgstr "值"
 
-#: apps/basket/abstract_models.py:840
+#: apps/basket/abstract_models.py:849
 msgid "Line attribute"
 msgstr "购物篮线的属性"
 
-#: apps/basket/abstract_models.py:841
+#: apps/basket/abstract_models.py:850
 msgid "Line attributes"
 msgstr "购物篮线属性"
 
-#: apps/basket/forms.py:16
+#: apps/basket/forms.py:17
 msgid "Save for Later"
 msgstr "加入收藏"
 
-#: apps/basket/forms.py:75
+#: apps/basket/forms.py:76
 msgid "Move to Basket"
 msgstr "移到购物车里"
 
-#: apps/basket/forms.py:124 apps/catalogue/abstract_models.py:784
+#: apps/basket/forms.py:125 apps/catalogue/abstract_models.py:784
 #: apps/catalogue/abstract_models.py:1093 apps/customer/abstract_models.py:142
 #: apps/dashboard/vouchers/forms.py:18 apps/dashboard/vouchers/forms.py:89
-#: apps/order/abstract_models.py:768 apps/order/abstract_models.py:933
-#: apps/order/abstract_models.py:984 apps/partner/abstract_models.py:21
+#: apps/order/abstract_models.py:778 apps/order/abstract_models.py:943
+#: apps/order/abstract_models.py:994 apps/partner/abstract_models.py:21
 #: apps/payment/abstract_models.py:207 apps/voucher/abstract_models.py:25
 #: templates/oscar/dashboard/comms/list.html:32
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:41
@@ -996,28 +736,26 @@ msgstr "移到购物车里"
 msgid "Code"
 msgstr "代码"
 
-#: apps/basket/forms.py:179
+#: apps/basket/forms.py:180
 msgid "Variant"
 msgstr "同类产品"
 
-#: apps/basket/forms.py:207
+#: apps/basket/forms.py:208
 msgid "Please select a valid product"
 msgstr "请选择一个有效的产品"
 
-#: apps/basket/forms.py:224
+#: apps/basket/forms.py:225
 #, python-format
 msgid ""
-"Due to technical limitations we are not able to ship more than %(threshold)d "
-"items in one order. Your basket currently has %(basket)d items."
-msgstr ""
-"由于技术原因，每个订单不能邮寄超过%(threshold)d件商品。您的购物篮里"
-"有%(basket)d件产品。"
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order. Your basket currently has %(basket)d items."
+msgstr "由于技术原因，每个订单不能邮寄超过%(threshold)d件商品。您的购物篮里有%(basket)d件产品。"
 
-#: apps/basket/forms.py:247
+#: apps/basket/forms.py:248
 msgid ""
-"This product cannot be added to the basket as its currency isn't the same as "
-"other products in your basket"
-msgstr ""
+"This product cannot be added to the basket as its currency isn't the same as"
+" other products in your basket"
+msgstr "加入购物车失败. 原因:该产品的货币与购物车内其他产品不一样."
 
 #: apps/basket/reports.py:18 apps/basket/reports.py:77
 msgid "User ID"
@@ -1054,7 +792,7 @@ msgstr "线的数量"
 #: templates/oscar/customer/order/order_list.html:40
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:11
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:11
-#: templates/oscar/dashboard/users/detail.html:120
+#: templates/oscar/dashboard/users/detail.html:122
 msgid "Num items"
 msgstr "商品数量"
 
@@ -1184,6 +922,19 @@ msgstr "短名为'%(slug)s'的类别已经存在！"
 msgid "Category"
 msgstr "类别"
 
+#: apps/catalogue/abstract_models.py:186 apps/catalogue/abstract_models.py:301
+#: apps/catalogue/abstract_models.py:598 apps/dashboard/catalogue/views.py:517
+#: apps/dashboard/catalogue/views.py:536 defaults.py:104
+#: templates/oscar/dashboard/catalogue/category_delete.html:13
+#: templates/oscar/dashboard/catalogue/category_form.html:8
+#: templates/oscar/dashboard/catalogue/category_form.html:18
+#: templates/oscar/dashboard/catalogue/category_list.html:9
+#: templates/oscar/dashboard/catalogue/category_list.html:18
+#: templates/oscar/dashboard/catalogue/category_list.html:25
+#: templates/oscar/dashboard/catalogue/product_update.html:76
+msgid "Categories"
+msgstr "分类"
+
 #: apps/catalogue/abstract_models.py:209
 msgid "Product category"
 msgstr "产品类别"
@@ -1198,18 +949,18 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:235 apps/catalogue/abstract_models.py:250
 msgid "Parent product"
-msgstr ""
+msgstr "父级商品"
 
 #: apps/catalogue/abstract_models.py:236
 msgid "Child product"
-msgstr ""
+msgstr "子级产品"
 
 #: apps/catalogue/abstract_models.py:239
 msgid "Product structure"
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:243 apps/dashboard/catalogue/forms.py:89
-#: apps/dashboard/orders/forms.py:68 apps/order/abstract_models.py:429
+#: apps/dashboard/orders/forms.py:68 apps/order/abstract_models.py:430
 #: templates/oscar/catalogue/detail.html:108
 #: templates/oscar/dashboard/orders/line_detail.html:53
 #: templates/oscar/dashboard/orders/order_detail.html:112
@@ -1221,25 +972,25 @@ msgstr "UPC"
 msgid ""
 "Universal Product Code (UPC) is an identifier for a product which is not "
 "specific to a particular  supplier. Eg an ISBN for a book."
-msgstr ""
-"通用产品代码(UPC)是给没有指名具体供货商的产品提供的识别码。例如，书籍的ISBN"
+msgstr "通用产品代码(UPC)是给没有指名具体供货商的产品提供的识别码。例如，书籍的ISBN"
 
 #: apps/catalogue/abstract_models.py:251
 msgid ""
 "Only choose a parent product if you're creating a child product.  For "
-"example if this is a size 4 of a particular t-shirt.  Leave blank if this is "
-"a stand-alone product (i.e. there is only one version of this product)."
+"example if this is a size 4 of a particular t-shirt.  Leave blank if this is"
+" a stand-alone product (i.e. there is only one version of this product)."
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:258 apps/catalogue/abstract_models.py:568
-#: apps/order/abstract_models.py:426 apps/wishlists/abstract_models.py:120
+#: apps/order/abstract_models.py:427 apps/wishlists/abstract_models.py:120
 #: templates/oscar/dashboard/orders/line_detail.html:40
 #: templates/oscar/dashboard/ranges/range_product_list.html:98
 msgctxt "Product title"
 msgid "Title"
 msgstr "标题"
 
-#: apps/catalogue/abstract_models.py:267 apps/dashboard/catalogue/tables.py:23
+#: apps/catalogue/abstract_models.py:267 apps/catalogue/abstract_models.py:781
+#: apps/dashboard/catalogue/tables.py:23
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:13
 msgid "Product type"
 msgstr "商品种类"
@@ -1257,8 +1008,8 @@ msgstr "属性"
 
 #: apps/catalogue/abstract_models.py:273
 msgid ""
-"A product attribute is something that this product may have, such as a size, "
-"as specified by its class"
+"A product attribute is something that this product may have, such as a size,"
+" as specified by its class"
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:277
@@ -1270,17 +1021,20 @@ msgid ""
 "Options are values that can be associated with a item when it is added to a "
 "customer's basket.  This could be something like a personalised message to "
 "be printed on a T-shirt."
-msgstr ""
-"选项是在一件商品被加入购物篮时可以被联系的数值。这个可以是能印在T恤上的个性化"
-"信息"
+msgstr "选项是在一件商品被加入购物篮时可以被联系的数值。这个可以是能印在T恤上的个性化信息"
 
 #: apps/catalogue/abstract_models.py:285
-msgid "Recommended Products"
-msgstr "推荐产品"
+#: templates/oscar/dashboard/catalogue/product_update.html:301
+msgid "Recommended products"
+msgstr "推荐商品"
 
 #: apps/catalogue/abstract_models.py:286
 msgid "These are products that are recommended to accompany the main product."
 msgstr ""
+
+#: apps/catalogue/abstract_models.py:291 defaults.py:215
+msgid "Rating"
+msgstr "等级"
 
 #: apps/catalogue/abstract_models.py:297 apps/partner/abstract_models.py:145
 msgid "Date updated"
@@ -1293,6 +1047,19 @@ msgstr "是可以打折的？"
 #: apps/catalogue/abstract_models.py:310
 msgid "This flag indicates if this product can be used in an offer or not"
 msgstr "这个旗子标明这个商品是否可能被用作促销"
+
+#: apps/catalogue/abstract_models.py:321 apps/dashboard/catalogue/views.py:85
+#: apps/promotions/models.py:273 defaults.py:96
+#: templates/oscar/dashboard/catalogue/product_delete.html:18
+#: templates/oscar/dashboard/catalogue/product_list.html:11
+#: templates/oscar/dashboard/catalogue/product_list.html:20
+#: templates/oscar/dashboard/catalogue/product_list.html:26
+#: templates/oscar/dashboard/catalogue/product_update.html:11
+#: templates/oscar/dashboard/catalogue/product_update.html:21
+#: templates/oscar/dashboard/promotions/handpickedproductlist_form.html:5
+#: templates/oscar/dashboard/ranges/range_product_list.html:24
+msgid "Products"
+msgstr "产品"
 
 #: apps/catalogue/abstract_models.py:378
 msgid "Your product must have a title."
@@ -1339,12 +1106,12 @@ msgid "One can't add a child product to a product with stock records."
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:690
-msgid "Primary Product"
-msgstr "初级产品"
+msgid "Primary product"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:692
-msgid "Recommended Product"
-msgstr "推荐产品"
+msgid "Recommended product"
+msgstr ""
 
 #: apps/catalogue/abstract_models.py:694
 msgid "Ranking"
@@ -1379,14 +1146,6 @@ msgstr "%(attr)s属性不能为空白"
 msgid "%(attr)s attribute %(err)s"
 msgstr "%(attr)s 属性%(err)s"
 
-#: apps/catalogue/abstract_models.py:781
-#: templates/oscar/catalogue/detail.html:112
-#: templates/oscar/dashboard/catalogue/product_class_form.html:16
-#: templates/oscar/dashboard/catalogue/product_class_list.html:11
-#: templates/oscar/dashboard/orders/line_detail.html:50
-msgid "Product Type"
-msgstr "商品种类"
-
 #: apps/catalogue/abstract_models.py:787
 msgid ""
 "Code can only contain the letters a-z, A-Z, digits, minus and underscores, "
@@ -1414,7 +1173,7 @@ msgid "Rich Text"
 msgstr "富文本"
 
 #: apps/catalogue/abstract_models.py:807 apps/catalogue/abstract_models.py:949
-#: apps/order/abstract_models.py:363
+#: apps/order/abstract_models.py:364
 #: templates/oscar/dashboard/orders/line_detail.html:141
 #: templates/oscar/dashboard/orders/line_detail.html:171
 #: templates/oscar/dashboard/orders/order_detail.html:344
@@ -1431,6 +1190,16 @@ msgstr "实体"
 #: apps/catalogue/abstract_models.py:810
 msgid "File"
 msgstr "文件"
+
+#: apps/catalogue/abstract_models.py:815 apps/offer/models.py:98
+#: apps/offer/models.py:430 apps/offer/models.py:565
+#: apps/order/abstract_models.py:717 apps/payment/abstract_models.py:37
+#: defaults.py:211 templates/oscar/dashboard/orders/order_detail.html:563
+#: templates/oscar/dashboard/orders/order_detail.html:613
+#: templates/oscar/dashboard/promotions/page_detail.html:39
+#: templates/oscar/dashboard/promotions/promotion_list.html:43
+msgid "Type"
+msgstr "类型"
 
 #: apps/catalogue/abstract_models.py:819
 msgid "Option Group"
@@ -1553,14 +1322,10 @@ msgstr "原本的"
 msgid "Caption"
 msgstr "注释"
 
-#: apps/catalogue/abstract_models.py:1169 apps/promotions/models.py:25
-#: apps/promotions/models.py:293 apps/promotions/models.py:336
-msgid "Display Order"
-msgstr "显示顺序"
-
 #: apps/catalogue/abstract_models.py:1170
 msgid ""
-"An image with a display order of zero will be the primary image for a product"
+"An image with a display order of zero will be the primary image for a "
+"product"
 msgstr "一个显示顺序为零的图片将被作为商品的主要图片"
 
 #: apps/catalogue/abstract_models.py:1181
@@ -1571,23 +1336,14 @@ msgstr ""
 msgid "Product images"
 msgstr "产品图片"
 
-#: apps/catalogue/utils.py:61
-#, python-format
-msgid "%(filename)s is not a valid image (%(error)s)"
-msgstr "%(filename)s 不是一个有效的图片(%(error)s)"
-
-#: apps/catalogue/utils.py:70
-#, python-format
-msgid "%s is not a valid image archive"
-msgstr "%s不是一个有效的图片存档"
-
-#: apps/catalogue/views.py:131 templates/oscar/partials/nav_primary.html:43
-msgid "All products"
-msgstr "所有产品"
+#: apps/catalogue/config.py:8 apps/dashboard/catalogue/config.py:8
+#: defaults.py:92
+msgid "Catalogue"
+msgstr "目录"
 
 #: apps/catalogue/reviews/abstract_models.py:32
 #: templates/oscar/dashboard/reviews/review_delete.html:38
-#: templates/oscar/dashboard/users/detail.html:179
+#: templates/oscar/dashboard/users/detail.html:181
 msgctxt "Product review title"
 msgid "Title"
 msgstr "标题"
@@ -1595,7 +1351,7 @@ msgstr "标题"
 #: apps/catalogue/reviews/abstract_models.py:35
 #: templates/oscar/customer/email/email_detail.html:24
 #: templates/oscar/customer/notifications/detail.html:29
-#: templates/oscar/dashboard/users/detail.html:180
+#: templates/oscar/dashboard/users/detail.html:182
 msgid "Body"
 msgstr "内容简述"
 
@@ -1605,7 +1361,7 @@ msgid "Name"
 msgstr "名称"
 
 #: apps/catalogue/reviews/abstract_models.py:46
-#: apps/dashboard/pages/forms.py:23 apps/dashboard/promotions/forms.py:60
+#: apps/dashboard/pages/forms.py:23 apps/dashboard/promotions/forms.py:62
 #: models/fields/__init__.py:36 templates/oscar/dashboard/pages/index.html:52
 #: templates/oscar/dashboard/promotions/pagepromotion_list.html:45
 msgid "URL"
@@ -1686,21 +1442,47 @@ msgstr "只有登录用户才能投票"
 msgid "You can only vote once on a review"
 msgstr "您只能在一个评价上投一次票"
 
-#: apps/catalogue/reviews/views.py:31
+#: apps/catalogue/reviews/forms.py:51
+msgid "Recency"
+msgstr "最近"
+
+#: apps/catalogue/reviews/forms.py:56 apps/search/forms.py:79
+msgid "Sort by"
+msgstr ""
+
+#: apps/catalogue/reviews/views.py:32
 msgid "You have already reviewed this product!"
 msgstr "你已经给过这个产品做过评价！"
 
-#: apps/catalogue/reviews/views.py:33
+#: apps/catalogue/reviews/views.py:34
 msgid "You can't leave a review for this product."
 msgstr "您不能为这个商品写评论"
 
-#: apps/catalogue/reviews/views.py:58
+#: apps/catalogue/reviews/views.py:59
 msgid "Thank you for reviewing this product"
 msgstr "多谢你给这个产品做评价"
 
-#: apps/catalogue/reviews/views.py:96
+#: apps/catalogue/reviews/views.py:97
 msgid "Thanks for voting!"
 msgstr "多谢投票！"
+
+#: apps/catalogue/utils.py:63
+#, python-format
+msgid "%(filename)s is not a valid image (%(error)s)"
+msgstr "%(filename)s 不是一个有效的图片(%(error)s)"
+
+#: apps/catalogue/utils.py:72
+#, python-format
+msgid "%s is not a valid image archive"
+msgstr "%s不是一个有效的图片存档"
+
+#: apps/catalogue/views.py:129 apps/catalogue/views.py:165
+msgid "The given page number was invalid."
+msgstr ""
+
+#: apps/catalogue/views.py:138 templates/oscar/partials/nav_primary.html:43
+msgid "All products"
+msgstr "所有产品"
 
 #: apps/checkout/config.py:8
 #: templates/oscar/basket/partials/basket_quick.html:39
@@ -1733,9 +1515,7 @@ msgstr "您必须要向购物篮里加些东西才能结账"
 msgid ""
 "'%(title)s' is no longer available to buy (%(reason)s). Please adjust your "
 "basket to continue"
-msgstr ""
-"'%(title)s' is no longer available to buy (%(reason)s). Please adjust your "
-"basket to continue"
+msgstr "'%(title)s' is no longer available to buy (%(reason)s). Please adjust your basket to continue"
 
 #: apps/checkout/session.py:147
 msgid "Please either sign in or enter your email address"
@@ -1780,7 +1560,8 @@ msgid "Address deleted"
 msgstr "地址已删除"
 
 #: apps/checkout/views.py:270
-msgid "Shipping is unavailable for your chosen address - please choose another"
+msgid ""
+"Shipping is unavailable for your chosen address - please choose another"
 msgstr "不能为您选定的地址送货- 请选择另一个"
 
 #: apps/checkout/views.py:311
@@ -1791,8 +1572,7 @@ msgstr "你递交的通货方式不被允许"
 msgid ""
 "A problem occurred while processing payment for this order - no payment has "
 "been taken.  Please contact customer services if this problem persists"
-msgstr ""
-"在处理这个订单的付款时发生了问题- 没有收取任何付款。如问题依旧请联系客服"
+msgstr "在处理这个订单的付款时发生了问题- 没有收取任何付款。如问题依旧请联系客服"
 
 #: apps/checkout/views.py:664
 msgid "No order found"
@@ -1907,7 +1687,7 @@ msgstr "SMS 模版"
 msgid "SMS template"
 msgstr "SMS 模版"
 
-#: apps/customer/abstract_models.py:182 apps/order/abstract_models.py:331
+#: apps/customer/abstract_models.py:182 apps/order/abstract_models.py:332
 msgid "Date Updated"
 msgstr "更新日期"
 
@@ -1984,8 +1764,39 @@ msgstr ""
 msgid "Product alerts"
 msgstr "产品通告"
 
+#: apps/customer/alerts/views.py:22
+#: templates/oscar/customer/baseaccountpage.html:44
+#: templates/oscar/customer/partials/nav_account.html:32
+msgid "Product Alerts"
+msgstr "产品通告"
+
+#: apps/customer/alerts/views.py:70
+msgid "An alert has been created"
+msgstr "一个告警已经被创建"
+
+#: apps/customer/alerts/views.py:72
+#, python-format
+msgid "A confirmation email has been sent to %s"
+msgstr "确认邮件已发送至 %s"
+
+#: apps/customer/alerts/views.py:90
+msgid "Your stock alert is now active"
+msgstr "您的库存提醒现已激活"
+
+#: apps/customer/alerts/views.py:92
+msgid "Your stock alert cannot be confirmed"
+msgstr "您的库存报警无法被确定"
+
+#: apps/customer/alerts/views.py:126
+msgid "Your stock alert has been cancelled"
+msgstr "你的存货告警已经被取消"
+
+#: apps/customer/alerts/views.py:129
+msgid "Your stock alert cannot be cancelled"
+msgstr "你的存货告警不能被取消"
+
 #: apps/customer/config.py:8
-#: templates/oscar/dashboard/orders/order_list.html:99
+#: templates/oscar/dashboard/orders/order_list.html:98
 msgid "Customer"
 msgstr "顾客"
 
@@ -2030,11 +1841,11 @@ msgstr "到"
 
 #: apps/customer/forms.py:192 apps/dashboard/communications/forms.py:24
 #: apps/dashboard/offers/reports.py:13 apps/dashboard/orders/forms.py:65
-#: apps/dashboard/orders/views.py:330 apps/order/abstract_models.py:24
+#: apps/dashboard/orders/views.py:330 apps/order/abstract_models.py:25
 #: apps/order/reports.py:20 templates/oscar/customer/order/order_list.html:39
 #: templates/oscar/dashboard/comms/detail.html:67
 #: templates/oscar/dashboard/offers/offer_detail.html:107
-#: templates/oscar/dashboard/orders/order_list.html:95
+#: templates/oscar/dashboard/orders/order_list.html:94
 #: templates/oscar/dashboard/reports/partials/order_report.html:9
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:63
 msgid "Order number"
@@ -2054,8 +1865,7 @@ msgstr "所有订单"
 msgid ""
 "Orders placed between %(date_from)s and %(date_to)s and order number "
 "containing %(order_number)s"
-msgstr ""
-"在%(date_from)s到  %(date_to)s 期间下的，以及订单号包含%(order_number)s的订单"
+msgstr "在%(date_from)s到  %(date_to)s 期间下的，以及订单号包含%(order_number)s的订单"
 
 #: apps/customer/forms.py:221 apps/dashboard/orders/forms.py:39
 #, python-format
@@ -2111,6 +1921,18 @@ msgstr "%s已经有了一个有效的存货告警"
 msgid "You already have an active alert for this product"
 msgstr "您在这个产品上已经有了一个有效告警"
 
+#: apps/customer/notifications/views.py:91
+#, python-format
+msgid "%(count)d notification archived"
+msgid_plural "%(count)d notifications archived"
+msgstr[0] "%(count)d 条提醒被存档"
+
+#: apps/customer/notifications/views.py:101
+#, python-format
+msgid "%(count)d notification deleted"
+msgid_plural "%(count)d notifications deleted"
+msgstr[0] "%(count)d条提醒被删除"
+
 #: apps/customer/views.py:169
 msgid "Welcome back"
 msgstr ""
@@ -2158,10 +1980,10 @@ msgstr "邮件历史"
 msgid "Order History"
 msgstr "订购历史"
 
-#: apps/customer/views.py:481 apps/order/abstract_models.py:274
-#: apps/order/abstract_models.py:318 apps/order/abstract_models.py:360
-#: apps/order/abstract_models.py:386 apps/order/abstract_models.py:794
-#: apps/order/abstract_models.py:857 apps/order/abstract_models.py:963
+#: apps/customer/views.py:481 apps/order/abstract_models.py:275
+#: apps/order/abstract_models.py:319 apps/order/abstract_models.py:361
+#: apps/order/abstract_models.py:387 apps/order/abstract_models.py:804
+#: apps/order/abstract_models.py:867 apps/order/abstract_models.py:973
 #: apps/order/config.py:8 apps/payment/abstract_models.py:71
 #: apps/voucher/abstract_models.py:147
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:5
@@ -2232,49 +2054,6 @@ msgstr "地址 ‘%s' 已删除"
 #: apps/customer/views.py:702
 msgid "We do not ship to this country"
 msgstr "我们不能送货到这个国家"
-
-#: apps/customer/alerts/views.py:22
-#: templates/oscar/customer/baseaccountpage.html:44
-#: templates/oscar/customer/partials/nav_account.html:32
-msgid "Product Alerts"
-msgstr "产品通告"
-
-#: apps/customer/alerts/views.py:70
-msgid "An alert has been created"
-msgstr "一个告警已经被创建"
-
-#: apps/customer/alerts/views.py:72
-#, python-format
-msgid "A confirmation email has been sent to %s"
-msgstr "确认邮件已发送至 %s"
-
-#: apps/customer/alerts/views.py:90
-msgid "Your stock alert is now active"
-msgstr "您的库存提醒现已激活"
-
-#: apps/customer/alerts/views.py:92
-msgid "Your stock alert cannot be confirmed"
-msgstr "您的库存报警无法被确定"
-
-#: apps/customer/alerts/views.py:126
-msgid "Your stock alert has been cancelled"
-msgstr "你的存货告警已经被取消"
-
-#: apps/customer/alerts/views.py:129
-msgid "Your stock alert cannot be cancelled"
-msgstr "你的存货告警不能被取消"
-
-#: apps/customer/notifications/views.py:91
-#, python-format
-msgid "%(count)d notification archived"
-msgid_plural "%(count)d notifications archived"
-msgstr[0] "%(count)d 条提醒被存档"
-
-#: apps/customer/notifications/views.py:101
-#, python-format
-msgid "%(count)d notification deleted"
-msgid_plural "%(count)d notifications deleted"
-msgstr[0] "%(count)d条提醒被删除"
 
 #: apps/customer/wishlists/views.py:26
 #: templates/oscar/customer/baseaccountpage.html:50
@@ -2370,11 +2149,11 @@ msgid ""
 "with."
 msgstr ""
 
-#: apps/dashboard/catalogue/forms.py:387
+#: apps/dashboard/catalogue/forms.py:390
 msgid "Stand-alone and parent products must have at least one category"
 msgstr ""
 
-#: apps/dashboard/catalogue/forms.py:391
+#: apps/dashboard/catalogue/forms.py:394
 msgid "A child product should not have categories"
 msgstr ""
 
@@ -2411,8 +2190,8 @@ msgstr "存货记录"
 #: templates/oscar/dashboard/promotions/promotion_list.html:60
 #: templates/oscar/dashboard/ranges/range_list.html:65
 #: templates/oscar/dashboard/reviews/review_list.html:105
-#: templates/oscar/dashboard/users/detail.html:86
 #: templates/oscar/dashboard/users/alerts/list.html:73
+#: templates/oscar/dashboard/users/detail.html:89
 #: templates/oscar/dashboard/vouchers/voucher_list.html:80
 msgid "Actions"
 msgstr "动作"
@@ -2429,106 +2208,112 @@ msgstr ""
 msgid "Please choose a product type"
 msgstr "请选择一个商品种类"
 
-#: apps/dashboard/catalogue/views.py:255
+#: apps/dashboard/catalogue/views.py:260
 #, python-format
 msgid "Create new %(product_class)s product"
 msgstr ""
 
-#: apps/dashboard/catalogue/views.py:258
+#: apps/dashboard/catalogue/views.py:263
 #, python-format
 msgid "Create new variant of %(parent_product)s"
 msgstr ""
 
-#: apps/dashboard/catalogue/views.py:264
+#: apps/dashboard/catalogue/views.py:269
 #, python-format
 msgid "Editing variant of %(parent_product)s"
 msgstr ""
 
-#: apps/dashboard/catalogue/views.py:355
+#: apps/dashboard/catalogue/views.py:360
 msgid "Your submitted data was not valid - please correct the errors below"
 msgstr "您提交的数据是无效的 - 请更正下列错误"
 
-#: apps/dashboard/catalogue/views.py:419
+#: apps/dashboard/catalogue/views.py:424
 msgid "Delete product variant?"
 msgstr ""
 
-#: apps/dashboard/catalogue/views.py:421
+#: apps/dashboard/catalogue/views.py:426
 msgid "Delete product?"
 msgstr "是否删除产品?"
 
-#: apps/dashboard/catalogue/views.py:464
+#: apps/dashboard/catalogue/views.py:470
 #, python-format
 msgid "Deleted product variant '%s'"
 msgstr ""
 
-#: apps/dashboard/catalogue/views.py:470
+#: apps/dashboard/catalogue/views.py:476
 #, python-format
 msgid "Deleted product '%s'"
 msgstr "删除商品'%s'"
 
-#: apps/dashboard/catalogue/views.py:492
+#: apps/dashboard/catalogue/views.py:498
 #, python-format
 msgid "Alerts with status \"%s\""
 msgstr "状态为\"%s\"的告警"
 
-#: apps/dashboard/catalogue/views.py:495
+#: apps/dashboard/catalogue/views.py:501
 msgid "All alerts"
 msgstr "通告"
 
-#: apps/dashboard/catalogue/views.py:552
+#: apps/dashboard/catalogue/views.py:558
 msgid "Add a new category"
 msgstr "创建新类别"
 
-#: apps/dashboard/catalogue/views.py:556
+#: apps/dashboard/catalogue/views.py:562
 msgid "Category created successfully"
 msgstr "成功创建种类"
 
-#: apps/dashboard/catalogue/views.py:574
+#: apps/dashboard/catalogue/views.py:580
 #, python-format
 msgid "Update category '%s'"
 msgstr "更新种类'%s'"
 
-#: apps/dashboard/catalogue/views.py:578
+#: apps/dashboard/catalogue/views.py:584
 msgid "Category updated successfully"
 msgstr "种类成功更新"
 
-#: apps/dashboard/catalogue/views.py:592
+#: apps/dashboard/catalogue/views.py:598
 msgid "Category deleted successfully"
 msgstr "类别删除成功"
 
-#: apps/dashboard/catalogue/views.py:614
+#: apps/dashboard/catalogue/views.py:620
 msgid "Add a new product type"
 msgstr "添加一个新的商品种类"
 
-#: apps/dashboard/catalogue/views.py:618
+#: apps/dashboard/catalogue/views.py:624
 msgid "Product type created successfully"
 msgstr "商品种类已成功创建"
 
-#: apps/dashboard/catalogue/views.py:641
+#: apps/dashboard/catalogue/views.py:636 apps/offer/models.py:807
+#: defaults.py:100
+#: templates/oscar/dashboard/catalogue/product_class_list.html:25
+msgid "Product Types"
+msgstr "商品种类"
+
+#: apps/dashboard/catalogue/views.py:647
 #, python-format
 msgid "Update product type '%s'"
 msgstr "更新产品种类 '%s'"
 
-#: apps/dashboard/catalogue/views.py:645
+#: apps/dashboard/catalogue/views.py:651
 msgid "Product type update successfully"
 msgstr "商品种类已成功更新"
 
-#: apps/dashboard/catalogue/views.py:657
+#: apps/dashboard/catalogue/views.py:663
 #, python-format
 msgid "Delete product type '%s'"
 msgstr "删除商品种类'%s'"
 
-#: apps/dashboard/catalogue/views.py:662
+#: apps/dashboard/catalogue/views.py:668
 #, python-format
 msgid "Unable to delete '%s'"
 msgstr "不能删除'%s'"
 
-#: apps/dashboard/catalogue/views.py:664
+#: apps/dashboard/catalogue/views.py:670
 #, python-format
 msgid "%i products are still assigned to this type"
 msgstr "%i商品依然被标明为这个种类"
 
-#: apps/dashboard/catalogue/views.py:669
+#: apps/dashboard/catalogue/views.py:675
 msgid "Product type deleted successfully"
 msgstr "商品种类已成功删除"
 
@@ -2574,6 +2359,74 @@ msgstr "电子邮件已被保存"
 msgid "A preview email has been sent to %s"
 msgstr "一个预览电子邮件已经被发送到 %s"
 
+#: apps/dashboard/config.py:8 defaults.py:87
+#: templates/oscar/dashboard/catalogue/category_delete.html:9
+#: templates/oscar/dashboard/catalogue/category_form.html:14
+#: templates/oscar/dashboard/catalogue/category_list.html:15
+#: templates/oscar/dashboard/catalogue/product_class_delete.html:9
+#: templates/oscar/dashboard/catalogue/product_class_form.html:12
+#: templates/oscar/dashboard/catalogue/product_class_list.html:8
+#: templates/oscar/dashboard/catalogue/product_delete.html:14
+#: templates/oscar/dashboard/catalogue/product_list.html:17
+#: templates/oscar/dashboard/catalogue/product_update.html:17
+#: templates/oscar/dashboard/catalogue/stockalert_list.html:14
+#: templates/oscar/dashboard/comms/detail.html:14
+#: templates/oscar/dashboard/comms/list.html:13
+#: templates/oscar/dashboard/index.html:16
+#: templates/oscar/dashboard/layout.html:33
+#: templates/oscar/dashboard/layout.html:113
+#: templates/oscar/dashboard/offers/offer_delete.html:13
+#: templates/oscar/dashboard/offers/offer_detail.html:14
+#: templates/oscar/dashboard/offers/offer_list.html:14
+#: templates/oscar/dashboard/offers/step_form.html:21
+#: templates/oscar/dashboard/orders/line_detail.html:13
+#: templates/oscar/dashboard/orders/order_detail.html:14
+#: templates/oscar/dashboard/orders/order_list.html:15
+#: templates/oscar/dashboard/orders/shippingaddress_form.html:11
+#: templates/oscar/dashboard/orders/statistics.html:14
+#: templates/oscar/dashboard/pages/delete.html:14
+#: templates/oscar/dashboard/pages/index.html:14
+#: templates/oscar/dashboard/pages/update.html:13
+#: templates/oscar/dashboard/partners/partner_delete.html:13
+#: templates/oscar/dashboard/partners/partner_form.html:14
+#: templates/oscar/dashboard/partners/partner_list.html:12
+#: templates/oscar/dashboard/partners/partner_manage.html:12
+#: templates/oscar/dashboard/partners/partner_user_form.html:14
+#: templates/oscar/dashboard/partners/partner_user_list.html:12
+#: templates/oscar/dashboard/partners/partner_user_select.html:12
+#: templates/oscar/dashboard/promotions/delete.html:14
+#: templates/oscar/dashboard/promotions/delete_pagepromotion.html:9
+#: templates/oscar/dashboard/promotions/form.html:9
+#: templates/oscar/dashboard/promotions/page_detail.html:15
+#: templates/oscar/dashboard/promotions/pagepromotion_list.html:17
+#: templates/oscar/dashboard/promotions/promotion_list.html:19
+#: templates/oscar/dashboard/ranges/range_delete.html:13
+#: templates/oscar/dashboard/ranges/range_form.html:13
+#: templates/oscar/dashboard/ranges/range_list.html:11
+#: templates/oscar/dashboard/ranges/range_product_list.html:13
+#: templates/oscar/dashboard/reports/index.html:12
+#: templates/oscar/dashboard/reviews/review_delete.html:14
+#: templates/oscar/dashboard/reviews/review_list.html:14
+#: templates/oscar/dashboard/reviews/review_update.html:14
+#: templates/oscar/dashboard/shipping/weight_band_delete.html:14
+#: templates/oscar/dashboard/shipping/weight_band_form.html:14
+#: templates/oscar/dashboard/shipping/weight_based_delete.html:11
+#: templates/oscar/dashboard/shipping/weight_based_detail.html:12
+#: templates/oscar/dashboard/shipping/weight_based_form.html:17
+#: templates/oscar/dashboard/shipping/weight_based_list.html:12
+#: templates/oscar/dashboard/users/alerts/delete.html:14
+#: templates/oscar/dashboard/users/alerts/list.html:14
+#: templates/oscar/dashboard/users/alerts/update.html:13
+#: templates/oscar/dashboard/users/detail.html:12
+#: templates/oscar/dashboard/users/index.html:21
+#: templates/oscar/dashboard/vouchers/voucher_delete.html:14
+#: templates/oscar/dashboard/vouchers/voucher_detail.html:12
+#: templates/oscar/dashboard/vouchers/voucher_form.html:14
+#: templates/oscar/dashboard/vouchers/voucher_list.html:13
+#: templates/oscar/partials/nav_accounts.html:45
+msgid "Dashboard"
+msgstr "仪表板"
+
 #: apps/dashboard/offers/config.py:8
 msgid "Offers dashboard"
 msgstr ""
@@ -2618,7 +2471,7 @@ msgstr "请选择一个范围，类别，数值或寻则一个自定义动机"
 msgid "No other options can be set if you are using a custom incentive"
 msgstr "如果您使用自定义动机，就不能设定其他选项"
 
-#: apps/dashboard/offers/forms.py:160 apps/order/abstract_models.py:980
+#: apps/dashboard/offers/forms.py:160 apps/order/abstract_models.py:990
 #: templates/oscar/dashboard/offers/offer_list.html:47
 #: templates/oscar/dashboard/orders/order_detail.html:565
 msgid "Offer name"
@@ -2735,7 +2588,7 @@ msgstr "顾客名"
 msgid "Product name"
 msgstr "产品名"
 
-#: apps/dashboard/orders/forms.py:69 apps/order/abstract_models.py:400
+#: apps/dashboard/orders/forms.py:69 apps/order/abstract_models.py:401
 #: apps/partner/abstract_models.py:99
 #: templates/oscar/dashboard/orders/line_detail.html:83
 msgid "Partner SKU"
@@ -2751,7 +2604,6 @@ msgid "Date to"
 msgstr "日期截止至"
 
 #: apps/dashboard/orders/forms.py:80 apps/voucher/reports.py:19
-#: templates/oscar/basket/partials/basket_content.html:120
 #: templates/oscar/dashboard/reports/partials/voucher_report.html:9
 msgid "Voucher code"
 msgstr "优惠码"
@@ -2780,12 +2632,9 @@ msgstr "新订单状态"
 #, python-format
 msgid ""
 "%(main_filter)s %(name_filter)s %(title_filter)s%(upc_filter)s "
-"%(sku_filter)s %(date_filter)s%(voucher_filter)s %(payment_filter)s"
-"%(status_filter)s"
-msgstr ""
-"%(main_filter)s %(name_filter)s %(title_filter)s%(upc_filter)s "
-"%(sku_filter)s %(date_filter)s%(voucher_filter)s %(payment_filter)s"
-"%(status_filter)s"
+"%(sku_filter)s %(date_filter)s%(voucher_filter)s "
+"%(payment_filter)s%(status_filter)s"
+msgstr "%(main_filter)s %(name_filter)s %(title_filter)s%(upc_filter)s %(sku_filter)s %(date_filter)s%(voucher_filter)s %(payment_filter)s%(status_filter)s"
 
 #: apps/dashboard/orders/views.py:161
 msgid "Orders without an order status"
@@ -2857,12 +2706,12 @@ msgstr "订单价值"
 
 #: apps/dashboard/orders/views.py:332
 #: templates/oscar/dashboard/orders/order_detail.html:64
-#: templates/oscar/dashboard/orders/order_list.html:102
+#: templates/oscar/dashboard/orders/order_list.html:101
 msgid "Date of purchase"
 msgstr "购买日期"
 
 #: apps/dashboard/orders/views.py:333
-#: templates/oscar/dashboard/orders/order_list.html:97
+#: templates/oscar/dashboard/orders/order_list.html:96
 msgid "Number of items"
 msgstr "商品数量"
 
@@ -2963,7 +2812,8 @@ msgstr "'%(status)s' 对于行 %(line_id)d来说，不是一个有效的新状�
 #: apps/dashboard/orders/views.py:611
 #, python-format
 msgid ""
-"Status of line #%(line_id)d changed from '%(old_status)s' to '%(new_status)s'"
+"Status of line #%(line_id)d changed from '%(old_status)s' to "
+"'%(new_status)s'"
 msgstr "#%(line_id)d 行的状态从'%(old_status)s'转变到了 '%(new_status)s'"
 
 #: apps/dashboard/orders/views.py:628 apps/dashboard/orders/views.py:676
@@ -3009,9 +2859,7 @@ msgstr "%(field)s从 '%(old_value)s' 变化到了'%(new_value)s'"
 msgid ""
 "Delivery address updated:\n"
 "%s"
-msgstr ""
-"送货地址已更新：\n"
-"%s"
+msgstr "送货地址已更新：\n%s"
 
 #: apps/dashboard/orders/views.py:780
 msgid "Delivery address updated"
@@ -3146,15 +2994,15 @@ msgstr ""
 msgid "Promotion type"
 msgstr "促销类别"
 
-#: apps/dashboard/promotions/forms.py:63 apps/promotions/models.py:23
+#: apps/dashboard/promotions/forms.py:65 apps/promotions/models.py:23
 msgid "Position"
 msgstr "位置"
 
-#: apps/dashboard/promotions/forms.py:64
+#: apps/dashboard/promotions/forms.py:66
 msgid "Where in the page this content block will appear"
 msgstr "这个内容模块会在页面的什么位置出现"
 
-#: apps/dashboard/promotions/forms.py:77
+#: apps/dashboard/promotions/forms.py:79
 msgid "Content blocks can only be linked to internal URLs"
 msgstr "内容块只能被链接到内部URL"
 
@@ -3281,7 +3129,7 @@ msgid "The report is inclusive of this date"
 msgstr "报告包括这个日期"
 
 #: apps/dashboard/reports/forms.py:26
-#: templates/oscar/dashboard/orders/order_list.html:86
+#: templates/oscar/dashboard/orders/order_list.html:85
 msgid "Download"
 msgstr "已下载的"
 
@@ -3315,9 +3163,7 @@ msgstr "到"
 msgid ""
 "%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s "
 "%(name_filter)s"
-msgstr ""
-"%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s "
-"%(name_filter)s"
+msgstr "%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s %(name_filter)s"
 
 #: apps/dashboard/reviews/views.py:56
 #, python-format
@@ -3703,7 +3549,7 @@ msgid ""
 msgstr "需要包含来自条件范围的固定数目的不同商品"
 
 #: apps/offer/models.py:429 apps/offer/models.py:545 apps/offer/models.py:827
-#: apps/offer/models.py:1646
+#: apps/offer/models.py:1657
 msgid "Range"
 msgstr "范围"
 
@@ -3815,188 +3661,201 @@ msgstr "被排除的产品"
 msgid "Included Categories"
 msgstr "包括的分类"
 
+#: apps/offer/models.py:828 defaults.py:108
+#: templates/oscar/dashboard/ranges/range_delete.html:7
+#: templates/oscar/dashboard/ranges/range_delete.html:17
+#: templates/oscar/dashboard/ranges/range_form.html:7
+#: templates/oscar/dashboard/ranges/range_form.html:17
+#: templates/oscar/dashboard/ranges/range_list.html:5
+#: templates/oscar/dashboard/ranges/range_list.html:14
+#: templates/oscar/dashboard/ranges/range_list.html:21
+#: templates/oscar/dashboard/ranges/range_list.html:28
+#: templates/oscar/dashboard/ranges/range_product_list.html:17
+msgid "Ranges"
+msgstr "范围"
+
 #: apps/offer/models.py:972
 #, python-format
 msgid "Basket includes %(count)d item(s) from %(range)s"
 msgstr "购物篮包括来自%(range)s的%(count)d个商品"
 
-#: apps/offer/models.py:988
+#: apps/offer/models.py:989
 msgid "Count condition"
 msgstr ""
 
-#: apps/offer/models.py:989
+#: apps/offer/models.py:990
 msgid "Count conditions"
 msgstr ""
 
-#: apps/offer/models.py:1022 apps/offer/models.py:1108
+#: apps/offer/models.py:1023 apps/offer/models.py:1110
 #, python-format
 msgid "Buy %(delta)d more product from %(range)s"
 msgid_plural "Buy %(delta)d more products from %(range)s"
 msgstr[0] "从%(range)s范围里多买%(delta)d个商品"
 
-#: apps/offer/models.py:1059
+#: apps/offer/models.py:1060
 #, python-format
 msgid "Basket includes %(count)d distinct item(s) from %(range)s"
 msgstr "购物篮包含了来自%(range)s的%(count)d 不同类商品"
 
-#: apps/offer/models.py:1076
+#: apps/offer/models.py:1078
 msgid "Coverage Condition"
 msgstr "覆盖率条件"
 
-#: apps/offer/models.py:1077
+#: apps/offer/models.py:1079
 msgid "Coverage Conditions"
 msgstr "覆盖率条件"
 
-#: apps/offer/models.py:1163
+#: apps/offer/models.py:1165
 #, python-format
 msgid "Basket includes %(amount)s from %(range)s"
 msgstr "购物篮包含来自范围 %(range)s 的价值%(amount)s "
 
-#: apps/offer/models.py:1179
+#: apps/offer/models.py:1182
 msgid "Value condition"
 msgstr ""
 
-#: apps/offer/models.py:1180
+#: apps/offer/models.py:1183
 msgid "Value conditions"
 msgstr ""
 
-#: apps/offer/models.py:1214
+#: apps/offer/models.py:1217
 #, python-format
 msgid "Spend %(value)s more from %(range)s"
 msgstr "在 %(range)s的商品上再花费%(value)s "
 
-#: apps/offer/models.py:1335
+#: apps/offer/models.py:1338
 #, python-format
 msgid "%(value)s%% discount on %(range)s"
 msgstr "在范围%(range)s里价值 %(value)s %%的折扣"
 
-#: apps/offer/models.py:1351
+#: apps/offer/models.py:1355
 msgid "Percentage discount benefit"
 msgstr "百分比折扣优惠"
 
-#: apps/offer/models.py:1352
+#: apps/offer/models.py:1356
 msgid "Percentage discount benefits"
 msgstr "百分比折扣优惠"
 
-#: apps/offer/models.py:1397
+#: apps/offer/models.py:1401
 #, python-format
 msgid "%(value)s discount on %(range)s"
 msgstr "%(range)s范围内的折扣额：%(value)s"
 
-#: apps/offer/models.py:1413
+#: apps/offer/models.py:1418
 msgid "Absolute discount benefit"
 msgstr "绝对折扣优惠额"
 
-#: apps/offer/models.py:1414
+#: apps/offer/models.py:1419
 msgid "Absolute discount benefits"
 msgstr "绝对折扣优惠"
 
-#: apps/offer/models.py:1481
+#: apps/offer/models.py:1486
 #, python-format
 msgid "The products that meet the condition are sold for %(amount)s"
 msgstr "符合条件的商品销售了%(amount)s件"
 
-#: apps/offer/models.py:1491
+#: apps/offer/models.py:1497
 msgid "Fixed price benefit"
 msgstr "固定价格的优惠"
 
-#: apps/offer/models.py:1492
+#: apps/offer/models.py:1498
 msgid "Fixed price benefits"
 msgstr "固定价格优惠"
 
-#: apps/offer/models.py:1543
+#: apps/offer/models.py:1549
 #, python-format
 msgid "Cheapest product from %(range)s is free"
 msgstr "%(range)s范围内的最便宜产品是免费的"
 
-#: apps/offer/models.py:1557
+#: apps/offer/models.py:1564
 msgid "Multibuy discount benefit"
 msgstr "多买折扣优惠"
 
-#: apps/offer/models.py:1558
+#: apps/offer/models.py:1565
 msgid "Multibuy discount benefits"
 msgstr "多买折扣优惠"
 
-#: apps/offer/models.py:1591
+#: apps/offer/models.py:1599
 #, python-format
 msgid "%(amount)s off shipping cost"
 msgstr "运费折扣%(amount)s "
 
-#: apps/offer/models.py:1600
+#: apps/offer/models.py:1609
 msgid "Shipping absolute discount benefit"
 msgstr "运费绝对折扣优惠"
 
-#: apps/offer/models.py:1601
+#: apps/offer/models.py:1610
 msgid "Shipping absolute discount benefits"
 msgstr "运费绝对折扣优惠"
 
-#: apps/offer/models.py:1608
+#: apps/offer/models.py:1617
 #, python-format
 msgid "Get shipping for %(amount)s"
 msgstr "以%(amount)s价格送货"
 
-#: apps/offer/models.py:1617
+#: apps/offer/models.py:1627
 msgid "Fixed price shipping benefit"
 msgstr "固定额度运费优惠"
 
-#: apps/offer/models.py:1618
+#: apps/offer/models.py:1628
 msgid "Fixed price shipping benefits"
 msgstr "固定额度运费优惠"
 
-#: apps/offer/models.py:1627
+#: apps/offer/models.py:1637
 #, python-format
 msgid "%(value)s%% off of shipping cost"
 msgstr "运费折扣%(value)s%%"
 
-#: apps/offer/models.py:1636
+#: apps/offer/models.py:1647
 msgid "Shipping percentage discount benefit"
 msgstr "运费比例折扣优惠"
 
-#: apps/offer/models.py:1637
+#: apps/offer/models.py:1648
 msgid "Shipping percentage discount benefits"
 msgstr "运费比例折扣优惠"
 
-#: apps/offer/models.py:1647
+#: apps/offer/models.py:1658
 msgid "File Path"
 msgstr "文件目录"
 
-#: apps/offer/models.py:1648
+#: apps/offer/models.py:1659
 msgid "Size"
 msgstr "大小"
 
-#: apps/offer/models.py:1650
+#: apps/offer/models.py:1661
 msgid "Uploaded By"
 msgstr "上传方："
 
-#: apps/offer/models.py:1651
+#: apps/offer/models.py:1662
 msgid "Date Uploaded"
 msgstr "上传日期"
 
-#: apps/offer/models.py:1661
+#: apps/offer/models.py:1672
 msgid "Error Message"
 msgstr "错误信息"
 
-#: apps/offer/models.py:1665
+#: apps/offer/models.py:1676
 msgid "Date Processed"
 msgstr "处理日期"
 
-#: apps/offer/models.py:1666
+#: apps/offer/models.py:1677
 msgid "Number of New SKUs"
 msgstr "新SKU的数量"
 
-#: apps/offer/models.py:1668
+#: apps/offer/models.py:1679
 msgid "Number of Unknown SKUs"
 msgstr "未知SKU的数量"
 
-#: apps/offer/models.py:1671
+#: apps/offer/models.py:1682
 msgid "Number of Duplicate SKUs"
 msgstr "重复SKU的数量"
 
-#: apps/offer/models.py:1675
+#: apps/offer/models.py:1687
 msgid "Range Product Uploaded File"
 msgstr "上传的系列产品文件"
 
-#: apps/offer/models.py:1676
+#: apps/offer/models.py:1688
 msgid "Range Product Uploaded Files"
 msgstr "上传的系列产品文件"
 
@@ -4012,37 +3871,37 @@ msgstr "总折扣额"
 msgid "Offer performance"
 msgstr "促销表现"
 
-#: apps/order/abstract_models.py:28
+#: apps/order/abstract_models.py:29
 msgid "Site"
 msgstr "网站"
 
-#: apps/order/abstract_models.py:44
+#: apps/order/abstract_models.py:45
 msgid "Billing Address"
 msgstr "账单地址"
 
-#: apps/order/abstract_models.py:53
+#: apps/order/abstract_models.py:54
 msgid "Order total (inc. tax)"
 msgstr "订单总和 (含税)"
 
-#: apps/order/abstract_models.py:55
+#: apps/order/abstract_models.py:56
 msgid "Order total (excl. tax)"
 msgstr "订单总和 (不含税)"
 
-#: apps/order/abstract_models.py:59
+#: apps/order/abstract_models.py:60
 #: templates/oscar/customer/anon_order.html:101
 msgid "Shipping charge (inc. tax)"
 msgstr "邮费 (含税)"
 
-#: apps/order/abstract_models.py:62
+#: apps/order/abstract_models.py:63
 msgid "Shipping charge (excl. tax)"
 msgstr "邮费 (不含税)"
 
-#: apps/order/abstract_models.py:69
+#: apps/order/abstract_models.py:70
 #: templates/oscar/customer/order/order_detail.html:151
 msgid "Shipping Address"
 msgstr "送货地址"
 
-#: apps/order/abstract_models.py:72
+#: apps/order/abstract_models.py:73
 #: templates/oscar/basket/partials/basket_totals.html:119
 #: templates/oscar/checkout/checkout.html:68
 #: templates/oscar/checkout/shipping_methods.html:8
@@ -4054,178 +3913,177 @@ msgstr "送货地址"
 msgid "Shipping method"
 msgstr "邮递方式"
 
-#: apps/order/abstract_models.py:79
+#: apps/order/abstract_models.py:80
 msgid "Guest email address"
 msgstr "客人电子邮箱地址"
 
-#: apps/order/abstract_models.py:119
+#: apps/order/abstract_models.py:120
 #, python-format
 msgid ""
-"'%(new_status)s' is not a valid status for order %(number)s (current status: "
-"'%(status)s')"
-msgstr ""
-"'%(new_status)s' 对于订单%(number)s(当前状态：'%(status)s')不是一个有效的状态"
+"'%(new_status)s' is not a valid status for order %(number)s (current status:"
+" '%(status)s')"
+msgstr "'%(new_status)s' 对于订单%(number)s(当前状态：'%(status)s')不是一个有效的状态"
 
-#: apps/order/abstract_models.py:238
+#: apps/order/abstract_models.py:239
 msgid "In progress"
 msgstr "进行中"
 
-#: apps/order/abstract_models.py:327
+#: apps/order/abstract_models.py:328
 msgid "Note Type"
 msgstr "备注类型"
 
-#: apps/order/abstract_models.py:329
+#: apps/order/abstract_models.py:330
 #: templates/oscar/customer/notifications/detail.html:34
 #: templates/oscar/dashboard/orders/order_detail.html:567
 #: templates/oscar/dashboard/orders/order_detail.html:614
 msgid "Message"
 msgstr "信息"
 
-#: apps/order/abstract_models.py:339
+#: apps/order/abstract_models.py:340
 msgid "Order Note"
 msgstr "订单类型"
 
-#: apps/order/abstract_models.py:340
+#: apps/order/abstract_models.py:341
 msgid "Order Notes"
 msgstr "订单备注"
 
-#: apps/order/abstract_models.py:362 apps/order/abstract_models.py:805
-#: apps/order/abstract_models.py:862
+#: apps/order/abstract_models.py:363 apps/order/abstract_models.py:815
+#: apps/order/abstract_models.py:872
 msgid "Event Type"
 msgstr "事件类型"
 
-#: apps/order/abstract_models.py:368
+#: apps/order/abstract_models.py:369
 msgid "Communication Event"
 msgstr "通信事件"
 
-#: apps/order/abstract_models.py:369
+#: apps/order/abstract_models.py:370
 msgid "Communication Events"
 msgstr "通信事件"
 
-#: apps/order/abstract_models.py:373
+#: apps/order/abstract_models.py:374
 #, python-format
 msgid "'%(type)s' event for order #%(number)s"
 msgstr "#%(number)s号订单的'%(type)s'事件 "
 
-#: apps/order/abstract_models.py:399
+#: apps/order/abstract_models.py:400
 msgid "Partner name"
 msgstr "供货商名称"
 
-#: apps/order/abstract_models.py:405
+#: apps/order/abstract_models.py:406
 msgid "Partner reference"
 msgstr "供货商参考"
 
-#: apps/order/abstract_models.py:406
+#: apps/order/abstract_models.py:407
 msgid "This is the item number that the partner uses within their system"
 msgstr "这是供货商内部系统中的商品编号"
 
-#: apps/order/abstract_models.py:409
+#: apps/order/abstract_models.py:410
 msgid "Partner Notes"
 msgstr "供货商备注"
 
-#: apps/order/abstract_models.py:415 apps/partner/abstract_models.py:159
+#: apps/order/abstract_models.py:416 apps/partner/abstract_models.py:159
 msgid "Stock record"
 msgstr "存货记录"
 
-#: apps/order/abstract_models.py:439 apps/order/abstract_models.py:735
+#: apps/order/abstract_models.py:440 apps/order/abstract_models.py:745
 msgid "Price (inc. tax)"
 msgstr "价格 (含税)"
 
-#: apps/order/abstract_models.py:441 apps/order/abstract_models.py:737
+#: apps/order/abstract_models.py:442 apps/order/abstract_models.py:747
 #: apps/partner/abstract_models.py:111
 #: templates/oscar/catalogue/detail.html:118
 msgid "Price (excl. tax)"
 msgstr "价格 (不含税)"
 
-#: apps/order/abstract_models.py:445
+#: apps/order/abstract_models.py:446
 msgid "Price before discounts (inc. tax)"
 msgstr "折扣前价格(含税)"
 
-#: apps/order/abstract_models.py:448
+#: apps/order/abstract_models.py:449
 msgid "Price before discounts (excl. tax)"
 msgstr "折扣前价格(不含税)"
 
-#: apps/order/abstract_models.py:454
+#: apps/order/abstract_models.py:455
 msgid "Unit Cost Price"
 msgstr "单元成本价格"
 
-#: apps/order/abstract_models.py:458
+#: apps/order/abstract_models.py:459
 msgid "Unit Price (inc. tax)"
 msgstr "单元价格(含税)"
 
-#: apps/order/abstract_models.py:461
+#: apps/order/abstract_models.py:462
 msgid "Unit Price (excl. tax)"
 msgstr "单元价格(不含税)"
 
-#: apps/order/abstract_models.py:465
+#: apps/order/abstract_models.py:466
 msgid "Unit Retail Price"
 msgstr "单元零售价格"
 
-#: apps/order/abstract_models.py:474
+#: apps/order/abstract_models.py:475
 msgid "Estimated Dispatch Date"
 msgstr "已生成的派发日期"
 
-#: apps/order/abstract_models.py:484
+#: apps/order/abstract_models.py:485
 msgid "Order Line"
 msgstr "订单行"
 
-#: apps/order/abstract_models.py:491
+#: apps/order/abstract_models.py:492
 msgid "<missing product>"
 msgstr "<商品缺失>"
 
-#: apps/order/abstract_models.py:492
+#: apps/order/abstract_models.py:493
 #, python-format
 msgid "Product '%(name)s', quantity '%(qty)s'"
 msgstr "产品'%(name)s', 数量：'%(qty)s'"
 
-#: apps/order/abstract_models.py:519
+#: apps/order/abstract_models.py:520
 #, python-format
 msgid "'%(new_status)s' is not a valid status (current status: '%(status)s')"
 msgstr "'%(new_status)s' 不是一个有效的状态 (当前状态: '%(status)s')"
 
-#: apps/order/abstract_models.py:678
+#: apps/order/abstract_models.py:688
 #, python-format
 msgid "'%(title)s' is no longer available"
 msgstr "'%(title)s' 不再可用"
 
-#: apps/order/abstract_models.py:713
+#: apps/order/abstract_models.py:723
 msgid "Line Attribute"
 msgstr "产品线属性"
 
-#: apps/order/abstract_models.py:714
+#: apps/order/abstract_models.py:724
 msgid "Line Attributes"
 msgstr "产品线属性"
 
-#: apps/order/abstract_models.py:739
+#: apps/order/abstract_models.py:749
 msgid "Shiping (inc. tax)"
 msgstr "邮费 (含税)"
 
-#: apps/order/abstract_models.py:741
+#: apps/order/abstract_models.py:751
 msgid "Shipping (excl. tax)"
 msgstr "运费(不含税)"
 
-#: apps/order/abstract_models.py:747
+#: apps/order/abstract_models.py:757
 msgid "Line Price"
 msgstr "产品线价格"
 
-#: apps/order/abstract_models.py:748
+#: apps/order/abstract_models.py:758
 msgid "Line Prices"
 msgstr "产品线价格"
 
-#: apps/order/abstract_models.py:751
+#: apps/order/abstract_models.py:761
 #, python-format
 msgid "Line '%(number)s' (quantity %(qty)d) price %(price)s"
 msgstr "商品线 '%(number)s' (数量%(qty)d) 价格%(price)s"
 
-#: apps/order/abstract_models.py:774
+#: apps/order/abstract_models.py:784
 msgid "Payment Event Type"
 msgstr "付款事件类别"
 
-#: apps/order/abstract_models.py:775
+#: apps/order/abstract_models.py:785
 msgid "Payment Event Types"
 msgstr "付款事件类别"
 
-#: apps/order/abstract_models.py:796 apps/order/abstract_models.py:987
+#: apps/order/abstract_models.py:806 apps/order/abstract_models.py:997
 #: apps/payment/abstract_models.py:39
 #: templates/oscar/dashboard/orders/order_detail.html:392
 #: templates/oscar/dashboard/orders/order_detail.html:528
@@ -4233,7 +4091,7 @@ msgstr "付款事件类别"
 msgid "Amount"
 msgstr "量"
 
-#: apps/order/abstract_models.py:800 apps/payment/abstract_models.py:40
+#: apps/order/abstract_models.py:810 apps/payment/abstract_models.py:40
 #: apps/payment/abstract_models.py:91
 #: templates/oscar/dashboard/orders/line_detail.html:140
 #: templates/oscar/dashboard/orders/order_detail.html:347
@@ -4243,27 +4101,27 @@ msgstr "量"
 msgid "Reference"
 msgstr "参考"
 
-#: apps/order/abstract_models.py:803 apps/order/abstract_models.py:860
+#: apps/order/abstract_models.py:813 apps/order/abstract_models.py:870
 #: templates/oscar/dashboard/orders/order_detail.html:346
 #: templates/oscar/dashboard/orders/order_detail.html:393
 msgid "Lines"
 msgstr "行"
 
-#: apps/order/abstract_models.py:817
+#: apps/order/abstract_models.py:827
 msgid "Payment Event"
 msgstr "付款事件"
 
-#: apps/order/abstract_models.py:818
+#: apps/order/abstract_models.py:828
 #: templates/oscar/dashboard/orders/order_detail.html:383
 msgid "Payment Events"
 msgstr "付款事件"
 
-#: apps/order/abstract_models.py:822
+#: apps/order/abstract_models.py:832
 #, python-format
 msgid "Payment event for order %s"
 msgstr "订单%s的付款事件"
 
-#: apps/order/abstract_models.py:834 apps/order/abstract_models.py:895
+#: apps/order/abstract_models.py:844 apps/order/abstract_models.py:905
 #: templates/oscar/dashboard/orders/line_detail.html:138
 #: templates/oscar/dashboard/orders/line_detail.html:169
 #: templates/oscar/dashboard/orders/order_detail.html:345
@@ -4271,84 +4129,84 @@ msgstr "订单%s的付款事件"
 msgid "Event"
 msgstr "事件"
 
-#: apps/order/abstract_models.py:842
+#: apps/order/abstract_models.py:852
 msgid "Payment Event Quantity"
 msgstr "付款事件数量"
 
-#: apps/order/abstract_models.py:843
+#: apps/order/abstract_models.py:853
 msgid "Payment Event Quantities"
 msgstr "付款事件数量"
 
-#: apps/order/abstract_models.py:864
+#: apps/order/abstract_models.py:874
 msgid "Event notes"
 msgstr "事件备注"
 
-#: apps/order/abstract_models.py:865
+#: apps/order/abstract_models.py:875
 msgid "This could be the dispatch reference, or a tracking number"
 msgstr "这可能是派发参考号，或是一个跟踪号码"
 
-#: apps/order/abstract_models.py:872
+#: apps/order/abstract_models.py:882
 msgid "Shipping Event"
 msgstr "送货事件"
 
-#: apps/order/abstract_models.py:873
+#: apps/order/abstract_models.py:883
 #: templates/oscar/dashboard/orders/order_detail.html:337
 msgid "Shipping Events"
 msgstr "送货事件"
 
-#: apps/order/abstract_models.py:877
+#: apps/order/abstract_models.py:887
 #, python-format
 msgid "Order #%(number)s, type %(type)s"
 msgstr "订单号%(number)s，类别%(type)s"
 
-#: apps/order/abstract_models.py:903
+#: apps/order/abstract_models.py:913
 msgid "Shipping Event Quantity"
 msgstr "运货事件数量"
 
-#: apps/order/abstract_models.py:904
+#: apps/order/abstract_models.py:914
 msgid "Shipping Event Quantities"
 msgstr "运货事件数量"
 
-#: apps/order/abstract_models.py:918
+#: apps/order/abstract_models.py:928
 #, python-format
 msgid "%(product)s - quantity %(qty)d"
 msgstr "%(product)s - 数量 %(qty)d"
 
-#: apps/order/abstract_models.py:939
+#: apps/order/abstract_models.py:949
 msgid "Shipping Event Type"
 msgstr "送货事件类别"
 
-#: apps/order/abstract_models.py:940
+#: apps/order/abstract_models.py:950
 msgid "Shipping Event Types"
 msgstr "送货事件类别"
 
-#: apps/order/abstract_models.py:974
+#: apps/order/abstract_models.py:984
 msgid "Discount category"
 msgstr "折扣lei'b"
 
-#: apps/order/abstract_models.py:978
+#: apps/order/abstract_models.py:988
 msgid "Offer ID"
 msgstr "促销识别码"
 
-#: apps/order/abstract_models.py:982
+#: apps/order/abstract_models.py:992
 msgid "Voucher ID"
 msgstr "优惠券识别码"
 
-#: apps/order/abstract_models.py:985
+#: apps/order/abstract_models.py:995
 #: templates/oscar/dashboard/orders/order_detail.html:566
 #: templates/oscar/dashboard/orders/statistics.html:60
 msgid "Frequency"
 msgstr "频率"
 
-#: apps/order/abstract_models.py:1008
+#: apps/order/abstract_models.py:1018
 msgid "Order Discount"
 msgstr "订单折扣"
 
-#: apps/order/abstract_models.py:1009
+#: apps/order/abstract_models.py:1019
 msgid "Order Discounts"
 msgstr "订单折扣"
 
-#: apps/order/abstract_models.py:1025
+#: apps/order/abstract_models.py:1035
 #, python-format
 msgid "Discount of %(amount)r from order %(order)s"
 msgstr "订单 %(order)s的折扣额%(amount)r"
@@ -4365,7 +4223,7 @@ msgstr "总价格（含税）"
 
 #: apps/order/reports.py:24
 #: templates/oscar/dashboard/reports/partials/order_report.html:13
-#: templates/oscar/dashboard/users/detail.html:122
+#: templates/oscar/dashboard/users/detail.html:124
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:66
 msgid "Date placed"
 msgstr "下订单日期"
@@ -4374,11 +4232,11 @@ msgstr "下订单日期"
 msgid "Orders placed"
 msgstr "下了的订单"
 
-#: apps/order/utils.py:50
+#: apps/order/utils.py:47
 msgid "Empty baskets cannot be submitted"
 msgstr "不能提交空购物篮"
 
-#: apps/order/utils.py:61
+#: apps/order/utils.py:58
 #, python-format
 msgid "There is already an order with number %s"
 msgstr "已经有号码为%s的订单"
@@ -4581,11 +4439,11 @@ msgstr "供货商参考号"
 msgid "%(card_type)s %(number)s (Expires: %(expiry)s)"
 msgstr "%(card_type)s %(number)s (过期: %(expiry)s)"
 
-#: apps/payment/abstract_models.py:283
+#: apps/payment/abstract_models.py:286
 msgid "Bankcard"
 msgstr "银行卡"
 
-#: apps/payment/abstract_models.py:284
+#: apps/payment/abstract_models.py:287
 msgid "Bankcards"
 msgstr "银行卡"
 
@@ -4655,6 +4513,11 @@ msgstr "运通卡使用4位安全码"
 msgid "Promotions"
 msgstr "促销"
 
+#: apps/promotions/models.py:25 apps/promotions/models.py:293
+#: apps/promotions/models.py:336
+msgid "Display Order"
+msgstr "显示顺序"
+
 #: apps/promotions/models.py:26
 msgid "Clicks"
 msgstr "点击"
@@ -4699,6 +4562,15 @@ msgstr "关键词促销"
 msgid "Keywords"
 msgstr "关键词"
 
+#: apps/promotions/models.py:95 defaults.py:184
+#: templates/oscar/dashboard/pages/delete.html:18
+#: templates/oscar/dashboard/pages/index.html:8
+#: templates/oscar/dashboard/pages/index.html:17
+#: templates/oscar/dashboard/pages/index.html:24
+#: templates/oscar/dashboard/pages/update.html:17
+msgid "Pages"
+msgstr "页"
+
 #: apps/promotions/models.py:100
 msgid "Promotion"
 msgstr "促销"
@@ -4709,7 +4581,8 @@ msgstr "显示种类"
 
 #: apps/promotions/models.py:152
 msgid ""
-"This can be used to have different types of HTML blocks (eg different widths)"
+"This can be used to have different types of HTML blocks (eg different "
+"widths)"
 msgstr "这个课用于不同种类的HTML块(例如不同的宽度)"
 
 #: apps/promotions/models.py:159 apps/promotions/models.py:160
@@ -4832,9 +4705,9 @@ msgstr "分栏的块"
 #: templates/oscar/dashboard/partners/partner_list.html:30
 #: templates/oscar/dashboard/partners/partner_user_select.html:36
 #: templates/oscar/dashboard/reviews/review_list.html:35
+#: templates/oscar/dashboard/users/alerts/list.html:32
 #: templates/oscar/dashboard/users/index.html:30
 #: templates/oscar/dashboard/users/index.html:35
-#: templates/oscar/dashboard/users/alerts/list.html:32
 #: templates/oscar/dashboard/vouchers/voucher_list.html:36
 #: templates/oscar/dashboard/vouchers/voucher_list.html:41
 #: templates/oscar/partials/search.html:5
@@ -4870,13 +4743,8 @@ msgstr "标题从A到Z"
 msgid "Title Z to A"
 msgstr "标题从Z到A"
 
-#: apps/search/search_handlers.py:112
+#: apps/search/search_handlers.py:122
 msgid "Page is not 'last', nor can it be converted to an int."
-msgstr ""
-
-#: apps/search/search_handlers.py:117
-#, python-format
-msgid "Invalid page (%(page_number)s): %(message)s"
 msgstr ""
 
 #: apps/shipping/abstract_models.py:36
@@ -4988,6 +4856,21 @@ msgstr "在优惠券被输入后，这个将会在结账和购物篮显示一次
 #: apps/voucher/abstract_models.py:26
 msgid "Case insensitive / No spaces allowed"
 msgstr "不区分大小写 / 不允许有空格"
+
+#: apps/voucher/abstract_models.py:30 defaults.py:158 defaults.py:162
+#: templates/oscar/dashboard/offers/offer_delete.html:7
+#: templates/oscar/dashboard/offers/offer_delete.html:17
+#: templates/oscar/dashboard/offers/offer_detail.html:18
+#: templates/oscar/dashboard/offers/offer_list.html:8
+#: templates/oscar/dashboard/offers/offer_list.html:17
+#: templates/oscar/dashboard/offers/offer_list.html:24
+#: templates/oscar/dashboard/offers/step_form.html:15
+#: templates/oscar/dashboard/offers/step_form.html:25
+#: templates/oscar/offer/detail.html:18 templates/oscar/offer/list.html:8
+#: templates/oscar/offer/list.html.py:17 templates/oscar/offer/list.html:22
+#: templates/oscar/partials/nav_primary.html:62
+msgid "Offers"
+msgstr "促销"
 
 #: apps/voucher/abstract_models.py:35
 msgid "Can be used once by one customer"
@@ -5110,6 +4993,111 @@ msgstr "这个空必须要填写"
 msgid "Please choose a less common password"
 msgstr "请输入不常见些的密码"
 
+#: defaults.py:112
+msgid "Low stock alerts"
+msgstr "低库存警报"
+
+#: defaults.py:118
+msgid "Fulfilment"
+msgstr "实行"
+
+#: defaults.py:126 templates/oscar/dashboard/orders/statistics.html:21
+msgid "Statistics"
+msgstr "统计"
+
+#: defaults.py:130 templates/oscar/dashboard/partners/partner_delete.html:7
+#: templates/oscar/dashboard/partners/partner_delete.html:17
+#: templates/oscar/dashboard/partners/partner_form.html:8
+#: templates/oscar/dashboard/partners/partner_form.html:18
+#: templates/oscar/dashboard/partners/partner_list.html:6
+#: templates/oscar/dashboard/partners/partner_list.html:15
+#: templates/oscar/dashboard/partners/partner_list.html:22
+#: templates/oscar/dashboard/partners/partner_manage.html:6
+#: templates/oscar/dashboard/partners/partner_manage.html:16
+#: templates/oscar/dashboard/partners/partner_user_form.html:8
+#: templates/oscar/dashboard/partners/partner_user_form.html:18
+#: templates/oscar/dashboard/partners/partner_user_list.html:6
+#: templates/oscar/dashboard/partners/partner_user_list.html:16
+#: templates/oscar/dashboard/partners/partner_user_select.html:6
+#: templates/oscar/dashboard/partners/partner_user_select.html:16
+msgid "Partners"
+msgstr "供货商"
+
+#: defaults.py:144 defaults.py:148 templates/oscar/dashboard/index.html:112
+#: templates/oscar/dashboard/users/detail.html:16
+#: templates/oscar/dashboard/users/index.html:9
+#: templates/oscar/dashboard/users/index.html:14
+#: templates/oscar/dashboard/users/index.html:24
+msgid "Customers"
+msgstr "顾客"
+
+#: defaults.py:152
+msgid "Stock alert requests"
+msgstr "库存警报请求"
+
+#: defaults.py:172
+msgid "Content"
+msgstr "内容"
+
+#: defaults.py:176 templates/oscar/dashboard/promotions/delete.html:18
+#: templates/oscar/dashboard/promotions/delete_pagepromotion.html:13
+#: templates/oscar/dashboard/promotions/form.html:13
+#: templates/oscar/dashboard/promotions/page_detail.html:19
+#: templates/oscar/dashboard/promotions/pagepromotion_list.html:7
+#: templates/oscar/dashboard/promotions/pagepromotion_list.html:21
+#: templates/oscar/dashboard/promotions/promotion_list.html:7
+#: templates/oscar/dashboard/promotions/promotion_list.html:12
+#: templates/oscar/dashboard/promotions/promotion_list.html:22
+#: templates/oscar/dashboard/promotions/promotion_list.html:38
+msgid "Content blocks"
+msgstr "内容块"
+
+#: defaults.py:180
+#: templates/oscar/dashboard/promotions/pagepromotion_list.html:24
+msgid "Content blocks by page"
+msgstr "内容块(按页)"
+
+#: defaults.py:188
+msgid "Email templates"
+msgstr "邮件模版"
+
+#: defaults.py:192 templates/oscar/catalogue/reviews/review_detail.html:5
+#: templates/oscar/catalogue/reviews/review_detail.html:26
+#: templates/oscar/dashboard/reviews/review_delete.html:8
+#: templates/oscar/dashboard/reviews/review_delete.html:18
+#: templates/oscar/dashboard/reviews/review_list.html:8
+#: templates/oscar/dashboard/reviews/review_list.html:17
+#: templates/oscar/dashboard/reviews/review_list.html:23
+#: templates/oscar/dashboard/reviews/review_update.html:18
+#: templates/oscar/dashboard/users/detail.html:109
+#: templates/oscar/dashboard/users/detail.html:176
+msgid "Reviews"
+msgstr "评价"
+
+#: defaults.py:198 templates/oscar/dashboard/reports/index.html:6
+msgid "Reports"
+msgstr "报告"
+
+#: defaults.py:227
+msgid "Price range"
+msgstr "价格范围"
+
+#: defaults.py:232
+msgid "0 to 20"
+msgstr "0到20"
+
+#: defaults.py:233
+msgid "20 to 40"
+msgstr "20到40"
+
+#: defaults.py:234
+msgid "40 to 60"
+msgstr "40到60"
+
+#: defaults.py:235
+msgid "60+"
+msgstr "60+"
+
 #: management/commands/oscar_send_alerts.py:16
 msgid "Check for products that are back in stock and send out alerts"
 msgstr "查看"
@@ -5154,25 +5142,9 @@ msgstr "此次事故已经被记录，一位工程师会尽快解决"
 msgid "Build"
 msgstr "分版本"
 
-#: templates/oscar/base.html:102
+#: templates/oscar/base.html:103
 msgid "Version:"
 msgstr "版本"
-
-#: templates/oscar/error.html:9
-msgid "Sorry!"
-msgstr "不好意思！"
-
-#: templates/oscar/error.html:12
-msgid "Return to previous page"
-msgstr "返回上一页"
-
-#: templates/oscar/error.html:13
-msgid "Go to homepage"
-msgstr "前往主页"
-
-#: templates/oscar/login_forbidden.html:5
-msgid "This page is only available to users who aren't logged in."
-msgstr "这个页面是专为没有登录的用户的"
 
 #: templates/oscar/basket/basket.html:12
 #: templates/oscar/catalogue/browse.html:18
@@ -5182,8 +5154,8 @@ msgstr "这个页面是专为没有登录的用户的"
 #: templates/oscar/catalogue/reviews/review_list.html:13
 #: templates/oscar/customer/baseaccountpage.html:14
 #: templates/oscar/customer/login_registration.html:11
-#: templates/oscar/customer/registration.html:12
 #: templates/oscar/customer/order/order_list.html:9
+#: templates/oscar/customer/registration.html:12
 #: templates/oscar/customer/wishlists/wishlists_delete.html:7
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:7
 #: templates/oscar/customer/wishlists/wishlists_detail.html:8
@@ -5206,9 +5178,7 @@ msgid ""
 "\n"
 "    <strong>%(title)s</strong> has been added to your basket.\n"
 "    "
-msgstr ""
-"\n"
-"<strong>%(title)s</strong> 已经加入你的购物车。"
+msgstr "\n<strong>%(title)s</strong> 已经加入你的购物车。"
 
 #: templates/oscar/basket/messages/addition.html:8
 #, python-format
@@ -5217,29 +5187,21 @@ msgid ""
 "    <strong>%(quantity)s</strong> copies of <strong>%(title)s</strong>\n"
 "    have been added to your basket.\n"
 "    "
-msgstr ""
-"\n"
-"<strong>%(quantity)s</strong> 件的\n"
-"<strong>%(title)s</strong>\n"
-"被加入您的购物篮."
+msgstr "\n<strong>%(quantity)s</strong> 件的\n<strong>%(title)s</strong>\n被加入您的购物篮."
 
 #: templates/oscar/basket/messages/line_restored.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been moved back to your basket.\n"
-msgstr ""
-"\n"
-"<strong>%(title)s</strong> 被移动回您的购物篮\n"
+msgstr "\n<strong>%(title)s</strong> 被移动回您的购物篮\n"
 
 #: templates/oscar/basket/messages/line_saved.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been saved for later\n"
-msgstr ""
-"\n"
-"<strong>%(title)s</strong>已经被保存后用\n"
+msgstr "\n<strong>%(title)s</strong>已经被保存后用\n"
 
 #: templates/oscar/basket/messages/new_total.html:6
 msgid "Your basket is now empty"
@@ -5250,12 +5212,9 @@ msgstr "你的购物车是空的"
 #, python-format
 msgid ""
 "\n"
-"            Basket total now <strong>%(total)s</strong>\n"
+"            Your basket total is now <strong>%(total)s</strong>\n"
 "            "
 msgstr ""
-"\n"
-"            购物车当前总数 <strong>%(total)s</strong>\n"
-"            "
 
 #: templates/oscar/basket/messages/new_total.html:22
 #: templates/oscar/basket/partials/basket_quick.html:38
@@ -5273,10 +5232,7 @@ msgid ""
 "\n"
 "Your basket now qualifies for the \n"
 "<strong>%(name)s</strong> offer.\n"
-msgstr ""
-"\n"
-"您的购物篮已经够资格使用\n"
-"<strong>%(name)s</strong> 促销\n"
+msgstr "\n您的购物篮已经够资格使用\n<strong>%(name)s</strong> 促销\n"
 
 #: templates/oscar/basket/messages/offer_lost.html:3
 #, python-format
@@ -5284,10 +5240,7 @@ msgid ""
 "\n"
 "Your basket no longer qualifies for the\n"
 "<strong>%(name)s</strong> offer.\n"
-msgstr ""
-"\n"
-"您的购物篮不再够资格使用\n"
-"<strong>%(name)s</strong> 促销\n"
+msgstr "\n您的购物篮不再够资格使用\n<strong>%(name)s</strong> 促销\n"
 
 #: templates/oscar/basket/partials/basket_content.html:7
 msgid "Important messages about items in your basket"
@@ -5301,21 +5254,16 @@ msgstr "你可能会错过促销机会"
 #, python-format
 msgid ""
 "\n"
-"                <div class=\"warning\">%(message)s to qualify for the <a "
-"href=\"%(url)s\">%(offer_name)s</a> special offer</div>\n"
+"                <div class=\"warning\">%(message)s to qualify for the <a href=\"%(url)s\">%(offer_name)s</a> special offer</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div class=\"warning\">%(message)s为了够资格拥有<a href=\"%(url)s\">"
-"%(offer_name)s</a>\n"
-"特别促销"
+msgstr "\n<div class=\"warning\">%(message)s为了够资格拥有<a href=\"%(url)s\">%(offer_name)s</a>\n特别促销"
 
 #: templates/oscar/basket/partials/basket_content.html:28
 msgid "Items to buy now"
 msgstr "现在要购买的商品"
 
 #: templates/oscar/basket/partials/basket_content.html:30
-#: templates/oscar/basket/partials/basket_content.html:170
+#: templates/oscar/basket/partials/basket_content.html:169
 #: templates/oscar/checkout/checkout.html:111
 msgid "Price"
 msgstr "价格"
@@ -5333,7 +5281,7 @@ msgid "Update"
 msgstr "刷新"
 
 #: templates/oscar/basket/partials/basket_content.html:67
-#: templates/oscar/basket/partials/basket_content.html:193
+#: templates/oscar/basket/partials/basket_content.html:192
 #: templates/oscar/basket/partials/basket_totals.html:48
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:41
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:36
@@ -5356,18 +5304,18 @@ msgstr "优惠码/促销码"
 msgid "I have a voucher code..."
 msgstr "我有一个优惠码···"
 
-#: templates/oscar/basket/partials/basket_content.html:124
+#: templates/oscar/basket/partials/basket_content.html:123
 msgid "Add voucher"
 msgstr "添加优惠券"
 
-#: templates/oscar/basket/partials/basket_content.html:125
+#: templates/oscar/basket/partials/basket_content.html:124
 #: templates/oscar/catalogue/reviews/review_form.html:44
 #: templates/oscar/checkout/shipping_address.html:79
 #: templates/oscar/checkout/user_address_delete.html:30
 #: templates/oscar/checkout/user_address_form.html:25
-#: templates/oscar/customer/registration.html:31
 #: templates/oscar/customer/address/address_delete.html:21
 #: templates/oscar/customer/profile/profile_delete.html:18
+#: templates/oscar/customer/registration.html:31
 #: templates/oscar/customer/wishlists/wishlists_delete.html:36
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:36
 #: templates/oscar/customer/wishlists/wishlists_form.html:44
@@ -5404,13 +5352,13 @@ msgstr "添加优惠券"
 msgid "or"
 msgstr "或者"
 
-#: templates/oscar/basket/partials/basket_content.html:125
+#: templates/oscar/basket/partials/basket_content.html:124
 #: templates/oscar/catalogue/reviews/review_form.html:45
 #: templates/oscar/checkout/user_address_delete.html:30
 #: templates/oscar/checkout/user_address_form.html:25
-#: templates/oscar/customer/registration.html:31
 #: templates/oscar/customer/address/address_delete.html:21
 #: templates/oscar/customer/profile/profile_delete.html:18
+#: templates/oscar/customer/registration.html:31
 #: templates/oscar/customer/wishlists/wishlists_delete.html:36
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:36
 #: templates/oscar/customer/wishlists/wishlists_form.html:44
@@ -5444,36 +5392,36 @@ msgstr "或者"
 msgid "cancel"
 msgstr "取消"
 
-#: templates/oscar/basket/partials/basket_content.html:135
+#: templates/oscar/basket/partials/basket_content.html:134
 #: templates/oscar/checkout/checkout.html:151
 #: templates/oscar/checkout/thank_you.html:164
 #: templates/oscar/customer/anon_order.html:95
 msgid "Totals"
 msgstr "总价格"
 
-#: templates/oscar/basket/partials/basket_content.html:147
+#: templates/oscar/basket/partials/basket_content.html:146
 msgid "Proceed to checkout"
 msgstr "前往结账"
 
-#: templates/oscar/basket/partials/basket_content.html:156
+#: templates/oscar/basket/partials/basket_content.html:155
 #: templates/oscar/basket/partials/basket_quick.html:42
 msgid "Your basket is empty."
 msgstr "你的购物车是空的"
 
-#: templates/oscar/basket/partials/basket_content.html:157
+#: templates/oscar/basket/partials/basket_content.html:156
 #: templates/oscar/checkout/thank_you.html:310
 msgid "Continue shopping"
 msgstr "继续购物"
 
-#: templates/oscar/basket/partials/basket_content.html:166
+#: templates/oscar/basket/partials/basket_content.html:165
 msgid "Items to buy later"
 msgstr ""
 
-#: templates/oscar/basket/partials/basket_content.html:169
+#: templates/oscar/basket/partials/basket_content.html:168
 msgid "Items"
 msgstr "商品"
 
-#: templates/oscar/basket/partials/basket_content.html:210
+#: templates/oscar/basket/partials/basket_content.html:209
 msgid "Move to basket"
 msgstr "移到购物车里"
 
@@ -5561,8 +5509,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                    <strong>%(num_results)s</strong> results - showing "
-"<strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
+"                    <strong>%(num_results)s</strong> results - showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
 msgstr ""
 
@@ -5601,6 +5548,13 @@ msgstr "产品介绍"
 msgid "Product Information"
 msgstr "产品信息"
 
+#: templates/oscar/catalogue/detail.html:112
+#: templates/oscar/dashboard/catalogue/product_class_form.html:16
+#: templates/oscar/dashboard/catalogue/product_class_list.html:11
+#: templates/oscar/dashboard/orders/line_detail.html:50
+msgid "Product Type"
+msgstr "商品种类"
+
 #: templates/oscar/catalogue/detail.html:122
 msgid "Price (incl. tax)"
 msgstr "价格（含税）"
@@ -5625,12 +5579,9 @@ msgstr "顾客评价"
 #, python-format
 msgid ""
 "This product does not have any reviews yet -\n"
-"                            <a href=\"%(add_review_url)s#addreview\">be the "
-"first to write one</a>.\n"
+"                            <a href=\"%(add_review_url)s#addreview\">be the first to write one</a>.\n"
 "                        "
-msgstr ""
-"此商品还没有评论\n"
-"<a href=\"%(add_review_url)s#addreview\">抢沙发</a>"
+msgstr "此商品还没有评论\n<a href=\"%(add_review_url)s#addreview\">抢沙发</a>"
 
 #: templates/oscar/catalogue/detail.html:166
 msgid "This product does not have any reviews yet"
@@ -5670,9 +5621,7 @@ msgid ""
 "\n"
 "\t                                        Add to '%(name)s' wish list\n"
 "\t                                    "
-msgstr ""
-"\n"
-"将'%(name)s'加入心愿单"
+msgstr "\n将'%(name)s'加入心愿单"
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:24
 msgid "Create a new wishlist"
@@ -5682,13 +5631,9 @@ msgstr "创造一个新心愿单"
 #, python-format
 msgid ""
 "\n"
-"                    <span class=\"pull-left\">Product is in <a href=\"%(url)s"
-"\">'%(name)s'</a> wishlist.</span>\n"
+"                    <span class=\"pull-left\">Product is in <a href=\"%(url)s\">'%(name)s'</a> wishlist.</span>\n"
 "                "
-msgstr ""
-"\n"
-"<span class=\"pull-left\">产品位于<a href=\"%(url)s\">'%(name)s'</a>心愿单内"
-"</span>"
+msgstr "\n<span class=\"pull-left\">产品位于<a href=\"%(url)s\">'%(name)s'</a>心愿单内</span>"
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:46
 msgid "Please login to add products to a wish list."
@@ -5700,20 +5645,15 @@ msgid ""
 "\n"
 "                Reviewed by you on %(review_date)s\n"
 "                "
-msgstr ""
-"\n"
-"在 %(review_date)s被您评论过"
+msgstr "\n在 %(review_date)s被您评论过"
 
 #: templates/oscar/catalogue/partials/review.html:27
 #, python-format
 msgid ""
 "\n"
-"                    Reviewed by <strong>%(name)s</strong> on "
-"%(review_date)s\n"
+"                    Reviewed by <strong>%(name)s</strong> on %(review_date)s\n"
 "                "
-msgstr ""
-"\n"
-"被<strong>%(name)s</strong> 在 %(review_date)s评论过"
+msgstr "\n被<strong>%(name)s</strong> 在 %(review_date)s评论过"
 
 #: templates/oscar/catalogue/partials/review.html:31
 msgid "Permalink"
@@ -5741,55 +5681,21 @@ msgstr "不"
 #, python-format
 msgid ""
 "\n"
-"            <strong>%(num_up_votes)s</strong> of 1 customer found this "
-"useful\n"
+"            <strong>%(num_up_votes)s</strong> of 1 customer found this useful\n"
 "            "
 msgid_plural ""
 "\n"
-"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customers "
-"found this useful\n"
+"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customers found this useful\n"
 "            "
-msgstr[0] ""
-"\n"
-"%(num_votes)s位顾客中的<strong>%(num_up_votes)s</strong> 认为这个有用"
+msgstr[0] "\n%(num_votes)s位顾客中的<strong>%(num_up_votes)s</strong> 认为这个有用"
 
 #: templates/oscar/catalogue/partials/review.html:58
 msgid "This review has no votes."
 msgstr "这个评论没有任何投票"
 
-#: templates/oscar/catalogue/partials/stock_record.html:10
+#: templates/oscar/catalogue/partials/stock_record.html:9
 msgid "Free"
 msgstr "免费"
-
-#: templates/oscar/catalogue/reviews/review_detail.html:35
-#: templates/oscar/catalogue/reviews/review_list.html:33
-msgid "Customer reviews"
-msgstr "顾客评价"
-
-#: templates/oscar/catalogue/reviews/review_form.html:8
-msgid "Leave a product review"
-msgstr "留下产品评论"
-
-#: templates/oscar/catalogue/reviews/review_form.html:43
-msgid "Save review"
-msgstr ""
-
-#: templates/oscar/catalogue/reviews/review_list.html:43
-msgid "Sort by:"
-msgstr "排序"
-
-#: templates/oscar/catalogue/reviews/review_list.html:46
-msgid "Recency"
-msgstr "最近"
-
-#: templates/oscar/catalogue/reviews/review_list.html:48
-#: templates/oscar/partials/nav_accounts.html:27
-msgid "Go"
-msgstr "前往"
-
-#: templates/oscar/catalogue/reviews/review_list.html:57
-msgid "This product does not have any reviews yet."
-msgstr "这件产品尚无评价。"
 
 #: templates/oscar/catalogue/reviews/partials/review_stars.html:13
 #, python-format
@@ -5808,6 +5714,28 @@ msgstr[0] ""
 #: templates/oscar/customer/order/order_detail.html:37
 msgid "Write a review"
 msgstr "写评论"
+
+#: templates/oscar/catalogue/reviews/review_detail.html:35
+#: templates/oscar/catalogue/reviews/review_list.html:33
+msgid "Customer reviews"
+msgstr "顾客评价"
+
+#: templates/oscar/catalogue/reviews/review_form.html:8
+msgid "Leave a product review"
+msgstr "留下产品评论"
+
+#: templates/oscar/catalogue/reviews/review_form.html:43
+msgid "Save review"
+msgstr ""
+
+#: templates/oscar/catalogue/reviews/review_list.html:48
+#: templates/oscar/partials/nav_accounts.html:27
+msgid "Go"
+msgstr "前往"
+
+#: templates/oscar/catalogue/reviews/review_list.html:57
+msgid "This product does not have any reviews yet."
+msgstr "这件产品尚无评价。"
 
 #: templates/oscar/checkout/checkout.html:34
 #: templates/oscar/checkout/checkout.html:65
@@ -5972,10 +5900,8 @@ msgstr "返回购物车"
 #, python-format
 msgid ""
 "\n"
-"                                This includes a discount of <strong>"
-"%(amount)s</strong> as\n"
-"                                your basket qualifies for the <strong>"
-"%(name)s</strong> offer.\n"
+"                                This includes a discount of <strong>%(amount)s</strong> as\n"
+"                                your basket qualifies for the <strong>%(name)s</strong> offer.\n"
 "                            "
 msgstr ""
 
@@ -5999,8 +5925,7 @@ msgstr "订单确认"
 #, python-format
 msgid ""
 "\n"
-"        Your order has been placed and a confirmation email has been sent - "
-"your order number is\n"
+"        Your order has been placed and a confirmation email has been sent - your order number is\n"
 "        <span class=\"label label-success\">%(number)s</span>\n"
 "        "
 msgstr ""
@@ -6023,12 +5948,9 @@ msgstr "无需送货地址"
 #, python-format
 msgid ""
 "\n"
-"                                Allocation of %(amount)s from type %(type)s "
-"(reference: %(reference)s)\n"
+"                                Allocation of %(amount)s from type %(type)s (reference: %(reference)s)\n"
 "                            "
-msgstr ""
-"\n"
-"从类别%(type)s (参考号: %(reference)s)分配%(amount)s "
+msgstr "\n从类别%(type)s (参考号: %(reference)s)分配%(amount)s "
 
 #: templates/oscar/checkout/thank_you.html:87
 #, python-format
@@ -6036,9 +5958,7 @@ msgid ""
 "\n"
 "                                Allocation of %(amount)s from type %(type)s\n"
 "                            "
-msgstr ""
-"\n"
-"从类别%(type)s 分配%(amount)s"
+msgstr "\n从类别%(type)s 分配%(amount)s"
 
 #: templates/oscar/checkout/thank_you.html:94
 msgid "No payment was required for this order."
@@ -6110,82 +6030,6 @@ msgstr "是！"
 msgid "Save"
 msgstr "保存"
 
-#: templates/oscar/customer/anon_order.html:8
-#: templates/oscar/dashboard/orders/order_detail.html:26
-#, python-format
-msgid "Order #%(number)s"
-msgstr "订单#%(number)s"
-
-#: templates/oscar/customer/anon_order.html:34
-msgid "Contact number"
-msgstr "联系号码"
-
-#: templates/oscar/customer/anon_order.html:40
-#: templates/oscar/dashboard/orders/order_detail.html:92
-#: templates/oscar/dashboard/orders/order_detail.html:605
-msgid "Notes"
-msgstr "备注"
-
-#: templates/oscar/customer/anon_order.html:62
-#: templates/oscar/customer/order/order_detail.html:21
-msgid "Line price excl. tax"
-msgstr "不含税商品线价格"
-
-#: templates/oscar/customer/anon_order.html:63
-#: templates/oscar/customer/order/order_detail.html:22
-msgid "Line price incl. tax"
-msgstr "含税商品线价格"
-
-#: templates/oscar/customer/anon_order.html:97
-msgid "Basket total (inc. tax)"
-msgstr "购物车总额(税后)"
-
-#: templates/oscar/customer/baseaccountpage.html:6
-#: templates/oscar/customer/baseaccountpage.html:18
-#: templates/oscar/customer/order/order_list.html:13
-#: templates/oscar/customer/wishlists/wishlists_delete.html:11
-#: templates/oscar/customer/wishlists/wishlists_delete_product.html:11
-#: templates/oscar/customer/wishlists/wishlists_detail.html:12
-#: templates/oscar/customer/wishlists/wishlists_form.html:11
-#: templates/oscar/dashboard/layout.html:52
-#: templates/oscar/partials/nav_accounts.html:37
-#: templates/oscar/partials/nav_accounts.html:41
-msgid "Account"
-msgstr "账户"
-
-#: templates/oscar/customer/login_registration.html:5
-#: templates/oscar/customer/login_registration.html:14
-#: templates/oscar/partials/nav_accounts.html:49
-msgid "Login or register"
-msgstr "登录或注册"
-
-#: templates/oscar/customer/login_registration.html:25
-#: templates/oscar/customer/login_registration.html:29
-msgid "Log In"
-msgstr "登陆"
-
-#: templates/oscar/customer/login_registration.html:28
-msgid "I've forgotten my password"
-msgstr "我忘记了密码"
-
-#: templates/oscar/customer/login_registration.html:29
-msgid "Logging in..."
-msgstr "登录中..."
-
-#: templates/oscar/customer/login_registration.html:34
-#: templates/oscar/customer/login_registration.html:37
-#: templates/oscar/customer/registration.html:6
-#: templates/oscar/customer/registration.html:15
-#: templates/oscar/customer/registration.html:20
-#: templates/oscar/customer/registration.html:29
-msgid "Register"
-msgstr "注册"
-
-#: templates/oscar/customer/login_registration.html:37
-#: templates/oscar/customer/registration.html:29
-msgid "Registering..."
-msgstr "正在注册中"
-
 #: templates/oscar/customer/address/address_delete.html:8
 #: templates/oscar/customer/address/address_form.html:8
 msgid "Address book"
@@ -6248,19 +6092,9 @@ msgstr "你没有任何有效的已缺货商品提醒"
 
 #: templates/oscar/customer/alerts/alert_list.html:29
 #: templates/oscar/dashboard/catalogue/product_update.html:324
-#: templates/oscar/dashboard/orders/partials/bulk_edit_form.html:25
+#: templates/oscar/dashboard/orders/partials/bulk_edit_form.html:26
 msgid "Cancel"
 msgstr "取消"
-
-#: templates/oscar/customer/alerts/message.html:2
-#, python-format
-msgid ""
-"\n"
-"<a href=\"%(url)s\">%(title)s</a> is back in stock\n"
-msgstr ""
-"\n"
-"<a href=\"%(url)s\">%(title)s</a>恢复供货了\n"
-"\n"
 
 #: templates/oscar/customer/alerts/emails/alert_body.txt:1
 #, python-format
@@ -6278,22 +6112,13 @@ msgid ""
 "\n"
 "We are happy to inform you that our product '%(product)s' is back in stock:\n"
 "http://%(site)s%(path)s\n"
-msgstr ""
-"\n"
-"我们高兴的通知：我们的商品'%(product)s' 已经\n"
-"上架：\n"
-"http://%(site)s%(path)s\n"
-"\n"
+msgstr "\n我们高兴的通知：我们的商品'%(product)s' 已经\n上架：\nhttp://%(site)s%(path)s\n\n"
 
 #: templates/oscar/customer/alerts/emails/alert_body.txt:5
 msgid ""
 "\n"
-"Beware that the amount of items in stock is limited. Be quick or someone "
-"might get there first.\n"
-msgstr ""
-"\n"
-"注意这件商品的存货有限。请尽快买，不然其他人可能\n"
-"先买了。\n"
+"Beware that the amount of items in stock is limited. Be quick or someone might get there first.\n"
+msgstr "\n注意这件商品的存货有限。请尽快买，不然其他人可能\n先买了。\n"
 
 #: templates/oscar/customer/alerts/emails/alert_body.txt:7
 #, python-format
@@ -6304,15 +6129,7 @@ msgid ""
 "\n"
 "Thanks for your interest,\n"
 "The %(site_name)s Team\n"
-msgstr ""
-"\n"
-"我们已经自动禁用了您的提醒功能\n"
-"您不再\n"
-"会收到关于这个商品的其他任何电子邮件\n"
-"\n"
-"谢谢你的惠顾\n"
-"%(site_name)s团队\n"
-"\n"
+msgstr "\n我们已经自动禁用了您的提醒功能\n您不再\n会收到关于这个商品的其他任何电子邮件\n\n谢谢你的惠顾\n%(site_name)s团队\n\n"
 
 #: templates/oscar/customer/alerts/emails/alert_subject.txt:1
 #, python-format
@@ -6334,23 +6151,61 @@ msgid ""
 "\n"
 "Thanks for your interest,\n"
 "The %(site)s Team\n"
-msgstr ""
-"你好，\n"
-"\n"
-"有人(希望是您)请求在商品'%(product)s' 恢复供货时候得到电子邮件提醒\n"
-"请点击下列链接\n"
-"来确定：\n"
-"http://%(domain)s%(confirm_path)s\n"
-"\n"
-"您可以在任何时间点击下列链接：\n"
-"http://%(domain)s%(cancel_path)s来取消这个提醒\n"
-"\n"
-"谢谢你的关心\n"
-"%(site)s 团队\n"
+msgstr "你好，\n\n有人(希望是您)请求在商品'%(product)s' 恢复供货时候得到电子邮件提醒\n请点击下列链接\n来确定：\nhttp://%(domain)s%(confirm_path)s\n\n您可以在任何时间点击下列链接：\nhttp://%(domain)s%(cancel_path)s来取消这个提醒\n\n谢谢你的关心\n%(site)s 团队\n"
 
 #: templates/oscar/customer/alerts/emails/confirmation_subject.txt:1
 msgid "Confirmation required for stock alert"
 msgstr "有货提醒确认函已申请"
+
+#: templates/oscar/customer/alerts/message.html:2
+#, python-format
+msgid ""
+"\n"
+"<a href=\"%(url)s\">%(title)s</a> is back in stock\n"
+msgstr "\n<a href=\"%(url)s\">%(title)s</a>恢复供货了\n\n"
+
+#: templates/oscar/customer/anon_order.html:8
+#: templates/oscar/dashboard/orders/order_detail.html:26
+#, python-format
+msgid "Order #%(number)s"
+msgstr "订单#%(number)s"
+
+#: templates/oscar/customer/anon_order.html:34
+msgid "Contact number"
+msgstr "联系号码"
+
+#: templates/oscar/customer/anon_order.html:40
+#: templates/oscar/dashboard/orders/order_detail.html:92
+#: templates/oscar/dashboard/orders/order_detail.html:605
+msgid "Notes"
+msgstr "备注"
+
+#: templates/oscar/customer/anon_order.html:62
+#: templates/oscar/customer/order/order_detail.html:21
+msgid "Line price excl. tax"
+msgstr "不含税商品线价格"
+
+#: templates/oscar/customer/anon_order.html:63
+#: templates/oscar/customer/order/order_detail.html:22
+msgid "Line price incl. tax"
+msgstr "含税商品线价格"
+
+#: templates/oscar/customer/anon_order.html:97
+msgid "Basket total (inc. tax)"
+msgstr "购物车总额(税后)"
+
+#: templates/oscar/customer/baseaccountpage.html:6
+#: templates/oscar/customer/baseaccountpage.html:18
+#: templates/oscar/customer/order/order_list.html:13
+#: templates/oscar/customer/wishlists/wishlists_delete.html:11
+#: templates/oscar/customer/wishlists/wishlists_delete_product.html:11
+#: templates/oscar/customer/wishlists/wishlists_detail.html:12
+#: templates/oscar/customer/wishlists/wishlists_form.html:11
+#: templates/oscar/dashboard/layout.html:52
+#: templates/oscar/partials/nav_accounts.html:37
+#: templates/oscar/partials/nav_accounts.html:41
+msgid "Account"
+msgstr "账户"
 
 #: templates/oscar/customer/email/email_detail.html:8
 msgid "Email history"
@@ -6381,12 +6236,9 @@ msgstr "%(name)s团队"
 #, python-format
 msgid ""
 "\n"
-"    You're receiving this email because your email address has been changed "
-"to <strong>%(email)s</strong>.\n"
+"    You're receiving this email because your email address has been changed to <strong>%(email)s</strong>.\n"
 "    "
-msgstr ""
-"\n"
-"因为您的电子邮件地址被改变到<strong>%(email)s</strong>，所以接收到这个邮件"
+msgstr "\n因为您的电子邮件地址被改变到<strong>%(email)s</strong>，所以接收到这个邮件"
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:12
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:6
@@ -6397,7 +6249,8 @@ msgstr "如果不是您本人更换这个，请立即重设你的密码并更正
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:16
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:9
-msgid "If it was you who changed the email address, you can ignore this email."
+msgid ""
+"If it was you who changed the email address, you can ignore this email."
 msgstr "如果是您本人改变的电子邮件地址，您可以忽略这个邮件"
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:4
@@ -6417,8 +6270,7 @@ msgstr "您在%(site_name)s注册的电子邮件地址已经更改"
 msgid ""
 "We are pleased to confirm your order %(order_number)s has been received and\n"
 "will be processed shortly."
-msgstr ""
-"我们很高兴地通知你，你的%(order_number)s号订单我们已经收到，我们将尽快处理。"
+msgstr "我们很高兴地通知你，你的%(order_number)s号订单我们已经收到，我们将尽快处理。"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:9
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:6
@@ -6459,11 +6311,9 @@ msgstr "送货地址"
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:27
 #, python-format
 msgid ""
-"You can view the status of this order by clicking <a href=\"%(status_url)s\" "
-"title=\"order status\">here</a>"
-msgstr ""
-"您可以点击 <a href=\"%(status_url)s\" title=\"order status\">这里</a>来查看这"
-"个订单的状态"
+"You can view the status of this order by clicking <a href=\"%(status_url)s\""
+" title=\"order status\">here</a>"
+msgstr "您可以点击 <a href=\"%(status_url)s\" title=\"order status\">这里</a>来查看这个订单的状态"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:1
 #, python-format
@@ -6472,19 +6322,14 @@ msgid ""
 "\n"
 "We are pleased to confirm your order %(order_number)s has been received and\n"
 "will be processed shortly."
-msgstr ""
-"你好,\n"
-"\n"
-"我们很高兴地通知你，你的%(order_number)s号订单我们已经收到，我们将尽快处理。"
+msgstr "你好,\n\n我们很高兴地通知你，你的%(order_number)s号订单我们已经收到，我们将尽快处理。"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:20
 #, python-format
 msgid ""
 "You can view the status of this order at the below URL:\n"
 "%(status_url)s"
-msgstr ""
-"您可以在下面URL查看这个订单的状态：\n"
-"%(status_url)s"
+msgstr "您可以在下面URL查看这个订单的状态：\n%(status_url)s"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:24
 msgid "The team"
@@ -6499,12 +6344,9 @@ msgstr "订单确认 %(number)s"
 #, python-format
 msgid ""
 "\n"
-"    You're receiving this e-mail because your password has been changed at "
-"%(name)s.\n"
+"    You're receiving this e-mail because your password has been changed at %(name)s.\n"
 "    "
-msgstr ""
-"\n"
-"因为您的%(name)s名下的密码被改变，所以收到本电子邮件"
+msgstr "\n因为您的%(name)s名下的密码被改变，所以收到本电子邮件"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:11
 #: templates/oscar/customer/emails/commtype_password_changed_body.txt:8
@@ -6521,11 +6363,8 @@ msgstr "不然，您可以忽略这个电子邮件"
 #, python-format
 msgid ""
 "\n"
-"You're receiving this email because your password has been changed at "
-"%(name)s.\n"
-msgstr ""
-"\n"
-"你收到本邮件是因为你在%(name)s名下的密码被改变了\n"
+"You're receiving this email because your password has been changed at %(name)s.\n"
+msgstr "\n你收到本邮件是因为你在%(name)s名下的密码被改变了\n"
 
 #: templates/oscar/customer/emails/commtype_password_changed_subject.txt:1
 #, python-format
@@ -6536,8 +6375,8 @@ msgstr "您在%(site_name)s名下的密码被改变了"
 #: templates/oscar/customer/emails/commtype_password_reset_body.txt:5
 #, python-format
 msgid ""
-"You're receiving this e-mail because you requested a password reset for your "
-"user account at %(name)s."
+"You're receiving this e-mail because you requested a password reset for your"
+" user account at %(name)s."
 msgstr "您收到这封邮件是因为您为 %(name)s 的用户账户申请了密码重置。"
 
 #: templates/oscar/customer/emails/commtype_password_reset_body.html:9
@@ -6560,6 +6399,39 @@ msgstr "谢谢您的注册"
 msgid "Products you recently viewed"
 msgstr "你近期浏览过的产品"
 
+#: templates/oscar/customer/login_registration.html:5
+#: templates/oscar/customer/login_registration.html:14
+#: templates/oscar/partials/nav_accounts.html:49
+msgid "Login or register"
+msgstr "登录或注册"
+
+#: templates/oscar/customer/login_registration.html:25
+#: templates/oscar/customer/login_registration.html:29
+msgid "Log In"
+msgstr "登陆"
+
+#: templates/oscar/customer/login_registration.html:28
+msgid "I've forgotten my password"
+msgstr "我忘记了密码"
+
+#: templates/oscar/customer/login_registration.html:29
+msgid "Logging in..."
+msgstr "登录中..."
+
+#: templates/oscar/customer/login_registration.html:34
+#: templates/oscar/customer/login_registration.html:37
+#: templates/oscar/customer/registration.html:6
+#: templates/oscar/customer/registration.html:15
+#: templates/oscar/customer/registration.html:20
+#: templates/oscar/customer/registration.html:29
+msgid "Register"
+msgstr "注册"
+
+#: templates/oscar/customer/login_registration.html:37
+#: templates/oscar/customer/registration.html:29
+msgid "Registering..."
+msgstr "正在注册中"
+
 #: templates/oscar/customer/notifications/detail.html:6
 msgid "Notifications inbox"
 msgstr "提醒收件箱"
@@ -6580,11 +6452,11 @@ msgstr "存档"
 #: templates/oscar/customer/notifications/list.html:36
 #: templates/oscar/customer/wishlists/wishlists_list.html:19
 #: templates/oscar/dashboard/orders/order_detail.html:154
-#: templates/oscar/dashboard/orders/order_list.html:126
+#: templates/oscar/dashboard/orders/order_list.html:125
 #: templates/oscar/dashboard/pages/index.html:69
 #: templates/oscar/dashboard/reports/partials/order_report.html:30
 #: templates/oscar/dashboard/shipping/weight_based_list.html:47
-#: templates/oscar/dashboard/users/detail.html:133
+#: templates/oscar/dashboard/users/detail.html:135
 #: templates/oscar/dashboard/users/user_row_actions.html:2
 msgid "View"
 msgstr "浏览"
@@ -6651,17 +6523,13 @@ msgstr "送货总计"
 msgid "Re-order all items"
 msgstr "重新订购所有商品"
 
-#: templates/oscar/customer/order/order_detail.html:155
-msgid "Address:"
-msgstr "地址："
-
 #: templates/oscar/customer/order/order_detail.html:156
-msgid "Contact Number:"
-msgstr "联系号码"
+msgid "Contact Number"
+msgstr ""
 
 #: templates/oscar/customer/order/order_detail.html:157
-msgid "Shipping Notes:"
-msgstr "送货备注"
+msgid "Shipping Notes"
+msgstr ""
 
 #: templates/oscar/customer/order/order_list.html:28
 msgid "Filter results"
@@ -6679,11 +6547,15 @@ msgid "Reset"
 msgstr "重置"
 
 #: templates/oscar/customer/order/order_list.html:41
-#: templates/oscar/dashboard/orders/order_list.html:96
+#: templates/oscar/dashboard/orders/order_list.html:95
 msgid "Total inc tax"
 msgstr "含税总价"
 
-#: templates/oscar/customer/order/order_list.html:55
+#: templates/oscar/customer/order/order_list.html:56
+msgid "No orders match your search."
+msgstr ""
+
+#: templates/oscar/customer/order/order_list.html:58
 msgid "You haven't placed any orders."
 msgstr "您尚未下任何订单"
 
@@ -6706,13 +6578,10 @@ msgstr "注意"
 #: templates/oscar/customer/profile/profile_delete.html:11
 msgid ""
 "\n"
-"                This will delete all information about you from the site.  "
-"Deleting your profile cannot be\n"
+"                This will delete all information about you from the site.  Deleting your profile cannot be\n"
 "                undone.\n"
 "            "
-msgstr ""
-"\n"
-"这将会删除您在本网站上关于您所有的信息。删除您的资料是不可恢复的操作"
+msgstr "\n这将会删除您在本网站上关于您所有的信息。删除您的资料是不可恢复的操作"
 
 #: templates/oscar/customer/wishlists/wishlists_delete.html:22
 #: templates/oscar/dashboard/catalogue/product_update.html:205
@@ -6730,9 +6599,7 @@ msgid ""
 "\n"
 "                Are you sure you want to delete %(name)s?\n"
 "            "
-msgstr ""
-"\n"
-"您确定要删除%(name)s?"
+msgstr "\n您确定要删除%(name)s?"
 
 #: templates/oscar/customer/wishlists/wishlists_delete_product.html:22
 msgid "Remove product"
@@ -6742,12 +6609,9 @@ msgstr "删除商品"
 #, python-format
 msgid ""
 "\n"
-"                Are you sure you want to delete %(product_name)s from wish "
-"list %(wishlist_name)s?\n"
+"                Are you sure you want to delete %(product_name)s from wish list %(wishlist_name)s?\n"
 "            "
-msgstr ""
-"\n"
-"您确定想要从心愿单%(wishlist_name)s'删除%(product_name)s'？"
+msgstr "\n您确定想要从心愿单%(wishlist_name)s'删除%(product_name)s'？"
 
 #: templates/oscar/customer/wishlists/wishlists_detail.html:35
 #: templates/oscar/customer/wishlists/wishlists_list.html:11
@@ -6762,12 +6626,9 @@ msgstr "浏览产品"
 #, python-format
 msgid ""
 "\n"
-"                                                            Move to "
-"'%(name)s' wish list\n"
+"                                                            Move to '%(name)s' wish list\n"
 "                                                        "
-msgstr ""
-"\n"
-"移动到心愿单'%(name)s' "
+msgstr "\n移动到心愿单'%(name)s' "
 
 #: templates/oscar/customer/wishlists/wishlists_detail.html:102
 msgid "Update quantities"
@@ -6789,12 +6650,9 @@ msgstr "你的新心愿单叫什么名字？"
 #, python-format
 msgid ""
 "\n"
-"                    After your wishlist is created, <strong>%(title)s</"
-"strong> will be added.\n"
+"                    After your wishlist is created, <strong>%(title)s</strong> will be added.\n"
 "                "
-msgstr ""
-"\n"
-"在您的心愿单创建后，<strong>%(title)s</strong>会被添加"
+msgstr "\n在您的心愿单创建后，<strong>%(title)s</strong>会被添加"
 
 #: templates/oscar/customer/wishlists/wishlists_list.html:10
 msgid "Number of products"
@@ -6807,6 +6665,360 @@ msgstr "心愿单设置"
 #: templates/oscar/customer/wishlists/wishlists_list.html:44
 msgid "You don't have any wish lists yet."
 msgstr "你还没有任何心愿单。"
+
+#: templates/oscar/dashboard/catalogue/category_delete.html:16
+#: templates/oscar/dashboard/catalogue/category_delete.html:21
+msgid "Delete category?"
+msgstr "删除分类？"
+
+#: templates/oscar/dashboard/catalogue/category_delete.html:26
+msgid "Delete category"
+msgstr "删除分类"
+
+#: templates/oscar/dashboard/catalogue/category_delete.html:31
+#, python-format
+msgid ""
+"\n"
+"            <p>Delete category <strong>%(name)s</strong> - are you sure?</p>\n"
+"        "
+msgstr "\n<p>删除类别<strong>%(name)s</strong> - 您确定么?</p>"
+
+#: templates/oscar/dashboard/catalogue/category_list.html:24
+msgid "Create new category"
+msgstr "创建新类别"
+
+#: templates/oscar/dashboard/catalogue/category_list.html:31
+msgid "You are editing:"
+msgstr "您正在编辑："
+
+#: templates/oscar/dashboard/catalogue/category_list.html:45
+msgid "There are no categories."
+msgstr "没有任何类别"
+
+#: templates/oscar/dashboard/catalogue/category_row_actions.html:12
+msgid "Edit category"
+msgstr "类别编辑"
+
+#: templates/oscar/dashboard/catalogue/category_row_actions.html:17
+msgid "Add child category"
+msgstr "添加子分类"
+
+#: templates/oscar/dashboard/catalogue/category_row_actions.html:22
+msgid "Edit children"
+msgstr "编辑子分类"
+
+#: templates/oscar/dashboard/catalogue/category_row_actions.html:27
+#: templates/oscar/dashboard/catalogue/product_row_actions.html:14
+#: templates/oscar/dashboard/catalogue/product_update.html:340
+#: templates/oscar/dashboard/pages/index.html:60
+#: templates/oscar/dashboard/pages/messages/saved.html:9
+#: templates/oscar/dashboard/ranges/range_list.html:76
+#: templates/oscar/dashboard/reviews/review_list.html:110
+msgid "View on site"
+msgstr "在网站上查看"
+
+#: templates/oscar/dashboard/catalogue/messages/product_saved.html:10
+#, python-format
+msgid ""
+"\n"
+"                    Created product variant '%(name)s'.\n"
+"                "
+msgstr ""
+
+#: templates/oscar/dashboard/catalogue/messages/product_saved.html:14
+#, python-format
+msgid ""
+"\n"
+"                    Created variant of '%(parent_name)s'.\n"
+"                "
+msgstr ""
+
+#: templates/oscar/dashboard/catalogue/messages/product_saved.html:20
+#, python-format
+msgid ""
+"\n"
+"                    Updated product variant '%(name)s'.\n"
+"                "
+msgstr ""
+
+#: templates/oscar/dashboard/catalogue/messages/product_saved.html:24
+#, python-format
+msgid ""
+"\n"
+"                    Updated a variant of '%(parent_name)s'.\n"
+"                "
+msgstr ""
+
+#: templates/oscar/dashboard/catalogue/messages/product_saved.html:33
+#, python-format
+msgid ""
+"\n"
+"                Created product '%(name)s'.\n"
+"            "
+msgstr ""
+
+#: templates/oscar/dashboard/catalogue/messages/product_saved.html:37
+#, python-format
+msgid ""
+"\n"
+"                Updated product '%(name)s'.\n"
+"            "
+msgstr ""
+
+#: templates/oscar/dashboard/catalogue/messages/product_saved.html:48
+#: templates/oscar/dashboard/pages/messages/saved.html:10
+#: templates/oscar/dashboard/ranges/messages/range_saved.html:6
+msgid "Edit again"
+msgstr "再次编辑"
+
+#: templates/oscar/dashboard/catalogue/messages/product_saved.html:49
+msgid "View it on the site"
+msgstr "在网站上查看它"
+
+#: templates/oscar/dashboard/catalogue/product_class_delete.html:16
+msgid "Delete product type?"
+msgstr "删除商品种类？"
+
+#: templates/oscar/dashboard/catalogue/product_class_delete.html:26
+msgid ""
+"Please make sure all products are assigned to another type before deletion."
+msgstr "请确定所有商品在删除前都被指定到其他种类"
+
+#: templates/oscar/dashboard/catalogue/product_class_delete.html:29
+msgid "Delete product type"
+msgstr "删除商品种类"
+
+#: templates/oscar/dashboard/catalogue/product_class_delete.html:35
+#, python-format
+msgid "Delete product type <strong>%(name)s</strong> - are you sure?"
+msgstr "删除商品种类<strong>%(name)s</strong> - 您确定么？"
+
+#: templates/oscar/dashboard/catalogue/product_class_form.html:6
+msgid "Create product type"
+msgstr "创建商品种类"
+
+#: templates/oscar/dashboard/catalogue/product_class_list.html:17
+msgid "Create new product type"
+msgstr "创建新的商品z'l"
+
+#: templates/oscar/dashboard/catalogue/product_class_list.html:18
+msgid "Product types"
+msgstr ""
+
+#: templates/oscar/dashboard/catalogue/product_class_list.html:29
+msgid "Requires shipping"
+msgstr "需要送货"
+
+#: templates/oscar/dashboard/catalogue/product_class_list.html:30
+msgid "Track stock?"
+msgstr "跟踪存货？"
+
+#: templates/oscar/dashboard/catalogue/product_class_list.html:47
+msgid "Edit product type"
+msgstr "编辑商品种类"
+
+#: templates/oscar/dashboard/catalogue/product_class_list.html:58
+msgid "There are no product types."
+msgstr "没有任何商品种类"
+
+#: templates/oscar/dashboard/catalogue/product_delete.html:40
+#, python-format
+msgid ""
+"\n"
+"                    Delete product variant <strong>%(title)s</strong> - are you sure?\n"
+"                "
+msgstr ""
+
+#: templates/oscar/dashboard/catalogue/product_delete.html:44
+#, python-format
+msgid ""
+"\n"
+"                    Delete product <strong>%(title)s</strong> - are you sure?\n"
+"                "
+msgstr ""
+
+#: templates/oscar/dashboard/catalogue/product_delete.html:52
+msgid "This will also delete the following child products:"
+msgstr ""
+
+#: templates/oscar/dashboard/catalogue/product_list.html:33
+msgid "Create new product"
+msgstr "建立新产品"
+
+#: templates/oscar/dashboard/catalogue/product_list.html:38
+msgid "New Product"
+msgstr "新商品"
+
+#: templates/oscar/dashboard/catalogue/product_list.html:45
+msgid "Search Products"
+msgstr "搜索产品"
+
+#: templates/oscar/dashboard/catalogue/product_update.html:47
+#, python-format
+msgid ""
+"\n"
+"                            You are currently editing a product variant of\n"
+"                            <a href=\"%(parent_url)s\">%(title)s</a>.\n"
+"                        "
+msgstr ""
+
+#: templates/oscar/dashboard/catalogue/product_update.html:62
+msgid "Sections"
+msgstr "段落"
+
+#: templates/oscar/dashboard/catalogue/product_update.html:74
+#: templates/oscar/dashboard/catalogue/product_update.html:104
+#: templates/oscar/dashboard/orders/line_detail.html:36
+msgid "Product details"
+msgstr "商品细节"
+
+#: templates/oscar/dashboard/catalogue/product_update.html:82
+msgid "Images"
+msgstr ""
+
+#: templates/oscar/dashboard/catalogue/product_update.html:85
+#: templates/oscar/dashboard/catalogue/product_update.html:189
+msgid "Stock and pricing"
+msgstr ""
+
+#: templates/oscar/dashboard/catalogue/product_update.html:91
+msgid "Upselling"
+msgstr ""
+
+#: templates/oscar/dashboard/catalogue/product_update.html:149
+msgid "Product Type:"
+msgstr "商品种类："
+
+#: templates/oscar/dashboard/catalogue/product_update.html:170
+msgid "Upload, change or remove images"
+msgstr "上传、修改或删除图片"
+
+#: templates/oscar/dashboard/catalogue/product_update.html:195
+msgid "SKU"
+msgstr "SKU"
+
+#: templates/oscar/dashboard/catalogue/product_update.html:197
+msgid "Num in stock"
+msgstr "存货量"
+
+#: templates/oscar/dashboard/catalogue/product_update.html:198
+msgid "Num allocated"
+msgstr "已分配量"
+
+#: templates/oscar/dashboard/catalogue/product_update.html:199
+#: templates/oscar/dashboard/catalogue/stockalert_list.html:51
+msgid "Low stock threshold"
+msgstr "低库存"
+
+#: templates/oscar/dashboard/catalogue/product_update.html:202
+msgid "Cost price"
+msgstr "成本价"
+
+#: templates/oscar/dashboard/catalogue/product_update.html:203
+msgid "Price (excl tax)"
+msgstr "价格(不包含税)"
+
+#: templates/oscar/dashboard/catalogue/product_update.html:204
+msgid "Retail price"
+msgstr "零售价格"
+
+#: templates/oscar/dashboard/catalogue/product_update.html:252
+msgid "Add variant"
+msgstr ""
+
+#: templates/oscar/dashboard/catalogue/product_update.html:281
+msgid "This product does not have any variants."
+msgstr ""
+
+#: templates/oscar/dashboard/catalogue/product_update.html:283
+msgid "One can't add variants to this product at this point."
+msgstr ""
+
+#: templates/oscar/dashboard/catalogue/product_update.html:285
+msgid "This is likely because this product still has stock records."
+msgstr ""
+
+#: templates/oscar/dashboard/catalogue/product_update.html:329
+msgid "Save and add another variant"
+msgstr ""
+
+#: templates/oscar/dashboard/catalogue/product_update.html:333
+msgid "Save and continue editing"
+msgstr "保存并继续编辑"
+
+#: templates/oscar/dashboard/catalogue/stockalert_list.html:38
+#: templates/oscar/dashboard/ranges/range_list.html:50
+msgid "All"
+msgstr "所有"
+
+#: templates/oscar/dashboard/catalogue/stockalert_list.html:52
+msgid "Current available stock"
+msgstr "当前可用的存货"
+
+#: templates/oscar/dashboard/catalogue/stockalert_list.html:53
+msgid "Date alert raised"
+msgstr "提醒发生日期"
+
+#: templates/oscar/dashboard/catalogue/stockalert_list.html:77
+msgid "No stock alerts found."
+msgstr "没有发现存货提醒"
+
+#: templates/oscar/dashboard/comms/detail.html:40
+#: templates/oscar/dashboard/comms/detail.html:75
+msgid "Preview"
+msgstr "预览"
+
+#: templates/oscar/dashboard/comms/detail.html:44
+msgid "Edit email"
+msgstr "编辑电子邮件"
+
+#: templates/oscar/dashboard/comms/detail.html:53
+msgid "Email content"
+msgstr "邮件内容"
+
+#: templates/oscar/dashboard/comms/detail.html:56
+msgid "These fields are rendered using Django's template system."
+msgstr "这些字段被 Django 的模版系统渲染。"
+
+#: templates/oscar/dashboard/comms/detail.html:57
+msgid "You can use the following variables:"
+msgstr "您可以使用下列变量"
+
+#: templates/oscar/dashboard/comms/detail.html:60
+msgid "The full name of the user (if they have one)"
+msgstr "该用户全名(如果有的话)"
+
+#: templates/oscar/dashboard/comms/detail.html:62
+msgid "The user's email address"
+msgstr "该用户的邮件地址"
+
+#: templates/oscar/dashboard/comms/detail.html:64
+msgid "The name of the site (eg example.com)"
+msgstr "网站地址(比如 example.com)"
+
+#: templates/oscar/dashboard/comms/detail.html:79
+msgid "View a preview of this email using order:"
+msgstr "用如下顺序查看这个电子邮件的预览"
+
+#: templates/oscar/dashboard/comms/detail.html:82
+msgid "View preview"
+msgstr "查看预览"
+
+#: templates/oscar/dashboard/comms/detail.html:83
+msgid "or send a preview to:"
+msgstr "或者发送预览到："
+
+#: templates/oscar/dashboard/comms/detail.html:85
+msgid "Send preview email"
+msgstr "发送预览邮件"
+
+#: templates/oscar/dashboard/comms/detail.html:95
+msgid "Body text"
+msgstr "内容简述"
+
+#: templates/oscar/dashboard/comms/list.html:53
+msgid "There are no defined emails to edit."
+msgstr "没有指定了的电子邮件可供编辑"
 
 #: templates/oscar/dashboard/index.html:22
 msgid "Your Store Statistics"
@@ -6924,369 +7136,6 @@ msgstr "返回网站"
 msgid "Log out"
 msgstr "退出"
 
-#: templates/oscar/dashboard/catalogue/category_delete.html:16
-#: templates/oscar/dashboard/catalogue/category_delete.html:21
-msgid "Delete category?"
-msgstr "删除分类？"
-
-#: templates/oscar/dashboard/catalogue/category_delete.html:26
-msgid "Delete category"
-msgstr "删除分类"
-
-#: templates/oscar/dashboard/catalogue/category_delete.html:31
-#, python-format
-msgid ""
-"\n"
-"            <p>Delete category <strong>%(name)s</strong> - are you sure?</"
-"p>\n"
-"        "
-msgstr ""
-"\n"
-"<p>删除类别<strong>%(name)s</strong> - 您确定么?</p>"
-
-#: templates/oscar/dashboard/catalogue/category_list.html:24
-msgid "Create new category"
-msgstr "创建新类别"
-
-#: templates/oscar/dashboard/catalogue/category_list.html:31
-msgid "You are editing:"
-msgstr "您正在编辑："
-
-#: templates/oscar/dashboard/catalogue/category_list.html:45
-msgid "There are no categories."
-msgstr "没有任何类别"
-
-#: templates/oscar/dashboard/catalogue/category_row_actions.html:12
-msgid "Edit category"
-msgstr "类别编辑"
-
-#: templates/oscar/dashboard/catalogue/category_row_actions.html:17
-msgid "Add child category"
-msgstr "添加子分类"
-
-#: templates/oscar/dashboard/catalogue/category_row_actions.html:22
-msgid "Edit children"
-msgstr "编辑子分类"
-
-#: templates/oscar/dashboard/catalogue/category_row_actions.html:27
-#: templates/oscar/dashboard/catalogue/product_row_actions.html:14
-#: templates/oscar/dashboard/catalogue/product_update.html:340
-#: templates/oscar/dashboard/pages/index.html:60
-#: templates/oscar/dashboard/pages/messages/saved.html:9
-#: templates/oscar/dashboard/ranges/range_list.html:76
-#: templates/oscar/dashboard/reviews/review_list.html:110
-msgid "View on site"
-msgstr "在网站上查看"
-
-#: templates/oscar/dashboard/catalogue/product_class_delete.html:16
-msgid "Delete product type?"
-msgstr "删除商品种类？"
-
-#: templates/oscar/dashboard/catalogue/product_class_delete.html:26
-msgid ""
-"Please make sure all products are assigned to another type before deletion."
-msgstr "请确定所有商品在删除前都被指定到其他种类"
-
-#: templates/oscar/dashboard/catalogue/product_class_delete.html:29
-msgid "Delete product type"
-msgstr "删除商品种类"
-
-#: templates/oscar/dashboard/catalogue/product_class_delete.html:35
-#, python-format
-msgid "Delete product type <strong>%(name)s</strong> - are you sure?"
-msgstr "删除商品种类<strong>%(name)s</strong> - 您确定么？"
-
-#: templates/oscar/dashboard/catalogue/product_class_form.html:6
-msgid "Create product type"
-msgstr "创建商品种类"
-
-#: templates/oscar/dashboard/catalogue/product_class_list.html:17
-msgid "Create new product type"
-msgstr "创建新的商品z'l"
-
-#: templates/oscar/dashboard/catalogue/product_class_list.html:18
-msgid "Product types"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/product_class_list.html:29
-msgid "Requires shipping"
-msgstr "需要送货"
-
-#: templates/oscar/dashboard/catalogue/product_class_list.html:30
-msgid "Track stock?"
-msgstr "跟踪存货？"
-
-#: templates/oscar/dashboard/catalogue/product_class_list.html:47
-msgid "Edit product type"
-msgstr "编辑商品种类"
-
-#: templates/oscar/dashboard/catalogue/product_class_list.html:58
-msgid "There are no product types."
-msgstr "没有任何商品种类"
-
-#: templates/oscar/dashboard/catalogue/product_delete.html:40
-#, python-format
-msgid ""
-"\n"
-"                    Delete product variant <strong>%(title)s</strong> - are "
-"you sure?\n"
-"                "
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/product_delete.html:44
-#, python-format
-msgid ""
-"\n"
-"                    Delete product <strong>%(title)s</strong> - are you "
-"sure?\n"
-"                "
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/product_delete.html:52
-msgid "This will also delete the following child products:"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/product_list.html:33
-msgid "Create new product"
-msgstr "建立新产品"
-
-#: templates/oscar/dashboard/catalogue/product_list.html:38
-msgid "New Product"
-msgstr "新商品"
-
-#: templates/oscar/dashboard/catalogue/product_list.html:45
-msgid "Search Products"
-msgstr "搜索产品"
-
-#: templates/oscar/dashboard/catalogue/product_update.html:47
-#, python-format
-msgid ""
-"\n"
-"                            You are currently editing a product variant of\n"
-"                            <a href=\"%(parent_url)s\">%(title)s</a>.\n"
-"                        "
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/product_update.html:62
-msgid "Sections"
-msgstr "段落"
-
-#: templates/oscar/dashboard/catalogue/product_update.html:74
-#: templates/oscar/dashboard/catalogue/product_update.html:104
-#: templates/oscar/dashboard/orders/line_detail.html:36
-msgid "Product details"
-msgstr "商品细节"
-
-#: templates/oscar/dashboard/catalogue/product_update.html:82
-msgid "Images"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/product_update.html:85
-#: templates/oscar/dashboard/catalogue/product_update.html:189
-msgid "Stock and pricing"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/product_update.html:91
-msgid "Upselling"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/product_update.html:149
-msgid "Product Type:"
-msgstr "商品种类："
-
-#: templates/oscar/dashboard/catalogue/product_update.html:170
-msgid "Upload, change or remove images"
-msgstr "上传、修改或删除图片"
-
-#: templates/oscar/dashboard/catalogue/product_update.html:195
-msgid "SKU"
-msgstr "SKU"
-
-#: templates/oscar/dashboard/catalogue/product_update.html:197
-msgid "Num in stock"
-msgstr "存货量"
-
-#: templates/oscar/dashboard/catalogue/product_update.html:198
-msgid "Num allocated"
-msgstr "已分配量"
-
-#: templates/oscar/dashboard/catalogue/product_update.html:199
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:51
-msgid "Low stock threshold"
-msgstr "低库存"
-
-#: templates/oscar/dashboard/catalogue/product_update.html:202
-msgid "Cost price"
-msgstr "成本价"
-
-#: templates/oscar/dashboard/catalogue/product_update.html:203
-msgid "Price (excl tax)"
-msgstr "价格(不包含税)"
-
-#: templates/oscar/dashboard/catalogue/product_update.html:204
-msgid "Retail price"
-msgstr "零售价格"
-
-#: templates/oscar/dashboard/catalogue/product_update.html:252
-msgid "Add variant"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/product_update.html:281
-msgid "This product does not have any variants."
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/product_update.html:283
-msgid "One can't add variants to this product at this point."
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/product_update.html:285
-msgid "This is likely because this product still has stock records."
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/product_update.html:301
-msgid "Recommended products"
-msgstr "推荐商品"
-
-#: templates/oscar/dashboard/catalogue/product_update.html:329
-msgid "Save and add another variant"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/product_update.html:333
-msgid "Save and continue editing"
-msgstr "保存并继续编辑"
-
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:38
-#: templates/oscar/dashboard/ranges/range_list.html:50
-msgid "All"
-msgstr "所有"
-
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:52
-msgid "Current available stock"
-msgstr "当前可用的存货"
-
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:53
-msgid "Date alert raised"
-msgstr "提醒发生日期"
-
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:77
-msgid "No stock alerts found."
-msgstr "没有发现存货提醒"
-
-#: templates/oscar/dashboard/catalogue/messages/product_saved.html:10
-#, python-format
-msgid ""
-"\n"
-"                    Created product variant '%(name)s'.\n"
-"                "
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/messages/product_saved.html:14
-#, python-format
-msgid ""
-"\n"
-"                    Created variant of '%(parent_name)s'.\n"
-"                "
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/messages/product_saved.html:20
-#, python-format
-msgid ""
-"\n"
-"                    Updated product variant '%(name)s'.\n"
-"                "
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/messages/product_saved.html:24
-#, python-format
-msgid ""
-"\n"
-"                    Updated a variant of '%(parent_name)s'.\n"
-"                "
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/messages/product_saved.html:33
-#, python-format
-msgid ""
-"\n"
-"                Created product '%(name)s'.\n"
-"            "
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/messages/product_saved.html:37
-#, python-format
-msgid ""
-"\n"
-"                Updated product '%(name)s'.\n"
-"            "
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/messages/product_saved.html:48
-#: templates/oscar/dashboard/pages/messages/saved.html:10
-#: templates/oscar/dashboard/ranges/messages/range_saved.html:6
-msgid "Edit again"
-msgstr "再次编辑"
-
-#: templates/oscar/dashboard/catalogue/messages/product_saved.html:49
-msgid "View it on the site"
-msgstr "在网站上查看它"
-
-#: templates/oscar/dashboard/comms/detail.html:40
-#: templates/oscar/dashboard/comms/detail.html:75
-msgid "Preview"
-msgstr "预览"
-
-#: templates/oscar/dashboard/comms/detail.html:44
-msgid "Edit email"
-msgstr "编辑电子邮件"
-
-#: templates/oscar/dashboard/comms/detail.html:53
-msgid "Email content"
-msgstr "邮件内容"
-
-#: templates/oscar/dashboard/comms/detail.html:56
-msgid "These fields are rendered using Django's template system."
-msgstr "这些字段被 Django 的模版系统渲染。"
-
-#: templates/oscar/dashboard/comms/detail.html:57
-msgid "You can use the following variables:"
-msgstr "您可以使用下列变量"
-
-#: templates/oscar/dashboard/comms/detail.html:60
-msgid "The full name of the user (if they have one)"
-msgstr "该用户全名(如果有的话)"
-
-#: templates/oscar/dashboard/comms/detail.html:62
-msgid "The user's email address"
-msgstr "该用户的邮件地址"
-
-#: templates/oscar/dashboard/comms/detail.html:64
-msgid "The name of the site (eg example.com)"
-msgstr "网站地址(比如 example.com)"
-
-#: templates/oscar/dashboard/comms/detail.html:79
-msgid "View a preview of this email using order:"
-msgstr "用如下顺序查看这个电子邮件的预览"
-
-#: templates/oscar/dashboard/comms/detail.html:82
-msgid "View preview"
-msgstr "查看预览"
-
-#: templates/oscar/dashboard/comms/detail.html:83
-msgid "or send a preview to:"
-msgstr "或者发送预览到："
-
-#: templates/oscar/dashboard/comms/detail.html:85
-msgid "Send preview email"
-msgstr "发送预览邮件"
-
-#: templates/oscar/dashboard/comms/detail.html:95
-msgid "Body text"
-msgstr "内容简述"
-
-#: templates/oscar/dashboard/comms/list.html:53
-msgid "There are no defined emails to edit."
-msgstr "没有指定了的电子邮件可供编辑"
-
 #: templates/oscar/dashboard/offers/benefit_form.html:14
 msgid "Build a new incentive"
 msgstr "建立一个新的动机"
@@ -7296,8 +7145,7 @@ msgstr "建立一个新的动机"
 #, python-format
 msgid ""
 "\n"
-"        Ranges can be created and edited from within the <a href="
-"\"%(range_list_url)s\">range dashboard</a>.\n"
+"        Ranges can be created and edited from within the <a href=\"%(range_list_url)s\">range dashboard</a>.\n"
 "        "
 msgstr ""
 
@@ -7456,9 +7304,7 @@ msgid ""
 "\n"
 "        Order %(number)s - Line #%(id)s\n"
 "    "
-msgstr ""
-"\n"
-"订单%(number)s -产品线#%(id)s"
+msgstr "\n订单%(number)s -产品线#%(id)s"
 
 #: templates/oscar/dashboard/orders/line_detail.html:24
 #, python-format
@@ -7594,7 +7440,7 @@ msgid "Change line status to"
 msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:270
-#: templates/oscar/dashboard/orders/order_list.html:142
+#: templates/oscar/dashboard/orders/order_list.html:141
 msgid "choose new status"
 msgstr "选择新的状态"
 
@@ -7626,17 +7472,17 @@ msgid "Go!"
 msgstr "前进！"
 
 #: templates/oscar/dashboard/orders/order_detail.html:323
-#: templates/oscar/dashboard/orders/order_list.html:136
+#: templates/oscar/dashboard/orders/order_list.html:135
 msgid "Change order status"
 msgstr "更改订单状态"
 
 #: templates/oscar/dashboard/orders/order_detail.html:327
-#: templates/oscar/dashboard/orders/order_list.html:152
+#: templates/oscar/dashboard/orders/order_list.html:149
 msgid "Change status"
 msgstr "更改状态"
 
 #: templates/oscar/dashboard/orders/order_detail.html:329
-#: templates/oscar/dashboard/orders/order_list.html:154
+#: templates/oscar/dashboard/orders/order_list.html:151
 msgid "This order can't have its status changed."
 msgstr ""
 
@@ -7644,12 +7490,9 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                                                                %(title)s "
-"(quantity %(event_qty)s/%(total_qty)s)\n"
+"                                                                %(title)s (quantity %(event_qty)s/%(total_qty)s)\n"
 "                                                            "
-msgstr ""
-"\n"
-"%(title)s (数量 %(event_qty)s/%(total_qty)s)"
+msgstr "\n%(title)s (数量 %(event_qty)s/%(total_qty)s)"
 
 #: templates/oscar/dashboard/orders/order_detail.html:373
 msgid "No shipping events."
@@ -7736,13 +7579,30 @@ msgstr "关闭"
 msgid "Download selected orders as a CSV"
 msgstr "用CSV文件下载指定的订单"
 
-#: templates/oscar/dashboard/orders/order_list.html:119
+#: templates/oscar/dashboard/orders/order_list.html:118
 msgid "Deleted"
 msgstr "已删除"
 
-#: templates/oscar/dashboard/orders/order_list.html:166
+#: templates/oscar/dashboard/orders/order_list.html:163
 msgid "No orders found."
 msgstr "没有找到订单。"
+
+#: templates/oscar/dashboard/orders/partials/bulk_edit_form.html:6
+msgid "Print Packaging Slips"
+msgstr "打印包装清单"
+
+#: templates/oscar/dashboard/orders/partials/bulk_edit_form.html:10
+msgid "Mark as"
+msgstr "标注为"
+
+#: templates/oscar/dashboard/orders/partials/bulk_edit_form.html:15
+#: templates/oscar/dashboard/orders/partials/bulk_edit_form.html:20
+msgid "Change order status to"
+msgstr "改变订单状态为"
+
+#: templates/oscar/dashboard/orders/partials/bulk_edit_form.html:27
+msgid "Done"
+msgstr "完成"
 
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:22
 msgid "Edit shipping address"
@@ -7772,23 +7632,6 @@ msgstr "总结"
 #: templates/oscar/dashboard/orders/statistics.html:57
 msgid "Order status breakdown"
 msgstr "订单状态分解显示"
-
-#: templates/oscar/dashboard/orders/partials/bulk_edit_form.html:5
-msgid "Print Packaging Slips"
-msgstr "打印包装清单"
-
-#: templates/oscar/dashboard/orders/partials/bulk_edit_form.html:9
-msgid "Mark as"
-msgstr "标注为"
-
-#: templates/oscar/dashboard/orders/partials/bulk_edit_form.html:14
-#: templates/oscar/dashboard/orders/partials/bulk_edit_form.html:19
-msgid "Change order status to"
-msgstr "改变订单状态为"
-
-#: templates/oscar/dashboard/orders/partials/bulk_edit_form.html:26
-msgid "Done"
-msgstr "完成"
 
 #: templates/oscar/dashboard/pages/delete.html:7
 #: templates/oscar/dashboard/pages/delete.html:21
@@ -7820,9 +7663,18 @@ msgid ""
 "\n"
 "        Page <strong>%(title)s</strong> saved!\n"
 "    "
-msgstr ""
+msgstr "\n页面 <strong>%(title)s</strong> 已保存!"
+
+#: templates/oscar/dashboard/partners/messages/user_unlinked.html:2
+#, python-format
+msgid ""
 "\n"
-"页面 <strong>%(title)s</strong> 已保存!"
+"User %(user_name)s was unlinked from %(partner_name)s.\n"
+msgstr "\n用户%(user_name)s 被取消从 %(partner_name)s的连系.\n"
+
+#: templates/oscar/dashboard/partners/messages/user_unlinked.html:5
+msgid "Undo"
+msgstr "复原"
 
 #: templates/oscar/dashboard/partners/partner_delete.html:7
 #: templates/oscar/dashboard/partners/partner_list.html:94
@@ -7892,22 +7744,17 @@ msgstr "更新细节"
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:40
 msgid ""
-"A partial email address can be entered (eg '@example.com') to match multiple "
-"addresses."
-msgstr ""
-"一个不完全的电子邮件地址(例如 '@example.com') 可以被输入以匹配多个电子邮件地"
-"址"
+"A partial email address can be entered (eg '@example.com') to match multiple"
+" addresses."
+msgstr "一个不完全的电子邮件地址(例如 '@example.com') 可以被输入以匹配多个电子邮件地址"
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:68
 #, python-format
 msgid ""
 "\n"
-"                                                User is already linked to "
-"%(name)s.\n"
+"                                                User is already linked to %(name)s.\n"
 "                                            "
-msgstr ""
-"\n"
-"用户已经被连接到%(name)s."
+msgstr "\n用户已经被连接到%(name)s."
 
 #: templates/oscar/dashboard/partners/partner_user_select.html:74
 msgid "Link user"
@@ -7916,19 +7763,6 @@ msgstr "连系用户"
 #: templates/oscar/dashboard/partners/partner_user_select.html:86
 msgid "No users found."
 msgstr "没有找到用户."
-
-#: templates/oscar/dashboard/partners/messages/user_unlinked.html:2
-#, python-format
-msgid ""
-"\n"
-"User %(user_name)s was unlinked from %(partner_name)s.\n"
-msgstr ""
-"\n"
-"用户%(user_name)s 被取消从 %(partner_name)s的连系.\n"
-
-#: templates/oscar/dashboard/partners/messages/user_unlinked.html:5
-msgid "Undo"
-msgstr "复原"
 
 #: templates/oscar/dashboard/promotions/delete.html:7
 #: templates/oscar/dashboard/promotions/delete.html:21
@@ -7960,11 +7794,10 @@ msgstr "删除促销"
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:30
 #, python-format
 msgid ""
-"Remove %(object.content_object.type)s content block <strong>%(object.name)s</"
-"strong> from page <strong>%(object.page_url)s</strong> - are you sure?"
-msgstr ""
-"从页面<strong>%(object.page_url)s</strong> 删除内容"
-"块%(object.content_object.type)s<strong>%(object.name)s</strong> -您确定么？"
+"Remove %(object.content_object.type)s content block "
+"<strong>%(object.name)s</strong> from page "
+"<strong>%(object.page_url)s</strong> - are you sure?"
+msgstr "从页面<strong>%(object.page_url)s</strong> 删除内容块%(object.content_object.type)s<strong>%(object.name)s</strong> -您确定么？"
 
 #: templates/oscar/dashboard/promotions/form.html:28
 msgid "Content block"
@@ -8067,6 +7900,56 @@ msgstr "创建块"
 msgid "Number of times used"
 msgstr "使用次数"
 
+#: templates/oscar/dashboard/ranges/messages/range_products_saved.html:2
+#, python-format
+msgid ""
+"\n"
+"    <p>File <strong>%(filename)s</strong> processed.</p>\n"
+msgstr ""
+
+#: templates/oscar/dashboard/ranges/messages/range_products_saved.html:9
+#, python-format
+msgid ""
+"\n"
+"                <strong>%(n)s</strong> products added\n"
+"            "
+msgstr ""
+
+#: templates/oscar/dashboard/ranges/messages/range_products_saved.html:16
+#, python-format
+msgid ""
+"\n"
+"                There were <strong>%(n)s</strong> duplicate products in the file\n"
+"            "
+msgstr ""
+
+#: templates/oscar/dashboard/ranges/messages/range_products_saved.html:23
+#, python-format
+msgid ""
+"\n"
+"                There were <strong>%(n)s</strong> products in the file that couldn't be found in the catalogue\n"
+"            "
+msgstr ""
+
+#: templates/oscar/dashboard/ranges/messages/range_products_saved.html:30
+msgid "Edit range metadata"
+msgstr "编辑范围复式数据"
+
+#: templates/oscar/dashboard/ranges/messages/range_products_saved.html:31
+msgid "Return to ranges homepage"
+msgstr "返回范围主页"
+
+#: templates/oscar/dashboard/ranges/messages/range_saved.html:2
+#, python-format
+msgid ""
+"\n"
+"<p>Range <strong>%(name)s</strong> saved.</p>\n"
+msgstr "\n<p>文件 <strong>%(name)s</strong> 已保存.</p>\n"
+
+#: templates/oscar/dashboard/ranges/messages/range_saved.html:7
+msgid "Edit included products"
+msgstr "编辑包含的商品"
+
 #: templates/oscar/dashboard/ranges/range_delete.html:7
 #, python-format
 msgid "Delete range '%(name)s'?"
@@ -8110,9 +7993,7 @@ msgstr "产品"
 msgid ""
 "This range contains all products. To add products manually, please unselect "
 "the 'Includes All Products' option on the edit range page."
-msgstr ""
-"这个范围包括所有产品。请反选择爱编辑范围页面中的选项’包含所有商品‘，以手动添"
-"加商品"
+msgstr "这个范围包括所有产品。请反选择爱编辑范围页面中的选项’包含所有商品‘，以手动添加商品"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:39
 msgid "Add products"
@@ -8165,57 +8046,6 @@ msgstr "编辑范围"
 #: templates/oscar/dashboard/ranges/range_product_list.html:137
 msgid "return to range list"
 msgstr "返回到范围列表"
-
-#: templates/oscar/dashboard/ranges/messages/range_products_saved.html:2
-#, python-format
-msgid ""
-"\n"
-"<p>File <strong>%(filename)s</strong> processed.</p>\n"
-msgstr ""
-"\n"
-"<p>文件 <strong>%(filename)s</strong> 已处理.</p>\n"
-
-#: templates/oscar/dashboard/ranges/messages/range_products_saved.html:8
-#, python-format
-msgid "<strong>%(upload.num_new_skus)s</strong> products added"
-msgstr "<strong>%(upload.num_new_skus)s</strong> 商品已添加"
-
-#: templates/oscar/dashboard/ranges/messages/range_products_saved.html:11
-#, python-format
-msgid ""
-"There were <strong>%(upload.num_duplicate_skus)s</strong> duplicate products "
-"in the file"
-msgstr "文件中有<strong>%(upload.num_duplicate_skus)s</strong> 重复商品"
-
-#: templates/oscar/dashboard/ranges/messages/range_products_saved.html:14
-#, python-format
-msgid ""
-"There were <strong>%(upload.num_unknown_skus)s</strong> products in the file "
-"that couldn't be found in the catalogue"
-msgstr ""
-"在本文件中，在商品目录里有 <strong>%(upload.num_unknown_skus)s</strong> 个商"
-"品不能被找到"
-
-#: templates/oscar/dashboard/ranges/messages/range_products_saved.html:18
-msgid "Edit range metadata"
-msgstr "编辑范围复式数据"
-
-#: templates/oscar/dashboard/ranges/messages/range_products_saved.html:19
-msgid "Return to ranges homepage"
-msgstr "返回范围主页"
-
-#: templates/oscar/dashboard/ranges/messages/range_saved.html:2
-#, python-format
-msgid ""
-"\n"
-"<p>Range <strong>%(name)s</strong> saved.</p>\n"
-msgstr ""
-"\n"
-"<p>文件 <strong>%(name)s</strong> 已保存.</p>\n"
-
-#: templates/oscar/dashboard/ranges/messages/range_saved.html:7
-msgid "Edit included products"
-msgstr "编辑包含的商品"
 
 #: templates/oscar/dashboard/reports/index.html:15
 msgid "Reporting Dashboard"
@@ -8292,6 +8122,45 @@ msgstr "评论#%(review.id)s"
 #: templates/oscar/dashboard/reviews/review_update.html:33
 msgid "Review information"
 msgstr "评论信息"
+
+#: templates/oscar/dashboard/shipping/messages/band_created.html:3
+#, python-format
+msgid ""
+"\n"
+"    <p>A weight band has been added to the <strong>%(name)s</strong> shipping method.</p>\n"
+msgstr ""
+
+#: templates/oscar/dashboard/shipping/messages/band_deleted.html:3
+#, python-format
+msgid ""
+"\n"
+"    <p>Weight band deleted from the <strong>%(name)s</strong> shipping method \n"
+msgstr ""
+
+#: templates/oscar/dashboard/shipping/messages/band_updated.html:3
+msgid "Weight band updated"
+msgstr ""
+
+#: templates/oscar/dashboard/shipping/messages/method_created.html:3
+#, python-format
+msgid ""
+"\n"
+"<p>A shipping method <strong>%(name)s</strong> has been created.</p>\n"
+msgstr ""
+
+#: templates/oscar/dashboard/shipping/messages/method_deleted.html:3
+#, python-format
+msgid ""
+"\n"
+"    <p>The <strong>%(name)s</strong> shipping method has been deleted.</p>\n"
+msgstr ""
+
+#: templates/oscar/dashboard/shipping/messages/method_updated.html:3
+#, python-format
+msgid ""
+"\n"
+"    <p>The <strong>%(name)s</strong> shipping method has been updated.</p>\n"
+msgstr ""
 
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:6
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:25
@@ -8390,141 +8259,6 @@ msgstr ""
 msgid "No shipping methods found."
 msgstr "没有找到配送方式"
 
-#: templates/oscar/dashboard/shipping/messages/band_created.html:3
-#, python-format
-msgid ""
-"\n"
-"    <p>A weight band has been added to the <strong>%(name)s</strong> "
-"shipping method.</p>\n"
-msgstr ""
-
-#: templates/oscar/dashboard/shipping/messages/band_deleted.html:3
-#, python-format
-msgid ""
-"\n"
-"    <p>Weight band deleted from the <strong>%(name)s</strong> shipping "
-"method \n"
-msgstr ""
-
-#: templates/oscar/dashboard/shipping/messages/band_updated.html:3
-msgid "Weight band updated"
-msgstr ""
-
-#: templates/oscar/dashboard/shipping/messages/method_created.html:3
-#, python-format
-msgid ""
-"\n"
-"<p>A shipping method <strong>%(name)s</strong> has been created.</p>\n"
-msgstr ""
-
-#: templates/oscar/dashboard/shipping/messages/method_deleted.html:3
-#, python-format
-msgid ""
-"\n"
-"    <p>The <strong>%(name)s</strong> shipping method has been deleted.</p>\n"
-msgstr ""
-
-#: templates/oscar/dashboard/shipping/messages/method_updated.html:3
-#, python-format
-msgid ""
-"\n"
-"    <p>The <strong>%(name)s</strong> shipping method has been updated.</p>\n"
-msgstr ""
-
-#: templates/oscar/dashboard/users/detail.html:30
-msgid "General"
-msgstr "总体的"
-
-#: templates/oscar/dashboard/users/detail.html:44
-msgid "Yes,No"
-msgstr "是，否"
-
-#: templates/oscar/dashboard/users/detail.html:48
-msgid "Superuser"
-msgstr "超级用户"
-
-#: templates/oscar/dashboard/users/detail.html:49
-#: templates/oscar/dashboard/users/detail.html:53
-msgid "True,False"
-msgstr "对，不对"
-
-#: templates/oscar/dashboard/users/detail.html:52
-msgid "Staff"
-msgstr "工作人员"
-
-#: templates/oscar/dashboard/users/detail.html:56
-msgid "Last login"
-msgstr "上次登录"
-
-#: templates/oscar/dashboard/users/detail.html:60
-msgid "Date joined"
-msgstr "加入日期"
-
-#: templates/oscar/dashboard/users/detail.html:65
-msgid "Products viewed"
-msgstr "查看过的商品"
-
-#: templates/oscar/dashboard/users/detail.html:69
-#: templates/oscar/dashboard/vouchers/voucher_detail.html:49
-msgid "Number of orders"
-msgstr "订单数量"
-
-#: templates/oscar/dashboard/users/detail.html:73
-msgid "Number of ordered items"
-msgstr "下订单了的商品数量"
-
-#: templates/oscar/dashboard/users/detail.html:81
-msgid "Reviews written"
-msgstr "评价数量"
-
-#: templates/oscar/dashboard/users/detail.html:91
-msgid "Send password reset email"
-msgstr "发送密码更改邮件"
-
-#: templates/oscar/dashboard/users/detail.html:119
-msgid "Order Number"
-msgstr "订单号"
-
-#: templates/oscar/dashboard/users/detail.html:121
-msgid "Total value"
-msgstr "总价"
-
-#: templates/oscar/dashboard/users/detail.html:137
-msgid "This customer has not placed any orders yet."
-msgstr "这个顾客尚未下任何订单"
-
-#: templates/oscar/dashboard/users/detail.html:165
-msgid "This customer has not saved any addresses."
-msgstr "这个顾客尚未保存任何地址"
-
-#: templates/oscar/dashboard/users/detail.html:177
-msgid "Product ID"
-msgstr "产品ID"
-
-#: templates/oscar/dashboard/users/detail.html:193
-msgid "This customer has not written any reviews yet."
-msgstr "这位顾客尚未写过任何评价。"
-
-#: templates/oscar/dashboard/users/index.html:49
-msgid "No customers found."
-msgstr "没有找到顾客。"
-
-#: templates/oscar/dashboard/users/table.html:8
-msgid "Bulk Actions"
-msgstr "批量操作"
-
-#: templates/oscar/dashboard/users/table.html:9
-msgid "With selected customers:"
-msgstr "对于选中了的顾客："
-
-#: templates/oscar/dashboard/users/table.html:11
-msgid "Make active"
-msgstr "使其有效"
-
-#: templates/oscar/dashboard/users/table.html:14
-msgid "Make inactive"
-msgstr "使无效"
-
 #: templates/oscar/dashboard/users/alerts/delete.html:8
 #: templates/oscar/dashboard/users/alerts/delete.html:21
 #: templates/oscar/dashboard/users/alerts/update.html:20
@@ -8574,6 +8308,100 @@ msgstr "没有发现提醒"
 msgid "Update alert #%(id)s"
 msgstr "更新提醒#%(id)s"
 
+#: templates/oscar/dashboard/users/detail.html:30
+msgid "General"
+msgstr "总体的"
+
+#: templates/oscar/dashboard/users/detail.html:44
+msgid "Yes,No"
+msgstr "是，否"
+
+#: templates/oscar/dashboard/users/detail.html:48
+msgid "Superuser"
+msgstr "超级用户"
+
+#: templates/oscar/dashboard/users/detail.html:49
+#: templates/oscar/dashboard/users/detail.html:53
+msgid "True,False"
+msgstr "对，不对"
+
+#: templates/oscar/dashboard/users/detail.html:52
+msgid "Staff"
+msgstr "工作人员"
+
+#: templates/oscar/dashboard/users/detail.html:56
+msgid "Last login"
+msgstr "上次登录"
+
+#: templates/oscar/dashboard/users/detail.html:60
+msgid "Date joined"
+msgstr "加入日期"
+
+#: templates/oscar/dashboard/users/detail.html:66
+msgid "Products viewed"
+msgstr "查看过的商品"
+
+#: templates/oscar/dashboard/users/detail.html:70
+#: templates/oscar/dashboard/vouchers/voucher_detail.html:49
+msgid "Number of orders"
+msgstr "订单数量"
+
+#: templates/oscar/dashboard/users/detail.html:74
+msgid "Number of ordered items"
+msgstr "下订单了的商品数量"
+
+#: templates/oscar/dashboard/users/detail.html:84
+msgid "Reviews written"
+msgstr "评价数量"
+
+#: templates/oscar/dashboard/users/detail.html:94
+msgid "Send password reset email"
+msgstr "发送密码更改邮件"
+
+#: templates/oscar/dashboard/users/detail.html:121
+msgid "Order Number"
+msgstr "订单号"
+
+#: templates/oscar/dashboard/users/detail.html:123
+msgid "Total value"
+msgstr "总价"
+
+#: templates/oscar/dashboard/users/detail.html:139
+msgid "This customer has not placed any orders yet."
+msgstr "这个顾客尚未下任何订单"
+
+#: templates/oscar/dashboard/users/detail.html:167
+msgid "This customer has not saved any addresses."
+msgstr "这个顾客尚未保存任何地址"
+
+#: templates/oscar/dashboard/users/detail.html:179
+msgid "Product ID"
+msgstr "产品ID"
+
+#: templates/oscar/dashboard/users/detail.html:195
+msgid "This customer has not written any reviews yet."
+msgstr "这位顾客尚未写过任何评价。"
+
+#: templates/oscar/dashboard/users/index.html:49
+msgid "No customers found."
+msgstr "没有找到顾客。"
+
+#: templates/oscar/dashboard/users/table.html:8
+msgid "Bulk Actions"
+msgstr "批量操作"
+
+#: templates/oscar/dashboard/users/table.html:9
+msgid "With selected customers:"
+msgstr "对于选中了的顾客："
+
+#: templates/oscar/dashboard/users/table.html:11
+msgid "Make active"
+msgstr "使其有效"
+
+#: templates/oscar/dashboard/users/table.html:14
+msgid "Make inactive"
+msgstr "使无效"
+
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:8
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:30
 #, python-format
@@ -8621,9 +8449,25 @@ msgstr "未激活"
 msgid "No vouchers found."
 msgstr "没有找到促销券"
 
+#: templates/oscar/error.html:9
+msgid "Sorry!"
+msgstr "不好意思！"
+
+#: templates/oscar/error.html:12
+msgid "Return to previous page"
+msgstr "返回上一页"
+
+#: templates/oscar/error.html:13
+msgid "Go to homepage"
+msgstr "前往主页"
+
 #: templates/oscar/flatpages/default.html:11
 msgid "Edit this page"
 msgstr ""
+
+#: templates/oscar/login_forbidden.html:5
+msgid "This page is only available to users who aren't logged in."
+msgstr "这个页面是专为没有登录的用户的"
 
 #: templates/oscar/offer/detail.html:30
 msgid " This offer is no longer available."
@@ -8685,9 +8529,7 @@ msgid ""
 "\n"
 "                        Total: %(total)s\n"
 "                    "
-msgstr ""
-"\n"
-"总计：%(total)s"
+msgstr "\n总计：%(total)s"
 
 #: templates/oscar/partials/nav_primary.html:38
 msgid "Browse store"
@@ -8700,9 +8542,7 @@ msgid ""
 "\n"
 "                Page %(page_num)s of %(total_pages)s\n"
 "            "
-msgstr ""
-"\n"
-"第%(page_num)s页，共%(total_pages)s页"
+msgstr "\n第%(page_num)s页，共%(total_pages)s页"
 
 #: templates/oscar/promotions/baseproductlist.html:19
 msgid "See more"
@@ -8772,16 +8612,14 @@ msgstr "邮件已发送"
 #: templates/oscar/registration/password_reset_done.html:24
 msgid ""
 "\n"
-"        We've e-mailed you instructions for resetting your password. You "
-"should be receiving it shortly.\n"
+"        We've e-mailed you instructions for resetting your password. You should be receiving it shortly.\n"
 "    "
 msgstr ""
 
 #: templates/oscar/registration/password_reset_done.html:29
 msgid ""
 "\n"
-"        If you don't receive an email, please make sure you've entered the "
-"address you registered with, and check\n"
+"        If you don't receive an email, please make sure you've entered the address you registered with, and check\n"
 "        your spam folder.\n"
 "    "
 msgstr ""
@@ -8790,9 +8628,7 @@ msgstr ""
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll e-mail "
 "instructions for setting a new one."
-msgstr ""
-"忘记了您的密码？在下面输入您的电子邮件地址，然后我们将会电邮给您设置新密码的"
-"步骤"
+msgstr "忘记了您的密码？在下面输入您的电子邮件地址，然后我们将会电邮给您设置新密码的步骤"
 
 #: templates/oscar/registration/password_reset_form.html:25
 msgid "Send reset email"
@@ -8808,16 +8644,13 @@ msgid ""
 "\n"
 "        Products matching \"%(q)s\"\n"
 "    "
-msgstr ""
-"\n"
-"商品匹配\"%(q)s\""
+msgstr "\n商品匹配\"%(q)s\""
 
 #: templates/oscar/search/results.html:56
 #, python-format
 msgid ""
 "\n"
-"                    Found <strong>%(num_results)s</strong> results, showing "
-"<strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
+"                    Found <strong>%(num_results)s</strong> results, showing <strong>%(start)s</strong> to <strong>%(end)s</strong>.\n"
 "                "
 msgstr ""
 
@@ -8841,13 +8674,9 @@ msgstr "发现 <strong>0</strong> 个结果"
 #, python-format
 msgid ""
 "\n"
-"                        Did you mean <a href=\"%(search_url)s?q="
-"%(suggestion)s\">\"%(suggestion)s\"</a>?\n"
+"                        Did you mean <a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>?\n"
 "                    "
-msgstr ""
-"\n"
-"您的意思是<a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</"
-"a>？"
+msgstr "\n您的意思是<a href=\"%(search_url)s?q=%(suggestion)s\">\"%(suggestion)s\"</a>？"
 
 #: templatetags/history_tags.py:62
 msgid "Back to search results"
@@ -8866,11 +8695,11 @@ msgstr "您需要选择一些%ss"
 msgid "This is not a valid international phone format."
 msgstr "这不是有效的国家电话号码格式"
 
-#: views/generic.py:204
+#: views/generic.py:203
 #, python-format
 msgid "This is not a valid local phone format for %s."
 msgstr "这不是为%s合法的本地电话号码"
 
-#: views/generic.py:209
+#: views/generic.py:208
 msgid "This is not a valid local or international phone format."
 msgstr "这不是有效的本地或国家电话号码格式"
