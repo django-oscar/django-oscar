@@ -36,9 +36,7 @@ Compatibility
 This release adds support for Django 1.7. Per our policy of always supporting
 two versions of Django, support for Django 1.5 has been dropped.
 
-This release also adds full Python 3.3 and 3.4 support. But due to South
-not supporting Python 3, Python 3 support is only supported in combination
-with Django 1.7 and its new migration framework.
+This release also adds full Python 3.3 and 3.4 support.
 
 If you're using ``pysolr`` for search, you'll need to upgrade to version 3.2 or
 later.

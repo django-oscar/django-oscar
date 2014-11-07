@@ -22,7 +22,7 @@ sites/sandbox/manage.py migrate
 sites/sandbox/manage.py makemigrations ${APPS[@]}
 
 echo "Generating Django 1.6 migrations"
-pip install "Django==1.6.8" "South==1.0"
+pip install "Django==1.6.8" "South==1.0.1"
 rm -f sites/sandbox/db.sqlite
 sites/sandbox/manage.py syncdb --noinput
 sites/sandbox/manage.py migrate

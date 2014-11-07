@@ -13,14 +13,6 @@ env:
         - DJANGO=Django==1.6.8
         - DJANGO=Django==1.7.1
 
-matrix:
-    # South does not support Python 3.x
-    allow_failures:
-        - env: "DJANGO=Django==1.6.8"
-          python: '3.3'
-        - env: "DJANGO=Django==1.6.8"
-          python: '3.4'
-
 install:
     - make install
     - easy_install $DJANGO
