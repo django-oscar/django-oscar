@@ -29,5 +29,4 @@ script:
 
 after_success:
     - coveralls
-    # TODO: Re-enable once 0.8 final is released
-    # - ./transifex.sh
+    - ./transifex.sh
