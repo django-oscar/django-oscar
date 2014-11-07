@@ -14,11 +14,7 @@ has flexibility baked into its core so that complicated requirements can be
 elegantly captured. You can tame a spaghetti domain without writing spaghetti
 code.
 
-Oscar is maintained by `Tangent Snowball`_, who are experts in building complex
-transactional sites for both B2C and B2B markets. Years of e-commerce
-hard-earned experience informs Oscar's design. 
-
-.. _`Tangent Snowball`: http://www.tangentsnowball.com/
+Years of e-commerce hard-earned experience informs Oscar's design.
 
 Oscar is "domain-driven" in the sense that the core business objects can be
 customised to suit the domain at hand. In this way, your application can
@@ -80,7 +76,6 @@ Example requirements that Oscar projects already handle:
 Oscar is used in production in several applications to sell everything from beer
 mats to iPads.  The `source is on GitHub`_ - contributions are always welcome.
 
-.. _`Tangent Labs`: http://www.tangentlabs.co.uk
 .. _`source is on GitHub`: https://github.com/django-oscar/django-oscar
 
 First steps
