@@ -12,7 +12,7 @@ if not is_model_registered('partner', 'Partner'):
     class Partner(AbstractPartner):
         pass
 
-    __all__.append('PartnerAddress')
+    __all__.append('Partner')
 
 
 if not is_model_registered('partner', 'PartnerAddress'):
