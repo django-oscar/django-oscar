@@ -14,5 +14,5 @@ view class. This is required when a different basket to ``request.basket`` is
 intended to be used in a preview (this is what `django-oscar-paypal`_ needs to
 do).
 
-.. _`makes a change`: https://github.com/tangentlabs/django-oscar/commit/fbce17c
-.. _`django-oscar-paypal`: https://github.com/tangentlabs/django-oscar-paypal
+.. _`makes a change`: https://github.com/django-oscar/django-oscar/commit/fbce17c
+.. _`django-oscar-paypal`: https://github.com/django-oscar/django-oscar-paypal

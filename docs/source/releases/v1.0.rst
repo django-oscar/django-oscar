@@ -494,8 +494,8 @@ Basket app changes
   been adjusted to take the basket and the purchase info tuple as parameters
   instead of the request instance (c74f57bf_ and 8ba283e8_).
 
-.. _c74f57bf: https://github.com/tangentlabs/django-oscar/commit/c74f57bf434661877f4d2d2259e7e7eb18b34951#diff-d200ac8746274e0307f512af886e1f3eR148
-.. _8ba283e8: https://github.com/tangentlabs/django-oscar/commit/8ba283e8c4239e4eff95da5e8097a17ecfadf5f5
+.. _c74f57bf: https://github.com/django-oscar/django-oscar/commit/c74f57bf434661877f4d2d2259e7e7eb18b34951#diff-d200ac8746274e0307f512af886e1f3eR148
+.. _8ba283e8: https://github.com/django-oscar/django-oscar/commit/8ba283e8c4239e4eff95da5e8097a17ecfadf5f5
 
 Misc
 ~~~~
@@ -601,7 +601,7 @@ Misc
   e.g. a ``datetime`` import that's pulled in via the star import. Any such
   import errors will cause a loud failure and should be easy to spot and fix.
 
-.. _rewritten: https://github.com/tangentlabs/django-oscar/commit/d8b4dbfed17be90846ea4bc47b5f7b39ad944c24
+.. _rewritten: https://github.com/django-oscar/django-oscar/commit/d8b4dbfed17be90846ea4bc47b5f7b39ad944c24
 
 Migrations
 ~~~~~~~~~~

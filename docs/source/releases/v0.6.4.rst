@@ -21,8 +21,8 @@ The following issues were fixed:
 * `#1275`_ - Dashboard partner user form now checks that the right fields are
   picked up from the user model (see also `#1282`_, `#1283`_)
 
-.. _`#1177`: https://github.com/tangentlabs/django-oscar/issues/1177
-.. _`#1273`: https://github.com/tangentlabs/django-oscar/issues/1273
-.. _`#1275`: https://github.com/tangentlabs/django-oscar/issues/1275
-.. _`#1282`: https://github.com/tangentlabs/django-oscar/issues/1282
-.. _`#1283`: https://github.com/tangentlabs/django-oscar/issues/1283
+.. _`#1177`: https://github.com/django-oscar/django-oscar/issues/1177
+.. _`#1273`: https://github.com/django-oscar/django-oscar/issues/1273
+.. _`#1275`: https://github.com/django-oscar/django-oscar/issues/1275
+.. _`#1282`: https://github.com/django-oscar/django-oscar/issues/1282
+.. _`#1283`: https://github.com/django-oscar/django-oscar/issues/1283

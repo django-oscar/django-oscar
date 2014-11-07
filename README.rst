@@ -38,9 +38,9 @@ Continuous integration status:
 .. image:: https://travis-ci.org/django-oscar/django-oscar.svg?branch=master
     :target: https://travis-ci.org/django-oscar/django-oscar
 
-.. image:: https://coveralls.io/repos/tangentlabs/django-oscar/badge.png?branch=master
+.. image:: https://coveralls.io/repos/django-oscar/django-oscar/badge.png?branch=master
     :alt: Coverage
-    :target: https://coveralls.io/r/tangentlabs/django-oscar
+    :target: https://coveralls.io/r/django-oscar/django-oscar
 
 PyPI status:
 

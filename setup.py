@@ -22,7 +22,7 @@ if PROJECT_DIR:
 
 setup(name='django-oscar',
       version=get_version().replace(' ', '-'),
-      url='https://github.com/tangentlabs/django-oscar',
+      url='https://github.com/django-oscar/django-oscar',
       author="David Winterbottom",
       author_email="david.winterbottom@tangentlabs.co.uk",
       description="A domain-driven e-commerce framework for Django",

@@ -52,9 +52,9 @@ Features:
 * Extension libraries available for many payment gateways, including PayPal_,
   GoCardless_, DataCash_ and more.
 
-.. _PayPal: https://github.com/tangentlabs/django-oscar-paypal
-.. _GoCardless: https://github.com/tangentlabs/django-oscar-gocardless
-.. _DataCash: https://github.com/tangentlabs/django-oscar-datacash
+.. _PayPal: https://github.com/django-oscar/django-oscar-paypal
+.. _GoCardless: https://github.com/django-oscar/django-oscar-gocardless
+.. _DataCash: https://github.com/django-oscar/django-oscar-datacash
 
 Oscar is a good choice if your domain has non-trivial business logic.  Oscar's
 flexibility means it's straightforward to implement business rules that would be
@@ -81,7 +81,7 @@ Oscar is used in production in several applications to sell everything from beer
 mats to iPads.  The `source is on GitHub`_ - contributions are always welcome.
 
 .. _`Tangent Labs`: http://www.tangentlabs.co.uk
-.. _`source is on GitHub`: https://github.com/tangentlabs/django-oscar
+.. _`source is on GitHub`: https://github.com/django-oscar/django-oscar
 
 First steps
 ===========

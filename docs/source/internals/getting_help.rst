@@ -14,5 +14,5 @@ If you think you found a bug, please read
 :doc:`Reporting bugs <contributing/bugs-and-features>` and report it
 in the `GitHub issue tracker`_.
 
-.. _`GitHub issue tracker`: https://github.com/tangentlabs/django-oscar/issues
+.. _`GitHub issue tracker`: https://github.com/django-oscar/django-oscar/issues
 

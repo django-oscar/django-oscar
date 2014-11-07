@@ -37,8 +37,8 @@ django-oscar-paypal_ extension.  Please use that as a reference.
 See also the sandbox for django-oscar-datacash_ which follows a similar pattern.
 
 
-.. _django-oscar-paypal: https://github.com/tangentlabs/django-oscar-paypal/tree/master/sandbox
-.. _django-oscar-datacash: https://github.com/tangentlabs/django-oscar-datacash/tree/master/sandbox
+.. _django-oscar-paypal: https://github.com/django-oscar/django-oscar-paypal/tree/master/sandbox
+.. _django-oscar-datacash: https://github.com/django-oscar/django-oscar-datacash/tree/master/sandbox
 
 Integration into checkout
 -------------------------

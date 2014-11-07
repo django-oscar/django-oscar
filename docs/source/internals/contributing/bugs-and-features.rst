@@ -20,7 +20,7 @@ general points:
 
 All bugs are reported on our `GitHub issue tracker`_.
 
-.. _`GitHub issue tracker`: https://github.com/tangentlabs/django-oscar/issues
+.. _`GitHub issue tracker`: https://github.com/django-oscar/django-oscar/issues
 
 Reporting security issues
 -------------------------

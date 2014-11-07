@@ -73,16 +73,16 @@ The following bugs were fixed:
 * `#1146`_ - Various templates were adjusted to gracefully handle deleted
   products.
 
-.. _`#1109`: https://github.com/tangentlabs/django-oscar/issues/1109
-.. _`#1121`: https://github.com/tangentlabs/django-oscar/issues/1121
-.. _`#1127`: https://github.com/tangentlabs/django-oscar/issues/1127
-.. _`#1128`: https://github.com/tangentlabs/django-oscar/issues/1128
-.. _`#1130`: https://github.com/tangentlabs/django-oscar/issues/1130
-.. _`#1132`: https://github.com/tangentlabs/django-oscar/issues/1132
-.. _`#1133`: https://github.com/tangentlabs/django-oscar/issues/1133
-.. _`#1134`: https://github.com/tangentlabs/django-oscar/issues/1134
-.. _`#1138`: https://github.com/tangentlabs/django-oscar/issues/1138
-.. _`#1146`: https://github.com/tangentlabs/django-oscar/issues/1146
-.. _`#1149`: https://github.com/tangentlabs/django-oscar/issues/1149
+.. _`#1109`: https://github.com/django-oscar/django-oscar/issues/1109
+.. _`#1121`: https://github.com/django-oscar/django-oscar/issues/1121
+.. _`#1127`: https://github.com/django-oscar/django-oscar/issues/1127
+.. _`#1128`: https://github.com/django-oscar/django-oscar/issues/1128
+.. _`#1130`: https://github.com/django-oscar/django-oscar/issues/1130
+.. _`#1132`: https://github.com/django-oscar/django-oscar/issues/1132
+.. _`#1133`: https://github.com/django-oscar/django-oscar/issues/1133
+.. _`#1134`: https://github.com/django-oscar/django-oscar/issues/1134
+.. _`#1138`: https://github.com/django-oscar/django-oscar/issues/1138
+.. _`#1146`: https://github.com/django-oscar/django-oscar/issues/1146
+.. _`#1149`: https://github.com/django-oscar/django-oscar/issues/1149
 .. _`Django's docs`: https://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey.on_delete
 

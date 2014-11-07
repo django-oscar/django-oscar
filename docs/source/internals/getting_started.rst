@@ -135,7 +135,7 @@ files from a remote storage (e.g. Amazon S3), you must manually copy a
 :ref:`"Image not found" image <missing-image-label>` into ``MEDIA_ROOT``.
 
 .. _`configured correctly`: https://docs.djangoproject.com/en/1.7/howto/static-files/
-.. _sandbox settings: https://github.com/tangentlabs/django-oscar/blob/3a5160a86c9b14c940c76a224a28cd37dd29f7f1/sites/sandbox/settings.py#L99
+.. _sandbox settings: https://github.com/django-oscar/django-oscar/blob/3a5160a86c9b14c940c76a224a28cd37dd29f7f1/sites/sandbox/settings.py#L99
 
 Modify your ``TEMPLATE_DIRS`` to include the main Oscar template directory:
 
