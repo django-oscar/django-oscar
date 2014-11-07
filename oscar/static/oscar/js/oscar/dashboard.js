@@ -207,16 +207,16 @@ var oscar = (function(o, $) {
                 }
             }
         },
-        product_classes: {
+        product_attributes: {
             init: function(){
                 var type_selects = $("select[name$=type]");
 
                 type_selects.each(function(index){
-                    o.dashboard.product_classes.toggleOptionGroup($(this));
+                    o.dashboard.product_attributes.toggleOptionGroup($(this));
                 });
 
                 type_selects.change(function(e){
-                    o.dashboard.product_classes.toggleOptionGroup($(this));
+                    o.dashboard.product_attributes.toggleOptionGroup($(this));
                 });
             },
 
@@ -224,13 +224,9 @@ var oscar = (function(o, $) {
                 var option_group_select = $('#' + type_select.attr('id').replace('type', 'option_group'));
 
                 if(type_select.val() === 'option'){
-                    option_group_select.show();
-
-                    // show the help-text.
-                    option_group_select.siblings().show();
+                    option_group_select.closest('.control-group').show();
                 }else{
-                    option_group_select.hide();
-                    option_group_select.siblings().hide();
+                    option_group_select.closest('.control-group').hide();
                 }
             }
         },
