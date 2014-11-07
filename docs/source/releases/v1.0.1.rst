@@ -1,0 +1,15 @@
+=============================================
+Oscar 1.0.1 release notes - UNDER DEVELOPMENT
+=============================================
+
+This is Oscar 1.0.1, a bug fix release.
+
+Bug fixes
+=========
+
+* `#1553`_: ``from oscar.apps.partner.models import *`` could lead to the
+  wrong models being imported.
+
+
+  .. _#1553: https://github.com/django-oscar/django-oscar/issues/1553
+

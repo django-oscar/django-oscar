@@ -729,3 +729,12 @@ These classes have been removed:
 * ``oscar.apps.partner.prices.DelegateToStockRecord``
 * ``oscar.apps.partner.availability.DelegateToStockRecord``
 * ``oscar.apps.payment.utils.Bankcard``
+
+Known issues
+------------
+* ``models.py`` dynamically sets ``__all__`` to control what models are
+  importable through the star import. A bug in the ``models.py`` for the
+  ``partner`` app means you'll have to explicitly import them. More info in
+  `#1553`_.
+
+  .. _#1553: https://github.com/django-oscar/django-oscar/issues/1553
