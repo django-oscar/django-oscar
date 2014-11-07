@@ -14,9 +14,9 @@ extensions have moved to a new `Github organisation`_. This marks a change for
 Oscar from being a Tangent-sponsored project to a more community-driven one,
 similar to Django itself. The core team is growing too to accommodate new
 contributors from outside Tangent. This is an exciting change and we're hopeful
-that Oscar can continue to grow and prosper.
-To mark this departure, this release has been renamed from 0.8 (under which
-we released three beta version) to 1.0.
+that Oscar can continue to grow and prosper.  To mark this departure, this
+release has been renamed from 0.8 (under which we released three beta versions)
+to 1.0.
 
 .. _`as you might have seen`: https://groups.google.com/forum/#!searchin/django-oscar/organisation/django-oscar/6H7ByzRAkRY/6055EDottBAJ
 .. _`Github organisation`: https://github.com/django-oscar/django-oscar
