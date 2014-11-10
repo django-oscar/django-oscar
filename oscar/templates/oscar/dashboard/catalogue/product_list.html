@@ -35,7 +35,7 @@
         <div class="well">
             <form action="{% url 'dashboard:catalogue-product-create' %}" method="get" class="form-inline">
                 {% include "partials/form_fields_inline.html" with form=productclass_form %}
-                <button class="btn btn-primary" type="submit"><i class="icon-plus"></i> {% trans "New Product" %}</button>
+                <button class="btn btn-primary" type="submit" data-loading-text="{% trans 'Submitting...' %}"><i class="icon-plus"></i> {% trans "New Product" %}</button>
             </form>
         </div>
     {% endblock %}
@@ -57,7 +57,7 @@
                 {% endfor %}
 
                 {% include "partials/form_fields_inline.html" with form=form %}
-                <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+                <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
             </form>
         </div>
     {% endblock %}

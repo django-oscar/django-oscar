@@ -1,0 +1,59 @@
+===========================================
+Oscar 1.1 release notes - UNDER DEVELOPMENT
+===========================================
+
+:release: TBD
+
+.. warning::
+   Since v1.1 has not been released yet, these release notes are still a work-in-progress.
+
+Welcome to Oscar 1.1!
+
+Table of contents:
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_1.1:
+
+Compatibility
+-------------
+
+.. _new_in_1.1:
+
+What's new in Oscar 1.1?
+------------------------
+
+.. _minor_changes_in_1.1:
+
+Minor changes
+~~~~~~~~~~~~~
+
+.. _incompatible_changes_in_1.1:
+
+Backwards incompatible changes in 1.1
+-------------------------------------
+
+Misc
+~~~~
+
+Migrations
+~~~~~~~~~~
+
+.. _deprecated_features_in_1.1:
+
+Deprecated features
+~~~~~~~~~~~~~~~~~~~
+
+The following features have been deprecated in this release:
+
+Removal of deprecated features
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+These methods have been removed:
+
+
+These classes have been removed:
+

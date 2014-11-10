@@ -46,7 +46,7 @@
         </table>
 
         <div class="form-actions">
-            <button class="btn btn-danger" type="submit">{% trans "Delete" %}</button> {% trans "or" %}
+            <button class="btn btn-danger" type="submit" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button> {% trans "or" %}
             <a href="{% url 'dashboard:reviews-list' %}">{% trans "cancel" %}</a>
         </div>
     </form>

@@ -27,7 +27,7 @@
     <div class="well">
         <form action="." method="get" class="form-inline">
             {% include 'partials/form_fields_inline.html' with form=form %}
-            <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+            <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
             {% if is_filtered %}
                 <a class="btn" href="{% url 'dashboard:partner-list' %}" >{% trans "Reset" %}</a>
             {% endif %}

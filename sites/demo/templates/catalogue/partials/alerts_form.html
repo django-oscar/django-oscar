@@ -7,5 +7,5 @@
     {% else %}
         {% include "partials/form_fields.html" with form=alert_form %}
     {% endif %}
-    <button type="submit" class="btn">{% trans "Notify me" %}</button>
+    <button type="submit" class="btn" data-loading-text="{% trans 'Submitting...' %}">{% trans "Notify me" %}</button>
 </form>

@@ -61,7 +61,7 @@
                                 <div class="checkout-quantity control-group {% if form.errors %}error{% endif %}">
                                     <p>
                                         {{ form.quantity }}
-                                        <button class="btn" type="submit">{% trans "Update" %}</button>
+                                        <button class="btn" type="submit" data-loading-text="{% trans 'Updating...' %}">{% trans "Update" %}</button>
                                     </p>
                                     <p>
                                         <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove" class="inline">{% trans "Remove" %}</a>
@@ -120,7 +120,7 @@
                         <form id="voucher_form" action="{% url 'basket:vouchers-add' %}" method="post">
                             {% csrf_token %}
                             {% include "partials/form_fields.html" with form=voucher_form %}
-                            <button type="submit" class="btn btn-info">{% trans "Add voucher" %}</button>
+                            <button type="submit" class="btn btn-info" data-loading-text="{% trans 'Adding...' %}">{% trans "Add voucher" %}</button>
                             {% trans "or" %} <a href="#" id="voucher_form_cancel">{% trans "cancel" %}</a>
                         </form>
                     </div>

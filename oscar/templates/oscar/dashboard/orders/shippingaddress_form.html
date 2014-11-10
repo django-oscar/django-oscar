@@ -33,7 +33,7 @@
         {% csrf_token %}
         {% include "partials/form_fields.html" with form=form %}
         <div class="form-actions">
-            <button type="submit" class="btn btn-primary">{% trans "Update address" %}</button>
+            <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Updating...' %}">{% trans "Update address" %}</button>
             {% trans "or" %} <a href="{% url 'dashboard:order-detail' number=order.number %}">{% trans "cancel" %}</a>
         </div>
     </form>

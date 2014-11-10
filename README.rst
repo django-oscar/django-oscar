@@ -38,9 +38,9 @@ Continuous integration status:
 .. image:: https://travis-ci.org/django-oscar/django-oscar.svg?branch=master
     :target: https://travis-ci.org/django-oscar/django-oscar
 
-.. image:: https://coveralls.io/repos/tangentlabs/django-oscar/badge.png?branch=master
+.. image:: https://coveralls.io/repos/django-oscar/django-oscar/badge.png?branch=master
     :alt: Coverage
-    :target: https://coveralls.io/r/tangentlabs/django-oscar
+    :target: https://coveralls.io/r/django-oscar/django-oscar
 
 PyPI status:
 
@@ -74,13 +74,13 @@ Core team:
 
 - `David Winterbottom`_ (Twitter `@codeinthehole`_)
 - `Maik Hoepfel`_ (Twitter `@maikhoepfel`_)
-- `Marcus Bertheau_`
+- `Markus Bertheau`_
 
 .. _`David Winterbottom`: https://github.com/codeinthehole
 .. _`@codeinthehole`: https://twitter.com/codeinthehole
 .. _`Maik Hoepfel`: https://github.com/maikhoepfel
 .. _`@maikhoepfel`: https://twitter.com/maikhoepfel
-.. _`Marcus Bertheau`: https://github.com/mbertheau
+.. _`Markus Bertheau`: https://github.com/mbertheau
 
 Screenshots
 -----------

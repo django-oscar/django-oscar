@@ -35,7 +35,7 @@
             {% block inlines %} {% endblock %}
 
             <div class="form-actions">
-                <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
+                <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
                 {% trans "or" %} <a href="{% url 'dashboard:promotion-list' %}">{% trans "cancel" %}</a>
             </div>
         </form>
@@ -64,7 +64,7 @@
                                     <input type="hidden" name="action" value="remove_from_page" />
                                     <input type="hidden" name="pagepromotion_id" value="{{ link.id }}" />
                                     <a href="{% url 'dashboard:promotion-list-by-url' path=link.page_url %}" class="btn btn-info">{% trans "View all blocks on this page" %}</a>
-                                    <button class="btn" type="submit">{% trans "Remove from page" %}</button>
+                                    <button class="btn" type="submit" data-loading-text="{% trans 'Removing...' %}">{% trans "Remove from page" %}</button>
                                 </form>
                             </td>
                         </tr>
@@ -82,7 +82,7 @@
                 {% csrf_token %}
                 <input type="hidden" name="action" value="add_to_page" />
                 {% include "partials/form_fields.html" with form=link_form %}
-                <button type="submit" class="btn btn-success">{% trans "Add to page" %}</button>
+                <button type="submit" class="btn btn-success" data-loading-text="{% trans 'Adding...' %}">{% trans "Add to page" %}</button>
             </form>
         </div>
     {% endif %}

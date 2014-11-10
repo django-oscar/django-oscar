@@ -13,17 +13,8 @@ env:
         - DJANGO=Django==1.6.8
         - DJANGO=Django==1.7.1
 
-matrix:
-    # South does not support Python 3.x
-    allow_failures:
-        - env: "DJANGO=Django==1.6.8"
-          python: '3.3'
-        - env: "DJANGO=Django==1.6.8"
-          python: '3.4'
-
 install:
-    - make install
-    - easy_install $DJANGO
+    - pip install -e . -r requirements.txt $DJANGO
 
 before_script:
     # Create testing databases for running migrations against
@@ -38,5 +29,4 @@ script:
 
 after_success:
     - coveralls
-    # TODO: Re-enable once 0.8 final is released
-    # - ./transifex.sh
+    - ./transifex.sh

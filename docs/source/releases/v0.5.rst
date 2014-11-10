@@ -166,8 +166,8 @@ projects):
 
 * Coverage data is now submitted to coveralls.io_
 
-.. _coveralls.io: https://coveralls.io/r/tangentlabs/django-oscar
-.. _django-oscar-testsupport: https://github.com/tangentlabs/django-oscar-testsupport
+.. _coveralls.io: https://coveralls.io/r/django-oscar/django-oscar
+.. _django-oscar-testsupport: https://github.com/django-oscar/django-oscar-testsupport
 .. _tox: http://testrun.org/tox/latest/
 .. _Vagrant: http://www.vagrantup.com/
 

@@ -35,7 +35,7 @@
         {{ form }}
         <p>{% blocktrans with title=object.title %}Delete page <strong>{{ title }}</strong> - are you sure?{% endblocktrans %}</p>
         <div class="form-actions">
-            <button type="submit" class="btn btn-danger">{% trans "Delete" %}</button>
+            <button type="submit" class="btn btn-danger" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button>
             {% trans "or" %} <a href="{% url 'dashboard:page-list' %}">{% trans "cancel" %}</a>.
         </div>
     </form>

@@ -28,7 +28,7 @@
         <form method="get" action="." class="form-inline">
             {% include "partials/form_fields_inline.html" with form=form %}
             <span class="control-group">
-                <button type="submit" class="btn btn-primary">{% trans "Generate report" %}</button>
+                <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Generating...' %}">{% trans "Generate report" %}</button>
             </span>
         </form>
     </div>

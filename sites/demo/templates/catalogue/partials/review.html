@@ -35,12 +35,12 @@
                     <form action="{{ review.get_absolute_url }}" method="post" class="vote_agree" >
                         {% csrf_token %}
                         <input type="hidden" name="delta" value="1"/>
-                        <button type="submit" class="btn btn-info btn-small">{% trans "Yes" %}</button>
+                        <button type="submit" class="btn btn-info btn-small" data-loading-text="{% trans 'Submitting...' %}">{% trans "Yes" %}</button>
                     </form>
                     <form  action="{{ review.get_absolute_url }}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="delta" value="-1"/>
-                        <button type="submit" class="btn btn-info btn-small">{% trans "No" %}</button>
+                        <button type="submit" class="btn btn-info btn-small" data-loading-text="{% trans 'Submitting...' %}">{% trans "No" %}</button>
                     </form>
                 {% endif %}
 

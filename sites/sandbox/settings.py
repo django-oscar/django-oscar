@@ -11,12 +11,11 @@ TEMPLATE_DEBUG = True
 SQL_DEBUG = True
 
 ALLOWED_HOSTS = ['latest.oscarcommerce.com',
-                 'sandbox.oscar.tangentlabs.co.uk',
                  'master.oscarcommerce.com']
 
 # This is needed for the hosted version of the sandbox
 ADMINS = (
-    ('David Winterbottom', 'david.winterbottom@tangentlabs.co.uk'),
+    ('David Winterbottom', 'david.winterbottom@gmail.com'),
 )
 EMAIL_SUBJECT_PREFIX = '[Oscar sandbox] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

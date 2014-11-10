@@ -91,7 +91,7 @@
                                 <form id="password_reset_form" action="{% url 'dashboard:user-password-reset' pk=customer.id %}" method="post" class="form-horizontal">
                                     {% csrf_token %}
                                     {% include 'partials/form_fields.html' %}
-                                    <button type="submit" class="btn btn-primary btn-large">{% trans 'Send password reset email' %}</button>
+                                    <button type="submit" class="btn btn-primary btn-large" data-loading-text="{% trans 'Sending...' %}">{% trans 'Send password reset email' %}</button>
                                 </form>
                             </td>
                         </tr>

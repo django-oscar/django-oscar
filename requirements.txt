@@ -1,3 +1,4 @@
+# These requirements are only necessary when developing on Oscar.
 # You can check for newer versions of these dependencies using this command
 #
 # $ for x in `yolk -l | awk '{print $1}'`; do yolk -d $x 2>/dev/null; done
