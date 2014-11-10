@@ -74,13 +74,13 @@ Core team:
 
 - `David Winterbottom`_ (Twitter `@codeinthehole`_)
 - `Maik Hoepfel`_ (Twitter `@maikhoepfel`_)
-- `Marcus Bertheau`_
+- `Markus Bertheau`_
 
 .. _`David Winterbottom`: https://github.com/codeinthehole
 .. _`@codeinthehole`: https://twitter.com/codeinthehole
 .. _`Maik Hoepfel`: https://github.com/maikhoepfel
 .. _`@maikhoepfel`: https://twitter.com/maikhoepfel
-.. _`Marcus Bertheau`: https://github.com/mbertheau
+.. _`Markus Bertheau`: https://github.com/mbertheau
 
 Screenshots
 -----------
