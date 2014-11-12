@@ -7,6 +7,11 @@ This is Oscar 1.0.1, a bug fix release.
 Bug fixes
 =========
 
+* `#1556`_: Dashboard order table headers shifted
+
+
+  .. _#1556: https://github.com/django-oscar/django-oscar/issues/1556
+
 * `#1553`_: ``from oscar.apps.partner.models import *`` could lead to the
   wrong models being imported.
 
