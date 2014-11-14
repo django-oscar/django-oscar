@@ -77,11 +77,11 @@
                             {% block form_actions_buttons %}
                                 <button class="btn btn-primary" type="submit">{% block submittext %}{% trans "Continue" %}{% endblock %}</button>
                                 {% if offer %}{# When editing offer, show saving button #}
-                                    <button class="btn" name="save" type="submit">{% trans "Save changes" %}</button>
+                                    <button class="btn btn-default" name="save" type="submit">{% trans "Save changes" %}</button>
                                 {% endif %}
                             {% endblock %}
                             </div>
-                            <a class="btn" href="{% url 'dashboard:offer-list' %}">{% trans "cancel" %}</a>
+                            <a class="btn btn-default" href="{% url 'dashboard:offer-list' %}">{% trans "cancel" %}</a>
                         </div>
                     </div>
 

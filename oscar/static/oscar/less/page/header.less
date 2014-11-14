@@ -4,8 +4,11 @@
 .header {
     position:relative;
     z-index:2;
-    .page_inner {
-        padding:50px 0 40px;
+    
+    @media (min-width: @screen-sm-min) {
+        .page_inner {
+            padding:50px 0 40px;
+        }
     }
     h1 {
         line-height:inherit;
@@ -19,12 +22,16 @@
 }
 
 //Language select
-#language_selector select {
-    width:100px;
+@media (min-width: @screen-sm-min) {
+    #language_selector select {
+        width:100px;
+    }
 }
 
 // Basket Mini Dropdown
 .basket-mini {
+    margin-right: @grid-gutter-width/2;
+
     .btn-group {
         margin-left:10px;
     }
@@ -72,6 +79,8 @@
         -moz-border-radius: 0 0px 6px 6px;
         border-radius: 0 0px 6px 6px;
         margin:0px;
+        overflow: hidden;
+        
         h4 {
             margin-bottom:@line-height-computed / 2;
         }

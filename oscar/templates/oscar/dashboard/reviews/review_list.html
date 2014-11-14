@@ -31,7 +31,7 @@
     </div>
     <div class="well">
         <form action="." method="get" class="form-inline">
-            {% include 'partials/form_fields_inline.html' with form=form %}
+            {% include 'dashboard/partials/form_fields_inline.html' with form=form %}
             <button type="submit" class="btn btn-primary top-spacer">{% trans "Search" %}</button>
         </form>
     </div>
@@ -101,7 +101,7 @@
                                 <td>
                                     <div class="btn-toolbar">
                                         <div class="btn-group">
-                                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                            <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
                                                 {% trans "Actions" %}
                                                 <span class="caret"></span>
                                             </a>

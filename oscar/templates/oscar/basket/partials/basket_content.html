@@ -1,6 +1,7 @@
 {% load i18n %}
 {% load thumbnail %}
 {% load currency_filters %}
+{% load html_tags %}
 {% load purchase_info_tags %}
 
 {% if basket_warnings %}
@@ -23,7 +24,7 @@
 
 {% if not basket.is_empty %}
     {% block basket_form_headers %}
-        <div class="basket-title hidden-phone">
+        <div class="basket-title hidden-xs">
             <div class="row">
                 <h2 class="col-sm-6 h3">{% trans "Items to buy now" %}</h2>
                 <p class="col-sm-3 h3">{% trans "Quantity" %}</p>
@@ -34,7 +35,7 @@
     {% endblock %}
 
     {% block basket_form_main %}
-        <form action="." method="post" class="basket_summary" id="basket_formset">
+        <form action="." method="post" class="basket_summary form-inline" id="basket_formset">
             {% csrf_token %}
             {{ formset.management_form }}
 
@@ -58,10 +59,10 @@
                                 <p class="availability {{ session.availability.code }}">{{ session.availability.message }}</p>
                             </div>
                             <div class="col-sm-3">
-                                <div class="checkout-quantity control-group {% if form.errors %}error{% endif %}">
+                                <div class="checkout-quantity form-group {% if form.errors %}error{% endif %}">
                                     <p>
-                                        {{ form.quantity }}
-                                        <button class="btn" type="submit">{% trans "Update" %}</button>
+                                        {{ form.quantity|add_class:"form-control" }}
+                                        <button class="btn btn-default" type="submit">{% trans "Update" %}</button>
                                     </p>
                                     <p>
                                         <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove" class="inline">{% trans "Remove" %}</a>
@@ -165,7 +166,7 @@
             <div class="sub-header">
                 <h2>{% trans "Items to buy later" %}</h2>
             </div>
-            <div class="row basket-title hidden-phone">
+            <div class="row basket-title hidden-xs">
                 <p class="col-sm-8 h4">{% trans "Items" %}</p>
                 <p class="col-sm-2 h4 align-center">{% trans "Price" %}</p>
                 <div class="col-sm-2">&nbsp;</div>

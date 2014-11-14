@@ -31,7 +31,7 @@
             {% include "partials/form_fields_inline.html" with form=form %}
             <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
             {% trans "or" %}
-            <a href="{% url 'dashboard:user-alert-list' %}" class="btn">{% trans "reset" %}</a>
+            <a href="{% url 'dashboard:user-alert-list' %}" class="btn btn-default">{% trans "reset" %}</a>
         </form>
     </div>
 
@@ -69,7 +69,7 @@
                     <td>
                         <div class="btn-toolbar">
                             <div class="btn-group">
-                                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
                                     {% trans "Actions" %}
                                     <span class="caret"></span>
                                 </a>

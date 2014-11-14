@@ -5,7 +5,7 @@
 {% load i18n %}
 {% load staticfiles %}
 
-<ul class="basket-mini-item unstyled">
+<ul class="basket-mini-item list-unstyled">
     {% if request.basket.num_lines %}
         {% for line in request.basket.all_lines %}
             <li>
@@ -19,11 +19,11 @@
                             {% endwith %}
                         </div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-5">
                         <p><strong><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></strong></p>
                     </div>
                     <div class="col-sm-1 align-center"><strong>{% trans "Qty" %}</strong> {{ line.quantity }}</div>
-                    <div class="col-sm-2 price_color align-right">{{ line.unit_price_excl_tax|currency:request.basket.currency }}</div>
+                    <div class="col-sm-3 price_color align-right">{{ line.unit_price_excl_tax|currency:request.basket.currency }}</div>
                 </div>
             </li>
         {% endfor %}
@@ -35,8 +35,8 @@
                     <small>{% trans "Total:" %} {{ request.basket.total_excl_tax|currency:request.basket.currency }}</small> 
                 {% endif %}
             </p>
-            <p class="pull-left"><a href="{% url 'basket:summary' %}" class="btn btn-info btn-sm">{% trans "View basket" %}</a></p>
-            <p class="pull-right"><a href="{% url 'checkout:index' %}" class="btn btn-primary btn-sm"><i class="icon-shopping-cart"></i> {% trans "Checkout" %}</a></p>
+            <a href="{% url 'basket:summary' %}" class="btn btn-info btn-sm">{% trans "View basket" %}</a>
+            <a href="{% url 'checkout:index' %}" class="btn btn-primary btn-sm pull-right"><i class="icon-shopping-cart"></i> {% trans "Checkout" %}</a>
         </li>
     {% else %}
         <li><p>{% trans "Your basket is empty." %}</p></li>

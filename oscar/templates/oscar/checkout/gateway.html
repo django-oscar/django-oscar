@@ -1,5 +1,6 @@
 {% extends "checkout/layout.html" %}
 
+{% load html_tags %}
 {% load i18n %}
 
 {% block title %}
@@ -20,7 +21,7 @@
 
         {% include "partials/form_field.html" with field=form.username %}
 
-        <div class="control-group">
+        <div class="form-group">
             <div class="controls">
                 <div class="radio">
                     {{ form.options.0 }}
@@ -28,13 +29,13 @@
             </div>
         </div>
 
-        <div class="control-group {% if form.password.errors %}error{% endif %}">
+        <div class="form-group {% if form.password.errors %}error{% endif %}">
             {{ form.options.errors }}
             <div class="controls">
                 <div class="radio">
                     {{ form.options.2 }}
                     <div class="form-inline">
-                        {{ form.password }}
+                        {{ form.password|add_class:"form-control" }}
                         <small><a href="{% url 'password-reset' %}" tabindex="-1">{% trans "Get a password reminder" %}</a></small>
                         {% for error in form.password.errors %}
                             <span class="error-block">{{ error }}</span>
@@ -44,7 +45,7 @@
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="form-group">
             <div class="controls">
                 <div class="radio">
                     {{ form.options.1 }}

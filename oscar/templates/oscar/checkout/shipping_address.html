@@ -21,7 +21,7 @@
         {% if addresses %}
             <h3>{% trans "An address from your addressbook?" %}</h3>
             <div class="choose-block">
-                <ul class="row unstyled">
+                <ul class="row list-unstyled">
                     {% for address in addresses %}
                         {% block select_address_form %}
                             <li class="col-sm-6">
@@ -73,7 +73,7 @@
         <form action="{% url 'checkout:shipping-address' %}" method="post" id="new_shipping_address" class="form form-horizontal">
             <div class="well">
                 {% csrf_token %}
-                {% include "partials/form_fields.html" with form=form %}
+                {% include "partials/form_fields.html" with form=form style='horizontal' %}
                 <div class="controls">
                     <button type="submit" class="btn btn-lg btn-primary">{% trans "Continue" %}</button>
                     {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>

@@ -25,7 +25,7 @@
 {% block content %}
 
     {% if not offer.is_available %}
-        <div class="alert alert-error">{% trans " This offer is no longer available." %}</div>
+        <div class="alert alert-danger">{% trans " This offer is no longer available." %}</div>
     {% endif %}
 
     {% if upsell_message %}
