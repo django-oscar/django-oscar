@@ -2,6 +2,12 @@
 Changelog
 =========
 
+0.4.17 - 2014-11-14
+-------------------
+
+Allow providing a currency to the currency template filter.
+This is a backport from a more recent Oscar version.
+
 0.4.16 - 2014-06-10
 -------------------
 
