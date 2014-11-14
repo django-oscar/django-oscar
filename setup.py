@@ -16,11 +16,6 @@ PY3 = sys.version_info >= (3, 0)
 sys.path.append(os.path.join(PROJECT_DIR, 'src'))
 from oscar import get_version
 
-# Change to the current directory to solve an issue installing Oscar on the
-# Vagrant machine.
-if PROJECT_DIR:
-    os.chdir(PROJECT_DIR)
-
 setup(name='django-oscar',
       version=get_version().replace(' ', '-'),
       url='https://github.com/django-oscar/django-oscar',
