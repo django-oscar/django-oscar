@@ -9,7 +9,7 @@
                 <option value="{{ language.0 }}" {% if LANGUAGE_CODE == language.0 %}selected="selected"{% endif %}>{{ language.1 }}</option>
                 {% endfor %}
             </select>
-            <button class="btn" type="submit">{% trans "Go" %}</button>
+            <button class="btn" type="submit" data-loading-text="{% trans 'Submitting...' %}">{% trans "Go" %}</button>
         </form>
     {% endif %}
 

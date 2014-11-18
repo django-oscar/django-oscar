@@ -32,7 +32,7 @@
             <form action="." method="post" class="form-inline">
                 {% csrf_token %}
                 {% include 'partials/form_fields_inline.html' %}
-                <button type='submit' class="btn btn-primary">{% trans "Save" %}</button>
+                <button type='submit' class="btn btn-primary" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
                 <a href="{% url 'dashboard:user-alert-list' %}" class="btn">{% trans "cancel" %}</a>
             </form>
         </div>

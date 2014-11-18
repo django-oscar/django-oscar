@@ -26,7 +26,7 @@
             {# 1 or no existing wishlists - show a simple button #}
             <form id="add_to_wishlist_form" action="{% url 'customer:wishlists-add-product' product_pk=product.pk %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="btn">{% trans "Add to wish list" %}</button>
+                <button type="submit" class="btn" data-loading-text="{% trans 'Adding...' %}">{% trans "Add to wish list" %}</button>
             </form>
         {% endif %}
 
@@ -37,7 +37,7 @@
                 {% blocktrans with name=wishlist.name url=wishlist.get_absolute_url %}
                     Product is in <a href="{{ url }}">'{{ name }}'</a> wishlist.
                 {% endblocktrans %}
-                <button type="submit" class="btn btn-small btn-danger pull-right">{% trans "Remove" %}</button>
+                <button type="submit" class="btn btn-small btn-danger pull-right" data-loading-text="{% trans 'Removing...' %}">{% trans "Remove" %}</button>
             </form>
             {% if not forloop.last %}<hr>{% endif %}
         {% endfor %}
