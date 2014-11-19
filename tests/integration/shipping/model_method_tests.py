@@ -116,6 +116,22 @@ class WeightBasedMethodTests(TestCase):
         self.standard = WeightBased.objects.create(name='Standard')
         self.express = WeightBased.objects.create(name='Express')
 
+    def test_zero_weight_baskets_can_have_a_charge(self):
+        self.standard.bands.create(upper_limit=1, charge=D('4.00'))
+        charge = self.standard.get_charge(0)
+        self.assertEqual(D('4.00'), charge)
+
+    def test_zero_weight_baskets_can_have_no_charge(self):
+        self.standard.bands.create(upper_limit=0, charge=D('0.00'))
+        self.standard.bands.create(upper_limit=1, charge=D('4.00'))
+        charge = self.standard.get_charge(0)
+        self.assertEqual(D('0.00'), charge)
+
+    def test_get_band_for_zero_weight(self):
+        self.standard.bands.create(upper_limit=1, charge=D('4.00'))
+        charge = self.standard.get_charge(0)
+        self.assertEqual(D('4.00'), charge)
+
     def test_get_band_for_lower_weight(self):
         band = self.standard.bands.create(upper_limit=1, charge=D('4.00'))
         fetched_band = self.standard.get_band_for_weight(0.5)

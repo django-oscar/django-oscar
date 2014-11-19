@@ -142,7 +142,7 @@ class AbstractWeightBased(AbstractBase):
         is NP-hard and solving it is left as an exercise to the reader.
         """
         weight = D(weight)  # weight really should be stored as a decimal
-        if not weight or not self.bands.exists():
+        if not self.bands.exists():
             return D('0.00')
 
         top_band = self.top_band
