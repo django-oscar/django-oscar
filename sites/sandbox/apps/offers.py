@@ -20,3 +20,5 @@ class ChangesOwnerName(models.Benefit):
     @property
     def description(self):
         return "Changes owners name"
+
+    name = description

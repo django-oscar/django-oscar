@@ -1,2 +1,0 @@
-virtual-node>=0.0.2-0.8.11
-virtual-less>=0.0.1-1.3.3

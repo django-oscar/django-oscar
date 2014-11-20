@@ -22,8 +22,7 @@ SQL_DEBUG = True
 EMAIL_SUBJECT_PREFIX = '[Oscar demo] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-ALLOWED_HOSTS = ['demo.oscarcommerce.com',
-                 'demo.oscar.tangentlabs.co.uk']
+ALLOWED_HOSTS = ['demo.oscarcommerce.com']
 
 # Use settings_local to override this default
 DATABASES = {

@@ -56,12 +56,12 @@ class EmailBackend(ModelBackend):
         return None
 
 
-# Deprecated since Oscar 0.8 because of the spelling.
+# Deprecated since Oscar 1.0 because of the spelling.
 class Emailbackend(EmailBackend):
 
     def __init__(self):
         warnings.warn(
-            "Oscar's auth backend EmailBackend has been renamed in Oscar 0.8 "
+            "Oscar's auth backend EmailBackend has been renamed in Oscar 1.0 "
             " and you're using the old name of Emailbackend. Please rename "
             " all references; most likely in the AUTH_BACKENDS setting.",
             DeprecationWarning)

@@ -32,7 +32,7 @@
                                         <a href="{% url 'checkout:user-address-delete' address.id %}" class="btn btn-small btn-info">{% trans "Delete" %}</a>
                                     </div>
                                     <div class="span6">
-                                        <button type="submit" class="btn btn-primary ship-address pull-right">{% trans "Ship to this address" %}</button>
+                                        <button type="submit" class="btn btn-primary ship-address pull-right" data-loading-text="{% trans 'Submitting...' %}">{% trans "Ship to this address" %}</button>
                                     </div>
                                 </div>
                             </form>
@@ -70,7 +70,7 @@
         
         <hr/>
         <div class="row-fluid">
-            <button type="submit" class="btn btn-large btn-primary pull-right">{% trans "Continue" %}</button>
+            <button type="submit" class="btn btn-large btn-primary pull-right" data-loading-text="{% trans 'Submitting...' %}">{% trans "Continue" %}</button>
             <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
         </div>
     </form>

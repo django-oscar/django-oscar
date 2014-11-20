@@ -11,14 +11,14 @@ if [ ! "$TRAVIS" == "true" ]
 then
   # If not on Travis, then create databases
   echo "Creating MySQL database and user"
-  mysql -u root -e "DROP DATABASE IF EXISTS oscar_vagrant; CREATE DATABASE oscar_vagrant"
-  mysql -u root -e "GRANT ALL PRIVILEGES ON oscar_vagrant.* TO 'travis'@'localhost' IDENTIFIED BY '';"
+  mysql -u root -e "DROP DATABASE IF EXISTS oscar_travis; CREATE DATABASE oscar_travis"
+  mysql -u root -e "GRANT ALL PRIVILEGES ON oscar_travis.* TO 'travis'@'localhost' IDENTIFIED BY '';"
 
   echo "Creating Postgres database and user"
   psql -c "DROP ROLE IF EXISTS travis"
   psql -c "CREATE ROLE travis LOGIN PASSWORD ''"
-  psql -c "DROP DATABASE IF EXISTS oscar_vagrant"
-  psql -c "CREATE DATABASE oscar_vagrant"
+  psql -c "DROP DATABASE IF EXISTS oscar_travis"
+  psql -c "CREATE DATABASE oscar_travis"
 fi
 
 # MySQL

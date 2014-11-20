@@ -29,7 +29,7 @@
         </p>
 
         <div class="form-group form-actions">
-            <button type="submit" class="btn btn-lg btn-danger">{% trans 'Remove' %}</button> {% trans 'or' %} <a href="{{ wishlist.get_absolute_url }}">{% trans 'cancel' %}</a>
+            <button type="submit" class="btn btn-lg btn-danger" data-loading-text="{% trans 'Removing...' %}">{% trans 'Remove' %}</button> {% trans 'or' %} <a href="{{ wishlist.get_absolute_url }}">{% trans 'cancel' %}</a>
         </div>
     </form>
 {% endblock tabcontent %}

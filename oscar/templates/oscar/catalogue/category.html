@@ -27,7 +27,6 @@
 {% endblock breadcrumbs %}
 
 {% block content %}
-
     {% if category.description %}
         <div class="row">
             <div class="col-sm-9"><p>{{ category.description|safe }}</p></div>
@@ -36,7 +35,5 @@
             {% endif %}
         </div>
     {% endif %}
-
     {{ block.super }}
-
 {% endblock %}

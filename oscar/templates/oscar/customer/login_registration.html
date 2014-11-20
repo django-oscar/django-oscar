@@ -25,7 +25,7 @@
                 {% csrf_token %}
                 {% include "partials/form_fields.html" with form=login_form %}
                 <p><a href="{% url 'password-reset' %}">{% trans "I've forgotten my password" %}</a></p>
-                <button name="login_submit" type="submit" value="Log In" class="btn btn-lg btn-primary js-disable-on-click" data-loading-text="{% trans "Logging in..." %}">{% trans 'Log In' %}</button>
+                <button name="login_submit" type="submit" value="Log In" class="btn btn-lg btn-primary" data-loading-text="{% trans "Logging in..." %}">{% trans 'Log In' %}</button>
             </form>
         </div>
         <div class="col-sm-6 register_form">
@@ -33,7 +33,7 @@
                 <h2>{% trans 'Register' %}</h2>
                 {% csrf_token %}
                 {% include "partials/form_fields.html" with form=registration_form %}
-                <button name="registration_submit" type="submit" value="Register" class="btn btn-lg btn-primary js-disable-on-click" data-loading-text="{% trans 'Registering...' %}">{% trans 'Register' %}</button>
+                <button name="registration_submit" type="submit" value="Register" class="btn btn-lg btn-primary" data-loading-text="{% trans 'Registering...' %}">{% trans 'Register' %}</button>
             </form>
         </div>
     </div>

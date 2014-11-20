@@ -7,7 +7,7 @@
 {% load i18n %}
 
 {% block title %}
-    {{ summary }} | {{ block.super }}
+    {% if summary %}{{ summary }} |{% endif %} {{ block.super }}
 {% endblock %}
 
 {% block headertext %}{{ summary }}{% endblock %}

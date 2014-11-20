@@ -1,6 +1,8 @@
+from django.contrib import messages
+from django.core.paginator import InvalidPage
 from django.utils.http import urlquote
 from django.http import HttpResponsePermanentRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import DetailView, TemplateView
 from django.utils.translation import ugettext_lazy as _
 
@@ -119,8 +121,13 @@ class CatalogueView(TemplateView):
     template_name = 'catalogue/browse.html'
 
     def get(self, request, *args, **kwargs):
-        self.search_handler = self.get_search_handler(
-            self.request.GET, request.get_full_path(), [])
+        try:
+            self.search_handler = self.get_search_handler(
+                self.request.GET, request.get_full_path(), [])
+        except InvalidPage:
+            # Redirect to page one.
+            messages.error(request, _('The given page number was invalid.'))
+            return redirect('catalogue:index')
         return super(CatalogueView, self).get(request, *args, **kwargs)
 
     def get_search_handler(self, *args, **kwargs):
@@ -137,8 +144,7 @@ class CatalogueView(TemplateView):
 
 class ProductCategoryView(TemplateView):
     """
-    Browse products in a given category (or all products if no category is
-    specified.
+    Browse products in a given category
     """
     context_object_name = "products"
     template_name = 'catalogue/category.html'
@@ -147,12 +153,17 @@ class ProductCategoryView(TemplateView):
     def get(self, request, *args, **kwargs):
         # Fetch the category; return 404 or redirect as needed
         self.category = self.get_category()
-        redirect = self.redirect_if_necessary(request.path, self.category)
-        if redirect is not None:
-            return redirect
+        potential_redirect = self.redirect_if_necessary(
+            request.path, self.category)
+        if potential_redirect is not None:
+            return potential_redirect
 
-        self.search_handler = self.get_search_handler(
-            request.GET, request.get_full_path(), self.get_categories())
+        try:
+            self.search_handler = self.get_search_handler(
+                request.GET, request.get_full_path(), self.get_categories())
+        except InvalidPage:
+            messages.error(request, _('The given page number was invalid.'))
+            return redirect(self.category.get_absolute_url())
 
         return super(ProductCategoryView, self).get(request, *args, **kwargs)
 

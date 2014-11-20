@@ -20,7 +20,7 @@ can contribute in many ways:
   and go ahead!
 
 .. _django-oscar: http://groups.google.com/group/django-oscar
-.. _ticket tracker: https://github.com/tangentlabs/django-oscar/issues
+.. _ticket tracker: https://github.com/django-oscar/django-oscar/issues
 .. _Transifex: https://www.transifex.com/projects/p/django-oscar/
 
 Overview

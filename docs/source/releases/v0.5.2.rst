@@ -15,4 +15,4 @@ possible that this method weakens the security of the ``SECRET_KEY``.
 `The fix`_ uses Django's cryptographic signing functionality to sign the cookie
 in a more secure manner.
 
-.. _`The fix`: https://github.com/tangentlabs/django-oscar/commit/876f723
+.. _`The fix`: https://github.com/django-oscar/django-oscar/commit/876f723

@@ -97,7 +97,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
 
     def handle_order_placement(self, order_number, user, basket,
                                shipping_address, shipping_method,
-                               shipping_charge, order_total, **kwargs):
+                               shipping_charge, billing_address, order_total,
+                               **kwargs):
         """
         Write out the order models and return the appropriate HTTP response
 

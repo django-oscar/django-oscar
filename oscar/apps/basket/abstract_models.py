@@ -11,6 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 
 from oscar.apps.basket.managers import OpenBasketManager, SavedBasketManager
 from oscar.apps.offer import results
+from oscar.core.utils import get_default_currency
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.templatetags.currency_filters import currency
 
@@ -165,6 +166,11 @@ class AbstractBasket(models.Model):
         The 'options' list should contains dicts with keys 'option' and 'value'
         which link the relevant product.Option model and string value
         respectively.
+
+        Returns (line, created).
+          line: the matching basket line
+          created: whether the line was created or updated
+
         """
         if options is None:
             options = []
@@ -213,6 +219,9 @@ class AbstractBasket(models.Model):
             line.quantity += quantity
             line.save()
         self.reset_offer_applications()
+
+        # Returning the line is useful when overriding this method.
+        return line, created
     add_product.alters_data = True
     add = add_product
 
@@ -569,7 +578,7 @@ class AbstractLine(models.Model):
     # the basket.  This allows us to tell if a product has changed price since
     # a person first added it to their basket.
     price_currency = models.CharField(
-        _("Currency"), max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
+        _("Currency"), max_length=12, default=get_default_currency)
     price_excl_tax = models.DecimalField(
         _('Price excl. Tax'), decimal_places=2, max_digits=12,
         null=True)

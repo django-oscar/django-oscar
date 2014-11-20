@@ -57,7 +57,7 @@
                         <td>
                             <form action="{% url 'dashboard:partner-user-unlink' partner_pk=partner.id user_pkuser.id %}" method="post">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-danger">{% trans 'Unlink user' %}</button>
+                                <button type="submit" class="btn btn-danger" data-loading-text="{% trans 'Unlinking...' %}">{% trans 'Unlink user' %}</button>
                             </form>
                         </td>
                     </tr>
