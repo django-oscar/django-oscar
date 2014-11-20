@@ -307,14 +307,17 @@ class AbstractOrder(models.Model):
         return self.discounts.filter(
             category=AbstractOrderDiscount.DEFERRED)
 
+    def set_date_placed_default(self):
+        if self.date_placed is None:
+            self.date_placed = now()
+
     def save(self, *args, **kwargs):
         """
         Overriddes django's save, so the date_placed field works as if
         auto_now_add was set to True, but with the option to modify
         the date later if the order is updated.
         """
-        if self.date_placed is None:
-            self.date_placed = now()
+        self.set_date_placed_default()
         super(AbstractOrder, self).save(*args, **kwargs)
 
 
