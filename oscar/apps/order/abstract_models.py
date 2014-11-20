@@ -313,7 +313,7 @@ class AbstractOrder(models.Model):
 
     def save(self, *args, **kwargs):
         """
-        Overriddes django's save, so the date_placed field works as if
+        Overrides django's save, so the date_placed field works as if
         auto_now_add was set to True, but with the option to modify
         the date later if the order is updated.
         """
