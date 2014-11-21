@@ -25,13 +25,6 @@
         {% endblock %}
 
         {% block mainstyles %}
-            {% comment %}
-            We use an inner block to work-around the fact that django-compressor doesn't work with
-            template inheritance.  Ie, we can't just wrap the {% block mainstyles %} with compress tags and
-            expect it to compress CSS files added in child templates.
-            {% endcomment %}
-            {% block styles %}
-            {% endblock %}
         {% endblock %}
 
         {# Additional CSS - specific to certain pages #}
@@ -49,18 +42,11 @@
             {% include "partials/google_analytics.html" %}
         {% endblock %}
 
-        {% comment %}
-        Scripts loaded from a CDN.  These can't be wrapped by the 'compress' tag and so we
-        use a separate block for them.
-        {% endcomment %}
-        {% block cdn_scripts %}
+        {# Local scripts #}
+        {% block scripts %}
             <!-- jQuery -->
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
             <script>window.jQuery || document.write('<script src="{% static "oscar/js/jquery/jquery-1.9.1.min.js" %}"><\/script>')</script>
-        {% endblock %}
-
-        {# Local scripts #}
-        {% block scripts %}
         {% endblock %}
 
         {# Additional JS scripts #}
