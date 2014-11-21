@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.views.generic.list import MultipleObjectMixin
 
-from oscar.core.loading import get_class, get_model
+from oscar.core.loading import get_class, get_model, import_string
 
 BrowseCategoryForm = get_class('search.forms', 'BrowseCategoryForm')
 SearchHandler = get_class('search.search_handlers', 'SearchHandler')
@@ -18,6 +18,8 @@ def get_product_search_handler_class():
     back to rudimentary category browsing if that isn't enabled.
     """
     # Use get_class to ensure overridability
+    if settings.OSCAR_PRODUCT_SEARCH_HANDLER is not None:
+        return import_string(settings.OSCAR_PRODUCT_SEARCH_HANDLER)
     if is_solr_supported():
         return get_class('catalogue.search_handlers', 'ProductSearchHandler')
     elif is_elasticsearch_supported():
