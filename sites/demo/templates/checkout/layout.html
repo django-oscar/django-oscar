@@ -3,7 +3,6 @@
 {% load currency_filters %}
 {% load promotion_tags %}
 {% load category_tags %}
-{% load compress %}
 {% load staticfiles %}
 {% load i18n %}
 
@@ -75,7 +74,5 @@
 {% endblock %}
 
 {% block extrascripts %}
-{% compress js %}
     {% include "partials/extrascripts.html" %}
-{% endcompress %}
 {% endblock %}

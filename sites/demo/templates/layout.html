@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load compress %}
 {% load category_tags %}
 {% load staticfiles %}
 {% load i18n %}
@@ -63,7 +62,5 @@
 {% endblock %}
 
 {% block extrascripts %}
-{% compress js %}
     {% include "partials/extrascripts.html" %}
-{% endcompress %}
 {% endblock %}
