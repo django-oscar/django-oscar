@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.utils.module_loading import import_string
 from django.views.generic.list import MultipleObjectMixin
 
 from oscar.core.loading import get_class, get_model
@@ -18,6 +19,8 @@ def get_product_search_handler_class():
     back to rudimentary category browsing if that isn't enabled.
     """
     # Use get_class to ensure overridability
+    if settings.OSCAR_PRODUCT_SEARCH_HANDLER is not None:
+        return import_string(settings.OSCAR_PRODUCT_SEARCH_HANDLER)
     if is_solr_supported():
         return get_class('catalogue.search_handlers', 'ProductSearchHandler')
     elif is_elasticsearch_supported():
