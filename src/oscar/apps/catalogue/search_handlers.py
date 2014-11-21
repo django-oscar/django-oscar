@@ -6,6 +6,7 @@ from oscar.core.loading import get_class, get_model
 BrowseCategoryForm = get_class('search.forms', 'BrowseCategoryForm')
 SearchHandler = get_class('search.search_handlers', 'SearchHandler')
 is_solr_supported = get_class('search.features', 'is_solr_supported')
+is_elasticsearch_supported = get_class('search.features', 'is_elasticsearch_supported')
 Product = get_model('catalogue', 'Product')
 
 
@@ -19,6 +20,10 @@ def get_product_search_handler_class():
     # Use get_class to ensure overridability
     if is_solr_supported():
         return get_class('catalogue.search_handlers', 'ProductSearchHandler')
+    elif is_elasticsearch_supported():
+        return get_class(
+            'catalogue.search_handlers', 'ElasticsearchSearchHandler',
+        )
     else:
         return get_class(
             'catalogue.search_handlers', 'SimpleProductSearchHandler')
@@ -45,6 +50,27 @@ class ProductSearchHandler(SearchHandler):
             pattern = ' OR '.join([
                 '"%s"' % c.full_name for c in self.categories])
             sqs = sqs.narrow('category_exact:(%s)' % pattern)
+        return sqs
+
+
+class ElasticsearchSearchHandler(SearchHandler):
+    """
+    Search handler specialised for searching products.  Comes with optional
+    category filtering.
+    """
+    form_class = BrowseCategoryForm
+    model_whitelist = [Product]
+    paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
+
+    def __init__(self, request_data, full_path, categories=None):
+        self.categories = categories
+        super(ElasticsearchSearchHandler, self).__init__(request_data, full_path)
+
+    def get_search_queryset(self):
+        sqs = super(ElasticsearchSearchHandler, self).get_search_queryset()
+        if self.categories:
+            for category in self.categories:
+                sqs = sqs.filter_or(category=category.full_name)
         return sqs
 
 
