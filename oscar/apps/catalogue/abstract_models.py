@@ -129,10 +129,11 @@ class AbstractCategory(MP_Node):
         if update_slugs:
             self.update_slug(commit=False)
 
-        # If the slug fieldd is updated then validate that it is unique and
-        # update the child categories
-        update_fields = kwargs.get('update_fields')
-        if not update_fields or 'slug' in update_fields:
+        # If update_fields is specified and name or slug are listed then
+        # validate that it is unique and update the child categories
+        update_fields = kwargs.get('update_fields', None)
+        slug_fields = set(['name', 'slug'])
+        if not update_fields or slug_fields & set(update_fields):
             # Enforce slug uniqueness here as MySQL can't handle a unique index
             # on the slug field
             try:
