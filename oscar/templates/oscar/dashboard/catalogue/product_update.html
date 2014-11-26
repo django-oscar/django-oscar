@@ -111,7 +111,7 @@
 
                                     {% for field in form.visible_fields %}
                                         {% if 'attr' not in field.id_for_label %}
-                                            {% include 'partials/form_field.html' with field=field %}
+                                            {% include 'dashboard/partials/form_field.html' with field=field %}
                                         {% endif %}
                                     {% endfor %}
                                 {% endblock product_details_content %}

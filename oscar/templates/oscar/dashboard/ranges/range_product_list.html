@@ -44,7 +44,7 @@
             <form action="." method="post" class="form-stacked" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="add_products"/>
-                {% include 'partials/form_fields.html' with form=form %}
+                {% include 'dashboard/partials/form_fields.html' with form=form %}
                 <div class="controls">
                     <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Running...' %}">{% trans "Go!" %}</button>
                 </div>
