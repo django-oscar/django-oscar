@@ -8,10 +8,8 @@
         {% compress css %}
             {% if use_less %}
                 <link rel="stylesheet" type="text/less" href="{% static "oscar/less/styles.less" %}" />
-                <link rel="stylesheet" type="text/less" href="{% static "oscar/less/responsive.less" %}" />
             {% else %}
                 <link rel="stylesheet" type="text/css" href="{% static "oscar/css/styles.css" %}" />
-                <link rel="stylesheet" type="text/css" href="{% static "oscar/css/responsive.css" %}" />
             {% endif %}
         {% endcompress %}
     {% endblock %}
@@ -24,7 +22,7 @@
     {# Site logo/title, mini-basket, browse dropdown and searchbox #}
     <header class="header container-fluid">
         <div class="page_inner">
-            <div class="row-fluid">
+            <div class="row">
                 {% include "partials/brand.html" %}
                 {# Mini-basket wrapped in a block so some templates can now display it #}
                 {% block mini_basket %}{% include "partials/mini_basket.html" %}{% endblock %}
@@ -72,7 +70,7 @@
     {{ block.super }}
     {% compress js %}
     <!-- Twitter Bootstrap -->
-    <script type="text/javascript" src="{% static "oscar/js/bootstrap/bootstrap.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "oscar/js/bootstrap3/bootstrap.min.js" %}"></script>
     <!-- Oscar -->
     <script src="{% static "oscar/js/oscar/ui.js" %}" type="text/javascript" charset="utf-8"></script>
     {% endcompress %}

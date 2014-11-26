@@ -4,7 +4,7 @@
 
 // Carousel overrides, idicators in the center bottom
 .carousel {
-  margin-bottom: @baseLineHeight * 2;
+  margin-bottom: @line-height-computed * 2;
 }
 .carousel-indicators {
   top: auto;
@@ -59,7 +59,7 @@
   .carousel-indicators {
     position:static;
     margin-top:1%;
-    *margin-bottom:@baseLineHeight;
+    *margin-bottom:@line-height-computed;
     width:auto;
     display:block;
     .clearfix();
@@ -68,7 +68,7 @@
       height:auto;
       display: block;
       float: left;
-      margin:@baseLineHeight/4;
+      margin:@line-height-computed/4;
       text-indent: 0;
       background-color:#fff;
       .opacity(50);

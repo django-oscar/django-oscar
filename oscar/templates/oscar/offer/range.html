@@ -14,7 +14,6 @@
     <ul class="breadcrumb">
         <li>
             <a href="{{ homepage_url }}">{% trans "Home" %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{{ range.name }}</li>
     </ul>
@@ -29,9 +28,9 @@
     {% if products %}
         <section>
             <div>
-                <ol class="row-fluid">
+                <ol class="row">
                     {% for product in products %}
-                        <li class="span2 {% if forloop.counter0|divisibleby:"6" %}no-margin{% endif %}">{% render_product product %}</li>
+                        <li class="col-sm-2 {% if forloop.counter0|divisibleby:"6" %}no-margin{% endif %}">{% render_product product %}</li>
                     {% endfor %}
                 </ol>
                 {% include "partials/pagination.html" %}

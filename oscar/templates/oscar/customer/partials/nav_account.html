@@ -4,16 +4,16 @@
     <div class="navbar-inner">
         <div class="container">
 
-            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".profile-collapse">
+            <!-- .navbar-btn is used as the toggle for collapsed navbar content -->
+            <a class="btn navbar-btn" data-toggle="collapse" data-target=".profile-collapse">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
 
-            <span class="brand visible-phone" href="#">{{ page_title }}</span>
+            <span class="brand visible-sm" href="#">{{ page_title }}</span>
 
-            <div class="nav-collapse profile-collapse">
+            <div class="navbar-collapse profile-collapse">
                 <ul class="nav nav-tabs">
                     {% block standard_tabs %}
                         <li{% if active_tab == 'profile' %} class="active"{% endif %}>

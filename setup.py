@@ -63,6 +63,9 @@ setup(name='django-oscar',
           'factory-boy>=2.4.1,<2.5',
           # Used for automatically building larger HTML tables
           'django-tables2>=0.15.0,<0.16',
+          # Used for manipulating form field attributes in templates (eg: add
+          # a css class)
+          'django-widget-tweaks>=1.3,<1.4',
       ],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[

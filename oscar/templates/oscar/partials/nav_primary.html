@@ -3,18 +3,19 @@
 {% load i18n %}
 
 <div class="navbar primary navbar-static-top navbar-inverse">
-    <div class="navbar-inner">
+    <div class="container-fluid">
+        <div class="navbar-header pull-right">
+            {# This is used in mobile view #}
+            <a class="navbar-toggle" data-toggle="collapse" data-target=".primary-collapse">
+                <span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </span>
+            </a>
+        </div>
 
-        {# This is used in mobile view #}
-        <a class="btn btn-navbar btn-nav-collapse" data-toggle="collapse" data-target=".primary-collapse">
-            <span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </span>
-        </a>
-
-        <a class="btn btn-navbar btn-cart visible-phone" href="{% url 'basket:summary' %}">
+        <a class="btn btn-default navbar-btn btn-cart navbar-right visible-xs-inline-block" href="{% url 'basket:summary' %}">
             <i class="icon-shopping-cart"></i>
             {% trans "Basket" %}
             {% if not request.basket.is_empty %}
@@ -30,9 +31,10 @@
             {% endif %}
         </a>
 
-        <div class="nav-collapse primary-collapse collapse">
+
+        <div class="navbar-collapse primary-collapse collapse">
             {% block nav_dropdown %}
-                <ul id="browse" class="nav">
+                <ul id="browse" class="nav navbar-nav">
                     <li class="dropdown active {% if expand_dropdown %}open{% endif %}">
                         <a href="#" class="dropdown-toggle" {% if not expand_dropdown %} data-toggle="dropdown"{% endif %}>
                             {% trans "Browse store" %}
@@ -68,7 +70,6 @@
                 </ul>
             {% endblock %}
             {% include "partials/search.html" %}
-        </div><!-- /nav-collapse -->
-
-    </div><!-- /navbar-inner -->
+        </div><!-- /navbar-collapse -->
+    </div>
 </div><!-- /navbar -->

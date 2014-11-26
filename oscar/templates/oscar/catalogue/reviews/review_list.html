@@ -11,18 +11,15 @@
     <ul class="breadcrumb">
         <li>
             <a href="{{ homepage_url }}">{% trans "Home" %}</a>
-            <span class="divider">/</span>
         </li>
         {% with category=product.categories.all.0 %}
             {% for c in category.get_ancestors_and_self %}
                 <li>
                     <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
-                    <span class="divider">/</span>
                 </li>
             {% endfor %}
             <li>
                 <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
-                <span class="divider">/</span>
             </li>
         {% endwith %}
         <li class="active">{% trans "All reviews" %}</li>
@@ -41,11 +38,10 @@
         {% if reviews %}
             <form action="." method="get" class="form-inline">
                 {% for field in form %}
-                  {{ field.label }}
-                  {{ field }}
+                    {{ field.label }}
+                    {{ field }}
                 {% endfor %}
-                </select>
-                <input type="submit" class="btn" value="{% trans "Go" %}" />
+                <input type="submit" class="btn btn-default" value="{% trans "Go" %}" />
             </form>
 
             {% for review in reviews %}

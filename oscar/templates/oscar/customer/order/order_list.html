@@ -7,11 +7,9 @@
     <ul class="breadcrumb">
         <li>
             <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{% trans 'Order history' %}</li>
     </ul>
@@ -23,10 +21,10 @@
         <div class="well">
             <h2>{% trans "Filter" %}</h2>
             <form action="." method="get" class="form-horizontal">
-                {% include "partials/form_fields.html" with form=form %}
+                {% include "partials/form_fields.html" with form=form style='horizontal' %}
                 <div class="controls">
                     <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Filtering...' %}">{% trans 'Filter results' %}</button>
-                    <a href="{% url 'customer:order-list' %}" class="btn">{% trans 'Reset' %}</a>
+                    <a href="{% url 'customer:order-list' %}" class="btn btn-default">{% trans 'Reset' %}</a>
                 </div>
             </form>
         </div>

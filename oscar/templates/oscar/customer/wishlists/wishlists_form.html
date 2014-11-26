@@ -5,15 +5,12 @@
     <ul class="breadcrumb">
         <li>
             <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'customer:wishlists-list' %}">{% trans 'Wish Lists' %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">
             {% if wishlist %}
@@ -39,8 +36,8 @@
                 {% endblocktrans %}
             </p>
         {% endif %}
-        <div class="form-actions">
-            <button class="btn btn-large btn-primary" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
+        <div class="form-group form-actions">
+            <button class="btn btn-lg btn-primary" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
             {% trans "or" %} <a href="#" onclick="history.go(-1);return false" >{% trans "cancel" %}</a>.
         </div>
     </form>
