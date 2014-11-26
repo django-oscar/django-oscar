@@ -1,5 +1,5 @@
 {% load form_tags %}
-{% load html_tags %}
+{% load widget_tweaks %}
 
 {% if field.is_hidden %}
     {{ field }}
@@ -28,10 +28,10 @@
                         {% if field.widget_type == 'CheckboxInput' %}
                             <label for="{{ field.auto_id }}" class="checkbox {% if field.field.required %}required{% endif %}">
                                 {{ field.label|safe }}{% if field.field.required %} <span>*</span>{% endif %}
-                                {{ field|add_class:"form-control" }}
+                                {% render_field field class+="form-control" %}
                             </label>
                         {% else %}
-                            {{ field|add_class:"form-control" }}
+                            {% render_field field class+="form-control" %}
                         {% endif %}
                     {% endblock %}
 

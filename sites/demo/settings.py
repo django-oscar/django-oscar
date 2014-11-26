@@ -234,6 +234,7 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     # Oscar dependencies
     'compressor',
+    'widget_tweaks',
     # Oscar extensions
     'stores',
     'paypal',

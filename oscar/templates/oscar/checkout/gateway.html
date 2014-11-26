@@ -1,7 +1,7 @@
 {% extends "checkout/layout.html" %}
 
-{% load html_tags %}
 {% load i18n %}
+{% load widget_tweaks %}
 
 {% block title %}
     {% trans "Checkout gateway" %} | {{ block.super }}
@@ -35,7 +35,7 @@
                 <div class="radio">
                     {{ form.options.2 }}
                     <div class="form-inline">
-                        {{ form.password|add_class:"form-control" }}
+                        {% render_field form.password class+="form-control" %}
                         <small><a href="{% url 'password-reset' %}" tabindex="-1">{% trans "Get a password reminder" %}</a></small>
                         {% for error in form.password.errors %}
                             <span class="error-block">{{ error }}</span>

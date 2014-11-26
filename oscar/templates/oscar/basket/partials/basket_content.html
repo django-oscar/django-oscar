@@ -1,8 +1,8 @@
 {% load i18n %}
 {% load thumbnail %}
 {% load currency_filters %}
-{% load html_tags %}
 {% load purchase_info_tags %}
+{% load widget_tweaks %}
 
 {% if basket_warnings %}
     <h5>{% trans "Important messages about items in your basket" %}</h5>
@@ -61,7 +61,7 @@
                             <div class="col-sm-3">
                                 <div class="checkout-quantity form-group {% if form.errors %}error{% endif %}">
                                     <p>
-                                        {{ form.quantity|add_class:"form-control" }}
+                                        {% render_field form.quantity class+="form-control" %}
                                         <button class="btn btn-default" type="submit" data-loading-text="{% trans 'Updating...' %}">{% trans "Update" %}</button>
                                     </p>
                                     <p>
