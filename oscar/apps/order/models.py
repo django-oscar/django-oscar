@@ -3,7 +3,7 @@ from oscar.apps.order.abstract_models import *  # noqa
 from oscar.apps.address.abstract_models import (AbstractShippingAddress,
                                                 AbstractBillingAddress)
 
-__all__ = []
+__all__ = ['PaymentEventQuantity', 'ShippingEventQuantity']
 
 
 if not is_model_registered('order', 'Order'):
