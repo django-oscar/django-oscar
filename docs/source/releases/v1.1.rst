@@ -21,6 +21,7 @@ Table of contents:
 Compatibility
 -------------
 
+
 .. _new_in_1.1:
 
 What's new in Oscar 1.1?
@@ -31,6 +32,8 @@ What's new in Oscar 1.1?
 Minor changes
 ~~~~~~~~~~~~~
 
+
+
 .. _incompatible_changes_in_1.1:
 
 Backwards incompatible changes in 1.1
@@ -38,6 +41,14 @@ Backwards incompatible changes in 1.1
 
 Misc
 ~~~~
+
+* The :class:`~oscar.apps.shipping.abstract_models.AbstractWeightBased` shipping
+  method now allows zero-weight baskets to have a non-zero shipping cost
+  (`#1565`_). This means that sites that rely on zero-weight baskets having no
+  change will need to introduce a new weight band that covers this edge case.
+
+.. _`#1565`: https://github.com/django-oscar/django-oscar/pull/1565
+
 
 Migrations
 ~~~~~~~~~~
