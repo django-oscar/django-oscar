@@ -333,6 +333,15 @@ AUTHENTICATION_BACKENDS = (
 LOGIN_REDIRECT_URL = '/'
 APPEND_SLASH = True
 
+# ====================
+# Messages contrib app
+# ====================
+
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger'
+}
+
 # Haystack settings
 HAYSTACK_CONNECTIONS = {
     'default': {

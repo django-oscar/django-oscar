@@ -11,7 +11,7 @@ var oscar = (function(o, $) {
         info: function(msg) { o.messages.addMessage('info', msg); },
         success: function(msg) { o.messages.addMessage('success', msg); },
         warning: function(msg) { o.messages.addMessage('warning', msg); },
-        error: function(msg) { o.messages.addMessage('error', msg); },
+        error: function(msg) { o.messages.addMessage('danger', msg); },
         clear: function() {
             $('#messages').html('');
         },
