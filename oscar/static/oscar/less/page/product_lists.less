@@ -5,13 +5,6 @@ ul {
         margin-left:0;
         padding-left:0;
         list-style: none;
-
-        &.no-padding {
-            [class*="col-"] {
-                padding-left: 0;
-                padding-right: 0;
-            }
-        }
     }
 }
 
@@ -52,12 +45,10 @@ ul {
     .price_color {
         margin-bottom: @line-height-computed / 2;
     }
-    // This could be set to 100% but this gives a little more space around products.
     .product_price {
         position:absolute;
         bottom:0;
-        left:5%;
-        width:90%;
+        width: 100%;
     }
 }
 
@@ -72,7 +63,7 @@ ul {
     position:relative;
     img {
         max-height:@imagecontainerheight - 10px;
-        max-width:90%;
+        max-width: 100%;
         width:auto;
         margin:0px auto;
     }
