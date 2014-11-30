@@ -31,7 +31,7 @@
         <div class="row">
             <div class="col-sm-9"><p>{{ category.description|safe }}</p></div>
             {% if category.image %}
-                <div class="col-sm-3"><img src="{{ category.image.url }}" alt="{{ category.name }}" /></div>
+                <div class="col-sm-3"><img src="{{ category.image.url }}" alt="{{ category.name }}" class="img-responsive" /></div>
             {% endif %}
         </div>
     {% endif %}
