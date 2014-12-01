@@ -38,7 +38,7 @@
                 {% for field in form %}
                     {# display title (first) and body (last) as full lines #}
                     {% if forloop.counter < 3 %}
-                        <div class="control-group {% for error in field.errors %}error{% endfor %}">
+                        <div class="form-group {% for error in field.errors %}error{% endfor %}">
                             {% if field.is_hidden %}
                                 {{ field }}
                             {% else %}
@@ -63,7 +63,7 @@
                             {% if field.is_hidden %}
                                 {{ field }}
                             {% else %}
-                                <span class="control-group {% if field.errors %}error{% endif %}">
+                                <span class="form-group {% if field.errors %}error{% endif %}">
                                     {{ field.label_tag }}
                                     {{ field }}
                                     {% for error in field.errors %}

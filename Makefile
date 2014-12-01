@@ -99,7 +99,7 @@ compiledmessages:
 css:
 	# Compile CSS files from LESS
 	lessc --source-map --source-map-less-inline oscar/static/oscar/less/styles.less oscar/static/oscar/css/styles.css
-	lessc --source-map --source-map-less-inline oscar/static/oscar/less/responsive.less oscar/static/oscar/css/responsive.css
+	lessc --source-map --source-map-less-inline oscar/static/oscar/less/responsive-bootstrap2.less oscar/static/oscar/css/responsive.css
 	lessc --source-map --source-map-less-inline oscar/static/oscar/less/dashboard.less oscar/static/oscar/css/dashboard.css
 	# Compile CSS for demo site
 	lessc --source-map --source-map-less-inline sites/demo/static/demo/less/styles.less sites/demo/static/demo/css/styles.css

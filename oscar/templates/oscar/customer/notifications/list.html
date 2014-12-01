@@ -33,11 +33,11 @@
                                 <em>{{ notification.date_sent }}</em> 
                             </td>
                             <td>
-                                <a href="{% url 'customer:notifications-detail' pk=notification.pk %}" class="btn btn-info btn-small">{% trans 'View' %}</a>
+                                <a href="{% url 'customer:notifications-detail' pk=notification.pk %}" class="btn btn-info btn-sm">{% trans 'View' %}</a>
                                 {% if list_type == 'inbox' %}
-                                    <a class="btn btn-success btn-small" href="#" data-behaviours="archive">{% trans 'Archive' context 'verb' %}</a>
+                                    <a class="btn btn-success btn-sm" href="#" data-behaviours="archive">{% trans 'Archive' context 'verb' %}</a>
                                 {% endif %}
-                                <a class="btn btn-danger btn-small "href="#" data-behaviours="delete">{% trans 'Delete' %}</a>
+                                <a class="btn btn-danger btn-sm "href="#" data-behaviours="delete">{% trans 'Delete' %}</a>
                             </td>
                         </tr>
                     {% endfor %}

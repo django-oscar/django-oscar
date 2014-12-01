@@ -23,7 +23,7 @@
 {% block headertext %}{{ partner.name }}{% endblock %}
 
 {% block dashboard_content %}
-    {% include 'partials/form.html' %}
+    {% include 'dashboard/partials/form.html' %}
 
     <h2>{% trans "Users" %}</h2>
     {% if users %}

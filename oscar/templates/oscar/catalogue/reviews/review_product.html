@@ -1,8 +1,8 @@
 {% load thumbnail %}
 {% load staticfiles %}
 
-<div class="row-fluid">
-    <div class="span2">
+<div class="row">
+    <div class="col-sm-2">
         <div class="image_container">
             {% with image=product.primary_image %}
                 {% thumbnail image.original "x155" upscale=False as thumb %}
@@ -11,7 +11,7 @@
             {% endwith %}
         </div>
     </div>
-    <div class="span10">
+    <div class="col-sm-10">
         <h2><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a></h2>
         {% include "catalogue/partials/stock_record.html" %}
         {% include "catalogue/reviews/partials/review_stars.html" %}

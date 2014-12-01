@@ -20,15 +20,15 @@
 
 {% block shipping_method %}
     <div class="basket-title">
-        <div class="row-fluid">
-            <h4 class="span8">{% trans "Method" %}</h4>
-            <h4 class="span3">{% trans "Cost" %}</h4>
+        <div class="row">
+            <h4 class="col-sm-8">{% trans "Method" %}</h4>
+            <h4 class="col-sm-3">{% trans "Cost" %}</h4>
         </div>
     </div>
     {% for method in methods %}
         <div class="basket-items">
-            <div class="row-fluid">
-                <div class="span8">
+            <div class="row">
+                <div class="col-sm-8">
                     <h4>{{ method.name }}</h4>
                     {% if method.description %}
                         <p>{{ method.description|safe }}</p>
@@ -43,7 +43,7 @@
                         </small>
                     {% endif %}
                 </div>
-                <div class="span1">
+                <div class="col-sm-1">
                     {% shipping_charge method basket as charge %}
                     {% if charge.is_tax_known %}
                         {{ charge.incl_tax|currency:basket.currency }}
@@ -51,11 +51,11 @@
                         {{ charge.excl_tax|currency:basket.currency }}
                     {% endif %}
                 </div>
-                <div class="span3">
+                <div class="col-sm-3">
                     <form method="post" action="{% url 'checkout:shipping-method' %}">
                         {% csrf_token %}
-                        <input type="hidden" name="method_code" value="{{ method.code }}" class="btn" />
-                        <button type="submit" class="btn btn-large btn-primary pull-right" data-loading-text="{% trans 'Submitting...' %}">{% trans "Select option" %}</button>
+                        <input type="hidden" name="method_code" value="{{ method.code }}" />
+                        <button type="submit" class="btn btn-lg btn-primary pull-right" data-loading-text="{% trans 'Submitting...' %}">{% trans "Select option" %}</button>
                     </form>
                 </div>    
             </div>

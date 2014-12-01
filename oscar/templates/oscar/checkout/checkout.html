@@ -16,14 +16,14 @@
 {% block content %}
 
     {% if error %}
-        <div class="alert alert-error">
+        <div class="alert alert-danger">
             {{ error }}
         </div>
     {% endif %}
 
-    <div class="row-fluid shipping-payment">
+    <div class="row shipping-payment">
         {% block shipping_address %}
-            <div class="span6">
+            <div class="col-sm-6">
                 <div class="sub-header">
                     <h2>{% trans "Shipping" %}</h2>
                 </div>
@@ -79,7 +79,7 @@
 
         {# You will almost certainly want to override this block to provide a payment summary #}
         {% block payment_method %}
-            <div class="span6">
+            <div class="col-sm-6">
                 <div class="sub-header">
                     <h2>{% trans "Payment" %}</h2>
                 </div>
@@ -105,17 +105,17 @@
             <h2>{% trans "Order contents" %}</h2>
         </div>
         <div class="basket-title">
-            <div class="row-fluid">
-                <p class="span9 h4">{% trans "Item" %}</p>
-                <p class="span1 h4 align-center">{% trans "Quantity" %}</p>
-                <p class="span2 h4 align-right">{% trans "Total" %}</p>
+            <div class="row">
+                <p class="col-sm-9 h4">{% trans "Item" %}</p>
+                <p class="col-sm-1 h4 align-center">{% trans "Quantity" %}</p>
+                <p class="col-sm-2 h4 align-right">{% trans "Total" %}</p>
             </div>
         </div>
         {% for line in basket.all_lines %}
             {% purchase_info_for_line request line as session %}
             <div class="basket-items">
-                <div class="row-fluid">
-                    <div class="span2">
+                <div class="row">
+                    <div class="col-sm-2">
                         <div class="image_container">
                             {% with image=line.product.primary_image %}
                                 {% thumbnail image.original "100x100" upscale=False as thumb %}
@@ -124,14 +124,14 @@
                             {% endwith %}
                         </div>
                     </div>
-                    <div class="span7">
+                    <div class="col-sm-7">
                         <h3><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h3>
                         <span class="availability {{ session.availability.code }}">{{ session.availability.message }}</span>
                     </div>
-                    <div class="span1 align-center">
+                    <div class="col-sm-1 align-center">
                         {{ line.quantity }}
                     </div>
-                    <div class="span2 align-right">
+                    <div class="col-sm-2 align-right">
                         <p class="price_color">
                             {% if not show_tax_separately and line.is_tax_known %}
                                 {{ line.line_price_incl_tax|currency:basket.currency }}
@@ -144,9 +144,9 @@
             </div>
         {% endfor %}
 
-        <div class="row-fluid">
-            <div class="span6">&nbsp;</div>
-            <div class="span6">
+        <div class="row">
+            <div class="col-sm-6">&nbsp;</div>
+            <div class="col-sm-6">
                 <div class="sub-header">
                     <h2>{% trans 'Totals' %}</h2>
                 </div>

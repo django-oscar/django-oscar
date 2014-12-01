@@ -11,10 +11,10 @@
         <link rel="stylesheet" href="{% static "oscar/css/bootstrap.min.css" %}" />
         {% if use_less %}
             <link rel="stylesheet" type="text/less" href="{% static "oscar/less/dashboard.less" %}" />
-            <link rel="stylesheet" type="text/less" href="{% static "oscar/less/responsive.less" %}" />
+            <link rel="stylesheet" type="text/less" href="{% static "oscar/less/responsive-bootstrap2.less" %}" />
         {% else %}
             <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard.css" %}" />
-            <link rel="stylesheet" type="text/css" href="{% static "oscar/css/responsive.css" %}" />
+            <link rel="stylesheet" type="text/css" href="{% static "oscar/css/responsive-bootstrap2.css" %}" />
         {% endif %}
     {% endcompress %}
 {% endblock %}
@@ -117,7 +117,7 @@
         {% endblock %}
 
         <div class="content">
-            {% include 'partials/alert_messages.html' %}
+            {% include 'dashboard/partials/alert_messages.html' %}
             {% block header %}
             <div class="page-header action">
                 <h1>{% block headertext %}{% endblock %}</h1>
@@ -146,6 +146,16 @@
             <img src="//analytics.oscarcommerce.com/tracker.gif?{{ call_home }}" style="display:none" />
         {% endif %}
     {% endblock %}
+{% endblock %}
+
+{# Local scripts #}
+{% block scripts %}
+    {% compress js %}
+    <!-- Twitter Bootstrap -->
+    <script type="text/javascript" src="{% static "oscar/js/bootstrap/bootstrap.min.js" %}"></script>
+    <!-- Oscar -->
+    <script src="{% static "oscar/js/oscar/ui.js" %}" type="text/javascript" charset="utf-8"></script>
+    {% endcompress %}
 {% endblock %}
 
 {% block extrascripts %}

@@ -31,6 +31,7 @@ def configure():
                 'django.contrib.flatpages',
                 'django.contrib.staticfiles',
                 'compressor',
+                'widget_tweaks',
                 'tests._site.model_tests_app',  # contains models we need for testing
                 'tests._site.myauth',
 

@@ -16,12 +16,10 @@
     <ul class="breadcrumb">
         <li>
             <a href="{{ homepage_url }}">{% trans "Home" %}</a>
-            <span class="divider">/</span>
         </li>
         {% for category in category.get_ancestors %}
             <li>
                 <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
-                <span class="divider">/</span>
             </li>
         {% endfor %}
         <li class="active">{{ category.name }}</li>
@@ -30,10 +28,10 @@
 
 {% block content %}
     {% if category.description %}
-        <div class="row-fluid">
-            <div class="span9"><p>{{ category.description|safe }}</p></div>
+        <div class="row">
+            <div class="col-sm-9"><p>{{ category.description|safe }}</p></div>
             {% if category.image %}
-                <div class="span3"><img src="{{ category.image.url }}" alt="{{ category.name }}" /></div>
+                <div class="col-sm-3"><img src="{{ category.image.url }}" alt="{{ category.name }}" /></div>
             {% endif %}
         </div>
     {% endif %}

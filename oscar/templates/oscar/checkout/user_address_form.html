@@ -21,10 +21,8 @@
         <div class="well">
             {% csrf_token %}
             {% include "partials/form_fields.html" with form=form %}
-            <div class="controls">
-                <button type="submit" class="btn btn-large btn-primary" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
-                {% trans "or" %} <a href="{% url 'checkout:shipping-address' %}">{% trans "cancel" %}</a>.
-            </div>
+            <button type="submit" class="btn btn-lg btn-primary" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
+            {% trans "or" %} <a href="{% url 'checkout:shipping-address' %}">{% trans "cancel" %}</a>.
         </div>
     </form>
 {% endblock shipping_address %}
