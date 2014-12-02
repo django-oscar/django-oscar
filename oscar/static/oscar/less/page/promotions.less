@@ -3,7 +3,7 @@
     .image_container {
         @imagecontainerheight: 210px;
         min-height: @imagecontainerheight;
-        margin-bottom: @baseLineHeight;
+        margin-bottom: @line-height-computed;
         img {
             max-height: @imagecontainerheight - 10;
         }
@@ -17,8 +17,8 @@
         h3 {
             .h5();
         }
-        .row-fluid {
-            > [class*="span"] {
+        .row {
+            > [class*="col-"] {
                 float:none;
                 width:auto;
             }

@@ -29,8 +29,8 @@
         {% trans "Please make a note of this reference or print this page and quote it in any communication with us regarding your order." %}</p>
     </p>
 
-    <div class="row-fluid shipping-payment">
-        <div class="span6">
+    <div class="row shipping-payment">
+        <div class="col-sm-6">
             {% block shipping_info %}
                 <div class="sub-header">
                     <h2>{% trans "Shipping" %}</h2>
@@ -70,7 +70,7 @@
             {% endblock %}
         </div>
 
-        <div class="span6">
+        <div class="col-sm-6">
             {% block payment_info %}
                 <div class="sub-header">
                     <h2>{% trans "Payment" %}</h2>
@@ -114,17 +114,17 @@
     </div>
 
     <div class="basket-title">
-        <div class="row-fluid">
-            <p class="span9 h4">{% trans "Items purchased" %}</p>
-            <p class="span1 h4 align-center">{% trans "Quantity" %}</p>
-            <p class="span2 h4 align-right">{% trans "Total" %}</p>
+        <div class="row">
+            <p class="col-sm-9 h4">{% trans "Items purchased" %}</p>
+            <p class="col-sm-1 h4 align-center">{% trans "Quantity" %}</p>
+            <p class="col-sm-2 h4 align-right">{% trans "Total" %}</p>
         </div>
     </div>
 
     {% for line in order.lines.all %}
         <div class="basket-items">
-            <div class="row-fluid">
-                <div class="span2">
+            <div class="row">
+                <div class="col-sm-2">
                     <div class="image_container">
                         {% with image=line.product.primary_image %}
                             {% thumbnail image.original "200x200" upscale=False as thumb %}
@@ -133,7 +133,7 @@
                         {% endwith %}
                     </div>
                 </div>
-                <div class="span7">
+                <div class="col-sm-7">
                     <h3><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h3>
                     <p>
                     {% if line.upc %}{{ line.upc }}<br/>{% endif %}
@@ -144,10 +144,10 @@
                     {% endif %}
                     </p>
                 </div>
-                <div class="span1 align-center">
+                <div class="col-sm-1 align-center">
                     {{ line.quantity }}
                 </div>
-                <div class="span2 align-right">
+                <div class="col-sm-2 align-right">
                     <p class="price_color">
                         {% if show_tax_separately %}
                             {{ line.line_price_before_discounts_excl_tax|currency:order.currency }}
@@ -161,9 +161,9 @@
     {% endfor %}
 
     {% block basket_totals %}
-        <div class="row-fluid">
-            <div class="span6">&nbsp;</div>
-            <div class="span6">
+        <div class="row">
+            <div class="col-sm-6">&nbsp;</div>
+            <div class="col-sm-6">
                 <div class="sub-header">
                     <h2>{% trans 'Totals' %}</h2>
                 </div>
@@ -308,13 +308,13 @@
 
 
     {% block order_actions %}
-        <div class="form-actions">
-            <div class="row-fluid">
-                <div class="span3">
-                    <p><a onclick="window.print()" href="#" class="btn btn-primary btn-block btn-large">{% trans "Print this page" %}</a></p>
+        <div class="form-group form-actions">
+            <div class="row">
+                <div class="col-sm-4">
+                    <p><a onclick="window.print()" href="#" class="btn btn-primary btn-block btn-lg">{% trans "Print this page" %}</a></p>
                 </div>
-                <div class="span3 offset6">
-                    <p><a href="{{ homepage_url }}" class="btn btn-primary btn-block btn-large">{% trans "Continue shopping" %}</a></p>
+                <div class="col-sm-4 col-sm-offset-4">
+                    <p><a href="{{ homepage_url }}" class="btn btn-primary btn-block btn-lg">{% trans "Continue shopping" %}</a></p>
                 </div>
             </div>
         </div>

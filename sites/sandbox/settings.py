@@ -312,6 +312,7 @@ INSTALLED_APPS = [
     'template_timings_panel',
     'compressor',       # Oscar's templates use compressor
     'apps.gateway',     # For allowing dashboard access
+    'widget_tweaks',
 ]
 from oscar import get_core_apps
 INSTALLED_APPS = INSTALLED_APPS + get_core_apps()
@@ -331,6 +332,15 @@ AUTHENTICATION_BACKENDS = (
 
 LOGIN_REDIRECT_URL = '/'
 APPEND_SLASH = True
+
+# ====================
+# Messages contrib app
+# ====================
+
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger'
+}
 
 # Haystack settings
 HAYSTACK_CONNECTIONS = {

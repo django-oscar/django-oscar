@@ -13,11 +13,9 @@
     <ul class="breadcrumb">
         <li>
             <a href="{{ homepage_url }}">{% trans "Home" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             {% trans "Search" %}
-            <span class="divider">/</span>
         </li>
         <li class="active">"{{ query }}"</li>
     </ul>
@@ -82,9 +80,9 @@
     {% if page.object_list %}
         <section>
             <div>
-                <ol class="row-fluid">
+                <ol class="row">
                     {% for result in page.object_list %}
-                        <li class="span3 {% if forloop.counter0|divisibleby:"4" %}no-margin{% endif %}">{% render_product result.object %}</li>
+                        <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3">{% render_product result.object %}</li>
                     {% endfor %}
                 </ol>
                 {% include "partials/pagination.html" with page_obj=page %}

@@ -1,6 +1,19 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% load compress %}
 {% load promotion_tags %}
+
+{% block mainstyles %}
+    {% block styles %}
+        {% compress css %}
+            {% if use_less %}
+                <link rel="stylesheet" type="text/less" href="{% static "oscar/less/styles.less" %}" />
+            {% else %}
+                <link rel="stylesheet" type="text/css" href="{% static "oscar/css/styles.css" %}" />
+            {% endif %}
+        {% endcompress %}
+    {% endblock %}
+{% endblock %}
 
 {% block layout %}
     {# Top-horizontal bar with account, notifictions, dashboard links #}
@@ -9,7 +22,7 @@
     {# Site logo/title, mini-basket, browse dropdown and searchbox #}
     <header class="header container-fluid">
         <div class="page_inner">
-            <div class="row-fluid">
+            <div class="row">
                 {% include "partials/brand.html" %}
                 {# Mini-basket wrapped in a block so some templates can now display it #}
                 {% block mini_basket %}{% include "partials/mini_basket.html" %}{% endblock %}
@@ -52,7 +65,23 @@
     {% include "partials/footer.html" %}
 {% endblock %}
 
+{# Local scripts #}
+{% block scripts %}
+    {{ block.super }}
+    {% compress js %}
+    <!-- Twitter Bootstrap -->
+    <script type="text/javascript" src="{% static "oscar/js/bootstrap3/bootstrap.min.js" %}"></script>
+    <!-- Oscar -->
+    <script src="{% static "oscar/js/oscar/ui.js" %}" type="text/javascript" charset="utf-8"></script>
+    {% endcompress %}
+{% endblock %}
+
 {% block extrascripts %}
     {% include "partials/extrascripts.html" %}
     {{ block.super }}
+{% endblock %}
+
+{% block onbodyload %}
+    {{ block.super }}
+    oscar.init();
 {% endblock %}

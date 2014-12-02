@@ -4,7 +4,6 @@
 {% block extra_breadcrumbs %}
     <li>
         <a href="{% url 'customer:notifications-inbox' %}">{% trans 'Notifications inbox' %}</a>
-        <span class="divider">/</span>
     </li>
 {% endblock %}
 
@@ -36,6 +35,6 @@
             </tr>
         {% endif %}
     </table>
-    <div class="form-actions"><a href="{% url 'customer:notifications-inbox' %}" class="btn">{% trans 'Return to notifications inbox' %}</a></div>
+    <div class="form-group form-actions"><a href="{% url 'customer:notifications-inbox' %}" class="btn btn-default">{% trans 'Return to notifications inbox' %}</a></div>
 {% endblock tabcontent %}
 

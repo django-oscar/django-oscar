@@ -3,7 +3,7 @@
     {% if field.is_hidden %}
         {{ field }}
     {% else %}
-        <span class="control-group {% if field.errors %}error{% endif %}">
+        <span class="form-group {% if field.errors %}error{% endif %}">
             {{ field.label_tag }}
             {{ field }}
             {% for error in field.errors %}

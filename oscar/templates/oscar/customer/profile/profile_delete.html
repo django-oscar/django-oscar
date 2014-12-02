@@ -13,8 +13,8 @@
                 undone.
             {% endblocktrans %}
         </div>
-        <div class="form-actions">
-            <button class="btn btn-large btn-danger" type="submit" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button>
+        <div class="form-group form-actions">
+            <button class="btn btn-lg btn-danger" type="submit" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button>
             {% trans "or" %} <a href="{% url "customer:profile-view" %}">{% trans "cancel" %}</a>.
         </div>
     </form>

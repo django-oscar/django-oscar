@@ -12,11 +12,9 @@
 <ul class="breadcrumb">
     <li>
 	<a href="{{ homepage_url }}">{% trans "Home" %}</a>
-        <span class="divider">/</span>
     </li>
     <li>
         <a href="{% url 'offer:list' %}">{% trans "Offers" %}</a>
-        <span class="divider">/</span>
     </li>
     <li class="active">{{ offer.name }}</li>
 </ul>
@@ -27,17 +25,17 @@
 {% block content %}
 
     {% if not offer.is_available %}
-        <div class="alert alert-error">{% trans " This offer is no longer available." %}</div>
+        <div class="alert alert-danger">{% trans " This offer is no longer available." %}</div>
     {% endif %}
 
     {% if upsell_message %}
-    <div class="row-fluid">
+    <div class="row">
         {% if offer.description %}
-            <div class="span7">
+            <div class="col-sm-7">
                 <p>{{ offer.description|safe }}</p>
             </div>
         {% endif %}
-            <div class="span5">
+            <div class="col-sm-5">
                 <div class="well">
                     <h2 class="h4"><i class="icon-exclamation-sign icon-large"></i> {% trans "What you need to do" %}</h2>
                     <p>{{ upsell_message }}</p>
@@ -51,9 +49,9 @@
         <section>
             <div>
                 {% include "partials/pagination.html" %}
-                <ol class="row-fluid">
+                <ol class="row">
                     {% for product in products %}
-                    <li class="span2 {% if forloop.counter0|divisibleby:"6" %}no-margin{% endif %}">{% render_product product %}</li>
+                    <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3">{% render_product product %}</li>
                     {% endfor %}
                 </ol>
                 {% include "partials/pagination.html" %}

@@ -10,7 +10,7 @@
                 
                 {% include 'partials/form_field.html' with field=form.title %}
 
-                <div class="reviewrating control-group {% if form.score.errors %}error{% endif %}">
+                <div class="reviewrating form-group {% if form.score.errors %}error{% endif %}">
                     <label for="{{ form.score.auto_id }}" class="control-label required">
                         {{ form.score.label|safe }} <span>*</span>
                     </label>
@@ -39,7 +39,7 @@
                 {% include 'partials/form_field.html' with field=form.email %}
 
 
-                <button type="submit" class="btn btn-primary btn-large" data-loading-text="{% trans 'Saving...' %}">{% trans "Save review" %}</button>
+                <button type="submit" class="btn btn-primary btn-lg" data-loading-text="{% trans 'Saving...' %}">{% trans "Save review" %}</button>
                 {% trans "or" %}
                 <a href="{{ product.get_absolute_url }}">{% trans "cancel" %}</a>
             </fieldset>

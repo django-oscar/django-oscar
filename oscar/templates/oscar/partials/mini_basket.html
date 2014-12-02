@@ -1,7 +1,7 @@
 {% load currency_filters %}
 {% load i18n %}
 
-<div class="basket-mini pull-right hidden-phone">
+<div class="basket-mini pull-right hidden-xs">
     <strong>{% trans "Basket total:" %}</strong>
     {% if request.basket.is_tax_known %}
         {{ request.basket.total_incl_tax|currency:request.basket.currency }}
@@ -10,8 +10,8 @@
     {% endif %}
 
     <span class="btn-group">
-        <a class="btn" href="{% url 'basket:summary' %}">{% trans "View basket" %}</a>
-        <button class="btn dropdown-toggle" data-toggle="dropdown">
+        <a class="btn btn-default" href="{% url 'basket:summary' %}">{% trans "View basket" %}</a>
+        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu pull-right">

@@ -117,7 +117,7 @@
         {% endblock %}
 
         <div class="content">
-            {% include 'partials/alert_messages.html' %}
+            {% include 'dashboard/partials/alert_messages.html' %}
             {% block header %}
             <div class="page-header action">
                 <h1>{% block headertext %}{% endblock %}</h1>
@@ -146,6 +146,16 @@
             <img src="//analytics.oscarcommerce.com/tracker.gif?{{ call_home }}" style="display:none" />
         {% endif %}
     {% endblock %}
+{% endblock %}
+
+{# Local scripts #}
+{% block scripts %}
+    {% compress js %}
+    <!-- Twitter Bootstrap -->
+    <script type="text/javascript" src="{% static "oscar/js/bootstrap/bootstrap.min.js" %}"></script>
+    <!-- Oscar -->
+    <script src="{% static "oscar/js/oscar/ui.js" %}" type="text/javascript" charset="utf-8"></script>
+    {% endcompress %}
 {% endblock %}
 
 {% block extrascripts %}
