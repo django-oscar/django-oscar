@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 from decimal import Decimal as D
 
 from django.test import TestCase
@@ -325,3 +325,31 @@ class TestOrderDiscount(TestCase):
         self.assertTrue(discount.offer is None)
 
         self.assertEqual(discount.description(), voucher.code)
+
+
+class OrderTests(TestCase):
+    def get_date_tuple(self, date=None):
+        """
+        Returns a tuple like (year, month, day, hour, minute) for
+        datetime comparisons.
+        We probably don't want to assert datetime objects have the same
+        number of miliseconds etc. just in case the object in the test
+        differs by some insignificant amount.
+        """
+        if date is None:
+            date = timezone.now()
+        return date.timetuple()[:-4]
+
+    def test_sets_date_placed_to_now_by_default(self):
+        order = create_order(number='100003')
+        self.assertTupleEqual(self.get_date_tuple(order.date_placed),
+                              self.get_date_tuple())
+
+    def test_allows_date_placed_to_be_changed_and_set_explicitly(self):
+        order = create_order(number='100003')
+        tzinfo = timezone.get_current_timezone()
+        order.date_placed = datetime(2012, 8, 11, 16, 14, tzinfo=tzinfo)
+        order.save()
+
+        self.assertTupleEqual(self.get_date_tuple(order.date_placed),
+                              (2012, 8, 11, 16, 14))

@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.utils.datastructures import SortedDict
+from django.utils.timezone import now
 
 from oscar.core.utils import get_default_currency
 from oscar.core.compat import AUTH_USER_MODEL
@@ -80,7 +81,7 @@ class AbstractOrder(models.Model):
     guest_email = models.EmailField(_("Guest email address"), blank=True)
 
     # Index added to this field for reporting
-    date_placed = models.DateTimeField(auto_now_add=True, db_index=True)
+    date_placed = models.DateTimeField(db_index=True)
 
     #: Order status pipeline.  This should be a dict where each (key, value) #:
     #: corresponds to a status and a list of possible statuses that can follow
@@ -305,6 +306,17 @@ class AbstractOrder(models.Model):
     def post_order_actions(self):
         return self.discounts.filter(
             category=AbstractOrderDiscount.DEFERRED)
+
+    def set_date_placed_default(self):
+        if self.date_placed is None:
+            self.date_placed = now()
+
+    def save(self, *args, **kwargs):
+        # Ensure the date_placed field works as it auto_now_add was set. But
+        # this gives us the ability to set the date_placed explicitly (which is
+        # useful when importing orders from another system).
+        self.set_date_placed_default()
+        super(AbstractOrder, self).save(*args, **kwargs)
 
 
 @python_2_unicode_compatible
