@@ -31,6 +31,12 @@ What's new in Oscar 1.1?
 Minor changes
 ~~~~~~~~~~~~~
 
+- The `Order.date_placed` field can now be set explicitly rather than using the
+  `auto_now_add` behaviour (`#1558`_).
+
+.. _`#1558`: https://github.com/django-oscar/django-oscar/pull/1558
+
+
 .. _incompatible_changes_in_1.1:
 
 Backwards incompatible changes in 1.1

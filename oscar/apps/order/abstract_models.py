@@ -312,11 +312,9 @@ class AbstractOrder(models.Model):
             self.date_placed = now()
 
     def save(self, *args, **kwargs):
-        """
-        Overrides django's save, so the date_placed field works as if
-        auto_now_add was set to True, but with the option to modify
-        the date later if the order is updated.
-        """
+        # Ensure the date_placed field works as it auto_now_add was set. But
+        # this gives us the ability to set the date_placed explicitly (which is
+        # useful when importing orders from another system).
         self.set_date_placed_default()
         super(AbstractOrder, self).save(*args, **kwargs)
 
