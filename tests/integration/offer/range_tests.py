@@ -65,8 +65,8 @@ class TestPartialRange(TestCase):
         excluded_products = [create_product() for _ in range(count)]
 
         for product in included_products:
-            models.RangeProduct.objects.create(product=product,
-                                               range=self.range)
+            models.RangeProduct.objects.create(
+                product=product, range=self.range)
 
         self.range.excluded_products.add(*excluded_products)
 
@@ -101,10 +101,11 @@ class TestPartialRange(TestCase):
         product_in_included_category = create_product()
         excluded_product_in_included_category = create_product()
 
-        catalogue_models.ProductCategory.objects.create(product=product_in_included_category,
-                                                        category=included_category)
-        catalogue_models.ProductCategory.objects.create(product=excluded_product_in_included_category,
-                                                        category=included_category)
+        catalogue_models.ProductCategory.objects.create(
+            product=product_in_included_category, category=included_category)
+        catalogue_models.ProductCategory.objects.create(
+            product=excluded_product_in_included_category,
+            category=included_category)
 
         self.range.included_categories.add(included_category)
         self.range.excluded_products.add(excluded_product_in_included_category)
@@ -124,10 +125,10 @@ class TestPartialRange(TestCase):
         c_product = create_product()
         gc_product = create_product()
 
-        catalogue_models.ProductCategory.objects.create(product=c_product,
-                                                        category=child_category)
-        catalogue_models.ProductCategory.objects.create(product=gc_product,
-                                                        category=grand_child_category)
+        catalogue_models.ProductCategory.objects.create(
+            product=c_product, category=child_category)
+        catalogue_models.ProductCategory.objects.create(
+            product=gc_product, category=grand_child_category)
 
         self.range.included_categories.add(parent_category)
 
