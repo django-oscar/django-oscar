@@ -958,27 +958,25 @@ class Range(models.Model):
 
     def all_products(self):
         """
-        Return a queryset containing all the products in the
-        included_products plus the products contained in the
-        included classes and included categories,
-        minus the products in excluded_products.
-        """
+        Return a queryset containing all the products in the range
 
+        This includes included_products plus the products contained in the
+        included classes and categories, minus the products in
+        excluded_products.
+        """
         if self.proxy_class:
             return load_proxy(self.proxy_class)().all_products()
 
         Product = get_model("catalogue", "Product")
         if self.includes_all_products:
-            # do not return child products
-            return Product.objects.filter(structure__in=[Product.PARENT,
-                                                         Product.STANDALONE])
+            # Filter out child products
+            return Product.browsable.all()
 
-        product_set = Product.objects.filter(
+        return Product.objects.filter(
             Q(id__in=self._included_product_ids()) |
             Q(product_class_id__in=self._class_ids()) |
             Q(productcategory__category_id__in=self._category_ids())
         ).exclude(id__in=self._excluded_product_ids())
-        return product_set
 
     @property
     def is_editable(self):
