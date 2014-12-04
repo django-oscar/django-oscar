@@ -1,7 +1,7 @@
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, ugettext_noop
 
-from django_tables2 import Table, Column, LinkColumn, TemplateColumn, A
+from django_tables2 import Column, LinkColumn, TemplateColumn, A
 
 from oscar.core.loading import get_class, get_model
 
@@ -10,7 +10,7 @@ Product = get_model('catalogue', 'Product')
 Category = get_model('catalogue', 'Category')
 
 
-class ProductTable(Table):
+class ProductTable(DashboardTable):
     title = TemplateColumn(
         verbose_name=_('Title'),
         template_name='dashboard/catalogue/product_row_title.html',
@@ -37,6 +37,8 @@ class ProductTable(Table):
         template_name='dashboard/catalogue/product_row_actions.html',
         orderable=False)
 
+    icon = "sitemap"
+
     class Meta(DashboardTable.Meta):
         model = Product
         fields = ('upc', 'date_updated')
@@ -45,7 +47,7 @@ class ProductTable(Table):
         order_by = '-date_updated'
 
 
-class CategoryTable(Table):
+class CategoryTable(DashboardTable):
     name = LinkColumn('dashboard:catalogue-category-update', args=[A('pk')])
     description = TemplateColumn(
         template_code='{{ record.description|default:""|striptags'
@@ -60,6 +62,10 @@ class CategoryTable(Table):
     actions = TemplateColumn(
         template_name='dashboard/catalogue/category_row_actions.html',
         orderable=False)
+
+    icon = "sitemap"
+    caption_singular = ugettext_noop("{count} Category")
+    caption_plural = ugettext_noop("{count} Categories")
 
     class Meta(DashboardTable.Meta):
         model = Category

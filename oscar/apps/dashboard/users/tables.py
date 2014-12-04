@@ -1,11 +1,11 @@
-from django_tables2 import Table, LinkColumn, TemplateColumn, Column, A
+from django_tables2 import LinkColumn, TemplateColumn, Column, A
 
 from oscar.core.loading import get_class
 
 DashboardTable = get_class('dashboard.tables', 'DashboardTable')
 
 
-class UserTable(Table):
+class UserTable(DashboardTable):
     check = TemplateColumn(
         template_name='dashboard/users/user_row_checkbox.html',
         verbose_name=' ', orderable=False)
@@ -20,6 +20,8 @@ class UserTable(Table):
     actions = TemplateColumn(
         template_name='dashboard/users/user_row_actions.html',
         verbose_name=' ')
+
+    icon = "group"
 
     class Meta(DashboardTable.Meta):
         template = 'dashboard/users/table.html'

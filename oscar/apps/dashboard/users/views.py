@@ -94,11 +94,14 @@ class IndexView(BulkEditMixin, SingleTableMixin, FormMixin, TemplateView):
 
         return queryset
 
+    def get_table(self, **kwargs):
+        table = super(IndexView, self).get_table(**kwargs)
+        table.caption = self.desc_template % self.desc_ctx
+        return table
+
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
         context['form'] = self.form
-        context['queryset_description'] = self.desc_template % self.desc_ctx
-        context['queryset_icon'] = 'group'
         return context
 
     def make_inactive(self, request, users):
