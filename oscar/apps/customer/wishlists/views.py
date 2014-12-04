@@ -9,8 +9,7 @@ from django.views.generic import (ListView, CreateView, UpdateView, DeleteView,
                                   View, FormView)
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.customer.mixins import PageTitleMixin
-from oscar.core.loading import get_classes, get_model
+from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import redirect_to_referrer, safe_referrer
 
 WishList = get_model('wishlists', 'WishList')
@@ -18,6 +17,7 @@ Line = get_model('wishlists', 'Line')
 Product = get_model('catalogue', 'Product')
 WishListForm, LineFormset = get_classes('wishlists.forms',
                                         ['WishListForm', 'LineFormset'])
+PageTitleMixin = get_class('customer.mixins', 'PageTitleMixin')
 
 
 class WishListListView(PageTitleMixin, ListView):
