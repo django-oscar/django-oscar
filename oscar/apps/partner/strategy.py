@@ -5,6 +5,8 @@ from . import availability, prices
 
 
 # A container for policies
+from oscar.core.decorators import deprecated
+
 PurchaseInfo = namedtuple(
     'PurchaseInfo', ['price', 'availability', 'stockrecord'])
 
@@ -74,12 +76,12 @@ class Base(object):
             "information."
         )
 
-    def fetch_for_group(self, product):
+    def fetch_for_parent(self, product):
         """
-        Given a group product, fetch a ``StockInfo`` instance
+        Given a parent product, fetch a ``StockInfo`` instance
         """
         raise NotImplementedError(
-            "A strategy class must define a fetch_for_group method "
+            "A strategy class must define a fetch_for_parent method "
             "for returning the availability and pricing "
             "information."
         )
@@ -122,14 +124,16 @@ class Structured(Base):
             availability=self.availability_policy(product, stockrecord),
             stockrecord=stockrecord)
 
-    def fetch_for_group(self, product):
-        # Select variants and associated stockrecords
-        variant_stock = self.select_variant_stockrecords(product)
+    def fetch_for_parent(self, product):
+        # Select children and associated stockrecords
+        children_stock = self.select_children_stockrecords(product)
         return PurchaseInfo(
-            price=self.group_pricing_policy(product, variant_stock),
-            availability=self.group_availability_policy(
-                product, variant_stock),
+            price=self.parent_pricing_policy(product, children_stock),
+            availability=self.parent_availability_policy(
+                product, children_stock),
             stockrecord=None)
+
+    fetch_for_group = deprecated(fetch_for_parent)
 
     def select_stockrecord(self, product):
         """
@@ -139,14 +143,17 @@ class Structured(Base):
             "A structured strategy class must define a "
             "'select_stockrecord' method")
 
-    def select_variant_stockrecords(self, product):
+    def select_children_stockrecords(self, product):
         """
-        Select appropriate stock record for all variants of a product
+        Select appropriate stock record for all children of a product
         """
         records = []
-        for variant in product.variants.all():
-            records.append((variant, self.select_stockrecord(variant)))
+        for child in product.children.all():
+            # Use tuples of (child product, stockrecord)
+            records.append((child, self.select_stockrecord(child)))
         return records
+
+    select_variant_stockrecords = deprecated(select_children_stockrecords)
 
     def pricing_policy(self, product, stockrecord):
         """
@@ -156,6 +163,12 @@ class Structured(Base):
             "A structured strategy class must define a "
             "'pricing_policy' method")
 
+    def parent_pricing_policy(self, product, children_stock):
+        raise NotImplementedError(
+            "A structured strategy class must define a "
+            "'parent_pricing_policy' method")
+    group_pricing_policy = deprecated(parent_pricing_policy)
+
     def availability_policy(self, product, stockrecord):
         """
         Return the appropriate availability policy
@@ -163,6 +176,12 @@ class Structured(Base):
         raise NotImplementedError(
             "A structured strategy class must define a "
             "'availability_policy' method")
+
+    def parent_availability_policy(self, product, children_stock):
+        raise NotImplementedError(
+            "A structured strategy class must define a "
+            "'parent_availability_policy' method")
+    group_availability_policy = deprecated(parent_availability_policy)
 
 
 # Mixins - these can be used to construct the appropriate strategy class
@@ -200,9 +219,9 @@ class StockRequired(object):
             return availability.StockRequired(
                 stockrecord.net_stock_level)
 
-    def group_availability_policy(self, product, variant_stock):
-        # A parent product is available if one of its variants is
-        for variant, stockrecord in variant_stock:
+    def parent_availability_policy(self, product, children_stock):
+        # A parent product is available if one of its children is
+        for child, stockrecord in children_stock:
             policy = self.availability_policy(product, stockrecord)
             if policy.is_available_to_buy:
                 return availability.Available()
@@ -217,15 +236,16 @@ class NoTax(object):
     """
 
     def pricing_policy(self, product, stockrecord):
-        if not stockrecord:
+        # Check stockrecord has the appropriate data
+        if not stockrecord or stockrecord.price_excl_tax is None:
             return prices.Unavailable()
         return prices.FixedPrice(
             currency=stockrecord.price_currency,
             excl_tax=stockrecord.price_excl_tax,
             tax=D('0.00'))
 
-    def group_pricing_policy(self, product, variant_stock):
-        stockrecords = [x[1] for x in variant_stock if x[1] is not None]
+    def parent_pricing_policy(self, product, children_stock):
+        stockrecords = [x[1] for x in children_stock if x[1] is not None]
         if not stockrecords:
             return prices.Unavailable()
         # We take price from first record
@@ -255,6 +275,20 @@ class FixedRateTax(object):
             excl_tax=stockrecord.price_excl_tax,
             tax=tax)
 
+    def parent_pricing_policy(self, product, children_stock):
+        stockrecords = [x[1] for x in children_stock if x[1] is not None]
+        if not stockrecords:
+            return prices.Unavailable()
+
+        # We take price from first record
+        stockrecord = stockrecords[0]
+        tax = (stockrecord.price_excl_tax * self.rate).quantize(self.exponent)
+
+        return prices.FixedPrice(
+            currency=stockrecord.price_currency,
+            excl_tax=stockrecord.price_excl_tax,
+            tax=tax)
+
 
 class DeferredTax(object):
     """
@@ -266,6 +300,18 @@ class DeferredTax(object):
     def pricing_policy(self, product, stockrecord):
         if not stockrecord:
             return prices.Unavailable()
+        return prices.FixedPrice(
+            currency=stockrecord.price_currency,
+            excl_tax=stockrecord.price_excl_tax)
+
+    def parent_pricing_policy(self, product, children_stock):
+        stockrecords = [x[1] for x in children_stock if x[1] is not None]
+        if not stockrecords:
+            return prices.Unavailable()
+
+        # We take price from first record
+        stockrecord = stockrecords[0]
+
         return prices.FixedPrice(
             currency=stockrecord.price_currency,
             excl_tax=stockrecord.price_excl_tax)

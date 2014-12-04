@@ -3,6 +3,7 @@ from decimal import Decimal as D
 
 from django.test import TestCase
 from django.core import exceptions
+from django.utils.timezone import utc
 from django_dynamic_fixture import G
 
 from oscar.apps.voucher.models import Voucher
@@ -10,8 +11,8 @@ from oscar.apps.order.models import Order
 from oscar.core.compat import get_user_model
 
 
-START_DATETIME = datetime.datetime(2011, 1, 1)
-END_DATETIME = datetime.datetime(2012, 1, 1)
+START_DATETIME = datetime.datetime(2011, 1, 1).replace(tzinfo=utc)
+END_DATETIME = datetime.datetime(2012, 1, 1).replace(tzinfo=utc)
 User = get_user_model()
 
 
@@ -38,7 +39,7 @@ class TestAVoucher(TestCase):
                                end_datetime=END_DATETIME)
 
     def test_is_active_between_start_and_end_dates(self):
-        test = datetime.datetime(2011, 6, 10)
+        test = datetime.datetime(2011, 6, 10).replace(tzinfo=utc)
         self.assertTrue(self.voucher.is_active(test))
 
     def test_is_active_on_end_date(self):
@@ -48,7 +49,7 @@ class TestAVoucher(TestCase):
         self.assertTrue(self.voucher.is_active(START_DATETIME))
 
     def test_is_inactive_outside_of_start_and_end_dates(self):
-        test = datetime.datetime(2012, 3, 10)
+        test = datetime.datetime(2012, 3, 10).replace(tzinfo=utc)
         self.assertFalse(self.voucher.is_active(test))
 
     def test_increments_total_discount_when_recording_usage(self):

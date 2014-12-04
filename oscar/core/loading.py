@@ -1,11 +1,52 @@
 import sys
 import traceback
+from importlib import import_module
 
+import django
 from django.conf import settings
-from django.db.models import get_model as django_get_model
+from django.utils import six
 
 from oscar.core.exceptions import (ModuleNotFoundError, ClassNotFoundError,
                                    AppNotFoundError)
+
+
+def import_string(dotted_path):
+    """
+    Import a dotted module path and return the attribute/class designated by
+    the last name in the path. Raise ImportError if the import failed.
+
+    This is backported from unreleased Django 1.7 at
+    47927eb786f432cb069f0b00fd810c465a78fd71. Can be removed once we don't
+    support Django versions below 1.7.
+    """
+    try:
+        module_path, class_name = dotted_path.rsplit('.', 1)
+    except ValueError:
+        msg = "%s doesn't look like a module path" % dotted_path
+        six.reraise(ImportError, ImportError(msg), sys.exc_info()[2])
+
+    module = import_module(module_path)
+
+    try:
+        return getattr(module, class_name)
+    except AttributeError:
+        msg = 'Module "%s" does not define a "%s" attribute/class' % (
+            dotted_path, class_name)
+        six.reraise(ImportError, ImportError(msg), sys.exc_info()[2])
+    try:
+        module_path, class_name = dotted_path.rsplit('.', 1)
+    except ValueError:
+        msg = "%s doesn't look like a module path" % dotted_path
+        six.reraise(ImportError, ImportError(msg), sys.exc_info()[2])
+
+    module = __import__(module_path, fromlist=[class_name])
+
+    try:
+        return getattr(module, class_name)
+    except AttributeError:
+        msg = 'Module "%s" does not define a "%s" attribute/class' % (
+            dotted_path, class_name)
+        six.reraise(ImportError, ImportError(msg), sys.exc_info()[2])
 
 
 def get_class(module_label, classname):
@@ -69,30 +110,36 @@ def get_classes(module_label, classnames):
         ImportError: If the attempted import of a class raises an
             ``ImportError``, it is re-raised
     """
-
-    # e.g. split 'dashboard.catalogue.forms' in 'dashboard.catalogue', 'forms'
-    package, module = module_label.rsplit('.', 1)
+    if '.' not in module_label:
+        # Importing from top-level modules is not supported, e.g.
+        # get_class('shipping', 'Scale'). That should be easy to fix,
+        # but @maikhoepfel had a stab and could not get it working reliably.
+        # Overridable classes in a __init__.py might not be a good idea anyway.
+        raise ValueError(
+            "Importing from top-level modules is not supported")
 
     # import from Oscar package (should succeed in most cases)
     # e.g. 'oscar.apps.dashboard.catalogue.forms'
     oscar_module_label = "oscar.apps.%s" % module_label
-    oscar_module = _import_oscar_module(oscar_module_label, classnames)
+    oscar_module = _import_module(oscar_module_label, classnames)
 
     # returns e.g. 'oscar.apps.dashboard.catalogue',
-    # 'yourproject.apps.dashboard.catalogue' or 'dashboard.catalogue'
-    installed_apps_entry = _get_installed_apps_entry(package)
-    if not installed_apps_entry.startswith('oscar.apps.'):
-        # Attempt to import the classes from the local module
-        # e.g. 'yourproject.dashboard.catalogue.forms'
-        local_module_label = installed_apps_entry + '.' + module
-        local_module = _import_local_module(local_module_label, classnames)
-    else:
+    # 'yourproject.apps.dashboard.catalogue' or 'dashboard.catalogue',
+    # depending on what is set in INSTALLED_APPS
+    installed_apps_entry, app_name = _find_installed_apps_entry(module_label)
+    if installed_apps_entry.startswith('oscar.apps.'):
         # The entry is obviously an Oscar one, we don't import again
         local_module = None
+    else:
+        # Attempt to import the classes from the local module
+        # e.g. 'yourproject.dashboard.catalogue.forms'
+        sub_module = module_label.replace(app_name, '')
+        local_module_label = installed_apps_entry + sub_module
+        local_module = _import_module(local_module_label, classnames)
 
     if oscar_module is local_module is None:
-        # This intentionally doesn't rise an ImportError, because it would get
-        # masked by in some circular import scenarios.
+        # This intentionally doesn't raise an ImportError, because ImportError
+        # can get masked in complex circular import scenarios.
         raise ModuleNotFoundError(
             "The module with label '%s' could not be imported. This either"
             "means that it indeed does not exist, or you might have a problem"
@@ -103,17 +150,21 @@ def get_classes(module_label, classnames):
     return _pluck_classes([local_module, oscar_module], classnames)
 
 
-def _import_local_module(local_module_label, classnames):
+def _import_module(module_label, classnames):
+    """
+    Imports the module with the given name.
+    Returns None if the module doesn't exist, but propagates any import errors.
+    """
     try:
-        return __import__(local_module_label, fromlist=classnames)
+        return __import__(module_label, fromlist=classnames)
     except ImportError:
-        # There are 2 reasons why there is ImportError:
-        #  1. local_app does not exist
-        #  2. local_app exists but is corrupted (ImportError inside of the app)
+        # There are 2 reasons why there could be an ImportError:
         #
-        # Obviously, for the reason #1 we want to fall back to use Oscar app.
-        # For the reason #2 we want to propagate error (the dev obviously wants
-        # to override app and not use Oscar app)
+        #  1. Module does not exist. In that case, we ignore the import and
+        #     return None
+        #  2. Module exists but another ImportError occurred when trying to
+        #     import the module. In that case, it is important to propagate the
+        #     error.
         #
         # ImportError does not provide easy way to distinguish those two cases.
         # Fortunately, the traceback of the ImportError starts at __import__
@@ -125,15 +176,12 @@ def _import_local_module(local_module_label, classnames):
             raise
 
 
-def _import_oscar_module(oscar_module_label, classnames):
-    try:
-        return __import__(oscar_module_label, fromlist=classnames)
-    except ImportError:
-        # Oscar does not have this application, can't fallback to it
-        return None
-
-
 def _pluck_classes(modules, classnames):
+    """
+    Gets a list of class names and a list of modules to pick from.
+    For each class name, will return the class from the first module that has a
+    matching class.
+    """
     klasses = []
     for classname in classnames:
         klass = None
@@ -151,20 +199,51 @@ def _pluck_classes(modules, classnames):
 
 def _get_installed_apps_entry(app_name):
     """
-    Walk through INSTALLED_APPS and return the first match. This does depend
-    on the order of INSTALLED_APPS and will break if e.g. 'dashboard.catalogue'
-    comes before 'catalogue' in INSTALLED_APPS.
+    Given an app name (e.g. 'catalogue'), walk through INSTALLED_APPS
+    and return the first match, or None.
+    This does depend on the order of INSTALLED_APPS and will break if
+    e.g. 'dashboard.catalogue' comes before 'catalogue' in INSTALLED_APPS.
     """
     for installed_app in settings.INSTALLED_APPS:
-        if installed_app.endswith(app_name):
+        # match root-level apps ('catalogue') or apps with same name at end
+        # ('shop.catalogue'), but don't match 'fancy_catalogue'
+        if installed_app == app_name or installed_app.endswith('.' + app_name):
             return installed_app
-    raise AppNotFoundError("No app found matching '%s'" % app_name)
+    return None
+
+
+def _find_installed_apps_entry(module_label):
+    """
+    Given a module label, finds the best matching INSTALLED_APPS entry.
+
+    This is made trickier by the fact that we don't know what part of the
+    module_label is part of the INSTALLED_APPS entry. So we try all possible
+    combinations, trying the longer versions first. E.g. for
+    'dashboard.catalogue.forms', 'dashboard.catalogue' is attempted before
+    'dashboard'
+    """
+    modules = module_label.split('.')
+    # if module_label is 'dashboard.catalogue.forms.widgets', combinations
+    # will be ['dashboard.catalogue.forms', 'dashboard.catalogue', 'dashboard']
+    combinations = [
+        '.'.join(modules[:-count]) for count in range(1, len(modules))]
+    for app_name in combinations:
+        entry = _get_installed_apps_entry(app_name)
+        if entry:
+            return entry, app_name
+    raise AppNotFoundError(
+        "Couldn't find an app to import %s from" % module_label)
 
 
 def get_profile_class():
     """
     Return the profile model class
     """
+    # The AUTH_PROFILE_MODULE setting was deprecated in Django 1.5, but it
+    # makes sense for Oscar to continue to use it. Projects built on Django
+    # 1.4 are likely to have used a profile class and it's very difficult to
+    # upgrade to a single user model. Hence, we should continue to support
+    # having a separate profile class even if Django doesn't.
     setting = getattr(settings, 'AUTH_PROFILE_MODULE', None)
     if setting is None:
         return None
@@ -180,15 +259,94 @@ def feature_hidden(feature_name):
             feature_name in settings.OSCAR_HIDDEN_FEATURES)
 
 
-def get_model(app_label, model_name, *args, **kwargs):
-    """
-    Gets a model class by it's app label and model name. Fails loudly if the
-    model class can't be imported.
-    This is merely a thin wrapper around Django's get_model function.
-    """
-    model = django_get_model(app_label, model_name, *args, **kwargs)
-    if model is None:
-        raise ImportError(
-            "{app_label}.{model_name} could not be imported.".format(
-                app_label=app_label, model_name=model_name))
-    return model
+# The following section is concerned with offering both the
+# get_model(app_label, model_name) and
+# is_model_registered(app_label, model_name) methods. Because the Django
+# internals dramatically changed in the Django 1.7 app refactor, we distinguish
+# based on the Django version and declare a total of four methods that
+# hopefully do mostly the same
+
+
+if django.VERSION < (1, 7):
+
+    from django.db.models import get_model as django_get_model
+
+    def get_model(app_label, model_name, *args, **kwargs):
+        """
+        Gets a model class by it's app label and model name. Fails loudly if
+        the model class can't be imported.
+        This is merely a thin wrapper around Django's get_model function.
+        Raises LookupError if model isn't found.
+        """
+
+        # The snippet below is not useful in production, but helpful to
+        # investigate circular import issues
+        # from django.db.models.loading import app_cache_ready
+        # if not app_cache_ready():
+        #     print(
+        #         "%s.%s accessed before app cache is fully populated!" %
+        #         (app_label, model_name))
+
+        model = django_get_model(app_label, model_name, *args, **kwargs)
+        if model is None:
+            raise LookupError(
+                "{app_label}.{model_name} could not be imported.".format(
+                    app_label=app_label, model_name=model_name))
+        return model
+
+    def is_model_registered(app_label, model_name):
+        """
+        Checks whether a given model is registered. This is used to only
+        register Oscar models if they aren't overridden by a forked app.
+        """
+        return bool(django_get_model(app_label, model_name, seed_cache=False))
+
+else:
+
+    from django.apps import apps
+    from django.apps.config import MODELS_MODULE_NAME
+    from django.core.exceptions import AppRegistryNotReady
+
+    def get_model(app_label, model_name):
+        """
+        Fetches a Django model using the app registry.
+
+        This doesn't require that an app with the given app label exists,
+        which makes it safe to call when the registry is being populated.
+        All other methods to access models might raise an exception about the
+        registry not being ready yet.
+        Raises LookupError if model isn't found.
+        """
+        try:
+            return apps.get_model(app_label, model_name)
+        except AppRegistryNotReady:
+            if apps.apps_ready and not apps.models_ready:
+                # If this function is called while `apps.populate()` is
+                # loading models, ensure that the module that defines the
+                # target model has been imported and try looking the model up
+                # in the app registry. This effectively emulates
+                # `from path.to.app.models import Model` where we use
+                # `Model = get_model('app', 'Model')` instead.
+                app_config = apps.get_app_config(app_label)
+                # `app_config.import_models()` cannot be used here because it
+                # would interfere with `apps.populate()`.
+                import_module('%s.%s' % (app_config.name, MODELS_MODULE_NAME))
+                # In order to account for case-insensitivity of model_name,
+                # look up the model through a private API of the app registry.
+                return apps.get_registered_model(app_label, model_name)
+            else:
+                # This must be a different case (e.g. the model really doesn't
+                # exist). We just re-raise the exception.
+                raise
+
+    def is_model_registered(app_label, model_name):
+        """
+        Checks whether a given model is registered. This is used to only
+        register Oscar models if they aren't overridden by a forked app.
+        """
+        try:
+            apps.get_registered_model(app_label, model_name)
+        except LookupError:
+            return False
+        else:
+            return True

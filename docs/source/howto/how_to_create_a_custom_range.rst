@@ -3,7 +3,7 @@ How to create a custom range
 ============================
 
 Oscar ships with a range model that represents a set of products from your
-catalogue.  Using the dashbaord, this can be configured to be:
+catalogue.  Using the dashboard, this can be configured to be:
 
 1.  The whole catalogue
 2.  A subset of products selected by ID/SKU (CSV uploads can be used to do this)
@@ -27,17 +27,22 @@ A custom range must:
   boolean
 * have a ``num_products`` method that returns the number of products in the
   range or ``None`` if such a query would be too expensive.
+* have an ``all_products`` method that returns a queryset of all products in the
+  range.
 
 Example::
 
-    class ExclamatoryProducts(object)
+    class ExclamatoryProducts(object):
         name = "Products including a '!'"
 
         def contains_product(self, product):
             return "!" in product.title
 
         def num_products(self):
-            return Product.objects.filter(title__icontains="!").count()
+            return self.all_products().count()
+
+        def all_products(self):
+            return Product.objects.filter(title__icontains="!")
 
 Create range instance
 ---------------------

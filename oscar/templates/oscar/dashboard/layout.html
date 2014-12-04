@@ -11,17 +11,23 @@
         <link rel="stylesheet" href="{% static "oscar/css/bootstrap.min.css" %}" />
         {% if use_less %}
             <link rel="stylesheet" type="text/less" href="{% static "oscar/less/dashboard.less" %}" />
+            <link rel="stylesheet" type="text/less" href="{% static "oscar/less/responsive.less" %}" />
         {% else %}
             <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard.css" %}" />
+            <link rel="stylesheet" type="text/css" href="{% static "oscar/css/responsive.css" %}" />
         {% endif %}
     {% endcompress %}
 {% endblock %}
 
 {% block extrastyles %}
     {{ block.super }}
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/cupertino/jquery-ui.css">
     {% compress css %}
+        {% block jquery-ui-css %}
+            <link rel="stylesheet" href="{% static "oscar/js/jquery-ui/jquery-ui.css" %}">
+        {% endblock %}
         <link rel="stylesheet" href="{% static "oscar/js/select2/select2.css" %}" />
+        <link rel="stylesheet" href="{% static "oscar/css/select2-bootstrap.css" %}" />
+        <link rel="stylesheet" href="{% static "oscar/js/bootstrap-datetimepicker/bootstrap-datetimepicker.css" %}" />
     {% endcompress %}
 {% endblock %}
 
@@ -111,7 +117,7 @@
         {% endblock %}
 
         <div class="content">
-            {% include 'partials/alert_messages.html' %}
+            {% include 'dashboard/partials/alert_messages.html' %}
             {% block header %}
             <div class="page-header action">
                 <h1>{% block headertext %}{% endblock %}</h1>
@@ -126,33 +132,50 @@
     </div><!-- /container -->
 
     {% comment %}
-        This block includes a single pixel from one of Tangent's servers.  We use the referer header to determine which sites are
-        using Oscar.  Since Tangent sponsor Oscar's development, this is an important metric to help justify the investment.  You
-        are, of course, welcome to remove this tracker - but please email the mailing list if you have a production site using Oscar.
+        This block includes a single pixel from one of the django-oscar
+        organisation's servers. It's included to keep track of which sites are
+        running Oscar in production, and what versions of Python and Django are
+        used. This provides useful data when deciding which versions of Python
+        and Django to support.
+
+        You are, of course, welcome to remove this tracker. To do so, set
+        OSCAR_TRACKING=False in your settings.
     {% endcomment %}
     {% block trackerimage %}
-        {% if call_home and not debug %}
-            <img src="//oscar-static.tangentlabs.co.uk/tracker.gif" style="display:none" />
+        {% if call_home %}
+            <img src="//analytics.oscarcommerce.com/tracker.gif?{{ call_home }}" style="display:none" />
         {% endif %}
     {% endblock %}
+{% endblock %}
 
+{# Local scripts #}
+{% block scripts %}
+    {% compress js %}
+    <!-- Twitter Bootstrap -->
+    <script type="text/javascript" src="{% static "oscar/js/bootstrap/bootstrap.min.js" %}"></script>
+    <!-- Oscar -->
+    <script src="{% static "oscar/js/oscar/ui.js" %}" type="text/javascript" charset="utf-8"></script>
+    {% endcompress %}
 {% endblock %}
 
 {% block extrascripts %}
     {{ block.super }}
 
-    <script src="//code.jquery.com/ui/1.10.3/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
 
     {% compress js %}
         {# jQuery plugins #}
+        {% block jquery-ui-js %}
+            <script src="{% static "oscar/js/jquery-ui/jquery-ui.js" %}" type="text/javascript" charset="utf-8"></script>
+        {% endblock %}
         <script src="{% static "oscar/js/mousewheel/jquery.mousewheel.min.js" %}" type="text/javascript" charset="utf-8"></script>
-        <script src="{% static "oscar/js/scrollpane/jquery.jscrollpane.min.js" %}" type="text/javascript" charset="utf-8"></script>
-        {# The CSS for the timepicker is embedded in dashboard.less #}
-        <script src="{% static "oscar/js/timepicker/jquery-ui-timepicker-addon.min.js" %}" type="text/javascript" charset="utf-8"></script>
+        <script src="{% static "oscar/js/bootstrap-datetimepicker/bootstrap-datetimepicker.js" %}" type="text/javascript" charset="utf-8"></script>
+        <script src="{% static "oscar/js/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.all.js" %}" type="text/javascript" charset="utf-8"></script>
+        <script src="{% static "oscar/js/inputmask/jquery.inputmask.bundle.min.js" %}" type="text/javascript" charset="utf-8"></script>
         <script src="{% static "oscar/js/select2/select2.js" %}" type="text/javascript" charset="utf-8"></script>
         <script src="{% static "oscar/js/oscar/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
     {% endcompress %}
 
+    {# We don't use a fallback for tinyMCE as it dynamically loads several other files #}
     <script src="//tinymce.cachefly.net/4.0/tinymce.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="//tinymce.cachefly.net/4.0/jquery.tinymce.min.js" type="text/javascript" charset="utf-8"></script>
 
@@ -160,5 +183,8 @@
 
 {% block onbodyload %}
     {{ block.super }}
-    oscar.dashboard.init();
+    options = {
+      'languageCode': '{{ LANGUAGE_CODE }}'
+    };
+    oscar.dashboard.init(options);
 {% endblock %}

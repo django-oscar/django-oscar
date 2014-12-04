@@ -2,14 +2,16 @@ import re
 import zlib
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.core import exceptions
 
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.models.fields import UppercaseCharField, PhoneNumberField
-from six.moves import filter
+from django.utils.six.moves import filter
 
 
+@python_2_unicode_compatible
 class AbstractAddress(models.Model):
     """
     Superclass address object
@@ -123,7 +125,7 @@ class AbstractAddress(models.Model):
         'LK': r'^[0-9]{5}$',
         'LR': r'^[0-9]{4}$',
         'LS': r'^[0-9]{3}$',
-        'LT': r'^[0-9]{5}$',
+        'LT': r'^(LT-)?[0-9]{5}$',
         'LU': r'^[0-9]{4}$',
         'LV': r'^LV-[0-9]{4}$',
         'LY': r'^[0-9]{5}$',
@@ -211,32 +213,29 @@ class AbstractAddress(models.Model):
 
     title = models.CharField(
         pgettext_lazy(u"Treatment Pronouns for the customer", u"Title"),
-        max_length=64, choices=TITLE_CHOICES, blank=True, null=True)
-    first_name = models.CharField(
-        _("First name"), max_length=255, blank=True, null=True)
+        max_length=64, choices=TITLE_CHOICES, blank=True)
+    first_name = models.CharField(_("First name"), max_length=255, blank=True)
     last_name = models.CharField(_("Last name"), max_length=255, blank=True)
 
     # We use quite a few lines of an address as they are often quite long and
     # it's easier to just hide the unnecessary ones than add extra ones.
     line1 = models.CharField(_("First line of address"), max_length=255)
     line2 = models.CharField(
-        _("Second line of address"), max_length=255, blank=True, null=True)
+        _("Second line of address"), max_length=255, blank=True)
     line3 = models.CharField(
-        _("Third line of address"), max_length=255, blank=True, null=True)
-    line4 = models.CharField(_("City"), max_length=255, blank=True, null=True)
-    state = models.CharField(
-        _("State/County"), max_length=255, blank=True, null=True)
+        _("Third line of address"), max_length=255, blank=True)
+    line4 = models.CharField(_("City"), max_length=255, blank=True)
+    state = models.CharField(_("State/County"), max_length=255, blank=True)
     postcode = UppercaseCharField(
-        _("Post/Zip-code"), max_length=64, blank=True, null=True)
+        _("Post/Zip-code"), max_length=64, blank=True)
     country = models.ForeignKey('address.Country', verbose_name=_("Country"))
 
     #: A field only used for searching addresses - this contains all the
     #: relevant fields.  This is effectively a poor man's Solr text field.
-    search_text = models.CharField(
-        _("Search text - used only for searching addresses"),
-        max_length=1000, editable=False)
+    search_text = models.TextField(
+        _("Search text - used only for searching addresses"), editable=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.summary
 
     class Meta:
@@ -278,7 +277,7 @@ class AbstractAddress(models.Model):
             country_code = self.country.iso_3166_1_a2
             regex = self.POSTCODES_REGEX.get(country_code, None)
 
-            # Validate postcode against regext for the country if available
+            # Validate postcode against regex for the country if available
             if regex and not re.match(regex, postcode):
                 msg = _("The postcode '%(postcode)s' is not valid "
                         "for %(country)s") \
@@ -376,47 +375,62 @@ class AbstractAddress(models.Model):
         return fields
 
 
+@python_2_unicode_compatible
 class AbstractCountry(models.Model):
     """
     International Organization for Standardization (ISO) 3166-1 Country list.
+
+    The field names are a bit awkward, but kept for backwards compatibility.
+    pycountry's syntax of alpha2, alpha3, name and official_name seems sane.
     """
-    iso_3166_1_a2 = models.CharField(_('ISO 3166-1 alpha-2'), max_length=2,
-                                     primary_key=True)
-    iso_3166_1_a3 = models.CharField(_('ISO 3166-1 alpha-3'), max_length=3,
-                                     null=True, db_index=True)
-    # This should have been a CharField as it needs to be padded with zeros to
-    # be 3 digits.  Access via the numeric_code instead.
-    iso_3166_1_numeric = models.PositiveSmallIntegerField(
-        _('ISO 3166-1 numeric'), null=True, db_index=True)
-    name = models.CharField(_('Official name (CAPS)'), max_length=128)
+    iso_3166_1_a2 = models.CharField(
+        _('ISO 3166-1 alpha-2'), max_length=2, primary_key=True)
+    iso_3166_1_a3 = models.CharField(
+        _('ISO 3166-1 alpha-3'), max_length=3, blank=True)
+    iso_3166_1_numeric = models.CharField(
+        _('ISO 3166-1 numeric'), blank=True, max_length=3)
+
+    #: The commonly used name; e.g. 'United Kingdom'
     printable_name = models.CharField(_('Country name'), max_length=128)
+    #: The full official name of a country
+    #: e.g. 'United Kingdom of Great Britain and Northern Ireland'
+    name = models.CharField(_('Official name'), max_length=128)
 
     display_order = models.PositiveSmallIntegerField(
         _("Display order"), default=0, db_index=True,
         help_text=_('Higher the number, higher the country in the list.'))
 
-    is_shipping_country = models.BooleanField(_("Is Shipping Country"),
-                                              default=False, db_index=True)
+    is_shipping_country = models.BooleanField(
+        _("Is shipping country"), default=False, db_index=True)
 
     class Meta:
         abstract = True
+        app_label = 'address'
         verbose_name = _('Country')
         verbose_name_plural = _('Countries')
-        ordering = ('-display_order', 'name',)
+        ordering = ('-display_order', 'printable_name',)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.printable_name or self.name
 
     @property
     def code(self):
         """
-        Shorthand for the ISO 3166 code
+        Shorthand for the ISO 3166 Alpha-2 code
         """
         return self.iso_3166_1_a2
 
     @property
     def numeric_code(self):
-        return u"%.03d" % self.iso_3166_1_numeric
+        """
+        Shorthand for the ISO 3166 numeric code.
+
+        iso_3166_1_numeric used to wrongly be a integer field, but has to be
+        padded with leading zeroes. It's since been converted to a char field,
+        but the database might still contain non-padded strings. That's why
+        the padding is kept.
+        """
+        return u"%.03d" % int(self.iso_3166_1_numeric)
 
 
 class AbstractShippingAddress(AbstractAddress):
@@ -425,18 +439,28 @@ class AbstractShippingAddress(AbstractAddress):
 
     A shipping address should not be edited once the order has been placed -
     it should be read-only after that.
+
+    NOTE:
+    ShippingAddress is a model of the order app. But moving it there is tricky
+    due to circular import issues that are amplified by get_model/get_class
+    calls pre-Django 1.7 to register receivers. So...
+    TODO: Once Django 1.6 support is dropped, move AbstractBillingAddress and
+    AbstractShippingAddress to the order app, and move
+    PartnerAddress to the partner app.
     """
+
     phone_number = PhoneNumberField(
         _("Phone number"), blank=True,
         help_text=_("In case we need to call you about your order"))
     notes = models.TextField(
-        blank=True, null=True,
-        verbose_name=_('Instructions'),
+        blank=True, verbose_name=_('Instructions'),
         help_text=_("Tell us anything we should know when delivering "
                     "your order."))
 
     class Meta:
         abstract = True
+        # ShippingAddress is registered in order/models.py
+        app_label = 'order'
         verbose_name = _("Shipping address")
         verbose_name_plural = _("Shipping addresses")
 
@@ -445,10 +469,10 @@ class AbstractShippingAddress(AbstractAddress):
         """
         Return the order linked to this shipping address
         """
-        orders = self.order_set.all()
-        if not orders:
+        try:
+            return self.order_set.all()[0]
+        except IndexError:
             return None
-        return orders[0]
 
 
 class AbstractUserAddress(AbstractShippingAddress):
@@ -509,6 +533,7 @@ class AbstractUserAddress(AbstractShippingAddress):
 
     class Meta:
         abstract = True
+        app_label = 'address'
         verbose_name = _("User address")
         verbose_name_plural = _("User addresses")
         ordering = ['-num_orders']
@@ -528,9 +553,10 @@ class AbstractUserAddress(AbstractShippingAddress):
 
 
 class AbstractBillingAddress(AbstractAddress):
-
     class Meta:
         abstract = True
+        # BillingAddress is registered in order/models.py
+        app_label = 'order'
         verbose_name = _("Billing address")
         verbose_name_plural = _("Billing addresses")
 
@@ -539,10 +565,10 @@ class AbstractBillingAddress(AbstractAddress):
         """
         Return the order linked to this shipping address
         """
-        orders = self.order_set.all()
-        if not orders:
+        try:
+            return self.order_set.all()[0]
+        except IndexError:
             return None
-        return orders[0]
 
 
 class AbstractPartnerAddress(AbstractAddress):
@@ -555,5 +581,6 @@ class AbstractPartnerAddress(AbstractAddress):
 
     class Meta:
         abstract = True
+        app_label = 'partner'
         verbose_name = _("Partner address")
         verbose_name_plural = _("Partner addresses")

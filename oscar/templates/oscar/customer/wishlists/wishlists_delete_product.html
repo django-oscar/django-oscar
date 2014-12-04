@@ -5,19 +5,15 @@
     <ul class="breadcrumb">
         <li>
             <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'customer:wishlists-list' %}">{% trans 'Wish Lists' %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'customer:wishlists-detail' key=wishlist.key %}">{{ wishlist.name }}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Remove product" %}</li>
     </ul>
@@ -32,8 +28,8 @@
             {% endblocktrans %}
         </p>
 
-        <div class="form-actions">
-            <button type="submit" class="btn btn-large btn-danger">{% trans 'Remove' %}</button> {% trans 'or' %} <a href="{{ wishlist.get_absolute_url }}">{% trans 'cancel' %}</a>
+        <div class="form-group form-actions">
+            <button type="submit" class="btn btn-lg btn-danger" data-loading-text="{% trans 'Removing...' %}">{% trans 'Remove' %}</button> {% trans 'or' %} <a href="{{ wishlist.get_absolute_url }}">{% trans 'cancel' %}</a>
         </div>
     </form>
 {% endblock tabcontent %}

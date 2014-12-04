@@ -1,11 +1,12 @@
-from six.moves import http_client
-
+from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.utils.six.moves import http_client
+from django.utils.six.moves import http_client
+
 from oscar.apps.catalogue.models import Category
 from oscar.test.testcases import WebTestCase
 
 from oscar.test.factories import create_product
-from oscar.apps.catalogue.views import ProductListView
 
 
 class TestProductDetailView(WebTestCase):
@@ -20,21 +21,22 @@ class TestProductDetailView(WebTestCase):
         self.assertEqual(http_client.MOVED_PERMANENTLY, response.status_code)
         self.assertTrue(p.get_absolute_url() in response.location)
 
-    def test_variant_to_parent_redirect(self):
-        parent_product = create_product()
+    def test_child_to_parent_redirect(self):
+        parent_product = create_product(structure='parent')
         kwargs = {'product_slug': parent_product.slug,
                   'pk': parent_product.id}
         parent_product_url = reverse('catalogue:detail', kwargs=kwargs)
 
-        variant = create_product(title="Variant 1", parent=parent_product)
-        kwargs = {'product_slug': variant.slug,
-                  'pk': variant.id}
-        variant_url = reverse('catalogue:detail', kwargs=kwargs)
+        child = create_product(
+            title="Variant 1", structure='child', parent=parent_product)
+        kwargs = {'product_slug': child.slug,
+                  'pk': child.id}
+        child_url = reverse('catalogue:detail', kwargs=kwargs)
 
         response = self.app.get(parent_product_url)
         self.assertEqual(http_client.OK, response.status_code)
 
-        response = self.app.get(variant_url)
+        response = self.app.get(child_url)
         self.assertEqual(http_client.MOVED_PERMANENTLY, response.status_code)
 
 
@@ -55,7 +57,7 @@ class TestProductListView(WebTestCase):
         self.assertContains(page, "Unavailable")
 
     def test_shows_pagination_navigation_for_multiple_pages(self):
-        per_page = ProductListView.paginate_by
+        per_page = settings.OSCAR_PRODUCTS_PER_PAGE
         title = u"Product #%d"
         for idx in range(0, int(1.5 * per_page)):
             create_product(title=title % idx)
@@ -83,3 +85,13 @@ class TestProductCategoryView(WebTestCase):
         response = self.app.get(wrong_url)
         self.assertEqual(http_client.MOVED_PERMANENTLY, response.status_code)
         self.assertTrue(self.category.get_absolute_url() in response.location)
+
+    def test_can_chop_off_last_part_of_url(self):
+        child_category = self.category.add_child(name='Cool products')
+        full_url = child_category.get_absolute_url()
+        chopped_url = full_url.rsplit('/', 2)[0]
+        parent_url = self.category.get_absolute_url()
+        response = self.app.get(chopped_url).follow()  # fails if no redirect
+        self.assertTrue(response.url.endswith(parent_url))
+
+

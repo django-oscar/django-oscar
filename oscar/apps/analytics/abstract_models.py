@@ -1,10 +1,12 @@
 from decimal import Decimal
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from oscar.core.compat import AUTH_USER_MODEL
 
 
+@python_2_unicode_compatible
 class AbstractProductRecord(models.Model):
     """
     A record of a how popular a product is.
@@ -29,11 +31,12 @@ class AbstractProductRecord(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'analytics'
         ordering = ['-num_purchases']
         verbose_name = _('Product record')
         verbose_name_plural = _('Product records')
 
-    def __unicode__(self):
+    def __str__(self):
         return _("Record for '%s'") % self.product
 
 
@@ -64,10 +67,12 @@ class AbstractUserRecord(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'analytics'
         verbose_name = _('User record')
         verbose_name_plural = _('User records')
 
 
+@python_2_unicode_compatible
 class AbstractUserProductView(models.Model):
 
     user = models.ForeignKey(AUTH_USER_MODEL, verbose_name=_("User"))
@@ -76,14 +81,16 @@ class AbstractUserProductView(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'analytics'
         verbose_name = _('User product view')
         verbose_name_plural = _('User product views')
 
-    def __unicode__(self):
+    def __str__(self):
         return _("%(user)s viewed '%(product)s'") % {
             'user': self.user, 'product': self.product}
 
 
+@python_2_unicode_compatible
 class AbstractUserSearch(models.Model):
 
     user = models.ForeignKey(AUTH_USER_MODEL, verbose_name=_("User"))
@@ -92,10 +99,11 @@ class AbstractUserSearch(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'analytics'
         verbose_name = _("User search query")
         verbose_name_plural = _("User search queries")
 
-    def __unicode__(self):
+    def __str__(self):
         return _("%(user)s searched for '%(query)s'") % {
             'user': self.user,
             'query': self.query}

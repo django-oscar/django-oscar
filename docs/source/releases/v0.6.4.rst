@@ -1,0 +1,28 @@
+=========================
+Oscar 0.6.4 release notes
+=========================
+
+This is Oscar 0.6.4.  This is a minor release which addresses a few niggles,
+mainly around how partner users are handled in the dashboard.
+
+Bug fixes
+=========
+
+The following issues were fixed:
+
+* Editing variant products didn't correctly look up the parent product class.
+
+* `#1177`_ - Fix a regression in ``get_classes`` that prevented overridden
+  dashboard apps being loaded correctly.
+
+* `#1273`_ - Dashboard partner views now allow user forms to be dynamically
+  loaded (and hence overridden).
+
+* `#1275`_ - Dashboard partner user form now checks that the right fields are
+  picked up from the user model (see also `#1282`_, `#1283`_)
+
+.. _`#1177`: https://github.com/django-oscar/django-oscar/issues/1177
+.. _`#1273`: https://github.com/django-oscar/django-oscar/issues/1273
+.. _`#1275`: https://github.com/django-oscar/django-oscar/issues/1275
+.. _`#1282`: https://github.com/django-oscar/django-oscar/issues/1282
+.. _`#1283`: https://github.com/django-oscar/django-oscar/issues/1283

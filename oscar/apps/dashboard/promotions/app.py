@@ -1,7 +1,7 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from oscar.core.application import Application
-from oscar.apps.dashboard.promotions import views
+from oscar.core.loading import get_class
 from oscar.apps.promotions.conf import PROMOTION_CLASSES
 
 
@@ -9,19 +9,29 @@ class PromotionsDashboardApplication(Application):
     name = None
     default_permissions = ['is_staff', ]
 
-    list_view = views.ListView
-    page_list = views.PageListView
-    page_detail = views.PageDetailView
-    create_redirect_view = views.CreateRedirectView
-    delete_page_promotion_view = views.DeletePagePromotionView
+    list_view = get_class('dashboard.promotions.views',
+                          'ListView')
+    page_list = get_class('dashboard.promotions.views',
+                          'PageListView')
+    page_detail = get_class('dashboard.promotions.views',
+                            'PageDetailView')
+    create_redirect_view = get_class('dashboard.promotions.views',
+                                     'CreateRedirectView')
+    delete_page_promotion_view = get_class('dashboard.promotions.views',
+                                           'DeletePagePromotionView')
 
+    # Dynamically set the CRUD views for all promotion classes
+    view_names = (
+        ('create_%s_view', 'Create%sView'),
+        ('update_%s_view', 'Update%sView'),
+        ('delete_%s_view', 'Delete%sView')
+    )
     for klass in PROMOTION_CLASSES:
-        locals()['create_%s_view' % klass.classname()] \
-            = getattr(views, 'Create%sView' % klass.__name__)
-        locals()['update_%s_view' % klass.classname()] \
-            = getattr(views, 'Update%sView' % klass.__name__)
-        locals()['delete_%s_view' % klass.classname()] \
-            = getattr(views, 'Delete%sView' % klass.__name__)
+        for attr_name, view_name in view_names:
+            full_attr_name = attr_name % klass.classname()
+            full_view_name = view_name % klass.__name__
+            view = get_class('dashboard.promotions.views', full_view_name)
+            locals()[full_attr_name] = view
 
     def get_urls(self):
         urls = [
@@ -50,7 +60,7 @@ class PromotionsDashboardApplication(Application):
                     getattr(self, 'delete_%s_view' % code).as_view(),
                     name='promotion-delete')]
 
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = PromotionsDashboardApplication()

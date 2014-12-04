@@ -29,7 +29,7 @@
     <div class="well">
         <form action="." method="get" class="form-inline">
             {% include "partials/form_fields_inline.html" with form=form %}
-            <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+            <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
             {% trans "or" %}
             <a href="{% url 'dashboard:user-alert-list' %}" class="btn">{% trans "reset" %}</a>
         </form>

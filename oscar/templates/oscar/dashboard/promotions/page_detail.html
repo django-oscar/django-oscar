@@ -16,7 +16,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:promotion-list' %}">{% trans "Content block management" %}</a>
+            <a href="{% url 'dashboard:promotion-list' %}">{% trans "Content blocks" %}</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{% blocktrans %}Content blocks on page '{{ page_url }}'{% endblocktrans %}</li>
@@ -57,7 +57,7 @@
                                             <li><a href="{% url 'dashboard:pagepromotion-delete' pk=promotion.id %}">{% trans "Remove" %}</a></li>
                                         </ul>
                                     </div>
-                                    <a href="#" class="btn btn-info btn-handle"><i class="icon-move icon-large"></i> {% trans "Re-order" %}</a>
+                                    <a href="#" class="btn btn-info btn-handle"><i class="icon-move icon-large"></i> {% trans "Change display order" %}</a>
                                 </div>
                             </td>
                         </tr>

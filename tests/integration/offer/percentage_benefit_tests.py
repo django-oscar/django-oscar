@@ -11,18 +11,17 @@ from oscar.test.basket import add_product, add_products
 class TestAPercentageDiscountAppliedWithCountCondition(TestCase):
 
     def setUp(self):
-        range = models.Range.objects.create(
+        range = models.Range(
             name="All products", includes_all_products=True)
-        self.condition = models.CountCondition.objects.create(
+        self.condition = models.CountCondition(
             range=range,
             type=models.Condition.COUNT,
             value=2)
-        self.benefit = models.PercentageDiscountBenefit.objects.create(
+        self.benefit = models.PercentageDiscountBenefit(
             range=range,
             type=models.Benefit.PERCENTAGE,
             value=20)
         self.offer = mock.Mock()
-        self.offer.applies_to_tax_exclusive_prices = False
         self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):
@@ -57,19 +56,18 @@ class TestAPercentageDiscountAppliedWithCountCondition(TestCase):
 class TestAPercentageDiscountWithMaxItemsSetAppliedWithCountCondition(TestCase):
 
     def setUp(self):
-        range = models.Range.objects.create(
+        range = models.Range(
             name="All products", includes_all_products=True)
-        self.condition = models.CountCondition.objects.create(
+        self.condition = models.CountCondition(
             range=range,
             type=models.Condition.COUNT,
             value=2)
-        self.benefit = models.PercentageDiscountBenefit.objects.create(
+        self.benefit = models.PercentageDiscountBenefit(
             range=range,
             type=models.Benefit.PERCENTAGE,
             value=20,
             max_affected_items=1)
         self.offer = mock.Mock()
-        self.offer.applies_to_tax_exclusive_prices = False
         self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):
@@ -108,7 +106,6 @@ class TestAPercentageDiscountAppliedWithValueCondition(TestCase):
             type=models.Benefit.PERCENTAGE,
             value=20)
         self.offer = mock.Mock()
-        self.offer.applies_to_tax_exclusive_prices = False
         self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):
@@ -154,7 +151,6 @@ class TestAPercentageDiscountWithMaxItemsSetAppliedWithValueCondition(TestCase):
             value=20,
             max_affected_items=1)
         self.offer = mock.Mock()
-        self.offer.applies_to_tax_exclusive_prices = False
         self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):

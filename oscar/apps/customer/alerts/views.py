@@ -105,6 +105,7 @@ class ProductAlertCancelView(generic.RedirectView):
     Specifying the redirect url is possible by supplying a 'next' GET
     parameter.  It defaults to showing the associated product page.
     """
+    permanent = False
 
     def get(self, request, *args, **kwargs):
         if 'key' in kwargs:

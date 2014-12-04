@@ -1,66 +1,82 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from django.views import generic
 
-from oscar.apps.customer import views
-from oscar.apps.customer.notifications import views as notification_views
-from oscar.apps.customer.alerts import views as alert_views
-from oscar.apps.customer.wishlists import views as wishlists_views
 from oscar.core.application import Application
+from oscar.core.loading import get_class
 
 
 class CustomerApplication(Application):
     name = 'customer'
-    summary_view = views.AccountSummaryView
-    order_history_view = views.OrderHistoryView
-    order_detail_view = views.OrderDetailView
-    anon_order_detail_view = views.AnonymousOrderDetailView
-    order_line_view = views.OrderLineView
+    summary_view = get_class('customer.views', 'AccountSummaryView')
+    order_history_view = get_class('customer.views', 'OrderHistoryView')
+    order_detail_view = get_class('customer.views', 'OrderDetailView')
+    anon_order_detail_view = get_class('customer.views',
+                                       'AnonymousOrderDetailView')
+    order_line_view = get_class('customer.views', 'OrderLineView')
 
-    address_list_view = views.AddressListView
-    address_create_view = views.AddressCreateView
-    address_update_view = views.AddressUpdateView
-    address_delete_view = views.AddressDeleteView
-    address_change_status_view = views.AddressChangeStatusView
+    address_list_view = get_class('customer.views', 'AddressListView')
+    address_create_view = get_class('customer.views', 'AddressCreateView')
+    address_update_view = get_class('customer.views', 'AddressUpdateView')
+    address_delete_view = get_class('customer.views', 'AddressDeleteView')
+    address_change_status_view = get_class('customer.views',
+                                           'AddressChangeStatusView')
 
-    email_list_view = views.EmailHistoryView
-    email_detail_view = views.EmailDetailView
-    login_view = views.AccountAuthView
-    logout_view = views.LogoutView
-    register_view = views.AccountRegistrationView
-    profile_view = views.ProfileView
-    profile_update_view = views.ProfileUpdateView
-    profile_delete_view = views.ProfileDeleteView
-    change_password_view = views.ChangePasswordView
+    email_list_view = get_class('customer.views', 'EmailHistoryView')
+    email_detail_view = get_class('customer.views', 'EmailDetailView')
+    login_view = get_class('customer.views', 'AccountAuthView')
+    logout_view = get_class('customer.views', 'LogoutView')
+    register_view = get_class('customer.views', 'AccountRegistrationView')
+    profile_view = get_class('customer.views', 'ProfileView')
+    profile_update_view = get_class('customer.views', 'ProfileUpdateView')
+    profile_delete_view = get_class('customer.views', 'ProfileDeleteView')
+    change_password_view = get_class('customer.views', 'ChangePasswordView')
 
-    notification_inbox_view = notification_views.InboxView
-    notification_archive_view = notification_views.ArchiveView
-    notification_update_view = notification_views.UpdateView
-    notification_detail_view = notification_views.DetailView
+    notification_inbox_view = get_class('customer.notifications.views',
+                                        'InboxView')
+    notification_archive_view = get_class('customer.notifications.views',
+                                          'ArchiveView')
+    notification_update_view = get_class('customer.notifications.views',
+                                         'UpdateView')
+    notification_detail_view = get_class('customer.notifications.views',
+                                         'DetailView')
 
-    alert_list_view = alert_views.ProductAlertListView
-    alert_create_view = alert_views.ProductAlertCreateView
-    alert_confirm_view = alert_views.ProductAlertConfirmView
-    alert_cancel_view = alert_views.ProductAlertCancelView
+    alert_list_view = get_class('customer.alerts.views',
+                                'ProductAlertListView')
+    alert_create_view = get_class('customer.alerts.views',
+                                  'ProductAlertCreateView')
+    alert_confirm_view = get_class('customer.alerts.views',
+                                   'ProductAlertConfirmView')
+    alert_cancel_view = get_class('customer.alerts.views',
+                                  'ProductAlertCancelView')
 
-    wishlists_add_product_view = wishlists_views.WishListAddProduct
-    wishlists_list_view = wishlists_views.WishListListView
-    wishlists_detail_view = wishlists_views.WishListDetailView
-    wishlists_create_view = wishlists_views.WishListCreateView
-    wishlists_create_with_product_view = wishlists_views.WishListCreateView
-    wishlists_update_view = wishlists_views.WishListUpdateView
-    wishlists_delete_view = wishlists_views.WishListDeleteView
-    wishlists_remove_product_view = wishlists_views.WishListRemoveProduct
-    wishlists_move_product_to_another_view \
-        = wishlists_views.WishListMoveProductToAnotherWishList
+    wishlists_add_product_view = get_class('customer.wishlists.views',
+                                           'WishListAddProduct')
+    wishlists_list_view = get_class('customer.wishlists.views',
+                                    'WishListListView')
+    wishlists_detail_view = get_class('customer.wishlists.views',
+                                      'WishListDetailView')
+    wishlists_create_view = get_class('customer.wishlists.views',
+                                      'WishListCreateView')
+    wishlists_create_with_product_view = get_class('customer.wishlists.views',
+                                                   'WishListCreateView')
+    wishlists_update_view = get_class('customer.wishlists.views',
+                                      'WishListUpdateView')
+    wishlists_delete_view = get_class('customer.wishlists.views',
+                                      'WishListDeleteView')
+    wishlists_remove_product_view = get_class('customer.wishlists.views',
+                                              'WishListRemoveProduct')
+    wishlists_move_product_to_another_view = get_class(
+        'customer.wishlists.views', 'WishListMoveProductToAnotherWishList')
 
     def get_urls(self):
         urls = [
-            url(r'^$', login_required(self.summary_view.as_view()),
-                name='summary'),
+            # Login, logout and register doesn't require login
             url(r'^login/$', self.login_view.as_view(), name='login'),
             url(r'^logout/$', self.logout_view.as_view(), name='logout'),
             url(r'^register/$', self.register_view.as_view(), name='register'),
+            url(r'^$', login_required(self.summary_view.as_view()),
+                name='summary'),
             url(r'^change-password/$',
                 login_required(self.change_password_view.as_view()),
                 name='change-password'),
@@ -116,6 +132,7 @@ class CustomerApplication(Application):
                 name='email-detail'),
 
             # Notifications
+            # Redirect to notification inbox
             url(r'^notifications/$', generic.RedirectView.as_view(
                 url='/accounts/notifications/inbox/')),
             url(r'^notifications/inbox/$',
@@ -132,6 +149,8 @@ class CustomerApplication(Application):
                 name='notifications-detail'),
 
             # Alerts
+            # Alerts can be setup by anonymous users: some views do not
+            # require login
             url(r'^alerts/$',
                 login_required(self.alert_list_view.as_view()),
                 name='alerts-list'),
@@ -164,6 +183,7 @@ class CustomerApplication(Application):
             url(r'wishlists/create/with-product/(?P<product_pk>\d+)/$',
                 login_required(self.wishlists_create_view.as_view()),
                 name='wishlists-create-with-product'),
+            # Wishlists can be publicly shared, no login required
             url(r'wishlists/(?P<key>[a-z0-9]+)/$',
                 self.wishlists_detail_view.as_view(), name='wishlists-detail'),
             url(r'wishlists/(?P<key>[a-z0-9]+)/update/$',
@@ -185,7 +205,7 @@ class CustomerApplication(Application):
                                .as_view()),
                 name='wishlists-move-product-to-another')]
 
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = CustomerApplication()

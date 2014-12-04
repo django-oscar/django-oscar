@@ -32,7 +32,7 @@
             <p>Delete category <strong>{{ name }}</strong> - are you sure?</p>
         {% endblocktrans %}
         <div class="form-actions">
-            <button type="submit" class="btn btn-danger">{% trans "Delete" %}</button>
+            <button type="submit" class="btn btn-danger" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button>
         {% trans "or" %} <a href="{% if parent %}{% url 'dashboard:catalogue-category-detail-list' pk=parent.pk %}{% else %}{% url 'dashboard:catalogue-category-list' %}{% endif %}">{% trans "cancel" %}</a>
     </div>
 </form>

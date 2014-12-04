@@ -1,32 +1,30 @@
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url, include
 
 from oscar.core.application import Application
-from oscar.apps.catalogue import views
-from oscar.apps.offer import views as offer_views
+from oscar.core.loading import get_class
 from oscar.apps.catalogue.reviews.app import application as reviews_app
 
 
 class BaseCatalogueApplication(Application):
     name = 'catalogue'
-    detail_view = views.ProductDetailView
-    index_view = views.ProductListView
-    category_view = views.ProductCategoryView
-    range_view = offer_views.RangeDetailView
+    detail_view = get_class('catalogue.views', 'ProductDetailView')
+    catalogue_view = get_class('catalogue.views', 'CatalogueView')
+    category_view = get_class('catalogue.views', 'ProductCategoryView')
+    range_view = get_class('offer.views', 'RangeDetailView')
 
     def get_urls(self):
         urlpatterns = super(BaseCatalogueApplication, self).get_urls()
-        urls = [
-            url(r'^$', self.index_view.as_view(), name='index'),
+        urlpatterns += [
+            url(r'^$', self.catalogue_view.as_view(), name='index'),
             url(r'^(?P<product_slug>[\w-]*)_(?P<pk>\d+)/$',
                 self.detail_view.as_view(), name='detail'),
             url(r'^category/(?P<category_slug>[\w-]+(/[\w-]+)*)_(?P<pk>\d+)/$',
                 self.category_view.as_view(), name='category'),
+            # Fallback URL if a user chops of the last part of the URL
+            url(r'^category/(?P<category_slug>[\w-]+(/[\w-]+)*)/$',
+                self.category_view.as_view()),
             url(r'^ranges/(?P<slug>[\w-]+)/$',
-                self.range_view.as_view(), name='range'),
-            # Legacy route for the category view
-            url(r'^(?P<category_slug>[\w-]+(/[\w-]+)*)/$',
-                self.category_view.as_view(), name='category')]
-        urlpatterns += patterns('', *urls)
+                self.range_view.as_view(), name='range')]
         return self.post_process_urls(urlpatterns)
 
 
@@ -36,11 +34,10 @@ class ReviewsApplication(Application):
 
     def get_urls(self):
         urlpatterns = super(ReviewsApplication, self).get_urls()
-        urls = [
+        urlpatterns += [
             url(r'^(?P<product_slug>[\w-]*)_(?P<product_pk>\d+)/reviews/',
                 include(self.reviews_app.urls)),
         ]
-        urlpatterns += patterns('', *urls)
         return self.post_process_urls(urlpatterns)
 
 

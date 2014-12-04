@@ -4,7 +4,7 @@ How to use a custom user model
 
 If you are using Django 1.5 or later, then you can specify a custom user model
 in your settings.  Oscar will dynamically adjust the profile summary view and
-profile editing form to use the fields from your custom model.  
+profile editing form to use the fields from your custom model.
 
 Before Django 1.5, the recommended technique for adding fields to users was to
 use a one-to-one "profile" model specified in the ``AUTH_PROFILE_MODULE``.  As
@@ -20,7 +20,7 @@ Restrictions
 
 Oscar does have some requirements on what fields a user model has.  For
 instance, the auth backend requires a user to have an 'email' and 'password'
-field.  
+field.
 
 Oscar 0.6 ships with its own abstract user model that supports the minimum
 fields and methods required for Oscar to work correctly.  New Oscar projects
@@ -40,3 +40,37 @@ or when you use a custom user model from the start. Switching over from
 ``auth.User`` to a custom model after having applied previous migration of
 Oscar will most likely require renaming the ``auth_user`` table to the new user
 table in a manual schemamigration.
+
+Example
+-------
+
+If you want to use ``oscar.apps.customer.abstract_model.AbstractUser``
+which has ``email`` as an index, and want to customize some of the methods on
+``User`` model, say, ``get_full_name`` for Asian names, a simple approach is
+to create your own ``user`` module::
+
+    # file: your-project/apps/user/models.py
+    from django.db import models
+
+    from oscar.apps.customer.abstract_models import AbstractUser
+
+
+    class User(AbstractUser):
+
+        def get_full_name(self):
+            full_name = '%s %s' % (self.last_name.upper(), self.first_name)
+            return full_name.strip()
+
+Then adding this ``user`` app to the ``INSTALLED_APPS`` list. Beside that we
+need to tell ``django`` to use our customized user model instead of the
+default one as the authentication model [1]_::
+
+    # use our own user model
+    AUTH_USER_MODEL = "user.User"
+
+After the migration, a database table called ``user_user`` will be created based
+on the schema defined inside of
+``oscar.apps.customer.abstract_models.AbstractUser``.
+
+
+  .. [1] https://docs.djangoproject.com/en/1.6/ref/settings/#auth-user-model

@@ -15,7 +15,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:promotion-list' %}">{% trans "Content block management" %}</a>
+            <a href="{% url 'dashboard:promotion-list' %}">{% trans "Content blocks" %}</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{% blocktrans with name=object.name %}Delete content block '{{ name }}'?"{% endblocktrans %}</li>
@@ -35,7 +35,7 @@
         {{ form }}
         <p>{% blocktrans %}Delete {{ object.type }} content block <strong>{{ object.name }}</strong> - are you sure?{% endblocktrans %}</p>
         <div class="form-actions">
-            <button type="submit" class="btn btn-danger">{% trans "Delete" %}</button>
+            <button type="submit" class="btn btn-danger" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button>
             {% trans "or" %} <a href="{% url 'dashboard:promotion-list' %}">{% trans "cancel" %}</a>
         </div>
     </form>

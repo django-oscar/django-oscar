@@ -1,18 +1,21 @@
-import six
 import json
 
 from django import forms
 from django.core import validators
 from django.core.exceptions import ValidationError
+from django.shortcuts import redirect
 from django.utils.encoding import smart_str
 from django.contrib import messages
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse
+from django.utils import six
+from django.utils.six.moves import map
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import View
 
 import phonenumbers
+
+from oscar.core.utils import safe_referrer
 from oscar.core.phonenumber import PhoneNumber
-from six.moves import map
 
 
 class PostActionMixin(object):
@@ -47,7 +50,6 @@ class BulkEditMixin(object):
 
     # Permitted methods that can be used to act on the selected objects
     actions = None
-    current_view = None
     checkbox_object_name = None
 
     def get_checkbox_object_name(self):
@@ -56,10 +58,10 @@ class BulkEditMixin(object):
         return smart_str(self.model._meta.object_name.lower())
 
     def get_error_url(self, request):
-        return request.META.get('HTTP_REFERER', '.')
+        return safe_referrer(request.META, '.')
 
     def get_success_url(self, request):
-        return request.META.get('HTTP_REFERER', '.')
+        return safe_referrer(request.META, '.')
 
     def post(self, request, *args, **kwargs):
         # Dynamic dispatch pattern - we forward POST requests onto a method
@@ -68,7 +70,7 @@ class BulkEditMixin(object):
         action = request.POST.get(self.action_param, '').lower()
         if not self.actions or action not in self.actions:
             messages.error(self.request, _("Invalid action"))
-            return HttpResponseRedirect(self.get_error_url(request))
+            return redirect(self.get_error_url(request))
 
         ids = request.POST.getlist(
             'selected_%s' % self.get_checkbox_object_name())
@@ -78,7 +80,7 @@ class BulkEditMixin(object):
                 self.request,
                 _("You need to select some %ss")
                 % self.get_checkbox_object_name())
-            return HttpResponseRedirect(self.get_error_url(request))
+            return redirect(self.get_error_url(request))
 
         objects = self.get_objects(ids)
         return getattr(self, action)(request, objects)
@@ -94,7 +96,7 @@ class BulkEditMixin(object):
 
 class ObjectLookupView(View):
     """Base view for json lookup for objects"""
-    def get_query_set(self):
+    def get_queryset(self):
         return self.model.objects.all()
 
     def format_object(self, obj):
@@ -128,7 +130,7 @@ class ObjectLookupView(View):
 
     def get(self, request):
         self.request = request
-        qs = self.get_query_set()
+        qs = self.get_queryset()
 
         initial, q, page, page_limit = self.get_args()
 
@@ -143,7 +145,7 @@ class ObjectLookupView(View):
         return HttpResponse(json.dumps({
             'results': [self.format_object(obj) for obj in qs],
             'more': more,
-        }), mimetype='application/json')
+        }), content_type='application/json')
 
 
 class PhoneNumberMixin(object):
@@ -151,11 +153,22 @@ class PhoneNumberMixin(object):
     Validation mixin for forms with a phone number, and optionally a country.
     It tries to validate the phone number, and on failure tries to validate it
     using a hint (the country provided), and treating it as a local number.
-
-    It looks for ``self.country``, or ``self.fields['country'].queryset``
     """
 
     phone_number = forms.CharField(max_length=32, required=False)
+
+    def get_country(self):
+        # If the form data contains valid country information, we use that.
+        if hasattr(self, 'cleaned_data') and 'country' in self.cleaned_data:
+            return self.cleaned_data['country']
+        # Oscar hides the field if there's only one country. Then (and only
+        # then!) can we consider a country on the model instance.
+        elif 'country' not in self.fields and hasattr(
+                self.instance, 'country'):
+            return self.instance.country
+
+    def get_region_code(self, country):
+        return country.iso_3166_1_a2
 
     def clean_phone_number(self):
         number = self.cleaned_data['phone_number']
@@ -169,29 +182,22 @@ class PhoneNumberMixin(object):
             phone_number = PhoneNumber.from_string(number)
         except phonenumbers.NumberParseException:
             # Try hinting with the shipping country
-            if hasattr(self.instance, 'country'):
-                country = self.instance.country
-            elif hasattr(self.fields.get('country'), 'queryset'):
-                country = self.fields['country'].queryset[0]
-            else:
-                country = None
+            country = self.get_country()
+            region_code = self.get_region_code(country)
 
-            if not country:
+            if not region_code:
                 # There is no shipping country, not a valid international
                 # number
                 raise ValidationError(
                     _(u'This is not a valid international phone format.'))
 
-            country = self.cleaned_data.get('country', country)
-
-            region_code = country.iso_3166_1_a2
             # The PhoneNumber class does not allow specifying
             # the region. So we drop down to the underlying phonenumbers
             # library, which luckily allows parsing into a PhoneNumber
             # instance
             try:
-                phone_number = PhoneNumber.from_string(number,
-                                                       region=region_code)
+                phone_number = PhoneNumber.from_string(
+                    number, region=region_code)
                 if not phone_number.is_valid():
                     raise ValidationError(
                         _(u'This is not a valid local phone format for %s.')

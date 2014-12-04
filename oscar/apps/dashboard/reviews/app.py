@@ -1,16 +1,16 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from oscar.core.application import Application
-from oscar.apps.dashboard.reviews import views
+from oscar.core.loading import get_class
 
 
 class ReviewsApplication(Application):
     name = None
     default_permissions = ['is_staff', ]
 
-    list_view = views.ReviewListView
-    update_view = views.ReviewUpdateView
-    delete_view = views.ReviewDeleteView
+    list_view = get_class('dashboard.reviews.views', 'ReviewListView')
+    update_view = get_class('dashboard.reviews.views', 'ReviewUpdateView')
+    delete_view = get_class('dashboard.reviews.views', 'ReviewDeleteView')
 
     def get_urls(self):
         urls = [
@@ -20,7 +20,7 @@ class ReviewsApplication(Application):
             url(r'^(?P<pk>\d+)/delete/$', self.delete_view.as_view(),
                 name='reviews-delete'),
         ]
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = ReviewsApplication()

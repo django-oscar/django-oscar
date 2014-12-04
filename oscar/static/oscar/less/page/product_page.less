@@ -2,10 +2,10 @@
 // -----------
 .availability {
     &.outofstock {
-        color:@red;
+        color:@brand-danger;
     }
     &.instock {
-    color:@green;
+        color:@brand-success;
     }
 }
 
@@ -13,9 +13,11 @@
 // -----------
 .price_color {
     display:block;
-    color:@green;
+    color:@brand-success;
     font-weight:bold;
 }
+
+.product_main .price_color {font-size: 26px; }
 .product_pod .price_color { margin-top:0 }
 .es-carousel .price_color { font-size:20px; }
 
@@ -27,6 +29,12 @@
 .review_read,
 .side_categories {
     .well();
+    li {
+        ul,
+        ol {
+            padding-left: 25/14em;
+        }
+    }
 }
 
 // Wish lists
@@ -50,5 +58,11 @@
 }
 .add-to-basket .btn,
 .btn-wishlist {
-    margin-bottom:@baseLineHeight;
+    margin-bottom:@line-height-computed;
+}
+
+#add_review_form {
+    #id_title, #id_body {
+        width: 500px;
+    }
 }

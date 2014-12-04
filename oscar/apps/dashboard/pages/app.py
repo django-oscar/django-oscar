@@ -1,17 +1,17 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from oscar.core.application import Application
-from oscar.apps.dashboard.pages import views
+from oscar.core.loading import get_class
 
 
 class FlatPageManagementApplication(Application):
     name = None
     default_permissions = ['is_staff', ]
 
-    list_view = views.PageListView
-    create_view = views.PageCreateView
-    update_view = views.PageUpdateView
-    delete_view = views.PageDeleteView
+    list_view = get_class('dashboard.pages.views', 'PageListView')
+    create_view = get_class('dashboard.pages.views', 'PageCreateView')
+    update_view = get_class('dashboard.pages.views', 'PageUpdateView')
+    delete_view = get_class('dashboard.pages.views', 'PageDeleteView')
 
     def get_urls(self):
         """
@@ -25,7 +25,7 @@ class FlatPageManagementApplication(Application):
             url(r'^delete/(?P<pk>\d+)/$',
                 self.delete_view.as_view(), name='page-delete')
         ]
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = FlatPageManagementApplication()

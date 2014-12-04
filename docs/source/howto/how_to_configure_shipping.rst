@@ -2,154 +2,162 @@
 How to configure shipping
 =========================
 
-Configuring shipping is not trivial.  It generally requires creating a
-'shipping' app within your project where you can define your own shipping
-methods as well as a 'repository' class which determines when methods are
-available.
+Shipping can be very complicated.  Depending on the domain, a wide variety of
+shipping scenarios are found in the wild.  For instance, calculation of
+shipping costs can depend on:
 
-This recipe explains in more detail how Oscar models shipping as well as the
-steps involved in configuring shipping for your project.
+* Shipping method (e.g., standard, courier)
+* Shipping address
+* Time of day of order (e.g., if requesting next-day delivery)
+* Weight of items in basket
+* Customer type (e.g., business accounts get discounted shipping rates)
+* Offers and vouchers that give free or discounted shipping
 
-How Oscar handles shipping charges
-----------------------------------
+Further complications can arise such as:
 
-Oscar uses a "repository" class to manage shipping charges.  The class is used
-in two ways:
+* Only making certain shipping methods available to certain customers
+* Tax is only applicable in certain situations
+  
+Oscar can handle all of these shipping scenarios. 
 
-* _It provides a list of shipping methods available to the user._  This is used to
-  generate the content for the shipping methods page of checkout, where the user
-  can choose a shipping method.  The methods available generally depend on the
-  user, the basket and the shipping address.
+Shipping in Oscar
+~~~~~~~~~~~~~~~~~
 
-* _It allows a shipping method to be retrieved based on a identifying code._  When
-  a user selects a shipping method during checkout, it is persisted in the
-  session using a code.  This code is used to retrieve the chosen shipping
-  method when it is required.
+Configuring shipping charges requires overriding Oscar's core 'shipping' app
+and providing your own ``Repository`` class (see :doc:`/topics/customisation`) that
+returns your chosen shipping method instances.
 
-The default shipping repository `can be seen here`_.  It defaults to only
-providing one shipping method, which has no charge.
+The primary responsibility of the
+``Repository`` class is to provide the available shipping methods for a
+particular scenario. This is done via the 
+:func:`~oscar.apps.shipping.repository.Repository.get_shipping_methods` method,
+which returns the shipping methods available to the customer.
+
+This method is called in several places:
+
+* To look up a "default" shipping method so that sample shipping charges can be
+  shown on the basket detail page.
+
+* To list the available shipping methods on the checkout shipping method page. 
+
+* To check the selected shipping method is still available when an order is
+  submitted.
+
+The ``get_shipping_methods`` method takes the basket, user, shipping address
+and request as parameters. These can be used to provide different sets of
+shipping methods depending on the circumstances. For instance, you could use
+the shipping address to provide international shipping rates if the address is
+overseas.
+
+The default behaviour is to return a single free shipping method.
 
 .. note::
 
     Oscar's checkout process includes a page for choosing your shipping method.
-    If there is only one method available for your basket then it will be chosen
-    automatically and the user immediately redirected to the next step.
+    If there is only one method available for your basket (as is the default)
+    then it will be chosen automatically and the user immediately redirected to
+    the next step.
 
-Custom shipping charges
------------------------
+Custom repositories
+-------------------
 
-In order to control shipping logic for your project, you need to define your own
-repository class (see :doc:`how_to_override_a_core_class`).  It normally makes
-sense to subclass the core ``Repository`` class and override the
-``get_shipping_methods`` and ``find_by_code`` methods.
+If the available shipping methods are the same for all customers and shipping
+addresses, then override the ``methods`` property of the repository:
 
-Here's a very simple example where all shipping costs are a fixed price,
-irrespective of basket and shipping address::
+.. code-block:: python
 
-    # myproject/shipping/repository.py
+   from oscar.apps.shipping import repository
+   from . import methods
 
-    from decimal import Decimal as D
-    from oscar.apps.shipping import repository, methods as core_methods
+   class Repository(repository.Repository):
+       methods = (methods.Standard(), methods.Express())
 
-    class Repository(repository.Repository):
-        methods = [core_methods.FixedPrice(D('9.99'))]
+For more complex logic, override the ``get_available_shipping_methods`` method:
 
-        def get_shipping_methods(self, user, basket, shipping_addr=None, **kwargs):
-            return self.prime_methods(basket, self.methods)
+.. code-block:: python
 
-        def find_by_code(self, code, basket):
-            for method in self.methods:
-                if code == method.code:
-                    return self.prime_method(basket, method)
+   from oscar.apps.shipping import repository
+   from . import methods
 
-Note that both these methods must return 'primed' method instances, which means
-the basket instance has been injected into the method.  This allows the method
-instance to return the shipping charge directly without requiring the basket to
-be passed again (which is useful in templates).
+   class Repository(repository.Repository):
 
-As you can see the ``get_shipping_methods`` can depend on several things:
+       def get_available_shipping_methods(
+               self, basket, user=None, shipping_addr=None, 
+               request=None, **kwargs):
+           methods = (methods.Standard())
+           if shipping_addr and shipping_addr.country.code == 'GB':
+               # Express is only available in the UK
+               methods = (methods.Standard(), methods.Express())
+           return methods
 
-* the user in question (e.g., staff get cheaper shipping rates)
-* the basket (e.g., shipping is charged based on the weight of the basket)
-* the shipping address (e.g., overseas shipping is more expensive)
-
-Here's a more involved example repository that has two fixed price charges::
-
-    # myproject/shipping/repository.py
-
-    from decimal import Decimal as D
-    from oscar.apps.shipping import repository, methods as core_methods
-
-    # We create subclasses so we can give them different codes and names
-    class Standard(core_methods.FixedPrice):
-        code = 'standard'
-        name = _("Standard shipping")
-
-    class Express(core_methods.FixedPrice):
-        code = 'express'
-        name = _("Express shipping")
-
-    class Repository(repository.Repository):
-        methods = [Standard(D('10.00')), Express(D('20.00'))]
-
-        def get_shipping_methods(self, user, basket, shipping_addr=None, **kwargs):
-            return self.prime_methods(basket, self.methods)
-
-        def find_by_code(self, code, basket):
-            for method in self.methods:
-                if code == method.code:
-                    return self.prime_method(basket, method)
-
-.. _`can be seen here`: https://github.com/tangentlabs/django-oscar/blob/master/oscar/apps/shipping/repository.py
+Note that the ``get_shipping_methods`` method wraps
+``get_available_shipping_methods`` in order to handle baskets that don't
+require shipping and to apply shipping discounts.
 
 Shipping methods
 ----------------
 
-The repository class is responsible for return shipping method instances.  Oscar
-defines several of these but it is easy to write your own, their interface is
-simple.
+Shipping methods need to implement a certain API. They need to have the
+following properties which define the metadata about the shipping method:
 
-The base shipping method class ``oscar.apps.shipping.base.ShippingMethod`` (that
-all shipping methods should subclass has API:
+* ``code`` - This is used as an identifier for the shipping method and so should
+  be unique amongst the shipping methods available in your shop.
 
-.. autoclass:: oscar.apps.shipping.base.ShippingMethod
-    :members:
-    :noindex:
+* ``name`` - The name of the shipping method. This will be visible to the
+  customer during checkout.
+
+* ``description`` - An optional description of the shipping method. This can
+  contain HTML.
+
+Further, each method must implement a ``calculate`` method which accepts the
+basket instance as a parameter and returns a ``Price`` instance.  Most shipping
+methods subclass
+:class:`~oscar.apps.shipping.methods.Base`, which stubs this API.
+
+Here's an example:
+
+.. code-block:: python
+
+   from oscar.apps.shipping import methods
+   from oscar.core import prices
+
+   class Standard(methods.Base):
+       code = 'standard'
+       name = 'Standard shipping (free)'
+
+       def calculate(self, basket):
+           return prices.Price(
+               currency=basket.currency, 
+               excl_tax=D('0.00'), incl_tax=D('0.00'))
 
 Core shipping methods
 ~~~~~~~~~~~~~~~~~~~~~
 
-The shipping methods that ship with Oscar are:
+Oscar ships with several re-usable shipping methods which can be used as-is, or
+subclassed and customised:
 
-* ``oscar.apps.shipping.methods.Free``.  No shipping charges.
+* :class:`~oscar.apps.shipping.methods.Free` - no shipping charges
 
-* ``oscar.apps.shipping.models.WeightBased``.  This is a model-driven method
-  that uses two models: ``WeightBased`` and ``WeightBand`` to provide charges
-  for different weight bands.  By default, the method will calculate the weight
-  of a product by looking for a 'weight' attribute although this can be
-  configured.  
+* :class:`~oscar.apps.shipping.methods.FixedPrice` - fixed-price shipping charges.  
+  Example usage:
 
-* ``oscar.apps.shipping.methods.FixedPrice``.  This simply charges a fixed price for 
-  shipping, irrespective of the basket contents.
+.. code-block:: python
 
-* ``oscar.apps.shipping.models.OrderAndItemCharges``.  This is a model which
-  specifies a per-order and a per-item level charge.
+   from oscar.apps.shipping import methods
+   from oscar.core import prices
 
-To apply your domain logic for shipping, you will need to override
-the default repository class (see :doc:`how_to_override_a_core_class`) and alter
-the implementation of the ``get_shipping_methods`` method.  This method
-should return a list of "shipping method" classes already instantiated
-and holding a reference to the basket instance.
+   class Standard(methods.Base):
+       code = 'standard'
+       name = 'Standard shipping'
+       charge_excl_tax = D('5.00')
 
-Building a custom shipping method
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   class Express(methods.Base):
+       code = 'express'
+       name = 'Express shipping'
+       charge_excl_tax = D('10.00')
 
-At a minimum, a custom shipping method class should define a ``code`` and
-``name`` attribute to distinguish it from other methods.  It is also normal to
-override the ``basket_charge_incl_tax`` and ``basket_charge_excl_tax`` methods
-to implement your custom shipping charge logic.
-
-.. tip::
-
-    Most of the shipping logic should live in the repository class, the method
-    instance is only responsble for returning the charge for a given basket.
+There is also a weight-based shipping method, 
+:class:`~oscar.apps.shipping.abstract_models.AbstractWeightBased`
+which determines a shipping charge by calculating the weight of a basket's
+contents and looking this up in a model-based set of weight bands.
+           

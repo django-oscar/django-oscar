@@ -12,7 +12,7 @@
     {% else %}
         {% trans "Create new offer" %}:
     {% endif %}
-    {{ title }} | {% trans "Offer management" %} | {{ block.super }}
+    {{ title }} | {% trans "Offers" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -22,7 +22,7 @@
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url 'dashboard:offer-list' %}">{% trans "Offer management" %}</a>
+        <a href="{% url 'dashboard:offer-list' %}">{% trans "Offers" %}</a>
         <span class="divider">/</span>
     </li>
     {% if offer.pk %}
@@ -75,9 +75,9 @@
                         <div class="form-actions">
                             <div class="pull-right">
                             {% block form_actions_buttons %}
-                                <button class="btn btn-primary" type="submit">{% block submittext %}{% trans "Continue" %}{% endblock %}</button>
+                                <button class="btn btn-primary" type="submit" data-loading-text="{% trans 'Submitting...' %}">{% block submittext %}{% trans "Continue" %}{% endblock %}</button>
                                 {% if offer %}{# When editing offer, show saving button #}
-                                    <button class="btn" name="save" type="submit">{% trans "Save changes" %}</button>
+                                    <button class="btn" name="save" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save changes" %}</button>
                                 {% endif %}
                             {% endblock %}
                             </div>

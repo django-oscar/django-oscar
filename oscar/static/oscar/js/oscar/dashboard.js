@@ -17,8 +17,10 @@ var oscar = (function(o, $) {
         init: function(options) {
             // Run initialisation that should take place on every page of the dashboard.
             var defaults = {
+                'languageCode': 'en',
                 'dateFormat': 'yy-mm-dd',
-                'timeFormat': 'HH:mm',
+                'timeFormat': 'hh:ii',
+                'datetimeFormat': 'yy-mm-dd hh:ii',
                 'stepMinute': 15,
                 'tinyConfig': {
                     statusbar: false,
@@ -31,11 +33,10 @@ var oscar = (function(o, $) {
                     toolbar: "styleselect | bold italic blockquote | bullist numlist | link"
                 }
             };
-            o.dashboard.options = $.extend(defaults, options);
+            o.dashboard.options = $.extend(true, defaults, options);
 
             o.dashboard.initWidgets(window.document);
-
-            $('.scroll-pane').jScrollPane();
+            o.dashboard.initForms();
 
             $(".category-select ul").prev('a').on('click', function(){
                 var $this = $(this),
@@ -69,8 +70,12 @@ var oscar = (function(o, $) {
              * twice for these elements. Make sure that that is harmless.
              */
             o.dashboard.initDatePickers(el);
+            o.dashboard.initMasks(el);
             o.dashboard.initWYSIWYG(el);
             o.dashboard.initSelects(el);
+        },
+        initMasks: function(el) {
+            $(el).find(':input').inputmask()
         },
         initSelects: function(el) {
             // Adds type/search for select fields
@@ -124,43 +129,58 @@ var oscar = (function(o, $) {
             });
         },
         initDatePickers: function(el) {
-            // Use datepicker for all inputs that have 'date' or 'datetime' in the name
-            $inputs = $(el).find('input').not('.no-widget-init input').not('.no-widget-init');
-            if ($.datepicker) {
-                var defaultDatepickerConfig = {'dateFormat': o.dashboard.options.dateFormat};
-                $inputs.filter('[name^="date"], [name$="date"]').each(function(ind, ele) {
+            if ($.fn.datetimepicker) {
+                var defaultDatepickerConfig = {
+                    'format': o.dashboard.options.dateFormat,
+                    'autoclose': true,
+                    'language': o.dashboard.options.languageCode,
+                    'minView': 2
+                };
+                $dates = $(el).find('[data-oscarWidget="date"]').not('.no-widget-init').not('.no-widget-init *')
+                $dates.each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultDatepickerConfig, {
-                            'dateFormat': $ele.data('dateformat')
+                            'format': $ele.data('dateformat')
                         });
-                    $ele.datepicker(config);
+                    $ele.datetimepicker(config);
+                    $ele.find('input').css('width', '125px');
                 });
-            }
-            if ($.ui.timepicker) {
+
                 var defaultDatetimepickerConfig = {
-                    'dateFormat': o.dashboard.options.dateFormat,
-                    'timeFormat': o.dashboard.options.timeFormat,
-                    'stepMinute': o.dashboard.options.stepMinute
+                    'format': o.dashboard.options.datetimeFormat,
+                    'minuteStep': o.dashboard.options.stepMinute,
+                    'autoclose': true,
+                    'language': o.dashboard.options.languageCode
                 };
-                $inputs.filter('[name$="datetime"]').each(function(ind, ele) {
+                $datetimes = $(el).find('[data-oscarWidget="datetime"]').not('.no-widget-init').not('.no-widget-init *')
+                $datetimes.each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultDatetimepickerConfig, {
-                        'dateFormat': $ele.data('dateformat'),
-                        'timeFormat': $ele.data('timeformat'),
-                        'stepMinute': $ele.data('stepminute')});
+                          'format': $ele.data('datetimeformat'),
+                          'minuteStep': $ele.data('stepminute')
+                        });
                     $ele.datetimepicker(config);
+                    $ele.find('input').css('width', '125px');
                 });
 
                 var defaultTimepickerConfig = {
-                    'timeFormat': o.dashboard.options.timeFormat,
-                    'stepMinute': o.dashboard.options.stepMinute
+                    'format': o.dashboard.options.timeFormat,
+                    'minuteStep': o.dashboard.options.stepMinute,
+                    'autoclose': true,
+                    'language': o.dashboard.options.languageCode
                 };
-                $inputs.filter('[name$="time"]').not('[name$="datetime"]').each(function(ind, ele) {
+                $times = $(el).find('[data-oscarWidget="time"]').not('.no-widget-init').not('.no-widget-init *')
+                $times.each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultTimepickerConfig, {
-                        'timeFormat': $ele.data('timeformat'),
-                        'stepMinute': $ele.data('stepminute')});
-                    $ele.timepicker(config);
+                          'format': $ele.data('timeformat'),
+                          'minuteStep': $ele.data('stepminute'),
+                          'startView': 1,
+                          'maxView': 1,
+                          'formatViewType': 'time'
+                        });
+                    $ele.datetimepicker(config);
+                    $ele.find('input').css('width', '125px');
                 });
             }
         },
@@ -169,6 +189,18 @@ var oscar = (function(o, $) {
             $textareas = $(el).find('textarea').not('.no-widget-init textarea').not('.no-widget-init');
             $textareas.filter('form.wysiwyg textarea').tinymce(o.dashboard.options.tinyConfig);
             $textareas.filter('.wysiwyg').tinymce(o.dashboard.options.tinyConfig);
+        },
+        initForms: function() {
+            // Disable buttons when they are clicked and show a "loading" message taken from the
+            // data-loading-text attribute (http://getbootstrap.com/2.3.2/javascript.html#buttons).
+            // Do not disable if button is inside a form with invalid fields.
+            // This uses a delegated event so that it keeps working for forms that are reloaded
+            // via AJAX: https://api.jquery.com/on/#direct-and-delegated-events
+            $(document.body).on('click', '[data-loading-text]', function(){
+                var form = $(this).parents("form");
+                if (!form || $(":invalid", form).length == 0)
+                    $(this).button('loading');
+            });
         },
         offers: {
             init: function() {

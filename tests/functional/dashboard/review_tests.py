@@ -1,8 +1,9 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 
-from oscar.core.loading import get_model
 from django.core.urlresolvers import reverse
+from django.utils import timezone
 from oscar.core.compat import get_user_model
+from oscar.core.loading import get_model
 from django_dynamic_fixture import get
 
 from oscar.test.testcases import WebTestCase
@@ -17,12 +18,10 @@ class ReviewsDashboardTests(WebTestCase):
 
     def test_reviews_dashboard_is_accessible_to_staff(self):
         url = reverse('dashboard:reviews-list')
-        response = self.client.get(url)
+        response = self.get(url)
         self.assertIsOk(response)
 
     def test_bulk_editing_review_status(self):
-        url = reverse('dashboard:reviews-list')
-
         user1 = get(User)
         user2 = get(User)
 
@@ -32,20 +31,16 @@ class ReviewsDashboardTests(WebTestCase):
 
         assert(ProductReview.objects.count() == 3)
 
-        post_params = {
-            'status': 1,
-            'selected_review': [3, 2],
-            'action': ['update_selected_review_status'],
-        }
-        self.client.post(url, post_params)
+        list_page = self.get(reverse('dashboard:reviews-list'))
+        form = list_page.forms[1]
+        form['selected_review'] = [3, 2]
+        form.submit('update')
 
         self.assertEqual(ProductReview.objects.get(pk=1).status, 0)
         self.assertEqual(ProductReview.objects.get(pk=2).status, 1)
         self.assertEqual(ProductReview.objects.get(pk=3).status, 1)
 
     def test_filter_reviews_by_name(self):
-        url = reverse('dashboard:reviews-list')
-
         user1 = get(User, first_name='Peter', last_name='Griffin')
         user2 = get(User, first_name='Lois', last_name='Griffin')
 
@@ -53,12 +48,14 @@ class ReviewsDashboardTests(WebTestCase):
         get(ProductReview, user=user2, status=0)
         get(ProductReview, user=user2, status=0)
 
-        response = self.client.get(url, {'name': 'peter'})
+        url = reverse('dashboard:reviews-list') + '?name=peter'
+        response = self.get(url)
 
         self.assertEqual(len(response.context['review_list']), 1)
         self.assertEqual(response.context['review_list'][0].user, user1)
 
-        response = self.client.get(url, {'name': 'lois griffin'})
+        url = reverse('dashboard:reviews-list') + '?name=lois+griffin'
+        response = self.get(url)
 
         self.assertEqual(len(response.context['review_list']), 2)
         for review in response.context['review_list']:
@@ -75,11 +72,11 @@ class ReviewsDashboardTests(WebTestCase):
                       body='argh')
         get(ProductReview, user=user2, title='Lovely Thing')
 
-        response = self.client.get(url, {'keyword': 'argh'})
+        response = self.get(url, params={'keyword': 'argh'})
         self.assertEqual(len(response.context['review_list']), 1)
         self.assertEqual(response.context['review_list'][0], review2)
 
-        response = self.client.get(url, {'keyword': 'review'})
+        response = self.get(url, params={'keyword': 'review'})
         self.assertQuerysetContains(response.context['review_list'],
                                     [review1, review2])
 
@@ -91,7 +88,15 @@ class ReviewsDashboardTests(WebTestCase):
             self.assertEqual(i, j)
 
     def test_filter_reviews_by_date(self):
-        now = datetime.now()
+        def n_days_ago(days):
+            """
+            The tests below pass timestamps as GET parameters, but the
+            ProductReviewSearchForm doesn't recognize the timezone notation.
+            """
+            return timezone.make_naive(
+                now - timedelta(days=days), timezone=timezone.utc)
+
+        now = timezone.now()
         review1 = get(ProductReview)
         review2 = get(ProductReview)
         review2.date_created = now - timedelta(days=2)
@@ -101,17 +106,17 @@ class ReviewsDashboardTests(WebTestCase):
         review3.save()
 
         url = reverse('dashboard:reviews-list')
-        response = self.client.get(url, {'date_from': now - timedelta(days=5)})
+        response = self.get(url, params={'date_from': n_days_ago(5)})
         self.assertQuerysetContains(response.context['review_list'],
                                     [review1, review2])
 
-        response = self.client.get(url, {'date_to': now - timedelta(days=5)})
+        response = self.get(url, params={'date_to': n_days_ago(5)})
         self.assertQuerysetContains(response.context['review_list'],
                                     [review3])
 
-        response = self.client.get(url, {
-            'date_from': now - timedelta(days=12),
-            'date_to': now - timedelta(days=9)
+        response = self.get(url, params={
+            'date_from': n_days_ago(12),
+            'date_to': n_days_ago(9),
         })
         self.assertQuerysetContains(response.context['review_list'],
                                     [review3])
@@ -126,18 +131,18 @@ class ReviewsDashboardTests(WebTestCase):
         review2 = get(ProductReview, user=user2, status=0)
         review3 = get(ProductReview, user=user2, status=2)
 
-        response = self.client.get(url, {'status': 0})
+        response = self.get(url, params={'status': 0})
         self.assertEqual(len(response.context['review_list']), 1)
         self.assertEqual(response.context['review_list'][0], review2)
 
-        response = self.client.get(url, {'status': 1})
+        response = self.get(url, params={'status': 1})
         self.assertEqual(len(response.context['review_list']), 1)
         self.assertEqual(response.context['review_list'][0], review1)
 
-        response = self.client.get(url, {'status': 2})
+        response = self.get(url, params={'status': 2})
         self.assertEqual(len(response.context['review_list']), 1)
         self.assertEqual(response.context['review_list'][0], review3)
 
-        response = self.client.get(url, {'status': 3})
+        response = self.get(url, params={'status': 3})
         reviews = response.context['review_list']
         self.assertTrue(review1 in reviews)

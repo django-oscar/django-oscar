@@ -1,20 +1,16 @@
-from django.core.files.uploadedfile import InMemoryUploadedFile
 import re
-import six
-
 from django import forms
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.forms.util import flatatt
 from django.forms.widgets import FileInput
 from django.template import Context
 from django.template.loader import render_to_string
+from django.utils import formats, six
+from django.utils.six.moves import filter
+from django.utils.six.moves import map
 from django.utils.encoding import force_text
+from django.utils.html import format_html
 from django.utils.safestring import mark_safe
-
-try:
-    from django.utils.html import format_html
-except ImportError:
-    # Django 1.4 compatibility
-    from oscar.core.compat import format_html
 
 
 class ImageInput(FileInput):
@@ -64,76 +60,196 @@ class WYSIWYGTextArea(forms.Textarea):
 
 def datetime_format_to_js_date_format(format):
     """
-    Convert a Python datetime format to a date format suitable for use with JS
-    date pickers
+    Convert a Python datetime format to a date format suitable for use with
+    the JS date picker we use.
     """
-    converted = format
-    replacements = {
-        '%Y': 'yy',
-        '%m': 'mm',
-        '%d': 'dd',
-        '%H:%M': '',
-    }
-    for search, replace in six.iteritems(replacements):
-        converted = converted.replace(search, replace)
-    return converted.strip()
+    format = format.split()[0]
+    return datetime_format_to_js_datetime_format(format)
 
 
 def datetime_format_to_js_time_format(format):
     """
-    Convert a Python datetime format to a time format suitable for use with JS
-    date pickers
+    Convert a Python datetime format to a time format suitable for use with the
+    JS time picker we use.
+    """
+    try:
+        format = format.split()[1]
+    except IndexError:
+        pass
+    converted = format
+    replacements = {
+        '%H': 'hh',
+        '%I': 'HH',
+        '%M': 'ii',
+        '%S': 'ss',
+    }
+    for search, replace in replacements.items():
+        converted = converted.replace(search, replace)
+    return converted.strip()
+
+
+def datetime_format_to_js_datetime_format(format):
+    """
+    Convert a Python datetime format to a time format suitable for use with
+    the datetime picker we use, http://www.malot.fr/bootstrap-datetimepicker/.
     """
     converted = format
     replacements = {
-        '%Y': '',
-        '%m': '',
-        '%d': '',
-        '%H': 'HH',
-        '%M': 'mm',
+        '%Y': 'yyyy',
+        '%y': 'yy',
+        '%m': 'mm',
+        '%d': 'dd',
+        '%H': 'hh',
+        '%I': 'HH',
+        '%M': 'ii',
+        '%S': 'ss',
     }
-    for search, replace in six.iteritems(replacements):
+    for search, replace in replacements.items():
         converted = converted.replace(search, replace)
-
-    converted = re.sub('[-/][^%]', '', converted)
 
     return converted.strip()
 
 
-def add_js_formats(widget):
-    """
-    Set data attributes for date and time format on a widget
-    """
-    attrs = {
-        'data-dateFormat': datetime_format_to_js_date_format(
-            widget.format),
-        'data-timeFormat': datetime_format_to_js_time_format(
-            widget.format)
+def datetime_format_to_js_input_mask(format):
+    # taken from
+    # http://stackoverflow.com/questions/15175142/how-can-i-do-multiple-substitutions-using-regex-in-python  # noqa
+    def multiple_replace(dict, text):
+        # Create a regular expression  from the dictionary keys
+        regex = re.compile("(%s)" % "|".join(map(re.escape, dict.keys())))
+
+        # For each match, look-up corresponding value in dictionary
+        return regex.sub(lambda mo: dict[mo.string[mo.start():mo.end()]], text)
+
+    replacements = {
+        '%Y': 'y',
+        '%y': '99',
+        '%m': 'm',
+        '%d': 'd',
+        '%H': 'h',
+        '%I': 'h',
+        '%M': 's',
+        '%S': 's',
     }
-    widget.attrs.update(attrs)
+    return multiple_replace(replacements, format).strip()
 
 
-class DatePickerInput(forms.DateInput):
+class DateTimeWidgetMixin(object):
+    def get_format(self):
+        format = self.format
+        if hasattr(self, 'manual_format'):
+            # For django <= 1.6.5, see
+            # https://code.djangoproject.com/ticket/21173
+            if self.is_localized and not self.manual_format:
+                format = force_text(formats.get_format(self.format_key)[0])
+        else:
+            # For django >= 1.7
+            format = format or formats.get_format(self.format_key)[0]
+
+        return format
+
+    def gett_attrs(self, attrs, format):
+        if not attrs:
+            attrs = {}
+
+        attrs['data-inputmask'] = "'mask': '{mask}'".format(
+            mask=datetime_format_to_js_input_mask(format))
+
+        return attrs
+
+
+class TimePickerInput(DateTimeWidgetMixin, forms.TimeInput):
     """
-    DatePicker input that uses the jQuery UI datepicker.  Data attributes are
-    used to pass the date format to the JS
+    A widget that passes the date format to the JS date picker in a data
+    attribute.
     """
-    def __init__(self, *args, **kwargs):
-        super(DatePickerInput, self).__init__(*args, **kwargs)
-        add_js_formats(self)
+    format_key = 'TIME_INPUT_FORMATS'
+
+    def render(self, name, value, attrs=None):
+        format = self.get_format()
+        input = super(TimePickerInput, self).render(
+            name, value, self.gett_attrs(attrs, format))
+
+        attrs = {'data-oscarWidget': 'time',
+                 'data-timeFormat':
+                 datetime_format_to_js_time_format(format),
+                 }
+
+        div = format_html('<div class="input-append date"{}>', flatatt(attrs))
+        return mark_safe('{div}'
+                         ' {input}'
+                         ' <span class="add-on">'
+                         '  <i class="icon-time"></i>'
+                         ' </span>'
+                         '</div>'
+                         .format(div=div, input=input))
 
 
-class DateTimePickerInput(forms.DateTimeInput):
-    # Build a widget which uses the locale datetime format but without seconds.
-    # We also use data attributes to pass these formats to the JS datepicker.
+class DatePickerInput(DateTimeWidgetMixin, forms.DateInput):
+    """
+    A widget that passes the date format to the JS date picker in a data
+    attribute.
+    """
+    format_key = 'DATE_INPUT_FORMATS'
+
+    def render(self, name, value, attrs=None):
+        format = self.get_format()
+        input = super(DatePickerInput, self).render(
+            name, value, self.gett_attrs(attrs, format))
+
+        attrs = {'data-oscarWidget': 'date',
+                 'data-dateFormat':
+                 datetime_format_to_js_date_format(format),
+                 }
+
+        div = format_html('<div class="input-append date"{}>', flatatt(attrs))
+        return mark_safe('{div}'
+                         ' {input}'
+                         ' <span class="add-on">'
+                         '  <i class="icon-calendar"></i>'
+                         ' </span>'
+                         '</div>'
+                         .format(div=div, input=input))
+
+
+class DateTimePickerInput(DateTimeWidgetMixin, forms.DateTimeInput):
+    """
+    A widget that passes the datetime format to the JS datetime picker in a
+    data attribute.
+
+    It also removes seconds by default. However this only works with widgets
+    without localize=True.
+
+    For localized widgets refer to
+    https://docs.djangoproject.com/en/1.6/topics/i18n/formatting/#creating-custom-format-files # noqa
+    instead to override the format.
+    """
+    format_key = 'DATETIME_INPUT_FORMATS'
 
     def __init__(self, *args, **kwargs):
         include_seconds = kwargs.pop('include_seconds', False)
         super(DateTimePickerInput, self).__init__(*args, **kwargs)
 
-        if not include_seconds:
+        if not include_seconds and self.format:
             self.format = re.sub(':?%S', '', self.format)
-        add_js_formats(self)
+
+    def render(self, name, value, attrs=None):
+        format = self.get_format()
+        input = super(DateTimePickerInput, self).render(
+            name, value, self.gett_attrs(attrs, format))
+
+        attrs = {'data-oscarWidget': 'datetime',
+                 'data-datetimeFormat':
+                 datetime_format_to_js_datetime_format(format),
+                 }
+
+        div = format_html('<div class="input-append date"{}>', flatatt(attrs))
+        return mark_safe('{div}'
+                         ' {input}'
+                         ' <span class="add-on">'
+                         '  <i class="icon-calendar"></i>'
+                         ' </span>'
+                         '</div>'
+                         .format(div=div, input=input))
 
 
 class AdvancedSelect(forms.Select):
@@ -163,3 +279,63 @@ class AdvancedSelect(forms.Select):
                            option_value,
                            selected_html,
                            force_text(option_label))
+
+
+class RemoteSelect(forms.Widget):
+    """
+    Somewhat reusable widget that allows AJAX lookups in combination with
+    select2.
+    Requires setting the URL of a lookup view either as class attribute or when
+    constructing
+    """
+    is_multiple = False
+    css = 'select2 input-xlarge'
+    lookup_url = None
+
+    def __init__(self, *args, **kwargs):
+        if 'lookup_url' in kwargs:
+            self.lookup_url = kwargs.pop('lookup_url')
+        if self.lookup_url is None:
+            raise ValueError(
+                "RemoteSelect requires a lookup ULR")
+        super(RemoteSelect, self).__init__(*args, **kwargs)
+
+    def format_value(self, value):
+        return six.text_type(value or '')
+
+    def value_from_datadict(self, data, files, name):
+        value = data.get(name, None)
+        if value is None:
+            return value
+        else:
+            return six.text_type(value)
+
+    def render(self, name, value, attrs=None, choices=()):
+        attrs = self.build_attrs(attrs, **{
+            'type': 'hidden',
+            'class': self.css,
+            'name': name,
+            'data-ajax-url': self.lookup_url,
+            'data-multiple': 'multiple' if self.is_multiple else '',
+            'value': self.format_value(value),
+            'data-required': 'required' if self.is_required else '',
+            })
+        return mark_safe(u'<input %s>' % flatatt(attrs))
+
+
+class MultipleRemoteSelect(RemoteSelect):
+    is_multiple = True
+    css = 'select2 input-xxlarge'
+
+    def format_value(self, value):
+        if value:
+            return ','.join(map(six.text_type, filter(bool, value)))
+        else:
+            return ''
+
+    def value_from_datadict(self, data, files, name):
+        value = data.get(name, None)
+        if value is None:
+            return []
+        else:
+            return list(filter(bool, value.split(',')))

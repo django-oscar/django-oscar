@@ -4,23 +4,34 @@
 .header {
     position:relative;
     z-index:2;
-    .page_inner {
-        padding:50px 0 40px;
+
+    @media (min-width: @screen-sm-min) {
+        .page_inner {
+            padding:50px 0 40px;
+        }
     }
     h1 {
         line-height:inherit;
         margin:0;
         font-size:30px;
     }
+
+    .navbar-static-top {
+        margin-bottom: 0; // remove 18px margin for default navbar
+    }
 }
 
 //Language select
-#language_selector select {
-    width:100px;
+@media (min-width: @screen-sm-min) {
+    #language_selector select {
+        width:100px;
+    }
 }
 
 // Basket Mini Dropdown
 .basket-mini {
+    margin-right: @grid-gutter-width/2;
+
     .btn-group {
         margin-left:10px;
     }
@@ -28,6 +39,8 @@
         width:400px;
         padding-bottom:0px;
         max-width:none;
+        z-index: 9999;
+
         li {
             display:block;
         }
@@ -37,7 +50,7 @@
 // Basket Mini Item
 .basket-mini-item {
     li {
-        border-top:1px solid @grayLighter;
+        border-top:1px solid @gray-lighter;
         padding:10px 15px;
         &:first-child {
             border-top:none;
@@ -54,7 +67,7 @@
         }
     }
     a {
-        color:@linkColor;
+        color:@link-color;
         font-weight:inherit;
         white-space:normal;
         &.btn {
@@ -66,8 +79,10 @@
         -moz-border-radius: 0 0px 6px 6px;
         border-radius: 0 0px 6px 6px;
         margin:0px;
+        overflow: hidden;
+
         h4 {
-            margin-bottom:@baseLineHeight / 2;
+            margin-bottom:@line-height-computed / 2;
         }
     }
 }

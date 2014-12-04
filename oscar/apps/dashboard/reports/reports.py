@@ -1,10 +1,11 @@
-import datetime
+from datetime import datetime, time
 
 from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 
-from oscar.apps.dashboard.reports.csv_utils import CsvUnicodeWriter
 from oscar.core import utils
+from oscar.core.compat import UnicodeCSVWriter
 
 
 class ReportGenerator(object):
@@ -57,19 +58,25 @@ class ReportGenerator(object):
 
         # After the start date
         if self.start_date:
+            start_datetime = timezone.make_aware(
+                datetime.combine(self.start_date, time(0, 0)),
+                timezone.get_default_timezone())
+
             filter_kwargs = {
-                "%s__gt" % self.date_range_field_name: self.start_date,
+                "%s__gt" % self.date_range_field_name: start_datetime,
             }
             queryset = queryset.filter(**filter_kwargs)
 
         # Before the end of the end date
         if self.end_date:
-            end_of_end_date = datetime.datetime.combine(
+            end_of_end_date = datetime.combine(
                 self.end_date,
-                datetime.time(hour=23, minute=59, second=59)
+                time(hour=23, minute=59, second=59)
             )
+            end_datetime = timezone.make_aware(end_of_end_date,
+                                               timezone.get_default_timezone())
             filter_kwargs = {
-                "%s__lt" % self.date_range_field_name: end_of_end_date,
+                "%s__lt" % self.date_range_field_name: end_datetime,
             }
             queryset = queryset.filter(**filter_kwargs)
 
@@ -94,7 +101,7 @@ class ReportFormatter(object):
 class ReportCSVFormatter(ReportFormatter):
 
     def get_csv_writer(self, file_handle, **kwargs):
-        return CsvUnicodeWriter(file_handle, **kwargs)
+        return UnicodeCSVWriter(open_file=file_handle, **kwargs)
 
     def generate_response(self, objects, **kwargs):
         response = HttpResponse(content_type='text/csv')

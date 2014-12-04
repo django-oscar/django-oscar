@@ -1,6 +1,7 @@
 {% extends "checkout/layout.html" %}
 
 {% load i18n %}
+{% load widget_tweaks %}
 
 {% block title %}
     {% trans "Checkout gateway" %} | {{ block.super }}
@@ -20,7 +21,7 @@
 
         {% include "partials/form_field.html" with field=form.username %}
 
-        <div class="control-group">
+        <div class="form-group">
             <div class="controls">
                 <div class="radio">
                     {{ form.options.0 }}
@@ -28,13 +29,13 @@
             </div>
         </div>
 
-        <div class="control-group {% if form.password.errors %}error{% endif %}">
+        <div class="form-group {% if form.password.errors %}error{% endif %}">
             {{ form.options.errors }}
             <div class="controls">
                 <div class="radio">
                     {{ form.options.2 }}
                     <div class="form-inline">
-                        {{ form.password }}
+                        {% render_field form.password class+="form-control" %}
                         <small><a href="{% url 'password-reset' %}" tabindex="-1">{% trans "Get a password reminder" %}</a></small>
                         {% for error in form.password.errors %}
                             <span class="error-block">{{ error }}</span>
@@ -44,7 +45,7 @@
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="form-group">
             <div class="controls">
                 <div class="radio">
                     {{ form.options.1 }}
@@ -52,10 +53,10 @@
             </div>
         </div>
 
-        <div class="form-actions">
-            <div class="row-fluid">
-                <div class="span3">
-                    <button type="submit" class="btn btn-large btn-block btn-primary">{% trans "Continue" %}</button>
+        <div class="form-group form-actions">
+            <div class="row">
+                <div class="col-sm-3">
+                    <button type="submit" class="btn btn-lg btn-block btn-primary" data-loading-text="{% trans 'Continuing...' %}">{% trans "Continue" %}</button>
                 </div>
             </div>
         </div>

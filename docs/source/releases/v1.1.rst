@@ -1,0 +1,78 @@
+===========================================
+Oscar 1.1 release notes - UNDER DEVELOPMENT
+===========================================
+
+:release: TBD
+
+.. warning::
+   Since v1.1 has not been released yet, these release notes are still a work-in-progress.
+
+Welcome to Oscar 1.1!
+
+Table of contents:
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_1.1:
+
+Compatibility
+-------------
+
+
+.. _new_in_1.1:
+
+What's new in Oscar 1.1?
+------------------------
+
+* The frontend templates have been updated to use Bootstrap 3 instead of version 2 (`#1576`_)
+
+.. _`#1576`: https://github.com/django-oscar/django-oscar/pull/1576
+
+
+.. _minor_changes_in_1.1:
+
+Minor changes
+~~~~~~~~~~~~~
+
+- The `Order.date_placed` field can now be set explicitly rather than using the
+  `auto_now_add` behaviour (`#1558`_).
+
+.. _`#1558`: https://github.com/django-oscar/django-oscar/pull/1558
+
+
+.. _incompatible_changes_in_1.1:
+
+Backwards incompatible changes in 1.1
+-------------------------------------
+
+Misc
+~~~~
+
+* The :class:`~oscar.apps.shipping.abstract_models.AbstractWeightBased` shipping
+  method now allows zero-weight baskets to have a non-zero shipping cost
+  (`#1565`_). This means that sites that rely on zero-weight baskets having no
+  change will need to introduce a new weight band that covers this edge case.
+
+.. _`#1565`: https://github.com/django-oscar/django-oscar/pull/1565
+
+Migrations
+~~~~~~~~~~
+
+.. _deprecated_features_in_1.1:
+
+Deprecated features
+~~~~~~~~~~~~~~~~~~~
+
+The following features have been deprecated in this release:
+
+Removal of deprecated features
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+These methods have been removed:
+
+
+These classes have been removed:
+

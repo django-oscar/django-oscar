@@ -8,7 +8,6 @@ OSCAR_HOMEPAGE = reverse_lazy('promotions:home')
 # Basket settings
 OSCAR_BASKET_COOKIE_LIFETIME = 7 * 24 * 60 * 60
 OSCAR_BASKET_COOKIE_OPEN = 'oscar_open_basket'
-OSCAR_BASKET_COOKIE_SAVED = 'oscar_saved_basket'
 OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = 10000
 
 # Recently-viewed products
@@ -18,12 +17,11 @@ OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 
 # Currency
 OSCAR_DEFAULT_CURRENCY = 'GBP'
-OSCAR_CURRENCY_LOCALE = 'en_GB'
-
 
 # Paths
 OSCAR_IMAGE_FOLDER = 'images/products/%Y/%m/'
 OSCAR_PROMOTION_FOLDER = 'images/promotions/'
+OSCAR_DELETE_IMAGE_FILES = True
 
 # Copy this image from oscar/static/img to your MEDIA_ROOT folder.
 # It needs to be there so Sorl can resize it.
@@ -39,9 +37,6 @@ OSCAR_PRODUCTS_PER_PAGE = 20
 
 # Checkout
 OSCAR_ALLOW_ANON_CHECKOUT = False
-
-# Partners
-OSCAR_PARTNER_WRAPPERS = {}
 
 # Promotions
 COUNTDOWN, LIST, SINGLE_PRODUCT, TABBED_BLOCK = (
@@ -75,8 +70,10 @@ OSCAR_EAGER_ALERTS = True
 OSCAR_SEND_REGISTRATION_EMAIL = True
 OSCAR_FROM_EMAIL = 'oscar@example.com'
 
-# Offers
-OSCAR_OFFER_BLACKLIST_PRODUCT = None
+# Slug handling
+OSCAR_SLUG_FUNCTION = 'oscar.core.utils.default_slugifier'
+OSCAR_SLUG_MAP = {}
+OSCAR_SLUG_BLACKLIST = []
 
 # Cookies
 OSCAR_COOKIES_DELETE_ON_LOGOUT = ['oscar_recently_viewed_products', ]
@@ -122,7 +119,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
         'icon': 'icon-shopping-cart',
         'children': [
             {
-                'label': _('Order management'),
+                'label': _('Orders'),
                 'url_name': 'dashboard:order-list',
             },
             {
@@ -133,6 +130,14 @@ OSCAR_DASHBOARD_NAVIGATION = [
                 'label': _('Partners'),
                 'url_name': 'dashboard:partner-list',
             },
+            # The shipping method dashboard is disabled by default as it might
+            # be confusing. Weight-based shipping methods aren't hooked into
+            # the shipping repository by default (as it would make
+            # customising the repository slightly more difficult).
+            # {
+            #     'label': _('Shipping charges'),
+            #     'url_name': 'dashboard:shipping-method-list',
+            # },
         ]
     },
     {
@@ -140,7 +145,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
         'icon': 'icon-group',
         'children': [
             {
-                'label': _('Customer management'),
+                'label': _('Customers'),
                 'url_name': 'dashboard:users-index',
             },
             {
@@ -154,7 +159,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
         'icon': 'icon-bullhorn',
         'children': [
             {
-                'label': _('Offer management'),
+                'label': _('Offers'),
                 'url_name': 'dashboard:offer-list',
             },
             {
@@ -195,17 +200,13 @@ OSCAR_DASHBOARD_NAVIGATION = [
         'url_name': 'dashboard:reports-index',
     },
 ]
-OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION = 'dashboard.nav.default_access_fn'
+OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION = 'oscar.apps.dashboard.nav.default_access_fn'  # noqa
 
 # Search facets
 OSCAR_SEARCH_FACETS = {
     'fields': {
         # The key for these dicts will be used when passing facet data
         # to the template. Same for the 'queries' dict below.
-        'category': {
-            'name': _('Category'),
-            'field': 'category'
-        },
         'product_class': {
             'name': _('Type'),
             'field': 'product_class'
@@ -228,10 +229,10 @@ OSCAR_SEARCH_FACETS = {
             'queries': [
                 # This is a list of (name, query) tuples where the name will
                 # be displayed on the front-end.
-                (_('0 to 20'), '[0 TO 20]'),
-                (_('20 to 40'), '[20 TO 40]'),
-                (_('40 to 60'), '[40 TO 60]'),
-                (_('60+'), '[60 TO *]'),
+                (_('0 to 20'), u'[0 TO 20]'),
+                (_('20 to 40'), u'[20 TO 40]'),
+                (_('40 to 60'), u'[40 TO 60]'),
+                (_('60+'), u'[60 TO *]'),
             ]
         },
     }

@@ -1,10 +1,11 @@
 import logging
 
-import django
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 
 from oscar.core.loading import get_model
 
@@ -42,10 +43,10 @@ class Dispatcher(object):
         else:
             self.dispatch_user_messages(order.user, messages)
 
-        # Create order comms event for audit
-        if event_type:
-            CommunicationEvent._default_manager.create(order=order,
-                                                       event_type=event_type)
+        # Create order communications event for audit
+        if event_type is not None:
+            CommunicationEvent._default_manager.create(
+                order=order, event_type=event_type)
 
     def dispatch_user_messages(self, user, messages):
         """
@@ -111,14 +112,10 @@ def get_password_reset_url(user, token_generator=default_token_generator):
     """
     Generate a password-reset URL for a given user
     """
-    kwargs = {'token': token_generator.make_token(user)}
-    if django.VERSION < (1, 6):
-        from django.utils.http import int_to_base36
-        kwargs['uidb36'] = int_to_base36(user.id)
-    else:
-        from django.utils.http import urlsafe_base64_encode
-        from django.utils.encoding import force_bytes
-        kwargs['uidb64'] = urlsafe_base64_encode(force_bytes(user.id))
+    kwargs = {
+        'token': token_generator.make_token(user),
+        'uidb64': urlsafe_base64_encode(force_bytes(user.id)),
+    }
     return reverse('password-reset-confirm', kwargs=kwargs)
 
 

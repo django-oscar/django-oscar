@@ -1,22 +1,40 @@
+import django
+
+from oscar.core.loading import is_model_registered
 from oscar.apps.analytics.abstract_models import (
     AbstractProductRecord, AbstractUserRecord,
     AbstractUserProductView, AbstractUserSearch)
 
-
-class ProductRecord(AbstractProductRecord):
-    pass
+__all__ = []
 
 
-class UserRecord(AbstractUserRecord):
-    pass
+if not is_model_registered('analytics', 'ProductRecord'):
+    class ProductRecord(AbstractProductRecord):
+        pass
+
+    __all__.append('ProductRecord')
 
 
-class UserProductView(AbstractUserProductView):
-    pass
+if not is_model_registered('analytics', 'UserRecord'):
+    class UserRecord(AbstractUserRecord):
+        pass
+
+    __all__.append('UserRecord')
 
 
-class UserSearch(AbstractUserSearch):
-    pass
+if not is_model_registered('analytics', 'UserProductView'):
+    class UserProductView(AbstractUserProductView):
+        pass
+
+    __all__.append('UserProductView')
 
 
-from .receivers import *  # noqa
+if not is_model_registered('analytics', 'UserSearch'):
+    class UserSearch(AbstractUserSearch):
+        pass
+
+    __all__.append('UserSearch')
+
+
+if django.VERSION < (1, 7):
+    from . import receivers  # noqa

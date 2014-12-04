@@ -19,7 +19,7 @@
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
             <span class="divider">/</span>
         </li>
-        <li class="active">{% trans "Content block management" %}</li>
+        <li class="active">{% trans "Content blocks" %}</li>
     </ul>
 {% endblock %}
 
@@ -30,7 +30,7 @@
     <div class="well">
         <form action="{% url 'dashboard:promotion-create-redirect' %}" method="get" class="form-inline">
             {% include "partials/form_fields_inline.html" with form=select_form %}
-            <button type="submit" class="btn btn-primary"><i class="icon-plus"></i> {% trans "Create block" %}</button>
+            <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Creating...' %}"><i class="icon-plus"></i> {% trans "Create block" %}</button>
         </form>
     </div>
 

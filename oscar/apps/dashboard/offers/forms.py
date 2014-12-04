@@ -1,9 +1,10 @@
 import datetime
+from django.utils import six
 
 from django import forms
-from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
+from oscar.core.loading import get_model
 from oscar.forms import widgets
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
@@ -29,8 +30,7 @@ class RestrictionsForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(RestrictionsForm, self).__init__(*args, **kwargs)
         today = datetime.date.today()
-        self.fields['start_datetime'].initial = today.strftime(
-            self.fields['start_datetime'].widget.format)
+        self.fields['start_datetime'].initial = today
 
     class Meta:
         model = ConditionalOffer
@@ -60,7 +60,7 @@ class ConditionForm(forms.ModelForm):
             proxy_class=None)
         if len(custom_conditions) > 0:
             # Initialise custom_condition field
-            choices = [(c.id, c.__unicode__()) for c in custom_conditions]
+            choices = [(c.id, six.text_type(c)) for c in custom_conditions]
             choices.insert(0, ('', ' --------- '))
             self.fields['custom_condition'].choices = choices
             condition = kwargs.get('instance')
@@ -114,7 +114,7 @@ class BenefitForm(forms.ModelForm):
             proxy_class=None)
         if len(custom_benefits) > 0:
             # Initialise custom_benefit field
-            choices = [(c.id, c.__unicode__()) for c in custom_benefits]
+            choices = [(c.id, six.text_type(c)) for c in custom_benefits]
             choices.insert(0, ('', ' --------- '))
             self.fields['custom_benefit'].choices = choices
             benefit = kwargs.get('instance')

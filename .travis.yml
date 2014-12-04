@@ -1,32 +1,32 @@
 language: python
 
 python:
-  - '2.6'
-  - '2.7'
-  - '3.3'
+    - '2.7'
+    - '3.3'
+    - '3.4'
 
 env:
-  global:
-    # $TRANSIFEX_PASSWORD for oscar_bot (used in transifex.sh)
-    secure: FuIlzEsGJiAwhaIRBmRNsq9eXmuzs25fX6BChknW4lDyVAySWMp0+Zps9Bd0JgfFYUG3Ip+OTmksYIoTUsG25ZJS9cq1IFt3QKUAN70YCI/4ZBLeIdICPEyxq+Km179+NeEXmBUug17RLMLxh3MWfO+RKUHK9yHIPNNpq0dNyoo=
-  matrix:
-    - DJANGO_VERSION=1.5.5
-    - DJANGO_VERSION=1.6.1
-
-matrix:
-  allow_failures:
-    - python: '3.3'
+    global:
+        # $TRANSIFEX_PASSWORD for oscar_bot (used in transifex.sh)
+        secure: FuIlzEsGJiAwhaIRBmRNsq9eXmuzs25fX6BChknW4lDyVAySWMp0+Zps9Bd0JgfFYUG3Ip+OTmksYIoTUsG25ZJS9cq1IFt3QKUAN70YCI/4ZBLeIdICPEyxq+Km179+NeEXmBUug17RLMLxh3MWfO+RKUHK9yHIPNNpq0dNyoo=
+    matrix:
+        - DJANGO=Django==1.6.8
+        - DJANGO=Django==1.7.1
 
 install:
-  - easy_install Django==$DJANGO_VERSION
+    - pip install -e . -r requirements.txt $DJANGO
 
 before_script:
-  - mysql -e 'create database oscar_vagrant;'
-  - psql -c 'create database oscar_vagrant;' -U postgres
+    # Create testing databases for running migrations against
+    - mysql -e 'CREATE DATABASE oscar_travis;'
+    - psql -c 'CREATE DATABASE oscar_travis;' -U postgres
+    # Create database for building demo site
+    - psql -c 'CREATE DATABASE oscar_demo;' -U postgres
+    - psql -c 'CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;' -U postgres -d oscar_demo
 
 script:
-  - make travis
+    - make travis
 
 after_success:
-  - coveralls
-  - ./transifex.sh
+    - coveralls
+    - ./transifex.sh

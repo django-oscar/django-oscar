@@ -48,5 +48,10 @@ class User(AbstractUser):
         validators=[
             validators.RegexValidator(re.compile('^[\w.@+-]+$'), _('Enter a valid username.'), 'invalid')
         ])
+    extra_field = models.CharField(
+        _('Nobody needs me'), max_length=5, blank=True)
 
     objects = CustomUserManager()
+
+    class Meta:
+        app_label = 'myauth'

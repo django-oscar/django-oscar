@@ -2,6 +2,7 @@ from decimal import Decimal as D, InvalidOperation
 
 from django import template
 from django.conf import settings
+from django.utils.translation import to_locale, get_language
 from babel.numbers import format_currency
 
 register = template.Library()
@@ -21,9 +22,6 @@ def currency(value, currency=None):
     kwargs = {
         'currency': currency if currency else settings.OSCAR_DEFAULT_CURRENCY,
         'format': getattr(settings, 'OSCAR_CURRENCY_FORMAT', None),
+        'locale': to_locale(get_language()),
     }
-    locale = getattr(settings, 'OSCAR_CURRENCY_LOCALE', None)
-    if locale:
-        kwargs['locale'] = locale
-
     return format_currency(value, **kwargs)

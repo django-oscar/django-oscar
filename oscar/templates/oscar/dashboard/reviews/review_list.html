@@ -31,8 +31,8 @@
     </div>
     <div class="well">
         <form action="." method="get" class="form-inline">
-            {% include 'partials/form_fields_inline.html' with form=form %}
-            <button type="submit" class="btn btn-primary top-spacer">{% trans "Search" %}</button>
+            {% include 'dashboard/partials/form_fields_inline.html' with form=form %}
+            <button type="submit" class="btn btn-primary top-spacer" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
         </form>
     </div>
 
@@ -48,13 +48,13 @@
                             {% trans "Update status of selected reviews" %}
                             {{ review_form.status }}
                             <input type="hidden" name="action" value="update_selected_review_status" />
-                            <button type="submit" class="btn btn-success">{% trans "Update" %}</button>
+                            <button type="submit" name="update" class="btn btn-success" data-loading-text="{% trans 'Updating...' %}">{% trans "Update" %}</button>
                         </div>
                     </div>
                 </caption>
                 <tr>
                     <th></th>
-                    <th>{% trans "Title" %}</th>
+                    <th>{% trans "Title" context "Review title" %}</th>
                     <th>{% trans "Product" %}</th>
                     <th>{% trans "User" %}</th>
                     <th>{% anchor 'score' _("Score") %}</th>

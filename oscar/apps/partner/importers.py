@@ -6,12 +6,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
 from oscar.core.loading import get_class, get_classes
-from oscar.core.compat import UnicodeCSVReader
+from oscar.core.compat import UnicodeCSVReader, atomic_compat
 
-try:
-    from django.db.transaction import atomic as atomic_compat
-except ImportError:
-    from django.db.transaction import commit_on_success as atomic_compat
 
 ImportingError = get_class('partner.exceptions', 'ImportingError')
 Partner, StockRecord = get_classes('partner.models', ['Partner',
@@ -46,8 +42,8 @@ class CatalogueImporter(object):
 
     def _flush_product_data(self):
         u"""Flush out product and stock models"""
-        ProductClass.objects.all().delete()
         Product.objects.all().delete()
+        ProductClass.objects.all().delete()
         Partner.objects.all().delete()
         StockRecord.objects.all().delete()
 
@@ -175,8 +171,9 @@ class DemoSiteImporter(object):
          category, partner, sku, price, stock) = row[0:9]
 
         # Create product
-        is_variant = ptype.lower() == 'variant'
-        is_group = ptype.lower() == 'group'
+        is_child = ptype.lower() == 'variant'
+        is_parent = ptype.lower() == 'group'
+
         if upc:
             try:
                 product = Product.objects.get(upc=upc)
@@ -185,13 +182,22 @@ class DemoSiteImporter(object):
         else:
             product = Product()
 
-        if not is_variant:
+        if is_child:
+            product.structure = Product.CHILD
+            # Assign parent for children
+            product.parent = self.parent
+        elif is_parent:
+            product.structure = Product.PARENT
+        else:
+            product.structure = Product.STANDALONE
+
+        if not product.is_child:
             product.title = title
             product.description = description
             product.product_class = product_class
 
         # Attributes
-        if not is_group:
+        if not product.is_parent:
             for code, value in zip(attribute_codes, row[9:]):
                 # Need to check if the attribute requires an Option instance
                 attr = product_class.attributes.get(
@@ -202,14 +208,10 @@ class DemoSiteImporter(object):
                     value = datetime.strptime(value, "%d/%m/%Y").date()
                 setattr(product.attr, code, value)
 
-        # Assign parent for variants
-        if is_variant:
-            product.parent = self.parent
-
         product.save()
 
-        # Save a reference to last group product
-        if is_group:
+        # Save a reference to last parent product
+        if is_parent:
             self.parent = product
 
         # Category information

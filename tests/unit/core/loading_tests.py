@@ -1,14 +1,15 @@
 from os.path import dirname
+import unittest
+
+import django
 from django.test import TestCase
 from django.conf import settings
-from oscar.core.loading import get_model
 from django.test.utils import override_settings
 
 import oscar
-from tests import temporary_python_path
 from oscar.core.loading import (
-    AppNotFoundError,
-    get_classes, get_class, ClassNotFoundError)
+    get_model, AppNotFoundError, get_classes, get_class, ClassNotFoundError)
+from tests import temporary_python_path
 
 
 class TestClassLoading(TestCase):
@@ -38,9 +39,13 @@ class TestClassLoading(TestCase):
             get_class('catalogue.models', 'Monkey')
 
     def test_raise_importerror_if_app_raises_importerror(self):
-        installed_apps = list(settings.INSTALLED_APPS)
-        installed_apps.insert(0, 'tests._site.import_error_app.catalogue')
-        with override_settings(INSTALLED_APPS=installed_apps):
+        """
+        This tests that Oscar doesn't fall back to using the Oscar catalogue
+        app if the overriding app throws an ImportError.
+        """
+        apps = list(settings.INSTALLED_APPS)
+        apps[apps.index('oscar.apps.catalogue')] = 'tests._site.import_error_app.catalogue'
+        with override_settings(INSTALLED_APPS=apps):
             with self.assertRaises(ImportError):
                 get_class('catalogue.app', 'CatalogueApplication')
 
@@ -82,6 +87,15 @@ class ClassLoadingWithLocalOverrideTests(TestCase):
                 (Free,) = get_classes('shipping.methods', ('Free',))
                 self.assertEqual('shipping.methods', Free.__module__)
 
+    def test_overriding_view_is_possible_without_overriding_app(self):
+        from oscar.apps.customer.app import application, CustomerApplication
+        # If test fails, it's helpful to know if it's caused by order of
+        # execution
+        self.assertEqual(CustomerApplication().summary_view.__module__,
+                         'tests._site.apps.customer.views')
+        self.assertEqual(application.summary_view.__module__,
+                         'tests._site.apps.customer.views')
+
 
 class ClassLoadingWithLocalOverrideWithMultipleSegmentsTests(TestCase):
 
@@ -120,5 +134,30 @@ class TestOverridingCoreApps(TestCase):
 
     def test_means_the_overriding_model_is_registered_first(self):
         klass = get_model('partner', 'StockRecord')
-        self.assertEquals('tests._site.apps.partner.models',
+        self.assertEqual('tests._site.apps.partner.models',
                           klass.__module__)
+
+
+@unittest.skipIf(django.VERSION < (1, 7), "Django 1.7 introduced app registry")
+class TestAppLabelsForModels(TestCase):
+
+    def test_all_oscar_models_have_app_labels(self):
+        from django.apps import apps
+        models = apps.get_models()
+        missing = []
+        for model in models:
+            # Ignore non-Oscar models
+            if not 'oscar' in repr(model):
+                continue
+            # Don't know how to get the actual model's Meta class. But if
+            # the parent doesn't have a Meta class, it's doesn't have an
+            # base in Oscar anyway and is not intended to be overridden
+            abstract_model = model.__base__
+            meta_class = getattr(abstract_model, 'Meta', None)
+            if meta_class is None:
+                continue
+
+            if not hasattr(meta_class, 'app_label'):
+                missing.append(model)
+        if missing:
+            self.fail("Those models don't have an app_label set: %s" % missing)

@@ -1,15 +1,15 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from oscar.core.application import Application
-from oscar.apps.promotions.views import HomeView, RecordClickView
+from oscar.core.loading import get_class
 from oscar.apps.promotions.models import PagePromotion, KeywordPromotion
 
 
 class PromotionsApplication(Application):
     name = 'promotions'
 
-    home_view = HomeView
-    record_click_view = RecordClickView
+    home_view = get_class('promotions.views', 'HomeView')
+    record_click_view = get_class('promotions.views', 'RecordClickView')
 
     def get_urls(self):
         urls = [
@@ -21,7 +21,7 @@ class PromotionsApplication(Application):
                 name='keyword-click'),
             url(r'^$', self.home_view.as_view(), name='home'),
         ]
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = PromotionsApplication()

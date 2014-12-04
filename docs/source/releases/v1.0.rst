@@ -1,0 +1,740 @@
+=======================
+Oscar 1.0 release notes
+=======================
+
+:release: 2014-11-07
+
+Welcome to Oscar 1.0!  It's been 7 months and some 800 commits since 0.7 and
+lots of work has gone into 1.0. This release makes quite a few changes,
+especially around supporting Django 1.7 with its app refactor and new migrations
+support.
+
+Also, `as you might have seen`_, the repositories for Oscar and most of its
+extensions have moved to a new `Github organisation`_. This marks a change for
+Oscar from being a Tangent-sponsored project to a more community-driven one,
+similar to Django itself. The core team is growing too to accommodate new
+contributors from outside Tangent. This is an exciting change and we're hopeful
+that Oscar can continue to grow and prosper.  To mark this departure, this
+release has been renamed from 0.8 (under which we released three beta versions)
+to 1.0.
+
+.. _`as you might have seen`: https://groups.google.com/forum/#!searchin/django-oscar/organisation/django-oscar/6H7ByzRAkRY/6055EDottBAJ
+.. _`Github organisation`: https://github.com/django-oscar/django-oscar
+
+Table of contents:
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_1.0:
+
+Compatibility
+-------------
+
+This release adds support for Django 1.7. Per our policy of always supporting
+two versions of Django, support for Django 1.5 has been dropped.
+
+This release also adds full Python 3.3 and 3.4 support.
+
+If you're using ``pysolr`` for search, you'll need to upgrade to version 3.2 or
+later.
+
+
+.. _new_in_1.0:
+
+What's new in Oscar 1.0?
+------------------------
+
+Explicit differentiation of child, parent and stand-alone products
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In some edge cases, it was difficult to determine the 'type' of a product. For
+example, whether a product is a parent (or "group") product without children or
+stand-alone product (which never has children).  To make that distinction
+easier, a ``structure`` field has been introduced on the ``AbstractProduct``
+class. In that process, naming for the three different product structures
+has been altered to be:
+
+*stand-alone product*
+    A regular product (like a book)
+
+*parent product*
+    A product that represents a set of *child* products (eg a T-shirt, where the set is
+    the various color and size permutations). These were previously referred to
+    as "group" products.
+
+*child product*
+    All child products have a parent product. They're a specific version of the
+    parent. Previously known as product variant.
+
+Some properties and method names have also been updated to the new naming. The
+old ones will throw a deprecation warning.
+
+Better handling of child products in product dashboard
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Together with the changes above, the dashboard experience for child products
+has been improved. The difference between a parent product and a stand-alone
+product is hidden from the user; a user can now add and remove child products
+on any suitable product. When the first child product is added, a stand-alone
+product becomes a parent product; and vice versa.
+
+In the front-end, the old name of "product variants" has been kept.
+
+Customisation just got easier!
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Oscar's views are now dynamically imported. This means that they can be
+  overridden like most other classes in Oscar; overriding the related
+  Application instance is not necessary any more which simplifies the process of
+  replacing or customising a view.
+
+* A new management command, ``oscar_fork_app``, has been introduced to make it
+  easy to fork an Oscar app in order to override one of its classes.
+
+The documentation around :doc:`/topics/customisation` has been given an
+overhaul to incorporate the changes.
+
+Django 1.7 support
+~~~~~~~~~~~~~~~~~~
+
+Oscar 1.0 comes with support for Django 1.7 out of the box. The app refactor
+and the new migration framework are both great improvements to Django. Oscar
+now ships with sets of migrations both for South and the new native
+migrations framework.
+
+Unfortunately, the changes in Django required a few breaking changes when
+upgrading Oscar both for users staying on Django 1.6 and for users upgrading to
+Django 1.7 at the same time. These are detailed in the section for
+backwards-incompatible changes.
+
+The changes in Django 1.7 meant quite a bit of effort to support both versions
+of Django, so it's very probable that Django 1.6 support will be removed in
+the next release of Oscar. Django 1.7 has notable improvements, so with that
+in mind, we can only recommend upgrading now.
+
+Billing addresses explicitly passed around checkout
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``build_submission`` method used in checkout now has a ``billing_address``
+key and the signatures for the ``submit`` and ``handle_order_placement`` methods
+have been extended to include it as a keyword argument. While this change should
+be backwards compatible, it's worth being aware of the method signature changes
+in case it affects your checkout implementation.
+
+Dashboard for weight-based shipping methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There is a new dashboard for weight-based shipping methods. It isn't enabled by
+default as weight-based shipping methods are themselves not enabled by default.
+To add it to the dashboard menu, include this snippet in your
+``OSCAR_DASHBOARD_NAVIGATION`` setting:
+
+.. code-block:: python
+
+    OSCAR_DASHBOARD_NAVIGATION = [
+        ...
+        {
+            'label': _('Shipping charges'),
+            'url_name': 'dashboard:shipping-method-list',
+        },
+        ...
+    ]
+
+You'll also need to modify your shipping repository class to return weight-based
+shipping methods.
+
+US demo site
+~~~~~~~~~~~~
+
+To help developers building sites for the US, a new example Oscar site has been
+included in the repo. This customises core Oscar to treat all prices as
+excluding tax and then calculate and apply taxes once the shipping address is
+known.
+
+See :ref:`us_site` for more information.
+
+Faceting for category browsing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If Oscar is running with a Solr-powered search backend, the category browsing
+now shows facets (e.g. filter by price range, or product type).  This is
+implemented via a new ``SearchHandler`` interface, which will eventually replace
+the tight coupling between Haystack and Oscar. It therefore paves the way for
+better support for other search engines.
+
+Reworked shipping app
+~~~~~~~~~~~~~~~~~~~~~
+
+Several parts of the shipping app have been altered. The most important change
+is a change to the API of shipping methods to avoid a potential thread safety
+issue.  Any existing Oscar sites with custom shipping methods will need to
+adjust them to confirm to the new API. The new API and the other changes are
+detailed below.
+
+See the
+:ref:`backwards incompatible changes <incompatible_shipping_changes_in_1.0>`
+for the shipping app and the
+:doc:`guide to configuring shipping </howto/how_to_configure_shipping>`
+for more information.
+
+Basket additions clean-up
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The forms and views around adding things to your basket have been vigorously
+reworked. This cleans up some very old code there and ensures variant products
+are handled in a consistent way.
+
+The changes do require changing the constructor signature of the
+``AddToBasketForm`` - the details are documented in the
+:ref:`basket_app_changes`.
+
+Checkout improvements
+~~~~~~~~~~~~~~~~~~~~~
+
+The checkout process now skips payment if the order total is zero (e.g. when
+ordering free products or using a voucher). As part of that, checkout views
+now evaluate *pre-conditions* (as before) and newly introduced
+*skip conditions*. This should make customising the checkout flow easier.
+
+Out with the old, in with the new
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Lots of methods deprecated in the 0.6 release have now been removed.
+Specifically, the partner "wrapper" functionality is now gone. All price and
+availability logic now needs to be handled with strategies.
+
+
+.. _minor_changes_in_1.0:
+
+Minor changes
+~~~~~~~~~~~~~
+
+* The ``OSCAR_CURRENCY_LOCALE`` setting has been removed. The locale is now
+  automatically determined from the current language. This ensures prices are
+  always shown in the correct format when switching languages.
+
+* The login and registration view now redirects staff users to the dashboard
+  after logging in. It also employs flash messages to welcome returning and
+  newly registered users.
+
+* The basket middleware now assigns a ``basket_hash`` attribute to the
+  ``request`` instance. This provides a hook for basket caching.
+
+* The tracking pixel now also reports the Oscar version in use. This was
+  forgotten when adding tracking of the Python and Django version in 0.7.
+  Total information collected now is the versions of Django, Python and Oscar.
+
+* The tracking pixel is now served by a server run by the new Oscar
+  organisation, rather than by Tangent.
+
+* The ``OSCAR_SLUG_FUNCTION`` now accepts both string notation and a callable.
+
+* The default templates now allow the order status to be changed on the
+  dashboard order detail page.
+
+* The forms for the order dashboard views are now loaded dynamically so they
+  can be overridden.
+
+* An ``OSCAR_DELETE_IMAGE_FILES`` setting has been introduced which makes deleting
+  image files and thumbnails after deleting a model with an ``ImageField``
+  optional. It usually is desired behaviour, but can slow down an app when
+  using a remote storage.
+
+* Oscar now ships with a ``oscar_populate_countries`` management command to
+  populate the country databases. It replaces the ``countries.json`` fixture.
+  The command relies on the ``pycountry`` library being installed.
+
+* It is now possible to use product attributes to add a relation to arbitrary
+  model instances. There was some (presumably broken) support for it before,
+  but you should now be able to use product attributes of type ``entity`` as
+  expected. There's currently no frontend or dashboard support for it, as there
+  is no good default behaviour.
+
+* Payment extensions can now raise a ``UserCancelled`` payment exception to
+  differentiate between the intended user action and any other errors.
+
+* Oscar has a new dependency, django-tables2_. It's a handy library that helps
+  when displaying tabular data, allowing sorting, etc. It also makes it easier
+  to adapt e.g. the product list view in the dashboard to additional fields.
+
+* ``jquery-ui-datepicker`` has been replaced in the dashboard by
+  bootstrap-datetimepicker_. We still ship with ``jquery-ui-datepicker`` and
+  ``JQuery UI`` as it's in use in the frontend.
+
+* ... and dozens of bugs fixed!
+
+.. _django-tables2: http://django-tables2.readthedocs.org/en/latest/
+.. _bootstrap-datetimepicker: http://www.malot.fr/bootstrap-datetimepicker/
+
+
+.. _incompatible_changes_in_1.0:
+
+Backwards incompatible changes in 1.0
+-------------------------------------
+
+.. _product_structure_changes_in_1.0:
+
+Product structure
+~~~~~~~~~~~~~~~~~
+
+Generally, backwards compatibility has been preserved. Be aware of the following
+points though:
+
+* You now need to explicitly set product structure when creating a product;
+  the default is a stand-alone product.
+
+* The ``related_name`` for child products was altered from ``variants`` to
+  ``children``. A ``variants`` property has been provided (and will throw a
+  deprecation warning), but if you used the old related name in a query lookup
+  (e.g. ``products.filter(variants__title='foo')``, you will have to change it
+  to ``children``.
+
+* Template blocks and CSS classes have been renamed.
+
+The following methods and properties have been deprecated:
+
+* ``Product.is_parent`` - Use ``is_group`` instead.
+* ``Product.is_variant`` - Use ``is_child`` instead.
+* ``Product.is_top_level`` - Test for ``is_standalone`` and/or ``is_parent`` instead.
+* ``Strategy.fetch_for_group`` - Use ``fetch_for_parent`` instead.
+* ``Strategy.group_[pricing|availability]_policy`` - Use
+  ``parent_[pricing|availability]_policy`` instead.
+* ``Strategy.select_variant_stockrecords`` - Use
+  ``select_children_stockrecords`` instead.
+
+Furthermore, CSS classes and template blocks have been updated. Please follow
+the following renaming pattern:
+
+* ``variant-product`` becomes ``child-product``
+* ``product_variants`` becomes ``child_products``
+* ``variants`` becomes ``children``
+* ``variant`` becomes ``child``
+
+Product editing
+~~~~~~~~~~~~~~~
+
+The dashboard improvements for child products meant slight changes to both
+``ProductCreateUpdateView`` and ``ProductForm``. Notably ``ProductForm`` now
+gets a ``parent`` kwarg. Please review your customisations for compatibility
+with the updated code.
+
+.. _incompatible_shipping_changes_in_1.0:
+
+Shipping
+~~~~~~~~
+
+The shipping method API has been altered to avoid potential thread-safety
+issues. Prior to v1.0, shipping methods had a ``set_basket`` method which
+allowed a basket instance to be assigned. This was really a crutch to allow
+templates to have easy access to shipping charges (as they could be read
+straight off the shipping method instance). However, it was also a
+design problem as shipping methods could be instantiated at compile-time
+leading to a thread safety issue where multiple threads could assign a basket
+to the same shipping method instance.
+
+In Oscar 1.0, shipping methods are stateless services that have a method
+:func:`~oscar.apps.shipping.methods.Base.calculate` that takes a basket and
+returns a ``Price`` instance.  New :doc:`template tags </ref/templatetags/>` are
+provided that allow these shipping charges to be accessed from templates.
+
+This API change does require quite a few changes as both the shipping method
+and shipping charge now need to be passed around separately:
+
+* Shipping methods no longer have ``charge_excl_tax``,
+  ``charge_incl_tax`` and ``is_tax_known`` properties.
+
+* The :class:`~oscar.apps.order.utils.OrderCreator` class now requires the
+  ``shipping_charge`` to be passed to ``place_order``.
+
+* The signature of the :class:`~oscar.apps.checkout.calculators.OrderTotalCalculator` 
+  class has changed to accept ``shipping_charge`` rather than a
+  ``shipping_method`` instance.
+
+* The signature of the
+  :func:`~oscar.apps.checkout.session.CheckoutSessionMixin.get_order_totals` 
+  method has changed to accept the ``shipping_charge`` rather than a
+  ``shipping_method`` instance.
+
+Another key change is in the shipping repository object. The
+``get_shipping_methods`` method has been split in two to simplify the exercise
+of providing new shipping methods. The best practice for Oscar 1.0 is to
+override the ``methods`` attribute if the same set of shipping methods is
+available to everyone:
+
+.. code-block:: python
+
+    from oscar.apps.shipping import repository, methods
+
+    class Standard(methods.FixedPrice):
+        code = "standard"
+        name = "Standard"
+        charge_excl_tax = D('10.00')
+
+
+    class Express(methods.FixedPrice):
+        code = "express"
+        name = "Express"
+        charge_excl_tax = D('20.00')
+
+    class Repository(repository.Repository):
+        methods = [Standard(), Express()]
+        
+or to override ``get_available_shipping_methods`` if the available shipping
+methods if only available conditionally:
+
+.. code-block:: python
+
+    from oscar.apps.shipping import repository
+
+    class Repository(repository.Repository):
+        
+        def get_available_shipping_methods(
+                self, basket, shipping_addr=None, **kwargs):
+            methods = [Standard()]
+            if shipping_addr.country.code == 'US':
+                # Express only available in the US
+                methods.append(Express())
+            return methods
+
+Note that shipping address should be passed around as instances not classes.
+
+Email address handling
+~~~~~~~~~~~~~~~~~~~~~~
+
+In theory, the local part of an email is case-sensitive. In practice, many
+users don't know about this and most email servers don't consider the
+capitalisation. Because of this, Oscar now disregards capitalisation when
+looking up emails (e.g. when a user logs in).
+Storing behaviour is unaltered: When a user's email address is stored (e.g.
+when registering or checking out), the local part is unaltered and
+the host portion is lowercased.
+
+.. warning::
+
+   Those changes mean you might now have multiple users with email addresses
+   that Oscar considers identical. Please use the new
+   ``oscar_find_duplicate_emails`` management command to check your database
+   and deal with any conflicts accordingly.
+
+Django 1.7 support
+~~~~~~~~~~~~~~~~~~
+
+If you have any plans to upgrade to Django 1.7, more changes beyond
+addressing migrations are necessary:
+
+* You should be aware that Django 1.7 now enforces uniqueness of app labels.
+  Oscar dashboard apps now ship with app configs that set their app label
+  to ``{oldname}_dashboard``.
+
+* If you have forked any Oscar apps, you must add app configs to them, and
+  have them inherit from the Oscar one. See the appropriate section in
+  :doc:`/topics/fork_app` for an example.
+
+* Double-check that you address migrations as detailed below.
+
+* Django now enforces that no calls happen to the model registry during
+  app startup. This mostly means that you should avoid module-level calls to
+  ``get_model``, as that only works with a fully initialised model registry.
+
+Basket line stockrecords
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The basket line model got a reference to the stockrecord in Oscar 0.6. The
+basket middleware since then updated basket lines to have stockrecords if
+one was missing. If any lines are still missing a stockrecord, we'd expect them
+to be from from submitted baskets or from old, abandoned baskets.
+This updating of basket lines has been removed for 1.0 as it incurs additional
+database queries. Oscar 1.0 now also enforces the stockrecord by making it
+the ``stockrecord`` field of basket ``Line`` model no longer nullable.
+
+There is a migration that makes the appropriate schema change but, before that
+runs, you may need to clean up your ``basket_line`` table to ensure that all
+existing null values are replaced or removed.
+
+Here's a simple script you could run before upgrading which should ensure there
+are no nulls in your ``basket_line`` table:
+
+.. code-block:: python
+
+    from oscar.apps.basket import models
+    from oscar.apps.partner.strategy import Selector
+
+    strategy = Selector().strategy()
+
+    lines = models.Line.objects.filter(stockrecord__isnull=True):
+    for line in lines:
+        info = strategy.fetch_for_product(line.product)
+        if line.stockrecord:
+            line.stockrecord = info.stockrecord
+            line.save()
+        else:
+            line.delete()
+
+* The ``reload_page_response`` method of 
+  :class:`~oscar.apps.dashboard.orders.views.OrderDetailView`
+  has been renamed to ``reload_page``.
+
+.. _basket_app_changes:
+
+Basket app changes
+~~~~~~~~~~~~~~~~~~
+
+- The ``basket:add`` URL now required the primary key of the "base" product to
+  be included. This allows the same form to be used for both GET and POST
+  requests for variant products.
+
+- The ``ProductSelectionForm`` is no longer used and has been removed.
+
+- The constructor of the :class:`~oscar.apps.basket.forms.AddToBasketForm` has
+  been adjusted to take the basket and the purchase info tuple as parameters
+  instead of the request instance (c74f57bf_ and 8ba283e8_).
+
+.. _c74f57bf: https://github.com/django-oscar/django-oscar/commit/c74f57bf434661877f4d2d2259e7e7eb18b34951#diff-d200ac8746274e0307f512af886e1f3eR148
+.. _8ba283e8: https://github.com/django-oscar/django-oscar/commit/8ba283e8c4239e4eff95da5e8097a17ecfadf5f5
+
+Misc
+~~~~
+
+* The ``oscar_calculate_scores`` command has been `rewritten`_ to use the ORM
+  instead of raw SQL. That exposed a bug in the previous calculations,
+  where purchases got weighed less than any other event. When you upgrade,
+  your total scores will be change. If you rely on the old behaviour,
+  just extend the ``Calculator`` class and adjust the weights.
+
+* ``Order.order_number`` now has ``unique=True`` set. If order numbers are
+  not unique in your database, you need to remedy that before migrating. By
+  default, Oscar creates unique order numbers.
+
+* ``Product.score`` was just duplicating ``ProductRecord.score`` and has been
+  removed. Use ``Product.stats.score`` instead.
+
+* Oscar has child products to model tightly coupled products, and
+  ``Product.recommended_products`` to model products that are loosely related
+  (e.g. used for upselling). ``Product.related_products`` was a
+  third option that sat somewhere in between, and which was not well supported.
+  We fear it adds confusion, and in the spirit of keeping Oscar core lean,
+  has been removed. If you're using it, switch to
+  ``Product.recommended_products`` or just add the field back to your
+  custom Product instance and ``ProductForm`` when migrating.
+
+* The ``basket_form`` template tag code has been greatly simplified. Because of
+  that, the syntax needed to change slightly.
+
+  Before: ``{% basket_form request product as basket_form single %}``
+
+  After: ``{% basket_form request product 'single' as basket_form %}``
+
+* Product attribute validation has been cleaned up. As part of that, the
+  trivial ``ProductAttribute.get_validator`` and the unused
+  ``ProductAttribute.is_value_valid`` methods have been removed.
+
+* The ``RangeProductFileUpload`` model has been moved from the ranges
+  dashboard app to the offers app. The migrations that have been naively
+  drop and re-create the model; any data is lost! This is probably not an
+  issue, as the model is only used while an range upload is in progress. If
+  you need to keep the data, ensure you migrate it across.
+
+* ``oscar.core.loading.get_model`` now raises a ``LookupError`` instead of an
+  ``ImportError`` if a model can't be found. That brings it more in line with
+  what Django does since the app refactor.
+
+* ``CommunicationEventType.category`` was storing a localised string, which
+  breaks when switching locale. It now uses ``choices`` to map between the
+  value and a localised string. Unfortunately, if you're using this feature
+  and not running an English locale, you will need to migrate the existing
+  data to the English values.
+
+* Support for the ``OSCAR_OFFER_BLACKLIST_PRODUCT`` setting has been removed.
+  It was only partially supported: it prevented products from being
+  added to a range, but offers could be applied to the products nonetheless.
+  To prevent an offer being applied to a product, use ``is_discountable`` or
+  override ``get_is_discountable`` on your product instances.
+
+* ``Category.get_ancestors`` used to return a list of ancestors and would
+  default to include itself. For consistency with get_descendants and to avoid
+  having to slice the results in templates, it now returns a queryset of the
+  ancestors; use ``Category.get_ancestors_and_self`` for the old behaviour.
+
+* Weight based shipping methods used to have an ``upper_charge`` field which was
+  returned if no weight band matched. That doesn't work very well in practice,
+  and has been removed. Instead, charges from bands are now added together to
+  match the weight of the basket.
+
+* The :class:`~oscar.apps.order.utils.OrderCreator` class no longer defaults to
+  free shipping: a shipping method and charge have to be explicitly passed in.
+
+* The ``Base`` shipping method class now lives in ``oscar.apps.shipping.methods``.
+
+* The ``find_by_code`` method of the shipping ``Repository`` class has been
+  removed as it is no longer used. 
+
+* The parameters for
+  :func:`oscar.apps.shipping.repository.Repository.get_shipping_methods`
+  have been re-ordered to reflect which are the most important.
+
+* The legacy ``ShippingMethod`` name of the interface of the shipping app has
+  been removed. Inherit from ``shipping.base.Base`` for the class instead, and
+  inherit from ``shipping.abstract_models.AbstractBase`` for model-based
+  shipping methods.
+
+* ``oscar.apps.shipping.Scales`` has been renamed and moved to
+  ``oscar.apps.shipping.scales.Scale``, and is now overridable.
+
+* The models of the shipping app now have abstract base classes, similar to
+  the rest of Oscar.
+
+* The legacy ``ShippingMethod`` name of the interface of the shipping app has
+  been removed. Inherit from ``shipping.base.Base`` for the class instead, and
+  inherit from ``shipping.abstract_models.AbstractBase`` for model-based
+  shipping methods.
+
+* Oscar's ``models.py`` files now define ``__all__``, and it's dynamically
+  set to only expose unregistered models (which should be what you want) to
+  the namespace. This is important to keep the namespace clean while doing
+  star imports like ``from oscar.apps.catalogue.models import *``. You will
+  have to check your imports to ensure you're not accidentally relying on
+  e.g. a ``datetime`` import that's pulled in via the star import. Any such
+  import errors will cause a loud failure and should be easy to spot and fix.
+
+.. _rewritten: https://github.com/django-oscar/django-oscar/commit/d8b4dbfed17be90846ea4bc47b5f7b39ad944c24
+
+Migrations
+~~~~~~~~~~
+
+* South is no longer a dependency. This means it won't get installed
+  automatically when you install Oscar. If you are on Django 1.6 and want to
+  use South, you will need to explicitly install it and add it to your
+  requirements.
+
+* Only South >= 1.0 is supported: South 1.0 is a backwards compatible release
+  explicitly released to help with the upgrade path to Django 1.7. Please make
+  sure you update accordingly if you intend to keep using South. Older versions
+  of South will look in the wrong directories and will break with this Oscar
+  release.
+
+* Rename your South ``migrations`` directories. To avoid
+  clashes between Django's and South's migrations, you should rename
+  all your South migrations directories (including those of forked Oscar apps)
+  to ``south_migrations``. South 1.0 will check those first before falling back
+  to ``migrations``.
+
+* If you're upgrading to Django 1.7, you
+  will need to follow the `instructions to upgrade from South`_ for your own
+  apps. For any forked Oscar apps, you will need to copy Oscar's initial
+  migrations into your emptied ``migrations`` directory first, because Oscar's
+  set of migrations depend on each other. You can then create migrations for
+  your changes by calling ``./manage.py makemigrations``. Django should
+  detect that the database layout already matches the state of migrations; so
+  a call to ``migrate`` should fake the migrations.
+
+.. _instructions to upgrade from South: https://docs.djangoproject.com/en/1.7/topics/migrations/#upgrading-from-south
+
+.. warning::
+
+    The catalogue app has a data migration to determine the product structure.
+    Please double-check it's outcome and make sure to do something similar
+    if you have forked the catalogue app.
+
+.. note::
+
+    The migration numbers below refer to the numbers of the South migrations.
+    Oscar 1.0 ships with a set of new initial migrations for Django's new
+    native migrations framework. They include all the changes detailed below.
+
+.. note::
+
+    Be sure to read the detailed instructions for
+    :doc:`handling migrations </topics/upgrading>`.
+
+* Address:
+
+    - ``0011`` - ``AbstractAddress.search_text`` turned into a ``TextField``.
+    - ``0012`` - ``AbstractCountry``: Removed two unused indexes & turns numeric code into ``CharField``
+
+* Catalogue:
+
+    - ``0021`` - Add ``unique_together`` to ``ProductAttributeValue``,
+      ``ProductRecommendation`` and ``ProductCategory``
+    - ``0022`` - Remove ``Product.score`` field.
+    - ``0023`` - Drop ``Product.related_products``.
+    - ``0024`` - Change ``ProductAttributeValue.value_text`` to a ``TextField``
+      and do entity attribute changes and model deletions.
+    - ``0025`` & ``0026`` - Schema & data migration to determine and save Product structure.
+
+* Offer:
+
+    - ``0033`` - Use an ``AutoSlug`` field for ``Range`` models
+    - ``0034`` - Add moved ``RangedProductFileUpload`` model.
+
+* Order:
+
+    - ``0029`` - Add ``unique_together`` to ``PaymentEventQuantity`` and ``ShippingEventQuantity``
+    - ``0030`` - Set ``unique=True`` for ``Order.order_number``
+    - ``0031`` - ``AbstractAddress.search_text`` turned into a ``TextField``.
+
+* Partner:
+
+    - ``0014`` - ``AbstractAddress.search_text`` turned into a ``TextField``.
+
+* Promotions:
+
+    - ``0006`` - Add ``unique_together`` to ``OrderedProduct``
+
+* Ranges dashboard:
+
+    - ``0003`` - Drop ``RangeProductFileUpload`` from ``ranges`` app. This is
+                 a destructive change!
+
+* Shipping:
+
+    - ``0007`` - Change ``WeightBand.upper_limit`` from ``FloatField`` to ``DecimalField``
+    - ``0008`` - Drop ``WeightBased.upper_charge`` field.
+
+.. _deprecated_features_in_1.0:
+
+Deprecated features
+~~~~~~~~~~~~~~~~~~~
+
+The following features have been deprecated in this release:
+
+* Many attributes concerning product structure. Please see the
+  `product structure changes <product_structure_changes_in_1.0>`_ for details.
+
+Removal of deprecated features
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+These methods have been removed:
+
+* ``oscar.apps.catalogue.abstract_models.AbstractProduct.has_stockrecord``
+* ``oscar.apps.catalogue.abstract_models.AbstractProduct.stockrecord``
+* ``oscar.apps.catalogue.abstract_models.AbstractProduct.is_available_to_buy``
+* ``oscar.apps.catalogue.abstract_models.AbstractProduct.is_purchase_permitted``
+* ``oscar.apps.catalogue.views.get_product_base_queryset``
+* ``oscar.apps.partner.abstract_models.AbstractStockRecord.is_available_to_buy``
+* ``oscar.apps.partner.abstract_models.AbstractStockRecord.is_purchase_permitted``
+* ``oscar.apps.partner.abstract_models.AbstractStockRecord.availability_code``
+* ``oscar.apps.partner.abstract_models.AbstractStockRecord.availability``
+* ``oscar.apps.partner.abstract_models.AbstractStockRecord.max_purchase_quantity``
+* ``oscar.apps.partner.abstract_models.AbstractStockRecord.dispatch_date``
+* ``oscar.apps.partner.abstract_models.AbstractStockRecord.lead_time``
+* ``oscar.apps.partner.abstract_models.AbstractStockRecord.price_incl_tax``
+* ``oscar.apps.partner.abstract_models.AbstractStockRecord.price_tax``
+* ``oscar.apps.payment.abstract_models.AbstractBankcard.card_number``
+
+These classes have been removed:
+
+* ``oscar.apps.partner.prices.DelegateToStockRecord``
+* ``oscar.apps.partner.availability.DelegateToStockRecord``
+* ``oscar.apps.payment.utils.Bankcard``
+
+Known issues
+------------
+* ``models.py`` dynamically sets ``__all__`` to control what models are
+  importable through the star import. A bug in the ``models.py`` for the
+  ``partner`` app means you'll have to explicitly import them. More info in
+  `#1553`_.
+
+  .. _#1553: https://github.com/django-oscar/django-oscar/issues/1553

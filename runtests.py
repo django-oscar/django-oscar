@@ -35,7 +35,7 @@ import logging
 import warnings
 
 from tests.config import configure
-from six.moves import map
+from django.utils.six.moves import map
 
 # No logging
 logging.disable(logging.CRITICAL)
@@ -72,7 +72,7 @@ if __name__ == '__main__':
             # Default options:
             # --stop Abort on first error/failure
             # --nocapture Don't capture STDOUT
-            args.extend(['--nocapture', '--stop', '--with-specplugin'])
+            args.extend(['--nocapture', '--stop'])
         else:
             # Remove options as nose will pick these up from sys.argv
             for arg in args:
@@ -82,14 +82,14 @@ if __name__ == '__main__':
 
     configure()
     with warnings.catch_warnings():
-        # The warnings module in default configuration will never cause tests to
-        # fail, as it never raises an exception.
-        # We alter that behaviour by turning DeprecationWarnings into
-        # exceptions, but exclude warnings triggered by third-party libs
-        # Note: The context manager is not thread safe. Behaviour with multiple
-        # threads is undefined.
+        # The warnings module in default configuration will never cause tests
+        # to fail, as it never raises an exception.  We alter that behaviour by
+        # turning DeprecationWarnings into exceptions, but exclude warnings
+        # triggered by third-party libs. Note: The context manager is not thread
+        # safe. Behaviour with multiple threads is undefined.
         warnings.filterwarnings('error', category=DeprecationWarning)
-        warnings.filterwarnings('ignore',
-                                r'django.utils.simplejson is deprecated.*',
-                                DeprecationWarning, r'sorl\.thumbnail\.helpers')
+        warnings.filterwarnings('error', category=RuntimeWarning)
+        libs = r'(sorl\.thumbnail.*|bs4.*|webtest.*)'
+        warnings.filterwarnings(
+            'ignore', r'.*', DeprecationWarning, libs)
         run_tests(verbosity, *args)

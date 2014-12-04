@@ -1,14 +1,17 @@
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Sum, Count
-from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import python_2_unicode_compatible
+from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 
 from oscar.apps.catalogue.reviews.managers import ApprovedReviewsManager
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core import validators
 
 
+@python_2_unicode_compatible
 class AbstractProductReview(models.Model):
     """
     A review of a product
@@ -26,8 +29,9 @@ class AbstractProductReview(models.Model):
     score = models.SmallIntegerField(_("Score"), choices=SCORE_CHOICES)
 
     title = models.CharField(
-        max_length=255, verbose_name=_("Review title"),
-        validators=[validators.non_whitespace])
+        verbose_name=pgettext_lazy(u"Product review title", u"Title"),
+        max_length=255, validators=[validators.non_whitespace])
+
     body = models.TextField(_("Body"))
 
     # User information.
@@ -35,11 +39,13 @@ class AbstractProductReview(models.Model):
         AUTH_USER_MODEL, related_name='reviews', null=True, blank=True)
 
     # Fields to be completed if user is anonymous
-    name = models.CharField(_("Name"), max_length=255, null=True, blank=True)
-    email = models.EmailField(_("Email"), null=True, blank=True)
-    homepage = models.URLField(_("URL"), null=True, blank=True)
+    name = models.CharField(
+        pgettext_lazy(u"Anonymous reviewer name", u"Name"),
+        max_length=255, blank=True)
+    email = models.EmailField(_("Email"), blank=True)
+    homepage = models.URLField(_("URL"), blank=True)
 
-    FOR_MODERATION, APPROVED, REJECTED = list(range(0, 3))
+    FOR_MODERATION, APPROVED, REJECTED = 0, 1, 2
     STATUS_CHOICES = (
         (FOR_MODERATION, _("Requires moderation")),
         (APPROVED, _("Approved")),
@@ -65,19 +71,21 @@ class AbstractProductReview(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'reviews'
         ordering = ['-delta_votes', 'id']
         unique_together = (('product', 'user'),)
         verbose_name = _('Product review')
         verbose_name_plural = _('Product reviews')
 
-    @models.permalink
     def get_absolute_url(self):
-        return ('catalogue:reviews-detail', (), {
+        kwargs = {
             'product_slug': self.product.slug,
             'product_pk': self.product.id,
-            'pk': self.id})
+            'pk': self.id
+        }
+        return reverse('catalogue:reviews-detail', kwargs=kwargs)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def clean(self):
@@ -160,7 +168,7 @@ class AbstractProductReview(models.Model):
         review
         """
         if not user.is_authenticated():
-            return False, u"Only signed in users can vote"
+            return False, _(u"Only signed in users can vote")
         vote = self.votes.model(review=self, user=user, delta=1)
         try:
             vote.full_clean()
@@ -169,6 +177,7 @@ class AbstractProductReview(models.Model):
         return True, ""
 
 
+@python_2_unicode_compatible
 class AbstractVote(models.Model):
     """
     Records user ratings as yes/no vote.
@@ -188,12 +197,13 @@ class AbstractVote(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'reviews'
         ordering = ['-date_created']
         unique_together = (('user', 'review'),)
         verbose_name = _('Vote')
         verbose_name_plural = _('Votes')
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s vote for %s" % (self.delta, self.review)
 
     def clean(self):

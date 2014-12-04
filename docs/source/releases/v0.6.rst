@@ -218,9 +218,9 @@ It's features include:
 * PayPal Express integration using django-oscar-paypal_
 * Datacash integration using django-oscar-datacash_
 
-.. _django-oscar-paypal: https://github.com/tangentlabs/django-oscar-paypal
-.. _django-oscar-datacash: https://github.com/tangentlabs/django-oscar-datacash
-.. _django-oscar-stores: https://github.com/tangentlabs/django-oscar-stores
+.. _django-oscar-paypal: https://github.com/django-oscar/django-oscar-paypal
+.. _django-oscar-datacash: https://github.com/django-oscar/django-oscar-datacash
+.. _django-oscar-stores: https://github.com/django-oscar/django-oscar-stores
 
 See the :doc:`sandbox and demo site documentation </internals/sandbox>` for more details.  A publicly accessible version of the demo site
 is available at http://demo.oscarcommerce.com.
@@ -892,4 +892,4 @@ simplifies things and avoids circular dependency issues.  If your project is
 using this extension, you should remove it as a dependency and use the
 analogous functionality from ``oscar/test/``.
 
-.. _`Oscar test support library`: https://github.com/tangentlabs/django-oscar-testsupport
+.. _`Oscar test support library`: https://github.com/django-oscar/django-oscar-testsupport

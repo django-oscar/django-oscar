@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block title %}
-    {% trans "Partner management" %} | {{ block.super }}
+    {% trans "Partners" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -13,7 +13,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:partner-list' %}">{% trans "Partner management" %}</a>
+            <a href="{% url 'dashboard:partner-list' %}">{% trans "Partners" %}</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{{ partner.name }}</li>
@@ -57,7 +57,7 @@
                         <td>
                             <form action="{% url 'dashboard:partner-user-unlink' partner_pk=partner.id user_pkuser.id %}" method="post">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-danger">{% trans 'Unlink user' %}</button>
+                                <button type="submit" class="btn btn-danger" data-loading-text="{% trans 'Unlinking...' %}">{% trans 'Unlink user' %}</button>
                             </form>
                         </td>
                     </tr>
@@ -70,5 +70,5 @@
     {% include "partials/pagination.html" %}
 
     <h1>{% trans "Update details" %}</h1>
-    {% include 'partials/form.html' %}
+    {% include 'dashboard/partials/form.html' %}
 {% endblock dashboard_content %}

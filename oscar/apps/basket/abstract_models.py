@@ -4,16 +4,19 @@ import zlib
 from django.db import models
 from django.db.models import Sum
 from django.conf import settings
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 
 from oscar.apps.basket.managers import OpenBasketManager, SavedBasketManager
 from oscar.apps.offer import results
+from oscar.core.utils import get_default_currency
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.templatetags.currency_filters import currency
 
 
+@python_2_unicode_compatible
 class AbstractBasket(models.Model):
     """
     Basket object
@@ -55,6 +58,7 @@ class AbstractBasket(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'basket'
         verbose_name = _('Basket')
         verbose_name_plural = _('Baskets')
 
@@ -73,7 +77,7 @@ class AbstractBasket(models.Model):
         self._lines = None
         self.offer_applications = results.OfferApplications()
 
-    def __unicode__(self):
+    def __str__(self):
         return _(
             u"%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)") \
             % {'status': self.status,
@@ -120,15 +124,6 @@ class AbstractBasket(models.Model):
                 .select_related('product', 'stockrecord')
                 .prefetch_related(
                     'attributes', 'product__images'))
-
-            # Assign strategy to each line so it can use it to determine
-            # prices.  This is only needed for Django 1.4.5, where accessing
-            # self.basket from within the line will create a new basket
-            # instance (with no strategy assigned).  In later version, the
-            # original basket instance is cached and keeps its strategy
-            # property.
-            for line in self._lines:
-                line.strategy = self.strategy
         return self._lines
 
     def is_quantity_allowed(self, qty):
@@ -171,6 +166,11 @@ class AbstractBasket(models.Model):
         The 'options' list should contains dicts with keys 'option' and 'value'
         which link the relevant product.Option model and string value
         respectively.
+
+        Returns (line, created).
+          line: the matching basket line
+          created: whether the line was created or updated
+
         """
         if options is None:
             options = []
@@ -219,6 +219,9 @@ class AbstractBasket(models.Model):
             line.quantity += quantity
             line.save()
         self.reset_offer_applications()
+
+        # Returning the line is useful when overriding this method.
+        return line, created
     add_product.alters_data = True
     add = add_product
 
@@ -279,6 +282,10 @@ class AbstractBasket(models.Model):
         basket.date_merged = now()
         basket._lines = None
         basket.save()
+        # Ensure all vouchers are moved to the new basket
+        for voucher in basket.vouchers.all():
+            basket.vouchers.remove(voucher)
+            self.vouchers.add(voucher)
     merge.alters_data = True
 
     def freeze(self):
@@ -411,6 +418,10 @@ class AbstractBasket(models.Model):
         return self.offer_applications.voucher_discounts
 
     @property
+    def has_shipping_discounts(self):
+        return len(self.shipping_discounts) > 0
+
+    @property
     def shipping_discounts(self):
         """
         Return discounts from vouchers
@@ -442,7 +453,7 @@ class AbstractBasket(models.Model):
     @property
     def num_lines(self):
         """Return number of lines"""
-        return self.lines.all().count()
+        return self.all_lines().count()
 
     @property
     def num_items(self):
@@ -538,6 +549,7 @@ class AbstractBasket(models.Model):
             return 0
 
 
+@python_2_unicode_compatible
 class AbstractLine(models.Model):
     """
     A line of a basket (product and a quantity)
@@ -556,12 +568,9 @@ class AbstractLine(models.Model):
         'catalogue.Product', related_name='basket_lines',
         verbose_name=_("Product"))
 
-    # We store the stockrecord that should be used to fulfil this line.  This
-    # shouldn't really be NULLable but we need to keep it so for backwards
-    # compatibility.
+    # We store the stockrecord that should be used to fulfil this line.
     stockrecord = models.ForeignKey(
-        'partner.StockRecord', related_name='basket_lines',
-        null=True, blank=True)
+        'partner.StockRecord', related_name='basket_lines')
 
     quantity = models.PositiveIntegerField(_('Quantity'), default=1)
 
@@ -569,7 +578,7 @@ class AbstractLine(models.Model):
     # the basket.  This allows us to tell if a product has changed price since
     # a person first added it to their basket.
     price_currency = models.CharField(
-        _("Currency"), max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
+        _("Currency"), max_length=12, default=get_default_currency)
     price_excl_tax = models.DecimalField(
         _('Price excl. Tax'), decimal_places=2, max_digits=12,
         null=True)
@@ -588,11 +597,12 @@ class AbstractLine(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'basket'
         unique_together = ("basket", "line_reference")
         verbose_name = _('Basket line')
         verbose_name_plural = _('Basket lines')
 
-    def __unicode__(self):
+    def __str__(self):
         return _(
             u"Basket #%(basket_id)d, Product #%(product_id)d, quantity"
             u" %(quantity)d") % {'basket_id': self.basket.pk,
@@ -600,18 +610,10 @@ class AbstractLine(models.Model):
                                  'quantity': self.quantity}
 
     def save(self, *args, **kwargs):
-        """
-        Saves a line or deletes if the quantity is 0
-        """
         if not self.basket.can_be_edited:
             raise PermissionDenied(
                 _("You cannot modify a %s basket") % (
                     self.basket.status.lower(),))
-        if self.quantity == 0:
-            # 'using' is the only kwarg that save() and delete() share
-            if 'using' in kwargs:
-                return self.delete(using=kwargs['using'])
-            return self.delete()
         return super(AbstractLine, self).save(*args, **kwargs)
 
     # =============
@@ -629,8 +631,6 @@ class AbstractLine(models.Model):
     def discount(self, discount_value, affected_quantity, incl_tax=True):
         """
         Apply a discount to this line
-
-        Note that it only makes sense to apply
         """
         if incl_tax:
             if self._discount_excl_tax > 0:
@@ -662,7 +662,7 @@ class AbstractLine(models.Model):
         """
         Return a breakdown of line prices after discounts have been applied.
 
-        Returns a list of (unit_price_incl_tx, unit_price_excl_tax, quantity)
+        Returns a list of (unit_price_incl_tax, unit_price_excl_tax, quantity)
         tuples.
         """
         if not self.is_tax_known:
@@ -729,16 +729,13 @@ class AbstractLine(models.Model):
         Return the stock/price info
         """
         if not hasattr(self, '_info'):
-            # Cache the PurchaseInfo instance (note that a strategy instance is
-            # assigned to each line by the basket in the all_lines method).
-            self._info = self.strategy.fetch_for_product(
+            # Cache the PurchaseInfo instance.
+            self._info = self.basket.strategy.fetch_for_product(
                 self.product, self.stockrecord)
         return self._info
 
     @property
     def is_tax_known(self):
-        if not hasattr(self, 'strategy'):
-            return False
         return self.purchase_info.price.is_tax_known
 
     @property
@@ -848,5 +845,6 @@ class AbstractLineAttribute(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'basket'
         verbose_name = _('Line attribute')
         verbose_name_plural = _('Line attributes')

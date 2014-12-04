@@ -19,21 +19,21 @@ Extend range of bankcard expiry month field.
 
 Make ``AbstractStockRecord`` abstract (`#645`)
 
-.. _`#645`: https://github.com/tangentlabs/django-oscar/pull/645
+.. _`#645`: https://github.com/django-oscar/django-oscar/pull/645
 
 0.4.8 - 2013-04-08
 ------------------
 
 Fix bug with order dashboard line editing (`#622`_)
 
-.. _`#622`: https://github.com/tangentlabs/django-oscar/pull/622
+.. _`#622`: https://github.com/django-oscar/django-oscar/pull/622
 
 0.4.7 - 2013-03-20
 ------------------
 
 Fix bug with order dashboard searching (`#587`_)
 
-.. _`#587`: https://github.com/tangentlabs/django-oscar/pull/587
+.. _`#587`: https://github.com/django-oscar/django-oscar/pull/587
 
 0.4.6 - 2013-03-05
 ------------------
@@ -135,7 +135,7 @@ A couple of minor adjustments for Tangent projects
 * Rework price lookups in offer calculations (backport of functionality from 0.4)
 * Add additional block to profile template
 
-Diff: https://github.com/tangentlabs/django-oscar/compare/0.3.3...0.3.4
+Diff: https://github.com/django-oscar/django-oscar/compare/0.3.3...0.3.4
 
 0.3.3 - 2012-08-24
 -------------------

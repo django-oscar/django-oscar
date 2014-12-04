@@ -2,6 +2,9 @@
 
 form {
     .clearfix();
+    &.flat {
+        margin:0;
+    }
 }
 
 // For IE: adds width for selects inside overflow hidden containers
@@ -20,6 +23,37 @@ form {
     }
 }
 
+.error-block {
+    color: #b94a48;
+    margin-top: 6px;
+}
+
 .control-label.required span {
     color: #FF0000;
+}
+
+/* weird alternative to btn-block for specific use on the product page, where btn-block would cause a vertical misalignment when product size options are shown */
+.btn-add-to-basket {
+    width:100%;
+}
+
+/* star rating functionality for product review page */
+.reviewrating {
+    select {
+        display:none;
+    }
+    .star-rating {
+        margin-bottom:10px;
+        font-size:280%;
+        i {
+            cursor:pointer;
+        }
+    }
+}
+
+.form-actions {
+    margin: @line-height-computed 0;
+    padding: @line-height-computed;
+    background-color: @form-actions-bg-color;
+    border-top: solid 1px @form-actions-border-color;
 }

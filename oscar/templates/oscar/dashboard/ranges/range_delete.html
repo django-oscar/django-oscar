@@ -4,7 +4,7 @@
 {% block body_class %}{{ block.super }} create-page{% endblock %}
 
 {% block title %}
-    {% blocktrans with name=range.name %}Delete range '{{ name }}'?{% endblocktrans %} | {% trans "Range management" %} | {{ block.super }}
+    {% blocktrans with name=range.name %}Delete range '{{ name }}'?{% endblocktrans %} | {% trans "Ranges" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -14,7 +14,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:range-list' %}">{% trans "Range management" %}</a>
+            <a href="{% url 'dashboard:range-list' %}">{% trans "Ranges" %}</a>
             <span class="divider">/</span>
         </li>
         <li>
@@ -34,7 +34,7 @@
         <p>{% trans "Are you sure you want to delete this range?" %}</p>
         {% csrf_token %}
         <div class="form-actions">
-            <button class="btn btn-danger" type="submit">{% trans "Delete" %}</button> {% trans "or" %}
+            <button class="btn btn-danger" type="submit" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button> {% trans "or" %}
             <a href="{% url 'dashboard:range-list' %}">{% trans "cancel" %}</a>
         </div>
     </form>

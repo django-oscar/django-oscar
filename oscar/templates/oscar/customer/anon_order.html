@@ -38,7 +38,7 @@
             {% if address.notes %}
                 <tr>
                     <th>{% trans 'Notes' %}</th>
-                    <td>{{ address.notes }}</td>
+                    <td>{{ address.notes|linebreaks }}</td>
                 </tr>
             {% endif %} 
         </table>

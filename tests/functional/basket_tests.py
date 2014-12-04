@@ -1,5 +1,5 @@
 from decimal import Decimal as D
-from six.moves import http_client
+from django.utils.six.moves import http_client
 import datetime
 
 from django.conf import settings
@@ -46,7 +46,7 @@ class AnonAddToBasketViewTests(TestCase):
     def setUp(self):
         self.product = create_product(
             price=D('10.00'), num_in_stock=10)
-        url = reverse('basket:add')
+        url = reverse('basket:add', kwargs={'pk': self.product.pk})
         post_params = {'product_id': self.product.id,
                        'action': 'add',
                        'quantity': 1}
@@ -98,7 +98,7 @@ class BasketThresholdTest(TestCase):
 
     def test_adding_more_than_threshold_raises(self):
         dummy_product = create_product(price=D('10.00'), num_in_stock=10)
-        url = reverse('basket:add')
+        url = reverse('basket:add', kwargs={'pk': dummy_product.pk})
         post_params = {'product_id': dummy_product.id,
                        'action': 'add',
                        'quantity': 2}

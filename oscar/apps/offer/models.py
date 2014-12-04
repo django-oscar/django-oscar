@@ -1,24 +1,27 @@
-import six
+import itertools
+import os
+import re
 import operator
 from decimal import Decimal as D, ROUND_DOWN, ROUND_UP
 
 from django.core import exceptions
-from oscar.core.loading import get_model
 from django.template.defaultfilters import date as date_filter
 from django.db import models
+from django.db.models.query import Q
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now, get_current_timezone
 from django.utils.translation import ungettext, ugettext_lazy as _
 from django.utils.importlib import import_module
+from django.utils import six
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
-from oscar.core.utils import slugify
-from oscar.core.loading import get_class
+from oscar.core.compat import AUTH_USER_MODEL
+from oscar.core.loading import get_class, get_model
 from oscar.apps.offer.managers import ActiveOfferManager
 from oscar.templatetags.currency_filters import currency
-from oscar.models.fields import (PositiveDecimalField, ExtendedURLField,
-                                 AutoSlugField)
+from oscar.models import fields
 
 BrowsableRangeManager = get_class('offer.managers', 'BrowsableRangeManager')
 
@@ -59,6 +62,7 @@ def apply_discount(line, discount, quantity):
     line.discount(discount, quantity, incl_tax=False)
 
 
+@python_2_unicode_compatible
 class ConditionalOffer(models.Model):
     """
     A conditional offer (eg buy 1, get 10% off)
@@ -66,8 +70,8 @@ class ConditionalOffer(models.Model):
     name = models.CharField(
         _("Name"), max_length=128, unique=True,
         help_text=_("This is displayed within the customer's basket"))
-    slug = AutoSlugField(_("Slug"), max_length=128, unique=True,
-                         populate_from='name')
+    slug = fields.AutoSlugField(
+        _("Slug"), max_length=128, unique=True, populate_from='name')
     description = models.TextField(_("Description"), blank=True,
                                    help_text=_("This is displayed on the offer"
                                                " browsing page"))
@@ -162,7 +166,8 @@ class ConditionalOffer(models.Model):
     num_orders = models.PositiveIntegerField(
         _("Number of Orders"), default=0)
 
-    redirect_url = ExtendedURLField(_("URL redirect (optional)"), blank=True)
+    redirect_url = fields.ExtendedURLField(
+        _("URL redirect (optional)"), blank=True)
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     objects = models.Manager()
@@ -173,13 +178,10 @@ class ConditionalOffer(models.Model):
     _voucher = None
 
     class Meta:
+        app_label = 'offer'
         ordering = ['-priority']
         verbose_name = _("Conditional offer")
         verbose_name_plural = _("Conditional offers")
-
-        # The way offers are looked up involves the fields (offer_type, status,
-        # start_datetime, end_datetime).  Ideally, you want a DB index that
-        # covers these 4 fields (will add support for this in Django 1.5)
 
     def save(self, *args, **kwargs):
         # Check to see if consumption thresholds have been broken
@@ -194,7 +196,7 @@ class ConditionalOffer(models.Model):
     def get_absolute_url(self):
         return reverse('offer:detail', kwargs={'slug': self.slug})
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def clean(self):
@@ -235,7 +237,7 @@ class ConditionalOffer(models.Model):
         if self.end_datetime:
             predicates.append(test_date > self.end_datetime)
         if any(predicates):
-            return 0
+            return False
         return self.get_max_applications(user) > 0
 
     def is_condition_satisfied(self, basket):
@@ -256,12 +258,12 @@ class ConditionalOffer(models.Model):
         return self.benefit.proxy().apply(
             basket, self.condition.proxy(), self)
 
-    def apply_deferred_benefit(self, basket):
+    def apply_deferred_benefit(self, basket, order, application):
         """
         Applies any deferred benefits.  These are things like adding loyalty
         points to somone's account.
         """
-        return self.benefit.proxy().apply_deferred(basket)
+        return self.benefit.proxy().apply_deferred(basket, order, application)
 
     def set_voucher(self, voucher):
         self._voucher = voucher
@@ -291,7 +293,7 @@ class ConditionalOffer(models.Model):
         return min(limits)
 
     def get_num_user_applications(self, user):
-        OrderDiscount = models.get_model('order', 'OrderDiscount')
+        OrderDiscount = get_model('order', 'OrderDiscount')
         aggregates = OrderDiscount.objects.filter(offer_id=self.id,
                                                   order__user=user)\
             .aggregate(total=models.Sum('frequency'))
@@ -403,15 +405,19 @@ class ConditionalOffer(models.Model):
         cond_range = self.condition.range
         if cond_range.includes_all_products:
             # Return ALL the products
-            return Product.browsable.select_related('product_class',
-                                                    'stockrecord')\
-                .filter(is_discountable=True)\
-                .prefetch_related('variants', 'images',
-                                  'product_class__options', 'product_options')
-        return cond_range.included_products.filter(is_discountable=True)
+            queryset = Product.browsable
+        else:
+            queryset = cond_range.included_products
+        return queryset.filter(is_discountable=True).exclude(
+            structure=Product.CHILD)
 
 
+@python_2_unicode_compatible
 class Condition(models.Model):
+    """
+    A condition for an offer to be applied. You can either specify a custom
+    proxy class, or need to specify a type, range and value.
+    """
     COUNT, VALUE, COVERAGE = ("Count", "Value", "Coverage")
     TYPE_CHOICES = (
         (COUNT, _("Depends on number of items in basket that are in "
@@ -423,14 +429,15 @@ class Condition(models.Model):
     range = models.ForeignKey(
         'offer.Range', verbose_name=_("Range"), null=True, blank=True)
     type = models.CharField(_('Type'), max_length=128, choices=TYPE_CHOICES,
-                            null=True, blank=True)
-    value = PositiveDecimalField(_('Value'), decimal_places=2, max_digits=12,
-                                 null=True, blank=True)
+                            blank=True)
+    value = fields.PositiveDecimalField(
+        _('Value'), decimal_places=2, max_digits=12, null=True, blank=True)
 
-    proxy_class = models.CharField(_("Custom class"), null=True, blank=True,
-                                   max_length=255, unique=True, default=None)
+    proxy_class = fields.NullCharField(
+        _("Custom class"), max_length=255, unique=True, default=None)
 
     class Meta:
+        app_label = 'offer'
         verbose_name = _("Condition")
         verbose_name_plural = _("Conditions")
 
@@ -438,6 +445,14 @@ class Condition(models.Model):
         """
         Return the proxy model
         """
+        klassmap = {
+            self.COUNT: CountCondition,
+            self.VALUE: ValueCondition,
+            self.COVERAGE: CoverageCondition}
+        # Short-circuit logic if current class is already a proxy class.
+        if self.__class__ in klassmap.values():
+            return self
+
         field_dict = dict(self.__dict__)
         for field in list(field_dict.keys()):
             if field.startswith('_'):
@@ -445,25 +460,34 @@ class Condition(models.Model):
 
         if self.proxy_class:
             klass = load_proxy(self.proxy_class)
+            # Short-circuit again.
+            if self.__class__ == klass:
+                return self
             return klass(**field_dict)
-        klassmap = {
-            self.COUNT: CountCondition,
-            self.VALUE: ValueCondition,
-            self.COVERAGE: CoverageCondition}
         if self.type in klassmap:
             return klassmap[self.type](**field_dict)
-        return self
+        raise RuntimeError("Unrecognised condition type (%s)" % self.type)
 
-    def __unicode__(self):
-        return self.proxy().name
+    def __str__(self):
+        return self.name
 
     @property
     def name(self):
-        return self.description
+        """
+        A plaintext description of the condition. Every proxy class has to
+        implement it.
+
+        This is used in the dropdowns within the offer dashboard.
+        """
+        return self.proxy().name
 
     @property
     def description(self):
-        return self.proxy().description
+        """
+        A description of the condition.
+        Defaults to the name. May contain HTML.
+        """
+        return self.name
 
     def consume_items(self, offer, basket, affected_lines):
         pass
@@ -491,10 +515,11 @@ class Condition(models.Model):
         """
         Determines whether the condition can be applied to a given basket line
         """
-        if not line.stockrecord:
+        if not line.stockrecord_id:
             return False
         product = line.product
-        return self.range.contains_product(product) and product.is_discountable
+        return (self.range.contains_product(product)
+                and product.get_is_discountable())
 
     def get_applicable_lines(self, offer, basket, most_expensive_first=True):
         """
@@ -515,6 +540,7 @@ class Condition(models.Model):
         return sorted(line_tuples, key=key)
 
 
+@python_2_unicode_compatible
 class Benefit(models.Model):
     range = models.ForeignKey(
         'offer.Range', null=True, blank=True, verbose_name=_("Range"))
@@ -542,7 +568,7 @@ class Benefit(models.Model):
     # The value to use with the designated type.  This can be either an integer
     # (eg for multibuy) or a decimal (eg an amount) which is slightly
     # confusing.
-    value = PositiveDecimalField(
+    value = fields.PositiveDecimalField(
         _("Value"), decimal_places=2, max_digits=12, null=True, blank=True)
 
     # If this is not set, then there is no upper limit on how many products
@@ -554,22 +580,15 @@ class Benefit(models.Model):
 
     # A custom benefit class can be used instead.  This means the
     # type/value/max_affected_items fields should all be None.
-    proxy_class = models.CharField(_("Custom class"), null=True, blank=True,
-                                   max_length=255, unique=True, default=None)
+    proxy_class = fields.NullCharField(
+        _("Custom class"), max_length=255, unique=True, default=None)
 
     class Meta:
+        app_label = 'offer'
         verbose_name = _("Benefit")
         verbose_name_plural = _("Benefits")
 
     def proxy(self):
-        field_dict = dict(self.__dict__)
-        for field in list(field_dict.keys()):
-            if field.startswith('_'):
-                del field_dict[field]
-
-        if self.proxy_class:
-            klass = load_proxy(self.proxy_class)
-            return klass(**field_dict)
         klassmap = {
             self.PERCENTAGE: PercentageDiscountBenefit,
             self.FIXED: AbsoluteDiscountBenefit,
@@ -578,31 +597,51 @@ class Benefit(models.Model):
             self.SHIPPING_ABSOLUTE: ShippingAbsoluteDiscountBenefit,
             self.SHIPPING_FIXED_PRICE: ShippingFixedPriceBenefit,
             self.SHIPPING_PERCENTAGE: ShippingPercentageDiscountBenefit}
+        # Short-circuit logic if current class is already a proxy class.
+        if self.__class__ in klassmap.values():
+            return self
+
+        field_dict = dict(self.__dict__)
+        for field in list(field_dict.keys()):
+            if field.startswith('_'):
+                del field_dict[field]
+
+        if self.proxy_class:
+            klass = load_proxy(self.proxy_class)
+            # Short-circuit again.
+            if self.__class__ == klass:
+                return self
+            return klass(**field_dict)
+
         if self.type in klassmap:
             return klassmap[self.type](**field_dict)
         raise RuntimeError("Unrecognised benefit type (%s)" % self.type)
 
-    def __unicode__(self):
-        name = self.proxy().name
-        if self.max_affected_items:
-            name += ungettext(
-                " (max %d item)",
-                " (max %d items)",
-                self.max_affected_items) % self.max_affected_items
-        return name
+    def __str__(self):
+        return self.name
 
     @property
     def name(self):
-        return self.description
+        """
+        A plaintext description of the benefit. Every proxy class has to
+        implement it.
+
+        This is used in the dropdowns within the offer dashboard.
+        """
+        return self.proxy().name
 
     @property
     def description(self):
-        return self.proxy().description
+        """
+        A description of the benefit.
+        Defaults to the name. May contain HTML.
+        """
+        return self.name
 
     def apply(self, basket, condition, offer):
         return ZERO_DISCOUNT
 
-    def apply_deferred(self, basket):
+    def apply_deferred(self, basket, order, application):
         return None
 
     def clean(self):
@@ -736,12 +775,17 @@ class Benefit(models.Model):
         return D('0.00')
 
 
+@python_2_unicode_compatible
 class Range(models.Model):
     """
-    Represents a range of products that can be used within an offer
+    Represents a range of products that can be used within an offer.
+
+    Ranges only support adding parent or stand-alone products. Offers will
+    consider child products automatically.
     """
     name = models.CharField(_("Name"), max_length=128, unique=True)
-    slug = models.SlugField(_('Slug'), max_length=128, unique=True, null=True)
+    slug = fields.AutoSlugField(
+        _("Slug"), max_length=128, unique=True, populate_from="name")
 
     description = models.TextField(blank=True)
 
@@ -767,36 +811,30 @@ class Range(models.Model):
         verbose_name=_("Included Categories"))
 
     # Allow a custom range instance to be specified
-    proxy_class = models.CharField(
-        _("Custom class"), null=True, blank=True, max_length=255,
-        default=None, unique=True)
+    proxy_class = fields.NullCharField(
+        _("Custom class"), max_length=255, default=None, unique=True)
 
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     __included_product_ids = None
     __excluded_product_ids = None
     __class_ids = None
+    __category_ids = None
 
     objects = models.Manager()
     browsable = BrowsableRangeManager()
 
     class Meta:
+        app_label = 'offer'
         verbose_name = _("Range")
         verbose_name_plural = _("Ranges")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('catalogue:range', kwargs={
-            'slug': self.slug})
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-
-        # Save Range
-        super(Range, self).save(*args, **kwargs)
+        return reverse(
+            'catalogue:range', kwargs={'slug': self.slug})
 
     def add_product(self, product, display_order=None):
         """ Add product to the range
@@ -804,18 +842,14 @@ class Range(models.Model):
         When adding product that is already in the range, prevent re-adding it.
         If display_order is specified, update it.
 
-        Standard display_order for a new product in the range (0) puts
+        Default display_order for a new product in the range is 0; this puts
         the product at the top of the list.
-
-        display_order needs to be tested for None because
-
-          >>> display_order = 0
-          >>> not display_order
-          True
-          >>> display_order is None
-          False
         """
-        initial_order = 0 if display_order is None else display_order
+        if product.is_child:
+            raise ValueError(
+                "Ranges can only contain parent and stand-alone products.")
+
+        initial_order = display_order or 0
         relation, __ = RangeProduct.objects.get_or_create(
             range=self, product=product,
             defaults={'display_order': initial_order})
@@ -826,19 +860,19 @@ class Range(models.Model):
             relation.save()
 
     def remove_product(self, product):
-        """ Remove product from range """
+        """
+        Remove product from range. To save on queries, this function does not
+        check if the product is in fact in the range.
+        """
         RangeProduct.objects.filter(range=self, product=product).delete()
 
     def contains_product(self, product):  # noqa (too complex (12))
         """
-        Check whether the passed product is part of this range
+        Check whether the passed product is part of this range.
         """
-        # We look for shortcircuit checks first before
-        # the tests that require more database queries.
-
-        if settings.OSCAR_OFFER_BLACKLIST_PRODUCT and \
-                settings.OSCAR_OFFER_BLACKLIST_PRODUCT(product):
-            return False
+        # Child products are never part of the range, but the parent may be.
+        if product.is_child:
+            product = product.parent
 
         # Delegate to a proxy class if one is provided
         if self.proxy_class:
@@ -856,7 +890,7 @@ class Range(models.Model):
             return True
         test_categories = self.included_categories.all()
         if test_categories:
-            for category in product.categories.all():
+            for category in product.get_categories().all():
                 for test_category in test_categories:
                     if category == test_category \
                             or category.is_descendant_of(test_category):
@@ -866,24 +900,53 @@ class Range(models.Model):
     # Shorter alias
     contains = contains_product
 
+    def __get_pks_and_child_pks(self, queryset):
+        """
+        Expects a product queryset; gets the primary keys of the passed
+        products and their children.
+
+        Verbose, but database and memory friendly.
+        """
+        # One query to get parent and children; [(4, None), (5, 10), (5, 11)]
+        pk_tuples_iterable = queryset.values_list('pk', 'children__pk')
+        # Flatten list without unpacking; [4, None, 5, 10, 5, 11]
+        flat_iterable = itertools.chain.from_iterable(pk_tuples_iterable)
+        # Ensure uniqueness and remove None; {4, 5, 10, 11}
+        return set(flat_iterable) - {None}
+
     def _included_product_ids(self):
+        if not self.id:
+            return []
         if self.__included_product_ids is None:
-            self.__included_product_ids = [row['id'] for row in
-                                           self.included_products.values('id')]
+            self.__included_product_ids = self.__get_pks_and_child_pks(
+                self.included_products)
         return self.__included_product_ids
 
     def _excluded_product_ids(self):
         if not self.id:
             return []
         if self.__excluded_product_ids is None:
-            self.__excluded_product_ids = [row['id'] for row in
-                                           self.excluded_products.values('id')]
+            self.__excluded_product_ids = self.__get_pks_and_child_pks(
+                self.excluded_products)
         return self.__excluded_product_ids
 
     def _class_ids(self):
         if None == self.__class_ids:
-            self.__class_ids = [row['id'] for row in self.classes.values('id')]
+            self.__class_ids = self.classes.values_list('pk', flat=True)
         return self.__class_ids
+
+    def _category_ids(self):
+        if self.__category_ids is None:
+            category_ids_list = list(
+                self.included_categories.values_list('pk', flat=True))
+            for category in self.included_categories.all():
+                children_ids = category.get_descendants().values_list(
+                    'pk', flat=True)
+                category_ids_list.extend(list(children_ids))
+
+            self.__category_ids = category_ids_list
+
+        return self.__category_ids
 
     def num_products(self):
         # Delegate to a proxy class if one is provided
@@ -891,14 +954,36 @@ class Range(models.Model):
             return load_proxy(self.proxy_class)().num_products()
         if self.includes_all_products:
             return None
-        return self.included_products.all().count()
+        return self.all_products().count()
+
+    def all_products(self):
+        """
+        Return a queryset containing all the products in the range
+
+        This includes included_products plus the products contained in the
+        included classes and categories, minus the products in
+        excluded_products.
+        """
+        if self.proxy_class:
+            return load_proxy(self.proxy_class)().all_products()
+
+        Product = get_model("catalogue", "Product")
+        if self.includes_all_products:
+            # Filter out child products
+            return Product.browsable.all()
+
+        return Product.objects.filter(
+            Q(id__in=self._included_product_ids()) |
+            Q(product_class_id__in=self._class_ids()) |
+            Q(productcategory__category_id__in=self._category_ids())
+        ).exclude(id__in=self._excluded_product_ids())
 
     @property
     def is_editable(self):
         """
         Test whether this product can be edited in the dashboard
         """
-        return self.proxy_class is None
+        return not self.proxy_class
 
 
 class RangeProduct(models.Model):
@@ -908,7 +993,8 @@ class RangeProduct(models.Model):
     display_order = models.IntegerField(default=0)
 
     class Meta:
-        unique_together = (('range', 'product'),)
+        app_label = 'offer'
+        unique_together = ('range', 'product')
 
 # ==========
 # Conditions
@@ -935,9 +1021,10 @@ class CountCondition(Condition):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
-        verbose_name = _("Count Condition")
-        verbose_name_plural = _("Count Conditions")
+        verbose_name = _("Count condition")
+        verbose_name_plural = _("Count conditions")
 
     def is_satisfied(self, offer, basket):
         """
@@ -1023,6 +1110,7 @@ class CoverageCondition(Condition):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Coverage Condition")
         verbose_name_plural = _("Coverage Conditions")
@@ -1126,9 +1214,10 @@ class ValueCondition(Condition):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
-        verbose_name = _("Value Condition")
-        verbose_name_plural = _("Value Conditions")
+        verbose_name = _("Value condition")
+        verbose_name_plural = _("Value conditions")
 
     def is_satisfied(self, offer, basket):
         """
@@ -1210,7 +1299,7 @@ class ApplicationResult(object):
     # (a) Give a discount off the BASKET total
     # (b) Give a discount off the SHIPPING total
     # (a) Trigger a post-order action
-    BASKET, SHIPPING, POST_ORDER = list(range(0, 3))
+    BASKET, SHIPPING, POST_ORDER = 0, 1, 2
     affects = None
 
     @property
@@ -1289,7 +1378,7 @@ class PercentageDiscountBenefit(Benefit):
     def name(self):
         return self._description % {
             'value': self.value,
-            'range': self.range.name.lower()}
+            'range': self.range.name}
 
     @property
     def description(self):
@@ -1298,11 +1387,18 @@ class PercentageDiscountBenefit(Benefit):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Percentage discount benefit")
         verbose_name_plural = _("Percentage discount benefits")
 
-    def apply(self, basket, condition, offer):
+    def apply(self, basket, condition, offer, discount_percent=None,
+              max_total_discount=None):
+        if discount_percent is None:
+            discount_percent = self.value
+
+        discount_amount_available = max_total_discount
+
         line_tuples = self.get_applicable_lines(offer, basket)
 
         discount = D('0.00')
@@ -1312,10 +1408,18 @@ class PercentageDiscountBenefit(Benefit):
         for price, line in line_tuples:
             if affected_items >= max_affected_items:
                 break
+            if discount_amount_available == 0:
+                break
+
             quantity_affected = min(line.quantity_without_discount,
                                     max_affected_items - affected_items)
-            line_discount = self.round(self.value / D('100.0') * price
+            line_discount = self.round(discount_percent / D('100.0') * price
                                        * int(quantity_affected))
+
+            if discount_amount_available is not None:
+                line_discount = min(line_discount, discount_amount_available)
+                discount_amount_available -= line_discount
+
             apply_discount(line, line_discount, quantity_affected)
 
             affected_lines.append((line, line_discount, quantity_affected))
@@ -1346,16 +1450,19 @@ class AbsoluteDiscountBenefit(Benefit):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Absolute discount benefit")
         verbose_name_plural = _("Absolute discount benefits")
 
-    def apply(self, basket, condition, offer):
+    def apply(self, basket, condition, offer, discount_amount=None,
+              max_total_discount=None):
+        if discount_amount is None:
+            discount_amount = self.value
+
         # Fetch basket lines that are in the range and available to be used in
         # an offer.
         line_tuples = self.get_applicable_lines(offer, basket)
-        if not line_tuples:
-            return ZERO_DISCOUNT
 
         # Determine which lines can have the discount applied to them
         max_affected_items = self._effective_max_affected_items()
@@ -1371,13 +1478,14 @@ class AbsoluteDiscountBenefit(Benefit):
             num_affected_items += qty
             affected_items_total += qty * price
 
-        # Guard against zero price products causing problems
-        if not affected_items_total:
-            return ZERO_DISCOUNT
-
         # Ensure we don't try to apply a discount larger than the total of the
         # matching items.
-        discount = min(self.value, affected_items_total)
+        discount = min(discount_amount, affected_items_total)
+        if max_total_discount is not None:
+            discount = min(discount, max_total_discount)
+
+        if discount == 0:
+            return ZERO_DISCOUNT
 
         # Apply discount equally amongst them
         affected_lines = []
@@ -1415,15 +1523,13 @@ class FixedPriceBenefit(Benefit):
     _description = _("The products that meet the condition are sold "
                      "for %(amount)s")
 
-    def __unicode__(self):
+    @property
+    def name(self):
         return self._description % {
             'amount': currency(self.value)}
 
-    @property
-    def description(self):
-        return self.__unicode__()
-
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Fixed price benefit")
         verbose_name_plural = _("Fixed price benefits")
@@ -1490,6 +1596,7 @@ class MultibuyDiscountBenefit(Benefit):
             'range': range_anchor(self.range)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Multibuy discount benefit")
         verbose_name_plural = _("Multibuy discount benefits")
@@ -1521,6 +1628,7 @@ class ShippingBenefit(Benefit):
         return SHIPPING_DISCOUNT
 
     class Meta:
+        app_label = 'offer'
         proxy = True
 
 
@@ -1528,11 +1636,12 @@ class ShippingAbsoluteDiscountBenefit(ShippingBenefit):
     _description = _("%(amount)s off shipping cost")
 
     @property
-    def description(self):
+    def name(self):
         return self._description % {
             'amount': currency(self.value)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Shipping absolute discount benefit")
         verbose_name_plural = _("Shipping absolute discount benefits")
@@ -1545,11 +1654,12 @@ class ShippingFixedPriceBenefit(ShippingBenefit):
     _description = _("Get shipping for %(amount)s")
 
     @property
-    def description(self):
+    def name(self):
         return self._description % {
             'amount': currency(self.value)}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Fixed price shipping benefit")
         verbose_name_plural = _("Fixed price shipping benefits")
@@ -1564,11 +1674,12 @@ class ShippingPercentageDiscountBenefit(ShippingBenefit):
     _description = _("%(value)s%% off of shipping cost")
 
     @property
-    def description(self):
+    def name(self):
         return self._description % {
             'value': self.value}
 
     class Meta:
+        app_label = 'offer'
         proxy = True
         verbose_name = _("Shipping percentage discount benefit")
         verbose_name_plural = _("Shipping percentage discount benefits")
@@ -1576,3 +1687,104 @@ class ShippingPercentageDiscountBenefit(ShippingBenefit):
     def shipping_discount(self, charge):
         discount = charge * self.value / D('100.0')
         return discount.quantize(D('0.01'))
+
+
+class RangeProductFileUpload(models.Model):
+    range = models.ForeignKey('offer.Range', related_name='file_uploads',
+                              verbose_name=_("Range"))
+    filepath = models.CharField(_("File Path"), max_length=255)
+    size = models.PositiveIntegerField(_("Size"))
+    uploaded_by = models.ForeignKey(AUTH_USER_MODEL,
+                                    verbose_name=_("Uploaded By"))
+    date_uploaded = models.DateTimeField(_("Date Uploaded"), auto_now_add=True)
+
+    PENDING, FAILED, PROCESSED = 'Pending', 'Failed', 'Processed'
+    choices = (
+        (PENDING, PENDING),
+        (FAILED, FAILED),
+        (PROCESSED, PROCESSED),
+    )
+    status = models.CharField(_("Status"), max_length=32, choices=choices,
+                              default=PENDING)
+    error_message = models.CharField(_("Error Message"), max_length=255,
+                                     blank=True)
+
+    # Post-processing audit fields
+    date_processed = models.DateTimeField(_("Date Processed"), null=True)
+    num_new_skus = models.PositiveIntegerField(_("Number of New SKUs"),
+                                               null=True)
+    num_unknown_skus = models.PositiveIntegerField(_("Number of Unknown SKUs"),
+                                                   null=True)
+    num_duplicate_skus = models.PositiveIntegerField(
+        _("Number of Duplicate SKUs"), null=True)
+
+    class Meta:
+        app_label = 'offer'
+        ordering = ('-date_uploaded',)
+        verbose_name = _("Range Product Uploaded File")
+        verbose_name_plural = _("Range Product Uploaded Files")
+
+    @property
+    def filename(self):
+        return os.path.basename(self.filepath)
+
+    def mark_as_failed(self, message=None):
+        self.date_processed = now()
+        self.error_message = message
+        self.status = self.FAILED
+        self.save()
+
+    def mark_as_processed(self, num_new, num_unknown, num_duplicate):
+        self.status = self.PROCESSED
+        self.date_processed = now()
+        self.num_new_skus = num_new
+        self.num_unknown_skus = num_unknown
+        self.num_duplicate_skus = num_duplicate
+        self.save()
+
+    def was_processing_successful(self):
+        return self.status == self.PROCESSED
+
+    def process(self):
+        """
+        Process the file upload and add products to the range
+        """
+        all_ids = set(self.extract_ids())
+        products = self.range.included_products.all()
+        existing_skus = products.values_list(
+            'stockrecords__partner_sku', flat=True)
+        existing_skus = set(filter(bool, existing_skus))
+        existing_upcs = products.values_list('upc', flat=True)
+        existing_upcs = set(filter(bool, existing_upcs))
+        existing_ids = existing_skus.union(existing_upcs)
+        new_ids = all_ids - existing_ids
+
+        Product = models.get_model('catalogue', 'Product')
+        products = Product._default_manager.filter(
+            models.Q(stockrecords__partner_sku__in=new_ids) |
+            models.Q(upc__in=new_ids))
+        for product in products:
+            self.range.add_product(product)
+
+        # Processing stats
+        found_skus = products.values_list(
+            'stockrecords__partner_sku', flat=True)
+        found_skus = set(filter(bool, found_skus))
+        found_upcs = set(filter(bool, products.values_list('upc', flat=True)))
+        found_ids = found_skus.union(found_upcs)
+        missing_ids = new_ids - found_ids
+        dupes = set(all_ids).intersection(existing_ids)
+
+        self.mark_as_processed(products.count(), len(missing_ids), len(dupes))
+
+    def extract_ids(self):
+        """
+        Extract all SKU- or UPC-like strings from the file
+        """
+        for line in open(self.filepath, 'r'):
+            for id in re.split('[^\w:\.-]', line):
+                if id:
+                    yield id
+
+    def delete_file(self):
+        os.unlink(self.filepath)

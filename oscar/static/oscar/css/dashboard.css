@@ -1,4 +1,4 @@
-@import url("http://fonts.googleapis.com/css?family=Open+Sans:700,300");
+@import url("//fonts.googleapis.com/css?family=Open+Sans:700,300");
 .clearfix {
   *zoom: 1;
 }
@@ -20,9 +20,7 @@
   width: 100%;
   min-height: 28px;
   /* Make inputs at least the height of their button counterpart */
-
   /* Makes inputs behave like true block-level elements */
-
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
@@ -82,7 +80,7 @@
 /* makes the font 33% larger relative to the icon container */
 .icon-large:before {
   vertical-align: -10%;
-  font-size: 1.3333333333333333em;
+  font-size: 1.33333333em;
 }
 /* makes sure icons active on rollover in links */
 a [class^="icon-"],
@@ -93,16 +91,16 @@ a [class*=" icon-"] {
 [class^="icon-"].icon-fixed-width,
 [class*=" icon-"].icon-fixed-width {
   display: inline-block;
-  width: 1.1428571428571428em;
+  width: 1.14285714em;
   text-align: right;
-  padding-right: 0.2857142857142857em;
+  padding-right: 0.28571429em;
 }
 [class^="icon-"].icon-fixed-width.icon-large,
 [class*=" icon-"].icon-fixed-width.icon-large {
-  width: 1.4285714285714286em;
+  width: 1.42857143em;
 }
 .icons-ul {
-  margin-left: 2.142857142857143em;
+  margin-left: 2.14285714em;
   list-style-type: none;
 }
 .icons-ul > li {
@@ -110,8 +108,8 @@ a [class*=" icon-"] {
 }
 .icons-ul .icon-li {
   position: absolute;
-  left: -2.142857142857143em;
-  width: 2.142857142857143em;
+  left: -2.14285714em;
+  width: 2.14285714em;
   text-align: center;
   line-height: inherit;
 }
@@ -1533,7 +1531,7 @@ a .icon-flip-vertical:before {
  *  Work: Lead Product Designer @ Kyruus - http://kyruus.com
  */
 .lt-ie8 .icon-large {
-  font-size: 1.3333333333333333em;
+  font-size: 1.33333333em;
   margin-top: -4px;
   padding-top: 3px;
   margin-bottom: -4px;
@@ -2750,6 +2748,7 @@ h3.app-ico:before {
 .btn-group > .dropdown-menu,
 .btn {
   font-size: 12px;
+  font-family: inherit;
 }
 .btn-warning,
 .btn-success,
@@ -2766,6 +2765,7 @@ h3.app-ico:before {
   border-color: #e6e6e6 #e6e6e6 #bfbfbf;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  text-shadow: none;
   color: inherit;
   *color: #333;
 }
@@ -2802,6 +2802,49 @@ h3.app-ico:before {
 .btn-info:active {
   color: inherit;
   *color: #333;
+}
+.btn-warning:focus,
+.btn-success:focus,
+.btn-info:focus {
+  background-color: #e8e8e8;
+  background-image: -moz-linear-gradient(top, #d9d9d9, #ffffff);
+  background-image: -ms-linear-gradient(top, #d9d9d9, #ffffff);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#d9d9d9), to(#ffffff));
+  background-image: -webkit-linear-gradient(top, #d9d9d9, #ffffff);
+  background-image: -o-linear-gradient(top, #d9d9d9, #ffffff);
+  background-image: linear-gradient(top, #d9d9d9, #ffffff);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d9d9d9', endColorstr='#ffffff', GradientType=0);
+  border-color: #ffffff #ffffff #d9d9d9;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  background-position: 0 0;
+  color: #333;
+}
+.btn-warning:focus:hover,
+.btn-success:focus:hover,
+.btn-info:focus:hover,
+.btn-warning:focus:active,
+.btn-success:focus:active,
+.btn-info:focus:active,
+.btn-warning:focus.active,
+.btn-success:focus.active,
+.btn-info:focus.active,
+.btn-warning:focus.disabled,
+.btn-success:focus.disabled,
+.btn-info:focus.disabled,
+.btn-warning:focus[disabled],
+.btn-success:focus[disabled],
+.btn-info:focus[disabled] {
+  background-color: #ffffff;
+}
+.btn-warning:focus:active,
+.btn-success:focus:active,
+.btn-info:focus:active,
+.btn-warning:focus.active,
+.btn-success:focus.active,
+.btn-info:focus.active {
+  background-color: #e6e6e6 \9;
 }
 .btn-primary {
   background-color: #006fb5;
@@ -2855,12 +2898,7 @@ td .btn-toolbar {
 .form-stacked textarea,
 .form-horizontal select,
 .form-stacked select {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -ms-box-sizing: border-box;
-  box-sizing: border-box;
   font-size: 12px;
-  min-height: 35px;
 }
 .form-horizontal textarea,
 .form-stacked textarea {
@@ -2882,9 +2920,16 @@ td .btn-toolbar {
 .form-inline .control-group {
   margin-right: 10px;
 }
+.form-stacked .error-block {
+  display: block;
+  color: #b94a48;
+}
 .fields-full input[type=text],
 .fields-full textarea {
   width: 100%;
+}
+form.flat {
+  margin: 0;
 }
 .well .form-actions,
 .tabbable.dashboard .tab-content .form-actions {
@@ -2897,7 +2942,7 @@ td .btn-toolbar {
   border-top-color: #ccc;
 }
 .tabbable.dashboard .tab-content .form-actions {
-  bottom: -29px;
+  bottom: -50px;
   left: -29px;
   padding-left: 29px;
   padding-right: 29px;
@@ -2926,13 +2971,6 @@ td .btn-toolbar {
 }
 .create-page label {
   font-weight: bold;
-}
-input[type=text].hasDatepicker,
-.create-page input[type=text].hasDatepicker,
-.form-inline input[type=text].hasDatepicker,
-.form-horizontal input[type=text].hasDatepicker,
-.form-stacked input[type=text].hasDatepicker {
-  width: 125px;
 }
 .wysihtml5-sandbox {
   border: 1px solid #ccc!important;
@@ -2971,6 +3009,12 @@ input[type=text].hasDatepicker,
 .table {
   background-color: #ffffff;
 }
+.table thead tr th.asc i:before {
+  content: "\f077";
+}
+.table thead tr th.desc i:before {
+  content: "\f078";
+}
 .table-striped tbody tr:nth-child(odd) td,
 .table-striped tbody tr:nth-child(odd) th {
   background-color: #efefef;
@@ -2985,8 +3029,8 @@ body {
 .container-fluid.dashboard {
   margin: 0 auto;
   /*  max-width: 1170px;*/
-
   position: relative;
+  padding: 0 20px;
 }
 .dashboard > .content {
   margin-top: 18px;
@@ -3122,7 +3166,7 @@ button {
   background-color: transparent;
 }
 .page-header {
-  padding: 0 20px 10px 0;
+  padding: 0 0 10px 0;
   margin-bottom: 0;
   border-bottom: 0;
 }
@@ -3196,6 +3240,7 @@ caption > i,
   background: #ffffff;
 }
 .content-block .order-graph-details label {
+  cursor: default;
   background-color: #F8F8F8;
   border: 1px solid #ccc;
   *zoom: 1;
@@ -3330,7 +3375,26 @@ caption > i,
   border-color: #ede181;
   color: #333;
 }
-#order-graph {
+/* additional styles for alert content. Used by both public side and dashboard */
+.alert .alertinner {
+  position: relative;
+}
+.alert .alertinner.wicon {
+  padding-left: 0.5em;
+  margin-left: 0.5em;
+}
+.alert .alertinner [class*="icon-"] {
+  position: absolute;
+  top: 0.3em;
+  right: 100%;
+}
+.alert .alertinner p {
+  margin: 10px 0 0 0;
+}
+.alert .alertinner p:first-child {
+  margin: 0;
+}
+#order_graph {
   position: relative;
   margin-bottom: 5em;
   width: 99%;
@@ -3597,13 +3661,13 @@ caption > i,
   float: left;
   text-align: center;
 }
-.upload-image li   > div {
+.upload-image li > div {
   padding: 4px;
   background: #ccc;
   margin-bottom: 10px;
 }
-.upload-image li   > div + label,
-.upload-image li   > div + label + input {
+.upload-image li > div + label,
+.upload-image li > div + label + input {
   display: none;
 }
 .upload-image div {
@@ -3740,101 +3804,6 @@ div[data-spy="affix"].affix {
 .well-stacked .well:first-child {
   border-top-width: 1px;
 }
-/* TINY SCROLL BAR */
-.scroll-pane {
-  height: 200px;
-  overflow: auto;
-  background: #fbfbfb;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  border: 2px solid #cccccc;
-}
-.scroll-pane:focus {
-  outline: none;
-}
-.jspContainer {
-  overflow: hidden;
-  position: relative;
-}
-.jspPane {
-  position: absolute;
-}
-.jspVerticalBar {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 10px;
-  height: 100%;
-  background: #ff0000;
-}
-.jspHorizontalBar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 10px;
-  background: #ff0000;
-}
-.jspVerticalBar *,
-.jspHorizontalBar * {
-  margin: 0;
-  padding: 0;
-}
-.jspCap {
-  display: none;
-}
-.jspHorizontalBar .jspCap {
-  float: left;
-}
-.jspTrack {
-  background: #efefef;
-  position: relative;
-}
-.jspDrag {
-  background: #ccc;
-  position: relative;
-  top: 0;
-  left: 0;
-  cursor: pointer;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-.jspHorizontalBar .jspTrack,
-.jspHorizontalBar .jspDrag {
-  float: left;
-  height: 100%;
-}
-.jspArrow {
-  background: #50506d;
-  text-indent: -20000px;
-  display: block;
-  cursor: pointer;
-}
-.jspArrow.jspDisabled {
-  cursor: default;
-  background: #80808d;
-}
-.jspVerticalBar .jspArrow {
-  height: 10px;
-}
-.jspHorizontalBar .jspArrow {
-  width: 10px;
-  float: left;
-  height: 100%;
-}
-.jspVerticalBar .jspArrow:focus {
-  outline: 0;
-}
-.jspCorner {
-  background: #eeeef4;
-  float: left;
-  height: 100%;
-}
-* html .jspCorner {
-  margin: 0 -3px 0 0;
-}
 /* Changes for wysihtml5 */
 textarea {
   width: 500px;
@@ -3856,38 +3825,6 @@ textarea {
 }
 textarea.plain {
   font-family: monospace;
-}
-/* css for timepicker */
-.ui-timepicker-div .ui-widget-header {
-  margin-bottom: 8px;
-}
-.ui-timepicker-div dl {
-  text-align: left;
-}
-.ui-timepicker-div dl dt {
-  height: 25px;
-  margin-bottom: -25px;
-}
-.ui-timepicker-div dl dd {
-  margin: 0 10px 10px 65px;
-}
-.ui-timepicker-div td {
-  font-size: 90%;
-}
-.ui-tpicker-grid-label {
-  background: none;
-  border: none;
-  margin: 0;
-  padding: 0;
-}
-.ui-timepicker-rtl {
-  direction: rtl;
-}
-.ui-timepicker-rtl dl {
-  text-align: right;
-}
-.ui-timepicker-rtl dl dd {
-  margin: 0 65px 10px 10px;
 }
 @media (max-width: 1300px) {
   div[data-spy="affix"] {
@@ -3925,3 +3862,4 @@ textarea.plain {
     -webkit-transform: none;
   }
 }
+/*# sourceMappingURL=dashboard.css.map */

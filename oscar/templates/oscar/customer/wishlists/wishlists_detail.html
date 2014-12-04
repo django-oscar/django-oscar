@@ -6,15 +6,12 @@
     <ul class="breadcrumb">
         <li>
             <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'customer:wishlists-list' %}">{% trans 'Wish Lists' %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">
             {{ wishlist.name }}
@@ -69,12 +66,12 @@
                                 <td>
                                     <div class="btn-group">
                                         {% if product %}
-                                            <a class="btn" href="{{ line.product.get_absolute_url }}">{% trans 'View product' %}</a>
-                                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                            <a class="btn btn-default" href="{{ line.product.get_absolute_url }}">{% trans 'View product' %}</a>
+                                            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                                 <span class="caret"></span>
                                             </button>
                                         {% else %}
-                                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                            <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
                                                 {% trans 'Actions' %}
                                                 <span class="caret"></span>
                                             </a>
@@ -99,7 +96,7 @@
                     <tr>
                         <td colspan="2"></td>
                         <td>
-                            <button class="btn btn-primary" type="submit">{% trans "Update quantities" %}</button>
+                            <button class="btn btn-primary" type="submit" data-loading-text="{% trans 'Updating...' %}">{% trans "Update quantities" %}</button>
                         </td>
                         <td></td>
                     </tr>

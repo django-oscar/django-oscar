@@ -1,23 +1,28 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from oscar.core.application import Application
-from oscar.apps.dashboard.partners import views
+from oscar.core.loading import get_class
 
 
 class PartnersDashboardApplication(Application):
     name = None
     default_permissions = ['is_staff', ]
 
-    list_view = views.PartnerListView
-    create_view = views.PartnerCreateView
-    manage_view = views.PartnerManageView
-    delete_view = views.PartnerDeleteView
+    list_view = get_class('dashboard.partners.views', 'PartnerListView')
+    create_view = get_class('dashboard.partners.views', 'PartnerCreateView')
+    manage_view = get_class('dashboard.partners.views', 'PartnerManageView')
+    delete_view = get_class('dashboard.partners.views', 'PartnerDeleteView')
 
-    user_link_view = views.PartnerUserLinkView
-    user_unlink_view = views.PartnerUserUnlinkView
-    user_create_view = views.PartnerUserCreateView
-    user_select_view = views.PartnerUserSelectView
-    user_update_view = views.PartnerUserUpdateView
+    user_link_view = get_class('dashboard.partners.views',
+                               'PartnerUserLinkView')
+    user_unlink_view = get_class('dashboard.partners.views',
+                                 'PartnerUserUnlinkView')
+    user_create_view = get_class('dashboard.partners.views',
+                                 'PartnerUserCreateView')
+    user_select_view = get_class('dashboard.partners.views',
+                                 'PartnerUserSelectView')
+    user_update_view = get_class('dashboard.partners.views',
+                                 'PartnerUserUpdateView')
 
     def get_urls(self):
         urls = [
@@ -43,7 +48,7 @@ class PartnersDashboardApplication(Application):
                 self.user_update_view.as_view(),
                 name='partner-user-update'),
         ]
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = PartnersDashboardApplication()

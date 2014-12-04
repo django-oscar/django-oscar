@@ -4,7 +4,7 @@
 {% block body_class %}{{ block.super }} content-blocks{% endblock %}
 
 {% block headertext %}
-    {% trans "Content block management" %}
+    {% trans "Content blocks" %}
 {% endblock %}
 
 {% block title %}
@@ -18,7 +18,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:promotion-list' %}">{% trans "Content block management" %}</a>
+            <a href="{% url 'dashboard:promotion-list' %}">{% trans "Content blocks" %}</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Content blocks by page" %}</li>

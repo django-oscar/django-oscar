@@ -76,29 +76,28 @@ class TestASignedInUser(WebTestCase):
         self.assertEqual('Chuckle', user.last_name)
 
     def test_cant_update_their_email_address_if_it_already_exists(self):
-        User.objects.create_user(username='testuser', email='new@example.com',
-                                 password="somerandompassword")
+        # create a user to "block" new@example.com
+        User.objects.create_user(
+            username='testuser', email='new@example.com',
+            password="somerandompassword")
         self.assertEqual(User.objects.count(), 2)
 
-        profile_form_page = self.app.get(reverse('customer:profile-update'),
-                                user=self.user)
-        self.assertEqual(200, profile_form_page.status_code)
-        form = profile_form_page.forms['profile_form']
-        form['email'] = 'new@example.com'
-        form['first_name'] = 'Barry'
-        form['last_name'] = 'Chuckle'
-        response = form.submit()
+        for email in ['new@example.com', 'New@Example.com']:
+            profile_form_page = self.app.get(
+                reverse('customer:profile-update'), user=self.user)
+            form = profile_form_page.forms['profile_form']
+            form['email'] = email
+            form['first_name'] = 'Barry'
+            form['last_name'] = 'Chuckle'
+            response = form.submit()
 
-        user = User.objects.get(id=self.user.id)
-        self.assertEqual(self.email, user.email)
-
-        try:
-            User.objects.get(email='new@example.com')
-        except User.MultipleObjectsReturned:
-            self.fail("email for user changed to existing one")
-
-        self.assertContains(response,
-                            'A user with this email address already exists')
+            # assert that the original user's email address is unchanged
+            user = User.objects.get(id=self.user.id)
+            self.assertEqual(self.email, user.email)
+            self.assertEqual(
+                User.objects.filter(email__iexact='new@example.com').count(), 1)
+            self.assertContains(
+                response, 'A user with this email address already exists')
 
     def test_can_change_their_password(self):
         new_password = 'bubblesgopop'
@@ -161,18 +160,16 @@ class TestReorderingOrderLines(WebTestCase):
         line = order.lines.all()[0]
 
         product = create_product(price=D('12.00'))
-        self.client.post(reverse('basket:add'), {'product_id': product.id,
-                                                 'quantity': 1})
+        product_page = self.get(line.product.get_absolute_url())
+        product_page.forms['add_to_basket_form'].submit()
 
         basket = Basket.objects.all()[0]
         basket.strategy = strategy.Default()
         self.assertEqual(len(basket.all_lines()), 1)
 
-        # try to reorder a product
-        self.client.post(reverse('customer:order',
-                                 args=(order.number,)),
-                         {'order_id': order.pk,
-                          'action': 'reorder'})
+        # Try to reorder the whole order
+        order_page = self.get(reverse('customer:order', args=(order.number,)))
+        order_page.forms['order_form_%s' % order.id].submit()
 
         self.assertEqual(len(basket.all_lines()), 1)
         self.assertNotEqual(line.product.pk, product.pk)
@@ -182,18 +179,17 @@ class TestReorderingOrderLines(WebTestCase):
         order = create_order(user=self.user)
         line = order.lines.all()[0]
 
-        # add a product
         product = create_product(price=D('12.00'))
-        self.client.post(reverse('basket:add'), {'product_id': product.id,
-                                                 'quantity': 1})
+        product_page = self.get(line.product.get_absolute_url())
+        product_page.forms['add_to_basket_form'].submit()
 
         basket = Basket.objects.all()[0]
         basket.strategy = strategy.Default()
         self.assertEqual(len(basket.all_lines()), 1)
 
-        self.client.post(reverse('customer:order-line',
-                                 args=(order.number, line.pk)),
-                         {'action': 'reorder'})
+        # Try to reorder a line
+        order_page = self.get(reverse('customer:order', args=(order.number,)))
+        order_page.forms['line_form_%s' % line.id].submit()
 
         self.assertEqual(len(basket.all_lines()), 1)
         self.assertNotEqual(line.product.pk, product.pk)

@@ -1,11 +1,12 @@
 {% extends 'dashboard/layout.html' %}
 {% load category_tags %}
 {% load i18n %}
+{% load render_table from django_tables2 %}
 
 {% block body_class %}{{ block.super }} catalogue{% endblock %}
 
 {% block title %}
-    {% trans "Category management" %} | {{ block.super }}
+    {% trans "Categories" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -21,7 +22,7 @@
 {% block header %}
     <div class="page-header">
         <a href="{% url 'dashboard:catalogue-category-create' %}" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new category" %}</a>
-        <h1>{% trans "Category management" %}</h1>
+        <h1>{% trans "Categories" %}</h1>
     </div>
 {% endblock header %}
 
@@ -38,65 +39,9 @@
         </p>
     </div>
 
-    {% if child_categories %}
-        <table class="table table-striped table-bordered table-hover">
-            <caption><i class="icon-sitemap icon-large"></i>{% trans 'Categories' %}</caption>
-            <thead>
-                <tr>
-                    <th>{% trans "Name" %}</th>
-                    <th>{% trans "Description" %}</th>
-                    <th>{% trans "Number of child categories" %}</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for category in child_categories %}
-                    <tr>
-                        <td><a href="{% url 'dashboard:catalogue-category-update' category.id %}">{{ category.name }}</a></td>
-                        <td>{{ category.description|default:""|striptags|cut:"&nbsp;"|truncatewords:6 }}</td>
-                        <td><a href="{% url 'dashboard:catalogue-category-detail-list' pk=category.pk %}">{{ category.get_num_children }}</a></td>
-                        <td>
-                            <div class="btn-toolbar">
-                                <div class="btn-group">
-                                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                        {% trans "Actions" %}
-                                        <span class="caret"></span>
-                                    </a>
-                                    <ul class="nav dropdown-menu pull-right">
-                                        <li>
-                                            <a href="{% url 'dashboard:catalogue-category-update' pk=category.id %}">
-                                                {% trans "Edit category" %}
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'dashboard:catalogue-category-create-child' parent=category.pk %}">
-                                                {% trans "Add child category" %}
-                                            </a>
-                                        </li>
-                                        <li{% if not category.has_children %} class="disabled"{% endif %}>
-                                            <a href="{% url 'dashboard:catalogue-category-detail-list' pk=category.pk %}">
-                                                {% trans "Edit children" %}
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ category.get_absolute_url }}">
-                                                {% trans "View on site" %}
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'dashboard:catalogue-category-delete' pk=category.id %}">
-                                                {% trans "Delete" %}
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
+    {% render_table categories %}
+
+    {% if not child_categories %}
         <p>{% trans "There are no categories." %}</p>
     {% endif %}
 {% endblock dashboard_content %}

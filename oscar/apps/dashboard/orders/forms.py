@@ -17,9 +17,9 @@ SourceType = get_model('payment', 'SourceType')
 
 class OrderStatsForm(forms.Form):
     date_from = forms.DateField(
-        required=False, label=pgettext_lazy("start date", "From"))
+        required=False, label=pgettext_lazy(u"start date", u"From"))
     date_to = forms.DateField(
-        required=False, label=pgettext_lazy("end date", "To"))
+        required=False, label=pgettext_lazy(u"end date", u"To"))
 
     _filters = _description = None
 
@@ -91,7 +91,7 @@ class OrderSearchForm(forms.Form):
                                         label=_("Get results as"))
 
     def __init__(self, *args, **kwargs):
-        # ensure that 'response_format' is always set
+        # Ensure that 'response_format' is always set
         if 'data' in kwargs:
             data = kwargs['data']
             del(kwargs['data'])
@@ -103,7 +103,7 @@ class OrderSearchForm(forms.Form):
 
         if data:
             if data.get('response_format', None) not in self.format_choices:
-                # handle POST/GET dictionaries, whose are unmutable
+                # Handle POST/GET dictionaries, which are unmutable.
                 if isinstance(data, QueryDict):
                     data = data.dict()
                 data['response_format'] = 'html'
@@ -122,9 +122,29 @@ class OrderNoteForm(forms.ModelForm):
         model = OrderNote
         exclude = ('order', 'user', 'note_type')
 
+    def __init__(self, order, user, *args, **kwargs):
+        super(OrderNoteForm, self).__init__(*args, **kwargs)
+        self.instance.order = order
+        self.instance.user = user
+
 
 class ShippingAddressForm(PhoneNumberMixin, AbstractAddressForm):
 
     class Meta:
         model = ShippingAddress
         exclude = ('search_text',)
+
+
+class OrderStatusForm(forms.Form):
+    new_status = forms.ChoiceField(label=_("New order status"), choices=())
+
+    def __init__(self, order, *args, **kwargs):
+        super(OrderStatusForm, self).__init__(*args, **kwargs)
+
+        # Set the choices
+        choices = [(x, x) for x in order.available_statuses()]
+        self.fields['new_status'].choices = choices
+
+    @property
+    def has_choices(self):
+        return len(self.fields['new_status'].choices) > 0

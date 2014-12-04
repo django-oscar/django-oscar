@@ -1,5 +1,5 @@
 ======================
-Oscar Design Decisions
+Oscar design decisions
 ======================
 
 The central aim of Oscar is to provide a solid core of an e-commerce project that can be
@@ -31,36 +31,19 @@ empty but concrete implementation of each abstract model.
 Classes are loaded dynamically
 ------------------------------
 
-To enable sub-apps to be overridden, Oscar classes are loading generically
-using a special ``get_class`` function.  This looks at the
-``INSTALLED_APPS`` tuple to determine the appropriate app to load a class from.
+The complexity of scenarios doesn't stop with Django models; core parts of
+Oscar need to be as customisable as possible. Hence almost all classes
+(including views) are
+:doc:`dynamically loaded </topics/class_loading_explained>`,
+which results in a maintainable approach to customising behaviour.
 
-Sample usage::
+URLs and permissions for apps are handled by Application instances
+------------------------------------------------------------------
 
-    from oscar.core.loading import get_class
-
-    Repository = get_class('shipping.repository', 'Repository')
-    
-This is a replacement for the usual::
-
-    from oscar.apps.shipping.repository import Repository
-
-It is effectively an extension of Django's ``django.db.models.get_model``
-function to work with arbitrary classes.
-    
-The ``get_class`` function looks through your ``INSTALLED_APPS`` for a matching module to
-the one specified and will load the classes from there.  If the matching module is
-not from Oscar's core, then it will also fall back to the equivalent module if the
-class cannot be found.
-
-This structure enables a project to create a local ``shipping.repository`` module and 
-subclass and extend the classes from ``oscar.app.shipping.repository``.  When Oscar
-tries to load the ``Repository`` class, it will load the one from your local project.
-
-All views are class-based
--------------------------
-
-This enables any view to be subclassed and extended within your project.  
+The :class:`oscar.core.application.Application` class handles mapping URLs
+to views and permissions at an per-app level. This makes Oscar's apps more
+modular, and makes it easy to customise this mapping as they can be overridden
+just like any other class in Oscar.
 
 Templates can be overridden
 ---------------------------

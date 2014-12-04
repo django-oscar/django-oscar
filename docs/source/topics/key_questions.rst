@@ -28,15 +28,13 @@ What are your product types?
 Are you selling books, DVDs, clothing, downloads, or fruit and vegetables?  You will
 need to capture the attributes of your product types within your models.  Oscar
 divides products into 'product classes' which each have their own set of
-attributes.  
-
-* :doc:`/howto/how_to_customise_models`
-* :doc:`/howto/importing_a_catalogue`
+attributes. Modelling the catalogue on the backend is explained in
+:doc:`/topics/modelling_your_catalogue`
 
 How is your catalogue organised?
 --------------------------------
 
-How are products organised within the site?  A common pattern is to have a
+How are products organised on the front end?  A common pattern is to have a
 single category tree where each product belongs to one category which sits
 within a tree structure of other categories.  However, there are lots of other
 options such as having several separate taxonomy trees (e.g., split by brand, by
@@ -45,8 +43,6 @@ theme, by product type).  Other questions to consider:
 * Can a product belong to more than one category?
 * Can a category sit in more than one place within the tree?  (e.g., a "children's fiction" category
   might sit beneath "children's books" and "fiction").
-
-* :doc:`/topics/customisation`
 
 How are products managed?
 -------------------------
@@ -77,7 +73,7 @@ factors, including:
 * The payment method used.
 
 Recipes:
-* :doc:`/howto/how_to_apply_tax_exemptions`
+* :doc:`/howto/how_to_handle_us_taxes`
 
 What availability messages are shown to customers?
 --------------------------------------------------

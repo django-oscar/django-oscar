@@ -6,8 +6,6 @@ To release a new version to PyPi:
 - Ensure the version is correctly set in oscar.__init__.py
 - Run: python setup.py sdist upload
 """
-from __future__ import print_function
-
 from setuptools import setup, find_packages
 import os
 import sys
@@ -24,9 +22,9 @@ if PROJECT_DIR:
 
 setup(name='django-oscar',
       version=get_version().replace(' ', '-'),
-      url='https://github.com/tangentlabs/django-oscar',
+      url='https://github.com/django-oscar/django-oscar',
       author="David Winterbottom",
-      author_email="david.winterbottom@tangentlabs.co.uk",
+      author_email="david.winterbottom@gmail.com",
       description="A domain-driven e-commerce framework for Django",
       long_description=open(os.path.join(PROJECT_DIR, 'README.rst')).read(),
       keywords="E-commerce, Django, domain-driven",
@@ -35,38 +33,39 @@ setup(name='django-oscar',
       packages=find_packages(exclude=["sandbox*", "tests*"]),
       include_package_data=True,
       install_requires=[
-          'django>=1.4.2,<1.7',
+          'django>=1.6.8,<1.8',
           # PIL is required for image fields, Pillow is the "friendly" PIL fork
-          'pillow>=1.7.8,<2.3',
-          # Oscar ships with migrations
-          'South>=0.7.6,<0.9',
+          'pillow>=1.7.8,<2.5',
           # We use the ModelFormSetView from django-extra-views for the basket
-          # page
-          'django-extra-views>=0.2,<0.7',
+          # page. 0.6.5 pins version of six, which causes issues:
+          # https://github.com/AndrewIngram/django-extra-views/pull/85
+          'django-extra-views>=0.2,<0.6.5',
           # Search support
-          'django-haystack>=2.1.0',
+          'django-haystack>=2.3.1,<2.4.0',
           # Treebeard is used for categories
-          'django-treebeard==2.0b2',
+          'django-treebeard==2.0',
           # Sorl is used as the default thumbnailer
-          'sorl-thumbnail==12.00' if PY3 else 'sorl-thumbnail==11.12',
+          'sorl-thumbnail==11.12.1b',
           # Babel is used for currency formatting
-          'Babel>=1.0',
+          'Babel>=1.0,<1.4',
           # Oscar's default templates use compressor (but you can override
           # this)
-          'django-compressor==1.4a1' if PY3 else 'django-compressor==1.3',
+          'django-compressor>=1.4',
           # For converting non-ASCII to ASCII when creating slugs
           'Unidecode>=0.04.12,<0.05',
           # For manipulating search URLs
           'purl>=0.7',
           # For phone number field
-          'phonenumbers==5.9.2',
-          # Python 2 & 3 compatibility helper
-          'six>=1.5.2',
-      ],
-      # tarballs for unreleased packages
-      dependency_links = [
-          'http://github.com/mariocesar/sorl-thumbnail/tarball/588837f828a5d9dd999bd6b994331e6285f79ca9#egg=sorl-thumbnail-12.00',
-          'http://github.com/django-compressor/django-compressor/tarball/cdab0d9698cb3c9421f3598822ddc71a57970405#egg=django-compressor-1.4a1',
+          'phonenumbers>=6.3.0,<7.0.0',
+          # Used for oscar.test.contextmanagers.mock_signal_receiver
+          'mock>=1.0.1,<1.1',
+          # Used for oscar.test.newfactories
+          'factory-boy>=2.4.1,<2.5',
+          # Used for automatically building larger HTML tables
+          'django-tables2>=0.15.0,<0.16',
+          # Used for manipulating form field attributes in templates (eg: add
+          # a css class)
+          'django-widget-tweaks>=1.3,<1.4',
       ],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
@@ -77,7 +76,12 @@ setup(name='django-oscar',
           'License :: OSI Approved :: BSD License',
           'Operating System :: Unix',
           'Programming Language :: Python',
-          'Topic :: Other/Nonlisted Topic']
+          'Programming Language :: Python :: 2',
+          'Programming Language :: Python :: 2.7',
+          'Programming Language :: Python :: 3',
+          'Programming Language :: Python :: 3.3',
+          'Programming Language :: Python :: 3.4',
+          'Topic :: Software Development :: Libraries :: Application Frameworks']
       )
 
 # Show contributing instructions if being installed in 'develop' mode

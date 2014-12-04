@@ -1,6 +1,5 @@
-import six
-
 from django.core import exceptions
+from django.db import IntegrityError
 
 from oscar.apps.offer.models import Range, Condition, Benefit
 
@@ -25,40 +24,29 @@ def create_range(range_class):
         raise exceptions.ValidationError(
             "Custom ranges must have text names (not ugettext proxies)")
 
-    # In Django versions further than 1.6 it will be update_or_create
-    # https://docs.djangoproject.com/en/dev/ref/models/querysets/#update-or-create # noqa
-    values = {
-        'name': range_class.name,
-        'proxy_class': _class_path(range_class),
-    }
     try:
-        obj = Range.objects.get(**values)
-    except Range.DoesNotExist:
-        obj = Range(**values)
-    else:
-        for key, value in six.iteritems(values):
-            setattr(obj, key, value)
-    obj.save()
-
-    return obj
+        return Range.objects.create(
+            name=range_class.name, proxy_class=_class_path(range_class))
+    except IntegrityError:
+        raise ValueError("The passed range already exists in the database.")
 
 
-def create_condition(condition_class):
+def create_condition(condition_class, **kwargs):
     """
     Create a custom condition instance
     """
     return Condition.objects.create(
-        proxy_class=_class_path(condition_class))
+        proxy_class=_class_path(condition_class), **kwargs)
 
 
-def create_benefit(benefit_class):
+def create_benefit(benefit_class, **kwargs):
     """
     Create a custom benefit instance
     """
-    # The custom benefit_class must override __unicode__ and description to
+    # The custom benefit_class must override __str__ and description to
     # avoid a recursion error
     if benefit_class.description is Benefit.description:
         raise RuntimeError("Your custom benefit must implement its own "
                            "'description' property")
     return Benefit.objects.create(
-        proxy_class=_class_path(benefit_class))
+        proxy_class=_class_path(benefit_class), **kwargs)

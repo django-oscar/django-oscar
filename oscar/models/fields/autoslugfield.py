@@ -25,7 +25,7 @@ THE SOFTWARE.
 """
 
 import re
-import six
+from django.utils import six
 
 from django.db.models import SlugField
 
@@ -69,6 +69,7 @@ class AutoSlugField(SlugField):
             self._populate_from = populate_from
         self.separator = kwargs.pop('separator', six.u('-'))
         self.overwrite = kwargs.pop('overwrite', False)
+        self.uppercase = kwargs.pop('uppercase', False)
         self.allow_duplicates = kwargs.pop('allow_duplicates', False)
         super(AutoSlugField, self).__init__(*args, **kwargs)
 
@@ -120,6 +121,10 @@ class AutoSlugField(SlugField):
         if slug_len:
             slug = slug[:slug_len]
         slug = self._slug_strip(slug)
+
+        if self.uppercase:
+            slug = slug.upper()
+
         original_slug = slug
 
         if self.allow_duplicates:
@@ -172,16 +177,17 @@ class AutoSlugField(SlugField):
             'separator': repr(self.separator),
             'overwrite': repr(self.overwrite),
             'allow_duplicates': repr(self.allow_duplicates),
-            })
+        })
         # That's our definition!
         return (field_class, args, kwargs)
 
     def deconstruct(self):
         name, path, args, kwargs = super(AutoSlugField, self).deconstruct()
-        kwargs.update({
-            'populate_from': repr(self._populate_from),
-            'separator': repr(self.separator),
-            'overwrite': repr(self.overwrite),
-            'allow_duplicates': repr(self.allow_duplicates),
-            })
+        kwargs['populate_from'] = self._populate_from
+        if not self.separator == six.u('-'):
+            kwargs['separator'] = self.separator
+        if self.overwrite is not False:
+            kwargs['overwrite'] = True
+        if self.allow_duplicates is not False:
+            kwargs['allow_duplicates'] = True
         return name, path, args, kwargs

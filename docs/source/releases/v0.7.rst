@@ -1,8 +1,19 @@
-===========================================
-Oscar 0.7 release notes - UNDER DEVELOPMENT
-===========================================
+=======================
+Oscar 0.7 release notes
+=======================
+
+:release: 2014-04-29
 
 Welcome to Oscar 0.7!
+
+These release notes cover the :ref:`new features <new_in_0.7>` as well as
+:ref:`backwards incompatible changes <incompatible_changes_in_0.7>` that you'll want to be aware of when
+upgrading from Oscar 0.6 or earlier.  
+
+If you encounter any undocumented issues, please let us know on the `mailing
+list`_.
+
+.. _`mailing list`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar
 
 Table of contents:
 
@@ -10,11 +21,34 @@ Table of contents:
     :local:
     :depth: 1
 
+.. _overview_of_0.7:
+
+Overview
+========
+
+Oscar 0.7 is largely a maintenance release, fixing minor issues, merging
+long-standing pull requests and other housekeeping. 
+
+As part of the clean-up, we have removed a few unused models and model fields,
+as well as removing ``null=True`` from a load of ``CharFields`` - so please read the
+release notes carefully when upgrading as some schema migrations may need some
+care. 
+
+Further, ensure you test your checkout implementation carefully after upgrading
+as the core Oscar checkout view classes have been reorganised slightly.  Any
+upgrading work should be minor but be diligent.
+
+.. _compatibility_of_0.7:
+
 Compatibility
 =============
 
-Oscar 0.7 has experimental support for Python 3. Support for Django 1.4 has
-been dropped, and support for Django 1.6 is considered stable.
+Oscar 0.7 has experimental support for Python 3. 
+
+Support for Django 1.4 has been dropped, and support for Django 1.6 is
+now considered stable.
+
+.. _new_in_0.7:
 
 What's new in Oscar 0.7?
 ========================
@@ -22,23 +56,25 @@ What's new in Oscar 0.7?
 Search improvements
 ~~~~~~~~~~~~~~~~~~~
 
-* Search results can be now be sorted
+Several improvements have been made to Oscar's default search functionality:
 
-* If you're search backend supports it, spelling suggestions will be shown if
-  the search term doesn't lead to any results.
+* Search results can be now be sorted.
+
+* If your search backend supports it, spelling suggestions will be shown if
+  the original search term doesn't lead to any results.
 
 * Only products are returned by the core search view.  Other content types in
   your search index are filtered out (`#370`_).
 
-.. _`#370`: https://github.com/tangentlabs/django-oscar/issues/370
+.. _`#370`: https://github.com/django-oscar/django-oscar/issues/370
 
-Improvements to signals
-~~~~~~~~~~~~~~~~~~~~~~~
+Extended signals
+~~~~~~~~~~~~~~~~
 
-Oscar signals have been improved and consolidated, making it easier to hook
-into user journeys and extract analytics.
+Oscar's signals have been improved and consolidated, making it easier to hook
+into user journeys and extract analytics information.
 
-Changes to existing signals:
+Changes to existing signals include:
 
 - The :ref:`basket_addition_signal` signal now passes the ``request`` as an additional
   kwarg.
@@ -53,10 +89,63 @@ New signals:
 
 See the :doc:`signals docs </ref/signals>` for more details.
 
+Checkout reorganisation
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The checkout classes have been reworked to clean-up how pre-conditions are
+enforced. Each view class now has a ``pre_conditions`` attribute which is an
+iterable of method names (as strings). Each method is run within the
+``dispatch`` method of the view and will redirect the customer back to the
+appropriate view if the check fails. 
+
+This change makes pre-conditions easier to customise and simplifies the core
+checkout views.  Consequently, the following methods are no longer required and
+have been removed:
+
+* ``PaymentDetails.get_error_response``
+* ``PaymentDetails.can_basket_be_submitted``
+
+Further, the ``PaymentDetailsView`` has been re-organised for extensibility.
+For instance, several new methods have been introduced to allow
+fine-grained overriding of functionality:
+
+* :func:`~oscar.apps.checkout.views.PaymentDetailsView.handle_payment_details_submission` - 
+  This is responsible for validating any forms submitted from the payment
+  URL 
+
+* :func:`~oscar.apps.checkout.views.PaymentDetailsView.handle_place_order_submission` - 
+  This is responsible for placing an order after a submission from the preview
+  URL.
+
+* :func:`~oscar.apps.checkout.views.PaymentDetailsView.render_payment_details` - 
+  Render the payment details template.
+
+The implementation of 
+:func:`~oscar.apps.checkout.views.PaymentDetailsView.submit` has been improved
+to handle payment errors in a more customer friendly way.  If an exception is
+raised during payment, the payment details page is now loaded with the
+original forms passed to the template (so form validation errors can be displayed).
+
+Finally, the ``billing_address`` kwarg to
+:func:`~oscar.apps.checkout.views.PaymentDetailsView.submit`` has been removed.
+If you want to pass a billing address to be saved against the order, then pass
+it as part of the ``order_kwargs`` option.
+
+.. _minor_changes_in_0.7:
+
 Minor changes
 ~~~~~~~~~~~~~
 
-* Customers can delete their profiles from within the account section.
+* Oscar's LESS files now use Bootstrap 2.3.2 (Oscar 0.6 uses 2.1.1).
+
+* The product model now has a 
+  :attr:`~oscar.apps.catalogue.abstract_models.Product.num_approved_reviews`
+  property to avoid unnecessary SQL queries when rendering templates (`#1299`_)
+
+* Customers can delete their profiles from within their account section.
+
+* Customers are prevented from using short or common passwords when changing
+  their password in their account (`#1202`_)
 
 * :attr:`~oscar.core.application.Application.permissions_map` now supports more than two
   lists to evaluate permissions.
@@ -97,20 +186,44 @@ Minor changes
 * Vouchers start and end times are now datetimes instead of dates; allowing
   "lunch-time deals" etc.
 
-.. _`b920f8ba`: https://github.com/tangentlabs/django-oscar/commit/b920f8ba288cd2f19bb167db2a012479ba956397
-.. _`ef3ccf08a7`: https://github.com/tangentlabs/django-oscar/commit/ef3ccf08a707ae1250cdb8d5f2dc6f721d020dc4
-.. _`32b7249`: https://github.com/tangentlabs/django-oscar/commit/32b7249e44b40cb1b20d01226f77ae6777a20b91
+* Product classes can now be added from the dashboard. Editing options and
+  attributes is not yet supported though.
+
+* Experimental support for having a language prefix in the URL has been added,
+  and enabled for the sandbox. This can be achieved by using Django's
+  `i18n_patterns`_ function in your ``urls.py``. for the sandbox.
+  See ``sites/sandbox/urls.py`` for an example.
+
+* A basic example for a multi-language sitemap has been added to the sandbox.
+
+* Reasoning about e.g. when it is feasible to drop Python 2.6 or Django 1.5
+  support is hard without reliable data, hence the tracker pixel has been
+  extended to submit the Python and Django version in use.
+  Tracking is still easily disabled by setting ``OSCAR_TRACKING`` to ``False``.
+
+.. _`#1202`: https://github.com/django-oscar/django-oscar/pull/1202
+.. _`#1299`: https://github.com/django-oscar/django-oscar/pull/1299
+.. _`b920f8ba`: https://github.com/django-oscar/django-oscar/commit/b920f8ba288cd2f19bb167db2a012479ba956397
+.. _`ef3ccf08a7`: https://github.com/django-oscar/django-oscar/commit/ef3ccf08a707ae1250cdb8d5f2dc6f721d020dc4
+.. _`32b7249`: https://github.com/django-oscar/django-oscar/commit/32b7249e44b40cb1b20d01226f77ae6777a20b91
+.. _`i18n_patterns`: https://docs.djangoproject.com/en/dev/topics/i18n/translation/#language-prefix-in-url-patterns
 
 Bugfixes
 ~~~~~~~~
 
-* Addresses in non-shipping countries can't be selected as default shipping
+* Addresses in non-shipping countries can no longer be selected as default shipping
   address anymore (`be04d46639`_).
 
 * Suspended and consumed offers are no longer returned by the "active" offer
   manager. (`#1228`_).
 
-.. _`#1228`: https://github.com/tangentlabs/django-oscar/issues/1228
+* Products can now be removed from categories (`#1289`_).
+
+.. _`#1228`: https://github.com/django-oscar/django-oscar/issues/1228
+.. _`#1289`: https://github.com/django-oscar/django-oscar/issues/1289
+.. _`be04d46639`: https://github.com/django-oscar/django-oscar/commit/
+
+.. _incompatible_changes_in_0.7:
 
 Backwards incompatible changes in 0.7
 =====================================
@@ -119,6 +232,11 @@ Backwards incompatible changes in 0.7
 
     Fields and models have been removed from Oscar. If you used them, you must
     ensure you create/extend the affected models appropriately.
+
+* Oscar has dropped support for Django 1.4. However, if Oscar continues to
+  support the ``AUTH_PROFILE_MODULE`` setting so sites that use separate
+  profile models aren't forced to convert to a single user model in order to
+  use Oscar 0.7.
 
 * ``AbstractProduct.status`` was an unused ``CharField`` provided for convenience
   as it's a commonly required field. But a different field type was often
@@ -140,21 +258,77 @@ Backwards incompatible changes in 0.7
   the product class' slug instead of the primary key. It's necessary to update
   URLs pointing to that view.
 
-.. _`#1123`: https://github.com/tangentlabs/django-oscar/pull/1123
+* ``ProductListView`` has been removed as it wasn't needed any more after the
+  search improvements. The old URL route still works.
+
+* Accessing categories by just slug instead of primary key and slug had been
+  unofficially deprecated for 0.6, and is removed now.
+
+* `#1251`_ - Form related templates have been refactored. If you've modified
+  them, your templates might need updating.
+
+* ``django.conf.urls.i18n`` has been removed from Oscar's default URLs. This is
+  because to get ``i18n_patterns`` working for Oscar, it needs to be defined
+  outside of the scope of it. If you use i18n, you need to explicitly add the
+  following line to your main ``urls.py``::
+
+        (r'^i18n/', include('django.conf.urls.i18n')),
+
+* jScrollPane, which was used to style the dashboard's scroll bars, has been
+  removed.
+
+* The methods ``get_error_response`` and ``can_basket_be_submitted`` have been
+  removed from the ``PaymentDetailsView`` view class in checkout
+
+.. _`#1123`: https://github.com/django-oscar/django-oscar/pull/1123
+.. _`#1251`: https://github.com/django-oscar/django-oscar/pull/1251
 
 Removal of features deprecated in 0.6
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * Django 1.4 support has been removed.
 
-Renamed templates
-~~~~~~~~~~~~~~~~~
+* In :class:`~oscar.apps.checkout.mixins.OrderPlacementMixin`, the following methods
+  have been removed:
 
-Template block changes
-~~~~~~~~~~~~~~~~~~~~~~
+  - ``create_shipping_address_from_form_fields`` - This is removed as checkout
+    now requires an unsaved shipping address instance to be passed in (rather
+    than having it created implicitly).
+  - ``create_user_address``  - This is replaced by
+    :meth:`oscar.apps.checkout.mixin.OrderPlacementMixin.update_address_book`.
+  - ``create_shipping_address_from_user_address``
+
+* The :meth:`oscar.apps.checkout.session.CheckoutSessionData.shipping_method`
+  has been removed.  Instead
+  :meth:`oscar.apps.checkout.session.CheckoutSessionMixin.get_shipping_address`
+  provides the same functionality.
 
 Migrations
 ~~~~~~~~~~
+
+.. warning::
+
+    The reviews app has not been under migration control so far. Please ensure
+    you follow South's guidelines on how to `convert an app`_. Essentially,
+    you will have to run: ``$ ./manage.py migrate reviews 0001 --fake``
+
+.. warning::
+
+    A lot of Oscar apps have data migrations for CharFields before ``null=True``
+    is removed in the following schema migration. If you have extended such an
+    app and use your own migrations, then you will need to first convert
+    affected ``None``'s to ``''`` yourself; see the data migrations for our
+    approach.
+
+.. note::
+
+    Be sure to read the detailed instructions for
+    :doc:`handling migrations </topics/upgrading>`.
+
+* Address:
+
+    - ``0008`` - Forgotten migration for ``UserAddress.phone_number``
+    - ``0009`` & ``0010`` - Data and schema migration for removing ``null=True`` on ``CharFields``
 
 * Catalogue:
 
@@ -162,37 +336,53 @@ Migrations
     - ``0015`` - Turns a product's UPC field into a :class:`oscar.models.fields.NullCharField`
     - ``0016`` - ``AutoSlugField`` for ``AbstractProductClass`` and ``AbstractOption``
     - ``0017`` - Removes ``Product.status``, ``Contributor``, ``ContributorRole`` and ``ProductContributor``
+    - ``0018`` - Set ``on_delete=models.PROTECT`` on ``Product.product_class``
+    - ``0019`` & ``0020`` - Data and schema migration for removing ``null=True`` on ``CharFields``
 
 * Customer:
 
     - ``0006`` - ``AutoSlugField`` and ``unique=True`` for ``AbstractCommunicationEventType``
+    - ``0007`` & ``0008`` - Data and schema migration for removing ``null=True`` on ``CharFields``
+    - ``0009`` - Migration caused by ``CommunicationEventType.code`` separator change
 
 * Offer:
 
     - ``0029`` - ``AutoSlugField`` for ``ConditionalOffer``
+    - ``0030`` & ``0031`` - Data and schema migration for removing ``null=True`` on ``CharFields``
+    - ``0032`` - Changing ``proxy_class`` fields to ``NullCharField``
 
 * Order:
 
     - ``0025`` - ``AutoSlugField`` for ``AbstractPaymentEventType`` and AbstractShippingEventType``
+    - ``0026`` - Allow ``null=True`` and ``blank=True`` for ``Line.partner_name``
+    - ``0027`` & ``0028`` - Data and schema migration for removing ``null=True`` on ``CharFields``
 
 * Partner:
 
     - ``0011`` - ``AutoSlugField`` for ``AbstractPartner``
+    - ``0012`` & ``0013`` - Data and schema migration for removing ``null=True`` on ``CharFields``
 
 * Payment:
 
     - ``0003`` - ``AutoSlugField`` and ``unique=True`` for ``AbstractSourceType``
 
+* Promotions:
+
+    - ``0004`` & ``0005`` - Data and schema migration for removing ``null=True`` on ``CharFields``
+
 * Shipping:
 
     - ``0006`` - ``AutoSlugField`` for ``ShippingMethod``
+
+* Reviews:
+
+    - ``0001`` - Initial migration for reviews application. Make sure to follow
+      South's guidelines on how to `convert an app`_.
+    - ``0002`` & ``0003`` - Data and schema migration for removing ``null=True`` on ``CharFields``
 
 * Voucher:
 
     - ``0002`` and ``0003`` - Convert ``[start|end]_date`` to
       ``[start|end]_datetime`` (includes data migration).
 
-
-
-Features deprecated in 0.6
-==========================
+.. _`convert an app`: http://south.readthedocs.org/en/latest/convertinganapp.html

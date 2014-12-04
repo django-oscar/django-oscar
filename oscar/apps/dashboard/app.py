@@ -1,6 +1,5 @@
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url, include
 
-from oscar.apps.dashboard import views
 from oscar.core.application import Application
 from oscar.core.loading import get_class
 
@@ -11,7 +10,7 @@ class DashboardApplication(Application):
         'index': (['is_staff'], ['partner.dashboard_access']),
     }
 
-    index_view = views.IndexView
+    index_view = get_class('dashboard.views', 'IndexView')
     reports_app = get_class('dashboard.reports.app', 'application')
     orders_app = get_class('dashboard.orders.app', 'application')
     users_app = get_class('dashboard.users.app', 'application')
@@ -24,6 +23,7 @@ class DashboardApplication(Application):
     reviews_app = get_class('dashboard.reviews.app', 'application')
     vouchers_app = get_class('dashboard.vouchers.app', 'application')
     comms_app = get_class('dashboard.communications.app', 'application')
+    shipping_app = get_class('dashboard.shipping.app', 'application')
 
     def get_urls(self):
         urls = [
@@ -40,8 +40,9 @@ class DashboardApplication(Application):
             url(r'^reviews/', include(self.reviews_app.urls)),
             url(r'^vouchers/', include(self.vouchers_app.urls)),
             url(r'^comms/', include(self.comms_app.urls)),
+            url(r'^shipping/', include(self.shipping_app.urls)),
         ]
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = DashboardApplication()

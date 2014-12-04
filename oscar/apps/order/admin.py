@@ -58,15 +58,6 @@ class PaymentEventTypeAdmin(admin.ModelAdmin):
     pass
 
 
-class OrderNoteAdmin(admin.ModelAdmin):
-    exclude = ('user',)
-
-    def save_model(self, request, obj, form, change):
-        if not change:
-            obj.user = request.user
-        obj.save()
-
-
 class OrderDiscountAdmin(admin.ModelAdmin):
     readonly_fields = ('order', 'category', 'offer_id', 'offer_name',
                        'voucher_id', 'voucher_code', 'amount')
@@ -75,7 +66,7 @@ class OrderDiscountAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Order, OrderAdmin)
-admin.site.register(OrderNote, OrderNoteAdmin)
+admin.site.register(OrderNote)
 admin.site.register(ShippingAddress)
 admin.site.register(Line, LineAdmin)
 admin.site.register(LinePrice, LinePriceAdmin)

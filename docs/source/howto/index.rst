@@ -12,7 +12,6 @@ Customisation
     :maxdepth: 1
 
     how_to_customise_models
-    how_to_override_a_core_class
     how_to_customise_templates
     how_to_disable_an_app
     how_to_change_a_url
@@ -53,7 +52,7 @@ Payment
     :maxdepth: 1
 
     how_to_integrate_payment
-    how_to_apply_tax_exemptions
+    how_to_handle_us_taxes
 
 Shipping
 --------
@@ -88,4 +87,12 @@ Appearance
     :maxdepth: 1
 
     how_to_handle_statics
+
+Deployment and setup
+--------------------
+
+.. toctree::
+    :maxdepth: 1
+
+    how_to_setup_solr
 

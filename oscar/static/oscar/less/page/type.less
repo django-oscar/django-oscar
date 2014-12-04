@@ -11,11 +11,11 @@ form,
 .table,
 .page-header,
 .sub-header {
-    margin:0 0 @baseLineHeight;
+    margin:0 0 @line-height-computed;
 }
 ul,
 ol {
-    margin-bottom:@baseLineHeight;
+    margin-bottom:@line-height-computed;
 }
 .page-header,
 .sub-header,
@@ -26,30 +26,37 @@ ol {
 }
 
 // Heading fonts a little smaller
-h1, .h1 { font-size: @baseFontSize * 2.15; line-height: @baseLineHeight * 2; } // 30px
-h2, .h2 { font-size: @baseFontSize * 1.75; line-height: @baseLineHeight * 2; } // 24px
-h3, .h3 { font-size: @baseFontSize * 1.25; line-height: @baseLineHeight * 1.2; } // 18px
-h4, .h4 { font-size: @baseFontSize * 1.15; line-height: @baseLineHeight * 1.2; } // 16px
-h5, .h5 { font-size: @baseFontSize; line-height: @baseLineHeight; } // 14px
+h1, .h1 { font-size: @font-size-base * 2.15; line-height: 1.3; } // 30px
+h2, .h2 { font-size: @font-size-base * 1.75; line-height: 1.3; } // 24px
+h3, .h3 { font-size: @font-size-base * 1.25; line-height: 1.4; } // 18px
+h4, .h4 { font-size: @font-size-base * 1.15; line-height: 1.4; } // 16px
+h5, .h5 { font-size: @font-size-base; line-height: @line-height-base; } // 14px
+
+.h1,
+.h2,
+.h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
 
 // Page / sub headers consistant
 .sub-header {
-    padding-bottom: (@baseLineHeight / 2) - 1;
-    border-bottom: 1px solid @grayLighter;
+    padding-bottom: (@line-height-computed / 2) - 1;
+    border-bottom: 1px solid @gray-lighter;
 }
 .page-header {
     h1,h2 {
-        font-size: @baseFontSize * 2.14;
+        font-size: @font-size-base * 2.14;
         line-height: 40px;
     }
 }
 // Sub header a little lighter
 .sub-header {
     h2,h3,h4 {
-        font-size: @baseFontSize * 1.6; // 22px
-        line-height: @baseLineHeight * 1.5;
+        font-size: @font-size-base * 1.6; // 22px
+        line-height: @line-height-base * 1.5;
         font-weight:normal;
-        color:@grayDark;
+        color:@gray-dark;
     }
 }
 

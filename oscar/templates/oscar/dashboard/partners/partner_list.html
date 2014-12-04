@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block title %}
-    {% trans "Partner management" %} | {{ block.super }}
+    {% trans "Partners" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -12,22 +12,22 @@
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
             <span class="divider">/</span>
         </li>
-        <li class="active">{% trans "Partner management" %}</li>
+        <li class="active">{% trans "Partners" %}</li>
     </ul>
 {% endblock %}
 
 {% block header %}
     <div class="page-header">
         <a href="{% url 'dashboard:partner-create' %}" class="btn btn-large btn-primary pull-right"><i class="icon-plus"></i> {% trans "Create new partner" %}</a>
-        <h1>{% trans "Partner management" %}</h1>
+        <h1>{% trans "Partners" %}</h1>
     </div>
 {% endblock header %}
 
 {% block dashboard_content %}
     <div class="well">
         <form action="." method="get" class="form-inline">
-            {% include 'partials/form_fields_inline.html' with form=form %}
-            <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+            {% include 'dashboard/partials/form_fields_inline.html' with form=form %}
+            <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
             {% if is_filtered %}
                 <a class="btn" href="{% url 'dashboard:partner-list' %}" >{% trans "Reset" %}</a>
             {% endif %}
@@ -42,7 +42,7 @@
             </caption>
             {% if partners %}
                 <tr>
-                    <th>{% anchor 'name' _('Partner name') %}</th>
+                    <th>{% anchor 'name' _('Name') %}</th>
                     <th>{% trans 'Users' %}</th>
                     <th>{% trans 'Addresses' %}</th>
                     <th>&nbsp;</th>

@@ -5,8 +5,56 @@ from django.test import TestCase
 import mock
 
 from oscar.apps.offer import models
+from oscar.apps.offer.utils import Applicator
 from oscar.test.basket import add_product, add_products
 from oscar.test import factories
+
+
+class TestAnAbsoluteDiscountAppliedWithCountConditionOnDifferentRange(TestCase):
+
+    def setUp(self):
+        self.condition_product = factories.ProductFactory()
+        condition_range = factories.RangeFactory()
+        condition_range.add_product(self.condition_product)
+        self.condition = models.CountCondition.objects.create(
+            range=condition_range,
+            type=models.Condition.COUNT,
+            value=2)
+
+        self.benefit_product = factories.ProductFactory()
+        benefit_range = factories.RangeFactory()
+        benefit_range.add_product(self.benefit_product)
+        self.benefit = models.AbsoluteDiscountBenefit.objects.create(
+            range=benefit_range,
+            type=models.Benefit.FIXED,
+            value=D('3.00'))
+
+        self.offer = models.ConditionalOffer(
+            id=1, condition=self.condition, benefit=self.benefit)
+        self.basket = factories.create_basket(empty=True)
+
+        self.applicator = Applicator()
+
+    def test_succcessful_application_consumes_correctly(self):
+        add_product(self.basket, product=self.condition_product, quantity=2)
+        add_product(self.basket, product=self.benefit_product, quantity=1)
+
+        self.applicator.apply_offers(self.basket, [self.offer])
+
+        discounts = self.basket.offer_applications.offer_discounts
+        self.assertEqual(len(discounts), 1)
+        self.assertEqual(discounts[0]['freq'], 1)
+
+    def test_condition_is_consumed_correctly(self):
+        # Testing an error case reported on the mailing list
+        add_product(self.basket, product=self.condition_product, quantity=3)
+        add_product(self.basket, product=self.benefit_product, quantity=2)
+
+        self.applicator.apply_offers(self.basket, [self.offer])
+
+        discounts = self.basket.offer_applications.offer_discounts
+        self.assertEqual(len(discounts), 1)
+        self.assertEqual(discounts[0]['freq'], 1)
 
 
 class TestAnAbsoluteDiscountAppliedWithCountCondition(TestCase):
@@ -19,7 +67,6 @@ class TestAnAbsoluteDiscountAppliedWithCountCondition(TestCase):
             type=models.Condition.COUNT,
             value=2)
         self.offer = mock.Mock()
-        self.offer.applies_to_tax_exclusive_prices = False
         self.benefit = models.AbsoluteDiscountBenefit.objects.create(
             range=range,
             type=models.Benefit.FIXED,
@@ -112,7 +159,6 @@ class TestAnAbsoluteDiscount(TestCase):
             type=models.Benefit.FIXED,
             value=D('4.00'))
         self.offer = mock.Mock()
-        self.offer.applies_to_tax_exclusive_prices = False
         self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_when_discounts_need_rounding(self):
@@ -144,7 +190,6 @@ class TestAnAbsoluteDiscountWithMaxItemsSetAppliedWithCountCondition(TestCase):
             value=D('3.00'),
             max_affected_items=1)
         self.offer = mock.Mock()
-        self.offer.applies_to_tax_exclusive_prices = False
         self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):
@@ -189,7 +234,6 @@ class TestAnAbsoluteDiscountAppliedWithValueCondition(TestCase):
             type=models.Benefit.FIXED,
             value=D('3.00'))
         self.offer = mock.Mock()
-        self.offer.applies_to_tax_exclusive_prices = False
         self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):
@@ -242,7 +286,6 @@ class TestAnAbsoluteDiscountWithMaxItemsSetAppliedWithValueCondition(TestCase):
             value=D('3.00'),
             max_affected_items=1)
         self.offer = mock.Mock()
-        self.offer.applies_to_tax_exclusive_prices = False
         self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):

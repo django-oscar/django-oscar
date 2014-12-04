@@ -1,0 +1,18 @@
+=========================
+Oscar 0.7.1 release notes
+=========================
+
+This is Oscar 0.7.1, a nano-release to squash one gremlin in 0.7 that affects
+`django-oscar-paypal`_.
+
+Bug fixes
+=========
+
+This release `makes a change`_ to the checkout session mixin which allows a basket
+to be explicitly specified by subclasses of the checkout ``PaymentDetails``
+view class. This is required when a different basket to ``request.basket`` is
+intended to be used in a preview (this is what `django-oscar-paypal`_ needs to
+do).
+
+.. _`makes a change`: https://github.com/django-oscar/django-oscar/commit/fbce17c
+.. _`django-oscar-paypal`: https://github.com/django-oscar/django-oscar-paypal

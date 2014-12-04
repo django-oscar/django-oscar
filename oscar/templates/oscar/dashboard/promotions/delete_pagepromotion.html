@@ -10,7 +10,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:promotion-list' %}">{% trans "Content block management" %}</a>
+            <a href="{% url 'dashboard:promotion-list' %}">{% trans "Content blocks" %}</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Remove promotion from page?" %}</li>
@@ -30,7 +30,7 @@
         <p>{% blocktrans %}Remove {{ object.content_object.type }} content block <strong>{{ object.name }}</strong> from page <strong>{{ object.page_url }}</strong> - are you sure?{% endblocktrans %}</p>
 
         <div class="form-actions">
-            <button type="submit" class="btn btn-danger">{% trans "Remove" %}</button>
+            <button type="submit" class="btn btn-danger" data-loading-text="{% trans 'Removing...' %}">{% trans "Remove" %}</button>
             {% trans "or" %} <a href="{% url 'dashboard:promotion-list-by-url' path=object.page_url  %}">{% trans "cancel" %}</a>
         </div>
     </form>

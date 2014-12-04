@@ -1,9 +1,9 @@
 from haystack import indexes
-from django.conf import settings
 
 from oscar.core.loading import get_model, get_class
 
 # Load default strategy (without a user/request)
+is_solr_supported = get_class('search.features', 'is_solr_supported')
 Selector = get_class('partner.strategy', 'Selector')
 strategy = Selector().strategy()
 
@@ -34,14 +34,14 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         return get_model('catalogue', 'Product')
 
     def index_queryset(self, using=None):
-        # Only index browsable products (not each individual variant)
+        # Only index browsable products (not each individual child product)
         return self.get_model().browsable.order_by('-date_updated')
 
     def read_queryset(self, using=None):
         return self.get_model().browsable.base_queryset()
 
     def prepare_product_class(self, obj):
-        return obj.product_class.name
+        return obj.get_product_class().name
 
     def prepare_category(self, obj):
         categories = obj.categories.all()
@@ -58,8 +58,8 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_price(self, obj):
         result = None
-        if obj.is_group:
-            result = strategy.fetch_for_group(obj)
+        if obj.is_parent:
+            result = strategy.fetch_for_parent(obj)
         elif obj.has_stockrecords:
             result = strategy.fetch_for_product(obj)
 
@@ -69,9 +69,8 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
             return result.price.excl_tax
 
     def prepare_num_in_stock(self, obj):
-        result = None
-        if obj.is_group:
-            # Don't return a stock level for group products
+        if obj.is_parent:
+            # Don't return a stock level for parent products
             return None
         elif obj.has_stockrecords:
             result = strategy.fetch_for_product(obj)
@@ -82,7 +81,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
         # We use Haystack's dynamic fields to ensure that the title field used
         # for sorting is of type "string'.
-        if 'solr' in settings.HAYSTACK_CONNECTIONS['default']['ENGINE']:
+        if is_solr_supported():
             prepared_data['title_s'] = prepared_data['title']
 
         # Use title to for spelling suggestions

@@ -1,23 +1,25 @@
 from django.test import TestCase
-from django_dynamic_fixture import G
 
-from oscar.apps.catalogue import models
 from oscar.apps.dashboard.catalogue import forms
+from oscar.test import factories
 
 
 class TestCreateProductForm(TestCase):
 
     def setUp(self):
-        self.pclass = G(models.ProductClass)
+        self.product_class = factories.ProductClassFactory()
 
-    def submit(self, data):
-        return forms.ProductForm(self.pclass, data=data)
+    def submit(self, data, parent=None):
+        return forms.ProductForm(self.product_class, parent=parent, data=data)
 
     def test_validates_that_parent_products_must_have_title(self):
-        form = self.submit({})
+        form = self.submit({'structure': 'parent'})
         self.assertFalse(form.is_valid())
+        form = self.submit({'structure': 'parent', 'title': 'foo'})
+        self.assertTrue(form.is_valid())
 
     def test_validates_that_child_products_dont_need_a_title(self):
-        parent = G(models.Product, product_class=self.pclass, parent=None)
-        form = self.submit({'parent': parent.id})
+        parent = factories.ProductFactory(
+            product_class=self.product_class, structure='parent')
+        form = self.submit({'structure': 'child'}, parent=parent)
         self.assertTrue(form.is_valid())

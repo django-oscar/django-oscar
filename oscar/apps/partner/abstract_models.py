@@ -1,50 +1,14 @@
-from decimal import Decimal as D
-import warnings
-
 from django.db import models
-from django.conf import settings
-from oscar.core.loading import get_model
-from django.utils.translation import ugettext_lazy as _
-from django.utils.importlib import import_module as django_import_module
-from oscar.core.compat import AUTH_USER_MODEL
+from django.utils.encoding import python_2_unicode_compatible
+from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 
-from oscar.core.loading import get_class
+from oscar.core.utils import get_default_currency
+from oscar.core.compat import AUTH_USER_MODEL
 from oscar.models.fields import AutoSlugField
 from oscar.apps.partner.exceptions import InvalidStockAdjustment
-DefaultWrapper = get_class('partner.wrappers', 'DefaultWrapper')
 
 
-# Cache dict of partner_id => availability wrapper instance
-partner_wrappers = None
-
-default_wrapper = DefaultWrapper()
-
-
-def get_partner_wrapper(partner_id):
-    """
-    Returns the appropriate partner wrapper given the partner's PK
-    """
-    if partner_wrappers is None:
-        _load_partner_wrappers()
-    return partner_wrappers.get(partner_id, default_wrapper)
-
-
-def _load_partner_wrappers():
-    # Prime cache of partner wrapper dict
-    global partner_wrappers
-    partner_wrappers = {}
-    Partner = get_model('partner', 'Partner')
-    for code, class_str in settings.OSCAR_PARTNER_WRAPPERS.items():
-        try:
-            partner = Partner.objects.get(code=code)
-        except Partner.DoesNotExist:
-            continue
-        else:
-            module_path, klass = class_str.rsplit('.', 1)
-            module = django_import_module(module_path)
-            partner_wrappers[partner.id] = getattr(module, klass)()
-
-
+@python_2_unicode_compatible
 class AbstractPartner(models.Model):
     """
     A fulfillment partner. An individual or company who can fulfil products.
@@ -56,7 +20,8 @@ class AbstractPartner(models.Model):
     """
     code = AutoSlugField(_("Code"), max_length=128, unique=True,
                          populate_from='name')
-    name = models.CharField(_("Name"), max_length=128, null=True, blank=True)
+    name = models.CharField(
+        pgettext_lazy(u"Partner's name", u"Name"), max_length=128, blank=True)
 
     #: A partner can have users assigned to it. This is used
     #: for access modelling in the permission-based dashboard
@@ -66,9 +31,7 @@ class AbstractPartner(models.Model):
 
     @property
     def display_name(self):
-        if not self.name:
-            return self.code
-        return self.name
+        return self.name or self.code
 
     @property
     def primary_address(self):
@@ -101,15 +64,17 @@ class AbstractPartner(models.Model):
         return self.primary_address
 
     class Meta:
-        permissions = (('dashboard_access', _('Can access dashboard')), )
+        abstract = True
+        app_label = 'partner'
+        permissions = (('dashboard_access', 'Can access dashboard'), )
         verbose_name = _('Fulfillment partner')
         verbose_name_plural = _('Fulfillment partners')
-        abstract = True
 
-    def __unicode__(self):
-        return self.name
+    def __str__(self):
+        return self.display_name
 
 
+@python_2_unicode_compatible
 class AbstractStockRecord(models.Model):
     """
     A stock record.
@@ -135,7 +100,7 @@ class AbstractStockRecord(models.Model):
 
     # Price info:
     price_currency = models.CharField(
-        _("Currency"), max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
+        _("Currency"), max_length=12, default=get_default_currency)
 
     # This is the base price for calculations - tax should be applied by the
     # appropriate method.  We don't store tax here as its calculation is highly
@@ -180,7 +145,7 @@ class AbstractStockRecord(models.Model):
     date_updated = models.DateTimeField(_("Date updated"), auto_now=True,
                                         db_index=True)
 
-    def __unicode__(self):
+    def __str__(self):
         msg = u"Partner: %s, product: %s" % (
             self.partner.display_name, self.product,)
         if self.partner_sku:
@@ -189,6 +154,7 @@ class AbstractStockRecord(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'partner'
         unique_together = ('partner', 'partner_sku')
         verbose_name = _("Stock record")
         verbose_name_plural = _("Stock records")
@@ -257,120 +223,8 @@ class AbstractStockRecord(models.Model):
             return False
         return self.net_stock_level < self.low_stock_threshold
 
-    # Stock wrapper methods - deprecated since 0.6
 
-    @property
-    def is_available_to_buy(self):
-        """
-        Return whether this stockrecord allows the product to be purchased
-        """
-        warnings.warn((
-            "StockRecord.is_available_to_buy is deprecated and will be "
-            "removed in 0.7.  Use a strategy class to determine availability "
-            "instead"), DeprecationWarning)
-        return get_partner_wrapper(self.partner_id).is_available_to_buy(self)
-
-    def is_purchase_permitted(self, user=None, quantity=1, product=None):
-        """
-        Return whether this stockrecord allows the product to be purchased by a
-        specific user and quantity
-        """
-        warnings.warn((
-            "StockRecord.is_purchase_permitted is deprecated and will be "
-            "removed in 0.7.  Use a strategy class to determine availability "
-            "instead"), DeprecationWarning)
-        return get_partner_wrapper(
-            self.partner_id).is_purchase_permitted(self, user, quantity,
-                                                   product)
-
-    @property
-    def availability_code(self):
-        """
-        Return an product's availability as a code for use in CSS to add icons
-        to the overall availability mark-up.  For example, "instock",
-        "unavailable".
-        """
-        warnings.warn((
-            "StockRecord.availability_code is deprecated and will be "
-            "removed in 0.7.  Use a strategy class to determine availability "
-            "instead"), DeprecationWarning)
-        return get_partner_wrapper(self.partner_id).availability_code(self)
-
-    @property
-    def availability(self):
-        """
-        Return a product's availability as a string that can be displayed to
-        the user.  For example, "In stock", "Unavailable".
-        """
-        warnings.warn((
-            "StockRecord.availability is deprecated and will be "
-            "removed in 0.7.  Use a strategy class to determine availability "
-            "instead"), DeprecationWarning)
-        return get_partner_wrapper(self.partner_id).availability(self)
-
-    def max_purchase_quantity(self, user=None):
-        """
-        Return an item's availability as a string
-
-        :param user: (optional) The user who wants to purchase
-        """
-        warnings.warn((
-            "StockRecord.max_purchase_quantity is deprecated and will be "
-            "removed in 0.7.  Use a strategy class to determine availability "
-            "instead"), DeprecationWarning)
-        return get_partner_wrapper(
-            self.partner_id).max_purchase_quantity(self, user)
-
-    @property
-    def dispatch_date(self):
-        """
-        Return the estimated dispatch date for a line
-        """
-        warnings.warn((
-            "StockRecord.dispatch_date is deprecated and will be "
-            "removed in 0.7.  Use a strategy class to determine availability "
-            "instead"), DeprecationWarning)
-        return get_partner_wrapper(self.partner_id).dispatch_date(self)
-
-    @property
-    def lead_time(self):
-        warnings.warn((
-            "StockRecord.lead_time is deprecated and will be "
-            "removed in 0.7.  Use a strategy class to determine availability "
-            "instead"), DeprecationWarning)
-        return get_partner_wrapper(self.partner_id).lead_time(self)
-
-    # Price methods - deprecated in 0.6
-
-    @property
-    def price_incl_tax(self):
-        """
-        Return a product's price including tax.
-
-        This defaults to the price_excl_tax as tax calculations are
-        domain specific.  This class needs to be subclassed and tax logic
-        added to this method.
-        """
-        warnings.warn((
-            "StockRecord.price_incl_tax is deprecated and will be "
-            "removed in 0.7.  Use a strategy class to determine price "
-            "information instead"), DeprecationWarning, stacklevel=2)
-        if self.price_excl_tax is None:
-            return D('0.00')
-        return self.price_excl_tax + self.price_tax
-
-    @property
-    def price_tax(self):
-        """
-        Return a product's tax value
-        """
-        warnings.warn((
-            "StockRecord.price_incl_tax is deprecated and will be "
-            "removed in 0.7.  Use a strategy class to determine price "
-            "information instead"), DeprecationWarning)
-        return get_partner_wrapper(self.partner_id).calculate_tax(self)
-
-
+@python_2_unicode_compatible
 class AbstractStockAlert(models.Model):
     """
     A stock alert. E.g. used to notify users when a product is 'back in stock'.
@@ -394,12 +248,13 @@ class AbstractStockAlert(models.Model):
         self.save()
     close.alters_data = True
 
-    def __unicode__(self):
+    def __str__(self):
         return _('<stockalert for "%(stock)s" status %(status)s>') \
             % {'stock': self.stockrecord, 'status': self.status}
 
     class Meta:
         abstract = True
+        app_label = 'partner'
         ordering = ('-date_created',)
-        verbose_name = _('Stock Alert')
-        verbose_name_plural = _('Stock Alerts')
+        verbose_name = _('Stock alert')
+        verbose_name_plural = _('Stock alerts')

@@ -1,55 +1,90 @@
+import django
+
 """
 Vanilla product models
 """
+from oscar.core.loading import is_model_registered
 from oscar.apps.catalogue.abstract_models import *  # noqa
 
-
-class ProductClass(AbstractProductClass):
-    pass
+__all__ = ['ProductAttributesContainer']
 
 
-class Category(AbstractCategory):
-    pass
+if not is_model_registered('catalogue', 'ProductClass'):
+    class ProductClass(AbstractProductClass):
+        pass
+
+    __all__.append('ProductClass')
 
 
-class ProductCategory(AbstractProductCategory):
-    pass
+if not is_model_registered('catalogue', 'Category'):
+    class Category(AbstractCategory):
+        pass
+
+    __all__.append('Category')
 
 
-class Product(AbstractProduct):
-    pass
+if not is_model_registered('catalogue', 'ProductCategory'):
+    class ProductCategory(AbstractProductCategory):
+        pass
+
+    __all__.append('ProductCategory')
 
 
-class ProductAttribute(AbstractProductAttribute):
-    pass
+if not is_model_registered('catalogue', 'Product'):
+    class Product(AbstractProduct):
+        pass
+
+    __all__.append('Product')
 
 
-class ProductAttributeValue(AbstractProductAttributeValue):
-    pass
+if not is_model_registered('catalogue', 'ProductRecommendation'):
+    class ProductRecommendation(AbstractProductRecommendation):
+        pass
+
+    __all__.append('ProductRecommendation')
 
 
-class AttributeOptionGroup(AbstractAttributeOptionGroup):
-    pass
+if not is_model_registered('catalogue', 'ProductAttribute'):
+    class ProductAttribute(AbstractProductAttribute):
+        pass
+
+    __all__.append('ProductAttribute')
 
 
-class AttributeOption(AbstractAttributeOption):
-    pass
+if not is_model_registered('catalogue', 'ProductAttributeValue'):
+    class ProductAttributeValue(AbstractProductAttributeValue):
+        pass
+
+    __all__.append('ProductAttributeValue')
 
 
-class AttributeEntity(AbstractAttributeEntity):
-    pass
+if not is_model_registered('catalogue', 'AttributeOptionGroup'):
+    class AttributeOptionGroup(AbstractAttributeOptionGroup):
+        pass
+
+    __all__.append('AttributeOptionGroup')
 
 
-class AttributeEntityType(AbstractAttributeEntityType):
-    pass
+if not is_model_registered('catalogue', 'AttributeOption'):
+    class AttributeOption(AbstractAttributeOption):
+        pass
+
+    __all__.append('AttributeOption')
 
 
-class Option(AbstractOption):
-    pass
+if not is_model_registered('catalogue', 'Option'):
+    class Option(AbstractOption):
+        pass
+
+    __all__.append('Option')
 
 
-class ProductImage(AbstractProductImage):
-    pass
+if not is_model_registered('catalogue', 'ProductImage'):
+    class ProductImage(AbstractProductImage):
+        pass
+
+    __all__.append('ProductImage')
 
 
-from .receivers import *  # noqa
+if django.VERSION < (1, 7):
+    from . import receivers  # noqa

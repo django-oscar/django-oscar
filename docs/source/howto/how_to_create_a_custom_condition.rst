@@ -11,13 +11,14 @@ Custom condition interface
 --------------------------
 
 Custom condition classes must be proxy models, subclassing Oscar's main
-Condition class.
+:class:`~oscar.apps.offer.models.Condition` class.
 
 At a minimum, a custom condition must:
 
-* have a ``name`` attribute
+* have a ``description`` attribute which describes what needs to happen to
+  satisfy the condition (eg "basket must have 4 items").
 * have an ``is_satisfied`` method that takes a basket instance and an offer
-  instance and returns a boolean
+  instance and returns a boolean indicating if the condition is satisfied
 
 It can also implement:
 
@@ -34,7 +35,9 @@ It can also implement:
   partially satisfies the condition (ie when you might want to show them an
   upsell message)
 
-Silly example::
+Silly example:
+
+.. code-block:: python
 
     from oscar.apps.offer import models
 

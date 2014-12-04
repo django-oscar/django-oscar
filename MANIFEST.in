@@ -2,6 +2,5 @@ include *.rst
 include AUTHORS
 include LICENSE
 recursive-include oscar/templates *.txt *.html
-recursive-include oscar/fixtures *.json
 recursive-include oscar/static *
 recursive-include oscar/locale *.po *.mo

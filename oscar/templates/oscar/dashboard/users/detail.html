@@ -4,9 +4,7 @@
 
 {% block body_class %}{{ block.super }} users{% endblock %}
 
-{% block title %}
-    {% blocktrans with email=customer.email %}{{ email }}{% endblocktrans %} | {{ block.super }}
-{% endblock %}
+{% block title %}{{ customer.email }} | {{ block.super }}{% endblock %}
 
 {% block breadcrumbs %}
     <ul class="breadcrumb">
@@ -18,13 +16,11 @@
             <a href="{% url 'dashboard:users-index' %}">{% trans "Customers" %}</a>
             <span class="divider">/</span>
         </li>
-        <li class="active">{% blocktrans with email=customer.email %}{{ email }}{% endblocktrans %}</li>
+        <li class="active">{{ customer.email }}</li>
     </ul>
 {% endblock %}
 
-{% block headertext %}
-    {% blocktrans with email=customer.email %}{{ email }}{% endblocktrans %}
-{% endblock %}
+{% block headertext %}{{ customer.email }}{% endblock %}
 
 {% block dashboard_content %}
     <div class="row-fluid">
@@ -64,38 +60,42 @@
                         <th>{% trans "Date joined" %}</th>
                         <td>{{ customer.date_joined }}</td>
                     </tr>
-                    {% with record=customer.userrecord %}
-                        <tr>
-                            <th>{% trans "Products viewed" %}</th>
-                            <td>{{ record.num_product_views|default:0 }}</td>
-                        </tr>
-                        <tr>
-                            <th>{% trans "Number of orders" %}</th>
-                            <td>{{ record.num_orders|default:0 }}</td>
-                        </tr>
-                        <tr>
-                            <th>{% trans "Number of ordered items" %}</th>
-                            <td>{{ record.num_order_items|default:0 }}</td>
-                        </tr>
-                        <tr>
-                            <th>{% trans "Total spent" %}</th>
-                            <td>{{ record.total_spent|default:0|currency }}</td>
-                        </tr>
-                        <tr>
-                            <th>{% trans "Reviews written" %}</th>
-                            <td>{{ customer.reviews.count }}</td>
-                        </tr>
+                    {% if customer.userrecord %}
+                        {% with record=customer.userrecord %}
+                            <tr>
+                                <th>{% trans "Products viewed" %}</th>
+                                <td>{{ record.num_product_views|default:0 }}</td>
+                            </tr>
+                            <tr>
+                                <th>{% trans "Number of orders" %}</th>
+                                <td>{{ record.num_orders|default:0 }}</td>
+                            </tr>
+                            <tr>
+                                <th>{% trans "Number of ordered items" %}</th>
+                                <td>{{ record.num_order_items|default:0 }}</td>
+                            </tr>
+                            <tr>
+                                <th>{% trans "Total spent" %}</th>
+                                <td>{{ record.total_spent|default:0|currency }}</td>
+                            </tr>
+                        {% endwith %}
+                    {% endif %}
+                    <tr>
+                        <th>{% trans "Reviews written" %}</th>
+                        <td>{{ customer.reviews.count }}</td>
+                    </tr>
+                    {% if customer.email %}
                         <tr>
                             <th>{% trans "Actions" %}</th>
                             <td>
                                 <form id="password_reset_form" action="{% url 'dashboard:user-password-reset' pk=customer.id %}" method="post" class="form-horizontal">
                                     {% csrf_token %}
-                                    {% include 'partials/form_fields.html' %}
-                                    <button type="submit" class="btn btn-primary btn-large">{% trans 'Send password reset email' %}</button>
+                                    {% include 'dashboard/partials/form_fields.html' %}
+                                    <button type="submit" class="btn btn-primary btn-large" data-loading-text="{% trans 'Sending...' %}">{% trans 'Send password reset email' %}</button>
                                 </form>
                             </td>
                         </tr>
-                    {% endwith %}
+                    {% endif %}
                 </table>
             </div>
         {% endblock %}
@@ -127,11 +127,11 @@
                                         </tr>
                                         {% for order in orders %}
                                             <tr>
-                                                <td>{{ order.number }}</td>
+                                                <td><a href="{% url 'dashboard:order-detail' order.number %}">{{ order.number }}</a></td>
                                                 <td>{{ order.num_items }}</td>
                                                 <td>{{ order.basket_total_incl_tax|currency }}</td>
-                                                <td>{{ order.date_placed|date:"d/m/y H:i" }}</td>
-                                                <td>{{ order.status }}</td>
+                                                <td>{{ order.date_placed|date }}</td>
+                                                <td>{{ order.status|default:"-" }}</td>
                                                 <td><a href="{% url 'dashboard:order-detail' number=order.number %}" class="btn btn-info">{% trans "View" %}</a></td>
                                             </tr>
                                         {% endfor %}
@@ -178,7 +178,7 @@
                                     <tr>
                                         <th>{% trans "Product ID" %}</th>
                                         <th>{% trans "Score" %}</th>
-                                        <th>{% trans "Title" %}</th>
+                                        <th>{% trans "Title" context "Product review title" %}</th>
                                         <th>{% trans "Body" %}</th>
                                         <th>{% trans "Date created" %}</th>
                                     </tr>

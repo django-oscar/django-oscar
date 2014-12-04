@@ -10,7 +10,6 @@
     <ul class="breadcrumb">
         <li>
             <a href="{{ homepage_url }}">{% trans "Home" %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Basket" %}</li>
     </ul>
@@ -32,7 +31,7 @@
     {{ block.super }}
     {# We pass in the URL to send AJAX requests to #}
     var options = {
-    'basketURL': '{% url 'basket:summary' %}'
+        'basketURL': '{% url 'basket:summary' %}'
     };
     oscar.basket.init(options);
 {% endblock %}

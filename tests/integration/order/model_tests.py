@@ -1,27 +1,25 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 from decimal import Decimal as D
 
 from django.test import TestCase
 from django.utils import timezone
 import mock
 
-from oscar.apps.address.models import Country
 from oscar.apps.order.models import ShippingAddress, Order, Line, \
         ShippingEvent, ShippingEventType, ShippingEventQuantity, OrderNote, \
         OrderDiscount
 from oscar.apps.order.exceptions import (InvalidOrderStatus, InvalidLineStatus,
                                          InvalidShippingEvent)
-from oscar.test.factories import create_order, create_offer, create_voucher, create_basket
+from oscar.test.factories import create_order, create_offer, create_voucher, create_basket, CountryFactory
 from oscar.test.basket import add_product
 
 ORDER_PLACED = 'order_placed'
 
 
 class ShippingAddressTest(TestCase):
-    fixtures = ['countries.json']
 
     def test_titleless_salutation_is_stripped(self):
-        country = Country.objects.get(iso_3166_1_a2='GB')
+        country = CountryFactory()
         a = ShippingAddress.objects.create(
             last_name='Barrington', line1="75 Smith Road", postcode="N4 8TY", country=country)
         self.assertEqual("Barrington", a.salutation)
@@ -182,6 +180,15 @@ class LineTests(TestCase):
             # Total quantity is too high
             self.event(type, 2)
 
+    def test_handles_product_deletion_gracefully(self):
+        product = self.line.product
+        product.delete()
+        line = Line.objects.get(pk=self.line.pk)
+        self.assertIsNone(line.product)
+        self.assertIsNone(line.stockrecord)
+        self.assertEqual(product.title, line.title)
+        self.assertEqual(product.upc, line.upc)
+
 
 class LineStatusTests(TestCase):
 
@@ -318,3 +325,31 @@ class TestOrderDiscount(TestCase):
         self.assertTrue(discount.offer is None)
 
         self.assertEqual(discount.description(), voucher.code)
+
+
+class OrderTests(TestCase):
+    def get_date_tuple(self, date=None):
+        """
+        Returns a tuple like (year, month, day, hour, minute) for
+        datetime comparisons.
+        We probably don't want to assert datetime objects have the same
+        number of miliseconds etc. just in case the object in the test
+        differs by some insignificant amount.
+        """
+        if date is None:
+            date = timezone.now()
+        return date.timetuple()[:-4]
+
+    def test_sets_date_placed_to_now_by_default(self):
+        order = create_order(number='100003')
+        self.assertTupleEqual(self.get_date_tuple(order.date_placed),
+                              self.get_date_tuple())
+
+    def test_allows_date_placed_to_be_changed_and_set_explicitly(self):
+        order = create_order(number='100003')
+        tzinfo = timezone.get_current_timezone()
+        order.date_placed = datetime(2012, 8, 11, 16, 14, tzinfo=tzinfo)
+        order.save()
+
+        self.assertTupleEqual(self.get_date_tuple(order.date_placed),
+                              (2012, 8, 11, 16, 14))

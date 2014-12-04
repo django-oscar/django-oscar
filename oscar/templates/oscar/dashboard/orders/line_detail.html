@@ -37,7 +37,7 @@
             </div>
             <table class="table table-striped table-bordered">
                 <tr>
-                    <th>{% trans "Title" %}</th>
+                    <th>{% trans "Title" context "Product title" %}</th>
                     <td>
                         {% if line.product %}
                             <a href="{{ line.product.get_absolute_url }}">{{ line.title }}</a>
@@ -177,7 +177,7 @@
                             {% with event=event_qty.event %}
                                 <td>{{ event.event_type.name }}</td>
                                 <td>{{ event_qty.quantity }}</td>
-                                <td>{{ event.date }}</td>
+                                <td>{{ event.date_created }}</td>
                             {% endwith %}
                         </tr>
                     {% empty %}

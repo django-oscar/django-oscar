@@ -2,11 +2,13 @@ from decimal import Decimal
 
 from django.core import exceptions
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from oscar.core.compat import AUTH_USER_MODEL
 
 
+@python_2_unicode_compatible
 class AbstractVoucher(models.Model):
     """
     A voucher.  This is simply a link to a collection of offers.
@@ -51,12 +53,13 @@ class AbstractVoucher(models.Model):
     date_created = models.DateField(auto_now_add=True)
 
     class Meta:
-        get_latest_by = 'date_created'
         abstract = True
+        app_label = 'voucher'
+        get_latest_by = 'date_created'
         verbose_name = _("Voucher")
         verbose_name_plural = _("Vouchers")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def clean(self):
@@ -128,6 +131,7 @@ class AbstractVoucher(models.Model):
         return self.offers.all()[0].benefit
 
 
+@python_2_unicode_compatible
 class AbstractVoucherApplication(models.Model):
     """
     For tracking how often a voucher has been used
@@ -145,10 +149,11 @@ class AbstractVoucherApplication(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'voucher'
         verbose_name = _("Voucher Application")
         verbose_name_plural = _("Voucher Applications")
 
-    def __unicode__(self):
+    def __str__(self):
         return _("'%(voucher)s' used by '%(user)s'") % {
             'voucher': self.voucher,
             'user': self.user}

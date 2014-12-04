@@ -1,7 +1,6 @@
 from django import forms
 from oscar.core.loading import get_model
-from django.utils.translation import ugettext_lazy as _
-
+from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from oscar.core.validators import URLDoesNotExistValidator
 
 FlatPage = get_model('flatpages', 'FlatPage')
@@ -11,7 +10,8 @@ class PageSearchForm(forms.Form):
     """
     Search form to filter pages by *title.
     """
-    title = forms.CharField(required=False, label=_("Title"))
+    title = forms.CharField(
+        required=False, label=pgettext_lazy(u"Page title", u"Title"))
 
 
 class PageUpdateForm(forms.ModelForm):

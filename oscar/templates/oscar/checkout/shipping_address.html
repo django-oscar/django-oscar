@@ -20,12 +20,12 @@
     {% if request.user.is_authenticated %}
         {% if addresses %}
             <h3>{% trans "An address from your addressbook?" %}</h3>
-            <div class="choose-block">
-                <ul class="row-fluid unstyled">
-                    {% for address in addresses %}
-                        {% block select_address_form %}
-                            <li class="span6">
-                                <div class="well">
+            <div class="row">
+                <div class="choose-block col-sm-6">
+                    <ul class="list-unstyled">
+                        {% for address in addresses %}
+                            {% block select_address_form %}
+                                <li class="well">
                                     <address>
                                         {% block select_address_fields %}
                                             {% for field in address.active_address_fields %}
@@ -38,22 +38,30 @@
                                         <input type="hidden" name="action" value="ship_to" />
                                         <input type="hidden" name="address_id" value="{{ address.id }}" />
                                         {% if address.is_default_for_shipping %}
-                                            <button type="submit" class="btn btn-success ship-address"><i class="icon-ok"></i> {% trans "Ship to your default shipping address" %}</button>
+                                            <button type="submit" class="btn btn-success btn-large ship-address" data-loading-text="{% trans 'Saving...' %}"><i class="icon-ok"></i> {% trans "Ship to your default shipping address" %}</button>
                                         {% else %}
-                                            <button type="submit" class="btn btn-primary ship-address">{% trans "Ship to this address" %}</button>
+                                            <button type="submit" class="btn btn-primary btn-large ship-address" data-loading-text="{% trans 'Saving...' %}">{% trans "Ship to this address" %}</button>
                                         {% endif %}
-                                        <a href="{% url 'checkout:user-address-update' pk=address.id %}">{% trans "Edit address" %}</a>
-                                        <a href="{% url 'checkout:user-address-delete' pk=address.id %}" class="btn btn-small btn-remove-address">{% trans "Delete" %}</a>
+                                        
+                                        <div class="btn-group address-controls">
+                                            <a href="{% url 'checkout:user-address-update' pk=address.id %}" class="btn btn-default btn-sm">{% trans "Edit address" %}</a>
+                                            <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="{% url 'checkout:user-address-delete' pk=address.id %}" class="btn-remove-address">{% trans "Delete" %}</a></li>
+                                            </ul>
+                                        </div>
                                     </form>
-                                </div>
-                            </li>
-                            {% if forloop.counter|divisibleby:2 %}
-                                </ul>
-                                {% if not forloop.last %}<ul class="row-fluid">{% endif %}
-                            {% endif %}
-                        {% endblock %}
-                    {% endfor %}
-                </ul>
+                                </li>
+                                {% if forloop.counter|divisibleby:2 %}
+                                    </ul>
+                                    {% if not forloop.last %}<ul class="row">{% endif %}
+                                {% endif %}
+                            {% endblock %}
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
             <h3>
                 {% trans "Or a new address?" %} 
@@ -62,12 +70,14 @@
     {% endif %}
 
     {% block new_address_form %}
-        <form action="{% url 'checkout:shipping-address' %}" method="post" id="new_shipping_address">
+        <form action="{% url 'checkout:shipping-address' %}" method="post" id="new_shipping_address" class="form form-horizontal">
             <div class="well">
                 {% csrf_token %}
-                {% include "partials/form_fields.html" with form=form %}
-                <button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
-                {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
+                {% include "partials/form_fields.html" with form=form style='horizontal' %}
+                <div class="controls">
+                    <button type="submit" class="btn btn-lg btn-primary" data-loading-text="{% trans 'Continuing...' %}">{% trans "Continue" %}</button>
+                    {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
+                </div>
             </div>
         </form>
     {% endblock %}

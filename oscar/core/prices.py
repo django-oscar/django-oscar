@@ -23,10 +23,34 @@ class Price(object):
         if incl_tax is not None:
             self.incl_tax = incl_tax
             self.is_tax_known = True
-            self.tax = incl_tax - excl_tax
         elif tax is not None:
             self.incl_tax = excl_tax + tax
             self.is_tax_known = True
-            self.tax = tax
         else:
+            self.incl_tax = None
             self.is_tax_known = False
+
+    def _get_tax(self):
+        return self.incl_tax - self.excl_tax
+
+    def _set_tax(self, value):
+        self.incl_tax = self.excl_tax + value
+        self.is_tax_known = True
+
+    tax = property(_get_tax, _set_tax)
+
+    def __repr__(self):
+        if self.is_tax_known:
+            return "%s(currency=%r, excl_tax=%r, incl_tax=%r, tax=%r)" % (
+                self.__class__.__name__, self.currency, self.excl_tax,
+                self.incl_tax, self.tax)
+        return "%s(currency=%r, excl_tax=%r)" % (
+            self.__class__.__name__, self.currency, self.excl_tax)
+
+    def __eq__(self, other):
+        """
+        Two price objects are equal if currency, price.excl_tax and tax match.
+        """
+        return (self.currency == other.currency and
+                self.excl_tax == other.excl_tax and
+                self.incl_tax == other.incl_tax)

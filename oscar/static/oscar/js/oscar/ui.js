@@ -11,7 +11,7 @@ var oscar = (function(o, $) {
         info: function(msg) { o.messages.addMessage('info', msg); },
         success: function(msg) { o.messages.addMessage('success', msg); },
         warning: function(msg) { o.messages.addMessage('warning', msg); },
-        error: function(msg) { o.messages.addMessage('error', msg); },
+        error: function(msg) { o.messages.addMessage('danger', msg); },
         clear: function() {
             $('#messages').html('');
         },
@@ -22,9 +22,19 @@ var oscar = (function(o, $) {
 
     o.search = {
         init: function() {
+            o.search.initSortWidget();
+            o.search.initFacetWidgets();
+        },
+        initSortWidget: function() {
             // Auto-submit (hidden) search form when selecting a new sort-by option
             $('#id_sort_by').on('change', function() {
                 $(this).closest('form').submit();
+            });
+        },
+        initFacetWidgets: function() {
+            // Bind events to facet checkboxes
+            $('.facet_checkbox').on('change', function() {
+                window.location.href = $(this).next('.facet_url').val();
             });
         }
     };
@@ -63,11 +73,19 @@ var oscar = (function(o, $) {
             // Disable buttons when they are clicked and show a "loading" message taken from the
             // data-loading-text attribute (http://getbootstrap.com/2.3.2/javascript.html#buttons).
             // Do not disable if button is inside a form with invalid fields.
-            $('.js-disable-on-click').click(function(){
+            // This uses a delegated event so that it keeps working for forms that are reloaded
+            // via AJAX: https://api.jquery.com/on/#direct-and-delegated-events
+            $(document.body).on('click', '[data-loading-text]', function(){
                 var form = $(this).parents("form");
                 if (!form || $(":invalid", form).length == 0)
                     $(this).button('loading');
             });
+            // stuff for star rating on review page
+            // show clickable stars instead of a select dropdown for product rating
+            ratings = $('.reviewrating');
+            if(ratings.length){
+                ratings.find('.star-rating i').on('click',o.forms.reviewRatingClick);
+            }
         },
         submitIfNotLocked: function(event) {
             var $form = $(this);
@@ -75,6 +93,11 @@ var oscar = (function(o, $) {
                 return false;
             }
             $form.data('locked', true);
+        },
+        reviewRatingClick: function(event){
+            var ratings = ['One','Two','Three','Four','Five']; //possible classes for display state
+            $(this).parent().removeClass('One Two Three Four Five').addClass(ratings[$(this).index()]);
+            $(this).closest('.controls').find('select').val($(this).index() + 1); //select is hidden, set value
         }
     };
 
@@ -105,7 +128,7 @@ var oscar = (function(o, $) {
         },
         initNav: function() {
             // Initial navigation for desktop
-            var $sidebar = $('aside.span3'), 
+            var $sidebar = $('aside.col-sm-3'),
                 $browse = $('[data-navigation="dropdown-menu"]'),
                 $browseOpen = $browse.parent().find('> a[data-toggle]');
             // Set width of nav dropdown to be same as sidebar
@@ -202,6 +225,7 @@ var oscar = (function(o, $) {
         showVoucherForm: function() {
             $('#voucher_form_container').show();
             $('#voucher_form_link').hide();
+            $('#id_code').focus();
         },
         hideVoucherForm: function() {
             $('#voucher_form_container').hide();

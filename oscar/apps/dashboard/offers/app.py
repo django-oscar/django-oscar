@@ -1,21 +1,21 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
+from oscar.core.loading import get_class
 from oscar.core.application import Application
-from oscar.apps.dashboard.offers import views
 
 
 class OffersDashboardApplication(Application):
     name = None
     default_permissions = ['is_staff', ]
 
-    list_view = views.OfferListView
-
-    metadata_view = views.OfferMetaDataView
-    condition_view = views.OfferConditionView
-    benefit_view = views.OfferBenefitView
-    restrictions_view = views.OfferRestrictionsView
-    delete_view = views.OfferDeleteView
-    detail_view = views.OfferDetailView
+    list_view = get_class('dashboard.offers.views', 'OfferListView')
+    metadata_view = get_class('dashboard.offers.views', 'OfferMetaDataView')
+    condition_view = get_class('dashboard.offers.views', 'OfferConditionView')
+    benefit_view = get_class('dashboard.offers.views', 'OfferBenefitView')
+    restrictions_view = get_class('dashboard.offers.views',
+                                  'OfferRestrictionsView')
+    delete_view = get_class('dashboard.offers.views', 'OfferDeleteView')
+    detail_view = get_class('dashboard.offers.views', 'OfferDetailView')
 
     def get_urls(self):
         urls = [
@@ -49,7 +49,7 @@ class OffersDashboardApplication(Application):
             url(r'^(?P<pk>\d+)/$', self.detail_view.as_view(),
                 name='offer-detail'),
         ]
-        return self.post_process_urls(patterns('', *urls))
+        return self.post_process_urls(urls)
 
 
 application = OffersDashboardApplication()

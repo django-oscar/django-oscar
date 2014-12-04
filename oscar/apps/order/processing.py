@@ -1,8 +1,8 @@
 from decimal import Decimal as D
 
-from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
+from oscar.core.loading import get_model
 from oscar.apps.order import exceptions
 
 ShippingEventQuantity = get_model('order', 'ShippingEventQuantity')
@@ -38,7 +38,7 @@ class EventHandler(object):
         # Example implementation
         self.validate_shipping_event(
             order, event_type, lines, line_quantities, **kwargs)
-        self.create_shipping_event(
+        return self.create_shipping_event(
             order, event_type, lines, line_quantities, **kwargs)
 
     def handle_payment_event(self, order, event_type, amount, lines=None,
@@ -53,10 +53,10 @@ class EventHandler(object):
         """
         self.validate_payment_event(
             order, event_type, amount, lines, line_quantities, **kwargs)
-        self.create_payment_event(
+        return self.create_payment_event(
             order, event_type, amount, lines, line_quantities, **kwargs)
 
-    def handle_order_status_change(self, order, new_status):
+    def handle_order_status_change(self, order, new_status, note_msg=None):
         """
         Handle a requested order status change
 
@@ -65,6 +65,8 @@ class EventHandler(object):
         viewed as a shipping event affecting all lines.
         """
         order.set_status(new_status)
+        if note_msg:
+            self.create_note(order, note_msg)
 
     # Validation methods
     # ------------------
@@ -207,7 +209,7 @@ class EventHandler(object):
 
     def create_shipping_event(self, order, event_type, lines, line_quantities,
                               **kwargs):
-        reference = kwargs.get('reference', None)
+        reference = kwargs.get('reference', '')
         event = order.shipping_events.create(
             event_type=event_type, notes=reference)
         try:

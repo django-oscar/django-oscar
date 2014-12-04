@@ -1,11 +1,25 @@
-from __future__ import absolute_import  # for import below
-import six
+from __future__ import absolute_import  # for logging import below
 import logging
 
+from django.shortcuts import redirect, resolve_url
+from django.utils import six
+from django.utils.http import is_safe_url
 from django.utils.timezone import get_current_timezone, is_naive, make_aware
-from unidecode import unidecode
 from django.conf import settings
-from django.template.defaultfilters import date as date_filter
+from django.template.defaultfilters import (date as date_filter,
+                                            slugify as django_slugify)
+from unidecode import unidecode
+
+from oscar.core.loading import import_string
+
+
+def default_slugifier(value):
+    """
+    Oscar's default slugifier function.
+    Uses Django's slugify function, but first applies unidecode() to convert
+    non-ASCII strings to ASCII equivalents where possible.
+    """
+    return django_slugify(value)
 
 
 def slugify(value):
@@ -14,26 +28,23 @@ def slugify(value):
     """
     # Re-map some strings to avoid important characters being stripped.  Eg
     # remap 'c++' to 'cpp' otherwise it will become 'c'.
-    if hasattr(settings, 'OSCAR_SLUG_MAP'):
-        for k, v in settings.OSCAR_SLUG_MAP.items():
-            value = value.replace(k, v)
+    for k, v in settings.OSCAR_SLUG_MAP.items():
+        value = value.replace(k, v)
 
     # Allow an alternative slugify function to be specified
-    if hasattr(settings, 'OSCAR_SLUG_FUNCTION'):
-        slugifier = settings.OSCAR_SLUG_FUNCTION
-    else:
-        from django.template import defaultfilters
-        slugifier = defaultfilters.slugify
+    # Recommended way to specify a function is as a string
+    slugifier = getattr(settings, 'OSCAR_SLUG_FUNCTION', default_slugifier)
+    if isinstance(slugifier, six.string_types):
+        slugifier = import_string(slugifier)
 
     # Use unidecode to convert non-ASCII strings to ASCII equivalents where
     # possible.
     value = slugifier(unidecode(six.text_type(value)))
 
     # Remove stopwords
-    if hasattr(settings, 'OSCAR_SLUG_BLACKLIST'):
-        for word in settings.OSCAR_SLUG_BLACKLIST:
-            value = value.replace(word + '-', '')
-            value = value.replace('-' + word, '')
+    for word in settings.OSCAR_SLUG_BLACKLIST:
+        value = value.replace(word + '-', '')
+        value = value.replace('-' + word, '')
 
     return value
 
@@ -72,3 +83,41 @@ def format_datetime(dt, format=None):
     else:
         localtime = dt.astimezone(get_current_timezone())
     return date_filter(localtime, format)
+
+
+def safe_referrer(meta, default):
+    """
+    Takes request.META and a default URL. Returns HTTP_REFERER if it's safe
+    to use and set, and the default URL otherwise.
+
+    The default URL can be a model with get_absolute_url defined, a urlname
+    or a regular URL
+    """
+    referrer = meta.get('HTTP_REFERER')
+    if referrer and is_safe_url(referrer):
+        return referrer
+    if default:
+        # try to resolve
+        return resolve_url(default)
+    else:
+        # Allow passing in '' and None as default
+        return default
+
+
+def redirect_to_referrer(meta, default):
+    """
+    Takes request.META and a default URL to redirect to.
+
+    Returns a HttpResponseRedirect to HTTP_REFERER if it exists and is a safe
+    URL; to the default URL otherwise.
+    """
+    return redirect(safe_referrer(meta, default))
+
+
+def get_default_currency():
+    """
+    For use as the default value for currency fields.  Use of this function
+    prevents Django's core migration engine from interpreting a change to
+    OSCAR_DEFAULT_CURRENCY as something it needs to generate a migration for.
+    """
+    return settings.OSCAR_DEFAULT_CURRENCY

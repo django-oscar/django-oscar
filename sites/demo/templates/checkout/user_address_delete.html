@@ -10,7 +10,7 @@
     {% csrf_token %}
     <h4>{{ object.summary }}</h4>
     <p>{% trans "Are you sure you want to delete this address?" %}</p>
-    <p><button type="submit" class="btn btn-danger">{% trans "Yes!" %}</button>
+    <p><button type="submit" class="btn btn-danger" data-loading-text="{% trans 'Submitting...' %}">{% trans "Yes!" %}</button>
     {% trans "or" %} <a href="{% url 'checkout:shipping-address' %}">{% trans "cancel" %}</a>.</p>
 </form>
 {% endblock shipping_address %}

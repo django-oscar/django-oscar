@@ -1,8 +1,9 @@
-from oscar.core.loading import get_model
 from django.core.urlresolvers import reverse
+from django.utils.six.moves import http_client
 
+from oscar.core.loading import get_model
 from oscar.test.testcases import WebTestCase, add_permissions
-from oscar.test.factories import create_product, create_stockrecord
+from oscar.test.factories import create_product, create_stockrecord, ProductAttributeFactory
 
 from django_dynamic_fixture import G
 
@@ -41,7 +42,7 @@ class TestAStaffUser(WebTestCase):
         form['upc'] = '123456'
         form['title'] = 'new product'
         form['productcategory_set-0-category'] = category.id
-        page = form.submit()
+        form.submit()
 
         self.assertEqual(Product.objects.count(), 1)
 
@@ -58,7 +59,7 @@ class TestAStaffUser(WebTestCase):
         form['stockrecords-0-partner_sku'] = '14'
         form['stockrecords-0-num_in_stock'] = '555'
         form['stockrecords-0-price_excl_tax'] = '13.99'
-        page = form.submit('action', index=0)
+        page = form.submit(name='action', value='continue')
 
         self.assertEqual(Product.objects.count(), 1)
         product = Product.objects.all()[0]
@@ -90,66 +91,89 @@ class TestAStaffUser(WebTestCase):
             if product.has_stockrecords:
                 self.fail('Product has stock records but should not')
 
-    def test_can_delete_an_individual_product(self):
-        product = create_product()
-        stockrecord = create_stockrecord(product, partner_users=[self.user, ])
+    def test_can_create_product_with_required_attributes(self):
+        category = G(Category)
+        attribute = ProductAttributeFactory(required=True)
+        product_class = attribute.product_class
+        page = self.get(reverse('dashboard:catalogue-product-create',
+                                args=(product_class.slug,)))
+        form = page.form
+        form['upc'] = '123456'
+        form['title'] = 'new product'
+        form['attr_weight'] = '5'
+        form['productcategory_set-0-category'] = category.id
+        form.submit()
 
+        self.assertEqual(Product.objects.count(), 1)
+
+    def test_can_delete_a_standalone_product(self):
+        product = create_product(partner_users=[self.user])
         category = Category.add_root(name='Test Category')
-        product_category = ProductCategory.objects.create(category=category,
-                                                          product=product)
+        ProductCategory.objects.create(category=category, product=product)
 
         page = self.get(reverse('dashboard:catalogue-product-delete',
                                 args=(product.id,))).form.submit()
 
         self.assertRedirects(page, reverse('dashboard:catalogue-product-list'))
-
         self.assertEqual(Product.objects.count(), 0)
         self.assertEqual(StockRecord.objects.count(), 0)
+        self.assertEqual(Category.objects.count(), 1)
         self.assertEqual(ProductCategory.objects.count(), 0)
 
-        self.assertRaises(Product.DoesNotExist,
-                          Product.objects.get, id=product.id)
-        self.assertRaises(StockRecord.DoesNotExist,
-                          StockRecord.objects.get, id=stockrecord.id)
-        self.assertRaises(ProductCategory.DoesNotExist,
-                          ProductCategory.objects.get, id=product_category.id)
+    def test_can_delete_a_parent_product(self):
+        parent_product = create_product(structure='parent')
+        create_product(parent=parent_product)
 
-    def test_can_delete_a_canonical_product(self):
-        canonical_product = create_product(title="Canonical Product",
-                                           partner_users=[self.user,])
-
-        product = create_product(title="Variant 1", parent=canonical_product)
-        stockrecord = create_stockrecord(product)
-
-        category = Category.add_root(name='Test Category')
-        product_category = ProductCategory.objects.create(
-            category=category, product=product)
-
-        page = self.get(reverse('dashboard:catalogue-product-delete',
-                                args=(canonical_product.id,))).form.submit()
+        url = reverse(
+            'dashboard:catalogue-product-delete',
+            args=(parent_product.id,))
+        page = self.get(url).form.submit()
 
         self.assertRedirects(page, reverse('dashboard:catalogue-product-list'))
-
         self.assertEqual(Product.objects.count(), 0)
-        self.assertEqual(StockRecord.objects.count(), 0)
-        self.assertEqual(ProductCategory.objects.count(), 0)
 
-        self.assertRaises(Product.DoesNotExist,
-                          Product.objects.get, id=canonical_product.id)
+    def test_can_delete_a_child_product(self):
+        parent_product = create_product(structure='parent')
+        child_product = create_product(parent=parent_product)
 
-        self.assertRaises(Product.DoesNotExist,
-                          Product.objects.get, id=product.id)
-        self.assertRaises(StockRecord.DoesNotExist,
-                          StockRecord.objects.get, id=stockrecord.id)
-        self.assertRaises(ProductCategory.DoesNotExist,
-                          ProductCategory.objects.get, id=product_category.id)
+        url = reverse(
+            'dashboard:catalogue-product-delete',
+            args=(child_product.id,))
+        page = self.get(url).form.submit()
+
+        expected_url = reverse(
+            'dashboard:catalogue-product', kwargs={'pk': parent_product.pk})
+        self.assertRedirects(page, expected_url)
+        self.assertEqual(Product.objects.count(), 1)
 
     def test_can_list_her_products(self):
         product1 = create_product(partner_users=[self.user, ])
-        product2 = create_product(partner="sneaky", partner_users=[])
+        product2 = create_product(partner_name="sneaky", partner_users=[])
         page = self.get(reverse('dashboard:catalogue-product-list'))
-        assert product1 in page.context['object_list']
-        assert product2 in page.context['object_list']
+        products_on_page = [row.record for row
+                            in page.context['products'].page.object_list]
+        assert product1 in products_on_page
+        assert product2 in products_on_page
+
+    def test_can_create_a_child_product(self):
+        parent_product = create_product(structure='parent')
+        url = reverse(
+            'dashboard:catalogue-product-create-child',
+            kwargs={'parent_pk': parent_product.pk})
+        form = self.get(url).form
+        form.submit()
+
+        self.assertEqual(Product.objects.count(), 2)
+
+    def test_cant_create_child_product_for_invalid_parents(self):
+        # Creates a product with stockrecords.
+        invalid_parent = create_product(partner_users=[self.user])
+        self.assertFalse(invalid_parent.can_be_parent())
+        url = reverse(
+            'dashboard:catalogue-product-create-child',
+            kwargs={'parent_pk': invalid_parent.pk})
+        self.assertRedirects(
+            self.get(url), reverse('dashboard:catalogue-product-list'))
 
 
 class TestANonStaffUser(TestAStaffUser):
@@ -163,11 +187,23 @@ class TestANonStaffUser(TestAStaffUser):
         self.partner.users.add(self.user)
 
     def test_can_list_her_products(self):
-        product1 = create_product(partner="A", partner_users=[self.user, ])
-        product2 = create_product(partner="B", partner_users=[])
+        product1 = create_product(partner_name="A", partner_users=[self.user])
+        product2 = create_product(partner_name="B", partner_users=[])
         page = self.get(reverse('dashboard:catalogue-product-list'))
-        assert product1 in page.context['object_list']
-        assert product2 not in page.context['object_list']
+        products_on_page = [row.record for row
+                            in page.context['products'].page.object_list]
+        assert product1 in products_on_page
+        assert product2 not in products_on_page
+
+    def test_cant_create_a_child_product(self):
+        parent_product = create_product(structure='parent')
+        url = reverse(
+            'dashboard:catalogue-product-create-child',
+            kwargs={'parent_pk': parent_product.pk})
+        response = self.get(url, status='*')
+        self.assertEqual(http_client.FORBIDDEN, response.status_code)
+
+    # Tests below can't work because they don't create a stockrecord
 
     def test_can_create_a_product_without_stockrecord(self):
         pass
@@ -175,7 +211,20 @@ class TestANonStaffUser(TestAStaffUser):
     def test_can_update_a_product_without_stockrecord(self):
         pass
 
-    def test_can_submit_an_invalid_product_update_and_returns_to_update_page(self):
+    def test_can_create_product_with_required_attributes(self):
         pass
 
+    # Tests below can't work because child products aren't supported with the
+    # permission-based dashboard
 
+    def test_can_delete_a_child_product(self):
+        pass
+
+    def test_can_delete_a_parent_product(self):
+        pass
+
+    def test_can_create_a_child_product(self):
+        pass
+
+    def test_cant_create_child_product_for_invalid_parents(self):
+        pass

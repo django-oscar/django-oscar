@@ -5,7 +5,7 @@
 // Components: Icons / Fonts
 @import "font-awesome/font-awesome.less"; // Replaced sprites with font-awesome
 @import "font-awesome/font-awesome-ie7.less";
-@import url("http://fonts.googleapis.com/css?family=Open+Sans:700,300");
+@import url("//fonts.googleapis.com/css?family=Open+Sans:700,300");
 
 // FONT FOR THE DASHBOARD
 // -----------------------------
@@ -45,17 +45,24 @@ h3.app-ico:before {
 .btn-group > .dropdown-menu,
 .btn {
   font-size:12px;
+  font-family:inherit;
 }
 .btn-warning,
 .btn-success,
 .btn-info {
   .buttonBackground(@white, darken(@white, 10%));
+  text-shadow: none;
   color: inherit;
   *color: #333;
   &:hover,
   &:active {
    color:inherit;
    *color: #333;
+  }
+  &:focus {
+    .buttonBackground(darken(@white, 15%),@white);
+    background-position:0 0;
+    color:#333;
   }
 }
 .btn-primary {
@@ -74,7 +81,7 @@ td .btn-toolbar {
 .form-horizontal,
 .form-stacked {
   .control-label {
-      text-align: left;
+    text-align: left;
   }
   .control-group {
     margin-bottom:@baseLineHeight / 2;
@@ -85,9 +92,7 @@ td .btn-toolbar {
   input[type=url],
   textarea,
   select {
-    .box-sizing(border-box);
     font-size:12px;
-    min-height: 35px;
   }
   textarea {
     max-height:200px;
@@ -110,11 +115,20 @@ td .btn-toolbar {
     margin-right:10px;
   }
 }
+.form-stacked {
+  .error-block {
+    display:block;
+    color:#b94a48;
+  }
+}
 .fields-full {
   input[type=text],
   textarea {
     width:100%;
   }
+}
+form.flat {
+  margin:0;
 }
 .well,
 .tabbable.dashboard .tab-content {
@@ -130,7 +144,7 @@ td .btn-toolbar {
 }
 .tabbable.dashboard .tab-content {
   .form-actions {
-    bottom:-29px;
+    bottom:-50px;
     left:-29px;
     padding-left: 29px;
     padding-right: 29px;
@@ -166,13 +180,6 @@ td .btn-toolbar {
   label {
     font-weight:bold;
   }
-}
-input[type=text].hasDatepicker,
-.create-page input[type=text].hasDatepicker,
-.form-inline input[type=text].hasDatepicker,
-.form-horizontal input[type=text].hasDatepicker,
-.form-stacked input[type=text].hasDatepicker {
-    width: 125px;
 }
 .wysihtml5-sandbox {
     border:1px solid #ccc!important;
@@ -213,6 +220,12 @@ input[type=text].hasDatepicker,
 .table {
   background-color: @white;
 }
+.table thead tr th.asc i:before {
+  content: "\f077";
+}
+.table thead tr th.desc i:before {
+  content: "\f078";
+}
 .table-striped tbody tr:nth-child(odd) td,
 .table-striped tbody tr:nth-child(odd) th {
   background-color: #efefef;
@@ -230,6 +243,7 @@ body {
   margin: 0 auto;
 /*  max-width: 1170px;*/
   position: relative;
+  padding: 0 20px;
 }
 .dashboard > .content {
   margin-top: @baseLineHeight;
@@ -348,7 +362,7 @@ button {
   background-color:transparent;
 }
 .page-header {
-  padding: 0 20px 10px 0;
+  padding: 0 0 10px 0;
   margin-bottom: 0;
   border-bottom: 0;
 }
@@ -395,6 +409,7 @@ caption,
   background: @white;
   .order-graph-details {
     label {
+      cursor: default;
       background-color: #F8F8F8;
       border: 1px solid #ccc;
       .clearfix();
@@ -516,9 +531,11 @@ caption,
   border-color: #ede181;
   color: #333;
 }
+@import 'page/alerts.less';
+
 // DASHBOARD GRAPH
 // ----------------
-#order-graph {
+#order_graph {
     position: relative;
     margin-bottom: 5em;
     width: 99%;
@@ -722,65 +739,65 @@ caption,
   overflow:visible;
 }
 .upload-image {
-  .clearfix();
-  margin:0;
+  .clearfix();
+  margin:0;
   z-index: 1;
   position: relative;
-  li {
-    display:block;
-    width: 200px;
-    margin:0 1% 2%;
-    float: left;
-    text-align:center;
-    > div {
-      padding: 4px;
-      background: #ccc;
-      margin-bottom: 10px;
-      + label,
-      + label + input {
-        display: none;
-      }
-    }
-  }
-  div {
-    background:#fff;
-    position: relative;
-    width: 200px;
-    height: 200px;
-    z-index: 200;
-  }
-  img {
-    position: absolute;
-    margin:auto;
-    top: 0;
-    max-height:200px;
-    max-width:200px;
-    width: auto;
-    height: auto;
-    left: 0;
-  }
-  .image-input {
-    z-index: 800;
-  }
-  .image-input button {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    .border-radius(0);
-  }
-  .input-field {
-    position: relative;
-    z-index: 1000;
-    opacity: 0;
-  }
-  .input-field input {
-    border-width: 0;
-    direction: ltr;
-    cursor: pointer;
-    width: 200px;
-    height: 200px;
-  }
+  li {
+   display:block;
+   width: 200px;
+   margin:0 1% 2%;
+   float: left;
+   text-align:center;
+   > div {
+     padding: 4px;
+     background: #ccc;
+     margin-bottom: 10px;
+     + label,
+     + label + input {
+       display: none;
+     }
+   }
+ }
+  div {
+    background:#fff;
+    position: relative;
+    width: 200px;
+    height: 200px;
+    z-index: 200;
+  }
+  img {
+   position: absolute;
+   margin:auto;
+     top: 0;
+     max-height:200px;
+     max-width:200px;
+     width: auto;
+     height: auto;
+     left: 0;
+ }
+  .image-input {
+    z-index: 800;
+  }
+  .image-input button {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    .border-radius(0);
+  }
+  .input-field {
+   position: relative;
+   z-index: 1000;
+   opacity: 0;
+ }
+  .input-field input {
+    border-width: 0;
+    direction: ltr;
+    cursor: pointer;
+    width: 200px;
+    height: 200px;
+ }
 }
 // SIDE NAV CREATE PAGES
 // ----------------
@@ -878,34 +895,6 @@ div[data-spy="affix"].affix {
 // PLUGINS
 // -----
 
-/* TINY SCROLL BAR */
- .scroll-pane {
-	height: 200px;
-	overflow: auto;
-	background:lighten(@grayLighter, 5%);
-	.border-radius(5px);
-	border:2px solid lighten(@grayLight, 20%);
- }
- .scroll-pane:focus {
-	outline:none;
- }
- .jspContainer{overflow:hidden;position:relative}
- .jspPane{position:absolute}
- .jspVerticalBar{position:absolute;top:0;right:0;width:10px;height:100%;background:red}
- .jspHorizontalBar{position:absolute;bottom:0;left:0;width:100%;height:10px;background:red}
- .jspVerticalBar *,.jspHorizontalBar *{margin:0;padding:0}
- .jspCap{display:none}.jspHorizontalBar .jspCap{float:left}
- .jspTrack{background:#efefef;position:relative}
- .jspDrag{background:#ccc;position:relative;top:0;left:0;cursor:pointer;.border-radius(5px);}
- .jspHorizontalBar .jspTrack,.jspHorizontalBar .jspDrag{float:left;height:100%}
- .jspArrow{background:#50506d;text-indent:-20000px;display:block;cursor:pointer}
- .jspArrow.jspDisabled{cursor:default;background:#80808d}
- .jspVerticalBar .jspArrow{height:10px}
- .jspHorizontalBar .jspArrow{width:10px;float:left;height:100%}
- .jspVerticalBar .jspArrow:focus{outline:0}
- .jspCorner{background:#eeeef4;float:left;height:100%}
- * html .jspCorner{margin:0 -3px 0 0}
-
 /* Changes for wysihtml5 */
 textarea {
 	width: 500px;
@@ -928,18 +917,6 @@ textarea {
 textarea.plain {
 	font-family: monospace;
 }
-// DATETIMEPICKER
-/* css for timepicker */
-.ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
-.ui-timepicker-div dl { text-align: left; }
-.ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; }
-.ui-timepicker-div dl dd { margin: 0 10px 10px 65px; }
-.ui-timepicker-div td { font-size: 90%; }
-.ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
-
-.ui-timepicker-rtl{ direction: rtl; }
-.ui-timepicker-rtl dl { text-align: right; }
-.ui-timepicker-rtl dl dd { margin: 0 65px 10px 10px; }
 
 // RESPONSIVE
 // ---------

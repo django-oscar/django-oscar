@@ -1,13 +1,13 @@
 from decimal import Decimal as D
 from django.template.loader import render_to_string
 
-from oscar.apps.shipping import base
+from oscar.apps.shipping import methods
+from oscar.core import prices
 
 
-class Standard(base.Base):
+class Standard(methods.Base):
     code = 'standard'
     name = 'Standard shipping'
-    is_tax_known = True
 
     charge_per_item = D('0.99')
     threshold = D('12.00')
@@ -17,42 +17,33 @@ class Standard(base.Base):
             'charge_per_item': charge_per_item,
             'threshold': threshold})
 
-    @property
-    def charge_incl_tax(self):
+    def calculate(self, basket):
         # Free for orders over some threshold
-        if self.basket.total_incl_tax > self.threshold:
-            return D('0.00')
+        if basket.total_incl_tax > self.threshold:
+            return prices.Price(
+                currency=basket.currency,
+                excl_tax=D('0.00'),
+                incl_tax=D('0.00'))
 
         # Simple method - charge 0.99 per item
-        total = D('0.00')
-        for line in self.basket.all_lines():
-            total += line.quantity * self.charge_per_item
-        return total
-
-    @property
-    def charge_excl_tax(self):
-        # Assume no tax
-        return self.charge_incl_tax
+        total = basket.num_items * self.charge_per_item
+        return prices.Price(
+            currency=basket.currency,
+            excl_tax=total,
+            incl_tax=total)
 
 
-class Express(base.Base):
+class Express(methods.Base):
     code = 'express'
     name = 'Express shipping'
-    is_tax_known = True
 
     charge_per_item = D('1.50')
     description = render_to_string(
         'shipping/express.html', {'charge_per_item': charge_per_item})
 
-    @property
-    def charge_incl_tax(self):
-        # Simple method - charge 0.99 per item
-        total = D('0.00')
-        for line in self.basket.all_lines():
-            total += line.quantity * self.charge_per_item
-        return total
-
-    @property
-    def charge_excl_tax(self):
-        # Assume no tax
-        return self.charge_incl_tax
+    def calculate(self, basket):
+        total = basket.num_items * self.charge_per_item
+        return prices.Price(
+            currency=basket.currency,
+            excl_tax=total,
+            incl_tax=total)

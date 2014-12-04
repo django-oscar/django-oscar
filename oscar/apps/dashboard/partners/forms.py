@@ -1,12 +1,11 @@
 from django import forms
 from django.contrib.auth.models import Permission
-from django.core import validators
-from oscar.core.loading import get_model
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 
-from oscar.apps.customer.forms import (EmailUserCreationForm,
-                                       CommonPasswordValidator)
-from oscar.core.compat import get_user_model
+from oscar.core.loading import get_model
+from oscar.core.compat import existing_user_fields, get_user_model
+from oscar.apps.customer.forms import EmailUserCreationForm
+from oscar.core.validators import password_validators
 
 User = get_user_model()
 Partner = get_model('partner', 'Partner')
@@ -14,7 +13,8 @@ PartnerAddress = get_model('partner', 'PartnerAddress')
 
 
 class PartnerSearchForm(forms.Form):
-    name = forms.CharField(required=False, label=_("Partner name"))
+    name = forms.CharField(
+        required=False, label=pgettext_lazy(u"Partner's name", u"Name"))
 
 
 class PartnerCreateForm(forms.ModelForm):
@@ -50,7 +50,8 @@ class NewUserForm(EmailUserCreationForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'password1', 'password2')
+        fields = existing_user_fields(
+            ['first_name', 'last_name', 'email']) + ['password1', 'password2']
 
 
 class ExistingUserForm(forms.ModelForm):
@@ -66,8 +67,7 @@ class ExistingUserForm(forms.ModelForm):
         label=_('Password'),
         widget=forms.PasswordInput,
         required=False,
-        validators=[validators.MinLengthValidator(6),
-                    CommonPasswordValidator()])
+        validators=password_validators)
     password2 = forms.CharField(
         required=False,
         label=_('Confirm Password'),
@@ -108,7 +108,8 @@ class ExistingUserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'password1', 'password2')
+        fields = existing_user_fields(
+            ['first_name', 'last_name']) + ['password1', 'password2']
 
 
 class UserEmailForm(forms.Form):
@@ -118,8 +119,10 @@ class UserEmailForm(forms.Form):
 
 
 class PartnerAddressForm(forms.ModelForm):
+    name = forms.CharField(
+        required=False, label=pgettext_lazy(u"Partner's name", u"Name"))
 
     class Meta:
-        fields = ('line1', 'line2', 'line3', 'line4',
+        fields = ('name', 'line1', 'line2', 'line3', 'line4',
                   'state', 'postcode', 'country')
         model = PartnerAddress

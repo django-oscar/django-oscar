@@ -56,12 +56,6 @@ availability.
 By using your own custom strategy class, a wide range of pricing, tax and
 availability problems can be easily solved.
 
-.. note::
-
-    Oscar's handling of prices and availability was reworked for v0.6.  
-    The old APIs are still available but considered deprecated and
-    will be removed in Oscar 0.7.
-
 .. _strategy_class:
 
 The strategy class
@@ -88,7 +82,7 @@ Given a product, the strategy class is responsible for:
 
 These three entities are wrapped up in a ``PurchaseInfo`` object, which is a
 simple named tuple.  The strategy class provides ``fetch_for_product`` and
-``fetch_for_group`` methods which takes a product and returns a ``PurchaseInfo``
+``fetch_for_parent`` methods which takes a product and returns a ``PurchaseInfo``
 instance:
 
 The strategy class is accessed in several places in Oscar's codebase.  In templates, a
@@ -150,7 +144,7 @@ API
 All strategies subclass a common ``Base`` class:
 
 .. autoclass:: oscar.apps.partner.strategy.Base
-   :members: fetch_for_product, fetch_for_group, fetch_for_line
+   :members: fetch_for_product, fetch_for_parent, fetch_for_line
    :noindex:
 
 Oscar also provides a "structured" strategy class which provides overridable
@@ -193,7 +187,7 @@ There is a base class that defines the interface a pricing policy should have:
 There are also several policies that accommodate common scenarios:
 
 .. automodule:: oscar.apps.partner.prices
-   :members: Unavailable, FixedPrice, DelegateToStockRecord
+   :members: Unavailable, FixedPrice 
    :noindex:
 
 .. _availability_policies:
@@ -215,7 +209,7 @@ The base class defines the interface:
 There are also several pre-defined availability policies:
 
 .. automodule:: oscar.apps.partner.availability
-   :members: Unavailable, Available, StockRequired, DelegateToStockRecord
+   :members: Unavailable, Available, StockRequired
    :noindex:
 
 Strategy mixins
@@ -276,7 +270,7 @@ Here's an example ``strategy.py`` module which is used to charge VAT on prices.
         """
 
         def strategy(self, request=None, user=None, **kwargs):
-            return UKStrategy(territory)
+            return UKStrategy()
 
 
     class IncludingVAT(strategy.FixedRateTax):

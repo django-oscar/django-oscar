@@ -5,12 +5,15 @@ cd /var/www/oscar/builds/latest
 git pull --ff-only 2> /dev/null
 [ $? -gt 0 ] && echo "Git pull failed" >&2 && exit 1
 
+# Remove existing pyc files
+find . -type f -name "*.pyc" -delete
+
 # Update any dependencies
 source ../../virtualenvs/latest/bin/activate
 python setup.py develop
 pip install -r requirements.txt
 
-# Update database
+# Update sandbox database
 cd sites/sandbox
 ./manage.py syncdb --noinput
 ./manage.py migrate
@@ -22,9 +25,8 @@ cd sites/sandbox
 # Load standard fixtures
 ./manage.py loaddata ../_fixtures/promotions.json
 
-# Restart Tomcat (to pick up any solr schema changes)
+# Restart Tomcat (to pick up any Solr schema changes)
 /etc/init.d/tomcat7 restart
-./manage.py rebuild_index --noinput
 
 # Re-compile python code
 touch deploy/wsgi/latest.wsgi

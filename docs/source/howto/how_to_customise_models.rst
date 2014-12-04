@@ -8,6 +8,7 @@ to add fields and custom methods.  It builds upon the steps described in
 
 * Created a Python module with the the same app label
 * Added it as Django app to ``INSTALLED_APPS``
+* Added a ``models.py`` and ``admin.py``
 
 Example
 -------

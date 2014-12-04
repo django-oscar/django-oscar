@@ -1,7 +1,3 @@
-import six
-
-from django.conf.urls import patterns
-
 from oscar.core.loading import feature_hidden
 from oscar.views.decorators import permissions_required
 
@@ -19,7 +15,12 @@ class Application(object):
     #: A name that allows the functionality within this app to be disabled
     hidable_feature_name = None
 
-    #: Maps view names to a tuple or list of permissions
+    #: Maps view names to lists of permissions. We expect tuples of 
+    #: lists as dictionary values. A list is a set of permissions that all 
+    #: needto be fulfilled (AND). Only one set of permissions has to be
+    #: fulfilled (OR).
+    #: If there's only one set of permissions, as a shortcut, you can also
+    #: just define one list.
     permissions_map = {}
 
     #: Default permission for any view not in permissions_map
@@ -28,14 +29,14 @@ class Application(object):
     def __init__(self, app_name=None, **kwargs):
         self.app_name = app_name
         # Set all kwargs as object attributes
-        for key, value in six.iteritems(kwargs):
+        for key, value in kwargs.items():
             setattr(self, key, value)
 
     def get_urls(self):
         """
         Return the url patterns for this app.
         """
-        return patterns('')
+        return []
 
     def post_process_urls(self, urlpatterns):
         """
@@ -54,7 +55,7 @@ class Application(object):
         # Test if this the URLs in the Application instance should be
         # available.  If the feature is hidden then we don't include the URLs.
         if feature_hidden(self.hidable_feature_name):
-            return patterns('')
+            return []
 
         for pattern in urlpatterns:
             if hasattr(pattern, 'url_patterns'):

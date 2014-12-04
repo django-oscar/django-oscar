@@ -12,24 +12,27 @@ Fork the repo and run::
 If using Ubuntu, the ``python-dev`` package is required for some packages to
 compile.
 
-The :doc:`sandbox </internals/sandbox>` site can be used to test our changes in
-a browser. It is easily created with ``make sandbox``.
+The :doc:`sandbox </internals/sandbox>` site can be used to examine changes
+locally.  It is easily created by running::
+
+    $ make sandbox
 
 JPEG Support
 ------------
 
-On Ubuntu, you need to install a few libraries to get JPEG support with Pillow.
+On Ubuntu, you need to install a few libraries to get JPEG support with
+Pillow::
 
     $ sudo apt-get install python-dev libjpeg-dev libfreetype6-dev zlib1g-dev
 
-If you did already install PIL (you did if you ran ``make install`` previously),
-reinstall it:
+If you already installed PIL (you did if you ran ``make install`` previously),
+reinstall it::
 
     $ pip uninstall Pillow
     $ pip install Pillow
 
 Creating migrations
-===================
+-------------------
 
 As the sandbox is a vanilla Oscar site, it is what we use to build migrations
 against::
@@ -38,9 +41,9 @@ against::
     $ sites/sandbox/manage.py schemamigration $YOURAPP --auto
     
 Writing LESS/CSS
-================
+----------------
 
-Oscar's CSS files are build using LESS_.  However, the sandbox defaults to
+Oscar's CSS files are built using LESS_ V1.  However, the sandbox defaults to
 serving CSS files directly, bypassing LESS compilation.
 
 .. _LESS: http://lesscss.org/
@@ -53,22 +56,11 @@ If you want to develop the LESS files, set::
 in ``sites/sandbox/settings_local.py``.  This will cause Oscar to use
 `django-compressor`_ to compile the LESS files as they are requested.  For this to
 work, you will need to ensure that the LESS compiler ``lessc`` is installed.
-This can be acheived by running::
+Using npm, install LESS using::
 
-    pip install -r requirements_less.txt
+    npm install less@'<2.0.0'
 
 .. _`django-compressor`: http://django_compressor.readthedocs.org/en/latest/
-
-which will install the `virtual-node`_ and `virtual-less`_ packages, which will
-install node.js and LESS in your virtualenv.  
-
-.. _`virtual-node`: https://github.com/elbaschid/virtual-node
-.. _`virtual-less`: https://github.com/elbaschid/virtual-less
-
-If you have npm installed already,
-you install LESS using::
-
-    npm install less
 
 You can manually compile the CSS files by running::
 

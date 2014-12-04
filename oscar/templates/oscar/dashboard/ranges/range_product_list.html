@@ -14,7 +14,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:range-list' %}">{% trans "Range management" %}</a>
+            <a href="{% url 'dashboard:range-list' %}">{% trans "Ranges" %}</a>
             <span class="divider">/</span>
         </li>
         <li>
@@ -44,9 +44,9 @@
             <form action="." method="post" class="form-stacked" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="add_products"/>
-                {% include 'partials/form_fields.html' with form=form %}
+                {% include 'dashboard/partials/form_fields.html' with form=form %}
                 <div class="controls">
-                    <button type="submit" class="btn btn-primary">{% trans "Go!" %}</button>
+                    <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Running...' %}">{% trans "Go!" %}</button>
                 </div>
             </form>
 
@@ -88,14 +88,14 @@
                             <h3 class="pull-left">{% trans "Products in range" %}</h3>
                             <div class="pull-right">
                                 <input type="hidden" name="action" value="remove_selected_products" />
-                                <button type="submit" class="btn">{% trans "Remove selected products" %}</button>
+                                <button type="submit" class="btn" data-loading-text="{% trans 'Removing...' %}">{% trans "Remove selected products" %}</button>
                             </div>
                         </caption>
                         <thead>
                             <tr>
                                 <th></th>
                                 <th>{% trans "UPC" %}</th>
-                                <th>{% trans "Title" %}</th>
+                                <th>{% trans "Title" context "Product title" %}</th>
                                 <th>{% trans "Is product discountable?" %}</th>
                                 <th></th>
                             </tr>
@@ -108,7 +108,7 @@
                                 </td>
                                 <td>{{ product.upc|default:"-" }}</td>
                                 <td><a href="{% url 'dashboard:catalogue-product' pk=product.id %}">{{ product.get_title }}</a></td>
-                                <td>{% if product.is_discountable %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>
+                                <td>{% if product.get_is_discountable %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>
                                 <td>
                                     <a class="btn btn-danger" href="#" data-behaviours="remove">{% trans "Remove" %}</a>
                                     <a href="#" class="btn btn-info btn-handle"><i class="icon-move icon-large"></i> {% trans "Re-order" %}</a>

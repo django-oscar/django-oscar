@@ -8,13 +8,10 @@ from PIL import Image
 
 from django.core.files import File
 from django.core.exceptions import FieldError
-from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
-try:
-    from django.db.transaction import atomic as atomic_compat
-except ImportError:
-    from django.db.transaction import commit_on_success as atomic_compat
 
+from oscar.core.loading import get_model
+from oscar.core.compat import atomic_compat
 from oscar.apps.catalogue.exceptions import (
     ImageImportError, IdenticalImageError, InvalidImageArchive)
 
@@ -23,6 +20,8 @@ Product = get_model('catalogue', 'product')
 ProductImage = get_model('catalogue', 'productimage')
 
 
+# This is an old class only really intended to be used by the internal sandbox
+# site. It's not recommended to be used by your project.
 class Importer(object):
 
     allowed_extensions = ['.jpeg', '.jpg', '.gif', '.png']
@@ -55,7 +54,7 @@ class Importer(object):
                                         % (self._field, lookup_value))
                     stats['num_skipped'] += 1
                 except IdenticalImageError:
-                    self.logger.warning(" - Identical image already exists for"
+                    self.logger.warning("Identical image already exists for"
                                         " %s='%s', skipping"
                                         % (self._field, lookup_value))
                     stats['num_skipped'] += 1
@@ -142,7 +141,7 @@ class Importer(object):
         im = ProductImage(product=item, display_order=next_index)
         im.original.save(filename, new_file, save=False)
         im.save()
-        self.logger.info(' - Image added to "%s"' % item)
+        self.logger.debug('Image added to "%s"' % item)
 
     def _fetch_item(self, filename):
         kwargs = {self._field: self._get_lookup_value_from_filename(filename)}

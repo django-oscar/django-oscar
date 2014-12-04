@@ -21,7 +21,7 @@
 {% block header %}
     <div class="page-header">
         <a href="{% url 'dashboard:page-create' %}" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new page" %}</a>
-        <h1>{% trans "Page Management" %}</h1>
+        <h1>{% trans "Pages" %}</h1>
     </div>
 {% endblock header %}
 
@@ -32,7 +32,7 @@
     <div class="well">
         <form action="." method="get" class="form-inline">
             {% include "partials/form_fields_inline.html" with form=form %}
-            <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+            <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
             <a href="{% url 'dashboard:page-list' %}" class="btn">{% trans "Reset" %}</a>
         </form>
     </div>
@@ -48,7 +48,7 @@
             <table class="table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th>{% trans "Title" %}</th>
+                        <th>{% trans "Title" context "Page title" %}</th>
                         <th>{% trans "URL" %}</th>
                         <th></th>
                     </tr>
@@ -67,8 +67,8 @@
                                         </a>
                                         <ul class="dropdown-menu pull-right">
                                             <li><a href="{{ page.get_absolute_url }}">{% trans "View" %}</a></li>
-                                            <li><a href="{% url 'dashboard:page-update' pk=page.id %}">{% trans "Edit" %}</a></li>
-                                            <li><a href="{% url 'dashboard:page-delete' pk=page.id %}">{% trans "Delete" %}</a></li>
+                                            <li><a id="edit_page_{{ page.id }}" href="{% url 'dashboard:page-update' pk=page.id %}">{% trans "Edit" %}</a></li>
+                                            <li><a id="delete_page_{{ page.id }}" href="{% url 'dashboard:page-delete' pk=page.id %}">{% trans "Delete" %}</a></li>
                                         </ul>
                                     </div>
                                 </div>

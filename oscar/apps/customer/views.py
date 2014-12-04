@@ -1,21 +1,19 @@
-from django.shortcuts import get_object_or_404
-from django.views.generic import (TemplateView, ListView, DetailView,
-                                  CreateView, UpdateView, DeleteView,
-                                  FormView, RedirectView)
+from django.shortcuts import get_object_or_404, redirect
+from django.views import generic
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponseRedirect, Http404
+from django import http
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import logout as auth_logout, login as auth_login
-from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.sites.models import get_current_site
 from django.conf import settings
-from oscar.core.loading import get_model
 
+from oscar.core.utils import safe_referrer
 from oscar.views.generic import PostActionMixin
 from oscar.apps.customer.utils import get_password_reset_url
-from oscar.core.loading import get_class, get_profile_class, get_classes
+from oscar.core.loading import (
+    get_class, get_profile_class, get_classes, get_model)
 from oscar.core.compat import get_user_model
 from . import signals
 
@@ -25,6 +23,7 @@ Dispatcher = get_class('customer.utils', 'Dispatcher')
 EmailAuthenticationForm, EmailUserCreationForm, OrderSearchForm = get_classes(
     'customer.forms', ['EmailAuthenticationForm', 'EmailUserCreationForm',
                        'OrderSearchForm'])
+PasswordChangeForm = get_class('customer.forms', 'PasswordChangeForm')
 ProfileForm, ConfirmPasswordForm = get_classes(
     'customer.forms', ['ProfileForm', 'ConfirmPasswordForm'])
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
@@ -33,7 +32,6 @@ Line = get_model('basket', 'Line')
 Basket = get_model('basket', 'Basket')
 UserAddress = get_model('address', 'UserAddress')
 Email = get_model('customer', 'Email')
-UserAddress = get_model('address', 'UserAddress')
 ProductAlert = get_model('customer', 'ProductAlert')
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
 
@@ -45,24 +43,24 @@ User = get_user_model()
 # =======
 
 
-class AccountSummaryView(RedirectView):
+class AccountSummaryView(generic.RedirectView):
     """
     View that exists for legacy reasons and customisability. It commonly gets
     called when the user clicks on "Account" in the navbar, and can be
-    overriden to determine to what sub-page the user is directed without
+    overridden to determine to what sub-page the user is directed without
     having to change a lot of templates.
     """
     url = reverse_lazy(settings.OSCAR_ACCOUNTS_REDIRECT_URL)
 
 
-class AccountRegistrationView(RegisterUserMixin, FormView):
+class AccountRegistrationView(RegisterUserMixin, generic.FormView):
     form_class = EmailUserCreationForm
     template_name = 'customer/registration.html'
     redirect_field_name = 'next'
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
-            return HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
+            return redirect(settings.LOGIN_REDIRECT_URL)
         return super(AccountRegistrationView, self).get(
             request, *args, **kwargs)
 
@@ -81,18 +79,18 @@ class AccountRegistrationView(RegisterUserMixin, FormView):
     def get_context_data(self, *args, **kwargs):
         ctx = super(AccountRegistrationView, self).get_context_data(
             *args, **kwargs)
-        ctx['cancel_url'] = self.request.META.get('HTTP_REFERER', None)
+        ctx['cancel_url'] = safe_referrer(self.request.META, '')
         return ctx
 
     def form_valid(self, form):
         self.register_user(form)
-        return HttpResponseRedirect(
-            form.cleaned_data['redirect_url'])
+        return redirect(form.cleaned_data['redirect_url'])
 
 
-class AccountAuthView(RegisterUserMixin, TemplateView):
+class AccountAuthView(RegisterUserMixin, generic.TemplateView):
     """
-    This is actually a slightly odd double form view
+    This is actually a slightly odd double form view that allows a customer to
+    either login or register.
     """
     template_name = 'customer/login_registration.html'
     login_prefix, registration_prefix = 'login', 'registration'
@@ -102,56 +100,17 @@ class AccountAuthView(RegisterUserMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
-            return HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
+            return redirect(settings.LOGIN_REDIRECT_URL)
         return super(AccountAuthView, self).get(
             request, *args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
         ctx = super(AccountAuthView, self).get_context_data(*args, **kwargs)
-        ctx.update(kwargs)
-
-        # Don't pass request as we don't want to trigger validation of BOTH
-        # forms.
         if 'login_form' not in kwargs:
             ctx['login_form'] = self.get_login_form()
         if 'registration_form' not in kwargs:
             ctx['registration_form'] = self.get_registration_form()
         return ctx
-
-    def get_login_form(self, request=None):
-        return self.login_form_class(**self.get_login_form_kwargs(request))
-
-    def get_login_form_kwargs(self, request=None):
-        kwargs = {}
-        kwargs['host'] = self.request.get_host()
-        kwargs['prefix'] = self.login_prefix
-        kwargs['initial'] = {
-            'redirect_url': self.request.GET.get(self.redirect_field_name, ''),
-        }
-        if request and request.method in ('POST', 'PUT'):
-            kwargs.update({
-                'data': request.POST,
-                'files': request.FILES,
-            })
-        return kwargs
-
-    def get_registration_form(self, request=None):
-        return self.registration_form_class(
-            **self.get_registration_form_kwargs(request))
-
-    def get_registration_form_kwargs(self, request=None):
-        kwargs = {}
-        kwargs['host'] = self.request.get_host()
-        kwargs['prefix'] = self.registration_prefix
-        kwargs['initial'] = {
-            'redirect_url': self.request.GET.get(self.redirect_field_name, ''),
-        }
-        if request and request.method in ('POST', 'PUT'):
-            kwargs.update({
-                'data': request.POST,
-                'files': request.FILES,
-            })
-        return kwargs
 
     def post(self, request, *args, **kwargs):
         # Use the name of the submit button to determine which form to validate
@@ -159,10 +118,30 @@ class AccountAuthView(RegisterUserMixin, TemplateView):
             return self.validate_login_form()
         elif u'registration_submit' in request.POST:
             return self.validate_registration_form()
-        return self.get(request)
+        return http.HttpResponseBadRequest()
+
+    # LOGIN
+
+    def get_login_form(self, bind_data=False):
+        return self.login_form_class(
+            **self.get_login_form_kwargs(bind_data))
+
+    def get_login_form_kwargs(self, bind_data=False):
+        kwargs = {}
+        kwargs['host'] = self.request.get_host()
+        kwargs['prefix'] = self.login_prefix
+        kwargs['initial'] = {
+            'redirect_url': self.request.GET.get(self.redirect_field_name, ''),
+        }
+        if bind_data and self.request.method in ('POST', 'PUT'):
+            kwargs.update({
+                'data': self.request.POST,
+                'files': self.request.FILES,
+            })
+        return kwargs
 
     def validate_login_form(self):
-        form = self.get_login_form(self.request)
+        form = self.get_login_form(bind_data=True)
         if form.is_valid():
             user = form.get_user()
 
@@ -178,22 +157,70 @@ class AccountAuthView(RegisterUserMixin, TemplateView):
                 sender=self, request=self.request, user=user,
                 old_session_key=old_session_key)
 
-            return HttpResponseRedirect(form.cleaned_data['redirect_url'])
+            msg = self.get_login_success_message(form)
+            messages.success(self.request, msg)
+
+            return redirect(self.get_login_success_url(form))
 
         ctx = self.get_context_data(login_form=form)
         return self.render_to_response(ctx)
 
+    def get_login_success_message(self, form):
+        return _("Welcome back")
+
+    def get_login_success_url(self, form):
+        redirect_url = form.cleaned_data['redirect_url']
+        if redirect_url:
+            return redirect_url
+
+        # Redirect staff members to dashboard as that's the most likely place
+        # they'll want to visit if they're logging in.
+        if self.request.user.is_staff:
+            return reverse('dashboard:index')
+
+        return settings.LOGIN_REDIRECT_URL
+
+    # REGISTRATION
+
+    def get_registration_form(self, bind_data=False):
+        return self.registration_form_class(
+            **self.get_registration_form_kwargs(bind_data))
+
+    def get_registration_form_kwargs(self, bind_data=False):
+        kwargs = {}
+        kwargs['host'] = self.request.get_host()
+        kwargs['prefix'] = self.registration_prefix
+        kwargs['initial'] = {
+            'redirect_url': self.request.GET.get(self.redirect_field_name, ''),
+        }
+        if bind_data and self.request.method in ('POST', 'PUT'):
+            kwargs.update({
+                'data': self.request.POST,
+                'files': self.request.FILES,
+            })
+        return kwargs
+
     def validate_registration_form(self):
-        form = self.get_registration_form(self.request)
+        form = self.get_registration_form(bind_data=True)
         if form.is_valid():
             self.register_user(form)
-            return HttpResponseRedirect(form.cleaned_data['redirect_url'])
+
+            msg = self.get_registration_success_message(form)
+            messages.success(self.request, msg)
+
+            return redirect(self.get_registration_success_url(form))
 
         ctx = self.get_context_data(registration_form=form)
         return self.render_to_response(ctx)
 
+    def get_registration_success_message(self, form):
+        return _("Thanks for registering!")
 
-class LogoutView(RedirectView):
+    def get_registration_success_url(self, form):
+        return settings.LOGIN_REDIRECT_URL
+
+
+class LogoutView(generic.RedirectView):
     url = settings.OSCAR_HOMEPAGE
     permanent = False
 
@@ -211,7 +238,8 @@ class LogoutView(RedirectView):
 # Profile
 # =============
 
-class ProfileView(PageTitleMixin, TemplateView):
+
+class ProfileView(PageTitleMixin, generic.TemplateView):
     template_name = 'customer/profile/profile.html'
     page_title = _('Profile')
     active_tab = 'profile'
@@ -261,12 +289,13 @@ class ProfileView(PageTitleMixin, TemplateView):
         }
 
 
-class ProfileUpdateView(PageTitleMixin, FormView):
+class ProfileUpdateView(PageTitleMixin, generic.FormView):
     form_class = ProfileForm
     template_name = 'customer/profile/profile_form.html'
     communication_type_code = 'EMAIL_CHANGED'
     page_title = _('Edit Profile')
     active_tab = 'profile'
+    success_url = reverse_lazy('customer:profile-view')
 
     def get_form_kwargs(self):
         kwargs = super(ProfileUpdateView, self).get_form_kwargs()
@@ -285,7 +314,8 @@ class ProfileUpdateView(PageTitleMixin, FormView):
 
         # We have to look up the email address from the form's
         # cleaned data because the object created by form.save() can
-        # either be a user or profile depending on AUTH_PROFILE_MODULE
+        # either be a user or profile instance depending whether a profile
+        # class has been specified by the AUTH_PROFILE_MODULE setting.
         new_email = form.cleaned_data['email']
         if old_user and new_email != old_user.email:
             # Email address has changed - send a confirmation email to the old
@@ -302,13 +332,10 @@ class ProfileUpdateView(PageTitleMixin, FormView):
             Dispatcher().dispatch_user_messages(old_user, msgs)
 
         messages.success(self.request, _("Profile updated"))
-        return HttpResponseRedirect(self.get_success_url())
-
-    def get_success_url(self):
-        return reverse('customer:profile-view')
+        return redirect(self.get_success_url())
 
 
-class ProfileDeleteView(PageTitleMixin, FormView):
+class ProfileDeleteView(PageTitleMixin, generic.FormView):
     form_class = ConfirmPasswordForm
     template_name = 'customer/profile/profile_delete.html'
     page_title = _('Delete profile')
@@ -325,15 +352,16 @@ class ProfileDeleteView(PageTitleMixin, FormView):
         messages.success(
             self.request,
             _("Your profile has now been deleted. Thanks for using the site."))
-        return HttpResponseRedirect(self.get_success_url())
+        return redirect(self.get_success_url())
 
 
-class ChangePasswordView(PageTitleMixin, FormView):
+class ChangePasswordView(PageTitleMixin, generic.FormView):
     form_class = PasswordChangeForm
     template_name = 'customer/profile/change_password_form.html'
     communication_type_code = 'PASSWORD_CHANGED'
     page_title = _('Change Password')
     active_tab = 'profile'
+    success_url = reverse_lazy('customer:profile-view')
 
     def get_form_kwargs(self):
         kwargs = super(ChangePasswordView, self).get_form_kwargs()
@@ -353,17 +381,14 @@ class ChangePasswordView(PageTitleMixin, FormView):
             code=self.communication_type_code, context=ctx)
         Dispatcher().dispatch_user_messages(self.request.user, msgs)
 
-        return HttpResponseRedirect(self.get_success_url())
-
-    def get_success_url(self):
-        return reverse('customer:profile-view')
+        return redirect(self.get_success_url())
 
 
 # =============
 # Email history
 # =============
 
-class EmailHistoryView(PageTitleMixin, ListView):
+class EmailHistoryView(PageTitleMixin, generic.ListView):
     context_object_name = "emails"
     template_name = 'customer/email/email_list.html'
     paginate_by = 20
@@ -374,14 +399,13 @@ class EmailHistoryView(PageTitleMixin, ListView):
         return Email._default_manager.filter(user=self.request.user)
 
 
-class EmailDetailView(PageTitleMixin, DetailView):
+class EmailDetailView(PageTitleMixin, generic.DetailView):
     """Customer email"""
     template_name = "customer/email/email_detail.html"
     context_object_name = 'email'
     active_tab = 'emails'
 
     def get_object(self, queryset=None):
-        """Return an order object or 404"""
         return get_object_or_404(Email, user=self.request.user,
                                  id=self.kwargs['email_id'])
 
@@ -394,7 +418,7 @@ class EmailDetailView(PageTitleMixin, DetailView):
 # Order history
 # =============
 
-class OrderHistoryView(PageTitleMixin, ListView):
+class OrderHistoryView(PageTitleMixin, generic.ListView):
     """
     Customer order history
     """
@@ -425,9 +449,8 @@ class OrderHistoryView(PageTitleMixin, ListView):
                 except Order.DoesNotExist:
                     pass
                 else:
-                    return HttpResponseRedirect(
-                        reverse('customer:order',
-                                kwargs={'order_number': order.number}))
+                    return redirect(
+                        'customer:order', order_number=order.number)
         else:
             self.form = self.form_class()
         return super(OrderHistoryView, self).get(request, *args, **kwargs)
@@ -444,7 +467,7 @@ class OrderHistoryView(PageTitleMixin, ListView):
         return ctx
 
 
-class OrderDetailView(PageTitleMixin, PostActionMixin, DetailView):
+class OrderDetailView(PageTitleMixin, PostActionMixin, generic.DetailView):
     model = Order
     active_tab = 'orders'
 
@@ -487,8 +510,7 @@ class OrderDetailView(PageTitleMixin, PostActionMixin, DetailView):
             total_quantity)
         if not is_quantity_allowed:
             messages.warning(self.request, reason)
-            self.response = HttpResponseRedirect(
-                reverse('customer:order-list'))
+            self.response = redirect('customer:order-list')
             return
 
         # Add any warnings
@@ -505,14 +527,13 @@ class OrderDetailView(PageTitleMixin, PostActionMixin, DetailView):
             basket.add_product(line.product, line.quantity, options)
 
         if len(lines_to_add) > 0:
-            self.response = HttpResponseRedirect(reverse('basket:summary'))
+            self.response = redirect('basket:summary')
             messages.info(
                 self.request,
                 _("All available lines from order %(number)s "
                   "have been added to your basket") % {'number': order.number})
         else:
-            self.response = HttpResponseRedirect(
-                reverse('customer:order-list'))
+            self.response = redirect('customer:order-list')
             messages.warning(
                 self.request,
                 _("It is not possible to re-order order %(number)s "
@@ -520,19 +541,17 @@ class OrderDetailView(PageTitleMixin, PostActionMixin, DetailView):
                 {'number': order.number})
 
 
-class OrderLineView(PostActionMixin, DetailView):
+class OrderLineView(PostActionMixin, generic.DetailView):
     """Customer order line"""
 
     def get_object(self, queryset=None):
-        """Return an order object or 404"""
         order = get_object_or_404(Order, user=self.request.user,
                                   number=self.kwargs['order_number'])
         return order.lines.get(id=self.kwargs['line_id'])
 
     def do_reorder(self, line):
-        self.response = HttpResponseRedirect(
-            reverse('customer:order',
-                    args=(int(self.kwargs['order_number']),)))
+        self.response = redirect(
+            'customer:order', int(self.kwargs['order_number']))
         basket = self.request.basket
 
         line_available_to_reorder, reason = line.is_available_to_reorder(
@@ -544,7 +563,7 @@ class OrderLineView(PostActionMixin, DetailView):
 
         # We need to pass response to the get_or_create... method
         # as a new basket might need to be created
-        self.response = HttpResponseRedirect(reverse('basket:summary'))
+        self.response = redirect('basket:summary')
 
         # Convert line attributes into basket options
         options = []
@@ -564,7 +583,7 @@ class OrderLineView(PostActionMixin, DetailView):
         messages.info(self.request, msg)
 
 
-class AnonymousOrderDetailView(DetailView):
+class AnonymousOrderDetailView(generic.DetailView):
     model = Order
     template_name = "customer/anon_order.html"
 
@@ -573,7 +592,7 @@ class AnonymousOrderDetailView(DetailView):
         order = get_object_or_404(self.model, user=None,
                                   number=self.kwargs['order_number'])
         if self.kwargs['hash'] != order.verification_hash():
-            raise Http404()
+            raise http.Http404()
         return order
 
 
@@ -581,7 +600,7 @@ class AnonymousOrderDetailView(DetailView):
 # Address book
 # ------------
 
-class AddressListView(PageTitleMixin, ListView):
+class AddressListView(PageTitleMixin, generic.ListView):
     """Customer address book"""
     context_object_name = "addresses"
     template_name = 'customer/address/address_list.html'
@@ -594,12 +613,13 @@ class AddressListView(PageTitleMixin, ListView):
         return UserAddress._default_manager.filter(user=self.request.user)
 
 
-class AddressCreateView(PageTitleMixin, CreateView):
+class AddressCreateView(PageTitleMixin, generic.CreateView):
     form_class = UserAddressForm
     model = UserAddress
     template_name = 'customer/address/address_form.html'
     active_tab = 'addresses'
     page_title = _('Add a new address')
+    success_url = reverse_lazy('customer:address-list')
 
     def get_form_kwargs(self):
         kwargs = super(AddressCreateView, self).get_form_kwargs()
@@ -614,15 +634,16 @@ class AddressCreateView(PageTitleMixin, CreateView):
     def get_success_url(self):
         messages.success(self.request,
                          _("Address '%s' created") % self.object.summary)
-        return reverse('customer:address-list')
+        return super(AddressCreateView, self).get_success_url()
 
 
-class AddressUpdateView(PageTitleMixin, UpdateView):
+class AddressUpdateView(PageTitleMixin, generic.UpdateView):
     form_class = UserAddressForm
     model = UserAddress
     template_name = 'customer/address/address_form.html'
     active_tab = 'addresses'
     page_title = _('Edit address')
+    success_url = reverse_lazy('customer:address-list')
 
     def get_form_kwargs(self):
         kwargs = super(AddressUpdateView, self).get_form_kwargs()
@@ -640,15 +661,16 @@ class AddressUpdateView(PageTitleMixin, UpdateView):
     def get_success_url(self):
         messages.success(self.request,
                          _("Address '%s' updated") % self.object.summary)
-        return reverse('customer:address-list')
+        return super(AddressUpdateView, self).get_success_url()
 
 
-class AddressDeleteView(PageTitleMixin, DeleteView):
+class AddressDeleteView(PageTitleMixin, generic.DeleteView):
     model = UserAddress
     template_name = "customer/address/address_delete.html"
     page_title = _('Delete address?')
     active_tab = 'addresses'
     context_object_name = 'address'
+    success_url = reverse_lazy('customer:address-list')
 
     def get_queryset(self):
         return UserAddress._default_manager.filter(user=self.request.user)
@@ -656,14 +678,15 @@ class AddressDeleteView(PageTitleMixin, DeleteView):
     def get_success_url(self):
         messages.success(self.request,
                          _("Address '%s' deleted") % self.object.summary)
-        return reverse('customer:address-list')
+        return super(AddressDeleteView, self).get_success_url()
 
 
-class AddressChangeStatusView(RedirectView):
+class AddressChangeStatusView(generic.RedirectView):
     """
     Sets an address as default_for_(billing|shipping)
     """
     url = reverse_lazy('customer:address-list')
+    permanent = False
 
     def get(self, request, pk=None, action=None, *args, **kwargs):
         address = get_object_or_404(UserAddress, user=self.request.user,

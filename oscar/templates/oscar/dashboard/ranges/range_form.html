@@ -4,7 +4,7 @@
 {% block body_class %}{{ block.super }} create-page{% endblock %}
 
 {% block title %}
-    {{ title }} | {% trans "Range management" %} | {{ block.super }}
+    {{ title }} | {% trans "Ranges" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -14,7 +14,7 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url 'dashboard:range-list' %}">{% trans "Range management" %}</a>
+            <a href="{% url 'dashboard:range-list' %}">{% trans "Ranges" %}</a>
             <span class="divider">/</span>
         </li>
         {% if range %}
@@ -26,7 +26,7 @@
 {% endblock %}
 
 {% block headertext %}
-{% if range %}{{ range.name }}{% else %}{% trans "Create new range" %}{% endif %}
+    {% if range %}{{ range.name }}{% else %}{% trans "Create new range" %}{% endif %}
 {% endblock %}
 
 {% block dashboard_content %}
@@ -35,7 +35,7 @@
         {% include "partials/form_fields.html" with form=form %}
         {% block form_actions %}
             <div class="form-actions">
-                <button class="btn btn-primary btn-large" type="submit">{% trans "Save" %}</button> {% trans "or" %}
+                <button class="btn btn-primary btn-large" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button> {% trans "or" %}
                 {# This is an input so we distinguish between which button was pressed #}
                 <input class="btn btn-primary btn-large" type="submit" name="action" value="{% trans "Save and edit products" %}"/>
                 {% trans "or" %}

@@ -8,11 +8,12 @@
     <head>
         <title>{% if display_version %}[{% trans "Build" %} {{ version }}] {% endif %}{% block title %}{{ shop_name }} - {{ shop_tagline }}{% endblock %}</title>
 
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
         <meta name="created" content="{% now "jS M Y h:i" %}" />
         <meta name="description" content="{% block description %}{% endblock %}" />
         <meta name="keywords" content="{% block keywords %}{% endblock %}" />
-        <meta name="viewport" content="{% block viewport %}width=device-width"{% endblock %}>
+        <meta name="viewport" content="{% block viewport %}width=device-width{% endblock %}" />
+        <meta name="robots" content="NONE,NOARCHIVE" />
 
         <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
         <!--[if lt IE 9]>
@@ -37,15 +38,6 @@
                 executable is available and you have COMPRESS_PRECOMPILERS specified
                 correctly.
                 {% endcomment %}
-                {% compress css %}
-                    {% if use_less %}
-                        <link rel="stylesheet" type="text/less" href="{% static "oscar/less/styles.less" %}" />
-                        <link rel="stylesheet" type="text/less" href="{% static "oscar/less/responsive.less" %}" />
-                    {% else %}
-                        <link rel="stylesheet" type="text/css" href="{% static "oscar/css/styles.css" %}" />
-                        <link rel="stylesheet" type="text/css" href="{% static "oscar/css/responsive.css" %}" />
-                    {% endif %}
-                {% endcompress %}
             {% endblock %}
         {% endblock %}
 
@@ -70,18 +62,12 @@
         {% endcomment %}
         {% block cdn_scripts %}
             <!-- jQuery -->
-            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
             <script>window.jQuery || document.write('<script src="{% static "oscar/js/jquery/jquery-1.9.1.min.js" %}"><\/script>')</script>
         {% endblock %}
 
         {# Local scripts #}
         {% block scripts %}
-            {% compress js %}
-            <!-- Twitter Bootstrap -->
-            <script type="text/javascript" src="{% static "oscar/js/bootstrap/bootstrap.min.js" %}"></script>
-            <!-- Oscar -->
-            <script src="{% static "oscar/js/oscar/ui.js" %}" type="text/javascript" charset="utf-8"></script>
-            {% endcompress %}
         {% endblock %}
 
         {# Additional JS scripts #}
@@ -90,7 +76,6 @@
         {# Block for body onload functions #}
         <script type="text/javascript">
             $(function() {
-                oscar.init();
                 {% block onbodyload %}{% endblock %}
             });
         </script>

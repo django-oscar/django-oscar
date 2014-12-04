@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block title %}
-    {% trans "Range management" %} | {{ block.super }}
+    {% trans "Ranges" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -11,14 +11,14 @@
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
             <span class="divider">/</span>
         </li>
-        <li class="active">{% trans "Range management" %}</li>
+        <li class="active">{% trans "Ranges" %}</li>
     </ul>
 {% endblock %}
 
 {% block header %}
     <div class="page-header">
         <a href="{% url 'dashboard:range-create' %}" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new range" %}</a>
-        <h1>{% trans "Range management" %}</h1>
+        <h1>{% trans "Ranges" %}</h1>
     </div>
 {% endblock header %}
 
@@ -47,7 +47,7 @@
                             {% endif %}
                         </td>
                         {% if range.includes_all_products %}
-                            <td>All</td>
+                            <td>{% trans 'All' %}</td>
                         {% else %}
                             <td>{{ range.num_products|default:"-" }}</td>
                         {% endif %}

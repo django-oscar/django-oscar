@@ -1,9 +1,8 @@
-import six
 
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.fields import CharField, DecimalField, Field
 from django.db.models import SubfieldBase
-from django.utils import six as django_six
+from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import MaxLengthValidator
 
@@ -12,7 +11,8 @@ from oscar.forms import fields
 
 import oscar.core.phonenumber as phonenumber
 # allow importing as oscar.models.fields.AutoSlugField
-from .autoslugfield import AutoSlugField  # noqa
+from .autoslugfield import AutoSlugField
+AutoSlugField = AutoSlugField
 
 try:
     from south.modelsinspector import add_introspection_rules
@@ -60,6 +60,19 @@ class ExtendedURLField(CharField):
         defaults.update(kwargs)
         return super(ExtendedURLField, self).formfield(**defaults)
 
+    def deconstruct(self):
+        """
+        deconstruct() is needed by Django's migration framework
+        """
+        name, path, args, kwargs = super(ExtendedURLField, self).deconstruct()
+        # Add verify_exists to kwargs if it's not the default value.
+        if self.verify_exists is not None:
+            kwargs['verify_exists'] = self.verify_exists
+        # We have a default value for max_length; remove it in that case
+        if self.max_length == 200:
+            del kwargs['max_length']
+        return name, path, args, kwargs
+
 
 class PositiveDecimalField(DecimalField):
     """
@@ -70,7 +83,7 @@ class PositiveDecimalField(DecimalField):
         return super(PositiveDecimalField, self).formfield(min_value=0)
 
 
-class UppercaseCharField(django_six.with_metaclass(SubfieldBase, CharField)):
+class UppercaseCharField(six.with_metaclass(SubfieldBase, CharField)):
     """
     A simple subclass of ``django.db.models.fields.CharField`` that
     restricts all text to be uppercase.
@@ -87,7 +100,7 @@ class UppercaseCharField(django_six.with_metaclass(SubfieldBase, CharField)):
             return val
 
 
-class NullCharField(CharField):
+class NullCharField(six.with_metaclass(SubfieldBase, CharField)):
     """
     CharField that stores '' as None and returns None as ''
     Useful when using unique=True and forms. Implies null==blank==True.
@@ -99,9 +112,6 @@ class NullCharField(CharField):
     """
     description = "CharField that stores '' as None and returns None as ''"
 
-    # necessary for to_python to be called
-    __metaclass__ = SubfieldBase
-
     def __init__(self, *args, **kwargs):
         if not kwargs.get('null', True) or not kwargs.get('blank', True):
             raise ImproperlyConfigured(
@@ -110,19 +120,21 @@ class NullCharField(CharField):
         super(NullCharField, self).__init__(*args, **kwargs)
 
     def to_python(self, value):
-        if isinstance(value, CharField):
-            return value
-        if value is None:
-            return u""
-        else:
-            return value
+        val = super(NullCharField, self).to_python(value)
+        return val if val is not None else u''
 
     def get_prep_value(self, value):
         prepped = super(NullCharField, self).get_prep_value(value)
-        if prepped == "":
-            return None
-        else:
-            return prepped
+        return prepped if prepped != u"" else None
+
+    def deconstruct(self):
+        """
+        deconstruct() is needed by Django's migration framework
+        """
+        name, path, args, kwargs = super(NullCharField, self).deconstruct()
+        del kwargs['null']
+        del kwargs['blank']
+        return name, path, args, kwargs
 
 
 class PhoneNumberField(Field):
@@ -134,13 +146,13 @@ class PhoneNumberField(Field):
     * Can be given a hint for the country, so that it can accept local numbers,
       that are not in an international format
 
-    Note:
-        This field is based on work in django-phonenumber-field:
-        https://github.com/maikhoepfel/django-phonenumber-field/
+    Notes
+    -----
+    This field is based on work in django-phonenumber-field
+    https://github.com/maikhoepfel/django-phonenumber-field/
 
-        See ``oscar/core/phonenumber.py`` for the relevant copyright and
-        permission notice.
-
+    See ``oscar/core/phonenumber.py`` for the relevant copyright and
+    permission notice.
     """
 
     attr_class = phonenumber.PhoneNumber
@@ -166,9 +178,18 @@ class PhoneNumberField(Field):
         """
         value = phonenumber.to_python(value)
         if value is None:
-            return ''
+            return u''
         return value.as_e164 if value.is_valid() else value.raw_input
 
     def contribute_to_class(self, cls, name):
         super(PhoneNumberField, self).contribute_to_class(cls, name)
         setattr(cls, self.name, self.descriptor_class(self))
+
+    def deconstruct(self):
+        """
+        deconstruct() is needed by Django's migration framework
+        """
+        name, path, args, kwargs = super(PhoneNumberField, self).deconstruct()
+        if self.max_length == 128:
+            del kwargs['max_length']
+        return name, path, args, kwargs

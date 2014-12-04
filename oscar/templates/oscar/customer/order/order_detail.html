@@ -7,7 +7,6 @@
 {% block extra_breadcrumbs %}
     <li>
         <a href="{% url 'customer:order-list' %}">{% trans 'Order history' %}</a>
-        <span class="divider">/</span>
     </li>
 {% endblock %}
 
@@ -18,8 +17,8 @@
                 <th>{% trans 'Product' %}</th>
                 <th>{% trans 'Dispatch date' %}</th>
                 <th>{% trans 'Qty' %}</th>
-                <th>{% trans 'Line price excl tax' %}</th>
-                <th>{% trans 'Line price incl tax' %}</th>
+                <th>{% trans 'Line price excl. tax' %}</th>
+                <th>{% trans 'Line price incl. tax' %}</th>
                 <th></th>
             </tr>
         </thead>
@@ -34,7 +33,7 @@
                                 </p>
                                 {% iffeature "reviews" %}
                                     {% if product|is_review_permitted:user %}
-                                        <a class="btn" href="{% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id %}">{% trans 'Write a review' %}</a>
+                                        <a class="btn btn-default" href="{% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id %}#addreview">{% trans 'Write a review' %}</a>
                                     {% endif %}
                                 {% endiffeature %}
                             {% else %}
@@ -52,7 +51,7 @@
                                 <form id="line_form_{{ line.id }}" action="{% url 'customer:order-line' order_number=order.number line_id=line.id %}" method="POST">
                                     {% csrf_token %}
                                     <input type="hidden" name="action" value="reorder" />
-                                    <button class="btn btn-success" type="submit">{% trans 'Re-order' %}</button>
+                                    <button id="reorder_line_{{ line.id }}" class="btn btn-success" type="submit" data-loading-text="{% trans 'Re-ordering...' %}">{% trans 'Re-order' %}</button>
                                 </form>
                             {% else %}
                                 {% trans 'Not available anymore' %}
@@ -137,33 +136,33 @@
             {% csrf_token %}
             <input type="hidden" name="order_id" value="{{ order.id }}" />
             <input type="hidden" name="action" value="reorder" />
-            <button type="submit" class="btn btn-success">{% trans 'Re-order all items' %}</button>
+            <button type="submit" class="btn btn-success" data-loading-text="{% trans 'Re-ordering...' %}">{% trans 'Re-order all items' %}</button>
         </form>
     {% endblock order_actions %}
 
     <hr>
 
-    <h3>{% trans 'Shipping Method' %}</h3>
+    <h2>{% trans 'Shipping Method' %}</h2>
     <p>{{ order.shipping_method }}</p>
 
     <hr>
 
-    <h3>{% trans 'Shipping Address' %}</h3>
+    <h2>{% trans 'Shipping Address' %}</h2>
 
     <table class="table table-striped table-bordered">
         <tr>
-            <th>{% trans 'Address:' %}</th>
-            <th>{% trans 'Contact Number:' %}</th>
-            <th>{% trans 'Shipping Notes:' %}</th>
+            <th>{% trans 'Address' %}</th>
+            <th>{% trans 'Contact Number' %}</th>
+            <th>{% trans 'Shipping Notes' %}</th>
         </tr>
         <tr>
             <td>
-                <p>{% for field in order.shipping_address.active_address_fields %}
+                    {% for field in order.shipping_address.active_address_fields %}
                         {{ field }}<br/>
-                    {% endfor %}</p>
+                    {% endfor %}
             </td>
-            <td><p>{{ order.shipping_address.phone_number }}</p></td>
-            <td><p>{{ order.shipping_address.notes }}</p></td>
+            <td>{{ order.shipping_address.phone_number|default:"-" }}</td>
+            <td>{{ order.shipping_address.notes|linebreaks }}</td>
         </tr>
     </table>
 {% endblock tabcontent %}

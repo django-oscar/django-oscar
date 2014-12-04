@@ -28,11 +28,11 @@
                 <a class="btn btn-large" href="{% url 'catalogue:detail' product.slug product.id %}">{% trans "View range" %}</a>
             {% else %}
                 {% if session.availability.is_available_to_buy %}
-                    {% basket_form request product as basket_form single %}
+                    {% basket_form request product 'single' as basket_form %}
                     <form action="{% url 'basket:add' %}" method="post">
                         {% csrf_token %}
                         {{ basket_form.as_p }}
-                        <button type="submit" class="btn btn-large btn-primary btn-full">{% trans "Add to basket" %}</button>
+                        <button type="submit" class="btn btn-large btn-primary btn-full" data-loading-text="{% trans 'Adding...' %}">{% trans "Add to basket" %}</button>
                     </form>
                 {% else %}
                     <span class="btn btn-large btn-info disabled">{% trans "Out of Stock" %}</span>

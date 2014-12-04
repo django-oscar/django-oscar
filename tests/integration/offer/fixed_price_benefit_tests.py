@@ -22,7 +22,6 @@ class TestAFixedPriceDiscountAppliedWithCountCondition(TestCase):
             type=models.Benefit.FIXED_PRICE,
             value=D('20.00'))
         self.offer = mock.Mock()
-        self.offer.applies_to_tax_exclusive_prices = False
         self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):

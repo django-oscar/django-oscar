@@ -1,5 +1,5 @@
 from django import forms
-from django.core.exceptions import ValidationError, MultipleObjectsReturned
+from django.core import exceptions
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
 from treebeard.forms import MoveNodeForm, movenodeform_factory
@@ -12,9 +12,6 @@ Product = get_model('catalogue', 'Product')
 ProductClass = get_model('catalogue', 'ProductClass')
 Category = get_model('catalogue', 'Category')
 StockRecord = get_model('partner', 'StockRecord')
-Partner = get_model('partner', 'Partner')
-ProductClass = get_model('catalogue', 'ProductClass')
-ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductImage = get_model('catalogue', 'ProductImage')
 ProductRecommendation = get_model('catalogue', 'ProductRecommendation')
@@ -68,6 +65,7 @@ CategoryForm = movenodeform_factory(Category, form=BaseCategoryForm)
 
 
 class ProductClassSelectForm(forms.Form):
+
     """
     Form which is used before creating a product to select it's product class
     """
@@ -89,7 +87,8 @@ class ProductClassSelectForm(forms.Form):
 
 class ProductSearchForm(forms.Form):
     upc = forms.CharField(max_length=16, required=False, label=_('UPC'))
-    title = forms.CharField(max_length=255, required=False, label=_('Title'))
+    title = forms.CharField(
+        max_length=255, required=False, label=_('Product title'))
 
     def clean(self):
         cleaned_data = super(ProductSearchForm, self).clean()
@@ -146,7 +145,8 @@ class StockRecordFormSet(BaseStockRecordFormSet):
         if self.require_user_stockrecord:
             try:
                 user_partner = self.user.partners.get()
-            except (Partner.DoesNotExist, MultipleObjectsReturned):
+            except (exceptions.ObjectDoesNotExist,
+                    exceptions.MultipleObjectsReturned):
                 pass
             else:
                 partner_field = self.forms[0].fields.get('partner', None)
@@ -171,9 +171,9 @@ class StockRecordFormSet(BaseStockRecordFormSet):
                                         for form in self.forms])
             user_partners = set(self.user.partners.all())
             if not user_partners & stockrecord_partners:
-                raise ValidationError(_("At least one stock record must be set"
-                                        " to a partner that you're associated"
-                                        " with."))
+                raise exceptions.ValidationError(
+                    _("At least one stock record must be set to a partner that"
+                      "you're associated with."))
 
 
 def _attr_text_field(attribute):
@@ -223,10 +223,11 @@ def _attr_multi_option_field(attribute):
 
 
 def _attr_entity_field(attribute):
-    return forms.ModelChoiceField(
-        label=attribute.name,
-        required=attribute.required,
-        queryset=attribute.entity_type.entities.all())
+    # Product entities don't have out-of-the-box supported in the ProductForm.
+    # There is no ModelChoiceField for generic foreign keys, and there's no
+    # good default behaviour anyway; offering a choice of *all* model instances
+    # is hardly useful.
+    return None
 
 
 def _attr_numeric_field(attribute):
@@ -245,17 +246,6 @@ def _attr_image_field(attribute):
 
 
 class ProductForm(forms.ModelForm):
-
-    # We need a special field to distinguish between group and standalone
-    # products.  It's impossible to tell when the product is first created.
-    # This is quite clunky but will be replaced when #693 is complete.
-    is_group = forms.BooleanField(
-        label=_("Is group product?"),
-        required=False,
-        help_text=_(
-            "Check this if this product is a group/parent product "
-            "that has variants (eg different sizes/colours available)"))
-
     FIELD_FACTORIES = {
         "text": _attr_text_field,
         "richtext": _attr_textarea_field,
@@ -273,110 +263,103 @@ class ProductForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        exclude = ('slug', 'score', 'product_class',
-                   'recommended_products', 'product_options',
-                   'attributes', 'categories')
+        fields = [
+            'title', 'upc', 'description', 'is_discountable', 'structure']
         widgets = {
-            'parent': ProductSelect,
-            'related_products': ProductSelectMultiple,
+            'structure': forms.HiddenInput()
         }
 
-    def __init__(self, product_class, data=None, *args, **kwargs):
-        self.product_class = product_class
-        self.set_initial_attribute_values(kwargs)
+    def __init__(self, product_class, data=None, parent=None, *args, **kwargs):
+        self.set_initial(product_class, parent, kwargs)
         super(ProductForm, self).__init__(data, *args, **kwargs)
+        if parent:
+            self.instance.parent = parent
+            # We need to set the correct product structures explicitly to pass
+            # attribute validation and child product validation. Note that
+            # those changes are not persisted.
+            self.instance.structure = Product.CHILD
+            self.instance.parent.structure = Product.PARENT
 
-        # Set the initial value of the is_group field.  This isn't watertight:
-        # if the product is intended to be a parent product but doesn't have
-        # any variants then we can't distinguish it from a standalone product
-        # and this checkbox won't have the right value.  This will be addressed
-        # in #693
-        instance = kwargs.get('instance', None)
-        if instance:
-            self.fields['is_group'].initial = instance.is_group
+            self.delete_non_child_fields()
+        else:
+            # Only set product class for non-child products
+            self.instance.product_class = product_class
+        self.add_attribute_fields(product_class, self.instance.is_parent)
 
-        # This is quite nasty.  We use the raw posted data to determine if the
-        # product is a group product, as this changes the validation rules we
-        # want to apply.
-        is_parent = data and data.get('is_group', '') == 'on'
-        self.add_attribute_fields(is_parent)
-
-        related_products = self.fields.get('related_products', None)
-        parent = self.fields.get('parent', None)
-
-        if parent is not None:
-            parent.queryset = self.get_parent_products_queryset()
-        if related_products is not None:
-            related_products.queryset = self.get_related_products_queryset()
         if 'title' in self.fields:
             self.fields['title'].widget = forms.TextInput(
                 attrs={'autocomplete': 'off'})
 
-    def set_initial_attribute_values(self, kwargs):
-        if kwargs.get('instance', None) is None:
-            return
+    def set_initial(self, product_class, parent, kwargs):
+        """
+        Set initial data for the form. Sets the correct product structure
+        and fetches initial values for the dynamically constructed attribute
+        fields.
+        """
         if 'initial' not in kwargs:
             kwargs['initial'] = {}
-        for attribute in self.product_class.attributes.all():
+        self.set_initial_attribute_values(product_class, kwargs)
+        if parent:
+            kwargs['initial']['structure'] = Product.CHILD
+
+    def set_initial_attribute_values(self, product_class, kwargs):
+        """
+        Update the kwargs['initial'] value to have the initial values based on
+        the product instance's attributes
+        """
+        instance = kwargs.get('instance')
+        if instance is None:
+            return
+        for attribute in product_class.attributes.all():
             try:
-                value = kwargs['instance'].attribute_values.get(
+                value = instance.attribute_values.get(
                     attribute=attribute).value
-            except ProductAttributeValue.DoesNotExist:
+            except exceptions.ObjectDoesNotExist:
                 pass
             else:
                 kwargs['initial']['attr_%s' % attribute.code] = value
 
-    def add_attribute_fields(self, is_parent=False):
-        for attribute in self.product_class.attributes.all():
-            self.fields['attr_%s' % attribute.code] \
-                = self.get_attribute_field(attribute)
-            # Attributes are not required for a parent product
-            if is_parent:
-                self.fields['attr_%s' % attribute.code].required = False
+    def add_attribute_fields(self, product_class, is_parent=False):
+        """
+        For each attribute specified by the product class, this method
+        dynamically adds form fields to the product form.
+        """
+        for attribute in product_class.attributes.all():
+            field = self.get_attribute_field(attribute)
+            if field:
+                self.fields['attr_%s' % attribute.code] = field
+                # Attributes are not required for a parent product
+                if is_parent:
+                    self.fields['attr_%s' % attribute.code].required = False
 
     def get_attribute_field(self, attribute):
+        """
+        Gets the correct form field for a given attribute type.
+        """
         return self.FIELD_FACTORIES[attribute.type](attribute)
 
-    def get_related_products_queryset(self):
-        return Product.browsable.order_by('title')
-
-    def get_parent_products_queryset(self):
+    def delete_non_child_fields(self):
         """
-        :return: Canonical products excluding this product
+        Deletes any fields not needed for child products. Override this if
+        you want to e.g. keep the description field.
         """
-        # Not using Product.browsable because a deployment might override
-        # that manager to respect a status field or such like
-        queryset = Product._default_manager.filter(parent=None)
-        if self.instance.pk is not None:
-            # Prevent selecting itself as parent
-            queryset = queryset.exclude(pk=self.instance.pk)
-        return queryset
+        for field_name in ['description', 'is_discountable']:
+            if field_name in self.fields:
+                del self.fields[field_name]
 
-    def save(self):
-        object = super(ProductForm, self).save(commit=False)
-        object.product_class = self.product_class
-        for attribute in self.product_class.attributes.all():
-            value = self.cleaned_data['attr_%s' % attribute.code]
-            setattr(object.attr, attribute.code, value)
-
-        if self.cleaned_data['is_group']:
-            # Don't validate attributes for parent products
-            object.save(validate_attributes=False)
-        else:
-            object.save()
-        self.save_m2m()
-        return object
-
-    def clean(self):
-        data = self.cleaned_data
-        if 'parent' not in data and not data['title']:
-            raise forms.ValidationError(_("This field is required"))
-        elif 'parent' in data and data['parent'] is None and not data['title']:
-            raise forms.ValidationError(_("Parent products must have a title"))
-        # Calling the clean() method of BaseForm here is required to apply
-        # checks for 'unique' field. This prevents e.g. the UPC field from
-        # raising a DatabaseError.
-        return super(ProductForm, self).clean()
+    def _post_clean(self):
+        """
+        Set attributes before ModelForm calls the product's clean method
+        (which it does in _post_clean), which in turn validates attributes.
+        """
+        product_class = self.instance.get_product_class()
+        for attribute in product_class.attributes.all():
+            field_name = 'attr_%s' % attribute.code
+            # An empty text field won't show up in cleaned_data.
+            if field_name in self.cleaned_data:
+                value = self.cleaned_data[field_name]
+                setattr(self.instance.attr, attribute.code, value)
+        super(ProductForm, self)._post_clean()
 
 
 class StockAlertSearchForm(forms.Form):
@@ -387,25 +370,28 @@ class ProductCategoryForm(forms.ModelForm):
 
     class Meta:
         model = ProductCategory
+        fields = ('category', )
 
 
 BaseProductCategoryFormSet = inlineformset_factory(
-    Product, ProductCategory, form=ProductCategoryForm,
-    fields=('category',), extra=1, can_delete=False)
+    Product, ProductCategory, form=ProductCategoryForm, extra=1,
+    can_delete=True)
 
 
 class ProductCategoryFormSet(BaseProductCategoryFormSet):
 
     def __init__(self, product_class, user, *args, **kwargs):
+        # This function just exists to drop the extra arguments
         super(ProductCategoryFormSet, self).__init__(*args, **kwargs)
 
     def clean(self):
-        if self.instance.is_top_level and self.get_num_categories() == 0:
+        if not self.instance.is_child and self.get_num_categories() == 0:
             raise forms.ValidationError(
-                _("A top-level product must have at least one category"))
-        if self.instance.is_variant and self.get_num_categories() > 0:
+                _("Stand-alone and parent products "
+                  "must have at least one category"))
+        if self.instance.is_child and self.get_num_categories() > 0:
             raise forms.ValidationError(
-                _("A variant product should not have categories"))
+                _("A child product should not have categories"))
 
     def get_num_categories(self):
         num_categories = 0
@@ -419,6 +405,7 @@ class ProductCategoryFormSet(BaseProductCategoryFormSet):
 
 
 class ProductImageForm(forms.ModelForm):
+
     class Meta:
         model = ProductImage
         exclude = ('display_order',)
@@ -447,13 +434,16 @@ BaseProductImageFormSet = inlineformset_factory(
 
 
 class ProductImageFormSet(BaseProductImageFormSet):
+
     def __init__(self, product_class, user, *args, **kwargs):
         super(ProductImageFormSet, self).__init__(*args, **kwargs)
 
 
 class ProductRecommendationForm(forms.ModelForm):
+
     class Meta:
         model = ProductRecommendation
+        fields = ['primary', 'recommendation', 'ranking']
         widgets = {
             'recommendation': ProductSelect,
         }
@@ -465,6 +455,7 @@ BaseProductRecommendationFormSet = inlineformset_factory(
 
 
 class ProductRecommendationFormSet(BaseProductRecommendationFormSet):
+
     def __init__(self, product_class, user, *args, **kwargs):
         super(ProductRecommendationFormSet, self).__init__(*args, **kwargs)
 
@@ -473,3 +464,4 @@ class ProductClassForm(forms.ModelForm):
 
     class Meta:
         model = ProductClass
+        fields = ['name', 'requires_shipping', 'track_stock', 'options']

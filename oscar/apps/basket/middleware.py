@@ -14,75 +14,47 @@ selector = Selector()
 
 class BasketMiddleware(object):
 
+    # Middleware interface methods
+
     def process_request(self, request):
+        # Keep track of cookies that need to be deleted (which can only be done
+        # when we're processing the response instance).
         request.cookies_to_delete = []
 
-        # Load stock/price strategy and assign to request and basket
+        # Load stock/price strategy and assign to request (it will later be
+        # assigned to the basket too).
         strategy = selector.strategy(request=request, user=request.user)
         request.strategy = strategy
 
-        def lazy_load_basket():
+        # We lazily load the basket so use a private variable to hold the
+        # cached instance.
+        request._basket_cache = None
+
+        def load_full_basket():
+            """
+            Return the basket after applying offers.
+            """
             basket = self.get_basket(request)
             basket.strategy = request.strategy
-
-            request.basket = basket
-
-            # Attach basket to the current request. Pricing policies in
-            # apply_offers_to_basket may depend on it, so it needs to be done
-            # before that is called
-            self.ensure_basket_lines_have_stockrecord(basket)
             self.apply_offers_to_basket(request, basket)
 
             return basket
 
-        request.basket = SimpleLazyObject(lazy_load_basket)
+        def load_basket_hash():
+            """
+            Load the basket and return the basket hash
 
-    def get_basket(self, request):
-        """
-        Return an open basket for this request
-        """
-        manager = Basket.open
-        cookie_basket = self.get_cookie_basket(
-            settings.OSCAR_BASKET_COOKIE_OPEN, request, manager)
+            Note that we don't apply offers or check that every line has a
+            stockrecord here.
+            """
+            basket = self.get_basket(request)
+            if basket.id:
+                return self.get_basket_hash(basket.id)
 
-        if hasattr(request, 'user') and request.user.is_authenticated():
-            # Signed-in user: if they have a cookie basket too, it means
-            # that they have just signed in and we need to merge their cookie
-            # basket into their user basket, then delete the cookie
-            try:
-                basket, _ = manager.get_or_create(owner=request.user)
-            except Basket.MultipleObjectsReturned:
-                # Not sure quite how we end up here with multiple baskets
-                # We merge them and create a fresh one
-                old_baskets = list(manager.filter(owner=request.user))
-                basket = old_baskets[0]
-                for other_basket in old_baskets[1:]:
-                    self.merge_baskets(basket, other_basket)
-
-            # Assign user onto basket to prevent further SQL queries when
-            # basket.owner is accessed.
-            basket.owner = request.user
-
-            if cookie_basket:
-                self.merge_baskets(basket, cookie_basket)
-                request.cookies_to_delete.append(
-                    settings.OSCAR_BASKET_COOKIE_OPEN)
-        elif cookie_basket:
-            # Anonymous user with a basket tied to the cookie
-            basket = cookie_basket
-        else:
-            # Anonymous user with no basket - we don't save the basket until
-            # we need to.
-            basket = Basket()
-        return basket
-
-    def merge_baskets(self, master, slave):
-        """
-        Merge one basket into another.
-
-        This is its own method to allow it to be overridden
-        """
-        master.merge(slave, add_quantities=False)
+        # Use Django's SimpleLazyObject to only perform the loading work
+        # when the attribute is accessed.
+        request.basket = SimpleLazyObject(load_full_basket)
+        request.basket_hash = SimpleLazyObject(load_basket_hash)
 
     def process_response(self, request, response):
         # Delete any surplus cookies
@@ -98,11 +70,12 @@ class BasketMiddleware(object):
                 and request.basket._wrapped is empty):
             return response
 
+        cookie_key = self.get_cookie_key(request)
         # Check if we need to set a cookie. If the cookies is already available
         # but is set in the cookies_to_delete list then we need to re-set it.
         has_basket_cookie = (
-            settings.OSCAR_BASKET_COOKIE_OPEN in request.COOKIES
-            and settings.OSCAR_BASKET_COOKIE_OPEN not in cookies_to_delete)
+            cookie_key in request.COOKIES
+            and cookie_key not in cookies_to_delete)
 
         # If a basket has had products added to it, but the user is anonymous
         # then we need to assign it to a cookie
@@ -110,9 +83,18 @@ class BasketMiddleware(object):
                 and not has_basket_cookie):
             cookie = self.get_basket_hash(request.basket.id)
             response.set_cookie(
-                settings.OSCAR_BASKET_COOKIE_OPEN, cookie,
+                cookie_key, cookie,
                 max_age=settings.OSCAR_BASKET_COOKIE_LIFETIME, httponly=True)
         return response
+
+    def get_cookie_key(self, request):
+        """
+        Returns the cookie name to use for storing a cookie basket.
+
+        The method serves as a useful hook in multi-site scenarios where
+        different baskets might be needed.
+        """
+        return settings.OSCAR_BASKET_COOKIE_OPEN
 
     def process_template_response(self, request, response):
         if hasattr(response, 'context_data'):
@@ -131,6 +113,63 @@ class BasketMiddleware(object):
                 # the request basket (just in case).
                 response.context_data['request_basket'] = request.basket
         return response
+
+    # Helper methods
+
+    def get_basket(self, request):
+        """
+        Return the open basket for this request
+        """
+        if request._basket_cache is not None:
+            return request._basket_cache
+
+        manager = Basket.open
+        cookie_key = self.get_cookie_key(request)
+        cookie_basket = self.get_cookie_basket(cookie_key, request, manager)
+
+        if hasattr(request, 'user') and request.user.is_authenticated():
+            # Signed-in user: if they have a cookie basket too, it means
+            # that they have just signed in and we need to merge their cookie
+            # basket into their user basket, then delete the cookie.
+            try:
+                basket, __ = manager.get_or_create(owner=request.user)
+            except Basket.MultipleObjectsReturned:
+                # Not sure quite how we end up here with multiple baskets.
+                # We merge them and create a fresh one
+                old_baskets = list(manager.filter(owner=request.user))
+                basket = old_baskets[0]
+                for other_basket in old_baskets[1:]:
+                    self.merge_baskets(basket, other_basket)
+
+            # Assign user onto basket to prevent further SQL queries when
+            # basket.owner is accessed.
+            basket.owner = request.user
+
+            if cookie_basket:
+                self.merge_baskets(basket, cookie_basket)
+                request.cookies_to_delete.append(cookie_key)
+
+        elif cookie_basket:
+            # Anonymous user with a basket tied to the cookie
+            basket = cookie_basket
+        else:
+            # Anonymous user with no basket - instantiate a new basket
+            # instance.  No need to save yet.
+            # we need to.
+            basket = Basket()
+
+        # Cache basket instance for the during of this request
+        request._basket_cache = basket
+
+        return basket
+
+    def merge_baskets(self, master, slave):
+        """
+        Merge one basket into another.
+
+        This is its own method to allow it to be overridden
+        """
+        master.merge(slave, add_quantities=False)
 
     def get_cookie_basket(self, cookie_key, request, manager):
         """
@@ -156,32 +195,3 @@ class BasketMiddleware(object):
 
     def get_basket_hash(self, basket_id):
         return Signer().sign(basket_id)
-
-    def ensure_basket_lines_have_stockrecord(self, basket):
-        """
-        Ensure each basket line has a stockrecord.
-
-        This is to handle the backwards compatibility issue introduced in v0.6
-        where basket lines began to require a stockrecord.
-        """
-        if not basket.id:
-            return
-        for line in basket.all_lines():
-            if not line.stockrecord:
-                self.ensure_line_has_stockrecord(basket, line)
-
-    def ensure_line_has_stockrecord(self, basket, line):
-        # Get details off line before deleting it
-        product = line.product
-        quantity = line.quantity
-        options = []
-        for attr in line.attributes.all():
-            options.append({
-                'option': attr.option,
-                'value': attr.value})
-        line.delete()
-
-        # Attempt to re-add to basket with the appropriate stockrecord
-        stock_info = basket.strategy.fetch_for_product(product)
-        if stock_info.stockrecord:
-            basket.add(product, quantity, options=options)
