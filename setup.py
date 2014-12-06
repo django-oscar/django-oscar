@@ -10,10 +10,11 @@ from setuptools import setup, find_packages
 import os
 import sys
 
-from oscar import get_version
-
 PROJECT_DIR = os.path.dirname(__file__)
 PY3 = sys.version_info >= (3, 0)
+
+sys.path.append(os.path.join(PROJECT_DIR, 'src'))
+from oscar import get_version
 
 # Change to the current directory to solve an issue installing Oscar on the
 # Vagrant machine.
