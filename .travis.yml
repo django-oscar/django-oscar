@@ -5,6 +5,8 @@ python:
     - '3.3'
     - '3.4'
 
+sudo: false
+
 env:
     global:
         # $TRANSIFEX_PASSWORD for oscar_bot (used in transifex.sh)
