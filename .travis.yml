@@ -2,6 +2,11 @@
 # http://docs.travis-ci.com/user/workers/container-based-infrastructure/
 sudo: false
 
+# Cache pip downloads
+cache:
+    directories:
+      - $HOME/.pip-cache/
+
 language: python
 
 python:
@@ -18,7 +23,7 @@ env:
         - DJANGO=Django==1.7.1
 
 install:
-    - pip install -e . -r requirements.txt $DJANGO
+    - pip install -e . -r requirements.txt $DJANGO --download-cache $HOME/.pip-cache
 
 before_script:
     # Create testing databases for running migrations against
