@@ -1093,13 +1093,38 @@ class AbstractOption(models.Model):
     code = AutoSlugField(_("Code"), max_length=128, unique=True,
                          populate_from='name')
 
-    REQUIRED, OPTIONAL = ('Required', 'Optional')
+    # Option types
+    TEXT = "text"
+    INTEGER = "integer"
+    BOOLEAN = "boolean"
+    FLOAT = "float"
+    RICHTEXT = "richtext"
+    DATE = "date"
+    OPTION = "option"
+    ENTITY = "entity"
+    FILE = "file"
+    IMAGE = "image"
     TYPE_CHOICES = (
-        (REQUIRED, _("Required - a value for this option must be specified")),
-        (OPTIONAL, _("Optional - a value for this option can be omitted")),
+        (TEXT, _("Text")),
+        (INTEGER, _("Integer")),
+        (BOOLEAN, _("True / False")),
+        (FLOAT, _("Float")),
+        (RICHTEXT, _("Rich Text")),
+        (DATE, _("Date")),
+        (OPTION, _("Option")),
+        (ENTITY, _("Entity")),
+        (FILE, _("File")),
+        (IMAGE, _("Image")),
     )
-    type = models.CharField(_("Status"), max_length=128, default=REQUIRED,
-                            choices=TYPE_CHOICES)
+    type = models.CharField(
+        choices=TYPE_CHOICES, default=TYPE_CHOICES[0][0],
+        max_length=20, verbose_name=_("Type"))
+    option_group = models.ForeignKey(
+        'catalogue.AttributeOptionGroup', blank=True, null=True,
+        verbose_name=_("Option Group"),
+        help_text=_('Select an option group if using type "Option"'))
+
+    required = models.BooleanField(_('Required'), default=False)
 
     class Meta:
         abstract = True
@@ -1112,7 +1137,68 @@ class AbstractOption(models.Model):
 
     @property
     def is_required(self):
-        return self.type == self.REQUIRED
+        return self.required
+
+    @property
+    def is_option(self):
+        return self.type == self.OPTION
+
+    @property
+    def is_file(self):
+        return self.type in [self.FILE, self.IMAGE]
+
+    def validate_value(self, value):
+        validator = getattr(self, '_validate_%s' % self.type)
+        validator(value)
+
+    # Validators
+
+    def _validate_text(self, value):
+        if not isinstance(value, six.string_types):
+            raise ValidationError(_("Must be str or unicode"))
+    _validate_richtext = _validate_text
+
+    def _validate_float(self, value):
+        try:
+            float(value)
+        except ValueError:
+            raise ValidationError(_("Must be a float"))
+
+    def _validate_integer(self, value):
+        try:
+            int(value)
+        except ValueError:
+            raise ValidationError(_("Must be an integer"))
+
+    def _validate_date(self, value):
+        if not (isinstance(value, datetime) or isinstance(value, date)):
+            raise ValidationError(_("Must be a date or datetime"))
+
+    def _validate_boolean(self, value):
+        if not type(value) == bool:
+            raise ValidationError(_("Must be a boolean"))
+
+    def _validate_entity(self, value):
+        if not isinstance(value, models.Model):
+            raise ValidationError(_("Must be a model instance"))
+
+    def _validate_option(self, value):
+        if not isinstance(value, get_model('catalogue', 'AttributeOption')):
+            raise ValidationError(
+                _("Must be an AttributeOption model object instance"))
+        if not value.pk:
+            raise ValidationError(_("AttributeOption has not been saved yet"))
+        valid_values = self.option_group.options.values_list(
+            'option', flat=True)
+        if value.option not in valid_values:
+            raise ValidationError(
+                _("%(enum)s is not a valid choice for %(attr)s") %
+                {'enum': value, 'attr': self})
+
+    def _validate_file(self, value):
+        if value and not isinstance(value, File):
+            raise ValidationError(_("Must be a file field"))
+    _validate_image = _validate_file
 
 
 class MissingProductImage(object):

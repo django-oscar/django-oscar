@@ -1,11 +1,15 @@
 # coding=utf-8
 from django.db import IntegrityError
 from django.test import TestCase
-from django.core.exceptions import ValidationError
+from unittest import skip
+from django import forms
+from django.core.exceptions import ValidationError, FieldError
 
 from oscar.apps.catalogue.models import (Product, ProductClass,
                                          ProductAttribute,
-                                         AttributeOption)
+                                         AttributeOption,
+                                         Option)
+from oscar.apps.catalogue.utils import attribute_widget_factory
 from oscar.test import factories
 
 
@@ -35,6 +39,17 @@ class ProductCreationTests(ProductTests):
                           title='testing')
         product.attr.num_pages = 100
         product.save()
+    
+    def tets_create_products_with_options(self):
+        msg_option = Option.objects.create(name='Printing Message',
+                                           code='msg',
+                                           type='text')
+        product = Product(upc='1234',
+                          product_class=self.product_class,
+                          title='testing')
+        product.product_options.add(msg_option)
+        product.save()       
+        
 
     def test_none_upc_is_represented_as_empty_string(self):
         product = Product(product_class=self.product_class,
@@ -142,3 +157,82 @@ class ProductAttributeCreationTests(TestCase):
             attribute=attribute, value_entity=unrelated_object)
 
         self.assertEqual(attribute_value.value, unrelated_object)
+        
+class OptionCreationTests(TestCase):
+    
+    def test_validating_options(self):
+        option_group = factories.AttributeOptionGroupFactory()
+        option_1 = factories.AttributeOptionFactory(group=option_group)
+        option_2 = factories.AttributeOptionFactory(group=option_group)
+        pa = factories.OptionFactory(
+            type='option', option_group=option_group)
+
+        self.assertRaises(ValidationError, pa.validate_value, 'invalid')
+        pa.validate_value(option_1)
+        pa.validate_value(option_2)
+
+        invalid_option = AttributeOption(option='invalid option')
+        self.assertRaises(
+            ValidationError, pa.validate_value, invalid_option)
+
+        
+class TestWidgetFactory(TestCase):
+    
+    def setUp(self):
+        option_group = factories.AttributeOptionGroupFactory()
+        option_1 = factories.AttributeOptionFactory(group=option_group)
+        option_2 = factories.AttributeOptionFactory(group=option_group)
+        self.pa = factories.ProductAttribute(type='option', option_group=option_group)
+    
+    def test_not_correct_widget_type(self):
+        with self.assertRaises(FieldError):
+            attribute_widget_factory("not_correct")("value")
+
+    def _test_widget(self, type):
+        widget = attribute_widget_factory(type)(self.pa)
+        self.assertEqual(widget.label, self.pa.name)
+        self.assertEqual(widget.required, self.pa.required)
+        return widget
+        
+
+    def test_text_widget(self):
+        text_widget = self._test_widget("text")
+        self.assertTrue(isinstance(text_widget, forms.CharField))
+    
+    def test_richtext(self):
+        richtext_widget = self._test_widget("richtext")
+        self.assertTrue(isinstance(richtext_widget.widget, forms.Textarea))
+        self.assertTrue(isinstance(richtext_widget, forms.CharField))
+ 
+    def test_integer(self):    
+        self.assertTrue(isinstance(self._test_widget("integer"), forms.IntegerField))        
+         
+    def test_boolean(self):
+        self.assertTrue(isinstance(self._test_widget("boolean"), forms.BooleanField))
+
+    def test_float(self):    
+        self.assertTrue(isinstance(self._test_widget("float"), forms.FloatField))
+         
+    def test_date(self):
+        self.assertTrue(isinstance(self._test_widget("date"), forms.DateField))
+    
+    def test_option(self):    
+        self.assertTrue(isinstance(self._test_widget("option"), forms.ModelChoiceField))
+    
+
+    def test_multioption(self):
+        self.assertTrue(isinstance(self._test_widget("multi_option"), forms.ModelMultipleChoiceField))
+ 
+    @skip("not implemented")
+    def test_entity(self):
+        self._test_widget("multi_entity")
+         
+    def test_numeric(self):
+        self.assertTrue(isinstance(self._test_widget("numeric"), forms.FloatField))
+ 
+    def test_file(self):    
+        self.assertTrue(isinstance(self._test_widget("file"), forms.FileField))
+                 
+    def test_image(self):
+        self.assertTrue(isinstance(self._test_widget("image"), forms.ImageField))
+

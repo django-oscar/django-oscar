@@ -4,7 +4,7 @@ from oscar.test import factories
 from oscar.apps.partner import strategy
 
 
-def add_product(basket, price=None, quantity=1, product=None):
+def add_product(basket, price=None, quantity=1, product=None, options=None):
     """
     Helper to add a product to the basket.
     """
@@ -23,7 +23,7 @@ def add_product(basket, price=None, quantity=1, product=None):
         record = factories.create_stockrecord(
             product=product, price_excl_tax=price,
             num_in_stock=quantity + 1)
-    basket.add_product(record.product, quantity)
+    basket.add_product(record.product, quantity, options)
 
 
 def add_products(basket, args):

@@ -108,3 +108,13 @@ class TestAddToBasketForm(TestCase):
         form = forms.AddToBasketForm(
             basket=basket, product=product, data=data)
         self.assertFalse(form.is_valid())
+        
+    def test_product_with_option(self):
+        basket = factories.BasketFactory()
+        product = factories.ProductFactory()
+        option = factories.OptionFactory()
+        product.product_options.add(option)
+        data = {'quantity': 1, 'weight': 12.0}
+        form = forms.AddToBasketForm(
+            basket=basket, product=product, data=data)
+        self.assertTrue(form.is_valid())

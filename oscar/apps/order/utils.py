@@ -218,7 +218,6 @@ class OrderCreator(object):
         for attr in basket_line.attributes.all():
             order_line.attributes.create(
                 option=attr.option,
-                type=attr.option.code,
                 value=attr.value)
 
     def create_discount_model(self, order, discount):

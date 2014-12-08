@@ -110,7 +110,20 @@ class TestSuccessfulOrderCreation(TestCase):
             line = Order.objects.get(number=order_number).lines.all()[0]
             partner = product.stockrecords.all()[0].partner
             self.assertTrue(partner_name == line.partner_name == partner.name)
-
+            
+    def test_add_product_with_options(self):
+        product = factories.ProductFactory()
+        option = factories.OptionFactory()
+        product.product_options.add(option)
+        options = [{'option': option, 'value':12.0}]
+        add_product(self.basket, D('12.00'), product=product, options=options)
+        place_order(self.creator, basket=self.basket, order_number='4321')
+        order = Order.objects.get(number='4321')
+        line = order.lines.all()[0]
+        self.assertEqual(1, len(line.attributes.all()))
+        line_attribute = line.attributes.all()[0]
+        self.assertEqual(option, line_attribute.option)
+        self.assertEqual(12.0, line_attribute.value)
 
 class TestPlacingOrderForDigitalGoods(TestCase):
 
