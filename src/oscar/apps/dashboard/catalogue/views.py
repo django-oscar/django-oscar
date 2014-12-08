@@ -607,7 +607,7 @@ class CategoryDeleteView(CategoryListMixin, generic.DeleteView):
 class ProductLookupView(ObjectLookupView):
     model = Product
 
-    def get_queryset(self):
+    def get_lookup_queryset(self):
         return self.model.browsable.all()
 
     def lookup_filter(self, qs, term):
