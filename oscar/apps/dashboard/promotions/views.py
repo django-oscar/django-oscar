@@ -10,8 +10,8 @@ from django.http import HttpResponseRedirect
 from django.db.models import Count
 from django.shortcuts import HttpResponse
 
-from oscar.core.loading import get_classes
-from oscar.apps.promotions.conf import PROMOTION_CLASSES
+from oscar.core.loading import get_classes, get_class
+PROMOTION_CLASSES = get_class('promotions.conf', 'PROMOTION_CLASSES')
 
 SingleProduct, RawHTML, Image, MultiImage, AutomaticProductList, \
     PagePromotion, HandPickedProductList \
