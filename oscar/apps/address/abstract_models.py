@@ -394,7 +394,7 @@ class AbstractCountry(models.Model):
     printable_name = models.CharField(_('Country name'), max_length=128)
     #: The full official name of a country
     #: e.g. 'United Kingdom of Great Britain and Northern Ireland'
-    name = models.CharField(_('Official name'), max_length=128)
+    name = models.CharField(_('Official name'), max_length=128, blank=True)
 
     display_order = models.PositiveSmallIntegerField(
         _("Display order"), default=0, db_index=True,
