@@ -10,10 +10,11 @@ from setuptools import setup, find_packages
 import os
 import sys
 
-from oscar import get_version
-
 PROJECT_DIR = os.path.dirname(__file__)
 PY3 = sys.version_info >= (3, 0)
+
+sys.path.append(os.path.join(PROJECT_DIR, 'src'))
+from oscar import get_version
 
 # Change to the current directory to solve an issue installing Oscar on the
 # Vagrant machine.
@@ -30,7 +31,8 @@ setup(name='django-oscar',
       keywords="E-commerce, Django, domain-driven",
       license='BSD',
       platforms=['linux'],
-      packages=find_packages(exclude=["sandbox*", "tests*"]),
+      package_dir={'': 'src'},
+      packages=find_packages('src'),
       include_package_data=True,
       install_requires=[
           'django>=1.6.8,<1.8',
