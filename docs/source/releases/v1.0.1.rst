@@ -9,6 +9,13 @@ Bug fixes
 
 * `#1556`_: Dashboard order table headers shifted
 
+* `#1557`_: Fixed an issue where Oscar wrongly used Django's ``is_safe_url``.
+  Hence some redirects might not have worked as expected. This change
+  unfortunately meant updating the notation of
+  :meth:`oscar.core.utils.safe_referrer` and
+  :meth:`oscar.core.utils.redirect_to_referrer` to accept the request instead
+  of request.META.
+
 * `#1577`_: The billing address was not being correctly passed through to the
   `place_order` method.
 
@@ -17,6 +24,7 @@ Bug fixes
 
 
   .. _#1556: https://github.com/django-oscar/django-oscar/issues/1556
+  .. _#1557: https://github.com/django-oscar/django-oscar/issues/1557
   .. _#1553: https://github.com/django-oscar/django-oscar/issues/1553
   .. _#1577: https://github.com/django-oscar/django-oscar/issues/1577
 

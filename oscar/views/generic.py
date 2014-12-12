@@ -58,10 +58,10 @@ class BulkEditMixin(object):
         return smart_str(self.model._meta.object_name.lower())
 
     def get_error_url(self, request):
-        return safe_referrer(request.META, '.')
+        return safe_referrer(request, '.')
 
     def get_success_url(self, request):
-        return safe_referrer(request.META, '.')
+        return safe_referrer(request, '.')
 
     def post(self, request, *args, **kwargs):
         # Dynamic dispatch pattern - we forward POST requests onto a method

@@ -146,7 +146,7 @@ class WishListCreateWithProductView(View):
         messages.success(
             request, _("%(title)s has been added to your wishlist") % {
                 'title': product.get_title()})
-        return redirect_to_referrer(request.META, wishlist.get_absolute_url())
+        return redirect_to_referrer(request, wishlist.get_absolute_url())
 
 
 class WishListUpdateView(PageTitleMixin, UpdateView):
@@ -236,7 +236,7 @@ class WishListAddProduct(View):
         msg = _("'%s' was added to your wish list.") % self.product.get_title()
         messages.success(self.request, msg)
         return redirect_to_referrer(
-            self.request.META, self.product.get_absolute_url())
+            self.request, self.product.get_absolute_url())
 
 
 class LineMixin(object):
@@ -289,7 +289,7 @@ class WishListRemoveProduct(LineMixin, PageTitleMixin, DeleteView):
 
         # We post directly to this view on product pages; and should send the
         # user back there if that was the case
-        referrer = safe_referrer(self.request.META, '')
+        referrer = safe_referrer(self.request, '')
         if (referrer and self.product and
                 self.product.get_absolute_url() in referrer):
             return referrer
@@ -322,4 +322,4 @@ class WishListMoveProductToAnotherWishList(LineMixin, View):
 
         default_url = reverse(
             'customer:wishlists-detail', kwargs={'key': self.wishlist.key})
-        return redirect_to_referrer(self.request.META, default_url)
+        return redirect_to_referrer(self.request, default_url)
