@@ -7,6 +7,7 @@ from oscar.apps.catalogue.models import (Product, ProductClass,
                                          ProductAttribute,
                                          AttributeOption)
 from oscar.test import factories
+from oscar.test.decorators import ignore_deprecation_warnings
 
 
 class ProductTests(TestCase):
@@ -82,8 +83,7 @@ class ChildProductTests(ProductTests):
 
     def test_child_products_dont_need_titles(self):
         Product.objects.create(
-            parent=self.parent, product_class=self.product_class,
-            structure=Product.CHILD)
+            parent=self.parent, structure=Product.CHILD)
 
     def test_child_products_dont_need_a_product_class(self):
         Product.objects.create(parent=self.parent, structure=Product.CHILD)
@@ -102,6 +102,18 @@ class ChildProductTests(ProductTests):
             product_class=self.product_class, parent=self.parent,
             structure=Product.CHILD)
         self.assertEqual(set([self.parent]), set(Product.browsable.all()))
+
+    @ignore_deprecation_warnings
+    def test_have_a_minimum_price(self):
+        self.assertIsNone(self.parent.min_child_price_excl_tax)
+        factories.ProductFactory(
+            parent=self.parent, structure=Product.CHILD,
+            stockrecords__price_excl_tax=5)
+        self.assertEqual(5, self.parent.min_child_price_excl_tax)
+        factories.ProductFactory(
+            parent=self.parent, structure=Product.CHILD,
+            stockrecords__price_excl_tax=3)
+        self.assertEqual(3, self.parent.min_child_price_excl_tax)
 
 
 class TestAChildProduct(TestCase):
