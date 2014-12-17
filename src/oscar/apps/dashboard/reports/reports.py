@@ -33,7 +33,7 @@ class ReportGenerator(object):
                'end_date': self.end_date,
                }
 
-    def generate(self, response):
+    def generate(self):
         pass
 
     def filename(self):
