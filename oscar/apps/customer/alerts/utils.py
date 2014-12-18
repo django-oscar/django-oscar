@@ -61,7 +61,7 @@ def send_product_alerts(product):
 
     logger.info("Sending alerts for '%s'", product)
     alerts = ProductAlert.objects.filter(
-        product=product,
+        product_id__in=(product.id, product.parent_id),
         status=ProductAlert.ACTIVE,
     )
 
