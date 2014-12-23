@@ -2,8 +2,17 @@
 import os
 import django
 
-from django.conf import settings, global_settings
+from django.conf import settings
 import oscar
+
+
+class DisableMigrations(object):
+
+    def __contains__(self, item):
+        return True
+
+    def __getitem__(self, item):
+        return "notmigrations"
 
 
 def configure():
@@ -27,7 +36,7 @@ def configure():
                 'django.contrib.admin',
                 'django.contrib.contenttypes',
                 'django.contrib.sessions',
-              'django.contrib.sites',
+                'django.contrib.sites',
                 'django.contrib.flatpages',
                 'django.contrib.staticfiles',
                 'compressor',
@@ -108,6 +117,8 @@ def configure():
             # warning regarding a changed default test runner. The Oscar test
             # suite is run with nose, so it does not matter.
             'SILENCED_SYSTEM_CHECKS': ['1_6.W001'],
+
+            'MIGRATION_MODULES': DisableMigrations(),
         })
 
         settings.configure(**test_settings)
