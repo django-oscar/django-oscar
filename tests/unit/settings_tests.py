@@ -19,6 +19,10 @@ class TestOscarCoreAppsList(TestCase):
         self.assertTrue('apps.shipping' in apps)
         self.assertTrue('oscar.apps.shipping' not in apps)
 
+    def test_raises_exception_for_string_arg(self):
+        with self.assertRaises(ValueError):
+            oscar.get_core_apps('forks.catalogue')
+
 
 class TestOscarTemplateSettings(TestCase):
     """
