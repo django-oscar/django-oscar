@@ -1,0 +1,15 @@
+=========================
+Oscar 1.0.2 release notes
+=========================
+
+This is Oscar 1.0.2, a bug fix release.
+
+Bug fixes
+=========
+
+* `#1562`_: Correctly handle the update_fields kwarg on ``Category.save()``
+* `#1672`_: ``Order.shipping_status`` was not guaranteed to return the correct status.
+
+
+  .. _#1562: https://github.com/django-oscar/django-oscar/issues/1562
+  .. _#1672: https://github.com/django-oscar/django-oscar/issues/1672
