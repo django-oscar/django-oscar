@@ -107,7 +107,7 @@ class EmailAuthenticationForm(AuthenticationForm):
 
     def clean_redirect_url(self):
         url = self.cleaned_data['redirect_url'].strip()
-        if url and is_safe_url(url):
+        if url and is_safe_url(url, self.host):
             return url
 
 
@@ -169,7 +169,7 @@ class EmailUserCreationForm(forms.ModelForm):
 
     def clean_redirect_url(self):
         url = self.cleaned_data['redirect_url'].strip()
-        if url and is_safe_url(url):
+        if url and is_safe_url(url, self.host):
             return url
         return settings.LOGIN_REDIRECT_URL
 

@@ -79,7 +79,7 @@ class AccountRegistrationView(RegisterUserMixin, generic.FormView):
     def get_context_data(self, *args, **kwargs):
         ctx = super(AccountRegistrationView, self).get_context_data(
             *args, **kwargs)
-        ctx['cancel_url'] = safe_referrer(self.request.META, '')
+        ctx['cancel_url'] = safe_referrer(self.request, '')
         return ctx
 
     def form_valid(self, form):

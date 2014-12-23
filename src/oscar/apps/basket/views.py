@@ -187,7 +187,7 @@ class BasketView(ModelFormSetView):
         return context
 
     def get_success_url(self):
-        return safe_referrer(self.request.META, 'basket:summary')
+        return safe_referrer(self.request, 'basket:summary')
 
     def formset_valid(self, formset):
         # Store offers before any changes are made so we can inform the user of
@@ -316,7 +316,7 @@ class BasketAddView(FormView):
         clean_msgs = [m.replace('* ', '') for m in msgs if m.startswith('* ')]
         messages.error(self.request, ",".join(clean_msgs))
 
-        return redirect_to_referrer(self.request.META, 'basket:summary')
+        return redirect_to_referrer(self.request, 'basket:summary')
 
     def form_valid(self, form):
         offers_before = self.request.basket.applied_offers()
@@ -346,9 +346,9 @@ class BasketAddView(FormView):
 
     def get_success_url(self):
         post_url = self.request.POST.get('next')
-        if post_url and is_safe_url(post_url):
+        if post_url and is_safe_url(post_url, self.request.get_host()):
             return post_url
-        return safe_referrer(self.request.META, 'basket:summary')
+        return safe_referrer(self.request, 'basket:summary')
 
 
 class VoucherAddView(FormView):
@@ -402,7 +402,7 @@ class VoucherAddView(FormView):
     def form_valid(self, form):
         code = form.cleaned_data['code']
         if not self.request.basket.id:
-            return redirect_to_referrer(self.request.META, 'basket:summary')
+            return redirect_to_referrer(self.request, 'basket:summary')
         if self.request.basket.contains_voucher(code):
             messages.error(
                 self.request,
@@ -418,7 +418,7 @@ class VoucherAddView(FormView):
                         'code': code})
             else:
                 self.apply_voucher_to_basket(voucher)
-        return redirect_to_referrer(self.request.META, 'basket:summary')
+        return redirect_to_referrer(self.request, 'basket:summary')
 
     def form_invalid(self, form):
         messages.error(self.request, _("Please enter a voucher code"))
@@ -474,7 +474,7 @@ class SavedView(ModelFormSetView):
             return []
 
     def get_success_url(self):
-        return safe_referrer(self.request.META, 'basket:summary')
+        return safe_referrer(self.request, 'basket:summary')
 
     def get_formset_kwargs(self):
         kwargs = super(SavedView, self).get_formset_kwargs()
@@ -512,4 +512,4 @@ class SavedView(ModelFormSetView):
             '\n'.join(
                 error for ed in formset.errors for el
                 in ed.values() for error in el))
-        return redirect_to_referrer(self.request.META, 'basket:summary')
+        return redirect_to_referrer(self.request, 'basket:summary')

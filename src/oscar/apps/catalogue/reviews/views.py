@@ -99,7 +99,7 @@ class AddVoteView(View):
             for error_list in form.errors.values():
                 for msg in error_list:
                     messages.error(request, msg)
-        return redirect_to_referrer(request.META, product.get_absolute_url())
+        return redirect_to_referrer(request, product.get_absolute_url())
 
 
 class ProductReviewList(ListView):
