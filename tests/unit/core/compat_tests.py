@@ -7,7 +7,13 @@ import unittest
 import django
 from django.test import TestCase
 
-from oscar.core.compat import UnicodeCSVWriter
+from oscar.core.compat import UnicodeCSVWriter, existing_user_fields
+
+class TestExistingUserFields(TestCase):
+
+    def test_order(self):
+        fields = existing_user_fields(['email', 'first_name', 'last_name'])
+        self.assertEqual(fields, ['email', 'first_name', 'last_name'])
 
 
 class TestUnicodeCSVWriter(TestCase):
