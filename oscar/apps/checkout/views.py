@@ -8,7 +8,6 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext as _
 from django.utils import six
 from django.utils.http import urlquote
-
 from django.views import generic
 
 from oscar.apps.shipping.methods import NoShippingRequired
