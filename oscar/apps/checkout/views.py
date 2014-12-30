@@ -7,7 +7,6 @@ from django.contrib.auth import login
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext as _
 from django.utils import six
-from django.utils.http import urlquote
 from django.views import generic
 
 from oscar.apps.shipping.methods import NoShippingRequired
@@ -92,7 +91,7 @@ class IndexView(CheckoutSessionMixin, generic.FormView):
                 self.success_url = "%s?next=%s&email=%s" % (
                     reverse('customer:register'),
                     reverse('checkout:shipping-address'),
-                    urlquote(email)
+                    email
                 )
         else:
             user = form.get_user()
