@@ -37,7 +37,7 @@ setup(name='django-oscar',
       install_requires=[
           'django>=1.6.8,<1.8',
           # PIL is required for image fields, Pillow is the "friendly" PIL fork
-          'pillow>=1.7.8,<2.5',
+          'pillow>=1.7.8,<=2.7',
           # We use the ModelFormSetView from django-extra-views for the basket
           # page. 0.6.5 pins version of six, which causes issues:
           # https://github.com/AndrewIngram/django-extra-views/pull/85
@@ -47,7 +47,7 @@ setup(name='django-oscar',
           # Treebeard is used for categories
           'django-treebeard==2.0',
           # Sorl is used as the default thumbnailer
-          'sorl-thumbnail==11.12.1b',
+          'sorl-thumbnail>=11.12.1b,<=12.2',
           # Babel is used for currency formatting
           'Babel>=1.0,<1.4',
           # Oscar's default templates use compressor (but you can override
