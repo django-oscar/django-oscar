@@ -1,18 +1,37 @@
+import itertools
 from decimal import Decimal as D
 
 from django.db import models
+from django.db.models.query import Q
 from django.core import exceptions
 from django.template.defaultfilters import date as date_filter
 from oscar.templatetags.currency_filters import currency
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now, get_current_timezone
 from django.utils.translation import ugettext_lazy as _
+from django.utils.importlib import import_module
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
 from oscar.models import fields
-from oscar.core.loading import get_model
+from oscar.core.loading import get_model, get_class
 from oscar.apps.offer.managers import ActiveOfferManager
+
+BrowsableRangeManager = get_class('offer.managers', 'BrowsableRangeManager')
+
+
+def load_proxy(proxy_class):
+    module, classname = proxy_class.rsplit('.', 1)
+    try:
+        mod = import_module(module)
+    except ImportError as e:
+        raise exceptions.ImproperlyConfigured(
+            "Error importing module %s: %s" % (module, e))
+    try:
+        return getattr(mod, classname)
+    except AttributeError:
+        raise exceptions.ImproperlyConfigured(
+            "Module %s does not define a %s" % (module, classname))
 
 
 @python_2_unicode_compatible
@@ -443,3 +462,232 @@ class PostOrderAction(ApplicationResult):
 
     def __init__(self, description):
         self.description = description
+
+
+@python_2_unicode_compatible
+class AbstractRange(models.Model):
+    """
+    Represents a range of products that can be used within an offer.
+
+    Ranges only support adding parent or stand-alone products. Offers will
+    consider child products automatically.
+    """
+    name = models.CharField(_("Name"), max_length=128, unique=True)
+    slug = fields.AutoSlugField(
+        _("Slug"), max_length=128, unique=True, populate_from="name")
+
+    description = models.TextField(blank=True)
+
+    # Whether this range is public
+    is_public = models.BooleanField(
+        _('Is public?'), default=False,
+        help_text=_("Public ranges have a customer-facing page"))
+
+    includes_all_products = models.BooleanField(
+        _('Includes all products?'), default=False)
+
+    included_products = models.ManyToManyField(
+        'catalogue.Product', related_name='includes', blank=True,
+        verbose_name=_("Included Products"), through='offer.RangeProduct')
+    excluded_products = models.ManyToManyField(
+        'catalogue.Product', related_name='excludes', blank=True,
+        verbose_name=_("Excluded Products"))
+    classes = models.ManyToManyField(
+        'catalogue.ProductClass', related_name='classes', blank=True,
+        verbose_name=_("Product Types"))
+    included_categories = models.ManyToManyField(
+        'catalogue.Category', related_name='includes', blank=True,
+        verbose_name=_("Included Categories"))
+
+    # Allow a custom range instance to be specified
+    proxy_class = fields.NullCharField(
+        _("Custom class"), max_length=255, default=None, unique=True)
+
+    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
+
+    __included_product_ids = None
+    __excluded_product_ids = None
+    __class_ids = None
+    __category_ids = None
+
+    objects = models.Manager()
+    browsable = BrowsableRangeManager()
+
+    class Meta:
+        abstract = True
+        app_label = 'offer'
+        verbose_name = _("Range")
+        verbose_name_plural = _("Ranges")
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse(
+            'catalogue:range', kwargs={'slug': self.slug})
+
+    def add_product(self, product, display_order=None):
+        """ Add product to the range
+
+        When adding product that is already in the range, prevent re-adding it.
+        If display_order is specified, update it.
+
+        Default display_order for a new product in the range is 0; this puts
+        the product at the top of the list.
+        """
+        if product.is_child:
+            raise ValueError(
+                "Ranges can only contain parent and stand-alone products.")
+
+        initial_order = display_order or 0
+        RangeProduct = get_model('offer', 'RangeProduct')
+        relation, __ = RangeProduct.objects.get_or_create(
+            range=self, product=product,
+            defaults={'display_order': initial_order})
+
+        if (display_order is not None and
+                relation.display_order != display_order):
+            relation.display_order = display_order
+            relation.save()
+
+    def remove_product(self, product):
+        """
+        Remove product from range. To save on queries, this function does not
+        check if the product is in fact in the range.
+        """
+        RangeProduct = get_model('offer', 'RangeProduct')
+        RangeProduct.objects.filter(range=self, product=product).delete()
+
+    def contains_product(self, product):  # noqa (too complex (12))
+        """
+        Check whether the passed product is part of this range.
+        """
+        # Child products are never part of the range, but the parent may be.
+        if product.is_child:
+            product = product.parent
+
+        # Delegate to a proxy class if one is provided
+        if self.proxy_class:
+            return load_proxy(self.proxy_class)().contains_product(product)
+
+        excluded_product_ids = self._excluded_product_ids()
+        if product.id in excluded_product_ids:
+            return False
+        if self.includes_all_products:
+            return True
+        if product.product_class_id in self._class_ids():
+            return True
+        included_product_ids = self._included_product_ids()
+        if product.id in included_product_ids:
+            return True
+        test_categories = self.included_categories.all()
+        if test_categories:
+            for category in product.get_categories().all():
+                for test_category in test_categories:
+                    if category == test_category \
+                            or category.is_descendant_of(test_category):
+                        return True
+        return False
+
+    # Shorter alias
+    contains = contains_product
+
+    def __get_pks_and_child_pks(self, queryset):
+        """
+        Expects a product queryset; gets the primary keys of the passed
+        products and their children.
+
+        Verbose, but database and memory friendly.
+        """
+        # One query to get parent and children; [(4, None), (5, 10), (5, 11)]
+        pk_tuples_iterable = queryset.values_list('pk', 'children__pk')
+        # Flatten list without unpacking; [4, None, 5, 10, 5, 11]
+        flat_iterable = itertools.chain.from_iterable(pk_tuples_iterable)
+        # Ensure uniqueness and remove None; {4, 5, 10, 11}
+        return set(flat_iterable) - {None}
+
+    def _included_product_ids(self):
+        if not self.id:
+            return []
+        if self.__included_product_ids is None:
+            self.__included_product_ids = self.__get_pks_and_child_pks(
+                self.included_products)
+        return self.__included_product_ids
+
+    def _excluded_product_ids(self):
+        if not self.id:
+            return []
+        if self.__excluded_product_ids is None:
+            self.__excluded_product_ids = self.__get_pks_and_child_pks(
+                self.excluded_products)
+        return self.__excluded_product_ids
+
+    def _class_ids(self):
+        if None == self.__class_ids:
+            self.__class_ids = self.classes.values_list('pk', flat=True)
+        return self.__class_ids
+
+    def _category_ids(self):
+        if self.__category_ids is None:
+            category_ids_list = list(
+                self.included_categories.values_list('pk', flat=True))
+            for category in self.included_categories.all():
+                children_ids = category.get_descendants().values_list(
+                    'pk', flat=True)
+                category_ids_list.extend(list(children_ids))
+
+            self.__category_ids = category_ids_list
+
+        return self.__category_ids
+
+    def num_products(self):
+        # Delegate to a proxy class if one is provided
+        if self.proxy_class:
+            return load_proxy(self.proxy_class)().num_products()
+        if self.includes_all_products:
+            return None
+        return self.all_products().count()
+
+    def all_products(self):
+        """
+        Return a queryset containing all the products in the range
+
+        This includes included_products plus the products contained in the
+        included classes and categories, minus the products in
+        excluded_products.
+        """
+        if self.proxy_class:
+            return load_proxy(self.proxy_class)().all_products()
+
+        Product = get_model("catalogue", "Product")
+        if self.includes_all_products:
+            # Filter out child products
+            return Product.browsable.all()
+
+        return Product.objects.filter(
+            Q(id__in=self._included_product_ids()) |
+            Q(product_class_id__in=self._class_ids()) |
+            Q(productcategory__category_id__in=self._category_ids())
+        ).exclude(id__in=self._excluded_product_ids())
+
+    @property
+    def is_editable(self):
+        """
+        Test whether this product can be edited in the dashboard
+        """
+        return not self.proxy_class
+
+
+class AbstractRangeProduct(models.Model):
+    """ 
+    Allow ordering products inside ranges 
+    Exists to allow customising.
+    """
+    range = models.ForeignKey('offer.Range')
+    product = models.ForeignKey('catalogue.Product')
+    display_order = models.IntegerField(default=0)
+
+    class Meta:
+        abstract = True
+        app_label = 'offer'
+        unique_together = ('range', 'product')
