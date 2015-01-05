@@ -129,10 +129,14 @@ Here's some example offers:
 
 More to come...
 
+Abstract models
+---------------
+
+.. automodule:: oscar.apps.offer.abstract_models
+    :members:
+
 Models
 -------
-
-Please note that models in this app are not abstract.
 
 .. automodule:: oscar.apps.offer.models
     :members:
