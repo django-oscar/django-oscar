@@ -22,7 +22,7 @@ from oscar.models import fields
 from oscar.core.loading import is_model_registered
 from oscar.apps.offer.abstract_models import *  # noqa
 
-__all__ = ['Condition', 'Benefit', 'Range', 'RangeProduct', 'CountCondition',
+__all__ = ['Condition', 'Benefit', 'CountCondition',
            'CoverageCondition', 'ValueCondition', 'PercentageDiscountBenefit',
            'AbsoluteDiscountBenefit', 'FixedPriceBenefit', 'ShippingBenefit',
            'MultibuyDiscountBenefit', 'ShippingAbsoluteDiscountBenefit',
