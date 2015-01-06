@@ -84,7 +84,7 @@ When payment has completed, there's a few things to do:
   paid for.  The ``add_payment_event`` method assumes all lines are paid for by
   the passed event type, as this is the normal situation when placing an order.
   Note that payment events don't distinguish between different sources.
-p
+
 For example::
 
     from oscar.apps.checkout import views
