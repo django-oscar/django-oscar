@@ -23,13 +23,21 @@
         <a href="{{ homepage_url }}">{% trans "Home" %}</a>
         <span class="divider">/</span>
     </li>
-    {% with category=product.categories.all.0 %}
+    {% with category=product.get_categories.0 %}
         {% for c in category.get_ancestors_and_self %}
         <li>
             <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
             <span class="divider">/</span>
         </li>
         {% endfor %}
+
+        {% if product.parent %}
+        <li>
+        	<a href="{{ product.parent.get_absolute_url }}">{{ product.parent.title }}</a>
+        	<span class="divider">/</span>
+        <li>
+        {% endif %}
+
         <li class="active">{{ product.title }}</li>
 
         {% get_back_button as backbutton %}
