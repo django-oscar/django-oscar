@@ -28,7 +28,14 @@ class ProductDetailView(DetailView):
     enforce_paths = True
 
     # Whether to redirect child products to their parent's URL
-    enforce_parent = True
+    enforce_parent = False
+
+    def _get_children(self, product):
+        if product.structure == Product.CHILD:
+            return product.parent.children.all()
+
+        elif product.structure == Product.PARENT:
+            return product.children.all()
 
     def get(self, request, **kwargs):
         """
@@ -66,6 +73,7 @@ class ProductDetailView(DetailView):
         ctx['reviews'] = self.get_reviews()
         ctx['alert_form'] = self.get_alert_form()
         ctx['has_active_alert'] = self.get_alert_status()
+        ctx['children'] = self._get_children(ctx['product'])
         return ctx
 
     def get_alert_status(self):
