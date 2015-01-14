@@ -11,7 +11,7 @@ Line = get_model('basket', 'line')
 Basket = get_model('basket', 'basket')
 Product = get_model('catalogue', 'product')
 
-VariantChoiceField = get_class('apps.basket.fields', 'VariantChoiceField')
+VariantChoiceField = get_class('basket.fields', 'VariantChoiceField')
 
 class BasketLineForm(forms.ModelForm):
     save_for_later = forms.BooleanField(
