@@ -3,8 +3,9 @@ from django import http
 from django.shortcuts import get_object_or_404
 
 from oscar.core.loading import get_model
-from oscar.apps.offer.models import ConditionalOffer, Range
 
+ConditionalOffer = get_model('offer', 'ConditionalOffer')
+Range = get_model('offer', 'Range')
 Product = get_model('catalogue', 'Product')
 
 
