@@ -23,7 +23,7 @@
         <a href="{{ homepage_url }}">{% trans "Home" %}</a>
         <span class="divider">/</span>
     </li>
-    {% with category=product.get_categories.0 %}
+    {% with category=product.get_categories.all.0 %}
         {% for c in category.get_ancestors_and_self %}
         <li>
             <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
