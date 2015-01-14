@@ -298,6 +298,11 @@ class AbstractProduct(models.Model):
     date_updated = models.DateTimeField(
         _("Date updated"), auto_now=True, db_index=True)
 
+    # This field is used to determine which images are associated with which child/variant
+    # The related name 'variants' might be confusing.
+    # Ideally, we would use a limit_choices_to referencing only the parent's images
+    child_images = models.ManyToManyField('catalogue.ProductImage', related_name='variants')
+
     categories = models.ManyToManyField(
         'catalogue.Category', through='ProductCategory',
         verbose_name=_("Categories"))
