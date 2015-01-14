@@ -76,7 +76,15 @@
             {% if user.is_authenticated and user.is_staff %}
                 <a class="pull-right hidden-phone" href="{% url 'dashboard:catalogue-product' pk=product.id %}"><small><i class="icon-edit"></i> {% trans "Edit this product" %}</small></a>
             {% endif %}
-            <h1>{{ product.get_title }}</h1>
+
+            <h1>
+                {% if product.parent %}
+                    {{ product.parent.get_title }}<br />
+                    <small>{{ product.get_title }}</small>
+                {% else %}
+                    {{ product.get_title }}
+                {% endif %}
+            </h1>
 
             {% block product_stock_record %}
                 {% include "catalogue/partials/stock_record.html" with verbose=1 %}
