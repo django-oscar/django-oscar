@@ -286,7 +286,7 @@ class ProductForm(forms.ModelForm):
             self.instance.parent.structure = Product.PARENT
 
             self.delete_non_child_fields()
-            self.set_child_images_queryset()
+            self.set_child_images_queryset(parent)
         else:
             # Only set product class for non-child products
             self.instance.product_class = product_class
