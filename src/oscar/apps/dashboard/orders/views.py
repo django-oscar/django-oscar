@@ -188,15 +188,15 @@ class OrderListView(BulkEditMixin, ListView):
         if data['date_from'] and data['date_to']:
             desc_ctx['date_filter'] \
                 = _(" placed between %(start_date)s and %(end_date)s") \
-                % {'start_date': format_datetime(data['date_from']),
-                   'end_date': format_datetime(data['date_to'])}
+                % {'start_date': data['date_from'],
+                   'end_date': data['date_to']}
         elif data['date_from']:
             desc_ctx['date_filter'] = _(" placed since %s") \
-                % format_datetime(data['date_from'])
+                % data['date_from']
         elif data['date_to']:
             date_to = data['date_to'] + datetime.timedelta(days=1)
             desc_ctx['date_filter'] = _(" placed before %s") \
-                % format_datetime(date_to)
+                % date_to
         if data['voucher']:
             desc_ctx['voucher_filter'] = _(" using voucher '%(voucher)s'") \
                 % data
