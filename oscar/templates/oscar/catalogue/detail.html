@@ -152,6 +152,25 @@
     </table>
     {% endblock %}
 
+
+    {% block parent_info %}
+        {% with attribute_values=product.parent.attribute_values.all %}
+            {% if attribute_values %}
+                <div class="sub-header">
+                    <h2>{% trans "Additional Information" %}</h2>
+                </div>
+                <table class="table table-striped">
+                    {% for av in attribute_values %}
+                        <tr>
+                            <th>{{ av.attribute.name }}</th>
+                            <td>{{ av.value_as_html }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+        {% endwith %}
+    {% endblock %}
+
     {% iffeature "reviews" %}
         {% block product_review %}
         <section>
