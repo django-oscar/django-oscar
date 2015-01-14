@@ -266,7 +266,7 @@ class AdvancedSelect(forms.Select):
 
     def render_option(self, selected_choices, option_value, option_label):
         option_value = force_text(option_value)
-        if option_value in self.disabled_values:
+        if getattr(option_label, 'disabled', False) or option_value in self.disabled_values:
             selected_html = mark_safe(' disabled="disabled"')
         elif option_value in selected_choices:
             selected_html = mark_safe(' selected="selected"')
