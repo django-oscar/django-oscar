@@ -301,7 +301,11 @@ class AbstractProduct(models.Model):
     # This field is used to determine which images are associated with which child/variant
     # The related name 'variants' might be confusing.
     # Ideally, we would use a limit_choices_to referencing only the parent's images
-    child_images = models.ManyToManyField('catalogue.ProductImage', related_name='variants')
+    child_images = models.ManyToManyField(
+        'catalogue.ProductImage',
+        blank='True',
+        related_name='variants',
+        verbose_name=_('Child images'))
 
     categories = models.ManyToManyField(
         'catalogue.Category', through='ProductCategory',
