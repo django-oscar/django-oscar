@@ -149,7 +149,7 @@ class AbstractCategory(MP_Node):
         Moves the current node and all its descendants to a new position
         relative to another node.
 
-        See https://tabo.pe/projects/django-treebeard/docs/1.61/api.html#treebeard.models.Node.move  # noqa
+        See https://tabo.pe/projects/django-treebeard/docs/2.0/api.html#treebeard.models.Node.move  # noqa
         """
         super(AbstractCategory, self).move(target, pos)
 
