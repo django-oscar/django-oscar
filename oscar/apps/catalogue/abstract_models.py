@@ -639,12 +639,23 @@ class AbstractProduct(models.Model):
         # field.
         return MissingProductImage()
 
+    @property
+    def active_images(self):
+        """
+        Returns the correct related manager for images
+        """
+
+        if self.structure == self.CHILD:
+            return self.child_images
+        else:
+            return self.images
+
     def primary_image(self):
         """
         Returns the primary image for a product. Usually used when one can
         only display one product image, e.g. in a list of products.
         """
-        images = self.images.all()
+        images = self.active_images.all()
         ordering = self.images.model.Meta.ordering
         if not ordering or ordering[0] != 'display_order':
             # Only apply order_by() if a custom model doesn't use default
