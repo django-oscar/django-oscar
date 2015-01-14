@@ -357,7 +357,7 @@ class OrderListView(BulkEditMixin, ListView):
                 row['billing_address_name'] = order.billing_address.name
             else:
                 row['billing_address_name'] = ''
-            writer.writerow(row)
+            writer.writerow(row.values())
         return response
 
     def change_order_statuses(self, request, orders):
