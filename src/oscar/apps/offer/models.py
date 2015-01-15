@@ -221,7 +221,7 @@ class ConditionalOffer(models.Model):
     def unsuspend(self):
         self.status = self.OPEN
         self.save()
-    suspend.alters_data = True
+    unsuspend.alters_data = True
 
     def is_available(self, user=None, test_date=None):
         """
