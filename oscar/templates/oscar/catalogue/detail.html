@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+{% load firstof from future %}
+
 {% load history_tags %}
 {% load currency_filters %}
 {% load reviews_tags %}
@@ -119,11 +121,11 @@
     </div><!-- /row-fluid -->
 
     {% block product_description %}
-        {% if product.description %}
+        {% if product.description or product.parent.description %}
         <div id="product_description" class="sub-header">
             <h2>{% trans "Product Description" %}</h2>
         </div>
-        <p>{{ product.description|safe }}</p>
+        <p>{% firstof product.description|safe product.parent.description|safe %}</p>
         {% endif %}
     {% endblock %}
 
