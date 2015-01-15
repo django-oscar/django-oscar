@@ -1,21 +1,6 @@
 from django import forms
 
-from oscar.forms.widgets import AdvancedSelect
-
-class VariantChoice(object):
-    """
-    Represents a simplified choice for a variant.
-    Includes a 'summary' which is the label, as well as a
-    'disabled' attribute which tells the underlying widget
-    to disable this choice.
-    """
-
-    def __init__(self, summary, disabled):
-        self.summary = summary
-        self.disabled = disabled
-
-    def __str__(self):
-        return self.summary
+from oscar.forms.widgets import AdvancedChoice, AdvancedSelect
 
 class VariantChoiceField(forms.ModelChoiceField):
     """
@@ -44,4 +29,4 @@ class VariantChoiceField(forms.ModelChoiceField):
         info = self.basket.strategy.fetch_for_product(child)
         disabled = not info.availability.is_available_to_buy
 
-        return VariantChoice(summary, disabled)
+        return AdvancedChoice(summary, disabled=disabled)
