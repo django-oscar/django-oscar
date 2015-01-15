@@ -1,6 +1,26 @@
 from django import forms
+from django.utils.html import format_html
 
-from oscar.forms.widgets import AdvancedChoice, AdvancedSelect
+from oscar.forms.widgets import AdvancedChoice, AdvancedRadioSelect
+
+class VariantChoice(AdvancedChoice):
+
+    # Bootstrap 2 & 3 classes
+    DISABLED_CLASSES = ['muted', 'text-muted']
+
+    def __init__(self, label, disabled=False, href=None):
+        self.href = href
+        super(VariantChoice, self).__init__(label, disabled=disabled)
+
+    def __unicode__(self):
+        if self.href:
+            if self.disabled:
+                disabled = format_html(' class="{0}"', ' '.join(self.DISABLED_CLASSES))
+            else:
+                disabled = ''
+            return format_html('<a href="{0}"{1}>{2}</a>', self.href, disabled, self.label)
+        else:
+            return self.label
 
 class VariantChoiceField(forms.ModelChoiceField):
     """
@@ -9,7 +29,7 @@ class VariantChoiceField(forms.ModelChoiceField):
 
     def __init__(self, *args, **kwargs):
         if 'widget' not in kwargs:
-            kwargs['widget'] = AdvancedSelect()
+            kwargs['widget'] = AdvancedRadioSelect()
 
         self.basket = kwargs.pop('basket')
 
@@ -29,4 +49,6 @@ class VariantChoiceField(forms.ModelChoiceField):
         info = self.basket.strategy.fetch_for_product(child)
         disabled = not info.availability.is_available_to_buy
 
-        return AdvancedChoice(summary, disabled=disabled)
+        href = child.get_absolute_url()
+
+        return VariantChoice(summary, disabled=disabled, href=href)
