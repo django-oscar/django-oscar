@@ -69,4 +69,5 @@ def update(product, request, response):
         settings.OSCAR_RECENTLY_VIEWED_COOKIE_NAME,
         json.dumps(updated_ids),
         max_age=settings.OSCAR_RECENTLY_VIEWED_COOKIE_LIFETIME,
+        secure=settings.OSCAR_RECENTLY_VIEWED_COOKIE_SECURE,
         httponly=True)
