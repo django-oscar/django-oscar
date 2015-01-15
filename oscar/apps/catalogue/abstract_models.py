@@ -373,6 +373,8 @@ class AbstractProduct(models.Model):
         +---------------+-------------+--------------+--------------+
         | options       | optional    | optional     | forbidden    |
         +---------------+-------------+--------------+--------------+
+        | child images  | forbidden   | forbidden    | optional     |
+        +---------------+-------------+--------------+--------------+
 
         Because the validation logic is quite complex, validation is delegated
         to the sub method appropriate for the product's structure.
@@ -391,6 +393,8 @@ class AbstractProduct(models.Model):
             raise ValidationError(_("Your product must have a product class."))
         if self.parent_id:
             raise ValidationError(_("Only child products can have a parent."))
+        if self.child_images.exists():
+            raise ValidationError(_("Only child products can have child images."))
 
     def _clean_child(self):
         """
@@ -420,6 +424,9 @@ class AbstractProduct(models.Model):
         if self.has_stockrecords:
             raise ValidationError(
                 _("A parent product can't have stockrecords."))
+        if self.child_images.exists():
+            raise ValidationError(
+                _("A parent product can't have child images."))
 
     def save(self, *args, **kwargs):
         if not self.slug:
