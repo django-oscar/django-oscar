@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.encoding import force_text
 from django.utils.html import format_html
 from django.utils.text import mark_safe
 
@@ -19,7 +20,9 @@ class VariantChoice(AdvancedChoice):
                 disabled = format_html(' class="{0}"', ' '.join(self.DISABLED_CLASSES))
             else:
                 disabled = ''
-            return mark_safe( format_html('<a href="{0}"{1}>{2}</a>', self.href, disabled, self.label) )
+
+            test = force_text( format_html('<a href="{0}"{1}>{2}</a>', self.href, disabled, self.label) )
+            assert False, repr(test)
         else:
             return self.label
 
