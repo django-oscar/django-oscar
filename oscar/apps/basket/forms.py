@@ -148,9 +148,22 @@ class AddToBasketForm(forms.Form):
         # Dynamically build fields
         if product.is_parent:
             self._create_parent_product_fields(product)
+        elif product.is_child:
+            self._create_child_product_fields(product)
         self._create_product_fields(product)
 
     # Dynamic form building methods
+
+    def _create_child_product_fields(self, product):
+        """
+        Adds the fields for the child's siblings. This lets us add
+        a child from a sibling's page.
+
+        Set the initial value to be the selected child.
+        """
+        self.fields['child'] = VariantChoiceField(
+            queryset=product.parent.children.all(), label=_("Variant"), empty_label=None, basket=self.basket,
+            initial=product)
 
     def _create_parent_product_fields(self, product):
         """
