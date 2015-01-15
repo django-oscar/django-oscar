@@ -1,0 +1,14 @@
+=========================
+Oscar 1.0.3 release notes
+=========================
+
+This is Oscar 1.0.3, a bug fix release.
+
+
+Bug fixes
+=========
+
+* The settings ``OSCAR_BASKET_COOKIE_SECURE`` and ``OSCAR_RECENTLY_VIEWED_COOKIE_SECURE``
+  are introduced to set the ``secure`` flag on the relevant cookies.
+
+  .. _`#1631`: https://github.com/django-oscar/django-oscar/pull/1631
