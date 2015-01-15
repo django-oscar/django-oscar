@@ -1,5 +1,6 @@
 from django import forms
 from django.utils.html import format_html
+from django.utils.text import mark_safe
 
 from oscar.forms.widgets import AdvancedChoice, AdvancedRadioSelect
 
@@ -18,7 +19,7 @@ class VariantChoice(AdvancedChoice):
                 disabled = format_html(' class="{0}"', ' '.join(self.DISABLED_CLASSES))
             else:
                 disabled = ''
-            return format_html('<a href="{0}"{1}>{2}</a>', self.href, disabled, self.label)
+            return mark_safe( format_html('<a href="{0}"{1}>{2}</a>', self.href, disabled, self.label) )
         else:
             return self.label
 
