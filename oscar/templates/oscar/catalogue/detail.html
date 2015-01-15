@@ -96,20 +96,6 @@
                 {% include "catalogue/reviews/partials/review_stars.html" %}
             {% endiffeature %}
 
-            {% if children %}
-            <ul>
-                {% for child in children %}
-                <li>
-                    {% if child.id == product.id %}
-                        <strong>{{ child }}</strong>
-                    {% else %}
-                        <a href="{{ child.get_absolute_url }}">{{ child }}</a>
-                    {% endif %}
-                </li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-
             <hr/>
 
             {% block product_basket_form %}
