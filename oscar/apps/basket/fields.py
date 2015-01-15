@@ -20,9 +20,7 @@ class VariantChoice(AdvancedChoice):
                 disabled = format_html(' class="{0}"', ' '.join(self.DISABLED_CLASSES))
             else:
                 disabled = ''
-
-            test = force_text( format_html('<a href="{0}"{1}>{2}</a>', self.href, disabled, self.label) )
-            assert False, repr(test)
+            return force_text( format_html('<a href="{0}"{1}>{2}</a>', self.href, disabled, self.label) )
         else:
             return self.label
 
