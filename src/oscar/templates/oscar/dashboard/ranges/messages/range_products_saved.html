@@ -6,28 +6,22 @@
 <ul>
     {% if upload.num_new_skus %}
         <li>
-            {% blocktrans with count=upload.num_new_skus %}
-                <strong>{{ count }}</strong> product added
-            {% plural %}
-                <strong>{{ count }}</strong> products added
+            {% blocktrans with n=upload.num_new_skus%}
+                <strong>{{ n }}</strong> products added
             {% endblocktrans %}
         </li>
     {% endif %}
     {% if upload.num_duplicate_skus %}
         <li>
-            {% blocktrans with count=upload.num_duplicate_skus %}
-                There was <strong>{{ count }}</strong> duplicate product in the file
-            {% plural %}
-                There were <strong>{{ count }}</strong> duplicate products in the file
+            {% blocktrans with n=upload.num_duplicate_skus %}
+                There were <strong>{{ n }}</strong> duplicate products in the file
             {% endblocktrans %}
         </li>
     {% endif %}
     {% if upload.num_unknown_skus %}
         <li>
-            {% blocktrans with count=upload.num_unknown_skus %}
-                There was <strong>{{ count }}</strong> product in the file that couldn't be found in the catalogue
-            {% plural %}
-                There were <strong>{{ count }}</strong> products in the file that couldn't be found in the catalogue
+            {% blocktrans with n=upload.num_unknown_skus %}
+                There were <strong>{{ n }}</strong> products in the file that couldn't be found in the catalogue
             {% endblocktrans %}
         </li>
     {% endif %}
