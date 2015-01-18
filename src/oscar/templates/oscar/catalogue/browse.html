@@ -72,10 +72,10 @@
                     <strong>{{ num_results }}</strong> results - showing <strong>{{ start }}</strong> to <strong>{{ end }}</strong>.
                 {% endblocktrans %}
             {% else %}
-                {% blocktrans count num_results=paginator.count %}
-                    <strong>1</strong> result.
+                {% blocktrans count=paginator.count %}
+                    <strong>{{ count }}</strong> result.
                 {% plural %}
-                    <strong>{{ num_results }}</strong> results.
+                    <strong>{{ count }}</strong> results.
                 {% endblocktrans %}
             {% endif %}
             {% if form %}

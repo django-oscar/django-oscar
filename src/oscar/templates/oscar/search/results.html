@@ -51,14 +51,16 @@
         </div>
         {% if paginator.count %}
             {% if paginator.num_pages > 1 %}
-                {% blocktrans with start=page.start_index end=page.end_index num_results=paginator.count %}
-                    Found <strong>{{ num_results }}</strong> results, showing <strong>{{ start }}</strong> to <strong>{{ end }}</strong>.
+                {% blocktrans with start=page.start_index end=page.end_index count=paginator.count %}
+                    Found <strong>{{ count }}</strong> result, showing <strong>{{ start }}</strong> to <strong>{{ end }}</strong>.
+                {% plural %}
+                    Found <strong>{{ count }}</strong> results, showing <strong>{{ start }}</strong> to <strong>{{ end }}</strong>.
                 {% endblocktrans %}
             {% else %}
-                {% blocktrans count num_results=paginator.count %}
-                    Found <strong>1</strong> result.
+                {% blocktrans count=paginator.count %}
+                    Found <strong>{{ count }}</strong> result.
                 {% plural %}
-                    Found <strong>{{ num_results }}</strong> results. 
+                    Found <strong>{{ count }}</strong> results.
                 {% endblocktrans %}
             {% endif %}
             <div class="pull-right">

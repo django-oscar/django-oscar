@@ -15,10 +15,10 @@
         <i class="icon-star"></i>
         <a href="{% url 'catalogue:reviews-list' product.slug product.id %}">
         {% if reviews %}
-            {% blocktrans count reviews|length as num_reviews %}
-            1 custom review
+            {% blocktrans reviews|length as count %}
+            {{ count }} customer review
             {% plural %}
-            {{ num_reviews }} customer reviews
+            {{ count }} customer reviews
             {% endblocktrans %}
         {% else %}
             {% trans "all reviews" %}

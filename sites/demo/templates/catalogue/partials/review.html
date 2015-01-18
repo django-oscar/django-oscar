@@ -47,10 +47,10 @@
                 {% if review.has_votes %}
                     <p>
                         <small>
-                        {% blocktrans count review.num_up_votes as num_up_votes %}
-                        <strong>1</strong> customer found this useful
+                        {% blocktrans review.num_up_votes as count %}
+                        <strong>{{ count }}</strong> customer found this useful
                         {% plural %}
-                        <strong>{{ num_up_votes }}</strong> customers found this useful
+                        <strong>{{ count }}</strong> customers found this useful
                         {% endblocktrans %}
                         </small>
                     </p>

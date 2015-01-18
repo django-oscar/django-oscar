@@ -10,10 +10,10 @@
         <i class="icon-star"></i>
 
         <small><a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.id %}">
-                {% blocktrans count product.num_approved_reviews as num_reviews %}
-                    1 customer review
+                {% blocktrans product.num_approved_reviews as count %}
+                    {{ count }} customer review
                 {% plural %}
-                    {{ num_reviews }} customer reviews
+                    {{ count }} customer reviews
                 {% endblocktrans %}
         </a></small>
         &nbsp;
