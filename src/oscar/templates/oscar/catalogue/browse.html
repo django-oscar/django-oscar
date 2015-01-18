@@ -68,7 +68,9 @@
 
         {% if paginator.count %}
             {% if paginator.num_pages > 1 %}
-                {% blocktrans with start=page_obj.start_index end=page_obj.end_index num_results=paginator.count %}
+                {% blocktrans with start=page_obj.start_index end=page_obj.end_index count num_results=paginator.count %}
+                    <strong>{{ num_results }}</strong> result - showing <strong>{{ start }}</strong> to <strong>{{ end }}</strong>.
+                {% plural %}
                     <strong>{{ num_results }}</strong> results - showing <strong>{{ start }}</strong> to <strong>{{ end }}</strong>.
                 {% endblocktrans %}
             {% else %}
