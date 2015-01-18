@@ -173,7 +173,7 @@ class StockRecordFormSet(BaseStockRecordFormSet):
             if not user_partners & stockrecord_partners:
                 raise exceptions.ValidationError(
                     _("At least one stock record must be set to a partner that"
-                      "you're associated with."))
+                      " you're associated with."))
 
 
 def _attr_text_field(attribute):
