@@ -196,6 +196,9 @@ var oscar = (function(o, $) {
             // Do not disable if button is inside a form with invalid fields.
             // This uses a delegated event so that it keeps working for forms that are reloaded
             // via AJAX: https://api.jquery.com/on/#direct-and-delegated-events
+            $(window).on('pageshow', function(){
+                $('[data-loading-text]').button('reset').attr({'disabled': false});
+            });
             $(document.body).on('click', '[data-loading-text]', function(){
                 var form = $(this).parents("form");
                 if (!form || $(":invalid", form).length == 0)
