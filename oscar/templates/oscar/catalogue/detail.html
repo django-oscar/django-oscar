@@ -81,8 +81,8 @@
 
             <h1>
                 {% if product.parent %}
-                    {{ product.parent.get_title }}<br />
-                    <small>{{ product.get_title }}</small>
+                    {{ product.parent.get_title }}
+                    <br /><small>{{ product }}</small>
                 {% else %}
                     {{ product.get_title }}
                 {% endif %}
