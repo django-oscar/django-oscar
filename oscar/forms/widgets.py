@@ -271,9 +271,10 @@ class AdvancedChoice(object):
     forms.MultipleChoiceField(choices=CHOICES, widget=AdvancedCheckboxSelectMultiple())
     """
 
-    def __init__(self, label, disabled=False):
+    def __init__(self, label, disabled=False, attrs=None):
         self.label = label
         self.disabled = disabled
+        self.attrs = attrs
 
     def __unicode__(self):
         return self.label
@@ -284,9 +285,10 @@ class DisabledChoice(AdvancedChoice):
     This is a shortcut class for AdvancedChoice(label, disabled=True)
     """
 
-    def __init__(self, label):
+    def __init__(self, label, attrs=None):
         self.label = label
         self.disabled = True
+        self.attrs = attrs
 
 
 class AdvancedSelect(forms.Select):
@@ -313,7 +315,7 @@ class AdvancedSelect(forms.Select):
         option_value = force_text(option_value)
         # In the next version, remove checking the option_value against self.disabled_values
         # and just rely on looking at the disabled attribute
-        option_attrs = getattr(option_label, 'attrs', {})
+        option_attrs = getattr(option_label, 'attrs', None) or {}
         # Also check if the object just has a diabled property, a shortcut for disabling the option 
         if getattr(option_label, 'disabled', False) or option_value in self.disabled_values:
             option_attrs['disabled'] = 'disabled'
