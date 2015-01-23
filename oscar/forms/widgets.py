@@ -313,18 +313,22 @@ class AdvancedSelect(forms.Select):
         option_value = force_text(option_value)
         # In the next version, remove checking the option_value against self.disabled_values
         # and just rely on looking at the disabled attribute
+        option_attrs = getattr(option_label, 'attrs', {})
+        # Also check if the object just has a diabled property, a shortcut for disabling the option 
         if getattr(option_label, 'disabled', False) or option_value in self.disabled_values:
-            selected_html = mark_safe(' disabled="disabled"')
-        elif option_value in selected_choices:
+            option_attrs['disabled'] = 'disabled'
+
+        if option_value in selected_choices:
             selected_html = mark_safe(' selected="selected"')
             if not self.allow_multiple_selected:
                 # Only allow for a single selection.
                 selected_choices.remove(option_value)
         else:
             selected_html = ''
-        return format_html(u'<option value="{0}"{1}>{2}</option>',
+        return format_html(u'<option value="{0}"{1}{2}>{3}</option>',
                            option_value,
                            selected_html,
+                           flatatt(option_attrs),
                            force_text(option_label))
 
 
