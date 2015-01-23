@@ -1,7 +1,6 @@
 from django import forms
 from django.utils.encoding import force_text
 from django.utils.html import format_html
-from django.utils.text import mark_safe
 
 from oscar.forms.widgets import AdvancedChoice, AdvancedRadioSelect
 
