@@ -298,6 +298,15 @@ class AbstractProduct(models.Model):
     date_updated = models.DateTimeField(
         _("Date updated"), auto_now=True, db_index=True)
 
+    # This field is used to determine which images are associated with which child/variant
+    # The related name 'variants' might be confusing.
+    # Ideally, we would use a limit_choices_to referencing only the parent's images
+    child_images = models.ManyToManyField(
+        'catalogue.ProductImage',
+        blank='True',
+        related_name='variants',
+        verbose_name=_('Child images'))
+
     categories = models.ManyToManyField(
         'catalogue.Category', through='ProductCategory',
         verbose_name=_("Categories"))
@@ -364,6 +373,8 @@ class AbstractProduct(models.Model):
         +---------------+-------------+--------------+--------------+
         | options       | optional    | optional     | forbidden    |
         +---------------+-------------+--------------+--------------+
+        | child images  | forbidden   | forbidden    | optional     |
+        +---------------+-------------+--------------+--------------+
 
         Because the validation logic is quite complex, validation is delegated
         to the sub method appropriate for the product's structure.
@@ -382,6 +393,8 @@ class AbstractProduct(models.Model):
             raise ValidationError(_("Your product must have a product class."))
         if self.parent_id:
             raise ValidationError(_("Only child products can have a parent."))
+        if self.pk and self.child_images.exists():
+            raise ValidationError(_("Only child products can have child images."))
 
     def _clean_child(self):
         """
@@ -411,6 +424,9 @@ class AbstractProduct(models.Model):
         if self.has_stockrecords:
             raise ValidationError(
                 _("A parent product can't have stockrecords."))
+        if self.child_images.exists():
+            raise ValidationError(
+                _("A parent product can't have child images."))
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -630,12 +646,23 @@ class AbstractProduct(models.Model):
         # field.
         return MissingProductImage()
 
+    @property
+    def active_images(self):
+        """
+        Returns the correct related manager for images
+        """
+
+        if self.structure == self.CHILD:
+            return self.child_images
+        else:
+            return self.images
+
     def primary_image(self):
         """
         Returns the primary image for a product. Usually used when one can
         only display one product image, e.g. in a list of products.
         """
-        images = self.images.all()
+        images = self.active_images.all()
         ordering = self.images.model.Meta.ordering
         if not ordering or ordering[0] != 'display_order':
             # Only apply order_by() if a custom model doesn't use default

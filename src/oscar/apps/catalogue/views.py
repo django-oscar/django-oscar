@@ -28,7 +28,7 @@ class ProductDetailView(DetailView):
     enforce_paths = True
 
     # Whether to redirect child products to their parent's URL
-    enforce_parent = True
+    enforce_parent = False
 
     def get(self, request, **kwargs):
         """
