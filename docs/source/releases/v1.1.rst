@@ -44,6 +44,9 @@ Minor changes
 - The `Order.date_placed` field can now be set explicitly rather than using the
   `auto_now_add` behaviour (`#1558`_).
 
+- The settings ``OSCAR_BASKET_COOKIE_SECURE`` and ``OSCAR_RECENTLY_VIEWED_COOKIE_SECURE``
+  are introduced to set the ``secure`` flag on the relevant cookies.
+
 .. _`#1558`: https://github.com/django-oscar/django-oscar/pull/1558
 
 
