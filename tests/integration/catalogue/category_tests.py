@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from django.test import TestCase
-from django.core.exceptions import ValidationError
 from django import template
+from django.core.exceptions import ValidationError
+from django.test import TestCase
 
 from oscar.apps.catalogue import models
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
@@ -26,6 +26,17 @@ class TestCategory(TestCase):
     def test_enforces_slug_uniqueness(self):
         with self.assertRaises(ValidationError):
             self.products.add_child(name=u"Bücher")
+
+    def test_save_update_slug(self):
+        with self.assertNumQueries(2):
+            self.books.name = 'Books'
+            self.books.save()
+
+    def test_save_update_fields(self):
+        with self.assertNumQueries(1):
+            self.books.description = 'Something new'
+            self.books.save(update_fields=['description'])
+
 
 
 class TestMovingACategory(TestCase):
