@@ -3,13 +3,20 @@ import sys
 from django.test.utils import override_settings
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from django.utils.http import urlquote
 from django.utils.importlib import import_module
 import mock
-from oscar.apps.shipping import methods
 
+from oscar.core.compat import get_user_model
+from oscar.core.loading import get_class
+from oscar.apps.shipping import methods
 from oscar.test.testcases import WebTestCase
 from oscar.test import factories
 from . import CheckoutMixin
+
+GatewayForm = get_class('checkout.forms', 'GatewayForm')
+CheckoutSessionData = get_class('checkout.utils', 'CheckoutSessionData')
+User = get_user_model()
 
 # Python 3 compat
 try:
@@ -40,12 +47,48 @@ class TestIndexView(CheckoutMixin, WebTestCase):
     def test_redirects_customers_with_invalid_basket(self):
         # Add product to basket but then remove its stock so it is not
         # purchasable.
-        product = factories.create_product(num_in_stock=1)
+        product = factories.ProductFactory()
         self.add_product_to_basket(product)
         product.stockrecords.all().update(num_in_stock=0)
 
         response = self.get(reverse('checkout:index'))
         self.assertRedirectUrlName(response, 'basket:summary')
+
+    def test_redirects_new_customers_to_registration_page(self):
+        self.add_product_to_basket()
+        page = self.get(reverse('checkout:index'))
+
+        form = page.form
+        form['options'].select(GatewayForm.NEW)
+        new_user_email = 'newcustomer@test.com'
+        form['username'].value = new_user_email
+        response = form.submit()
+        url = '%s?next=%s&email=%s' % (
+            reverse('customer:register'), '/checkout/shipping-address/', urlquote(new_user_email))
+        self.assertRedirects(response, url)
+
+    def test_redirects_existing_customers_to_shipping_address_page(self):
+        existing_user = User.objects.create_user(username=self.username, email=self.email, password=self.password)
+        self.add_product_to_basket()
+        page = self.get(reverse('checkout:index'))
+        form = page.form
+        form.select('options', GatewayForm.EXISTING)
+        form['username'].value = existing_user.email
+        form['password'].value = self.password
+        response = form.submit()
+        self.assertRedirectUrlName(response, 'checkout:shipping-address')
+
+    def test_redirects_guest_customers_to_shipping_address_page(self):
+        self.add_product_to_basket()
+        response = self.enter_guest_details()
+        self.assertRedirectUrlName(response, 'checkout:shipping-address')
+
+    def test_prefill_form_with_email_for_returning_guest(self):
+        self.add_product_to_basket()
+        email = 'forgetfulguest@test.com'
+        self.enter_guest_details(email)
+        page = self.get(reverse('checkout:index'))
+        self.assertEqual(email, page.form['username'].value)
 
 
 @override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)

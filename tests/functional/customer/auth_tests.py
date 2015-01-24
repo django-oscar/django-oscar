@@ -101,7 +101,7 @@ class TestAnAnonymousUser(WebTestCase):
         form['login-username'] = email
         form['login-password'] = password
         response = form.submit('login_submit')
-        self.assertRedirectsTo(response, 'customer:summary')
+        self.assertRedirectUrlName(response, 'customer:summary')
 
     def test_can_login(self):
         email, password = 'd@d.com', 'mypassword'
@@ -124,7 +124,7 @@ class TestAnAnonymousUser(WebTestCase):
         form['email'] = 'terry@boom.com'
         form['password1'] = form['password2'] = 'hedgehog'
         response = form.submit()
-        self.assertRedirectsTo(response, 'customer:summary')
+        self.assertRedirectUrlName(response, 'customer:summary')
 
     def test_casing_of_local_part_of_email_is_preserved(self):
         url = reverse('customer:register')
@@ -152,4 +152,4 @@ class TestAStaffUser(WebTestCase):
         form['login-password'] = self.password
         response = form.submit('login_submit')
 
-        self.assertRedirectsTo(response, 'dashboard:index')
+        self.assertRedirectUrlName(response, 'dashboard:index')
