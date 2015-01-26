@@ -64,3 +64,10 @@ class CheckoutMixin(object):
         preview = payment_details.click(linkid="view_preview")
         return preview.forms['place_order_form'].submit().follow()
 
+    def ready_to_place_an_order(self, is_guest=False):
+        self.add_product_to_basket()
+        if is_guest:
+            self.enter_guest_details('hello@egg.com')
+        self.enter_shipping_address()
+        payment_details = self.get(reverse('checkout:shipping-method')).follow().follow()
+        return payment_details.click(linkid="view_preview")
