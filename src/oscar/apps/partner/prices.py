@@ -33,6 +33,11 @@ class Base(object):
     #: Price currency (3 char code)
     currency = None
 
+    # Used to enable sorting of prices
+    # Ignores currency, but is correct if all Base instances are the same currency
+    def __cmp__(self, other):
+        return self.effective_price - other.effective_price
+
     def __repr__(self):
         return "%s(%r)" % (self.__class__.__name__, self.__dict__)
 
