@@ -9,9 +9,9 @@ class VariantChoice(AdvancedChoice):
     # Bootstrap 2 & 3 classes
     DISABLED_CLASSES = ['muted', 'text-muted']
 
-    def __init__(self, label, disabled=False, href=None):
-        self.href = href
-        super(VariantChoice, self).__init__(label, disabled=disabled)
+    def __init__(self, label, **kwargs):
+        self.href = kwargs.pop('href', None)
+        super(VariantChoice, self).__init__(label, **kwargs)
 
     def __unicode__(self):
         if self.href:
