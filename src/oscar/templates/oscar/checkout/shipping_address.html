@@ -33,7 +33,7 @@
                                             {% endfor %}
                                         {% endblock %}
                                     </address>
-                                    <form action="{% url 'checkout:shipping-address' %}" method="post">
+                                    <form action="{% url 'checkout:shipping-address' %}" method="post" id="select_shipping_address_{{ address.id }}">
                                         {% csrf_token %}
                                         <input type="hidden" name="action" value="ship_to" />
                                         <input type="hidden" name="address_id" value="{{ address.id }}" />
