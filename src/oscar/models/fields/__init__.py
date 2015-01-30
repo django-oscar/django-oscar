@@ -137,14 +137,12 @@ class NullCharField(six.with_metaclass(SubfieldBase, CharField)):
         return name, path, args, kwargs
 
 
-class PhoneNumberField(Field):
+class PhoneNumberField(six.with_metaclass(SubfieldBase, CharField)):
     """
     An international phone number.
 
     * Validates a wide range of phone number formats
     * Displays it nicely formatted
-    * Can be given a hint for the country, so that it can accept local numbers,
-      that are not in an international format
 
     Notes
     -----
@@ -155,22 +153,20 @@ class PhoneNumberField(Field):
     permission notice.
     """
 
-    attr_class = phonenumber.PhoneNumber
-    descriptor_class = phonenumber.PhoneNumberDescriptor
     default_validators = [phonenumber.validate_international_phonenumber]
 
     description = _("Phone number")
 
     def __init__(self, *args, **kwargs):
+        # There's no useful distinction between '' and None for a phone
+        # number. To avoid running into issues that are similar to what
+        # NullCharField tries to solve, we just forbid settings null=True.
         if kwargs.get('null', False):
             raise ImproperlyConfigured(
                 "null=True is not supported on PhoneNumberField")
+        # Set a default max_length.
         kwargs['max_length'] = kwargs.get('max_length', 128)
         super(PhoneNumberField, self).__init__(*args, **kwargs)
-        self.validators.append(MaxLengthValidator(self.max_length))
-
-    def get_internal_type(self):
-        return "CharField"
 
     def get_prep_value(self, value):
         """
@@ -181,15 +177,22 @@ class PhoneNumberField(Field):
             return u''
         return value.as_e164 if value.is_valid() else value.raw_input
 
-    def contribute_to_class(self, cls, name):
-        super(PhoneNumberField, self).contribute_to_class(cls, name)
-        setattr(cls, self.name, self.descriptor_class(self))
+    def to_python(self, value):
+        return phonenumber.to_python(value)
+
+    def value_to_string(self, obj):
+        """
+        Used when the field is serialized. See Django docs.
+        """
+        value = self._get_val_from_obj(obj)
+        return self.get_prep_value(value)
 
     def deconstruct(self):
         """
-        deconstruct() is needed by Django's migration framework
+        deconstruct() is needed by Django's migration framework.
         """
         name, path, args, kwargs = super(PhoneNumberField, self).deconstruct()
+        # Delete kwargs at default value.
         if self.max_length == 128:
             del kwargs['max_length']
         return name, path, args, kwargs
