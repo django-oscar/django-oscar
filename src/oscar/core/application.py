@@ -100,7 +100,8 @@ class Application(object):
         See permissions_required decorator for details
         """
         permissions = self.get_permissions(pattern.name)
-        return permissions_required(permissions)
+        if permissions:
+            return permissions_required(permissions)
 
     @property
     def urls(self):

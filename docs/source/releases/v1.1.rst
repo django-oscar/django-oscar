@@ -47,6 +47,11 @@ Minor changes
 - The settings ``OSCAR_BASKET_COOKIE_SECURE`` and ``OSCAR_RECENTLY_VIEWED_COOKIE_SECURE``
   are introduced to set the ``secure`` flag on the relevant cookies.
 
+- Previously, all views handled in Oscar's Application class were decorated
+  with the permissions_required decorator. That decorator would not do
+  anything if used with an empty set of permissions. But it was raised as an
+  issue, and now views not requiring permissions are not decorated at all.
+
 .. _`#1558`: https://github.com/django-oscar/django-oscar/pull/1558
 
 
