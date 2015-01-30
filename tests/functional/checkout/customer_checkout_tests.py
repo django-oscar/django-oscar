@@ -15,12 +15,12 @@ class TestIndexView(CheckoutMixin, WebTestCase):
 
     def test_redirects_customers_with_empty_basket(self):
         response = self.get(reverse('checkout:index'))
-        self.assertRedirectUrlName(response, 'basket:summary')
+        self.assertRedirectsTo(response, 'basket:summary')
 
     def test_redirects_customers_to_shipping_address_view(self):
         self.add_product_to_basket()
         response = self.get(reverse('checkout:index'))
-        self.assertRedirectUrlName(response, 'checkout:shipping-address')
+        self.assertRedirectsTo(response, 'checkout:shipping-address')
 
 
 class TestShippingAddressView(CheckoutMixin, WebTestCase):
@@ -43,7 +43,7 @@ class TestShippingAddressView(CheckoutMixin, WebTestCase):
         form['line4'] = 'Gotham City'
         form['postcode'] = 'N1 7RR'
         response = form.submit()
-        self.assertRedirectUrlName(response, 'checkout:shipping-method')
+        self.assertRedirectsTo(response, 'checkout:shipping-method')
 
         session_data = self.app.session['checkout_data']
         session_fields = session_data['shipping']['new_address_fields']
@@ -64,7 +64,7 @@ class TestShippingMethodView(CheckoutMixin, WebTestCase):
         self.add_product_to_basket()
         self.enter_shipping_address()
         response = self.get(reverse('checkout:shipping-method'))
-        self.assertRedirectUrlName(response, 'checkout:payment-method')
+        self.assertRedirectsTo(response, 'checkout:payment-method')
 
 
 class TestPreviewView(CheckoutMixin, WebTestCase):

@@ -35,7 +35,7 @@ class TestIndexView(CheckoutMixin, WebTestCase):
 
     def test_redirects_customers_with_empty_basket(self):
         response = self.get(reverse('checkout:index'))
-        self.assertRedirectUrlName(response, 'basket:summary')
+        self.assertRedirectsTo(response, 'basket:summary')
 
     def test_redirects_customers_with_invalid_basket(self):
         # Add product to basket but then remove its stock so it is not
@@ -45,7 +45,7 @@ class TestIndexView(CheckoutMixin, WebTestCase):
         product.stockrecords.all().update(num_in_stock=0)
 
         response = self.get(reverse('checkout:index'))
-        self.assertRedirectUrlName(response, 'basket:summary')
+        self.assertRedirectsTo(response, 'basket:summary')
 
 
 @override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)
@@ -58,12 +58,12 @@ class TestShippingAddressView(CheckoutMixin, WebTestCase):
 
     def test_redirects_customers_with_empty_basket(self):
         response = self.get(reverse('checkout:shipping-address'))
-        self.assertRedirectUrlName(response, 'basket:summary')
+        self.assertRedirectsTo(response, 'basket:summary')
 
     def test_redirects_customers_who_have_skipped_guest_form(self):
         self.add_product_to_basket()
         response = self.get(reverse('checkout:shipping-address'))
-        self.assertRedirectUrlName(response, 'checkout:index')
+        self.assertRedirectsTo(response, 'checkout:index')
 
     def test_redirects_customers_whose_basket_doesnt_require_shipping(self):
         product = self.create_digital_product()
@@ -71,7 +71,7 @@ class TestShippingAddressView(CheckoutMixin, WebTestCase):
         self.enter_guest_details()
 
         response = self.get(reverse('checkout:shipping-address'))
-        self.assertRedirectUrlName(response, 'checkout:shipping-method')
+        self.assertRedirectsTo(response, 'checkout:shipping-method')
 
     def test_redirects_customers_with_invalid_basket(self):
         # Add product to basket but then remove its stock so it is not
@@ -83,7 +83,7 @@ class TestShippingAddressView(CheckoutMixin, WebTestCase):
         product.stockrecords.all().update(num_in_stock=0)
 
         response = self.get(reverse('checkout:shipping-address'))
-        self.assertRedirectUrlName(response, 'basket:summary')
+        self.assertRedirectsTo(response, 'basket:summary')
 
 
 @override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)
@@ -96,7 +96,7 @@ class TestShippingMethodView(CheckoutMixin, WebTestCase):
 
     def test_redirects_customers_with_empty_basket(self):
         response = self.get(reverse('checkout:shipping-method'))
-        self.assertRedirectUrlName(response, 'basket:summary')
+        self.assertRedirectsTo(response, 'basket:summary')
 
     def test_redirects_customers_with_invalid_basket(self):
         product = factories.create_product(num_in_stock=1)
@@ -106,13 +106,13 @@ class TestShippingMethodView(CheckoutMixin, WebTestCase):
         product.stockrecords.all().update(num_in_stock=0)
 
         response = self.get(reverse('checkout:shipping-method'))
-        self.assertRedirectUrlName(response, 'basket:summary')
+        self.assertRedirectsTo(response, 'basket:summary')
 
     def test_redirects_customers_who_have_skipped_guest_form(self):
         self.add_product_to_basket()
 
         response = self.get(reverse('checkout:shipping-method'))
-        self.assertRedirectUrlName(response, 'checkout:index')
+        self.assertRedirectsTo(response, 'checkout:index')
 
     def test_redirects_customers_whose_basket_doesnt_require_shipping(self):
         product = self.create_digital_product()
@@ -120,14 +120,14 @@ class TestShippingMethodView(CheckoutMixin, WebTestCase):
         self.enter_guest_details()
 
         response = self.get(reverse('checkout:shipping-method'))
-        self.assertRedirectUrlName(response, 'checkout:payment-method')
+        self.assertRedirectsTo(response, 'checkout:payment-method')
 
     def test_redirects_customers_who_have_skipped_shipping_address_form(self):
         self.add_product_to_basket()
         self.enter_guest_details()
 
         response = self.get(reverse('checkout:shipping-method'))
-        self.assertRedirectUrlName(response, 'checkout:shipping-address')
+        self.assertRedirectsTo(response, 'checkout:shipping-address')
 
     @mock.patch('oscar.apps.checkout.views.Repository')
     def test_redirects_customers_when_no_shipping_methods_available(self, mock_repo):
@@ -153,7 +153,7 @@ class TestShippingMethodView(CheckoutMixin, WebTestCase):
         instance.get_shipping_methods.return_value = [methods.Free()]
 
         response = self.get(reverse('checkout:shipping-method'))
-        self.assertRedirectUrlName(response, 'checkout:payment-method')
+        self.assertRedirectsTo(response, 'checkout:payment-method')
 
     @mock.patch('oscar.apps.checkout.views.Repository')
     def test_shows_form_when_multiple_shipping_methods_available(self, mock_repo):
@@ -181,7 +181,7 @@ class TestPaymentMethodView(CheckoutMixin, WebTestCase):
 
     def test_redirects_customers_with_empty_basket(self):
         response = self.get(reverse('checkout:payment-method'))
-        self.assertRedirectUrlName(response, 'basket:summary')
+        self.assertRedirectsTo(response, 'basket:summary')
 
     def test_redirects_customers_with_invalid_basket(self):
         product = factories.create_product(num_in_stock=1)
@@ -192,20 +192,20 @@ class TestPaymentMethodView(CheckoutMixin, WebTestCase):
         product.stockrecords.all().update(num_in_stock=0)
 
         response = self.get(reverse('checkout:payment-method'))
-        self.assertRedirectUrlName(response, 'basket:summary')
+        self.assertRedirectsTo(response, 'basket:summary')
 
     def test_redirects_customers_who_have_skipped_guest_form(self):
         self.add_product_to_basket()
 
         response = self.get(reverse('checkout:payment-method'))
-        self.assertRedirectUrlName(response, 'checkout:index')
+        self.assertRedirectsTo(response, 'checkout:index')
 
     def test_redirects_customers_who_have_skipped_shipping_address_form(self):
         self.add_product_to_basket()
         self.enter_guest_details()
 
         response = self.get(reverse('checkout:payment-method'))
-        self.assertRedirectUrlName(response, 'checkout:shipping-address')
+        self.assertRedirectsTo(response, 'checkout:shipping-address')
 
     def test_redirects_customers_who_have_skipped_shipping_method_step(self):
         self.add_product_to_basket()
@@ -213,7 +213,7 @@ class TestPaymentMethodView(CheckoutMixin, WebTestCase):
         self.enter_shipping_address()
 
         response = self.get(reverse('checkout:payment-method'))
-        self.assertRedirectUrlName(response, 'checkout:shipping-method')
+        self.assertRedirectsTo(response, 'checkout:shipping-method')
 
 
 @override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)
@@ -226,7 +226,7 @@ class TestPaymentDetailsView(CheckoutMixin, WebTestCase):
 
     def test_redirects_customers_with_empty_basket(self):
         response = self.get(reverse('checkout:payment-details'))
-        self.assertRedirectUrlName(response, 'basket:summary')
+        self.assertRedirectsTo(response, 'basket:summary')
 
     def test_redirects_customers_with_invalid_basket(self):
         product = factories.create_product(num_in_stock=1)
@@ -237,20 +237,20 @@ class TestPaymentDetailsView(CheckoutMixin, WebTestCase):
         product.stockrecords.all().update(num_in_stock=0)
 
         response = self.get(reverse('checkout:payment-details'))
-        self.assertRedirectUrlName(response, 'basket:summary')
+        self.assertRedirectsTo(response, 'basket:summary')
 
     def test_redirects_customers_who_have_skipped_guest_form(self):
         self.add_product_to_basket()
 
         response = self.get(reverse('checkout:payment-details'))
-        self.assertRedirectUrlName(response, 'checkout:index')
+        self.assertRedirectsTo(response, 'checkout:index')
 
     def test_redirects_customers_who_have_skipped_shipping_address_form(self):
         self.add_product_to_basket()
         self.enter_guest_details()
 
         response = self.get(reverse('checkout:payment-details'))
-        self.assertRedirectUrlName(response, 'checkout:shipping-address')
+        self.assertRedirectsTo(response, 'checkout:shipping-address')
 
     def test_redirects_customers_who_have_skipped_shipping_method_step(self):
         self.add_product_to_basket()
@@ -258,7 +258,7 @@ class TestPaymentDetailsView(CheckoutMixin, WebTestCase):
         self.enter_shipping_address()
 
         response = self.get(reverse('checkout:payment-details'))
-        self.assertRedirectUrlName(response, 'checkout:shipping-method')
+        self.assertRedirectsTo(response, 'checkout:shipping-method')
 
 
 @override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)
