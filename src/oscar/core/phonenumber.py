@@ -68,6 +68,15 @@ class PhoneNumber(phonenumbers.phonenumber.PhoneNumber):
             return self.format_as(fmt)
         return self.raw_input
 
+    def __unicode__(self):
+        # Django calls force_text on PhoneNumber instances when populating
+        # a model form. Django 1.6's force_text implementation unfortunately
+        # checks for __unicode__ first, which is defined in the base class.
+        # As we're using the python_2_unicode_compatible decorator, in Python 2
+        # __unicode__ is already overwritten by the decorator.
+        # In Python 3, we can safely return __str__ because it returns unicode.
+        return self.__str__()
+
     def is_valid(self):
         """
         checks whether the number supplied is actually valid
@@ -118,35 +127,6 @@ def to_python(value):
     elif isinstance(value, PhoneNumber):
         phone_number = value
     return phone_number
-
-
-class PhoneNumberDescriptor(object):
-    """
-    The descriptor for the phone number attribute on the model instance.
-    Returns a PhoneNumber when accessed so you can do stuff like::
-
-        >>> instance.phone_number.as_international
-
-    Assigns a phone number object on assignment so you can do::
-
-        >>> instance.phone_number = PhoneNumber(...)
-    or
-        >>> instance.phone_number = '+414204242'
-
-    """
-
-    def __init__(self, field):
-        self.field = field
-
-    def __get__(self, instance=None, owner=None):
-        if instance is None:
-            raise AttributeError(
-                "The '%s' attribute can only be accessed from %s instances."
-                % (self.field.name, owner.__name__))
-        return instance.__dict__[self.field.name]
-
-    def __set__(self, instance, value):
-        instance.__dict__[self.field.name] = to_python(value)
 
 
 def validate_international_phonenumber(value):

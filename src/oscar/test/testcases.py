@@ -73,21 +73,20 @@ class WebTestCase(WebTest):
             location = URL.from_string(response['Location'])
             self.assertEqual(expected_url, location.path())
 
-    def assertRedirectsTo(self, response, url_name):
-        self.assertTrue(str(response.status_code).startswith('3'))
+    def assertRedirectsTo(self, response, url_name, kwargs=None):
+        """
+        Asserts that a response is a redirect to a given URL name.
+        """
+        self.assertIsRedirect(response)
         location = response.headers['Location']
-        redirect_path = location.replace('http://localhost:80', '')
-        self.assertEqual(reverse(url_name), redirect_path)
+        for unwanted in ['http://localhost:80', 'http://testserver']:
+            location = location.replace(unwanted, '')
+        self.assertEqual(reverse(url_name, kwargs=kwargs), location)
 
     def assertNoAccess(self, response):
         self.assertContext(response)
         self.assertTrue(response.status_code in (http_client.NOT_FOUND,
                                                  http_client.FORBIDDEN))
-
-    def assertRedirectUrlName(self, response, name, kwargs=None):
-        self.assertIsRedirect(response)
-        location = response['Location'].replace('http://testserver', '')
-        self.assertEqual(location, reverse(name, kwargs=kwargs))
 
     def assertIsOk(self, response):
         self.assertEqual(http_client.OK, response.status_code)

@@ -19,10 +19,11 @@ class ReportForm(forms.Form):
                                                 " reports use the selected"
                                                 " date range"))
 
-    date_from = forms.DateField(label=_("Date from"))
+    date_from = forms.DateField(label=_("Date from"), required=False)
     date_to = forms.DateField(label=_("Date to"),
                               help_text=_("The report is inclusive of this"
-                                          " date"))
+                                          " date"),
+                              required=False)
     download = forms.BooleanField(label=_("Download"), required=False)
 
     def clean(self):

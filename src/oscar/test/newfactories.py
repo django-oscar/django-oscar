@@ -17,6 +17,7 @@ import factory
 
 from oscar.core.loading import get_model, get_class
 from oscar.core.compat import get_user_model
+from oscar.core.phonenumber import PhoneNumber
 
 __all__ = ["UserFactory", "CountryFactory", "UserAddressFactory",
            "BasketFactory", "VoucherFactory", "ProductFactory",
@@ -59,6 +60,7 @@ class UserAddressFactory(factory.DjangoModelFactory):
     line1 = "1 King Road"
     line4 = "London"
     postcode = "SW1 9RE"
+    phone_number = PhoneNumber.from_string('+49 351 3296645')
     country = factory.SubFactory(CountryFactory)
     user = factory.SubFactory(UserFactory)
 
