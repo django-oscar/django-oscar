@@ -217,6 +217,10 @@ class AccountAuthView(RegisterUserMixin, generic.TemplateView):
         return _("Thanks for registering!")
 
     def get_registration_success_url(self, form):
+        redirect_url = form.cleaned_data['redirect_url']
+        if redirect_url:
+            return redirect_url
+
         return settings.LOGIN_REDIRECT_URL
 
 
