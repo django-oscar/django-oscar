@@ -8,9 +8,9 @@ from django.utils.timezone import get_current_timezone, is_naive, make_aware
 from django.conf import settings
 from django.template.defaultfilters import (date as date_filter,
                                             slugify as django_slugify)
-from unidecode import unidecode
+from django.utils.module_loading import import_string
 
-from oscar.core.loading import import_string
+from unidecode import unidecode
 
 
 def default_slugifier(value):
