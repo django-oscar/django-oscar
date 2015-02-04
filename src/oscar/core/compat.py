@@ -73,14 +73,6 @@ def existing_user_fields(fields):
 
 # Python3 compatibility layer
 
-
-# Make backwards-compatible atomic decorator available
-try:
-    from django.db.transaction import atomic as atomic_compat
-except ImportError:
-    from django.db.transaction import commit_on_success as atomic_compat
-atomic_compat = atomic_compat
-
 """
 Unicode compatible wrapper for CSV reader and writer that abstracts away
 differences between Python 2 and 3. A package like unicodecsv would be
