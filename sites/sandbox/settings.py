@@ -276,11 +276,6 @@ LOGGING = {
             'level': 'INFO',
         },
         # Third party
-        'south': {
-            'handlers': ['null'],
-            'propagate': True,
-            'level': 'INFO',
-        },
         'sorl.thumbnail': {
             'handlers': ['sorl_file'],
             'propagate': True,
@@ -316,12 +311,6 @@ INSTALLED_APPS = [
 ]
 from oscar import get_core_apps
 INSTALLED_APPS = INSTALLED_APPS + get_core_apps()
-
-# As we use the sandbox to create both South migrations and native ones,
-# the sandbox needs to work both with Django < 1.7 and 1.7
-import django
-if django.VERSION < (1, 7):
-    INSTALLED_APPS.append('south')
 
 # Add Oscar's custom auth backend so users can sign in using their email
 # address.

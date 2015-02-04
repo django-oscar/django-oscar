@@ -248,11 +248,6 @@ INSTALLED_APPS = [
     'raven.contrib.django.raven_compat'
 ]
 
-# South is only supported in Django < 1.7
-import django
-if django.VERSION < (1, 7):
-    INSTALLED_APPS.append('south')
-
 # Include core apps with a few overrides:
 # - a shipping override app to provide some shipping methods
 # - an order app to provide order processing logic

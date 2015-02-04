@@ -4,9 +4,6 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 DEBUG_PROPAGATE_EXCEPTIONS = True
 
-# Use syncdb rather than applying migrations
-SOUTH_TESTS_MIGRATE = False
-
 NOSE_ARGS = ['-s']
 
 # Disable logging
