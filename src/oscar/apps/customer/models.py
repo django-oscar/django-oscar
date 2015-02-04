@@ -1,5 +1,3 @@
-import django
-
 from oscar.core.loading import is_model_registered
 from oscar.apps.customer import abstract_models
 
@@ -33,8 +31,3 @@ if not is_model_registered('customer', 'ProductAlert'):
         pass
 
     __all__.append('ProductAlert')
-
-
-if django.VERSION < (1, 7):
-    from .receivers import *  # noqa
-    from .alerts import receivers  # noqa

@@ -68,15 +68,6 @@ class PhoneNumber(phonenumbers.phonenumber.PhoneNumber):
             return self.format_as(fmt)
         return self.raw_input
 
-    def __unicode__(self):
-        # Django calls force_text on PhoneNumber instances when populating
-        # a model form. Django 1.6's force_text implementation unfortunately
-        # checks for __unicode__ first, which is defined in the base class.
-        # As we're using the python_2_unicode_compatible decorator, in Python 2
-        # __unicode__ is already overwritten by the decorator.
-        # In Python 3, we can safely return __str__ because it returns unicode.
-        return self.__str__()
-
     def is_valid(self):
         """
         checks whether the number supplied is actually valid

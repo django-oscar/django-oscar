@@ -1,11 +1,10 @@
 import json
 
 from django.conf import settings
-from oscar.core.loading import get_model
-
-from oscar.core.loading import get_class
+from oscar.core.loading import get_model, get_class
 
 product_viewed = get_class('catalogue.signals', 'product_viewed')
+Product = get_model('catalogue', 'Product')
 
 
 def get(request):
@@ -13,11 +12,6 @@ def get(request):
     Return a list of recently viewed products
     """
     ids = extract(request)
-
-    # Needs to live in local scope because receivers in this module get
-    # registered during model initialisation
-    # TODO Move this back to global scope once Django < 1.7 support is removed
-    Product = get_model('catalogue', 'Product')
 
     # Reordering as the ID order gets messed up in the query
     product_dict = Product.browsable.in_bulk(ids)

@@ -1,5 +1,3 @@
-import django
-
 from oscar.core.loading import is_model_registered
 from oscar.apps.analytics.abstract_models import (
     AbstractProductRecord, AbstractUserRecord,
@@ -34,7 +32,3 @@ if not is_model_registered('analytics', 'UserSearch'):
         pass
 
     __all__.append('UserSearch')
-
-
-if django.VERSION < (1, 7):
-    from . import receivers  # noqa

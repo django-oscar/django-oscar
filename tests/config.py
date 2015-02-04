@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 import os
-import django
 
-from django.conf import settings, global_settings
+from django.conf import settings
 import oscar
 
 
@@ -120,11 +119,11 @@ def configure():
 
 if __name__ == '__main__':
     import sys
+    import django
     from django.core.management import call_command
     args = sys.argv[1:]
 
     if args:
         configure()  # configure Django settings
-        if hasattr(django, 'setup'):
-            django.setup()  # initialise app registry for Django 1.7+
+        django.setup()  # initialise app registry for Django 1.7+
         call_command(*args)
