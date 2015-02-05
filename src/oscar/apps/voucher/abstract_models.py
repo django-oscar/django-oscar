@@ -83,8 +83,8 @@ class AbstractVoucher(models.Model):
         """
         Test whether this voucher is available to the passed user.
 
-        Returns a tuple of a boolean for whether it is successulf, and a
-        message
+        Returns a tuple of a boolean for whether it is successful, and a
+        availability message.
         """
         is_available, message = False, ''
         if self.usage == self.SINGLE_USE:
