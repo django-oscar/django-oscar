@@ -6,6 +6,28 @@ class CheckoutSessionData(object):
     data persisted until the final order is placed. This class helps store and
     organise checkout form data until it is required to write out the final
     order.
+
+    The data is kept in a nested dictionary as follows:
+
+        checkout:
+            signal_sent: <bool>
+        guest:
+            email: <guest email>
+        shipping:
+            user_address_id: <id of user address to ship to>
+            new_adress_fields: <dict with shipping address data>
+            method_code: <code of shipping method>
+        billing:
+            user_address_id: <id of user address to bill to>
+            new_address_fields: <dict with billing address data>
+            billing_address_same_as_shipping: <bool>
+        payment:
+            method: <payment method code>
+        submission:
+            order_number: <generated order number>
+            basket_id: <id of frozen basket>
+        preview:
+            confirmed: <bool>
     """
     SESSION_KEY = 'checkout_data'
 
@@ -68,6 +90,15 @@ class CheckoutSessionData(object):
 
     def get_guest_email(self):
         return self._get('guest', 'email')
+
+    # start_checkout signal
+    # =====================
+
+    def set_sent_start_checkout_signal(self):
+        self._set('checkout', 'signal_sent', True)
+
+    def was_start_checkout_signal_sent(self):
+        return self._get('checkout', 'signal_sent', False)
 
     # Shipping address
     # ================
@@ -225,6 +256,18 @@ class CheckoutSessionData(object):
 
     def payment_method(self):
         return self._get('payment', 'method')
+
+    # Preview methods
+    # ===============
+
+    def was_preview_confirmed(self):
+        return self._get('preview', 'confirmed', False)
+
+    def reset_preview_confirmation(self):
+        self._set('preview', 'confirmed', False)
+
+    def confirm_preview(self):
+        self._set('preview', 'confirmed', True)
 
     # Submission methods
     # ==================
