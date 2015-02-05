@@ -79,7 +79,7 @@ class AbstractVoucher(models.Model):
         test_datetime = test_datetime or timezone.now()
         return self.start_datetime <= test_datetime <= self.end_datetime
 
-    def is_available_to_user(self, user=None):
+    def is_available_to_user(self, user=None, no_message_on_result=None):
         """
         Test whether this voucher is available to the passed user.
 
@@ -104,6 +104,9 @@ class AbstractVoucher(models.Model):
                 if not is_available:
                     message = _("You have already used this voucher in "
                                 "a previous order")
+        if no_message_on_result:
+            return is_available
+                
         return is_available, message
 
     def record_usage(self, order, user):

@@ -96,7 +96,7 @@ class Applicator(object):
             return offers
 
         for voucher in basket.vouchers.all():
-            if voucher.is_active() and voucher.is_available_to_user(user):
+            if voucher.is_active() and voucher.is_available_to_user(user=user, no_message_on_result=True):
                 basket_offers = voucher.offers.all()
                 for offer in basket_offers:
                     offer.set_voucher(voucher)

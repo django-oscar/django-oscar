@@ -69,7 +69,7 @@ class TestMultiuseVoucher(TestCase):
         user, order = G(User), G(Order)
         for i in range(10):
             self.voucher.record_usage(order, user)
-            self.assertTrue(self.voucher.is_available_to_user(user)[0])
+            self.assertTrue(self.voucher.is_available_to_user(user=user, no_message_on_result=True))
 
 
 class TestOncePerCustomerVoucher(TestCase):
@@ -79,13 +79,13 @@ class TestOncePerCustomerVoucher(TestCase):
 
     def test_is_available_to_a_user_once(self):
         user, order = G(User), G(Order)
-        self.assertTrue(self.voucher.is_available_to_user(user)[0])
+        self.assertTrue(self.voucher.is_available_to_user(user=user, no_message_on_result=True))
         self.voucher.record_usage(order, user)
-        self.assertFalse(self.voucher.is_available_to_user(user)[0])
+        self.assertFalse(self.voucher.is_available_to_user(user=user, no_message_on_result=True))
 
     def test_is_available_to_different_users(self):
         users, order = [G(User), G(User)], G(Order)
         for user in users:
-            self.assertTrue(self.voucher.is_available_to_user(user)[0])
+            self.assertTrue(self.voucher.is_available_to_user(user=user, no_message_on_result=True))
             self.voucher.record_usage(order, user)
-            self.assertFalse(self.voucher.is_available_to_user(user)[0])
+            self.assertFalse(self.voucher.is_available_to_user(user=user, no_message_on_result=True))
