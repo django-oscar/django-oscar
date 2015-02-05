@@ -11,12 +11,17 @@ from oscar.test.offer import add_line
 class TestAPercentageDiscount(TestCase):
 
     def setUp(self):
-        range = models.Range(
+        self.range = models.Range(
             name="All products", includes_all_products=True)
         self.benefit = models.PercentageDiscountBenefit(
-            range=range,
+            range=self.range,
             type=models.Benefit.PERCENTAGE,
             value=20)
+        self.other_benefit = models.PercentageDiscountBenefit(
+            range=self.range,
+            type=models.Benefit.PERCENTAGE,
+            value=50,
+            can_apply_with_other_benefits=True)
         self.set_of_lines = SetOfLines([])
 
     def test_gives_a_percentage_discount(self):
@@ -60,3 +65,47 @@ class TestAPercentageDiscount(TestCase):
         add_line(self.set_of_lines, 100, 1)
         result = self.benefit.apply(self.set_of_lines, discount_percent=30)
         self.assertEqual(result.discount, 30)
+
+    def test_does_not_apply_twice(self):
+        add_line(self.set_of_lines, 100, 1)
+
+        result = self.other_benefit.apply(self.set_of_lines)
+        self.assertEqual(50, result.discount)
+        self.assertEqual(1, self.set_of_lines.num_items_with_benefit)
+        self.assertEqual(0, self.set_of_lines.num_items_without_benefit)
+
+        result = self.other_benefit.apply(self.set_of_lines)
+        self.assertFalse(result)
+
+    def test_applies_before_other_non_conflicting_benefit(self):
+        add_line(self.set_of_lines, 100, 1)
+
+        result = self.benefit.apply(self.set_of_lines)
+        self.assertTrue(result)
+        self.assertEqual(1, self.set_of_lines.num_items_with_benefit)
+        self.assertEqual(0, self.set_of_lines.num_items_without_benefit)
+
+        result = self.other_benefit.apply(self.set_of_lines)
+        self.assertTrue(result)
+        self.assertEqual(1, self.set_of_lines.num_items_with_benefit)
+        self.assertEqual(0, self.set_of_lines.num_items_without_benefit)
+
+    def test_applies_after_other_non_conflicting_benefit(self):
+        add_line(self.set_of_lines, 100, 1)
+
+        result = self.other_benefit.apply(self.set_of_lines)
+        self.assertTrue(result)
+        self.assertEqual(1, self.set_of_lines.num_items_with_benefit)
+        self.assertEqual(0, self.set_of_lines.num_items_without_benefit)
+
+        result = self.benefit.apply(self.set_of_lines)
+        self.assertTrue(result)
+        self.assertEqual(1, self.set_of_lines.num_items_with_benefit)
+        self.assertEqual(0, self.set_of_lines.num_items_without_benefit)
+
+    def test_calculates_discount_based_on_previously_discounted_price(self):
+        add_line(self.set_of_lines, 100, 1)
+
+        result = self.benefit.apply(self.set_of_lines)
+        result = self.other_benefit.apply(self.set_of_lines)
+        self.assertEqual(100 * (1 - D('0.2')) * D('0.5'), result.discount)
