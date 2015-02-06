@@ -1,6 +1,3 @@
-USE_LESS = False
-COMPRESS_ENABLED = False
-
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
