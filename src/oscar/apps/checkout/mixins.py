@@ -1,11 +1,15 @@
 import logging
+import six
 
-from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse, NoReverseMatch
+from django.contrib import messages
 from django.contrib.sites.models import Site, get_current_site
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.translation import ugettext as _
 
-from oscar.core.loading import get_class, get_model
+from oscar.core.loading import get_class, get_classes, get_model
+
+from . import signals
 
 OrderCreator = get_class('order.utils', 'OrderCreator')
 Dispatcher = get_class('customer.utils', 'Dispatcher')
@@ -20,10 +24,23 @@ Basket = get_model('basket', 'Basket')
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
 UnableToPlaceOrder = get_class('order.exceptions', 'UnableToPlaceOrder')
 
+PaymentRedirectRequired, UnableToTakePayment, PaymentError \
+    = get_classes('payment.exceptions', ['RedirectRequired',
+                                         'UnableToTakePayment',
+                                         'PaymentError'])
 post_checkout = get_class('checkout.signals', 'post_checkout')
 
 # Standard logger for checkout events
 logger = logging.getLogger('oscar.checkout')
+
+
+class RedirectRequired(Exception):
+    def __init__(self, target):
+        self.target = target
+
+
+class CheckoutFailed(Exception):
+    pass
 
 
 class OrderPlacementMixin(CheckoutSessionMixin):
@@ -44,8 +61,6 @@ class OrderPlacementMixin(CheckoutSessionMixin):
 
     # Default code for the email to send after successful checkout
     communication_type_code = 'ORDER_PLACED'
-
-    view_signal = post_checkout
 
     # Payment handling methods
     # ------------------------
@@ -86,6 +101,140 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             reference=reference)
         self._payment_events.append(event)
 
+    # Order submission methods
+    # ------------------------
+
+    def submit_basket(self, user, basket, shipping_address, shipping_method,
+                      shipping_charge, billing_address, order_total,
+                      payment_kwargs=None, order_kwargs=None):
+        """
+        Submit a basket for order placement.
+
+        The process runs as follows:
+
+         * Generate an order number
+         * Freeze the basket so it cannot be modified any more (important when
+           redirecting the user to another site for payment as it prevents the
+           basket being manipulated during the payment process).
+         * Attempt to take payment for the order
+           - If payment is successful, place the order
+           - If a redirect is required (eg PayPal, 3DSecure), redirect
+           - If payment is unsuccessful, show an appropriate error message
+
+        :basket: The basket to submit.
+        :payment_kwargs: Additional kwargs to pass to the handle_payment
+        method. It normally makes sense to pass form instances (rather than
+        model instances) so that the forms can be re-rendered correctly if
+        payment fails.
+        :order_kwargs: Additional kwargs to pass to the place_order method
+        """
+        if payment_kwargs is None:
+            payment_kwargs = {}
+        if order_kwargs is None:
+            order_kwargs = {}
+
+        # Taxes must be known at this point
+        assert basket.is_tax_known, (
+            "Basket tax must be set before a user can place an order")
+        assert shipping_charge.is_tax_known, (
+            "Shipping charge tax must be set before a user can place an order")
+
+        # We generate the order number first as this will be used
+        # in payment requests (ie before the order model has been
+        # created).  We also save it in the session for multi-stage
+        # checkouts (eg where we redirect to a 3rd party site and place
+        # the order on a different request).
+        order_number = self.generate_order_number(basket)
+        self.checkout_session.set_order_number(order_number)
+        logger.info("Order #%s: beginning submission process for basket #%d",
+                    order_number, basket.id)
+
+        # Freeze the basket so it cannot be manipulated while the customer is
+        # completing payment on a 3rd party site.  Also, store a reference to
+        # the basket in the session so that we know which basket to thaw if we
+        # get an unsuccessful payment response when redirecting to a 3rd party
+        # site.
+        self.freeze_basket(basket)
+        self.checkout_session.set_submitted_basket(basket)
+
+        # We define a general error message for when an unanticipated payment
+        # error occurs.
+        error_msg = _("A problem occurred while processing payment for this "
+                      "order - no payment has been taken.  Please "
+                      "contact customer services if this problem persists")
+
+        signals.pre_payment.send_robust(sender=self, view=self)
+
+        try:
+            self.handle_payment(order_number, order_total, **payment_kwargs)
+        except PaymentRedirectRequired as e:
+            # Redirect required (eg PayPal, 3DS)
+            logger.info("Order #%s: redirecting to %s", order_number, e.url)
+            raise RedirectRequired(e.url)
+        except UnableToTakePayment as e:
+            # Something went wrong with payment but in an anticipated way.  Eg
+            # their bankcard has expired, wrong card number - that kind of
+            # thing. This type of exception is supposed to set a friendly error
+            # message that makes sense to the customer.
+            msg = six.text_type(e)
+            logger.warning(
+                "Order #%s: unable to take payment (%s) - restoring basket",
+                order_number, msg)
+            self.restore_frozen_basket()
+
+            # We assume that the details submitted on the payment details view
+            # were invalid (eg expired bankcard).
+            # TODO: make it so that payment details are next up
+            messages.error(self.request, msg)
+            # TODO payment_kwargs are lost now
+            raise CheckoutFailed
+        except PaymentError as e:
+            # A general payment error - Something went wrong which wasn't
+            # anticipated.  Eg, the payment gateway is down (it happens), your
+            # credentials are wrong - that king of thing.
+            # It makes sense to configure the checkout logger to
+            # mail admins on an error as this issue warrants some further
+            # investigation.
+            msg = six.text_type(e)
+            logger.error("Order #%s: payment error (%s)", order_number, msg,
+                         exc_info=True)
+            self.restore_frozen_basket()
+            messages.error(self.request, error_msg)
+            # TODO payment_kwargs are lost now
+            raise CheckoutFailed
+        except Exception as e:
+            # Unhandled exception - hopefully, you will only ever see this in
+            # development...
+            logger.error(
+                "Order #%s: unhandled exception while taking payment (%s)",
+                order_number, e, exc_info=True)
+            self.restore_frozen_basket()
+            messages.error(self.request, error_msg)
+            # TODO payment_kwargs are lost now
+            raise CheckoutFailed
+
+        signals.post_payment.send_robust(sender=self, view=self)
+
+        # If all is ok with payment, try and place order
+        logger.info("Order #%s: payment successful, placing order",
+                    order_number)
+        try:
+            self.handle_order_placement(
+                order_number, user, basket, shipping_address, shipping_method,
+                shipping_charge, billing_address, order_total, **order_kwargs)
+        except UnableToPlaceOrder as e:
+            # It's possible that something will go wrong while trying to
+            # actually place an order.  Not a good situation to be in as a
+            # payment transaction may already have taken place, but needs
+            # to be handled gracefully.
+            msg = six.text_type(e)
+            logger.error("Order #%s: unable to place order - %s",
+                         order_number, msg, exc_info=True)
+            self.restore_frozen_basket()
+            messages.error(self.request, msg)
+            # TODO payment_kwargs are lost now
+            raise CheckoutFailed
+
     # Placing order methods
     # ---------------------
 
@@ -112,7 +261,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             shipping_charge=shipping_charge, order_total=order_total, 
             billing_address=billing_address, **kwargs)
         basket.submit()
-        return self.handle_successful_order(order)
+        self.handle_successful_order(order)
 
     def place_order(self, order_number, user, basket, shipping_address,
                     shipping_method, shipping_charge, order_total,
@@ -238,23 +387,11 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         # Send confirmation message (normally an email)
         self.send_confirmation_message(order, self.communication_type_code)
 
-        # Flush all session data
-        self.checkout_session.flush()
-
         # Save order id in session so thank-you page can load it
         self.request.session['checkout_order_id'] = order.id
 
-        response = HttpResponseRedirect(self.get_success_url())
-        self.send_signal(self.request, response, order)
-        return response
-
-    def send_signal(self, request, response, order):
-        self.view_signal.send(
-            sender=self, order=order, user=request.user,
-            request=request, response=response)
-
-    def get_success_url(self):
-        return reverse('checkout:thank-you')
+        post_checkout.send(sender=self, order=order, user=self.request.user,
+                           request=self.request)
 
     def send_confirmation_message(self, order, code, **kwargs):
         ctx = self.get_message_context(order)
