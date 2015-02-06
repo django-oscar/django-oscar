@@ -5,7 +5,6 @@ from django.test.client import RequestFactory
 import mock
 
 from oscar.apps.offer import models, utils
-from oscar.apps.order.utils import OrderCreator
 from oscar.apps.shipping.repository import Repository
 from oscar.apps.shipping.methods import FixedPrice
 from oscar.test.basket import add_product
@@ -15,10 +14,9 @@ from oscar.test import factories
 def create_offer():
     range = models.Range.objects.create(
         name="All products", includes_all_products=True)
-    condition = models.CountCondition.objects.create(
+    condition = models.NoneCondition.objects.create(
         range=range,
-        type=models.Condition.COUNT,
-        value=1)
+        type=models.Condition.NONE)
     benefit = models.ShippingFixedPriceBenefit.objects.create(
         type=models.Benefit.SHIPPING_FIXED_PRICE,
         value=D('1.00'))

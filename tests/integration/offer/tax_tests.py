@@ -3,6 +3,7 @@ from decimal import Decimal as D
 from django.test import TestCase
 
 from oscar.apps.offer import models
+from oscar.apps.offer.utils import SetOfLines
 from oscar.apps.basket.models import Basket
 from oscar.apps.partner import strategy
 from oscar.test.basket import add_product
@@ -16,8 +17,7 @@ class TestAValueBasedOffer(TestCase):
             name="All products", includes_all_products=True)
         condition = models.Condition.objects.create(
             range=range,
-            type=models.Condition.VALUE,
-            value=D('10.00'))
+            type=models.Condition.NONE)
         benefit = models.Benefit.objects.create(
             range=range,
             type=models.Benefit.PERCENTAGE,
@@ -37,7 +37,7 @@ class TestAValueBasedOffer(TestCase):
         add_product(self.basket, price=D('6'), quantity=2)
 
         # Ensure discount is correct
-        result = self.offer.apply_benefit(self.basket)
+        result = self.offer.apply_benefit(SetOfLines.from_basket(self.basket))
         self.assertEqual(D('2.40'), result.discount)
 
     def test_respects_effective_price_when_taxes_are_known(self):
@@ -48,5 +48,5 @@ class TestAValueBasedOffer(TestCase):
         add_product(self.basket, price=D('6'), quantity=2)
 
         # Ensure discount is calculated against tax-inclusive price
-        result = self.offer.apply_benefit(self.basket)
+        result = self.offer.apply_benefit(SetOfLines.from_basket(self.basket))
         self.assertEqual(2 * D('6.00') * D('1.2') * D('0.20'), result.discount)

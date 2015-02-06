@@ -17,16 +17,15 @@ class TestOfferApplicator(TestCase):
         self.applicator = Applicator()
         self.basket = factories.create_basket(empty=True)
         rng = G(models.Range, includes_all_products=True)
-        self.condition = G(models.Condition, range=rng, type="Value",
-                           value=D('100'), proxy_class=None)
-        self.benefit = G(models.Benefit, range=rng, type="Absolute",
+        self.condition = G(models.Condition, range=rng, type="None", proxy_class=None)
+        self.benefit = G(models.Benefit, range=rng, type="Percentage",
                          value=D('10'))
 
     def test_applies_offer_multiple_times_by_default(self):
         add_product(self.basket, D('100'), 5)
         offer = models.ConditionalOffer(
             id="test", condition=self.condition, benefit=self.benefit)
-        self.applicator.apply_offers(self.basket, [offer])
+        self.applicator.apply_offers_to_basket(self.basket, [offer])
         applications = self.basket.offer_applications.applications
         self.assertEqual(5, applications["test"]['freq'])
 
@@ -35,7 +34,7 @@ class TestOfferApplicator(TestCase):
         offer = models.ConditionalOffer(
             id="test", condition=self.condition, benefit=self.benefit,
             max_basket_applications=1)
-        self.applicator.apply_offers(self.basket, [offer])
+        self.applicator.apply_offers_to_basket(self.basket, [offer])
         applications = self.basket.offer_applications.applications
         self.assertEqual(1, applications["test"]['freq'])
 
