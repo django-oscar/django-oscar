@@ -9,7 +9,7 @@
             {% if table.icon %}
               <i class="icon-{{ table.icon }} icon-large"></i>
             {% endif %}
-            {{ table.caption }}
+            {{ table.get_caption_display }}
         </h3>
     {% endblock %}
 </caption>
