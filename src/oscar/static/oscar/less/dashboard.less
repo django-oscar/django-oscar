@@ -25,10 +25,10 @@ h2 {
 }
 body {
   font-family: @dashFontFamily;
-  font-size: 12px;
+  font-size: @baseFontSize;
 }
 label, input, button, select, textarea {
-  font-size: 12px;
+  font-size: @baseFontSize;
 }
 h3 {
   font-size: 20px;
@@ -44,26 +44,8 @@ h3.app-ico:before {
 .btn-group > .btn,
 .btn-group > .dropdown-menu,
 .btn {
-  font-size:12px;
+  font-size:@baseFontSize;
   font-family:inherit;
-}
-.btn-warning,
-.btn-success,
-.btn-info {
-  .buttonBackground(@white, darken(@white, 10%));
-  text-shadow: none;
-  color: inherit;
-  *color: #333;
-  &:hover,
-  &:active {
-   color:inherit;
-   *color: #333;
-  }
-  &:focus {
-    .buttonBackground(darken(@white, 15%),@white);
-    background-position:0 0;
-    color:#333;
-  }
 }
 .btn-primary {
   .buttonBackground(#0083C9, #005096);
@@ -78,21 +60,9 @@ td .btn-toolbar {
 
 // FORM CHANGES
 // -----------
-.form-horizontal,
 .form-stacked {
-  .control-label {
-    text-align: left;
-  }
   .control-group {
     margin-bottom:@baseLineHeight / 2;
-  }
-  input[type=text],
-  input[type=number],
-  input[type=email],
-  input[type=url],
-  textarea,
-  select {
-    font-size:12px;
   }
   textarea {
     max-height:200px;
@@ -114,6 +84,12 @@ td .btn-toolbar {
   .control-group {
     margin-right:10px;
   }
+}
+
+/* align text with label baseline */
+.controls > .dummy-control {
+    display: inline-block;
+    padding-top: 5px;
 }
 .form-stacked {
   .error-block {
@@ -156,7 +132,6 @@ form.flat {
   }
 }
 .create-page {
-  .form-horizontal,
   .form-stacked {
     input[type=text],
     input[type=number],
@@ -215,7 +190,6 @@ form.flat {
 .table-bordered,
 .table-bordered th,
 .table-bordered td  {
-  border-color:#bbb;
 }
 .table {
   background-color: @white;
@@ -255,7 +229,7 @@ body {
     padding-left:  20px;
     padding-right: 20px;
     min-height: 50px;
-    font-size: 12px;
+    font-size: @baseFontSize;
     #gradient > .vertical(#373737, #242424);
     border: none;
     .brand {
@@ -314,7 +288,7 @@ body {
         border-right: 1px solid @grayDarker;
         .border-radius(0);
         color: #DCDCDC;
-        font-size: 12px;
+        font-size: @baseFontSize;
         padding: 15px;
         .caret {
           border-top-color: #DCDCDC;
@@ -346,7 +320,7 @@ body {
 .navbar-primary .nav {
   > li i {
     color: #dcdcdc;
-    padding-right: 12px;
+    padding-right: @baseFontSize;
   }
 }
 
@@ -417,7 +391,7 @@ caption,
       margin-bottom: 15px;
       padding: 12px;
       color: #878787;
-      font-size: 12px;
+      font-size: @baseFontSize;
       span {
         display: inline-block;
         font-weight: bold;
@@ -502,7 +476,6 @@ caption,
   .clearfix();
   box-shadow: none;
   background-color: #efefef;
-  border-color: #bbb;
 }
 .well-success {
   background-color: @successBackground;
@@ -524,14 +497,15 @@ caption,
 .promotions .well-info {
     background-color: @white;
 }
-// ALERTS
-// -----
-.alert {
-  background-color: #fff49f;
-  border-color: #ede181;
-  color: #333;
-}
+
 @import 'page/alerts.less';
+
+// TABS
+// ----
+.nav-tabs {
+    /* pull up tab-content well to tabs so there's no gap between them */
+    margin-bottom: -1px;
+}
 
 // DASHBOARD GRAPH
 // ----------------
@@ -708,35 +682,10 @@ caption,
 .ico_expand + ul {
   height:0px;
 }
-.category-selected {
-  margin:0;
-  li {
-    display:block;
-    width:150px;
-    .clearfix();
-    margin-bottom:@baseLineHeight / 2;
-  }
-  span {
-    float: right;
-    display: block;
-    background: @grayLight;
-    color: white;
-    padding: 1px 0 3px;
-    .border-radius(15px);
-    font-size: 12px;
-    line-height: 11px;
-    width: 15px;
-    font-weight: bold;
-    text-align: center;
-  }
-}
 #product_category {
   select {
     width:350px;
   }
-}
-.catalogue .tab-content {
-  overflow:visible;
 }
 .upload-image {
   .clearfix();
@@ -868,10 +817,10 @@ div[data-spy="affix"].affix {
   }
 }
 .fixed-actions {
-  margin-bottom:180px;
+  margin-bottom:100px;
   .fixed-actions-group {
     margin:0;
-    z-index:1010;
+    z-index:2;
     position:fixed;
     bottom:0;
     left:0;
@@ -896,7 +845,7 @@ div[data-spy="affix"].affix {
 // -----
 
 /* Changes for wysihtml5 */
-textarea {
+textarea.wysiwyg, form.wysiwyg textarea {
 	width: 500px;
 	height: 400px;
 }
