@@ -1,6 +1,7 @@
 import re
 import zlib
 
+from django.conf import settings
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
@@ -9,7 +10,6 @@ from django.core import exceptions
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.models.fields import UppercaseCharField, PhoneNumberField
 from django.utils.six.moves import filter
-
 
 @python_2_unicode_compatible
 class AbstractAddress(models.Model):
@@ -27,7 +27,9 @@ class AbstractAddress(models.Model):
         (MS, _("Ms")),
         (DR, _("Dr")),
     )
-
+    
+    POSTCODE_REQUIRED = 'postcode' in settings.OSCAR_REQUIRED_ADDRESS_FIELDS
+    
     # Regex for each country. Not listed countries don't use postcodes
     # Based on http://en.wikipedia.org/wiki/List_of_postal_codes
     POSTCODES_REGEX = {
@@ -263,7 +265,7 @@ class AbstractAddress(models.Model):
         """
         Validate postcode given the country
         """
-        if not self.postcode and self.country_id:
+        if not self.postcode and self.POSTCODE_REQUIRED and self.country_id:
             country_code = self.country.iso_3166_1_a2
             regex = self.POSTCODES_REGEX.get(country_code, None)
             if regex:
