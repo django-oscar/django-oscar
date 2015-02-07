@@ -57,7 +57,7 @@ def configure():
                 'oscar.core.context_processors.metadata',
             ),
             'TEMPLATE_DIRS': (
-                location('templates'),
+                location('_site/templates'),
                 oscar.OSCAR_MAIN_TEMPLATE_DIR,
             ),
             'TEMPLATE_LOADERS': (
