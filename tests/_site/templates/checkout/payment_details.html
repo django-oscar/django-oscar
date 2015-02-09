@@ -1,0 +1,17 @@
+{% extends 'oscar/checkout/payment_details.html' %}
+{% load url from future %}
+{% load i18n %}
+
+{% block payment_details %}
+    {{ block.super }}
+
+    <div class="well">
+        <div class="sub-header">
+            <h3>{% trans "PayTest" %}</h3>
+        </div>
+        <form method="post" action="{% url 'checkout:preview' %}" id="sensible_data">
+            {% csrf_token %}
+         <button type="submit" class="btn btn-large btn-primary">Submit</button>
+        </form>
+    </div>
+{% endblock %}
