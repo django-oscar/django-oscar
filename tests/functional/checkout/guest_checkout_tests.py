@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.utils.http import urlquote
 from django.utils.importlib import import_module
+from django.utils.six.moves import http_client
 import mock
 
 from oscar.core.compat import get_user_model
@@ -19,8 +20,10 @@ CheckoutSessionData = get_class('checkout.utils', 'CheckoutSessionData')
 RedirectRequired, UnableToTakePayment, PaymentError = get_classes(
     'payment.exceptions', [
         'RedirectRequired', 'UnableToTakePayment', 'PaymentError'])
+UnableToPlaceOrder = get_class('order.exceptions', 'UnableToPlaceOrder')
 
 Basket = get_model('basket', 'Basket')
+Order = get_model('order', 'Order')
 User = get_user_model()
 
 # Python 3 compat
@@ -136,6 +139,17 @@ class TestShippingAddressView(CheckoutMixin, WebTestCase):
 
         response = self.get(reverse('checkout:shipping-address'))
         self.assertRedirectsTo(response, 'basket:summary')
+
+    def test_shows_initial_data_if_the_form_has_already_been_submitted(self):
+        self.add_product_to_basket()
+        self.enter_guest_details('hello@egg.com')
+        self.enter_shipping_address()
+        page = self.get(reverse('checkout:shipping-address'), user=self.user)
+        self.assertEqual('John', page.form['first_name'].value)
+        self.assertEqual('Doe', page.form['last_name'].value)
+        self.assertEqual('1 Egg Road', page.form['line1'].value)
+        self.assertEqual('Shell City', page.form['line4'].value)
+        self.assertEqual('N12 9RT', page.form['postcode'].value)
 
 
 @override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)
@@ -389,6 +403,42 @@ class TestPaymentDetailsView(CheckoutMixin, WebTestCase):
         basket = Basket.objects.get()
         self.assertEqual(basket.status, Basket.OPEN)
 
+    @mock.patch('oscar.apps.checkout.views.logger')
+    @mock.patch('oscar.apps.checkout.views.PaymentDetailsView.handle_order_placement')
+    def test_handles_unexpected_order_placement_errors_gracefully(
+            self, mock_method, mock_logger):
+        e = UnableToPlaceOrder()
+        mock_method.side_effect = e
+        preview = self.ready_to_place_an_order(is_guest=True)
+        response = preview.forms['place_order_form'].submit()
+        self.assertIsOk(response)
+        self.assertTrue(mock_logger.error.called)
+        basket = Basket.objects.get()
+        self.assertEqual(basket.status, Basket.OPEN)
+
+
+@override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)
+class TestPaymentDetailsWithPreview(CheckoutMixin, WebTestCase):
+    is_anonymous = True
+    csrf_checks = False
+
+    def setUp(self):
+        reload_url_conf()
+        super(TestPaymentDetailsWithPreview, self).setUp()
+
+    def test_payment_form_being_submitted_from_payment_details_view(self):
+        payment_details = self.reach_payment_details_page(is_guest=True)
+        preview = payment_details.forms['sensible_data'].submit()
+        self.assertEqual(0, Order.objects.all().count())
+        preview.form.submit().follow()
+        self.assertEqual(1, Order.objects.all().count())
+
+    def test_handles_invalid_payment_forms(self):
+        payment_details = self.reach_payment_details_page(is_guest=True)
+        form = payment_details.forms['sensible_data']
+        # payment forms should use the preview URL not the payment details URL
+        form.action = reverse('checkout:payment-details')
+        self.assertEqual(form.submit(status="*").status_code, http_client.BAD_REQUEST)
 
 @override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)
 class TestPlacingOrder(CheckoutMixin, WebTestCase):

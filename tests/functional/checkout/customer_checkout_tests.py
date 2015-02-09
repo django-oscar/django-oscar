@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from django.core.urlresolvers import reverse
+from django.utils.six.moves import http_client
 
 from oscar.core.loading import get_model, get_class
 from oscar.test.newfactories import UserAddressFactory
@@ -60,7 +61,7 @@ class TestShippingAddressView(CheckoutMixin, WebTestCase):
         self.assertEqual('Gotham City', session_fields['line4'])
         self.assertEqual('N1 7RR', session_fields['postcode'])
 
-    def test_only_shipping_address_are_shown(self):
+    def test_only_shipping_addresses_are_shown(self):
         not_shipping_country = factories.CountryFactory(
             iso_3166_1_a2='US', name="UNITED STATES",
             is_shipping_country=False)
@@ -194,3 +195,49 @@ class TestPlacingAnOrderUsingAnOffer(CheckoutMixin, WebTestCase):
 
         self.assertEqual(1, offer.num_orders)
         self.assertEqual(1, offer.num_applications)
+
+
+class TestThankYouView(CheckoutMixin, WebTestCase):
+
+    def tests_gets_a_404_when_there_is_no_order(self):
+        response = self.get(reverse('checkout:thank-you'), user=self.user, status="*")
+        self.assertEqual(http_client.NOT_FOUND, response.status_code)
+
+    def tests_custumers_can_reach_the_thank_you_page(self):
+        self.add_product_to_basket()
+        self.enter_shipping_address()
+        thank_you = self.place_order()
+        self.assertIsOk(thank_you)
+
+    def test_superusers_can_force_an_order(self):
+        self.add_product_to_basket()
+        self.enter_shipping_address()
+        self.place_order()
+        user = self.create_user('admin', 'admin@admin.com')
+        user.is_superuser = True
+        user.save()
+        order = Order.objects.get()
+        thank_you_order_number = self.get(
+            "%s?order_number=%s" % (
+                reverse('checkout:thank-you'), order.number), user=user)
+        self.assertIsOk(thank_you_order_number)
+        thank_you_order_id = self.get(
+            "%s?order_id=%s" % (
+                reverse('checkout:thank-you'), order.id), user=user)
+        self.assertIsOk(thank_you_order_id)
+
+    def test_users_cannot_force_an_other_custumer_order(self):
+        self.add_product_to_basket()
+        self.enter_shipping_address()
+        self.place_order()
+        user = self.create_user('John', 'john@test.com')
+        user.save()
+        order = Order.objects.get()
+        thank_you_order_number = self.get(
+            "%s?order_number=%s" % (
+                reverse('checkout:thank-you'), order.number), status='*', user=user)
+        self.assertEqual(thank_you_order_number.status_code, http_client.NOT_FOUND)
+        thank_you_order_id = self.get(
+            "%s?order_id=%s" % (
+                reverse('checkout:thank-you'), order.id), status='*', user=user)
+        self.assertEqual(thank_you_order_id.status_code, http_client.NOT_FOUND)
