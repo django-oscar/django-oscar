@@ -25,8 +25,7 @@ __all__ = ["UserFactory", "CountryFactory", "UserAddressFactory",
            "ProductAttributeFactory", "ProductAttributeValueFactory",
            "AttributeOptionGroupFactory",
            "AttributeOptionFactory", "PartnerFactory",
-           "ProductCategoryFactory", "CategoryFactory", "RangeFactory",
-           "ProductClassFactory"]
+           "ProductCategoryFactory", "CategoryFactory", "RangeFactory"]
 
 Selector = get_class('partner.strategy', 'Selector')
 
