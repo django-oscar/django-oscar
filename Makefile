@@ -90,11 +90,11 @@ travis: lint coverage build_sandbox build_demo testmigrations
 
 messages:
 	# Create the .po files used for i18n
-	cd oscar; django-admin.py makemessages -a
+	cd src/oscar; django-admin.py makemessages -a
 
 compiledmessages:
 	# Compile the gettext files
-	cd oscar; django-admin.py compilemessages
+	cd src/oscar; django-admin.py compilemessages
 
 css:
 	# Compile CSS files from LESS
