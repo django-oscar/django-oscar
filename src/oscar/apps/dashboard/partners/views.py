@@ -232,7 +232,7 @@ class PartnerUserUnlinkView(generic.View):
     def unlink_user(self, user, partner):
         """
         Unlinks a user from a partner, and removes the dashboard permission
-        if she's not linked to any other partners.
+        if they are not linked to any other partners.
 
         Returns False if the user was not linked to the partner; True
         otherwise.

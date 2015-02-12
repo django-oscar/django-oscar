@@ -42,7 +42,7 @@ class AbstractWishList(models.Model):
                                   default=PRIVATE, choices=VISIBILITY_CHOICES)
 
     # Convention: A user can have multiple wish lists. The last created wish
-    # list for a user shall be her "default" wish list.
+    # list for a user shall be their "default" wish list.
     # If an UI element only allows adding to wish list without
     # specifying which one , one shall use the default one.
     # That is a rare enough case to handle it by convention instead of a
@@ -76,7 +76,7 @@ class AbstractWishList(models.Model):
             return user == self.owner
 
     def is_allowed_to_edit(self, user):
-        # currently only the owner can edit her wish list
+        # currently only the owner can edit their wish list
         return user == self.owner
 
     class Meta:
