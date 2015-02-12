@@ -289,7 +289,7 @@ class UserForm(forms.ModelForm):
 
 
 Profile = get_profile_class()
-if Profile:
+if Profile:  # noqa (too complex (12))
 
     class UserAndProfileForm(forms.ModelForm):
 

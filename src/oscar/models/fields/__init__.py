@@ -1,10 +1,9 @@
 
 from django.core.exceptions import ImproperlyConfigured
-from django.db.models.fields import CharField, DecimalField, Field
+from django.db.models.fields import CharField, DecimalField
 from django.db.models import SubfieldBase
 from django.utils import six
 from django.utils.translation import ugettext_lazy as _
-from django.core.validators import MaxLengthValidator
 
 from oscar.core import validators
 from oscar.forms import fields

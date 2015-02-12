@@ -15,8 +15,8 @@ class Application(object):
     #: A name that allows the functionality within this app to be disabled
     hidable_feature_name = None
 
-    #: Maps view names to lists of permissions. We expect tuples of 
-    #: lists as dictionary values. A list is a set of permissions that all 
+    #: Maps view names to lists of permissions. We expect tuples of
+    #: lists as dictionary values. A list is a set of permissions that all
     #: needto be fulfilled (AND). Only one set of permissions has to be
     #: fulfilled (OR).
     #: If there's only one set of permissions, as a shortcut, you can also

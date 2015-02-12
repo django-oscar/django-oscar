@@ -267,7 +267,7 @@ def feature_hidden(feature_name):
 # hopefully do mostly the same
 
 
-if django.VERSION < (1, 7):
+if django.VERSION < (1, 7):  # noqa (too complex (12))
 
     from django.db.models import get_model as django_get_model
 

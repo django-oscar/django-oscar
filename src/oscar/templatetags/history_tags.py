@@ -25,7 +25,7 @@ def recently_viewed_products(context):
             'request': request}
 
 
-@register.assignment_tag(takes_context=True)
+@register.assignment_tag(takes_context=True)  # noqa (too complex (11))
 def get_back_button(context):
     """
     Show back button, custom title available for different urls, for

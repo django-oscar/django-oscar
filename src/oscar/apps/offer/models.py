@@ -931,7 +931,7 @@ class Range(models.Model):
         return self.__excluded_product_ids
 
     def _class_ids(self):
-        if None == self.__class_ids:
+        if None is self.__class_ids:
             self.__class_ids = self.classes.values_list('pk', flat=True)
         return self.__class_ids
 

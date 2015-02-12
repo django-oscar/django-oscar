@@ -1,3 +1,6 @@
+import csv
+import sys
+
 from django.utils import six
 
 from django.conf import settings
@@ -93,8 +96,6 @@ Changes:
   of a view
 """
 
-import sys
-import csv
 
 PY3 = sys.version > '3'
 
