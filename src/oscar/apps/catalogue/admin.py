@@ -46,6 +46,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ['structure', 'is_discountable']
     inlines = [AttributeInline, CategoryInline, ProductRecommendationInline]
     prepopulated_fields = {"slug": ("title",)}
+    search_fields = ['upc', 'title']
 
     def queryset(self, request):
         qs = super(ProductAdmin, self).queryset(request)
