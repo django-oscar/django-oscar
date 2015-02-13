@@ -40,10 +40,21 @@ class ProductClassAdmin(admin.ModelAdmin):
 
 
 class ProductAdmin(admin.ModelAdmin):
+    date_hierarchy = 'date_created'
     list_display = ('get_title', 'upc', 'get_product_class', 'structure',
                     'attribute_summary', 'date_created')
-    prepopulated_fields = {"slug": ("title",)}
+    list_filter = ['structure', 'is_discountable']
     inlines = [AttributeInline, CategoryInline, ProductRecommendationInline]
+    prepopulated_fields = {"slug": ("title",)}
+
+    def queryset(self, request):
+        qs = super(ProductAdmin, self).queryset(request)
+        return (
+            qs
+            .select_related('product_class', 'parent')
+            .prefetch_related(
+                'attribute_values',
+                'attribute_values__attribute'))
 
 
 class ProductAttributeAdmin(admin.ModelAdmin):
