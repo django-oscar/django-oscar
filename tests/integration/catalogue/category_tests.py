@@ -2,14 +2,14 @@
 from django import template
 from django.test import TestCase
 
-from oscar.apps.catalogue import models
+from oscar.apps.catalogue.models import Category
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
 
 
 class TestCategory(TestCase):
 
     def setUp(self):
-        self.products = models.Category.add_root(name=u"Pröducts")
+        self.products = Category.add_root(name=u"Pröducts")
         self.books = self.products.add_child(name=u"Bücher")
 
     def test_includes_parents_name_in_full_name(self):
@@ -32,7 +32,7 @@ class TestCategory(TestCase):
         self.assertEqual(more_books.slug, self.books.slug)
 
     def test_duplicate_slugs_allowed_for_non_siblings(self):
-        more_books = models.Category.add_root(name=self.books.name)
+        more_books = Category.add_root(name=self.books.name)
         self.assertEqual(more_books.slug, self.books.slug)
 
 
@@ -50,39 +50,26 @@ class TestMovingACategory(TestCase):
         for trail in breadcrumbs:
             create_from_breadcrumbs(trail)
 
-        horror = models.Category.objects.get(name="Horror")
-        programming = models.Category.objects.get(name="Programming")
+        horror = Category.objects.get(name="Horror")
+        programming = Category.objects.get(name="Programming")
         horror.move(programming)
 
         # Reload horror instance to pick up changes
-        self.horror = models.Category.objects.get(name="Horror")
-
-    def print_tree(self, tree=None):
-        """
-        Print out the category tree
-        """
-        if tree is None:
-            tree = models.Category.objects.filter(depth=1)
-        for node in tree:
-            self.print_tree(node.get_children())
+        self.horror = Category.objects.get(name="Horror")
 
     def test_updates_instance_name(self):
-        self.assertEqual('Books > Non-fiction > Horror',
-                         self.horror.full_name)
+        self.assertEqual('Books > Non-fiction > Horror', self.horror.full_name)
 
     def test_updates_subtree_names(self):
-        teen = models.Category.objects.get(name="Teen")
+        teen = Category.objects.get(name="Teen")
         self.assertEqual('Books > Non-fiction > Horror > Teen',
                          teen.full_name)
-        gothic = models.Category.objects.get(name="Gothic")
+        gothic = Category.objects.get(name="Gothic")
         self.assertEqual('Books > Non-fiction > Horror > Gothic',
                          gothic.full_name)
 
 
 class TestCategoryFactory(TestCase):
-
-    def setUp(self):
-        models.Category.objects.all().delete()
 
     def test_can_create_single_level_category(self):
         trail = 'Books'
@@ -99,7 +86,7 @@ class TestCategoryFactory(TestCase):
         self.assertEqual(category.name, 'Science-Fiction')
         self.assertEqual(category.get_depth(), 2)
         self.assertEqual(category.get_parent().name, 'Books')
-        self.assertEqual(2, models.Category.objects.count())
+        self.assertEqual(2, Category.objects.count())
         self.assertEqual(category.full_slug, 'books/science-fiction')
 
     def test_can_create_multiple_categories(self):
@@ -112,13 +99,13 @@ class TestCategoryFactory(TestCase):
         self.assertEqual(category.name, 'Popular Science')
         self.assertEqual(category.get_depth(), 3)
         self.assertEqual(category.get_parent().name, 'Factual')
-        self.assertEqual(5, models.Category.objects.count())
+        self.assertEqual(5, Category.objects.count())
         self.assertEqual(category.full_slug, 'books/factual/popular-science', )
 
     def test_can_use_alternative_separator(self):
         trail = 'Food|Cheese|Blue'
         create_from_breadcrumbs(trail, separator='|')
-        self.assertEqual(3, len(models.Category.objects.all()))
+        self.assertEqual(3, len(Category.objects.all()))
 
     def test_updating_subtree_slugs_when_moving_category_to_new_parent(self):
         trail = 'A > B > C'
@@ -132,19 +119,19 @@ class TestCategoryFactory(TestCase):
 
         trail = 'T'
         target = create_from_breadcrumbs(trail)
-        category = models.Category.objects.get(name='A')
+        category = Category.objects.get(name='A')
 
         category.move(target, pos='first-child')
 
-        c1 = models.Category.objects.get(name='A')
+        c1 = Category.objects.get(name='A')
         self.assertEqual(c1.full_slug, 't/a')
         self.assertEqual(c1.full_name, 'T > A')
 
-        child = models.Category.objects.get(name='F')
+        child = Category.objects.get(name='F')
         self.assertEqual(child.full_slug, 't/a/e/f')
         self.assertEqual(child.full_name, 'T > A > E > F')
 
-        child = models.Category.objects.get(name='D')
+        child = Category.objects.get(name='D')
         self.assertEqual(child.full_slug, 't/a/b/d')
         self.assertEqual(child.full_name, 'T > A > B > D')
 
@@ -158,16 +145,16 @@ class TestCategoryFactory(TestCase):
         trail = 'A > E > G'
         create_from_breadcrumbs(trail)
 
-        category = models.Category.objects.get(name='E')
-        target = models.Category.objects.get(name='A')
+        category = Category.objects.get(name='E')
+        target = Category.objects.get(name='A')
 
         category.move(target, pos='right')
 
-        child = models.Category.objects.get(name='E')
+        child = Category.objects.get(name='E')
         self.assertEqual(child.full_slug, 'e')
         self.assertEqual(child.full_name, 'E')
 
-        child = models.Category.objects.get(name='F')
+        child = Category.objects.get(name='F')
         self.assertEqual(child.full_slug, 'e/f')
         self.assertEqual(child.full_name, 'E > F')
 
@@ -248,7 +235,7 @@ class TestCategoryTemplateTags(TestCase):
         {% category_tree parent=category as tree_categories %}
         """ + self.template
         rendered = self.render_template(template,
-            context={'category': models.Category.objects.get(name="Fiction")})
+            context={'category': Category.objects.get(name="Fiction")})
         categories_exists = set(('Horror', 'Teen', 'Gothic', 'Comedy'))
         for c in categories_exists:
             self.assertTrue(c in rendered)
@@ -263,7 +250,7 @@ class TestCategoryTemplateTags(TestCase):
         {% category_tree depth=1 parent=category as tree_categories %}
         """ + self.template
         rendered = self.render_template(template,
-            context={'category': models.Category.objects.get(name="Fiction")})
+            context={'category': Category.objects.get(name="Fiction")})
         categories_exists = set(('Horror', 'Comedy'))
         for c in categories_exists:
             self.assertTrue(c in rendered)
