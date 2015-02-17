@@ -1,6 +1,7 @@
 {% extends "customer/baseaccountpage.html" %}
 {% load thumbnail %}
 {% load i18n %}
+{% load widget_tweaks %}
 
 {% block breadcrumbs %}
     <ul class="breadcrumb">
@@ -55,7 +56,7 @@
                                 </td>
                                 <td>
                                     {% for field in subform %}
-                                        {{ field }}
+                                        {% render_field field class+="form-control" %}
                                         {% for error in field.errors %}
                                             <ul class="error-block">
                                                 <li>{{ error }}</li>
