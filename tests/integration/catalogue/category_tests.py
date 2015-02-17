@@ -38,7 +38,6 @@ class TestCategory(TestCase):
             self.books.save(update_fields=['description'])
 
 
-
 class TestMovingACategory(TestCase):
 
     def setUp(self):

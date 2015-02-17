@@ -92,14 +92,25 @@ class AbstractCategory(MP_Node):
                               null=True, max_length=255)
     slug = models.SlugField(_('Slug'), max_length=255, db_index=True,
                             editable=False)
-    full_name = models.CharField(_('Full Name'), max_length=255,
-                                 db_index=True, editable=False)
 
     _slug_separator = '/'
     _full_name_separator = ' > '
 
     def __str__(self):
         return self.full_name
+
+    @property
+    def full_name(self):
+        """
+        Returns a string representation of the category and it's ancestors,
+        e.g. 'Books > Non-fiction > Essential programming'.
+
+        It's rarely used in Oscar's codebase, but used to be stored as a
+        CharField and is hence kept for backwards compatibility. It's also
+        sufficiently useful to keep around.
+        """
+        names = [category.name for category in self.get_ancestors_and_self()]
+        return self._full_name_separator.join(names)
 
     def update_slug(self, commit=True):
         """
@@ -112,11 +123,8 @@ class AbstractCategory(MP_Node):
         if parent:
             self.slug = '%s%s%s' % (
                 parent.slug, self._slug_separator, slug)
-            self.full_name = '%s%s%s' % (
-                parent.full_name, self._full_name_separator, self.name)
         else:
             self.slug = slug
-            self.full_name = self.name
         if commit:
             self.save()
 
@@ -190,7 +198,7 @@ class AbstractCategory(MP_Node):
     class Meta:
         abstract = True
         app_label = 'catalogue'
-        ordering = ['full_name']
+        ordering = ['path']
         verbose_name = _('Category')
         verbose_name_plural = _('Categories')
 
