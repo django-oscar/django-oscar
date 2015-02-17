@@ -8,8 +8,8 @@
 
 {% if form.non_field_errors %}
     {% for error in form.non_field_errors %}
-        <div class="alert alert-danger form-group error">
-            <span class="help-block"><i class="icon-exclamation-sign"></i> {{ error }}</span>
+        <div class="alert alert-danger">
+            <i class="icon-exclamation-sign"></i> {{ error }}
         </div>
     {% endfor %}
 {% endif %}

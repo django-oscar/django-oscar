@@ -86,12 +86,16 @@ sub {
 }
 img {
   /* Responsive images (ensure images don't scale beyond their parents) */
+
   max-width: 100%;
   /* Part 1: Set a maxium relative to the parent */
+
   width: auto\9;
   /* IE7-8 need help adjusting responsive images */
+
   height: auto;
   /* Part 2: Scale the height according to the width, otherwise you get stretching */
+
   vertical-align: middle;
   border: 0;
   -ms-interpolation-mode: bicubic;
@@ -186,7 +190,7 @@ textarea {
   img {
     max-width: 100% !important;
   }
-  @page {
+  @page  {
     margin: 0.5cm;
   }
   p,
@@ -353,158 +357,158 @@ a:focus {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   float: left;
-  margin-left: 2.12765957%;
-  *margin-left: 2.07446809%;
+  margin-left: 2.127659574468085%;
+  *margin-left: 2.074468085106383%;
 }
 .row-fluid [class*="span"]:first-child {
   margin-left: 0;
 }
 .row-fluid .controls-row [class*="span"] + [class*="span"] {
-  margin-left: 2.12765957%;
+  margin-left: 2.127659574468085%;
 }
 .row-fluid .span12 {
   width: 100%;
-  *width: 99.94680851%;
+  *width: 99.94680851063829%;
 }
 .row-fluid .span11 {
-  width: 91.4893617%;
-  *width: 91.43617021%;
+  width: 91.48936170212765%;
+  *width: 91.43617021276594%;
 }
 .row-fluid .span10 {
-  width: 82.9787234%;
-  *width: 82.92553191%;
+  width: 82.97872340425532%;
+  *width: 82.92553191489361%;
 }
 .row-fluid .span9 {
-  width: 74.46808511%;
-  *width: 74.41489362%;
+  width: 74.46808510638297%;
+  *width: 74.41489361702126%;
 }
 .row-fluid .span8 {
-  width: 65.95744681%;
-  *width: 65.90425532%;
+  width: 65.95744680851064%;
+  *width: 65.90425531914893%;
 }
 .row-fluid .span7 {
-  width: 57.44680851%;
-  *width: 57.39361702%;
+  width: 57.44680851063829%;
+  *width: 57.39361702127659%;
 }
 .row-fluid .span6 {
-  width: 48.93617021%;
-  *width: 48.88297872%;
+  width: 48.93617021276595%;
+  *width: 48.88297872340425%;
 }
 .row-fluid .span5 {
-  width: 40.42553191%;
-  *width: 40.37234043%;
+  width: 40.42553191489362%;
+  *width: 40.37234042553192%;
 }
 .row-fluid .span4 {
-  width: 31.91489362%;
-  *width: 31.86170213%;
+  width: 31.914893617021278%;
+  *width: 31.861702127659576%;
 }
 .row-fluid .span3 {
-  width: 23.40425532%;
-  *width: 23.35106383%;
+  width: 23.404255319148934%;
+  *width: 23.351063829787233%;
 }
 .row-fluid .span2 {
-  width: 14.89361702%;
-  *width: 14.84042553%;
+  width: 14.893617021276595%;
+  *width: 14.840425531914894%;
 }
 .row-fluid .span1 {
-  width: 6.38297872%;
-  *width: 6.32978723%;
+  width: 6.382978723404255%;
+  *width: 6.329787234042553%;
 }
 .row-fluid .offset12 {
-  margin-left: 104.25531915%;
-  *margin-left: 104.14893617%;
+  margin-left: 104.25531914893617%;
+  *margin-left: 104.14893617021275%;
 }
 .row-fluid .offset12:first-child {
-  margin-left: 102.12765957%;
-  *margin-left: 102.0212766%;
+  margin-left: 102.12765957446808%;
+  *margin-left: 102.02127659574467%;
 }
 .row-fluid .offset11 {
-  margin-left: 95.74468085%;
-  *margin-left: 95.63829787%;
+  margin-left: 95.74468085106382%;
+  *margin-left: 95.6382978723404%;
 }
 .row-fluid .offset11:first-child {
-  margin-left: 93.61702128%;
-  *margin-left: 93.5106383%;
+  margin-left: 93.61702127659574%;
+  *margin-left: 93.51063829787232%;
 }
 .row-fluid .offset10 {
-  margin-left: 87.23404255%;
-  *margin-left: 87.12765957%;
+  margin-left: 87.23404255319149%;
+  *margin-left: 87.12765957446807%;
 }
 .row-fluid .offset10:first-child {
-  margin-left: 85.10638298%;
-  *margin-left: 85%;
+  margin-left: 85.1063829787234%;
+  *margin-left: 84.99999999999999%;
 }
 .row-fluid .offset9 {
-  margin-left: 78.72340426%;
-  *margin-left: 78.61702128%;
+  margin-left: 78.72340425531914%;
+  *margin-left: 78.61702127659572%;
 }
 .row-fluid .offset9:first-child {
-  margin-left: 76.59574468%;
-  *margin-left: 76.4893617%;
+  margin-left: 76.59574468085106%;
+  *margin-left: 76.48936170212764%;
 }
 .row-fluid .offset8 {
-  margin-left: 70.21276596%;
-  *margin-left: 70.10638298%;
+  margin-left: 70.2127659574468%;
+  *margin-left: 70.10638297872339%;
 }
 .row-fluid .offset8:first-child {
-  margin-left: 68.08510638%;
-  *margin-left: 67.9787234%;
+  margin-left: 68.08510638297872%;
+  *margin-left: 67.9787234042553%;
 }
 .row-fluid .offset7 {
-  margin-left: 61.70212766%;
-  *margin-left: 61.59574468%;
+  margin-left: 61.70212765957446%;
+  *margin-left: 61.59574468085106%;
 }
 .row-fluid .offset7:first-child {
-  margin-left: 59.57446809%;
-  *margin-left: 59.46808511%;
+  margin-left: 59.574468085106375%;
+  *margin-left: 59.46808510638297%;
 }
 .row-fluid .offset6 {
-  margin-left: 53.19148936%;
-  *margin-left: 53.08510638%;
+  margin-left: 53.191489361702125%;
+  *margin-left: 53.085106382978715%;
 }
 .row-fluid .offset6:first-child {
-  margin-left: 51.06382979%;
-  *margin-left: 50.95744681%;
+  margin-left: 51.063829787234035%;
+  *margin-left: 50.95744680851063%;
 }
 .row-fluid .offset5 {
-  margin-left: 44.68085106%;
-  *margin-left: 44.57446809%;
+  margin-left: 44.68085106382979%;
+  *margin-left: 44.57446808510638%;
 }
 .row-fluid .offset5:first-child {
-  margin-left: 42.55319149%;
-  *margin-left: 42.44680851%;
+  margin-left: 42.5531914893617%;
+  *margin-left: 42.4468085106383%;
 }
 .row-fluid .offset4 {
-  margin-left: 36.17021277%;
-  *margin-left: 36.06382979%;
+  margin-left: 36.170212765957444%;
+  *margin-left: 36.06382978723405%;
 }
 .row-fluid .offset4:first-child {
-  margin-left: 34.04255319%;
-  *margin-left: 33.93617021%;
+  margin-left: 34.04255319148936%;
+  *margin-left: 33.93617021276596%;
 }
 .row-fluid .offset3 {
-  margin-left: 27.65957447%;
-  *margin-left: 27.55319149%;
+  margin-left: 27.659574468085104%;
+  *margin-left: 27.5531914893617%;
 }
 .row-fluid .offset3:first-child {
-  margin-left: 25.53191489%;
-  *margin-left: 25.42553191%;
+  margin-left: 25.53191489361702%;
+  *margin-left: 25.425531914893618%;
 }
 .row-fluid .offset2 {
-  margin-left: 19.14893617%;
-  *margin-left: 19.04255319%;
+  margin-left: 19.148936170212764%;
+  *margin-left: 19.04255319148936%;
 }
 .row-fluid .offset2:first-child {
-  margin-left: 17.0212766%;
-  *margin-left: 16.91489362%;
+  margin-left: 17.02127659574468%;
+  *margin-left: 16.914893617021278%;
 }
 .row-fluid .offset1 {
-  margin-left: 10.63829787%;
-  *margin-left: 10.53191489%;
+  margin-left: 10.638297872340425%;
+  *margin-left: 10.53191489361702%;
 }
 .row-fluid .offset1:first-child {
-  margin-left: 8.5106383%;
-  *margin-left: 8.40425532%;
+  margin-left: 8.51063829787234%;
+  *margin-left: 8.404255319148938%;
 }
 [class*="span"].hide,
 .row-fluid [class*="span"].hide {
@@ -543,158 +547,158 @@ ul.row-fluid {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   float: left;
-  margin-left: 3.44827586%;
-  *margin-left: 3.39508437%;
+  margin-left: 3.4482758620689653%;
+  *margin-left: 3.395084372707263%;
 }
 .product-list .row-fluid [class*="span"]:first-child {
   margin-left: 0;
 }
 .product-list .row-fluid .controls-row [class*="span"] + [class*="span"] {
-  margin-left: 3.44827586%;
+  margin-left: 3.4482758620689653%;
 }
 .product-list .row-fluid .span12 {
   width: 100%;
-  *width: 99.94680851%;
+  *width: 99.94680851063829%;
 }
 .product-list .row-fluid .span11 {
-  width: 91.37931034%;
-  *width: 91.32611886%;
+  width: 91.37931034482759%;
+  *width: 91.32611885546588%;
 }
 .product-list .row-fluid .span10 {
-  width: 82.75862069%;
-  *width: 82.7054292%;
+  width: 82.75862068965517%;
+  *width: 82.70542920029347%;
 }
 .product-list .row-fluid .span9 {
-  width: 74.13793103%;
-  *width: 74.08473955%;
+  width: 74.13793103448276%;
+  *width: 74.08473954512105%;
 }
 .product-list .row-fluid .span8 {
-  width: 65.51724138%;
-  *width: 65.46404989%;
+  width: 65.51724137931035%;
+  *width: 65.46404988994864%;
 }
 .product-list .row-fluid .span7 {
-  width: 56.89655172%;
-  *width: 56.84336023%;
+  width: 56.896551724137936%;
+  *width: 56.843360234776235%;
 }
 .product-list .row-fluid .span6 {
-  width: 48.27586207%;
-  *width: 48.22267058%;
+  width: 48.275862068965516%;
+  *width: 48.222670579603815%;
 }
 .product-list .row-fluid .span5 {
-  width: 39.65517241%;
-  *width: 39.60198092%;
+  width: 39.6551724137931%;
+  *width: 39.6019809244314%;
 }
 .product-list .row-fluid .span4 {
-  width: 31.03448276%;
-  *width: 30.98129127%;
+  width: 31.03448275862069%;
+  *width: 30.98129126925899%;
 }
 .product-list .row-fluid .span3 {
-  width: 22.4137931%;
-  *width: 22.36060161%;
+  width: 22.413793103448278%;
+  *width: 22.360601614086576%;
 }
 .product-list .row-fluid .span2 {
-  width: 13.79310345%;
-  *width: 13.73991196%;
+  width: 13.793103448275861%;
+  *width: 13.73991195891416%;
 }
 .product-list .row-fluid .span1 {
-  width: 5.17241379%;
-  *width: 5.1192223%;
+  width: 5.172413793103448%;
+  *width: 5.119222303741746%;
 }
 .product-list .row-fluid .offset12 {
-  margin-left: 106.89655172%;
-  *margin-left: 106.79016875%;
+  margin-left: 106.89655172413794%;
+  *margin-left: 106.79016874541452%;
 }
 .product-list .row-fluid .offset12:first-child {
-  margin-left: 103.44827586%;
-  *margin-left: 103.34189288%;
+  margin-left: 103.44827586206897%;
+  *margin-left: 103.34189288334555%;
 }
 .product-list .row-fluid .offset11 {
-  margin-left: 98.27586207%;
-  *margin-left: 98.16947909%;
+  margin-left: 98.27586206896552%;
+  *margin-left: 98.1694790902421%;
 }
 .product-list .row-fluid .offset11:first-child {
-  margin-left: 94.82758621%;
-  *margin-left: 94.72120323%;
+  margin-left: 94.82758620689656%;
+  *margin-left: 94.72120322817314%;
 }
 .product-list .row-fluid .offset10 {
-  margin-left: 89.65517241%;
-  *margin-left: 89.54878944%;
+  margin-left: 89.65517241379311%;
+  *margin-left: 89.5487894350697%;
 }
 .product-list .row-fluid .offset10:first-child {
-  margin-left: 86.20689655%;
-  *margin-left: 86.10051357%;
+  margin-left: 86.20689655172414%;
+  *margin-left: 86.10051357300073%;
 }
 .product-list .row-fluid .offset9 {
-  margin-left: 81.03448276%;
-  *margin-left: 80.92809978%;
+  margin-left: 81.0344827586207%;
+  *margin-left: 80.92809977989728%;
 }
 .product-list .row-fluid .offset9:first-child {
-  margin-left: 77.5862069%;
-  *margin-left: 77.47982392%;
+  margin-left: 77.58620689655173%;
+  *margin-left: 77.47982391782831%;
 }
 .product-list .row-fluid .offset8 {
-  margin-left: 72.4137931%;
-  *margin-left: 72.30741012%;
+  margin-left: 72.41379310344828%;
+  *margin-left: 72.30741012472487%;
 }
 .product-list .row-fluid .offset8:first-child {
-  margin-left: 68.96551724%;
-  *margin-left: 68.85913426%;
+  margin-left: 68.96551724137932%;
+  *margin-left: 68.8591342626559%;
 }
 .product-list .row-fluid .offset7 {
-  margin-left: 63.79310345%;
-  *margin-left: 63.68672047%;
+  margin-left: 63.793103448275865%;
+  *margin-left: 63.68672046955246%;
 }
 .product-list .row-fluid .offset7:first-child {
-  margin-left: 60.34482759%;
-  *margin-left: 60.23844461%;
+  margin-left: 60.344827586206904%;
+  *margin-left: 60.2384446074835%;
 }
 .product-list .row-fluid .offset6 {
-  margin-left: 55.17241379%;
-  *margin-left: 55.06603081%;
+  margin-left: 55.172413793103445%;
+  *margin-left: 55.06603081438004%;
 }
 .product-list .row-fluid .offset6:first-child {
-  margin-left: 51.72413793%;
-  *margin-left: 51.61775495%;
+  margin-left: 51.724137931034484%;
+  *margin-left: 51.61775495231108%;
 }
 .product-list .row-fluid .offset5 {
-  margin-left: 46.55172414%;
-  *margin-left: 46.44534116%;
+  margin-left: 46.55172413793103%;
+  *margin-left: 46.44534115920763%;
 }
 .product-list .row-fluid .offset5:first-child {
-  margin-left: 43.10344828%;
-  *margin-left: 42.9970653%;
+  margin-left: 43.10344827586207%;
+  *margin-left: 42.99706529713867%;
 }
 .product-list .row-fluid .offset4 {
-  margin-left: 37.93103448%;
-  *margin-left: 37.8246515%;
+  margin-left: 37.93103448275862%;
+  *margin-left: 37.82465150403522%;
 }
 .product-list .row-fluid .offset4:first-child {
-  margin-left: 34.48275862%;
-  *margin-left: 34.37637564%;
+  margin-left: 34.48275862068966%;
+  *margin-left: 34.376375641966256%;
 }
 .product-list .row-fluid .offset3 {
-  margin-left: 29.31034483%;
-  *margin-left: 29.20396185%;
+  margin-left: 29.310344827586206%;
+  *margin-left: 29.203961848862804%;
 }
 .product-list .row-fluid .offset3:first-child {
-  margin-left: 25.86206897%;
-  *margin-left: 25.75568599%;
+  margin-left: 25.862068965517242%;
+  *margin-left: 25.75568598679384%;
 }
 .product-list .row-fluid .offset2 {
-  margin-left: 20.68965517%;
-  *margin-left: 20.58327219%;
+  margin-left: 20.689655172413794%;
+  *margin-left: 20.58327219369039%;
 }
 .product-list .row-fluid .offset2:first-child {
-  margin-left: 17.24137931%;
-  *margin-left: 17.13499633%;
+  margin-left: 17.241379310344826%;
+  *margin-left: 17.134996331621423%;
 }
 .product-list .row-fluid .offset1 {
-  margin-left: 12.06896552%;
-  *margin-left: 11.96258254%;
+  margin-left: 12.068965517241379%;
+  *margin-left: 11.962582538517974%;
 }
 .product-list .row-fluid .offset1:first-child {
-  margin-left: 8.62068966%;
-  *margin-left: 8.51430668%;
+  margin-left: 8.620689655172413%;
+  *margin-left: 8.51430667644901%;
 }
 .product-list .row-fluid [class*="span"].no-margin {
   margin-left: 0;
@@ -812,19 +816,19 @@ h6 small {
   line-height: 1;
 }
 h1 {
-  font-size: 3.42857143em;
+  font-size: 3.4285714285714284em;
   line-height: 58px;
 }
 h2 {
-  font-size: 2.28571429em;
+  font-size: 2.2857142857142856em;
   line-height: 38px;
 }
 h3 {
-  font-size: 1.71428571em;
+  font-size: 1.7142857142857142em;
   line-height: 30px;
 }
 h4 {
-  font-size: 1.14285714em;
+  font-size: 1.1428571428571428em;
   line-height: 20px;
 }
 h5,
@@ -833,13 +837,13 @@ h6 {
   line-height: 20px;
 }
 h1 small {
-  font-size: 0.66666667em;
+  font-size: 0.6666666666666666em;
 }
 h2 small {
   font-size: 0.75em;
 }
 h3 small {
-  font-size: 0.66666667em;
+  font-size: 0.6666666666666666em;
 }
 h4 small {
   font-size: 0.875em;
@@ -874,7 +878,7 @@ h3 {
   clear: both;
 }
 .page-header h1 {
-  font-size: 2.28571429em;
+  font-size: 2.2857142857142856em;
   line-height: 38px;
   text-transform: uppercase;
 }
@@ -929,6 +933,7 @@ ol.inline > li {
   display: inline-block;
   *display: inline;
   /* IE7 inline-block hack */
+
   *zoom: 1;
   padding-left: 5px;
   padding-right: 5px;
@@ -1104,11 +1109,11 @@ input[type="tel"],
 input[type="color"],
 .uneditable-input {
   display: inline-block;
-  height: 1.71428571em;
+  height: 1.7142857142857142em;
   padding: 6px;
-  margin-bottom: 0.85714286em;
-  font-size: 1.14285714em;
-  line-height: 1.71428571em;
+  margin-bottom: 0.8571428571428571em;
+  font-size: 1.1428571428571428em;
+  line-height: 1.7142857142857142em;
   color: #8e8e8e;
   vertical-align: middle;
 }
@@ -1163,6 +1168,7 @@ input[type="color"]:focus,
   outline: 0;
   outline: thin dotted \9;
   /* IE6-9 */
+
   -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(82,168,236,.6);
   -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(82,168,236,.6);
   box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(82,168,236,.6);
@@ -1172,8 +1178,10 @@ input[type="checkbox"] {
   margin: 4px 0 0;
   *margin-top: 0;
   /* IE7 */
+
   margin-top: 1px \9;
   /* IE8-9 */
+
   line-height: normal;
 }
 input[type="file"],
@@ -1189,8 +1197,10 @@ select,
 input[type="file"] {
   height: 40px;
   /* In IE7, the height of the select element cannot be changed by height, only font-size */
+
   *margin-top: 4px;
   /* For IE7, add top margin to align select with labels */
+
   line-height: 40px;
 }
 select {
@@ -1589,6 +1599,7 @@ select:focus:invalid:focus {
   display: inline-block;
   *display: inline;
   /* IE7 inline-block hack */
+
   *zoom: 1;
   vertical-align: middle;
   padding-left: 5px;
@@ -1739,6 +1750,7 @@ input.search-query {
   padding-left: 14px;
   padding-left: 4px \9;
   /* IE7-8 doesn't have border-radius, so don't indent the padding */
+
   margin-bottom: 0;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
@@ -1795,6 +1807,7 @@ input.search-query {
   display: inline-block;
   *display: inline;
   /* IE7 inline-block hack */
+
   *zoom: 1;
   margin-bottom: 0;
   vertical-align: middle;
@@ -2382,6 +2395,7 @@ button.close {
   display: inline-block;
   *display: inline;
   /* IE7 inline-block hack */
+
   *zoom: 1;
   padding: 8px 16px;
   margin-bottom: 0;
@@ -2449,7 +2463,7 @@ fieldset[disabled] .btn {
 }
 .btn-large {
   padding: 20px 30px;
-  font-size: 1.71428571em;
+  font-size: 1.7142857142857142em;
   *line-height: 2em;
 }
 .btn-large [class^="icon-"],
@@ -2612,6 +2626,7 @@ input[type="submit"].btn.btn-mini {
   display: inline-block;
   *display: inline;
   /* IE7 inline-block hack */
+
   *zoom: 1;
   font-size: 0;
   vertical-align: middle;
@@ -2791,6 +2806,7 @@ input[type="submit"].btn.btn-mini {
   display: inline-block;
   *display: inline;
   /* IE7 inline-block hack */
+
   *zoom: 1;
 }
 .btn-group-vertical > .btn {
@@ -3762,6 +3778,7 @@ input[type="submit"].btn.btn-mini {
   display: inline-block;
   *display: inline;
   /* IE7 inline-block hack */
+
   *zoom: 1;
   text-shadow: 0 1px 0 #ffffff;
 }
@@ -3788,6 +3805,7 @@ input[type="submit"].btn.btn-mini {
   display: inline-block;
   *display: inline;
   /* IE7 inline-block hack */
+
   *zoom: 1;
   margin-left: 0;
   margin-bottom: 0;
@@ -3988,6 +4006,7 @@ input[type="submit"].btn.btn-mini {
   border: 1px solid rgba(0, 0, 0, 0.3);
   *border: 1px solid #999;
   /* IE6-7 */
+
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
   border-radius: 6px;
@@ -4506,7 +4525,7 @@ you can use the generic selector below, but it's slower:
   margin-right: 5px;
 }
 .header-content i {
-  font-size: 1.71428571em;
+  font-size: 1.7142857142857142em;
   color: #337abf;
   margin-right: 5px;
   vertical-align: top;
@@ -4583,7 +4602,7 @@ you can use the generic selector below, but it's slower:
   clear: both;
 }
 .footer-links h3 {
-  font-size: 1.14285714em;
+  font-size: 1.1428571428571428em;
   color: #ffffff;
   margin-bottom: 20px;
   text-transform: capitalize;
@@ -4610,7 +4629,7 @@ you can use the generic selector below, but it's slower:
   float: right;
 }
 .social-icons {
-  font-size: 2.28571429em;
+  font-size: 2.2857142857142856em;
 }
 .social-icons a:hover {
   text-decoration: none;
@@ -4772,7 +4791,7 @@ you can use the generic selector below, but it's slower:
   margin: 0;
 }
 .checkout-proceed > strong {
-  font-size: 1.14285714em;
+  font-size: 1.1428571428571428em;
   text-transform: uppercase;
   display: block;
   margin: 20px 0;
@@ -4867,14 +4886,14 @@ you can use the generic selector below, but it's slower:
   font-weight: bold;
   text-transform: uppercase;
   color: #10283f;
-  font-size: 1.28571429em;
+  font-size: 1.2857142857142858em;
 }
 .checkoutNav ul li.visited {
   color: #4ca84c;
 }
 .checkoutNav ul li.visited i:first-child + i {
   display: inline-block;
-  font-size: 1.33333333em;
+  font-size: 1.3333333333333333em;
   line-height: 1em;
 }
 .checkoutNav ul li.visited a {
@@ -4882,7 +4901,7 @@ you can use the generic selector below, but it's slower:
 }
 .checkoutNav ul li.active i:first-child {
   display: inline-block;
-  font-size: 1.77777778em;
+  font-size: 1.7777777777777777em;
   line-height: 1em;
   height: 1em;
   overflow: hidden;
@@ -4953,7 +4972,7 @@ you can use the generic selector below, but it's slower:
   margin-bottom: 0;
 }
 .product_pod h3 {
-  font-size: 1.14285714em;
+  font-size: 1.1428571428571428em;
   margin-bottom: 0;
   line-height: 20px;
   color: #8e8e8e;
@@ -5014,7 +5033,7 @@ you can use the generic selector below, but it's slower:
   color: #ffffff;
   text-transform: uppercase;
   margin-bottom: 0;
-  font-size: 2.28571429em;
+  font-size: 2.2857142857142856em;
   margin: 50px 35% 0 30px;
 }
 .category-title p {
@@ -5116,8 +5135,8 @@ you can use the generic selector below, but it's slower:
   float: left;
 }
 .product-highlight .price_color i {
-  font-size: 1.14285714em;
-  line-height: 1.14285714em;
+  font-size: 1.1428571428571428em;
+  line-height: 1.1428571428571428em;
 }
 .product-highlight .free-delivery {
   float: right;
@@ -5128,7 +5147,7 @@ you can use the generic selector below, but it's slower:
   padding: 10px;
 }
 .product-page .free-delivery > span span {
-  font-size: 1.42857143em;
+  font-size: 1.4285714285714286em;
   font-weight: 700;
 }
 .review-title {
@@ -5145,7 +5164,7 @@ you can use the generic selector below, but it's slower:
   clear: both;
 }
 .review-title p {
-  font-size: 1.14285714em;
+  font-size: 1.1428571428571428em;
 }
 .review-title > a {
   float: right;
@@ -5166,8 +5185,8 @@ you can use the generic selector below, but it's slower:
   clear: both;
 }
 .review h3 {
-  font-size: 1.14285714em;
-  line-height: 1.71428571em;
+  font-size: 1.1428571428571428em;
+  line-height: 1.7142857142857142em;
   text-transform: none;
 }
 .review h3 a {
@@ -5205,7 +5224,7 @@ you can use the generic selector below, but it's slower:
 }
 .review_add h3 {
   color: #97a5a3;
-  font-size: 1.14285714em;
+  font-size: 1.1428571428571428em;
 }
 .child-product {
   *zoom: 1;
@@ -5227,7 +5246,7 @@ you can use the generic selector below, but it's slower:
   margin-bottom: 15px;
 }
 .child-product .price_color {
-  font-size: 1.71428571em;
+  font-size: 1.7142857142857142em;
 }
 .child-product .image_container {
   background: #ffffff;
@@ -5446,8 +5465,7 @@ you can use the generic selector below, but it's slower:
   list-style: none;
 }
 /* FlexSlider Necessary Styles
-*********************************/
-.flexslider {
+*********************************/.flexslider {
   margin: 0;
   padding: 0;
 }
@@ -5741,11 +5759,11 @@ html[xmlns] .slides {
   display: block;
 }
 .free-delivery > span span {
-  font-size: 1.33333333em;
+  font-size: 1.3333333333333333em;
   line-height: 1em;
 }
 .free-delivery strong {
-  font-size: 0.70833333em;
+  font-size: 0.7083333333333334em;
   letter-spacing: 0;
 }
 .widget-delivery,
@@ -5801,13 +5819,13 @@ html[xmlns] .slides {
 }
 .widget-image-link h3 small {
   display: block;
-  line-height: 1.14285714em;
+  line-height: 1.1428571428571428em;
 }
 .widget-image-link i {
   position: absolute;
   right: 5px;
   top: 10px;
-  font-size: 1.33333333em;
+  font-size: 1.3333333333333333em;
 }
 .widget-image-link.large h3 {
   background: #10283f;
@@ -5853,4 +5871,3 @@ html[xmlns] .slides {
 .table .align-center {
   text-align: center;
 }
-/*# sourceMappingURL=styles.css.map */
