@@ -16,9 +16,6 @@ class TestCategory(TestCase):
     def test_includes_parents_name_in_full_name(self):
         self.assertTrue(u'Pröducts' in self.books.full_name)
 
-    def test_includes_slug_in_slug(self):
-        self.assertTrue(self.products.slug in self.books.slug)
-
     def test_supports_has_children_method(self):
         """supports has_children method"""
         self.assertTrue(self.products.has_children())
@@ -102,7 +99,7 @@ class TestCategoryFactory(TestCase):
         self.assertEqual(category.get_depth(), 2)
         self.assertEqual(category.get_parent().name, 'Books')
         self.assertEqual(2, models.Category.objects.count())
-        self.assertEqual(category.slug, 'books/science-fiction')
+        self.assertEqual(category.full_slug, 'books/science-fiction')
 
     def test_can_create_multiple_categories(self):
         trail = 'Books > Science-Fiction > Star Trek'
@@ -115,7 +112,7 @@ class TestCategoryFactory(TestCase):
         self.assertEqual(category.get_depth(), 3)
         self.assertEqual(category.get_parent().name, 'Factual')
         self.assertEqual(5, models.Category.objects.count())
-        self.assertEqual(category.slug, 'books/factual/popular-science', )
+        self.assertEqual(category.full_slug, 'books/factual/popular-science', )
 
     def test_can_use_alternative_separator(self):
         trail = 'Food|Cheese|Blue'
@@ -139,15 +136,15 @@ class TestCategoryFactory(TestCase):
         category.move(target, pos='first-child')
 
         c1 = models.Category.objects.get(name='A')
-        self.assertEqual(c1.slug, 't/a')
+        self.assertEqual(c1.full_slug, 't/a')
         self.assertEqual(c1.full_name, 'T > A')
 
         child = models.Category.objects.get(name='F')
-        self.assertEqual(child.slug, 't/a/e/f')
+        self.assertEqual(child.full_slug, 't/a/e/f')
         self.assertEqual(child.full_name, 'T > A > E > F')
 
         child = models.Category.objects.get(name='D')
-        self.assertEqual(child.slug, 't/a/b/d')
+        self.assertEqual(child.full_slug, 't/a/b/d')
         self.assertEqual(child.full_name, 'T > A > B > D')
 
     def test_updating_subtree_when_moving_category_to_new_sibling(self):
@@ -166,11 +163,11 @@ class TestCategoryFactory(TestCase):
         category.move(target, pos='right')
 
         child = models.Category.objects.get(name='E')
-        self.assertEqual(child.slug, 'e')
+        self.assertEqual(child.full_slug, 'e')
         self.assertEqual(child.full_name, 'E')
 
         child = models.Category.objects.get(name='F')
-        self.assertEqual(child.slug, 'e/f')
+        self.assertEqual(child.full_slug, 'e/f')
         self.assertEqual(child.full_name, 'E > F')
 
 

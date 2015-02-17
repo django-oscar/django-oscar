@@ -112,26 +112,26 @@ class AbstractCategory(MP_Node):
         names = [category.name for category in self.get_ancestors_and_self()]
         return self._full_name_separator.join(names)
 
+    @property
+    def full_slug(self):
+        """
+        Returns a string of this category's slug concatenated with the slugs
+        of it's ancestors, e.g. 'books/non-fiction/essential-programming'.
+
+        Oscar used to store this as in the 'slug' model field, but this field
+        has been re-purposed to only store this category's slug and to not
+        include it's ancestors' slugs.
+        """
+        slugs = [category.slug for category in self.get_ancestors_and_self()]
+        return self._slug_separator.join(slugs)
+
     def update_slug(self, commit=True):
         """
-        Updates the instance's slug. Use update_children_slugs for updating
-        the rest of the tree.
+        Updates the instance's slug.
         """
-        parent = self.get_parent()
-        slug = slugify(self.name)
-        # If category has a parent, includes the parents slug in this one
-        if parent:
-            self.slug = '%s%s%s' % (
-                parent.slug, self._slug_separator, slug)
-        else:
-            self.slug = slug
+        self.slug = slugify(self.name)
         if commit:
             self.save()
-
-    def update_children_slugs(self):
-        for child in self.get_children():
-            child.update_slug()
-            child.update_children_slugs()
 
     def save(self, update_slugs=True, *args, **kwargs):
         if update_slugs:
@@ -154,26 +154,7 @@ class AbstractCategory(MP_Node):
                         _("A category with slug '%(slug)s' already exists") % {
                             'slug': self.slug})
 
-            super(AbstractCategory, self).save(*args, **kwargs)
-            self.update_children_slugs()
-        else:
-            super(AbstractCategory, self).save(*args, **kwargs)
-
-    def move(self, target, pos=None):
-        """
-        Moves the current node and all its descendants to a new position
-        relative to another node.
-
-        See https://tabo.pe/projects/django-treebeard/docs/2.0/api.html#treebeard.models.Node.move  # noqa
-        """
-        super(AbstractCategory, self).move(target, pos)
-
-        # We need to reload self as 'move' doesn't update the current instance,
-        # then we iterate over the subtree and call save which automatically
-        # updates slugs.
-        reloaded_self = self.__class__.objects.get(pk=self.pk)
-        reloaded_self.update_slug()
-        reloaded_self.update_children_slugs()
+        super(AbstractCategory, self).save(*args, **kwargs)
 
     def get_ancestors_and_self(self):
         """
@@ -192,8 +173,9 @@ class AbstractCategory(MP_Node):
         return list(self.get_descendants()) + [self]
 
     def get_absolute_url(self):
-        return reverse('catalogue:category',
-                       kwargs={'category_slug': self.slug, 'pk': self.pk})
+        return reverse(
+            'catalogue:category',
+            kwargs={'category_slug': self.full_slug, 'pk': self.pk})
 
     class Meta:
         abstract = True
