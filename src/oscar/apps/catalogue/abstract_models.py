@@ -90,8 +90,7 @@ class AbstractCategory(MP_Node):
     description = models.TextField(_('Description'), blank=True)
     image = models.ImageField(_('Image'), upload_to='categories', blank=True,
                               null=True, max_length=255)
-    slug = models.SlugField(_('Slug'), max_length=255, db_index=True,
-                            editable=False)
+    slug = models.SlugField(_('Slug'), max_length=255, db_index=True)
 
     _slug_separator = '/'
     _full_name_separator = ' > '
@@ -125,36 +124,48 @@ class AbstractCategory(MP_Node):
         slugs = [category.slug for category in self.get_ancestors_and_self()]
         return self._slug_separator.join(slugs)
 
-    def update_slug(self, commit=True):
+    def generate_slug(self):
         """
-        Updates the instance's slug.
+        Generates a slug for a category. This makes no attempt at generating
+        a unique slug.
         """
-        self.slug = slugify(self.name)
-        if commit:
+        return slugify(self.name)
+
+    def ensure_slug_uniqueness(self):
+        """
+        Ensures that the category's slug is unique amongst it's siblings.
+        This is inefficient and probably not thread-safe.
+        """
+        unique_slug = self.slug
+        siblings = self.get_siblings().exclude(pk=self.pk)
+        next_num = 2
+        while siblings.filter(slug=unique_slug).exists():
+            unique_slug = '{slug}_{end}'.format(slug=self.slug, end=next_num)
+            next_num += 1
+
+        if unique_slug != self.slug:
+            self.slug = unique_slug
             self.save()
 
-    def save(self, update_slugs=True, *args, **kwargs):
-        if update_slugs:
-            self.update_slug(commit=False)
-
-        # If update_fields is specified and name or slug are listed then
-        # validate that it is unique and update the child categories
-        update_fields = kwargs.get('update_fields', None)
-        slug_fields = set(['name', 'slug'])
-        if not update_fields or slug_fields & set(update_fields):
-            # Enforce slug uniqueness here as MySQL can't handle a unique index
-            # on the slug field
-            try:
-                match = self.__class__.objects.get(slug=self.slug)
-            except self.__class__.DoesNotExist:
-                pass
-            else:
-                if match.id != self.id:
-                    raise ValidationError(
-                        _("A category with slug '%(slug)s' already exists") % {
-                            'slug': self.slug})
-
-        super(AbstractCategory, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        """
+        Oscar traditionally auto-generated slugs from names. As that is
+        often convenient, we still do so if a slug is not supplied through
+        other means. If you want to control slug creation, just create
+        instances with a slug already set, or expose a field on the
+        appropriate forms.
+        """
+        if self.slug:
+            # Slug was supplied. Hands off!
+            super(AbstractCategory, self).save(*args, **kwargs)
+        else:
+            self.slug = self.generate_slug()
+            super(AbstractCategory, self).save(*args, **kwargs)
+            # We auto-generated a slug, so we need to make sure that it's
+            # unique. As we need to be able to inspect the category's siblings
+            # for that, we need to wait until the instance is saved. We
+            # update the slug and save again if necessary.
+            self.ensure_slug_uniqueness()
 
     def get_ancestors_and_self(self):
         """
