@@ -16,8 +16,6 @@ ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductImage = get_model('catalogue', 'ProductImage')
 ProductRecommendation = get_model('catalogue', 'ProductRecommendation')
 ProductSelect = get_class('dashboard.catalogue.widgets', 'ProductSelect')
-ProductSelectMultiple = get_class('dashboard.catalogue.widgets',
-                                  'ProductSelectMultiple')
 
 
 class BaseCategoryForm(MoveNodeForm):

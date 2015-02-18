@@ -14,8 +14,7 @@ class CustomAction(models.Benefit):
     class Meta:
         proxy = True
 
-    def apply(self, basket, condition, offer):
-        condition.consume_items(offer, basket, ())
+    def apply(self, set_of_lines):
         return models.PostOrderAction(
             "Something will happen")
 
@@ -30,10 +29,9 @@ class CustomAction(models.Benefit):
 def create_offer():
     range = models.Range.objects.create(
         name="All products", includes_all_products=True)
-    condition = models.CountCondition.objects.create(
+    condition = models.NoneCondition.objects.create(
         range=range,
-        type=models.Condition.COUNT,
-        value=1)
+        type=models.Condition.NONE)
     benefit = custom.create_benefit(CustomAction)
     return models.ConditionalOffer.objects.create(
         condition=condition,

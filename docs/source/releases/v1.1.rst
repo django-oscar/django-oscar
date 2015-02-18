@@ -43,6 +43,8 @@ Minor changes
 
 - The `Order.date_placed` field can now be set explicitly rather than using the
   `auto_now_add` behaviour (`#1558`_).
+- ``django-compressor`` has been removed in favor of offline compilation of
+  LESS files (`#1568`_).
 
 - The settings ``OSCAR_BASKET_COOKIE_SECURE`` and ``OSCAR_RECENTLY_VIEWED_COOKIE_SECURE``
   are introduced to set the ``secure`` flag on the relevant cookies.
@@ -53,6 +55,7 @@ Minor changes
   issue, and now views not requiring permissions are not decorated at all.
 
 .. _`#1558`: https://github.com/django-oscar/django-oscar/pull/1558
+.. _`#1568`: https://github.com/django-oscar/django-oscar/pull/1568
 
 
 .. _incompatible_changes_in_1.1:

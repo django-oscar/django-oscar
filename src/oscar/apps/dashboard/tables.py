@@ -1,9 +1,8 @@
 from django.utils.translation import ungettext_lazy
 
-from django_tables2 import Table
+from django_tables2_reports.tables import TableReport
 
-
-class DashboardTable(Table):
+class DashboardTable(TableReport):
     caption = ungettext_lazy('%d Row', '%d Rows')
 
     def get_caption_display(self):
