@@ -104,6 +104,23 @@ class AbstractUser(auth_models.AbstractBaseUser,
         # see Oscar ticket #1127, Django ticket #19218
         self._migrate_alerts_to_user()
 
+    def handle_order_shipped_to(self, shipping_address):
+        """
+        Put the shipping address in the user's address book, or if it's there
+        already, increase its usage counter to track which addresses are used
+        most often for orders.
+        """
+        try:
+            user_address = self.addresses.get(
+                hash=shipping_address.generate_hash())
+        except self.addresses.model.DoesNotExist:
+            # Create a new user address
+            user_address = self.addresses.model(user=self)
+            shipping_address.populate_alternative_model(user_address)
+
+        user_address.num_orders += 1
+        user_address.save()
+
 
 @python_2_unicode_compatible
 class AbstractEmail(models.Model):

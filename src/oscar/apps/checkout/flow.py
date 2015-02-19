@@ -1,15 +1,24 @@
+import logging
+import six
+
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 
 from oscar.apps.shipping.methods import NoShippingRequired
-from oscar.core.loading import get_class
+from oscar.core.loading import get_class, get_model
 
 from . import signals
 
+Applicator = get_class('offer.utils', 'Applicator')
+Basket = get_model('basket', 'Basket')
+CheckoutFailed = get_class('checkout.mixins', 'CheckoutFailed')
 OrderPlacementMixin = get_class('checkout.mixins', 'OrderPlacementMixin')
 RedirectRequired = get_class('checkout.mixins', 'RedirectRequired')
-CheckoutFailed = get_class('checkout.mixins', 'CheckoutFailed')
+UnableToPlaceOrder = get_class('order.exceptions', 'UnableToPlaceOrder')
+
+# Standard logger for checkout events
+logger = logging.getLogger('oscar.checkout')
 
 
 class CheckoutFlow(OrderPlacementMixin):
@@ -65,6 +74,7 @@ class CheckoutFlow(OrderPlacementMixin):
         self.capture_payment_data(basket, shipping_charge)
 
         self.confirm_order_preview()
+        self.take_payment()
         self.submit_order()
 
     def checkout_failed(self):
@@ -171,8 +181,117 @@ class CheckoutFlow(OrderPlacementMixin):
         if not self.checkout_session.was_preview_confirmed():
             raise RedirectRequired('checkout:preview')
 
+    def take_payment(self):
+        payment_sources = self.checkout_session.get_payment_sources()
+        payment_events = self.checkout_session.get_payment_events()
+
+        if not payment_sources and not payment_events:
+
+            # create clerk with checkout session data
+            clerk = self.get_clerk()
+
+            logger.info(
+                "Order #%s: beginning submission process for basket #%d",
+                clerk.order_number, clerk.basket.id)
+
+            # pay using order information from the clerk
+            # may raise RedirectRequired or CheckoutFailed
+            try:
+                payment_sources, payment_events = self.do_payment(clerk)
+            except RedirectRequired:
+                self.freeze_for_external_payment(clerk)
+                raise
+
+            self.checkout_session.set_payment_sources(payment_sources)
+            self.checkout_session.set_payment_events(payment_events)
+
+            messages.success(self.request, _('Payment accepted'))
+            signals.post_payment.send_robust(sender=self, view=self)
+
+    def handle_payment_failed(self, message):
+        """
+        Call this when you return from a failed redirect payment.
+        """
+        self.restore_frozen_basket()
+        messages.warning(self.request, message)
+        return self.checkout_failed()
+
+    def handle_payment_successful(self, basket_id, payment_sources,
+                                  payment_events):
+        """
+        Call this when you return from a successful redirect payment.
+        """
+        logger.info("Received payment for basket #%s", basket_id)
+
+        self.checkout_session.set_payment_sources(payment_sources)
+        self.checkout_session.set_payment_events(payment_events)
+
+        payment_references = ', '.join(
+            [source.reference for source in payment_sources])
+
+        try:
+            basket = Basket.objects.get(id=self.basket_id,
+                                        status=Basket.FROZEN)
+        except Basket.DoesNotExist:
+            logger.error(
+                "Basket (id: {}) for payment (reference: {}) doesn't exist."
+                .format(self.basket_id, payment_references))
+            messages.warning(self.request,
+                             _("Payment error. Please try again."))
+            return self.checkout_failed()
+
+        if basket.status != Basket.FROZEN:
+            logger.error("Basket {} for payment (reference: {}) is not frozen."
+                         .format(basket, payment_references))
+            messages.warning(self.request,
+                             _("Payment error. Please try again."))
+            return self.checkout_failed()
+
+        basket.strategy = self.request.strategy
+        Applicator().apply(basket, self.request.user, self.request)
+
+        # after a successful payment, discard the session basket, which the
+        # user could have changed
+        self.request.basket = basket
+
+        messages.success(self.request, _('Payment accepted'))
+        signals.post_payment.send_robust(sender=self, view=self)
+
+        return self.checkout()
+
     def submit_order(self):
-        return self.submit_basket(**self.build_submission())
+        # create clerk with checkout session data
+        clerk = self.get_clerk()
+
+        # restore the order number used for payment
+        clerk.order_number = self.checkout_session.get_order_number()
+
+        payment_sources = self.checkout_session.get_payment_sources()
+        payment_events = self.checkout_session.get_payment_events()
+
+        # give clerk payment information
+        clerk.receive_payment(payment_sources, payment_events)
+
+        # If all is ok with payment, try and place order
+        logger.info("Order #%s: payment successful, placing order",
+                    clerk.order_number)
+
+        # let clerk place order and handle failure
+        try:
+            order = clerk.place_order()
+        except UnableToPlaceOrder as e:
+            # It's possible that something will go wrong while trying to
+            # actually place an order.  Not a good situation to be in as a
+            # payment transaction may already have taken place, but needs
+            # to be handled gracefully.
+            msg = six.text_type(e)
+            logger.error("Order #%s: unable to place order - %s",
+                         clerk.order_number, msg, exc_info=True)
+            self.restore_frozen_basket()
+            messages.error(self.request, msg)
+            raise CheckoutFailed
+
+        self.handle_successful_order(order)
 
     # Helpers
 

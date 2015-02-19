@@ -31,6 +31,19 @@ class CheckoutSessionMixin(object):
         ctx.update(ctx['order_kwargs'])
         return ctx
 
+    def freeze_for_external_payment(self, clerk):
+        self.checkout_session.set_order_number(clerk.order_number)
+
+        # Freeze the basket so it cannot be manipulated while the customer is
+        # completing payment on a 3rd party site.  If your payment fails, then
+        # the basket will need to be "unfrozen".
+        clerk.basket.freeze()
+
+        # Store a reference to the basket in the session so that we know which
+        # basket to thaw if we get an unsuccessful payment response when
+        # redirecting to a 3rd party site.
+        self.checkout_session.set_submitted_basket(clerk.basket)
+
     def build_submission(self, **kwargs):
         """
         Return a dict of data that contains everything required for an order
@@ -44,12 +57,14 @@ class CheckoutSessionMixin(object):
         shipping_method = self.get_shipping_method(
             basket, shipping_address)
         billing_address = self.get_billing_address(shipping_address)
+
         if not shipping_method:
             total = shipping_charge = None
         else:
             shipping_charge = shipping_method.calculate(basket)
             total = self.get_order_totals(
                 basket, shipping_charge=shipping_charge)
+
         submission = {
             'user': self.request.user,
             'basket': basket,
