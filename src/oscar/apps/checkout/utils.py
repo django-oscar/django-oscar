@@ -1,3 +1,9 @@
+from oscar.core.loading import get_class
+
+PaymentSource = get_class('payment.api', 'PaymentSource')
+PaymentEvent = get_class('payment.api', 'PaymentEvent')
+
+
 class CheckoutSessionData(object):
     """
     Responsible for marshalling all the checkout session data
@@ -23,6 +29,8 @@ class CheckoutSessionData(object):
             billing_address_same_as_shipping: <bool>
         payment:
             method: <payment method code>
+            sources:
+            events:
         submission:
             order_number: <generated order number>
             basket_id: <id of frozen basket>
@@ -256,6 +264,22 @@ class CheckoutSessionData(object):
 
     def payment_method(self):
         return self._get('payment', 'method')
+
+    def set_payment_sources(self, payment_sources):
+        self._set('payment', 'sources', payment_sources)
+
+    def get_payment_sources(self):
+        return [PaymentSource(*source)
+                for source
+                in self._get('payment', 'sources', [])]
+
+    def set_payment_events(self, payment_events):
+        self._set('payment', 'events', payment_events)
+
+    def get_payment_events(self):
+        return [PaymentEvent(*event)
+                for event
+                in self._get('payment', 'events', [])]
 
     # Preview methods
     # ===============
