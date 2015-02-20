@@ -172,6 +172,12 @@ class ProductCategoryView(TemplateView):
             # Usual way to reach a category page. We just look at the primary
             # key, which is easy on the database. If the slug changed, get()
             # will redirect appropriately.
+            # WARNING: Category.get_absolute_url needs to look up it's parents
+            # to compute the URL. As this is slightly expensive, Oscar's
+            # default implementation caches the method. That's pretty safe
+            # as ProductCategoryView does the lookup by primary key, which
+            # will work even if the cache is stale. But if you override this
+            # logic, consider if that still holds true.
             return get_object_or_404(Category, pk=self.kwargs['pk'])
         elif 'category_slug' in self.kwargs:
             # For SEO and legacy reasons, we allow chopping off the primary

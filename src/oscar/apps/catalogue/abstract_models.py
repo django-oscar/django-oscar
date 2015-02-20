@@ -7,6 +7,7 @@ from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.conf import settings
 from django.contrib.staticfiles.finders import find
+from django.core.cache import cache
 from django.core.exceptions import ValidationError, ImproperlyConfigured
 from django.core.files.base import File
 from django.core.urlresolvers import reverse
@@ -184,9 +185,22 @@ class AbstractCategory(MP_Node):
         return list(self.get_descendants()) + [self]
 
     def get_absolute_url(self):
-        return reverse(
-            'catalogue:category',
-            kwargs={'category_slug': self.full_slug, 'pk': self.pk})
+        """
+        Our URL scheme means we have to look up the category's ancestors. As
+        that is a bit more expensive, we cache the generated URL. That is
+        safe even for a stale cache, as the default implementation of
+        ProductCategoryView does the lookup via primary key anyway. But if
+        you change that logic, you'll have to reconsider the caching
+        approach.
+        """
+        cache_key = 'CATEGORY_URL_%s' % self.pk
+        url = cache.get(cache_key)
+        if not url:
+            url = reverse(
+                'catalogue:category',
+                kwargs={'category_slug': self.full_slug, 'pk': self.pk})
+            cache.set(cache_key, url)
+        return url
 
     class Meta:
         abstract = True
