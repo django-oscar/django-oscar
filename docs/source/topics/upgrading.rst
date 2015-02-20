@@ -8,11 +8,9 @@ upgrading Oscar.
 Migrations
 ----------
 
-Oscar uses South_ to provide migrations for its apps.  But since Oscar allows
+Oscar provides migrations for its apps.  But since Oscar allows
 an app to be overridden and its models extended, handling migrations can be
 tricky when upgrading.  
-
-.. _South: http://south.readthedocs.org/en/latest/installation.html
 
 Suppose a new version of Oscar changes the models of the 'shipping' app and
 includes the corresponding migrations.  There are two scenarios to be aware of:
@@ -43,6 +41,8 @@ usual.  You will have to adapt paths, but something akin to this will work::
     $ cdsitepackages oscar/apps/shipping/migrations
     $ copy *.py <your_project>/myshop/shipping/migrations/
 
+.. _migrate_customised_apps_with_model_changes:
+
 Migrating customised apps (models changed)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -50,24 +50,16 @@ At this point, you have essentially forked away from Oscar's migrations. Read
 the release notes carefully and see if it includes data migrations. If not,
 it's as easy as::
 
-    ./manage.py schemamigration shipping --auto
+    ./manage.py makemigrations shipping
 
 to create the appropriate migration.
 
 But if there is data migrations, you will need to look into what they do, and
-likely will have to imitate what they're doing. You can't just copy across the
-entire data migration (because the South's fake ORM snapshot will be wrong),
-but you can usually create a data migration like this::
+likely will have to imitate what they're doing. You can copy across the
+data migration, but you have to manually update the dependencies.
 
-    ./manage.py datamigration shipping descriptive_name
+If there's no schema migrations, you should set the data migration to depend
+on your last migration for that app. If there is a schema migration, you
+will have to imitate the dependency order of Oscar.
 
-and then copy the code portion from Oscar's migration into your newly
-created migration.
-
-If there's also schema migrations, then you need to also create a schema
-migration::
-
-    ./manage.py schemamigration shipping --auto
-
-The fun part is figuring out if you have to create the schema migration before
-or after the data migration.
+Feel free to get in touch on the mailing list if you run into any problems.

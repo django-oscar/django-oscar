@@ -28,6 +28,8 @@ What's new in Oscar 1.1?
 ------------------------
 
 * The frontend templates have been updated to use Bootstrap 3 instead of version 2 (`#1576`_)
+* Category slug, name and URL handling has been refactored to make it easier to
+  translate categories, and to be able to edit slugs independent of names.
 * The icon and caption of `django-tables2` tables can be set directly on the `Table` object, if it
   derives from :class:`~oscar.apps.dashboard.tables.DashboardTable`. The caption can be localized
   in singular and plural. (`#1482`_)
@@ -60,6 +62,40 @@ Minor changes
 Backwards incompatible changes in 1.1
 -------------------------------------
 
+Categories refactor
+~~~~~~~~~~~~~~~~~~~
+The Category model contained two denormalisations to improve performance: it
+stored the name of the category and it's ancestors in ``full_name``, and the
+``slug`` field did not just contain the category's slug, but also the ones of
+it's ancestors.
+
+This came with several drawbacks: it was fiddly to move and update categories,
+as one had to ensure to update parts of the entire category tree. It also
+made it trickier to add model-level translation to categories.
+
+A refactoring removed the denormalisations leading to much simpler logic,
+and a light sprinkle of caching for the URLs hopefully leads to a performance
+net positive. But unfortunately it did come with some changes:
+
+* Category slug handling is changed. Historically, Oscar always updated the
+  slug when the name changed. Now a slug is only created if no slug is given,
+  and an existing slug is never overridden. This means that you can freely
+  change the slugs, and a name change will not change the category's URL.
+* The ``full_name`` field has been *removed* and been replaced by a
+  ``full_name`` property. Accessing that property incurs one database query to
+  fetch the ancestors.
+* ``Category.get_absolute_url`` is now naively cached, as it's more costly to
+  generate the URL than before. But as ``ProductCategoryView``, the view
+  returned in ``get_absolute_url`` only considers the primary key and not the
+  slug, even a stale cache should lead to the correct category page. But if
+  you have altered that logic, please be sure to investigate.
+
+Those changes unfortunately do mean a data migration to update the slugs
+which *must* be run. Please see the section on migrations below. Please also
+ensure that, if you load your categories via fixtures, you update them
+accordingly: remove the ``full_name`` field and remove the ancestor's slugs
+from the ``slug`` field.
+
 Misc
 ~~~~
 
@@ -72,6 +108,20 @@ Misc
 
 Migrations
 ~~~~~~~~~~
+
+Migrations will get picked up automatically for apps you haven't customised.
+If you have customised any app, please consult the
+`detailed instructions <topics/upgrading>`_ on how to handle migrations.
+
+.. warning::
+   This release contains a data migration for category slugs.  If you have
+   forked it, it is critical you run a copy of that migration when upgrading.
+
+Catalogue
+  * This app contains model changes.
+  * This app contains a data migration: ``0003_data_migration_slugs``.
+    It shouldn't matter whether you apply this migration before or after
+    the model changes.
 
 .. _deprecated_features_in_1.1:
 
