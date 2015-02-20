@@ -130,6 +130,10 @@ Deprecated features
 
 The following features have been deprecated in this release:
 
+* For backwards compatibility, one can access the ``ProductCategoryView``
+  without specifying a category PK in the URL. Oscar itself does not
+  use this any more, and it will be removed with the next version of Oscar.
+
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

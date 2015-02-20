@@ -1,3 +1,4 @@
+import warnings
 from django.contrib import messages
 from django.core.paginator import InvalidPage
 from django.utils.http import urlquote
@@ -180,6 +181,7 @@ class ProductCategoryView(TemplateView):
             # logic, consider if that still holds true.
             return get_object_or_404(Category, pk=self.kwargs['pk'])
         elif 'category_slug' in self.kwargs:
+            # DEPRECATED. TODO: Remove in Oscar 1.2.
             # For SEO and legacy reasons, we allow chopping off the primary
             # key from the URL. In that case, we have the target category slug
             # and it's ancestors' slugs concatenated together.
@@ -196,6 +198,11 @@ class ProductCategoryView(TemplateView):
             else:
                 for category in Category.objects.filter(slug=last_slug):
                     if category.full_slug == concatenated_slugs:
+                        message = (
+                            "Accessing categories without a primary key"
+                            " is deprecated will be removed in Oscar 1.2.")
+                        warnings.warn(message, DeprecationWarning)
+
                         return category
 
         raise Http404
