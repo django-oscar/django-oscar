@@ -4,6 +4,7 @@ from django.test import TestCase
 
 from oscar.apps.catalogue.models import Category
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
+from oscar.templatetags.category_tags import get_annotated_list
 
 
 class TestCategory(TestCase):
@@ -190,71 +191,45 @@ class TestCategoryTemplateTags(TestCase):
             'Books > Fiction > Comedy',
             'Books > Non-fiction > Biography',
             'Books > Non-fiction > Programming',
-            'Books > Childrens',
+            'Books > Children',
         )
         for trail in breadcrumbs:
             create_from_breadcrumbs(trail)
 
-    def render_template(self, template_string, context={}):
+    def get_category_names(self, depth=None, parent=None):
         """
-        Return the rendered string or raise an exception.
+        For the tests, we are only interested in the category names returned
+        from the template tag. This helper calls the template tag and
+        returns a list of the included categories.
         """
-        tpl = template.Template(template_string)
-        ctxt = template.Context(context)
-        return tpl.render(ctxt)
+        annotated_list = get_annotated_list(depth, parent)
+        names = [category.name for category, __ in annotated_list]
+        names_set = set(names)
+        # We return a set to ease testing, but need to be sure we're not
+        # losing any duplicates through that conversion.
+        assert len(names_set) == len(names)
+        return names_set
 
     def test_all_categories(self):
-        template = """
-        {% load category_tags %}
-        {% category_tree as tree_categories %}
-        """ + self.template
-        rendered = self.render_template(template)
-        categories_exists = set(('Books', 'Fiction', 'Horror', 'Teen',
-            'Gothic', 'Comedy', 'Non-fiction', 'Biography', 'Programming',
-            'Childrens'))
-        for c in categories_exists:
-            self.assertTrue(c in rendered)
+        expected_categories = {
+            'Books', 'Fiction', 'Horror', 'Teen', 'Gothic', 'Comedy',
+            'Non-fiction', 'Biography', 'Programming', 'Children'}
+        actual_categories = self.get_category_names()
+        self.assertEqual(expected_categories, actual_categories)
 
     def test_categories_depth(self):
-        template = """
-        {% load category_tags %}
-        {% category_tree depth=1 as tree_categories %}
-        """ + self.template
-        rendered = self.render_template(template)
-        categories_exists = set(('Books', ))
-        for c in categories_exists:
-            self.assertTrue(c in rendered)
-        categories_missed = set(('Fiction', 'Horror', 'Teen', 'Gothic',
-            'Comedy', 'Non-fiction', 'Biography', 'Programming', 'Childrens'))
-        for c in categories_missed:
-            self.assertFalse(c in rendered)
+        expected_categories = {'Books'}
+        actual_categories = self.get_category_names(depth=1)
+        self.assertEqual(expected_categories, actual_categories)
 
     def test_categories_parent(self):
-        template = """
-        {% load category_tags %}
-        {% category_tree parent=category as tree_categories %}
-        """ + self.template
-        rendered = self.render_template(template,
-            context={'category': Category.objects.get(name="Fiction")})
-        categories_exists = set(('Horror', 'Teen', 'Gothic', 'Comedy'))
-        for c in categories_exists:
-            self.assertTrue(c in rendered)
-        categories_missed = set(('Books', 'Fiction', 'Non-fiction',
-            'Biography', 'Programming', 'Childrens'))
-        for c in categories_missed:
-            self.assertFalse(c in rendered)
+        parent = Category.objects.get(name="Fiction")
+        actual_categories = self.get_category_names(parent=parent)
+        expected_categories = {'Horror', 'Teen', 'Gothic', 'Comedy'}
+        self.assertEqual(expected_categories, actual_categories)
 
     def test_categories_depth_parent(self):
-        template = """
-        {% load category_tags %}
-        {% category_tree depth=1 parent=category as tree_categories %}
-        """ + self.template
-        rendered = self.render_template(template,
-            context={'category': Category.objects.get(name="Fiction")})
-        categories_exists = set(('Horror', 'Comedy'))
-        for c in categories_exists:
-            self.assertTrue(c in rendered)
-        categories_missed = set(('Books', 'Fiction', 'Teen', 'Gothic',
-            'Non-fiction', 'Biography', 'Programming', 'Childrens'))
-        for c in categories_missed:
-            self.assertFalse(c in rendered)
+        parent = Category.objects.get(name="Fiction")
+        actual_categories = self.get_category_names(depth=1, parent=parent)
+        expected_categories = {'Horror', 'Comedy'}
+        self.assertEqual(expected_categories, actual_categories)
