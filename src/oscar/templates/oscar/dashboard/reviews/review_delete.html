@@ -34,7 +34,7 @@
         {% csrf_token %}
 
         <table class="table table-striped table-bordered table-hover">
-            <tbody> 
+            <tbody>
                 <tr><th>{% trans "Title" context "Product review title" %}</th><td>{{ review.title }}</td></tr>
                 <tr><th>{% trans "Product" %}</th><td>{{ review.product.title }}</td></tr>
                 <tr><th>{% trans "User" %}</th><td>{{ review.user.reviewer_name|default:"-" }}</td></tr>

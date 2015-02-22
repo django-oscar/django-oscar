@@ -129,21 +129,21 @@
                 </tbody>
             </table>
             {% endblock order_list %}
-          
+
             {% block order_actions %}
                 <div class="well">
                     <h3><i class="icon-warning"></i> {% trans "Change order status" %}:</h3>
                     {% if order_statuses %}
                         <div class="control-group">
                             <div class="controls">
-                                
+
                             <select name="new_status">
                                 <option value=""> -- {% trans "choose new status" %} -- </option>
                                 {% for status in order_statuses %}
                                     <option>{{ status }}</option>
                                 {% endfor %}
                             </select>
-                                
+
                             </div>
                         </div>
                         <button type="submit" name="action" value="change_order_statuses" class="btn btn-primary" data-loading-text="{% trans 'Changing...' %}">{% trans "Change status" %}</button>
@@ -152,7 +152,7 @@
                     {% endif %}
                 </div>
             {% endblock %}
-           
+
 
             {% include "dashboard/orders/partials/bulk_edit_form.html" with status=active_status %}
             {% include "partials/pagination.html" %}
