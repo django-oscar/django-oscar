@@ -61,7 +61,7 @@
     {% endblock navbar %}
 
     {% block dashboard_nav %}
-        {% dashboard_navigation request.user %}
+        {% dashboard_navigation request.user as nav_items %}
 
         <div class="navbar navbar-static-top navbar-inverse navbar-primary">
             <div class="navbar-inner">
