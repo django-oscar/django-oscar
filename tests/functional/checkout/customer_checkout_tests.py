@@ -200,7 +200,8 @@ class TestPlacingAnOrderUsingAnOffer(CheckoutMixin, WebTestCase):
 class TestThankYouView(CheckoutMixin, WebTestCase):
 
     def tests_gets_a_404_when_there_is_no_order(self):
-        response = self.get(reverse('checkout:thank-you'), user=self.user, status="*")
+        response = self.get(
+            reverse('checkout:thank-you'), user=self.user, status="*")
         self.assertEqual(http_client.NOT_FOUND, response.status_code)
 
     def tests_custumers_can_reach_the_thank_you_page(self):
@@ -217,14 +218,15 @@ class TestThankYouView(CheckoutMixin, WebTestCase):
         user.is_superuser = True
         user.save()
         order = Order.objects.get()
-        thank_you_order_number = self.get(
-            "%s?order_number=%s" % (
-                reverse('checkout:thank-you'), order.number), user=user)
-        self.assertIsOk(thank_you_order_number)
-        thank_you_order_id = self.get(
-            "%s?order_id=%s" % (
-                reverse('checkout:thank-you'), order.id), user=user)
-        self.assertIsOk(thank_you_order_id)
+
+        test_url = '%s?order_number=%s' % (
+            reverse('checkout:thank-you'), order.number)
+        response = self.get(test_url, status='*', user=user)
+        self.assertIsOk(response)
+
+        test_url = '%s?order_id=%s' % (reverse('checkout:thank-you'), order.pk)
+        response = self.get(test_url, status='*', user=user)
+        self.assertIsOk(response)
 
     def test_users_cannot_force_an_other_custumer_order(self):
         self.add_product_to_basket()
@@ -233,11 +235,12 @@ class TestThankYouView(CheckoutMixin, WebTestCase):
         user = self.create_user('John', 'john@test.com')
         user.save()
         order = Order.objects.get()
-        thank_you_order_number = self.get(
-            "%s?order_number=%s" % (
-                reverse('checkout:thank-you'), order.number), status='*', user=user)
-        self.assertEqual(thank_you_order_number.status_code, http_client.NOT_FOUND)
-        thank_you_order_id = self.get(
-            "%s?order_id=%s" % (
-                reverse('checkout:thank-you'), order.id), status='*', user=user)
-        self.assertEqual(thank_you_order_id.status_code, http_client.NOT_FOUND)
+
+        test_url = '%s?order_number=%s' % (
+            reverse('checkout:thank-you'), order.number)
+        response = self.get(test_url, status='*', user=user)
+        self.assertEqual(response.status_code, http_client.NOT_FOUND)
+
+        test_url = '%s?order_id=%s' % (reverse('checkout:thank-you'), order.pk)
+        response = self.get(test_url, status='*', user=user)
+        self.assertEqual(response.status_code, http_client.NOT_FOUND)
