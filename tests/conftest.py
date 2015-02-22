@@ -1,4 +1,4 @@
-from config import configure
+from .config import configure
 
 
 def pytest_configure():
