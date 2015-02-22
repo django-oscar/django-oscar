@@ -80,12 +80,14 @@ Core team:
 - `David Winterbottom`_ (Twitter `@codeinthehole`_)
 - `Maik Hoepfel`_ (Twitter `@maikhoepfel`_)
 - `Markus Bertheau`_
+- `Michael van Tellingen`_
 
 .. _`David Winterbottom`: https://github.com/codeinthehole
 .. _`@codeinthehole`: https://twitter.com/codeinthehole
 .. _`Maik Hoepfel`: https://github.com/maikhoepfel
 .. _`@maikhoepfel`: https://twitter.com/maikhoepfel
 .. _`Markus Bertheau`: https://github.com/mbertheau
+.. _`Michael van Tellingen`: https://github.com/mvantellingen
 
 Screenshots
 -----------
