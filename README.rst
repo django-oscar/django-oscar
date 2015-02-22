@@ -257,8 +257,6 @@ Non-Tangent:
 * Dolbeau - http://www.dolbeau.ca
 * Audio App - https://audioapp.pl
 * Anything Gift - http://www.anythinggift.co.uk
-* FP Sport - http://www.fpsport.it
-* Garmsby - https://garmsby.co.uk
 * Partecipa Cards - http://www.partecipacards.com
 * Chiyome - https://chiyome.com
 * Bike Parts Market - https://www.bikepartsmarket.com
@@ -271,12 +269,6 @@ Non-Tangent:
 
 .. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/anythinggift.thumb.png
     :target: http://www.anythinggift.co.uk
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/fpsport.thumb.png
-    :target: http://www.fpsport.it
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/garmsby.thumb.png
-    :target: https://garmsby.co.uk
 
 .. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/partecipacards.thumb.png
     :target: http://www.partecipacards.com
