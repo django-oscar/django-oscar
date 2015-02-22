@@ -52,6 +52,9 @@ Minor changes
   anything if used with an empty set of permissions. But it was raised as an
   issue, and now views not requiring permissions are not decorated at all.
 
+- Properly redirect users to the checkout page after a guest user created an
+  account.
+
 .. _`#1558`: https://github.com/django-oscar/django-oscar/pull/1558
 
 
