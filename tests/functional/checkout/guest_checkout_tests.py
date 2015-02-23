@@ -5,7 +5,6 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.utils.http import urlquote
 from django.utils.importlib import import_module
-from django.utils.six.moves import http_client
 import mock
 
 from oscar.core.compat import get_user_model
@@ -23,7 +22,6 @@ RedirectRequired, UnableToTakePayment, PaymentError = get_classes(
 UnableToPlaceOrder = get_class('order.exceptions', 'UnableToPlaceOrder')
 
 Basket = get_model('basket', 'Basket')
-Order = get_model('order', 'Order')
 User = get_user_model()
 
 # Python 3 compat
@@ -416,29 +414,6 @@ class TestPaymentDetailsView(CheckoutMixin, WebTestCase):
         basket = Basket.objects.get()
         self.assertEqual(basket.status, Basket.OPEN)
 
-
-@override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)
-class TestPaymentDetailsWithPreview(CheckoutMixin, WebTestCase):
-    is_anonymous = True
-    csrf_checks = False
-
-    def setUp(self):
-        reload_url_conf()
-        super(TestPaymentDetailsWithPreview, self).setUp()
-
-    def test_payment_form_being_submitted_from_payment_details_view(self):
-        payment_details = self.reach_payment_details_page(is_guest=True)
-        preview = payment_details.forms['sensible_data'].submit()
-        self.assertEqual(0, Order.objects.all().count())
-        preview.form.submit().follow()
-        self.assertEqual(1, Order.objects.all().count())
-
-    def test_handles_invalid_payment_forms(self):
-        payment_details = self.reach_payment_details_page(is_guest=True)
-        form = payment_details.forms['sensible_data']
-        # payment forms should use the preview URL not the payment details URL
-        form.action = reverse('checkout:payment-details')
-        self.assertEqual(form.submit(status="*").status_code, http_client.BAD_REQUEST)
 
 @override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)
 class TestPlacingOrder(CheckoutMixin, WebTestCase):
