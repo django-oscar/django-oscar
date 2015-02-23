@@ -5,7 +5,6 @@ from django.test.client import RequestFactory
 import mock
 
 from oscar.apps.offer import models, utils
-from oscar.apps.order.utils import OrderCreator
 from oscar.apps.shipping.repository import Repository
 from oscar.apps.shipping.methods import FixedPrice
 from oscar.test.basket import add_product
