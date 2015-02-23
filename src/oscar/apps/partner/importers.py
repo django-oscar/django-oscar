@@ -164,7 +164,7 @@ class DemoSiteImporter(object):
                 if row[1] == 'UPC':
                     attribute_codes = row[9:]
                     continue
-                self.create_product(product_class, attribute_codes,  row)
+                self.create_product(product_class, attribute_codes, row)
 
     def create_product(self, product_class, attribute_codes, row):  # noqa
         (ptype, upc, title, description,

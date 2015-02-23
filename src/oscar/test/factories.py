@@ -106,7 +106,7 @@ def create_product_image(product=None,
             display_order = 0
         else:
             display_order = max(
-                [i.display_order for i in product.images.all()])+1
+                [i.display_order for i in product.images.all()]) + 1
 
     kwargs = {'product_id': product.id,
               'original': original,

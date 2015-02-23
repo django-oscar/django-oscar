@@ -55,8 +55,7 @@ class ReviewListView(BulkEditMixin, generic.ListView):
             self.desc_ctx['date_filter'] \
                 = _(" created between %(start_date)s and %(end_date)s") % {
                     'start_date': format_datetime(date_from),
-                    'end_date': format_datetime(date_to)
-                }
+                    'end_date': format_datetime(date_to)}
         elif date_from:
             queryset = queryset.filter(date_created__gte=date_from)
             self.desc_ctx['date_filter'] \

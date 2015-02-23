@@ -319,7 +319,7 @@ class RemoteSelect(forms.Widget):
             'data-multiple': 'multiple' if self.is_multiple else '',
             'value': self.format_value(value),
             'data-required': 'required' if self.is_required else '',
-            })
+        })
         return mark_safe(u'<input %s>' % flatatt(attrs))
 
 

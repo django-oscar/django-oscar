@@ -64,7 +64,7 @@ class CategoryTable(DashboardTable):
         orderable=False)
 
     icon = "sitemap"
-    caption = ungettext_lazy("%s Category",  "%s Categories")
+    caption = ungettext_lazy("%s Category", "%s Categories")
 
     class Meta(DashboardTable.Meta):
         model = Category
