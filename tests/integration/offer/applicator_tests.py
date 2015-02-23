@@ -50,6 +50,6 @@ class TestOfferApplicator(TestCase):
                 name="offer2", condition=self.condition, benefit=self.benefit,
                 priority=-1)])
 
-        offers = self.applicator.get_offers(Mock(), self.basket)
+        offers = self.applicator.get_offers(self.basket)
         priorities = [offer.priority for offer in offers]
         self.assertEqual(sorted(priorities, reverse=True), priorities)

@@ -71,7 +71,12 @@ Misc
   (`#1565`_). This means that sites that rely on zero-weight baskets having no
   change will need to introduce a new weight band that covers this edge case.
 
+* The methods :method:`~oscar.apps.offer.utils.Applicator.apply` and
+  :method:`~oscar.apps.offer.utils.Applicatior.get_offers` changed their
+  arguments to `(basket, user=None, request=None)`. (`#1677`_)
+
 .. _`#1565`: https://github.com/django-oscar/django-oscar/pull/1565
+.. _`#1677`: https://github.com/django-oscar/django-oscar/pull/1677
 
 Migrations
 ~~~~~~~~~~

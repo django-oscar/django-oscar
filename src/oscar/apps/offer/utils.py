@@ -18,14 +18,14 @@ class OfferApplicationError(Exception):
 
 class Applicator(object):
 
-    def apply(self, request, basket):
+    def apply(self, basket, user=None, request=None):
         """
         Apply all relevant offers to the given basket.
 
         The request is passed too as sometimes the available offers
         are dependent on the user (eg session-based offers).
         """
-        offers = self.get_offers(request, basket)
+        offers = self.get_offers(basket, user, request)
         self.apply_offers(basket, offers)
 
     def apply_offers(self, basket, offers):
@@ -48,7 +48,7 @@ class Applicator(object):
         # rendered in templates
         basket.offer_applications = applications
 
-    def get_offers(self, request, basket):
+    def get_offers(self, basket, user=None, request=None):
         """
         Return all offers to apply to the basket.
 
@@ -57,8 +57,8 @@ class Applicator(object):
         based on the session or the user type.
         """
         site_offers = self.get_site_offers()
-        basket_offers = self.get_basket_offers(basket, request.user)
-        user_offers = self.get_user_offers(request.user)
+        basket_offers = self.get_basket_offers(basket, user)
+        user_offers = self.get_user_offers(user)
         session_offers = self.get_session_offers(request)
 
         return list(sorted(chain(
@@ -92,7 +92,7 @@ class Applicator(object):
         code
         """
         offers = []
-        if not basket.id:
+        if not basket.id or not user:
             return offers
 
         for voucher in basket.vouchers.all():
