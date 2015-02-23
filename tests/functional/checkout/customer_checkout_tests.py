@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from django.core.urlresolvers import reverse
 from django.utils.six.moves import http_client
 
-from oscar.core.loading import get_model, get_class
+from oscar.core.loading import get_model
 from oscar.test.newfactories import UserAddressFactory
 from oscar.test.testcases import WebTestCase
 from oscar.test import factories
@@ -11,7 +11,6 @@ from . import CheckoutMixin
 Order = get_model('order', 'Order')
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 UserAddress = get_model('address', 'UserAddress')
-GatewayForm = get_class('checkout.forms', 'GatewayForm')
 
 
 class TestIndexView(CheckoutMixin, WebTestCase):
@@ -51,7 +50,7 @@ class TestShippingAddressView(CheckoutMixin, WebTestCase):
         form['line4'] = 'Gotham City'
         form['postcode'] = 'N1 7RR'
         response = form.submit()
-        self.assertRedirectsTo(response, 'checkout:shipping-method')
+        self.assertRedirectsTo(response, 'checkout:preview')
 
         session_data = self.app.session['checkout_data']
         session_fields = session_data['shipping']['new_address_fields']
@@ -79,7 +78,7 @@ class TestShippingAddressView(CheckoutMixin, WebTestCase):
         self.assertIsOk(page)
         form = page.forms["select_shipping_address_%s" % self.user_address.id]
         response = form.submit()
-        self.assertRedirectsTo(response, 'checkout:shipping-method')
+        self.assertRedirectsTo(response, 'checkout:preview')
 
 
 class TestUserAddressUpdateView(CheckoutMixin, WebTestCase):
@@ -116,11 +115,10 @@ class TestShippingMethodView(CheckoutMixin, WebTestCase):
         response = self.get(reverse('checkout:shipping-method'), user=None)
         self.assertIsRedirect(response)
 
-    def test_redirects_when_only_one_shipping_method(self):
+    def test_is_skipped_when_only_one_shipping_method(self):
         self.add_product_to_basket()
-        self.enter_shipping_address()
-        response = self.get(reverse('checkout:shipping-method'))
-        self.assertRedirectsTo(response, 'checkout:payment-method')
+        response = self.enter_shipping_address()
+        self.assertRedirectsTo(response, 'checkout:preview')
 
 
 class TestDeleteUserAddressView(CheckoutMixin, WebTestCase):
@@ -158,9 +156,7 @@ class TestPreviewView(CheckoutMixin, WebTestCase):
         self.add_product_to_basket()
         self.enter_shipping_address()
 
-        payment_details = self.get(
-            reverse('checkout:shipping-method')).follow().follow()
-        preview = payment_details.click(linkid="view_preview")
+        preview = self.get(reverse('checkout:preview'))
         preview.forms['place_order_form'].submit().follow()
 
         self.assertEqual(1, Order.objects.all().count())
