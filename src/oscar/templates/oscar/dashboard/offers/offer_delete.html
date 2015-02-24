@@ -11,15 +11,12 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:offer-list' %}">{% trans "Offers" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:offer-detail' pk=offer.pk %}">'{{ offer.name }}'</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Delete?" %}</li>
     </ul>

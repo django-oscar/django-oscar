@@ -12,16 +12,13 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:voucher-list' %}">{% trans "Vouchers" %}</a>
-            <span class="divider">/</span>
         </li>
         {% if voucher %}
         <li>
             <a href="{% url 'dashboard:voucher-stats' pk=voucher.id %}">{{ voucher }}</a>
-            <span class="divider">/</span>
         </li>
     {% endif %}
     <li class="active">{% trans "Edit" %}</li>

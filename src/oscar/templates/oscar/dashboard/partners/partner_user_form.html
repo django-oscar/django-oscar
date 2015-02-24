@@ -12,16 +12,13 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:partner-list' %}">{% trans "Partners" %}</a>
-            <span class="divider">/</span>
         </li>
         {% if partner %}
             <li>
                 <a href="{% url 'dashboard:partner-manage' pk=partner.id %}">{{ partner.name }}</a>
-                <span class="divider">/</span>
             </li>
         {% endif %}
         <li class="active">{{ title }}</li>

@@ -15,18 +15,15 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:catalogue-product-list' %}">{% trans "Products" %}</a>
-            <span class="divider">/</span>
         </li>
         {% if parent %}
             <li>
                 <a href="{% url 'dashboard:catalogue-product' parent.id %}">
                     {{ parent.title }}
                 </a>
-                <span class="divider">/</span>
             </li>
         {% endif %}
         <li class="active">{{ title }}</li>

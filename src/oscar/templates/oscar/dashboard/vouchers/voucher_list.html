@@ -11,12 +11,10 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         {% if form.is_bound %}
             <li>
                 <a href="{% url 'dashboard:voucher-list' %}">{% trans "Vouchers" %}</a>
-                <span class="divider">/</span>
             </li>
         {% endif %}
         <li class="active">{{ description }}</li>

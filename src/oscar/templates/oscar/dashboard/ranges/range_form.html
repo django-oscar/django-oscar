@@ -11,11 +11,9 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:range-list' %}">{% trans "Ranges" %}</a>
-            <span class="divider">/</span>
         </li>
         {% if range %}
             <li class="active">'{{ range.name }}'</li>

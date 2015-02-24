@@ -19,21 +19,17 @@
 <ul class="breadcrumb">
     <li>
         <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        <span class="divider">/</span>
     </li>
     <li>
         <a href="{% url 'dashboard:offer-list' %}">{% trans "Offers" %}</a>
-        <span class="divider">/</span>
     </li>
     {% if offer.pk %}
     <li>
         <a href="{% url 'dashboard:offer-detail' pk=offer.pk %}">{{ offer.name }}</a>
-        <span class="divider">/</span>
     </li>
     {% else %}
     <li>
         {% trans "Create new offer" %}
-        <span class="divider">/</span>
     </li>
     {% endif %}
     <li class="active">{{ title }}</li>

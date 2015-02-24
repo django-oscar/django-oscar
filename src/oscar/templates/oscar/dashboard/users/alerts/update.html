@@ -11,11 +11,9 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:user-alert-list' %}">{% trans "Product alerts" %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{% blocktrans with id=alert.id %}Alert #{{ id }}{% endblocktrans %}</li>
     </ul>

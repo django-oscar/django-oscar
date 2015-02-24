@@ -11,15 +11,12 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:range-list' %}">{% trans "Ranges" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:range-update' pk=range.id %}">'{{ range.name }}'</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Products" %}</li>
     </ul>

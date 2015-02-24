@@ -10,11 +10,9 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:voucher-list' %}">{% trans "Vouchers" %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{{ voucher }}</li>
     </ul>
