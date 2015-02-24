@@ -124,7 +124,7 @@
                                             <input type="checkbox" name="selected_line" value="{{ line.id }}" />
                                         </td>
                                         <td>
-                                            <input type="text" name="selected_line_qty_{{ line.id }}" value="{{ line.quantity }}" class="span1" size="2" style="width:40px" />
+                                            <input type="text" name="selected_line_qty_{{ line.id }}" value="{{ line.quantity }}" class="col-md-1" size="2" style="width:40px" />
                                         </td>
                                         <td><a href="{% url 'dashboard:order-line-detail' number=order.number line_id=line.id %}">#{{ line.id }}</a></td>
                                         <td>{{ line.quantity }}</td>
@@ -257,12 +257,12 @@
                         <div class="well">
                             <h3>{% trans "With selected lines" %}:</h3>
 
-                            <div class="control-group">
+                            <div class="form-group">
                                 <div class="controls">
-                                    <label class="radio inline">
+                                    <label class="radio-inline">
                                         <input type="radio" name="line_action" value="change_line_statuses" /> {% trans "Change line status to" %}
                                     </label>
-                                    <label class="radio inline">
+                                    <label class="radio-inline">
                                         <select name="new_status">
                                             <option value=""> -- {% trans "choose new status" %} -- </option>
                                             {% for status in line_statuses %}
@@ -272,12 +272,12 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="control-group">
+                            <div class="form-group">
                                 <div class="controls">
-                                    <label class="radio inline">
+                                    <label class="radio-inline">
                                         <input type="radio" name="line_action" value="create_shipping_event" /> {% trans "Create shipping event" %}
                                     </label>
-                                    <label class="radio inline">
+                                    <label class="radio-inline">
                                         <select name="shipping_event_type">
                                             <option value=""> -- {% trans "choose event type" %} -- </option>
                                             {% for event_type in shipping_event_types %}
@@ -285,17 +285,17 @@
                                             {% endfor %}
                                         </select>
                                     </label>
-                                    <label class="radio inline">
+                                    <label class="radio-inline">
                                         {% trans "with reference" %} <input type="text" name="reference" value="" />
                                     </label>
                                 </div>
                             </div>
-                            <div class="control-group">
+                            <div class="form-group">
                                 <div class="controls">
-                                    <label class="radio inline">
+                                    <label class="radio-inline">
                                         <input type="radio" name="line_action" value="create_payment_event" /> {% trans "Create payment event" %}
                                     </label>
-                                    <label class="radio inline">
+                                    <label class="radio-inline">
                                         <select name="payment_event_type">
                                             <option value=""> -- {% trans "choose event type" %} -- </option>
                                             {% for event_type in payment_event_types %}
@@ -303,7 +303,7 @@
                                             {% endfor %}
                                         </select>
                                     </label>
-                                    <label class="radio inline">
+                                    <label class="radio-inline">
                                         {% trans "with amount" %} <input type="text" name="amount" value="" />
                                     </label>
                                 </div>
@@ -447,7 +447,7 @@
                                     {% for field in order.shipping_address.active_address_fields %}
                                         {{ field }}<br/>
                                     {% endfor %}
-                                    <a class="btn" href="{% url 'dashboard:order-shipping-address' order.number %}">
+                                    <a class="btn btn-default" href="{% url 'dashboard:order-shipping-address' order.number %}">
                                         {% trans "Update" %}
                                     </a>
                                 </td>
@@ -617,7 +617,7 @@
                                         <td>{{ note.user|default:"-" }}</td>
                                         <td>{{ note.note_type|default:"-" }}</td>
                                         <td>{{ note.message|linebreaks }}</td>
-                                        <td class="span2">
+                                        <td class="col-md-2">
                                             {% if note.is_editable %}
                                                 &nbsp;<a href="{% url 'dashboard:order-detail-note' number=order.number note_id=note.id %}#notes" class="btn btn-info">{% trans "Edit" %}</a>
                                                 <form action="." method="post" class="pull-left flat">

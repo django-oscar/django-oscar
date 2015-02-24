@@ -55,10 +55,10 @@
                         <td>
                             <div class="btn-toolbar">
                                 <div class="btn-group">
-                                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
                                         {% trans "Actions" %}
                                         <span class="caret"></span>
-                                    </a>
+                                    </button>
                                     <ul class="dropdown-menu pull-right">
                                         <li><a href="{% url 'dashboard:promotion-update' ptype=promotion.code pk=promotion.id %}">{% trans "Edit" %}</a></li>
                                         <li><a href="{% url 'dashboard:promotion-delete' ptype=promotion.code pk=promotion.id %}">{% trans "Delete" %}</a></li>

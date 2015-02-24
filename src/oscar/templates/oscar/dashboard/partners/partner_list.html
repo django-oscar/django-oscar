@@ -17,7 +17,7 @@
 
 {% block header %}
     <div class="page-header">
-        <a href="{% url 'dashboard:partner-create' %}" class="btn btn-large btn-primary pull-right"><i class="icon-plus"></i> {% trans "Create new partner" %}</a>
+        <a href="{% url 'dashboard:partner-create' %}" class="btn btn-lg btn-primary pull-right"><i class="icon-plus"></i> {% trans "Create new partner" %}</a>
         <h1>{% trans "Partners" %}</h1>
     </div>
 {% endblock header %}
@@ -28,7 +28,7 @@
             {% include 'dashboard/partials/form_fields_inline.html' with form=form %}
             <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
             {% if is_filtered %}
-                <a class="btn" href="{% url 'dashboard:partner-list' %}" >{% trans "Reset" %}</a>
+                <a class="btn btn-default" href="{% url 'dashboard:partner-list' %}" >{% trans "Reset" %}</a>
             {% endif %}
         </form>
     </div>
@@ -84,10 +84,10 @@
                         <td>
                             <div class="btn-toolbar">
                                 <div class="btn-group">
-                                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
                                         {% trans "Actions" %}
                                         <span class="caret"></span>
-                                    </a>
+                                    </button>
                                     <ul class="dropdown-menu pull-right">
                                         <li><a href="{% url 'dashboard:partner-manage' pk=partner.pk %}">{% trans "Manage partner and users" %}</a></li>
                                         <li><a href="{% url 'dashboard:partner-delete' pk=partner.pk %}">{% trans "Delete partner" %}</a></li>

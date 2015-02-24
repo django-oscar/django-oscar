@@ -34,7 +34,7 @@
             {% csrf_token %}
             <div class="form-actions">
                 <p>{% trans "Are you sure that you want to delete this alert?" %}</p>
-                <button type='submit' class="btn btn-large btn-danger" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button> {% trans "or" %}
+                <button type='submit' class="btn btn-lg btn-danger" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button> {% trans "or" %}
                 <a href="{% url 'dashboard:user-alert-list' %}">{% trans "cancel" %}</a>
             </div>
         </form>

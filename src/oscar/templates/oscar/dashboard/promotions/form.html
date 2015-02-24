@@ -62,7 +62,7 @@
                                     <input type="hidden" name="action" value="remove_from_page" />
                                     <input type="hidden" name="pagepromotion_id" value="{{ link.id }}" />
                                     <a href="{% url 'dashboard:promotion-list-by-url' path=link.page_url %}" class="btn btn-info">{% trans "View all blocks on this page" %}</a>
-                                    <button class="btn" type="submit" data-loading-text="{% trans 'Removing...' %}">{% trans "Remove from page" %}</button>
+                                    <button class="btn btn-default" type="submit" data-loading-text="{% trans 'Removing...' %}">{% trans "Remove from page" %}</button>
                                 </form>
                             </td>
                         </tr>

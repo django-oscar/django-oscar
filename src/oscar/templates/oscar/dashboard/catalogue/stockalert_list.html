@@ -29,10 +29,10 @@
 
     <div class="pull-right">
         <div class="btn-group pull-right">
-            <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+            <button class="btn btn-primary dropdown-toggle" type="submit" data-toggle="dropdown" aria-expanded="true">
                 {% trans "Filter" %}
                 <span class="caret"></span>
-            </a>
+            </button>
             <ul class="dropdown-menu">
                 <li><a href="{% url 'dashboard:stock-alert-list' %}">{% trans "All" %}</a></li>
                 <li><a href="{% url 'dashboard:stock-alert-list' %}?status=Open">{% trans "Open" %}</a></li>

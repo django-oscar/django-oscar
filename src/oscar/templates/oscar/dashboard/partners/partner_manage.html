@@ -53,7 +53,7 @@
     {% else %}
         <p>{% trans "No users linked." %}</p>
     {% endif %}
-    <div class="form-actions">
+    <div class="form-group">
         <a class="btn btn-info" href="{% url 'dashboard:partner-user-create' partner_pk=partner.pk %}" >{% trans "Link a new user" %}</a>
         <a class="btn btn-info" href="{% url 'dashboard:partner-user-select' partner_pk=partner.pk %}" >{% trans "Link an existing user" %}</a>
     </div>

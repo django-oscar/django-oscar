@@ -30,7 +30,7 @@
             {% include "dashboard/partials/form_fields_inline.html" with form=form %}
             <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
             {% trans "or" %}
-            <a href="{% url 'dashboard:user-alert-list' %}" class="btn">{% trans "reset" %}</a>
+            <a href="{% url 'dashboard:user-alert-list' %}" class="btn btn-default">{% trans "reset" %}</a>
         </form>
     </div>
 
@@ -68,10 +68,10 @@
                     <td>
                         <div class="btn-toolbar">
                             <div class="btn-group">
-                                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
                                     {% trans "Actions" %}
                                     <span class="caret"></span>
-                                </a>
+                                </button>
                                 <ul class="dropdown-menu pull-right">
                                     <li><a href="{% url 'dashboard:user-alert-update' pk=alert.id %}">{% trans "Edit" %}</a></li>
                                     <li><a href="{% url 'dashboard:user-alert-delete' pk=alert.id %}">{% trans "Delete" %}</a></li>

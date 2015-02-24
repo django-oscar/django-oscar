@@ -36,7 +36,7 @@
                 {% for field in form %}
                     {# display title (first) and body (last) as full lines #}
                     {% if forloop.counter < 3 %}
-                        <div class="control-group {% for error in field.errors %}error{% endfor %}">
+                        <div class="form-group{% for error in field.errors %} has-error{% endfor %}">
                             {% if field.is_hidden %}
                                 {{ field }}
                             {% else %}
@@ -61,7 +61,7 @@
                             {% if field.is_hidden %}
                                 {{ field }}
                             {% else %}
-                                <span class="control-group {% if field.errors %}error{% endif %}">
+                                <span class="form-group{% if field.errors %} has-error{% endif %}">
                                     {{ field.label_tag }}
                                     {{ field }}
                                     {% for error in field.errors %}
@@ -76,7 +76,7 @@
                 {% endfor %}
             </div>
             <div class="form-actions">
-                <button class="btn btn-primary btn-large" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button> {% trans "or" %}
+                <button class="btn btn-primary btn-lg" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button> {% trans "or" %}
                 <a href="{% url 'dashboard:reviews-list' %}">{% trans "cancel" %}</a>
             </div>
         </div>

@@ -2,6 +2,7 @@
 {% load currency_filters %}
 {% load sorting_tags %}
 {% load i18n %}
+{% load widget_tweaks %}
 
 {% block body_class %}{{ block.super }} orders{% endblock %}
 
@@ -33,11 +34,11 @@
             {% for field in form %}
                 {% if "order" in field.id_for_label %}
                     {% if field.is_hidden %}
-                        {{ field }}
+                        {% render_field field class+='form-control' %}
                     {% else %}
-                        <span class="control-group {% if field.errors %}error{% endif %}">
+                        <span class="form-group{% if field.errors %} has-error{% endif %}">
                             {{ field.label_tag }}
-                            {{ field }}
+                            {% render_field field class+='form-control' %}
                             {% for error in field.errors %}
                                 <ul class="error-block">
                                     <li>{{ error }}</li>
@@ -62,7 +63,7 @@
                     {% include "dashboard/partials/form_fields.html" with form=form %}
                 </div>
                 <div class="modal-footer">
-                    <a href="#" class="btn" data-dismiss="modal">{% trans "Close" %}</a>
+                    <a href="#" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</a>
                     <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
                 </div>
             </form>
@@ -133,7 +134,7 @@
                 <div class="well">
                     <h3><i class="icon-warning"></i> {% trans "Change order status" %}:</h3>
                     {% if order_statuses %}
-                        <div class="control-group">
+                        <div class="form-group">
                             <div class="controls">
 
                             <select name="new_status">

@@ -34,7 +34,7 @@
                                 <a href="{% url 'customer:notifications-inbox' %}">
                                     <i class="icon-user"></i>
                                     {% trans "Account" %}
-                                    <span class="label label-important">{{ num_unread_notifications }}</span>
+                                    <span class="label label-danger">{{ num_unread_notifications }}</span>
                                 </a>
                             {% else %}
                                 <a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "Account" %}</a>

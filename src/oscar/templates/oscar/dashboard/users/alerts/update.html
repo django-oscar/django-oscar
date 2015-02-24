@@ -31,7 +31,7 @@
                 {% csrf_token %}
                 {% include 'dashboard/partials/form_fields_inline.html' %}
                 <button type='submit' class="btn btn-primary" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
-                <a href="{% url 'dashboard:user-alert-list' %}" class="btn">{% trans "cancel" %}</a>
+                <a href="{% url 'dashboard:user-alert-list' %}" class="btn btn-default">{% trans "cancel" %}</a>
             </form>
         </div>
     </div>

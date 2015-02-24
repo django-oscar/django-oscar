@@ -32,7 +32,7 @@
                 {% include 'dashboard/partials/form_fields_inline.html' with form=form %}
                 <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
                 {% if form.is_bound %}
-                    <a class="btn" href="{% url 'dashboard:partner-user-select' partner_pk=partner.id %}" >{% trans "Reset" %}</a>
+                    <a class="btn btn-default" href="{% url 'dashboard:partner-user-select' partner_pk=partner.id %}" >{% trans "Reset" %}</a>
                 {% endif %}
                 <div style="margin-top:5px">{% trans "A partial email address can be entered (eg '@example.com') to match multiple addresses." %}</div>
             </form>

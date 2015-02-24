@@ -19,7 +19,7 @@
 
 {% block header %}
     <div class="page-header">
-        <a href="{% url 'dashboard:page-create' %}" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new page" %}</a>
+        <a href="{% url 'dashboard:page-create' %}" class="btn btn-primary btn-lg pull-right"><i class="icon-plus"></i> {% trans "Create new page" %}</a>
         <h1>{% trans "Pages" %}</h1>
     </div>
 {% endblock header %}
@@ -32,7 +32,7 @@
         <form action="." method="get" class="form-inline">
             {% include "dashboard/partials/form_fields_inline.html" with form=form %}
             <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
-            <a href="{% url 'dashboard:page-list' %}" class="btn">{% trans "Reset" %}</a>
+            <a href="{% url 'dashboard:page-list' %}" class="btn btn-default">{% trans "Reset" %}</a>
         </form>
     </div>
 
@@ -60,10 +60,10 @@
                             <td>
                                 <div class="btn-toolbar">
                                     <div class="btn-group">
-                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
                                             {% trans "Actions" %}
                                             <span class="caret"></span>
-                                        </a>
+                                        </button>
                                         <ul class="dropdown-menu pull-right">
                                             <li><a href="{{ page.get_absolute_url }}">{% trans "View" %}</a></li>
                                             <li><a id="edit_page_{{ page.id }}" href="{% url 'dashboard:page-update' pk=page.id %}">{% trans "Edit" %}</a></li>

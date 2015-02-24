@@ -31,7 +31,7 @@
         {% csrf_token %}
         <p>{% trans "Are you sure you want to delete this offer?" %}</p>
         <div class="form-actions">
-            <button class="btn btn-large btn-danger" type="submit" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button> {% trans "or" %}
+            <button class="btn btn-lg btn-danger" type="submit" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button> {% trans "or" %}
             <a href="{% url 'dashboard:offer-list' %}">{% trans "cancel" %}</a>
         </div>
     </form>

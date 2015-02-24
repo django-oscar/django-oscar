@@ -89,7 +89,7 @@
                             {% if review.status == 1 %}
                                 <span class="label label-success">
                                     {% elif review.status == 2 %}
-                                    <span class="label label-important">
+                                    <span class="label label-danger">
                                     {% else %}
                                         <span class="label label-info">
                                         {% endif %}
@@ -100,10 +100,10 @@
                                 <td>
                                     <div class="btn-toolbar">
                                         <div class="btn-group">
-                                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
                                                 {% trans "Actions" %}
                                                 <span class="caret"></span>
-                                            </a>
+                                            </button>
                                             <ul class="dropdown-menu pull-right">
                                                 {% if review.title and review.product %}
                                                     <li><a href="{% url 'catalogue:reviews-detail' product_slug=review.product.slug product_pk=review.product.id pk=review.id %}">{% trans "View on site" %}</a></li>

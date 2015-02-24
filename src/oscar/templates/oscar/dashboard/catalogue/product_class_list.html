@@ -13,7 +13,7 @@
 
 {% block header %}
     <div class="page-header">
-        <a href="{% url 'dashboard:catalogue-class-create' %}" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new product type" %}</a>
+        <a href="{% url 'dashboard:catalogue-class-create' %}" class="btn btn-primary btn-lg pull-right"><i class="icon-plus"></i> {% trans "Create new product type" %}</a>
         <h1>{% trans "Product types" %}</h1>
     </div>
 {% endblock header %}
@@ -39,10 +39,10 @@
                         <td>
                             <div class="btn-toolbar">
                                 <div class="btn-group">
-                                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <button class="btn btn-default dropdown-toggle" type="submit" data-toggle="dropdown" aria-expanded="true">
                                         {% trans "Actions" %}
                                         <span class="caret"></span>
-                                    </a>
+                                    </button>
                                     <ul class="nav dropdown-menu pull-right">
                                         <li><a href="{% url 'dashboard:catalogue-class-update' pk=class.id %}">{% trans "Edit product type" %}</a></li>
                                         <li><a href="{% url 'dashboard:catalogue-class-delete' pk=class.id %}">{% trans "Delete" %}</a></li>
