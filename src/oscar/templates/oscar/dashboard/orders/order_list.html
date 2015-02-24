@@ -60,7 +60,7 @@
             <form action="." method="get" class="form-horizontal">
                 <div class="modal-body">
                     {% csrf_token %}
-                    {% include "partials/form_fields.html" with form=form %}
+                    {% include "dashboard/partials/form_fields.html" with form=form %}
                 </div>
                 <div class="modal-footer">
                     <a href="#" class="btn" data-dismiss="modal">{% trans "Close" %}</a>

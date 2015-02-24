@@ -13,20 +13,20 @@
     {% if form.fields.custom_benefit.choices %}
         <h4>{% trans "Build a new incentive" %}</h4>
     {% endif %}
-	{% include "partials/form_field.html" with field=form.range %}
+    {% include "dashboard/partials/form_field.html" with field=form.range %}
     <p>
         {% url 'dashboard:range-list' as range_list_url %}
         {% blocktrans %}
         Ranges can be created and edited from within the <a href="{{ range_list_url }}">range dashboard</a>.
         {% endblocktrans %}
     </p>
-	{% include "partials/form_field.html" with field=form.type %}
-	{% include "partials/form_field.html" with field=form.value %}
-	{% include "partials/form_field.html" with field=form.max_affected_items %}
+    {% include "dashboard/partials/form_field.html" with field=form.type %}
+    {% include "dashboard/partials/form_field.html" with field=form.value %}
+    {% include "dashboard/partials/form_field.html" with field=form.max_affected_items %}
 
     {% if form.fields.custom_benefit.choices %}
         <h4>{% trans "...or choose a pre-defined one" %}</h4>
-        {% include "partials/form_field.html" with field=form.custom_benefit %}
+        {% include "dashboard/partials/form_field.html" with field=form.custom_benefit %}
     {% endif %}
 {% endblock %}
 

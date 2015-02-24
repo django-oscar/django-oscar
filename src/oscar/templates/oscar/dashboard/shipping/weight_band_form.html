@@ -34,7 +34,7 @@
     <div class="well">
         <form action="." method="post" class="form-stacked">
             {% csrf_token %}
-            {% include "partials/form_fields.html" with form=form %}
+            {% include "dashboard/partials/form_fields.html" with form=form %}
             {% block form_actions %}
                 <div class="form-actions">
                     <button class="btn btn-primary btn-large" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button> {% trans "or" %}

@@ -30,7 +30,7 @@
     </div>
     <div class="well">
         <form method="get" action="{% url 'dashboard:order-stats' %}" class="form-inline">
-            {% include "partials/form_fields_inline.html" with form=form %}
+            {% include "dashboard/partials/form_fields_inline.html" with form=form %}
             <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Filtering...' %}">{% trans "Filter result" %}</button>
             <a href="{% url 'dashboard:order-stats' %}" class="btn">{% trans "Reset" %}</a>
         </form>

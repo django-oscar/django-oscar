@@ -30,7 +30,7 @@
 
         <form action="." method="post" enctype="multipart/form-data" class="well form-stacked wysiwyg">
             {% csrf_token %}
-            {% include "partials/form_fields.html" with form=form %}
+            {% include "dashboard/partials/form_fields.html" with form=form %}
 
             {% block inlines %} {% endblock %}
 
@@ -81,7 +81,7 @@
             <form action="." method="post" class="form-stacked">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="add_to_page" />
-                {% include "partials/form_fields.html" with form=link_form %}
+                {% include "dashboard/partials/form_fields.html" with form=link_form %}
                 <button type="submit" class="btn btn-success" data-loading-text="{% trans 'Adding...' %}">{% trans "Add to page" %}</button>
             </form>
         </div>

@@ -64,7 +64,7 @@
                     {% csrf_token %}
                     <p>{% trans "Fields marked with * are mandatory." %}</p>
                     {% block form_fields %}
-                        {% include "partials/form_fields.html" with form=form %}
+                        {% include "dashboard/partials/form_fields.html" with form=form %}
                     {% endblock %}
                     {% block form_extradata %}{% endblock %}
                 </div>

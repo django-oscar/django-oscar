@@ -129,7 +129,7 @@
                                     {% for category_form in category_formset %}
                                         <tr>
                                             <td>
-                                                {% include "partials/form_fields_inline.html" with form=category_form %}
+                                                {% include "dashboard/partials/form_fields_inline.html" with form=category_form %}
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -152,7 +152,7 @@
                                         {% if 'attr' in field.id_for_label %}
                                             <tr>
                                                 <td>
-                                                    {% include "partials/form_field.html" %}
+                                                    {% include "dashboard/partials/form_field.html" %}
                                                 </td>
                                             </tr>
                                         {% endif %}
@@ -216,20 +216,20 @@
                                             </tr>
                                             {% endif %}
                                             <tr>
-                                                <td>{% include "partials/form_field.html" with field=stockrecord_form.partner nolabel=True %}</td>
-                                                <td>{% include "partials/form_field.html" with field=stockrecord_form.partner_sku nolabel=True %}</td>
+                                                <td>{% include "dashboard/partials/form_field.html" with field=stockrecord_form.partner nolabel=True %}</td>
+                                                <td>{% include "dashboard/partials/form_field.html" with field=stockrecord_form.partner_sku nolabel=True %}</td>
                                                 {% if product_class.track_stock %}
-                                                    <td>{% include "partials/form_field.html" with field=stockrecord_form.num_in_stock nolabel=True %}</td>
+                                                    <td>{% include "dashboard/partials/form_field.html" with field=stockrecord_form.num_in_stock nolabel=True %}</td>
                                                     <td>{{ stockrecord_form.instance.num_allocated|default:"-" }}</td>
-                                                    <td>{% include "partials/form_field.html" with field=stockrecord_form.low_stock_threshold nolabel=True %}</td>
+                                                    <td>{% include "dashboard/partials/form_field.html" with field=stockrecord_form.low_stock_threshold nolabel=True %}</td>
                                                 {% endif %}
-                                                <td>{% include "partials/form_field.html" with field=stockrecord_form.price_currency nolabel=True %}</td>
-                                                <td>{% include "partials/form_field.html" with field=stockrecord_form.cost_price nolabel=True %}</td>
-                                                <td>{% include "partials/form_field.html" with field=stockrecord_form.price_excl_tax nolabel=True %}</td>
-                                                <td>{% include "partials/form_field.html" with field=stockrecord_form.price_retail nolabel=True %}</td>
+                                                <td>{% include "dashboard/partials/form_field.html" with field=stockrecord_form.price_currency nolabel=True %}</td>
+                                                <td>{% include "dashboard/partials/form_field.html" with field=stockrecord_form.cost_price nolabel=True %}</td>
+                                                <td>{% include "dashboard/partials/form_field.html" with field=stockrecord_form.price_excl_tax nolabel=True %}</td>
+                                                <td>{% include "dashboard/partials/form_field.html" with field=stockrecord_form.price_retail nolabel=True %}</td>
                                                 <td>
-                                                    {% include "partials/form_field.html" with field=stockrecord_form.id nolabel=True %}
-                                                    {% include "partials/form_field.html" with field=stockrecord_form.DELETE nolabel=True %}
+                                                    {% include "dashboard/partials/form_field.html" with field=stockrecord_form.id nolabel=True %}
+                                                    {% include "dashboard/partials/form_field.html" with field=stockrecord_form.DELETE nolabel=True %}
                                                 </td>
                                             </tr>
                                         {% endfor %}
@@ -303,7 +303,7 @@
                                     {% for recommended_form in recommended_formset %}
                                         <tr>
                                             <td>
-                                                {% include "partials/form_fields_inline.html" with form=recommended_form %}
+                                                {% include "dashboard/partials/form_fields_inline.html" with form=recommended_form %}
                                             </td>
                                         </tr>
                                     {% endfor %}
