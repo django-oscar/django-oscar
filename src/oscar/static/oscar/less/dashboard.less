@@ -10,6 +10,7 @@
 // FONT FOR THE DASHBOARD
 // -----------------------------
 
+
 // TYPES CHANGES
 // -----------
 h1, h2, h3, h4, h5, h6 {
@@ -17,36 +18,46 @@ h1, h2, h3, h4, h5, h6 {
   margin-top:0;
   font-weight:normal;
 }
+
 h1 {
     font-size: 30px;
 }
+
 h2 {
     font-size: 18px;
 }
+
+h3 {
+  font-size: 20px;
+}
+
+h3.app-ico:before {
+    display: none;
+}
+
 body {
   font-family: @dashFontFamily;
   font-size: 12px;
 }
+
 label, input, button, select, textarea {
   font-size: 12px;
 }
-h3 {
-  font-size: 20px;
-}
-h3.app-ico:before {
-    display: none;
-}
+
+
 // BUTTONS
 // -----------
 .btn {
   font-weight:normal;
 }
+
 .btn-group > .btn,
 .btn-group > .dropdown-menu,
 .btn {
   font-size:12px;
   font-family:inherit;
 }
+
 .btn-warning,
 .btn-success,
 .btn-info {
@@ -65,16 +76,20 @@ h3.app-ico:before {
     color:#333;
   }
 }
+
 .btn-primary {
   .buttonBackground(#0083C9, #005096);
 }
+
 .btn-primary,
 .btn-danger {
   font-weight:bold;
 }
+
 td .btn-toolbar {
   margin:0;
 }
+
 
 // FORM CHANGES
 // -----------
@@ -98,11 +113,13 @@ td .btn-toolbar {
     max-height:200px;
   }
 }
+
 .form-inline {
   select {
     min-width:200px;
   }
 }
+
 .form-inline {
   margin-bottom: 0;
   .help-block:first-child, .error-block:first-child {
@@ -115,21 +132,25 @@ td .btn-toolbar {
     margin-right:10px;
   }
 }
+
 .form-stacked {
   .error-block {
     display:block;
     color:#b94a48;
   }
 }
+
 .fields-full {
   input[type=text],
   textarea {
     width:100%;
   }
 }
+
 form.flat {
   margin:0;
 }
+
 .well,
 .tabbable.dashboard .tab-content {
   .form-actions {
@@ -142,6 +163,7 @@ form.flat {
     border-top-color: #ccc;
   }
 }
+
 .tabbable.dashboard .tab-content {
   .form-actions {
     bottom:-50px;
@@ -150,11 +172,13 @@ form.flat {
     padding-right: 29px;
   }
 }
+
 .well form {
   .form-actions {
     bottom:-39px;
   }
 }
+
 .create-page {
   .form-horizontal,
   .form-stacked {
@@ -181,9 +205,11 @@ form.flat {
     font-weight:bold;
   }
 }
+
 .wysihtml5-sandbox {
     border:1px solid #ccc!important;
 }
+
 /* ADDITIONAL ERRORS */
 .errorlist {
   margin:0 0 0 20px;
@@ -194,6 +220,7 @@ form.flat {
     list-style:none;
   }
 }
+
 .form-inline {
   .help-block, .error-block {
     display:inline-block;
@@ -210,6 +237,8 @@ form.flat {
     width: 140px;
   }
 }
+
+
 // TABLE CHANGES
 // -----------
 .table-bordered,
@@ -217,28 +246,35 @@ form.flat {
 .table-bordered td  {
   border-color:#bbb;
 }
+
 .table {
   background-color: @white;
 }
+
 .table thead tr th.asc i:before {
   content: "\f077";
 }
+
 .table thead tr th.desc i:before {
   content: "\f078";
 }
+
 .table-striped tbody tr:nth-child(odd) td,
 .table-striped tbody tr:nth-child(odd) th {
   background-color: #efefef;
 }
+
 .table-hover tbody tr:hover td,
 .table-hover tbody tr:hover th {
-background-color: #FFF49F;
+  background-color: #FFF49F;
 }
+
 // OSCAR DASHBOARD UNIQUE STYLES
 // -----------
 body {
   background: url("../img/ui/dashboard/bg_subtle_dots.png") repeat scroll 0 0 #fff;
 }
+
 .container-fluid.dashboard {
   margin: 0 auto;
 /*  max-width: 1170px;*/
@@ -358,14 +394,17 @@ body {
 .breadcrumb {
   margin-top:20px;
 }
+
 button {
   background-color:transparent;
 }
+
 .page-header {
   padding: 0 0 10px 0;
   margin-bottom: 0;
   border-bottom: 0;
 }
+
 caption,
 .table-header {
   .clearfix();
@@ -402,6 +441,7 @@ caption,
     padding-right: 10px;
   }
 }
+
 .content-block {
   border: 1px solid #ccc;
   margin-bottom: 20px;
@@ -433,6 +473,7 @@ caption,
     }
   }
 }
+
 .search-adv {
   margin:0;
   position:relative;
@@ -446,9 +487,11 @@ caption,
     margin:0;
   }
 }
+
 .no-float {
   float:none;
 }
+
 .control-group.pull-left.no-float {
   > label {
     width: 140px;
@@ -457,27 +500,33 @@ caption,
     margin-left: 160px;
   }
 }
+
 .pull-left.btn {
   margin-left:20px;
 }
+
 .pull-left.no-float.btn {
   margin-left:160px;
 }
+
 .controls {
   ul {
     margin-left:0px;
     list-style:none;
   }
 }
+
 .alert-message.block-message.file_upload p {
   margin-right:10px;
 }
+
 .tabs.product_managment {
   margin-bottom:0px;
   li.active a {
     background-color:#efefef;
   }
 }
+
 .tabbable.dashboard {
   margin-bottom:@baseLineHeight;
   .navbar, .nav-tabs {
@@ -491,6 +540,7 @@ caption,
     padding:30px;
   }
 }
+
 // WELLS
 // -----
 .well,
@@ -619,6 +669,7 @@ caption,
     height: 50%;
     #gradient > .vertical(#0e91bf, #0b759b);
 }
+
 // ORDER SUMMARY
 // ----------------
 .order-summary {
@@ -799,6 +850,7 @@ caption,
     height: 200px;
  }
 }
+
 // SIDE NAV CREATE PAGES
 // ----------------
 div[data-spy="affix"] {
