@@ -2724,6 +2724,12 @@ h1 {
 h2 {
   font-size: 18px;
 }
+h3 {
+  font-size: 20px;
+}
+h3.app-ico:before {
+  display: none;
+}
 body {
   font-family: "Open Sans", 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 12px;
@@ -2734,12 +2740,6 @@ button,
 select,
 textarea {
   font-size: 12px;
-}
-h3 {
-  font-size: 20px;
-}
-h3.app-ico:before {
-  display: none;
 }
 .btn {
   font-weight: normal;
