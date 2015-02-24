@@ -37,9 +37,9 @@
 </div>
 <div class="well">
     <form action="." method="get" class="form-inline">
-		{% include 'dashboard/partials/form_fields_inline.html' with form=form %}
-		<button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
-		<a href="{% url 'dashboard:voucher-list' %}" class="btn">{% trans "Reset" %}</a>
+        {% include 'dashboard/partials/form_fields_inline.html' with form=form %}
+        <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
+        <a href="{% url 'dashboard:voucher-list' %}" class="btn">{% trans "Reset" %}</a>
     </form>
 </div>
 

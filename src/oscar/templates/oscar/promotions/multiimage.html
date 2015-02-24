@@ -1,11 +1,11 @@
 {% if promotion.images %}
 <div id="{{ promotion.name|slugify }}" class="carousel slide">
-	<ol class="carousel-indicators">
-		{% for promotion_image in promotion.images.all %}
-			<li data-target="#{{ promotion.name|slugify }}" data-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}"></li>
-    	{% endfor %}
-	</ol>
-	
+    <ol class="carousel-indicators">
+        {% for promotion_image in promotion.images.all %}
+            <li data-target="#{{ promotion.name|slugify }}" data-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}"></li>
+        {% endfor %}
+    </ol>
+
     <div class="carousel-inner">
     {% for promotion_image in promotion.images.all %}
         <div class="item {% if forloop.first %}active{% endif %}">
@@ -16,12 +16,9 @@
             {% endif %}
         </div>
     {% endfor %}
-	</div>
+    </div>
 
-	<a class="carousel-control left" href="#{{ promotion.name|slugify }}" data-slide="prev">&lsaquo;</a>
-	<a class="carousel-control right" href="#{{ promotion.name|slugify }}" data-slide="next">&rsaquo;</a>
+    <a class="carousel-control left" href="#{{ promotion.name|slugify }}" data-slide="prev">&lsaquo;</a>
+    <a class="carousel-control right" href="#{{ promotion.name|slugify }}" data-slide="next">&rsaquo;</a>
 </div>
 {% endif %}
-
-
-
