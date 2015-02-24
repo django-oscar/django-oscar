@@ -1,3 +1,51 @@
+// Core variables and mixins
+@import "bootstrap3/variables.less";
+@import "bootstrap3/mixins.less";
+
+// Oscar variables
+@import "page/mixins.less"; // Kept separate for bootstrap updates - but should be imported into bootstap mixins.
+
+// Reset and dependencies
+@import "bootstrap3/normalize.less";
+@import "bootstrap3/print.less";
+
+// Core CSS
+@import "bootstrap3/scaffolding.less";
+@import "bootstrap3/type.less";
+@import "bootstrap3/code.less";
+@import "bootstrap3/grid.less";
+@import "bootstrap3/tables.less";
+@import "bootstrap3/forms.less";
+@import "bootstrap3/buttons.less";
+
+// Components
+@import "bootstrap3/component-animations.less";
+@import "bootstrap3/dropdowns.less";
+@import "bootstrap3/button-groups.less";
+@import "bootstrap3/input-groups.less";
+@import "bootstrap3/navs.less";
+@import "bootstrap3/navbar.less";
+@import "bootstrap3/breadcrumbs.less";
+@import "bootstrap3/pagination.less";
+@import "bootstrap3/pager.less";
+@import "bootstrap3/labels.less";
+@import "bootstrap3/badges.less";
+@import "bootstrap3/jumbotron.less";
+@import "bootstrap3/thumbnails.less";
+@import "bootstrap3/alerts.less";
+@import "page/alerts.less";
+@import "bootstrap3/progress-bars.less";
+@import "bootstrap3/media.less";
+@import "bootstrap3/list-group.less";
+@import "bootstrap3/panels.less";
+@import "bootstrap3/responsive-embed.less";
+@import "bootstrap3/wells.less";
+@import "bootstrap3/close.less";
+
+// Utility classes
+@import "bootstrap3/utilities.less";
+@import "bootstrap3/responsive-utilities.less";
+
 // Core variables and mixins separate from frontend variables and mixins
 @import "dashboard/variables.less"; // Modify this for custom colors, font-sizes, etc
 @import "dashboard/mixins.less";
@@ -5,7 +53,6 @@
 // Components: Icons / Fonts
 @import "font-awesome/font-awesome.less"; // Replaced sprites with font-awesome
 @import "font-awesome/font-awesome-ie7.less";
-@import url("//fonts.googleapis.com/css?family=Open+Sans:700,300");
 
 // FONT FOR THE DASHBOARD
 // -----------------------------
@@ -117,6 +164,9 @@ td .btn-toolbar {
 .form-inline {
   select {
     min-width:200px;
+  }
+  .select2-container.form-control {
+      display: inline-block;
   }
 }
 
@@ -277,24 +327,39 @@ body {
 
 .container-fluid.dashboard {
   margin: 0 auto;
-/*  max-width: 1170px;*/
   position: relative;
   padding: 0 20px;
 }
-.dashboard > .content {
-  margin-top: @baseLineHeight;
-}
+
 .fancypages .dashboard > .content {
 }
+
+.navbar {
+  margin-bottom: 0;
+  .nav > li span {
+    display:block;
+    padding: @navbar-padding-vertical;
+  }
+}
+
+.dropdown-menu {
+  font-size: 12px;
+}
+
+.navbar-inverse {
+  color: #DCDCDC;
+}
+
 .navbar-accounts {
-  .navbar-inner {
+  .container-fluid {
+    max-width: 100%;
     padding-left:  20px;
     padding-right: 20px;
     min-height: 50px;
     font-size: 12px;
     #gradient > .vertical(#373737, #242424);
     border: none;
-    .brand {
+    .navbar-brand {
       background: url("../img/ui/dashboard/logo_oscar.png") no-repeat scroll 0 0 transparent;
       text-indent: -9999px;
       display: block;
@@ -304,42 +369,27 @@ body {
       margin-left: 0;
       margin-top: 5px;
     }
-    .nav {
+    .navbar-nav {
       top: 5px;
     }
-    .nav > li > a {
+    .navbar-nav > li > a {
       color: #C1C1C1;
     }
   }
 }
-.navbar .nav > li span {
-    display:block;
-    padding:10px;
-}
-.navbar-inverse {
-  color: #DCDCDC;
-}
-.subnav-fixed {
-  position: fixed;
-  right: 0;
-  left: 0;
-  z-index: @zindexFixedNavbar;
-  top: 50px;
-  .box-shadow(0 1px 5px rgba(0,0,0,.1));
-  border-bottom:1px solid #D5D5D5;
-}
+
 .navbar-primary {
-  .navbar-inner {
+  min-height: 44px;
+  .container-fluid {
     #gradient > .vertical(#353535, #373737);
     filter: progid:DXImageTransform.Microsoft.gradient(enabled=false) !important;
     border-top: 1px solid #5B5B5B;
     *position:relative;
     *z-index:10;
   }
-}
-.navbar-primary {
+
   .nav {
-    &.nav-pills .open .dropdown-toggle {
+    &.open .dropdown-toggle {
       border-color: #444;
       border-right-color: #222;
     }
@@ -351,12 +401,20 @@ body {
         .border-radius(0);
         color: #DCDCDC;
         font-size: 12px;
-        padding: 15px;
+        padding: 12px;
         .caret {
           border-top-color: #DCDCDC;
           border-bottom-color: #DCDCDC;
           margin-top: 4px;
         }
+      }
+      > a:hover .caret {
+        border-top-color: #B2DEF2;
+        border-bottom-color: #B2DEF2;
+      }
+      i {
+        color: #dcdcdc;
+        padding-right: 12px;
       }
       .dropdown-menu {
         .border-radius(0);
@@ -366,7 +424,7 @@ body {
   .nav > .active > a,
   .nav > .active > a:hover,
   .nav > li > a:hover,
-  .nav-pills .open .dropdown-toggle {
+  .nav .open .dropdown-toggle {
     color: #B2DEF2;
     background-color: #373737;
     border-right-color: @grayDarker;
@@ -376,19 +434,6 @@ body {
       color: #B2DEF2;
     }
   }
-}
-
-
-.navbar-primary .nav {
-  > li i {
-    color: #dcdcdc;
-    padding-right: 12px;
-  }
-}
-
-.navbar-primary .nav > li > a:hover .caret {
-  border-top-color: #B2DEF2;
-  border-bottom-color: #B2DEF2;
 }
 
 .breadcrumb {
@@ -928,10 +973,11 @@ div[data-spy="affix"].affix {
     bottom:0;
     left:0;
     width:100%;
-  }
-  .form-actions {
-    margin:0;
+    padding: 20px;
     background:#2a2a2a;
+  }
+  .form-group {
+    margin:0;
   }
 }
 .well-stacked {
@@ -1001,14 +1047,5 @@ textarea.plain {
   }
   .navbar-primary .nav > li > a:hover {
     background:#222;
-  }
-}
-
-// Override for Bootstrap 2.3.1/2.3.2
-// Fix disappearing menu in mobile Android Chrome
-// https://github.com/twbs/bootstrap/issues/11145
-@media (max-width: 480px) {
-  .nav-collapse {
-    -webkit-transform: none;
   }
 }
