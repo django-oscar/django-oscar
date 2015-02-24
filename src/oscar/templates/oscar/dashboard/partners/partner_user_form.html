@@ -28,5 +28,13 @@
 {% block headertext %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
-    {% include "dashboard/partials/form.html" %}
+    <form action="." method="post" class="well form-stacked wysiwyg" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% include 'dashboard/partials/form_fields.html' with form=form %}
+        <div class="form-actions">
+            <button class="btn btn-lg btn-primary" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
+            {% trans "or" %} <a href="{% url 'dashboard:partner-manage' pk=partner.pk %}">{% trans "cancel" %}</a>.
+        </div>
+    </form>
+
 {% endblock dashboard_content %}
