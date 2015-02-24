@@ -32,17 +32,17 @@
         </aside>
         <div class="span9">    
             <div id="order_graph">
-                <div class='bar-caption'><h1>{% trans "Latest Orders (last 24 hours)" %}</h1></div>
-                <div class='bar-y-axis'>
+                <div class="bar-caption"><h1>{% trans "Latest Orders (last 24 hours)" %}</h1></div>
+                <div class="bar-y-axis">
                     <ul>
                     {% for y_value in hourly_report_dict.y_range %}
                         <li><span>{{ y_value|currency }}</span></li>
                     {% endfor %}
                     </ul>
                 </div>
-                <dl class='bar-chart'> 
+                <dl class="bar-chart">
                     {% for item in hourly_report_dict.order_total_hourly %}
-                        <dd class='bar-layer'>
+                        <dd class="bar-layer">
                             <em>{{ item.end_time|time }}</em>
                             <span style="height: {{ item.percentage }}%;" >
                                 <p{% if item.percentage == 0 %} style="display: none;"{% endif %}>{{ item.total_incl_tax|currency }}</p>
