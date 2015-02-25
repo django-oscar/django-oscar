@@ -3,14 +3,20 @@ from decimal import Decimal as D
 
 from django.test import TestCase
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 import mock
 
-from oscar.apps.order.models import ShippingAddress, Order, Line, \
-        ShippingEvent, ShippingEventType, ShippingEventQuantity, OrderNote, \
-        OrderDiscount
-from oscar.apps.order.exceptions import (InvalidOrderStatus, InvalidLineStatus,
-                                         InvalidShippingEvent)
-from oscar.test.factories import create_order, create_offer, create_voucher, create_basket, CountryFactory
+from oscar.apps.order.exceptions import (
+    InvalidOrderStatus, InvalidLineStatus, InvalidShippingEvent)
+from oscar.apps.order.models import (
+    Order, Line, ShippingEvent, ShippingEventType, ShippingEventQuantity,
+    OrderNote, OrderDiscount)
+from oscar.test.factories import (
+    create_order, create_offer, create_voucher, create_basket)
+from oscar.test.newfactories import (
+    CountryFactory, OrderFactory, OrderLineFactory, ShippingAddressFactory,
+    ShippingEventFactory)
+
 from oscar.test.basket import add_product
 
 ORDER_PLACED = 'order_placed'
@@ -19,9 +25,9 @@ ORDER_PLACED = 'order_placed'
 class ShippingAddressTest(TestCase):
 
     def test_titleless_salutation_is_stripped(self):
-        country = CountryFactory()
-        a = ShippingAddress.objects.create(
-            last_name='Barrington', line1="75 Smith Road", postcode="N4 8TY", country=country)
+        a = ShippingAddressFactory(
+            first_name='', last_name='Barrington', line1="75 Smith Road",
+            postcode="N4 8TY")
         self.assertEqual("Barrington", a.salutation)
 
 
@@ -353,3 +359,34 @@ class OrderTests(TestCase):
 
         self.assertTupleEqual(self.get_date_tuple(order.date_placed),
                               (2012, 8, 11, 16, 14))
+
+    def test_shipping_status(self):
+        order = OrderFactory()
+
+        line_1 = OrderLineFactory(
+            order=order, partner_sku='SKU1234', quantity=2)
+        line_2 = OrderLineFactory(
+            order=order, partner_sku='SKU5678', quantity=1)
+        self.assertEqual(order.shipping_status, '')
+
+        event_1 = ShippingEventFactory(order=order, event_type__name='Shipped')
+        event_2 = ShippingEventFactory(order=order, event_type__name='Returned')
+
+        # Default status
+        self.assertEqual(order.shipping_status, _('In progress'))
+
+        # Set first line to shipped
+        event_1.line_quantities.create(line=line_1, quantity=2)
+        self.assertEqual(order.shipping_status, _('In progress'))
+
+        # Set first line to returned
+        event_2.line_quantities.create(line=line_1, quantity=2)
+        self.assertEqual(order.shipping_status, _('In progress'))
+
+        # Set second line to shipped
+        event_1.line_quantities.create(line=line_2, quantity=1)
+        self.assertEqual(order.shipping_status, _('Shipped'))
+
+        # Set second line to returned
+        event_2.line_quantities.create(line=line_2, quantity=1)
+        self.assertEqual(order.shipping_status, _('Returned'))
