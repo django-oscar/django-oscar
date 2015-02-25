@@ -1,16 +1,22 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 from decimal import Decimal as D
 
 from django.test import TestCase
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 import mock
 
-from oscar.apps.order.models import ShippingAddress, Order, Line, \
-        ShippingEvent, ShippingEventType, ShippingEventQuantity, OrderNote, \
-        OrderDiscount
-from oscar.apps.order.exceptions import (InvalidOrderStatus, InvalidLineStatus,
-                                         InvalidShippingEvent)
-from oscar.test.factories import create_order, create_offer, create_voucher, create_basket, CountryFactory
+from oscar.apps.order.exceptions import (
+    InvalidOrderStatus, InvalidLineStatus, InvalidShippingEvent)
+from oscar.apps.order.models import (
+    Order, Line, ShippingEvent, ShippingEventType, ShippingEventQuantity,
+    OrderNote, OrderDiscount)
+from oscar.test.factories import (
+    create_order, create_offer, create_voucher, create_basket)
+from oscar.test.newfactories import (
+    OrderFactory, OrderLineFactory, ShippingAddressFactory,
+    ShippingEventFactory)
+
 from oscar.test.basket import add_product
 
 ORDER_PLACED = 'order_placed'
@@ -19,9 +25,9 @@ ORDER_PLACED = 'order_placed'
 class ShippingAddressTest(TestCase):
 
     def test_titleless_salutation_is_stripped(self):
-        country = CountryFactory()
-        a = ShippingAddress.objects.create(
-            last_name='Barrington', line1="75 Smith Road", postcode="N4 8TY", country=country)
+        a = ShippingAddressFactory(
+            first_name='', last_name='Barrington', line1="75 Smith Road",
+            postcode="N4 8TY")
         self.assertEqual("Barrington", a.salutation)
 
 
@@ -325,3 +331,62 @@ class TestOrderDiscount(TestCase):
         self.assertTrue(discount.offer is None)
 
         self.assertEqual(discount.description(), voucher.code)
+
+    def test_shipping_status(self):
+        order = OrderFactory()
+
+        line_1 = OrderLineFactory(
+            order=order, partner_sku='SKU1234', quantity=2)
+        line_2 = OrderLineFactory(
+            order=order, partner_sku='SKU5678', quantity=1)
+        self.assertEqual(order.shipping_status, '')
+
+        event_1 = ShippingEventFactory(order=order, event_type__name='Shipped')
+        event_2 = ShippingEventFactory(order=order, event_type__name='Returned')
+
+        # Default status
+        self.assertEqual(order.shipping_status, _('In progress'))
+
+        # Set first line to shipped
+        event_1.line_quantities.create(line=line_1, quantity=2)
+        self.assertEqual(order.shipping_status, _('In progress'))
+
+        # Set first line to returned
+        event_2.line_quantities.create(line=line_1, quantity=2)
+        self.assertEqual(order.shipping_status, _('In progress'))
+
+        # Set second line to shipped
+        event_1.line_quantities.create(line=line_2, quantity=1)
+        self.assertEqual(order.shipping_status, _('Shipped'))
+
+        # Set second line to returned
+        event_2.line_quantities.create(line=line_2, quantity=1)
+        self.assertEqual(order.shipping_status, _('Returned'))
+
+
+class OrderTests(TestCase):
+    def get_date_tuple(self, date=None):
+        """
+        Returns a tuple like (year, month, day, hour, minute) for
+        datetime comparisons.
+        We probably don't want to assert datetime objects have the same
+        number of miliseconds etc. just in case the object in the test
+        differs by some insignificant amount.
+        """
+        if date is None:
+            date = timezone.now()
+        return date.timetuple()[:-4]
+
+    def test_sets_date_placed_to_now_by_default(self):
+        order = create_order(number='100003')
+        self.assertTupleEqual(self.get_date_tuple(order.date_placed),
+                              self.get_date_tuple())
+
+    def test_allows_date_placed_to_be_changed_and_set_explicitly(self):
+        order = create_order(number='100003')
+        tzinfo = timezone.get_current_timezone()
+        order.date_placed = datetime(2012, 8, 11, 16, 14, tzinfo=tzinfo)
+        order.save()
+
+        self.assertTupleEqual(self.get_date_tuple(order.date_placed),
+                              (2012, 8, 11, 16, 14))
