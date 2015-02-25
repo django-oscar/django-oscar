@@ -19,6 +19,7 @@ class PhoneNumberForm(forms.ModelForm):
 
     class Meta:
         model = MandatoryPhoneNumber
+        fields = ['phone_number']
 
 
 valid_number = '+4917696842671'

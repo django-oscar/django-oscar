@@ -120,7 +120,7 @@ class OrderNoteForm(forms.ModelForm):
 
     class Meta:
         model = OrderNote
-        exclude = ('order', 'user', 'note_type')
+        fields = ['message']
 
     def __init__(self, order, user, *args, **kwargs):
         super(OrderNoteForm, self).__init__(*args, **kwargs)
@@ -132,7 +132,12 @@ class ShippingAddressForm(PhoneNumberMixin, AbstractAddressForm):
 
     class Meta:
         model = ShippingAddress
-        exclude = ('search_text',)
+        fields = [
+            'title', 'first_name', 'last_name',
+            'line1', 'line2', 'line3', 'line4',
+            'state', 'postcode', 'country',
+            'phone_number', 'notes',
+        ]
 
 
 class OrderStatusForm(forms.Form):

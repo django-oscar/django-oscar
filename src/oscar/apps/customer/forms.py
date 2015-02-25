@@ -413,6 +413,4 @@ class ProductAlertForm(forms.ModelForm):
 
     class Meta:
         model = ProductAlert
-        exclude = ('user', 'key',
-                   'status', 'date_confirmed', 'date_cancelled', 'date_closed',
-                   'product')
+        fields = ['email']
