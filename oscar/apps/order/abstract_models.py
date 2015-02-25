@@ -1,4 +1,4 @@
-from itertools import chain
+from collections import OrderedDict
 from decimal import Decimal as D
 import hashlib
 
@@ -222,24 +222,28 @@ class AbstractOrder(models.Model):
 
     @property
     def shipping_status(self):
-        events = self.shipping_events.all()
+        """Return the last complete shipping event for this order."""
+
+        # As safeguard against identical timestamps, also sort by the primary
+        # key. It's not recommended to rely on this behaviour, but in practice
+        # reasonably safe if PKs are not manually set.
+        events = self.shipping_events.order_by('-date_created', '-pk').all()
         if not len(events):
             return ''
 
         # Collect all events by event-type
-        map = {}
+        event_map = OrderedDict()
         for event in events:
             event_name = event.event_type.name
-            if event_name not in map:
-                map[event_name] = []
-            map[event_name] = list(chain(map[event_name],
-                                         event.line_quantities.all()))
+            if event_name not in event_map:
+                event_map[event_name] = []
+            event_map[event_name].extend(list(event.line_quantities.all()))
 
         # Determine last complete event
         status = _("In progress")
-        for event_name, event_line_quantities in map.items():
+        for event_name, event_line_quantities in event_map.items():
             if self._is_event_complete(event_line_quantities):
-                status = event_name
+                return event_name
         return status
 
     @property
@@ -257,14 +261,14 @@ class AbstractOrder(models.Model):
 
     def _is_event_complete(self, event_quantities):
         # Form map of line to quantity
-        map = {}
+        event_map = {}
         for event_quantity in event_quantities:
             line_id = event_quantity.line_id
-            map.setdefault(line_id, 0)
-            map[line_id] += event_quantity.quantity
+            event_map.setdefault(line_id, 0)
+            event_map[line_id] += event_quantity.quantity
 
         for line in self.lines.all():
-            if map[line.id] != line.quantity:
+            if event_map.get(line.pk, 0) != line.quantity:
                 return False
         return True
 
