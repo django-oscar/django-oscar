@@ -2731,15 +2731,15 @@ h3.app-ico:before {
   display: none;
 }
 body {
-  font-family: "Open Sans", 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 12px;
+  font-family: sans-serif;
+  font-size: 14px;
 }
 label,
 input,
 button,
 select,
 textarea {
-  font-size: 12px;
+  font-size: 14px;
 }
 .btn {
   font-weight: normal;
@@ -2747,104 +2747,8 @@ textarea {
 .btn-group > .btn,
 .btn-group > .dropdown-menu,
 .btn {
-  font-size: 12px;
+  font-size: 14px;
   font-family: inherit;
-}
-.btn-warning,
-.btn-success,
-.btn-info {
-  background-color: #f5f5f5;
-  background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
-  background-image: -ms-linear-gradient(top, #ffffff, #e6e6e6);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
-  background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
-  background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
-  background-image: linear-gradient(top, #ffffff, #e6e6e6);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e6e6e6', GradientType=0);
-  border-color: #e6e6e6 #e6e6e6 #bfbfbf;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
-  text-shadow: none;
-  color: inherit;
-  *color: #333;
-}
-.btn-warning:hover,
-.btn-success:hover,
-.btn-info:hover,
-.btn-warning:active,
-.btn-success:active,
-.btn-info:active,
-.btn-warning.active,
-.btn-success.active,
-.btn-info.active,
-.btn-warning.disabled,
-.btn-success.disabled,
-.btn-info.disabled,
-.btn-warning[disabled],
-.btn-success[disabled],
-.btn-info[disabled] {
-  background-color: #e6e6e6;
-}
-.btn-warning:active,
-.btn-success:active,
-.btn-info:active,
-.btn-warning.active,
-.btn-success.active,
-.btn-info.active {
-  background-color: #cccccc \9;
-}
-.btn-warning:hover,
-.btn-success:hover,
-.btn-info:hover,
-.btn-warning:active,
-.btn-success:active,
-.btn-info:active {
-  color: inherit;
-  *color: #333;
-}
-.btn-warning:focus,
-.btn-success:focus,
-.btn-info:focus {
-  background-color: #e8e8e8;
-  background-image: -moz-linear-gradient(top, #d9d9d9, #ffffff);
-  background-image: -ms-linear-gradient(top, #d9d9d9, #ffffff);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#d9d9d9), to(#ffffff));
-  background-image: -webkit-linear-gradient(top, #d9d9d9, #ffffff);
-  background-image: -o-linear-gradient(top, #d9d9d9, #ffffff);
-  background-image: linear-gradient(top, #d9d9d9, #ffffff);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d9d9d9', endColorstr='#ffffff', GradientType=0);
-  border-color: #ffffff #ffffff #d9d9d9;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
-  background-position: 0 0;
-  color: #333;
-}
-.btn-warning:focus:hover,
-.btn-success:focus:hover,
-.btn-info:focus:hover,
-.btn-warning:focus:active,
-.btn-success:focus:active,
-.btn-info:focus:active,
-.btn-warning:focus.active,
-.btn-success:focus.active,
-.btn-info:focus.active,
-.btn-warning:focus.disabled,
-.btn-success:focus.disabled,
-.btn-info:focus.disabled,
-.btn-warning:focus[disabled],
-.btn-success:focus[disabled],
-.btn-info:focus[disabled] {
-  background-color: #ffffff;
-}
-.btn-warning:focus:active,
-.btn-success:focus:active,
-.btn-info:focus:active,
-.btn-warning:focus.active,
-.btn-success:focus.active,
-.btn-info:focus.active {
-  background-color: #e6e6e6 \9;
 }
 .btn-primary {
   background-color: #006fb5;
@@ -2878,29 +2782,9 @@ textarea {
 td .btn-toolbar {
   margin: 0;
 }
-.form-horizontal .control-label,
-.form-stacked .control-label {
-  text-align: left;
-}
-.form-horizontal .control-group,
 .form-stacked .control-group {
   margin-bottom: 9px;
 }
-.form-horizontal input[type=text],
-.form-stacked input[type=text],
-.form-horizontal input[type=number],
-.form-stacked input[type=number],
-.form-horizontal input[type=email],
-.form-stacked input[type=email],
-.form-horizontal input[type=url],
-.form-stacked input[type=url],
-.form-horizontal textarea,
-.form-stacked textarea,
-.form-horizontal select,
-.form-stacked select {
-  font-size: 12px;
-}
-.form-horizontal textarea,
 .form-stacked textarea {
   max-height: 200px;
 }
@@ -2919,6 +2803,11 @@ td .btn-toolbar {
 }
 .form-inline .control-group {
   margin-right: 10px;
+}
+/* align text with label baseline */
+.controls > .dummy-control {
+  display: inline-block;
+  padding-top: 5px;
 }
 .form-stacked .error-block {
   display: block;
@@ -2950,15 +2839,10 @@ form.flat {
 .well form .form-actions {
   bottom: -39px;
 }
-.create-page .form-horizontal input[type=text],
 .create-page .form-stacked input[type=text],
-.create-page .form-horizontal input[type=number],
 .create-page .form-stacked input[type=number],
-.create-page .form-horizontal input[type=email],
 .create-page .form-stacked input[type=email],
-.create-page .form-horizontal input[type=url],
 .create-page .form-stacked input[type=url],
-.create-page .form-horizontal textarea,
 .create-page .form-stacked textarea {
   width: 95%;
 }
@@ -3001,11 +2885,6 @@ form.flat {
 .form-inline input[type=text] {
   width: 140px;
 }
-.table-bordered,
-.table-bordered th,
-.table-bordered td {
-  border-color: #bbb;
-}
 .table {
   background-color: #ffffff;
 }
@@ -3039,7 +2918,7 @@ body {
   padding-left: 20px;
   padding-right: 20px;
   min-height: 50px;
-  font-size: 12px;
+  font-size: 14px;
   background-color: #2f2f2f;
   background-image: -moz-linear-gradient(top, #373737, #242424);
   background-image: -ms-linear-gradient(top, #373737, #242424);
@@ -3112,7 +2991,7 @@ body {
   -moz-border-radius: 0;
   border-radius: 0;
   color: #DCDCDC;
-  font-size: 12px;
+  font-size: 14px;
   padding: 15px;
 }
 .navbar-primary .nav > li > a .caret {
@@ -3153,7 +3032,7 @@ body {
 }
 .navbar-primary .nav > li i {
   color: #dcdcdc;
-  padding-right: 12px;
+  padding-right: 14px;
 }
 .navbar-primary .nav > li > a:hover .caret {
   border-top-color: #B2DEF2;
@@ -3248,7 +3127,7 @@ caption > i,
   margin-bottom: 15px;
   padding: 12px;
   color: #878787;
-  font-size: 12px;
+  font-size: 14px;
 }
 .content-block .order-graph-details label:before,
 .content-block .order-graph-details label:after {
@@ -3340,7 +3219,6 @@ caption > i,
   *zoom: 1;
   box-shadow: none;
   background-color: #efefef;
-  border-color: #bbb;
 }
 .well:before,
 .well:after {
@@ -3370,11 +3248,6 @@ caption > i,
 .promotions .well-info {
   background-color: #ffffff;
 }
-.alert {
-  background-color: #fff49f;
-  border-color: #ede181;
-  color: #333;
-}
 /* additional styles for alert content. Used by both public side and dashboard */
 .alert .alertinner {
   position: relative;
@@ -3393,6 +3266,10 @@ caption > i,
 }
 .alert .alertinner p:first-child {
   margin: 0;
+}
+.nav-tabs {
+  /* pull up tab-content well to tabs so there's no gap between them */
+  margin-bottom: -1px;
 }
 #order_graph {
   position: relative;
@@ -3602,43 +3479,8 @@ caption > i,
 .ico_expand + ul {
   height: 0px;
 }
-.category-selected {
-  margin: 0;
-}
-.category-selected li {
-  display: block;
-  width: 150px;
-  *zoom: 1;
-  margin-bottom: 9px;
-}
-.category-selected li:before,
-.category-selected li:after {
-  display: table;
-  content: "";
-}
-.category-selected li:after {
-  clear: both;
-}
-.category-selected span {
-  float: right;
-  display: block;
-  background: #999999;
-  color: white;
-  padding: 1px 0 3px;
-  -webkit-border-radius: 15px;
-  -moz-border-radius: 15px;
-  border-radius: 15px;
-  font-size: 12px;
-  line-height: 11px;
-  width: 15px;
-  font-weight: bold;
-  text-align: center;
-}
 #product_category select {
   width: 350px;
-}
-.catalogue .tab-content {
-  overflow: visible;
 }
 .upload-image {
   *zoom: 1;
@@ -3783,11 +3625,11 @@ div[data-spy="affix"].affix {
   top: 8px;
 }
 .fixed-actions {
-  margin-bottom: 180px;
+  margin-bottom: 100px;
 }
 .fixed-actions .fixed-actions-group {
   margin: 0;
-  z-index: 1010;
+  z-index: 2;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -3805,7 +3647,8 @@ div[data-spy="affix"].affix {
   border-top-width: 1px;
 }
 /* Changes for wysihtml5 */
-textarea {
+textarea.wysiwyg,
+form.wysiwyg textarea {
   width: 500px;
   height: 400px;
 }
@@ -3835,7 +3678,7 @@ textarea.plain {
   }
   table .btn {
     padding: 3px 9px;
-    font-size: 11px;
+    font-size: 12px;
     line-height: 16px;
   }
 }
