@@ -220,6 +220,29 @@ var oscar = (function(o, $) {
                 }
             }
         },
+        product_attributes: {
+            init: function(){
+                var type_selects = $("select[name$=type]");
+
+                type_selects.each(function(index){
+                    o.dashboard.product_attributes.toggleOptionGroup($(this));
+                });
+
+                type_selects.change(function(e){
+                    o.dashboard.product_attributes.toggleOptionGroup($(this));
+                });
+            },
+
+            toggleOptionGroup: function(type_select){
+                var option_group_select = $('#' + type_select.attr('id').replace('type', 'option_group'));
+
+                if(type_select.val() === 'option'){
+                    option_group_select.closest('.control-group').show();
+                }else{
+                    option_group_select.closest('.control-group').hide();
+                }
+            }
+        },
         ranges: {
             init: function() {
                 $('[data-behaviours~="remove"]').click(function() {

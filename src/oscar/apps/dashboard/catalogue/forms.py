@@ -5,10 +5,12 @@ from django.utils.translation import ugettext_lazy as _
 from treebeard.forms import movenodeform_factory
 
 from oscar.core.loading import get_class, get_model
+from oscar.core.utils import slugify
 from oscar.forms.widgets import ImageInput
 
 Product = get_model('catalogue', 'Product')
 ProductClass = get_model('catalogue', 'ProductClass')
+ProductAttribute = get_model('catalogue', 'ProductAttribute')
 Category = get_model('catalogue', 'Category')
 StockRecord = get_model('partner', 'StockRecord')
 ProductCategory = get_model('catalogue', 'ProductCategory')
@@ -425,3 +427,33 @@ class ProductClassForm(forms.ModelForm):
     class Meta:
         model = ProductClass
         fields = ['name', 'requires_shipping', 'track_stock', 'options']
+
+
+class ProductAttributesForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ProductAttributesForm, self).__init__(*args, **kwargs)
+
+        # because we'll allow submission of the form with blank
+        # codes so that we can generate them.
+        self.fields["code"].required = False
+
+        self.fields["option_group"].help_text = _("Select an option group")
+
+    def clean_code(self):
+        code = self.cleaned_data.get("code")
+        title = self.cleaned_data.get("name")
+
+        if not code and title:
+            code = slugify(title)
+
+        return code
+
+    class Meta:
+        model = ProductAttribute
+        fields = ["name", "code", "type", "option_group", "required"]
+
+ProductAttributesFormSet = inlineformset_factory(ProductClass,
+                                                 ProductAttribute,
+                                                 form=ProductAttributesForm,
+                                                 extra=3)
