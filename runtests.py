@@ -58,12 +58,7 @@ if __name__ == '__main__':
     if not args:
         # If run with no args, try and run the testsuite as fast as possible.
         # That means across all cores and with no high-falutin' plugins.
-        import multiprocessing
-        try:
-            num_cores = multiprocessing.cpu_count()
-        except NotImplementedError:
-            num_cores = 4  # Guess
-        args = ['--nocapture', '--stop', '--processes=%s' % num_cores]
+        args = ['--nocapture', '--stop', '--processes=-1']
     else:
         # Some args/options specified.  Check to see if any nose options have
         # been specified.  If they have, then don't set any
