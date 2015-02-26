@@ -113,7 +113,11 @@ class StockRecordForm(forms.ModelForm):
 
     class Meta:
         model = StockRecord
-        exclude = ('product', 'num_allocated')
+        fields = [
+            'partner', 'partner_sku',
+            'price_currency', 'price_excl_tax', 'price_retail', 'cost_price',
+            'num_in_stock', 'low_stock_threshold',
+        ]
 
 
 BaseStockRecordFormSet = inlineformset_factory(
@@ -406,7 +410,7 @@ class ProductImageForm(forms.ModelForm):
 
     class Meta:
         model = ProductImage
-        exclude = ('display_order',)
+        fields = ['product', 'original', 'caption']
         # use ImageInput widget to create HTML displaying the
         # actual uploaded image and providing the upload dialog
         # when clicking on the actual image.

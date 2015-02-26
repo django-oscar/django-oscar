@@ -25,7 +25,7 @@ class PromotionTypeSelectForm(forms.Form):
 class RawHTMLForm(forms.ModelForm):
     class Meta:
         model = RawHTML
-        exclude = ('display_type',)
+        fields = ['name', 'body']
 
     def __init__(self, *args, **kwargs):
         super(RawHTMLForm, self).__init__(*args, **kwargs)
@@ -42,7 +42,7 @@ class SingleProductForm(forms.ModelForm):
 class HandPickedProductListForm(forms.ModelForm):
     class Meta:
         model = HandPickedProductList
-        exclude = ('products',)
+        fields = ['name', 'description', 'link_url', 'link_text']
 
 
 class OrderedProductForm(forms.ModelForm):
@@ -67,7 +67,7 @@ class PagePromotionForm(forms.ModelForm):
 
     class Meta:
         model = PagePromotion
-        exclude = ('display_order', 'clicks', 'content_type', 'object_id')
+        fields = ['position']
 
     def clean_page_url(self):
         page_url = self.cleaned_data.get('page_url')

@@ -41,8 +41,7 @@ class BasketLineForm(forms.ModelForm):
 
     class Meta:
         model = Line
-        exclude = ('basket', 'product', 'stockrecord', 'line_reference',
-                   'price_excl_tax', 'price_incl_tax', 'price_currency')
+        fields = ['quantity']
 
 
 class BaseBasketLineFormSet(BaseModelFormSet):
