@@ -181,7 +181,7 @@ class Applicator(object):
         for line in set_of_lines:
             basket_lines_by_ref[line.reference].discount(
                 line.get_discount_value(), line.quantity_with_benefits(),
-                incl_tax=False)
+                incl_tax=True)
         # Store this list of discounts with the basket so it can be
         # rendered in templates
         basket.offer_applications = applications
