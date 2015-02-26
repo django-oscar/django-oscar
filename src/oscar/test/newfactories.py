@@ -56,7 +56,6 @@ class CountryFactory(factory.DjangoModelFactory):
         django_get_or_create = ('iso_3166_1_a2',)
 
 
-
 class UserAddressFactory(factory.DjangoModelFactory):
     title = "Dr"
     first_name = "Barry"
@@ -294,7 +293,7 @@ class OrderLineFactory(factory.DjangoModelFactory):
 
 class ShippingEventTypeFactory(factory.DjangoModelFactory):
     name = 'Test event'
-    code =  factory.LazyAttribute(lambda o: slugify(o.name).replace('-', '_'))
+    code = factory.LazyAttribute(lambda o: slugify(o.name).replace('-', '_'))
 
     class Meta:
         model = get_model('order', 'ShippingEventType')
