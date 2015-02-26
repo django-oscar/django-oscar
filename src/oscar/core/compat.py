@@ -70,8 +70,6 @@ def existing_user_fields(fields):
     """
     user_fields = get_user_model()._meta.fields
     user_field_names = [field.name for field in user_fields]
-
-    # return only fileds that exist in user model
     return [field for field in fields if field in user_field_names]
 
 
