@@ -17,53 +17,12 @@ ProductImage = get_model('catalogue', 'ProductImage')
 ProductRecommendation = get_model('catalogue', 'ProductRecommendation')
 ProductSelect = get_class('dashboard.catalogue.widgets', 'ProductSelect')
 
-
-class BaseCategoryForm(MoveNodeForm):
-
-    def clean(self):
-        cleaned_data = super(BaseCategoryForm, self).clean()
-
-        name = cleaned_data.get('name')
-        ref_node_pk = cleaned_data.get('_ref_node_id')
-        pos = cleaned_data.get('_position')
-
-        if name and self.is_slug_conflicting(name, ref_node_pk, pos):
-            raise forms.ValidationError(
-                _('Category with the given path already exists.'))
-        return cleaned_data
-
-    def is_slug_conflicting(self, name, ref_node_pk, position):
-        # determine parent
-        if ref_node_pk:
-            ref_category = Category.objects.get(pk=ref_node_pk)
-            if position == 'first-child':
-                parent = ref_category
-            else:
-                parent = ref_category.get_parent()
-        else:
-            parent = None
-
-        # build full slug
-        slug_prefix = ''
-        if parent:
-            slug_prefix = (parent.slug + Category._slug_separator)
-        slug = '%s%s' % (slug_prefix, slugify(name))
-
-        # check if slug is conflicting
-        try:
-            category = Category.objects.get(slug=slug)
-        except Category.DoesNotExist:
-            pass
-        else:
-            if category.pk != self.instance.pk:
-                return True
-        return False
-
-CategoryForm = movenodeform_factory(Category, form=BaseCategoryForm)
+CategoryForm = movenodeform_factory(
+    Category,
+    fields=['name', 'description', 'image'])
 
 
 class ProductClassSelectForm(forms.Form):
-
     """
     Form which is used before creating a product to select it's product class
     """
