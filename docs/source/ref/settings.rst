@@ -70,28 +70,25 @@ needs to be a dict with keys ``fields`` and ``queries`` for field- and
 query-type facets.  The default is::
 
     OSCAR_SEARCH_FACETS = {
-        'fields': {
-            # The key for these dicts will be used when passing facet data
-            # to the template. Same for the 'queries' dict below.
-            'category': {
-                'name': _('Category'),
-                'field': 'category'
-            }
-        },
-        'queries': {
-            'price_range': {
-                'name': _('Price range'),
-                'field': 'price',
-                'queries': [
-                    # This is a list of (name, query) tuples where the name will
-                    # be displayed on the front-end.
-                    (_('0 to 40'), '[0 TO 20]'),
-                    (_('20 to 40'), '[20 TO 40]'),
-                    (_('40 to 60'), '[40 TO 60]'),
-                    (_('60+'), '[60 TO *]'),
-                ]
-            }
-        }
+        'fields': OrderedDict([
+            ('product_class', {'name': _('Type'), 'field': 'product_class'}),
+            ('rating', {'name': _('Rating'), 'field': 'rating'}),
+        ]),
+        'queries': OrderedDict([
+            ('price_range',
+             {
+                 'name': _('Price range'),
+                 'field': 'price',
+                 'queries': [
+                     # This is a list of (name, query) tuples where the name will
+                     # be displayed on the front-end.
+                     (_('0 to 20'), u'[0 TO 20]'),
+                     (_('20 to 40'), u'[20 TO 40]'),
+                     (_('40 to 60'), u'[40 TO 60]'),
+                     (_('60+'), u'[60 TO *]'),
+                 ]
+             }),
+        ]),
     }
 
 
