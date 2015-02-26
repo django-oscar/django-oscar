@@ -34,6 +34,7 @@ What's new in Oscar 1.1?
   derives from :class:`~oscar.apps.dashboard.tables.DashboardTable`. The caption can be localized
   in singular and plural. (`#1482`_)
 * All modelforms now specify the `fields` meta attribute instead of the `excludes` list.
+* Product class options and attributes can now be edited in the dashboard.
 
 .. _`#1576`: https://github.com/django-oscar/django-oscar/pull/1576
 .. _`#1482`: https://github.com/django-oscar/django-oscar/pull/1482
