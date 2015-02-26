@@ -76,7 +76,7 @@ def apply_messages(request, offers_before):
     """
     # Re-apply offers to see if any new ones are now available
     request.basket.reset_offer_applications()
-    Applicator().apply(request, request.basket)
+    Applicator().apply(request.basket, request.user, request)
     offers_after = request.basket.applied_offers()
 
     for level, msg in get_messages(
@@ -124,7 +124,8 @@ class BasketView(ModelFormSetView):
         return warnings
 
     def get_upsell_messages(self, basket):
-        offers = Applicator().get_offers(self.request, basket)
+        offers = Applicator().get_offers(basket, self.request.user,
+                                         self.request)
         applied_offers = list(basket.offer_applications.offers.values())
         msgs = []
         for offer in offers:
@@ -232,7 +233,8 @@ class BasketView(ModelFormSetView):
             self.request.basket = get_model('basket', 'Basket').objects.get(
                 id=self.request.basket.id)
             self.request.basket.strategy = self.request.strategy
-            Applicator().apply(self.request, self.request.basket)
+            Applicator().apply(self.request.basket, self.request.user,
+                               self.request)
             offers_after = self.request.basket.applied_offers()
 
             for level, msg in get_messages(
@@ -379,7 +381,8 @@ class VoucherAddView(FormView):
             sender=self, basket=self.request.basket, voucher=voucher)
 
         # Recalculate discounts to see if the voucher gives any
-        Applicator().apply(self.request, self.request.basket)
+        Applicator().apply(self.request.basket, self.request.user,
+                           self.request)
         discounts_after = self.request.basket.offer_applications
 
         # Look for discounts from this new voucher

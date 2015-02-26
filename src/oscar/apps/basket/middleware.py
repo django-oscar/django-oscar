@@ -192,7 +192,7 @@ class BasketMiddleware(object):
 
     def apply_offers_to_basket(self, request, basket):
         if not basket.is_empty:
-            Applicator().apply(request, basket)
+            Applicator().apply(basket, request.user, request)
 
     def get_basket_hash(self, basket_id):
         return Signer().sign(basket_id)
