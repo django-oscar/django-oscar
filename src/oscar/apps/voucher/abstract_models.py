@@ -104,6 +104,7 @@ class AbstractVoucher(models.Model):
                 if not is_available:
                     message = _("You have already used this voucher in "
                                 "a previous order")
+                
         return is_available, message
 
     def record_usage(self, order, user):

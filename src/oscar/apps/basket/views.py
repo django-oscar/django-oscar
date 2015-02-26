@@ -369,7 +369,7 @@ class VoucherAddView(FormView):
                     'code': voucher.code})
             return
 
-        is_available, message = voucher.is_available_to_user(self.request.user)
+        is_available, message = voucher.is_available_to_user(user=self.request.user)
         if not is_available:
             messages.error(self.request, message)
             return
