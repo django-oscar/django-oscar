@@ -87,7 +87,7 @@ testmigrations:
 # This target is run on Travis.ci. We lint, test and build the sandbox/demo
 # sites as well as testing migrations apply correctly. We don't call 'install'
 # first as that is run as a separate part of the Travis build process.
-travis: lint coverage build_sandbox build_demo testmigrations
+travis: coverage lint build_sandbox build_demo testmigrations
 
 messages:
 	# Create the .po files used for i18n
