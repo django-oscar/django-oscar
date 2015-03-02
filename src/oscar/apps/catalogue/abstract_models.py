@@ -552,54 +552,6 @@ class AbstractProduct(models.Model):
         raw_prices = sorted([getattr(price, prop) for price in prices])
         return raw_prices[0] if raw_prices else None
 
-    # The properties below are based on deprecated naming conventions
-
-    @property
-    @deprecated
-    def variants(self):
-        """
-        Provide backwards-compatible way to access a parent products children
-        """
-        return self.children
-
-    @property
-    @deprecated
-    def is_top_level(self):
-        """
-        Test if this product is a stand-alone or parent product
-        """
-        return self.is_standalone or self.is_parent
-
-    @property
-    @deprecated
-    def is_group(self):
-        """
-        Test if this is a parent product
-        """
-        return self.is_parent
-
-    @property
-    @deprecated
-    def is_variant(self):
-        """Return True if a product is not a top level product"""
-        return self.is_child
-
-    @property
-    @deprecated
-    def min_variant_price_incl_tax(self):
-        """
-        Return minimum variant price including tax
-        """
-        return self._min_child_price('price_incl_tax')
-
-    @property
-    @deprecated
-    def min_variant_price_excl_tax(self):
-        """
-        Return minimum variant price excluding tax
-        """
-        return self._min_child_price('price_excl_tax')
-
     # Wrappers for child products
 
     def get_title(self):
