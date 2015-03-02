@@ -1,8 +1,6 @@
 import os
-import six
 
 # Use 'dev', 'beta', or 'final' as the 4th element to indicate release type.
-
 VERSION = (1, 1, 0, 'dev')
 
 
@@ -75,6 +73,9 @@ def get_core_apps(overrides=None):
     if not overrides:
         return OSCAR_CORE_APPS
 
+    # Conservative import to ensure that this file can be loaded
+    # without the presence Django.
+    from django.utils import six
     if isinstance(overrides, six.string_types):
         raise ValueError(
             "get_core_apps expects a list or tuple of apps "
