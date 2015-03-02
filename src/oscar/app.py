@@ -59,6 +59,4 @@ class Shop(Application):
         ]
         return urls
 
-
-# 'shop' kept for legacy projects - 'application' is a better name
-shop = application = Shop()
+application = Shop()
