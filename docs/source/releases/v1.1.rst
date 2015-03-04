@@ -135,6 +135,11 @@ Catalogue
     It shouldn't matter whether you apply this migration before or after
     the model changes.
 
+Dependency changes
+------------------
+
+* Oscar now requires `django-treebeard` 3.0.
+
 .. _deprecated_features_in_1.1:
 
 Deprecated features
