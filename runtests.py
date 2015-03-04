@@ -30,11 +30,12 @@ Drop into pdb when a test fails
 $ ./runtests.py ... --pdb-failures
 """
 
+import os
 import sys
 import logging
 import warnings
 
-from tests.config import configure
+import django
 from django.utils.six.moves import map
 
 # No logging
@@ -75,7 +76,6 @@ if __name__ == '__main__':
                     verbosity = int(arg[-1])
             args = [arg for arg in args if not arg.startswith('-')]
 
-    configure()
     with warnings.catch_warnings():
         # The warnings module in default configuration will never cause tests
         # to fail, as it never raises an exception.  We alter that behaviour by
@@ -87,4 +87,7 @@ if __name__ == '__main__':
         libs = r'(sorl\.thumbnail.*|bs4.*|webtest.*)'
         warnings.filterwarnings(
             'ignore', r'.*', DeprecationWarning, libs)
+
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tests.settings')
+        django.setup()
         run_tests(verbosity, *args)

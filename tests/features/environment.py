@@ -1,6 +1,9 @@
 def before_all(context):
-    from tests.config import configure
-    configure()
+    import os
+    import django
+
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tests.settings')
+    django.setup()
 
     from django.test import utils
     utils.setup_test_environment()

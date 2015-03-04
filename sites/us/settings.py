@@ -373,10 +373,6 @@ if not os.path.exists(LOG_ROOT):
 THUMBNAIL_DEBUG = True
 THUMBNAIL_KEY_PREFIX = 'oscar-us-sandbox'
 
-# Django 1.6 has switched to JSON serializing for security reasons, but it does
-# not serialize Models. We should resolve this by extending the
-# django/core/serializers/json.Serializer to have the `dumps` function. Also in
-# tests/config.py
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
