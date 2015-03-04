@@ -46,11 +46,15 @@ User = get_user_model()
 class AccountSummaryView(generic.RedirectView):
     """
     View that exists for legacy reasons and customisability. It commonly gets
-    called when the user clicks on "Account" in the navbar, and can be
-    overridden to determine to what sub-page the user is directed without
+    called when the user clicks on "Account" in the navbar.
+
+    Oscar defaults to just redirecting to the profile summary page (and
+    that redirect can be configured via OSCAR_ACCOUNT_REDIRECT_URL), but
+    it's also likely you want to display an 'account overview' page or
+    such like. The presence of this view allows just that, without
     having to change a lot of templates.
     """
-    url = reverse_lazy(settings.OSCAR_ACCOUNTS_REDIRECT_URL)
+    pattern_name = settings.OSCAR_ACCOUNTS_REDIRECT_URL
 
 
 class AccountRegistrationView(RegisterUserMixin, generic.FormView):
