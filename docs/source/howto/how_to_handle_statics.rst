@@ -27,43 +27,22 @@ Frontend vs. Dashboard
 
 The frontend and dashboard are intentionally kept very separate. They
 incidentally both use Bootstrap, but may be updated individually.
+
 The frontend is based on Bootstrap's LESS files and ties it together with
 Oscar-specific styling in ``styles.less``.
 
-On the other hand, ``dashboard.less`` just contains a few customisations that
-are included alongside a copy of stock Bootstrap CSS - and at the time of
-writing, using a different Bootstrap version.
+The dashboard's styles are in ``dashboard.less``. It contains just a few
+customizations to stock Bootstrap CSS.
 
 LESS/CSS
 --------
 
-By default, CSS files compiled from their LESS sources are used rather than the
-LESS ones.  To use Less directly, set ``USE_LESS = True`` in your settings file.
-You will also need to ensure that the ``lessc`` executable is installed and is
-configured using a setting like::
+Compiling the LESS files to CSS happens offline using lessc. The Makefile
+contains a target that compiles all LESS files::
 
-    COMPRESS_PRECOMPILERS = (
-        ('text/less', 'lessc {infile} {outfile}'),
-    )
+    $ make css
 
 A few other CSS files are used to provide styles for javascript libraries.
-
-Using offline compression
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Django compressor also provides a way of running offline compression which can
-be used during deployment to automatically generate CSS files from your LESS
-files. To make sure that compressor is obeying the ``USE_LESS`` setting and
-is not trying to compress CSS files that are not available, the setting has to
-be passed into the ``COMPRESS_OFFLINE_CONTEXT``. You should add something like
-this to your settings file::
-
-    COMPRESS_OFFLINE_CONTEXT = {
-        # this is the only default value from compressor itself
-        'STATIC_URL': STATIC_URL,
-        'use_less': USE_LESS,
-    }
-
 
 Javascript
 ----------
@@ -124,6 +103,6 @@ and replace the 'less' block::
 
     # project/base.html
 
-    {% block less %}
-        <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}myproject/less/styles.less" />
+    {% block mainstyles %}
+        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}myproject/css/styles.css" />
     {% endblock %}
