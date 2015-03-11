@@ -31,7 +31,7 @@ class Command(BaseCommand):
 
         if Country.objects.exists():
             raise CommandError(
-                "You already have countries in your database. This command"
+                "You already have countries in your database. This command "
                 "currently does not support updating existing countries.")
 
         countries = [
