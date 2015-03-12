@@ -1,5 +1,3 @@
-import django
-
 """
 Vanilla product models
 """
@@ -84,7 +82,3 @@ if not is_model_registered('catalogue', 'ProductImage'):
         pass
 
     __all__.append('ProductImage')
-
-
-if django.VERSION < (1, 7):
-    from . import receivers  # noqa

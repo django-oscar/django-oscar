@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# Code will only work with Django >= 1.5. See tests/config.py
 import re
 
 from django.utils.translation import ugettext_lazy as _

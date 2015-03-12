@@ -5,24 +5,20 @@ from django.contrib import admin
 from django.conf.urls.static import static
 
 from oscar.app import application
-from oscar.views import handler500, handler404, handler403  # noqa
 
 
 admin.autodiscover()
 
 urlpatterns = [
-    # Include admin as convenience. It's unsupported and you should
-    # use the dashboard
+    # Include admin as convenience. It's unsupported and only included
+    # for developers.
     url(r'^admin/', include(admin.site.urls)),
-    # i18n URLS need to live outside of i18n_patterns scope of the shop
+    # i18n URLS need to live outside of i18n_patterns scope of Oscar.
     url(r'^i18n/', include('django.conf.urls.i18n')),
 ]
 
 # Prefix Oscar URLs with language codes
-urlpatterns += i18n_patterns('',
-    # Oscar's normal URLs
-    url(r'', include(application.urls)),
-)
+urlpatterns += i18n_patterns('', url(r'', include(application.urls)))
 
 if settings.DEBUG:
     import debug_toolbar

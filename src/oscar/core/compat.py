@@ -12,8 +12,6 @@ from oscar.core.loading import get_model
 
 # A setting that can be used in foreign key declarations
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
-# Two additional settings that are useful in South migrations when
-# specifying the user model in the FakeORM
 try:
     AUTH_USER_APP_LABEL, AUTH_USER_MODEL_NAME = AUTH_USER_MODEL.rsplit('.', 1)
 except ValueError:
@@ -74,14 +72,6 @@ def existing_user_fields(fields):
 
 
 # Python3 compatibility layer
-
-
-# Make backwards-compatible atomic decorator available
-try:
-    from django.db.transaction import atomic as atomic_compat
-except ImportError:
-    from django.db.transaction import commit_on_success as atomic_compat
-atomic_compat = atomic_compat
 
 """
 Unicode compatible wrapper for CSV reader and writer that abstracts away

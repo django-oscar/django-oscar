@@ -70,7 +70,4 @@ class TestForkAppFunction(TestCase):
             native_migration_path = os.path.join(
                 self.tmp_folder, app, 'migrations')
             self.assertEqual(has_models, os.path.exists(native_migration_path))
-            south_migration_path = os.path.join(
-                self.tmp_folder, app, 'south_migrations')
-            self.assertEqual(has_models, os.path.exists(south_migration_path))
 

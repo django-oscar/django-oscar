@@ -8,10 +8,10 @@ from PIL import Image
 
 from django.core.files import File
 from django.core.exceptions import FieldError
+from django.db.transaction import atomic
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_model
-from oscar.core.compat import atomic_compat
 from oscar.apps.catalogue.exceptions import (
     ImageImportError, IdenticalImageError, InvalidImageArchive)
 
@@ -30,7 +30,7 @@ class Importer(object):
         self.logger = logger
         self._field = field
 
-    @atomic_compat  # noqa (too complex (10))
+    @atomic  # noqa (too complex (10))
     def handle(self, dirname):
         stats = {
             'num_processed': 0,

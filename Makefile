@@ -11,8 +11,6 @@ build_sandbox:
 	-rm -rf sites/sandbox/public/static
 	-rm -f sites/sandbox/db.sqlite
 	# Create database
-	# 'syncdb' is identical to migrate in Django 1.7+; but calling it twice should have no effect
-	sites/sandbox/manage.py syncdb --noinput
 	sites/sandbox/manage.py migrate
 	# Import some fixtures. Order is important as JSON fixtures include primary keys
 	sites/sandbox/manage.py loaddata sites/sandbox/fixtures/child_products.json
@@ -37,7 +35,6 @@ build_demo:
 	# Create database
 	# Breaks on Travis because of https://github.com/django-extensions/django-extensions/issues/489
 	if [ -z "$(TRAVIS)" ]; then sites/demo/manage.py reset_db --router=default --noinput; fi
-	sites/demo/manage.py syncdb --noinput
 	sites/demo/manage.py migrate
 	# Import some core fixtures
 	sites/demo/manage.py oscar_populate_countries
@@ -60,7 +57,6 @@ us_site: install
 	pip install -r requirements_us.txt
 	# Create database
 	sites/us/manage.py reset_db --router=default --noinput
-	sites/us/manage.py syncdb --noinput
 	sites/us/manage.py migrate
 	# Import some fixtures
 	sites/us/manage.py oscar_populate_countries

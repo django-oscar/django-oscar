@@ -15,7 +15,6 @@ pip install -r requirements.txt
 
 # Update sandbox database
 cd sites/sandbox
-./manage.py syncdb --noinput
 ./manage.py migrate
 
 # Rebuild statics

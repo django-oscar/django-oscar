@@ -238,37 +238,15 @@ Check your database settings. A quick way to get started is to use SQLite:
 Note that we recommend using ``ATOMIC_REQUESTS`` to tie transactions to
 requests.
 
-Migrations
-----------
-
-Oscar ships with two sets of migrations. If you're running Django 1.7, you
-don't need to do anything; Django's migration framework will detect them
-automatically and will do the right thing.
-If you're running Django 1.6, you need to install `South`_:
-
-.. code-block:: bash
-
-    $ pip install South
-
-And you need to add it to your installed apps:
-
-.. code-block:: django
-
-    INSTALLED_APPS = [
-        ...
-        'south',
-    ] + get_core_apps()
-
-.. _South: http://south.readthedocs.org/en/latest/
-
-Create Database
+Create database
 ---------------
 
-Then create the database and the shop should be browsable:
+Oscar ships with migrations. Django's migration framework will detect them
+automatically and will do the right thing.
+Create the database and the shop should be browsable:
 
 .. code-block:: bash
 
-    $ python manage.py syncdb --noinput  # Only needed for Django 1.6
     $ python manage.py migrate
     $ python manage.py runserver
 

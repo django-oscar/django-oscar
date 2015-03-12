@@ -96,12 +96,12 @@ def fork_app(label, folder_path, logger=None):
             join(local_app_path, 'models.py'),
             "from oscar.apps.%s.models import *  # noqa\n" % label)
 
-        for migrations_path in ['migrations', 'south_migrations']:
-            source = join(oscar_app_path, migrations_path)
-            if exists(source):
-                logger.info("Creating %s folder", migrations_path)
-                destination = join(local_app_path, migrations_path)
-                shutil.copytree(source, destination)
+        migrations_path = 'migrations'
+        source = join(oscar_app_path, migrations_path)
+        if exists(source):
+            logger.info("Creating %s folder", migrations_path)
+            destination = join(local_app_path, migrations_path)
+            shutil.copytree(source, destination)
 
     # Final step needs to be done by hand
     msg = (

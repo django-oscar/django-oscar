@@ -21,6 +21,10 @@ Table of contents:
 Compatibility
 -------------
 
+Oscar 1.1 is compatible with Django 1.7 and Django 1.8, and Python 2.7,
+3.3 and 3.4.  Support for Django 1.6, and hence South for migrations, has been
+removed.
+
 
 .. _new_in_1.1:
 
@@ -129,6 +133,10 @@ If you have customised any app, please consult the
    This release contains a data migration for category slugs.  If you have
    forked it, it is critical you run a copy of that migration when upgrading.
 
+.. warning::
+   This release doesn't include any South migrations, as support for Django
+   1.6 has been dropped.
+
 Catalogue
   * This app contains model changes.
   * This app contains a data migration: ``0003_data_migration_slugs``.
@@ -156,6 +164,27 @@ Removal of deprecated features
 
 These methods have been removed:
 
+* ``oscar.core.compat.atomic_compat``: Use ``django.db.transaction.atomic``
+  instead.
+* ``oscar.core.loading.import_string``: Use
+  ``django.utils.module_loading.import_string`` instead.
+* ``Product.variants``: Use ``Product.children``
+* ``Product.is_top_level``: Use ``Product.is_standalone or self.is_parent``
+* ``Product.is_group``: Use ``Product.is_parent``
+* ``Product.is_variant``: Use ``Product.is_child``
+* ``Product.min_variant_price_incl_tax``: Refactor or use the deprecated
+  ``Product.min_child_price_incl_tax``.
+* ``Product.min_variant_price_excl_tax``: Refactor or use the deprecated
+  ``Product.min_child_price_excl_tax``.
+* ``Strategy.fetch_for_group``: Use ``Strategy.fetch_for_parent``.
+* ``Strategy.select_variant_stockrecords``: Use
+  ``Strategy.select_children_stockrecords``.
+* ``Strategy.group_pricing_policy``: Use ``Strategy.parent_pricing_policy``.
+* ``Strategy.group_availability_policy``: Use
+  ``Strategy.parent_availability_policy``.
 
 These classes have been removed:
 
+These instances have been removed:
+
+* ``oscar.app.shop``: Use ``oscar.app.application`` instead.

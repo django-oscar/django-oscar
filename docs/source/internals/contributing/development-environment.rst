@@ -84,4 +84,4 @@ up an environment with both installed and do the following:
     ./test_migrations.sh
 
     This will recreate the Oscar database in both MySQL and Postgres and rebuild
-    it using ``syncdb`` and ``migrate``.
+    it using ``migrate``.

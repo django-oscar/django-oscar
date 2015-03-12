@@ -9,23 +9,6 @@ from . import facets
 
 FacetMunger = get_class('search.facets', 'FacetMunger')
 
-# Workaround for pysolr 3.1 not supporting and failing hard on
-# Solr 4.0 error messages
-# https://github.com/toastdriven/pysolr/pull/127
-# https://github.com/toastdriven/pysolr/pull/113
-# TODO: Remove in Oscar 0.9
-try:
-    import pysolr
-except ImportError:
-    pass
-else:
-    if pysolr.__version__[:2] < (3, 2):
-        import logging
-        logger = logging.getLogger()
-        logger.warning(
-            "You're running an old version of pysolr that is causing issues "
-            "with Oscar. Please upgrade to 3.2 or higher.")
-
 
 class SearchHandler(object):
     """
