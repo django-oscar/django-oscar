@@ -1,34 +1,14 @@
 from django_dynamic_fixture import G
 
-from mock import Mock
-import contextlib
 from nose.plugins.attrib import attr
 
 from oscar.test.testcases import WebTestCase
 from oscar.test.factories import create_product
 from oscar.core.compat import get_user_model
 from oscar.apps.catalogue.reviews.signals import review_added
-
+from oscar.test.contextmanagers import mock_signal_receiver
 
 User = get_user_model()
-
-@contextlib.contextmanager
-def mock_signal_receiver(signal, wraps=None, **kwargs):
-    """
-    Temporarily attaches a receiver to the provided ``signal`` within the scope
-    of the context manager.
-
-    >>> with mock_signal_receiver(post_save, sender=Model) as receiver:
-    >>> Model.objects.create()
-    >>> assert receiver.call_count = 1
-    """
-    if wraps is None:
-        wraps = lambda *args, **kwargs: None
-
-    receiver = Mock(wraps=wraps)
-    signal.connect(receiver, **kwargs)
-    yield receiver
-    signal.disconnect(receiver)
 
 
 @attr('reviews')
