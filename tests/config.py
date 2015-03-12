@@ -5,6 +5,15 @@ from django.conf import settings
 import oscar
 
 
+class DisableMigrations(object):
+
+    def __contains__(self, item):
+        return True
+
+    def __getitem__(self, item):
+        return "notmigrations"
+
+
 def configure():
     if not settings.configured:
         from oscar.defaults import OSCAR_SETTINGS
@@ -107,6 +116,8 @@ def configure():
             # warning regarding a changed default test runner. The Oscar test
             # suite is run with nose, so it does not matter.
             'SILENCED_SYSTEM_CHECKS': ['1_6.W001'],
+
+            'MIGRATION_MODULES': DisableMigrations(),
         })
 
         settings.configure(**test_settings)
