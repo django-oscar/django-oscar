@@ -9,16 +9,6 @@ from oscar.apps.catalogue.categories import create_from_breadcrumbs
 
 User = get_user_model()
 
-def create_test_category_tree():
-    trail = 'A > B > C'
-    create_from_breadcrumbs(trail)
-    trail = 'A > B > D'
-    create_from_breadcrumbs(trail)
-    trail = 'A > E > F'
-    create_from_breadcrumbs(trail)
-    trail = 'A > E > G'
-    create_from_breadcrumbs(trail)
-
 
 class TestCategoryDashboard(WebTestCase):
 
