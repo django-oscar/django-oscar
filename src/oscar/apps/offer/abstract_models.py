@@ -824,9 +824,6 @@ class AbstractRange(models.Model):
         Default display_order for a new product in the range is 0; this puts
         the product at the top of the list.
         """
-        if product.is_child:
-            raise ValueError(
-                "Ranges can only contain parent and stand-alone products.")
 
         initial_order = display_order or 0
         RangeProduct = get_model('offer', 'RangeProduct')
@@ -851,9 +848,6 @@ class AbstractRange(models.Model):
         """
         Check whether the passed product is part of this range.
         """
-        # Child products are never part of the range, but the parent may be.
-        if product.is_child:
-            product = product.parent
 
         # Delegate to a proxy class if one is provided
         if self.proxy:
@@ -867,6 +861,9 @@ class AbstractRange(models.Model):
         if product.product_class_id in self._class_ids():
             return True
         included_product_ids = self._included_product_ids()
+        # If the product's parent is in the range, the child is automatically included as well
+        if product.is_child and product.parent.id in included_product_ids:
+            return True
         if product.id in included_product_ids:
             return True
         test_categories = self.included_categories.all()
