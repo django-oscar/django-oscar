@@ -797,6 +797,7 @@ class AbstractProductAttribute(models.Model):
     RICHTEXT = "richtext"
     DATE = "date"
     OPTION = "option"
+    MULTI_OPTION = "multi_option"
     ENTITY = "entity"
     FILE = "file"
     IMAGE = "image"
@@ -808,6 +809,7 @@ class AbstractProductAttribute(models.Model):
         (RICHTEXT, _("Rich Text")),
         (DATE, _("Date")),
         (OPTION, _("Option")),
+        (MULTI_OPTION, _("Multi Option")),
         (ENTITY, _("Entity")),
         (FILE, _("File")),
         (IMAGE, _("Image")),
@@ -819,7 +821,7 @@ class AbstractProductAttribute(models.Model):
     option_group = models.ForeignKey(
         'catalogue.AttributeOptionGroup', blank=True, null=True,
         verbose_name=_("Option Group"),
-        help_text=_('Select an option group if using type "Option"'))
+        help_text=_('Select an option group if using type "Option" or "Multi Option"'))
     required = models.BooleanField(_('Required'), default=False)
 
     class Meta:
@@ -909,14 +911,28 @@ class AbstractProductAttribute(models.Model):
         if not isinstance(value, models.Model):
             raise ValidationError(_("Must be a model instance"))
 
-    def _validate_option(self, value):
+    def _validate_multi_option(self, value):
+        try:
+            values = iter(value)
+        except TypeError:
+            raise ValidationError(
+                _("Must be a list or AttributeOption queryset"))
+        # Validate each value as if it were an option
+        # Pass in valid_values so that the DB isn't hit multiple times per iteration
+        valid_values = self.option_group.options.values_list(
+            'option', flat=True)
+        for value in values:
+            self._validate_option(value, valid_values=valid_values)
+
+    def _validate_option(self, value, valid_values=None):
         if not isinstance(value, get_model('catalogue', 'AttributeOption')):
             raise ValidationError(
                 _("Must be an AttributeOption model object instance"))
         if not value.pk:
             raise ValidationError(_("AttributeOption has not been saved yet"))
-        valid_values = self.option_group.options.values_list(
-            'option', flat=True)
+        if valid_values is None:
+            valid_values = self.option_group.options.values_list(
+                'option', flat=True)
         if value.option not in valid_values:
             raise ValidationError(
                 _("%(enum)s is not a valid choice for %(attr)s") %
@@ -949,6 +965,10 @@ class AbstractProductAttributeValue(models.Model):
     value_float = models.FloatField(_('Float'), blank=True, null=True)
     value_richtext = models.TextField(_('Richtext'), blank=True, null=True)
     value_date = models.DateField(_('Date'), blank=True, null=True)
+    value_multi_option = models.ManyToManyField(
+        'catalogue.AttributeOption', blank=True, null=True,
+        related_name='multi_valued_attribute_values',
+        verbose_name=_("Value multi option"))
     value_option = models.ForeignKey(
         'catalogue.AttributeOption', blank=True, null=True,
         verbose_name=_("Value option"))
@@ -967,7 +987,10 @@ class AbstractProductAttributeValue(models.Model):
         null=True, blank=True, editable=False)
 
     def _get_value(self):
-        return getattr(self, 'value_%s' % self.attribute.type)
+        value = getattr(self, 'value_%s' % self.attribute.type)
+        if hasattr(value, 'all'):
+            value = value.all()
+        return value
 
     def _set_value(self, new_value):
         if self.attribute.is_option and isinstance(new_value, six.string_types):
@@ -1004,6 +1027,10 @@ class AbstractProductAttributeValue(models.Model):
         """
         property_name = '_%s_as_text' % self.attribute.type
         return getattr(self, property_name, self.value)
+
+    @property
+    def _multi_option_as_text(self):
+        return ', '.join(unicode(option) for option in self.value_multi_option.all())
 
     @property
     def _richtext_as_text(self):
