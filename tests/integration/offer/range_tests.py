@@ -50,9 +50,6 @@ class TestPartialRange(TestCase):
         self.assertTrue(self.range.contains_product(self.parent))
         self.assertTrue(self.range.contains_product(self.child))
 
-    def test_cant_add_child_product(self):
-        self.assertRaises(ValueError, self.range.add_product, self.child)
-
     def test_included_class_with_exception(self):
         self.range.classes.add(self.parent.get_product_class())
         self.range.excluded_products.add(self.parent)
