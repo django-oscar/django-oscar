@@ -824,9 +824,6 @@ class AbstractRange(models.Model):
         Default display_order for a new product in the range is 0; this puts
         the product at the top of the list.
         """
-        if product.is_child:
-            raise ValueError(
-                "Ranges can only contain parent and stand-alone products.")
 
         initial_order = display_order or 0
         RangeProduct = get_model('offer', 'RangeProduct')
