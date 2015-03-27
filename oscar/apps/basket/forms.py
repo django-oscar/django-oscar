@@ -4,13 +4,14 @@ from django.forms.models import modelformset_factory, BaseModelFormSet
 from django.db.models import Sum
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.core.loading import get_model
+from oscar.core.loading import get_class, get_model
 from oscar.forms import widgets
 
 Line = get_model('basket', 'line')
 Basket = get_model('basket', 'basket')
 Product = get_model('catalogue', 'product')
 
+VariantChoiceField = get_class('basket.fields', 'VariantChoiceField')
 
 class BasketLineForm(forms.ModelForm):
     save_for_later = forms.BooleanField(
@@ -147,38 +148,38 @@ class AddToBasketForm(forms.Form):
         # Dynamically build fields
         if product.is_parent:
             self._create_parent_product_fields(product)
+        elif product.is_child:
+            self._create_child_product_fields(product)
         self._create_product_fields(product)
 
     # Dynamic form building methods
 
+    def _create_child_field(self):
+        """
+        Adds the field for the child or the child's siblings.
+        """
+        self.fields['child'] = VariantChoiceField(queryset=Product.objects.none(), label=_("Variant"), empty_label=None,
+                                                  basket=self.basket)
+        return self.fields['child']
+
+    def _create_child_product_fields(self, product):
+        """
+        Add the field for the child's siblings, and set its attributes
+        to reference the siblings with an initial value of the child.
+        """
+        child_field = self._create_child_field()
+        child_field.queryset = product.parent.children.all()
+        child_field.initial = product
+
     def _create_parent_product_fields(self, product):
         """
-        Adds the fields for a "group"-type product (eg, a parent product with a
+        Add the fields for a "group"-type product (eg, a parent product with a
         list of children.
 
         Currently requires that a stock record exists for the children
         """
-        choices = []
-        disabled_values = []
-        for child in product.children.all():
-            # Build a description of the child, including any pertinent
-            # attributes
-            attr_summary = child.attribute_summary
-            if attr_summary:
-                summary = attr_summary
-            else:
-                summary = child.get_title()
-
-            # Check if it is available to buy
-            info = self.basket.strategy.fetch_for_product(child)
-            if not info.availability.is_available_to_buy:
-                disabled_values.append(child.id)
-
-            choices.append((child.id, summary))
-
-        self.fields['child_id'] = forms.ChoiceField(
-            choices=tuple(choices), label=_("Variant"),
-            widget=widgets.AdvancedSelect(disabled_values=disabled_values))
+        child_field = self._create_child_field()
+        child_field.queryset = product.children.all()
 
     def _create_product_fields(self, product):
         """
@@ -196,22 +197,6 @@ class AddToBasketForm(forms.Form):
         """
         kwargs = {'required': option.is_required}
         self.fields[option.code] = forms.CharField(**kwargs)
-
-    # Cleaning
-
-    def clean_child_id(self):
-        try:
-            child = self.parent_product.children.get(
-                id=self.cleaned_data['child_id'])
-        except Product.DoesNotExist:
-            raise forms.ValidationError(
-                _("Please select a valid product"))
-
-        # To avoid duplicate SQL queries, we cache a copy of the loaded child
-        # product as we're going to need it later.
-        self.child_product = child
-
-        return self.cleaned_data['child_id']
 
     def clean_quantity(self):
         # Check that the proposed new line quantity is sensible
@@ -236,7 +221,11 @@ class AddToBasketForm(forms.Form):
         """
         # Note, the child product attribute is saved in the clean_child_id
         # method
-        return getattr(self, 'child_product', self.parent_product)
+        if 'child' in self.cleaned_data:
+            return self.cleaned_data['child']
+
+        else:
+            return self.parent_product
 
     def clean(self):
         info = self.basket.strategy.fetch_for_product(self.product)

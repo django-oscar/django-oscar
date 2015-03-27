@@ -15,6 +15,8 @@ StockRecord = get_model('partner', 'StockRecord')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductImage = get_model('catalogue', 'ProductImage')
 ProductRecommendation = get_model('catalogue', 'ProductRecommendation')
+ProductImageMultipleChoiceField = get_class('dashboard.catalogue.fields',
+                                            'ProductImageMultipleChoiceField')
 ProductSelect = get_class('dashboard.catalogue.widgets', 'ProductSelect')
 ProductSelectMultiple = get_class('dashboard.catalogue.widgets',
                                   'ProductSelectMultiple')
@@ -261,10 +263,13 @@ class ProductForm(forms.ModelForm):
         "image": _attr_image_field,
     }
 
+    # Override default field to enable custom label_from_instance with <img> tags
+    child_images = ProductImageMultipleChoiceField(label='Images', queryset=ProductImage.objects.none())
+
     class Meta:
         model = Product
         fields = [
-            'title', 'upc', 'description', 'is_discountable', 'structure']
+            'title', 'upc', 'description', 'is_discountable', 'structure', 'child_images']
         widgets = {
             'structure': forms.HiddenInput()
         }
@@ -281,14 +286,19 @@ class ProductForm(forms.ModelForm):
             self.instance.parent.structure = Product.PARENT
 
             self.delete_non_child_fields()
+            self.set_child_images_queryset(parent)
         else:
             # Only set product class for non-child products
             self.instance.product_class = product_class
+            self.delete_child_fields()
         self.add_attribute_fields(product_class, self.instance.is_parent)
 
         if 'title' in self.fields:
             self.fields['title'].widget = forms.TextInput(
                 attrs={'autocomplete': 'off'})
+
+    def set_child_images_queryset(self, parent):
+        self.fields['child_images'].queryset = ProductImage.objects.filter(product=parent)
 
     def set_initial(self, product_class, parent, kwargs):
         """
@@ -344,6 +354,14 @@ class ProductForm(forms.ModelForm):
         you want to e.g. keep the description field.
         """
         for field_name in ['description', 'is_discountable']:
+            if field_name in self.fields:
+                del self.fields[field_name]
+
+    def delete_child_fields(self):
+        """
+        Deletes any fields specific to children.
+        """
+        for field_name in ['child_images']:
             if field_name in self.fields:
                 del self.fields[field_name]
 
