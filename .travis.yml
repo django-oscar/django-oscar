@@ -31,7 +31,7 @@ env:
         - PIP_WHEEL_DIR=$HOME/.cache/pip/wheels
         - PIP_FIND_LINKS=file://$HOME/.cache/pip/wheels
     matrix:
-        - DJANGO=Django==1.7.4
+        - DJANGO=Django==1.7.7
 
 install:
     # Before installation, we'll run ``pip wheel``, this will build wheels for
