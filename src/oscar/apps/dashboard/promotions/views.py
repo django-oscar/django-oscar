@@ -164,10 +164,12 @@ class CreateSingleProductView(CreateView):
 
 class CreateImageView(CreateView):
     model = Image
+    fields = ['name', 'link_url', 'image']
 
 
 class CreateMultiImageView(CreateView):
     model = MultiImage
+    fields = ['name']
 
 
 class CreateAutomaticProductListView(CreateView):
