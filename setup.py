@@ -59,7 +59,7 @@ setup(name='django-oscar',
           # Used for oscar.test.newfactories
           'factory-boy>=2.4.1,<2.5',
           # Used for automatically building larger HTML tables
-          'django-tables2>=0.15.0,<0.16',
+          'django-tables2>=0.16.0,<0.17',
           # Used for manipulating form field attributes in templates (eg: add
           # a css class)
           'django-widget-tweaks>=1.3,<1.4',
