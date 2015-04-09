@@ -27,7 +27,7 @@ class AbstractPartner(models.Model):
     #: for access modelling in the permission-based dashboard
     users = models.ManyToManyField(
         AUTH_USER_MODEL, related_name="partners",
-        blank=True, null=True, verbose_name=_("Users"))
+        blank=True, verbose_name=_("Users"))
 
     @property
     def display_name(self):
