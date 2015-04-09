@@ -17,7 +17,7 @@ class TestUserAddress(TestCase):
 
     def setUp(self):
         self.country = factories.CountryFactory.build()
-        self.user = factories.UserFactory.build()
+        self.user = factories.UserFactory()
 
     def test_uses_title_firstname_and_lastname_in_salutation(self):
         a = factories.UserAddressFactory.build(
@@ -46,7 +46,7 @@ class TestUserAddress(TestCase):
 
     def test_has_summary_property(self):
         c = factories.CountryFactory.build(name='')
-        a = factories.UserAddressFactory.build(country=c,
+        a = factories.UserAddressFactory(country=c,
                 title='Dr',
                 first_name='Barry',
                 last_name='Barrington',
