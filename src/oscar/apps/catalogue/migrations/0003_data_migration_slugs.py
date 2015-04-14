@@ -2,17 +2,18 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+from oscar.core.loading import get_model
 
 
 def remove_ancestor_slugs(apps, schema_editor):
-    Category = apps.get_model('catalogue', 'Category')
+    Category = get_model('catalogue', 'Category')
     for category in Category.objects.all():
         category.slug = category.slug.split(Category._slug_separator)[-1]
         category.save()
 
 
 def add_ancestor_slugs(apps, schema_editor):
-    Category = apps.get_model('catalogue', 'Category')
+    Category = get_model('catalogue', 'Category')
     for category in Category.objects.all():
         category.slug = category.full_slug
         category.save()
