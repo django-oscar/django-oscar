@@ -123,7 +123,7 @@ class CategoryFactory(factory.DjangoModelFactory):
     name = factory.Sequence(lambda n: 'Category %d' % n)
 
     # Very naive handling of treebeard node fields. Works though!
-    depth = 0
+    depth = 1
     path = factory.Sequence(lambda n: '%04d' % n)
 
     class Meta:
