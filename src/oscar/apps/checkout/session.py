@@ -1,19 +1,10 @@
-from decimal import Decimal as D
-
-from django.contrib import messages
-from django import http
-from django.core.exceptions import ImproperlyConfigured
-from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext_lazy as _
-
 from oscar.core.loading import get_model, get_class
-from . import exceptions
 
+
+CheckoutSessionData = get_class('checkout.utils', 'CheckoutSessionData')
+OrderTotalCalculator = get_class('checkout.calculators',
+                                 'OrderTotalCalculator')
 Repository = get_class('shipping.repository', 'Repository')
-OrderTotalCalculator = get_class(
-    'checkout.calculators', 'OrderTotalCalculator')
-CheckoutSessionData = get_class(
-    'checkout.utils', 'CheckoutSessionData')
 ShippingAddress = get_model('order', 'ShippingAddress')
 BillingAddress = get_model('order', 'BillingAddress')
 UserAddress = get_model('address', 'UserAddress')
@@ -21,225 +12,16 @@ UserAddress = get_model('address', 'UserAddress')
 
 class CheckoutSessionMixin(object):
     """
-    Mixin to provide common functionality shared between checkout views.
-
     All checkout views subclass this mixin. It ensures that all relevant
     checkout information is available in the template context.
     """
-
-    # A pre-condition is a condition that MUST be met in order for a view
-    # to be available. If it isn't then the customer should be redirected
-    # to a view *earlier* in the chain.
-    # pre_conditions is a list of method names that get executed before the
-    # normal flow of the view. Each method should check some condition has been
-    # met. If not, then an exception is raised that indicates the URL the
-    # customer will be redirected to.
-
-    pre_conditions = None
-
-    # A *skip* condition is a condition that MUST NOT be met in order for a
-    # view to be available. If the condition is met, this means the view MUST
-    # be skipped and the customer should be redirected to a view *later* in
-    # the chain.
-    # Skip conditions work similar to pre-conditions, and get evaluated after
-    # pre-conditions have been evaluated.
-    skip_conditions = None
-
     def dispatch(self, request, *args, **kwargs):
         # Assign the checkout session manager so it's available in all checkout
         # views.
         self.checkout_session = CheckoutSessionData(request)
 
-        # Enforce any pre-conditions for the view.
-        try:
-            self.check_pre_conditions(request)
-        except exceptions.FailedPreCondition as e:
-            for message in e.messages:
-                messages.warning(request, message)
-            return http.HttpResponseRedirect(e.url)
-
-        # Check if this view should be skipped
-        try:
-            self.check_skip_conditions(request)
-        except exceptions.PassedSkipCondition as e:
-            return http.HttpResponseRedirect(e.url)
-
         return super(CheckoutSessionMixin, self).dispatch(
             request, *args, **kwargs)
-
-    def check_pre_conditions(self, request):
-        pre_conditions = self.get_pre_conditions(request)
-        for method_name in pre_conditions:
-            if not hasattr(self, method_name):
-                raise ImproperlyConfigured(
-                    "There is no method '%s' to call as a pre-condition" % (
-                        method_name))
-            getattr(self, method_name)(request)
-
-    def get_pre_conditions(self, request):
-        """
-        Return the pre-condition method names to run for this view
-        """
-        if self.pre_conditions is None:
-            return []
-        return self.pre_conditions
-
-    def check_skip_conditions(self, request):
-        skip_conditions = self.get_skip_conditions(request)
-        for method_name in skip_conditions:
-            if not hasattr(self, method_name):
-                raise ImproperlyConfigured(
-                    "There is no method '%s' to call as a skip-condition" % (
-                        method_name))
-            getattr(self, method_name)(request)
-
-    def get_skip_conditions(self, request):
-        """
-        Return the skip-condition method names to run for this view
-        """
-        if self.skip_conditions is None:
-            return []
-        return self.skip_conditions
-
-    # Re-usable pre-condition validators
-
-    def check_basket_is_not_empty(self, request):
-        if request.basket.is_empty:
-            raise exceptions.FailedPreCondition(
-                url=reverse('basket:summary'),
-                message=_(
-                    "You need to add some items to your basket to checkout")
-            )
-
-    def check_basket_is_valid(self, request):
-        """
-        Check that the basket is permitted to be submitted as an order. That
-        is, all the basket lines are available to buy - nothing has gone out of
-        stock since it was added to the basket.
-        """
-        messages = []
-        strategy = request.strategy
-        for line in request.basket.all_lines():
-            result = strategy.fetch_for_product(line.product)
-            is_permitted, reason = result.availability.is_purchase_permitted(
-                line.quantity)
-            if not is_permitted:
-                # Create a more meaningful message to show on the basket page
-                msg = _(
-                    "'%(title)s' is no longer available to buy (%(reason)s). "
-                    "Please adjust your basket to continue"
-                ) % {
-                    'title': line.product.get_title(),
-                    'reason': reason}
-                messages.append(msg)
-        if messages:
-            raise exceptions.FailedPreCondition(
-                url=reverse('basket:summary'),
-                messages=messages
-            )
-
-    def check_user_email_is_captured(self, request):
-        if not request.user.is_authenticated() \
-                and not self.checkout_session.get_guest_email():
-            raise exceptions.FailedPreCondition(
-                url=reverse('checkout:index'),
-                message=_(
-                    "Please either sign in or enter your email address")
-            )
-
-    def check_shipping_data_is_captured(self, request):
-        if not request.basket.is_shipping_required():
-            # Even without shipping being required, we still need to check that
-            # a shipping method code has been set.
-            if not self.checkout_session.is_shipping_method_set(
-                    self.request.basket):
-                raise exceptions.FailedPreCondition(
-                    url=reverse('checkout:shipping-method'),
-                )
-            return
-
-        # Basket requires shipping: check address and method are captured and
-        # valid.
-        self.check_a_valid_shipping_address_is_captured()
-        self.check_a_valid_shipping_method_is_captured()
-
-    def check_a_valid_shipping_address_is_captured(self):
-        # Check that shipping address has been completed
-        if not self.checkout_session.is_shipping_address_set():
-            raise exceptions.FailedPreCondition(
-                url=reverse('checkout:shipping-address'),
-                message=_("Please choose a shipping address")
-            )
-
-        # Check that the previously chosen shipping address is still valid
-        shipping_address = self.get_shipping_address(
-            basket=self.request.basket)
-        if not shipping_address:
-            raise exceptions.FailedPreCondition(
-                url=reverse('checkout:shipping-address'),
-                message=_("Your previously chosen shipping address is "
-                          "no longer valid.  Please choose another one")
-            )
-
-    def check_a_valid_shipping_method_is_captured(self):
-        # Check that shipping method has been set
-        if not self.checkout_session.is_shipping_method_set(
-                self.request.basket):
-            raise exceptions.FailedPreCondition(
-                url=reverse('checkout:shipping-method'),
-                message=_("Please choose a shipping method")
-            )
-
-        # Check that a *valid* shipping method has been set
-        shipping_address = self.get_shipping_address(
-            basket=self.request.basket)
-        shipping_method = self.get_shipping_method(
-            basket=self.request.basket,
-            shipping_address=shipping_address)
-        if not shipping_method:
-            raise exceptions.FailedPreCondition(
-                url=reverse('checkout:shipping-method'),
-                message=_("Your previously chosen shipping method is "
-                          "no longer valid.  Please choose another one")
-            )
-
-    def check_payment_data_is_captured(self, request):
-        # We don't collect payment data by default so we don't have anything to
-        # validate here. If your shop requires forms to be submitted on the
-        # payment details page, then override this method to check that the
-        # relevant data is available. Often just enforcing that the preview
-        # view is only accessible from a POST request is sufficient.
-        pass
-
-    # Re-usable skip conditions
-
-    def skip_unless_basket_requires_shipping(self, request):
-        # Check to see that a shipping address is actually required.  It may
-        # not be if the basket is purely downloads
-        if not request.basket.is_shipping_required():
-            raise exceptions.PassedSkipCondition(
-                url=reverse('checkout:shipping-method')
-            )
-
-    def skip_unless_payment_is_required(self, request):
-        # Check to see if payment is actually required for this order.
-        shipping_address = self.get_shipping_address(request.basket)
-        shipping_method = self.get_shipping_method(
-            request.basket, shipping_address)
-        if shipping_method:
-            shipping_charge = shipping_method.calculate(request.basket)
-        else:
-            # It's unusual to get here as a shipping method should be set by
-            # the time this skip-condition is called. In the absence of any
-            # other evidence, we assume the shipping charge is zero.
-            shipping_charge = D('0.00')
-        total = self.get_order_totals(request.basket, shipping_charge)
-        if total.excl_tax == D('0.00'):
-            raise exceptions.PassedSkipCondition(
-                url=reverse('checkout:preview')
-            )
-
-    # Helpers
 
     def get_context_data(self, **kwargs):
         # Use the proposed submission as template context data.  Flatten the
@@ -340,7 +122,7 @@ class CheckoutSessionMixin(object):
                 address.populate_alternative_model(shipping_addr)
                 return shipping_addr
 
-    def get_shipping_method(self, basket, shipping_address=None, **kwargs):
+    def get_shipping_method(self, basket, shipping_address=None):
         """
         Return the selected shipping method instance from this checkout session
 
@@ -348,12 +130,22 @@ class CheckoutSessionMixin(object):
         stored in the session is still valid for the shipping address.
         """
         code = self.checkout_session.shipping_method_code(basket)
-        methods = Repository().get_shipping_methods(
-            basket=basket, user=self.request.user,
-            shipping_addr=shipping_address, request=self.request)
+        methods = self.get_available_shipping_methods(basket, shipping_address)
         for method in methods:
             if method.code == code:
                 return method
+
+    def get_available_shipping_methods(self, basket, shipping_address=None):
+        """
+        Returns all applicable shipping method objects for a given basket.
+        """
+        # Shipping methods can depend on the user, the contents of the basket
+        # and the shipping address (so we pass all these things to the
+        # repository).  I haven't come across a scenario that doesn't fit this
+        # system.
+        return Repository().get_shipping_methods(
+            basket, shipping_address, user=self.request.user,
+            request=self.request)
 
     def get_billing_address(self, shipping_address):
         """
