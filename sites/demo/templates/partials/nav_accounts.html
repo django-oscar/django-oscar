@@ -29,7 +29,7 @@
             </li>
             {% if user.is_staff or perms.partner.dashboard_access %}
             <li class="hidden-phone">
-                <a href="{% url "dashboard:index" %}">{% trans "Dashboard" %}</a>
+                <a href="{% url "dashboard:index" %}">{% trans "Cockpit" %}</a>
                 <span class="divider">|</span>
             </li>
             {% endif %}

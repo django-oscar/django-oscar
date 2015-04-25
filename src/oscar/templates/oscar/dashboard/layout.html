@@ -32,7 +32,7 @@
 {% endblock %}
 
 {% block title %}
-    {% trans "Dashboard" %} | {{ block.super }}
+    {% trans "Cockpit" %} | {{ block.super }}
 {% endblock %}
 
 {% block layout %}
@@ -112,7 +112,7 @@
     <div class="container-fluid dashboard">
         {% block breadcrumbs %}
         <ul class="breadcrumb">
-            <li><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a> <span class="divider">/</span></li>
+            <li><a href="{% url 'dashboard:index' %}">{% trans "Cockpit" %}</a> <span class="divider">/</span></li>
         </ul>
         {% endblock %}
 
