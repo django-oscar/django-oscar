@@ -104,3 +104,77 @@ class OfferApplications(object):
         """
         return dict([(a['offer'].id, a['offer']) for a in
                      self.applications.values()])
+
+
+class ApplicationResult(object):
+    is_final = is_successful = False
+    # Basket discount
+    discount = D('0.00')
+    description = None
+
+    # Offer applications can affect 3 distinct things
+    # (a) Give a discount off the BASKET total
+    # (b) Give a discount off the SHIPPING total
+    # (a) Trigger a post-order action
+    BASKET, SHIPPING, POST_ORDER = 0, 1, 2
+    affects = None
+
+    @property
+    def affects_basket(self):
+        return self.affects == self.BASKET
+
+    @property
+    def affects_shipping(self):
+        return self.affects == self.SHIPPING
+
+    @property
+    def affects_post_order(self):
+        return self.affects == self.POST_ORDER
+
+
+class BasketDiscount(ApplicationResult):
+    """
+    For when an offer application leads to a simple discount off the basket's
+    total
+    """
+    affects = ApplicationResult.BASKET
+
+    def __init__(self, amount):
+        self.discount = amount
+
+    @property
+    def is_successful(self):
+        return self.discount > 0
+
+    def __str__(self):
+        return '<Basket discount of %s>' % self.discount
+
+    def __repr__(self):
+        return '%s(%r)' % (self.__class__.__name__, self.discount)
+
+
+# Helper global as returning zero discount is quite common
+ZERO_DISCOUNT = BasketDiscount(D('0.00'))
+
+
+class ShippingDiscount(ApplicationResult):
+    """
+    For when an offer application leads to a discount from the shipping cost
+    """
+    is_successful = is_final = True
+    affects = ApplicationResult.SHIPPING
+
+
+SHIPPING_DISCOUNT = ShippingDiscount()
+
+
+class PostOrderAction(ApplicationResult):
+    """
+    For when an offer condition is met but the benefit is deferred until after
+    the order has been placed.  Eg buy 2 books and get 100 loyalty points.
+    """
+    is_final = is_successful = True
+    affects = ApplicationResult.POST_ORDER
+
+    def __init__(self, description):
+        self.description = description
