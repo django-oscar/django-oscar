@@ -2,20 +2,16 @@ from decimal import Decimal as D
 
 from django.test import TestCase
 
-from oscar.apps.offer import models, utils, custom
+from oscar.apps.offer import benefits, models, utils, custom, results
 from oscar.test import factories
 from oscar.test.basket import add_product
 
 
-class CustomAction(models.Benefit):
-
-    class Meta:
-        proxy = True
+class CustomAction(benefits.BenefitImplementation):
 
     def apply(self, basket, condition, offer):
         condition.consume_items(offer, basket, ())
-        return models.PostOrderAction(
-            "Something will happen")
+        return results.PostOrderAction("Something will happen")
 
     def apply_deferred(self, basket, order, application):
         return "Something happened"

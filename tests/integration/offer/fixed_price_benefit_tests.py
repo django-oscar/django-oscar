@@ -17,7 +17,7 @@ class TestAFixedPriceDiscountAppliedWithCountCondition(TestCase):
             range=range,
             type=models.Condition.COUNT,
             value=3)
-        self.benefit = models.FixedPriceBenefit.objects.create(
+        self.benefit = models.Benefit.objects.create(
             range=range,
             type=models.Benefit.FIXED_PRICE,
             value=D('20.00'))

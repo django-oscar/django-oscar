@@ -16,7 +16,7 @@ class TestACountConditionWithPercentageDiscount(TestCase):
             range=range,
             type=models.Condition.COUNT,
             value=3)
-        benefit = models.PercentageDiscountBenefit.objects.create(
+        benefit = models.Benefit(
             range=range,
             type=models.Benefit.PERCENTAGE,
             value=20,

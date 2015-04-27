@@ -2,7 +2,8 @@ import itertools
 import os
 import operator
 import re
-from decimal import Decimal as D, ROUND_DOWN
+import warnings
+from decimal import Decimal as D
 
 from django.db import models
 from django.db.models.query import Q
@@ -15,7 +16,7 @@ from django.utils.timezone import now, get_current_timezone
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
-from oscar.apps.offer import results, utils
+from oscar.apps.offer import benefits, results, utils
 from oscar.apps.offer.managers import ActiveOfferManager
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_model, get_class
@@ -220,15 +221,14 @@ class AbstractConditionalOffer(models.Model):
         """
         if not self.is_condition_satisfied(basket):
             return results.ZERO_DISCOUNT
-        return self.benefit.proxy().apply(
-            basket, self.condition.proxy(), self)
+        return self.benefit.apply(basket, self.condition.proxy(), self)
 
     def apply_deferred_benefit(self, basket, order, application):
         """
         Applies any deferred benefits.  These are things like adding loyalty
         points to somone's account.
         """
-        return self.benefit.proxy().apply_deferred(basket, order, application)
+        return self.benefit.apply_deferred(basket, order, application)
 
     def set_voucher(self, voucher):
         self._voucher = voucher
@@ -388,17 +388,17 @@ class AbstractBenefit(models.Model):
     SHIPPING_PERCENTAGE, SHIPPING_ABSOLUTE, SHIPPING_FIXED_PRICE = (
         'Shipping percentage', 'Shipping absolute', 'Shipping fixed price')
     TYPE_CHOICES = (
-        (PERCENTAGE, _("Discount is a percentage off of the product's value")),
-        (FIXED, _("Discount is a fixed amount off of the product's value")),
-        (MULTIBUY, _("Discount is to give the cheapest product for free")),
-        (FIXED_PRICE,
-         _("Get the products that meet the condition for a fixed price")),
+        (PERCENTAGE, benefits.PercentageDiscountBenefit.help_text),
+        (FIXED, benefits.AbsoluteDiscountBenefit.help_text),
+        (MULTIBUY, benefits.MultibuyDiscountBenefit.help_text),
+        (FIXED_PRICE, benefits.FixedPriceBenefit.help_text),
         (SHIPPING_ABSOLUTE,
-         _("Discount is a fixed amount of the shipping cost")),
-        (SHIPPING_FIXED_PRICE, _("Get shipping for a fixed price")),
-        (SHIPPING_PERCENTAGE, _("Discount is a percentage off of the shipping"
-                                " cost")),
+         benefits.ShippingAbsoluteDiscountBenefit.help_text),
+        (SHIPPING_FIXED_PRICE, benefits.ShippingFixedPriceBenefit.help_text),
+        (SHIPPING_PERCENTAGE,
+         benefits.ShippingPercentageDiscountBenefit.help_text),
     )
+
     type = models.CharField(
         _("Type"), max_length=128, choices=TYPE_CHOICES, blank=True)
 
@@ -427,8 +427,6 @@ class AbstractBenefit(models.Model):
         verbose_name_plural = _("Benefits")
 
     def proxy(self):
-        from oscar.apps.offer import benefits
-
         klassmap = {
             self.PERCENTAGE: benefits.PercentageDiscountBenefit,
             self.FIXED: benefits.AbsoluteDiscountBenefit,
@@ -438,24 +436,30 @@ class AbstractBenefit(models.Model):
             self.SHIPPING_FIXED_PRICE: benefits.ShippingFixedPriceBenefit,
             self.SHIPPING_PERCENTAGE: benefits.ShippingPercentageDiscountBenefit
         }
-        # Short-circuit logic if current class is already a proxy class.
-        if self.__class__ in klassmap.values():
-            return self
-
-        field_dict = dict(self.__dict__)
-        for field in list(field_dict.keys()):
-            if field.startswith('_'):
-                del field_dict[field]
 
         if self.proxy_class:
             klass = utils.load_proxy(self.proxy_class)
-            # Short-circuit again.
-            if self.__class__ == klass:
-                return self
-            return klass(**field_dict)
+
+            if isinstance(klass, self.__class__):
+                warnings.warn(
+                    _("proxy classes should not extend benefit model"),
+                    DeprecationWarning, stacklevel=2)
+
+                field_dict = dict(self.__dict__)
+                for field in list(field_dict.keys()):
+                    if field.startswith('_'):
+                        del field_dict[field]
+
+                # Short-circuit again.
+                if self.__class__ == klass:
+                    return self
+                return klass(**field_dict)
+            else:
+                return klass(self)
 
         if self.type in klassmap:
-            return klassmap[self.type](**field_dict)
+            return klassmap[self.type](self)
+
         raise RuntimeError("Unrecognised benefit type (%s)" % self.type)
 
     def __str__(self):
@@ -480,95 +484,18 @@ class AbstractBenefit(models.Model):
         return self.name
 
     def apply(self, basket, condition, offer):
-        return results.ZERO_DISCOUNT
+        return self.proxy().apply(basket, condition, offer)
 
     def apply_deferred(self, basket, order, application):
-        return None
+        return self.proxy().apply_deferred(basket, order, application)
+
+    def shipping_discount(self, charge):
+        return self.proxy().shipping_discount(charge)
 
     def clean(self):
         if not self.type:
             return
-        method_name = 'clean_%s' % self.type.lower().replace(' ', '_')
-        if hasattr(self, method_name):
-            getattr(self, method_name)()
-
-    def clean_multibuy(self):
-        if not self.range:
-            raise exceptions.ValidationError(
-                _("Multibuy benefits require a product range"))
-        if self.value:
-            raise exceptions.ValidationError(
-                _("Multibuy benefits don't require a value"))
-        if self.max_affected_items:
-            raise exceptions.ValidationError(
-                _("Multibuy benefits don't require a 'max affected items' "
-                  "attribute"))
-
-    def clean_percentage(self):
-        if not self.range:
-            raise exceptions.ValidationError(
-                _("Percentage benefits require a product range"))
-        if self.value > 100:
-            raise exceptions.ValidationError(
-                _("Percentage discount cannot be greater than 100"))
-
-    def clean_shipping_absolute(self):
-        if not self.value:
-            raise exceptions.ValidationError(
-                _("A discount value is required"))
-        if self.range:
-            raise exceptions.ValidationError(
-                _("No range should be selected as this benefit does not "
-                  "apply to products"))
-        if self.max_affected_items:
-            raise exceptions.ValidationError(
-                _("Shipping discounts don't require a 'max affected items' "
-                  "attribute"))
-
-    def clean_shipping_percentage(self):
-        if self.value > 100:
-            raise exceptions.ValidationError(
-                _("Percentage discount cannot be greater than 100"))
-        if self.range:
-            raise exceptions.ValidationError(
-                _("No range should be selected as this benefit does not "
-                  "apply to products"))
-        if self.max_affected_items:
-            raise exceptions.ValidationError(
-                _("Shipping discounts don't require a 'max affected items' "
-                  "attribute"))
-
-    def clean_shipping_fixed_price(self):
-        if self.range:
-            raise exceptions.ValidationError(
-                _("No range should be selected as this benefit does not "
-                  "apply to products"))
-        if self.max_affected_items:
-            raise exceptions.ValidationError(
-                _("Shipping discounts don't require a 'max affected items' "
-                  "attribute"))
-
-    def clean_fixed_price(self):
-        if self.range:
-            raise exceptions.ValidationError(
-                _("No range should be selected as the condition range will "
-                  "be used instead."))
-
-    def clean_absolute(self):
-        if not self.range:
-            raise exceptions.ValidationError(
-                _("Fixed discount benefits require a product range"))
-        if not self.value:
-            raise exceptions.ValidationError(
-                _("Fixed discount benefits require a value"))
-
-    def round(self, amount):
-        """
-        Apply rounding to discount amount
-        """
-        if hasattr(settings, 'OSCAR_OFFER_ROUNDING_FUNCTION'):
-            return settings.OSCAR_OFFER_ROUNDING_FUNCTION(amount)
-        return amount.quantize(D('.01'), ROUND_DOWN)
+        self.proxy().clean()
 
     def _effective_max_affected_items(self):
         """
@@ -576,44 +503,6 @@ class AbstractBenefit(models.Model):
         during the application of this benefit
         """
         return self.max_affected_items if self.max_affected_items else 10000
-
-    def can_apply_benefit(self, line):
-        """
-        Determines whether the benefit can be applied to a given basket line
-        """
-        return line.stockrecord and line.product.is_discountable
-
-    def get_applicable_lines(self, offer, basket, range=None):
-        """
-        Return the basket lines that are available to be discounted
-
-        :basket: The basket
-        :range: The range of products to use for filtering.  The fixed-price
-                benefit ignores its range and uses the condition range
-        """
-        if range is None:
-            range = self.range
-        line_tuples = []
-        for line in basket.all_lines():
-            product = line.product
-
-            if (not range.contains(product) or
-                    not self.can_apply_benefit(line)):
-                continue
-
-            price = utils.unit_price(offer, line)
-            if not price:
-                # Avoid zero price products
-                continue
-            if line.quantity_without_discount == 0:
-                continue
-            line_tuples.append((price, line))
-
-        # We sort lines to be cheapest first to ensure consistent applications
-        return sorted(line_tuples, key=operator.itemgetter(0))
-
-    def shipping_discount(self, charge):
-        return D('0.00')
 
 
 @python_2_unicode_compatible

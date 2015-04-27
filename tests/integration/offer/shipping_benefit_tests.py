@@ -16,7 +16,7 @@ def create_offer():
         range=range,
         type=models.Condition.COUNT,
         value=1)
-    benefit = models.ShippingFixedPriceBenefit.objects.create(
+    benefit = models.Benefit.objects.create(
         type=models.Benefit.SHIPPING_FIXED_PRICE,
         value=D('1.00'))
     return models.ConditionalOffer.objects.create(

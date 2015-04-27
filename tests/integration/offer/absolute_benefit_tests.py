@@ -24,7 +24,7 @@ class TestAnAbsoluteDiscountAppliedWithCountConditionOnDifferentRange(TestCase):
         self.benefit_product = factories.ProductFactory()
         benefit_range = factories.RangeFactory()
         benefit_range.add_product(self.benefit_product)
-        self.benefit = models.AbsoluteDiscountBenefit.objects.create(
+        self.benefit = models.Benefit.objects.create(
             range=benefit_range,
             type=models.Benefit.FIXED,
             value=D('3.00'))
@@ -67,7 +67,7 @@ class TestAnAbsoluteDiscountAppliedWithCountCondition(TestCase):
             type=models.Condition.COUNT,
             value=2)
         self.offer = mock.Mock()
-        self.benefit = models.AbsoluteDiscountBenefit.objects.create(
+        self.benefit = models.Benefit.objects.create(
             range=range,
             type=models.Benefit.FIXED,
             value=D('3.00'))
@@ -154,7 +154,7 @@ class TestAnAbsoluteDiscount(TestCase):
             range=range,
             type=models.Condition.COUNT,
             value=2)
-        self.benefit = models.AbsoluteDiscountBenefit.objects.create(
+        self.benefit = models.Benefit.objects.create(
             range=range,
             type=models.Benefit.FIXED,
             value=D('4.00'))
@@ -184,7 +184,7 @@ class TestAnAbsoluteDiscountWithMaxItemsSetAppliedWithCountCondition(TestCase):
             range=range,
             type=models.Condition.COUNT,
             value=2)
-        self.benefit = models.AbsoluteDiscountBenefit.objects.create(
+        self.benefit = models.Benefit.objects.create(
             range=range,
             type=models.Benefit.FIXED,
             value=D('3.00'),
@@ -229,7 +229,7 @@ class TestAnAbsoluteDiscountAppliedWithValueCondition(TestCase):
             range=range,
             type=models.Condition.VALUE,
             value=D('10.00'))
-        self.benefit = models.AbsoluteDiscountBenefit.objects.create(
+        self.benefit = models.Benefit.objects.create(
             range=range,
             type=models.Benefit.FIXED,
             value=D('3.00'))
@@ -280,7 +280,7 @@ class TestAnAbsoluteDiscountWithMaxItemsSetAppliedWithValueCondition(TestCase):
             range=range,
             type=models.Condition.VALUE,
             value=D('10.00'))
-        self.benefit = models.AbsoluteDiscountBenefit.objects.create(
+        self.benefit = models.Benefit.objects.create(
             range=range,
             type=models.Benefit.FIXED,
             value=D('3.00'),

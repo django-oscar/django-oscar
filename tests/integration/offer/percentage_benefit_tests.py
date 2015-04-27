@@ -17,7 +17,7 @@ class TestAPercentageDiscountAppliedWithCountCondition(TestCase):
             range=range,
             type=models.Condition.COUNT,
             value=2)
-        self.benefit = models.PercentageDiscountBenefit(
+        self.benefit = models.Benefit(
             range=range,
             type=models.Benefit.PERCENTAGE,
             value=20)
@@ -62,7 +62,7 @@ class TestAPercentageDiscountWithMaxItemsSetAppliedWithCountCondition(TestCase):
             range=range,
             type=models.Condition.COUNT,
             value=2)
-        self.benefit = models.PercentageDiscountBenefit(
+        self.benefit = models.Benefit(
             range=range,
             type=models.Benefit.PERCENTAGE,
             value=20,
@@ -101,7 +101,7 @@ class TestAPercentageDiscountAppliedWithValueCondition(TestCase):
             range=range,
             type=models.Condition.VALUE,
             value=D('10.00'))
-        self.benefit = models.PercentageDiscountBenefit.objects.create(
+        self.benefit = models.Benefit.objects.create(
             range=range,
             type=models.Benefit.PERCENTAGE,
             value=20)
@@ -145,7 +145,7 @@ class TestAPercentageDiscountWithMaxItemsSetAppliedWithValueCondition(TestCase):
             range=range,
             type=models.Condition.VALUE,
             value=D('10.00'))
-        self.benefit = models.PercentageDiscountBenefit.objects.create(
+        self.benefit = models.Benefit.objects.create(
             range=range,
             type=models.Benefit.PERCENTAGE,
             value=20,

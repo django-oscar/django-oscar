@@ -26,7 +26,7 @@ class TestAShippingPercentageDiscountAppliedWithCountCondition(TestCase):
             range=range,
             type=models.Condition.COUNT,
             value=2)
-        self.benefit = models.ShippingPercentageDiscountBenefit.objects.create(
+        self.benefit = models.Benefit.objects.create(
             type=models.Benefit.SHIPPING_PERCENTAGE,
             value=50)
         self.offer = models.ConditionalOffer(
