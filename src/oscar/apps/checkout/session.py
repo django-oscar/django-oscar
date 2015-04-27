@@ -120,7 +120,7 @@ class CheckoutSessionMixin(object):
         messages = []
         strategy = request.strategy
         for line in request.basket.all_lines():
-            result = strategy.fetch_for_product(line.product)
+            result = strategy.fetch_for_line(line)
             is_permitted, reason = result.availability.is_purchase_permitted(
                 line.quantity)
             if not is_permitted:
