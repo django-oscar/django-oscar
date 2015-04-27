@@ -15,6 +15,7 @@ from decimal import ROUND_HALF_UP
 
 import factory
 from django.conf import settings
+from django.contrib.auth import models as auth_models
 from django.utils.timezone import now
 
 from oscar.core.loading import get_model, get_class
@@ -28,7 +29,8 @@ __all__ = ["UserFactory", "CountryFactory", "UserAddressFactory",
            "ProductAttributeFactory", "ProductAttributeValueFactory",
            "AttributeOptionGroupFactory",
            "AttributeOptionFactory", "PartnerFactory",
-           "ProductCategoryFactory", "CategoryFactory", "RangeFactory"]
+           "ProductCategoryFactory", "CategoryFactory", "RangeFactory",
+           "PermissionFactory"]
 
 Selector = get_class('partner.strategy', 'Selector')
 
@@ -325,3 +327,12 @@ def tax_add(price, tax_percentage=21):
 
     result = price * ((100 + tax_percentage) / D(100))
     return result.quantize(D('0.01'), ROUND_HALF_UP)
+
+
+class PermissionFactory(factory.DjangoModelFactory):
+    name = 'Dummy permission'
+    codename = 'dummy'
+
+    class Meta:
+        model = auth_models.Permission
+        django_get_or_create = ('content_type', 'codename')
