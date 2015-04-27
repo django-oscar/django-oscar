@@ -26,6 +26,7 @@ ProductClass = get_model('catalogue', 'ProductClass')
 ProductAttribute = get_model('catalogue', 'ProductAttribute')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 ProductImage = get_model('catalogue', 'ProductImage')
+ConditionalOffer = get_model('offer', 'ConditionalOffer')
 
 
 def create_stockrecord(product=None, price_excl_tax=None, partner_sku=None,
@@ -176,7 +177,7 @@ def create_offer(name=u"Dùｍϻϒ offer", offer_type="Site",
         benefit, __ = models.Benefit.objects.get_or_create(
             range=range, type=models.Benefit.PERCENTAGE, value=20)
     if status is None:
-        status = models.ConditionalOffer.OPEN
+        status = ConditionalOffer.OPEN
 
     # Create start and end date so offer is active
     now = timezone.now()
@@ -185,7 +186,7 @@ def create_offer(name=u"Dùｍϻϒ offer", offer_type="Site",
     if end is None:
         end = now + datetime.timedelta(days=30)
 
-    return models.ConditionalOffer.objects.create(
+    return ConditionalOffer.objects.create(
         name=name,
         start_datetime=start,
         end_datetime=end,
