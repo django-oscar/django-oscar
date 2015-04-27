@@ -59,7 +59,7 @@ if __name__ == '__main__':
     if not args:
         # If run with no args, try and run the testsuite as fast as possible.
         # That means across all cores and with no high-falutin' plugins.
-        args = ['--nocapture', '--stop', '--processes=-1']
+        args = ['--nocapture', '--stop', '--processes=-1', 'tests']
     else:
         # Some args/options specified.  Check to see if any nose options have
         # been specified.  If they have, then don't set any
