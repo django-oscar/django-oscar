@@ -13,6 +13,7 @@
 *.*~
 .~lock.*
 *.DS_Store
+.python-version
 
 # IDE files
 .project
