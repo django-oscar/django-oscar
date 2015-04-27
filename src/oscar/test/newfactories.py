@@ -86,7 +86,7 @@ class VoucherFactory(factory.DjangoModelFactory):
     code = "MYVOUCHER"
 
     start_datetime = now() - datetime.timedelta(days=1)
-    end_datetime = now() - datetime.timedelta(days=10)
+    end_datetime = now() + datetime.timedelta(days=10)
 
     class Meta:
         model = get_model('voucher', 'Voucher')

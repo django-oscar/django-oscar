@@ -1,4 +1,5 @@
 from django.db.models import F
+
 from oscar.apps.basket import signals
 
 
