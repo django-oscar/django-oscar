@@ -10,6 +10,7 @@ from django.core import exceptions
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import date as date_filter
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.functional import cached_property
 from django.utils.timezone import now, get_current_timezone
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
@@ -809,6 +810,11 @@ class AbstractRange(models.Model):
         return reverse(
             'catalogue:range', kwargs={'slug': self.slug})
 
+    @cached_property
+    def proxy(self):
+        if self.proxy_class:
+            return utils.load_proxy(self.proxy_class)()
+
     def add_product(self, product, display_order=None):
         """ Add product to the range
 
@@ -850,8 +856,8 @@ class AbstractRange(models.Model):
             product = product.parent
 
         # Delegate to a proxy class if one is provided
-        if self.proxy_class:
-            return utils.load_proxy(self.proxy_class)().contains_product(product)
+        if self.proxy:
+            return self.proxy.contains_product(product)
 
         excluded_product_ids = self._excluded_product_ids()
         if product.id in excluded_product_ids:
@@ -925,8 +931,8 @@ class AbstractRange(models.Model):
 
     def num_products(self):
         # Delegate to a proxy class if one is provided
-        if self.proxy_class:
-            return utils.load_proxy(self.proxy_class)().num_products()
+        if self.proxy:
+            return self.proxy.num_products()
         if self.includes_all_products:
             return None
         return self.all_products().count()
@@ -939,8 +945,8 @@ class AbstractRange(models.Model):
         included classes and categories, minus the products in
         excluded_products.
         """
-        if self.proxy_class:
-            return utils.load_proxy(self.proxy_class)().all_products()
+        if self.proxy:
+            return self.proxy.all_products()
 
         Product = get_model("catalogue", "Product")
         if self.includes_all_products:
