@@ -11,11 +11,12 @@ from oscar.test.basket import add_product
 class TestCountCondition(TestCase):
 
     def setUp(self):
+        super(TestCountCondition, self).setUp()
+        self.basket = factories.create_basket(empty=True)
         self.range = models.Range.objects.create(
             name="All products range", includes_all_products=True)
-        self.basket = factories.create_basket(empty=True)
-        self.condition = models.CountCondition(
-            range=self.range, type="Count", value=2)
+        self.condition = models.Condition.objects.create(
+            range=self.range, type=models.Condition.COUNT, value=2)
         self.offer = mock.Mock()
 
     def test_is_not_satified_by_empty_basket(self):
@@ -67,11 +68,12 @@ class TestCountCondition(TestCase):
 class ValueConditionTest(TestCase):
 
     def setUp(self):
+        super(ValueConditionTest, self).setUp()
+        self.basket = factories.create_basket(empty=True)
         self.range = models.Range.objects.create(
             name="All products range", includes_all_products=True)
-        self.basket = factories.create_basket(empty=True)
-        self.condition = models.ValueCondition(
-            range=self.range, type="Value", value=D('10.00'))
+        self.condition = models.Condition.objects.create(
+            range=self.range, type=models.Condition.VALUE, value=D('10.00'))
         self.offer = mock.Mock()
         self.item = factories.create_product(price=D('5.00'))
         self.expensive_item = factories.create_product(price=D('15.00'))
@@ -137,8 +139,8 @@ class TestCoverageCondition(TestCase):
             self.range.add_product(product)
             self.range.add_product(product)
         self.basket = factories.create_basket(empty=True)
-        self.condition = models.CoverageCondition(
-            range=self.range, type="Coverage", value=2)
+        self.condition = models.Condition(
+            range=self.range, type=models.Condition.COVERAGE, value=2)
         self.offer = mock.Mock()
 
     def test_empty_basket_fails(self):
@@ -194,7 +196,7 @@ class TestCoverageCondition(TestCase):
     def test_consumed_items_checks_affected_items(self):
         # Create new offer
         range = models.Range.objects.create(name="All products", includes_all_products=True)
-        cond = models.CoverageCondition(range=range, type="Coverage", value=2)
+        cond = models.Condition(range=range, type=models.Condition.COVERAGE, value=2)
 
         # Get 4 distinct products in the basket
         self.products.extend(

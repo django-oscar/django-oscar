@@ -16,7 +16,7 @@ from django.utils.timezone import now, get_current_timezone
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
-from oscar.apps.offer import benefits, results, utils
+from oscar.apps.offer import benefits, conditions, results, utils
 from oscar.apps.offer.managers import ActiveOfferManager
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_model, get_class
@@ -207,13 +207,13 @@ class AbstractConditionalOffer(models.Model):
         return self.get_max_applications(user) > 0
 
     def is_condition_satisfied(self, basket):
-        return self.condition.proxy().is_satisfied(self, basket)
+        return self.condition.is_satisfied(self, basket)
 
     def is_condition_partially_satisfied(self, basket):
-        return self.condition.proxy().is_partially_satisfied(self, basket)
+        return self.condition.is_partially_satisfied(self, basket)
 
     def get_upsell_message(self, basket):
-        return self.condition.proxy().get_upsell_message(self, basket)
+        return self.condition.get_upsell_message(self, basket)
 
     def apply_benefit(self, basket):
         """
@@ -513,12 +513,10 @@ class AbstractCondition(models.Model):
     """
     COUNT, VALUE, COVERAGE = ("Count", "Value", "Coverage")
     TYPE_CHOICES = (
-        (COUNT, _("Depends on number of items in basket that are in "
-                  "condition range")),
-        (VALUE, _("Depends on value of items in basket that are in "
-                  "condition range")),
-        (COVERAGE, _("Needs to contain a set number of DISTINCT items "
-                     "from the condition range")))
+        (COUNT, conditions.CountCondition.help_text),
+        (VALUE, conditions.ValueCondition.help_text),
+        (COVERAGE, conditions.CoverageCondition.help_text)
+    )
     range = models.ForeignKey(
         'offer.Range', verbose_name=_("Range"), null=True, blank=True)
     type = models.CharField(_('Type'), max_length=128, choices=TYPE_CHOICES,
@@ -546,23 +544,28 @@ class AbstractCondition(models.Model):
             self.VALUE: conditions.ValueCondition,
             self.COVERAGE: conditions.CoverageCondition
         }
-        # Short-circuit logic if current class is already a proxy class.
-        if self.__class__ in klassmap.values():
-            return self
-
-        field_dict = dict(self.__dict__)
-        for field in list(field_dict.keys()):
-            if field.startswith('_'):
-                del field_dict[field]
 
         if self.proxy_class:
             klass = utils.load_proxy(self.proxy_class)
-            # Short-circuit again.
-            if self.__class__ == klass:
-                return self
-            return klass(**field_dict)
+
+            if isinstance(klass, self.__class__):
+                warnings.warn(
+                    _("proxy classes should not extend benefit model"),
+                    DeprecationWarning, stacklevel=2)
+
+                field_dict = dict(self.__dict__)
+                for field in list(field_dict.keys()):
+                    if field.startswith('_'):
+                        del field_dict[field]
+
+                # Short-circuit again.
+                if self.__class__ == klass:
+                    return self
+                return klass(**field_dict)
+            return klass(self)
+
         if self.type in klassmap:
-            return klassmap[self.type](**field_dict)
+            return klassmap[self.type](self)
         raise RuntimeError("Unrecognised condition type (%s)" % self.type)
 
     def __str__(self):
@@ -584,57 +587,19 @@ class AbstractCondition(models.Model):
         A description of the condition.
         Defaults to the name. May contain HTML.
         """
-        return self.name
+        return self.proxy().name
 
     def consume_items(self, offer, basket, affected_lines):
-        pass
-
-    def is_satisfied(self, offer, basket):
-        """
-        Determines whether a given basket meets this condition.  This is
-        stubbed in this top-class object.  The subclassing proxies are
-        responsible for implementing it correctly.
-        """
-        return False
-
-    def is_partially_satisfied(self, offer, basket):
-        """
-        Determine if the basket partially meets the condition.  This is useful
-        for up-selling messages to entice customers to buy something more in
-        order to qualify for an offer.
-        """
-        return False
+        return self.proxy().consume_items(offer, basket, affected_lines)
 
     def get_upsell_message(self, offer, basket):
-        return None
+        return self.proxy().get_upsell_message(offer, basket)
 
-    def can_apply_condition(self, line):
-        """
-        Determines whether the condition can be applied to a given basket line
-        """
-        if not line.stockrecord_id:
-            return False
-        product = line.product
-        return (self.range.contains_product(product)
-                and product.get_is_discountable())
+    def is_satisfied(self, offer, basket):
+        return self.proxy().is_satisfied(offer, basket)
 
-    def get_applicable_lines(self, offer, basket, most_expensive_first=True):
-        """
-        Return line data for the lines that can be consumed by this condition
-        """
-        line_tuples = []
-        for line in basket.all_lines():
-            if not self.can_apply_condition(line):
-                continue
-
-            price = utils.unit_price(offer, line)
-            if not price:
-                continue
-            line_tuples.append((price, line))
-        key = operator.itemgetter(0)
-        if most_expensive_first:
-            return sorted(line_tuples, reverse=True, key=key)
-        return sorted(line_tuples, key=key)
+    def is_partially_satisfied(self, offer, basket):
+        return self.proxy().is_partially_satisfied(offer, basket)
 
 
 @python_2_unicode_compatible

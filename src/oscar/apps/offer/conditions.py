@@ -1,26 +1,88 @@
+import operator
 from decimal import Decimal as D, ROUND_UP
 
 from django.utils import six
 from django.utils.translation import ungettext, ugettext_lazy as _
 
 from oscar.apps.offer import utils
-from oscar.core.loading import get_model
 from oscar.templatetags.currency_filters import currency
-
-
-Condition = get_model('offer', 'Condition')
 
 __all__ = [
     'CountCondition', 'CoverageCondition', 'ValueCondition'
 ]
 
 
-class CountCondition(Condition):
+class ConditionImplementation(object):
+
+    def __init__(self, instance):
+        self.instance = instance
+
+    @property
+    def value(self):
+        return self.instance.value
+
+    @property
+    def range(self):
+        return self.instance.range
+
+    def is_satisfied(self, offer, basket):
+        """
+        Determines whether a given basket meets this condition.  This is
+        stubbed in this top-class object.  The subclassing proxies are
+        responsible for implementing it correctly.
+        """
+        return False
+
+    def is_partially_satisfied(self, offer, basket):
+        """
+        Determine if the basket partially meets the condition.  This is useful
+        for up-selling messages to entice customers to buy something more in
+        order to qualify for an offer.
+        """
+        return False
+
+    def get_upsell_message(self, offer, basket):
+        return None
+
+    def can_apply_condition(self, line):
+        """
+        Determines whether the condition can be applied to a given basket line
+        """
+        if not line.stockrecord_id:
+            return False
+        product = line.product
+        return (self.range.contains_product(product)
+                and product.get_is_discountable())
+
+    def get_applicable_lines(self, offer, basket, most_expensive_first=True):
+        """
+        Return line data for the lines that can be consumed by this condition
+        """
+        line_tuples = []
+        for line in basket.all_lines():
+            if not self.can_apply_condition(line):
+                continue
+
+            price = utils.unit_price(offer, line)
+            if not price:
+                continue
+            line_tuples.append((price, line))
+        key = operator.itemgetter(0)
+        if most_expensive_first:
+            return sorted(line_tuples, reverse=True, key=key)
+        return sorted(line_tuples, key=key)
+
+
+class CountCondition(ConditionImplementation):
     """
     An offer condition dependent on the NUMBER of matching items from the
     basket.
     """
     _description = _("Basket includes %(count)d item(s) from %(range)s")
+    help_text = _("Depends on number of items in basket that are in "
+                  "condition range")
+    verbose_name = _("Count condition")
+    verbose_name_plural = _("Count conditions")
 
     @property
     def name(self):
@@ -33,12 +95,6 @@ class CountCondition(Condition):
         return self._description % {
             'count': self.value,
             'range': utils.range_anchor(self.range)}
-
-    class Meta:
-        app_label = 'offer'
-        proxy = True
-        verbose_name = _("Count condition")
-        verbose_name_plural = _("Count conditions")
 
     def is_satisfied(self, offer, basket):
         """
@@ -103,13 +159,17 @@ class CountCondition(Condition):
                 break
 
 
-class CoverageCondition(Condition):
+class CoverageCondition(ConditionImplementation):
     """
     An offer condition dependent on the number of DISTINCT matching items from
     the basket.
     """
     _description = _("Basket includes %(count)d distinct item(s) from"
                      " %(range)s")
+    help_text = _("Needs to contain a set number of DISTINCT items "
+                  "from the condition range")
+    verbose_name = _("Coverage Condition")
+    verbose_name_plural = _("Coverage Conditions")
 
     @property
     def name(self):
@@ -122,12 +182,6 @@ class CoverageCondition(Condition):
         return self._description % {
             'count': self.value,
             'range': utils.range_anchor(self.range)}
-
-    class Meta:
-        app_label = 'offer'
-        proxy = True
-        verbose_name = _("Coverage Condition")
-        verbose_name_plural = _("Coverage Conditions")
 
     def is_satisfied(self, offer, basket):
         """
@@ -208,12 +262,16 @@ class CoverageCondition(Condition):
         return value
 
 
-class ValueCondition(Condition):
+class ValueCondition(ConditionImplementation):
     """
     An offer condition dependent on the VALUE of matching items from the
     basket.
     """
     _description = _("Basket includes %(amount)s from %(range)s")
+    help_text = _("Depends on value of items in basket that are in "
+                  "condition range")
+    verbose_name = _("Value condition")
+    verbose_name_plural = _("Value conditions")
 
     @property
     def name(self):
@@ -226,12 +284,6 @@ class ValueCondition(Condition):
         return self._description % {
             'amount': currency(self.value),
             'range': utils.range_anchor(self.range)}
-
-    class Meta:
-        app_label = 'offer'
-        proxy = True
-        verbose_name = _("Value condition")
-        verbose_name_plural = _("Value conditions")
 
     def is_satisfied(self, offer, basket):
         """

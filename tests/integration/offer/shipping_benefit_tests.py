@@ -12,7 +12,7 @@ from oscar.test import factories
 def create_offer():
     range = models.Range.objects.create(
         name="All products", includes_all_products=True)
-    condition = models.CountCondition.objects.create(
+    condition = models.Condition.objects.create(
         range=range,
         type=models.Condition.COUNT,
         value=1)

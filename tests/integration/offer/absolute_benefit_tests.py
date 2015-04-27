@@ -16,7 +16,7 @@ class TestAnAbsoluteDiscountAppliedWithCountConditionOnDifferentRange(TestCase):
         self.condition_product = factories.ProductFactory()
         condition_range = factories.RangeFactory()
         condition_range.add_product(self.condition_product)
-        self.condition = models.CountCondition.objects.create(
+        self.condition = models.Condition.objects.create(
             range=condition_range,
             type=models.Condition.COUNT,
             value=2)
@@ -62,7 +62,7 @@ class TestAnAbsoluteDiscountAppliedWithCountCondition(TestCase):
     def setUp(self):
         range = models.Range.objects.create(
             name="All products", includes_all_products=True)
-        self.condition = models.CountCondition.objects.create(
+        self.condition = models.Condition.objects.create(
             range=range,
             type=models.Condition.COUNT,
             value=2)
@@ -150,7 +150,7 @@ class TestAnAbsoluteDiscount(TestCase):
     def setUp(self):
         range = models.Range.objects.create(
             name="All products", includes_all_products=True)
-        self.condition = models.CountCondition.objects.create(
+        self.condition = models.Condition.objects.create(
             range=range,
             type=models.Condition.COUNT,
             value=2)
@@ -180,7 +180,7 @@ class TestAnAbsoluteDiscountWithMaxItemsSetAppliedWithCountCondition(TestCase):
     def setUp(self):
         range = models.Range.objects.create(
             name="All products", includes_all_products=True)
-        self.condition = models.CountCondition.objects.create(
+        self.condition = models.Condition.objects.create(
             range=range,
             type=models.Condition.COUNT,
             value=2)
@@ -225,7 +225,7 @@ class TestAnAbsoluteDiscountAppliedWithValueCondition(TestCase):
     def setUp(self):
         range = models.Range.objects.create(
             name="All products", includes_all_products=True)
-        self.condition = models.ValueCondition.objects.create(
+        self.condition = models.Condition.objects.create(
             range=range,
             type=models.Condition.VALUE,
             value=D('10.00'))
@@ -276,7 +276,7 @@ class TestAnAbsoluteDiscountWithMaxItemsSetAppliedWithValueCondition(TestCase):
     def setUp(self):
         range = models.Range.objects.create(
             name="All products", includes_all_products=True)
-        self.condition = models.ValueCondition.objects.create(
+        self.condition = models.Condition.objects.create(
             range=range,
             type=models.Condition.VALUE,
             value=D('10.00'))
