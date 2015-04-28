@@ -241,6 +241,7 @@ class CheckoutFlow(OrderPlacementMixin):
             return self.checkout_failed()
 
         if basket.status != Basket.FROZEN:
+            # this cannot happen - we filter(status=FROZEN) above
             logger.error("Basket {} for payment (reference: {}) is not frozen."
                          .format(basket, payment_references))
             messages.warning(self.request,
