@@ -23,9 +23,7 @@ sphinx_rtd_theme==0.1.6
 # Testing
 django-dynamic-fixture==1.8.1
 coverage==3.7.1
-# django-nose has no released version with Django 1.8 support yet.
-# Remove when 1.4 is released
-https://github.com/django-nose/django-nose/archive/117e3892a64a67d90a8daaacb07332f05ce7f73e.zip#egg=django-nose
+django-nose==1.4
 spec==0.11.1
 WebTest==2.0.17
 django-webtest==1.7.7
