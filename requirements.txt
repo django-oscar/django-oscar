@@ -23,10 +23,14 @@ sphinx_rtd_theme==0.1.6
 # Testing
 django-dynamic-fixture==1.8.1
 coverage==3.7.1
-django-nose==1.4
 spec==0.11.1
 WebTest==2.0.17
 django-webtest==1.7.7
+pytest==2.7.0
+pytest-cache==1.0
+pytest-cov==1.8.1
+pytest-django==2.8.0
+pytest-xdist==1.11
 tox==1.8.1
 coveralls==0.4.4
 behave==1.2.4

@@ -87,9 +87,4 @@ OSCAR_ORDER_STATUS_PIPELINE = {'A': ('B',), 'B': ()}
 OSCAR_INITIAL_LINE_STATUS = 'a'
 OSCAR_LINE_STATUS_PIPELINE = {'a': ('b', ), 'b': ()}
 
-# Setting this explicitly prevents Django 1.7+ from showing a
-# warning regarding a changed default test runner. The Oscar test
-# suite is run with nose, so it does not matter.
-SILENCED_SYSTEM_CHECKS = ['1_6.W001']
-
 SECRET_KEY = 'notverysecret'
