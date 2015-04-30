@@ -1,10 +1,8 @@
 from django.test import TestCase
-from nose.plugins.attrib import attr
 
 from oscar.apps.catalogue.reviews import forms
 
 
-@attr('reviews')
 class TestReviewForm(TestCase):
 
     def setUp(self):

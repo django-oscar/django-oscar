@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
+import pytest
 from django.test import TestCase
 from django.core import exceptions
-
-from nose.tools import raises
 
 from oscar.apps.order.models import ShippingAddress
 from oscar.core.compat import get_user_model
@@ -197,11 +196,12 @@ def assert_valid_postcode(country_value, postcode_value):
     address.clean()
 
 
-@raises(exceptions.ValidationError)
 def assert_invalid_postcode(country_value, postcode_value):
     country = models.Country(iso_3166_1_a2=country_value)
     address = models.UserAddress(country=country, postcode=postcode_value)
-    address.clean()
+
+    with pytest.raises(exceptions.ValidationError):
+        address.clean()
 
 
 def test_postcode_is_validated_for_country():

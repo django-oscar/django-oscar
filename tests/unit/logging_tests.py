@@ -1,7 +1,5 @@
 from logging import LogRecord
 
-import nose.tools
-
 from oscar.core.logging.formatters import PciFormatter
 
 
@@ -19,7 +17,7 @@ def assert_message_filtered_correctly(string, expected):
     record = LogRecord(
         name=None, level=None, pathname='', lineno=0,
         msg=string, args=None, exc_info=None)
-    nose.tools.eq_(formatter.format(record), expected)
+    assert formatter.format(record) == expected
 
 
 def test_pci_formatter():

@@ -1,11 +1,9 @@
 from django.test import TestCase
-from nose.plugins.attrib import attr
 import mock
 
 from oscar.apps.shipping import repository, methods
 
 
-@attr('shipping')
 class TestDefaultShippingRepository(TestCase):
 
     def setUp(self):

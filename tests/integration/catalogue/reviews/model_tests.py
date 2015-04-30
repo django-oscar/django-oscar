@@ -1,7 +1,6 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django_dynamic_fixture import G
-from nose.plugins.attrib import attr
 
 from oscar.core.compat import get_user_model
 from oscar.apps.catalogue.reviews import models
@@ -10,7 +9,6 @@ from oscar.test.factories import create_product
 User = get_user_model()
 
 
-@attr('reviews')
 class TestAnAnonymousReview(TestCase):
 
     def setUp(self):
@@ -68,7 +66,6 @@ class TestAnAnonymousReview(TestCase):
         self.assertEqual("Dave", review.reviewer_name)
 
 
-@attr('reviews')
 class TestAUserReview(TestCase):
 
     def setUp(self):
@@ -107,7 +104,6 @@ class TestAUserReview(TestCase):
         self.assertEqual("Tom Thumb", review.reviewer_name)
 
 
-@attr('reviews')
 class TestVotingOnAReview(TestCase):
 
     def setUp(self):

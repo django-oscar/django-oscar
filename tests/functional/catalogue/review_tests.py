@@ -1,7 +1,5 @@
 from django_dynamic_fixture import G
 
-from nose.plugins.attrib import attr
-
 from oscar.test.testcases import WebTestCase
 from oscar.test.factories import create_product
 from oscar.core.compat import get_user_model
@@ -11,7 +9,6 @@ from oscar.test.contextmanagers import mock_signal_receiver
 User = get_user_model()
 
 
-@attr('reviews')
 class TestACustomer(WebTestCase):
 
     def setUp(self):

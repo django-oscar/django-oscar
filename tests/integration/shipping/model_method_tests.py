@@ -1,7 +1,6 @@
 from decimal import Decimal as D
 
 from django.test import TestCase
-from nose.plugins.attrib import attr
 
 from oscar.apps.shipping.models import OrderAndItemCharges, WeightBased
 from oscar.core.compat import get_user_model
@@ -11,7 +10,6 @@ from oscar.test import factories
 User = get_user_model()
 
 
-@attr('shipping')
 class TestOrderAndItemCharges(TestCase):
 
     def setUp(self):
@@ -57,7 +55,6 @@ class TestOrderAndItemCharges(TestCase):
         self.assertEqual(D('5.00') + 7*D('1.00'), charge.incl_tax)
 
 
-@attr('shipping')
 class ZeroFreeThresholdTest(TestCase):
 
     def setUp(self):
@@ -76,7 +73,6 @@ class ZeroFreeThresholdTest(TestCase):
         self.assertEqual(D('0.00'), charge.incl_tax)
 
 
-@attr('shipping')
 class TestNonZeroFreeThreshold(TestCase):
 
     def setUp(self):
@@ -109,7 +105,6 @@ class TestNonZeroFreeThreshold(TestCase):
         self.assertEqual(D('0.00'), charge.incl_tax)
 
 
-@attr('shipping')
 class WeightBasedMethodTests(TestCase):
 
     def setUp(self):

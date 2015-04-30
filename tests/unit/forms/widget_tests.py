@@ -1,11 +1,8 @@
-import nose
-
 from oscar.forms import widgets
 
 
 def compare_date_format(format, expected):
-    nose.tools.eq_(
-        widgets.datetime_format_to_js_date_format(format), expected)
+    assert widgets.datetime_format_to_js_date_format(format) == expected
 
 
 def test_datetime_to_date_format_conversion():
@@ -18,8 +15,7 @@ def test_datetime_to_date_format_conversion():
 
 
 def compare_time_format(format, expected):
-    nose.tools.eq_(
-        widgets.datetime_format_to_js_time_format(format), expected)
+    assert widgets.datetime_format_to_js_time_format(format) == expected
 
 
 def test_datetime_to_time_format_conversion():
