@@ -30,7 +30,7 @@ __all__ = ["UserFactory", "CountryFactory", "UserAddressFactory",
            "AttributeOptionGroupFactory",
            "AttributeOptionFactory", "PartnerFactory",
            "ProductCategoryFactory", "CategoryFactory", "RangeFactory",
-           "PermissionFactory"]
+           "PermissionFactory", "OptionFactory", "BasketLineAttributeFactory"]
 
 Selector = get_class('partner.strategy', 'Selector')
 
@@ -81,6 +81,22 @@ class BasketFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = get_model('basket', 'Basket')
+
+
+class OptionFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = get_model('catalogue', 'Option')
+
+    name = 'example option'
+    code = 'example'
+    type = Meta.model.OPTIONAL
+
+
+class BasketLineAttributeFactory(factory.DjangoModelFactory):
+    option = factory.SubFactory(OptionFactory)
+
+    class Meta:
+        model = get_model('basket', 'LineAttribute')
 
 
 class VoucherFactory(factory.DjangoModelFactory):

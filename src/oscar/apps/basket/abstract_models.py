@@ -4,7 +4,7 @@ import zlib
 from django.db import models
 from django.db.models import Sum
 from django.conf import settings
-from django.utils.encoding import python_2_unicode_compatible
+from django.utils.encoding import python_2_unicode_compatible, smart_text
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
@@ -791,12 +791,12 @@ class AbstractLine(models.Model):
 
     @property
     def description(self):
-        d = str(self.product)
+        d = smart_text(self.product)
         ops = []
         for attribute in self.attributes.all():
             ops.append("%s = '%s'" % (attribute.option.name, attribute.value))
         if ops:
-            d = "%s (%s)" % (d.decode('utf-8'), ", ".join(ops))
+            d = "%s (%s)" % (d, ", ".join(ops))
         return d
 
     def get_warning(self):
