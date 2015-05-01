@@ -1,10 +1,18 @@
 // OSCAR CHECKOUT UNIQUE STYLES
 // -----------
 
-//Set Width of all quantity fields
+//Set max width of all quantity fields
 input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
-    width: 55px;
+    max-width: 55px;
 }
+
+.checkout-quantity .input-group {
+  max-width: 130px;
+  input[type="number"][id*="quantity"] {
+    max-width: none;
+  }
+}
+
 // Quantity on the basket
 .checkout-quantity {
     input {
@@ -44,9 +52,9 @@ input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
 
 // Descriptions next to shipping prices - basket totals table
 #basket_totals {
-	th small {
-		font-weight: normal;
-	}
+    th small {
+        font-weight: normal;
+    }
 }
 
 // Table background for totals
@@ -94,13 +102,13 @@ input[type="text"][id*="quantity"], input[type="number"][id*="quantity"] {
         width: auto;
     }
     #id_line1, #id_line2, #id_line3 {
-        width: 300px;
+        max-width: 300px;
     }
     #id_postcode {
-        width: 100px;
+        max-width: 100px;
     }
     #id_notes {
-        width: 400px;
+        max-width: 600px;
         height: 100px;
     }
 }

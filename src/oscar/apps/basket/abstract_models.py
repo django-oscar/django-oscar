@@ -730,8 +730,8 @@ class AbstractLine(models.Model):
         """
         if not hasattr(self, '_info'):
             # Cache the PurchaseInfo instance.
-            self._info = self.basket.strategy.fetch_for_product(
-                self.product, self.stockrecord)
+            self._info = self.basket.strategy.fetch_for_line(
+                self, self.stockrecord)
         return self._info
 
     @property

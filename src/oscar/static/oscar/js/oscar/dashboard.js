@@ -23,6 +23,7 @@ var oscar = (function(o, $) {
                 'datetimeFormat': 'yy-mm-dd hh:ii',
                 'stepMinute': 15,
                 'tinyConfig': {
+                    entity_encoding: 'raw',
                     statusbar: false,
                     menubar: false,
                     plugins: "link",
