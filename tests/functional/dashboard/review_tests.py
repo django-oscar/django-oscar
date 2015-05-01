@@ -2,10 +2,10 @@ from datetime import timedelta
 
 from django.core.urlresolvers import reverse
 from django.utils import timezone
+
 from oscar.core.compat import get_user_model
 from oscar.core.loading import get_model
-from django_dynamic_fixture import get
-
+from oscar.test.factories import ProductReviewFactory, UserFactory
 from oscar.test.testcases import WebTestCase
 
 
@@ -22,12 +22,12 @@ class ReviewsDashboardTests(WebTestCase):
         self.assertIsOk(response)
 
     def test_bulk_editing_review_status(self):
-        user1 = get(User)
-        user2 = get(User)
+        user1 = UserFactory()
+        user2 = UserFactory()
 
-        get(ProductReview, user=user1, status=0)
-        get(ProductReview, user=user2, status=0)
-        get(ProductReview, user=user2, status=0)
+        ProductReviewFactory(user=user1, status=0)
+        ProductReviewFactory(user=user2, status=0)
+        ProductReviewFactory(user=user2, status=0)
 
         assert(ProductReview.objects.count() == 3)
 
@@ -41,12 +41,12 @@ class ReviewsDashboardTests(WebTestCase):
         self.assertEqual(ProductReview.objects.get(pk=3).status, 1)
 
     def test_filter_reviews_by_name(self):
-        user1 = get(User, first_name='Peter', last_name='Griffin')
-        user2 = get(User, first_name='Lois', last_name='Griffin')
+        user1 = UserFactory(first_name='Peter', last_name='Griffin')
+        user2 = UserFactory(first_name='Lois', last_name='Griffin')
 
-        get(ProductReview, user=user1, status=0)
-        get(ProductReview, user=user2, status=0)
-        get(ProductReview, user=user2, status=0)
+        ProductReviewFactory(user=user1, status=0)
+        ProductReviewFactory(user=user2, status=0)
+        ProductReviewFactory(user=user2, status=0)
 
         url = reverse('dashboard:reviews-list') + '?name=peter'
         response = self.get(url)
@@ -64,13 +64,13 @@ class ReviewsDashboardTests(WebTestCase):
     def test_filter_reviews_by_keyword(self):
         url = reverse('dashboard:reviews-list')
 
-        user1 = get(User)
-        user2 = get(User)
+        user1 = UserFactory()
+        user2 = UserFactory()
 
-        review1 = get(ProductReview, user=user1, title='Sexy Review')
-        review2 = get(ProductReview, user=user2, title='Anry Review',
-                      body='argh')
-        get(ProductReview, user=user2, title='Lovely Thing')
+        review1 = ProductReviewFactory(user=user1, title='Sexy Review')
+        review2 = ProductReviewFactory(
+            user=user2, title='Anry Review', body='argh')
+        ProductReviewFactory(user=user2, title='Lovely Thing')
 
         response = self.get(url, params={'keyword': 'argh'})
         self.assertEqual(len(response.context['review_list']), 1)
@@ -97,11 +97,11 @@ class ReviewsDashboardTests(WebTestCase):
                 now - timedelta(days=days), timezone=timezone.utc)
 
         now = timezone.now()
-        review1 = get(ProductReview)
-        review2 = get(ProductReview)
+        review1 = ProductReviewFactory()
+        review2 = ProductReviewFactory()
         review2.date_created = now - timedelta(days=2)
         review2.save()
-        review3 = get(ProductReview)
+        review3 = ProductReviewFactory()
         review3.date_created = now - timedelta(days=10)
         review3.save()
 
@@ -124,12 +124,12 @@ class ReviewsDashboardTests(WebTestCase):
     def test_filter_reviews_by_status(self):
         url = reverse('dashboard:reviews-list')
 
-        user1 = get(User)
-        user2 = get(User)
+        user1 = UserFactory()
+        user2 = UserFactory()
 
-        review1 = get(ProductReview, user=user1, status=1)
-        review2 = get(ProductReview, user=user2, status=0)
-        review3 = get(ProductReview, user=user2, status=2)
+        review1 = ProductReviewFactory(user=user1, status=1)
+        review2 = ProductReviewFactory(user=user2, status=0)
+        review3 = ProductReviewFactory(user=user2, status=2)
 
         response = self.get(url, params={'status': 0})
         self.assertEqual(len(response.context['review_list']), 1)

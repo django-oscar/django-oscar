@@ -21,7 +21,6 @@ sphinxcontrib-napoleon==0.2.8
 sphinx_rtd_theme==0.1.6
 
 # Testing
-django-dynamic-fixture==1.8.1
 coverage==3.7.1
 spec==0.11.1
 WebTest==2.0.17

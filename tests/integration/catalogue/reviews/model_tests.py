@@ -1,10 +1,10 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
-from django_dynamic_fixture import G
 
 from oscar.core.compat import get_user_model
 from oscar.apps.catalogue.reviews import models
 from oscar.test.factories import create_product
+from oscar.test.factories import UserFactory
 
 User = get_user_model()
 
@@ -70,7 +70,7 @@ class TestAUserReview(TestCase):
 
     def setUp(self):
         self.product = create_product()
-        self.user = G(User, first_name="Tom", last_name="Thumb")
+        self.user = UserFactory(first_name="Tom", last_name="Thumb")
         self.data = {
             'product': self.product,
             'title': 'This product is lovely',
@@ -108,8 +108,8 @@ class TestVotingOnAReview(TestCase):
 
     def setUp(self):
         self.product = create_product()
-        self.user = G(User)
-        self.voter = G(User)
+        self.user = UserFactory()
+        self.voter = UserFactory()
         self.review = self.product.reviews.create(
             title='This is nice',
             score=3,

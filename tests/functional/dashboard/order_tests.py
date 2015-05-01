@@ -1,18 +1,16 @@
-from django.utils.six.moves import http_client
 from django.conf import settings
+from django.core.urlresolvers import reverse
+from django.utils.six.moves import http_client
 
 from oscar.core.loading import get_model
-from django.core.urlresolvers import reverse
-from django_dynamic_fixture import get, G
-
-from oscar.test.testcases import WebTestCase
+from oscar.apps.order.models import (
+    Order, OrderNote, PaymentEvent, PaymentEventType)
+from oscar.test.factories import (
+    PartnerFactory, ShippingAddressFactory)
 from oscar.test.factories import create_order, create_basket
-from oscar.apps.order.models import Order, OrderNote, PaymentEvent, \
-    PaymentEventType
-from oscar.core.compat import get_user_model
+from oscar.test.testcases import WebTestCase
 
 
-User = get_user_model()
 Basket = get_model('basket', 'Basket')
 Partner = get_model('partner', 'Partner')
 ShippingAddress = get_model('order', 'ShippingAddress')
@@ -30,7 +28,7 @@ class TestOrderListDashboard(WebTestCase):
         self.assertEqual(http_client.FOUND, response.status_code)
 
     def test_downloads_to_csv_without_error(self):
-        address = get(ShippingAddress)
+        address = ShippingAddressFactory()
         create_order(shipping_address=address)
         page = self.get(reverse('dashboard:order-list'))
         form = page.forms['orders_form']
@@ -53,11 +51,11 @@ class PermissionBasedDashboardOrderTestsBase(WebTestCase):
         Creates two orders. order_in has self.user in it's partner users list.
         """
         super(PermissionBasedDashboardOrderTestsBase, self).setUp()
-        self.address = G(ShippingAddress)
+        self.address = ShippingAddressFactory()
         self.basket_in = create_basket()
         self.basket_out = create_basket()
         # replace partner with one that has the user in it's users list
-        self.partner_in = G(Partner, users=[self.user])
+        self.partner_in = PartnerFactory(users=[self.user])
         stockrecord = self.basket_in.lines.all()[0].stockrecord
         stockrecord.partner = self.partner_in
         stockrecord.save()
