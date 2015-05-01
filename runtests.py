@@ -82,4 +82,5 @@ if __name__ == '__main__':
             'ignore', r'.*', DeprecationWarning, libs)
 
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tests.settings')
-        pytest.main(args)
+        result_code = pytest.main(args)
+        sys.exit(result_code)
