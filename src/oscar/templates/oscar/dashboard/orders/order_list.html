@@ -49,24 +49,30 @@
                 {% endif %}
             {% endfor %}
             <input type="submit" value="{% trans "Search" %}" class="btn btn-primary" />
-            <a data-toggle="modal" href="#SearchModal">{% trans "Advanced Search" %}</a>
+            <a data-toggle="modal" data-target="#SearchModal" href="#">{% trans "Advanced Search" %}</a>
         </form>
 
-        <div class="modal hide fade" id="SearchModal">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h3>{% trans "Advanced Search" %}</h3>
+        <div class="modal fade" id="SearchModal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3>{% trans "Advanced Search" %}</h3>
+                    </div>
+                    <form action="." method="get" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                            {% csrf_token %}
+                            {% include "dashboard/partials/form_fields.html" with form=form %}
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</a>
+                            <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <form action="." method="get" class="form-horizontal">
-                <div class="modal-body">
-                    {% csrf_token %}
-                    {% include "dashboard/partials/form_fields.html" with form=form %}
-                </div>
-                <div class="modal-footer">
-                    <a href="#" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</a>
-                    <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
-                </div>
-            </form>
         </div>
     </div>
 

@@ -1,0 +1,146 @@
+// ----------------
+#order_graph {
+    position: relative;
+    margin-bottom: 5em;
+    width: 99%;
+    height: @graph-height;
+
+    .bar-caption {
+      position: relative;
+      text-align: center;
+      top: 0;
+      h1 {
+        font-size: 18px;
+        color: #242424;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+    }
+
+    .bar-y-axis{
+        position: absolute;
+        top: 16px;
+        width: 5em;
+        margin: 0;
+        padding: 0;
+        float: left;
+        display: inline;
+    }
+
+    .bar-y-axis li{
+        list-style:none;
+        height: @graph-segments-height;
+        float: right;
+        color: #868686;
+    }
+
+    .bar-chart, .bar-chart dt, .bar-chart dd{
+        margin:0;
+        padding:0;
+    }
+
+    .bar-chart{
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        width: 98%;
+        height: @bar-height;
+    }
+
+    .bar-chart dd{
+        position: relative;
+        float: left;
+        width: @bar-width;
+        height: @graph-height;
+        margin-top: 22px;
+    }
+
+    .bar-chart dd em{
+        position: absolute;
+        bottom: -2em;
+        right: 0;
+        font-style: inherit;
+        color: #868686;
+    }
+
+    .bar-chart span{
+        position: absolute;
+        display: block;
+        width: 30%;
+        bottom: 0;
+        right: 0;
+        z-index: 1;
+        color: @gray;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .bar-chart span p {
+        position: relative;
+        top: 1em;
+        display: none;
+        padding: 3px;
+        color: @gray-dark;
+        z-index: 2;
+        background-color: @white;
+        font-weight: bold;
+        .border-radius(3px);
+    }
+
+    .bar-chart span {
+        height: 50%;
+        #gradient > .vertical(#0e91bf, #0b759b);
+    }
+}
+
+.order-graph-details {
+  label {
+    cursor: default;
+    background-color: #F8F8F8;
+    border: 1px solid #ccc;
+    .clearfix();
+    display:block;
+    margin-bottom: 15px;
+    padding: 12px;
+    color: #878787;
+    font-size: 12px;
+    span {
+      display: inline-block;
+      font-weight: bold;
+      width: 30%;
+      font-size: 16px;
+      color: #242424;
+    }
+    i {
+      color: #0D84AE;
+      margin-right: 5px;
+      font-size: 18px;
+    }
+  }
+}
+
+.order-summary {
+  .horiz_col();
+    background: #efefef;
+    li {
+      width: 20%;
+      text-align: center;
+    }
+    div {
+      border-left: 1px solid #dcdcdc;
+      padding: 20px 10px;
+      min-height: 85px;
+    }
+    strong {
+      display: block;
+      margin-top: 20px;
+    }
+    li {
+      width: 16%;
+    }
+    li:first-child div {
+      border-left: none;
+    }
+}
+
