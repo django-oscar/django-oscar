@@ -276,7 +276,7 @@ class ProductCreateUpdateView(generic.UpdateView):
                 return _('Create new variant of %(parent_product)s') % {
                     'parent_product': self.parent.title}
         else:
-            if self.object.title:
+            if self.object.title or not self.parent:
                 return self.object.title
             else:
                 return _('Editing variant of %(parent_product)s') % {
