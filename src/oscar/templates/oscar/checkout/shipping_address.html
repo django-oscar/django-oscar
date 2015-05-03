@@ -17,7 +17,7 @@
     <div class="sub-header">
         <h2>{% trans "Where should we ship to?" %}</h2>
     </div>
-    {% if request.user.is_authenticated %}
+    {% if user.is_authenticated %}
         {% if addresses %}
             <h3>{% trans "An address from your addressbook?" %}</h3>
             <div class="row">

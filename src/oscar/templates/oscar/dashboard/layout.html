@@ -46,7 +46,7 @@
             </div>
             <div class="collapse navbar-collapse nav-accounts">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><span>{% trans "Welcome" %} <em>{{ request.user.get_full_name|default:request.user.email }}</em></span></li>
+                    <li><span>{% trans "Welcome" %} <em>{{ user.get_full_name|default:request.user.email }}</em></span></li>
                     <li><a href="{{ homepage_url }}"><i class="icon-home"></i> {% trans "Return to site" %}</a></li>
                     <li><a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "Account" %}</a></li>
                     <li><a href="{% url 'customer:logout' %}"><i class="icon-signout"></i> {% trans "Log out" %}</a></li>
@@ -57,7 +57,7 @@
     {% endblock navbar %}
 
     {% block dashboard_nav %}
-        {% dashboard_navigation request.user as nav_items %}
+        {% dashboard_navigation user as nav_items %}
 
         <nav class="navbar navbar-static-top navbar-inverse navbar-primary">
             <div class="container-fluid dashboard">

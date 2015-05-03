@@ -7,7 +7,7 @@
         <tbody>
             <tr>
                 <th>{% trans 'Name' %}</th>
-                <td>{{ request.user.get_full_name|default:'-' }}</td>
+                <td>{{ user.get_full_name|default:'-' }}</td>
             </tr>
             <tr>
                 <th>{% trans 'Email address' %}</th>
