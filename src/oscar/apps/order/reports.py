@@ -52,17 +52,20 @@ class OrderReportGenerator(ReportGenerator):
     }
 
     def generate(self):
-        orders = Order._default_manager.filter(
-            date_placed__gte=self.start_date,
-            date_placed__lt=self.end_date + datetime.timedelta(days=1)
-        )
+        qs = Order._default_manager.all()
+
+        if self.start_date:
+            qs = qs.filter(date_placed__gte=self.start_date)
+        if self.end_date:
+            qs = qs.filter(
+                date_placed__lt=self.end_date + datetime.timedelta(days=1))
 
         additional_data = {
             'start_date': self.start_date,
             'end_date': self.end_date
         }
 
-        return self.formatter.generate_response(orders, **additional_data)
+        return self.formatter.generate_response(qs, **additional_data)
 
     def is_available_to(self, user):
         return user.is_staff
