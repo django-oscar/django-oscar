@@ -566,7 +566,12 @@ class Benefit(models.Model):
             return klass(**field_dict)
 
         if self.type in klassmap:
-            return klassmap[self.type](**field_dict)
+            ret = klassmap[self.type](**field_dict)
+            # copy select related cache
+            for attr_name in dict(self.__dict__):
+                if attr_name.startswith('_') and attr_name.endswith('_cache'):
+                    setattr(ret, attr_name, getattr(self, attr_name))
+            return ret
         raise RuntimeError("Unrecognised benefit type (%s)" % self.type)
 
     def __str__(self):
