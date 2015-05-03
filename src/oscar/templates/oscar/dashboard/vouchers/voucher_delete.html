@@ -12,15 +12,12 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:voucher-list' %}">{% trans "Vouchers" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:voucher-stats' pk=voucher.pk %}">{{ voucher }}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Delete?" %}</li>
     </ul>
@@ -48,7 +45,7 @@
         <form action="." method="post">
             {% csrf_token %}
             <div class="form-actions">
-                <button class="btn btn-danger btn-large" type="submit" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button> {% trans "or" %}
+                <button class="btn btn-danger btn-lg" type="submit" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button> {% trans "or" %}
                 <a href="{% url 'dashboard:voucher-list' %}">{% trans "cancel" %}</a>
             </div>
         </form>

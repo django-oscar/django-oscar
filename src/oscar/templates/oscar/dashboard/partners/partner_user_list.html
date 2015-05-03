@@ -10,11 +10,9 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:partner-list' %}">{% trans "Partners" %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{{ partner.name }}</li>
     </ul>
@@ -23,7 +21,7 @@
 {% block header %}
     <div class="page-header">
         <div class="btn-group pull-right">
-            <a class="btn btn-large btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+            <a class="btn btn-lg btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
                 <i class="icon-plus"></i>
                 {% trans 'Link a user' %}
                 <span class="caret"></span>

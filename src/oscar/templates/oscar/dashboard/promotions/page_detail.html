@@ -13,11 +13,9 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:promotion-list' %}">{% trans "Content blocks" %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{% blocktrans %}Content blocks on page '{{ page_url }}'{% endblocktrans %}</li>
     </ul>
@@ -48,10 +46,10 @@
                             <td>
                                 <div class="btn-toolbar">
                                     <div class="btn-group">
-                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
                                             {% trans "Actions" %}
                                             <span class="caret"></span>
-                                        </a>
+                                        </button>
                                         <ul class="dropdown-menu pull-right">
                                             <li><a href="{% url 'dashboard:promotion-update' ptype=promotion.content_object.code pk=promotion.content_object.id %}">{% trans "Edit" %}</a></li>
                                             <li><a href="{% url 'dashboard:pagepromotion-delete' pk=promotion.id %}">{% trans "Remove" %}</a></li>

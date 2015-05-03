@@ -12,11 +12,9 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:catalogue-class-list' %}">{% trans "Product Type" %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{{ title }}</li>
     </ul>
@@ -28,10 +26,10 @@
     <form class="form-stacked wysiwyg fixed-actions" method="post" data-behaviour="affix-nav-errors">
         {% csrf_token %}
 
-        <div class="row-fluid">
+        <div class="row">
 
             {% block tab_nav %}
-                <div class="span3">
+                <div class="col-md-3">
                     <div data-spy="affix" class="affix-top" data-offset-top="200">
                         <div class="table-header">
                             <h3>{% trans "Sections" %}</h3>
@@ -48,7 +46,7 @@
                 </div>
             {% endblock tab_nav %}
 
-            <div class="span9">
+            <div class="col-md-9">
                 <div class="tab-content">
                     {% block product_class_details %}
                         <div class="tab-pane active" id="product_class_details">

@@ -11,15 +11,12 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:order-list' %}">{% trans "Orders" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:order-detail' number=line.order.number %}">#{{ line.order.number }}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{% blocktrans with id=line.id %}Line #{{ id }}{% endblocktrans %}</li>
     </ul>
@@ -30,8 +27,8 @@
 {% endblock %}
 
 {% block dashboard_content %}
-    <div class="row-fluid">
-        <div class="span4">
+    <div class="row">
+        <div class="col-md-4">
             <div class="table-header">
                 <h3>{% trans "Product details" %}</h3>
             </div>
@@ -68,7 +65,7 @@
                 {% endif %}
             </table>
         </div>
-        <div class="span4">
+        <div class="col-md-4">
             <div class="table-header">
                 <h3>{% trans "Partner details" %}</h3>
             </div>
@@ -84,7 +81,7 @@
                 </tr>
             </table>
         </div>
-        <div class="span4">
+        <div class="col-md-4">
             <div class="table-header">
                 <h3>{% trans "Shipping details" %}</h3>
             </div>
@@ -102,8 +99,8 @@
         </div>
     </div>
 
-    <div class="row-fluid">
-        <div class="span4">
+    <div class="row">
+        <div class="col-md-4">
             <div class="table-header">
                 <h3>{% trans "Shipping status" %}</h3>
             </div>
@@ -128,7 +125,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="span4">
+        <div class="col-md-4">
             <div class="table-header">
                 <h3>{% trans "Shipping events" %}</h3>
             </div>
@@ -159,7 +156,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="span4">
+        <div class="col-md-4">
             <div class="table-header">
                 <h3>{% trans "Payment events" %}</h3>
             </div>

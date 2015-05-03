@@ -15,18 +15,15 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:catalogue-product-list' %}">{% trans "Products" %}</a>
-            <span class="divider">/</span>
         </li>
         {% if parent %}
             <li>
                 <a href="{% url 'dashboard:catalogue-product' parent.id %}">
                     {{ parent.title }}
                 </a>
-                <span class="divider">/</span>
             </li>
         {% endif %}
         <li class="active">{{ title }}</li>
@@ -40,8 +37,8 @@
         {% csrf_token %}
 
         {% if parent %}
-            <div class="row-fluid">
-                <div class="span12">
+            <div class="row">
+                <div class="col-md-12">
                     <div class="alert alert-info">
                         {% url 'dashboard:catalogue-product' pk=parent.id as parent_url %}
                         {% blocktrans with title=parent.title %}
@@ -53,10 +50,10 @@
             </div>
         {% endif %}
 
-        <div class="row-fluid">
+        <div class="row">
 
             {% block tab_nav %}
-                <div class="span3">
+                <div class="col-md-3">
                     <div data-spy="affix" class="affix-top" data-offset-top="200">
                         <div class="table-header">
                             <h3>{% trans "Sections" %}</h3>
@@ -95,7 +92,7 @@
                 </div>
             {% endblock tab_nav %}
 
-            <div class="span9">
+            <div class="col-md-9">
                 <div class="tab-content">
                     {% block product_details %}
                         <div class="tab-pane active" id="product_details">
@@ -317,26 +314,26 @@
 
         {% block fixed_actions_group %}
             <div class="fixed-actions-group">
-                <div class="form-actions">
+                <div class="form-group">
                     <div class="pull-right">
                         <a href="{% url 'dashboard:catalogue-product-list' %}">
                             {% trans "Cancel" %}
                         </a>
                         {% trans "or" %}
                         {% if parent %}
-                            <button class="btn btn-secondary btn-large" name="action" type="submit" value="create-another-child" data-loading-text="{% trans 'Saving...' %}">
+                            <button class="btn btn-default btn-lg" name="action" type="submit" value="create-another-child" data-loading-text="{% trans 'Saving...' %}">
                                 {% trans "Save and add another variant" %}
                             </button>
                         {% endif %}
-                        <button class="btn btn-secondary btn-large" name="action" type="submit" value="continue" data-loading-text="{% trans 'Saving...' %}">
+                        <button class="btn btn-default btn-lg" name="action" type="submit" value="continue" data-loading-text="{% trans 'Saving...' %}">
                             {% trans "Save and continue editing" %}
                         </button>
-                        <button class="btn btn-primary btn-large" name="action" type="submit" value="save" data-loading-text="{% trans 'Saving...' %}">
+                        <button class="btn btn-primary btn-lg" name="action" type="submit" value="save" data-loading-text="{% trans 'Saving...' %}">
                             {% trans "Save" %}
                         </button>
                     </div>
                     {% if product %}
-                        <a class="btn btn-success btn-large" href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a>
+                        <a class="btn btn-success btn-lg" href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a>
                     {% endif %}
                 </div>
             </div>

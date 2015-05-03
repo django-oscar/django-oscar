@@ -11,15 +11,12 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:range-list' %}">{% trans "Ranges" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:range-update' pk=range.id %}">'{{ range.name }}'</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Products" %}</li>
     </ul>
@@ -88,7 +85,7 @@
                             <h3 class="pull-left">{% trans "Products in range" %}</h3>
                             <div class="pull-right">
                                 <input type="hidden" name="action" value="remove_selected_products" />
-                                <button type="submit" class="btn" data-loading-text="{% trans 'Removing...' %}">{% trans "Remove selected products" %}</button>
+                                <button type="submit" class="btn btn-default" data-loading-text="{% trans 'Removing...' %}">{% trans "Remove selected products" %}</button>
                             </div>
                         </caption>
                         <thead>
@@ -133,7 +130,7 @@
     </div>
         {% endif %}
         <div class="form-actions">
-            <a href="{% url 'dashboard:range-update' pk=range.id %}" class="btn btn-large btn-primary">{% trans "Edit range" %}</a> {% trans "or" %}
+            <a href="{% url 'dashboard:range-update' pk=range.id %}" class="btn btn-lg btn-primary">{% trans "Edit range" %}</a> {% trans "or" %}
             <a href="{% url 'dashboard:range-list' %}" class="">{% trans "return to range list" %}</a>
         </div>
 

@@ -12,11 +12,9 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:offer-list' %}">{% trans "Offers" %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{{ offer.name }}</li>
     </ul>
@@ -29,7 +27,7 @@
             {% if offer.is_suspended %}
                 <button type="submit" class="btn btn-success" name="unsuspend" data-loading-text="{% trans 'Reinstating...' %}">{% trans "Reinstate offer" %}</button>
             {% else %}
-                <button type="submit" class="btn" name="suspend" data-loading-text="{% trans 'Suspending...' %}">{% trans "Suspend offer" %}</button>
+                <button type="submit" class="btn btn-default" name="suspend" data-loading-text="{% trans 'Suspending...' %}">{% trans "Suspend offer" %}</button>
             {% endif %}
             <a class="btn btn-danger" href="{% url 'dashboard:offer-delete' pk=offer.pk %}">{% trans "Delete offer" %}</a>
         </form>
@@ -45,7 +43,7 @@
                 {% if offer.is_available %}
                     <span class="label label-success">{% trans "Offer currently available" %}</span>
                 {% else %}
-                    <span class="label label-important">{% trans "Offer not available due to restrictions!" %}</span>
+                    <span class="label label-danger">{% trans "Offer not available due to restrictions!" %}</span>
                 {% endif %}
             </td>
             <td>{% trans "Total cost:" %} <strong>{{ offer.total_discount|currency }}</strong></td>
@@ -63,7 +61,7 @@
             <tr>
                 <th>{% trans "Name" %}</th>
                 <td>{{ offer.name }}</td>
-                <td rowspan="2"><a id="edit_metadata" href="{% url 'dashboard:offer-metadata' pk=offer.pk %}" class="btn">{% trans "Edit" %}</a></td>
+                <td rowspan="2"><a id="edit_metadata" href="{% url 'dashboard:offer-metadata' pk=offer.pk %}" class="btn btn-default">{% trans "Edit" %}</a></td>
             </tr>
             <tr>
                 <th>{% trans "Description" %}</th>
@@ -72,19 +70,19 @@
             <tr>
                 <th>{% trans "Incentive" %}</th>
                 <td>{{ offer.benefit.description|safe }}</td>
-                <td><a href="{% url 'dashboard:offer-benefit' pk=offer.pk %}" class="btn">{% trans "Edit" %}</a></td>
+                <td><a href="{% url 'dashboard:offer-benefit' pk=offer.pk %}" class="btn btn-default">{% trans "Edit" %}</a></td>
             </tr>
             <tr>
                 <th>{% trans "Condition" %}</th>
                 <td>{{ offer.condition.description|safe }}</td>
-                <td><a href="{% url 'dashboard:offer-condition' pk=offer.pk %}" class="btn">{% trans "Edit" %}</a></td>
+                <td><a href="{% url 'dashboard:offer-condition' pk=offer.pk %}" class="btn btn-default">{% trans "Edit" %}</a></td>
             </tr>
             <tr>
                 <th>{% trans "Restrictions" %}</th>
                 <td>
                     {% for restriction in offer.availability_restrictions %}
                         {% if not restriction.is_satisfied %}
-                            <span class="label label-important">
+                            <span class="label label-danger">
                                 {{ restriction.description }}
                             </span><br/>
                         {% else %}
@@ -92,7 +90,7 @@
                         {% endif %}
                     {% endfor %}
                 </td>
-                <td><a href="{% url 'dashboard:offer-restrictions' pk=offer.pk %}" class="btn">{% trans "Edit" %}</a></td>
+                <td><a href="{% url 'dashboard:offer-restrictions' pk=offer.pk %}" class="btn btn-default">{% trans "Edit" %}</a></td>
             </tr>
         </tbody>
     </table>
