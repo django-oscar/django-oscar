@@ -32,6 +32,7 @@ TODO
 coverage.xml
 violations.txt
 nosetests.xml
+/.cache/
 /htmlcov/*
 /.tox/*
 
