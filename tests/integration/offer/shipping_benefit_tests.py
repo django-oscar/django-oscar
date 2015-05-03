@@ -12,10 +12,9 @@ from oscar.test import factories
 def create_offer():
     range = models.Range.objects.create(
         name="All products", includes_all_products=True)
-    condition = models.CountCondition.objects.create(
+    condition = models.NoneCondition.objects.create(
         range=range,
-        type=models.Condition.COUNT,
-        value=1)
+        type=models.Condition.NONE)
     benefit = models.ShippingFixedPriceBenefit.objects.create(
         type=models.Benefit.SHIPPING_FIXED_PRICE,
         value=D('1.00'))
