@@ -212,6 +212,8 @@ class Applicator(object):
         sophisticated behaviour.  For instance, you could load extra offers
         based on the session or the user type.
         """
+        self._request = request
+
         site_offers = self.get_site_offers()
         basket_offers = self.get_basket_offers(basket, user)
         user_offers = self.get_user_offers(user)
@@ -222,28 +224,33 @@ class Applicator(object):
             key=lambda o: o.priority, reverse=True))
 
     def get_available_offers(self):
-        cutoff = now()
-        date_based = Q(
-            Q(start_datetime__lte=cutoff),
-            Q(end_datetime__gte=cutoff) | Q(end_datetime=None),
-        )
+        if not hasattr(self._request, '_available_offers'):
+            cutoff = now()
+            date_based = Q(
+                Q(start_datetime__lte=cutoff),
+                Q(end_datetime__gte=cutoff) | Q(end_datetime=None),
+            )
 
-        nondate_based = Q(start_datetime=None, end_datetime=None)
+            nondate_based = Q(start_datetime=None, end_datetime=None)
 
-        qs = ConditionalOffer.objects.filter(
-            date_based | nondate_based,
-            status=ConditionalOffer.OPEN)
-        # Using select_related with the condition/benefit ranges doesn't seem
-        # to work.  I think this is because both the related objects have the
-        # FK to range with the same name.
-        return qs.select_related('condition', 'benefit')
+            qs = ConditionalOffer.objects.filter(
+                date_based | nondate_based,
+                status=ConditionalOffer.OPEN)
+            # Using select_related with the condition/benefit ranges doesn't
+            # seem to work.  I think this is because both the related objects
+            # have the FK to range with the same name.
+            self._request._available_offers = qs.select_related('condition',
+                                                                'benefit',
+                                                                'benefit__range')
+
+        return self._request._available_offers
 
     def get_site_offers(self):
         """
         Return site offers that are available to all users
         """
-        queryset = self.get_available_offers()
-        return queryset.filter(offer_type=ConditionalOffer.SITE)
+        return [offer for offer in self.get_available_offers()
+                if offer.offer_type == ConditionalOffer.SITE]
 
     def get_basket_offers(self, basket, user):
         """
