@@ -28,14 +28,7 @@
             <div class="table-header">
                 <h2>{{ title }}</h2>
             </div>
-            <form action="." method="post" class="well form-stacked wysiwyg" enctype="multipart/form-data">
-                {% csrf_token %}
-                {% include 'dashboard/partials/form_fields.html' with form=form %}
-                <div class="form-actions">
-                    <button class="btn btn-lg btn-primary" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
-                    {% trans "or" %} <a href="{% url 'dashboard:partner-list' %}">{% trans "cancel" %}</a>.
-                </div>
-            </form>
+            {% include "dashboard/partials/form.html" with form=form class="well" %}
         </div>
     </div>
     <div class="row">
