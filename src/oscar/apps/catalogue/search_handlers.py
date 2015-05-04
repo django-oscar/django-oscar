@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.utils.module_loading import import_string
 from django.views.generic.list import MultipleObjectMixin
-from core.decorators import deprecated
 
+from oscar.core.decorators import deprecated
 from oscar.core.loading import get_class, get_model
 
 BrowseCategoryForm = get_class('search.forms', 'BrowseCategoryForm')
