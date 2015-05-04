@@ -1,5 +1,5 @@
 # Oscar extensions
-django-oscar-stores==0.5.1
+https://github.com/django-oscar/django-oscar-stores/archive/feature/oscar-1.1.zip#egg=django-oscar-stores==1.0-dev
 django-oscar-paypal==0.9.1
 django-oscar-datacash==0.8.3
 
