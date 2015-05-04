@@ -47,8 +47,9 @@ class TestFixedRateTaxMixin(TestCase):
     def test_returns_correct_tax(self):
         policy = self.mixin.pricing_policy(
             self.product, self.stockrecord)
-        self.assertEqual(self.mixin.rate * self.stockrecord.price_excl_tax,
-                          policy.tax)
+        expected_tax = self.stockrecord.price_excl_tax * self.mixin.get_rate(
+            self.product, self.stockrecord)
+        self.assertEqual(expected_tax, policy.tax)
 
     def test_adds_tax_to_net_price(self):
         policy = self.mixin.pricing_policy(

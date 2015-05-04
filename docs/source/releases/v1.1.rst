@@ -67,6 +67,8 @@ Minor changes
 
 - ``OSCAR_SEARCH_FACETS`` now accepts ordered dicts.
 
+- Oscar now supports varying the tax rate per product.
+
 .. _`#1558`: https://github.com/django-oscar/django-oscar/pull/1558
 
 
