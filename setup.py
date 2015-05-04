@@ -30,7 +30,7 @@ setup(name='django-oscar',
       packages=find_packages('src'),
       include_package_data=True,
       install_requires=[
-          'django>=1.7.7,<1.8',
+          'django>=1.7.8,<1.9',
           # PIL is required for image fields, Pillow is the "friendly" PIL fork
           'pillow>=1.7.8,<=2.7',
           # We use the ModelFormSetView from django-extra-views for the basket
@@ -59,7 +59,7 @@ setup(name='django-oscar',
           # Used for oscar.test.newfactories
           'factory-boy>=2.4.1,<2.5',
           # Used for automatically building larger HTML tables
-          'django-tables2>=0.15.0,<0.16',
+          'django-tables2>=0.16.0,<0.17',
           # Used for manipulating form field attributes in templates (eg: add
           # a css class)
           'django-widget-tweaks>=1.3,<1.4',
@@ -70,6 +70,7 @@ setup(name='django-oscar',
           'Environment :: Web Environment',
           'Framework :: Django',
           'Framework :: Django :: 1.7',
+          'Framework :: Django :: 1.8',
           'Intended Audience :: Developers',
           'License :: OSI Approved :: BSD License',
           'Operating System :: Unix',

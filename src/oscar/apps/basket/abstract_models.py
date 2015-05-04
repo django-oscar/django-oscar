@@ -46,7 +46,7 @@ class AbstractBasket(models.Model):
     # for sites to only allow one voucher per basket - this will need to be
     # enforced in the project's codebase.
     vouchers = models.ManyToManyField(
-        'voucher.Voucher', null=True, verbose_name=_("Vouchers"), blank=True)
+        'voucher.Voucher', verbose_name=_("Vouchers"), blank=True)
 
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
     date_merged = models.DateTimeField(_("Date merged"), null=True, blank=True)

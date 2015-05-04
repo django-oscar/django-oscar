@@ -4,9 +4,10 @@ from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
 from django.views import generic
 
-from oscar.core.loading import get_model, get_class
+from oscar.core.loading import get_model, get_classes
 
-WeightBandForm = get_class('dashboard.shipping.forms', 'WeightBandForm')
+WeightBandForm, WeightBasedForm = get_classes(
+    'dashboard.shipping.forms', ['WeightBandForm', 'WeightBasedForm'])
 WeightBased = get_model('shipping', 'WeightBased')
 WeightBand = get_model('shipping', 'WeightBand')
 
@@ -19,6 +20,7 @@ class WeightBasedListView(generic.ListView):
 
 class WeightBasedCreateView(generic.CreateView):
     model = WeightBased
+    form_class = WeightBasedForm
     template_name = "dashboard/shipping/weight_based_form.html"
 
     def get_success_url(self):
@@ -32,8 +34,8 @@ class WeightBasedCreateView(generic.CreateView):
 
 class WeightBasedDetailView(generic.CreateView):
     model = WeightBand
-    template_name = "dashboard/shipping/weight_based_detail.html"
     form_class = WeightBandForm
+    template_name = "dashboard/shipping/weight_based_detail.html"
 
     def dispatch(self, request, *args, **kwargs):
         self.method = shortcuts.get_object_or_404(
@@ -62,6 +64,7 @@ class WeightBasedDetailView(generic.CreateView):
 
 class WeightBasedUpdateView(generic.UpdateView):
     model = WeightBased
+    form_class = WeightBasedForm
     template_name = "dashboard/shipping/weight_based_form.html"
     context_object_name = "method"
 
