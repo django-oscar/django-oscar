@@ -454,7 +454,7 @@ class AbstractBasket(models.Model):
     @property
     def num_lines(self):
         """Return number of lines"""
-        return self.all_lines().count()
+        return len(self.all_lines())
 
     @property
     def num_items(self):
