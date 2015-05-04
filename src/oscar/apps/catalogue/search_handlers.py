@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.utils.module_loading import import_string
 from django.views.generic.list import MultipleObjectMixin
+from core.decorators import deprecated
 
 from oscar.core.loading import get_class, get_model
 
@@ -25,17 +26,17 @@ def get_product_search_handler_class():
         return get_class('catalogue.search_handlers', 'ProductSearchHandler')
     elif is_elasticsearch_supported():
         return get_class(
-            'catalogue.search_handlers', 'ElasticsearchSearchHandler',
+            'catalogue.search_handlers', 'ESProductSearchHandler',
         )
     else:
         return get_class(
             'catalogue.search_handlers', 'SimpleProductSearchHandler')
 
 
-class ProductSearchHandler(SearchHandler):
+class SolrProductSearchHandler(SearchHandler):
     """
     Search handler specialised for searching products.  Comes with optional
-    category filtering.
+    category filtering. To be used with a Solr search backend.
     """
     form_class = BrowseCategoryForm
     model_whitelist = [Product]
@@ -43,10 +44,10 @@ class ProductSearchHandler(SearchHandler):
 
     def __init__(self, request_data, full_path, categories=None):
         self.categories = categories
-        super(ProductSearchHandler, self).__init__(request_data, full_path)
+        super(SolrProductSearchHandler, self).__init__(request_data, full_path)
 
     def get_search_queryset(self):
-        sqs = super(ProductSearchHandler, self).get_search_queryset()
+        sqs = super(SolrProductSearchHandler, self).get_search_queryset()
         if self.categories:
             # We use 'narrow' API to ensure Solr's 'fq' filtering is used as
             # opposed to filtering using 'q'.
@@ -56,10 +57,14 @@ class ProductSearchHandler(SearchHandler):
         return sqs
 
 
-class ElasticsearchSearchHandler(SearchHandler):
+# Deprecated name. TODO: Remove in Oscar 1.2
+ProductSearchHandler = deprecated(SolrProductSearchHandler)
+
+
+class ESProductSearchHandler(SearchHandler):
     """
     Search handler specialised for searching products.  Comes with optional
-    category filtering.
+    category filtering. To be used with an ElasticSearch search backend.
     """
     form_class = BrowseCategoryForm
     model_whitelist = [Product]
@@ -67,10 +72,10 @@ class ElasticsearchSearchHandler(SearchHandler):
 
     def __init__(self, request_data, full_path, categories=None):
         self.categories = categories
-        super(ElasticsearchSearchHandler, self).__init__(request_data, full_path)
+        super(ESProductSearchHandler, self).__init__(request_data, full_path)
 
     def get_search_queryset(self):
-        sqs = super(ElasticsearchSearchHandler, self).get_search_queryset()
+        sqs = super(ESProductSearchHandler, self).get_search_queryset()
         if self.categories:
             for category in self.categories:
                 sqs = sqs.filter_or(category=category.full_name)

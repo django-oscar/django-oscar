@@ -39,6 +39,8 @@ What's new in Oscar 1.1?
   in singular and plural. (`#1482`_)
 * All modelforms now specify the `fields` meta attribute instead of the `excludes` list.
 * Product class options and attributes can now be edited in the dashboard.
+* Oscar now ships with basic ElasticSearch support.
+  ``OSCAR_PRODUCT_SEARCH_HANDLER`` has been introduced to more easily set the search backend.
 
 .. _`#1576`: https://github.com/django-oscar/django-oscar/pull/1576
 .. _`#1482`: https://github.com/django-oscar/django-oscar/pull/1482
@@ -158,6 +160,9 @@ The following features have been deprecated in this release:
 * For backwards compatibility, one can access the ``ProductCategoryView``
   without specifying a category PK in the URL. Oscar itself does not
   use this any more, and it will be removed with the next version of Oscar.
+
+* ``ProductSearchHandler`` has been renamed to ``SolrProductSearchHandler``.
+  The old name will be removed in the next version of Oscar.
 
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
