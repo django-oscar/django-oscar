@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import pytest
 from django.test import TestCase
 from django.core import exceptions
 
@@ -189,25 +190,17 @@ INVALID_POSTCODES = [
 ]
 
 
-def assert_valid_postcode(country_value, postcode_value):
+@pytest.mark.parametrize('country_value, postcode_value', VALID_POSTCODES)
+def test_assert_valid_postcode(country_value, postcode_value):
     country = models.Country(iso_3166_1_a2=country_value)
     address = models.UserAddress(country=country, postcode=postcode_value)
     address.clean()
 
 
-def assert_invalid_postcode(country_value, postcode_value):
+@pytest.mark.parametrize('country_value, postcode_value', INVALID_POSTCODES)
+def test_assert_invalid_postcode(country_value, postcode_value):
     country = models.Country(iso_3166_1_a2=country_value)
     address = models.UserAddress(country=country, postcode=postcode_value)
 
-    with self.assertRaises(exceptions.ValidationError):
+    with pytest.raises(exceptions.ValidationError):
         address.clean()
-
-
-def test_postcode_is_validated_for_country():
-    for country, postcode in VALID_POSTCODES:
-        yield assert_valid_postcode, country, postcode
-
-
-def test_postcode_is_only_valid():
-    for country, postcode in INVALID_POSTCODES:
-        yield assert_invalid_postcode, country, postcode
