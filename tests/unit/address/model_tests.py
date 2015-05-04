@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import pytest
 from django.test import TestCase
 from django.core import exceptions
 
@@ -200,7 +199,7 @@ def assert_invalid_postcode(country_value, postcode_value):
     country = models.Country(iso_3166_1_a2=country_value)
     address = models.UserAddress(country=country, postcode=postcode_value)
 
-    with pytest.raises(exceptions.ValidationError):
+    with self.assertRaises(exceptions.ValidationError):
         address.clean()
 
 
