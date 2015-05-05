@@ -806,9 +806,9 @@ class AbstractProductAttribute(models.Model):
     code = models.SlugField(
         _('Code'), max_length=128,
         validators=[RegexValidator(
-            regex=r'^[a-zA-Z\-_][0-9a-zA-Z\-_]*$',
+            regex=r'^[a-zA-Z_][0-9a-zA-Z_]*$',
             message=_("Code can only contain the letters a-z, A-Z, digits, "
-                      "minus and underscores, and can't start with a digit"))])
+                      "and underscores, and can't start with a digit"))])
 
     # Attribute types
     TEXT = "text"
