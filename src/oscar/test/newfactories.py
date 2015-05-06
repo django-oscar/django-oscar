@@ -244,7 +244,9 @@ class OrderFactory(factory.DjangoModelFactory):
         model = get_model('order', 'Order')
         exclude = ('basket',)
 
-    status = settings.OSCAR_INITIAL_ORDER_STATUS
+    if hasattr(settings, 'OSCAR_INITIAL_ORDER_STATUS'):
+        status = settings.OSCAR_INITIAL_ORDER_STATUS
+
     site_id = settings.SITE_ID
     number = factory.LazyAttribute(lambda o: '%d' % (100000 + o.basket.pk))
     basket = factory.SubFactory(BasketFactory)
