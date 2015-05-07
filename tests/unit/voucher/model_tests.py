@@ -7,7 +7,7 @@ from django.utils.timezone import utc
 
 from oscar.apps.voucher.models import Voucher
 from oscar.core.compat import get_user_model
-from oscar.test.newfactories import OrderFactory, UserFactory, VoucherFactory
+from oscar.test.factories import OrderFactory, UserFactory, VoucherFactory
 
 
 START_DATETIME = datetime.datetime(2011, 1, 1).replace(tzinfo=utc)

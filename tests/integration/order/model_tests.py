@@ -11,13 +11,12 @@ from oscar.apps.order.exceptions import (
 from oscar.apps.order.models import (
     Order, Line, ShippingEvent, ShippingEventType, ShippingEventQuantity,
     OrderNote, OrderDiscount)
+from oscar.test.basket import add_product
 from oscar.test.factories import (
     create_order, create_offer, create_voucher, create_basket)
-from oscar.test.newfactories import (
-    CountryFactory, OrderFactory, OrderLineFactory, ShippingAddressFactory,
+from oscar.test.factories import (
+    OrderFactory, OrderLineFactory, ShippingAddressFactory,
     ShippingEventFactory)
-
-from oscar.test.basket import add_product
 
 ORDER_PLACED = 'order_placed'
 
