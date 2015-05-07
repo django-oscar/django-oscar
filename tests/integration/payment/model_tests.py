@@ -3,10 +3,9 @@ import datetime
 
 from django.test import TestCase
 
-from oscar.test import factories
-from oscar.apps.payment import models
 from oscar.apps.payment.models import Bankcard
-from oscar.test.newfactories import SourceFactory
+from oscar.test import factories
+from oscar.test.factories import SourceFactory
 
 
 class TestAPaymentSource(TestCase):

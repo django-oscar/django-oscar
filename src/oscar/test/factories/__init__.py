@@ -6,11 +6,20 @@ import datetime
 from django.conf import settings
 from django.utils import timezone
 
-from oscar.core.loading import get_model
-from oscar.apps.partner import strategy, availability, prices
-from oscar.core.loading import get_class
 from oscar.apps.offer import models
-from oscar.test.newfactories import *  # noqa
+from oscar.apps.partner import strategy, availability, prices
+from oscar.core.loading import get_class, get_model
+from oscar.test.factories.address import *  # noqa
+from oscar.test.factories.basket import *  # noqa
+from oscar.test.factories.catalogue import *  # noqa
+from oscar.test.factories.contrib import *  # noqa
+from oscar.test.factories.customer import *  # noqa
+from oscar.test.factories.offer import *  # noqa
+from oscar.test.factories.order import *  # noqa
+from oscar.test.factories.partner import *  # noqa
+from oscar.test.factories.payment import *  # noqa
+from oscar.test.factories.voucher import *  # noqa
+
 
 Basket = get_model('basket', 'Basket')
 Free = get_class('shipping.methods', 'Free')

@@ -2,9 +2,8 @@ from decimal import Decimal as D
 
 from django.test import TestCase
 
-from oscar.apps.offer import models
 from oscar.core.loading import get_model
-from oscar.test.newfactories import ConditionalOfferFactory
+from oscar.test.factories import ConditionalOfferFactory
 
 
 class TestAnOfferChangesStatusWhen(TestCase):

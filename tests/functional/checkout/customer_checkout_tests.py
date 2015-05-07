@@ -3,9 +3,9 @@ from django.core.urlresolvers import reverse
 from django.utils.six.moves import http_client
 
 from oscar.core.loading import get_model, get_class
-from oscar.test.newfactories import UserAddressFactory
-from oscar.test.testcases import WebTestCase
 from oscar.test import factories
+from oscar.test.factories import UserAddressFactory
+from oscar.test.testcases import WebTestCase
 from . import CheckoutMixin
 
 Order = get_model('order', 'Order')
