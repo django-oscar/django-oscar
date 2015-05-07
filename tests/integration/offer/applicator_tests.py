@@ -5,9 +5,9 @@ from mock import Mock
 
 from oscar.apps.offer import models
 from oscar.apps.offer.utils import Applicator
-from oscar.test.basket import add_product
 from oscar.test import factories
-from oscar.test.newfactories import (
+from oscar.test.basket import add_product
+from oscar.test.factories import (
     BenefitFactory, ConditionalOfferFactory, ConditionFactory, RangeFactory)
 
 
