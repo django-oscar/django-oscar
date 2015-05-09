@@ -1,0 +1,20 @@
+{% load display_tags %}
+{% load i18n %}
+
+{% if paginator.num_pages > 1 %}
+    <div>
+        <ul class="pager">
+            {% if page_obj.has_previous %}
+                <li class="previous"><a href="?{% get_parameters page %}page={{ page_obj.previous_page_number }}">{% trans "previous" %}</a></li>
+            {% endif %}
+            <li class="current">
+            {% blocktrans with page_num=page_obj.number total_pages=paginator.num_pages %}
+                Page {{ page_num }} of {{ total_pages }}
+            {% endblocktrans %}
+            </li>
+            {% if page_obj.has_next %}
+                <li class="next"><a href="?{% get_parameters page %}page={{ page_obj.next_page_number }}">{% trans "next" %}</a></li>
+            {% endif %}
+        </ul>
+    </div>
+{% endif %}

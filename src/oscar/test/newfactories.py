@@ -30,7 +30,9 @@ __all__ = ["UserFactory", "CountryFactory", "UserAddressFactory",
            "AttributeOptionGroupFactory",
            "AttributeOptionFactory", "PartnerFactory",
            "ProductCategoryFactory", "CategoryFactory", "RangeFactory",
-           "PermissionFactory"]
+           "OptionFactory", "BasketLineAttributeFactory",
+           "PermissionFactory", "ShippingAddressFactory",
+           "ProductReviewFactory"]
 
 Selector = get_class('partner.strategy', 'Selector')
 
@@ -83,6 +85,22 @@ class BasketFactory(factory.DjangoModelFactory):
         model = get_model('basket', 'Basket')
 
 
+class OptionFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = get_model('catalogue', 'Option')
+
+    name = 'example option'
+    code = 'example'
+    type = Meta.model.OPTIONAL
+
+
+class BasketLineAttributeFactory(factory.DjangoModelFactory):
+    option = factory.SubFactory(OptionFactory)
+
+    class Meta:
+        model = get_model('basket', 'LineAttribute')
+
+
 class VoucherFactory(factory.DjangoModelFactory):
     name = "My voucher"
     code = "MYVOUCHER"
@@ -99,6 +117,15 @@ class PartnerFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = get_model('partner', 'Partner')
+
+    @factory.post_generation
+    def users(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for user in extracted:
+                self.users.add(user)
 
 
 class StockRecordFactory(factory.DjangoModelFactory):
@@ -187,12 +214,30 @@ class ProductAttributeValueFactory(factory.DjangoModelFactory):
         model = get_model('catalogue', 'ProductAttributeValue')
 
 
+class ProductReviewFactory(factory.DjangoModelFactory):
+    score = 5
+    product = factory.SubFactory(ProductFactory, stockrecords=[])
+
+    class Meta:
+        model = get_model('reviews', 'ProductReview')
+
+
 class RangeFactory(factory.DjangoModelFactory):
     name = factory.Sequence(lambda n: 'Range %d' % n)
     slug = factory.Sequence(lambda n: 'range-%d' % n)
 
     class Meta:
         model = get_model('offer', 'Range')
+
+    @factory.post_generation
+    def products(self, create, extracted, **kwargs):
+        if not create or not extracted:
+            return
+
+        RangeProduct = get_model('offer', 'RangeProduct')
+
+        for product in extracted:
+            RangeProduct.objects.create(product=product, range=self)
 
 
 class ShippingAddressFactory(factory.DjangoModelFactory):
@@ -228,7 +273,9 @@ class OrderFactory(factory.DjangoModelFactory):
         model = get_model('order', 'Order')
         exclude = ('basket',)
 
-    status = settings.OSCAR_INITIAL_ORDER_STATUS
+    if hasattr(settings, 'OSCAR_INITIAL_ORDER_STATUS'):
+        status = settings.OSCAR_INITIAL_ORDER_STATUS
+
     site_id = settings.SITE_ID
     number = factory.LazyAttribute(lambda o: '%d' % (100000 + o.basket.pk))
     basket = factory.SubFactory(BasketFactory)
@@ -336,3 +383,73 @@ class PermissionFactory(factory.DjangoModelFactory):
     class Meta:
         model = auth_models.Permission
         django_get_or_create = ('content_type', 'codename')
+
+
+class SourceTypeFactory(factory.DjangoModelFactory):
+    name = 'Creditcard'
+    code = 'creditcard'
+
+    class Meta:
+        model = get_model('payment', 'SourceType')
+
+
+class SourceFactory(factory.DjangoModelFactory):
+    order = factory.SubFactory(OrderFactory)
+    source_type = factory.SubFactory(SourceTypeFactory)
+
+    class Meta:
+        model = get_model('payment', 'Source')
+
+
+class TransactionFactory(factory.DjangoModelFactory):
+    amount = factory.LazyAttribute(lambda obj: obj.source.order.total_incl_tax)
+    reference = factory.LazyAttribute(lambda obj: obj.source.order.number)
+    source = factory.SubFactory(SourceFactory)
+    status = 'authorised'
+
+    class Meta:
+        model = get_model('payment', 'Transaction')
+
+    @classmethod
+    def _create(cls, target_class, *args, **kwargs):
+        date_created = kwargs.pop('date_created', None)
+        instance = super(TransactionFactory, cls)._create(
+            target_class, *args, **kwargs)
+
+        if date_created:
+            instance.date_created = date_created
+            instance.save()
+        return instance
+
+
+class ConditionFactory(factory.DjangoModelFactory):
+    type = get_model('offer', 'Condition').COUNT
+    value = 10
+
+    class Meta:
+        model = get_model('offer', 'Condition')
+
+
+class BenefitFactory(factory.DjangoModelFactory):
+    type = get_model('offer', 'Benefit').PERCENTAGE
+    value = 10
+    max_affected_items = None
+    range = factory.SubFactory(RangeFactory)
+
+    class Meta:
+        model = get_model('offer', 'Benefit')
+
+
+class ConditionalOfferFactory(factory.DjangoModelFactory):
+    name = 'Test offer'
+    benefit = factory.SubFactory(BenefitFactory)
+    condition = factory.SubFactory(ConditionFactory)
+
+    class Meta:
+        model = get_model('offer','ConditionalOffer')
+
+
+class OrderDiscountFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = get_model('order', 'OrderDiscount')

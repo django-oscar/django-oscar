@@ -30,7 +30,7 @@ setup(name='django-oscar',
       packages=find_packages('src'),
       include_package_data=True,
       install_requires=[
-          'django>=1.7.7,<1.8',
+          'django>=1.7.8,<1.9',
           # PIL is required for image fields, Pillow is the "friendly" PIL fork
           'pillow>=1.7.8,<=2.7',
           # We use the ModelFormSetView from django-extra-views for the basket
@@ -59,10 +59,16 @@ setup(name='django-oscar',
           # Used for oscar.test.newfactories
           'factory-boy>=2.4.1,<2.5',
           # Used for automatically building larger HTML tables
-          'django-tables2>=0.15.0,<0.16',
+          # TODO: Upgrade to released version once
+          # https://github.com/bradleyayers/django-tables2/pull/245 is merged and released,
+          # and remove dependency_links below.
+          'django-tables2>=1.0.0dev0',
           # Used for manipulating form field attributes in templates (eg: add
           # a css class)
           'django-widget-tweaks>=1.3,<1.4',
+      ],
+      dependency_links=[
+          'https://github.com/mvantellingen/django-tables2/tarball/5792fb93ea971f6130b5623ba6293b8aa1e90229#egg=django-tables2-1.0.0dev0',
       ],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
@@ -70,6 +76,7 @@ setup(name='django-oscar',
           'Environment :: Web Environment',
           'Framework :: Django',
           'Framework :: Django :: 1.7',
+          'Framework :: Django :: 1.8',
           'Intended Audience :: Developers',
           'License :: OSI Approved :: BSD License',
           'Operating System :: Unix',

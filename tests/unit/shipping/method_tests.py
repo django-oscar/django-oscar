@@ -1,14 +1,12 @@
 from decimal import Decimal as D
 
 from django.test import TestCase
-from nose.plugins.attrib import attr
 import mock
 
 from oscar.apps.shipping import methods
 from oscar.apps.basket.models import Basket
 
 
-@attr('shipping')
 class TestFreeShipppingForEmptyBasket(TestCase):
 
     def setUp(self):
@@ -27,7 +25,6 @@ class TestFreeShipppingForEmptyBasket(TestCase):
         self.assertEqual(self.basket.currency, self.charge.currency)
 
 
-@attr('shipping')
 class TestFreeShipppingForNonEmptyBasket(TestCase):
 
     def setUp(self):
@@ -41,7 +38,6 @@ class TestFreeShipppingForNonEmptyBasket(TestCase):
         self.assertEqual(D('0.00'), self.charge.excl_tax)
 
 
-@attr('shipping')
 class TestNoShippingRequired(TestCase):
 
     def setUp(self):
@@ -58,7 +54,6 @@ class TestNoShippingRequired(TestCase):
                         methods.Free.code)
 
 
-@attr('shipping')
 class TestFixedPriceShippingWithoutTax(TestCase):
 
     def setUp(self):
@@ -73,7 +68,6 @@ class TestFixedPriceShippingWithoutTax(TestCase):
         self.assertFalse(self.charge.is_tax_known)
 
 
-@attr('shipping')
 class TestFixedPriceShippingWithTax(TestCase):
 
     def setUp(self):

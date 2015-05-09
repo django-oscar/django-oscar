@@ -15,11 +15,9 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:promotion-list' %}">{% trans "Content blocks" %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Content blocks by page" %}</li>
     </ul>
@@ -31,7 +29,7 @@
     </div>
     <div class="well">
         <a href="{% url 'dashboard:promotion-list' %}" class="btn btn-primary">{% trans "View all content blocks" %}</a>
-        <a href="{% url 'dashboard:promotion-list-by-page' %}" class="btn">{% trans "View content blocks by page" %}</a>
+        <a href="{% url 'dashboard:promotion-list-by-page' %}" class="btn btn-default">{% trans "View content blocks by page" %}</a>
     </div>
 
     <div class="table-header">

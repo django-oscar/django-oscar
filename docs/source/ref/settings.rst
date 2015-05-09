@@ -101,6 +101,15 @@ query-type facets.  The default is::
         ]),
     }
 
+``OSCAR_PRODUCT_SEARCH_HANDLER``
+-----------------------
+
+The search handler to be used in the product list views. If ``None``,
+Oscar tries to guess the correct handler based on your Haystack settings.
+
+Default::
+
+    None
 
 ``OSCAR_PROMOTION_POSITIONS``
 -----------------------------

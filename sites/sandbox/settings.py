@@ -41,10 +41,6 @@ CACHES = {
     }
 }
 
-# Prevent Django 1.7+ from showing a warning regarding a changed default test
-# runner. The Oscar test suite is run with nose, so it does not matter.
-SILENCED_SYSTEM_CHECKS = ['1_6.W001', ]
-
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -53,6 +49,8 @@ SILENCED_SYSTEM_CHECKS = ['1_6.W001', ]
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
 TIME_ZONE = 'Europe/London'
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -153,7 +151,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     # Allow languages to be selected
     'django.middleware.locale.LocaleMiddleware',

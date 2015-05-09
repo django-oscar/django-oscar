@@ -43,12 +43,16 @@ class OfferReportGenerator(ReportGenerator):
     }
 
     def generate(self):
-        discounts = OrderDiscount._default_manager.filter(
-            order__date_placed__gte=self.start_date,
-            order__date_placed__lt=self.end_date + datetime.timedelta(days=1)
-        )
+        qs = OrderDiscount._default_manager.all()
+        if self.start_date:
+            qs = qs.filter(order__date_placed__gte=self.start_date)
+        if self.end_date:
+            qs = qs.filter(
+                order__date_placed__lt=
+                    self.end_date + datetime.timedelta(days=1))
+
         offer_discounts = {}
-        for discount in discounts:
+        for discount in qs:
             if discount.offer_id not in offer_discounts:
                 try:
                     all_offers = ConditionalOffer._default_manager

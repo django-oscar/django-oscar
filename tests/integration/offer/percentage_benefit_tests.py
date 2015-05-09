@@ -11,7 +11,7 @@ from oscar.test.basket import add_product, add_products
 class TestAPercentageDiscountAppliedWithCountCondition(TestCase):
 
     def setUp(self):
-        range = models.Range(
+        range = models.Range.objects.create(
             name="All products", includes_all_products=True)
         self.condition = models.CountCondition(
             range=range,
@@ -56,7 +56,7 @@ class TestAPercentageDiscountAppliedWithCountCondition(TestCase):
 class TestAPercentageDiscountWithMaxItemsSetAppliedWithCountCondition(TestCase):
 
     def setUp(self):
-        range = models.Range(
+        range = models.Range.objects.create(
             name="All products", includes_all_products=True)
         self.condition = models.CountCondition(
             range=range,

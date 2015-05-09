@@ -12,11 +12,9 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:order-list' %}">{% trans "Orders" %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Statistics" %}</li>
     </ul>
@@ -32,7 +30,7 @@
         <form method="get" action="{% url 'dashboard:order-stats' %}" class="form-inline">
             {% include "dashboard/partials/form_fields_inline.html" with form=form %}
             <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Filtering...' %}">{% trans "Filter result" %}</button>
-            <a href="{% url 'dashboard:order-stats' %}" class="btn">{% trans "Reset" %}</a>
+            <a href="{% url 'dashboard:order-stats' %}" class="btn btn-default">{% trans "Reset" %}</a>
         </form>
     </div>
 

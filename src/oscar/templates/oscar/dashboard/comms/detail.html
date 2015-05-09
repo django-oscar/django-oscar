@@ -12,11 +12,9 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:comms-list' %}">{% trans "Emails" %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active"><a href=".">{{ commtype.name }}</a></li>
     </ul>
@@ -79,10 +77,10 @@
                         <p>{% trans "View a preview of this email using order:" %}</p>
                         {% include 'dashboard/partials/form_field.html' with field=form.preview_order_number %}
                     {% endif %}
-                    <button type="submit" class="btn btn-primary btn-large" name="show_preview" data-loading-text="{% trans 'Submitting...' %}">{% trans "View preview" %}</button>
+                    <button type="submit" class="btn btn-primary btn-lg" name="show_preview" data-loading-text="{% trans 'Submitting...' %}">{% trans "View preview" %}</button>
                     <p>{% trans "or send a preview to:" %}</p>
                     {% include 'dashboard/partials/form_field.html' with field=form.preview_email %}
-                    <button type="submit" class="btn" name="send_preview" data-loading-text="{% trans 'Sending...' %}">{% trans "Send preview email" %}</button>
+                    <button type="submit" class="btn btn-default" name="send_preview" data-loading-text="{% trans 'Sending...' %}">{% trans "Send preview email" %}</button>
                 </div>
             </div>
             <div class="tab-pane {% if preview %}active{% endif %}" id="email_preview">
@@ -102,7 +100,7 @@
                     </table>
                 </div>
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary btn-large" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
+                    <button type="submit" class="btn btn-primary btn-lg" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
                     {% trans "or" %} <a href="{% url 'dashboard:comms-list' %}">{% trans "cancel" %}</a>.
                 </div>
             </div>

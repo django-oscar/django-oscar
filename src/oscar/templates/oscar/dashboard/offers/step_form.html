@@ -19,21 +19,17 @@
 <ul class="breadcrumb">
     <li>
         <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        <span class="divider">/</span>
     </li>
     <li>
         <a href="{% url 'dashboard:offer-list' %}">{% trans "Offers" %}</a>
-        <span class="divider">/</span>
     </li>
     {% if offer.pk %}
     <li>
         <a href="{% url 'dashboard:offer-detail' pk=offer.pk %}">{{ offer.name }}</a>
-        <span class="divider">/</span>
     </li>
     {% else %}
     <li>
         {% trans "Create new offer" %}
-        <span class="divider">/</span>
     </li>
     {% endif %}
     <li class="active">{{ title }}</li>
@@ -49,13 +45,13 @@
 {% endblock %}
 
 {% block dashboard_content %}
-    <div class="row-fluid">
-        <div class="span3">
+    <div class="row">
+        <div class="col-md-3">
             {% block progress %}
                 {% include 'dashboard/offers/progress.html' %}
             {% endblock %}
         </div>
-        <div class="{% if session_offer %}span6{% else %}span9{% endif %}">
+        <div class="{% if session_offer %}col-md-6{% else %}col-md-9{% endif %}">
             <form action="." method="post" class="form-stacked wysiwyg fixed-actions">
                 <div class="table-header">
                     <h3>{{ title }}</h3>
@@ -77,11 +73,11 @@
                             {% block form_actions_buttons %}
                                 <button class="btn btn-primary" type="submit" data-loading-text="{% trans 'Submitting...' %}">{% block submittext %}{% trans "Continue" %}{% endblock %}</button>
                                 {% if offer %}{# When editing offer, show saving button #}
-                                    <button class="btn" name="save" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save changes" %}</button>
+                                    <button class="btn btn-default" name="save" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save changes" %}</button>
                                 {% endif %}
                             {% endblock %}
                             </div>
-                            <a class="btn" href="{% url 'dashboard:offer-list' %}">{% trans "cancel" %}</a>
+                            <a class="btn btn-default" href="{% url 'dashboard:offer-list' %}">{% trans "cancel" %}</a>
                         </div>
                     </div>
 
@@ -89,7 +85,7 @@
             </form>
         </div>
         {% if session_offer %}
-        <div class="span3">
+        <div class="col-md-3">
             {% block summary %}
                 {% include 'dashboard/offers/summary.html' %}
             {% endblock %}

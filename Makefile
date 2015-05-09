@@ -2,7 +2,7 @@
 .PHONY: install sandbox geoip demo docs coverage lint travis messages compiledmessages css clean preflight make_sandbox make_demo
 
 install:
-	pip install -e . -r requirements.txt
+	pip install -e . -r requirements.txt --process-dependency-links
 
 build_sandbox:
 	# Remove media
@@ -95,7 +95,6 @@ compiledmessages:
 css:
 	# Compile CSS files from LESS
 	lessc --source-map --source-map-less-inline src/oscar/static/oscar/less/styles.less src/oscar/static/oscar/css/styles.css
-	lessc --source-map --source-map-less-inline src/oscar/static/oscar/less/responsive.less src/oscar/static/oscar/css/responsive.css
 	lessc --source-map --source-map-less-inline src/oscar/static/oscar/less/dashboard.less src/oscar/static/oscar/css/dashboard.css
 	# Compile CSS for demo site
 	lessc --source-map --source-map-less-inline sites/demo/static/demo/less/styles.less sites/demo/static/demo/css/styles.css

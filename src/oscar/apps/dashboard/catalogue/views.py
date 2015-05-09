@@ -124,13 +124,17 @@ class ProductListView(SingleTableMixin, generic.TemplateView):
         data = self.form.cleaned_data
 
         if data.get('upc'):
-            # If there's an exact UPC match, it returns just the matched
-            # product. Otherwise does a broader icontains search.
-            qs_match = queryset.filter(upc=data['upc'])
+            # Filter the queryset by upc
+            # If there's an exact match, return it, otherwise return results
+            # that contain the UPC
+            matches_upc = Product.objects.filter(upc=data['upc'])
+            qs_match = queryset.filter(Q(id=matches_upc.values('id')) | Q(id=matches_upc.values('parent_id')))
+
             if qs_match.exists():
                 queryset = qs_match
             else:
-                queryset = queryset.filter(upc__icontains=data['upc'])
+                matches_upc = Product.objects.filter(upc__icontains=data['upc'])
+                queryset = queryset.filter(Q(id=matches_upc.values('id')) | Q(id=matches_upc.values('parent_id')))
 
         if data.get('title'):
             queryset = queryset.filter(title__icontains=data['title'])
@@ -272,7 +276,7 @@ class ProductCreateUpdateView(generic.UpdateView):
                 return _('Create new variant of %(parent_product)s') % {
                     'parent_product': self.parent.title}
         else:
-            if self.object.title:
+            if self.object.title or not self.parent:
                 return self.object.title
             else:
                 return _('Editing variant of %(parent_product)s') % {

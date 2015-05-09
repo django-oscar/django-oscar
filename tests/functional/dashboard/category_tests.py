@@ -1,19 +1,15 @@
 from django.core.urlresolvers import reverse
-from django_dynamic_fixture import G
 
 from oscar.test.testcases import WebTestCase
-from oscar.core.compat import get_user_model
 from oscar.apps.catalogue.models import Category
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
-
-
-User = get_user_model()
+from oscar.test.factories import UserFactory
 
 
 class TestCategoryDashboard(WebTestCase):
 
     def setUp(self):
-        self.staff = G(User, is_staff=True)
+        self.staff = UserFactory(is_staff=True)
         create_from_breadcrumbs('A > B > C')
 
     def test_redirects_to_main_dashboard_after_creating_top_level_category(self):

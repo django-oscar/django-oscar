@@ -8743,8 +8743,10 @@ form.flat {
   color: #b94a48;
   margin-top: 6px;
 }
-.control-label.required span {
+.control-label.required:after {
   color: #FF0000;
+  content: "*";
+  display: inline-block;
 }
 /* weird alternative to btn-block for specific use on the product page, where btn-block would cause a vertical misalignment when product size options are shown */
 .btn-add-to-basket {
@@ -9160,7 +9162,13 @@ a:hover .thumbnail {
 }
 input[type="text"][id*="quantity"],
 input[type="number"][id*="quantity"] {
-  width: 55px;
+  max-width: 55px;
+}
+.checkout-quantity .input-group {
+  max-width: 130px;
+}
+.checkout-quantity .input-group input[type="number"][id*="quantity"] {
+  max-width: none;
 }
 .checkout-quantity input {
   margin-right: 2px;
@@ -9267,15 +9275,15 @@ input[type="number"][id*="quantity"] {
 #update_user_address #id_line2,
 #new_shipping_address #id_line3,
 #update_user_address #id_line3 {
-  width: 300px;
+  max-width: 300px;
 }
 #new_shipping_address #id_postcode,
 #update_user_address #id_postcode {
-  width: 100px;
+  max-width: 100px;
 }
 #new_shipping_address #id_notes,
 #update_user_address #id_notes {
-  width: 400px;
+  max-width: 600px;
   height: 100px;
 }
 .nav-checkout {

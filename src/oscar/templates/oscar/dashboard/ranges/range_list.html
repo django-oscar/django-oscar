@@ -9,7 +9,6 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Ranges" %}</li>
     </ul>
@@ -17,7 +16,7 @@
 
 {% block header %}
     <div class="page-header">
-        <a href="{% url 'dashboard:range-create' %}" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new range" %}</a>
+        <a href="{% url 'dashboard:range-create' %}" class="btn btn-primary btn-lg pull-right"><i class="icon-plus"></i> {% trans "Create new range" %}</a>
         <h1>{% trans "Ranges" %}</h1>
     </div>
 {% endblock header %}
@@ -61,10 +60,10 @@
                         <td>
                             <div class="btn-toolbar">
                                 <div class="btn-group">
-                                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <button class="btn btn-default dropdown-toggle" type="submit" data-toggle="dropdown" aria-expanded="true">
                                         {% trans "Actions" %}
                                         <span class="caret"></span>
-                                    </a>
+                                    </button>
                                     <ul class="dropdown-menu pull-right">
                                         {% if range.is_editable %}
                                             <li><a href="{% url 'dashboard:range-update' pk=range.id %}">{% trans "Edit" %}</a></li>
@@ -87,6 +86,6 @@
             <tr><td>{% trans "No ranges found." %}</td></tr>
         {% endif %}
     </table>
-    {% include "partials/pagination.html" %}
+    {% include "dashboard/partials/pagination.html" %}
 
 {% endblock dashboard_content %}

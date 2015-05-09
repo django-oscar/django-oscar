@@ -12,7 +12,6 @@
     <ul class="breadcrumb">
         <li>
             <a href="{{ homepage_url }}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Offers" %}</li>
     </ul>
@@ -20,7 +19,7 @@
 
 {% block header %}
     <div class="page-header">
-        <a href="{% url 'dashboard:offer-metadata' %}" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new offer" %}</a>
+        <a href="{% url 'dashboard:offer-metadata' %}" class="btn btn-primary btn-lg pull-right"><i class="icon-plus"></i> {% trans "Create new offer" %}</a>
         <h1>{% trans "Offers" %}</h1>
     </div>
 {% endblock header %}
@@ -65,13 +64,13 @@
                         <td>{% if offer.is_available %}
                                 <span class="label label-success">{% trans "Yes" %}</span>
                             {% else %}
-                                <span class="label label-important">{% trans "No" %}</span>
+                                <span class="label label-danger">{% trans "No" %}</span>
                             {% endif %}
                         </td>
                         <td>
                             {% for restriction in offer.availability_restrictions %}
                                 {% if not restriction.is_satisfied %}
-                                    <label class="label label-important">
+                                    <label class="label label-danger">
                                         {{ restriction.description }}
                                     </label>
                                 {% else %}
@@ -84,10 +83,10 @@
                         <td>
                             <div class="btn-toolbar">
                                 <div class="btn-group">
-                                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
                                         {% trans "Actions" %}
                                         <span class="caret"></span>
-                                    </a>
+                                    </button>
                                     <ul class="dropdown-menu pull-right">
                                         <li><a class="" href="{% url 'offer:detail' slug=offer.slug %}">{% trans "Browse" %}</a></li>
                                         <li><a class="" href="{% url 'dashboard:offer-detail' pk=offer.pk %}">{% trans "Stats" %}</a></li>
@@ -104,6 +103,6 @@
                 <tr><td>{% trans "No offers found." %}</td></tr>
             {% endif %}
         </table>
-        {% include "partials/pagination.html" %}
+        {% include "dashboard/partials/pagination.html" %}
     </form>
 {% endblock dashboard_content %}

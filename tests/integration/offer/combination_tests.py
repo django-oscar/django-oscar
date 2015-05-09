@@ -10,13 +10,13 @@ from oscar.test import factories
 class TestACountConditionWithPercentageDiscount(TestCase):
 
     def setUp(self):
-        range = models.Range(
+        range = models.Range.objects.create(
             name="All products", includes_all_products=True)
-        condition = models.CountCondition(
+        condition = models.CountCondition.objects.create(
             range=range,
             type=models.Condition.COUNT,
             value=3)
-        benefit = models.PercentageDiscountBenefit(
+        benefit = models.PercentageDiscountBenefit.objects.create(
             range=range,
             type=models.Benefit.PERCENTAGE,
             value=20,

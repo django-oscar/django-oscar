@@ -17,7 +17,7 @@
     <div class="sub-header">
         <h2>{% trans "Where should we ship to?" %}</h2>
     </div>
-    {% if request.user.is_authenticated %}
+    {% if user.is_authenticated %}
         {% if addresses %}
             <h3>{% trans "An address from your addressbook?" %}</h3>
             <div class="row">
@@ -70,16 +70,19 @@
     {% endif %}
 
     {% block new_address_form %}
-        <form action="{% url 'checkout:shipping-address' %}" method="post" id="new_shipping_address" class="form form-horizontal">
-            <div class="well">
+        <div class="well">
+            <form action="{% url 'checkout:shipping-address' %}" method="post" id="new_shipping_address" class="form form-horizontal">
                 {% csrf_token %}
                 {% include "partials/form_fields.html" with form=form style='horizontal' %}
-                <div class="controls">
-                    <button type="submit" class="btn btn-lg btn-primary" data-loading-text="{% trans 'Continuing...' %}">{% trans "Continue" %}</button>
-                    {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <button type="submit" class="btn btn-lg btn-primary" data-loading-text="{% trans 'Continuing...' %}">{% trans "Continue" %}</button>
+                        {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
+
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     {% endblock %}
 {% endblock shipping_address %}
 

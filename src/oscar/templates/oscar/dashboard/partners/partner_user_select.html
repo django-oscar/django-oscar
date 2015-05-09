@@ -10,15 +10,12 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:partner-list' %}">{% trans "Partners" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:partner-manage' pk=partner.id %}">{{ partner.name }}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Link an existing user" %}</li>
     </ul>
@@ -35,7 +32,7 @@
                 {% include 'dashboard/partials/form_fields_inline.html' with form=form %}
                 <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
                 {% if form.is_bound %}
-                    <a class="btn" href="{% url 'dashboard:partner-user-select' partner_pk=partner.id %}" >{% trans "Reset" %}</a>
+                    <a class="btn btn-default" href="{% url 'dashboard:partner-user-select' partner_pk=partner.id %}" >{% trans "Reset" %}</a>
                 {% endif %}
                 <div style="margin-top:5px">{% trans "A partial email address can be entered (eg '@example.com') to match multiple addresses." %}</div>
             </form>
@@ -81,7 +78,7 @@
                     </tbody>
                 </table>
             {% endwith %}
-            {% include "partials/pagination.html" %}
+            {% include "dashboard/partials/pagination.html" %}
         {% else %}
             {% trans "No users found." %}
         {% endif %}

@@ -260,7 +260,9 @@ class FixedRateTax(object):
     def pricing_policy(self, product, stockrecord):
         if not stockrecord:
             return prices.Unavailable()
-        tax = (stockrecord.price_excl_tax * self.rate).quantize(self.exponent)
+        rate = self.get_rate(product, stockrecord)
+        exponent = self.get_exponent(stockrecord)
+        tax = (stockrecord.price_excl_tax * rate).quantize(exponent)
         return prices.TaxInclusiveFixedPrice(
             currency=stockrecord.price_currency,
             excl_tax=stockrecord.price_excl_tax,
@@ -273,12 +275,32 @@ class FixedRateTax(object):
 
         # We take price from first record
         stockrecord = stockrecords[0]
-        tax = (stockrecord.price_excl_tax * self.rate).quantize(self.exponent)
+        rate = self.get_rate(product, stockrecord)
+        exponent = self.get_exponent(stockrecord)
+        tax = (stockrecord.price_excl_tax * rate).quantize(exponent)
 
         return prices.FixedPrice(
             currency=stockrecord.price_currency,
             excl_tax=stockrecord.price_excl_tax,
             tax=tax)
+
+    def get_rate(self, product, stockrecord):
+        """
+        This method serves as hook to be able to plug in support for varying tax rates
+        based on the product.
+
+        TODO: Needs tests.
+        """
+        return self.rate
+
+    def get_exponent(self, stockrecord):
+        """
+        This method serves as hook to be able to plug in support for a varying exponent
+        based on the currency.
+
+        TODO: Needs tests.
+        """
+        return self.exponent
 
 
 class DeferredTax(object):
