@@ -40,9 +40,7 @@ install:
     - pip wheel -r requirements.txt
     # Actually install our dependencies now, this will pull from the directory
     # that the first command placed the Wheels into.
-    # --process-dependency-links is deprecated, but currently needed to
-    # install an unreleased version of tables2.
-    - pip install -e . -r requirements.txt $DJANGO --process-dependency-links
+    - pip install -e . -r requirements.txt $DJANGO 
 
 before_script:
     # Create testing databases for running migrations against

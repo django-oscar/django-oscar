@@ -2,7 +2,7 @@
 .PHONY: install sandbox geoip demo docs coverage lint travis messages compiledmessages css clean preflight make_sandbox make_demo
 
 install:
-	pip install -e . -r requirements.txt --process-dependency-links
+	pip install -e . -r requirements.txt
 
 build_sandbox:
 	# Remove media

@@ -59,17 +59,12 @@ setup(name='django-oscar',
           # Used for oscar.test.newfactories
           'factory-boy>=2.4.1,<2.5',
           # Used for automatically building larger HTML tables
-          # TODO: Upgrade to released version once
-          # https://github.com/bradleyayers/django-tables2/pull/245 is merged and released,
-          # and remove dependency_links below.
-          'django-tables2>=1.0.0dev0',
+          'django-tables2>=1.0.4,<1.1',
           # Used for manipulating form field attributes in templates (eg: add
           # a css class)
           'django-widget-tweaks>=1.3,<1.4',
       ],
-      dependency_links=[
-          'https://github.com/mvantellingen/django-tables2/tarball/5792fb93ea971f6130b5623ba6293b8aa1e90229#egg=django-tables2-1.0.0dev0',
-      ],
+      dependency_links=[],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
           'Development Status :: 5 - Production/Stable',
