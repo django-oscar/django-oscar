@@ -34,6 +34,9 @@ env:
         - DJANGO=Django==1.7.8
         - DJANGO=Django==1.8.1
 
+before_install:
+    - pip install codecov
+
 install:
     # Before installation, we'll run ``pip wheel``, this will build wheels for
     # anything that doesn't already have one on PyPI.
@@ -55,4 +58,5 @@ script:
 
 after_success:
     - coveralls
+    - codecov
     - ./transifex.sh
