@@ -9364,17 +9364,12 @@ input[type="number"][id*="quantity"] {
   max-height: 400px;
 }
 #product_gallery .carousel-control {
-  left: -20px;
-  top: 200px;
-}
-#product_gallery .carousel-control.right {
-  left: auto;
-  right: -20px;
+  background-image: none;
 }
 #product_gallery .carousel-indicators {
   position: static;
-  margin-top: 1%;
-  *margin-bottom: 20px;
+  bottom: 0;
+  margin: 0;
   width: auto;
   display: block;
 }
@@ -9413,6 +9408,7 @@ input[type="number"][id*="quantity"] {
   -webkit-transition: none;
   -o-transition: none;
   transition: none;
+  position: relative;
 }
 .clearfix:before,
 .clearfix:after,
