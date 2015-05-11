@@ -174,10 +174,10 @@ class TimePickerInput(DateTimeWidgetMixin, forms.TimeInput):
                  datetime_format_to_js_time_format(format),
                  }
 
-        div = format_html('<div class="input-append date"{}>', flatatt(attrs))
+        div = format_html('<div class="input-group date"{}>', flatatt(attrs))
         return mark_safe('{div}'
                          ' {input}'
-                         ' <span class="add-on">'
+                         ' <span class="input-group-addon">'
                          '  <i class="icon-time"></i>'
                          ' </span>'
                          '</div>'
@@ -201,10 +201,10 @@ class DatePickerInput(DateTimeWidgetMixin, forms.DateInput):
                  datetime_format_to_js_date_format(format),
                  }
 
-        div = format_html('<div class="input-append date"{}>', flatatt(attrs))
+        div = format_html('<div class="input-group date"{}>', flatatt(attrs))
         return mark_safe('{div}'
                          ' {input}'
-                         ' <span class="add-on">'
+                         ' <span class="input-group-addon">'
                          '  <i class="icon-calendar"></i>'
                          ' </span>'
                          '</div>'
@@ -242,10 +242,10 @@ class DateTimePickerInput(DateTimeWidgetMixin, forms.DateTimeInput):
                  datetime_format_to_js_datetime_format(format),
                  }
 
-        div = format_html('<div class="input-append date"{}>', flatatt(attrs))
+        div = format_html('<div class="input-group date"{}>', flatatt(attrs))
         return mark_safe('{div}'
                          ' {input}'
-                         ' <span class="add-on">'
+                         ' <span class="input-group-addon">'
                          '  <i class="icon-calendar"></i>'
                          ' </span>'
                          '</div>'
