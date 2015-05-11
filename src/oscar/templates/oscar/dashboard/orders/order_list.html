@@ -52,7 +52,8 @@
             <a data-toggle="modal" data-target="#SearchModal" href="#">{% trans "Advanced Search" %}</a>
         </form>
 
-        <div class="modal fade" id="SearchModal" role="dialog">
+        {# Search modal, if there are form errors the form is automatically openend #}
+        <div class="modal fade" data-show="true" id="SearchModal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -63,7 +64,8 @@
                         <div class="modal-body">
                             <div class="container-fluid">
                             {% csrf_token %}
-                            {% include "dashboard/partials/form_fields.html" with form=form %}
+                            {% include "dashboard/partials/form_fields.html" with form=form style='horizontal' %}
+
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -176,4 +178,7 @@
         {{ block.super }}
         oscar.dashboard.orders.initTable();
         oscar.dashboard.search.init();
+        {% if form.errors %}
+        $('#SearchModal').modal('show');
+        {% endif %}
     {% endblock onbodyload %}
