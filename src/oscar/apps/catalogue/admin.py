@@ -48,7 +48,7 @@ class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
     search_fields = ['upc', 'title']
 
-    def queryset(self, request):
+    def get_queryset(self, request):
         qs = super(ProductAdmin, self).queryset(request)
         return (
             qs
