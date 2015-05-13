@@ -5487,6 +5487,14 @@ td .btn-toolbar {
 .fixed-actions .form-group {
   margin: 0;
 }
+.datetimepicker .glyphicon {
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: inherit;
+  -webkit-font-smoothing: antialiased;
+  *margin-right: .3em;
+}
 .navbar {
   margin-bottom: 0;
 }
@@ -6766,10 +6774,12 @@ a .icon-flip-vertical:before {
 .icon-ban-circle:before {
   content: "\f05e";
 }
-.icon-arrow-left:before {
+.icon-arrow-left:before,
+.datetimepicker .glyphicon.glyphicon-arrow-left:before {
   content: "\f060";
 }
-.icon-arrow-right:before {
+.icon-arrow-right:before,
+.datetimepicker .glyphicon.glyphicon-arrow-right:before {
   content: "\f061";
 }
 .icon-arrow-up:before {
