@@ -81,6 +81,20 @@ form.flat {
   }
 }
 
+form {
+  .form-group .form-inline {
+    .input-group.date input {
+      width: 100%;
+    }
+
+    @media (min-width: @screen-sm-min) {
+      .input-group.date input {
+        width: 145px;
+      }
+    }
+  }
+}
+
 .fields-full {
   input[type=text],
   textarea {
