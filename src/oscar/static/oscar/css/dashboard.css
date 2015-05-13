@@ -5174,6 +5174,32 @@ button.close {
     display: none !important;
   }
 }
+/* additional styles for alert content. Used by both public side and dashboard */
+.alert {
+  margin-top: 20px;
+}
+.alert .close {
+  position: relative;
+  z-index: 5;
+}
+.alert .alertinner {
+  position: relative;
+}
+.alert .alertinner.wicon {
+  padding-left: 0.5em;
+  margin-left: 0.5em;
+}
+.alert .alertinner [class*="icon-"] {
+  position: absolute;
+  top: 0.3em;
+  right: 100%;
+}
+.alert .alertinner p {
+  margin: 10px 0 0 0;
+}
+.alert .alertinner p:first-child {
+  margin: 0;
+}
 body {
   background: url("../img/ui/dashboard/bg_subtle_dots.png") repeat scroll 0 0 #ffffff;
 }
