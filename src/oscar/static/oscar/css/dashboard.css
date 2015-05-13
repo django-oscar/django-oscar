@@ -5648,6 +5648,14 @@ form.flat {
   display: block;
   color: #b94a48;
 }
+form .form-group .form-inline .input-group.date input {
+  width: 100%;
+}
+@media (min-width: 768px) {
+  form .form-group .form-inline .input-group.date input {
+    width: 145px;
+  }
+}
 .fields-full input[type=text],
 .fields-full textarea {
   width: 100%;

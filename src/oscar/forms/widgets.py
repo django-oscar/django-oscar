@@ -175,11 +175,13 @@ class TimePickerInput(DateTimeWidgetMixin, forms.TimeInput):
                  }
 
         div = format_html('<div class="input-group date"{}>', flatatt(attrs))
-        return mark_safe('{div}'
-                         ' {input}'
-                         ' <span class="input-group-addon">'
-                         '  <i class="icon-time"></i>'
-                         ' </span>'
+        return mark_safe('<div class="form-inline">'
+                         ' {div}'
+                         '  {input}'
+                         '  <span class="input-group-addon">'
+                         '   <i class="icon-time glyphicon-time"></i>'
+                         '  </span>'
+                         ' </div>'
                          '</div>'
                          .format(div=div, input=input))
 
@@ -202,11 +204,13 @@ class DatePickerInput(DateTimeWidgetMixin, forms.DateInput):
                  }
 
         div = format_html('<div class="input-group date"{}>', flatatt(attrs))
-        return mark_safe('{div}'
-                         ' {input}'
-                         ' <span class="input-group-addon">'
-                         '  <i class="icon-calendar"></i>'
-                         ' </span>'
+        return mark_safe('<div class="form-inline">'
+                         ' {div}'
+                         '  {input}'
+                         '  <span class="input-group-addon">'
+                         '   <i class="icon-calendar glyphicon-calendar"></i>'
+                         '  </span>'
+                         ' </div>'
                          '</div>'
                          .format(div=div, input=input))
 
@@ -243,11 +247,13 @@ class DateTimePickerInput(DateTimeWidgetMixin, forms.DateTimeInput):
                  }
 
         div = format_html('<div class="input-group date"{}>', flatatt(attrs))
-        return mark_safe('{div}'
-                         ' {input}'
-                         ' <span class="input-group-addon">'
-                         '  <i class="icon-calendar"></i>'
-                         ' </span>'
+        return mark_safe('<div class="form-inline">'
+                         ' {div}'
+                         '  {input}'
+                         '  <span class="input-group-addon">'
+                         '   <i class="icon-calendar glyphicon-calendar"></i>'
+                         '  </span>'
+                         ' </div>'
                          '</div>'
                          .format(div=div, input=input))
 

@@ -7,6 +7,7 @@ from django.utils.translation import pgettext_lazy
 
 from oscar.apps.address.forms import AbstractAddressForm
 from oscar.core.loading import get_model
+from oscar.forms.widgets import DatePickerInput
 from oscar.views.generic import PhoneNumberMixin
 
 Order = get_model('order', 'Order')
@@ -74,8 +75,10 @@ class OrderSearchForm(forms.Form):
     status = forms.ChoiceField(choices=status_choices, label=_("Status"),
                                required=False)
 
-    date_from = forms.DateField(required=False, label=_("Date from"))
-    date_to = forms.DateField(required=False, label=_("Date to"))
+    date_from = forms.DateField(
+        required=False, label=_("Date from"), widget=DatePickerInput)
+    date_to = forms.DateField(
+        required=False, label=_("Date to"), widget=DatePickerInput)
 
     voucher = forms.CharField(required=False, label=_("Voucher code"))
 
