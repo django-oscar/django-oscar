@@ -88,7 +88,8 @@ def format_datetime(dt, format=None):
 
 def datetime_combine(date, time):
     """Timezone aware version of `datetime.datetime.combine`"""
-    return make_aware(datetime.datetime.combine(date, time))
+    return make_aware(
+        datetime.datetime.combine(date, time), get_current_timezone())
 
 
 def safe_referrer(request, default):
