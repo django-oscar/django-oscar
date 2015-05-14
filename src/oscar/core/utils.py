@@ -1,4 +1,5 @@
 from __future__ import absolute_import  # for logging import below
+import datetime
 import logging
 
 from django.shortcuts import redirect, resolve_url
@@ -83,6 +84,11 @@ def format_datetime(dt, format=None):
     else:
         localtime = dt.astimezone(get_current_timezone())
     return date_filter(localtime, format)
+
+
+def datetime_combine(date, time):
+    """Timezone aware version of `datetime.datetime.combine`"""
+    return make_aware(datetime.datetime.combine(date, time))
 
 
 def safe_referrer(request, default):

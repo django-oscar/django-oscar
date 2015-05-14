@@ -13,7 +13,7 @@ from django.views.generic import ListView, DetailView, UpdateView, FormView
 from django.conf import settings
 
 from oscar.core.loading import get_class, get_model
-from oscar.core.utils import format_datetime
+from oscar.core.utils import format_datetime, datetime_combine
 from oscar.core.compat import UnicodeCSVWriter
 from oscar.views import sort_queryset
 from oscar.views.generic import BulkEditMixin
@@ -198,14 +198,15 @@ class OrderListView(BulkEditMixin, ListView):
             queryset = queryset.filter(lines__partner_sku=data['partner_sku'])
 
         if data['date_from'] and data['date_to']:
-            # Add 24 hours to make search inclusive
-            date_to = data['date_to'] + datetime.timedelta(days=1)
-            queryset = queryset.filter(date_placed__gte=data['date_from'])
-            queryset = queryset.filter(date_placed__lt=date_to)
+            date_to = datetime_combine(data['date_to'], datetime.time.max)
+            date_from = datetime_combine(data['date_from'], datetime.time.min)
+            queryset = queryset.filter(
+                date_placed__gte=date_from, date_placed__lt=date_to)
         elif data['date_from']:
-            queryset = queryset.filter(date_placed__gte=data['date_from'])
+            date_from = datetime_combine(data['date_from'], datetime.time.min)
+            queryset = queryset.filter(date_placed__gte=date_from)
         elif data['date_to']:
-            date_to = data['date_to'] + datetime.timedelta(days=1)
+            date_to = datetime_combine(data['date_to'], datetime.time.max)
             queryset = queryset.filter(date_placed__lt=date_to)
 
         if data['voucher']:
