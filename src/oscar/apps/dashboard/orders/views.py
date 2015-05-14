@@ -222,7 +222,7 @@ class OrderListView(BulkEditMixin, ListView):
 
         return queryset
 
-    def get_search_filter_descriptions(self):
+    def get_search_filter_descriptions(self):  # noqa (too complex (19))
         """Describe the filters used in the search.
 
         These are user-facing messages describing what filters
@@ -239,105 +239,107 @@ class OrderListView(BulkEditMixin, ListView):
         # won't be set, so default to None.
         data = getattr(self.form, 'cleaned_data', None)
 
-        if data is not None:
-            if data.get('order_number'):
-                descriptions.append(
-                    _('Order number starts with "{order_number}"').format(
-                        order_number=data['order_number']
-                    )
-                )
+        if data is None:
+            return descriptions
 
-            if data.get('name'):
-                descriptions.append(
-                    _('Customer name matches "{customer_name}"').format(
-                        customer_name=data['name']
-                    )
+        if data.get('order_number'):
+            descriptions.append(
+                _('Order number starts with "{order_number}"').format(
+                    order_number=data['order_number']
                 )
+            )
 
-
-            if data.get('product_title'):
-                descriptions.append(
-                    _('Product name matches "{product_name}"').format(
-                        product_name=data['product_title']
-                    )
+        if data.get('name'):
+            descriptions.append(
+                _('Customer name matches "{customer_name}"').format(
+                    customer_name=data['name']
                 )
+            )
 
-            if data.get('upc'):
-                descriptions.append(
-                    # Translators: "UPC" means "universal product code" and it is used
-                    # to uniquely identify a product in an online store.
-                    # "Item" in this context means an item in an order placed
-                    # in an online store.
-                    _('Includes an item with UPC "{upc}"').format(
-                        upc=data['upc']
-                    )
+        if data.get('product_title'):
+            descriptions.append(
+                _('Product name matches "{product_name}"').format(
+                    product_name=data['product_title']
                 )
+            )
 
-            if data.get('partner_sku'):
-                descriptions.append(
-                    # Translators: "SKU" means "stock keeping unit" and it is used
-                    # to identify products that can be shipped from an online store.
-                    # A "partner" is a company that ships items to users who
-                    # buy things in an online store.
-                    _('Includes an item with partner SKU "{partner_sku}"').format(
-                        partner_sku=data['partner_sku']
-                    )
+        if data.get('upc'):
+            descriptions.append(
+                # Translators: "UPC" means "universal product code" and it is
+                # used to uniquely identify a product in an online store.
+                # "Item" in this context means an item in an order placed
+                # in an online store.
+                _('Includes an item with UPC "{upc}"').format(
+                    upc=data['upc']
                 )
+            )
 
-            if data.get('date_from') and data.get('date_to'):
-                descriptions.append(
-                    # Translators: This string refers to orders in an online
-                    # store that were made within a particular date range.
-                    _('Placed between {start_date} and {end_date}').format(
-                        start_date=data['date_from'],
-                        end_date=data['date_to']
-                    )
+        if data.get('partner_sku'):
+            descriptions.append(
+                # Translators: "SKU" means "stock keeping unit" and is used to
+                # identify products that can be shipped from an online store.
+                # A "partner" is a company that ships items to users who
+                # buy things in an online store.
+                _('Includes an item with partner SKU "{partner_sku}"').format(
+                    partner_sku=data['partner_sku']
                 )
+            )
 
-            elif data.get('date_from'):
-                descriptions.append(
-                    # Translators: This string refers to orders in an online store
-                    # that were made after a particular date.
-                    _('Placed after {start_date}').format(start_date=data['date_from'])
+        if data.get('date_from') and data.get('date_to'):
+            descriptions.append(
+                # Translators: This string refers to orders in an online
+                # store that were made within a particular date range.
+                _('Placed between {start_date} and {end_date}').format(
+                    start_date=data['date_from'],
+                    end_date=data['date_to']
                 )
+            )
 
-            elif data.get('date_to'):
-                end_date = data['date_to'] + datetime.timedelta(days=1)
-                descriptions.append(
-                    # Translators: This string refers to orders in an online store
-                    # that were made before a particular date.
-                    _('Placed before {end_date}').format(end_date=end_date)
-                )
+        elif data.get('date_from'):
+            descriptions.append(
+                # Translators: This string refers to orders in an online store
+                # that were made after a particular date.
+                _('Placed after {start_date}').format(
+                    start_date=data['date_from'])
+            )
 
-            if data.get('voucher'):
-                descriptions.append(
-                    # Translators: A "voucher" is a coupon that can be applied
-                    # to an order in an online store in order to recieve a discount.
-                    # The voucher "code" is a string that users can enter to
-                    # receive the discount.
-                    _('Used voucher code "{voucher_code}"').format(voucher_code=data['voucher'])
-                )
+        elif data.get('date_to'):
+            end_date = data['date_to'] + datetime.timedelta(days=1)
+            descriptions.append(
+                # Translators: This string refers to orders in an online store
+                # that were made before a particular date.
+                _('Placed before {end_date}').format(end_date=end_date)
+            )
 
-            if data.get('payment_method'):
-                payment_method_code = data['payment_method']
-                payment_source_type = SourceType.objects.get(code=payment_method_code)
-                payment_method = payment_source_type.name
-                descriptions.append(
-                    # Translators: A payment method is a way of paying for an
-                    # item in an online store.  For example, a user can pay
-                    # with a credit card or PayPal.
-                    _('Paid using {payment_method}').format(
-                        payment_method=payment_method
-                    )
-                )
+        if data.get('voucher'):
+            descriptions.append(
+                # Translators: A "voucher" is a coupon that can be applied to
+                # an order in an online store in order to receive a discount.
+                # The voucher "code" is a string that users can enter to
+                # receive the discount.
+                _('Used voucher code "{voucher_code}"').format(
+                    voucher_code=data['voucher'])
+            )
 
-            if data.get('status'):
-                descriptions.append(
-                    # Translators: This string refers to an order in an
-                    # online store.  Some examples of order status are
-                    # "purchased", "cancelled", or "refunded".
-                    _('Order status is {order_status}').format(order_status=data['status'])
+        if data.get('payment_method'):
+            payment_type = SourceType.objects.get(code=data['payment_method'])
+            descriptions.append(
+                # Translators: A payment method is a way of paying for an
+                # item in an online store.  For example, a user can pay
+                # with a credit card or PayPal.
+                _('Paid using {payment_method}').format(
+                    payment_method=payment_type.name
                 )
+            )
+
+        if data.get('status'):
+            descriptions.append(
+                # Translators: This string refers to an order in an
+                # online store.  Some examples of order status are
+                # "purchased", "cancelled", or "refunded".
+                _('Order status is {order_status}').format(
+                    order_status=data['status'])
+            )
 
         return descriptions
 
