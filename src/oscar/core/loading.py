@@ -95,7 +95,7 @@ def get_classes(module_label, classnames):
     else:
         # Attempt to import the classes from the local module
         # e.g. 'yourproject.dashboard.catalogue.forms'
-        sub_module = module_label.replace(app_name, '')
+        sub_module = module_label.replace(app_name, '', 1)
         local_module_label = installed_apps_entry + sub_module
         local_module = _import_module(local_module_label, classnames)
 
