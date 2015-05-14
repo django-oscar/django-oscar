@@ -1,22 +1,13 @@
 """Tests for the dashboard orders search. """
-
-import warnings
-from bs4 import BeautifulSoup
 from django.core.urlresolvers import reverse
-from django.test import TestCase
-from oscar.core.compat import get_user_model, get_model
+
+from oscar.test.factories import SourceTypeFactory
+from oscar.test.testcases import WebTestCase
 
 
-User = get_user_model()
-SourceType = get_model('payment', 'SourceType')
-
-
-class TestOrderSearch(TestCase):
+class TestOrderSearch(WebTestCase):
     """Test the order search page. """
-
-    USERNAME = "staff"
-    EMAIL = "staff@example.com"
-    PASSWORD = "password"
+    is_staff = True
 
     TEST_CASES = [
         ({}, []),
@@ -91,66 +82,20 @@ class TestOrderSearch(TestCase):
         ),
     ]
 
-    def setUp(self):
-        self._create_payment_source()
-        self._create_staff_account_and_login()
 
     def test_search_filter_descriptions(self):
+        SourceTypeFactory(name='Visa', code='visa')
+        url = reverse('dashboard:order-list')
         for params, expected_filters in self.TEST_CASES:
+
             # Need to provide the order number parameter to avoid
             # being short-circuited to "all results".
-            if 'order_number' not in params:
-                params['order_number'] = ''
+            params.setdefault('order_number', '')
 
-            response = self._search_with_params(**params)
+            response = self.get(url, params=params)
             self.assertEqual(response.status_code, 200)
-            self._assert_filters(response, expected_filters)
-
-    def _create_payment_source(self):
-        """Ensure that a payment source type exists. """
-        SourceType.objects.create(name="Visa", code="visa")
-
-    def _create_staff_account_and_login(self):
-        """Create a staff account and log in using the test client. """
-        self.user = User.objects.create_user(self.USERNAME, self.EMAIL, self.PASSWORD)
-        self.user.is_staff = True
-        self.user.save()
-        result = self.client.login(email=self.EMAIL, password=self.PASSWORD)
-        self.assertTrue(result, msg="Could not log in as a staff user.")
-
-    def _search_with_params(self, **kwargs):
-        """Perform the search with the specified parameters.
-
-        Keyword arguments are the GET parameters to
-        the order-list view.
-
-        Returns:
-            HttpResponse
-
-        """
-        url = reverse('dashboard:order-list')
-
-        # Django raises a warning about using a naive datetime
-        # when querying the Order model.  This occurs because
-        # the form field is a date, but the model field is a
-        # datetime, so when we convert from a date to a datetime
-        # there isn't any timezone information.
-        # To avoid halting the test, we suppress the warning.
-        with warnings.catch_warnings():
-            warnings.filterwarnings("ignore", category=RuntimeWarning)
-            return self.client.get(url, kwargs)
-
-    def _assert_filters(self, response, expected_filters):
-        """Check filter descriptions displayed on the search results page.
-
-        Arguments:
-            response (HttpResponse)
-            expected_filters (list)
-
-        Raises:
-            AssertionError
-
-        """
-        doc = BeautifulSoup(response.content)
-        filters = [el.text.strip() for el in doc.select('#filters li')]
-        self.assertEqual(filters, expected_filters)
+            applied_filters = [
+                el.text.strip() for el in
+                response.html.select('.search-filter-list .label')
+            ]
+            assert applied_filters == expected_filters

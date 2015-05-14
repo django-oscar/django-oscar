@@ -32,7 +32,7 @@ __all__ = ["UserFactory", "CountryFactory", "UserAddressFactory",
            "ProductCategoryFactory", "CategoryFactory", "RangeFactory",
            "OptionFactory", "BasketLineAttributeFactory",
            "PermissionFactory", "ShippingAddressFactory",
-           "ProductReviewFactory"]
+           "ProductReviewFactory", "SourceTypeFactory"]
 
 Selector = get_class('partner.strategy', 'Selector')
 
