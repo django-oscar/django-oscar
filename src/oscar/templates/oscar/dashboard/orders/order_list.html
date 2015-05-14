@@ -76,19 +76,17 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    {% if search_filters %}
-        <a id="show_filters" href="#filters">{% trans "Show Filters" %}</a>
-        <a id="hide_filters" href="#filters" style="display:none">{% trans "Hide Filters" %}</a>
-        <div id="filters" class="collapse">
-            <ul>
+        {% if search_filters %}
+        <div class="search-filter-list">
+            <label>Filters:</label>
             {% for filter in search_filters %}
-                <li>{{ filter }}</li>
+            <span class="label label-success">{{ filter }}</span>
             {% endfor %}
-            </ul>
         </div>
-    {% endif %}
+
+        {% endif %}
+    </div>
 
     {% if orders %}
         <form action="." method="post" class="order_table" id="orders_form">

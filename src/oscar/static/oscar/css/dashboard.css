@@ -6122,6 +6122,12 @@ caption > i,
   height: 400px;
   overflow-y: auto;
 }
+.search-filter-list {
+  margin-top: 10px;
+}
+.search-filter-list .label {
+  font-size: 100%;
+}
 /*!
  *  Font Awesome 3.2.1
  *  the iconic font designed for Bootstrap

@@ -269,19 +269,6 @@ var oscar = (function(o, $) {
                         $('td:first input', this).prop("checked", $(input).is(':checked'));
                     });
                 });
-            },
-            initFilterToggle: function() {
-                $("#show_filters").on('click', function() {
-                    $("#filters").collapse('show');
-                    $("#show_filters").hide();
-                    $("#hide_filters").show();
-                });
-
-                $("#hide_filters").on('click', function() {
-                    $("#filters").collapse('hide');
-                    $("#hide_filters").hide();
-                    $("#show_filters").show();
-                });
             }
         },
         reordering: (function() {
