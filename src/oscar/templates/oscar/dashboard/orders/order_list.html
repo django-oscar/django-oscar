@@ -88,6 +88,18 @@
         {% endif %}
     </div>
 
+    {% if search_filters %}
+        <a id="show_filters" href="#filters">{% trans "Show Filters" %}</a>
+        <a id="hide_filters" href="#filters" style="display:none">{% trans "Hide Filters" %}</a>
+        <div id="filters" class="collapse">
+            <ul>
+            {% for filter in search_filters %}
+                <li>{{ filter }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
     {% if orders %}
         <form action="." method="post" class="order_table" id="orders_form">
             {% csrf_token %}
