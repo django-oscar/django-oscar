@@ -5713,9 +5713,6 @@ textarea.plain {
   padding-left: 29px;
   padding-right: 29px;
 }
-.well form .form-actions {
-  bottom: -39px;
-}
 .wysihtml5-sandbox {
   border: 1px solid #ccc!important;
 }
