@@ -4,7 +4,6 @@ from django.utils.six.moves import http_client
 
 from oscar.core.loading import get_model, get_class
 from oscar.test import factories
-from oscar.test.factories import UserAddressFactory
 from oscar.test.testcases import WebTestCase
 from . import CheckoutMixin
 
@@ -34,7 +33,7 @@ class TestShippingAddressView(CheckoutMixin, WebTestCase):
 
     def setUp(self):
         super(TestShippingAddressView, self).setUp()
-        self.user_address = UserAddressFactory(
+        self.user_address = factories.UserAddressFactory(
             user=self.user, country=self.create_shipping_country())
 
     def test_requires_login(self):
@@ -65,7 +64,7 @@ class TestShippingAddressView(CheckoutMixin, WebTestCase):
         not_shipping_country = factories.CountryFactory(
             iso_3166_1_a2='US', name="UNITED STATES",
             is_shipping_country=False)
-        not_shipping_address = UserAddressFactory(
+        not_shipping_address = factories.UserAddressFactory(
             user=self.user, country=not_shipping_country, line4='New York')
         self.add_product_to_basket()
         page = self.get(reverse('checkout:shipping-address'))
@@ -87,7 +86,8 @@ class TestUserAddressUpdateView(CheckoutMixin, WebTestCase):
     def setUp(self):
         country = self.create_shipping_country()
         super(TestUserAddressUpdateView, self).setUp()
-        self.user_address = UserAddressFactory(user=self.user, country=country)
+        self.user_address = factories.UserAddressFactory(
+            user=self.user, country=country)
 
     def test_requires_login(self):
         response = self.get(
@@ -128,7 +128,7 @@ class TestDeleteUserAddressView(CheckoutMixin, WebTestCase):
     def setUp(self):
         super(TestDeleteUserAddressView, self).setUp()
         self.country = self.create_shipping_country()
-        self.user_address = UserAddressFactory(
+        self.user_address = factories.UserAddressFactory(
             user=self.user, country=self.country)
 
     def test_requires_login(self):

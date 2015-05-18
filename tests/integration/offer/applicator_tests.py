@@ -5,17 +5,18 @@ from mock import Mock
 
 from oscar.apps.offer import models
 from oscar.apps.offer.utils import Applicator
-from oscar.test import factories
-from oscar.test.basket import add_product
 from oscar.test.factories import (
-    BenefitFactory, ConditionalOfferFactory, ConditionFactory, RangeFactory)
+    BasketFactory, RangeFactory, BenefitFactory, ConditionFactory,
+    ConditionalOfferFactory)
+
+from oscar.test.basket import add_product
 
 
 class TestOfferApplicator(TestCase):
 
     def setUp(self):
         self.applicator = Applicator()
-        self.basket = factories.create_basket(empty=True)
+        self.basket = BasketFactory()
         rng = RangeFactory(includes_all_products=True)
         self.condition = ConditionFactory(
             range=rng, type=ConditionFactory._meta.model.VALUE,

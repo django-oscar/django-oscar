@@ -13,8 +13,7 @@ from oscar.apps.order.models import (
     OrderNote, OrderDiscount)
 from oscar.test.basket import add_product
 from oscar.test.factories import (
-    create_order, create_offer, create_voucher, create_basket)
-from oscar.test.factories import (
+    create_order, create_offer, create_voucher, create_basket,
     OrderFactory, OrderLineFactory, ShippingAddressFactory,
     ShippingEventFactory)
 

@@ -1,8 +1,8 @@
 from django.test import TestCase
 
 from oscar.apps.offer import models
-from oscar.test.factories import create_order
-from oscar.test.factories import OrderDiscountFactory, UserFactory
+from oscar.test.factories import (
+    create_order, OrderDiscountFactory, UserFactory)
 
 
 class TestAPerUserConditionalOffer(TestCase):

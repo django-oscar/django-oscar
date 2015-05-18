@@ -1,8 +1,7 @@
 from django.test import TestCase
 
 from oscar.apps.catalogue.reviews import forms
-from oscar.test.factories import create_product
-from oscar.test.factories import UserFactory
+from oscar.test.factories import create_product, UserFactory
 
 
 class TestReviewForm(TestCase):

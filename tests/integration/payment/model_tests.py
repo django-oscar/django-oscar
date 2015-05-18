@@ -5,14 +5,13 @@ from django.test import TestCase
 
 from oscar.apps.payment.models import Bankcard
 from oscar.test import factories
-from oscar.test.factories import SourceFactory
 
 
 class TestAPaymentSource(TestCase):
 
     def setUp(self):
         order = factories.create_order()
-        self.source = SourceFactory(order=order)
+        self.source = factories.SourceFactory(order=order)
 
     def test_allocation_doesnt_error(self):
         self.source.allocate(D('100.00'))
