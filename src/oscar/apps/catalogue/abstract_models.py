@@ -792,6 +792,7 @@ class AbstractProductAttribute(models.Model):
     RICHTEXT = "richtext"
     DATE = "date"
     OPTION = "option"
+    MULTI_OPTION = "multi_option"
     ENTITY = "entity"
     FILE = "file"
     IMAGE = "image"
@@ -803,6 +804,7 @@ class AbstractProductAttribute(models.Model):
         (RICHTEXT, _("Rich Text")),
         (DATE, _("Date")),
         (OPTION, _("Option")),
+        (MULTI_OPTION, _("Multi-option")),
         (ENTITY, _("Entity")),
         (FILE, _("File")),
         (IMAGE, _("Image")),
