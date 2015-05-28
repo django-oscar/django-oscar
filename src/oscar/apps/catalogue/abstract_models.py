@@ -965,7 +965,7 @@ class AbstractProductAttributeValue(models.Model):
         return getattr(self, 'value_%s' % self.attribute.type)
 
     def _set_value(self, new_value):
-        if self.attribute.is_option and isinstance(new_value, str):
+        if self.attribute.is_option and isinstance(new_value, six.string_types):
             # Need to look up instance of AttributeOption
             new_value = self.attribute.option_group.options.get(
                 option=new_value)
