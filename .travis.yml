@@ -35,12 +35,13 @@ env:
         - DJANGO=Django==1.8.1
 
 before_install:
-    - pip install codecov
-
-install:
     # Before installation, we'll run ``pip wheel``, this will build wheels for
     # anything that doesn't already have one on PyPI.
-    - pip wheel -r requirements.txt
+    - ls requirements*.txt | xargs -n 1 pip wheel --allow-external django-oscar --process-dependency-links -r 
+    - pip install codecov
+
+
+install:
     # Actually install our dependencies now, this will pull from the directory
     # that the first command placed the Wheels into.
     - pip install -e . -r requirements.txt $DJANGO 
