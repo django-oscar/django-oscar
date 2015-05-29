@@ -35,6 +35,9 @@ OSCAR_UPLOAD_ROOT = '/tmp'
 OSCAR_REQUIRED_ADDRESS_FIELDS = ('first_name', 'last_name', 'line1',
                                  'line4', 'postcode', 'country')
 
+# Offer list settings
+OSCAR_OFFERS_PER_PAGE = 20
+
 # Product list settings
 OSCAR_PRODUCTS_PER_PAGE = 20
 
