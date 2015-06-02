@@ -1,6 +1,7 @@
 import datetime
 
 from django.views import generic
+from django.conf import settings
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
@@ -21,7 +22,7 @@ class ReviewListView(BulkEditMixin, generic.ListView):
     context_object_name = 'review_list'
     form_class = forms.ProductReviewSearchForm
     review_form_class = forms.DashboardProductReviewForm
-    paginate_by = 25
+    paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
     actions = ('update_selected_review_status',)
     checkbox_object_name = 'review'
     desc_template = _("%(main_filter)s %(date_filter)s %(status_filter)s"

@@ -3,6 +3,7 @@ from django.utils.translation import ugettext_lazy as _, ungettext
 from django.utils.timezone import now
 from django.contrib import messages
 from django.views import generic
+from django.conf import settings
 
 from oscar.core.loading import get_model
 from oscar.core.utils import redirect_to_referrer
@@ -16,7 +17,7 @@ class NotificationListView(PageTitleMixin, generic.ListView):
     model = Notification
     template_name = 'customer/notifications/list.html'
     context_object_name = 'notifications'
-    paginate_by = 20
+    paginate_by = settings.OSCAR_NOTIFICATIONS_PER_PAGE
     page_title = _("Notifications")
     active_tab = 'notifications'
 

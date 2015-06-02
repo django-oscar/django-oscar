@@ -1,10 +1,10 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, View
 from django.contrib import messages
-from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
-from oscar.core.loading import get_classes
+from oscar.core.loading import get_model, get_classes
 from oscar.core.utils import redirect_to_referrer
 from oscar.apps.catalogue.reviews.signals import review_added
 
@@ -110,7 +110,7 @@ class ProductReviewList(ListView):
     context_object_name = "reviews"
     model = ProductReview
     product_model = Product
-    paginate_by = 20
+    paginate_by = settings.OSCAR_REVIEWS_PER_PAGE
 
     def get_queryset(self):
         qs = self.model.approved.filter(product=self.kwargs['product_pk'])

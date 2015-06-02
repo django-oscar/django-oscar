@@ -63,12 +63,21 @@ Default: ``'oscar_history'``
 
 The name of the cookie for showing recently viewed products.
 
-``OSCAR_PRODUCTS_PER_PAGE``
----------------------------
+Pagination
+----------
 
-Default: 20
+There are a number of settings that control pagination in Oscar's views. They
+all default to 20.
 
-The number of products to paginate by.
+- ``OSCAR_PRODUCTS_PER_PAGE``
+- ``OSCAR_OFFERS_PER_PAGE``
+- ``OSCAR_REVIEWS_PER_PAGE``
+- ``OSCAR_NOTIFICATIONS_PER_PAGE``
+- ``OSCAR_EMAILS_PER_PAGE``
+- ``OSCAR_ORDERS_PER_PAGE``
+- ``OSCAR_ADDRESSES_PER_PAGE``
+- ``OSCAR_STOCK_ALERTS_PER_PAGE``
+- ``OSCAR_DASHBOARD_ITEMS_PER_PAGE``
 
 .. _oscar_search_facets:
 
