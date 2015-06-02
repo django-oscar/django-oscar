@@ -29,7 +29,6 @@ You can also run tests which match an expression via::
 
     $ ./runtests.py tests/unit/offer/availability_tests.py -k is_unavailable
 
-
 Testing against different setups
 --------------------------------
 

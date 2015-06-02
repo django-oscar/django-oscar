@@ -1,5 +1,6 @@
 import datetime
 
+from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from oscar.core.loading import get_model
@@ -25,7 +26,7 @@ class VoucherListView(generic.ListView):
     template_name = 'dashboard/vouchers/voucher_list.html'
     form_class = VoucherSearchForm
     description_template = _("%(main_filter)s %(name_filter)s %(code_filter)s")
-    paginate_by = 25
+    paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
 
     def get_queryset(self):
         qs = self.model.objects.all().order_by('-date_created')

@@ -114,7 +114,7 @@ class OrderListView(BulkEditMixin, ListView):
     context_object_name = 'orders'
     template_name = 'dashboard/orders/order_list.html'
     form_class = OrderSearchForm
-    paginate_by = 25
+    paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
     actions = ('download_selected_orders', 'change_order_statuses')
 
     def dispatch(self, request, *args, **kwargs):
