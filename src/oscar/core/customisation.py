@@ -70,6 +70,10 @@ def fork_app(label, folder_path, logger=None):
     if label not in valid_labels:
         raise ValueError("There is no Oscar app that matches '%s'" % label)
 
+    # Check folder_path is current catalog
+    if folder_path == '.':
+        folder_path = ''
+
     # Create folder
     label_folder = label.replace('.', '/')  # eg 'dashboard/ranges'
     local_app_path = join(folder_path, label_folder)
