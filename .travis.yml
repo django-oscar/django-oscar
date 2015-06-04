@@ -4,8 +4,12 @@ sudo: false
 
 # Cache pip downloads
 cache:
+    # Apparently if you override the install command that silently disables the
+    # cache: pip support. This is less than ideal and @dstufft opened up
+    # travis-ci/travis-ci#3239 to hopefully get that addressed. For now we
+    # manually add the pip cache directory to the build cache.
     directories:
-      - $HOME/.pip-cache/
+      - ~/.cache/pip
 
 language: python
 
@@ -17,13 +21,29 @@ python:
 env:
     global:
         # $TRANSIFEX_PASSWORD for oscar_bot (used in transifex.sh)
-        secure: FuIlzEsGJiAwhaIRBmRNsq9eXmuzs25fX6BChknW4lDyVAySWMp0+Zps9Bd0JgfFYUG3Ip+OTmksYIoTUsG25ZJS9cq1IFt3QKUAN70YCI/4ZBLeIdICPEyxq+Km179+NeEXmBUug17RLMLxh3MWfO+RKUHK9yHIPNNpq0dNyoo=
+        - secure: FuIlzEsGJiAwhaIRBmRNsq9eXmuzs25fX6BChknW4lDyVAySWMp0+Zps9Bd0JgfFYUG3Ip+OTmksYIoTUsG25ZJS9cq1IFt3QKUAN70YCI/4ZBLeIdICPEyxq+Km179+NeEXmBUug17RLMLxh3MWfO+RKUHK9yHIPNNpq0dNyoo=
+
+        # These two environment variables could be set by Travis itself, or Travis
+        # could configure itself in /etc/, ~/, or inside of the virtual
+        # environments. In any case if these two values get configured then end
+        # users only need to enable the pip cache and manually run pip wheel before
+        # running pip install.
+        - PIP_WHEEL_DIR=$HOME/.cache/pip/wheels
+        - PIP_FIND_LINKS=file://$HOME/.cache/pip/wheels
     matrix:
-        - DJANGO=Django==1.6.8
-        - DJANGO=Django==1.7.1
+        - DJANGO=Django==1.7.8
+        - DJANGO=Django==1.8.1
+
+before_install:
+    - pip install codecov
 
 install:
-    - pip install -e . -r requirements.txt $DJANGO --download-cache $HOME/.pip-cache
+    # Before installation, we'll run ``pip wheel``, this will build wheels for
+    # anything that doesn't already have one on PyPI.
+    - pip wheel -r requirements.txt
+    # Actually install our dependencies now, this will pull from the directory
+    # that the first command placed the Wheels into.
+    - pip install -e . -r requirements.txt $DJANGO 
 
 before_script:
     # Create testing databases for running migrations against
@@ -38,4 +58,5 @@ script:
 
 after_success:
     - coveralls
+    - codecov
     - ./transifex.sh

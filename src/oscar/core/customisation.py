@@ -38,6 +38,9 @@ def subfolders(path):
 def inherit_app_config(local_app_path, app_package, app_label):
     if 'dashboard' in app_label:
         config_name = '%sDashboardConfig' % app_label.split('.').pop().title()
+    elif app_label == 'catalogue.reviews':
+        # This embedded app needs special handling
+        config_name = 'CatalogueReviewsConfig'
     else:
         config_name = app_label.title() + 'Config'
     create_file(
@@ -70,6 +73,10 @@ def fork_app(label, folder_path, logger=None):
     if label not in valid_labels:
         raise ValueError("There is no Oscar app that matches '%s'" % label)
 
+    # Check folder_path is current catalog
+    if folder_path == '.':
+        folder_path = ''
+
     # Create folder
     label_folder = label.replace('.', '/')  # eg 'dashboard/ranges'
     local_app_path = join(folder_path, label_folder)
@@ -96,12 +103,12 @@ def fork_app(label, folder_path, logger=None):
             join(local_app_path, 'models.py'),
             "from oscar.apps.%s.models import *  # noqa\n" % label)
 
-        for migrations_path in ['migrations', 'south_migrations']:
-            source = join(oscar_app_path, migrations_path)
-            if exists(source):
-                logger.info("Creating %s folder", migrations_path)
-                destination = join(local_app_path, migrations_path)
-                shutil.copytree(source, destination)
+        migrations_path = 'migrations'
+        source = join(oscar_app_path, migrations_path)
+        if exists(source):
+            logger.info("Creating %s folder", migrations_path)
+            destination = join(local_app_path, migrations_path)
+            shutil.copytree(source, destination)
 
     # Final step needs to be done by hand
     msg = (

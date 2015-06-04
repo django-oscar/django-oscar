@@ -1,12 +1,10 @@
 # flake8: noqa, because URL syntax is more readable with long lines
 
-import django
 from django.conf.urls import url, include
 from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse_lazy
 
 from oscar.core.application import Application
-from oscar.apps.customer import forms
 from oscar.core.loading import get_class
 from oscar.views.decorators import login_forbidden
 
@@ -46,32 +44,14 @@ class Shop(Application):
                 name='password-reset'),
             url(r'^password-reset/done/$',
                 login_forbidden(auth_views.password_reset_done),
-                name='password-reset-done')]
-
-        # Django <=1.5: uses uidb36 to encode the user's primary key (support
-        #               has been removed)
-        # Django 1.6:   uses uidb64 to encode the user's primary key, but
-        #               supports legacy links
-        # Django > 1.7: used uidb64 to encode the user's primary key
-        # see https://docs.djangoproject.com/en/dev/releases/1.6/#django-contrib-auth-password-reset-uses-base-64-encoding-of-user-pk
-        urls.append(
+                name='password-reset-done'),
             url(r'^password-reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
                 login_forbidden(auth_views.password_reset_confirm),
                 {
                     'post_reset_redirect': reverse_lazy('password-reset-complete'),
                     'set_password_form': self.set_password_form,
                 },
-                name='password-reset-confirm'))
-        if django.VERSION < (1, 7):
-            urls.append(
-                url(r'^password-reset/confirm/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$',
-                    login_forbidden(auth_views.password_reset_confirm_uidb36),
-                    {
-                        'post_reset_redirect': reverse_lazy('password-reset-complete'),
-                        'set_password_form': self.set_password_form,
-                    }))
-
-        urls += [
+                name='password-reset-confirm'),
             url(r'^password-reset/complete/$',
                 login_forbidden(auth_views.password_reset_complete),
                 name='password-reset-complete'),
@@ -79,6 +59,4 @@ class Shop(Application):
         ]
         return urls
 
-
-# 'shop' kept for legacy projects - 'application' is a better name
-shop = application = Shop()
+application = Shop()

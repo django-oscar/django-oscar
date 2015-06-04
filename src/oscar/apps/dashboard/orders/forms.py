@@ -1,12 +1,13 @@
 import datetime
 
 from django import forms
-from oscar.core.loading import get_model
 from django.http import QueryDict
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
-from oscar.apps.address.forms import AbstractAddressForm
 
+from oscar.apps.address.forms import AbstractAddressForm
+from oscar.core.loading import get_model
+from oscar.forms.widgets import DatePickerInput
 from oscar.views.generic import PhoneNumberMixin
 
 Order = get_model('order', 'Order')
@@ -74,8 +75,10 @@ class OrderSearchForm(forms.Form):
     status = forms.ChoiceField(choices=status_choices, label=_("Status"),
                                required=False)
 
-    date_from = forms.DateField(required=False, label=_("Date from"))
-    date_to = forms.DateField(required=False, label=_("Date to"))
+    date_from = forms.DateField(
+        required=False, label=_("Date from"), widget=DatePickerInput)
+    date_to = forms.DateField(
+        required=False, label=_("Date to"), widget=DatePickerInput)
 
     voucher = forms.CharField(required=False, label=_("Voucher code"))
 
@@ -120,7 +123,7 @@ class OrderNoteForm(forms.ModelForm):
 
     class Meta:
         model = OrderNote
-        exclude = ('order', 'user', 'note_type')
+        fields = ['message']
 
     def __init__(self, order, user, *args, **kwargs):
         super(OrderNoteForm, self).__init__(*args, **kwargs)
@@ -132,7 +135,12 @@ class ShippingAddressForm(PhoneNumberMixin, AbstractAddressForm):
 
     class Meta:
         model = ShippingAddress
-        exclude = ('search_text',)
+        fields = [
+            'title', 'first_name', 'last_name',
+            'line1', 'line2', 'line3', 'line4',
+            'state', 'postcode', 'country',
+            'phone_number', 'notes',
+        ]
 
 
 class OrderStatusForm(forms.Form):

@@ -1,18 +1,14 @@
 from django.test import TestCase
-from django_dynamic_fixture import G
 
-from oscar.core.compat import get_user_model
-from oscar.apps.catalogue.reviews import forms, models
-from oscar.test.factories import create_product
-
-User = get_user_model()
+from oscar.apps.catalogue.reviews import forms
+from oscar.test.factories import create_product, UserFactory
 
 
 class TestReviewForm(TestCase):
 
     def setUp(self):
         self.product = create_product()
-        self.reviewer = G(User)
+        self.reviewer = UserFactory()
         self.data = {
             'title': '  This product is lovely',
             'body': 'I really like this cheese',
@@ -33,8 +29,8 @@ class TestVoteForm(TestCase):
 
     def setUp(self):
         self.product = create_product()
-        self.reviewer = G(User)
-        self.voter = G(User)
+        self.reviewer = UserFactory()
+        self.voter = UserFactory()
         self.review = self.product.reviews.create(
             title='This is nice',
             score=3,

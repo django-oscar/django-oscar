@@ -24,8 +24,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 
-import unittest
-import django
 from django.db import models
 from django.test import TestCase
 
@@ -34,7 +32,6 @@ from oscar.core.loading import get_model
 SluggedTestModel = get_model('model_tests_app', 'sluggedtestmodel')
 ChildSluggedTestModel = get_model('model_tests_app', 'childsluggedtestmodel')
 CustomSluggedTestModel = get_model('model_tests_app', 'CustomSluggedTestModel')
-
 
 
 class AutoSlugFieldTest(TestCase):
@@ -135,9 +132,7 @@ class AutoSlugFieldTest(TestCase):
         m.save()
         self.assertEqual(m.slug, 'PASSWORD_RESET_2')
 
-    @unittest.skipIf(django.VERSION < (1, 7),
-                     "Migrations are handled by south in Django <1.7")
-    def test_17_migration(self):
+    def test_migration(self):
         """
         Tests making migrations with Django 1.7+'s migration framework
         """

@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
@@ -157,7 +158,7 @@ class ProductAlertListView(ListView):
     form_class = ProductAlertSearchForm
     context_object_name = 'alerts'
     template_name = 'dashboard/users/alerts/list.html'
-    paginate_by = 20
+    paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
     base_description = _('All Alerts')
     description = ''
 

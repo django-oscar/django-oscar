@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from django.conf import settings
 from purl import URL
 from haystack.query import SearchQuerySet
@@ -25,7 +27,7 @@ class FacetMunger(object):
         self.facet_counts = facet_counts
 
     def facet_data(self):
-        facet_data = {}
+        facet_data = OrderedDict()
         # Haystack can return an empty dict for facet_counts when e.g. Solr
         # isn't running. Skip facet munging in that case.
         if self.facet_counts:

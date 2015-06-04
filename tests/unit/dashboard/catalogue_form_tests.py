@@ -23,3 +23,19 @@ class TestCreateProductForm(TestCase):
             product_class=self.product_class, structure='parent')
         form = self.submit({'structure': 'child'}, parent=parent)
         self.assertTrue(form.is_valid())
+
+
+class TestCreateProductAttributeForm(TestCase):
+
+    def test_can_create_without_code(self):
+        form = forms.ProductAttributesForm(data={
+            "name": "Attr",
+            "type": "text"
+        })
+
+        self.assertTrue(form.is_valid())
+
+        product_attribute = form.save()
+
+        # check that code is not None or empty string
+        self.assertTrue(product_attribute.code)

@@ -1,18 +1,16 @@
-from django.utils.six.moves import http_client
 from django.conf import settings
+from django.core.urlresolvers import reverse
+from django.utils.six.moves import http_client
 
 from oscar.core.loading import get_model
-from django.core.urlresolvers import reverse
-from django_dynamic_fixture import get, G
-
-from oscar.test.testcases import WebTestCase
+from oscar.apps.order.models import (
+    Order, OrderNote, PaymentEvent, PaymentEventType)
+from oscar.test.factories import PartnerFactory, ShippingAddressFactory
 from oscar.test.factories import create_order, create_basket
-from oscar.apps.order.models import Order, OrderNote, PaymentEvent, \
-    PaymentEventType
-from oscar.core.compat import get_user_model
+from oscar.test.testcases import WebTestCase
+from oscar.test.factories import SourceTypeFactory
 
 
-User = get_user_model()
 Basket = get_model('basket', 'Basket')
 Partner = get_model('partner', 'Partner')
 ShippingAddress = get_model('order', 'ShippingAddress')
@@ -30,7 +28,7 @@ class TestOrderListDashboard(WebTestCase):
         self.assertEqual(http_client.FOUND, response.status_code)
 
     def test_downloads_to_csv_without_error(self):
-        address = get(ShippingAddress)
+        address = ShippingAddressFactory()
         create_order(shipping_address=address)
         page = self.get(reverse('dashboard:order-list'))
         form = page.forms['orders_form']
@@ -53,11 +51,11 @@ class PermissionBasedDashboardOrderTestsBase(WebTestCase):
         Creates two orders. order_in has self.user in it's partner users list.
         """
         super(PermissionBasedDashboardOrderTestsBase, self).setUp()
-        self.address = G(ShippingAddress)
+        self.address = ShippingAddressFactory()
         self.basket_in = create_basket()
         self.basket_out = create_basket()
         # replace partner with one that has the user in it's users list
-        self.partner_in = G(Partner, users=[self.user])
+        self.partner_in = PartnerFactory(users=[self.user])
         stockrecord = self.basket_in.lines.all()[0].stockrecord
         stockrecord.partner = self.partner_in
         stockrecord.save()
@@ -120,6 +118,101 @@ class PermissionBasedDashboardOrderTestsStaff(PermissionBasedDashboardOrderTests
             url = reverse('dashboard:order-detail',
                           kwargs={'number': order.number})
             self.assertIsOk(self.get(url))
+
+
+class TestOrderListSearch(WebTestCase):
+    is_staff = True
+
+    TEST_CASES = [
+        ({}, []),
+        (
+            {'order_number': 'abcd1234'},
+            ['Order number starts with "abcd1234"']
+        ),
+        (
+            {'name': 'Bob Smith'},
+            ['Customer name matches "Bob Smith"']
+        ),
+        (
+            {'product_title': 'The Art of War'},
+            ['Product name matches "The Art of War"']
+        ),
+        (
+            {'upc': 'abcd1234'},
+            ['Includes an item with UPC "abcd1234"']
+        ),
+        (
+            {'partner_sku': 'abcd1234'},
+            ['Includes an item with partner SKU "abcd1234"']
+        ),
+        (
+            {'date_from': '2015-01-01'},
+            ['Placed after 2015-01-01']
+        ),
+        (
+            {'date_to': '2015-01-01'},
+            ['Placed before 2015-01-02']
+        ),
+        (
+            {'date_from': '2014-01-02', 'date_to': '2015-03-04'},
+            ['Placed between 2014-01-02 and 2015-03-04']
+        ),
+        (
+            {'voucher': 'abcd1234'},
+            ['Used voucher code "abcd1234"']
+        ),
+        (
+            {'payment_method': 'visa'},
+            ['Paid using Visa']
+        ),
+        (
+            # Assumes that the test settings (OSCAR_ORDER_STATUS_PIPELINE)
+            # include a state called 'A'
+            {'status': 'A'},
+            ['Order status is A']
+        ),
+        (
+            {
+                'name': 'Bob Smith',
+                'product_title': 'The Art of War',
+                'upc': 'upc_abcd1234',
+                'partner_sku': 'partner_avcd1234',
+                'date_from': '2014-01-02',
+                'date_to': '2015-03-04',
+                'voucher': 'voucher_abcd1234',
+                'payment_method': 'visa',
+                'status': 'A'
+            },
+            [
+                'Customer name matches "Bob Smith"',
+                'Product name matches "The Art of War"',
+                'Includes an item with UPC "upc_abcd1234"',
+                'Includes an item with partner SKU "partner_avcd1234"',
+                'Placed between 2014-01-02 and 2015-03-04',
+                'Used voucher code "voucher_abcd1234"',
+                'Paid using Visa',
+                'Order status is A',
+            ]
+        ),
+    ]
+
+
+    def test_search_filter_descriptions(self):
+        SourceTypeFactory(name='Visa', code='visa')
+        url = reverse('dashboard:order-list')
+        for params, expected_filters in self.TEST_CASES:
+
+            # Need to provide the order number parameter to avoid
+            # being short-circuited to "all results".
+            params.setdefault('order_number', '')
+
+            response = self.get(url, params=params)
+            self.assertEqual(response.status_code, 200)
+            applied_filters = [
+                el.text.strip() for el in
+                response.html.select('.search-filter-list .label')
+            ]
+            assert applied_filters == expected_filters
 
 
 class TestOrderDetailPage(WebTestCase):

@@ -10,7 +10,6 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Reporting Dashboard" %}</li>
     </ul>
@@ -26,8 +25,8 @@
     </div>
     <div class="well">
         <form method="get" action="." class="form-inline">
-            {% include "partials/form_fields_inline.html" with form=form %}
-            <span class="control-group">
+            {% include "dashboard/partials/form_fields_inline.html" with form=form %}
+            <span class="form-group">
                 <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Generating...' %}">{% trans "Generate report" %}</button>
             </span>
         </form>

@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse_lazy
 
@@ -8,11 +9,13 @@ OSCAR_HOMEPAGE = reverse_lazy('promotions:home')
 # Basket settings
 OSCAR_BASKET_COOKIE_LIFETIME = 7 * 24 * 60 * 60
 OSCAR_BASKET_COOKIE_OPEN = 'oscar_open_basket'
+OSCAR_BASKET_COOKIE_SECURE = False
 OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = 10000
 
 # Recently-viewed products
 OSCAR_RECENTLY_VIEWED_COOKIE_LIFETIME = 7 * 24 * 60 * 60
 OSCAR_RECENTLY_VIEWED_COOKIE_NAME = 'oscar_history'
+OSCAR_RECENTLY_VIEWED_COOKIE_SECURE = False
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 
 # Currency
@@ -32,8 +35,17 @@ OSCAR_UPLOAD_ROOT = '/tmp'
 OSCAR_REQUIRED_ADDRESS_FIELDS = ('first_name', 'last_name', 'line1',
                                  'line4', 'postcode', 'country')
 
-# Product list settings
+# Pagination settings
+
+OSCAR_OFFERS_PER_PAGE = 20
 OSCAR_PRODUCTS_PER_PAGE = 20
+OSCAR_REVIEWS_PER_PAGE = 20
+OSCAR_NOTIFICATIONS_PER_PAGE = 20
+OSCAR_EMAILS_PER_PAGE = 20
+OSCAR_ORDERS_PER_PAGE = 20
+OSCAR_ADDRESSES_PER_PAGE = 20
+OSCAR_STOCK_ALERTS_PER_PAGE = 20
+OSCAR_DASHBOARD_ITEMS_PER_PAGE = 20
 
 # Checkout
 OSCAR_ALLOW_ANON_CHECKOUT = False
@@ -204,39 +216,36 @@ OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION = 'oscar.apps.dashboard.nav.default_acce
 
 # Search facets
 OSCAR_SEARCH_FACETS = {
-    'fields': {
+    'fields': OrderedDict([
         # The key for these dicts will be used when passing facet data
         # to the template. Same for the 'queries' dict below.
-        'product_class': {
-            'name': _('Type'),
-            'field': 'product_class'
-        },
-        'rating': {
-            'name': _('Rating'),
-            'field': 'rating',
-            # You can specify an 'options' element that will be passed to the
-            # SearchQuerySet.facet() call.  It's hard to get 'missing' to work
-            # correctly though as of Solr's hilarious syntax for selecting
-            # items without a specific facet:
-            # http://wiki.apache.org/solr/SimpleFacetParameters#facet.method
-            # 'options': {'missing': 'true'}
-        }
-    },
-    'queries': {
-        'price_range': {
-            'name': _('Price range'),
-            'field': 'price',
-            'queries': [
-                # This is a list of (name, query) tuples where the name will
-                # be displayed on the front-end.
-                (_('0 to 20'), u'[0 TO 20]'),
-                (_('20 to 40'), u'[20 TO 40]'),
-                (_('40 to 60'), u'[40 TO 60]'),
-                (_('60+'), u'[60 TO *]'),
-            ]
-        },
-    }
+        ('product_class', {'name': _('Type'), 'field': 'product_class'}),
+        ('rating', {'name': _('Rating'), 'field': 'rating'}),
+        # You can specify an 'options' element that will be passed to the
+        # SearchQuerySet.facet() call.  It's hard to get 'missing' to work
+        # correctly though as of Solr's hilarious syntax for selecting
+        # items without a specific facet:
+        # http://wiki.apache.org/solr/SimpleFacetParameters#facet.method
+        # 'options': {'missing': 'true'}
+    ]),
+    'queries': OrderedDict([
+        ('price_range',
+         {
+             'name': _('Price range'),
+             'field': 'price',
+             'queries': [
+                 # This is a list of (name, query) tuples where the name will
+                 # be displayed on the front-end.
+                 (_('0 to 20'), u'[0 TO 20]'),
+                 (_('20 to 40'), u'[20 TO 40]'),
+                 (_('40 to 60'), u'[40 TO 60]'),
+                 (_('60+'), u'[60 TO *]'),
+             ]
+         }),
+    ]),
 }
+
+OSCAR_PRODUCT_SEARCH_HANDLER = None
 
 OSCAR_SETTINGS = dict(
     [(k, v) for k, v in locals().items() if k.startswith('OSCAR_')])

@@ -14,8 +14,8 @@ Permission-based dashboard
 Staff users (users with ``is_staff==True``) get access to all views in the
 dashboard. To better support Oscar's use for marketplace scenarios, the
 permission-based dashboard has been introduced. If a non-staff user has
-the ``partner.dashboard_access`` permission set, she is given access to a subset
-of views, and her access to products and orders is limited.
+the ``partner.dashboard_access`` permission set, they are given access to a subset
+of views, and their access to products and orders is limited.
 
 :class:`~oscar.apps.partner.abstract_models.AbstractPartner` instances
 have a :attr:`~oscar.apps.partner.abstract_models.AbstractPartner.users` field.
@@ -23,7 +23,7 @@ Prior to Oscar 0.6, this field was not used. Since Oscar 0.6, it is used solely
 for modelling dashboard access.
 
 If a non-staff user with the ``partner.dashboard_access`` permission is in
-:attr:`~oscar.apps.partner.abstract_models.AbstractPartner.users`, she can:
+:attr:`~oscar.apps.partner.abstract_models.AbstractPartner.users`, they can:
 
 * Create products. It is enforced that at least one stock record's partner has
   the current user in ``users``.

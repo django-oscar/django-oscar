@@ -23,7 +23,7 @@ class AbstractBase(models.Model):
     description = models.TextField(_("Description"), blank=True)
 
     # We allow shipping methods to be linked to a specific set of countries
-    countries = models.ManyToManyField('address.Country', null=True,
+    countries = models.ManyToManyField('address.Country',
                                        blank=True, verbose_name=_("Countries"))
 
     # We need this to mimic the interface of the Base shipping method

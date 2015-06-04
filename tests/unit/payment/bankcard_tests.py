@@ -1,5 +1,3 @@
-import nose.tools
-
 from oscar.apps.payment import bankcards
 
 
@@ -13,7 +11,7 @@ fixture_data = {
 
 
 def compare(number, type):
-    nose.tools.eq_(bankcards.bankcard_type(number), type)
+    assert bankcards.bankcard_type(number) == type
 
 
 def test_bankcard_type_sniffing():

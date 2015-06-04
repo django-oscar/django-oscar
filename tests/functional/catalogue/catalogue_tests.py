@@ -1,9 +1,10 @@
 from django.conf import settings
+from django.core.cache import cache
 from django.core.urlresolvers import reverse
-from django.utils.six.moves import http_client
 from django.utils.six.moves import http_client
 
 from oscar.apps.catalogue.models import Category
+from oscar.test.decorators import ignore_deprecation_warnings
 from oscar.test.testcases import WebTestCase
 
 from oscar.test.factories import create_product
@@ -86,12 +87,19 @@ class TestProductCategoryView(WebTestCase):
         self.assertEqual(http_client.MOVED_PERMANENTLY, response.status_code)
         self.assertTrue(self.category.get_absolute_url() in response.location)
 
+    @ignore_deprecation_warnings
     def test_can_chop_off_last_part_of_url(self):
+        # We cache category URLs, which normally is a safe thing to do, as
+        # the primary key stays the same and ProductCategoryView only looks
+        # at the key any way.
+        # But this test chops the URLs, and hence relies on the URLs being
+        # correct. So in this case, we start with a clean cache to ensure
+        # our URLs are correct.
+        cache.clear()
+
         child_category = self.category.add_child(name='Cool products')
         full_url = child_category.get_absolute_url()
         chopped_url = full_url.rsplit('/', 2)[0]
         parent_url = self.category.get_absolute_url()
         response = self.app.get(chopped_url).follow()  # fails if no redirect
         self.assertTrue(response.url.endswith(parent_url))
-
-

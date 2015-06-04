@@ -174,12 +174,14 @@ class TimePickerInput(DateTimeWidgetMixin, forms.TimeInput):
                  datetime_format_to_js_time_format(format),
                  }
 
-        div = format_html('<div class="input-append date"{}>', flatatt(attrs))
-        return mark_safe('{div}'
-                         ' {input}'
-                         ' <span class="add-on">'
-                         '  <i class="icon-time"></i>'
-                         ' </span>'
+        div = format_html('<div class="input-group date"{}>', flatatt(attrs))
+        return mark_safe('<div class="form-inline">'
+                         ' {div}'
+                         '  {input}'
+                         '  <span class="input-group-addon">'
+                         '   <i class="icon-time glyphicon-time"></i>'
+                         '  </span>'
+                         ' </div>'
                          '</div>'
                          .format(div=div, input=input))
 
@@ -201,12 +203,14 @@ class DatePickerInput(DateTimeWidgetMixin, forms.DateInput):
                  datetime_format_to_js_date_format(format),
                  }
 
-        div = format_html('<div class="input-append date"{}>', flatatt(attrs))
-        return mark_safe('{div}'
-                         ' {input}'
-                         ' <span class="add-on">'
-                         '  <i class="icon-calendar"></i>'
-                         ' </span>'
+        div = format_html('<div class="input-group date"{}>', flatatt(attrs))
+        return mark_safe('<div class="form-inline">'
+                         ' {div}'
+                         '  {input}'
+                         '  <span class="input-group-addon">'
+                         '   <i class="icon-calendar glyphicon-calendar"></i>'
+                         '  </span>'
+                         ' </div>'
                          '</div>'
                          .format(div=div, input=input))
 
@@ -242,12 +246,14 @@ class DateTimePickerInput(DateTimeWidgetMixin, forms.DateTimeInput):
                  datetime_format_to_js_datetime_format(format),
                  }
 
-        div = format_html('<div class="input-append date"{}>', flatatt(attrs))
-        return mark_safe('{div}'
-                         ' {input}'
-                         ' <span class="add-on">'
-                         '  <i class="icon-calendar"></i>'
-                         ' </span>'
+        div = format_html('<div class="input-group date"{}>', flatatt(attrs))
+        return mark_safe('<div class="form-inline">'
+                         ' {div}'
+                         '  {input}'
+                         '  <span class="input-group-addon">'
+                         '   <i class="icon-calendar glyphicon-calendar"></i>'
+                         '  </span>'
+                         ' </div>'
                          '</div>'
                          .format(div=div, input=input))
 
@@ -319,7 +325,7 @@ class RemoteSelect(forms.Widget):
             'data-multiple': 'multiple' if self.is_multiple else '',
             'value': self.format_value(value),
             'data-required': 'required' if self.is_required else '',
-            })
+        })
         return mark_safe(u'<input %s>' % flatatt(attrs))
 
 

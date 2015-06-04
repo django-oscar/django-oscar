@@ -12,16 +12,13 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:voucher-list' %}">{% trans "Vouchers" %}</a>
-            <span class="divider">/</span>
         </li>
         {% if voucher %}
         <li>
             <a href="{% url 'dashboard:voucher-stats' pk=voucher.id %}">{{ voucher }}</a>
-            <span class="divider">/</span>
         </li>
     {% endif %}
     <li class="active">{% trans "Edit" %}</li>
@@ -42,10 +39,10 @@
     </div>
     <form action="." method="post" class="well form-stacked">
         {% csrf_token %}
-        {% include "partials/form_fields.html" with form=form %}
+        {% include "dashboard/partials/form_fields.html" with form=form %}
         {% block form_actions %}
             <div class="form-actions">
-                <button class="btn btn-primary btn-large" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button> {% trans "or" %}
+                <button class="btn btn-primary btn-lg" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button> {% trans "or" %}
                 <a href="{% url 'dashboard:voucher-list' %}">{% trans "cancel" %}</a>
             </div>
         {% endblock form_actions %}

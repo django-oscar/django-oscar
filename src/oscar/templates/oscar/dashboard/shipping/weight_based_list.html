@@ -10,7 +10,6 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Shipping methods" %}</li>
     </ul>
@@ -18,7 +17,7 @@
 
 {% block header %}
     <div class="page-header">
-        <a id="create_new_shipping_method" href="{% url 'dashboard:shipping-method-create' %}" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new shipping charge" %}</a>
+        <a id="create_new_shipping_method" href="{% url 'dashboard:shipping-method-create' %}" class="btn btn-primary btn-lg pull-right"><i class="icon-plus"></i> {% trans "Create new shipping charge" %}</a>
         <h1>{% trans "Shipping methods" %}</h1>
     </div>
 {% endblock header %}
@@ -44,7 +43,7 @@
                         <td>{{ method.num_bands }}</td>
                         <td>{{ method.default_weight }}</td>
                         <td>
-                            <a href="{% url 'dashboard:shipping-method-detail' pk=method.pk %}" class="btn">{% trans "View" %}</a>
+                            <a href="{% url 'dashboard:shipping-method-detail' pk=method.pk %}" class="btn btn-default">{% trans "View" %}</a>
                             <a href="{% url 'dashboard:shipping-method-edit' pk=method.pk %}" class="btn btn-primary">{% trans "Edit" %}</a>
                             <a href="{% url 'dashboard:shipping-method-delete' pk=method.pk %}" class="btn btn-danger">{% trans "Delete" %}</a>
                         </td>

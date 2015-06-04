@@ -1,16 +1,14 @@
 from django.test import TestCase
-from django_dynamic_fixture import G
 
 from oscar.apps.address import models, forms
 from oscar.core.compat import get_user_model
-
-User = get_user_model()
+from oscar.test.factories import UserFactory
 
 
 class TestUserAddressForm(TestCase):
 
     def setUp(self):
-        self.user = G(User)
+        self.user = UserFactory()
         self.country = models.Country.objects.create(
             iso_3166_1_a2='GB', name="UNITED KINGDOM")
 

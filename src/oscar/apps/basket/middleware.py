@@ -84,7 +84,8 @@ class BasketMiddleware(object):
             cookie = self.get_basket_hash(request.basket.id)
             response.set_cookie(
                 cookie_key, cookie,
-                max_age=settings.OSCAR_BASKET_COOKIE_LIFETIME, httponly=True)
+                max_age=settings.OSCAR_BASKET_COOKIE_LIFETIME,
+                secure=settings.OSCAR_BASKET_COOKIE_SECURE, httponly=True)
         return response
 
     def get_cookie_key(self, request):
@@ -191,7 +192,7 @@ class BasketMiddleware(object):
 
     def apply_offers_to_basket(self, request, basket):
         if not basket.is_empty:
-            Applicator().apply(request, basket)
+            Applicator().apply(basket, request.user, request)
 
     def get_basket_hash(self, basket_id):
         return Signer().sign(basket_id)

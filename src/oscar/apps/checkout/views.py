@@ -177,12 +177,6 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
                 # User has selected a previous address to ship to
                 self.checkout_session.ship_to_user_address(address)
                 return redirect(self.get_success_url())
-            elif action == 'delete':
-                # Delete the selected address
-                address.delete()
-                messages.info(self.request, _("Address deleted from your"
-                                              " address book"))
-                return redirect(self.get_success_url())
             else:
                 return http.HttpResponseBadRequest()
         else:

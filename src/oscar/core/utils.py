@@ -1,4 +1,5 @@
 from __future__ import absolute_import  # for logging import below
+import datetime
 import logging
 
 from django.shortcuts import redirect, resolve_url
@@ -8,9 +9,9 @@ from django.utils.timezone import get_current_timezone, is_naive, make_aware
 from django.conf import settings
 from django.template.defaultfilters import (date as date_filter,
                                             slugify as django_slugify)
-from unidecode import unidecode
+from django.utils.module_loading import import_string
 
-from oscar.core.loading import import_string
+from unidecode import unidecode
 
 
 def default_slugifier(value):
@@ -83,6 +84,12 @@ def format_datetime(dt, format=None):
     else:
         localtime = dt.astimezone(get_current_timezone())
     return date_filter(localtime, format)
+
+
+def datetime_combine(date, time):
+    """Timezone aware version of `datetime.datetime.combine`"""
+    return make_aware(
+        datetime.datetime.combine(date, time), get_current_timezone())
 
 
 def safe_referrer(request, default):

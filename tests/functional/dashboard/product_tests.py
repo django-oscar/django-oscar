@@ -1,11 +1,11 @@
 from django.core.urlresolvers import reverse
-from django_dynamic_fixture import G
 from oscar.test import factories
 
 from oscar.test.testcases import WebTestCase
 from oscar.core.compat import get_user_model
-from oscar.apps.catalogue.models import ProductClass, Category, Product
-
+from oscar.apps.catalogue.models import Product
+from oscar.test.factories import (
+    CategoryFactory, ProductFactory, ProductClassFactory)
 
 User = get_user_model()
 
@@ -41,7 +41,7 @@ class TestGatewayPage(ProductWebTest):
                              reverse('dashboard:catalogue-product-list'))
 
     def test_redirects_to_form_page_when_valid_query_param(self):
-        pclass = G(ProductClass, slug='books')
+        pclass = ProductClassFactory(name='Books', slug='books')
         url = reverse('dashboard:catalogue-product-create')
         response = self.get(url + '?product_class=%s' % pclass.pk)
         expected_url = reverse('dashboard:catalogue-product-create',
@@ -53,7 +53,7 @@ class TestCreateParentProduct(ProductWebTest):
     is_staff = True
 
     def setUp(self):
-        self.pclass = G(ProductClass, slug='books')
+        self.pclass = ProductClassFactory(name='Books', slug='books')
         super(TestCreateParentProduct, self).setUp()
 
     def submit(self, title=None, category=None, upc=None):
@@ -84,14 +84,14 @@ class TestCreateParentProduct(ProductWebTest):
         self.assertEqual(Product.objects.count(), 0)
 
     def test_for_smoke(self):
-        category = G(Category)
+        category = CategoryFactory()
         response = self.submit(title='testing', category=category)
         self.assertIsRedirect(response)
         self.assertEqual(Product.objects.count(), 1)
 
     def test_doesnt_allow_duplicate_upc(self):
-        G(Product, parent=None, upc="12345")
-        category = G(Category)
+        ProductFactory(parent=None, upc="12345")
+        category = CategoryFactory()
         self.assertTrue(Product.objects.get(upc="12345"))
 
         response = self.submit(title="Nice T-Shirt", category=category,
@@ -99,7 +99,7 @@ class TestCreateParentProduct(ProductWebTest):
 
         self.assertEqual(Product.objects.count(), 1)
         self.assertNotEqual(Product.objects.get(upc='12345').title,
-                             'Nice T-Shirt')
+                            'Nice T-Shirt')
         self.assertContains(response,
                             "Product with this UPC already exists.")
 
@@ -108,8 +108,8 @@ class TestCreateChildProduct(ProductWebTest):
     is_staff = True
 
     def setUp(self):
-        self.pclass = G(ProductClass, slug='books')
-        self.parent = G(Product, structure='parent')
+        self.pclass = ProductClassFactory(name='Books', slug='books')
+        self.parent = ProductFactory(structure='parent', stockrecords=[])
         super(TestCreateChildProduct, self).setUp()
 
     def test_categories_are_not_required(self):

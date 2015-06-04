@@ -5,22 +5,19 @@
 {% block title %}
     {% trans "Edit weight band" %} |
     {{ band.method.name }} |
-    {{ block.super }} 
+    {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:shipping-method-list' %}">{% trans "Shipping methods" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
-            {{ band.method.name }} 
-            <span class="divider">/</span>
+            {{ band.method.name }}
         </li>
         <li class="active">{% trans "Edit weight band" %}</li>
     </ul>
@@ -34,10 +31,10 @@
     <div class="well">
         <form action="." method="post" class="form-stacked">
             {% csrf_token %}
-            {% include "partials/form_fields.html" with form=form %}
+            {% include "dashboard/partials/form_fields.html" with form=form %}
             {% block form_actions %}
                 <div class="form-actions">
-                    <button class="btn btn-primary btn-large" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button> {% trans "or" %}
+                    <button class="btn btn-primary btn-lg" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button> {% trans "or" %}
                     <a href="{% url 'dashboard:shipping-method-list' %}">{% trans "cancel" %}</a>
                 </div>
             {% endblock form_actions %}

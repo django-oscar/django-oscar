@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
+from django.conf import settings
 
 from oscar.core.loading import get_classes, get_model
 
@@ -22,7 +23,8 @@ from oscar.views.generic import ObjectLookupView
  StockAlertSearchForm,
  ProductCategoryFormSet,
  ProductImageFormSet,
- ProductRecommendationFormSet) \
+ ProductRecommendationFormSet,
+ ProductAttributesFormSet) \
     = get_classes('dashboard.catalogue.forms',
                   ('ProductForm',
                    'ProductClassSelectForm',
@@ -33,7 +35,8 @@ from oscar.views.generic import ObjectLookupView
                    'StockAlertSearchForm',
                    'ProductCategoryFormSet',
                    'ProductImageFormSet',
-                   'ProductRecommendationFormSet'))
+                   'ProductRecommendationFormSet',
+                   'ProductAttributesFormSet'))
 ProductTable, CategoryTable \
     = get_classes('dashboard.catalogue.tables',
                   ('ProductTable', 'CategoryTable'))
@@ -122,13 +125,17 @@ class ProductListView(SingleTableMixin, generic.TemplateView):
         data = self.form.cleaned_data
 
         if data.get('upc'):
-            # If there's an exact UPC match, it returns just the matched
-            # product. Otherwise does a broader icontains search.
-            qs_match = queryset.filter(upc=data['upc'])
+            # Filter the queryset by upc
+            # If there's an exact match, return it, otherwise return results
+            # that contain the UPC
+            matches_upc = Product.objects.filter(upc=data['upc'])
+            qs_match = queryset.filter(Q(id=matches_upc.values('id')) | Q(id=matches_upc.values('parent_id')))
+
             if qs_match.exists():
                 queryset = qs_match
             else:
-                queryset = queryset.filter(upc__icontains=data['upc'])
+                matches_upc = Product.objects.filter(upc__icontains=data['upc'])
+                queryset = queryset.filter(Q(id=matches_upc.values('id')) | Q(id=matches_upc.values('parent_id')))
 
         if data.get('title'):
             queryset = queryset.filter(title__icontains=data['title'])
@@ -270,7 +277,7 @@ class ProductCreateUpdateView(generic.UpdateView):
                 return _('Create new variant of %(parent_product)s') % {
                     'parent_product': self.parent.title}
         else:
-            if self.object.title:
+            if self.object.title or not self.parent:
                 return self.object.title
             else:
                 return _('Editing variant of %(parent_product)s') % {
@@ -489,7 +496,7 @@ class StockAlertListView(generic.ListView):
     template_name = 'dashboard/catalogue/stockalert_list.html'
     model = StockAlert
     context_object_name = 'alerts'
-    paginate_by = 20
+    paginate_by = settings.OSCAR_STOCK_ALERTS_PER_PAGE
 
     def get_context_data(self, **kwargs):
         ctx = super(StockAlertListView, self).get_context_data(**kwargs)
@@ -615,19 +622,92 @@ class ProductLookupView(ObjectLookupView):
                          | Q(parent__title__icontains=term))
 
 
-class ProductClassCreateView(generic.CreateView):
+class ProductClassCreateUpdateView(generic.UpdateView):
+
     template_name = 'dashboard/catalogue/product_class_form.html'
     model = ProductClass
     form_class = ProductClassForm
+    product_attributes_formset = ProductAttributesFormSet
 
-    def get_context_data(self, **kwargs):
-        ctx = super(ProductClassCreateView, self).get_context_data(**kwargs)
-        ctx['title'] = _("Add a new product type")
+    def process_all_forms(self, form):
+        """
+        This validates both the ProductClass form and the
+        ProductClassAttributes formset at once
+        making it possible to display all their errors at once.
+        """
+        if self.creating and form.is_valid():
+            # the object will be needed by the product_attributes_formset
+            self.object = form.save(commit=False)
+
+        attributes_formset = self.product_attributes_formset(
+            self.request.POST, self.request.FILES, instance=self.object)
+
+        is_valid = form.is_valid() and attributes_formset.is_valid()
+
+        if is_valid:
+            return self.forms_valid(form, attributes_formset)
+        else:
+            return self.forms_invalid(form, attributes_formset)
+
+    def forms_valid(self, form, attributes_formset):
+        form.save()
+        attributes_formset.save()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def forms_invalid(self, form, attributes_formset):
+        messages.error(self.request,
+                       _("Your submitted data was not valid - please "
+                         "correct the errors below"
+                         ))
+        ctx = self.get_context_data(form=form,
+                                    attributes_formset=attributes_formset)
+        return self.render_to_response(ctx)
+
+    form_valid = form_invalid = process_all_forms
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(ProductClassCreateUpdateView, self).get_context_data(
+            *args, **kwargs)
+
+        if "attributes_formset" not in ctx:
+            ctx["attributes_formset"] = self.product_attributes_formset(
+                instance=self.object)
+
+        ctx["title"] = self.get_title()
+
         return ctx
+
+
+class ProductClassCreateView(ProductClassCreateUpdateView):
+
+    creating = True
+
+    def get_object(self):
+        return None
+
+    def get_title(self):
+        return _("Add a new product type")
 
     def get_success_url(self):
         messages.info(self.request, _("Product type created successfully"))
         return reverse("dashboard:catalogue-class-list")
+
+
+class ProductClassUpdateView(ProductClassCreateUpdateView):
+
+    creating = False
+
+    def get_title(self):
+        return _("Update product type '%s'") % self.object.name
+
+    def get_success_url(self):
+        messages.info(self.request, _("Product type updated successfully"))
+        return reverse("dashboard:catalogue-class-list")
+
+    def get_object(self):
+        product_class = get_object_or_404(ProductClass, pk=self.kwargs['pk'])
+        return product_class
 
 
 class ProductClassListView(generic.ListView):
@@ -640,21 +720,6 @@ class ProductClassListView(generic.ListView):
                                                                  **kwargs)
         ctx['title'] = _("Product Types")
         return ctx
-
-
-class ProductClassUpdateView(generic.UpdateView):
-    template_name = 'dashboard/catalogue/product_class_form.html'
-    model = ProductClass
-    form_class = ProductClassForm
-
-    def get_context_data(self, **kwargs):
-        ctx = super(ProductClassUpdateView, self).get_context_data(**kwargs)
-        ctx['title'] = _("Update product type '%s'") % self.object.name
-        return ctx
-
-    def get_success_url(self):
-        messages.info(self.request, _("Product type update successfully"))
-        return reverse("dashboard:catalogue-class-list")
 
 
 class ProductClassDeleteView(generic.DeleteView):

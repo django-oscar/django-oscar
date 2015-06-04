@@ -5,37 +5,29 @@ Test suite
 Running tests
 -------------
 
-Oscar uses a nose_ testrunner which can be invoked using::
+Oscar uses pytest_ to run the tests, which can be invoked using::
 
     $ ./runtests.py
 
-.. _nose: http://nose.readthedocs.org/en/latest/
+.. _pytest: http://pytest.org/latest/
 
-To run a subset of tests, you can use filesystem or module paths.  These two
-commands will run the same set of tests::
+You can run a subset of the tests by passing a path:
 
     $ ./runtests.py tests/unit/offer/availability_tests.py
-    $ ./runtests.py tests.unit.offer.availability_tests
 
-To run an individual test class, use one of::
+To run an individual test class, use::
 
-    $ ./runtests.py tests/unit/offer/availability_tests.py:TestAPerUserConditionalOffer
-    $ ./runtests.py tests.unit.offer.availability_tests:TestAPerUserConditionalOffer
+    $ ./runtests.py tests/unit/offer/availability_tests.py::TestASuspendedOffer
 
-(Note the ':'.)
+(Note the '::'.)
 
-To run an individual test, use one of::
+To run an individual test, use::
 
-    $ ./runtests.py tests/unit/offer/availability_tests.py:TestAPerUserConditionalOffer.test_is_available_with_no_applications
-    $ ./runtests.py tests.unit.offer.availability_tests:TestAPerUserConditionalOffer.test_is_available_with_no_applications
+    $ ./runtests.py tests/unit/offer/availability_tests.py::TestASuspendedOffer::test_is_unavailable
 
-To check if the number of queries changes::
+You can also run tests which match an expression via::
 
-    $ ./runtests.py --with-querycount
-
-Please note that ``--with-querycount`` sets ``DEBUG = True``, which might affect
-test outcomes. Total query count gives a quick indication. Diff'ing the outputs
-is recommended for further analysis.
+    $ ./runtests.py tests/unit/offer/availability_tests.py -k is_unavailable
 
 Testing against different setups
 --------------------------------
@@ -75,28 +67,39 @@ When running a subset of tests, Oscar uses the spec_ plugin.  It is a good
 practice to name your test cases and methods so that the spec output reads well.
 For example::
 
-    $ ./runtests.py tests/unit/offer/benefit_tests.py:TestAbsoluteDiscount
-    nosetests --verbosity 1 tests/unit/offer/benefit_tests.py:TestAbsoluteDiscount -s -x --with-spec
-    Creating test database for alias 'default'...
+    $ py.test tests/integration/catalogue/product_tests.py --spec
+    ============================== test session starts ==============================
+    platform darwin -- Python 2.7.9 -- py-1.4.26 -- pytest-2.7.0
+    rootdir: /Users/mvantellingen/projects/django-oscar, inifile: setup.cfg
+    plugins: cache, cov, django, spec, xdist
+    collected 15 items 
 
-    Absolute discount
-    - consumes all lines for multi item basket cheaper than threshold
-    - consumes all products for heterogeneous basket
-    - consumes correct quantity for multi item basket more expensive than threshold
-    - correctly discounts line
-    - discount is applied to lines
-    - gives correct discount for multi item basket cheaper than threshold
-    - gives correct discount for multi item basket more expensive than threshold
-    - gives correct discount for multi item basket with max affected items set
-    - gives correct discount for single item basket cheaper than threshold
-    - gives correct discount for single item basket equal to threshold
-    - gives correct discount for single item basket more expensive than threshold
-    - gives correct discounts when applied multiple times
-    - gives correct discounts when applied multiple times with condition
-    - gives no discount for a non discountable product
-    - gives no discount for an empty basket
+    tests/integration/catalogue/product_tests.py::ProductCreationTests
+        [PASS]  Allow two products without upc
+        [PASS]  Create products with attributes
+        [PASS]  None upc is represented as empty string
+        [PASS]  Upc uniqueness enforced
 
-    ----------------------------------------------------------------------
-    Ran 15 tests in 0.295s
+    tests/integration/catalogue/product_tests.py::TopLevelProductTests
+        [PASS]  Top level products are part of browsable set
+        [PASS]  Top level products must have product class
+        [PASS]  Top level products must have titles
 
-.. _spec: https://github.com/bitprophet/spec
+    tests/integration/catalogue/product_tests.py::ChildProductTests
+        [PASS]  Child products are not part of browsable set
+        [PASS]  Child products dont need a product class
+        [PASS]  Child products dont need titles
+        [PASS]  Child products inherit fields
+        [PASS]  Have a minimum price
+
+    tests/integration/catalogue/product_tests.py::TestAChildProduct
+        [PASS]  Delegates requires shipping logic
+
+    tests/integration/catalogue/product_tests.py::ProductAttributeCreationTests
+        [PASS]  Entity attributes
+        [PASS]  Validating option attribute
+
+    =========================== 15 passed in 1.64 seconds ===========================
+
+
+.. _spec: https://pypi.python.org/pypi/pytest-spec

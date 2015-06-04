@@ -14,8 +14,8 @@ will be processed shortly.{% endblocktrans %}</p>
     {% endfor %}
 </ul>
 <p>
-{% trans 'Basket total:' %} {{ order.basket_total_incl_tax|currency:order.currency }}</br>
-{% trans 'Shipping:' %} {{ order.shipping_incl_tax|currency:order.currency }}</br>
+{% trans 'Basket total:' %} {{ order.basket_total_incl_tax|currency:order.currency }}<br/>
+{% trans 'Shipping:' %} {{ order.shipping_incl_tax|currency:order.currency }}<br/>
 {% trans 'Order Total:' %} {{ order.total_incl_tax|currency:order.currency }}
 </p>
 

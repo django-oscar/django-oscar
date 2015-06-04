@@ -46,11 +46,15 @@ User = get_user_model()
 class AccountSummaryView(generic.RedirectView):
     """
     View that exists for legacy reasons and customisability. It commonly gets
-    called when the user clicks on "Account" in the navbar, and can be
-    overridden to determine to what sub-page the user is directed without
+    called when the user clicks on "Account" in the navbar.
+
+    Oscar defaults to just redirecting to the profile summary page (and
+    that redirect can be configured via OSCAR_ACCOUNT_REDIRECT_URL), but
+    it's also likely you want to display an 'account overview' page or
+    such like. The presence of this view allows just that, without
     having to change a lot of templates.
     """
-    url = reverse_lazy(settings.OSCAR_ACCOUNTS_REDIRECT_URL)
+    pattern_name = settings.OSCAR_ACCOUNTS_REDIRECT_URL
 
 
 class AccountRegistrationView(RegisterUserMixin, generic.FormView):
@@ -217,6 +221,10 @@ class AccountAuthView(RegisterUserMixin, generic.TemplateView):
         return _("Thanks for registering!")
 
     def get_registration_success_url(self, form):
+        redirect_url = form.cleaned_data['redirect_url']
+        if redirect_url:
+            return redirect_url
+
         return settings.LOGIN_REDIRECT_URL
 
 
@@ -391,7 +399,7 @@ class ChangePasswordView(PageTitleMixin, generic.FormView):
 class EmailHistoryView(PageTitleMixin, generic.ListView):
     context_object_name = "emails"
     template_name = 'customer/email/email_list.html'
-    paginate_by = 20
+    paginate_by = settings.OSCAR_EMAILS_PER_PAGE
     page_title = _('Email History')
     active_tab = 'emails'
 
@@ -424,7 +432,7 @@ class OrderHistoryView(PageTitleMixin, generic.ListView):
     """
     context_object_name = "orders"
     template_name = 'customer/order/order_list.html'
-    paginate_by = 20
+    paginate_by = settings.OSCAR_ORDERS_PER_PAGE
     model = Order
     form_class = OrderSearchForm
     page_title = _('Order History')
@@ -604,7 +612,7 @@ class AddressListView(PageTitleMixin, generic.ListView):
     """Customer address book"""
     context_object_name = "addresses"
     template_name = 'customer/address/address_list.html'
-    paginate_by = 40
+    paginate_by = settings.OSCAR_ADDRESSES_PER_PAGE
     active_tab = 'addresses'
     page_title = _('Address Book')
 

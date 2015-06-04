@@ -1,3 +1,6 @@
+import csv
+import sys
+
 from django.utils import six
 
 from django.conf import settings
@@ -9,8 +12,6 @@ from oscar.core.loading import get_model
 
 # A setting that can be used in foreign key declarations
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
-# Two additional settings that are useful in South migrations when
-# specifying the user model in the FakeORM
 try:
     AUTH_USER_APP_LABEL, AUTH_USER_MODEL_NAME = AUTH_USER_MODEL.rsplit('.', 1)
 except ValueError:
@@ -67,18 +68,10 @@ def existing_user_fields(fields):
     """
     user_fields = get_user_model()._meta.fields
     user_field_names = [field.name for field in user_fields]
-    return list(set(fields) & set(user_field_names))
+    return [field for field in fields if field in user_field_names]
 
 
 # Python3 compatibility layer
-
-
-# Make backwards-compatible atomic decorator available
-try:
-    from django.db.transaction import atomic as atomic_compat
-except ImportError:
-    from django.db.transaction import commit_on_success as atomic_compat
-atomic_compat = atomic_compat
 
 """
 Unicode compatible wrapper for CSV reader and writer that abstracts away
@@ -93,8 +86,6 @@ Changes:
   of a view
 """
 
-import sys
-import csv
 
 PY3 = sys.version > '3'
 

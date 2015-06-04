@@ -41,10 +41,6 @@ CACHES = {
     }
 }
 
-# Prevent Django 1.7+ from showing a warning regarding a changed default test
-# runner. The Oscar test suite is run with nose, so it does not matter.
-SILENCED_SYSTEM_CHECKS = ['1_6.W001', ]
-
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -53,6 +49,8 @@ SILENCED_SYSTEM_CHECKS = ['1_6.W001', ]
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
 TIME_ZONE = 'Europe/London'
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -153,7 +151,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     # Allow languages to be selected
     'django.middleware.locale.LocaleMiddleware',
@@ -276,11 +273,6 @@ LOGGING = {
             'level': 'INFO',
         },
         # Third party
-        'south': {
-            'handlers': ['null'],
-            'propagate': True,
-            'level': 'INFO',
-        },
         'sorl.thumbnail': {
             'handlers': ['sorl_file'],
             'propagate': True,
@@ -316,12 +308,6 @@ INSTALLED_APPS = [
 ]
 from oscar import get_core_apps
 INSTALLED_APPS = INSTALLED_APPS + get_core_apps()
-
-# As we use the sandbox to create both South migrations and native ones,
-# the sandbox needs to work both with Django < 1.7 and 1.7
-import django
-if django.VERSION < (1, 7):
-    INSTALLED_APPS.append('south')
 
 # Add Oscar's custom auth backend so users can sign in using their email
 # address.

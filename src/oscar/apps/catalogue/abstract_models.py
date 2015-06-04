@@ -7,6 +7,7 @@ from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.conf import settings
 from django.contrib.staticfiles.finders import find
+from django.core.cache import cache
 from django.core.exceptions import ValidationError, ImproperlyConfigured
 from django.core.files.base import File
 from django.core.urlresolvers import reverse
@@ -90,10 +91,7 @@ class AbstractCategory(MP_Node):
     description = models.TextField(_('Description'), blank=True)
     image = models.ImageField(_('Image'), upload_to='categories', blank=True,
                               null=True, max_length=255)
-    slug = models.SlugField(_('Slug'), max_length=255, db_index=True,
-                            editable=False)
-    full_name = models.CharField(_('Full Name'), max_length=255,
-                                 db_index=True, editable=False)
+    slug = models.SlugField(_('Slug'), max_length=255, db_index=True)
 
     _slug_separator = '/'
     _full_name_separator = ' > '
@@ -101,64 +99,74 @@ class AbstractCategory(MP_Node):
     def __str__(self):
         return self.full_name
 
-    def update_slug(self, commit=True):
+    @property
+    def full_name(self):
         """
-        Updates the instance's slug. Use update_children_slugs for updating
-        the rest of the tree.
+        Returns a string representation of the category and it's ancestors,
+        e.g. 'Books > Non-fiction > Essential programming'.
+
+        It's rarely used in Oscar's codebase, but used to be stored as a
+        CharField and is hence kept for backwards compatibility. It's also
+        sufficiently useful to keep around.
         """
-        parent = self.get_parent()
-        slug = slugify(self.name)
-        # If category has a parent, includes the parents slug in this one
-        if parent:
-            self.slug = '%s%s%s' % (
-                parent.slug, self._slug_separator, slug)
-            self.full_name = '%s%s%s' % (
-                parent.full_name, self._full_name_separator, self.name)
-        else:
-            self.slug = slug
-            self.full_name = self.name
-        if commit:
+        names = [category.name for category in self.get_ancestors_and_self()]
+        return self._full_name_separator.join(names)
+
+    @property
+    def full_slug(self):
+        """
+        Returns a string of this category's slug concatenated with the slugs
+        of it's ancestors, e.g. 'books/non-fiction/essential-programming'.
+
+        Oscar used to store this as in the 'slug' model field, but this field
+        has been re-purposed to only store this category's slug and to not
+        include it's ancestors' slugs.
+        """
+        slugs = [category.slug for category in self.get_ancestors_and_self()]
+        return self._slug_separator.join(slugs)
+
+    def generate_slug(self):
+        """
+        Generates a slug for a category. This makes no attempt at generating
+        a unique slug.
+        """
+        return slugify(self.name)
+
+    def ensure_slug_uniqueness(self):
+        """
+        Ensures that the category's slug is unique amongst it's siblings.
+        This is inefficient and probably not thread-safe.
+        """
+        unique_slug = self.slug
+        siblings = self.get_siblings().exclude(pk=self.pk)
+        next_num = 2
+        while siblings.filter(slug=unique_slug).exists():
+            unique_slug = '{slug}_{end}'.format(slug=self.slug, end=next_num)
+            next_num += 1
+
+        if unique_slug != self.slug:
+            self.slug = unique_slug
             self.save()
 
-    def update_children_slugs(self):
-        for child in self.get_children():
-            child.update_slug()
-            child.update_children_slugs()
-
-    def save(self, update_slugs=True, *args, **kwargs):
-        if update_slugs:
-            self.update_slug(commit=False)
-
-        # Enforce slug uniqueness here as MySQL can't handle a unique index on
-        # the slug field
-        try:
-            match = self.__class__.objects.get(slug=self.slug)
-        except self.__class__.DoesNotExist:
-            pass
+    def save(self, *args, **kwargs):
+        """
+        Oscar traditionally auto-generated slugs from names. As that is
+        often convenient, we still do so if a slug is not supplied through
+        other means. If you want to control slug creation, just create
+        instances with a slug already set, or expose a field on the
+        appropriate forms.
+        """
+        if self.slug:
+            # Slug was supplied. Hands off!
+            super(AbstractCategory, self).save(*args, **kwargs)
         else:
-            if match.id != self.id:
-                raise ValidationError(
-                    _("A category with slug '%(slug)s' already exists") % {
-                        'slug': self.slug})
-
-        super(AbstractCategory, self).save(*args, **kwargs)
-        self.update_children_slugs()
-
-    def move(self, target, pos=None):
-        """
-        Moves the current node and all its descendants to a new position
-        relative to another node.
-
-        See https://tabo.pe/projects/django-treebeard/docs/2.0/api.html#treebeard.models.Node.move  # noqa
-        """
-        super(AbstractCategory, self).move(target, pos)
-
-        # We need to reload self as 'move' doesn't update the current instance,
-        # then we iterate over the subtree and call save which automatically
-        # updates slugs.
-        reloaded_self = self.__class__.objects.get(pk=self.pk)
-        reloaded_self.update_slug()
-        reloaded_self.update_children_slugs()
+            self.slug = self.generate_slug()
+            super(AbstractCategory, self).save(*args, **kwargs)
+            # We auto-generated a slug, so we need to make sure that it's
+            # unique. As we need to be able to inspect the category's siblings
+            # for that, we need to wait until the instance is saved. We
+            # update the slug and save again if necessary.
+            self.ensure_slug_uniqueness()
 
     def get_ancestors_and_self(self):
         """
@@ -177,13 +185,27 @@ class AbstractCategory(MP_Node):
         return list(self.get_descendants()) + [self]
 
     def get_absolute_url(self):
-        return reverse('catalogue:category',
-                       kwargs={'category_slug': self.slug, 'pk': self.pk})
+        """
+        Our URL scheme means we have to look up the category's ancestors. As
+        that is a bit more expensive, we cache the generated URL. That is
+        safe even for a stale cache, as the default implementation of
+        ProductCategoryView does the lookup via primary key anyway. But if
+        you change that logic, you'll have to reconsider the caching
+        approach.
+        """
+        cache_key = 'CATEGORY_URL_%s' % self.pk
+        url = cache.get(cache_key)
+        if not url:
+            url = reverse(
+                'catalogue:category',
+                kwargs={'category_slug': self.full_slug, 'pk': self.pk})
+            cache.set(cache_key, url)
+        return url
 
     class Meta:
         abstract = True
         app_label = 'catalogue'
-        ordering = ['full_name']
+        ordering = ['path']
         verbose_name = _('Category')
         verbose_name_plural = _('Categories')
 
@@ -265,7 +287,7 @@ class AbstractProduct(models.Model):
     #: "Kind" of product, e.g. T-Shirt, Book, etc.
     #: None for child products, they inherit their parent's product class
     product_class = models.ForeignKey(
-        'catalogue.ProductClass', null=True, on_delete=models.PROTECT,
+        'catalogue.ProductClass', null=True, blank=True, on_delete=models.PROTECT,
         verbose_name=_('Product type'), related_name="products",
         help_text=_("Choose what type of product this is"))
     attributes = models.ManyToManyField(
@@ -529,54 +551,6 @@ class AbstractProduct(models.Model):
             for child, stockrecord in children_stock]
         raw_prices = sorted([getattr(price, prop) for price in prices])
         return raw_prices[0] if raw_prices else None
-
-    # The properties below are based on deprecated naming conventions
-
-    @property
-    @deprecated
-    def variants(self):
-        """
-        Provide backwards-compatible way to access a parent products children
-        """
-        return self.children
-
-    @property
-    @deprecated
-    def is_top_level(self):
-        """
-        Test if this product is a stand-alone or parent product
-        """
-        return self.is_standalone or self.is_parent
-
-    @property
-    @deprecated
-    def is_group(self):
-        """
-        Test if this is a parent product
-        """
-        return self.is_parent
-
-    @property
-    @deprecated
-    def is_variant(self):
-        """Return True if a product is not a top level product"""
-        return self.is_child
-
-    @property
-    @deprecated
-    def min_variant_price_incl_tax(self):
-        """
-        Return minimum variant price including tax
-        """
-        return self._min_child_price('price_incl_tax')
-
-    @property
-    @deprecated
-    def min_variant_price_excl_tax(self):
-        """
-        Return minimum variant price excluding tax
-        """
-        return self._min_child_price('price_excl_tax')
 
     # Wrappers for child products
 

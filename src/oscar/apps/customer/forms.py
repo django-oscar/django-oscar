@@ -289,7 +289,7 @@ class UserForm(forms.ModelForm):
 
 
 Profile = get_profile_class()
-if Profile:
+if Profile:  # noqa (too complex (12))
 
     class UserAndProfileForm(forms.ModelForm):
 
@@ -413,6 +413,4 @@ class ProductAlertForm(forms.ModelForm):
 
     class Meta:
         model = ProductAlert
-        exclude = ('user', 'key',
-                   'status', 'date_confirmed', 'date_cancelled', 'date_closed',
-                   'product')
+        fields = ['email']

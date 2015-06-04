@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 from django.test.testcases import TestCase
 from django.db import models
+from django import forms
 
 from oscar.core.phonenumber import PhoneNumber
 from oscar.models.fields import PhoneNumberField
@@ -14,7 +15,14 @@ class OptionalPhoneNumber(models.Model):
     phone_number = PhoneNumberField(blank=True, default='')
 
 
-test_number_1 = '+414204242'
+class PhoneNumberForm(forms.ModelForm):
+
+    class Meta:
+        model = MandatoryPhoneNumber
+        fields = ['phone_number']
+
+
+valid_number = '+4917696842671'
 equal_number_strings = ['+44 113 8921113', '+441138921113']
 local_numbers = [
     ('GB', '01606 751 78'),
@@ -27,7 +35,7 @@ class TestPhoneNumberTestCase(TestCase):
 
     def test_valid_numbers_are_valid(self):
         numbers = [PhoneNumber.from_string(number_string)
-                   for number_string in equal_number_strings]
+                   for number_string in equal_number_strings + [valid_number]]
         self.assertTrue(all([number.is_valid() for number in numbers]))
         numbers = [PhoneNumber.from_string(number_string, region=region)
                    for region, number_string in local_numbers]
@@ -45,16 +53,32 @@ class TestPhoneNumberFieldTestCase(TestCase):
         numbers = [
             MandatoryPhoneNumber(phone_number=number_string).phone_number
             for number_string in equal_number_strings]
-        self.assertTrue(all(n==numbers[0] for n in numbers))
+        self.assertTrue(all(n == numbers[0] for n in numbers))
 
     def test_field_returns_correct_type(self):
-        model = OptionalPhoneNumber()
-        self.assertEqual(model.phone_number, None)
-        model.phone_number = '+49 176 96842671'
-        self.assertEqual(type(model.phone_number), PhoneNumber)
+        instance = OptionalPhoneNumber()
+        self.assertEqual(instance.phone_number, None)
+        instance.phone_number = valid_number
+        self.assertEqual(type(instance.phone_number), PhoneNumber)
 
     def test_can_assign_string_phone_number(self):
-        opt_phone = OptionalPhoneNumber()
-        opt_phone.phone_number = test_number_1
-        self.assertEqual(type(opt_phone.phone_number), PhoneNumber)
-        self.assertEqual(opt_phone.phone_number.as_e164, test_number_1)
+        instance = MandatoryPhoneNumber()
+        instance.phone_number = valid_number
+        self.assertEqual(type(instance.phone_number), PhoneNumber)
+        self.assertEqual(instance.phone_number.as_e164, valid_number)
+
+    def test_can_assign_phone_number(self):
+        phone = MandatoryPhoneNumber()
+        phone.phone_number = PhoneNumber.from_string(valid_number)
+        self.assertEqual(type(phone.phone_number), PhoneNumber)
+        self.assertEqual(phone.phone_number.as_e164, valid_number)
+
+
+class TestPhoneNumberFormFieldTestCase(TestCase):
+
+    def test_form_to_instance_flow(self):
+        form = PhoneNumberForm({'phone_number': valid_number})
+        self.assertTrue(form.is_valid())
+        instance = form.save(commit=False)
+        self.assertTrue(type(instance.phone_number), PhoneNumber)
+        self.assertEqual(instance.phone_number.as_e164, valid_number)

@@ -12,15 +12,12 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:catalogue-product-list' %}">{% trans "Products" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:catalogue-product' pk=product.pk %}">{{ product.get_title }}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{{ title }}</li>
     </ul>

@@ -2,70 +2,28 @@ from django import forms
 from django.core import exceptions
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
-from treebeard.forms import MoveNodeForm, movenodeform_factory
+from treebeard.forms import movenodeform_factory
 
-from oscar.core.utils import slugify
 from oscar.core.loading import get_class, get_model
+from oscar.core.utils import slugify
 from oscar.forms.widgets import ImageInput
 
 Product = get_model('catalogue', 'Product')
 ProductClass = get_model('catalogue', 'ProductClass')
+ProductAttribute = get_model('catalogue', 'ProductAttribute')
 Category = get_model('catalogue', 'Category')
 StockRecord = get_model('partner', 'StockRecord')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductImage = get_model('catalogue', 'ProductImage')
 ProductRecommendation = get_model('catalogue', 'ProductRecommendation')
 ProductSelect = get_class('dashboard.catalogue.widgets', 'ProductSelect')
-ProductSelectMultiple = get_class('dashboard.catalogue.widgets',
-                                  'ProductSelectMultiple')
 
-
-class BaseCategoryForm(MoveNodeForm):
-
-    def clean(self):
-        cleaned_data = super(BaseCategoryForm, self).clean()
-
-        name = cleaned_data.get('name')
-        ref_node_pk = cleaned_data.get('_ref_node_id')
-        pos = cleaned_data.get('_position')
-
-        if name and self.is_slug_conflicting(name, ref_node_pk, pos):
-            raise forms.ValidationError(
-                _('Category with the given path already exists.'))
-        return cleaned_data
-
-    def is_slug_conflicting(self, name, ref_node_pk, position):
-        # determine parent
-        if ref_node_pk:
-            ref_category = Category.objects.get(pk=ref_node_pk)
-            if position == 'first-child':
-                parent = ref_category
-            else:
-                parent = ref_category.get_parent()
-        else:
-            parent = None
-
-        # build full slug
-        slug_prefix = ''
-        if parent:
-            slug_prefix = (parent.slug + Category._slug_separator)
-        slug = '%s%s' % (slug_prefix, slugify(name))
-
-        # check if slug is conflicting
-        try:
-            category = Category.objects.get(slug=slug)
-        except Category.DoesNotExist:
-            pass
-        else:
-            if category.pk != self.instance.pk:
-                return True
-        return False
-
-CategoryForm = movenodeform_factory(Category, form=BaseCategoryForm)
+CategoryForm = movenodeform_factory(
+    Category,
+    fields=['name', 'description', 'image'])
 
 
 class ProductClassSelectForm(forms.Form):
-
     """
     Form which is used before creating a product to select it's product class
     """
@@ -115,7 +73,11 @@ class StockRecordForm(forms.ModelForm):
 
     class Meta:
         model = StockRecord
-        exclude = ('product', 'num_allocated')
+        fields = [
+            'partner', 'partner_sku',
+            'price_currency', 'price_excl_tax', 'price_retail', 'cost_price',
+            'num_in_stock', 'low_stock_threshold',
+        ]
 
 
 BaseStockRecordFormSet = inlineformset_factory(
@@ -408,7 +370,7 @@ class ProductImageForm(forms.ModelForm):
 
     class Meta:
         model = ProductImage
-        exclude = ('display_order',)
+        fields = ['product', 'original', 'caption']
         # use ImageInput widget to create HTML displaying the
         # actual uploaded image and providing the upload dialog
         # when clicking on the actual image.
@@ -465,3 +427,33 @@ class ProductClassForm(forms.ModelForm):
     class Meta:
         model = ProductClass
         fields = ['name', 'requires_shipping', 'track_stock', 'options']
+
+
+class ProductAttributesForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ProductAttributesForm, self).__init__(*args, **kwargs)
+
+        # because we'll allow submission of the form with blank
+        # codes so that we can generate them.
+        self.fields["code"].required = False
+
+        self.fields["option_group"].help_text = _("Select an option group")
+
+    def clean_code(self):
+        code = self.cleaned_data.get("code")
+        title = self.cleaned_data.get("name")
+
+        if not code and title:
+            code = slugify(title)
+
+        return code
+
+    class Meta:
+        model = ProductAttribute
+        fields = ["name", "code", "type", "option_group", "required"]
+
+ProductAttributesFormSet = inlineformset_factory(ProductClass,
+                                                 ProductAttribute,
+                                                 form=ProductAttributesForm,
+                                                 extra=3)

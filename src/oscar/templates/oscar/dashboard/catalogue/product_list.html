@@ -15,7 +15,6 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Products" %}</li>
     </ul>
@@ -34,7 +33,7 @@
         </div>
         <div class="well">
             <form action="{% url 'dashboard:catalogue-product-create' %}" method="get" class="form-inline">
-                {% include "partials/form_fields_inline.html" with form=productclass_form %}
+                {% include "dashboard/partials/form_fields_inline.html" with form=productclass_form %}
                 <button class="btn btn-primary" type="submit" data-loading-text="{% trans 'Submitting...' %}"><i class="icon-plus"></i> {% trans "New Product" %}</button>
             </form>
         </div>
@@ -56,7 +55,7 @@
                     {% endif %}
                 {% endfor %}
 
-                {% include "partials/form_fields_inline.html" with form=form %}
+                {% include "dashboard/partials/form_fields_inline.html" with form=form %}
                 <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
             </form>
         </div>

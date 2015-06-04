@@ -200,7 +200,7 @@ class MultiImage(AbstractPromotion):
     _type = 'Multi-image'
     name = models.CharField(_("Name"), max_length=128)
     images = models.ManyToManyField(
-        'promotions.Image', null=True, blank=True,
+        'promotions.Image', blank=True,
         help_text=_(
             "Choose the Image content blocks that this block will use. "
             "(You may need to create some first)."))
@@ -270,7 +270,7 @@ class HandPickedProductList(AbstractProductList):
     _type = 'Product list'
     products = models.ManyToManyField('catalogue.Product',
                                       through='OrderedProduct', blank=True,
-                                      null=True, verbose_name=_("Products"))
+                                      verbose_name=_("Products"))
 
     def get_queryset(self):
         return self.products.base_queryset()\

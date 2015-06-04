@@ -9,7 +9,7 @@
             {% if table.icon %}
               <i class="icon-{{ table.icon }} icon-large"></i>
             {% endif %}
-            {{ table.caption }}
+            {{ table.get_caption_display }}
         </h3>
     {% endblock %}
 </caption>
@@ -28,6 +28,6 @@
 
 {% block pagination %}
 {% with page_obj=table.page paginator=table.paginator %}
-    {% include "partials/pagination.html" %}
+    {% include "dashboard/partials/pagination.html" %}
 {% endwith %}
 {% endblock pagination %}

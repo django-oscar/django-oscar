@@ -1,16 +1,12 @@
-from django_dynamic_fixture import G
-
 from oscar.test.testcases import WebTestCase
-from oscar.core.compat import get_user_model
 from oscar.apps.customer.notifications import services
+from oscar.test.factories import UserFactory
 
-
-User = get_user_model()
 
 class TestAUserWithUnreadNotifications(WebTestCase):
 
     def setUp(self):
-        self.user = G(User)
+        self.user = UserFactory()
         services.notify_user(self.user, "Test message")
 
     def test_can_see_them_in_page_header(self):

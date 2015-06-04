@@ -16,11 +16,6 @@ PY3 = sys.version_info >= (3, 0)
 sys.path.append(os.path.join(PROJECT_DIR, 'src'))
 from oscar import get_version
 
-# Change to the current directory to solve an issue installing Oscar on the
-# Vagrant machine.
-if PROJECT_DIR:
-    os.chdir(PROJECT_DIR)
-
 setup(name='django-oscar',
       version=get_version().replace(' ', '-'),
       url='https://github.com/django-oscar/django-oscar',
@@ -35,7 +30,7 @@ setup(name='django-oscar',
       packages=find_packages('src'),
       include_package_data=True,
       install_requires=[
-          'django>=1.6.8,<1.8',
+          'django>=1.7.8,<1.9',
           # PIL is required for image fields, Pillow is the "friendly" PIL fork
           'pillow>=1.7.8,<=2.7',
           # We use the ModelFormSetView from django-extra-views for the basket
@@ -45,7 +40,7 @@ setup(name='django-oscar',
           # Search support
           'django-haystack>=2.3.1,<2.4.0',
           # Treebeard is used for categories
-          'django-treebeard==2.0',
+          'django-treebeard>=3.0',
           # Sorl is used as the default thumbnailer
           'sorl-thumbnail>=11.12.1b,<=12.2',
           # Babel is used for currency formatting
@@ -64,16 +59,19 @@ setup(name='django-oscar',
           # Used for oscar.test.newfactories
           'factory-boy>=2.4.1,<2.5',
           # Used for automatically building larger HTML tables
-          'django-tables2>=0.15.0,<0.16',
+          'django-tables2>=1.0.4,<1.1',
           # Used for manipulating form field attributes in templates (eg: add
           # a css class)
           'django-widget-tweaks>=1.3,<1.4',
       ],
+      dependency_links=[],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
           'Development Status :: 5 - Production/Stable',
           'Environment :: Web Environment',
           'Framework :: Django',
+          'Framework :: Django :: 1.7',
+          'Framework :: Django :: 1.8',
           'Intended Audience :: Developers',
           'License :: OSI Approved :: BSD License',
           'Operating System :: Unix',

@@ -1,7 +1,8 @@
+import warnings
 from django.contrib import messages
 from django.core.paginator import InvalidPage
 from django.utils.http import urlquote
-from django.http import HttpResponsePermanentRedirect
+from django.http import HttpResponsePermanentRedirect, Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import DetailView, TemplateView
 from django.utils.translation import ugettext_lazy as _
@@ -170,14 +171,41 @@ class ProductCategoryView(TemplateView):
     def get_category(self):
         if 'pk' in self.kwargs:
             # Usual way to reach a category page. We just look at the primary
-            # key in case the slug changed. If it did, get() will redirect
-            # appropriately
-            filters = {'pk': self.kwargs['pk']}
-        else:
-            # For SEO reasons, we allow chopping off bits of the URL. If that
-            # happened, no primary key will be available.
-            filters = {'slug': self.kwargs['category_slug']}
-        return get_object_or_404(Category, **filters)
+            # key, which is easy on the database. If the slug changed, get()
+            # will redirect appropriately.
+            # WARNING: Category.get_absolute_url needs to look up it's parents
+            # to compute the URL. As this is slightly expensive, Oscar's
+            # default implementation caches the method. That's pretty safe
+            # as ProductCategoryView does the lookup by primary key, which
+            # will work even if the cache is stale. But if you override this
+            # logic, consider if that still holds true.
+            return get_object_or_404(Category, pk=self.kwargs['pk'])
+        elif 'category_slug' in self.kwargs:
+            # DEPRECATED. TODO: Remove in Oscar 1.2.
+            # For SEO and legacy reasons, we allow chopping off the primary
+            # key from the URL. In that case, we have the target category slug
+            # and it's ancestors' slugs concatenated together.
+            # To save on queries, we pick the last slug, look up all matching
+            # categories and only then compare.
+            # Note that currently we enforce uniqueness of slugs, but as that
+            # might feasibly change soon, it makes sense to be forgiving here.
+            concatenated_slugs = self.kwargs['category_slug']
+            slugs = concatenated_slugs.split(Category._slug_separator)
+            try:
+                last_slug = slugs[-1]
+            except IndexError:
+                raise Http404
+            else:
+                for category in Category.objects.filter(slug=last_slug):
+                    if category.full_slug == concatenated_slugs:
+                        message = (
+                            "Accessing categories without a primary key"
+                            " is deprecated will be removed in Oscar 1.2.")
+                        warnings.warn(message, DeprecationWarning)
+
+                        return category
+
+        raise Http404
 
     def redirect_if_necessary(self, current_path, category):
         if self.enforce_paths:

@@ -2,11 +2,12 @@ import os
 from decimal import Decimal as D
 from datetime import datetime
 
+from django.db.transaction import atomic
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
 from oscar.core.loading import get_class, get_classes
-from oscar.core.compat import UnicodeCSVReader, atomic_compat
+from oscar.core.compat import UnicodeCSVReader
 
 
 ImportingError = get_class('partner.exceptions', 'ImportingError')
@@ -47,7 +48,7 @@ class CatalogueImporter(object):
         Partner.objects.all().delete()
         StockRecord.objects.all().delete()
 
-    @atomic_compat
+    @atomic
     def _import(self, file_path):
         u"""Imports given file"""
         stats = {'new_items': 0,
@@ -153,7 +154,7 @@ class DemoSiteImporter(object):
     def __init__(self, logger):
         self.logger = logger
 
-    @atomic_compat
+    @atomic
     def handle(self, product_class_name, filepath):
         product_class = ProductClass.objects.get(
             name=product_class_name)
@@ -164,7 +165,7 @@ class DemoSiteImporter(object):
                 if row[1] == 'UPC':
                     attribute_codes = row[9:]
                     continue
-                self.create_product(product_class, attribute_codes,  row)
+                self.create_product(product_class, attribute_codes, row)
 
     def create_product(self, product_class, attribute_codes, row):  # noqa
         (ptype, upc, title, description,

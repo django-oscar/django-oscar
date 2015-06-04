@@ -10,11 +10,9 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:users-index' %}">{% trans "Customers" %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{{ customer.email }}</li>
     </ul>
@@ -23,9 +21,9 @@
 {% block headertext %}{{ customer.email }}{% endblock %}
 
 {% block dashboard_content %}
-    <div class="row-fluid">
+    <div class="row">
         {% block user_general_info %}
-            <div class="">
+            <div class="col-md-12">
                 <div class="table-header">
                     <h2>{% trans "General" %}</h2>
                 </div>
@@ -91,7 +89,7 @@
                                 <form id="password_reset_form" action="{% url 'dashboard:user-password-reset' pk=customer.id %}" method="post" class="form-horizontal">
                                     {% csrf_token %}
                                     {% include 'dashboard/partials/form_fields.html' %}
-                                    <button type="submit" class="btn btn-primary btn-large" data-loading-text="{% trans 'Sending...' %}">{% trans 'Send password reset email' %}</button>
+                                    <button type="submit" class="btn btn-primary btn-lg" data-loading-text="{% trans 'Sending...' %}">{% trans 'Send password reset email' %}</button>
                                 </form>
                             </td>
                         </tr>
@@ -99,9 +97,10 @@
                 </table>
             </div>
         {% endblock %}
-
+    </div>
+    <div class="row">
         {% block user_additional_info %}
-            <div class="tabbable dashboard">
+            <div class="tabbable dashboard col-md-12">
                 {% block tab_nav %}
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#user_orders" data-toggle="tab">{% trans "Orders" %}</a></li>
@@ -147,10 +146,10 @@
                     {% block user_addresses %}
                         <div id="user_addresses" class="tab-pane">
                             <h2>{% trans "Addresses" %}</h2>
-                            <div class="row-fluid">
+                            <div class="row">
                                 {% for address in customer.addresses.all %}
 
-                                    <div class="span3">
+                                    <div class="col-md-3">
                                         <div class="well well-info">
                                             {% for field in address.active_address_fields %}
                                                 {{ field }}<br/>
@@ -160,7 +159,7 @@
                                     {% if forloop.counter|divisibleby:4 %}
                                     </div>
                                     {% if not forloop.last %}
-                                        <div class="row-fluid">
+                                        <div class="row">
                                         {% endif %}
                                     {% endif %}
                                 {% empty %}

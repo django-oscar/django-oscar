@@ -105,7 +105,8 @@ class AutoSlugField(SlugField):
         # only set slug if empty and first-time save, or when overwrite=True
         if add and not getattr(model_instance, self.attname) or self.overwrite:
             # slugify the original field content and set next step to 2
-            slug_for_field = lambda field: self.slugify_func(getattr(model_instance, field))  # NOQA
+            def slug_for_field(field):
+                return self.slugify_func(getattr(model_instance, field))
             slug = self.separator.join(map(slug_for_field, self._populate_from))  # NOQA
             next = 2
         else:
@@ -165,21 +166,6 @@ class AutoSlugField(SlugField):
 
     def get_internal_type(self):
         return "SlugField"
-
-    def south_field_triple(self):
-        "Returns a suitable description of this field for South."
-        # We'll just introspect the _actual_ field.
-        from south.modelsinspector import introspector
-        field_class = '%s.AutoSlugField' % self.__module__
-        args, kwargs = introspector(self)
-        kwargs.update({
-            'populate_from': repr(self._populate_from),
-            'separator': repr(self.separator),
-            'overwrite': repr(self.overwrite),
-            'allow_duplicates': repr(self.allow_duplicates),
-        })
-        # That's our definition!
-        return (field_class, args, kwargs)
 
     def deconstruct(self):
         name, path, args, kwargs = super(AutoSlugField, self).deconstruct()

@@ -1,20 +1,16 @@
 from django_webtest import WebTest
 from django.core.urlresolvers import reverse
 from django.core import mail
-from django_dynamic_fixture import G
 
-from oscar.test.factories import create_product, create_stockrecord
-from oscar.core.compat import get_user_model
 from oscar.apps.customer.models import ProductAlert
-
-
-User = get_user_model()
+from oscar.test.factories import create_product, create_stockrecord
+from oscar.test.factories import UserFactory
 
 
 class TestAUser(WebTest):
 
     def test_can_create_a_stock_alert(self):
-        user = G(User)
+        user = UserFactory()
         product = create_product(num_in_stock=0)
         product_page = self.app.get(product.get_absolute_url(), user=user)
         form = product_page.forms['alert_form']
@@ -30,7 +26,7 @@ class TestAUser(WebTest):
 class TestAUserWithAnActiveStockAlert(WebTest):
 
     def setUp(self):
-        self.user = G(User)
+        self.user = UserFactory()
         self.product = create_product()
         self.stockrecord = create_stockrecord(self.product, num_in_stock=0)
         product_page = self.app.get(self.product.get_absolute_url(),

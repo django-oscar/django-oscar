@@ -23,6 +23,7 @@ var oscar = (function(o, $) {
                 'datetimeFormat': 'yy-mm-dd hh:ii',
                 'stepMinute': 15,
                 'tinyConfig': {
+                    entity_encoding: 'raw',
                     statusbar: false,
                     menubar: false,
                     plugins: "link",
@@ -143,7 +144,6 @@ var oscar = (function(o, $) {
                             'format': $ele.data('dateformat')
                         });
                     $ele.datetimepicker(config);
-                    $ele.find('input').css('width', '125px');
                 });
 
                 var defaultDatetimepickerConfig = {
@@ -160,7 +160,6 @@ var oscar = (function(o, $) {
                           'minuteStep': $ele.data('stepminute')
                         });
                     $ele.datetimepicker(config);
-                    $ele.find('input').css('width', '125px');
                 });
 
                 var defaultTimepickerConfig = {
@@ -180,7 +179,6 @@ var oscar = (function(o, $) {
                           'formatViewType': 'time'
                         });
                     $ele.datetimepicker(config);
-                    $ele.find('input').css('width', '125px');
                 });
             }
         },
@@ -217,6 +215,29 @@ var oscar = (function(o, $) {
                     $valueContainer.hide();
                 } else {
                     $valueContainer.show();
+                }
+            }
+        },
+        product_attributes: {
+            init: function(){
+                var type_selects = $("select[name$=type]");
+
+                type_selects.each(function(index){
+                    o.dashboard.product_attributes.toggleOptionGroup($(this));
+                });
+
+                type_selects.change(function(e){
+                    o.dashboard.product_attributes.toggleOptionGroup($(this));
+                });
+            },
+
+            toggleOptionGroup: function(type_select){
+                var option_group_select = $('#' + type_select.attr('id').replace('type', 'option_group'));
+
+                if(type_select.val() === 'option'){
+                    option_group_select.closest('.control-group').show();
+                }else{
+                    option_group_select.closest('.control-group').hide();
                 }
             }
         },

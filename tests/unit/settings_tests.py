@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.template import loader, base
+from django.template import loader, base, Context
 
 import oscar
 
@@ -19,6 +19,10 @@ class TestOscarCoreAppsList(TestCase):
         self.assertTrue('apps.shipping' in apps)
         self.assertTrue('oscar.apps.shipping' not in apps)
 
+    def test_raises_exception_for_string_arg(self):
+        with self.assertRaises(ValueError):
+            oscar.get_core_apps('forks.catalogue')
+
 
 class TestOscarTemplateSettings(TestCase):
     """
@@ -31,3 +35,15 @@ class TestOscarTemplateSettings(TestCase):
                 loader.get_template(path)
             except base.TemplateDoesNotExist:
                 self.fail("Template %s should exist" % path)
+
+    def test_allows_a_template_to_be_customized(self):
+        path = 'base.html'
+        template = loader.get_template(path)
+        rendered_template = template.render(Context())
+        self.assertIn('Oscar Test Shop', rendered_template)
+
+    def test_default_oscar_templates_are_accessible(self):
+        path = 'oscar/base.html'
+        template = loader.get_template(path)
+        rendered_template = template.render(Context())
+        self.assertNotIn('Oscar Test Shop', rendered_template)

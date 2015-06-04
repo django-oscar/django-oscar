@@ -14,8 +14,10 @@ class RangeForm(forms.ModelForm):
 
     class Meta:
         model = Range
-        exclude = ('included_products', 'slug', 'excluded_products', 'classes',
-                   'proxy_class')
+        fields = [
+            'name', 'description', 'is_public',
+            'includes_all_products', 'included_categories'
+        ]
 
 
 class RangeProductForm(forms.Form):

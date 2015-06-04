@@ -4,7 +4,7 @@ import zlib
 from django.db import models
 from django.db.models import Sum
 from django.conf import settings
-from django.utils.encoding import python_2_unicode_compatible
+from django.utils.encoding import python_2_unicode_compatible, smart_text
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
@@ -46,7 +46,7 @@ class AbstractBasket(models.Model):
     # for sites to only allow one voucher per basket - this will need to be
     # enforced in the project's codebase.
     vouchers = models.ManyToManyField(
-        'voucher.Voucher', null=True, verbose_name=_("Vouchers"), blank=True)
+        'voucher.Voucher', verbose_name=_("Vouchers"), blank=True)
 
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
     date_merged = models.DateTimeField(_("Date merged"), null=True, blank=True)
@@ -730,8 +730,8 @@ class AbstractLine(models.Model):
         """
         if not hasattr(self, '_info'):
             # Cache the PurchaseInfo instance.
-            self._info = self.basket.strategy.fetch_for_product(
-                self.product, self.stockrecord)
+            self._info = self.basket.strategy.fetch_for_line(
+                self, self.stockrecord)
         return self._info
 
     @property
@@ -791,12 +791,12 @@ class AbstractLine(models.Model):
 
     @property
     def description(self):
-        d = str(self.product)
+        d = smart_text(self.product)
         ops = []
         for attribute in self.attributes.all():
             ops.append("%s = '%s'" % (attribute.option.name, attribute.value))
         if ops:
-            d = "%s (%s)" % (d.decode('utf-8'), ", ".join(ops))
+            d = "%s (%s)" % (d, ", ".join(ops))
         return d
 
     def get_warning(self):

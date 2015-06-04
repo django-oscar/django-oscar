@@ -17,7 +17,6 @@
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Content blocks" %}</li>
     </ul>
@@ -29,7 +28,7 @@
     </div>
     <div class="well">
         <form action="{% url 'dashboard:promotion-create-redirect' %}" method="get" class="form-inline">
-            {% include "partials/form_fields_inline.html" with form=select_form %}
+            {% include "dashboard/partials/form_fields_inline.html" with form=select_form %}
             <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Creating...' %}"><i class="icon-plus"></i> {% trans "Create block" %}</button>
         </form>
     </div>
@@ -56,10 +55,10 @@
                         <td>
                             <div class="btn-toolbar">
                                 <div class="btn-group">
-                                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
                                         {% trans "Actions" %}
                                         <span class="caret"></span>
-                                    </a>
+                                    </button>
                                     <ul class="dropdown-menu pull-right">
                                         <li><a href="{% url 'dashboard:promotion-update' ptype=promotion.code pk=promotion.id %}">{% trans "Edit" %}</a></li>
                                         <li><a href="{% url 'dashboard:promotion-delete' ptype=promotion.code pk=promotion.id %}">{% trans "Delete" %}</a></li>

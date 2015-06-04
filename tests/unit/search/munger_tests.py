@@ -1,4 +1,8 @@
+from collections import OrderedDict
+
 from django.test import TestCase
+from django.test.utils import override_settings
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.search import facets
 
@@ -34,6 +38,28 @@ FACET_COUNTS_WITH_PRICE_RANGE_SELECTED = {
 }
 
 
+SEARCH_FACETS = {
+    'fields': OrderedDict([
+        ('product_class', {'name': _('Type'), 'field': 'product_class'}),
+        ('rating', {'name': _('Rating'), 'field': 'rating'}),
+        ('category', {'name': _('Category'), 'field': 'category'}),
+    ]),
+    'queries': OrderedDict([
+        ('price_range',
+         {
+             'name': _('Price range'),
+             'field': 'price',
+             'queries': [
+                 (_('0 to 20'), u'[0 TO 20]'),
+                 (_('20 to 40'), u'[20 TO 40]'),
+                 (_('40 to 60'), u'[40 TO 60]'),
+                 (_('60+'), u'[60 TO *]'),
+             ]
+         }),
+    ]),
+}
+
+@override_settings(OSCAR_SEARCH_FACETS=SEARCH_FACETS)
 class TestFacetMunger(TestCase):
 
     def test_with_no_facets_selected(self):
@@ -42,7 +68,6 @@ class TestFacetMunger(TestCase):
             selected_multi_facets={},
             facet_counts=FACET_COUNTS)
         data = munger.facet_data()
-
         self.assertTrue('category' in data)
         self.assertEqual(3, len(data['category']['results']))
 

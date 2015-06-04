@@ -3,18 +3,16 @@
 {% load currency_filters %}
 
 {% block title %}
-    {{ method.name }} | {{ block.super }} 
+    {{ method.name }} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
         </li>
         <li>
             <a href="{% url 'dashboard:shipping-method-list' %}">{% trans "Shipping methods" %}</a>
-            <span class="divider">/</span>
         </li>
         <li class="active">{{ method.name }}</li>
     </ul>
@@ -91,7 +89,7 @@
         <h2>{% trans "Add a new weight band" %}</h2>
         <form action="." method="post">
             {% csrf_token %}
-            {% include "partials/form_fields.html" with form=form %}
+            {% include "dashboard/partials/form_fields.html" with form=form %}
             <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Adding...' %}">{% trans 'Add weight band' %}</button>
         </form>
     </div>

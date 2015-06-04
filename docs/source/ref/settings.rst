@@ -32,6 +32,16 @@ URL of home page of your site. This value is used for `Home` link in
 navigation and redirection page after logout. Useful if you use a different app
 to serve your homepage.
 
+``OSCAR_ACCOUNTS_REDIRECT_URL``
+-------------------------------
+
+Default: ``'customer:profile-view'``
+
+Oscar has a view that gets called any time the user clicks on 'My account' or
+similar. By default it's a dumb redirect to the view configured with this
+setting. But you could also override the view to display a more useful
+account summary page or such like.
+
 ``OSCAR_RECENTLY_VIEWED_PRODUCTS``
 ----------------------------------
 
@@ -53,12 +63,21 @@ Default: ``'oscar_history'``
 
 The name of the cookie for showing recently viewed products.
 
-``OSCAR_PRODUCTS_PER_PAGE``
----------------------------
+Pagination
+----------
 
-Default: 20
+There are a number of settings that control pagination in Oscar's views. They
+all default to 20.
 
-The number of products to paginate by.
+- ``OSCAR_PRODUCTS_PER_PAGE``
+- ``OSCAR_OFFERS_PER_PAGE``
+- ``OSCAR_REVIEWS_PER_PAGE``
+- ``OSCAR_NOTIFICATIONS_PER_PAGE``
+- ``OSCAR_EMAILS_PER_PAGE``
+- ``OSCAR_ORDERS_PER_PAGE``
+- ``OSCAR_ADDRESSES_PER_PAGE``
+- ``OSCAR_STOCK_ALERTS_PER_PAGE``
+- ``OSCAR_DASHBOARD_ITEMS_PER_PAGE``
 
 .. _oscar_search_facets:
 
@@ -70,30 +89,36 @@ needs to be a dict with keys ``fields`` and ``queries`` for field- and
 query-type facets.  The default is::
 
     OSCAR_SEARCH_FACETS = {
-        'fields': {
-            # The key for these dicts will be used when passing facet data
-            # to the template. Same for the 'queries' dict below.
-            'category': {
-                'name': _('Category'),
-                'field': 'category'
-            }
-        },
-        'queries': {
-            'price_range': {
-                'name': _('Price range'),
-                'field': 'price',
-                'queries': [
-                    # This is a list of (name, query) tuples where the name will
-                    # be displayed on the front-end.
-                    (_('0 to 40'), '[0 TO 20]'),
-                    (_('20 to 40'), '[20 TO 40]'),
-                    (_('40 to 60'), '[40 TO 60]'),
-                    (_('60+'), '[60 TO *]'),
-                ]
-            }
-        }
+        'fields': OrderedDict([
+            ('product_class', {'name': _('Type'), 'field': 'product_class'}),
+            ('rating', {'name': _('Rating'), 'field': 'rating'}),
+        ]),
+        'queries': OrderedDict([
+            ('price_range',
+             {
+                 'name': _('Price range'),
+                 'field': 'price',
+                 'queries': [
+                     # This is a list of (name, query) tuples where the name will
+                     # be displayed on the front-end.
+                     (_('0 to 20'), u'[0 TO 20]'),
+                     (_('20 to 40'), u'[20 TO 40]'),
+                     (_('40 to 60'), u'[40 TO 60]'),
+                     (_('60+'), u'[60 TO *]'),
+                 ]
+             }),
+        ]),
     }
 
+``OSCAR_PRODUCT_SEARCH_HANDLER``
+-----------------------
+
+The search handler to be used in the product list views. If ``None``,
+Oscar tries to guess the correct handler based on your Haystack settings.
+
+Default::
+
+    None
 
 ``OSCAR_PROMOTION_POSITIONS``
 -----------------------------

@@ -1,18 +1,17 @@
 from decimal import Decimal as D
 
 from django.test import TestCase
-from django_dynamic_fixture import G
 
-from oscar.apps.offer import models
+from oscar.core.loading import get_model
+from oscar.test.factories import ConditionalOfferFactory
 
 
 class TestAnOfferChangesStatusWhen(TestCase):
 
     def setUp(self):
-        condition, benefit = G(models.Condition), G(models.Benefit)
-        self.offer = models.ConditionalOffer(
-            offer_type=models.ConditionalOffer.SITE,
-            condition=condition, benefit=benefit)
+        ConditionalOffer = get_model('offer', 'ConditionalOffer')
+        self.offer = ConditionalOfferFactory(
+            offer_type=ConditionalOffer.SITE)
 
     def test_the_max_discount_is_exceeded(self):
         self.offer.max_discount = D('10.00')

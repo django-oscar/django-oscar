@@ -12,14 +12,14 @@
                 <ul class="dropdown-menu pull-right">
                     {% for wishlist in wishlists %}
                         {% if wishlist not in product_wishlists %}
-	                        <li>
-	                                <a href="{% url 'customer:wishlists-add-product' key=wishlist.key product_pk=product.pk %}">
-	                                    {% blocktrans with name=wishlist.name %}
-	                                        Add to '{{ name }}' wish list
-	                                    {% endblocktrans %}
-	                                </a>
-	                        </li>
-						{% endif %}
+                            <li>
+                                    <a href="{% url 'customer:wishlists-add-product' key=wishlist.key product_pk=product.pk %}">
+                                        {% blocktrans with name=wishlist.name %}
+                                            Add to '{{ name }}' wish list
+                                        {% endblocktrans %}
+                                    </a>
+                            </li>
+                        {% endif %}
                     {% endfor %}
                     <li><a href="{% url 'customer:wishlists-create-with-product' product_pk=product.pk %}">{% trans 'Create a new wishlist' %}</a></li>
                 </ul>

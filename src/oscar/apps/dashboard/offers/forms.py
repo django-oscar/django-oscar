@@ -74,7 +74,7 @@ class ConditionForm(forms.ModelForm):
 
     class Meta:
         model = Condition
-        exclude = ('proxy_class',)
+        fields = ['range', 'type', 'value']
 
     def clean(self):
         data = super(ConditionForm, self).clean()
@@ -127,7 +127,7 @@ class BenefitForm(forms.ModelForm):
 
     class Meta:
         model = Benefit
-        exclude = ('proxy_class',)
+        fields = ['range', 'type', 'value', 'max_affected_items']
 
     def clean(self):
         data = super(BenefitForm, self).clean()

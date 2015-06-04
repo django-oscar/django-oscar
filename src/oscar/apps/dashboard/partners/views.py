@@ -232,7 +232,7 @@ class PartnerUserUnlinkView(generic.View):
     def unlink_user(self, user, partner):
         """
         Unlinks a user from a partner, and removes the dashboard permission
-        if she's not linked to any other partners.
+        if they are not linked to any other partners.
 
         Returns False if the user was not linked to the partner; True
         otherwise.
@@ -241,9 +241,10 @@ class PartnerUserUnlinkView(generic.View):
             return False
         partner.users.remove(user)
         if not user.is_staff and not user.partners.exists():
-            user.user_permissions.filter(
+            dashboard_access_perm = Permission.objects.get(
                 codename='dashboard_access',
-                content_type__app_label='partner').delete()
+                content_type__app_label='partner')
+            user.user_permissions.remove(dashboard_access_perm)
         return True
 
     def post(self, request, user_pk, partner_pk):

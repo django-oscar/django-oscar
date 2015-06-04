@@ -2,12 +2,16 @@
 import datetime
 from django.utils import six
 from django.utils.six.moves import cStringIO
-import unittest
 
-import django
 from django.test import TestCase
 
-from oscar.core.compat import UnicodeCSVWriter
+from oscar.core.compat import UnicodeCSVWriter, existing_user_fields
+
+class TestExistingUserFields(TestCase):
+
+    def test_order(self):
+        fields = existing_user_fields(['email', 'first_name', 'last_name'])
+        self.assertEqual(fields, ['email', 'first_name', 'last_name'])
 
 
 class TestUnicodeCSVWriter(TestCase):
@@ -27,9 +31,6 @@ class TestUnicodeCSVWriter(TestCase):
 
 class TestPython3Compatibility(TestCase):
 
-    @unittest.skipIf(
-        django.VERSION < (1, 7),
-        "Oscar only supports Python 3 with Django 1.7+")
     def test_models_define_python_3_compatible_representation(self):
         """
         In Python 2, models can define __unicode__ to get a text representation,
