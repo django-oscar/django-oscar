@@ -5,6 +5,7 @@ import random
 from django.conf import settings
 from django.contrib.auth import models as auth_models
 from django.core.urlresolvers import reverse
+from django.core.validators import RegexValidator
 from django.db import models
 from django.template import Template, Context, TemplateDoesNotExist
 from django.template.loader import get_template
@@ -141,6 +142,12 @@ class AbstractCommunicationEventType(models.Model):
     code = AutoSlugField(
         _('Code'), max_length=128, unique=True, populate_from='name',
         separator=six.u("_"), uppercase=True, editable=True,
+        validators=[
+            RegexValidator(
+                regex=r'^[a-zA-Z_][0-9a-zA-Z_]*$',
+                message=_(
+                    "Code can only contain the letters a-z, A-Z, digits, "
+                    "and underscores, and can't start with a digit."))],
         help_text=_("Code used for looking up this event programmatically"))
 
     #: Name is the friendly description of an event for use in the admin
