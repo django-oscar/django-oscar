@@ -1,13 +1,12 @@
-===========================================
-Oscar 1.1 release notes - UNDER DEVELOPMENT
-===========================================
+=======================
+Oscar 1.1 release notes
+=======================
 
-:release: TBD
+:release: 2015-06-04
 
-.. warning::
-   Since v1.1 has not been released yet, these release notes are still a work-in-progress.
-
-Welcome to Oscar 1.1!
+Welcome to Oscar 1.1, or the "Bootstrap 3" release. We also squashed
+many bugs that were reported in the last seven months, and managed to shed
+a lot of compatibility helpers when Django 1.6 support was removed.
 
 Table of contents:
 
@@ -25,7 +24,6 @@ Oscar 1.1 is compatible with Django 1.7 and Django 1.8, and Python 2.7,
 3.3 and 3.4.  Support for Django 1.6, and hence South for migrations, has been
 removed.
 
-
 .. _new_in_1.1:
 
 What's new in Oscar 1.1?
@@ -39,12 +37,11 @@ What's new in Oscar 1.1?
 * The icon and caption of `django-tables2` tables can be set directly on the `Table` object, if it
   derives from :class:`~oscar.apps.dashboard.tables.DashboardTable`. The caption can be localized
   in singular and plural. (`#1482`_)
-* All modelforms now specify the `fields` meta attribute instead of the `excludes` list.
-* Product class options and attributes can now be edited in the dashboard.
 * Oscar now ships with basic ElasticSearch support.
   ``OSCAR_PRODUCT_SEARCH_HANDLER`` has been introduced to more easily set the search backend.
 * The offer models can now also be customised the same way as was already 
   possible for the other apps.
+* The test suite is now run with the glorious py.test.
 
 .. _`#1576`: https://github.com/django-oscar/django-oscar/pull/1576
 .. _`#1482`: https://github.com/django-oscar/django-oscar/pull/1482
@@ -72,6 +69,10 @@ Minor changes
 - ``OSCAR_SEARCH_FACETS`` now accepts ordered dicts.
 
 - Oscar now supports varying the tax rate per product.
+
+- Product class options and attributes can now be edited in the dashboard.
+
+- All modelforms now specify the `fields` meta attribute instead of the `excludes` list.
 
 .. _`#1558`: https://github.com/django-oscar/django-oscar/pull/1558
 
