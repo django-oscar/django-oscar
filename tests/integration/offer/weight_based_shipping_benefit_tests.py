@@ -38,8 +38,6 @@ class TestWeightBasedShippingBenefit(TestCase):
         add_product(self.basket, D('12.00'), 1)
         utils.Applicator().apply(self.basket)
         self.assertEqual(1, len(self.basket.offer_applications))
-        for offer in self.basket.offer_applications:
-            print offer
 
         shipping_method = WeightBased.objects.first()
         shipping_method = Repository().apply_shipping_offer(
