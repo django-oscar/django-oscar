@@ -24,6 +24,7 @@ from treebeard.mp_tree import MP_Node
 
 from oscar.core.decorators import deprecated
 from oscar.core.utils import slugify
+from oscar.core.validators import non_python_keyword
 from oscar.core.loading import get_classes, get_model, get_class
 from oscar.models.fields import NullCharField, AutoSlugField
 
@@ -779,10 +780,14 @@ class AbstractProductAttribute(models.Model):
     name = models.CharField(_('Name'), max_length=128)
     code = models.SlugField(
         _('Code'), max_length=128,
-        validators=[RegexValidator(
-            regex=r'^[a-zA-Z_][0-9a-zA-Z_]*$',
-            message=_("Code can only contain the letters a-z, A-Z, digits, "
-                      "and underscores, and can't start with a digit"))])
+        validators=[
+            RegexValidator(
+                regex=r'^[a-zA-Z_][0-9a-zA-Z_]*$',
+                message=_(
+                    "Code can only contain the letters a-z, A-Z, digits, "
+                    "and underscores, and can't start with a digit")),
+            non_python_keyword
+        ])
 
     # Attribute types
     TEXT = "text"

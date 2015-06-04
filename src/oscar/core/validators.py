@@ -1,9 +1,12 @@
+import keyword
+
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import resolve
-from oscar.core.loading import get_model
 from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
+
+from oscar.core.loading import get_model
 
 
 class ExtendedURLValidator(validators.URLValidator):
@@ -90,9 +93,16 @@ def non_whitespace(value):
     return stripped
 
 
+def non_python_keyword(value):
+    if keyword.iskeyword(value):
+        raise ValidationError(
+            _("This field is invalid as its valud is forbidden")
+        )
+    return value
+
+
 class CommonPasswordValidator(validators.BaseValidator):
-    # See
-    # http://www.smartplanet.com/blog/business-brains/top-20-most-common-passwords-of-all-time-revealed-8216123456-8216princess-8216qwerty/4519  # noqa
+    # See http://www.smartplanet.com/blog/business-brains/top-20-most-common-passwords-of-all-time-revealed-8216123456-8216princess-8216qwerty/4519  # noqa
     forbidden_passwords = [
         'password',
         '1234',
