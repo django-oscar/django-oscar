@@ -1,10 +1,11 @@
-from decimal import Decimal as D
 import datetime
+from decimal import Decimal as D
 
-from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.core.loading import get_class
+from oscar.core.loading import get_model, get_class
+
+
 ReportGenerator = get_class('dashboard.reports.reports', 'ReportGenerator')
 ReportCSVFormatter = get_class('dashboard.reports.reports',
                                'ReportCSVFormatter')
@@ -47,9 +48,7 @@ class OfferReportGenerator(ReportGenerator):
         if self.start_date:
             qs = qs.filter(order__date_placed__gte=self.start_date)
         if self.end_date:
-            qs = qs.filter(
-                order__date_placed__lt=
-                    self.end_date + datetime.timedelta(days=1))
+            qs = qs.filter(order__date_placed__lt=self.end_date + datetime.timedelta(days=1))
 
         offer_discounts = {}
         for discount in qs:

@@ -129,13 +129,16 @@ class ProductListView(SingleTableMixin, generic.TemplateView):
             # If there's an exact match, return it, otherwise return results
             # that contain the UPC
             matches_upc = Product.objects.filter(upc=data['upc'])
-            qs_match = queryset.filter(Q(id=matches_upc.values('id')) | Q(id=matches_upc.values('parent_id')))
+            qs_match = queryset.filter(
+                Q(id=matches_upc.values('id')) |
+                Q(id=matches_upc.values('parent_id')))
 
             if qs_match.exists():
                 queryset = qs_match
             else:
                 matches_upc = Product.objects.filter(upc__icontains=data['upc'])
-                queryset = queryset.filter(Q(id=matches_upc.values('id')) | Q(id=matches_upc.values('parent_id')))
+                queryset = queryset.filter(
+                    Q(id=matches_upc.values('id')) | Q(id=matches_upc.values('parent_id')))
 
         if data.get('title'):
             queryset = queryset.filter(title__icontains=data['title'])
