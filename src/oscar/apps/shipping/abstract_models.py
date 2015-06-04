@@ -183,6 +183,7 @@ class AbstractWeightBased(AbstractBase):
         base_charge = self.calculate(basket)
         return self.offer.shipping_discount(base_charge.incl_tax)
 
+
 @python_2_unicode_compatible
 class AbstractWeightBand(models.Model):
     """
