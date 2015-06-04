@@ -6,7 +6,7 @@
 
 # Ideally, this figure should be 0. But to keep the amount of "Fix PEP8" commits
 # low, we only fail Travis after a certain amount of warnings have accumulated
-THRESHOLD=15
+THRESHOLD=16
 
 # Run flake8 and convert the output into a format that the "violations" plugin 
 # for Jenkins/Hudson can understand.
