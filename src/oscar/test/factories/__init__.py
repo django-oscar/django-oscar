@@ -235,4 +235,5 @@ def create_shipping_weight_band(upper_limit, charge, weight_based=None):
     return WeightBand.objects.create(
         method=weight_based,
         upper_limit=upper_limit,
-        charge=charge)
+        charge=charge
+    )
