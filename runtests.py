@@ -7,7 +7,7 @@ If args or options, we run the testsuite as quickly as possible.
 If args but no options, we default to using the spec plugin and aborting on
 first error/failure.
 
-If options, we ignore defaults and pass options onto Nose.
+If options, we ignore defaults and pass options onto pytest.
 
 Examples:
 
@@ -58,7 +58,7 @@ if __name__ == '__main__':
             'tests'
         ]
     else:
-        # Some args/options specified.  Check to see if any nose options have
+        # Some args/options specified.  Check to see if any options have
         # been specified.  If they have, then don't set any
         has_options = any(map(lambda x: x.startswith('--'), args))
         if not has_options:
@@ -73,8 +73,8 @@ if __name__ == '__main__':
         # The warnings module in default configuration will never cause tests
         # to fail, as it never raises an exception.  We alter that behaviour by
         # turning DeprecationWarnings into exceptions, but exclude warnings
-        # triggered by third-party libs. Note: The context manager is not thread
-        # safe. Behaviour with multiple threads is undefined.
+        # triggered by third-party libs. Note: The context manager is not
+        # thread safe. Behaviour with multiple threads is undefined.
         warnings.filterwarnings('error', category=DeprecationWarning)
         warnings.filterwarnings('error', category=RuntimeWarning)
         libs = r'(sorl\.thumbnail.*|bs4.*|webtest.*)'
