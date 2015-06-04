@@ -277,7 +277,9 @@ class BasketView(ModelFormSetView):
 
     def formset_invalid(self, formset):
         flash_messages = ajax.FlashMessages()
-        flash_messages.warning(_("Your basket couldn't be updated. Please correct any validation errors below."))
+        flash_messages.warning(_(
+            "Your basket couldn't be updated. "
+            "Please correct any validation errors below."))
 
         if self.request.is_ajax():
             ctx = self.get_context_data(formset=formset,
