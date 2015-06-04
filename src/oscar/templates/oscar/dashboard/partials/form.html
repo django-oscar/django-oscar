@@ -1,0 +1,14 @@
+{% load i18n %}
+
+<form {% if form_id %}id="{{ form_id }}"{% endif %} class="form-{{ style|default:"stacked" }} {{ class }}" method="{{ method|default:"post" }}"
+    {% if action %}action="{{ action }}"{% endif %}
+    {% if includes_files %}enctype="multipart/form-data"{% endif %}>
+
+    {% if not method == "get" %}{% csrf_token %}{% endif %}
+    {% include 'dashboard/partials/form_fields.html' %}
+    <div class="form-group form-actions">
+        <button class="btn btn-lg btn-primary" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
+        {% trans "or" %} <a href="#" onclick="window.history.go(-1);return false" >{% trans "cancel" %}</a>.
+    </div>
+</form>
+

@@ -21,26 +21,140 @@ Table of contents:
 Compatibility
 -------------
 
+Oscar 1.1 is compatible with Django 1.7 and Django 1.8, and Python 2.7,
+3.3 and 3.4.  Support for Django 1.6, and hence South for migrations, has been
+removed.
+
+
 .. _new_in_1.1:
 
 What's new in Oscar 1.1?
 ------------------------
+
+* The frontend and backend templates have been updated to use Bootstrap 3 
+  instead of version 2 (`#1576`_). The frontend and backend templates are now
+  also independent of each other.
+* Category slug, name and URL handling has been refactored to make it easier to
+  translate categories, and to be able to edit slugs independent of names.
+* The icon and caption of `django-tables2` tables can be set directly on the `Table` object, if it
+  derives from :class:`~oscar.apps.dashboard.tables.DashboardTable`. The caption can be localized
+  in singular and plural. (`#1482`_)
+* All modelforms now specify the `fields` meta attribute instead of the `excludes` list.
+* Product class options and attributes can now be edited in the dashboard.
+* Oscar now ships with basic ElasticSearch support.
+  ``OSCAR_PRODUCT_SEARCH_HANDLER`` has been introduced to more easily set the search backend.
+* The offer models can now also be customised the same way as was already 
+  possible for the other apps.
+
+.. _`#1576`: https://github.com/django-oscar/django-oscar/pull/1576
+.. _`#1482`: https://github.com/django-oscar/django-oscar/pull/1482
+
 
 .. _minor_changes_in_1.1:
 
 Minor changes
 ~~~~~~~~~~~~~
 
+- The `Order.date_placed` field can now be set explicitly rather than using the
+  `auto_now_add` behaviour (`#1558`_).
+
+- The settings ``OSCAR_BASKET_COOKIE_SECURE`` and ``OSCAR_RECENTLY_VIEWED_COOKIE_SECURE``
+  are introduced to set the ``secure`` flag on the relevant cookies.
+
+- Previously, all views handled in Oscar's Application class were decorated
+  with the permissions_required decorator. That decorator would not do
+  anything if used with an empty set of permissions. But it was raised as an
+  issue, and now views not requiring permissions are not decorated at all.
+
+- Properly redirect users to the checkout page after a guest user created an
+  account.
+
+- ``OSCAR_SEARCH_FACETS`` now accepts ordered dicts.
+
+- Oscar now supports varying the tax rate per product.
+
+.. _`#1558`: https://github.com/django-oscar/django-oscar/pull/1558
+
+
 .. _incompatible_changes_in_1.1:
 
 Backwards incompatible changes in 1.1
 -------------------------------------
 
+Categories refactor
+~~~~~~~~~~~~~~~~~~~
+The Category model contained two denormalisations to improve performance: it
+stored the name of the category and it's ancestors in ``full_name``, and the
+``slug`` field did not just contain the category's slug, but also the ones of
+it's ancestors.
+
+This came with several drawbacks: it was fiddly to move and update categories,
+as one had to ensure to update parts of the entire category tree. It also
+made it trickier to add model-level translation to categories.
+
+A refactoring removed the denormalisations leading to much simpler logic,
+and a light sprinkle of caching for the URLs hopefully leads to a performance
+net positive. But unfortunately it did come with some changes:
+
+* Category slug handling is changed. Historically, Oscar always updated the
+  slug when the name changed. Now a slug is only created if no slug is given,
+  and an existing slug is never overridden. This means that you can freely
+  change the slugs, and a name change will not change the category's URL.
+* The ``full_name`` field has been *removed* and been replaced by a
+  ``full_name`` property. Accessing that property incurs one database query to
+  fetch the ancestors.
+* ``Category.get_absolute_url`` is now naively cached, as it's more costly to
+  generate the URL than before. But as ``ProductCategoryView``, the view
+  returned in ``get_absolute_url`` only considers the primary key and not the
+  slug, even a stale cache should lead to the correct category page. But if
+  you have altered that logic, please be sure to investigate.
+
+Those changes unfortunately do mean a data migration to update the slugs
+which *must* be run. Please see the section on migrations below. Please also
+ensure that, if you load your categories via fixtures, you update them
+accordingly: remove the ``full_name`` field and remove the ancestor's slugs
+from the ``slug`` field.
+
 Misc
 ~~~~
 
+* The :class:`~oscar.apps.shipping.abstract_models.AbstractWeightBased` shipping
+  method now allows zero-weight baskets to have a non-zero shipping cost
+  (`#1565`_). This means that sites that rely on zero-weight baskets having no
+  change will need to introduce a new weight band that covers this edge case.
+
+* The methods :method:`~oscar.apps.offer.utils.Applicator.apply` and
+  :method:`~oscar.apps.offer.utils.Applicatior.get_offers` changed their
+  arguments to `(basket, user=None, request=None)`. (`#1677`_)
+
+.. _`#1565`: https://github.com/django-oscar/django-oscar/pull/1565
+.. _`#1677`: https://github.com/django-oscar/django-oscar/pull/1677
+
 Migrations
 ~~~~~~~~~~
+
+Migrations will get picked up automatically for apps you haven't customised.
+If you have customised any app, please consult the
+`detailed instructions <topics/upgrading>`_ on how to handle migrations.
+
+.. warning::
+   This release contains a data migration for category slugs.  If you have
+   forked it, it is critical you run a copy of that migration when upgrading.
+
+.. warning::
+   This release doesn't include any South migrations, as support for Django
+   1.6 has been dropped.
+
+Catalogue
+  * This app contains model changes.
+  * This app contains a data migration: ``0003_data_migration_slugs``.
+    It shouldn't matter whether you apply this migration before or after
+    the model changes.
+
+Dependency changes
+------------------
+
+* Oscar now requires `django-treebeard` 3.0.
 
 .. _deprecated_features_in_1.1:
 
@@ -49,11 +163,39 @@ Deprecated features
 
 The following features have been deprecated in this release:
 
+* For backwards compatibility, one can access the ``ProductCategoryView``
+  without specifying a category PK in the URL. Oscar itself does not
+  use this any more, and it will be removed with the next version of Oscar.
+
+* ``ProductSearchHandler`` has been renamed to ``SolrProductSearchHandler``.
+  The old name will be removed in the next version of Oscar.
+
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 These methods have been removed:
 
+* ``oscar.core.compat.atomic_compat``: Use ``django.db.transaction.atomic``
+  instead.
+* ``oscar.core.loading.import_string``: Use
+  ``django.utils.module_loading.import_string`` instead.
+* ``Product.variants``: Use ``Product.children``
+* ``Product.is_top_level``: Use ``Product.is_standalone or self.is_parent``
+* ``Product.is_group``: Use ``Product.is_parent``
+* ``Product.is_variant``: Use ``Product.is_child``
+* ``Product.min_variant_price_incl_tax``: Refactor or use the deprecated
+  ``Product.min_child_price_incl_tax``.
+* ``Product.min_variant_price_excl_tax``: Refactor or use the deprecated
+  ``Product.min_child_price_excl_tax``.
+* ``Strategy.fetch_for_group``: Use ``Strategy.fetch_for_parent``.
+* ``Strategy.select_variant_stockrecords``: Use
+  ``Strategy.select_children_stockrecords``.
+* ``Strategy.group_pricing_policy``: Use ``Strategy.parent_pricing_policy``.
+* ``Strategy.group_availability_policy``: Use
+  ``Strategy.parent_availability_policy``.
 
 These classes have been removed:
 
+These instances have been removed:
+
+* ``oscar.app.shop``: Use ``oscar.app.application`` instead.

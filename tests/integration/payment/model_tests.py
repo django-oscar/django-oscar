@@ -2,20 +2,16 @@ from decimal import Decimal as D
 import datetime
 
 from django.test import TestCase
-from django_dynamic_fixture import G
 
-from oscar.test import factories
-from oscar.apps.payment import models
 from oscar.apps.payment.models import Bankcard
+from oscar.test import factories
 
 
 class TestAPaymentSource(TestCase):
 
     def setUp(self):
         order = factories.create_order()
-        source_type = G(models.SourceType)
-        self.source = order.sources.create(
-            source_type=source_type)
+        self.source = factories.SourceFactory(order=order)
 
     def test_allocation_doesnt_error(self):
         self.source.allocate(D('100.00'))

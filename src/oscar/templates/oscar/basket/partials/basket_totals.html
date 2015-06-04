@@ -1,0 +1,224 @@
+{% load i18n %}
+{% load currency_filters %}
+{% load shipping_tags %}
+
+<div id="basket_totals">
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th colspan="2"><h3>{% trans "Basket" %}</h3></th>
+            </tr>
+            {% with offer_discounts=basket.offer_discounts voucher_discounts=basket.grouped_voucher_discounts %}
+                {% block discount_totals %}
+                    {% if offer_discounts or voucher_discounts %}
+                        {# Basket total will be discounted so we show a before and after version #}
+                        <tr>
+                            <td>{% trans "Basket total (before discounts)" %}</td>
+                            <td class="align-right">
+                                {% if basket.is_tax_known and not show_tax_separately %}
+                                    {{ basket.total_incl_tax_excl_discounts|currency:basket.currency }}
+                                {% else %}
+                                    {{ basket.total_excl_tax_excl_discounts|currency:basket.currency }}
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                        {% for discount in offer_discounts %}
+                            <tr>
+                                <td class="basket-discount"><span class="label label-success">{% trans "Discount" %}</span> {{ discount.name }}
+                                    {% if discount.description %}
+                                        <br/><small>{{ discount.description }}</small>
+                                    {% endif %}
+                                </td>
+                                <td class="align-right">-{{ discount.discount|currency:basket.currency }}</td>
+                            </tr>
+                        {% endfor %}
+
+                        {% if voucher_discounts %}
+                            <tr>
+                                <th colspan="2"><h3>{% trans "Vouchers" %}</h3></th>
+                            </tr>
+                            {% for discount in voucher_discounts %}
+                                <tr>
+                                    <td>
+                                        {{ discount.voucher.name }} ({{ discount.voucher.code }})
+                                        {% if editable %}
+                                            <form action="{% url 'basket:vouchers-remove' pk=discount.voucher.id %}" method="POST">
+                                                {% csrf_token %}
+                                                <input type="submit" value="{% trans 'Remove' %}" class="btn btn-sm btn-danger" />
+                                            </form>
+                                        {% endif %}
+                                    </td>
+                                    <td class="align-right">-{{ discount.discount|currency:basket.currency }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    {% endif %}
+                {% endblock %}
+
+                {% block basket_total %}
+                    {% if offer_discounts or voucher_discounts %}
+                        <tr>
+                            <th class="total">{% trans "Basket total (after discounts)" %}</th>
+                            <th class="total align-right">
+                                {% if not show_tax_separately and basket.is_tax_known %}
+                                    {{ basket.total_incl_tax|currency:basket.currency }}
+                                {% else %}
+                                    {{ basket.total_excl_tax|currency:basket.currency }}
+                                {% endif %}
+                            </th>
+                        </tr>
+                    {% else %}
+                        {# No discounts to basket #}
+                        <tr>
+                            <th class="total">{% trans "Basket total" %}</th>
+                            <th class="total align-right">
+                                {% if not show_tax_separately and basket.is_tax_known %}
+                                    {{ basket.total_incl_tax|currency:basket.currency }}
+                                {% else %}
+                                    {{ basket.total_excl_tax|currency:basket.currency }}
+                                {% endif %}
+                            </th>
+                        </tr>
+                    {% endif %}
+                {% endblock %}
+            {% endwith %}
+
+            {% block shipping_totals %}
+                <tr>
+                    <th>&nbsp;</th>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <th colspan="2">
+                        <h3>{% trans "Shipping" %}</h3>
+                        {% if shipping_methods|length > 1 and editable %}
+                            <small>{% trans "Alternative shipping methods can be chosen during checkout" %}</small>
+                        {% endif %}
+                    </th>
+                </tr>
+                {% if not shipping_method.is_discounted %}
+                    <tr>
+                        <th class="total">
+                            {{ shipping_method.name }}
+                        </th>
+                        <th class="total align-right">
+                            {% if not show_tax_separately and shipping_charge.is_tax_known %}
+                                {{ shipping_charge.incl_tax|currency:basket.currency }}
+                            {% else %}
+                                {{ shipping_charge.excl_tax|currency:basket.currency }}
+                            {% endif %}
+                        </th>
+                    </tr>
+                {% else %}
+                    {% shipping_charge_discount shipping_method basket as shipping_discount %}
+                    {% shipping_charge_excl_discount shipping_method basket as shipping_charge_excl_discount %}
+                    {# As shipping is discounted, we break it down into its original charge and a discount #}
+                    <tr>
+                        <th class="total">{% trans "Shipping method" %}</th>
+                        <td class="total align-right">{{ shipping_method.name }}</td>
+                    </tr>
+                    <tr>
+                        <td>{% trans "Shipping total (before discounts)" %}</td>
+                        <td class="align-right">
+                            {% if not show_tax_separately and shipping_charge_excl_discount.is_tax_known %}
+                                {{ shipping_charge_excl_discount.incl_tax|currency:basket.currency }}
+                            {% else %}
+                                {{ shipping_charge_excl_discount.excl_tax|currency:basket.currency }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {# This section needs adjustment to when taxes are shown separately #}
+                    <tr>
+                        <td class="basket-discount"><span class="label label-success">{% trans "Discount" %}</span> {{ shipping_method.discount_name }}</td>
+                        <td class="align-right">-{{ shipping_discount|currency:basket.currency }}</td>
+                    </tr>
+                    <tr>
+                        <th class="total">
+                            {% trans "Shipping total (after discounts)" %}
+                        </th>
+                        <th class="total align-right">
+                            {% if not show_tax_separately and shipping_charge.is_tax_known %}
+                                {{ shipping_charge.incl_tax|currency:basket.currency }}
+                            {% else %}
+                                {{ shipping_charge.excl_tax|currency:basket.currency }}
+                            {% endif %}
+                        </th>
+                    </tr>
+                {% endif %}
+            {% endblock %}
+
+            {% block tax_totals %}
+                {% if show_tax_separately %}
+                    <tr>
+                        <th>&nbsp;</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">
+                            <h3>{% trans "Tax" %}</h3>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th class="total">{% trans "Basket" %}</th>
+                        <th class="total align-right">
+                            {{ basket.total_tax|currency:basket.currency }}
+                        </th>
+                    </tr>
+                    <tr>
+                        <th class="total">{% trans "Shipping" %}</th>
+                        <th class="total align-right">
+                            {{ shipping_charge.tax|currency:basket.currency }}
+                        </th>
+                    </tr>
+                {% endif %}
+            {% endblock %}
+
+            {% block post_order_action_totals %}
+                {% if basket.post_order_actions %}
+                    <tr>
+                        <th>&nbsp;</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th><h3>{% trans "Post order actions" %}</h3><small>{% trans "These will be applied once your order is placed." %}</small></th>
+                        <td></td>
+                    </tr>
+                    {% for discount in basket.post_order_actions %}
+                        <tr>
+                            <td class="total" colspan="2">
+                                <span class="label label-success">{{ discount.name }}</span><br/>
+                                <p>{{ discount.description }}</p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            {% endblock %}
+
+            {% block order_total %}
+                <tr>
+                    <th>&nbsp;</th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th class="total"><h3>{% trans "Order total" %}</h3></th>
+                    <td class="total align-right">
+                        <h3 class="price_color">
+                            {% if order_total.is_tax_known %}
+                                {{ order_total.incl_tax|currency:basket.currency }}
+                            {% else %}
+                                {{ order_total.excl_tax|currency:basket.currency }}
+                            {% endif %}
+                        </h3>
+                    </td>
+                </tr>
+                {% if not order_total.is_tax_known %}
+                    <tr>
+                        <td><small>{% trans "Taxes will be added during checkout." %}</small></td>
+                    </tr>
+                {% endif %}
+            {% endblock %}
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,53 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+{% load currency_filters %}
+
+{% block title %}
+    {% trans "Delete weight band?" %} |
+    {{ band.method.name }} |
+    {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:shipping-method-list' %}">{% trans "Shipping methods" %}</a>
+        </li>
+        <li>
+            {{ band.method.name }}
+        </li>
+        <li class="active">{% trans "Delete weight band?" %}</li>
+    </ul>
+{% endblock %}
+
+{% block headertext %}
+    {% trans "Delete weight band?" %}
+{% endblock %}
+
+{% block dashboard_content %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>{% trans "Weight range (kg)" %}</th>
+                <th>{% trans "Charge" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ band.weight_from|floatformat:3 }} - {{ band.weight_to|floatformat:3 }}</td>
+                <td>{{ band.charge|currency }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <form action="." method="post" class="well">
+        <p>{% trans "Are you sure you want to delete this weight band method?" %}</p>
+        {% csrf_token %}
+        <div class="form-actions">
+            <button class="btn btn-danger" type="submit" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button> {% trans "or" %}
+            <a href="{% url 'dashboard:shipping-method-detail' pk=band.method.pk %}">{% trans "cancel" %}</a>
+        </div>
+    </form>
+{% endblock dashboard_content %}

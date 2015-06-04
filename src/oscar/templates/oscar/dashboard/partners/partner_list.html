@@ -1,0 +1,108 @@
+{% extends 'dashboard/layout.html' %}
+{% load sorting_tags %}
+{% load i18n %}
+
+{% block title %}
+    {% trans "Partners" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="active">{% trans "Partners" %}</li>
+    </ul>
+{% endblock %}
+
+{% block header %}
+    <div class="page-header">
+        <a href="{% url 'dashboard:partner-create' %}" class="btn btn-lg btn-primary pull-right"><i class="icon-plus"></i> {% trans "Create new partner" %}</a>
+        <h1>{% trans "Partners" %}</h1>
+    </div>
+{% endblock header %}
+
+{% block dashboard_content %}
+    <div class="well">
+        <form action="." method="get" class="form-inline">
+            {% include 'dashboard/partials/form_fields_inline.html' with form=form %}
+            <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
+            {% if is_filtered %}
+                <a class="btn btn-default" href="{% url 'dashboard:partner-list' %}" >{% trans "Reset" %}</a>
+            {% endif %}
+        </form>
+    </div>
+
+    <form action="." method="post" class="order_table">
+        {% csrf_token %}
+        <table class="table table-striped table-bordered">
+            <caption>
+                <i class="icon-briefcase icon-large"></i>{{ queryset_description }}
+            </caption>
+            {% if partners %}
+                <tr>
+                    <th>{% anchor 'name' _('Name') %}</th>
+                    <th>{% trans 'Users' %}</th>
+                    <th>{% trans 'Addresses' %}</th>
+                    <th>&nbsp;</th>
+                </tr>
+                {% for partner in partners %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'dashboard:partner-manage' pk=partner.pk %}">{{ partner.name }}</a>
+                        </td>
+                        <td>
+                            {% with users=partner.users.all %}
+                                {% if users %}
+                                    <ul>
+                                        {% for user in users %}
+                                            <li>
+                                                <a href="{% url 'dashboard:partner-user-update' partner_pk=partner.pk user_pk=user.id %}" title="{% trans "Edit the user's details" %}">
+                                                    {{ user.get_full_name|default:user.email }}
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    {% trans 'No users associated.' %}
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                        <td>
+                            {% with addresses=partner.addresses.all %}
+                            {% if addresses %}
+                                <ul>
+                                    {% for address in addresses %}
+                                        <li>{{ address.summary }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                {% trans 'No address associated.' %}
+                            {% endif %}
+                            {% endwith %}
+                        </td>
+                        <td>
+                            <div class="btn-toolbar">
+                                <div class="btn-group">
+                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
+                                        {% trans "Actions" %}
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li><a href="{% url 'dashboard:partner-manage' pk=partner.pk %}">{% trans "Manage partner and users" %}</a></li>
+                                        <li><a href="{% url 'dashboard:partner-delete' pk=partner.pk %}">{% trans "Delete partner" %}</a></li>
+                                        <li><a href="{% url 'dashboard:partner-user-select' partner_pk=partner.pk %}">{% trans "Link an existing user" %}</a></li>
+                                        <li><a href="{% url 'dashboard:partner-user-create' partner_pk=partner.pk %}">{% trans "Link a new user" %}</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr><td>{% trans "No partners found." %}</td></tr>
+            {% endif %}
+        </table>
+        {% include "dashboard/partials/pagination.html" %}
+    </form>
+{% endblock dashboard_content %}

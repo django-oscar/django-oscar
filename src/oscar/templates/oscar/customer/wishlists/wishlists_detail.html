@@ -1,0 +1,112 @@
+{% extends "customer/baseaccountpage.html" %}
+{% load thumbnail %}
+{% load i18n %}
+{% load widget_tweaks %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
+        </li>
+        <li>
+            <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
+        </li>
+        <li>
+            <a href="{% url 'customer:wishlists-list' %}">{% trans 'Wish Lists' %}</a>
+        </li>
+        <li class="active">
+            {{ wishlist.name }}
+        </li>
+    </ul>
+{% endblock %}
+
+{% block tabcontent %}
+    {% if form.total_form_count %}
+        <form class="stacked" method="post">
+            {{ form.management_form }}
+            {% csrf_token %}
+            <table class="table table-striped table-bordered">
+                <tbody>
+                    <tr>
+                        <th colspan="2">{% trans 'Product' %}</th>
+                        <th>{% trans 'Quantity' %}</th>
+                        <th>{% trans 'Action' %}</th>
+                    </tr>
+
+                    {% for subform in form %}
+                        {% with line=subform.instance product=subform.instance.product %}
+                            <tr>
+                                <td>
+                                    {% if product %}
+                                        {% with image=product.primary_image %}
+                                            {% thumbnail image.original "100x100" upscale=False as thumb %}
+                                                <a href="{{ product.get_absolute_url }}">
+                                                    <img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}" />
+                                                </a>
+                                            {% endthumbnail %}
+                                        {% endwith %}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if product %}
+                                        <a href="{{ line.product.get_absolute_url }}">{{ line.get_title }}</a>
+                                    {% else %}
+                                        <em>{{ line.get_title }} ({% trans 'Not available anymore' %})</em>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% for field in subform %}
+                                        {% render_field field class+="form-control" %}
+                                        {% for error in field.errors %}
+                                            <ul class="error-block">
+                                                <li>{{ error }}</li>
+                                            </ul>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        {% if product %}
+                                            <a class="btn btn-default" href="{{ line.product.get_absolute_url }}">{% trans 'View product' %}</a>
+                                            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                            </button>
+                                        {% else %}
+                                            <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+                                                {% trans 'Actions' %}
+                                                <span class="caret"></span>
+                                            </a>
+                                        {% endif %}
+                                        <ul class="dropdown-menu">
+                                            <li><a href="{% url 'customer:wishlists-remove-product' key=wishlist.key line_pk=line.pk %}">
+                                                    {% trans 'Remove' %}
+                                            </a></li>
+                                            {% for other_wishlist in other_wishlists %}
+                                                <li><a href="{% url 'customer:wishlists-move-product-to-another' key=wishlist.key line_pk=line.pk to_key=other_wishlist.key %}">
+                                                        {% blocktrans with name=other_wishlist.name %}
+                                                            Move to '{{ name }}' wish list
+                                                        {% endblocktrans %}
+                                                </a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endwith %}
+                    {% endfor %}
+                    <tr>
+                        <td colspan="2"></td>
+                        <td>
+                            <button class="btn btn-primary" type="submit" data-loading-text="{% trans 'Updating...' %}">{% trans "Update quantities" %}</button>
+                        </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+
+    {% else %}
+        {% trans "Your wish list is empty." %}
+    {% endif %}
+
+{% endblock tabcontent %}

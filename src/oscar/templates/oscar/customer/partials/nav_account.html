@@ -1,0 +1,47 @@
+{% load i18n %}
+
+<div class="navbar nav-profile">
+    <div class="navbar-inner">
+        <div class="container">
+
+            <!-- .navbar-btn is used as the toggle for collapsed navbar content -->
+            <a class="btn navbar-btn" data-toggle="collapse" data-target=".profile-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+
+            <span class="brand visible-sm" href="#">{{ page_title }}</span>
+
+            <div class="navbar-collapse profile-collapse">
+                <ul class="nav nav-tabs">
+                    {% block standard_tabs %}
+                        <li{% if active_tab == 'profile' %} class="active"{% endif %}>
+                            <a href="{% url 'customer:profile-view' %}">{% trans "Profile" %}</a>
+                        </li>
+                        <li{% if active_tab == 'orders' %} class="active"{% endif %}>
+                            <a href="{% url 'customer:order-list' %}">{% trans "Order History" %}</a>
+                        </li>
+                        <li{% if active_tab == 'addresses' %} class="active"{% endif %}>
+                            <a href="{% url 'customer:address-list' %}">{% trans "Address Book" %}</a>
+                        </li>
+                        <li{% if active_tab == 'emails' %} class="active"{% endif %}>
+                            <a href="{% url 'customer:email-list' %}">{% trans "Email History" %}</a>
+                        </li>
+                        <li{% if active_tab == 'alerts' %} class="active"{% endif %}>
+                            <a href="{% url 'customer:alerts-list' %}">{% trans "Product Alerts" %}</a>
+                        </li>
+                        <li{% if active_tab == 'notifications' %} class="active"{% endif %}>
+                            <a href="{% url 'customer:notifications-inbox' %}">{% trans "Notifications" %}</a>
+                        </li>
+                        <li{% if active_tab == 'wishlists' %} class="active"{% endif %}>
+                            <a href="{% url 'customer:wishlists-list' %}">{% trans "Wish Lists" %}</a>
+                        </li>
+                    {% endblock %}
+                    {% block extra_tabs %}
+                    {% endblock %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

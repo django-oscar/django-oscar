@@ -1,0 +1,31 @@
+{% extends "checkout/checkout.html" %}
+{% load i18n %}
+
+{% block title %}
+    {% trans "Payment details" %} | {{ block.super }}
+{% endblock %}
+
+{% block checkout_nav %}
+    {% include 'checkout/nav.html' with step=3 %}
+{% endblock %}
+
+{% block checkout_title %}{% trans "Enter payment details" %}{% endblock %}
+
+{% block order_contents %}{% endblock %}
+{% block shipping_address %}{% endblock %}
+{% block shipping_method %}{% endblock %}
+{% block payment_method %}{% endblock %}
+
+{% block payment_details %}
+    {% block payment_details_content %}
+        <p>{% trans "This page needs implementing within your project.  You may want to use one of Oscar's payment gateway libraries:" %}</p>
+        <ul>
+            <li><a href="https://github.com/django-oscar/django-oscar-paypal">django-oscar-paypal</a></li>
+            <li><a href="https://github.com/django-oscar/django-oscar-datacash">django-oscar-datacash</a></li>
+            <li><a href="https://github.com/django-oscar/django-oscar-gocardless">django-oscar-gocardless</a></li>
+            <li><a href="https://github.com/django-oscar/django-oscar-paymentexpress">django-oscar-paymentexpress</a></li>
+            <li><a href="https://github.com/django-oscar/django-oscar-accounts">django-oscar-accounts</a></li>
+        </ul>
+        <a id="view_preview" href="{% url 'checkout:preview' %}" class="btn btn-primary btn-lg">{% trans "Continue" %}</a>
+    {% endblock payment_details_content %}
+{% endblock payment_details %}

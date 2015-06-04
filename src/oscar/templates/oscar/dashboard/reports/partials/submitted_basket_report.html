@@ -1,0 +1,39 @@
+{% extends 'dashboard/reports/index.html' %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block report %}
+    <table class="table table-striped table-bordered table-hover">
+        <tr>
+            <th>{% trans "Email" %}</th>
+            <th>{% trans "Name" %}</th>
+            <th>{% trans "Num lines" %}</th>
+            <th>{% trans "Num items" %}</th>
+            <th>{% trans "Date created" %}</th>
+            <th>{% trans "Time between creation and submission" %}</th>
+        </tr>
+        {% for basket in objects %}
+            <tr>
+                <td>
+                {% if basket.owner %}
+                    <a href="{% url 'dashboard:user-detail' basket.owner.id %}">{{ basket.owner.email }}</a>
+                {% else %}
+                    -
+                {% endif %}
+                </td>
+                <td>
+                {% if basket.owner %}
+                    <a href="{% url 'dashboard:user-detail' basket.owner.id %}">{{ basket.owner.get_full_name|default:"-" }}</a>
+                {% else %}
+                    -
+                {% endif %}
+                </td>
+                <td>{{ basket.num_lines }}</td>
+                <td>{{ basket.num_items }}</td>
+                <td>{{ basket.date_created }}</td>
+                <td>{{ basket.time_before_submit }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% include "dashboard/partials/pagination.html" %}
+{% endblock %}

@@ -47,7 +47,8 @@ You can go as far as associating arbitrary models with it. Use the ``entity``
 type::
 
     > klass = ProductClass.objects.create(name='foo', slug='bar')
-    > ProductAttribute.objects.create(product_class=klass, name='admin user', code='admin_user')
+    > ProductAttribute.objects.create(
+          product_class=klass, name='admin user', code='admin_user', type='entity')
     <ProductAttribute: admin user>
     > p = Product(product_class=klass)
 

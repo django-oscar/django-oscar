@@ -14,7 +14,7 @@ pipeline.
 Structure
 ---------
 
-There are two relevant Oscar apps to order processing.  
+There are two relevant Oscar apps to order processing.
 
 * The checkout app is responsible for collecting the required shipping and
   payment information, taking payment in some sense and placing the order.  It
@@ -105,18 +105,18 @@ hook points to make implementing this workflow easy.
 * An order is placed and the customer's bankcard is pre-authed for the order
   total.  The new order has status 'Pending'
 
-* An admin logs into the dashboard and views all new orders.  He selects the new
-  order, retrieves the goods from the warehouse and gets them ready to ship.
+* An admin logs into the dashboard and views all new orders.  They select the new
+  order, retrieve the goods from the warehouse and get them ready to ship.
 
-* When all items are retrieved, he selects all the lines from the order and hits
+* When all items are retrieved, they select all the lines from the order and hit
   a button saying 'take payment'.  This calls the ``handle_payment_event``
   method of the ``EventHandler`` class which performs the settle transaction
   with the payment gateway and, if successful, creates a payment event against
   the order.
 
 * If payment is successful, the admin ships the goods and gets a tracking number
-  from the courier service.  He then selects the shipped lines for the order and
-  hits a button saying "mark as shipped".  This will show a form requesting a
+  from the courier service.  They then select the shipped lines for the order and
+  hit a button saying "mark as shipped".  This will show a form requesting a
   shipping number for the event.  When this is entered, the
   ``handle_shipping_event`` method of the ``EventHandler`` class is called,
   which will update stock allocations and create a shipping event.

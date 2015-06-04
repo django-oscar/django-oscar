@@ -1,0 +1,96 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+{% load currency_filters %}
+
+{% block title %}
+    {{ method.name }} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:shipping-method-list' %}">{% trans "Shipping methods" %}</a>
+        </li>
+        <li class="active">{{ method.name }}</li>
+    </ul>
+{% endblock %}
+
+{% block headertext %}
+    {{ method.name }}
+{% endblock %}
+
+{% block dashboard_content %}
+    <div class="well">
+        <h2>{% trans "Shipping method" %}</h2>
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th>{% trans "Name" %}</th>
+                    <td>{{ method.name }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Description" %}</th>
+                    <td>{{ method.description|safe|default:"-" }}</td>
+                </tr>
+                {% with countries=method.countries.all %}
+                    {% if countries %}
+                        <tr>
+                            <th>{% trans "Applies to countries" %}</th>
+                            <td>{{ countries|join:", " }}</td>
+                        </tr>
+                    {% endif %}
+                {% endwith %}
+                <tr>
+                    <th>{% trans "Default product weight (kg)" %}</th>
+                    <td>{{ method.default_weight }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>
+            <a id="edit_method" href="{% url 'dashboard:shipping-method-edit' pk=method.pk %}" class="btn btn-primary">
+                {% trans 'Edit shipping method' %}
+            </a>
+            <a id="delete_method" href="{% url 'dashboard:shipping-method-delete' pk=method.pk %}" class="btn btn-danger">
+                {% trans 'Delete shipping method' %}
+            </a>
+        </p>
+
+        <h2>{% trans "Weight bands" %}</h2>
+        {% if method.bands.all.count %}
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>{% trans "Weight range (kg)" %}</th>
+                        <th>{% trans "Charge" %}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for band in method.bands.all %}
+                        <tr>
+                            <td>{{ band.weight_from|floatformat:3 }} - {{ band.weight_to|floatformat:3 }}</td>
+                            <td>{{ band.charge|currency }}</td>
+                            <td>
+                                <a id="edit_band_{{ band.id }}" href="{% url 'dashboard:shipping-method-band-edit' method_pk=band.method.pk pk=band.pk %}" class="btn btn-primary">{% trans "Edit" %}</a>
+                                <a id="delete_band_{{ band.id }}" href="{% url 'dashboard:shipping-method-band-delete' method_pk=band.method.pk pk=band.pk %}" class="btn btn-danger">{% trans "Delete" %}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>{% trans "No weight bands have been added yet." %}</p>
+        {% endif %}
+
+        <h2>{% trans "Add a new weight band" %}</h2>
+        <form action="." method="post">
+            {% csrf_token %}
+            {% include "dashboard/partials/form_fields.html" with form=form %}
+            <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Adding...' %}">{% trans 'Add weight band' %}</button>
+        </form>
+    </div>
+{% endblock %}

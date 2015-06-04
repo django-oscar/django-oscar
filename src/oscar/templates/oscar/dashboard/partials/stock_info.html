@@ -1,0 +1,11 @@
+<div class="form-group">
+    {{ field.label_tag }}
+    <div>
+        {{ field }}
+        {% for error in field.errors %}
+            <ul class="error-block">
+                <li>{{ error }}</li>
+            </ul>
+        {% endfor %}
+    </div>
+</div>

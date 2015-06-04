@@ -1,0 +1,40 @@
+{% extends "dashboard/layout.html" %}
+{% load category_tags %}
+{% load i18n %}
+
+{% block body_class %}{{ block.super }} create-page partner{% endblock %}
+
+{% block title %}
+    {{ title }} | {{ partner.name }} | {% trans "Partners" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:partner-list' %}">{% trans "Partners" %}</a>
+        </li>
+        {% if partner %}
+            <li>
+                <a href="{% url 'dashboard:partner-manage' pk=partner.id %}">{{ partner.name }}</a>
+            </li>
+        {% endif %}
+        <li class="active">{{ title }}</li>
+    </ul>
+{% endblock %}
+
+{% block headertext %}{{ title }}{% endblock %}
+
+{% block dashboard_content %}
+    <form action="." method="post" class="well form-stacked wysiwyg" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% include 'dashboard/partials/form_fields.html' with form=form %}
+        <div class="form-actions">
+            <button class="btn btn-lg btn-primary" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
+            {% trans "or" %} <a href="{% url 'dashboard:partner-manage' pk=partner.pk %}">{% trans "cancel" %}</a>.
+        </div>
+    </form>
+
+{% endblock dashboard_content %}

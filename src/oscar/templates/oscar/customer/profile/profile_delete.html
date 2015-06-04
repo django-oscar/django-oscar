@@ -1,0 +1,21 @@
+{% extends "customer/baseaccountpage.html" %}
+{% load i18n %}
+
+{% block tabcontent %}
+    <p>{% trans "Please confirm your password to delete your profile." %}</p>
+    <form id="delete_profile_form" action="." method="post" class="form-horizontal">
+        {% csrf_token %}
+        {% include "partials/form_fields.html" %}
+        <div class="alert alert-warning">
+            <h3>{% trans "Warning" %}</h3>
+            {% blocktrans %}
+                This will delete all information about you from the site.  Deleting your profile cannot be
+                undone.
+            {% endblocktrans %}
+        </div>
+        <div class="form-group">
+            <button class="btn btn-lg btn-danger" type="submit" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button>
+            {% trans "or" %} <a href="{% url "customer:profile-view" %}">{% trans "cancel" %}</a>.
+        </div>
+    </form>
+{% endblock tabcontent %}

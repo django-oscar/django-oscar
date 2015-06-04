@@ -1,0 +1,36 @@
+{% extends 'dashboard/offers/step_form.html' %}
+
+
+{% load i18n %}
+
+{% block summary %}
+    {% include 'dashboard/offers/summary.html' %}
+{% endblock %}
+
+{% block progress %}
+    {% include 'dashboard/offers/progress.html' with step=3 %}
+{% endblock %}
+
+{% block form_fields %}
+    <span class="error-block">{{ form.non_field_errors }}</span>
+
+    {% if form.fields.custom_condition.choices %}
+    <h4>{% trans "Build a new condition" %}</h4>
+    {% endif %}
+    {% include "dashboard/partials/form_field.html" with field=form.range %}
+    <p>
+        {% url 'dashboard:range-list' as range_list_url %}
+        {% blocktrans %}
+        Ranges can be created and edited from within the <a href="{{ range_list_url }}">range dashboard</a>.
+        {% endblocktrans %}
+    </p>
+    {% include "dashboard/partials/form_field.html" with field=form.type %}
+    {% include "dashboard/partials/form_field.html" with field=form.value %}
+
+    {% if form.fields.custom_condition.choices %}
+        <h4>{% trans "...or choose a pre-defined one" %}</h4>
+        {% include "dashboard/partials/form_field.html" with field=form.custom_condition %}
+    {% endif %}
+{% endblock %}
+
+{% block submittext %}{% trans "Continue to step 4" %}{% endblock %}

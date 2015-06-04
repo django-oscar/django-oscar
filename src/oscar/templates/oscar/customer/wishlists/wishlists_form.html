@@ -1,0 +1,44 @@
+{% extends "customer/baseaccountpage.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
+        </li>
+        <li>
+            <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
+        </li>
+        <li>
+            <a href="{% url 'customer:wishlists-list' %}">{% trans 'Wish Lists' %}</a>
+        </li>
+        <li class="active">
+            {% if wishlist %}
+                {{ wishlist.name }}
+            {% else %}
+                {% trans "Create" %}
+            {% endif %}
+        </li>
+    </ul>
+{% endblock %}
+
+{% block tabcontent %}
+    <form action="." method="post" data-behaviours="lock">
+        {% csrf_token %}
+        {% if not wishlist %}
+            <p>{% trans "What should your new wish list be called?" %}</p>
+        {% endif %}
+        {% include "partials/form_fields.html" %}
+        {% if product %}
+            <p>
+                {% blocktrans with title=product.get_title %}
+                    After your wishlist is created, <strong>{{ title }}</strong> will be added.
+                {% endblocktrans %}
+            </p>
+        {% endif %}
+        <div class="form-group">
+            <button class="btn btn-lg btn-primary" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
+            {% trans "or" %} <a href="#" onclick="history.go(-1);return false" >{% trans "cancel" %}</a>.
+        </div>
+    </form>
+{% endblock tabcontent %}

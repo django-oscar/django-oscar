@@ -1,37 +1,10 @@
-from django_dynamic_fixture import G
-
-from mock import Mock
-import contextlib
-from nose.plugins.attrib import attr
-
 from oscar.test.testcases import WebTestCase
-from oscar.test.factories import create_product
+from oscar.test.factories import create_product, UserFactory
 from oscar.core.compat import get_user_model
 from oscar.apps.catalogue.reviews.signals import review_added
+from oscar.test.contextmanagers import mock_signal_receiver
 
 
-User = get_user_model()
-
-@contextlib.contextmanager
-def mock_signal_receiver(signal, wraps=None, **kwargs):
-    """
-    Temporarily attaches a receiver to the provided ``signal`` within the scope
-    of the context manager.
-
-    >>> with mock_signal_receiver(post_save, sender=Model) as receiver:
-    >>> Model.objects.create()
-    >>> assert receiver.call_count = 1
-    """
-    if wraps is None:
-        wraps = lambda *args, **kwargs: None
-
-    receiver = Mock(wraps=wraps)
-    signal.connect(receiver, **kwargs)
-    yield receiver
-    signal.disconnect(receiver)
-
-
-@attr('reviews')
 class TestACustomer(WebTestCase):
 
     def setUp(self):
@@ -51,7 +24,7 @@ class TestACustomer(WebTestCase):
         self.assertEqual(1, self.product.reviews.all().count())
 
     def test_can_add_a_review_when_signed_in(self):
-        user = G(User)
+        user = UserFactory()
         detail_page = self.app.get(self.product.get_absolute_url(),
                                    user=user)
         add_review_page = detail_page.click(linkid="write_review")
@@ -64,7 +37,7 @@ class TestACustomer(WebTestCase):
         self.assertEqual(1, self.product.reviews.all().count())
 
     def test_adding_a_review_sends_a_signal(self):
-        review_user = G(User)
+        review_user = UserFactory()
         detail_page = self.app.get(self.product.get_absolute_url(),
                                    user=review_user)
         with mock_signal_receiver(review_added) as receiver:

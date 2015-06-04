@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% load promotion_tags %}
+
+{% block content_wrapper %}
+    <div class="container-fluid page">
+        <div class="page_inner">
+            {% block breadcrumbs %}{% endblock %}
+
+            <div class="row">
+
+                <aside class="col-sm-3">
+                    <div id="promotions_left">
+                        {% for promotion in promotions_left %}
+                        {% render_promotion promotion %}
+                        {% endfor %}
+                    </div>
+                    {% block column_left %} 
+                    {% endblock %}
+                </aside>
+
+                <div class="col-sm-6">
+                    {% block header %}
+                    <div class="page-header action">
+                        <h1>{% block headertext %}{% endblock %}</h1>
+                    </div>
+                    {% endblock %}
+                    {% include "partials/alert_messages.html" %}
+
+                    <div id="promotions">
+                        {% for promotion in promotions_page %}
+                        {% render_promotion promotion %}
+                        {% endfor %}
+                    </div>
+
+                    {% block content %}{% endblock %}
+                </div>
+
+                <aside class="col-sm-3">
+                    <div id="promotions_right">
+                        {% for promotion in promotions_right %}
+                        {% render_promotion promotion %}
+                        {% endfor %}
+                    </div>
+                    {% block column_right %} 
+                    {% endblock %}
+                </aside>
+
+            </div><!-- /row -->
+
+        </div><!-- /page_inner -->
+    </div><!-- /container-fluid -->
+{% endblock %}

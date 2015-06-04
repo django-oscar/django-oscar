@@ -1,0 +1,189 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% blocktrans with number=line.order.number id=line.id%}
+        Order {{ number }} - Line #{{ id }}
+    {% endblocktrans %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:order-list' %}">{% trans "Orders" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:order-detail' number=line.order.number %}">#{{ line.order.number }}</a>
+        </li>
+        <li class="active">{% blocktrans with id=line.id %}Line #{{ id }}{% endblocktrans %}</li>
+    </ul>
+{% endblock %}
+
+{% block headertext %}
+    {% blocktrans with number=line.order.number id=line.id %}Order #{{ number }} - Line #{{ id }}{% endblocktrans %}
+{% endblock %}
+
+{% block dashboard_content %}
+    <div class="row">
+        <div class="col-md-4">
+            <div class="table-header">
+                <h3>{% trans "Product details" %}</h3>
+            </div>
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th>{% trans "Title" context "Product title" %}</th>
+                    <td>
+                        {% if line.product %}
+                            <a href="{{ line.product.get_absolute_url }}">{{ line.title }}</a>
+                        {% else %}
+                            {{ line.title }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{% trans "Product Type" %}</th><td>{{ line.product.product_class }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "UPC" %}</th><td>{{ line.upc|default:"-" }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Quantity" %}</th><td>{{ line.quantity }}</td>
+                </tr>
+                {% if line.attributes.exists %}
+                    <tr>
+                        <th colspan="2">{% trans "Product Options" %}</th>
+                    </tr>
+                    {% for attribute in line.attributes.all %}
+                        <tr>
+                            <th>{{ attribute.option }}</th>
+                            <td>{{ attribute.value }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </table>
+        </div>
+        <div class="col-md-4">
+            <div class="table-header">
+                <h3>{% trans "Partner details" %}</h3>
+            </div>
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th>{% trans "Status" %}</th><td>{{ line.status|default:"-" }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Partner" %}</th><td>{{ line.partner_name }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Partner SKU" %}</th><td>{{ line.partner_sku }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <div class="table-header">
+                <h3>{% trans "Shipping details" %}</h3>
+            </div>
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th>{% trans "Partner reference number" %}</th><td>{{ line.partner_line_reference|default:"-" }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Partner notes" %}</th><td>{{ line.partner_line_notes|default:"-" }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Estimate dispatch date" %}</th><td>{{ line.est_dispatch_date|default:"-" }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="table-header">
+                <h3>{% trans "Shipping status" %}</h3>
+            </div>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>{% trans "State" %}</th>
+                        <th>{% trans "Quantity" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for state in line.shipping_event_breakdown.values %}
+                        <tr>
+                            <td>{{ state.event_type.name }}</td>
+                            <td>{{ state.quantity }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="2">{% trans "No shipping events have occurred." %}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <div class="table-header">
+                <h3>{% trans "Shipping events" %}</h3>
+            </div>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>{% trans "Event" %}</th>
+                        <th>{% trans "Quantity" %}</th>
+                        <th>{% trans "Reference" %}</th>
+                        <th>{% trans "Date" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event_qty in line.shipping_event_quantities.all %}
+                        <tr>
+                            {% with event=event_qty.event %}
+                                <td>{{ event.event_type.name }}</td>
+                                <td>{{ event_qty.quantity }}</td>
+                                <td>{{ event.notes }}</td>
+                                <td>{{ event.date_created }}</td>
+                            {% endwith %}
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4">{% trans "No shipping events have occurred." %}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <div class="table-header">
+                <h3>{% trans "Payment events" %}</h3>
+            </div>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>{% trans "Event" %}</th>
+                        <th>{% trans "Quantity" %}</th>
+                        <th>{% trans "Date" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event_qty in line.payment_event_quantities.all %}
+                        <tr>
+                            {% with event=event_qty.event %}
+                                <td>{{ event.event_type.name }}</td>
+                                <td>{{ event_qty.quantity }}</td>
+                                <td>{{ event.date_created }}</td>
+                            {% endwith %}
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3">{% trans "No payment events have occurred." %}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock dashboard_content %}

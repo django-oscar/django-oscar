@@ -1,0 +1,56 @@
+{% extends "layout_2_col.html" %}
+
+{% load i18n %}
+
+{% block title %}
+    {{ page_title }} | {% trans 'Account' %} | {{ block.super }}
+{% endblock %}
+
+{% block body_class %}account-profile{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
+        </li>
+        <li>
+            <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
+        </li>
+        {% block extra_breadcrumbs %}{% endblock %}
+        <li class="active">{{ page_title }}</li>
+    </ul>
+{% endblock %}
+
+{% block headertext %}{{ page_title }}{% endblock %}
+
+{% block column_left %}
+    <ul class="nav nav-pills nav-stacked">
+        {% block standard_tabs %}
+            <li{% if active_tab == 'profile' %} class="active"{% endif %}>
+                <a href="{% url 'customer:profile-view' %}">{% trans "Profile" %}</a>
+            </li>
+            <li{% if active_tab == 'orders' %} class="active"{% endif %}>
+                <a href="{% url 'customer:order-list' %}">{% trans "Order History" %}</a>
+            </li>
+            <li{% if active_tab == 'addresses' %} class="active"{% endif %}>
+                <a href="{% url 'customer:address-list' %}">{% trans "Address Book" %}</a>
+            </li>
+            <li{% if active_tab == 'emails' %} class="active"{% endif %}>
+                <a href="{% url 'customer:email-list' %}">{% trans "Email History" %}</a>
+            </li>
+            <li{% if active_tab == 'alerts' %} class="active"{% endif %}>
+                <a href="{% url 'customer:alerts-list' %}">{% trans "Product Alerts" %}</a>
+            </li>
+            <li{% if active_tab == 'notifications' %} class="active"{% endif %}>
+                <a href="{% url 'customer:notifications-inbox' %}">{% trans "Notifications" %}</a>
+            </li>
+            <li{% if active_tab == 'wishlists' %} class="active"{% endif %}>
+                <a href="{% url 'customer:wishlists-list' %}">{% trans "Wish Lists" %}</a>
+            </li>
+        {% endblock %}
+    </ul>
+{% endblock %}
+
+{% block content %}
+    {% block tabcontent %}{% endblock tabcontent %}
+{% endblock content %}

@@ -121,7 +121,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     # Allow languages to be selected
     'django.middleware.locale.LocaleMiddleware',
@@ -244,11 +243,6 @@ LOGGING = {
             'level': 'INFO',
         },
         # Third party
-        'south': {
-            'handlers': ['null'],
-            'propagate': True,
-            'level': 'INFO',
-        },
         'sorl.thumbnail': {
             'handlers': ['sorl_file'],
             'propagate': True,
@@ -279,14 +273,11 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'template_timings_panel',
     'compressor',       # Oscar's templates use compressor
+    'widget_tweaks',
 ]
 from oscar import get_core_apps
 INSTALLED_APPS = INSTALLED_APPS + get_core_apps(
     ['apps.partner', 'apps.checkout', 'apps.shipping'])
-
-import django
-if django.VERSION < (1, 7):
-    INSTALLED_APPS.append('south')
 
 # Add Oscar's custom auth backend so users can sign in using their email
 # address.
@@ -381,10 +372,6 @@ if not os.path.exists(LOG_ROOT):
 THUMBNAIL_DEBUG = True
 THUMBNAIL_KEY_PREFIX = 'oscar-us-sandbox'
 
-# Django 1.6 has switched to JSON serializing for security reasons, but it does
-# not serialize Models. We should resolve this by extending the
-# django/core/serializers/json.Serializer to have the `dumps` function. Also in
-# tests/config.py
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'

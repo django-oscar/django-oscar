@@ -1,0 +1,40 @@
+{% extends "customer/baseaccountpage.html" %}
+{% load i18n %}
+
+{% block extra_breadcrumbs %}
+    <li>
+        <a href="{% url 'customer:notifications-inbox' %}">{% trans 'Notifications inbox' %}</a>
+    </li>
+{% endblock %}
+
+{% block tabcontent %}
+    <table class="table table-striped table-bordered">
+        {% if notification.sender %}
+        <tr>
+            <th>{% trans 'Sender' %}</th>
+            <td>{{ notification.sender }}</td>
+        </tr>
+        {% endif %}
+        <tr>
+            <th>{% trans 'Date sent' %}</th>
+            <td>{{ notification.date_sent }}</td>
+        </tr>
+        {% if notification.body %}
+            <tr>
+                <th>{% trans 'Subject' %}</th>
+                <td>{{ notification.subject|safe }}</td>
+            </tr>
+            <tr>
+                <th>{% trans 'Body' %}</th>
+                <td>{{ notification.body }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <th>{% trans 'Message' %}</th>
+                <th>{{ notification.subject|safe }}</th>
+            </tr>
+        {% endif %}
+    </table>
+    <div class="form-group form-actions"><a href="{% url 'customer:notifications-inbox' %}" class="btn btn-default">{% trans 'Return to notifications inbox' %}</a></div>
+{% endblock tabcontent %}
+

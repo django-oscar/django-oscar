@@ -2,23 +2,29 @@ from decimal import Decimal as D
 
 from django.core.urlresolvers import reverse
 
-from oscar.apps.address.models import Country
+from oscar.core.loading import get_model, get_class
 from oscar.test import factories
+
+UserAddress = get_model('address', 'UserAddress')
+Country = get_model('address', 'Country')
+GatewayForm = get_class('checkout.forms', 'GatewayForm')
 
 
 class CheckoutMixin(object):
 
     def create_digital_product(self):
-        product = factories.create_product(price=D('12.00'), num_in_stock=None)
-        product.product_class.requires_shipping = False
-        product.product_class.track_stock = False
-        product.product_class.save()
+        product_class = factories.ProductClassFactory(
+            requires_shipping=False, track_stock=False)
+        product = factories.ProductFactory(product_class=product_class)
+        factories.StockRecordFactory(
+            num_in_stock=None, price_excl_tax=D('12.00'), product=product)
         return product
 
     def add_product_to_basket(self, product=None):
         if product is None:
-            product = factories.create_product(price=D('12.00'),
-                                               num_in_stock=10)
+            product = factories.ProductFactory()
+            factories.StockRecordFactory(
+                num_in_stock=10, price_excl_tax=D('12.00'), product=product)
         detail_page = self.get(product.get_absolute_url())
         form = detail_page.forms['add_to_basket_form']
         form.submit()
@@ -34,10 +40,11 @@ class CheckoutMixin(object):
     def enter_guest_details(self, email='guest@example.com'):
         index_page = self.get(reverse('checkout:index'))
         index_page.form['username'] = email
-        index_page.form.submit()
+        index_page.form.select('options', GatewayForm.GUEST)
+        return index_page.form.submit()
 
     def create_shipping_country(self):
-        Country.objects.get_or_create(
+        return factories.CountryFactory(
             iso_3166_1_a2='GB', is_shipping_country=True)
 
     def enter_shipping_address(self):
@@ -59,3 +66,15 @@ class CheckoutMixin(object):
             reverse('checkout:shipping-method')).follow().follow()
         preview = payment_details.click(linkid="view_preview")
         return preview.forms['place_order_form'].submit().follow()
+
+    def reach_payment_details_page(self, is_guest=False):
+        self.add_product_to_basket()
+        if is_guest:
+            self.enter_guest_details('hello@egg.com')
+        self.enter_shipping_address()
+        return self.get(
+            reverse('checkout:shipping-method')).follow().follow()
+
+    def ready_to_place_an_order(self, is_guest=False):
+        payment_details = self.reach_payment_details_page(is_guest)
+        return payment_details.click(linkid="view_preview")

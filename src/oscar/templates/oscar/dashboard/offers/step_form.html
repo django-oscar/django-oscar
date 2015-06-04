@@ -1,0 +1,95 @@
+{% extends 'dashboard/layout.html' %}
+
+{% load currency_filters %}
+
+{% load i18n %}
+
+{% block body_class %}{{ block.super }} create-page{% endblock %}
+
+{% block title %}
+    {% if offer.pk %}
+        {{ offer.name }}:
+    {% else %}
+        {% trans "Create new offer" %}:
+    {% endif %}
+    {{ title }} | {% trans "Offers" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+    </li>
+    <li>
+        <a href="{% url 'dashboard:offer-list' %}">{% trans "Offers" %}</a>
+    </li>
+    {% if offer.pk %}
+    <li>
+        <a href="{% url 'dashboard:offer-detail' pk=offer.pk %}">{{ offer.name }}</a>
+    </li>
+    {% else %}
+    <li>
+        {% trans "Create new offer" %}
+    </li>
+    {% endif %}
+    <li class="active">{{ title }}</li>
+</ul>
+{% endblock %}
+
+{% block headertext %}
+    {% if not offer.pk %}
+        {% trans "Create new offer" %}
+    {% else %}
+        {{ offer.name }}
+    {% endif %}
+{% endblock %}
+
+{% block dashboard_content %}
+    <div class="row">
+        <div class="col-md-3">
+            {% block progress %}
+                {% include 'dashboard/offers/progress.html' %}
+            {% endblock %}
+        </div>
+        <div class="{% if session_offer %}col-md-6{% else %}col-md-9{% endif %}">
+            <form action="." method="post" class="form-stacked wysiwyg fixed-actions">
+                <div class="table-header">
+                    <h3>{{ title }}</h3>
+                </div>
+                <div class="well">
+                    {% csrf_token %}
+                    <p>{% trans "Fields marked with * are mandatory." %}</p>
+                    {% block form_fields %}
+                        {% include "dashboard/partials/form_fields.html" with form=form %}
+                    {% endblock %}
+                    {% block form_extradata %}{% endblock %}
+                </div>
+
+                {% block form_actions %}
+
+                    <div class="fixed-actions-group">
+                        <div class="form-actions">
+                            <div class="pull-right">
+                            {% block form_actions_buttons %}
+                                <button class="btn btn-primary" type="submit" data-loading-text="{% trans 'Submitting...' %}">{% block submittext %}{% trans "Continue" %}{% endblock %}</button>
+                                {% if offer %}{# When editing offer, show saving button #}
+                                    <button class="btn btn-default" name="save" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save changes" %}</button>
+                                {% endif %}
+                            {% endblock %}
+                            </div>
+                            <a class="btn btn-default" href="{% url 'dashboard:offer-list' %}">{% trans "cancel" %}</a>
+                        </div>
+                    </div>
+
+                {% endblock form_actions %}
+            </form>
+        </div>
+        {% if session_offer %}
+        <div class="col-md-3">
+            {% block summary %}
+                {% include 'dashboard/offers/summary.html' %}
+            {% endblock %}
+        </div>
+        {% endif %}
+    </div>
+{% endblock dashboard_content %}

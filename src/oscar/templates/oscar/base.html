@@ -1,0 +1,86 @@
+{% load i18n compress %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="{{ LANGUAGE_CODE|default:"en-gb" }}" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="{{ LANGUAGE_CODE|default:"en-gb" }}" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="{{ LANGUAGE_CODE|default:"en-gb" }}" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="{{ LANGUAGE_CODE|default:"en-gb" }}" class="no-js"> <!--<![endif]-->
+    <head>
+        <title>{% if display_version %}[{% trans "Build" %} {{ version }}] {% endif %}{% block title %}{{ shop_name }} - {{ shop_tagline }}{% endblock %}</title>
+
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <meta name="created" content="{% now "jS M Y h:i" %}" />
+        <meta name="description" content="{% block description %}{% endblock %}" />
+        <meta name="keywords" content="{% block keywords %}{% endblock %}" />
+        <meta name="viewport" content="{% block viewport %}width=device-width{% endblock %}" />
+        <meta name="robots" content="NOARCHIVE,NOCACHE" />
+
+        <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+        <!--[if lt IE 9]>
+        <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+        {% block favicon %}
+            <link rel="shortcut icon" href="{% static "oscar/favicon.ico" %}" />
+        {% endblock %}
+
+        {% block mainstyles %}
+            {% comment %}
+            We use an inner block to work-around the fact that django-compressor doesn't work with
+            template inheritance.  Ie, we can't just wrap the {% block mainstyles %} with compress tags and
+            expect it to compress CSS files added in child templates.
+            {% endcomment %}
+            {% block styles %}
+                {% comment %}
+                If you are developing Oscar's CSS, or overriding Oscar's CSS
+                files in your project, then set USE_LESS = True in your
+                settings file.  You will also need to ensure that the 'lessc'
+                executable is available and you have COMPRESS_PRECOMPILERS specified
+                correctly.
+                {% endcomment %}
+            {% endblock %}
+        {% endblock %}
+
+        {# Additional CSS - specific to certain pages #}
+        {% block extrastyles %}{% endblock %}
+
+        {% block extrahead %}{% endblock %}
+
+        {% block tracking %}
+            {# Default to using Google analytics #}
+            {% include "partials/google_analytics.html" %}
+        {% endblock %}
+    </head>
+
+    <body id="{% block body_id %}default{% endblock %}" class="{% block body_class %}default{% endblock %}">
+        {# Main content goes in this 'layout' block #}
+        {% block layout %}{% endblock %}
+
+        {% comment %}
+        Scripts loaded from a CDN.  These can't be wrapped by the 'compress' tag and so we
+        use a separate block for them.
+        {% endcomment %}
+        {% block cdn_scripts %}
+            <!-- jQuery -->
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+            <script>window.jQuery || document.write('<script src="{% static "oscar/js/jquery/jquery-1.9.1.min.js" %}"><\/script>')</script>
+        {% endblock %}
+
+        {# Local scripts #}
+        {% block scripts %}
+        {% endblock %}
+
+        {# Additional JS scripts #}
+        {% block extrascripts %}{% endblock %}
+
+        {# Block for body onload functions #}
+        <script type="text/javascript">
+            $(function() {
+                {% block onbodyload %}{% endblock %}
+            });
+        </script>
+
+        {# Page meta-data - this is populated by the 'metadata' template context processor #}
+        <!-- {% trans "Version:" %} {{ version }} -->
+    </body>
+</html>

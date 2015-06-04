@@ -1,0 +1,151 @@
+{% extends 'dashboard/layout.html' %}
+{% load url from future %}
+{% load i18n %}
+
+{% block title %}
+    {{ title }} | {% trans "Create product type" %} | {{ block.super }}
+{% endblock %}
+
+{% block body_class %}{{ block.super }} create-page{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:catalogue-class-list' %}">{% trans "Product Type" %}</a>
+        </li>
+        <li class="active">{{ title }}</li>
+    </ul>
+{% endblock %}
+
+{% block headertext %}{{ title }}{% endblock %}
+
+{% block dashboard_content %}
+    <form class="form-stacked wysiwyg fixed-actions" method="post" data-behaviour="affix-nav-errors">
+        {% csrf_token %}
+
+        <div class="row">
+
+            {% block tab_nav %}
+                <div class="col-md-3">
+                    <div data-spy="affix" class="affix-top" data-offset-top="200">
+                        <div class="table-header">
+                            <h3>{% trans "Sections" %}</h3>
+                        </div>
+                        <ul class="nav nav-list bs-docs-sidenav" id="product_update_tabs">
+
+                            {% block tabs %}
+                                <li class="active"><a href="#product_class_details" data-toggle="tab">{% trans 'Product Class details' %}</a></li>
+                                <li><a href="#product_attributes" data-toggle="tab">{% trans 'Product attributes' %}</a></li>
+
+                            {% endblock tabs %}
+                        </ul>
+                    </div>
+                </div>
+            {% endblock tab_nav %}
+
+            <div class="col-md-9">
+                <div class="tab-content">
+                    {% block product_class_details %}
+                        <div class="tab-pane active" id="product_class_details">
+                            <div class="table-header">
+                                <h3>{% trans "Product Class details" %}</h3>
+                            </div>
+                            <div class="well product-class-details">
+
+                                {% comment %}
+                                    If the ProductClass form has field_errors, partials/form_fields.html
+                                    will render an error message.
+                                    This means that there'll be 2 error messages,
+                                    one from the partial and one from the view. Perhaps there should be
+                                    an option allowing hiding of the error message in the template.
+                                    For now we copy paste what we need from the template.
+                                {% endcomment %}
+
+                                {% if form.non_field_errors %}
+                                    {% for error in form.non_field_errors %}
+                                        <div class="alert alert-error control-group error">
+                                            <span class="error-block"><i class="icon-exclamation-sign"></i> {{ error }}</span>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+
+                                {% for field in form %}
+                                    {% include 'dashboard/partials/form_field.html' with field=field %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endblock %}
+
+                    {% block product_attributes %}
+                        <div class="tab-pane" id="product_attributes">
+                            <div class="table-header">
+                                <h3>{% trans "Product attributes" %}</h3>
+                            </div>
+                            <div class="product-attributes">
+                                <table class="table table-striped table-bordered">
+                                    {{ attributes_formset.management_form }}
+                                    {{ attributes_formset.non_form_errors }}
+                                    <col width="20%">
+                                    <col width="20%">
+                                    <col width="20%">
+                                    <thead>
+                                        <tr>
+                                            <th>{% trans "Name" %}</th>
+                                            <th>{% trans "Code" %}</th>
+                                            <th>{% trans "Type" %}</th>
+                                            <th>{% trans "Required" %}</th>
+                                            <th>{% trans "Delete?" %}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for attribute_form in attributes_formset %}
+                                            <tr>
+                                                {% for hidden_field in attribute_form.hidden_fields %}
+                                                 {{ hidden_field }}
+                                                {% endfor %}
+                                                <td>{% include 'dashboard/partials/form_field.html' with field=attribute_form.name nolabel=True %}</td>
+                                                <td>{% include 'dashboard/partials/form_field.html' with field=attribute_form.code nolabel=True %}</td>
+                                                <td>
+                                                    {% include 'dashboard/partials/form_field.html' with field=attribute_form.type nolabel=True %}
+
+                                                    {% include 'dashboard/partials/form_field.html' with field=attribute_form.option_group nolabel=True %}
+                                                </td>
+                                                <td>{% include 'dashboard/partials/form_field.html' with field=attribute_form.required nolabel=True %}</td>
+                                                <td>{% include 'dashboard/partials/form_field.html' with field=attribute_form.DELETE nolabel=True %}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+
+        {% block fixed_actions_group %}
+            <div class="fixed-actions-group">
+                <div class="form-actions">
+                    <div class="pull-right">
+                        <a href="#" onclick="window.history.go(-1);return false" >
+                            {% trans "Cancel" %}
+                        </a>
+                        {% trans "or" %}
+                        <button class="btn btn-large btn-primary" type="submit">
+                            {% trans "Save" %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {% endblock fixed_actions_group %}
+    </form>
+
+{% endblock dashboard_content %}
+
+{% block onbodyload %}
+    {{ block.super }}
+    oscar.dashboard.product_attributes.init();
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "catalogue/browse.html" %}
+
+{% load i18n %}
+
+{% block title %}
+    {{ category.name }} | {{ block.super }}
+{% endblock %}
+
+{% block description %}
+    {{ category.description|default:""|striptags }}
+{% endblock %}
+
+{% block headertext %}{{ category.name }}{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{{ homepage_url }}">{% trans "Home" %}</a>
+        </li>
+        {% for category in category.get_ancestors %}
+            <li>
+                <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+            </li>
+        {% endfor %}
+        <li class="active">{{ category.name }}</li>
+    </ul>
+{% endblock breadcrumbs %}
+
+{% block content %}
+    {% if category.description %}
+        <div class="row">
+            <div class="col-sm-9"><p>{{ category.description|safe }}</p></div>
+            {% if category.image %}
+                <div class="col-sm-3"><img src="{{ category.image.url }}" alt="{{ category.name }}" class="img-responsive" /></div>
+            {% endif %}
+        </div>
+    {% endif %}
+    {{ block.super }}
+{% endblock %}

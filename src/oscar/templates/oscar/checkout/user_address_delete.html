@@ -1,0 +1,32 @@
+{% extends "checkout/checkout.html" %}
+{% load i18n %}
+
+{% block title %}
+    {% trans "Delete address?" %} | {{ block.super }}
+{% endblock title %}
+
+{% block order_contents %}{% endblock %}
+{% block shipping_method %}{% endblock %}
+{% block payment_method %}{% endblock %}
+{% block payment_details %}{% endblock %}
+
+{% block checkout_nav %}
+    {% include 'checkout/nav.html' with step=1 %}
+{% endblock %}
+
+{% block checkout_title %}{% trans "Delete address?" %}{% endblock %}
+
+{% block shipping_address %}
+    <form action="." method="post" id="delete_address_{{ object.id }}">
+        {% csrf_token %}
+        <div class="well">
+            <address>
+                {% for field in object.active_address_fields %}
+                    {{ field }}<br/>
+                {% endfor %}
+            </address>
+        </div>
+        <p>{% trans "Are you sure you want to delete this address?" %} <button type="submit" class="btn btn-danger" data-loading-text="{% trans 'Submitting...' %}">{% trans "Yes!" %}</button>
+            {% trans "or" %} <a href="{% url 'checkout:shipping-address' %}">{% trans "cancel" %}</a>.</p>
+    </form>
+{% endblock shipping_address %}

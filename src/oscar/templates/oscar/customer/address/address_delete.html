@@ -1,0 +1,24 @@
+{% extends "customer/baseaccountpage.html" %}
+
+
+{% load i18n %}
+
+{% block extra_breadcrumbs %}
+    <li>
+        <a href="{% url 'customer:address-list' %}">{% trans 'Address book' %}</a>
+    </li>
+{% endblock %}
+
+{% block tabcontent %}
+<form method="post">
+    {% csrf_token %}
+    <p>{% trans 'Are you sure you want to delete this address?' %}</p>
+
+    <p><strong>{{ object.summary }}</strong></p>
+
+    <div class="form-group form-actions">
+        <button type="submit" class="btn btn-danger btn-lg" data-loading-text="{% trans 'Deleting...' %}">{% trans 'Delete' %}</button> {% trans 'or' %} <a href="{% url 'customer:address-list' %}">{% trans 'cancel' %}</a>
+    </div>
+</form>
+{% endblock tabcontent %}
+

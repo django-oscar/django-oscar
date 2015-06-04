@@ -1,0 +1,29 @@
+{% extends 'dashboard/layout.html' %}
+{% load category_tags %}
+{% load i18n %}
+
+{% block body_class %}{{ block.super }} create-page partner{% endblock %}
+
+{% block title %}
+    {{ title }} | {% trans "Partners" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:partner-list' %}">{% trans "Partners" %}</a>
+        </li>
+        <li class="active">{{ title }}</li>
+    </ul>
+{% endblock %}
+
+{% block headertext %}{{ title }}{% endblock %}
+
+{% block dashboard_content %}
+    <div class="well">
+        {% include 'dashboard/partials/form.html' with form=form %}
+    </div>
+{% endblock dashboard_content %}

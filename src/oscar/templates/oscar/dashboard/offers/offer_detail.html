@@ -1,0 +1,126 @@
+{% extends 'dashboard/layout.html' %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block title %}
+    {% blocktrans with name=offer.name %}
+        {{ name }} | Offers
+    {% endblocktrans %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:offer-list' %}">{% trans "Offers" %}</a>
+        </li>
+        <li class="active">{{ offer.name }}</li>
+    </ul>
+{% endblock %}
+
+{% block header %}
+    <div class="page-header">
+        <form id="status_form" class="pull-right" method="post" action=".">
+            {% csrf_token %}
+            {% if offer.is_suspended %}
+                <button type="submit" class="btn btn-success" name="unsuspend" data-loading-text="{% trans 'Reinstating...' %}">{% trans "Reinstate offer" %}</button>
+            {% else %}
+                <button type="submit" class="btn btn-default" name="suspend" data-loading-text="{% trans 'Suspending...' %}">{% trans "Suspend offer" %}</button>
+            {% endif %}
+            <a class="btn btn-danger" href="{% url 'dashboard:offer-delete' pk=offer.pk %}">{% trans "Delete offer" %}</a>
+        </form>
+        <h1>{{ offer.name }}</h1>
+    </div>
+{% endblock header %}
+
+{% block dashboard_content %}
+
+    <table class="table table-bordered">
+        <tr>
+            <td>
+                {% if offer.is_available %}
+                    <span class="label label-success">{% trans "Offer currently available" %}</span>
+                {% else %}
+                    <span class="label label-danger">{% trans "Offer not available due to restrictions!" %}</span>
+                {% endif %}
+            </td>
+            <td>{% trans "Total cost:" %} <strong>{{ offer.total_discount|currency }}</strong></td>
+            <td>{% trans "Number of orders:" %} <strong>{{ offer.num_orders }}</strong></td>
+            <td>{% trans "Number of uses:" %} <strong>{{ offer.num_applications }}</strong></td>
+        </tr>
+    </table>
+
+    <div class="table-header">
+        <div class="pull-right" style="font-weight: normal">{% trans "Date created:" %} {{ offer.date_created }}</div>
+        <h2>{% trans "Offer details" %}</h2>
+    </div>
+    <table class="table table-striped table-bordered">
+        <tbody>
+            <tr>
+                <th>{% trans "Name" %}</th>
+                <td>{{ offer.name }}</td>
+                <td rowspan="2"><a id="edit_metadata" href="{% url 'dashboard:offer-metadata' pk=offer.pk %}" class="btn btn-default">{% trans "Edit" %}</a></td>
+            </tr>
+            <tr>
+                <th>{% trans "Description" %}</th>
+                <td>{{ offer.description|safe|default:"-" }}</td>
+            </tr>
+            <tr>
+                <th>{% trans "Incentive" %}</th>
+                <td>{{ offer.benefit.description|safe }}</td>
+                <td><a href="{% url 'dashboard:offer-benefit' pk=offer.pk %}" class="btn btn-default">{% trans "Edit" %}</a></td>
+            </tr>
+            <tr>
+                <th>{% trans "Condition" %}</th>
+                <td>{{ offer.condition.description|safe }}</td>
+                <td><a href="{% url 'dashboard:offer-condition' pk=offer.pk %}" class="btn btn-default">{% trans "Edit" %}</a></td>
+            </tr>
+            <tr>
+                <th>{% trans "Restrictions" %}</th>
+                <td>
+                    {% for restriction in offer.availability_restrictions %}
+                        {% if not restriction.is_satisfied %}
+                            <span class="label label-danger">
+                                {{ restriction.description }}
+                            </span><br/>
+                        {% else %}
+                            {{ restriction.description }}</br>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td><a href="{% url 'dashboard:offer-restrictions' pk=offer.pk %}" class="btn btn-default">{% trans "Edit" %}</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% if order_discounts %}
+        <div class="table-header">
+            <a class="pull-right btn" href=".?format=csv">{% trans "Export to CSV" %}</a>
+            <h2>{% trans "Orders that used this offer" %}</h2>
+        </div>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <th>{% trans "Order number" %}</th>
+                <th>{% trans "Order date" %}</th>
+                <th>{% trans "Order total" %}</th>
+                <th>{% trans "Cost" %}</th>
+            </thead>
+            <tbody>
+                {% for discount in order_discounts %}
+                    {% with order=discount.order %}
+                        <tr>
+                            <td><a href="{% url 'dashboard:order-detail' number=order.number %}">{{ order.number }}</a></td>
+                            <td>{{ order.date_placed }}</td>
+                            <td>{{ order.total_incl_tax|currency }}</td>
+                            <td>{{ discount.amount|currency }}</td>
+                        </tr>
+                    {% endwith %}
+                {% endfor %}
+            </tbody>
+        </table>
+        {% include 'dashboard/partials/pagination.html' %}
+    {% endif %}
+
+{% endblock dashboard_content %}

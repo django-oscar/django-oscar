@@ -1,0 +1,64 @@
+{% extends "customer/baseaccountpage.html" %}
+{% load i18n %}
+
+{% block tabcontent %}
+
+    <ul class="nav nav-tabs">
+        <li class="{% if list_type == 'inbox' %}active{% endif %}"><a href="{% url 'customer:notifications-inbox' %}">{% trans 'Inbox' %}</a></li>
+        <li class="{% if list_type == 'archive' %}active{% endif %}"><a href="{% url 'customer:notifications-archive' %}">{% trans 'Archive' context 'noun' %}</a></li>
+    </ul>
+
+    {% if notifications %}
+        {% include "partials/pagination.html" %}
+
+        <form action="{% url 'customer:notifications-update' %}" method="post">
+            {% csrf_token %}
+            <table class="table table-striped table-bordered">
+                <tbody>
+                    {% for notification in notifications %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="selected_notification" 
+                                value="{{ notification.id }}"/>
+                            </td>
+                            <td>
+                                {% if notification.is_new %}
+                                    <i class="icon-envelope"></i>
+                                {% else %}
+                                    <i class="icon-envelope"></i>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ notification.subject|safe }} <br/>
+                                <em>{{ notification.date_sent }}</em> 
+                            </td>
+                            <td>
+                                <a href="{% url 'customer:notifications-detail' pk=notification.pk %}" class="btn btn-info btn-sm">{% trans 'View' %}</a>
+                                {% if list_type == 'inbox' %}
+                                    <a class="btn btn-success btn-sm" href="#" data-behaviours="archive">{% trans 'Archive' context 'verb' %}</a>
+                                {% endif %}
+                                <a class="btn btn-danger btn-sm "href="#" data-behaviours="delete">{% trans 'Delete' %}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% trans "With selected items:" %} 
+            {% if list_type == 'inbox' %}
+                <button type="submit" class="btn btn-success" name="action" value="archive" data-loading-text="{% trans 'Archiving...' %}">{% trans "Archive" context 'verb' %}</button>
+            {% endif %}
+            <button type="submit" class="btn btn-danger" name="action" value="delete" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button>
+        </form>
+
+        {% include "partials/pagination.html" %}
+
+    {% else %}
+        <p>{% trans "There are no notifications to display." %}</p>
+    {% endif %}
+
+{% endblock tabcontent %}
+
+{% block onbodyload %}
+    {{ block.super }}
+    oscar.notifications.init();
+{% endblock %}

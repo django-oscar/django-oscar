@@ -1,0 +1,81 @@
+{% extends 'dashboard/layout.html' %}
+
+{% load i18n %}
+
+{% block body_class %}{{ block.super }} catalogue{% endblock %}
+
+{% block title %}
+{% trans "Stock alerts" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+    </li>
+    <li class="active">{% trans "Stock alerts" %}</li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+  <h1>{% trans "Stock alerts" %}</h1>
+</div>
+{% endblock header %}
+
+{% block dashboard_content %}
+<div class="table-header">
+    <h2 class="pull-left"><i class="icon-sitemap icon-large"></i>{{ description }}</h2>
+
+    <div class="pull-right">
+        <div class="btn-group pull-right">
+            <button class="btn btn-primary dropdown-toggle" type="submit" data-toggle="dropdown" aria-expanded="true">
+                {% trans "Filter" %}
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="{% url 'dashboard:stock-alert-list' %}">{% trans "All" %}</a></li>
+                <li><a href="{% url 'dashboard:stock-alert-list' %}?status=Open">{% trans "Open" %}</a></li>
+                <li><a href="{% url 'dashboard:stock-alert-list' %}?status=Closed">{% trans "Closed" %}</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<table class="table table-striped table-bordered table-hover">
+    {% if alerts %}
+    <tr>
+        <th>{% trans "Product" %}</th>
+        <th>{% trans "Partner" %}</th>
+        <th>{% trans "Low stock threshold" %}</th>
+        <th>{% trans "Current available stock" %}</th>
+        <th>{% trans "Date alert raised" %}</th>
+        <th>{% trans "Status" %}</th>
+        <th></th>
+    </tr>
+    {% for alert in alerts %}
+    <tr>
+        <td>
+            <a href="{% url 'dashboard:catalogue-product' alert.stockrecord.product.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}">
+                {{ alert.stockrecord.product.get_title }}
+            </a>
+        </td>
+        <td>{{ alert.stockrecord.partner.display_name }}</td>
+        <td>{{ alert.stockrecord.low_stock_threshold }}</td>
+        <td>{{ alert.stockrecord.net_stock_level }}</td>
+        <td>{{ alert.date_created }}</td>
+        <td>{{ alert.status }}</td>
+        <td>
+            <a class="btn btn-info" href="{% url 'dashboard:catalogue-product' pk=alert.stockrecord.product.id %}">{% trans "Update" %}</a>
+        </td>
+    </tr>
+    {% endfor %}
+
+    {% else %}
+
+    <tr><td>{% trans "No stock alerts found." %}</td></tr>
+
+    {% endif %}
+</table>
+
+{% endblock dashboard_content %}

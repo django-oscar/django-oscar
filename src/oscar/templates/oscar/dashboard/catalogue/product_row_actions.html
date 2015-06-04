@@ -1,0 +1,21 @@
+{% load django_tables2 %}
+{% load i18n %}
+<div class="btn-toolbar">
+    <div class="btn-group">
+        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
+            {% trans "Actions" %}
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu pull-right">
+            <li>
+                <a href="{% url 'dashboard:catalogue-product' pk=record.id %}{% querystring %}">{% trans "Edit" %}</a>
+            </li>
+            <li>
+                <a href="{{ record.get_absolute_url }}"> {% trans "View on site" %}</a>
+            </li>
+            <li>
+                <a href="{% url 'dashboard:catalogue-product-delete' pk=record.id %}">{% trans "Delete" %}</a>
+            </li>
+        </ul>
+    </div>
+</div>

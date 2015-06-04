@@ -3,16 +3,15 @@ from django.utils.six.moves import http_client
 
 from oscar.core.loading import get_model
 from oscar.test.testcases import WebTestCase, add_permissions
-from oscar.test.factories import create_product, create_stockrecord, ProductAttributeFactory
-
-from django_dynamic_fixture import G
+from oscar.test.factories import create_product
+from oscar.test.factories import (
+    CategoryFactory, PartnerFactory, ProductFactory, ProductAttributeFactory)
 
 Product = get_model('catalogue', 'Product')
 ProductClass = get_model('catalogue', 'ProductClass')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 Category = get_model('catalogue', 'Category')
 StockRecord = get_model('partner', 'stockrecord')
-Partner = get_model('partner', 'partner')
 
 
 class TestCatalogueViews(WebTestCase):
@@ -31,10 +30,10 @@ class TestAStaffUser(WebTestCase):
 
     def setUp(self):
         super(TestAStaffUser, self).setUp()
-        self.partner = G(Partner)
+        self.partner = PartnerFactory()
 
     def test_can_create_a_product_without_stockrecord(self):
-        category = G(Category)
+        category = CategoryFactory()
         product_class = ProductClass.objects.create(name="Book")
         page = self.get(reverse('dashboard:catalogue-product-create',
                                 args=(product_class.slug,)))
@@ -47,7 +46,7 @@ class TestAStaffUser(WebTestCase):
         self.assertEqual(Product.objects.count(), 1)
 
     def test_can_create_and_continue_editing_a_product(self):
-        category = G(Category)
+        category = CategoryFactory()
         product_class = ProductClass.objects.create(name="Book")
         page = self.get(reverse('dashboard:catalogue-product-create',
                                 args=(product_class.slug,)))
@@ -69,8 +68,8 @@ class TestAStaffUser(WebTestCase):
 
     def test_can_update_a_product_without_stockrecord(self):
         new_title = u'foobar'
-        category = G(Category)
-        product = G(Product, parent=None)
+        category = CategoryFactory()
+        product = ProductFactory(stockrecords=[])
 
         page = self.get(
             reverse('dashboard:catalogue-product',
@@ -92,7 +91,7 @@ class TestAStaffUser(WebTestCase):
                 self.fail('Product has stock records but should not')
 
     def test_can_create_product_with_required_attributes(self):
-        category = G(Category)
+        category = CategoryFactory()
         attribute = ProductAttributeFactory(required=True)
         product_class = attribute.product_class
         page = self.get(reverse('dashboard:catalogue-product-create',

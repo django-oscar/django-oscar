@@ -23,10 +23,8 @@ fi
 
 # MySQL
 echo "Running migrations against MySQL"
-./manage.py syncdb --noinput --settings=settings_mysql > /dev/null
 ./manage.py migrate --noinput --settings=settings_mysql
 
 # Postgres
 echo "Running migrations against Postgres"
-./manage.py syncdb --noinput --settings=settings_postgres > /dev/null
 ./manage.py migrate --noinput --settings=settings_postgres

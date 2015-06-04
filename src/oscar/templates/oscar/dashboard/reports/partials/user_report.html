@@ -1,0 +1,35 @@
+{% extends 'dashboard/reports/index.html' %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block report %}
+    <table class="table table-striped table-bordered table-hover">
+        <tr>
+            <th>{% trans "Email" %}</th>
+            <th>{% trans "Name" %}</th>
+            <th>{% trans "Date registered" %}</th>
+            <th>{% trans "Product views" %}</th>
+            <th>{% trans "Basket additions" %}</th>
+            <th>{% trans "Orders" %}</th>
+            <th>{% trans "Order lines" %}</th>
+            <th>{% trans "Order items" %}</th>
+            <th>{% trans "Total spent" %}</th>
+            <th>{% trans "Date of last order" %}</th>
+        </tr>
+        {% for user in objects %}
+            <tr>
+                <td><a href="{% url 'dashboard:user-detail' user.user.id %}">{{ user.user.email }}</a></td>
+                <td><a href="{% url 'dashboard:user-detail' user.user.id %}">{{ user.user.get_full_name|default:"-" }}</a></td>
+                <td>{{ user.user.date_joined }}</td>
+                <td>{{ user.num_product_views }}</td>
+                <td>{{ user.num_basket_additions }}</td>
+                <td>{{ user.num_orders }}</td>
+                <td>{{ user.num_order_lines }}</td>
+                <td>{{ user.num_order_items }}</td>
+                <td>{{ user.total_spent|currency }}</td>
+                <td>{{ user.date_last_order|default:"-" }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% include "dashboard/partials/pagination.html" %}
+{% endblock %}

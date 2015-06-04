@@ -11,7 +11,7 @@ Models
 
 The payment app provides several models to track payments:
 
-* ``SourceType`` - This is the type of payment source used (eg PayPal, DataCash, BrainTree).  As part of setting up
+* ``SourceType`` - This is the type of payment source used (eg PayPal, DataCash).  As part of setting up
   a new Oscar site you would create a SourceType for each of the payment
   gateways you are using.
 * ``Source`` - A source of payment for a single order.  This tracks how an order

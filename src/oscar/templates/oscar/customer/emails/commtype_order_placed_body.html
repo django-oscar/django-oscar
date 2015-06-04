@@ -1,0 +1,28 @@
+{% extends "customer/emails/base.html" %}
+{% load currency_filters i18n %}
+
+{% block body %}<p xmlns="http://www.w3.org/1999/html">{% trans 'Hello,' %}</p>
+
+<p>{% blocktrans with order_number=order.number %}We are pleased to confirm your order {{ order_number }} has been received and
+will be processed shortly.{% endblocktrans %}</p>
+
+<p>{% trans 'Your order contains:' %}</p>
+
+<ul>
+    {% for line in order.lines.all %}
+    <li>{{ line.title }} - {%  trans 'quantity:' %} {{ line.quantity }} - {% trans 'price:' %} {{ line.line_price_incl_tax|currency:order.currency }}</li>
+    {% endfor %}
+</ul>
+<p>
+{% trans 'Basket total:' %} {{ order.basket_total_incl_tax|currency:order.currency }}<br/>
+{% trans 'Shipping:' %} {{ order.shipping_incl_tax|currency:order.currency }}<br/>
+{% trans 'Order Total:' %} {{ order.total_incl_tax|currency:order.currency }}
+</p>
+
+<p>{% trans 'Shipping address:' %}</p>
+<p>{% for field in order.shipping_address.active_address_fields %}  {{ field }}<br/>
+{% endfor %}</p>
+
+{% if status_url %}
+<p>{% blocktrans %}You can view the status of this order by clicking <a href="{{ status_url }}" title="order status">here</a>{% endblocktrans %}</p>
+{% endif %}{% endblock %}

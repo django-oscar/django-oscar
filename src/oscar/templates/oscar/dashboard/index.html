@@ -1,0 +1,180 @@
+{% extends 'dashboard/layout.html' %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block body_class %}{{ block.super }} orders home{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <meta http-equiv="refresh" content="300">
+{% endblock %}
+
+{% block breadcrumbs %}
+{% endblock %}
+
+{% block headertext %}
+{% trans "Dashboard" %}
+{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="table-header">
+    <i class="icon-signal icon-large"></i>{% trans "Your Store Statistics" %}
+</div>
+
+<div class="content-block">
+    <div class="row">
+        <aside class="col-md-3 order-graph-details">
+            <label><span><i class="icon-shopping-cart"></i>{{ total_orders_last_day }}</span>{% trans "Total Orders" %}</label>
+            <label><span><i class="icon-hand-right"></i>{{ total_customers_last_day }}</span>{% trans "New Customers" %}</label>
+            <label><span><i class="icon-group"></i>{{ total_customers }}</span>{% trans "Total Customers" %}</label>
+            <label><span><i class="icon-briefcase"></i>{{ total_products }}</span>{% trans "Total Products" %}</label>
+        </aside>
+        <div class="col-md-9">
+            <div id="order_graph">
+                <div class="bar-caption"><h1>{% trans "Latest Orders (last 24 hours)" %}</h1></div>
+                <div class="bar-y-axis">
+                    <ul>
+                    {% for y_value in hourly_report_dict.y_range %}
+                        <li><span>{{ y_value|currency }}</span></li>
+                    {% endfor %}
+                    </ul>
+                </div>
+                <dl class="bar-chart">
+                    {% for item in hourly_report_dict.order_total_hourly %}
+                        <dd class="bar-layer">
+                            <em>{{ item.end_time|time }}</em>
+                            <span style="height: {{ item.percentage }}%;" >
+                                <p{% if item.percentage == 0 %} style="display: none;"{% endif %}>{{ item.total_incl_tax|currency }}</p>
+                            </span>
+                        </dd>
+                    {% endfor %}
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-4">
+        <table class="table table-striped table-bordered table-hover">
+            <caption><i class="icon-shopping-cart icon-large"></i>{% trans "Orders - Last 24 Hours" %}</caption>
+            </tr>
+                <tr>
+                    <th class="col-md-10">{% trans "Total orders" %}</th>
+                    <td class="col-md-2" >{{ total_orders_last_day }}</td>
+                </tr>
+                <tr>
+                    <th class="col-md-10">{% trans "Total lines" %}</th>
+                    <td class="col-md-2" >{{ total_lines_last_day }}</td>
+                </tr>
+                <tr>
+                    <th class="col-md-10">{% trans "Total revenue" %}</th>
+                    <td class="col-md-2" >{{ total_revenue_last_day|currency }}</td>
+                </tr>
+                <tr>
+                    <th class="col-md-10">{% trans "Average order costs" %}</th>
+                    <td class="col-md-2" >{{ average_order_costs|currency }}</td>
+                </tr>
+        </table>
+    </div>
+
+    <div class="col-md-4">
+        <table class="table table-striped table-bordered table-hover">
+            <caption>
+                <a href="{% url 'dashboard:order-list' %}" class="btn btn-default pull-right">
+                    <i class="icon-shopping-cart"></i> {% trans "Manage" %}
+                </a>
+                <i class="icon-shopping-cart icon-large"></i>{% trans "Orders - All Time" %}
+            </caption>
+            <tr>
+                <th class="col-md-10">{% trans "Total orders" %}</th>
+                <td class="col-md-2" >{{ total_orders }}</td>
+            </tr>
+            <tr>
+                <th class="col-md-10">{% trans "Total lines" %}</th>
+                <td class="col-md-2" >{{ total_lines }}</td>
+            </tr>
+            <tr>
+                <th class="col-md-10">{% trans "Total revenue" %}</th>
+                <td class="col-md-2" >{{ total_revenue|currency }}</td>
+            </tr>
+            <tr>
+                <th class="col-md-10">{% trans "Total <em>open</em> baskets" %}</th>
+                <td class="col-md-2" >{{ total_open_baskets }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="col-md-4">
+        <table class="table table-striped table-bordered table-hover">
+            <caption><i class="icon-group icon-large"></i>{% trans "Customers" %}</caption>
+            <tr>
+                <th class="col-md-10">{% trans "Total customers" %}</th>
+                <td class="col-md-2" >{{ total_customers }}</td>
+            </tr>
+            <tr>
+                <th class="col-md-10">{% trans "New customers" %}</th>
+                <td class="col-md-2" >{{ total_customers_last_day }}</td>
+            </tr>
+            <tr>
+                <th class="col-md-10">{% trans "Total <em>open</em> baskets" %}</th>
+                <td class="col-md-2" >{{ total_open_baskets_last_day }}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <table class="table table-striped table-bordered table-hover">
+            <caption>
+                <div class="btn-toolbar pull-right">
+                  <div class="btn-group">
+                    <a href="{% url 'dashboard:catalogue-product-list' %}" class="btn btn-default">
+                        <i class="icon-sitemap"></i> {% trans "Manage" %}
+                    </a>
+                  </div>
+                  <div class="btn-group">
+                    <a href="{% url 'dashboard:stock-alert-list' %}" class="btn btn-default">
+                        <i class="icon-sitemap"></i> {% trans "View Stock Alerts" %}
+                    </a>
+                  </div>
+                </div>
+                <i class="icon-sitemap icon-large"></i>{% trans "Catalogue and stock" %}
+            </caption>
+            <tr>
+                <th class="col-md-10">{% trans "Total products" %}</th>
+                    <td class="col-md-2" >{{ total_products }}</td>
+            </tr>
+            <tr>
+                <th class="col-md-10">{% trans "<em>Open</em> stock alerts" %}</th>
+                    <td class="col-md-2" >{{ total_open_stock_alerts }}</td>
+            </tr>
+            <tr>
+                <th class="col-md-10">{% trans "<em>Closed</em> stock alerts" %}</th>
+                    <td class="col-md-2" >{{ total_closed_stock_alerts }}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-6">
+
+        <table class="table table-striped table-bordered table-hover">
+            <caption><i class="icon-gift icon-large"></i>{% trans "Offers, vouchers and promotions" %}</caption>
+            <tr>
+                <th class="col-md-10">{% trans "Active <em>Site</em> Offers" %}</th>
+                <td class="col-md-2" >{{ total_site_offers }}</td>
+            </tr>
+            <tr>
+                <th class="col-md-10">{% trans "Active <em>Vouchers</em>" %}</th>
+                <td class="col-md-2" >{{ total_vouchers }}</td>
+            </tr>
+            <th class="col-md-10">{% trans "Promotions" %}</th>
+                <td class="col-md-2" >{{ total_promotions }}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

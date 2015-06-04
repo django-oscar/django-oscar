@@ -1,0 +1,16 @@
+{% load i18n %}
+{% load product_tags %}
+
+{% with products_sliced=products|slice:":6" %}
+    {% if products_sliced %}
+        <div class="sub-header">
+            <h2>{% trans 'Products you recently viewed' %}</h2>
+        </div>
+
+        <ul class="row">
+            {% for product in products_sliced %}
+                <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3">{% render_product product %}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}

@@ -1,0 +1,50 @@
+{% extends 'dashboard/layout.html' %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block body_class %}{{ block.super }} create-page{% endblock %}
+
+{% block title %}
+    {{ title }} | {% trans "Vouchers" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:voucher-list' %}">{% trans "Vouchers" %}</a>
+        </li>
+        {% if voucher %}
+        <li>
+            <a href="{% url 'dashboard:voucher-stats' pk=voucher.id %}">{{ voucher }}</a>
+        </li>
+    {% endif %}
+    <li class="active">{% trans "Edit" %}</li>
+    </ul>
+{% endblock %}
+
+{% block headertext %}{{ title }}{% endblock %}
+
+{% block dashboard_content %}
+    <div class="table-header">
+        <h2><i class="icon-money icon-large"></i>
+            {% if voucher %}
+                {% trans "Edit voucher" %}
+            {% else %}
+                {% trans "Create voucher" %}
+            {% endif %}
+        </h2>
+    </div>
+    <form action="." method="post" class="well form-stacked">
+        {% csrf_token %}
+        {% include "dashboard/partials/form_fields.html" with form=form %}
+        {% block form_actions %}
+            <div class="form-actions">
+                <button class="btn btn-primary btn-lg" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button> {% trans "or" %}
+                <a href="{% url 'dashboard:voucher-list' %}">{% trans "cancel" %}</a>
+            </div>
+        {% endblock form_actions %}
+    </form>
+{% endblock dashboard_content %}

@@ -1,10 +1,16 @@
+from __future__ import unicode_literals
 from django.core.urlresolvers import reverse
+from django.utils.six.moves import http_client
 
-from oscar.test.testcases import WebTestCase
+from oscar.core.loading import get_model, get_class
 from oscar.test import factories
-from oscar.apps.order.models import Order
-from oscar.apps.offer.models import ConditionalOffer
+from oscar.test.testcases import WebTestCase
 from . import CheckoutMixin
+
+Order = get_model('order', 'Order')
+ConditionalOffer = get_model('offer', 'ConditionalOffer')
+UserAddress = get_model('address', 'UserAddress')
+GatewayForm = get_class('checkout.forms', 'GatewayForm')
 
 
 class TestIndexView(CheckoutMixin, WebTestCase):
@@ -15,19 +21,20 @@ class TestIndexView(CheckoutMixin, WebTestCase):
 
     def test_redirects_customers_with_empty_basket(self):
         response = self.get(reverse('checkout:index'))
-        self.assertRedirectUrlName(response, 'basket:summary')
+        self.assertRedirectsTo(response, 'basket:summary')
 
     def test_redirects_customers_to_shipping_address_view(self):
         self.add_product_to_basket()
         response = self.get(reverse('checkout:index'))
-        self.assertRedirectUrlName(response, 'checkout:shipping-address')
+        self.assertRedirectsTo(response, 'checkout:shipping-address')
 
 
 class TestShippingAddressView(CheckoutMixin, WebTestCase):
 
     def setUp(self):
-        self.create_shipping_country()
         super(TestShippingAddressView, self).setUp()
+        self.user_address = factories.UserAddressFactory(
+            user=self.user, country=self.create_shipping_country())
 
     def test_requires_login(self):
         response = self.get(reverse('checkout:shipping-address'), user=None)
@@ -43,15 +50,64 @@ class TestShippingAddressView(CheckoutMixin, WebTestCase):
         form['line4'] = 'Gotham City'
         form['postcode'] = 'N1 7RR'
         response = form.submit()
-        self.assertRedirectUrlName(response, 'checkout:shipping-method')
+        self.assertRedirectsTo(response, 'checkout:shipping-method')
 
         session_data = self.app.session['checkout_data']
         session_fields = session_data['shipping']['new_address_fields']
-        self.assertEqual(u'Barry', session_fields['first_name'])
-        self.assertEqual(u'Chuckle', session_fields['last_name'])
-        self.assertEqual(u'1 King Street', session_fields['line1'])
-        self.assertEqual(u'Gotham City', session_fields['line4'])
-        self.assertEqual(u'N1 7RR', session_fields['postcode'])
+        self.assertEqual('Barry', session_fields['first_name'])
+        self.assertEqual('Chuckle', session_fields['last_name'])
+        self.assertEqual('1 King Street', session_fields['line1'])
+        self.assertEqual('Gotham City', session_fields['line4'])
+        self.assertEqual('N1 7RR', session_fields['postcode'])
+
+    def test_only_shipping_addresses_are_shown(self):
+        not_shipping_country = factories.CountryFactory(
+            iso_3166_1_a2='US', name="UNITED STATES",
+            is_shipping_country=False)
+        not_shipping_address = factories.UserAddressFactory(
+            user=self.user, country=not_shipping_country, line4='New York')
+        self.add_product_to_basket()
+        page = self.get(reverse('checkout:shipping-address'))
+        page.mustcontain(
+            self.user_address.line4, self.user_address.country.name,
+            no=[not_shipping_address.country.name, not_shipping_address.line4])
+
+    def test_can_select_an_existing_shipping_address(self):
+        self.add_product_to_basket()
+        page = self.get(reverse('checkout:shipping-address'), user=self.user)
+        self.assertIsOk(page)
+        form = page.forms["select_shipping_address_%s" % self.user_address.id]
+        response = form.submit()
+        self.assertRedirectsTo(response, 'checkout:shipping-method')
+
+
+class TestUserAddressUpdateView(CheckoutMixin, WebTestCase):
+
+    def setUp(self):
+        country = self.create_shipping_country()
+        super(TestUserAddressUpdateView, self).setUp()
+        self.user_address = factories.UserAddressFactory(
+            user=self.user, country=country)
+
+    def test_requires_login(self):
+        response = self.get(
+            reverse('checkout:user-address-update',
+                    kwargs={'pk': self.user_address.pk}),
+            user=None)
+        self.assertIsRedirect(response)
+
+    def test_submitting_valid_form_modifies_user_address(self):
+        page = self.get(
+            reverse(
+                'checkout:user-address-update',
+                kwargs={'pk': self.user_address.pk}),
+            user=self.user)
+
+        form = page.forms['update_user_address']
+        form['first_name'] = 'Tom'
+        response = form.submit()
+        self.assertRedirectsTo(response, 'checkout:shipping-address')
+        self.assertEqual('Tom', UserAddress.objects.get().first_name)
 
 
 class TestShippingMethodView(CheckoutMixin, WebTestCase):
@@ -64,7 +120,36 @@ class TestShippingMethodView(CheckoutMixin, WebTestCase):
         self.add_product_to_basket()
         self.enter_shipping_address()
         response = self.get(reverse('checkout:shipping-method'))
-        self.assertRedirectUrlName(response, 'checkout:payment-method')
+        self.assertRedirectsTo(response, 'checkout:payment-method')
+
+
+class TestDeleteUserAddressView(CheckoutMixin, WebTestCase):
+
+    def setUp(self):
+        super(TestDeleteUserAddressView, self).setUp()
+        self.country = self.create_shipping_country()
+        self.user_address = factories.UserAddressFactory(
+            user=self.user, country=self.country)
+
+    def test_requires_login(self):
+        response = self.get(
+            reverse('checkout:user-address-delete',
+                    kwargs={'pk': self.user_address.pk}),
+            user=None)
+        self.assertIsRedirect(response)
+
+    def test_can_delete_a_user_address_from_shipping_address_page(self):
+        self.add_product_to_basket()
+        page = self.get(reverse('checkout:shipping-address'), user=self.user)
+        delete_confirm = page.click(
+            href=reverse('checkout:user-address-delete',
+                         kwargs={'pk': self.user_address.pk}))
+        form = delete_confirm.forms["delete_address_%s" % self.user_address.id]
+        form.submit()
+
+        # Ensure address is deleted
+        user_addresses = UserAddress.objects.filter(user=self.user)
+        self.assertEqual(0, len(user_addresses))
 
 
 class TestPreviewView(CheckoutMixin, WebTestCase):
@@ -110,3 +195,52 @@ class TestPlacingAnOrderUsingAnOffer(CheckoutMixin, WebTestCase):
 
         self.assertEqual(1, offer.num_orders)
         self.assertEqual(1, offer.num_applications)
+
+
+class TestThankYouView(CheckoutMixin, WebTestCase):
+
+    def tests_gets_a_404_when_there_is_no_order(self):
+        response = self.get(
+            reverse('checkout:thank-you'), user=self.user, status="*")
+        self.assertEqual(http_client.NOT_FOUND, response.status_code)
+
+    def tests_custumers_can_reach_the_thank_you_page(self):
+        self.add_product_to_basket()
+        self.enter_shipping_address()
+        thank_you = self.place_order()
+        self.assertIsOk(thank_you)
+
+    def test_superusers_can_force_an_order(self):
+        self.add_product_to_basket()
+        self.enter_shipping_address()
+        self.place_order()
+        user = self.create_user('admin', 'admin@admin.com')
+        user.is_superuser = True
+        user.save()
+        order = Order.objects.get()
+
+        test_url = '%s?order_number=%s' % (
+            reverse('checkout:thank-you'), order.number)
+        response = self.get(test_url, status='*', user=user)
+        self.assertIsOk(response)
+
+        test_url = '%s?order_id=%s' % (reverse('checkout:thank-you'), order.pk)
+        response = self.get(test_url, status='*', user=user)
+        self.assertIsOk(response)
+
+    def test_users_cannot_force_an_other_custumer_order(self):
+        self.add_product_to_basket()
+        self.enter_shipping_address()
+        self.place_order()
+        user = self.create_user('John', 'john@test.com')
+        user.save()
+        order = Order.objects.get()
+
+        test_url = '%s?order_number=%s' % (
+            reverse('checkout:thank-you'), order.number)
+        response = self.get(test_url, status='*', user=user)
+        self.assertEqual(response.status_code, http_client.NOT_FOUND)
+
+        test_url = '%s?order_id=%s' % (reverse('checkout:thank-you'), order.pk)
+        response = self.get(test_url, status='*', user=user)
+        self.assertEqual(response.status_code, http_client.NOT_FOUND)

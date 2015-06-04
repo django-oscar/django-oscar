@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% load thumbnail %}
+{% load i18n %}
+
+{% block title %}
+    {% trans "Basket" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{{ homepage_url }}">{% trans "Home" %}</a>
+        </li>
+        <li class="active">{% trans "Basket" %}</li>
+    </ul>
+{% endblock %}
+
+{# Hide mini-basket so we don't have two baskets to keep in sync #}
+{% block mini_basket %}{% endblock %}
+
+{% block headertext %}
+    {% trans "Basket" %}
+{% endblock %}
+
+{% block content %}
+    {# Use a partial template so that AJAX can be used to re-render basket #}
+    {% include 'basket/partials/basket_content.html' %}
+{% endblock content %}
+
+{% block onbodyload %}
+    {{ block.super }}
+    {# We pass in the URL to send AJAX requests to #}
+    var options = {
+        'basketURL': '{% url 'basket:summary' %}'
+    };
+    oscar.basket.init(options);
+{% endblock %}

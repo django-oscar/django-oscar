@@ -47,29 +47,46 @@ recommended to install Oscar in a virtualenv.
 Django settings
 ===============
 
-Edit your settings file ``frobshop.frobshop.settings.py`` to specify
-``TEMPLATE_CONTEXT_PROCESSORS``:
+Edit your settings file ``frobshop.frobshop.settings.py`` to  modify your 
+``TEMPLATES`` to include the main Oscar template directory and add the extra
+context processors.
 
 .. code-block:: django
 
-    TEMPLATE_CONTEXT_PROCESSORS = (
-        "django.contrib.auth.context_processors.auth",
-        "django.core.context_processors.request",
-        "django.core.context_processors.debug",
-        "django.core.context_processors.i18n",
-        "django.core.context_processors.media",
-        "django.core.context_processors.static",
-        "django.core.context_processors.tz",
-        "django.contrib.messages.context_processors.messages",
-        'oscar.apps.search.context_processors.search_form',
-        'oscar.apps.promotions.context_processors.promotions',
-        'oscar.apps.checkout.context_processors.checkout',
-        'oscar.apps.customer.notifications.context_processors.notifications',
-        'oscar.core.context_processors.metadata',
-    )
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [
+                os.path.join(BASE_DIR, 'templates'),
+                OSCAR_MAIN_TEMPLATE_DIR
+            ],
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    'django.template.context_processors.debug',
+                    'django.template.context_processors.request',
+                    'django.contrib.auth.context_processors.auth',
+                    'django.contrib.messages.context_processors.messages',
 
-Next, modify ``INSTALLED_APPS`` to be a list, add ``django.contrib.sites``, ``django.contrib.flatpages`` and ``compressor``
-and append Oscar's core apps. Also set ``SITE_ID``:
+                    'oscar.apps.search.context_processors.search_form',
+                    'oscar.apps.promotions.context_processors.promotions',
+                    'oscar.apps.checkout.context_processors.checkout',
+                    'oscar.apps.customer.notifications.context_processors.notifications',
+                    'oscar.core.context_processors.metadata',
+                ],
+            },
+        },
+    ]
+
+.. attention::
+    
+   Before Django 1.8 this setting was split between 
+   ``TEMPLATE_CONTEXT_PROCESSORS`` and ``TEMPLATE_DIRS``. 
+
+
+Next, modify ``INSTALLED_APPS`` to be a list, add ``django.contrib.sites``, 
+``django.contrib.flatpages``, ``compressor`` and ``widget_tweaks`` and append 
+Oscar's core apps. Also set ``SITE_ID``:
 
 .. code-block:: django
 
@@ -85,6 +102,7 @@ and append Oscar's core apps. Also set ``SITE_ID``:
         'django.contrib.flatpages',
         ...
         'compressor',
+        'widget_tweaks',
     ] + get_core_apps()
 
     SITE_ID = 1
@@ -98,11 +116,12 @@ More info about installing ``flatpages`` is in the `Django docs`_.
 
 .. tip::
 
-    Oscar's default templates use django-compressor_ but it's optional really.
-    You may decide to use your own templates that don't use compressor.  Hence
-    why it is not one of the 'core apps'.
+    Oscar's default templates use django-compressor_ and django-widget-tweaks_ 
+    but it's optional really.  You may decide to use your own templates that 
+    don't use either.  Hence why they are not in the 'core apps'.
 
 .. _django-compressor: https://github.com/jezdez/django_compressor
+.. _django-widget-tweaks: https://github.com/kmike/django-widget-tweaks
 
 Next, add ``oscar.apps.basket.middleware.BasketMiddleware`` and
 ``django.contrib.flatpages.middleware.FlatpageFallbackMiddleware`` to
@@ -137,20 +156,7 @@ files from a remote storage (e.g. Amazon S3), you must manually copy a
 .. _`configured correctly`: https://docs.djangoproject.com/en/1.7/howto/static-files/
 .. _sandbox settings: https://github.com/django-oscar/django-oscar/blob/3a5160a86c9b14c940c76a224a28cd37dd29f7f1/sites/sandbox/settings.py#L99
 
-Modify your ``TEMPLATE_DIRS`` to include the main Oscar template directory:
 
-.. code-block:: django
-
-    import os
-    from oscar import OSCAR_MAIN_TEMPLATE_DIR
-
-    location = lambda x: os.path.join(
-        os.path.dirname(os.path.realpath(__file__)), x)
-
-    TEMPLATE_DIRS = (
-        location('templates'),
-        OSCAR_MAIN_TEMPLATE_DIR,
-    )
 
 The last addition to the settings file is to import all of Oscar's default settings:
 
@@ -238,37 +244,15 @@ Check your database settings. A quick way to get started is to use SQLite:
 Note that we recommend using ``ATOMIC_REQUESTS`` to tie transactions to
 requests.
 
-Migrations
-----------
-
-Oscar ships with two sets of migrations. If you're running Django 1.7, you
-don't need to do anything; Django's migration framework will detect them
-automatically and will do the right thing.
-If you're running Django 1.6, you need to install `South`_:
-
-.. code-block:: bash
-
-    $ pip install South
-
-And you need to add it to your installed apps:
-
-.. code-block:: django
-
-    INSTALLED_APPS = [
-        ...
-        'south',
-    ] + get_core_apps()
-
-.. _South: http://south.readthedocs.org/en/latest/
-
-Create Database
+Create database
 ---------------
 
-Then create the database and the shop should be browsable:
+Oscar ships with migrations. Django's migration framework will detect them
+automatically and will do the right thing.
+Create the database and the shop should be browsable:
 
 .. code-block:: bash
 
-    $ python manage.py syncdb --noinput  # Only needed for Django 1.6
     $ python manage.py migrate
     $ python manage.py runserver
 
@@ -309,9 +293,17 @@ and one
 :class:`fulfillment partner <oscar.apps.partner.abstract_models.AbstractPartner>`.
 These aren't created automatically as they're highly specific to the shop you
 want to build.
-The quickest way to set them up is to log into the Django admin
-interface at http://127.0.0.1:8000/admin/ and create instances of both there.
-For a deployment setup, we recommend creating them as `data migration`_.
+
+When managing your catalogue you should always use the Oscar dashboard, which
+provides the necessary functionality. Login to:
+http://127.0.0.1:8000/dashboard/ and create instances of both there.
+
+It is important to note that the Django admin site is not supported. It may
+or may not work and is only included in the sandbox for developer's
+convenience.
+
+For a deployment setup, we recommend creating product classes
+as `data migration`_.
 
 .. _`data migration`: http://codeinthehole.com/writing/prefer-data-migrations-to-initial-data/
 

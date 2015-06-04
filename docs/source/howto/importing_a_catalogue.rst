@@ -32,7 +32,7 @@ Let's take a closer look at ``DemoSiteImporter``::
         def __init__(self, logger):
             self.logger = logger
     
-        @atomic_compat
+        @atomic
         def handle(self, product_class_name, filepath):
             ....
     

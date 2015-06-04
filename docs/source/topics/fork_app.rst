@@ -37,9 +37,9 @@ If two models with the same name are declared within an app, Django will only
 use the first one. That means that if you wish to customise Oscar's models, you
 must declare your custom ones before importing Oscar's models for that app.
 
-If you're using South, you have to copy the ``migrations`` directory
-from ``oscar/apps/order`` and put it into your ``order`` app. Detailed
-instructions are available in :doc:`/howto/how_to_customise_models`.
+You have to copy the ``migrations`` directory from ``oscar/apps/order`` and put
+it into your ``order`` app. Detailed instructions are available in
+:doc:`/howto/how_to_customise_models`.
 
 Get the Django admin working
 ============================

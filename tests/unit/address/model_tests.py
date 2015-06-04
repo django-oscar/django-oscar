@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
+import pytest
 from django.test import TestCase
 from django.core import exceptions
-
-from nose.tools import raises
 
 from oscar.apps.order.models import ShippingAddress
 from oscar.core.compat import get_user_model
@@ -17,7 +16,7 @@ class TestUserAddress(TestCase):
 
     def setUp(self):
         self.country = factories.CountryFactory.build()
-        self.user = factories.UserFactory.build()
+        self.user = factories.UserFactory()
 
     def test_uses_title_firstname_and_lastname_in_salutation(self):
         a = factories.UserAddressFactory.build(
@@ -46,7 +45,7 @@ class TestUserAddress(TestCase):
 
     def test_has_summary_property(self):
         c = factories.CountryFactory.build(name='')
-        a = factories.UserAddressFactory.build(country=c,
+        a = factories.UserAddressFactory(country=c,
                 title='Dr',
                 first_name='Barry',
                 last_name='Barrington',
@@ -191,24 +190,17 @@ INVALID_POSTCODES = [
 ]
 
 
-def assert_valid_postcode(country_value, postcode_value):
+@pytest.mark.parametrize('country_value, postcode_value', VALID_POSTCODES)
+def test_assert_valid_postcode(country_value, postcode_value):
     country = models.Country(iso_3166_1_a2=country_value)
     address = models.UserAddress(country=country, postcode=postcode_value)
     address.clean()
 
 
-@raises(exceptions.ValidationError)
-def assert_invalid_postcode(country_value, postcode_value):
+@pytest.mark.parametrize('country_value, postcode_value', INVALID_POSTCODES)
+def test_assert_invalid_postcode(country_value, postcode_value):
     country = models.Country(iso_3166_1_a2=country_value)
     address = models.UserAddress(country=country, postcode=postcode_value)
-    address.clean()
 
-
-def test_postcode_is_validated_for_country():
-    for country, postcode in VALID_POSTCODES:
-        yield assert_valid_postcode, country, postcode
-
-
-def test_postcode_is_only_valid():
-    for country, postcode in INVALID_POSTCODES:
-        yield assert_invalid_postcode, country, postcode
+    with pytest.raises(exceptions.ValidationError):
+        address.clean()

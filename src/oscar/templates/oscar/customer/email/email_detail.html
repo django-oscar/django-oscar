@@ -1,0 +1,27 @@
+{% extends "customer/baseaccountpage.html" %}
+
+
+{% load i18n %}
+
+{% block extra_breadcrumbs %}
+    <li>
+        <a href="{% url 'customer:email-list' %}">{% trans 'Email history' %}</a>
+    </li>
+{% endblock %}
+
+{% block tabcontent %}
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>{% trans 'Date sent' %}</th>
+            <td>{{ email.date_sent }}</td>
+        </tr>
+        <tr>
+            <th>{% trans 'Subject' %}</th>
+            <td>{{ email.subject }}</td>
+        </tr>
+        <tr>
+            <th>{% trans 'Body' %}</th>
+            <td>{{ email.body_html|safe }}</td>
+        </tr>
+    </table>
+{% endblock tabcontent %}

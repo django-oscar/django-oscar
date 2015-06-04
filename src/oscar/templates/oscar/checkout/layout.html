@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% load i18n %}
+{% load promotion_tags %}
+{% load category_tags %}
+
+{% block layout %}
+
+    <header class="header container-fluid">
+        <div class="page_inner">
+            <div class="row">
+                {% include "partials/brand.html" %}
+            </div><!-- /row -->
+        </div>
+        {% block checkout_nav %}{% endblock %}
+    </header><!-- /header -->
+
+    <div class="container-fluid page">
+       <div class="page_inner">
+            {% include 'partials/alert_messages.html' %}
+
+            <div class="sub-header">
+                <h1>{% block checkout_title %}{% endblock %}</h1>
+            </div>
+
+            <!-- The main nav on checkout pages contain links to modal flatpages -->
+            {% block modal %}
+                {% load flatpages %}
+                {% get_flatpages '/order/' as flatpages %}
+                {% for page in flatpages %}
+                <div id="{{ page.title|slugify }}" class="modal hide fade">
+                    <div class="modal-header">
+                        <a class="close" data-dismiss="modal">×</a>
+                        <h3>{{ page.title }}</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="large-content">
+                            {{ page.content|safe }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endblock %}
+
+            {% block content %}{% endblock %}
+
+            <div id="promotions">
+                {% for promotion in promotions_page %}
+                    {% render_promotion promotion %}
+                {% endfor %}
+            </div>
+        </div><!-- /page_inner -->
+    </div>
+    {% include "partials/footer_checkout.html" %}
+{% endblock %}

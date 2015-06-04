@@ -5,11 +5,16 @@
 Domain-driven e-commerce for Django
 ===================================
 
+
 Oscar is an e-commerce framework for Django designed for building domain-driven
 sites.  It is structured such that any part of the core functionality can be
 customised to suit the needs of your project.  This allows a wide range of
 e-commerce requirements to be handled, from large-scale B2C sites to complex B2B
 sites rich in domain-specific business logic.
+
+Contents:
+
+.. contents:: :local:
 
 .. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/oscarcommerce.thumb.png
     :target: http://oscarcommerce.com
@@ -75,12 +80,14 @@ Core team:
 - `David Winterbottom`_ (Twitter `@codeinthehole`_)
 - `Maik Hoepfel`_ (Twitter `@maikhoepfel`_)
 - `Markus Bertheau`_
+- `Michael van Tellingen`_
 
 .. _`David Winterbottom`: https://github.com/codeinthehole
 .. _`@codeinthehole`: https://twitter.com/codeinthehole
 .. _`Maik Hoepfel`: https://github.com/maikhoepfel
 .. _`@maikhoepfel`: https://twitter.com/maikhoepfel
 .. _`Markus Bertheau`: https://github.com/mbertheau
+.. _`Michael van Tellingen`: https://github.com/mvantellingen
 
 Screenshots
 -----------
@@ -154,9 +161,6 @@ The following extensions are stable and ready for use:
 * django-oscar-stores_ - Physical stores integration (opening hours, store
   locator etc)
 
-* django-oscar-easyrec_ - Recomendations using EasyRec_
-  locator etc)
-
 * django-oscar-eway_ - Integration with the eWay_ payment gateway.
 
 * django-oscar-sagepay-direct_ - Integration with "DIRECT" part of Sagepay's API
@@ -178,7 +182,6 @@ The following extensions are stable and ready for use:
 
 The following are community-written extensions:
 
-* django-oscar-unicredit_ - Integration with the Unicredit payment gateway
 * django-oscar-payments_ - Pluggable payments for Oscar
 * django-oscar-recurly_ - Integration with the Recurly payment gateway
 * django-oscar-adyen_ - Integration with the Adyen payment gateway
@@ -250,8 +253,6 @@ Non-Tangent:
 * Dolbeau - http://www.dolbeau.ca
 * Audio App - https://audioapp.pl
 * Anything Gift - http://www.anythinggift.co.uk
-* FP Sport - http://www.fpsport.it
-* Garmsby - https://garmsby.co.uk
 * Partecipa Cards - http://www.partecipacards.com
 * Chiyome - https://chiyome.com
 * Bike Parts Market - https://www.bikepartsmarket.com
@@ -264,12 +265,6 @@ Non-Tangent:
 
 .. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/anythinggift.thumb.png
     :target: http://www.anythinggift.co.uk
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/fpsport.thumb.png
-    :target: http://www.fpsport.it
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/garmsby.thumb.png
-    :target: https://garmsby.co.uk
 
 .. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/partecipacards.thumb.png
     :target: http://www.partecipacards.com

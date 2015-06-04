@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% load basket_tags %}
+{% load promotion_tags %}
+{% load category_tags %}
+{% load product_tags %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ range.name }} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{{ homepage_url }}">{% trans "Home" %}</a>
+        </li>
+        <li class="active">{{ range.name }}</li>
+    </ul>
+{% endblock breadcrumbs %}
+
+{% block headertext %}{{ range.name }}{% endblock %}
+
+{% block content %}
+    {% if range.description %}
+        {{ range.description|safe }}
+    {% endif %}
+    {% if products %}
+        <section>
+            <div>
+                <ol class="row">
+                    {% for product in products %}
+                        <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3">{% render_product product %}</li>
+                    {% endfor %}
+                </ol>
+                {% include "partials/pagination.html" %}
+            </div>
+        </section>
+    {% else %}
+        <p class="nonefound">{% trans "No products found." %}</p>
+    {% endif %}
+{% endblock content %}

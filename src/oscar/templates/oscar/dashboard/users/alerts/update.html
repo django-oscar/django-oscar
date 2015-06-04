@@ -1,0 +1,39 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+
+{% block body_class %}{{ block.super }} users{% endblock %}
+
+{% block title %}
+    {% blocktrans with id=alert.id %}Update alert #{{ id }}{% endblocktrans %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:user-alert-list' %}">{% trans "Product alerts" %}</a>
+        </li>
+        <li class="active">{% blocktrans with id=alert.id %}Alert #{{ id }}{% endblocktrans %}</li>
+    </ul>
+{% endblock %}
+
+{% block headertext %}
+    {% blocktrans with id=alert.id %}Product alert #{{ id }}{% endblocktrans %}
+{% endblock %}
+
+{% block dashboard_content %}
+    <div class="table-header">
+        <h2 class="pull-left">{% blocktrans with id=alert.id %}Product alert #{{ id }}{% endblocktrans %}</h2>
+        <div class="pull-right">
+            <form action="." method="post" class="form-inline">
+                {% csrf_token %}
+                {% include 'dashboard/partials/form_fields_inline.html' %}
+                <button type='submit' class="btn btn-primary" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
+                <a href="{% url 'dashboard:user-alert-list' %}" class="btn btn-default">{% trans "cancel" %}</a>
+            </form>
+        </div>
+    </div>
+    {% include 'dashboard/users/alerts/partials/alert.html' %}
+{% endblock dashboard_content %}

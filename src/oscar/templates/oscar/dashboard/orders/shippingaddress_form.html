@@ -1,0 +1,39 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans "Shipping address" %} | {% trans "Order" %} {{ order.number }} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:order-list' %}">{% trans "Orders" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:order-detail' number=order.number %}">{{ order.number }}</a>
+        </li>
+        <li class="active">{% trans "Edit shipping address" %}</li>
+    </ul>
+{% endblock %}
+
+{% block headertext %}
+    {% blocktrans %}Edit shipping address for order {{ order.number }}{% endblocktrans %}
+{% endblock  %}
+
+{% block content %}
+
+    <form action="." method="post" class="well form-horizontal">
+        {% csrf_token %}
+        {% include "dashboard/partials/form_fields.html" with form=form %}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Updating...' %}">{% trans "Update address" %}</button>
+            {% trans "or" %} <a href="{% url 'dashboard:order-detail' number=order.number %}">{% trans "cancel" %}</a>
+        </div>
+    </form>
+
+{% endblock content %}
+

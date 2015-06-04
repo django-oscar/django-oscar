@@ -1,6 +1,6 @@
 include *.rst
 include AUTHORS
 include LICENSE
-recursive-include oscar/templates *.txt *.html
-recursive-include oscar/static *
-recursive-include oscar/locale *.po *.mo
+recursive-include src/oscar/templates *.txt *.html
+recursive-include src/oscar/static *
+recursive-include src/oscar/locale *.po *.mo

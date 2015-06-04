@@ -1,0 +1,32 @@
+{% extends 'dashboard/layout.html' %}
+{% load category_tags %}
+{% load i18n %}
+
+{% block body_class %}{{ block.super }} create-page catalogue{% endblock %}
+
+{% block title %}
+    {{ title }} | {% trans "Categories" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:catalogue-category-list' %}">{% trans "Categories" %}</a>
+        </li>
+        <li class="active">{{ title }}</li>
+    </ul>
+{% endblock %}
+
+{% block headertext %}{{ title }}{% endblock %}
+
+{% block dashboard_content %}
+    <div class="table-header">
+        <h2>{{ title }}</h2>
+    </div>
+    <div class="well">
+        {% include 'dashboard/partials/form.html' with includes_files=1 class='wysiwyg' %}
+    </div>
+{% endblock dashboard_content %}

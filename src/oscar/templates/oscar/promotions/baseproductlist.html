@@ -1,0 +1,22 @@
+{% load i18n %}
+{% load product_tags %}
+
+{% block content %}
+<section class="well well-blank">
+    <div class="sub-header">
+        <h3>{{ promotion.name }}</h3>
+    </div>
+
+    {{ promotion.description|safe }}
+
+    <ul class="row">
+        {% for product in products %}
+        <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3">{% render_product product %}</li>
+        {% endfor %}
+    </ul>
+
+    {% if block.link_url %}
+        <a href="{{ block.link_url }}">{% trans "See more" %}</a>
+    {% endif %}
+</section>
+{% endblock %}

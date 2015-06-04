@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+
+{% load i18n %}
+{% load product_tags %}
+
+{% block title %}
+{% trans "Offers" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{{ homepage_url }}">{% trans "Home" %}</a>
+    </li>
+    <li class="active">{% trans "Offers" %}</li>
+</ul>
+{% endblock %}
+
+{% block headertext %}
+    {% trans "Offers" %}
+{% endblock %}
+
+{% block content %}
+    {% if not offers %}
+        <p>{% trans "There are no site offers at the moment." %}</p>
+    {% else %}
+        {% for offer in offers %}
+        <h2>{{ offer.name }}</h2>
+        {% if offer.description %}
+            <p>{{ offer.description|safe }}</p>
+        {% endif %}
+        {% if offer.has_products %}
+            <ul class="row">
+                {% for product in offer.products|slice:":12" %}
+                <li class="col-xs-6 col-sm-4 col-md-3 col-lg-3">{% render_product product %}</li>
+                {% endfor %}
+            </ul>
+            <p>
+                <a class="btn btn-default" href="{% url 'offer:detail' slug=offer.slug %}">{% trans "Browse products in offer" %}</a>
+            </p>
+        {% endif %}
+        <hr/>
+        {% endfor %}
+    {% endif %}
+{% endblock content %}

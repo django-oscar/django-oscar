@@ -30,7 +30,9 @@ Style guides
 ------------
 Oscar currently does not have it's own style guide for writing documentation.
 Please carefully review style guides for `Python`_ and `Django`_.
+Please use `gender-neutral language`_.
 
 .. _`Python`: http://docs.python.org/devguide/documenting.html#style-guide
 .. _`Django`: https://docs.djangoproject.com/en/dev/internals/contributing/writing-documentation/
+.. _`gender-neutral language`: https://alexgaynor.net/2013/nov/30/gender-neutral-language-faq/
 

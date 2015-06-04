@@ -1,6 +1,0 @@
-{% load i18n %}
-
-<form method="get" action="{% url 'search:search' %}" class="navbar-form pull-right">
-    {{ search_form.q }}
-    <input type="submit" value="{% trans "Search" %}" class="btn" />
-</form>

@@ -1,0 +1,24 @@
+{% extends 'dashboard/reports/index.html' %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block report %}
+<table class="table table-striped table-bordered table-hover">
+    {% if objects %}
+        <tr>
+            <th>{% trans "Offer" %}</th>
+            <th>{% trans "Total discount" %}</th>
+        </tr>
+        {% for offer_discount in objects %}
+        <tr>
+            <td><a href="{% url 'dashboard:offer-detail' offer_discount.offer.pk %}">{{ offer_discount.offer.name }}</a></td>
+            <td>{{ offer_discount.total_discount|currency }}</td>
+        </tr>
+    {% endfor %}
+
+    {% else %}
+        <tr><td>{% trans "No results found." %}</td></tr>
+    {% endif %}
+</table>
+{% include "dashboard/partials/pagination.html" %}
+{% endblock %}

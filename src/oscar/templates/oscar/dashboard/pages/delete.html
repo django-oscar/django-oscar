@@ -1,0 +1,40 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+
+{% block body_class %}{{ block.super }} create-page{% endblock %}
+
+{% block title %}
+    {% blocktrans with title=object.title %}Delete page '{{ title }}'?{% endblocktrans %}
+    | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:page-list' %}">{% trans "Pages" %}</a>
+        </li>
+        <li class="active">{% blocktrans with title=object.title %}Delete page '{{ title }}'?{% endblocktrans %}</li>
+    </ul>
+{% endblock %}
+
+{% block headertext %}
+    {% blocktrans with title=object.title %}Delete page '{{ title }}'?{% endblocktrans %}
+{% endblock %}
+
+{% block dashboard_content %}
+    <div class="table-header">
+        <h2>{% trans "Delete page" %}</h2>
+    </div>
+    <form action="." method="post" class="well">
+        {% csrf_token %}
+        {{ form }}
+        <p>{% blocktrans with title=object.title %}Delete page <strong>{{ title }}</strong> - are you sure?{% endblocktrans %}</p>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-danger" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button>
+            {% trans "or" %} <a href="{% url 'dashboard:page-list' %}">{% trans "cancel" %}</a>.
+        </div>
+    </form>
+{% endblock %}

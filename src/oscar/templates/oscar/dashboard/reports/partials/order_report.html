@@ -1,0 +1,39 @@
+{% extends 'dashboard/reports/index.html' %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block report %}
+    <table class="table table-striped table-bordered table-hover">
+        {% if objects %}
+            <tr>
+                <th>{% trans "Order number" %}</th>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Email" %}</th>
+                <th>{% trans "Total incl. tax" %}</th>
+                <th>{% trans "Date placed" %}</th>
+                <th></th>
+            </tr>
+            {% for order in objects %}
+                <tr>
+                    <td><a href="{% url 'dashboard:order-detail' order.number %}">{{ order.number }}</a></td>
+                    <td>
+                        {% if order.user %}
+                            <a href="{% url 'dashboard:user-detail' order.user.id %}">{{ order.user|default:"-" }}</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>{{ order.email }}</td>
+                    <td>{{ order.total_incl_tax|currency:order.currency }}</td>
+                    <td>{{ order.date_placed }}</td>
+                    <td>
+                        <a class="btn btn-info" href="{% url 'dashboard:order-detail' number=order.number %}">{% trans "View" %}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr><td>{% trans "No results found." %}</td></tr>
+        {% endif %}
+    </table>
+    {% include "dashboard/partials/pagination.html" %}
+{% endblock %}

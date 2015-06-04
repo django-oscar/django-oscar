@@ -1,0 +1,52 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+{% load currency_filters %}
+
+{% block title %}
+    {% if method %}
+        {{ method.name }}
+    {% else %}
+        {% trans "Create a new shipping method" %}
+    {% endif %}
+    | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:shipping-method-list' %}">{% trans "Shipping methods" %}</a>
+        </li>
+        {% if method %}
+            <li>
+                {{ method.name }}
+            </li>
+            <li class="active">{% trans "Edit" %}</li>
+        {% else %}
+            <li class="active">{% trans "Create a new shipping method" %}</li>
+        {% endif %}
+    </ul>
+{% endblock %}
+
+{% block headertext %}
+    {% if method %}
+        {{ method.name }}
+    {% else %}
+        {% trans "Create a new shipping method" %}
+    {% endif %}
+{% endblock %}
+
+{% block dashboard_content %}
+    <form action="." method="post" class="form-stacked well wysiwyg">
+        {% csrf_token %}
+        {% include "dashboard/partials/form_fields.html" with form=form %}
+        {% block form_actions %}
+            <div class="form-actions">
+                <button class="btn btn-primary btn-lg" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button> {% trans "or" %}
+                <a href="{% url 'dashboard:shipping-method-list' %}">{% trans "cancel" %}</a>
+            </div>
+        {% endblock form_actions %}
+    </form>
+{% endblock %}

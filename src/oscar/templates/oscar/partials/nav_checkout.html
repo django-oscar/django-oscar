@@ -1,0 +1,30 @@
+
+<div class="navbar primary">
+    {% load flatpages %}
+    {% get_flatpages '/order/' as flatpages %}
+    {% if flatpages %}
+        <div class="navbar-inner">
+            <div class="container" style="width: auto;">
+                <a class="btn navbar-btn" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <a class="brand hidden" href="{{ homepage_url }}">{{ shop_name }}</a>
+                <div class="navbar-collapse">
+
+                    <ul class="nav">
+                        <!-- Links to modal flatpages -->
+                        {% for page in flatpages %}
+                            <li>
+                                <a data-toggle="modal" href="#{{ page.title|slugify }}">{{ page.title }}</a>
+                            </li>
+                        {% endfor %}
+                        <!-- Delete this if other links present -->
+                        <li><a href="{{ homepage_url }}">&larr;</a></li>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div>
+        </div><!-- /navbar-inner -->
+    {% endif %}
+</div><!-- /navbar -->

@@ -1,0 +1,91 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans "Ranges" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="active">{% trans "Ranges" %}</li>
+    </ul>
+{% endblock %}
+
+{% block header %}
+    <div class="page-header">
+        <a href="{% url 'dashboard:range-create' %}" class="btn btn-primary btn-lg pull-right"><i class="icon-plus"></i> {% trans "Create new range" %}</a>
+        <h1>{% trans "Ranges" %}</h1>
+    </div>
+{% endblock header %}
+
+{% block dashboard_content %}
+
+    <table class="table table-striped table-bordered">
+        <caption><i class="icon-reorder icon-large"></i> {% trans "Ranges" %}</caption>
+        {% if ranges %}
+            <thead>
+                <tr>
+                    <th>{% trans "Name" %}</th>
+                    <th>{% trans "Num products" %}</th>
+                    <th>{% trans "Is public?" %}</th>
+                    <th>{% trans "Date created" %}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for range in ranges %}
+                    <tr>
+                        <td>
+                            {% if range.is_editable %}
+                                <a href="{% url 'dashboard:range-update' pk=range.id %}">{{ range.name }}</a>
+                            {% else %}
+                                {{ range.name }}
+                            {% endif %}
+                        </td>
+                        {% if range.includes_all_products %}
+                            <td>{% trans 'All' %}</td>
+                        {% else %}
+                            <td>{{ range.num_products|default:"-" }}</td>
+                        {% endif %}
+
+                        {% if range.is_public %}
+                            <td>{% trans "Yes" %}</td>
+                        {% else %}
+                            <td>{% trans "No" %}</td>
+                        {% endif %}
+                        <td>{{ range.date_created }}</td>
+                        <td>
+                            <div class="btn-toolbar">
+                                <div class="btn-group">
+                                    <button class="btn btn-default dropdown-toggle" type="submit" data-toggle="dropdown" aria-expanded="true">
+                                        {% trans "Actions" %}
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right">
+                                        {% if range.is_editable %}
+                                            <li><a href="{% url 'dashboard:range-update' pk=range.id %}">{% trans "Edit" %}</a></li>
+                                            {% if not range.includes_all_products %}
+                                                <li><a href="{% url 'dashboard:range-products' pk=range.id %}">{% trans "Edit products" %}</a></li>
+                                            {% endif %}
+                                        {% endif %}
+                                        {% if range.is_public %}
+                                            <li><a href="{{ range.get_absolute_url }}">{% trans "View on site" %}</a></li>
+                                        {% endif %}
+                                        <li><a href="{% url 'dashboard:range-delete' pk=range.id %}">{% trans "Delete" %}</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        {% else %}
+            <tr><td>{% trans "No ranges found." %}</td></tr>
+        {% endif %}
+    </table>
+    {% include "dashboard/partials/pagination.html" %}
+
+{% endblock dashboard_content %}

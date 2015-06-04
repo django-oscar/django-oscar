@@ -1,0 +1,86 @@
+{% extends 'dashboard/layout.html' %}
+{% load sorting_tags %}
+{% load i18n %}
+
+{% block title %}
+    {% trans "Link an existing user" %} | {{ partner.name }} | {% trans "Partners" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:partner-list' %}">{% trans "Partners" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:partner-manage' pk=partner.id %}">{{ partner.name }}</a>
+        </li>
+        <li class="active">{% trans "Link an existing user" %}</li>
+    </ul>
+{% endblock %}
+
+{% block headertext %}
+    {% trans "Link an existing user" %}
+{% endblock %}
+
+{% block dashboard_content %}
+    {% block users_form %}
+        <div class="well">
+            <form action="." method="get" class="form-inline">
+                {% include 'dashboard/partials/form_fields_inline.html' with form=form %}
+                <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Searching...' %}">{% trans "Search" %}</button>
+                {% if form.is_bound %}
+                    <a class="btn btn-default" href="{% url 'dashboard:partner-user-select' partner_pk=partner.id %}" >{% trans "Reset" %}</a>
+                {% endif %}
+                <div style="margin-top:5px">{% trans "A partial email address can be entered (eg '@example.com') to match multiple addresses." %}</div>
+            </form>
+        </div>
+    {% endblock %}
+
+    {% if form.is_bound %}
+        {% if users %}
+            {% with partner_users=partner.users.all %}
+                <table class="table table-striped table-bordered">
+                    {% block users_header %}
+                        <thead>
+                            <tr>
+                                <th>{% trans 'Email' %}</th>
+                                <th>{% trans 'First name' %}</th>
+                                <th>{% trans 'Last name' %}</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                        </thead>
+                    {% endblock %}
+                    <tbody>
+                        {% for user in users %}
+                            {% block users_row %}
+                                <tr>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.first_name|default:"-" }}</td>
+                                    <td>{{ user.last_name|default:"-" }}</td>
+                                    <td>
+                                        {% if user in partner_users %}
+                                            {% blocktrans with name=partner.name %}
+                                                User is already linked to {{ name }}.
+                                            {% endblocktrans %}
+                                        {% else %}
+                                            <form action="{% url 'dashboard:partner-user-link' partner_pk=partner.id user_pk=user.id %}" method="post">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Linking...' %}">{% trans 'Link user' %}</button>
+                                            </form>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endblock %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endwith %}
+            {% include "dashboard/partials/pagination.html" %}
+        {% else %}
+            {% trans "No users found." %}
+        {% endif %}
+    {% endif %}
+{% endblock dashboard_content %}

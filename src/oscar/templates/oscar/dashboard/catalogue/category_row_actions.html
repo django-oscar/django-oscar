@@ -1,0 +1,37 @@
+{% load django_tables2 %}
+{% load i18n %}
+<div class="btn-toolbar">
+    <div class="btn-group">
+        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
+            {% trans "Actions" %}
+            <span class="caret"></span>
+        </button>
+        <ul class="nav dropdown-menu pull-right">
+            <li>
+                <a href="{% url 'dashboard:catalogue-category-update' pk=record.id %}">
+                    {% trans "Edit category" %}
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'dashboard:catalogue-category-create-child' parent=record.pk %}">
+                    {% trans "Add child category" %}
+                </a>
+            </li>
+            <li{% if not record.has_children %} class="disabled"{% endif %}>
+                <a href="{% url 'dashboard:catalogue-category-detail-list' pk=record.pk %}">
+                    {% trans "Edit children" %}
+                </a>
+            </li>
+            <li>
+                <a href="{{ record.get_absolute_url }}">
+                    {% trans "View on site" %}
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'dashboard:catalogue-category-delete' pk=record.id %}">
+                    {% trans "Delete" %}
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

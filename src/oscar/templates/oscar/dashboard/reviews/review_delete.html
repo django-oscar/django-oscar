@@ -1,0 +1,51 @@
+{% extends 'dashboard/layout.html' %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block body_class %}{{ block.super }} create-page{% endblock %}
+
+{% block title %}
+    {% blocktrans with title=review.title|truncatechars:30 %}Delete review '{{ title }}'?{% endblocktrans %} | {% trans "Reviews" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:reviews-list' %}">{% trans "Reviews" %}</a>
+        </li>
+        <li class="active">{% blocktrans with title=review.title|truncatechars:30 %}Delete review "{{ title }}"?{% endblocktrans %}</li>
+    </ul>
+{% endblock %}
+
+{% block headertext %}
+    {% blocktrans with title=review.title|truncatechars:30 %}Delete review "{{ title }}"?{% endblocktrans %}
+{% endblock %}
+
+{% block dashboard_content %}
+    <div class="table-header">
+        <h2>{% trans "Review" %}</h2>
+    </div>
+    <form action="." method="post" class="well">
+        {% csrf_token %}
+
+        <table class="table table-striped table-bordered table-hover">
+            <tbody>
+                <tr><th>{% trans "Title" context "Product review title" %}</th><td>{{ review.title }}</td></tr>
+                <tr><th>{% trans "Product" %}</th><td>{{ review.product.title }}</td></tr>
+                <tr><th>{% trans "User" %}</th><td>{{ review.user.reviewer_name|default:"-" }}</td></tr>
+                <tr><th>{% trans "Score" %}</th><td>{{ review.score|floatformat:1 }}</td></tr>
+                <tr><th>{% trans "Votest" %}</th><td>{{ review.total_votes }}</td></tr>
+                <tr><th>{% trans "Status" %}</th><td>{{ review.status }}</td></tr>
+                <tr><th>{% trans "Date created" %}</th><td>{{ review.date_created }}</td></tr>
+            </tbody>
+        </table>
+
+        <div class="form-actions">
+            <button class="btn btn-danger" type="submit" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button> {% trans "or" %}
+            <a href="{% url 'dashboard:reviews-list' %}">{% trans "cancel" %}</a>
+        </div>
+    </form>
+{% endblock dashboard_content %}

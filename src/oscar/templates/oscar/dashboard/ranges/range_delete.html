@@ -1,0 +1,38 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+
+{% block body_class %}{{ block.super }} create-page{% endblock %}
+
+{% block title %}
+    {% blocktrans with name=range.name %}Delete range '{{ name }}'?{% endblocktrans %} | {% trans "Ranges" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:range-list' %}">{% trans "Ranges" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:range-update' pk=range.pk %}">'{{ range.name }}'</a>
+        </li>
+        <li class="active">{% trans "Delete?" %}</li>
+    </ul>
+{% endblock %}
+
+{% block headertext %}
+    {{ range.name }}
+{% endblock %}
+
+{% block dashboard_content %}
+    <form action="." method="post" class="well">
+        <p>{% trans "Are you sure you want to delete this range?" %}</p>
+        {% csrf_token %}
+        <div class="form-actions">
+            <button class="btn btn-danger" type="submit" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button> {% trans "or" %}
+            <a href="{% url 'dashboard:range-list' %}">{% trans "cancel" %}</a>
+        </div>
+    </form>
+{% endblock dashboard_content %}

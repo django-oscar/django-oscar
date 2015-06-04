@@ -11,8 +11,6 @@ build_sandbox:
 	-rm -rf sites/sandbox/public/static
 	-rm -f sites/sandbox/db.sqlite
 	# Create database
-	# 'syncdb' is identical to migrate in Django 1.7+; but calling it twice should have no effect
-	sites/sandbox/manage.py syncdb --noinput
 	sites/sandbox/manage.py migrate
 	# Import some fixtures. Order is important as JSON fixtures include primary keys
 	sites/sandbox/manage.py loaddata sites/sandbox/fixtures/child_products.json
@@ -37,7 +35,6 @@ build_demo:
 	# Create database
 	# Breaks on Travis because of https://github.com/django-extensions/django-extensions/issues/489
 	if [ -z "$(TRAVIS)" ]; then sites/demo/manage.py reset_db --router=default --noinput; fi
-	sites/demo/manage.py syncdb --noinput
 	sites/demo/manage.py migrate
 	# Import some core fixtures
 	sites/demo/manage.py oscar_populate_countries
@@ -60,7 +57,6 @@ us_site: install
 	pip install -r requirements_us.txt
 	# Create database
 	sites/us/manage.py reset_db --router=default --noinput
-	sites/us/manage.py syncdb --noinput
 	sites/us/manage.py migrate
 	# Import some fixtures
 	sites/us/manage.py oscar_populate_countries
@@ -86,21 +82,20 @@ testmigrations:
 # This target is run on Travis.ci. We lint, test and build the sandbox/demo
 # sites as well as testing migrations apply correctly. We don't call 'install'
 # first as that is run as a separate part of the Travis build process.
-travis: lint coverage build_sandbox build_demo testmigrations
+travis: coverage lint build_sandbox build_demo testmigrations
 
 messages:
 	# Create the .po files used for i18n
-	cd oscar; django-admin.py makemessages -a
+	cd src/oscar; django-admin.py makemessages -a
 
 compiledmessages:
 	# Compile the gettext files
-	cd oscar; django-admin.py compilemessages
+	cd src/oscar; django-admin.py compilemessages
 
 css:
 	# Compile CSS files from LESS
-	lessc --source-map --source-map-less-inline oscar/static/oscar/less/styles.less oscar/static/oscar/css/styles.css
-	lessc --source-map --source-map-less-inline oscar/static/oscar/less/responsive.less oscar/static/oscar/css/responsive.css
-	lessc --source-map --source-map-less-inline oscar/static/oscar/less/dashboard.less oscar/static/oscar/css/dashboard.css
+	lessc --source-map --source-map-less-inline src/oscar/static/oscar/less/styles.less src/oscar/static/oscar/css/styles.css
+	lessc --source-map --source-map-less-inline src/oscar/static/oscar/less/dashboard.less src/oscar/static/oscar/css/dashboard.css
 	# Compile CSS for demo site
 	lessc --source-map --source-map-less-inline sites/demo/static/demo/less/styles.less sites/demo/static/demo/css/styles.css
 	lessc --source-map --source-map-less-inline sites/demo/static/demo/less/responsive.less sites/demo/static/demo/css/responsive.css
@@ -118,5 +113,5 @@ todo:
 	# Look for areas of the code that need updating when some event has taken place (like 
 	# Oscar dropping support for a Django version)
 	-grep -rnH TODO *.txt
-	-grep -rnH TODO oscar/apps/
-	-grep -rnH "django.VERSION" oscar/apps
+	-grep -rnH TODO src/oscar/apps/
+	-grep -rnH "django.VERSION" src/oscar/apps

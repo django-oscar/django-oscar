@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block layout %}
+{% include "partials/nav_accounts.html" %}
+
+<div class="container-fluid">
+    <div class="jumbotron">
+        <h1>{% block error_heading %}{% trans 'Sorry!' %}{% endblock %}</h1>
+        {% block error_message %}{% endblock %}
+        <p>
+            <a class="btn btn-primary btn-lg" onclick="javascript:history.go(-1);">{% trans 'Return to previous page' %}</a>
+            <a class="btn btn-primary btn-lg" href="{{ homepage_url }}">{% trans "Go to homepage" %}</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

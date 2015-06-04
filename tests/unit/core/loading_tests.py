@@ -1,7 +1,5 @@
 from os.path import dirname
-import unittest
 
-import django
 from django.test import TestCase
 from django.conf import settings
 from django.test.utils import override_settings
@@ -138,7 +136,6 @@ class TestOverridingCoreApps(TestCase):
                           klass.__module__)
 
 
-@unittest.skipIf(django.VERSION < (1, 7), "Django 1.7 introduced app registry")
 class TestAppLabelsForModels(TestCase):
 
     def test_all_oscar_models_have_app_labels(self):

@@ -1,0 +1,44 @@
+{% load i18n %}
+
+<div class="table-header">
+    <h3>{% trans "Offer summary" %}</h3>
+</div>
+<div class="well-stacked">
+    {% if session_offer.name %}
+        <div class="well">
+            <a href="{% if session_offer.pk %}{% url 'dashboard:offer-metadata' pk=session_offer.pk %}{% else %}{% url 'dashboard:offer-metadata' %}{% endif %}" class="btn btn-default pull-right">{% trans "Edit" %}</a>
+            <p><strong>{% trans "Name" %}:</strong><br /> {{ session_offer.name }}</p>
+            {% if session_offer.description %}
+            <p><strong>{% trans "Description" %}:</strong><br /> {{ session_offer.description|safe|striptags|truncatewords:8 }}</p>
+            {% endif %}
+        </div>
+    {% endif %}
+    {% if session_offer.benefit %}
+        <div class="well">
+            <a href="{% if session_offer.pk %}{% url 'dashboard:offer-benefit' pk=session_offer.pk %}{% else %}{% url 'dashboard:offer-benefit' %}{% endif %}" class="btn btn-default pull-right">{% trans "Edit" %}</a>
+            <p><strong>{% trans "Incentive" %}:</strong><br /> {{ session_offer.benefit.description|safe }}</p>
+
+        </div>
+    {% endif %}
+    {% if session_offer.condition %}
+        <div class="well">
+            <a href="{% if session_offer.pk %}{% url 'dashboard:offer-condition' pk=session_offer.pk %}{% else %}{% url 'dashboard:offer-condition' %}{% endif %}" class="btn btn-default pull-right">{% trans "Edit" %}</a>
+            <p><strong>{% trans "Condition" %}:</strong><br/>{{ session_offer.condition.description|safe }}</p>
+        </div>
+    {% endif %}
+    {% if session_offer.pk %}
+        <div class="well">
+            <a href="{% if session_offer.pk %}{% url 'dashboard:offer-restrictions' pk=session_offer.pk %}{% else %}{% url 'dashboard:offer-restrictions' %}{% endif %}" class="btn btn-default pull-right">{% trans "Edit" %}</a>
+            <p><strong>{% trans "Restrictions" %}:</strong> <br/> {% if offer.availability_restrictions %}</p>
+
+                <ul>
+                {% for restriction in offer.availability_restrictions %}
+                <li>{{ restriction.description }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+            -
+            {% endif %}
+        </div>
+    {% endif %}
+</div>

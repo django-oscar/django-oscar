@@ -1,0 +1,64 @@
+{% extends 'dashboard/layout.html' %}
+
+{% load i18n %}
+
+{% block title %}
+    {{ title }} | {{ block.super }}
+{% endblock %}
+
+{% block body_class %}{{ block.super }} create-page{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:catalogue-product-list' %}">{% trans "Products" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:catalogue-product' pk=product.pk %}">{{ product.get_title }}</a>
+        </li>
+        <li class="active">{{ title }}</li>
+    </ul>
+{% endblock %}
+
+{% block headertext %}{{ title }}{% endblock %}
+
+{% block dashboard_content %}
+    <div class="table-header">
+        <h2>{{ title }}</h2>
+    </div>
+    <form action="." method="post" class="well">
+        {% csrf_token %}
+
+        <p>
+            {% if product.is_child %}
+                {% blocktrans with title=product.get_title %}
+                    Delete product variant <strong>{{ title }}</strong> - are you sure?
+                {% endblocktrans %}
+            {% else %}
+                {% blocktrans with title=product.get_title %}
+                    Delete product <strong>{{ title }}</strong> - are you sure?
+                {% endblocktrans %}
+            {% endif %}
+        </p>
+
+        {% if product.is_parent %}
+            <p>
+                {% trans "This will also delete the following child products:" %}
+                <ul>
+                    {% for child in product.children.all %}
+                        <li><strong>{{ child.get_title }}</strong></li>
+                    {% endfor %}
+                </ul>
+            </p>
+        {% endif %}
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-danger" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button>
+            {% trans "or" %}
+            <a href="{% url 'dashboard:catalogue-product-list' %}">{% trans "cancel" %}</a>
+        </div>
+    </form>
+{% endblock %}

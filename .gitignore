@@ -13,6 +13,7 @@
 *.*~
 .~lock.*
 *.DS_Store
+.python-version
 
 # IDE files
 .project
@@ -31,6 +32,7 @@ TODO
 coverage.xml
 violations.txt
 nosetests.xml
+/.cache/
 /htmlcov/*
 /.tox/*
 
@@ -46,6 +48,7 @@ settings_local.py
 /sites/demo/public/
 /sites/demo/whoosh_index/
 /sites/demo/logs/
+/sites/us/*.sqlite
 /sites/us/public/
 /sites/us/logs/
 sites/puppet/modules/

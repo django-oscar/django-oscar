@@ -1,0 +1,35 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+
+{% block body_class %}{{ block.super }} create-page{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:promotion-list' %}">{% trans "Content blocks" %}</a>
+        </li>
+        <li class="active">{% trans "Remove promotion from page?" %}</li>
+    </ul>
+{% endblock %}
+
+{% block headertext %}
+    {% trans "Remove promotion from page?" %}
+{% endblock %}
+
+{% block dashboard_content %}
+    <div class="table-header">
+        {% trans "Remove promotion" %}
+    </div>
+    <form action="." method="post" class="well">
+        {% csrf_token %}
+        <p>{% blocktrans %}Remove {{ object.content_object.type }} content block <strong>{{ object.name }}</strong> from page <strong>{{ object.page_url }}</strong> - are you sure?{% endblocktrans %}</p>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-danger" data-loading-text="{% trans 'Removing...' %}">{% trans "Remove" %}</button>
+            {% trans "or" %} <a href="{% url 'dashboard:promotion-list-by-url' path=object.page_url  %}">{% trans "cancel" %}</a>
+        </div>
+    </form>
+{% endblock %}

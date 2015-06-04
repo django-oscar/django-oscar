@@ -1,0 +1,71 @@
+{% extends 'dashboard/layout.html' %}
+{% load sorting_tags %}
+{% load i18n %}
+
+{% block body_class %}{{ block.super }} create-page partners{% endblock %}
+{% block title %}
+    {{ partner.name }} | {% trans "Partners" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li>
+            <a href="{% url 'dashboard:partner-list' %}">{% trans "Partners" %}</a>
+        </li>
+        <li class="active">{{ partner.name }}</li>
+    </ul>
+{% endblock %}
+
+{% block headertext %}{{ partner.name }}{% endblock %}
+
+{% block dashboard_content %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-header">
+                <h2>{{ title }}</h2>
+            </div>
+            {% include "dashboard/partials/form.html" with form=form class="well" %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+        <h2>{% trans "Users" %}</h2>
+        {% if users %}
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>{% trans 'Email' %}</th>
+                        <th>{% trans 'First name' %}</th>
+                        <th>{% trans 'Last name' %}</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td><a href="{% url 'dashboard:partner-user-update' partner_pk=partner.pk user_pk=user.id %}">{{ user.email }}</a></td>
+                            <td>{{ user.first_name|default:"-" }}</td>
+                            <td>{{ user.last_name|default:"-" }}</td>
+                            <td>
+                                <form action="{% url 'dashboard:partner-user-unlink' partner_pk=partner.id user_pk=user.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger" data-loading-text="{% trans 'Unlinking...' %}">{% trans 'Unlink user' %}</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>{% trans "No users linked." %}</p>
+        {% endif %}
+        <div class="form-group">
+            <a class="btn btn-info" href="{% url 'dashboard:partner-user-create' partner_pk=partner.pk %}" >{% trans "Link a new user" %}</a>
+            <a class="btn btn-info" href="{% url 'dashboard:partner-user-select' partner_pk=partner.pk %}" >{% trans "Link an existing user" %}</a>
+        </div>
+    </div>
+{% endblock dashboard_content %}

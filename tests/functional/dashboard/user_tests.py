@@ -1,13 +1,11 @@
 from django.core.urlresolvers import reverse
 from django.core import mail
-from django_dynamic_fixture import get
 from django.utils.translation import ugettext_lazy as _
-
-from oscar.test.testcases import WebTestCase
+from webtest import AppError
 
 from oscar.core.compat import get_user_model
-
-from webtest import AppError
+from oscar.test.factories import UserFactory
+from oscar.test.testcases import WebTestCase
 
 User = get_user_model()
 
@@ -22,9 +20,9 @@ class IndexViewTests(WebTestCase):
     def setUp(self):
         super(IndexViewTests, self).setUp()
         for i in range(1, 25):
-            get(User, is_active=True)
+            UserFactory(is_active=True)
         for i in range(1, 25):
-            get(User, is_active=False)
+            UserFactory(is_active=False)
 
         user_queryset = User.objects.all()
         self.active_users_ids = user_queryset.filter(is_active=True).values_list('id', flat=True)
@@ -64,9 +62,8 @@ class TestDetailViewForStaffUser(WebTestCase):
     is_staff = True
 
     def setUp(self):
-        self.customer = get(User, username='jane',
-                            email='jane@example.org',
-                            password='password')
+        self.customer = UserFactory(
+            username='jane', email='jane@example.org', password='password')
         super(TestDetailViewForStaffUser, self).setUp()
 
     def test_password_reset_url_only_available_via_post(self):
