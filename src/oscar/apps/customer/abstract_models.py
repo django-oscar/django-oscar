@@ -306,7 +306,8 @@ class AbstractProductAlert(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL, db_index=True, blank=True,
                              null=True, related_name="alerts",
                              verbose_name=_('User'))
-    email = models.EmailField(_("Email"), db_index=True, blank=True)
+    email = models.EmailField(_("Email"), db_index=True, blank=True,
+                              max_length=75)
 
     # This key are used to confirm and cancel alerts for anon users
     key = models.CharField(_("Key"), max_length=128, blank=True, db_index=True)

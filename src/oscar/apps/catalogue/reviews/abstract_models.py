@@ -42,7 +42,7 @@ class AbstractProductReview(models.Model):
     name = models.CharField(
         pgettext_lazy(u"Anonymous reviewer name", u"Name"),
         max_length=255, blank=True)
-    email = models.EmailField(_("Email"), blank=True)
+    email = models.EmailField(_("Email"), max_length=75, blank=True)
     homepage = models.URLField(_("URL"), blank=True)
 
     FOR_MODERATION, APPROVED, REJECTED = 0, 1, 2
