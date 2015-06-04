@@ -42,6 +42,7 @@ class AbstractProductReview(models.Model):
     name = models.CharField(
         pgettext_lazy(u"Anonymous reviewer name", u"Name"),
         max_length=255, blank=True)
+    # TODO Remove the max_length kwarg when support for Django 1.7 is dropped
     email = models.EmailField(_("Email"), max_length=75, blank=True)
     homepage = models.URLField(_("URL"), blank=True)
 

@@ -306,6 +306,7 @@ class AbstractProductAlert(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL, db_index=True, blank=True,
                              null=True, related_name="alerts",
                              verbose_name=_('User'))
+    # TODO Remove the max_length kwarg when support for Django 1.7 is dropped
     email = models.EmailField(_("Email"), db_index=True, blank=True,
                               max_length=75)
 
