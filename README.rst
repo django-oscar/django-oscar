@@ -161,9 +161,6 @@ The following extensions are stable and ready for use:
 * django-oscar-stores_ - Physical stores integration (opening hours, store
   locator etc)
 
-* django-oscar-easyrec_ - Recomendations using EasyRec_
-  locator etc)
-
 * django-oscar-eway_ - Integration with the eWay_ payment gateway.
 
 * django-oscar-sagepay-direct_ - Integration with "DIRECT" part of Sagepay's API
@@ -185,7 +182,6 @@ The following extensions are stable and ready for use:
 
 The following are community-written extensions:
 
-* django-oscar-unicredit_ - Integration with the Unicredit payment gateway
 * django-oscar-payments_ - Pluggable payments for Oscar
 * django-oscar-recurly_ - Integration with the Recurly payment gateway
 * django-oscar-adyen_ - Integration with the Adyen payment gateway
