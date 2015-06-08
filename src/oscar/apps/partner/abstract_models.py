@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
+from django.utils.timezone import now
 
 from oscar.core.utils import get_default_currency
 from oscar.core.compat import AUTH_USER_MODEL
@@ -245,6 +246,7 @@ class AbstractStockAlert(models.Model):
 
     def close(self):
         self.status = self.CLOSED
+        self.date_closed = now()
         self.save()
     close.alters_data = True
 
