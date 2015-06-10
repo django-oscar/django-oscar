@@ -27,7 +27,8 @@ def remove_ancestor_slugs(apps, schema_editor):
 def add_ancestor_slugs(apps, schema_editor):
     MigrationCategory = apps.get_model('catalogue', 'Category')
     for category in MigrationCategory.objects.all():
-        category.slug = category.full_slug
+        orm_category = ORMCategory.objects.get(pk=category.pk)
+        category.slug = orm_category.full_slug
         category.save()
 
 
