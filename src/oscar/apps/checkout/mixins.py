@@ -129,7 +129,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         # We pass the kwargs as they often include the billing address form
         # which will be needed to save a billing address.
         billing_address = self.create_billing_address(
-            billing_address, shipping_address, **kwargs)
+            user, billing_address, shipping_address, **kwargs)
 
         if 'status' not in kwargs:
             status = self.get_initial_order_status(basket)
@@ -165,28 +165,31 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             self.update_address_book(user, shipping_address)
         return shipping_address
 
-    def update_address_book(self, user, shipping_addr):
+    def update_address_book(self, user, addr):
         """
         Update the user's address book based on the new shipping address
         """
         try:
             user_addr = user.addresses.get(
-                hash=shipping_addr.generate_hash())
+                hash=addr.generate_hash())
         except ObjectDoesNotExist:
             # Create a new user address
             user_addr = UserAddress(user=user)
-            shipping_addr.populate_alternative_model(user_addr)
+            addr.populate_alternative_model(user_addr)
         user_addr.num_orders += 1
         user_addr.save()
 
-    def create_billing_address(self, billing_address=None,
+    def create_billing_address(self, user, billing_address=None,
                                shipping_address=None, **kwargs):
         """
         Saves any relevant billing data (eg a billing address).
         """
-        if billing_address is not None:
-            billing_address.save()
-            return billing_address
+        if not billing_address:
+            return None
+        billing_address.save()
+        if user.is_authenticated():
+            self.update_address_book(user, billing_address)
+        return billing_address
 
     def save_payment_details(self, order):
         """
