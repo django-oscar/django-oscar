@@ -1,4 +1,5 @@
 {% load basket_tags %}
+{% load display_tags %}
 {% load i18n %}
 {% load purchase_info_tags %}
 
@@ -11,7 +12,9 @@
         {% include "partials/form_fields.html" with form=basket_form %}
         <button type="submit" class="btn btn-lg btn-primary btn-add-to-basket" value="{% trans "Add to basket" %}" data-loading-text="{% trans 'Adding...' %}">{% trans "Add to basket" %}</button>
     </form>
-    {% include "catalogue/partials/add_to_wishlist.html" %}
+    {% iffeature "wishlists" %}
+        {% include "catalogue/partials/add_to_wishlist.html" %}
+    {% endiffeature %}
 {% else %}
     {% if has_active_alert %}
         <p>{% trans "You have an active stock alert for this product." %}</p>
@@ -23,5 +26,7 @@
             <button type="submit" class="btn btn-lg btn-info btn-add-to-basket" data-loading-text="{% trans 'Submitting...' %}">{% trans "Notify me" %}</button>
         </form>
     {% endif %}
-    {% include "catalogue/partials/add_to_wishlist.html" %}
+    {% iffeature "wishlists" %}
+        {% include "catalogue/partials/add_to_wishlist.html" %}
+    {% endiffeature %}
 {% endif %}
