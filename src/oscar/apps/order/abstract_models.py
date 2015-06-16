@@ -134,6 +134,13 @@ class AbstractOrder(models.Model):
     set_status.alters_data = True
 
     @property
+    def status_verbose_name(self):
+        status_verbose_names = getattr(settings, 'OSCAR_LINE_STATUS_VERBOSE_NAMES', {})
+        if self.status and status_verbose_names and self.status in status_verbose_names:
+            return status_verbose_names[self.status]
+        return None
+
+    @property
     def is_anonymous(self):
         # It's possible for an order to be placed by a customer who then
         # deletes their profile.  Hence, we need to check that a guest email is
@@ -541,6 +548,13 @@ class AbstractLine(models.Model):
         self.status = new_status
         self.save()
     set_status.alters_data = True
+
+    @property
+    def status_verbose_name(self):
+        status_verbose_names = getattr(settings, 'OSCAR_ORDER_STATUS_VERBOSE_NAMES', {})
+        if self.status and status_verbose_names and self.status in status_verbose_names:
+            return status_verbose_names[self.status]
+        return None
 
     @property
     def category(self):
