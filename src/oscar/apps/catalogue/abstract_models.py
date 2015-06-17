@@ -756,6 +756,10 @@ class AbstractProductAttribute(models.Model):
         return self.type == self.OPTION
 
     @property
+    def is_multi_option(self):
+        return self.type == self.MULTI_OPTION
+
+    @property
     def is_file(self):
         return self.type in [self.FILE, self.IMAGE]
 
@@ -786,6 +790,20 @@ class AbstractProductAttribute(models.Model):
                 value_obj.delete()
             else:
                 # New uploaded file
+                value_obj.value = value
+                value_obj.save()
+        elif self.is_multi_option:
+            # ManyToMany fields are handled separately
+            if value is None:
+                value_obj.delete()
+                return
+            try:
+                count = value.count()
+            except (AttributeError, TypeError):
+                count = len(value)
+            if count == 0:
+                value_obj.delete()
+            else:
                 value_obj.value = value
                 value_obj.save()
         else:
