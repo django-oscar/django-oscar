@@ -83,7 +83,7 @@ class StockRequired(Base):
         self.num_available = num_available
 
     def is_purchase_permitted(self, quantity):
-        if self.num_available == 0:
+        if self.num_available <= 0:
             return False, _("no stock available")
         if quantity > self.num_available:
             msg = _("a maximum of %(max)d can be bought") % {

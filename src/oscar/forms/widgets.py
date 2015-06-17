@@ -295,7 +295,6 @@ class RemoteSelect(forms.Widget):
     constructing
     """
     is_multiple = False
-    css = 'select2 input-xlarge'
     lookup_url = None
 
     def __init__(self, *args, **kwargs):
@@ -319,7 +318,6 @@ class RemoteSelect(forms.Widget):
     def render(self, name, value, attrs=None, choices=()):
         attrs = self.build_attrs(attrs, **{
             'type': 'hidden',
-            'class': self.css,
             'name': name,
             'data-ajax-url': self.lookup_url,
             'data-multiple': 'multiple' if self.is_multiple else '',
@@ -331,7 +329,6 @@ class RemoteSelect(forms.Widget):
 
 class MultipleRemoteSelect(RemoteSelect):
     is_multiple = True
-    css = 'select2 input-xxlarge'
 
     def format_value(self, value):
         if value:

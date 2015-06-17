@@ -399,7 +399,7 @@ class ChangePasswordView(PageTitleMixin, generic.FormView):
 class EmailHistoryView(PageTitleMixin, generic.ListView):
     context_object_name = "emails"
     template_name = 'customer/email/email_list.html'
-    paginate_by = 20
+    paginate_by = settings.OSCAR_EMAILS_PER_PAGE
     page_title = _('Email History')
     active_tab = 'emails'
 
@@ -432,7 +432,7 @@ class OrderHistoryView(PageTitleMixin, generic.ListView):
     """
     context_object_name = "orders"
     template_name = 'customer/order/order_list.html'
-    paginate_by = 20
+    paginate_by = settings.OSCAR_ORDERS_PER_PAGE
     model = Order
     form_class = OrderSearchForm
     page_title = _('Order History')
@@ -612,7 +612,7 @@ class AddressListView(PageTitleMixin, generic.ListView):
     """Customer address book"""
     context_object_name = "addresses"
     template_name = 'customer/address/address_list.html'
-    paginate_by = 40
+    paginate_by = settings.OSCAR_ADDRESSES_PER_PAGE
     active_tab = 'addresses'
     page_title = _('Address Book')
 

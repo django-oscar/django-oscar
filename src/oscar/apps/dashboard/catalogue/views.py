@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
+from django.conf import settings
 
 from oscar.core.loading import get_classes, get_model
 
@@ -128,13 +129,16 @@ class ProductListView(SingleTableMixin, generic.TemplateView):
             # If there's an exact match, return it, otherwise return results
             # that contain the UPC
             matches_upc = Product.objects.filter(upc=data['upc'])
-            qs_match = queryset.filter(Q(id=matches_upc.values('id')) | Q(id=matches_upc.values('parent_id')))
+            qs_match = queryset.filter(
+                Q(id=matches_upc.values('id')) |
+                Q(id=matches_upc.values('parent_id')))
 
             if qs_match.exists():
                 queryset = qs_match
             else:
                 matches_upc = Product.objects.filter(upc__icontains=data['upc'])
-                queryset = queryset.filter(Q(id=matches_upc.values('id')) | Q(id=matches_upc.values('parent_id')))
+                queryset = queryset.filter(
+                    Q(id=matches_upc.values('id')) | Q(id=matches_upc.values('parent_id')))
 
         if data.get('title'):
             queryset = queryset.filter(title__icontains=data['title'])
@@ -495,7 +499,7 @@ class StockAlertListView(generic.ListView):
     template_name = 'dashboard/catalogue/stockalert_list.html'
     model = StockAlert
     context_object_name = 'alerts'
-    paginate_by = 20
+    paginate_by = settings.OSCAR_STOCK_ALERTS_PER_PAGE
 
     def get_context_data(self, **kwargs):
         ctx = super(StockAlertListView, self).get_context_data(**kwargs)

@@ -159,7 +159,7 @@ class BasketView(ModelFormSetView):
         shipping_charge = method.calculate(self.request.basket)
         context['shipping_charge'] = shipping_charge
         if method.is_discounted:
-            excl_discount = method.calculate_excl_discount(shipping_charge)
+            excl_discount = method.calculate_excl_discount(self.request.basket)
             context['shipping_charge_excl_discount'] = excl_discount
 
         context['order_total'] = OrderTotalCalculator().calculate(
@@ -277,7 +277,9 @@ class BasketView(ModelFormSetView):
 
     def formset_invalid(self, formset):
         flash_messages = ajax.FlashMessages()
-        flash_messages.warning(_("Your basket couldn't be updated"))
+        flash_messages.warning(_(
+            "Your basket couldn't be updated. "
+            "Please correct any validation errors below."))
 
         if self.request.is_ajax():
             ctx = self.get_context_data(formset=formset,

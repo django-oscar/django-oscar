@@ -9,10 +9,10 @@ from oscar.templatetags.currency_filters import currency
 Benefit = get_model('offer', 'Benefit')
 
 __all__ = [
-   'PercentageDiscountBenefit', 'AbsoluteDiscountBenefit', 'FixedPriceBenefit',
-   'ShippingBenefit', 'MultibuyDiscountBenefit',
-   'ShippingAbsoluteDiscountBenefit', 'ShippingFixedPriceBenefit',
-   'ShippingPercentageDiscountBenefit',
+    'PercentageDiscountBenefit', 'AbsoluteDiscountBenefit', 'FixedPriceBenefit',
+    'ShippingBenefit', 'MultibuyDiscountBenefit',
+    'ShippingAbsoluteDiscountBenefit', 'ShippingFixedPriceBenefit',
+    'ShippingPercentageDiscountBenefit',
 ]
 
 

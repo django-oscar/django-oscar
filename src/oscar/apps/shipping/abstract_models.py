@@ -93,6 +93,10 @@ class AbstractWeightBased(AbstractBase):
     # The attribute code to use to look up the weight of a product
     weight_attribute = 'weight'
 
+    code = 'weight-based-shipping'
+    name = _('Weight-based shipping')
+    offer = None
+
     # The default weight to use (in kg) when a product doesn't have a weight
     # attribute.
     default_weight = models.DecimalField(
@@ -174,6 +178,10 @@ class AbstractWeightBased(AbstractBase):
             return self.bands.order_by('-upper_limit')[0]
         except IndexError:
             return None
+
+    def discount(self, basket):
+        base_charge = self.calculate(basket)
+        return self.offer.shipping_discount(base_charge.incl_tax)
 
 
 @python_2_unicode_compatible

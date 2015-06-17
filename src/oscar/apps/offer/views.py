@@ -1,5 +1,6 @@
 from django.views.generic import ListView
 from django import http
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 
 from oscar.core.loading import get_model
@@ -22,7 +23,7 @@ class OfferListView(ListView):
 class OfferDetailView(ListView):
     context_object_name = 'products'
     template_name = 'offer/detail.html'
-    paginate_by = 20
+    paginate_by = settings.OSCAR_OFFERS_PER_PAGE
 
     def get(self, request, *args, **kwargs):
         try:

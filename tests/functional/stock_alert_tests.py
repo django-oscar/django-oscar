@@ -83,3 +83,4 @@ class TestRestockingProduct(TestCase):
 
         alert = StockAlert.objects.get(stockrecord=self.stockrecord)
         self.assertEqual(StockAlert.CLOSED, alert.status)
+        self.assertIsNotNone(alert.date_closed)

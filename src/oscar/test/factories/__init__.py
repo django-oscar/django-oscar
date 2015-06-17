@@ -37,6 +37,9 @@ ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 ProductImage = get_model('catalogue', 'ProductImage')
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 
+WeightBand = get_model('shipping', 'WeightBand')
+WeightBased = get_model('shipping', 'WeightBased')
+
 
 def create_stockrecord(product=None, price_excl_tax=None, partner_sku=None,
                        num_in_stock=None, partner_name=None,
@@ -218,3 +221,19 @@ def create_voucher():
         end_datetime=timezone.now() + datetime.timedelta(days=12))
     voucher.offers.add(create_offer(offer_type='Voucher'))
     return voucher
+
+
+def create_shipping_weight_based(default_weight=D(1)):
+    return WeightBased.objects.create(
+        default_weight=default_weight
+    )
+
+
+def create_shipping_weight_band(upper_limit, charge, weight_based=None):
+    if not weight_based:
+        weight_based = create_shipping_weight_based()
+    return WeightBand.objects.create(
+        method=weight_based,
+        upper_limit=upper_limit,
+        charge=charge
+    )

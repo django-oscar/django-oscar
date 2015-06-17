@@ -38,13 +38,13 @@ Fork the Oscar app
 If this is the first time you're forking an Oscar app, you'll need to create
 a root module under which all your forked apps will live::
 
-    $ mkdir yourproject
-    $ touch yourproject/__init__.py
+    $ mkdir yourappsfolder
+    $ touch yourappsfolder/__init__.py
 
 Now you call the helper management command which creates some basic files for
 you. It is explained in detail in :doc:`fork_app`. Run it like this::
 
-    $ ./manage.py oscar_fork_app order yourproject/
+    $ ./manage.py oscar_fork_app order yourappsfolder/
     Creating folder apps/order
     Creating __init__.py and admin.py
     Creating models.py and copying migrations from [...] to [...]
@@ -62,7 +62,7 @@ apps. You can do that by supplying an extra argument to
     # ...
     INSTALLED_APPS = [
         # all your non-Oscar apps
-    ] + get_core_apps(['yourproject.order'])
+    ] + get_core_apps(['yourappsfolder.order'])
 
 ``get_core_apps([])`` will return a list of Oscar core apps. If you supply a
 list of additional apps, they will be used to replace the Oscar core apps.

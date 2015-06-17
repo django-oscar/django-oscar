@@ -1,11 +1,10 @@
 from django.core import exceptions
 from django.db import IntegrityError
 
+from oscar.apps.offer.models import Condition, Benefit
 from oscar.core.loading import get_model
 
 Range = get_model('offer', 'Range')
-
-from oscar.apps.offer.models import Condition, Benefit
 
 
 def _class_path(klass):

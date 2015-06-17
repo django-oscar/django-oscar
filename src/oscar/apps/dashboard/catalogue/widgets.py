@@ -14,4 +14,3 @@ class ProductSelectMultiple(MultipleRemoteSelect):
     # AjaxSelect(data_url=...) for overridability and backwards compatibility
     lookup_url = reverse_lazy('dashboard:catalogue-product-lookup')
     is_multiple = True
-    css = 'select2 input-xxlarge'
