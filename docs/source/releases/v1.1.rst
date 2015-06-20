@@ -146,12 +146,9 @@ If you have customised any app, please consult the
    This release doesn't include any South migrations, as support for Django
    1.6 has been dropped.
 
-Catalogue app:
-
-  * This app contains model changes.
-  * This app contains a data migration: ``0003_data_migration_slugs``.
-    It shouldn't matter whether you apply this migration before or after
-    the model changes.
+Note, the catalogue app contains a data migration ``0003_data_migration_slugs``.
+If you have a forked catalogue app, copy this migration into your project so it
+can be applied (or create a data migration that applies the same transformation).
 
 Dependency changes
 ------------------
