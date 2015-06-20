@@ -1,0 +1,37 @@
+=======================
+Oscar 1.2 release notes
+=======================
+
+.. warning::
+
+    Oscar 1.2 is still in development. This document is a work-in-progress.
+
+:release: TBD
+
+Welcome to Oscar 1.2.
+
+Table of contents:
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_1.2:
+
+Compatibility
+-------------
+
+Oscar 1.2 is compatible with... 
+
+
+.. _new_in_1.2:
+
+What's new in Oscar 1.2?
+------------------------
+
+
+.. _incompatible_in_1.2:
+
+Backwards incompatible changes in Oscar 1.2
+-------------------------------------------
