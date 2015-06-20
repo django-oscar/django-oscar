@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Tahmid Rafi <rafi.tahmid@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
@@ -10,32 +11,32 @@ msgstr ""
 "POT-Creation-Date: 2015-06-12 11:37+0000\n"
 "PO-Revision-Date: 2015-06-05 09:08+0000\n"
 "Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
-"Language-Team: Spanish (Chile) (http://www.transifex.com/projects/p/django-oscar/language/es_CL/)\n"
+"Language-Team: Bengali (Bangladesh) (http://www.transifex.com/projects/p/django-oscar/language/bn_BD/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es_CL\n"
+"Language: bn_BD\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: apps/address/abstract_models.py:25
 msgid "Mr"
-msgstr ""
+msgstr "জনাব"
 
 #: apps/address/abstract_models.py:26
 msgid "Miss"
-msgstr ""
+msgstr "জনাবা"
 
 #: apps/address/abstract_models.py:27
 msgid "Mrs"
-msgstr ""
+msgstr "জনাবা"
 
 #: apps/address/abstract_models.py:28
 msgid "Ms"
-msgstr ""
+msgstr "জনাবা"
 
 #: apps/address/abstract_models.py:29
 msgid "Dr"
-msgstr ""
+msgstr "ড."
 
 #: apps/address/abstract_models.py:218
 msgctxt "Treatment Pronouns for the customer"
@@ -58,19 +59,19 @@ msgstr ""
 
 #: apps/address/abstract_models.py:225
 msgid "First line of address"
-msgstr ""
+msgstr "ঠিকানার প্রথম লাইন"
 
 #: apps/address/abstract_models.py:227
 msgid "Second line of address"
-msgstr ""
+msgstr "ঠিকানার দ্বিতীয় লাইন"
 
 #: apps/address/abstract_models.py:229
 msgid "Third line of address"
-msgstr ""
+msgstr "ঠিকানার তৃতীয় লাইন"
 
 #: apps/address/abstract_models.py:230
 msgid "City"
-msgstr ""
+msgstr "শহর"
 
 #: apps/address/abstract_models.py:231
 msgid "State/County"
@@ -78,11 +79,11 @@ msgstr ""
 
 #: apps/address/abstract_models.py:233
 msgid "Post/Zip-code"
-msgstr ""
+msgstr "পোস্ট ক‌োড/ZIP কোড"
 
 #: apps/address/abstract_models.py:234 apps/address/abstract_models.py:412
 msgid "Country"
-msgstr ""
+msgstr "দেশ"
 
 #: apps/address/abstract_models.py:239
 msgid "Search text - used only for searching addresses"
@@ -96,7 +97,7 @@ msgstr ""
 #: templates/oscar/customer/order/order_detail.html:154
 #: templates/oscar/dashboard/orders/order_detail.html:446
 msgid "Address"
-msgstr ""
+msgstr "ঠিকানা"
 
 #: apps/address/abstract_models.py:247
 #: templates/oscar/dashboard/partners/partner_list.html:46
@@ -153,7 +154,7 @@ msgstr ""
 
 #: apps/address/abstract_models.py:456 models/fields/__init__.py:139
 msgid "Phone number"
-msgstr ""
+msgstr "ফোন নম্বর"
 
 #: apps/address/abstract_models.py:457
 msgid "In case we need to call you about your order"
@@ -164,7 +165,7 @@ msgstr ""
 #: templates/oscar/checkout/thank_you.html:58
 #: templates/oscar/dashboard/orders/order_detail.html:461
 msgid "Instructions"
-msgstr ""
+msgstr "নির্দেশাবলী"
 
 #: apps/address/abstract_models.py:460
 msgid "Tell us anything we should know when delivering your order."
@@ -177,7 +178,7 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_list.html:122
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:5
 msgid "Shipping address"
-msgstr ""
+msgstr "শিপিং এর ঠিকানা"
 
 #: apps/address/abstract_models.py:468
 msgid "Shipping addresses"
@@ -207,7 +208,7 @@ msgstr ""
 
 #: apps/address/abstract_models.py:506 apps/offer/abstract_models.py:131
 msgid "Number of Orders"
-msgstr ""
+msgstr "অর্ডারের সংখ্যা"
 
 #: apps/address/abstract_models.py:510
 msgid "Address Hash"
@@ -221,7 +222,7 @@ msgstr ""
 #: apps/payment/abstract_models.py:42 apps/promotions/models.py:27
 #: apps/promotions/models.py:350 apps/voucher/abstract_models.py:148
 msgid "Date Created"
-msgstr ""
+msgstr "তৈরীর তারিখ"
 
 #: apps/address/abstract_models.py:540
 msgid "User address"
@@ -281,7 +282,7 @@ msgstr ""
 #: templates/oscar/dashboard/users/alerts/list.html:44
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:6
 msgid "Product"
-msgstr ""
+msgstr "পন্য"
 
 #: apps/analytics/abstract_models.py:23 apps/analytics/reports.py:21
 #: templates/oscar/dashboard/reports/partials/product_report.html:9
@@ -295,7 +296,7 @@ msgstr ""
 #: apps/analytics/abstract_models.py:27 apps/analytics/reports.py:23
 #: templates/oscar/dashboard/reports/partials/product_report.html:11
 msgid "Purchases"
-msgstr ""
+msgstr "ক্রয়সমূহ"
 
 #: apps/analytics/abstract_models.py:30
 #: apps/catalogue/reviews/abstract_models.py:29
@@ -304,7 +305,7 @@ msgstr ""
 #: templates/oscar/dashboard/reviews/review_list.html:59
 #: templates/oscar/dashboard/users/detail.html:179
 msgid "Score"
-msgstr ""
+msgstr "স্কোর"
 
 #: apps/analytics/abstract_models.py:36
 msgid "Product record"
@@ -336,7 +337,7 @@ msgstr ""
 #: templates/oscar/dashboard/users/detail.html:106
 #: templates/oscar/dashboard/users/detail.html:116
 msgid "Orders"
-msgstr ""
+msgstr "অর্ডার"
 
 #: apps/analytics/abstract_models.py:60 apps/order/abstract_models.py:504
 msgid "Order Lines"
@@ -443,13 +444,13 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:32
 #: templates/oscar/dashboard/vouchers/voucher_list.html:50
 msgid "Name"
-msgstr ""
+msgstr "নাম"
 
 #: apps/analytics/reports.py:63
 #: templates/oscar/customer/profile/profile.html:25
 #: templates/oscar/dashboard/reports/partials/user_report.html:10
 msgid "Date registered"
-msgstr ""
+msgstr "রেজিস্ট্রেশনের তারিখ"
 
 #: apps/analytics/reports.py:64
 #: templates/oscar/dashboard/reports/partials/user_report.html:11
@@ -475,7 +476,7 @@ msgstr ""
 #: apps/analytics/reports.py:70
 #: templates/oscar/dashboard/reports/partials/user_report.html:17
 msgid "Date of last order"
-msgstr ""
+msgstr "সর্বশেষ অর্ডারের তারিখ"
 
 #: apps/analytics/reports.py:92
 msgid "User analytics"
@@ -544,7 +545,7 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_list.html:17
 #: templates/oscar/dashboard/vouchers/voucher_list.html:27
 msgid "Vouchers"
-msgstr ""
+msgstr "ভাউচার"
 
 #: apps/basket/abstract_models.py:51 apps/basket/reports.py:82
 #: apps/catalogue/abstract_models.py:318
@@ -562,7 +563,7 @@ msgstr ""
 #: templates/oscar/dashboard/users/detail.html:182
 #: templates/oscar/dashboard/vouchers/voucher_list.html:55
 msgid "Date created"
-msgstr ""
+msgstr "তৈরীর তারিখ"
 
 #: apps/basket/abstract_models.py:52
 msgid "Date merged"
@@ -571,7 +572,7 @@ msgstr ""
 #: apps/basket/abstract_models.py:53
 #: templates/oscar/customer/order/order_list.html:42
 msgid "Date submitted"
-msgstr ""
+msgstr "জমাদানের তারিখ"
 
 #: apps/basket/abstract_models.py:62 apps/basket/abstract_models.py:558
 #: apps/basket/config.py:8 apps/order/abstract_models.py:34
@@ -619,21 +620,21 @@ msgstr ""
 #: templates/oscar/dashboard/orders/line_detail.html:167
 #: templates/oscar/dashboard/orders/order_detail.html:108
 msgid "Quantity"
-msgstr ""
+msgstr "পরিমান"
 
 #: apps/basket/abstract_models.py:581 apps/order/abstract_models.py:53
 #: apps/partner/abstract_models.py:104 apps/payment/abstract_models.py:76
 #: templates/oscar/dashboard/catalogue/product_update.html:198
 msgid "Currency"
-msgstr ""
+msgstr "মুদ্রা"
 
 #: apps/basket/abstract_models.py:583
 msgid "Price excl. Tax"
-msgstr ""
+msgstr "ট্যাক্স ছাড়া মূল্য"
 
 #: apps/basket/abstract_models.py:586
 msgid "Price incl. Tax"
-msgstr ""
+msgstr "ট্যাক্সসহ মূল্য"
 
 #: apps/basket/abstract_models.py:602
 msgid "Basket line"
@@ -683,7 +684,7 @@ msgstr ""
 #: apps/basket/abstract_models.py:844 apps/offer/abstract_models.py:409
 #: apps/offer/abstract_models.py:638 apps/order/abstract_models.py:736
 msgid "Value"
-msgstr ""
+msgstr "মান"
 
 #: apps/basket/abstract_models.py:849
 msgid "Line attribute"
@@ -713,7 +714,7 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:33
 #: templates/oscar/dashboard/vouchers/voucher_list.html:51
 msgid "Code"
-msgstr ""
+msgstr "কোড"
 
 #: apps/basket/forms.py:179
 msgid "Variant"
@@ -738,7 +739,7 @@ msgstr ""
 
 #: apps/basket/reports.py:18 apps/basket/reports.py:77
 msgid "User ID"
-msgstr ""
+msgstr "ইউজার আইডি"
 
 #: apps/basket/reports.py:20 apps/catalogue/reviews/abstract_models.py:46
 #: apps/catalogue/reviews/forms.py:11 apps/customer/abstract_models.py:125
@@ -755,7 +756,7 @@ msgstr ""
 #: templates/oscar/dashboard/reports/partials/user_report.html:8
 #: templates/oscar/dashboard/users/detail.html:36
 msgid "Email"
-msgstr ""
+msgstr "ইমেইল"
 
 #: apps/basket/reports.py:21 apps/basket/reports.py:79
 msgid "Basket status"
@@ -778,7 +779,7 @@ msgstr ""
 #: apps/basket/reports.py:24
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:12
 msgid "Date of creation"
-msgstr ""
+msgstr "তৈরীর তারিখ"
 
 #: apps/basket/reports.py:25
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:13
@@ -849,7 +850,7 @@ msgstr ""
 #: apps/catalogue/abstract_models.py:285 apps/offer/abstract_models.py:38
 #: apps/offer/abstract_models.py:761 apps/shipping/abstract_models.py:20
 msgid "Slug"
-msgstr ""
+msgstr "স্লাগ"
 
 #: apps/catalogue/abstract_models.py:54
 msgid "Requires shipping?"
@@ -878,20 +879,20 @@ msgstr ""
 #: templates/oscar/dashboard/offers/summary.html:12
 #: templates/oscar/dashboard/shipping/weight_based_detail.html:35
 msgid "Description"
-msgstr ""
+msgstr "বিবরন"
 
 #: apps/catalogue/abstract_models.py:93 apps/catalogue/abstract_models.py:813
 #: apps/dashboard/catalogue/tables.py:19 apps/promotions/models.py:180
 #: apps/promotions/models.py:189 apps/promotions/models.py:190
 msgid "Image"
-msgstr ""
+msgstr "ছবি"
 
 #: apps/catalogue/abstract_models.py:210 apps/catalogue/abstract_models.py:227
 #: apps/customer/abstract_models.py:168
 #: templates/oscar/dashboard/catalogue/product_update.html:124
 #: templates/oscar/dashboard/comms/list.html:33
 msgid "Category"
-msgstr ""
+msgstr "ক্যাটাগরি"
 
 #: apps/catalogue/abstract_models.py:211 apps/catalogue/abstract_models.py:326
 #: apps/catalogue/abstract_models.py:596 defaults.py:116
@@ -903,15 +904,15 @@ msgstr ""
 #: templates/oscar/dashboard/catalogue/category_list.html:24
 #: templates/oscar/dashboard/catalogue/product_update.html:73
 msgid "Categories"
-msgstr ""
+msgstr "ক্যাটাগরি"
 
 #: apps/catalogue/abstract_models.py:234
 msgid "Product category"
-msgstr ""
+msgstr "পন্যের ক্যাটাগরি"
 
 #: apps/catalogue/abstract_models.py:235
 msgid "Product categories"
-msgstr ""
+msgstr "পন্যের ক্যাটাগরিসমূহ"
 
 #: apps/catalogue/abstract_models.py:259
 msgid "Stand-alone product"
@@ -957,13 +958,13 @@ msgstr ""
 #: templates/oscar/dashboard/ranges/range_product_list.html:95
 msgctxt "Product title"
 msgid "Title"
-msgstr ""
+msgstr "শিরোনাম"
 
 #: apps/catalogue/abstract_models.py:292 apps/catalogue/abstract_models.py:779
 #: apps/dashboard/catalogue/tables.py:23
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:12
 msgid "Product type"
-msgstr ""
+msgstr "পন্যের ধরন"
 
 #: apps/catalogue/abstract_models.py:293
 msgid "Choose what type of product this is"
@@ -1004,7 +1005,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:316 defaults.py:223
 msgid "Rating"
-msgstr ""
+msgstr "রেটিং"
 
 #: apps/catalogue/abstract_models.py:322 apps/partner/abstract_models.py:146
 msgid "Date updated"
@@ -1029,7 +1030,7 @@ msgstr ""
 #: templates/oscar/dashboard/promotions/handpickedproductlist_form.html:5
 #: templates/oscar/dashboard/ranges/range_product_list.html:21
 msgid "Products"
-msgstr ""
+msgstr "পন্য"
 
 #: apps/catalogue/abstract_models.py:403
 msgid "Your product must have a title."
@@ -1128,11 +1129,11 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:805 apps/catalogue/abstract_models.py:947
 msgid "Integer"
-msgstr ""
+msgstr "পূর্ণ সংখ্যা"
 
 #: apps/catalogue/abstract_models.py:806
 msgid "True / False"
-msgstr ""
+msgstr "সত্য / মিথ্যা"
 
 #: apps/catalogue/abstract_models.py:807 apps/catalogue/abstract_models.py:949
 msgid "Float"
@@ -1151,7 +1152,7 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:529
 #: templates/oscar/dashboard/orders/order_detail.html:609
 msgid "Date"
-msgstr ""
+msgstr "তারিখ"
 
 #: apps/catalogue/abstract_models.py:811
 msgid "Entity"
@@ -1159,7 +1160,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:812
 msgid "File"
-msgstr ""
+msgstr "ফাইল"
 
 #: apps/catalogue/abstract_models.py:817 apps/offer/abstract_models.py:63
 #: apps/offer/abstract_models.py:403 apps/offer/abstract_models.py:635
@@ -1314,7 +1315,7 @@ msgstr ""
 #: apps/catalogue/config.py:8 apps/dashboard/catalogue/config.py:8
 #: defaults.py:104
 msgid "Catalogue"
-msgstr ""
+msgstr "ক্যাটালগ"
 
 #: apps/catalogue/reviews/abstract_models.py:32
 #: templates/oscar/dashboard/reviews/review_delete.html:36
@@ -2286,7 +2287,7 @@ msgstr ""
 #: defaults.py:112
 #: templates/oscar/dashboard/catalogue/product_class_list.html:24
 msgid "Product Types"
-msgstr ""
+msgstr "পন্যের ধরন"
 
 #: apps/dashboard/catalogue/views.py:736
 #, python-format
@@ -2415,7 +2416,7 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_list.html:13
 #: templates/oscar/partials/nav_accounts.html:47
 msgid "Dashboard"
-msgstr ""
+msgstr "ড্যাসবোর্ড"
 
 #: apps/dashboard/offers/config.py:8
 msgid "Offers dashboard"
@@ -4873,7 +4874,7 @@ msgstr ""
 #: templates/oscar/offer/list.html.py:16 templates/oscar/offer/list.html:21
 #: templates/oscar/partials/nav_primary.html:64
 msgid "Offers"
-msgstr ""
+msgstr "অফার"
 
 #: apps/voucher/abstract_models.py:35
 msgid "Can be used once by one customer"
@@ -5010,7 +5011,7 @@ msgstr ""
 
 #: defaults.py:138 templates/oscar/dashboard/orders/statistics.html:19
 msgid "Statistics"
-msgstr ""
+msgstr "পরিসংখ্যান"
 
 #: defaults.py:142 templates/oscar/dashboard/partners/partner_delete.html:7
 #: templates/oscar/dashboard/partners/partner_delete.html:16
@@ -5028,7 +5029,7 @@ msgstr ""
 #: templates/oscar/dashboard/partners/partner_user_select.html:6
 #: templates/oscar/dashboard/partners/partner_user_select.html:15
 msgid "Partners"
-msgstr ""
+msgstr "পার্টনার"
 
 #: defaults.py:156 defaults.py:160 templates/oscar/dashboard/index.html:112
 #: templates/oscar/dashboard/users/detail.html:15
@@ -5036,7 +5037,7 @@ msgstr ""
 #: templates/oscar/dashboard/users/index.html:14
 #: templates/oscar/dashboard/users/index.html:23
 msgid "Customers"
-msgstr ""
+msgstr "কাস্টমার"
 
 #: defaults.py:164
 msgid "Stock alert requests"
@@ -5066,7 +5067,7 @@ msgstr ""
 
 #: defaults.py:200
 msgid "Email templates"
-msgstr ""
+msgstr "ইমেইল টেমপ্লেট"
 
 #: defaults.py:204 templates/oscar/catalogue/reviews/review_detail.html:5
 #: templates/oscar/catalogue/reviews/review_detail.html:23
@@ -5079,31 +5080,31 @@ msgstr ""
 #: templates/oscar/dashboard/users/detail.html:108
 #: templates/oscar/dashboard/users/detail.html:175
 msgid "Reviews"
-msgstr ""
+msgstr "রিভিউ"
 
 #: defaults.py:210 templates/oscar/dashboard/reports/index.html:6
 msgid "Reports"
-msgstr ""
+msgstr "রিপোর্ট"
 
 #: defaults.py:234
 msgid "Price range"
-msgstr ""
+msgstr "মূল্যসীমা"
 
 #: defaults.py:239
 msgid "0 to 20"
-msgstr ""
+msgstr "0 থেকে 20"
 
 #: defaults.py:240
 msgid "20 to 40"
-msgstr ""
+msgstr "20 থেকে 40"
 
 #: defaults.py:241
 msgid "40 to 60"
-msgstr ""
+msgstr "40 থেকে 60"
 
 #: defaults.py:242
 msgid "60+"
-msgstr ""
+msgstr "60+"
 
 #: management/commands/oscar_send_alerts.py:16
 msgid "Check for products that are back in stock and send out alerts"

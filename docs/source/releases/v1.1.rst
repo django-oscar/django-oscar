@@ -2,7 +2,7 @@
 Oscar 1.1 release notes
 =======================
 
-:release: 2015-06-04
+:release: 2015-06-20
 
 Welcome to Oscar 1.1, or the "Bootstrap 3" release. We also squashed
 many bugs that were reported in the last seven months, and managed to shed
@@ -20,7 +20,7 @@ Table of contents:
 Compatibility
 -------------
 
-Oscar 1.1 is compatible with Django 1.7 and Django 1.8, and Python 2.7,
+Oscar 1.1 is compatible with Django 1.7 and 1.8 as well as Python 2.7,
 3.3 and 3.4.  Support for Django 1.6, and hence South for migrations, has been
 removed.
 
@@ -87,7 +87,7 @@ Categories refactor
 The Category model contained two denormalisations to improve performance: it
 stored the name of the category and it's ancestors in ``full_name``, and the
 ``slug`` field did not just contain the category's slug, but also the ones of
-it's ancestors.
+its ancestors.
 
 This came with several drawbacks: it was fiddly to move and update categories,
 as one had to ensure to update parts of the entire category tree. It also
@@ -146,7 +146,8 @@ If you have customised any app, please consult the
    This release doesn't include any South migrations, as support for Django
    1.6 has been dropped.
 
-Catalogue
+Catalogue app:
+
   * This app contains model changes.
   * This app contains a data migration: ``0003_data_migration_slugs``.
     It shouldn't matter whether you apply this migration before or after
@@ -194,8 +195,6 @@ These methods have been removed:
 * ``Strategy.group_pricing_policy``: Use ``Strategy.parent_pricing_policy``.
 * ``Strategy.group_availability_policy``: Use
   ``Strategy.parent_availability_policy``.
-
-These classes have been removed:
 
 These instances have been removed:
 
