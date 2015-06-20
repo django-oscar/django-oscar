@@ -29,6 +29,9 @@ sys.path.append(sandbox_folder)
 # Specify settings module (which will be picked up from the sandbox)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings_sphinx')
 
+import django
+django.setup()
+
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
