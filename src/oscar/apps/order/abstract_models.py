@@ -136,7 +136,7 @@ class AbstractOrder(models.Model):
     @property
     def status_verbose_name(self):
         status_verbose_names = getattr(settings, 'OSCAR_LINE_STATUS_VERBOSE_NAMES', {})
-        if self.status and status_verbose_names and self.status in status_verbose_names:
+        if self.status and self.status in status_verbose_names:
             return status_verbose_names[self.status]
         return self.status
 
@@ -552,7 +552,7 @@ class AbstractLine(models.Model):
     @property
     def status_verbose_name(self):
         status_verbose_names = getattr(settings, 'OSCAR_ORDER_STATUS_VERBOSE_NAMES', {})
-        if self.status and status_verbose_names and self.status in status_verbose_names:
+        if self.status and self.status in status_verbose_names:
             return status_verbose_names[self.status]
         return self.status
 
