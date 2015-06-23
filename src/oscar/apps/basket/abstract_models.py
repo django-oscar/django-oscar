@@ -759,7 +759,9 @@ class AbstractLine(models.Model):
 
     @property
     def line_price_excl_tax(self):
-        return self.quantity * self.unit_price_excl_tax
+        if self.unit_price_excl_tax:
+            return self.quantity * self.unit_price_excl_tax
+        return 0
 
     @property
     def line_price_excl_tax_incl_discounts(self):
