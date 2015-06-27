@@ -785,7 +785,7 @@ class AbstractProductAttribute(models.Model):
                 regex=r'^[a-zA-Z_][0-9a-zA-Z_]*$',
                 message=_(
                     "Code can only contain the letters a-z, A-Z, digits, "
-                    "and underscores, and can't start with a digit")),
+                    "and underscores, and can't start with a digit.")),
             non_python_keyword
         ])
 
