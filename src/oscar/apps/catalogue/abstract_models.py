@@ -720,7 +720,10 @@ class ProductAttributesContainer(object):
         self.initialised = False
 
     def __getattr__(self, name):
-        if not name.startswith('_') and not self.initialised:
+        if name.startswith('_'):
+            raise AttributeError(
+                _('Invalid attribute: %(attr)s') % {'attr': name})
+        if not self.initialised:
             values = self.get_values().select_related('attribute')
             for v in values:
                 setattr(self, v.attribute.code, v.value)
