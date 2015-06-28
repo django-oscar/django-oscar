@@ -1,4 +1,5 @@
 from collections import namedtuple
+from copy import deepcopy
 from decimal import Decimal as D
 
 from . import availability, prices
@@ -53,6 +54,13 @@ class Base(object):
         self.user = None
         if request and request.user.is_authenticated():
             self.user = request.user
+
+    def __deepcopy__(self, memo):
+        res = self.__class__(self.request)
+        for k, v in self.__dict__.items():
+            if k != 'request':
+                res.__dict__[deepcopy(k, memo)] = deepcopy(v, memo)
+        return res
 
     def fetch_for_product(self, product, stockrecord=None):
         """
