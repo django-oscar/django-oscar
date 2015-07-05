@@ -153,6 +153,10 @@ class BenefitForm(forms.ModelForm):
         if self.cleaned_data['custom_benefit']:
             return Benefit.objects.get(
                 id=self.cleaned_data['custom_benefit'])
+
+        return self.save_regular(*args, **kwargs)
+
+    def save_regular(self, *args, **kwargs):
         return super(BenefitForm, self).save(*args, **kwargs)
 
 
