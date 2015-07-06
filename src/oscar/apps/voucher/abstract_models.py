@@ -83,12 +83,12 @@ class AbstractVoucher(models.Model):
         """
         Test whether this voucher is available to the passed user.
 
-        Returns a tuple of a boolean for whether it is successulf, and a
-        message
+        Returns a tuple of a boolean for whether it is available, and a
+        message with the reason if it is not available.
         """
         is_available, message = False, ''
         if self.usage == self.SINGLE_USE:
-            is_available = not self.applications.exists()
+            is_available = len(self.applications.all()) == 0
             if not is_available:
                 message = _("This voucher has already been used")
         elif self.usage == self.MULTI_USE:
