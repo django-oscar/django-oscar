@@ -528,6 +528,11 @@ class Benefit(models.Model):
         help_text=_("Set this to prevent the discount consuming all items "
                     "within the range that are in the basket."))
 
+    can_apply_with_other_benefits = models.BooleanField(
+        _("Can apply with other benefits"), default=False,
+        help_text=_("All benefits that have this checked can apply to the "
+                    "same item."))
+
     # A custom benefit class can be used instead.  This means the
     # type/value/max_affected_items fields should all be None.
     proxy_class = fields.NullCharField(
@@ -695,7 +700,7 @@ class Benefit(models.Model):
         """
         # We sort lines to be cheapest first to ensure consistent applications
         return sorted([line for line
-                       in set_of_lines.get_lines_available_for_benefit()
+                       in set_of_lines.get_lines_available_for_benefit(self)
                        if self.range.contains_product(line.product)],
                       key=lambda line: line.price)
 
@@ -1095,11 +1100,11 @@ class PercentageDiscountBenefit(Benefit):
             if discount_amount_available == 0:
                 break
 
-            affected_quantity = min(line.quantity_available_for_benefit(),
+            affected_quantity = min(line.quantity_available_for_benefit(self),
                                     affected_quantity_allowed)
 
             line_discount = self.round(discount_percent / D('100.0')
-                                       * line.price
+                                       * line.discounted_price
                                        * affected_quantity)
 
             if discount_amount_available is not None:

@@ -38,23 +38,48 @@ class Line(object):
             c_transaction_id != transaction_id,
             self.benefits)
 
+    def quantity_with_benefit(self, benefit):
+        # django-1.7: When we drop support for Django < 1.7 we can change
+        # b[1] is benefit to b[1] == benefit and thus allow separate instances
+        # representing the same database row to pass the test. For now we need
+        # unsaved instances to be different for the tests. In Django-1.7 both
+        # hold true with ==.
+        # https://github.com/django/django/commit/6af05e7a0f0e4604d6a67899acaa99d73ec0dfaa  # noqa
+        return sum(b[2] for b in self.benefits
+                   if b[1] is benefit)
+
     def quantity_with_benefits(self):
-        return sum(map(lambda b: b[2], self.benefits))
+        def maximum(iterable, default):
+            try:
+                return max(iterable)
+            except ValueError:
+                return default
+
+        return max(maximum((b[2] for b in self.benefits
+                            if b[1].can_apply_with_other_benefits), 0),
+                   sum(b[2] for b in self.benefits
+                       if not b[1].can_apply_with_other_benefits))
 
     def quantity_without_benefits(self):
         return self.quantity - self.quantity_with_benefits()
 
-    def quantity_available_for_benefit(self):
-        return (self.quantity
-                - self.quantity_with_benefits())
+    def quantity_with_greedy_benefits(self):
+        return sum(b[2] for b in self.benefits
+                   if not b[1].can_apply_with_other_benefits)
 
-    def is_available_for_benefit(self):
-        return self.quantity_available_for_benefit() > 0
+    def quantity_available_for_benefit(self, benefit):
+        if not benefit.can_apply_with_other_benefits:
+            return self.quantity - self.quantity_with_greedy_benefits()
+        return self.quantity - self.quantity_with_benefit(benefit)
+
+    def is_available_for_benefit(self, benefit):
+        return self.quantity_available_for_benefit(benefit) > 0
 
     def get_discount_value(self):
         return sum(b[3] for b in self.benefits)
 
-    def get_discounted_price(self):
+    @property
+    def discounted_price(self):
         return self.price - self.get_discount_value()
 
 
@@ -108,7 +133,7 @@ class SetOfLines(object):
 
         line.add_benefit(self.transaction_id, benefit, quantity, discount)
 
-    def get_lines_available_for_benefit(self):
+    def get_lines_available_for_benefit(self, benefit):
         """
         Return only those lines that can be used to satisfy a condition.
         """
@@ -118,7 +143,7 @@ class SetOfLines(object):
              if (line.stockrecord
                  and line.price
                  and line.product.is_discountable
-                 and line.is_available_for_benefit())],
+                 and line.is_available_for_benefit(benefit))],
             key=lambda line: line.price)
 
     @property
