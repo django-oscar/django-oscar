@@ -984,7 +984,7 @@ class AbstractProductAttributeValue(models.Model):
     value_richtext = models.TextField(_('Richtext'), blank=True, null=True)
     value_date = models.DateField(_('Date'), blank=True, null=True)
     value_multi_option = models.ManyToManyField(
-        'catalogue.AttributeOption', blank=True, null=True,
+        'catalogue.AttributeOption', blank=True,
         related_name='multi_valued_attribute_values',
         verbose_name=_("Value multi option"))
     value_option = models.ForeignKey(
