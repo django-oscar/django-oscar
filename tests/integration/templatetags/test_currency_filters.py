@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from decimal import Decimal as D
 
+from django.utils import translation
 from django.test import TestCase
 from django import template
 
@@ -32,4 +33,10 @@ class TestCurrencyFilter(TestCase):
     def test_handles_string_price_gracefully(self):
         self.template.render(template.Context({
             'price': ''
+        }))
+
+    @translation.override(None, deactivate=True)
+    def test_handles_no_translation(self):
+        self.template.render(template.Context({
+            'price': D('10.23'),
         }))
