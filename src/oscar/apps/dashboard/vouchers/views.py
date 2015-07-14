@@ -77,6 +77,7 @@ class VoucherCreateView(generic.FormView):
     model = Voucher
     template_name = 'dashboard/vouchers/voucher_form.html'
     form_class = VoucherForm
+    conditional_offer_defaults = {}
 
     def get_context_data(self, **kwargs):
         ctx = super(VoucherCreateView, self).get_context_data(**kwargs)
@@ -100,6 +101,7 @@ class VoucherCreateView(generic.FormView):
             offer_type=ConditionalOffer.VOUCHER,
             benefit=benefit,
             condition=condition,
+            **self.conditional_offer_defaults
         )
         voucher = Voucher.objects.create(
             name=name,

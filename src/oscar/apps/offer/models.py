@@ -501,11 +501,12 @@ class Benefit(models.Model):
         'offer.Range', null=True, blank=True, verbose_name=_("Range"))
 
     # Benefit types
-    PERCENTAGE = "Percentage"
+    PERCENTAGE, FIXED = ("Percentage", "Fixed")
     SHIPPING_PERCENTAGE, SHIPPING_ABSOLUTE, SHIPPING_FIXED_PRICE = (
         'Shipping percentage', 'Shipping absolute', 'Shipping fixed price')
     TYPE_CHOICES = (
         (PERCENTAGE, _("Discount is a percentage off of the product's value")),
+        (FIXED, _("Discount is a fixed amount off of the product's value")),
         (SHIPPING_ABSOLUTE,
          _("Discount is a fixed amount of the shipping cost")),
         (SHIPPING_FIXED_PRICE, _("Get shipping for a fixed price")),
@@ -546,6 +547,7 @@ class Benefit(models.Model):
     def proxy(self):
         klassmap = {
             self.PERCENTAGE: PercentageDiscountBenefit,
+            self.FIXED: AbsoluteDiscountBenefit,
             self.SHIPPING_ABSOLUTE: ShippingAbsoluteDiscountBenefit,
             self.SHIPPING_FIXED_PRICE: ShippingFixedPriceBenefit,
             self.SHIPPING_PERCENTAGE: ShippingPercentageDiscountBenefit}
@@ -1127,6 +1129,75 @@ class PercentageDiscountBenefit(Benefit):
 
         return BasketDiscount(discount)
 
+
+class AbsoluteDiscountBenefit(Benefit):
+    """
+    An offer benefit that gives an absolute discount
+    Changed from oscar: on one item.
+    """
+    _description = _("%(value)s discount on %(range)s")
+
+    @property
+    def name(self):
+        return self._description % {
+            'value': currency(self.value),
+            'range': self.range.name.lower()}
+
+    @property
+    def description(self):
+        return self._description % {
+            'value': currency(self.value),
+            'range': range_anchor(self.range)}
+
+    class Meta:
+        app_label = 'offer'
+        proxy = True
+        verbose_name = _("Absolute discount benefit")
+        verbose_name_plural = _("Absolute discount benefits")
+
+    def apply(self, set_of_lines, discount_amount=None,
+              max_total_discount=None):
+        """
+        Apply a discount of `discount_amount` (defaults to `self.value`)
+        to all items in the range, but limiting
+            * the maximum total discount to `max_total_discount`
+            * the maximum number of items discounted to
+              `self.max_affected_items`
+        """
+        if discount_amount is None:
+            discount_amount = self.value
+
+        discount_amount_available = max_total_discount
+
+        discount = 0
+        affected_quantity_allowed = self._effective_max_affected_items()
+
+        for line in self.filter_lines(set_of_lines):
+            if affected_quantity_allowed == 0:
+                break
+
+            if discount_amount_available == 0:
+                break
+
+            affected_quantity = min(line.quantity_available_for_benefit(self),
+                                    affected_quantity_allowed)
+
+            line_discount = min(discount_amount, line.discounted_price)
+
+            if discount_amount_available is not None:
+                line_discount = min(line_discount, discount_amount_available)
+                discount_amount_available -= line_discount
+
+            set_of_lines.mark_for_benefit(line, self, affected_quantity,
+                                          line_discount)
+
+            affected_quantity_allowed -= affected_quantity
+            discount += line_discount
+
+        if discount == 0:
+            return False
+
+        return BasketDiscount(discount)
 
 # =================
 # Shipping benefits
