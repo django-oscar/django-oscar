@@ -185,6 +185,9 @@ class ProductCreateUpdateView(generic.UpdateView):
     recommendations_formset = ProductRecommendationFormSet
     stockrecord_formset = StockRecordFormSet
 
+    forms_invalid_message = _("Your submitted data was not valid - please "
+                              "correct the errors below")
+
     def __init__(self, *args, **kwargs):
         super(ProductCreateUpdateView, self).__init__(*args, **kwargs)
         self.formsets = {'category_formset': self.category_formset,
@@ -363,9 +366,7 @@ class ProductCreateUpdateView(generic.UpdateView):
             self.object.delete()
             self.object = None
 
-        messages.error(self.request,
-                       _("Your submitted data was not valid - please "
-                         "correct the errors below"))
+        messages.error(self.request, self.forms_invalid_message)
         ctx = self.get_context_data(form=form, **formsets)
         return self.render_to_response(ctx)
 
