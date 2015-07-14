@@ -30,7 +30,6 @@ def configure():
               'django.contrib.sites',
                 'django.contrib.flatpages',
                 'django.contrib.staticfiles',
-                'compressor',
                 'widget_tweaks',
                 'tests._site.model_tests_app',  # contains models we need for testing
                 'tests._site.myauth',
@@ -86,8 +85,6 @@ def configure():
             'ROOT_URLCONF': 'tests._site.urls',
             'LOGIN_REDIRECT_URL': '/accounts/',
             'STATIC_URL': '/static/',
-            'COMPRESS_ENABLED': False,
-            'COMPRESS_ROOT': '',  # needed to avoid issue #1214
             'DEBUG': False,
             'SITE_ID': 1,
             'USE_TZ': 1,

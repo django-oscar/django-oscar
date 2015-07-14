@@ -50,7 +50,6 @@ def metadata(request):
             'shop_name': settings.OSCAR_SHOP_NAME,
             'shop_tagline': settings.OSCAR_SHOP_TAGLINE,
             'homepage_url': settings.OSCAR_HOMEPAGE,
-            'use_less': getattr(settings, 'USE_LESS', False),
             'call_home': usage_statistics_string(),
             'language_neutral_url_path': strip_language_code(request),
             'google_analytics_id': getattr(settings,

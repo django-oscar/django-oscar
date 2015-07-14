@@ -68,8 +68,9 @@ Edit your settings file ``frobshop.frobshop.settings.py`` to specify
         'oscar.core.context_processors.metadata',
     )
 
-Next, modify ``INSTALLED_APPS`` to be a list, add ``django.contrib.sites``, ``django.contrib.flatpages`` and ``compressor``
-and append Oscar's core apps. Also set ``SITE_ID``:
+Next, modify ``INSTALLED_APPS`` to be a list, add ``django.contrib.sites`` and
+``django.contrib.flatpages`` and append Oscar's core apps. Also set
+``SITE_ID``:
 
 .. code-block:: django
 
@@ -84,7 +85,6 @@ and append Oscar's core apps. Also set ``SITE_ID``:
         'django.contrib.staticfiles',
         'django.contrib.flatpages',
         ...
-        'compressor',
     ] + get_core_apps()
 
     SITE_ID = 1
@@ -95,14 +95,6 @@ which won't be enabled by default when using Django 1.6 or upwards.
 More info about installing ``flatpages`` is in the `Django docs`_.
 
 .. _`Django docs`: https://docs.djangoproject.com/en/dev/ref/contrib/flatpages/#installation
-
-.. tip::
-
-    Oscar's default templates use django-compressor_ but it's optional really.
-    You may decide to use your own templates that don't use compressor.  Hence
-    why it is not one of the 'core apps'.
-
-.. _django-compressor: https://github.com/jezdez/django_compressor
 
 Next, add ``oscar.apps.basket.middleware.BasketMiddleware`` and
 ``django.contrib.flatpages.middleware.FlatpageFallbackMiddleware`` to
