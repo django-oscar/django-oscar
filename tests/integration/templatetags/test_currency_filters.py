@@ -35,8 +35,8 @@ class TestCurrencyFilter(TestCase):
             'price': ''
         }))
 
-    @translation.override(None, deactivate=True)
     def test_handles_no_translation(self):
-        self.template.render(template.Context({
-            'price': D('10.23'),
-        }))
+        with translation.override(None, deactivate=True):
+            self.template.render(template.Context({
+                'price': D('10.23'),
+            }))
