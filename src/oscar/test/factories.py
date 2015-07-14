@@ -171,7 +171,7 @@ def create_offer(name=u"Dùｍϻϒ offer", offer_type="Site",
             name=u"All products räñgë", includes_all_products=True)
     if condition is None:
         condition, __ = models.Condition.objects.get_or_create(
-            range=range, type=models.Condition.COUNT, value=1)
+            range=range, type=models.Condition.NONE)
     if benefit is None:
         benefit, __ = models.Benefit.objects.get_or_create(
             range=range, type=models.Benefit.PERCENTAGE, value=20)
