@@ -225,6 +225,27 @@ class AbstractBasket(models.Model):
     add_product.alters_data = True
     add = add_product
 
+    def check_all_lines_available(self):
+        """
+        Check with the availability strategy whether all lines in the basket
+        are available in the requested quantity.
+
+        Returns a tuple (can_submit, errors). If the basket can be submitted,
+        can_submit is True and errors is an empty list. Else can_submit is
+        False and errors is a list of tuples (line, reason) with the basket
+        line and the reason the line can't be purchased.
+        """
+        errors = []
+
+        for line in self.all_lines():
+            result = self.strategy.fetch_for_product(line.product)
+            is_permitted, reason = result.availability.is_purchase_permitted(
+                line.quantity)
+            if not is_permitted:
+                errors.append((line, reason))
+
+        return len(errors) == 0, errors
+
     def applied_offers(self):
         """
         Return a dict of offers successfully applied to the basket.
