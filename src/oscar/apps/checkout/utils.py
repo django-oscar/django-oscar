@@ -1,3 +1,11 @@
+from decimal import Decimal
+
+from oscar.core.loading import get_class
+
+PaymentSource = get_class('payment.api', 'PaymentSource')
+PaymentEvent = get_class('payment.api', 'PaymentEvent')
+
+
 class CheckoutSessionData(object):
     """
     Responsible for marshalling all the checkout session data
@@ -23,6 +31,8 @@ class CheckoutSessionData(object):
             billing_address_same_as_shipping: <bool>
         payment:
             method: <payment method code>
+            sources:
+            events:
         submission:
             order_number: <generated order number>
             basket_id: <id of frozen basket>
@@ -256,6 +266,39 @@ class CheckoutSessionData(object):
 
     def payment_method(self):
         return self._get('payment', 'method')
+
+    def set_payment_sources(self, payment_sources):
+        # need to convert Decimal values to string for storing them in the
+        # session
+        # https://docs.djangoproject.com/en/1.8/topics/http/sessions/#bundled-serializers
+        self._set('payment', 'sources',
+                  [PaymentSource(s.type_code, s.type_name, s.currency,
+                                 str(s.amount_allocated),
+                                 str(s.amount_debited), s.reference)
+                   for s in payment_sources])
+
+    def get_payment_sources(self):
+        # convert decimal values back from string to Decimal
+        return [PaymentSource(type_code, type_name, currency,
+                              Decimal(amount_allocated),
+                              Decimal(amount_debited), reference)
+                for type_code, type_name, currency, amount_allocated,
+                amount_debited, reference
+                in self._get('payment', 'sources', [])]
+
+    def set_payment_events(self, payment_events):
+        # need to convert Decimal values to string for storing them in the
+        # session
+        # https://docs.djangoproject.com/en/1.8/topics/http/sessions/#bundled-serializers
+        self._set('payment', 'events',
+                  [PaymentEvent(e.type_name, str(e.amount), e.reference)
+                   for e in payment_events])
+
+    def get_payment_events(self):
+        # convert decimal values back from string to Decimal
+        return [PaymentEvent(type_name, Decimal(amount), reference)
+                for type_name, amount, reference
+                in self._get('payment', 'events', [])]
 
     # Preview methods
     # ===============

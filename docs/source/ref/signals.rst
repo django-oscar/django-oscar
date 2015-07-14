@@ -178,18 +178,6 @@ Arguments sent with this signal:
 
     The order created
 
-.. attribute:: user
-
-    The user who completed the checkout
-
-.. attribute:: request
-
-    The request instance
-
-.. attribute:: response
-
-    The response instance
-
 ``review_created``
 ------------------
 

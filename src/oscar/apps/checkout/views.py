@@ -13,26 +13,12 @@ from oscar.core.loading import get_class, get_classes, get_model
 
 ShippingAddressForm, GatewayForm \
     = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
-OrderCreator = get_class('order.utils', 'OrderCreator')
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
-Repository = get_class('shipping.repository', 'Repository')
-AccountAuthView = get_class('customer.views', 'AccountAuthView')
-RedirectRequired, UnableToTakePayment, PaymentError \
-    = get_classes('payment.exceptions', ['RedirectRequired',
-                                         'UnableToTakePayment',
-                                         'PaymentError'])
 CheckoutFlow = get_class('checkout.flow', 'CheckoutFlow')
 
 Order = get_model('order', 'Order')
-ShippingAddress = get_model('order', 'ShippingAddress')
-CommunicationEvent = get_model('order', 'CommunicationEvent')
-PaymentEventType = get_model('order', 'PaymentEventType')
-PaymentEvent = get_model('order', 'PaymentEvent')
 UserAddress = get_model('address', 'UserAddress')
-Basket = get_model('basket', 'Basket')
-Email = get_model('customer', 'Email')
 Country = get_model('address', 'Country')
-CommunicationEventType = get_model('customer', 'CommunicationEventType')
 
 # Standard logger for checkout events
 logger = logging.getLogger('oscar.checkout')

@@ -2,11 +2,9 @@ from decimal import Decimal as D
 
 from django.core.urlresolvers import reverse
 
-from oscar.core.loading import get_model, get_class
+from oscar.core.loading import get_class
 from oscar.test import factories
 
-UserAddress = get_model('address', 'UserAddress')
-Country = get_model('address', 'Country')
 GatewayForm = get_class('checkout.forms', 'GatewayForm')
 
 
@@ -38,7 +36,7 @@ class CheckoutMixin(object):
         form.submit()
 
     def enter_guest_details(self, email='guest@example.com'):
-        index_page = self.get(reverse('checkout:index'))
+        index_page = self.get(reverse('checkout:identify-user'))
         index_page.form['username'] = email
         index_page.form.select('options', GatewayForm.GUEST)
         return index_page.form.submit()
@@ -56,15 +54,13 @@ class CheckoutMixin(object):
         form['line1'] = '1 Egg Road'
         form['line4'] = 'Shell City'
         form['postcode'] = 'N12 9RT'
-        form.submit()
+        return form.submit()
 
     def enter_shipping_method(self):
         self.get(reverse('checkout:shipping-method'))
 
     def place_order(self):
-        payment_details = self.get(
-            reverse('checkout:shipping-method')).follow().follow()
-        preview = payment_details.click(linkid="view_preview")
+        preview = self.get(reverse('checkout:preview'))
         return preview.forms['place_order_form'].submit().follow()
 
     def reach_payment_details_page(self, is_guest=False):
@@ -72,9 +68,11 @@ class CheckoutMixin(object):
         if is_guest:
             self.enter_guest_details('hello@egg.com')
         self.enter_shipping_address()
+        """
         return self.get(
             reverse('checkout:shipping-method')).follow().follow()
+        """
 
     def ready_to_place_an_order(self, is_guest=False):
-        payment_details = self.reach_payment_details_page(is_guest)
-        return payment_details.click(linkid="view_preview")
+        self.reach_payment_details_page(is_guest)
+        return self.get(reverse('checkout:preview'))
