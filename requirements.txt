@@ -40,3 +40,6 @@ ipython==2.3.0
 
 # Country data
 pycountry==1.8
+
+# Table csv export
+https://github.com/monocult/django-tables2-reports/archive/v0.0.10machtfit1.tar.gz#egg=django-tables2-reports==0.0.10machtfit1
