@@ -86,7 +86,7 @@ OSCAR_HIDDEN_FEATURES = []
 # Menu structure of the dashboard navigation
 OSCAR_DASHBOARD_NAVIGATION = [
     {
-        'label': _('Dashboard'),
+        'label': _('Cockpit'),
         'icon': 'icon-th-list',
         'url_name': 'dashboard:index',
     },
