@@ -121,9 +121,10 @@ class AbstractBasket(models.Model):
         if self._lines is None:
             self._lines = (
                 self.lines
-                .select_related('product', 'stockrecord')
+                .select_related('product', 'stockrecord',
+                                'product__product_class')
                 .prefetch_related(
-                    'attributes', 'product__images'))
+                    'attributes', 'product__images', 'product__stockrecords'))
         return self._lines
 
     def is_quantity_allowed(self, qty):
@@ -474,7 +475,7 @@ class AbstractBasket(models.Model):
     @property
     def num_lines(self):
         """Return number of lines"""
-        return self.all_lines().count()
+        return len(self.all_lines())
 
     @property
     def num_items(self):

@@ -1055,7 +1055,7 @@ class AbstractOrderDiscount(models.Model):
     def offer(self):
         Offer = models.get_model('offer', 'ConditionalOffer')
         try:
-            return Offer.objects.get(id=self.offer_id)
+            return Offer.objects.select_related('benefit').get(id=self.offer_id)
         except Offer.DoesNotExist:
             return None
 

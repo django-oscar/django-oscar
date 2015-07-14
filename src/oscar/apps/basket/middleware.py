@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.signing import Signer, BadSignature
+from django.db.models import Prefetch
 from django.utils.functional import SimpleLazyObject, empty
 
 from oscar.core.loading import get_model
@@ -8,6 +9,7 @@ from oscar.core.loading import get_class
 Applicator = get_class('offer.utils', 'Applicator')
 Basket = get_model('basket', 'basket')
 Selector = get_class('partner.strategy', 'Selector')
+Voucher = get_model('voucher', 'Voucher')
 
 selector = Selector()
 
