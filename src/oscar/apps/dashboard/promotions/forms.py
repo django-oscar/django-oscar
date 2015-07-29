@@ -75,7 +75,7 @@ class PagePromotionForm(forms.ModelForm):
 
     class Meta:
         model = PagePromotion
-        fields = ['position']
+        fields = ['position', 'page_url']
 
     def clean_page_url(self):
         page_url = self.cleaned_data.get('page_url')
