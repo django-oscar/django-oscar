@@ -136,7 +136,7 @@ Migrations
 
 Migrations will get picked up automatically for apps you haven't customised.
 If you have customised any app, please consult the
-`detailed instructions <topics/upgrading>`_ on how to handle migrations.
+:doc:`detailed instructions </topics/upgrading>` on how to handle migrations.
 
 .. warning::
    This release contains a data migration for category slugs.  If you have
