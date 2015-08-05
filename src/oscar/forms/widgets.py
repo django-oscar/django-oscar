@@ -12,6 +12,7 @@ from django.utils.encoding import force_text
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
+import warnings
 
 class ImageInput(FileInput):
     """
@@ -258,6 +259,44 @@ class DateTimePickerInput(DateTimeWidgetMixin, forms.DateTimeInput):
                          .format(div=div, input=input))
 
 
+class AdvancedChoice(object):
+    """
+    This is a class that you can pass into an AdvancedChoiceField to disabled options.
+
+    Some examples:
+
+    CHOICES = (
+        ('value1', 'Label 1'),
+        ('value2', AdvancedChoice('Label 2', disabled=True),
+        ('value3', DisabledChoice('Label 3'))
+    )
+
+    forms.ChoiceField(choices=CHOICES, widget=AdvancedSelect())
+    forms.ChoiceField(choices=CHOICES, widget=AdvancedRadioSelect())
+    forms.MultipleChoiceField(choices=CHOICES, widget=AdvancedSelectMultiple())
+    forms.MultipleChoiceField(choices=CHOICES, widget=AdvancedCheckboxSelectMultiple())
+    """
+
+    def __init__(self, label, disabled=False, attrs=None):
+        self.label = label
+        self.disabled = disabled
+        self.attrs = attrs
+
+    def __unicode__(self):
+        return self.label
+
+
+class DisabledChoice(AdvancedChoice):
+    """
+    This is a shortcut class for AdvancedChoice(label, disabled=True)
+    """
+
+    def __init__(self, label, attrs=None):
+        self.label = label
+        self.disabled = True
+        self.attrs = attrs
+
+
 class AdvancedSelect(forms.Select):
     """
     Customised Select widget that allows a list of disabled values to be passed
@@ -266,25 +305,114 @@ class AdvancedSelect(forms.Select):
     for whether the widget is disabled.
     """
 
-    def __init__(self, attrs=None, choices=(), disabled_values=()):
+    def __init__(self, attrs=None, choices=(), **kwargs):
+
+        if 'disabled_values' in kwargs:
+            message = "Passing disabled_values as kwarg to AdvancedSelect is deprecated " \
+                "and will be removed in the next major version of django-oscar"
+            warnings.warn(message, DeprecationWarning, stacklevel=2)
+
+        disabled_values = kwargs.pop('disabled_values', ())
         self.disabled_values = set(force_text(v) for v in disabled_values)
-        super(AdvancedSelect, self).__init__(attrs, choices)
+
+        super(AdvancedSelect, self).__init__(attrs, choices, **kwargs)
 
     def render_option(self, selected_choices, option_value, option_label):
         option_value = force_text(option_value)
-        if option_value in self.disabled_values:
-            selected_html = mark_safe(' disabled="disabled"')
-        elif option_value in selected_choices:
+        # In the next version, remove checking the option_value against self.disabled_values
+        # and just rely on looking at the disabled attribute
+        option_attrs = getattr(option_label, 'attrs', None) or {}
+        # Also check if the object just has a diabled property, a shortcut for disabling the option 
+        if getattr(option_label, 'disabled', False) or option_value in self.disabled_values:
+            option_attrs['disabled'] = 'disabled'
+
+        if option_value in selected_choices:
             selected_html = mark_safe(' selected="selected"')
             if not self.allow_multiple_selected:
                 # Only allow for a single selection.
                 selected_choices.remove(option_value)
         else:
             selected_html = ''
-        return format_html(u'<option value="{0}"{1}>{2}</option>',
+        return format_html(u'<option value="{0}"{1}{2}>{3}</option>',
                            option_value,
                            selected_html,
+                           flatatt(option_attrs),
                            force_text(option_label))
+
+
+class AdvancedSelectMultiple(AdvancedSelect, forms.SelectMultiple):
+    pass
+    # Really that simple. Python's MRO works great in this case
+
+
+class AdvancedChoiceFieldRenderer(forms.widgets.ChoiceFieldRenderer):
+
+    # Include both Bootstrap 2 & 3 classes for forwards-compatibility
+    # Bootstrap 3, Bootstrap 3, Bootstrap 2
+    DISABLED_CLASSES = ['disabled', 'text-muted', 'muted']
+    # Bootstrap 3, Bootstrap 2
+    LIST_CLASSES = ['list-unstyled', 'unstyled']
+
+    def render(self):
+        """
+        Outputs a <ul> for this set of choice fields.
+        If an id was given to the field, it is applied to the <ul> (each
+        item in the list will get an id of `$id_$i`).
+        Includes logic to apply a class to the <li> elements for appropriate styling.
+        """
+        # This is mostly boilerplate copied from widgets.ChoiceFieldRenderer
+        # I tried to re-use the existing render method, but there wasn't a great
+        # place for the ooks I needed
+        id_ = self.attrs.get('id', None)
+        # Includes style for both bootstrap 2.x and 3.x
+        start_tag = format_html('<ul id="{0}" class="{1}">', id_, ' '.join(self.LIST_CLASSES)) if id_ else '<ul>'
+        output = [start_tag]
+        for i, choice in enumerate(self.choices):
+            classes = [self.choice_input_class.input_type]
+            choice_value, choice_label = choice
+
+            attrs_plus = self.attrs.copy()
+
+            # Custom code for wrapping <li> in disabled classes
+            if getattr(choice_label, 'disabled', False):
+                classes.extend(self.DISABLED_CLASSES)
+                attrs_plus['disabled'] = 'disabled'
+
+            if isinstance(choice_label, (tuple, list)):
+                if id_:
+                    attrs_plus['id'] += '_{0}'.format(i)
+                sub_ul_renderer = AdvancedChoiceFieldRenderer(name=self.name,
+                                                      value=self.value,
+                                                      attrs=attrs_plus,
+                                                      choices=choice_label)
+                sub_ul_renderer.choice_input_class = self.choice_input_class
+
+                output.append(format_html('<li class="{2}">{0}{1}</li>', choice_value,
+                                          sub_ul_renderer.render(), ' '.join(classes)))
+            else:
+                w = self.choice_input_class(self.name, self.value,
+                                            attrs_plus, choice, i)
+                output.append(format_html('<li class="{1}">{0}</li>', force_text(w), ' '.join(classes)))
+        output.append('</ul>')
+        return mark_safe('\n'.join(output))
+
+
+class AdvancedRadioFieldRenderer(AdvancedChoiceFieldRenderer):
+    choice_input_class = forms.widgets.RadioChoiceInput
+
+
+class AdvancedCheckboxFieldRenderer(AdvancedChoiceFieldRenderer):
+    choice_input_class = forms.widgets.CheckboxChoiceInput
+
+
+class AdvancedRadioSelect(forms.widgets.RendererMixin, AdvancedSelect):
+    renderer = AdvancedRadioFieldRenderer
+    _empty_value = ''
+
+
+class AdvancedCheckboxSelectMultiple(forms.widgets.RendererMixin, AdvancedSelectMultiple):
+    renderer = AdvancedCheckboxFieldRenderer
+    _empty_value = []
 
 
 class RemoteSelect(forms.Widget):

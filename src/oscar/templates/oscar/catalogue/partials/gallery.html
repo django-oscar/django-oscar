@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load staticfiles %}
 
-{% with all_images=product.images.all %}
+{% with all_images=product.active_images.all %}
     {# use length rather then count as the images get queried anyways #}
 
     {% if all_images|length > 1 %}

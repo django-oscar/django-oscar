@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+{% load firstof from future %}
+
 {% load history_tags %}
 {% load currency_filters %}
 {% load reviews_tags %}
@@ -22,12 +24,20 @@
     <li>
         <a href="{{ homepage_url }}">{% trans "Home" %}</a>
     </li>
-    {% with category=product.categories.all.0 %}
+    {% with category=product.get_categories.all.0 %}
         {% for c in category.get_ancestors_and_self %}
         <li>
             <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
         </li>
         {% endfor %}
+
+        {% if product.parent %}
+        <li>
+        	<a href="{{ product.parent.get_absolute_url }}">{{ product.parent.title }}</a>
+        	<span class="divider">/</span>
+        <li>
+        {% endif %}
+
         <li class="active">{{ product.title }}</li>
 
         {% get_back_button as backbutton %}
@@ -66,7 +76,15 @@
             {% if user.is_authenticated and user.is_staff %}
                 <a class="pull-right hidden-xs" href="{% url 'dashboard:catalogue-product' pk=product.id %}"><small><i class="icon-edit"></i> {% trans "Edit this product" %}</small></a>
             {% endif %}
-            <h1>{{ product.get_title }}</h1>
+
+            <h1>
+                {% if product.parent %}
+                    {{ product.parent.get_title }}
+                    <br /><small>{{ product }}</small>
+                {% else %}
+                    {{ product.get_title }}
+                {% endif %}
+            </h1>
 
             {% block product_stock_record %}
                 {% include "catalogue/partials/stock_record.html" with verbose=1 %}
@@ -87,11 +105,11 @@
     </div><!-- /row -->
 
     {% block product_description %}
-        {% if product.description %}
+        {% if product.description or product.parent.description %}
         <div id="product_description" class="sub-header">
             <h2>{% trans "Product Description" %}</h2>
         </div>
-        <p>{{ product.description|safe }}</p>
+        <p>{% firstof product.description|safe product.parent.description|safe %}</p>
         {% endif %}
     {% endblock %}
 
@@ -140,6 +158,25 @@
             </tr>
         {% endiffeature %}
     </table>
+    {% endblock %}
+
+
+    {% block parent_info %}
+        {% with attribute_values=product.parent.attribute_values.all %}
+            {% if attribute_values %}
+                <div class="sub-header">
+                    <h2>{% trans "Additional Information" %}</h2>
+                </div>
+                <table class="table table-striped">
+                    {% for av in attribute_values %}
+                        <tr>
+                            <th>{{ av.attribute.name }}</th>
+                            <td>{{ av.value_as_html }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+        {% endwith %}
     {% endblock %}
 
     {% iffeature "reviews" %}
