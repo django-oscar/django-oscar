@@ -53,6 +53,8 @@ context processors.
 
 .. code-block:: django
 
+    from oscar import OSCAR_MAIN_TEMPLATE_DIR
+
     TEMPLATES = [
         {
             'BACKEND': 'django.template.backends.django.DjangoTemplates',

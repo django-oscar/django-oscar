@@ -162,7 +162,8 @@ class AccountAuthView(RegisterUserMixin, generic.TemplateView):
                 old_session_key=old_session_key)
 
             msg = self.get_login_success_message(form)
-            messages.success(self.request, msg)
+            if msg:
+                messages.success(self.request, msg)
 
             return redirect(self.get_login_success_url(form))
 
