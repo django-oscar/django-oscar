@@ -128,7 +128,8 @@ class UserEmailForm(forms.Form):
 
 class PartnerAddressForm(forms.ModelForm):
     name = forms.CharField(
-        required=False, label=pgettext_lazy(u"Partner's name", u"Name"))
+        required=False, max_length=128,
+        label=pgettext_lazy(u"Partner's name", u"Name"))
 
     class Meta:
         fields = ('name', 'line1', 'line2', 'line3', 'line4',
