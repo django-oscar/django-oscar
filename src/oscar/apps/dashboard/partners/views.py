@@ -277,6 +277,7 @@ class PartnerUserUpdateView(generic.UpdateView):
     form_class = ExistingUserForm
 
     def get_object(self, queryset=None):
+        self.partner = get_object_or_404(Partner, pk=self.kwargs['partner_pk'])
         return get_object_or_404(User,
                                  pk=self.kwargs['user_pk'],
                                  partners__pk=self.kwargs['partner_pk'])
@@ -284,6 +285,7 @@ class PartnerUserUpdateView(generic.UpdateView):
     def get_context_data(self, **kwargs):
         ctx = super(PartnerUserUpdateView, self).get_context_data(**kwargs)
         name = self.object.get_full_name() or self.object.email
+        ctx['partner'] = self.partner
         ctx['title'] = _("Edit user '%s'") % name
         return ctx
 
