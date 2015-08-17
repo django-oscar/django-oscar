@@ -1,5 +1,6 @@
 from django.contrib import admin
 from treebeard.admin import TreeAdmin
+from treebeard.forms import movenodeform_factory
 
 from oscar.core.loading import get_model
 
@@ -82,7 +83,7 @@ class AttributeOptionGroupAdmin(admin.ModelAdmin):
 
 
 class CategoryAdmin(TreeAdmin):
-    pass
+    form = movenodeform_factory(Category)
 
 
 admin.site.register(ProductClass, ProductClassAdmin)
