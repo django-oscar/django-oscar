@@ -266,8 +266,76 @@ var oscar = (function(o, $) {
         }
     };
 
+    o.datetimepickers = {
+        init: function() {
+            o.datetimepickers.initDatePickers(window.document);
+        },
+        options: {
+            'languageCode': 'en',
+            'dateFormat': 'yy-mm-dd',
+            'timeFormat': 'hh:ii',
+            'datetimeFormat': 'yy-mm-dd hh:ii',
+            'stepMinute': 15,
+        },
+        initDatePickers: function(el) {
+            if ($.fn.datetimepicker) {
+                var defaultDatepickerConfig = {
+                    'format': o.datetimepickers.options.dateFormat,
+                    'autoclose': true,
+                    'language': o.datetimepickers.options.languageCode,
+                    'minView': 2
+                };
+                $dates = $(el).find('[data-oscarWidget="date"]').not('.no-widget-init').not('.no-widget-init *');
+                $dates.each(function(ind, ele) {
+                    var $ele = $(ele),
+                        config = $.extend({}, defaultDatepickerConfig, {
+                            'format': $ele.data('dateformat')
+                        });
+                    $ele.datetimepicker(config);
+                });
+
+                var defaultDatetimepickerConfig = {
+                    'format': o.datetimepickers.options.datetimeFormat,
+                    'minuteStep': o.datetimepickers.options.stepMinute,
+                    'autoclose': true,
+                    'language': o.datetimepickers.options.languageCode
+                };
+                $datetimes = $(el).find('[data-oscarWidget="datetime"]').not('.no-widget-init').not('.no-widget-init *');
+                $datetimes.each(function(ind, ele) {
+                    var $ele = $(ele),
+                        config = $.extend({}, defaultDatetimepickerConfig, {
+                          'format': $ele.data('datetimeformat'),
+                          'minuteStep': $ele.data('stepminute')
+                        });
+                    $ele.datetimepicker(config);
+                });
+
+                var defaultTimepickerConfig = {
+                    'format': o.datetimepickers.options.timeFormat,
+                    'minuteStep': o.datetimepickers.options.stepMinute,
+                    'autoclose': true,
+                    'language': o.datetimepickers.options.languageCode
+                };
+                $times = $(el).find('[data-oscarWidget="time"]').not('.no-widget-init').not('.no-widget-init *')
+                $times.each(function(ind, ele) {
+                    var $ele = $(ele),
+                        config = $.extend({}, defaultTimepickerConfig, {
+                          'format': $ele.data('timeformat'),
+                          'minuteStep': $ele.data('stepminute'),
+                          'startView': 1,
+                          'maxView': 1,
+                          'formatViewType': 'time'
+                        });
+                    $ele.datetimepicker(config);
+                });
+            }
+        }
+    };
+
+
     o.init = function() {
         o.forms.init();
+        o.datetimepickers.init();
         o.page.init();
         o.responsive.init();
         o.responsive.initSlider();

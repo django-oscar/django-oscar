@@ -11,11 +11,12 @@ from django.utils.http import is_safe_url
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
+
+from oscar.apps.customer.utils import get_password_reset_url, normalise_email
 from oscar.core.loading import get_profile_class, get_class, get_model
 from oscar.core.compat import get_user_model, existing_user_fields
-from oscar.apps.customer.utils import get_password_reset_url, normalise_email
 from oscar.core.validators import password_validators
-
+from oscar.forms import widgets
 
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 CommunicationEventType = get_model('customer', 'communicationeventtype')
@@ -186,9 +187,11 @@ class EmailUserCreationForm(forms.ModelForm):
 
 class OrderSearchForm(forms.Form):
     date_from = forms.DateField(
-        required=False, label=pgettext_lazy("start date", "From"))
+        required=False, label=pgettext_lazy("start date", "From"),
+        widget=widgets.DatePickerInput())
     date_to = forms.DateField(
-        required=False, label=pgettext_lazy("end date", "To"))
+        required=False, label=pgettext_lazy("end date", "To"),
+        widget=widgets.DatePickerInput())
     order_number = forms.CharField(required=False, label=_("Order number"))
 
     def clean(self):

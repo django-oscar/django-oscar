@@ -19,12 +19,10 @@
 {% block extrastyles %}
     {{ block.super }}
     {% compress css %}
-        {% block jquery-ui-css %}
-            <link rel="stylesheet" href="{% static "oscar/js/jquery-ui/jquery-ui.css" %}">
-        {% endblock %}
         <link rel="stylesheet" href="{% static "oscar/js/select2/select2.css" %}" />
         <link rel="stylesheet" href="{% static "oscar/css/select2-bootstrap.css" %}" />
         <link rel="stylesheet" href="{% static "oscar/js/bootstrap-datetimepicker/bootstrap-datetimepicker.css" %}" />
+        <link rel="stylesheet" href="{% static "oscar/css/datetimepicker.css" %}" />
     {% endcompress %}
 {% endblock %}
 
@@ -159,9 +157,6 @@
 
     {% compress js %}
         {# jQuery plugins #}
-        {% block jquery-ui-js %}
-            <script src="{% static "oscar/js/jquery-ui/jquery-ui.js" %}" type="text/javascript" charset="utf-8"></script>
-        {% endblock %}
         <script src="{% static "oscar/js/mousewheel/jquery.mousewheel.min.js" %}" type="text/javascript" charset="utf-8"></script>
         <script src="{% static "oscar/js/bootstrap-datetimepicker/bootstrap-datetimepicker.js" %}" type="text/javascript" charset="utf-8"></script>
         <script src="{% static "oscar/js/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.all.js" %}" type="text/javascript" charset="utf-8"></script>
