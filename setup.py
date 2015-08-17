@@ -62,7 +62,7 @@ setup(name='django-oscar',
           'django-tables2>=1.0.4,<1.1',
           # Used for manipulating form field attributes in templates (eg: add
           # a css class)
-          'django-widget-tweaks>=1.3,<1.4',
+          'django-widget-tweaks>=1.4.1,<1.5',
       ],
       dependency_links=[],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers

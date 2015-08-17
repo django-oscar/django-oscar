@@ -4,7 +4,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes import fields
 from oscar.core.loading import get_model
 
 from oscar.models.fields import ExtendedURLField
@@ -18,7 +18,7 @@ class LinkedPromotion(models.Model):
     # We use generic foreign key to link to a promotion model
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
-    content_object = generic.GenericForeignKey('content_type', 'object_id')
+    content_object = fields.GenericForeignKey('content_type', 'object_id')
 
     position = models.CharField(_("Position"), max_length=100,
                                 help_text="Position on page")
@@ -90,9 +90,9 @@ class AbstractPromotion(models.Model):
     that subclasses must implement.
     """
     _type = 'Promotion'
-    keywords = generic.GenericRelation(KeywordPromotion,
-                                       verbose_name=_('Keywords'))
-    pages = generic.GenericRelation(PagePromotion, verbose_name=_('Pages'))
+    keywords = fields.GenericRelation(KeywordPromotion,
+                                      verbose_name=_('Keywords'))
+    pages = fields.GenericRelation(PagePromotion, verbose_name=_('Pages'))
 
     class Meta:
         abstract = True

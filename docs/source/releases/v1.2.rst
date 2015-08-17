@@ -35,3 +35,9 @@ What's new in Oscar 1.2?
 
 Backwards incompatible changes in Oscar 1.2
 -------------------------------------------
+
+
+Misc
+~~~~
+ 
+* JQuery UI is no longer included in the dashboard (`#1792`)

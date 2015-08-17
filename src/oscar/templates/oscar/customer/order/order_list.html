@@ -60,18 +60,3 @@
     {% endif %}
 
 {% endblock tabcontent %}
-
-{% block extrastyles %}
-    {{ block.super }}
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/cupertino/jquery-ui.css">
-{% endblock %}
-
-{% block cdn_scripts %}
-    {{ block.super }}
-    <script src="//code.jquery.com/ui/1.10.3/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
-{% endblock %}
-
-{% block onbodyload %}
-    {{ block.super }}
-    $('#id_date_to, #id_date_from').datepicker({'dateFormat': 'yy-mm-dd'});
-{% endblock %}
