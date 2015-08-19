@@ -58,13 +58,11 @@
 {% block content %}
 
     <form method="get" class="form-horizontal">
-        {# Render other search params in a hidden block #}
-        <div style="display:none">
-            {% for value in selected_facets %}
-                <input name="selected_facets" value="{{ value }}" />
-            {% endfor %}
-            {{ form.q }}
-        </div>
+        {# Render other search params as hidden inputs #}
+        {% for value in selected_facets %}
+            <input type="hidden" name="selected_facets" value="{{ value }}" />
+        {% endfor %}
+        <input type="hidden" name="q" value="{{ search_form.q.value }}" />
 
         {% if paginator.count %}
             {% if paginator.num_pages > 1 %}
