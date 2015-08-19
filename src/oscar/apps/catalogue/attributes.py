@@ -13,11 +13,12 @@ class ProductAttributesContainer(object):
 
     def __setstate__(self, state):
         self.__dict__ = state
-        self.initialised = False
+        self._initialised = False
 
     def __init__(self, product):
-        self.product = product
-        self.initialised = False
+        self._product = product
+        self._product_pk = product.pk
+        self._initialised = False
 
     def __getattr__(self, name):
         if not name.startswith('_') and not self.initialised:
@@ -25,7 +26,7 @@ class ProductAttributesContainer(object):
             return getattr(self, name)
         raise AttributeError(
             _("%(obj)s has no attribute named '%(attr)s'") % {
-                'obj': self.product.get_product_class(), 'attr': name})
+                'obj': self._product.get_product_class(), 'attr': name})
 
     def validate_attributes(self):
         for attribute in self.get_all_attributes():
@@ -44,13 +45,13 @@ class ProductAttributesContainer(object):
                         {'attr': attribute.code, 'err': e})
 
     def get_values(self):
-        return self.product.attribute_values.all()
+        return self._product.attribute_values.all()
 
     def get_value_by_attribute(self, attribute):
         return self.get_values().get(attribute=attribute)
 
     def get_all_attributes(self):
-        return self.product.get_product_class().attributes.all()
+        return self._product.get_product_class().attributes.all()
 
     def get_attribute_by_code(self, code):
         return self.get_all_attributes().get(code=code)
@@ -83,11 +84,11 @@ class ProductAttributesContainer(object):
             # Django fetch it again.
             if value_obj:
                 value_obj.attribute = attribute
-            attribute.save_value(self.product, new_value, value_obj)
+            attribute.save_value(self._product, new_value, value_obj)
 
     def _load_values(self):
         values = {v.attribute_id: v for v in self.get_values()}
-        attrs = self.product.get_product_class().attributes.all()
+        attrs = self._product.get_product_class().attributes.all()
 
         self._initial_state = {}
         for attr in attrs:
@@ -96,4 +97,4 @@ class ProductAttributesContainer(object):
             setattr(self, attr.code, value)
             self._initial_state[attr.code] = value
 
-        self.initialised = True
+        self._initialised = True
