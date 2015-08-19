@@ -24,7 +24,7 @@ class ProductAttributesTest(TestCase):
         product.attr.text = 'foobar'
         product.attr.integer = 1
 
-        with self.assertNumQueries(5):
+        with self.assertNumQueries(4):
             product.save()
 
     def test_load_attributes(self):

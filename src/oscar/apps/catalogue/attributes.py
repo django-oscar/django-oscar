@@ -21,7 +21,7 @@ class ProductAttributesContainer(object):
         self._initialised = False
 
     def __getattr__(self, name):
-        if not name.startswith('_') and not self.initialised:
+        if not name.startswith('_') and not self._initialised:
             self._load_values()
             return getattr(self, name)
         raise AttributeError(
@@ -75,7 +75,11 @@ class ProductAttributesContainer(object):
 
         # We don't filter on the attributes here since we assume all objects
         # are still available in the orm cache.
-        value_objects = {v.attribute_id: v for v in self.get_values()}
+        if self._product_pk:
+            value_objects = {v.attribute_id: v for v in self.get_values()}
+        else:
+            value_objects = {}
+
         for attribute in dirty_attributes:
             new_value = getattr(self, attribute.code)
             value_obj = value_objects.get(attribute.pk)
