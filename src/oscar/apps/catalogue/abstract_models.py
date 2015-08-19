@@ -32,6 +32,11 @@ ProductManager, BrowsableProductManager = get_classes(
     'catalogue.managers', ['ProductManager', 'BrowsableProductManager'])
 
 Selector = get_class('partner.strategy', 'Selector')
+ProductAttributesContainer = get_class(
+    'catalogue.attributes', 'ProductAttributesContainer')
+
+
+class _default(object): pass
 
 
 @python_2_unicode_compatible
@@ -347,7 +352,7 @@ class AbstractProduct(models.Model):
 
     def __init__(self, *args, **kwargs):
         super(AbstractProduct, self).__init__(*args, **kwargs)
-        self.attr = ProductAttributesContainer(product=self)
+        self.attr = ProductAttributesContainer(self)
 
     def __str__(self):
         if self.title:
@@ -702,71 +707,6 @@ class AbstractProductRecommendation(models.Model):
         verbose_name_plural = _('Product recomendations')
 
 
-class ProductAttributesContainer(object):
-    """
-    Stolen liberally from django-eav, but simplified to be product-specific
-
-    To set attributes on a product, use the `attr` attribute:
-
-        product.attr.weight = 125
-    """
-
-    def __setstate__(self, state):
-        self.__dict__ = state
-        self.initialised = False
-
-    def __init__(self, product):
-        self.product = product
-        self.initialised = False
-
-    def __getattr__(self, name):
-        if not name.startswith('_') and not self.initialised:
-            values = self.get_values().select_related('attribute')
-            for v in values:
-                setattr(self, v.attribute.code, v.value)
-            self.initialised = True
-            return getattr(self, name)
-        raise AttributeError(
-            _("%(obj)s has no attribute named '%(attr)s'") % {
-                'obj': self.product.get_product_class(), 'attr': name})
-
-    def validate_attributes(self):
-        for attribute in self.get_all_attributes():
-            value = getattr(self, attribute.code, None)
-            if value is None:
-                if attribute.required:
-                    raise ValidationError(
-                        _("%(attr)s attribute cannot be blank") %
-                        {'attr': attribute.code})
-            else:
-                try:
-                    attribute.validate_value(value)
-                except ValidationError as e:
-                    raise ValidationError(
-                        _("%(attr)s attribute %(err)s") %
-                        {'attr': attribute.code, 'err': e})
-
-    def get_values(self):
-        return self.product.attribute_values.all()
-
-    def get_value_by_attribute(self, attribute):
-        return self.get_values().get(attribute=attribute)
-
-    def get_all_attributes(self):
-        return self.product.get_product_class().attributes.all()
-
-    def get_attribute_by_code(self, code):
-        return self.get_all_attributes().get(code=code)
-
-    def __iter__(self):
-        return iter(self.get_values())
-
-    def save(self):
-        for attribute in self.get_all_attributes():
-            if hasattr(self, attribute.code):
-                value = getattr(self, attribute.code)
-                attribute.save_value(self.product, value)
-
 
 @python_2_unicode_compatible
 class AbstractProductAttribute(models.Model):
@@ -840,18 +780,22 @@ class AbstractProductAttribute(models.Model):
     def __str__(self):
         return self.name
 
-    def save_value(self, product, value):
+    def save_value(self, product, value, value_obj=_default):
         ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
-        try:
-            value_obj = product.attribute_values.get(attribute=self)
-        except ProductAttributeValue.DoesNotExist:
+
+        if value_obj is _default:
+            try:
+                value_obj = product.attribute_values.get(attribute=self)
+            except ProductAttributeValue.DoesNotExist:
+                value_obj = None
+
+        if value_obj is None:
             # FileField uses False for announcing deletion of the file
             # not creating a new value
             delete_file = self.is_file and value is False
             if value is None or value == '' or delete_file:
                 return
-            value_obj = ProductAttributeValue.objects.create(
-                product=product, attribute=self)
+            value_obj = ProductAttributeValue(product=product, attribute=self)
 
         if self.is_file:
             # File fields in Django are treated differently, see

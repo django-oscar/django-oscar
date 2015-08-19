@@ -29,7 +29,10 @@ Oscar 1.2 is compatible with...
 
 What's new in Oscar 1.2?
 ------------------------
-
+ 
+* The `ProductAttributesContainer` is moved to `oscar.apps.catalogue.attributes`.
+  Various performance optimizations where done and it is now also possible to 
+  override the class.
 
 .. _incompatible_in_1.2:
 
