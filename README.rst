@@ -53,10 +53,7 @@ Continuous integration status:
     
 PyPI status:
 
-.. image:: https://pypip.in/v/django-oscar/badge.png
-    :target: https://pypi.python.org/pypi/django-oscar/
-
-.. image:: https://pypip.in/d/django-oscar/badge.png
+.. image:: https://img.shields.io/pypi/v/django-oscar.svg
     :target: https://pypi.python.org/pypi/django-oscar/
 
 Docs status:
