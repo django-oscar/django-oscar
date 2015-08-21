@@ -43,10 +43,11 @@ Continuous integration status:
 .. image:: https://travis-ci.org/django-oscar/django-oscar.svg?branch=master
     :target: https://travis-ci.org/django-oscar/django-oscar
 
-.. image:: https://coveralls.io/repos/django-oscar/django-oscar/badge.png?branch=master
+.. image:: http://codecov.io/github/django-oscar/django-oscar/coverage.svg?branch=master 
     :alt: Coverage
-    :target: https://coveralls.io/r/django-oscar/django-oscar
-
+    :target: http://codecov.io/github/django-oscar/django-oscar?branch=master
+    
+    
 PyPI status:
 
 .. image:: https://pypip.in/v/django-oscar/badge.png
