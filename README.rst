@@ -47,6 +47,9 @@ Continuous integration status:
     :alt: Coverage
     :target: http://codecov.io/github/django-oscar/django-oscar?branch=master
     
+.. image:: https://requires.io/github/django-oscar/django-oscar/requirements.svg?branch=master
+     :target: https://requires.io/github/django-oscar/django-oscar/requirements/?branch=master
+     :alt: Requirements Status
     
 PyPI status:
 
