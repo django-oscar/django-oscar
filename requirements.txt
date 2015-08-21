@@ -12,7 +12,7 @@ Werkzeug==0.9.6
 # Sandbox
 Whoosh==2.6.0
 pysolr==3.2.0
-requests==2.4.3
+requests==2.7.0
 uWSGI==2.0.8
 
 # Docs
