@@ -235,9 +235,9 @@ var oscar = (function(o, $) {
                 var option_group_select = $('#' + type_select.attr('id').replace('type', 'option_group'));
 
                 if(type_select.val() === 'option'){
-                    option_group_select.closest('.control-group').show();
+                    option_group_select.select2('container').show();
                 }else{
-                    option_group_select.closest('.control-group').hide();
+                    option_group_select.select2('container').hide();
                 }
             }
         },
