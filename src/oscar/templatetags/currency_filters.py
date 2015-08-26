@@ -22,6 +22,6 @@ def currency(value, currency=None):
     kwargs = {
         'currency': currency if currency else settings.OSCAR_DEFAULT_CURRENCY,
         'format': getattr(settings, 'OSCAR_CURRENCY_FORMAT', None),
-        'locale': to_locale(get_language()),
+        'locale': to_locale(get_language() or settings.LANGUAGE_CODE),
     }
     return format_currency(value, **kwargs)
