@@ -109,7 +109,7 @@ class RangeProductListView(BulkEditMixin, ListView):
         return self._range
 
     def get_queryset(self):
-        products = self.get_range().included_products.all()
+        products = self.get_range().all_products()
         return products.order_by('rangeproduct__display_order')
 
     def get_context_data(self, **kwargs):
