@@ -4,7 +4,8 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.fields import (GenericForeignKey,
+                                                GenericRelation)
 from oscar.core.loading import get_model
 
 from oscar.models.fields import ExtendedURLField
@@ -18,7 +19,7 @@ class LinkedPromotion(models.Model):
     # We use generic foreign key to link to a promotion model
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
-    content_object = generic.GenericForeignKey('content_type', 'object_id')
+    content_object = GenericForeignKey('content_type', 'object_id')
 
     position = models.CharField(_("Position"), max_length=100,
                                 help_text="Position on page")
@@ -90,9 +91,8 @@ class AbstractPromotion(models.Model):
     that subclasses must implement.
     """
     _type = 'Promotion'
-    keywords = generic.GenericRelation(KeywordPromotion,
-                                       verbose_name=_('Keywords'))
-    pages = generic.GenericRelation(PagePromotion, verbose_name=_('Pages'))
+    keywords = GenericRelation(KeywordPromotion, verbose_name=_('Keywords'))
+    pages = GenericRelation(PagePromotion, verbose_name=_('Pages'))
 
     class Meta:
         abstract = True
@@ -200,7 +200,7 @@ class MultiImage(AbstractPromotion):
     _type = 'Multi-image'
     name = models.CharField(_("Name"), max_length=128)
     images = models.ManyToManyField(
-        'promotions.Image', null=True, blank=True,
+        'promotions.Image', blank=True,
         help_text=_(
             "Choose the Image content blocks that this block will use. "
             "(You may need to create some first)."))
@@ -270,7 +270,7 @@ class HandPickedProductList(AbstractProductList):
     _type = 'Product list'
     products = models.ManyToManyField('catalogue.Product',
                                       through='OrderedProduct', blank=True,
-                                      null=True, verbose_name=_("Products"))
+                                      verbose_name=_("Products"))
 
     def get_queryset(self):
         return self.products.base_queryset()\

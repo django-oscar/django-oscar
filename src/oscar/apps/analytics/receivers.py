@@ -5,7 +5,6 @@ from django.dispatch import receiver
 from django.db import IntegrityError
 
 from oscar.core.loading import get_class, get_classes
-from oscar.apps.search.signals import user_search
 
 UserSearch, UserRecord, ProductRecord, UserProductView = get_classes(
     'analytics.models', ['UserSearch', 'UserRecord', 'ProductRecord',
@@ -80,12 +79,6 @@ def receive_product_view(sender, product, user, **kwargs):
     if user and user.is_authenticated():
         _update_counter(UserRecord, 'num_product_views', {'user': user})
         UserProductView.objects.create(product=product, user=user)
-
-
-@receiver(user_search)
-def receive_product_search(sender, query, user, **kwargs):
-    if user and user.is_authenticated() and not kwargs.get('raw', False):
-        UserSearch._default_manager.create(user=user, query=query)
 
 
 @receiver(basket_addition)

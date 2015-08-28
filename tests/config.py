@@ -49,7 +49,6 @@ def configure():
                 "django.core.context_processors.media",
                 "django.core.context_processors.static",
                 "django.contrib.messages.context_processors.messages",
-                'oscar.apps.search.context_processors.search_form',
                 'oscar.apps.customer.notifications.context_processors.notifications',
                 'oscar.apps.promotions.context_processors.promotions',
                 'oscar.apps.checkout.context_processors.checkout',
@@ -76,11 +75,6 @@ def configure():
                 'oscar.apps.customer.auth_backends.EmailBackend',
                 'django.contrib.auth.backends.ModelBackend',
             ),
-            'HAYSTACK_CONNECTIONS': {
-                'default': {
-                    'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
-                }
-            },
             'PASSWORD_HASHERS': ['django.contrib.auth.hashers.MD5PasswordHasher'],
             'ROOT_URLCONF': 'tests._site.urls',
             'LOGIN_REDIRECT_URL': '/accounts/',

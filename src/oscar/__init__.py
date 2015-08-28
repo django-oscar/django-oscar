@@ -43,7 +43,6 @@ OSCAR_CORE_APPS = [
     'oscar.apps.order',
     'oscar.apps.customer',
     'oscar.apps.promotions',
-    'oscar.apps.search',
     'oscar.apps.voucher',
     'oscar.apps.wishlists',
     'oscar.apps.dashboard',
@@ -60,7 +59,6 @@ OSCAR_CORE_APPS = [
     'oscar.apps.dashboard.vouchers',
     'oscar.apps.dashboard.communications',
     # 3rd-party apps that oscar depends on
-    'haystack',
     'treebeard',
     'sorl.thumbnail',
     'django_tables2',

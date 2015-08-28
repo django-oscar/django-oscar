@@ -1,11 +1,3 @@
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-        'URL': u'http://127.0.0.1:8983/solr',
-        'INCLUDE_SPELLING': True
-    },
-}
-
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',

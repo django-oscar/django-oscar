@@ -19,7 +19,6 @@ class Shop(Application):
     basket_app = get_class('basket.app', 'application')
     checkout_app = get_class('checkout.app', 'application')
     promotions_app = get_class('promotions.app', 'application')
-    search_app = get_class('search.app', 'application')
     dashboard_app = get_class('dashboard.app', 'application')
     offer_app = get_class('offer.app', 'application')
 
@@ -32,7 +31,6 @@ class Shop(Application):
             url(r'^basket/', include(self.basket_app.urls)),
             url(r'^checkout/', include(self.checkout_app.urls)),
             url(r'^accounts/', include(self.customer_app.urls)),
-            url(r'^search/', include(self.search_app.urls)),
             url(r'^dashboard/', include(self.dashboard_app.urls)),
             url(r'^offers/', include(self.offer_app.urls)),
 
