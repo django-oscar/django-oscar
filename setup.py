@@ -35,7 +35,7 @@ setup(name='django-oscar',
       packages=find_packages('src'),
       include_package_data=True,
       install_requires=[
-          'django>=1.6.8,<1.8',
+          'django>=1.8,<1.9',
           # PIL is required for image fields, Pillow is the "friendly" PIL fork
           'pillow>=1.7.8,<=2.7',
           # We use the ModelFormSetView from django-extra-views for the basket
@@ -45,9 +45,9 @@ setup(name='django-oscar',
           # Search support
           'django-haystack>=2.3.1,<2.4.0',
           # Treebeard is used for categories
-          'django-treebeard==3.0',
+          'django-treebeard>=3.0,<3.1',
           # Sorl is used as the default thumbnailer
-          'sorl-thumbnail>=11.12.1b,<=12.2',
+          'sorl-thumbnail>=12.3,<12.4',
           # Babel is used for currency formatting
           'Babel>=1.0,<1.4',
           # For converting non-ASCII to ASCII when creating slugs
@@ -64,7 +64,7 @@ setup(name='django-oscar',
           'django-tables2>=0.15.0,<0.16',
           # Used for manipulating form field attributes in templates (eg: add
           # a css class)
-          'django-widget-tweaks>=1.3,<1.4',
+          'django-widget-tweaks>=1.4.1,<1.5',
       ],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
