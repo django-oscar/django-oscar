@@ -2,6 +2,7 @@ from decimal import Decimal as D
 
 from django.test import TestCase
 import mock
+import six
 
 from oscar.apps.order import processing
 from oscar.apps.order import exceptions
@@ -40,7 +41,7 @@ class TestValidatePaymentEvent(TestCase):
 
         error = "The selected quantity for line #6 is too large"
 
-        with self.assertRaisesRegexp(exceptions.InvalidPaymentEvent, error):
+        with six.assertRaisesRegex(self, exceptions.InvalidPaymentEvent, error):
             self.event_handler.validate_payment_event(order, 'payment',
                                                       D('10.00'), lines,
                                                       line_quantities)
