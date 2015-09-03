@@ -1,6 +1,5 @@
 import sys
 import traceback
-from importlib import import_module
 
 import django
 from django.conf import settings
@@ -8,6 +7,11 @@ from django.utils import six
 
 from oscar.core.exceptions import (ModuleNotFoundError, ClassNotFoundError,
                                    AppNotFoundError)
+
+try:
+    from importlib import import_module
+except ImportError:
+    from django.utils.importlib import import_module
 
 
 def import_string(dotted_path):

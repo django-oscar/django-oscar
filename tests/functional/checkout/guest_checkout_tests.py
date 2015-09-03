@@ -4,7 +4,6 @@ from django.test.utils import override_settings
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.utils.http import urlquote
-from django.utils.importlib import import_module
 import mock
 from six.moves.urllib.parse import urlsplit
 
@@ -29,6 +28,11 @@ try:
     from imp import reload
 except ImportError:
     pass
+
+try:
+    from importlib import import_module
+except ImportError:
+    from django.utils.importlib import import_module
 
 
 def reload_url_conf():

@@ -10,7 +10,6 @@ from django.db.models.query import Q
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now, get_current_timezone
 from django.utils.translation import ugettext_lazy as _
-from django.utils.importlib import import_module
 from django.utils import six
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
@@ -21,6 +20,11 @@ from oscar.core.loading import get_class, get_model
 from oscar.apps.offer.managers import ActiveOfferManager
 from oscar.templatetags.currency_filters import currency
 from oscar.models import fields
+
+try:
+    from importlib import import_module
+except ImportError:
+    from django.utils.importlib import import_module
 
 BrowsableRangeManager = get_class('offer.managers', 'BrowsableRangeManager')
 
