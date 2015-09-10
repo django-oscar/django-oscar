@@ -328,8 +328,8 @@ class ProfileUpdateView(PageTitleMixin, generic.FormView):
         # cleaned data because the object created by form.save() can
         # either be a user or profile instance depending whether a profile
         # class has been specified by the AUTH_PROFILE_MODULE setting.
-        new_email = form.cleaned_data['email']
-        if old_user and new_email != old_user.email:
+        new_email = form.cleaned_data.get('email')
+        if new_email and old_user and new_email != old_user.email:
             # Email address has changed - send a confirmation email to the old
             # address including a password reset link in case this is a
             # suspicious change.
