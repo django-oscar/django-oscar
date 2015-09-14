@@ -156,7 +156,6 @@ class BasketMiddleware(object):
         else:
             # Anonymous user with no basket - instantiate a new basket
             # instance.  No need to save yet.
-            # we need to.
             basket = Basket()
 
         # Cache basket instance for the during of this request
