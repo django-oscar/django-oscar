@@ -352,6 +352,12 @@ class AbstractBasket(models.Model):
             except ObjectDoesNotExist:
                 # Handle situation where the product may have been deleted
                 pass
+            except TypeError:
+                # Handle Unavailable products with no known price
+                info = self.strategy.fetch_for_product(line.product)
+                if info.availability.is_available_to_buy:
+                    raise
+                pass
         return total
 
     # ==========
