@@ -114,6 +114,7 @@ class TestANonEmptyBasket(TestCase):
 
         try:
             self.basket.strategy = UnavailableProductStrategy()
+            self.assertEqual(self.basket.all_lines()[1].get_warning(), u"'D\xf9\uff4d\u03fb\u03d2 title' is no longer available")
             self.assertEqual(self.basket.total_excl_tax, 100)
         finally:
             self.basket.strategy = strategy.Default()
