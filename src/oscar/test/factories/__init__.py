@@ -63,7 +63,12 @@ def create_stockrecord(product=None, price_excl_tax=None, partner_sku=None,
 
 def create_purchase_info(record):
     return strategy.PurchaseInfo(
-        price=prices.FixedPrice(
+        min_price=prices.FixedPrice(
+            record.price_currency,
+            record.price_excl_tax,
+            D('0.00')  # Default to no tax
+        ),
+        max_price=prices.FixedPrice(
             record.price_currency,
             record.price_excl_tax,
             D('0.00')  # Default to no tax
