@@ -5566,13 +5566,13 @@ msgstr[1] ""
 #, python-format
 msgid ""
 "\n"
-"                    <strong>1</strong> result.\n"
+"                    <strong>%(num_results)s</strong> result.\n"
 "                "
 msgid_plural ""
 "\n"
 "                    <strong>%(num_results)s</strong> results.\n"
 "                "
-msgstr[0] "\n                    <strong>1</strong> résultat.\n                "
+msgstr[0] "\n                    <strong>%(num_results)s</strong> résultat.\n                "
 msgstr[1] "\n                    <strong>%(num_results)s</strong> résultats.\n                "
 
 #: templates/oscar/catalogue/browse.html:90
@@ -5755,13 +5755,13 @@ msgstr "Non"
 #, python-format
 msgid ""
 "\n"
-"            <strong>%(num_up_votes)s</strong> of 1 customer found this useful\n"
+"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customer found this useful\n"
 "            "
 msgid_plural ""
 "\n"
 "            <strong>%(num_up_votes)s</strong> of %(num_votes)s customers found this useful\n"
 "            "
-msgstr[0] "\n<strong>%(num_up_votes)s</strong> sur 1 client ont trouvé cela utile"
+msgstr[0] "\n<strong>%(num_up_votes)s</strong> sur %(num_votes)s client ont trouvé cela utile"
 msgstr[1] "\n<strong>%(num_up_votes)s</strong> sur %(num_votes)s clients ont trouvé cela utile"
 
 #: templates/oscar/catalogue/partials/review.html:58
@@ -5776,13 +5776,13 @@ msgstr "Gratuit"
 #, python-format
 msgid ""
 "\n"
-"                    1 customer review\n"
+"                    %(num_reviews)s customer review\n"
 "                "
 msgid_plural ""
 "\n"
 "                    %(num_reviews)s customer reviews\n"
 "                "
-msgstr[0] "\n                    1 avis de client\n                "
+msgstr[0] "\n                    %(num_reviews)s avis de client\n                "
 msgstr[1] "\n                    %(num_reviews)s avis de clients\n                "
 
 #: templates/oscar/catalogue/reviews/partials/review_stars.html:26
@@ -8897,13 +8897,13 @@ msgstr "\n                    <strong>%(num_results)s</strong> résultats trouv�
 #, python-format
 msgid ""
 "\n"
-"                    Found <strong>1</strong> result.\n"
+"                    Found <strong>%(num_results)s</strong> result.\n"
 "                "
 msgid_plural ""
 "\n"
 "                    Found <strong>%(num_results)s</strong> results. \n"
 "                "
-msgstr[0] "\n<strong>1</strong> résultat trouvé"
+msgstr[0] "\n<strong>%(num_results)s</strong> résultat trouvé"
 msgstr[1] "\n<strong>%(num_results)s</strong> résultats trouvés"
 
 #: templates/oscar/search/results.html:69

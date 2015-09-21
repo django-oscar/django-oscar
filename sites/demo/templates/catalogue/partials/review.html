@@ -48,7 +48,7 @@
                     <p>
                         <small>
                         {% blocktrans count review.num_up_votes as num_up_votes %}
-                        <strong>1</strong> customer found this useful
+                        <strong>{{ num_up_votes }}</strong> customer found this useful
                         {% plural %}
                         <strong>{{ num_up_votes }}</strong> customers found this useful
                         {% endblocktrans %}

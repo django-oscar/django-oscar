@@ -11,7 +11,7 @@
 
         <small><a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.id %}">
                 {% blocktrans count product.num_approved_reviews as num_reviews %}
-                    1 customer review
+                    {{ num_reviews }} customer review
                 {% plural %}
                     {{ num_reviews }} customer reviews
                 {% endblocktrans %}
