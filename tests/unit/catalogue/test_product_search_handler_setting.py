@@ -20,4 +20,4 @@ class TestProductSearchHandlerSetting(TestCase):
         with override_settings(OSCAR_PRODUCT_SEARCH_HANDLER=handler_override):
             handler_class = get_product_search_handler_class()
 
-        assert handler_class == TestSearchHandler
+        self.assertEqual(handler_class, TestSearchHandler)
