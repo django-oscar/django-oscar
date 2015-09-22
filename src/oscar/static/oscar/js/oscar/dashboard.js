@@ -245,8 +245,8 @@ var oscar = (function(o, $) {
             init: function() {
                 $('[data-behaviours~="remove"]').click(function() {
                     $this = $(this);
-                    $this.parents('table').find('input').attr('checked', false);
-                    $this.parents('tr').find('input').attr('checked', 'checked');
+                    $this.parents('table').find('input').prop('checked', false);
+                    $this.parents('tr').find('input').prop('checked', true);
                     $this.parents('form').submit();
                 });
             }
