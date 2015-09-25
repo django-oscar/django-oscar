@@ -32,7 +32,8 @@ env:
         - PIP_FIND_LINKS=file://$HOME/.cache/pip/wheels
     matrix:
         - DJANGO=Django==1.7.8
-        - DJANGO=Django==1.8.1
+        - DJANGO=Django==1.8.4
+        - DJANGO=DJANGO==1.9a1 
 
 before_install:
     - pip install codecov
@@ -43,7 +44,8 @@ install:
     - pip wheel -r requirements.txt
     # Actually install our dependencies now, this will pull from the directory
     # that the first command placed the Wheels into.
-    - pip install -e . -r requirements.txt $DJANGO 
+    - pip install --pre $DJANGO 
+    - pip install -e . -r requirements.txt 
 
 before_script:
     # Create testing databases for running migrations against
