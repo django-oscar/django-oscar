@@ -3,8 +3,7 @@ from django.core.exceptions import ValidationError
 
 from oscar.core.compat import get_user_model
 from oscar.apps.catalogue.reviews import models
-from oscar.test.factories import create_product
-from oscar.test.factories import UserFactory
+from oscar.test import factories
 
 User = get_user_model()
 
@@ -12,7 +11,7 @@ User = get_user_model()
 class TestAnAnonymousReview(TestCase):
 
     def setUp(self):
-        self.product = create_product()
+        self.product = factories.StandaloneProductFactory()
         self.data = {
             'product': self.product,
             'title': 'This product is lovely',
@@ -69,8 +68,8 @@ class TestAnAnonymousReview(TestCase):
 class TestAUserReview(TestCase):
 
     def setUp(self):
-        self.product = create_product()
-        self.user = UserFactory(first_name="Tom", last_name="Thumb")
+        self.product = factories.StandaloneProductFactory()
+        self.user = factories.UserFactory(first_name="Tom", last_name="Thumb")
         self.data = {
             'product': self.product,
             'title': 'This product is lovely',
@@ -107,9 +106,9 @@ class TestAUserReview(TestCase):
 class TestVotingOnAReview(TestCase):
 
     def setUp(self):
-        self.product = create_product()
-        self.user = UserFactory()
-        self.voter = UserFactory()
+        self.product = factories.StandaloneProductFactory()
+        self.user = factories.UserFactory()
+        self.voter = factories.UserFactory()
         self.review = self.product.reviews.create(
             title='This is nice',
             score=3,
