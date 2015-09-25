@@ -7,7 +7,7 @@ from oscar.test.testcases import WebTestCase
 class TestACustomer(WebTestCase):
 
     def setUp(self):
-        self.product = factories.create_product()
+        self.product = factories.StandaloneProductFactory()
 
     def test_can_add_a_review_when_anonymous(self):
         detail_page = self.app.get(self.product.get_absolute_url())
