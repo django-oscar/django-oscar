@@ -17,6 +17,7 @@ python:
     - '2.7'
     - '3.3'
     - '3.4'
+    - '3.5'
 
 env:
     global:
@@ -34,6 +35,13 @@ env:
         - DJANGO=Django==1.7.8
         - DJANGO=Django==1.8.4
         - DJANGO=DJANGO==1.9a1 
+
+
+matrix:
+    exclude:
+        - python: 3.5
+          env: DJANGO=Django==1.7.8
+
 
 before_install:
     - pip install codecov
