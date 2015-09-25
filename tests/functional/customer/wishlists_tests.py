@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from oscar.core.loading import get_model
 
-from oscar.test.factories import create_product
+from oscar.test import factories
 from oscar.test.testcases import WebTestCase
 
 WishList = get_model('wishlists', 'WishList')
@@ -12,7 +12,7 @@ class TestProductDetailPage(WebTestCase):
 
     def setUp(self):
         super(TestProductDetailPage, self).setUp()
-        self.product = create_product()
+        self.product = factories.StandaloneProductFactory()
 
     def test_allows_a_product_to_be_added_to_wishlist(self):
         # Click add to wishlist button
