@@ -13,10 +13,9 @@ class TestAddingAProductToABasket(TestCase):
     def setUp(self):
         self.basket = Basket()
         self.basket.strategy = strategy.Default()
-        self.product = factories.create_product()
-        self.record = factories.create_stockrecord(
-            currency='GBP',
-            product=self.product, price_excl_tax=D('10.00'))
+        self.product = factories.StandaloneProductFactory()
+        self.product.stockrecords.update(price_currency='GBP')
+        self.record = self.product.stockrecords.get()
         self.purchase_info = factories.create_purchase_info(self.record)
         self.basket.add(self.product)
 
@@ -29,9 +28,8 @@ class TestAddingAProductToABasket(TestCase):
         self.assertEqual(line.price_excl_tax, self.purchase_info.price.excl_tax)
 
     def test_means_another_currency_product_cannot_be_added(self):
-        product = factories.create_product()
-        factories.create_stockrecord(
-            currency='USD', product=product, price_excl_tax=D('20.00'))
+        product = factories.StandaloneProductFactory()
+        product.stockrecords.update(price_currency='USD')
         with self.assertRaises(ValueError):
             self.basket.add(product)
 
@@ -41,9 +39,8 @@ class TestANonEmptyBasket(TestCase):
     def setUp(self):
         self.basket = Basket()
         self.basket.strategy = strategy.Default()
-        self.product = factories.create_product()
-        self.record = factories.create_stockrecord(
-            self.product, price_excl_tax=D('10.00'))
+        self.product = factories.StandaloneProductFactory()
+        self.record = self.product.stockrecords.get()
         self.purchase_info = factories.create_purchase_info(self.record)
         self.basket.add(self.product, 10)
 
@@ -66,16 +63,14 @@ class TestANonEmptyBasket(TestCase):
             self.product, record))
 
     def test_returns_zero_line_quantity_for_missing_product_and_stockrecord(self):
-        product = factories.create_product()
-        record = factories.create_stockrecord(
-            product, price_excl_tax=D('5.00'))
+        product = factories.StandaloneProductFactory()
+        record = product.stockrecords.get()
         self.assertEqual(0, self.basket.line_quantity(
             product, record))
 
     def test_returns_correct_quantity_for_existing_product_and_stockrecord_and_options(self):
-        product = factories.create_product()
-        record = factories.create_stockrecord(
-            product, price_excl_tax=D('5.00'))
+        product = factories.StandaloneProductFactory()
+        record = product.stockrecords.get()
         option = Option.objects.create(name="Message")
         options = [{"option": option, "value": "2"}]
 
@@ -89,9 +84,8 @@ class TestANonEmptyBasket(TestCase):
 class TestMergingTwoBaskets(TestCase):
 
     def setUp(self):
-        self.product = factories.create_product()
-        self.record = factories.create_stockrecord(
-            self.product, price_excl_tax=D('10.00'))
+        self.product = factories.StandaloneProductFactory()
+        self.record = self.product.stockrecords.get()
         self.purchase_info = factories.create_purchase_info(self.record)
 
         self.main_basket = Basket()
