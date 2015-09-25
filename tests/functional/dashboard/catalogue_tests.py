@@ -104,9 +104,8 @@ class TestAStaffUser(WebTestCase):
         self.assertEqual(Product.objects.count(), 1)
 
     def test_can_delete_a_standalone_product(self):
-        product = factories.create_product(partner_users=[self.user])
-        category = Category.add_root(name='Test Category')
-        ProductCategory.objects.create(category=category, product=product)
+        product = factories.StandaloneProductFactory()
+        product.stockrecords.get().partner.users.add(self.user)
 
         page = self.get(reverse('dashboard:catalogue-product-delete',
                                 args=(product.id,))).form.submit()
@@ -118,8 +117,7 @@ class TestAStaffUser(WebTestCase):
         self.assertEqual(ProductCategory.objects.count(), 0)
 
     def test_can_delete_a_parent_product(self):
-        parent_product = factories.create_product(structure='parent')
-        factories.create_product(parent=parent_product)
+        parent_product = factories.ParentProductFactory()
 
         url = reverse(
             'dashboard:catalogue-product-delete',
@@ -130,8 +128,8 @@ class TestAStaffUser(WebTestCase):
         self.assertEqual(Product.objects.count(), 0)
 
     def test_can_delete_a_child_product(self):
-        parent_product = factories.create_product(structure='parent')
-        child_product = factories.create_product(parent=parent_product)
+        parent_product = factories.ParentProductFactory()
+        child_product = parent_product.children.get()
 
         url = reverse(
             'dashboard:catalogue-product-delete',
@@ -144,8 +142,9 @@ class TestAStaffUser(WebTestCase):
         self.assertEqual(Product.objects.count(), 1)
 
     def test_can_list_her_products(self):
-        product1 = factories.create_product(partner_users=[self.user, ])
-        product2 = factories.create_product(partner_name="sneaky", partner_users=[])
+        product1 = factories.StandaloneProductFactory()
+        product1.stockrecords.get().partner.users.add(self.user)
+        product2 = factories.StandaloneProductFactory()
         page = self.get(reverse('dashboard:catalogue-product-list'))
         products_on_page = [row.record for row
                             in page.context['products'].page.object_list]
@@ -153,18 +152,20 @@ class TestAStaffUser(WebTestCase):
         self.assertIn(product2, products_on_page)
 
     def test_can_create_a_child_product(self):
-        parent_product = factories.create_product(structure='parent')
+        parent_product = factories.ParentProductFactory()
+        initial_num_children = parent_product.children.count()
         url = reverse(
             'dashboard:catalogue-product-create-child',
             kwargs={'parent_pk': parent_product.pk})
         form = self.get(url).form
         form.submit()
 
-        self.assertEqual(Product.objects.count(), 2)
+        self.assertEqual(parent_product.children.count(), initial_num_children+1)
 
     def test_cant_create_child_product_for_invalid_parents(self):
         # Creates a product with stockrecords.
-        invalid_parent = factories.create_product(partner_users=[self.user])
+        invalid_parent = factories.StandaloneProductFactory()
+        invalid_parent.stockrecords.get().partner.users.add(self.user)
         self.assertFalse(invalid_parent.can_be_parent())
         url = reverse(
             'dashboard:catalogue-product-create-child',
@@ -184,8 +185,9 @@ class TestANonStaffUser(TestAStaffUser):
         self.partner.users.add(self.user)
 
     def test_can_list_her_products(self):
-        product1 = factories.create_product(partner_name="A", partner_users=[self.user])
-        product2 = factories.create_product(partner_name="B", partner_users=[])
+        product1 = factories.StandaloneProductFactory()
+        product1.stockrecords.get().partner.users.add(self.user)
+        product2 = factories.StandaloneProductFactory()
         page = self.get(reverse('dashboard:catalogue-product-list'))
         products_on_page = [row.record for row
                             in page.context['products'].page.object_list]
@@ -193,7 +195,7 @@ class TestANonStaffUser(TestAStaffUser):
         self.assertNotIn(product2, products_on_page)
 
     def test_cant_create_a_child_product(self):
-        parent_product = factories.create_product(structure='parent')
+        parent_product = factories.ParentProductFactory()
         url = reverse(
             'dashboard:catalogue-product-create-child',
             kwargs={'parent_pk': parent_product.pk})
