@@ -7,29 +7,29 @@ from oscar.apps.catalogue.models import Category
 from oscar.test.decorators import ignore_deprecation_warnings
 from oscar.test.testcases import WebTestCase
 
+from oscar.test import factories
 from oscar.test.factories import create_product
 
 
 class TestProductDetailView(WebTestCase):
 
     def test_enforces_canonical_url(self):
-        p = create_product()
+        product = factories.StandaloneProductFactory()
         kwargs = {'product_slug': '1_wrong-but-valid-slug_1',
-                  'pk': p.id}
+                  'pk': product.id}
         wrong_url = reverse('catalogue:detail', kwargs=kwargs)
 
         response = self.app.get(wrong_url)
         self.assertEqual(http_client.MOVED_PERMANENTLY, response.status_code)
-        self.assertTrue(p.get_absolute_url() in response.location)
+        self.assertIn(product.get_absolute_url(), response.location)
 
     def test_child_to_parent_redirect(self):
-        parent_product = create_product(structure='parent')
+        parent_product = factories.ParentProductFactory()
         kwargs = {'product_slug': parent_product.slug,
                   'pk': parent_product.id}
         parent_product_url = reverse('catalogue:detail', kwargs=kwargs)
 
-        child = create_product(
-            title="Variant 1", structure='child', parent=parent_product)
+        child = parent_product.children.all()[0]
         kwargs = {'product_slug': child.slug,
                   'pk': child.id}
         child_url = reverse('catalogue:detail', kwargs=kwargs)
@@ -44,13 +44,15 @@ class TestProductDetailView(WebTestCase):
 class TestProductListView(WebTestCase):
 
     def test_shows_add_to_basket_button_for_available_product(self):
-        product = create_product(num_in_stock=1)
+        product = factories.StandaloneProductFactory()
+        product.stockrecords.update(num_in_stock=1)
         page = self.app.get(reverse('catalogue:index'))
         self.assertContains(page, product.title)
         self.assertContains(page, "Add to basket")
 
     def test_shows_not_available_for_out_of_stock_product(self):
-        product = create_product(num_in_stock=0)
+        product = factories.StandaloneProductFactory()
+        product.stockrecords.update(num_in_stock=0)
 
         page = self.app.get(reverse('catalogue:index'))
 
