@@ -297,7 +297,7 @@ These aren't created automatically as they're highly specific to the shop you
 want to build.
 
 When managing your catalogue you should always use the Oscar dashboard, which
-provides the necessary functionality. Login to:
+provides the necessary functionality. Use your Django superuser email and password to login to:
 http://127.0.0.1:8000/dashboard/ and create instances of both there.
 
 It is important to note that the Django admin site is not supported. It may
