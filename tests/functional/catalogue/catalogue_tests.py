@@ -63,7 +63,7 @@ class TestProductListView(WebTestCase):
         per_page = settings.OSCAR_PRODUCTS_PER_PAGE
         title = u"Product #%d"
         for idx in range(0, int(1.5 * per_page)):
-            create_product(title=title % idx)
+            factories.StandaloneProductFactory(title=title % idx)
 
         page = self.app.get(reverse('catalogue:index'))
 
