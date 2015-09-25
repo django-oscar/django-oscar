@@ -1,4 +1,5 @@
 import datetime
+from collections import OrderedDict
 from decimal import Decimal as D
 from decimal import InvalidOperation
 
@@ -9,7 +10,6 @@ from django.core.urlresolvers import reverse
 from django.db.models import Q, Count, Sum, fields
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
-from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView, FormView, ListView, UpdateView
 
@@ -383,7 +383,7 @@ class OrderListView(BulkEditMixin, ListView):
                      ('shipping_address_name', _('Deliver to name')),
                      ('billing_address_name', _('Bill to name')),
                      )
-        columns = SortedDict()
+        columns = OrderedDict()
         for k, v in meta_data:
             columns[k] = v
 
