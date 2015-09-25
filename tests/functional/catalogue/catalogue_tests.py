@@ -8,7 +8,6 @@ from oscar.test.decorators import ignore_deprecation_warnings
 from oscar.test.testcases import WebTestCase
 
 from oscar.test import factories
-from oscar.test.factories import create_product
 
 
 class TestProductDetailView(WebTestCase):
