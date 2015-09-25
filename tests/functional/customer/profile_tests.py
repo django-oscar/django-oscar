@@ -159,7 +159,7 @@ class TestReorderingOrderLines(WebTestCase):
         order = factories.create_order(user=self.user)
         line = order.lines.all()[0]
 
-        product = factories.create_product(price=D('12.00'))
+        product = factories.StandaloneProductFactory()
         product_page = self.get(line.product.get_absolute_url())
         product_page.forms['add_to_basket_form'].submit()
 
@@ -179,7 +179,7 @@ class TestReorderingOrderLines(WebTestCase):
         order = factories.create_order(user=self.user)
         line = order.lines.all()[0]
 
-        product = factories.create_product(price=D('12.00'))
+        product = factories.StandaloneProductFactory()
         product_page = self.get(line.product.get_absolute_url())
         product_page.forms['add_to_basket_form'].submit()
 
