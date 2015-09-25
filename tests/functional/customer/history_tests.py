@@ -16,7 +16,7 @@ COOKIE_NAME = settings.OSCAR_RECENTLY_VIEWED_COOKIE_NAME
 class HistoryHelpersTest(TestCase):
 
     def setUp(self):
-        self.product = factories.create_product()
+        self.product = factories.StandaloneProductFactory()
 
     def test_viewing_product_creates_cookie(self):
         response = self.client.get(self.product.get_absolute_url())
@@ -49,7 +49,7 @@ class TestAUserWhoLogsOut(TestCase):
     email = 'customer@example.com'
 
     def setUp(self):
-        self.product = factories.create_product()
+        self.product = factories.StandaloneProductFactory()
         User.objects.create_user(username=self.username,
                                  email=self.email, password=self.password)
         self.client.login(email=self.email, password=self.password)
