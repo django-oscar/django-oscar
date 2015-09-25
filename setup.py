@@ -38,11 +38,11 @@ setup(name='django-oscar',
           # https://github.com/AndrewIngram/django-extra-views/pull/85
           'django-extra-views>=0.2,<0.6.5',
           # Search support
-          'django-haystack>=2.3.1,<2.4.0',
+          'django-haystack>=2.3.1,<2.5.0',
           # Treebeard is used for categories
           'django-treebeard>=3.0',
           # Sorl is used as the default thumbnailer
-          'sorl-thumbnail>=11.12.1b,<=12.2',
+          'sorl-thumbnail>=11.12.1b,<=12.3',
           # Babel is used for currency formatting
           'Babel>=1.0,<1.4',
           # For converting non-ASCII to ASCII when creating slugs
