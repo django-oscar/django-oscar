@@ -25,7 +25,8 @@ class RangeProductFormTests(TestCase):
         self.assertFalse(form.is_valid())
 
     def test_matching_query_is_valid(self):
-        factories.create_product(partner_sku='123123')
+        product = factories.StandaloneProductFactory()
+        product.stockrecords.update(partner_sku='123123')
         form = self.submit_form({'query': '123123'})
         self.assertTrue(form.is_valid())
 
