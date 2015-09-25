@@ -9,6 +9,7 @@ __all__ = [
     'ProductAttributeFactory', 'AttributeOptionGroupFactory',
     'OptionFactory', 'AttributeOptionFactory',
     'ProductAttributeValueFactory', 'ProductReviewFactory',
+    'StandaloneProductFactory', 'ParentProductFactory', 'ChildProductFactory',
 ]
 
 
@@ -21,7 +22,7 @@ class ProductClassFactory(factory.DjangoModelFactory):
         model = get_model('catalogue', 'ProductClass')
 
 
-class ProductFactory(factory.DjangoModelFactory):
+class StandaloneProductFactory(factory.DjangoModelFactory):
     class Meta:
         model = get_model('catalogue', 'Product')
 
@@ -34,6 +35,36 @@ class ProductFactory(factory.DjangoModelFactory):
         'oscar.test.factories.StockRecordFactory', 'product')
     categories = factory.RelatedFactory(
         'oscar.test.factories.ProductCategoryFactory', 'product')
+
+
+# Previously, ProductFactory just created standalone products
+# ProductFactory should probably be removed sooner than later
+ProductFactory = StandaloneProductFactory
+
+
+class ParentProductFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = get_model('catalogue', 'Product')
+
+    structure = Meta.model.PARENT
+    title = "A confederacy of dunces"
+    product_class = factory.SubFactory(ProductClassFactory)
+
+    categories = factory.RelatedFactory(
+        'oscar.test.factories.ProductCategoryFactory', 'product')
+    children = factory.RelatedFactory(
+        'oscar.test.factories.ChildProductFactory', 'parent')
+
+
+class ChildProductFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = get_model('catalogue', 'Product')
+
+    structure = Meta.model.CHILD
+    upc = factory.Sequence(lambda n: '978080213020%d' % n)
+
+    stockrecords = factory.RelatedFactory(
+        'oscar.test.factories.StockRecordFactory', 'product')
 
 
 class CategoryFactory(factory.DjangoModelFactory):
