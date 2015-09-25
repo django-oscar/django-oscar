@@ -10,7 +10,8 @@ class TestAUser(WebTest):
 
     def test_can_create_a_stock_alert(self):
         user = factories.UserFactory()
-        product = factories.create_product(num_in_stock=0)
+        product = factories.StandaloneProductFactory()
+        product.stockrecords.update(num_in_stock=0)
         product_page = self.app.get(product.get_absolute_url(), user=user)
         form = product_page.forms['alert_form']
         form.submit()
@@ -26,8 +27,9 @@ class TestAUserWithAnActiveStockAlert(WebTest):
 
     def setUp(self):
         self.user = factories.UserFactory()
-        self.product = factories.create_product()
-        self.stockrecord = factories.create_stockrecord(self.product, num_in_stock=0)
+        self.product = factories.StandaloneProductFactory()
+        self.product.stockrecords.update(num_in_stock=0)
+        self.stockrecord = self.product.stockrecords.get()
         product_page = self.app.get(self.product.get_absolute_url(),
                                     user=self.user)
         form = product_page.forms['alert_form']
@@ -67,7 +69,8 @@ class TestAUserWithAnActiveStockAlert(WebTest):
 class TestAnAnonymousUser(WebTest):
 
     def test_can_create_a_stock_alert(self):
-        product = factories.create_product(num_in_stock=0)
+        product = factories.StandaloneProductFactory()
+        product.stockrecords.update(num_in_stock=0)
         product_page = self.app.get(product.get_absolute_url())
         form = product_page.forms['alert_form']
         form['email'] = 'john@smith.com'
