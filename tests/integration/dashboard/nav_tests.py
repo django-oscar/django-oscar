@@ -20,11 +20,11 @@ class TestCategory(TestCase):
 
     def test_staff_user_has_menu(self):
         menu = get_nodes(self.staff_user)
-        assert menu
+        self.assertTrue(menu)
 
     def test_non_staff_user_has_empty_menu(self):
         menu = get_nodes(self.non_staff_user)
-        assert menu == []
+        self.assertEqual(menu, [])
 
 
 

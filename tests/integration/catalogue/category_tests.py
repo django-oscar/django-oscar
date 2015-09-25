@@ -207,7 +207,7 @@ class TestCategoryTemplateTags(TestCase):
         names_set = set(names)
         # We return a set to ease testing, but need to be sure we're not
         # losing any duplicates through that conversion.
-        assert len(names_set) == len(names)
+        self.assertEqual(len(names_set), len(names))
         return names_set
 
     def test_all_categories(self):

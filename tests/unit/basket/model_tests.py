@@ -42,7 +42,7 @@ class TestBasketLine(TestCase):
         basket.add_product(product)
 
         line = basket.lines.first()
-        assert line.description == "A product"
+        self.assertEqual(line.description, "A product")
 
     def test_description_with_attributes(self):
         basket = BasketFactory()
@@ -52,4 +52,4 @@ class TestBasketLine(TestCase):
         line = basket.lines.first()
         BasketLineAttributeFactory(
             line=line, value=u'\u2603', option__name='with')
-        assert line.description == u"A product (with = '\u2603')"
+        self.assertEqual(line.description, u"A product (with = '\u2603')")
