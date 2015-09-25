@@ -3,7 +3,7 @@ from decimal import Decimal as D
 
 from django.core.urlresolvers import reverse
 
-from oscar.test.factories import create_product, create_order
+from oscar.test import factories
 from oscar.test.testcases import WebTestCase
 from oscar.core.compat import get_user_model
 from oscar.apps.basket.models import Basket
@@ -21,7 +21,7 @@ class TestASignedInUser(WebTestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             '_', self.email, self.password)
-        self.order = create_order(user=self.user)
+        self.order = factories.create_order(user=self.user)
 
     def test_can_view_their_profile(self):
         response = self.app.get(reverse('customer:profile-view'),
@@ -156,10 +156,10 @@ class TestReorderingOrderLines(WebTestCase):
 
     @patch('django.conf.settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD', 1)
     def test_cannot_reorder_when_basket_maximum_exceeded(self):
-        order = create_order(user=self.user)
+        order = factories.create_order(user=self.user)
         line = order.lines.all()[0]
 
-        product = create_product(price=D('12.00'))
+        product = factories.create_product(price=D('12.00'))
         product_page = self.get(line.product.get_absolute_url())
         product_page.forms['add_to_basket_form'].submit()
 
@@ -176,10 +176,10 @@ class TestReorderingOrderLines(WebTestCase):
 
     @patch('django.conf.settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD', 1)
     def test_cannot_reorder_line_when_basket_maximum_exceeded(self):
-        order = create_order(user=self.user)
+        order = factories.create_order(user=self.user)
         line = order.lines.all()[0]
 
-        product = create_product(price=D('12.00'))
+        product = factories.create_product(price=D('12.00'))
         product_page = self.get(line.product.get_absolute_url())
         product_page.forms['add_to_basket_form'].submit()
 
