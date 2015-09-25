@@ -1,14 +1,14 @@
 from django.test import TestCase
 
 from oscar.apps.catalogue.reviews import forms
-from oscar.test.factories import create_product, UserFactory
+from oscar.test import factories
 
 
 class TestReviewForm(TestCase):
 
     def setUp(self):
-        self.product = create_product()
-        self.reviewer = UserFactory()
+        self.product = factories.StandaloneProductFactory()
+        self.reviewer = factories.UserFactory()
         self.data = {
             'title': '  This product is lovely',
             'body': 'I really like this cheese',
@@ -28,9 +28,9 @@ class TestReviewForm(TestCase):
 class TestVoteForm(TestCase):
 
     def setUp(self):
-        self.product = create_product()
-        self.reviewer = UserFactory()
-        self.voter = UserFactory()
+        self.product = factories.StandaloneProductFactory()
+        self.reviewer = factories.UserFactory()
+        self.voter = factories.UserFactory()
         self.review = self.product.reviews.create(
             title='This is nice',
             score=3,
