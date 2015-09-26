@@ -14,10 +14,10 @@ cache:
 language: python
 
 python:
-    - '2.7'
-    - '3.3'
-    - '3.4'
-    - '3.5'
+    - 2.7
+    - 3.3
+    - 3.4
+    - 3.5
 
 env:
     global:
@@ -32,7 +32,7 @@ env:
         - PIP_WHEEL_DIR=$HOME/.cache/pip/wheels
         - PIP_FIND_LINKS=file://$HOME/.cache/pip/wheels
     matrix:
-        - DJANGO=Django==1.7.8
+        - DJANGO=Django==1.7.10
         - DJANGO=Django==1.8.4
         - DJANGO=DJANGO==1.9a1 
 
@@ -40,7 +40,7 @@ env:
 matrix:
     exclude:
         - python: 3.5
-          env: DJANGO=Django==1.7.8
+          env: DJANGO=Django==1.7.10
 
 
 before_install:
