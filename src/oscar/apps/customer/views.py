@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -381,6 +382,7 @@ class ChangePasswordView(PageTitleMixin, generic.FormView):
 
     def form_valid(self, form):
         form.save()
+        update_session_auth_hash(self.request, self.request.user)
         messages.success(self.request, _("Password updated"))
 
         ctx = {
