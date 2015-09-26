@@ -1,6 +1,5 @@
 from django.test import TestCase
-from django.template import loader, Context
-from django.template.exceptions import TemplateDoesNotExist
+from django.template import loader, Context, TemplateDoesNotExist
 
 import oscar
 
