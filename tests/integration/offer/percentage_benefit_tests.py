@@ -13,11 +13,11 @@ class TestAPercentageDiscountAppliedWithCountCondition(TestCase):
     def setUp(self):
         range = models.Range.objects.create(
             name="All products", includes_all_products=True)
-        self.condition = models.CountCondition(
+        self.condition = models.Condition(
             range=range,
             type=models.Condition.COUNT,
             value=2)
-        self.benefit = models.PercentageDiscountBenefit(
+        self.benefit = models.Benefit(
             range=range,
             type=models.Benefit.PERCENTAGE,
             value=20)
@@ -58,11 +58,11 @@ class TestAPercentageDiscountWithMaxItemsSetAppliedWithCountCondition(TestCase):
     def setUp(self):
         range = models.Range.objects.create(
             name="All products", includes_all_products=True)
-        self.condition = models.CountCondition(
+        self.condition = models.Condition(
             range=range,
             type=models.Condition.COUNT,
             value=2)
-        self.benefit = models.PercentageDiscountBenefit(
+        self.benefit = models.Benefit(
             range=range,
             type=models.Benefit.PERCENTAGE,
             value=20,
@@ -97,11 +97,11 @@ class TestAPercentageDiscountAppliedWithValueCondition(TestCase):
     def setUp(self):
         range = models.Range.objects.create(
             name="All products", includes_all_products=True)
-        self.condition = models.ValueCondition.objects.create(
+        self.condition = models.Condition.objects.create(
             range=range,
             type=models.Condition.VALUE,
             value=D('10.00'))
-        self.benefit = models.PercentageDiscountBenefit.objects.create(
+        self.benefit = models.Benefit.objects.create(
             range=range,
             type=models.Benefit.PERCENTAGE,
             value=20)
@@ -141,11 +141,11 @@ class TestAPercentageDiscountWithMaxItemsSetAppliedWithValueCondition(TestCase):
     def setUp(self):
         range = models.Range.objects.create(
             name="All products", includes_all_products=True)
-        self.condition = models.ValueCondition.objects.create(
+        self.condition = models.Condition.objects.create(
             range=range,
             type=models.Condition.VALUE,
             value=D('10.00'))
-        self.benefit = models.PercentageDiscountBenefit.objects.create(
+        self.benefit = models.Benefit.objects.create(
             range=range,
             type=models.Benefit.PERCENTAGE,
             value=20,

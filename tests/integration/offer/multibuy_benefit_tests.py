@@ -13,11 +13,11 @@ class TestAMultibuyDiscountAppliedWithCountCondition(TestCase):
     def setUp(self):
         range = models.Range.objects.create(
             name="All products", includes_all_products=True)
-        self.condition = models.CountCondition.objects.create(
+        self.condition = models.Condition.objects.create(
             range=range,
             type=models.Condition.COUNT,
             value=3)
-        self.benefit = models.MultibuyDiscountBenefit.objects.create(
+        self.benefit = models.Benefit.objects.create(
             range=range,
             type=models.Benefit.MULTIBUY,
             value=1)
@@ -51,11 +51,11 @@ class TestAMultibuyDiscountAppliedWithAValueCondition(TestCase):
     def setUp(self):
         range = models.Range.objects.create(
             name="All products", includes_all_products=True)
-        self.condition = models.ValueCondition.objects.create(
+        self.condition = models.Condition.objects.create(
             range=range,
             type=models.Condition.VALUE,
             value=D('10.00'))
-        self.benefit = models.MultibuyDiscountBenefit.objects.create(
+        self.benefit = models.Benefit.objects.create(
             range=range,
             type=models.Benefit.MULTIBUY,
             value=1)
