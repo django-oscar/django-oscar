@@ -200,7 +200,7 @@ class RangeProductListView(BulkEditMixin, ListView):
 
 class RangeReorderView(View):
     def post(self, request, pk):
-        order = dict(request.POST).get('product[]')
+        order = dict(request.POST).get('product')
         self._save_page_order(order)
         return HttpResponse(status=200)
 
