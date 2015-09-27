@@ -140,7 +140,7 @@ class Validator(object):
         try:
             f = open(file_path, 'r')
             f.close()
-        except:
+        except IOError:
             raise ImportingError(_("%s is not readable") % (file_path))
 
 

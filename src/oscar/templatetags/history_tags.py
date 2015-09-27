@@ -41,7 +41,7 @@ def get_back_button(context):
 
     try:
         url = parse.urlparse(referrer)
-    except:
+    except (ValueError, TypeError):
         return None
 
     if request.get_host() != url.netloc:
