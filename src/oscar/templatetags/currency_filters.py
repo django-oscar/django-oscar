@@ -1,9 +1,10 @@
-from decimal import Decimal as D, InvalidOperation
+from decimal import Decimal as D
+from decimal import InvalidOperation
 
+from babel.numbers import format_currency
 from django import template
 from django.conf import settings
-from django.utils.translation import to_locale, get_language
-from babel.numbers import format_currency
+from django.utils.translation import get_language, to_locale
 
 register = template.Library()
 

@@ -1,11 +1,10 @@
-from django.core.paginator import Paginator, InvalidPage
+from django.core.paginator import InvalidPage, Paginator
 from django.utils.translation import ugettext_lazy as _
-
 from haystack import connections
 
 from oscar.core.loading import get_class
-from . import facets
 
+from . import facets
 
 FacetMunger = get_class('search.facets', 'FacetMunger')
 

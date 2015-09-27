@@ -1,16 +1,16 @@
 import datetime
 import json
 
-from django.views.generic import ListView, FormView, DeleteView
-from django.core.urlresolvers import reverse
 from django.contrib import messages
+from django.core import serializers
+from django.core.serializers.json import DjangoJSONEncoder
+from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
-from django.core import serializers
-from django.core.serializers.json import DjangoJSONEncoder
+from django.views.generic import DeleteView, FormView, ListView
 
-from oscar.core.loading import get_classes, get_class, get_model
+from oscar.core.loading import get_class, get_classes, get_model
 from oscar.views import sort_queryset
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')

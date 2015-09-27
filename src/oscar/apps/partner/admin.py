@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from oscar.core.loading import get_model
 
 Partner = get_model('partner', 'Partner')

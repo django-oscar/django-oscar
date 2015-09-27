@@ -5,7 +5,6 @@ from django.utils.timezone import now
 
 from oscar.core.loading import get_model
 
-
 __all__ = ['VoucherFactory']
 
 

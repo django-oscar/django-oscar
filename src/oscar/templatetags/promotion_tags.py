@@ -1,7 +1,5 @@
-from django.template import Library, Node, Variable
+from django.template import Library, Node, RequestContext, Variable
 from django.template.loader import select_template
-from django.template import RequestContext
-
 
 register = Library()
 

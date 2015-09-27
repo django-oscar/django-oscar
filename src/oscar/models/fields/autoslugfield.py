@@ -25,16 +25,16 @@ THE SOFTWARE.
 """
 
 import re
-from django.utils import six
 
 from django.db.models import SlugField
+from django.utils import six
+
+from oscar.core.utils import slugify
 
 try:
     from django.utils.encoding import force_unicode  # NOQA
 except ImportError:
     from django.utils.encoding import force_text as force_unicode  # NOQA
-
-from oscar.core.utils import slugify
 
 
 class AutoSlugField(SlugField):

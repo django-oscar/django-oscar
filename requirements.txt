@@ -33,6 +33,7 @@ pytest-xdist==1.11
 tox==1.8.1
 coveralls==0.4.4
 behave==1.2.4
+isort==4.2.2
 
 # Misc
 flake8==2.2.5

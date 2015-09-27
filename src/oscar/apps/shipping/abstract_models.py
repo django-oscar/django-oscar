@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from decimal import Decimal as D
 
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
-from django.core.validators import MinValueValidator
 
-from oscar.core import prices, loading
+from oscar.core import loading, prices
 from oscar.models.fields import AutoSlugField
 
 Scale = loading.get_class('shipping.scales', 'Scale')

@@ -1,4 +1,5 @@
 import re
+
 from django import forms
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.forms.util import flatatt
@@ -6,11 +7,10 @@ from django.forms.widgets import FileInput
 from django.template import Context
 from django.template.loader import render_to_string
 from django.utils import formats, six
-from django.utils.six.moves import filter
-from django.utils.six.moves import map
 from django.utils.encoding import force_text
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
+from django.utils.six.moves import filter, map
 
 
 class ImageInput(FileInput):
