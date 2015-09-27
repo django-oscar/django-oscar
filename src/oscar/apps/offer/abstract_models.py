@@ -372,7 +372,7 @@ class AbstractConditionalOffer(models.Model):
             # Return ALL the products
             queryset = Product.browsable
         else:
-            queryset = cond_range.included_products
+            queryset = cond_range.all_products()
         return queryset.filter(is_discountable=True).exclude(
             structure=Product.CHILD)
 
@@ -1041,7 +1041,7 @@ class AbstractRangeProductFileUpload(models.Model):
         Process the file upload and add products to the range
         """
         all_ids = set(self.extract_ids())
-        products = self.range.included_products.all()
+        products = self.range.all_products()
         existing_skus = products.values_list(
             'stockrecords__partner_sku', flat=True)
         existing_skus = set(filter(bool, existing_skus))

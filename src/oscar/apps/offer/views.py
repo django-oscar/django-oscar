@@ -55,7 +55,7 @@ class RangeDetailView(ListView):
             request, *args, **kwargs)
 
     def get_queryset(self):
-        products = self.range.included_products.all()
+        products = self.range.all_products()
         return products.order_by('rangeproduct__display_order')
 
     def get_context_data(self, **kwargs):
