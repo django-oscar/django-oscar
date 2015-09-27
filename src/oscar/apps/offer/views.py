@@ -1,7 +1,7 @@
-from django.views.generic import ListView
 from django import http
 from django.conf import settings
 from django.shortcuts import get_object_or_404
+from django.views.generic import ListView
 
 from oscar.core.loading import get_model
 

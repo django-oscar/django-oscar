@@ -1,5 +1,3 @@
-import datetime
-
 from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse
@@ -8,7 +6,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
-from oscar.core.loading import get_model, get_class
+from oscar.core.loading import get_class, get_model
 from oscar.views import sort_queryset
 
 VoucherForm = get_class('dashboard.vouchers.forms', 'VoucherForm')

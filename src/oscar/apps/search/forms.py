@@ -1,10 +1,9 @@
 from collections import defaultdict
 
 from django import forms
-from django.forms.widgets import Input
 from django.conf import settings
+from django.forms.widgets import Input
 from django.utils.translation import ugettext_lazy as _
-
 from haystack.forms import FacetedSearchForm
 
 from oscar.core.loading import get_class

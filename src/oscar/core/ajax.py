@@ -1,5 +1,5 @@
-from django.utils import six
 from django.contrib import messages
+from django.utils import six
 
 
 class FlashMessages(object):

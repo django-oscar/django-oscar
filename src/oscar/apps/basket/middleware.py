@@ -1,9 +1,8 @@
 from django.conf import settings
-from django.core.signing import Signer, BadSignature
+from django.core.signing import BadSignature, Signer
 from django.utils.functional import SimpleLazyObject, empty
 
-from oscar.core.loading import get_model
-from oscar.core.loading import get_class
+from oscar.core.loading import get_class, get_model
 
 Applicator = get_class('offer.utils', 'Applicator')
 Basket = get_model('basket', 'basket')

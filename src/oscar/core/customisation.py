@@ -1,9 +1,10 @@
 from __future__ import absolute_import
-import os
-from os.path import join, exists
-import shutil
+
 import logging
+import os
+import shutil
 import textwrap
+from os.path import exists, join
 
 import oscar
 

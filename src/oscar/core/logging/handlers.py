@@ -1,5 +1,5 @@
-from logging import FileHandler as BaseFileHandler
 import os
+from logging import FileHandler as BaseFileHandler
 
 
 class EnvFileHandler(BaseFileHandler):

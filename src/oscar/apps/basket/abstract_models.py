@@ -1,18 +1,18 @@
-from decimal import Decimal as D
 import zlib
+from decimal import Decimal as D
 
+from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.db import models
 from django.db.models import Sum
-from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible, smart_text
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
-from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 
 from oscar.apps.basket.managers import OpenBasketManager, SavedBasketManager
 from oscar.apps.offer import results
-from oscar.core.utils import get_default_currency
 from oscar.core.compat import AUTH_USER_MODEL
+from oscar.core.utils import get_default_currency
 from oscar.templatetags.currency_filters import currency
 
 

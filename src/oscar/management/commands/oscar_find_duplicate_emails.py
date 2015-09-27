@@ -1,6 +1,7 @@
 from collections import Counter
 
 from django.core.management.base import BaseCommand
+
 from oscar.core.compat import get_user_model
 
 User = get_user_model()

@@ -5,15 +5,15 @@ from django.contrib import messages
 from django.core import exceptions
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, HttpResponse
+from django.shortcuts import HttpResponse, get_object_or_404
 from django.template.loader import render_to_string
-from django.utils.translation import ungettext, ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext
 from django.views.generic import (
-    ListView, DeleteView, CreateView, UpdateView, View)
+    CreateView, DeleteView, ListView, UpdateView, View)
 
-
-from oscar.views.generic import BulkEditMixin
 from oscar.core.loading import get_classes, get_model
+from oscar.views.generic import BulkEditMixin
 
 Range = get_model('offer', 'Range')
 RangeProduct = get_model('offer', 'RangeProduct')

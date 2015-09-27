@@ -2,6 +2,7 @@
 from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
+
 from oscar.core.loading import get_model
 
 Country = get_model('address', 'Country')

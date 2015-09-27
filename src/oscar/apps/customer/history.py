@@ -1,7 +1,8 @@
 import json
 
 from django.conf import settings
-from oscar.core.loading import get_model, get_class
+
+from oscar.core.loading import get_class, get_model
 
 product_viewed = get_class('catalogue.signals', 'product_viewed')
 Product = get_model('catalogue', 'Product')

@@ -1,8 +1,9 @@
 from django.contrib import admin
 
-from oscar.apps.promotions.models import Image, MultiImage, RawHTML, \
-    HandPickedProductList, OrderedProduct, AutomaticProductList, TabbedBlock, \
-    PagePromotion, KeywordPromotion, SingleProduct
+from oscar.apps.promotions.models import (
+    AutomaticProductList, HandPickedProductList, Image,
+    KeywordPromotion, MultiImage, OrderedProduct, PagePromotion,
+    RawHTML, SingleProduct, TabbedBlock)
 
 
 class OrderProductInline(admin.TabularInline):

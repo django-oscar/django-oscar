@@ -1,4 +1,4 @@
-from django.conf.urls import url, include
+from django.conf.urls import include, url
 
 from oscar.core.application import Application
 from oscar.core.loading import get_class

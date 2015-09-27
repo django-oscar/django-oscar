@@ -1,7 +1,7 @@
-from oscar.core.loading import is_model_registered
 from oscar.apps.address.abstract_models import AbstractPartnerAddress
 from oscar.apps.partner.abstract_models import (
-    AbstractPartner, AbstractStockRecord, AbstractStockAlert)
+    AbstractPartner, AbstractStockAlert, AbstractStockRecord)
+from oscar.core.loading import is_model_registered
 
 __all__ = []
 

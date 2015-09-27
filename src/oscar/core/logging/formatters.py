@@ -1,5 +1,5 @@
-from logging import Formatter
 import re
+from logging import Formatter
 
 
 class PciFormatter(Formatter):

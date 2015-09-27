@@ -33,9 +33,12 @@ pytest-xdist==1.11
 tox==1.8.1
 coveralls==0.4.4
 behave==1.2.4
+isort==4.2.2
 
 # Misc
-flake8==2.2.5
+flake8==2.4.1
+flake8-debugger==1.4.0
+flake8-blind-except==0.1.0
 pyprof2calltree==1.3.2
 ipdb==0.8
 ipython==2.3.0

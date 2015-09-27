@@ -1,4 +1,5 @@
 from oscar.core.loading import get_class, get_classes
+
 OrderReportGenerator = get_class('order.reports', 'OrderReportGenerator')
 ProductReportGenerator, UserReportGenerator \
     = get_classes('analytics.reports', ['ProductReportGenerator',

@@ -1,8 +1,8 @@
-from django.conf.urls import url, include
+from django.conf.urls import include, url
 
+from oscar.apps.catalogue.reviews.app import application as reviews_app
 from oscar.core.application import Application
 from oscar.core.loading import get_class
-from oscar.apps.catalogue.reviews.app import application as reviews_app
 
 
 class BaseCatalogueApplication(Application):

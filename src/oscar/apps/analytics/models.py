@@ -1,7 +1,7 @@
-from oscar.core.loading import is_model_registered
 from oscar.apps.analytics.abstract_models import (
-    AbstractProductRecord, AbstractUserRecord,
-    AbstractUserProductView, AbstractUserSearch)
+    AbstractProductRecord, AbstractUserProductView,
+    AbstractUserRecord, AbstractUserSearch)
+from oscar.core.loading import is_model_registered
 
 __all__ = []
 
