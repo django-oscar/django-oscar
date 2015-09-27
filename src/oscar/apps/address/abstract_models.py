@@ -511,7 +511,12 @@ class AbstractUserAddress(AbstractShippingAddress):
     #: We keep track of the number of times an address has been used
     #: as a shipping address so we can show the most popular ones
     #: first at the checkout.
-    num_orders = models.PositiveIntegerField(_("Number of Orders"), default=0)
+    num_orders_as_shipping_address = models.PositiveIntegerField(
+        _("Number of Orders as Billing Address"), default=0)
+
+    #: Same as previous, but for billing address.
+    num_orders_as_billing_address = models.PositiveIntegerField(
+        _("Number of Orders as Shipping Address"), default=0)
 
     #: A hash is kept to try and avoid duplicate addresses being added
     #: to the address book.
@@ -547,7 +552,7 @@ class AbstractUserAddress(AbstractShippingAddress):
         app_label = 'address'
         verbose_name = _("User address")
         verbose_name_plural = _("User addresses")
-        ordering = ['-num_orders']
+        ordering = ['-num_orders_as_shipping_address']
         unique_together = ('user', 'hash')
 
     def validate_unique(self, exclude=None):

@@ -12,6 +12,7 @@ from oscar.core.loading import get_class, get_model
 OrderCreator = get_class('order.utils', 'OrderCreator')
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 CheckoutSessionMixin = get_class('checkout.session', 'CheckoutSessionMixin')
+BillingAddress = get_model('order', 'BillingAddress')
 ShippingAddress = get_model('order', 'ShippingAddress')
 OrderNumberGenerator = get_class('order.utils', 'OrderNumberGenerator')
 PaymentEventType = get_model('order', 'PaymentEventType')
@@ -176,7 +177,10 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             # Create a new user address
             user_addr = UserAddress(user=user)
             addr.populate_alternative_model(user_addr)
-        user_addr.num_orders += 1
+        if isinstance(addr, ShippingAddress):
+            user_addr.num_orders_as_shipping_address += 1
+        if isinstance(addr, BillingAddress):
+            user_addr.num_orders_as_billing_address += 1
         user_addr.save()
 
     def create_billing_address(self, user, billing_address=None,
