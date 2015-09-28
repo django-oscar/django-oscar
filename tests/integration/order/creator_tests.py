@@ -107,8 +107,8 @@ class TestSuccessfulOrderCreation(TestCase):
             add_product(self.basket, D('12.00'), product=product)
             place_order(
                 self.creator, basket=self.basket, order_number=order_number)
-            line = Order.objects.get(number=order_number).lines.all()[0]
-            partner = product.stockrecords.all()[0].partner
+            line = Order.objects.get(number=order_number).lines.get()
+            partner = product.stockrecords.get().partner
             self.assertTrue(partner_name == line.partner_name == partner.name)
 
 
