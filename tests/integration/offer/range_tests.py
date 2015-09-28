@@ -34,9 +34,9 @@ class TestChildRange(TestCase):
     def setUp(self):
         self.range = models.Range.objects.create(
             name='Child-specific range', includes_all_products=False)
-        self.parent = create_product(structure='parent')
-        self.child1 = create_product(structure='child', parent=self.parent)
-        self.child2 = create_product(structure='child', parent=self.parent)
+        self.parent = factories.ParentProductFactory(children=[])
+        self.child1 = factories.ChildProductFactory(parent=self.parent)
+        self.child2 = factories.ChildProductFactory(parent=self.parent)
         self.range.add_product(self.child1)
 
     def test_includes_child(self):
