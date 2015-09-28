@@ -6,7 +6,6 @@ from oscar.test import factories
 from oscar.test.testcases import WebTestCase, add_permissions
 
 Product = get_model('catalogue', 'Product')
-ProductClass = get_model('catalogue', 'ProductClass')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 Category = get_model('catalogue', 'Category')
 StockRecord = get_model('partner', 'stockrecord')
@@ -32,7 +31,7 @@ class TestAStaffUser(WebTestCase):
 
     def test_can_create_a_product_without_stockrecord(self):
         category = factories.CategoryFactory()
-        product_class = ProductClass.objects.create(name="Book")
+        product_class = factories.ProductClassFactory(name="Book")
         page = self.get(reverse('dashboard:catalogue-product-create',
                                 args=(product_class.slug,)))
         form = page.form
@@ -45,7 +44,7 @@ class TestAStaffUser(WebTestCase):
 
     def test_can_create_and_continue_editing_a_product(self):
         category = factories.CategoryFactory()
-        product_class = ProductClass.objects.create(name="Book")
+        product_class = factories.ProductClassFactory(name="Book")
         page = self.get(reverse('dashboard:catalogue-product-create',
                                 args=(product_class.slug,)))
         form = page.form
