@@ -161,8 +161,8 @@ class TestAStaffUser(WebTestCase):
 
     def test_cant_create_child_product_for_invalid_parents(self):
         # Creates a product with stockrecords.
-        invalid_parent = \
-            factories.StandaloneProductFactory(stockrecords__partner__users=[self.user])
+        invalid_parent = factories.StandaloneProductFactory(
+            stockrecords__partner__users=[self.user])
         self.assertFalse(invalid_parent.can_be_parent())
         url = reverse(
             'dashboard:catalogue-product-create-child',
