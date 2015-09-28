@@ -13,9 +13,8 @@ GatewayForm = get_class('checkout.forms', 'GatewayForm')
 class CheckoutMixin(object):
 
     def create_digital_product(self):
-        product_class = factories.ProductClassFactory(
-            requires_shipping=False, track_stock=False)
-        product = factories.ProductFactory(product_class=product_class, 
+        product = factories.ProductFactory(product_class__requires_shipping=False,
+                                           product_class__track_stock=False, 
                                            stockrecords__num_in_stock=None, 
                                            stockrecords__price_excl_tax=D('12.00'))
         return product
