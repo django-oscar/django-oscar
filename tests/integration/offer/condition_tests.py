@@ -72,10 +72,9 @@ class ValueConditionTest(TestCase):
         self.condition = models.ValueCondition(
             range=self.range, type="Value", value=D('10.00'))
         self.offer = mock.Mock()
-        self.item = factories.StandaloneProductFactory()
-        self.item.stockrecords.update(price_excl_tax=D('5.00'))
-        self.expensive_item = factories.StandaloneProductFactory()
-        self.expensive_item.stockrecords.update(price_excl_tax=D('15.00'))
+        self.item = factories.StandaloneProductFactory(stockrecords__price_excl_tax=D('5.00'))
+        self.expensive_item = factories.StandaloneProductFactory(
+            stockrecords__price_excl_tax=D('15.00'))
 
     def test_empty_basket_fails_condition(self):
         self.assertFalse(self.condition.is_satisfied(self.offer, self.basket))

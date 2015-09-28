@@ -13,8 +13,7 @@ class TestAddingAProductToABasket(TestCase):
     def setUp(self):
         self.basket = Basket()
         self.basket.strategy = strategy.Default()
-        self.product = factories.StandaloneProductFactory()
-        self.product.stockrecords.update(price_currency='GBP')
+        self.product = factories.StandaloneProductFactory(stockrecords__price_currency='GBP')
         self.record = self.product.stockrecords.get()
         self.purchase_info = factories.create_purchase_info(self.record)
         self.basket.add(self.product)
@@ -28,8 +27,7 @@ class TestAddingAProductToABasket(TestCase):
         self.assertEqual(line.price_excl_tax, self.purchase_info.price.excl_tax)
 
     def test_means_another_currency_product_cannot_be_added(self):
-        product = factories.StandaloneProductFactory()
-        product.stockrecords.update(price_currency='USD')
+        product = factories.StandaloneProductFactory(stockrecords__price_currency='USD')
         with self.assertRaises(ValueError):
             self.basket.add(product)
 

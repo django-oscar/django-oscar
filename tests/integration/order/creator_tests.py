@@ -118,9 +118,8 @@ class TestPlacingOrderForDigitalGoods(TestCase):
         self.basket = factories.create_basket(empty=True)
 
     def test_does_not_allocate_stock(self):
-        product_class = ProductClass.objects.create(
-            name="Digital", track_stock=False)
-        product = factories.StandaloneProductFactory(product_class=product_class,
+        product = factories.StandaloneProductFactory(product_class__name='Digital',
+                                                     product_class__track_stock=False,
                                                      stockrecords__num_in_stock=None)
         record = product.stockrecords.get()
         self.assertTrue(record.num_allocated is None)

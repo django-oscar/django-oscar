@@ -41,7 +41,7 @@ class RangeProductFormTests(TestCase):
         form = self.submit_form({'query': '123123, 123xxx'})
         form.is_valid()
         self.assertEqual(1, len(form.get_missing_skus()))
-        self.assertTrue('123xxx' in form.get_missing_skus())
+        self.assertIn('123xxx', form.get_missing_skus())
 
     def test_only_dupes_is_invalid(self):
         product = factories.StandaloneProductFactory(stockrecords__partner_sku='123123')
@@ -55,4 +55,4 @@ class RangeProductFormTests(TestCase):
         self.range.add_product(product1)
         form = self.submit_form({'query': '123123, 123124'})
         self.assertTrue(form.is_valid())
-        self.assertTrue('123123' in form.get_duplicate_skus())
+        self.assertIn('123123', form.get_duplicate_skus())

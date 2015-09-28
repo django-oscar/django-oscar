@@ -12,8 +12,8 @@ from tests._site.apps.partner.models import StockRecord
 class TestPlacingAnOrder(TestCase):
 
     def setUp(self):
-        self.product = factories.StandaloneProductFactory()
-        self.product.stockrecords.update(num_in_stock=5, price_excl_tax=D('12.00')) 
+        self.product = factories.StandaloneProductFactory(stockrecords__num_in_stock=5,
+                                                          stockrecords__price_excl_tax=D('12.00'))
         self.stockrecord = self.product.stockrecords.get()
         self.basket = factories.create_basket(empty=True)
         add_product(self.basket, product=self.product)
@@ -59,8 +59,8 @@ class TestPlacingAnOrder(TestCase):
 class TestRestockingProduct(TestCase):
 
     def setUp(self):
-        self.product = factories.StandaloneProductFactory()
-        self.product.stockrecords.update(num_in_stock=5, price_excl_tax=D('12.00')) 
+        self.product = factories.StandaloneProductFactory(stockrecords__num_in_stock=5,
+                                                          stockrecords__price_excl_tax=D('12.00'))
         self.stockrecord = self.product.stockrecords.get()
         self.basket = factories.create_basket(empty=True)
         add_product(self.basket, product=self.product)
