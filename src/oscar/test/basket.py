@@ -17,12 +17,14 @@ def add_product(basket, price=None, quantity=1, product=None):
         basket.strategy = strategy.Default()
     if price is None:
         price = D('1')
-    if product and product.has_stockrecords:
-        record = product.stockrecords.all()[0]
+    if product is None:
+        product = factories.StandaloneProductFactory(stockrecords__price_excl_tax=price,
+                                                     stockrecords__num_in_stock=quantity + 1)
+    if product.has_stockrecords:
+        record = product.stockrecords.get()
     else:
-        record = factories.create_stockrecord(
-            product=product, price_excl_tax=price,
-            num_in_stock=quantity + 1)
+        record = factories.StockRecordFactory(product=product, price_excl_tax=price,
+                                              num_in_stock=quantity + 1)
     basket.add_product(record.product, quantity)
 
 
