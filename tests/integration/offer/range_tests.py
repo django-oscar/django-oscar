@@ -116,22 +116,17 @@ class TestPartialRange(TestCase):
 
     def test_categories_in_all_products(self):
         included_category = catalogue_models.Category.add_root(name="root")
-        product_in_included_category = create_product()
-        excluded_product_in_included_category = create_product()
-
-        catalogue_models.ProductCategory.objects.create(
-            product=product_in_included_category, category=included_category)
-        catalogue_models.ProductCategory.objects.create(
-            product=excluded_product_in_included_category,
-            category=included_category)
+        product_in_included_category = factories.StandaloneProductFactory(
+            categories__category=included_category)
+        excluded_product_in_included_category = factories.StandaloneProductFactory(
+            categories__category=included_category)
 
         self.range.included_categories.add(included_category)
         self.range.excluded_products.add(excluded_product_in_included_category)
 
         all_products = self.range.all_products()
-        self.assertTrue(product_in_included_category in all_products)
-        self.assertTrue(excluded_product_in_included_category not in
-                        all_products)
+        self.assertIn(product_in_included_category, all_products)
+        self.assertNotIn(excluded_product_in_included_category, all_products)
 
         self.assertEqual(self.range.num_products(), 1)
 
