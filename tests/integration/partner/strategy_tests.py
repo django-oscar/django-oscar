@@ -34,14 +34,15 @@ class TestDefaultStrategy(TestCase):
         self.assertTrue(info.availability.is_available_to_buy)
 
     def test_line_method_is_same_as_product_one(self):
-        product = factories.create_product()
+        product = factories.StandaloneProductFactory(stockrecords=[])
         line = Line(product=product)
         info = self.strategy.fetch_for_line(line)
         self.assertFalse(info.availability.is_available_to_buy)
         self.assertIsNone(info.price.incl_tax)
 
     def test_free_product_is_available_to_buy(self):
-        product = factories.create_product(price=D('0'), num_in_stock=1)
+        product = factories.StandaloneProductFactory(stockrecords__price_excl_tax=D('0'), 
+                                                     stockrecords__num_in_stock=1)
         info = self.strategy.fetch_for_product(product)
         self.assertTrue(info.availability.is_available_to_buy)
         self.assertTrue(info.price.exists)
@@ -51,9 +52,9 @@ class TestDefaultStrategyForParentProductWhoseVariantsHaveNoStockRecords(TestCas
 
     def setUp(self):
         self.strategy = strategy.Default()
-        parent = factories.create_product(structure='parent')
-        for x in range(3):
-            factories.create_product(parent=parent)
+        parent = factories.ParentProductFactory(children=[])
+        for __ in range(3):
+            factories.ChildProductFactory(parent=parent, stockrecords=[])
         self.info = self.strategy.fetch_for_parent(parent)
 
     def test_specifies_product_is_unavailable(self):
@@ -70,11 +71,10 @@ class TestDefaultStrategyForParentProductWithInStockVariant(TestCase):
 
     def setUp(self):
         self.strategy = strategy.Default()
-        parent = factories.create_product(structure='parent')
-        factories.create_product(parent=parent, price=D('10.00'),
-                                 num_in_stock=3)
-        for x in range(2):
-            factories.create_product(parent=parent)
+        parent = factories.ParentProductFactory(children__stockrecords__price_excl_tax=D('10.00'),
+                                                children__stockrecords__num_in_stock=3)
+        for __ in range(2):
+            factories.ChildProductFactory(parent=parent, stockrecords=[])
         self.info = self.strategy.fetch_for_parent(parent)
 
     def test_specifies_product_is_available(self):
@@ -91,11 +91,10 @@ class TestDefaultStrategyForParentProductWithOutOfStockVariant(TestCase):
 
     def setUp(self):
         self.strategy = strategy.Default()
-        parent = factories.create_product(structure='parent')
-        factories.create_product(
-            parent=parent, price=D('10.00'), num_in_stock=0)
-        for x in range(2):
-            factories.create_product(parent=parent)
+        parent = factories.ParentProductFactory(children__stockrecords__price_excl_tax=D('10.00'),
+                                                children__stockrecords__num_in_stock=0)
+        for __ in range(2):
+            factories.ChildProductFactory(parent=parent, stockrecords=[])
         self.info = self.strategy.fetch_for_parent(parent)
 
     def test_specifies_product_is_unavailable(self):
