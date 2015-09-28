@@ -104,8 +104,7 @@ class TestAStaffUser(WebTestCase):
         self.assertEqual(Product.objects.count(), 1)
 
     def test_can_delete_a_standalone_product(self):
-        product = factories.StandaloneProductFactory()
-        product.stockrecords.get().partner.users.add(self.user)
+        product = factories.StandaloneProductFactory(stockrecords__partner__users=[self.user])
 
         page = self.get(reverse('dashboard:catalogue-product-delete',
                                 args=(product.id,))).form.submit()
@@ -142,8 +141,7 @@ class TestAStaffUser(WebTestCase):
         self.assertEqual(Product.objects.count(), 1)
 
     def test_can_list_her_products(self):
-        product1 = factories.StandaloneProductFactory()
-        product1.stockrecords.get().partner.users.add(self.user)
+        product1 = factories.StandaloneProductFactory(stockrecords__partner__users=[self.user])
         product2 = factories.StandaloneProductFactory()
         page = self.get(reverse('dashboard:catalogue-product-list'))
         products_on_page = [row.record for row
@@ -164,8 +162,8 @@ class TestAStaffUser(WebTestCase):
 
     def test_cant_create_child_product_for_invalid_parents(self):
         # Creates a product with stockrecords.
-        invalid_parent = factories.StandaloneProductFactory()
-        invalid_parent.stockrecords.get().partner.users.add(self.user)
+        invalid_parent = \
+            factories.StandaloneProductFactory(stockrecords__partner__users=[self.user])
         self.assertFalse(invalid_parent.can_be_parent())
         url = reverse(
             'dashboard:catalogue-product-create-child',
@@ -185,8 +183,7 @@ class TestANonStaffUser(TestAStaffUser):
         self.partner.users.add(self.user)
 
     def test_can_list_her_products(self):
-        product1 = factories.StandaloneProductFactory()
-        product1.stockrecords.get().partner.users.add(self.user)
+        product1 = factories.StandaloneProductFactory(stockrecords__partner__users=[self.user])
         product2 = factories.StandaloneProductFactory()
         page = self.get(reverse('dashboard:catalogue-product-list'))
         products_on_page = [row.record for row
