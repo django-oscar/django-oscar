@@ -171,8 +171,7 @@ class SavedBasketTests(TestCase):
         client = Client()
         client.login(email=user.email, password='pass')
 
-        product = factories.StandaloneProductFactory()
-        product.stockrecords.update(num_in_stock=1)
+        product = factories.StandaloneProductFactory(stockrecords__num_in_stock=1)
         basket, created = Basket.open.get_or_create(owner=user)
         add_product(basket, product=product)
 
