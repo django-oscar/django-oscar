@@ -43,15 +43,13 @@ class TestProductDetailView(WebTestCase):
 class TestProductListView(WebTestCase):
 
     def test_shows_add_to_basket_button_for_available_product(self):
-        product = factories.StandaloneProductFactory()
-        product.stockrecords.update(num_in_stock=1)
+        product = factories.StandaloneProductFactory(stockrecords__num_in_stock=1)
         page = self.app.get(reverse('catalogue:index'))
         self.assertContains(page, product.title)
         self.assertContains(page, "Add to basket")
 
     def test_shows_not_available_for_out_of_stock_product(self):
-        product = factories.StandaloneProductFactory()
-        product.stockrecords.update(num_in_stock=0)
+        product = factories.StandaloneProductFactory(stockrecords__num_in_stock=0)
 
         page = self.app.get(reverse('catalogue:index'))
 
