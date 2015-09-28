@@ -18,7 +18,7 @@ class TestWholeSiteRange(TestCase):
         self.assertTrue(self.range.contains_product(self.product))
 
     def test_all_products_excludes_child_products(self):
-        self.assertTrue(self.child not in self.range.all_products())
+        self.assertNotIn(self.child, self.range.all_products())
 
     def test_whitelisting(self):
         self.range.add_product(self.product)
@@ -93,10 +93,10 @@ class TestPartialRange(TestCase):
         self.assertEqual(self.range.num_products(), count)
 
         for product in included_products:
-            self.assertTrue(product in all_products)
+            self.assertIn(product, all_products)
 
         for product in excluded_products:
-            self.assertTrue(product not in all_products)
+            self.assertNotIn(product, all_products)
 
     def test_product_classes_in_all_products(self):
         product_in_included_class = factories.StandaloneProductFactory(product_class__name="123")
@@ -108,9 +108,8 @@ class TestPartialRange(TestCase):
         self.range.excluded_products.add(excluded_product_in_included_class)
 
         all_products = self.range.all_products()
-        self.assertTrue(product_in_included_class in all_products)
-        self.assertTrue(excluded_product_in_included_class not in
-                        all_products)
+        self.assertIn(product_in_included_class, all_products)
+        self.assertNotIn(excluded_product_in_included_class, all_products)
 
         self.assertEqual(self.range.num_products(), 1)
 
