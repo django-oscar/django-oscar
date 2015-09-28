@@ -44,13 +44,11 @@ class TestScales(TestCase):
 
     def test_returns_correct_weight_for_nonempty_basket_with_line_quantities(self):
         basket = factories.create_basket(empty=True)
-        products = [
-            (factories.create_product(attributes={'weight': '1'},
-                                      price=D('5.00')), 3),
-            (factories.create_product(attributes={'weight': '2'},
-                                      price=D('5.00')), 4)]
-        for product, quantity in products:
-            basket.add(product, quantity=quantity)
+        for weight, quantity in [ (1, 3), (2, 4) ]:
+            attribute_value = factories.ProductAttributeValueFactory(
+                product__stockrecords__price_excl_tax=D('5.00'),
+                value=weight)
+            basket.add(attribute_value.product, quantity=quantity)
 
         scale = Scale(attribute_code='weight')
         self.assertEqual(1*3 + 2*4, scale.weigh_basket(basket))
