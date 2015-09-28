@@ -101,8 +101,8 @@ class TestPartialRange(TestCase):
     def test_product_classes_in_all_products(self):
         product_in_included_class = factories.StandaloneProductFactory(product_class__name="123")
         included_product_class = product_in_included_class.product_class
-        excluded_product_in_included_class = create_product(
-            product_class=included_product_class.name)
+        excluded_product_in_included_class = factories.StandaloneProductFactory(
+            product_class=included_product_class)
 
         self.range.classes.add(included_product_class)
         self.range.excluded_products.add(excluded_product_in_included_class)
