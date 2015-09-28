@@ -134,14 +134,16 @@ class TestPartialRange(TestCase):
         child_category = parent_category.add_child(name="child")
         grand_child_category = child_category.add_child(name="grand-child")
 
-        c_product = factories.StandaloneProductFactory(categories__category=child_category)
-        gc_product = factories.StandaloneProductFactory(categories__category=grand_child_category)
+        product_in_child_category = factories.StandaloneProductFactory(
+            categories__category=child_category)
+        product_in_grand_child_category = factories.StandaloneProductFactory(
+            categories__category=grand_child_category)
 
         self.range.included_categories.add(parent_category)
 
         all_products = self.range.all_products()
-        self.assertIn(c_product, all_products)
-        self.assertIn(gc_product, all_products)
+        self.assertIn(product_in_child_category, all_products)
+        self.assertIn(product_in_grand_child_category, all_products)
 
         self.assertEqual(self.range.num_products(), 2)
 
