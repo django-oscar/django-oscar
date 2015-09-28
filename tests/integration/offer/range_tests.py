@@ -54,8 +54,8 @@ class TestPartialRange(TestCase):
     def setUp(self):
         self.range = models.Range.objects.create(
             name="All products", includes_all_products=False)
-        self.parent = create_product(structure='parent')
-        self.child = create_product(structure='child', parent=self.parent)
+        self.parent = factories.ParentProductFactory()
+        self.child = self.parent.children.get()
 
     def test_empty_list(self):
         self.assertFalse(self.range.contains_product(self.parent))
@@ -79,8 +79,8 @@ class TestPartialRange(TestCase):
 
     def test_included_excluded_products_in_all_products(self):
         count = 5
-        included_products = [create_product() for _ in range(count)]
-        excluded_products = [create_product() for _ in range(count)]
+        included_products = [factories.StandaloneProductFactory() for _ in range(count)]
+        excluded_products = [factories.StandaloneProductFactory() for _ in range(count)]
 
         for product in included_products:
             models.RangeProduct.objects.create(
