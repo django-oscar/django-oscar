@@ -149,15 +149,14 @@ class TestAStaffUser(WebTestCase):
         self.assertIn(product2, products_on_page)
 
     def test_can_create_a_child_product(self):
-        parent_product = factories.ParentProductFactory()
-        initial_num_children = parent_product.children.count()
+        parent_product = factories.ParentProductFactory(children=[])
         url = reverse(
             'dashboard:catalogue-product-create-child',
             kwargs={'parent_pk': parent_product.pk})
         form = self.get(url).form
         form.submit()
 
-        self.assertEqual(parent_product.children.count(), initial_num_children+1)
+        self.assertEqual(parent_product.children.count(), 1)
 
     def test_cant_create_child_product_for_invalid_parents(self):
         # Creates a product with stockrecords.
