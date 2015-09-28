@@ -2,6 +2,7 @@ from django.test import TestCase
 
 from oscar.apps.offer import models
 from oscar.apps.catalogue import models as catalogue_models
+from oscar.test import factories
 from oscar.test.factories import create_product
 
 
@@ -10,22 +11,22 @@ class TestWholeSiteRange(TestCase):
     def setUp(self):
         self.range = models.Range.objects.create(
             name="All products", includes_all_products=True)
-        self.prod = create_product()
+        self.product = factories.ParentProductFactory()
+        self.child = self.product.children.get()
 
     def test_all_products_range(self):
-        self.assertTrue(self.range.contains_product(self.prod))
+        self.assertTrue(self.range.contains_product(self.product))
 
     def test_all_products_excludes_child_products(self):
-        child_product = create_product(structure='child', parent=self.prod)
-        self.assertTrue(child_product not in self.range.all_products())
+        self.assertTrue(self.child not in self.range.all_products())
 
     def test_whitelisting(self):
-        self.range.add_product(self.prod)
-        self.assertTrue(self.range.contains_product(self.prod))
+        self.range.add_product(self.product)
+        self.assertTrue(self.range.contains_product(self.product))
 
     def test_blacklisting(self):
-        self.range.excluded_products.add(self.prod)
-        self.assertFalse(self.range.contains_product(self.prod))
+        self.range.excluded_products.add(self.product)
+        self.assertFalse(self.range.contains_product(self.product))
 
 
 class TestChildRange(TestCase):
