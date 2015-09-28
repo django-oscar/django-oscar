@@ -28,7 +28,10 @@ def create_offer():
 class TestWeightBasedShippingBenefit(TestCase):
 
     def setUp(self):
-        product = factories.create_product(attributes={'weight': 5}, num_in_stock=10)
+        weight_attribute = factories.ProductAttributeFactory()
+        product = factories.StandaloneProductFactory(stockrecords__num_in_stock=10)
+        factories.ProductAttributeValueFactory(attribute=weight_attribute, product=product,
+                                               value=5)
         factories.create_shipping_weight_band(10, 10)
         self.basket = factories.create_basket(empty=True)
         self.basket.add_product(product)
