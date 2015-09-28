@@ -22,7 +22,7 @@ class ProductClassFactory(factory.DjangoModelFactory):
         model = get_model('catalogue', 'ProductClass')
 
 
-class StandaloneProductFactory(factory.DjangoModelFactory):
+class ProductFactory(factory.DjangoModelFactory):
     class Meta:
         model = get_model('catalogue', 'Product')
 
@@ -37,9 +37,8 @@ class StandaloneProductFactory(factory.DjangoModelFactory):
         'oscar.test.factories.ProductCategoryFactory', 'product')
 
 
-# Previously, ProductFactory just created standalone products
-# ProductFactory should probably be removed sooner than later
-ProductFactory = StandaloneProductFactory
+# Aliased so that tests can use the more explicit class name
+StandaloneProductFactory = ProductFactory
 
 
 class ParentProductFactory(factory.DjangoModelFactory):
