@@ -7,7 +7,7 @@ from oscar.apps.partner.importers import CatalogueImporter
 from oscar.apps.partner.exceptions import ImportingError
 from oscar.apps.catalogue.models import ProductClass, Product
 from oscar.apps.partner.models import Partner
-from oscar.test.factories import create_product
+from oscar.test import factories
 
 from tests._site.apps.partner.models import StockRecord
 
@@ -119,7 +119,8 @@ class ImportWithFlushTest(TestCase):
 
     def test_items_are_flushed_by_importer(self):
         upc = "0000000000000"
-        create_product(price=D('10.00'), upc=upc)
+        factories.StandaloneProductFactory(upc=upc,
+                                           stockrecords__price_excl_tax=D('10.00'))
 
         self.importer.handle(TEST_BOOKS_CSV)
 

@@ -13,9 +13,9 @@ Country = get_model('address', 'Country')
 class TestStockRecord(TestCase):
 
     def setUp(self):
-        self.product = factories.create_product()
-        self.stockrecord = factories.create_stockrecord(
-            self.product, price_excl_tax=D('10.00'), num_in_stock=10)
+        self.product = factories.StandaloneProductFactory(stockrecords__price_excl_tax=D('10.00'),
+                                                          stockrecords__num_in_stock=10)
+        self.stockrecord = self.product.stockrecords.get()
 
     def test_get_price_excl_tax_returns_correct_value(self):
         self.assertEqual(D('10.00'), self.stockrecord.price_excl_tax)
