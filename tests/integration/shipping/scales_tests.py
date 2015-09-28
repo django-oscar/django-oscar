@@ -11,19 +11,20 @@ class TestScales(TestCase):
 
     def test_weighs_uses_specified_attribute(self):
         scale = Scale(attribute_code='weight')
-        p = factories.create_product(attributes={'weight': '1'})
-        self.assertEqual(1, scale.weigh_product(p))
+        product = factories.StandaloneProductFactory()
+        factories.ProductAttributeValueFactory(product=product, value=1)
+        self.assertEqual(1, scale.weigh_product(product))
 
     def test_uses_default_weight_when_attribute_is_missing(self):
         scale = Scale(attribute_code='weight', default_weight=0.5)
-        p = factories.create_product()
-        self.assertEqual(0.5, scale.weigh_product(p))
+        product = factories.StandaloneProductFactory()
+        self.assertEqual(0.5, scale.weigh_product(product))
 
     def test_raises_exception_when_attribute_is_missing(self):
         scale = Scale(attribute_code='weight')
-        p = factories.create_product()
+        product = factories.StandaloneProductFactory()
         with self.assertRaises(ValueError):
-            scale.weigh_product(p)
+            scale.weigh_product(product)
 
     def test_returns_zero_for_empty_basket(self):
         basket = Basket()
@@ -33,16 +34,13 @@ class TestScales(TestCase):
 
     def test_returns_correct_weight_for_nonempty_basket(self):
         basket = factories.create_basket(empty=True)
-        products = [
-            factories.create_product(attributes={'weight': '1'},
-                                     price=D('5.00')),
-            factories.create_product(attributes={'weight': '2'},
-                                     price=D('5.00'))]
-        for product in products:
-            basket.add(product)
+        weights = [1, 2]
+        for weight in weights:
+            attribute_value = factories.ProductAttributeValueFactory(value=weight)
+            basket.add(attribute_value.product)
 
         scale = Scale(attribute_code='weight')
-        self.assertEqual(1 + 2, scale.weigh_basket(basket))
+        self.assertEqual(sum(weights), scale.weigh_basket(basket))
 
     def test_returns_correct_weight_for_nonempty_basket_with_line_quantities(self):
         basket = factories.create_basket(empty=True)
