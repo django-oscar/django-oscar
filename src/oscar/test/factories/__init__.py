@@ -30,8 +30,6 @@ OrderTotalCalculator = get_class('checkout.calculators',
 Partner = get_model('partner', 'Partner')
 StockRecord = get_model('partner', 'StockRecord')
 
-Product = get_model('catalogue', 'Product')
-ProductClass = get_model('catalogue', 'ProductClass')
 ProductAttribute = get_model('catalogue', 'ProductAttribute')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 ProductImage = get_model('catalogue', 'ProductImage')
