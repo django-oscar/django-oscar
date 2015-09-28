@@ -74,39 +74,6 @@ def create_purchase_info(record):
     )
 
 
-def create_product(upc=None, title=u"Dùｍϻϒ title",
-                   product_class=u"Dùｍϻϒ item class",
-                   partner_name=None, partner_sku=None, price=None,
-                   num_in_stock=None, attributes=None,
-                   partner_users=None, **kwargs):
-    """
-    Helper method for creating products that are used in tests.
-    """
-    product_class, __ = ProductClass._default_manager.get_or_create(
-        name=product_class)
-    product = product_class.products.model(
-        product_class=product_class,
-        title=title, upc=upc, **kwargs)
-    if kwargs.get('parent') and 'structure' not in kwargs:
-        product.structure = 'child'
-    if attributes:
-        for code, value in attributes.items():
-            # Ensure product attribute exists
-            product_class.attributes.get_or_create(name=code, code=code)
-            setattr(product.attr, code, value)
-    product.save()
-
-    # Shortcut for creating stockrecord
-    stockrecord_fields = [
-        price, partner_sku, partner_name, num_in_stock, partner_users]
-    if any([field is not None for field in stockrecord_fields]):
-        create_stockrecord(
-            product, price_excl_tax=price, num_in_stock=num_in_stock,
-            partner_users=partner_users, partner_sku=partner_sku,
-            partner_name=partner_name)
-    return product
-
-
 def create_product_image(product=None,
                          original=None,
                          caption='Dummy Caption',
