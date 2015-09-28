@@ -103,7 +103,7 @@ class TestSuccessfulOrderCreation(TestCase):
     def test_partner_name_is_optional(self):
         for partner_name, order_number in [('', 'A'), ('p1', 'B')]:
             self.basket = factories.create_basket(empty=True)
-            product = factories.create_product(partner_name=partner_name)
+            product = factories.StandaloneProductFactory(stockrecords__partner__name=partner_name)
             add_product(self.basket, D('12.00'), product=product)
             place_order(
                 self.creator, basket=self.basket, order_number=order_number)
