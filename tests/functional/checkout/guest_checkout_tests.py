@@ -57,7 +57,7 @@ class TestIndexView(CheckoutMixin, WebTestCase):
         # purchasable.
         product = factories.StandaloneProductFactory()
         self.add_product_to_basket(product)
-        product.stockrecords.all().update(num_in_stock=0)
+        product.stockrecords.update(num_in_stock=0)
 
         response = self.get(reverse('checkout:index'))
         self.assertRedirectsTo(response, 'basket:summary')
@@ -135,7 +135,7 @@ class TestShippingAddressView(CheckoutMixin, WebTestCase):
         self.add_product_to_basket(product)
         self.enter_guest_details()
 
-        product.stockrecords.all().update(num_in_stock=0)
+        product.stockrecords.update(num_in_stock=0)
 
         response = self.get(reverse('checkout:shipping-address'))
         self.assertRedirectsTo(response, 'basket:summary')
@@ -169,7 +169,7 @@ class TestShippingMethodView(CheckoutMixin, WebTestCase):
         self.add_product_to_basket(product)
         self.enter_guest_details()
         self.enter_shipping_address()
-        product.stockrecords.all().update(num_in_stock=0)
+        product.stockrecords.update(num_in_stock=0)
 
         response = self.get(reverse('checkout:shipping-method'))
         self.assertRedirectsTo(response, 'basket:summary')
