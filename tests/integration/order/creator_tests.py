@@ -2,7 +2,6 @@ from decimal import Decimal as D
 
 from django.test import TestCase
 from django.test.utils import override_settings
-from mock import Mock
 
 from oscar.apps.catalogue.models import ProductClass, Product
 from oscar.apps.offer.utils import Applicator
@@ -119,17 +118,18 @@ class TestPlacingOrderForDigitalGoods(TestCase):
         self.basket = factories.create_basket(empty=True)
 
     def test_does_not_allocate_stock(self):
-        ProductClass.objects.create(
+        product_class = ProductClass.objects.create(
             name="Digital", track_stock=False)
-        product = factories.create_product(product_class="Digital")
-        record = factories.create_stockrecord(product, num_in_stock=None)
+        product = factories.StandaloneProductFactory(product_class=product_class,
+                                                     stockrecords__num_in_stock=None)
+        record = product.stockrecords.get()
         self.assertTrue(record.num_allocated is None)
 
         add_product(self.basket, D('12.00'), product=product)
         place_order(self.creator, basket=self.basket, order_number='1234')
 
         product = Product.objects.get(id=product.id)
-        stockrecord = product.stockrecords.all()[0]
+        stockrecord = product.stockrecords.get()
         self.assertTrue(stockrecord.num_in_stock is None)
         self.assertTrue(stockrecord.num_allocated is None)
 
