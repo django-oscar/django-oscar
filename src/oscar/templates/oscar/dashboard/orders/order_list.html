@@ -196,7 +196,6 @@
     {% block onbodyload %}
         {{ block.super }}
         oscar.dashboard.orders.initTable();
-        oscar.dashboard.orders.initFilterToggle();
         oscar.dashboard.search.init();
         {% if form.errors %}
         $('#SearchModal').modal('show');
