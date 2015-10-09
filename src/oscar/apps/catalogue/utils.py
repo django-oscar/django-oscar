@@ -1,19 +1,19 @@
 import os
-import zlib
-import tarfile
-import zipfile
-import tempfile
 import shutil
-from PIL import Image
+import tarfile
+import tempfile
+import zipfile
+import zlib
 
-from django.core.files import File
 from django.core.exceptions import FieldError
+from django.core.files import File
 from django.db.transaction import atomic
 from django.utils.translation import ugettext_lazy as _
+from PIL import Image
 
-from oscar.core.loading import get_model
 from oscar.apps.catalogue.exceptions import (
-    ImageImportError, IdenticalImageError, InvalidImageArchive)
+    IdenticalImageError, ImageImportError, InvalidImageArchive)
+from oscar.core.loading import get_model
 
 Category = get_model('catalogue', 'category')
 Product = get_model('catalogue', 'product')

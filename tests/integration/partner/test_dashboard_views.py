@@ -21,5 +21,5 @@ class TestPartnerUserUnlinkView(TestCase):
         view = views.PartnerUserUnlinkView()
         view.unlink_user(user, partner)
 
-        assert partner.users.count() == 0
-        assert Permission.objects.filter(pk=permission.pk).exists()
+        self.assertEqual(partner.users.count(), 0)
+        self.assertTrue(Permission.objects.filter(pk=permission.pk).exists())

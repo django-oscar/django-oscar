@@ -1,4 +1,4 @@
-from django_tables2 import LinkColumn, TemplateColumn, Column, A
+from django_tables2 import A, Column, LinkColumn, TemplateColumn
 
 from oscar.core.loading import get_class
 

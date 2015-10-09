@@ -1,14 +1,12 @@
 import csv
 import sys
 
-from django.utils import six
-
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
+from django.utils import six
 
 from oscar.core.loading import get_model
-
 
 # A setting that can be used in foreign key declarations
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')

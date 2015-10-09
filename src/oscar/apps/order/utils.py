@@ -1,13 +1,12 @@
 from decimal import Decimal as D
 
-from django.contrib.sites.models import Site
 from django.conf import settings
+from django.contrib.sites.models import Site
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.core.loading import get_model
-from oscar.core.loading import get_class
-from . import exceptions
+from oscar.core.loading import get_class, get_model
 
+from . import exceptions
 
 Order = get_model('order', 'Order')
 Line = get_model('order', 'Line')

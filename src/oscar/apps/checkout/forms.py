@@ -1,12 +1,11 @@
 from django import forms
-from oscar.core.loading import get_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.address.forms import AbstractAddressForm
 from oscar.apps.customer.utils import normalise_email
 from oscar.core.compat import get_user_model
-
+from oscar.core.loading import get_model
 from oscar.views.generic import PhoneNumberMixin
 
 User = get_user_model()

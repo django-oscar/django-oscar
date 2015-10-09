@@ -1,12 +1,13 @@
-from django.db import models
 from django.conf import settings
-from django.utils.encoding import python_2_unicode_compatible
-from django.utils.translation import ugettext_lazy as _, pgettext_lazy
-from django.core.urlresolvers import reverse
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import fields
-from oscar.core.loading import get_model
+from django.contrib.contenttypes.models import ContentType
+from django.core.urlresolvers import reverse
+from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
+from oscar.core.loading import get_model
 from oscar.models.fields import ExtendedURLField
 
 

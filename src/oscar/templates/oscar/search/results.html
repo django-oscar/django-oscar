@@ -56,7 +56,7 @@
                 {% endblocktrans %}
             {% else %}
                 {% blocktrans count num_results=paginator.count %}
-                    Found <strong>1</strong> result.
+                    Found <strong>{{ num_results }}</strong> result.
                 {% plural %}
                     Found <strong>{{ num_results }}</strong> results. 
                 {% endblocktrans %}

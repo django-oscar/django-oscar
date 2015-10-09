@@ -1,12 +1,14 @@
 from decimal import Decimal as D
 
-from django.contrib import messages
 from django import http
+from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.core.loading import get_model, get_class
+from oscar.core import prices
+from oscar.core.loading import get_class, get_model
+
 from . import exceptions
 
 Repository = get_class('shipping.repository', 'Repository')
@@ -232,7 +234,7 @@ class CheckoutSessionMixin(object):
             # It's unusual to get here as a shipping method should be set by
             # the time this skip-condition is called. In the absence of any
             # other evidence, we assume the shipping charge is zero.
-            shipping_charge = D('0.00')
+            shipping_charge = prices.Price(excl_tax=D('0.00'), tax=D('0.00'))
         total = self.get_order_totals(request.basket, shipping_charge)
         if total.excl_tax == D('0.00'):
             raise exceptions.PassedSkipCondition(

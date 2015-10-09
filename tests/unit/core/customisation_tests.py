@@ -29,7 +29,7 @@ class TestForkAppFunction(TestCase):
         # We piggyback on another test which means a custom app is already in
         # the settings we use for the test suite. We just check that's still
         # the case here.
-        assert 'tests._site.apps.partner' in settings.INSTALLED_APPS
+        self.assertIn('tests._site.apps.partner', settings.INSTALLED_APPS)
         with self.assertRaises(ValueError):
             customisation.fork_app('partner', VALID_FOLDER_PATH)
 

@@ -5569,13 +5569,13 @@ msgstr[1] "\n<strong>%(num_results)s</strong> resultaten - vertoont <strong>%(st
 #, python-format
 msgid ""
 "\n"
-"                    <strong>1</strong> result.\n"
+"                    <strong>%(num_results)s</strong> result.\n"
 "                "
 msgid_plural ""
 "\n"
 "                    <strong>%(num_results)s</strong> results.\n"
 "                "
-msgstr[0] "\n                    <strong>1</strong> resultaat.\n                "
+msgstr[0] "\n                    <strong>%(num_results)s</strong> resultaat.\n                "
 msgstr[1] "\n<strong>%(num_results)s</strong> resultaten.\n                "
 
 #: templates/oscar/catalogue/browse.html:90
@@ -5758,13 +5758,13 @@ msgstr "Nee"
 #, python-format
 msgid ""
 "\n"
-"            <strong>%(num_up_votes)s</strong> of 1 customer found this useful\n"
+"            <strong>%(num_up_votes)s</strong> of %(num_votes)s customer found this useful\n"
 "            "
 msgid_plural ""
 "\n"
 "            <strong>%(num_up_votes)s</strong> of %(num_votes)s customers found this useful\n"
 "            "
-msgstr[0] "\n            <strong>%(num_up_votes)s</strong> van 1 klant vond dit nuttig\n            "
+msgstr[0] "\n            <strong>%(num_up_votes)s</strong> van %(num_votes)s klant vond dit nuttig\n            "
 msgstr[1] "\n            <strong>%(num_up_votes)s</strong> van %(num_votes)s klanten vonden dit nuttig\n            "
 
 #: templates/oscar/catalogue/partials/review.html:58
@@ -5779,13 +5779,13 @@ msgstr "Gratis"
 #, python-format
 msgid ""
 "\n"
-"                    1 customer review\n"
+"                    %(num_reviews)s customer review\n"
 "                "
 msgid_plural ""
 "\n"
 "                    %(num_reviews)s customer reviews\n"
 "                "
-msgstr[0] "\n                    1 klant beoordeling\n                "
+msgstr[0] "\n                    %(num_reviews)s klant beoordeling\n                "
 msgstr[1] "\n                    %(num_reviews)s klantbeoordelingen\n                "
 
 #: templates/oscar/catalogue/reviews/partials/review_stars.html:26
@@ -8900,13 +8900,13 @@ msgstr "\n<strong>%(num_results)s</strong> resultaten gevonden, vertoont <strong
 #, python-format
 msgid ""
 "\n"
-"                    Found <strong>1</strong> result.\n"
+"                    Found <strong>%(num_results)s</strong> result.\n"
 "                "
 msgid_plural ""
 "\n"
 "                    Found <strong>%(num_results)s</strong> results. \n"
 "                "
-msgstr[0] "\n<strong>1</strong> resultaat gevonden."
+msgstr[0] "\n<strong>%(num_results)s</strong> resultaat gevonden."
 msgstr[1] "\n<strong> %(num_results)s</strong> resultaten gevonden."
 
 #: templates/oscar/search/results.html:69

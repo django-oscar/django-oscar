@@ -1,8 +1,8 @@
 from django.conf.urls import url
 
+from oscar.apps.promotions.conf import PROMOTION_CLASSES
 from oscar.core.application import Application
 from oscar.core.loading import get_class
-from oscar.apps.promotions.conf import PROMOTION_CLASSES
 
 
 class PromotionsDashboardApplication(Application):

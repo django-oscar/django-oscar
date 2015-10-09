@@ -1,9 +1,9 @@
 from django.conf.urls import url
 from haystack.views import search_view_factory
 
+from oscar.apps.search import facets
 from oscar.core.application import Application
 from oscar.core.loading import get_class
-from oscar.apps.search import facets
 
 
 class SearchApplication(Application):

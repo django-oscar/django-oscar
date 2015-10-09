@@ -1,10 +1,10 @@
-from django.utils import six
-
 from django import forms
-from oscar.core.loading import get_model
 from django.template import Template, TemplateSyntaxError
+from django.utils import six
 from django.utils.translation import ugettext_lazy as _
+
 from oscar.apps.customer.utils import normalise_email
+from oscar.core.loading import get_model
 
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
 Order = get_model('order', 'Order')

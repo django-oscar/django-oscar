@@ -31,6 +31,13 @@ What's new in Oscar 1.2?
 ------------------------
 
 
+.. _minor_changes_in_1.2:
+
+Minor changes
+~~~~~~~~~~~~~
+ - Fix missing page_url field in the promotions form (`#1816`_)
+
+
 .. _incompatible_in_1.2:
 
 Backwards incompatible changes in Oscar 1.2
