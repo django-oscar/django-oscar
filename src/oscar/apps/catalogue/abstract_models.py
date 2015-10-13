@@ -393,6 +393,8 @@ class AbstractProduct(models.Model):
         +---------------+-------------+--------------+--------------+
         | rec. products | optional    | optional     | unsupported  |
         +---------------+-------------+--------------+--------------+
+        | child images  | forbidden   | forbidden    | 0 or more    |
+        +---------------+-------------+--------------+--------------+
         | options       | optional    | optional     | forbidden    |
         +---------------+-------------+--------------+--------------+
 
