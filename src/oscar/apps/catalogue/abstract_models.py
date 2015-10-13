@@ -415,7 +415,7 @@ class AbstractProduct(models.Model):
             raise ValidationError(_("Your product must have a product class."))
         if self.parent_id:
             raise ValidationError(_("Only child products can have a parent."))
-        if self.child_images.exists():
+        if self.pk and self.child_images.exists():
             raise ValidationError(_("Only child products can have child images."))
 
     def _clean_child(self):
