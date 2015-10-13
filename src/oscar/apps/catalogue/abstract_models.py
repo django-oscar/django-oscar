@@ -311,7 +311,7 @@ class AbstractProduct(models.Model):
         help_text=_("These are products that are recommended to accompany the "
                     "main product."))
 
-    # Which images belong to which child. For instance, you might have both a Blue and Dark Blue 
+    # Which images belong to which child. For instance, you might have both a Blue and Dark Blue
     # T-Shirt, so it's important to be totally clear on this matter
     child_images = models.ManyToManyField(
         'catalogue.ProductImage',
