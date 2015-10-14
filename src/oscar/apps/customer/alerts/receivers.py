@@ -1,6 +1,7 @@
 from django.conf import settings
-from oscar.core.loading import get_model
 from django.db.models.signals import post_save
+
+from oscar.core.loading import get_model
 
 
 def send_product_alerts(sender, instance, created, **kwargs):

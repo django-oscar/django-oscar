@@ -1,13 +1,14 @@
 from datetime import timedelta
-from decimal import Decimal as D, ROUND_UP
+from decimal import Decimal as D
+from decimal import ROUND_UP
 
+from django.db.models import Avg, Count, Sum
 from django.utils.timezone import now
 from django.views.generic import TemplateView
-from oscar.core.loading import get_model
-from django.db.models import Avg, Sum, Count
 
-from oscar.core.compat import get_user_model
 from oscar.apps.promotions.models import AbstractPromotion
+from oscar.core.compat import get_user_model
+from oscar.core.loading import get_model
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 Voucher = get_model('voucher', 'Voucher')

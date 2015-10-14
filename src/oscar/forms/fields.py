@@ -1,4 +1,4 @@
-from django.forms import fields, TextInput
+from django.forms import TextInput, fields
 
 from oscar.core import validators
 

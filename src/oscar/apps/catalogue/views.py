@@ -1,14 +1,15 @@
 import warnings
+
 from django.contrib import messages
 from django.core.paginator import InvalidPage
-from django.utils.http import urlquote
-from django.http import HttpResponsePermanentRedirect, Http404
+from django.http import Http404, HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import DetailView, TemplateView
+from django.utils.http import urlquote
 from django.utils.translation import ugettext_lazy as _
+from django.views.generic import DetailView, TemplateView
 
-from oscar.core.loading import get_class, get_model
 from oscar.apps.catalogue.signals import product_viewed
+from oscar.core.loading import get_class, get_model
 
 Product = get_model('catalogue', 'product')
 ProductReview = get_model('reviews', 'ProductReview')

@@ -1,5 +1,5 @@
-from oscar.core.loading import is_model_registered
 from oscar.apps.shipping import abstract_models
+from oscar.core.loading import is_model_registered
 
 __all__ = []
 

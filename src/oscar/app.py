@@ -1,6 +1,6 @@
 # flake8: noqa, because URL syntax is more readable with long lines
 
-from django.conf.urls import url, include
+from django.conf.urls import include, url
 from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse_lazy
 

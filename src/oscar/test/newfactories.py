@@ -12,7 +12,6 @@ from oscar.test.factories.payment import *  # noqa
 from oscar.test.factories.utils import *  # noqa
 from oscar.test.factories.voucher import *  # noqa
 
-
 message = (
     "Module '%s' is deprecated and will be removed in the next major version "
     "of django-oscar"

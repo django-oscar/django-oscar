@@ -1,10 +1,11 @@
 import logging
-from optparse import make_option
 from datetime import timedelta
+from optparse import make_option
+
+from django.core.management.base import BaseCommand
+from django.utils.timezone import now
 
 from oscar.core.loading import get_model
-from django.utils.timezone import now
-from django.core.management.base import BaseCommand
 
 ProductAlert = get_model('customer', 'ProductAlert')
 

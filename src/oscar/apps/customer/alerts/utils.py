@@ -1,10 +1,10 @@
 import logging
 
-from django.core import mail
 from django.conf import settings
-from django.template import loader, Context
 from django.contrib.sites.models import Site
+from django.core import mail
 from django.db.models import Max
+from django.template import Context, loader
 
 from oscar.apps.customer.notifications import services
 from oscar.core.loading import get_class, get_model

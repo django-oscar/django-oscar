@@ -47,7 +47,7 @@ class RangeProductForm(forms.Form):
 
         # Check that the search matches some products
         ids = set(re.compile(r'[\w-]+').findall(raw))
-        products = self.range.included_products.all()
+        products = self.range.all_products()
         existing_skus = set(products.values_list(
             'stockrecords__partner_sku', flat=True))
         existing_upcs = set(products.values_list('upc', flat=True))
