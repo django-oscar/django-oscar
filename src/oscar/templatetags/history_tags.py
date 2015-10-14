@@ -1,12 +1,11 @@
+from django import template
+from django.core.urlresolvers import Resolver404, resolve
 from django.utils import six
 from django.utils.six.moves.urllib import parse
-
-from django import template
-from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import resolve, Resolver404
 
 from oscar.apps.customer import history
+from oscar.core.loading import get_model
 
 Site = get_model('sites', 'Site')
 
@@ -42,7 +41,7 @@ def get_back_button(context):
 
     try:
         url = parse.urlparse(referrer)
-    except:
+    except (ValueError, TypeError):
         return None
 
     if request.get_host() != url.netloc:

@@ -1,17 +1,17 @@
 import itertools
 
-from django.views import generic
-from django.contrib.contenttypes.models import ContentType
-from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.contrib.contenttypes.models import ContentType
+from django.core.urlresolvers import reverse
 from django.db.models import Count
+from django.http import HttpResponseRedirect
 from django.shortcuts import HttpResponse
+from django.utils.translation import ugettext_lazy as _
+from django.views import generic
 
-from oscar.core.loading import get_classes
 from oscar.apps.promotions.conf import PROMOTION_CLASSES
+from oscar.core.loading import get_classes
 
 SingleProduct, RawHTML, Image, MultiImage, AutomaticProductList, \
     PagePromotion, HandPickedProductList \

@@ -1,7 +1,7 @@
 from decimal import Decimal as D
 
-from oscar.test import factories
 from oscar.apps.partner import strategy
+from oscar.test import factories
 
 
 def add_product(basket, price=None, quantity=1, product=None):

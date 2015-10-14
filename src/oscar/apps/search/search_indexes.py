@@ -1,6 +1,6 @@
 from haystack import indexes
 
-from oscar.core.loading import get_model, get_class
+from oscar.core.loading import get_class, get_model
 
 # Load default strategy (without a user/request)
 is_solr_supported = get_class('search.features', 'is_solr_supported')

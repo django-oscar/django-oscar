@@ -1,7 +1,7 @@
 from django import forms
 from django.conf import settings
-from django.forms.models import modelformset_factory, BaseModelFormSet
 from django.db.models import Sum
+from django.forms.models import BaseModelFormSet, modelformset_factory
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_model
