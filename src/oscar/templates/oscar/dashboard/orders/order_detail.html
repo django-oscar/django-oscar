@@ -317,7 +317,7 @@
                     {% csrf_token %}
                     {% block order_actions %}
                         <div class="well">
-                            <h3><i class="icon-warning"></i> {% trans "Change order status" %}:</h3>
+                            <h3><i class="icon-warning-sign"></i> {% trans "Change order status" %}:</h3>
                             {% if order_status_form.has_choices %}
                                 {% include "dashboard/partials/form_fields.html" with form=order_status_form %}
                                 <input type="hidden" value="change_order_status" name="order_action" />
