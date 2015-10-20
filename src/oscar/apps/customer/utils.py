@@ -82,7 +82,7 @@ class Dispatcher(object):
 
     def send_email_messages(self, recipient, messages):
         """
-        Plain email sending to the specified recipient
+        Send email to recipient, HTML attachment optional.
         """
         if hasattr(settings, 'OSCAR_FROM_EMAIL'):
             from_email = settings.OSCAR_FROM_EMAIL
