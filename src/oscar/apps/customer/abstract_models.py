@@ -115,7 +115,9 @@ class AbstractEmail(models.Model):
         AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='emails',
-        verbose_name=_("User"))
+        verbose_name=_("User"),
+        null=True)
+    email = models.EmailField(_('Email Address'), blank=True, null=True)
     subject = models.TextField(_('Subject'), max_length=255)
     body_text = models.TextField(_("Body Text"))
     body_html = models.TextField(_("Body HTML"), blank=True)
