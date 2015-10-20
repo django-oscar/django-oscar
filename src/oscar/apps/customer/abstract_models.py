@@ -112,7 +112,8 @@ class AbstractEmail(models.Model):
     Normally, we only record order-related emails.
     """
     user = models.ForeignKey(AUTH_USER_MODEL, related_name='emails',
-                             verbose_name=_("User"))
+                             verbose_name=_("User"), null=True)
+    email = models.EmailField(_('email address'))
     subject = models.TextField(_('Subject'), max_length=255)
     body_text = models.TextField(_("Body Text"))
     body_html = models.TextField(_("Body HTML"), blank=True)
