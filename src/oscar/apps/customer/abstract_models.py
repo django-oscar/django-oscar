@@ -130,8 +130,12 @@ class AbstractEmail(models.Model):
         verbose_name_plural = _('Emails')
 
     def __str__(self):
-        return _(u"Email to %(user)s with subject '%(subject)s'") % {
-            'user': self.user.get_username(), 'subject': self.subject}
+        if self.user:
+            return _(u"Email to %(user)s with subject '%(subject)s'") % {
+                'user': self.user.get_username(), 'subject': self.subject}
+        else:
+            return _(u"Anonymous email to %(email)s with subject '%(subject)s'") % {
+                'email': self.email, 'subject': self.subject}
 
 
 @python_2_unicode_compatible
