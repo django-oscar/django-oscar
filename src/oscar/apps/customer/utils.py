@@ -34,7 +34,7 @@ class Dispatcher(object):
         Dispatch order-related messages to the customer.
         """
         if order.is_anonymous:
-            email = kwargs.get('email_address', order.guest_guest_email)
+            email = kwargs.get('email_address', order.guest_email)
             dispatched_messages = self.dispatch_anonymous_messages(email, messages)
         else:
             dispatched_messages = self.dispatch_user_messages(order.user, messages)
