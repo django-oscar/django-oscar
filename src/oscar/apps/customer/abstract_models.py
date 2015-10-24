@@ -21,7 +21,7 @@ class UserManager(auth_models.BaseUserManager):
 
     def create_user(self, email, password=None, **extra_fields):
         """
-        Creates and saves a User with the given username, email and
+        Creates and saves a User with the given email and
         password.
         """
         now = timezone.now()
