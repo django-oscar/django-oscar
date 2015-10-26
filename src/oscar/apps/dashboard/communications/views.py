@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.sites.models import get_current_site
+from django.contrib.sites.shortcuts import get_current_site
 from django.template import TemplateSyntaxError
 from django.utils import six
 from django.utils.translation import ugettext_lazy as _
