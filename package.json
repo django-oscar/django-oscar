@@ -1,0 +1,22 @@
+{
+  "name": "django-oscar",
+  "version": "1.1.1",
+  "description": "A domain-driven e-commerce framework for Django",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "~3.8.11",
+    "gulp-autoprefixer": "~1.0.1",
+    "gulp-less": "^3.0.5",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-watch": "^4.3.5",
+    "less": "^2.5.3",
+    "require-dir": "^0.3.0"
+  },
+  "scripts": {
+    "build": "gulp",
+    "start": "gulp watch"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/django-oscar/django-oscar#readme"
+}
