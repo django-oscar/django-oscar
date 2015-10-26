@@ -1,20 +1,20 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-{% load compress %}
 {% load promotion_tags %}
 
-{% block mainstyles %}
-    {% block styles %}
-        {% compress css %}
-            {% if use_less %}
-                <link rel="stylesheet" type="text/less" href="{% static "oscar/less/styles.less" %}" />
-            {% else %}
-                <link rel="stylesheet" type="text/css" href="{% static "oscar/css/styles.css" %}" />
-            {% endif %}
-            <link rel="stylesheet" href="{% static "oscar/js/bootstrap-datetimepicker/bootstrap-datetimepicker.css" %}" />
-            <link rel="stylesheet" type="text/css" href="{% static "oscar/css/datetimepicker.css" %}" />
-        {% endcompress %}
-    {% endblock %}
+{% block styles %}
+    {% comment %}
+        If you are developing Oscar's CSS, or overriding Oscar's CSS
+        files in your project, then set USE_LESS = True in your
+        settings file. This will enable the on-the-fly less compiler.
+    {% endcomment %}
+    {% if use_less %}
+        <link rel="stylesheet/less" type="text/css" href="{% static "oscar/less/styles.less" %}" />
+    {% else %}
+        <link rel="stylesheet" type="text/css" href="{% static "oscar/css/styles.css" %}" />
+    {% endif %}
+    <link rel="stylesheet" href="{% static "oscar/js/bootstrap-datetimepicker/bootstrap-datetimepicker.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "oscar/css/datetimepicker.css" %}" />
 {% endblock %}
 
 {% block layout %}
@@ -67,10 +67,17 @@
     {% include "partials/footer.html" %}
 {% endblock %}
 
+{% block cdn_scripts %}
+  {{ block.super }}
+  {% if use_less and debug %}
+    {# Load the on-the-fly less compiler. Never do this in production. #}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.3/less.min.js"></script>
+  {% endif %}
+{% endblock %}
+
 {# Local scripts #}
 {% block scripts %}
     {{ block.super }}
-    {% compress js %}
     <!-- Twitter Bootstrap -->
     <script type="text/javascript" src="{% static "oscar/js/bootstrap3/bootstrap.min.js" %}"></script>
     <!-- Oscar -->
@@ -78,7 +85,6 @@
 
     <script src="{% static "oscar/js/bootstrap-datetimepicker/bootstrap-datetimepicker.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "oscar/js/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.all.js" %}" type="text/javascript" charset="utf-8"></script>
-    {% endcompress %}
 {% endblock %}
 
 {% block extrascripts %}

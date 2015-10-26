@@ -115,7 +115,6 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -302,7 +301,6 @@ INSTALLED_APPS = [
     # Debug toolbar + extensions
     'debug_toolbar',
     'template_timings_panel',
-    'compressor',       # Oscar's templates use compressor
     'apps.gateway',     # For allowing dashboard access
     'widget_tweaks',
 ]
@@ -413,30 +411,13 @@ OSCAR_ORDER_STATUS_CASCADE = {
     'Complete': 'Shipped',
 }
 
-# LESS/CSS/statics
-# ================
+# LESS/CSS
+# ========
 
 # We default to using CSS files, rather than the LESS files that generate them.
-# If you want to develop Oscar's CSS, then set USE_LESS=True and
-# COMPRESS_ENABLED=False in your settings_local module and ensure you have
-# 'lessc' installed.
-
-USE_LESS = False
-
-COMPRESS_ENABLED = True
-COMPRESS_PRECOMPILERS = (
-    ('text/less', 'lessc {infile} {outfile}'),
-)
-COMPRESS_OFFLINE_CONTEXT = {
-    'STATIC_URL': 'STATIC_URL',
-    'use_less': USE_LESS,
-}
-
-# We do this to work around an issue in compressor where the LESS files are
-# compiled but compression isn't enabled.  When this happens, the relative URL
-# is wrong between the generated CSS file and other assets:
-# https://github.com/jezdez/django_compressor/issues/226
-COMPRESS_OUTPUT_DIR = 'oscar'
+# If you want to develop Oscar's CSS, then set USE_LESS=True to enable the
+# on-the-fly less processor.
+USE_LESS = True
 
 # Logging
 # =======
