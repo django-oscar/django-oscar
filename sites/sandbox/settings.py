@@ -411,15 +411,13 @@ OSCAR_ORDER_STATUS_CASCADE = {
     'Complete': 'Shipped',
 }
 
-# LESS/CSS/statics
-# ================
+# LESS/CSS
+# ========
 
 # We default to using CSS files, rather than the LESS files that generate them.
-# If you want to develop Oscar's CSS, then set USE_LESS=True and
-# COMPRESS_ENABLED=False in your settings_local module and ensure you have
-# 'lessc' installed.
-
-USE_LESS = False
+# If you want to develop Oscar's CSS, then set USE_LESS=True to enable the
+# on-the-fly less processor.
+USE_LESS = True
 
 # Logging
 # =======

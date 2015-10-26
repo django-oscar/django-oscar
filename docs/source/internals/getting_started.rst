@@ -87,7 +87,7 @@ context processors.
 
 
 Next, modify ``INSTALLED_APPS`` to be a list, add ``django.contrib.sites``, 
-``django.contrib.flatpages``, ``compressor`` and ``widget_tweaks`` and append 
+``django.contrib.flatpages``, and ``widget_tweaks`` and append
 Oscar's core apps. Also set ``SITE_ID``:
 
 .. code-block:: django
