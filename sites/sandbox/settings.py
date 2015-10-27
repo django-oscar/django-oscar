@@ -417,7 +417,7 @@ OSCAR_ORDER_STATUS_CASCADE = {
 # We default to using CSS files, rather than the LESS files that generate them.
 # If you want to develop Oscar's CSS, then set USE_LESS=True to enable the
 # on-the-fly less processor.
-USE_LESS = True
+USE_LESS = False
 
 # Logging
 # =======
