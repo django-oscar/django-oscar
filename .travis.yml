@@ -53,6 +53,8 @@ matrix:
         - python: 3.4
           env: "DJANGO=Django==1.9b1"
         - python: 3.5
+          env: "DJANGO=Django==1.8.5"
+        - python: 3.5
           env: "DJANGO=Django==1.9b1"
 
 
