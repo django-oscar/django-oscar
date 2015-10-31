@@ -60,7 +60,7 @@ context processors.
             'BACKEND': 'django.template.backends.django.DjangoTemplates',
             'DIRS': [
                 os.path.join(BASE_DIR, 'templates'),
-                OSCAR_MAIN_TEMPLATE_DIR
+                OSCAR_MAIN_TEMPLATE_DIR,
             ],
             'APP_DIRS': True,
             'OPTIONS': {
