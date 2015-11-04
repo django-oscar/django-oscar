@@ -3706,3 +3706,9 @@ textarea.plain {
   }
 }
 /*# sourceMappingURL=dashboard.css.map */
+
+div[data-oscarwidget="date"] input,
+div[data-oscarwidget="time"] input,
+div[data-oscarwidget="datetime"] input {
+  width: 125px !important;
+}

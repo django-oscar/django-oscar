@@ -127,60 +127,60 @@ var oscar = (function(o, $) {
             });
         },
         initDatePickers: function(el) {
-            if ($.fn.datetimepicker) {
+            if (!$.fn.datetimepicker) {
+                return;
+            }
+
+            $(el).on("mouseover", '[data-oscarWidget="date"]:not(.hasDatepicker):not(.no-widget-init):not(no-widget-init *)', function() {
                 var defaultDatepickerConfig = {
                     'format': o.dashboard.options.dateFormat,
                     'autoclose': true,
                     'language': o.dashboard.options.languageCode,
                     'minView': 2
                 };
-                $dates = $(el).find('[data-oscarWidget="date"]').not('.no-widget-init').not('.no-widget-init *')
-                $dates.each(function(ind, ele) {
-                    var $ele = $(ele),
-                        config = $.extend({}, defaultDatepickerConfig, {
-                            'format': $ele.data('dateformat')
-                        });
-                    $ele.datetimepicker(config);
-                    $ele.find('input').css('width', '125px');
-                });
+                var $ele = $(this),
+                    config = $.extend({}, defaultDatepickerConfig, {
+                        'format': $ele.data('dateformat')
+                    });
+                $ele.datetimepicker(config);
+                $ele.addClass('hasDatepicker');
+            });
 
+            $(el).on("mouseover", '[data-oscarWidget="datetime"]:not(.hasDatepicker):not(.no-widget-init):not(no-widget-init *)', function() {
                 var defaultDatetimepickerConfig = {
                     'format': o.dashboard.options.datetimeFormat,
                     'minuteStep': o.dashboard.options.stepMinute,
                     'autoclose': true,
                     'language': o.dashboard.options.languageCode
                 };
-                $datetimes = $(el).find('[data-oscarWidget="datetime"]').not('.no-widget-init').not('.no-widget-init *')
-                $datetimes.each(function(ind, ele) {
-                    var $ele = $(ele),
-                        config = $.extend({}, defaultDatetimepickerConfig, {
-                          'format': $ele.data('datetimeformat'),
-                          'minuteStep': $ele.data('stepminute')
-                        });
-                    $ele.datetimepicker(config);
-                    $ele.find('input').css('width', '125px');
-                });
 
+                var $ele = $(this),
+                    config = $.extend({}, defaultDatetimepickerConfig, {
+                      'format': $ele.data('datetimeformat'),
+                      'minuteStep': $ele.data('stepminute')
+                    });
+                $ele.datetimepicker(config);
+                $ele.addClass('hasDatepicker');
+            });
+
+            $(el).on("mouseover", '[data-oscarWidget="time"]:not(.hasDatepicker):not(.no-widget-init):not(no-widget-init *)', function() {
                 var defaultTimepickerConfig = {
                     'format': o.dashboard.options.timeFormat,
                     'minuteStep': o.dashboard.options.stepMinute,
                     'autoclose': true,
                     'language': o.dashboard.options.languageCode
                 };
-                $times = $(el).find('[data-oscarWidget="time"]').not('.no-widget-init').not('.no-widget-init *')
-                $times.each(function(ind, ele) {
-                    var $ele = $(ele),
-                        config = $.extend({}, defaultTimepickerConfig, {
-                          'format': $ele.data('timeformat'),
-                          'minuteStep': $ele.data('stepminute'),
-                          'startView': 1,
-                          'maxView': 1,
-                          'formatViewType': 'time'
-                        });
-                    $ele.datetimepicker(config);
-                    $ele.find('input').css('width', '125px');
-                });
-            }
+                var $ele = $(this),
+                    config = $.extend({}, defaultTimepickerConfig, {
+                      'format': $ele.data('timeformat'),
+                      'minuteStep': $ele.data('stepminute'),
+                      'startView': 1,
+                      'maxView': 1,
+                      'formatViewType': 'time'
+                    });
+                $ele.datetimepicker(config);
+                $ele.addClass('hasDatepicker');
+            });
         },
         initWYSIWYG: function(el) {
             // Use TinyMCE by default
