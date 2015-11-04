@@ -35,8 +35,12 @@
                 </div>
 
                 {% include 'partials/form_field.html' with field=form.body %}
-                {% include 'partials/form_field.html' with field=form.name %}
-                {% include 'partials/form_field.html' with field=form.email %}
+                {% if form.name %}
+                    {% include 'partials/form_field.html' with field=form.name %}
+                {% endif %}
+                {% if form.email %}
+                    {% include 'partials/form_field.html' with field=form.email %}
+                {% endif %}
 
 
                 <button type="submit" class="btn btn-primary btn-lg" data-loading-text="{% trans 'Saving...' %}">{% trans "Save review" %}</button>
