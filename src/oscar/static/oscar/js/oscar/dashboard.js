@@ -131,7 +131,7 @@ var oscar = (function(o, $) {
                 return;
             }
 
-            $(el).on("mouseover", '[data-oscarWidget="date"]:not(.hasDatepicker):not(.no-widget-init):not(no-widget-init *)', function() {
+            $(el).on("mouseover", '[data-oscarWidget="date"]:not(.oscarWidgetInitialized):not(.no-widget-init):not(no-widget-init *)', function() {
                 var defaultDatepickerConfig = {
                     'format': o.dashboard.options.dateFormat,
                     'autoclose': true,
@@ -143,10 +143,10 @@ var oscar = (function(o, $) {
                         'format': $ele.data('dateformat')
                     });
                 $ele.datetimepicker(config);
-                $ele.addClass('hasDatepicker');
+                $ele.addClass('oscarWidgetInitialized');
             });
 
-            $(el).on("mouseover", '[data-oscarWidget="datetime"]:not(.hasDatepicker):not(.no-widget-init):not(no-widget-init *)', function() {
+            $(el).on("mouseover", '[data-oscarWidget="datetime"]:not(.oscarWidgetInitialized):not(.no-widget-init):not(no-widget-init *)', function() {
                 var defaultDatetimepickerConfig = {
                     'format': o.dashboard.options.datetimeFormat,
                     'minuteStep': o.dashboard.options.stepMinute,
@@ -160,10 +160,10 @@ var oscar = (function(o, $) {
                       'minuteStep': $ele.data('stepminute')
                     });
                 $ele.datetimepicker(config);
-                $ele.addClass('hasDatepicker');
+                $ele.addClass('oscarWidgetInitialized');
             });
 
-            $(el).on("mouseover", '[data-oscarWidget="time"]:not(.hasDatepicker):not(.no-widget-init):not(no-widget-init *)', function() {
+            $(el).on("mouseover", '[data-oscarWidget="time"]:not(.oscarWidgetInitialized):not(.no-widget-init):not(no-widget-init *)', function() {
                 var defaultTimepickerConfig = {
                     'format': o.dashboard.options.timeFormat,
                     'minuteStep': o.dashboard.options.stepMinute,
@@ -179,7 +179,7 @@ var oscar = (function(o, $) {
                       'formatViewType': 'time'
                     });
                 $ele.datetimepicker(config);
-                $ele.addClass('hasDatepicker');
+                $ele.addClass('oscarWidgetInitialized');
             });
         },
         initWYSIWYG: function(el) {
