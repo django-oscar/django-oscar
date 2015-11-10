@@ -63,6 +63,7 @@ Assign a couple of options to the Language options group::
 
 Finally assign the Language options group to your product as an attribute::
 
+    > klass = ProductClass.objects.create(name='foo', slug='bar')
     > ProductAttribute.objects.create(
     >     product_class=klass,
     >     name='Language',
