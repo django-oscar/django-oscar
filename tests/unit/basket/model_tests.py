@@ -1,9 +1,10 @@
+# -*- coding: utf-8 -*-
 from django.test import TestCase
 
 from oscar.apps.basket.models import Basket
 from oscar.apps.partner import strategy
 from oscar.test.factories import (
-    BasketFactory, BasketLineAttributeFactory, ProductFactory)
+    BasketFactory, BasketLineAttributeFactory, ProductFactory, OptionFactory)
 
 
 class TestANewBasket(TestCase):
@@ -53,3 +54,13 @@ class TestBasketLine(TestCase):
         BasketLineAttributeFactory(
             line=line, value=u'\u2603', option__name='with')
         self.assertEqual(line.description, u"A product (with = '\u2603')")
+        
+    def test_create_line_reference(self):
+        basket = BasketFactory()
+        product = ProductFactory(title="A product")
+        option = OptionFactory(name="product_option", code="product_option")
+        option_product = ProductFactory(title=u'Asunción')
+        options = [{'option' : option, 'value': option_product}]
+        basket.add_product(product, options = options)
+        
+        

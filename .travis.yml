@@ -14,9 +14,10 @@ cache:
 language: python
 
 python:
-    - '2.7'
-    - '3.3'
-    - '3.4'
+    - 2.7
+    - 3.3
+    - 3.4
+    - 3.5
 
 env:
     global:
@@ -31,8 +32,31 @@ env:
         - PIP_WHEEL_DIR=$HOME/.cache/pip/wheels
         - PIP_FIND_LINKS=file://$HOME/.cache/pip/wheels
     matrix:
-        - DJANGO=Django==1.7.8
-        - DJANGO=Django==1.8.1
+        - DJANGO=Django==1.7.10
+        - DJANGO=Django==1.8.5
+        - DJANGO=Django==1.9b1 
+
+
+matrix:
+    exclude:
+        - python: 3.2
+          env: "DJANGO=Django==1.9b1"
+        - python: 3.3
+          env: "DJANGO=Django==1.9b1"
+        - python: 3.5
+          env: "DJANGO=Django==1.7.10"
+    allow_failures:
+        - python: 2.7
+          env: "DJANGO=Django==1.9b1"
+        - python: 3.3
+          env: "DJANGO=Django==1.9b1"
+        - python: 3.4
+          env: "DJANGO=Django==1.9b1"
+        - python: 3.5
+          env: "DJANGO=Django==1.8.5"
+        - python: 3.5
+          env: "DJANGO=Django==1.9b1"
+
 
 before_install:
     - pip install codecov
@@ -43,7 +67,8 @@ install:
     - pip wheel -r requirements.txt
     # Actually install our dependencies now, this will pull from the directory
     # that the first command placed the Wheels into.
-    - pip install -e . -r requirements.txt $DJANGO 
+    - pip install --pre $DJANGO 
+    - pip install -e . -r requirements.txt 
 
 before_script:
     # Create testing databases for running migrations against

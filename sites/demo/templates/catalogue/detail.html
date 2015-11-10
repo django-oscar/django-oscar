@@ -1,6 +1,5 @@
 {% extends "oscar/catalogue/detail.html" %}
 
-{% load compress %}
 {% load currency_filters %}
 {% load history_tags %}
 {% load reviews_tags %}
@@ -186,7 +185,5 @@
 {% endblock content %}
 
 {% block extrascripts %}
-{% compress js %}
     {% include "partials/extrascripts.html" %}
-{% endcompress %}
 {% endblock %}

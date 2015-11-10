@@ -87,7 +87,6 @@ STATIC_ROOT = location('public/static')
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -164,7 +163,7 @@ LOGGING = {
     'handlers': {
         'null': {
             'level': 'DEBUG',
-            'class': 'django.utils.log.NullHandler',
+            'class': 'logging.NullHandler',
         },
         'console': {
             'level': 'DEBUG',
@@ -230,7 +229,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.gis',
     # Oscar dependencies
-    'compressor',
     'widget_tweaks',
     # Oscar extensions
     'stores',
@@ -280,11 +278,6 @@ OSCAR_ALLOW_ANON_CHECKOUT = True
 
 OSCAR_SHOP_NAME = 'Oscar'
 OSCAR_SHOP_TAGLINE = 'Demo'
-
-COMPRESS_ENABLED = False
-COMPRESS_PRECOMPILERS = (
-    ('text/less', 'lessc {infile} {outfile}'),
-)
 
 THUMBNAIL_KEY_PREFIX = 'oscar-demo'
 

@@ -338,7 +338,9 @@ class AbstractBasket(models.Model):
         base = '%s_%s' % (product.id, stockrecord.id)
         if not options:
             return base
-        return "%s_%s" % (base, zlib.crc32(repr(options).encode('utf8')))
+        repr_options = [{'option': repr(option['option']),
+                         'value': repr(option['value'])} for option in options]
+        return "%s_%s" % (base, zlib.crc32(repr(repr_options).encode('utf8')))
 
     def _get_total(self, property):
         """
