@@ -125,6 +125,7 @@ class BasketMiddleware(object):
         if request._basket_cache is not None:
             return request._basket_cache
 
+        num_baskets_merged = 0
         manager = Basket.open
         cookie_key = self.get_cookie_key(request)
         cookie_basket = self.get_cookie_basket(cookie_key, request, manager)
@@ -140,12 +141,9 @@ class BasketMiddleware(object):
                 # We merge them and create a fresh one
                 old_baskets = list(manager.filter(owner=request.user))
                 basket = old_baskets[0]
-                messages.add_message(request, messages.WARNING,
-                                     _("An attempt has been made to merge a basket from a "
-                                       "previous session. The contents of your basket may "
-                                       "have changed."))
                 for other_basket in old_baskets[1:]:
                     self.merge_baskets(basket, other_basket)
+                    num_baskets_merged += 1
 
             # Assign user onto basket to prevent further SQL queries when
             # basket.owner is accessed.
@@ -153,10 +151,7 @@ class BasketMiddleware(object):
 
             if cookie_basket:
                 self.merge_baskets(basket, cookie_basket)
-                messages.add_message(request, messages.WARNING,
-                                     _("An attempt has been made to merge a basket from a "
-                                       "previous session. The contents of your basket may "
-                                       "have changed."))
+                num_baskets_merged += 1
                 request.cookies_to_delete.append(cookie_key)
 
         elif cookie_basket:
@@ -169,6 +164,12 @@ class BasketMiddleware(object):
 
         # Cache basket instance for the during of this request
         request._basket_cache = basket
+
+        if num_baskets_merged > 0:
+            messages.add_message(request, messages.WARNING,
+                                 _("An attempt has been made to merge a basket from a "
+                                   "previous session. The contents of your basket may "
+                                   "have changed."))
 
         return basket
 
