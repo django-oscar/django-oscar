@@ -130,23 +130,40 @@ var oscar = (function(o, $) {
             if (!$.fn.datetimepicker) {
                 return;
             }
-
-            $(el).on("mouseover", '[data-oscarWidget="date"]:not(.oscarWidgetInitialized):not(.no-widget-init):not(no-widget-init *)', function() {
+            var initDatePicker = function(ele) {
+                ele = $(ele);
                 var defaultDatepickerConfig = {
                     'format': o.dashboard.options.dateFormat,
                     'autoclose': true,
                     'language': o.dashboard.options.languageCode,
                     'minView': 2
                 };
-                var $ele = $(this),
-                    config = $.extend({}, defaultDatepickerConfig, {
-                        'format': $ele.data('dateformat')
+                var config = $.extend({}, defaultDatepickerConfig, {
+                        'format': ele.data('dateformat')
                     });
-                $ele.datetimepicker(config);
-                $ele.addClass('oscarWidgetInitialized');
-            });
-
-            $(el).on("mouseover", '[data-oscarWidget="datetime"]:not(.oscarWidgetInitialized):not(.no-widget-init):not(no-widget-init *)', function() {
+                ele.datetimepicker(config);
+                ele.addClass('oscarWidgetInitialized');
+            };
+            var initTimePicker = function(ele) {
+                ele = $(ele);
+                var defaultTimepickerConfig = {
+                    'format': o.dashboard.options.timeFormat,
+                    'minuteStep': o.dashboard.options.stepMinute,
+                    'autoclose': true,
+                    'language': o.dashboard.options.languageCode
+                };
+                var config = $.extend({}, defaultTimepickerConfig, {
+                      'format': ele.data('timeformat'),
+                      'minuteStep': ele.data('stepminute'),
+                      'startView': 1,
+                      'maxView': 1,
+                      'formatViewType': 'time'
+                    });
+                ele.datetimepicker(config);
+                ele.addClass('oscarWidgetInitialized');
+            };
+            var initDatetimePicker = function(ele) {
+                ele = $(ele);
                 var defaultDatetimepickerConfig = {
                     'format': o.dashboard.options.datetimeFormat,
                     'minuteStep': o.dashboard.options.stepMinute,
@@ -154,33 +171,44 @@ var oscar = (function(o, $) {
                     'language': o.dashboard.options.languageCode
                 };
 
-                var $ele = $(this),
-                    config = $.extend({}, defaultDatetimepickerConfig, {
-                      'format': $ele.data('datetimeformat'),
-                      'minuteStep': $ele.data('stepminute')
+                var config = $.extend({}, defaultDatetimepickerConfig, {
+                      'format': ele.data('datetimeformat'),
+                      'minuteStep': ele.data('stepminute')
                     });
-                $ele.datetimepicker(config);
-                $ele.addClass('oscarWidgetInitialized');
-            });
+                ele.datetimepicker(config);
+                ele.addClass('oscarWidgetInitialized');
+            };
 
-            $(el).on("mouseover", '[data-oscarWidget="time"]:not(.oscarWidgetInitialized):not(.no-widget-init):not(no-widget-init *)', function() {
-                var defaultTimepickerConfig = {
-                    'format': o.dashboard.options.timeFormat,
-                    'minuteStep': o.dashboard.options.stepMinute,
-                    'autoclose': true,
-                    'language': o.dashboard.options.languageCode
-                };
-                var $ele = $(this),
-                    config = $.extend({}, defaultTimepickerConfig, {
-                      'format': $ele.data('timeformat'),
-                      'minuteStep': $ele.data('stepminute'),
-                      'startView': 1,
-                      'maxView': 1,
-                      'formatViewType': 'time'
-                    });
-                $ele.datetimepicker(config);
-                $ele.addClass('oscarWidgetInitialized');
-            });
+            var dateWidgetSelector = '[data-oscarWidget="date"]:not(.oscarWidgetInitialized):not(.no-widget-init):not(no-widget-init *)';
+            var timeWidgetSelector = '[data-oscarWidget="time"]:not(.oscarWidgetInitialized):not(.no-widget-init):not(no-widget-init *)';
+            var datetimeWidgetSelector = '[data-oscarWidget="datetime"]:not(.oscarWidgetInitialized):not(.no-widget-init):not(no-widget-init *)';
+            if (el == window.document) {
+                // if this wants to initialize all widgets for the whole document, then
+                // we delegate the initialization to the first time a mouse moves over the
+                // widget, so the initialization on page load is fast
+                $(el).on("mouseover", dateWidgetSelector, function() {
+                    initDatePicker(this);
+                });
+                $(el).on("mouseover", timeWidgetSelector, function() {
+                    initTimePicker(this);
+                });
+                $(el).on("mouseover", datetimeWidgetSelector, function() {
+                    initDatetimePicker(this);
+                });
+            } else {
+                // however, if a specific dom node is given, then we need to initialize
+                // the element(s) present in that node immediately, as they likely are
+                // being used by JS code right after
+                $(el).find(dateWidgetSelector).each(function(ind, ele) {
+                    initDatePicker(ele);
+                });
+                $(el).find(timeWidgetSelector).each(function(ind, ele) {
+                    initTimePicker(ele);
+                });
+                $(el).find(datetimeWidgetSelector).each(function(ind, ele) {
+                    initDatetimePicker(ele);
+                });
+            }
         },
         initWYSIWYG: function(el) {
             // Use TinyMCE by default
