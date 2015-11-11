@@ -37,7 +37,7 @@ class TestANonEmptyBasket(TestCase):
     def setUp(self):
         self.basket = Basket()
         self.basket.strategy = strategy.Default()
-        self.product = factories.StandaloneProductFactory()
+        self.product = factories.StandaloneProductFactory(stockrecords__price_excl_tax=D('10.00'))
         self.record = self.product.stockrecords.get()
         self.purchase_info = factories.create_purchase_info(self.record)
         self.basket.add(self.product, 10)
@@ -79,16 +79,12 @@ class TestANonEmptyBasket(TestCase):
             product, record, options))
 
     def test_total_sums_product_totals(self):
-        product = factories.create_product()
-        factories.create_stockrecord(
-            product, price_excl_tax=D('5.00'))
+        product = factories.StandaloneProductFactory(stockrecords__price_excl_tax=D('5.00'))
         self.basket.add(product, 1)
         self.assertEqual(self.basket.total_excl_tax, 105)
 
     def test_total_excludes_unavailable_products_with_unknown_price(self):
-        new_product = factories.create_product()
-        factories.create_stockrecord(
-            new_product, price_excl_tax=D('5.00'))
+        new_product = factories.StandaloneProductFactory(stockrecords__price_excl_tax=D('5.00'))
         self.basket.add(new_product, 1)
 
         class UnavailableProductStrategy(strategy.Default):
@@ -107,7 +103,7 @@ class TestANonEmptyBasket(TestCase):
 
         try:
             self.basket.strategy = UnavailableProductStrategy()
-            self.assertEqual(self.basket.all_lines()[1].get_warning(), u"'D\xf9\uff4d\u03fb\u03d2 title' is no longer available")
+            self.assertEqual(self.basket.all_lines()[1].get_warning(), u"'A confederacy of dunces' is no longer available")
             self.assertEqual(self.basket.total_excl_tax, 100)
         finally:
             self.basket.strategy = strategy.Default()
