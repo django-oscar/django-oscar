@@ -1,10 +1,10 @@
 import sys
+from importlib import import_module
 
 from django.test.utils import override_settings
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import clear_url_caches, reverse
 from django.conf import settings
 from django.utils.http import urlquote
-from django.utils.importlib import import_module
 from django.utils.six.moves import http_client
 import mock
 
@@ -38,6 +38,7 @@ def reload_url_conf():
     if settings.ROOT_URLCONF in sys.modules:
         reload(sys.modules[settings.ROOT_URLCONF])
     import_module(settings.ROOT_URLCONF)
+    clear_url_caches()
 
 
 @override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)

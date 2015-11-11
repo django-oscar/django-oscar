@@ -3,7 +3,8 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-from django.contrib.sites.models import get_current_site
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404, redirect
@@ -327,8 +328,8 @@ class ProfileUpdateView(PageTitleMixin, generic.FormView):
         # cleaned data because the object created by form.save() can
         # either be a user or profile instance depending whether a profile
         # class has been specified by the AUTH_PROFILE_MODULE setting.
-        new_email = form.cleaned_data['email']
-        if old_user and new_email != old_user.email:
+        new_email = form.cleaned_data.get('email')
+        if new_email and old_user and new_email != old_user.email:
             # Email address has changed - send a confirmation email to the old
             # address including a password reset link in case this is a
             # suspicious change.
@@ -381,6 +382,7 @@ class ChangePasswordView(PageTitleMixin, generic.FormView):
 
     def form_valid(self, form):
         form.save()
+        update_session_auth_hash(self.request, self.request.user)
         messages.success(self.request, _("Password updated"))
 
         ctx = {

@@ -29,6 +29,7 @@ class BasketOwnerCalledBarry(models.Condition):
 
     class Meta:
         proxy = True
+        app_label = 'tests'
 
     def is_satisfied(self, offer, basket):
         if not basket.owner:

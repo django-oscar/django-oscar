@@ -140,6 +140,7 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
     def get_initial(self):
         initial = self.checkout_session.new_shipping_address_fields()
         if initial:
+            initial = initial.copy()
             # Convert the primary key stored in the session into a Country
             # instance
             try:

@@ -43,7 +43,7 @@ against::
 Writing LESS/CSS
 ----------------
 
-Oscar's CSS files are built using LESS_ V1.  However, the sandbox defaults to
+Oscar's CSS files are built using LESS_.  However, the sandbox defaults to
 serving CSS files directly, bypassing LESS compilation.
 
 .. _LESS: http://lesscss.org/
@@ -51,20 +51,19 @@ serving CSS files directly, bypassing LESS compilation.
 If you want to develop the LESS files, set::
 
     USE_LESS = True
-    COMPRESS_ENABLED = False
 
-in ``sites/sandbox/settings_local.py``.  This will cause Oscar to use
-`django-compressor`_ to compile the LESS files as they are requested.  For this to
-work, you will need to ensure that the LESS compiler ``lessc`` is installed.
-Using npm, install LESS using::
-
-    npm install less@'<2.0.0'
-
-.. _`django-compressor`: http://django_compressor.readthedocs.org/en/latest/
+in ``sites/sandbox/settings_local.py``.  This will include the on-the-fly
+``less`` pre-processor. That will allow you to see changes to the LESS
+files after a page reload.
 
 You can manually compile the CSS files by running::
 
     make css
+
+For this to work, you will need to ensure that the pre-processor binary
+``lessc`` is installed. Using npm, install LESS using::
+
+    npm install less
 
 .. warning::
 

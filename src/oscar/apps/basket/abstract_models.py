@@ -11,6 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.basket.managers import OpenBasketManager, SavedBasketManager
 from oscar.apps.offer import results
+from oscar.apps.partner import availability
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.utils import get_default_currency
 from oscar.templatetags.currency_filters import currency
@@ -338,7 +339,9 @@ class AbstractBasket(models.Model):
         base = '%s_%s' % (product.id, stockrecord.id)
         if not options:
             return base
-        return "%s_%s" % (base, zlib.crc32(repr(options).encode('utf8')))
+        repr_options = [{'option': repr(option['option']),
+                         'value': repr(option['value'])} for option in options]
+        return "%s_%s" % (base, zlib.crc32(repr(repr_options).encode('utf8')))
 
     def _get_total(self, property):
         """
@@ -351,6 +354,12 @@ class AbstractBasket(models.Model):
                 total += getattr(line, property)
             except ObjectDoesNotExist:
                 # Handle situation where the product may have been deleted
+                pass
+            except TypeError:
+                # Handle Unavailable products with no known price
+                info = self.strategy.fetch_for_product(line.product)
+                if info.availability.is_available_to_buy:
+                    raise
                 pass
         return total
 
@@ -805,7 +814,7 @@ class AbstractLine(models.Model):
 
         This could be things like the price has changed
         """
-        if not self.stockrecord:
+        if isinstance(self.purchase_info.availability, availability.Unavailable):
             msg = u"'%(product)s' is no longer available"
             return _(msg) % {'product': self.product.get_title()}
 

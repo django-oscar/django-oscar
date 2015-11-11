@@ -15,7 +15,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
     'django.contrib.staticfiles',
-    'compressor',
     'widget_tweaks',
 
     # contains models we need for testing
@@ -57,6 +56,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'oscar.apps.basket.middleware.BasketMiddleware',
 )
@@ -69,8 +69,6 @@ PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
 ROOT_URLCONF = 'tests._site.urls'
 LOGIN_REDIRECT_URL = '/accounts/'
 STATIC_URL = '/static/'
-COMPRESS_ENABLED = False
-COMPRESS_ROOT = ''  # needed to avoid issue #1214
 DEBUG = False
 SITE_ID = 1
 USE_TZ = 1

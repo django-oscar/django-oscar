@@ -34,7 +34,7 @@ The sandbox is, in effect, the blank canvas upon which you can build your site.
 Browse the external sandbox site
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-An instance of the sandbox site is build hourly from master branch and made
+An instance of the sandbox site is built hourly from master branch and made
 available at http://latest.oscarcommerce.com 
 
 .. warning::
@@ -97,7 +97,7 @@ The US site is a relatively simple Oscar that makes a few key customisations in
 order to mimic how sites in the US work. Specifically, it:
 
 - Overrides the partner app to supply a new strategy selector which ensures all
-  prices are return without taxes.
+  prices are returned without taxes.
 
 - Overrides the checkout app in order to apply taxes to submissions once the
   shipping address is known.
