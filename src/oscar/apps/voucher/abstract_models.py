@@ -80,6 +80,13 @@ class AbstractVoucher(models.Model):
         test_datetime = test_datetime or timezone.now()
         return self.start_datetime <= test_datetime <= self.end_datetime
 
+    def is_expired(self):
+        """
+        Test whether this voucher has passed its expiration date
+        """
+        now = timezone.now()
+        return self.end_datetime < now
+
     def is_available_to_user(self, user=None):
         """
         Test whether this voucher is available to the passed user.
