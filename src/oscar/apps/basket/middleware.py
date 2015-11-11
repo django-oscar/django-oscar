@@ -167,9 +167,8 @@ class BasketMiddleware(object):
 
         if num_baskets_merged > 0:
             messages.add_message(request, messages.WARNING,
-                                 _("An attempt has been made to merge a basket from a "
-                                   "previous session. The contents of your basket may "
-                                   "have changed."))
+                                 _("We have merged a basket from a previous session. Its contents "
+                                   "might have changed."))
 
         return basket
 
