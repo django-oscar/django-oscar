@@ -246,7 +246,8 @@ class CheckoutSessionMixin(object):
     def get_context_data(self, **kwargs):
         # Use the proposed submission as template context data.  Flatten the
         # order kwargs so they are easily available too.
-        ctx = self.build_submission(**kwargs)
+        ctx = super(CheckoutSessionMixin, self).get_context_data()
+        ctx.update(self.build_submission(**kwargs))
         ctx.update(kwargs)
         ctx.update(ctx['order_kwargs'])
         return ctx

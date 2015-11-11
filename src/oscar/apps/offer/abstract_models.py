@@ -858,7 +858,7 @@ class AbstractRange(models.Model):
             return False
         if self.includes_all_products:
             return True
-        if product.product_class_id in self._class_ids():
+        if product.get_product_class().id in self._class_ids():
             return True
         included_product_ids = self._included_product_ids()
         # If the product's parent is in the range, the child is automatically included as well

@@ -11,6 +11,7 @@ class CustomAction(models.Benefit):
 
     class Meta:
         proxy = True
+        app_label = 'tests'
 
     def apply(self, basket, condition, offer):
         condition.consume_items(offer, basket, ())

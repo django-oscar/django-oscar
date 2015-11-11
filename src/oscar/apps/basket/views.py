@@ -362,10 +362,17 @@ class VoucherAddView(FormView):
         return redirect('basket:summary')
 
     def apply_voucher_to_basket(self, voucher):
-        if not voucher.is_active():
+        if voucher.is_expired():
             messages.error(
                 self.request,
                 _("The '%(code)s' voucher has expired") % {
+                    'code': voucher.code})
+            return
+
+        if not voucher.is_active():
+            messages.error(
+                self.request,
+                _("The '%(code)s' voucher is not active") % {
                     'code': voucher.code})
             return
 
