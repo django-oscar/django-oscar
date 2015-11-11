@@ -3,7 +3,7 @@ from decimal import Decimal as D
 from django.test import TestCase
 
 from oscar.apps.basket.models import Basket
-from oscar.apps.partner import strategy
+from oscar.apps.partner import strategy, availability, prices
 from oscar.test import factories
 from oscar.apps.catalogue.models import Option
 
@@ -84,6 +84,40 @@ class TestANonEmptyBasket(TestCase):
             product, record))
         self.assertEqual(1, self.basket.line_quantity(
             product, record, options))
+
+    def test_total_sums_product_totals(self):
+        product = factories.create_product()
+        factories.create_stockrecord(
+            product, price_excl_tax=D('5.00'))
+        self.basket.add(product, 1)
+        self.assertEqual(self.basket.total_excl_tax, 105)
+
+    def test_total_excludes_unavailable_products_with_unknown_price(self):
+        new_product = factories.create_product()
+        factories.create_stockrecord(
+            new_product, price_excl_tax=D('5.00'))
+        self.basket.add(new_product, 1)
+
+        class UnavailableProductStrategy(strategy.Default):
+            """ A test strategy that makes a specific product unavailable """
+
+            def availability_policy(self, product, stockrecord):
+                if product == new_product:
+                    return availability.Unavailable()
+                return super(UnavailableProductStrategy, self).availability_policy(product, stockrecord)
+
+            def pricing_policy(self, product, stockrecord):
+                if product == new_product:
+                    return prices.Unavailable()
+                return super(UnavailableProductStrategy, self).pricing_policy(product, stockrecord)
+
+
+        try:
+            self.basket.strategy = UnavailableProductStrategy()
+            self.assertEqual(self.basket.all_lines()[1].get_warning(), u"'D\xf9\uff4d\u03fb\u03d2 title' is no longer available")
+            self.assertEqual(self.basket.total_excl_tax, 100)
+        finally:
+            self.basket.strategy = strategy.Default()
 
 
 class TestMergingTwoBaskets(TestCase):
