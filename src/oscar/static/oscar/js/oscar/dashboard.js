@@ -141,7 +141,6 @@ var oscar = (function(o, $) {
                             'format': $ele.data('dateformat')
                         });
                     $ele.datetimepicker(config);
-                    $ele.find('input').css('width', '125px');
                 });
 
                 var defaultDatetimepickerConfig = {
@@ -158,7 +157,6 @@ var oscar = (function(o, $) {
                           'minuteStep': $ele.data('stepminute')
                         });
                     $ele.datetimepicker(config);
-                    $ele.find('input').css('width', '125px');
                 });
 
                 var defaultTimepickerConfig = {
@@ -178,7 +176,6 @@ var oscar = (function(o, $) {
                           'formatViewType': 'time'
                         });
                     $ele.datetimepicker(config);
-                    $ele.find('input').css('width', '125px');
                 });
             }
         },
