@@ -29,7 +29,18 @@ Oscar 1.2 is compatible with...
 
 What's new in Oscar 1.2?
 ------------------------
+ - ``django-compressor`` has been removed as a dependency, and as a way
+   of building ``less`` files for development. Removing or disabling it
+   was commonly required as it didn't work well with deploying on PaaS
+   providers, and many current projects understandably prefer to use
+   Javascript build chains (``gulp``, ``grunt``, etc.) for all their
+   statics.
+   But ``django-compressor`` was hard to remove  on a per-project basis,
+   so the decision was made to remove it altogether.
 
+   For development, ``USE_LESS`` now enables the browser-based on-the-fly
+   pre-processor. ``make css`` continues to run a locally installed
+   LESS binary.
 
 .. _minor_changes_in_1.2:
 
@@ -42,6 +53,12 @@ Minor changes
 
 Backwards incompatible changes in Oscar 1.2
 -------------------------------------------
+
+- The ``mainstyles`` template block was removed. It served as a wrapper
+  for the ``styles`` content black and was needed to be extensible while
+  still being able to compress CSS. As ``django-compressor`` has been
+  removed, it's not needed any more. Just use ``styles`` instead if you
+  happened to use it.
 
 
 Misc

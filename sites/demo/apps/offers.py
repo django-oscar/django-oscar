@@ -16,6 +16,7 @@ class BasketOwnerCalledBarry(models.Condition):
 
     class Meta:
         proxy = True
+        app_label = 'demo'
 
     def is_satisfied(self, basket):
         if not basket.owner:
@@ -33,6 +34,7 @@ class ChangesOwnerName(models.Benefit):
 
     class Meta:
         proxy = True
+        app_label = 'demo'
 
     def apply(self, basket, condition, offer=None):
         condition.consume_items(basket, ())

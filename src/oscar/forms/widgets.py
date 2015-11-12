@@ -2,7 +2,7 @@ import re
 
 from django import forms
 from django.core.files.uploadedfile import InMemoryUploadedFile
-from django.forms.util import flatatt
+from django.forms.utils import flatatt
 from django.forms.widgets import FileInput
 from django.template import Context
 from django.template.loader import render_to_string

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from optparse import make_option
+import sys
 
 from django.core.management.base import BaseCommand, CommandError
 
@@ -20,6 +21,12 @@ class Command(BaseCommand):
             dest='is_shipping',
             default=True,
             help="Don't mark countries for shipping"),
+        make_option(
+            '--initial-only',
+            action='store_true',
+            dest='is_initial_only',
+            default=False,
+            help="Exit quietly without doing anything if countries were already populated."),
     )
 
     def handle(self, *args, **options):
@@ -31,9 +38,14 @@ class Command(BaseCommand):
                 "'pip install pycountry'")
 
         if Country.objects.exists():
-            raise CommandError(
-                "You already have countries in your database. This command "
-                "currently does not support updating existing countries.")
+            if options.get('is_initial_only', False):
+                # exit quietly, as the initial load already seems to have happened.
+                self.stdout.write("Countries already populated; nothing to be done.")
+                sys.exit(0)
+            else:
+                raise CommandError(
+                    "You already have countries in your database. This command "
+                    "currently does not support updating existing countries.")
 
         countries = [
             Country(

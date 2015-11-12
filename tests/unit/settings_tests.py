@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.template import loader, base, Context
+from django.template import loader, Context, TemplateDoesNotExist
 
 import oscar
 
@@ -33,7 +33,7 @@ class TestOscarTemplateSettings(TestCase):
         for path in paths:
             try:
                 loader.get_template(path)
-            except base.TemplateDoesNotExist:
+            except TemplateDoesNotExist:
                 self.fail("Template %s should exist" % path)
 
     def test_allows_a_template_to_be_customized(self):

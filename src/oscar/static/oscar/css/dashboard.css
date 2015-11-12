@@ -5326,11 +5326,6 @@ textarea {
 .promotions .well-info {
   background-color: #ffffff;
 }
-.alert {
-  background-color: #fff49f;
-  border-color: #ede181;
-  color: #333;
-}
 .alert-message.block-message.file_upload p {
   margin-right: 10px;
 }
