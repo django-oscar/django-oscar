@@ -112,7 +112,7 @@ def create_order(number=None, basket=None, user=None, shipping_address=None,
     if not basket:
         basket = Basket.objects.create()
         basket.strategy = strategy.Default()
-        product = StandaloneProductFactory(stockrecords__num_in_stock=10, 
+        product = StandaloneProductFactory(stockrecords__num_in_stock=10,
                                            stockrecords__price_excl_tax=D('10.00'))
         basket.add_product(product)
     if not basket.id:
