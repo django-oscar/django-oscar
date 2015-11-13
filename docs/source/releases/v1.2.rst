@@ -47,7 +47,14 @@ What's new in Oscar 1.2?
 Minor changes
 ~~~~~~~~~~~~~
  - Fix missing page_url field in the promotions form (`#1816`_)
-
+ - ``Voucher.date_created`` and ``VoucherApplication.date_created``
+   are date fields that have been deprecated.
+   Their intended replacements are the new ``.created`` datetime
+   fields, which we hope are more generally useful. If you have been happy
+   with just having the date, we suggest to keep using the old fields
+   for now, and only switch to the new field when ``date_created`` is
+   removed as part of Oscar 1.3. But you can always write a data migration
+   should it be necessary to keep the old creation dates around.
 
 .. _incompatible_in_1.2:
 
@@ -65,3 +72,11 @@ Misc
 ~~~~
  
 * JQuery UI is no longer included in the dashboard (`#1792`)
+
+Deprecated features
+~~~~~~~~~~~~~~~~~~~
+
+The following features have been deprecated in this release:
+
+* ``Voucher.date_created``, as it's replaced by ``Voucher.created``.
+  To be removed in Oscar 1.3.

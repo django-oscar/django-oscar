@@ -51,6 +51,11 @@ class AbstractVoucher(models.Model):
         _("Total discount"), decimal_places=2, max_digits=12,
         default=Decimal('0.00'))
 
+    #: Creation timestamp. Supersedes Voucher.date_created.
+    # TODO: Remove null=True with Oscar 1.3.
+    created = models.DateTimeField(_("Created"), auto_now_add=True, null=True)
+    #: Deprecated: Creation date. Superseded by Voucher.created.
+    # TODO: Remove with Oscar 1.3.
     date_created = models.DateField(auto_now_add=True)
 
     class Meta:
@@ -153,6 +158,12 @@ class AbstractVoucherApplication(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL, blank=True, null=True,
                              verbose_name=_("User"))
     order = models.ForeignKey('order.Order', verbose_name=_("Order"))
+
+    #: Creation timestamp. Supersedes VoucherApplication.date_created.
+    # TODO: Remove null=True with Oscar 1.3.
+    created = models.DateTimeField(_("Created"), auto_now_add=True, null=True)
+    #: Deprecated: Creation date. Superseded by VoucherApplication.created.
+    # TODO: Remove with Oscar 1.3.
     date_created = models.DateField(_("Date Created"), auto_now_add=True)
 
     class Meta:

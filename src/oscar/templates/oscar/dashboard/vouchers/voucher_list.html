@@ -56,7 +56,7 @@
                     <th>{% trans "Status" %}</th>
                     <th>{% anchor 'num_basket_additions' _("Num baskets") %}</th>
                     <th>{% anchor 'num_orders' _("Num orders") %}</th>
-                    <th>{% anchor 'date_created' _("Date created") %}</th>
+                    <th>{% anchor 'created' _("Date created") %}</th>
                     <th></th>
                 </tr>
                 {% endblock table_head %}
@@ -76,7 +76,7 @@
                             </td>
                             <td>{{ voucher.num_basket_additions }}</td>
                             <td>{{ voucher.num_orders }}</td>
-                            <td>{{ voucher.date_created }}</td>
+                            <td>{{ voucher.created|default:voucher.date_created }}</td>
                             <td>
                                 {% block row_actions %}
                                     <div class="btn-toolbar">
