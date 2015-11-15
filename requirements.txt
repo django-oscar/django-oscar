@@ -13,7 +13,7 @@ Werkzeug==0.9.6
 Whoosh==2.6.0
 pysolr==3.2.0
 requests==2.7.0
-uWSGI==2.0.8
+uWSGI==2.0.11.2
 
 # Docs
 Sphinx==1.2.3
