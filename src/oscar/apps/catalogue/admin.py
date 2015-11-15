@@ -24,6 +24,7 @@ class AttributeInline(admin.TabularInline):
 class ProductRecommendationInline(admin.TabularInline):
     model = ProductRecommendation
     fk_name = 'primary'
+    raw_id_fields = ['primary', 'recommendation']
 
 
 class CategoryInline(admin.TabularInline):
@@ -46,6 +47,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ('get_title', 'upc', 'get_product_class', 'structure',
                     'attribute_summary', 'date_created')
     list_filter = ['structure', 'is_discountable']
+    raw_id_fields = ['parent']
     inlines = [AttributeInline, CategoryInline, ProductRecommendationInline]
     prepopulated_fields = {"slug": ("title",)}
     search_fields = ['upc', 'title']
