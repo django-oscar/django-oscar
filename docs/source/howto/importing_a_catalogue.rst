@@ -4,9 +4,9 @@ Importing a catalogue
 
 .. warning::
 
-   Handling imports works in Oscar, but the code quality of the importers is
-   low as they are only used to populate the sandbox and demo site, and not
-   meant for general usage. So proceed at your own risk!
+   Handling imports works in Oscar, but the code quality of the importer is
+   low as it is only used to populate the sandbox site, and not meant for 
+   general usage. So proceed at your own risk!
 
 Importing a catalogue is pretty straightforward, and can be done in two easy
 steps:
@@ -22,31 +22,23 @@ steps:
 Example
 -------
 
-Two examples of that are ``CatalogueImporter`` and ``DemoSiteImporter``, used
-to import catalogues for the sandbox and demo-site, respectively. Both classes
-are available under ``oscar.apps.partner.importers``.
+An example of that is the ``CatalogueImporter`` used to import catalogues for 
+the sandbox site. The class is available under 
+``oscar.apps.partner.importers``.
 
-Let's take a closer look at ``DemoSiteImporter``::
+Let's take a closer look at ``CatalogueImporter``::
 
-    class DemoSiteImporter(object):
+    class CatalogueImporter(object):
         def __init__(self, logger):
             self.logger = logger
     
         @atomic
-        def handle(self, product_class_name, filepath):
+        def _import(self, file_path=None):
             ....
     
-        def create_product(self, product_class, attribute_codes, row):  # noqa
+        def _import_row(self, row_number, row, stats):
             ....
             
 
 The two steps procedure we talked about are obvious in this example, and are
-implemented in ``handle`` and ``create_product`` functions, respectively.
-
-Start by initializing the class with a logger, and call ``handle`` with
-``product_class_name`` and ``filepath`` arguments. There's absolutely no need
-to hard-code ``product_class_name`` and make product-class unified for all
-products like this example does, you can make it part of the CSV file content.
-``handle`` then calls ``create_product`` once for every line, and the latter
-uses Django ORM to create a couple of objects to represent the product and its
-properties.
+implemented in ``_import`` and ``_import_row`` functions, respectively.

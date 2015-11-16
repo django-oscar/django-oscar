@@ -26,7 +26,7 @@ Next, replace the example configuration with Oscar's.
 
     $ cd solr-4.7.2/example/solr/collection1
     $ mv conf conf.original
-    $ ln -s <your_oscar_checkout>/sites/<sandbox|demo>/deploy/solr conf
+    $ ln -s <your_oscar_checkout>/sites/sandbox/deploy/solr conf
 
 You should then be able to start Solr by running:
 
