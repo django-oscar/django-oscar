@@ -2,9 +2,8 @@
 Sample Oscar projects
 =====================
 
-Oscar ships with three sample projects: a 'sandbox' site, which is a vanilla
-install of Oscar using the default templates and styles, a sample US site which
-customises Oscar to use US style taxes, and a fully featured
+Oscar ships with two sample projects: a 'sandbox' site, which is a vanilla
+install of Oscar using the default templates and styles and a fully featured
 'demo' site which demonstrates how Oscar can be re-skinned and customised to
 model a domain.
 
@@ -90,26 +89,6 @@ at: http://localhost:8000.  A sample superuser is installed with credentials::
 
 .. _us_site:
 
-The US site
------------
-
-The US site is a relatively simple Oscar that makes a few key customisations in
-order to mimic how sites in the US work. Specifically, it:
-
-- Overrides the partner app to supply a new strategy selector which ensures all
-  prices are returned without taxes.
-
-- Overrides the checkout app in order to apply taxes to submissions once the
-  shipping address is known.
-
-To browse the US site locally run:
-
-.. code-block:: bash
-
-   (oscar) $ make us_site
-   (oscar) $ sites/us/manage.py runserver
-
-and the US site will be browsable at http://localhost:8000
 
 The demo site
 -------------
