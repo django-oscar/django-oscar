@@ -74,9 +74,6 @@ before_script:
     # Create testing databases for running migrations against
     - mysql -e 'CREATE DATABASE oscar_travis;'
     - psql -c 'CREATE DATABASE oscar_travis;' -U postgres
-    # Create database for building demo site
-    - psql -c 'CREATE DATABASE oscar_demo;' -U postgres
-    - psql -c 'CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;' -U postgres -d oscar_demo
 
 script:
     - make travis

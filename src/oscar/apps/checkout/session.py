@@ -366,8 +366,7 @@ class CheckoutSessionMixin(object):
         to store billing address information. It's also possible to capture
         billing address information as part of the payment details forms, which
         never get stored in the session. In that circumstance, the billing
-        address can be set directly in the build_submission dict (see Oscar's
-        demo site for an example of this approach).
+        address can be set directly in the build_submission dict.
         """
         if not self.checkout_session.is_billing_address_set():
             return None

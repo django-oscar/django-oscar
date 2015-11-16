@@ -75,8 +75,3 @@ An example implementation of the ``tax.py`` module is:
         def calculate_tax(price, rate):
             tax = price * rate
             return tax.quantize(D('0.01'))
-
-.. tip::
-
-   Oscar's repository contains a sample Oscar site customised for the US.  See
-   :ref:`us_site` for more information.
