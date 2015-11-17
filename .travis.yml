@@ -33,7 +33,7 @@ env:
         - PIP_FIND_LINKS=file://$HOME/.cache/pip/wheels
     matrix:
         - DJANGO=Django==1.7.10
-        - DJANGO=Django==1.8.5
+        - DJANGO=Django==1.8.6
         - DJANGO=Django==1.9rc1
 
 
@@ -53,7 +53,7 @@ matrix:
         - python: 3.4
           env: "DJANGO=Django==1.9rc1"
         - python: 3.5
-          env: "DJANGO=Django==1.8.5"
+          env: "DJANGO=Django==1.8.6"
         - python: 3.5
           env: "DJANGO=Django==1.9rc1"
 
