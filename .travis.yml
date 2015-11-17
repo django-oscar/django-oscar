@@ -34,28 +34,28 @@ env:
     matrix:
         - DJANGO=Django==1.7.10
         - DJANGO=Django==1.8.5
-        - DJANGO=Django==1.9b1 
+        - DJANGO=Django==1.9rc1
 
 
 matrix:
     exclude:
         - python: 3.2
-          env: "DJANGO=Django==1.9b1"
+          env: "DJANGO=Django==1.9rc1"
         - python: 3.3
-          env: "DJANGO=Django==1.9b1"
+          env: "DJANGO=Django==1.9rc1"
         - python: 3.5
           env: "DJANGO=Django==1.7.10"
     allow_failures:
         - python: 2.7
-          env: "DJANGO=Django==1.9b1"
+          env: "DJANGO=Django==1.9rc1"
         - python: 3.3
-          env: "DJANGO=Django==1.9b1"
+          env: "DJANGO=Django==1.9rc1"
         - python: 3.4
-          env: "DJANGO=Django==1.9b1"
+          env: "DJANGO=Django==1.9rc1"
         - python: 3.5
           env: "DJANGO=Django==1.8.5"
         - python: 3.5
-          env: "DJANGO=Django==1.9b1"
+          env: "DJANGO=Django==1.9rc1"
 
 
 before_install:
