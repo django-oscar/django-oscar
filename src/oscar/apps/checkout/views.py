@@ -15,8 +15,8 @@ from oscar.core.loading import get_class, get_classes, get_model
 
 from . import signals
 
-ShippingAddressForm, GatewayForm \
-    = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
+ShippingAddressForm, ShippingMethodForm, GatewayForm \
+    = get_classes('checkout.forms', ['ShippingAddressForm', 'ShippingMethodForm', 'GatewayForm'])
 OrderCreator = get_class('order.utils', 'OrderCreator')
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
 Repository = get_class('shipping.repository', 'Repository')
@@ -235,7 +235,7 @@ class UserAddressDeleteView(CheckoutSessionMixin, generic.DeleteView):
 # ===============
 
 
-class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
+class ShippingMethodView(CheckoutSessionMixin, generic.FormView):
     """
     View for allowing a user to choose a shipping method.
 
@@ -248,9 +248,14 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
     the user can choose the appropriate one.
     """
     template_name = 'checkout/shipping_methods.html'
+    form_class = ShippingMethodForm
     pre_conditions = ['check_basket_is_not_empty',
                       'check_basket_is_valid',
                       'check_user_email_is_captured']
+
+    def post(self, request, *args, **kwargs):
+        self._methods = self.get_available_shipping_methods()
+        return super(ShippingMethodView, self).post(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         # These pre-conditions can't easily be factored out into the normal
@@ -293,6 +298,11 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
         kwargs['methods'] = self._methods
         return kwargs
 
+    def get_form_kwargs(self):
+        kwargs = super(ShippingMethodView, self).get_form_kwargs()
+        kwargs['methods'] = self._methods
+        return kwargs
+
     def get_available_shipping_methods(self):
         """
         Returns all applicable shipping method objects for a given basket.
@@ -306,25 +316,16 @@ class ShippingMethodView(CheckoutSessionMixin, generic.TemplateView):
             shipping_addr=self.get_shipping_address(self.request.basket),
             request=self.request)
 
-    def is_valid_shipping_method(self, method_code):
-        for method in self.get_available_shipping_methods():
-            if method.code == method_code:
-                return True
-        return False
-
-    def post(self, request, *args, **kwargs):
-        # Need to check that this code is valid for this user
-        method_code = request.POST.get('method_code', None)
-        if not self.is_valid_shipping_method(method_code):
-            messages.error(request, _("Your submitted shipping method is not"
-                                      " permitted"))
-            return redirect('checkout:shipping-method')
-
+    def form_valid(self, form):
         # Save the code for the chosen shipping method in the session
         # and continue to the next step.
-        self.checkout_session.use_shipping_method(method_code)
-
+        self.checkout_session.use_shipping_method(form.cleaned_data['method_code'])
         return self.get_success_response()
+
+    def form_invalid(self, form):
+        messages.error(self.request, _("Your submitted shipping method is not"
+                                       " permitted"))
+        return super(ShippingMethodView, self).form_invalid(form)
 
     def get_success_response(self):
         return redirect('checkout:payment-method')
