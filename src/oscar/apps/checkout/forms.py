@@ -39,6 +39,7 @@ class ShippingAddressForm(PhoneNumberMixin, AbstractAddressForm):
             'phone_number', 'notes',
         ]
 
+
 class ShippingMethodForm(forms.Form):
     method_code = forms.ChoiceField(widget=forms.HiddenInput)
 
