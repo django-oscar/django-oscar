@@ -1,5 +1,5 @@
 # These targets are not files
-.PHONY: install sandbox docs coverage lint travis messages compiledmessages css clean preflight make_sandbox
+.PHONY: install sandbox docs coverage lint travis messages compiledmessages css clean preflight sandbox_image
 
 install:
 	pip install -e . -r requirements.txt
@@ -23,6 +23,9 @@ build_sandbox:
 	sites/sandbox/manage.py update_index catalogue
 
 sandbox: install build_sandbox
+
+sandbox_image:
+	docker build -t django-oscar-sandbox:latest .
 
 docs:
 	cd docs && make html
