@@ -647,6 +647,12 @@ class AbstractProduct(models.Model):
     def num_approved_reviews(self):
         return self.reviews.approved().count()
 
+    @property
+    def sorted_recommended_products(self):
+        """Keeping order by recommendation ranking."""
+        return [r.recommendation for r in self.primary_recommendations
+                                              .select_related('recommendation').all()]
+
 
 class AbstractProductRecommendation(models.Model):
     """
