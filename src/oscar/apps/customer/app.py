@@ -101,7 +101,7 @@ class CustomerApplication(Application):
             url(r'^orders/(?P<order_number>[\w-]*)/$',
                 login_required(self.order_detail_view.as_view()),
                 name='order'),
-            url(r'^orders/(?P<order_number>[\w-]*)/(?P<line_id>\d+)$',
+            url(r'^orders/(?P<order_number>[\w-]*)/(?P<line_id>\d+)/$',
                 login_required(self.order_line_view.as_view()),
                 name='order-line'),
 
