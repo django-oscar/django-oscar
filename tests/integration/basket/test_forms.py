@@ -175,3 +175,14 @@ class TestAddToBasketForm(TestCase):
         form = forms.AddToBasketForm(
             basket=basket, product=product, data=data)
         self.assertFalse(form.is_valid())
+
+    def test_for_empty_price_excl_tax(self):
+        basket = factories.BasketFactory()
+        product_class = factories.ProductClassFactory(track_stock=False)
+        product = factories.ProductFactory(product_class=product_class, stockrecords=[])
+        factories.StockRecordFactory.build(price_excl_tax=None, product=product)
+
+        data = {'quantity': 1}
+        form = forms.AddToBasketForm(basket=basket, product=product, data=data)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['__all__'][0], 'unavailable')
