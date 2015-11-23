@@ -1,3 +1,4 @@
+from decimal import Decimal as D
 from django.core.exceptions import ObjectDoesNotExist
 
 
@@ -20,10 +21,10 @@ class Scale(object):
             weight = self.default_weight
         else:
             weight = attr_val.value
-        return float(weight) if weight is not None else 0.0
+        return D(weight) if weight is not None else D('0.0')
 
     def weigh_basket(self, basket):
-        weight = 0.0
+        weight = D('0.0')
         for line in basket.lines.all():
             weight += self.weigh_product(line.product) * line.quantity
         return weight
