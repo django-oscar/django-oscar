@@ -53,7 +53,7 @@ you. It is explained in detail in :doc:`fork_app`. Run it like this::
 
    For forking app in project root directory, call ``oscar_fork_app`` with ``.`` (dot) instead of ``yourproject/`` path.
    
-   Exapmle: 
+   Example: 
    
    Calling ``./manage.py oscar_fork_app order yourproject/`` ``order`` app will be placed in ``project_root/yourproject/`` directory. 
    Calling ``./manage.py oscar_fork_app order .`` ``order`` app will be placed in ``project_root/`` directory.
