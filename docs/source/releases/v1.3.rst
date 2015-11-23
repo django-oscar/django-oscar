@@ -35,6 +35,12 @@ What's new in Oscar 1.3?
 
 .. _minor_changes_in_1.3:
 
+ - Update the queryset for `ProductReview` to include an `approved` method
+   which filters the queryset on approved reviews (`#1920`)
+
+
+.. _`#1935`: https://github.com/django-oscar/django-oscar/issues/1920
+
 
 Dependency changes
 ------------------

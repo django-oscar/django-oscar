@@ -103,6 +103,12 @@ class TestAUserReview(TestCase):
         review = self.review()
         self.assertEqual("Tom Thumb", review.reviewer_name)
 
+    def test_num_approved_reviews(self):
+        review = self.review()
+        review.save()
+        self.assertEqual(self.product.num_approved_reviews, 1)
+        self.assertEqual(self.product.reviews.approved().first(), review)
+
 
 class TestVotingOnAReview(TestCase):
 
