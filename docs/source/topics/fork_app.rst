@@ -8,7 +8,7 @@ This guide explains how to fork an app in Oscar.
 
   The following steps are now automated by the ``oscar_fork_app`` management
   command. They're explained in detail so you get an idea of what's going on.
-  But there's no need to do this manually anymore!
+  But there's no need to do this manually anymore! More information is available in :doc:`/topics/customisation#fork-the-oscar-app`.
 
 Create Python module with same label
 ====================================
