@@ -58,7 +58,7 @@ class OfferListView(ListView):
         if data['is_active']:
             self.is_filtered = True
             today = datetime.date.today()
-            qs = qs.filter(start_date__lte=today, end_date__gte=today)
+            qs = qs.filter(start_datetime__lte=today, end_datetime__gte=today)
 
         return qs
 
