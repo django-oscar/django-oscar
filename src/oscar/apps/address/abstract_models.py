@@ -11,6 +11,7 @@ from django.utils.translation import pgettext_lazy
 from phonenumber_field.modelfields import PhoneNumberField
 
 from oscar.core.compat import AUTH_USER_MODEL
+from oscar.core.decorators import deprecated
 from oscar.models.fields import UppercaseCharField
 
 
@@ -566,6 +567,11 @@ class AbstractUserAddress(AbstractShippingAddress):
             raise exceptions.ValidationError({
                 '__all__': [_("This address is already in your address"
                               " book")]})
+
+    @property
+    @deprecated
+    def num_orders(self):
+        return self.num_orders_as_shipping_address
 
 
 class AbstractBillingAddress(AbstractAddress):
