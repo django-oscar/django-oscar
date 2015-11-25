@@ -66,6 +66,10 @@ Backwards incompatible changes in Oscar 1.2
   were not up-to-date anymore. These might return in the future as 
   separate repositories.
 
+- The `RecentReviewsManager`, `TopScoredReviewsManager` and 
+  `TopVotedReviewsManager` managers are removed from the reviews app 
+  since they were broken and unused.
+
 
 Misc
 ~~~~
