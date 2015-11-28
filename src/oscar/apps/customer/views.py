@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
+from oscar.apps.basket import signals as basket_signals
 from oscar.apps.customer.utils import get_password_reset_url
 from oscar.core.compat import get_user_model
 from oscar.core.loading import (
@@ -483,6 +484,7 @@ class OrderHistoryView(PageTitleMixin, generic.ListView):
 class OrderDetailView(PageTitleMixin, PostActionMixin, generic.DetailView):
     model = Order
     active_tab = 'orders'
+    add_signal = basket_signals.basket_addition
 
     def get_template_names(self):
         return ["customer/order/order_detail.html"]
@@ -537,7 +539,14 @@ class OrderDetailView(PageTitleMixin, PostActionMixin, generic.DetailView):
                     options.append({
                         'option': attribute.option,
                         'value': attribute.value})
-            basket.add_product(line.product, line.quantity, options)
+            basket_line, created = basket.add_product(
+                line.product, line.quantity, options)
+
+            # Send signal for basket addition
+            self.add_signal.send(
+                sender=self, product=line.product, user=self.request.user,
+                request=self.request, quantity=line.quantity,
+                purchase_info=basket_line.purchase_info)
 
         if len(lines_to_add) > 0:
             self.response = redirect('basket:summary')
@@ -556,6 +565,7 @@ class OrderDetailView(PageTitleMixin, PostActionMixin, generic.DetailView):
 
 class OrderLineView(PostActionMixin, generic.DetailView):
     """Customer order line"""
+    add_signal = basket_signals.basket_addition
 
     def get_object(self, queryset=None):
         order = get_object_or_404(Order, user=self.request.user,
@@ -584,7 +594,14 @@ class OrderLineView(PostActionMixin, generic.DetailView):
             if attribute.option:
                 options.append({'option': attribute.option,
                                 'value': attribute.value})
-        basket.add_product(line.product, line.quantity, options)
+        basket_line, created = basket.add_product(
+            line.product, line.quantity, options)
+
+        # Send signal for basket addition
+        self.add_signal.send(
+            sender=self, product=line.product, user=self.request.user,
+            request=self.request, quantity=line.quantity,
+            purchase_info=basket_line.purchase_info)
 
         if line.quantity > 1:
             msg = _("%(qty)d copies of '%(product)s' have been added to your"

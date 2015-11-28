@@ -89,6 +89,43 @@ Arguments sent with this signal:
 
     The user in question
 
+.. attribute:: quantity
+
+    The quantity being added
+
+.. attribute:: purchase_info
+
+    The purchase info (price, availability and stock record) of the product being added
+
+``basket_removal``
+------------------
+
+.. class:: oscar.apps.basket.signals.basket_removal
+
+   Raised when a product is removed from a basket
+
+Arguments sent with this signal:
+
+.. attribute:: request
+
+    The request instance
+
+.. attribute:: product
+
+    The product being removed
+
+.. attribute:: user
+
+    The user in question
+
+.. attribute:: quantity
+
+    The quantity being removed
+
+.. attribute:: purchase_info
+
+    The purchase info (price, availability and stock record) of the product being removed
+
 ``voucher_addition``
 --------------------
 
