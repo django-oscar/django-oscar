@@ -2,8 +2,8 @@ from decimal import Decimal as D
 
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.core.loading import get_model
 from oscar.apps.order import exceptions
+from oscar.core.loading import get_model
 
 ShippingEventQuantity = get_model('order', 'ShippingEventQuantity')
 PaymentEventQuantity = get_model('order', 'PaymentEventQuantity')
@@ -90,16 +90,17 @@ class EventHandler(object):
         if errors:
             raise exceptions.InvalidShippingEvent(", ".join(errors))
 
-    def validate_payment_event(self, order, event_type, amount, lines,
-                               line_quantities, **kwargs):
-        errors = []
-        for line, qty in zip(lines, line_quantities):
-            if not line.is_payment_event_permitted(event_type, qty):
-                msg = _("The selected quantity for line #%(line_id)s is too"
-                        " large") % {'line_id': line.id}
-                errors.append(msg)
-        if errors:
-            raise exceptions.InvalidPaymentEvent(", ".join(errors))
+    def validate_payment_event(self, order, event_type, amount, lines=None,
+                               line_quantities=None, **kwargs):
+        if lines and line_quantities:
+            errors = []
+            for line, qty in zip(lines, line_quantities):
+                if not line.is_payment_event_permitted(event_type, qty):
+                    msg = _("The selected quantity for line #%(line_id)s is too"
+                            " large") % {'line_id': line.id}
+                    errors.append(msg)
+            if errors:
+                raise exceptions.InvalidPaymentEvent(", ".join(errors))
 
     # Query methods
     # -------------

@@ -2,9 +2,10 @@ from decimal import Decimal
 
 from django.core import exceptions
 from django.db import models
+from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
-from django.utils import timezone
+
 from oscar.core.compat import AUTH_USER_MODEL
 
 
@@ -78,6 +79,13 @@ class AbstractVoucher(models.Model):
         """
         test_datetime = test_datetime or timezone.now()
         return self.start_datetime <= test_datetime <= self.end_datetime
+
+    def is_expired(self):
+        """
+        Test whether this voucher has passed its expiration date
+        """
+        now = timezone.now()
+        return self.end_datetime < now
 
     def is_available_to_user(self, user=None):
         """

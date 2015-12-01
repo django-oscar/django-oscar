@@ -1,13 +1,13 @@
 from functools import wraps
 
-from django.utils.six.moves.urllib import parse
+from django.contrib import messages
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import user_passes_test
-from django.shortcuts import render
-from django.contrib import messages
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse_lazy
+from django.shortcuts import render
+from django.utils.six.moves.urllib import parse
 from django.utils.translation import ugettext_lazy as _
 
 

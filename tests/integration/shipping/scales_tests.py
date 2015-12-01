@@ -56,3 +56,18 @@ class TestScales(TestCase):
 
         scale = Scale(attribute_code='weight')
         self.assertEqual(1*3 + 2*4, scale.weigh_basket(basket))
+
+    def test_decimals(self):
+        basket = factories.create_basket(empty=True)
+        product = factories.create_product(attributes={'weight': '0.3'},
+                                           price=D('5.00'))
+        basket.add(product)
+
+        scale = Scale(attribute_code='weight')
+        self.assertEqual(D('0.3'), scale.weigh_basket(basket))
+
+        basket.add(product)
+        self.assertEqual(D('0.6'), scale.weigh_basket(basket))
+
+        basket.add(product)
+        self.assertEqual(D('0.9'), scale.weigh_basket(basket))

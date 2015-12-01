@@ -1,7 +1,7 @@
 import factory
 
-from oscar.core.phonenumber import PhoneNumber
 from oscar.core.loading import get_model
+from oscar.core.phonenumber import PhoneNumber
 
 __all__ = [
     'CountryFactory', 'UserAddressFactory',

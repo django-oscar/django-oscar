@@ -1,4 +1,5 @@
 from django import template
+
 from oscar.core.loading import get_model
 
 register = template.Library()

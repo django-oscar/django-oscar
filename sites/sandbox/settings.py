@@ -115,7 +115,6 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -146,7 +145,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -196,7 +195,7 @@ LOGGING = {
     'handlers': {
         'null': {
             'level': 'DEBUG',
-            'class': 'django.utils.log.NullHandler',
+            'class': 'logging.NullHandler',
         },
         'console': {
             'level': 'DEBUG',
@@ -301,8 +300,7 @@ INSTALLED_APPS = [
     'django_extensions',
     # Debug toolbar + extensions
     'debug_toolbar',
-    'template_timings_panel',
-    'compressor',       # Oscar's templates use compressor
+    # 'template_timings_panel',
     'apps.gateway',     # For allowing dashboard access
     'widget_tweaks',
 ]
@@ -360,7 +358,7 @@ DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.sql.SQLPanel',
     'debug_toolbar.panels.staticfiles.StaticFilesPanel',
     'debug_toolbar.panels.templates.TemplatesPanel',
-    'template_timings_panel.panels.TemplateTimings.TemplateTimings',
+    # 'template_timings_panel.panels.TemplateTimings.TemplateTimings',
     'debug_toolbar.panels.cache.CachePanel',
     'debug_toolbar.panels.signals.SignalsPanel',
     'debug_toolbar.panels.logging.LoggingPanel',
@@ -413,30 +411,13 @@ OSCAR_ORDER_STATUS_CASCADE = {
     'Complete': 'Shipped',
 }
 
-# LESS/CSS/statics
-# ================
+# LESS/CSS
+# ========
 
 # We default to using CSS files, rather than the LESS files that generate them.
-# If you want to develop Oscar's CSS, then set USE_LESS=True and
-# COMPRESS_ENABLED=False in your settings_local module and ensure you have
-# 'lessc' installed.
-
+# If you want to develop Oscar's CSS, then set USE_LESS=True to enable the
+# on-the-fly less processor.
 USE_LESS = False
-
-COMPRESS_ENABLED = True
-COMPRESS_PRECOMPILERS = (
-    ('text/less', 'lessc {infile} {outfile}'),
-)
-COMPRESS_OFFLINE_CONTEXT = {
-    'STATIC_URL': 'STATIC_URL',
-    'use_less': USE_LESS,
-}
-
-# We do this to work around an issue in compressor where the LESS files are
-# compiled but compression isn't enabled.  When this happens, the relative URL
-# is wrong between the generated CSS file and other assets:
-# https://github.com/jezdez/django_compressor/issues/226
-COMPRESS_OUTPUT_DIR = 'oscar'
 
 # Logging
 # =======

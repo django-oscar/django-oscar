@@ -25,7 +25,6 @@ Contents:
 Further reading:
 
 * `Official homepage`_
-* `Demo site`_ (a reference build of an Oscar project)
 * `Sandbox site`_ (an hourly build of the unstable master branch - it's
   experimental but feel free to explore and get a feel for the base Oscar
   install.)
@@ -64,7 +63,6 @@ Docs status:
 
 .. _`Official homepage`: http://oscarcommerce.com
 .. _`Sandbox site`: http://latest.oscarcommerce.com
-.. _`Demo site`: http://demo.oscarcommerce.com
 .. _`Documentation`: http://django-oscar.readthedocs.org/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
 .. _`Continuous integration homepage`: http://travis-ci.org/#!/django-oscar/django-oscar
@@ -125,23 +123,6 @@ make changes?  Check out the `contributing guidelines`_.
 .. _`in 5 commands`: http://django-oscar.readthedocs.org/en/latest/internals/sandbox.html#running-the-sandbox-locally
 .. _`contributing guidelines`: http://django-oscar.readthedocs.org/en/latest/internals/contributing/index.html
 
-Demo
-~~~~
-
-Oscar also ships with a demo site, which is a reference build of an Oscar
-project.  It integrates with Oscar's stores_, PayPal_ and Datacash_ extensions.
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/demo.home.thumb.png
-    :target: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/demo.home.png
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/demo.browse.thumb.png
-    :target: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/demo.browse.png
-
-The demo site is also available to browse at
-http://demo.oscarcommerce.com
-
-.. _stores: https://github.com/django-oscar/django-oscar-stores
-.. _PayPal: https://github.com/django-oscar/django-oscar-paypal
 
 Extensions
 ----------

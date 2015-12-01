@@ -146,8 +146,8 @@
                                         </td>
                                         <td>{{ line.partner_sku }}</td>
                                         <td>{{ line.est_dispatch_date|default:"-" }}</td>
-                                        <td style="text-align: right">{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>
-                                        <td style="text-align: right">{{ line.line_price_before_discounts_incl_tax|currency:order.currency }}</td>
+                                        <td class="text-right">{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>
+                                        <td class="text-right">{{ line.line_price_before_discounts_incl_tax|currency:order.currency }}</td>
                                         <td>
                                             <a href="{% url 'dashboard:order-line-detail' number=order.number line_id=line.id %}" class="btn btn-info">{% trans "View" %}</a>
                                         </td>
@@ -157,8 +157,8 @@
                                 <tr>
                                     <td colspan="9"></td>
                                     <th>{% trans "Discount" %}</th>
-                                    <td style="text-align: right">{{ order.total_discount_excl_tax|currency:order.currency }}</td>
-                                    <td style="text-align: right">{{ order.total_discount_incl_tax|currency:order.currency }}</td>
+                                    <td class="text-right">{{ order.total_discount_excl_tax|currency:order.currency }}</td>
+                                    <td class="text-right">{{ order.total_discount_incl_tax|currency:order.currency }}</td>
                                     <td></td>
                                 </tr>
                                 {% with discounts=order.basket_discounts %}
@@ -166,8 +166,8 @@
                                         <tr>
                                             <td colspan="9"></td>
                                             <th>{% trans "Basket total (excl. discounts)" %}</th>
-                                            <td style="text-align: right">{{ order.basket_total_before_discounts_excl_tax|currency:order.currency }}</td>
-                                            <td style="text-align: right">{{ order.basket_total_before_discounts_incl_tax|currency:order.currency }}</td>
+                                            <td class="text-right">{{ order.basket_total_before_discounts_excl_tax|currency:order.currency }}</td>
+                                            <td class="text-right">{{ order.basket_total_before_discounts_incl_tax|currency:order.currency }}</td>
                                             <td></td>
                                         </tr>
                                         {% for discount in discounts %}
@@ -177,24 +177,24 @@
                                                     <span class="label label-success">{% trans "Discount" %}</span>
                                                     {{ discount.offer_name }}
                                                 </td>
-                                                <td style="text-align: right"></td>
-                                                <td style="text-align: right">- {{ discount.amount|currency:order.currency }}</td>
+                                                <td class="text-right"></td>
+                                                <td class="text-right">- {{ discount.amount|currency:order.currency }}</td>
                                                 <td></td>
                                             </tr>
                                         {% endfor %}
                                         <tr>
                                             <td colspan="9"></td>
                                             <th>{% trans "Basket total (inc. discounts)" %}</th>
-                                            <th style="text-align: right">{{ order.basket_total_excl_tax|currency:order.currency }}</th>
-                                            <th style="text-align: right">{{ order.basket_total_incl_tax|currency:order.currency }}</th>
+                                            <th class="text-right">{{ order.basket_total_excl_tax|currency:order.currency }}</th>
+                                            <th class="text-right">{{ order.basket_total_incl_tax|currency:order.currency }}</th>
                                             <td></td>
                                         </tr>
                                     {% else %}
                                         <tr>
                                             <td colspan="9"></td>
                                             <th>{% trans "Basket total" %}</th>
-                                            <th style="text-align: right">{{ order.basket_total_excl_tax|currency:order.currency }}</th>
-                                            <th style="text-align: right">{{ order.basket_total_incl_tax|currency:order.currency }}</th>
+                                            <th class="text-right">{{ order.basket_total_excl_tax|currency:order.currency }}</th>
+                                            <th class="text-right">{{ order.basket_total_incl_tax|currency:order.currency }}</th>
                                             <td></td>
                                         </tr>
                                     {% endif %}
@@ -204,8 +204,8 @@
                                     <tr>
                                         <td colspan="9"></td>
                                         <td>{% trans "Shipping total (excl. discounts)" %}</td>
-                                        <td style="text-align: right">{{ order.shipping_before_discounts_excl_tax|currency:order.currency }}</td>
-                                        <td style="text-align: right">{{ order.shipping_before_discounts_incl_tax|currency:order.currency }}</td>
+                                        <td class="text-right">{{ order.shipping_before_discounts_excl_tax|currency:order.currency }}</td>
+                                        <td class="text-right">{{ order.shipping_before_discounts_incl_tax|currency:order.currency }}</td>
                                         <td></td>
                                     </tr>
                                     {% for discount in order.shipping_discounts %}
@@ -216,23 +216,23 @@
                                                 {{ discount.offer_name }}
                                             </td>
                                             <td></td>
-                                            <td style="text-align: right">- {{ discount.amount|currency:order.currency }}</td>
+                                            <td class="text-right">- {{ discount.amount|currency:order.currency }}</td>
                                             <td></td>
                                         </tr>
                                     {% endfor %}
                                     <tr>
                                         <td colspan="9"></td>
                                         <th>{% trans "Shipping total (inc. discounts)" %}</th>
-                                        <th style="text-align: right">{{ order.shipping_excl_tax|currency:order.currency }}</th>
-                                        <th style="text-align: right">{{ order.shipping_incl_tax|currency:order.currency }}</th>
+                                        <th class="text-right">{{ order.shipping_excl_tax|currency:order.currency }}</th>
+                                        <th class="text-right">{{ order.shipping_incl_tax|currency:order.currency }}</th>
                                         <td></td>
                                     </tr>
                                 {% else %}
                                     <tr>
                                         <td colspan="9"></td>
                                         <th>{% trans "Shipping total" %}</th>
-                                        <th style="text-align: right">{{ order.shipping_excl_tax|currency:order.currency }}</th>
-                                        <th style="text-align: right">{{ order.shipping_incl_tax|currency:order.currency }}</th>
+                                        <th class="text-right">{{ order.shipping_excl_tax|currency:order.currency }}</th>
+                                        <th class="text-right">{{ order.shipping_incl_tax|currency:order.currency }}</th>
                                         <td></td>
                                     </tr>
                                 {% endif %}
@@ -240,8 +240,8 @@
                                 <tr>
                                     <td colspan="9"></td>
                                     <th>{% trans "Order total" %}</th>
-                                    <th style="text-align: right">{{ order.total_excl_tax|currency:order.currency }}</th>
-                                    <th style="text-align: right">{{ order.total_incl_tax|currency:order.currency }}</th>
+                                    <th class="text-right">{{ order.total_excl_tax|currency:order.currency }}</th>
+                                    <th class="text-right">{{ order.total_incl_tax|currency:order.currency }}</th>
                                     <td></td>
                                 </tr>
                             </tbody>
@@ -317,7 +317,7 @@
                     {% csrf_token %}
                     {% block order_actions %}
                         <div class="well">
-                            <h3><i class="icon-warning"></i> {% trans "Change order status" %}:</h3>
+                            <h3><i class="icon-warning-sign"></i> {% trans "Change order status" %}:</h3>
                             {% if order_status_form.has_choices %}
                                 {% include "dashboard/partials/form_fields.html" with form=order_status_form %}
                                 <input type="hidden" value="change_order_status" name="order_action" />

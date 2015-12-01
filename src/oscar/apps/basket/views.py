@@ -2,22 +2,21 @@ import json
 
 from django import shortcuts
 from django.contrib import messages
-from django.shortcuts import redirect
-from django.template.loader import render_to_string
-from django.template import RequestContext
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
-from django.views.generic import FormView, View
+from django.shortcuts import redirect
+from django.template import RequestContext
+from django.template.loader import render_to_string
 from django.utils.http import is_safe_url
 from django.utils.translation import ugettext_lazy as _
-from django.core.exceptions import ObjectDoesNotExist
-
+from django.views.generic import FormView, View
 from extra_views import ModelFormSetView
 
-from oscar.core import ajax
-from oscar.core.utils import redirect_to_referrer, safe_referrer
 from oscar.apps.basket import signals
+from oscar.core import ajax
 from oscar.core.loading import get_class, get_classes, get_model
+from oscar.core.utils import redirect_to_referrer, safe_referrer
 
 Applicator = get_class('offer.utils', 'Applicator')
 (BasketLineFormSet, BasketLineForm, AddToBasketForm, BasketVoucherForm,
@@ -363,10 +362,17 @@ class VoucherAddView(FormView):
         return redirect('basket:summary')
 
     def apply_voucher_to_basket(self, voucher):
-        if not voucher.is_active():
+        if voucher.is_expired():
             messages.error(
                 self.request,
                 _("The '%(code)s' voucher has expired") % {
+                    'code': voucher.code})
+            return
+
+        if not voucher.is_active():
+            messages.error(
+                self.request,
+                _("The '%(code)s' voucher is not active") % {
                     'code': voucher.code})
             return
 

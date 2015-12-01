@@ -235,9 +235,9 @@ var oscar = (function(o, $) {
                 var option_group_select = $('#' + type_select.attr('id').replace('type', 'option_group'));
 
                 if(type_select.val() === 'option'){
-                    option_group_select.closest('.control-group').show();
+                    option_group_select.select2('container').show();
                 }else{
-                    option_group_select.closest('.control-group').hide();
+                    option_group_select.select2('container').hide();
                 }
             }
         },
@@ -245,8 +245,8 @@ var oscar = (function(o, $) {
             init: function() {
                 $('[data-behaviours~="remove"]').click(function() {
                     $this = $(this);
-                    $this.parents('table').find('input').attr('checked', false);
-                    $this.parents('tr').find('input').attr('checked', 'checked');
+                    $this.parents('table').find('input').prop('checked', false);
+                    $this.parents('tr').find('input').prop('checked', true);
                     $this.parents('form').submit();
                 });
             }

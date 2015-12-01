@@ -1,17 +1,17 @@
 import warnings
+
 from django.contrib import messages
 from django.core.paginator import InvalidPage
-from django.utils.http import urlquote
-from django.http import HttpResponsePermanentRedirect, Http404
+from django.http import Http404, HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import DetailView, TemplateView
+from django.utils.http import urlquote
 from django.utils.translation import ugettext_lazy as _
+from django.views.generic import DetailView, TemplateView
 
-from oscar.core.loading import get_class, get_model
 from oscar.apps.catalogue.signals import product_viewed
+from oscar.core.loading import get_class, get_model
 
 Product = get_model('catalogue', 'product')
-ProductReview = get_model('reviews', 'ProductReview')
 Category = get_model('catalogue', 'category')
 ProductAlert = get_model('customer', 'ProductAlert')
 ProductAlertForm = get_class('customer.forms', 'ProductAlertForm')
@@ -64,7 +64,6 @@ class ProductDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductDetailView, self).get_context_data(**kwargs)
-        ctx['reviews'] = self.get_reviews()
         ctx['alert_form'] = self.get_alert_form()
         ctx['has_active_alert'] = self.get_alert_status()
         return ctx
@@ -82,9 +81,6 @@ class ProductDetailView(DetailView):
     def get_alert_form(self):
         return ProductAlertForm(
             user=self.request.user, product=self.object)
-
-    def get_reviews(self):
-        return self.object.reviews.filter(status=ProductReview.APPROVED)
 
     def send_signal(self, request, response, product):
         self.view_signal.send(

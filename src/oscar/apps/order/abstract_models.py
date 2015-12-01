@@ -1,19 +1,21 @@
+import hashlib
 from collections import OrderedDict
 from decimal import Decimal as D
-import hashlib
 
 from django.conf import settings
 from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
-from django.utils.translation import ugettext_lazy as _, pgettext_lazy
-from django.utils.datastructures import SortedDict
 from django.utils.timezone import now
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
-from oscar.core.utils import get_default_currency
 from oscar.core.compat import AUTH_USER_MODEL
+from oscar.core.loading import get_model
+from oscar.core.utils import get_default_currency
 from oscar.models.fields import AutoSlugField
+
 from . import exceptions
 
 
@@ -655,7 +657,7 @@ class AbstractLine(models.Model):
         """
         Returns a dict of shipping events that this line has been through
         """
-        status_map = SortedDict()
+        status_map = OrderedDict()
         for event in self.shipping_events.all():
             event_type = event.event_type
             event_name = event_type.name
@@ -1055,7 +1057,7 @@ class AbstractOrderDiscount(models.Model):
 
     @property
     def offer(self):
-        Offer = models.get_model('offer', 'ConditionalOffer')
+        Offer = get_model('offer', 'ConditionalOffer')
         try:
             return Offer.objects.get(id=self.offer_id)
         except Offer.DoesNotExist:
@@ -1063,7 +1065,7 @@ class AbstractOrderDiscount(models.Model):
 
     @property
     def voucher(self):
-        Voucher = models.get_model('voucher', 'Voucher')
+        Voucher = get_model('voucher', 'Voucher')
         try:
             return Voucher.objects.get(id=self.voucher_id)
         except Voucher.DoesNotExist:

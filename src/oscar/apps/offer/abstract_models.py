@@ -1,27 +1,27 @@
 import itertools
-import os
 import operator
+import os
 import re
-from decimal import Decimal as D, ROUND_DOWN
+from decimal import Decimal as D
+from decimal import ROUND_DOWN
 
-from django.db import models
-from django.db.models.query import Q
+from django.conf import settings
 from django.core import exceptions
 from django.core.urlresolvers import reverse
+from django.db import models
+from django.db.models.query import Q
 from django.template.defaultfilters import date as date_filter
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
-from django.utils.timezone import now, get_current_timezone
+from django.utils.timezone import get_current_timezone, now
 from django.utils.translation import ugettext_lazy as _
-from django.conf import settings
 
 from oscar.apps.offer import results, utils
 from oscar.apps.offer.managers import ActiveOfferManager
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.core.loading import get_model, get_class
+from oscar.core.loading import get_class, get_model
 from oscar.models import fields
 from oscar.templatetags.currency_filters import currency
-
 
 BrowsableRangeManager = get_class('offer.managers', 'BrowsableRangeManager')
 
@@ -372,7 +372,7 @@ class AbstractConditionalOffer(models.Model):
             # Return ALL the products
             queryset = Product.browsable
         else:
-            queryset = cond_range.included_products
+            queryset = cond_range.all_products()
         return queryset.filter(is_discountable=True).exclude(
             structure=Product.CHILD)
 
@@ -858,7 +858,7 @@ class AbstractRange(models.Model):
             return False
         if self.includes_all_products:
             return True
-        if product.product_class_id in self._class_ids():
+        if product.get_product_class().id in self._class_ids():
             return True
         included_product_ids = self._included_product_ids()
         # If the product's parent is in the range, the child is automatically included as well
@@ -1041,7 +1041,7 @@ class AbstractRangeProductFileUpload(models.Model):
         Process the file upload and add products to the range
         """
         all_ids = set(self.extract_ids())
-        products = self.range.included_products.all()
+        products = self.range.all_products()
         existing_skus = products.values_list(
             'stockrecords__partner_sku', flat=True)
         existing_skus = set(filter(bool, existing_skus))

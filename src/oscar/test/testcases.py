@@ -1,12 +1,10 @@
-from django.utils.six.moves import http_client
-
-from django.core.urlresolvers import reverse
 from django.contrib.auth.models import Permission
+from django.core.urlresolvers import reverse
+from django.utils.six.moves import http_client
 from django_webtest import WebTest
 from purl import URL
 
 from oscar.core.compat import get_user_model
-
 
 User = get_user_model()
 
@@ -72,6 +70,12 @@ class WebTestCase(WebTest):
         if expected_url:
             location = URL.from_string(response['Location'])
             self.assertEqual(expected_url, location.path())
+
+    def assertIsNotRedirect(self, response):
+        self.assertIsOk(response)
+        self.assertTrue(response.status_code not in (
+            http_client.FOUND, http_client.MOVED_PERMANENTLY
+        ))
 
     def assertRedirectsTo(self, response, url_name, kwargs=None):
         """

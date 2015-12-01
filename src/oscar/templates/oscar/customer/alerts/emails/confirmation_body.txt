@@ -1,7 +1,7 @@
 {% load i18n %}{% blocktrans with product=alert.product domain=site.domain confirm_path=alert.get_confirm_url cancel_path=alert.get_cancel_url %}Hello,
 
 Somebody (hopefully you) has requested an email alert when
-'{{ product }}' is back in stock.  Please click the following link
+'{{ product|safe }}' is back in stock.  Please click the following link
 to confirm:
 http://{{ domain }}{{ confirm_path }}
 

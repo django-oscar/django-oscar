@@ -1,9 +1,10 @@
 import logging
 
-from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse, NoReverseMatch
-from django.contrib.sites.models import Site, get_current_site
+from django.contrib.sites.models import Site
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import NoReverseMatch, reverse
+from django.http import HttpResponseRedirect
 
 from oscar.core.loading import get_class, get_model
 

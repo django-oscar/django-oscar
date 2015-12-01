@@ -3,6 +3,7 @@
 *.egg-info
 /dist/
 /build/
+/node_modules/
 
 # Vagrant
 .vagrant

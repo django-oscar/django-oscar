@@ -1,11 +1,11 @@
-from itertools import chain
 import logging
+from itertools import chain
 
 from django.db.models import Q
 from django.utils.timezone import now
 
-from oscar.core.loading import get_model
 from oscar.apps.offer import results
+from oscar.core.loading import get_model
 
 logger = logging.getLogger('oscar.offers')
 

@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from oscar.core.loading import get_model
 
 Order = get_model('order', 'Order')
@@ -77,3 +78,4 @@ admin.site.register(PaymentEventType, PaymentEventTypeAdmin)
 admin.site.register(LineAttribute)
 admin.site.register(OrderDiscount, OrderDiscountAdmin)
 admin.site.register(CommunicationEvent)
+admin.site.register(BillingAddress)

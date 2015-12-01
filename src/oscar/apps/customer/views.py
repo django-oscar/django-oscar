@@ -1,20 +1,23 @@
-from django.shortcuts import get_object_or_404, redirect
-from django.views import generic
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.core.exceptions import ObjectDoesNotExist
 from django import http
-from django.contrib import messages
-from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth import logout as auth_logout, login as auth_login
-from django.contrib.sites.models import get_current_site
 from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import login as auth_login
+from django.contrib.auth import logout as auth_logout
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse, reverse_lazy
+from django.shortcuts import get_object_or_404, redirect
+from django.utils.translation import ugettext_lazy as _
+from django.views import generic
 
+from oscar.apps.customer.utils import get_password_reset_url
+from oscar.core.compat import get_user_model
+from oscar.core.loading import (
+    get_class, get_classes, get_model, get_profile_class)
 from oscar.core.utils import safe_referrer
 from oscar.views.generic import PostActionMixin
-from oscar.apps.customer.utils import get_password_reset_url
-from oscar.core.loading import (
-    get_class, get_profile_class, get_classes, get_model)
-from oscar.core.compat import get_user_model
+
 from . import signals
 
 PageTitleMixin, RegisterUserMixin = get_classes(
@@ -325,8 +328,8 @@ class ProfileUpdateView(PageTitleMixin, generic.FormView):
         # cleaned data because the object created by form.save() can
         # either be a user or profile instance depending whether a profile
         # class has been specified by the AUTH_PROFILE_MODULE setting.
-        new_email = form.cleaned_data['email']
-        if old_user and new_email != old_user.email:
+        new_email = form.cleaned_data.get('email')
+        if new_email and old_user and new_email != old_user.email:
             # Email address has changed - send a confirmation email to the old
             # address including a password reset link in case this is a
             # suspicious change.
@@ -379,6 +382,7 @@ class ChangePasswordView(PageTitleMixin, generic.FormView):
 
     def form_valid(self, form):
         form.save()
+        update_session_auth_hash(self.request, self.request.user)
         messages.success(self.request, _("Password updated"))
 
         ctx = {

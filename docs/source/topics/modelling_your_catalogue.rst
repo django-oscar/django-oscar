@@ -43,6 +43,35 @@ they have a ``size`` attribute::
     > shirt.attr.size
     <AttributeOption: Large>
 
+You can assign ``option`` s to your product. For example you want a Language attribute
+to your product, and a couple of options to choose from, for example English and 
+Croatian. You'd first create an ``AttributeOptionGroup`` that would contain all the 
+``AttributeOption`` s you want to have available::
+
+    > language = AttributeOptionGroup.objects.create(name='Language')
+
+Assign a couple of options to the Language options group::
+
+    > AttributeOption.objects.create(
+    >     group=language,
+    >     option='English'
+    > )
+    > AttributeOption.objects.create(
+    >     group=language,
+    >     option='Croatian'
+    > )
+
+Finally assign the Language options group to your product as an attribute::
+
+    > klass = ProductClass.objects.create(name='foo', slug='bar')
+    > ProductAttribute.objects.create(
+    >     product_class=klass,
+    >     name='Language',
+    >     code='language',
+    >     type='option',
+    >     option_group=language
+    > )
+
 You can go as far as associating arbitrary models with it. Use the ``entity``
 type::
 
