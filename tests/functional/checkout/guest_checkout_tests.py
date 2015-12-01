@@ -255,7 +255,8 @@ class TestShippingMethodView(CheckoutMixin, WebTestCase):
         # a malicious attempt?
         form_page.forms[0]['method_code'].value = 'super-free-shipping'
         response = form_page.forms[0].submit()
-        self.assertRedirectsTo(response, 'checkout:shipping-method')
+        self.assertIsNotRedirect(response)
+        response.mustcontain('Your submitted shipping method is not permitted')
 
 
 @override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)

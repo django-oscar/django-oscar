@@ -1,5 +1,0 @@
-{% load currency_filters %}
-{% load i18n %}
-
-<a href="{% url 'basket:summary' %}" class="btn btn-inverse"><span>{{ request.basket.total_incl_tax|currency }}</span> 
-    {% blocktrans count counter=request.basket.num_items %}1 item{% plural %}{{ counter }} items{% endblocktrans %}</a>

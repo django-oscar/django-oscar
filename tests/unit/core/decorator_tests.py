@@ -1,6 +1,9 @@
+import warnings
+
 from django.contrib.auth.models import AnonymousUser, Permission
 from django.test import TestCase
 
+from oscar.core.decorators import deprecated
 from oscar.test import factories
 from oscar.views.decorators import check_permissions
 
@@ -35,4 +38,53 @@ class TestPermissionsDecorator(TestCase):
             check_permissions(user_without_perm, ['address.add_country']))
 
 
+class TestDeprecatedDecorator(TestCase):
 
+    def test_decorate_function(self):
+
+        @deprecated
+        def func():
+            return True
+
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            self.assertTrue(func())
+            assert len(caught) == 1
+            assert issubclass(caught[0].category, DeprecationWarning)
+
+    def test_decorate_class(self):
+
+        class Cls(object):
+            val = False
+
+            def __init__(self):
+                self.val = True
+
+        Deprecated = deprecated(Cls)  # noqa
+
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            obj = Deprecated()
+            self.assertTrue(obj.val)
+            assert len(caught) == 1
+            assert issubclass(caught[0].category, DeprecationWarning)
+
+    def test_subclass_decorated(self):
+
+        class Cls(object):
+            val = False
+
+            def __init__(self):
+                self.val = True
+
+        Deprecated = deprecated(Cls)  # noqa
+
+        class SubCls(Deprecated):
+            pass
+
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            obj = SubCls()
+            self.assertTrue(obj.val)
+            assert len(caught) == 1
+            assert issubclass(caught[0].category, DeprecationWarning)

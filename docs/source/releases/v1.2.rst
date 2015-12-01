@@ -60,6 +60,16 @@ Backwards incompatible changes in Oscar 1.2
   removed, it's not needed any more. Just use ``styles`` instead if you
   happened to use it.
 
+- The `keywords` block is removed from the main template (`#1799`)
+
+- The US and Demo sites were both removed from the repository as they 
+  were not up-to-date anymore. These might return in the future as 
+  separate repositories.
+
+- The `RecentReviewsManager`, `TopScoredReviewsManager` and 
+  `TopVotedReviewsManager` managers are removed from the reviews app 
+  since they were broken and unused.
+
 
 Misc
 ~~~~

@@ -40,6 +40,15 @@ class ShippingAddressForm(PhoneNumberMixin, AbstractAddressForm):
         ]
 
 
+class ShippingMethodForm(forms.Form):
+    method_code = forms.ChoiceField(widget=forms.HiddenInput)
+
+    def __init__(self, *args, **kwargs):
+        methods = kwargs.pop('methods', [])
+        super(ShippingMethodForm, self).__init__(*args, **kwargs)
+        self.fields['method_code'].choices = ((m.code, m.name) for m in methods)
+
+
 class GatewayForm(AuthenticationForm):
     username = forms.EmailField(label=_("My email address is"))
     GUEST, NEW, EXISTING = 'anonymous', 'new', 'existing'
