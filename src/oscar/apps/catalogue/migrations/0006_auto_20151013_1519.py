@@ -2,8 +2,6 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import django.core.validators
-import oscar.core.validators
 
 
 class Migration(migrations.Migration):
