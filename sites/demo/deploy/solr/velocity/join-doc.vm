@@ -1,4 +1,0 @@
-<div class="result-title"><b>#field('compName_s')</b></div>
-<div>Id: #field('id') (company-details document for <a href="http://wiki.apache.org/solr/Join" target="_new">join</a>)</div>
-<div>Address: #field('address_s')</div>
-#parse('debug.vm')

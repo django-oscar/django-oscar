@@ -1,6 +1,0 @@
-##TODO: Make some nice tabs here
-#set($queryOpts = $params.get("queryOpts"))
-<span #annTitle("Click the link to demonstrate various Solr capabilities")><span>Examples: </span><span class="tab">#if($queryOpts && $queryOpts != "")<a href="#url_for_home/?#debug#annotate">Simple</a>#{else}Simple#end</span>
-<span class="tab">#if($queryOpts == "spatial")Spatial#else<a href="#url_for_home?&queryOpts=spatial#debug#annotate">Spatial</a>#end</span>
-<span class="tab">#if($queryOpts == "group")Group By#else<a href="#url_for_home?#debug#annotate&queryOpts=group&group=true&group.field=manu_exact">Group By</a>#end</span></span>
-<hr/>

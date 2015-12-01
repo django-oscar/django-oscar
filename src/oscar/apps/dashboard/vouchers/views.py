@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -83,6 +84,7 @@ class VoucherCreateView(generic.FormView):
         ctx['title'] = _('Create voucher')
         return ctx
 
+    @transaction.atomic()
     def form_valid(self, form):
         # Create offer and benefit
         condition = Condition.objects.create(
@@ -166,6 +168,7 @@ class VoucherUpdateView(generic.FormView):
             'benefit_value': benefit.value,
         }
 
+    @transaction.atomic()
     def form_valid(self, form):
         voucher = self.get_voucher()
         voucher.name = form.cleaned_data['name']

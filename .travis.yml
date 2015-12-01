@@ -32,30 +32,30 @@ env:
         - PIP_WHEEL_DIR=$HOME/.cache/pip/wheels
         - PIP_FIND_LINKS=file://$HOME/.cache/pip/wheels
     matrix:
-        - DJANGO=Django==1.7.10
-        - DJANGO=Django==1.8.5
-        - DJANGO=Django==1.9b1 
+        - DJANGO=Django==1.7.11
+        - DJANGO=Django==1.8.7
+        - DJANGO=Django==1.9rc2
 
 
 matrix:
     exclude:
         - python: 3.2
-          env: "DJANGO=Django==1.9b1"
+          env: "DJANGO=Django==1.9rc2"
         - python: 3.3
-          env: "DJANGO=Django==1.9b1"
+          env: "DJANGO=Django==1.9rc2"
         - python: 3.5
-          env: "DJANGO=Django==1.7.10"
+          env: "DJANGO=Django==1.7.11"
     allow_failures:
         - python: 2.7
-          env: "DJANGO=Django==1.9b1"
+          env: "DJANGO=Django==1.9rc2"
         - python: 3.3
-          env: "DJANGO=Django==1.9b1"
+          env: "DJANGO=Django==1.9rc2"
         - python: 3.4
-          env: "DJANGO=Django==1.9b1"
+          env: "DJANGO=Django==1.9rc2"
         - python: 3.5
-          env: "DJANGO=Django==1.8.5"
+          env: "DJANGO=Django==1.8.7"
         - python: 3.5
-          env: "DJANGO=Django==1.9b1"
+          env: "DJANGO=Django==1.9rc2"
 
 
 before_install:
@@ -74,9 +74,6 @@ before_script:
     # Create testing databases for running migrations against
     - mysql -e 'CREATE DATABASE oscar_travis;'
     - psql -c 'CREATE DATABASE oscar_travis;' -U postgres
-    # Create database for building demo site
-    - psql -c 'CREATE DATABASE oscar_demo;' -U postgres
-    - psql -c 'CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;' -U postgres -d oscar_demo
 
 script:
     - make travis

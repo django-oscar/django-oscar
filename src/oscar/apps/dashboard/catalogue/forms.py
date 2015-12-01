@@ -63,6 +63,10 @@ class StockRecordForm(forms.ModelForm):
         self.user = user
         super(StockRecordForm, self).__init__(*args, **kwargs)
 
+        # Restrict accessible partners for non-staff users
+        if not self.user.is_staff:
+            self.fields['partner'].queryset = self.user.partners.all()
+
         # If not tracking stock, we hide the fields
         if not product_class.track_stock:
             del self.fields['num_in_stock']
@@ -90,6 +94,15 @@ class StockRecordFormSet(BaseStockRecordFormSet):
         self.user = user
         self.require_user_stockrecord = not user.is_staff
         self.product_class = product_class
+
+        if not user.is_staff and \
+           'instance' in kwargs and \
+           'queryset' not in kwargs:
+            kwargs.update({
+                'queryset': StockRecord.objects.filter(product=kwargs['instance'],
+                                                       partner__in=user.partners.all())
+            })
+
         super(StockRecordFormSet, self).__init__(*args, **kwargs)
         self.set_initial_data()
 

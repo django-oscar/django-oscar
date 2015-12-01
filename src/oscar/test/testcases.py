@@ -71,6 +71,12 @@ class WebTestCase(WebTest):
             location = URL.from_string(response['Location'])
             self.assertEqual(expected_url, location.path())
 
+    def assertIsNotRedirect(self, response):
+        self.assertIsOk(response)
+        self.assertTrue(response.status_code not in (
+            http_client.FOUND, http_client.MOVED_PERMANENTLY
+        ))
+
     def assertRedirectsTo(self, response, url_name, kwargs=None):
         """
         Asserts that a response is a redirect to a given URL name.
