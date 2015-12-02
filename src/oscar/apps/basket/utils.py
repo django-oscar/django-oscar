@@ -23,22 +23,26 @@ class BasketMessageGenerator(object):
 
         return new_total_messages
 
-    def get_offer_messages(self, offers_before, offers_after):
-        # Look for changes in offers
-        offers_lost = set(offers_before).difference(offers_after)
-        offers_gained = set(offers_after).difference(offers_before)
-
-        # Build a list of (level, msg) tuples
+    def get_offer_lost_messages(self, offers_before, offers_after):
         offer_messages = []
-        for offer_id in offers_lost:
+        for offer_id in set(offers_before).difference(offers_after):
             offer = offers_before[offer_id]
             msg = render_to_string(self.offer_lost_template_name, {'offer': offer})
             offer_messages.append((messages.WARNING, msg))
-        for offer_id in offers_gained:
+        return offer_messages
+
+    def get_offer_gained_messages(self, offers_before, offers_after):
+        offer_messages = []
+        for offer_id in set(offers_after).difference(offers_before):
             offer = offers_after[offer_id]
             msg = render_to_string(self.offer_gained_template_name, {'offer': offer})
             offer_messages.append((messages.SUCCESS, msg))
+        return offer_messages
 
+    def get_offer_messages(self, offers_before, offers_after):
+        offer_messages = []
+        offer_messages.extend(self.get_offer_lost_messages(offers_before, offers_after))
+        offer_messages.extend(self.get_offer_gained_messages(offers_before, offers_after))
         return offer_messages
 
     def get_messages(self, basket, offers_before, offers_after, include_buttons=True):
