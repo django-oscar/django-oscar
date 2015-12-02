@@ -27,61 +27,7 @@ Applicator = get_class('offer.utils', 'Applicator')
 Repository = get_class('shipping.repository', ('Repository'))
 OrderTotalCalculator = get_class(
     'checkout.calculators', 'OrderTotalCalculator')
-
-
-def get_messages(basket, offers_before, offers_after,
-                 include_buttons=True):
-    """
-    Return the messages about offer changes
-    """
-    # Look for changes in offers
-    offers_lost = set(offers_before.keys()).difference(
-        set(offers_after.keys()))
-    offers_gained = set(offers_after.keys()).difference(
-        set(offers_before.keys()))
-
-    # Build a list of (level, msg) tuples
-    offer_messages = []
-    for offer_id in offers_lost:
-        offer = offers_before[offer_id]
-        msg = render_to_string(
-            'basket/messages/offer_lost.html',
-            {'offer': offer})
-        offer_messages.append((
-            messages.WARNING, msg))
-    for offer_id in offers_gained:
-        offer = offers_after[offer_id]
-        msg = render_to_string(
-            'basket/messages/offer_gained.html',
-            {'offer': offer})
-        offer_messages.append((
-            messages.SUCCESS, msg))
-
-    # We use the 'include_buttons' parameter to determine whether to show the
-    # 'Checkout now' buttons.  We don't want to show these on the basket page.
-    msg = render_to_string(
-        'basket/messages/new_total.html',
-        {'basket': basket,
-         'include_buttons': include_buttons})
-    offer_messages.append((
-        messages.INFO, msg))
-
-    return offer_messages
-
-
-def apply_messages(request, offers_before):
-    """
-    Set flash messages triggered by changes to the basket
-    """
-    # Re-apply offers to see if any new ones are now available
-    request.basket.reset_offer_applications()
-    Applicator().apply(request.basket, request.user, request)
-    offers_after = request.basket.applied_offers()
-
-    for level, msg in get_messages(
-            request.basket, offers_before, offers_after):
-        messages.add_message(
-            request, level, msg, extra_tags='safe noicon')
+BasketMessageGenerator = get_class('basket.utils', 'BasketMessageGenerator')
 
 
 class BasketView(ModelFormSetView):
@@ -235,9 +181,8 @@ class BasketView(ModelFormSetView):
                                self.request)
             offers_after = self.request.basket.applied_offers()
 
-            for level, msg in get_messages(
-                    self.request.basket, offers_before,
-                    offers_after, include_buttons=False):
+            for level, msg in BasketMessageGenerator().get_messages(
+                    self.request.basket, offers_before, offers_after, include_buttons=False):
                 flash_messages.add_message(level, msg)
 
             # Reload formset - we have to remove the POST fields from the
@@ -255,7 +200,7 @@ class BasketView(ModelFormSetView):
                                         basket=self.request.basket)
             return self.json_response(ctx, flash_messages)
 
-        apply_messages(self.request, offers_before)
+        BasketMessageGenerator().apply_messages(self.request, offers_before)
 
         return response
 
@@ -331,7 +276,7 @@ class BasketAddView(FormView):
                          extra_tags='safe noicon')
 
         # Check for additional offer messages
-        apply_messages(self.request, offers_before)
+        BasketMessageGenerator().apply_messages(self.request, offers_before)
 
         # Send signal for basket addition
         self.add_signal.send(
@@ -509,7 +454,7 @@ class SavedView(ModelFormSetView):
         if is_move:
             # As we're changing the basket, we need to check if it qualifies
             # for any new offers.
-            apply_messages(self.request, offers_before)
+            BasketMessageGenerator().apply_messages(self.request, offers_before)
             response = redirect(self.get_success_url())
         else:
             response = super(SavedView, self).formset_valid(formset)
