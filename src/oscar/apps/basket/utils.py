@@ -25,10 +25,8 @@ class BasketMessageGenerator(object):
 
     def get_offer_messages(self, offers_before, offers_after):
         # Look for changes in offers
-        offers_lost = set(offers_before.keys()).difference(
-            set(offers_after.keys()))
-        offers_gained = set(offers_after.keys()).difference(
-            set(offers_before.keys()))
+        offers_lost = set(offers_before).difference(offers_after)
+        offers_gained = set(offers_after).difference(offers_before)
 
         # Build a list of (level, msg) tuples
         offer_messages = []
