@@ -47,8 +47,8 @@ class BasketMessageGenerator(object):
 
     def get_messages(self, basket, offers_before, offers_after, include_buttons=True):
         messages = []
-        messages.extend(self.get_new_total_messages(basket, include_buttons))
         messages.extend(self.get_offer_messages(offers_before, offers_after))
+        messages.extend(self.get_new_total_messages(basket, include_buttons))
         return messages
 
     def apply_messages(self, request, offers_before):
