@@ -1074,6 +1074,7 @@ class AbstractAttributeOption(models.Model):
     class Meta:
         abstract = True
         app_label = 'catalogue'
+        unique_together = ('group', 'option')
         verbose_name = _('Attribute option')
         verbose_name_plural = _('Attribute options')
 
