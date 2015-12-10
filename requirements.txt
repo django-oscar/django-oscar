@@ -27,11 +27,11 @@ coverage==3.7.1
 spec==0.11.1
 WebTest==2.0.17
 django-webtest==1.7.8
-pytest==2.7.0
+pytest==2.8.4
 pytest-cache==1.0
-pytest-cov==1.8.1
-pytest-django==2.8.0
-pytest-xdist==1.11
+pytest-cov==2.2.0
+pytest-django==2.9.1
+pytest-xdist==1.13.1
 tox==1.8.1
 coveralls==0.4.4
 behave==1.2.4
