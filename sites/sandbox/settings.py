@@ -277,12 +277,6 @@ LOGGING = {
             'propagate': True,
             'level': 'INFO',
         },
-        # Suppress output of this debug toolbar panel
-        'template_timings_panel': {
-            'handlers': ['null'],
-            'level': 'DEBUG',
-            'propagate': False,
-        }
     }
 }
 
@@ -300,7 +294,6 @@ INSTALLED_APPS = [
     'django_extensions',
     # Debug toolbar + extensions
     'debug_toolbar',
-    # 'template_timings_panel',
     'apps.gateway',     # For allowing dashboard access
     'widget_tweaks',
 ]
@@ -358,7 +351,6 @@ DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.sql.SQLPanel',
     'debug_toolbar.panels.staticfiles.StaticFilesPanel',
     'debug_toolbar.panels.templates.TemplatesPanel',
-    # 'template_timings_panel.panels.TemplateTimings.TemplateTimings',
     'debug_toolbar.panels.cache.CachePanel',
     'debug_toolbar.panels.signals.SignalsPanel',
     'debug_toolbar.panels.logging.LoggingPanel',
