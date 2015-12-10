@@ -47,6 +47,11 @@ What's new in Oscar 1.2?
 Minor changes
 ~~~~~~~~~~~~~
  - Fix missing page_url field in the promotions form (`#1816`_)
+ - Custom benefits now don't enforce uniqueness on the ``proxy_class``
+   field, making them more useful (`#685`_).
+
+.. _`#685`: https://github.com/django-oscar/django-oscar/issues/685
+.. _`#1816`: https://github.com/django-oscar/django-oscar/issues/1816
 
 
 .. _incompatible_in_1.2:
@@ -74,4 +79,6 @@ Backwards incompatible changes in Oscar 1.2
 Misc
 ~~~~
  
-* JQuery UI is no longer included in the dashboard (`#1792`)
+* JQuery UI is no longer included in the dashboard (`#1792`_)
+
+.. _`#1792`: https://github.com/django-oscar/django-oscar/issues/1792
