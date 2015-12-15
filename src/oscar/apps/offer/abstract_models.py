@@ -954,7 +954,7 @@ class AbstractRange(models.Model):
             Q(id__in=self._included_product_ids()) |
             Q(product_class_id__in=self._class_ids()) |
             Q(productcategory__category_id__in=self._category_ids())
-        ).exclude(id__in=self._excluded_product_ids())
+        ).exclude(id__in=self._excluded_product_ids()).distinct()
 
     @property
     def is_editable(self):
