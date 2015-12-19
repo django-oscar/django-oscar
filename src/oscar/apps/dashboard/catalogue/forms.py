@@ -306,7 +306,18 @@ class ProductImageForm(forms.ModelForm):
         # when clicking on the actual image.
         widgets = {
             'original': ImageInput(),
+            'display_order': forms.HiddenInput(),
         }
+
+    def __init__(self, data=None, *args, **kwargs):
+        self.prefix = kwargs.get('prefix', None)
+        if data and not data.get('display_order', None):
+            data['display_order'] = self.get_display_order()
+        else:
+            initial = {'display_order': self.get_display_order()}
+            initial.update(kwargs.get('initial', {}))
+            kwargs['initial'] = initial
+        super(ProductImageForm, self).__init__(data, *args, **kwargs)
 
     def save(self, *args, **kwargs):
         # We infer the display order of the image based on the order of the
@@ -318,7 +329,7 @@ class ProductImageForm(forms.ModelForm):
         return obj
 
     def get_display_order(self):
-        return self.prefix.split('-').pop()
+        return int(self.prefix.split('-').pop())
 
 
 class ProductRecommendationForm(forms.ModelForm):
