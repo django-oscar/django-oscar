@@ -45,20 +45,18 @@
 
     {% block voucher_table %}
         <table class="table table-striped table-bordered table-hover">
-            {% if description != "All vouchers" %}
-                <caption><i class="icon-money icon-large"></i>{{ description }}</caption>
-            {% endif %}
+            <caption><i class="icon-money icon-large"></i>{{ description }}</caption>
             {% if vouchers %}
                 {% block table_head %}
-                <tr>
-                    <th>{% trans "Name" %}</th>
-                    <th>{% trans "Code" %}</th>
-                    <th>{% trans "Status" %}</th>
-                    <th>{% anchor 'num_basket_additions' _("Num baskets") %}</th>
-                    <th>{% anchor 'num_orders' _("Num orders") %}</th>
-                    <th>{% anchor 'date_created' _("Date created") %}</th>
-                    <th></th>
-                </tr>
+                    <tr>
+                        <th>{% trans "Name" %}</th>
+                        <th>{% trans "Code" %}</th>
+                        <th>{% trans "Status" %}</th>
+                        <th>{% anchor 'num_basket_additions' _("Num baskets") %}</th>
+                        <th>{% anchor 'num_orders' _("Num orders") %}</th>
+                        <th>{% anchor 'date_created' _("Date created") %}</th>
+                        <th></th>
+                    </tr>
                 {% endblock table_head %}
                 {% for voucher in vouchers %}
                     {% block table_row %}
