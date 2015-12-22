@@ -94,7 +94,7 @@ class AbstractUser(auth_models.AbstractBaseUser,
         ProductAlert = self.alerts.model
         alerts = ProductAlert.objects.filter(
             email=self.email, status=ProductAlert.ACTIVE)
-        alerts.update(user=self, key=None, email=None)
+        alerts.update(user=self, key='', email='')
 
     def save(self, *args, **kwargs):
         super(AbstractUser, self).save(*args, **kwargs)
