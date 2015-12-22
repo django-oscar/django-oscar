@@ -89,7 +89,8 @@ class AbstractConditionalOffer(models.Model):
 
     # Use this field to limit the number of times this offer can be applied in
     # total.  Note that a single order can apply an offer multiple times so
-    # this is not the same as the number of orders that can use it.
+    # this is not necessarily the same as the number of orders that can use it.
+    # Also see max_basket_applications.
     max_global_applications = models.PositiveIntegerField(
         _("Max global applications"),
         help_text=_("The number of times this offer can be used before it "
@@ -104,7 +105,8 @@ class AbstractConditionalOffer(models.Model):
         blank=True, null=True)
 
     # Use this field to limit the number of times this offer can be applied to
-    # a basket (and hence a single order).
+    # a basket (and hence a single order). Often, an offer should only be
+    # usable once per basket/order, so this field will commonly be set to 1.
     max_basket_applications = models.PositiveIntegerField(
         _("Max basket applications"),
         blank=True, null=True,
@@ -121,6 +123,8 @@ class AbstractConditionalOffer(models.Model):
                     "unavailable"))
 
     # TRACKING
+    # These fields are used to enforce the limits set by the
+    # max_* fields above.
 
     total_discount = models.DecimalField(
         _("Total Discount"), decimal_places=2, max_digits=12,
