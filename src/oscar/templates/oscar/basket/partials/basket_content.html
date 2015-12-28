@@ -63,7 +63,7 @@
                                     <div class="input-group  {% if form.errors %}error{% endif %}">
                                         {% render_field form.quantity class+="form-control" %}
                                     <span class="input-group-btn">
-                                        <button class="btn btn-default" type="submit" data-loading-text="{% trans 'Updating...' %}">{% trans "Update" %}</button>
+                                        <button class="btn btn-default" name="submit-{{ forloop.counter0 }}-quantity" type="submit" data-loading-text="{% trans 'Updating...' %}">{% trans "Update" %}</button>
                                     </span>
                                     </div>
                                 </div>

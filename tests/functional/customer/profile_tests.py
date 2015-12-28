@@ -3,13 +3,14 @@ from decimal import Decimal as D
 
 from django.core.urlresolvers import reverse
 
-from oscar.test.factories import create_product, create_order
-from oscar.test.testcases import WebTestCase
-from oscar.core.compat import get_user_model
 from oscar.apps.basket.models import Basket
-from oscar.apps.partner import strategy
+from oscar.apps.basket.signals import basket_addition
 from oscar.apps.order.models import Order
-
+from oscar.apps.partner import strategy
+from oscar.core.compat import get_user_model
+from oscar.test.contextmanagers import mock_signal_receiver
+from oscar.test.factories import create_basket, create_product, create_order
+from oscar.test.testcases import WebTestCase
 
 User = get_user_model()
 
@@ -150,6 +151,24 @@ class TestASignedInUser(WebTestCase):
         basket = Basket.open.get(owner=self.user)
         self.assertEqual(0, basket.all_lines().count())
 
+    def test_basket_addition_signal_is_sent(self):
+        basket = create_basket()
+        product = create_product(num_in_stock=10)
+        basket.add_product(product)
+
+        # this order has 2 lines
+        order = create_order(user=self.user, basket=basket)
+
+        with mock_signal_receiver(basket_addition) as addition_receiver:
+            order_history_page = self.app.get(
+                reverse('customer:order',
+                        kwargs={'order_number': order.number}),
+                user=self.user)
+            line = order.lines.first()
+            form = order_history_page.forms['line_form_%d' % line.id]
+            form.submit()
+            self.assertEqual(addition_receiver.call_count, 1)
+
 
 class TestReorderingOrderLines(WebTestCase):
     # TODO - rework this as a webtest
@@ -173,6 +192,21 @@ class TestReorderingOrderLines(WebTestCase):
 
         self.assertEqual(len(basket.all_lines()), 1)
         self.assertNotEqual(line.product.pk, product.pk)
+
+    def test_basket_addition_signals_is_sent(self):
+        basket = create_basket()
+        product = create_product(num_in_stock=10)
+        basket.add_product(product)
+
+        # the order has 2 lines to make this test more meaningful
+        order = create_order(user=self.user, basket=basket)
+        with mock_signal_receiver(basket_addition) as addition_receiver:
+            order_page = self.app.get(
+                reverse('customer:order',
+                        kwargs={'order_number': order.number}),
+                user=self.user)
+            order_page.forms['order_form_%s' % order.id].submit()
+            self.assertEqual(addition_receiver.call_count, 2)
 
     @patch('django.conf.settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD', 1)
     def test_cannot_reorder_line_when_basket_maximum_exceeded(self):

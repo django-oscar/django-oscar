@@ -138,6 +138,13 @@ class BasketView(ModelFormSetView):
         # Store offers before any changes are made so we can inform the user of
         # any changes
         offers_before = self.request.basket.applied_offers()
+
+        # Store lines and quantities before any changes so we can handle
+        # quantity variations signals
+        lines_before_variations = {}
+        for line in self.request.basket.all_lines():
+            lines_before_variations[line] = line.quantity
+
         save_for_later = False
 
         # Keep a list of messages - we don't immediately call
@@ -201,6 +208,16 @@ class BasketView(ModelFormSetView):
             return self.json_response(ctx, flash_messages)
 
         BasketMessageGenerator().apply_messages(self.request, offers_before)
+
+        # 'apply_messages()' resets the cached basket lines - we assume
+        # that 'all_lines()' method returns the updated lines
+        lines_after_variations = {}
+        for line in self.request.basket.all_lines():
+            lines_after_variations[line] = line.quantity
+
+        signals.send_basket_variations_signals(
+            lines_before_variations, lines_after_variations,
+            user=self.request.user, request=self.request, sender=self)
 
         return response
 
@@ -267,10 +284,10 @@ class BasketAddView(FormView):
 
     def form_valid(self, form):
         offers_before = self.request.basket.applied_offers()
+        quantity = form.cleaned_data['quantity']
 
-        self.request.basket.add_product(
-            form.product, form.cleaned_data['quantity'],
-            form.cleaned_options())
+        line, created = self.request.basket.add_product(
+            form.product, quantity, form.cleaned_options())
 
         messages.success(self.request, self.get_success_message(form),
                          extra_tags='safe noicon')
@@ -281,7 +298,8 @@ class BasketAddView(FormView):
         # Send signal for basket addition
         self.add_signal.send(
             sender=self, product=form.product, user=self.request.user,
-            request=self.request)
+            request=self.request, quantity=quantity,
+            purchase_info=line.purchase_info)
 
         return super(BasketAddView, self).form_valid(form)
 
@@ -415,6 +433,7 @@ class SavedView(ModelFormSetView):
     form_class = SavedLineForm
     extra = 0
     can_delete = True
+    add_signal = signals.basket_addition
 
     def get(self, request, *args, **kwargs):
         return redirect('basket:summary')
@@ -450,6 +469,16 @@ class SavedView(ModelFormSetView):
                 messages.info(self.request, msg, extra_tags='safe noicon')
                 real_basket = self.request.basket
                 real_basket.merge_line(form.instance)
+
+            line = form.cleaned_data['id']
+            purchase_info = self.request.strategy.fetch_for_product(
+                line.product)
+
+            # Send signal for real basket addition
+            self.add_signal.send(
+                sender=self, product=line.product,
+                user=self.request.user, request=self.request,
+                quantity=line.quantity, purchase_info=purchase_info)
 
         if is_move:
             # As we're changing the basket, we need to check if it qualifies
