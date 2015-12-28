@@ -39,6 +39,7 @@ class BenefitFactory(factory.DjangoModelFactory):
 class ConditionFactory(factory.DjangoModelFactory):
     type = get_model('offer', 'Condition').COUNT
     value = 10
+    range = factory.SubFactory(RangeFactory)
 
     class Meta:
         model = get_model('offer', 'Condition')
