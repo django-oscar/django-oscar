@@ -71,7 +71,7 @@ class ReviewListView(BulkEditMixin, generic.ListView):
         return queryset
 
     def get_queryset(self):
-        queryset = self.model.objects.all()
+        queryset = self.model.objects.select_related('product').all()
         queryset = sort_queryset(queryset, self.request,
                                  ['score', 'total_votes', 'date_created'])
         self.desc_ctx = {
