@@ -29,7 +29,7 @@ class ReviewListView(BulkEditMixin, generic.ListView):
                       "%(kw_filter)s %(name_filter)s")
 
     def get(self, request, *args, **kwargs):
-        response = super(self.__class__, self).get(request, **kwargs)
+        response = super(ReviewListView, self).get(request, **kwargs)
         self.form = self.form_class()
         return response
 
