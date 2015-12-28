@@ -42,8 +42,8 @@ class ReviewListView(BulkEditMixin, generic.ListView):
         given dates. Otherwise, a new queryset for all ``ProductReview``
         items is created.
         """
-        if not queryset:
-            self.model.objects.all()
+        if queryset is None:
+            queryset = self.model.objects.all()
 
         if date_from and date_to:
             # Add 24 hours to make search inclusive
