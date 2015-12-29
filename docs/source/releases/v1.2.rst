@@ -75,3 +75,16 @@ Misc
 ~~~~
  
 * JQuery UI is no longer included in the dashboard (`#1792`)
+
+Undocumented
+~~~~~~~~~~~~
+
+We merged the work below, but haven't yet gotten around to documenting it.
+https://github.com/django-oscar/django-oscar/issues/1935
+https://github.com/django-oscar/django-oscar/pull/1936
+
+https://github.com/django-oscar/django-oscar/issues/1929
+https://github.com/django-oscar/django-oscar/issues/1930
+
+https://github.com/django-oscar/django-oscar/issues/1925
+https://github.com/django-oscar/django-oscar/pull/1926

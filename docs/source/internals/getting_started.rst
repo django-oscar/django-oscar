@@ -47,14 +47,20 @@ recommended to install Oscar in a virtualenv.
 Django settings
 ===============
 
-Edit your settings file ``frobshop.frobshop.settings.py`` to  modify your 
-``TEMPLATES`` to include the main Oscar template directory and add the extra
+First, edit your settings file ``frobshop.frobshop.settings.py`` to import all of Oscar's default settings.
+
+.. code-block:: django
+
+    from oscar.defaults import *
+
+
+Now modify your ``TEMPLATES`` to include the main Oscar template directory and add the extra
 context processors.
 
 .. code-block:: django
 
     from oscar import OSCAR_MAIN_TEMPLATE_DIR
-
+    
     TEMPLATES = [
         {
             'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -159,13 +165,6 @@ files from a remote storage (e.g. Amazon S3), you must manually copy a
 .. _sandbox settings: https://github.com/django-oscar/django-oscar/blob/3a5160a86c9b14c940c76a224a28cd37dd29f7f1/sites/sandbox/settings.py#L99
 
 
-
-The last addition to the settings file is to import all of Oscar's default settings:
-
-.. code-block:: django
-
-    from oscar.defaults import *
-
 URLs
 ====
 
@@ -180,6 +179,7 @@ you will also need to include Django's i18n URLs:
 .. code-block:: django
 
     from django.conf.urls import include, url
+    from django.contrib import admin
     from oscar.app import application
 
     urlpatterns = [

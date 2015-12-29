@@ -19,7 +19,8 @@ from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import pgettext_lazy
+from django.utils.translation import get_language, pgettext_lazy
+
 from treebeard.mp_tree import MP_Node
 
 from oscar.core.decorators import deprecated
@@ -194,7 +195,8 @@ class AbstractCategory(MP_Node):
         you change that logic, you'll have to reconsider the caching
         approach.
         """
-        cache_key = 'CATEGORY_URL_%s' % self.pk
+        current_locale = get_language()
+        cache_key = 'CATEGORY_URL_%s_%s' % (current_locale, self.pk)
         url = cache.get(cache_key)
         if not url:
             url = reverse(
@@ -1074,6 +1076,7 @@ class AbstractAttributeOption(models.Model):
     class Meta:
         abstract = True
         app_label = 'catalogue'
+        unique_together = ('group', 'option')
         verbose_name = _('Attribute option')
         verbose_name_plural = _('Attribute options')
 
