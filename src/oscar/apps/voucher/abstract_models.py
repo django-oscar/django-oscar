@@ -14,10 +14,13 @@ class AbstractVoucher(models.Model):
     """
     A voucher.  This is simply a link to a collection of offers.
 
-    Note that there are three possible "usage" models:
+    Note that there are three possible "usage" modes:
     (a) Single use
     (b) Multi-use
     (c) Once per customer
+
+    Oscar enforces those modes by creating VoucherApplication
+    instances when a voucher is used for an order.
     """
     name = models.CharField(_("Name"), max_length=128,
                             help_text=_("This will be shown in the checkout"
@@ -43,7 +46,7 @@ class AbstractVoucher(models.Model):
     start_datetime = models.DateTimeField(_('Start datetime'))
     end_datetime = models.DateTimeField(_('End datetime'))
 
-    # Audit information
+    # Reporting information. Not used to enforce any consumption limits.
     num_basket_additions = models.PositiveIntegerField(
         _("Times added to basket"), default=0)
     num_orders = models.PositiveIntegerField(_("Times on orders"), default=0)
@@ -136,13 +139,22 @@ class AbstractVoucher(models.Model):
 
     @property
     def benefit(self):
+        """
+        Returns the first offer's benefit instance.
+
+        A voucher is commonly only linked to one offer. In that case,
+        this helper can be used for convenience.
+        """
         return self.offers.all()[0].benefit
 
 
 @python_2_unicode_compatible
 class AbstractVoucherApplication(models.Model):
     """
-    For tracking how often a voucher has been used
+    For tracking how often a voucher has been used in an order.
+
+    This is used to enforce the voucher usage mode in
+    Voucher.is_available_to_user, and created in Voucher.record_usage.
     """
     voucher = models.ForeignKey(
         'voucher.Voucher', related_name="applications",
