@@ -563,8 +563,7 @@ class OrderLineView(PostActionMixin, generic.DetailView):
         return order.lines.get(id=self.kwargs['line_id'])
 
     def do_reorder(self, line):
-        self.response = redirect(
-            'customer:order', int(self.kwargs['order_number']))
+        self.response = redirect('customer:order', self.kwargs['order_number'])
         basket = self.request.basket
 
         line_available_to_reorder, reason = line.is_available_to_reorder(
