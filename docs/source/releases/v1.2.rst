@@ -22,10 +22,8 @@ Table of contents:
 Compatibility
 -------------
 
-Oscar 1.2 is compatible with... 
-
-Oscar 1.1 is compatible with Django 1.7, 1.8 and 1.9 as well as Python 2.7,
-3.3 and 3.4.  
+Oscar 1.2 is compatible with Django 1.7, 1.8 and 1.9 as well as Python 2.7,
+3.3, 3.4 and 3.5.
 
 
 
