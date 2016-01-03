@@ -1,4 +1,6 @@
 from django.contrib import admin
+from treebeard.admin import TreeAdmin
+from treebeard.forms import movenodeform_factory
 
 from oscar.core.loading import get_model
 
@@ -82,7 +84,8 @@ class AttributeOptionGroupAdmin(admin.ModelAdmin):
     inlines = [AttributeOptionInline, ]
 
 
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(TreeAdmin):
+    form = movenodeform_factory(Category)
     list_display = ('name', 'slug')
 
 

@@ -40,7 +40,7 @@ setup(name='django-oscar',
           # Search support
           'django-haystack>=2.3.1,<2.5.0',
           # Treebeard is used for categories
-          'django-treebeard>=3.0',
+          'django-treebeard>=4.0',
           # Sorl is used as the default thumbnailer
           'sorl-thumbnail>=11.12.1b,<=12.3',
           # Babel is used for currency formatting
