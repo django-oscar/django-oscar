@@ -94,4 +94,6 @@ https://github.com/django-oscar/django-oscar/pull/1926
 Dependency changes
 ------------------
 
-* Oscar now requires `django-treebeard` 4.0.
+* The following packages are updated:
+    - `django-treebeard >= 4.0` (Django 1.9 support)
+    - `sorl.thumbnail >= 12.4a1` (Django 1.9 support)

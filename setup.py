@@ -42,7 +42,7 @@ setup(name='django-oscar',
           # Treebeard is used for categories
           'django-treebeard>=4.0',
           # Sorl is used as the default thumbnailer
-          'sorl-thumbnail>=11.12.1b,<=12.3',
+          'sorl-thumbnail>=12.4a1,<13.0',
           # Babel is used for currency formatting
           'Babel>=1.0,<1.4',
           # For converting non-ASCII to ASCII when creating slugs
