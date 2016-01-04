@@ -69,6 +69,7 @@ setup(name='django-oscar',
           'Framework :: Django',
           'Framework :: Django :: 1.7',
           'Framework :: Django :: 1.8',
+          'Framework :: Django :: 1.9',
           'Intended Audience :: Developers',
           'License :: OSI Approved :: BSD License',
           'Operating System :: Unix',
@@ -78,6 +79,7 @@ setup(name='django-oscar',
           'Programming Language :: Python :: 3',
           'Programming Language :: Python :: 3.3',
           'Programming Language :: Python :: 3.4',
+          'Programming Language :: Python :: 3.5',
           'Topic :: Software Development :: Libraries :: Application Frameworks']
       )
 
