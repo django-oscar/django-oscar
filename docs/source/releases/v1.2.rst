@@ -49,6 +49,7 @@ What's new in Oscar 1.2?
 Minor changes
 ~~~~~~~~~~~~~
  - Fix missing page_url field in the promotions form (`#1816`_)
+ - `Partner` instances got a default ordering by name.
 
 
 .. _incompatible_in_1.2:
