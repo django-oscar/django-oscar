@@ -40,6 +40,9 @@ class Base(object):
         """
         Return the discount on the standard shipping charge
         """
+        # The regular shipping methods don't add a default discount.
+        # For offers and vouchers, the discount will be provided
+        # by a wrapper that Repository.apply_shipping_offer() adds.
         return D('0.00')
 
 

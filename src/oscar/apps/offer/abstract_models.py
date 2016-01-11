@@ -422,7 +422,7 @@ class AbstractBenefit(models.Model):
     # A custom benefit class can be used instead.  This means the
     # type/value/max_affected_items fields should all be None.
     proxy_class = fields.NullCharField(
-        _("Custom class"), max_length=255, unique=True, default=None)
+        _("Custom class"), max_length=255, default=None)
 
     class Meta:
         abstract = True
@@ -958,7 +958,7 @@ class AbstractRange(models.Model):
             Q(id__in=self._included_product_ids()) |
             Q(product_class_id__in=self._class_ids()) |
             Q(productcategory__category_id__in=self._category_ids())
-        ).exclude(id__in=self._excluded_product_ids())
+        ).exclude(id__in=self._excluded_product_ids()).distinct()
 
     @property
     def is_editable(self):
