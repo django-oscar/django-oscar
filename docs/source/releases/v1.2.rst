@@ -50,6 +50,10 @@ Minor changes
 ~~~~~~~~~~~~~
  - Fix missing page_url field in the promotions form (`#1816`_)
  - `Partner` instances got a default ordering by name.
+ - If a child product has no weight, we check if a parent's product weight
+   is set before falling back to the default weight (`#1965`_).
+ - `Address.active_address_fields` now uses the saner common name of a country
+   instead of the official name (`#1964`_).
 
 
 .. _incompatible_in_1.2:
