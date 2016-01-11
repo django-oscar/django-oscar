@@ -54,6 +54,11 @@ Minor changes
    is set before falling back to the default weight (`#1965`_).
  - `Address.active_address_fields` now uses the saner common name of a country
    instead of the official name (`#1964`_).
+ - Custom benefits now don't enforce uniqueness on the ``proxy_class``
+   field, making them more useful (`#685`_).
+
+.. _`#685`: https://github.com/django-oscar/django-oscar/issues/685
+.. _`#1816`: https://github.com/django-oscar/django-oscar/issues/1816
 
 
 .. _incompatible_in_1.2:
@@ -78,11 +83,6 @@ Backwards incompatible changes in Oscar 1.2
   since they were broken and unused.
 
 
-Misc
-~~~~
- 
-* JQuery UI is no longer included in the dashboard (`#1792`)
-
 Undocumented
 ~~~~~~~~~~~~
 
@@ -96,9 +96,15 @@ https://github.com/django-oscar/django-oscar/issues/1930
 https://github.com/django-oscar/django-oscar/issues/1925
 https://github.com/django-oscar/django-oscar/pull/1926
 
+https://github.com/django-oscar/django-oscar/pull/1948
+https://github.com/django-oscar/django-oscar/pull/1922
+
 Dependency changes
 ------------------
 
 * The following packages are updated:
     - `django-treebeard >= 4.0` (Django 1.9 support)
     - `sorl.thumbnail >= 12.4a1` (Django 1.9 support)
+* JQuery UI is no longer included in the dashboard (`#1792`_)
+
+.. _`#1792`: https://github.com/django-oscar/django-oscar/issues/1792

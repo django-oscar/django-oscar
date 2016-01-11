@@ -422,7 +422,7 @@ class AbstractBenefit(models.Model):
     # A custom benefit class can be used instead.  This means the
     # type/value/max_affected_items fields should all be None.
     proxy_class = fields.NullCharField(
-        _("Custom class"), max_length=255, unique=True, default=None)
+        _("Custom class"), max_length=255, default=None)
 
     class Meta:
         abstract = True
