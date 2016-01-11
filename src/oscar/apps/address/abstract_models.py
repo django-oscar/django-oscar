@@ -373,7 +373,7 @@ class AbstractAddress(models.Model):
             fields = [self.salutation] + fields
         fields = [f.strip() for f in fields if f]
         try:
-            fields.append(self.country.name)
+            fields.append(self.country.printable_name)
         except exceptions.ObjectDoesNotExist:
             pass
         return fields
