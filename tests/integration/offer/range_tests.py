@@ -155,6 +155,24 @@ class TestPartialRange(TestCase):
 
         self.assertEqual(self.range.num_products(), 2)
 
+    def test_product_duplicated_in_all_products(self):
+        """Making sure product is not duplicated in range products if it has multiple categories assigned."""
+
+        included_category1 = catalogue_models.Category.add_root(name="cat1")
+        included_category2 = catalogue_models.Category.add_root(name="cat2")
+        product = create_product()
+        catalogue_models.ProductCategory.objects.create(
+            product=product, category=included_category1)
+        catalogue_models.ProductCategory.objects.create(
+            product=product, category=included_category2)
+
+        self.range.included_categories.add(included_category1)
+        self.range.included_categories.add(included_category2)
+        self.range.add_product(product)
+
+        all_product_ids = list(self.range.all_products().values_list('id', flat=True))
+        product_occurances_in_range = all_product_ids.count(product.id)
+        self.assertEqual(product_occurances_in_range, 1)
 
 class TestRangeModel(TestCase):
 
