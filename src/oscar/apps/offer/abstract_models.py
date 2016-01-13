@@ -852,7 +852,7 @@ class AbstractRange(models.Model):
         # category or etc.
         self.excluded_products.add(product)
         # Invalidating cached property value with list of IDs of already excluded products.
-        self.__excluded_product_ids = None
+        self.invalidate_cached_ids()
 
     def contains_product(self, product):  # noqa (too complex (12))
         """
@@ -936,6 +936,11 @@ class AbstractRange(models.Model):
 
         return self.__category_ids
 
+    def invalidate_cached_ids(self):
+        self.__category_ids = None
+        self.__included_product_ids = None
+        self.__excluded_product_ids = None
+
     def num_products(self):
         # Delegate to a proxy class if one is provided
         if self.proxy:
@@ -969,9 +974,16 @@ class AbstractRange(models.Model):
     @property
     def is_editable(self):
         """
-        Test whether this product can be edited in the dashboard
+        Test whether this range can be edited in the dashboard.
         """
         return not self.proxy_class
+
+    @property
+    def is_reorderable(self):
+        """
+        Test whether products for the range can be re-ordered.
+        """
+        return len(self._class_ids()) == 0 and len(self._category_ids()) == 0
 
 
 class AbstractRangeProduct(models.Model):

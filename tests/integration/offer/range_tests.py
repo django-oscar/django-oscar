@@ -191,6 +191,23 @@ class TestPartialRange(TestCase):
         all_products = self.range.all_products()
         self.assertFalse(product in all_products)
 
+    def test_range_is_reordable(self):
+        product = create_product()
+        self.range.add_product(product)
+        self.assertTrue(self.range.is_reorderable)
+
+        included_category = catalogue_models.Category.add_root(name="root")
+        catalogue_models.ProductCategory.objects.create(
+            product=product, category=included_category)
+        self.range.included_categories.add(included_category)
+
+        self.range.invalidate_cached_ids()
+        self.assertFalse(self.range.is_reorderable)
+
+        self.range.included_categories.remove(included_category)
+        self.range.invalidate_cached_ids()
+        self.assertTrue(self.range.is_reorderable)
+
 
 class TestRangeModel(TestCase):
 
