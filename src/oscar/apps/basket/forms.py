@@ -199,8 +199,8 @@ class AddToBasketForm(forms.Form):
         This is designed to be overridden so that specific widgets can be used
         for certain types of options.
         """
-        kwargs = {'required': option.is_required}
-        self.fields[option.code] = forms.CharField(**kwargs)
+        self.fields[option.code] = forms.CharField(
+            label=option.name, required=option.is_required)
 
     # Cleaning
 
