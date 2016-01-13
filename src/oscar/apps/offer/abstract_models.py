@@ -847,6 +847,12 @@ class AbstractRange(models.Model):
         """
         RangeProduct = get_model('offer', 'RangeProduct')
         RangeProduct.objects.filter(range=self, product=product).delete()
+        # Making sure product will be excluded from range products list by adding to
+        # respective field. Otherwise, it could be included as a product from included
+        # category or etc.
+        self.excluded_products.add(product)
+        # Invalidating cached property value with list of IDs of already excluded products.
+        self.__excluded_product_ids = None
 
     def contains_product(self, product):  # noqa (too complex (12))
         """

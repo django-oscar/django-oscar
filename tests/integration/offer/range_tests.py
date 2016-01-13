@@ -174,6 +174,24 @@ class TestPartialRange(TestCase):
         product_occurances_in_range = all_product_ids.count(product.id)
         self.assertEqual(product_occurances_in_range, 1)
 
+    def test_product_remove_from_range(self):
+        included_category = catalogue_models.Category.add_root(name="root")
+        product = create_product()
+        catalogue_models.ProductCategory.objects.create(
+            product=product, category=included_category)
+
+        self.range.included_categories.add(included_category)
+        self.range.add_product(product)
+
+        all_products = self.range.all_products()
+        self.assertTrue(product in all_products)
+
+        self.range.remove_product(product)
+
+        all_products = self.range.all_products()
+        self.assertFalse(product in all_products)
+
+
 class TestRangeModel(TestCase):
 
     def test_ensures_unique_slugs_are_used(self):
