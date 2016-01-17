@@ -1,4 +1,4 @@
-{% load i18n %}{% autoescape off %}{% blocktrans with title=alert.product.get_title domain=site.domain confirm_path=alert.get_confirm_url cancel_path=alert.get_cancel_url %}Hello,
+{% load i18n %}{% blocktrans with title=alert.product.get_title|safe domain=site.domain confirm_path=alert.get_confirm_url cancel_path=alert.get_cancel_url %}Hello,
 
 Somebody (hopefully you) has requested an email alert when
 '{{ title }}' is back in stock.  Please click the following link
@@ -11,4 +11,3 @@ http://{{ domain }}{{ cancel_path }}
 Thanks for your interest,
 The {{ site }} Team
 {% endblocktrans %}
-{% endautoescape %}
