@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from django.forms.models import inlineformset_factory
 
 from oscar.core.loading import get_model
 
@@ -24,8 +23,3 @@ class WishListLineForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(WishListLineForm, self).__init__(*args, **kwargs)
         self.fields['quantity'].widget.attrs['class'] = 'input-mini'
-
-
-LineFormset = inlineformset_factory(
-    WishList, Line, fields=('quantity', ), form=WishListLineForm,
-    extra=0, can_delete=False)
