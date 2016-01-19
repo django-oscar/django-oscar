@@ -141,7 +141,7 @@ class IndexView(TemplateView):
     def get_stats(self):
         datetime_24hrs_ago = now() - timedelta(hours=24)
 
-        orders = Order.objects.filter()
+        orders = Order.objects.all()
         orders_last_day = orders.filter(date_placed__gt=datetime_24hrs_ago)
 
         open_alerts = StockAlert.objects.filter(status=StockAlert.OPEN)
@@ -181,7 +181,7 @@ class IndexView(TemplateView):
             'total_customers': User.objects.count(),
             'total_open_baskets': self.get_open_baskets().count(),
             'total_orders': orders.count(),
-            'total_lines': Line.objects.filter(order__in=orders).count(),
+            'total_lines': Line.objects.count(),
             'total_revenue': orders.aggregate(
                 Sum('total_incl_tax')
             )['total_incl_tax__sum'] or D('0.00'),
