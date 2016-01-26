@@ -5638,6 +5638,9 @@ form.flat {
 .form-inline .select2-container.form-control {
   display: inline-block;
 }
+.form-inline .form-group .form-inline {
+  display: inline-block;
+}
 .form-inline {
   margin-bottom: 0;
 }
