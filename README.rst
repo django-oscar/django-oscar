@@ -240,6 +240,7 @@ Non-Tangent:
 * Partecipa Cards - http://www.partecipacards.com
 * Chiyome - https://chiyome.com
 * Bike Parts Market - https://www.bikepartsmarket.com
+* Dadagraphix - https://dadagraphix.com
 
 .. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/dolbeau.thumb.png
     :target: http://www.dolbeau.ca
@@ -258,6 +259,9 @@ Non-Tangent:
 
 .. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/bpm.thumb.png
     :target: https://www.bikepartsmarket.com
+
+.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/dadagraphix.thumb.png
+    :target: https://dadagraphix.com
 
 Many more on the way.  If you use Oscar in production, please let us know.
 
