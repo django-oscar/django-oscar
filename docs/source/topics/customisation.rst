@@ -49,6 +49,15 @@ you. It is explained in detail in :doc:`fork_app`. Run it like this::
     Creating __init__.py and admin.py
     Creating models.py and copying migrations from [...] to [...]
 
+.. note::
+
+   For forking app in project root directory, call ``oscar_fork_app`` with ``.`` (dot) instead of ``yourproject/`` path.
+   
+   Example: 
+   
+   Calling ``./manage.py oscar_fork_app order yourproject/`` ``order`` app will be placed in ``project_root/yourproject/`` directory. 
+   Calling ``./manage.py oscar_fork_app order .`` ``order`` app will be placed in ``project_root/`` directory.
+
 Replace Oscar's app with your own in ``INSTALLED_APPS``
 =======================================================
 

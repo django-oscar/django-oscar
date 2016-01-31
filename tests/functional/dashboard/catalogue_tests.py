@@ -23,6 +23,56 @@ class TestCatalogueViews(WebTestCase):
                 reverse('dashboard:stock-alert-list')]
         for url in urls:
             self.assertIsOk(self.get(url))
+    
+    def test_upc_filter(self):
+        product1 = create_product(upc='123')
+        product2 = create_product(upc='12')
+        product3 = create_product(upc='1')
+
+        # no value for upc, all results
+        page = self.get("%s?upc=" %
+                        reverse('dashboard:catalogue-product-list'))
+        products_on_page = [row.record for row
+                            in page.context['products'].page.object_list]
+        self.assertIn(product1, products_on_page)
+        self.assertIn(product2, products_on_page)
+        self.assertIn(product3, products_on_page)
+
+        # filter by upc, one result
+        page = self.get("%s?upc=123" %
+                        reverse('dashboard:catalogue-product-list'))
+        products_on_page = [row.record for row
+                            in page.context['products'].page.object_list]
+        self.assertIn(product1, products_on_page)
+        self.assertNotIn(product2, products_on_page)
+        self.assertNotIn(product3, products_on_page)
+
+        # exact match, one result, no multiple
+        page = self.get("%s?upc=12" %
+                        reverse('dashboard:catalogue-product-list'))
+        products_on_page = [row.record for row
+                            in page.context['products'].page.object_list]
+        self.assertNotIn(product1, products_on_page)
+        self.assertIn(product2, products_on_page)
+        self.assertNotIn(product3, products_on_page)
+
+        # part of the upc, one result
+        page = self.get("%s?upc=3" %
+                        reverse('dashboard:catalogue-product-list'))
+        products_on_page = [row.record for row
+                            in page.context['products'].page.object_list]
+        self.assertIn(product1, products_on_page)
+        self.assertNotIn(product2, products_on_page)
+        self.assertNotIn(product3, products_on_page)
+
+        # part of the upc, two results
+        page = self.get("%s?upc=2" %
+                        reverse('dashboard:catalogue-product-list'))
+        products_on_page = [row.record for row
+                            in page.context['products'].page.object_list]
+        self.assertIn(product1, products_on_page)
+        self.assertIn(product2, products_on_page)
+        self.assertNotIn(product3, products_on_page)
 
 
 class TestAStaffUser(WebTestCase):
@@ -77,7 +127,7 @@ class TestAStaffUser(WebTestCase):
         )
         form = page.forms[0]
         form['productcategory_set-0-category'] = category.id
-        assert form['title'].value != new_title
+        self.assertNotEqual(form['title'].value, new_title)
         form['title'] = new_title
         form.submit()
 
@@ -151,8 +201,8 @@ class TestAStaffUser(WebTestCase):
         page = self.get(reverse('dashboard:catalogue-product-list'))
         products_on_page = [row.record for row
                             in page.context['products'].page.object_list]
-        assert product1 in products_on_page
-        assert product2 in products_on_page
+        self.assertIn(product1, products_on_page)
+        self.assertIn(product2, products_on_page)
 
     def test_can_create_a_child_product(self):
         parent_product = create_product(structure='parent')
@@ -191,8 +241,8 @@ class TestANonStaffUser(TestAStaffUser):
         page = self.get(reverse('dashboard:catalogue-product-list'))
         products_on_page = [row.record for row
                             in page.context['products'].page.object_list]
-        assert product1 in products_on_page
-        assert product2 not in products_on_page
+        self.assertIn(product1, products_on_page)
+        self.assertNotIn(product2, products_on_page)
 
     def test_cant_create_a_child_product(self):
         parent_product = create_product(structure='parent')

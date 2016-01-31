@@ -1,12 +1,11 @@
 from django import forms
-from oscar.core.loading import get_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.address.forms import AbstractAddressForm
 from oscar.apps.customer.utils import normalise_email
 from oscar.core.compat import get_user_model
-
+from oscar.core.loading import get_model
 from oscar.views.generic import PhoneNumberMixin
 
 User = get_user_model()
@@ -41,6 +40,15 @@ class ShippingAddressForm(PhoneNumberMixin, AbstractAddressForm):
         ]
 
 
+class ShippingMethodForm(forms.Form):
+    method_code = forms.ChoiceField(widget=forms.HiddenInput)
+
+    def __init__(self, *args, **kwargs):
+        methods = kwargs.pop('methods', [])
+        super(ShippingMethodForm, self).__init__(*args, **kwargs)
+        self.fields['method_code'].choices = ((m.code, m.name) for m in methods)
+
+
 class GatewayForm(AuthenticationForm):
     username = forms.EmailField(label=_("My email address is"))
     GUEST, NEW, EXISTING = 'anonymous', 'new', 'existing'
@@ -62,7 +70,7 @@ class GatewayForm(AuthenticationForm):
             if 'username' in self.cleaned_data:
                 email = normalise_email(self.cleaned_data['username'])
                 if User._default_manager.filter(email__iexact=email).exists():
-                    msg = "A user with that email address already exists"
+                    msg = _("A user with that email address already exists")
                     self._errors["username"] = self.error_class([msg])
             return self.cleaned_data
         return super(GatewayForm, self).clean()

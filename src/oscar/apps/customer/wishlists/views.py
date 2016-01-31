@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.contrib import messages
 from django.core.exceptions import (
-    ObjectDoesNotExist, MultipleObjectsReturned, PermissionDenied)
+    MultipleObjectsReturned, ObjectDoesNotExist, PermissionDenied)
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import (ListView, CreateView, UpdateView, DeleteView,
-                                  View, FormView)
 from django.utils.translation import ugettext_lazy as _
+from django.views.generic import (
+    CreateView, DeleteView, FormView, ListView, UpdateView, View)
 
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import redirect_to_referrer, safe_referrer

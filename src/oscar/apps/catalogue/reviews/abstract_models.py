@@ -2,13 +2,14 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models import Sum, Count
+from django.db.models import Count, Sum
 from django.utils.encoding import python_2_unicode_compatible
-from django.utils.translation import ugettext_lazy as _, pgettext_lazy
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from oscar.apps.catalogue.reviews.managers import ApprovedReviewsManager
-from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core import validators
+from oscar.core.compat import AUTH_USER_MODEL
 
 
 @python_2_unicode_compatible

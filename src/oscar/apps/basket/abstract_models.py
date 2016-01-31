@@ -1,18 +1,19 @@
-from decimal import Decimal as D
 import zlib
+from decimal import Decimal as D
 
+from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.db import models
 from django.db.models import Sum
-from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible, smart_text
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
-from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 
 from oscar.apps.basket.managers import OpenBasketManager, SavedBasketManager
 from oscar.apps.offer import results
-from oscar.core.utils import get_default_currency
+from oscar.apps.partner import availability
 from oscar.core.compat import AUTH_USER_MODEL
+from oscar.core.utils import get_default_currency
 from oscar.templatetags.currency_filters import currency
 
 
@@ -338,7 +339,9 @@ class AbstractBasket(models.Model):
         base = '%s_%s' % (product.id, stockrecord.id)
         if not options:
             return base
-        return "%s_%s" % (base, zlib.crc32(repr(options).encode('utf8')))
+        repr_options = [{'option': repr(option['option']),
+                         'value': repr(option['value'])} for option in options]
+        return "%s_%s" % (base, zlib.crc32(repr(repr_options).encode('utf8')))
 
     def _get_total(self, property):
         """
@@ -351,6 +354,12 @@ class AbstractBasket(models.Model):
                 total += getattr(line, property)
             except ObjectDoesNotExist:
                 # Handle situation where the product may have been deleted
+                pass
+            except TypeError:
+                # Handle Unavailable products with no known price
+                info = self.strategy.fetch_for_product(line.product)
+                if info.availability.is_available_to_buy:
+                    raise
                 pass
         return total
 
@@ -553,6 +562,22 @@ class AbstractBasket(models.Model):
 class AbstractLine(models.Model):
     """
     A line of a basket (product and a quantity)
+
+    Common approaches on ordering basket lines:
+    a) First added at top. That's the history-like approach; new items are
+       added to the bottom of the list. Changing quantities doesn't impact
+       position.
+       Oscar does this by default. It just sorts by Line.pk, which is
+       guaranteed to increment after each creation.
+    b) Last modified at top. That means items move to the top when you add
+       another one, and new items are added to the top as well.
+       Amazon mostly does this, but doesn't change the position when you
+       update the quantity in the basket view.
+       To get this behaviour, add a date_updated field, change
+       Meta.ordering and optionally do something similar on wishlist lines.
+       Order lines should already be created in the order of the basket lines,
+       and are sorted by their primary key, so no changes should be necessary
+       there.
     """
     basket = models.ForeignKey('basket.Basket', related_name='lines',
                                verbose_name=_("Basket"))
@@ -598,6 +623,8 @@ class AbstractLine(models.Model):
     class Meta:
         abstract = True
         app_label = 'basket'
+        # Enforce sorting by order of creation.
+        ordering = ['date_created', 'pk']
         unique_together = ("basket", "line_reference")
         verbose_name = _('Basket line')
         verbose_name_plural = _('Basket lines')
@@ -805,7 +832,7 @@ class AbstractLine(models.Model):
 
         This could be things like the price has changed
         """
-        if not self.stockrecord:
+        if isinstance(self.purchase_info.availability, availability.Unavailable):
             msg = u"'%(product)s' is no longer available"
             return _(msg) % {'product': self.product.get_title()}
 

@@ -1,6 +1,6 @@
 from itertools import chain
 
-from oscar.apps.promotions.models import PagePromotion, KeywordPromotion
+from oscar.apps.promotions.models import KeywordPromotion, PagePromotion
 
 
 def promotions(request):

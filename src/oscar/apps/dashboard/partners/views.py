@@ -1,14 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth.models import Permission
-from django.core.urlresolvers import reverse_lazy, reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404, redirect
-from django.utils.translation import ugettext_lazy as _
 from django.template.loader import render_to_string
+from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
 from oscar.apps.customer.utils import normalise_email
-from oscar.core.loading import get_classes, get_model
 from oscar.core.compat import get_user_model
+from oscar.core.loading import get_classes, get_model
 from oscar.views import sort_queryset
 
 User = get_user_model()
@@ -277,6 +277,7 @@ class PartnerUserUpdateView(generic.UpdateView):
     form_class = ExistingUserForm
 
     def get_object(self, queryset=None):
+        self.partner = get_object_or_404(Partner, pk=self.kwargs['partner_pk'])
         return get_object_or_404(User,
                                  pk=self.kwargs['user_pk'],
                                  partners__pk=self.kwargs['partner_pk'])
@@ -284,6 +285,7 @@ class PartnerUserUpdateView(generic.UpdateView):
     def get_context_data(self, **kwargs):
         ctx = super(PartnerUserUpdateView, self).get_context_data(**kwargs)
         name = self.object.get_full_name() or self.object.email
+        ctx['partner'] = self.partner
         ctx['title'] = _("Edit user '%s'") % name
         return ctx
 

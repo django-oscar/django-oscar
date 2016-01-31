@@ -1,21 +1,21 @@
-import string
 import random
+import string
 
 from django import forms
 from django.conf import settings
 from django.contrib.auth import forms as auth_forms
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.sites.models import get_current_site
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
 from django.utils.http import is_safe_url
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
-from oscar.core.loading import get_profile_class, get_class, get_model
-from oscar.core.compat import get_user_model, existing_user_fields
 from oscar.apps.customer.utils import get_password_reset_url, normalise_email
+from oscar.core.compat import existing_user_fields, get_user_model
+from oscar.core.loading import get_class, get_model, get_profile_class
 from oscar.core.validators import password_validators
-
+from oscar.forms import widgets
 
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 CommunicationEventType = get_model('customer', 'communicationeventtype')
@@ -186,9 +186,11 @@ class EmailUserCreationForm(forms.ModelForm):
 
 class OrderSearchForm(forms.Form):
     date_from = forms.DateField(
-        required=False, label=pgettext_lazy("start date", "From"))
+        required=False, label=pgettext_lazy("start date", "From"),
+        widget=widgets.DatePickerInput())
     date_to = forms.DateField(
-        required=False, label=pgettext_lazy("end date", "To"))
+        required=False, label=pgettext_lazy("end date", "To"),
+        widget=widgets.DatePickerInput())
     order_number = forms.CharField(required=False, label=_("Order number"))
 
     def clean(self):

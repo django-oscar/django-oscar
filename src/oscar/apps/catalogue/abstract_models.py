@@ -1,32 +1,33 @@
-import os
-from django.utils import six
-from datetime import datetime, date
 import logging
+import os
+from datetime import date, datetime
 
-from django.utils.html import strip_tags
-from django.utils.safestring import mark_safe
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.staticfiles.finders import find
 from django.core.cache import cache
-from django.core.exceptions import ValidationError, ImproperlyConfigured
+from django.core.exceptions import ImproperlyConfigured, ValidationError
 from django.core.files.base import File
 from django.core.urlresolvers import reverse
 from django.core.validators import RegexValidator
 from django.db import models
-from django.db.models import Sum, Count
+from django.db.models import Count, Sum
+from django.utils import six
 from django.utils.encoding import python_2_unicode_compatible
-from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.utils.functional import cached_property
-from django.contrib.contenttypes.generic import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
+from django.utils.html import strip_tags
+from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import get_language, pgettext_lazy
 
 from treebeard.mp_tree import MP_Node
 
 from oscar.core.decorators import deprecated
+from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import slugify
 from oscar.core.validators import non_python_keyword
-from oscar.core.loading import get_classes, get_model, get_class
-from oscar.models.fields import NullCharField, AutoSlugField
+from oscar.models.fields import AutoSlugField, NullCharField
 
 ProductManager, BrowsableProductManager = get_classes(
     'catalogue.managers', ['ProductManager', 'BrowsableProductManager'])
@@ -194,7 +195,8 @@ class AbstractCategory(MP_Node):
         you change that logic, you'll have to reconsider the caching
         approach.
         """
-        cache_key = 'CATEGORY_URL_%s' % self.pk
+        current_locale = get_language()
+        cache_key = 'CATEGORY_URL_%s_%s' % (current_locale, self.pk)
         url = cache.get(cache_key)
         if not url:
             url = reverse(
@@ -785,7 +787,7 @@ class AbstractProductAttribute(models.Model):
                 regex=r'^[a-zA-Z_][0-9a-zA-Z_]*$',
                 message=_(
                     "Code can only contain the letters a-z, A-Z, digits, "
-                    "and underscores, and can't start with a digit")),
+                    "and underscores, and can't start with a digit.")),
             non_python_keyword
         ])
 
@@ -1074,6 +1076,7 @@ class AbstractAttributeOption(models.Model):
     class Meta:
         abstract = True
         app_label = 'catalogue'
+        unique_together = ('group', 'option')
         verbose_name = _('Attribute option')
         verbose_name_plural = _('Attribute options')
 

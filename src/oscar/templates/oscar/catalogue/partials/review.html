@@ -50,7 +50,7 @@
         <small>
         {% if review.has_votes %}
             {% blocktrans with num_up_votes=review.num_up_votes count num_votes=review.total_votes %}
-            <strong>{{ num_up_votes }}</strong> of 1 customer found this useful
+            <strong>{{ num_up_votes }}</strong> of {{ num_votes }} customer found this useful
             {% plural %}
             <strong>{{ num_up_votes }}</strong> of {{ num_votes }} customers found this useful
             {% endblocktrans %}

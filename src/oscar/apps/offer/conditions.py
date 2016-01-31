@@ -1,12 +1,13 @@
-from decimal import Decimal as D, ROUND_UP
+from decimal import Decimal as D
+from decimal import ROUND_UP
 
 from django.utils import six
-from django.utils.translation import ungettext, ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext
 
 from oscar.apps.offer import utils
 from oscar.core.loading import get_model
 from oscar.templatetags.currency_filters import currency
-
 
 Condition = get_model('offer', 'Condition')
 

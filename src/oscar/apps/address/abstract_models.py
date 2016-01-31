@@ -2,14 +2,15 @@ import re
 import zlib
 
 from django.conf import settings
+from django.core import exceptions
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
-from django.utils.translation import ugettext_lazy as _, pgettext_lazy
-from django.core import exceptions
+from django.utils.six.moves import filter
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.models.fields import UppercaseCharField, PhoneNumberField
-from django.utils.six.moves import filter
+from oscar.models.fields import PhoneNumberField, UppercaseCharField
 
 
 @python_2_unicode_compatible
@@ -119,7 +120,7 @@ class AbstractAddress(models.Model):
         'KE': r'^[0-9]{5}$',
         'KG': r'^[0-9]{6}$',
         'KH': r'^[0-9]{5}$',
-        'KR': r'^[0-9]{3}-?[0-9]{3}$',
+        'KR': r'^[0-9]{5}$',
         'KY': r'^KY[0-9]-[0-9]{4}$',
         'KZ': r'^[0-9]{6}$',
         'LA': r'^[0-9]{5}$',
@@ -372,7 +373,7 @@ class AbstractAddress(models.Model):
             fields = [self.salutation] + fields
         fields = [f.strip() for f in fields if f]
         try:
-            fields.append(self.country.name)
+            fields.append(self.country.printable_name)
         except exceptions.ObjectDoesNotExist:
             pass
         return fields

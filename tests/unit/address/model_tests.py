@@ -52,7 +52,7 @@ class TestUserAddress(TestCase):
                 line1='1 King Road',
                 line4='London',
                 postcode='SW1 9RE')
-        self.assertEqual("Dr Barry Barrington, 1 King Road, London, SW1 9RE, ",
+        self.assertEqual("Dr Barry Barrington, 1 King Road, London, SW1 9RE, UNITED KINGDOM",
                           a.summary)
 
     def test_summary_includes_country(self):

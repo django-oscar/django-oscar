@@ -1,13 +1,11 @@
-from django.utils import six
-
 from django.contrib import messages
-from django.contrib.sites.models import get_current_site
-from oscar.core.loading import get_model
+from django.contrib.sites.shortcuts import get_current_site
 from django.template import TemplateSyntaxError
+from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
-from oscar.core.loading import get_class
+from oscar.core.loading import get_class, get_model
 
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
 CommunicationEventTypeForm = get_class('dashboard.communications.forms',

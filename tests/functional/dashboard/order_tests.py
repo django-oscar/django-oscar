@@ -212,7 +212,7 @@ class TestOrderListSearch(WebTestCase):
                 el.text.strip() for el in
                 response.html.select('.search-filter-list .label')
             ]
-            assert applied_filters == expected_filters
+            self.assertEqual(applied_filters, expected_filters)
 
 
 class TestOrderDetailPage(WebTestCase):

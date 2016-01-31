@@ -1,7 +1,8 @@
-from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from oscar.core.loading import get_classes
+
 StockRecord, StockAlert = get_classes('partner.models', ['StockRecord',
                                                          'StockAlert'])
 

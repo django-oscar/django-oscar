@@ -1,7 +1,6 @@
 from django import template
 from django.template.loader import select_template
 
-
 register = template.Library()
 
 

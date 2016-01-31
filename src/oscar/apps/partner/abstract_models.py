@@ -1,12 +1,13 @@
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
-from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.utils.timezone import now
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import pgettext_lazy
 
-from oscar.core.utils import get_default_currency
-from oscar.core.compat import AUTH_USER_MODEL
-from oscar.models.fields import AutoSlugField
 from oscar.apps.partner.exceptions import InvalidStockAdjustment
+from oscar.core.compat import AUTH_USER_MODEL
+from oscar.core.utils import get_default_currency
+from oscar.models.fields import AutoSlugField
 
 
 @python_2_unicode_compatible
@@ -67,6 +68,7 @@ class AbstractPartner(models.Model):
     class Meta:
         abstract = True
         app_label = 'partner'
+        ordering = ('name', 'code')
         permissions = (('dashboard_access', 'Can access dashboard'), )
         verbose_name = _('Fulfillment partner')
         verbose_name_plural = _('Fulfillment partners')

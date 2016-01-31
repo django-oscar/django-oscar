@@ -1,14 +1,13 @@
-import datetime
-
 from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse
-from oscar.core.loading import get_model
+from django.db import transaction
 from django.http import HttpResponseRedirect
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
-from oscar.core.loading import get_class
+from oscar.core.loading import get_class, get_model
 from oscar.views import sort_queryset
 
 VoucherForm = get_class('dashboard.vouchers.forms', 'VoucherForm')
@@ -58,8 +57,8 @@ class VoucherListView(generic.ListView):
             self.description_ctx['code_filter'] \
                 = _("with code '%s'") % data['code']
         if data['is_active']:
-            today = datetime.date.today()
-            qs = qs.filter(start_date__lte=today, end_date__gte=today)
+            now = timezone.now()
+            qs = qs.filter(start_datetime__lte=now, end_datetime__gte=now)
             self.description_ctx['main_filter'] = _('Active vouchers')
 
         return qs
@@ -85,6 +84,7 @@ class VoucherCreateView(generic.FormView):
         ctx['title'] = _('Create voucher')
         return ctx
 
+    @transaction.atomic()
     def form_valid(self, form):
         # Create offer and benefit
         condition = Condition.objects.create(
@@ -168,6 +168,7 @@ class VoucherUpdateView(generic.FormView):
             'benefit_value': benefit.value,
         }
 
+    @transaction.atomic()
     def form_valid(self, form):
         voucher = self.get_voucher()
         voucher.name = form.cleaned_data['name']

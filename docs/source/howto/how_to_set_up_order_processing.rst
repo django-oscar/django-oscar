@@ -51,7 +51,7 @@ Event handling
 --------------
 
 Most Oscar shops will want to customise the ``EventHandler`` class from the
-order app.  This is class is intended to handle all events and perform the
+order app.  This class is intended to handle all events and perform the
 appropriate actions.  The main public API is
 
 .. autoclass:: oscar.apps.order.processing.EventHandler

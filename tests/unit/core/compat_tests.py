@@ -51,9 +51,7 @@ class TestPython3Compatibility(TestCase):
             dict_ = model.__dict__
             if '__str__' in dict_:
                 if six.PY2:
-                    str_method_module = dict_['__str__'].__module__
-                    valid = ('django.utils.encoding' == str_method_module and
-                             '__unicode__' in dict_)
+                    valid = '__unicode__' in dict_
                 else:
                     valid = '__unicode__' not in dict_
             else:

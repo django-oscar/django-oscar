@@ -2,7 +2,10 @@ from decimal import Decimal as D
 
 from django.test import TestCase
 
+from oscar.apps.offer.applicator import Applicator
+from oscar.apps.offer.models import Benefit
 from oscar.apps.shipping.models import OrderAndItemCharges, WeightBased
+from oscar.apps.shipping.repository import Repository
 from oscar.core.compat import get_user_model
 from oscar.test import factories
 
@@ -198,3 +201,24 @@ class WeightBasedMethodTests(TestCase):
         charge = self.standard.calculate(basket)
 
         self.assertEqual(D('1.00') + D('2.00'), charge.excl_tax)
+
+    def test_zero_charge_discount(self):
+        # Since Repository.apply_shipping_offer() returns the original
+        # shipping method object on a free shipping charge, it's discount()
+        # method should be callable and also indicate it won't add discounts.
+        basket = factories.create_basket()
+        self.assertEqual(D('0.00'), self.standard.discount(basket))
+
+    def test_zero_charge_with_shipping_discount(self):
+        offer = factories.create_offer(
+            benefit=Benefit.objects.create(
+                type=Benefit.SHIPPING_FIXED_PRICE, value=1),
+        )
+        basket = factories.create_basket()
+        Applicator().apply_offers(basket, [offer])
+
+        # Similar to test_zero_charge_discount(),
+        # but now test how the repository deals with it.
+        method = Repository().apply_shipping_offer(
+            basket, self.standard, offer)
+        self.assertEqual(D('0.00'), method.discount(basket))

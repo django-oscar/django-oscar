@@ -1,11 +1,11 @@
 import logging
 
+from django.db import IntegrityError
 from django.db.models import F
 from django.dispatch import receiver
-from django.db import IntegrityError
 
-from oscar.core.loading import get_class, get_classes
 from oscar.apps.search.signals import user_search
+from oscar.core.loading import get_class, get_classes
 
 UserSearch, UserRecord, ProductRecord, UserProductView = get_classes(
     'analytics.models', ['UserSearch', 'UserRecord', 'ProductRecord',
