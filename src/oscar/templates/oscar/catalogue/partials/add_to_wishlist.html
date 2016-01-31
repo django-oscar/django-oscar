@@ -1,6 +1,7 @@
 {% load i18n %}
-{% load wishlist_tags %}
+{% load display_tags wishlist_tags %}
 
+{% iffeature 'wishlists' %}
 {% if user.is_authenticated %}
     {% with wishlists=user.wishlists.all %}
         {# Select wishlists that contains product #}
@@ -45,3 +46,4 @@
 {% else %}
     <button class="btn btn-lg btn-wishlist" disabled="disabled" title="{% trans 'Please login to add products to a wish list.' %}">{% trans 'Add to wish list' %}</button><br/>
 {% endif %}
+{% endiffeature %}
