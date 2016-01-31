@@ -28,9 +28,11 @@
                         <li{% if active_tab == 'emails' %} class="active"{% endif %}>
                             <a href="{% url 'customer:email-list' %}">{% trans "Email History" %}</a>
                         </li>
-                        <li{% if active_tab == 'alerts' %} class="active"{% endif %}>
-                            <a href="{% url 'customer:alerts-list' %}">{% trans "Product Alerts" %}</a>
-                        </li>
+                        {% iffeature 'alerts' %}
+                            <li{% if active_tab == 'alerts' %} class="active"{% endif %}>
+                                <a href="{% url 'customer:alerts-list' %}">{% trans "Product Alerts" %}</a>
+                            </li>
+                        {% endiffeature %}
                         <li{% if active_tab == 'notifications' %} class="active"{% endif %}>
                             <a href="{% url 'customer:notifications-inbox' %}">{% trans "Notifications" %}</a>
                         </li>
