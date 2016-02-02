@@ -1,12 +1,12 @@
 # vim: ts=4:sw=4:expandtabs
 
-__author__ = 'zmott@fantasyflightgames.com'
-
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 
 from oscar.core.application import Application
 from oscar.core.loading import get_class
+
+__author__ = 'zmott@fantasyflightgames.com'
 
 
 class AlertsApplication(Application):
