@@ -5926,7 +5926,7 @@ msgid "Where should we ship to?"
 msgstr "我們應該寄往哪裡？"
 
 #: templates/oscar/checkout/shipping_address.html:22
-msgid "An address from your addressbook?"
+msgid "An address from your address book?"
 msgstr "使用你的地址簿裡的地址？"
 
 #: templates/oscar/checkout/shipping_address.html:41

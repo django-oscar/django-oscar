@@ -5992,7 +5992,7 @@ msgid "Where should we ship to?"
 msgstr "إلى اين يجب ان نشحن الطلب؟"
 
 #: templates/oscar/checkout/shipping_address.html:22
-msgid "An address from your addressbook?"
+msgid "An address from your address book?"
 msgstr ""
 
 #: templates/oscar/checkout/shipping_address.html:41

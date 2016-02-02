@@ -5949,7 +5949,7 @@ msgid "Where should we ship to?"
 msgstr "Kam doručiť?"
 
 #: templates/oscar/checkout/shipping_address.html:22
-msgid "An address from your addressbook?"
+msgid "An address from your address book?"
 msgstr "Uveďte adresu Vášho trvalého bydliska"
 
 #: templates/oscar/checkout/shipping_address.html:41

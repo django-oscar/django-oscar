@@ -74,7 +74,7 @@ class CheckoutSessionData(object):
     # Options:
     # 1. No shipping required (eg digital products)
     # 2. Ship to new address (entered in a form)
-    # 3. Ship to an addressbook address (address chosen from list)
+    # 3. Ship to an address book address (address chosen from list)
 
     def reset_shipping_data(self):
         self._flush_namespace('shipping')
