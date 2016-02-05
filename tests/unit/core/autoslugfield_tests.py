@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 AutoSlugField taken from django-extensions at
 15d3eb305957cee4768dd86e44df1bdad341a10e
@@ -23,9 +24,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
+from unittest import skipIf
 
+from django import VERSION as DJANGO_VERSION
 from django.db import models
 from django.test import TestCase
+from django.test.utils import override_settings
 
 from oscar.core.loading import get_model
 
@@ -40,12 +44,12 @@ class AutoSlugFieldTest(TestCase):
 
         SluggedTestModel.objects.all().delete()
 
-    def testAutoCreateSlug(self):
+    def test_auto_create_slug(self):
         m = SluggedTestModel(title='foo')
         m.save()
         self.assertEqual(m.slug, 'foo')
 
-    def testAutoCreateNextSlug(self):
+    def test_auto_create_next_slug(self):
         m = SluggedTestModel(title='foo')
         m.save()
 
@@ -53,18 +57,59 @@ class AutoSlugFieldTest(TestCase):
         m.save()
         self.assertEqual(m.slug, 'foo-2')
 
-    def testAutoCreateSlugWithNumber(self):
+    def test_auto_create_slug_with_number(self):
         m = SluggedTestModel(title='foo 2012')
         m.save()
         self.assertEqual(m.slug, 'foo-2012')
 
-    def testAutoUpdateSlugWithNumber(self):
+    def test_auto_update_slug_with_number(self):
         m = SluggedTestModel(title='foo 2012')
         m.save()
         m.save()
         self.assertEqual(m.slug, 'foo-2012')
 
-    def testUpdateSlug(self):
+    @skipIf(DJANGO_VERSION < (1, 9),
+            "unicode slugs not supported by Django<1.9")
+    def test_auto_create_unicode_slug(self):
+        with override_settings(OSCAR_SLUG_ALLOW_UNICODE=True):
+            m = SluggedTestModel(title=u'Château Margaux 1960')
+            m.save()
+            self.assertEqual(m.slug, u'château-margaux-1960')
+
+    @skipIf(DJANGO_VERSION < (1, 9),
+            "unicode slugs not supported by Django<1.9")
+    def test_auto_create_next_unicode_slug(self):
+        with override_settings(OSCAR_SLUG_ALLOW_UNICODE=True):
+            m1 = SluggedTestModel(title=u'Château Margaux 1960')
+            m1.save()
+
+            m2 = SluggedTestModel(title=u'Château Margaux 1960')
+            m2.save()
+
+            self.assertEqual(m2.slug, u'château-margaux-1960-2')
+
+    @skipIf(DJANGO_VERSION < (1, 9),
+            "unicode slugs not supported by Django<1.9")
+    def test_switch_to_unicode_slug(self):
+        m = SluggedTestModel(title=u'Château Margaux 1960')
+        m.save()
+        self.assertEqual(m.slug, 'chateau-margaux-1960')
+        with override_settings(OSCAR_SLUG_ALLOW_UNICODE=True):
+            m = SluggedTestModel(title=u'Château Margaux 1960')
+            m.save()
+            self.assertEqual(m.slug, u'château-margaux-1960')
+
+    @skipIf(DJANGO_VERSION < (1, 9),
+            "unicode slugs not supported by Django<1.9")
+    def test_autoslugfield_allow_unicode_kwargs_precedence(self):
+        from oscar.models.fields import AutoSlugField
+        with override_settings(OSCAR_SLUG_ALLOW_UNICODE=True):
+            autoslug_field = AutoSlugField(populate_from='title', allow_unicode=False)
+            self.assertFalse(autoslug_field.allow_unicode)
+            autoslug_field = AutoSlugField(populate_from='title')
+            self.assertTrue(autoslug_field.allow_unicode)
+
+    def test_update_slug(self):
         m = SluggedTestModel(title='foo')
         m.save()
         self.assertEqual(m.slug, 'foo')
@@ -85,7 +130,7 @@ class AutoSlugFieldTest(TestCase):
         self.assertEqual(m.title, 'bar')
         self.assertEqual(m.slug, 'foo-2012')
 
-    def testSimpleSlugSource(self):
+    def test_simple_slug_source(self):
         m = SluggedTestModel(title='-foo')
         m.save()
         self.assertEqual(m.slug, 'foo')
@@ -97,7 +142,7 @@ class AutoSlugFieldTest(TestCase):
         n.save()
         self.assertEqual(n.slug, 'foo-2')
 
-    def testEmptySlugSource(self):
+    def test_empty_slug_source(self):
         # regression test
 
         m = SluggedTestModel(title='')
@@ -111,7 +156,7 @@ class AutoSlugFieldTest(TestCase):
         n.save()
         self.assertEqual(n.slug, '-3')
 
-    def testInheritanceCreatesNextSlug(self):
+    def test_inheritance_creates_next_slug(self):
         m = SluggedTestModel(title='foo')
         m.save()
 
@@ -180,3 +225,4 @@ class AutoSlugFieldTest(TestCase):
             else:
                 self.fail("Could not exec %r: %s" % (string.strip(), e))
         return l
+

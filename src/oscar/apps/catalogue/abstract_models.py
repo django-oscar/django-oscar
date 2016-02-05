@@ -28,6 +28,7 @@ from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import slugify
 from oscar.core.validators import non_python_keyword
 from oscar.models.fields import AutoSlugField, NullCharField
+from oscar.models.fields.slugfield import SlugField
 
 ProductManager, BrowsableProductManager = get_classes(
     'catalogue.managers', ['ProductManager', 'BrowsableProductManager'])
@@ -93,7 +94,7 @@ class AbstractCategory(MP_Node):
     description = models.TextField(_('Description'), blank=True)
     image = models.ImageField(_('Image'), upload_to='categories', blank=True,
                               null=True, max_length=255)
-    slug = models.SlugField(_('Slug'), max_length=255, db_index=True)
+    slug = SlugField(_('Slug'), max_length=255, db_index=True)
 
     _slug_separator = '/'
     _full_name_separator = ' > '

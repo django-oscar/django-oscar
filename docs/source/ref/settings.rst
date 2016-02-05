@@ -465,6 +465,17 @@ Example::
 
     OSCAR_SLUG_BLACKLIST = ['the', 'a', 'but']
 
+``OSCAR_SLUG_ALLOW_UNICODE``
+----------------------------
+
+Default: ``False``
+
+Allows to disable unicode to ASCII conversion and enable `allow_unicode` option
+for ``AutoSlugField``, which is supported by ``SlugField`` in Django>=1.9
+(https://docs.djangoproject.com/es/1.9/ref/models/fields/#django.db.models.SlugField.allow_unicode).
+This will allow to have
+automatically generated unicode-containing slugs.
+
 Misc settings
 =============
 
