@@ -1,6 +1,7 @@
 from collections import OrderedDict
 
 from django.conf import settings
+
 from haystack.query import SearchQuerySet
 from purl import URL
 

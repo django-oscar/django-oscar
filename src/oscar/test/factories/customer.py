@@ -1,5 +1,4 @@
 import factory
-
 from oscar.core.compat import get_user_model
 from oscar.core.loading import get_model
 

@@ -1,5 +1,4 @@
 from haystack import indexes
-
 from oscar.core.loading import get_class, get_model
 
 # Load default strategy (without a user/request)

@@ -1,7 +1,8 @@
 import pymysql
+from settings import *  # noqa
+
 pymysql.install_as_MySQLdb()
 
-from settings import *  # noqa
 
 DATABASES = {
     'default': {

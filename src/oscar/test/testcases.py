@@ -2,9 +2,9 @@ from django.contrib.auth.models import Permission
 from django.core.urlresolvers import reverse
 from django.utils.six.moves import http_client
 from django_webtest import WebTest
-from purl import URL
 
 from oscar.core.compat import get_user_model
+from purl import URL
 
 User = get_user_model()
 

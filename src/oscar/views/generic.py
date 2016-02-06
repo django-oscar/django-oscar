@@ -1,6 +1,5 @@
 import json
 
-import phonenumbers
 from django import forms
 from django.contrib import messages
 from django.core import validators
@@ -13,6 +12,7 @@ from django.utils.six.moves import map
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import View
 
+import phonenumbers
 from oscar.core.phonenumber import PhoneNumber
 from oscar.core.utils import safe_referrer
 

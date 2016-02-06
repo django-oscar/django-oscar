@@ -16,9 +16,22 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 
+import inspect
+import os
 # Add the project root and sandbox root to the path
 import sys
-import os
+
+import django
+from django.utils.encoding import force_unicode
+from django.utils.html import strip_tags
+
+# The version info for the project you're documenting, acts as replacement for
+# |version| and |release|, also used in various other places throughout the
+# built documents.
+#
+# The short X.Y version.
+from oscar import get_short_version, get_version
+
 oscar_folder = os.path.realpath(
     os.path.join(os.path.dirname(__file__), '../..'))
 sandbox_folder = os.path.realpath(
@@ -29,7 +42,6 @@ sys.path.append(sandbox_folder)
 # Specify settings module (which will be picked up from the sandbox)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings_sphinx')
 
-import django
 django.setup()
 
 # -- General configuration -----------------------------------------------------
@@ -62,12 +74,6 @@ master_doc = 'index'
 # General information about the project.
 project = u'django-oscar'
 
-# The version info for the project you're documenting, acts as replacement for
-# |version| and |release|, also used in various other places throughout the
-# built documents.
-#
-# The short X.Y version.
-from oscar import get_version, get_short_version
 version = get_version()
 release = get_short_version()
 
@@ -247,9 +253,6 @@ autoclass_content = 'class'
 # Better documenting of Django models
 # See http://djangosnippets.org/snippets/2533/
 
-import inspect
-from django.utils.html import strip_tags
-from django.utils.encoding import force_unicode
 
 
 def process_docstring(app, what, name, obj, options, lines):

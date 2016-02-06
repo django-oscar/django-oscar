@@ -6,15 +6,17 @@ To release a new version to PyPi:
 - Ensure the version is correctly set in oscar.__init__.py
 - Run: python setup.py sdist upload
 """
-from setuptools import setup, find_packages
 import os
 import sys
+
+from setuptools import find_packages, setup
+
+from oscar import get_version
 
 PROJECT_DIR = os.path.dirname(__file__)
 PY3 = sys.version_info >= (3, 0)
 
 sys.path.append(os.path.join(PROJECT_DIR, 'src'))
-from oscar import get_version
 
 setup(name='django-oscar',
       version=get_version().replace(' ', '-'),

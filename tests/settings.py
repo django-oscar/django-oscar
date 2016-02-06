@@ -1,6 +1,6 @@
 import os
-import oscar
 
+import oscar
 from oscar.defaults import *  # noqa
 
 # Path helper

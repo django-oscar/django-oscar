@@ -1,5 +1,12 @@
 import os
 
+from django.contrib.messages import constants as messages
+
+# Add another path to Oscar's templates.  This allows templates to be
+# customised easily.
+from oscar import OSCAR_MAIN_TEMPLATE_DIR, get_core_apps
+from oscar.defaults import *
+
 # Path helper
 location = lambda x: os.path.join(
     os.path.dirname(os.path.realpath(__file__)), x)
@@ -163,9 +170,6 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'urls'
 
-# Add another path to Oscar's templates.  This allows templates to be
-# customised easily.
-from oscar import OSCAR_MAIN_TEMPLATE_DIR
 TEMPLATE_DIRS = (
     location('templates'),
     OSCAR_MAIN_TEMPLATE_DIR,
@@ -297,7 +301,6 @@ INSTALLED_APPS = [
     'apps.gateway',     # For allowing dashboard access
     'widget_tweaks',
 ]
-from oscar import get_core_apps
 INSTALLED_APPS = INSTALLED_APPS + get_core_apps()
 
 # Add Oscar's custom auth backend so users can sign in using their email
@@ -314,7 +317,6 @@ APPEND_SLASH = True
 # Messages contrib app
 # ====================
 
-from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
@@ -362,7 +364,6 @@ INTERNAL_IPS = ['127.0.0.1', '::1']
 # Oscar settings
 # ==============
 
-from oscar.defaults import *
 
 # Meta
 # ====
