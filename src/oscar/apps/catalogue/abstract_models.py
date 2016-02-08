@@ -6,7 +6,6 @@ from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.staticfiles.finders import find
-from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured, ValidationError
 from django.core.files.base import File
 from django.core.urlresolvers import reverse
@@ -19,7 +18,7 @@ from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import get_language, pgettext_lazy
+from django.utils.translation import pgettext_lazy
 
 from treebeard.mp_tree import MP_Node
 
@@ -125,6 +124,9 @@ class AbstractCategory(MP_Node):
         include it's ancestors' slugs.
         """
         slugs = [category.slug for category in self.get_ancestors_and_self()]
+        return self._build_full_slug(slugs)
+
+    def _build_full_slug(self, slugs):
         return self._slug_separator.join(slugs)
 
     def generate_slug(self):
@@ -186,7 +188,7 @@ class AbstractCategory(MP_Node):
         """
         return list(self.get_descendants()) + [self]
 
-    def get_absolute_url(self):
+    def get_absolute_url(self, slugs=None):
         """
         Our URL scheme means we have to look up the category's ancestors. As
         that is a bit more expensive, we cache the generated URL. That is
@@ -194,16 +196,15 @@ class AbstractCategory(MP_Node):
         ProductCategoryView does the lookup via primary key anyway. But if
         you change that logic, you'll have to reconsider the caching
         approach.
+
+        We allow passing in slugs to avoid database queries. Note that some
+        Oscar instances translate slugs via model translation or similar,
+        so it's tricky to cache them.
         """
-        current_locale = get_language()
-        cache_key = 'CATEGORY_URL_%s_%s' % (current_locale, self.pk)
-        url = cache.get(cache_key)
-        if not url:
-            url = reverse(
-                'catalogue:category',
-                kwargs={'category_slug': self.full_slug, 'pk': self.pk})
-            cache.set(cache_key, url)
-        return url
+        full_slug = self._build_full_slug(slugs) if slugs else self.full_slug
+        return reverse(
+            'catalogue:category',
+            kwargs={'category_slug': full_slug, 'pk': self.pk})
 
     class Meta:
         abstract = True

@@ -60,12 +60,14 @@ def get_annotated_list(depth=None, parent=None):
                 # but it would make a complicated template tag even more complicated.
 
         # Write current node's info.
+        # Slugs aren't set in every case
+        slugs = getattr(node, '_slugs', None)
         info = {
             'num_to_close': [],
             'level': node_depth - start_depth,
             # Most of the time, this should use the already populated
             # node._slugs and not incur a database query.
-            'url': node.get_absolute_url()
+            'url': node.get_absolute_url(slugs)
         }
         annotated_categories.append((node, info,))
         prev_node = node
