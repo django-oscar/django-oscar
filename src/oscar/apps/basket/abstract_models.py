@@ -217,7 +217,7 @@ class AbstractBasket(models.Model):
                 line.attributes.create(option=option_dict['option'],
                                        value=option_dict['value'])
         else:
-            line.quantity += quantity
+            line.quantity = max(0, line.quantity + quantity)
             line.save()
         self.reset_offer_applications()
 

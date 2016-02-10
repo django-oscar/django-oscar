@@ -28,6 +28,13 @@ class TestAddingAProductToABasket(TestCase):
         self.assertEqual(line.price_incl_tax, self.purchase_info.price.incl_tax)
         self.assertEqual(line.price_excl_tax, self.purchase_info.price.excl_tax)
 
+    def test_adding_negative_quantity(self):
+        self.assertEqual(1, self.basket.num_lines)
+        self.basket.add(self.product, quantity=4)
+        self.assertEqual(5, self.basket.line_quantity(self.product, self.record))
+        self.basket.add(self.product, quantity=-10)
+        self.assertEqual(0, self.basket.line_quantity(self.product, self.record))
+
     def test_means_another_currency_product_cannot_be_added(self):
         product = factories.create_product()
         factories.create_stockrecord(
