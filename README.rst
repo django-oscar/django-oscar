@@ -42,14 +42,14 @@ Continuous integration status:
 .. image:: https://travis-ci.org/django-oscar/django-oscar.svg?branch=master
     :target: https://travis-ci.org/django-oscar/django-oscar
 
-.. image:: http://codecov.io/github/django-oscar/django-oscar/coverage.svg?branch=master 
+.. image:: http://codecov.io/github/django-oscar/django-oscar/coverage.svg?branch=master
     :alt: Coverage
     :target: http://codecov.io/github/django-oscar/django-oscar?branch=master
-    
+
 .. image:: https://requires.io/github/django-oscar/django-oscar/requirements.svg?branch=master
      :target: https://requires.io/github/django-oscar/django-oscar/requirements/?branch=master
      :alt: Requirements Status
-    
+
 PyPI status:
 
 .. image:: https://img.shields.io/pypi/v/django-oscar.svg
@@ -98,7 +98,7 @@ These are screenshots from the 'sandbox' example site that ships with
 Oscar.  It sports a simple design built with Twitter's Bootstrap_ and provides a
 good starting point for rapidly building elegant e-commerce sites.
 
-.. _Bootstrap: http://twitter.github.com/bootstrap/
+.. _Bootstrap: https://getbootstrap.com/
 
 .. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/browse.thumb.png
     :target: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/browse.png
@@ -157,7 +157,7 @@ The following extensions are stable and ready for use:
 .. _django-oscar-accounts: https://github.com/django-oscar/django-oscar-accounts
 .. _django-oscar-easyrec: https://github.com/django-oscar/django-oscar-easyrec
 .. _EasyRec: http://easyrec.org/
-.. _django-oscar-eway: https://github.com/django-oscar/django-oscar-eway
+.. _django-oscar-eway: https://github.com/snowball-one/django-oscar-eway
 .. _django-oscar-stores: https://github.com/django-oscar/django-oscar-stores
 .. _django-oscar-sagepay-direct: https://github.com/django-oscar/django-oscar-sagepay-direct
 .. _eWay: https://www.eway.com.au
