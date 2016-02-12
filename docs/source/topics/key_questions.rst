@@ -86,7 +86,7 @@ displayed on the site?
 Do you allow pre- and back-orders
 ---------------------------------
 
-An pre-order is where you allow a product to be bought before it has been
+A pre-order is where you allow a product to be bought before it has been
 published, while a back-order is where you allow a product to be bought that is
 currently out of stock.
 

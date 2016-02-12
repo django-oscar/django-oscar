@@ -10,7 +10,7 @@ __all__ = [
 
 class CountryFactory(factory.DjangoModelFactory):
     iso_3166_1_a2 = 'GB'
-    name = "UNITED KINGDOM"
+    printable_name = "UNITED KINGDOM"
 
     class Meta:
         model = get_model('address', 'Country')

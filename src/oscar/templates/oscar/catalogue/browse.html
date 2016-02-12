@@ -29,16 +29,18 @@
             <ul class="nav nav-list">
                 {% for tree_category, info in tree_categories %}
                     <li>
-                    {% if tree_category.pk == category.pk %}
-                        <strong>{{ tree_category.name }}</strong>
-                    {% else %}
-                        <a href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
-                    {% endif %}
+                        <a href="{{ tree_category.get_absolute_url }}">
+                            {% if tree_category.pk == category.pk %}
+                                <strong>{{ tree_category.name }}</strong>
+                            {% else %}
+                                {{ tree_category.name }}
+                            {% endif %}
+                        </a>
 
-                    {% if info.has_children %}<ul>{% else %}</li>{% endif %}
-                    {% for n in info.num_to_close %}
-                        </ul></li>
-                    {% endfor %}
+                        {% if info.has_children %}<ul>{% else %}</li>{% endif %}
+                        {% for n in info.num_to_close %}
+                            </ul></li>
+                        {% endfor %}
                 {% endfor %}
             </ul>
         </div>

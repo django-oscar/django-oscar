@@ -5,45 +5,43 @@
 
 # Development
 django-debug-toolbar==1.4.0
-django-debug-toolbar-template-timings==0.6.4
-django-extensions==1.5.9
+django-extensions==1.6.1
 Werkzeug==0.9.6
 
 # Sandbox
 Whoosh==2.6.0
 pysolr==3.2.0
 requests==2.7.0
-uWSGI==2.0.11.2
+uWSGI==2.0.12
 whitenoise==2.0.6
 Pillow==2.7.0
 
 # Docs
-Sphinx==1.2.3
-sphinxcontrib-napoleon==0.2.8
-sphinx_rtd_theme==0.1.6
+Sphinx==1.3.3
+sphinxcontrib-napoleon==0.4.3
+sphinx_rtd_theme==0.1.9
 
 # Testing
 coverage==3.7.1
 spec==0.11.1
 WebTest==2.0.17
 django-webtest==1.7.8
-pytest==2.8.4
+pytest==2.8.5
 pytest-cache==1.0
 pytest-cov==2.2.0
 pytest-django==2.9.1
 pytest-xdist==1.13.1
 tox==1.8.1
 coveralls==0.4.4
-behave==1.2.4
-isort==4.2.2
 
 # Misc
-flake8==2.4.1
+flake8==2.5.1
 flake8-debugger==1.4.0
 flake8-blind-except==0.1.0
 pyprof2calltree==1.3.2
-ipdb==0.8
-ipython==2.3.0
+ipdb==0.8.1
+ipython==4.0.1
+isort==4.2.2
 
 # Country data
 pycountry==1.8

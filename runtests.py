@@ -77,7 +77,7 @@ if __name__ == '__main__':
         # thread safe. Behaviour with multiple threads is undefined.
         warnings.filterwarnings('error', category=DeprecationWarning)
         warnings.filterwarnings('error', category=RuntimeWarning)
-        libs = r'(sorl\.thumbnail.*|bs4.*|webtest.*|inspect.*)'
+        libs = r'(sorl\.thumbnail.*|bs4.*|webtest.*|inspect.*|re.*)'
         warnings.filterwarnings(
             'ignore', r'.*', DeprecationWarning, libs)
 

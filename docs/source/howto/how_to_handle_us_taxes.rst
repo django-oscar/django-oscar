@@ -35,13 +35,13 @@ to the submission.
             submission = super(CheckoutSessionMixin, self).build_submission(
                 **kwargs)
 
-            if submission['shipping_address']:
+            if submission['shipping_address'] and submission['shipping_method']:
                 tax.apply_to(submission)
 
                 # Recalculate order total to ensure we have a tax-inclusive total
                 submission['order_total'] = self.get_order_totals(
                     submission['basket'],
-                    shipping_method=submission['shipping_method'])
+                    submission['shipping_charge'])
 
             return submission
 
@@ -64,14 +64,15 @@ An example implementation of the ``tax.py`` module is:
             line_tax = calculate_tax(
                 line.line_price_excl_tax_incl_discounts, rate)
             unit_tax = (line_tax / line.quantity).quantize(D('0.01'))
-            line.purchase_info = unit_tax
+            line.purchase_info.price.tax = unit_tax
 
         # Note, we change the submission in place - we don't need to
         # return anything from this function
-        shipping_method = submission['shipping_method']
-        shipping_method.tax = calculate_tax(
-            shipping_method.charge_incl_tax, rate)
+        shipping_charge = submission['shipping_charge']
+        if shipping_charge is not None:
+            shipping_charge.tax = calculate_tax(
+                shipping_charge.excl_tax, rate)
 
-        def calculate_tax(price, rate):
-            tax = price * rate
-            return tax.quantize(D('0.01'))
+    def calculate_tax(price, rate):
+        tax = price * rate
+        return tax.quantize(D('0.01'))

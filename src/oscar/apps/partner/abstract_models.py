@@ -68,6 +68,7 @@ class AbstractPartner(models.Model):
     class Meta:
         abstract = True
         app_label = 'partner'
+        ordering = ('name', 'code')
         permissions = (('dashboard_access', 'Can access dashboard'), )
         verbose_name = _('Fulfillment partner')
         verbose_name_plural = _('Fulfillment partners')

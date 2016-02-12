@@ -39,6 +39,13 @@ class AbstractBase(models.Model):
     def __str__(self):
         return self.name
 
+    def discount(self, basket):
+        """
+        Return the discount on the standard shipping charge
+        """
+        # This method is identical to the Base.discount().
+        return D('0.00')
+
 
 class AbstractOrderAndItemCharges(AbstractBase):
     """
@@ -95,7 +102,6 @@ class AbstractWeightBased(AbstractBase):
 
     code = 'weight-based-shipping'
     name = _('Weight-based shipping')
-    offer = None
 
     # The default weight to use (in kg) when a product doesn't have a weight
     # attribute.
@@ -178,10 +184,6 @@ class AbstractWeightBased(AbstractBase):
             return self.bands.order_by('-upper_limit')[0]
         except IndexError:
             return None
-
-    def discount(self, basket):
-        base_charge = self.calculate(basket)
-        return self.offer.shipping_discount(base_charge.incl_tax)
 
 
 @python_2_unicode_compatible
