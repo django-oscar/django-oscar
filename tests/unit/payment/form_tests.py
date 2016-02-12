@@ -47,12 +47,12 @@ class TestStartingMonthField(TestCase):
         self.field = forms.BankcardStartingMonthField()
 
     def test_returns_a_date(self):
-        start_date = self.field.clean(['01', '2010'])
+        start_date = self.field.clean(['01', '2014'])
         self.assertTrue(isinstance(start_date, datetime.date))
 
     def test_rejects_invalid_months(self):
         with self.assertRaises(ValidationError):
-            self.field.clean(['00', '2010'])
+            self.field.clean(['00', '2014'])
 
     def test_rejects_invalid_years(self):
         with self.assertRaises(ValidationError):
@@ -64,7 +64,7 @@ class TestStartingMonthField(TestCase):
             self.field.clean(['01', today.year + 1])
 
     def test_returns_the_first_day_of_month(self):
-        start_date = self.field.clean(['01', '2010'])
+        start_date = self.field.clean(['01', '2014'])
         self.assertEqual(1, start_date.day)
 
 
@@ -80,7 +80,7 @@ class TestExpiryMonthField(TestCase):
 
     def test_rejects_invalid_months(self):
         with self.assertRaises(ValidationError):
-            self.field.clean(['00', '2010'])
+            self.field.clean(['00', '2014'])
 
     def test_rejects_invalid_years(self):
         with self.assertRaises(ValidationError):

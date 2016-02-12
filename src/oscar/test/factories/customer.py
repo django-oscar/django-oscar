@@ -1,8 +1,18 @@
 import factory
 
 from oscar.core.compat import get_user_model
+from oscar.core.loading import get_model
 
-__all__ = ['UserFactory']
+__all__ = ['ProductAlertFactory', 'UserFactory']
+
+
+class ProductAlertFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = get_model('customer', 'ProductAlert')
+
+    product = factory.SubFactory('oscar.test.factories.ProductFactory')
+    user = factory.SubFactory('oscar.test.factories.customer.UserFactory')
+    status = Meta.model.ACTIVE
 
 
 class UserFactory(factory.DjangoModelFactory):

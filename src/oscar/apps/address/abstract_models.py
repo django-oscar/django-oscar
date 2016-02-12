@@ -120,7 +120,7 @@ class AbstractAddress(models.Model):
         'KE': r'^[0-9]{5}$',
         'KG': r'^[0-9]{6}$',
         'KH': r'^[0-9]{5}$',
-        'KR': r'^[0-9]{3}-?[0-9]{3}$',
+        'KR': r'^[0-9]{5}$',
         'KY': r'^KY[0-9]-[0-9]{4}$',
         'KZ': r'^[0-9]{6}$',
         'LA': r'^[0-9]{5}$',
@@ -373,7 +373,7 @@ class AbstractAddress(models.Model):
             fields = [self.salutation] + fields
         fields = [f.strip() for f in fields if f]
         try:
-            fields.append(self.country.name)
+            fields.append(self.country.printable_name)
         except exceptions.ObjectDoesNotExist:
             pass
         return fields

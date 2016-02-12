@@ -502,6 +502,8 @@ class AbstractLine(models.Model):
     class Meta:
         abstract = True
         app_label = 'order'
+        # Enforce sorting in order of creation.
+        ordering = ['pk']
         verbose_name = _("Order Line")
         verbose_name_plural = _("Order Lines")
 

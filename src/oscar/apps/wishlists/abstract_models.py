@@ -133,5 +133,7 @@ class AbstractLine(models.Model):
     class Meta:
         abstract = True
         app_label = 'wishlists'
+        # Enforce sorting by order of creation.
+        ordering = ['pk']
         unique_together = (('wishlist', 'product'), )
         verbose_name = _('Wish list line')

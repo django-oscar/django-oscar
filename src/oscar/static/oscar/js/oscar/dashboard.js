@@ -28,6 +28,7 @@ var oscar = (function(o, $) {
                     menubar: false,
                     plugins: "link",
                     style_formats: [
+                        {title: 'Text', block: 'p'},
                         {title: 'Heading', block: 'h2'},
                         {title: 'Subheading', block: 'h3'}
                     ],

@@ -154,8 +154,6 @@ included in the repo. This customises core Oscar to treat all prices as
 excluding tax and then calculate and apply taxes once the shipping address is
 known.
 
-See :ref:`us_site` for more information.
-
 Faceting for category browsing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

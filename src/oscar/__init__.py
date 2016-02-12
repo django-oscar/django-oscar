@@ -61,7 +61,7 @@ OSCAR_CORE_APPS = [
     'oscar.apps.dashboard.shipping',
     # 3rd-party apps that oscar depends on
     'haystack',
-    # 'treebeard',
+    'treebeard',
     'sorl.thumbnail',
     'django_tables2',
 ]
