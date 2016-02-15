@@ -22,9 +22,10 @@ class TestCatalogueViews(WebTestCase):
             self.assertIsOk(self.get(url))
     
     def test_upc_filter(self):
-        product1 = create_product(upc='123')
-        product2 = create_product(upc='12')
-        product3 = create_product(upc='1')
+
+        product1 = factories.StandaloneProductFactory(upc='123')
+        product2 = factories.StandaloneProductFactory(upc='12')
+        product3 = factories.StandaloneProductFactory(upc='1')
 
         # no value for upc, all results
         page = self.get("%s?upc=" %
