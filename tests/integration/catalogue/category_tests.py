@@ -14,7 +14,7 @@ class TestCategory(TestCase):
         self.books = self.products.add_child(name=u"Bücher")
 
     def test_includes_parents_name_in_full_name(self):
-        self.assertTrue(self.products.name in self.books.full_name)
+        self.assertIn(self.products.name, self.books.full_name)
 
     def test_has_children_method(self):
         self.assertTrue(self.products.has_children())

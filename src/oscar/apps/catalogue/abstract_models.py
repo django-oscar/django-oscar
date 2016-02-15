@@ -1,12 +1,12 @@
 import logging
 import os
 from datetime import date, datetime
+from itertools import count
 
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.staticfiles.finders import find
-from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured, ValidationError
 from django.core.files.base import File
 from django.core.urlresolvers import reverse
@@ -19,8 +19,7 @@ from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import get_language, pgettext_lazy
-
+from django.utils.translation import pgettext_lazy
 from treebeard.mp_tree import MP_Node
 
 from oscar.core.decorators import deprecated
@@ -94,6 +93,8 @@ class AbstractCategory(MP_Node):
     image = models.ImageField(_('Image'), upload_to='categories', blank=True,
                               null=True, max_length=255)
     slug = models.SlugField(_('Slug'), max_length=255, db_index=True)
+    full_name = models.CharField(_('Full Name'), max_length=255, db_index=True, editable=False)
+    full_slug = models.CharField(_('Full Slug'), max_length=255, db_index=True, editable=False)
 
     _slug_separator = '/'
     _full_name_separator = ' > '
@@ -101,54 +102,48 @@ class AbstractCategory(MP_Node):
     def __str__(self):
         return self.full_name
 
-    @property
-    def full_name(self):
+    @classmethod
+    def denormalise_fields(cls):
         """
-        Returns a string representation of the category and it's ancestors,
-        e.g. 'Books > Non-fiction > Essential programming'.
+        Traverses the Category tree and updates full_name and full_slug only if it's absolutely
+        necessary.
+        """
+        def _update(node, names=(), slugs=()):
+            data = node['data']
 
-        It's rarely used in Oscar's codebase, but used to be stored as a
-        CharField and is hence kept for backwards compatibility. It's also
-        sufficiently useful to keep around.
-        """
-        names = [category.name for category in self.get_ancestors_and_self()]
-        return self._full_name_separator.join(names)
+            names = names + (data['name'], )
+            slugs = slugs + (data['slug'], )
 
-    @property
-    def full_slug(self):
-        """
-        Returns a string of this category's slug concatenated with the slugs
-        of it's ancestors, e.g. 'books/non-fiction/essential-programming'.
+            full_name = cls._full_name_separator.join(names)
+            full_slug = cls._slug_separator.join(slugs)
 
-        Oscar used to store this as in the 'slug' model field, but this field
-        has been re-purposed to only store this category's slug and to not
-        include it's ancestors' slugs.
-        """
-        slugs = [category.slug for category in self.get_ancestors_and_self()]
-        return self._slug_separator.join(slugs)
+            if (full_name, full_slug) != (data['full_name'], data['full_slug']):
+                cls.objects.filter(id=node['id']).update(full_name=full_name, full_slug=full_slug)
+
+            if 'children' in node:
+                for child in node['children']:
+                    _update(child, names=names, slugs=slugs)
+
+        map(_update, cls.dump_bulk())
 
     def generate_slug(self):
         """
         Generates a slug for a category. This makes no attempt at generating
         a unique slug.
-        """
-        return slugify(self.name)
 
-    def ensure_slug_uniqueness(self):
-        """
-        Ensures that the category's slug is unique amongst it's siblings.
+        The category's slug is unique amongst it's siblings.
         This is inefficient and probably not thread-safe.
         """
-        unique_slug = self.slug
+        base_slug = slugify(self.name)
         siblings = self.get_siblings().exclude(pk=self.pk)
-        next_num = 2
-        while siblings.filter(slug=unique_slug).exists():
-            unique_slug = '{slug}_{end}'.format(slug=self.slug, end=next_num)
-            next_num += 1
 
-        if unique_slug != self.slug:
-            self.slug = unique_slug
-            self.save()
+        if not siblings.filter(slug=base_slug).exists():
+            return base_slug
+
+        for suffix in count(2):
+            slug = '{slug}_{suffix}'.format(slug=base_slug, suffix=suffix)
+            if not siblings.filter(slug=slug).exists():
+                return slug
 
     def save(self, *args, **kwargs):
         """
@@ -158,17 +153,21 @@ class AbstractCategory(MP_Node):
         instances with a slug already set, or expose a field on the
         appropriate forms.
         """
-        if self.slug:
-            # Slug was supplied. Hands off!
-            super(AbstractCategory, self).save(*args, **kwargs)
-        else:
+        if not self.slug:
             self.slug = self.generate_slug()
-            super(AbstractCategory, self).save(*args, **kwargs)
-            # We auto-generated a slug, so we need to make sure that it's
-            # unique. As we need to be able to inspect the category's siblings
-            # for that, we need to wait until the instance is saved. We
-            # update the slug and save again if necessary.
-            self.ensure_slug_uniqueness()
+        super(AbstractCategory, self).save(*args, **kwargs)
+        # Get updated full_slug and full_name
+        self.refresh_from_db()
+
+    def move(self, target, pos=None):
+        """
+        Moves the current node and all its descendants to a new position
+        relative to another node.
+
+        See https://tabo.pe/projects/django-treebeard/docs/2.0/api.html#treebeard.models.Node.move  # noqa
+        """
+        super(AbstractCategory, self).move(target, pos)
+        self.denormalise_fields()
 
     def get_ancestors_and_self(self):
         """
@@ -187,23 +186,8 @@ class AbstractCategory(MP_Node):
         return list(self.get_descendants()) + [self]
 
     def get_absolute_url(self):
-        """
-        Our URL scheme means we have to look up the category's ancestors. As
-        that is a bit more expensive, we cache the generated URL. That is
-        safe even for a stale cache, as the default implementation of
-        ProductCategoryView does the lookup via primary key anyway. But if
-        you change that logic, you'll have to reconsider the caching
-        approach.
-        """
-        current_locale = get_language()
-        cache_key = 'CATEGORY_URL_%s_%s' % (current_locale, self.pk)
-        url = cache.get(cache_key)
-        if not url:
-            url = reverse(
-                'catalogue:category',
-                kwargs={'category_slug': self.full_slug, 'pk': self.pk})
-            cache.set(cache_key, url)
-        return url
+        return reverse('catalogue:category',
+                       kwargs={'category_slug': self.full_slug, 'pk': self.pk})
 
     class Meta:
         abstract = True
