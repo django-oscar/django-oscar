@@ -44,6 +44,9 @@ class Base(object):
     def __eq__(self, other):
         return self.effective_price == other.effective_price
 
+    def __ne__(self, other):
+        return self.effective_price != other.effective_price
+
     def __repr__(self):
         return "%s(%r)" % (self.__class__.__name__, self.__dict__)
 
