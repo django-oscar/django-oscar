@@ -1,21 +1,20 @@
 import json
 
+import phonenumbers
 from django import forms
+from django.contrib import messages
 from django.core import validators
 from django.core.exceptions import ValidationError
-from django.shortcuts import redirect
-from django.utils.encoding import smart_str
-from django.contrib import messages
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.utils import six
+from django.utils.encoding import smart_str
 from django.utils.six.moves import map
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import View
 
-import phonenumbers
-
-from oscar.core.utils import safe_referrer
 from oscar.core.phonenumber import PhoneNumber
+from oscar.core.utils import safe_referrer
 
 
 class PostActionMixin(object):

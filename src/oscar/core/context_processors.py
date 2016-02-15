@@ -1,10 +1,12 @@
-import oscar
-import re
 import platform
+import re
+
 import django
-from django.utils.six.moves.urllib import parse
 from django.conf import settings
 from django.utils.safestring import mark_safe
+from django.utils.six.moves.urllib import parse
+
+import oscar
 
 
 def strip_language_code(request):

@@ -1,6 +1,7 @@
 from django import forms
-from oscar.core.loading import get_model
 from django.utils.translation import ugettext_lazy as _
+
+from oscar.core.loading import get_model
 
 ProductReview = get_model('reviews', 'productreview')
 

@@ -7,7 +7,6 @@ from oscar.core.loading import get_model
 from oscar.core.utils import slugify
 from oscar.test.factories.utils import tax_add, tax_subtract
 
-
 __all__ = [
     'BillingAddressFactory', 'ShippingAddressFactory', 'OrderDiscountFactory',
     'OrderFactory', 'OrderLineFactory', 'ShippingEventTypeFactory',

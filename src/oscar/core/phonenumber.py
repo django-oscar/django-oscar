@@ -26,15 +26,13 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-from django.utils import six
-
-from django.core import validators
-from django.conf import settings
-from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import python_2_unicode_compatible
-
 import phonenumbers
+from django.conf import settings
+from django.core import validators
+from django.core.exceptions import ValidationError
+from django.utils import six
+from django.utils.encoding import python_2_unicode_compatible
+from django.utils.translation import ugettext_lazy as _
 
 
 @python_2_unicode_compatible

@@ -2,10 +2,10 @@ from django import forms
 from django.conf import settings
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
-from oscar.apps.promotions.conf import PROMOTION_CLASSES
 
+from oscar.apps.promotions.conf import PROMOTION_CLASSES
+from oscar.core.loading import get_class, get_classes
 from oscar.forms.fields import ExtendedURLField
-from oscar.core.loading import get_classes, get_class
 
 HandPickedProductList, RawHTML, SingleProduct, PagePromotion, OrderedProduct \
     = get_classes('promotions.models',
@@ -75,7 +75,7 @@ class PagePromotionForm(forms.ModelForm):
 
     class Meta:
         model = PagePromotion
-        fields = ['position']
+        fields = ['position', 'page_url']
 
     def clean_page_url(self):
         page_url = self.cleaned_data.get('page_url')

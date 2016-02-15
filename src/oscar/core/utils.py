@@ -1,16 +1,16 @@
 from __future__ import absolute_import  # for logging import below
+
 import datetime
 import logging
 
+from django.conf import settings
 from django.shortcuts import redirect, resolve_url
+from django.template.defaultfilters import date as date_filter
+from django.template.defaultfilters import slugify as django_slugify
 from django.utils import six
 from django.utils.http import is_safe_url
-from django.utils.timezone import get_current_timezone, is_naive, make_aware
-from django.conf import settings
-from django.template.defaultfilters import (date as date_filter,
-                                            slugify as django_slugify)
 from django.utils.module_loading import import_string
-
+from django.utils.timezone import get_current_timezone, is_naive, make_aware
 from unidecode import unidecode
 
 

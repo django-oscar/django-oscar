@@ -22,16 +22,92 @@ Table of contents:
 Compatibility
 -------------
 
-Oscar 1.2 is compatible with... 
+Oscar 1.2 is compatible with Django 1.7, 1.8 and 1.9 as well as Python 2.7,
+3.3, 3.4 and 3.5.
+
 
 
 .. _new_in_1.2:
 
 What's new in Oscar 1.2?
 ------------------------
+ - ``django-compressor`` has been removed as a dependency, and as a way
+   of building ``less`` files for development. Removing or disabling it
+   was commonly required as it didn't work well with deploying on PaaS
+   providers, and many current projects understandably prefer to use
+   Javascript build chains (``gulp``, ``grunt``, etc.) for all their
+   statics.
+   But ``django-compressor`` was hard to remove  on a per-project basis,
+   so the decision was made to remove it altogether.
+
+   For development, ``USE_LESS`` now enables the browser-based on-the-fly
+   pre-processor. ``make css`` continues to run a locally installed
+   LESS binary.
+
+.. _minor_changes_in_1.2:
+
+Minor changes
+~~~~~~~~~~~~~
+ - Fix missing page_url field in the promotions form (`#1816`_)
+ - The order of basket, order and wishlist lines in now guaranteed
+   to be in the order of creation. Previously, this wasn't guaranteed,
+   but still almost always the case.
+ - `Partner` instances got a default ordering by name.
+ - If a child product has no weight, we check if a parent's product weight
+   is set before falling back to the default weight (`#1965`_).
+ - `Address.active_address_fields` now uses the saner common name of a country
+   instead of the official name (`#1964`_).
+ - Custom benefits now don't enforce uniqueness on the ``proxy_class``
+   field, making them more useful (`#685`_).
+
+.. _`#685`: https://github.com/django-oscar/django-oscar/issues/685
+.. _`#1816`: https://github.com/django-oscar/django-oscar/issues/1816
 
 
 .. _incompatible_in_1.2:
 
 Backwards incompatible changes in Oscar 1.2
 -------------------------------------------
+
+- The ``mainstyles`` template block was removed. It served as a wrapper
+  for the ``styles`` content black and was needed to be extensible while
+  still being able to compress CSS. As ``django-compressor`` has been
+  removed, it's not needed any more. Just use ``styles`` instead if you
+  happened to use it.
+
+- The `keywords` block is removed from the main template (`#1799`)
+
+- The US and Demo sites were both removed from the repository as they 
+  were not up-to-date anymore. These might return in the future as 
+  separate repositories.
+
+- The `RecentReviewsManager`, `TopScoredReviewsManager` and 
+  `TopVotedReviewsManager` managers are removed from the reviews app 
+  since they were broken and unused.
+
+
+Undocumented
+~~~~~~~~~~~~
+
+We merged the work below, but haven't yet gotten around to documenting it.
+https://github.com/django-oscar/django-oscar/issues/1935
+https://github.com/django-oscar/django-oscar/pull/1936
+
+https://github.com/django-oscar/django-oscar/issues/1929
+https://github.com/django-oscar/django-oscar/issues/1930
+
+https://github.com/django-oscar/django-oscar/issues/1925
+https://github.com/django-oscar/django-oscar/pull/1926
+
+https://github.com/django-oscar/django-oscar/pull/1948
+https://github.com/django-oscar/django-oscar/pull/1922
+
+Dependency changes
+------------------
+
+* The following packages are updated:
+    - `django-treebeard >= 4.0` (Django 1.9 support)
+    - `sorl.thumbnail >= 12.4a1` (Django 1.9 support)
+* JQuery UI is no longer included in the dashboard (`#1792`_)
+
+.. _`#1792`: https://github.com/django-oscar/django-oscar/issues/1792

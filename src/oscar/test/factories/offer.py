@@ -2,7 +2,6 @@ import factory
 
 from oscar.core.loading import get_model
 
-
 __all__ = [
     'RangeFactory', 'ConditionFactory', 'BenefitFactory',
     'ConditionalOfferFactory',
@@ -40,6 +39,7 @@ class BenefitFactory(factory.DjangoModelFactory):
 class ConditionFactory(factory.DjangoModelFactory):
     type = get_model('offer', 'Condition').COUNT
     value = 10
+    range = factory.SubFactory(RangeFactory)
 
     class Meta:
         model = get_model('offer', 'Condition')

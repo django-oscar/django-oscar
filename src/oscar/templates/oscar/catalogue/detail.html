@@ -165,7 +165,7 @@
                 </p>
             {% else %}
                 <ol class="list-unstyled review-list">
-                    {% for review in reviews|slice:":3" %}
+                    {% for review in product.reviews.approved.all|slice:":3" %}
                         <li>
                         {% include 'catalogue/partials/review.html' %}
                         </li>
@@ -191,7 +191,7 @@
         {% endif %}
     {% endwith %}
 
-    {% recently_viewed_products %}
+    {% recently_viewed_products current_product=product %}
 
 </article><!-- End of product page -->
 {% endblock content %}

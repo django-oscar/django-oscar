@@ -96,7 +96,7 @@ def non_whitespace(value):
 def non_python_keyword(value):
     if keyword.iskeyword(value):
         raise ValidationError(
-            _("This field is invalid as its valud is forbidden")
+            _("This field is invalid as its value is forbidden")
         )
     return value
 

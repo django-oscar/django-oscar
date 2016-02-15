@@ -1,7 +1,7 @@
 import factory
 
-from oscar.core.phonenumber import PhoneNumber
 from oscar.core.loading import get_model
+from oscar.core.phonenumber import PhoneNumber
 
 __all__ = [
     'CountryFactory', 'UserAddressFactory',
@@ -10,7 +10,7 @@ __all__ = [
 
 class CountryFactory(factory.DjangoModelFactory):
     iso_3166_1_a2 = 'GB'
-    name = "UNITED KINGDOM"
+    printable_name = "UNITED KINGDOM"
 
     class Meta:
         model = get_model('address', 'Country')

@@ -1,9 +1,0 @@
-{% load i18n %}
-<nav class="checkoutNav">
-    <ul class="container-fluid">
-        <li class="step1 {% if step == 1 %}active{% else %}{% if step > 1 %}visited{% else %}disabled{% endif %}{% endif %}"><i class="icon-checkout-half-wheel hidden-phone"></i><i class="hidden-phone icon-check-alt"></i> {% if step == 2 or step == 3 or step == 4 %}<a href="{% url 'checkout:shipping-address' %}">{% trans "1. Shipping address" %}</a>{% else %}{%  trans "1. Shipping address" %}{% endif %}</li>
-        <li class="step2 {% if step == 2 %}active{% else %}{% if step > 2 %}visited{% else %}disabled{% endif %}{% endif %}"><i class="hidden-phone icon-checkout-half-wheel"></i><i class="hidden-phone icon-check-alt"></i> {% if step == 3 or step == 4 %}<a href="{% url 'checkout:shipping-method' %}">{% trans "2. Shipping method" %}</a>{% else %}{%  trans "2. Shipping method" %}{% endif %}</li>
-        <li class="step3 {% if step == 3 %}active{% else %}{% if step > 3 %}visited{% else %}disabled{% endif %}{% endif %}"><i class="hidden-phone icon-checkout-half-wheel"></i><i class="hidden-phone icon-check-alt"></i> {% if step == 4 %}<a href="{% url 'checkout:payment-details' %}">{% trans "3. Payment" %}</a>{% else %}{%  trans "3. Payment" %}{% endif %}</li>
-        <li class="step4 {% if step == 4 %}active{% else %}disabled{% endif %}"><i class="hidden-phone icon-checkout-half-wheel"></i><i class="hidden-phone icon-check-alt"></i> {% trans "4. Confirmation" %}</li>
-    </ul>
-</nav>

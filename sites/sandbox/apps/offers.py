@@ -5,6 +5,7 @@ class ChangesOwnerName(models.Benefit):
 
     class Meta:
         proxy = True
+        app_label = 'sandbox'
 
     def apply(self, basket, condition, offer=None):
         condition.consume_items(offer, basket, ())

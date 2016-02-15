@@ -10,9 +10,15 @@ from oscar.models.fields import PhoneNumberField
 class MandatoryPhoneNumber(models.Model):
     phone_number = PhoneNumberField()
 
+    class Meta:
+        app_label = 'tests'
+
 
 class OptionalPhoneNumber(models.Model):
     phone_number = PhoneNumberField(blank=True, default='')
+
+    class Meta:
+        app_label = 'tests'
 
 
 class PhoneNumberForm(forms.ModelForm):

@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse
+from django.utils import timezone
 from oscar.test import testcases, factories
 
 from oscar.apps.offer import models
@@ -42,6 +43,31 @@ class TestAnAdmin(testcases.WebTestCase):
         self.assertEqual(3, offer.condition.value)
         self.assertEqual(25, offer.benefit.value)
 
+    def test_offer_list_page(self):
+        offer = factories.create_offer(name="Offer A")
+
+        list_page = self.get(reverse('dashboard:offer-list'))
+        form = list_page.forms[0]
+        form['name'] = "I do not exist"
+        res = form.submit()
+        self.assertTrue("No offers found" in res.text)
+
+        form['name'] = "Offer A"
+        res = form.submit()
+        self.assertFalse("No offers found" in res.text)
+
+        form['is_active'] = True
+        res = form.submit()
+        self.assertFalse("No offers found" in res.text)
+
+        yesterday = timezone.now() - timezone.timedelta(days=1)
+        offer.end_datetime = yesterday
+        offer.save()
+
+        form['is_active'] = True
+        res = form.submit()
+        self.assertTrue("No offers found" in res.text)
+
     def test_can_update_an_existing_offer(self):
         factories.create_offer(name="Offer A")
 
@@ -62,6 +88,15 @@ class TestAnAdmin(testcases.WebTestCase):
         restrictions_page.form.submit()
 
         models.ConditionalOffer.objects.get(name="Offer A+")
+
+    def test_can_update_an_existing_offer_save_directly(self):
+        # see if we can save the offer directly without completing all
+        # steps
+        offer = factories.create_offer(name="Offer A")
+        name_and_description_page = self.get(
+            reverse('dashboard:offer-metadata', kwargs={'pk': offer.pk}))
+        res = name_and_description_page.form.submit('save').follow()
+        self.assertEqual(200, res.status_code)
 
     def test_can_jump_to_intermediate_step_for_existing_offer(self):
         offer = factories.create_offer()

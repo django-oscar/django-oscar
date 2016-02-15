@@ -63,13 +63,19 @@ class StockRecordForm(forms.ModelForm):
         self.user = user
         super(StockRecordForm, self).__init__(*args, **kwargs)
 
+        # Restrict accessible partners for non-staff users
+        if not self.user.is_staff:
+            self.fields['partner'].queryset = self.user.partners.all()
+
         # If not tracking stock, we hide the fields
         if not product_class.track_stock:
-            del self.fields['num_in_stock']
-            del self.fields['low_stock_threshold']
+            for field_name in ['num_in_stock', 'low_stock_treshold']:
+                if field_name in self.fields:
+                    del self.fields[field_name]
         else:
-            self.fields['price_excl_tax'].required = True
-            self.fields['num_in_stock'].required = True
+            for field_name in ['price_excl_tax', 'num_in_stock']:
+                if field_name in self.fields:
+                    self.fields[field_name].required = True
 
     class Meta:
         model = StockRecord
@@ -90,6 +96,15 @@ class StockRecordFormSet(BaseStockRecordFormSet):
         self.user = user
         self.require_user_stockrecord = not user.is_staff
         self.product_class = product_class
+
+        if not user.is_staff and \
+           'instance' in kwargs and \
+           'queryset' not in kwargs:
+            kwargs.update({
+                'queryset': StockRecord.objects.filter(product=kwargs['instance'],
+                                                       partner__in=user.partners.all())
+            })
+
         super(StockRecordFormSet, self).__init__(*args, **kwargs)
         self.set_initial_data()
 

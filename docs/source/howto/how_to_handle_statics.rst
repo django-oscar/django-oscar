@@ -39,31 +39,10 @@ LESS/CSS
 
 By default, CSS files compiled from their LESS sources are used rather than the
 LESS ones.  To use Less directly, set ``USE_LESS = True`` in your settings file.
-You will also need to ensure that the ``lessc`` executable is installed and is
-configured using a setting like::
-
-    COMPRESS_PRECOMPILERS = (
-        ('text/less', 'lessc {infile} {outfile}'),
-    )
-
+This will enable the on-the-fly pre-processor which lets you trial changes with
+a page reload. If you want to commit your changes, use the ``make css`` Makefile
+command, making sure you have the ``lessc`` binary available on your command line.
 A few other CSS files are used to provide styles for javascript libraries.
-
-Using offline compression
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Django compressor also provides a way of running offline compression which can
-be used during deployment to automatically generate CSS files from your LESS
-files. To make sure that compressor is obeying the ``USE_LESS`` setting and
-is not trying to compress CSS files that are not available, the setting has to
-be passed into the ``COMPRESS_OFFLINE_CONTEXT``. You should add something like
-this to your settings file::
-
-    COMPRESS_OFFLINE_CONTEXT = {
-        # this is the only default value from compressor itself
-        'STATIC_URL': STATIC_URL,
-        'use_less': USE_LESS,
-    }
-
 
 Javascript
 ----------
@@ -127,3 +106,4 @@ and replace the 'less' block::
     {% block less %}
         <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}myproject/less/styles.less" />
     {% endblock %}
+
