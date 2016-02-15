@@ -6,6 +6,7 @@ from . import availability, prices
 BasePurchaseInfo = namedtuple(
     'BasePurchaseInfo', ['min_price', 'max_price', 'availability', 'stockrecord'])
 
+
 # A container for policies
 class PurchaseInfo(BasePurchaseInfo):
     @property
@@ -232,6 +233,7 @@ class StockRequired(object):
                 return availability.Available()
         return availability.Unavailable()
 
+
 class PricingPolicyMixin(object):
     """
     Default mixin uses the pricing_policy method to compute the
@@ -247,6 +249,7 @@ class PricingPolicyMixin(object):
             if child_policy.excl_tax is not None:
                 pricing.append(child_policy)
         return pricing
+
 
 class NoTax(PricingPolicyMixin):
     """
