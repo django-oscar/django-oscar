@@ -35,10 +35,13 @@ class TestBankcardNumberField(TestCase):
         with self.assertRaises(ValidationError):
             self.field.clean('348934265521923')
 
-
     def test_raises_error_for_invalid_card_type(self):
         with self.assertRaises(ImproperlyConfigured):
             self.field = forms.BankcardNumberField(types=['American Express', 'Nonsense'])
+
+    def test_rejects_none(self):
+        with self.assertRaises(ValidationError):
+            self.field.clean(None)
 
 
 class TestStartingMonthField(TestCase):
