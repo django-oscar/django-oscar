@@ -133,7 +133,7 @@ class BankcardExpiryMonthField(BankcardMonthField):
 
     def clean(self, value):
         expiry_date = super(BankcardExpiryMonthField, self).clean(value)
-        if date.today() > expiry_date:
+        if expiry_date and date.today() > expiry_date:
             raise forms.ValidationError(
                 _("The expiration date you entered is in the past."))
         return expiry_date
