@@ -79,7 +79,7 @@ class BulkEditMixin(object):
             messages.error(
                 self.request,
                 _("You need to select some %ss")
-                % self.get_checkbox_object_name())
+                % self.model._meta.verbose_name_plural)
             return redirect(self.get_error_url(request))
 
         objects = self.get_objects(ids)
