@@ -217,7 +217,7 @@ class UserAddressUpdateView(CheckoutSessionMixin, generic.UpdateView):
 
 class UserAddressDeleteView(CheckoutSessionMixin, generic.DeleteView):
     """
-    Delete an address from a user's addressbook.
+    Delete an address from a user's address book.
     """
     template_name = 'checkout/user_address_delete.html'
     success_url = reverse_lazy('checkout:shipping-address')

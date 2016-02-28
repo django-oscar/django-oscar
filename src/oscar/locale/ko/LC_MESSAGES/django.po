@@ -5936,7 +5936,7 @@ msgid "Where should we ship to?"
 msgstr "어디로 배송해야 하나요?"
 
 #: templates/oscar/checkout/shipping_address.html:22
-msgid "An address from your addressbook?"
+msgid "An address from your address book?"
 msgstr "주소록에 있는 주소를 사용하시겠습니까?"
 
 #: templates/oscar/checkout/shipping_address.html:41

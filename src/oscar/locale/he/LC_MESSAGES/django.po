@@ -5943,7 +5943,7 @@ msgid "Where should we ship to?"
 msgstr "לאן לשלוח את הזמנתך?"
 
 #: templates/oscar/checkout/shipping_address.html:22
-msgid "An address from your addressbook?"
+msgid "An address from your address book?"
 msgstr "כתובת מרשימת הכתובות שלך?"
 
 #: templates/oscar/checkout/shipping_address.html:41

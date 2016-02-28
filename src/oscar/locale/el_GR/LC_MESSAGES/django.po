@@ -5940,7 +5940,7 @@ msgid "Where should we ship to?"
 msgstr ""
 
 #: templates/oscar/checkout/shipping_address.html:22
-msgid "An address from your addressbook?"
+msgid "An address from your address book?"
 msgstr "Μια διεύθυνση από το βιβλίο διευθύνσεών σας;"
 
 #: templates/oscar/checkout/shipping_address.html:41

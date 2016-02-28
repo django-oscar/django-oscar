@@ -5950,7 +5950,7 @@ msgid "Where should we ship to?"
 msgstr "Куди доставити замовлення?"
 
 #: templates/oscar/checkout/shipping_address.html:22
-msgid "An address from your addressbook?"
+msgid "An address from your address book?"
 msgstr "Адреса з Вашої адресної книги?"
 
 #: templates/oscar/checkout/shipping_address.html:41
