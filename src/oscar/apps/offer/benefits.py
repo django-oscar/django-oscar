@@ -55,7 +55,7 @@ class PercentageDiscountBenefit(Benefit):
         discount_amount_available = max_total_discount
 
         line_tuples = self.get_applicable_lines(offer, basket)
-
+        discount_percent = min(discount_percent, D('100.0'))
         discount = D('0.00')
         affected_items = 0
         max_affected_items = self._effective_max_affected_items()
