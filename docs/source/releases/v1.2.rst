@@ -103,7 +103,6 @@ Dependency changes
 ------------------
 
 * The following packages are updated:
-    - `django-treebeard >= 4.0` (Django 1.9 support)
     - `sorl.thumbnail >= 12.4a1` (Django 1.9 support)
 * JQuery UI is no longer included in the dashboard (`#1792`_)
 
