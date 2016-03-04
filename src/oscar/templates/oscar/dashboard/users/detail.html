@@ -158,9 +158,7 @@
                                     </div>
                                     {% if forloop.counter|divisibleby:4 %}
                                     </div>
-                                    {% if not forloop.last %}
-                                        <div class="row">
-                                        {% endif %}
+                                    <div class="row">
                                     {% endif %}
                                 {% empty %}
                                     <p>{% trans "This customer has not saved any addresses." %}</p>
