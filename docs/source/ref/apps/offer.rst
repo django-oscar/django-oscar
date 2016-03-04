@@ -33,7 +33,7 @@ in isolation or combination:
 
 * Date range - a date can be set, outside of which the offer is unavailable.
 
-* Max global applications - the number of times and offer can be used can be capped.
+* Max global applications - the number of times an offer can be used can be capped.
   Note that an offer can be used multiple times within the same order so this
   isn't the same as limiting the number of orders that can use an offer.
 
