@@ -4,6 +4,14 @@ Release notes
 
 Release notes for each version of Oscar published to PyPI.
 
+1.3 release branch
+
+.. toctree::
+    :maxdepth: 1
+
+    v1.3
+
+
 1.2 release branch
 
 .. toctree::
