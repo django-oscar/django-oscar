@@ -22,9 +22,8 @@ Table of contents:
 Compatibility
 -------------
 
-Oscar 1.2 is compatible with Django 1.7, 1.8 and 1.9 as well as Python 2.7,
+Oscar 1.2 is compatible with Django 1.7 and 1.8 as well as Python 2.7,
 3.3, 3.4 and 3.5.
-
 
 
 .. _new_in_1.2:
@@ -59,9 +58,18 @@ Minor changes
    instead of the official name (`#1964`_).
  - Custom benefits now don't enforce uniqueness on the ``proxy_class``
    field, making them more useful (`#685`_).
+ - Move logic to create basket messages to it's own utility class
+   `basket.utils.BasketMessageGenerator()`. (`#1930`_)
+ - Fix a caching issue in `Product.get_absolute_url()` (`#1925`_)
+ - Update the `recently_viewed_products` templatetag to accept a 
+   `current_product` attribute. (`#1948`_)
+
 
 .. _`#685`: https://github.com/django-oscar/django-oscar/issues/685
 .. _`#1816`: https://github.com/django-oscar/django-oscar/issues/1816
+.. _`#1930`: https://github.com/django-oscar/django-oscar/issues/1930
+.. _`#1925`: https://github.com/django-oscar/django-oscar/issues/1925
+.. _`#1948`: https://github.com/django-oscar/django-oscar/issues/1948
 
 
 .. _incompatible_in_1.2:
@@ -85,22 +93,11 @@ Backwards incompatible changes in Oscar 1.2
   `TopVotedReviewsManager` managers are removed from the reviews app 
   since they were broken and unused.
 
+ - A new unique index is added to `catalogue.AbstractAttributeOption` to make 
+   sure that the `group`, `option` combination is unique (`#1935`)
 
-Undocumented
-~~~~~~~~~~~~
+.. _`#1935`: https://github.com/django-oscar/django-oscar/issues/1935
 
-We merged the work below, but haven't yet gotten around to documenting it.
-https://github.com/django-oscar/django-oscar/issues/1935
-https://github.com/django-oscar/django-oscar/pull/1936
-
-https://github.com/django-oscar/django-oscar/issues/1929
-https://github.com/django-oscar/django-oscar/issues/1930
-
-https://github.com/django-oscar/django-oscar/issues/1925
-https://github.com/django-oscar/django-oscar/pull/1926
-
-https://github.com/django-oscar/django-oscar/pull/1948
-https://github.com/django-oscar/django-oscar/pull/1922
 
 Dependency changes
 ------------------
