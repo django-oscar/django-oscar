@@ -34,15 +34,10 @@ env:
     matrix:
         - DJANGO=Django==1.7.11
         - DJANGO=Django==1.8.10
-        - DJANGO=Django==1.9.3
 
 
 matrix:
     exclude:
-        - python: 3.2
-          env: "DJANGO=Django==1.9.3"
-        - python: 3.3
-          env: "DJANGO=Django==1.9.3"
         - python: 3.5
           env: "DJANGO=Django==1.7.11"
 
