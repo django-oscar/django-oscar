@@ -104,6 +104,7 @@ Dependency changes
 
 * The following packages are updated:
     - `sorl.thumbnail >= 12.3` 
+    - `django-widget-tweaks>=1.4.1`
 * JQuery UI is no longer included in the dashboard (`#1792`_)
 
 .. _`#1792`: https://github.com/django-oscar/django-oscar/issues/1792
