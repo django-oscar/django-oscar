@@ -312,9 +312,7 @@ class AbstractProductAlert(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL, db_index=True, blank=True,
                              null=True, related_name="alerts",
                              verbose_name=_('User'))
-    # TODO Remove the max_length kwarg when support for Django 1.7 is dropped
-    email = models.EmailField(_("Email"), db_index=True, blank=True,
-                              max_length=75)
+    email = models.EmailField(_("Email"), db_index=True, blank=True)
 
     # This key are used to confirm and cancel alerts for anon users
     key = models.CharField(_("Key"), max_length=128, blank=True, db_index=True)
