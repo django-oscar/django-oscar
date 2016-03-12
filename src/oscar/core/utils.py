@@ -8,7 +8,6 @@ from django.shortcuts import redirect, resolve_url
 from django.template.defaultfilters import date as date_filter
 from django.template.defaultfilters import slugify as django_slugify
 from django.utils import six
-from django.utils.text import force_text
 from django.utils.http import is_safe_url
 from django.utils.module_loading import import_string
 from django.utils.timezone import get_current_timezone, is_naive, make_aware
@@ -102,9 +101,6 @@ def safe_referrer(request, default):
     or a regular URL
     """
     referrer = request.META.get('HTTP_REFERER')
-    if referrer:
-        referrer = force_text(referrer)
-
     if referrer and is_safe_url(referrer, request.get_host()):
         return referrer
     if default:
