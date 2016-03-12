@@ -4,6 +4,7 @@ import datetime
 
 from django.conf import settings
 from django.test import TestCase, Client
+from django.utils.translation import ugettext
 from django.core.urlresolvers import reverse
 
 from oscar.test.factories import create_product
@@ -108,8 +109,13 @@ class BasketThresholdTest(TestCase):
                        'action': 'add',
                        'quantity': 2}
         response = self.client.post(url, post_params)
-        self.assertTrue('Your basket currently has 2 items.' in
-                        response.cookies['messages'].value)
+
+        expected = ugettext(
+            "Due to technical limitations we are not able to ship more "
+            "than %(threshold)d items in one order. Your basket currently "
+            "has %(basket)d items."
+        ) % ({'threshold': 3, 'basket': 2})
+        self.assertTrue(expected in response.cookies['messages'].value)
 
 
 class BasketReportTests(TestCase):
