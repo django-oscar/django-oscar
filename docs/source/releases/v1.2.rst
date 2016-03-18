@@ -2,11 +2,7 @@
 Oscar 1.2 release notes
 =======================
 
-.. warning::
-
-    Oscar 1.2 is still in development. This document is a work-in-progress.
-
-:release: TBD
+:release: 2016-03-18
 
 Welcome to Oscar 1.2.
 
