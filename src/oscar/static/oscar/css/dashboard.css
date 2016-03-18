@@ -5490,6 +5490,9 @@ td .btn-toolbar {
   -webkit-font-smoothing: antialiased;
   *margin-right: .3em;
 }
+.form-inline .form-group .form-inline {
+  display: inline-block;
+}
 .navbar {
   margin-bottom: 0;
 }
