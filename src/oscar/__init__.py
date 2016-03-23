@@ -1,7 +1,7 @@
 import os
 
 # Use 'dev', 'beta', or 'final' as the 4th element to indicate release type.
-VERSION = (1, 2, 0, 'dev')
+VERSION = (1, 3, 0, 'dev')
 
 
 def get_short_version():
