@@ -11,3 +11,10 @@ Minor changes
 =============
 
 Change the babel requirement in setup.py to allow versions up to 3.0
+
+Bug fixes
+=========
+
+* `#2019`_: Optimize ORM query on the offer detail page in the dashboard.
+
+  .. _#2019: https://github.com/django-oscar/django-oscar/pull/2019
