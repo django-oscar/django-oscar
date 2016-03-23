@@ -366,7 +366,8 @@ class OfferDetailView(ListView):
             reverse('dashboard:offer-detail', kwargs={'pk': self.offer.pk}))
 
     def get_queryset(self):
-        return self.model.objects.filter(offer_id=self.offer.pk)
+        return self.model.objects.filter(offer_id=self.offer.pk) \
+            .select_related('order')
 
     def get_context_data(self, **kwargs):
         ctx = super(OfferDetailView, self).get_context_data(**kwargs)
