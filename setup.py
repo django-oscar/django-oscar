@@ -44,7 +44,7 @@ setup(name='django-oscar',
           # Sorl is used as the default thumbnailer
           'sorl-thumbnail>=12.4a1',
           # Babel is used for currency formatting
-          'Babel>=1.0,<1.4',
+          'Babel>=1.0,<3.0',
           # For converting non-ASCII to ASCII when creating slugs
           'Unidecode>=0.04.12,<0.05',
           # For manipulating search URLs
