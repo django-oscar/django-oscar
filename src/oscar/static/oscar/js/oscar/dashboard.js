@@ -7,10 +7,14 @@ var oscar = (function(o, $) {
         $.each(cookies, function(index, cookie) {
             cookieParts = $.trim(cookie).split('=');
             if (cookieParts[0] == 'csrftoken') {
-                csrfToken = cookieParts[1];
+                csrf_token = cookieParts[1];
             }
         });
-        return csrfToken;
+        // Extract from cookies fails for HTML-Only cookies
+        if (! csrf_token) {
+            csrf_token = $(document.forms.valueOf()).find('[name="csrfmiddlewaretoken"]')[0].value;
+        }
+        return csrf_token;
     };
 
     o.dashboard = {
