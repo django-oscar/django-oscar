@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='communicationeventtype',
             name='code',
-            field=oscar.models.fields.autoslugfield.AutoSlugField(populate_from=b'name', validators=[django.core.validators.RegexValidator(regex=b'^[a-zA-Z_][0-9a-zA-Z_]*$', message="Code can only contain the letters a-z, A-Z, digits, and underscores, and can't start with a digit.")], editable=False, max_length=128, separator='_', blank=True, help_text='Code used for looking up this event programmatically', unique=True, verbose_name='Code'),
+            field=oscar.models.fields.autoslugfield.AutoSlugField(populate_from='name', validators=[django.core.validators.RegexValidator(regex=r'^[a-zA-Z_][0-9a-zA-Z_]*$', message="Code can only contain the letters a-z, A-Z, digits, and underscores, and can't start with a digit.")], editable=False, max_length=128, separator='_', blank=True, help_text='Code used for looking up this event programmatically', unique=True, verbose_name='Code'),
             preserve_default=True,
         ),
     ]
