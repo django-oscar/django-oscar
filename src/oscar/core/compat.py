@@ -175,7 +175,7 @@ class UnicodeCSVWriter:
         self.writer = None
         # If a new file is created with UTF-8 encoding, set byte order mark at the beginning of the
         # file for better compatibility with readers like MS Excel.
-        if self.filename is None and self.encoding == "utf-8":
+        if self.filename is None and not PY3 and self.encoding == "utf-8":
                 self.f.write(codecs.BOM_UTF8)
 
     def __enter__(self):
