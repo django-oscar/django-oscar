@@ -1,4 +1,5 @@
 from os.path import dirname
+import sys
 
 from django.test import TestCase
 from django.conf import settings
@@ -158,3 +159,29 @@ class TestAppLabelsForModels(TestCase):
                 missing.append(model)
         if missing:
             self.fail("Those models don't have an app_label set: %s" % missing)
+
+
+class TestDynamicLoadingOn3rdPartyApps(TestCase):
+
+    core_app_prefix = 'thirdparty_package.apps'
+
+    def setUp(self):
+        self.installed_apps = list(settings.INSTALLED_APPS)
+        sys.path.append('./tests/_site/')
+
+    def tearDown(self):
+        sys.path.remove('./tests/_site/')
+
+    def test_load_core_3rd_party_class_correctly(self):
+        self.installed_apps.append('thirdparty_package.apps.myapp')
+        with override_settings(INSTALLED_APPS=self.installed_apps):
+            Cow, Goat = get_classes('myapp.models', ('Cow', 'Goat'), self.core_app_prefix)
+            self.assertEqual('thirdparty_package.apps.myapp.models', Cow.__module__)
+            self.assertEqual('thirdparty_package.apps.myapp.models', Goat.__module__)
+
+    def test_load_overriden_3rd_party_class_correctly(self):
+        self.installed_apps.append('apps.myapp')
+        with override_settings(INSTALLED_APPS=self.installed_apps):
+            Cow, Goat = get_classes('myapp.models', ('Cow', 'Goat'), self.core_app_prefix)
+            self.assertEqual('thirdparty_package.apps.myapp.models', Cow.__module__)
+            self.assertEqual('apps.myapp.models', Goat.__module__)

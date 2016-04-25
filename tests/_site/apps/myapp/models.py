@@ -1,0 +1,2 @@
+class Goat(object):
+    pass
