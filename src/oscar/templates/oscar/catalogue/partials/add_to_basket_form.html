@@ -1,7 +1,7 @@
 {% load basket_tags %}
 {% load display_tags %}
 {% load i18n %}
-{% load purchase_info_tags %}
+{% load purchase_info_tags display_tags %}
 
 {% purchase_info_for_product request product as session %}
 
@@ -16,16 +16,18 @@
         {% include "catalogue/partials/add_to_wishlist.html" %}
     {% endiffeature %}
 {% else %}
-    {% if has_active_alert %}
-        <p>{% trans "You have an active stock alert for this product." %}</p>
-    {% else %}
-        <form id="alert_form" method="post" action="{% url 'customer:alert-create' pk=product.id %}" class="add-to-basket">
-            {% csrf_token %}
-            <p>{% trans "You can get an email alert when this product is back in stock." %}</p>
-            {% include "partials/form_fields.html" with form=alert_form %}
-            <button type="submit" class="btn btn-lg btn-info btn-add-to-basket" data-loading-text="{% trans 'Submitting...' %}">{% trans "Notify me" %}</button>
-        </form>
-    {% endif %}
+    {% iffeature 'alerts' %}
+        {% if has_active_alert %}
+            <p>{% trans "You have an active stock alert for this product." %}</p>
+        {% else %}
+            <form id="alert_form" method="post" action="{% url 'customer:alert-create' pk=product.id %}" class="add-to-basket">
+                {% csrf_token %}
+                <p>{% trans "You can get an email alert when this product is back in stock." %}</p>
+                {% include "partials/form_fields.html" with form=alert_form %}
+                <button type="submit" class="btn btn-lg btn-info btn-add-to-basket" data-loading-text="{% trans 'Submitting...' %}">{% trans "Notify me" %}</button>
+            </form>
+        {% endif %}
+    {% endiffeature %}
     {% iffeature "wishlists" %}
         {% include "catalogue/partials/add_to_wishlist.html" %}
     {% endiffeature %}

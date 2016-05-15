@@ -1,6 +1,6 @@
 {% extends "layout_2_col.html" %}
 
-{% load i18n %}
+{% load i18n displaytags %}
 
 {% block title %}
     {{ page_title }} | {% trans 'Account' %} | {{ block.super }}
@@ -38,15 +38,19 @@
             <li{% if active_tab == 'emails' %} class="active"{% endif %}>
                 <a href="{% url 'customer:email-list' %}">{% trans "Email History" %}</a>
             </li>
-            <li{% if active_tab == 'alerts' %} class="active"{% endif %}>
-                <a href="{% url 'customer:alerts-list' %}">{% trans "Product Alerts" %}</a>
-            </li>
+            {% iffeature 'alerts' %}
+                <li{% if active_tab == 'alerts' %} class="active"{% endif %}>
+                    <a href="{% url 'customer:alerts-list' %}">{% trans "Product Alerts" %}</a>
+                </li>
+            {% endiffeature %}
             <li{% if active_tab == 'notifications' %} class="active"{% endif %}>
                 <a href="{% url 'customer:notifications-inbox' %}">{% trans "Notifications" %}</a>
             </li>
-            <li{% if active_tab == 'wishlists' %} class="active"{% endif %}>
-                <a href="{% url 'customer:wishlists-list' %}">{% trans "Wish Lists" %}</a>
-            </li>
+            {% iffeature 'wishlists' %}
+                <li{% if active_tab == 'wishlists' %} class="active"{% endif %}>
+                    <a href="{% url 'customer:wishlists-list' %}">{% trans "Wish Lists" %}</a>
+                </li>
+            {% endiffeature %}
         {% endblock %}
     </ul>
 {% endblock %}

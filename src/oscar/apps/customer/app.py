@@ -1,13 +1,21 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib.auth.decorators import login_required
 from django.views import generic
 
-from oscar.core.application import Application
 from oscar.core.loading import get_class
+from oscar.core.application import Application
+from oscar.apps.customer.alerts.app import application as alerts_app
+from oscar.apps.customer.wishlists.app import application as wishlists_app
 
 
 class CustomerApplication(Application):
     name = 'customer'
+
+    sub_applications = [
+        (r'^wishlists/', wishlists_app),
+        (r'^alerts/$', alerts_app),
+    ]
+
     summary_view = get_class('customer.views', 'AccountSummaryView')
     order_history_view = get_class('customer.views', 'OrderHistoryView')
     order_detail_view = get_class('customer.views', 'OrderDetailView')
@@ -40,34 +48,6 @@ class CustomerApplication(Application):
                                          'UpdateView')
     notification_detail_view = get_class('customer.notifications.views',
                                          'DetailView')
-
-    alert_list_view = get_class('customer.alerts.views',
-                                'ProductAlertListView')
-    alert_create_view = get_class('customer.alerts.views',
-                                  'ProductAlertCreateView')
-    alert_confirm_view = get_class('customer.alerts.views',
-                                   'ProductAlertConfirmView')
-    alert_cancel_view = get_class('customer.alerts.views',
-                                  'ProductAlertCancelView')
-
-    wishlists_add_product_view = get_class('customer.wishlists.views',
-                                           'WishListAddProduct')
-    wishlists_list_view = get_class('customer.wishlists.views',
-                                    'WishListListView')
-    wishlists_detail_view = get_class('customer.wishlists.views',
-                                      'WishListDetailView')
-    wishlists_create_view = get_class('customer.wishlists.views',
-                                      'WishListCreateView')
-    wishlists_create_with_product_view = get_class('customer.wishlists.views',
-                                                   'WishListCreateView')
-    wishlists_update_view = get_class('customer.wishlists.views',
-                                      'WishListUpdateView')
-    wishlists_delete_view = get_class('customer.wishlists.views',
-                                      'WishListDeleteView')
-    wishlists_remove_product_view = get_class('customer.wishlists.views',
-                                              'WishListRemoveProduct')
-    wishlists_move_product_to_another_view = get_class(
-        'customer.wishlists.views', 'WishListMoveProductToAnotherWishList')
 
     def get_urls(self):
         urls = [
@@ -147,63 +127,12 @@ class CustomerApplication(Application):
             url(r'^notifications/(?P<pk>\d+)/$',
                 login_required(self.notification_detail_view.as_view()),
                 name='notifications-detail'),
+        ]
 
-            # Alerts
-            # Alerts can be setup by anonymous users: some views do not
-            # require login
-            url(r'^alerts/$',
-                login_required(self.alert_list_view.as_view()),
-                name='alerts-list'),
-            url(r'^alerts/create/(?P<pk>\d+)/$',
-                self.alert_create_view.as_view(),
-                name='alert-create'),
-            url(r'^alerts/confirm/(?P<key>[a-z0-9]+)/$',
-                self.alert_confirm_view.as_view(),
-                name='alerts-confirm'),
-            url(r'^alerts/cancel/key/(?P<key>[a-z0-9]+)/$',
-                self.alert_cancel_view.as_view(),
-                name='alerts-cancel-by-key'),
-            url(r'^alerts/cancel/(?P<pk>[a-z0-9]+)/$',
-                login_required(self.alert_cancel_view.as_view()),
-                name='alerts-cancel-by-pk'),
-
-            # Wishlists
-            url(r'wishlists/$',
-                login_required(self.wishlists_list_view.as_view()),
-                name='wishlists-list'),
-            url(r'wishlists/add/(?P<product_pk>\d+)/$',
-                login_required(self.wishlists_add_product_view.as_view()),
-                name='wishlists-add-product'),
-            url(r'wishlists/(?P<key>[a-z0-9]+)/add/(?P<product_pk>\d+)/',
-                login_required(self.wishlists_add_product_view.as_view()),
-                name='wishlists-add-product'),
-            url(r'wishlists/create/$',
-                login_required(self.wishlists_create_view.as_view()),
-                name='wishlists-create'),
-            url(r'wishlists/create/with-product/(?P<product_pk>\d+)/$',
-                login_required(self.wishlists_create_view.as_view()),
-                name='wishlists-create-with-product'),
-            # Wishlists can be publicly shared, no login required
-            url(r'wishlists/(?P<key>[a-z0-9]+)/$',
-                self.wishlists_detail_view.as_view(), name='wishlists-detail'),
-            url(r'wishlists/(?P<key>[a-z0-9]+)/update/$',
-                login_required(self.wishlists_update_view.as_view()),
-                name='wishlists-update'),
-            url(r'wishlists/(?P<key>[a-z0-9]+)/delete/$',
-                login_required(self.wishlists_delete_view.as_view()),
-                name='wishlists-delete'),
-            url(r'wishlists/(?P<key>[a-z0-9]+)/lines/(?P<line_pk>\d+)/delete/',
-                login_required(self.wishlists_remove_product_view.as_view()),
-                name='wishlists-remove-product'),
-            url(r'wishlists/(?P<key>[a-z0-9]+)/products/(?P<product_pk>\d+)/'
-                r'delete/',
-                login_required(self.wishlists_remove_product_view.as_view()),
-                name='wishlists-remove-product'),
-            url(r'wishlists/(?P<key>[a-z0-9]+)/lines/(?P<line_pk>\d+)/move-to/'
-                r'(?P<to_key>[a-z0-9]+)/$',
-                login_required(self.wishlists_move_product_to_another_view
-                               .as_view()),
-                name='wishlists-move-product-to-another')]
+        for url_prefix, app in self.sub_applications:
+            urls += [
+                url(url_prefix, include(app.urls))
+            ]
 
         return self.post_process_urls(urls)
 
