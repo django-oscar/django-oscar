@@ -27,10 +27,10 @@ Drop into pdb when a test fails
 $ ./runtests.py ... --pdb
 """
 
-import os
-import multiprocessing
-import sys
 import logging
+import multiprocessing
+import os
+import sys
 import warnings
 
 import pytest

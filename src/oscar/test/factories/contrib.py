@@ -1,5 +1,6 @@
-import factory
 from django.contrib.auth import models as auth_models
+
+import factory
 
 __all__ = ['PermissionFactory']
 

@@ -4,11 +4,9 @@ from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib import admin
 
-from oscar.app import application
-from oscar.views import handler500, handler404, handler403
-
 from apps.sitemaps import base_sitemaps
-
+from oscar.app import application
+from oscar.views import handler403, handler404, handler500
 
 admin.autodiscover()
 

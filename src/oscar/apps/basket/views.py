@@ -11,8 +11,8 @@ from django.template.loader import render_to_string
 from django.utils.http import is_safe_url
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import FormView, View
-from extra_views import ModelFormSetView
 
+from extra_views import ModelFormSetView
 from oscar.apps.basket import signals
 from oscar.core import ajax
 from oscar.core.loading import get_class, get_classes, get_model

@@ -1,8 +1,8 @@
 from decimal import Decimal as D
 
-import factory
 from django.conf import settings
 
+import factory
 from oscar.core.loading import get_model
 from oscar.core.utils import slugify
 from oscar.test.factories.utils import tax_add, tax_subtract

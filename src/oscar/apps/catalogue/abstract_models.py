@@ -21,13 +21,12 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import get_language, pgettext_lazy
 
-from treebeard.mp_tree import MP_Node
-
 from oscar.core.decorators import deprecated
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import slugify
 from oscar.core.validators import non_python_keyword
 from oscar.models.fields import AutoSlugField, NullCharField
+from treebeard.mp_tree import MP_Node
 
 ProductManager, BrowsableProductManager = get_classes(
     'catalogue.managers', ['ProductManager', 'BrowsableProductManager'])

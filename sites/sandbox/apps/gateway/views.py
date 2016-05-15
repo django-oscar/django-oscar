@@ -1,13 +1,13 @@
 import logging
 
-from django.views import generic
-from django.contrib.auth.models import User
-from django.contrib import messages
-from django.core.mail import send_mail
 from django import http
+from django.contrib import messages
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
-from django.template.loader import get_template
 from django.template import Context
+from django.template.loader import get_template
+from django.views import generic
 
 from apps.gateway import forms
 from oscar.apps.customer.forms import generate_username
@@ -49,4 +49,3 @@ class GatewayView(generic.FormView):
         send_mail('Dashboard access to Oscar sandbox',
                   msg, 'blackhole@latest.oscarcommerce.com',
                   [real_email])
-

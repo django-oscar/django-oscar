@@ -1,8 +1,8 @@
 import datetime
 
-import factory
 from django.utils.timezone import now
 
+import factory
 from oscar.core.loading import get_model
 
 __all__ = ['VoucherFactory']

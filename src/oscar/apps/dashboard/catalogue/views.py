@@ -7,8 +7,8 @@ from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
-from django_tables2 import SingleTableMixin
 
+from django_tables2 import SingleTableMixin
 from oscar.core.loading import get_classes, get_model
 from oscar.views.generic import ObjectLookupView
 

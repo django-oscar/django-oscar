@@ -1,4 +1,3 @@
-from django.utils import timezone
 import json
 
 from django.contrib import messages
@@ -7,6 +6,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DeleteView, FormView, ListView
 

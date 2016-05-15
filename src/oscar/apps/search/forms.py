@@ -4,8 +4,8 @@ from django import forms
 from django.conf import settings
 from django.forms.widgets import Input
 from django.utils.translation import ugettext_lazy as _
-from haystack.forms import FacetedSearchForm
 
+from haystack.forms import FacetedSearchForm
 from oscar.core.loading import get_class
 
 is_solr_supported = get_class('search.features', 'is_solr_supported')
