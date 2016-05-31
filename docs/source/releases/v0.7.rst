@@ -385,4 +385,4 @@ Migrations
     - ``0002`` and ``0003`` - Convert ``[start|end]_date`` to
       ``[start|end]_datetime`` (includes data migration).
 
-.. _`convert an app`: http://south.readthedocs.org/en/latest/convertinganapp.html
+.. _`convert an app`: https://south.readthedocs.io/en/latest/convertinganapp.html

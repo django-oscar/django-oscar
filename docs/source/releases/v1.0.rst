@@ -264,7 +264,7 @@ Minor changes
 
 * ... and dozens of bugs fixed!
 
-.. _django-tables2: http://django-tables2.readthedocs.org/en/latest/
+.. _django-tables2: https://django-tables2.readthedocs.io/en/latest/
 .. _bootstrap-datetimepicker: http://www.malot.fr/bootstrap-datetimepicker/
 
 
