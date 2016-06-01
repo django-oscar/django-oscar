@@ -12,7 +12,7 @@ def create_from_sequence(bits):
         name = bits[0]
         try:
             # Category names should be unique at the depth=1
-            root = Category.objects.get(depth=1, name=name)
+            root = Category.get_root_nodes().get(name=name)
         except Category.DoesNotExist:
             root = Category.add_root(name=name)
         except Category.MultipleObjectsReturned:
