@@ -20,7 +20,7 @@ Contents:
     :target: http://oscarcommerce.com
 
 .. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/readthedocs.thumb.png
-    :target: http://django-oscar.readthedocs.org/en/latest/
+    :target: https://django-oscar.readthedocs.io/en/latest/
 
 Further reading:
 
@@ -63,7 +63,7 @@ Docs status:
 
 .. _`Official homepage`: http://oscarcommerce.com
 .. _`Sandbox site`: http://latest.oscarcommerce.com
-.. _`Documentation`: http://django-oscar.readthedocs.org/en/latest/
+.. _`Documentation`: https://django-oscar.readthedocs.io/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
 .. _`Continuous integration homepage`: http://travis-ci.org/#!/django-oscar/django-oscar
 .. _`travis-ci.org`: http://travis-ci.org/
@@ -120,8 +120,8 @@ The sandbox site can be set-up locally `in 5 commands`_.  Want to
 make changes?  Check out the `contributing guidelines`_.
 
 .. _`this gateway page`: http://latest.oscarcommerce.com/gateway/
-.. _`in 5 commands`: http://django-oscar.readthedocs.org/en/latest/internals/sandbox.html#running-the-sandbox-locally
-.. _`contributing guidelines`: http://django-oscar.readthedocs.org/en/latest/internals/contributing/index.html
+.. _`in 5 commands`: https://django-oscar.readthedocs.io/en/latest/internals/sandbox.html#running-the-sandbox-locally
+.. _`contributing guidelines`: https://django-oscar.readthedocs.io/en/latest/internals/contributing/index.html
 
 
 Extensions

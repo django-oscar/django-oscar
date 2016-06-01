@@ -35,4 +35,4 @@ The following bugs were fixed:
 .. _`#1127`: https://github.com/django-oscar/django-oscar/issues/1127
 .. _`fa1f8403`: https://github.com/django-oscar/django-oscar/commit/fa1f8403fb43af693766acafc520d10932a7f5b0
 .. _`reverting the original commit`: https://github.com/django-oscar/django-oscar/commit/ec950cf9de16c68858bc095d980e478be8146f79
-.. _`explicit installation instructions`: http://django-debug-toolbar.readthedocs.org/en/latest/installation.html#explicit-setup
+.. _`explicit installation instructions`: https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#explicit-setup

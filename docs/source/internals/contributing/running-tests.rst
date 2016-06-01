@@ -41,7 +41,7 @@ system. All other requirements are downloaded automatically.
 detox_ is a wrapper around tox_, creating the environments and running the tests
 in parallel. This greatly speeds up the process.
 
-.. _tox: http://tox.readthedocs.org/en/latest/
+.. _tox: https://tox.readthedocs.io/en/latest/
 .. _detox: https://pypi.python.org/pypi/detox
 
 Kinds of tests

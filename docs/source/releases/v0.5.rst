@@ -123,7 +123,7 @@ There are several noteworthy smaller improvements
 
 * Flash messages can now contain HTML.
 
-.. _django-compressor: http://django_compressor.readthedocs.org/en/latest/
+.. _django-compressor: https://django-compressor.readthedocs.io/en/latest/
 
 Minor improvements
 ~~~~~~~~~~~~~~~~~~
