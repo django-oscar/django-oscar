@@ -25,6 +25,7 @@ env:
     matrix:
         - DJANGO=Django==1.8.13
         - DJANGO=Django==1.9.7
+        - DJANGO=Django==1.10.4
 
 
 matrix:
@@ -32,13 +33,15 @@ matrix:
         # Python 3.3 is not supported by Django 1.9
         - python: 3.3
           env: "DJANGO=Django==1.9.7"
+        - python: 3.3
+          env: "DJANGO=Django==1.10.4"
 
 before_install:
     - pip install codecov
 
 install:
-    - pip install --pre $DJANGO 
-    - pip install -r requirements.txt 
+    - pip install --pre $DJANGO
+    - pip install -r requirements.txt
     - pip list
 
 before_script:
