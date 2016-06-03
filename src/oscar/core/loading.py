@@ -11,7 +11,7 @@ from oscar.core.exceptions import (
     AppNotFoundError, ClassNotFoundError, ModuleNotFoundError)
 
 
-def get_class(module_label, classname):
+def get_class(module_label, classname, module_prefix='oscar.apps'):
     """
     Dynamically import a single class from the given module.
 
@@ -26,17 +26,17 @@ def get_class(module_label, classname):
     Returns:
         The requested class object or `None` if it can't be found
     """
-    return get_classes(module_label, [classname])[0]
+    return get_classes(module_label, [classname], module_prefix)[0]
 
 
-def get_classes(module_label, classnames):
+def get_classes(module_label, classnames, module_prefix='oscar.apps'):
     """
     Dynamically import a list of classes from the given module.
 
     This works by looping over ``INSTALLED_APPS`` and looking for a match
     against the passed module label.  If the requested class can't be found in
     the matching module, then we attempt to import it from the corresponding
-    core Oscar app (assuming the matched module isn't in Oscar).
+    core app.
 
     This is very similar to ``django.db.models.get_model`` function for
     dynamically loading models.  This function is more general though as it can
@@ -82,14 +82,14 @@ def get_classes(module_label, classnames):
 
     # import from Oscar package (should succeed in most cases)
     # e.g. 'oscar.apps.dashboard.catalogue.forms'
-    oscar_module_label = "oscar.apps.%s" % module_label
+    oscar_module_label = "%s.%s" % (module_prefix, module_label)
     oscar_module = _import_module(oscar_module_label, classnames)
 
     # returns e.g. 'oscar.apps.dashboard.catalogue',
     # 'yourproject.apps.dashboard.catalogue' or 'dashboard.catalogue',
     # depending on what is set in INSTALLED_APPS
     installed_apps_entry, app_name = _find_installed_apps_entry(module_label)
-    if installed_apps_entry.startswith('oscar.apps.'):
+    if installed_apps_entry.startswith('%s.' % module_prefix):
         # The entry is obviously an Oscar one, we don't import again
         local_module = None
     else:
