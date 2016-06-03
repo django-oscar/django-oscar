@@ -14,6 +14,7 @@ from oscar.apps.offer import results
 from oscar.apps.partner import availability
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.utils import get_default_currency
+from oscar.models.fields.slugfield import SlugField
 from oscar.templatetags.currency_filters import currency
 
 
@@ -586,7 +587,7 @@ class AbstractLine(models.Model):
     # We can't just use product.id as you can have customised products
     # which should be treated as separate lines.  Set as a
     # SlugField as it is included in the path for certain views.
-    line_reference = models.SlugField(
+    line_reference = SlugField(
         _("Line Reference"), max_length=128, db_index=True)
 
     product = models.ForeignKey(

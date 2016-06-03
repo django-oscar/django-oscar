@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
-from django import template
+from unittest import skipIf
+
+from django import VERSION as DJANGO_VERSION
 from django.test import TestCase
+from django.test.utils import override_settings
 
 from oscar.apps.catalogue.models import Category
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
@@ -35,6 +38,15 @@ class TestCategory(TestCase):
     def test_duplicate_slugs_allowed_for_non_siblings(self):
         more_books = Category.add_root(name=self.books.name)
         self.assertEqual(more_books.slug, self.books.slug)
+
+    @skipIf(DJANGO_VERSION < (1, 9),
+            "unicode slugs not supported by Django<1.9")
+    def test_unicode_slug(self):
+        with override_settings(OSCAR_SLUG_ALLOW_UNICODE=True):
+            root_category = Category.add_root(name=u"Vins français")
+            child_category = root_category.add_child(name=u"Château d'Yquem")
+            self.assertEqual(root_category.slug, u'vins-français')
+            self.assertEqual(child_category.slug, u'château-dyquem')
 
 
 class TestMovingACategory(TestCase):
