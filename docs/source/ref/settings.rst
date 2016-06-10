@@ -368,6 +368,29 @@ the ``format_currency`` function from the `Babel library`_.
 
 .. _`Babel library`: http://babel.pocoo.org/docs/api/numbers/#babel.numbers.format_currency
 
+``OSCAR_CURRENCY_DIGITS``
+-------------------------
+
+Default: ``True``
+
+This can be used show or hide the digits, overriding the default for the given
+currency. The value will be passed to the ``format_currency`` function from the
+`Babel library`_.
+
+.. _`Babel library`: http://babel.pocoo.org/docs/api/numbers/#babel.numbers.format_currency
+
+``OSCAR_CURRENCY_FORMAT_TYPE``
+-------------------------
+
+Default: ``standard``
+
+This can be used choose an alternate format for a currency where available. The
+value will be passed to the ``format_currency`` function from the
+`Babel library`_.
+
+.. _`Babel library`: http://babel.pocoo.org/docs/api/numbers/#babel.numbers.format_currency
+
+
 Upload/media settings
 =====================
 
