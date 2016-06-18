@@ -50,7 +50,9 @@ class WebTestCase(WebTest):
         if exists.
         """
         kwargs = {'email': email, 'password': password}
-        if 'username' in User._meta.get_all_field_names():
+        fields = {f.name: f for f in User._meta.get_fields()}
+
+        if 'username' in fields:
             kwargs['username'] = username
         return User.objects.create_user(**kwargs)
 
