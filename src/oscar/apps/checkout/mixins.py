@@ -146,7 +146,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             shipping_charge=shipping_charge,
             total=order_total,
             billing_address=billing_address,
-            status=status, **kwargs)
+            status=status,
+            req=self.request, **kwargs)
         self.save_payment_details(order)
         return order
 
