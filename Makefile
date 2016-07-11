@@ -73,3 +73,10 @@ todo:
 	-grep -rnH TODO *.txt
 	-grep -rnH TODO src/oscar/apps/
 	-grep -rnH "django.VERSION" src/oscar/apps
+
+
+release:
+	pip install twine wheel
+	rm -rf dist/*
+	python setup.py sdist bdist_wheel
+	twine upload -s dist/*
