@@ -1,14 +1,32 @@
+from decimal import Decimal as D
+
 from django.test import TestCase
 from django.conf import settings
 import mock
 
 from oscar.apps.basket import forms
+from oscar.apps.offer.utils import Applicator
+from oscar.core.loading import get_model
 from oscar.test import factories
+from oscar.test.basket import add_product
+from oscar.test.factories import (
+    BenefitFactory, ConditionalOfferFactory, ConditionFactory, RangeFactory)
+
+
+Line = get_model('basket', 'Line')
 
 
 class TestBasketLineForm(TestCase):
 
     def setUp(self):
+        self.applicator = Applicator()
+        rng = RangeFactory(includes_all_products=True)
+        self.condition = ConditionFactory(
+            range=rng, type=ConditionFactory._meta.model.VALUE,
+            value=D('100'), proxy_class=None)
+        self.benefit = BenefitFactory(
+            range=rng, type=BenefitFactory._meta.model.FIXED,
+            value=D('10'), max_affected_items=1)
         self.basket = factories.create_basket()
         self.line = self.basket.all_lines()[0]
 
@@ -46,6 +64,43 @@ class TestBasketLineForm(TestCase):
         invalid_qty = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD + 1
         form = self.build_form(quantity=invalid_qty)
         self.assertFalse(form.is_valid())
+
+    def test_basketline_formset_ordering(self):
+        # when we use a unordered queryset in the Basketlineformset, the
+        # discounts will be lost because django will query the database
+        # again to enforce ordered results
+        add_product(self.basket, D('100'), 5)
+        offer = ConditionalOfferFactory(
+            pk=1, condition=self.condition, benefit=self.benefit)
+
+        # now we force an unordered queryset so we can see that our discounts
+        # will disappear due to a new ordering query (see django/forms/model.py)
+        default_line_ordering = Line._meta.ordering
+        Line._meta.ordering = []
+        self.basket._lines = self.basket.lines.all()
+
+        self.applicator.apply_offers(self.basket, [offer])
+        formset = forms.BasketLineFormSet(
+            strategy=self.basket.strategy,
+            queryset=self.basket.all_lines())
+
+        # the discount is in all_lines():
+        self.assertTrue(self.basket.all_lines()[0].has_discount)
+
+        # but not in the formset
+        self.assertFalse(formset.forms[0].instance.has_discount)
+
+        # Restore the ordering on the line
+        Line._meta.ordering = default_line_ordering
+
+        # clear the cached lines and apply the offer again
+        self.basket._lines = None
+        self.applicator.apply_offers(self.basket, [offer])
+
+        formset = forms.BasketLineFormSet(
+            strategy=self.basket.strategy,
+            queryset=self.basket.all_lines())
+        self.assertTrue(formset.forms[0].instance.has_discount)
 
 
 class TestAddToBasketForm(TestCase):
