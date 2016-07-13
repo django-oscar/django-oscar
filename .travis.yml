@@ -48,6 +48,7 @@ before_install:
 install:
     - pip install --pre $DJANGO 
     - pip install -r requirements.txt 
+    - pip list
 
 before_script:
     # Create testing databases for running migrations against
