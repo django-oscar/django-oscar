@@ -32,15 +32,15 @@ env:
         - PIP_WHEEL_DIR=$HOME/.cache/pip/wheels
         - PIP_FIND_LINKS=file://$HOME/.cache/pip/wheels
     matrix:
-        - DJANGO=Django==1.8.11
-        - DJANGO=Django==1.9.3
+        - DJANGO=Django==1.8.13
+        - DJANGO=Django==1.9.7
 
 
 matrix:
     exclude:
         # Python 3.3 is not supported by Django 1.9
         - python: 3.3
-          env: "DJANGO=Django==1.9.3"
+          env: "DJANGO=Django==1.9.7"
 
 before_install:
     - pip install codecov
