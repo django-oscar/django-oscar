@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import oscar.core.utils
 
 
 class Migration(migrations.Migration):
@@ -11,10 +12,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
+        migrations.AlterField(
             model_name='stockrecord',
-            name='offer_name',
-            field=models.CharField(null=True, max_length=128, blank=True),
-            preserve_default=True,
+            name='price_currency',
+            field=models.CharField(default=oscar.core.utils.get_default_currency, max_length=12, verbose_name='Currency'),
         ),
     ]
