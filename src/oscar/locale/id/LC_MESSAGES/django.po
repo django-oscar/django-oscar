@@ -3,13 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# oon arfiandwi <oon.arfiandwi@gmail.com>, 2016
+# oon arfiandwi <oon.arfiandwi@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-04 17:46+0000\n"
-"PO-Revision-Date: 2016-02-28 22:21+0000\n"
-"Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
+"POT-Creation-Date: 2016-07-13 13:06+0200\n"
+"PO-Revision-Date: 2016-04-20 19:27+0000\n"
+"Last-Translator: oon arfiandwi <oon.arfiandwi@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/codeinthehole/django-oscar/language/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,30 +49,30 @@ msgstr ""
 #: templates/oscar/dashboard/partners/partner_user_list.html:44
 #: templates/oscar/dashboard/partners/partner_user_select.html:50
 msgid "First name"
-msgstr ""
+msgstr "Nama Depan"
 
 #: apps/address/abstract_models.py:222 apps/customer/abstract_models.py:61
 #: templates/oscar/dashboard/partners/partner_manage.html:43
 #: templates/oscar/dashboard/partners/partner_user_list.html:45
 #: templates/oscar/dashboard/partners/partner_user_select.html:51
 msgid "Last name"
-msgstr ""
+msgstr "Nama Akhir"
 
 #: apps/address/abstract_models.py:226
 msgid "First line of address"
-msgstr ""
+msgstr "Baris pertama dari alamat"
 
 #: apps/address/abstract_models.py:228
 msgid "Second line of address"
-msgstr ""
+msgstr "Baris kedua dari alamat"
 
 #: apps/address/abstract_models.py:230
 msgid "Third line of address"
-msgstr ""
+msgstr "Baris ketiga dari alamat"
 
 #: apps/address/abstract_models.py:231
 msgid "City"
-msgstr ""
+msgstr "Kota"
 
 #: apps/address/abstract_models.py:232
 msgid "State/County"
@@ -78,7 +80,7 @@ msgstr ""
 
 #: apps/address/abstract_models.py:234
 msgid "Post/Zip-code"
-msgstr ""
+msgstr "Kode Pos"
 
 #: apps/address/abstract_models.py:235 apps/address/abstract_models.py:413
 msgid "Country"
@@ -96,7 +98,7 @@ msgstr ""
 #: templates/oscar/customer/order/order_detail.html:154
 #: templates/oscar/dashboard/orders/order_detail.html:446
 msgid "Address"
-msgstr ""
+msgstr "Alamat"
 
 #: apps/address/abstract_models.py:248
 #: templates/oscar/dashboard/partners/partner_list.html:46
@@ -129,15 +131,15 @@ msgstr ""
 
 #: apps/address/abstract_models.py:398
 msgid "Country name"
-msgstr ""
+msgstr "Nama negara"
 
 #: apps/address/abstract_models.py:401
 msgid "Official name"
-msgstr ""
+msgstr "Nama resmi"
 
-#: apps/address/abstract_models.py:404 apps/catalogue/abstract_models.py:1174
+#: apps/address/abstract_models.py:404 apps/catalogue/abstract_models.py:1175
 msgid "Display order"
-msgstr ""
+msgstr "Tampilkan pesanan"
 
 #: apps/address/abstract_models.py:405
 msgid "Higher the number, higher the country in the list."
@@ -153,7 +155,7 @@ msgstr ""
 
 #: apps/address/abstract_models.py:457 models/fields/__init__.py:139
 msgid "Phone number"
-msgstr ""
+msgstr "Nomor Telpon"
 
 #: apps/address/abstract_models.py:458
 msgid "In case we need to call you about your order"
@@ -164,7 +166,7 @@ msgstr ""
 #: templates/oscar/checkout/thank_you.html:58
 #: templates/oscar/dashboard/orders/order_detail.html:461
 msgid "Instructions"
-msgstr ""
+msgstr "Instruksi"
 
 #: apps/address/abstract_models.py:461
 msgid "Tell us anything we should know when delivering your order."
@@ -177,17 +179,17 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_list.html:122
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:5
 msgid "Shipping address"
-msgstr ""
+msgstr "Alamat Pengiriman"
 
 #: apps/address/abstract_models.py:469
 msgid "Shipping addresses"
 msgstr ""
 
 #: apps/address/abstract_models.py:494 apps/analytics/abstract_models.py:49
-#: apps/analytics/abstract_models.py:79 apps/analytics/abstract_models.py:97
+#: apps/analytics/abstract_models.py:80 apps/analytics/abstract_models.py:98
 #: apps/basket/reports.py:78 apps/customer/abstract_models.py:79
 #: apps/customer/abstract_models.py:115 apps/customer/abstract_models.py:314
-#: apps/order/abstract_models.py:43 apps/order/abstract_models.py:344
+#: apps/order/abstract_models.py:43 apps/order/abstract_models.py:342
 #: apps/payment/abstract_models.py:241 apps/voucher/abstract_models.py:166
 #: templates/oscar/dashboard/orders/order_detail.html:610
 #: templates/oscar/dashboard/reviews/review_delete.html:38
@@ -195,7 +197,7 @@ msgstr ""
 #: templates/oscar/dashboard/users/alerts/list.html:45
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:10
 msgid "User"
-msgstr ""
+msgstr "Pengguna"
 
 #: apps/address/abstract_models.py:498
 msgid "Default shipping address?"
@@ -203,29 +205,29 @@ msgstr ""
 
 #: apps/address/abstract_models.py:502
 msgid "Default billing address?"
-msgstr ""
+msgstr "Alamat tagihan bawaan"
 
 #: apps/address/abstract_models.py:507 apps/offer/abstract_models.py:135
 msgid "Number of Orders"
-msgstr ""
+msgstr "Jumlah Pesanan"
 
 #: apps/address/abstract_models.py:511
 msgid "Address Hash"
 msgstr ""
 
-#: apps/address/abstract_models.py:513 apps/analytics/abstract_models.py:81
-#: apps/analytics/abstract_models.py:99 apps/basket/abstract_models.py:614
+#: apps/address/abstract_models.py:513 apps/analytics/abstract_models.py:82
+#: apps/analytics/abstract_models.py:100 apps/basket/abstract_models.py:616
 #: apps/customer/abstract_models.py:187 apps/offer/abstract_models.py:139
-#: apps/offer/abstract_models.py:794 apps/order/abstract_models.py:351
-#: apps/order/abstract_models.py:899 apps/partner/abstract_models.py:246
+#: apps/offer/abstract_models.py:794 apps/order/abstract_models.py:349
+#: apps/order/abstract_models.py:897 apps/partner/abstract_models.py:246
 #: apps/payment/abstract_models.py:42 apps/promotions/models.py:28
 #: apps/promotions/models.py:351 apps/voucher/abstract_models.py:168
 msgid "Date Created"
-msgstr ""
+msgstr "Tanggal dibuat"
 
 #: apps/address/abstract_models.py:541
 msgid "User address"
-msgstr ""
+msgstr "Alamat Pengguna"
 
 #: apps/address/abstract_models.py:542
 msgid "User addresses"
@@ -240,19 +242,19 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:474
 #: templates/oscar/dashboard/orders/order_list.html:123
 msgid "Billing address"
-msgstr ""
+msgstr "Alamat Penagihan"
 
 #: apps/address/abstract_models.py:565
 msgid "Billing addresses"
 msgstr ""
 
-#: apps/address/abstract_models.py:584 apps/order/abstract_models.py:418
+#: apps/address/abstract_models.py:584 apps/order/abstract_models.py:416
 #: apps/partner/abstract_models.py:95 apps/partner/config.py:8
 #: templates/oscar/dashboard/catalogue/product_update.html:191
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:49
 #: templates/oscar/dashboard/orders/line_detail.html:77
 msgid "Partner"
-msgstr ""
+msgstr "Rekan"
 
 #: apps/address/abstract_models.py:589
 msgid "Partner address"
@@ -262,11 +264,11 @@ msgstr ""
 msgid "Partner addresses"
 msgstr ""
 
-#: apps/analytics/abstract_models.py:20 apps/analytics/abstract_models.py:80
-#: apps/analytics/reports.py:19 apps/basket/abstract_models.py:594
-#: apps/catalogue/abstract_models.py:227 apps/catalogue/abstract_models.py:347
-#: apps/catalogue/abstract_models.py:946
-#: apps/catalogue/abstract_models.py:1167 apps/order/abstract_models.py:445
+#: apps/analytics/abstract_models.py:20 apps/analytics/abstract_models.py:81
+#: apps/analytics/reports.py:19 apps/basket/abstract_models.py:596
+#: apps/catalogue/abstract_models.py:228 apps/catalogue/abstract_models.py:348
+#: apps/catalogue/abstract_models.py:947
+#: apps/catalogue/abstract_models.py:1168 apps/order/abstract_models.py:443
 #: apps/partner/abstract_models.py:93 apps/promotions/models.py:293
 #: apps/wishlists/abstract_models.py:115
 #: templates/oscar/customer/alerts/alert_list.html:12
@@ -281,14 +283,14 @@ msgstr ""
 #: templates/oscar/dashboard/users/alerts/list.html:44
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:6
 msgid "Product"
-msgstr ""
+msgstr "Produk"
 
 #: apps/analytics/abstract_models.py:24 apps/analytics/reports.py:20
 #: templates/oscar/dashboard/reports/partials/product_report.html:9
 msgid "Views"
 msgstr ""
 
-#: apps/analytics/abstract_models.py:26 apps/analytics/abstract_models.py:55
+#: apps/analytics/abstract_models.py:26 apps/analytics/abstract_models.py:56
 msgid "Basket Additions"
 msgstr ""
 
@@ -304,11 +306,11 @@ msgstr ""
 #: templates/oscar/dashboard/reviews/review_list.html:59
 #: templates/oscar/dashboard/users/detail.html:177
 msgid "Score"
-msgstr ""
+msgstr "Skor"
 
 #: apps/analytics/abstract_models.py:37
 msgid "Product record"
-msgstr ""
+msgstr "Rekaman produk"
 
 #: apps/analytics/abstract_models.py:38
 msgid "Product records"
@@ -319,12 +321,12 @@ msgstr ""
 msgid "Record for '%s'"
 msgstr ""
 
-#: apps/analytics/abstract_models.py:53
+#: apps/analytics/abstract_models.py:54
 msgid "Product Views"
 msgstr ""
 
-#: apps/analytics/abstract_models.py:59 apps/analytics/reports.py:65
-#: apps/order/abstract_models.py:285 defaults.py:135
+#: apps/analytics/abstract_models.py:60 apps/analytics/reports.py:65
+#: apps/order/abstract_models.py:283 defaults.py:136
 #: templates/oscar/dashboard/orders/line_detail.html:16
 #: templates/oscar/dashboard/orders/order_detail.html:17
 #: templates/oscar/dashboard/orders/order_list.html:10
@@ -336,58 +338,58 @@ msgstr ""
 #: templates/oscar/dashboard/users/detail.html:106
 #: templates/oscar/dashboard/users/detail.html:116
 msgid "Orders"
-msgstr ""
+msgstr "Pesanan"
 
-#: apps/analytics/abstract_models.py:61 apps/order/abstract_models.py:508
+#: apps/analytics/abstract_models.py:62 apps/order/abstract_models.py:506
 msgid "Order Lines"
 msgstr ""
 
-#: apps/analytics/abstract_models.py:63
+#: apps/analytics/abstract_models.py:64
 msgid "Order Items"
 msgstr ""
 
-#: apps/analytics/abstract_models.py:64
+#: apps/analytics/abstract_models.py:65
 msgid "Total Spent"
-msgstr ""
+msgstr "Total belanja"
 
-#: apps/analytics/abstract_models.py:67
+#: apps/analytics/abstract_models.py:68
 msgid "Last Order Date"
-msgstr ""
+msgstr "Tanggal Terakhir Memesan"
 
-#: apps/analytics/abstract_models.py:72
+#: apps/analytics/abstract_models.py:73
 msgid "User record"
 msgstr ""
 
-#: apps/analytics/abstract_models.py:73
+#: apps/analytics/abstract_models.py:74
 msgid "User records"
 msgstr ""
 
-#: apps/analytics/abstract_models.py:86
+#: apps/analytics/abstract_models.py:87
 msgid "User product view"
 msgstr ""
 
-#: apps/analytics/abstract_models.py:87
+#: apps/analytics/abstract_models.py:88
 msgid "User product views"
 msgstr ""
 
-#: apps/analytics/abstract_models.py:90
+#: apps/analytics/abstract_models.py:91
 #, python-format
 msgid "%(user)s viewed '%(product)s'"
 msgstr ""
 
-#: apps/analytics/abstract_models.py:98
+#: apps/analytics/abstract_models.py:99
 msgid "Search term"
 msgstr ""
 
-#: apps/analytics/abstract_models.py:104
+#: apps/analytics/abstract_models.py:105
 msgid "User search query"
 msgstr ""
 
-#: apps/analytics/abstract_models.py:105
+#: apps/analytics/abstract_models.py:106
 msgid "User search queries"
 msgstr ""
 
-#: apps/analytics/abstract_models.py:108
+#: apps/analytics/abstract_models.py:109
 #, python-format
 msgid "%(user)s searched for '%(query)s'"
 msgstr ""
@@ -407,14 +409,14 @@ msgid "Product analytics"
 msgstr ""
 
 #: apps/analytics/reports.py:61 apps/basket/reports.py:19
-#: apps/catalogue/abstract_models.py:49 apps/catalogue/abstract_models.py:92
-#: apps/catalogue/abstract_models.py:782
-#: apps/catalogue/abstract_models.py:1045
-#: apps/catalogue/abstract_models.py:1097 apps/catalogue/reviews/forms.py:11
+#: apps/catalogue/abstract_models.py:50 apps/catalogue/abstract_models.py:93
+#: apps/catalogue/abstract_models.py:783
+#: apps/catalogue/abstract_models.py:1046
+#: apps/catalogue/abstract_models.py:1098 apps/catalogue/reviews/forms.py:11
 #: apps/customer/abstract_models.py:154 apps/dashboard/users/forms.py:44
 #: apps/dashboard/vouchers/forms.py:17 apps/dashboard/vouchers/forms.py:88
 #: apps/offer/abstract_models.py:35 apps/offer/abstract_models.py:763
-#: apps/order/abstract_models.py:799 apps/order/abstract_models.py:963
+#: apps/order/abstract_models.py:797 apps/order/abstract_models.py:961
 #: apps/order/reports.py:21 apps/payment/abstract_models.py:205
 #: apps/payment/abstract_models.py:245 apps/promotions/models.py:146
 #: apps/promotions/models.py:176 apps/promotions/models.py:202
@@ -443,7 +445,7 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:32
 #: templates/oscar/dashboard/vouchers/voucher_list.html:52
 msgid "Name"
-msgstr ""
+msgstr "Nama"
 
 #: apps/analytics/reports.py:62
 #: templates/oscar/customer/profile/profile.html:25
@@ -470,48 +472,48 @@ msgstr ""
 #: templates/oscar/dashboard/reports/partials/user_report.html:16
 #: templates/oscar/dashboard/users/detail.html:76
 msgid "Total spent"
-msgstr ""
+msgstr "Pengeluaran Total"
 
 #: apps/analytics/reports.py:69
 #: templates/oscar/dashboard/reports/partials/user_report.html:17
 msgid "Date of last order"
-msgstr ""
+msgstr "Tanggal pesanan terakhir"
 
 #: apps/analytics/reports.py:91
 msgid "User analytics"
 msgstr ""
 
-#: apps/basket/abstract_models.py:29 apps/wishlists/abstract_models.py:24
+#: apps/basket/abstract_models.py:30 apps/wishlists/abstract_models.py:24
 msgid "Owner"
-msgstr ""
-
-#: apps/basket/abstract_models.py:37
-msgid "Open - currently active"
-msgstr ""
+msgstr "Pemilik"
 
 #: apps/basket/abstract_models.py:38
+msgid "Open - currently active"
+msgstr "Terbuka - sedang aktif"
+
+#: apps/basket/abstract_models.py:39
 msgid "Merged - superceded by another basket"
 msgstr ""
 
-#: apps/basket/abstract_models.py:39
+#: apps/basket/abstract_models.py:40
 msgid "Saved - for items to be purchased later"
 msgstr ""
 
-#: apps/basket/abstract_models.py:40
+#: apps/basket/abstract_models.py:41
 msgid "Frozen - the basket cannot be modified"
 msgstr ""
 
-#: apps/basket/abstract_models.py:41
+#: apps/basket/abstract_models.py:42
 msgid "Submitted - has been ordered at the checkout"
 msgstr ""
 
-#: apps/basket/abstract_models.py:44 apps/catalogue/abstract_models.py:1106
-#: apps/catalogue/reviews/abstract_models.py:60
-#: apps/customer/abstract_models.py:336 apps/dashboard/catalogue/forms.py:343
-#: apps/dashboard/orders/forms.py:75 apps/dashboard/reviews/forms.py:14
+#: apps/basket/abstract_models.py:45 apps/catalogue/abstract_models.py:1107
+#: apps/catalogue/reviews/abstract_models.py:59
+#: apps/customer/abstract_models.py:334 apps/dashboard/catalogue/forms.py:343
+#: apps/dashboard/orders/forms.py:77 apps/dashboard/reviews/forms.py:14
 #: apps/dashboard/reviews/forms.py:27 apps/dashboard/users/forms.py:43
 #: apps/offer/abstract_models.py:68 apps/offer/abstract_models.py:1001
-#: apps/order/abstract_models.py:82 apps/order/abstract_models.py:491
+#: apps/order/abstract_models.py:82 apps/order/abstract_models.py:489
 #: apps/partner/abstract_models.py:244 apps/payment/abstract_models.py:41
 #: templates/oscar/customer/alerts/alert_list.html:13
 #: templates/oscar/customer/anon_order.html:14
@@ -530,10 +532,10 @@ msgstr ""
 #: templates/oscar/dashboard/users/detail.html:124
 #: templates/oscar/dashboard/vouchers/voucher_list.html:54
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
-#: apps/basket/abstract_models.py:50 apps/dashboard/vouchers/views.py:71
-#: apps/voucher/abstract_models.py:64 defaults.py:179
+#: apps/basket/abstract_models.py:51 apps/dashboard/vouchers/views.py:71
+#: apps/voucher/abstract_models.py:64 defaults.py:180
 #: templates/oscar/basket/partials/basket_totals.html:39
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:8
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:17
@@ -546,10 +548,10 @@ msgstr ""
 msgid "Vouchers"
 msgstr ""
 
-#: apps/basket/abstract_models.py:52 apps/basket/reports.py:82
-#: apps/catalogue/abstract_models.py:320
-#: apps/catalogue/abstract_models.py:1177 apps/customer/abstract_models.py:339
-#: apps/order/abstract_models.py:844 apps/partner/abstract_models.py:147
+#: apps/basket/abstract_models.py:53 apps/basket/reports.py:82
+#: apps/catalogue/abstract_models.py:321
+#: apps/catalogue/abstract_models.py:1178 apps/customer/abstract_models.py:337
+#: apps/order/abstract_models.py:842 apps/partner/abstract_models.py:147
 #: apps/wishlists/abstract_models.py:52
 #: templates/oscar/customer/alerts/alert_list.html:14
 #: templates/oscar/dashboard/promotions/promotion_list.html:44
@@ -562,18 +564,18 @@ msgstr ""
 #: templates/oscar/dashboard/users/detail.html:180
 #: templates/oscar/dashboard/vouchers/voucher_list.html:57
 msgid "Date created"
-msgstr ""
+msgstr "Tanggal Dibuat"
 
-#: apps/basket/abstract_models.py:53
+#: apps/basket/abstract_models.py:54
 msgid "Date merged"
 msgstr ""
 
-#: apps/basket/abstract_models.py:54
+#: apps/basket/abstract_models.py:55
 #: templates/oscar/customer/order/order_list.html:42
 msgid "Date submitted"
-msgstr ""
+msgstr "Tanggal Dikirim"
 
-#: apps/basket/abstract_models.py:63 apps/basket/abstract_models.py:583
+#: apps/basket/abstract_models.py:64 apps/basket/abstract_models.py:585
 #: apps/basket/config.py:8 apps/order/abstract_models.py:36
 #: templates/oscar/basket/basket.html:6 templates/oscar/basket/basket.html:14
 #: templates/oscar/basket/basket.html:22
@@ -582,32 +584,32 @@ msgstr ""
 #: templates/oscar/checkout/thank_you.html:174
 #: templates/oscar/partials/nav_primary.html:20
 msgid "Basket"
-msgstr ""
+msgstr "Keranjang"
 
-#: apps/basket/abstract_models.py:64
+#: apps/basket/abstract_models.py:65
 msgid "Baskets"
 msgstr ""
 
-#: apps/basket/abstract_models.py:83
+#: apps/basket/abstract_models.py:84
 #, python-format
 msgid "%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)"
 msgstr ""
 
-#: apps/basket/abstract_models.py:142
+#: apps/basket/abstract_models.py:144
 #, python-format
 msgid ""
 "Due to technical limitations we are not able to ship more than %(threshold)d"
 " items in one order."
 msgstr ""
 
-#: apps/basket/abstract_models.py:590
+#: apps/basket/abstract_models.py:592
 msgid "Line Reference"
 msgstr ""
 
-#: apps/basket/abstract_models.py:600 apps/basket/forms.py:134
-#: apps/basket/forms.py:282 apps/order/abstract_models.py:452
-#: apps/order/abstract_models.py:765 apps/order/abstract_models.py:870
-#: apps/order/abstract_models.py:931 apps/wishlists/abstract_models.py:118
+#: apps/basket/abstract_models.py:602 apps/basket/forms.py:134
+#: apps/basket/forms.py:282 apps/order/abstract_models.py:450
+#: apps/order/abstract_models.py:763 apps/order/abstract_models.py:868
+#: apps/order/abstract_models.py:929 apps/wishlists/abstract_models.py:118
 #: templates/oscar/basket/partials/basket_content.html:30
 #: templates/oscar/checkout/checkout.html:110
 #: templates/oscar/checkout/thank_you.html:119
@@ -619,93 +621,93 @@ msgstr ""
 #: templates/oscar/dashboard/orders/line_detail.html:167
 #: templates/oscar/dashboard/orders/order_detail.html:108
 msgid "Quantity"
-msgstr ""
+msgstr "Jumlah"
 
-#: apps/basket/abstract_models.py:606 apps/order/abstract_models.py:55
+#: apps/basket/abstract_models.py:608 apps/order/abstract_models.py:55
 #: apps/partner/abstract_models.py:106 apps/payment/abstract_models.py:76
 #: templates/oscar/dashboard/catalogue/product_update.html:198
 msgid "Currency"
-msgstr ""
+msgstr "Mata uang"
 
-#: apps/basket/abstract_models.py:608
+#: apps/basket/abstract_models.py:610
 msgid "Price excl. Tax"
 msgstr ""
 
-#: apps/basket/abstract_models.py:611
+#: apps/basket/abstract_models.py:613
 msgid "Price incl. Tax"
-msgstr ""
+msgstr "Harga dengan Pajak"
 
-#: apps/basket/abstract_models.py:629
+#: apps/basket/abstract_models.py:631
 msgid "Basket line"
 msgstr ""
 
-#: apps/basket/abstract_models.py:630
+#: apps/basket/abstract_models.py:632
 msgid "Basket lines"
 msgstr ""
 
-#: apps/basket/abstract_models.py:634
+#: apps/basket/abstract_models.py:636
 #, python-format
 msgid "Basket #%(basket_id)d, Product #%(product_id)d, quantity %(quantity)d"
 msgstr ""
 
-#: apps/basket/abstract_models.py:642
+#: apps/basket/abstract_models.py:644
 #, python-format
 msgid "You cannot modify a %s basket"
-msgstr ""
+msgstr "Anda tidak dapat mengubah keranjang %s "
 
-#: apps/basket/abstract_models.py:853
+#: apps/basket/abstract_models.py:855
 #, python-format
 msgid ""
 "The price of '%(product)s' has increased from %(old_price)s to %(new_price)s"
 " since you added it to your basket"
 msgstr ""
 
-#: apps/basket/abstract_models.py:858
+#: apps/basket/abstract_models.py:860
 #, python-format
 msgid ""
 "The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s"
 " since you added it to your basket"
 msgstr ""
 
-#: apps/basket/abstract_models.py:869 apps/order/abstract_models.py:735
-#: apps/order/abstract_models.py:764 apps/order/abstract_models.py:869
-#: apps/order/abstract_models.py:930
+#: apps/basket/abstract_models.py:871 apps/order/abstract_models.py:733
+#: apps/order/abstract_models.py:762 apps/order/abstract_models.py:867
+#: apps/order/abstract_models.py:928
 msgid "Line"
 msgstr ""
 
-#: apps/basket/abstract_models.py:870 apps/catalogue/abstract_models.py:812
-#: apps/catalogue/abstract_models.py:1071
-#: apps/catalogue/abstract_models.py:1112 apps/order/abstract_models.py:738
-#: apps/order/abstract_models.py:762
+#: apps/basket/abstract_models.py:872 apps/catalogue/abstract_models.py:813
+#: apps/catalogue/abstract_models.py:1072
+#: apps/catalogue/abstract_models.py:1113 apps/order/abstract_models.py:736
+#: apps/order/abstract_models.py:760
 msgid "Option"
-msgstr ""
+msgstr "Opsi"
 
-#: apps/basket/abstract_models.py:871 apps/offer/abstract_models.py:413
-#: apps/offer/abstract_models.py:642 apps/order/abstract_models.py:740
+#: apps/basket/abstract_models.py:873 apps/offer/abstract_models.py:413
+#: apps/offer/abstract_models.py:642 apps/order/abstract_models.py:738
 msgid "Value"
 msgstr ""
 
-#: apps/basket/abstract_models.py:876
+#: apps/basket/abstract_models.py:878
 msgid "Line attribute"
 msgstr ""
 
-#: apps/basket/abstract_models.py:877
+#: apps/basket/abstract_models.py:879
 msgid "Line attributes"
 msgstr ""
 
 #: apps/basket/forms.py:17
 msgid "Save for Later"
-msgstr ""
+msgstr "Simpan untuk Nanti"
 
 #: apps/basket/forms.py:75
 msgid "Move to Basket"
-msgstr ""
+msgstr "Pindah ke Keranjang"
 
-#: apps/basket/forms.py:124 apps/catalogue/abstract_models.py:784
-#: apps/catalogue/abstract_models.py:1098 apps/customer/abstract_models.py:142
+#: apps/basket/forms.py:124 apps/catalogue/abstract_models.py:785
+#: apps/catalogue/abstract_models.py:1099 apps/customer/abstract_models.py:142
 #: apps/dashboard/vouchers/forms.py:18 apps/dashboard/vouchers/forms.py:89
-#: apps/order/abstract_models.py:800 apps/order/abstract_models.py:965
-#: apps/order/abstract_models.py:1016 apps/partner/abstract_models.py:23
+#: apps/order/abstract_models.py:798 apps/order/abstract_models.py:963
+#: apps/order/abstract_models.py:1014 apps/partner/abstract_models.py:23
 #: apps/payment/abstract_models.py:207 apps/voucher/abstract_models.py:29
 #: templates/oscar/dashboard/catalogue/product_class_form.html:97
 #: templates/oscar/dashboard/comms/list.html:31
@@ -713,15 +715,15 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:33
 #: templates/oscar/dashboard/vouchers/voucher_list.html:53
 msgid "Code"
-msgstr ""
+msgstr "Kode"
 
 #: apps/basket/forms.py:179
 msgid "Variant"
-msgstr ""
+msgstr "Varian"
 
 #: apps/basket/forms.py:207
 msgid "Please select a valid product"
-msgstr ""
+msgstr "Silakan pilih produk yang valid"
 
 #: apps/basket/forms.py:224
 #, python-format
@@ -744,11 +746,11 @@ msgstr ""
 
 #: apps/basket/reports.py:18 apps/basket/reports.py:77
 msgid "User ID"
-msgstr ""
+msgstr "ID Pengguna"
 
-#: apps/basket/reports.py:20 apps/catalogue/reviews/abstract_models.py:47
+#: apps/basket/reports.py:20 apps/catalogue/reviews/abstract_models.py:46
 #: apps/catalogue/reviews/forms.py:12 apps/customer/abstract_models.py:124
-#: apps/customer/abstract_models.py:316 apps/customer/views.py:427
+#: apps/customer/abstract_models.py:315 apps/customer/views.py:427
 #: apps/dashboard/users/forms.py:13 apps/dashboard/users/forms.py:45
 #: apps/order/reports.py:22 templates/oscar/checkout/checkout.html:49
 #: templates/oscar/checkout/thank_you.html:52
@@ -761,11 +763,11 @@ msgstr ""
 #: templates/oscar/dashboard/reports/partials/user_report.html:8
 #: templates/oscar/dashboard/users/detail.html:36
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: apps/basket/reports.py:21 apps/basket/reports.py:79
 msgid "Basket status"
-msgstr ""
+msgstr "Status Keranjang"
 
 #: apps/basket/reports.py:22 apps/basket/reports.py:80
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:10
@@ -784,12 +786,12 @@ msgstr ""
 #: apps/basket/reports.py:24
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:12
 msgid "Date of creation"
-msgstr ""
+msgstr "Tanggal pembuatan"
 
 #: apps/basket/reports.py:25
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:13
 msgid "Time since creation"
-msgstr ""
+msgstr "Waktu sejak pembuatan"
 
 #: apps/basket/reports.py:57
 msgid "Open baskets"
@@ -798,7 +800,7 @@ msgstr ""
 #: apps/basket/reports.py:83
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:13
 msgid "Time between creation and submission"
-msgstr ""
+msgstr "Waktu antara pembuatan dan penyetoran"
 
 #: apps/basket/reports.py:112
 msgid "Submitted baskets"
@@ -816,12 +818,12 @@ msgstr ""
 #: apps/basket/views.py:313
 #, python-format
 msgid "The '%(code)s' voucher has expired"
-msgstr ""
+msgstr "Voucher '%(code)s' telah kadaluarsa"
 
 #: apps/basket/views.py:320
 #, python-format
 msgid "The '%(code)s' voucher is not active"
-msgstr ""
+msgstr "Voucher '%(code)s' tidak aktif"
 
 #: apps/basket/views.py:349
 msgid "Your basket does not qualify for a voucher discount"
@@ -844,7 +846,7 @@ msgstr ""
 
 #: apps/basket/views.py:379 apps/dashboard/vouchers/forms.py:66
 msgid "Please enter a voucher code"
-msgstr ""
+msgstr "Masukkan kode voucher"
 
 #: apps/basket/views.py:400
 #, python-format
@@ -854,58 +856,58 @@ msgstr ""
 #: apps/basket/views.py:406
 #, python-format
 msgid "Voucher '%s' removed from basket"
-msgstr ""
+msgstr "Voucher '%s' dipindahkan dari basket"
 
-#: apps/catalogue/abstract_models.py:50 apps/catalogue/abstract_models.py:96
-#: apps/catalogue/abstract_models.py:287 apps/offer/abstract_models.py:38
+#: apps/catalogue/abstract_models.py:51 apps/catalogue/abstract_models.py:97
+#: apps/catalogue/abstract_models.py:288 apps/offer/abstract_models.py:38
 #: apps/offer/abstract_models.py:765 apps/shipping/abstract_models.py:20
 msgid "Slug"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:55
+#: apps/catalogue/abstract_models.py:56
 msgid "Requires shipping?"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:60
+#: apps/catalogue/abstract_models.py:61
 msgid "Track stock levels?"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:67 apps/catalogue/abstract_models.py:1113
+#: apps/catalogue/abstract_models.py:68 apps/catalogue/abstract_models.py:1114
 msgid "Options"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:73 apps/catalogue/abstract_models.py:578
+#: apps/catalogue/abstract_models.py:74 apps/catalogue/abstract_models.py:579
 msgid "Product class"
-msgstr ""
+msgstr "Kelas Produk"
 
-#: apps/catalogue/abstract_models.py:74
+#: apps/catalogue/abstract_models.py:75
 msgid "Product classes"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:93 apps/catalogue/abstract_models.py:288
+#: apps/catalogue/abstract_models.py:94 apps/catalogue/abstract_models.py:289
 #: apps/offer/abstract_models.py:39 apps/promotions/models.py:224
 #: apps/promotions/models.py:248 apps/shipping/abstract_models.py:23
 #: templates/oscar/dashboard/offers/offer_detail.html:67
 #: templates/oscar/dashboard/offers/summary.html:12
 #: templates/oscar/dashboard/shipping/weight_based_detail.html:35
 msgid "Description"
-msgstr ""
+msgstr "Deskripsi"
 
-#: apps/catalogue/abstract_models.py:94 apps/catalogue/abstract_models.py:815
+#: apps/catalogue/abstract_models.py:95 apps/catalogue/abstract_models.py:816
 #: apps/dashboard/catalogue/tables.py:19 apps/promotions/models.py:181
 #: apps/promotions/models.py:190 apps/promotions/models.py:191
 msgid "Image"
-msgstr ""
+msgstr "Gambar"
 
-#: apps/catalogue/abstract_models.py:212 apps/catalogue/abstract_models.py:229
+#: apps/catalogue/abstract_models.py:213 apps/catalogue/abstract_models.py:230
 #: apps/customer/abstract_models.py:167
 #: templates/oscar/dashboard/catalogue/product_update.html:124
 #: templates/oscar/dashboard/comms/list.html:33
 msgid "Category"
-msgstr ""
+msgstr "Kategori"
 
-#: apps/catalogue/abstract_models.py:213 apps/catalogue/abstract_models.py:328
-#: apps/catalogue/abstract_models.py:598 defaults.py:117
+#: apps/catalogue/abstract_models.py:214 apps/catalogue/abstract_models.py:329
+#: apps/catalogue/abstract_models.py:599 defaults.py:118
 #: templates/oscar/dashboard/catalogue/category_delete.html:12
 #: templates/oscar/dashboard/catalogue/category_form.html:8
 #: templates/oscar/dashboard/catalogue/category_form.html:17
@@ -916,32 +918,32 @@ msgstr ""
 msgid "Categories"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:236
-msgid "Product category"
-msgstr ""
-
 #: apps/catalogue/abstract_models.py:237
+msgid "Product category"
+msgstr "Kategori Produk"
+
+#: apps/catalogue/abstract_models.py:238
 msgid "Product categories"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:261
+#: apps/catalogue/abstract_models.py:262
 msgid "Stand-alone product"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:262 apps/catalogue/abstract_models.py:277
+#: apps/catalogue/abstract_models.py:263 apps/catalogue/abstract_models.py:278
 msgid "Parent product"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:263
+#: apps/catalogue/abstract_models.py:264
 msgid "Child product"
-msgstr ""
+msgstr "Produk turunan"
 
-#: apps/catalogue/abstract_models.py:266
+#: apps/catalogue/abstract_models.py:267
 msgid "Product structure"
-msgstr ""
+msgstr "Struktur produk"
 
-#: apps/catalogue/abstract_models.py:270 apps/dashboard/catalogue/forms.py:47
-#: apps/dashboard/orders/forms.py:69 apps/order/abstract_models.py:450
+#: apps/catalogue/abstract_models.py:271 apps/dashboard/catalogue/forms.py:47
+#: apps/dashboard/orders/forms.py:71 apps/order/abstract_models.py:448
 #: templates/oscar/catalogue/detail.html:106
 #: templates/oscar/dashboard/orders/line_detail.html:50
 #: templates/oscar/dashboard/orders/order_detail.html:110
@@ -949,88 +951,88 @@ msgstr ""
 msgid "UPC"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:271
+#: apps/catalogue/abstract_models.py:272
 msgid ""
 "Universal Product Code (UPC) is an identifier for a product which is not "
 "specific to a particular  supplier. Eg an ISBN for a book."
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:278
+#: apps/catalogue/abstract_models.py:279
 msgid ""
 "Only choose a parent product if you're creating a child product.  For "
 "example if this is a size 4 of a particular t-shirt.  Leave blank if this is"
 " a stand-alone product (i.e. there is only one version of this product)."
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:285 apps/catalogue/abstract_models.py:568
-#: apps/order/abstract_models.py:447 apps/wishlists/abstract_models.py:121
+#: apps/catalogue/abstract_models.py:286 apps/catalogue/abstract_models.py:569
+#: apps/order/abstract_models.py:445 apps/wishlists/abstract_models.py:121
 #: templates/oscar/dashboard/orders/line_detail.html:37
 #: templates/oscar/dashboard/ranges/range_product_list.html:95
 msgctxt "Product title"
 msgid "Title"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:294 apps/catalogue/abstract_models.py:781
+#: apps/catalogue/abstract_models.py:295 apps/catalogue/abstract_models.py:782
 #: apps/dashboard/catalogue/tables.py:23
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:12
 msgid "Product type"
-msgstr ""
+msgstr "Jenis produk"
 
-#: apps/catalogue/abstract_models.py:295
+#: apps/catalogue/abstract_models.py:296
 msgid "Choose what type of product this is"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:299
+#: apps/catalogue/abstract_models.py:300
 #: templates/oscar/dashboard/catalogue/product_update.html:76
 #: templates/oscar/dashboard/catalogue/product_update.html:144
 #: templates/oscar/dashboard/catalogue/product_update.html:255
 msgid "Attributes"
-msgstr ""
+msgstr "Atribut"
 
-#: apps/catalogue/abstract_models.py:300
+#: apps/catalogue/abstract_models.py:301
 msgid ""
 "A product attribute is something that this product may have, such as a size,"
 " as specified by its class"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:304
-msgid "Product options"
-msgstr ""
-
 #: apps/catalogue/abstract_models.py:305
+msgid "Product options"
+msgstr "Pilihan dari produk"
+
+#: apps/catalogue/abstract_models.py:306
 msgid ""
 "Options are values that can be associated with a item when it is added to a "
 "customer's basket.  This could be something like a personalised message to "
 "be printed on a T-shirt."
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:312
+#: apps/catalogue/abstract_models.py:313
 #: templates/oscar/dashboard/catalogue/product_update.html:298
 msgid "Recommended products"
-msgstr ""
+msgstr "Produk yang direkomendasikan"
 
-#: apps/catalogue/abstract_models.py:313
+#: apps/catalogue/abstract_models.py:314
 msgid "These are products that are recommended to accompany the main product."
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:318 defaults.py:224
+#: apps/catalogue/abstract_models.py:319 defaults.py:225
 msgid "Rating"
-msgstr ""
+msgstr "Peringkat"
 
-#: apps/catalogue/abstract_models.py:324 apps/partner/abstract_models.py:148
+#: apps/catalogue/abstract_models.py:325 apps/partner/abstract_models.py:148
 msgid "Date updated"
-msgstr ""
+msgstr "Tanggal diperbarui"
 
-#: apps/catalogue/abstract_models.py:336
+#: apps/catalogue/abstract_models.py:337
 msgid "Is discountable?"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:337
+#: apps/catalogue/abstract_models.py:338
 msgid "This flag indicates if this product can be used in an offer or not"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:348 apps/dashboard/catalogue/views.py:85
-#: apps/promotions/models.py:274 defaults.py:109
+#: apps/catalogue/abstract_models.py:349 apps/dashboard/catalogue/views.py:85
+#: apps/promotions/models.py:274 defaults.py:110
 #: templates/oscar/dashboard/catalogue/product_delete.html:17
 #: templates/oscar/dashboard/catalogue/product_list.html:11
 #: templates/oscar/dashboard/catalogue/product_list.html:19
@@ -1042,119 +1044,119 @@ msgstr ""
 msgid "Products"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:405
+#: apps/catalogue/abstract_models.py:406
 msgid "Your product must have a title."
-msgstr ""
+msgstr "Produk anda harus memiliki judul"
 
-#: apps/catalogue/abstract_models.py:407
+#: apps/catalogue/abstract_models.py:408
 msgid "Your product must have a product class."
-msgstr ""
+msgstr "Produk anda harus memiliki kelas produk"
 
-#: apps/catalogue/abstract_models.py:409
+#: apps/catalogue/abstract_models.py:410
 msgid "Only child products can have a parent."
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:416
+#: apps/catalogue/abstract_models.py:417
 msgid "A child product needs a parent."
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:419
+#: apps/catalogue/abstract_models.py:420
 msgid "You can only assign child products to parent products."
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:422
+#: apps/catalogue/abstract_models.py:423
 msgid "A child product can't have a product class."
-msgstr ""
+msgstr "Produk turunan tidak dapat memiliki kelas produk"
 
-#: apps/catalogue/abstract_models.py:425
+#: apps/catalogue/abstract_models.py:426
 msgid "A child product can't have a category assigned."
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:429
+#: apps/catalogue/abstract_models.py:430
 msgid "A child product can't have options."
-msgstr ""
+msgstr "Produk turunan tidak dapat memiliki opsi"
 
-#: apps/catalogue/abstract_models.py:438
+#: apps/catalogue/abstract_models.py:439
 msgid "A parent product can't have stockrecords."
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:466
+#: apps/catalogue/abstract_models.py:467
 msgid "The specified parent product is a child product."
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:469
+#: apps/catalogue/abstract_models.py:470
 msgid "One can't add a child product to a product with stock records."
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:690
+#: apps/catalogue/abstract_models.py:691
 msgid "Primary product"
-msgstr ""
+msgstr "Produk utama"
 
-#: apps/catalogue/abstract_models.py:692
+#: apps/catalogue/abstract_models.py:693
 msgid "Recommended product"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:694
-msgid "Ranking"
-msgstr ""
-
 #: apps/catalogue/abstract_models.py:695
+msgid "Ranking"
+msgstr "Peringkat"
+
+#: apps/catalogue/abstract_models.py:696
 msgid ""
 "Determines order of the products. A product with a higher value will appear "
 "before one with a lower ranking."
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:703
-msgid "Product recommendation"
-msgstr ""
-
 #: apps/catalogue/abstract_models.py:704
-msgid "Product recomendations"
-msgstr ""
+msgid "Product recommendation"
+msgstr "Rekomendasi produk"
 
-#: apps/catalogue/abstract_models.py:732
+#: apps/catalogue/abstract_models.py:705
+msgid "Product recomendations"
+msgstr "Produk yang direkomendasikan"
+
+#: apps/catalogue/abstract_models.py:733
 #, python-format
 msgid "%(obj)s has no attribute named '%(attr)s'"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:741
+#: apps/catalogue/abstract_models.py:742
 #, python-format
 msgid "%(attr)s attribute cannot be blank"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:748
+#: apps/catalogue/abstract_models.py:749
 #, python-format
 msgid "%(attr)s attribute %(err)s"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:789 apps/customer/abstract_models.py:148
+#: apps/catalogue/abstract_models.py:790 apps/customer/abstract_models.py:148
 msgid ""
 "Code can only contain the letters a-z, A-Z, digits, and underscores, and "
 "can't start with a digit."
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:806 apps/catalogue/abstract_models.py:948
-msgid "Text"
-msgstr ""
-
 #: apps/catalogue/abstract_models.py:807 apps/catalogue/abstract_models.py:949
+msgid "Text"
+msgstr "Teks"
+
+#: apps/catalogue/abstract_models.py:808 apps/catalogue/abstract_models.py:950
 msgid "Integer"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:808
+#: apps/catalogue/abstract_models.py:809
 msgid "True / False"
-msgstr ""
+msgstr "Benar / Salah"
 
-#: apps/catalogue/abstract_models.py:809 apps/catalogue/abstract_models.py:951
+#: apps/catalogue/abstract_models.py:810 apps/catalogue/abstract_models.py:952
 msgid "Float"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:810
+#: apps/catalogue/abstract_models.py:811
 msgid "Rich Text"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:811 apps/catalogue/abstract_models.py:953
-#: apps/order/abstract_models.py:384
+#: apps/catalogue/abstract_models.py:812 apps/catalogue/abstract_models.py:954
+#: apps/order/abstract_models.py:382
 #: templates/oscar/dashboard/orders/line_detail.html:138
 #: templates/oscar/dashboard/orders/line_detail.html:168
 #: templates/oscar/dashboard/orders/order_detail.html:342
@@ -1162,177 +1164,177 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:529
 #: templates/oscar/dashboard/orders/order_detail.html:609
 msgid "Date"
-msgstr ""
-
-#: apps/catalogue/abstract_models.py:813
-msgid "Entity"
-msgstr ""
+msgstr "Tanggal"
 
 #: apps/catalogue/abstract_models.py:814
+msgid "Entity"
+msgstr "Entitas"
+
+#: apps/catalogue/abstract_models.py:815
 msgid "File"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:819 apps/offer/abstract_models.py:63
+#: apps/catalogue/abstract_models.py:820 apps/offer/abstract_models.py:63
 #: apps/offer/abstract_models.py:407 apps/offer/abstract_models.py:639
-#: apps/order/abstract_models.py:739 apps/payment/abstract_models.py:37
-#: defaults.py:223
+#: apps/order/abstract_models.py:737 apps/payment/abstract_models.py:37
+#: defaults.py:224
 #: templates/oscar/dashboard/catalogue/product_class_form.html:98
 #: templates/oscar/dashboard/orders/order_detail.html:561
 #: templates/oscar/dashboard/orders/order_detail.html:611
 #: templates/oscar/dashboard/promotions/page_detail.html:37
 #: templates/oscar/dashboard/promotions/promotion_list.html:42
 msgid "Type"
-msgstr ""
-
-#: apps/catalogue/abstract_models.py:823
-msgid "Option Group"
-msgstr ""
+msgstr "Tipe"
 
 #: apps/catalogue/abstract_models.py:824
+msgid "Option Group"
+msgstr "Kelompok Opsi"
+
+#: apps/catalogue/abstract_models.py:825
 msgid "Select an option group if using type \"Option\""
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:825
+#: apps/catalogue/abstract_models.py:826
 #: templates/oscar/dashboard/catalogue/product_class_form.html:99
 msgid "Required"
-msgstr ""
-
-#: apps/catalogue/abstract_models.py:831
-msgid "Product attribute"
-msgstr ""
+msgstr "Wajib"
 
 #: apps/catalogue/abstract_models.py:832
+msgid "Product attribute"
+msgstr "Atribut produk"
+
+#: apps/catalogue/abstract_models.py:833
 #: templates/oscar/dashboard/catalogue/product_class_form.html:40
 #: templates/oscar/dashboard/catalogue/product_class_form.html:85
 msgid "Product attributes"
-msgstr ""
+msgstr "Atribut produk"
 
-#: apps/catalogue/abstract_models.py:887
+#: apps/catalogue/abstract_models.py:888
 msgid "Must be str or unicode"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:894
+#: apps/catalogue/abstract_models.py:895
 msgid "Must be a float"
-msgstr ""
+msgstr "Harus bilangan pecahan"
 
-#: apps/catalogue/abstract_models.py:900
+#: apps/catalogue/abstract_models.py:901
 msgid "Must be an integer"
-msgstr ""
+msgstr "Harus bilangan bulat"
 
-#: apps/catalogue/abstract_models.py:904
+#: apps/catalogue/abstract_models.py:905
 msgid "Must be a date or datetime"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:908
+#: apps/catalogue/abstract_models.py:909
 msgid "Must be a boolean"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:912
+#: apps/catalogue/abstract_models.py:913
 msgid "Must be a model instance"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:917
+#: apps/catalogue/abstract_models.py:918
 msgid "Must be an AttributeOption model object instance"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:919
+#: apps/catalogue/abstract_models.py:920
 msgid "AttributeOption has not been saved yet"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:924
+#: apps/catalogue/abstract_models.py:925
 #, python-format
 msgid "%(enum)s is not a valid choice for %(attr)s"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:929
+#: apps/catalogue/abstract_models.py:930
 msgid "Must be a file field"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:943
+#: apps/catalogue/abstract_models.py:944
 msgid "Attribute"
-msgstr ""
+msgstr "Atribut"
 
-#: apps/catalogue/abstract_models.py:950
+#: apps/catalogue/abstract_models.py:951
 msgid "Boolean"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:952
+#: apps/catalogue/abstract_models.py:953
 msgid "Richtext"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:956
+#: apps/catalogue/abstract_models.py:957
 msgid "Value option"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:987
+#: apps/catalogue/abstract_models.py:988
 msgid "Product attribute value"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:988
+#: apps/catalogue/abstract_models.py:989
 msgid "Product attribute values"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:1053
+#: apps/catalogue/abstract_models.py:1054
 msgid "Attribute option group"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:1054
+#: apps/catalogue/abstract_models.py:1055
 msgid "Attribute option groups"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:1070
+#: apps/catalogue/abstract_models.py:1071
 msgid "Group"
-msgstr ""
-
-#: apps/catalogue/abstract_models.py:1080
-msgid "Attribute option"
-msgstr ""
+msgstr "Grup"
 
 #: apps/catalogue/abstract_models.py:1081
+msgid "Attribute option"
+msgstr "Opsi atribut"
+
+#: apps/catalogue/abstract_models.py:1082
 msgid "Attribute options"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:1103
+#: apps/catalogue/abstract_models.py:1104
 msgid "Required - a value for this option must be specified"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:1104
+#: apps/catalogue/abstract_models.py:1105
 msgid "Optional - a value for this option can be omitted"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:1169
-msgid "Original"
-msgstr ""
-
 #: apps/catalogue/abstract_models.py:1170
+msgid "Original"
+msgstr "Asli"
+
+#: apps/catalogue/abstract_models.py:1171
 msgid "Caption"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:1175
+#: apps/catalogue/abstract_models.py:1176
 msgid ""
 "An image with a display order of zero will be the primary image for a "
 "product"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:1186
-msgid "Product image"
-msgstr ""
-
 #: apps/catalogue/abstract_models.py:1187
+msgid "Product image"
+msgstr "Gambar produk"
+
+#: apps/catalogue/abstract_models.py:1188
 msgid "Product images"
-msgstr ""
+msgstr "Gambar produk"
 
 #: apps/catalogue/config.py:8 apps/dashboard/catalogue/config.py:8
-#: defaults.py:105
+#: defaults.py:106
 msgid "Catalogue"
-msgstr ""
+msgstr "Katalog"
 
 #: apps/catalogue/reviews/abstract_models.py:33
 #: templates/oscar/dashboard/reviews/review_delete.html:36
 #: templates/oscar/dashboard/users/detail.html:178
 msgctxt "Product review title"
 msgid "Title"
-msgstr ""
+msgstr "Judul"
 
 #: apps/catalogue/reviews/abstract_models.py:36
 #: templates/oscar/customer/email/email_detail.html:23
@@ -1344,87 +1346,87 @@ msgstr ""
 #: apps/catalogue/reviews/abstract_models.py:44
 msgctxt "Anonymous reviewer name"
 msgid "Name"
-msgstr ""
+msgstr "Nama"
 
-#: apps/catalogue/reviews/abstract_models.py:48
+#: apps/catalogue/reviews/abstract_models.py:47
 #: apps/dashboard/pages/forms.py:25 apps/dashboard/promotions/forms.py:70
 #: models/fields/__init__.py:17 templates/oscar/dashboard/pages/index.html:51
 #: templates/oscar/dashboard/promotions/pagepromotion_list.html:43
 msgid "URL"
-msgstr ""
+msgstr "URL"
+
+#: apps/catalogue/reviews/abstract_models.py:51
+msgid "Requires moderation"
+msgstr "Butuh moderasi"
 
 #: apps/catalogue/reviews/abstract_models.py:52
-msgid "Requires moderation"
-msgstr ""
-
-#: apps/catalogue/reviews/abstract_models.py:53
 #: apps/dashboard/reviews/forms.py:11
 msgid "Approved"
-msgstr ""
+msgstr "Disetujui"
 
-#: apps/catalogue/reviews/abstract_models.py:54
+#: apps/catalogue/reviews/abstract_models.py:53
 #: apps/dashboard/reviews/forms.py:12
 msgid "Rejected"
-msgstr ""
+msgstr "Ditolak"
 
-#: apps/catalogue/reviews/abstract_models.py:64
+#: apps/catalogue/reviews/abstract_models.py:63
 msgid "Total Votes"
-msgstr ""
+msgstr "Total Suara"
 
-#: apps/catalogue/reviews/abstract_models.py:66
+#: apps/catalogue/reviews/abstract_models.py:65
 msgid "Delta Votes"
-msgstr ""
+msgstr "Selisih Suara"
+
+#: apps/catalogue/reviews/abstract_models.py:78
+msgid "Product review"
+msgstr "Ulasan produk"
 
 #: apps/catalogue/reviews/abstract_models.py:79
-msgid "Product review"
-msgstr ""
-
-#: apps/catalogue/reviews/abstract_models.py:80
 msgid "Product reviews"
 msgstr ""
 
-#: apps/catalogue/reviews/abstract_models.py:98
+#: apps/catalogue/reviews/abstract_models.py:97
 msgid "Anonymous reviews must include a name and an email"
 msgstr ""
 
-#: apps/catalogue/reviews/abstract_models.py:151
+#: apps/catalogue/reviews/abstract_models.py:150
 msgid "anonymous"
-msgstr ""
+msgstr "anonim"
 
-#: apps/catalogue/reviews/abstract_models.py:173
+#: apps/catalogue/reviews/abstract_models.py:172
 msgid "Only signed in users can vote"
-msgstr ""
+msgstr "Hanya pengguna yang sudah masuk yang bisa memilih"
 
-#: apps/catalogue/reviews/abstract_models.py:194
+#: apps/catalogue/reviews/abstract_models.py:193
 msgid "Up"
 msgstr ""
 
-#: apps/catalogue/reviews/abstract_models.py:195
+#: apps/catalogue/reviews/abstract_models.py:194
 msgid "Down"
 msgstr ""
 
-#: apps/catalogue/reviews/abstract_models.py:197
+#: apps/catalogue/reviews/abstract_models.py:196
 msgid "Delta"
 msgstr ""
 
-#: apps/catalogue/reviews/abstract_models.py:205
+#: apps/catalogue/reviews/abstract_models.py:204
 msgid "Vote"
 msgstr ""
 
-#: apps/catalogue/reviews/abstract_models.py:206
+#: apps/catalogue/reviews/abstract_models.py:205
 #: templates/oscar/dashboard/reviews/review_list.html:60
 msgid "Votes"
 msgstr ""
 
-#: apps/catalogue/reviews/abstract_models.py:214
+#: apps/catalogue/reviews/abstract_models.py:213
 msgid "You cannot vote on your own reviews"
 msgstr ""
 
-#: apps/catalogue/reviews/abstract_models.py:217
+#: apps/catalogue/reviews/abstract_models.py:216
 msgid "Only signed-in users can vote on reviews"
 msgstr ""
 
-#: apps/catalogue/reviews/abstract_models.py:221
+#: apps/catalogue/reviews/abstract_models.py:220
 msgid "You can only vote once on a review"
 msgstr ""
 
@@ -1438,7 +1440,7 @@ msgstr ""
 
 #: apps/catalogue/reviews/forms.py:57 apps/search/forms.py:83
 msgid "Sort by"
-msgstr ""
+msgstr "Urut berdasarkan"
 
 #: apps/catalogue/reviews/views.py:32
 msgid "You have already reviewed this product!"
@@ -1454,7 +1456,7 @@ msgstr ""
 
 #: apps/catalogue/reviews/views.py:97
 msgid "Thanks for voting!"
-msgstr ""
+msgstr "Terima kasih sudah memberi suara!"
 
 #: apps/catalogue/utils.py:63
 #, python-format
@@ -1468,25 +1470,25 @@ msgstr ""
 
 #: apps/catalogue/views.py:126 apps/catalogue/views.py:162
 msgid "The given page number was invalid."
-msgstr ""
+msgstr "Nomor halaman yang dituju tidak ada"
 
 #: apps/catalogue/views.py:135 templates/oscar/partials/nav_primary.html:45
 msgid "All products"
-msgstr ""
+msgstr "Semua produk"
 
 #: apps/checkout/config.py:8
 #: templates/oscar/basket/partials/basket_quick.html:39
 #: templates/oscar/checkout/checkout.html:9
 msgid "Checkout"
-msgstr ""
+msgstr "cekout"
 
 #: apps/checkout/forms.py:53
 msgid "My email address is"
-msgstr ""
+msgstr "Alamat email saya adalah"
 
 #: apps/checkout/forms.py:56
 msgid "I am a new customer and want to checkout as a guest"
-msgstr ""
+msgstr "Saya pelanggan baru dan ingin diproses sebagai tamu"
 
 #: apps/checkout/forms.py:57
 msgid "I am a new customer and want to create an account before checking out"
@@ -1494,11 +1496,11 @@ msgstr ""
 
 #: apps/checkout/forms.py:59
 msgid "I am a returning customer, and my password is"
-msgstr ""
+msgstr "Saya sudah jadi pelanggan dan kata sandi saya adalah"
 
 #: apps/checkout/forms.py:73 apps/customer/forms.py:159
 msgid "A user with that email address already exists"
-msgstr ""
+msgstr "Pengguna dengan alamat email tersebut sudah ada"
 
 #: apps/checkout/session.py:113
 msgid "You need to add some items to your basket to checkout"
@@ -1513,21 +1515,21 @@ msgstr ""
 
 #: apps/checkout/session.py:149
 msgid "Please either sign in or enter your email address"
-msgstr ""
+msgstr "Mohon pilih masuk atau tuliskan alamat email"
 
 #: apps/checkout/session.py:173 apps/checkout/views.py:274
 msgid "Please choose a shipping address"
-msgstr ""
+msgstr "Pilih alamat kirim"
 
 #: apps/checkout/session.py:182
 msgid ""
 "Your previously chosen shipping address is no longer valid.  Please choose "
 "another one"
-msgstr ""
+msgstr "Alamat kirim pilihan anda sebelumnya tidak valid lagi. Mohon pilih yang lain"
 
 #: apps/checkout/session.py:192
 msgid "Please choose a shipping method"
-msgstr ""
+msgstr "Pilih cara pengiriman"
 
 #: apps/checkout/session.py:204
 msgid ""
@@ -1543,11 +1545,11 @@ msgstr ""
 
 #: apps/checkout/views.py:214
 msgid "Address saved"
-msgstr ""
+msgstr "Alamat tersimpan"
 
 #: apps/checkout/views.py:229
 msgid "Address deleted"
-msgstr ""
+msgstr "Alamat terhapus"
 
 #: apps/checkout/views.py:283
 msgid ""
@@ -1566,25 +1568,25 @@ msgstr ""
 
 #: apps/checkout/views.py:676
 msgid "No order found"
-msgstr ""
+msgstr "Pesanan tidak ditemukan"
 
 #: apps/customer/abstract_models.py:57
 msgid "email address"
-msgstr ""
+msgstr "alamat email"
 
 #: apps/customer/abstract_models.py:63
 msgid "Staff status"
-msgstr ""
+msgstr "Status staf"
 
 #: apps/customer/abstract_models.py:64
 msgid "Designates whether the user can log into this admin site."
 msgstr ""
 
-#: apps/customer/abstract_models.py:67 apps/customer/abstract_models.py:332
+#: apps/customer/abstract_models.py:67 apps/customer/abstract_models.py:330
 #: templates/oscar/dashboard/users/detail.html:40
 #: templates/oscar/dashboard/vouchers/voucher_list.html:70
 msgid "Active"
-msgstr ""
+msgstr "Aktif"
 
 #: apps/customer/abstract_models.py:68
 msgid ""
@@ -1594,7 +1596,7 @@ msgstr ""
 
 #: apps/customer/abstract_models.py:70
 msgid "date joined"
-msgstr ""
+msgstr "tanggal bergabung"
 
 #: apps/customer/abstract_models.py:80 apps/partner/abstract_models.py:32
 #: templates/oscar/dashboard/partners/partner_list.html:45
@@ -1608,20 +1610,20 @@ msgstr ""
 #: templates/oscar/customer/notifications/detail.html:24
 #: templates/oscar/dashboard/comms/detail.html:89
 msgid "Subject"
-msgstr ""
+msgstr "Subjek"
 
 #: apps/customer/abstract_models.py:117
 msgid "Body Text"
-msgstr ""
+msgstr "Badan Teks"
 
 #: apps/customer/abstract_models.py:118
 #: templates/oscar/dashboard/comms/detail.html:97
 msgid "Body HTML"
-msgstr ""
+msgstr "Badan HTML"
 
 #: apps/customer/abstract_models.py:119
 msgid "Date Sent"
-msgstr ""
+msgstr "Tanggal Terkirim"
 
 #: apps/customer/abstract_models.py:125
 #: templates/oscar/dashboard/comms/detail.html:17
@@ -1647,11 +1649,11 @@ msgstr ""
 
 #: apps/customer/abstract_models.py:162
 msgid "Order related"
-msgstr ""
+msgstr "Pesanan terkait"
 
 #: apps/customer/abstract_models.py:163
 msgid "User related"
-msgstr ""
+msgstr "Pengguna terkait"
 
 #: apps/customer/abstract_models.py:175
 msgid "Email Subject Template"
@@ -1677,9 +1679,9 @@ msgstr ""
 msgid "SMS template"
 msgstr ""
 
-#: apps/customer/abstract_models.py:188 apps/order/abstract_models.py:352
+#: apps/customer/abstract_models.py:188 apps/order/abstract_models.py:350
 msgid "Date Updated"
-msgstr ""
+msgstr "Tanggal Diperbarui"
 
 #: apps/customer/abstract_models.py:201
 msgid "Communication event type"
@@ -1696,12 +1698,12 @@ msgstr ""
 
 #: apps/customer/abstract_models.py:276
 msgid "Archive"
-msgstr ""
+msgstr "Arsip"
 
 #: apps/customer/abstract_models.py:287
 #: apps/customer/notifications/views.py:69
 msgid "Notification"
-msgstr ""
+msgstr "Notifikasi"
 
 #: apps/customer/abstract_models.py:288
 #: apps/customer/notifications/views.py:22
@@ -1710,42 +1712,42 @@ msgstr ""
 msgid "Notifications"
 msgstr ""
 
-#: apps/customer/abstract_models.py:320 apps/wishlists/abstract_models.py:30
+#: apps/customer/abstract_models.py:318 apps/wishlists/abstract_models.py:30
 msgid "Key"
-msgstr ""
+msgstr "Kunci"
+
+#: apps/customer/abstract_models.py:329
+msgid "Not yet confirmed"
+msgstr "Belum dikonfirmasi"
 
 #: apps/customer/abstract_models.py:331
-msgid "Not yet confirmed"
-msgstr ""
-
-#: apps/customer/abstract_models.py:333
 msgid "Cancelled"
-msgstr ""
+msgstr "Dibatalkan"
 
-#: apps/customer/abstract_models.py:334 apps/partner/abstract_models.py:242
+#: apps/customer/abstract_models.py:332 apps/partner/abstract_models.py:242
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:39
 msgid "Closed"
-msgstr ""
+msgstr "Ditutup"
 
-#: apps/customer/abstract_models.py:340
+#: apps/customer/abstract_models.py:338
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:29
 msgid "Date confirmed"
-msgstr ""
+msgstr "Tanggal dikonfirmasi"
 
-#: apps/customer/abstract_models.py:342
+#: apps/customer/abstract_models.py:340
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:35
 msgid "Date cancelled"
-msgstr ""
+msgstr "Tanggal dibatalkan"
 
-#: apps/customer/abstract_models.py:344
+#: apps/customer/abstract_models.py:342
 msgid "Date closed"
-msgstr ""
+msgstr "Tanggal ditutup"
 
-#: apps/customer/abstract_models.py:349
+#: apps/customer/abstract_models.py:347
 msgid "Product alert"
 msgstr ""
 
-#: apps/customer/abstract_models.py:350
+#: apps/customer/abstract_models.py:348
 #: templates/oscar/dashboard/users/alerts/delete.html:17
 #: templates/oscar/dashboard/users/alerts/list.html:8
 #: templates/oscar/dashboard/users/alerts/list.html:16
@@ -1788,7 +1790,7 @@ msgstr ""
 #: apps/customer/config.py:8
 #: templates/oscar/dashboard/orders/order_list.html:121
 msgid "Customer"
-msgstr ""
+msgstr "Pelanggan"
 
 #: apps/customer/forms.py:100 apps/customer/forms.py:135
 #: apps/dashboard/partners/forms.py:127
@@ -1796,20 +1798,20 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:39
 #: templates/oscar/dashboard/orders/order_detail.html:45
 msgid "Email address"
-msgstr ""
+msgstr "Alamat email"
 
 #: apps/customer/forms.py:120 apps/customer/forms.py:137
 #: apps/dashboard/partners/forms.py:76
 msgid "Password"
-msgstr ""
+msgstr "Kata Sandi"
 
 #: apps/customer/forms.py:130
 msgid "The entered password is not valid!"
-msgstr ""
+msgstr "Password yang dimasukkan tidak valid!"
 
 #: apps/customer/forms.py:140
 msgid "Confirm password"
-msgstr ""
+msgstr "Konfirmasi kata sandi"
 
 #: apps/customer/forms.py:167 apps/dashboard/partners/forms.py:91
 msgid "The two password fields didn't match."
@@ -1818,15 +1820,15 @@ msgstr ""
 #: apps/customer/forms.py:189 apps/dashboard/orders/forms.py:21
 msgctxt "start date"
 msgid "From"
-msgstr ""
+msgstr "Dari"
 
-#: apps/customer/forms.py:192 apps/dashboard/orders/forms.py:23
+#: apps/customer/forms.py:192 apps/dashboard/orders/forms.py:24
 msgctxt "end date"
 msgid "To"
-msgstr ""
+msgstr "Kepada"
 
 #: apps/customer/forms.py:194 apps/dashboard/communications/forms.py:24
-#: apps/dashboard/offers/reports.py:14 apps/dashboard/orders/forms.py:66
+#: apps/dashboard/offers/reports.py:14 apps/dashboard/orders/forms.py:68
 #: apps/dashboard/orders/views.py:377 apps/order/abstract_models.py:28
 #: apps/order/reports.py:20 templates/oscar/customer/order/order_list.html:39
 #: templates/oscar/dashboard/comms/detail.html:65
@@ -1835,16 +1837,16 @@ msgstr ""
 #: templates/oscar/dashboard/reports/partials/order_report.html:9
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:62
 msgid "Order number"
-msgstr ""
+msgstr "Nomor Pesanan"
 
 #: apps/customer/forms.py:200
 msgid "At least one field is required."
-msgstr ""
+msgstr "Setidaknya satu area adalah wajib"
 
-#: apps/customer/forms.py:209 apps/dashboard/orders/forms.py:29
-#: apps/dashboard/orders/forms.py:52
+#: apps/customer/forms.py:209 apps/dashboard/orders/forms.py:31
+#: apps/dashboard/orders/forms.py:54
 msgid "All orders"
-msgstr ""
+msgstr "Semua pesanan"
 
 #: apps/customer/forms.py:219
 #, python-format
@@ -1853,7 +1855,7 @@ msgid ""
 "containing %(order_number)s"
 msgstr ""
 
-#: apps/customer/forms.py:223 apps/dashboard/orders/forms.py:40
+#: apps/customer/forms.py:223 apps/dashboard/orders/forms.py:42
 #, python-format
 msgid "Orders placed between %(date_from)s and %(date_to)s"
 msgstr ""
@@ -1892,11 +1894,11 @@ msgstr ""
 
 #: apps/customer/forms.py:367
 msgid "Send notification to"
-msgstr ""
+msgstr "Kirim notifikasi kepada"
 
 #: apps/customer/forms.py:369
 msgid "Enter your email"
-msgstr ""
+msgstr "Masukkan email anda"
 
 #: apps/customer/forms.py:403
 #, python-format
@@ -1921,60 +1923,60 @@ msgstr[0] ""
 
 #: apps/customer/views.py:177
 msgid "Welcome back"
-msgstr ""
+msgstr "Selamat datang kembali"
 
 #: apps/customer/views.py:225
 msgid "Thanks for registering!"
-msgstr ""
+msgstr "Terima kasih sudah mendaftar!"
 
 #: apps/customer/views.py:256 templates/oscar/customer/baseaccountpage.html:30
 #: templates/oscar/customer/partials/nav_account.html:20
 msgid "Profile"
-msgstr ""
+msgstr "Profil"
 
 #: apps/customer/views.py:308
 msgid "Edit Profile"
-msgstr ""
+msgstr "Ubah Profil"
 
 #: apps/customer/views.py:346
 msgid "Profile updated"
-msgstr ""
+msgstr "Profil diperbarui"
 
 #: apps/customer/views.py:353 templates/oscar/customer/profile/profile.html:33
 msgid "Delete profile"
-msgstr ""
+msgstr "Profil dihapus"
 
 #: apps/customer/views.py:366
 msgid "Your profile has now been deleted. Thanks for using the site."
-msgstr ""
+msgstr "Profil anda telah dihapus. Terima kasih telah menggunakan situs ini."
 
 #: apps/customer/views.py:374
 msgid "Change Password"
-msgstr ""
+msgstr "Ubah Katasandi"
 
 #: apps/customer/views.py:386
 msgid "Password updated"
-msgstr ""
+msgstr "Katasandi diperbarui"
 
 #: apps/customer/views.py:408 templates/oscar/customer/baseaccountpage.html:39
 #: templates/oscar/customer/partials/nav_account.html:29
 msgid "Email History"
-msgstr ""
+msgstr "Sejarah Email"
 
 #: apps/customer/views.py:443 templates/oscar/customer/baseaccountpage.html:33
 #: templates/oscar/customer/partials/nav_account.html:23
 msgid "Order History"
-msgstr ""
+msgstr "Sejarah Pesanan"
 
-#: apps/customer/views.py:494 apps/order/abstract_models.py:284
-#: apps/order/abstract_models.py:339 apps/order/abstract_models.py:381
-#: apps/order/abstract_models.py:407 apps/order/abstract_models.py:826
-#: apps/order/abstract_models.py:889 apps/order/abstract_models.py:995
+#: apps/customer/views.py:494 apps/order/abstract_models.py:282
+#: apps/order/abstract_models.py:337 apps/order/abstract_models.py:379
+#: apps/order/abstract_models.py:405 apps/order/abstract_models.py:824
+#: apps/order/abstract_models.py:887 apps/order/abstract_models.py:993
 #: apps/order/config.py:8 apps/payment/abstract_models.py:71
 #: apps/voucher/abstract_models.py:167
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:5
 msgid "Order"
-msgstr ""
+msgstr "Pesanan"
 
 #: apps/customer/views.py:546
 #, python-format
@@ -2002,44 +2004,44 @@ msgstr ""
 #: apps/customer/views.py:621 templates/oscar/customer/baseaccountpage.html:36
 #: templates/oscar/customer/partials/nav_account.html:26
 msgid "Address Book"
-msgstr ""
+msgstr "Buku Alamat"
 
 #: apps/customer/views.py:633 apps/customer/views.py:643
 #: templates/oscar/customer/address/address_list.html:67
 msgid "Add a new address"
-msgstr ""
+msgstr "Tambahkan alamat baru"
 
 #: apps/customer/views.py:648
 #, python-format
 msgid "Address '%s' created"
-msgstr ""
+msgstr "Alamat '%s' dibuat"
 
 #: apps/customer/views.py:657 apps/customer/views.py:667
 #: templates/oscar/checkout/shipping_address.html:47
 #: templates/oscar/checkout/user_address_form.html:5
 #: templates/oscar/checkout/user_address_form.html:17
 msgid "Edit address"
-msgstr ""
+msgstr "Ubah alamat"
 
 #: apps/customer/views.py:675
 #, python-format
 msgid "Address '%s' updated"
-msgstr ""
+msgstr "Alamat '%s' diperbarui"
 
 #: apps/customer/views.py:682
 #: templates/oscar/checkout/user_address_delete.html:5
 #: templates/oscar/checkout/user_address_delete.html:17
 msgid "Delete address?"
-msgstr ""
+msgstr "Hapus alamat?"
 
 #: apps/customer/views.py:692
 #, python-format
 msgid "Address '%s' deleted"
-msgstr ""
+msgstr "Alamat '%s' dihapus"
 
 #: apps/customer/views.py:714
 msgid "We do not ship to this country"
-msgstr ""
+msgstr "Kami tidak mengirim ke negara ini"
 
 #: apps/customer/wishlists/views.py:26
 #: templates/oscar/customer/baseaccountpage.html:48
@@ -2053,7 +2055,7 @@ msgstr ""
 
 #: apps/customer/wishlists/views.py:78
 msgid "Quantities updated."
-msgstr ""
+msgstr "Jumlah diperbarui"
 
 #: apps/customer/wishlists/views.py:92
 #: templates/oscar/customer/wishlists/wishlists_list.html:49
@@ -2086,7 +2088,7 @@ msgstr ""
 #: apps/customer/wishlists/views.py:184
 #, python-format
 msgid "Delete %s"
-msgstr ""
+msgstr "Hapus %s"
 
 #: apps/customer/wishlists/views.py:192
 #, python-format
@@ -2101,7 +2103,7 @@ msgstr ""
 #: apps/customer/wishlists/views.py:270
 #, python-format
 msgid "Remove %s"
-msgstr ""
+msgstr "Hapus %s"
 
 #: apps/customer/wishlists/views.py:285
 #, python-format
@@ -2119,11 +2121,11 @@ msgstr ""
 
 #: apps/dashboard/catalogue/forms.py:33
 msgid "-- Choose type --"
-msgstr ""
+msgstr "-- Pilih jenis --"
 
 #: apps/dashboard/catalogue/forms.py:49
 msgid "Product title"
-msgstr ""
+msgstr "Judul produk"
 
 #: apps/dashboard/catalogue/forms.py:152
 msgid ""
@@ -2141,12 +2143,12 @@ msgstr ""
 
 #: apps/dashboard/catalogue/forms.py:460
 msgid "Select an option group"
-msgstr ""
+msgstr "Pilih grup opsi"
 
 #: apps/dashboard/catalogue/tables.py:15
 #: templates/oscar/dashboard/catalogue/product_update.html:254
 msgid "Title"
-msgstr ""
+msgstr "Judul"
 
 #: apps/dashboard/catalogue/tables.py:27
 #: templates/oscar/dashboard/catalogue/product_update.html:85
@@ -2157,7 +2159,7 @@ msgstr ""
 #: apps/dashboard/catalogue/tables.py:32 apps/partner/abstract_models.py:163
 #: templates/oscar/dashboard/catalogue/product_update.html:256
 msgid "Stock records"
-msgstr ""
+msgstr "Rekaman Stok"
 
 #: apps/dashboard/catalogue/tables.py:36
 #: templates/oscar/customer/wishlists/wishlists_detail.html:76
@@ -2180,7 +2182,7 @@ msgstr ""
 #: templates/oscar/dashboard/users/detail.html:87
 #: templates/oscar/dashboard/vouchers/voucher_list.html:83
 msgid "Actions"
-msgstr ""
+msgstr "Aksi"
 
 #: apps/dashboard/catalogue/tables.py:59
 msgid "Number of child categories"
@@ -2194,11 +2196,11 @@ msgstr[0] ""
 
 #: apps/dashboard/catalogue/views.py:84
 msgid "Product search results"
-msgstr ""
+msgstr "Produk hasil pencarian"
 
 #: apps/dashboard/catalogue/views.py:157
 msgid "Please choose a product type"
-msgstr ""
+msgstr "Pilih jenis produk"
 
 #: apps/dashboard/catalogue/views.py:275
 #, python-format
@@ -2217,15 +2219,15 @@ msgstr ""
 
 #: apps/dashboard/catalogue/views.py:375 apps/dashboard/catalogue/views.py:661
 msgid "Your submitted data was not valid - please correct the errors below"
-msgstr ""
+msgstr "Data yang dikirimkan tidak valid - mohon perbaiki kesalahan di bawah ini"
 
 #: apps/dashboard/catalogue/views.py:439
 msgid "Delete product variant?"
-msgstr ""
+msgstr "Hapus varian produk?"
 
 #: apps/dashboard/catalogue/views.py:441
 msgid "Delete product?"
-msgstr ""
+msgstr "Hapus produk?"
 
 #: apps/dashboard/catalogue/views.py:485
 #, python-format
@@ -2240,7 +2242,7 @@ msgstr ""
 #: apps/dashboard/catalogue/views.py:513
 #, python-format
 msgid "Alerts with status \"%s\""
-msgstr ""
+msgstr "Alerts with status \"%s\""
 
 #: apps/dashboard/catalogue/views.py:516
 msgid "All alerts"
@@ -2248,24 +2250,24 @@ msgstr ""
 
 #: apps/dashboard/catalogue/views.py:571
 msgid "Add a new category"
-msgstr ""
+msgstr "Tambahkan kategori baru"
 
 #: apps/dashboard/catalogue/views.py:575
 msgid "Category created successfully"
-msgstr ""
+msgstr "Kategori berhasil dibuat"
 
 #: apps/dashboard/catalogue/views.py:593
 #, python-format
 msgid "Update category '%s'"
-msgstr ""
+msgstr "Perbarui kategori '%s'"
 
 #: apps/dashboard/catalogue/views.py:597
 msgid "Category updated successfully"
-msgstr ""
+msgstr "Kategori berhasil diperbarui"
 
 #: apps/dashboard/catalogue/views.py:611
 msgid "Category deleted successfully"
-msgstr ""
+msgstr "Kategori berhasil dihapus"
 
 #: apps/dashboard/catalogue/views.py:691
 msgid "Add a new product type"
@@ -2285,7 +2287,7 @@ msgid "Product type updated successfully"
 msgstr ""
 
 #: apps/dashboard/catalogue/views.py:722 apps/offer/abstract_models.py:785
-#: defaults.py:113
+#: defaults.py:114
 #: templates/oscar/dashboard/catalogue/product_class_list.html:23
 msgid "Product Types"
 msgstr ""
@@ -2335,7 +2337,7 @@ msgstr ""
 
 #: apps/dashboard/communications/forms.py:76
 msgid "Please enter an email address"
-msgstr ""
+msgstr "Masukkan alamat email"
 
 #: apps/dashboard/communications/views.py:32
 msgid ""
@@ -2344,14 +2346,14 @@ msgstr ""
 
 #: apps/dashboard/communications/views.py:41
 msgid "Email saved"
-msgstr ""
+msgstr "Email tersimpan"
 
 #: apps/dashboard/communications/views.py:82
 #, python-format
 msgid "A preview email has been sent to %s"
 msgstr ""
 
-#: apps/dashboard/config.py:8 defaults.py:100
+#: apps/dashboard/config.py:8 defaults.py:101
 #: templates/oscar/dashboard/catalogue/category_delete.html:9
 #: templates/oscar/dashboard/catalogue/category_form.html:14
 #: templates/oscar/dashboard/catalogue/category_list.html:15
@@ -2426,16 +2428,16 @@ msgstr ""
 #: apps/dashboard/offers/forms.py:25 apps/offer/abstract_models.py:85
 #: templates/oscar/dashboard/offers/offer_list.html:47
 msgid "Start date"
-msgstr ""
+msgstr "Tanggal mulai"
 
 #: apps/dashboard/offers/forms.py:28 apps/offer/abstract_models.py:87
 #: templates/oscar/dashboard/offers/offer_list.html:48
 msgid "End date"
-msgstr ""
+msgstr "Tanggal selesai"
 
 #: apps/dashboard/offers/forms.py:47
 msgid "The end date must be after the start date"
-msgstr ""
+msgstr "Tanggal selesai harus setelah tanggal mulai"
 
 #: apps/dashboard/offers/forms.py:54
 msgid "Custom condition"
@@ -2463,7 +2465,7 @@ msgstr ""
 msgid "No other options can be set if you are using a custom incentive"
 msgstr ""
 
-#: apps/dashboard/offers/forms.py:160 apps/order/abstract_models.py:1012
+#: apps/dashboard/offers/forms.py:160 apps/order/abstract_models.py:1010
 #: templates/oscar/dashboard/offers/offer_list.html:46
 #: templates/oscar/dashboard/orders/order_detail.html:563
 msgid "Offer name"
@@ -2471,12 +2473,12 @@ msgstr ""
 
 #: apps/dashboard/offers/forms.py:161
 msgid "Is active?"
-msgstr ""
+msgstr "Apakah aktif?"
 
 #: apps/dashboard/offers/reports.py:15
 #: templates/oscar/dashboard/offers/offer_detail.html:106
 msgid "Order date"
-msgstr ""
+msgstr "Tanggal Pesanan"
 
 #: apps/dashboard/offers/reports.py:16
 #: templates/oscar/basket/partials/basket_totals.html:205
@@ -2487,18 +2489,18 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:242
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:63
 msgid "Order total"
-msgstr ""
+msgstr "Total pesanan"
 
 #: apps/dashboard/offers/reports.py:17
 #: templates/oscar/checkout/shipping_methods.html:25
 #: templates/oscar/dashboard/offers/offer_detail.html:108
 #: templates/oscar/dashboard/offers/offer_list.html:54
 msgid "Cost"
-msgstr ""
+msgstr "Biaya"
 
 #: apps/dashboard/offers/views.py:43
 msgid "All offers"
-msgstr ""
+msgstr "Semua tawaran"
 
 #: apps/dashboard/offers/views.py:56
 #, python-format
@@ -2508,7 +2510,7 @@ msgstr ""
 #: apps/dashboard/offers/views.py:89
 #, python-format
 msgid "%s step not complete"
-msgstr ""
+msgstr "%s langkah tidak lengkap"
 
 #: apps/dashboard/offers/views.py:239
 #, python-format
@@ -2522,25 +2524,25 @@ msgstr ""
 
 #: apps/dashboard/offers/views.py:271
 msgid "Name and description"
-msgstr ""
+msgstr "Nama dan deskripsi"
 
 #: apps/dashboard/offers/views.py:287
 #: templates/oscar/dashboard/offers/offer_detail.html:71
 #: templates/oscar/dashboard/offers/offer_list.html:49
 #: templates/oscar/dashboard/offers/summary.html:19
 msgid "Incentive"
-msgstr ""
+msgstr "Insentif"
 
 #: apps/dashboard/offers/views.py:317
 #: templates/oscar/dashboard/offers/offer_detail.html:81
 #: templates/oscar/dashboard/offers/offer_list.html:52
 #: templates/oscar/dashboard/offers/summary.html:32
 msgid "Restrictions"
-msgstr ""
+msgstr "Restriksi"
 
 #: apps/dashboard/offers/views.py:326
 msgid "Offer deleted!"
-msgstr ""
+msgstr "Tawaran dihapus!"
 
 #: apps/dashboard/offers/views.py:349
 msgid "Offer is already suspended"
@@ -2562,73 +2564,76 @@ msgstr ""
 msgid "Orders dashboard"
 msgstr ""
 
-#: apps/dashboard/orders/forms.py:46
+#: apps/dashboard/orders/forms.py:48
 #, python-format
 msgid "Orders placed since %s"
 msgstr ""
 
-#: apps/dashboard/orders/forms.py:49
+#: apps/dashboard/orders/forms.py:51
 #, python-format
 msgid "Orders placed until %s"
 msgstr ""
 
-#: apps/dashboard/orders/forms.py:67 apps/dashboard/reviews/forms.py:30
+#: apps/dashboard/orders/forms.py:69 apps/dashboard/reviews/forms.py:30
 msgid "Customer name"
-msgstr ""
+msgstr "Nama pelanggan"
 
-#: apps/dashboard/orders/forms.py:68
+#: apps/dashboard/orders/forms.py:70
 msgid "Product name"
-msgstr ""
+msgstr "Nama produk"
 
-#: apps/dashboard/orders/forms.py:70 apps/order/abstract_models.py:421
+#: apps/dashboard/orders/forms.py:72 apps/order/abstract_models.py:419
 #: apps/partner/abstract_models.py:102
 #: templates/oscar/dashboard/orders/line_detail.html:80
 msgid "Partner SKU"
-msgstr ""
+msgstr "SKU Rekan"
 
-#: apps/dashboard/orders/forms.py:79 apps/dashboard/reports/forms.py:23
+#: apps/dashboard/orders/forms.py:81 apps/dashboard/reports/forms.py:25
 #: apps/dashboard/reviews/forms.py:28
 msgid "Date from"
-msgstr ""
+msgstr "Tanggal mulai"
 
-#: apps/dashboard/orders/forms.py:81 apps/dashboard/reports/forms.py:24
+#: apps/dashboard/orders/forms.py:83 apps/dashboard/reports/forms.py:27
 msgid "Date to"
-msgstr ""
+msgstr "Tanggal selesai"
 
-#: apps/dashboard/orders/forms.py:83 apps/voucher/reports.py:18
+#: apps/dashboard/orders/forms.py:85 apps/voucher/reports.py:18
 #: templates/oscar/dashboard/reports/partials/voucher_report.html:9
 msgid "Voucher code"
-msgstr ""
+msgstr "Kode voucher"
 
-#: apps/dashboard/orders/forms.py:86
+#: apps/dashboard/orders/forms.py:88
 msgid "Payment method"
-msgstr ""
+msgstr "Cara pembayaran"
 
-#: apps/dashboard/orders/forms.py:89 apps/promotions/models.py:155
+#: apps/dashboard/orders/forms.py:91 apps/promotions/models.py:155
 msgid "HTML"
-msgstr ""
+msgstr "HTML"
 
-#: apps/dashboard/orders/forms.py:90
+#: apps/dashboard/orders/forms.py:92
 msgid "CSV"
-msgstr ""
+msgstr "CSV"
 
-#: apps/dashboard/orders/forms.py:94
+#: apps/dashboard/orders/forms.py:96
 msgid "Get results as"
 msgstr ""
 
-#: apps/dashboard/orders/forms.py:147
+#: apps/dashboard/orders/forms.py:149
 msgid "New order status"
-msgstr ""
+msgstr "Status pesanan baru"
 
 #: apps/dashboard/orders/views.py:248
+#, python-brace-format
 msgid "Order number starts with \"{order_number}\""
-msgstr ""
+msgstr "Nomor pesanan dimulai dengan \"{order_number}\""
 
 #: apps/dashboard/orders/views.py:255
+#, python-brace-format
 msgid "Customer name matches \"{customer_name}\""
 msgstr ""
 
 #: apps/dashboard/orders/views.py:262
+#, python-brace-format
 msgid "Product name matches \"{product_name}\""
 msgstr ""
 
@@ -2637,6 +2642,7 @@ msgstr ""
 #. "Item" in this context means an item in an order placed
 #. in an online store.
 #: apps/dashboard/orders/views.py:273
+#, python-brace-format
 msgid "Includes an item with UPC \"{upc}\""
 msgstr ""
 
@@ -2645,24 +2651,28 @@ msgstr ""
 #. A "partner" is a company that ships items to users who
 #. buy things in an online store.
 #: apps/dashboard/orders/views.py:284
+#, python-brace-format
 msgid "Includes an item with partner SKU \"{partner_sku}\""
 msgstr ""
 
 #. Translators: This string refers to orders in an online
 #. store that were made within a particular date range.
 #: apps/dashboard/orders/views.py:293
+#, python-brace-format
 msgid "Placed between {start_date} and {end_date}"
 msgstr ""
 
 #. Translators: This string refers to orders in an online store
 #. that were made after a particular date.
 #: apps/dashboard/orders/views.py:303
+#, python-brace-format
 msgid "Placed after {start_date}"
 msgstr ""
 
 #. Translators: This string refers to orders in an online store
 #. that were made before a particular date.
 #: apps/dashboard/orders/views.py:312
+#, python-brace-format
 msgid "Placed before {end_date}"
 msgstr ""
 
@@ -2671,6 +2681,7 @@ msgstr ""
 #. The voucher "code" is a string that users can enter to
 #. receive the discount.
 #: apps/dashboard/orders/views.py:321
+#, python-brace-format
 msgid "Used voucher code \"{voucher_code}\""
 msgstr ""
 
@@ -2678,6 +2689,7 @@ msgstr ""
 #. item in an online store.  For example, a user can pay
 #. with a credit card or PayPal.
 #: apps/dashboard/orders/views.py:331
+#, python-brace-format
 msgid "Paid using {payment_method}"
 msgstr ""
 
@@ -2685,6 +2697,7 @@ msgstr ""
 #. online store.  Some examples of order status are
 #. "purchased", "cancelled", or "refunded".
 #: apps/dashboard/orders/views.py:341
+#, python-brace-format
 msgid "Order status is {order_status}"
 msgstr ""
 
@@ -2696,7 +2709,7 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:62
 #: templates/oscar/dashboard/orders/order_list.html:124
 msgid "Date of purchase"
-msgstr ""
+msgstr "Tanggal pembelian"
 
 #: apps/dashboard/orders/views.py:380
 #: templates/oscar/dashboard/orders/order_list.html:119
@@ -2705,7 +2718,7 @@ msgstr ""
 
 #: apps/dashboard/orders/views.py:381
 msgid "Order status"
-msgstr ""
+msgstr "Status pesanan"
 
 #: apps/dashboard/orders/views.py:382
 msgid "Customer email address"
@@ -2713,11 +2726,11 @@ msgstr ""
 
 #: apps/dashboard/orders/views.py:383
 msgid "Deliver to name"
-msgstr ""
+msgstr "Nama pada pengiriman"
 
 #: apps/dashboard/orders/views.py:384
 msgid "Bill to name"
-msgstr ""
+msgstr "Nama pada tagihan"
 
 #: apps/dashboard/orders/views.py:420 apps/dashboard/orders/views.py:643
 #, python-format
@@ -2746,7 +2759,7 @@ msgstr ""
 #: apps/dashboard/orders/views.py:484 apps/dashboard/orders/views.py:489
 #: views/generic.py:71
 msgid "Invalid action"
-msgstr ""
+msgstr "Aksi tidak valid"
 
 #: apps/dashboard/orders/views.py:495
 msgid "You must select some lines to act on"
@@ -2770,15 +2783,15 @@ msgstr ""
 
 #: apps/dashboard/orders/views.py:581
 msgid "Note saved"
-msgstr ""
+msgstr "Catatan tersimpan"
 
 #: apps/dashboard/orders/views.py:591
 msgid "Note cannot be deleted"
-msgstr ""
+msgstr "Catatan tidak dapat dihapus"
 
 #: apps/dashboard/orders/views.py:593
 msgid "Note deleted"
-msgstr ""
+msgstr "Catatan terhapus"
 
 #: apps/dashboard/orders/views.py:600 views/generic.py:38
 msgid "Invalid form submission"
@@ -2790,7 +2803,7 @@ msgstr ""
 
 #: apps/dashboard/orders/views.py:634 apps/dashboard/orders/views.py:710
 msgid "Please choose a valid amount"
-msgstr ""
+msgstr "Pilih jumlah yang benar"
 
 #: apps/dashboard/orders/views.py:649
 #, python-format
@@ -2861,15 +2874,15 @@ msgstr ""
 #: templates/oscar/dashboard/pages/index.html:50
 msgctxt "Page title"
 msgid "Title"
-msgstr ""
+msgstr "Judul"
 
 #: apps/dashboard/pages/forms.py:26
 msgid "Example: '/about/contact/'."
-msgstr ""
+msgstr "Contoh: '/about/contact/'."
 
 #: apps/dashboard/pages/views.py:37
 msgid "All pages"
-msgstr ""
+msgstr "Semua halaman"
 
 #: apps/dashboard/pages/views.py:51
 #, python-format
@@ -2878,7 +2891,7 @@ msgstr ""
 
 #: apps/dashboard/pages/views.py:74
 msgid "Create New Page"
-msgstr ""
+msgstr "Buat Halaman Baru"
 
 #: apps/dashboard/pages/views.py:148
 #, python-format
@@ -2893,7 +2906,7 @@ msgstr ""
 #: apps/partner/abstract_models.py:26
 msgctxt "Partner's name"
 msgid "Name"
-msgstr ""
+msgstr "Nama"
 
 #: apps/dashboard/partners/forms.py:35
 msgid "Full dashboard access"
@@ -2913,7 +2926,7 @@ msgstr ""
 
 #: apps/dashboard/partners/views.py:35
 msgid "All partners"
-msgstr ""
+msgstr "Semua rekan"
 
 #: apps/dashboard/partners/views.py:48
 #, python-format
@@ -2942,7 +2955,7 @@ msgstr ""
 
 #: apps/dashboard/partners/views.py:144
 msgid "Create user"
-msgstr ""
+msgstr "Buat pengguna"
 
 #: apps/dashboard/partners/views.py:155
 #, python-format
@@ -2967,7 +2980,7 @@ msgstr ""
 #: apps/dashboard/partners/views.py:289
 #, python-format
 msgid "Edit user '%s'"
-msgstr ""
+msgstr "Ubah pengguna '%s'"
 
 #: apps/dashboard/partners/views.py:295
 #, python-format
@@ -2980,11 +2993,11 @@ msgstr ""
 
 #: apps/dashboard/promotions/forms.py:22
 msgid "Promotion type"
-msgstr ""
+msgstr "Jenis promosi"
 
 #: apps/dashboard/promotions/forms.py:73 apps/promotions/models.py:24
 msgid "Position"
-msgstr ""
+msgstr "Posisi"
 
 #: apps/dashboard/promotions/forms.py:74
 msgid "Where in the page this content block will appear"
@@ -3026,7 +3039,7 @@ msgstr ""
 
 #: apps/dashboard/promotions/views.py:262
 msgid "No link found to delete"
-msgstr ""
+msgstr "Tidak ditemukan tautan untuk dihapus"
 
 #: apps/dashboard/promotions/views.py:266
 #, python-format
@@ -3104,24 +3117,24 @@ msgstr ""
 msgid "Reports dashboard"
 msgstr ""
 
-#: apps/dashboard/reports/forms.py:18
+#: apps/dashboard/reports/forms.py:20
 msgid "Report Type"
-msgstr ""
+msgstr "Jenis Laporan"
 
-#: apps/dashboard/reports/forms.py:19
+#: apps/dashboard/reports/forms.py:21
 msgid "Only the offer and order reports use the selected date range"
 msgstr ""
 
-#: apps/dashboard/reports/forms.py:25
+#: apps/dashboard/reports/forms.py:28
 msgid "The report is inclusive of this date"
 msgstr ""
 
-#: apps/dashboard/reports/forms.py:28
+#: apps/dashboard/reports/forms.py:32
 #: templates/oscar/dashboard/orders/order_list.html:109
 msgid "Download"
-msgstr ""
+msgstr "Unduh"
 
-#: apps/dashboard/reports/forms.py:34
+#: apps/dashboard/reports/forms.py:38
 msgid "Your start date must be before your end date"
 msgstr ""
 
@@ -3132,7 +3145,7 @@ msgstr ""
 
 #: apps/dashboard/reports/views.py:42
 msgid "You do not have access to this report"
-msgstr ""
+msgstr "Anda tidak punya akses ke laporan ini"
 
 #: apps/dashboard/reviews/config.py:8
 msgid "Reviews dashboard"
@@ -3144,7 +3157,7 @@ msgstr ""
 
 #: apps/dashboard/reviews/forms.py:29
 msgid "to"
-msgstr ""
+msgstr "kepada"
 
 #: apps/dashboard/reviews/views.py:28
 #, python-format
@@ -3161,12 +3174,12 @@ msgstr ""
 #: apps/dashboard/reviews/views.py:63
 #, python-format
 msgid " created after %s"
-msgstr ""
+msgstr "dibuat setelah %s"
 
 #: apps/dashboard/reviews/views.py:69
 #, python-format
 msgid " created before %s"
-msgstr ""
+msgstr "dibuat sebelum %s"
 
 #: apps/dashboard/reviews/views.py:78
 #: templates/oscar/catalogue/reviews/review_list.html:7
@@ -3206,7 +3219,7 @@ msgstr ""
 #: apps/dashboard/users/forms.py:15
 msgctxt "User's name"
 msgid "Name"
-msgstr ""
+msgstr "Nama"
 
 #: apps/dashboard/users/views.py:35
 #, python-format
@@ -3215,7 +3228,7 @@ msgstr ""
 
 #: apps/dashboard/users/views.py:63
 msgid "All users"
-msgstr ""
+msgstr "Semua pengguna"
 
 #: apps/dashboard/users/views.py:80
 #, python-format
@@ -3260,19 +3273,19 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:39
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:34
 msgid "Start datetime"
-msgstr ""
+msgstr "Tanggal waktu mulai"
 
 #: apps/dashboard/vouchers/forms.py:24 apps/voucher/abstract_models.py:47
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:40
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:35
 msgid "End datetime"
-msgstr ""
+msgstr "Tanggal waktu selesai"
 
 #: apps/dashboard/vouchers/forms.py:25 apps/voucher/abstract_models.py:43
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:41
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:36
 msgid "Usage"
-msgstr ""
+msgstr "Penggunaan"
 
 #: apps/dashboard/vouchers/forms.py:28
 msgid "Which products get a discount?"
@@ -3322,7 +3335,7 @@ msgstr ""
 
 #: apps/dashboard/vouchers/forms.py:90
 msgid "Is Active?"
-msgstr ""
+msgstr "Aktif?"
 
 #: apps/dashboard/vouchers/views.py:27
 #, python-format
@@ -3401,15 +3414,15 @@ msgstr ""
 #: templates/oscar/dashboard/offers/offer_list.html:50
 #: templates/oscar/dashboard/offers/summary.html:26
 msgid "Condition"
-msgstr ""
+msgstr "Kondisi"
 
 #: apps/offer/abstract_models.py:72 apps/offer/abstract_models.py:430
 msgid "Benefit"
-msgstr ""
+msgstr "Keuntungan"
 
 #: apps/offer/abstract_models.py:76
 msgid "Priority"
-msgstr ""
+msgstr "Prioritas"
 
 #: apps/offer/abstract_models.py:77
 msgid "The highest priority offers are applied first"
@@ -3445,7 +3458,7 @@ msgstr ""
 
 #: apps/offer/abstract_models.py:119
 msgid "Max discount"
-msgstr ""
+msgstr "Diskon maksimum"
 
 #: apps/offer/abstract_models.py:121
 msgid ""
@@ -3455,7 +3468,7 @@ msgstr ""
 
 #: apps/offer/abstract_models.py:130
 msgid "Total Discount"
-msgstr ""
+msgstr "Diskon total"
 
 #: apps/offer/abstract_models.py:133
 msgid "Number of applications"
@@ -3626,12 +3639,12 @@ msgstr ""
 
 #: apps/offer/abstract_models.py:651
 msgid "Conditions"
-msgstr ""
+msgstr "Kondisi"
 
 #: apps/offer/abstract_models.py:771
 #: templates/oscar/dashboard/ranges/range_list.html:33
 msgid "Is public?"
-msgstr ""
+msgstr "Publik?"
 
 #: apps/offer/abstract_models.py:772
 msgid "Public ranges have a customer-facing page"
@@ -3639,21 +3652,21 @@ msgstr ""
 
 #: apps/offer/abstract_models.py:775
 msgid "Includes all products?"
-msgstr ""
+msgstr "Sertakan semua produk?"
 
 #: apps/offer/abstract_models.py:779
 msgid "Included Products"
-msgstr ""
+msgstr "Termasuk produk"
 
 #: apps/offer/abstract_models.py:782
 msgid "Excluded Products"
-msgstr ""
+msgstr "Tidak termasuk produk"
 
 #: apps/offer/abstract_models.py:788
 msgid "Included Categories"
 msgstr ""
 
-#: apps/offer/abstract_models.py:808 defaults.py:121
+#: apps/offer/abstract_models.py:808 defaults.py:122
 #: templates/oscar/dashboard/ranges/range_delete.html:7
 #: templates/oscar/dashboard/ranges/range_delete.html:16
 #: templates/oscar/dashboard/ranges/range_form.html:7
@@ -3672,7 +3685,7 @@ msgstr ""
 
 #: apps/offer/abstract_models.py:990
 msgid "Size"
-msgstr ""
+msgstr "Ukuran"
 
 #: apps/offer/abstract_models.py:992
 msgid "Uploaded By"
@@ -3684,11 +3697,11 @@ msgstr ""
 
 #: apps/offer/abstract_models.py:1003
 msgid "Error Message"
-msgstr ""
+msgstr "Pesan Kesalahan"
 
 #: apps/offer/abstract_models.py:1007
 msgid "Date Processed"
-msgstr ""
+msgstr "Tanggal Diproses"
 
 #: apps/offer/abstract_models.py:1008
 msgid "Number of New SKUs"
@@ -3854,7 +3867,7 @@ msgstr ""
 #: apps/offer/config.py:8 apps/offer/reports.py:22
 #: templates/oscar/dashboard/reports/partials/offer_report.html:9
 msgid "Offer"
-msgstr ""
+msgstr "Tawaran"
 
 #: apps/offer/reports.py:23 apps/voucher/abstract_models.py:54
 #: apps/voucher/reports.py:21
@@ -3870,11 +3883,11 @@ msgstr ""
 
 #: apps/order/abstract_models.py:32
 msgid "Site"
-msgstr ""
+msgstr "Situs"
 
 #: apps/order/abstract_models.py:48
 msgid "Billing Address"
-msgstr ""
+msgstr "Alamat Tagihan"
 
 #: apps/order/abstract_models.py:57
 msgid "Order total (inc. tax)"
@@ -3896,7 +3909,7 @@ msgstr ""
 #: apps/order/abstract_models.py:73
 #: templates/oscar/customer/order/order_detail.html:150
 msgid "Shipping Address"
-msgstr ""
+msgstr "Alamat Pengiriman"
 
 #: apps/order/abstract_models.py:76
 #: templates/oscar/basket/partials/basket_totals.html:119
@@ -3908,179 +3921,179 @@ msgstr ""
 #: templates/oscar/customer/anon_order.html:48
 #: templates/oscar/dashboard/shipping/weight_based_detail.html:27
 msgid "Shipping method"
-msgstr ""
+msgstr "Cara Pengiriman"
 
-#: apps/order/abstract_models.py:84
+#: apps/order/abstract_models.py:83
 msgid "Guest email address"
-msgstr ""
+msgstr "Alamat email tamu"
 
-#: apps/order/abstract_models.py:125
+#: apps/order/abstract_models.py:123
 #, python-format
 msgid ""
 "'%(new_status)s' is not a valid status for order %(number)s (current status:"
 " '%(status)s')"
 msgstr ""
 
-#: apps/order/abstract_models.py:248
+#: apps/order/abstract_models.py:246
 msgid "In progress"
 msgstr ""
 
-#: apps/order/abstract_models.py:348
+#: apps/order/abstract_models.py:346
 msgid "Note Type"
 msgstr ""
 
-#: apps/order/abstract_models.py:350
+#: apps/order/abstract_models.py:348
 #: templates/oscar/customer/notifications/detail.html:33
 #: templates/oscar/dashboard/orders/order_detail.html:565
 #: templates/oscar/dashboard/orders/order_detail.html:612
 msgid "Message"
-msgstr ""
+msgstr "Pesan"
 
-#: apps/order/abstract_models.py:360
+#: apps/order/abstract_models.py:358
 msgid "Order Note"
 msgstr ""
 
-#: apps/order/abstract_models.py:361
+#: apps/order/abstract_models.py:359
 msgid "Order Notes"
 msgstr ""
 
-#: apps/order/abstract_models.py:383 apps/order/abstract_models.py:837
-#: apps/order/abstract_models.py:894
+#: apps/order/abstract_models.py:381 apps/order/abstract_models.py:835
+#: apps/order/abstract_models.py:892
 msgid "Event Type"
 msgstr ""
 
-#: apps/order/abstract_models.py:389
+#: apps/order/abstract_models.py:387
 msgid "Communication Event"
 msgstr ""
 
-#: apps/order/abstract_models.py:390
+#: apps/order/abstract_models.py:388
 msgid "Communication Events"
 msgstr ""
 
-#: apps/order/abstract_models.py:394
+#: apps/order/abstract_models.py:392
 #, python-format
 msgid "'%(type)s' event for order #%(number)s"
 msgstr ""
 
-#: apps/order/abstract_models.py:420
+#: apps/order/abstract_models.py:418
 msgid "Partner name"
-msgstr ""
+msgstr "Nama Rekan"
 
-#: apps/order/abstract_models.py:426
+#: apps/order/abstract_models.py:424
 msgid "Partner reference"
 msgstr ""
 
-#: apps/order/abstract_models.py:427
+#: apps/order/abstract_models.py:425
 msgid "This is the item number that the partner uses within their system"
 msgstr ""
 
-#: apps/order/abstract_models.py:430
+#: apps/order/abstract_models.py:428
 msgid "Partner Notes"
 msgstr ""
 
-#: apps/order/abstract_models.py:436 apps/partner/abstract_models.py:162
+#: apps/order/abstract_models.py:434 apps/partner/abstract_models.py:162
 msgid "Stock record"
 msgstr ""
 
-#: apps/order/abstract_models.py:460 apps/order/abstract_models.py:767
+#: apps/order/abstract_models.py:458 apps/order/abstract_models.py:765
 msgid "Price (inc. tax)"
 msgstr ""
 
-#: apps/order/abstract_models.py:462 apps/order/abstract_models.py:769
+#: apps/order/abstract_models.py:460 apps/order/abstract_models.py:767
 #: apps/partner/abstract_models.py:114
 #: templates/oscar/catalogue/detail.html:116
 msgid "Price (excl. tax)"
 msgstr ""
 
-#: apps/order/abstract_models.py:466
+#: apps/order/abstract_models.py:464
 msgid "Price before discounts (inc. tax)"
 msgstr ""
 
-#: apps/order/abstract_models.py:469
+#: apps/order/abstract_models.py:467
 msgid "Price before discounts (excl. tax)"
 msgstr ""
 
-#: apps/order/abstract_models.py:475
+#: apps/order/abstract_models.py:473
 msgid "Unit Cost Price"
 msgstr ""
 
-#: apps/order/abstract_models.py:479
+#: apps/order/abstract_models.py:477
 msgid "Unit Price (inc. tax)"
 msgstr ""
 
-#: apps/order/abstract_models.py:482
+#: apps/order/abstract_models.py:480
 msgid "Unit Price (excl. tax)"
 msgstr ""
 
-#: apps/order/abstract_models.py:486
+#: apps/order/abstract_models.py:484
 msgid "Unit Retail Price"
 msgstr ""
 
-#: apps/order/abstract_models.py:495
+#: apps/order/abstract_models.py:493
 msgid "Estimated Dispatch Date"
 msgstr ""
 
-#: apps/order/abstract_models.py:507
+#: apps/order/abstract_models.py:505
 msgid "Order Line"
 msgstr ""
 
-#: apps/order/abstract_models.py:514
+#: apps/order/abstract_models.py:512
 msgid "<missing product>"
 msgstr ""
 
-#: apps/order/abstract_models.py:515
+#: apps/order/abstract_models.py:513
 #, python-format
 msgid "Product '%(name)s', quantity '%(qty)s'"
 msgstr ""
 
-#: apps/order/abstract_models.py:542
+#: apps/order/abstract_models.py:540
 #, python-format
 msgid "'%(new_status)s' is not a valid status (current status: '%(status)s')"
 msgstr ""
 
-#: apps/order/abstract_models.py:710
+#: apps/order/abstract_models.py:708
 #, python-format
 msgid "'%(title)s' is no longer available"
 msgstr ""
 
-#: apps/order/abstract_models.py:745
+#: apps/order/abstract_models.py:743
 msgid "Line Attribute"
 msgstr ""
 
-#: apps/order/abstract_models.py:746
+#: apps/order/abstract_models.py:744
 msgid "Line Attributes"
 msgstr ""
 
-#: apps/order/abstract_models.py:771
+#: apps/order/abstract_models.py:769
 msgid "Shiping (inc. tax)"
 msgstr ""
 
-#: apps/order/abstract_models.py:773
+#: apps/order/abstract_models.py:771
 msgid "Shipping (excl. tax)"
 msgstr ""
 
-#: apps/order/abstract_models.py:779
+#: apps/order/abstract_models.py:777
 msgid "Line Price"
 msgstr ""
 
-#: apps/order/abstract_models.py:780
+#: apps/order/abstract_models.py:778
 msgid "Line Prices"
 msgstr ""
 
-#: apps/order/abstract_models.py:783
+#: apps/order/abstract_models.py:781
 #, python-format
 msgid "Line '%(number)s' (quantity %(qty)d) price %(price)s"
 msgstr ""
 
-#: apps/order/abstract_models.py:806
+#: apps/order/abstract_models.py:804
 msgid "Payment Event Type"
 msgstr ""
 
-#: apps/order/abstract_models.py:807
+#: apps/order/abstract_models.py:805
 msgid "Payment Event Types"
 msgstr ""
 
-#: apps/order/abstract_models.py:828 apps/order/abstract_models.py:1019
+#: apps/order/abstract_models.py:826 apps/order/abstract_models.py:1017
 #: apps/payment/abstract_models.py:39
 #: templates/oscar/dashboard/orders/order_detail.html:390
 #: templates/oscar/dashboard/orders/order_detail.html:526
@@ -4088,7 +4101,7 @@ msgstr ""
 msgid "Amount"
 msgstr ""
 
-#: apps/order/abstract_models.py:832 apps/payment/abstract_models.py:40
+#: apps/order/abstract_models.py:830 apps/payment/abstract_models.py:40
 #: apps/payment/abstract_models.py:91
 #: templates/oscar/dashboard/orders/line_detail.html:137
 #: templates/oscar/dashboard/orders/order_detail.html:345
@@ -4098,27 +4111,27 @@ msgstr ""
 msgid "Reference"
 msgstr ""
 
-#: apps/order/abstract_models.py:835 apps/order/abstract_models.py:892
+#: apps/order/abstract_models.py:833 apps/order/abstract_models.py:890
 #: templates/oscar/dashboard/orders/order_detail.html:344
 #: templates/oscar/dashboard/orders/order_detail.html:391
 msgid "Lines"
 msgstr ""
 
-#: apps/order/abstract_models.py:849
+#: apps/order/abstract_models.py:847
 msgid "Payment Event"
 msgstr ""
 
-#: apps/order/abstract_models.py:850
+#: apps/order/abstract_models.py:848
 #: templates/oscar/dashboard/orders/order_detail.html:381
 msgid "Payment Events"
 msgstr ""
 
-#: apps/order/abstract_models.py:854
+#: apps/order/abstract_models.py:852
 #, python-format
 msgid "Payment event for order %s"
 msgstr ""
 
-#: apps/order/abstract_models.py:866 apps/order/abstract_models.py:927
+#: apps/order/abstract_models.py:864 apps/order/abstract_models.py:925
 #: templates/oscar/dashboard/orders/line_detail.html:135
 #: templates/oscar/dashboard/orders/line_detail.html:166
 #: templates/oscar/dashboard/orders/order_detail.html:343
@@ -4126,84 +4139,84 @@ msgstr ""
 msgid "Event"
 msgstr ""
 
-#: apps/order/abstract_models.py:874
+#: apps/order/abstract_models.py:872
 msgid "Payment Event Quantity"
 msgstr ""
 
-#: apps/order/abstract_models.py:875
+#: apps/order/abstract_models.py:873
 msgid "Payment Event Quantities"
 msgstr ""
 
-#: apps/order/abstract_models.py:896
+#: apps/order/abstract_models.py:894
 msgid "Event notes"
 msgstr ""
 
-#: apps/order/abstract_models.py:897
+#: apps/order/abstract_models.py:895
 msgid "This could be the dispatch reference, or a tracking number"
 msgstr ""
 
-#: apps/order/abstract_models.py:904
+#: apps/order/abstract_models.py:902
 msgid "Shipping Event"
 msgstr ""
 
-#: apps/order/abstract_models.py:905
+#: apps/order/abstract_models.py:903
 #: templates/oscar/dashboard/orders/order_detail.html:335
 msgid "Shipping Events"
 msgstr ""
 
-#: apps/order/abstract_models.py:909
+#: apps/order/abstract_models.py:907
 #, python-format
 msgid "Order #%(number)s, type %(type)s"
 msgstr ""
 
-#: apps/order/abstract_models.py:935
+#: apps/order/abstract_models.py:933
 msgid "Shipping Event Quantity"
 msgstr ""
 
-#: apps/order/abstract_models.py:936
+#: apps/order/abstract_models.py:934
 msgid "Shipping Event Quantities"
 msgstr ""
 
-#: apps/order/abstract_models.py:950
+#: apps/order/abstract_models.py:948
 #, python-format
 msgid "%(product)s - quantity %(qty)d"
 msgstr ""
 
-#: apps/order/abstract_models.py:971
+#: apps/order/abstract_models.py:969
 msgid "Shipping Event Type"
 msgstr ""
 
-#: apps/order/abstract_models.py:972
+#: apps/order/abstract_models.py:970
 msgid "Shipping Event Types"
 msgstr ""
 
-#: apps/order/abstract_models.py:1006
+#: apps/order/abstract_models.py:1004
 msgid "Discount category"
 msgstr ""
 
-#: apps/order/abstract_models.py:1010
+#: apps/order/abstract_models.py:1008
 msgid "Offer ID"
 msgstr ""
 
-#: apps/order/abstract_models.py:1014
+#: apps/order/abstract_models.py:1012
 msgid "Voucher ID"
 msgstr ""
 
-#: apps/order/abstract_models.py:1017
+#: apps/order/abstract_models.py:1015
 #: templates/oscar/dashboard/orders/order_detail.html:564
 #: templates/oscar/dashboard/orders/statistics.html:58
 msgid "Frequency"
 msgstr ""
 
-#: apps/order/abstract_models.py:1040
+#: apps/order/abstract_models.py:1038
 msgid "Order Discount"
 msgstr ""
 
-#: apps/order/abstract_models.py:1041
+#: apps/order/abstract_models.py:1039
 msgid "Order Discounts"
 msgstr ""
 
-#: apps/order/abstract_models.py:1057
+#: apps/order/abstract_models.py:1055
 #, python-format
 msgid "Discount of %(amount)r from order %(order)s"
 msgstr ""
@@ -4559,7 +4572,7 @@ msgstr ""
 msgid "Keywords"
 msgstr ""
 
-#: apps/promotions/models.py:96 defaults.py:197
+#: apps/promotions/models.py:96 defaults.py:198
 #: templates/oscar/dashboard/pages/delete.html:17
 #: templates/oscar/dashboard/pages/index.html:8
 #: templates/oscar/dashboard/pages/index.html:16
@@ -4858,7 +4871,7 @@ msgstr ""
 msgid "Case insensitive / No spaces allowed"
 msgstr ""
 
-#: apps/voucher/abstract_models.py:34 defaults.py:171 defaults.py:175
+#: apps/voucher/abstract_models.py:34 defaults.py:172 defaults.py:176
 #: templates/oscar/dashboard/offers/offer_delete.html:7
 #: templates/oscar/dashboard/offers/offer_delete.html:16
 #: templates/oscar/dashboard/offers/offer_detail.html:17
@@ -4868,7 +4881,7 @@ msgstr ""
 #: templates/oscar/dashboard/offers/step_form.html:15
 #: templates/oscar/dashboard/offers/step_form.html:24
 #: templates/oscar/offer/detail.html:17 templates/oscar/offer/list.html:8
-#: templates/oscar/offer/list.html.py:16 templates/oscar/offer/list.html:21
+#: templates/oscar/offer/list.html:16 templates/oscar/offer/list.html:21
 #: templates/oscar/partials/nav_primary.html:64
 msgid "Offers"
 msgstr ""
@@ -4998,19 +5011,19 @@ msgstr ""
 msgid "Please choose a less common password"
 msgstr ""
 
-#: defaults.py:125
+#: defaults.py:126
 msgid "Low stock alerts"
 msgstr ""
 
-#: defaults.py:131
+#: defaults.py:132
 msgid "Fulfilment"
 msgstr ""
 
-#: defaults.py:139 templates/oscar/dashboard/orders/statistics.html:19
+#: defaults.py:140 templates/oscar/dashboard/orders/statistics.html:19
 msgid "Statistics"
 msgstr ""
 
-#: defaults.py:143 templates/oscar/dashboard/partners/partner_delete.html:7
+#: defaults.py:144 templates/oscar/dashboard/partners/partner_delete.html:7
 #: templates/oscar/dashboard/partners/partner_delete.html:16
 #: templates/oscar/dashboard/partners/partner_form.html:8
 #: templates/oscar/dashboard/partners/partner_form.html:17
@@ -5028,7 +5041,7 @@ msgstr ""
 msgid "Partners"
 msgstr ""
 
-#: defaults.py:157 defaults.py:161 templates/oscar/dashboard/index.html:112
+#: defaults.py:158 defaults.py:162 templates/oscar/dashboard/index.html:112
 #: templates/oscar/dashboard/users/detail.html:15
 #: templates/oscar/dashboard/users/index.html:9
 #: templates/oscar/dashboard/users/index.html:14
@@ -5036,15 +5049,15 @@ msgstr ""
 msgid "Customers"
 msgstr ""
 
-#: defaults.py:165
+#: defaults.py:166
 msgid "Stock alert requests"
 msgstr ""
 
-#: defaults.py:185
+#: defaults.py:186
 msgid "Content"
 msgstr ""
 
-#: defaults.py:189 templates/oscar/dashboard/promotions/delete.html:17
+#: defaults.py:190 templates/oscar/dashboard/promotions/delete.html:17
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:12
 #: templates/oscar/dashboard/promotions/form.html:12
 #: templates/oscar/dashboard/promotions/page_detail.html:18
@@ -5057,16 +5070,16 @@ msgstr ""
 msgid "Content blocks"
 msgstr ""
 
-#: defaults.py:193
+#: defaults.py:194
 #: templates/oscar/dashboard/promotions/pagepromotion_list.html:22
 msgid "Content blocks by page"
 msgstr ""
 
-#: defaults.py:201
+#: defaults.py:202
 msgid "Email templates"
 msgstr ""
 
-#: defaults.py:205 templates/oscar/catalogue/reviews/review_detail.html:5
+#: defaults.py:206 templates/oscar/catalogue/reviews/review_detail.html:5
 #: templates/oscar/catalogue/reviews/review_detail.html:23
 #: templates/oscar/dashboard/reviews/review_delete.html:8
 #: templates/oscar/dashboard/reviews/review_delete.html:17
@@ -5079,27 +5092,27 @@ msgstr ""
 msgid "Reviews"
 msgstr ""
 
-#: defaults.py:211 templates/oscar/dashboard/reports/index.html:6
+#: defaults.py:212 templates/oscar/dashboard/reports/index.html:6
 msgid "Reports"
 msgstr ""
 
-#: defaults.py:235
+#: defaults.py:236
 msgid "Price range"
 msgstr ""
 
-#: defaults.py:240
+#: defaults.py:241
 msgid "0 to 20"
 msgstr ""
 
-#: defaults.py:241
+#: defaults.py:242
 msgid "20 to 40"
 msgstr ""
 
-#: defaults.py:242
+#: defaults.py:243
 msgid "40 to 60"
 msgstr ""
 
-#: defaults.py:243
+#: defaults.py:244
 msgid "60+"
 msgstr ""
 
@@ -5107,7 +5120,7 @@ msgstr ""
 msgid "Check for products that are back in stock and send out alerts"
 msgstr ""
 
-#: templates/oscar/403.html:5 templates/oscar/403.html.py:9
+#: templates/oscar/403.html:5 templates/oscar/403.html:9
 msgid "Permission denied!"
 msgstr ""
 
@@ -5127,7 +5140,7 @@ msgstr ""
 msgid "We're sorry but the page you are looking for can't be found."
 msgstr ""
 
-#: templates/oscar/500.html:5 templates/oscar/500.html.py:9
+#: templates/oscar/500.html:5 templates/oscar/500.html:9
 msgid "Server error!"
 msgstr ""
 
