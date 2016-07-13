@@ -101,7 +101,6 @@ class OrderCreator(object):
         """
         order_data = {'basket': basket,
                       'number': order_number,
-                      'site': Site._default_manager.get_current(),
                       'currency': total.currency,
                       'total_incl_tax': total.incl_tax,
                       'total_excl_tax': total.excl_tax,
@@ -119,6 +118,8 @@ class OrderCreator(object):
             order_data['status'] = status
         if extra_order_fields:
             order_data.update(extra_order_fields)
+        if 'site' not in order_data:
+            order_data['site'] = Site._default_manager.get_current()
         order = Order(**order_data)
         order.save()
         return order
