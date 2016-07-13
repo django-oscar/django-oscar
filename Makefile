@@ -31,8 +31,7 @@ docs:
 	cd docs && make html
 
 coverage:
-	coverage run ./runtests.py --with-xunit
-	coverage xml -i
+	py.test --cov=oscar --cov-report=term-missing
 
 lint:
 	./lint.sh
