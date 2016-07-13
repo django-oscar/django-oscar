@@ -132,7 +132,7 @@ class AbstractEmail(models.Model):
 @python_2_unicode_compatible
 class AbstractCommunicationEventType(models.Model):
     """
-    A 'type' of communication.  Like a order confirmation email.
+    A 'type' of communication.  Like an order confirmation email.
     """
 
     #: Code used for looking up this event programmatically.
