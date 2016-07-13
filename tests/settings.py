@@ -6,7 +6,13 @@ from oscar.defaults import *  # noqa
 # Path helper
 location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), x)
 
-DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': ':memory:', }, }
+DATABASES = {
+    'default': {
+        'ENGINE': os.environ.get('DATABASE_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.environ.get('DATABASE_NAME', ':memory:'),
+    },
+}
+
 INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.admin',
@@ -75,6 +81,8 @@ USE_TZ = 1
 APPEND_SLASH = True
 DDF_DEFAULT_DATA_FIXTURE = 'tests.dynamic_fixtures.OscarDynamicDataFixtureClass'
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
+LANGUAGE_CODE = 'en-gb'
+
 
 # temporary workaround for issue in sorl-thumbnail in Python 3
 # https://github.com/mariocesar/sorl-thumbnail/pull/254
