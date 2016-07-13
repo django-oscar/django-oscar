@@ -4,83 +4,108 @@ Installation script:
 
 To release a new version to PyPi:
 - Ensure the version is correctly set in oscar.__init__.py
-- Run: python setup.py sdist upload
+- Run: make release
 """
 from setuptools import setup, find_packages
 import os
 import sys
 
+
 PROJECT_DIR = os.path.dirname(__file__)
 PY3 = sys.version_info >= (3, 0)
 
 sys.path.append(os.path.join(PROJECT_DIR, 'src'))
-from oscar import get_version
+from oscar import get_version  # noqa isort:skip
 
-setup(name='django-oscar',
-      version=get_version().replace(' ', '-'),
-      url='https://github.com/django-oscar/django-oscar',
-      author="David Winterbottom",
-      author_email="david.winterbottom@gmail.com",
-      description="A domain-driven e-commerce framework for Django",
-      long_description=open(os.path.join(PROJECT_DIR, 'README.rst')).read(),
-      keywords="E-commerce, Django, domain-driven",
-      license='BSD',
-      platforms=['linux'],
-      package_dir={'': 'src'},
-      packages=find_packages('src'),
-      include_package_data=True,
-      install_requires=[
-          'django>=1.8.8,<1.10',
-          # PIL is required for image fields, Pillow is the "friendly" PIL fork
-          'pillow>=1.7.8',
-          # We use the ModelFormSetView from django-extra-views for the basket
-          # page. > 0.6.5 has a bug which causes issues with Django > 1.6,
-          # https://github.com/AndrewIngram/django-extra-views/issues/114
-          'django-extra-views>=0.2,<0.6.5',
-          # Search support
-          'django-haystack>=2.5.0,<2.6.0',
-          # Treebeard is used for categories
-          'django-treebeard>=4.0',
-          # Sorl is used as the default thumbnailer
-          'sorl-thumbnail>=12.4a1',
-          # Babel is used for currency formatting
-          'Babel>=1.0,<3.0',
-          # For converting non-ASCII to ASCII when creating slugs
-          'Unidecode>=0.04.12,<0.05',
-          # For manipulating search URLs
-          'purl>=0.7',
-          # For phone number field
-          'phonenumbers>=6.3.0,<8.0.0',
-          # Used for oscar.test.contextmanagers.mock_signal_receiver
-          'mock>=1.0.1,<2.0',
-          # Used for oscar.test.newfactories
-          'factory-boy>=2.4.1,<2.7',
-          # Used for automatically building larger HTML tables
-          'django-tables2>=1.0.4,<1.1',
-          # Used for manipulating form field attributes in templates (eg: add
-          # a css class)
-          'django-widget-tweaks>=1.4.1',
-      ],
-      dependency_links=[],
-      # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
-      classifiers=[
-          'Development Status :: 5 - Production/Stable',
-          'Environment :: Web Environment',
-          'Framework :: Django',
-          'Framework :: Django :: 1.8',
-          'Framework :: Django :: 1.9',
-          'Intended Audience :: Developers',
-          'License :: OSI Approved :: BSD License',
-          'Operating System :: Unix',
-          'Programming Language :: Python',
-          'Programming Language :: Python :: 2',
-          'Programming Language :: Python :: 2.7',
-          'Programming Language :: Python :: 3',
-          'Programming Language :: Python :: 3.3',
-          'Programming Language :: Python :: 3.4',
-          'Programming Language :: Python :: 3.5',
-          'Topic :: Software Development :: Libraries :: Application Frameworks']
-      )
+install_requires = [
+    'django>=1.8.8,<1.10',
+    # PIL is required for image fields, Pillow is the "friendly" PIL fork
+    'pillow>=1.7.8',
+    # We use the ModelFormSetView from django-extra-views for the basket
+    # page. > 0.6.5 has a bug which causes issues with Django > 1.6,
+    # https://github.com/AndrewIngram/django-extra-views/issues/114
+    'django-extra-views>=0.2,<0.6.5',
+    # Search support
+    'django-haystack>=2.5.0,<2.6.0',
+    # Treebeard is used for categories
+    'django-treebeard>=4.0',
+    # Sorl is used as the default thumbnailer
+    'sorl-thumbnail>=12.4a1',
+    # Babel is used for currency formatting
+    'Babel>=1.0,<3.0',
+    # For converting non-ASCII to ASCII when creating slugs
+    'Unidecode>=0.04.12,<0.05',
+    # For manipulating search URLs
+    'purl>=0.7',
+    # For phone number field
+    'phonenumbers>=6.3.0,<8.0.0',
+    # Used for oscar.test.contextmanagers.mock_signal_receiver
+    'mock>=1.0.1,<2.0',
+    # Used for oscar.test.newfactories
+    'factory-boy>=2.4.1,<2.7',
+    # Used for automatically building larger HTML tables
+    'django-tables2>=1.0.4,<1.1',
+    # Used for manipulating form field attributes in templates (eg: add
+    # a css class)
+    'django-widget-tweaks>=1.4.1',
+]
+
+docs_requires = [
+    'Sphinx==1.3.3',
+    'sphinxcontrib-napoleon==0.4.3',
+    'sphinx_rtd_theme==0.1.9',
+]
+
+test_requires = [
+    'WebTest==2.0.21',
+    'coverage==3.7.1',
+    'django-webtest==1.7.9',
+    'pytest-cache==1.0',
+    'pytest-cov==2.2.0',
+    'pytest-django==2.9.1',
+    'pytest-xdist==1.13.1',
+    'pytest==2.8.5',
+    'spec==0.11.1',
+    'tox==1.8.1',
+]
+
+setup(
+    name='django-oscar',
+    version=get_version().replace(' ', '-'),
+    url='https://github.com/django-oscar/django-oscar',
+    author="David Winterbottom",
+    author_email="david.winterbottom@gmail.com",
+    description="A domain-driven e-commerce framework for Django",
+    long_description=open(os.path.join(PROJECT_DIR, 'README.rst')).read(),
+    keywords="E-commerce, Django, domain-driven",
+    license='BSD',
+    platforms=['linux'],
+    package_dir={'': 'src'},
+    packages=find_packages('src'),
+    include_package_data=True,
+    install_requires=install_requires,
+    extras_require={
+        'docs': docs_requires,
+        'test': test_requires,
+    },
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Environment :: Web Environment',
+        'Framework :: Django',
+        'Framework :: Django :: 1.8',
+        'Framework :: Django :: 1.9',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: BSD License',
+        'Operating System :: Unix',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Topic :: Software Development :: Libraries :: Application Frameworks']
+)
 
 # Show contributing instructions if being installed in 'develop' mode
 if len(sys.argv) > 1 and sys.argv[1] == 'develop':

@@ -2,7 +2,7 @@
 .PHONY: install sandbox docs coverage lint travis messages compiledmessages css clean preflight sandbox_image
 
 install:
-	pip install -e . -r requirements.txt
+	pip install -r requirements.txt
 
 build_sandbox:
 	# Remove media

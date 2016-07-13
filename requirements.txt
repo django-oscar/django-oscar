@@ -2,6 +2,7 @@
 # You can check for newer versions of these dependencies using this command
 #
 # $ for x in `yolk -l | awk '{print $1}'`; do yolk -d $x 2>/dev/null; done
+-e .[test,docs]
 
 # Development
 django-debug-toolbar==1.4.0
@@ -15,24 +16,6 @@ requests==2.7.0
 uWSGI==2.0.12
 whitenoise==2.0.6
 Pillow==2.7.0
-
-# Docs
-Sphinx==1.3.3
-sphinxcontrib-napoleon==0.4.3
-sphinx_rtd_theme==0.1.9
-
-# Testing
-coverage==3.7.1
-spec==0.11.1
-WebTest==2.0.17
-django-webtest==1.7.8
-pytest==2.8.5
-pytest-cache==1.0
-pytest-cov==2.2.0
-pytest-django==2.9.1
-pytest-xdist==1.13.1
-tox==1.8.1
-coveralls==0.4.4
 
 # Misc
 flake8==2.5.1
