@@ -1,6 +1,6 @@
 {% load i18n %}{% if alert.user and alert.user.get_short_name %}{% blocktrans with name=alert.user.get_short_name %}Dear {{ name }},{% endblocktrans %}{% else %}{% trans "Hello," %}{% endif %}
-{% blocktrans with product=alert.product path=alert.product.get_absolute_url %}
-We are happy to inform you that our product '{{ product|safe }}' is back in stock:
+{% blocktrans with title=alert.product.get_title|safe path=alert.product.get_absolute_url %}
+We are happy to inform you that our product '{{ title }}' is back in stock:
 http://{{ site }}{{ path }}
 {% endblocktrans %}{% if hurry %}{% blocktrans with product_url=product_url %}
 Beware that the amount of items in stock is limited. Be quick or someone might get there first.
