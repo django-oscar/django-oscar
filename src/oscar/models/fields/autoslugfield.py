@@ -69,6 +69,7 @@ class AutoSlugField(SlugField):
             raise ValueError("missing 'populate_from' argument")
         else:
             self._populate_from = populate_from
+            self._populate_from_org = populate_from
         self.separator = kwargs.pop('separator', six.u('-'))
         self.overwrite = kwargs.pop('overwrite', False)
         self.uppercase = kwargs.pop('uppercase', False)
@@ -177,7 +178,7 @@ class AutoSlugField(SlugField):
 
     def deconstruct(self):
         name, path, args, kwargs = super(AutoSlugField, self).deconstruct()
-        kwargs['populate_from'] = self._populate_from
+        kwargs['populate_from'] = self._populate_from_org
         if not self.separator == six.u('-'):
             kwargs['separator'] = self.separator
         if self.overwrite is not False:
