@@ -356,7 +356,7 @@ class TestPaymentDetailsView(CheckoutMixin, WebTestCase):
         mock_method.side_effect = e
         preview = self.ready_to_place_an_order(is_guest=True)
         bank_redirect = preview.forms['place_order_form'].submit()
-        self.assertRedirects(bank_redirect, bank_url)
+        assert bank_redirect.location == bank_url
 
     @mock.patch('oscar.apps.checkout.views.PaymentDetailsView.handle_payment')
     def test_handles_anticipated_payments_errors_gracefully(self, mock_method):

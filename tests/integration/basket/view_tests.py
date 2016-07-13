@@ -41,7 +41,7 @@ class TestVoucherRemoveView(TestCase):
 
     def test_post_valid(self):
         basket = BasketFactory()
-        voucher = VoucherFactory()
+        voucher = VoucherFactory(num_basket_additions=5)
         basket.vouchers.add(voucher)
 
         data = {
@@ -54,4 +54,4 @@ class TestVoucherRemoveView(TestCase):
         self.assertEqual(response.status_code, 302)
 
         voucher = voucher.__class__.objects.get(pk=voucher.pk)
-        self.assertEqual(voucher.num_basket_additions, -1)
+        self.assertEqual(voucher.num_basket_additions, 4)
