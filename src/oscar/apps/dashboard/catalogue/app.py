@@ -9,9 +9,6 @@ class CatalogueApplication(Application):
 
     default_permissions = ['is_staff', ]
     permissions_map = _map = {
-        'catalogue-product': (['is_staff'], ['partner.dashboard_access']),
-        'catalogue-product-create': (['is_staff'],
-                                     ['partner.dashboard_access']),
         'catalogue-product-list': (['is_staff'], ['partner.dashboard_access']),
         'catalogue-product-delete': (['is_staff'],
                                      ['partner.dashboard_access']),
@@ -25,8 +22,6 @@ class CatalogueApplication(Application):
                                     'ProductLookupView')
     product_create_redirect_view = get_class('dashboard.catalogue.views',
                                              'ProductCreateRedirectView')
-    product_createupdate_view = get_class('dashboard.catalogue.views',
-                                          'ProductCreateUpdateView')
     product_delete_view = get_class('dashboard.catalogue.views',
                                     'ProductDeleteView')
 
@@ -55,18 +50,9 @@ class CatalogueApplication(Application):
 
     def get_urls(self):
         urls = [
-            url(r'^products/(?P<pk>\d+)/$',
-                self.product_createupdate_view.as_view(),
-                name='catalogue-product'),
             url(r'^products/create/$',
                 self.product_create_redirect_view.as_view(),
                 name='catalogue-product-create'),
-            url(r'^products/create/(?P<product_class_slug>[\w-]+)/$',
-                self.product_createupdate_view.as_view(),
-                name='catalogue-product-create'),
-            url(r'^products/(?P<parent_pk>[-\d]+)/create-variant/$',
-                self.product_createupdate_view.as_view(),
-                name='catalogue-product-create-child'),
             url(r'^products/(?P<pk>\d+)/delete/$',
                 self.product_delete_view.as_view(),
                 name='catalogue-product-delete'),

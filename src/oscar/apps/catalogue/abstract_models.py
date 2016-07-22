@@ -364,75 +364,8 @@ class AbstractProduct(models.Model):
                        kwargs={'product_slug': self.slug, 'pk': self.id})
 
     def clean(self):
-        """
-        Validate a product. Those are the rules:
-
-        +---------------+-------------+--------------+--------------+
-        |               | stand alone | parent       | child        |
-        +---------------+-------------+--------------+--------------+
-        | title         | required    | required     | optional     |
-        +---------------+-------------+--------------+--------------+
-        | product class | required    | required     | must be None |
-        +---------------+-------------+--------------+--------------+
-        | parent        | forbidden   | forbidden    | required     |
-        +---------------+-------------+--------------+--------------+
-        | stockrecords  | 0 or more   | forbidden    | 0 or more    |
-        +---------------+-------------+--------------+--------------+
-        | categories    | 1 or more   | 1 or more    | forbidden    |
-        +---------------+-------------+--------------+--------------+
-        | attributes    | optional    | optional     | optional     |
-        +---------------+-------------+--------------+--------------+
-        | rec. products | optional    | optional     | unsupported  |
-        +---------------+-------------+--------------+--------------+
-        | options       | optional    | optional     | forbidden    |
-        +---------------+-------------+--------------+--------------+
-
-        Because the validation logic is quite complex, validation is delegated
-        to the sub method appropriate for the product's structure.
-        """
-        getattr(self, '_clean_%s' % self.structure)()
         if not self.is_parent:
             self.attr.validate_attributes()
-
-    def _clean_standalone(self):
-        """
-        Validates a stand-alone product
-        """
-        if not self.title:
-            raise ValidationError(_("Your product must have a title."))
-        if not self.product_class:
-            raise ValidationError(_("Your product must have a product class."))
-        if self.parent_id:
-            raise ValidationError(_("Only child products can have a parent."))
-
-    def _clean_child(self):
-        """
-        Validates a child product
-        """
-        if not self.parent_id:
-            raise ValidationError(_("A child product needs a parent."))
-        if self.parent_id and not self.parent.is_parent:
-            raise ValidationError(
-                _("You can only assign child products to parent products."))
-        if self.product_class:
-            raise ValidationError(
-                _("A child product can't have a product class."))
-        if self.pk and self.categories.exists():
-            raise ValidationError(
-                _("A child product can't have a category assigned."))
-        # Note that we only forbid options on product level
-        if self.pk and self.product_options.exists():
-            raise ValidationError(
-                _("A child product can't have options."))
-
-    def _clean_parent(self):
-        """
-        Validates a parent product.
-        """
-        self._clean_standalone()
-        if self.has_stockrecords:
-            raise ValidationError(
-                _("A parent product can't have stockrecords."))
 
     def save(self, *args, **kwargs):
         if not self.slug:
