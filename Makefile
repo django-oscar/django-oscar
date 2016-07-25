@@ -3,7 +3,7 @@
 
 install:
 	pip install -r requirements.txt
-	pip install -e .
+	pip install -e .[test]
 
 build_sandbox:
 	# Remove media
@@ -44,7 +44,7 @@ testmigrations:
 # This target is run on Travis.ci. We lint, test and build the sandbox
 # site as well as testing migrations apply correctly. We don't call 'install'
 # first as that is run as a separate part of the Travis build process.
-travis: coverage lint build_sandbox testmigrations
+travis: install coverage lint build_sandbox testmigrations
 
 messages:
 	# Create the .po files used for i18n
