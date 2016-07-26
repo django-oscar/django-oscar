@@ -57,8 +57,8 @@ docs_requires = [
 ]
 
 test_requires = [
-    'WebTest==2.0.21',
-    'coverage==3.7.1',
+    'WebTest==2.0.23',
+    'coverage==4.1',
     'django-webtest==1.7.9',
     'py>=1.4.31',
     'pytest-cov==2.3.0',
@@ -67,7 +67,7 @@ test_requires = [
     'pytest-warnings==0.1.0',
     'pytest==2.9.2',
     'spec==0.11.1',
-    'tox==1.8.1',
+    'tox==2.3.1',
 ]
 
 setup(
