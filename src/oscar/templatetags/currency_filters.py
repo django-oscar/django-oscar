@@ -24,5 +24,6 @@ def currency(value, currency=None):
         'currency': currency if currency else settings.OSCAR_DEFAULT_CURRENCY,
         'format': getattr(settings, 'OSCAR_CURRENCY_FORMAT', None),
         'locale': to_locale(get_language() or settings.LANGUAGE_CODE),
+        'currency_digits': getattr(settings, 'OSCAR_CURRENCY_DIGITS', 2),
     }
-    return format_currency(value, **kwargs)
+    return format_currency(value, **kwargs) + getattr(settings, 'OSCAR_CURRENCY_SUFFIX', '')
