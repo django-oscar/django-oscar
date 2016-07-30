@@ -187,10 +187,9 @@ LOGGING = {
             'format': '[%(asctime)s] %(message)s'
         },
     },
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
+    'root': {
+        'level': 'DEBUG',
+        'handlers': ['console'],
     },
     'handlers': {
         'null': {
@@ -202,37 +201,23 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
         },
-        'checkout_file': {
-            'level': 'INFO',
-            'class': 'oscar.core.logging.handlers.EnvFileHandler',
-            'filename': 'checkout.log',
-            'formatter': 'verbose'
-        },
-        'gateway_file': {
-            'level': 'INFO',
-            'class': 'oscar.core.logging.handlers.EnvFileHandler',
-            'filename': 'gateway.log',
-            'formatter': 'simple'
-        },
-        'error_file': {
-            'level': 'INFO',
-            'class': 'oscar.core.logging.handlers.EnvFileHandler',
-            'filename': 'errors.log',
-            'formatter': 'verbose'
-        },
-        'sorl_file': {
-            'level': 'INFO',
-            'class': 'oscar.core.logging.handlers.EnvFileHandler',
-            'filename': 'sorl.log',
-            'formatter': 'verbose'
-        },
-        'mail_admins': {
-            'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler',
-            'filters': ['require_debug_false'],
-        },
     },
     'loggers': {
+        'oscar': {
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'oscar.catalogue.import': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'oscar.alerts': {
+            'handlers': ['null'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+
         # Django loggers
         'django': {
             'handlers': ['null'],
@@ -240,40 +225,22 @@ LOGGING = {
             'level': 'INFO',
         },
         'django.request': {
-            'handlers': ['mail_admins', 'error_file'],
+            'handlers': ['console'],
             'level': 'ERROR',
-            'propagate': False,
+            'propagate': True,
         },
         'django.db.backends': {
-            'handlers': ['null'],
-            'propagate': False,
-            'level': 'DEBUG',
-        },
-        # Oscar core loggers
-        'oscar.checkout': {
-            'handlers': ['console', 'checkout_file'],
-            'propagate': False,
-            'level': 'INFO',
-        },
-        'oscar.catalogue.import': {
-            'handlers': ['console'],
-            'propagate': False,
-            'level': 'INFO',
-        },
-        'oscar.alerts': {
-            'handlers': ['null'],
-            'propagate': False,
-            'level': 'INFO',
-        },
-        # Sandbox logging
-        'gateway': {
-            'handlers': ['gateway_file'],
+            'level': 'WARNING',
             'propagate': True,
-            'level': 'INFO',
         },
         # Third party
+        'raven': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
         'sorl.thumbnail': {
-            'handlers': ['sorl_file'],
+            'handlers': ['console'],
             'propagate': True,
             'level': 'INFO',
         },
@@ -411,13 +378,19 @@ OSCAR_ORDER_STATUS_CASCADE = {
 # on-the-fly less processor.
 USE_LESS = False
 
-# Logging
-# =======
 
-LOG_ROOT = location('logs')
-# Ensure log root exists
-if not os.path.exists(LOG_ROOT):
-    os.mkdir(LOG_ROOT)
+# Sentry
+# ======
+
+if os.environ.get('SENTRY_DSN'):
+    RAVEN_CONFIG = {'dsn': os.environ.get('SENTRY_DSN')}
+    LOGGING['handlers']['sentry'] = {
+        'level': 'ERROR',
+        'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+    }
+    LOGGING['root']['handlers'].append('sentry')
+    INSTALLED_APPS.append('raven.contrib.django.raven_compat')
+
 
 # Sorl
 # ====
