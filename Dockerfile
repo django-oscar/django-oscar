@@ -19,4 +19,4 @@ RUN make build_sandbox
 
 RUN cp --remove-destination /app/src/oscar/static/oscar/img/image_not_found.jpg /app/sites/sandbox/public/media/
 
-CMD uwsgi --ini /app/sites/sandbox/deploy/uwsgi.ini
+CMD uwsgi --ini /app/sites/sandbox/uwsgi.ini
