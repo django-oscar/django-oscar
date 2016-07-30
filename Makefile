@@ -17,7 +17,7 @@ build_sandbox:
 	sites/sandbox/manage.py loaddata sites/sandbox/fixtures/child_products.json
 	sites/sandbox/manage.py oscar_import_catalogue sites/sandbox/fixtures/*.csv
 	sites/sandbox/manage.py oscar_import_catalogue_images sites/sandbox/fixtures/images.tar.gz
-	sites/sandbox/manage.py oscar_populate_countries
+	sites/sandbox/manage.py oscar_populate_countries --initial-only
 	sites/sandbox/manage.py loaddata sites/_fixtures/pages.json sites/_fixtures/auth.json sites/_fixtures/ranges.json sites/_fixtures/offers.json
 	sites/sandbox/manage.py loaddata sites/sandbox/fixtures/orders.json
 	sites/sandbox/manage.py clear_index --noinput
