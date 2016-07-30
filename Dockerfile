@@ -2,7 +2,7 @@ FROM python:3.5
 ENV PYTHONUNBUFFERED 1
 
 COPY ./requirements.txt /requirements.txt
-RUN pip install -r /requirements.txt
+RUN pip3 install -r /requirements.txt psycopg2
 
 RUN groupadd -r django && useradd -r -g django django
 COPY . /app
@@ -12,7 +12,6 @@ WORKDIR /app
 
 
 RUN make install
-RUN pip3 install psycopg2
 
 USER django
 
