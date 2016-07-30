@@ -19,12 +19,15 @@ class ProductAttributesContainer(object):
         self.product = product
         self.initialised = False
 
+    def initiate_attributes(self):
+        values = self.get_values().select_related('attribute')
+        for v in values:
+            setattr(self, v.attribute.code, v.value)
+        self.initialised = True
+
     def __getattr__(self, name):
         if not name.startswith('_') and not self.initialised:
-            values = self.get_values().select_related('attribute')
-            for v in values:
-                setattr(self, v.attribute.code, v.value)
-            self.initialised = True
+            self.initiate_attributes()
             return getattr(self, name)
         raise AttributeError(
             _("%(obj)s has no attribute named '%(attr)s'") % {

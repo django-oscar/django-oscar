@@ -329,8 +329,8 @@ class ProductForm(forms.ModelForm):
         Set attributes before ModelForm calls the product's clean method
         (which it does in _post_clean), which in turn validates attributes.
         """
-        product_class = self.instance.get_product_class()
-        for attribute in product_class.attributes.all():
+        self.instance.attr.initiate_attributes()
+        for attribute in self.instance.attr.get_all_attributes():
             field_name = 'attr_%s' % attribute.code
             # An empty text field won't show up in cleaned_data.
             if field_name in self.cleaned_data:
