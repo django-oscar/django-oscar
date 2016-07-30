@@ -207,6 +207,16 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
+        'oscar.catalogue.import': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'oscar.alerts': {
+            'handlers': ['null'],
+            'level': 'INFO',
+            'propagate': False,
+        },
 
         # Django loggers
         'django': {
@@ -230,7 +240,7 @@ LOGGING = {
             'propagate': False,
         },
         'sorl.thumbnail': {
-            'handlers': ['sorl_file'],
+            'handlers': ['console'],
             'propagate': True,
             'level': 'INFO',
         },
@@ -371,10 +381,9 @@ USE_LESS = False
 
 # Sentry
 # ======
-RAVEN_CONFIG = {'dsn': env('SENTRY_DSN', default=None)}
 
-if env('SENTRY_DSN', default=None):
-
+if os.environ.get('SENTRY_DSN'):
+    RAVEN_CONFIG = {'dsn': os.environ.get('SENTRY_DSN')}
     LOGGING['handlers']['sentry'] = {
         'level': 'ERROR',
         'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
