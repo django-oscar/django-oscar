@@ -76,7 +76,7 @@ todo:
 	-grep -rnH "django.VERSION" src/oscar/apps
 
 
-release:
+release: clean
 	pip install twine wheel
 	rm -rf dist/*
 	python setup.py sdist bdist_wheel
