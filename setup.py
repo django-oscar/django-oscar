@@ -51,8 +51,8 @@ install_requires = [
 ]
 
 docs_requires = [
-    'Sphinx==1.3.3',
-    'sphinxcontrib-napoleon==0.4.3',
+    'Sphinx==1.4.5',
+    'sphinxcontrib-napoleon==0.5.2',
     'sphinx_rtd_theme==0.1.9',
 ]
 
