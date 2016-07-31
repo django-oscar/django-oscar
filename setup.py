@@ -40,7 +40,7 @@ install_requires = [
     # For phone number field
     'phonenumbers>=6.3.0,<8.0.0',
     # Used for oscar.test.contextmanagers.mock_signal_receiver
-    'mock>=1.0.1,<2.0',
+    'mock>=1.0.1,<3.0',
     # Used for oscar.test.newfactories
     'factory-boy>=2.4.1,<2.7',
     # Used for automatically building larger HTML tables
