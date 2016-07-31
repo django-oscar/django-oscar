@@ -35,7 +35,8 @@ coverage:
 	py.test --cov=oscar --cov-report=term-missing
 
 lint:
-	./lint.sh
+	flake8 src/oscar/
+	isort -q --recursive --diff src/
 
 testmigrations:
 	pip install -r requirements_migrations.txt
