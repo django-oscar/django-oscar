@@ -42,7 +42,7 @@ install_requires = [
     # Used for oscar.test.contextmanagers.mock_signal_receiver
     'mock>=1.0.1,<3.0',
     # Used for oscar.test.newfactories
-    'factory-boy>=2.4.1,<2.7',
+    'factory-boy>=2.4.1,<3.0',
     # Used for automatically building larger HTML tables
     'django-tables2>=1.0.4,<1.1',
     # Used for manipulating form field attributes in templates (eg: add
