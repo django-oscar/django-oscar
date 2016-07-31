@@ -109,6 +109,7 @@ MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
 STATIC_ROOT = location('public/static')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATICFILES_DIRS = (
     location('static/'),
 )
@@ -146,14 +147,20 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 MIDDLEWARE_CLASSES = (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+
     # Allow languages to be selected
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
+
     # Ensure a valid basket is added to the request instance for every request
     'oscar.apps.basket.middleware.BasketMiddleware',
     # Enable the ProfileMiddleware, then add ?cprofile to any
