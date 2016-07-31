@@ -39,7 +39,6 @@ except ImportError:
     from django.utils.encoding import force_text as force_unicode  # NOQA
 
 
-
 class AutoSlugField(SlugField):
     """ AutoSlugField
 
