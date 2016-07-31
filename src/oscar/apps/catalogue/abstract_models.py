@@ -20,7 +20,6 @@ from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import get_language, pgettext_lazy
-
 from treebeard.mp_tree import MP_Node
 
 from oscar.core.decorators import deprecated

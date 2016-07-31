@@ -31,12 +31,13 @@ from django.utils import six
 
 from oscar.core.utils import slugify
 
+from .slugfield import SlugField
+
 try:
     from django.utils.encoding import force_unicode  # NOQA
 except ImportError:
     from django.utils.encoding import force_text as force_unicode  # NOQA
 
-from .slugfield import SlugField
 
 
 class AutoSlugField(SlugField):
