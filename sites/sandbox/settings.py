@@ -1,21 +1,23 @@
 import os
 
+import oscar
+
 # Path helper
 location = lambda x: os.path.join(
     os.path.dirname(os.path.realpath(__file__)), x)
 
-USE_TZ = True
+DEBUG = os.environ.get('DEBUG', 'true') != 'false'
+SQL_DEBUG = DEBUG
 
-DEBUG = True
-TEMPLATE_DEBUG = True
-SQL_DEBUG = True
-
-ALLOWED_HOSTS = ['latest.oscarcommerce.com',
-                 'master.oscarcommerce.com']
+ALLOWED_HOSTS = [
+    'latest.oscarcommerce.com',
+    'master.oscarcommerce.com'
+]
 
 # This is needed for the hosted version of the sandbox
 ADMINS = (
     ('David Winterbottom', 'david.winterbottom@gmail.com'),
+    ('Michael van Tellingen', 'michaelvantellingen@gmail.com'),
 )
 EMAIL_SUBJECT_PREFIX = '[Oscar sandbox] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -48,6 +50,7 @@ CACHES = {
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
+USE_TZ = True
 TIME_ZONE = 'Europe/London'
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
@@ -102,11 +105,6 @@ MEDIA_ROOT = location("public/media")
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 MEDIA_URL = '/media/'
 
-# URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
-# trailing slash.
-# Examples: "http://foo.com/media/", "/media/".
-#ADMIN_MEDIA_PREFIX = '/media/admin/'
-
 STATIC_URL = '/static/'
 STATIC_ROOT = location('public/static')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -121,29 +119,39 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '$)a7n&o80u!6y5t-+jrd3)3!%vh&shg$wqpjpxc!ar&p#!)n1a'
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-    # needed by django-treebeard for admin (and potentially other libs)
-    'django.template.loaders.eggs.Loader',
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            location('_site/templates'),
+            oscar.OSCAR_MAIN_TEMPLATE_DIR,
+        ],
+        'OPTIONS': {
+            'loaders': [
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+                'django.template.loaders.eggs.Loader',
+            ],
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.core.context_processors.request',
+                'django.core.context_processors.debug',
+                'django.core.context_processors.i18n',
+                'django.core.context_processors.media',
+                'django.core.context_processors.static',
+                'django.contrib.messages.context_processors.messages',
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.request",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.static",
-    "django.contrib.messages.context_processors.messages",
-    # Oscar specific
-    'oscar.apps.search.context_processors.search_form',
-    'oscar.apps.promotions.context_processors.promotions',
-    'oscar.apps.checkout.context_processors.checkout',
-    'oscar.core.context_processors.metadata',
-    'oscar.apps.customer.notifications.context_processors.notifications',
-)
+                # Oscar specific
+                'oscar.apps.search.context_processors.search_form',
+                'oscar.apps.customer.notifications.context_processors.notifications',
+                'oscar.apps.promotions.context_processors.promotions',
+                'oscar.apps.checkout.context_processors.checkout',
+                'oscar.core.context_processors.metadata',
+            ],
+            'debug': DEBUG,
+        }
+    }
+]
 
 MIDDLEWARE_CLASSES = (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
@@ -170,13 +178,6 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'urls'
 
-# Add another path to Oscar's templates.  This allows templates to be
-# customised easily.
-from oscar import OSCAR_MAIN_TEMPLATE_DIR
-TEMPLATE_DIRS = (
-    location('templates'),
-    OSCAR_MAIN_TEMPLATE_DIR,
-)
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -266,13 +267,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
     'django_extensions',
+
     # Debug toolbar + extensions
     'debug_toolbar',
     'apps.gateway',     # For allowing dashboard access
     'widget_tweaks',
-]
-from oscar import get_core_apps
-INSTALLED_APPS = INSTALLED_APPS + get_core_apps()
+] + oscar.get_core_apps()
 
 # Add Oscar's custom auth backend so users can sign in using their email
 # address.
