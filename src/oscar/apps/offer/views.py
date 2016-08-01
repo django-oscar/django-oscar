@@ -27,7 +27,7 @@ class OfferDetailView(ListView):
 
     def get(self, request, *args, **kwargs):
         try:
-            self.offer = ConditionalOffer.objects.select_related().get(
+            self.offer = ConditionalOffer.active.select_related().get(
                 slug=self.kwargs['slug'])
         except ConditionalOffer.DoesNotExist:
             raise http.Http404
