@@ -102,7 +102,6 @@ class AbstractWeightBased(AbstractBase):
 
     # The default weight to use (in kg) when a product doesn't have a weight
     # attribute.
-    # Validation isn't trigging in `test_doesnt_allow_negative_default_weights`
     default_weight = models.DecimalField(
         _("Default Weight"), decimal_places=3, max_digits=12,
         default=D('0.000'),
