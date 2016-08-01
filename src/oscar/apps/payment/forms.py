@@ -205,7 +205,8 @@ class BankcardCCVField(forms.RegexField):
             'required': True,
             'label': _("CCV number"),
             'widget': forms.TextInput(attrs={'size': '5'}),
-            'error_message': _("Please enter a 3 or 4 digit number"),
+            'error_messages': {
+                'invalid': _("Please enter a 3 or 4 digit number")},
             'help_text': _("This is the 3 or 4 digit security number "
                            "on the back of your bankcard")
         }
