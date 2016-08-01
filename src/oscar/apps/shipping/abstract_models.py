@@ -100,9 +100,6 @@ class AbstractWeightBased(AbstractBase):
     # The attribute code to use to look up the weight of a product
     weight_attribute = 'weight'
 
-    code = 'weight-based-shipping'
-    name = _('Weight-based shipping')
-
     # The default weight to use (in kg) when a product doesn't have a weight
     # attribute.
     # Validation isn't trigging in `test_doesnt_allow_negative_default_weights`
