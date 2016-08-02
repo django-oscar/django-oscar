@@ -1,4 +1,13 @@
+from decimal import Decimal as D
+from decimal import InvalidOperation
+
+from babel.numbers import format_currency
+from django.conf import settings
+from django.utils.translation import get_language, to_locale
+
+
 class TaxNotKnown(Exception):
+
     """
     Exception for when a tax-inclusive price is requested but we don't know
     what the tax applicable is (yet).
@@ -6,6 +15,7 @@ class TaxNotKnown(Exception):
 
 
 class Price(object):
+
     """
     Simple price class that encapsulates a price and its tax information
 
@@ -54,3 +64,25 @@ class Price(object):
         return (self.currency == other.currency and
                 self.excl_tax == other.excl_tax and
                 self.incl_tax == other.incl_tax)
+
+
+def render_price(value, currency=None):
+    """return rendered price with format
+    """
+    try:
+        value = D(value)
+    except (TypeError, InvalidOperation):
+        return u""
+    # Using Babel's currency formatting
+    # http://babel.pocoo.org/en/latest/api/numbers.html#babel.numbers.format_currency
+    kwargs = {
+        'currency': currency if currency else settings.OSCAR_DEFAULT_CURRENCY,
+        'format': getattr(settings, 'OSCAR_CURRENCY_FORMAT', None),
+        'locale': to_locale(get_language() or settings.LANGUAGE_CODE),
+        'currency_digits': getattr(settings, 'OSCAR_CURRENCY_DIGITS', 2),
+    }
+
+    price_string = format_currency(value, **kwargs)
+
+    return u'%s%s' % (price_string, getattr(
+        settings, 'OSCAR_CURRENCY_SUFFIX', ''))
