@@ -39,6 +39,8 @@ What's new in Oscar 1.3?
  - Make more use of the datepicker in the dashboard (`#1983`)
  - Add `site` kwarg to the OrderCreator class (`#2014`)
  - Update Oscar's `get_class()` method to work with non oscar modules (`#2039`)
+ - The ProductAttributesContainer is now moved to `catalogue.product_attribute`
+   and can now be replaced more easily.
 
 
 .. _`#1920`: https://github.com/django-oscar/django-oscar/issues/1920
