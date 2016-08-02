@@ -3406,6 +3406,9 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .navbar-form .select2-container.form-control {
   display: inline-block;
 }
+.navbar-form .form-group .form-inline {
+  display: inline-block;
+}
 .navbar-form .help-block:first-child,
 .navbar-form .error-block:first-child {
   display: none;

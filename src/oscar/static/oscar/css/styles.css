@@ -9223,22 +9223,6 @@ input[type="number"][id*="quantity"] {
 .total {
   background-color: #FDF5D9!important;
 }
-.choose-block ul:before,
-.choose-block ul:after {
-  content: " ";
-  display: table;
-}
-.choose-block ul:after {
-  clear: both;
-}
-.choose-block ul:before,
-.choose-block ul:after {
-  content: " ";
-  display: table;
-}
-.choose-block ul:after {
-  clear: both;
-}
 .choose-block .well {
   position: relative;
   min-height: 240px;
