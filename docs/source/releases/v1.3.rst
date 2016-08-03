@@ -52,7 +52,7 @@ Dependency changes
 .. warning::
 
     Oscar depends on sorl-thumbnail 12.4a1. Unfortunately you have to 
-    fake the initial migration of this application since older versiosn didn't
+    fake the initial migration of this application since older versions didn't
     include migrations. This can be done via::
 
         python manage.py migrate thumbnail --fake
