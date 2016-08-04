@@ -5203,9 +5203,6 @@ button.close {
 .alert .alertinner p:first-child {
   margin: 0;
 }
-body {
-  background: url("../img/ui/dashboard/bg_subtle_dots.png") repeat scroll 0 0 #fff;
-}
 h1,
 h2,
 h3,
