@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from oscar.core.application import Application
-from oscar.core.loading import get_class
+from oscar.core.loading import get_class, feature_hidden
 
 
 class UserManagementApplication(Application):
@@ -27,18 +27,20 @@ class UserManagementApplication(Application):
             url(r'^(?P<pk>-?\d+)/password-reset/$',
                 self.password_reset_view.as_view(),
                 name='user-password-reset'),
-
-            # Alerts
-            url(r'^alerts/$',
-                self.alert_list_view.as_view(),
-                name='user-alert-list'),
-            url(r'^alerts/(?P<pk>-?\d+)/delete/$',
-                self.alert_delete_view.as_view(),
-                name='user-alert-delete'),
-            url(r'^alerts/(?P<pk>-?\d+)/update/$',
-                self.alert_update_view.as_view(),
-                name='user-alert-update'),
         ]
+
+        if not feature_hidden('alerts'):
+            urls += [
+                url(r'^alerts/$',
+                    self.alert_list_view.as_view(),
+                    name='user-alert-list'),
+                url(r'^alerts/(?P<pk>-?\d+)/delete/$',
+                    self.alert_delete_view.as_view(),
+                    name='user-alert-delete'),
+                url(r'^alerts/(?P<pk>-?\d+)/update/$',
+                    self.alert_update_view.as_view(),
+                    name='user-alert-update'),
+            ]
         return self.post_process_urls(urls)
 
 
