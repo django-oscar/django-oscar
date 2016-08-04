@@ -22,9 +22,12 @@
 {% endblock header %}
 
 {% block dashboard_content %}
-
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="icon-reorder icon-large"></i>
+        <h3>{% trans "Ranges" %}</h3>
+    </div>
     <table class="table table-striped table-bordered">
-        <caption><i class="icon-reorder icon-large"></i> {% trans "Ranges" %}</caption>
         {% if ranges %}
             <thead>
                 <tr>
@@ -87,5 +90,5 @@
         {% endif %}
     </table>
     {% include "dashboard/partials/pagination.html" %}
-
+</div>
 {% endblock dashboard_content %}

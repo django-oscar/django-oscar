@@ -1,6 +1,5 @@
 
 body {
-  background: url("../img/ui/dashboard/bg_subtle_dots.png") repeat scroll 0 0 #fff;
 }
 
 // TYPES CHANGES
@@ -170,7 +169,6 @@ div[data-spy="affix"].affix {
   display: block;
   margin: 0;
   padding: 8px 14px;
-  border: 1px solid #e5e5e5;
   border-top-width: 0;
   color: @link-color;
   &:hover {
@@ -196,6 +194,12 @@ div[data-spy="affix"].affix {
   &:hover {
     background: #f1faff;
     color: @link-color;
+  }
+  &:focus {
+      &:after {
+        border-left: 10px solid #f1faff;
+      }
+    background: #f1faff;
   }
   &:after {
     border-bottom: 10px solid transparent;
