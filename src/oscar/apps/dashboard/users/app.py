@@ -1,10 +1,10 @@
 from django.conf.urls import url
 
-from oscar.core.application import Application
+from oscar.core.application import DashboardApplication
 from oscar.core.loading import get_class
 
 
-class UserManagementApplication(Application):
+class UserManagementApplication(DashboardApplication):
     name = None
     default_permissions = ['is_staff', ]
 

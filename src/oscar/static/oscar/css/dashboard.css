@@ -5857,6 +5857,13 @@ caption > i,
 .table-header > i {
   padding-right: 10px;
 }
+body.dashboard-login {
+  padding-top: 60px;
+  background-color: #f5f5f5;
+}
+body.dashboard-login h1 {
+  text-align: center;
+}
 #order_graph {
   position: relative;
   margin-bottom: 5em;
