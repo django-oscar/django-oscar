@@ -13,7 +13,7 @@ class TestDashboardIndexForAnonUser(WebTestCase):
 
     def test_is_not_available(self):
         response = self.get(reverse('dashboard:index')).follow()
-        self.assertContains(response, 'login-username', status_code=200)
+        self.assertContains(response, 'username', status_code=200)
 
 
 class TestDashboardIndexForStaffUser(WebTestCase):

@@ -1,3 +1,5 @@
+from django.core.urlresolvers import reverse_lazy
+
 from oscar.core.loading import feature_hidden
 from oscar.views.decorators import permissions_required
 
@@ -11,6 +13,8 @@ class Application(object):
     """
     #: Namespace name
     name = None
+
+    login_url = None
 
     #: A name that allows the functionality within this app to be disabled
     hidable_feature_name = None
@@ -101,9 +105,13 @@ class Application(object):
         """
         permissions = self.get_permissions(pattern.name)
         if permissions:
-            return permissions_required(permissions)
+            return permissions_required(permissions, login_url=self.login_url)
 
     @property
     def urls(self):
         # We set the application and instance namespace here
         return self.get_urls(), self.app_name, self.name
+
+
+class DashboardApplication(Application):
+    login_url = reverse_lazy('dashboard:login')
