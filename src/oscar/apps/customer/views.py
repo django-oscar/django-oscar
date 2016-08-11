@@ -58,6 +58,7 @@ class AccountSummaryView(generic.RedirectView):
     having to change a lot of templates.
     """
     pattern_name = settings.OSCAR_ACCOUNTS_REDIRECT_URL
+    permanent = False
 
 
 class AccountRegistrationView(RegisterUserMixin, generic.FormView):
