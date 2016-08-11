@@ -1,11 +1,11 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.fields import CharField, DecimalField
-from django.db.models import SubfieldBase
 from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core import validators
 from oscar.forms import fields
+from oscar.compat import SubfieldBase
 
 import oscar.core.phonenumber as phonenumber
 # allow importing as oscar.models.fields.AutoSlugField
