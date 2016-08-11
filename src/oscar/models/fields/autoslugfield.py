@@ -30,6 +30,7 @@ from django.conf import settings
 from django.utils import six
 
 from oscar.core.utils import slugify
+from oscar.compat import get_fields_with_model
 
 try:
     from django.utils.encoding import force_unicode  # NOQA
@@ -77,7 +78,7 @@ class AutoSlugField(SlugField):
         # not override parameter if it was passed explicitly,
         # so passed parameters takes precedence over the setting
         if settings.OSCAR_SLUG_ALLOW_UNICODE:
-            kwargs.setdefault('allow_unicode', settings.OSCAR_SLUG_ALLOW_UNICODE)
+            kwargs.setdefault('allow_unicode', settings.OSCAR_SLUG_ALLOW_UNICODE)   # NOQA
 
         super(AutoSlugField, self).__init__(*args, **kwargs)
 
@@ -94,7 +95,7 @@ class AutoSlugField(SlugField):
         return re.sub(r'^%s+|%s+$' % (re_sep, re_sep), '', value)
 
     def get_queryset(self, model_cls, slug_field):
-        for field, model in model_cls._meta.get_fields_with_model():
+        for field, model in get_fields_with_model(model_cls):
             if model and field == slug_field:
                 return model._default_manager.all()
         return model_cls._default_manager.all()
