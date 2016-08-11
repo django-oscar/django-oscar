@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from decimal import Decimal as D
 
+import django
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
@@ -100,8 +101,12 @@ class AbstractWeightBased(AbstractBase):
     # The attribute code to use to look up the weight of a product
     weight_attribute = 'weight'
 
-    code = 'weight-based-shipping'
-    name = _('Weight-based shipping')
+    if django.VERSION >= (1, 10):
+        name = models.CharField(
+            _("Weight-based shipping"), max_length=128, unique=True)
+    else:
+        # not overide 'name' field under django 1.10
+        name = _("Weight-based shipping")
 
     # The default weight to use (in kg) when a product doesn't have a weight
     # attribute.
