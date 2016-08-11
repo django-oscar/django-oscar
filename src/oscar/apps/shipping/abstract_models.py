@@ -105,6 +105,7 @@ class AbstractWeightBased(AbstractBase):
         name = models.CharField(
             _("Weight-based shipping"), max_length=128, unique=True)
     else:
+        # not overide 'name' field under django 1.10
         name = _("Weight-based shipping")
 
     # The default weight to use (in kg) when a product doesn't have a weight
