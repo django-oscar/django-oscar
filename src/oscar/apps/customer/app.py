@@ -134,7 +134,7 @@ class CustomerApplication(Application):
             # Notifications
             # Redirect to notification inbox
             url(r'^notifications/$', generic.RedirectView.as_view(
-                url='/accounts/notifications/inbox/')),
+                url='/accounts/notifications/inbox/', permanent=False)),
             url(r'^notifications/inbox/$',
                 login_required(self.notification_inbox_view.as_view()),
                 name='notifications-inbox'),
