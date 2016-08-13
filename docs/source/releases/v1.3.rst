@@ -2,7 +2,7 @@
 Oscar 1.3 release notes
 =======================
 
-:release: TBD
+:release: 2016-08-13
 
 Welcome to Oscar 1.3, a minor release which finally brings compatibility with
 Django 1.9.
