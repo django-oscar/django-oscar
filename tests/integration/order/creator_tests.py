@@ -2,9 +2,9 @@ from decimal import Decimal as D
 
 from django.test import TestCase
 from django.test.utils import override_settings
-from mock import Mock
 
 from oscar.apps.catalogue.models import ProductClass, Product
+from oscar.apps.checkout import calculators
 from oscar.apps.offer.utils import Applicator
 from oscar.apps.order.models import Order
 from oscar.apps.order.utils import OrderCreator
@@ -13,7 +13,6 @@ from oscar.apps.shipping.repository import Repository
 from oscar.core.loading import get_class
 from oscar.test import factories
 from oscar.test.basket import add_product
-from oscar.apps.checkout import calculators
 
 Range = get_class('offer.models', 'Range')
 Benefit = get_class('offer.models', 'Benefit')
@@ -186,3 +185,36 @@ class TestShippingOfferForOrder(TestCase):
         self.assertEqual(0, len(order.shipping_discounts))
         self.assertEqual(D('0.00'), order.shipping_incl_tax)
         self.assertEqual(D('12.00'), order.total_incl_tax)
+
+
+class TestMultiSiteOrderCreation(TestCase):
+
+    def setUp(self):
+        self.creator = OrderCreator()
+        self.basket = factories.create_basket(empty=True)
+
+    def test_default_site(self):
+        add_product(self.basket, D('12.00'))
+        place_order(self.creator,
+                    basket=self.basket,
+                    order_number='1234')
+        order = Order.objects.get(number='1234')
+        self.assertEquals(order.site_id, 1)
+
+    def test_multi_sites(self):
+        site1 = factories.SiteFactory()
+        site2 = factories.SiteFactory()
+        add_product(self.basket, D('12.00'))
+        place_order(self.creator,
+                    basket=self.basket,
+                    order_number='12345',
+                    site=site1)
+        order1 = Order.objects.get(number='12345')
+        self.assertEquals(order1.site, site1)
+        add_product(self.basket, D('12.00'))
+        place_order(self.creator,
+                    basket=self.basket,
+                    order_number='12346',
+                    site=site2)
+        order2 = Order.objects.get(number='12346')
+        self.assertEquals(order2.site, site2)
