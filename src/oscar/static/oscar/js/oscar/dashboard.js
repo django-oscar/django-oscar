@@ -281,15 +281,13 @@ var oscar = (function(o, $) {
                 handle: '.btn-handle',
                 submit_url: '#'
             },
-            saveOrder = function(event, ui) {
+            saveOrder = function(data) {
                 // Get the csrf token, otherwise django will not accept the
                 // POST request.
-                var serial = $(this).sortable("serialize"),
-                    csrf = o.getCsrfToken();
-                serial = serial + '&csrfmiddlewaretoken=' + csrf;
+                var csrf = o.getCsrfToken();
                 $.ajax({
                     type: 'POST',
-                    data: serial,
+                    data: $.param(data),
                     dataType: "json",
                     url: options.submit_url,
                     beforeSend: function(xhr, settings) {
@@ -299,9 +297,27 @@ var oscar = (function(o, $) {
             },
             init = function(user_options) {
                 options = $.extend(options, user_options);
-                $(options.wrapper).sortable({
+                var group = $(options.wrapper).sortable({
+                    group: 'serialization',
+                    containerSelector: 'tbody',
+                    itemSelector: 'tr',
                     handle: options.handle,
-                    stop: saveOrder
+                    vertical: true,
+                    onDrop: function ($item, container, _super) {
+                        var data = group.sortable("serialize");
+                        saveOrder(data);
+                        _super($item, container);
+                    },
+                    placeholder: '<tr class="placeholder"/>',
+                    serialize: function (parent, children, isContainer) {
+                        if (isContainer) {
+                            return children;
+                        }
+                        else {
+                            var parts = parent.attr('id').split('_');
+                            return {'name': parts[0], 'value': parts[1]};
+                        }
+                    }
                 });
             };
 

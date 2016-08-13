@@ -6137,6 +6137,18 @@ body.dashboard-login h1 {
 .search-filter-list .label {
   font-size: 100%;
 }
+body.dragging,
+body.dragging * {
+  cursor: move !important;
+}
+.draggable {
+  background-color: #FFF49F;
+}
+.dragged {
+  position: absolute;
+  opacity: 0.5;
+  z-index: 2000;
+}
 /*!
  *  Font Awesome 3.2.1
  *  the iconic font designed for Bootstrap
