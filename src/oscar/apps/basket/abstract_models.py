@@ -133,7 +133,7 @@ class AbstractBasket(models.Model):
         """
         Test whether the passed quantity of items can be added to the basket
         """
-        # We enfore a max threshold to prevent a DOS attack via the offers
+        # We enforce a max threshold to prevent a DOS attack via the offers
         # system.
         basket_threshold = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD
         if basket_threshold:
