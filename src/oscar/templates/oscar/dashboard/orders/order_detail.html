@@ -124,7 +124,7 @@
                                             <input type="checkbox" name="selected_line" value="{{ line.id }}" />
                                         </td>
                                         <td>
-                                            <input type="text" name="selected_line_qty_{{ line.id }}" value="{{ line.quantity }}" class="col-md-1" size="2" style="width:40px" />
+                                            <input type="text" name="selected_line_qty_{{ line.id }}" value="{{ line.quantity }}" size="2" style="width:40px" />
                                         </td>
                                         <td><a href="{% url 'dashboard:order-line-detail' number=order.number line_id=line.id %}">#{{ line.id }}</a></td>
                                         <td>{{ line.quantity }}</td>
@@ -617,7 +617,7 @@
                                         <td>{{ note.user|default:"-" }}</td>
                                         <td>{{ note.note_type|default:"-" }}</td>
                                         <td>{{ note.message|linebreaks }}</td>
-                                        <td class="col-md-2">
+                                        <td>
                                             {% if note.is_editable %}
                                                 &nbsp;<a href="{% url 'dashboard:order-detail-note' number=order.number note_id=note.id %}#notes" class="btn btn-info">{% trans "Edit" %}</a>
                                                 <form action="." method="post" class="pull-left flat">
