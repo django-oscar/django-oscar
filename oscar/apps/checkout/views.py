@@ -19,9 +19,10 @@ OrderCreator = get_class('order.utils', 'OrderCreator')
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
 Repository = get_class('shipping.repository', 'Repository')
 AccountAuthView = get_class('customer.views', 'AccountAuthView')
-RedirectRequired, UnableToTakePayment, PaymentError \
+RedirectRequired, UnableToTakePayment, UserCancelled, PaymentError \
     = get_classes('payment.exceptions', ['RedirectRequired',
                                          'UnableToTakePayment',
+                                         'UserCancelled',
                                          'PaymentError'])
 UnableToPlaceOrder = get_class('order.exceptions', 'UnableToPlaceOrder')
 OrderPlacementMixin = get_class('checkout.mixins', 'OrderPlacementMixin')
@@ -583,6 +584,17 @@ class PaymentDetailsView(OrderPlacementMixin, generic.TemplateView):
             # Redirect required (eg PayPal, 3DS)
             logger.info("Order #%s: redirecting to %s", order_number, e.url)
             return http.HttpResponseRedirect(e.url)
+        except UserCancelled as e:
+            # The user willingly cancelled the payment flow. This type of
+            # exception is supposed to set a friendly error
+            # message that makes sense to the customer.
+            msg = six.text_type(e)
+            logger.info(
+                "Order #%s: user cancelled the payment process (%s).",
+                order_number, msg)
+            self.restore_frozen_basket()
+            return self.render_preview(
+                self.request, error=msg, **payment_kwargs)
         except UnableToTakePayment as e:
             # Something went wrong with payment but in an anticipated way.  Eg
             # their bankcard has expired, wrong card number - that kind of
