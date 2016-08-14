@@ -14,6 +14,27 @@ oscar.dashboard = {
     init: function() {
         $('input[name^="date"], input[name$="date"]').datepicker({dateFormat: 'yy-mm-dd'});
     },
+    catalogue: {
+        init: function() {
+            var price_excl_tax = $('#id_price_excl_tax');
+            var price_retail = $('#id_price_retail');
+            var vat_recalc = function(elem){
+                elem.val(price_retail.val() - price_excl_tax.val());
+            }
+            var price_excl_tax_field = price_excl_tax.parent().parent();
+            var cloned = price_excl_tax_field.clone();
+            var input = $('input', cloned).attr('id', 'id_vat').attr('disabled', 'disabled');
+            $('label', cloned).text('VAT').attr('for', input.attr('id'));
+            vat_recalc(input);
+            price_excl_tax_field.after(cloned);
+            price_excl_tax.blur(function(){
+                vat_recalc(input);
+            });
+            price_retail.blur(function(){
+                vat_recalc(input);
+            });
+        }
+    },
     ranges: {
         init: function() {
             $('[data-behaviours~="remove"]').click(function() {

@@ -145,3 +145,7 @@ Update product | {{ block.super }}
 	</div>
 </form>
 {% endblock dashboard_content %}
+
+{% block onbodyload %}
+oscar.dashboard.catalogue.init();
+{% endblock %}
