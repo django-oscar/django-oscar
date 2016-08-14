@@ -64,7 +64,7 @@ template configuration as so::
     location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', x)
     from oscar import OSCAR_MAIN_TEMPLATE_DIR
     TEMPLATE_DIRS = (
-        location('templates'),
+        os.path.join(BASE_DIR, 'templates'),        
         OSCAR_MAIN_TEMPLATE_DIR,
     )
 
