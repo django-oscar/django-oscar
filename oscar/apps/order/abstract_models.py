@@ -363,7 +363,7 @@ class AbstractLine(models.Model):
         """Returns a string summary of the shipping status of this line"""
         status_map = self.shipping_event_breakdown()
         if not status_map:
-            return ''
+            return 'Pending'
         
         events = []    
         last_complete_event_name = None
