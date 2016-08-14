@@ -27,7 +27,7 @@ class AbstractOrder(models.Model):
     number = models.CharField(
         _("Order number"), max_length=128, db_index=True, unique=True)
 
-    # We track the site that each order is placed within
+    # We track the site that each order is placed within.
     site = models.ForeignKey(
         'sites.Site', verbose_name=_("Site"), null=True,
         on_delete=models.SET_NULL)
@@ -42,7 +42,7 @@ class AbstractOrder(models.Model):
         AUTH_USER_MODEL, related_name='orders', null=True, blank=True,
         verbose_name=_("User"), on_delete=models.SET_NULL)
 
-    # Billing address is not always required (eg paying by gift card)
+    # Billing address is not always required (eg paying by gift card).
     billing_address = models.ForeignKey(
         'order.BillingAddress', null=True, blank=True,
         verbose_name=_("Billing Address"),
@@ -50,7 +50,7 @@ class AbstractOrder(models.Model):
 
     # Total price looks like it could be calculated by adding up the
     # prices of the associated lines, but in some circumstances extra
-    # order-level charges are added and so we need to store it separately
+    # order-level charges are added and so we need to store it separately.
     currency = models.CharField(
         _("Currency"), max_length=12, default=get_default_currency)
     total_incl_tax = models.DecimalField(
@@ -58,7 +58,7 @@ class AbstractOrder(models.Model):
     total_excl_tax = models.DecimalField(
         _("Order total (excl. tax)"), decimal_places=2, max_digits=12)
 
-    # Shipping charges
+    # Shipping charges.
     shipping_incl_tax = models.DecimalField(
         _("Shipping charge (inc. tax)"), decimal_places=2, max_digits=12,
         default=0)
@@ -75,17 +75,17 @@ class AbstractOrder(models.Model):
     shipping_method = models.CharField(
         _("Shipping method"), max_length=128, blank=True)
 
-    # Identifies shipping code
+    # Identifies shipping code.
     shipping_code = models.CharField(blank=True, max_length=128, default="")
 
-    # Use this field to indicate that an order is on hold / awaiting payment
+    # Use this field to indicate that an order is on hold / awaiting payment.
     status = models.CharField(_("Status"), max_length=100, blank=True)
     guest_email = models.EmailField(_("Guest email address"), blank=True)
 
-    # Index added to this field for reporting
+    # Index added to this field for reporting.
     date_placed = models.DateTimeField(db_index=True)
 
-    #: Order status pipeline.  This should be a dict where each (key, value) #:
+    #: Order status pipeline.  This should be a dict where each (key, value)
     #: corresponds to a status and a list of possible statuses that can follow
     #: that one.
     pipeline = getattr(settings, 'OSCAR_ORDER_STATUS_PIPELINE', {})
@@ -93,7 +93,7 @@ class AbstractOrder(models.Model):
     #: Order status cascade pipeline.  This should be a dict where each (key,
     #: value) pair corresponds to an *order* status and the corresponding
     #: *line* status that needs to be set when the order is set to the new
-    #: status
+    #: status.
     cascade = getattr(settings, 'OSCAR_ORDER_STATUS_CASCADE', {})
 
     @classmethod
@@ -234,7 +234,7 @@ class AbstractOrder(models.Model):
         if not len(events):
             return ''
 
-        # Collect all events by event-type
+        # Collect all events by event-type.
         event_map = OrderedDict()
         for event in events:
             event_name = event.event_type.name
@@ -242,7 +242,7 @@ class AbstractOrder(models.Model):
                 event_map[event_name] = []
             event_map[event_name].extend(list(event.line_quantities.all()))
 
-        # Determine last complete event
+        # Determine last complete event.
         status = _("In progress")
         for event_name, event_line_quantities in event_map.items():
             if self._is_event_complete(event_line_quantities):
@@ -263,7 +263,7 @@ class AbstractOrder(models.Model):
         return self.shipping_incl_tax + total
 
     def _is_event_complete(self, event_quantities):
-        # Form map of line to quantity
+        # Form map of line to quantity.
         event_map = {}
         for event_quantity in event_quantities:
             line_id = event_quantity.line_id
@@ -337,11 +337,11 @@ class AbstractOrderNote(models.Model):
                               verbose_name=_("Order"))
 
     # These are sometimes programatically generated so don't need a
-    # user everytime
+    # user everytime.
     user = models.ForeignKey(AUTH_USER_MODEL, null=True,
                              verbose_name=_("User"))
 
-    # We allow notes to be classified although this isn't always needed
+    # We allow notes to be classified although this isn't always needed.
     INFO, WARNING, ERROR, SYSTEM = 'Info', 'Warning', 'Error', 'System'
     note_type = models.CharField(_("Note Type"), max_length=128, blank=True)
 
@@ -349,7 +349,7 @@ class AbstractOrderNote(models.Model):
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
     date_updated = models.DateTimeField(_("Date Updated"), auto_now=True)
 
-    # Notes can only be edited for 5 minutes after being created
+    # Notes can only be edited for 5 minutes after being created.
     editable_lifetime = 300
 
     class Meta:
@@ -428,7 +428,7 @@ class AbstractLine(models.Model):
         _("Partner Notes"), blank=True)
 
     # We keep a link to the stockrecord used for this line which allows us to
-    # update stocklevels when it ships
+    # update stocklevels when it ships.
     stockrecord = models.ForeignKey(
         'partner.StockRecord', on_delete=models.SET_NULL, blank=True,
         null=True, verbose_name=_("Stock record"))
@@ -437,14 +437,14 @@ class AbstractLine(models.Model):
     # -------------------
 
     # We don't want any hard links between orders and the products table so we
-    # allow this link to be NULLable.
+    # allow this link to be nullable.
     product = models.ForeignKey(
         'catalogue.Product', on_delete=models.SET_NULL, blank=True, null=True,
         verbose_name=_("Product"))
     title = models.CharField(
         pgettext_lazy(u"Product title", u"Title"), max_length=255)
     # UPC can be null because it's usually set as the product's UPC, and that
-    # can be null as well
+    # can be null as well.
     upc = models.CharField(_("UPC"), max_length=128, blank=True, null=True)
 
     quantity = models.PositiveIntegerField(_("Quantity"), default=1)
@@ -453,13 +453,13 @@ class AbstractLine(models.Model):
     # ---------------------
 
     # Price information (these fields are actually redundant as the information
-    # can be calculated from the LinePrice models
+    # can be calculated from the LinePrice models).
     line_price_incl_tax = models.DecimalField(
         _("Price (inc. tax)"), decimal_places=2, max_digits=12)
     line_price_excl_tax = models.DecimalField(
         _("Price (excl. tax)"), decimal_places=2, max_digits=12)
 
-    # Price information before discounts are applied
+    # Price information before discounts are applied.
     line_price_before_discounts_incl_tax = models.DecimalField(
         _("Price before discounts (inc. tax)"),
         decimal_places=2, max_digits=12)
@@ -472,14 +472,14 @@ class AbstractLine(models.Model):
     unit_cost_price = models.DecimalField(
         _("Unit Cost Price"), decimal_places=2, max_digits=12, blank=True,
         null=True)
-    # Normal site price for item (without discounts)
+    # Normal site price for item (without discounts).
     unit_price_incl_tax = models.DecimalField(
         _("Unit Price (inc. tax)"), decimal_places=2, max_digits=12,
         blank=True, null=True)
     unit_price_excl_tax = models.DecimalField(
         _("Unit Price (excl. tax)"), decimal_places=2, max_digits=12,
         blank=True, null=True)
-    # Retail price at time of purchase
+    # Retail price at time of purchase.
     unit_retail_price = models.DecimalField(
         _("Unit Retail Price"), decimal_places=2, max_digits=12,
         blank=True, null=True)
@@ -488,13 +488,13 @@ class AbstractLine(models.Model):
     # own business processes.
     status = models.CharField(_("Status"), max_length=255, blank=True)
 
-    # Estimated dispatch date - should be set at order time
+    # Estimated dispatch date - should be set at order time.
     est_dispatch_date = models.DateField(
         _("Estimated Dispatch Date"), blank=True, null=True)
 
-    #: Order status pipeline.  This should be a dict where each (key, value)
-    #: corresponds to a status and the possible statuses that can follow that
-    #: one.
+    # Order status pipeline.  This should be a dict where each (key, value)
+    # corresponds to a status and the possible statuses that can follow that
+    # one.
     pipeline = getattr(settings, 'OSCAR_LINE_STATUS_PIPELINE', {})
 
     class Meta:
@@ -935,10 +935,10 @@ class ShippingEventQuantity(models.Model):
         unique_together = ('event', 'line')
 
     def save(self, *args, **kwargs):
-        # Default quantity to full quantity of line
+        # Default quantity to full quantity of line.
         if not self.quantity:
             self.quantity = self.line.quantity
-        # Ensure we don't violate quantities constraint
+        # Ensure we don't violate quantities constraint.
         if not self.line.is_shipping_event_permitted(
                 self.event.event_type, self.quantity):
             raise exceptions.InvalidShippingEvent
@@ -957,9 +957,9 @@ class AbstractShippingEventType(models.Model):
 
     Eg: 'Shipped', 'Cancelled', 'Returned'
     """
-    # Name is the friendly description of an event
+    # Name is the friendly description of an event.
     name = models.CharField(_("Name"), max_length=255, unique=True)
-    # Code is used in forms
+    # Code is used in forms.
     code = AutoSlugField(_("Code"), max_length=128, unique=True,
                          populate_from='name')
 
