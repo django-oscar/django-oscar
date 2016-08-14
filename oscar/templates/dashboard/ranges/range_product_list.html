@@ -83,6 +83,7 @@ Products in range '{{ range.name }}' | {{ block.super }}
 					<th>Partner</th>
 					<th>Partner SKU</th>
 					<th>Price</th>
+					<th>Is product discountable?</th>
 					<th></th>
 				</tr>
 				{% for product in products %}
@@ -95,6 +96,7 @@ Products in range '{{ range.name }}' | {{ block.super }}
 					<td>{{ product.stockrecord.partner.name }}</td>
 					<td>{{ product.stockrecord.partner_sku }}</td>
 					<td>{{ product.stockrecord.price_incl_tax|currency }}</td>
+					<td>{% if product.is_discountable %}Yes{% else %}No{% endif %}</td>
 					<td>
 						<a class="btn btn-danger" href="#" data-behaviours="remove">Remove</a>
 					</td>
