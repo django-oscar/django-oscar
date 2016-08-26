@@ -151,6 +151,7 @@ class UnicodeCSVWriter:
                           encoding=self.encoding, newline='')
         else:
             self.f = open(self.filename, 'wb')
+        return self
 
     def __exit__(self, type, value, traceback):
         assert self.filename is not None

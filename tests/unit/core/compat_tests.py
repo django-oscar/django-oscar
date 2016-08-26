@@ -1,11 +1,25 @@
 # -*- coding: utf-8 -*-
 import datetime
+from tempfile import NamedTemporaryFile
 from django.utils import six
 from django.utils.six.moves import cStringIO
 
 from django.test import TestCase
 
 from oscar.core.compat import UnicodeCSVWriter, existing_user_fields
+
+
+class unicodeobj(object):
+
+    def __init__(self, s):
+        self.s = s
+
+    def __str__(self):
+        return self.s
+
+    def __unicode__(self):
+        return self.s
+
 
 class TestExistingUserFields(TestCase):
 
@@ -19,14 +33,16 @@ class TestUnicodeCSVWriter(TestCase):
     def test_can_write_different_values(self):
         writer = UnicodeCSVWriter(open_file=cStringIO())
         s = u'ünįcodē'
-        class unicodeobj(object):
-            def __str__(self):
-                return s
-            def __unicode__(self):
-                return s
-        rows = [[s, unicodeobj(), 123, datetime.date.today()], ]
+        rows = [[s, unicodeobj(s), 123, datetime.date.today()], ]
         writer.writerows(rows)
         self.assertRaises(TypeError, writer.writerows, [object()])
+
+    def test_context_manager(self):
+        tmp_file = NamedTemporaryFile()
+        with UnicodeCSVWriter(filename=tmp_file.name) as writer:
+            s = u'ünįcodē'
+            rows = [[s, unicodeobj(s), 123, datetime.date.today()], ]
+            writer.writerows(rows)
 
 
 class TestPython3Compatibility(TestCase):
