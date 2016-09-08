@@ -2,6 +2,7 @@ from django.utils.translation import ungettext_lazy
 
 from django_tables2_reports.tables import TableReport
 
+
 class DashboardTable(TableReport):
     caption = ungettext_lazy('%d Row', '%d Rows')
 
@@ -14,6 +15,6 @@ class DashboardTable(TableReport):
             pass
         return self.caption
 
-    class Meta:
+    class Meta(object):
         template = 'dashboard/table.html'
         attrs = {'class': 'table table-striped table-bordered'}
