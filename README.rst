@@ -170,6 +170,7 @@ The following are community-written extensions:
 * django-oscar-przelewy24_ - Integration with the Przelewy24 payment gateway
 * oscar-sagepay_ - Payment integration with Sage Pay
 * django-oscar-erp_
+* django-oscar-sofortueberweisung_ - Integration with SOFORT
 
 Let us know if you're writing a new one!
 
@@ -180,6 +181,7 @@ Let us know if you're writing a new one!
 .. _django-oscar-adyen: https://github.com/oscaro/django-oscar-adyen
 .. _django-oscar-przelewy24: https://github.com/kisiel/django-oscar-przelewy24
 .. _oscar-sagepay: https://github.com/udox/oscar-sagepay
+.. _django-oscar-sofortueberweisung: https://github.com/byteyard/django-oscar-sofortueberweisung
 
 License
 -------
