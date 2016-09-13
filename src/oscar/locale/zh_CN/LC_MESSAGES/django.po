@@ -8365,7 +8365,7 @@ msgid "Review"
 msgstr "评论"
 
 #: templates/oscar/dashboard/reviews/review_delete.html:40
-msgid "Votest"
+msgid "Votes"
 msgstr "最多评论了的"
 
 #: templates/oscar/dashboard/reviews/review_list.html:29

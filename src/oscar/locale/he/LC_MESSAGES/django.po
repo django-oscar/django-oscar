@@ -8363,7 +8363,7 @@ msgid "Review"
 msgstr "ביקורת"
 
 #: templates/oscar/dashboard/reviews/review_delete.html:40
-msgid "Votest"
+msgid "Votes"
 msgstr "הצבעות"
 
 #: templates/oscar/dashboard/reviews/review_list.html:29

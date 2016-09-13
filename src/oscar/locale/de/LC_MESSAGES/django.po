@@ -8372,7 +8372,7 @@ msgid "Review"
 msgstr "Bewertung"
 
 #: templates/oscar/dashboard/reviews/review_delete.html:40
-msgid "Votest"
+msgid "Votes"
 msgstr "Stimmen"
 
 #: templates/oscar/dashboard/reviews/review_list.html:29
