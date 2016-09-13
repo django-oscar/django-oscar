@@ -37,7 +37,7 @@
                 <tr><th>{% trans "Product" %}</th><td>{{ review.product.title }}</td></tr>
                 <tr><th>{% trans "User" %}</th><td>{{ review.user.reviewer_name|default:"-" }}</td></tr>
                 <tr><th>{% trans "Score" %}</th><td>{{ review.score|floatformat:1 }}</td></tr>
-                <tr><th>{% trans "Votest" %}</th><td>{{ review.total_votes }}</td></tr>
+                <tr><th>{% trans "Votes" %}</th><td>{{ review.total_votes }}</td></tr>
                 <tr><th>{% trans "Status" %}</th><td>{{ review.status }}</td></tr>
                 <tr><th>{% trans "Date created" %}</th><td>{{ review.date_created }}</td></tr>
             </tbody>

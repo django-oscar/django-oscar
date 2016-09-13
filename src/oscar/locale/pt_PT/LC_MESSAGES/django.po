@@ -8364,7 +8364,7 @@ msgid "Review"
 msgstr "Avaliação"
 
 #: templates/oscar/dashboard/reviews/review_delete.html:40
-msgid "Votest"
+msgid "Votes"
 msgstr "Mais votadas"
 
 #: templates/oscar/dashboard/reviews/review_list.html:29

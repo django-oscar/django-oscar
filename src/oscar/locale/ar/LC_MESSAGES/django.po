@@ -8424,7 +8424,7 @@ msgid "Review"
 msgstr "تقييم"
 
 #: templates/oscar/dashboard/reviews/review_delete.html:40
-msgid "Votest"
+msgid "Votes"
 msgstr "التصويتات"
 
 #: templates/oscar/dashboard/reviews/review_list.html:29
