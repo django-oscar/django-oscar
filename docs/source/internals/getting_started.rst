@@ -144,6 +144,8 @@ your ``MIDDLEWARE_CLASSES`` setting.
         'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     )
 
+Note: In django 1.10 and above: make sure to replace ``MIDDLEWARE`` with ``MIDDLEWARE_CLASSES``
+
 Set your auth backends to:
 
 .. code-block:: django
