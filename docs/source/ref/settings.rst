@@ -246,7 +246,7 @@ checkout (using Oscar's default checkout views).
 ``OSCAR_REQUIRED_ADDRESS_FIELDS``
 ---------------------------------
 
-Default: ``('first_name', 'last_name', 'line1', 'city', 'postcode', 'country')``
+Default: ``('first_name', 'last_name', 'line1', 'line4', 'postcode', 'country')``
 
 List of form fields that a user has to fill out to validate an address field.
 
