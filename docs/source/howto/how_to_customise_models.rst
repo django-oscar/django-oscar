@@ -44,21 +44,21 @@ Make sure to import the remaining Oscar models at the bottom of your file.
    first one for a given class name being registered.
 
 The last thing you need to do now is make Django update the database schema and
-create a new column in the product table. We recommend using South migrations 
+create a new column in the product table. We recommend using migrations 
 for this (internally Oscar already does this) so all you need to do is create a
 new schema migration. 
 
 It is possible to simply create a new catalogue migration (using ``./manage.py
-schemamigration catalogue --auto``) but this isn't recommended as any
+makemigrations catalogue``) but this isn't recommended as any
 dependencies between migrations will need to be applied manually (by adding a
-``depends_on`` attribute to the migration class).
+``dependencies`` attribute to the migration class).
 
 The recommended way to handle migrations is to copy the ``migrations`` directory
 from ``oscar/apps/catalogue`` into your new ``catalogue`` app.  Then you can
-create a new (additional) schemamigration using the ``schemamigration``
+create a new (additional) migration using the ``makemigrations``
 management command::
 
-    ./manage.py schemamigration catalogue --auto
+    ./manage.py makemigrations catalogue
 
 which will pick up any customisations to the product model.
 
