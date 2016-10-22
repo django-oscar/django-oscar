@@ -40,6 +40,6 @@ class TestDispatcher(TestCase):
         self.assertIn(order_number, message.body)
 
         # test sending messages to emails without account and text body
-        messages['body'] = None
+        messages['body'] = ''
         dispatcher.dispatch_direct_messages(email, messages)
         self.assertEqual(len(mail.outbox), 2)
