@@ -11,7 +11,7 @@ Use message tags to control these alerts.  Available tags include:
 <div id="messages">
 {% if messages %}
     {% for message in messages %}
-    <div class="alert {% for tag in message.tags|split %}alert-{{ tag }} {% endfor %} fade in" role="alert">
+    <div class="alert {% for tag in message.tags|split %}alert-{% if tag == 'error' %}danger{% else %}{{ tag }}{% endif %} {% endfor %} fade in" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <div class="alertinner {% if 'noicon' not in message.tags %}wicon{% endif %}">
             {# Allow HTML to be embedded in messages #}
@@ -29,7 +29,7 @@ Use message tags to control these alerts.  Available tags include:
                     <i class="icon-info-sign"></i>
                 {% elif 'warning' in message.tags %}
                     <i class="icon-warning-sign"></i>
-                {% elif 'error' in message.tags %}
+                {% elif 'danger' in message.tags or 'error' in message.tags %}
                     <i class="icon-exclamation-sign"></i>
                 {% endif %}
             {% endif %}
