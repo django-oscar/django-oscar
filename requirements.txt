@@ -4,7 +4,7 @@
 # $ for x in `yolk -l | awk '{print $1}'`; do yolk -d $x 2>/dev/null; done
 
 # Development
-django-debug-toolbar==1.4.0
+django-debug-toolbar==1.6.0
 django-extensions==1.6.1
 Werkzeug==0.9.6
 
