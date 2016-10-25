@@ -105,8 +105,7 @@ class NullCharField(CharField):
         super(NullCharField, self).__init__(*args, **kwargs)
 
     def from_db_value(self, value, expression, connection, context):
-        val = super(NullCharField, self).from_db_value(value)
-        return val if val is not None else u''
+        return value if value is not None else u''
 
     def to_python(self, value):
         val = super(NullCharField, self).to_python(value)
