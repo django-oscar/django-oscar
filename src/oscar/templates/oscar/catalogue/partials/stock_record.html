@@ -4,14 +4,27 @@
 
 {% purchase_info_for_product request product as session %}
 
-{% if session.price.exists %}
-    {% if session.price.excl_tax == 0 %}
-        <p class="price_color">{% trans "Free" %}</p>
-    {% elif session.price.is_tax_known %}
-        <p class="price_color">{{ session.price.incl_tax|currency:session.price.currency }}</p>
-    {% else %}
-        <p class="price_color">{{ session.price.excl_tax|currency:session.price.currency }}</p>
-    {% endif %}
+{% if session.min_price.exists %}
+    <p class="price_color">
+        {% if session.min_price.excl_tax == 0 %}
+            {% trans "Free" %}
+        {% elif session.min_price.is_tax_known %}
+            {{ session.min_price.incl_tax|currency:session.min_price.currency }}
+        {% else %}
+            {{ session.min_price.excl_tax|currency:session.min_price.currency }}
+        {% endif %}
+
+        {% if session.max_price.exists and session.max_price != session.min_price %}
+           - 
+            {% if session.max_price.excl_tax == 0 %}
+                {% trans "Free" %}
+            {% elif session.max_price.is_tax_known %}
+                {{ session.max_price.incl_tax|currency:session.max_price.currency }}
+            {% else %}
+                {{ session.max_price.excl_tax|currency:session.max_price.currency }}
+            {% endif %}
+        {% endif %}
+    </p>
 {% else %}
     <p class="price_color">&nbsp;</p>
 {% endif %}
