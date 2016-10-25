@@ -1,9 +1,9 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from oscar.test.factories import create_product
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.offer import custom
+from oscar.test import factories
 
 
 class CustomRange(object):
@@ -42,10 +42,10 @@ class TestACustomRange(TestCase):
 
     def test_correctly_includes_match(self):
         rng = custom.create_range(CustomRange)
-        test_product = create_product(title=u"A tale")
+        test_product = factories.StandaloneProductFactory(title=u"A tale")
         self.assertTrue(rng.contains_product(test_product))
 
     def test_correctly_excludes_nonmatch(self):
         rng = custom.create_range(CustomRange)
-        test_product = create_product(title=u"B tale")
+        test_product = factories.StandaloneProductFactory(title=u"B tale")
         self.assertFalse(rng.contains_product(test_product))

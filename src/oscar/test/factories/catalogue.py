@@ -9,6 +9,7 @@ __all__ = [
     'ProductAttributeFactory', 'AttributeOptionGroupFactory',
     'OptionFactory', 'AttributeOptionFactory',
     'ProductAttributeValueFactory', 'ProductReviewFactory',
+    'StandaloneProductFactory', 'ParentProductFactory', 'ChildProductFactory',
 ]
 
 
@@ -34,6 +35,35 @@ class ProductFactory(factory.DjangoModelFactory):
         'oscar.test.factories.StockRecordFactory', 'product')
     categories = factory.RelatedFactory(
         'oscar.test.factories.ProductCategoryFactory', 'product')
+
+
+# Aliased so that tests can use the more explicit class name
+StandaloneProductFactory = ProductFactory
+
+
+class ParentProductFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = get_model('catalogue', 'Product')
+
+    structure = Meta.model.PARENT
+    title = "A confederacy of dunces"
+    product_class = factory.SubFactory(ProductClassFactory)
+
+    categories = factory.RelatedFactory(
+        'oscar.test.factories.ProductCategoryFactory', 'product')
+    children = factory.RelatedFactory(
+        'oscar.test.factories.ChildProductFactory', 'parent')
+
+
+class ChildProductFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = get_model('catalogue', 'Product')
+
+    structure = Meta.model.CHILD
+    upc = factory.Sequence(lambda n: '978080213020%d' % n)
+
+    stockrecords = factory.RelatedFactory(
+        'oscar.test.factories.StockRecordFactory', 'product')
 
 
 class CategoryFactory(factory.DjangoModelFactory):

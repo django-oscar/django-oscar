@@ -7,7 +7,6 @@ from django.test import TestCase, Client
 from django.utils.translation import ugettext
 from django.core.urlresolvers import reverse
 
-from oscar.test.factories import create_product
 from oscar.core.compat import get_user_model
 from oscar.apps.basket.models import Basket
 from oscar.apps.basket import reports
@@ -22,7 +21,7 @@ User = get_user_model()
 class TestBasketMerging(TestCase):
 
     def setUp(self):
-        self.product = create_product(num_in_stock=10)
+        self.product = factories.StandaloneProductFactory()
         self.user_basket = Basket()
         self.user_basket.strategy = strategy.Default()
         add_product(self.user_basket, product=self.product)
@@ -45,8 +44,7 @@ class TestBasketMerging(TestCase):
 class AnonAddToBasketViewTests(TestCase):
 
     def setUp(self):
-        self.product = create_product(
-            price=D('10.00'), num_in_stock=10)
+        self.product = factories.StandaloneProductFactory()
         url = reverse('basket:add', kwargs={'pk': self.product.pk})
         post_params = {'product_id': self.product.id,
                        'action': 'add',
@@ -98,7 +96,7 @@ class BasketThresholdTest(TestCase):
         settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = self._old_threshold
 
     def test_adding_more_than_threshold_raises(self):
-        dummy_product = create_product(price=D('10.00'), num_in_stock=10)
+        dummy_product = factories.StandaloneProductFactory()
         url = reverse('basket:add', kwargs={'pk': dummy_product.pk})
         post_params = {'product_id': dummy_product.id,
                        'action': 'add',
@@ -147,7 +145,7 @@ class SavedBasketTests(TestCase):
         client = Client()
         client.login(email=user.email, password='pass')
 
-        product = create_product(price=D('10.00'), num_in_stock=2)
+        product = factories.StandaloneProductFactory()
         basket = factories.create_basket(empty=True)
         basket.owner = user
         basket.save()
@@ -179,7 +177,7 @@ class SavedBasketTests(TestCase):
         client = Client()
         client.login(email=user.email, password='pass')
 
-        product = create_product(price=D('10.00'), num_in_stock=1)
+        product = factories.StandaloneProductFactory(stockrecords__num_in_stock=1)
         basket, created = Basket.open.get_or_create(owner=user)
         add_product(basket, product=product)
 

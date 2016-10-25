@@ -22,11 +22,10 @@ class TestCountCondition(TestCase):
         self.assertFalse(self.condition.is_satisfied(self.offer, self.basket))
 
     def test_not_discountable_product_fails_condition(self):
-        prod1, prod2 = factories.create_product(), factories.create_product()
-        prod2.is_discountable = False
-        prod2.save()
-        add_product(self.basket, product=prod1)
-        add_product(self.basket, product=prod2)
+        product1 = factories.StandaloneProductFactory()
+        product2 = factories.StandaloneProductFactory(is_discountable=False)
+        add_product(self.basket, product=product1)
+        add_product(self.basket, product=product2)
         self.assertFalse(self.condition.is_satisfied(self.offer, self.basket))
 
     def test_empty_basket_fails_partial_condition(self):
@@ -73,8 +72,9 @@ class ValueConditionTest(TestCase):
         self.condition = models.ValueCondition(
             range=self.range, type="Value", value=D('10.00'))
         self.offer = mock.Mock()
-        self.item = factories.create_product(price=D('5.00'))
-        self.expensive_item = factories.create_product(price=D('15.00'))
+        self.item = factories.StandaloneProductFactory(stockrecords__price_excl_tax=D('5.00'))
+        self.expensive_item = factories.StandaloneProductFactory(
+            stockrecords__price_excl_tax=D('15.00'))
 
     def test_empty_basket_fails_condition(self):
         self.assertFalse(self.condition.is_satisfied(self.offer, self.basket))
@@ -87,7 +87,7 @@ class ValueConditionTest(TestCase):
         self.assertFalse(self.condition.is_satisfied(self.offer, self.basket))
 
     def test_not_discountable_item_fails_condition(self):
-        product = factories.create_product(is_discountable=False)
+        product = factories.StandaloneProductFactory(is_discountable=False)
         add_product(self.basket, D('15'), product=product)
         self.assertFalse(self.condition.is_satisfied(self.offer, self.basket))
 
@@ -131,7 +131,8 @@ class ValueConditionTest(TestCase):
 class TestCoverageCondition(TestCase):
 
     def setUp(self):
-        self.products = [factories.create_product(), factories.create_product()]
+        self.products = [factories.StandaloneProductFactory(),
+                         factories.StandaloneProductFactory()]
         self.range = models.Range.objects.create(name="Some products")
         for product in self.products:
             self.range.add_product(product)
@@ -198,7 +199,7 @@ class TestCoverageCondition(TestCase):
 
         # Get 4 distinct products in the basket
         self.products.extend(
-            [factories.create_product(), factories.create_product()])
+            [factories.StandaloneProductFactory(), factories.StandaloneProductFactory()])
         for product in self.products:
             add_product(self.basket, product=product)
 

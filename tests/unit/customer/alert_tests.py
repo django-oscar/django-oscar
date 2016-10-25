@@ -2,8 +2,7 @@ from django.test import TestCase
 
 from oscar.apps.customer.models import ProductAlert
 from oscar.core.compat import get_user_model
-from oscar.test.factories import create_product
-from oscar.test.factories import UserFactory
+from oscar.test import factories
 
 
 User = get_user_model()
@@ -12,8 +11,8 @@ User = get_user_model()
 class TestAnAlertForARegisteredUser(TestCase):
 
     def setUp(self):
-        user = UserFactory()
-        product = create_product()
+        user = factories.UserFactory()
+        product = factories.StandaloneProductFactory()
         self.alert = ProductAlert.objects.create(user=user,
                                                  product=product)
 

@@ -102,12 +102,12 @@ class TestSuccessfulOrderCreation(TestCase):
     def test_partner_name_is_optional(self):
         for partner_name, order_number in [('', 'A'), ('p1', 'B')]:
             self.basket = factories.create_basket(empty=True)
-            product = factories.create_product(partner_name=partner_name)
+            product = factories.StandaloneProductFactory(stockrecords__partner__name=partner_name)
             add_product(self.basket, D('12.00'), product=product)
             place_order(
                 self.creator, basket=self.basket, order_number=order_number)
-            line = Order.objects.get(number=order_number).lines.all()[0]
-            partner = product.stockrecords.all()[0].partner
+            line = Order.objects.get(number=order_number).lines.get()
+            partner = product.stockrecords.get().partner
             self.assertTrue(partner_name == line.partner_name == partner.name)
 
 
@@ -118,17 +118,17 @@ class TestPlacingOrderForDigitalGoods(TestCase):
         self.basket = factories.create_basket(empty=True)
 
     def test_does_not_allocate_stock(self):
-        ProductClass.objects.create(
-            name="Digital", track_stock=False)
-        product = factories.create_product(product_class="Digital")
-        record = factories.create_stockrecord(product, num_in_stock=None)
+        product = factories.StandaloneProductFactory(product_class__name='Digital',
+                                                     product_class__track_stock=False,
+                                                     stockrecords__num_in_stock=None)
+        record = product.stockrecords.get()
         self.assertTrue(record.num_allocated is None)
 
         add_product(self.basket, D('12.00'), product=product)
         place_order(self.creator, basket=self.basket, order_number='1234')
 
         product = Product.objects.get(id=product.id)
-        stockrecord = product.stockrecords.all()[0]
+        stockrecord = product.stockrecords.get()
         self.assertTrue(stockrecord.num_in_stock is None)
         self.assertTrue(stockrecord.num_allocated is None)
 

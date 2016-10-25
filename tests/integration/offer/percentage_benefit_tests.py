@@ -31,7 +31,7 @@ class TestAPercentageDiscountAppliedWithCountCondition(TestCase):
         self.assertEqual(0, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_basket_with_no_discountable_products(self):
-        product = factories.create_product(is_discountable=False)
+        product = factories.StandaloneProductFactory(is_discountable=False)
         add_product(self.basket, D('12.00'), 2, product=product)
         result = self.benefit.apply(self.basket, self.condition, self.offer)
         self.assertEqual(D('0.00'), result.discount)

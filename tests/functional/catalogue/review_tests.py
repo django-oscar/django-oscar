@@ -1,14 +1,13 @@
-from oscar.test.testcases import WebTestCase
-from oscar.test.factories import create_product, UserFactory
-from oscar.core.compat import get_user_model
 from oscar.apps.catalogue.reviews.signals import review_added
+from oscar.test import factories
 from oscar.test.contextmanagers import mock_signal_receiver
+from oscar.test.testcases import WebTestCase
 
 
 class TestACustomer(WebTestCase):
 
     def setUp(self):
-        self.product = create_product()
+        self.product = factories.StandaloneProductFactory()
 
     def test_can_add_a_review_when_anonymous(self):
         detail_page = self.app.get(self.product.get_absolute_url())
@@ -24,7 +23,7 @@ class TestACustomer(WebTestCase):
         self.assertEqual(1, self.product.reviews.all().count())
 
     def test_can_add_a_review_when_signed_in(self):
-        user = UserFactory()
+        user = factories.UserFactory()
         detail_page = self.app.get(self.product.get_absolute_url(),
                                    user=user)
         add_review_page = detail_page.click(linkid="write_review")
@@ -37,7 +36,7 @@ class TestACustomer(WebTestCase):
         self.assertEqual(1, self.product.reviews.all().count())
 
     def test_adding_a_review_sends_a_signal(self):
-        review_user = UserFactory()
+        review_user = factories.UserFactory()
         detail_page = self.app.get(self.product.get_absolute_url(),
                                    user=review_user)
         with mock_signal_receiver(review_added) as receiver:

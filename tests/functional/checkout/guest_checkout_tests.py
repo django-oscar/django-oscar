@@ -56,9 +56,9 @@ class TestIndexView(CheckoutMixin, WebTestCase):
     def test_redirects_customers_with_invalid_basket(self):
         # Add product to basket but then remove its stock so it is not
         # purchasable.
-        product = factories.ProductFactory()
+        product = factories.StandaloneProductFactory()
         self.add_product_to_basket(product)
-        product.stockrecords.all().update(num_in_stock=0)
+        product.stockrecords.update(num_in_stock=0)
 
         response = self.get(reverse('checkout:index'))
         self.assertRedirectsTo(response, 'basket:summary')
@@ -132,11 +132,11 @@ class TestShippingAddressView(CheckoutMixin, WebTestCase):
     def test_redirects_customers_with_invalid_basket(self):
         # Add product to basket but then remove its stock so it is not
         # purchasable.
-        product = factories.create_product(num_in_stock=1)
+        product = factories.StandaloneProductFactory()
         self.add_product_to_basket(product)
         self.enter_guest_details()
 
-        product.stockrecords.all().update(num_in_stock=0)
+        product.stockrecords.update(num_in_stock=0)
 
         response = self.get(reverse('checkout:shipping-address'))
         self.assertRedirectsTo(response, 'basket:summary')
@@ -166,11 +166,11 @@ class TestShippingMethodView(CheckoutMixin, WebTestCase):
         self.assertRedirectsTo(response, 'basket:summary')
 
     def test_redirects_customers_with_invalid_basket(self):
-        product = factories.create_product(num_in_stock=1)
+        product = factories.StandaloneProductFactory()
         self.add_product_to_basket(product)
         self.enter_guest_details()
         self.enter_shipping_address()
-        product.stockrecords.all().update(num_in_stock=0)
+        product.stockrecords.update(num_in_stock=0)
 
         response = self.get(reverse('checkout:shipping-method'))
         self.assertRedirectsTo(response, 'basket:summary')
@@ -272,7 +272,7 @@ class TestPaymentMethodView(CheckoutMixin, WebTestCase):
         self.assertRedirectsTo(response, 'basket:summary')
 
     def test_redirects_customers_with_invalid_basket(self):
-        product = factories.create_product(num_in_stock=1)
+        product = factories.StandaloneProductFactory()
         self.add_product_to_basket(product)
         self.enter_guest_details()
         self.enter_shipping_address()
@@ -317,7 +317,7 @@ class TestPaymentDetailsView(CheckoutMixin, WebTestCase):
         self.assertRedirectsTo(response, 'basket:summary')
 
     def test_redirects_customers_with_invalid_basket(self):
-        product = factories.create_product(num_in_stock=1)
+        product = factories.StandaloneProductFactory()
         self.add_product_to_basket(product)
         self.enter_guest_details()
         self.enter_shipping_address()

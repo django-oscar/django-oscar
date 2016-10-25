@@ -3,15 +3,14 @@ from django.core.urlresolvers import reverse
 from django.core import mail
 
 from oscar.apps.customer.models import ProductAlert
-from oscar.test.factories import create_product, create_stockrecord
-from oscar.test.factories import UserFactory
+from oscar.test import factories
 
 
 class TestAUser(WebTest):
 
     def test_can_create_a_stock_alert(self):
-        user = UserFactory()
-        product = create_product(num_in_stock=0)
+        user = factories.UserFactory()
+        product = factories.StandaloneProductFactory(stockrecords__num_in_stock=0)
         product_page = self.app.get(product.get_absolute_url(), user=user)
         form = product_page.forms['alert_form']
         form.submit()
@@ -26,9 +25,9 @@ class TestAUser(WebTest):
 class TestAUserWithAnActiveStockAlert(WebTest):
 
     def setUp(self):
-        self.user = UserFactory()
-        self.product = create_product()
-        self.stockrecord = create_stockrecord(self.product, num_in_stock=0)
+        self.user = factories.UserFactory()
+        self.product = factories.StandaloneProductFactory(stockrecords__num_in_stock=0)
+        self.stockrecord = self.product.stockrecords.get()
         product_page = self.app.get(self.product.get_absolute_url(),
                                     user=self.user)
         form = product_page.forms['alert_form']
@@ -68,7 +67,7 @@ class TestAUserWithAnActiveStockAlert(WebTest):
 class TestAnAnonymousUser(WebTest):
 
     def test_can_create_a_stock_alert(self):
-        product = create_product(num_in_stock=0)
+        product = factories.StandaloneProductFactory(stockrecords__num_in_stock=0)
         product_page = self.app.get(product.get_absolute_url())
         form = product_page.forms['alert_form']
         form['email'] = 'john@smith.com'

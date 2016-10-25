@@ -30,8 +30,6 @@ OrderTotalCalculator = get_class('checkout.calculators',
 Partner = get_model('partner', 'Partner')
 StockRecord = get_model('partner', 'StockRecord')
 
-Product = get_model('catalogue', 'Product')
-ProductClass = get_model('catalogue', 'ProductClass')
 ProductAttribute = get_model('catalogue', 'ProductAttribute')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 ProductImage = get_model('catalogue', 'ProductImage')
@@ -46,7 +44,7 @@ def create_stockrecord(product=None, price_excl_tax=None, partner_sku=None,
                        currency=settings.OSCAR_DEFAULT_CURRENCY,
                        partner_users=None):
     if product is None:
-        product = create_product()
+        product = StandaloneProductFactory(stockrecords=[])
     partner, __ = Partner.objects.get_or_create(name=partner_name or '')
     if partner_users:
         for user in partner_users:
@@ -74,46 +72,13 @@ def create_purchase_info(record):
     )
 
 
-def create_product(upc=None, title=u"Dùｍϻϒ title",
-                   product_class=u"Dùｍϻϒ item class",
-                   partner_name=None, partner_sku=None, price=None,
-                   num_in_stock=None, attributes=None,
-                   partner_users=None, **kwargs):
-    """
-    Helper method for creating products that are used in tests.
-    """
-    product_class, __ = ProductClass._default_manager.get_or_create(
-        name=product_class)
-    product = product_class.products.model(
-        product_class=product_class,
-        title=title, upc=upc, **kwargs)
-    if kwargs.get('parent') and 'structure' not in kwargs:
-        product.structure = 'child'
-    if attributes:
-        for code, value in attributes.items():
-            # Ensure product attribute exists
-            product_class.attributes.get_or_create(name=code, code=code)
-            setattr(product.attr, code, value)
-    product.save()
-
-    # Shortcut for creating stockrecord
-    stockrecord_fields = [
-        price, partner_sku, partner_name, num_in_stock, partner_users]
-    if any([field is not None for field in stockrecord_fields]):
-        create_stockrecord(
-            product, price_excl_tax=price, num_in_stock=num_in_stock,
-            partner_users=partner_users, partner_sku=partner_sku,
-            partner_name=partner_name)
-    return product
-
-
 def create_product_image(product=None,
                          original=None,
                          caption='Dummy Caption',
                          display_order=None,
                          ):
     if not product:
-        product = create_product()
+        product = StandaloneProductFactory()
     if not display_order:
         if not product.images.all():
             display_order = 0
@@ -133,8 +98,7 @@ def create_basket(empty=False):
     basket = Basket.objects.create()
     basket.strategy = strategy.Default()
     if not empty:
-        product = create_product()
-        create_stockrecord(product, num_in_stock=2)
+        product = StandaloneProductFactory(stockrecords__num_in_stock=2)
         basket.add_product(product)
     return basket
 
@@ -148,9 +112,8 @@ def create_order(number=None, basket=None, user=None, shipping_address=None,
     if not basket:
         basket = Basket.objects.create()
         basket.strategy = strategy.Default()
-        product = create_product()
-        create_stockrecord(
-            product, num_in_stock=10, price_excl_tax=D('10.00'))
+        product = StandaloneProductFactory(stockrecords__num_in_stock=10,
+                                           stockrecords__price_excl_tax=D('10.00'))
         basket.add_product(product)
     if not basket.id:
         basket.save()
