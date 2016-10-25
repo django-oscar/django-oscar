@@ -101,7 +101,6 @@ class AbstractWeightBased(AbstractBase):
     weight_attribute = 'weight'
 
     code = 'weight-based-shipping'
-    name = _('Weight-based shipping')
 
     # The default weight to use (in kg) when a product doesn't have a weight
     # attribute.
