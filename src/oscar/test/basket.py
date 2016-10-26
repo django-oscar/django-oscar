@@ -1,7 +1,9 @@
 from decimal import Decimal as D
 
-from oscar.apps.partner import strategy
+from oscar.core.loading import get_class
 from oscar.test import factories
+
+Default = get_class('partner.strategy', 'Default')
 
 
 def add_product(basket, price=None, quantity=1, product=None):
@@ -14,7 +16,7 @@ def add_product(basket, price=None, quantity=1, product=None):
     except RuntimeError:
         pass
     if not has_strategy:
-        basket.strategy = strategy.Default()
+        basket.strategy = Default()
     if price is None:
         price = D('1')
     if product and product.has_stockrecords:

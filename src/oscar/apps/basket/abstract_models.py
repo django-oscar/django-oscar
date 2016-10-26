@@ -11,11 +11,13 @@ from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.basket.managers import OpenBasketManager, SavedBasketManager
 from oscar.apps.offer import results
-from oscar.apps.partner import availability
 from oscar.core.compat import AUTH_USER_MODEL
+from oscar.core.loading import get_class
 from oscar.core.utils import get_default_currency
 from oscar.models.fields.slugfield import SlugField
 from oscar.templatetags.currency_filters import currency
+
+Unavailable = get_class('partner.availability', 'Unavailable')
 
 
 @python_2_unicode_compatible
@@ -834,7 +836,7 @@ class AbstractLine(models.Model):
 
         This could be things like the price has changed
         """
-        if isinstance(self.purchase_info.availability, availability.Unavailable):
+        if isinstance(self.purchase_info.availability, Unavailable):
             msg = u"'%(product)s' is no longer available"
             return _(msg) % {'product': self.product.get_title()}
 
