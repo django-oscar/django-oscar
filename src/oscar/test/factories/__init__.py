@@ -18,6 +18,7 @@ from oscar.test.factories.order import *  # noqa
 from oscar.test.factories.partner import *  # noqa
 from oscar.test.factories.payment import *  # noqa
 from oscar.test.factories.voucher import *  # noqa
+from oscar.test.factories.wishlists import * # noqa
 
 
 Basket = get_model('basket', 'Basket')

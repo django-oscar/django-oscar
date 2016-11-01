@@ -312,13 +312,20 @@ class WishListMoveProductToAnotherWishList(LineMixin, View):
     def get(self, request, *args, **kwargs):
         to_wishlist = get_object_or_404(
             WishList, owner=request.user, key=kwargs['to_key'])
-        self.line.wishlist = to_wishlist
-        self.line.save()
 
-        msg = _("'%(title)s' moved to '%(name)s' wishlist") % {
-            'title': self.product.get_title(),
-            'name': to_wishlist.name}
-        messages.success(self.request, msg)
+        if to_wishlist.lines.filter(product=self.line.product).count() > 0:
+            msg = _("Wish list '%(name)s' already containing '%(title)s'") % {
+                'title': self.product.get_title(),
+                'name': to_wishlist.name}
+            messages.error(self.request, msg)
+        else:
+            self.line.wishlist = to_wishlist
+            self.line.save()
+
+            msg = _("'%(title)s' moved to '%(name)s' wishlist") % {
+                'title': self.product.get_title(),
+                'name': to_wishlist.name}
+            messages.success(self.request, msg)
 
         default_url = reverse(
             'customer:wishlists-detail', kwargs={'key': self.wishlist.key})
