@@ -2,11 +2,11 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.forms import AuthenticationForm
 from django.conf.urls import include, url
 
-from oscar.core.application import DashboardApplication
+from oscar.core.application import DashboardApplication as BaseDashboardApplication
 from oscar.core.loading import get_class
 
 
-class DashboardApplication(DashboardApplication):
+class DashboardApplication(BaseDashboardApplication):
     name = 'dashboard'
     permissions_map = {
         'index': (['is_staff'], ['partner.dashboard_access']),
