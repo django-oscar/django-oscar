@@ -43,19 +43,38 @@ class Command(BaseCommand):
                 self.stdout.write("Countries already populated; nothing to be done.")
                 sys.exit(0)
             else:
-                raise CommandError(
-                    "You already have countries in your database. This command "
-                    "currently does not support updating existing countries.")
+                num_updated = 0
+                num_created = 0
+                for country in pycountry.countries:
+                    oscar_country, created = Country.objects.get_or_create(
+                        iso_3166_1_a2=country.alpha2
+                    )
+                    oscar_country.iso_3166_1_a2 = country.alpha2
+                    oscar_country.iso_3166_1_a3 = country.alpha3
+                    oscar_country.iso_3166_1_numeric = country.numeric
+                    oscar_country.printable_name = country.name
+                    oscar_country.name = getattr(country, 'official_name', country.name)
+                    oscar_country.is_shipping_country = options['is_shipping']
+                    oscar_country.save()
 
-        countries = [
-            Country(
-                iso_3166_1_a2=country.alpha2,
-                iso_3166_1_a3=country.alpha3,
-                iso_3166_1_numeric=country.numeric,
-                printable_name=country.name,
-                name=getattr(country, 'official_name', ''),
-                is_shipping_country=options['is_shipping'])
-            for country in pycountry.countries]
+                    if created:
+                        num_created += 1
+                    else:
+                        num_updated += 1
 
-        Country.objects.bulk_create(countries)
-        self.stdout.write("Successfully added %s countries." % len(countries))
+                self.stdout.write(
+                    "Successfully updated %s, created %s countries." % (num_updated, num_created)
+                )
+        else:
+            countries = [
+                Country(
+                    iso_3166_1_a2=country.alpha2,
+                    iso_3166_1_a3=country.alpha3,
+                    iso_3166_1_numeric=country.numeric,
+                    printable_name=country.name,
+                    name=getattr(country, 'official_name', country.name),
+                    is_shipping_country=options['is_shipping'])
+                for country in pycountry.countries]
+
+            Country.objects.bulk_create(countries)
+            self.stdout.write("Successfully added %s countries." % len(countries))
