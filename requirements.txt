@@ -25,4 +25,4 @@ ipython==4.0.1
 isort==4.2.2
 
 # Country data
-pycountry==1.8
+pycountry==1.10
