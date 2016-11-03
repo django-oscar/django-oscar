@@ -31,8 +31,9 @@ class ReportForm(forms.Form):
     download = forms.BooleanField(label=_("Download"), required=False)
 
     def clean(self):
-        if ('date_from' in self.cleaned_data and 'date_to' in self.cleaned_data
-                and self.cleaned_data['date_from'] >
+        date_from = self.cleaned_data.get('date_from', None)
+        date_to = self.cleaned_data.get('date_to', None)
+        if (all([date_from, date_to]) and self.cleaned_data['date_from'] >
                 self.cleaned_data['date_to']):
             raise forms.ValidationError(_("Your start date must be before your"
                                           " end date"))
