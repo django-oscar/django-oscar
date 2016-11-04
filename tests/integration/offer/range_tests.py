@@ -191,6 +191,12 @@ class TestPartialRange(TestCase):
         all_products = self.range.all_products()
         self.assertFalse(product in all_products)
 
+        # Re-adding product should return it to the products range
+        self.range.add_product(product)
+
+        all_products = self.range.all_products()
+        self.assertTrue(product in all_products)
+
     def test_range_is_reordable(self):
         product = create_product()
         self.range.add_product(product)
