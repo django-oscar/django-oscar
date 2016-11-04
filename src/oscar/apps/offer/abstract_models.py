@@ -840,6 +840,12 @@ class AbstractRange(models.Model):
             relation.display_order = display_order
             relation.save()
 
+        # Remove product from excluded products if it was removed earlier and
+        # re-added again, thus it returns back to the range product list.
+        if product.id in self._excluded_product_ids():
+            self.excluded_products.remove(product)
+            self.invalidate_cached_ids()
+
     def remove_product(self, product):
         """
         Remove product from range. To save on queries, this function does not
