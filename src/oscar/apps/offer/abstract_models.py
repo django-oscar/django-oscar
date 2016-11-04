@@ -1095,6 +1095,7 @@ class AbstractRangeProductFileUpload(models.Model):
         dupes = set(all_ids).intersection(existing_ids)
 
         self.mark_as_processed(products.count(), len(missing_ids), len(dupes))
+        return products
 
     def extract_ids(self):
         """

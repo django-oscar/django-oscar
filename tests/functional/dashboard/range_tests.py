@@ -1,8 +1,14 @@
+from django.contrib.messages.constants import SUCCESS, WARNING
+from django.core.urlresolvers import reverse
 from django.test import TestCase
 
 from oscar.apps.dashboard.ranges import forms
+from oscar.apps.offer.models import Range, RangeProductFileUpload
 from oscar.test.factories import create_product
-from oscar.apps.offer.models import Range
+from oscar.test.testcases import WebTestCase
+
+from nose_parameterized import parameterized
+from webtest.forms import Upload
 
 
 class RangeProductFormTests(TestCase):
@@ -56,3 +62,97 @@ class RangeProductFormTests(TestCase):
         form = self.submit_form({'query': '123123, 123124'})
         self.assertTrue(form.is_valid())
         self.assertTrue('123123' in form.get_duplicate_skus())
+
+
+class RangeProductViewTest(WebTestCase):
+    is_staff = True
+
+    def setUp(self):
+        super(RangeProductViewTest, self).setUp()
+        self.range = Range.objects.create(name='dummy')
+        self.url = reverse('dashboard:range-products', args=(self.range.id,))
+        self.product1 = create_product(
+            title='Product 1', partner_sku='123123', partner_name='Partner 1'
+        )
+        self.product2 = create_product(
+            title='Product 2', partner_sku='123123', partner_name='Partner 2'
+        )
+        self.product3 = create_product(partner_sku='456')
+        self.product4 = create_product(partner_sku='789')
+
+    def test_upload_file_with_skus(self):
+        range_products_page = self.get(self.url)
+        form = range_products_page.form
+        form['file_upload'] = Upload('new_skus.txt', b'456')
+        form.submit().follow()
+        all_products = self.range.all_products()
+        self.assertEquals(len(all_products), 1)
+        self.assertTrue(self.product3 in all_products)
+        range_product_file_upload = RangeProductFileUpload.objects.get()
+        self.assertEquals(range_product_file_upload.range, self.range)
+        self.assertEquals(range_product_file_upload.num_new_skus, 1)
+        self.assertEquals(range_product_file_upload.status, RangeProductFileUpload.PROCESSED)
+        self.assertEquals(range_product_file_upload.size, 3)
+
+    def test_dupe_skus_warning(self):
+        self.range.add_product(self.product3)
+        range_products_page = self.get(self.url)
+        form = range_products_page.forms[0]
+        form['query'] = '456'
+        response = form.submit()
+        self.assertEquals(list(response.context['messages']), [])
+        self.assertEquals(
+            response.context['form'].errors['query'],
+            ['The products with SKUs or UPCs matching 456 are already in this range']
+        )
+
+        form = response.forms[0]
+        form['query'] = '456, 789'
+        response = form.submit().follow()
+        messages = list(response.context['messages'])
+        self.assertEquals(len(messages), 2)
+        self.assertEquals(messages[0].level, SUCCESS)
+        self.assertEquals(messages[0].message, '1 product added to range')
+        self.assertEquals(messages[1].level, WARNING)
+        self.assertEquals(
+            messages[1].message,
+            'The products with SKUs or UPCs matching 456 are already in this range'
+        )
+
+    def test_missing_skus_warning(self):
+        range_products_page = self.get(self.url)
+        form = range_products_page.form
+        form['query'] = '321'
+        response = form.submit()
+        self.assertEquals(list(response.context['messages']), [])
+        self.assertEquals(
+            response.context['form'].errors['query'],
+            ['No products exist with a SKU or UPC matching 321']
+        )
+        form = range_products_page.form
+        form['query'] = '456, 321'
+        response = form.submit().follow()
+        messages = list(response.context['messages'])
+        self.assertEquals(len(messages), 2)
+        self.assertEquals(messages[0].level, SUCCESS)
+        self.assertEquals(messages[0].message, '1 product added to range')
+        self.assertEquals(messages[1].level, WARNING)
+        self.assertEquals(
+            messages[1].message, 'No product(s) were found with SKU or UPC matching 321'
+        )
+
+    @parameterized.expand([
+        ('query', '123123'),
+        ('file_upload', Upload('skus.txt', b'123123'))
+    ])
+    def test_same_skus_within_different_products_warning(self, field_name, field_value):
+        range_products_page = self.get(self.url)
+        form = range_products_page.form
+        form[field_name] = field_value
+        response = form.submit().follow()
+        messages = list(response.context['messages'])
+        self.assertEquals(len(messages), 2)
+        self.assertEquals(messages[1].level, WARNING)
+        self.assertEquals(
+            messages[1].message, 'There are more than one product with SKU 123123'
+        )
