@@ -24,7 +24,7 @@ ProductAlert = get_model('customer', 'ProductAlert')
 User = get_user_model()
 
 
-class IndexView(BulkEditMixin, SingleTableMixin, FormMixin, TemplateView):
+class IndexView(BulkEditMixin, SingleTableMixin, FormMixin, ListView):
     template_name = 'dashboard/users/index.html'
     table_pagination = True
     model = User

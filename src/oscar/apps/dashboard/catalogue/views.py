@@ -61,7 +61,7 @@ def filter_products(queryset, user):
     return queryset.filter(stockrecords__partner__users__pk=user.pk).distinct()
 
 
-class ProductListView(SingleTableMixin, generic.TemplateView):
+class ProductListView(SingleTableMixin, generic.ListView):
     """
     Dashboard view of the product list.
     Supports the permission-based dashboard.
@@ -92,7 +92,7 @@ class ProductListView(SingleTableMixin, generic.TemplateView):
         table.caption = self.get_description(self.form)
         return table
 
-    def get_table_pagination(self):
+    def get_table_pagination(self, table):
         return dict(per_page=20)
 
     def filter_queryset(self, queryset):
@@ -518,7 +518,7 @@ class StockAlertListView(generic.ListView):
         return self.model.objects.all()
 
 
-class CategoryListView(SingleTableMixin, generic.TemplateView):
+class CategoryListView(SingleTableMixin, generic.ListView):
     template_name = 'dashboard/catalogue/category_list.html'
     table_class = CategoryTable
     context_table_name = 'categories'
