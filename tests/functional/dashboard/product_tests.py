@@ -1,11 +1,14 @@
+import datetime
+
 from django.core.urlresolvers import reverse
 from oscar.test import factories
 
 from oscar.test.testcases import WebTestCase
 from oscar.core.compat import get_user_model
-from oscar.apps.catalogue.models import Product
+from oscar.apps.catalogue.models import Product, ProductAttribute
 from oscar.test.factories import (
-    CategoryFactory, ProductFactory, ProductClassFactory)
+    CategoryFactory, ProductFactory, ProductAttributeFactory,
+    ProductClassFactory)
 
 User = get_user_model()
 
@@ -145,3 +148,64 @@ class TestProductUpdate(ProductWebTest):
 
         self.assertEqual(page.context['product'], self.product)
         self.assertEqual(product.title, expected_title)
+
+
+class TestProductClass(ProductWebTest):
+    def setUp(self):
+        super(TestProductClass, self).setUp()
+        self.pclass = ProductClassFactory(name='T-Shirts', slug='tshirts')
+
+        for attribute_type, __ in ProductAttribute.TYPE_CHOICES:
+            values = {
+                'type': attribute_type, 'code': attribute_type,
+                'product_class': self.pclass, 'name': attribute_type,
+            }
+            if attribute_type == ProductAttribute.OPTION:
+                option_group = factories.AttributeOptionGroupFactory()
+                self.option = factories.AttributeOptionFactory(group=option_group)
+                values['option_group'] = option_group
+            ProductAttributeFactory(**values)
+        self.product = factories.ProductFactory(product_class=self.pclass)
+        self.url = reverse('dashboard:catalogue-product',
+                           kwargs={'pk': self.product.id})
+
+    def test_product_update_attribute_values(self):
+        page = self.get(self.url)
+        product_form = page.form
+        # Send string field values due to an error
+        # in the Webtest during multipart form encode.
+        product_form['attr_text'] = 'test1'
+        product_form['attr_integer'] = '1'
+        product_form['attr_float'] = '1.2'
+        product_form['attr_boolean'] = 'yes'
+        product_form['attr_richtext'] = 'longread'
+        product_form['attr_date'] = '2016-10-12'
+        product_form.submit()
+
+        # Reloading model instance to re-initiate ProductAttributeContainer
+        # with new attributes.
+        self.product = Product.objects.get(pk=self.product.id)
+        self.assertEquals(self.product.attr.text, 'test1')
+        self.assertEquals(self.product.attr.integer, 1)
+        self.assertEquals(self.product.attr.float, 1.2)
+        self.assertTrue(self.product.attr.boolean)
+        self.assertEquals(self.product.attr.richtext, 'longread')
+        self.assertEquals(self.product.attr.date, datetime.date(2016, 10, 12))
+
+        page = self.get(self.url)
+        product_form = page.form
+        product_form['attr_text'] = 'test2'
+        product_form['attr_integer'] = '2'
+        product_form['attr_float'] = '5.2'
+        product_form['attr_boolean'] = ''
+        product_form['attr_richtext'] = 'article'
+        product_form['attr_date'] = '2016-10-10'
+        product_form.submit()
+
+        self.product = Product.objects.get(pk=self.product.id)
+        self.assertEquals(self.product.attr.text, 'test2')
+        self.assertEquals(self.product.attr.integer, 2)
+        self.assertEquals(self.product.attr.float, 5.2)
+        self.assertFalse(self.product.attr.boolean)
+        self.assertEquals(self.product.attr.richtext, 'article')
+        self.assertEquals(self.product.attr.date, datetime.date(2016, 10, 10))
