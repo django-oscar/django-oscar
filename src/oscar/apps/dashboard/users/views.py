@@ -82,12 +82,11 @@ class IndexView(BulkEditMixin, SingleTableMixin, FormMixin, TemplateView):
             # If the value is two words, then assume they are first name and
             # last name
             parts = data['name'].split()
-            if len(parts) == 2:
-                condition = Q(first_name__istartswith=parts[0]) \
-                    | Q(last_name__istartswith=parts[1])
-            else:
-                condition = Q(first_name__istartswith=data['name']) \
-                    | Q(last_name__istartswith=data['name'])
+            # always true filter
+            condition = Q()
+            for part in parts:
+                condition &= Q(first_name__icontains=part) \
+                    | Q(last_name__icontains=part)
             queryset = queryset.filter(condition).distinct()
             self.desc_ctx['name_filter'] \
                 = _(" with name matching '%s'") % data['name']
