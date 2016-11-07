@@ -38,8 +38,10 @@ def create_condition(condition_class, **kwargs):
     """
     Create a custom condition instance
     """
-    return Condition.objects.create(
-        proxy_class=_class_path(condition_class), **kwargs)
+    created, condition = Condition.objects.get_or_create(
+        proxy_class=_class_path(condition_class), defaults=kwargs)
+
+    return condition
 
 
 def create_benefit(benefit_class, **kwargs):
@@ -51,5 +53,7 @@ def create_benefit(benefit_class, **kwargs):
     if benefit_class.description is Benefit.description:
         raise RuntimeError("Your custom benefit must implement its own "
                            "'description' property")
-    return Benefit.objects.create(
-        proxy_class=_class_path(benefit_class), **kwargs)
+    created, benefit = Benefit.objects.get_or_create(
+        proxy_class=_class_path(benefit_class), defaults=kwargs)
+
+    return benefit
