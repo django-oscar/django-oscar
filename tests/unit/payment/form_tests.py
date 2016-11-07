@@ -102,6 +102,15 @@ class TestExpiryMonthField(TestCase):
                           self.field.initial)
 
 
+class TestOptionalExpiryMonthField(TestExpiryMonthField):
+
+    def setUp(self):
+        self.field = forms.BankcardExpiryMonthField(required=False)
+
+    def test_accepts_none(self):
+        self.field.clean(None)
+
+
 class TestCCVField(TestCase):
     """CCV field"""
 
