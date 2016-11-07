@@ -1,4 +1,5 @@
 import os
+import sys
 import tempfile
 
 from django.test import TestCase
@@ -72,3 +73,13 @@ class TestForkAppFunction(TestCase):
             native_migration_path = os.path.join(
                 self.tmp_folder, app, 'migrations')
             self.assertEqual(has_models, os.path.exists(native_migration_path))
+
+    def test_dashboard_app_config(self):
+        customisation.fork_app('dashboard', self.tmp_folder)
+        sys.path.append(os.path.dirname(self.tmp_folder))
+
+        config_module = __import__(
+            '%s.dashboard.config' % os.path.basename(self.tmp_folder), fromlist=['DashboardConfig']
+        )
+        self.assertTrue(hasattr(config_module, 'DashboardConfig'))
+        sys.path.remove(os.path.dirname(self.tmp_folder))
