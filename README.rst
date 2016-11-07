@@ -272,8 +272,6 @@ Looking for commercial support?
 
 If you are interested in having an Oscar project built for you, or for
 development of an existing Oscar site, Tangent can
-help.  Please get in touch via `oscar@tangentlabs.co.uk`_ or via the `Tangent
-Snowball`_ site.
+help.  Please get in touch via `oscar@tangent.co.uk`_.
 
-.. _`oscar@tangentlabs.co.uk`: mailto:oscar@tangentlabs.co.uk
-.. _`Tangent Snowball`: http://www.tangentsnowball.com/products/oscar
+.. _`oscar@tangent.co.uk`: mailto:oscar@tangent.co.uk
