@@ -37,7 +37,7 @@ def subfolders(path):
 
 
 def inherit_app_config(local_app_path, app_package, app_label):
-    if 'dashboard' in app_label:
+    if 'dashboard' in app_label and app_label != 'dashboard':
         config_name = '%sDashboardConfig' % app_label.split('.').pop().title()
     elif app_label == 'catalogue.reviews':
         # This embedded app needs special handling
