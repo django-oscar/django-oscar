@@ -1078,7 +1078,7 @@ class AbstractRangeProductFileUpload(models.Model):
         existing_ids = existing_skus.union(existing_upcs)
         new_ids = all_ids - existing_ids
 
-        Product = models.get_model('catalogue', 'Product')
+        Product = get_model('catalogue', 'Product')
         products = Product._default_manager.filter(
             models.Q(stockrecords__partner_sku__in=new_ids) |
             models.Q(upc__in=new_ids))
@@ -1095,6 +1095,7 @@ class AbstractRangeProductFileUpload(models.Model):
         dupes = set(all_ids).intersection(existing_ids)
 
         self.mark_as_processed(products.count(), len(missing_ids), len(dupes))
+        return products
 
     def extract_ids(self):
         """

@@ -68,6 +68,7 @@ test_requires = [
     'pytest==2.9.2',
     'spec==0.11.1',
     'tox==2.3.1',
+    'nose-parameterized==0.5.0'
 ]
 
 setup(
