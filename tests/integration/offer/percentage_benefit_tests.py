@@ -1,5 +1,6 @@
 from decimal import Decimal as D
 
+from django.core import exceptions
 from django.test import TestCase
 import mock
 
@@ -179,3 +180,15 @@ class TestAPercentageDiscountWithMaxItemsSetAppliedWithValueCondition(TestCase):
         self.assertEqual(1 * D('4.00') * D('0.2'), result.discount)
         self.assertEqual(3, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
+
+
+class TestAPercentageDiscountBenefit(TestCase):
+
+    def test_requires_a_benefit_value(self):
+        rng = models.Range.objects.create(
+            name="", includes_all_products=True)
+        benefit = models.Benefit.objects.create(
+            type=models.Benefit.PERCENTAGE, range=rng
+        )
+        with self.assertRaises(exceptions.ValidationError):
+            benefit.clean()
