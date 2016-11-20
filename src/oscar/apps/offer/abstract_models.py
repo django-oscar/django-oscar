@@ -655,7 +655,7 @@ class AbstractCondition(models.Model):
         _('Value'), decimal_places=2, max_digits=12, null=True, blank=True)
 
     proxy_class = fields.NullCharField(
-        _("Custom class"), max_length=255, unique=True, default=None)
+        _("Custom class"), max_length=255, default=None)
 
     class Meta:
         abstract = True
