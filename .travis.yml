@@ -2,15 +2,6 @@
 # http://docs.travis-ci.com/user/workers/container-based-infrastructure/
 sudo: false
 
-# Cache pip downloads
-cache:
-    # Apparently if you override the install command that silently disables the
-    # cache: pip support. This is less than ideal and @dstufft opened up
-    # travis-ci/travis-ci#3239 to hopefully get that addressed. For now we
-    # manually add the pip cache directory to the build cache.
-    directories:
-      - ~/.cache/pip
-
 language: python
 
 python:
