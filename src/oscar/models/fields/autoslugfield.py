@@ -39,6 +39,15 @@ except ImportError:
 from .slugfield import SlugField
 
 
+def get_fields_with_model(model_class):
+    return [
+        (f, f.model if f.model != model_class else None)
+        for f in model_class._meta.get_fields()
+        if not f.is_relation or f.one_to_one
+        or (f.many_to_one and f.related_model)
+        ]
+
+
 class AutoSlugField(SlugField):
     """ AutoSlugField
 
@@ -94,7 +103,7 @@ class AutoSlugField(SlugField):
         return re.sub(r'^%s+|%s+$' % (re_sep, re_sep), '', value)
 
     def get_queryset(self, model_cls, slug_field):
-        for field, model in model_cls._meta.get_fields_with_model():
+        for field, model in get_fields_with_model(model_cls):
             if model and field == slug_field:
                 return model._default_manager.all()
         return model_cls._default_manager.all()

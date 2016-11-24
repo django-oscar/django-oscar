@@ -1,1 +1,0 @@
-{% load i18n %}{% blocktrans %}Confirmation required for stock alert{% endblocktrans %}

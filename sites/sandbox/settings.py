@@ -7,7 +7,6 @@ location = lambda x: os.path.join(
 USE_TZ = True
 
 DEBUG = True
-TEMPLATE_DEBUG = True
 SQL_DEBUG = True
 
 ALLOWED_HOSTS = ['latest.oscarcommerce.com',
@@ -120,29 +119,6 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '$)a7n&o80u!6y5t-+jrd3)3!%vh&shg$wqpjpxc!ar&p#!)n1a'
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-    # needed by django-treebeard for admin (and potentially other libs)
-    'django.template.loaders.eggs.Loader',
-)
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.request",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.static",
-    "django.contrib.messages.context_processors.messages",
-    # Oscar specific
-    'oscar.apps.search.context_processors.search_form',
-    'oscar.apps.promotions.context_processors.promotions',
-    'oscar.apps.checkout.context_processors.checkout',
-    'oscar.core.context_processors.metadata',
-    'oscar.apps.customer.notifications.context_processors.notifications',
-)
 
 MIDDLEWARE_CLASSES = (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
@@ -161,15 +137,43 @@ MIDDLEWARE_CLASSES = (
     #'oscar.profiling.middleware.ProfileMiddleware',
 )
 
-ROOT_URLCONF = 'urls'
-
 # Add another path to Oscar's templates.  This allows templates to be
 # customised easily.
 from oscar import OSCAR_MAIN_TEMPLATE_DIR
-TEMPLATE_DIRS = (
-    location('templates'),
-    OSCAR_MAIN_TEMPLATE_DIR,
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            location('templates'),
+            OSCAR_MAIN_TEMPLATE_DIR,
+        ],
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                # Oscar specific
+                'oscar.apps.search.context_processors.search_form',
+                'oscar.apps.promotions.context_processors.promotions',
+                'oscar.apps.checkout.context_processors.checkout',
+                'oscar.core.context_processors.metadata',
+                'oscar.apps.customer.notifications.context_processors.notifications',
+            ],
+            'loaders': [
+                # List of callables that know how to import templates from various sources.
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+                # needed by django-treebeard for admin (and potentially other libs)
+                'django.template.loaders.eggs.Loader',
+            ],
+        },
+    },
+]
+
+ROOT_URLCONF = 'urls'
+
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

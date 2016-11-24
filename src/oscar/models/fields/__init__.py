@@ -1,6 +1,5 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.fields import CharField, DecimalField
-from django.db.models import SubfieldBase
 from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 
@@ -64,7 +63,7 @@ class PositiveDecimalField(DecimalField):
         return super(PositiveDecimalField, self).formfield(min_value=0)
 
 
-class UppercaseCharField(six.with_metaclass(SubfieldBase, CharField)):
+class UppercaseCharField(CharField):
     """
     A simple subclass of ``django.db.models.fields.CharField`` that
     restricts all text to be uppercase.
@@ -73,15 +72,19 @@ class UppercaseCharField(six.with_metaclass(SubfieldBase, CharField)):
     https://docs.djangoproject.com/en/1.6/howto/custom-model-fields/#the-subfieldbase-metaclass  # NOQA
     """
 
+    def from_db_value(self, value, expression, connection, context):
+        return self.up_the_string(value)
+
     def to_python(self, value):
         val = super(UppercaseCharField, self).to_python(value)
-        if isinstance(val, six.string_types):
-            return val.upper()
-        else:
-            return val
+        return self.up_the_string(val)
+
+    @staticmethod
+    def up_the_string(value):
+        return value.upper() if isinstance(value, six.string_types) else value
 
 
-class NullCharField(six.with_metaclass(SubfieldBase, CharField)):
+class NullCharField(CharField):
     """
     CharField that stores '' as None and returns None as ''
     Useful when using unique=True and forms. Implies null==blank==True.
@@ -99,6 +102,9 @@ class NullCharField(six.with_metaclass(SubfieldBase, CharField)):
                 "NullCharField implies null==blank==True")
         kwargs['null'] = kwargs['blank'] = True
         super(NullCharField, self).__init__(*args, **kwargs)
+
+    def from_db_value(self, value, expression, connection, context):
+        return value if value is not None else u''
 
     def to_python(self, value):
         val = super(NullCharField, self).to_python(value)
@@ -118,7 +124,7 @@ class NullCharField(six.with_metaclass(SubfieldBase, CharField)):
         return name, path, args, kwargs
 
 
-class PhoneNumberField(six.with_metaclass(SubfieldBase, CharField)):
+class PhoneNumberField(CharField):
     """
     An international phone number.
 
@@ -157,6 +163,9 @@ class PhoneNumberField(six.with_metaclass(SubfieldBase, CharField)):
         if value is None:
             return u''
         return value.as_e164 if value.is_valid() else value.raw_input
+
+    def from_db_value(self, value, expression, connection, context):
+        return phonenumber.to_python(value)
 
     def to_python(self, value):
         return phonenumber.to_python(value)
