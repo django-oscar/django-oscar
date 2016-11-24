@@ -35,6 +35,7 @@ tox==1.8.1
 coveralls==0.4.4
 
 # Misc
+pbr==1.10.0
 flake8==2.5.1
 flake8-debugger==1.4.0
 flake8-blind-except==0.1.0

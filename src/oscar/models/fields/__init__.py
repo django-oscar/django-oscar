@@ -73,8 +73,7 @@ class UppercaseCharField(CharField):
     """
 
     def from_db_value(self, value, expression, connection, context):
-        val = super(UppercaseCharField, self).from_db_value(value)
-        return self.up_the_string(val)
+        return self.up_the_string(value)
 
     def to_python(self, value):
         val = super(UppercaseCharField, self).to_python(value)
