@@ -47,10 +47,10 @@ class Command(BaseCommand):
                 num_created = 0
                 for country in pycountry.countries:
                     oscar_country, created = Country.objects.get_or_create(
-                        iso_3166_1_a2=country.alpha2
+                        iso_3166_1_a2=country.alpha_2
                     )
-                    oscar_country.iso_3166_1_a2 = country.alpha2
-                    oscar_country.iso_3166_1_a3 = country.alpha3
+                    oscar_country.iso_3166_1_a2 = country.alpha_2
+                    oscar_country.iso_3166_1_a3 = country.alpha_3
                     oscar_country.iso_3166_1_numeric = country.numeric
                     oscar_country.printable_name = country.name
                     oscar_country.name = getattr(country, 'official_name', country.name)
@@ -68,8 +68,8 @@ class Command(BaseCommand):
         else:
             countries = [
                 Country(
-                    iso_3166_1_a2=country.alpha2,
-                    iso_3166_1_a3=country.alpha3,
+                    iso_3166_1_a2=country.alpha_2,
+                    iso_3166_1_a3=country.alpha_3,
                     iso_3166_1_numeric=country.numeric,
                     printable_name=country.name,
                     name=getattr(country, 'official_name', country.name),
