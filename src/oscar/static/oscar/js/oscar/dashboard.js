@@ -31,7 +31,7 @@ var oscar = (function(o, $) {
                     entity_encoding: 'raw',
                     statusbar: false,
                     menubar: false,
-                    plugins: "link",
+                    plugins: "link lists",
                     style_formats: [
                         {title: 'Text', block: 'p'},
                         {title: 'Heading', block: 'h2'},
