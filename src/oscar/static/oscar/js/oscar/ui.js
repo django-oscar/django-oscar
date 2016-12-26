@@ -34,7 +34,7 @@ var oscar = (function(o, $) {
         initFacetWidgets: function() {
             // Bind events to facet checkboxes
             $('.facet_checkbox').on('change', function() {
-                window.location.href = $(this).next('.facet_url').val();
+                window.location.href = $(this).nextAll('.facet_url').val();
             });
         }
     };
