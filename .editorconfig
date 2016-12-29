@@ -2,5 +2,4 @@ root = true
 
 [*.yml]
 indent = 2
-shift_wodth = 2
-
+shift_width = 2
