@@ -3,6 +3,7 @@ import logging
 from django import http
 from django.contrib import messages
 from django.contrib.auth import login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import redirect
 from django.utils import six
@@ -194,7 +195,8 @@ class ShippingAddressView(CheckoutSessionMixin, generic.FormView):
         return super(ShippingAddressView, self).form_valid(form)
 
 
-class UserAddressUpdateView(CheckoutSessionMixin, generic.UpdateView):
+class UserAddressUpdateView(
+        LoginRequiredMixin, CheckoutSessionMixin, generic.UpdateView):
     """
     Update a user address
     """
@@ -215,7 +217,8 @@ class UserAddressUpdateView(CheckoutSessionMixin, generic.UpdateView):
         return super(UserAddressUpdateView, self).get_success_url()
 
 
-class UserAddressDeleteView(CheckoutSessionMixin, generic.DeleteView):
+class UserAddressDeleteView(
+        LoginRequiredMixin, CheckoutSessionMixin, generic.DeleteView):
     """
     Delete an address from a user's address book.
     """
