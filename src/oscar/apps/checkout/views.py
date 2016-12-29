@@ -3,7 +3,6 @@ import logging
 from django import http
 from django.contrib import messages
 from django.contrib.auth import login
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import redirect
 from django.utils import six
@@ -15,6 +14,14 @@ from oscar.apps.shipping.methods import NoShippingRequired
 from oscar.core.loading import get_class, get_classes, get_model
 
 from . import signals
+
+# Drop try catch once we no longer need to support Django 1.8. This will be
+# when it's no longer the LTS release
+try:
+    from django.contrib.auth.mixins import LoginRequiredMixin
+except ImportError:
+    from oscar.views.auth_mixins import LoginRequiredMixin
+
 
 ShippingAddressForm, ShippingMethodForm, GatewayForm \
     = get_classes('checkout.forms', ['ShippingAddressForm', 'ShippingMethodForm', 'GatewayForm'])
