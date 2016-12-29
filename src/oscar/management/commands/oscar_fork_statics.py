@@ -16,9 +16,15 @@ class Command(BaseCommand):
     args = '<destination folder>'
     help = "Copy Oscar's static files"
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '<destination folder>',
+            nargs='?',
+            default='static')
+
     def handle(self, *args, **options):
         # Determine where to copy to
-        folder = args[0] if args else 'static'
+        folder = options['<destination folder>']
         if not folder.startswith('/'):
             destination = os.path.join(os.getcwd(), folder)
         else:
