@@ -23,7 +23,7 @@ class TestCatalogueViews(WebTestCase):
                 reverse('dashboard:stock-alert-list')]
         for url in urls:
             self.assertIsOk(self.get(url))
-    
+
     def test_upc_filter(self):
         product1 = create_product(upc='123')
         product2 = create_product(upc='12')
@@ -75,25 +75,12 @@ class TestCatalogueViews(WebTestCase):
         self.assertNotIn(product3, products_on_page)
 
 
-class TestAStaffUser(WebTestCase):
+class TestAStaffUserEdit(WebTestCase):
     is_staff = True
 
     def setUp(self):
-        super(TestAStaffUser, self).setUp()
+        super(TestAStaffUserEdit, self).setUp()
         self.partner = PartnerFactory()
-
-    def test_can_create_a_product_without_stockrecord(self):
-        category = CategoryFactory()
-        product_class = ProductClass.objects.create(name="Book")
-        page = self.get(reverse('dashboard:catalogue-product-create',
-                                args=(product_class.slug,)))
-        form = page.form
-        form['upc'] = '123456'
-        form['title'] = 'new product'
-        form['productcategory_set-0-category'] = category.id
-        form.submit()
-
-        self.assertEqual(Product.objects.count(), 1)
 
     def test_can_create_and_continue_editing_a_product(self):
         category = CategoryFactory()
@@ -115,6 +102,27 @@ class TestAStaffUser(WebTestCase):
         self.assertEqual(product.stockrecords.all()[0].partner, self.partner)
         self.assertRedirects(page, reverse('dashboard:catalogue-product',
                                            kwargs={'pk': product.id}))
+
+
+class TestAStaffUser(WebTestCase):
+    is_staff = True
+
+    def setUp(self):
+        super(TestAStaffUser, self).setUp()
+        self.partner = PartnerFactory()
+
+    def test_can_create_a_product_without_stockrecord(self):
+        category = CategoryFactory()
+        product_class = ProductClass.objects.create(name="Book")
+        page = self.get(reverse('dashboard:catalogue-product-create',
+                                args=(product_class.slug,)))
+        form = page.form
+        form['upc'] = '123456'
+        form['title'] = 'new product'
+        form['productcategory_set-0-category'] = category.id
+        form.submit()
+
+        self.assertEqual(Product.objects.count(), 1)
 
     def test_can_update_a_product_without_stockrecord(self):
         new_title = u'foobar'

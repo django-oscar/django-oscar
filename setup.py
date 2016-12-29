@@ -18,7 +18,7 @@ sys.path.append(os.path.join(PROJECT_DIR, 'src'))
 from oscar import get_version  # noqa isort:skip
 
 install_requires = [
-    'django>=1.8.8,<1.10',
+    'django>=1.8.8,<1.11',
     # PIL is required for image fields, Pillow is the "friendly" PIL fork
     'pillow>=1.7.8',
     # We use the ModelFormSetView from django-extra-views for the basket
@@ -28,7 +28,7 @@ install_requires = [
     # Search support
     'django-haystack>=2.5.0,<2.6.0',
     # Treebeard is used for categories
-    'django-treebeard>=4.0',
+    'django-treebeard>=4.1.0',
     # Sorl is used as the default thumbnailer
     'sorl-thumbnail>=12.4a1',
     # Babel is used for currency formatting

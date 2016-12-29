@@ -95,9 +95,10 @@ class AutoSlugField(SlugField):
         return re.sub(r'^%s+|%s+$' % (re_sep, re_sep), '', value)
 
     def get_queryset(self, model_cls, slug_field):
-        for field, model in model_cls._meta.get_fields_with_model():
-            if model and field == slug_field:
-                return model._default_manager.all()
+        # https://github.com/django-extensions/django-extensions/pull/854/files
+        for field in model_cls._meta._get_fields():
+            if field == slug_field:
+                return field.model._default_manager.all()
         return model_cls._default_manager.all()
 
     def slugify_func(self, content):

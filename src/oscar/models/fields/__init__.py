@@ -1,6 +1,5 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.fields import CharField, DecimalField
-from django.db.models import SubfieldBase
 from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 
@@ -11,6 +10,23 @@ import oscar.core.phonenumber as phonenumber
 # allow importing as oscar.models.fields.AutoSlugField
 from .autoslugfield import AutoSlugField
 AutoSlugField = AutoSlugField
+
+
+# https://github.com/django/django/blob/64200c14e0072ba0ffef86da46b2ea82fd1e019a/django/db/models/fields/subclassing.py#L31-L44
+class Creator(object):
+    """
+    A placeholder class that provides a way to set the attribute on the model.
+    """
+    def __init__(self, field):
+        self.field = field
+
+    def __get__(self, obj, type=None):
+        if obj is None:
+            return self
+        return obj.__dict__[self.field.name]
+
+    def __set__(self, obj, value):
+        obj.__dict__[self.field.name] = self.field.to_python(value)
 
 
 class ExtendedURLField(CharField):
@@ -64,7 +80,7 @@ class PositiveDecimalField(DecimalField):
         return super(PositiveDecimalField, self).formfield(min_value=0)
 
 
-class UppercaseCharField(six.with_metaclass(SubfieldBase, CharField)):
+class UppercaseCharField(CharField):
     """
     A simple subclass of ``django.db.models.fields.CharField`` that
     restricts all text to be uppercase.
@@ -72,6 +88,14 @@ class UppercaseCharField(six.with_metaclass(SubfieldBase, CharField)):
     Defined with the with_metaclass helper so that to_python is called
     https://docs.djangoproject.com/en/1.6/howto/custom-model-fields/#the-subfieldbase-metaclass  # NOQA
     """
+
+    def contribute_to_class(self, cls, name, **kwargs):
+        super(UppercaseCharField, self).contribute_to_class(
+            cls, name, **kwargs)
+        setattr(cls, self.name, Creator(self))
+
+    def from_db_value(self, value, expression, connection, context):
+        return self.to_python(value)
 
     def to_python(self, value):
         val = super(UppercaseCharField, self).to_python(value)
@@ -81,7 +105,7 @@ class UppercaseCharField(six.with_metaclass(SubfieldBase, CharField)):
             return val
 
 
-class NullCharField(six.with_metaclass(SubfieldBase, CharField)):
+class NullCharField(CharField):
     """
     CharField that stores '' as None and returns None as ''
     Useful when using unique=True and forms. Implies null==blank==True.
@@ -99,6 +123,13 @@ class NullCharField(six.with_metaclass(SubfieldBase, CharField)):
                 "NullCharField implies null==blank==True")
         kwargs['null'] = kwargs['blank'] = True
         super(NullCharField, self).__init__(*args, **kwargs)
+
+    def contribute_to_class(self, cls, name, **kwargs):
+        super(NullCharField, self).contribute_to_class(cls, name, **kwargs)
+        setattr(cls, self.name, Creator(self))
+
+    def from_db_value(self, value, expression, connection, context):
+        return self.to_python(value)
 
     def to_python(self, value):
         val = super(NullCharField, self).to_python(value)
@@ -118,7 +149,7 @@ class NullCharField(six.with_metaclass(SubfieldBase, CharField)):
         return name, path, args, kwargs
 
 
-class PhoneNumberField(six.with_metaclass(SubfieldBase, CharField)):
+class PhoneNumberField(CharField):
     """
     An international phone number.
 
@@ -148,6 +179,13 @@ class PhoneNumberField(six.with_metaclass(SubfieldBase, CharField)):
         # Set a default max_length.
         kwargs['max_length'] = kwargs.get('max_length', 128)
         super(PhoneNumberField, self).__init__(*args, **kwargs)
+
+    def contribute_to_class(self, cls, name, **kwargs):
+        super(PhoneNumberField, self).contribute_to_class(cls, name, **kwargs)
+        setattr(cls, self.name, Creator(self))
+
+    def from_db_value(self, value, expression, connection, context):
+        return self.to_python(value)
 
     def get_prep_value(self, value):
         """
