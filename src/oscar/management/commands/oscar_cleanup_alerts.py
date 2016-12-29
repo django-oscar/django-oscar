@@ -1,6 +1,5 @@
 import logging
 from datetime import timedelta
-from optparse import make_option
 
 from django.core.management.base import BaseCommand
 from django.utils.timezone import now
@@ -18,12 +17,17 @@ class Command(BaseCommand):
     """
     help = "Check unconfirmed alerts and clean them up"
 
-    option_list = BaseCommand.option_list + (
-        make_option('--days', dest='days', default=0,
-                    help='cleanup alerts older then DAYS from now.'),
-        make_option('--hours', dest='hours', default=0,
-                    help='cleanup alerts older then HOURS from now.'),
-    )
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--days',
+            dest='days',
+            default=0,
+            help='cleanup alerts older then DAYS from now.')
+        parser.add_argument(
+            '--hours',
+            dest='hours',
+            default=0,
+            help='cleanup alerts older then HOURS from now.')
 
     def handle(self, *args, **options):
         """

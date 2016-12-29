@@ -11,20 +11,22 @@ class Command(BaseCommand):
     args = '<communication_event_type> <order number>'
     help = 'For testing the content of order emails'
 
-    def handle(self, *args, **options):
-        if len(args) != 2:
-            raise CommandError("Please select a event type and order number")
+    def add_arguments(self, parser):
+        parser.add_argument('<communication_event_type>')
+        parser.add_argument('<order number>')
 
+    def handle(self, *args, **options):
         try:
-            order = Order.objects.get(number=args[1])
+            order = Order.objects.get(number=options['<order number>'])
         except Order.DoesNotExist:
-            raise CommandError("No order found with number %s" % args[1])
+            raise CommandError(
+                "No order found with number %s" % options['<order number>'])
 
         ctx = {
             'order': order,
             'lines': order.lines.all(),
         }
         messages = CommunicationEventType.objects.get_and_render(
-            args[0], ctx)
+            options['<communication_event_type>'], ctx)
         print("Subject: %s\nBody:\n\n%s\nBody HTML:\n\n%s" % (
             messages['subject'], messages['body'], messages['html']))
