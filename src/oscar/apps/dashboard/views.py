@@ -2,7 +2,9 @@ from datetime import timedelta
 from decimal import Decimal as D
 from decimal import ROUND_UP
 
+from django.core.urlresolvers import reverse
 from django.db.models import Avg, Count, Sum
+from django.http import HttpResponseRedirect
 from django.utils.timezone import now
 from django.views.generic import TemplateView
 
@@ -28,6 +30,11 @@ class IndexView(TemplateView):
     index_nonstaff.html template because Oscar's default template will
     display potentially sensitive store information.
     """
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return HttpResponseRedirect(redirect_to=reverse('customer:login'))
+        return super(IndexView, self).dispatch(request, *args, **kwargs)
 
     def get_template_names(self):
         if self.request.user.is_staff:
