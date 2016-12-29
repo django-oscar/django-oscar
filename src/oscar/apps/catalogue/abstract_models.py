@@ -20,7 +20,6 @@ from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import get_language, pgettext_lazy
-
 from treebeard.mp_tree import MP_Node
 
 from oscar.core.decorators import deprecated
@@ -678,8 +677,7 @@ class AbstractProduct(models.Model):
 
     @cached_property
     def num_approved_reviews(self):
-        return self.reviews.filter(
-            status=self.reviews.model.APPROVED).count()
+        return self.reviews.approved().count()
 
 
 class AbstractProductRecommendation(models.Model):

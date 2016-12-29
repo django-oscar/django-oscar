@@ -95,7 +95,7 @@ class CatalogueImporter(object):
 
         # Category
         cat = create_from_breadcrumbs(category_str)
-        ProductCategory.objects.create(product=item, category=cat)
+        ProductCategory.objects.update_or_create(product=item, category=cat)
 
         return item
 

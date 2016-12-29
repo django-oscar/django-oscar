@@ -7,7 +7,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
-from oscar.apps.catalogue.reviews.managers import ApprovedReviewsManager
+from oscar.apps.catalogue.reviews.managers import ProductReviewQuerySet
 from oscar.core import validators
 from oscar.core.compat import AUTH_USER_MODEL
 
@@ -67,8 +67,7 @@ class AbstractProductReview(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
 
     # Managers
-    objects = models.Manager()
-    approved = ApprovedReviewsManager()
+    objects = ProductReviewQuerySet.as_manager()
 
     class Meta:
         abstract = True

@@ -29,7 +29,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='productrecord',
             name='product',
-            field=models.OneToOneField(verbose_name='Product', related_name='stats', to='catalogue.Product'),
+            field=models.OneToOneField(verbose_name='Product', related_name='stats', to='catalogue.Product',
+                                       on_delete=models.CASCADE),
             preserve_default=True,
         ),
     ]

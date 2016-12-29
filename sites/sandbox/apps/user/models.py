@@ -17,7 +17,8 @@ class Profile(models.Model):
     """
     Dummy profile model used for testing
     """
-    user = models.OneToOneField(compat.AUTH_USER_MODEL, related_name="profile")
+    user = models.OneToOneField(compat.AUTH_USER_MODEL, related_name="profile",
+                                on_delete=models.CASCADE)
     MALE, FEMALE = 'M', 'F'
     choices = (
         (MALE, 'Male'),

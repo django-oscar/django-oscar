@@ -1,4 +1,5 @@
 from decimal import Decimal as D
+
 from django.core.exceptions import ObjectDoesNotExist
 
 

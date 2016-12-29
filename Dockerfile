@@ -1,8 +1,8 @@
-FROM python:2.7
+FROM python:3.5
 ENV PYTHONUNBUFFERED 1
 
 COPY ./requirements.txt /requirements.txt
-RUN pip install -r /requirements.txt
+RUN pip3 install -r /requirements.txt psycopg2 raven==5.23.0
 
 RUN groupadd -r django && useradd -r -g django django
 COPY . /app
@@ -18,6 +18,5 @@ USER django
 RUN make build_sandbox
 
 RUN cp --remove-destination /app/src/oscar/static/oscar/img/image_not_found.jpg /app/sites/sandbox/public/media/
-RUN chmod +x /app/sites/sandbox/deploy/run_uwsgi.sh
 
-CMD /app/sites/sandbox/deploy/run_uwsgi.sh
+CMD uwsgi --ini /app/sites/sandbox/uwsgi.ini

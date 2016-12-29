@@ -1,0 +1,20 @@
+version: '2'
+
+services:
+    sandbox:
+        build: .
+        environment:
+            DATABASE_ENGINE: django.db.backends.postgresql
+            DATABASE_NAME: postgres
+            DATABASE_HOST: db
+            DATABASE_USER: postgres
+            DATABASE_PASSWORD: postgres
+        ports:
+            - 80:8080
+        links:
+            - db
+            - elasticsearch
+    db:
+        image: postgres:9.5
+    elasticsearch:
+        image: elasticsearch:1.7

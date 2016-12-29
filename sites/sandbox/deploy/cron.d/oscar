@@ -1,8 +1,0 @@
-SHELL=/bin/bash
-MAILTO=david.winterbottom@gmail.com
-
-# Clean up alerts
-15 0 * * * root source /var/www/oscar/virtualenvs/latest/bin/activate && /var/www/oscar/builds/latest/sites/sandbox/manage.py oscar_cleanup_alerts > /dev/null
-
-# Rebuild search index
-30 * * * * root source /var/www/oscar/virtualenvs/latest/bin/activate && /var/www/oscar/builds/latest/sites/sandbox/manage.py update_index --age=1 > /dev/null

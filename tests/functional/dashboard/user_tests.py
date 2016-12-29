@@ -53,7 +53,8 @@ class DetailViewTests(WebTestCase):
     is_staff = True
 
     def test_user_detail_view(self):
-        response = self.get(reverse('dashboard:user-detail', kwargs={'pk': 1}))
+        response = self.get(
+            reverse('dashboard:user-detail', kwargs={'pk': self.user.pk}))
         self.assertInContext(response, 'user')
         self.assertIsOk(response)
 

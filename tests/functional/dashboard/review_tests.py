@@ -25,9 +25,9 @@ class ReviewsDashboardTests(WebTestCase):
         user1 = UserFactory()
         user2 = UserFactory()
 
-        ProductReviewFactory(user=user1, status=0)
-        ProductReviewFactory(user=user2, status=0)
-        ProductReviewFactory(user=user2, status=0)
+        ProductReviewFactory(pk=1, user=user1, status=0)
+        ProductReviewFactory(pk=2, user=user2, status=0)
+        ProductReviewFactory(pk=3, user=user2, status=0)
 
         assert(ProductReview.objects.count() == 3)
 

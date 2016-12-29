@@ -113,7 +113,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='OrderedProductList',
             fields=[
-                ('handpickedproductlist_ptr', models.OneToOneField(parent_link=True, serialize=False, auto_created=True, primary_key=True, to='promotions.HandPickedProductList')),
+                ('handpickedproductlist_ptr', models.OneToOneField(parent_link=True,
+                                                                   serialize=False,
+                                                                   auto_created=True,
+                                                                   primary_key=True,
+                                                                   to='promotions.HandPickedProductList',
+                                                                   on_delete=models.CASCADE)),
                 ('display_order', models.PositiveIntegerField(default=0, verbose_name='Display Order')),
             ],
             options={

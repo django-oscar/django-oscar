@@ -11,7 +11,6 @@ from django.utils.http import is_safe_url
 from django.utils.module_loading import import_string
 from django.utils.text import slugify as django_slugify
 from django.utils.timezone import get_current_timezone, is_naive, make_aware
-
 from unidecode import unidecode
 
 
