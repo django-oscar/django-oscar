@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db.models import Q
+from django.http import HttpResponseForbidden
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
@@ -201,6 +202,8 @@ class ProductCreateUpdateView(generic.UpdateView):
                          'stockrecord_formset': self.stockrecord_formset}
 
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return HttpResponseForbidden()
         resp = super(ProductCreateUpdateView, self).dispatch(
             request, *args, **kwargs)
         return self.check_objects_or_redirect() or resp
