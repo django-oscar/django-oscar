@@ -8360,10 +8360,6 @@ msgstr ""
 msgid "Review"
 msgstr "Κριτική"
 
-#: templates/oscar/dashboard/reviews/review_delete.html:40
-msgid "Votest"
-msgstr ""
-
 #: templates/oscar/dashboard/reviews/review_list.html:29
 msgid "Review Search"
 msgstr "Αναζήτηση Κριτικών"

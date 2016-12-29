@@ -20,17 +20,27 @@ Say you want to customise ``base.html``.  First you need a project-specific
 templates directory that comes first in the include path.  You can set this up
 as so::
 
-    TEMPLATE_LOADERS = (
-        'django.template.loaders.filesystem.Loader',
-        'django.template.loaders.app_directories.Loader',
-        'django.template.loaders.eggs.Loader',
-    )
+    
 
     import os
     location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', x)
-    TEMPLATE_DIRS = (
-        location('templates'),
-    )
+
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [
+                location('templates'), # templates directory of the project
+            ],
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    'django.template.context_processors.debug',
+                    ...
+                    'oscar.core.context_processors.metadata',
+                ],
+            },
+        },
+    ]
 
 Next copy Oscar's ``base.html`` into your templates directory and customise it
 to suit your needs.
@@ -55,18 +65,27 @@ to.
 Oscar provides a helper variable to make this easy.  First, set up your
 template configuration as so::
 
-    TEMPLATE_LOADERS = (
-        'django.template.loaders.filesystem.Loader',
-        'django.template.loaders.app_directories.Loader',
-    )
-
     import os
-    location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', x)
     from oscar import OSCAR_MAIN_TEMPLATE_DIR
-    TEMPLATE_DIRS = (
-        location('templates'),
-        OSCAR_MAIN_TEMPLATE_DIR,
-    )
+    location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', x)
+
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [
+                location('templates'), # templates directory of the project
+                OSCAR_MAIN_TEMPLATE_DIR,
+            ],
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    'django.template.context_processors.debug',
+                    ...
+                    'oscar.core.context_processors.metadata',
+                ],
+            },
+        },
+    ]
 
 The ``OSCAR_MAIN_TEMPLATE_DIR`` points to the directory above Oscar's normal
 templates directory.  This means that ``path/to/oscar/template.html`` can also
@@ -87,8 +106,8 @@ Overriding individual products partials
 
 Apart from overriding ``catalogue/partials/product.html`` to change the looks
 for all products, you can also override it for individual products by placing
-templates in ``catalogue/partials/product/upc-%s.html`` or
-``catalogue/partials/product/class-%s.html``, where ``%s`` is the product's UPC
+templates in ``catalogue/detail-for-upc-%s.html`` or
+``catalogue/detail-for-class-%s.html``, where ``%s`` is the product's UPC
 or class's slug, respectively.
 
 Example: Changing the analytics package

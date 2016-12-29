@@ -77,6 +77,7 @@ class UpdateView(BulkEditMixin, generic.RedirectView):
     model = Notification
     actions = ('archive', 'delete')
     checkbox_object_name = 'notification'
+    permanent = False
 
     def get_object_dict(self, ids):
         return self.model.objects.filter(

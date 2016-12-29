@@ -8342,10 +8342,6 @@ msgstr "Xóa xem lại \"%(title)s\"?"
 msgid "Review"
 msgstr "Xem lại"
 
-#: templates/oscar/dashboard/reviews/review_delete.html:40
-msgid "Votest"
-msgstr "Votest"
-
 #: templates/oscar/dashboard/reviews/review_list.html:29
 msgid "Review Search"
 msgstr "Tìm kiếm xem lại"

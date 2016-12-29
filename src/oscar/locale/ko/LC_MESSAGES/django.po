@@ -8354,10 +8354,6 @@ msgstr "\"%(title)s\" 후기를 삭제하시겠습니까?"
 msgid "Review"
 msgstr "리뷰"
 
-#: templates/oscar/dashboard/reviews/review_delete.html:40
-msgid "Votest"
-msgstr ""
-
 #: templates/oscar/dashboard/reviews/review_list.html:29
 msgid "Review Search"
 msgstr "후기 검색"

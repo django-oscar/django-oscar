@@ -8362,10 +8362,6 @@ msgstr "מחק ביקורת  '%(title)s'?"
 msgid "Review"
 msgstr "ביקורת"
 
-#: templates/oscar/dashboard/reviews/review_delete.html:40
-msgid "Votest"
-msgstr "הצבעות"
-
 #: templates/oscar/dashboard/reviews/review_list.html:29
 msgid "Review Search"
 msgstr "חיפוש ביקורת"

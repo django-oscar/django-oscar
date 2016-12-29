@@ -8363,10 +8363,6 @@ msgstr "Remover a avaliação \"%(title)s\"?"
 msgid "Review"
 msgstr "Avaliação"
 
-#: templates/oscar/dashboard/reviews/review_delete.html:40
-msgid "Votest"
-msgstr "Mais votadas"
-
 #: templates/oscar/dashboard/reviews/review_list.html:29
 msgid "Review Search"
 msgstr "Pesquisar Avaliação"

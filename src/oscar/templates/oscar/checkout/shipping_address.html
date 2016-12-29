@@ -14,18 +14,19 @@
 {% block order_contents %}{% endblock %}
 
 {% block shipping_address %}
+<div class="col-sm-12">
     <div class="sub-header">
         <h2>{% trans "Where should we ship to?" %}</h2>
     </div>
     {% if user.is_authenticated %}
         {% if addresses %}
             <h3>{% trans "An address from your address book?" %}</h3>
-            <div class="row">
-                <div class="choose-block col-sm-6">
-                    <ul class="list-unstyled">
-                        {% for address in addresses %}
-                            {% block select_address_form %}
-                                <li class="well">
+            <div class="choose-block">
+                <div class="row">
+                    {% for address in addresses %}
+                        {% block select_address_form %}
+                            <div class="col-sm-6">
+                                <div class="well">
                                     <address>
                                         {% block select_address_fields %}
                                             {% for field in address.active_address_fields %}
@@ -42,7 +43,7 @@
                                         {% else %}
                                             <button type="submit" class="btn btn-primary btn-large ship-address" data-loading-text="{% trans 'Saving...' %}">{% trans "Ship to this address" %}</button>
                                         {% endif %}
-                                        
+
                                         <div class="btn-group address-controls">
                                             <a href="{% url 'checkout:user-address-update' pk=address.id %}" class="btn btn-default btn-sm">{% trans "Edit address" %}</a>
                                             <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
@@ -53,19 +54,16 @@
                                             </ul>
                                         </div>
                                     </form>
-                                </li>
-                                {% if forloop.counter|divisibleby:2 %}
-                                    </ul>
-                                    {% if not forloop.last %}<ul class="row">{% endif %}
-                                {% endif %}
-                            {% endblock %}
-                        {% endfor %}
-                    </ul>
+                                </div>
+                            </div>
+                            {% if forloop.counter|divisibleby:2 %}
+                                </div><div class="row">
+                            {% endif %}
+                        {% endblock %}
+                    {% endfor %}
                 </div>
             </div>
-            <h3>
-                {% trans "Or a new address?" %} 
-            </h3>
+            <h3>{% trans "Or a new address?" %}</h3>
         {% endif %}
     {% endif %}
 
@@ -78,12 +76,12 @@
                     <div class="col-sm-offset-4 col-sm-8">
                         <button type="submit" class="btn btn-lg btn-primary" data-loading-text="{% trans 'Continuing...' %}">{% trans "Continue" %}</button>
                         {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
-
                     </div>
                 </div>
             </form>
         </div>
     {% endblock %}
+</div>
 {% endblock shipping_address %}
 
 {% block shipping_method %}{% endblock %}

@@ -8355,10 +8355,6 @@ msgstr "Slet anmeldelse \"%(title)s\"?"
 msgid "Review"
 msgstr "Anmeldelse"
 
-#: templates/oscar/dashboard/reviews/review_delete.html:40
-msgid "Votest"
-msgstr "Stemmer"
-
 #: templates/oscar/dashboard/reviews/review_list.html:29
 msgid "Review Search"
 msgstr "Søgning i anmeldelser"

@@ -60,9 +60,21 @@ class TestBasketLineForm(TestCase):
         form = self.build_form(quantity=0)
         self.assertTrue(form.is_valid())
 
-    def test_enforces_max_line_quantity(self):
+    def test_enforces_max_line_quantity_for_new_product(self):
         invalid_qty = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD + 1
         form = self.build_form(quantity=invalid_qty)
+        self.assertFalse(form.is_valid())
+
+    def test_enforce_max_line_quantity_for_existing_product(self):
+        settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = 10
+        self.basket.flush()
+        product = factories.create_product(num_in_stock=20)
+        add_product(self.basket, D('100'), 4, product)
+        self.line = self.basket.all_lines()[0]
+        form = self.build_form(quantity=6)
+        self.assertTrue(form.is_valid())
+        form.save()
+        form = self.build_form(quantity=11)
         self.assertFalse(form.is_valid())
 
     def test_basketline_formset_ordering(self):

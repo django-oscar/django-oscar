@@ -8370,10 +8370,6 @@ msgstr "Smazat recenzi \"%(title)s\"?"
 msgid "Review"
 msgstr "Recenze"
 
-#: templates/oscar/dashboard/reviews/review_delete.html:40
-msgid "Votest"
-msgstr "Počet hlasů"
-
 #: templates/oscar/dashboard/reviews/review_list.html:29
 msgid "Review Search"
 msgstr "Vyhledávání recenzí"

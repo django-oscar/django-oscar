@@ -123,7 +123,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            location('_site/templates'),
+            location('templates'),
             oscar.OSCAR_MAIN_TEMPLATE_DIR,
         ],
         'OPTIONS': {

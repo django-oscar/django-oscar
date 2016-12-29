@@ -8396,10 +8396,6 @@ msgstr "Удалить отзыв \"%(title)s\"?"
 msgid "Review"
 msgstr "Отзыв"
 
-#: templates/oscar/dashboard/reviews/review_delete.html:40
-msgid "Votest"
-msgstr "Всего оценок"
-
 #: templates/oscar/dashboard/reviews/review_list.html:29
 msgid "Review Search"
 msgstr "Поиск Отзыва"

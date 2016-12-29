@@ -8369,10 +8369,6 @@ msgstr "Sterge recenzia \"%(title)s\"?"
 msgid "Review"
 msgstr "Recenzie"
 
-#: templates/oscar/dashboard/reviews/review_delete.html:40
-msgid "Votest"
-msgstr "Voturi"
-
 #: templates/oscar/dashboard/reviews/review_list.html:29
 msgid "Review Search"
 msgstr "Cautare Recenzii"

@@ -1,5 +1,6 @@
 # flake8: noqa, because URL syntax is more readable with long lines
 
+from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse_lazy
@@ -55,8 +56,10 @@ class Shop(Application):
             url(r'^password-reset/complete/$',
                 login_forbidden(auth_views.password_reset_complete),
                 name='password-reset-complete'),
-            url(r'', include(self.promotions_app.urls)),
         ]
+
+        if settings.OSCAR_PROMOTIONS_ENABLED:
+            urls.append(url(r'', include(self.promotions_app.urls)))
         return urls
 
 application = Shop()

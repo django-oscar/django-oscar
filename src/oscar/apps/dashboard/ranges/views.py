@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core import exceptions
 from django.core.urlresolvers import reverse
+from django.db.models import Count
 from django.http import HttpResponseRedirect
 from django.shortcuts import HttpResponse, get_object_or_404
 from django.template.loader import render_to_string
@@ -167,12 +168,13 @@ class RangeProductListView(BulkEditMixin, ListView):
                 request,
                 _("No product(s) were found with SKU or UPC matching %s") %
                 ", ".join(missing_skus))
+        self.check_imported_products_sku_duplicates(request, products)
 
     def handle_file_products(self, request, range, form):
         if 'file_upload' not in request.FILES:
             return
         upload = self.create_upload_object(request, range)
-        upload.process()
+        products = upload.process()
         if not upload.was_processing_successful():
             messages.error(request, upload.error_message)
         else:
@@ -182,6 +184,7 @@ class RangeProductListView(BulkEditMixin, ListView):
                  'upload': upload})
             messages.success(request, msg, extra_tags='safe noicon block')
         upload.delete_file()
+        self.check_imported_products_sku_duplicates(request, products)
 
     def create_upload_object(self, request, range):
         f = request.FILES['file_upload']
@@ -197,10 +200,22 @@ class RangeProductListView(BulkEditMixin, ListView):
         )
         return upload
 
+    def check_imported_products_sku_duplicates(self, request, queryset):
+        dupe_sku_products = queryset.values('stockrecords__partner_sku')\
+                                    .annotate(total=Count('stockrecords__partner_sku'))\
+                                    .filter(total__gt=1).order_by('stockrecords__partner_sku')
+        if dupe_sku_products:
+            dupe_skus = [p['stockrecords__partner_sku'] for p in dupe_sku_products]
+            messages.warning(
+                request,
+                _("There are more than one product with SKU %s") %
+                ", ".join(dupe_skus)
+            )
+
 
 class RangeReorderView(View):
     def post(self, request, pk):
-        order = dict(request.POST).get('product[]')
+        order = dict(request.POST).get('product')
         self._save_page_order(order)
         return HttpResponse(status=200)
 

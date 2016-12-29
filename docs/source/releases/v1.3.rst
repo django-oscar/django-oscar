@@ -2,11 +2,7 @@
 Oscar 1.3 release notes
 =======================
 
-.. warning::
-
-    Oscar 1.3 is still in development. This document is a work-in-progress.
-
-:release: TBD
+:release: 2016-08-13
 
 Welcome to Oscar 1.3, a minor release which finally brings compatibility with
 Django 1.9.
@@ -39,6 +35,8 @@ What's new in Oscar 1.3?
  - Make more use of the datepicker in the dashboard (`#1983`)
  - Add `site` kwarg to the OrderCreator class (`#2014`)
  - Update Oscar's `get_class()` method to work with non oscar modules (`#2039`)
+ - The ProductAttributesContainer is now moved to `catalogue.product_attribute`
+   and can now be replaced more easily.
 
 
 .. _`#1920`: https://github.com/django-oscar/django-oscar/issues/1920
@@ -51,7 +49,17 @@ What's new in Oscar 1.3?
 Dependency changes
 ------------------
 
-* The following packages are updated:
+.. warning::
+
+    Oscar depends on sorl-thumbnail 12.4a1. Unfortunately you have to 
+    fake the initial migration of this application since older versions didn't
+    include migrations. This can be done via::
+
+        python manage.py migrate thumbnail --fake
+
+
+The following packages are updated:
+    - `sorl-thumbnail == 12.4a1` (Django 1.9 support)
     - `django-haystack >= 2.5.0` (Django 1.9 support)
     - `mock < 3.0`
-    - `factory-boy > 2.4.1,< 3.0
+    - `factory-boy > 2.4.1,< 3.0`

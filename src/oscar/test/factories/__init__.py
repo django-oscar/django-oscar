@@ -7,7 +7,6 @@ from django.conf import settings
 from django.utils import timezone
 
 from oscar.apps.offer import models
-from oscar.apps.partner import strategy, availability, prices
 from oscar.core.loading import get_class, get_model
 from oscar.test.factories.address import *  # noqa
 from oscar.test.factories.basket import *  # noqa
@@ -19,6 +18,7 @@ from oscar.test.factories.order import *  # noqa
 from oscar.test.factories.partner import *  # noqa
 from oscar.test.factories.payment import *  # noqa
 from oscar.test.factories.voucher import *  # noqa
+from oscar.test.factories.wishlists import * # noqa
 
 
 Basket = get_model('basket', 'Basket')
@@ -29,6 +29,10 @@ OrderTotalCalculator = get_class('checkout.calculators',
                                  'OrderTotalCalculator')
 Partner = get_model('partner', 'Partner')
 StockRecord = get_model('partner', 'StockRecord')
+PurchaseInfo = get_class('partner.strategy', 'PurchaseInfo')
+Default = get_class('partner.strategy', 'Default')
+StockRequired = get_class('partner.availability', 'StockRequired')
+FixedPrice = get_class('partner.prices', 'FixedPrice')
 
 Product = get_model('catalogue', 'Product')
 ProductClass = get_model('catalogue', 'ProductClass')
@@ -62,13 +66,13 @@ def create_stockrecord(product=None, price_excl_tax=None, partner_sku=None,
 
 
 def create_purchase_info(record):
-    return strategy.PurchaseInfo(
-        price=prices.FixedPrice(
+    return PurchaseInfo(
+        price=FixedPrice(
             record.price_currency,
             record.price_excl_tax,
             D('0.00')  # Default to no tax
         ),
-        availability=availability.StockRequired(
+        availability=StockRequired(
             record.net_stock_level),
         stockrecord=record
     )
@@ -131,7 +135,7 @@ def create_product_image(product=None,
 
 def create_basket(empty=False):
     basket = Basket.objects.create()
-    basket.strategy = strategy.Default()
+    basket.strategy = Default()
     if not empty:
         product = create_product()
         create_stockrecord(product, num_in_stock=2)
@@ -147,7 +151,7 @@ def create_order(number=None, basket=None, user=None, shipping_address=None,
     """
     if not basket:
         basket = Basket.objects.create()
-        basket.strategy = strategy.Default()
+        basket.strategy = Default()
         product = create_product()
         create_stockrecord(
             product, num_in_stock=10, price_excl_tax=D('10.00'))

@@ -155,6 +155,65 @@ class TestPartialRange(TestCase):
 
         self.assertEqual(self.range.num_products(), 2)
 
+    def test_product_duplicated_in_all_products(self):
+        """Making sure product is not duplicated in range products if it has multiple categories assigned."""
+
+        included_category1 = catalogue_models.Category.add_root(name="cat1")
+        included_category2 = catalogue_models.Category.add_root(name="cat2")
+        product = create_product()
+        catalogue_models.ProductCategory.objects.create(
+            product=product, category=included_category1)
+        catalogue_models.ProductCategory.objects.create(
+            product=product, category=included_category2)
+
+        self.range.included_categories.add(included_category1)
+        self.range.included_categories.add(included_category2)
+        self.range.add_product(product)
+
+        all_product_ids = list(self.range.all_products().values_list('id', flat=True))
+        product_occurances_in_range = all_product_ids.count(product.id)
+        self.assertEqual(product_occurances_in_range, 1)
+
+    def test_product_remove_from_range(self):
+        included_category = catalogue_models.Category.add_root(name="root")
+        product = create_product()
+        catalogue_models.ProductCategory.objects.create(
+            product=product, category=included_category)
+
+        self.range.included_categories.add(included_category)
+        self.range.add_product(product)
+
+        all_products = self.range.all_products()
+        self.assertTrue(product in all_products)
+
+        self.range.remove_product(product)
+
+        all_products = self.range.all_products()
+        self.assertFalse(product in all_products)
+
+        # Re-adding product should return it to the products range
+        self.range.add_product(product)
+
+        all_products = self.range.all_products()
+        self.assertTrue(product in all_products)
+
+    def test_range_is_reordable(self):
+        product = create_product()
+        self.range.add_product(product)
+        self.assertTrue(self.range.is_reorderable)
+
+        included_category = catalogue_models.Category.add_root(name="root")
+        catalogue_models.ProductCategory.objects.create(
+            product=product, category=included_category)
+        self.range.included_categories.add(included_category)
+
+        self.range.invalidate_cached_ids()
+        self.assertFalse(self.range.is_reorderable)
+
+        self.range.included_categories.remove(included_category)
+        self.range.invalidate_cached_ids()
+        self.assertTrue(self.range.is_reorderable)
+
 
 class TestRangeModel(TestCase):
 

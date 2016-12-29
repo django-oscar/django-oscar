@@ -12,7 +12,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     # Search text
     text = indexes.EdgeNgramField(
         document=True, use_template=True,
-        template_name='oscar/search/indexes/product/item_text.txt')
+        template_name='search/indexes/product/item_text.txt')
 
     upc = indexes.CharField(model_attr="upc", null=True)
     title = indexes.EdgeNgramField(model_attr='title', null=True)

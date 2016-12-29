@@ -1,11 +1,11 @@
 from django.conf.urls import url
 
 from oscar.apps.promotions.conf import PROMOTION_CLASSES
-from oscar.core.application import Application
+from oscar.core.application import DashboardApplication
 from oscar.core.loading import get_class
 
 
-class PromotionsDashboardApplication(Application):
+class PromotionsDashboardApplication(DashboardApplication):
     name = None
     default_permissions = ['is_staff', ]
 

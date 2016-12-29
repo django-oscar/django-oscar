@@ -8361,10 +8361,6 @@ msgstr "Verwijder beoordeling \"%(title)s\"?"
 msgid "Review"
 msgstr "Review"
 
-#: templates/oscar/dashboard/reviews/review_delete.html:40
-msgid "Votest"
-msgstr "Stemmen"
-
 #: templates/oscar/dashboard/reviews/review_list.html:29
 msgid "Review Search"
 msgstr "Beoordeling Zoeken"

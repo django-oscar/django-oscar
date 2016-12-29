@@ -8364,10 +8364,6 @@ msgstr "删除评论\"%(title)s\"?"
 msgid "Review"
 msgstr "评论"
 
-#: templates/oscar/dashboard/reviews/review_delete.html:40
-msgid "Votest"
-msgstr "最多评论了的"
-
 #: templates/oscar/dashboard/reviews/review_list.html:29
 msgid "Review Search"
 msgstr "搜索评论"

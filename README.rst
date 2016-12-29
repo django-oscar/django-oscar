@@ -170,6 +170,7 @@ The following are community-written extensions:
 * django-oscar-przelewy24_ - Integration with the Przelewy24 payment gateway
 * oscar-sagepay_ - Payment integration with Sage Pay
 * django-oscar-erp_
+* django-oscar-sofortueberweisung_ - Integration with SOFORT
 
 Let us know if you're writing a new one!
 
@@ -180,6 +181,7 @@ Let us know if you're writing a new one!
 .. _django-oscar-adyen: https://github.com/oscaro/django-oscar-adyen
 .. _django-oscar-przelewy24: https://github.com/kisiel/django-oscar-przelewy24
 .. _oscar-sagepay: https://github.com/udox/oscar-sagepay
+.. _django-oscar-sofortueberweisung: https://github.com/byteyard/django-oscar-sofortueberweisung
 
 License
 -------
@@ -240,6 +242,7 @@ Non-Tangent:
 * Partecipa Cards - http://www.partecipacards.com
 * Chiyome - https://chiyome.com
 * Bike Parts Market - https://www.bikepartsmarket.com
+* Dadagraphix - https://dadagraphix.com
 
 .. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/dolbeau.thumb.png
     :target: http://www.dolbeau.ca
@@ -259,6 +262,9 @@ Non-Tangent:
 .. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/bpm.thumb.png
     :target: https://www.bikepartsmarket.com
 
+.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/dadagraphix.thumb.png
+    :target: https://dadagraphix.com
+
 Many more on the way.  If you use Oscar in production, please let us know.
 
 Looking for commercial support?
@@ -266,8 +272,6 @@ Looking for commercial support?
 
 If you are interested in having an Oscar project built for you, or for
 development of an existing Oscar site, Tangent can
-help.  Please get in touch via `oscar@tangentlabs.co.uk`_ or via the `Tangent
-Snowball`_ site.
+help.  Please get in touch via `oscar@tangent.co.uk`_.
 
-.. _`oscar@tangentlabs.co.uk`: mailto:oscar@tangentlabs.co.uk
-.. _`Tangent Snowball`: http://www.tangentsnowball.com/products/oscar
+.. _`oscar@tangent.co.uk`: mailto:oscar@tangent.co.uk

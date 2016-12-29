@@ -22,6 +22,7 @@ build_sandbox:
 	sites/sandbox/manage.py loaddata sites/sandbox/fixtures/orders.json
 	sites/sandbox/manage.py clear_index --noinput
 	sites/sandbox/manage.py update_index catalogue
+	sites/sandbox/manage.py thumbnail cleanup
 
 sandbox: install build_sandbox
 

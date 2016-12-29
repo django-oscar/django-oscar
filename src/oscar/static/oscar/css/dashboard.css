@@ -3406,6 +3406,9 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .navbar-form .select2-container.form-control {
   display: inline-block;
 }
+.navbar-form .form-group .form-inline {
+  display: inline-block;
+}
 .navbar-form .help-block:first-child,
 .navbar-form .error-block:first-child {
   display: none;
@@ -5854,6 +5857,14 @@ caption > i,
 .table-header > i {
   padding-right: 10px;
 }
+body.dashboard-login {
+  padding-top: 60px;
+  background-image: none;
+  background-color: #f5f5f5;
+}
+body.dashboard-login h1 {
+  text-align: center;
+}
 #order_graph {
   position: relative;
   margin-bottom: 5em;
@@ -6125,6 +6136,18 @@ caption > i,
 }
 .search-filter-list .label {
   font-size: 100%;
+}
+body.dragging,
+body.dragging * {
+  cursor: move !important;
+}
+.draggable {
+  background-color: #FFF49F;
+}
+.dragged {
+  position: absolute;
+  opacity: 0.5;
+  z-index: 2000;
 }
 /*!
  *  Font Awesome 3.2.1

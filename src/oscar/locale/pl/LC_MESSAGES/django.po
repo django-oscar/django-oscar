@@ -8383,10 +8383,6 @@ msgstr "Usunąć recenzję \"%(title)s\"?"
 msgid "Review"
 msgstr "Recenzja"
 
-#: templates/oscar/dashboard/reviews/review_delete.html:40
-msgid "Votest"
-msgstr "Oddane Głosy"
-
 #: templates/oscar/dashboard/reviews/review_list.html:29
 msgid "Review Search"
 msgstr "Wyszukaj recenzje"

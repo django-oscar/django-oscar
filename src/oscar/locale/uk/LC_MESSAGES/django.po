@@ -8373,10 +8373,6 @@ msgstr "Видалити відгук \"%(title)s\"?"
 msgid "Review"
 msgstr "Відгук"
 
-#: templates/oscar/dashboard/reviews/review_delete.html:40
-msgid "Votest"
-msgstr "Всього оцінок"
-
 #: templates/oscar/dashboard/reviews/review_list.html:29
 msgid "Review Search"
 msgstr "Пошук серед відгуків"

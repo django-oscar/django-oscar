@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -8,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
 
 from oscar.apps.catalogue.reviews.managers import ProductReviewQuerySet
+from oscar.apps.catalogue.reviews.utils import get_default_review_status
 from oscar.core import validators
 from oscar.core.compat import AUTH_USER_MODEL
 
@@ -52,11 +52,9 @@ class AbstractProductReview(models.Model):
         (APPROVED, _("Approved")),
         (REJECTED, _("Rejected")),
     )
-    default_status = APPROVED
-    if settings.OSCAR_MODERATE_REVIEWS:
-        default_status = FOR_MODERATION
+
     status = models.SmallIntegerField(
-        _("Status"), choices=STATUS_CHOICES, default=default_status)
+        _("Status"), choices=STATUS_CHOICES, default=get_default_review_status)
 
     # Denormalised vote totals
     total_votes = models.IntegerField(

@@ -8423,10 +8423,6 @@ msgstr "Delete review \"%(title)s\"?"
 msgid "Review"
 msgstr "تقييم"
 
-#: templates/oscar/dashboard/reviews/review_delete.html:40
-msgid "Votest"
-msgstr "التصويتات"
-
 #: templates/oscar/dashboard/reviews/review_list.html:29
 msgid "Review Search"
 msgstr "Review Search"

@@ -8371,10 +8371,6 @@ msgstr "Vymazať recenziu \"%(title)s\"?"
 msgid "Review"
 msgstr "Recenzia"
 
-#: templates/oscar/dashboard/reviews/review_delete.html:40
-msgid "Votest"
-msgstr "Hlasov"
-
 #: templates/oscar/dashboard/reviews/review_list.html:29
 msgid "Review Search"
 msgstr "Vyhľadávanie v recenziách"

@@ -840,6 +840,12 @@ class AbstractRange(models.Model):
             relation.display_order = display_order
             relation.save()
 
+        # Remove product from excluded products if it was removed earlier and
+        # re-added again, thus it returns back to the range product list.
+        if product.id in self._excluded_product_ids():
+            self.excluded_products.remove(product)
+            self.invalidate_cached_ids()
+
     def remove_product(self, product):
         """
         Remove product from range. To save on queries, this function does not
@@ -847,6 +853,12 @@ class AbstractRange(models.Model):
         """
         RangeProduct = get_model('offer', 'RangeProduct')
         RangeProduct.objects.filter(range=self, product=product).delete()
+        # Making sure product will be excluded from range products list by adding to
+        # respective field. Otherwise, it could be included as a product from included
+        # category or etc.
+        self.excluded_products.add(product)
+        # Invalidating cached property value with list of IDs of already excluded products.
+        self.invalidate_cached_ids()
 
     def contains_product(self, product):  # noqa (too complex (12))
         """
@@ -930,6 +942,11 @@ class AbstractRange(models.Model):
 
         return self.__category_ids
 
+    def invalidate_cached_ids(self):
+        self.__category_ids = None
+        self.__included_product_ids = None
+        self.__excluded_product_ids = None
+
     def num_products(self):
         # Delegate to a proxy class if one is provided
         if self.proxy:
@@ -963,9 +980,16 @@ class AbstractRange(models.Model):
     @property
     def is_editable(self):
         """
-        Test whether this product can be edited in the dashboard
+        Test whether this range can be edited in the dashboard.
         """
         return not self.proxy_class
+
+    @property
+    def is_reorderable(self):
+        """
+        Test whether products for the range can be re-ordered.
+        """
+        return len(self._class_ids()) == 0 and len(self._category_ids()) == 0
 
 
 class AbstractRangeProduct(models.Model):
@@ -1054,7 +1078,7 @@ class AbstractRangeProductFileUpload(models.Model):
         existing_ids = existing_skus.union(existing_upcs)
         new_ids = all_ids - existing_ids
 
-        Product = models.get_model('catalogue', 'Product')
+        Product = get_model('catalogue', 'Product')
         products = Product._default_manager.filter(
             models.Q(stockrecords__partner_sku__in=new_ids) |
             models.Q(upc__in=new_ids))
@@ -1071,6 +1095,7 @@ class AbstractRangeProductFileUpload(models.Model):
         dupes = set(all_ids).intersection(existing_ids)
 
         self.mark_as_processed(products.count(), len(missing_ids), len(dupes))
+        return products
 
     def extract_ids(self):
         """

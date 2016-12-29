@@ -9165,13 +9165,15 @@ input[type="number"][id*="quantity"] {
   max-width: 55px;
 }
 .checkout-quantity .input-group {
-  max-width: 130px;
+  max-width: 160px;
 }
 .checkout-quantity .input-group input[type="number"][id*="quantity"] {
-  max-width: none;
+  max-width: 65px;
+}
+.checkout-quantity .input-group .input-group-btn {
+  min-width: 95px;
 }
 .checkout-quantity input {
-  margin-right: 2px;
   margin-bottom: 0px;
 }
 .basket-title {
@@ -9222,22 +9224,6 @@ input[type="number"][id*="quantity"] {
 }
 .total {
   background-color: #FDF5D9!important;
-}
-.choose-block ul:before,
-.choose-block ul:after {
-  content: " ";
-  display: table;
-}
-.choose-block ul:after {
-  clear: both;
-}
-.choose-block ul:before,
-.choose-block ul:after {
-  content: " ";
-  display: table;
-}
-.choose-block ul:after {
-  clear: both;
 }
 .choose-block .well {
   position: relative;

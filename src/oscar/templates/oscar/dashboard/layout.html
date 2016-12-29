@@ -42,7 +42,7 @@
                     <li><span>{% trans "Welcome" %} <em>{{ user.get_full_name|default:request.user.email }}</em></span></li>
                     <li><a href="{{ homepage_url }}"><i class="icon-home"></i> {% trans "Return to site" %}</a></li>
                     <li><a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "Account" %}</a></li>
-                    <li><a href="{% url 'customer:logout' %}"><i class="icon-signout"></i> {% trans "Log out" %}</a></li>
+                    <li><a href="{% url 'dashboard:logout' %}"><i class="icon-signout"></i> {% trans "Log out" %}</a></li>
                 </ul>
             </div>
         </div><!-- /navbar-inner -->
@@ -153,6 +153,7 @@
     <script src="{% static "oscar/js/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.all.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "oscar/js/inputmask/jquery.inputmask.bundle.min.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "oscar/js/select2/select2.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/jquery-sortable/jquery-sortable-min.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "oscar/js/oscar/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
 
     {# We don't use a fallback for tinyMCE as it dynamically loads several other files #}
