@@ -444,6 +444,7 @@ class TestPaymentDetailsWithPreview(CheckoutMixin, WebTestCase):
         form.action = reverse('checkout:payment-details')
         self.assertEqual(form.submit(status="*").status_code, http_client.BAD_REQUEST)
 
+
 @override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True)
 class TestPlacingOrder(CheckoutMixin, WebTestCase):
     is_anonymous = True

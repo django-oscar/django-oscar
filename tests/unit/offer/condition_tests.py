@@ -54,4 +54,3 @@ class TestCustomCondition(TestCase):
     def test_is_satified_by_match(self):
         self.basket.owner = factories.UserFactory(first_name="Barry")
         self.assertTrue(self.offer.is_condition_satisfied(self.basket))
-

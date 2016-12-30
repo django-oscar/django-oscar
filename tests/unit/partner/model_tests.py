@@ -25,7 +25,7 @@ class TestStockRecord(TestCase):
 
     def test_net_stock_level_with_allocation(self):
         self.stockrecord.allocate(5)
-        self.assertEqual(10-5, self.stockrecord.net_stock_level)
+        self.assertEqual(10 - 5, self.stockrecord.net_stock_level)
 
     def test_allocated_does_not_alter_num_in_stock(self):
         self.stockrecord.allocate(5)

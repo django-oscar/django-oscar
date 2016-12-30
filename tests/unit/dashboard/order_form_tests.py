@@ -9,8 +9,10 @@ from oscar.apps.dashboard.orders import forms
 class TestOrderStatsForm(TestCase):
 
     def test_returns_inclusive_date_filters(self):
-        data = {'date_from': '2012-08-03',
-                'date_to': '2012-08-03',}
+        data = {
+            'date_from': '2012-08-03',
+            'date_to': '2012-08-03'
+        }
         form = forms.OrderStatsForm(data)
         self.assertTrue(form.is_valid())
         filters = form.get_filters()

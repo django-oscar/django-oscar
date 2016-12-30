@@ -82,8 +82,7 @@ class TestCreateParentProduct(ProductWebTest):
 
     def test_requires_a_category(self):
         response = self.submit(title="Nice T-Shirt")
-        self.assertContains(response,
-            "must have at least one category")
+        self.assertContains(response, "must have at least one category")
         self.assertEqual(Product.objects.count(), 0)
 
     def test_for_smoke(self):

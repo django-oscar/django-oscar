@@ -30,8 +30,9 @@ class TestDashboardIndexForStaffUser(WebTestCase):
     def test_includes_hourly_report_with_no_orders(self):
         report = IndexView().get_hourly_report()
         self.assertEqual(len(report), 3)
-        for i, j in zip(sorted(report.keys()),
-                ['max_revenue', 'order_total_hourly', 'y_range']):
+
+        keys = ['max_revenue', 'order_total_hourly', 'y_range']
+        for i, j in zip(sorted(report.keys()), keys):
             self.assertEqual(i, j)
 
         self.assertEqual(len(report['order_total_hourly']), 12)

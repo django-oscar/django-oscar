@@ -30,11 +30,11 @@ class TestBankCardValidation(TestCase):
             for number in numbers:
                 sniffed_bankcard_type = bankcards.bankcard_type(number)
                 self.assertEqual(expected_bankcard_type, sniffed_bankcard_type)
-    
+
     def test_valid_numbers(self):
         for number in self.valid_numbers:
             self.assertTrue(bankcards.luhn(number))
-    
+
     def test_invalid_numbers(self):
         for number in self.invalid_numbers:
             self.assertFalse(bankcards.luhn(number))

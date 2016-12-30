@@ -41,7 +41,8 @@ class User(AbstractUser):
     """
     Custom user based on Oscar's AbstractUser
     """
-    username = models.CharField(_('username'), max_length=30, unique=True,
+    username = models.CharField(
+        _('username'), max_length=30, unique=True,
         help_text=_('Required. 30 characters or fewer. Letters, numbers and '
                     '@/./+/-/_ characters'),
         validators=[

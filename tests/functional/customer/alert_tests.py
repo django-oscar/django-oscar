@@ -39,15 +39,14 @@ class TestAUserWithAnActiveStockAlert(WebTest):
         self.assertEqual(1, len(alerts))
         alert = alerts[0]
         self.assertFalse(alert.is_cancelled)
-        self.app.get(reverse('customer:alerts-cancel-by-pk',
-                             kwargs={'pk': alert.pk}),
-                             user=self.user)
+        self.app.get(
+            reverse('customer:alerts-cancel-by-pk', kwargs={'pk': alert.pk}),
+            user=self.user)
 
         alerts = ProductAlert.objects.filter(user=self.user)
         self.assertEqual(1, len(alerts))
         alert = alerts[0]
         self.assertTrue(alert.is_cancelled)
-
 
     def test_gets_notified_when_it_is_back_in_stock(self):
         self.stockrecord.num_in_stock = 10

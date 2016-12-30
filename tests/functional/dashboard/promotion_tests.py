@@ -7,11 +7,12 @@ class ViewTests(WebTestCase):
     is_staff = True
 
     def test_pages_exist(self):
-        urls = [reverse('dashboard:promotion-list'),
-                reverse('dashboard:promotion-create-rawhtml'),
-                reverse('dashboard:promotion-create-singleproduct'),
-                reverse('dashboard:promotion-create-image'),
-               ]
+        urls = [
+            reverse('dashboard:promotion-list'),
+            reverse('dashboard:promotion-create-rawhtml'),
+            reverse('dashboard:promotion-create-singleproduct'),
+            reverse('dashboard:promotion-create-image'),
+        ]
         for url in urls:
             self.assertIsOk(self.get(url))
 

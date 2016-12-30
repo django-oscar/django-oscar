@@ -1,6 +1,5 @@
 from oscar.test.testcases import WebTestCase
 from oscar.test.factories import create_product, UserFactory
-from oscar.core.compat import get_user_model
 from oscar.apps.catalogue.reviews.signals import review_added
 from oscar.test.contextmanagers import mock_signal_receiver
 

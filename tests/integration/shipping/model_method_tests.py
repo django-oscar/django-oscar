@@ -55,7 +55,7 @@ class TestOrderAndItemCharges(TestCase):
 
         charge = self.method.calculate(basket)
 
-        self.assertEqual(D('5.00') + 7*D('1.00'), charge.incl_tax)
+        self.assertEqual(D('5.00') + 7 * D('1.00'), charge.incl_tax)
 
 
 class ZeroFreeThresholdTest(TestCase):

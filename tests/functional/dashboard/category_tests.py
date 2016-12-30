@@ -34,9 +34,9 @@ class TestCategoryDashboard(WebTestCase):
         form['_position'] = 'left'
         form['_ref_node_id'] = c.id
         response = form.submit()
-        self.assertRedirects(response,
-                             reverse('dashboard:catalogue-category-detail-list',
-                                    args=(b.pk,)))
+        self.assertRedirects(
+            response,
+            reverse('dashboard:catalogue-category-detail-list', args=(b.pk,)))
 
     def test_handles_invalid_form_gracefully(self):
         dashboard_index = self.app.get(reverse('dashboard:index'),

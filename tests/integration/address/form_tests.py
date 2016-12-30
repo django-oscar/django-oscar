@@ -1,7 +1,6 @@
 from django.test import TestCase
 
 from oscar.apps.address import models, forms
-from oscar.core.compat import get_user_model
 from oscar.test.factories import UserFactory
 
 

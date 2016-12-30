@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from django.test.testcases import TestCase
 from django.db import models
 from django import forms
@@ -33,7 +33,7 @@ equal_number_strings = ['+44 113 8921113', '+441138921113']
 local_numbers = [
     ('GB', '01606 751 78'),
     ('DE', '0176/96842671'),
-    ]
+]
 invalid_numbers = ['+44 113 892111', ]
 
 

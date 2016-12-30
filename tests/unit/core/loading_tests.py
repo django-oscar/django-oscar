@@ -133,8 +133,8 @@ class TestOverridingCoreApps(TestCase):
 
     def test_means_the_overriding_model_is_registered_first(self):
         klass = get_model('partner', 'StockRecord')
-        self.assertEqual('tests._site.apps.partner.models',
-                          klass.__module__)
+        self.assertEqual(
+            'tests._site.apps.partner.models', klass.__module__)
 
 
 class TestAppLabelsForModels(TestCase):
@@ -145,7 +145,7 @@ class TestAppLabelsForModels(TestCase):
         missing = []
         for model in models:
             # Ignore non-Oscar models
-            if not 'oscar' in repr(model):
+            if 'oscar' not in repr(model):
                 continue
             # Don't know how to get the actual model's Meta class. But if
             # the parent doesn't have a Meta class, it's doesn't have an

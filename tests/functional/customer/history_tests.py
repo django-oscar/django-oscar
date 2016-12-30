@@ -5,7 +5,7 @@ from django.http import HttpRequest
 
 from oscar.test.factories import create_product
 from oscar.core.compat import get_user_model
-from oscar.apps.customer  import history
+from oscar.apps.customer import history
 from oscar.templatetags.history_tags import get_back_button
 
 

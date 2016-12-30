@@ -23,7 +23,7 @@ class TestCatalogueViews(WebTestCase):
                 reverse('dashboard:stock-alert-list')]
         for url in urls:
             self.assertIsOk(self.get(url))
-    
+
     def test_upc_filter(self):
         product1 = create_product(upc='123')
         product2 = create_product(upc='12')

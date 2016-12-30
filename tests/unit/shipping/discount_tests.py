@@ -65,4 +65,3 @@ class TestDiscountingMethodsWithTax(TestCase):
         basket = Basket()
         charge = self.method.calculate(basket)
         self.assertEqual(D('7.00'), charge.incl_tax)
-

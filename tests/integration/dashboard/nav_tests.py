@@ -25,6 +25,3 @@ class TestCategory(TestCase):
     def test_non_staff_user_has_empty_menu(self):
         menu = get_nodes(self.non_staff_user)
         self.assertEqual(menu, [])
-
-
-

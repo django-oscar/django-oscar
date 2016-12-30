@@ -118,7 +118,6 @@ class TestANonEmptyBasket(TestCase):
                     return prices.Unavailable()
                 return super(UnavailableProductStrategy, self).pricing_policy(product, stockrecord)
 
-
         try:
             self.basket.strategy = UnavailableProductStrategy()
             self.assertEqual(self.basket.all_lines()[1].get_warning(), u"'D\xf9\uff4d\u03fb\u03d2 title' is no longer available")

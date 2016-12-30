@@ -4,7 +4,6 @@ from django.utils import six
 
 from oscar.apps.basket import views
 from oscar.test.factories import BasketFactory, VoucherFactory
-from oscar.test.utils import RequestFactory
 
 
 class TestVoucherAddView(TestCase):

@@ -6,10 +6,11 @@ from django.forms import ValidationError
 
 
 from oscar.apps.payment import forms, models
- # types=[bankcards.VISA, bankcards.VISA_ELECTRON, bankcards.MASTERCARD,
- #               bankcards.AMEX, bankcards.MAESTRO, bankcards.DINERS_CLUB,
- #               bankcards.DISCOVER, bankcards.JCB, bankcards.CHINA_UNIONPAY,
- #               bankcards.SOLO, bankcards.LASER, bankcards.SWITCH]
+# types=[bankcards.VISA, bankcards.VISA_ELECTRON, bankcards.MASTERCARD,
+#               bankcards.AMEX, bankcards.MAESTRO, bankcards.DINERS_CLUB,
+#               bankcards.DISCOVER, bankcards.JCB, bankcards.CHINA_UNIONPAY,
+#               bankcards.SOLO, bankcards.LASER, bankcards.SWITCH]
+
 
 class TestBankcardNumberField(TestCase):
 
@@ -26,15 +27,14 @@ class TestBankcardNumberField(TestCase):
 
     def test_amex_accepted_when_allowed(self):
         # Number taken from http://www.darkcoding.net/credit-card-numbers/
-        self.field = forms.BankcardNumberField(types=['American Express',])
+        self.field = forms.BankcardNumberField(types=['American Express'])
         self.assertEqual(
             '348934265521923', self.field.clean('348934265521923'))
 
     def test_amex_rejected_when_disallowed(self):
-        self.field = forms.BankcardNumberField(types=['Visa',])
+        self.field = forms.BankcardNumberField(types=['Visa'])
         with self.assertRaises(ValidationError):
             self.field.clean('348934265521923')
-
 
     def test_raises_error_for_invalid_card_type(self):
         with self.assertRaises(ImproperlyConfigured):
@@ -98,8 +98,7 @@ class TestExpiryMonthField(TestCase):
 
     def test_defaults_to_current_month(self):
         today = datetime.date.today()
-        self.assertEqual(["%.2d" % today.month, today.year],
-                          self.field.initial)
+        self.assertEqual(["%.2d" % today.month, today.year], self.field.initial)
 
 
 class TestOptionalExpiryMonthField(TestExpiryMonthField):
@@ -134,8 +133,8 @@ class TestCCVField(TestCase):
         try:
             self.field.clean("asdf")
         except ValidationError as e:
-            self.assertEqual("Please enter a 3 or 4 digit number",
-                              e.messages[0])
+            self.assertEqual(
+                "Please enter a 3 or 4 digit number", e.messages[0])
 
 
 class TestValidBankcardForm(TestCase):

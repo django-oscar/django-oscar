@@ -196,7 +196,6 @@ class TestOrderListSearch(WebTestCase):
         ),
     ]
 
-
     def test_search_filter_descriptions(self):
         SourceTypeFactory(name='Visa', code='visa')
         url = reverse('dashboard:order-list')

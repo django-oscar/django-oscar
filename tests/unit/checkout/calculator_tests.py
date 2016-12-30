@@ -4,7 +4,6 @@ from django.test import TestCase
 import mock
 
 from oscar.apps.checkout import calculators
-from oscar.apps.shipping import methods
 from oscar.core import prices
 
 

@@ -66,4 +66,3 @@ class TestShippingAddressForm(TestCase):
 
         data['country'] = Country.objects.get(iso_3166_1_a2='GB').pk
         self.assertTrue(ShippingAddressForm(data).is_valid())
-

@@ -5,6 +5,7 @@ from oscar.apps.catalogue.search_handlers import (
     get_product_search_handler_class,
 )
 
+
 class TestSearchHandler(object):
     pass
 

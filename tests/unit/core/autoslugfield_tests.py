@@ -225,4 +225,3 @@ class AutoSlugFieldTest(TestCase):
             else:
                 self.fail("Could not exec %r: %s" % (string.strip(), e))
         return l
-

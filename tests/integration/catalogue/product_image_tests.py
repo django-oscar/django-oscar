@@ -7,8 +7,8 @@ class TestProductImages(TestCase):
 
     def test_images_are_in_consecutive_order(self):
         product = factories.create_product()
-        images = [factories.create_product_image(
-                  product=product, display_order=i) for i in range(4)]
+        for i in range(4):
+            factories.create_product_image(product=product, display_order=i)
 
         product.images.all()[2].delete()
 

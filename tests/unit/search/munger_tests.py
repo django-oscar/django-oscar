@@ -59,6 +59,7 @@ SEARCH_FACETS = {
     ]),
 }
 
+
 @override_settings(OSCAR_SEARCH_FACETS=SEARCH_FACETS)
 class TestFacetMunger(TestCase):
 

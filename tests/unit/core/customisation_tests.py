@@ -57,7 +57,8 @@ class TestForkAppFunction(TestCase):
         for module, expected_string in [
             ('models', 'from oscar.apps.order.models import *'),
             ('admin', 'from oscar.apps.order.admin import *'),
-            ('config', 'OrderConfig')]:
+            ('config', 'OrderConfig')
+        ]:
             filepath = os.path.join(self.tmp_folder, 'order', '%s.py' % module)
             self.assertTrue(os.path.exists(filepath))
 
@@ -70,4 +71,3 @@ class TestForkAppFunction(TestCase):
             native_migration_path = os.path.join(
                 self.tmp_folder, app, 'migrations')
             self.assertEqual(has_models, os.path.exists(native_migration_path))
-

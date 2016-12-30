@@ -26,7 +26,8 @@ class TestEmailAuthBackend(TestCase):
             'user1', email, password=password)
 
         for email_variation in [
-            'Person@example.com', 'Person@EXAMPLE.COM', 'person@Example.com']:
+            'Person@example.com', 'Person@EXAMPLE.COM', 'person@Example.com'
+        ]:
             user = authenticate(username=email_variation, password=password)
             self.assertEqual(user, created_user)
 

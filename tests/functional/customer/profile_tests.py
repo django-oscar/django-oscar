@@ -142,7 +142,7 @@ class TestASignedInUser(WebTestCase):
 
         order_history_page = self.app.get(
             reverse('customer:order', args=[self.order.number]),
-                    user=self.user)
+            user=self.user)
         form = order_history_page.forms['order_form_%d' % self.order.id]
         form.submit()
 

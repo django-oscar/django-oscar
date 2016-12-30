@@ -19,10 +19,10 @@ class TestPriceObject(TestCase):
 
     def test_price_equals_reflexivity(self):
         for price in (
-            Price(currency='USD', excl_tax=D('10.00')), 
+            Price(currency='USD', excl_tax=D('10.00')),
             Price(currency='USD', excl_tax=D('10.00'), tax=D('2.00')),
             Price(currency='USD', excl_tax=D('10.00'), incl_tax=D('12.00')),
-            ):
+        ):
             self.assertEqual(price, price)
 
     def test_price_equals_formats(self):
@@ -34,7 +34,7 @@ class TestPriceObject(TestCase):
         price1 = Price(currency='EUR', excl_tax=D('10.00'), tax=D('2.00'))
         price2 = Price(currency='USD', excl_tax=D('10.00'), tax=D('2.00'))
         self.assertNotEqual(price1, price2)
-        
+
     def test_price_equals_transitivity(self):
         prices = (
             Price(currency='EUR', excl_tax=D('10.00'), tax=D('2.00')),
