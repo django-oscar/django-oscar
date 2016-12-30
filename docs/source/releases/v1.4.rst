@@ -1,0 +1,51 @@
+=======================
+Oscar 1.4 release notes
+=======================
+
+:release: tbd
+
+Welcome to Oscar 1.4, a minor release which finally brings compatibility with
+Django 1.10.
+
+
+Table of contents:
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_1.4:
+
+Compatibility
+-------------
+
+Oscar 1.4 is compatible with Django 1.8, 1.9 and 1.10 as well as Python 2.7,
+3.3, 3.4, 3.5 and 3.6.
+
+
+.. _new_in_1.4:
+
+What's new in Oscar 1.4?
+------------------------
+
+ - Django 1.10 compatibility (`#2055`)
+
+
+.. _`#2055`: https://github.com/django-oscar/django-oscar/issues/2055
+
+
+Dependency changes
+------------------
+
+.. warning::
+
+    Oscar depends on sorl-thumbnail 12.4a1. Unfortunately you have to 
+    fake the initial migration of this application since older versions didn't
+    include migrations. This can be done via::
+
+        python manage.py migrate thumbnail --fake
+
+
+The following packages are updated:
+    - `treebeard >= 4.1.0` (Django 1.10 support)
