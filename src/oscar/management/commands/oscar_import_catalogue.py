@@ -11,12 +11,12 @@ logger = logging.getLogger('oscar.catalogue.import')
 
 
 class Command(BaseCommand):
-    args = '/path/to/file1.csv /path/to/file2.csv ...'
     help = 'For creating product catalogues based on a CSV file'
 
     def add_arguments(self, parser):
-        parser.add_argument('/path/to/file.csv', nargs='+')
-
+        parser.add_argument(
+            'filename', nargs='+',
+            help='/path/to/file1.csv /path/to/file2.csv ...')
         parser.add_argument(
             '--flush',
             action='store_true',
@@ -34,7 +34,7 @@ class Command(BaseCommand):
         importer = CatalogueImporter(
             logger, delimiter=options.get('delimiter'),
             flush=options.get('flush'))
-        for file_path in options['/path/to/file.csv']:
+        for file_path in options['filename']:
             logger.info(" - Importing records from '%s'" % file_path)
             try:
                 importer.handle(file_path)

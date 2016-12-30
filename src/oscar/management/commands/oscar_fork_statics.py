@@ -13,18 +13,14 @@ class Command(BaseCommand):
     Copy Oscar's statics into local project so they can be used as a base for
     styling a new site.
     """
-    args = '<destination folder>'
     help = "Copy Oscar's static files"
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            '<destination folder>',
-            nargs='?',
-            default='static')
+        parser.add_argument('target_path', nargs='?', default='static')
 
     def handle(self, *args, **options):
         # Determine where to copy to
-        folder = options['<destination folder>']
+        folder = options['target_path']
         if not folder.startswith('/'):
             destination = os.path.join(os.getcwd(), folder)
         else:
