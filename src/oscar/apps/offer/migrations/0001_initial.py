@@ -66,8 +66,8 @@ class Migration(migrations.Migration):
                 ('num_orders', models.PositiveIntegerField(default=0, verbose_name='Number of Orders')),
                 ('redirect_url', oscar.models.fields.ExtendedURLField(verbose_name='URL redirect (optional)', blank=True)),
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date Created')),
-                ('benefit', models.ForeignKey(verbose_name='Benefit', to='offer.Benefit')),
-                ('condition', models.ForeignKey(verbose_name='Condition', to='offer.Condition')),
+                ('benefit', models.ForeignKey(verbose_name='Benefit', to='offer.Benefit', on_delete=models.CASCADE)),
+                ('condition', models.ForeignKey(verbose_name='Condition', to='offer.Condition', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['-priority'],
@@ -102,8 +102,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('display_order', models.IntegerField(default=0)),
-                ('product', models.ForeignKey(to='catalogue.Product')),
-                ('range', models.ForeignKey(to='offer.Range')),
+                ('product', models.ForeignKey(to='catalogue.Product', on_delete=models.CASCADE)),
+                ('range', models.ForeignKey(to='offer.Range', on_delete=models.CASCADE)),
             ],
             options={
             },
@@ -122,8 +122,8 @@ class Migration(migrations.Migration):
                 ('num_new_skus', models.PositiveIntegerField(verbose_name='Number of New SKUs', null=True)),
                 ('num_unknown_skus', models.PositiveIntegerField(verbose_name='Number of Unknown SKUs', null=True)),
                 ('num_duplicate_skus', models.PositiveIntegerField(verbose_name='Number of Duplicate SKUs', null=True)),
-                ('range', models.ForeignKey(verbose_name='Range', related_name='file_uploads', to='offer.Range')),
-                ('uploaded_by', models.ForeignKey(verbose_name='Uploaded By', to=settings.AUTH_USER_MODEL)),
+                ('range', models.ForeignKey(verbose_name='Range', related_name='file_uploads', to='offer.Range', on_delete=models.CASCADE)),
+                ('uploaded_by', models.ForeignKey(verbose_name='Uploaded By', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ('-date_uploaded',),
@@ -145,13 +145,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='condition',
             name='range',
-            field=models.ForeignKey(null=True, verbose_name='Range', to='offer.Range', blank=True),
+            field=models.ForeignKey(null=True, verbose_name='Range', to='offer.Range', blank=True, on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='benefit',
             name='range',
-            field=models.ForeignKey(null=True, verbose_name='Range', to='offer.Range', blank=True),
+            field=models.ForeignKey(null=True, verbose_name='Range', to='offer.Range', blank=True, on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.CreateModel(

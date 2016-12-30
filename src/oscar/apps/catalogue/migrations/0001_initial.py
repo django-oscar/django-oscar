@@ -107,7 +107,7 @@ class Migration(migrations.Migration):
                 ('code', models.SlugField(max_length=128, verbose_name='Code', validators=[django.core.validators.RegexValidator(regex='^[a-zA-Z\\-_][0-9a-zA-Z\\-_]*$', message="Code can only contain the letters a-z, A-Z, digits, minus and underscores, and can't start with a digit")])),
                 ('type', models.CharField(default='text', max_length=20, verbose_name='Type', choices=[('text', 'Text'), ('integer', 'Integer'), ('boolean', 'True / False'), ('float', 'Float'), ('richtext', 'Rich Text'), ('date', 'Date'), ('option', 'Option'), ('entity', 'Entity'), ('file', 'File'), ('image', 'Image')])),
                 ('required', models.BooleanField(default=False, verbose_name='Required')),
-                ('option_group', models.ForeignKey(null=True, verbose_name='Option Group', help_text='Select an option group if using type "Option"', to='catalogue.AttributeOptionGroup', blank=True)),
+                ('option_group', models.ForeignKey(null=True, verbose_name='Option Group', help_text='Select an option group if using type "Option"', to='catalogue.AttributeOptionGroup', blank=True, on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['code'],
@@ -130,10 +130,10 @@ class Migration(migrations.Migration):
                 ('value_file', models.FileField(upload_to='images/products/%Y/%m/', max_length=255, blank=True, null=True)),
                 ('value_image', models.ImageField(upload_to='images/products/%Y/%m/', max_length=255, blank=True, null=True)),
                 ('entity_object_id', models.PositiveIntegerField(blank=True, editable=False, null=True)),
-                ('attribute', models.ForeignKey(verbose_name='Attribute', to='catalogue.ProductAttribute')),
-                ('entity_content_type', models.ForeignKey(null=True, editable=False, to='contenttypes.ContentType', blank=True)),
-                ('product', models.ForeignKey(verbose_name='Product', related_name='attribute_values', to='catalogue.Product')),
-                ('value_option', models.ForeignKey(null=True, verbose_name='Value option', to='catalogue.AttributeOption', blank=True)),
+                ('attribute', models.ForeignKey(verbose_name='Attribute', to='catalogue.ProductAttribute', on_delete=models.CASCADE)),
+                ('entity_content_type', models.ForeignKey(null=True, editable=False, to='contenttypes.ContentType', blank=True, on_delete=models.CASCADE)),
+                ('product', models.ForeignKey(verbose_name='Product', related_name='attribute_values', to='catalogue.Product', on_delete=models.CASCADE)),
+                ('value_option', models.ForeignKey(null=True, verbose_name='Value option', to='catalogue.AttributeOption', blank=True, on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name_plural': 'Product attribute values',
@@ -146,8 +146,8 @@ class Migration(migrations.Migration):
             name='ProductCategory',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('category', models.ForeignKey(verbose_name='Category', to='catalogue.Category')),
-                ('product', models.ForeignKey(verbose_name='Product', to='catalogue.Product')),
+                ('category', models.ForeignKey(verbose_name='Category', to='catalogue.Category', on_delete=models.CASCADE)),
+                ('product', models.ForeignKey(verbose_name='Product', to='catalogue.Product', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['product', 'category'],
@@ -183,7 +183,7 @@ class Migration(migrations.Migration):
                 ('caption', models.CharField(max_length=200, verbose_name='Caption', blank=True)),
                 ('display_order', models.PositiveIntegerField(default=0, verbose_name='Display order', help_text='An image with a display order of zero will be the primary image for a product')),
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date created')),
-                ('product', models.ForeignKey(verbose_name='Product', related_name='images', to='catalogue.Product')),
+                ('product', models.ForeignKey(verbose_name='Product', related_name='images', to='catalogue.Product', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['display_order'],
@@ -198,8 +198,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('ranking', models.PositiveSmallIntegerField(default=0, verbose_name='Ranking', help_text='Determines order of the products. A product with a higher value will appear before one with a lower ranking.')),
-                ('primary', models.ForeignKey(verbose_name='Primary product', related_name='primary_recommendations', to='catalogue.Product')),
-                ('recommendation', models.ForeignKey(verbose_name='Recommended product', to='catalogue.Product')),
+                ('primary', models.ForeignKey(verbose_name='Primary product', related_name='primary_recommendations', to='catalogue.Product', on_delete=models.CASCADE)),
+                ('recommendation', models.ForeignKey(verbose_name='Recommended product', to='catalogue.Product', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['primary', '-ranking'],
@@ -228,7 +228,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='productattribute',
             name='product_class',
-            field=models.ForeignKey(null=True, verbose_name='Product type', related_name='attributes', to='catalogue.ProductClass', blank=True),
+            field=models.ForeignKey(null=True, verbose_name='Product type', related_name='attributes', to='catalogue.ProductClass', blank=True, on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -246,7 +246,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='product',
             name='parent',
-            field=models.ForeignKey(null=True, verbose_name='Parent product', related_name='children', help_text="Only choose a parent product if you're creating a child product.  For example if this is a size 4 of a particular t-shirt.  Leave blank if this is a stand-alone product (i.e. there is only one version of this product).", to='catalogue.Product', blank=True),
+            field=models.ForeignKey(null=True, verbose_name='Parent product', related_name='children', help_text="Only choose a parent product if you're creating a child product.  For example if this is a size 4 of a particular t-shirt.  Leave blank if this is a stand-alone product (i.e. there is only one version of this product).", to='catalogue.Product', blank=True, on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -270,7 +270,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='attributeoption',
             name='group',
-            field=models.ForeignKey(verbose_name='Group', related_name='options', to='catalogue.AttributeOptionGroup'),
+            field=models.ForeignKey(verbose_name='Group', related_name='options', to='catalogue.AttributeOptionGroup', on_delete=models.CASCADE),
             preserve_default=True,
         ),
     ]

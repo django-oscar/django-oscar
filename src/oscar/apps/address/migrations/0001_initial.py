@@ -53,8 +53,8 @@ class Migration(migrations.Migration):
                 ('num_orders', models.PositiveIntegerField(default=0, verbose_name='Number of Orders')),
                 ('hash', models.CharField(max_length=255, editable=False, db_index=True, verbose_name='Address Hash')),
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date Created')),
-                ('country', models.ForeignKey(verbose_name='Country', to='address.Country')),
-                ('user', models.ForeignKey(verbose_name='User', related_name='addresses', to=settings.AUTH_USER_MODEL)),
+                ('country', models.ForeignKey(verbose_name='Country', to='address.Country', on_delete=models.CASCADE)),
+                ('user', models.ForeignKey(verbose_name='User', related_name='addresses', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['-num_orders'],

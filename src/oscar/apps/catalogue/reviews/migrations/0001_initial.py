@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 ('delta_votes', models.IntegerField(default=0, db_index=True, verbose_name='Delta Votes')),
                 ('date_created', models.DateTimeField(auto_now_add=True)),
                 ('product', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, related_name='reviews', to='catalogue.Product', null=True)),
-                ('user', models.ForeignKey(null=True, related_name='reviews', to=settings.AUTH_USER_MODEL, blank=True)),
+                ('user', models.ForeignKey(null=True, related_name='reviews', to=settings.AUTH_USER_MODEL, blank=True, on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['-delta_votes', 'id'],
@@ -46,8 +46,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('delta', models.SmallIntegerField(verbose_name='Delta', choices=[(1, 'Up'), (-1, 'Down')])),
                 ('date_created', models.DateTimeField(auto_now_add=True)),
-                ('review', models.ForeignKey(related_name='votes', to='reviews.ProductReview')),
-                ('user', models.ForeignKey(related_name='review_votes', to=settings.AUTH_USER_MODEL)),
+                ('review', models.ForeignKey(related_name='votes', to='reviews.ProductReview', on_delete=models.CASCADE)),
+                ('user', models.ForeignKey(related_name='review_votes', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['-date_created'],

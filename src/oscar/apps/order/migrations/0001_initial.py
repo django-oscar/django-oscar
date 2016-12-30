@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
                 ('state', models.CharField(max_length=255, verbose_name='State/County', blank=True)),
                 ('postcode', oscar.models.fields.UppercaseCharField(max_length=64, verbose_name='Post/Zip-code', blank=True)),
                 ('search_text', models.TextField(editable=False, verbose_name='Search text - used only for searching addresses')),
-                ('country', models.ForeignKey(verbose_name='Country', to='address.Country')),
+                ('country', models.ForeignKey(verbose_name='Country', to='address.Country', on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name_plural': 'Billing addresses',
@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date')),
-                ('event_type', models.ForeignKey(verbose_name='Event Type', to='customer.CommunicationEventType')),
+                ('event_type', models.ForeignKey(verbose_name='Event Type', to='customer.CommunicationEventType', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['-date_created'],
@@ -94,7 +94,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('type', models.CharField(max_length=128, verbose_name='Type')),
                 ('value', models.CharField(max_length=255, verbose_name='Value')),
-                ('line', models.ForeignKey(verbose_name='Line', related_name='attributes', to='order.Line')),
+                ('line', models.ForeignKey(verbose_name='Line', related_name='attributes', to='order.Line', on_delete=models.CASCADE)),
                 ('option', models.ForeignKey(verbose_name='Option', on_delete=django.db.models.deletion.SET_NULL, related_name='line_attributes', to='catalogue.Option', null=True)),
             ],
             options={
@@ -113,7 +113,7 @@ class Migration(migrations.Migration):
                 ('price_excl_tax', models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Price (excl. tax)')),
                 ('shipping_incl_tax', models.DecimalField(default=0, max_digits=12, decimal_places=2, verbose_name='Shiping (inc. tax)')),
                 ('shipping_excl_tax', models.DecimalField(default=0, max_digits=12, decimal_places=2, verbose_name='Shipping (excl. tax)')),
-                ('line', models.ForeignKey(verbose_name='Line', related_name='prices', to='order.Line')),
+                ('line', models.ForeignKey(verbose_name='Line', related_name='prices', to='order.Line', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ('id',),
@@ -161,7 +161,7 @@ class Migration(migrations.Migration):
                 ('frequency', models.PositiveIntegerField(verbose_name='Frequency', null=True)),
                 ('amount', models.DecimalField(default=0, max_digits=12, decimal_places=2, verbose_name='Amount')),
                 ('message', models.TextField(blank=True)),
-                ('order', models.ForeignKey(verbose_name='Order', related_name='discounts', to='order.Order')),
+                ('order', models.ForeignKey(verbose_name='Order', related_name='discounts', to='order.Order', on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name_plural': 'Order Discounts',
@@ -178,8 +178,8 @@ class Migration(migrations.Migration):
                 ('message', models.TextField(verbose_name='Message')),
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date Created')),
                 ('date_updated', models.DateTimeField(auto_now=True, verbose_name='Date Updated')),
-                ('order', models.ForeignKey(verbose_name='Order', related_name='notes', to='order.Order')),
-                ('user', models.ForeignKey(verbose_name='User', to=settings.AUTH_USER_MODEL, null=True)),
+                ('order', models.ForeignKey(verbose_name='Order', related_name='notes', to='order.Order', on_delete=models.CASCADE)),
+                ('user', models.ForeignKey(verbose_name='User', to=settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name_plural': 'Order Notes',
@@ -209,8 +209,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('quantity', models.PositiveIntegerField(verbose_name='Quantity')),
-                ('event', models.ForeignKey(verbose_name='Event', related_name='line_quantities', to='order.PaymentEvent')),
-                ('line', models.ForeignKey(verbose_name='Line', related_name='payment_event_quantities', to='order.Line')),
+                ('event', models.ForeignKey(verbose_name='Event', related_name='line_quantities', to='order.PaymentEvent', on_delete=models.CASCADE)),
+                ('line', models.ForeignKey(verbose_name='Line', related_name='payment_event_quantities', to='order.Line', on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name_plural': 'Payment Event Quantities',
@@ -249,7 +249,7 @@ class Migration(migrations.Migration):
                 ('search_text', models.TextField(editable=False, verbose_name='Search text - used only for searching addresses')),
                 ('phone_number', oscar.models.fields.PhoneNumberField(verbose_name='Phone number', help_text='In case we need to call you about your order', blank=True)),
                 ('notes', models.TextField(verbose_name='Instructions', help_text='Tell us anything we should know when delivering your order.', blank=True)),
-                ('country', models.ForeignKey(verbose_name='Country', to='address.Country')),
+                ('country', models.ForeignKey(verbose_name='Country', to='address.Country', on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name_plural': 'Shipping addresses',
@@ -278,8 +278,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('quantity', models.PositiveIntegerField(verbose_name='Quantity')),
-                ('event', models.ForeignKey(verbose_name='Event', related_name='line_quantities', to='order.ShippingEvent')),
-                ('line', models.ForeignKey(verbose_name='Line', related_name='shipping_event_quantities', to='order.Line')),
+                ('event', models.ForeignKey(verbose_name='Event', related_name='line_quantities', to='order.ShippingEvent', on_delete=models.CASCADE)),
+                ('line', models.ForeignKey(verbose_name='Line', related_name='shipping_event_quantities', to='order.Line', on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name_plural': 'Shipping Event Quantities',
@@ -309,7 +309,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='shippingevent',
             name='event_type',
-            field=models.ForeignKey(verbose_name='Event Type', to='order.ShippingEventType'),
+            field=models.ForeignKey(verbose_name='Event Type', to='order.ShippingEventType', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -321,7 +321,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='shippingevent',
             name='order',
-            field=models.ForeignKey(verbose_name='Order', related_name='shipping_events', to='order.Order'),
+            field=models.ForeignKey(verbose_name='Order', related_name='shipping_events', to='order.Order', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AlterUniqueTogether(
@@ -331,7 +331,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='paymentevent',
             name='event_type',
-            field=models.ForeignKey(verbose_name='Event Type', to='order.PaymentEventType'),
+            field=models.ForeignKey(verbose_name='Event Type', to='order.PaymentEventType', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -343,13 +343,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='paymentevent',
             name='order',
-            field=models.ForeignKey(verbose_name='Order', related_name='payment_events', to='order.Order'),
+            field=models.ForeignKey(verbose_name='Order', related_name='payment_events', to='order.Order', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='paymentevent',
             name='shipping_event',
-            field=models.ForeignKey(related_name='payment_events', to='order.ShippingEvent', null=True),
+            field=models.ForeignKey(related_name='payment_events', to='order.ShippingEvent', null=True, on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -373,13 +373,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='lineprice',
             name='order',
-            field=models.ForeignKey(verbose_name='Option', related_name='line_prices', to='order.Order'),
+            field=models.ForeignKey(verbose_name='Option', related_name='line_prices', to='order.Order', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='line',
             name='order',
-            field=models.ForeignKey(verbose_name='Order', related_name='lines', to='order.Order'),
+            field=models.ForeignKey(verbose_name='Order', related_name='lines', to='order.Order', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -403,7 +403,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='communicationevent',
             name='order',
-            field=models.ForeignKey(verbose_name='Order', related_name='communication_events', to='order.Order'),
+            field=models.ForeignKey(verbose_name='Order', related_name='communication_events', to='order.Order', on_delete=models.CASCADE),
             preserve_default=True,
         ),
     ]

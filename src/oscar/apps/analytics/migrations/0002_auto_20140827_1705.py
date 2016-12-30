@@ -17,13 +17,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='userproductview',
             name='product',
-            field=models.ForeignKey(verbose_name='Product', to='catalogue.Product'),
+            field=models.ForeignKey(verbose_name='Product', to='catalogue.Product', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='userproductview',
             name='user',
-            field=models.ForeignKey(verbose_name='User', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(verbose_name='User', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
