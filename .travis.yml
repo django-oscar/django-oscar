@@ -1,57 +1,77 @@
-# Use the newer container-based infrastructure
-# http://docs.travis-ci.com/user/workers/container-based-infrastructure/
 sudo: false
-
 language: python
 
-python:
-    - 2.7
-    - 3.3
-    - 3.4
-    - 3.5
+matrix:
+  include:
+    - python: 2.7
+      env: TOXENV=py27-django18
+    - python: 2.7
+      env: TOXENV=py27-django19
+    - python: 2.7
+      env: TOXENV=py27-django110
+    - python: 3.3
+      env: TOXENV=py33-django18
+    - python: 3.4
+      env: TOXENV=py34-django18
+    - python: 3.4
+      env: TOXENV=py34-django19
+    - python: 3.4
+      env: TOXENV=py34-django110
+    - python: 3.5
+      env: TOXENV=py35-django18
+    - python: 3.5
+      env: TOXENV=py35-django19
+    - python: 3.5
+      env: TOXENV=py35-django110
+    - python: 3.6
+      env: TOXENV=py36-django18
+    - python: 3.6
+      env: TOXENV=py36-django19
+    - python: 3.6
+      env: TOXENV=py36-django110
+
+    - python: 3.5
+      env: TOXENV=lint
+    - python: 3.5
+      env: TOXENV=sandbox
+
+  allow_failures:
+    - python: 3.5
+      env: TOXENV=lint
+
 
 env:
-    global:
-        # $TRANSIFEX_PASSWORD for oscar_bot (used in transifex.sh)
-        - secure: FuIlzEsGJiAwhaIRBmRNsq9eXmuzs25fX6BChknW4lDyVAySWMp0+Zps9Bd0JgfFYUG3Ip+OTmksYIoTUsG25ZJS9cq1IFt3QKUAN70YCI/4ZBLeIdICPEyxq+Km179+NeEXmBUug17RLMLxh3MWfO+RKUHK9yHIPNNpq0dNyoo=
+  global:
+    # $TRANSIFEX_PASSWORD for oscar_bot (used in transifex.sh)
+    - secure: FuIlzEsGJiAwhaIRBmRNsq9eXmuzs25fX6BChknW4lDyVAySWMp0+Zps9Bd0JgfFYUG3Ip+OTmksYIoTUsG25ZJS9cq1IFt3QKUAN70YCI/4ZBLeIdICPEyxq+Km179+NeEXmBUug17RLMLxh3MWfO+RKUHK9yHIPNNpq0dNyoo=
 
-        # These two environment variables could be set by Travis itself, or Travis
-        # could configure itself in /etc/, ~/, or inside of the virtual
-        # environments. In any case if these two values get configured then end
-        # users only need to enable the pip cache and manually run pip wheel before
-        # running pip install.
-        - PIP_WHEEL_DIR=$HOME/.cache/pip/wheels
-        - PIP_FIND_LINKS=file://$HOME/.cache/pip/wheels
-    matrix:
-        - DJANGO=Django==1.8.13
-        - DJANGO=Django==1.9.7
-        - DJANGO=Django==1.10.4
+    # These two environment variables could be set by Travis itself, or Travis
+    # could configure itself in /etc/, ~/, or inside of the virtual
+    # environments. In any case if these two values get configured then end
+    # users only need to enable the pip cache and manually run pip wheel before
+    # running pip install.
+    - PIP_WHEEL_DIR=$HOME/.cache/pip/wheels
+    - PIP_FIND_LINKS=file://$HOME/.cache/pip/wheels
 
 
-matrix:
-    exclude:
-        # Python 3.3 is not supported by Django 1.9
-        - python: 3.3
-          env: "DJANGO=Django==1.9.7"
-        - python: 3.3
-          env: "DJANGO=Django==1.10.4"
+before_cache:
+  - rm -rf $HOME/.cache/pip/log
 
-before_install:
-    - pip install codecov
+
+cache:
+  directories:
+    - $HOME/.cache/pip
+
 
 install:
-    - pip install --pre $DJANGO
-    - pip install -r requirements.txt
-    - pip list
+  - pip install tox codecov
 
-before_script:
-    # Create testing databases for running migrations against
-    - mysql -e 'CREATE DATABASE oscar_travis;'
-    - psql -c 'CREATE DATABASE oscar_travis;' -U postgres
 
 script:
-    - make travis
+  - tox
+
 
 after_success:
-    - codecov
-    - ./transifex.sh
+  - tox -e coverage-report
+  - codecov
+  - ./transifex.sh
