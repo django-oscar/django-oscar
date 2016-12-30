@@ -61,14 +61,12 @@ test_requires = [
     'coverage==4.1',
     'django-webtest==1.7.9',
     'py>=1.4.31',
-    'pytest-cov==2.3.0',
-    'pytest-django==2.9.1',
-    'pytest-xdist==1.14',
-    'pytest-warnings==0.1.0',
-    'pytest==2.9.2',
-    'spec==0.11.1',
+    'pytest==3.0.5',
+    'pytest-cov==2.4.0',
+    'pytest-django==3.1.2',
+    'pytest-xdist==1.15.0',
+    'pytest-warnings==0.2.0',
     'tox==2.3.1',
-    'nose-parameterized==0.5.0'
 ]
 
 setup(
