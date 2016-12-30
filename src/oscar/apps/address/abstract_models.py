@@ -232,7 +232,10 @@ class AbstractAddress(models.Model):
     state = models.CharField(_("State/County"), max_length=255, blank=True)
     postcode = UppercaseCharField(
         _("Post/Zip-code"), max_length=64, blank=True)
-    country = models.ForeignKey('address.Country', verbose_name=_("Country"))
+    country = models.ForeignKey(
+        'address.Country',
+        on_delete=models.CASCADE,
+        verbose_name=_("Country"))
 
     #: A field only used for searching addresses - this contains all the
     #: relevant fields.  This is effectively a poor man's Solr text field.
@@ -491,7 +494,10 @@ class AbstractUserAddress(AbstractShippingAddress):
     book without affecting orders already placed.
     """
     user = models.ForeignKey(
-        AUTH_USER_MODEL, related_name='addresses', verbose_name=_("User"))
+        AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='addresses',
+        verbose_name=_("User"))
 
     #: Whether this address is the default for shipping
     is_default_for_shipping = models.BooleanField(
@@ -580,8 +586,11 @@ class AbstractPartnerAddress(AbstractAddress):
     A partner can have one or more addresses. This can be useful e.g. when
     determining US tax which depends on the origin of the shipment.
     """
-    partner = models.ForeignKey('partner.Partner', related_name='addresses',
-                                verbose_name=_('Partner'))
+    partner = models.ForeignKey(
+        'partner.Partner',
+        on_delete=models.CASCADE,
+        related_name='addresses',
+        verbose_name=_('Partner'))
 
     class Meta:
         abstract = True

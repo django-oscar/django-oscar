@@ -111,8 +111,11 @@ class AbstractEmail(models.Model):
     This is a record of all emails sent to a customer.
     Normally, we only record order-related emails.
     """
-    user = models.ForeignKey(AUTH_USER_MODEL, related_name='emails',
-                             verbose_name=_("User"))
+    user = models.ForeignKey(
+        AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='emails',
+        verbose_name=_("User"))
     subject = models.TextField(_('Subject'), max_length=255)
     body_text = models.TextField(_("Body Text"))
     body_html = models.TextField(_("Body HTML"), blank=True)
@@ -256,11 +259,17 @@ class AbstractCommunicationEventType(models.Model):
 
 @python_2_unicode_compatible
 class AbstractNotification(models.Model):
-    recipient = models.ForeignKey(AUTH_USER_MODEL,
-                                  related_name='notifications', db_index=True)
+    recipient = models.ForeignKey(
+        AUTH_USER_MODEL,
+        db_index=True,
+        on_delete=models.CASCADE,
+        related_name='notifications')
 
     # Not all notifications will have a sender.
-    sender = models.ForeignKey(AUTH_USER_MODEL, null=True)
+    sender = models.ForeignKey(
+        AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True)
 
     # HTML is allowed in this field as it can contain links
     subject = models.CharField(max_length=255)
@@ -304,14 +313,21 @@ class AbstractProductAlert(models.Model):
     """
     An alert for when a product comes back in stock
     """
-    product = models.ForeignKey('catalogue.Product')
+    product = models.ForeignKey(
+        'catalogue.Product',
+        on_delete=models.CASCADE)
 
     # A user is only required if the notification is created by a
     # registered user, anonymous users will only have an email address
     # attached to the notification
-    user = models.ForeignKey(AUTH_USER_MODEL, db_index=True, blank=True,
-                             null=True, related_name="alerts",
-                             verbose_name=_('User'))
+    user = models.ForeignKey(
+        AUTH_USER_MODEL,
+        blank=True,
+        db_index=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name="alerts",
+        verbose_name=_('User'))
     email = models.EmailField(_("Email"), db_index=True, blank=True)
 
     # This key are used to confirm and cancel alerts for anon users

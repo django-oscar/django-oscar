@@ -28,7 +28,10 @@ class AbstractBasket(models.Model):
     # Baskets can be anonymously owned - hence this field is nullable.  When a
     # anon user signs in, their two baskets are merged.
     owner = models.ForeignKey(
-        AUTH_USER_MODEL, related_name='baskets', null=True,
+        AUTH_USER_MODEL,
+        null=True,
+        related_name='baskets',
+        on_delete=models.CASCADE,
         verbose_name=_("Owner"))
 
     # Basket statuses
@@ -583,8 +586,11 @@ class AbstractLine(models.Model):
        and are sorted by their primary key, so no changes should be necessary
        there.
     """
-    basket = models.ForeignKey('basket.Basket', related_name='lines',
-                               verbose_name=_("Basket"))
+    basket = models.ForeignKey(
+        'basket.Basket',
+        on_delete=models.CASCADE,
+        related_name='lines',
+        verbose_name=_("Basket"))
 
     # This is to determine which products belong to the same line
     # We can't just use product.id as you can have customised products
@@ -594,12 +600,16 @@ class AbstractLine(models.Model):
         _("Line Reference"), max_length=128, db_index=True)
 
     product = models.ForeignKey(
-        'catalogue.Product', related_name='basket_lines',
+        'catalogue.Product',
+        on_delete=models.CASCADE,
+        related_name='basket_lines',
         verbose_name=_("Product"))
 
     # We store the stockrecord that should be used to fulfil this line.
     stockrecord = models.ForeignKey(
-        'partner.StockRecord', related_name='basket_lines')
+        'partner.StockRecord',
+        on_delete=models.CASCADE,
+        related_name='basket_lines')
 
     quantity = models.PositiveIntegerField(_('Quantity'), default=1)
 
@@ -869,9 +879,15 @@ class AbstractLineAttribute(models.Model):
     """
     An attribute of a basket line
     """
-    line = models.ForeignKey('basket.Line', related_name='attributes',
-                             verbose_name=_("Line"))
-    option = models.ForeignKey('catalogue.Option', verbose_name=_("Option"))
+    line = models.ForeignKey(
+        'basket.Line',
+        on_delete=models.CASCADE,
+        related_name='attributes',
+        verbose_name=_("Line"))
+    option = models.ForeignKey(
+        'catalogue.Option',
+        on_delete=models.CASCADE,
+        verbose_name=_("Option"))
     value = models.CharField(_("Value"), max_length=255)
 
     class Meta:

@@ -20,8 +20,11 @@ class AbstractWishList(models.Model):
     """
 
     # Only authenticated users can have wishlists
-    owner = models.ForeignKey(AUTH_USER_MODEL, related_name='wishlists',
-                              verbose_name=_('Owner'))
+    owner = models.ForeignKey(
+        AUTH_USER_MODEL,
+        related_name='wishlists',
+        on_delete=models.CASCADE,
+        verbose_name=_('Owner'))
     name = models.CharField(verbose_name=_('Name'), default=_('Default'),
                             max_length=255)
 
@@ -109,8 +112,11 @@ class AbstractLine(models.Model):
     """
     One entry in a wish list. Similar to order lines or basket lines.
     """
-    wishlist = models.ForeignKey('wishlists.WishList', related_name='lines',
-                                 verbose_name=_('Wish List'))
+    wishlist = models.ForeignKey(
+        'wishlists.WishList',
+        on_delete=models.CASCADE,
+        related_name='lines',
+        verbose_name=_('Wish List'))
     product = models.ForeignKey(
         'catalogue.Product', verbose_name=_('Product'),
         related_name='wishlists_lines', on_delete=models.SET_NULL,

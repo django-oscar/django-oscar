@@ -333,13 +333,19 @@ class AbstractOrderNote(models.Model):
     This are often used for audit purposes too.  IE, whenever an admin
     makes a change to an order, we create a note to record what happened.
     """
-    order = models.ForeignKey('order.Order', related_name="notes",
-                              verbose_name=_("Order"))
+    order = models.ForeignKey(
+        'order.Order',
+        on_delete=models.CASCADE,
+        related_name="notes",
+        verbose_name=_("Order"))
 
     # These are sometimes programatically generated so don't need a
     # user everytime
-    user = models.ForeignKey(AUTH_USER_MODEL, null=True,
-                             verbose_name=_("User"))
+    user = models.ForeignKey(
+        AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,
+        verbose_name=_("User"))
 
     # We allow notes to be classified although this isn't always needed
     INFO, WARNING, ERROR, SYSTEM = 'Info', 'Warning', 'Error', 'System'
@@ -375,10 +381,14 @@ class AbstractCommunicationEvent(models.Model):
     as an confirmation email being sent.
     """
     order = models.ForeignKey(
-        'order.Order', related_name="communication_events",
+        'order.Order',
+        on_delete=models.CASCADE,
+        related_name="communication_events",
         verbose_name=_("Order"))
     event_type = models.ForeignKey(
-        'customer.CommunicationEventType', verbose_name=_("Event Type"))
+        'customer.CommunicationEventType',
+        on_delete=models.CASCADE,
+        verbose_name=_("Event Type"))
     date_created = models.DateTimeField(_("Date"), auto_now_add=True)
 
     class Meta:
@@ -402,7 +412,10 @@ class AbstractLine(models.Model):
     An order line
     """
     order = models.ForeignKey(
-        'order.Order', related_name='lines', verbose_name=_("Order"))
+        'order.Order',
+        on_delete=models.CASCADE,
+        related_name='lines',
+        verbose_name=_("Order"))
 
     # PARTNER INFORMATION
     # -------------------
@@ -729,7 +742,9 @@ class AbstractLineAttribute(models.Model):
     An attribute of a line
     """
     line = models.ForeignKey(
-        'order.Line', related_name='attributes',
+        'order.Line',
+        on_delete=models.CASCADE,
+        related_name='attributes',
         verbose_name=_("Line"))
     option = models.ForeignKey(
         'catalogue.Option', null=True, on_delete=models.SET_NULL,
@@ -757,9 +772,15 @@ class AbstractLinePrice(models.Model):
     50% off as it's part of an offer while the remainder are full price.
     """
     order = models.ForeignKey(
-        'order.Order', related_name='line_prices', verbose_name=_("Option"))
+        'order.Order',
+        on_delete=models.CASCADE,
+        related_name='line_prices',
+        verbose_name=_("Option"))
     line = models.ForeignKey(
-        'order.Line', related_name='prices', verbose_name=_("Line"))
+        'order.Line',
+        on_delete=models.CASCADE,
+        related_name='prices',
+        verbose_name=_("Line"))
     quantity = models.PositiveIntegerField(_("Quantity"), default=1)
     price_incl_tax = models.DecimalField(
         _("Price (inc. tax)"), decimal_places=2, max_digits=12)
@@ -820,7 +841,9 @@ class AbstractPaymentEvent(models.Model):
     * 2 lines have been refunded
     """
     order = models.ForeignKey(
-        'order.Order', related_name='payment_events',
+        'order.Order',
+        on_delete=models.CASCADE,
+        related_name='payment_events',
         verbose_name=_("Order"))
     amount = models.DecimalField(
         _("Amount"), decimal_places=2, max_digits=12)
@@ -832,13 +855,17 @@ class AbstractPaymentEvent(models.Model):
         'order.Line', through='PaymentEventQuantity',
         verbose_name=_("Lines"))
     event_type = models.ForeignKey(
-        'order.PaymentEventType', verbose_name=_("Event Type"))
+        'order.PaymentEventType',
+        on_delete=models.CASCADE,
+        verbose_name=_("Event Type"))
     # Allow payment events to be linked to shipping events.  Often a shipping
     # event will trigger a payment event and so we can use this FK to capture
     # the relationship.
     shipping_event = models.ForeignKey(
-        'order.ShippingEvent', related_name='payment_events',
-        null=True)
+        'order.ShippingEvent',
+        null=True,
+        on_delete=models.CASCADE,
+        related_name='payment_events')
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
 
     class Meta:
@@ -860,10 +887,14 @@ class PaymentEventQuantity(models.Model):
     A "through" model linking lines to payment events
     """
     event = models.ForeignKey(
-        'order.PaymentEvent', related_name='line_quantities',
+        'order.PaymentEvent',
+        on_delete=models.CASCADE,
+        related_name='line_quantities',
         verbose_name=_("Event"))
     line = models.ForeignKey(
-        'order.Line', related_name="payment_event_quantities",
+        'order.Line',
+        on_delete=models.CASCADE,
+        related_name="payment_event_quantities",
         verbose_name=_("Line"))
     quantity = models.PositiveIntegerField(_("Quantity"))
 
@@ -884,12 +915,17 @@ class AbstractShippingEvent(models.Model):
     1 item being dispatched.
     """
     order = models.ForeignKey(
-        'order.Order', related_name='shipping_events', verbose_name=_("Order"))
+        'order.Order',
+        on_delete=models.CASCADE,
+        related_name='shipping_events',
+        verbose_name=_("Order"))
     lines = models.ManyToManyField(
         'order.Line', related_name='shipping_events',
         through='ShippingEventQuantity', verbose_name=_("Lines"))
     event_type = models.ForeignKey(
-        'order.ShippingEventType', verbose_name=_("Event Type"))
+        'order.ShippingEventType',
+        on_delete=models.CASCADE,
+        verbose_name=_("Event Type"))
     notes = models.TextField(
         _("Event notes"), blank=True,
         help_text=_("This could be the dispatch reference, or a "
@@ -921,10 +957,14 @@ class ShippingEventQuantity(models.Model):
     particular shipping event.
     """
     event = models.ForeignKey(
-        'order.ShippingEvent', related_name='line_quantities',
+        'order.ShippingEvent',
+        on_delete=models.CASCADE,
+        related_name='line_quantities',
         verbose_name=_("Event"))
     line = models.ForeignKey(
-        'order.Line', related_name="shipping_event_quantities",
+        'order.Line',
+        on_delete=models.CASCADE,
+        related_name="shipping_event_quantities",
         verbose_name=_("Line"))
     quantity = models.PositiveIntegerField(_("Quantity"))
 
@@ -990,7 +1030,10 @@ class AbstractOrderDiscount(models.Model):
     track benefit applications which aren't necessarily discounts.
     """
     order = models.ForeignKey(
-        'order.Order', related_name="discounts", verbose_name=_("Order"))
+        'order.Order',
+        on_delete=models.CASCADE,
+        related_name="discounts",
+        verbose_name=_("Order"))
 
     # We need to distinguish between basket discounts, shipping discounts and
     # 'deferred' discounts.

@@ -89,10 +89,14 @@ class AbstractStockRecord(models.Model):
     information for the customer.
     """
     product = models.ForeignKey(
-        'catalogue.Product', related_name="stockrecords",
+        'catalogue.Product',
+        on_delete=models.CASCADE,
+        related_name="stockrecords",
         verbose_name=_("Product"))
     partner = models.ForeignKey(
-        'partner.Partner', verbose_name=_("Partner"),
+        'partner.Partner',
+        on_delete=models.CASCADE,
+        verbose_name=_("Partner"),
         related_name='stockrecords')
 
     #: The fulfilment partner will often have their own SKU for a product,
@@ -233,7 +237,9 @@ class AbstractStockAlert(models.Model):
     A stock alert. E.g. used to notify users when a product is 'back in stock'.
     """
     stockrecord = models.ForeignKey(
-        'partner.StockRecord', related_name='alerts',
+        'partner.StockRecord',
+        on_delete=models.CASCADE,
+        related_name='alerts',
         verbose_name=_("Stock Record"))
     threshold = models.PositiveIntegerField(_("Threshold"))
     OPEN, CLOSED = "Open", "Closed"

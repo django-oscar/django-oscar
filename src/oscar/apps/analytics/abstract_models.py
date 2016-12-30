@@ -77,8 +77,13 @@ class AbstractUserRecord(models.Model):
 @python_2_unicode_compatible
 class AbstractUserProductView(models.Model):
 
-    user = models.ForeignKey(AUTH_USER_MODEL, verbose_name=_("User"))
-    product = models.ForeignKey('catalogue.Product', verbose_name=_("Product"))
+    user = models.ForeignKey(
+        AUTH_USER_MODEL, verbose_name=_("User"),
+        on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        'catalogue.Product',
+        on_delete=models.CASCADE,
+        verbose_name=_("Product"))
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     class Meta:
@@ -95,7 +100,10 @@ class AbstractUserProductView(models.Model):
 @python_2_unicode_compatible
 class AbstractUserSearch(models.Model):
 
-    user = models.ForeignKey(AUTH_USER_MODEL, verbose_name=_("User"))
+    user = models.ForeignKey(
+        AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name=_("User"))
     query = models.CharField(_("Search term"), max_length=255, db_index=True)
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 

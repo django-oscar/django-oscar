@@ -157,14 +157,23 @@ class AbstractVoucherApplication(models.Model):
     Voucher.is_available_to_user, and created in Voucher.record_usage.
     """
     voucher = models.ForeignKey(
-        'voucher.Voucher', related_name="applications",
+        'voucher.Voucher',
+        on_delete=models.CASCADE,
+        related_name="applications",
         verbose_name=_("Voucher"))
 
     # It is possible for an anonymous user to apply a voucher so we need to
     # allow the user to be nullable
-    user = models.ForeignKey(AUTH_USER_MODEL, blank=True, null=True,
-                             verbose_name=_("User"))
-    order = models.ForeignKey('order.Order', verbose_name=_("Order"))
+    user = models.ForeignKey(
+        AUTH_USER_MODEL,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        verbose_name=_("User"))
+    order = models.ForeignKey(
+        'order.Order',
+        on_delete=models.CASCADE,
+        verbose_name=_("Order"))
     date_created = models.DateField(_("Date Created"), auto_now_add=True)
 
     class Meta:

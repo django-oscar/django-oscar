@@ -17,7 +17,7 @@ from oscar.models.fields import ExtendedURLField
 class LinkedPromotion(models.Model):
 
     # We use generic foreign key to link to a promotion model
-    content_type = models.ForeignKey(ContentType)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = fields.GenericForeignKey('content_type', 'object_id')
 
@@ -220,7 +220,7 @@ class MultiImage(AbstractPromotion):
 class SingleProduct(AbstractPromotion):
     _type = 'Single product'
     name = models.CharField(_("Name"), max_length=128)
-    product = models.ForeignKey('catalogue.Product')
+    product = models.ForeignKey('catalogue.Product', on_delete=models.CASCADE)
     description = models.TextField(_("Description"), blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
@@ -288,9 +288,14 @@ class HandPickedProductList(AbstractProductList):
 
 class OrderedProduct(models.Model):
 
-    list = models.ForeignKey('promotions.HandPickedProductList',
-                             verbose_name=_("List"))
-    product = models.ForeignKey('catalogue.Product', verbose_name=_("Product"))
+    list = models.ForeignKey(
+        'promotions.HandPickedProductList',
+        on_delete=models.CASCADE,
+        verbose_name=_("List"))
+    product = models.ForeignKey(
+        'catalogue.Product',
+        on_delete=models.CASCADE,
+        verbose_name=_("Product"))
     display_order = models.PositiveIntegerField(_('Display Order'), default=0)
 
     class Meta:
@@ -331,9 +336,11 @@ class AutomaticProductList(AbstractProductList):
 
 
 class OrderedProductList(HandPickedProductList):
-    tabbed_block = models.ForeignKey('promotions.TabbedBlock',
-                                     related_name='tabs',
-                                     verbose_name=_("Tabbed Block"))
+    tabbed_block = models.ForeignKey(
+        'promotions.TabbedBlock',
+        on_delete=models.CASCADE,
+        related_name='tabs',
+        verbose_name=_("Tabbed Block"))
     display_order = models.PositiveIntegerField(_('Display Order'), default=0)
 
     class Meta:
