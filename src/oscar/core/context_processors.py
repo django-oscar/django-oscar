@@ -1,12 +1,6 @@
-import platform
 import re
 
-import django
 from django.conf import settings
-from django.utils.safestring import mark_safe
-from django.utils.six.moves.urllib import parse
-
-import oscar
 
 
 def strip_language_code(request):
@@ -22,27 +16,6 @@ def strip_language_code(request):
     return path
 
 
-def usage_statistics_string():
-    """
-    For Oscar development, it is helpful to know which versions of Oscar,
-    Django and Python are in use, and which can be safely deprecated or
-    removed. If tracking is enabled, this function builds a query string with
-    that information. It is used in dashboard/layout.html with an invisible
-    tracker pixel.
-    If you're developing locally or tracking is disabled, the tracker pixel
-    does not get rendered and no information is collected.
-    """
-    if not settings.DEBUG and getattr(settings, 'OSCAR_TRACKING', True):
-        params = {
-            'django': django.get_version(),
-            'python': platform.python_version(),
-            'oscar': oscar.get_version(),
-        }
-        return mark_safe(parse.urlencode(params))
-    else:
-        return None
-
-
 def metadata(request):
     """
     Add some generally useful metadata to the template context
@@ -53,7 +26,6 @@ def metadata(request):
             'shop_tagline': settings.OSCAR_SHOP_TAGLINE,
             'homepage_url': settings.OSCAR_HOMEPAGE,
             'use_less': getattr(settings, 'USE_LESS', False),
-            'call_home': usage_statistics_string(),
             'language_neutral_url_path': strip_language_code(request),
             'google_analytics_id': getattr(settings,
                                            'GOOGLE_ANALYTICS_ID', None)}

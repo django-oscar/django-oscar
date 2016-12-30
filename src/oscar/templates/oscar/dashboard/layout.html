@@ -119,21 +119,6 @@
         </div>
     </div><!-- /container -->
 
-    {% comment %}
-        This block includes a single pixel from one of the django-oscar
-        organisation's servers. It's included to keep track of which sites are
-        running Oscar in production, and what versions of Python and Django are
-        used. This provides useful data when deciding which versions of Python
-        and Django to support.
-
-        You are, of course, welcome to remove this tracker. To do so, set
-        OSCAR_TRACKING=False in your settings.
-    {% endcomment %}
-    {% block trackerimage %}
-        {% if call_home %}
-            <img src="//analytics.oscarcommerce.com/tracker.gif?{{ call_home }}" style="display:none" />
-        {% endif %}
-    {% endblock %}
 {% endblock %}
 
 {# Local scripts #}
