@@ -74,6 +74,7 @@ class Dispatcher(object):
         # Is user is signed in, record the event for audit
         if email and user.is_authenticated():
             Email._default_manager.create(user=user,
+                                          email=user.email,
                                           subject=email.subject,
                                           body_text=email.body,
                                           body_html=messages['html'])
