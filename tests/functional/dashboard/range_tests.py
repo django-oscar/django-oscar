@@ -7,7 +7,6 @@ from oscar.apps.offer.models import Range, RangeProductFileUpload
 from oscar.test.factories import create_product
 from oscar.test.testcases import WebTestCase
 
-from nose_parameterized import parameterized
 from webtest.forms import Upload
 
 
@@ -141,14 +140,22 @@ class RangeProductViewTest(WebTestCase):
             messages[1].message, 'No product(s) were found with SKU or UPC matching 321'
         )
 
-    @parameterized.expand([
-        ('query', '123123'),
-        ('file_upload', Upload('skus.txt', b'123123'))
-    ])
-    def test_same_skus_within_different_products_warning(self, field_name, field_value):
+    def test_same_skus_within_different_products_warning_query(self):
         range_products_page = self.get(self.url)
         form = range_products_page.form
-        form[field_name] = field_value
+        form['query'] = '123123'
+        response = form.submit().follow()
+        messages = list(response.context['messages'])
+        self.assertEquals(len(messages), 2)
+        self.assertEquals(messages[1].level, WARNING)
+        self.assertEquals(
+            messages[1].message, 'There are more than one product with SKU 123123'
+        )
+
+    def test_same_skus_within_different_products_warning_file_upload(self):
+        range_products_page = self.get(self.url)
+        form = range_products_page.form
+        form['file_upload'] = Upload('skus.txt', b'123123')
         response = form.submit().follow()
         messages = list(response.context['messages'])
         self.assertEquals(len(messages), 2)
