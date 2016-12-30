@@ -1,5 +1,5 @@
 # These targets are not files
-.PHONY: install sandbox docs coverage lint travis messages compiledmessages css clean preflight sandbox_image
+.PHONY: install sandbox docs coverage lint messages compiledmessages css clean sandbox_image
 
 install:
 	pip install -r requirements.txt
@@ -32,6 +32,9 @@ sandbox_image:
 docs:
 	cd docs && make html
 
+test:
+	py.test 
+
 coverage:
 	py.test --cov=oscar --cov-report=term-missing
 
@@ -42,11 +45,6 @@ lint:
 testmigrations:
 	pip install -r requirements_migrations.txt
 	cd sites/sandbox && ./test_migrations.sh
-
-# This target is run on Travis.ci. We lint, test and build the sandbox
-# site as well as testing migrations apply correctly. We don't call 'install'
-# first as that is run as a separate part of the Travis build process.
-travis: install coverage lint build_sandbox testmigrations
 
 messages:
 	# Create the .po files used for i18n
@@ -64,10 +62,6 @@ clean:
 	# Remove files not in source control
 	find . -type f -name "*.pyc" -delete
 	rm -rf nosetests.xml coverage.xml htmlcov *.egg-info *.pdf dist violations.txt
-
-preflight: lint
-    # Bare minimum of tests to run before pushing to master
-	./runtests.py
 
 todo:
 	# Look for areas of the code that need updating when some event has taken place (like 
