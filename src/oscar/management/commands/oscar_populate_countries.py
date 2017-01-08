@@ -46,10 +46,14 @@ class Command(BaseCommand):
                     'You already have countries in your database. This command'
                     ' currently does not support updating existing countries.')
 
+        test_country = list(pycountry.countries)[0]
+        a2 = 'alpha2' if hasattr(test_country, 'alpha2') else 'alpha_2'
+        a3 = 'alpha3' if hasattr(test_country, 'alpha3') else 'alpha_3'
+
         countries = [
             Country(
-                iso_3166_1_a2=country.alpha2,
-                iso_3166_1_a3=country.alpha3,
+                iso_3166_1_a2=getattr(country, a2),
+                iso_3166_1_a3=getattr(country, a3),
                 iso_3166_1_numeric=country.numeric,
                 printable_name=country.name,
                 name=getattr(country, 'official_name', ''),
