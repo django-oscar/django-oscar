@@ -23,7 +23,9 @@ calculating prices and availability information.
 
 .. code-block:: python
 
+   >>> from oscar.apps.partner.strategy import Selector
    >>> product = Product.objects.get(id=1)
+   >>> strategy = Selector().strategy()
    >>> info = strategy.fetch_for_product(product)
 
    # Availability information
