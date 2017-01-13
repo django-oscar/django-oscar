@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.core.signing import BadSignature, Signer
 from django.utils.functional import SimpleLazyObject, empty
 from django.utils.translation import ugettext_lazy as _
+from django.utils.deprecation import MiddlewareMixin
 
 from oscar.core.loading import get_class, get_model
 
@@ -13,7 +14,7 @@ Selector = get_class('partner.strategy', 'Selector')
 selector = Selector()
 
 
-class BasketMiddleware(object):
+class BasketMiddleware(MiddlewareMixin):
 
     # Middleware interface methods
 
