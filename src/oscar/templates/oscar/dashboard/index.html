@@ -60,23 +60,22 @@
     <div class="col-md-4">
         <table class="table table-striped table-bordered table-hover">
             <caption><i class="icon-shopping-cart icon-large"></i>{% trans "Orders - Last 24 Hours" %}</caption>
+            <tr>
+                <th class="col-md-10">{% trans "Total orders" %}</th>
+                <td class="col-md-2" >{{ total_orders_last_day }}</td>
             </tr>
-                <tr>
-                    <th class="col-md-10">{% trans "Total orders" %}</th>
-                    <td class="col-md-2" >{{ total_orders_last_day }}</td>
-                </tr>
-                <tr>
-                    <th class="col-md-10">{% trans "Total lines" %}</th>
-                    <td class="col-md-2" >{{ total_lines_last_day }}</td>
-                </tr>
-                <tr>
-                    <th class="col-md-10">{% trans "Total revenue" %}</th>
-                    <td class="col-md-2" >{{ total_revenue_last_day|currency }}</td>
-                </tr>
-                <tr>
-                    <th class="col-md-10">{% trans "Average order costs" %}</th>
-                    <td class="col-md-2" >{{ average_order_costs|currency }}</td>
-                </tr>
+            <tr>
+                <th class="col-md-10">{% trans "Total lines" %}</th>
+                <td class="col-md-2" >{{ total_lines_last_day }}</td>
+            </tr>
+            <tr>
+                <th class="col-md-10">{% trans "Total revenue" %}</th>
+                <td class="col-md-2" >{{ total_revenue_last_day|currency }}</td>
+            </tr>
+            <tr>
+                <th class="col-md-10">{% trans "Average order costs" %}</th>
+                <td class="col-md-2" >{{ average_order_costs|currency }}</td>
+            </tr>
         </table>
     </div>
 
@@ -170,7 +169,8 @@
                 <th class="col-md-10">{% trans "Active <em>Vouchers</em>" %}</th>
                 <td class="col-md-2" >{{ total_vouchers }}</td>
             </tr>
-            <th class="col-md-10">{% trans "Promotions" %}</th>
+            <tr>
+                <th class="col-md-10">{% trans "Promotions" %}</th>
                 <td class="col-md-2" >{{ total_promotions }}</td>
             </tr>
         </table>
