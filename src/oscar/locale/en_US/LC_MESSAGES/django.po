@@ -5024,7 +5024,7 @@ msgstr "Low stock alerts"
 
 #: defaults.py:132
 msgid "Fulfilment"
-msgstr "Fulfilment"
+msgstr "Fulfillment"
 
 #: defaults.py:140 templates/oscar/dashboard/orders/statistics.html:19
 msgid "Statistics"
