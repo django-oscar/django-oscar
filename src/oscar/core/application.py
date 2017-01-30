@@ -1,5 +1,5 @@
 from django import VERSION as DJANGO_VERSION
-from django.core.urlresolvers import reverse_lazy, RegexURLPattern
+from django.core.urlresolvers import RegexURLPattern, reverse_lazy
 
 from oscar.core.loading import feature_hidden
 from oscar.views.decorators import permissions_required

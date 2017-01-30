@@ -15,5 +15,6 @@ class ProductReviewAdmin(admin.ModelAdmin):
 class VoteAdmin(admin.ModelAdmin):
     list_display = ('review', 'user', 'delta', 'date_created')
 
+
 admin.site.register(ProductReview, ProductReviewAdmin)
 admin.site.register(Vote, VoteAdmin)

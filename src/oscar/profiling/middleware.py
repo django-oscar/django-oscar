@@ -1,10 +1,11 @@
 import cProfile
-import hotshot
-import hotshot.stats
 import pstats
 import sys
 import tempfile
 from cStringIO import StringIO
+
+import hotshot
+import hotshot.stats
 
 
 def profile_this(fn):
