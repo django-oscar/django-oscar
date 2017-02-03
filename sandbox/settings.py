@@ -154,7 +154,7 @@ TEMPLATES = [
     }
 ]
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
@@ -175,7 +175,7 @@ MIDDLEWARE_CLASSES = (
     # Enable the ProfileMiddleware, then add ?cprofile to any
     # URL path to print out profile details
     #'oscar.profiling.middleware.ProfileMiddleware',
-)
+]
 
 ROOT_URLCONF = 'urls'
 

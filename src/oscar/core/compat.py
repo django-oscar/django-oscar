@@ -1,6 +1,7 @@
 import csv
 import sys
 
+import django
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
@@ -67,6 +68,13 @@ def existing_user_fields(fields):
     user_fields = get_user_model()._meta.fields
     user_field_names = [field.name for field in user_fields]
     return [field for field in fields if field in user_field_names]
+
+
+# Supprt new Django 1.10 middleware
+if django.VERSION >= (1, 10):
+    from django.utils.deprecation import MiddlewareMixin
+else:
+    MiddlewareMixin = object
 
 
 # Python3 compatibility layer
