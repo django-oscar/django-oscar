@@ -8,7 +8,7 @@ django-extensions==1.7.6
 Werkzeug==0.11.15
 
 # Sandbox
-Whoosh==2.6.0
+Whoosh==2.7.4
 pysolr==3.2.0
 requests==2.10.0
 uWSGI==2.0.13.1
