@@ -6,7 +6,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.utils.http import is_safe_url
 from django.utils.translation import ugettext_lazy as _
@@ -207,7 +206,8 @@ class BasketView(ModelFormSetView):
     def json_response(self, ctx, flash_messages):
         basket_html = render_to_string(
             'basket/partials/basket_content.html',
-            RequestContext(self.request, ctx))
+            context=ctx, request=self.request)
+
         payload = {
             'content_html': basket_html,
             'messages': flash_messages.as_dict()}
