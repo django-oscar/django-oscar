@@ -23,6 +23,7 @@ build_sandbox:
 	sandbox/manage.py clear_index --noinput
 	sandbox/manage.py update_index catalogue
 	sandbox/manage.py thumbnail cleanup
+	sandbox/manage.py collectstatic --noinput
 
 sandbox: install build_sandbox
 
