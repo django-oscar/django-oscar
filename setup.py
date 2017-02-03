@@ -20,7 +20,7 @@ from oscar import get_version  # noqa isort:skip
 install_requires = [
     'django>=1.8.8,<1.11',
     # PIL is required for image fields, Pillow is the "friendly" PIL fork
-    'pillow>=1.7.8',
+    'pillow>=3.4.2',
     # We use the ModelFormSetView from django-extra-views for the basket
     # page. > 0.6.5 has a bug which causes issues with Django > 1.6,
     # https://github.com/AndrewIngram/django-extra-views/issues/114
@@ -38,7 +38,7 @@ install_requires = [
     # For manipulating search URLs
     'purl>=0.7',
     # For phone number field
-    'phonenumbers>=6.3.0,<8.0.0',
+    'phonenumbers>=6.3.0,<9.0.0',
     # Used for oscar.test.contextmanagers.mock_signal_receiver
     'mock>=1.0.1,<3.0',
     # Used for oscar.test.newfactories
@@ -58,10 +58,10 @@ docs_requires = [
 
 test_requires = [
     'WebTest==2.0.23',
-    'coverage==4.1',
-    'django-webtest==1.7.9',
+    'coverage==4.3.4',
+    'django-webtest==1.8.0',
     'py>=1.4.31',
-    'pytest==3.0.5',
+    'pytest==3.0.6',
     'pytest-cov==2.4.0',
     'pytest-django==3.1.2',
     'pytest-xdist==1.15.0',
