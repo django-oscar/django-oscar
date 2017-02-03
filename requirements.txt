@@ -13,7 +13,7 @@ pysolr==3.2.0
 requests==2.10.0
 uWSGI==2.0.13.1
 whitenoise==3.2
-Pillow==3.3.0
+Pillow==3.3.2
 
 # Misc
 flake8==3.0.3
