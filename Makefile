@@ -7,22 +7,22 @@ install:
 
 build_sandbox:
 	# Remove media
-	-rm -rf sites/sandbox/public/media/images
-	-rm -rf sites/sandbox/public/media/cache
-	-rm -rf sites/sandbox/public/static
-	-rm -f sites/sandbox/db.sqlite
+	-rm -rf sandbox/public/media/images
+	-rm -rf sandbox/public/media/cache
+	-rm -rf sandbox/public/static
+	-rm -f sandbox/db.sqlite
 	# Create database
-	sites/sandbox/manage.py migrate
+	sandbox/manage.py migrate
 	# Import some fixtures. Order is important as JSON fixtures include primary keys
-	sites/sandbox/manage.py loaddata sites/sandbox/fixtures/child_products.json
-	sites/sandbox/manage.py oscar_import_catalogue sites/sandbox/fixtures/*.csv
-	sites/sandbox/manage.py oscar_import_catalogue_images sites/sandbox/fixtures/images.tar.gz
-	sites/sandbox/manage.py oscar_populate_countries --initial-only
-	sites/sandbox/manage.py loaddata sites/_fixtures/pages.json sites/_fixtures/auth.json sites/_fixtures/ranges.json sites/_fixtures/offers.json
-	sites/sandbox/manage.py loaddata sites/sandbox/fixtures/orders.json
-	sites/sandbox/manage.py clear_index --noinput
-	sites/sandbox/manage.py update_index catalogue
-	sites/sandbox/manage.py thumbnail cleanup
+	sandbox/manage.py loaddata sandbox/fixtures/child_products.json
+	sandbox/manage.py oscar_import_catalogue sandbox/fixtures/*.csv
+	sandbox/manage.py oscar_import_catalogue_images sandbox/fixtures/images.tar.gz
+	sandbox/manage.py oscar_populate_countries --initial-only
+	sandbox/manage.py loaddata sandbox/fixtures/pages.json sandbox/fixtures/auth.json sandbox/fixtures/ranges.json sandbox/fixtures/offers.json
+	sandbox/manage.py loaddata sandbox/fixtures/orders.json
+	sandbox/manage.py clear_index --noinput
+	sandbox/manage.py update_index catalogue
+	sandbox/manage.py thumbnail cleanup
 
 sandbox: install build_sandbox
 
@@ -44,7 +44,7 @@ lint:
 
 testmigrations:
 	pip install -r requirements_migrations.txt
-	cd sites/sandbox && ./test_migrations.sh
+	cd sandbox && ./test_migrations.sh
 
 messages:
 	# Create the .po files used for i18n
