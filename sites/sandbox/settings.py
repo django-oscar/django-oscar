@@ -44,6 +44,19 @@ CACHES = {
     }
 }
 
+# Alternative caches - Redis
+# install Ubuntu: sudo apt-get install redis-server
+# pip install django-redis
+#CACHES = {
+#    'default': {
+#        'BACKEND': 'django_redis.cache.RedisCache',
+#        'LOCATION': '127.0.0.1:6379',
+#        'OPTIONS': {
+#            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#        }
+#    }
+#}
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
