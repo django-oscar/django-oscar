@@ -13,6 +13,8 @@ ALLOWED_HOSTS = [
     'latest.oscarcommerce.com',
     'master.oscarcommerce.com',
     'localhost',
+    '127.0.0.1',
+
 ]
 
 # This is needed for the hosted version of the sandbox
