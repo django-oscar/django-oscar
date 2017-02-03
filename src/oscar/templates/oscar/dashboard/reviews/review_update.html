@@ -21,7 +21,7 @@
 {% endblock %}
 
 {% block headertext %}
-    {% blocktrans %}Review #{{ review.id }}{% endblocktrans %}
+    {% blocktrans with review_id=review.id %}Review #{{ review_id }}{% endblocktrans %}
 {% endblock %}
 
 {% block dashboard_content %}
