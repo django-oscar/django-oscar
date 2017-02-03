@@ -3,8 +3,10 @@
 #
 # $ for x in `yolk -l | awk '{print $1}'`; do yolk -d $x 2>/dev/null; done
 # Development
+django-environ==0.4.1
 django-debug-toolbar==1.6
 django-extensions==1.7.6
+python-memcached==1.58
 Werkzeug==0.11.15
 
 # Sandbox

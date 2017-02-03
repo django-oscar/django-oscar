@@ -1,12 +1,14 @@
 import os
-
+import environ
 import oscar
+
+env = environ.Env()
 
 # Path helper
 location = lambda x: os.path.join(
     os.path.dirname(os.path.realpath(__file__)), x)
 
-DEBUG = os.environ.get('DEBUG', 'true') != 'false'
+DEBUG = env.bool('DEBUG', default=True)
 SQL_DEBUG = DEBUG
 
 ALLOWED_HOSTS = [
@@ -39,10 +41,9 @@ DATABASES = {
 }
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-    }
+    'default': env.cache(default='locmemcache://'),
 }
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -391,8 +392,8 @@ USE_LESS = False
 # Sentry
 # ======
 
-if os.environ.get('SENTRY_DSN'):
-    RAVEN_CONFIG = {'dsn': os.environ.get('SENTRY_DSN')}
+if env('SENTRY_DSN', default=None):
+    RAVEN_CONFIG = {'dsn': env('SENTRY_DSN', default=None)}
     LOGGING['handlers']['sentry'] = {
         'level': 'ERROR',
         'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
