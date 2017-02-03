@@ -168,6 +168,7 @@ MIDDLEWARE = [
 
     # Allow languages to be selected
     'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.http.ConditionalGetMiddleware',
     'django.middleware.common.CommonMiddleware',
 
     # Ensure a valid basket is added to the request instance for every request
