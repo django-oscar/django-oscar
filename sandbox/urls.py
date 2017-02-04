@@ -1,18 +1,15 @@
 import django
-
 from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.sitemaps import views
-
 from oscar.app import application
-from oscar.views import handler500, handler404, handler403
+from oscar.views import handler403, handler404, handler500
 
-from apps.sitemaps import base_sitemaps
 from apps.gateway import urls as gateway_urls
-
+from apps.sitemaps import base_sitemaps
 
 admin.autodiscover()
 
@@ -20,13 +17,16 @@ urlpatterns = [
     # Include admin as convenience. It's unsupported and only included
     # for developers.
     url(r'^admin/', include(admin.site.urls)),
+
     # i18n URLS need to live outside of i18n_patterns scope of Oscar
     url(r'^i18n/', include(django.conf.urls.i18n)),
+
     # include a basic sitemap
-    url(r'^sitemap\.xml$', views.index, {
-        'sitemaps': base_sitemaps}),
-    url(r'^sitemap-(?P<section>.+)\.xml$',
-        views.sitemap, {'sitemaps': base_sitemaps}),
+    url(r'^sitemap\.xml$', views.index,
+        {'sitemaps': base_sitemaps}),
+    url(r'^sitemap-(?P<section>.+)\.xml$', views.sitemap,
+        {'sitemaps': base_sitemaps},
+        name='django.contrib.sitemaps.views.sitemap')
 ]
 
 # Prefix Oscar URLs with language codes
