@@ -12,7 +12,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
 from oscar.apps.customer.utils import get_password_reset_url
-from oscar.core.compat import get_user_model
+from oscar.core.compat import get_user_model, user_is_authenticated
 from oscar.core.loading import (
     get_class, get_classes, get_model, get_profile_class)
 from oscar.core.utils import safe_referrer
@@ -67,7 +67,7 @@ class AccountRegistrationView(RegisterUserMixin, generic.FormView):
     redirect_field_name = 'next'
 
     def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated():
+        if user_is_authenticated(request.user):
             return redirect(settings.LOGIN_REDIRECT_URL)
         return super(AccountRegistrationView, self).get(
             request, *args, **kwargs)
@@ -107,7 +107,7 @@ class AccountAuthView(RegisterUserMixin, generic.TemplateView):
     redirect_field_name = 'next'
 
     def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated():
+        if user_is_authenticated(request.user):
             return redirect(settings.LOGIN_REDIRECT_URL)
         return super(AccountAuthView, self).get(
             request, *args, **kwargs)

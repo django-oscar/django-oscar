@@ -14,6 +14,7 @@ from extra_views import ModelFormSetView
 
 from oscar.apps.basket import signals
 from oscar.core import ajax
+from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import redirect_to_referrer, safe_referrer
 
@@ -113,7 +114,7 @@ class BasketView(ModelFormSetView):
         context['upsell_messages'] = self.get_upsell_messages(
             self.request.basket)
 
-        if self.request.user.is_authenticated():
+        if user_is_authenticated(self.request.user):
             try:
                 saved_basket = self.basket_model.saved.get(
                     owner=self.request.user)
@@ -148,7 +149,7 @@ class BasketView(ModelFormSetView):
             if (hasattr(form, 'cleaned_data') and
                     form.cleaned_data['save_for_later']):
                 line = form.instance
-                if self.request.user.is_authenticated():
+                if user_is_authenticated(self.request.user):
                     self.move_line_to_saved_basket(line)
 
                     msg = render_to_string(

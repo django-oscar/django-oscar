@@ -1,5 +1,7 @@
 from collections import namedtuple
 from decimal import Decimal as D
+
+from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_class
 
 Unavailable = get_class('partner.availability', 'Unavailable')
@@ -57,7 +59,7 @@ class Base(object):
     def __init__(self, request=None):
         self.request = request
         self.user = None
-        if request and request.user.is_authenticated():
+        if request and user_is_authenticated(request.user):
             self.user = request.user
 
     def fetch_for_product(self, product, stockrecord=None):
