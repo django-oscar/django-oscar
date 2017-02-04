@@ -34,7 +34,7 @@ urlpatterns += i18n_patterns(
     # Custom functionality to allow dashboard users to be created
     url(r'gateway/', include(gateway_urls)),
     # Oscar's normal URLs
-    url(r'^', include(application.urls)),
+    url(r'^', application.urls),
 )
 
 if settings.DEBUG:
