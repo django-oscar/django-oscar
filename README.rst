@@ -25,9 +25,9 @@ Contents:
 Further reading:
 
 * `Official homepage`_
-* `Sandbox site`_(automatically deployed via the official docker sandbox image)
+* `Sandbox site`_ (automatically deployed via the official docker sandbox image)
 * `Documentation`_ on the excellent `readthedocs.org`_
-* `Docker image`_
+* `Docker image`_ on http://hub.docker.com/
 * `django-oscar group`_ - mailing list for questions and announcements
 * `django-oscar-jobs group`_ - mailing list for job offers
 * `Continuous integration homepage`_ on `travis-ci.org`_
@@ -62,7 +62,7 @@ Docs status:
 
 .. _`Official homepage`: http://oscarcommerce.com
 .. _`Sandbox site`: http://latest.oscarcommerce.com
-.. _`Document image`: https://hub.docker.com/r/oscarcommerce/django-oscar-sandbox/
+.. _`Docker image`: https://hub.docker.com/r/oscarcommerce/django-oscar-sandbox/
 .. _`Documentation`: https://django-oscar.readthedocs.io/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
 .. _`Continuous integration homepage`: http://travis-ci.org/#!/django-oscar/django-oscar
