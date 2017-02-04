@@ -85,13 +85,13 @@ class RangeProductViewTest(WebTestCase):
         form['file_upload'] = Upload('new_skus.txt', b'456')
         form.submit().follow()
         all_products = self.range.all_products()
-        self.assertEquals(len(all_products), 1)
+        self.assertEqual(len(all_products), 1)
         self.assertTrue(self.product3 in all_products)
         range_product_file_upload = RangeProductFileUpload.objects.get()
-        self.assertEquals(range_product_file_upload.range, self.range)
-        self.assertEquals(range_product_file_upload.num_new_skus, 1)
-        self.assertEquals(range_product_file_upload.status, RangeProductFileUpload.PROCESSED)
-        self.assertEquals(range_product_file_upload.size, 3)
+        self.assertEqual(range_product_file_upload.range, self.range)
+        self.assertEqual(range_product_file_upload.num_new_skus, 1)
+        self.assertEqual(range_product_file_upload.status, RangeProductFileUpload.PROCESSED)
+        self.assertEqual(range_product_file_upload.size, 3)
 
     def test_dupe_skus_warning(self):
         self.range.add_product(self.product3)
@@ -99,8 +99,8 @@ class RangeProductViewTest(WebTestCase):
         form = range_products_page.forms[0]
         form['query'] = '456'
         response = form.submit()
-        self.assertEquals(list(response.context['messages']), [])
-        self.assertEquals(
+        self.assertEqual(list(response.context['messages']), [])
+        self.assertEqual(
             response.context['form'].errors['query'],
             ['The products with SKUs or UPCs matching 456 are already in this range']
         )
@@ -109,11 +109,11 @@ class RangeProductViewTest(WebTestCase):
         form['query'] = '456, 789'
         response = form.submit().follow()
         messages = list(response.context['messages'])
-        self.assertEquals(len(messages), 2)
-        self.assertEquals(messages[0].level, SUCCESS)
-        self.assertEquals(messages[0].message, '1 product added to range')
-        self.assertEquals(messages[1].level, WARNING)
-        self.assertEquals(
+        self.assertEqual(len(messages), 2)
+        self.assertEqual(messages[0].level, SUCCESS)
+        self.assertEqual(messages[0].message, '1 product added to range')
+        self.assertEqual(messages[1].level, WARNING)
+        self.assertEqual(
             messages[1].message,
             'The products with SKUs or UPCs matching 456 are already in this range'
         )
@@ -123,8 +123,8 @@ class RangeProductViewTest(WebTestCase):
         form = range_products_page.form
         form['query'] = '321'
         response = form.submit()
-        self.assertEquals(list(response.context['messages']), [])
-        self.assertEquals(
+        self.assertEqual(list(response.context['messages']), [])
+        self.assertEqual(
             response.context['form'].errors['query'],
             ['No products exist with a SKU or UPC matching 321']
         )
@@ -132,11 +132,11 @@ class RangeProductViewTest(WebTestCase):
         form['query'] = '456, 321'
         response = form.submit().follow()
         messages = list(response.context['messages'])
-        self.assertEquals(len(messages), 2)
-        self.assertEquals(messages[0].level, SUCCESS)
-        self.assertEquals(messages[0].message, '1 product added to range')
-        self.assertEquals(messages[1].level, WARNING)
-        self.assertEquals(
+        self.assertEqual(len(messages), 2)
+        self.assertEqual(messages[0].level, SUCCESS)
+        self.assertEqual(messages[0].message, '1 product added to range')
+        self.assertEqual(messages[1].level, WARNING)
+        self.assertEqual(
             messages[1].message, 'No product(s) were found with SKU or UPC matching 321'
         )
 
@@ -146,9 +146,9 @@ class RangeProductViewTest(WebTestCase):
         form['query'] = '123123'
         response = form.submit().follow()
         messages = list(response.context['messages'])
-        self.assertEquals(len(messages), 2)
-        self.assertEquals(messages[1].level, WARNING)
-        self.assertEquals(
+        self.assertEqual(len(messages), 2)
+        self.assertEqual(messages[1].level, WARNING)
+        self.assertEqual(
             messages[1].message, 'There are more than one product with SKU 123123'
         )
 
@@ -158,8 +158,8 @@ class RangeProductViewTest(WebTestCase):
         form['file_upload'] = Upload('skus.txt', b'123123')
         response = form.submit().follow()
         messages = list(response.context['messages'])
-        self.assertEquals(len(messages), 2)
-        self.assertEquals(messages[1].level, WARNING)
-        self.assertEquals(
+        self.assertEqual(len(messages), 2)
+        self.assertEqual(messages[1].level, WARNING)
+        self.assertEqual(
             messages[1].message, 'There are more than one product with SKU 123123'
         )
