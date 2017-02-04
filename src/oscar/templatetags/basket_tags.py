@@ -1,5 +1,6 @@
 from django import template
 
+from oscar.core.compat import assignment_tag
 from oscar.core.loading import get_class, get_model
 
 AddToBasketForm = get_class('basket.forms', 'AddToBasketForm')
@@ -11,7 +12,7 @@ register = template.Library()
 QNT_SINGLE, QNT_MULTIPLE = 'single', 'multiple'
 
 
-@register.assignment_tag()
+@assignment_tag(register)
 def basket_form(request, product, quantity_type='single'):
     if not isinstance(product, Product):
         return ''

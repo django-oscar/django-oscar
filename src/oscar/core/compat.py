@@ -91,6 +91,13 @@ def user_is_anonymous(user):
         return user.is_anonymous()
 
 
+def assignment_tag(register):
+    if django.VERSION >= (1, 9):
+        return register.simple_tag
+    else:
+        return register.assignment_tag
+
+
 # Python3 compatibility layer
 
 """
