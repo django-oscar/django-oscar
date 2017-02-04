@@ -10,7 +10,7 @@ Pillow==4.0.0
 Whoosh==2.7.4
 django-environ==0.4.1
 pysolr==3.6.0
-python-memcached==1.58
+redis==2.10.5
 requests==2.13.0
 uWSGI==2.0.14
 whitenoise==3.3.0

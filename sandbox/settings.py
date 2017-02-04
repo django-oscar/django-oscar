@@ -405,8 +405,13 @@ if env('SENTRY_DSN', default=None):
 # Sorl
 # ====
 
-THUMBNAIL_DEBUG = True
+THUMBNAIL_DEBUG = DEBUG
 THUMBNAIL_KEY_PREFIX = 'oscar-sandbox'
+THUMBNAIL_KVSTORE = env(
+    'THUMBNAIL_KVSTORE',
+    default='sorl.thumbnail.kvstores.cached_db_kvstore.KVStore')
+THUMBNAIL_REDIS_URL = env('THUMBNAIL_REDIS_URL', default=None)
+
 
 # Django 1.6 has switched to JSON serializing for security reasons, but it does not
 # serialize Models. We should resolve this by extending the
