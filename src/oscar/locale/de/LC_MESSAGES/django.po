@@ -17,7 +17,7 @@
 # Sören Schlömer <sos@anotherone.de>, 2013
 # Stefano Probst <stefano.probst@htl-klu.at>, 2014
 # Azd325 <tim.kleinschmidt@gmail.com>, 2014-2015
-# Tobias <te@englert.it>, 2016
+# Tobias <te@englert.it>, 2016-2017
 # topotropic <nicole@publicidentity.net>, 2013
 # welworx <wpm@liemberger.cc>, 2014
 # welworx <wpm@liemberger.cc>, 2014
@@ -26,7 +26,7 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-13 13:06+0200\n"
-"PO-Revision-Date: 2016-07-06 21:09+0000\n"
+"PO-Revision-Date: 2017-01-05 13:09+0000\n"
 "Last-Translator: Tobias <te@englert.it>\n"
 "Language-Team: German (http://www.transifex.com/codeinthehole/django-oscar/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -936,7 +936,7 @@ msgstr "Kategorie"
 
 #: apps/catalogue/abstract_models.py:237
 msgid "Product category"
-msgstr "Produktkategorien"
+msgstr "Produktkategorie"
 
 #: apps/catalogue/abstract_models.py:238
 msgid "Product categories"

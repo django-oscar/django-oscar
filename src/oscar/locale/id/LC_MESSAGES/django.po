@@ -3,6 +3,9 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# ariadi <me@ariadi.net>, 2017
+# Gus Hill <lkybstrd@gmail.com>, 2016
+# ariadi <me@ariadi.net>, 2017
 # oon arfiandwi <oon.arfiandwi@gmail.com>, 2016
 # oon arfiandwi <oon.arfiandwi@gmail.com>, 2016
 msgid ""
@@ -10,8 +13,8 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-13 13:06+0200\n"
-"PO-Revision-Date: 2016-04-20 19:27+0000\n"
-"Last-Translator: oon arfiandwi <oon.arfiandwi@gmail.com>\n"
+"PO-Revision-Date: 2017-01-23 23:43+0000\n"
+"Last-Translator: ariadi <me@ariadi.net>\n"
 "Language-Team: Indonesian (http://www.transifex.com/codeinthehole/django-oscar/language/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,15 +24,15 @@ msgstr ""
 
 #: apps/address/abstract_models.py:26
 msgid "Mr"
-msgstr ""
+msgstr "Tuan"
 
 #: apps/address/abstract_models.py:27
 msgid "Miss"
-msgstr ""
+msgstr "Nona"
 
 #: apps/address/abstract_models.py:28
 msgid "Mrs"
-msgstr ""
+msgstr "Nyonya"
 
 #: apps/address/abstract_models.py:29
 msgid "Ms"
@@ -42,7 +45,7 @@ msgstr ""
 #: apps/address/abstract_models.py:219
 msgctxt "Treatment Pronouns for the customer"
 msgid "Title"
-msgstr ""
+msgstr "Judul"
 
 #: apps/address/abstract_models.py:221 apps/customer/abstract_models.py:59
 #: templates/oscar/dashboard/partners/partner_manage.html:42
@@ -76,7 +79,7 @@ msgstr "Kota"
 
 #: apps/address/abstract_models.py:232
 msgid "State/County"
-msgstr ""
+msgstr "Provinsi"
 
 #: apps/address/abstract_models.py:234
 msgid "Post/Zip-code"
@@ -84,11 +87,11 @@ msgstr "Kode Pos"
 
 #: apps/address/abstract_models.py:235 apps/address/abstract_models.py:413
 msgid "Country"
-msgstr ""
+msgstr "Negara"
 
 #: apps/address/abstract_models.py:240
 msgid "Search text - used only for searching addresses"
-msgstr ""
+msgstr "Pencarian kata - hanya gunakan untuk pencarian alamat"
 
 #: apps/address/abstract_models.py:247 apps/address/config.py:8
 #: templates/oscar/checkout/checkout.html:37
@@ -105,29 +108,29 @@ msgstr "Alamat"
 #: templates/oscar/dashboard/users/detail.html:107
 #: templates/oscar/dashboard/users/detail.html:148
 msgid "Addresses"
-msgstr ""
+msgstr "Alamat"
 
 #: apps/address/abstract_models.py:274
 #, python-format
 msgid "Addresses in %(country)s require a valid postcode"
-msgstr ""
+msgstr "Alamat dalam %(country)s membutuhkan kodepos yang valid"
 
 #: apps/address/abstract_models.py:286
 #, python-format
 msgid "The postcode '%(postcode)s' is not valid for %(country)s"
-msgstr ""
+msgstr "Kodepos '%(postcode)s' tidak valid untuk %(country)s"
 
 #: apps/address/abstract_models.py:391
 msgid "ISO 3166-1 alpha-2"
-msgstr ""
+msgstr "ISO 3166-1 alpha-2"
 
 #: apps/address/abstract_models.py:393
 msgid "ISO 3166-1 alpha-3"
-msgstr ""
+msgstr "ISO 3166-1 alpha-3"
 
 #: apps/address/abstract_models.py:395
 msgid "ISO 3166-1 numeric"
-msgstr ""
+msgstr "ISO 3166-1 numeric"
 
 #: apps/address/abstract_models.py:398
 msgid "Country name"
@@ -143,15 +146,15 @@ msgstr "Tampilkan pesanan"
 
 #: apps/address/abstract_models.py:405
 msgid "Higher the number, higher the country in the list."
-msgstr ""
+msgstr "Tingkatkan angka, negara pada daftar."
 
 #: apps/address/abstract_models.py:408
 msgid "Is shipping country"
-msgstr ""
+msgstr "Apakah termasuk negara pengiriman"
 
 #: apps/address/abstract_models.py:414 apps/shipping/abstract_models.py:27
 msgid "Countries"
-msgstr ""
+msgstr "Negara"
 
 #: apps/address/abstract_models.py:457 models/fields/__init__.py:139
 msgid "Phone number"
@@ -159,7 +162,7 @@ msgstr "Nomor Telpon"
 
 #: apps/address/abstract_models.py:458
 msgid "In case we need to call you about your order"
-msgstr ""
+msgstr "Andaikata kami perlu menghubungi anda mengenai pesanan"
 
 #: apps/address/abstract_models.py:460
 #: templates/oscar/checkout/checkout.html:55
@@ -170,7 +173,7 @@ msgstr "Instruksi"
 
 #: apps/address/abstract_models.py:461
 msgid "Tell us anything we should know when delivering your order."
-msgstr ""
+msgstr "Ceritakan apa yang perlu kami ketahui ketika menerima pesanan Anda."
 
 #: apps/address/abstract_models.py:468
 #: templates/oscar/checkout/shipping_address.html:5
@@ -183,7 +186,7 @@ msgstr "Alamat Pengiriman"
 
 #: apps/address/abstract_models.py:469
 msgid "Shipping addresses"
-msgstr ""
+msgstr "Alamat pengiriman"
 
 #: apps/address/abstract_models.py:494 apps/analytics/abstract_models.py:49
 #: apps/analytics/abstract_models.py:80 apps/analytics/abstract_models.py:98
@@ -201,7 +204,7 @@ msgstr "Pengguna"
 
 #: apps/address/abstract_models.py:498
 msgid "Default shipping address?"
-msgstr ""
+msgstr "Alamat pengiriman default?"
 
 #: apps/address/abstract_models.py:502
 msgid "Default billing address?"
@@ -213,7 +216,7 @@ msgstr "Jumlah Pesanan"
 
 #: apps/address/abstract_models.py:511
 msgid "Address Hash"
-msgstr ""
+msgstr "Hash alamat"
 
 #: apps/address/abstract_models.py:513 apps/analytics/abstract_models.py:82
 #: apps/analytics/abstract_models.py:100 apps/basket/abstract_models.py:616
@@ -231,11 +234,11 @@ msgstr "Alamat Pengguna"
 
 #: apps/address/abstract_models.py:542
 msgid "User addresses"
-msgstr ""
+msgstr "Alamat pengguna"
 
 #: apps/address/abstract_models.py:555
 msgid "This address is already in your address book"
-msgstr ""
+msgstr "Alamat sudah tertera pada daftar alamat Anda."
 
 #: apps/address/abstract_models.py:564
 #: templates/oscar/checkout/thank_you.html:99
@@ -246,7 +249,7 @@ msgstr "Alamat Penagihan"
 
 #: apps/address/abstract_models.py:565
 msgid "Billing addresses"
-msgstr ""
+msgstr "Alamat penagihan"
 
 #: apps/address/abstract_models.py:584 apps/order/abstract_models.py:416
 #: apps/partner/abstract_models.py:95 apps/partner/config.py:8
@@ -258,11 +261,11 @@ msgstr "Rekan"
 
 #: apps/address/abstract_models.py:589
 msgid "Partner address"
-msgstr ""
+msgstr "Alamat partner"
 
 #: apps/address/abstract_models.py:590
 msgid "Partner addresses"
-msgstr ""
+msgstr "Alamat partner"
 
 #: apps/analytics/abstract_models.py:20 apps/analytics/abstract_models.py:81
 #: apps/analytics/reports.py:19 apps/basket/abstract_models.py:596
@@ -288,16 +291,16 @@ msgstr "Produk"
 #: apps/analytics/abstract_models.py:24 apps/analytics/reports.py:20
 #: templates/oscar/dashboard/reports/partials/product_report.html:9
 msgid "Views"
-msgstr ""
+msgstr "Tampilan"
 
 #: apps/analytics/abstract_models.py:26 apps/analytics/abstract_models.py:56
 msgid "Basket Additions"
-msgstr ""
+msgstr "Tambahan troli belanja"
 
 #: apps/analytics/abstract_models.py:28 apps/analytics/reports.py:22
 #: templates/oscar/dashboard/reports/partials/product_report.html:11
 msgid "Purchases"
-msgstr ""
+msgstr "Pembelian"
 
 #: apps/analytics/abstract_models.py:31
 #: apps/catalogue/reviews/abstract_models.py:30
@@ -314,16 +317,16 @@ msgstr "Rekaman produk"
 
 #: apps/analytics/abstract_models.py:38
 msgid "Product records"
-msgstr ""
+msgstr "rekord produk"
 
 #: apps/analytics/abstract_models.py:41
 #, python-format
 msgid "Record for '%s'"
-msgstr ""
+msgstr "rekord untuk '%s'"
 
 #: apps/analytics/abstract_models.py:54
 msgid "Product Views"
-msgstr ""
+msgstr "Tampilan produk"
 
 #: apps/analytics/abstract_models.py:60 apps/analytics/reports.py:65
 #: apps/order/abstract_models.py:283 defaults.py:136
@@ -342,11 +345,11 @@ msgstr "Pesanan"
 
 #: apps/analytics/abstract_models.py:62 apps/order/abstract_models.py:506
 msgid "Order Lines"
-msgstr ""
+msgstr "daftar pesanan"
 
 #: apps/analytics/abstract_models.py:64
 msgid "Order Items"
-msgstr ""
+msgstr "Item pesanan"
 
 #: apps/analytics/abstract_models.py:65
 msgid "Total Spent"
@@ -358,55 +361,55 @@ msgstr "Tanggal Terakhir Memesan"
 
 #: apps/analytics/abstract_models.py:73
 msgid "User record"
-msgstr ""
+msgstr "rekord pengguna"
 
 #: apps/analytics/abstract_models.py:74
 msgid "User records"
-msgstr ""
+msgstr "record pengguna"
 
 #: apps/analytics/abstract_models.py:87
 msgid "User product view"
-msgstr ""
+msgstr "Tampilan produk pengguna"
 
 #: apps/analytics/abstract_models.py:88
 msgid "User product views"
-msgstr ""
+msgstr "Tampilan produk pengguna"
 
 #: apps/analytics/abstract_models.py:91
 #, python-format
 msgid "%(user)s viewed '%(product)s'"
-msgstr ""
+msgstr "%(user)s melihat '%(product)s' "
 
 #: apps/analytics/abstract_models.py:99
 msgid "Search term"
-msgstr ""
+msgstr "Istilah pencarian"
 
 #: apps/analytics/abstract_models.py:105
 msgid "User search query"
-msgstr ""
+msgstr "kueri pencarian pengguna"
 
 #: apps/analytics/abstract_models.py:106
 msgid "User search queries"
-msgstr ""
+msgstr "Pengguna mencari kueri"
 
 #: apps/analytics/abstract_models.py:109
 #, python-format
 msgid "%(user)s searched for '%(query)s'"
-msgstr ""
+msgstr "%(user)s mencari '%(query)s'"
 
 #: apps/analytics/config.py:8
 msgid "Analytics"
-msgstr ""
+msgstr "Analisis"
 
 #: apps/analytics/reports.py:21 apps/analytics/reports.py:64
 #: templates/oscar/dashboard/reports/partials/product_report.html:10
 #: templates/oscar/dashboard/reports/partials/user_report.html:12
 msgid "Basket additions"
-msgstr ""
+msgstr "Troli belanja tambahan"
 
 #: apps/analytics/reports.py:39
 msgid "Product analytics"
-msgstr ""
+msgstr "Analisis produk"
 
 #: apps/analytics/reports.py:61 apps/basket/reports.py:19
 #: apps/catalogue/abstract_models.py:50 apps/catalogue/abstract_models.py:93
@@ -451,22 +454,22 @@ msgstr "Nama"
 #: templates/oscar/customer/profile/profile.html:25
 #: templates/oscar/dashboard/reports/partials/user_report.html:10
 msgid "Date registered"
-msgstr ""
+msgstr "Tanggal registrasi"
 
 #: apps/analytics/reports.py:63
 #: templates/oscar/dashboard/reports/partials/user_report.html:11
 msgid "Product views"
-msgstr ""
+msgstr "Tampilan produk"
 
 #: apps/analytics/reports.py:66
 #: templates/oscar/dashboard/reports/partials/user_report.html:14
 msgid "Order lines"
-msgstr ""
+msgstr "daftar pesanan"
 
 #: apps/analytics/reports.py:67
 #: templates/oscar/dashboard/reports/partials/user_report.html:15
 msgid "Order items"
-msgstr ""
+msgstr "Item pesanan"
 
 #: apps/analytics/reports.py:68
 #: templates/oscar/dashboard/reports/partials/user_report.html:16
@@ -481,7 +484,7 @@ msgstr "Tanggal pesanan terakhir"
 
 #: apps/analytics/reports.py:91
 msgid "User analytics"
-msgstr ""
+msgstr "Analisis pengguna"
 
 #: apps/basket/abstract_models.py:30 apps/wishlists/abstract_models.py:24
 msgid "Owner"
@@ -497,11 +500,11 @@ msgstr ""
 
 #: apps/basket/abstract_models.py:40
 msgid "Saved - for items to be purchased later"
-msgstr ""
+msgstr "Tersimpan - untuk item yang dibeli nanti"
 
 #: apps/basket/abstract_models.py:41
 msgid "Frozen - the basket cannot be modified"
-msgstr ""
+msgstr "Dibekukan - Troli tidak dapat diubah"
 
 #: apps/basket/abstract_models.py:42
 msgid "Submitted - has been ordered at the checkout"
@@ -546,7 +549,7 @@ msgstr "Status"
 #: templates/oscar/dashboard/vouchers/voucher_list.html:17
 #: templates/oscar/dashboard/vouchers/voucher_list.html:27
 msgid "Vouchers"
-msgstr ""
+msgstr "Voucher"
 
 #: apps/basket/abstract_models.py:53 apps/basket/reports.py:82
 #: apps/catalogue/abstract_models.py:321
@@ -568,7 +571,7 @@ msgstr "Tanggal Dibuat"
 
 #: apps/basket/abstract_models.py:54
 msgid "Date merged"
-msgstr ""
+msgstr "Tanggal penggabungan"
 
 #: apps/basket/abstract_models.py:55
 #: templates/oscar/customer/order/order_list.html:42
@@ -584,27 +587,27 @@ msgstr "Tanggal Dikirim"
 #: templates/oscar/checkout/thank_you.html:174
 #: templates/oscar/partials/nav_primary.html:20
 msgid "Basket"
-msgstr "Keranjang"
+msgstr "Troli belanja"
 
 #: apps/basket/abstract_models.py:65
 msgid "Baskets"
-msgstr ""
+msgstr "Troli belanja"
 
 #: apps/basket/abstract_models.py:84
 #, python-format
 msgid "%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)"
-msgstr ""
+msgstr "%(status)s troli belanja (pemilik: %(owner)s, daftar ke: %(num_lines)d)"
 
 #: apps/basket/abstract_models.py:144
 #, python-format
 msgid ""
 "Due to technical limitations we are not able to ship more than %(threshold)d"
 " items in one order."
-msgstr ""
+msgstr "Disebabkan pembatasan kami tidak dapat mengirim lebih dari %(threshold)d item dalam satu pesanan."
 
 #: apps/basket/abstract_models.py:592
 msgid "Line Reference"
-msgstr ""
+msgstr "Daftar referensi"
 
 #: apps/basket/abstract_models.py:602 apps/basket/forms.py:134
 #: apps/basket/forms.py:282 apps/order/abstract_models.py:450
@@ -639,61 +642,61 @@ msgstr "Harga dengan Pajak"
 
 #: apps/basket/abstract_models.py:631
 msgid "Basket line"
-msgstr ""
+msgstr "Daftar troli belanja"
 
 #: apps/basket/abstract_models.py:632
 msgid "Basket lines"
-msgstr ""
+msgstr "Daftar troli belanja"
 
 #: apps/basket/abstract_models.py:636
 #, python-format
 msgid "Basket #%(basket_id)d, Product #%(product_id)d, quantity %(quantity)d"
-msgstr ""
+msgstr "Troli belanja #%(basket_id)d, Produk #%(product_id)d, jumlah %(quantity)d"
 
 #: apps/basket/abstract_models.py:644
 #, python-format
 msgid "You cannot modify a %s basket"
-msgstr "Anda tidak dapat mengubah keranjang %s "
+msgstr "Anda tidak dapat mengubah %s troli belanja "
 
 #: apps/basket/abstract_models.py:855
 #, python-format
 msgid ""
 "The price of '%(product)s' has increased from %(old_price)s to %(new_price)s"
 " since you added it to your basket"
-msgstr ""
+msgstr "harga '%(product)s' telah naik dari %(old_price)s to %(new_price)s sejak Anda menambahkan ke dalam troli belanja"
 
 #: apps/basket/abstract_models.py:860
 #, python-format
 msgid ""
 "The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s"
 " since you added it to your basket"
-msgstr ""
+msgstr "harga '%(product)s' telah turun dari %(old_price)s to %(new_price)s sejak Anda menambahkan ke dalam troli belanja"
 
 #: apps/basket/abstract_models.py:871 apps/order/abstract_models.py:733
 #: apps/order/abstract_models.py:762 apps/order/abstract_models.py:867
 #: apps/order/abstract_models.py:928
 msgid "Line"
-msgstr ""
+msgstr "Daftar"
 
 #: apps/basket/abstract_models.py:872 apps/catalogue/abstract_models.py:813
 #: apps/catalogue/abstract_models.py:1072
 #: apps/catalogue/abstract_models.py:1113 apps/order/abstract_models.py:736
 #: apps/order/abstract_models.py:760
 msgid "Option"
-msgstr "Opsi"
+msgstr "Pilihan"
 
 #: apps/basket/abstract_models.py:873 apps/offer/abstract_models.py:413
 #: apps/offer/abstract_models.py:642 apps/order/abstract_models.py:738
 msgid "Value"
-msgstr ""
+msgstr "Nilai"
 
 #: apps/basket/abstract_models.py:878
 msgid "Line attribute"
-msgstr ""
+msgstr "daftar atribut"
 
 #: apps/basket/abstract_models.py:879
 msgid "Line attributes"
-msgstr ""
+msgstr "daftar atribut"
 
 #: apps/basket/forms.py:17
 msgid "Save for Later"
@@ -701,7 +704,7 @@ msgstr "Simpan untuk Nanti"
 
 #: apps/basket/forms.py:75
 msgid "Move to Basket"
-msgstr "Pindah ke Keranjang"
+msgstr "Pindah ke Troli belanja"
 
 #: apps/basket/forms.py:124 apps/catalogue/abstract_models.py:785
 #: apps/catalogue/abstract_models.py:1099 apps/customer/abstract_models.py:142
@@ -730,7 +733,7 @@ msgstr "Silakan pilih produk yang valid"
 msgid ""
 "Due to technical limitations we are not able to ship more than %(threshold)d"
 " items in one order. Your basket currently has %(basket)d items."
-msgstr ""
+msgstr "Disebabkan keterbatasan kami tidak dapat mengirim lebih dari %(threshold)d item dalam satu pesanan. Pada pesanan Anda terdapat %(basket)d item."
 
 #: apps/basket/forms.py:247
 msgid ""
@@ -3595,11 +3598,11 @@ msgstr ""
 
 #: apps/offer/abstract_models.py:517 apps/offer/abstract_models.py:535
 msgid "Percentage discount cannot be greater than 100"
-msgstr ""
+msgstr "Persen diskon tidak dapat lebih dari 100"
 
 #: apps/offer/abstract_models.py:522
 msgid "A discount value is required"
-msgstr ""
+msgstr "Wajib memasukkan nilai diskon"
 
 #: apps/offer/abstract_models.py:525 apps/offer/abstract_models.py:538
 #: apps/offer/abstract_models.py:548
@@ -3717,7 +3720,7 @@ msgstr ""
 
 #: apps/offer/abstract_models.py:1019
 msgid "Range Product Uploaded File"
-msgstr ""
+msgstr "Kisaran produk file upload"
 
 #: apps/offer/abstract_models.py:1020
 msgid "Range Product Uploaded Files"
@@ -3997,64 +4000,64 @@ msgstr ""
 
 #: apps/order/abstract_models.py:458 apps/order/abstract_models.py:765
 msgid "Price (inc. tax)"
-msgstr ""
+msgstr "Harga (termasuk pajak)"
 
 #: apps/order/abstract_models.py:460 apps/order/abstract_models.py:767
 #: apps/partner/abstract_models.py:114
 #: templates/oscar/catalogue/detail.html:116
 msgid "Price (excl. tax)"
-msgstr ""
+msgstr "Harga (belum termasuk pajak)"
 
 #: apps/order/abstract_models.py:464
 msgid "Price before discounts (inc. tax)"
-msgstr ""
+msgstr "Harga sebelum diskon (termasuk pajak)"
 
 #: apps/order/abstract_models.py:467
 msgid "Price before discounts (excl. tax)"
-msgstr ""
+msgstr "Harga sebelum diskon (belum termasuk pajak)"
 
 #: apps/order/abstract_models.py:473
 msgid "Unit Cost Price"
-msgstr ""
+msgstr "Harga satuan"
 
 #: apps/order/abstract_models.py:477
 msgid "Unit Price (inc. tax)"
-msgstr ""
+msgstr "Harga satuan (termasuk pajak)"
 
 #: apps/order/abstract_models.py:480
 msgid "Unit Price (excl. tax)"
-msgstr ""
+msgstr "Harga satuan (belum termasuk pajak)"
 
 #: apps/order/abstract_models.py:484
 msgid "Unit Retail Price"
-msgstr ""
+msgstr "Harga retail satuan"
 
 #: apps/order/abstract_models.py:493
 msgid "Estimated Dispatch Date"
-msgstr ""
+msgstr "Tanggal perkiraan pengambilan"
 
 #: apps/order/abstract_models.py:505
 msgid "Order Line"
-msgstr ""
+msgstr "Daftar pesanan"
 
 #: apps/order/abstract_models.py:512
 msgid "<missing product>"
-msgstr ""
+msgstr "<produk tidak diketahui>"
 
 #: apps/order/abstract_models.py:513
 #, python-format
 msgid "Product '%(name)s', quantity '%(qty)s'"
-msgstr ""
+msgstr "Produk '%(name)s', banyaknya '%(qty)s'"
 
 #: apps/order/abstract_models.py:540
 #, python-format
 msgid "'%(new_status)s' is not a valid status (current status: '%(status)s')"
-msgstr ""
+msgstr "'%(new_status)s' tidak valid (status saat ini: '%(status)s')"
 
 #: apps/order/abstract_models.py:708
 #, python-format
 msgid "'%(title)s' is no longer available"
-msgstr ""
+msgstr "'%(title)s' tidak tersedia lagi"
 
 #: apps/order/abstract_models.py:743
 msgid "Line Attribute"
@@ -4066,11 +4069,11 @@ msgstr ""
 
 #: apps/order/abstract_models.py:769
 msgid "Shiping (inc. tax)"
-msgstr ""
+msgstr "Pengiriman (termasuk pajak)"
 
 #: apps/order/abstract_models.py:771
 msgid "Shipping (excl. tax)"
-msgstr ""
+msgstr "Pengiriman (belum termasuk pajak)"
 
 #: apps/order/abstract_models.py:777
 msgid "Line Price"
@@ -4099,7 +4102,7 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:526
 #: templates/oscar/dashboard/orders/order_detail.html:566
 msgid "Amount"
-msgstr ""
+msgstr "Jumlah"
 
 #: apps/order/abstract_models.py:830 apps/payment/abstract_models.py:40
 #: apps/payment/abstract_models.py:91
@@ -4109,7 +4112,7 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:495
 #: templates/oscar/dashboard/orders/order_detail.html:527
 msgid "Reference"
-msgstr ""
+msgstr "Referensi"
 
 #: apps/order/abstract_models.py:833 apps/order/abstract_models.py:890
 #: templates/oscar/dashboard/orders/order_detail.html:344
@@ -4200,26 +4203,26 @@ msgstr ""
 
 #: apps/order/abstract_models.py:1012
 msgid "Voucher ID"
-msgstr ""
+msgstr "ID Voucher"
 
 #: apps/order/abstract_models.py:1015
 #: templates/oscar/dashboard/orders/order_detail.html:564
 #: templates/oscar/dashboard/orders/statistics.html:58
 msgid "Frequency"
-msgstr ""
+msgstr "Intensitas"
 
 #: apps/order/abstract_models.py:1038
 msgid "Order Discount"
-msgstr ""
+msgstr "Diskon pesanan"
 
 #: apps/order/abstract_models.py:1039
 msgid "Order Discounts"
-msgstr ""
+msgstr "Diskon pesanan"
 
 #: apps/order/abstract_models.py:1055
 #, python-format
 msgid "Discount of %(amount)r from order %(order)s"
-msgstr ""
+msgstr "Diskon senilai %(amount)r dari pesanan %(order)s"
 
 #: apps/order/processing.py:87 apps/order/processing.py:99
 #, python-format
@@ -4229,7 +4232,7 @@ msgstr ""
 #: apps/order/reports.py:23
 #: templates/oscar/dashboard/reports/partials/order_report.html:12
 msgid "Total incl. tax"
-msgstr ""
+msgstr "Total termasuk pajak"
 
 #: apps/order/reports.py:24
 #: templates/oscar/dashboard/reports/partials/order_report.html:13
@@ -4451,7 +4454,7 @@ msgstr ""
 
 #: apps/payment/abstract_models.py:286
 msgid "Bankcard"
-msgstr ""
+msgstr "Pembayaran via ATM"
 
 #: apps/payment/abstract_models.py:287
 msgid "Bankcards"
