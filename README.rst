@@ -25,10 +25,9 @@ Contents:
 Further reading:
 
 * `Official homepage`_
-* `Sandbox site`_ (an hourly build of the unstable master branch - it's
-  experimental but feel free to explore and get a feel for the base Oscar
-  install.)
+* `Sandbox site`_(automatically deployed via the official docker sandbox image)
 * `Documentation`_ on the excellent `readthedocs.org`_
+* `Docker image`_
 * `django-oscar group`_ - mailing list for questions and announcements
 * `django-oscar-jobs group`_ - mailing list for job offers
 * `Continuous integration homepage`_ on `travis-ci.org`_
@@ -63,6 +62,7 @@ Docs status:
 
 .. _`Official homepage`: http://oscarcommerce.com
 .. _`Sandbox site`: http://latest.oscarcommerce.com
+.. _`Document image`: https://hub.docker.com/r/oscarcommerce/django-oscar-sandbox/
 .. _`Documentation`: https://django-oscar.readthedocs.io/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
 .. _`Continuous integration homepage`: http://travis-ci.org/#!/django-oscar/django-oscar
@@ -113,7 +113,7 @@ good starting point for rapidly building elegant e-commerce sites.
     :target: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/dashboard.png
 
 The sandbox site is also available to browse at
-http://latest.oscarcommerce.com.  Dashboard users can be created using `this
+https://latest.oscarcommerce.com.  Dashboard users can be created using `this
 gateway page`_.
 
 The sandbox site can be set-up locally `in 5 commands`_.  Want to
@@ -128,6 +128,8 @@ Extensions
 ----------
 
 The following extensions are stable and ready for use:
+
+* django-oscar-adyen_ - Integration with the Adyen payment gateway
 
 * django-oscar-datacash_ - Integration with the DataCash_ payment gateway
 
@@ -147,6 +149,7 @@ The following extensions are stable and ready for use:
 
 * django-oscar-sagepay-direct_ - Integration with "DIRECT" part of Sagepay's API
 
+.. _django-oscar-adyen: https://github.com/django-oscar/django-oscar-adyen
 .. _django-oscar-datacash: https://github.com/django-oscar/django-oscar-datacash
 .. _django-oscar-paymentexpress: https://github.com/django-oscar/django-oscar-paymentexpress
 .. _`Payment Express`: http://www.paymentexpress.com
@@ -166,7 +169,7 @@ The following are community-written extensions:
 
 * django-oscar-payments_ - Pluggable payments for Oscar
 * django-oscar-recurly_ - Integration with the Recurly payment gateway
-* django-oscar-adyen_ - Integration with the Adyen payment gateway
+
 * django-oscar-przelewy24_ - Integration with the Przelewy24 payment gateway
 * oscar-sagepay_ - Payment integration with Sage Pay
 * django-oscar-erp_
@@ -178,7 +181,7 @@ Let us know if you're writing a new one!
 .. _django-oscar-erp: https://bitbucket.org/zikzakmedia/django-oscar_erp
 .. _django-oscar-payments: https://github.com/Lacrymology/django-oscar-payments
 .. _django-oscar-recurly: https://github.com/mynameisgabe/django-oscar-recurly
-.. _django-oscar-adyen: https://github.com/oscaro/django-oscar-adyen
+
 .. _django-oscar-przelewy24: https://github.com/kisiel/django-oscar-przelewy24
 .. _oscar-sagepay: https://github.com/udox/oscar-sagepay
 .. _django-oscar-sofortueberweisung: https://github.com/byteyard/django-oscar-sofortueberweisung
