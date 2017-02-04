@@ -9,6 +9,7 @@ django-extensions==1.7.6
 Pillow==4.0.0
 Whoosh==2.7.4
 django-environ==0.4.1
+django-redis==4.7.0
 pysolr==3.6.0
 redis==2.10.5
 requests==2.13.0
