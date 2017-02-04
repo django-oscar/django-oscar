@@ -33,6 +33,7 @@ Further reading:
 * `Continuous integration homepage`_ on `travis-ci.org`_
 * `Twitter account for news and updates`_
 * #django-oscar on Freenode (community-run IRC channel) with `public logs`_
+* `Slack`_
 * `PyPI page`_
 * `Transifex project`_ - translating Oscar made easy
 
@@ -73,6 +74,7 @@ Docs status:
 .. _`django-oscar-jobs group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar-jobs
 .. _`PyPI page`: https://pypi.python.org/pypi/django-oscar/
 .. _`Transifex project`: https://www.transifex.com/projects/p/django-oscar/
+.. _`Slack`: https://slack.oscarcommerce.com/
 
 Core team:
 
