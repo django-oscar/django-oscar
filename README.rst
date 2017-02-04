@@ -201,82 +201,18 @@ Case studies
 ------------
 
 Oscar is still in active development but is used in production by a range of
-companies, from large multinationals to small, boutique stores:
+companies, from large multinationals to small, boutique stores. See 
+http://oscarcommerce.com/cases.html for an overview.
 
-Selected Tangent projects:
+Many more on the way.  If you use Oscar in production, please `let us know`_.
 
-* Tata Group - http://www.landmarkonthenet.com
-* Carlsberg - Their global "We Deliver More" platform is powered by Oscar (but
-  is a B2B site and not browsable by the public)
-* Chocolate Box - https://www.chocolatebox.com.au
-* The UK Labour party - http://shop.labour.org.uk
-* Meridian Audio - http://www.meridian-audio.co.uk
-* Which Rightchoice - http://www.whichrightchoice.com
-* Freetix - http://www.freetix.com.au/
-* Nails inc US - http://www.nailsinc.com/us/
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/landmark.thumb.png
-    :target: http://www.landmarkonthenet.com
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/carlsberg.cch.thumb.png
-    :target: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/carlsberg.cch.png
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/chocolatebox.thumb.png
-    :target: https://www.chocolatebox.com.au
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/labourshop.thumb.png
-    :target: https://shop.labour.org.uk
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/meridian.thumb.png
-    :target: http://www.meridian-audio.co.uk
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/rightchoice.thumb.png
-    :target: http://www.whichrightchoice.com
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/freetix.thumb.png
-    :target: http://www.freetix.com.au/
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/nailsinc.thumb.png
-    :target: http://www.nailsinc.com/us/
-
-Non-Tangent:
-
-* Dolbeau - http://www.dolbeau.ca
-* Audio App - https://audioapp.pl
-* Anything Gift - http://www.anythinggift.co.uk
-* Partecipa Cards - http://www.partecipacards.com
-* Chiyome - https://chiyome.com
-* Bike Parts Market - https://www.bikepartsmarket.com
-* Dadagraphix - https://dadagraphix.com
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/dolbeau.thumb.png
-    :target: http://www.dolbeau.ca
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/audioapp.thumb.png
-    :target: https://audioapp.pl
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/anythinggift.thumb.png
-    :target: http://www.anythinggift.co.uk
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/partecipacards.thumb.png
-    :target: http://www.partecipacards.com
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/chiyome.thumb.png
-    :target: https://chiyome.com
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/bpm.thumb.png
-    :target: https://www.bikepartsmarket.com
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/dadagraphix.thumb.png
-    :target: https://dadagraphix.com
-
-Many more on the way.  If you use Oscar in production, please let us know.
+.. _`let us know`: https://github.com/django-oscar/oscarcommerce.com/issues
 
 Looking for commercial support?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you are interested in having an Oscar project built for you, or for
 development of an existing Oscar site, Tangent can
-help.  Please get in touch via `oscar@tangent.co.uk`_.
+help.  Please get in touch via `info@oscarcommerce.com`_.
 
-.. _`oscar@tangent.co.uk`: mailto:oscar@tangent.co.uk
+.. _`oscar@tangent.co.uk`: mailto:info@oscarcommerce.com
