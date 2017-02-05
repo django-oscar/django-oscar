@@ -1,9 +1,6 @@
-import os
-import sys
-import tempfile
-
-from django.test import TestCase
+import pytest
 from django.conf import settings
+from django.test import TestCase
 
 from oscar.core import customisation
 
@@ -17,69 +14,75 @@ class TestUtilities(TestCase):
         self.assertEqual(folders, ['/var', '/var/www', '/var/www/eggs'])
 
 
-class TestForkAppFunction(TestCase):
+def test_raises_exception_for_nonexistant_app_label():
+    with pytest.raises(ValueError):
+        customisation.fork_app('sillytown', 'somefolder')
 
-    def setUp(self):
-        self.tmp_folder = tempfile.mkdtemp()
 
-    def test_raises_exception_for_nonexistant_app_label(self):
-        with self.assertRaises(ValueError):
-            customisation.fork_app('sillytown', 'somefolder')
+def test_raises_exception_if_app_has_already_been_forked():
+    # We piggyback on another test which means a custom app is already in
+    # the settings we use for the test suite. We just check that's still
+    # the case here.
+    assert 'tests._site.apps.partner' in settings.INSTALLED_APPS
+    with pytest.raises(ValueError):
+        customisation.fork_app('partner', VALID_FOLDER_PATH)
 
-    def test_raises_exception_if_app_has_already_been_forked(self):
-        # We piggyback on another test which means a custom app is already in
-        # the settings we use for the test suite. We just check that's still
-        # the case here.
-        self.assertIn('tests._site.apps.partner', settings.INSTALLED_APPS)
-        with self.assertRaises(ValueError):
-            customisation.fork_app('partner', VALID_FOLDER_PATH)
 
-    def test_creates_new_folder(self):
-        customisation.fork_app('order', self.tmp_folder)
-        new_folder_path = os.path.join(self.tmp_folder, 'order')
-        self.assertTrue(os.path.exists(new_folder_path))
+def test_creates_new_folder(tmpdir):
+    path = tmpdir.mkdir('fork')
+    customisation.fork_app('order', str(path))
+    path.join('order').ensure_dir()
 
-    def test_creates_init_file(self):
-        customisation.fork_app('order', self.tmp_folder)
-        filepath = os.path.join(self.tmp_folder, 'order', '__init__.py')
-        self.assertTrue(os.path.exists(filepath))
 
-    def test_handles_dashboard_app(self):
-        # Dashboard apps are fiddly as they aren't identified by a single app
-        # label.
-        customisation.fork_app('dashboard.catalogue', self.tmp_folder)
-        # Check __init__.py created (and supporting folders)
-        init_path = os.path.join(self.tmp_folder,
-                                 'dashboard/catalogue/__init__.py')
-        self.assertTrue(os.path.exists(init_path))
+def test_creates_init_file(tmpdir):
+    path = tmpdir.mkdir('fork')
+    customisation.fork_app('order', str(path))
 
-    def test_creates_models_and_admin_file(self):
-        customisation.fork_app('order', self.tmp_folder)
-        for module, expected_string in [
-            ('models', 'from oscar.apps.order.models import *'),
-            ('admin', 'from oscar.apps.order.admin import *'),
-            ('config', 'OrderConfig')
-        ]:
-            filepath = os.path.join(self.tmp_folder, 'order', '%s.py' % module)
-            self.assertTrue(os.path.exists(filepath))
+    path.join('order').join('__init__.py').ensure()
 
-            with open(filepath) as fh:
-                contents = fh.read()
-            self.assertTrue(expected_string in contents)
 
-    def test_copies_in_migrations_when_needed(self):
-        for app, has_models in [('order', True), ('search', False)]:
-            customisation.fork_app(app, self.tmp_folder)
-            native_migration_path = os.path.join(
-                self.tmp_folder, app, 'migrations')
-            self.assertEqual(has_models, os.path.exists(native_migration_path))
+def test_handles_dashboard_app(tmpdir):
+    # Dashboard apps are fiddly as they aren't identified by a single app
+    # label.
+    path = tmpdir.mkdir('fork')
+    customisation.fork_app('dashboard.catalogue', str(path))
+    # Check __init__.py created (and supporting folders)
 
-    def test_dashboard_app_config(self):
-        customisation.fork_app('dashboard', self.tmp_folder)
-        sys.path.append(os.path.dirname(self.tmp_folder))
+    path.join('dashboard').join('catalogue').join('__init__.py').ensure()
 
-        config_module = __import__(
-            '%s.dashboard.config' % os.path.basename(self.tmp_folder), fromlist=['DashboardConfig']
-        )
-        self.assertTrue(hasattr(config_module, 'DashboardConfig'))
-        sys.path.remove(os.path.dirname(self.tmp_folder))
+
+def test_creates_models_and_admin_file(tmpdir):
+    path = tmpdir.mkdir('fork')
+    customisation.fork_app('order', str(path))
+    for module, expected_string in [
+        ('models', 'from oscar.apps.order.models import *'),
+        ('admin', 'from oscar.apps.order.admin import *'),
+        ('config', 'OrderConfig')
+    ]:
+        filepath = path.join('order').join('%s.py' % module)
+        filepath.ensure()
+        contents = filepath.read()
+        assert expected_string in contents
+
+
+def test_copies_in_migrations_when_needed(tmpdir):
+    path = tmpdir.mkdir('fork')
+    for app, has_models in [('order', True), ('search', False)]:
+        customisation.fork_app(app, str(path))
+
+        native_migration_path = path.join(app).join('migrations')
+        assert has_models == native_migration_path.check()
+
+
+def test_dashboard_app_config(tmpdir, monkeypatch):
+    path = tmpdir.mkdir('fork')
+    customisation.fork_app('dashboard', str(path))
+
+    path.join('__init__.py').write('')
+    monkeypatch.syspath_prepend(str(tmpdir))
+
+    config_module = __import__(
+        '%s.dashboard.config' % path.basename, fromlist=['DashboardConfig']
+    )
+
+    assert hasattr(config_module, 'DashboardConfig')
