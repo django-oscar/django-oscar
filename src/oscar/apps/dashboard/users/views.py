@@ -5,10 +5,10 @@ from django.db.models import Q
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import (
-    DeleteView, DetailView, FormView, ListView, TemplateView, UpdateView)
+    DeleteView, DetailView, FormView, ListView, UpdateView)
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import FormMixin
-from django_tables2 import SingleTableMixin
+from django_tables2 import SingleTableView
 
 from oscar.apps.customer.utils import normalise_email
 from oscar.core.compat import get_user_model
@@ -24,7 +24,7 @@ ProductAlert = get_model('customer', 'ProductAlert')
 User = get_user_model()
 
 
-class IndexView(BulkEditMixin, SingleTableMixin, FormMixin, ListView):
+class IndexView(BulkEditMixin, FormMixin, SingleTableView):
     template_name = 'dashboard/users/index.html'
     table_pagination = True
     model = User
