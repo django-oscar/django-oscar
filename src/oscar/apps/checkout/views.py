@@ -3,7 +3,6 @@ import logging
 from django import http
 from django.contrib import messages
 from django.contrib.auth import login
-from oscar.core.compat import user_is_authenticated
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import redirect
 from django.utils import six
@@ -12,6 +11,7 @@ from django.utils.translation import ugettext as _
 from django.views import generic
 
 from oscar.apps.shipping.methods import NoShippingRequired
+from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_class, get_classes, get_model
 
 from . import signals
