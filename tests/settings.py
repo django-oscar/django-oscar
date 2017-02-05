@@ -1,7 +1,8 @@
 import os
-import oscar
+
 from django import VERSION as DJANGO_VERSION
 
+import oscar
 from oscar.defaults import *  # noqa
 
 # Path helper
