@@ -212,7 +212,6 @@ Looking for commercial support?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you are interested in having an Oscar project built for you, or for
-development of an existing Oscar site, Tangent can
-help.  Please get in touch via `info@oscarcommerce.com`_.
+development of an existing Oscar site then please get in touch via `info@oscarcommerce.com`_.
 
-.. _`oscar@tangent.co.uk`: mailto:info@oscarcommerce.com
+.. _`info@oscarcommerce.com`: mailto:info@oscarcommerce.com
