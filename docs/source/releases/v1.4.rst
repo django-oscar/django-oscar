@@ -43,7 +43,7 @@ Minor changes
    (:issue:`2166`)
  - Change the default argument of ProductReview.status to a callable
  - Use get_class for imports to partner.prices and partner.availability
-   (:issue:`2035)
+   (:issue:`2035`)
  - Fix an IntegrityError when a product is moved between wishlists
    (:issue:`2133`)
  - Fix issue when update product attributes in the dashboard when the product
