@@ -3,12 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# shavlego kapanadze <shavlego91@gmail.com>, 2016
+# Tekle Kapanadze <tekle.kapanadze.1@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-13 13:06+0200\n"
-"PO-Revision-Date: 2016-02-28 22:21+0000\n"
+"PO-Revision-Date: 2016-12-30 15:10+0000\n"
 "Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
 "Language-Team: Georgian (Georgia) (http://www.transifex.com/codeinthehole/django-oscar/language/ka_GE/)\n"
 "MIME-Version: 1.0\n"
@@ -40,53 +42,53 @@ msgstr ""
 #: apps/address/abstract_models.py:219
 msgctxt "Treatment Pronouns for the customer"
 msgid "Title"
-msgstr ""
+msgstr "სათაური"
 
 #: apps/address/abstract_models.py:221 apps/customer/abstract_models.py:59
 #: templates/oscar/dashboard/partners/partner_manage.html:42
 #: templates/oscar/dashboard/partners/partner_user_list.html:44
 #: templates/oscar/dashboard/partners/partner_user_select.html:50
 msgid "First name"
-msgstr ""
+msgstr "სახელი"
 
 #: apps/address/abstract_models.py:222 apps/customer/abstract_models.py:61
 #: templates/oscar/dashboard/partners/partner_manage.html:43
 #: templates/oscar/dashboard/partners/partner_user_list.html:45
 #: templates/oscar/dashboard/partners/partner_user_select.html:51
 msgid "Last name"
-msgstr ""
+msgstr "გვარი"
 
 #: apps/address/abstract_models.py:226
 msgid "First line of address"
-msgstr ""
+msgstr "მისამართი "
 
 #: apps/address/abstract_models.py:228
 msgid "Second line of address"
-msgstr ""
+msgstr "ალტერნატიული მისამართი"
 
 #: apps/address/abstract_models.py:230
 msgid "Third line of address"
-msgstr ""
+msgstr "ალტერნატიული მისამართი 2"
 
 #: apps/address/abstract_models.py:231
 msgid "City"
-msgstr ""
+msgstr "ქალაქი"
 
 #: apps/address/abstract_models.py:232
 msgid "State/County"
-msgstr ""
+msgstr "რეგიონი/ქვეყანა"
 
 #: apps/address/abstract_models.py:234
 msgid "Post/Zip-code"
-msgstr ""
+msgstr "საფოსტო ინდექსი/ზიპ კოდი"
 
 #: apps/address/abstract_models.py:235 apps/address/abstract_models.py:413
 msgid "Country"
-msgstr ""
+msgstr "ქვეყანა"
 
 #: apps/address/abstract_models.py:240
 msgid "Search text - used only for searching addresses"
-msgstr ""
+msgstr "საძიებო ტექსტი - მხოლოდ ძიებისთვის გამოსაყენებელი"
 
 #: apps/address/abstract_models.py:247 apps/address/config.py:8
 #: templates/oscar/checkout/checkout.html:37
@@ -96,24 +98,24 @@ msgstr ""
 #: templates/oscar/customer/order/order_detail.html:154
 #: templates/oscar/dashboard/orders/order_detail.html:446
 msgid "Address"
-msgstr ""
+msgstr "მისამართი"
 
 #: apps/address/abstract_models.py:248
 #: templates/oscar/dashboard/partners/partner_list.html:46
 #: templates/oscar/dashboard/users/detail.html:107
 #: templates/oscar/dashboard/users/detail.html:148
 msgid "Addresses"
-msgstr ""
+msgstr "მისამართები"
 
 #: apps/address/abstract_models.py:274
 #, python-format
 msgid "Addresses in %(country)s require a valid postcode"
-msgstr ""
+msgstr " %(country)s მისამართი მოითხოვს მოქმედ საფოსტო ინდექსს "
 
 #: apps/address/abstract_models.py:286
 #, python-format
 msgid "The postcode '%(postcode)s' is not valid for %(country)s"
-msgstr ""
+msgstr "საფოსტო ინდექსი '%(postcode)s' არ არის ვალიდური %(country)s"
 
 #: apps/address/abstract_models.py:391
 msgid "ISO 3166-1 alpha-2"
@@ -129,15 +131,15 @@ msgstr ""
 
 #: apps/address/abstract_models.py:398
 msgid "Country name"
-msgstr ""
+msgstr "ქვეყნის სახელი"
 
 #: apps/address/abstract_models.py:401
 msgid "Official name"
-msgstr ""
+msgstr "ოფიციალური სახელი"
 
 #: apps/address/abstract_models.py:404 apps/catalogue/abstract_models.py:1175
 msgid "Display order"
-msgstr ""
+msgstr "შეკვეთის ჩვენება"
 
 #: apps/address/abstract_models.py:405
 msgid "Higher the number, higher the country in the list."
@@ -145,30 +147,30 @@ msgstr ""
 
 #: apps/address/abstract_models.py:408
 msgid "Is shipping country"
-msgstr ""
+msgstr "არის გზავნილის მიღების ქვეყანა"
 
 #: apps/address/abstract_models.py:414 apps/shipping/abstract_models.py:27
 msgid "Countries"
-msgstr ""
+msgstr "ქვეყნები"
 
 #: apps/address/abstract_models.py:457 models/fields/__init__.py:139
 msgid "Phone number"
-msgstr ""
+msgstr "ტელეფონის ნომერი"
 
 #: apps/address/abstract_models.py:458
 msgid "In case we need to call you about your order"
-msgstr ""
+msgstr "შეკეთის შესახებ დარეკვის საჭიროების შემთხვევაში"
 
 #: apps/address/abstract_models.py:460
 #: templates/oscar/checkout/checkout.html:55
 #: templates/oscar/checkout/thank_you.html:58
 #: templates/oscar/dashboard/orders/order_detail.html:461
 msgid "Instructions"
-msgstr ""
+msgstr "ინსტრუქციები"
 
 #: apps/address/abstract_models.py:461
 msgid "Tell us anything we should know when delivering your order."
-msgstr ""
+msgstr "რა დამატებითი ინფორმაცია უნდა ვიცოდეთ თქვენი შეკვეთის ადგილზე მოტანის შესახებ"
 
 #: apps/address/abstract_models.py:468
 #: templates/oscar/checkout/shipping_address.html:5
@@ -177,11 +179,11 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_list.html:122
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:5
 msgid "Shipping address"
-msgstr ""
+msgstr "გაგზავნის მისამართი"
 
 #: apps/address/abstract_models.py:469
 msgid "Shipping addresses"
-msgstr ""
+msgstr "გაგზავნის მისამართები"
 
 #: apps/address/abstract_models.py:494 apps/analytics/abstract_models.py:49
 #: apps/analytics/abstract_models.py:80 apps/analytics/abstract_models.py:98
@@ -195,19 +197,19 @@ msgstr ""
 #: templates/oscar/dashboard/users/alerts/list.html:45
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:10
 msgid "User"
-msgstr ""
+msgstr "მომხმარებელი"
 
 #: apps/address/abstract_models.py:498
 msgid "Default shipping address?"
-msgstr ""
+msgstr "ამანათის მიმღების მისამართი"
 
 #: apps/address/abstract_models.py:502
 msgid "Default billing address?"
-msgstr ""
+msgstr "ანგარიშის ნომერი"
 
 #: apps/address/abstract_models.py:507 apps/offer/abstract_models.py:135
 msgid "Number of Orders"
-msgstr ""
+msgstr "შეკვეთების რაოდენობა"
 
 #: apps/address/abstract_models.py:511
 msgid "Address Hash"
@@ -221,30 +223,30 @@ msgstr ""
 #: apps/payment/abstract_models.py:42 apps/promotions/models.py:28
 #: apps/promotions/models.py:351 apps/voucher/abstract_models.py:168
 msgid "Date Created"
-msgstr ""
+msgstr "შექმნის თარიღი"
 
 #: apps/address/abstract_models.py:541
 msgid "User address"
-msgstr ""
+msgstr "მომხმარებლის მისამართი"
 
 #: apps/address/abstract_models.py:542
 msgid "User addresses"
-msgstr ""
+msgstr "მომხმარებლის მისამართები"
 
 #: apps/address/abstract_models.py:555
 msgid "This address is already in your address book"
-msgstr ""
+msgstr "აღნიშნული მისამართი უკვე დაფიქსირებულია მისამართების წიგნში"
 
 #: apps/address/abstract_models.py:564
 #: templates/oscar/checkout/thank_you.html:99
 #: templates/oscar/dashboard/orders/order_detail.html:474
 #: templates/oscar/dashboard/orders/order_list.html:123
 msgid "Billing address"
-msgstr ""
+msgstr "ანგარიშის ნომერი"
 
 #: apps/address/abstract_models.py:565
 msgid "Billing addresses"
-msgstr ""
+msgstr "ალტერნატიული ანგარიშის ნომრები"
 
 #: apps/address/abstract_models.py:584 apps/order/abstract_models.py:416
 #: apps/partner/abstract_models.py:95 apps/partner/config.py:8
@@ -252,15 +254,15 @@ msgstr ""
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:49
 #: templates/oscar/dashboard/orders/line_detail.html:77
 msgid "Partner"
-msgstr ""
+msgstr "პარტნიორი"
 
 #: apps/address/abstract_models.py:589
 msgid "Partner address"
-msgstr ""
+msgstr "პარტნიორის მისამართი"
 
 #: apps/address/abstract_models.py:590
 msgid "Partner addresses"
-msgstr ""
+msgstr "პარტნიორის ალტერნატული მისამართი"
 
 #: apps/analytics/abstract_models.py:20 apps/analytics/abstract_models.py:81
 #: apps/analytics/reports.py:19 apps/basket/abstract_models.py:596
@@ -281,21 +283,21 @@ msgstr ""
 #: templates/oscar/dashboard/users/alerts/list.html:44
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:6
 msgid "Product"
-msgstr ""
+msgstr "პროდუქტი"
 
 #: apps/analytics/abstract_models.py:24 apps/analytics/reports.py:20
 #: templates/oscar/dashboard/reports/partials/product_report.html:9
 msgid "Views"
-msgstr ""
+msgstr "ნახვები"
 
 #: apps/analytics/abstract_models.py:26 apps/analytics/abstract_models.py:56
 msgid "Basket Additions"
-msgstr ""
+msgstr "კალათაში დამატება"
 
 #: apps/analytics/abstract_models.py:28 apps/analytics/reports.py:22
 #: templates/oscar/dashboard/reports/partials/product_report.html:11
 msgid "Purchases"
-msgstr ""
+msgstr "შესყიდვები"
 
 #: apps/analytics/abstract_models.py:31
 #: apps/catalogue/reviews/abstract_models.py:30
@@ -304,24 +306,24 @@ msgstr ""
 #: templates/oscar/dashboard/reviews/review_list.html:59
 #: templates/oscar/dashboard/users/detail.html:177
 msgid "Score"
-msgstr ""
+msgstr "ანგარიში"
 
 #: apps/analytics/abstract_models.py:37
 msgid "Product record"
-msgstr ""
+msgstr "პროდუქტის ანგარში"
 
 #: apps/analytics/abstract_models.py:38
 msgid "Product records"
-msgstr ""
+msgstr "პროდუქტის ანგარიშები"
 
 #: apps/analytics/abstract_models.py:41
 #, python-format
 msgid "Record for '%s'"
-msgstr ""
+msgstr "ანგარიში '%s'სთვის"
 
 #: apps/analytics/abstract_models.py:54
 msgid "Product Views"
-msgstr ""
+msgstr "პროდუქტის ნახვები"
 
 #: apps/analytics/abstract_models.py:60 apps/analytics/reports.py:65
 #: apps/order/abstract_models.py:283 defaults.py:136
@@ -336,75 +338,75 @@ msgstr ""
 #: templates/oscar/dashboard/users/detail.html:106
 #: templates/oscar/dashboard/users/detail.html:116
 msgid "Orders"
-msgstr ""
+msgstr "შეკვეთა"
 
 #: apps/analytics/abstract_models.py:62 apps/order/abstract_models.py:506
 msgid "Order Lines"
-msgstr ""
+msgstr "შეკვეთის ხაზი"
 
 #: apps/analytics/abstract_models.py:64
 msgid "Order Items"
-msgstr ""
+msgstr "შეკვეთილი მასალები"
 
 #: apps/analytics/abstract_models.py:65
 msgid "Total Spent"
-msgstr ""
+msgstr "სულ დახარჯულია"
 
 #: apps/analytics/abstract_models.py:68
 msgid "Last Order Date"
-msgstr ""
+msgstr "ბოლო შეკვეთის თარიღი"
 
 #: apps/analytics/abstract_models.py:73
 msgid "User record"
-msgstr ""
+msgstr "მომხმარებლის ანგარიში"
 
 #: apps/analytics/abstract_models.py:74
 msgid "User records"
-msgstr ""
+msgstr "მომხმარებლის ანგარიშები"
 
 #: apps/analytics/abstract_models.py:87
 msgid "User product view"
-msgstr ""
+msgstr "მომხმარებლის პროდუქტის ნახვა"
 
 #: apps/analytics/abstract_models.py:88
 msgid "User product views"
-msgstr ""
+msgstr "მომხმარებლის პროდუქტის ნახვები"
 
 #: apps/analytics/abstract_models.py:91
 #, python-format
 msgid "%(user)s viewed '%(product)s'"
-msgstr ""
+msgstr "%(user)s ნახეს '%(product)s'"
 
 #: apps/analytics/abstract_models.py:99
 msgid "Search term"
-msgstr ""
+msgstr "საძიებო პერიოდი"
 
 #: apps/analytics/abstract_models.py:105
 msgid "User search query"
-msgstr ""
+msgstr "მომხმარებლის გამოკითხვა"
 
 #: apps/analytics/abstract_models.py:106
 msgid "User search queries"
-msgstr ""
+msgstr "მომხმარებლის კითხვები"
 
 #: apps/analytics/abstract_models.py:109
 #, python-format
 msgid "%(user)s searched for '%(query)s'"
-msgstr ""
+msgstr "%(user)s ძიება '%(query)s'"
 
 #: apps/analytics/config.py:8
 msgid "Analytics"
-msgstr ""
+msgstr "სტატისტიკა"
 
 #: apps/analytics/reports.py:21 apps/analytics/reports.py:64
 #: templates/oscar/dashboard/reports/partials/product_report.html:10
 #: templates/oscar/dashboard/reports/partials/user_report.html:12
 msgid "Basket additions"
-msgstr ""
+msgstr "კალათის დანამატები"
 
 #: apps/analytics/reports.py:39
 msgid "Product analytics"
-msgstr ""
+msgstr "პროდუქტის ანალიზი"
 
 #: apps/analytics/reports.py:61 apps/basket/reports.py:19
 #: apps/catalogue/abstract_models.py:50 apps/catalogue/abstract_models.py:93
@@ -443,67 +445,67 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:32
 #: templates/oscar/dashboard/vouchers/voucher_list.html:52
 msgid "Name"
-msgstr ""
+msgstr "სახელი"
 
 #: apps/analytics/reports.py:62
 #: templates/oscar/customer/profile/profile.html:25
 #: templates/oscar/dashboard/reports/partials/user_report.html:10
 msgid "Date registered"
-msgstr ""
+msgstr "რეგისტრაციის თარიღი"
 
 #: apps/analytics/reports.py:63
 #: templates/oscar/dashboard/reports/partials/user_report.html:11
 msgid "Product views"
-msgstr ""
+msgstr "პროდუქტის ნახვები"
 
 #: apps/analytics/reports.py:66
 #: templates/oscar/dashboard/reports/partials/user_report.html:14
 msgid "Order lines"
-msgstr ""
+msgstr "შეკვეთის ხაზი"
 
 #: apps/analytics/reports.py:67
 #: templates/oscar/dashboard/reports/partials/user_report.html:15
 msgid "Order items"
-msgstr ""
+msgstr "შესაკვეთი ნივთები"
 
 #: apps/analytics/reports.py:68
 #: templates/oscar/dashboard/reports/partials/user_report.html:16
 #: templates/oscar/dashboard/users/detail.html:76
 msgid "Total spent"
-msgstr ""
+msgstr "სულ დანახარჯი"
 
 #: apps/analytics/reports.py:69
 #: templates/oscar/dashboard/reports/partials/user_report.html:17
 msgid "Date of last order"
-msgstr ""
+msgstr "ბოლო შეკვეთის თარიღი"
 
 #: apps/analytics/reports.py:91
 msgid "User analytics"
-msgstr ""
+msgstr "მომხმარებლის მონაცემები"
 
 #: apps/basket/abstract_models.py:30 apps/wishlists/abstract_models.py:24
 msgid "Owner"
-msgstr ""
+msgstr "მეპატრონე"
 
 #: apps/basket/abstract_models.py:38
 msgid "Open - currently active"
-msgstr ""
+msgstr "გახსენით - ამჟამად აქტიური"
 
 #: apps/basket/abstract_models.py:39
 msgid "Merged - superceded by another basket"
-msgstr ""
+msgstr "შერჩეულია - სხვა კალათის მიერ"
 
 #: apps/basket/abstract_models.py:40
 msgid "Saved - for items to be purchased later"
-msgstr ""
+msgstr "შენახულია - მოგვიანებით შესასყიდთა სიაში"
 
 #: apps/basket/abstract_models.py:41
 msgid "Frozen - the basket cannot be modified"
-msgstr ""
+msgstr "შეჩერებულია - კალათა არ არის მოდიფიცირებული"
 
 #: apps/basket/abstract_models.py:42
 msgid "Submitted - has been ordered at the checkout"
-msgstr ""
+msgstr "წარდგენილია - შეკვეთა გამზადებულია გასაგზავნად"
 
 #: apps/basket/abstract_models.py:45 apps/catalogue/abstract_models.py:1107
 #: apps/catalogue/reviews/abstract_models.py:59
@@ -530,7 +532,7 @@ msgstr ""
 #: templates/oscar/dashboard/users/detail.html:124
 #: templates/oscar/dashboard/vouchers/voucher_list.html:54
 msgid "Status"
-msgstr ""
+msgstr "სტატუსი"
 
 #: apps/basket/abstract_models.py:51 apps/dashboard/vouchers/views.py:71
 #: apps/voucher/abstract_models.py:64 defaults.py:180
@@ -544,7 +546,7 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_list.html:17
 #: templates/oscar/dashboard/vouchers/voucher_list.html:27
 msgid "Vouchers"
-msgstr ""
+msgstr "ვაუჩერები"
 
 #: apps/basket/abstract_models.py:53 apps/basket/reports.py:82
 #: apps/catalogue/abstract_models.py:321
@@ -562,16 +564,16 @@ msgstr ""
 #: templates/oscar/dashboard/users/detail.html:180
 #: templates/oscar/dashboard/vouchers/voucher_list.html:57
 msgid "Date created"
-msgstr ""
+msgstr "შექმნის თარიღი"
 
 #: apps/basket/abstract_models.py:54
 msgid "Date merged"
-msgstr ""
+msgstr "შერჩევის თარიღი"
 
 #: apps/basket/abstract_models.py:55
 #: templates/oscar/customer/order/order_list.html:42
 msgid "Date submitted"
-msgstr ""
+msgstr "წარდგენის თარიღი"
 
 #: apps/basket/abstract_models.py:64 apps/basket/abstract_models.py:585
 #: apps/basket/config.py:8 apps/order/abstract_models.py:36
@@ -582,27 +584,27 @@ msgstr ""
 #: templates/oscar/checkout/thank_you.html:174
 #: templates/oscar/partials/nav_primary.html:20
 msgid "Basket"
-msgstr ""
+msgstr "კალათა"
 
 #: apps/basket/abstract_models.py:65
 msgid "Baskets"
-msgstr ""
+msgstr "კალათები"
 
 #: apps/basket/abstract_models.py:84
 #, python-format
 msgid "%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)"
-msgstr ""
+msgstr "%(status)s კალათა (owner: %(owner)s, ველები: %(num_lines)d)"
 
 #: apps/basket/abstract_models.py:144
 #, python-format
 msgid ""
 "Due to technical limitations we are not able to ship more than %(threshold)d"
 " items in one order."
-msgstr ""
+msgstr "ტექნიკური ლიმიტის გამო ჩვენ არ შეგვიძლია ერთდროულად %(threshold)d მეტი ნივთის შესყიდვის გამოწერა."
 
 #: apps/basket/abstract_models.py:592
 msgid "Line Reference"
-msgstr ""
+msgstr "ველის გადამოწმება"
 
 #: apps/basket/abstract_models.py:602 apps/basket/forms.py:134
 #: apps/basket/forms.py:282 apps/order/abstract_models.py:450
@@ -619,13 +621,13 @@ msgstr ""
 #: templates/oscar/dashboard/orders/line_detail.html:167
 #: templates/oscar/dashboard/orders/order_detail.html:108
 msgid "Quantity"
-msgstr ""
+msgstr "რაოდენობა"
 
 #: apps/basket/abstract_models.py:608 apps/order/abstract_models.py:55
 #: apps/partner/abstract_models.py:106 apps/payment/abstract_models.py:76
 #: templates/oscar/dashboard/catalogue/product_update.html:198
 msgid "Currency"
-msgstr ""
+msgstr "ვალუტა"
 
 #: apps/basket/abstract_models.py:610
 msgid "Price excl. Tax"
@@ -637,21 +639,21 @@ msgstr ""
 
 #: apps/basket/abstract_models.py:631
 msgid "Basket line"
-msgstr ""
+msgstr "კალათის ველი"
 
 #: apps/basket/abstract_models.py:632
 msgid "Basket lines"
-msgstr ""
+msgstr "კალათის ველები"
 
 #: apps/basket/abstract_models.py:636
 #, python-format
 msgid "Basket #%(basket_id)d, Product #%(product_id)d, quantity %(quantity)d"
-msgstr ""
+msgstr "კალათა #%(basket_id)d, პროდუქტი #%(product_id)d, რაოდენობა %(quantity)d"
 
 #: apps/basket/abstract_models.py:644
 #, python-format
 msgid "You cannot modify a %s basket"
-msgstr ""
+msgstr "არ შეგიძლიათ %s კალათის შეცვლა"
 
 #: apps/basket/abstract_models.py:855
 #, python-format
@@ -671,35 +673,35 @@ msgstr ""
 #: apps/order/abstract_models.py:762 apps/order/abstract_models.py:867
 #: apps/order/abstract_models.py:928
 msgid "Line"
-msgstr ""
+msgstr "ველი"
 
 #: apps/basket/abstract_models.py:872 apps/catalogue/abstract_models.py:813
 #: apps/catalogue/abstract_models.py:1072
 #: apps/catalogue/abstract_models.py:1113 apps/order/abstract_models.py:736
 #: apps/order/abstract_models.py:760
 msgid "Option"
-msgstr ""
+msgstr "არჩევანი"
 
 #: apps/basket/abstract_models.py:873 apps/offer/abstract_models.py:413
 #: apps/offer/abstract_models.py:642 apps/order/abstract_models.py:738
 msgid "Value"
-msgstr ""
+msgstr "ღირებულება"
 
 #: apps/basket/abstract_models.py:878
 msgid "Line attribute"
-msgstr ""
+msgstr "ხაზის დამახასიათებელი ნიშანი"
 
 #: apps/basket/abstract_models.py:879
 msgid "Line attributes"
-msgstr ""
+msgstr "ხაზის დამახასიათებელი ნიშნები"
 
 #: apps/basket/forms.py:17
 msgid "Save for Later"
-msgstr ""
+msgstr "სხვა დროისთვის შენახვა"
 
 #: apps/basket/forms.py:75
 msgid "Move to Basket"
-msgstr ""
+msgstr "კალათაში დამატება"
 
 #: apps/basket/forms.py:124 apps/catalogue/abstract_models.py:785
 #: apps/catalogue/abstract_models.py:1099 apps/customer/abstract_models.py:142
@@ -713,38 +715,38 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:33
 #: templates/oscar/dashboard/vouchers/voucher_list.html:53
 msgid "Code"
-msgstr ""
+msgstr "კოდი"
 
 #: apps/basket/forms.py:179
 msgid "Variant"
-msgstr ""
+msgstr "ვარიანტი"
 
 #: apps/basket/forms.py:207
 msgid "Please select a valid product"
-msgstr ""
+msgstr "გთხოვთ მონიშნოთ ვალიდური პროდუქტი"
 
 #: apps/basket/forms.py:224
 #, python-format
 msgid ""
 "Due to technical limitations we are not able to ship more than %(threshold)d"
 " items in one order. Your basket currently has %(basket)d items."
-msgstr ""
+msgstr "ტექნიკური შეზღუდვების გამო ჩვენ არ შეგვიძლია ერთდროულად მოვახდინოთ  %(threshold)d მეტი პროდუქტის შესყიდვის გაფორმება ერთდროულად. თქვენს კალათაში ამ დროისთვის %(basket)d ნივთია"
 
 #: apps/basket/forms.py:247
 msgid ""
 "This product cannot be added to the basket as its currency isn't the same as"
 " other products in your basket"
-msgstr ""
+msgstr "ამ პროუქტის კალათში დამატება ამ დროისთვის შეუძლებელია რადგან ის განსხვავდება კალათში არსებული პროდუქტებისგან"
 
 #: apps/basket/middleware.py:170
 msgid ""
 "We have merged a basket from a previous session. Its contents might have "
 "changed."
-msgstr ""
+msgstr "ჩვენ გამოვარჩიეთ კალათა წინა სესიებიდან. მისი შინაარსი შეიძლება შეიცვალა."
 
 #: apps/basket/reports.py:18 apps/basket/reports.py:77
 msgid "User ID"
-msgstr ""
+msgstr "მომხმარებლის ID"
 
 #: apps/basket/reports.py:20 apps/catalogue/reviews/abstract_models.py:46
 #: apps/catalogue/reviews/forms.py:12 apps/customer/abstract_models.py:124
@@ -761,11 +763,11 @@ msgstr ""
 #: templates/oscar/dashboard/reports/partials/user_report.html:8
 #: templates/oscar/dashboard/users/detail.html:36
 msgid "Email"
-msgstr ""
+msgstr "ელ-ფოსტა"
 
 #: apps/basket/reports.py:21 apps/basket/reports.py:79
 msgid "Basket status"
-msgstr ""
+msgstr "კალათის სტატუსი"
 
 #: apps/basket/reports.py:22 apps/basket/reports.py:80
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:10
@@ -784,83 +786,83 @@ msgstr ""
 #: apps/basket/reports.py:24
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:12
 msgid "Date of creation"
-msgstr ""
+msgstr "შექმნის თარიღი"
 
 #: apps/basket/reports.py:25
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:13
 msgid "Time since creation"
-msgstr ""
+msgstr "დრო შექმნიდან"
 
 #: apps/basket/reports.py:57
 msgid "Open baskets"
-msgstr ""
+msgstr "გახსენი კალათები"
 
 #: apps/basket/reports.py:83
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:13
 msgid "Time between creation and submission"
-msgstr ""
+msgstr "დრო შექმნასა და არჩევას შორის"
 
 #: apps/basket/reports.py:112
 msgid "Submitted baskets"
-msgstr ""
+msgstr "წარმოდგენილი კალათები"
 
 #: apps/basket/views.py:162
 msgid "You can't save an item for later if you're not logged in!"
-msgstr ""
+msgstr "არ შეგიძლიათ შეინახოთ ნივთი, თუ არ გაქვთ გავლილი ავტორიზაცია!"
 
 #: apps/basket/views.py:225
 msgid ""
 "Your basket couldn't be updated. Please correct any validation errors below."
-msgstr ""
+msgstr "თქვენი კალათა ვერ განახლდა. გთხოვთ შეამოწმოთ შენიშვნების ვალიდურობა"
 
 #: apps/basket/views.py:313
 #, python-format
 msgid "The '%(code)s' voucher has expired"
-msgstr ""
+msgstr " '%(code)s' ვაუჩერი ვადაგასულია"
 
 #: apps/basket/views.py:320
 #, python-format
 msgid "The '%(code)s' voucher is not active"
-msgstr ""
+msgstr "'%(code)s'ვაუჩერი არ არის აქტიური"
 
 #: apps/basket/views.py:349
 msgid "Your basket does not qualify for a voucher discount"
-msgstr ""
+msgstr "თქვენი კალათა არ სარგებლობს ფასდაკლების ვაუჩერით"
 
 #: apps/basket/views.py:354
 #, python-format
 msgid "Voucher '%(code)s' added to basket"
-msgstr ""
+msgstr " '%(code)s' ვაუჩერი დაემატა კალათას "
 
 #: apps/basket/views.py:364
 #, python-format
 msgid "You have already added the '%(code)s' voucher to your basket"
-msgstr ""
+msgstr "ამ დროისთვის '%(code)s' ვაუჩერი დაემატა თქვენს კალათას"
 
 #: apps/basket/views.py:372
 #, python-format
 msgid "No voucher found with code '%(code)s'"
-msgstr ""
+msgstr "კოდით '%(code)s' ვერცერთი ვაუჩერი ვერ მოინახა"
 
 #: apps/basket/views.py:379 apps/dashboard/vouchers/forms.py:66
 msgid "Please enter a voucher code"
-msgstr ""
+msgstr "გთხოვთ შეიყვანოთ ვაუჩერის კოდი"
 
 #: apps/basket/views.py:400
 #, python-format
 msgid "No voucher found with id '%d'"
-msgstr ""
+msgstr "ID ნომრით '%d' ვერცერთი ვაუჩერი ვერ მოინახა"
 
 #: apps/basket/views.py:406
 #, python-format
 msgid "Voucher '%s' removed from basket"
-msgstr ""
+msgstr " '%s' ვაუჩერი ამოღებულია თქვენი კალათიდან"
 
 #: apps/catalogue/abstract_models.py:51 apps/catalogue/abstract_models.py:97
 #: apps/catalogue/abstract_models.py:288 apps/offer/abstract_models.py:38
 #: apps/offer/abstract_models.py:765 apps/shipping/abstract_models.py:20
 msgid "Slug"
-msgstr ""
+msgstr "URL-ის დაბოლოება"
 
 #: apps/catalogue/abstract_models.py:56
 msgid "Requires shipping?"
@@ -889,20 +891,20 @@ msgstr ""
 #: templates/oscar/dashboard/offers/summary.html:12
 #: templates/oscar/dashboard/shipping/weight_based_detail.html:35
 msgid "Description"
-msgstr ""
+msgstr "აღწერა"
 
 #: apps/catalogue/abstract_models.py:95 apps/catalogue/abstract_models.py:816
 #: apps/dashboard/catalogue/tables.py:19 apps/promotions/models.py:181
 #: apps/promotions/models.py:190 apps/promotions/models.py:191
 msgid "Image"
-msgstr ""
+msgstr "სურათი"
 
 #: apps/catalogue/abstract_models.py:213 apps/catalogue/abstract_models.py:230
 #: apps/customer/abstract_models.py:167
 #: templates/oscar/dashboard/catalogue/product_update.html:124
 #: templates/oscar/dashboard/comms/list.html:33
 msgid "Category"
-msgstr ""
+msgstr "კატეგორია"
 
 #: apps/catalogue/abstract_models.py:214 apps/catalogue/abstract_models.py:329
 #: apps/catalogue/abstract_models.py:599 defaults.py:118
@@ -914,15 +916,15 @@ msgstr ""
 #: templates/oscar/dashboard/catalogue/category_list.html:24
 #: templates/oscar/dashboard/catalogue/product_update.html:73
 msgid "Categories"
-msgstr ""
+msgstr "კატეგორიები"
 
 #: apps/catalogue/abstract_models.py:237
 msgid "Product category"
-msgstr ""
+msgstr "პროდუქტის კატეგორია"
 
 #: apps/catalogue/abstract_models.py:238
 msgid "Product categories"
-msgstr ""
+msgstr "პროდუქტის კატეგორიები"
 
 #: apps/catalogue/abstract_models.py:262
 msgid "Stand-alone product"
@@ -968,13 +970,13 @@ msgstr ""
 #: templates/oscar/dashboard/ranges/range_product_list.html:95
 msgctxt "Product title"
 msgid "Title"
-msgstr ""
+msgstr "სათაური"
 
 #: apps/catalogue/abstract_models.py:295 apps/catalogue/abstract_models.py:782
 #: apps/dashboard/catalogue/tables.py:23
 #: templates/oscar/dashboard/catalogue/product_class_delete.html:12
 msgid "Product type"
-msgstr ""
+msgstr "პროდუქტის ტიპი"
 
 #: apps/catalogue/abstract_models.py:296
 msgid "Choose what type of product this is"
@@ -1015,11 +1017,11 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:319 defaults.py:225
 msgid "Rating"
-msgstr ""
+msgstr "რეიტინგი"
 
 #: apps/catalogue/abstract_models.py:325 apps/partner/abstract_models.py:148
 msgid "Date updated"
-msgstr ""
+msgstr "განახლების თარიღი"
 
 #: apps/catalogue/abstract_models.py:337
 msgid "Is discountable?"
@@ -1040,7 +1042,7 @@ msgstr ""
 #: templates/oscar/dashboard/promotions/handpickedproductlist_form.html:5
 #: templates/oscar/dashboard/ranges/range_product_list.html:21
 msgid "Products"
-msgstr ""
+msgstr "პროდუქტები"
 
 #: apps/catalogue/abstract_models.py:406
 msgid "Your product must have a title."
@@ -1135,11 +1137,11 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:807 apps/catalogue/abstract_models.py:949
 msgid "Text"
-msgstr ""
+msgstr "ტექსტი"
 
 #: apps/catalogue/abstract_models.py:808 apps/catalogue/abstract_models.py:950
 msgid "Integer"
-msgstr ""
+msgstr "მთელი რიცხვი"
 
 #: apps/catalogue/abstract_models.py:809
 msgid "True / False"
@@ -1162,7 +1164,7 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:529
 #: templates/oscar/dashboard/orders/order_detail.html:609
 msgid "Date"
-msgstr ""
+msgstr "თარიღი"
 
 #: apps/catalogue/abstract_models.py:814
 msgid "Entity"
@@ -1170,7 +1172,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:815
 msgid "File"
-msgstr ""
+msgstr "ფაილი"
 
 #: apps/catalogue/abstract_models.py:820 apps/offer/abstract_models.py:63
 #: apps/offer/abstract_models.py:407 apps/offer/abstract_models.py:639
@@ -1182,7 +1184,7 @@ msgstr ""
 #: templates/oscar/dashboard/promotions/page_detail.html:37
 #: templates/oscar/dashboard/promotions/promotion_list.html:42
 msgid "Type"
-msgstr ""
+msgstr "ტიპი"
 
 #: apps/catalogue/abstract_models.py:824
 msgid "Option Group"
@@ -1195,7 +1197,7 @@ msgstr ""
 #: apps/catalogue/abstract_models.py:826
 #: templates/oscar/dashboard/catalogue/product_class_form.html:99
 msgid "Required"
-msgstr ""
+msgstr "შევსება აუცილებელია"
 
 #: apps/catalogue/abstract_models.py:832
 msgid "Product attribute"
@@ -1217,7 +1219,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:901
 msgid "Must be an integer"
-msgstr ""
+msgstr "აუცილებლად მთელი რიცხვი უნდა იყოს"
 
 #: apps/catalogue/abstract_models.py:905
 msgid "Must be a date or datetime"
@@ -1282,7 +1284,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:1071
 msgid "Group"
-msgstr ""
+msgstr "ჯგუფი"
 
 #: apps/catalogue/abstract_models.py:1081
 msgid "Attribute option"
@@ -1316,23 +1318,23 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:1187
 msgid "Product image"
-msgstr ""
+msgstr "პროდუქტის სურათი"
 
 #: apps/catalogue/abstract_models.py:1188
 msgid "Product images"
-msgstr ""
+msgstr "პროდუქტის სურათები"
 
 #: apps/catalogue/config.py:8 apps/dashboard/catalogue/config.py:8
 #: defaults.py:106
 msgid "Catalogue"
-msgstr ""
+msgstr "კატალოგი"
 
 #: apps/catalogue/reviews/abstract_models.py:33
 #: templates/oscar/dashboard/reviews/review_delete.html:36
 #: templates/oscar/dashboard/users/detail.html:178
 msgctxt "Product review title"
 msgid "Title"
-msgstr ""
+msgstr "სათაური"
 
 #: apps/catalogue/reviews/abstract_models.py:36
 #: templates/oscar/customer/email/email_detail.html:23
@@ -1344,28 +1346,28 @@ msgstr ""
 #: apps/catalogue/reviews/abstract_models.py:44
 msgctxt "Anonymous reviewer name"
 msgid "Name"
-msgstr ""
+msgstr "სახელი"
 
 #: apps/catalogue/reviews/abstract_models.py:47
 #: apps/dashboard/pages/forms.py:25 apps/dashboard/promotions/forms.py:70
 #: models/fields/__init__.py:17 templates/oscar/dashboard/pages/index.html:51
 #: templates/oscar/dashboard/promotions/pagepromotion_list.html:43
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: apps/catalogue/reviews/abstract_models.py:51
 msgid "Requires moderation"
-msgstr ""
+msgstr "ესაჭიროება მოდერაცია"
 
 #: apps/catalogue/reviews/abstract_models.py:52
 #: apps/dashboard/reviews/forms.py:11
 msgid "Approved"
-msgstr ""
+msgstr "დადასტურებული"
 
 #: apps/catalogue/reviews/abstract_models.py:53
 #: apps/dashboard/reviews/forms.py:12
 msgid "Rejected"
-msgstr ""
+msgstr "უარყოფილი"
 
 #: apps/catalogue/reviews/abstract_models.py:63
 msgid "Total Votes"
@@ -1377,11 +1379,11 @@ msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:78
 msgid "Product review"
-msgstr ""
+msgstr "პროდუქტის მიმოხილვა"
 
 #: apps/catalogue/reviews/abstract_models.py:79
 msgid "Product reviews"
-msgstr ""
+msgstr "პროდუქტის მიმოხილვები"
 
 #: apps/catalogue/reviews/abstract_models.py:97
 msgid "Anonymous reviews must include a name and an email"
@@ -1389,7 +1391,7 @@ msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:150
 msgid "anonymous"
-msgstr ""
+msgstr "ანონიმური"
 
 #: apps/catalogue/reviews/abstract_models.py:172
 msgid "Only signed in users can vote"
@@ -1397,11 +1399,11 @@ msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:193
 msgid "Up"
-msgstr ""
+msgstr "ზემოთ"
 
 #: apps/catalogue/reviews/abstract_models.py:194
 msgid "Down"
-msgstr ""
+msgstr "ქვემოთ"
 
 #: apps/catalogue/reviews/abstract_models.py:196
 msgid "Delta"
@@ -1438,7 +1440,7 @@ msgstr ""
 
 #: apps/catalogue/reviews/forms.py:57 apps/search/forms.py:83
 msgid "Sort by"
-msgstr ""
+msgstr "სორტირება"
 
 #: apps/catalogue/reviews/views.py:32
 msgid "You have already reviewed this product!"
@@ -1472,13 +1474,13 @@ msgstr ""
 
 #: apps/catalogue/views.py:135 templates/oscar/partials/nav_primary.html:45
 msgid "All products"
-msgstr ""
+msgstr "ყველა პროდუქტი"
 
 #: apps/checkout/config.py:8
 #: templates/oscar/basket/partials/basket_quick.html:39
 #: templates/oscar/checkout/checkout.html:9
 msgid "Checkout"
-msgstr ""
+msgstr "ანგარიშსწორება"
 
 #: apps/checkout/forms.py:53
 msgid "My email address is"
@@ -1570,7 +1572,7 @@ msgstr ""
 
 #: apps/customer/abstract_models.py:57
 msgid "email address"
-msgstr ""
+msgstr "ელ-ფოსტის მისამართი"
 
 #: apps/customer/abstract_models.py:63
 msgid "Staff status"
@@ -1584,7 +1586,7 @@ msgstr ""
 #: templates/oscar/dashboard/users/detail.html:40
 #: templates/oscar/dashboard/vouchers/voucher_list.html:70
 msgid "Active"
-msgstr ""
+msgstr "აქტიური"
 
 #: apps/customer/abstract_models.py:68
 msgid ""
@@ -1600,7 +1602,7 @@ msgstr ""
 #: templates/oscar/dashboard/partners/partner_list.html:45
 #: templates/oscar/dashboard/partners/partner_manage.html:36
 msgid "Users"
-msgstr ""
+msgstr "მომხმარებლები"
 
 #: apps/customer/abstract_models.py:116
 #: templates/oscar/customer/email/email_detail.html:19
@@ -1630,7 +1632,7 @@ msgstr ""
 #: templates/oscar/dashboard/comms/list.html:21
 #: templates/oscar/dashboard/comms/list.html:27
 msgid "Emails"
-msgstr ""
+msgstr "ელ-ფოსტები"
 
 #: apps/customer/abstract_models.py:128
 #, python-format
@@ -1725,7 +1727,7 @@ msgstr ""
 #: apps/customer/abstract_models.py:332 apps/partner/abstract_models.py:242
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:39
 msgid "Closed"
-msgstr ""
+msgstr "დახურული"
 
 #: apps/customer/abstract_models.py:338
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:29
@@ -1739,7 +1741,7 @@ msgstr ""
 
 #: apps/customer/abstract_models.py:342
 msgid "Date closed"
-msgstr ""
+msgstr "დახურვის თარიღი"
 
 #: apps/customer/abstract_models.py:347
 msgid "Product alert"
@@ -1788,7 +1790,7 @@ msgstr ""
 #: apps/customer/config.py:8
 #: templates/oscar/dashboard/orders/order_list.html:121
 msgid "Customer"
-msgstr ""
+msgstr "მომხმარებელი"
 
 #: apps/customer/forms.py:100 apps/customer/forms.py:135
 #: apps/dashboard/partners/forms.py:127
@@ -1796,7 +1798,7 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:39
 #: templates/oscar/dashboard/orders/order_detail.html:45
 msgid "Email address"
-msgstr ""
+msgstr "ელ-ფოსტის მისამართი"
 
 #: apps/customer/forms.py:120 apps/customer/forms.py:137
 #: apps/dashboard/partners/forms.py:76
@@ -1930,19 +1932,19 @@ msgstr ""
 #: apps/customer/views.py:256 templates/oscar/customer/baseaccountpage.html:30
 #: templates/oscar/customer/partials/nav_account.html:20
 msgid "Profile"
-msgstr ""
+msgstr "პროფილი"
 
 #: apps/customer/views.py:308
 msgid "Edit Profile"
-msgstr ""
+msgstr "პროფილის რედაქტირება"
 
 #: apps/customer/views.py:346
 msgid "Profile updated"
-msgstr ""
+msgstr "პროფილი განახლებულია"
 
 #: apps/customer/views.py:353 templates/oscar/customer/profile/profile.html:33
 msgid "Delete profile"
-msgstr ""
+msgstr "პროფილის წაშლა"
 
 #: apps/customer/views.py:366
 msgid "Your profile has now been deleted. Thanks for using the site."
@@ -1950,11 +1952,11 @@ msgstr ""
 
 #: apps/customer/views.py:374
 msgid "Change Password"
-msgstr ""
+msgstr "პაროლის შეცვლა"
 
 #: apps/customer/views.py:386
 msgid "Password updated"
-msgstr ""
+msgstr "პაროლი განახლებულია"
 
 #: apps/customer/views.py:408 templates/oscar/customer/baseaccountpage.html:39
 #: templates/oscar/customer/partials/nav_account.html:29
@@ -1974,7 +1976,7 @@ msgstr ""
 #: apps/voucher/abstract_models.py:167
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:5
 msgid "Order"
-msgstr ""
+msgstr "შეკვეთა"
 
 #: apps/customer/views.py:546
 #, python-format
@@ -2123,7 +2125,7 @@ msgstr ""
 
 #: apps/dashboard/catalogue/forms.py:49
 msgid "Product title"
-msgstr ""
+msgstr "პროდუქტის დასახელება"
 
 #: apps/dashboard/catalogue/forms.py:152
 msgid ""
@@ -2146,7 +2148,7 @@ msgstr ""
 #: apps/dashboard/catalogue/tables.py:15
 #: templates/oscar/dashboard/catalogue/product_update.html:254
 msgid "Title"
-msgstr ""
+msgstr "სათაური"
 
 #: apps/dashboard/catalogue/tables.py:27
 #: templates/oscar/dashboard/catalogue/product_update.html:85
@@ -2248,7 +2250,7 @@ msgstr ""
 
 #: apps/dashboard/catalogue/views.py:571
 msgid "Add a new category"
-msgstr ""
+msgstr "კკატეგორიის დამატება"
 
 #: apps/dashboard/catalogue/views.py:575
 msgid "Category created successfully"
@@ -2288,7 +2290,7 @@ msgstr ""
 #: defaults.py:114
 #: templates/oscar/dashboard/catalogue/product_class_list.html:23
 msgid "Product Types"
-msgstr ""
+msgstr "პროდუქტის ტიპები"
 
 #: apps/dashboard/catalogue/views.py:734
 #, python-format
@@ -2417,7 +2419,7 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_list.html:13
 #: templates/oscar/partials/nav_accounts.html:47
 msgid "Dashboard"
-msgstr ""
+msgstr "დეშბორდი"
 
 #: apps/dashboard/offers/config.py:8
 msgid "Offers dashboard"
@@ -2426,12 +2428,12 @@ msgstr ""
 #: apps/dashboard/offers/forms.py:25 apps/offer/abstract_models.py:85
 #: templates/oscar/dashboard/offers/offer_list.html:47
 msgid "Start date"
-msgstr ""
+msgstr "დაწყების თარიღი"
 
 #: apps/dashboard/offers/forms.py:28 apps/offer/abstract_models.py:87
 #: templates/oscar/dashboard/offers/offer_list.html:48
 msgid "End date"
-msgstr ""
+msgstr "დასრულების თარიღი"
 
 #: apps/dashboard/offers/forms.py:47
 msgid "The end date must be after the start date"
@@ -2476,7 +2478,7 @@ msgstr ""
 #: apps/dashboard/offers/reports.py:15
 #: templates/oscar/dashboard/offers/offer_detail.html:106
 msgid "Order date"
-msgstr ""
+msgstr "შეკვეთის თარიღი"
 
 #: apps/dashboard/offers/reports.py:16
 #: templates/oscar/basket/partials/basket_totals.html:205
@@ -2578,7 +2580,7 @@ msgstr ""
 
 #: apps/dashboard/orders/forms.py:70
 msgid "Product name"
-msgstr ""
+msgstr "პროდუქტის სახელი"
 
 #: apps/dashboard/orders/forms.py:72 apps/order/abstract_models.py:419
 #: apps/partner/abstract_models.py:102
@@ -2872,7 +2874,7 @@ msgstr ""
 #: templates/oscar/dashboard/pages/index.html:50
 msgctxt "Page title"
 msgid "Title"
-msgstr ""
+msgstr "სათაური"
 
 #: apps/dashboard/pages/forms.py:26
 msgid "Example: '/about/contact/'."
@@ -2880,7 +2882,7 @@ msgstr ""
 
 #: apps/dashboard/pages/views.py:37
 msgid "All pages"
-msgstr ""
+msgstr "ყველა გვერდი"
 
 #: apps/dashboard/pages/views.py:51
 #, python-format
@@ -2889,7 +2891,7 @@ msgstr ""
 
 #: apps/dashboard/pages/views.py:74
 msgid "Create New Page"
-msgstr ""
+msgstr "ახალი გვერდის შექმნა"
 
 #: apps/dashboard/pages/views.py:148
 #, python-format
@@ -2904,7 +2906,7 @@ msgstr ""
 #: apps/partner/abstract_models.py:26
 msgctxt "Partner's name"
 msgid "Name"
-msgstr ""
+msgstr "სახელი"
 
 #: apps/dashboard/partners/forms.py:35
 msgid "Full dashboard access"
@@ -2953,7 +2955,7 @@ msgstr ""
 
 #: apps/dashboard/partners/views.py:144
 msgid "Create user"
-msgstr ""
+msgstr "მომხმარებლის შექმნა"
 
 #: apps/dashboard/partners/views.py:155
 #, python-format
@@ -3130,7 +3132,7 @@ msgstr ""
 #: apps/dashboard/reports/forms.py:32
 #: templates/oscar/dashboard/orders/order_list.html:109
 msgid "Download"
-msgstr ""
+msgstr "გადმოწერა"
 
 #: apps/dashboard/reports/forms.py:38
 msgid "Your start date must be before your end date"
@@ -3217,7 +3219,7 @@ msgstr ""
 #: apps/dashboard/users/forms.py:15
 msgctxt "User's name"
 msgid "Name"
-msgstr ""
+msgstr "სახელი"
 
 #: apps/dashboard/users/views.py:35
 #, python-format
@@ -3226,7 +3228,7 @@ msgstr ""
 
 #: apps/dashboard/users/views.py:63
 msgid "All users"
-msgstr ""
+msgstr "ყველა მომხმარებელი"
 
 #: apps/dashboard/users/views.py:80
 #, python-format
@@ -3683,7 +3685,7 @@ msgstr ""
 
 #: apps/offer/abstract_models.py:990
 msgid "Size"
-msgstr ""
+msgstr "ზომა"
 
 #: apps/offer/abstract_models.py:992
 msgid "Uploaded By"
@@ -3945,7 +3947,7 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:565
 #: templates/oscar/dashboard/orders/order_detail.html:612
 msgid "Message"
-msgstr ""
+msgstr "შეტყობინება"
 
 #: apps/order/abstract_models.py:358
 msgid "Order Note"
@@ -4263,11 +4265,11 @@ msgstr ""
 
 #: apps/partner/abstract_models.py:128
 msgid "Cost Price"
-msgstr ""
+msgstr "ღირებულება"
 
 #: apps/partner/abstract_models.py:133
 msgid "Number in stock"
-msgstr ""
+msgstr "მარაგის რაოდენობა"
 
 #: apps/partner/abstract_models.py:139
 msgid "Number allocated"
@@ -4283,16 +4285,16 @@ msgstr ""
 
 #: apps/partner/abstract_models.py:237
 msgid "Stock Record"
-msgstr ""
+msgstr "მარაგის ჩანაწერი"
 
 #: apps/partner/abstract_models.py:238
 msgid "Threshold"
-msgstr ""
+msgstr "ზღვარი"
 
 #: apps/partner/abstract_models.py:241
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:38
 msgid "Open"
-msgstr ""
+msgstr "გაღება"
 
 #: apps/partner/abstract_models.py:247
 msgid "Date Closed"
@@ -4316,20 +4318,20 @@ msgstr ""
 
 #: apps/partner/availability.py:42
 msgid "unavailable"
-msgstr ""
+msgstr "მიუწვდომელი"
 
 #: apps/partner/availability.py:53 apps/partner/availability.py:104
 #: apps/partner/availability.py:110
 msgid "Unavailable"
-msgstr ""
+msgstr "მიუწვდომელი"
 
 #: apps/partner/availability.py:64
 msgid "Available"
-msgstr ""
+msgstr "ხელმისაწვდომი"
 
 #: apps/partner/availability.py:87
 msgid "no stock available"
-msgstr ""
+msgstr "მარაგი არ არის ხელმისაწვდომი"
 
 #: apps/partner/availability.py:89
 #, python-format
@@ -4338,7 +4340,7 @@ msgstr ""
 
 #: apps/partner/availability.py:103
 msgid "In stock"
-msgstr ""
+msgstr "გაყიდვაშია"
 
 #: apps/partner/availability.py:109
 #, python-format
@@ -4352,23 +4354,23 @@ msgstr ""
 #: apps/partner/importers.py:130
 #, python-format
 msgid "%s does not exist"
-msgstr ""
+msgstr "%s არ არსებობს"
 
 #: apps/partner/importers.py:135
 #, python-format
 msgid "%s is not a file"
-msgstr ""
+msgstr "%s არ არის ფაილი"
 
 #: apps/partner/importers.py:143
 #, python-format
 msgid "%s is not readable"
-msgstr ""
+msgstr "%s არ არის წაკითხვადი"
 
 #: apps/payment/abstract_models.py:31 apps/payment/abstract_models.py:107
 #: templates/oscar/dashboard/orders/order_detail.html:491
 #: templates/oscar/dashboard/orders/order_detail.html:525
 msgid "Source"
-msgstr ""
+msgstr "რესურსი"
 
 #: apps/payment/abstract_models.py:45
 #, python-format
@@ -4377,16 +4379,16 @@ msgstr ""
 
 #: apps/payment/abstract_models.py:53
 msgid "Transaction"
-msgstr ""
+msgstr "ტრანზაქცია"
 
 #: apps/payment/abstract_models.py:54
 #: templates/oscar/dashboard/orders/order_detail.html:520
 msgid "Transactions"
-msgstr ""
+msgstr "ტრანზაქციები"
 
 #: apps/payment/abstract_models.py:73 apps/payment/abstract_models.py:213
 msgid "Source Type"
-msgstr ""
+msgstr "რესურსის ტიპი"
 
 #: apps/payment/abstract_models.py:80
 msgid "Amount Allocated"
@@ -4406,7 +4408,7 @@ msgstr ""
 
 #: apps/payment/abstract_models.py:108
 msgid "Sources"
-msgstr ""
+msgstr "რესურსები"
 
 #: apps/payment/abstract_models.py:111
 #, python-format
@@ -4528,7 +4530,7 @@ msgstr ""
 
 #: apps/promotions/models.py:27
 msgid "Clicks"
-msgstr ""
+msgstr "კლიკები"
 
 #: apps/promotions/models.py:34
 msgid "Linked Promotion"
@@ -4541,7 +4543,7 @@ msgstr ""
 #: apps/promotions/models.py:49
 #: templates/oscar/dashboard/promotions/form.html:49
 msgid "Page URL"
-msgstr ""
+msgstr "გვერდის URL"
 
 #: apps/promotions/models.py:59
 msgid "Page Promotion"
@@ -4556,7 +4558,7 @@ msgstr ""
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:33
 #: templates/oscar/dashboard/orders/statistics.html:27
 msgid "Filter"
-msgstr ""
+msgstr "ფილტრი"
 
 #: apps/promotions/models.py:82
 msgid "Keyword Promotion"
@@ -4577,7 +4579,7 @@ msgstr ""
 #: templates/oscar/dashboard/pages/index.html:23
 #: templates/oscar/dashboard/pages/update.html:16
 msgid "Pages"
-msgstr ""
+msgstr "გვერდები"
 
 #: apps/promotions/models.py:101
 msgid "Promotion"
@@ -4626,7 +4628,7 @@ msgstr ""
 #: apps/promotions/models.py:246
 msgctxt "Promotion product list title"
 msgid "Title"
-msgstr ""
+msgstr "სათაური"
 
 #: apps/promotions/models.py:250
 msgid "Link text"
@@ -4696,7 +4698,7 @@ msgstr ""
 #: apps/promotions/models.py:350
 msgctxt "Tabbed block title"
 msgid "Title"
-msgstr ""
+msgstr "სათაური"
 
 #: apps/promotions/models.py:356
 msgid "Tabbed Blocks"
@@ -4745,11 +4747,11 @@ msgstr ""
 
 #: apps/search/forms.py:62
 msgid "Title A to Z"
-msgstr ""
+msgstr "სათაური ა დან ჰ-მდე"
 
 #: apps/search/forms.py:63
 msgid "Title Z to A"
-msgstr ""
+msgstr "სათაური ჰ დან ა-მდე"
 
 #: apps/search/search_handlers.py:104
 msgid "Page is not 'last', nor can it be converted to an int."
@@ -5140,7 +5142,7 @@ msgstr ""
 
 #: templates/oscar/500.html:5 templates/oscar/500.html:9
 msgid "Server error!"
-msgstr ""
+msgstr "სერვერული შეცდომა!"
 
 #: templates/oscar/500.html:13
 msgid ""
@@ -5160,7 +5162,7 @@ msgstr ""
 
 #: templates/oscar/base.html:66
 msgid "Version:"
-msgstr ""
+msgstr "ვერსია:"
 
 #: templates/oscar/basket/basket.html:12
 #: templates/oscar/catalogue/browse.html:18
@@ -5186,7 +5188,7 @@ msgstr ""
 #: templates/oscar/registration/password_reset_form.html:9
 #: templates/oscar/search/results.html:15
 msgid "Home"
-msgstr ""
+msgstr "მთავარი"
 
 #: templates/oscar/basket/messages/addition.html:4
 #, python-format
@@ -5281,13 +5283,13 @@ msgstr ""
 #: templates/oscar/basket/partials/basket_content.html:31
 #: templates/oscar/basket/partials/basket_content.html:173
 msgid "Price"
-msgstr ""
+msgstr "ფასი"
 
 #: templates/oscar/basket/partials/basket_content.html:32
 #: templates/oscar/checkout/checkout.html:111
 #: templates/oscar/checkout/thank_you.html:120
 msgid "Total"
-msgstr ""
+msgstr "სულ"
 
 #: templates/oscar/basket/partials/basket_content.html:66
 #: templates/oscar/customer/wishlists/wishlists_detail.html:100
@@ -5734,14 +5736,14 @@ msgstr ""
 #: templates/oscar/dashboard/ranges/range_list.html:55
 #: templates/oscar/dashboard/ranges/range_product_list.html:108
 msgid "Yes"
-msgstr ""
+msgstr "დიახ"
 
 #: templates/oscar/catalogue/partials/review.html:45
 #: templates/oscar/dashboard/offers/offer_list.html:67
 #: templates/oscar/dashboard/ranges/range_list.html:57
 #: templates/oscar/dashboard/ranges/range_product_list.html:108
 msgid "No"
-msgstr ""
+msgstr "არა"
 
 #: templates/oscar/catalogue/partials/review.html:52
 #, python-format
@@ -6100,7 +6102,7 @@ msgstr ""
 
 #: templates/oscar/checkout/thank_you.html:314
 msgid "Print this page"
-msgstr ""
+msgstr "აღნიშნული გვერდის დაბეჭდვა"
 
 #: templates/oscar/checkout/user_address_delete.html:29
 #: templates/oscar/customer/address/address_delete.html:15
@@ -6109,7 +6111,7 @@ msgstr ""
 
 #: templates/oscar/checkout/user_address_delete.html:29
 msgid "Yes!"
-msgstr ""
+msgstr "დიახ!"
 
 #: templates/oscar/checkout/user_address_form.html:26
 #: templates/oscar/customer/wishlists/wishlists_form.html:40
@@ -6128,12 +6130,12 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_form.html:45
 #: templates/oscar/partials/form.html:11
 msgid "Save"
-msgstr ""
+msgstr "შენახვა"
 
 #: templates/oscar/customer/address/address_delete.html:8
 #: templates/oscar/customer/address/address_form.html:8
 msgid "Address book"
-msgstr ""
+msgstr "მისამართების წიგნი"
 
 #: templates/oscar/customer/address/address_delete.html:20
 #: templates/oscar/customer/notifications/list.html:50
@@ -6153,7 +6155,7 @@ msgstr ""
 #: templates/oscar/dashboard/users/alerts/delete.html:37
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:48
 msgid "Deleting..."
-msgstr ""
+msgstr "იშლება..."
 
 #: templates/oscar/customer/address/address_list.html:17
 msgid "Default shipping address"
@@ -6192,7 +6194,7 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_form.html:24
 #: templates/oscar/dashboard/vouchers/voucher_list.html:88
 msgid "Edit"
-msgstr ""
+msgstr "რედაქტირება"
 
 #: templates/oscar/customer/address/address_list.html:44
 msgid "Set as default shipping address"
@@ -7742,21 +7744,21 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_list.html:52
 #: templates/oscar/dashboard/orders/order_list.html:61
 msgid "Advanced Search"
-msgstr ""
+msgstr "გაძლიერებული ძიება"
 
 #: templates/oscar/dashboard/orders/order_list.html:72
 msgid "Close"
-msgstr ""
+msgstr "დახურვა"
 
 #: templates/oscar/dashboard/orders/order_list.html:101
 #: templates/oscar/dashboard/orders/order_list.html:185
 msgid "Order Search Results"
-msgstr ""
+msgstr "შეკვეთის ძიების შედეგები"
 
 #: templates/oscar/dashboard/orders/order_list.html:103
 #: templates/oscar/dashboard/orders/order_list.html:187
 msgid "All Orders"
-msgstr ""
+msgstr "ყველა შეკვეთა"
 
 #: templates/oscar/dashboard/orders/order_list.html:108
 msgid "Download selected orders as a CSV"
@@ -7764,16 +7766,16 @@ msgstr ""
 
 #: templates/oscar/dashboard/orders/order_list.html:142
 msgid "Deleted"
-msgstr ""
+msgstr "წაშლილია"
 
 #: templates/oscar/dashboard/orders/order_list.html:171
 #: templates/oscar/registration/password_reset_confirm.html:27
 msgid "Changing..."
-msgstr ""
+msgstr "იცვლება..."
 
 #: templates/oscar/dashboard/orders/order_list.html:190
 msgid "No orders found."
-msgstr ""
+msgstr "არცერთი შეკვეთა არ არის ნაპოვნი"
 
 #: templates/oscar/dashboard/orders/partials/bulk_edit_form.html:6
 msgid "Print Packaging Slips"
@@ -7781,16 +7783,16 @@ msgstr ""
 
 #: templates/oscar/dashboard/orders/partials/bulk_edit_form.html:10
 msgid "Mark as"
-msgstr ""
+msgstr "მონიშნე როგორც"
 
 #: templates/oscar/dashboard/orders/partials/bulk_edit_form.html:15
 #: templates/oscar/dashboard/orders/partials/bulk_edit_form.html:20
 msgid "Change order status to"
-msgstr ""
+msgstr "შეკვეთის სტატუსის ცვლილება"
 
 #: templates/oscar/dashboard/orders/partials/bulk_edit_form.html:27
 msgid "Done"
-msgstr ""
+msgstr "შესრულებულია"
 
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:19
 msgid "Edit shipping address"
@@ -7803,7 +7805,7 @@ msgstr ""
 
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:33
 msgid "Update address"
-msgstr ""
+msgstr "მისამართის განახლება"
 
 #: templates/oscar/dashboard/orders/statistics.html:8
 msgid "Order statistics"
@@ -7885,7 +7887,7 @@ msgstr ""
 #: templates/oscar/partials/pagination.html:16
 #: templates/oscar/search/partials/pagination.html:16
 msgid "next"
-msgstr ""
+msgstr "შემდეგი"
 
 #: templates/oscar/dashboard/partners/messages/user_unlinked.html:2
 #, python-format
@@ -7896,20 +7898,20 @@ msgstr ""
 
 #: templates/oscar/dashboard/partners/messages/user_unlinked.html:5
 msgid "Undo"
-msgstr ""
+msgstr "განულება"
 
 #: templates/oscar/dashboard/partners/partner_delete.html:7
 #: templates/oscar/dashboard/partners/partner_list.html:93
 msgid "Delete partner"
-msgstr ""
+msgstr "პარტნიორის გაუქმება"
 
 #: templates/oscar/dashboard/partners/partner_delete.html:32
 msgid "Are you sure you want to delete this partner?"
-msgstr ""
+msgstr "ნამდვილად გსურთ პარტნიორის გაუქმება?"
 
 #: templates/oscar/dashboard/partners/partner_list.html:60
 msgid "Edit the user's details"
-msgstr ""
+msgstr "მომხმარებლის შესახებ ინფორმაციის რედაქტირება"
 
 #: templates/oscar/dashboard/partners/partner_list.html:67
 msgid "No users associated."
@@ -8627,7 +8629,7 @@ msgstr ""
 
 #: templates/oscar/dashboard/users/detail.html:176
 msgid "Product ID"
-msgstr ""
+msgstr "პროდუქტის ID"
 
 #: templates/oscar/dashboard/users/detail.html:192
 msgid "This customer has not written any reviews yet."
@@ -8902,16 +8904,16 @@ msgstr ""
 
 #: templatetags/history_tags.py:63
 msgid "Back to search results"
-msgstr ""
+msgstr "ძიების შედეგებზე დაბრუნება"
 
 #: views/decorators.py:44
 msgid "You must log in to access this page"
-msgstr ""
+msgstr "გვერდის სანახავად აუცილებელია გაიაროთ ავტორიზაცია"
 
 #: views/generic.py:80
 #, python-format
 msgid "You need to select some %ss"
-msgstr ""
+msgstr "საჭიროა მონიშნოთ რამოდენიმე %ss"
 
 #: views/generic.py:191
 msgid "This is not a valid international phone format."

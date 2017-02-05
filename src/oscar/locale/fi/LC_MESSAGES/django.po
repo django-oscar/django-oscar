@@ -13,6 +13,7 @@
 # kyyberi <jarkko.moilanen@want3d.fi>, 2014
 # preriasusi <coyotronics@gmail.com>, 2014
 # Tumetsu <salmi.tuomas@gmail.com>, 2014
+# Seppo Erviälä <seppo.erviala@iki.fi>, 2016
 # sienikasvusto <teemu.heikkila@pistoke.org>, 2014
 # sienikasvusto <teemu.heikkila@pistoke.org>, 2014
 # Tumetsu <salmi.tuomas@gmail.com>, 2014
@@ -23,7 +24,7 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-13 13:06+0200\n"
-"PO-Revision-Date: 2016-02-28 22:21+0000\n"
+"PO-Revision-Date: 2016-12-30 15:10+0000\n"
 "Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/codeinthehole/django-oscar/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -396,7 +397,7 @@ msgstr "Hakulauseke"
 
 #: apps/analytics/abstract_models.py:105
 msgid "User search query"
-msgstr "Käyttähän hakunäkymä"
+msgstr "Käyttäjän tekemät haut"
 
 #: apps/analytics/abstract_models.py:106
 msgid "User search queries"
@@ -755,7 +756,7 @@ msgstr "Tätä tuotetta ei voida lisätä koriin, koska sen valuutta ei ole sama
 msgid ""
 "We have merged a basket from a previous session. Its contents might have "
 "changed."
-msgstr ""
+msgstr "Palautimme ostoskorisi aiemmalta käynniltä. Ostoskorin sisältö on voinut muuttua."
 
 #: apps/basket/reports.py:18 apps/basket/reports.py:77
 msgid "User ID"
@@ -836,7 +837,7 @@ msgstr "Kuponki '%(code)s' on vanhentunut"
 #: apps/basket/views.py:320
 #, python-format
 msgid "The '%(code)s' voucher is not active"
-msgstr ""
+msgstr "Kuponki '%(code)s' on vanhentunut"
 
 #: apps/basket/views.py:349
 msgid "Your basket does not qualify for a voucher discount"
@@ -4808,7 +4809,7 @@ msgstr "Tilaus- ja tuotelaskutukset"
 
 #: apps/shipping/abstract_models.py:104
 msgid "Weight-based shipping"
-msgstr "Painoperusteinen toimitus"
+msgstr ""
 
 #: apps/shipping/abstract_models.py:109
 msgid "Default Weight"
@@ -5025,7 +5026,7 @@ msgstr "Tämä kenttä on pakollinen"
 
 #: core/validators.py:99
 msgid "This field is invalid as its value is forbidden"
-msgstr ""
+msgstr "Kentän arvo ei sallittu"
 
 #: core/validators.py:142
 msgid "Please choose a less common password"
@@ -5294,7 +5295,7 @@ msgid ""
 "\n"
 "                <div class=\"warning\">%(message)s to qualify for the <a href=\"%(url)s\">%(offer_name)s</a> special offer</div>\n"
 "            "
-msgstr "\n<div class=\"warning\">%(message)s hyväksyäksesi erikoistarjouksen<a href=\"%(url)s\">%(offer_name)s</a></div>"
+msgstr "\n<div class=\"warning\">%(message)s saadaksesi erikoistarjouksen <a href=\"%(url)s\">%(offer_name)s</a></div>"
 
 #: templates/oscar/basket/partials/basket_content.html:29
 msgid "Items to buy now"
@@ -5588,8 +5589,8 @@ msgid_plural ""
 "\n"
 "                    <strong>%(num_results)s</strong> results.\n"
 "                "
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "\n                    <strong>%(num_results)s</strong> osuma.\n                "
+msgstr[1] "\n                    <strong>%(num_results)s</strong> osumaa.\n                "
 
 #: templates/oscar/catalogue/browse.html:92
 msgid "<strong>0</strong> results."
@@ -5777,8 +5778,8 @@ msgid_plural ""
 "\n"
 "            <strong>%(num_up_votes)s</strong> of %(num_votes)s customers found this useful\n"
 "            "
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "\n<strong>%(num_up_votes)s</strong> asiakasta %(num_votes)s asiakkaasta piti tätä hyödyllisenä"
+msgstr[1] "\n<strong>%(num_up_votes)s</strong> asiakasta %(num_votes)s asiakkaasta piti tätä hyödyllisenä"
 
 #: templates/oscar/catalogue/partials/review.html:58
 msgid "This review has no votes."
@@ -5798,8 +5799,8 @@ msgid_plural ""
 "\n"
 "                    %(num_reviews)s customer reviews\n"
 "                "
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "\n%(num_reviews)s asiakasarvio"
+msgstr[1] "\n%(num_reviews)s asiakasarviota"
 
 #: templates/oscar/catalogue/reviews/partials/review_stars.html:26
 #: templates/oscar/customer/anon_order.html:79
@@ -5966,7 +5967,7 @@ msgstr "Minne toimittaisimme?"
 
 #: templates/oscar/checkout/shipping_address.html:22
 msgid "An address from your address book?"
-msgstr ""
+msgstr "Osoite osoitekirjastasi?"
 
 #: templates/oscar/checkout/shipping_address.html:41
 msgid "Ship to your default shipping address"
@@ -8915,8 +8916,8 @@ msgid_plural ""
 "\n"
 "                    Found <strong>%(num_results)s</strong> results. \n"
 "                "
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "\n<strong>%(num_results)s</strong> osuma löytyi."
+msgstr[1] "\n<strong>%(num_results)s</strong> osumaa löytyi."
 
 #: templates/oscar/search/results.html:69
 msgid "Found <strong>0</strong> results."

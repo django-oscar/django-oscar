@@ -3,27 +3,32 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Aaron Kim <ahkim@ahkim.com>, 2016
 # astyfx <astyfx@gmail.com>, 2014
 # astyfx <astyfx@gmail.com>, 2014
 # astyfx <astyfx@gmail.com>, 2014
 # Choi Gyeong Cheol <ckc6842@gmail.com>, 2014
 # Choi Gyeong Cheol <ckc6842@gmail.com>, 2014
+# DOJUN LEE <leedoe0709@gmail.com>, 2016
 # bootinge, 2016
 # Haedal <luccasya@hanmail.net>, 2014
 # Haedal <luccasya@hanmail.net>, 2014
+# Jay Oh <theanswer.jay@gmail.com>, 2016
 # Oh-Hyun Kwon <oh.kwon@datasquare.co.kr>, 2014
 # 이혜민 <luccasya@datasquare.co.kr>, 2014
 # 이혜민 <luccasya@datasquare.co.kr>, 2014
 # Haedal <luccasya@hanmail.net>, 2014
+# NS Kim <nasol.kim@gmail.com>, 2016
 # Oh-Hyun Kwon <oh.kwon@datasquare.co.kr>, 2014
 # Oh-Hyun Kwon <oh.kwon@datasquare.co.kr>, 2014
 # SungChan YUN, 2016
+# WONHEE JUNG <wonhee.jung@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-13 13:06+0200\n"
-"PO-Revision-Date: 2016-02-28 22:21+0000\n"
+"PO-Revision-Date: 2016-12-30 15:10+0000\n"
 "Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
 "Language-Team: Korean (http://www.transifex.com/codeinthehole/django-oscar/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -156,7 +161,7 @@ msgstr "출력 순서"
 
 #: apps/address/abstract_models.py:405
 msgid "Higher the number, higher the country in the list."
-msgstr ""
+msgstr "높은 숫자일수록, 해당 국가가 리스트 상위에 리스트됩니다."
 
 #: apps/address/abstract_models.py:408
 msgid "Is shipping country"
@@ -749,13 +754,13 @@ msgstr "기술적인 문제로 %(threshold)d개 이상의 아이템을 한 주�
 msgid ""
 "This product cannot be added to the basket as its currency isn't the same as"
 " other products in your basket"
-msgstr ""
+msgstr "해당 상품은 장바구니에 담긴 다른 상품들과 통화가 일치하지 않기에 장바구니에 담을 수 없습니다"
 
 #: apps/basket/middleware.py:170
 msgid ""
 "We have merged a basket from a previous session. Its contents might have "
 "changed."
-msgstr ""
+msgstr "장바구니에 담긴 상품 내역을 이전 세션과 병합했습니다. 장바구니에 담긴 상품 내역이 변경 됐을 수도 있습니다. "
 
 #: apps/basket/reports.py:18 apps/basket/reports.py:77
 msgid "User ID"
@@ -1006,7 +1011,7 @@ msgstr "속성"
 msgid ""
 "A product attribute is something that this product may have, such as a size,"
 " as specified by its class"
-msgstr ""
+msgstr "상품의 속성이라 함은 이 제품이 가질 수도 있는 무언가. 이를테면 크기 같은, 것을 뜻합니다. 이것은 제품의 클래스에서 지정해둔 것입니다."
 
 #: apps/catalogue/abstract_models.py:305
 msgid "Product options"
@@ -1026,7 +1031,7 @@ msgstr "추천 상품"
 
 #: apps/catalogue/abstract_models.py:314
 msgid "These are products that are recommended to accompany the main product."
-msgstr ""
+msgstr "이 상품들은 주요 상품과 같이 나오도록 권장되는 상품들입니다."
 
 #: apps/catalogue/abstract_models.py:319 defaults.py:225
 msgid "Rating"
@@ -1083,7 +1088,7 @@ msgstr "자식 상품은 상품 분류를 가질 수 없습니다."
 
 #: apps/catalogue/abstract_models.py:426
 msgid "A child product can't have a category assigned."
-msgstr ""
+msgstr "자식 상품은 카테고리를 부여받을 수 없습니다."
 
 #: apps/catalogue/abstract_models.py:430
 msgid "A child product can't have options."
@@ -1095,7 +1100,7 @@ msgstr "부모 상품은 재고 기록을 가질 수 없습니다."
 
 #: apps/catalogue/abstract_models.py:467
 msgid "The specified parent product is a child product."
-msgstr ""
+msgstr "지정된 부모 제품은 자식 제품이 됩니다."
 
 #: apps/catalogue/abstract_models.py:470
 msgid "One can't add a child product to a product with stock records."
@@ -1103,7 +1108,7 @@ msgstr "재고 기록을 가지고 있는 상품에는 자식 상품을 붙일 �
 
 #: apps/catalogue/abstract_models.py:691
 msgid "Primary product"
-msgstr ""
+msgstr "주요 상품"
 
 #: apps/catalogue/abstract_models.py:693
 msgid "Recommended product"
@@ -1117,7 +1122,7 @@ msgstr "순위"
 msgid ""
 "Determines order of the products. A product with a higher value will appear "
 "before one with a lower ranking."
-msgstr ""
+msgstr "상품 나열 순서를 결정합니다. 높은 숫자를 가진 상품 순서대로 나열됩니다."
 
 #: apps/catalogue/abstract_models.py:704
 msgid "Product recommendation"
@@ -1524,7 +1529,7 @@ msgstr "장바구니에 결제하기 위한 상품을 추가해야 합니다."
 msgid ""
 "'%(title)s' is no longer available to buy (%(reason)s). Please adjust your "
 "basket to continue"
-msgstr ""
+msgstr "'%(title)s'는 다음과 같은 이유로 구매를 진행 할 수 없습니다(%(reason)s). 구매를 진행하려면 장바구니에 담긴 상품들을 수정/삭제 해야 됩니다"
 
 #: apps/checkout/session.py:149
 msgid "Please either sign in or enter your email address"
@@ -1538,7 +1543,7 @@ msgstr "배송지를 선택해주세요"
 msgid ""
 "Your previously chosen shipping address is no longer valid.  Please choose "
 "another one"
-msgstr ""
+msgstr "당신이 이전에 선택한 배송지 주소는 더이상 유효하지 않습니다. 다른 배송지 주소를 선택하십시오"
 
 #: apps/checkout/session.py:192
 msgid "Please choose a shipping method"
@@ -1548,7 +1553,7 @@ msgstr "배송 방법을 선택해주세요."
 msgid ""
 "Your previously chosen shipping method is no longer valid.  Please choose "
 "another one"
-msgstr ""
+msgstr "이전에 선택한 배송방법은 더 이상 유효하지 않습니다. 다른 것을 선택해 주세요."
 
 #: apps/checkout/views.py:91
 msgid ""
@@ -1605,7 +1610,7 @@ msgstr "활성화"
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
-msgstr ""
+msgstr "이 사용자를 액티브 사용자로 여겨야 하는지 여부를 표기합니다. 계정을 삭제하는 대신에 이 옵션을 선택해제 하십시오."
 
 #: apps/customer/abstract_models.py:70
 msgid "date joined"
@@ -1654,7 +1659,7 @@ msgstr "'%(subject)s' 제목으로 %(user)s 에게 이메일 보내기"
 
 #: apps/customer/abstract_models.py:150
 msgid "Code used for looking up this event programmatically"
-msgstr ""
+msgstr "프로그램적으로 이 이벤트를 찾을 때 사용되는 코드입니다."
 
 #: apps/customer/abstract_models.py:155
 msgid "This is just used for organisational purposes"
@@ -2223,7 +2228,7 @@ msgstr "새 %(product_class)s 상품 만들기"
 #: apps/dashboard/catalogue/views.py:278
 #, python-format
 msgid "Create new variant of %(parent_product)s"
-msgstr ""
+msgstr "%(parent_product)s의 새로운 상품 변형 만들기"
 
 #: apps/dashboard/catalogue/views.py:284
 #, python-format
@@ -2236,7 +2241,7 @@ msgstr "등록된 데이터는 유효하지 않습니다 - 아래 오류를 정�
 
 #: apps/dashboard/catalogue/views.py:439
 msgid "Delete product variant?"
-msgstr ""
+msgstr "상품 변형을 삭제하시겠습니까?"
 
 #: apps/dashboard/catalogue/views.py:441
 msgid "Delete product?"
@@ -2293,11 +2298,11 @@ msgstr "상품 종류를 성공적으로 생성했습니다."
 #: apps/dashboard/catalogue/views.py:703
 #, python-format
 msgid "Update product type '%s'"
-msgstr ""
+msgstr "상품 종류 '%s' 갱신하기"
 
 #: apps/dashboard/catalogue/views.py:706
 msgid "Product type updated successfully"
-msgstr ""
+msgstr "상품 유형이 성공적으로 업데이트되었습니다."
 
 #: apps/dashboard/catalogue/views.py:722 apps/offer/abstract_models.py:785
 #: defaults.py:114
@@ -2318,7 +2323,7 @@ msgstr "'%s'를 삭제할 수 없습니다."
 #: apps/dashboard/catalogue/views.py:741
 #, python-format
 msgid "%i products are still assigned to this type"
-msgstr ""
+msgstr "%i 상품들이 여전히 이 유형에 할당되어 있습니다."
 
 #: apps/dashboard/catalogue/views.py:746
 msgid "Product type deleted successfully"
@@ -2326,7 +2331,7 @@ msgstr "상품 종류가 성공적으로 삭제되었습니다."
 
 #: apps/dashboard/communications/config.py:8
 msgid "Communications dashboard"
-msgstr ""
+msgstr "커뮤니케이션 대시보드"
 
 #: apps/dashboard/communications/forms.py:15
 msgid "Email subject template"
@@ -2638,17 +2643,17 @@ msgstr "새 주문 상태"
 #: apps/dashboard/orders/views.py:248
 #, python-brace-format
 msgid "Order number starts with \"{order_number}\""
-msgstr ""
+msgstr "순서의 번호는 \"{order_number}\"부터 시작합니다."
 
 #: apps/dashboard/orders/views.py:255
 #, python-brace-format
 msgid "Customer name matches \"{customer_name}\""
-msgstr ""
+msgstr "고객의 이름이 \"{customer_name}\"과 일치합니다."
 
 #: apps/dashboard/orders/views.py:262
 #, python-brace-format
 msgid "Product name matches \"{product_name}\""
-msgstr ""
+msgstr "상품의 이름이 \"{product_name}\"과 일치합니다."
 
 #. Translators: "UPC" means "universal product code" and it is
 #. used to uniquely identify a product in an online store.
@@ -2657,7 +2662,7 @@ msgstr ""
 #: apps/dashboard/orders/views.py:273
 #, python-brace-format
 msgid "Includes an item with UPC \"{upc}\""
-msgstr ""
+msgstr "상품고유코드 \"{upc}\"가 있는 상품을 포함합니다."
 
 #. Translators: "SKU" means "stock keeping unit" and is used to
 #. identify products that can be shipped from an online store.
@@ -2666,28 +2671,28 @@ msgstr ""
 #: apps/dashboard/orders/views.py:284
 #, python-brace-format
 msgid "Includes an item with partner SKU \"{partner_sku}\""
-msgstr ""
+msgstr "협력공급업체 재고품 \"{parner_sku}\"를 갖는 상품을 포함합니다."
 
 #. Translators: This string refers to orders in an online
 #. store that were made within a particular date range.
 #: apps/dashboard/orders/views.py:293
 #, python-brace-format
 msgid "Placed between {start_date} and {end_date}"
-msgstr ""
+msgstr "{start_date}와 {end_date} 사이에 주문되었습니다."
 
 #. Translators: This string refers to orders in an online store
 #. that were made after a particular date.
 #: apps/dashboard/orders/views.py:303
 #, python-brace-format
 msgid "Placed after {start_date}"
-msgstr ""
+msgstr "{start_date} 이후에 주문되었습니다."
 
 #. Translators: This string refers to orders in an online store
 #. that were made before a particular date.
 #: apps/dashboard/orders/views.py:312
 #, python-brace-format
 msgid "Placed before {end_date}"
-msgstr ""
+msgstr "{end_date} 이전에 주문되었습니다."
 
 #. Translators: A "voucher" is a coupon that can be applied to
 #. an order in an online store in order to receive a discount.
@@ -2696,7 +2701,7 @@ msgstr ""
 #: apps/dashboard/orders/views.py:321
 #, python-brace-format
 msgid "Used voucher code \"{voucher_code}\""
-msgstr ""
+msgstr "할인쿠폰 \"{voucher_code}\"을 사용했습니다."
 
 #. Translators: A payment method is a way of paying for an
 #. item in an online store.  For example, a user can pay
@@ -2785,14 +2790,14 @@ msgstr ""
 #: apps/dashboard/orders/views.py:509
 #, python-format
 msgid "The entered quantity for line #%s is not valid"
-msgstr ""
+msgstr "#%s줄의 수량이 적절하지 않습니다."
 
 #: apps/dashboard/orders/views.py:513
 #, python-format
 msgid ""
 "The entered quantity for line #%(line_id)s should not be higher than "
 "%(quantity)s"
-msgstr ""
+msgstr "#%(line_id)s 상품의 수량은 %(quantity)s보다 크면 안됩니다."
 
 #: apps/dashboard/orders/views.py:581
 msgid "Note saved"
@@ -2812,7 +2817,7 @@ msgstr "유효하지 않은 형식 제출"
 
 #: apps/dashboard/orders/views.py:620
 msgid "Unable to change order status as the requested new status is not valid"
-msgstr ""
+msgstr "새로운 주문상태가 적절하지 않으므로 주문상태를 변경할 수 없습니다."
 
 #: apps/dashboard/orders/views.py:634 apps/dashboard/orders/views.py:710
 msgid "Please choose a valid amount"
@@ -2852,12 +2857,12 @@ msgstr "배송 이벤트가 생성되었습니다."
 #: apps/dashboard/orders/views.py:729
 #, python-format
 msgid "Unable to create payment event due to payment error: %s"
-msgstr ""
+msgstr "결제 오류때문에 결제 이벤트를 생성할 수 없습니다: %s"
 
 #: apps/dashboard/orders/views.py:733
 #, python-format
 msgid "Unable to create payment event: %s"
-msgstr ""
+msgstr "결제 이벤트를 생성할 수 없습니다: %s"
 
 #: apps/dashboard/orders/views.py:735
 msgid "Payment event created"
@@ -2881,7 +2886,7 @@ msgstr "배송 주소가 업데이트 되었습니다."
 
 #: apps/dashboard/pages/config.py:8
 msgid "Pages dashboard"
-msgstr ""
+msgstr "페이지 대시보드"
 
 #: apps/dashboard/pages/forms.py:16
 #: templates/oscar/dashboard/pages/index.html:50
@@ -3223,7 +3228,7 @@ msgstr "배송 대시보드"
 #, python-format
 msgid "%d Row"
 msgid_plural "%d Rows"
-msgstr[0] ""
+msgstr[0] "%d 행(개수)"
 
 #: apps/dashboard/users/config.py:8
 msgid "Users dashboard"
@@ -3718,15 +3723,15 @@ msgstr "데이터가 처리되었습니다."
 
 #: apps/offer/abstract_models.py:1008
 msgid "Number of New SKUs"
-msgstr ""
+msgstr "새로 생성된 재고관리코드 개수"
 
 #: apps/offer/abstract_models.py:1010
 msgid "Number of Unknown SKUs"
-msgstr ""
+msgstr "알 수 없는 재고관리코드 개수"
 
 #: apps/offer/abstract_models.py:1013
 msgid "Number of Duplicate SKUs"
-msgstr ""
+msgstr "중복되는 재고관리코드 개수"
 
 #: apps/offer/abstract_models.py:1019
 msgid "Range Product Uploaded File"
@@ -4349,7 +4354,7 @@ msgstr "재고 없음"
 #: apps/partner/availability.py:89
 #, python-format
 msgid "a maximum of %(max)d can be bought"
-msgstr ""
+msgstr "최대 %(max)d개 구매가능합니다."
 
 #: apps/partner/availability.py:103
 msgid "In stock"
@@ -4388,7 +4393,7 @@ msgstr "소스"
 #: apps/payment/abstract_models.py:45
 #, python-format
 msgid "%(type)s of %(amount).2f"
-msgstr ""
+msgstr "%(type)s 유형 %(amount).2f개"
 
 #: apps/payment/abstract_models.py:53
 msgid "Transaction"
@@ -4435,7 +4440,7 @@ msgstr "(참조 번호 : %s)"
 
 #: apps/payment/abstract_models.py:208
 msgid "This is used within forms to identify this source type"
-msgstr ""
+msgstr "이것은 양식안에서 이 소스 유형을 식별하기 위해 사용됩니다."
 
 #: apps/payment/abstract_models.py:214
 msgid "Source Types"
@@ -4501,7 +4506,7 @@ msgstr "올바른 년도를 입력하시기 바랍니다."
 
 #: apps/payment/forms.py:120
 msgid "Valid to"
-msgstr ""
+msgstr "~까지 유효"
 
 #: apps/payment/forms.py:138
 msgid "The expiration date you entered is in the past."
@@ -4509,7 +4514,7 @@ msgstr "입력한 종료일이 과거 시점입니다."
 
 #: apps/payment/forms.py:162
 msgid "Valid from"
-msgstr ""
+msgstr "~부터 유효"
 
 #: apps/payment/forms.py:184
 msgid "The starting date you entered is in the future."
@@ -4618,7 +4623,7 @@ msgstr "링크 URL"
 
 #: apps/promotions/models.py:179
 msgid "This is where this promotion links to"
-msgstr ""
+msgstr "이 행사 링크를 클릭하면 이곳으로 이동합니다."
 
 #: apps/promotions/models.py:206
 msgid ""
@@ -4801,7 +4806,7 @@ msgstr "주문과 아이템 요금"
 
 #: apps/shipping/abstract_models.py:104
 msgid "Weight-based shipping"
-msgstr "무게 기반 배송"
+msgstr ""
 
 #: apps/shipping/abstract_models.py:109
 msgid "Default Weight"
@@ -4809,7 +4814,7 @@ msgstr "기본 무게"
 
 #: apps/shipping/abstract_models.py:112
 msgid "Default product weight in kg when no weight attribute is defined"
-msgstr ""
+msgstr "상품의 무게 속성이 정의되지 않았을 때 기본 중량으로 지정되는 무게(Kg)입니다."
 
 #: apps/shipping/abstract_models.py:118
 msgid "Weight-based Shipping Method"
@@ -4846,7 +4851,7 @@ msgstr ""
 #: apps/shipping/abstract_models.py:225
 #, python-format
 msgid "Charge for weights up to %s kg"
-msgstr ""
+msgstr "%s 킬로그램까지의 요금"
 
 #: apps/shipping/config.py:8
 #: templates/oscar/basket/partials/basket_totals.html:95
@@ -4958,7 +4963,7 @@ msgstr "장바구니에 추가됨"
 #: apps/voucher/reports.py:20
 #: templates/oscar/dashboard/reports/partials/voucher_report.html:11
 msgid "Used in an order"
-msgstr ""
+msgstr "순서에서 사용됨"
 
 #: apps/voucher/reports.py:39
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:42
@@ -5018,7 +5023,7 @@ msgstr "이 필드는 필수입니다."
 
 #: core/validators.py:99
 msgid "This field is invalid as its value is forbidden"
-msgstr ""
+msgstr "이 필드의 값이 사용금지상태이므로 이 필드는 유효하지 않습니다."
 
 #: core/validators.py:142
 msgid "Please choose a less common password"
@@ -5161,7 +5166,7 @@ msgstr "서버 에러!"
 msgid ""
 "We're sorry but something went terribly wrong and we've been unable to "
 "generate the page you requested."
-msgstr ""
+msgstr "죄송하지만 치명적인 문제가 발생해서 요청하신 페이지를 생성할 수 없습니다."
 
 #: templates/oscar/500.html:14
 msgid ""
@@ -5171,7 +5176,7 @@ msgstr "이 사고는 기록되었고 최대한 빨리 개발자가 해결할 �
 
 #: templates/oscar/base.html:9
 msgid "Build"
-msgstr ""
+msgstr "만들다"
 
 #: templates/oscar/base.html:66
 msgid "Version:"
@@ -5552,7 +5557,7 @@ msgstr "계산 중에 세금이 추가될 것입니다."
 
 #: templates/oscar/catalogue/browse.html:27
 msgid "Show results for"
-msgstr ""
+msgstr "결과를 보여줍니다"
 
 #: templates/oscar/catalogue/browse.html:49
 msgid "Refine by"
@@ -5584,7 +5589,7 @@ msgstr[0] ""
 
 #: templates/oscar/catalogue/browse.html:92
 msgid "<strong>0</strong> results."
-msgstr ""
+msgstr "<strong>0</strong> 결과."
 
 #: templates/oscar/catalogue/browse.html:109
 #: templates/oscar/dashboard/catalogue/product_list.html:73
@@ -5694,7 +5699,7 @@ msgid ""
 "\n"
 "                                            Add to '%(name)s' wish list\n"
 "                                        "
-msgstr ""
+msgstr "\n'%(name)s'를 위시리스트에 추가"
 
 #: templates/oscar/catalogue/partials/add_to_wishlist.html:24
 msgid "Create a new wishlist"
@@ -5788,7 +5793,7 @@ msgid_plural ""
 "\n"
 "                    %(num_reviews)s customer reviews\n"
 "                "
-msgstr[0] ""
+msgstr[0] "\n%(num_reviews)s개의 고객 상품평"
 
 #: templates/oscar/catalogue/reviews/partials/review_stars.html:26
 #: templates/oscar/customer/anon_order.html:79
@@ -5889,12 +5894,12 @@ msgstr "당신은 누구 입니까?"
 
 #: templates/oscar/checkout/gateway.html:39
 msgid "Get a password reminder"
-msgstr ""
+msgstr "주기적 비밀번호 변경 알림 받기"
 
 #: templates/oscar/checkout/gateway.html:59
 #: templates/oscar/checkout/shipping_address.html:79
 msgid "Continuing..."
-msgstr ""
+msgstr "진행중..."
 
 #: templates/oscar/checkout/gateway.html:59
 #: templates/oscar/checkout/payment_details.html:29
@@ -5935,7 +5940,7 @@ msgstr "결제 상세 입력"
 msgid ""
 "This page needs implementing within your project.  You may want to use one "
 "of Oscar's payment gateway libraries:"
-msgstr ""
+msgstr "이 페이지는 당신의 프로젝트 안에 구현되어야 합니다. 당신은 Oscar 결제 게이트웨이 라이브러리 중 하나를 이용할 수도 있습니다."
 
 #: templates/oscar/checkout/preview.html:5
 msgid "Order preview"
@@ -5955,7 +5960,7 @@ msgstr "어디로 배송해야 하나요?"
 
 #: templates/oscar/checkout/shipping_address.html:22
 msgid "An address from your address book?"
-msgstr ""
+msgstr "주소록에 있는 주소를 사용하시겠습니까?"
 
 #: templates/oscar/checkout/shipping_address.html:41
 msgid "Ship to your default shipping address"
@@ -6019,7 +6024,7 @@ msgid ""
 "                                This includes a discount of <strong>%(amount)s</strong> as\n"
 "                                your basket qualifies for the <strong>%(name)s</strong> offer.\n"
 "                            "
-msgstr ""
+msgstr "\n장바구니에 <strong>%(name)s</strong>행사가 적용되어, 이 주문에 <strong>%(amount)s</strong>  할인이 포함욉니다."
 
 #: templates/oscar/checkout/shipping_methods.html:58
 msgid "Select option"
@@ -6032,7 +6037,7 @@ msgid ""
 "\n"
 "        Order %(number)s: confirmation\n"
 "    "
-msgstr ""
+msgstr "\n주문 %(number)s: 확인"
 
 #: templates/oscar/checkout/thank_you.html:25
 #, python-format
@@ -6041,7 +6046,7 @@ msgid ""
 "        Your order has been placed and a confirmation email has been sent - your order number is\n"
 "        <strong>%(number)s</strong>.\n"
 "        "
-msgstr ""
+msgstr "\n주문이 완료되었고 확인 이메일을 전송했습니다. 주문번호는 \n<strong>%(number)s</strong>입니다."
 
 #: templates/oscar/checkout/thank_you.html:29
 msgid ""
@@ -6083,7 +6088,7 @@ msgid ""
 "\n"
 "                            Estimated dispatch: <strong>%(date)s</strong>\n"
 "                        "
-msgstr ""
+msgstr "\n발송 예정일: <strong>%(date)s</strong>"
 
 #: templates/oscar/checkout/thank_you.html:227
 msgid "Shipping charge (before discounts)"
@@ -6248,7 +6253,7 @@ msgid ""
 "\n"
 "We are happy to inform you that our product '%(product|safe)s' is back in stock:\n"
 "http://%(site)s%(path)s\n"
-msgstr "\n'%(product|safe)s' 재고가 들어왔습니다.:\nhttp://%(site)s%(path)s\n"
+msgstr ""
 
 #: templates/oscar/customer/alerts/emails/alert_body.txt:5
 msgid ""
@@ -6410,7 +6415,7 @@ msgstr "이메일 주소가 %(site_name)s에서 변경되었습니다."
 msgid ""
 "We are pleased to confirm your order %(order_number)s has been received and\n"
 "will be processed shortly."
-msgstr ""
+msgstr "고객님의 주문 %(order_number)s가 접수되었음을 알려드립니다. 곧 처리될 것입니다."
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:9
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:6
@@ -6462,7 +6467,7 @@ msgid ""
 "\n"
 "We are pleased to confirm your order %(order_number)s has been received and\n"
 "will be processed shortly."
-msgstr ""
+msgstr "안녕하세요,\n\n고객님의 주문 %(order_number)s가 접수되었음을 알려드립니다. \n곧 처리될 것입니다."
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:20
 #, python-format
@@ -6613,7 +6618,7 @@ msgstr "선택된 상품들을"
 
 #: templates/oscar/customer/notifications/list.html:48
 msgid "Archiving..."
-msgstr ""
+msgstr "저장소에 보관중..."
 
 #: templates/oscar/customer/notifications/list.html:56
 msgid "There are no notifications to display."
@@ -6878,7 +6883,7 @@ msgid ""
 "\n"
 "                    Created product variant '%(name)s'.\n"
 "                "
-msgstr ""
+msgstr "\n'%(name)s' 상품이 생성되었습니다."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:14
 #, python-format
@@ -6886,7 +6891,7 @@ msgid ""
 "\n"
 "                    Created variant of '%(parent_name)s'.\n"
 "                "
-msgstr ""
+msgstr "\n부모상품 '%(parent_name)s'이 생성되었습니다."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:20
 #, python-format
@@ -6894,7 +6899,7 @@ msgid ""
 "\n"
 "                    Updated product variant '%(name)s'.\n"
 "                "
-msgstr ""
+msgstr "\n'%(name)s' 상품을 업데이트했습니다."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:24
 #, python-format
@@ -6902,7 +6907,7 @@ msgid ""
 "\n"
 "                    Updated a variant of '%(parent_name)s'.\n"
 "                "
-msgstr ""
+msgstr "\n부모상품 '%(parent_name)s'을 업데이트했습니다."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:33
 #, python-format
@@ -6910,7 +6915,7 @@ msgid ""
 "\n"
 "                Created product '%(name)s'.\n"
 "            "
-msgstr ""
+msgstr "\n'%(name)s' 상품이 생성되었습니다."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:37
 #, python-format
@@ -6918,7 +6923,7 @@ msgid ""
 "\n"
 "                Updated product '%(name)s'.\n"
 "            "
-msgstr ""
+msgstr "\n '%(name)s' 상품을 업데이트했습니다."
 
 #: templates/oscar/dashboard/catalogue/messages/product_saved.html:48
 #: templates/oscar/dashboard/pages/messages/saved.html:10
@@ -6960,7 +6965,7 @@ msgstr "섹션"
 #: templates/oscar/dashboard/catalogue/product_class_form.html:39
 #: templates/oscar/dashboard/catalogue/product_class_form.html:53
 msgid "Product Class details"
-msgstr ""
+msgstr "상품 분류의 세부사항"
 
 #: templates/oscar/dashboard/catalogue/product_class_list.html:15
 msgid "Create new product type"
@@ -6992,7 +6997,7 @@ msgid ""
 "\n"
 "                    Delete product variant <strong>%(title)s</strong> - are you sure?\n"
 "                "
-msgstr ""
+msgstr "\n<strong>%(title)s</strong> 상품을 정말로 삭제하시겠습니까?"
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:41
 #, python-format
@@ -7000,11 +7005,11 @@ msgid ""
 "\n"
 "                    Delete product <strong>%(title)s</strong> - are you sure?\n"
 "                "
-msgstr ""
+msgstr "\n <strong>%(title)s</strong>상품을 정말로 삭제하시겠습니까?"
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:49
 msgid "This will also delete the following child products:"
-msgstr ""
+msgstr "이렇게 하면 다음의 세부 상품들도 삭제됩니다."
 
 #: templates/oscar/dashboard/catalogue/product_list.html:32
 msgid "Create new product"
@@ -7038,7 +7043,7 @@ msgid ""
 "                            You are currently editing a product variant of\n"
 "                            <a href=\"%(parent_url)s\">%(title)s</a>.\n"
 "                        "
-msgstr ""
+msgstr "\n현재 <a href=\"%(parent_url)s\">%(title)s</a>상품을 수정하고 있습니다."
 
 #: templates/oscar/dashboard/catalogue/product_update.html:71
 #: templates/oscar/dashboard/catalogue/product_update.html:101
@@ -7110,11 +7115,11 @@ msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_update.html:282
 msgid "This is likely because this product still has stock records."
-msgstr ""
+msgstr "이 상품이 아직도 재고 기록이 있어서 그런 것 같습니다."
 
 #: templates/oscar/dashboard/catalogue/product_update.html:326
 msgid "Save and add another variant"
-msgstr ""
+msgstr "저장하고 또다른 변형을 추가"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:330
 msgid "Save and continue editing"
@@ -7180,7 +7185,7 @@ msgstr "프리뷰 보기"
 
 #: templates/oscar/dashboard/comms/detail.html:81
 msgid "or send a preview to:"
-msgstr ""
+msgstr "미리보기를 이메일로 다음으로 전송: "
 
 #: templates/oscar/dashboard/comms/detail.html:83
 #: templates/oscar/dashboard/users/detail.html:92
@@ -7369,7 +7374,7 @@ msgstr ""
 
 #: templates/oscar/dashboard/offers/offer_detail.html:28
 msgid "Reinstating..."
-msgstr ""
+msgstr "복원중..."
 
 #: templates/oscar/dashboard/offers/offer_detail.html:28
 msgid "Reinstate offer"
@@ -7672,7 +7677,7 @@ msgstr "상태 변경"
 #: templates/oscar/dashboard/orders/order_detail.html:327
 #: templates/oscar/dashboard/orders/order_list.html:173
 msgid "This order can't have its status changed."
-msgstr ""
+msgstr "해당 주문은 상태를 변경 할 수 없습니다."
 
 #: templates/oscar/dashboard/orders/order_detail.html:357
 #, python-format
@@ -7740,7 +7745,7 @@ msgstr "이 주문에는 할인을 적용할 수 없습니다."
 
 #: templates/oscar/dashboard/orders/order_detail.html:613
 msgid "Admin"
-msgstr ""
+msgstr "관리자"
 
 #: templates/oscar/dashboard/orders/order_detail.html:636
 msgid "No notes available."
@@ -7792,7 +7797,7 @@ msgstr "주문을 찾을 수 없습니다."
 
 #: templates/oscar/dashboard/orders/partials/bulk_edit_form.html:6
 msgid "Print Packaging Slips"
-msgstr ""
+msgstr "포장명세서 인쇄하기"
 
 #: templates/oscar/dashboard/orders/partials/bulk_edit_form.html:10
 msgid "Mark as"
@@ -8099,7 +8104,7 @@ msgstr "프로모션 이름"
 
 #: templates/oscar/dashboard/promotions/page_detail.html:58
 msgid "Change display order"
-msgstr ""
+msgstr "표시 순서 변경"
 
 #: templates/oscar/dashboard/promotions/page_detail.html:65
 msgid "No promotions in this position."
@@ -8412,21 +8417,21 @@ msgstr ""
 msgid ""
 "\n"
 "<p>A shipping method <strong>%(name)s</strong> has been created.</p>\n"
-msgstr ""
+msgstr "\n<p>다음과 같은 배송 방식이 추가 되었습니다 <strong>%(name)s</strong>.</p>\n"
 
 #: templates/oscar/dashboard/shipping/messages/method_deleted.html:3
 #, python-format
 msgid ""
 "\n"
 "    <p>The <strong>%(name)s</strong> shipping method has been deleted.</p>\n"
-msgstr ""
+msgstr "\n<p>다음과 같은 배송 방식이 삭제되었습니다 <strong>%(name)s</strong>.</p>\n"
 
 #: templates/oscar/dashboard/shipping/messages/method_updated.html:3
 #, python-format
 msgid ""
 "\n"
 "    <p>The <strong>%(name)s</strong> shipping method has been updated.</p>\n"
-msgstr ""
+msgstr "\n<p>다음과 같은 배송 방식이 업데이트 되었습니다 <strong>%(name)s</strong>.</p>\n"
 
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:6
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:22
@@ -8450,7 +8455,7 @@ msgstr "배송 방법"
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:34
 #: templates/oscar/dashboard/shipping/weight_based_detail.html:67
 msgid "Weight range (kg)"
-msgstr ""
+msgstr "무게 범위(kg)"
 
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:46
 msgid "Are you sure you want to delete this weight band method?"
@@ -8469,11 +8474,11 @@ msgstr "'%(name)s' 배송 방법을 삭제하시겠습니까?"
 
 #: templates/oscar/dashboard/shipping/weight_based_delete.html:29
 msgid "Are you sure you want to delete this shipping method?"
-msgstr ""
+msgstr "이 배송 방식을 삭제하시겠습니까?"
 
 #: templates/oscar/dashboard/shipping/weight_based_detail.html:41
 msgid "Applies to countries"
-msgstr ""
+msgstr "국가들에 적용된다"
 
 #: templates/oscar/dashboard/shipping/weight_based_detail.html:47
 msgid "Default product weight (kg)"
@@ -8511,7 +8516,7 @@ msgstr "새 배송 방법 만들기"
 
 #: templates/oscar/dashboard/shipping/weight_based_list.html:20
 msgid "Create new shipping charge"
-msgstr ""
+msgstr "새 배송비 생성하기"
 
 #: templates/oscar/dashboard/shipping/weight_based_list.html:32
 msgid "Number of weight bands"
@@ -8519,7 +8524,7 @@ msgstr ""
 
 #: templates/oscar/dashboard/shipping/weight_based_list.html:33
 msgid "Default weight (kg)"
-msgstr ""
+msgstr "기본 무게(kg)"
 
 #: templates/oscar/dashboard/shipping/weight_based_list.html:54
 msgid "No shipping methods found."
@@ -8580,7 +8585,7 @@ msgstr "일반"
 
 #: templates/oscar/dashboard/users/detail.html:42
 msgid "Yes,No"
-msgstr ""
+msgstr "예,아니오"
 
 #: templates/oscar/dashboard/users/detail.html:46
 msgid "Superuser"
@@ -8741,7 +8746,7 @@ msgstr "이 행사는 더 이상 이용할 수 없습니다."
 
 #: templates/oscar/offer/detail.html:40
 msgid "What you need to do"
-msgstr ""
+msgstr "당신이 해야 하는 것들"
 
 #: templates/oscar/offer/list.html:26
 msgid "There are no site offers at the moment."
@@ -8851,7 +8856,7 @@ msgid ""
 "\n"
 "        We've e-mailed you instructions for resetting your password. You should be receiving it shortly.\n"
 "    "
-msgstr ""
+msgstr "\n고객님의 이메일 주소로 비밀번호 변경을 위한 이메일을 보냈습니다. 받은편지함을 확인하세요."
 
 #: templates/oscar/registration/password_reset_done.html:27
 msgid ""
@@ -8859,7 +8864,7 @@ msgid ""
 "        If you don't receive an email, please make sure you've entered the address you registered with, and check\n"
 "        your spam folder.\n"
 "    "
-msgstr ""
+msgstr "\n이메일을 받지 못하셨다면 이메일 주소를 확인하거나 \n스펨폴더를 확인해주세요"
 
 #: templates/oscar/registration/password_reset_form.html:21
 msgid ""
@@ -8873,7 +8878,7 @@ msgstr "변경 메일이 전송되었습니다."
 
 #: templates/oscar/search/results.html:26
 msgid "Refine your search"
-msgstr ""
+msgstr "고급 검색하기"
 
 #: templates/oscar/search/results.html:38
 #, python-format
@@ -8901,7 +8906,7 @@ msgid_plural ""
 "\n"
 "                    Found <strong>%(num_results)s</strong> results. \n"
 "                "
-msgstr[0] ""
+msgstr[0] "\n<strong>%(num_results)s</strong> 개의 상품을 찾았습니다."
 
 #: templates/oscar/search/results.html:69
 msgid "Found <strong>0</strong> results."

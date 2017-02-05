@@ -8,8 +8,9 @@
 # Eugene MechanisM <eugene@mechanism.pro>, 2013
 # Georgy <g.kutsurua@gmail.com>, 2013
 # Lex Berezhny <lex@damoti.com>, 2013
+# Max Brajsky <kzerot@gmail.com>, 2016
 # Michael van Tellingen <michaelvantellingen@gmail.com>, 2016
-# Oleg Rybkin <okfish@yandex.ru>, 2013-2016
+# Oleg Rybkin <okfish@yandex.ru>, 2013-2017
 # Putilov Artem <putilkin@gmail.com>, 2013
 # Владимиров Антон Павлович <styleex@inbox.ru>, 2014
 # Ivan Gromov <summer.is.gone@gmail.com>, 2013
@@ -23,7 +24,7 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-13 13:06+0200\n"
-"PO-Revision-Date: 2016-05-23 09:05+0000\n"
+"PO-Revision-Date: 2017-02-04 14:22+0000\n"
 "Last-Translator: Oleg Rybkin <okfish@yandex.ru>\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/codeinthehole/django-oscar/language/ru_RU/)\n"
 "MIME-Version: 1.0\n"
@@ -6281,7 +6282,7 @@ msgid ""
 "\n"
 "We are happy to inform you that our product '%(product|safe)s' is back in stock:\n"
 "http://%(site)s%(path)s\n"
-msgstr "\nМы счастливысообщить Вам, что товар '%(product|safe)s' поступил на склад:\nhttp://%(site)s%(path)s\n"
+msgstr "\nМы счастливы сообщить вам, что наш товар '%(product|safe)s' снова на складе:\nhttp://%(site)s%(path)s\n"
 
 #: templates/oscar/customer/alerts/emails/alert_body.txt:5
 msgid ""

@@ -14,7 +14,7 @@
 # joaquinnunez <josejnv@gmail.com>, 2014
 # Jon Lazaro Aduna <lazaro.jon@gmail.com>, 2014
 # joaquinnunez <josejnv@gmail.com>, 2014
-# Juan Madurga <jlmadurga@gmail.com>, 2014-2015
+# Juan Madurga <jlmadurga@gmail.com>, 2014-2016
 # Juan Ordoñez <juanordonezht85@gmail.com>, 2014
 # Juan Saavedra <jsaavedra@trea.uy>, 2013
 # kkx <qijiongjiang1@hotmail.com>, 2015
@@ -29,12 +29,13 @@
 # RUBEN MASO CARCASES <matusalen@gmail.com>, 2013
 # Yoandy Mesa <yoandym@gmail.com>, 2013
 # Yoandy Mesa <yoandym@gmail.com>, 2013
+# Yusuf (Josè) Luis <alagunajs@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-13 13:06+0200\n"
-"PO-Revision-Date: 2016-02-28 22:21+0000\n"
+"PO-Revision-Date: 2016-12-30 15:10+0000\n"
 "Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/codeinthehole/django-oscar/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -2613,7 +2614,7 @@ msgstr "Nombre del producto "
 #: apps/partner/abstract_models.py:102
 #: templates/oscar/dashboard/orders/line_detail.html:80
 msgid "Partner SKU"
-msgstr "SKU del socio"
+msgstr "Número de referencia del socio"
 
 #: apps/dashboard/orders/forms.py:81 apps/dashboard/reports/forms.py:25
 #: apps/dashboard/reviews/forms.py:28
@@ -2680,7 +2681,7 @@ msgstr "Incluye un producto con UPC \"{upc}\""
 #: apps/dashboard/orders/views.py:284
 #, python-brace-format
 msgid "Includes an item with partner SKU \"{partner_sku}\""
-msgstr "Incluye un producto con SKU de socio \"{partner_sku}\""
+msgstr "Incluye un producto con el Número de referencia del socio \"{partner_sku}\""
 
 #. Translators: This string refers to orders in an online
 #. store that were made within a particular date range.
@@ -3087,15 +3088,15 @@ msgstr "Panel de rangos"
 
 #: apps/dashboard/ranges/forms.py:25
 msgid "Product SKUs or UPCs"
-msgstr "Producto SKUs o UPSs"
+msgstr "Producto Número de referencia o Código universal de producto"
 
 #: apps/dashboard/ranges/forms.py:27
 msgid "You can paste in a selection of SKUs or UPCs"
-msgstr "Usted puede pegar una seleccion de SKUs o UPCs"
+msgstr "Usted puede pegar una seleccion de Número de referencia o Código universal de producto"
 
 #: apps/dashboard/ranges/forms.py:29
 msgid "File of SKUs or UPCs"
-msgstr "Archivo de SKUs o UPCs"
+msgstr "Archivo de Número de referencia o Código universal de producto"
 
 #: apps/dashboard/ranges/forms.py:30
 msgid "Either comma-separated, or one identifier per line"
@@ -3103,17 +3104,17 @@ msgstr "Separado por coma o un identificador por linea"
 
 #: apps/dashboard/ranges/forms.py:40
 msgid "You must submit either a list of SKU/UPCs or a file"
-msgstr "Debe enviar una lista de SKU/UPCs o un fichero"
+msgstr "Debe enviar una lista de Número de referencia/Código universal de producto o un fichero"
 
 #: apps/dashboard/ranges/forms.py:59 apps/dashboard/ranges/views.py:161
 #, python-format
 msgid "The products with SKUs or UPCs matching %s are already in this range"
-msgstr "Los productos con SKUs o UPCs que coinciden con %s ya están en este rango"
+msgstr "Los productos con Número de referencia o Código universal de producto que coinciden con %s ya están en este rango"
 
 #: apps/dashboard/ranges/forms.py:67
 #, python-format
 msgid "No products exist with a SKU or UPC matching %s"
-msgstr "No existen productos con SKU o UPS que coincidan con %s"
+msgstr "No existen productos con Número de referencia o Código universal de producto que coincidan con %s"
 
 #: apps/dashboard/ranges/views.py:50
 msgid "Create range"
@@ -3140,7 +3141,7 @@ msgstr[1] "%d productos añadidos al rango"
 #: apps/dashboard/ranges/views.py:168
 #, python-format
 msgid "No product(s) were found with SKU or UPC matching %s"
-msgstr "No se encontró producto(s) con SKU o UPC que coincida con %s"
+msgstr "No se encontró producto(s) con Número de referencia o Código universal de producto que coincida con %s"
 
 #: apps/dashboard/reports/config.py:8
 msgid "Reports dashboard"
@@ -3735,15 +3736,15 @@ msgstr "Fecha procesada"
 
 #: apps/offer/abstract_models.py:1008
 msgid "Number of New SKUs"
-msgstr "Número de Nuevos SKUs"
+msgstr "Número de Nuevos Números de referencia"
 
 #: apps/offer/abstract_models.py:1010
 msgid "Number of Unknown SKUs"
-msgstr "Número de Desconocidos SKUs"
+msgstr "Número de Desconocidos de Números de referencia"
 
 #: apps/offer/abstract_models.py:1013
 msgid "Number of Duplicate SKUs"
-msgstr "Número de Duplicados SKUs"
+msgstr "Número de Duplicados de Números de referencia"
 
 #: apps/offer/abstract_models.py:1019
 msgid "Range Product Uploaded File"
@@ -4819,7 +4820,7 @@ msgstr "Costos de la orden y artículo"
 
 #: apps/shipping/abstract_models.py:104
 msgid "Weight-based shipping"
-msgstr "Envío basado en peso"
+msgstr ""
 
 #: apps/shipping/abstract_models.py:109
 msgid "Default Weight"
@@ -5977,7 +5978,7 @@ msgstr "A donde debemos enviar el paquete"
 
 #: templates/oscar/checkout/shipping_address.html:22
 msgid "An address from your address book?"
-msgstr ""
+msgstr "Añade una dirección a su cuenta."
 
 #: templates/oscar/checkout/shipping_address.html:41
 msgid "Ship to your default shipping address"
@@ -6292,7 +6293,7 @@ msgstr "\nCon este email hemos deshabilitado su alerta automáticamente y usted 
 #: templates/oscar/customer/alerts/emails/alert_subject.txt:1
 #, python-format
 msgid "%(title|safe)s is back in stock"
-msgstr "%(title|safe)s está de nuevo en stock"
+msgstr ""
 
 #: templates/oscar/customer/alerts/emails/confirmation_body.txt:1
 #, python-format
@@ -7079,7 +7080,7 @@ msgstr "Stock y precios"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:88
 msgid "Upselling"
-msgstr "Upselling"
+msgstr "Sobreventa"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:146
 msgid "Product Type:"
@@ -7091,7 +7092,7 @@ msgstr "Publica, actualiza o elimina imágenes"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:192
 msgid "SKU"
-msgstr "SKU"
+msgstr "Número de referencia"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:194
 msgid "Num in stock"
@@ -7627,7 +7628,7 @@ msgstr "Proveedor"
 
 #: templates/oscar/dashboard/orders/order_detail.html:113
 msgid "Supplier SKU"
-msgstr "SKU proveedor"
+msgstr "Número de referencia del proveedor"
 
 #: templates/oscar/dashboard/orders/order_detail.html:114
 msgid "Est. dispatch date"
