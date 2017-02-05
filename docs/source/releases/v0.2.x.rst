@@ -1,0 +1,41 @@
+=========================
+Oscar 0.2.2 release notes
+=========================
+
+:release: 13 July 2012
+
+Fixes a bug with applying absolute-discount benefits
+
+
+=========================
+Oscar 0.2.1 release notes
+=========================
+
+:release: 09 July 2012
+
+Mainly small bug-fixes to templates and javascript.  
+
+
+=========================
+Oscar 0.2.0 release notes
+=========================
+
+:release: 01 June 2012
+
+Many components have been rewritten since 0.1 - Oscar is much more of a complete
+package now.  New features include:
+
+* Dashboard for managing catalogue, offers, stock, vouchers and more.  This includes
+  statistics pages to track performance.
+
+* Sample templates, CSS and JS to get a shop up and running in a minutes.  
+
+* Updated documentation.
+
+* Reworking of shipping methods.
+
+* Automatic up-selling on the basket page.  We now inform the user if they
+  partially qualify for an offer.
+
+The documentation still needs more work which we'll do over the next week or
+two.

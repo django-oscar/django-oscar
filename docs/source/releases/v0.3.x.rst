@@ -1,0 +1,115 @@
+=========================
+Oscar 0.3.7 release notes
+=========================
+
+:release: 2013-07-03
+
+* Extend number of years in bankcard expiry field
+
+
+=========================
+Oscar 0.3.6 release notes
+=========================
+
+:release: 2013-04-08
+
+* Fix line-handling bug in order dashboard.
+
+
+=========================
+Oscar 0.3.5 release notes
+=========================
+
+:release: 2012-09-28
+
+A couple of minor adjustments for Tangent projects
+
+* Add handling of custom redirect after adding to basket
+* Add recursive URL decoration
+
+
+=========================
+Oscar 0.3.4 release notes
+=========================
+
+:release: 2012-09-24
+
+* Rework price lookups in offer calculations (backport of functionality from 0.4)
+* Add additional block to profile template
+
+Diff: https://github.com/django-oscar/django-oscar/compare/0.3.3...0.3.4
+
+
+=========================
+Oscar 0.3.3 release notes
+=========================
+
+:release: 2012-08-24
+
+* Minor bug fixes around category editing and order history.
+
+
+=========================
+Oscar 0.3.2 release notes
+=========================
+
+:release: 2012-08-13
+
+* Bug fix for basket calculations.
+* Bug fix for absolute discount benefit calculations.
+
+
+=========================
+Oscar 0.3.1 release notes
+=========================
+
+:release: 2012-08-08
+
+* Now including the translation files.
+
+
+=========================
+Oscar 0.3.0 release notes
+=========================
+
+:release: 2012-08-08
+
+* i18n support added - Oscar now ships with .po files for seven languages.
+  Translation files are welcome.
+* Category management added to dashboard
+* Some improvements to how group/variant products are handled
+* Improved installation process using makefile
+
+
+Migrations
+~~~~~~~~~~
+
+There are 3 new migrations in the catalogue app.  If you have a local version,
+you will need to run::
+
+    ./manage.py schemamigration catalogue --auto
+
+to pick up the changes in Oscar's catalogue app.
+
+Breaking changes
+~~~~~~~~~~~~~~~~
+
+A new setting ``OSCAR_MAIN_TEMPLATE_DIR`` has been introduced
+as the template structure has been altered.  This requires your
+``TEMPLATE_DIRS`` setting to be altered to include this folder, eg::
+
+    from oscar import OSCAR_MAIN_TEMPLATE_DIR
+    TEMPLATE_DIRS = (
+        location('templates'),
+        OSCAR_MAIN_TEMPLATE_DIR
+    )
+
+If you want to extend one of Oscar's templates, then use::
+
+    # base.html
+    {% extends 'oscar/base.html' %}
+
+instead of::
+
+    # base.html
+    {% extends 'templates/base.html' %}
