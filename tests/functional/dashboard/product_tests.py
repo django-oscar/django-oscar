@@ -184,12 +184,12 @@ class TestProductClass(ProductWebTest):
         # Reloading model instance to re-initiate ProductAttributeContainer
         # with new attributes.
         self.product = Product.objects.get(pk=self.product.id)
-        self.assertEquals(self.product.attr.text, 'test1')
-        self.assertEquals(self.product.attr.integer, 1)
-        self.assertEquals(self.product.attr.float, 1.2)
+        self.assertEqual(self.product.attr.text, 'test1')
+        self.assertEqual(self.product.attr.integer, 1)
+        self.assertEqual(self.product.attr.float, 1.2)
         self.assertTrue(self.product.attr.boolean)
-        self.assertEquals(self.product.attr.richtext, 'longread')
-        self.assertEquals(self.product.attr.date, datetime.date(2016, 10, 12))
+        self.assertEqual(self.product.attr.richtext, 'longread')
+        self.assertEqual(self.product.attr.date, datetime.date(2016, 10, 12))
 
         page = self.get(self.url)
         product_form = page.form
@@ -202,9 +202,9 @@ class TestProductClass(ProductWebTest):
         product_form.submit()
 
         self.product = Product.objects.get(pk=self.product.id)
-        self.assertEquals(self.product.attr.text, 'test2')
-        self.assertEquals(self.product.attr.integer, 2)
-        self.assertEquals(self.product.attr.float, 5.2)
+        self.assertEqual(self.product.attr.text, 'test2')
+        self.assertEqual(self.product.attr.integer, 2)
+        self.assertEqual(self.product.attr.float, 5.2)
         self.assertFalse(self.product.attr.boolean)
-        self.assertEquals(self.product.attr.richtext, 'article')
-        self.assertEquals(self.product.attr.date, datetime.date(2016, 10, 10))
+        self.assertEqual(self.product.attr.richtext, 'article')
+        self.assertEqual(self.product.attr.date, datetime.date(2016, 10, 10))

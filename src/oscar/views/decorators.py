@@ -10,6 +10,8 @@ from django.shortcuts import render
 from django.utils.six.moves.urllib import parse
 from django.utils.translation import ugettext_lazy as _
 
+from oscar.core.compat import user_is_authenticated
+
 
 def staff_member_required(view_func, login_url=None):
     """
@@ -31,7 +33,7 @@ def staff_member_required(view_func, login_url=None):
             return view_func(request, *args, **kwargs)
 
         # If user is not logged in, redirect to login page
-        if not request.user.is_authenticated():
+        if not user_is_authenticated(request.user):
             # If the login url is the same scheme and net location then just
             # use the path as the "next" url.
             path = request.build_absolute_uri()
@@ -104,7 +106,7 @@ def permissions_required(permissions, login_url=None):
 
     def _check_permissions(user):
         outcome = check_permissions(user, permissions)
-        if not outcome and user.is_authenticated():
+        if not outcome and user_is_authenticated(user):
             raise PermissionDenied
         else:
             return outcome
@@ -119,7 +121,7 @@ def login_forbidden(view_func, template_name='login_forbidden.html',
     """
     @wraps(view_func)
     def _checklogin(request, *args, **kwargs):
-        if not request.user.is_authenticated():
+        if not user_is_authenticated(request.user):
             return view_func(request, *args, **kwargs)
         return render(request, template_name, status=status)
 

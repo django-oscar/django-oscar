@@ -1,7 +1,7 @@
 # flake8: noqa, because URL syntax is more readable with long lines
 
 from django.conf import settings
-from django.conf.urls import include, url
+from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse_lazy
 
@@ -27,13 +27,13 @@ class Shop(Application):
 
     def get_urls(self):
         urls = [
-            url(r'^catalogue/', include(self.catalogue_app.urls)),
-            url(r'^basket/', include(self.basket_app.urls)),
-            url(r'^checkout/', include(self.checkout_app.urls)),
-            url(r'^accounts/', include(self.customer_app.urls)),
-            url(r'^search/', include(self.search_app.urls)),
-            url(r'^dashboard/', include(self.dashboard_app.urls)),
-            url(r'^offers/', include(self.offer_app.urls)),
+            url(r'^catalogue/', self.catalogue_app.urls),
+            url(r'^basket/', self.basket_app.urls),
+            url(r'^checkout/', self.checkout_app.urls),
+            url(r'^accounts/', self.customer_app.urls),
+            url(r'^search/', self.search_app.urls),
+            url(r'^dashboard/', self.dashboard_app.urls),
+            url(r'^offers/', self.offer_app.urls),
 
             # Password reset - as we're using Django's default view functions,
             # we can't namespace these urls as that prevents
@@ -59,7 +59,7 @@ class Shop(Application):
         ]
 
         if settings.OSCAR_PROMOTIONS_ENABLED:
-            urls.append(url(r'', include(self.promotions_app.urls)))
+            urls.append(url(r'', self.promotions_app.urls))
         return urls
 
 application = Shop()

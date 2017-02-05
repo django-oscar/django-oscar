@@ -199,7 +199,7 @@ class TestMultiSiteOrderCreation(TestCase):
                     basket=self.basket,
                     order_number='1234')
         order = Order.objects.get(number='1234')
-        self.assertEquals(order.site_id, 1)
+        self.assertEqual(order.site_id, 1)
 
     def test_multi_sites(self):
         site1 = factories.SiteFactory()
@@ -210,11 +210,11 @@ class TestMultiSiteOrderCreation(TestCase):
                     order_number='12345',
                     site=site1)
         order1 = Order.objects.get(number='12345')
-        self.assertEquals(order1.site, site1)
+        self.assertEqual(order1.site, site1)
         add_product(self.basket, D('12.00'))
         place_order(self.creator,
                     basket=self.basket,
                     order_number='12346',
                     site=site2)
         order2 = Order.objects.get(number='12346')
-        self.assertEquals(order2.site, site2)
+        self.assertEqual(order2.site, site2)

@@ -77,6 +77,27 @@ else:
     MiddlewareMixin = object
 
 
+def user_is_authenticated(user):
+    if django.VERSION >= (1, 10):
+        return user.is_authenticated
+    else:
+        return user.is_authenticated()
+
+
+def user_is_anonymous(user):
+    if django.VERSION >= (1, 10):
+        return user.is_anonymous
+    else:
+        return user.is_anonymous()
+
+
+def assignment_tag(register):
+    if django.VERSION >= (1, 9):
+        return register.simple_tag
+    else:
+        return register.assignment_tag
+
+
 # Python3 compatibility layer
 
 """

@@ -62,7 +62,8 @@ class TestForkAppFunction(TestCase):
             filepath = os.path.join(self.tmp_folder, 'order', '%s.py' % module)
             self.assertTrue(os.path.exists(filepath))
 
-            contents = open(filepath).read()
+            with open(filepath) as fh:
+                contents = fh.read()
             self.assertTrue(expected_string in contents)
 
     def test_copies_in_migrations_when_needed(self):

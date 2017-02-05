@@ -1,9 +1,11 @@
 from django import template
 
+from oscar.core.compat import assignment_tag
+
 register = template.Library()
 
 
-@register.assignment_tag
+@assignment_tag(register)
 def shipping_charge(method, basket):
     """
     Template tag for calculating the shipping charge for a given shipping
@@ -12,7 +14,7 @@ def shipping_charge(method, basket):
     return method.calculate(basket)
 
 
-@register.assignment_tag
+@assignment_tag(register)
 def shipping_charge_discount(method, basket):
     """
     Template tag for calculating the shipping discount for a given shipping
@@ -21,7 +23,7 @@ def shipping_charge_discount(method, basket):
     return method.discount(basket)
 
 
-@register.assignment_tag
+@assignment_tag(register)
 def shipping_charge_excl_discount(method, basket):
     """
     Template tag for calculating the shipping charge (excluding discounts) for

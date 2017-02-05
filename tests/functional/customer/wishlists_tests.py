@@ -49,8 +49,8 @@ class TestMoveProductToAnotherWishList(WishListTestMixin, WebTestCase):
                                                                                  'line_pk': line1.pk,
                                                                                  'to_key': self.wishlist2.key})
         self.get(url)
-        self.assertEquals(self.wishlist1.lines.filter(product=self.product).count(), 1)
-        self.assertEquals(self.wishlist2.lines.filter(product=self.product).count(), 1)
+        self.assertEqual(self.wishlist1.lines.filter(product=self.product).count(), 1)
+        self.assertEqual(self.wishlist2.lines.filter(product=self.product).count(), 1)
 
     def test_move_product_to_another_wishlist(self):
         self.wishlist1.add(self.product)
@@ -59,5 +59,5 @@ class TestMoveProductToAnotherWishList(WishListTestMixin, WebTestCase):
                                                                                  'line_pk': line1.pk,
                                                                                  'to_key': self.wishlist2.key})
         self.get(url)
-        self.assertEquals(self.wishlist1.lines.filter(product=self.product).count(), 0)
-        self.assertEquals(self.wishlist2.lines.filter(product=self.product).count(), 1)
+        self.assertEqual(self.wishlist1.lines.filter(product=self.product).count(), 0)
+        self.assertEqual(self.wishlist2.lines.filter(product=self.product).count(), 1)
