@@ -64,4 +64,4 @@ class OfferReportGenerator(ReportGenerator):
             offer_discounts[discount.offer_id]['total_discount'] \
                 += discount.amount
 
-        return self.formatter.generate_response(offer_discounts.values())
+        return self.formatter.generate_response(list(offer_discounts.values()))
