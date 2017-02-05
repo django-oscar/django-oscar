@@ -8,9 +8,10 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.six.moves import filter
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
+from phonenumber_field.modelfields import PhoneNumberField
 
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.models.fields import PhoneNumberField, UppercaseCharField
+from oscar.models.fields import UppercaseCharField
 
 
 @python_2_unicode_compatible

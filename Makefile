@@ -36,6 +36,9 @@ docs:
 test:
 	py.test 
 
+retest:
+	py.test --lf 
+
 coverage:
 	py.test --cov=oscar --cov-report=term-missing
 
