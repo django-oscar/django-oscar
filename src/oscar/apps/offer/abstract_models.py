@@ -1120,7 +1120,7 @@ class AbstractRangeProductFileUpload(models.Model):
         Extract all SKU- or UPC-like strings from the file
         """
         with open(self.filepath, 'r') as fh:
-            for line in fh.readlines():
+            for line in fh:
                 for id in re.split('[^\w:\.-]', line):
                     if id:
                         yield id
