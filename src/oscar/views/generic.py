@@ -4,7 +4,7 @@ import phonenumbers
 from django import forms
 from django.contrib import messages
 from django.core import validators
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, FieldDoesNotExist
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.utils import six
@@ -12,8 +12,8 @@ from django.utils.encoding import smart_str
 from django.utils.six.moves import map
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import View
+from phonenumber_field.phonenumber import PhoneNumber
 
-from oscar.core.phonenumber import PhoneNumber
 from oscar.core.utils import safe_referrer
 
 
@@ -148,13 +148,29 @@ class ObjectLookupView(View):
 
 
 class PhoneNumberMixin(object):
-    """
-    Validation mixin for forms with a phone number, and optionally a country.
+    """Validation mixin for forms with a phone number, and optionally a country.
+
     It tries to validate the phone number, and on failure tries to validate it
     using a hint (the country provided), and treating it as a local number.
+
     """
 
-    phone_number = forms.CharField(max_length=32, required=False)
+    def __init__(self, *args, **kwargs):
+        super(PhoneNumberMixin, self).__init__(*args, **kwargs)
+
+        # We can't use the PhoneNumberField here since we want validate the
+        # phonenumber based on the selected country as a fallback when a local
+        # number is entered. We add the field in the init since on Python 2
+        # using forms.Form as base class results in errors when using this
+        # class as mixin.
+        self.fields['phone_number'] = forms.CharField(max_length=32, required=False)
+
+        # Copy the help_text from the model field if it is available
+        try:
+            self.fields['phone_number'].help_text = (
+                self._meta.model._meta.get_field('phone_number').help_text)
+        except (AttributeError, FieldDoesNotExist):
+            pass
 
     def get_country(self):
         # If the form data contains valid country information, we use that.
@@ -162,8 +178,7 @@ class PhoneNumberMixin(object):
             return self.cleaned_data['country']
         # Oscar hides the field if there's only one country. Then (and only
         # then!) can we consider a country on the model instance.
-        elif 'country' not in self.fields and hasattr(
-                self.instance, 'country'):
+        elif 'country' not in self.fields and hasattr(self.instance, 'country'):
             return self.instance.country
 
     def get_region_code(self, country):
@@ -195,8 +210,7 @@ class PhoneNumberMixin(object):
             # library, which luckily allows parsing into a PhoneNumber
             # instance
             try:
-                phone_number = PhoneNumber.from_string(
-                    number, region=region_code)
+                phone_number = PhoneNumber.from_string(number, region=region_code)
                 if not phone_number.is_valid():
                     raise ValidationError(
                         _(u'This is not a valid local phone format for %s.')
