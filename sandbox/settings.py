@@ -244,6 +244,11 @@ LOGGING = {
             'level': 'WARNING',
             'propagate': True,
         },
+        'django.security.DisallowedHost': {
+            'handlers': ['null'],
+            'propagate': False,
+        },
+
         # Third party
         'raven': {
             'level': 'DEBUG',
