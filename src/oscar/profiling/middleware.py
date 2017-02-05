@@ -2,10 +2,16 @@ import cProfile
 import pstats
 import sys
 import tempfile
+import warnings
 from cStringIO import StringIO
 
 import hotshot
 import hotshot.stats
+from oscar.utils.deprecation import RemovedInOscar15Warning
+
+warnings.warn(
+    "The profiling middleware will be removed in Oscar 1.5",
+    RemovedInOscar15Warning)
 
 
 def profile_this(fn):

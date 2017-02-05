@@ -3,6 +3,8 @@ from functools import wraps
 
 import mock
 
+from oscar.utils.deprecation import RemovedInOscar15Warning
+
 
 def dataProvider(fn_data_provider):
     """
@@ -13,6 +15,11 @@ def dataProvider(fn_data_provider):
     Implementation based on:
     http://melp.nl/2011/02/phpunit-style-dataprovider-in-python-unit-test/#more-525  # noqa
     """
+
+    warnings.warn(
+        "dataProvider() is deprecated and will be removed in Oscar 1.5",
+        RemovedInOscar15Warning)
+
     def test_decorator(test_method):
         def execute_test_method_with_each_data_set(self):
             for data in fn_data_provider():
@@ -37,6 +44,10 @@ def compose(*functions):
 
     This is useful for combining decorators.
     """
+    warnings.warn(
+        "compose() is deprecated and will be removed in Oscar 1.5",
+        RemovedInOscar15Warning)
+
     def _composed(*args):
         for fn in functions:
             try:
@@ -73,6 +84,11 @@ def ignore_deprecation_warnings(target):
     deprecation warning.  Using this decorator allows tests to exercise
     deprecated code without an exception.
     """
+    warnings.warn(
+        "ignore_deprecation_warnings() is deprecated and will be " +
+        "removed in Oscar 1.5",
+        RemovedInOscar15Warning)
+
     if target.__class__.__name__ not in ('instancemethod', 'function'):
         # Decorate every test method in class
         for attr in dir(target):

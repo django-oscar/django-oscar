@@ -1,5 +1,9 @@
+import warnings
+
 import os
 from logging import FileHandler as BaseFileHandler
+
+from oscar.utils.deprecation import RemovedInOscar15Warning
 
 
 class EnvFileHandler(BaseFileHandler):
@@ -14,6 +18,11 @@ class EnvFileHandler(BaseFileHandler):
     """
 
     def __init__(self, filename, *args, **kwargs):
+
+        warnings.warn(
+            "The EnvFileHandler() class will be removed in Oscar 1.5",
+            RemovedInOscar15Warning)
+
         self.filename = filename
         kwargs['delay'] = True
         BaseFileHandler.__init__(self, "/dev/null", *args, **kwargs)

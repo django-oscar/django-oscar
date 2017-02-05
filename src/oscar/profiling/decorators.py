@@ -1,6 +1,10 @@
+import warnings
+
 import cProfile
 import pstats
 import time
+
+from oscar.utils.deprecation import RemovedInOscar15Warning
 
 
 def profile(fn):
@@ -10,6 +14,11 @@ def profile(fn):
     Inspired by
     https://speakerdeck.com/rwarren/a-brief-intro-to-profiling-in-python
     """
+
+    warnings.warn(
+        "The profile() decorator will be removed in Oscar 1.5",
+        RemovedInOscar15Warning)
+
     def profiled_fn(*args, **kwargs):
         filepath = "/tmp/%s.profile" % fn.__name__
         prof = cProfile.Profile()

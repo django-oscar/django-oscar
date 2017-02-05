@@ -1,4 +1,8 @@
+import warnings
+
 from django import template
+
+from oscar.core.utils import RemovedInOscar15Warning
 
 register = template.Library()
 
@@ -35,7 +39,14 @@ def ellipses_page_range(page, args="1,2"):
         pages at borders (N first pages, N last pages); second is the number of
         pages to the left/right from the current page.
     :returns: range of page numbers or None for ellipsed page numbers
+
     """
+
+    warnings.warn(
+        "The ellipses_page_range template filter will be removed in " +
+        "Oscar 1.5. Please use django-rangepaginator instead",
+        RemovedInOscar15Warning)
+
     if ',' not in args or len(args.split(',')) != 2:
         raise template.TemplateSyntaxError("Invalid number of arguments")
 
