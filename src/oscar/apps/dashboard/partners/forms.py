@@ -31,6 +31,7 @@ class PartnerCreateForm(forms.ModelForm):
         model = Partner
         fields = ('name',)
 
+
 ROLE_CHOICES = (
     ('staff', _('Full dashboard access')),
     ('limited', _('Limited dashboard access')),
