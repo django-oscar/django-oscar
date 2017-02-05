@@ -10,6 +10,4 @@ This is Oscar 1.2.2, a bug fix release.
 Bug fixes
 =========
 
-* `#2030`_: Fix migration issues on Python 3. 
-
-  .. _#2030: https://github.com/django-oscar/django-oscar/pull/2030
+* :issue:`2030`: Fix migration issues on Python 3. 
