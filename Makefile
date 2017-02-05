@@ -62,6 +62,7 @@ css:
 clean:
 	# Remove files not in source control
 	find . -type f -name "*.pyc" -delete
+	find . -type f -name "__pycache__" -delete
 	rm -rf nosetests.xml coverage.xml htmlcov *.egg-info *.pdf dist violations.txt
 
 todo:
