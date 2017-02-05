@@ -1,0 +1,39 @@
+=======================
+Oscar 1.5 release notes
+=======================
+
+:release: tbd
+
+Welcome to Oscar 1.5
+
+
+Table of contents:
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_1.5:
+
+Compatibility
+-------------
+
+Oscar 1.4 is compatible with Django 1.8, 1.9 and 1.10 as well as Python 2.7,
+3.3, 3.4, 3.5 and 3.6.
+
+
+.. _new_in_1.5:
+
+What's new in Oscar 1.5?
+------------------------
+
+
+
+Minor changes
+~~~~~~~~~~~~~
+
+
+
+Dependency changes
+------------------
