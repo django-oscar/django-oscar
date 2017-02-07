@@ -41,6 +41,7 @@ These methods/modules have been removed:
  - The ``ellipses_page_range`` templatetag. See `django-rangepaginator`_ for
    an alternative.
  - ``oscar.test.decorators`` module.
+ - ``oscar.core.utils.compose`` function.
 
 
 .. _silk: https://github.com/django-silk/silk
