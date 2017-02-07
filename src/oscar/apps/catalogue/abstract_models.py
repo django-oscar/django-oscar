@@ -23,7 +23,6 @@ from django.utils.translation import get_language, pgettext_lazy
 from treebeard.mp_tree import MP_Node
 
 from oscar.core.compat import user_is_anonymous, user_is_authenticated
-from oscar.core.decorators import deprecated
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import slugify
 from oscar.core.validators import non_python_keyword
@@ -520,9 +519,6 @@ class AbstractProduct(models.Model):
         attributes = self.attribute_values.all()
         pairs = [attribute.summary() for attribute in attributes]
         return ", ".join(pairs)
-
-
-    # Wrappers for child products
 
     def get_title(self):
         """

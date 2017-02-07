@@ -44,7 +44,9 @@ coverage:
 
 lint:
 	flake8 src/oscar/
+	flake8 tests/
 	isort -q --recursive --diff src/
+	isort -q --recursive --diff tests/
 
 testmigrations:
 	pip install -r requirements_migrations.txt

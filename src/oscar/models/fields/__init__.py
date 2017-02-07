@@ -2,15 +2,14 @@ from django.core.exceptions import ImproperlyConfigured
 from django.db.models.fields import CharField, DecimalField
 from django.utils import six
 from django.utils.translation import ugettext_lazy as _
+from phonenumber_field.modelfields import PhoneNumberField
 
 from oscar.core import validators
 from oscar.forms import fields
+from oscar.models.fields.autoslugfield import AutoSlugField
 
-from phonenumber_field.modelfields import PhoneNumberField
-
-# allow importing as oscar.models.fields.AutoSlugField
-from .autoslugfield import AutoSlugField
 AutoSlugField = AutoSlugField
+PhoneNumberField = PhoneNumberField
 
 
 # https://github.com/django/django/blob/64200c14e0072ba0ffef86da46b2ea82fd1e019a/django/db/models/fields/subclassing.py#L31-L44
