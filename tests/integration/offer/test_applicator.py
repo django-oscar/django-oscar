@@ -4,6 +4,7 @@ from django.test import TestCase
 from mock import Mock
 
 from oscar.apps.offer import models
+from oscar.apps.offer.results import OfferApplications
 from oscar.apps.offer.utils import Applicator
 from oscar.test.factories import (
     BasketFactory, RangeFactory, BenefitFactory, ConditionFactory,
@@ -56,3 +57,19 @@ class TestOfferApplicator(TestCase):
         offers = self.applicator.get_offers(self.basket)
         priorities = [offer.priority for offer in offers]
         self.assertEqual(sorted(priorities, reverse=True), priorities)
+
+
+class TestOfferApplicationsWrapper(TestCase):
+
+    def setUp(self):
+        offer = models.ConditionalOffer()
+        self.applications = OfferApplications()
+        for i in range(4):
+            self.applications.add(offer, models.BasketDiscount(D('5.00')))
+
+    def test_is_iterable(self):
+        for discount in self.applications:
+            pass
+
+    def test_aggregates_results_from_same_offer(self):
+        self.assertEqual(1, len(list(self.applications)))

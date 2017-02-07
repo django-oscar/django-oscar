@@ -17,7 +17,7 @@ class TestProductSearchHandlerSetting(TestCase):
         dictates the return value of the `get_product_search_handler_class`
         function.
         """
-        handler_override = 'tests.unit.catalogue.test_product_search_handler_setting.TestSearchHandler'
+        handler_override = 'tests.integration.catalogue.test_product_search_handler_setting.TestSearchHandler'
         with override_settings(OSCAR_PRODUCT_SEARCH_HANDLER=handler_override):
             handler_class = get_product_search_handler_class()
 

@@ -1,28 +1,43 @@
 from django.test import TestCase
 
 from oscar.apps.catalogue.reviews import forms
-from oscar.test.factories import create_product, UserFactory
+from oscar.test.factories import UserFactory, create_product
 
 
 class TestReviewForm(TestCase):
 
-    def setUp(self):
-        self.product = create_product()
-        self.reviewer = UserFactory()
-        self.data = {
+    def test_cleans_title(self):
+        product = create_product()
+        reviewer = UserFactory()
+        data = {
             'title': '  This product is lovely',
             'body': 'I really like this cheese',
             'score': 0,
             'name': 'JR Hartley',
             'email': 'hartley@example.com'
         }
-
-    def test_cleans_title(self):
         form = forms.ProductReviewForm(
-            product=self.product, user=self.reviewer, data=self.data)
-        self.assertTrue(form.is_valid())
+            product=product, user=reviewer, data=data)
+
+        assert form.is_valid()
+
         review = form.save()
-        self.assertEqual("This product is lovely", review.title)
+        assert review.title == "This product is lovely"
+
+    def test_validates_empty_data_correctly(self):
+        form = forms.ProductReviewForm(product=None, user=None, data={})
+        assert form.is_valid() is False
+
+    def test_validates_correctly(self):
+        data = {
+            'title': 'This product is lovely',
+            'body': 'I really like this cheese',
+            'score': 0,
+            'name': 'JR Hartley',
+            'email': 'hartley@example.com'
+        }
+        form = forms.ProductReviewForm(product=None, user=None, data=data)
+        assert form.is_valid()
 
 
 class TestVoteForm(TestCase):
