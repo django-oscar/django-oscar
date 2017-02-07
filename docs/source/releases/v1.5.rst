@@ -27,7 +27,12 @@ Oscar 1.4 is compatible with Django 1.8, 1.9 and 1.10 as well as Python 2.7,
 
 What's new in Oscar 1.5?
 ------------------------
+ - Remove the profiling middleware. See `silk`_ or `django-cprofile-middleware`_
+   for alternatives.
 
+
+.. _silk: https://github.com/django-silk/silk
+.. _django-cprofile-middleware: https://github.com/omarish/django-cprofile-middleware
 
 
 Minor changes

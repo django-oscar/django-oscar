@@ -174,9 +174,6 @@ MIDDLEWARE = [
 
     # Ensure a valid basket is added to the request instance for every request
     'oscar.apps.basket.middleware.BasketMiddleware',
-    # Enable the ProfileMiddleware, then add ?cprofile to any
-    # URL path to print out profile details
-    #'oscar.profiling.middleware.ProfileMiddleware',
 ]
 
 ROOT_URLCONF = 'urls'
