@@ -40,6 +40,7 @@ These methods/modules have been removed:
  - ``oscar.core.logging.handlers.EnvFileHandler()``
  - The ``ellipses_page_range`` templatetag. See `django-rangepaginator`_ for
    an alternative.
+ - ``oscar.test.decorators`` module.
 
 
 .. _silk: https://github.com/django-silk/silk
