@@ -40,6 +40,10 @@ class TestBankcardNumberField(TestCase):
         with self.assertRaises(ImproperlyConfigured):
             self.field = forms.BankcardNumberField(types=['American Express', 'Nonsense'])
 
+    def test_rejects_none(self):
+        with self.assertRaises(ValidationError):
+            self.field.clean(None)
+
 
 class TestStartingMonthField(TestCase):
 
