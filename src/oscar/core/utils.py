@@ -2,7 +2,6 @@ from __future__ import absolute_import  # for logging import below
 
 import datetime
 import logging
-import warnings
 
 from django.conf import settings
 from django.shortcuts import redirect, resolve_url
@@ -13,8 +12,6 @@ from django.utils.module_loading import import_string
 from django.utils.text import slugify as django_slugify
 from django.utils.timezone import get_current_timezone, is_naive, make_aware
 from unidecode import unidecode
-
-from oscar.utils.deprecation import RemovedInOscar15Warning
 
 
 def default_slugifier(value):
@@ -58,28 +55,6 @@ def slugify(value):
         value = value.replace('-' + word, '')
 
     return value
-
-
-def compose(*functions):
-    """
-    Compose functions
-
-    This is useful for combining decorators.
-    """
-
-    warnings.warn(
-        "compose() is deprecated and will be removed in Oscar 1.5",
-        RemovedInOscar15Warning)
-
-    def _composed(*args):
-        for fn in functions:
-            try:
-                args = fn(*args)
-            except TypeError:
-                # args must be scalar so we don't try to expand it
-                args = fn(args)
-        return args
-    return _composed
 
 
 def format_datetime(dt, format=None):
