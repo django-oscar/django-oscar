@@ -3,16 +3,17 @@ from django.utils.six.moves import http_client
 import datetime
 
 from django.conf import settings
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.utils.translation import ugettext
 from django.core.urlresolvers import reverse
 
 from oscar.test.factories import create_product
 from oscar.core.compat import get_user_model
-from oscar.apps.basket.models import Basket
-from oscar.apps.basket import reports
-from oscar.test.basket import add_product
 from oscar.test import factories
+from oscar.test.basket import add_product
+from oscar.apps.basket import reports
+from oscar.apps.basket.models import Basket
+from oscar.test.testcases import WebTestCase
 from oscar.apps.partner import strategy
 
 
@@ -42,7 +43,8 @@ class TestBasketMerging(TestCase):
         self.assertEqual(2, line.quantity)
 
 
-class AnonAddToBasketViewTests(TestCase):
+class AnonAddToBasketViewTests(WebTestCase):
+    csrf_checks = False
 
     def setUp(self):
         self.product = create_product(
@@ -51,25 +53,24 @@ class AnonAddToBasketViewTests(TestCase):
         post_params = {'product_id': self.product.id,
                        'action': 'add',
                        'quantity': 1}
-        self.client = Client()
-        self.response = self.client.post(url, post_params)
+        self.response = self.app.post(url, params=post_params)
 
     def test_cookie_is_created(self):
-        self.assertTrue('oscar_open_basket' in self.response.cookies)
+        self.assertTrue('oscar_open_basket' in self.response.client.cookies)
 
     def test_price_is_recorded(self):
-        basket_id = self.response.cookies['oscar_open_basket'].value.split(':')[0]
+        basket_id = self.response.client.cookies['oscar_open_basket'].value.split(':')[0]
         basket = Basket.objects.get(id=basket_id)
         line = basket.lines.get(product=self.product)
         stockrecord = self.product.stockrecords.all()[0]
         self.assertEqual(stockrecord.price_excl_tax, line.price_excl_tax)
 
 
-class BasketSummaryViewTests(TestCase):
+class BasketSummaryViewTests(WebTestCase):
 
     def setUp(self):
         url = reverse('basket:summary')
-        self.response = self.client.get(url)
+        self.response = self.app.get(url)
 
     def test_shipping_method_in_context(self):
         self.assertTrue('shipping_method' in self.response.context)
@@ -88,7 +89,8 @@ class BasketSummaryViewTests(TestCase):
         self.assertEqual(0, basket.num_lines)
 
 
-class BasketThresholdTest(TestCase):
+class BasketThresholdTest(WebTestCase):
+    csrf_checks = False
 
     def setUp(self):
         self._old_threshold = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD
@@ -103,19 +105,19 @@ class BasketThresholdTest(TestCase):
         post_params = {'product_id': dummy_product.id,
                        'action': 'add',
                        'quantity': 2}
-        response = self.client.post(url, post_params)
-        self.assertTrue('oscar_open_basket' in response.cookies)
+        response = self.app.post(url, params=post_params)
+        self.assertTrue('oscar_open_basket' in response.client.cookies)
         post_params = {'product_id': dummy_product.id,
                        'action': 'add',
                        'quantity': 2}
-        response = self.client.post(url, post_params)
+        response = self.app.post(url, params=post_params)
 
         expected = ugettext(
             "Due to technical limitations we are not able to ship more "
             "than %(threshold)d items in one order. Your basket currently "
             "has %(basket)d items."
         ) % ({'threshold': 3, 'basket': 2})
-        self.assertTrue(expected in response.cookies['messages'].value)
+        self.assertTrue(expected in response.client.cookies['messages'].value)
 
 
 class BasketReportTests(TestCase):
@@ -139,25 +141,23 @@ class BasketReportTests(TestCase):
         generator.generate()
 
 
-class SavedBasketTests(TestCase):
+class SavedBasketTests(WebTestCase):
+    csrf_checks = False
 
     def test_moving_from_saved_basket(self):
-        user = User.objects.create_user(username='test', password='pass',
-                                        email='test@example.com')
-        client = Client()
-        client.login(email=user.email, password='pass')
-
+        self.user = User.objects.create_user(username='test', password='pass',
+                                             email='test@example.com')
         product = create_product(price=D('10.00'), num_in_stock=2)
         basket = factories.create_basket(empty=True)
-        basket.owner = user
+        basket.owner = self.user
         basket.save()
         add_product(basket, product=product)
 
-        saved_basket, created = Basket.saved.get_or_create(owner=user)
+        saved_basket, created = Basket.saved.get_or_create(owner=self.user)
         saved_basket.strategy = basket.strategy
         add_product(saved_basket, product=product)
 
-        response = client.get(reverse('basket:summary'))
+        response = self.get(reverse('basket:summary'))
         saved_formset = response.context['saved_formset']
         saved_form = saved_formset.forms[0]
 
@@ -168,25 +168,22 @@ class SavedBasketTests(TestCase):
             saved_form.add_prefix('id'): saved_form.initial['id'],
             saved_form.add_prefix('move_to_basket'): True,
         }
-        response = client.post(reverse('basket:saved'), data=data)
+        response = self.post(reverse('basket:saved'), params=data)
         self.assertEqual(Basket.open.get(id=basket.id).lines.get(
             product=product).quantity, 2)
         self.assertRedirects(response, reverse('basket:summary'))
 
     def test_moving_from_saved_basket_more_than_stocklevel_raises(self):
-        user = User.objects.create_user(username='test', password='pass',
-                                        email='test@example.com')
-        client = Client()
-        client.login(email=user.email, password='pass')
-
+        self.user = User.objects.create_user(username='test', password='pass',
+                                             email='test@example.com')
         product = create_product(price=D('10.00'), num_in_stock=1)
-        basket, created = Basket.open.get_or_create(owner=user)
+        basket, created = Basket.open.get_or_create(owner=self.user)
         add_product(basket, product=product)
 
-        saved_basket, created = Basket.saved.get_or_create(owner=user)
+        saved_basket, created = Basket.saved.get_or_create(owner=self.user)
         add_product(saved_basket, product=product)
 
-        response = client.get(reverse('basket:summary'))
+        response = self.get(reverse('basket:summary'))
         saved_formset = response.context['saved_formset']
         saved_form = saved_formset.forms[0]
 
@@ -197,7 +194,7 @@ class SavedBasketTests(TestCase):
             saved_form.add_prefix('id'): saved_form.initial['id'],
             saved_form.add_prefix('move_to_basket'): True,
         }
-        response = client.post(reverse('basket:saved'), data=data)
+        response = self.post(reverse('basket:saved'), params=data)
         # we can't add more than stock level into basket
         self.assertEqual(Basket.open.get(id=basket.id).lines.get(product=product).quantity, 1)
         self.assertRedirects(response, reverse('basket:summary'))
