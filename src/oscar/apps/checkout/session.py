@@ -274,7 +274,7 @@ class CheckoutSessionMixin(object):
         else:
             shipping_charge = shipping_method.calculate(basket)
             total = self.get_order_totals(
-                basket, shipping_charge=shipping_charge)
+                basket, shipping_charge=shipping_charge, **kwargs)
         submission = {
             'user': self.request.user,
             'basket': basket,
