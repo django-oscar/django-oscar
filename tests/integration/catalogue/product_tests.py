@@ -7,7 +7,6 @@ from oscar.apps.catalogue.models import (Product, ProductClass,
                                          ProductAttribute,
                                          AttributeOption)
 from oscar.test import factories
-from oscar.test.decorators import ignore_deprecation_warnings
 
 
 class ProductTests(TestCase):
