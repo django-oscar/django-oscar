@@ -103,18 +103,6 @@ class ChildProductTests(ProductTests):
             structure=Product.CHILD)
         self.assertEqual(set([self.parent]), set(Product.browsable.all()))
 
-    @ignore_deprecation_warnings
-    def test_have_a_minimum_price(self):
-        self.assertIsNone(self.parent.min_child_price_excl_tax)
-        factories.ProductFactory(
-            parent=self.parent, structure=Product.CHILD,
-            stockrecords__price_excl_tax=5)
-        self.assertEqual(5, self.parent.min_child_price_excl_tax)
-        factories.ProductFactory(
-            parent=self.parent, structure=Product.CHILD,
-            stockrecords__price_excl_tax=3)
-        self.assertEqual(3, self.parent.min_child_price_excl_tax)
-
 
 class TestAChildProduct(TestCase):
 
