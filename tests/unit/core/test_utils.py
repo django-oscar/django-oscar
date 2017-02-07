@@ -24,6 +24,6 @@ class TestSlugify(TestCase):
                          utils.slugify(u'König der Straße'))
 
     def test_works_with_custom_slugifier(self):
-        for fn in [sluggish, 'tests.unit.core.utils_tests.sluggish']:
+        for fn in [sluggish, 'tests.unit.core.test_utils.sluggish']:
             with override_settings(OSCAR_SLUG_FUNCTION=fn):
                 self.assertEqual('HAM AND EGGS', utils.slugify('Ham and eggs'))
