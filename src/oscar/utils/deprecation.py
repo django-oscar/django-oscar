@@ -1,6 +1,6 @@
-class RemovedInOscar15Warning(DeprecationWarning):
+class RemovedInOscar16Warning(DeprecationWarning):
     pass
 
 
-class RemovedInOscar16Warning(DeprecationWarning):
+class RemovedInOscar20Warning(DeprecationWarning):
     pass
