@@ -19,7 +19,7 @@ build_sandbox:
 	sandbox/manage.py oscar_import_catalogue_images sandbox/fixtures/images.tar.gz
 	sandbox/manage.py oscar_populate_countries --initial-only
 	sandbox/manage.py loaddata sandbox/fixtures/pages.json sandbox/fixtures/auth.json sandbox/fixtures/ranges.json sandbox/fixtures/offers.json
-	sandbox/manage.py loaddata sandbox/fixtures/orders.json
+	sandbox/manage.py loaddata sandbox/fixtures/orders.json sandbox/fixtures/promotions.json
 	sandbox/manage.py clear_index --noinput
 	sandbox/manage.py update_index catalogue
 	sandbox/manage.py thumbnail cleanup
