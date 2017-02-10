@@ -2,7 +2,7 @@
 Oscar 1.4 release notes
 =======================
 
-:release: tbd
+:release: 2017-02-10
 
 Welcome to Oscar 1.4, a relative minor release which finally brings
 compatibility with Django 1.10.
@@ -59,9 +59,6 @@ Minor changes
    for Django 1.10+. (:issue:`2222`)
 
 
-
-
-
 Dependency changes
 ------------------
 
@@ -70,4 +67,3 @@ The following packages are updated:
     - `Pillow >= 3.4.2` (Security issue)
     - `phonenumbers>=6.3.0,<9.0.0` (Allow version 8.x)
     - `django-tables2 >= 1.2.0,<2.0.0` 
-
