@@ -2,7 +2,7 @@
 Oscar 1.4 release notes
 =======================
 
-:release: 2016-02-10
+:release: 2017-02-10
 
 Welcome to Oscar 1.4, a relative minor release which finally brings
 compatibility with Django 1.10.
