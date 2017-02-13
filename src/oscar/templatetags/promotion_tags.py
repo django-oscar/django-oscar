@@ -1,4 +1,4 @@
-from django.template import Library, Node, RequestContext
+from django.template import Library, RequestContext
 from django.template.loader import select_template
 
 register = Library()

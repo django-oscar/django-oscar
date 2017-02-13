@@ -184,6 +184,7 @@ class TestUserAddress(TestCase):
             "Terry Barrington, 75 Smith Road, N4 8TY, UNITED KINGDOM",
             a.summary)
 
+
 VALID_POSTCODES = [
     ('GB', 'N1 9RT'),
     ('SK', '991 41'),

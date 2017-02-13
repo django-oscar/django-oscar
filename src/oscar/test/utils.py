@@ -3,11 +3,10 @@ from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.sessions.backends.db import SessionStore
 from django.core.signing import Signer
 from django.test import RequestFactory as BaseRequestFactory
-
-from oscar.core.loading import get_class, get_model
-
 from webob.compat import bytes_
 from webob.cookies import _unquote
+
+from oscar.core.loading import get_class, get_model
 
 
 class RequestFactory(BaseRequestFactory):

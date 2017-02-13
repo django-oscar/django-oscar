@@ -472,6 +472,7 @@ class ProductAttributesForm(forms.ModelForm):
         model = ProductAttribute
         fields = ["name", "code", "type", "option_group", "required"]
 
+
 ProductAttributesFormSet = inlineformset_factory(ProductClass,
                                                  ProductAttribute,
                                                  form=ProductAttributesForm,
