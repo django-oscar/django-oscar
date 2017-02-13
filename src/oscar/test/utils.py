@@ -3,6 +3,8 @@ from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.sessions.backends.db import SessionStore
 from django.core.signing import Signer
 from django.test import RequestFactory as BaseRequestFactory
+from webob.compat import bytes_
+from webob.cookies import _unquote
 
 from oscar.core.loading import get_class, get_model
 
@@ -26,3 +28,13 @@ class RequestFactory(BaseRequestFactory):
         request.cookies_to_delete = []
 
         return request
+
+
+def extract_cookie_value(response_cookies, cookie_name):
+    """
+    Making sure cookie unescaped from double quotes when extracting from
+    test response using Webob approach of cookie parsing.
+    """
+    oscar_open_basket_cookie = bytes_(response_cookies[cookie_name])
+    oscar_open_basket_cookie = _unquote(oscar_open_basket_cookie)
+    return oscar_open_basket_cookie.decode('utf-8')
