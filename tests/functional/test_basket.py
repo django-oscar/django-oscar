@@ -11,6 +11,7 @@ from oscar.test.factories import create_product
 from oscar.core.compat import get_user_model
 from oscar.test import factories
 from oscar.test.basket import add_product
+from oscar.test.utils import extract_cookie_value
 from oscar.apps.basket import reports
 from oscar.apps.basket.models import Basket
 from oscar.test.testcases import WebTestCase
@@ -56,10 +57,13 @@ class AnonAddToBasketViewTests(WebTestCase):
         self.response = self.app.post(url, params=post_params)
 
     def test_cookie_is_created(self):
-        self.assertTrue('oscar_open_basket' in self.response.client.cookies)
+        self.assertTrue('oscar_open_basket' in self.response.test_app.cookies)
 
     def test_price_is_recorded(self):
-        basket_id = self.response.client.cookies['oscar_open_basket'].value.split(':')[0]
+        oscar_open_basket_cookie = extract_cookie_value(
+            self.response.test_app.cookies, 'oscar_open_basket'
+        )
+        basket_id = oscar_open_basket_cookie.split(':')[0]
         basket = Basket.objects.get(id=basket_id)
         line = basket.lines.get(product=self.product)
         stockrecord = self.product.stockrecords.all()[0]
@@ -106,7 +110,7 @@ class BasketThresholdTest(WebTestCase):
                        'action': 'add',
                        'quantity': 2}
         response = self.app.post(url, params=post_params)
-        self.assertTrue('oscar_open_basket' in response.client.cookies)
+        self.assertTrue('oscar_open_basket' in response.test_app.cookies)
         post_params = {'product_id': dummy_product.id,
                        'action': 'add',
                        'quantity': 2}
@@ -117,7 +121,7 @@ class BasketThresholdTest(WebTestCase):
             "than %(threshold)d items in one order. Your basket currently "
             "has %(basket)d items."
         ) % ({'threshold': 3, 'basket': 2})
-        self.assertTrue(expected in response.client.cookies['messages'].value)
+        self.assertTrue(expected in response.test_app.cookies['messages'])
 
 
 class BasketReportTests(TestCase):
