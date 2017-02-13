@@ -58,7 +58,7 @@ docs_requires = [
 ]
 
 test_requires = [
-    'WebTest==2.0.24',
+    'WebTest==2.0.25',
     'coverage==4.3.4',
     'django-webtest==1.8.0',
     'py>=1.4.31',
