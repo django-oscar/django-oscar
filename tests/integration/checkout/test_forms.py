@@ -1,5 +1,6 @@
 # coding=utf-8
 from django.test import TestCase
+from django.test.utils import override_settings
 
 from oscar.apps.address.models import Country
 from oscar.apps.checkout.forms import ShippingAddressForm
@@ -24,6 +25,22 @@ class TestShippingAddressForm(TestCase):
     def test_keeps_country_field(self):
         CountryFactory(iso_3166_1_a2='DE', is_shipping_country=True)
         self.assertTrue('country' in ShippingAddressForm().fields)
+
+    @override_settings(OSCAR_REQUIRED_ADDRESS_FIELDS=('last_name', 'postcode'))
+    def test_required_fields_validated(self):
+        form = ShippingAddressForm()
+        self.assertTrue(form.fields['last_name'].required)
+        self.assertTrue(form.fields['postcode'].required)
+        self.assertFalse(form.fields['first_name'].required)
+        self.assertFalse(form.fields['line2'].required)
+        self.assertFalse(form.fields['line3'].required)
+        self.assertFalse(form.fields['line4'].required)
+
+    @override_settings(OSCAR_REQUIRED_ADDRESS_FIELDS=('phone_number',))
+    def test_required_phone_number_validated(self):
+        # This needs a separate test because of the logic in PhoneNumberMixin
+        form = ShippingAddressForm()
+        self.assertTrue(form.fields['phone_number'].required)
 
     # Tests where the country field is hidden
 
