@@ -38,7 +38,6 @@ class TestVoucherAddView(TestCase):
 
 
 class TestVoucherRemoveView(TestCase):
-
     def test_post_valid(self):
         voucher = VoucherFactory(num_basket_additions=5)
 
@@ -55,3 +54,17 @@ class TestVoucherRemoveView(TestCase):
 
         voucher = voucher.__class__.objects.get(pk=voucher.pk)
         self.assertEqual(voucher.num_basket_additions, 4)
+
+    def test_post_with_missing_voucher(self):
+        """ If the voucher is missing, verify the view queues a message and redirects. """
+        pk = '12345'
+        view = views.VoucherRemoveView.as_view()
+        request = RequestFactory().post('/')
+        request.basket.save()
+        response = view(request, pk=pk)
+
+        self.assertEqual(response.status_code, 302)
+
+        actual = list(get_messages(request))[-1].message
+        expected = "No voucher found with id '{}'".format(pk)
+        self.assertEqual(actual, expected)
