@@ -1,4 +1,4 @@
-from django.template import Library, RequestContext
+from django.template import Library
 from django.template.loader import select_template
 
 register = Library()
@@ -8,12 +8,12 @@ register = Library()
 def render_promotion(context, promotion):
     template = select_template([
         promotion.template_name(), 'promotions/default.html'])
+    request = context['request']
 
-    args = {
-        'request': context['request'],
+    ctx = {
+        'request': request,
         'promotion': promotion
     }
-    args.update(**promotion.template_context(request=context['request']))
+    ctx.update(**promotion.template_context(request=request))
 
-    ctx = RequestContext(context['request'], args)
-    return template.render(ctx)
+    return template.render(ctx, request)
