@@ -398,7 +398,7 @@ class VoucherRemoveView(View):
             voucher = request.basket.vouchers.get(id=voucher_id)
         except ObjectDoesNotExist:
             messages.error(
-                request, _("No voucher found with id '%d'") % voucher_id)
+                request, _("No voucher found with id '%s'") % voucher_id)
         else:
             request.basket.vouchers.remove(voucher)
             self.remove_signal.send(
