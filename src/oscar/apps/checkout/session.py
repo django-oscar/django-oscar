@@ -264,7 +264,9 @@ class CheckoutSessionMixin(object):
         This can be the right place to perform tax lookups and apply them to
         the basket.
         """
-        basket = kwargs.get('basket', self.request.basket)
+        # Pop the basket if there is one, because we pass it as a positional
+        # argument to methods below
+        basket = kwargs.pop('basket', self.request.basket)
         shipping_address = self.get_shipping_address(basket)
         shipping_method = self.get_shipping_method(
             basket, shipping_address)
