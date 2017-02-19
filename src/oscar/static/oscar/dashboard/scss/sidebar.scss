@@ -1,0 +1,171 @@
+/*
+ * Sidebar
+ */
+
+$sidebar-width: 230px;
+
+html, body {
+  height: 100%;
+}
+
+.body-wrapper {
+  height: 100%;
+  transition: all 0.3s ease;
+  transform: translateX(0px);
+}
+
+.page-wrapper {
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  left: $sidebar-width;
+  padding: 0 $sidebar-width 0 0;
+
+  @media screen and (max-width: $screen-sm-max) {
+    padding: 0;
+    left: 0px;
+  }
+}
+
+.sidebar-menu-checkbox {
+  display: none;
+}
+
+.sidebar-menu-checkbox:checked + .body-wrapper  {
+  transition: all 0.3s ease;
+  transform: translateX($sidebar-width);
+}
+
+.sidebar-menu-checkbox:checked + .menu-panel {
+  transform: translate3d(40px, 0, 0);
+}
+
+.sidebar {
+  position: absolute;
+  overflow-y: hidden;
+  background-color: #2f2d2d;
+  top: 0;
+  left: 0;
+  width: $sidebar-width;
+  height: 100%;
+
+  @media screen and (max-width: $screen-sm-max) {
+    transform: translate3d(-$sidebar-width, 0, 0);
+    transition: transform 0.35s;
+  }
+
+  h2 {
+    position: relative;
+    font-size: 20px;
+    margin: 0px;
+    padding: 0px;
+    padding: 10px;
+    background-color: #505050;
+
+    label {
+      right: 10px;
+      position: absolute;
+      top: 10px;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    i.fa {
+      margin-right: 5px;
+    }
+  }
+
+
+  .brand-logo {
+    padding: 20px;
+  }
+
+  .overlay {
+    display: none;
+    height: 100%;
+    position: absolute;
+    left: 0px;
+    /* background-color: rgba(0, 0, 0, 0.3); */
+    width: 30px;
+  }
+
+
+  .menu-container {
+    height: 100%;
+    position: relative;
+    background-color: #2d2d2d;
+    // background-image: linear-gradient(to bottom, #373737 0%, #242424 100%);
+  }
+
+
+  .menu-panel {
+    position: absolute;
+    top: 0px;
+    left: 0;
+    background-color: #373737;
+    width: $sidebar-width - 40px;
+    height: 100%;
+    transform: translate3d($sidebar-width + 30, 0, 0);
+    transition: transform 0.35s;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+
+    li {
+      width: 100%;
+      padding: 10px 10px;
+      color: #fff;
+
+      a,
+      a:hover,
+      a:active {
+        color: #fff;
+        text-decoration: none;
+      }
+
+      > label,
+      > a {
+        display: block;
+        font-size: 16px;
+        font-weight: normal;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+      }
+
+      > label.has-children::after {
+        content: "\f054";
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        float: right;
+        font-size: 10px;
+        vertical-align: bottom;
+        margin-top: 5px;
+      }
+
+
+      i.fa {
+        width: 20px;
+        text-align: center;
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .bottom-nav {
+    position: absolute;
+    bottom: 0px;
+    bottom: 100px;
+  }
+}
+
+.btn-sidebar-toggle {
+  margin: 25px 25px 0 5px;
+  float: left;
+}

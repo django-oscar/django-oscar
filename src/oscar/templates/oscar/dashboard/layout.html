@@ -6,11 +6,7 @@
 {% load staticfiles %}
 
 {% block styles %}
-    {% if use_less %}
-        <link rel="stylesheet/less" type="text/css" href="{% static "oscar/less/dashboard.less" %}" />
-    {% else %}
-        <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard.css" %}" />
-    {% endif %}
+    <link rel="stylesheet" type="text/css" href="{% static "oscar/dashboard/dist/main.css" %}" />
 {% endblock %}
 
 {% block extrastyles %}
@@ -26,143 +22,102 @@
 {% endblock %}
 
 {% block layout %}
-    {% block navbar %}
-    <nav class="navbar navbar-static-top navbar-inverse navbar-accounts">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".nav-accounts">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <span class="navbar-brand">{{ shop_name }}</span>
-            </div>
-            <div class="collapse navbar-collapse nav-accounts">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><span>{% trans "Welcome" %} <em>{{ user.get_full_name|default:request.user.email }}</em></span></li>
-                    <li><a href="{{ homepage_url }}"><i class="icon-home"></i> {% trans "Return to site" %}</a></li>
-                    <li><a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "Account" %}</a></li>
-                    <li><a href="{% url 'dashboard:logout' %}"><i class="icon-signout"></i> {% trans "Log out" %}</a></li>
-                </ul>
-            </div>
-        </div><!-- /navbar-inner -->
-    </nav><!-- /navbar -->
-    {% endblock navbar %}
+    <input type="checkbox" id="menu-item-root" name="menu-5" class="sidebar-menu-checkbox">
+    <div class="body-wrapper">
 
-    {% block dashboard_nav %}
-        {% dashboard_navigation user as nav_items %}
-
-        <nav class="navbar navbar-static-top navbar-inverse navbar-primary">
-            <div class="container-fluid dashboard">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".nav-primary">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
+        {% block sidebar %}
+            <div class="sidebar">
+                <div class="brand-logo">
+                    <img src="{% static "oscar/dashboard/images/oscar-logo.png" %}" height="50">
                 </div>
+                <div class="menu-container">
+                    <input type="radio" id="menu-item-none" name="menu-1" class="sidebar-menu-checkbox">
+                    <div class="overlay"></div>
 
-                <div class="collapse navbar-collapse nav-primary">
-                    <ul class="nav navbar-nav dashboard">
+                    {% block sidebar_menu %}
+                    {% dashboard_navigation user as nav_items %}
+                    <ul class="">
                         {% for item in nav_items %}
-                        <li class="dropdown">
-                            {% if item.is_heading %}
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %}
-                                {{ item.label }} <b class="caret"></b>
-                            </a>
-                            {% else %}
-                            <a href="{{ item.url }}">
-                                {% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %}
-                                {{ item.label }}
-                            </a>
-                            {% endif %}
+                        <li class="">
                             {% if item.has_children %}
-                            <ul class="dropdown-menu">
-                                {% for subitem in item.children %}
-                                <li>
-                                    <a href="{{ subitem.url }}">
-                                    {% if subitem.icon %}<i class="{{ subitem.icon }}"></i>{% endif %}
-                                    {{ subitem.label }}
-                                    </a>
-                                </li>
-                                {% endfor %}
-                            </ul>
+                            <label for="menu-item-{{ item.id }}" class="has-children"><i class="fa {{ item.icon }}"></i>{{ item.label }}</label>
+                            <input type="radio" id="menu-item-{{ item.id }}" name="menu-1" class="sidebar-menu-checkbox">
+                            <div class="menu-panel">
+                                <h2>{{ item.label }} <label for="menu-item-none"><i class="fa fa-times"></i></label></h2>
+                                <ul>
+                                    {% for subitem in item.children %}
+                                    <li class=""><a class="nav-link" href="{{ subitem.url }}">{{ subitem.label }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% else %}
+                            <a class="nav-link" href="{{ item.url }}"><i class="fa {{ item.icon }}"></i>{{ item.label }}</a>
                             {% endif %}
                         </li>
                         {% endfor %}
                     </ul>
+                    {% endblock sidebar_menu %}
+                    <div class="bottom-nav">
+                        <a href="{% url 'customer:summary' %}"><i class="fa fa-user-circle"></i> Account</a>
+                        <a href="{% url 'dashboard:logout' %}"><i class="fa fa-sign-out"></i> Log out</a>
+                    </div>
                 </div>
             </div>
-        </nav>
-    {% endblock %}
+        {% endblock sidebar %}
 
-    <div class="container-fluid dashboard">
-        {% block breadcrumbs %}
-        <ul class="breadcrumb">
-            <li><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
-        </ul>
-        {% endblock %}
+        <div class="page-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12 main">
+                        <div class="row page-heading">
+                            <div class="col-md-4 col-xs-10">
+                                <label for="menu-item-root" class="btn-sidebar-toggle hidden-md hidden-lg btn btn-primary"><i class="fa fa-bars"></i></label>
+                                <h1>{% block headertext %}{% endblock %}</h1>
+                            </div>
+                            <div class="col-md-8 col-xs-2">
+                                <div class="buttons pull-right">
+                                    <button class="btn btn-default dropdown-toggle" type="button">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
-        <div class="content">
-            {% include 'dashboard/partials/alert_messages.html' %}
-            {% block header %}
-            <div class="page-header action">
-                <h1>{% block headertext %}{% endblock %}</h1>
-            </div>
-            {% endblock %}
-            <div class="page-content">
-                {% block content %}
-                    {% block dashboard_content %}{% endblock dashboard_content %}
-                {% endblock content %}
-            </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                {% include 'dashboard/partials/alert_messages.html' %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                {% block content %}
+                                    {% block dashboard_content %}{% endblock dashboard_content %}
+                                {% endblock content %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% comment %}
+                {% block breadcrumbs %}
+                <ul class="breadcrumb">
+                    <li><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a></li>
+                </ul>
+                {% endblock %}
+                {% endcomment %}
+            </div><!-- /container -->
         </div>
-    </div><!-- /container -->
+    </div>
 
-{% endblock %}
-
-{# Local scripts #}
-{% block scripts %}
-    <!-- Twitter Bootstrap -->
-    <script type="text/javascript" src="{% static "oscar/js/bootstrap3/bootstrap.min.js" %}"></script>
-    <!-- Oscar -->
-    <script src="{% static "oscar/js/oscar/ui.js" %}" type="text/javascript" charset="utf-8"></script>
-{% endblock %}
+{% endblock layout %}
 
 {% block extrascripts %}
     {{ block.super }}
 
-    {# jQuery plugins #}
-    <script src="{% static "oscar/js/mousewheel/jquery.mousewheel.min.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/bootstrap-datetimepicker/bootstrap-datetimepicker.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.all.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/inputmask/jquery.inputmask.bundle.min.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/select2/select2.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/jquery-sortable/jquery-sortable-min.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/oscar/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/dashboard/dist/main.js" %}"></script>
 
     {# We don't use a fallback for tinyMCE as it dynamically loads several other files #}
     <script src="//cdn.tinymce.com/4/tinymce.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="//cdn.tinymce.com/4/jquery.tinymce.min.js" type="text/javascript" charset="utf-8"></script>
 
-{% endblock %}
-
-{% block onbodyload %}
-    {{ block.super }}
-
-    // Javascript to enable link to tab
-    var url = document.location.toString();
-    if (url.match('#')) {
-        $('.nav-list a[href="#' + url.split('#')[1] + '"]').tab('show');
-    }
-
-    // Change hash for page-reload
-    $('.nav-list a').on('shown.bs.tab', function (e) {
-        window.location.hash = e.target.hash;
-    });
-
-    options = {
-      'languageCode': '{{ LANGUAGE_CODE }}'
-    };
-    oscar.dashboard.init(options);
 {% endblock %}

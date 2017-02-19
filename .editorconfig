@@ -3,3 +3,11 @@ root = true
 [*.yml]
 indent = 2
 shift_width = 2
+
+[*.{scss,js}]
+line_length = 119
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = true

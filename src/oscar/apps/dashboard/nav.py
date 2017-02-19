@@ -5,6 +5,7 @@ from django.core.urlresolvers import NoReverseMatch, resolve, reverse
 from django.http import Http404
 
 from oscar.core.loading import AppNotFoundError, get_class
+from oscar.core.utils import slugify
 from oscar.views.decorators import check_permissions
 
 
@@ -22,6 +23,10 @@ class Node(object):
         self.url_kwargs = url_kwargs
         self.access_fn = access_fn
         self.children = []
+
+    @property
+    def id(self):
+        return slugify(self.label)
 
     @property
     def is_heading(self):

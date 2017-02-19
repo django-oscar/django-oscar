@@ -1,0 +1,45 @@
+@import "variables";
+
+@import "~font-awesome/scss/font-awesome";
+@import "bootstrap";
+
+
+body {
+  background-color: #eaeaea;
+}
+
+
+body, p, a, h1, h2, h3, h4, h5, h6 {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+
+.page-heading {
+  background-color: white;
+  margin-bottom: 20px;
+}
+
+.page-heading h1 {
+  color: #4a4a4a;
+  margin-left: 15px;
+}
+
+.page-heading {
+  .buttons {
+    margin: 20px 0 20px;
+  }
+}
+
+
+.panel-heading h2 {
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+  margin-left: -10px;
+}
+
+
+
+@import "sidebar";
+@import "tables";
+@import "panel-tabs";
