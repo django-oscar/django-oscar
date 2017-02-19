@@ -51,9 +51,27 @@ These methods/modules have been removed:
 
 Minor changes
 ~~~~~~~~~~~~~
-- Add billing address to user's address book during checkout (`#1532`_). Number of usages for billing and shipping
-   addresses tracked separately: billing address in `UserAddress.num_orders_as_billing_address` field
-   and shipping address in `UserAddress.num_order_as_shipping_address` accordingly.
+- Add billing address to user's address book during checkout (:issue:`1532`). Number of usages for billing and shipping
+   addresses tracked separately: billing address in ``UserAddress.num_orders_as_billing_address`` field
+   and shipping address in ``UserAddress.num_order_as_shipping_address`` accordingly.
+
+.. _incompatible_in_1.5:
+
+Backwards incompatible changes in Oscar 1.5
+-------------------------------------------
+
+- Formset classes moved to the separate modules, if you import them directly - please update location or
+  use :meth:`oscar.core.loading.get_classes` for loading classes (:issue:`1957`).
+
+  Next classes have new locations:
+
+  - ``BaseBasketLineFormSet``, ``BasketLineFormSet``, ``BaseSavedLineFormSet``, ``SavedLineFormSet`` moved to
+    ``oscar.apps.basket.formsets`` module;
+  - ``BaseStockRecordFormSet``, ``StockRecordFormSet``, ``BaseProductCategoryFormSet``, ``ProductCategoryFormSet``,
+    ``BaseProductImageFormSet``, ``ProductImageFormSet``, ``BaseProductRecommendationFormSet``,
+    ``ProductRecommendationFormSet``, ``ProductAttributesFormSet`` moved to ``oscar.apps.dashboard.catalogue.formsets``;
+  - ``OrderedProductFormSet`` moved to ``oscar.apps.dashboard.promotions.formsets``;
+  - ``LineFormset`` moved to ``oscar.apps.wishlists.formsets``.
 
 
 Dependency changes
