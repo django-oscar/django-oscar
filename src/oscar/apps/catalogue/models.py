@@ -9,12 +9,6 @@ from oscar.apps.catalogue.abstract_models import *  # noqa
 __all__ = ['ProductAttributesContainer']
 
 
-if not is_model_registered('catalogue', 'ProductClass'):
-    class ProductClass(AbstractProductClass):
-        pass
-
-    __all__.append('ProductClass')
-
 
 if not is_model_registered('catalogue', 'Category'):
     class Category(AbstractCategory):

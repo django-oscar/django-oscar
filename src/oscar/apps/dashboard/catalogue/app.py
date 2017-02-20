@@ -20,19 +20,8 @@ class CatalogueApplication(Application):
                                   'ProductListView')
     product_lookup_view = get_class('dashboard.catalogue.views',
                                     'ProductLookupView')
-    product_create_redirect_view = get_class('dashboard.catalogue.views',
-                                             'ProductCreateRedirectView')
     product_delete_view = get_class('dashboard.catalogue.views',
                                     'ProductDeleteView')
-
-    product_class_create_view = get_class('dashboard.catalogue.views',
-                                          'ProductClassCreateView')
-    product_class_list_view = get_class('dashboard.catalogue.views',
-                                        'ProductClassListView')
-    product_class_update_view = get_class('dashboard.catalogue.views',
-                                          'ProductClassUpdateView')
-    product_class_delete_view = get_class('dashboard.catalogue.views',
-                                          'ProductClassDeleteView')
 
     category_list_view = get_class('dashboard.catalogue.views',
                                    'CategoryListView')
@@ -50,9 +39,6 @@ class CatalogueApplication(Application):
 
     def get_urls(self):
         urls = [
-            url(r'^products/create/$',
-                self.product_create_redirect_view.as_view(),
-                name='catalogue-product-create'),
             url(r'^products/(?P<pk>\d+)/delete/$',
                 self.product_delete_view.as_view(),
                 name='catalogue-product-delete'),
@@ -78,18 +64,6 @@ class CatalogueApplication(Application):
             url(r'^categories/(?P<pk>\d+)/delete/$',
                 self.category_delete_view.as_view(),
                 name='catalogue-category-delete'),
-            url(r'^product-type/create/$',
-                self.product_class_create_view.as_view(),
-                name='catalogue-class-create'),
-            url(r'^product-types/$',
-                self.product_class_list_view.as_view(),
-                name='catalogue-class-list'),
-            url(r'^product-type/(?P<pk>\d+)/update/$',
-                self.product_class_update_view.as_view(),
-                name='catalogue-class-update'),
-            url(r'^product-type/(?P<pk>\d+)/delete/$',
-                self.product_class_delete_view.as_view(),
-                name='catalogue-class-delete'),
         ]
         return self.post_process_urls(urls)
 
