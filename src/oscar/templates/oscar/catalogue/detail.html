@@ -176,7 +176,7 @@
         {% endblock product_review %}
     {% endiffeature %}
 
-    {% with recommended_products=product.recommended_products.all|slice:":6" %}
+    {% with recommended_products=product.sorted_recommended_products|slice:":6" %}
         {% if recommended_products %}
             <div class="sub-header">
                 <h2>{% trans "Recommended items" %}</h2>

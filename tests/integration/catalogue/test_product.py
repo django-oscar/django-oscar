@@ -5,7 +5,8 @@ from django.core.exceptions import ValidationError
 
 from oscar.apps.catalogue.models import (Product, ProductClass,
                                          ProductAttribute,
-                                         AttributeOption)
+                                         AttributeOption,
+                                         ProductRecommendation)
 from oscar.test import factories
 
 
@@ -141,3 +142,35 @@ class ProductAttributeCreationTests(TestCase):
             attribute=attribute, value_entity=unrelated_object)
 
         self.assertEqual(attribute_value.value, unrelated_object)
+
+
+class ProductRecommendationTests(ProductTests):
+
+    def setUp(self):
+        super(ProductRecommendationTests, self).setUp()
+        self.primary_product = Product.objects.create(
+            upc='1234', product_class=self.product_class, title='Primary Product'
+        )
+
+    def test_recommended_products_ordering(self):
+        secondary_products = []
+        for i in range(5):
+            secondary_products.append(Product.objects.create(
+                upc='secondary%s' % i, product_class=self.product_class, title='Secondary Product #%s' % i
+            ))
+
+        recommendation_1 = ProductRecommendation.objects.create(
+            primary=self.primary_product, recommendation=secondary_products[3], ranking=5)
+        recommendation_2 = ProductRecommendation.objects.create(
+            primary=self.primary_product, recommendation=secondary_products[1], ranking=2)
+        recommendation_3 = ProductRecommendation.objects.create(
+            primary=self.primary_product, recommendation=secondary_products[2], ranking=4)
+        recommendation_4 = ProductRecommendation.objects.create(
+            primary=self.primary_product, recommendation=secondary_products[4], ranking=1)
+        recommendation_5 = ProductRecommendation.objects.create(
+            primary=self.primary_product, recommendation=secondary_products[0], ranking=3)
+        recommended_products = [
+            secondary_products[3], secondary_products[2], secondary_products[0],
+            secondary_products[1], secondary_products[4]
+        ]
+        self.assertEqual(self.primary_product.sorted_recommended_products, recommended_products)
