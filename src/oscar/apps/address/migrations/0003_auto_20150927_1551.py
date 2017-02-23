@@ -19,11 +19,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='useraddress',
             name='num_orders_as_billing_address',
-            field=models.PositiveIntegerField(default=0, verbose_name='Number of Orders as Shipping Address'),
+            field=models.PositiveIntegerField(default=0, verbose_name='Number of Orders as Billing Address'),
         ),
         migrations.AlterField(
             model_name='useraddress',
             name='num_orders_as_shipping_address',
-            field=models.PositiveIntegerField(default=0, verbose_name='Number of Orders as Billing Address'),
+            field=models.PositiveIntegerField(default=0, verbose_name='Number of Orders as Shipping Address'),
         ),
     ]
