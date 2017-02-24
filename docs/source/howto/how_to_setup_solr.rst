@@ -9,8 +9,8 @@ for similar environments. A working Java or OpenJDK installation are necessary.
 
 .. _`Apache Solr`: https://lucene.apache.org/solr/
 
-Starting Solr
-=============
+Installing Solr
+===============
 
 You first need to fetch and extract Solr. The schema included with Oscar
 is tested with Solr 4.7.2:
@@ -19,22 +19,7 @@ is tested with Solr 4.7.2:
 
     $ wget http://archive.apache.org/dist/lucene/solr/4.7.2/solr-4.7.2.tgz
     $ tar xzf solr-4.7.2.tgz
-
-Next, replace the example configuration with Oscar's.
-
-.. code-block:: bash
-
-    $ cd solr-4.7.2/example/solr/collection1
-    $ mv conf conf.original
-    $ ln -s <your_oscar_checkout>/sites/sandbox/deploy/solr conf
-
-You should then be able to start Solr by running:
-
-.. code-block:: bash
-
-    $ cd ../..
-    $ java -jar start.jar
-
+    
 Integrating with Haystack
 =========================
 
@@ -51,6 +36,25 @@ integrates with Django. Your Haystack connection settings in your
             'INCLUDE_SPELLING': True,
         },
     }
+
+Build solr schema
+=================
+
+Next, replace the example configuration with Oscar's.
+
+.. code-block:: bash
+
+    $ ./manage.py build_solr_schema > solr-4.7.2/example/solr/collection1/conf/schema.xml
+
+You should then be able to start Solr by running:
+
+.. code-block:: bash
+
+    $ cd solr-4.7.2/example
+    $ java -jar start.jar
+
+Rebuild search index
+====================
 
 If all is well, you should now be able to rebuild the search index.
 
