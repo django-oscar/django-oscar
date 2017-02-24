@@ -159,15 +159,15 @@ class ProductRecommendationTests(ProductTests):
                 upc='secondary%s' % i, product_class=self.product_class, title='Secondary Product #%s' % i
             ))
 
-        recommendation_1 = ProductRecommendation.objects.create(
+        ProductRecommendation.objects.create(
             primary=self.primary_product, recommendation=secondary_products[3], ranking=5)
-        recommendation_2 = ProductRecommendation.objects.create(
+        ProductRecommendation.objects.create(
             primary=self.primary_product, recommendation=secondary_products[1], ranking=2)
-        recommendation_3 = ProductRecommendation.objects.create(
+        ProductRecommendation.objects.create(
             primary=self.primary_product, recommendation=secondary_products[2], ranking=4)
-        recommendation_4 = ProductRecommendation.objects.create(
+        ProductRecommendation.objects.create(
             primary=self.primary_product, recommendation=secondary_products[4], ranking=1)
-        recommendation_5 = ProductRecommendation.objects.create(
+        ProductRecommendation.objects.create(
             primary=self.primary_product, recommendation=secondary_products[0], ranking=3)
         recommended_products = [
             secondary_products[3], secondary_products[2], secondary_products[0],
