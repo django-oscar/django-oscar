@@ -4,7 +4,7 @@ import phonenumbers
 from django import forms
 from django.contrib import messages
 from django.core import validators
-from django.core.exceptions import FieldDoesNotExist, ValidationError
+from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.utils import six
