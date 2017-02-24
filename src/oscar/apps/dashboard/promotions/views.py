@@ -92,10 +92,10 @@ class PageDetailView(generic.TemplateView):
 
     def post(self, request, **kwargs):
         """
-        When called with a post request, try and get 'promo[]' from
+        When called with a post request, try and get 'promo' from
         the post data and use it to reorder the page content blocks.
         """
-        data = dict(request.POST).get('promo[]')
+        data = dict(request.POST).get('promo')
         self._save_page_order(data)
         return HttpResponse(status=200)
 
