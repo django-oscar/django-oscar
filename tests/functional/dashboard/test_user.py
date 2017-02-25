@@ -98,3 +98,47 @@ class TestDetailViewForStaffUser(WebTestCase):
             response.follow(),
             _("A password reset email has been sent")
         )
+
+
+class SearchTests(WebTestCase):
+    is_staff = True
+    url = reverse('dashboard:users-index')
+
+    def setUp(self):
+        UserFactory(
+            username='lars', email='lars@example.org', first_name='Lars', last_name='van der Berg')
+        UserFactory(
+            username='owen', email='owen@example.org', first_name='Owen', last_name='Davies')
+        UserFactory(
+            username='robalan', email='robalan@example.org', first_name='Rob Alan', last_name='Lewis'
+        )
+        super(SearchTests, self).setUp()
+
+    def _search_by_user_name(self, name):
+        response = self.get(self.url)
+        search_form = response.forms[0]
+        search_form['name'] = name
+        search_response = search_form.submit('search')
+        data = search_response.context['users'].data
+        return data
+
+    def test_user_name_2_parts(self):
+        data = self._search_by_user_name('Owen Davies')
+        self.assertEquals(len(data), 1)
+        self.assertEquals(data[0].email, 'owen@example.org')
+        self.assertEquals(data[0].first_name, 'Owen')
+        self.assertEquals(data[0].last_name, 'Davies')
+
+    def test_user_name_3_parts(self):
+        data = self._search_by_user_name('Rob Alan Lewis')
+        self.assertEquals(len(data), 1)
+        self.assertEquals(data[0].email, 'robalan@example.org')
+        self.assertEquals(data[0].first_name, 'Rob Alan')
+        self.assertEquals(data[0].last_name, 'Lewis')
+
+    def test_user_name_4_parts(self):
+        data = self._search_by_user_name('Lars van der Berg')
+        self.assertEquals(len(data), 1)
+        self.assertEquals(data[0].email, 'lars@example.org')
+        self.assertEquals(data[0].first_name, 'Lars')
+        self.assertEquals(data[0].last_name, 'van der Berg')
