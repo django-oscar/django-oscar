@@ -1,15 +1,21 @@
 from decimal import Decimal as D
 import mock
 
+from django.http import HttpRequest
 from django.test import TestCase
+from django.test.utils import override_settings
 
 from oscar.apps.checkout.calculators import OrderTotalCalculator
 from oscar.apps.checkout.mixins import CheckoutSessionMixin, OrderPlacementMixin
 from oscar.apps.checkout.exceptions import FailedPreCondition
+from oscar.core.loading import get_model
 from oscar.test import factories
 from oscar.test.basket import add_product
 from oscar.test.utils import RequestFactory
-from oscar.apps.shipping.methods import FixedPrice
+from oscar.apps.shipping.methods import FixedPrice, Free
+
+
+Order = get_model('order', 'Order')
 
 
 class TestOrderPlacementMixin(TestCase):
@@ -80,6 +86,43 @@ class TestOrderPlacementMixin(TestCase):
         user_shipping_address = user.addresses.get(hash=shipping_address.generate_hash())
         self.assertEqual(user_billing_address.num_orders_as_billing_address, 3)
         self.assertEqual(user_shipping_address.num_orders_as_shipping_address, 1)
+
+    @override_settings(SITE_ID='')
+    def test_multi_site(self):
+        basket = factories.create_basket(empty=True)
+        site1 = factories.SiteFactory()
+        site2 = factories.SiteFactory()
+        request = HttpRequest()
+        request.META['SERVER_PORT'] = 80
+        request.META['SERVER_NAME'] = site1.domain
+        user = factories.UserFactory()
+        add_product(basket, D('12.00'))
+        shipping_method = Free()
+        shipping_charge = shipping_method.calculate(basket)
+        order_total = OrderTotalCalculator().calculate(basket, shipping_charge)
+
+        billing_address = factories.BillingAddressFactory()
+        shipping_address = factories.ShippingAddressFactory()
+        order_submission_data = {'user': user,
+                                 'order_number': '12345',
+                                 'basket': basket,
+                                 'shipping_method': shipping_method,
+                                 'shipping_charge': shipping_charge,
+                                 'order_total': order_total,
+                                 'billing_address': billing_address,
+                                 'shipping_address': shipping_address,
+                                 'request': request}
+        OrderPlacementMixin().place_order(**order_submission_data)
+        order1 = Order.objects.get(number='12345')
+        self.assertEqual(order1.site, site1)
+
+        add_product(basket, D('12.00'))
+        request.META['SERVER_NAME'] = site2.domain
+        order_submission_data['order_number'] = '12346'
+        order_submission_data['request'] = request
+        OrderPlacementMixin().place_order(**order_submission_data)
+        order2 = Order.objects.get(number='12346')
+        self.assertEqual(order2.site, site2)
 
 
 class TestCheckoutSessionMixin(TestCase):

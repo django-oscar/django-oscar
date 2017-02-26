@@ -1,5 +1,6 @@
 from decimal import Decimal as D
 
+from django.http import HttpRequest
 from django.test import TestCase
 from django.test.utils import override_settings
 
@@ -192,6 +193,8 @@ class TestMultiSiteOrderCreation(TestCase):
     def setUp(self):
         self.creator = OrderCreator()
         self.basket = factories.create_basket(empty=True)
+        self.site1 = factories.SiteFactory()
+        self.site2 = factories.SiteFactory()
 
     def test_default_site(self):
         add_product(self.basket, D('12.00'))
@@ -202,19 +205,38 @@ class TestMultiSiteOrderCreation(TestCase):
         self.assertEqual(order.site_id, 1)
 
     def test_multi_sites(self):
-        site1 = factories.SiteFactory()
-        site2 = factories.SiteFactory()
         add_product(self.basket, D('12.00'))
         place_order(self.creator,
                     basket=self.basket,
                     order_number='12345',
-                    site=site1)
+                    site=self.site1)
         order1 = Order.objects.get(number='12345')
-        self.assertEqual(order1.site, site1)
+        self.assertEqual(order1.site, self.site1)
         add_product(self.basket, D('12.00'))
         place_order(self.creator,
                     basket=self.basket,
                     order_number='12346',
-                    site=site2)
+                    site=self.site2)
         order2 = Order.objects.get(number='12346')
-        self.assertEqual(order2.site, site2)
+        self.assertEqual(order2.site, self.site2)
+
+    @override_settings(SITE_ID='')
+    def test_request(self):
+        request = HttpRequest()
+        request.META['SERVER_PORT'] = 80
+        request.META['SERVER_NAME'] = self.site1.domain
+        add_product(self.basket, D('12.00'))
+        place_order(self.creator,
+                    basket=self.basket,
+                    order_number='12345',
+                    request=request)
+        order1 = Order.objects.get(number='12345')
+        self.assertEqual(order1.site, self.site1)
+        add_product(self.basket, D('12.00'))
+        request.META['SERVER_NAME'] = self.site2.domain
+        place_order(self.creator,
+                    basket=self.basket,
+                    order_number='12346',
+                    request=request)
+        order2 = Order.objects.get(number='12346')
+        self.assertEqual(order2.site, self.site2)
