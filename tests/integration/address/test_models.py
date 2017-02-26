@@ -197,6 +197,8 @@ VALID_POSTCODES = [
     ('PG', '314'),
     ('HN', '41202'),
     ('BN', 'BC3615'),
+    ('TW', '104'),
+    ('TW', '10444'),
     # It works for small cases as well
     ('GB', 'sw2 1rw'),
 ]
