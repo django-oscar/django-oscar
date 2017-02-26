@@ -47,6 +47,13 @@ class TestDefaultStrategy(TestCase):
         self.assertTrue(info.availability.is_available_to_buy)
         self.assertTrue(info.price.exists)
 
+    def test_product_with_empty_price(self):
+        product_class = factories.ProductClassFactory(track_stock=False)
+        product = factories.ProductFactory(product_class=product_class, stockrecords=[])
+        factories.StockRecordFactory(price_excl_tax=None, product=product)
+        info = self.strategy.fetch_for_product(product)
+        self.assertFalse(info.availability.is_available_to_buy)
+
 
 class TestDefaultStrategyForParentProductWhoseVariantsHaveNoStockRecords(TestCase):
 

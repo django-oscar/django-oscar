@@ -210,7 +210,7 @@ class StockRequired(object):
     """
 
     def availability_policy(self, product, stockrecord):
-        if not stockrecord:
+        if not stockrecord or stockrecord.price_excl_tax is None:
             return Unavailable()
         if not product.get_product_class().track_stock:
             return Available()
