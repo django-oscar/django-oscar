@@ -513,11 +513,11 @@ class AbstractUserAddress(AbstractShippingAddress):
     #: as a shipping address so we can show the most popular ones
     #: first at the checkout.
     num_orders_as_shipping_address = models.PositiveIntegerField(
-        _("Number of Orders as Billing Address"), default=0)
+        _("Number of Orders as Shipping Address"), default=0)
 
     #: Same as previous, but for billing address.
     num_orders_as_billing_address = models.PositiveIntegerField(
-        _("Number of Orders as Shipping Address"), default=0)
+        _("Number of Orders as Billing Address"), default=0)
 
     #: A hash is kept to try and avoid duplicate addresses being added
     #: to the address book.
