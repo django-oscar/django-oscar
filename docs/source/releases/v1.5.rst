@@ -55,6 +55,17 @@ Minor changes
    addresses tracked separately: billing address in `UserAddress.num_orders_as_billing_address` field
    and shipping address in `UserAddress.num_order_as_shipping_address` accordingly.
 
+.. _incompatible_in_1.5:
+
+Backwards incompatible changes in Oscar 1.5
+-------------------------------------------
+
+- `SimpleAddToBasketForm` doesn't override the quantity field any
+  more. Instead, it just hides the field declared by AddToBasketForm
+  and sets the quantity to one. This means `SimpleAddToBasketForm`
+  doesn't need to be overridden for most cases, but please check
+  things still work as expected for you if you have customized it.
+
 
 Dependency changes
 ------------------

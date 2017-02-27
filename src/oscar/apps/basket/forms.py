@@ -199,8 +199,8 @@ class AddToBasketForm(forms.Form):
         This is designed to be overridden so that specific widgets can be used
         for certain types of options.
         """
-        kwargs = {'required': option.is_required}
-        self.fields[option.code] = forms.CharField(**kwargs)
+        self.fields[option.code] = forms.CharField(
+            label=option.name, required=option.is_required)
 
     # Cleaning
 
@@ -283,6 +283,13 @@ class SimpleAddToBasketForm(AddToBasketForm):
     """
     Simplified version of the add to basket form where the quantity is
     defaulted to 1 and rendered in a hidden widget
+
+    Most of the time, you won't need to override this class. Just change
+    AddToBasketForm to change behaviour in both forms at once.
     """
-    quantity = forms.IntegerField(
-        initial=1, min_value=1, widget=forms.HiddenInput, label=_('Quantity'))
+
+    def __init__(self, *args, **kwargs):
+        super(SimpleAddToBasketForm, self).__init__(*args, **kwargs)
+        if 'quantity' in self.fields:
+            self.fields['quantity'].initial = 1
+            self.fields['quantity'].widget = forms.HiddenInput()
