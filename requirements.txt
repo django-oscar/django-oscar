@@ -2,7 +2,7 @@
 
 # development
 Werkzeug==0.11.15
-django-debug-toolbar==1.6
+django-debug-toolbar==1.7
 django-extensions==1.7.6
 
 # Sandbox
