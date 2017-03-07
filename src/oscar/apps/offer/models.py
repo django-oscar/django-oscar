@@ -827,8 +827,6 @@ class Range(models.Model):
             return False
         if self.includes_all_products:
             return True
-        if product.product_class_id in self._class_ids():
-            return True
         included_product_ids = self._included_product_ids()
         if product.id in included_product_ids:
             return True
