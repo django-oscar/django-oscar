@@ -1,7 +1,7 @@
 # These requirements are only necessary when developing on Oscar.
 
 # development
-Werkzeug==0.12
+Werkzeug==0.12.1
 django-debug-toolbar==1.6
 django-extensions==1.7.6
 
