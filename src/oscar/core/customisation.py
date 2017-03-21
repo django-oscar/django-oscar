@@ -102,7 +102,7 @@ def fork_app(label, folder_path, logger=None):
         logger.info("Creating models.py")
         create_file(
             join(local_app_path, 'models.py'),
-            "from oscar.apps.%s.models import *  # noqa\n" % label)
+            "from oscar.apps.%s.models import *  # noqa isort:skip\n" % label)
 
         migrations_path = 'migrations'
         source = join(oscar_app_path, migrations_path)
