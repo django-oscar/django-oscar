@@ -38,7 +38,7 @@ install_requires = [
     # For manipulating search URLs
     'purl>=0.7',
     # For phone number field
-    'django-phonenumber-field>=1.0.0,<2.0.0',
+    'django-phonenumber-field>=1.0.0,<1.2.0',
     # Used for oscar.test.contextmanagers.mock_signal_receiver
     'mock>=1.0.1,<3.0',
     # Used for oscar.test.newfactories
