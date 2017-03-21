@@ -10,13 +10,15 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
-
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_model
 from oscar.core.utils import get_default_currency
 from oscar.models.fields import AutoSlugField
-
+from oscar.core.loading import get_class
 from . import exceptions
+
+order_status_changed = get_class('order.signals', 'order_status_changed')
+order_line_status_changed = get_class('order.signals', 'order_line_status_changed')
 
 
 @python_2_unicode_compatible
@@ -118,6 +120,9 @@ class AbstractOrder(models.Model):
         """
         if new_status == self.status:
             return
+
+        old_status = self.status
+
         if new_status not in self.available_statuses():
             raise exceptions.InvalidOrderStatus(
                 _("'%(new_status)s' is not a valid status for order %(number)s"
@@ -131,6 +136,14 @@ class AbstractOrder(models.Model):
                 line.status = self.cascade[self.status]
                 line.save()
         self.save()
+
+        # Send signal for handling status changed
+        order_status_changed.send(sender=self,
+                                  order=self,
+                                  old_status=old_status,
+                                  new_status=new_status,
+                                  )
+
     set_status.alters_data = True
 
     @property
@@ -548,6 +561,9 @@ class AbstractLine(models.Model):
         """
         if new_status == self.status:
             return
+
+        old_status = self.status
+
         if new_status not in self.available_statuses():
             raise exceptions.InvalidLineStatus(
                 _("'%(new_status)s' is not a valid status (current status:"
@@ -555,6 +571,14 @@ class AbstractLine(models.Model):
                 % {'new_status': new_status, 'status': self.status})
         self.status = new_status
         self.save()
+
+        # Send signal for handling status changed
+        order_line_status_changed.send(sender=self,
+                                       line=self,
+                                       old_status=old_status,
+                                       new_status=new_status,
+                                       )
+
     set_status.alters_data = True
 
     @property
