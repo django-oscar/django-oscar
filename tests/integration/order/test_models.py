@@ -11,7 +11,9 @@ from oscar.apps.order.exceptions import (
 from oscar.apps.order.models import (
     Order, Line, ShippingEvent, ShippingEventType, ShippingEventQuantity,
     OrderNote, OrderDiscount)
+from oscar.apps.order.signals import order_line_status_changed, order_status_changed
 from oscar.test.basket import add_product
+from oscar.test.contextmanagers import mock_signal_receiver
 from oscar.test.factories import (
     create_order, create_offer, create_voucher, create_basket,
     OrderFactory, OrderLineFactory, ShippingAddressFactory,
@@ -73,6 +75,12 @@ class OrderStatusPipelineTests(TestCase):
         self.order.set_status('SHIPPED')
         for line in self.order.lines.all():
             self.assertEqual('SHIPPED', line.status)
+
+    def test_set_status_sends_a_signal(self):
+        self.order = create_order(status='PENDING')
+        with mock_signal_receiver(order_status_changed) as receiver:
+            self.order.set_status('SHIPPED')
+            self.assertEqual(receiver.call_count, 1)
 
 
 class OrderNoteTests(TestCase):
@@ -217,6 +225,11 @@ class LineStatusTests(TestCase):
 
     def test_setting_same_status_does_nothing(self):
         self.line.set_status('A')
+
+    def test_set_status_sends_a_signal(self):
+        with mock_signal_receiver(order_line_status_changed) as receiver:
+            self.line.set_status('C')
+            self.assertEqual(receiver.call_count, 1)
 
 
 class ShippingEventTypeTests(TestCase):
