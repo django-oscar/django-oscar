@@ -78,6 +78,30 @@ list of additional apps, they will be used to replace the Oscar core apps.
 In the above example, ``yourproject.order`` will be returned instead of
 ``oscar.apps.order``.
 
+.. note::
+
+    Overrides of dashboard applications should follow overrides of core
+    applications (basket, catalogue etc), since they depend on models,
+    declared in the core applications. Otherwise, it could cause issues
+    with Oscar's dynamic model loading.
+
+    Example:
+
+    .. code:: django
+
+        INSTALLED_APPS = [
+            # all your non-Oscar apps
+        ] + get_core_apps([
+            # core applications
+            'yourappsfolder.catalogue',
+            'yourappsfolder.order',
+            # dashboard applications
+            'yourappsfolder.dashboard',
+            'yourappsfolder.dashboard.orders',
+            'yourappsfolder.dashboard.reports',
+        ])
+
+
 Start customising!
 ==================
 
