@@ -45,7 +45,7 @@ class TestUserAddress(TestCase):
         self.assertEqual("Barry Barrington", a.name)
 
     def test_has_summary_property(self):
-        c = factories.CountryFactory.build(name='')
+        c = factories.CountryFactory(name='')
         a = factories.UserAddressFactory(
             country=c,
             title='Dr',
