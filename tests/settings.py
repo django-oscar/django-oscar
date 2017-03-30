@@ -10,9 +10,9 @@ location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), x
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('DATABASE_ENGINE', 'django.db.backends.sqlite3'),
-        'NAME': os.environ.get('DATABASE_NAME', ':memory:'),
-    },
+        'ENGINE': os.environ.get('DATABASE_ENGINE', 'django.db.backends.postgresql_psycopg2'),
+        'NAME': os.environ.get('DATABASE_NAME', 'oscar'),
+    }
 }
 
 INSTALLED_APPS = [
