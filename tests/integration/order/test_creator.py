@@ -1,8 +1,12 @@
 from decimal import Decimal as D
+import threading
+import time
 
+import pytest
 from django.http import HttpRequest
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from django.test.utils import override_settings
+from django.contrib.auth.models import AnonymousUser
 
 from oscar.apps.catalogue.models import ProductClass, Product
 from oscar.apps.checkout import calculators
@@ -11,9 +15,11 @@ from oscar.apps.order.models import Order
 from oscar.apps.order.utils import OrderCreator
 from oscar.apps.shipping.methods import Free, FixedPrice
 from oscar.apps.shipping.repository import Repository
+from oscar.apps.voucher.models import Voucher
 from oscar.core.loading import get_class
 from oscar.test import factories
 from oscar.test.basket import add_product
+from tests.utils import run_concurrently
 
 Range = get_class('offer.models', 'Range')
 Benefit = get_class('offer.models', 'Benefit')
@@ -240,3 +246,65 @@ class TestMultiSiteOrderCreation(TestCase):
                     request=request)
         order2 = Order.objects.get(number='12346')
         self.assertEqual(order2.site, self.site2)
+
+
+class TestPlaceOrderWithVoucher(TestCase):
+
+    def test_single_usage(self):
+        user = AnonymousUser()
+        basket = factories.create_basket()
+        creator = OrderCreator()
+
+        voucher = factories.VoucherFactory(usage=Voucher.SINGLE_USE)
+        voucher.offers.add(factories.create_offer(offer_type='Voucher'))
+        basket.vouchers.add(voucher)
+
+        place_order(creator, basket=basket, order_number='12346', user=user)
+        assert voucher.applications.count() == 1
+
+        # Make sure the voucher usage is rechecked
+        with pytest.raises(ValueError):
+            place_order(creator, basket=basket, order_number='12347', user=user)
+
+
+class TestConcurrentOrderPlacement(TransactionTestCase):
+
+    def test_single_usage(self):
+        user = AnonymousUser()
+        creator = OrderCreator()
+        product = factories.ProductFactory()
+        voucher = factories.VoucherFactory(usage=Voucher.SINGLE_USE)
+        voucher.offers.add(factories.create_offer(offer_type='Voucher'))
+
+        # Make the order creator a bit more slow too reliable trigger
+        # concurrency issues
+        org_create_order_model = OrderCreator.create_order_model
+        def new_create_order_model(*args, **kwargs):
+            time.sleep(0.5)
+            return org_create_order_model(creator, *args, **kwargs)
+        creator.create_order_model = new_create_order_model
+
+        org_record_voucher_usage = OrderCreator.record_voucher_usage
+        def record_voucher_usage(*args, **kwargs):
+            time.sleep(0.5)
+            return org_record_voucher_usage(creator, *args, **kwargs)
+        creator.record_voucher_usage = record_voucher_usage
+
+        # Start 5 threads to place an order concurrently
+        def worker():
+            order_number = threading.current_thread().name
+
+            basket = factories.BasketFactory()
+            basket.add_product(product)
+            basket.vouchers.add(voucher)
+            place_order(
+                creator, basket=basket, order_number=order_number, user=user)
+
+        exceptions = run_concurrently(worker, num_threads=5)
+
+        voucher.refresh_from_db()
+        assert all(isinstance(x, ValueError) for x in exceptions), exceptions
+        assert len(exceptions) == 4
+        assert voucher.applications.count() == 1
+
+        assert Order.objects.count() == 1
