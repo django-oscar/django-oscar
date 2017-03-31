@@ -382,7 +382,6 @@ class ProductCategoryFormSet(BaseProductCategoryFormSet):
 
 
 class ProductImageForm(forms.ModelForm):
-
     class Meta:
         model = ProductImage
         fields = ['product', 'original', 'caption']
@@ -391,19 +390,21 @@ class ProductImageForm(forms.ModelForm):
         # when clicking on the actual image.
         widgets = {
             'original': ImageInput(),
+            'display_order': forms.HiddenInput(),
         }
 
-    def save(self, *args, **kwargs):
-        # We infer the display order of the image based on the order of the
-        # image fields within the formset.
-        kwargs['commit'] = False
-        obj = super(ProductImageForm, self).save(*args, **kwargs)
-        obj.display_order = self.get_display_order()
-        obj.save()
-        return obj
+    def __init__(self, data=None, *args, **kwargs):
+        self.prefix = kwargs.get('prefix', None)
+        if data and not data.get('display_order', None):
+            data['display_order'] = self.get_display_order()
+        else:
+            initial = {'display_order': self.get_display_order()}
+            initial.update(kwargs.get('initial', {}))
+            kwargs['initial'] = initial
+        super(ProductImageForm, self).__init__(data, *args, **kwargs)
 
     def get_display_order(self):
-        return self.prefix.split('-').pop()
+        return int(self.prefix.split('-').pop())
 
 
 BaseProductImageFormSet = inlineformset_factory(
@@ -411,9 +412,30 @@ BaseProductImageFormSet = inlineformset_factory(
 
 
 class ProductImageFormSet(BaseProductImageFormSet):
-
     def __init__(self, product_class, user, *args, **kwargs):
         super(ProductImageFormSet, self).__init__(*args, **kwargs)
+
+        # pull files out of 'EXTRAn' fields (each being a multiple file upload)
+        # and apply them as individual files belonging to submitted extra fields
+        files = self.files
+        i = 0
+        count = self.initial_form_count()
+        while files:
+            extra_name = '%s-EXTRA%d-original' % (self.prefix, i)
+            if extra_name not in files:
+                break
+            if hasattr(files, 'getlist'):
+                extra_files = files.getlist(extra_name)
+            else:
+                extra_files = [files.get(extra_name)]
+            for extra_file in extra_files:
+                dest_name = '%s-%d-original' % (self.prefix, count)
+                # in case individual images were replaced after multi selection
+                if not files.get(dest_name, None):
+                    files[dest_name] = extra_file
+                count += 1
+            i += 1
+        self.files = files
 
 
 class ProductRecommendationForm(forms.ModelForm):
