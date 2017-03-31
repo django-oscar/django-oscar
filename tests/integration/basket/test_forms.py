@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.conf import settings
 import mock
 
-from oscar.apps.basket import forms
+from oscar.apps.basket import forms, formsets
 from oscar.apps.offer.utils import Applicator
 from oscar.core.loading import get_model
 from oscar.test import factories
@@ -92,7 +92,7 @@ class TestBasketLineForm(TestCase):
         self.basket._lines = self.basket.lines.all()
 
         self.applicator.apply_offers(self.basket, [offer])
-        formset = forms.BasketLineFormSet(
+        formset = formsets.BasketLineFormSet(
             strategy=self.basket.strategy,
             queryset=self.basket.all_lines())
 
@@ -109,7 +109,7 @@ class TestBasketLineForm(TestCase):
         self.basket._lines = None
         self.applicator.apply_offers(self.basket, [offer])
 
-        formset = forms.BasketLineFormSet(
+        formset = formsets.BasketLineFormSet(
             strategy=self.basket.strategy,
             queryset=self.basket.all_lines())
         self.assertTrue(formset.forms[0].instance.has_discount)

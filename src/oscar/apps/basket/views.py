@@ -19,11 +19,11 @@ from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import redirect_to_referrer, safe_referrer
 
 Applicator = get_class('offer.utils', 'Applicator')
-(BasketLineFormSet, BasketLineForm, AddToBasketForm, BasketVoucherForm,
- SavedLineFormSet, SavedLineForm) \
-    = get_classes('basket.forms', ('BasketLineFormSet', 'BasketLineForm',
-                                   'AddToBasketForm', 'BasketVoucherForm',
-                                   'SavedLineFormSet', 'SavedLineForm'))
+(BasketLineForm, AddToBasketForm, BasketVoucherForm, SavedLineForm) = get_classes(
+    'basket.forms', ('BasketLineForm', 'AddToBasketForm',
+                     'BasketVoucherForm', 'SavedLineForm'))
+BasketLineFormSet, SavedLineFormSet = get_classes(
+    'basket.formsets', ('BasketLineFormSet', 'SavedLineFormSet'))
 Repository = get_class('shipping.repository', ('Repository'))
 OrderTotalCalculator = get_class(
     'checkout.calculators', 'OrderTotalCalculator')
