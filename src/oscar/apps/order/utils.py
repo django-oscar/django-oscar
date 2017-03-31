@@ -50,11 +50,8 @@ class OrderCreator(object):
             order_number = generator.order_number(basket)
         if not status and hasattr(settings, 'OSCAR_INITIAL_ORDER_STATUS'):
             status = getattr(settings, 'OSCAR_INITIAL_ORDER_STATUS')
-        try:
-            Order._default_manager.get(number=order_number)
-        except Order.DoesNotExist:
-            pass
-        else:
+
+        if Order._default_manager.filter(number=order_number).exists():
             raise ValueError(_("There is already an order with number %s")
                              % order_number)
 
