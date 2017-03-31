@@ -272,6 +272,37 @@ class TestConcurrentOrderPlacement(TransactionTestCase):
     def test_single_usage(self):
         user = AnonymousUser()
         creator = OrderCreator()
+        product = factories.ProductFactory(stockrecords__num_in_stock=1000)
+
+        # Make the order creator a bit more slow too reliable trigger
+        # concurrency issues
+        org_create_order_model = OrderCreator.create_order_model
+        def new_create_order_model(*args, **kwargs):
+            time.sleep(0.5)
+            return org_create_order_model(creator, *args, **kwargs)
+        creator.create_order_model = new_create_order_model
+
+        # Start 5 threads to place an order concurrently
+        def worker():
+            order_number = threading.current_thread().name
+
+            basket = factories.BasketFactory()
+            basket.add_product(product)
+            place_order(
+                creator, basket=basket, order_number=order_number, user=user)
+
+        exceptions = run_concurrently(worker, num_threads=5)
+
+        assert all(isinstance(x, ValueError) for x in exceptions), exceptions
+        assert len(exceptions) == 0
+        assert Order.objects.count() == 5
+
+        stockrecord = product.stockrecords.first()
+        assert stockrecord.num_allocated == 5
+
+    def test_voucher_single_usage(self):
+        user = AnonymousUser()
+        creator = OrderCreator()
         product = factories.ProductFactory()
         voucher = factories.VoucherFactory(usage=Voucher.SINGLE_USE)
         voucher.offers.add(factories.create_offer(offer_type='Voucher'))
