@@ -1,4 +1,6 @@
-from django.db import models
+from django.db import models, router
+from django.db.models import F, Value, signals
+from django.db.models.functions import Coalesce
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
@@ -189,11 +191,27 @@ class AbstractStockRecord(models.Model):
 
         This normally happens when a product is bought at checkout.  When the
         product is actually shipped, then we 'consume' the allocation.
+
         """
+        # Atomic update
+        (self.__class__.objects
+            .filter(pk=self.pk)
+            .update(num_allocated=(
+                Coalesce(F('num_allocated'), Value(0)) + quantity)))
+
+        # Make sure the current object is up-to-date
         if self.num_allocated is None:
             self.num_allocated = 0
         self.num_allocated += quantity
-        self.save()
+
+        # Send the post-save signal
+        signals.post_save.send(
+            sender=self.__class__,
+            instance=self,
+            created=False,
+            raw=False,
+            using=router.db_for_write(self.__class__, instance=self))
+
     allocate.alters_data = True
 
     def is_allocation_consumption_possible(self, quantity):
