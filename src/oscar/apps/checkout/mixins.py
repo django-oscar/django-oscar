@@ -137,6 +137,11 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         else:
             status = kwargs.pop('status')
 
+        if 'request' not in kwargs:
+            request = getattr(self, 'request', None)
+        else:
+            request = kwargs.pop('request')
+
         order = OrderCreator().place_order(
             user=user,
             order_number=order_number,
@@ -146,7 +151,9 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             shipping_charge=shipping_charge,
             total=order_total,
             billing_address=billing_address,
-            status=status, **kwargs)
+            status=status,
+            request=request,
+            **kwargs)
         self.save_payment_details(order)
         return order
 

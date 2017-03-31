@@ -38,7 +38,7 @@ class OrderCreator(object):
     def place_order(self, basket, total,  # noqa (too complex (12))
                     shipping_method, shipping_charge, user=None,
                     shipping_address=None, billing_address=None,
-                    order_number=None, status=None, **kwargs):
+                    order_number=None, status=None, request=None, **kwargs):
         """
         Placing an order involves creating all the relevant models based on the
         basket and session data.
@@ -61,7 +61,7 @@ class OrderCreator(object):
         # Ok - everything seems to be in order, let's place the order
         order = self.create_order_model(
             user, basket, shipping_address, shipping_method, shipping_charge,
-            billing_address, total, order_number, status, **kwargs)
+            billing_address, total, order_number, status, request,  **kwargs)
         for line in basket.all_lines():
             self.create_line_models(order, line)
             self.update_stock_records(line)
@@ -96,7 +96,7 @@ class OrderCreator(object):
 
     def create_order_model(self, user, basket, shipping_address,
                            shipping_method, shipping_charge, billing_address,
-                           total, order_number, status, **extra_order_fields):
+                           total, order_number, status, request=None, **extra_order_fields):
         """
         Create an order model.
         """
@@ -120,7 +120,7 @@ class OrderCreator(object):
         if extra_order_fields:
             order_data.update(extra_order_fields)
         if 'site' not in order_data:
-            order_data['site'] = Site._default_manager.get_current()
+            order_data['site'] = Site._default_manager.get_current(request)
         order = Order(**order_data)
         order.save()
         return order
