@@ -193,6 +193,14 @@ class AbstractStockRecord(models.Model):
         product is actually shipped, then we 'consume' the allocation.
 
         """
+        # Send the pre-save signal
+        signals.pre_save.send(
+            sender=self.__class__,
+            instance=self,
+            created=False,
+            raw=False,
+            using=router.db_for_write(self.__class__, instance=self))
+
         # Atomic update
         (self.__class__.objects
             .filter(pk=self.pk)
