@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.template import loader, Context, TemplateDoesNotExist
+from django.template import loader, TemplateDoesNotExist
 
 import oscar
 
@@ -39,11 +39,11 @@ class TestOscarTemplateSettings(TestCase):
     def test_allows_a_template_to_be_customized(self):
         path = 'base.html'
         template = loader.get_template(path)
-        rendered_template = template.render(Context())
+        rendered_template = template.render({})
         self.assertIn('Oscar Test Shop', rendered_template)
 
     def test_default_oscar_templates_are_accessible(self):
         path = 'oscar/base.html'
         template = loader.get_template(path)
-        rendered_template = template.render(Context())
+        rendered_template = template.render({})
         self.assertNotIn('Oscar Test Shop', rendered_template)
