@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core import mail
 from django.db.models import Max
-from django.template import Context, loader
+from django.template import loader
 
 from oscar.apps.customer.notifications import services
 from oscar.core.loading import get_class, get_model
@@ -32,10 +32,10 @@ def send_alert_confirmation(alert):
     """
     Send an alert confirmation email.
     """
-    ctx = Context({
+    ctx = {
         'alert': alert,
         'site': Site.objects.get_current(),
-    })
+    }
     subject_tpl = loader.get_template('customer/alerts/emails/'
                                       'confirmation_subject.txt')
     body_tpl = loader.get_template('customer/alerts/emails/'
@@ -93,11 +93,11 @@ def send_product_alerts(product):
         if not data.availability.is_available_to_buy:
             continue
 
-        ctx = Context({
+        ctx = {
             'alert': alert,
             'site': Site.objects.get_current(),
             'hurry': hurry_mode,
-        })
+        }
         if alert.user:
             # Send a site notification
             num_notifications += 1

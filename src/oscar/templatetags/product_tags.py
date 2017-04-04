@@ -23,6 +23,8 @@ def render_product(context, product):
              % product.get_product_class().slug,
              'catalogue/partials/product.html']
     template_ = select_template(names)
+    context = context.flatten()
+
     # Ensure the passed product is in the context as 'product'
     context['product'] = product
     return template_.render(context)

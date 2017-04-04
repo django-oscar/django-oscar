@@ -4,7 +4,6 @@ from django import forms
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.forms.utils import flatatt
 from django.forms.widgets import FileInput
-from django.template import Context
 from django.template.loader import render_to_string
 from django.utils import formats, six
 from django.utils.encoding import force_text
@@ -42,11 +41,11 @@ class ImageInput(FileInput):
             image_url = final_attrs['value'] = force_text(
                 self._format_value(value))
 
-        return render_to_string(self.template_name, Context({
+        return render_to_string(self.template_name, {
             'input_attrs': flatatt(final_attrs),
             'image_url': image_url,
             'image_id': "%s-image" % final_attrs['id'],
-        }))
+        })
 
 
 class WYSIWYGTextArea(forms.Textarea):
