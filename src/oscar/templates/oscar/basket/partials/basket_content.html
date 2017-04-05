@@ -7,7 +7,7 @@
 {% if basket_warnings %}
     <h5>{% trans "Important messages about items in your basket" %}</h5>
     {% for warning in basket_warnings %}
-        <div class="alert">{{ warning }}</div>
+        <div class="alert alert-warning">{{ warning }}</div>
     {% endfor %}
 {% endif %}
 
