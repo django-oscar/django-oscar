@@ -20,12 +20,13 @@ def currency(value, currency=None):
         return u""
     # Using Babel's currency formatting
     # http://babel.pocoo.org/en/latest/api/numbers.html#babel.numbers.format_currency
+    OSCAR_CURRENCY_FORMAT = getattr(settings, 'OSCAR_CURRENCY_FORMAT', None)
     kwargs = {
-        'currency': (currency if not currency is None else
-            settings.OSCAR_DEFAULT_CURRENCY),
-        'format': getattr(settings, 'OSCAR_CURRENCY_FORMAT', None),
-        'locale': to_locale(get_language() or settings.LANGUAGE_CODE),
-        'currency_digits': getattr(settings, 'OSCAR_CURRENCY_DIGITS', True),
-        'format_type': getattr(settings, 'OSCAR_CURRENCY_FORMAT_TYPE', 'standard'),
+        'currency': currency or settings.OSCAR_DEFAULT_CURRENCY,
+        'locale': to_locale(get_language() or settings.LANGUAGE_CODE)
     }
+    if isinstance(OSCAR_CURRENCY_FORMAT, dict):
+        kwargs.update(OSCAR_CURRENCY_FORMAT.get(currency, {}))
+    else:
+        kwargs['format'] = OSCAR_CURRENCY_FORMAT
     return format_currency(value, **kwargs)
