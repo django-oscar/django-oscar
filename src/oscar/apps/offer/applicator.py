@@ -1,10 +1,10 @@
 import logging
 from itertools import chain
 
-from oscar.apps.offer import results
-from oscar.core.loading import get_model
+from oscar.core.loading import get_class, get_model
 
 logger = logging.getLogger('oscar.offers')
+OfferApplications = get_class('offer.results', 'OfferApplications')
 
 
 class OfferApplicationError(Exception):
@@ -24,7 +24,7 @@ class Applicator(object):
         self.apply_offers(basket, offers)
 
     def apply_offers(self, basket, offers):
-        applications = results.OfferApplications()
+        applications = OfferApplications()
         for offer in offers:
             num_applications = 0
             # Keep applying the offer until either

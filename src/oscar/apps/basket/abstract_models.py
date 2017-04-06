@@ -10,13 +10,13 @@ from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.basket.managers import OpenBasketManager, SavedBasketManager
-from oscar.apps.offer import results
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.loading import get_class
 from oscar.core.utils import get_default_currency
 from oscar.models.fields.slugfield import SlugField
 from oscar.templatetags.currency_filters import currency
 
+OfferApplications = get_class('offer.results', 'OfferApplications')
 Unavailable = get_class('partner.availability', 'Unavailable')
 LineOfferConsumer = get_class('basket.utils', 'LineOfferConsumer')
 
@@ -83,7 +83,7 @@ class AbstractBasket(models.Model):
         # so we want to avoid reloading them as this would drop the discount
         # information.
         self._lines = None
-        self.offer_applications = results.OfferApplications()
+        self.offer_applications = OfferApplications()
 
     def __str__(self):
         return _(
@@ -247,7 +247,7 @@ class AbstractBasket(models.Model):
         """
         Remove any discounts so they get recalculated
         """
-        self.offer_applications = results.OfferApplications()
+        self.offer_applications = OfferApplications()
         self._lines = None
 
     def merge_line(self, line, add_quantities=True):
