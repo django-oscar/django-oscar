@@ -300,7 +300,7 @@ class ProductImageForm(forms.ModelForm):
 
     class Meta:
         model = ProductImage
-        fields = ['product', 'original', 'caption']
+        fields = ['product', 'original', 'caption', 'display_order']
         # use ImageInput widget to create HTML displaying the
         # actual uploaded image and providing the upload dialog
         # when clicking on the actual image.
