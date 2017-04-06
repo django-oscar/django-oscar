@@ -802,13 +802,14 @@ class AbstractLine(models.Model):
 
     @property
     def line_price_excl_tax(self):
-        return self.quantity * self.unit_price_excl_tax
+        if self.unit_price_excl_tax:
+            return self.quantity * self.unit_price_excl_tax
 
     @property
     def line_price_excl_tax_incl_discounts(self):
-        if self._discount_excl_tax:
+        if self._discount_excl_tax and self.line_price_excl_tax:
             return self.line_price_excl_tax - self._discount_excl_tax
-        if self._discount_incl_tax:
+        if self._discount_incl_tax and self.line_price_incl_tax:
             # This is a tricky situation.  We know the discount as calculated
             # against tax inclusive prices but we need to guess how much of the
             # discount applies to tax-exclusive prices.  We do this by
@@ -822,15 +823,18 @@ class AbstractLine(models.Model):
         # We use whichever discount value is set.  If the discount value was
         # calculated against the tax-exclusive prices, then the line price
         # including tax
-        return self.line_price_incl_tax - self.discount_value
+        if self.line_price_incl_tax:
+            return self.line_price_incl_tax - self.discount_value
 
     @property
     def line_tax(self):
-        return self.quantity * self.unit_tax
+        if self.unit_tax:
+            return self.quantity * self.unit_tax
 
     @property
     def line_price_incl_tax(self):
-        return self.quantity * self.unit_price_incl_tax
+        if self.unit_price_incl_tax:
+            return self.quantity * self.unit_price_incl_tax
 
     @property
     def description(self):

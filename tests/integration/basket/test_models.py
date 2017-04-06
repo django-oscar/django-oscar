@@ -170,7 +170,7 @@ class TestANonEmptyBasket(TestCase):
         self.basket.add(product, 1)
         self.assertEqual(self.basket.total_excl_tax, 105)
 
-    def test_total_excludes_unavailable_products_with_unknown_price(self):
+    def test_basket_prices_calculation_for_unavailable_pricing(self):
         new_product = factories.create_product()
         factories.create_stockrecord(
             new_product, price_excl_tax=D('5.00'))
@@ -189,12 +189,18 @@ class TestANonEmptyBasket(TestCase):
                     return prices.Unavailable()
                 return super(UnavailableProductStrategy, self).pricing_policy(product, stockrecord)
 
-        try:
-            self.basket.strategy = UnavailableProductStrategy()
-            self.assertEqual(self.basket.all_lines()[1].get_warning(), u"'D\xf9\uff4d\u03fb\u03d2 title' is no longer available")
-            self.assertEqual(self.basket.total_excl_tax, 100)
-        finally:
-            self.basket.strategy = strategy.Default()
+        self.basket.strategy = UnavailableProductStrategy()
+        line = self.basket.all_lines()[1]
+        self.assertEqual(line.get_warning(), u"'D\xf9\uff4d\u03fb\u03d2 title' is no longer available")
+        self.assertIsNone(line.line_price_excl_tax)
+        self.assertIsNone(line.line_price_incl_tax)
+        self.assertIsNone(line.line_price_excl_tax_incl_discounts)
+        self.assertIsNone(line.line_price_incl_tax_incl_discounts)
+        self.assertIsNone(line.line_tax)
+        self.assertEqual(self.basket.total_excl_tax, 100)
+        self.assertEqual(self.basket.total_incl_tax, 100)
+        self.assertEqual(self.basket.total_excl_tax_excl_discounts, 100)
+        self.assertEqual(self.basket.total_incl_tax_excl_discounts, 100)
 
 
 class TestMergingTwoBaskets(TestCase):
