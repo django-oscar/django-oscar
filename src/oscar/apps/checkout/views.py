@@ -10,7 +10,6 @@ from django.utils.http import urlquote
 from django.utils.translation import ugettext as _
 from django.views import generic
 
-from oscar.apps.shipping.methods import NoShippingRequired
 from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_class, get_classes, get_model
 
@@ -29,6 +28,7 @@ RedirectRequired, UnableToTakePayment, PaymentError \
 UnableToPlaceOrder = get_class('order.exceptions', 'UnableToPlaceOrder')
 OrderPlacementMixin = get_class('checkout.mixins', 'OrderPlacementMixin')
 CheckoutSessionMixin = get_class('checkout.session', 'CheckoutSessionMixin')
+NoShippingRequired = get_class('shipping.methods', 'NoShippingRequired')
 Order = get_model('order', 'Order')
 ShippingAddress = get_model('order', 'ShippingAddress')
 CommunicationEvent = get_model('order', 'CommunicationEvent')

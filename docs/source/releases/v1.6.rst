@@ -36,6 +36,9 @@ Removal of deprecated features
 
 Minor changes
 ~~~~~~~~~~~~~
+ - Majority of the Oscar imports now using dynamic loading, instead of
+   direct importing for better extensibility and customizability, except
+   signals.
 
 .. _incompatible_in_1.6:
 

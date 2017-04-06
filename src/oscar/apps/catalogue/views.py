@@ -8,7 +8,6 @@ from django.utils.http import urlquote
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView, TemplateView
 
-from oscar.apps.catalogue.signals import product_viewed
 from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_class, get_model
 
@@ -18,6 +17,7 @@ ProductAlert = get_model('customer', 'ProductAlert')
 ProductAlertForm = get_class('customer.forms', 'ProductAlertForm')
 get_product_search_handler_class = get_class(
     'catalogue.search_handlers', 'get_product_search_handler_class')
+product_viewed = get_class('catalogue.signals', 'product_viewed')
 
 
 class ProductDetailView(DetailView):

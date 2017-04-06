@@ -12,7 +12,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic import FormView, View
 from extra_views import ModelFormSetView
 
-from oscar.apps.basket import signals
 from oscar.core import ajax
 from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_class, get_classes, get_model
@@ -24,7 +23,9 @@ Applicator = get_class('offer.applicator', 'Applicator')
                      'BasketVoucherForm', 'SavedLineForm'))
 BasketLineFormSet, SavedLineFormSet = get_classes(
     'basket.formsets', ('BasketLineFormSet', 'SavedLineFormSet'))
-Repository = get_class('shipping.repository', ('Repository'))
+Repository = get_class('shipping.repository', 'Repository')
+basket_addition, voucher_addition, voucher_removal = get_classes(
+    'basket.signals', ('basket_addition', 'voucher_addition', 'voucher_removal'))
 OrderTotalCalculator = get_class(
     'checkout.calculators', 'OrderTotalCalculator')
 BasketMessageGenerator = get_class('basket.utils', 'BasketMessageGenerator')
@@ -243,7 +244,7 @@ class BasketAddView(FormView):
     """
     form_class = AddToBasketForm
     product_model = get_model('catalogue', 'product')
-    add_signal = signals.basket_addition
+    add_signal = basket_addition
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
@@ -302,7 +303,7 @@ class BasketAddView(FormView):
 class VoucherAddView(FormView):
     form_class = BasketVoucherForm
     voucher_model = get_model('voucher', 'voucher')
-    add_signal = signals.voucher_addition
+    add_signal = voucher_addition
 
     def get(self, request, *args, **kwargs):
         return redirect('basket:summary')
@@ -383,7 +384,7 @@ class VoucherAddView(FormView):
 
 class VoucherRemoveView(View):
     voucher_model = get_model('voucher', 'voucher')
-    remove_signal = signals.voucher_removal
+    remove_signal = voucher_removal
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
