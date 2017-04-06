@@ -6,7 +6,7 @@ from django.contrib.auth import models as auth_models
 from django.core.urlresolvers import reverse
 from django.core.validators import RegexValidator
 from django.db import models
-from django.template import Template, TemplateDoesNotExist
+from django.template import Context, TemplateDoesNotExist, engines
 from django.template.loader import get_template
 from django.utils import six, timezone
 from django.utils.encoding import python_2_unicode_compatible
@@ -228,7 +228,7 @@ class AbstractCommunicationEventType(models.Model):
             field = getattr(self, attr_name, None)
             if field is not None:
                 # Template content is in a model field
-                templates[name] = Template(field)
+                templates[name] = engines['django'].from_string(field)
             else:
                 # Model field is empty - look for a file template
                 template_name = getattr(self, "%s_file" % attr_name) % code
@@ -244,7 +244,6 @@ class AbstractCommunicationEventType(models.Model):
             settings, 'OSCAR_STATIC_BASE_URL', None)
 
         messages = {}
-        ctx = {}
         for name, template in templates.items():
             messages[name] = template.render(ctx) if template else ''
 
