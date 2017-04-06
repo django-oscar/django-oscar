@@ -18,7 +18,7 @@ from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import redirect_to_referrer, safe_referrer
 
-Applicator = get_class('offer.utils', 'Applicator')
+Applicator = get_class('offer.applicator', 'Applicator')
 (BasketLineForm, AddToBasketForm, BasketVoucherForm, SavedLineForm) = get_classes(
     'basket.forms', ('BasketLineForm', 'AddToBasketForm',
                      'BasketVoucherForm', 'SavedLineForm'))

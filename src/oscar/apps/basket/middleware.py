@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from oscar.core.compat import MiddlewareMixin, user_is_authenticated
 from oscar.core.loading import get_class, get_model
 
-Applicator = get_class('offer.utils', 'Applicator')
+Applicator = get_class('offer.applicator', 'Applicator')
 Basket = get_model('basket', 'basket')
 Selector = get_class('partner.strategy', 'Selector')
 
