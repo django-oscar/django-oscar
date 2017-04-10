@@ -131,6 +131,8 @@ Extensions
 
 The following extensions are stable and ready for use:
 
+* django-oscar-api_ - RESTful JSON API for django-oscar
+
 * django-oscar-adyen_ - Integration with the Adyen payment gateway
 
 * django-oscar-datacash_ - Integration with the DataCash_ payment gateway
@@ -151,6 +153,7 @@ The following extensions are stable and ready for use:
 
 * django-oscar-sagepay-direct_ - Integration with "DIRECT" part of Sagepay's API
 
+.. _django-oscar-api: https://github.com/django-oscar/django-oscar-api
 .. _django-oscar-adyen: https://github.com/django-oscar/django-oscar-adyen
 .. _django-oscar-datacash: https://github.com/django-oscar/django-oscar-datacash
 .. _django-oscar-paymentexpress: https://github.com/django-oscar/django-oscar-paymentexpress
