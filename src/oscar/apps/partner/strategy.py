@@ -266,7 +266,7 @@ class FixedRateTax(object):
     exponent = D('0.01')  # Default to two decimal places
 
     def pricing_policy(self, product, stockrecord):
-        if not stockrecord:
+        if not stockrecord or stockrecord.price_excl_tax is None:
             return UnavailablePrice()
         rate = self.get_rate(product, stockrecord)
         exponent = self.get_exponent(stockrecord)
@@ -319,7 +319,7 @@ class DeferredTax(object):
     """
 
     def pricing_policy(self, product, stockrecord):
-        if not stockrecord:
+        if not stockrecord or stockrecord.price_excl_tax is None:
             return UnavailablePrice()
         return FixedPrice(
             currency=stockrecord.price_currency,
