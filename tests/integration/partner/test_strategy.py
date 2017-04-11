@@ -7,7 +7,17 @@ from oscar.test import factories
 from oscar.apps.basket.models import Line
 
 
-class TestDefaultStrategy(TestCase):
+class ProductWithEmptyPriceTestMixin(object):
+
+    def test_product_with_empty_price(self):
+        product_class = factories.ProductClassFactory(track_stock=False)
+        product = factories.ProductFactory(product_class=product_class, stockrecords=[])
+        factories.StockRecordFactory(price_excl_tax=None, product=product)
+        info = self.strategy.fetch_for_product(product)
+        self.assertFalse(info.availability.is_available_to_buy)
+
+
+class TestDefaultStrategy(ProductWithEmptyPriceTestMixin, TestCase):
 
     def setUp(self):
         self.strategy = strategy.Default()
@@ -114,3 +124,15 @@ class TestDefaultStrategyForParentProductWithOutOfStockVariant(TestCase):
 
     def test_specifies_product_has_correct_price(self):
         self.assertEqual(D('10.00'), self.info.price.incl_tax)
+
+
+class TestFixedRateTax(ProductWithEmptyPriceTestMixin, TestCase):
+
+    def setUp(self):
+        self.strategy = strategy.UK()
+
+
+class TestDeferredTax(ProductWithEmptyPriceTestMixin, TestCase):
+
+    def setUp(self):
+        self.strategy = strategy.US()
