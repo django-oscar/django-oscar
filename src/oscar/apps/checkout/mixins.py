@@ -219,10 +219,9 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         for event in self._payment_events:
             event.order = order
             event.save()
-        # We assume all lines are involved in the initial payment event
-        for line in order.lines.all():
-            PaymentEventQuantity.objects.create(
-                event=event, line=line, quantity=line.quantity)
+            for line in order.lines.all():
+                PaymentEventQuantity.objects.create(
+                    event=event, line=line, quantity=line.quantity)
 
     def save_payment_sources(self, order):
         """

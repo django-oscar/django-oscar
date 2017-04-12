@@ -124,6 +124,39 @@ class TestOrderPlacementMixin(TestCase):
         order2 = Order.objects.get(number='12346')
         self.assertEqual(order2.site, site2)
 
+    def test_multiple_payment_events(self):
+        basket = factories.create_basket(empty=True)
+        user = factories.UserFactory()
+        add_product(basket, D('100.00'))
+        order_placement = OrderPlacementMixin()
+        order_placement.add_payment_event('Gift Card Payment', D('10'))
+        order_placement.add_payment_event('Credit Card Payment', D('90'))
+        shipping_method = Free()
+        shipping_charge = shipping_method.calculate(basket)
+        order_total = OrderTotalCalculator().calculate(basket, shipping_charge)
+
+        billing_address = factories.BillingAddressFactory()
+        shipping_address = factories.ShippingAddressFactory()
+        order_submission_data = {'user': user,
+                                 'order_number': '12345',
+                                 'basket': basket,
+                                 'shipping_method': shipping_method,
+                                 'shipping_charge': shipping_charge,
+                                 'order_total': order_total,
+                                 'billing_address': billing_address,
+                                 'shipping_address': shipping_address}
+        order_placement.place_order(**order_submission_data)
+        order1 = Order.objects.get(number='12345')
+        self.assertEquals(order1.payment_events.count(), 2)
+        event1 = order1.payment_events.all()[0]
+        event2 = order1.payment_events.all()[1]
+        self.assertEquals(event1.event_type.name, 'Credit Card Payment')
+        self.assertEquals(event1.amount, D('90'))
+        self.assertEquals(event1.lines.count(), 1)
+        self.assertEquals(event2.event_type.name, 'Gift Card Payment')
+        self.assertEquals(event2.amount, D('10'))
+        self.assertEquals(event2.lines.count(), 1)
+
 
 class TestCheckoutSessionMixin(TestCase):
 
