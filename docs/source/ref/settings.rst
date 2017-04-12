@@ -363,10 +363,19 @@ This will be used by the currency templatetag.
 
 Default: ``None``
 
-This can be used to customise currency formatting. The value will be passed to
-the ``format_currency`` function from the `Babel library`_.
+Dictionary with arguments for the ``format_currency`` function from the `Babel library`_.
+Contains next options: `format`, `format_type`, `currency_digits`.
+For example::
 
-.. _`Babel library`: http://babel.pocoo.org/docs/api/numbers/#babel.numbers.format_currency
+    OSCAR_CURRENCY_FORMAT = {
+        'USD': {
+            'currency_digits': False,
+            'currency_digits': "accounting",
+        },
+        'EUR': { .. }
+    }
+
+.. _`Babel library`: http://babel.pocoo.org/en/latest/api/numbers.html#babel.numbers.format_currency
 
 Upload/media settings
 =====================

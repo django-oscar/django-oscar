@@ -73,17 +73,15 @@ Backwards incompatible changes in Oscar 1.5
   - ``OrderedProductFormSet`` moved to ``oscar.apps.dashboard.promotions.formsets``;
   - ``LineFormset`` moved to ``oscar.apps.wishlists.formsets``.
 
-.. _incompatible_in_1.5:
-
-Backwards incompatible changes in Oscar 1.5
--------------------------------------------
-
-- `SimpleAddToBasketForm` doesn't override the quantity field any
+- ``SimpleAddToBasketForm`` doesn't override the quantity field any
   more. Instead, it just hides the field declared by AddToBasketForm
-  and sets the quantity to one. This means `SimpleAddToBasketForm`
+  and sets the quantity to one. This means ``SimpleAddToBasketForm``
   doesn't need to be overridden for most cases, but please check
   things still work as expected for you if you have customized it.
 
+- ``OSCAR_CURRENCY_FORMAT`` setting changed to dictionary form in order to support multi-currency for
+  currency formatting. You can set `format`, `format_type` and `currency_digits` in it.
+  Please refer to documentation for an example.
 
 Dependency changes
 ------------------
