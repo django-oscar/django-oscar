@@ -494,3 +494,16 @@ Misc settings
 Default: ``['oscar_recently_viewed_products',]``
 
 Which cookies to delete automatically when the user logs out.
+
+``OSCAR_GOOGLE_ANALYTICS_ID``
+-----------------------------
+
+Tracking ID for Google Analytics tracking code, available as `google_analytics_id` in the template
+context. If setting is set, enables Universal Analytics tracking code for page views and
+transactions.
+
+
+``OSCAR_USE_LESS``
+------------------
+
+Allows to use raw LESS styles directly. Refer to :ref:`less-css` document for more details.
