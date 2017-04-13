@@ -32,6 +32,8 @@ recommended:
 * :doc:`Dynamic class loading</topics/class_loading_explained>`
 * :doc:`fork_app`
 
+.. _fork-oscar-app:
+
 Fork the Oscar app
 ==================
 
