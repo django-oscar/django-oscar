@@ -11,7 +11,8 @@ TEMPLATE_DEBUG = True
 SQL_DEBUG = True
 
 ALLOWED_HOSTS = ['latest.oscarcommerce.com',
-                 'master.oscarcommerce.com']
+                 'master.oscarcommerce.com',
+                 'localhost']
 
 # This is needed for the hosted version of the sandbox
 ADMINS = (
@@ -142,12 +143,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     # Allow languages to be selected
     'django.middleware.locale.LocaleMiddleware',
@@ -301,9 +300,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
     'django_extensions',
-    # Debug toolbar + extensions
-    'debug_toolbar',
-    'template_timings_panel',
     'apps.gateway',     # For allowing dashboard access
     'widget_tweaks',
 ]
@@ -350,7 +346,6 @@ DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.request.RequestPanel',
     'debug_toolbar.panels.sql.SQLPanel',
     'debug_toolbar.panels.staticfiles.StaticFilesPanel',
-    'debug_toolbar.panels.templates.TemplatesPanel',
     'template_timings_panel.panels.TemplateTimings.TemplateTimings',
     'debug_toolbar.panels.cache.CachePanel',
     'debug_toolbar.panels.signals.SignalsPanel',

@@ -1,2 +1,0 @@
-class Free(object):
-    pass
