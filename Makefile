@@ -10,9 +10,6 @@ build_sandbox:
 	-rm -rf sites/sandbox/public/media/cache
 	-rm -rf sites/sandbox/public/static
 	-rm -f sites/sandbox/db.sqlite
-	# Create database
-	# 'syncdb' is identical to migrate in Django 1.7+; but calling it twice should have no effect
-	sites/sandbox/manage.py syncdb --noinput
 	sites/sandbox/manage.py migrate
 	# Import some fixtures. Order is important as JSON fixtures include primary keys
 	sites/sandbox/manage.py loaddata sites/sandbox/fixtures/child_products.json
@@ -21,8 +18,6 @@ build_sandbox:
 	sites/sandbox/manage.py oscar_populate_countries
 	sites/sandbox/manage.py loaddata sites/_fixtures/pages.json sites/_fixtures/auth.json sites/_fixtures/ranges.json sites/_fixtures/offers.json
 	sites/sandbox/manage.py loaddata sites/sandbox/fixtures/orders.json
-	sites/sandbox/manage.py clear_index --noinput
-	sites/sandbox/manage.py update_index catalogue
 
 sandbox: install build_sandbox
 
