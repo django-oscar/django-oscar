@@ -88,5 +88,10 @@ Backwards incompatible changes in Oscar 1.5
 
 - Google Analytics tracking code has been migrated to Universal Analytics.
 
+- ``GOOGLE_ANALYTICS_ID`` and ``USE_LESS`` settings were renamed into ``OSCAR_GOOGLE_ANALYTICS_ID`` and
+  ``OSCAR_USE_LESS`` respectively in order to keep all Oscar settings under common namespace.
+
+- Remove ``display_version`` and ``version`` variables from templates and template context.
+
 Dependency changes
 ------------------

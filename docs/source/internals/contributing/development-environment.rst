@@ -50,7 +50,7 @@ serving CSS files directly, bypassing LESS compilation.
 
 If you want to develop the LESS files, set::
 
-    USE_LESS = True
+    OSCAR_USE_LESS = True
 
 in ``sites/sandbox/settings_local.py``.  This will include the on-the-fly
 ``less`` pre-processor. That will allow you to see changes to the LESS
