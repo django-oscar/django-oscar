@@ -145,18 +145,6 @@ class OrderListView(BulkEditMixin, ListView):
         queryset = sort_queryset(self.base_queryset, self.request,
                                  ['number', 'total_incl_tax'])
 
-        # Look for shortcut query filters
-        if 'order_status' in self.request.GET:
-            self.form = self.form_class()
-            status = self.request.GET['order_status']
-            if status.lower() == 'none':
-                status = None
-            return self.base_queryset.filter(status=status)
-
-        if 'order_number' not in self.request.GET:
-            self.form = self.form_class()
-            return queryset
-
         self.form = self.form_class(self.request.GET)
         if not self.form.is_valid():
             return queryset

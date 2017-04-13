@@ -83,5 +83,8 @@ Backwards incompatible changes in Oscar 1.5
   currency formatting. You can set `format`, `format_type` and `currency_digits` in it.
   Please refer to documentation for an example.
 
+- Dashboard order list doesn't have shortcut filters any more, pass `status` parameter instead of
+  `order_status` for the relevant filtering.
+
 Dependency changes
 ------------------
