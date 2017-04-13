@@ -82,7 +82,6 @@ var oscar = (function(o, $) {
             o.dashboard.initMasks(el);
             o.dashboard.initWYSIWYG(el);
             o.dashboard.initSelects(el);
-            o.dashboard.initSortables(el);
             o.dashboard.initProductImages(el);
         },
         initMasks: function(el) {
@@ -226,24 +225,6 @@ var oscar = (function(o, $) {
                     $(this).button('loading');
             });
         },
-        initSortables: function(el) {
-            var $sortables = $(el).find('.sortable');
-            $sortables.sortable({
-                cursor: "move",
-                update: function(evt, ui) {
-                    o.dashboard.updateSortFields(evt.target);
-                }
-            });
-            $sortables.disableSelection();
-        },
-        updateSortFields: function(sortableParent) {
-            var $sortableParent = $(sortableParent);
-            var fieldName = $sortableParent.data('fieldName') || "display_order";
-            var $sortFields = $sortableParent.find("input[name$="+fieldName+"]");
-            $sortFields.each(function(i){
-                $(this).val(i);
-            });
-        },
         initProductImages: function(el) {
             // convert last 'extra' form into a multi-upload
             // (assumes `extra=1` in django formset)
@@ -281,6 +262,19 @@ var oscar = (function(o, $) {
                 });
             });
             $extraImg.children('div').first().append('<div class="spent-inputs"></div>');
+
+            var group = $('ol.upload-image').sortable({
+                vertical: false,
+                group: 'serialization',
+                handle: '.btn-handle',
+                onDrop: function ($item, container, _super) {
+                    var $sortFields = $("input[name$=-display_order]");
+                    $sortFields.each(function(i, v){
+                        $(this).val(i);
+                    });
+                    _super($item, container);
+                }
+            });
         },
         offers: {
             init: function() {
@@ -433,7 +427,7 @@ var oscar = (function(o, $) {
                             var $totalForms = $parentTab.find("input[name$=TOTAL_FORMS]");
                             var numExisting = parseInt($totalForms.val(), 10);
 
-                            for (i=0; i<evt.target.files.length; i++) {
+                            for (var i=0; i<evt.target.files.length; i++) {
                                 var $newImg = o.dashboard._extraProductImg.clone();
                                 var index = numExisting + i;
 
@@ -487,7 +481,6 @@ var oscar = (function(o, $) {
                             reader.onload = (function() {
                                 return function(e) {
                                     var imgDiv = $("#" + imgId);
-                                    console.log(imgDiv, e.target.result);
                                     imgDiv.children('img').attr('src', e.target.result);
                                 };
                             })();

@@ -1,3 +1,4 @@
+{% load i18n %}
 <li class='sortable-handle'>
     {% for field in form %}
         {% if field.is_hidden %}
@@ -9,6 +10,9 @@
                     <li>{{ error }}</li>
                 </ul>
             {% endfor %}
+            {% if form.instance.id %}
+                <a href="#" class="btn btn-info btn-handle"><i class="icon-move icon-large"></i> {% trans "Re-order" %}</a><br>
+            {% endif %}
         {% else %}
             {{ field.label_tag }}
             {{ field }}
