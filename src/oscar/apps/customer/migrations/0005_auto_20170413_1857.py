@@ -4,10 +4,12 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 
+from oscar.core.compat import get_user_model
+
+User = get_user_model()
+
 
 def forwards_func(apps, schema_editor):
-    User = apps.get_model("auth", "User")
-
     for user in User.objects.all():
         user.emails.update(email=user.email)
 
