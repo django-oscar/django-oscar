@@ -63,6 +63,14 @@ Default: ``'oscar_history'``
 
 The name of the cookie for showing recently viewed products.
 
+``OSCAR_HIDDEN_FEATURES``
+-------------------------
+
+Defaults: ``[]``
+
+Allows to disable particular Oscar feature in application and templates.
+More information in the :doc:`/howto/how_to_disable_an_app_or_feature` document.
+
 Pagination
 ----------
 
