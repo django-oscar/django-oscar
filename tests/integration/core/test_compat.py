@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
+import codecs
+import csv
 import datetime
 from tempfile import NamedTemporaryFile
+
 from django.utils import six
+from django.utils.encoding import smart_text
 from django.utils.six.moves import cStringIO
 
 from django.test import TestCase
@@ -43,6 +47,20 @@ class TestUnicodeCSVWriter(TestCase):
             s = u'ünįcodē'
             rows = [[s, unicodeobj(s), 123, datetime.date.today()], ]
             writer.writerows(rows)
+
+    def test_write_and_read(self):
+        csv_file = cStringIO()
+        writer = UnicodeCSVWriter(open_file=csv_file, encoding="utf-8")
+        s = u'ünįcodē'
+        row = [s, unicodeobj(s), 123, datetime.date.today()]
+        rows = [row, ]
+        writer.writerows(rows)
+        csv_file.seek(0)
+        reader = csv.reader(csv_file, dialect=csv.excel)
+        original_row = [smart_text(c) for c in row]
+        for reader_row in reader:
+            reader_row = [smart_text(c, encoding='utf-8-sig') for c in reader_row]
+            self.assertEquals(reader_row, original_row)
 
 
 class TestPython3Compatibility(TestCase):
