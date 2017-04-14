@@ -23,10 +23,12 @@
 {% block headertext %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
-    <div class="table-header">
-        <h2>{{ title }}</h2>
-    </div>
-    <div class="well">
-        {% include 'dashboard/partials/form.html' with includes_files=1 class='wysiwyg' %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2>{{ title }}</h2>
+        </div>
+        <div class="panel-body">
+            {% include 'dashboard/partials/form.html' with includes_files=1 class='wysiwyg' %}
+        </div>
     </div>
 {% endblock dashboard_content %}

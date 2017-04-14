@@ -20,18 +20,22 @@
 {% endblock %}
 
 {% block dashboard_content %}
-    <div class="table-header">
-        <h2>{% trans "Delete category" %}</h2>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2>{% trans "Delete category" %}</h2>
+        </div>
+        <div class="panel-body">
+            <form action="." method="post">
+                {% csrf_token %}
+                {{ form }}
+                {% blocktrans with name=object.name %}
+                    <p>Delete category <strong>{{ name }}</strong> - are you sure?</p>
+                {% endblocktrans %}
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-danger" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button>
+                    {% trans "or" %} <a href="{% if parent %}{% url 'dashboard:catalogue-category-detail-list' pk=parent.pk %}{% else %}{% url 'dashboard:catalogue-category-list' %}{% endif %}">{% trans "cancel" %}</a>
+                </div>
+            </form>
+        </div>
     </div>
-    <form action="." method="post" class="well">
-        {% csrf_token %}
-        {{ form }}
-        {% blocktrans with name=object.name %}
-            <p>Delete category <strong>{{ name }}</strong> - are you sure?</p>
-        {% endblocktrans %}
-        <div class="form-actions">
-            <button type="submit" class="btn btn-danger" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button>
-        {% trans "or" %} <a href="{% if parent %}{% url 'dashboard:catalogue-category-detail-list' pk=parent.pk %}{% else %}{% url 'dashboard:catalogue-category-list' %}{% endif %}">{% trans "cancel" %}</a>
-    </div>
-</form>
 {% endblock %}
