@@ -582,13 +582,6 @@ class AbstractLine(models.Model):
     set_status.alters_data = True
 
     @property
-    def category(self):
-        """
-        Used by Google analytics tracking
-        """
-        return None
-
-    @property
     def description(self):
         """
         Returns a description of this line including details of any
