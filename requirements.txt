@@ -9,7 +9,7 @@ psycopg2==2.7.1
 # Sandbox
 Pillow==4.1.0
 Whoosh==2.7.4
-django-environ==0.4.1
+django-environ==0.4.2
 django-redis==4.7.0
 pysolr==3.6.0
 redis==2.10.5
