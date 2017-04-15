@@ -197,8 +197,8 @@ you will also need to include Django's i18n URLs:
 
 Search backend
 ==============
-If you're happy with basic search for now, you can just use Haystack's simple
-backend:
+If you're happy with basic search for now, you can just add Haystack's simple
+backend to the ``HAYSTACK_CONNECTIONS`` option in your Django settings:
 
 .. code-block:: django
 
