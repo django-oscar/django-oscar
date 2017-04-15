@@ -132,7 +132,7 @@
                         <td><a href="{% url 'dashboard:order-detail' number=order.number %}">{{ order.number }}</a></td>
                         <td>{{ order.total_incl_tax|currency:order.currency }}</td>
                         <td>{{ order.num_items }}</td>
-                        <td>{{ order.status|default:"-" }}</td>
+                        <td>{{ order.status_verbose_name|default:"-" }}</td>
                         <td>
                             {% if order.guest_email %}
                                 {{ order.guest_email }}

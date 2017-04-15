@@ -241,6 +241,26 @@ Default: ``{}``
 
 Same as ``OSCAR_ORDER_STATUS_PIPELINE`` but for lines.
 
+``OSCAR_ORDER_STATUS_VERBOSE_NAMES``
+------------------------------------
+
+Default: ``{}``
+
+This settings defines dictinary with status names to translatable verbose names of statuses.
+
+For example::
+
+    OSCAR_ORDER_STATUS_VERBOSE_NAMES = {
+        'Pending': _('Pending'),
+    }
+
+``OSCAR_LINE_STATUS_VERBOSE_NAMES``
+------------------------------------
+
+Default: ``{}``
+
+Same as ``OSCAR_ORDER_STATUS_VERBOSE_NAMES`` but for lines.
+
 Checkout settings
 =================
 
