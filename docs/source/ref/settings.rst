@@ -94,7 +94,9 @@ all default to 20.
 
 A dictionary that specifies the facets to use with the search backend.  It
 needs to be a dict with keys ``fields`` and ``queries`` for field- and
-query-type facets.  The default is::
+query-type facets. Field-type facets can get an 'options' element with parameters like facet
+sorting, filtering, etc.
+The default is::
 
     OSCAR_SEARCH_FACETS = {
         'fields': OrderedDict([
