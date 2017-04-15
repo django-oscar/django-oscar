@@ -15,7 +15,7 @@ class PermissionFactory(factory.DjangoModelFactory):
 
 
 class SiteFactory(factory.DjangoModelFactory):
-    domain = factory.Sequence(lambda n: 'example%d.com' % n)
+    domain = factory.Sequence(lambda n: 'site-%d.oscarcommerce.com' % n)
 
     class Meta:
         model = sites_models.Site
