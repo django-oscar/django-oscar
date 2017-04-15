@@ -195,8 +195,8 @@ you will also need to include Django's i18n URLs:
         url(r'', include(application.urls)),
     ]
 
-Search backend
-==============
+Django Settings: Search backend
+===============================
 If you're happy with basic search for now, you can just use Haystack's simple
 backend:
 
