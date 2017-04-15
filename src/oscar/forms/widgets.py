@@ -304,6 +304,7 @@ class RemoteSelect(forms.Widget):
     """
     is_multiple = False
     lookup_url = None
+    template_name = None
 
     def __init__(self, *args, **kwargs):
         if 'lookup_url' in kwargs:
