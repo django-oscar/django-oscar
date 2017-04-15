@@ -153,7 +153,7 @@ class AbstractConditionalOffer(models.Model):
     class Meta:
         abstract = True
         app_label = 'offer'
-        ordering = ['-priority']
+        ordering = ['-priority', 'pk']
         verbose_name = _("Conditional offer")
         verbose_name_plural = _("Conditional offers")
 
