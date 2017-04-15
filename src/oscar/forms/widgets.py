@@ -1,3 +1,4 @@
+import copy
 import re
 
 import django
@@ -325,17 +326,15 @@ class RemoteSelect(forms.Widget):
             return six.text_type(value)
 
     def render(self, name, value, attrs=None, renderer=None):
-        attrs = {} if attrs is None else attrs
-
-        extra_attrs = {
+        attrs = {} if attrs is None else copy.copy(attrs)
+        attrs.update({
             'type': 'hidden',
             'name': name,
             'data-ajax-url': self.lookup_url,
             'data-multiple': 'multiple' if self.is_multiple else '',
             'value': self.format_value(value),
             'data-required': 'required' if self.is_required else '',
-        }
-        attrs = self.build_attrs(attrs, extra_attrs=extra_attrs)
+        })
         return mark_safe(u'<input %s>' % flatatt(attrs))
 
 
