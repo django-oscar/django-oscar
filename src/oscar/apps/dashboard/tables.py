@@ -1,5 +1,16 @@
 from django.utils.translation import ungettext_lazy
-from django_tables2 import Table
+from django_tables2 import Column, Table
+
+from django.utils.text import Truncator
+
+
+class TruncatedColumn(Column):
+    def __init__(self, *args, **kwargs):
+        self.length = kwargs.pop('length')
+        super(TruncatedColumn, self).__init__(*args, **kwargs)
+
+    def render(self, value):
+        return Truncator(value).chars(self.length)
 
 
 class DashboardTable(Table):
@@ -16,4 +27,4 @@ class DashboardTable(Table):
 
     class Meta:
         template = 'dashboard/table.html'
-        attrs = {'class': 'table table-striped table-bordered'}
+        attrs = {'class': 'table table-hover table-responsive'}

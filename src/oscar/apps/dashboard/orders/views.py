@@ -12,6 +12,7 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView, FormView, ListView, UpdateView
+from django_tables2 import SingleTableView
 
 from oscar.apps.order import exceptions as order_exceptions
 from oscar.apps.payment.exceptions import PaymentError
@@ -31,6 +32,7 @@ Line = get_model('order', 'Line')
 ShippingEventType = get_model('order', 'ShippingEventType')
 PaymentEventType = get_model('order', 'PaymentEventType')
 EventHandler = get_class('order.processing', 'EventHandler')
+OrderTable = get_class('dashboard.orders.tables', 'OrderTable')
 OrderStatsForm = get_class('dashboard.orders.forms', 'OrderStatsForm')
 OrderSearchForm = get_class('dashboard.orders.forms', 'OrderSearchForm')
 OrderNoteForm = get_class('dashboard.orders.forms', 'OrderNoteForm')
@@ -51,6 +53,7 @@ def queryset_orders_for_user(user):
         'shipping_address', 'shipping_address__country',
         'user'
     ).prefetch_related('lines')
+    return queryset
     if user.is_staff:
         return queryset
     else:
@@ -106,13 +109,15 @@ class OrderStatsView(FormView):
         return stats
 
 
-class OrderListView(BulkEditMixin, ListView):
+class OrderListView(BulkEditMixin, SingleTableView):
     """
     Dashboard view for a list of orders.
     Supports the permission-based dashboard.
     """
     model = Order
     context_object_name = 'orders'
+    context_table_name = 'orders_table'
+    table_class = OrderTable
     template_name = 'dashboard/orders/order_list.html'
     form_class = OrderSearchForm
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
@@ -120,8 +125,7 @@ class OrderListView(BulkEditMixin, ListView):
 
     def dispatch(self, request, *args, **kwargs):
         # base_queryset is equal to all orders the user is allowed to access
-        self.base_queryset = queryset_orders_for_user(
-            request.user).order_by('-date_placed')
+        self.base_queryset = queryset_orders_for_user(request.user)
         return super(OrderListView, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -134,16 +138,14 @@ class OrderListView(BulkEditMixin, ListView):
             except Order.DoesNotExist:
                 pass
             else:
-                return redirect(
-                    'dashboard:order-detail', number=order.number)
+                return redirect('dashboard:order-detail', number=order.number)
         return super(OrderListView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):  # noqa (too complex (19))
         """
         Build the queryset for this list.
         """
-        queryset = sort_queryset(self.base_queryset, self.request,
-                                 ['number', 'total_incl_tax'])
+        queryset = self.base_queryset
 
         self.form = self.form_class(self.request.GET)
         if not self.form.is_valid():

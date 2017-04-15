@@ -3,16 +3,6 @@
 {% load i18n %}
 
 {% block table.thead %}
-<caption>
-    {% block table.caption %}
-        <h3 class="pull-left">
-            {% if table.icon %}
-              <i class="icon-{{ table.icon }} icon-large"></i>
-            {% endif %}
-            {{ table.get_caption_display }}
-        </h3>
-    {% endblock %}
-</caption>
 <thead>
     <tr>
     {% for column in table.columns %}
