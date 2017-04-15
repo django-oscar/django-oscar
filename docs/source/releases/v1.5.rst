@@ -86,5 +86,12 @@ Backwards incompatible changes in Oscar 1.5
 - Dashboard order list doesn't have shortcut filters any more, pass `status` parameter instead of
   `order_status` for the relevant filtering.
 
+- Google Analytics tracking code has been migrated to Universal Analytics.
+
+- ``GOOGLE_ANALYTICS_ID`` and ``USE_LESS`` settings were renamed into ``OSCAR_GOOGLE_ANALYTICS_ID`` and
+  ``OSCAR_USE_LESS`` respectively in order to keep all Oscar settings under common namespace.
+
+- Remove ``display_version`` and ``version`` variables from templates and template context.
+
 Dependency changes
 ------------------

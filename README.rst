@@ -188,6 +188,17 @@ Let us know if you're writing a new one!
 .. _oscar-sagepay: https://github.com/udox/oscar-sagepay
 .. _django-oscar-sofortueberweisung: https://github.com/byteyard/django-oscar-sofortueberweisung
 
+Videos
+------
+
+Videos with talks about Oscar:
+
+* video1_ - "An introduction to Django-oscar" by `David Winterbottom`_, DjangoCon Europe 2014
+* video2_ - "Oscar and the art of transactional Django applications" by `David Winterbottom`_, PyCon PL 2014
+
+.. _video1: https://youtu.be/o4ol6EzGDSw
+.. _video2: https://youtu.be/datKUNTKYz8
+
 License
 -------
 

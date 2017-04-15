@@ -34,15 +34,17 @@ On the other hand, ``dashboard.less`` just contains a few customisations that
 are included alongside a copy of stock Bootstrap CSS - and at the time of
 writing, using a different Bootstrap version.
 
+.. _less-css:
+
 LESS/CSS
 --------
 
 By default, CSS files compiled from their LESS sources are used rather than the
-LESS ones.  To use Less directly, set ``USE_LESS = True`` in your settings file.
-This will enable the on-the-fly pre-processor which lets you trial changes with
+LESS ones.  To use Less directly, set ``OSCAR_USE_LESS = True`` in your settings file.
+This will enable browser LESS pre-processor which lets you trial changes with
 a page reload. If you want to commit your changes, use the ``make css`` Makefile
-command, making sure you have the ``lessc`` binary available on your command line.
-A few other CSS files are used to provide styles for javascript libraries.
+command, which uses `Gulp` for compiling into CSS. A few other CSS files are
+used to provide styles for javascript libraries.
 
 Javascript
 ----------
