@@ -28,6 +28,9 @@ __pycache__
 *.pdf
 TODO
 
+# Generated content
+src/oscar/static/oscar/dashboard/dist/
+
 # Test files
 .coverage
 .coverage\.*
