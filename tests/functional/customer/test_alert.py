@@ -1,7 +1,9 @@
 from django_webtest import WebTest
 from django.core.urlresolvers import reverse
 from django.core import mail
+from django.test import TestCase
 
+from oscar.apps.customer.alerts.utils import send_product_alerts
 from oscar.apps.customer.models import ProductAlert
 from oscar.test.factories import create_product, create_stockrecord
 from oscar.test.factories import UserFactory
@@ -78,3 +80,56 @@ class TestAnAnonymousUser(WebTest):
         alert = alerts[0]
         self.assertEqual(ProductAlert.UNCONFIRMED, alert.status)
         self.assertEqual(alert.product, product)
+
+
+class TestHurryMode(TestCase):
+
+    def setUp(self):
+        self.user = UserFactory()
+        self.product = create_product()
+
+    def test_hurry_mode_not_set_when_stock_high(self):
+        # One alert, 5 items in stock. No need to hurry.
+        create_stockrecord(self.product, num_in_stock=5)
+        ProductAlert.objects.create(user=self.user, product=self.product)
+
+        send_product_alerts(self.product)
+
+        self.assertEqual(1, len(mail.outbox))
+        self.assertNotIn('Beware that the amount of items in stock is limited',
+            mail.outbox[0].body)
+
+    def test_hurry_mode_set_when_stock_low(self):
+        # Two alerts, 1 item in stock. Hurry mode should be set.
+        create_stockrecord(self.product, num_in_stock=1)
+        ProductAlert.objects.create(user=self.user, product=self.product)
+        ProductAlert.objects.create(user=UserFactory(), product=self.product)
+
+        send_product_alerts(self.product)
+
+        self.assertEqual(2, len(mail.outbox))
+        self.assertIn('Beware that the amount of items in stock is limited',
+            mail.outbox[0].body)
+
+    def test_hurry_mode_not_set_multiple_stockrecords(self):
+        # Two stockrecords, 5 items in stock for one. No need to hurry.
+        create_stockrecord(self.product, num_in_stock=1)
+        create_stockrecord(self.product, num_in_stock=5)
+        ProductAlert.objects.create(user=self.user, product=self.product)
+
+        send_product_alerts(self.product)
+
+        self.assertNotIn('Beware that the amount of items in stock is limited',
+            mail.outbox[0].body)
+
+    def test_hurry_mode_set_multiple_stockrecords(self):
+        # Two stockrecords, low stock on both. Hurry mode should be set.
+        create_stockrecord(self.product, num_in_stock=1)
+        create_stockrecord(self.product, num_in_stock=1)
+        ProductAlert.objects.create(user=self.user, product=self.product)
+        ProductAlert.objects.create(user=UserFactory(), product=self.product)
+
+        send_product_alerts(self.product)
+
+        self.assertIn('Beware that the amount of items in stock is limited',
+            mail.outbox[0].body)
