@@ -42,13 +42,12 @@
 
 {% block content %}
     <form method="get" action="." class="form-horizontal">
-        {# Render other search params in a hidden block #}
-        <div style="display:none">
-            {% for value in selected_facets %}
-                <input name="selected_facets" value="{{ value }}" />
-            {% endfor %}
-            {{ search_form.q }}
-        </div>
+        {# Render other search params as hidden inputs #}
+        {% for value in selected_facets %}
+            <input type="hidden" name="selected_facets" value="{{ value }}" />
+        {% endfor %}
+        <input type="hidden" name="q" value="{{ search_form.q.value }}" />
+
         {% if paginator.count %}
             {% if paginator.num_pages > 1 %}
                 {% blocktrans with start=page.start_index end=page.end_index num_results=paginator.count %}
@@ -58,7 +57,7 @@
                 {% blocktrans count num_results=paginator.count %}
                     Found <strong>{{ num_results }}</strong> result.
                 {% plural %}
-                    Found <strong>{{ num_results }}</strong> results. 
+                    Found <strong>{{ num_results }}</strong> results.
                 {% endblocktrans %}
             {% endif %}
             <div class="pull-right">
