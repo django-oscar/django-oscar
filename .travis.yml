@@ -48,6 +48,8 @@ matrix:
       env: TOXENV=lint
 
 
+sudo: false
+
 env:
   global:
     # $TRANSIFEX_PASSWORD for oscar_bot (used in transifex.sh)
