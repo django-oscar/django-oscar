@@ -1971,7 +1971,7 @@ msgstr "Perfil actualizado"
 
 #: apps/customer/views.py:353 templates/oscar/customer/profile/profile.html:33
 msgid "Delete profile"
-msgstr "Perfil eliminado"
+msgstr "Eliminar perfil"
 
 #: apps/customer/views.py:366
 msgid "Your profile has now been deleted. Thanks for using the site."
