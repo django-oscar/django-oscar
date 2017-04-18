@@ -2,6 +2,8 @@ import warnings
 
 from django.contrib.auth.backends import ModelBackend
 from django.core.exceptions import ImproperlyConfigured
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 
 from oscar.apps.customer.utils import normalise_email
 from oscar.core.compat import get_user_model
@@ -54,6 +56,39 @@ class EmailBackend(ModelBackend):
                 "There are multiple users with the given email address and "
                 "password")
         return None
+
+
+def valid_email(email):
+    try:
+        validate_email(email)
+        return True
+    except ValidationError:
+        return False
+
+
+class EmailOrUsernameModelBackend(object):
+    """
+    Another custom auth backend that uses automatically username or email and password
+
+    """
+    
+    def authenticate(self, username=None, password=None):
+        if valid_email(username):
+            kwargs = {'email': username}
+        else:
+            kwargs = {'username': username}
+        try:
+            user = User.objects.get(**kwargs)
+            if user.check_password(password):
+                return user
+        except User.DoesNotExist:
+            return None
+
+    def get_user(self, user_id):
+        try:
+            return User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return None
 
 
 # Deprecated since Oscar 1.0 because of the spelling.
