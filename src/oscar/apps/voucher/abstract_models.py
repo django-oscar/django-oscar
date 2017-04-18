@@ -54,7 +54,7 @@ class AbstractVoucher(models.Model):
         _("Total discount"), decimal_places=2, max_digits=12,
         default=Decimal('0.00'))
 
-    date_created = models.DateField(auto_now_add=True)
+    date_created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         abstract = True
@@ -174,7 +174,7 @@ class AbstractVoucherApplication(models.Model):
         'order.Order',
         on_delete=models.CASCADE,
         verbose_name=_("Order"))
-    date_created = models.DateField(_("Date Created"), auto_now_add=True)
+    date_created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         abstract = True
