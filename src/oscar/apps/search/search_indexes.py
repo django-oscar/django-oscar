@@ -10,7 +10,7 @@ strategy = Selector().strategy()
 
 class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     # Search text
-    text = indexes.EdgeNgramField(
+    text = indexes.CharField(
         document=True, use_template=True,
         template_name='search/indexes/product/item_text.txt')
 
