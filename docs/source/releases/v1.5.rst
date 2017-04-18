@@ -58,6 +58,10 @@ Minor changes
    addresses tracked separately: billing address in ``UserAddress.num_orders_as_billing_address`` field
    and shipping address in ``UserAddress.num_order_as_shipping_address`` accordingly.
 
+- Fixed logic for determining "hurry mode" on stock alerts. Hurry mode is now
+  set if the number of alerts for a product exceeds the quantity in stock,
+  rather than the other way around.
+
 .. _incompatible_in_1.5:
 
 Backwards incompatible changes in Oscar 1.5

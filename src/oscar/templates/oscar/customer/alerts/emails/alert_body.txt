@@ -2,7 +2,7 @@
 {% blocktrans with title=alert.product.get_title|safe path=alert.product.get_absolute_url %}
 We are happy to inform you that our product '{{ title }}' is back in stock:
 http://{{ site }}{{ path }}
-{% endblocktrans %}{% if hurry %}{% blocktrans with product_url=product_url %}
+{% endblocktrans %}{% if hurry %}{% blocktrans %}
 Beware that the amount of items in stock is limited. Be quick or someone might get there first.
 {% endblocktrans %}{% endif %}{% blocktrans with site_name=site.name %}
 With this email we have disabled your alert automatically and you will not
