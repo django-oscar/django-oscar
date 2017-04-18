@@ -69,6 +69,16 @@ Minor changes
  - Update ``customer.utils.Dispatcher`` to improve the ability to customise
    the implementation (:issue:`2303`)
 
+ - Fixed logic for determining "hurry mode" on stock alerts. Hurry mode is now
+   set if the number of alerts for a product exceeds the quantity in stock,
+   rather than the other way around.
+
+ - ``Voucher.date_created`` and ``VoucherApplication.date_created`` model
+   fields changed from ``DateField`` to ``DateTimeField``. If you use SQLite
+   database, please make sure to backup data before running migrations, since
+   due to limited support of column altering, Django re-creates new SQLite
+   database with new columns and copies into it original data -
+   https://docs.djangoproject.com/en/1.11/topics/migrations/#sqlite
 
 .. _incompatible_in_1.5:
 
