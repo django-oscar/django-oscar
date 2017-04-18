@@ -27,7 +27,7 @@ Oscar 1.4 is compatible with Django 1.8, 1.9, 1.10  and 1.11 as well as Python 2
 
 What's new in Oscar 1.5?
 ------------------------
- - Support for Django 1.11
+ - Support for Django 1.11 (:issue:`2221`)
  - Google Analytics tracking code has been migrated to Universal Analytics.
 
 
