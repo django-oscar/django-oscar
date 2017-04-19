@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
+import codecs
+import csv
 import datetime
+import os
 from tempfile import NamedTemporaryFile
 from django.utils import six
+from django.utils.encoding import smart_text
 from django.utils.six.moves import cStringIO
 
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from oscar.core.compat import UnicodeCSVWriter, existing_user_fields
 
@@ -43,6 +47,63 @@ class TestUnicodeCSVWriter(TestCase):
             s = u'ünįcodē'
             rows = [[s, unicodeobj(s), 123, datetime.date.today()], ]
             writer.writerows(rows)
+
+    def test_csv_write_output(self):
+        tmp_file = NamedTemporaryFile(delete=False)
+        with UnicodeCSVWriter(filename=tmp_file.name) as writer:
+            s = u'ünįcodē'
+            row = [s, 123, 'foo-bar']
+            writer.writerows([row])
+
+        with open(tmp_file.name, 'r') as read_file:
+            content = smart_text(read_file.read(), encoding='utf-8').strip()
+            self.assertEqual(content, u'ünįcodē,123,foo-bar')
+
+        # Clean up
+        os.unlink(tmp_file.name)
+
+    @override_settings(OSCAR_CSV_INCLUDE_BOM=True)
+    def test_bom_write_with_open_file(self):
+        csv_file = NamedTemporaryFile(delete=False)
+        with open(csv_file.name, 'w') as open_file:
+            writer = UnicodeCSVWriter(open_file=open_file, encoding="utf-8")
+            s = u'ünįcodē'
+            row = [s, 123, datetime.date.today()]
+            writer.writerows([row])
+
+        with open(csv_file.name, 'rb') as read_file:
+            self.assertTrue(read_file.read().startswith(codecs.BOM_UTF8))
+
+        # Clean up
+        os.unlink(csv_file.name)
+
+    @override_settings(OSCAR_CSV_INCLUDE_BOM=True)
+    def test_bom_write_with_filename(self):
+        csv_file = NamedTemporaryFile(delete=False)
+        with UnicodeCSVWriter(filename=csv_file.name, encoding="utf-8") as writer:
+            s = u'ünįcodē'
+            row = [s, 123, datetime.date.today()]
+            writer.writerows([row])
+
+        with open(csv_file.name, 'rb') as read_file:
+            self.assertTrue(read_file.read().startswith(codecs.BOM_UTF8))
+
+        # Clean up
+        os.unlink(csv_file.name)
+
+    @override_settings(OSCAR_CSV_INCLUDE_BOM=True)
+    def test_bom_not_written_for_other_encodings(self):
+        csv_file = NamedTemporaryFile(delete=False)
+        with UnicodeCSVWriter(filename=csv_file.name, encoding="ascii") as writer:
+            s = 'boring ascii'
+            row = [s, 123, datetime.date.today()]
+            writer.writerows([row])
+
+        with open(csv_file.name, 'rb') as read_file:
+            self.assertFalse(read_file.read().startswith(codecs.BOM_UTF8))
+
+        # Clean up
+        os.unlink(csv_file.name)
 
 
 class TestPython3Compatibility(TestCase):

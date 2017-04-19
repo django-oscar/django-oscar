@@ -139,7 +139,7 @@ Default::
                                  ('right', 'Right-hand sidebar'),
                                  ('left', 'Left-hand sidebar'))
 
-The choice of display locations available when editing a promotion. Only 
+The choice of display locations available when editing a promotion. Only
 useful when using a new set of templates.
 
 ``OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES``
@@ -203,7 +203,7 @@ Default: ``{}``
 The pipeline defines the statuses that an order or line item can have and what
 transitions are allowed in any given status. The pipeline is defined as a
 dictionary where the keys are the available statuses. Allowed transitions are
-defined as iterable values for the corresponding status. 
+defined as iterable values for the corresponding status.
 
 A sample pipeline (as used in the Oscar sandbox) might look like this::
 
@@ -444,7 +444,7 @@ Slug settings
 Default: ``{}``
 
 A dictionary to map strings to more readable versions for including in URL
-slugs.  This mapping is appled before the slugify function.  
+slugs.  This mapping is appled before the slugify function.
 This is useful when names contain characters which would normally be
 stripped.  For instance::
 
@@ -517,3 +517,13 @@ transactions.
 ------------------
 
 Allows to use raw LESS styles directly. Refer to :ref:`less-css` document for more details.
+
+
+``OSCAR_CSV_INCLUDE_BOM``
+-------------------------
+
+Default: ``False``
+
+A flag to control whether Oscar's CSV writer should prepend a byte order mark
+(BOM) to CSV files that are encoded in UTF-8. Useful for compatibility with some
+CSV readers, Microsoft Excel in particular.
