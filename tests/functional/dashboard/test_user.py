@@ -124,21 +124,21 @@ class SearchTests(WebTestCase):
 
     def test_user_name_2_parts(self):
         data = self._search_by_user_name('Owen Davies')
-        self.assertEquals(len(data), 1)
-        self.assertEquals(data[0].email, 'owen@example.org')
-        self.assertEquals(data[0].first_name, 'Owen')
-        self.assertEquals(data[0].last_name, 'Davies')
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0].email, 'owen@example.org')
+        self.assertEqual(data[0].first_name, 'Owen')
+        self.assertEqual(data[0].last_name, 'Davies')
 
     def test_user_name_3_parts(self):
         data = self._search_by_user_name('Rob Alan Lewis')
-        self.assertEquals(len(data), 1)
-        self.assertEquals(data[0].email, 'robalan@example.org')
-        self.assertEquals(data[0].first_name, 'Rob Alan')
-        self.assertEquals(data[0].last_name, 'Lewis')
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0].email, 'robalan@example.org')
+        self.assertEqual(data[0].first_name, 'Rob Alan')
+        self.assertEqual(data[0].last_name, 'Lewis')
 
     def test_user_name_4_parts(self):
         data = self._search_by_user_name('Lars van der Berg')
-        self.assertEquals(len(data), 1)
-        self.assertEquals(data[0].email, 'lars@example.org')
-        self.assertEquals(data[0].first_name, 'Lars')
-        self.assertEquals(data[0].last_name, 'van der Berg')
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0].email, 'lars@example.org')
+        self.assertEqual(data[0].first_name, 'Lars')
+        self.assertEqual(data[0].last_name, 'van der Berg')

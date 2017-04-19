@@ -147,15 +147,15 @@ class TestOrderPlacementMixin(TestCase):
                                  'shipping_address': shipping_address}
         order_placement.place_order(**order_submission_data)
         order1 = Order.objects.get(number='12345')
-        self.assertEquals(order1.payment_events.count(), 2)
+        self.assertEqual(order1.payment_events.count(), 2)
         event1 = order1.payment_events.all()[0]
         event2 = order1.payment_events.all()[1]
-        self.assertEquals(event1.event_type.name, 'Credit Card Payment')
-        self.assertEquals(event1.amount, D('90'))
-        self.assertEquals(event1.lines.count(), 1)
-        self.assertEquals(event2.event_type.name, 'Gift Card Payment')
-        self.assertEquals(event2.amount, D('10'))
-        self.assertEquals(event2.lines.count(), 1)
+        self.assertEqual(event1.event_type.name, 'Credit Card Payment')
+        self.assertEqual(event1.amount, D('90'))
+        self.assertEqual(event1.lines.count(), 1)
+        self.assertEqual(event2.event_type.name, 'Gift Card Payment')
+        self.assertEqual(event2.amount, D('10'))
+        self.assertEqual(event2.lines.count(), 1)
 
 
 class TestCheckoutSessionMixin(TestCase):
@@ -167,8 +167,8 @@ class TestCheckoutSessionMixin(TestCase):
 
     def add_product_to_basket(self, product, quantity=1):
         self.request.basket.add_product(product, quantity=quantity)
-        self.assertEquals(len(self.request.basket.all_lines()), 1)
-        self.assertEquals(self.request.basket.all_lines()[0].product, product)
+        self.assertEqual(len(self.request.basket.all_lines()), 1)
+        self.assertEqual(self.request.basket.all_lines()[0].product, product)
 
     def test_check_basket_is_valid_no_stock_available(self):
         self.add_product_to_basket(self.product)

@@ -29,7 +29,7 @@ class TestDispatcher(TestCase):
         dispatcher = Dispatcher()
         dispatcher.dispatch_order_messages(order, messages, et)
 
-        self.assertEquals(CommunicationEvent.objects.filter(order=order, event_type=et).count(), 1)
+        self.assertEqual(CommunicationEvent.objects.filter(order=order, event_type=et).count(), 1)
 
         self.assertEqual(len(mail.outbox), 1)
 
@@ -46,11 +46,11 @@ class TestDispatcher(TestCase):
             code=event_code, context=ctx)
         Dispatcher().dispatch_user_messages(user, msgs)
         self.assertEqual(len(mail.outbox), 1)
-        self.assertEquals(mail.outbox[0].subject, subject)
-        self.assertEquals(Email.objects.count(), 1)
+        self.assertEqual(mail.outbox[0].subject, subject)
+        self.assertEqual(Email.objects.count(), 1)
         email = Email.objects.last()
-        self.assertEquals(email.user.id, user.id)
-        self.assertEquals(email.email, 'testuser@example.com')
+        self.assertEqual(email.user.id, user.id)
+        self.assertEqual(email.email, 'testuser@example.com')
 
     def test_dispatch_order_messages(self):
         email = 'testuser@example.com'
