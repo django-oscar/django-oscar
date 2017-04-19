@@ -1,3 +1,4 @@
+import codecs
 import csv
 import sys
 
@@ -173,6 +174,9 @@ class UnicodeCSVWriter:
         self.kw = kw
         self.writer = None
 
+        if self.f:
+            self.add_bom(self.f)
+
     def __enter__(self):
         assert self.filename is not None
         if PY3:
@@ -180,12 +184,21 @@ class UnicodeCSVWriter:
                           encoding=self.encoding, newline='')
         else:
             self.f = open(self.filename, 'wb')
+
+        self.add_bom(self.f)
         return self
 
     def __exit__(self, type, value, traceback):
         assert self.filename is not None
         if self.filename is not None:
             self.f.close()
+
+    def add_bom(self, f):
+        # If encoding is UTF-8, insert a Byte Order Mark at the start of the
+        # file for compatibility with MS Excel.
+        if (self.encoding == 'utf-8'
+                        and getattr(settings, 'OSCAR_CSV_INCLUDE_BOM', False)):
+            self.f.write(u'\ufeff' if PY3 else codecs.BOM_UTF8)
 
     def writerow(self, row):
         if self.writer is None:
