@@ -117,7 +117,7 @@ class AbstractEmail(models.Model):
         related_name='emails',
         verbose_name=_("User"),
         null=True)
-    email = models.EmailField(_('Email Address'))
+    email = models.EmailField(_('Email Address'), null=True, blank=True)
     subject = models.TextField(_('Subject'), max_length=255)
     body_text = models.TextField(_("Body Text"))
     body_html = models.TextField(_("Body HTML"), blank=True)
