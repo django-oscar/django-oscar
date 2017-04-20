@@ -163,6 +163,10 @@ class TestProductClass(ProductWebTest):
                 option_group = factories.AttributeOptionGroupFactory()
                 self.option = factories.AttributeOptionFactory(group=option_group)
                 values['option_group'] = option_group
+            elif attribute_type == ProductAttribute.MULTI_OPTION:
+                option_group = factories.AttributeOptionGroupFactory()
+                self.multi_option = factories.AttributeOptionFactory(group=option_group)
+                values['option_group'] = option_group
             ProductAttributeFactory(**values)
         self.product = factories.ProductFactory(product_class=self.pclass)
         self.url = reverse('dashboard:catalogue-product',
