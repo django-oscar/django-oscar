@@ -241,12 +241,8 @@ var oscar = (function(o, $) {
 
             toggleOptionGroup: function(type_select){
                 var option_group_select = $('#' + type_select.attr('id').replace('type', 'option_group'));
-
-                if(type_select.val() === 'option'){
-                    option_group_select.select2('container').show();
-                }else{
-                    option_group_select.select2('container').hide();
-                }
+                var v = type_select.val();
+                option_group_select.select2('container').toggle(v === 'option' || v == 'multi_option');
             }
         },
         ranges: {
