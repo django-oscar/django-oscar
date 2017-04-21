@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
                 ('key', models.CharField(max_length=6, unique=True, db_index=True, verbose_name='Key', editable=False)),
                 ('visibility', models.CharField(default='Private', max_length=20, verbose_name='Visibility', choices=[('Private', 'Private - Only the owner can see the wish list'), ('Shared', 'Shared - Only the owner and people with access to the obfuscated link can see the wish list'), ('Public', 'Public - Everybody can see the wish list')])),
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date created')),
-                ('owner', models.ForeignKey(verbose_name='Owner', related_name='wishlists', to=settings.AUTH_USER_MODEL)),
+                ('owner', models.ForeignKey(verbose_name='Owner', related_name='wishlists', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ('owner', 'date_created'),
@@ -48,7 +48,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='line',
             name='wishlist',
-            field=models.ForeignKey(verbose_name='Wish List', related_name='lines', to='wishlists.WishList'),
+            field=models.ForeignKey(verbose_name='Wish List', related_name='lines', to='wishlists.WishList', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AlterUniqueTogether(

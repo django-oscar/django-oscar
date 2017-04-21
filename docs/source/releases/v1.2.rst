@@ -43,29 +43,22 @@ What's new in Oscar 1.2?
 
 Minor changes
 ~~~~~~~~~~~~~
- - Fix missing page_url field in the promotions form (`#1816`_)
+ - Fix missing page_url field in the promotions form (:issue:`1816`)
  - The order of basket, order and wishlist lines in now guaranteed
    to be in the order of creation. Previously, this wasn't guaranteed,
    but still almost always the case.
  - `Partner` instances got a default ordering by name.
  - If a child product has no weight, we check if a parent's product weight
-   is set before falling back to the default weight (`#1965`_).
+   is set before falling back to the default weight (:issue:`1965`).
  - `Address.active_address_fields` now uses the saner common name of a country
-   instead of the official name (`#1964`_).
+   instead of the official name (:issue:`1964`).
  - Custom benefits now don't enforce uniqueness on the ``proxy_class``
-   field, making them more useful (`#685`_).
+   field, making them more useful (:issue:`685`).
  - Move logic to create basket messages to it's own utility class
-   `basket.utils.BasketMessageGenerator()`. (`#1930`_)
- - Fix a caching issue in `Product.get_absolute_url()` (`#1925`_)
+   `basket.utils.BasketMessageGenerator()`. (:issue:`1930`)
+ - Fix a caching issue in `Product.get_absolute_url()` (:issue:`1925`)
  - Update the `recently_viewed_products` templatetag to accept a 
-   `current_product` attribute. (`#1948`_)
-
-
-.. _`#685`: https://github.com/django-oscar/django-oscar/issues/685
-.. _`#1816`: https://github.com/django-oscar/django-oscar/issues/1816
-.. _`#1930`: https://github.com/django-oscar/django-oscar/issues/1930
-.. _`#1925`: https://github.com/django-oscar/django-oscar/issues/1925
-.. _`#1948`: https://github.com/django-oscar/django-oscar/issues/1948
+   `current_product` attribute. (:issue:`1948`)
 
 
 .. _incompatible_in_1.2:
@@ -79,7 +72,7 @@ Backwards incompatible changes in Oscar 1.2
   removed, it's not needed any more. Just use ``styles`` instead if you
   happened to use it.
 
-- The `keywords` block is removed from the main template (`#1799`)
+- The `keywords` block is removed from the main template (:issue:`1799`)
 
 - The US and Demo sites were both removed from the repository as they 
   were not up-to-date anymore. These might return in the future as 
@@ -90,9 +83,7 @@ Backwards incompatible changes in Oscar 1.2
   since they were broken and unused.
 
  - A new unique index is added to `catalogue.AbstractAttributeOption` to make 
-   sure that the `group`, `option` combination is unique (`#1935`)
-
-.. _`#1935`: https://github.com/django-oscar/django-oscar/issues/1935
+   sure that the `group`, `option` combination is unique (:issue:`1935`)
 
 
 Dependency changes
@@ -101,6 +92,4 @@ Dependency changes
 * The following packages are updated:
     - `django-treebeard >= 4.0` (Django 1.9 support)
     - `sorl.thumbnail >= 12.4a1` (Django 1.9 support)
-* JQuery UI is no longer included in the dashboard (`#1792`_)
-
-.. _`#1792`: https://github.com/django-oscar/django-oscar/issues/1792
+* JQuery UI is no longer included in the dashboard (:issue:`1792`)

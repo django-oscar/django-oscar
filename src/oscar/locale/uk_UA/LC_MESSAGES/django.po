@@ -3,12 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Володимир Гуменюк <vladimir.gumenyuk@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-13 13:06+0200\n"
-"PO-Revision-Date: 2016-02-28 22:21+0000\n"
+"PO-Revision-Date: 2016-12-30 15:10+0000\n"
 "Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
 "Language-Team: Ukrainian (Ukraine) (http://www.transifex.com/codeinthehole/django-oscar/language/uk_UA/)\n"
 "MIME-Version: 1.0\n"
@@ -19,19 +20,19 @@ msgstr ""
 
 #: apps/address/abstract_models.py:26
 msgid "Mr"
-msgstr ""
+msgstr "Шановний"
 
 #: apps/address/abstract_models.py:27
 msgid "Miss"
-msgstr ""
+msgstr "Шановна"
 
 #: apps/address/abstract_models.py:28
 msgid "Mrs"
-msgstr ""
+msgstr "Шановний"
 
 #: apps/address/abstract_models.py:29
 msgid "Ms"
-msgstr ""
+msgstr "Шановна"
 
 #: apps/address/abstract_models.py:30
 msgid "Dr"
@@ -70,19 +71,19 @@ msgstr ""
 
 #: apps/address/abstract_models.py:231
 msgid "City"
-msgstr ""
+msgstr "Місто"
 
 #: apps/address/abstract_models.py:232
 msgid "State/County"
-msgstr ""
+msgstr "Область"
 
 #: apps/address/abstract_models.py:234
 msgid "Post/Zip-code"
-msgstr ""
+msgstr "Поштовий індекс"
 
 #: apps/address/abstract_models.py:235 apps/address/abstract_models.py:413
 msgid "Country"
-msgstr ""
+msgstr "Країна"
 
 #: apps/address/abstract_models.py:240
 msgid "Search text - used only for searching addresses"
@@ -129,11 +130,11 @@ msgstr ""
 
 #: apps/address/abstract_models.py:398
 msgid "Country name"
-msgstr ""
+msgstr "Назва країни"
 
 #: apps/address/abstract_models.py:401
 msgid "Official name"
-msgstr ""
+msgstr "Офіційна назва країни"
 
 #: apps/address/abstract_models.py:404 apps/catalogue/abstract_models.py:1175
 msgid "Display order"
@@ -153,7 +154,7 @@ msgstr ""
 
 #: apps/address/abstract_models.py:457 models/fields/__init__.py:139
 msgid "Phone number"
-msgstr ""
+msgstr "Телефонний номер"
 
 #: apps/address/abstract_models.py:458
 msgid "In case we need to call you about your order"
@@ -195,7 +196,7 @@ msgstr ""
 #: templates/oscar/dashboard/users/alerts/list.html:45
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:10
 msgid "User"
-msgstr ""
+msgstr "Користувач"
 
 #: apps/address/abstract_models.py:498
 msgid "Default shipping address?"

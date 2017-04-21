@@ -6,7 +6,7 @@ from django.contrib.auth import models as auth_models
 from django.core.urlresolvers import reverse
 from django.core.validators import RegexValidator
 from django.db import models
-from django.template import Context, Template, TemplateDoesNotExist
+from django.template import Context, TemplateDoesNotExist, engines
 from django.template.loader import get_template
 from django.utils import six, timezone
 from django.utils.encoding import python_2_unicode_compatible
@@ -21,7 +21,7 @@ class UserManager(auth_models.BaseUserManager):
 
     def create_user(self, email, password=None, **extra_fields):
         """
-        Creates and saves a User with the given username, email and
+        Creates and saves a User with the given email and
         password.
         """
         now = timezone.now()
@@ -115,7 +115,9 @@ class AbstractEmail(models.Model):
         AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='emails',
-        verbose_name=_("User"))
+        verbose_name=_("User"),
+        null=True)
+    email = models.EmailField(_('Email Address'), null=True, blank=True)
     subject = models.TextField(_('Subject'), max_length=255)
     body_text = models.TextField(_("Body Text"))
     body_html = models.TextField(_("Body HTML"), blank=True)
@@ -128,8 +130,12 @@ class AbstractEmail(models.Model):
         verbose_name_plural = _('Emails')
 
     def __str__(self):
-        return _(u"Email to %(user)s with subject '%(subject)s'") % {
-            'user': self.user.get_username(), 'subject': self.subject}
+        if self.user:
+            return _(u"Email to %(user)s with subject '%(subject)s'") % {
+                'user': self.user.get_username(), 'subject': self.subject}
+        else:
+            return _(u"Anonymous email to %(email)s with subject '%(subject)s'") % {
+                'email': self.email, 'subject': self.subject}
 
 
 @python_2_unicode_compatible
@@ -222,7 +228,7 @@ class AbstractCommunicationEventType(models.Model):
             field = getattr(self, attr_name, None)
             if field is not None:
                 # Template content is in a model field
-                templates[name] = Template(field)
+                templates[name] = engines['django'].from_string(field)
             else:
                 # Model field is empty - look for a file template
                 template_name = getattr(self, "%s_file" % attr_name) % code
@@ -239,7 +245,7 @@ class AbstractCommunicationEventType(models.Model):
 
         messages = {}
         for name, template in templates.items():
-            messages[name] = template.render(Context(ctx)) if template else ''
+            messages[name] = template.render(ctx) if template else ''
 
         # Ensure the email subject doesn't contain any newlines
         messages['subject'] = messages['subject'].replace("\n", "")

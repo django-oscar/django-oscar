@@ -22,7 +22,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import get_language, pgettext_lazy
 from treebeard.mp_tree import MP_Node
 
-from oscar.core.decorators import deprecated
+from oscar.core.compat import user_is_anonymous, user_is_authenticated
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import slugify
 from oscar.core.validators import non_python_keyword
@@ -520,56 +520,6 @@ class AbstractProduct(models.Model):
         pairs = [attribute.summary() for attribute in attributes]
         return ", ".join(pairs)
 
-    # The two properties below are deprecated because determining minimum
-    # price is not as trivial as it sounds considering multiple stockrecords,
-    # currencies, tax, etc.
-    # The current implementation is very naive and only works for a limited
-    # set of use cases.
-    # At the very least, we should pass in the request and
-    # user. Hence, it's best done as an extension to a Strategy class.
-    # Once that is accomplished, these properties should be removed.
-
-    @property
-    @deprecated
-    def min_child_price_incl_tax(self):
-        """
-        Return minimum child product price including tax.
-        """
-        return self._min_child_price('incl_tax')
-
-    @property
-    @deprecated
-    def min_child_price_excl_tax(self):
-        """
-        Return minimum child product price excluding tax.
-
-        This is a very naive approach; see the deprecation notice above. And
-        only use it for display purposes (e.g. "new Oscar shirt, prices
-        starting from $9.50").
-        """
-        return self._min_child_price('excl_tax')
-
-    def _min_child_price(self, prop):
-        """
-        Return minimum child product price.
-
-        This is for visual purposes only. It ignores currencies, most of the
-        Strategy logic for selecting stockrecords, knows nothing about the
-        current user or request, etc. It's only here to ensure
-        backwards-compatibility; the previous implementation wasn't any
-        better.
-        """
-        strategy = Selector().strategy()
-
-        children_stock = strategy.select_children_stockrecords(self)
-        prices = [
-            strategy.pricing_policy(child, stockrecord)
-            for child, stockrecord in children_stock]
-        raw_prices = sorted([getattr(price, prop) for price in prices])
-        return raw_prices[0] if raw_prices else None
-
-    # Wrappers for child products
-
     def get_title(self):
         """
         Return a product's title or it's parent's title if it has no title
@@ -638,7 +588,7 @@ class AbstractProduct(models.Model):
             if self.is_child:
                 # By default, Oscar's dashboard doesn't support child images.
                 # We just serve the parents image instead.
-                return self.parent.primary_image
+                return self.parent.primary_image()
             else:
                 # We return a dict with fields that mirror the key properties of
                 # the ProductImage class so this missing image can be used
@@ -674,7 +624,7 @@ class AbstractProduct(models.Model):
         return rating
 
     def has_review_by(self, user):
-        if user.is_anonymous():
+        if user_is_anonymous(user):
             return False
         return self.reviews.filter(user=user).exists()
 
@@ -688,7 +638,7 @@ class AbstractProduct(models.Model):
         Override this if you want to alter the default behaviour; e.g. enforce
         that a user purchased the product to be allowed to leave a review.
         """
-        if user.is_authenticated() or settings.OSCAR_ALLOW_ANON_REVIEWS:
+        if user_is_authenticated(user) or settings.OSCAR_ALLOW_ANON_REVIEWS:
             return not self.has_review_by(user)
         else:
             return False
@@ -696,6 +646,12 @@ class AbstractProduct(models.Model):
     @cached_property
     def num_approved_reviews(self):
         return self.reviews.approved().count()
+
+    @property
+    def sorted_recommended_products(self):
+        """Keeping order by recommendation ranking."""
+        return [r.recommendation for r in self.primary_recommendations
+                                              .select_related('recommendation').all()]
 
 
 class AbstractProductRecommendation(models.Model):
@@ -758,6 +714,7 @@ class AbstractProductAttribute(models.Model):
     RICHTEXT = "richtext"
     DATE = "date"
     OPTION = "option"
+    MULTI_OPTION = "multi_option"
     ENTITY = "entity"
     FILE = "file"
     IMAGE = "image"
@@ -769,6 +726,7 @@ class AbstractProductAttribute(models.Model):
         (RICHTEXT, _("Rich Text")),
         (DATE, _("Date")),
         (OPTION, _("Option")),
+        (MULTI_OPTION, _("Multi Option")),
         (ENTITY, _("Entity")),
         (FILE, _("File")),
         (IMAGE, _("Image")),
@@ -783,7 +741,7 @@ class AbstractProductAttribute(models.Model):
         null=True,
         on_delete=models.CASCADE,
         verbose_name=_("Option Group"),
-        help_text=_('Select an option group if using type "Option"'))
+        help_text=_('Select an option group if using type "Option" or "Multi Option"'))
     required = models.BooleanField(_('Required'), default=False)
 
     class Meta:
@@ -796,6 +754,10 @@ class AbstractProductAttribute(models.Model):
     @property
     def is_option(self):
         return self.type == self.OPTION
+
+    @property
+    def is_multi_option(self):
+        return self.type == self.MULTI_OPTION
 
     @property
     def is_file(self):
@@ -828,6 +790,20 @@ class AbstractProductAttribute(models.Model):
                 value_obj.delete()
             else:
                 # New uploaded file
+                value_obj.value = value
+                value_obj.save()
+        elif self.is_multi_option:
+            # ManyToMany fields are handled separately
+            if value is None:
+                value_obj.delete()
+                return
+            try:
+                count = value.count()
+            except (AttributeError, TypeError):
+                count = len(value)
+            if count == 0:
+                value_obj.delete()
+            else:
                 value_obj.value = value
                 value_obj.save()
         else:
@@ -873,14 +849,28 @@ class AbstractProductAttribute(models.Model):
         if not isinstance(value, models.Model):
             raise ValidationError(_("Must be a model instance"))
 
-    def _validate_option(self, value):
+    def _validate_multi_option(self, value):
+        try:
+            values = iter(value)
+        except TypeError:
+            raise ValidationError(
+                _("Must be a list or AttributeOption queryset"))
+        # Validate each value as if it were an option
+        # Pass in valid_values so that the DB isn't hit multiple times per iteration
+        valid_values = self.option_group.options.values_list(
+            'option', flat=True)
+        for value in values:
+            self._validate_option(value, valid_values=valid_values)
+
+    def _validate_option(self, value, valid_values=None):
         if not isinstance(value, get_model('catalogue', 'AttributeOption')):
             raise ValidationError(
                 _("Must be an AttributeOption model object instance"))
         if not value.pk:
             raise ValidationError(_("AttributeOption has not been saved yet"))
-        valid_values = self.option_group.options.values_list(
-            'option', flat=True)
+        if valid_values is None:
+            valid_values = self.option_group.options.values_list(
+                'option', flat=True)
         if value.option not in valid_values:
             raise ValidationError(
                 _("%(enum)s is not a valid choice for %(attr)s") %
@@ -917,6 +907,10 @@ class AbstractProductAttributeValue(models.Model):
     value_float = models.FloatField(_('Float'), blank=True, null=True)
     value_richtext = models.TextField(_('Richtext'), blank=True, null=True)
     value_date = models.DateField(_('Date'), blank=True, null=True)
+    value_multi_option = models.ManyToManyField(
+        'catalogue.AttributeOption', blank=True,
+        related_name='multi_valued_attribute_values',
+        verbose_name=_("Value multi option"))
     value_option = models.ForeignKey(
         'catalogue.AttributeOption',
         blank=True,
@@ -942,7 +936,10 @@ class AbstractProductAttributeValue(models.Model):
         null=True, blank=True, editable=False)
 
     def _get_value(self):
-        return getattr(self, 'value_%s' % self.attribute.type)
+        value = getattr(self, 'value_%s' % self.attribute.type)
+        if hasattr(value, 'all'):
+            value = value.all()
+        return value
 
     def _set_value(self, new_value):
         if self.attribute.is_option and isinstance(new_value, six.string_types):
@@ -979,6 +976,10 @@ class AbstractProductAttributeValue(models.Model):
         """
         property_name = '_%s_as_text' % self.attribute.type
         return getattr(self, property_name, self.value)
+
+    @property
+    def _multi_option_as_text(self):
+        return ', '.join(unicode(option) for option in self.value_multi_option.all())
 
     @property
     def _richtext_as_text(self):

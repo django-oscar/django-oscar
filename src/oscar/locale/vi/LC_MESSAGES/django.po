@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-13 13:06+0200\n"
-"PO-Revision-Date: 2016-06-17 03:41+0000\n"
-"Last-Translator: Toan Vu <vtoanb@gmail.com>\n"
+"PO-Revision-Date: 2016-12-30 15:10+0000\n"
+"Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
 "Language-Team: Vietnamese (http://www.transifex.com/codeinthehole/django-oscar/language/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4789,7 +4789,7 @@ msgstr "Những đơn hàng và mặt hàng tính phí"
 
 #: apps/shipping/abstract_models.py:104
 msgid "Weight-based shipping"
-msgstr "Giao hàng dự trên cân nặng"
+msgstr ""
 
 #: apps/shipping/abstract_models.py:109
 msgid "Default Weight"
@@ -6236,7 +6236,7 @@ msgid ""
 "\n"
 "We are happy to inform you that our product '%(product|safe)s' is back in stock:\n"
 "http://%(site)s%(path)s\n"
-msgstr "\nChúng tôi rất vui mừng khi báo cho bạn biết rằng sản phẩm '%(product|safe)s' của chúng tôi quay lại kho:\nhttp://%(site)s%(path)s\n"
+msgstr ""
 
 #: templates/oscar/customer/alerts/emails/alert_body.txt:5
 msgid ""
@@ -6258,7 +6258,7 @@ msgstr "\nVới email này chúng tôi vô hiệu hóa tự động thông báo 
 #: templates/oscar/customer/alerts/emails/alert_subject.txt:1
 #, python-format
 msgid "%(title|safe)s is back in stock"
-msgstr "%(title|safe)s quay lại hàng tồn kho"
+msgstr ""
 
 #: templates/oscar/customer/alerts/emails/confirmation_body.txt:1
 #, python-format
@@ -6275,7 +6275,7 @@ msgid ""
 "\n"
 "Thanks for your interest,\n"
 "The %(site)s Team\n"
-msgstr "Xin chào, \n\nVài người (hy vọng có ích với bạn) có yêu cầu một email thông báo khi \n'%(product|safe)s' quay lại  kho. Vui lòng nhấn vào liên kết bên dưới\nđể xác nhận:\n http://%(domain)s%(confirm_path)s\n\nBạn có thể thoát cảnh báo này bất cứ lúc nào bằng cách nhấn vào liên kết bên dưới:\nhttp://%(domain)s%(cancel_path)s\n\nCảm ơn vì sự quan tâm của bạn,\nNhóm %(site)s\n"
+msgstr ""
 
 #: templates/oscar/customer/alerts/emails/confirmation_subject.txt:1
 msgid "Confirmation required for stock alert"

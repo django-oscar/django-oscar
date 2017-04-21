@@ -43,7 +43,7 @@ class Migration(migrations.Migration):
                 ('body_text', models.TextField(verbose_name='Body Text')),
                 ('body_html', models.TextField(verbose_name='Body HTML', blank=True)),
                 ('date_sent', models.DateTimeField(auto_now_add=True, verbose_name='Date Sent')),
-                ('user', models.ForeignKey(verbose_name='User', related_name='emails', to=settings.AUTH_USER_MODEL)),
+                ('user', models.ForeignKey(verbose_name='User', related_name='emails', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name_plural': 'Emails',
@@ -62,8 +62,8 @@ class Migration(migrations.Migration):
                 ('location', models.CharField(default='Inbox', max_length=32, choices=[('Inbox', 'Inbox'), ('Archive', 'Archive')])),
                 ('date_sent', models.DateTimeField(auto_now_add=True)),
                 ('date_read', models.DateTimeField(blank=True, null=True)),
-                ('recipient', models.ForeignKey(related_name='notifications', to=settings.AUTH_USER_MODEL)),
-                ('sender', models.ForeignKey(to=settings.AUTH_USER_MODEL, null=True)),
+                ('recipient', models.ForeignKey(related_name='notifications', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
+                ('sender', models.ForeignKey(to=settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ('-date_sent',),
@@ -84,8 +84,8 @@ class Migration(migrations.Migration):
                 ('date_confirmed', models.DateTimeField(blank=True, verbose_name='Date confirmed', null=True)),
                 ('date_cancelled', models.DateTimeField(blank=True, verbose_name='Date cancelled', null=True)),
                 ('date_closed', models.DateTimeField(blank=True, verbose_name='Date closed', null=True)),
-                ('product', models.ForeignKey(to='catalogue.Product')),
-                ('user', models.ForeignKey(null=True, verbose_name='User', related_name='alerts', to=settings.AUTH_USER_MODEL, blank=True)),
+                ('product', models.ForeignKey(to='catalogue.Product', on_delete=models.CASCADE)),
+                ('user', models.ForeignKey(null=True, verbose_name='User', related_name='alerts', to=settings.AUTH_USER_MODEL, blank=True, on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name_plural': 'Product alerts',

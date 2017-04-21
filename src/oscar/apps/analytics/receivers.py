@@ -5,6 +5,7 @@ from django.db.models import F
 from django.dispatch import receiver
 
 from oscar.apps.search.signals import user_search
+from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_class, get_classes
 
 UserSearch, UserRecord, ProductRecord, UserProductView = get_classes(
@@ -24,6 +25,8 @@ def _update_counter(model, field_name, filter_kwargs, increment=1):
     Efficiently updates a counter field by a given increment. Uses Django's
     update() call to fetch and update in one query.
 
+    TODO: This has a race condition, we should use UPSERT here
+
     :param model: The model class of the recording model
     :param field_name: The name of the field to update
     :param filter_kwargs: Parameters to the ORM's filter() function to get the
@@ -36,8 +39,8 @@ def _update_counter(model, field_name, filter_kwargs, increment=1):
             filter_kwargs[field_name] = increment
             model.objects.create(**filter_kwargs)
     except IntegrityError:
-        # get_or_create sometimes fails due to MySQL's weird transactions, fail
-        # silently
+        # get_or_create has a race condition (we should use upsert in supported)
+        # databases. For now just ignore these errors
         logger.error(
             "IntegrityError when updating analytics counter for %s", model)
 
@@ -77,14 +80,14 @@ def receive_product_view(sender, product, user, **kwargs):
     if kwargs.get('raw', False):
         return
     _update_counter(ProductRecord, 'num_views', {'product': product})
-    if user and user.is_authenticated():
+    if user and user_is_authenticated(user):
         _update_counter(UserRecord, 'num_product_views', {'user': user})
         UserProductView.objects.create(product=product, user=user)
 
 
 @receiver(user_search)
 def receive_product_search(sender, query, user, **kwargs):
-    if user and user.is_authenticated() and not kwargs.get('raw', False):
+    if user and user_is_authenticated(user) and not kwargs.get('raw', False):
         UserSearch._default_manager.create(user=user, query=query)
 
 
@@ -94,7 +97,7 @@ def receive_basket_addition(sender, product, user, **kwargs):
         return
     _update_counter(
         ProductRecord, 'num_basket_additions', {'product': product})
-    if user and user.is_authenticated():
+    if user and user_is_authenticated(user):
         _update_counter(UserRecord, 'num_basket_additions', {'user': user})
 
 
@@ -103,5 +106,5 @@ def receive_order_placed(sender, order, user, **kwargs):
     if kwargs.get('raw', False):
         return
     _record_products_in_order(order)
-    if user and user.is_authenticated():
+    if user and user_is_authenticated(user):
         _record_user_order(user, order)

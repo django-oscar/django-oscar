@@ -20,12 +20,12 @@ def metadata(request):
     """
     Add some generally useful metadata to the template context
     """
-    return {'display_version': getattr(settings, 'DISPLAY_VERSION', False),
-            'version': getattr(settings, 'VERSION', 'N/A'),
-            'shop_name': settings.OSCAR_SHOP_NAME,
+    return {'shop_name': settings.OSCAR_SHOP_NAME,
             'shop_tagline': settings.OSCAR_SHOP_TAGLINE,
             'homepage_url': settings.OSCAR_HOMEPAGE,
-            'use_less': getattr(settings, 'USE_LESS', False),
             'language_neutral_url_path': strip_language_code(request),
-            'google_analytics_id': getattr(settings,
-                                           'GOOGLE_ANALYTICS_ID', None)}
+            # Fallback to old settings name for backwards compatibility
+            'use_less': getattr(settings, 'OSCAR_USE_LESS', None) or
+                        getattr(settings, 'USE_LESS', False),
+            'google_analytics_id': getattr(settings, 'OSCAR_GOOGLE_ANALYTICS_ID', None) or
+                                   getattr(settings, 'GOOGLE_ANALYTICS_ID', None)}

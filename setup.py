@@ -18,9 +18,9 @@ sys.path.append(os.path.join(PROJECT_DIR, 'src'))
 from oscar import get_version  # noqa isort:skip
 
 install_requires = [
-    'django>=1.8.8,<1.11',
+    'django>=1.8.8,<1.12',
     # PIL is required for image fields, Pillow is the "friendly" PIL fork
-    'pillow>=1.7.8',
+    'pillow>=3.4.2',
     # We use the ModelFormSetView from django-extra-views for the basket
     # page. > 0.6.5 has a bug which causes issues with Django > 1.6,
     # https://github.com/AndrewIngram/django-extra-views/issues/114
@@ -38,37 +38,36 @@ install_requires = [
     # For manipulating search URLs
     'purl>=0.7',
     # For phone number field
-    'phonenumbers>=6.3.0,<8.0.0',
+    'django-phonenumber-field>=1.0.0,<1.2.0',
     # Used for oscar.test.contextmanagers.mock_signal_receiver
     'mock>=1.0.1,<3.0',
     # Used for oscar.test.newfactories
     'factory-boy>=2.4.1,<3.0',
     # Used for automatically building larger HTML tables
-    'django-tables2>=1.0.4,<1.1',
+    'django-tables2>=1.2,<2.0',
     # Used for manipulating form field attributes in templates (eg: add
     # a css class)
     'django-widget-tweaks>=1.4.1',
 ]
 
 docs_requires = [
-    'Sphinx==1.4.5',
-    'sphinxcontrib-napoleon==0.5.2',
+    'Sphinx==1.5.2',
+    'sphinxcontrib-napoleon==0.6.0',
     'sphinx_rtd_theme==0.1.9',
+    'sphinx-issues==0.3.1',
 ]
 
 test_requires = [
-    'WebTest==2.0.23',
-    'coverage==4.1',
-    'django-webtest==1.7.9',
+    'WebTest==2.0.25',
+    'coverage==4.3.4',
+    'django-webtest==1.9.1',
     'py>=1.4.31',
-    'pytest-cov==2.3.0',
-    'pytest-django==2.9.1',
-    'pytest-xdist==1.14',
-    'pytest-warnings==0.1.0',
-    'pytest==2.9.2',
-    'spec==0.11.1',
+    'pytest==3.0.6',
+    'pytest-cov==2.4.0',
+    'pytest-django==3.1.2',
+    'pytest-xdist==1.15.0',
+    'pytest-warnings==0.2.0',
     'tox==2.3.1',
-    'nose-parameterized==0.5.0'
 ]
 
 setup(

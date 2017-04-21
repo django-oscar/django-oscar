@@ -46,8 +46,8 @@ class Migration(migrations.Migration):
                 ('state', models.CharField(max_length=255, verbose_name='State/County', blank=True)),
                 ('postcode', oscar.models.fields.UppercaseCharField(max_length=64, verbose_name='Post/Zip-code', blank=True)),
                 ('search_text', models.TextField(editable=False, verbose_name='Search text - used only for searching addresses')),
-                ('country', models.ForeignKey(verbose_name='Country', to='address.Country')),
-                ('partner', models.ForeignKey(verbose_name='Partner', related_name='addresses', to='partner.Partner')),
+                ('country', models.ForeignKey(verbose_name='Country', to='address.Country', on_delete=models.CASCADE)),
+                ('partner', models.ForeignKey(verbose_name='Partner', related_name='addresses', to='partner.Partner', on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name_plural': 'Partner addresses',
@@ -87,8 +87,8 @@ class Migration(migrations.Migration):
                 ('low_stock_threshold', models.PositiveIntegerField(blank=True, verbose_name='Low Stock Threshold', null=True)),
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date created')),
                 ('date_updated', models.DateTimeField(auto_now=True, db_index=True, verbose_name='Date updated')),
-                ('partner', models.ForeignKey(verbose_name='Partner', related_name='stockrecords', to='partner.Partner')),
-                ('product', models.ForeignKey(verbose_name='Product', related_name='stockrecords', to='catalogue.Product')),
+                ('partner', models.ForeignKey(verbose_name='Partner', related_name='stockrecords', to='partner.Partner', on_delete=models.CASCADE)),
+                ('product', models.ForeignKey(verbose_name='Product', related_name='stockrecords', to='catalogue.Product', on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name_plural': 'Stock records',
@@ -104,7 +104,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='stockalert',
             name='stockrecord',
-            field=models.ForeignKey(verbose_name='Stock Record', related_name='alerts', to='partner.StockRecord'),
+            field=models.ForeignKey(verbose_name='Stock Record', related_name='alerts', to='partner.StockRecord', on_delete=models.CASCADE),
             preserve_default=True,
         ),
     ]

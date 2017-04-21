@@ -567,24 +567,26 @@ class AbstractBasket(models.Model):
 
 @python_2_unicode_compatible
 class AbstractLine(models.Model):
-    """
-    A line of a basket (product and a quantity)
+    """A line of a basket (product and a quantity)
 
     Common approaches on ordering basket lines:
-    a) First added at top. That's the history-like approach; new items are
-       added to the bottom of the list. Changing quantities doesn't impact
-       position.
-       Oscar does this by default. It just sorts by Line.pk, which is
-       guaranteed to increment after each creation.
-    b) Last modified at top. That means items move to the top when you add
-       another one, and new items are added to the top as well.
-       Amazon mostly does this, but doesn't change the position when you
-       update the quantity in the basket view.
-       To get this behaviour, add a date_updated field, change
-       Meta.ordering and optionally do something similar on wishlist lines.
-       Order lines should already be created in the order of the basket lines,
-       and are sorted by their primary key, so no changes should be necessary
-       there.
+
+        a) First added at top. That's the history-like approach; new items are
+           added to the bottom of the list. Changing quantities doesn't impact
+           position.
+           Oscar does this by default. It just sorts by Line.pk, which is
+           guaranteed to increment after each creation.
+
+        b) Last modified at top. That means items move to the top when you add
+           another one, and new items are added to the top as well.  Amazon
+           mostly does this, but doesn't change the position when you update
+           the quantity in the basket view.
+           To get this behaviour, add a date_updated field, change
+           Meta.ordering and optionally do something similar on wishlist lines.
+           Order lines should already be created in the order of the basket
+           lines, and are sorted by their primary key, so no changes should be
+           necessary there.
+
     """
     basket = models.ForeignKey(
         'basket.Basket',
@@ -800,13 +802,14 @@ class AbstractLine(models.Model):
 
     @property
     def line_price_excl_tax(self):
-        return self.quantity * self.unit_price_excl_tax
+        if self.unit_price_excl_tax:
+            return self.quantity * self.unit_price_excl_tax
 
     @property
     def line_price_excl_tax_incl_discounts(self):
-        if self._discount_excl_tax:
+        if self._discount_excl_tax and self.line_price_excl_tax:
             return self.line_price_excl_tax - self._discount_excl_tax
-        if self._discount_incl_tax:
+        if self._discount_incl_tax and self.line_price_incl_tax:
             # This is a tricky situation.  We know the discount as calculated
             # against tax inclusive prices but we need to guess how much of the
             # discount applies to tax-exclusive prices.  We do this by
@@ -820,15 +823,18 @@ class AbstractLine(models.Model):
         # We use whichever discount value is set.  If the discount value was
         # calculated against the tax-exclusive prices, then the line price
         # including tax
-        return self.line_price_incl_tax - self.discount_value
+        if self.line_price_incl_tax:
+            return self.line_price_incl_tax - self.discount_value
 
     @property
     def line_tax(self):
-        return self.quantity * self.unit_tax
+        if self.unit_tax:
+            return self.quantity * self.unit_tax
 
     @property
     def line_price_incl_tax(self):
-        return self.quantity * self.unit_price_incl_tax
+        if self.unit_price_incl_tax:
+            return self.quantity * self.unit_price_incl_tax
 
     @property
     def description(self):

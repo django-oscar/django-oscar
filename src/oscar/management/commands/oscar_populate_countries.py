@@ -48,8 +48,8 @@ class Command(BaseCommand):
 
         countries = [
             Country(
-                iso_3166_1_a2=country.alpha2,
-                iso_3166_1_a3=country.alpha3,
+                iso_3166_1_a2=country.alpha_2,
+                iso_3166_1_a3=country.alpha_3,
                 iso_3166_1_numeric=country.numeric,
                 printable_name=country.name,
                 name=getattr(country, 'official_name', ''),

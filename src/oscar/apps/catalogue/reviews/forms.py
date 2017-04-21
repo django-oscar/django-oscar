@@ -1,6 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
+from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_model
 
 Vote = get_model('reviews', 'vote')
@@ -14,7 +15,7 @@ class ProductReviewForm(forms.ModelForm):
     def __init__(self, product, user=None, *args, **kwargs):
         super(ProductReviewForm, self).__init__(*args, **kwargs)
         self.instance.product = product
-        if user and user.is_authenticated():
+        if user and user_is_authenticated(user):
             self.instance.user = user
             del self.fields['name']
             del self.fields['email']

@@ -1,0 +1,9 @@
+=========================
+Oscar 0.1.0 release notes
+=========================
+
+* Initial release - used in production by two major applications at Tangent but
+  still quite rough around the edges.  Many features were implemented directly
+  in the applications rather than using a feature from oscar.
+
+* Docs are a bit stale and need updating in 0.2

@@ -5,7 +5,7 @@ import django
 
 
 def pytest_addoption(parser):
-    parser.addoption('--postgres', action='store_true')
+    parser.addoption('--sqlite', action='store_true')
     parser.addoption(
         '--deprecation', choices=['strict', 'log', 'none'], default='log')
 
@@ -26,8 +26,8 @@ def pytest_configure(config):
         # Deprecation warnings are ignored by default
         pass
 
-    if config.getoption('postgres'):
-        os.environ['DATABASE_ENGINE'] = 'django.db.backends.postgresql_psycopg2'
-        os.environ['DATABASE_NAME'] = 'oscar'
+    if config.getoption('sqlite'):
+        os.environ['DATABASE_ENGINE'] = 'django.db.backends.sqlite3'
+        os.environ['DATABASE_NAME'] = ':memory:'
 
     django.setup()

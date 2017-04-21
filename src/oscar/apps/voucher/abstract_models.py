@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.core.compat import AUTH_USER_MODEL
+from oscar.core.compat import AUTH_USER_MODEL, user_is_authenticated
 
 
 @python_2_unicode_compatible
@@ -54,7 +54,7 @@ class AbstractVoucher(models.Model):
         _("Total discount"), decimal_places=2, max_digits=12,
         default=Decimal('0.00'))
 
-    date_created = models.DateField(auto_now_add=True)
+    date_created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         abstract = True
@@ -105,7 +105,7 @@ class AbstractVoucher(models.Model):
         elif self.usage == self.MULTI_USE:
             is_available = True
         elif self.usage == self.ONCE_PER_CUSTOMER:
-            if not user.is_authenticated():
+            if not user_is_authenticated(user):
                 is_available = False
                 message = _(
                     "This voucher is only available to signed in users")
@@ -121,7 +121,7 @@ class AbstractVoucher(models.Model):
         """
         Records a usage of this voucher in an order.
         """
-        if user.is_authenticated():
+        if user_is_authenticated(user):
             self.applications.create(voucher=self, order=order, user=user)
         else:
             self.applications.create(voucher=self, order=order)
@@ -174,7 +174,7 @@ class AbstractVoucherApplication(models.Model):
         'order.Order',
         on_delete=models.CASCADE,
         verbose_name=_("Order"))
-    date_created = models.DateField(_("Date Created"), auto_now_add=True)
+    date_created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         abstract = True

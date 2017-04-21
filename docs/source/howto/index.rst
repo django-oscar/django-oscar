@@ -13,7 +13,7 @@ Customisation
 
     how_to_customise_models
     how_to_customise_templates
-    how_to_disable_an_app
+    how_to_disable_an_app_or_feature
     how_to_change_a_url
     how_to_customise_a_view
     how_to_configure_the_dashboard_navigation

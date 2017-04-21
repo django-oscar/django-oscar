@@ -224,7 +224,10 @@ OSCAR_SEARCH_FACETS = {
         ('product_class', {'name': _('Type'), 'field': 'product_class'}),
         ('rating', {'name': _('Rating'), 'field': 'rating'}),
         # You can specify an 'options' element that will be passed to the
-        # SearchQuerySet.facet() call.  It's hard to get 'missing' to work
+        # SearchQuerySet.facet() call.
+        # For instance, with Elasticsearch backend, 'options': {'order': 'term'}
+        # will sort items in a facet by title instead of number of items.
+        # It's hard to get 'missing' to work
         # correctly though as of Solr's hilarious syntax for selecting
         # items without a specific facet:
         # http://wiki.apache.org/solr/SimpleFacetParameters#facet.method

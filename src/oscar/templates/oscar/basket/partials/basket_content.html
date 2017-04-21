@@ -7,7 +7,7 @@
 {% if basket_warnings %}
     <h5>{% trans "Important messages about items in your basket" %}</h5>
     {% for warning in basket_warnings %}
-        <div class="alert">{{ warning }}</div>
+        <div class="alert alert-warning">{{ warning }}</div>
     {% endfor %}
 {% endif %}
 
@@ -86,22 +86,30 @@
 
                             </div>
                             <div class="col-sm-1">
-                                <p class="price_color align-right">
-                                    {% if line.is_tax_known %}
-                                        {{ line.unit_price_incl_tax|currency:line.price_currency }}
-                                    {% else %}
-                                        {{ line.unit_price_excl_tax|currency:line.price_currency }}
-                                    {% endif %}
-                                </p>
+                                {% if not line.unit_price_incl_tax and not line.unit_tax_excl_tax %}
+                                    <p class="align-right">&mdash;</p>
+                                {% else %}
+                                    <p class="price_color align-right">
+                                        {% if line.is_tax_known %}
+                                            {{ line.unit_price_incl_tax|currency:line.price_currency }}
+                                        {% else %}
+                                            {{ line.unit_price_excl_tax|currency:line.price_currency }}
+                                        {% endif %}
+                                    </p>
+                                {% endif %}
                             </div>
                             <div class="col-sm-2">
-                                <p class="price_color align-right">
-                                    {% if line.is_tax_known %}
-                                        {{ line.line_price_incl_tax|currency:line.price_currency }}
-                                    {% else %}
-                                        {{ line.line_price_excl_tax|currency:line.price_currency }}
-                                    {% endif %}
-                                </p>
+                                {% if not line.line_price_incl_tax and not line_price_excl_tax %}
+                                    <p class="align-right">&mdash;</p>
+                                {% else %}
+                                    <p class="price_color align-right">
+                                        {% if line.is_tax_known %}
+                                            {{ line.line_price_incl_tax|currency:line.price_currency }}
+                                        {% else %}
+                                            {{ line.line_price_excl_tax|currency:line.price_currency }}
+                                        {% endif %}
+                                    </p>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

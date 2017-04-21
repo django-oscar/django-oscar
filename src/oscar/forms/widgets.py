@@ -1,10 +1,11 @@
+import copy
 import re
 
+import django
 from django import forms
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.forms.utils import flatatt
 from django.forms.widgets import FileInput
-from django.template import Context
 from django.template.loader import render_to_string
 from django.utils import formats, six
 from django.utils.encoding import force_text
@@ -24,7 +25,7 @@ class ImageInput(FileInput):
     template_name = 'partials/image_input_widget.html'
     attrs = {'accept': 'image/*'}
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         """
         Render the ``input`` field based on the defined ``template_name``. The
         image URL is take from *value* and is provided to the template as
@@ -34,7 +35,15 @@ class ImageInput(FileInput):
         If *value* contains no valid image URL an empty string will be provided
         in the context.
         """
-        final_attrs = self.build_attrs(attrs, type=self.input_type, name=name)
+        extra_attrs = {
+            'type': self.input_type,
+            'name': name,
+        }
+        if django.VERSION < (1, 11):
+            final_attrs = self.build_attrs(attrs, **extra_attrs)
+        else:
+            final_attrs = self.build_attrs(attrs, extra_attrs=extra_attrs)
+
         if not value or isinstance(value, InMemoryUploadedFile):
             # can't display images that aren't stored
             image_url = ''
@@ -42,11 +51,11 @@ class ImageInput(FileInput):
             image_url = final_attrs['value'] = force_text(
                 self._format_value(value))
 
-        return render_to_string(self.template_name, Context({
+        return render_to_string(self.template_name, {
             'input_attrs': flatatt(final_attrs),
             'image_url': image_url,
             'image_id': "%s-image" % final_attrs['id'],
-        }))
+        })
 
 
 class WYSIWYGTextArea(forms.Textarea):
@@ -164,7 +173,7 @@ class TimePickerInput(DateTimeWidgetMixin, forms.TimeInput):
     """
     format_key = 'TIME_INPUT_FORMATS'
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         format = self.get_format()
         input = super(TimePickerInput, self).render(
             name, value, self.gett_attrs(attrs, format))
@@ -193,7 +202,7 @@ class DatePickerInput(DateTimeWidgetMixin, forms.DateInput):
     """
     format_key = 'DATE_INPUT_FORMATS'
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         format = self.get_format()
         input = super(DatePickerInput, self).render(
             name, value, self.gett_attrs(attrs, format))
@@ -236,7 +245,7 @@ class DateTimePickerInput(DateTimeWidgetMixin, forms.DateTimeInput):
         if not include_seconds and self.format:
             self.format = re.sub(':?%S', '', self.format)
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         format = self.get_format()
         input = super(DateTimePickerInput, self).render(
             name, value, self.gett_attrs(attrs, format))
@@ -296,6 +305,7 @@ class RemoteSelect(forms.Widget):
     """
     is_multiple = False
     lookup_url = None
+    template_name = None
 
     def __init__(self, *args, **kwargs):
         if 'lookup_url' in kwargs:
@@ -315,8 +325,9 @@ class RemoteSelect(forms.Widget):
         else:
             return six.text_type(value)
 
-    def render(self, name, value, attrs=None, choices=()):
-        attrs = self.build_attrs(attrs, **{
+    def render(self, name, value, attrs=None, renderer=None):
+        attrs = {} if attrs is None else copy.copy(attrs)
+        attrs.update({
             'type': 'hidden',
             'name': name,
             'data-ajax-url': self.lookup_url,

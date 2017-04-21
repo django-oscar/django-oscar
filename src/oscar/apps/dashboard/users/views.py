@@ -5,10 +5,10 @@ from django.db.models import Q
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import (
-    DeleteView, DetailView, FormView, ListView, TemplateView, UpdateView)
+    DeleteView, DetailView, FormView, ListView, UpdateView)
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import FormMixin
-from django_tables2 import SingleTableMixin
+from django_tables2 import SingleTableView
 
 from oscar.apps.customer.utils import normalise_email
 from oscar.core.compat import get_user_model
@@ -24,7 +24,7 @@ ProductAlert = get_model('customer', 'ProductAlert')
 User = get_user_model()
 
 
-class IndexView(BulkEditMixin, SingleTableMixin, FormMixin, TemplateView):
+class IndexView(BulkEditMixin, FormMixin, SingleTableView):
     template_name = 'dashboard/users/index.html'
     table_pagination = True
     model = User
@@ -82,12 +82,11 @@ class IndexView(BulkEditMixin, SingleTableMixin, FormMixin, TemplateView):
             # If the value is two words, then assume they are first name and
             # last name
             parts = data['name'].split()
-            if len(parts) == 2:
-                condition = Q(first_name__istartswith=parts[0]) \
-                    | Q(last_name__istartswith=parts[1])
-            else:
-                condition = Q(first_name__istartswith=data['name']) \
-                    | Q(last_name__istartswith=data['name'])
+            # always true filter
+            condition = Q()
+            for part in parts:
+                condition &= Q(first_name__icontains=part) \
+                    | Q(last_name__icontains=part)
             queryset = queryset.filter(condition).distinct()
             self.desc_ctx['name_filter'] \
                 = _(" with name matching '%s'") % data['name']

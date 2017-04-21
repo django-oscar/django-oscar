@@ -74,7 +74,7 @@ context processors.
                     'django.template.context_processors.debug',
                     'django.template.context_processors.request',
                     'django.contrib.auth.context_processors.auth',
-                    'django.core.context_processors.i18n',
+                    'django.template.context_processors.i18n',
                     'django.contrib.messages.context_processors.messages',
 
                     'oscar.apps.search.context_processors.search_form',
@@ -144,6 +144,8 @@ your ``MIDDLEWARE_CLASSES`` setting.
         'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     )
 
+Note: In django 1.10 and above: make sure to replace ``MIDDLEWARE`` with ``MIDDLEWARE_CLASSES``
+
 Set your auth backends to:
 
 .. code-block:: django
@@ -195,8 +197,8 @@ you will also need to include Django's i18n URLs:
 
 Search backend
 ==============
-If you're happy with basic search for now, you can just use Haystack's simple
-backend:
+If you're happy with basic search for now, you can just add Haystack's simple
+backend to the ``HAYSTACK_CONNECTIONS`` option in your Django settings:
 
 .. code-block:: django
 

@@ -44,7 +44,7 @@ Search Engine Optimisation
 --------------------------
 
 A basic example of what a sitemap for Oscar could look like has been added
-to the sandbox site. Have a look at ``sites/sandbox/urls.py`` for inspiration.
+to the sandbox site. Have a look at ``sandbox/urls.py`` for inspiration.
 
 .. _deployment: https://docs.djangoproject.com/en/dev/howto/deployment/
 .. _`Django's guidelines for security`: https://docs.djangoproject.com/en/dev/topics/security/

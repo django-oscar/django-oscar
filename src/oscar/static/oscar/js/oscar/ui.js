@@ -34,7 +34,7 @@ var oscar = (function(o, $) {
         initFacetWidgets: function() {
             // Bind events to facet checkboxes
             $('.facet_checkbox').on('change', function() {
-                window.location.href = $(this).next('.facet_url').val();
+                window.location.href = $(this).nextAll('.facet_url').val();
             });
         }
     };
@@ -75,10 +75,10 @@ var oscar = (function(o, $) {
             // Do not disable if button is inside a form with invalid fields.
             // This uses a delegated event so that it keeps working for forms that are reloaded
             // via AJAX: https://api.jquery.com/on/#direct-and-delegated-events
-            $(document.body).on('click', '[data-loading-text]', function(){
-                var form = $(this).parents("form");
-                if (!form || $(":invalid", form).length == 0)
-                    $(this).button('loading');
+            $(document.body).on('submit', 'form', function(){
+                var form = $(this);
+                if ($(":invalid", form).length == 0)
+                    $(this).find('button[data-loading-text]').button('loading');
             });
             // stuff for star rating on review page
             // show clickable stars instead of a select dropdown for product rating

@@ -8,9 +8,11 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.six.moves import filter
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
+from phonenumber_field.modelfields import PhoneNumberField
 
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.models.fields import PhoneNumberField, UppercaseCharField
+from oscar.core.decorators import deprecated
+from oscar.models.fields import UppercaseCharField
 
 
 @python_2_unicode_compatible
@@ -197,7 +199,7 @@ class AbstractAddress(models.Model):
         'TN': r'^[0-9]{4}$',
         'TR': r'^[0-9]{5}$',
         'TT': r'^[0-9]{6}$',
-        'TW': r'^[0-9]{5}$',
+        'TW': r'^([0-9]{3}|[0-9]{5})$',
         'UA': r'^[0-9]{5}$',
         'US': r'^[0-9]{5}(-[0-9]{4}|-[0-9]{6})?$',
         'UY': r'^[0-9]{5}$',
@@ -510,7 +512,12 @@ class AbstractUserAddress(AbstractShippingAddress):
     #: We keep track of the number of times an address has been used
     #: as a shipping address so we can show the most popular ones
     #: first at the checkout.
-    num_orders = models.PositiveIntegerField(_("Number of Orders"), default=0)
+    num_orders_as_shipping_address = models.PositiveIntegerField(
+        _("Number of Orders as Shipping Address"), default=0)
+
+    #: Same as previous, but for billing address.
+    num_orders_as_billing_address = models.PositiveIntegerField(
+        _("Number of Orders as Billing Address"), default=0)
 
     #: A hash is kept to try and avoid duplicate addresses being added
     #: to the address book.
@@ -546,7 +553,7 @@ class AbstractUserAddress(AbstractShippingAddress):
         app_label = 'address'
         verbose_name = _("User address")
         verbose_name_plural = _("User addresses")
-        ordering = ['-num_orders']
+        ordering = ['-num_orders_as_shipping_address']
         unique_together = ('user', 'hash')
 
     def validate_unique(self, exclude=None):
@@ -560,6 +567,11 @@ class AbstractUserAddress(AbstractShippingAddress):
             raise exceptions.ValidationError({
                 '__all__': [_("This address is already in your address"
                               " book")]})
+
+    @property
+    @deprecated
+    def num_orders(self):
+        return self.num_orders_as_shipping_address
 
 
 class AbstractBillingAddress(AbstractAddress):

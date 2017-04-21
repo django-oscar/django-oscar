@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
 from oscar.apps.promotions.conf import PROMOTION_CLASSES
-from oscar.core.loading import get_classes
+from oscar.core.loading import get_class, get_classes
 
 SingleProduct, RawHTML, Image, MultiImage, AutomaticProductList, \
     PagePromotion, HandPickedProductList \
@@ -20,11 +20,12 @@ SingleProduct, RawHTML, Image, MultiImage, AutomaticProductList, \
                    'AutomaticProductList', 'PagePromotion',
                    'HandPickedProductList'])
 SelectForm, RawHTMLForm, PagePromotionForm, HandPickedProductListForm, \
-    SingleProductForm, OrderedProductFormSet \
+    SingleProductForm  \
     = get_classes('dashboard.promotions.forms',
                   ['PromotionTypeSelectForm', 'RawHTMLForm',
                    'PagePromotionForm', 'HandPickedProductListForm',
-                   'SingleProductForm', 'OrderedProductFormSet'])
+                   'SingleProductForm'])
+OrderedProductFormSet = get_class('dashboard.promotions.formsets', 'OrderedProductFormSet')
 
 
 class ListView(generic.TemplateView):
@@ -92,10 +93,10 @@ class PageDetailView(generic.TemplateView):
 
     def post(self, request, **kwargs):
         """
-        When called with a post request, try and get 'promo[]' from
+        When called with a post request, try and get 'promo' from
         the post data and use it to reorder the page content blocks.
         """
-        data = dict(request.POST).get('promo[]')
+        data = dict(request.POST).get('promo')
         self._save_page_order(data)
         return HttpResponse(status=200)
 

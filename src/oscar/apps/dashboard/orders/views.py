@@ -7,7 +7,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
-from django.db.models import Q, Count, Sum, fields
+from django.db.models import Count, Q, Sum, fields
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
@@ -144,18 +144,6 @@ class OrderListView(BulkEditMixin, ListView):
         """
         queryset = sort_queryset(self.base_queryset, self.request,
                                  ['number', 'total_incl_tax'])
-
-        # Look for shortcut query filters
-        if 'order_status' in self.request.GET:
-            self.form = self.form_class()
-            status = self.request.GET['order_status']
-            if status.lower() == 'none':
-                status = None
-            return self.base_queryset.filter(status=status)
-
-        if 'order_number' not in self.request.GET:
-            self.form = self.form_class()
-            return queryset
 
         self.form = self.form_class(self.request.GET)
         if not self.form.is_valid():

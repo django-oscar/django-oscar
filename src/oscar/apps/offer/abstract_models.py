@@ -153,7 +153,7 @@ class AbstractConditionalOffer(models.Model):
     class Meta:
         abstract = True
         app_label = 'offer'
-        ordering = ['-priority']
+        ordering = ['-priority', 'pk']
         verbose_name = _("Conditional offer")
         verbose_name_plural = _("Conditional offers")
 
@@ -521,6 +521,9 @@ class AbstractBenefit(models.Model):
         if not self.range:
             raise exceptions.ValidationError(
                 _("Percentage benefits require a product range"))
+        if not self.value:
+            raise exceptions.ValidationError(
+                _("Percentage discount benefits require a value"))
         if self.value > 100:
             raise exceptions.ValidationError(
                 _("Percentage discount cannot be greater than 100"))
@@ -655,7 +658,7 @@ class AbstractCondition(models.Model):
         _('Value'), decimal_places=2, max_digits=12, null=True, blank=True)
 
     proxy_class = fields.NullCharField(
-        _("Custom class"), max_length=255, unique=True, default=None)
+        _("Custom class"), max_length=255, default=None)
 
     class Meta:
         abstract = True
@@ -1119,10 +1122,11 @@ class AbstractRangeProductFileUpload(models.Model):
         """
         Extract all SKU- or UPC-like strings from the file
         """
-        for line in open(self.filepath, 'r'):
-            for id in re.split('[^\w:\.-]', line):
-                if id:
-                    yield id
+        with open(self.filepath, 'r') as fh:
+            for line in fh:
+                for id in re.split('[^\w:\.-]', line):
+                    if id:
+                        yield id
 
     def delete_file(self):
         os.unlink(self.filepath)

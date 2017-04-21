@@ -70,7 +70,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='weightband',
             name='method',
-            field=models.ForeignKey(verbose_name='Method', related_name='bands', to='shipping.WeightBased'),
+            field=models.ForeignKey(verbose_name='Method', related_name='bands', to='shipping.WeightBased', on_delete=models.CASCADE),
             preserve_default=True,
         ),
     ]

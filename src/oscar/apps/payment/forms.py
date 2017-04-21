@@ -44,7 +44,7 @@ class BankcardNumberField(forms.CharField):
         card types we accept
         """
         non_decimal = re.compile(r'\D+')
-        value = non_decimal.sub('', value.strip())
+        value = non_decimal.sub('', (value or '').strip())
 
         if value and not bankcards.luhn(value):
             raise forms.ValidationError(

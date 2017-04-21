@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Rosen Pashov <porosenoq@abv.bg>, 2016
+# porosenoq <porosenoq@abv.bg>, 2016
+# porosenoq <porosenoq@abv.bg>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-13 13:06+0200\n"
-"PO-Revision-Date: 2016-03-16 16:33+0000\n"
-"Last-Translator: Rosen Pashov <porosenoq@abv.bg>\n"
+"PO-Revision-Date: 2016-12-30 15:10+0000\n"
+"Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
 "Language-Team: Bulgarian (Bulgaria) (http://www.transifex.com/codeinthehole/django-oscar/language/bg_BG/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,7 +68,7 @@ msgstr "Алтернативен адрес"
 
 #: apps/address/abstract_models.py:230
 msgid "Third line of address"
-msgstr "трябва да проверя"
+msgstr "Резервен адрес"
 
 #: apps/address/abstract_models.py:231
 msgid "City"
@@ -130,7 +131,7 @@ msgstr ""
 
 #: apps/address/abstract_models.py:398
 msgid "Country name"
-msgstr ""
+msgstr "Държава"
 
 #: apps/address/abstract_models.py:401
 msgid "Official name"
@@ -150,11 +151,11 @@ msgstr ""
 
 #: apps/address/abstract_models.py:414 apps/shipping/abstract_models.py:27
 msgid "Countries"
-msgstr ""
+msgstr "Държави"
 
 #: apps/address/abstract_models.py:457 models/fields/__init__.py:139
 msgid "Phone number"
-msgstr ""
+msgstr "Телефонен номер"
 
 #: apps/address/abstract_models.py:458
 msgid "In case we need to call you about your order"
@@ -165,7 +166,7 @@ msgstr ""
 #: templates/oscar/checkout/thank_you.html:58
 #: templates/oscar/dashboard/orders/order_detail.html:461
 msgid "Instructions"
-msgstr ""
+msgstr "Инструкции"
 
 #: apps/address/abstract_models.py:461
 msgid "Tell us anything we should know when delivering your order."
@@ -8779,7 +8780,7 @@ msgstr ""
 
 #: templates/oscar/partials/nav_primary.html:40
 msgid "Browse store"
-msgstr ""
+msgstr "Категории"
 
 #: templates/oscar/promotions/baseproductlist.html:19
 msgid "See more"

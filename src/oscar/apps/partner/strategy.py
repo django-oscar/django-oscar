@@ -1,5 +1,7 @@
 from collections import namedtuple
 from decimal import Decimal as D
+
+from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_class
 
 Unavailable = get_class('partner.availability', 'Unavailable')
@@ -57,7 +59,7 @@ class Base(object):
     def __init__(self, request=None):
         self.request = request
         self.user = None
-        if request and request.user.is_authenticated():
+        if request and user_is_authenticated(request.user):
             self.user = request.user
 
     def fetch_for_product(self, product, stockrecord=None):
@@ -208,7 +210,7 @@ class StockRequired(object):
     """
 
     def availability_policy(self, product, stockrecord):
-        if not stockrecord:
+        if not stockrecord or stockrecord.price_excl_tax is None:
             return Unavailable()
         if not product.get_product_class().track_stock:
             return Available()
@@ -264,7 +266,7 @@ class FixedRateTax(object):
     exponent = D('0.01')  # Default to two decimal places
 
     def pricing_policy(self, product, stockrecord):
-        if not stockrecord:
+        if not stockrecord or stockrecord.price_excl_tax is None:
             return UnavailablePrice()
         rate = self.get_rate(product, stockrecord)
         exponent = self.get_exponent(stockrecord)
@@ -317,7 +319,7 @@ class DeferredTax(object):
     """
 
     def pricing_policy(self, product, stockrecord):
-        if not stockrecord:
+        if not stockrecord or stockrecord.price_excl_tax is None:
             return UnavailablePrice()
         return FixedPrice(
             currency=stockrecord.price_currency,

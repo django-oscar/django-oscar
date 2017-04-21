@@ -25,15 +25,15 @@ Contents:
 Further reading:
 
 * `Official homepage`_
-* `Sandbox site`_ (an hourly build of the unstable master branch - it's
-  experimental but feel free to explore and get a feel for the base Oscar
-  install.)
+* `Sandbox site`_ (automatically deployed via the official docker sandbox image)
 * `Documentation`_ on the excellent `readthedocs.org`_
+* `Docker image`_ on http://hub.docker.com/
 * `django-oscar group`_ - mailing list for questions and announcements
 * `django-oscar-jobs group`_ - mailing list for job offers
 * `Continuous integration homepage`_ on `travis-ci.org`_
 * `Twitter account for news and updates`_
 * #django-oscar on Freenode (community-run IRC channel) with `public logs`_
+* `Slack`_
 * `PyPI page`_
 * `Transifex project`_ - translating Oscar made easy
 
@@ -63,6 +63,7 @@ Docs status:
 
 .. _`Official homepage`: http://oscarcommerce.com
 .. _`Sandbox site`: http://latest.oscarcommerce.com
+.. _`Docker image`: https://hub.docker.com/r/oscarcommerce/django-oscar-sandbox/
 .. _`Documentation`: https://django-oscar.readthedocs.io/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
 .. _`Continuous integration homepage`: http://travis-ci.org/#!/django-oscar/django-oscar
@@ -73,6 +74,7 @@ Docs status:
 .. _`django-oscar-jobs group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar-jobs
 .. _`PyPI page`: https://pypi.python.org/pypi/django-oscar/
 .. _`Transifex project`: https://www.transifex.com/projects/p/django-oscar/
+.. _`Slack`: https://slack.oscarcommerce.com/
 
 Core team:
 
@@ -113,7 +115,7 @@ good starting point for rapidly building elegant e-commerce sites.
     :target: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/dashboard.png
 
 The sandbox site is also available to browse at
-http://latest.oscarcommerce.com.  Dashboard users can be created using `this
+https://latest.oscarcommerce.com.  Dashboard users can be created using `this
 gateway page`_.
 
 The sandbox site can be set-up locally `in 5 commands`_.  Want to
@@ -128,6 +130,10 @@ Extensions
 ----------
 
 The following extensions are stable and ready for use:
+
+* django-oscar-api_ - RESTful JSON API for django-oscar
+
+* django-oscar-adyen_ - Integration with the Adyen payment gateway
 
 * django-oscar-datacash_ - Integration with the DataCash_ payment gateway
 
@@ -147,6 +153,8 @@ The following extensions are stable and ready for use:
 
 * django-oscar-sagepay-direct_ - Integration with "DIRECT" part of Sagepay's API
 
+.. _django-oscar-api: https://github.com/django-oscar/django-oscar-api
+.. _django-oscar-adyen: https://github.com/django-oscar/django-oscar-adyen
 .. _django-oscar-datacash: https://github.com/django-oscar/django-oscar-datacash
 .. _django-oscar-paymentexpress: https://github.com/django-oscar/django-oscar-paymentexpress
 .. _`Payment Express`: http://www.paymentexpress.com
@@ -166,7 +174,7 @@ The following are community-written extensions:
 
 * django-oscar-payments_ - Pluggable payments for Oscar
 * django-oscar-recurly_ - Integration with the Recurly payment gateway
-* django-oscar-adyen_ - Integration with the Adyen payment gateway
+
 * django-oscar-przelewy24_ - Integration with the Przelewy24 payment gateway
 * oscar-sagepay_ - Payment integration with Sage Pay
 * django-oscar-erp_
@@ -178,10 +186,21 @@ Let us know if you're writing a new one!
 .. _django-oscar-erp: https://bitbucket.org/zikzakmedia/django-oscar_erp
 .. _django-oscar-payments: https://github.com/Lacrymology/django-oscar-payments
 .. _django-oscar-recurly: https://github.com/mynameisgabe/django-oscar-recurly
-.. _django-oscar-adyen: https://github.com/oscaro/django-oscar-adyen
+
 .. _django-oscar-przelewy24: https://github.com/kisiel/django-oscar-przelewy24
 .. _oscar-sagepay: https://github.com/udox/oscar-sagepay
 .. _django-oscar-sofortueberweisung: https://github.com/byteyard/django-oscar-sofortueberweisung
+
+Videos
+------
+
+Videos with talks about Oscar:
+
+* video1_ - "An introduction to Django-oscar" by `David Winterbottom`_, DjangoCon Europe 2014
+* video2_ - "Oscar and the art of transactional Django applications" by `David Winterbottom`_, PyCon PL 2014
+
+.. _video1: https://youtu.be/o4ol6EzGDSw
+.. _video2: https://youtu.be/datKUNTKYz8
 
 License
 -------
@@ -196,82 +215,17 @@ Case studies
 ------------
 
 Oscar is still in active development but is used in production by a range of
-companies, from large multinationals to small, boutique stores:
+companies, from large multinationals to small, boutique stores. See 
+http://oscarcommerce.com/cases.html for an overview.
 
-Selected Tangent projects:
+Many more on the way.  If you use Oscar in production, please `let us know`_.
 
-* Tata Group - http://www.landmarkonthenet.com
-* Carlsberg - Their global "We Deliver More" platform is powered by Oscar (but
-  is a B2B site and not browsable by the public)
-* Chocolate Box - https://www.chocolatebox.com.au
-* The UK Labour party - http://shop.labour.org.uk
-* Meridian Audio - http://www.meridian-audio.co.uk
-* Which Rightchoice - http://www.whichrightchoice.com
-* Freetix - http://www.freetix.com.au/
-* Nails inc US - http://www.nailsinc.com/us/
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/landmark.thumb.png
-    :target: http://www.landmarkonthenet.com
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/carlsberg.cch.thumb.png
-    :target: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/carlsberg.cch.png
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/chocolatebox.thumb.png
-    :target: https://www.chocolatebox.com.au
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/labourshop.thumb.png
-    :target: https://shop.labour.org.uk
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/meridian.thumb.png
-    :target: http://www.meridian-audio.co.uk
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/rightchoice.thumb.png
-    :target: http://www.whichrightchoice.com
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/freetix.thumb.png
-    :target: http://www.freetix.com.au/
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/nailsinc.thumb.png
-    :target: http://www.nailsinc.com/us/
-
-Non-Tangent:
-
-* Dolbeau - http://www.dolbeau.ca
-* Audio App - https://audioapp.pl
-* Anything Gift - http://www.anythinggift.co.uk
-* Partecipa Cards - http://www.partecipacards.com
-* Chiyome - https://chiyome.com
-* Bike Parts Market - https://www.bikepartsmarket.com
-* Dadagraphix - https://dadagraphix.com
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/dolbeau.thumb.png
-    :target: http://www.dolbeau.ca
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/audioapp.thumb.png
-    :target: https://audioapp.pl
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/anythinggift.thumb.png
-    :target: http://www.anythinggift.co.uk
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/partecipacards.thumb.png
-    :target: http://www.partecipacards.com
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/chiyome.thumb.png
-    :target: https://chiyome.com
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/bpm.thumb.png
-    :target: https://www.bikepartsmarket.com
-
-.. image:: https://github.com/django-oscar/django-oscar/raw/master/docs/images/screenshots/dadagraphix.thumb.png
-    :target: https://dadagraphix.com
-
-Many more on the way.  If you use Oscar in production, please let us know.
+.. _`let us know`: https://github.com/django-oscar/oscarcommerce.com/issues
 
 Looking for commercial support?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you are interested in having an Oscar project built for you, or for
-development of an existing Oscar site, Tangent can
-help.  Please get in touch via `oscar@tangent.co.uk`_.
+development of an existing Oscar site then please get in touch via `info@oscarcommerce.com`_.
 
-.. _`oscar@tangent.co.uk`: mailto:oscar@tangent.co.uk
+.. _`info@oscarcommerce.com`: mailto:info@oscarcommerce.com

@@ -73,7 +73,7 @@ class Migration(migrations.Migration):
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date Created')),
                 ('keyword', models.CharField(max_length=200, verbose_name='Keyword')),
                 ('filter', models.CharField(max_length=200, verbose_name='Filter', blank=True)),
-                ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
+                ('content_type', models.ForeignKey(to='contenttypes.ContentType', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['-clicks'],
@@ -138,7 +138,7 @@ class Migration(migrations.Migration):
                 ('clicks', models.PositiveIntegerField(default=0, verbose_name='Clicks')),
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date Created')),
                 ('page_url', oscar.models.fields.ExtendedURLField(max_length=128, verify_exists=True, db_index=True, verbose_name='Page URL')),
-                ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
+                ('content_type', models.ForeignKey(to='contenttypes.ContentType', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['-clicks'],
@@ -170,7 +170,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=128, verbose_name='Name')),
                 ('description', models.TextField(verbose_name='Description', blank=True)),
                 ('date_created', models.DateTimeField(auto_now_add=True)),
-                ('product', models.ForeignKey(to='catalogue.Product')),
+                ('product', models.ForeignKey(to='catalogue.Product', on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name_plural': 'Single product',
@@ -194,19 +194,19 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='orderedproductlist',
             name='tabbed_block',
-            field=models.ForeignKey(verbose_name='Tabbed Block', related_name='tabs', to='promotions.TabbedBlock'),
+            field=models.ForeignKey(verbose_name='Tabbed Block', related_name='tabs', to='promotions.TabbedBlock', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='orderedproduct',
             name='list',
-            field=models.ForeignKey(verbose_name='List', to='promotions.HandPickedProductList'),
+            field=models.ForeignKey(verbose_name='List', to='promotions.HandPickedProductList', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='orderedproduct',
             name='product',
-            field=models.ForeignKey(verbose_name='Product', to='catalogue.Product'),
+            field=models.ForeignKey(verbose_name='Product', to='catalogue.Product', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AlterUniqueTogether(
