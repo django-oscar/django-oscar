@@ -8,5 +8,5 @@ register = template.Library()
 
 
 @assignment_tag(register)
-def dashboard_navigation(user):
-    return get_nodes(user)
+def dashboard_navigation(request, user):
+    return get_nodes(user, request)

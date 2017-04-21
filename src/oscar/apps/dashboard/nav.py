@@ -23,6 +23,7 @@ class Node(object):
         self.url_kwargs = url_kwargs
         self.access_fn = access_fn
         self.children = []
+        self.active = False
 
     @property
     def id(self):

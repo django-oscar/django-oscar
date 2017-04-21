@@ -21,7 +21,8 @@
 {% endblock %}
 
 {% block headertext %}
-    {% blocktrans with number=order.number %}Order #{{ number }}{% endblocktrans %}
+    <a href="{%  url 'dashboard:order-list' %}">{% trans "Orders" %}</a> /
+    {% blocktrans with number=order.number %}#{{ number }}{% endblocktrans %}
 {% endblock  %}
 
 {% block dashboard_content %}

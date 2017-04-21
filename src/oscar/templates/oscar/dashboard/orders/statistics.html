@@ -24,47 +24,53 @@
 {% block headertext %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
-    <div class="table-header">
-        <h3><i class="icon-filter icon-large"></i> {% trans "Filter" %}</h3>
+<div class="panel">
+
+    <div class="pandel-heading">
+        <i class="icon-filter icon-large"></i> {% trans "Filter" %}
     </div>
-    <div class="well">
+    <div class="panel-body">
         <form method="get" action="{% url 'dashboard:order-stats' %}" class="form-inline">
             {% include "dashboard/partials/form_fields_inline.html" with form=form %}
             <button type="submit" class="btn btn-primary" data-loading-text="{% trans 'Filtering...' %}">{% trans "Filter result" %}</button>
             <a href="{% url 'dashboard:order-stats' %}" class="btn btn-default">{% trans "Reset" %}</a>
         </form>
+
+        <table class="table table-striped table-bordered table-hover">
+            <caption><i class="icon-shopping-cart icon-large"></i>{% trans "Summary" %}</caption>
+            <tr>
+                <th>{% trans "Total orders" %}</th>
+                <td>{{ total_orders }}</td>
+            </tr>
+            <tr>
+                <th>{% trans "Total lines" %}</th>
+                <td>{{ total_lines }}</td>
+            </tr>
+            <tr>
+                <th>{% trans "Total revenue" %}</th>
+                <td>{{ total_revenue|currency }}</td>
+            </tr>
+        </table>
     </div>
 
-    <table class="table table-striped table-bordered table-hover">
-        <caption><i class="icon-shopping-cart icon-large"></i>{% trans "Summary" %}</caption>
-        <tr>
-            <th>{% trans "Total orders" %}</th>
-            <td>{{ total_orders }}</td>
-        </tr>
-        <tr>
-            <th>{% trans "Total lines" %}</th>
-            <td>{{ total_lines }}</td>
-        </tr>
-        <tr>
-            <th>{% trans "Total revenue" %}</th>
-            <td>{{ total_revenue|currency }}</td>
-        </tr>
-    </table>
+</div>
 
+<div class="panel">
     {% if order_status_breakdown %}
-        <table class="table table-striped table-bordered table-hover">
-            <caption><i class="icon-shopping-cart icon-large"></i>{% trans "Order status breakdown" %}</caption>
+    <table class="table table-striped table-bordered table-hover">
+        <caption><i class="icon-shopping-cart icon-large"></i>{% trans "Order status breakdown" %}</caption>
+        <tr>
+            <th>{% trans "Status" %}</th>
+            <th>{% trans "Frequency" %}</th>
+        </tr>
+        {% for dict in order_status_breakdown %}
             <tr>
-                <th>{% trans "Status" %}</th>
-                <th>{% trans "Frequency" %}</th>
+                <td><a href="{% url 'dashboard:order-list' %}{% querystring 'status'=dict.status %}">{{ dict.status }}</a></td>
+                <td>{{ dict.freq }}</td>
             </tr>
-            {% for dict in order_status_breakdown %}
-                <tr>
-                    <td><a href="{% url 'dashboard:order-list' %}{% querystring 'status'=dict.status %}">{{ dict.status }}</a></td>
-                    <td>{{ dict.freq }}</td>
-                </tr>
-            {% endfor %}
-        </table>
+        {% endfor %}
+    </table>
     {% endif %}
+</div>
 
 {% endblock dashboard_content %}

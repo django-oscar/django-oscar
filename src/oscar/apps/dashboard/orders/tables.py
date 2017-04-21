@@ -1,10 +1,12 @@
-from django_tables2 import Column, TemplateColumn
+from django_tables2 import Column, TemplateColumn, LinkColumn
+from django_tables2.utils import Accessor
 from oscar.core.loading import get_class, get_model
 from django.utils.translation import ugettext_lazy as _
 from oscar.apps.dashboard.tables import TruncatedColumn
 
 DashboardTable = get_class('dashboard.tables', 'DashboardTable')
 Order = get_model('order', 'Order')
+
 
 class OrderTable(DashboardTable):
     select = TemplateColumn(
@@ -13,7 +15,11 @@ class OrderTable(DashboardTable):
         template_code="""
         <input type="checkbox" name="selected_order" class="selected_order" value="32">
     """)
-    number = Column(verbose_name=_('Order #'))
+    number = LinkColumn(
+        verbose_name=_('Order #'),
+        viewname='dashboard:order-detail',
+        kwargs={'number': Accessor('number')})
+
     shipping_address = TruncatedColumn(length=100)
     date_placed = Column(verbose_name=_('Purchased on'))
     num_items = Column(verbose_name=_('Items'), attrs={
@@ -24,7 +30,6 @@ class OrderTable(DashboardTable):
         'th': {'class': 'text-right'},
         'td': {'class': 'text-right'}
     })
-
 
     class Meta(DashboardTable.Meta):
         model = Order

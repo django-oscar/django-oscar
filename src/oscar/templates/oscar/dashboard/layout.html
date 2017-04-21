@@ -35,15 +35,14 @@
                     <div class="overlay"></div>
 
                     {% block sidebar_menu %}
-                    {% dashboard_navigation user as nav_items %}
+                    {% dashboard_navigation request user as nav_items %}
                     <ul class="">
                         {% for item in nav_items %}
                         <li class="">
                             {% if item.has_children %}
                             <label for="menu-item-{{ item.id }}" class="has-children"><i class="fa {{ item.icon }}"></i>{{ item.label }}</label>
-                            <input type="radio" id="menu-item-{{ item.id }}" name="menu-1" class="sidebar-menu-checkbox">
+                            <input type="radio" id="menu-item-{{ item.id }}"{%  if item.active %} checked="checked"{% endif %} name="menu-1" class="sidebar-menu-checkbox">
                             <div class="menu-panel">
-                                <h2>{{ item.label }} <label for="menu-item-none"><i class="fa fa-times"></i></label></h2>
                                 <ul>
                                     {% for subitem in item.children %}
                                     <li class=""><a class="nav-link" href="{{ subitem.url }}">{{ subitem.label }}</a></li>

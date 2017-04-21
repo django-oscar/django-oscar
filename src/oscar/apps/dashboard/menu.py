@@ -7,7 +7,7 @@ from oscar.core.loading import get_class
 Node = get_class('dashboard.nav', 'Node')
 
 
-def get_nodes(user):
+def get_nodes(user, request):
     """
     Return the visible navigation nodes for the passed user
     """
@@ -19,6 +19,15 @@ def get_nodes(user):
         if filtered_node and (filtered_node.has_children() or
                               not filtered_node.is_heading):
             visible_nodes.append(filtered_node)
+
+    # TODO: Naive implementation, should be fixed
+    for node in visible_nodes:
+        if node.has_children():
+            if any(request.path.startswith(n.url) for n in node.children):
+                node.active = True
+        elif request.path == node.url:
+            node.active = True
+
     return visible_nodes
 
 
