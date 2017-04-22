@@ -18,7 +18,7 @@ from oscar.test.factories.order import *  # noqa
 from oscar.test.factories.partner import *  # noqa
 from oscar.test.factories.payment import *  # noqa
 from oscar.test.factories.voucher import *  # noqa
-from oscar.test.factories.wishlists import * # noqa
+from oscar.test.factories.wishlists import *  # noqa
 
 
 Basket = get_model('basket', 'Basket')
@@ -228,6 +228,7 @@ def create_voucher(**kwargs):
     voucher = VoucherFactory(**defaults)
     voucher.offers.add(create_offer(offer_type='Voucher'))
     return voucher
+
 
 def create_shipping_weight_based(default_weight=D(1)):
     return WeightBased.objects.create(
