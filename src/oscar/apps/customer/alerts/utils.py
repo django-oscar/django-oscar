@@ -1,14 +1,18 @@
 import logging
+import warnings
 
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core import mail
 from django.db.models import Max
-from django.template import loader
+from django.template import loader, TemplateDoesNotExist
 
 from oscar.apps.customer.notifications import services
+from oscar.apps.customer.utils import Dispatcher
 from oscar.core.loading import get_class, get_model
+from oscar.utils.deprecation import RemovedInOscar20Warning
 
+CommunicationEventType = get_model('customer', 'CommunicationEventType')
 ProductAlert = get_model('customer', 'ProductAlert')
 Product = get_model('catalogue', 'Product')
 Selector = get_class('partner.strategy', 'Selector')
@@ -36,16 +40,37 @@ def send_alert_confirmation(alert):
         'alert': alert,
         'site': Site.objects.get_current(),
     }
-    subject_tpl = loader.get_template('customer/alerts/emails/'
-                                      'confirmation_subject.txt')
-    body_tpl = loader.get_template('customer/alerts/emails/'
-                                   'confirmation_body.txt')
-    mail.send_mail(
-        subject_tpl.render(ctx).strip(),
-        body_tpl.render(ctx),
-        settings.OSCAR_FROM_EMAIL,
-        [alert.email],
-    )
+
+    # For backwards compability, we check if the old (non-communication-event)
+    # templates exist, and use them if they do.
+    # This will be removed in Oscar 2.0
+    try:
+        subject_tpl = loader.get_template('customer/alerts/emails/'
+                                          'confirmation_subject.txt')
+        body_tpl = loader.get_template('customer/alerts/emails/'
+                                       'confirmation_body.txt')
+        warnings.warn(
+            "Product alert notifications now use the CommunicationEvent. "
+            "Move '{}' to '{}', and '{}' to '{}'".format(
+                'customer/alerts/emails/confirmation_subject.txt',
+                'customer/emails/commtype_product_alert_confirmation_subject.txt',
+                'customer/alerts/emails/confirmation_body.txt',
+                'customer/emails/commtype_product_alert_confirmation_body.txt',
+            ),
+            category=RemovedInOscar20Warning, stacklevel=2
+        )
+
+        messages = {
+            'subject': subject_tpl.render(ctx).strip(),
+            'body': body_tpl.render(ctx),
+            'html': '',
+        }
+    except TemplateDoesNotExist:
+        code = 'PRODUCT_ALERT_CONFIRMATION'
+        messages = CommunicationEventType.objects.get_and_render(code, ctx)
+
+    if messages and messages['body']:
+        Dispatcher().dispatch_direct_messages(alert.email, messages)
 
 
 def send_product_alerts(product):
@@ -75,14 +100,35 @@ def send_product_alerts(product):
     # hurry_mode is false if num_in_stock is None
     hurry_mode = num_in_stock is not None and alerts.count() > num_in_stock
 
-    # Load templates
-    message_tpl = loader.get_template('customer/alerts/message.html')
-    email_subject_tpl = loader.get_template('customer/alerts/emails/'
-                                            'alert_subject.txt')
-    email_body_tpl = loader.get_template('customer/alerts/emails/'
-                                         'alert_body.txt')
+    # For backwards compability, we check if the old (non-communication-event)
+    # templates exist, and use them if they do.
+    # This will be removed in Oscar 2.0
+    try:
+        email_subject_tpl = loader.get_template('customer/alerts/emails/'
+                                                'alert_subject.txt')
+        email_body_tpl = loader.get_template('customer/alerts/emails/'
+                                             'alert_body.txt')
+        use_deprecated_templates = True
+        warnings.warn(
+            "Product alert notifications now use the CommunicationEvent. "
+            "Move '{}' to '{}', and '{}' to '{}'".format(
+                'customer/alerts/emails/alert_subject.txt',
+                'customer/emails/commtype_product_alert_subject.txt',
+                'customer/alerts/emails/alert_body.txt',
+                'customer/emails/commtype_product_alert_body.txt',
+            ),
+            category=RemovedInOscar20Warning, stacklevel=2
+        )
 
-    emails = []
+    except TemplateDoesNotExist:
+        code = 'PRODUCT_ALERT'
+        try:
+            event_type = CommunicationEventType.objects.get(code=code)
+        except CommunicationEventType.DoesNotExist:
+            event_type = CommunicationEventType.objects.model(code=code)
+        use_deprecated_templates = False
+
+    messages_to_send = []
     num_notifications = 0
     selector = Selector()
     for alert in alerts:
@@ -100,26 +146,33 @@ def send_product_alerts(product):
         if alert.user:
             # Send a site notification
             num_notifications += 1
+            message_tpl = loader.get_template('customer/alerts/message.html')
             services.notify_user(alert.user, message_tpl.render(ctx))
 
-        # Build email and add to list
-        emails.append(
-            mail.EmailMessage(
-                email_subject_tpl.render(ctx).strip(),
-                email_body_tpl.render(ctx),
-                settings.OSCAR_FROM_EMAIL,
-                [alert.get_email_address()],
+        # Build message and add to list
+        if use_deprecated_templates:
+            messages = {
+                'subject': email_subject_tpl.render(ctx).strip(),
+                'body': email_body_tpl.render(ctx),
+                'html': '',
+            }
+        else:
+            messages = event_type.get_messages(ctx)
+
+        if messages and messages['body']:
+            messages_to_send.append(
+                (alert.get_email_address(), messages)
             )
-        )
         alert.close()
 
-    # Send all emails in one go to prevent multiple SMTP
-    # connections to be opened
-    if emails:
+    # Send all messages using one SMTP connection to avoid opening lots of them
+    if messages_to_send:
         connection = mail.get_connection()
         connection.open()
-        connection.send_messages(emails)
+        disp = Dispatcher(mail_connection=connection)
+        for message in messages_to_send:
+            disp.dispatch_direct_messages(*message)
         connection.close()
 
-    logger.info("Sent %d notifications and %d emails", num_notifications,
-                len(emails))
+    logger.info("Sent %d notifications and %d messages", num_notifications,
+                len(messages_to_send))
