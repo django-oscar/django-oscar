@@ -88,3 +88,13 @@ class TestDispatcher(TestCase):
         ctx = {'user': user,
                'site': SiteFactory()}
         self._dispatch_user_messages(user, 'REGISTRATION', ctx, 'Thank you for registering.')
+
+    def test_dispatcher_uses_email_connection(self):
+        connection = mail.get_connection()
+        disp = Dispatcher(mail_connection=connection)
+        disp.dispatch_direct_messages('test@example.com', {
+            'subject': 'Test',
+            'body': 'This is a test.',
+            'html': '',
+        })
+        self.assertEqual(len(mail.outbox), 1)
