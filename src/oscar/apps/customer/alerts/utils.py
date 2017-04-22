@@ -64,6 +64,7 @@ def send_alert_confirmation(alert):
             'subject': subject_tpl.render(ctx).strip(),
             'body': body_tpl.render(ctx),
             'html': '',
+            'sms': '',
         }
     except TemplateDoesNotExist:
         code = 'PRODUCT_ALERT_CONFIRMATION'
@@ -108,6 +109,7 @@ def send_product_alerts(product):
                                                 'alert_subject.txt')
         email_body_tpl = loader.get_template('customer/alerts/emails/'
                                              'alert_body.txt')
+
         use_deprecated_templates = True
         warnings.warn(
             "Product alert notifications now use the CommunicationEvent. "
@@ -129,6 +131,7 @@ def send_product_alerts(product):
         use_deprecated_templates = False
 
     messages_to_send = []
+    user_messages_to_send = []
     num_notifications = 0
     selector = Selector()
     for alert in alerts:
@@ -155,24 +158,32 @@ def send_product_alerts(product):
                 'subject': email_subject_tpl.render(ctx).strip(),
                 'body': email_body_tpl.render(ctx),
                 'html': '',
+                'sms': '',
             }
         else:
             messages = event_type.get_messages(ctx)
 
         if messages and messages['body']:
-            messages_to_send.append(
-                (alert.get_email_address(), messages)
-            )
+            if alert.user:
+                user_messages_to_send.append(
+                    (alert.user, messages)
+                )
+            else:
+                messages_to_send.append(
+                    (alert.get_email_address(), messages)
+                )
         alert.close()
 
     # Send all messages using one SMTP connection to avoid opening lots of them
-    if messages_to_send:
+    if messages_to_send or user_messages_to_send:
         connection = mail.get_connection()
         connection.open()
         disp = Dispatcher(mail_connection=connection)
         for message in messages_to_send:
             disp.dispatch_direct_messages(*message)
+        for message in user_messages_to_send:
+            disp.dispatch_user_messages(*message)
         connection.close()
 
     logger.info("Sent %d notifications and %d messages", num_notifications,
-                len(messages_to_send))
+                len(messages_to_send) + len(user_messages_to_send))

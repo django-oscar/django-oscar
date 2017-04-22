@@ -53,7 +53,7 @@ These methods/modules have been removed:
 
 Minor changes
 ~~~~~~~~~~~~~
- - Add billing address to user's address book during checkout (:issue:`1532`).
+ - Added billing address to user's address book during checkout (:issue:`1532`).
    Number of usages for billing and shipping addresses tracked separately:
    billing address in ``UserAddress.num_orders_as_billing_address`` field and
    shipping address in ``UserAddress.num_order_as_shipping_address``
@@ -63,10 +63,10 @@ Minor changes
    set if the number of alerts for a product exceeds the quantity in stock,
    rather than the other way around.
 
- - Update search to use the haystack CharField instead of the EdgeNgramField
+ - Updated search to use the haystack CharField instead of the EdgeNgramField
    to fix irrelevant results (:issue:`2128`)
 
- - Update ``customer.utils.Dispatcher`` to improve the ability to customise
+ - Updated ``customer.utils.Dispatcher`` to improve the ability to customise
    the implementation (:issue:`2303`)
 
  - Fixed logic for determining "hurry mode" on stock alerts. Hurry mode is now
@@ -79,6 +79,12 @@ Minor changes
    due to limited support of column altering, Django re-creates new SQLite
    database with new columns and copies into it original data -
    https://docs.djangoproject.com/en/1.11/topics/migrations/#sqlite
+
+ - Allowed the communication event dispatcher to accept an optional
+   ``mail_connection`` to use when sending email messages.
+
+ - Changed product alerts to be sent using the Communication Event framework.
+   The old email templates will continue to be supported until Oscar 2.0.
 
 .. _incompatible_in_1.5:
 
@@ -122,11 +128,11 @@ Backwards incompatible changes in Oscar 1.5
    ``OSCAR_GOOGLE_ANALYTICS_ID`` and ``OSCAR_USE_LESS`` respectively in order
    to keep all Oscar settings under common namespace.
 
- - Remove ``display_version`` and ``version`` variables from templates and
+ - Removed ``display_version`` and ``version`` variables from templates and
    template context.
 
-- Offer ``Applicator`` is now loaded from the ``offer.applicator`` module, instead of ``offer.utils``.
-  Old path is deprecated and won't be supported in the next Oscar versions.
+ - Offer ``Applicator`` is now loaded from the ``offer.applicator`` module, instead of ``offer.utils``.
+   Old path is deprecated and won't be supported in the next Oscar versions.
 
 
 Dependency changes
