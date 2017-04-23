@@ -39,3 +39,5 @@ as affected stock records are updated. Alternatively, the management command
 The context for the alert email body contains a ``hurry`` variable that is set
 to ``True`` if the number of active alerts for a product is greater than the
 quantity of the product available in stock.
+
+Alerts are sent using the Communication Event framework.

@@ -15,10 +15,13 @@ Email = get_model('customer', 'Email')
 
 
 class Dispatcher(object):
-    def __init__(self, logger=None):
+    def __init__(self, logger=None, mail_connection=None):
         if not logger:
             logger = logging.getLogger(__name__)
         self.logger = logger
+        # Supply a mail_connection if you want the dispatcher to use that
+        # instead of opening a new one.
+        self.mail_connection = mail_connection
 
     # Public API methods
 
@@ -113,7 +116,11 @@ class Dispatcher(object):
                                  from_email=from_email,
                                  to=[recipient])
         self.logger.info("Sending email to %s" % recipient)
-        email.send()
+
+        if self.mail_connection:
+            self.mail_connection.send_messages([email])
+        else:
+            email.send()
 
         return email
 
