@@ -10,6 +10,7 @@ from django.utils.http import urlsafe_base64_encode
 from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_model
 
+
 CommunicationEvent = get_model('order', 'CommunicationEvent')
 Email = get_model('customer', 'Email')
 

@@ -39,6 +39,8 @@ Minor changes
  - Majority of the Oscar imports now using dynamic loading, instead of
    direct importing for better extensibility and customizability, except
    signals.
+ - Customer transaction emails reworked on top of mailgun layout and has
+   better look.
 
 .. _incompatible_in_1.6:
 
