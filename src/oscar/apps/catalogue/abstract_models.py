@@ -16,6 +16,7 @@ from django.db.models import Count, Sum
 from django.utils import six
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
+from django.utils.lru_cache import lru_cache
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
@@ -102,8 +103,8 @@ class AbstractCategory(MP_Node):
     def __str__(self):
         return self.full_name
 
-    @property
-    def full_name(self):
+    @lru_cache(maxsize=256)
+    def _get_full_name(self):
         """
         Returns a string representation of the category and it's ancestors,
         e.g. 'Books > Non-fiction > Essential programming'.
@@ -116,7 +117,11 @@ class AbstractCategory(MP_Node):
         return self._full_name_separator.join(names)
 
     @property
-    def full_slug(self):
+    def full_name(self):
+        return self._get_full_name()
+
+    @lru_cache(maxsize=256)
+    def _get_full_slug(self):
         """
         Returns a string of this category's slug concatenated with the slugs
         of it's ancestors, e.g. 'books/non-fiction/essential-programming'.
@@ -127,6 +132,10 @@ class AbstractCategory(MP_Node):
         """
         slugs = [category.slug for category in self.get_ancestors_and_self()]
         return self._slug_separator.join(slugs)
+
+    @property
+    def full_slug(self):
+        return self._get_full_slug()
 
     def generate_slug(self):
         """
@@ -170,6 +179,9 @@ class AbstractCategory(MP_Node):
             # for that, we need to wait until the instance is saved. We
             # update the slug and save again if necessary.
             self.ensure_slug_uniqueness()
+        # Invalidate fulL_name and full_slug cache
+        self._get_full_name.cache_clear()
+        self._get_full_slug.cache_clear()
 
     def get_ancestors_and_self(self):
         """
