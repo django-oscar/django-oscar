@@ -60,3 +60,10 @@ class TestMultiOptionAttributes(TestCase):
         self.attr.save_value(product, None)
         product.refresh_from_db()
         self.assertFalse(hasattr(product.attr, 'sizes'))
+
+    def test_multi_option_value_as_text(self):
+        product = factories.ProductFactory()
+        self.attr.save_value(product, self.options)
+        attr_val = product.attribute_values.get(attribute=self.attr)
+        self.assertEqual(attr_val.value_as_text,
+            ", ".join(o.option for o in self.options))

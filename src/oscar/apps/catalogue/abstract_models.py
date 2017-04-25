@@ -979,7 +979,7 @@ class AbstractProductAttributeValue(models.Model):
 
     @property
     def _multi_option_as_text(self):
-        return ', '.join(unicode(option) for option in self.value_multi_option.all())
+        return ', '.join(str(option) for option in self.value_multi_option.all())
 
     @property
     def _richtext_as_text(self):
