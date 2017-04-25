@@ -44,6 +44,8 @@ These methods/modules have been removed:
    alternative.
  - ``oscar.test.decorators`` module.
  - ``oscar.core.utils.compose`` function.
+ - ``oscar.apps.customer.auth_backends.Emailbackend``. Use
+   ``oscar.apps.customer.auth_backends.EmailBackend`` instead.
 
 
 .. _silk: https://github.com/django-silk/silk
