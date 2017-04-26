@@ -19,8 +19,8 @@ Table of contents:
 Compatibility
 -------------
 
-Oscar 1.5 is compatible with Django 1.8, 1.9, 1.10  and 1.11 as well as Python 2.7,
-3.3, 3.4, 3.5 and 3.6.
+Oscar 1.5 is compatible with Django 1.8, 1.10 and 1.11 as well as Python 2.7,
+3.3, 3.4, 3.5 and 3.6. Support for Django 1.9 is dropped in this version.
 
 
 .. _new_in_1.5:
