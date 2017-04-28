@@ -70,10 +70,12 @@ class AbstractConditionalOffer(models.Model):
     condition = models.ForeignKey(
         'offer.Condition',
         on_delete=models.CASCADE,
+        related_name='offers',
         verbose_name=_("Condition"))
     benefit = models.ForeignKey(
         'offer.Benefit',
         on_delete=models.CASCADE,
+        related_name='offers',
         verbose_name=_("Benefit"))
 
     # Some complicated situations require offers to be applied in a set order.
@@ -235,7 +237,7 @@ class AbstractConditionalOffer(models.Model):
     def apply_deferred_benefit(self, basket, order, application):
         """
         Applies any deferred benefits.  These are things like adding loyalty
-        points to somone's account.
+        points to someone's account.
         """
         return self.benefit.proxy().apply_deferred(basket, order, application)
 

@@ -9,6 +9,8 @@ from oscar.apps.offer import custom, models
 from oscar.test import factories
 from oscar.test.basket import add_product
 
+from tests._site.model_tests_app.models import BasketOwnerCalledBarry
+
 
 class TestCountCondition(TestCase):
 
@@ -20,7 +22,7 @@ class TestCountCondition(TestCase):
             range=self.range, type="Count", value=2)
         self.offer = mock.Mock()
 
-    def test_is_not_satified_by_empty_basket(self):
+    def test_is_not_satisfied_by_empty_basket(self):
         self.assertFalse(self.condition.is_satisfied(self.offer, self.basket))
 
     def test_not_discountable_product_fails_condition(self):
@@ -232,21 +234,6 @@ class TestConditionProxyModels(TestCase):
                 six.text_type(condition)]))
 
 
-class BasketOwnerCalledBarry(models.Condition):
-
-    class Meta:
-        proxy = True
-        app_label = 'tests'
-
-    def is_satisfied(self, offer, basket):
-        if not basket.owner:
-            return False
-        return basket.owner.first_name.lower() == 'barry'
-
-    def can_apply_condition(self, product):
-        return False
-
-
 class TestCustomCondition(TestCase):
 
     def setUp(self):
@@ -254,10 +241,10 @@ class TestCustomCondition(TestCase):
         self.offer = models.ConditionalOffer(condition=self.condition)
         self.basket = Basket()
 
-    def test_is_not_satified_by_non_match(self):
+    def test_is_not_satisfied_by_non_match(self):
         self.basket.owner = factories.UserFactory(first_name="Alan")
         self.assertFalse(self.offer.is_condition_satisfied(self.basket))
 
-    def test_is_satified_by_match(self):
+    def test_is_satisfied_by_match(self):
         self.basket.owner = factories.UserFactory(first_name="Barry")
         self.assertTrue(self.offer.is_condition_satisfied(self.basket))
