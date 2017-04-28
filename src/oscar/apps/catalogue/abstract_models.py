@@ -1119,6 +1119,11 @@ class MissingProductImage(object):
         static_file_path = find('oscar/img/%s' % self.name)
         if static_file_path is not None:
             try:
+                # Check that the target directory exists, and attempt to
+                # create it if it doesn't.
+                media_file_dir = os.path.dirname(media_file_path)
+                if not os.path.exists(media_file_dir):
+                    os.makedirs(media_file_dir)
                 os.symlink(static_file_path, media_file_path)
             except OSError:
                 raise ImproperlyConfigured((
