@@ -137,7 +137,7 @@ class Migration(migrations.Migration):
                 ('display_order', models.PositiveIntegerField(default=0, verbose_name='Display Order')),
                 ('clicks', models.PositiveIntegerField(default=0, verbose_name='Clicks')),
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name='Date Created')),
-                ('page_url', oscar.models.fields.ExtendedURLField(max_length=128, verify_exists=True, db_index=True, verbose_name='Page URL')),
+                ('page_url', oscar.models.fields.ExtendedURLField(max_length=128, db_index=True, verbose_name='Page URL')),
                 ('content_type', models.ForeignKey(to='contenttypes.ContentType', on_delete=models.CASCADE)),
             ],
             options={

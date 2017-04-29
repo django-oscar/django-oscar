@@ -62,7 +62,7 @@ class OrderedProductForm(forms.ModelForm):
 
 
 class PagePromotionForm(forms.ModelForm):
-    page_url = ExtendedURLField(label=_("URL"), verify_exists=True)
+    page_url = ExtendedURLField(label=_("URL"))
     position = forms.CharField(
         widget=forms.Select(choices=settings.OSCAR_PROMOTION_POSITIONS),
         label=_("Position"),

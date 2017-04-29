@@ -12,19 +12,15 @@ from oscar.core.loading import get_model
 class ExtendedURLValidator(validators.URLValidator):
 
     def __init__(self, *args, **kwargs):
-        # 'verify_exists' has been removed in Django 1.5 and so we no longer
-        # pass it up to the core validator class
         self.is_local_url = False
-        verify_exists = kwargs.pop('verify_exists', False)
         super(ExtendedURLValidator, self).__init__(*args, **kwargs)
-        self.verify_exists = verify_exists
 
     def __call__(self, value):
         try:
             super(ExtendedURLValidator, self).__call__(value)
         except ValidationError:
-            # The parent validator will raise an exception if the URL does not
-            # exist and so we test here to see if the value is a local URL.
+            # The parent validator will raise an exception if the URL is not a
+            # valid absolute URL so we test here to see if it is a local URL.
             if value:
                 self.validate_local_url(value)
             else:
@@ -65,12 +61,12 @@ class URLDoesNotExistValidator(ExtendedURLValidator):
 
     def __call__(self, value):
         """
-        Validate that the URLdoes not already exist.
+        Validate that the URL does not already exist.
 
         The URL will be verified first and raises ``ValidationError`` when
-        it is invalid. A valid URL is checked for existance and raises
-        ``ValidationError`` if the URL already exists. Setting attribute
-        ``verify_exists`` has no impact on validation.
+        it is invalid. A valid URL is checked for existence and raises
+        ``ValidationError`` if the URL already exists.
+
         This validation uses two calls to ExtendedURLValidator which can
         be slow. Be aware of this, when you use it.
 

@@ -14,21 +14,9 @@ class ExtendedURLField(fields.URLField):
     # URLS are allowed for ExtendedURLField, we must set it to TextInput
     widget = TextInput
 
-    def __init__(self, max_length=None, min_length=None, verify_exists=None,
-                 *args, **kwargs):
-        # We don't pass on verify_exists as it has been deprecated in Django
-        # 1.4
-        super(fields.URLField, self).__init__(
-            max_length, min_length, *args, **kwargs)
-        # Even though it is deprecated, we still pass on 'verify_exists' as
-        # Oscar's ExtendedURLValidator uses it to determine whether to test
-        # local URLs.
-        if verify_exists is not None:
-            validator = validators.ExtendedURLValidator(
-                verify_exists=verify_exists)
-        else:
-            validator = validators.ExtendedURLValidator()
-        self.validators.append(validator)
+    def __init__(self, max_length=None, min_length=None, *args, **kwargs):
+        super(fields.URLField, self).__init__(*args, **kwargs)
+        self.validators.append(validators.ExtendedURLValidator())
 
     def to_python(self, value):
         # We need to avoid having 'http' inserted at the start of
