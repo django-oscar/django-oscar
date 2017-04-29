@@ -6,5 +6,5 @@ class TestExtendedURLField(TestCase):
     """ExtendedURLField"""
 
     def test_validates_local_urls(self):
-        field = fields.ExtendedURLField(verify_exists=True)
+        field = fields.ExtendedURLField()
         field.clean('/')

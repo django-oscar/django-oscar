@@ -6,13 +6,10 @@ from oscar.core.validators import ExtendedURLValidator
 from oscar.core.validators import URLDoesNotExistValidator
 
 
-class TestExtendedURLValidatorWithVerifications(TestCase):
-    """
-    ExtendedURLValidator with verify_exists=True
-    """
+class TestExtendedURLValidator(TestCase):
 
     def setUp(self):
-        self.validator = ExtendedURLValidator(verify_exists=True)
+        self.validator = ExtendedURLValidator()
 
     def test_validates_local_url(self):
         try:
@@ -52,10 +49,7 @@ class TestExtendedURLValidatorWithVerifications(TestCase):
                       'unexpectedly!')
 
 
-class TestExtendedURLValidatorWithoutVerifyExists(TestCase):
-    """
-    ExtendedURLValidator with verify_exists=False
-    """
+class TestURLDoesNotExistValidator(TestCase):
 
     def setUp(self):
         self.validator = URLDoesNotExistValidator()

@@ -136,6 +136,9 @@ Backwards incompatible changes in Oscar 1.5
  - Offer ``Applicator`` is now loaded from the ``offer.applicator`` module, instead of ``offer.utils``.
    Old path is deprecated and won't be supported in the next Oscar versions.
 
+ - ``oscar.forms.fields.ExtendedURLField`` no longer accepts a ``verify_exists``
+   argument.
+
 
 Dependency changes
 ------------------
