@@ -1,5 +1,6 @@
 import keyword
 
+from django.conf import settings
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import resolve
@@ -98,7 +99,7 @@ def non_python_keyword(value):
 
 
 class CommonPasswordValidator(validators.BaseValidator):
-    # See http://www.smartplanet.com/blog/business-brains/top-20-most-common-passwords-of-all-time-revealed-8216123456-8216princess-8216qwerty/4519  # noqa
+
     forbidden_passwords = [
         'password',
         '1234',
@@ -152,8 +153,38 @@ class CommonPasswordValidator(validators.BaseValidator):
             return self.forbidden_passwords
 
 
-# List all requirements for password, site wide
-password_validators = [
-    validators.MinLengthValidator(6),
-    CommonPasswordValidator(),
-]
+# Shim for backwards compatibility with Django 1.8. This can be removed when
+# support for Django 1.8 is dropped.
+def validate_password(password, user=None):
+    try:
+        # Django 1.9 and above
+        from django.contrib.auth import password_validation
+        # If AUTH_PASSWORD_VALIDATORS is empty, then supply validators
+        # equivalent to what Oscar used to do itself (deprecated).
+        if settings.AUTH_PASSWORD_VALIDATORS:
+            password_validators = None
+        else:
+            password_validators = [
+                password_validation.MinimumLengthValidator(min_length=6),
+                password_validation.CommonPasswordValidator(),
+            ]
+        return password_validation.validate_password(password, user=user,
+                                        password_validators=password_validators)
+    except ImportError:
+        # Django 1.8 - use our custom validators. Note that these are Field
+        # validators and have a different signature to the password validators
+        # used above.
+        password_validators = [
+            validators.MinLengthValidator(6),
+            CommonPasswordValidator(),
+        ]
+
+        errors = []
+        for validator in password_validators:
+            try:
+                validator(password)
+            except ValidationError as error:
+                errors.append(error)
+
+        if errors:
+            raise ValidationError(errors)

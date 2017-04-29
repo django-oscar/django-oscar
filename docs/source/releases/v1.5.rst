@@ -29,6 +29,8 @@ What's new in Oscar 1.5?
 ------------------------
  - Support for Django 1.11 (:issue:`2221`)
  - Google Analytics tracking code has been migrated to Universal Analytics.
+ - Passwords are validated using the validators defined in
+   ``AUTH_PASSWORD_VALIDATORS`` for Django 1.9 and above.
 
 
 Removal of deprecated features

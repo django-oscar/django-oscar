@@ -15,7 +15,7 @@ from oscar.apps.customer.utils import get_password_reset_url, normalise_email
 from oscar.core.compat import (
     existing_user_fields, get_user_model, user_is_authenticated)
 from oscar.core.loading import get_class, get_model, get_profile_class
-from oscar.core.validators import password_validators
+from oscar.core.validators import validate_password
 from oscar.forms import widgets
 
 Dispatcher = get_class('customer.utils', 'Dispatcher')
@@ -79,17 +79,21 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
 
 
 class SetPasswordForm(auth_forms.SetPasswordForm):
-    def __init__(self, *args, **kwargs):
-        super(SetPasswordForm, self).__init__(*args, **kwargs)
-        # Enforce password validations for the new password
-        self.fields['new_password1'].validators += password_validators
+
+    def clean_new_password2(self):
+        new_password2 = super(SetPasswordForm, self).clean_new_password2()
+        # For backward compatibility with Django 1.8
+        validate_password(new_password2, self.user)
+        return new_password2
 
 
 class PasswordChangeForm(auth_forms.PasswordChangeForm):
-    def __init__(self, *args, **kwargs):
-        super(PasswordChangeForm, self).__init__(*args, **kwargs)
-        # Enforce password validations for the new password
-        self.fields['new_password1'].validators += password_validators
+
+    def clean_new_password2(self):
+        new_password2 = super(PasswordChangeForm, self).clean_new_password2()
+        # For backward compatibility with Django 1.8
+        validate_password(new_password2, self.user)
+        return new_password2
 
 
 class EmailAuthenticationForm(AuthenticationForm):
@@ -135,8 +139,7 @@ class ConfirmPasswordForm(forms.Form):
 class EmailUserCreationForm(forms.ModelForm):
     email = forms.EmailField(label=_('Email address'))
     password1 = forms.CharField(
-        label=_('Password'), widget=forms.PasswordInput,
-        validators=password_validators)
+        label=_('Password'), widget=forms.PasswordInput)
     password2 = forms.CharField(
         label=_('Confirm password'), widget=forms.PasswordInput)
     redirect_url = forms.CharField(
@@ -166,6 +169,7 @@ class EmailUserCreationForm(forms.ModelForm):
         if password1 != password2:
             raise forms.ValidationError(
                 _("The two password fields didn't match."))
+        validate_password(password2, self.instance)
         return password2
 
     def clean_redirect_url(self):
