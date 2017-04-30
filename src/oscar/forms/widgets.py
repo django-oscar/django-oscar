@@ -48,8 +48,7 @@ class ImageInput(FileInput):
             # can't display images that aren't stored
             image_url = ''
         else:
-            image_url = final_attrs['value'] = force_text(
-                self._format_value(value))
+            image_url = final_attrs['value'] = value
 
         return render_to_string(self.template_name, {
             'input_attrs': flatatt(final_attrs),
