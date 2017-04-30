@@ -2,7 +2,6 @@ from django.conf import settings
 from django.utils.module_loading import import_string
 from django.views.generic.list import MultipleObjectMixin
 
-from oscar.core.decorators import deprecated
 from oscar.core.loading import get_class, get_model
 
 BrowseCategoryForm = get_class('search.forms', 'BrowseCategoryForm')
@@ -55,10 +54,6 @@ class SolrProductSearchHandler(SearchHandler):
                 '"%s"' % c.full_name for c in self.categories])
             sqs = sqs.narrow('category_exact:(%s)' % pattern)
         return sqs
-
-
-# Deprecated name. TODO: Remove in Oscar 1.2
-ProductSearchHandler = deprecated(SolrProductSearchHandler)
 
 
 class ESProductSearchHandler(SearchHandler):
