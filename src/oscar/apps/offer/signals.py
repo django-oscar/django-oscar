@@ -9,7 +9,7 @@ Benefit = get_model('offer', 'Benefit')
 
 
 @receiver(post_delete, sender=ConditionalOffer)
-def delete_related_useless_conditions_and_benefits(instance, **kwargs):
+def delete_unused_related_conditions_and_benefits(instance, **kwargs):
     offer = instance  # the object is no longer in the database
 
     condition_id = offer.condition_id
