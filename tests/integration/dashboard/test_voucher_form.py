@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django import test
 
 from oscar.apps.dashboard.vouchers import forms

@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import os
 
 from django import VERSION as DJANGO_VERSION

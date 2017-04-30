@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from oscar.apps.voucher.abstract_models import (
     AbstractVoucher, AbstractVoucherApplication)
 from oscar.core.loading import is_model_registered

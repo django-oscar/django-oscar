@@ -1,11 +1,11 @@
+from __future__ import unicode_literals, absolute_import
+
 """This module was taken from Wagtail, see:
 
 https://github.com/torchbox/wagtail/blob/d82e38e11e9f6c27b6ad6dfc6467e2754b5ab228/wagtail/wagtailcore/tests/test_migrations.py
 
 
 """
-from __future__ import absolute_import
-
 from django.apps import apps
 from django.db.migrations.autodetector import MigrationAutodetector
 from django.db.migrations.loader import MigrationLoader

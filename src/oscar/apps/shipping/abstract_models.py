@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from decimal import Decimal as D
 
 from django.core.validators import MinValueValidator

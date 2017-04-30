@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from mock import patch
 from decimal import Decimal as D
 

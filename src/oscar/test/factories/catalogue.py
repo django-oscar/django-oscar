@@ -1,4 +1,5 @@
-# coding=utf-8
+from __future__ import unicode_literals
+
 import factory
 
 from oscar.core.loading import get_model
@@ -84,7 +85,7 @@ class AttributeOptionFactory(factory.DjangoModelFactory):
 
 
 class AttributeOptionGroupFactory(factory.DjangoModelFactory):
-    name = u'Grüppchen'
+    name = 'Grüppchen'
 
     class Meta:
         model = get_model('catalogue', 'AttributeOptionGroup')

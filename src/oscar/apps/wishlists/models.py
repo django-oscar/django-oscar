@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from oscar.core.loading import is_model_registered
 
 from .abstract_models import *  # noqa

@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.fields import CharField, DecimalField
 from django.utils import six
@@ -119,11 +121,11 @@ class NullCharField(CharField):
 
     def to_python(self, value):
         val = super(NullCharField, self).to_python(value)
-        return val if val is not None else u''
+        return val if val is not None else ''
 
     def get_prep_value(self, value):
         prepped = super(NullCharField, self).get_prep_value(value)
-        return prepped if prepped != u"" else None
+        return prepped if prepped != "" else None
 
     def deconstruct(self):
         """

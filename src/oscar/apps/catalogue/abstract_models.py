@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import logging
 import os
 from datetime import date, datetime
@@ -243,7 +245,7 @@ class AbstractProductCategory(models.Model):
         verbose_name_plural = _('Product categories')
 
     def __str__(self):
-        return u"<productcategory for product '%s'>" % self.product
+        return "<productcategory for product '%s'>" % self.product
 
 
 @python_2_unicode_compatible
@@ -368,7 +370,7 @@ class AbstractProduct(models.Model):
         if self.title:
             return self.title
         if self.attribute_summary:
-            return u"%s (%s)" % (self.get_title(), self.attribute_summary)
+            return "%s (%s)" % (self.get_title(), self.attribute_summary)
         else:
             return self.get_title()
 
@@ -528,7 +530,7 @@ class AbstractProduct(models.Model):
         if not title and self.parent_id:
             title = self.parent.title
         return title
-    get_title.short_description = pgettext_lazy(u"Product title", u"Title")
+    get_title.short_description = pgettext_lazy("Product title", "Title")
 
     def get_product_class(self):
         """
@@ -965,7 +967,7 @@ class AbstractProductAttributeValue(models.Model):
         Gets a string representation of both the attribute and it's value,
         used e.g in product summaries.
         """
-        return u"%s: %s" % (self.attribute.name, self.value_as_text)
+        return "%s: %s" % (self.attribute.name, self.value_as_text)
 
     @property
     def value_as_text(self):
@@ -1171,7 +1173,7 @@ class AbstractProductImage(models.Model):
         verbose_name_plural = _('Product images')
 
     def __str__(self):
-        return u"Image of '%s'" % self.product
+        return "Image of '%s'" % self.product
 
     def is_primary(self):
         """

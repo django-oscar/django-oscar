@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from oscar.test.testcases import WebTestCase
 from oscar.apps.partner import models
 from django.core.urlresolvers import reverse

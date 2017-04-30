@@ -1,4 +1,5 @@
-# coding=utf-8
+from __future__ import unicode_literals
+
 from django.db import IntegrityError
 from django.test import TestCase
 from django.core.exceptions import ValidationError
@@ -40,7 +41,7 @@ class ProductCreationTests(ProductTests):
     def test_none_upc_is_represented_as_empty_string(self):
         product = Product(product_class=self.product_class,
                           title='testing', upc=None)
-        self.assertEqual(product.upc, u'')
+        self.assertEqual(product.upc, '')
 
     def test_upc_uniqueness_enforced(self):
         Product.objects.create(product_class=self.product_class,
@@ -62,12 +63,12 @@ class TopLevelProductTests(ProductTests):
         self.assertRaises(ValidationError, product.clean)
 
     def test_top_level_products_must_have_product_class(self):
-        product = Product(title=u"Kopfhörer")
+        product = Product(title="Kopfhörer")
         self.assertRaises(ValidationError, product.clean)
 
     def test_top_level_products_are_part_of_browsable_set(self):
         product = Product.objects.create(
-            product_class=self.product_class, title=u"Kopfhörer")
+            product_class=self.product_class, title="Kopfhörer")
         self.assertEqual(set([product]), set(Product.browsable.all()))
 
 

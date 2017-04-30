@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.conf import settings
 from django.contrib.contenttypes import fields
 from django.contrib.contenttypes.models import ContentType
@@ -49,7 +51,7 @@ class PagePromotion(LinkedPromotion):
         _('Page URL'), max_length=128, db_index=True)
 
     def __str__(self):
-        return u"%s on %s" % (self.content_object, self.page_url)
+        return "%s on %s" % (self.content_object, self.page_url)
 
     def get_link(self):
         return reverse('promotions:page-click',
@@ -243,7 +245,7 @@ class AbstractProductList(AbstractPromotion):
     of products.
     """
     name = models.CharField(
-        pgettext_lazy(u"Promotion product list title", u"Title"),
+        pgettext_lazy("Promotion product list title", "Title"),
         max_length=255)
     description = models.TextField(_("Description"), blank=True)
     link_url = ExtendedURLField(_('Link URL'), blank=True)
@@ -354,7 +356,7 @@ class TabbedBlock(AbstractPromotion):
 
     _type = 'Tabbed block'
     name = models.CharField(
-        pgettext_lazy(u"Tabbed block title", u"Title"), max_length=255)
+        pgettext_lazy("Tabbed block title", "Title"), max_length=255)
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     class Meta:

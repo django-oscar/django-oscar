@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.contrib.messages.constants import SUCCESS, WARNING
 from django.core.urlresolvers import reverse
 from django.test import TestCase

@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import keyword
 
 from django.conf import settings

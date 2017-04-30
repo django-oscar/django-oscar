@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from oscar.apps.address.abstract_models import (
     AbstractBillingAddress, AbstractShippingAddress)
 from oscar.apps.order.abstract_models import *  # noqa

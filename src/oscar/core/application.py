@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django import VERSION as DJANGO_VERSION
 from django.core.urlresolvers import RegexURLPattern, reverse_lazy
 

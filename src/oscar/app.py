@@ -1,4 +1,5 @@
 # flake8: noqa, because URL syntax is more readable with long lines
+from __future__ import unicode_literals
 
 from django.conf import settings
 from django.conf.urls import url

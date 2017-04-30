@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.core.urlresolvers import reverse
 from django.contrib.flatpages.models import FlatPage
 from oscar.test.testcases import WebTestCase

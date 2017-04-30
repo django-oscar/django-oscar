@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 class FailedPreCondition(Exception):
 
     def __init__(self, url, message=None, messages=None):

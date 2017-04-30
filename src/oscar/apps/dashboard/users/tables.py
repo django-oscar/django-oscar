@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django_tables2 import A, Column, LinkColumn, TemplateColumn
 
 from oscar.core.loading import get_class

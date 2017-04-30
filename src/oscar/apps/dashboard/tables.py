@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.utils.translation import ungettext_lazy
 from django_tables2 import Table
 

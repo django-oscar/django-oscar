@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 try:
     from types import ClassType
 except ImportError:

@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import json
 
 import phonenumbers
@@ -206,7 +208,7 @@ class PhoneNumberMixin(object):
                 # There is no shipping country, not a valid international
                 # number
                 raise ValidationError(
-                    _(u'This is not a valid international phone format.'))
+                    _('This is not a valid international phone format.'))
 
             # The PhoneNumber class does not allow specifying
             # the region. So we drop down to the underlying phonenumbers
@@ -216,12 +218,12 @@ class PhoneNumberMixin(object):
                 phone_number = PhoneNumber.from_string(number, region=region_code)
                 if not phone_number.is_valid():
                     raise ValidationError(
-                        _(u'This is not a valid local phone format for %s.')
+                        _('This is not a valid local phone format for %s.')
                         % country)
             except phonenumbers.NumberParseException:
                 # Not a valid local or international phone number
                 raise ValidationError(
-                    _(u'This is not a valid local or international phone'
-                      u' format.'))
+                    _('This is not a valid local or international phone'
+                      ' format.'))
 
         return phone_number

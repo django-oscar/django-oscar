@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from itertools import chain
 
 from oscar.apps.promotions.models import KeywordPromotion, PagePromotion

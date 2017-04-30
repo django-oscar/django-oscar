@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from oscar.apps.basket.abstract_models import (
     AbstractBasket, AbstractLine, AbstractLineAttribute)
 from oscar.core.loading import is_model_registered

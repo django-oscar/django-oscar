@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from oscar.apps.offer.abstract_models import (
     AbstractBenefit, AbstractCondition, AbstractConditionalOffer,
     AbstractRange, AbstractRangeProduct, AbstractRangeProductFileUpload)

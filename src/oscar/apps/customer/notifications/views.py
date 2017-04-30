@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.conf import settings
 from django.contrib import messages
 from django.utils.html import strip_tags
@@ -66,7 +68,7 @@ class DetailView(PageTitleMixin, generic.DetailView):
     def get_page_title(self):
         """Append subject to page title"""
         title = strip_tags(self.object.subject)
-        return u'%s: %s' % (_('Notification'), title)
+        return '%s: %s' % (_('Notification'), title)
 
     def get_queryset(self):
         return self.model._default_manager.filter(

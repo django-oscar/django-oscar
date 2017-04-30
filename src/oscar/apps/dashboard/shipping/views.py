@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django import shortcuts
 from django.contrib import messages
 from django.core.urlresolvers import reverse

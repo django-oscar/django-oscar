@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from oscar.apps.analytics.abstract_models import (
     AbstractProductRecord, AbstractUserProductView,
     AbstractUserRecord, AbstractUserSearch)

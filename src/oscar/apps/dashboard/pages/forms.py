@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
@@ -13,7 +15,7 @@ class PageSearchForm(forms.Form):
     Search form to filter pages by *title.
     """
     title = forms.CharField(
-        required=False, label=pgettext_lazy(u"Page title", u"Title"))
+        required=False, label=pgettext_lazy("Page title", "Title"))
 
 
 class PageUpdateForm(forms.ModelForm):

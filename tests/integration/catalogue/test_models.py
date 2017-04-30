@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import pytest
 from django.core.exceptions import ValidationError
 

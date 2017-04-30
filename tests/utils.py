@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import threading
 
 from django.db import connection

@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.core.management.base import BaseCommand, CommandError
 
 from oscar.core.loading import get_class, get_model

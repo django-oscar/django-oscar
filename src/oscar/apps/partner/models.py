@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from oscar.apps.address.abstract_models import AbstractPartnerAddress
 from oscar.apps.partner.abstract_models import (
     AbstractPartner, AbstractStockAlert, AbstractStockRecord)

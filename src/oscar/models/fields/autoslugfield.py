@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 """
 AutoSlugField taken from django-extensions at
 15d3eb305957cee4768dd86e44df1bdad341a10e
@@ -70,7 +72,7 @@ class AutoSlugField(SlugField):
         else:
             self._populate_from = populate_from
             self._populate_from_org = populate_from
-        self.separator = kwargs.pop('separator', six.u('-'))
+        self.separator = kwargs.pop('separator', '-')
         self.overwrite = kwargs.pop('overwrite', False)
         self.uppercase = kwargs.pop('uppercase', False)
         self.allow_duplicates = kwargs.pop('allow_duplicates', False)
@@ -180,7 +182,7 @@ class AutoSlugField(SlugField):
     def deconstruct(self):
         name, path, args, kwargs = super(AutoSlugField, self).deconstruct()
         kwargs['populate_from'] = self._populate_from_org
-        if not self.separator == six.u('-'):
+        if not self.separator == "-":
             kwargs['separator'] = self.separator
         if self.overwrite is not False:
             kwargs['overwrite'] = True
