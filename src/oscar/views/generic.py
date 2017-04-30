@@ -192,7 +192,7 @@ class PhoneNumberMixin(object):
 
         # empty
         if number in validators.EMPTY_VALUES:
-            return None
+            return ''
 
         # Check for an international phone format
         try:
