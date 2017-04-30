@@ -88,6 +88,8 @@ Minor changes
  - Changed product alerts to be sent using the Communication Event framework.
    The old email templates will continue to be supported until Oscar 2.0.
 
+ - Product reviews are now deleted if the associated product is deleted.
+
 .. _incompatible_in_1.5:
 
 Backwards incompatible changes in Oscar 1.5

@@ -20,10 +20,9 @@ class AbstractProductReview(models.Model):
     Reviews can belong to a user or be anonymous.
     """
 
-    # Note we keep the review even if the product is deleted
     product = models.ForeignKey(
         'catalogue.Product', related_name='reviews', null=True,
-        on_delete=models.SET_NULL)
+        on_delete=models.CASCADE)
 
     # Scores are between 0 and 5
     SCORE_CHOICES = tuple([(x, x) for x in range(0, 6)])
