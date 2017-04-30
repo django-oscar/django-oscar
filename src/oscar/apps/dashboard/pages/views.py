@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ValidationError
@@ -25,7 +27,7 @@ class PageListView(ListView):
     model = FlatPage
     form_class = forms.PageSearchForm
     paginate_by = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE
-    desc_template = u'%(main_filter)s %(title_filter)s'
+    desc_template = '%(main_filter)s %(title_filter)s'
 
     def get_queryset(self):
         """

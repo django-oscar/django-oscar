@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from decimal import Decimal as D
 from oscar.core.loading import get_model
 

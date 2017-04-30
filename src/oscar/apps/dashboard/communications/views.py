@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
 from django.template import TemplateSyntaxError

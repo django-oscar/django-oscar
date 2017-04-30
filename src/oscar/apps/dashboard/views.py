@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from datetime import timedelta
 from decimal import Decimal as D
 from decimal import ROUND_UP

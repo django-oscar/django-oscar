@@ -1,4 +1,5 @@
-# coding=utf-8
+from __future__ import unicode_literals
+
 """
 AutoSlugField taken from django-extensions at
 15d3eb305957cee4768dd86e44df1bdad341a10e
@@ -72,32 +73,32 @@ class AutoSlugFieldTest(TestCase):
             "unicode slugs not supported by Django<1.9")
     def test_auto_create_unicode_slug(self):
         with override_settings(OSCAR_SLUG_ALLOW_UNICODE=True):
-            m = SluggedTestModel(title=u'Château Margaux 1960')
+            m = SluggedTestModel(title='Château Margaux 1960')
             m.save()
-            self.assertEqual(m.slug, u'château-margaux-1960')
+            self.assertEqual(m.slug, 'château-margaux-1960')
 
     @skipIf(DJANGO_VERSION < (1, 9),
             "unicode slugs not supported by Django<1.9")
     def test_auto_create_next_unicode_slug(self):
         with override_settings(OSCAR_SLUG_ALLOW_UNICODE=True):
-            m1 = SluggedTestModel(title=u'Château Margaux 1960')
+            m1 = SluggedTestModel(title='Château Margaux 1960')
             m1.save()
 
-            m2 = SluggedTestModel(title=u'Château Margaux 1960')
+            m2 = SluggedTestModel(title='Château Margaux 1960')
             m2.save()
 
-            self.assertEqual(m2.slug, u'château-margaux-1960-2')
+            self.assertEqual(m2.slug, 'château-margaux-1960-2')
 
     @skipIf(DJANGO_VERSION < (1, 9),
             "unicode slugs not supported by Django<1.9")
     def test_switch_to_unicode_slug(self):
-        m = SluggedTestModel(title=u'Château Margaux 1960')
+        m = SluggedTestModel(title='Château Margaux 1960')
         m.save()
         self.assertEqual(m.slug, 'chateau-margaux-1960')
         with override_settings(OSCAR_SLUG_ALLOW_UNICODE=True):
-            m = SluggedTestModel(title=u'Château Margaux 1960')
+            m = SluggedTestModel(title='Château Margaux 1960')
             m.save()
-            self.assertEqual(m.slug, u'château-margaux-1960')
+            self.assertEqual(m.slug, 'château-margaux-1960')
 
     @skipIf(DJANGO_VERSION < (1, 9),
             "unicode slugs not supported by Django<1.9")

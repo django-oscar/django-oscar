@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.core.paginator import InvalidPage, Paginator
 from django.utils.translation import ugettext_lazy as _
 from haystack import connections

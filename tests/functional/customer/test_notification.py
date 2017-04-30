@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from oscar.test.testcases import WebTestCase
 from oscar.apps.customer.notifications import services
 from oscar.test.factories import UserFactory

@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from haystack import views
 
 from oscar.core.loading import get_class, get_model

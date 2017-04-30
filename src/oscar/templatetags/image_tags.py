@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django import template
 from django.conf import settings
 from django.db.models.fields.files import ImageFieldFile
@@ -50,7 +52,7 @@ class DynamicImageNode(template.Node):
 
             for key, v in self.params.items():
                 value = v.resolve(context)
-                if key == u'format':
+                if key == 'format':
                     ext = value
                     ext_changed = True
                 else:

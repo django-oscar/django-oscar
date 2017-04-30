@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+
+
 class TaxNotKnown(Exception):
     """
     Exception for when a tax-inclusive price is requested but we don't know

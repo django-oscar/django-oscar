@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.conf import settings
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
@@ -59,7 +61,7 @@ class TestProductListView(WebTestCase):
 
     def test_shows_pagination_navigation_for_multiple_pages(self):
         per_page = settings.OSCAR_PRODUCTS_PER_PAGE
-        title = u"Product #%d"
+        title = "Product #%d"
         for idx in range(0, int(1.5 * per_page)):
             create_product(title=title % idx)
 

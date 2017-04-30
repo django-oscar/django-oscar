@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from decimal import Decimal as D
 from itertools import product
 from django.test import TestCase

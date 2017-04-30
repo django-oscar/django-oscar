@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django import template
 from django.core.urlresolvers import Resolver404, resolve
 from django.utils import six

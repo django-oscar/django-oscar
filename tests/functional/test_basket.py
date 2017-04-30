@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from decimal import Decimal as D
 from django.utils.six.moves import http_client
 import datetime

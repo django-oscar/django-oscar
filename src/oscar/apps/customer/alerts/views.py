@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django import http
 from django.contrib import messages
 from django.http import Http404

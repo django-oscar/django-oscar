@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from oscar.forms import fields
 from django.test import TestCase
 

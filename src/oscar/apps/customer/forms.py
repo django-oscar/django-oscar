@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import random
 import string
 
@@ -369,7 +371,7 @@ else:
 
 
 class ProductAlertForm(forms.ModelForm):
-    email = forms.EmailField(required=True, label=_(u'Send notification to'),
+    email = forms.EmailField(required=True, label=_('Send notification to'),
                              widget=forms.TextInput(attrs={
                                  'placeholder': _('Enter your email')
                              }))

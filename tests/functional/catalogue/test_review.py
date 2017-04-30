@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from oscar.test.testcases import WebTestCase
 from oscar.test.factories import create_product, UserFactory
 from oscar.apps.catalogue.reviews.signals import review_added

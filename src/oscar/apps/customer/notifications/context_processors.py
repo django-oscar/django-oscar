@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_model
 

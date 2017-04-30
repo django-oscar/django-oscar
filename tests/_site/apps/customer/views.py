@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from oscar.apps.customer.views import AccountSummaryView as OscarAccountSummaryView
 
 

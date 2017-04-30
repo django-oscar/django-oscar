@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import os
 import environ
 import oscar
@@ -322,7 +324,7 @@ HAYSTACK_CONNECTIONS = {
 #HAYSTACK_CONNECTIONS = {
 #    'default': {
 #        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-#        'URL': u'http://127.0.0.1:8983/solr/oscar_latest/',
+#        'URL': 'http://127.0.0.1:8983/solr/oscar_latest/',
 #        'INCLUDE_SPELLING': True
 #    },
 #}

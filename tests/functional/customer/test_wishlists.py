@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.core.urlresolvers import reverse_lazy
 
 from oscar.core.loading import get_model

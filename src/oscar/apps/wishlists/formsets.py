@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.forms.models import inlineformset_factory
 
 from oscar.core.loading import get_class, get_model

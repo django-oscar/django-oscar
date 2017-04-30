@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+
+
 def split_by_position(linked_promotions, context):
     """
     Split the list of promotions into separate lists, grouping

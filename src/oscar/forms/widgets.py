@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import copy
 import re
 
@@ -289,7 +290,7 @@ class AdvancedSelect(forms.Select):
                 selected_choices.remove(option_value)
         else:
             selected_html = ''
-        return format_html(u'<option value="{0}"{1}>{2}</option>',
+        return format_html('<option value="{0}"{1}>{2}</option>',
                            option_value,
                            selected_html,
                            force_text(option_label))
@@ -334,7 +335,7 @@ class RemoteSelect(forms.Widget):
             'value': self.format_value(value),
             'data-required': 'required' if self.is_required else '',
         })
-        return mark_safe(u'<input %s>' % flatatt(attrs))
+        return mark_safe('<input %s>' % flatatt(attrs))
 
 
 class MultipleRemoteSelect(RemoteSelect):

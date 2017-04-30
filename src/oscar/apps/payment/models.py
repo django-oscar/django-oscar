@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from oscar.core.loading import is_model_registered
 
 from . import abstract_models

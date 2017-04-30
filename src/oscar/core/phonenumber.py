@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import warnings
 
 from phonenumber_field.phonenumber import PhoneNumber  # noqa

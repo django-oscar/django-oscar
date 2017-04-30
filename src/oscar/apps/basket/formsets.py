@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.forms.models import BaseModelFormSet, modelformset_factory
 
 from oscar.core.loading import get_classes, get_model

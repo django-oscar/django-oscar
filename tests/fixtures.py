@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import pytest
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.storage.fallback import FallbackStorage

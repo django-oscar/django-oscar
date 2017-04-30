@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django import template
 
 from oscar.core.loading import feature_hidden

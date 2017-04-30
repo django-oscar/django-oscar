@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 class CheckoutSessionData(object):
     """
     Responsible for marshalling all the checkout session data

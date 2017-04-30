@@ -1,6 +1,7 @@
 # This is a rewrite of django-sorting but with added support for i18n title
 # strings.
 # See https://github.com/directeur/django-sorting
+from __future__ import unicode_literals
 
 from django import template
 from django.conf import settings
@@ -54,12 +55,12 @@ class SortAnchorNode(template.Node):
             get_vars['dir'] = sort_directions[direction]['inverse']
             icon = sort_directions[direction]['icon']
 
-        href = u'%s?sort=%s' % (request.path, field)
+        href = '%s?sort=%s' % (request.path, field)
         if len(get_vars) > 0:
             href += "&%s" % get_vars.urlencode()
         if icon:
-            title = u"%s %s" % (title, icon)
-        return u'<a href="%s">%s</a>' % (href, title)
+            title = "%s %s" % (title, icon)
+        return '<a href="%s">%s</a>' % (href, title)
 
 
 anchor = register.tag(anchor)

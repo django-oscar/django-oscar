@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from oscar.core.loading import get_class, get_classes
 
 OrderReportGenerator = get_class('order.reports', 'OrderReportGenerator')

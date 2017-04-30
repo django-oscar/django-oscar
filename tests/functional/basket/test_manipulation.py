@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from oscar.test.testcases import WebTestCase
 from oscar.test import factories
 from oscar.apps.basket import models

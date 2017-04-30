@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.dispatch import Signal
 
 start_checkout = Signal(providing_args=["request"])

@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import hashlib
 import random
 
@@ -131,10 +133,10 @@ class AbstractEmail(models.Model):
 
     def __str__(self):
         if self.user:
-            return _(u"Email to %(user)s with subject '%(subject)s'") % {
+            return _("Email to %(user)s with subject '%(subject)s'") % {
                 'user': self.user.get_username(), 'subject': self.subject}
         else:
-            return _(u"Anonymous email to %(email)s with subject '%(subject)s'") % {
+            return _("Anonymous email to %(email)s with subject '%(subject)s'") % {
                 'email': self.email, 'subject': self.subject}
 
 
@@ -149,7 +151,7 @@ class AbstractCommunicationEventType(models.Model):
     # it's a useful convention that's been enforced in previous Oscar versions
     code = AutoSlugField(
         _('Code'), max_length=128, unique=True, populate_from='name',
-        separator=six.u("_"), uppercase=True, editable=True,
+        separator="_", uppercase=True, editable=True,
         validators=[
             RegexValidator(
                 regex=r'^[a-zA-Z_][0-9a-zA-Z_]*$',
