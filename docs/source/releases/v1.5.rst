@@ -20,7 +20,8 @@ Compatibility
 -------------
 
 Oscar 1.5 is compatible with Django 1.8, 1.10 and 1.11 as well as Python 2.7,
-3.3, 3.4, 3.5 and 3.6. Support for Django 1.9 is dropped in this version.
+3.3, 3.4, 3.5 and 3.6. Support for Django 1.9 is no longer officialy supported
+since it is longer supported by Django (end of life).
 
 
 .. _new_in_1.5:
@@ -31,7 +32,10 @@ What's new in Oscar 1.5?
  - Google Analytics tracking code has been migrated to Universal Analytics.
  - Passwords are validated using the validators defined in
    ``AUTH_PASSWORD_VALIDATORS`` for Django 1.9 and above.
+ - The custom PhoneNumberField implementation has been replaced with the
+   `django-phonenumber-field`_ package (:issue:`2227`)
 
+.. _django-phonenumber-field: https://pypi.python.org/pypi/django-phonenumber-field/
 
 Removal of deprecated features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -90,12 +94,12 @@ Minor changes
  - Changed product alerts to be sent using the Communication Event framework.
    The old email templates will continue to be supported until Oscar 2.0.
 
- - Product reviews are now deleted if the associated product is deleted.
-
 .. _incompatible_in_1.5:
 
 Backwards incompatible changes in Oscar 1.5
 -------------------------------------------
+
+ - Product reviews are now deleted if the associated product is deleted.
 
  - Formset classes moved to the separate modules, if you import them directly -
    please update location or use :meth:`oscar.core.loading.get_classes` for
@@ -137,8 +141,9 @@ Backwards incompatible changes in Oscar 1.5
  - Removed ``display_version`` and ``version`` variables from templates and
    template context.
 
- - Offer ``Applicator`` is now loaded from the ``offer.applicator`` module, instead of ``offer.utils``.
-   Old path is deprecated and won't be supported in the next Oscar versions.
+ - Offer ``Applicator`` is now loaded from the ``offer.applicator`` module,
+   instead of ``offer.utils``. Old path is deprecated and won't be supported
+   in the next Oscar versions.
 
  - ``oscar.forms.fields.ExtendedURLField`` no longer accepts a ``verify_exists``
    argument.
@@ -146,3 +151,8 @@ Backwards incompatible changes in Oscar 1.5
 
 Dependency changes
 ------------------
+
+The following packages are updated:
+
+    - `django>=1.8.8,<1.12`
+    - 'django-phonenumber-field>=1.0.0,<2.0.0
