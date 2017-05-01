@@ -37,6 +37,8 @@ Further reading:
 * `PyPI page`_
 * `Transifex project`_ - translating Oscar made easy
 
+.. start-no-pypi
+
 Continuous integration status:
 
 .. image:: https://travis-ci.org/django-oscar/django-oscar.svg?branch=master
@@ -60,6 +62,8 @@ Docs status:
 .. image:: https://readthedocs.org/projects/django-oscar/badge/
    :target: https://readthedocs.org/projects/django-oscar/
    :alt: Documentation Status
+
+.. end-no-pypi
 
 .. _`Official homepage`: http://oscarcommerce.com
 .. _`Sandbox site`: http://latest.oscarcommerce.com
@@ -215,7 +219,7 @@ Case studies
 ------------
 
 Oscar is still in active development but is used in production by a range of
-companies, from large multinationals to small, boutique stores. See 
+companies, from large multinationals to small, boutique stores. See
 http://oscarcommerce.com/cases.html for an overview.
 
 Many more on the way.  If you use Oscar in production, please `let us know`_.
