@@ -137,27 +137,6 @@ class ProductImageFormSet(BaseProductImageFormSet):
     def __init__(self, product_class, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # pull files out of 'EXTRAn' fields (each being a multiple file upload)
-        # and apply them as individual files belonging to submitted extra fields
-        files = self.files
-        i = 0
-        count = self.initial_form_count()
-        while files:
-            extra_name = '%s-EXTRA%d-original' % (self.prefix, i)
-            if extra_name not in files:
-                break
-            if hasattr(files, 'getlist'):
-                extra_files = files.getlist(extra_name)
-            else:
-                extra_files = [files.get(extra_name)]
-            for extra_file in extra_files:
-                dest_name = '%s-%d-original' % (self.prefix, count)
-                # in case individual images were replaced after multi selection
-                if not files.get(dest_name, None):
-                    files[dest_name] = extra_file
-                count += 1
-            i += 1
-        self.files = files
 
 
 BaseProductRecommendationFormSet = inlineformset_factory(
