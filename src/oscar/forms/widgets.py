@@ -142,24 +142,15 @@ def datetime_format_to_js_input_mask(format):
 
 
 class DateTimeWidgetMixin(object):
-    def get_format(self):
-        format = self.format
-        if hasattr(self, 'manual_format'):
-            # For django <= 1.6.5, see
-            # https://code.djangoproject.com/ticket/21173
-            if self.is_localized and not self.manual_format:
-                format = force_text(formats.get_format(self.format_key)[0])
-        else:
-            # For django >= 1.7
-            format = format or formats.get_format(self.format_key)[0]
 
-        return format
+    def get_format(self):
+        return self.format or formats.get_format(self.format_key)[0]
 
     def gett_attrs(self, attrs, format):
         if not attrs:
             attrs = {}
 
-        attrs['data-inputmask'] = "'mask': '{mask}'".format(
+        attrs['data-inputmask'] = u"'mask': '{mask}'".format(
             mask=datetime_format_to_js_input_mask(format))
 
         return attrs
@@ -177,20 +168,20 @@ class TimePickerInput(DateTimeWidgetMixin, forms.TimeInput):
         input = super(TimePickerInput, self).render(
             name, value, self.gett_attrs(attrs, format))
 
-        attrs = {'data-oscarWidget': 'time',
-                 'data-timeFormat':
-                 datetime_format_to_js_time_format(format),
-                 }
+        attrs = {
+            'data-oscarWidget': 'time',
+            'data-timeFormat': datetime_format_to_js_time_format(format),
+        }
 
-        div = format_html('<div class="input-group date"{}>', flatatt(attrs))
-        return mark_safe('<div class="form-inline">'
-                         ' {div}'
-                         '  {input}'
-                         '  <span class="input-group-addon">'
-                         '   <i class="icon-time glyphicon-time"></i>'
-                         '  </span>'
-                         ' </div>'
-                         '</div>'
+        div = format_html(u'<div class="input-group date"{}>', flatatt(attrs))
+        return mark_safe(u'<div class="form-inline">'
+                         u' {div}'
+                         u'  {input}'
+                         u'  <span class="input-group-addon">'
+                         u'   <i class="icon-time glyphicon-time"></i>'
+                         u'  </span>'
+                         u' </div>'
+                         u'</div>'
                          .format(div=div, input=input))
 
 
@@ -206,20 +197,20 @@ class DatePickerInput(DateTimeWidgetMixin, forms.DateInput):
         input = super(DatePickerInput, self).render(
             name, value, self.gett_attrs(attrs, format))
 
-        attrs = {'data-oscarWidget': 'date',
-                 'data-dateFormat':
-                 datetime_format_to_js_date_format(format),
-                 }
+        attrs = {
+            'data-oscarWidget': 'date',
+            'data-dateFormat': datetime_format_to_js_date_format(format),
+        }
 
-        div = format_html('<div class="input-group date"{}>', flatatt(attrs))
-        return mark_safe('<div class="form-inline">'
-                         ' {div}'
-                         '  {input}'
-                         '  <span class="input-group-addon">'
-                         '   <i class="icon-calendar glyphicon-calendar"></i>'
-                         '  </span>'
-                         ' </div>'
-                         '</div>'
+        div = format_html(u'<div class="input-group date"{}>', flatatt(attrs))
+        return mark_safe(u'<div class="form-inline">'
+                         u' {div}'
+                         u'  {input}'
+                         u'  <span class="input-group-addon">'
+                         u'   <i class="icon-calendar glyphicon-calendar"></i>'
+                         u'  </span>'
+                         u' </div>'
+                         u'</div>'
                          .format(div=div, input=input))
 
 
@@ -249,20 +240,20 @@ class DateTimePickerInput(DateTimeWidgetMixin, forms.DateTimeInput):
         input = super(DateTimePickerInput, self).render(
             name, value, self.gett_attrs(attrs, format))
 
-        attrs = {'data-oscarWidget': 'datetime',
-                 'data-datetimeFormat':
-                 datetime_format_to_js_datetime_format(format),
-                 }
+        attrs = {
+            'data-oscarWidget': 'datetime',
+            'data-datetimeFormat': datetime_format_to_js_datetime_format(format),
+        }
 
-        div = format_html('<div class="input-group date"{}>', flatatt(attrs))
-        return mark_safe('<div class="form-inline">'
-                         ' {div}'
-                         '  {input}'
-                         '  <span class="input-group-addon">'
-                         '   <i class="icon-calendar glyphicon-calendar"></i>'
-                         '  </span>'
-                         ' </div>'
-                         '</div>'
+        div = format_html(u'<div class="input-group date"{}>', flatatt(attrs))
+        return mark_safe(u'<div class="form-inline">'
+                         u' {div}'
+                         u'  {input}'
+                         u'  <span class="input-group-addon">'
+                         u'   <i class="icon-calendar glyphicon-calendar"></i>'
+                         u'  </span>'
+                         u' </div>'
+                         u'</div>'
                          .format(div=div, input=input))
 
 
