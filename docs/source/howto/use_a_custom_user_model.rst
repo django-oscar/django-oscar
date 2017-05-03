@@ -22,7 +22,7 @@ Oscar does have some requirements on what fields a user model has.  For
 instance, the auth backend requires a user to have an 'email' and 'password'
 field.
 
-Oscar 0.6 ships with its own abstract user model that supports the minimum
+Oscar ships with its own abstract user model that supports the minimum
 fields and methods required for Oscar to work correctly.  New Oscar projects
 are encouraged to subclass this User model.
 
@@ -39,7 +39,7 @@ This works in the instances where you are using the default ``auth.User`` model
 or when you use a custom user model from the start. Switching over from
 ``auth.User`` to a custom model after having applied previous migration of
 Oscar will most likely require renaming the ``auth_user`` table to the new user
-table in a manual schemamigration.
+table in a schemamigration.
 
 Example
 -------
@@ -68,9 +68,15 @@ default one as the authentication model [1]_::
     # use our own user model
     AUTH_USER_MODEL = "user.User"
 
+    # add to INSTALLED_APPS
+    INSTALLED_APPS = [
+        ...... 
+        'user',
+    ] + oscar.get_core_apps()
+
 After the migration, a database table called ``user_user`` will be created based
 on the schema defined inside of
 ``oscar.apps.customer.abstract_models.AbstractUser``.
 
 
-  .. [1] https://docs.djangoproject.com/en/1.6/ref/settings/#auth-user-model
+  .. [1] https://docs.djangoproject.com/en/1.11/ref/settings/#auth-user-model
