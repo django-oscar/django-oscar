@@ -89,10 +89,13 @@ class AbstractConditionalOffer(models.Model):
     # dates are ignored and only the dates from the voucher are used to
     # determine availability.
     start_datetime = models.DateTimeField(
-        _("Start date"), blank=True, null=True)
+        _("Start date"), blank=True, null=True,
+        help_text=_("Offers are active from the start date. "
+                    "Leave this empty if the offer has no start date."))
     end_datetime = models.DateTimeField(
         _("End date"), blank=True, null=True,
-        help_text=_("Offers are active until the end of the 'end date'"))
+        help_text=_("Offers are active until the end date. "
+                    "Leave this empty if the offer has no expiry date."))
 
     # Use this field to limit the number of times this offer can be applied in
     # total.  Note that a single order can apply an offer multiple times so
