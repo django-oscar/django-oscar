@@ -49,7 +49,9 @@ shipping methods depending on the circumstances. For instance, you could use
 the shipping address to provide international shipping rates if the address is
 overseas.
 
-The default behaviour is to return a single free shipping method.
+The ``get_default_shipping_method`` method takes the same parameters and
+returns default shipping method for the current basket. Used for shipping
+cost indication on the basket page. Defaults to free shipping method.
 
 .. note::
 

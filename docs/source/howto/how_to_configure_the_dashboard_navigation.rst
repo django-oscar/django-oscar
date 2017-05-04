@@ -35,7 +35,18 @@ do that is::
     ]
 
 That's it. You should now have *Store manager > Stores* in you dashboard
-menu.
+menu. If you add to the navigation non-dashboard URLconf, you need to set
+``access_fn`` parameter for the current node, so that Oscar is able to
+resolve permissions to the current node::
+
+    OSCAR_DASHBOARD_NAVIGATION += [
+        {
+            'label': _('Admin site'),
+            'icon': 'icon-dashboard',
+            'url_name': 'admin:index',
+            'access_fn': lambda user, url_name, url_args, url_kwargs: user.is_staff,
+        }
+    ]
 
 
 Add an icon to your dashboard menu
