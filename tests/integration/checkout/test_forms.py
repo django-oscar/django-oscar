@@ -83,3 +83,15 @@ class TestShippingAddressForm(TestCase):
 
         data['country'] = Country.objects.get(iso_3166_1_a2='GB').pk
         self.assertTrue(ShippingAddressForm(data).is_valid())
+
+    @override_settings(OSCAR_REQUIRED_ADDRESS_FIELDS=('phone_number',))
+    def test_local_phonenumber_invalid_without_country(self):
+        # Add another country, so we have two.
+        CountryFactory(iso_3166_1_a2='DE', is_shipping_country=True)
+        data = self.minimal_data.copy()
+        data['phone_number'] = '07 914721389'
+        # User hasn't selected a country. Because there are multiple country
+        # choices we should not accept the local number.
+        form = ShippingAddressForm(data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('phone_number', form.errors)
