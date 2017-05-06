@@ -89,7 +89,7 @@ class ExistingUserForm(forms.ModelForm):
         if password1 != password2:
             raise forms.ValidationError(
                 _("The two password fields didn't match."))
-        validate_password(password, self.instance)
+        validate_password(password2, self.instance)
         return password2
 
     def __init__(self, *args, **kwargs):
