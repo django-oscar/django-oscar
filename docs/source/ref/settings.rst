@@ -193,7 +193,7 @@ that is defined in the ``OSCAR_ORDER_STATUS_PIPELINE``.
 -----------------------------
 
 The status assigned to a line item when it is created as part of an new order. It
-has to be a status defined in ``OSCAR_ORDER_STATUS_PIPELINE``.
+has to be a status defined in ``OSCAR_LINE_STATUS_PIPELINE``.
 
 ``OSCAR_ORDER_STATUS_PIPELINE``
 -------------------------------
