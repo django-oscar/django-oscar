@@ -65,7 +65,7 @@ the class is overridden, it will not require code changes. Care should be taken
 when doing this, as this is a tricky trade-off between maintainability and
 added complexity.
 Please note that we cannot recommend ever using ``get_model`` in your own code.
-Especially pre-Django 1.7, model initialisation is a tricky process and it's
+Model initialisation is a tricky process and it's
 easy to run into circular import issues.
 
 
@@ -78,4 +78,3 @@ module::
     >>> from oscar.core.loading import get_class
     >>> get_class('shipping.repository', 'Repository')
     yourproject.shipping.repository.Repository  # it worked!
-

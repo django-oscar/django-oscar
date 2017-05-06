@@ -44,7 +44,7 @@ including `Django's default permissions`_.
   products. Supporting this requires a modelling change. If you require this,
   please get in touch so we can first learn about your use case.
 
-.. _Django's default permissions: https://docs.djangoproject.com/en/dev/topics/auth/default/#default-permissions
+.. _Django's default permissions: https://docs.djangoproject.com/en/stable/topics/auth/default/#default-permissions
 
 
 Abstract models
@@ -57,4 +57,3 @@ Views
 
 .. automodule:: oscar.apps.dashboard.views
     :members:
-
