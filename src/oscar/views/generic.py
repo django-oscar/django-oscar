@@ -198,9 +198,9 @@ class PhoneNumberMixin(object):
         try:
             phone_number = PhoneNumber.from_string(number)
         except phonenumbers.NumberParseException:
-            # Try hinting with the shipping country
+            # Try hinting with the shipping country if we can determine one
             country = self.get_country()
-            region_code = self.get_region_code(country)
+            region_code = self.get_region_code(country) if country else None
 
             if not region_code:
                 # There is no shipping country, not a valid international
