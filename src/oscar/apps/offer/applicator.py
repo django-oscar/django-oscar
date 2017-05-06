@@ -67,19 +67,8 @@ class Applicator(object):
         """
         Return site offers that are available to all users
         """
-        cutoff = now()
-        date_based = Q(
-            Q(start_datetime__lte=cutoff),
-            Q(end_datetime__gte=cutoff) | Q(end_datetime=None),
-        )
-
-        nondate_based = Q(start_datetime=None, end_datetime=None)
-
         ConditionalOffer = get_model('offer', 'ConditionalOffer')
-        qs = ConditionalOffer.objects.filter(
-            date_based | nondate_based,
-            offer_type=ConditionalOffer.SITE,
-            status=ConditionalOffer.OPEN)
+        qs = ConditionalOffer.active.filter(offer_type=ConditionalOffer.SITE)
         # Using select_related with the condition/benefit ranges doesn't seem
         # to work.  I think this is because both the related objects have the
         # FK to range with the same name.

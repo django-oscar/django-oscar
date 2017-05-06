@@ -59,6 +59,26 @@ class TestADateBasedConditionalOffer(TestCase):
     def test_is_active_on_end_datetime(self):
         self.assertTrue(self.offer.is_available(test_date=self.end))
 
+    def test_active_on_null_end_datetime(self):
+        # null end_datetime means offer should never expire
+        offer = models.ConditionalOffer(start_datetime=self.start,
+                                        end_datetime=None)
+        test = datetime.date(2017, 3, 10)
+        self.assertTrue(offer.is_available(test_date=test))
+
+    def test_active_on_null_start_datetime(self):
+        # null start_datetime means offer is active from the beginning of time
+        offer = models.ConditionalOffer(start_datetime=None,
+                                        end_datetime=self.end)
+        test = datetime.date(2000, 3, 10)
+        self.assertTrue(offer.is_available(test_date=test))
+
+    def test_active_on_null_start_and_end_datetime(self):
+        # null datetimes - offer is always available
+        offer = models.ConditionalOffer(start_datetime=None, end_datetime=None)
+        test = datetime.date(2017, 3, 10)
+        self.assertTrue(offer.is_available(test_date=test))
+
 
 class TestAConsumptionFrequencyBasedConditionalOffer(TestCase):
 
