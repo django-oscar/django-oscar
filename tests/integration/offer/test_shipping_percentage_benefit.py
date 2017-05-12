@@ -1,5 +1,6 @@
 from decimal import Decimal as D
 
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from oscar.apps.offer import models, utils
@@ -79,3 +80,43 @@ class TestAShippingPercentageDiscountAppliedWithCountCondition(TestCase):
         charge = method.calculate(self.basket)
         self.assertEqual(D('6.00'), charge.incl_tax)
         self.assertEqual(D('5.00'), charge.excl_tax)
+
+    def test_shipping_percentage_required(self):
+        benefit = models.Benefit(
+            type=models.Benefit.SHIPPING_PERCENTAGE,
+            value=None, # This should be required
+        )
+
+        with self.assertRaises(ValidationError):
+            benefit.clean()
+
+    def test_shipping_percentage_validation(self):
+        benefit = models.Benefit(
+            type=models.Benefit.SHIPPING_PERCENTAGE,
+            value=105,  # Invalid value
+        )
+
+        with self.assertRaises(ValidationError):
+            benefit.clean()
+
+    def test_shipping_range_must_not_be_set(self):
+        product_range = models.Range.objects.create(
+                            name="Foo", includes_all_products=True)
+        benefit = models.Benefit(
+            type=models.Benefit.SHIPPING_PERCENTAGE,
+            value=50,
+            range=product_range,    # Range shouldn't be allowed
+        )
+
+        with self.assertRaises(ValidationError):
+            benefit.clean()
+
+    def test_shipping_max_affected_items_must_not_be_set(self):
+        benefit = models.Benefit(
+            type=models.Benefit.SHIPPING_PERCENTAGE,
+            value=50,
+            max_affected_items=5,
+        )
+
+        with self.assertRaises(ValidationError):
+            benefit.clean()

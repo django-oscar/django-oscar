@@ -1,6 +1,6 @@
 from decimal import Decimal as D
 
-from django.core import exceptions
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 import mock
 
@@ -335,8 +335,15 @@ class TestAnAbsoluteDiscountBenefit(TestCase):
     def test_requires_a_benefit_value(self):
         rng = models.Range.objects.create(
             name="", includes_all_products=True)
-        benefit = models.Benefit.objects.create(
+        benefit = models.Benefit(
             type=models.Benefit.FIXED, range=rng
         )
-        with self.assertRaises(exceptions.ValidationError):
+        with self.assertRaises(ValidationError):
+            benefit.clean()
+
+    def test_requires_a_range(self):
+        benefit = models.Benefit(
+            type=models.Benefit.FIXED, value=10
+        )
+        with self.assertRaises(ValidationError):
             benefit.clean()

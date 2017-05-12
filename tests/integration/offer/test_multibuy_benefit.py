@@ -1,5 +1,6 @@
 from decimal import Decimal as D
 
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 import mock
 
@@ -19,8 +20,7 @@ class TestAMultibuyDiscountAppliedWithCountCondition(TestCase):
             value=3)
         self.benefit = models.MultibuyDiscountBenefit.objects.create(
             range=range,
-            type=models.Benefit.MULTIBUY,
-            value=1)
+            type=models.Benefit.MULTIBUY)
         self.offer = mock.Mock()
         self.basket = factories.create_basket(empty=True)
 
@@ -81,3 +81,43 @@ class TestAMultibuyDiscountAppliedWithAValueCondition(TestCase):
         self.assertEqual(D('2.00'), result.discount)
         self.assertEqual(3, self.basket.num_items_with_discount)
         self.assertEqual(1, self.basket.num_items_without_discount)
+
+
+class TestMultibuyValidation(TestCase):
+
+    def setUp(self):
+        self.range = models.Range.objects.create(
+            name="All products", includes_all_products=True)
+        self.condition = models.CountCondition.objects.create(
+            range=self.range,
+            type=models.Condition.COUNT,
+            value=3)
+        self.offer = mock.Mock()
+        self.basket = factories.create_basket(empty=True)
+
+    def test_multibuy_range_required(self):
+        benefit = models.Benefit(
+            range=None,
+            type=models.Benefit.MULTIBUY,
+            value=1)
+
+        with self.assertRaises(ValidationError):
+            benefit.clean()
+
+    def test_multibuy_must_not_have_value(self):
+        benefit = models.Benefit(
+            range=self.range,
+            type=models.Benefit.MULTIBUY,
+            value=1)
+
+        with self.assertRaises(ValidationError):
+            benefit.clean()
+
+    def test_multibuy_must_not_have_max_affected_items(self):
+        benefit = models.Benefit(
+            range=self.range,
+            type=models.Benefit.MULTIBUY,
+            max_affected_items=2)
+
+        with self.assertRaises(ValidationError):
+            benefit.clean()
