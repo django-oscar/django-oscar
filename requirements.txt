@@ -30,4 +30,4 @@ ipython==5.3.0
 transifex-client==0.12.4
 
 # Country data
-pycountry==17.1.8
+pycountry==17.5.14
