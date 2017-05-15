@@ -1,5 +1,6 @@
 from decimal import Decimal as D
 
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from oscar.apps.offer import models, utils
@@ -7,22 +8,6 @@ from oscar.apps.shipping.repository import Repository
 from oscar.apps.shipping.methods import FixedPrice
 from oscar.test.basket import add_product
 from oscar.test import factories
-
-
-def create_offer():
-    range = models.Range.objects.create(
-        name="All products", includes_all_products=True)
-    condition = models.CountCondition.objects.create(
-        range=range,
-        type=models.Condition.COUNT,
-        value=1)
-    benefit = models.ShippingFixedPriceBenefit.objects.create(
-        type=models.Benefit.SHIPPING_FIXED_PRICE,
-        value=D('1.00'))
-    return models.ConditionalOffer.objects.create(
-        condition=condition,
-        benefit=benefit,
-        offer_type=models.ConditionalOffer.SITE)
 
 
 class StubRepository(Repository):
@@ -38,7 +23,19 @@ class TestAnOfferWithAShippingBenefit(TestCase):
 
     def setUp(self):
         self.basket = factories.create_basket(empty=True)
-        create_offer()
+        self.range = models.Range.objects.create(
+            name="All products", includes_all_products=True)
+        self.condition = models.CountCondition.objects.create(
+            range=self.range,
+            type=models.Condition.COUNT,
+            value=1)
+        self.benefit = models.ShippingFixedPriceBenefit.objects.create(
+            type=models.Benefit.SHIPPING_FIXED_PRICE,
+            value=D('1.00'))
+        self.offer = models.ConditionalOffer.objects.create(
+            condition=self.condition,
+            benefit=self.benefit,
+            offer_type=models.ConditionalOffer.SITE)
 
     def test_applies_correctly_to_basket_which_matches_condition(self):
         add_product(self.basket, D('12.00'))
@@ -73,3 +70,50 @@ class TestAnOfferWithAShippingBenefit(TestCase):
         discount = discounts[0]
         self.assertTrue(discount.is_shipping_discount)
         self.assertEqual(D('9.00'), discount.amount)
+
+    def test_fixed_range_must_not_be_set(self):
+        benefit = models.Benefit(
+            type=models.Benefit.SHIPPING_FIXED_PRICE,
+            value=10,
+            range=self.range,
+        )
+
+        with self.assertRaises(ValidationError):
+            benefit.clean()
+
+    def test_fixed_max_affected_items_must_not_be_set(self):
+        benefit = models.Benefit(
+            type=models.Benefit.SHIPPING_FIXED_PRICE,
+            value=10,
+            max_affected_items=5,
+        )
+
+        with self.assertRaises(ValidationError):
+            benefit.clean()
+
+    def test_absolute_requires_value(self):
+        benefit = models.Benefit(
+            type=models.Benefit.SHIPPING_ABSOLUTE)
+
+        with self.assertRaises(ValidationError):
+            benefit.clean()
+
+    def test_absolute_range_must_not_be_set(self):
+        benefit = models.Benefit(
+            type=models.Benefit.SHIPPING_ABSOLUTE,
+            value=10,
+            range=self.range,
+        )
+
+        with self.assertRaises(ValidationError):
+            benefit.clean()
+
+    def test_absolute_max_affected_items_must_not_be_set(self):
+        benefit = models.Benefit(
+            type=models.Benefit.SHIPPING_ABSOLUTE,
+            value=10,
+            max_affected_items=5,
+        )
+
+        with self.assertRaises(ValidationError):
+            benefit.clean()
