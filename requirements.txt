@@ -16,6 +16,7 @@ redis==2.10.5
 requests==2.14.2
 uWSGI==2.0.15
 whitenoise==3.3.0
+sqlparse==0.2.3
 
 # Linting
 flake8==3.3.0
