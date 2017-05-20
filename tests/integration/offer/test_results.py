@@ -43,7 +43,7 @@ class TestOfferApplicationsObject(TestCase):
         self.applications.add(offer1, result1)
         self.applications.add(offer2, result2)
         discounts = self.applications.grouped_voucher_discounts
-        discounts = [*discounts,]
+        discounts = [x for x in discounts]
         assert len(discounts) == 1
         assert discounts[0]['voucher'] == voucher
         assert discounts[0]['discount'] == D('3.00')
