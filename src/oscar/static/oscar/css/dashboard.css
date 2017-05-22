@@ -5203,9 +5203,6 @@ button.close {
 .alert .alertinner p:first-child {
   margin: 0;
 }
-body {
-  background: url("../img/ui/dashboard/bg_subtle_dots.png") repeat scroll 0 0 #fff;
-}
 h1,
 h2,
 h3,
@@ -5353,7 +5350,6 @@ div[data-spy="affix"].affix {
   display: block;
   margin: 0;
   padding: 8px 14px;
-  border: 1px solid #e5e5e5;
   border-top-width: 0;
   color: #428bca;
 }
@@ -5383,6 +5379,14 @@ div[data-spy="affix"].affix {
 .bs-docs-sidenav > .active > span:hover {
   background: #f1faff;
   color: #428bca;
+}
+.bs-docs-sidenav > .active > a:focus,
+.bs-docs-sidenav > .active > span:focus {
+  background: #f1faff;
+}
+.bs-docs-sidenav > .active > a:focus:after,
+.bs-docs-sidenav > .active > span:focus:after {
+  border-left: 10px solid #f1faff;
 }
 .bs-docs-sidenav > .active > a:after,
 .bs-docs-sidenav > .active > span:after {
@@ -5766,6 +5770,19 @@ textarea {
 .form-inline input[type=text] {
   width: 140px;
 }
+div.panel .panel-heading h2,
+div.panel .panel-heading h3 {
+  font-size: 16px;
+  font-weight: bold;
+  display: inline;
+  vertical-align: middle;
+}
+div.panel .panel-heading i {
+  vertical-align: middle;
+}
+div.panel .panel-heading .icon-large {
+  vertical-align: top;
+}
 .table-bordered,
 .table-bordered th,
 .table-bordered td {
@@ -5782,7 +5799,7 @@ textarea {
 }
 .table-striped tbody tr:nth-child(odd) td,
 .table-striped tbody tr:nth-child(odd) th {
-  background-color: #efefef;
+  background-color: #f9f9f9;
 }
 .table-hover tbody tr:hover td,
 .table-hover tbody tr:hover th {

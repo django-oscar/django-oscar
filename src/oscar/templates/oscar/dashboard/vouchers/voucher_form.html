@@ -28,23 +28,27 @@
 {% block headertext %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
-    <div class="table-header">
-        <h2><i class="icon-money icon-large"></i>
-            {% if voucher %}
-                {% trans "Edit voucher" %}
-            {% else %}
-                {% trans "Create voucher" %}
-            {% endif %}
-        </h2>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2><i class="icon-money icon-large"></i>
+                {% if voucher %}
+                    {% trans "Edit voucher" %}
+                {% else %}
+                    {% trans "Create voucher" %}
+                {% endif %}
+            </h2>
+        </div>
+        <div class="panel-body">
+            <form action="." method="post" class="form-stacked">
+                {% csrf_token %}
+                {% include "dashboard/partials/form_fields.html" with form=form %}
+                {% block form_actions %}
+                    <div class="form-actions">
+                        <button class="btn btn-primary btn-lg" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button> {% trans "or" %}
+                        <a href="{% url 'dashboard:voucher-list' %}">{% trans "cancel" %}</a>
+                    </div>
+                {% endblock form_actions %}
+            </form>
+        </div>
     </div>
-    <form action="." method="post" class="well form-stacked">
-        {% csrf_token %}
-        {% include "dashboard/partials/form_fields.html" with form=form %}
-        {% block form_actions %}
-            <div class="form-actions">
-                <button class="btn btn-primary btn-lg" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button> {% trans "or" %}
-                <a href="{% url 'dashboard:voucher-list' %}">{% trans "cancel" %}</a>
-            </div>
-        {% endblock form_actions %}
-    </form>
 {% endblock dashboard_content %}

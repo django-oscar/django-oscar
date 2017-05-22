@@ -23,11 +23,12 @@
 {% block dashboard_content %}
     <div class="row">
         {% block user_general_info %}
-            <div class="col-md-12">
-                <div class="table-header">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
                     <h2>{% trans "General" %}</h2>
                 </div>
-                <table class="table table-bordered">
+                <table class="table">
                     <tr>
                         <th>{% trans "Name" %}</th>
                         <td>{{ customer.get_full_name|default:"-" }}</td>
@@ -96,6 +97,7 @@
                     {% endif %}
                 </table>
             </div>
+        </div>
         {% endblock %}
     </div>
     <div class="row">
@@ -111,9 +113,12 @@
 
                 <div class="tab-content">
                     {% block user_orders %}
-                        <div id="user_orders" class="tab-pane active">
-                            <table class="table table-striped table-bordered table-hover">
-                                <caption>{% trans "Orders" %}</caption>
+                    <div id="user_orders" class="tab-pane active">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                {% trans "Orders" %}
+                            </div>
+                            <table class="table table-striped table-hover">
                                 {% with orders=customer.orders.all %}
                                     {% if orders %}
                                         <tr>
@@ -139,8 +144,8 @@
                                     {% endif %}
                                 {% endwith %}
                             </table>
-
                         </div>
+                    </div>
                     {% endblock %}
 
                     {% block user_addresses %}
@@ -168,9 +173,12 @@
                     {% endblock %}
 
                     {% block user_reviews %}
-                        <div id="user_reviews" class="tab-pane">
-                            <table class="table table-striped table-bordered table-hover">
-                                <caption>{% trans "Reviews" %}</caption>
+                    <div id="user_reviews" class="tab-pane">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                {% trans "Reviews" %}
+                            </div>
+                            <table class="table table-striped table-hover">
                                 {% if customer.reviews.count %}
                                     <tr>
                                         <th>{% trans "Product ID" %}</th>
@@ -192,8 +200,8 @@
                                     <tr><td>{% trans "This customer has not written any reviews yet." %}</td></tr>
                                 {% endif %}
                             </table>
-
                         </div>
+                    </div>
                     {% endblock %}
                 </div>
             </div>
