@@ -13,7 +13,7 @@ django-environ==0.4.3
 django-redis==4.8.0
 pysolr==3.6.0
 redis==2.10.5
-requests==2.16.4
+requests==2.17.3
 uWSGI==2.0.15
 whitenoise==3.3.0
 
