@@ -61,6 +61,7 @@ class StockRecordForm(forms.ModelForm):
         # anyway in case one wishes to customise the partner queryset
         self.user = user
         super(StockRecordForm, self).__init__(*args, **kwargs)
+        self.fields['partner'].queryset = self.user.partners.all()
 
         # Restrict accessible partners for non-staff users
         if not self.user.is_staff:
