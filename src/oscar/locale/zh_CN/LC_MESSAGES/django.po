@@ -2340,7 +2340,7 @@ msgstr "商品种类已成功删除"
 
 #: apps/dashboard/communications/config.py:8
 msgid "Communications dashboard"
-msgstr "通信仪表板"
+msgstr "通信控制台"
 
 #: apps/dashboard/communications/forms.py:15
 msgid "Email subject template"
@@ -2446,7 +2446,7 @@ msgstr "一个预览电子邮件已经被发送到 %s"
 #: templates/oscar/dashboard/vouchers/voucher_list.html:13
 #: templates/oscar/partials/nav_accounts.html:47
 msgid "Dashboard"
-msgstr "仪表板"
+msgstr "控制台"
 
 #: apps/dashboard/offers/config.py:8
 msgid "Offers dashboard"
@@ -2589,7 +2589,7 @@ msgstr "促销被恢复"
 
 #: apps/dashboard/orders/config.py:8
 msgid "Orders dashboard"
-msgstr "订单仪表板"
+msgstr "订单控制台"
 
 #: apps/dashboard/orders/forms.py:48
 #, python-format
@@ -2927,7 +2927,7 @@ msgstr "已删除页面'%s'"
 
 #: apps/dashboard/partners/config.py:8
 msgid "Partners dashboard"
-msgstr "供货商仪表板"
+msgstr "供货商控制台"
 
 #: apps/dashboard/partners/forms.py:18 apps/dashboard/partners/forms.py:133
 #: apps/partner/abstract_models.py:26
@@ -2937,11 +2937,11 @@ msgstr "名字"
 
 #: apps/dashboard/partners/forms.py:35
 msgid "Full dashboard access"
-msgstr "完全仪表板查看权"
+msgstr "完全控制台查看权"
 
 #: apps/dashboard/partners/forms.py:36
 msgid "Limited dashboard access"
-msgstr "有限的仪表板查看权"
+msgstr "有限的控制台查看权"
 
 #: apps/dashboard/partners/forms.py:42 apps/dashboard/partners/forms.py:74
 msgid "User role"
@@ -3176,7 +3176,7 @@ msgstr "你无权访问该报告"
 
 #: apps/dashboard/reviews/config.py:8
 msgid "Reviews dashboard"
-msgstr "评论仪表板"
+msgstr "评论控制台"
 
 #: apps/dashboard/reviews/forms.py:25 apps/promotions/models.py:71
 msgid "Keyword"
@@ -3241,7 +3241,7 @@ msgstr[0] ""
 
 #: apps/dashboard/users/config.py:8
 msgid "Users dashboard"
-msgstr "用户仪表板"
+msgstr "用户控制台"
 
 #: apps/dashboard/users/forms.py:15
 msgctxt "User's name"
@@ -3294,7 +3294,7 @@ msgstr "产品提醒已删除"
 
 #: apps/dashboard/vouchers/config.py:8
 msgid "Vouchers dashboard"
-msgstr "优惠仪表板"
+msgstr "优惠控制台"
 
 #: apps/dashboard/vouchers/forms.py:22 apps/voucher/abstract_models.py:46
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:39
@@ -5923,7 +5923,7 @@ msgstr "1. 邮递地址"
 
 #: templates/oscar/checkout/nav.html:26 templates/oscar/checkout/nav.html:31
 msgid "2. Shipping method"
-msgstr "2. 郵遞方式"
+msgstr "2. 邮递方式"
 
 #: templates/oscar/checkout/nav.html:41 templates/oscar/checkout/nav.html:46
 msgid "3. Payment"
@@ -8329,12 +8329,12 @@ msgstr "返回到范围列表"
 
 #: templates/oscar/dashboard/reports/index.html:14
 msgid "Reporting Dashboard"
-msgstr "报告仪表板"
+msgstr "报告控制台"
 
 #: templates/oscar/dashboard/reports/index.html:19
 #: templates/oscar/dashboard/reports/index.html:24
 msgid "Reporting dashboard"
-msgstr "报告仪表板"
+msgstr "报告控制台"
 
 #: templates/oscar/dashboard/reports/index.html:30
 msgid "Generating..."
