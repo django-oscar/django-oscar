@@ -74,10 +74,14 @@ class RegisterUserMixin(object):
             # ignore capitalisation when looking up an email address.
             # We might otherwise accidentally mark unrelated users as inactive
             users = User.objects.filter(email=user.email)
-            user = users[0]
             for u in users[1:]:
                 u.is_active = False
                 u.save()
+                
+            # Try again to authenticate
+            user = authenticate(
+                username=user.email,
+                password=form.cleaned_data['password1'])
 
         auth_login(self.request, user)
 
