@@ -1,10 +1,13 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from django.utils.timezone import now
 
 from oscar.core.loading import get_model
+from oscar.core.utils import aware_min_max_datetime
 from oscar.forms import widgets
 
 Voucher = get_model('voucher', 'Voucher')
+VoucherSet = get_model('voucher', 'VoucherSet')
 Benefit = get_model('offer', 'Benefit')
 Range = get_model('offer', 'Range')
 
@@ -90,6 +93,48 @@ class VoucherForm(forms.Form):
 
 class VoucherSearchForm(forms.Form):
     name = forms.CharField(required=False, label=_("Name"))
+    code = forms.CharField(required=False, label=_("Code"))
+    is_active = forms.BooleanField(required=False, label=_("Is Active?"))
+
+    def clean_code(self):
+        return self.cleaned_data['code'].upper()
+
+
+class VoucherSetForm(forms.ModelForm):
+    class Meta:
+        model = VoucherSet
+        fields = [
+            'name',
+            'code_length',
+            'description',
+            'start_datetime',
+            'end_datetime',
+            'count',
+        ]
+
+    def __init__(self, *args, **kwargs):
+        data = kwargs.get('initial', {})
+        instance = kwargs.get('instance', None)
+
+        if not instance and ('start_datetime', 'end_datetime') not in data:
+            start, end = aware_min_max_datetime()
+
+            data.setdefault('start_datetime', start)
+            data.setdefault('end_datetime', end)
+        super(VoucherSetForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        if not self.instance.start_datetime:
+            self.instance.start_datetime = now()
+        if not self.instance.end_datetime:
+            self.instance.end_datetime = now()
+        instance = super(VoucherSetForm, self).save(commit)
+        if commit:
+            instance.generate_vouchers()
+        return instance
+
+
+class VoucherSetSearchForm(forms.Form):
     code = forms.CharField(required=False, label=_("Code"))
     is_active = forms.BooleanField(required=False, label=_("Is Active?"))
 

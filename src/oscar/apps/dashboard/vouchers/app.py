@@ -14,6 +14,17 @@ class VoucherDashboardApplication(DashboardApplication):
     delete_view = get_class('dashboard.vouchers.views', 'VoucherDeleteView')
     stats_view = get_class('dashboard.vouchers.views', 'VoucherStatsView')
 
+    set_list_view = get_class(
+        'dashboard.vouchers.views', 'VoucherSetListView')
+    set_create_view = get_class(
+        'dashboard.vouchers.views', 'VoucherSetCreateView')
+    set_update_view = get_class(
+        'dashboard.vouchers.views', 'VoucherSetUpdateView')
+    set_detail_view = get_class(
+        'dashboard.vouchers.views', 'VoucherSetDetailView')
+    set_download_view = get_class(
+        'dashboard.vouchers.views', 'VoucherSetDownloadView')
+
     def get_urls(self):
         urls = [
             url(r'^$', self.list_view.as_view(), name='voucher-list'),
@@ -25,6 +36,16 @@ class VoucherDashboardApplication(DashboardApplication):
                 name='voucher-delete'),
             url(r'^stats/(?P<pk>\d+)/$', self.stats_view.as_view(),
                 name='voucher-stats'),
+            url(r'^sets$', self.set_list_view.as_view(),
+                name='voucher-set-list'),
+            url(r'^sets/create/$', self.set_create_view.as_view(),
+                name='voucher-set-create'),
+            url(r'^sets/update/(?P<pk>\d+)/$', self.set_update_view.as_view(),
+                name='voucher-set-update'),
+            url(r'^sets/(?P<pk>\d+)/$', self.set_detail_view.as_view(),
+                name='voucher-set'),
+            url(r'^sets/(?P<pk>\d+)/download$', self.set_download_view.as_view(),
+                name='voucher-set-download'),
         ]
         return self.post_process_urls(urls)
 

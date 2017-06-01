@@ -4,8 +4,10 @@ import factory
 from django.utils.timezone import now
 
 from oscar.core.loading import get_model
+from oscar.test.factories import ConditionalOfferFactory
 
-__all__ = ['VoucherFactory']
+
+__all__ = ['VoucherFactory', 'VoucherSetFactory']
 
 
 class VoucherFactory(factory.DjangoModelFactory):
@@ -17,3 +19,15 @@ class VoucherFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = get_model('voucher', 'Voucher')
+
+
+class VoucherSetFactory(factory.DjangoModelFactory):
+    name = "My voucherset"
+    count = 100
+    code_length = 12
+    start_datetime = now() - datetime.timedelta(days=1)
+    end_datetime = now() + datetime.timedelta(days=10)
+    offer = factory.SubFactory(ConditionalOfferFactory)
+
+    class Meta:
+        model = get_model('voucher', 'VoucherSet')

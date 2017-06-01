@@ -6,7 +6,7 @@ import logging
 from django.conf import settings
 from django.shortcuts import redirect, resolve_url
 from django.template.defaultfilters import date as date_filter
-from django.utils import six
+from django.utils import six, timezone
 from django.utils.http import is_safe_url
 from django.utils.module_loading import import_string
 from django.utils.text import slugify as django_slugify
@@ -111,3 +111,19 @@ def get_default_currency():
     OSCAR_DEFAULT_CURRENCY as something it needs to generate a migration for.
     """
     return settings.OSCAR_DEFAULT_CURRENCY
+
+
+def aware_min_max_datetime():
+    """Return timezone aware MIN and MAX objects, since the django make_aware
+    function does a timedelta of 1 day we need to create a range of 1 day
+    first.
+
+    """
+    tz = timezone.get_current_timezone()
+    dt_min = datetime.datetime.min + datetime.timedelta(days=1)
+    dt_max = datetime.datetime.max - datetime.timedelta(days=1)
+
+    min = timezone.make_aware(dt_min, tz)
+    max = timezone.make_aware(dt_max, tz)
+
+    return min, max

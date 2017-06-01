@@ -1,13 +1,15 @@
+import pytest
 import datetime
 from decimal import Decimal as D
 
-from django.test import TestCase
 from django.core import exceptions
+from django.test import TestCase
 from django.utils.timezone import utc
 
 from oscar.apps.voucher.models import Voucher
 from oscar.core.compat import get_user_model
-from oscar.test.factories import OrderFactory, UserFactory, VoucherFactory
+from oscar.test.factories import (
+    OrderFactory, UserFactory, VoucherFactory, VoucherSetFactory)
 
 
 START_DATETIME = datetime.datetime(2011, 1, 1).replace(tzinfo=utc)
@@ -94,3 +96,14 @@ class TestOncePerCustomerVoucher(TestCase):
             self.voucher.record_usage(order, user)
             is_voucher_available_to_user, __ = self.voucher.is_available_to_user(user=user)
             self.assertFalse(is_voucher_available_to_user)
+
+
+@pytest.mark.django_db
+class TestVoucherSet(object):
+
+    def test_factory(self):
+        voucherset = VoucherSetFactory()
+        assert voucherset.count == voucherset.vouchers.count()
+        code = voucherset.vouchers.first().code
+        assert len(code) == 14
+        assert code.count('-') == 2
