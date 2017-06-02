@@ -21,7 +21,7 @@ whitenoise==3.3.0
 flake8==3.3.0
 flake8-debugger==1.4.0
 flake8-blind-except==0.1.1
-isort==4.2.5
+isort==4.2.13
 
 # Helpers
 pyprof2calltree==1.4.1
