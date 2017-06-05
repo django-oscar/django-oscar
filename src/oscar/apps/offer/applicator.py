@@ -80,7 +80,7 @@ class Applicator(object):
         code
         """
         offers = []
-        if not basket.id or not user:
+        if not hasattr(basket,'id') or not basket.id or not user:
             return offers
 
         for voucher in basket.vouchers.all():
