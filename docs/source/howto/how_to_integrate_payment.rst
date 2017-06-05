@@ -50,8 +50,11 @@ communicating with payment gateways and creating the appropriate payment models.
 Payment logic is normally implemented by using a customised version of
 ``PaymentDetailsView``, where the ``handle_payment`` method is overridden.  This
 method will be given the order number and order total plus any custom keyword
-arguments initially passed to ``submit`` (as ``payment_kwargs``).  If payment is
-successful, then nothing needs to be returned.  However, Oscar defines a few
+arguments initially passed to ``submit`` (as ``payment_kwargs``). If you need to make specifc
+kwargs available, then you'll have to override other methods from the same view as well. See the
+django-oscar-paypal project for details.
+
+If payment is successful, then nothing needs to be returned by ``handle_payment``.  However, Oscar defines a few
 common exceptions which can occur:
 
 * ``oscar.apps.payment.exceptions.RedirectRequired``  For payment integrations
