@@ -60,7 +60,7 @@ context processors.
 .. code-block:: django
 
     from oscar import OSCAR_MAIN_TEMPLATE_DIR
-    
+
     TEMPLATES = [
         {
             'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -88,12 +88,12 @@ context processors.
     ]
 
 .. attention::
-    
-   Before Django 1.8 this setting was split between 
-   ``TEMPLATE_CONTEXT_PROCESSORS`` and ``TEMPLATE_DIRS``. 
+
+   Before Django 1.8 this setting was split between
+   ``TEMPLATE_CONTEXT_PROCESSORS`` and ``TEMPLATE_DIRS``.
 
 
-Next, modify ``INSTALLED_APPS`` to be a list, add ``django.contrib.sites``, 
+Next, modify ``INSTALLED_APPS`` to be a list, add ``django.contrib.sites``,
 ``django.contrib.flatpages``, and ``widget_tweaks`` and append
 Oscar's core apps. Also set ``SITE_ID``:
 
@@ -117,16 +117,15 @@ Oscar's core apps. Also set ``SITE_ID``:
     SITE_ID = 1
 
 Note that Oscar requires ``django.contrib.flatpages`` which isn't
-included by default. ``flatpages`` also requires ``django.contrib.sites``,
-which won't be enabled by default when using Django 1.6 or upwards.
+included by default. ``flatpages`` also requires ``django.contrib.sites``.
 More info about installing ``flatpages`` is in the `Django docs`_.
 
-.. _`Django docs`: https://docs.djangoproject.com/en/dev/ref/contrib/flatpages/#installation
+.. _`Django docs`: https://docs.djangoproject.com/en/stable/ref/contrib/flatpages/#installation
 
 .. tip::
 
-    Oscar's default templates use django-compressor_ and django-widget-tweaks_ 
-    but it's optional really.  You may decide to use your own templates that 
+    Oscar's default templates use django-compressor_ and django-widget-tweaks_
+    but it's optional really.  You may decide to use your own templates that
     don't use either.  Hence why they are not in the 'core apps'.
 
 .. _django-compressor: https://github.com/jezdez/django_compressor
@@ -164,7 +163,7 @@ Check out the `sandbox settings`_ for a working example. If you're serving
 files from a remote storage (e.g. Amazon S3), you must manually copy a
 :ref:`"Image not found" image <missing-image-label>` into ``MEDIA_ROOT``.
 
-.. _`configured correctly`: https://docs.djangoproject.com/en/1.7/howto/static-files/
+.. _`configured correctly`: https://docs.djangoproject.com/en/stable/howto/static-files/
 .. _sandbox settings: https://github.com/django-oscar/django-oscar/blob/3a5160a86c9b14c940c76a224a28cd37dd29f7f1/sites/sandbox/settings.py#L99
 
 

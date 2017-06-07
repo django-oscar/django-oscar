@@ -1,9 +1,10 @@
 from django.core import exceptions
 from django.db import IntegrityError
 
-from oscar.apps.offer.models import Benefit, Condition
 from oscar.core.loading import get_model
 
+Benefit = get_model('offer', 'Benefit')
+Condition = get_model('offer', 'Condition')
 Range = get_model('offer', 'Range')
 
 

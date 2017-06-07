@@ -77,13 +77,14 @@ class OfferApplications(object):
         voucher_discounts = {}
         for application in self.voucher_discounts:
             voucher = application['voucher']
+            discount = application['discount']
             if voucher.code not in voucher_discounts:
                 voucher_discounts[voucher.code] = {
                     'voucher': voucher,
-                    'discount': application['discount'],
+                    'discount': discount,
                 }
             else:
-                voucher_discounts[voucher.code] += application.discount
+                voucher_discounts[voucher.code]['discount'] += discount
         return voucher_discounts.values()
 
     @property

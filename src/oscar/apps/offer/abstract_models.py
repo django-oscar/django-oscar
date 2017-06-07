@@ -89,10 +89,13 @@ class AbstractConditionalOffer(models.Model):
     # dates are ignored and only the dates from the voucher are used to
     # determine availability.
     start_datetime = models.DateTimeField(
-        _("Start date"), blank=True, null=True)
+        _("Start date"), blank=True, null=True,
+        help_text=_("Offers are active from the start date. "
+                    "Leave this empty if the offer has no start date."))
     end_datetime = models.DateTimeField(
         _("End date"), blank=True, null=True,
-        help_text=_("Offers are active until the end of the 'end date'"))
+        help_text=_("Offers are active until the end date. "
+                    "Leave this empty if the offer has no expiry date."))
 
     # Use this field to limit the number of times this offer can be applied in
     # total.  Note that a single order can apply an offer multiple times so
@@ -508,63 +511,75 @@ class AbstractBenefit(models.Model):
             getattr(self, method_name)()
 
     def clean_multibuy(self):
+        errors = []
+
         if not self.range:
-            raise exceptions.ValidationError(
-                _("Multibuy benefits require a product range"))
+            errors.append(_("Multibuy benefits require a product range"))
         if self.value:
-            raise exceptions.ValidationError(
-                _("Multibuy benefits don't require a value"))
+            errors.append(_("Multibuy benefits don't require a value"))
         if self.max_affected_items:
-            raise exceptions.ValidationError(
-                _("Multibuy benefits don't require a 'max affected items' "
-                  "attribute"))
+            errors.append(_("Multibuy benefits don't require a "
+                            "'max affected items' attribute"))
+
+        if errors:
+            raise exceptions.ValidationError(errors)
 
     def clean_percentage(self):
+        errors = []
+
         if not self.range:
-            raise exceptions.ValidationError(
-                _("Percentage benefits require a product range"))
+            errors.append(_("Percentage benefits require a product range"))
+
         if not self.value:
-            raise exceptions.ValidationError(
-                _("Percentage discount benefits require a value"))
-        if self.value > 100:
-            raise exceptions.ValidationError(
-                _("Percentage discount cannot be greater than 100"))
+            errors.append(_("Percentage discount benefits require a value"))
+        elif self.value > 100:
+            errors.append(_("Percentage discount cannot be greater than 100"))
+
+        if errors:
+            raise exceptions.ValidationError(errors)
 
     def clean_shipping_absolute(self):
+        errors = []
         if not self.value:
-            raise exceptions.ValidationError(
-                _("A discount value is required"))
+            errors.append(_("A discount value is required"))
         if self.range:
-            raise exceptions.ValidationError(
-                _("No range should be selected as this benefit does not "
-                  "apply to products"))
+            errors.append(_("No range should be selected as this benefit does "
+                            "not apply to products"))
         if self.max_affected_items:
-            raise exceptions.ValidationError(
-                _("Shipping discounts don't require a 'max affected items' "
-                  "attribute"))
+            errors.append(_("Shipping discounts don't require a "
+                            "'max affected items' attribute"))
+
+        if errors:
+            raise exceptions.ValidationError(errors)
 
     def clean_shipping_percentage(self):
-        if self.value > 100:
-            raise exceptions.ValidationError(
-                _("Percentage discount cannot be greater than 100"))
+        errors = []
+
+        if not self.value:
+            errors.append(_("Percentage discount benefits require a value"))
+        elif self.value > 100:
+            errors.append(_("Percentage discount cannot be greater than 100"))
+
         if self.range:
-            raise exceptions.ValidationError(
-                _("No range should be selected as this benefit does not "
-                  "apply to products"))
+            errors.append(_("No range should be selected as this benefit does "
+                            "not apply to products"))
         if self.max_affected_items:
-            raise exceptions.ValidationError(
-                _("Shipping discounts don't require a 'max affected items' "
-                  "attribute"))
+            errors.append(_("Shipping discounts don't require a "
+                            "'max affected items' attribute"))
+        if errors:
+            raise exceptions.ValidationError(errors)
 
     def clean_shipping_fixed_price(self):
+        errors = []
         if self.range:
-            raise exceptions.ValidationError(
-                _("No range should be selected as this benefit does not "
-                  "apply to products"))
+            errors.append(_("No range should be selected as this benefit does "
+                            "not apply to products"))
         if self.max_affected_items:
-            raise exceptions.ValidationError(
-                _("Shipping discounts don't require a 'max affected items' "
-                  "attribute"))
+            errors.append(_("Shipping discounts don't require a "
+                            "'max affected items' attribute"))
+
+        if errors:
+            raise exceptions.ValidationError(errors)
 
     def clean_fixed_price(self):
         if self.range:
@@ -573,12 +588,14 @@ class AbstractBenefit(models.Model):
                   "be used instead."))
 
     def clean_absolute(self):
+        errors = []
         if not self.range:
-            raise exceptions.ValidationError(
-                _("Fixed discount benefits require a product range"))
+            errors.append(_("Fixed discount benefits require a product range"))
         if not self.value:
-            raise exceptions.ValidationError(
-                _("Fixed discount benefits require a value"))
+            errors.append(_("Fixed discount benefits require a value"))
+
+        if errors:
+            raise exceptions.ValidationError(errors)
 
     def round(self, amount):
         """

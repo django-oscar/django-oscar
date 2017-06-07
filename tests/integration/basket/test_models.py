@@ -170,6 +170,19 @@ class TestANonEmptyBasket(TestCase):
         self.basket.add(product, 1)
         self.assertEqual(self.basket.total_excl_tax, 105)
 
+    def test_totals_for_free_products(self):
+        basket = Basket()
+        basket.strategy = strategy.Default()
+        # Add a zero-priced product to the basket
+        product = factories.create_product()
+        factories.create_stockrecord(
+            product, price_excl_tax=D('0.00'), num_in_stock=10)
+        basket.add(product, 1)
+
+        self.assertEqual(basket.lines.count(), 1)
+        self.assertEqual(basket.total_excl_tax, 0)
+        self.assertEqual(basket.total_incl_tax, 0)
+
     def test_basket_prices_calculation_for_unavailable_pricing(self):
         new_product = factories.create_product()
         factories.create_stockrecord(

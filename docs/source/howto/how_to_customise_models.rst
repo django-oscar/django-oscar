@@ -92,3 +92,29 @@ Oscar's models.py, and the stack trace will show you the importing module.
 
 If other modules need to import your models, then import from your local module,
 not from Oscar directly.
+
+Customising dashboard forms
+---------------------------
+
+For example, we have customised Product model and have added several fields.
+And we want to show it in the form for editing. You can customise dashboard
+forms by creating your own form that subclasses Oscar's dashboard form for
+any model. For example, you can customise the ``Product`` form in
+``apps/dashboard/catalogue/forms.py`` as follows::
+
+    from oscar.apps.dashboard.catalogue import forms as base_forms
+
+    class ProductForm(base_forms.ProductForm):
+
+        class Meta(base_forms.ProductForm.Meta):
+
+            fields = (
+                'title', 'upc', 'on_sale',
+                'short_description', 'description',
+                'out_of_stock', 'bestseller',
+                'is_new', 'is_discountable', 'structure',
+                'markdown', 'markdown_reason')
+
+
+Finally, make sure that you have overridden the dashboard app in your settings:
+``get_core_apps(['apps.dashboard.catalogue']``.

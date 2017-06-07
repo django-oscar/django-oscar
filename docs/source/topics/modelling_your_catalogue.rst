@@ -35,6 +35,9 @@ to customise the underlying Django models. There's different types of
 attributes, e.g. ones for just associating text (type ``text`` or ``richtext``),
 for related images and files (type ``image`` and ``file``), etc.
 
+Storing data in structured attributes also makes it easy to search and filter
+products based on specific attributes.
+
 The available product attributes for a product are set when creating the
 product's class. The sandbox comes with a product class for T-shirts, and
 they have a ``size`` attribute::
