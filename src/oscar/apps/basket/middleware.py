@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.core.signing import BadSignature, Signer
 from django.utils.functional import SimpleLazyObject, empty
 from django.utils.translation import ugettext_lazy as _
+from django.utils.deprecation import MiddlewareMixin
 
 from oscar.core.compat import MiddlewareMixin, user_is_authenticated
 from oscar.core.loading import get_class, get_model
