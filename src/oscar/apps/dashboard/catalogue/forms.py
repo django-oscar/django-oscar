@@ -5,7 +5,7 @@ from treebeard.forms import movenodeform_factory
 
 from oscar.core.loading import get_class, get_model
 from oscar.core.utils import slugify
-from oscar.forms.widgets import ImageInput
+from oscar.forms.widgets import ImageInput, DateTimePickerInput
 
 Product = get_model('catalogue', 'Product')
 ProductClass = get_model('catalogue', 'ProductClass')
@@ -117,6 +117,12 @@ def _attr_date_field(attribute):
                            widget=forms.widgets.DateInput)
 
 
+def _attr_datetime_field(attribute):
+    return forms.DateTimeField(label=attribute.name,
+                               required=attribute.required,
+                               widget=DateTimePickerInput())
+
+
 def _attr_option_field(attribute):
     return forms.ModelChoiceField(
         label=attribute.name,
@@ -162,6 +168,7 @@ class ProductForm(forms.ModelForm):
         "boolean": _attr_boolean_field,
         "float": _attr_float_field,
         "date": _attr_date_field,
+        "datetime": _attr_datetime_field,
         "option": _attr_option_field,
         "multi_option": _attr_multi_option_field,
         "entity": _attr_entity_field,
