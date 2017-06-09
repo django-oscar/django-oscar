@@ -20,6 +20,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='productattribute',
             name='type',
-            field=models.CharField(choices=[(b'text', 'Text'), (b'integer', 'Integer'), (b'boolean', 'True / False'), (b'float', 'Float'), (b'richtext', 'Rich Text'), (b'date', 'Date'), (b'datetime', b'Datetime'), (b'option', 'Option'), (b'multi_option', 'Multi Option'), (b'entity', 'Entity'), (b'file', 'File'), (b'image', 'Image')], default=b'text', max_length=20, verbose_name='Type'),
+            field=models.CharField(choices=[('text', 'Text'), ('integer', 'Integer'), ('boolean', 'True / False'), ('float', 'Float'), ('richtext', 'Rich Text'), ('date', 'Date'), ('datetime', 'Datetime'), ('option', 'Option'), ('multi_option', 'Multi Option'), ('entity', 'Entity'), ('file', 'File'), ('image', 'Image')], default='text', max_length=20, verbose_name='Type'),
         ),
     ]
