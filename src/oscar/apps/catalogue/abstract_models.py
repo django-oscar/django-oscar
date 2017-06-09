@@ -713,6 +713,7 @@ class AbstractProductAttribute(models.Model):
     FLOAT = "float"
     RICHTEXT = "richtext"
     DATE = "date"
+    DATETIME = "datetime"
     OPTION = "option"
     MULTI_OPTION = "multi_option"
     ENTITY = "entity"
@@ -725,6 +726,7 @@ class AbstractProductAttribute(models.Model):
         (FLOAT, _("Float")),
         (RICHTEXT, _("Rich Text")),
         (DATE, _("Date")),
+        (DATETIME, ("Datetime")),
         (OPTION, _("Option")),
         (MULTI_OPTION, _("Multi Option")),
         (ENTITY, _("Entity")),
@@ -841,6 +843,10 @@ class AbstractProductAttribute(models.Model):
         if not (isinstance(value, datetime) or isinstance(value, date)):
             raise ValidationError(_("Must be a date or datetime"))
 
+    def _validate_datetime(self, value):
+        if not isinstance(value, datetime):
+            raise ValidationError(_("Must be a datetime"))
+
     def _validate_boolean(self, value):
         if not type(value) == bool:
             raise ValidationError(_("Must be a boolean"))
@@ -907,6 +913,7 @@ class AbstractProductAttributeValue(models.Model):
     value_float = models.FloatField(_('Float'), blank=True, null=True)
     value_richtext = models.TextField(_('Richtext'), blank=True, null=True)
     value_date = models.DateField(_('Date'), blank=True, null=True)
+    value_datetime = models.DateTimeField(_('DateTime'), blank=True, null=True)
     value_multi_option = models.ManyToManyField(
         'catalogue.AttributeOption', blank=True,
         related_name='multi_valued_attribute_values',
