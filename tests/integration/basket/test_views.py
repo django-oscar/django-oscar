@@ -37,6 +37,27 @@ class TestVoucherAddView(TestCase):
         voucher = voucher.__class__.objects.get(pk=voucher.pk)
         self.assertEqual(voucher.num_basket_additions, 1, msg=self._get_voucher_message(request))
 
+    def test_post_valid_from_set(self):
+        voucherset = factories.VoucherSetFactory()
+        voucher = voucherset.vouchers.first()
+
+        self.assertTrue(voucher.is_active())
+
+        data = {
+            'code': voucher.code
+        }
+        request = RequestFactory().post('/', data=data)
+        request.basket.save()
+
+        view = views.VoucherAddView.as_view()
+        response = view(request)
+        self.assertEqual(response.status_code, 302)
+
+        voucher = voucher.__class__.objects.get(pk=voucher.pk)
+        self.assertEqual(voucher.num_basket_additions, 1, msg=self._get_voucher_message(request))
+
+        self.assertEqual(voucherset.num_basket_additions, 1)
+
 
 class TestVoucherRemoveView(TestCase):
     def test_post_valid(self):
