@@ -67,6 +67,8 @@ class VoucherListView(generic.ListView):
             now = timezone.now()
             qs = qs.filter(start_datetime__lte=now, end_datetime__gte=now)
             self.description_ctx['main_filter'] = _('Active vouchers')
+        if not data['in_set']:
+            qs = qs.filter(voucher_set__isnull=True)
 
         return qs
 
