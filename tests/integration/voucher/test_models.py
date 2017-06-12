@@ -107,3 +107,11 @@ class TestVoucherSet(object):
         code = voucherset.vouchers.first().code
         assert len(code) == 14
         assert code.count('-') == 2
+
+    def test_min_count(self):
+        voucherset = VoucherSetFactory(count=20)
+        assert voucherset.count == 20
+        voucherset.count = 10
+        voucherset.save()
+        voucherset.refresh_from_db()
+        assert voucherset.count == 20

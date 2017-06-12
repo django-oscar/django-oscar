@@ -1,9 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from django.utils.timezone import now
 
 from oscar.core.loading import get_model
-from oscar.core.utils import aware_min_max_datetime
 from oscar.forms import widgets
 
 Voucher = get_model('voucher', 'Voucher')
@@ -24,7 +22,9 @@ class VoucherForm(forms.Form):
         widget=widgets.DateTimePickerInput(),
         label=_("Start datetime"))
     end_datetime = forms.DateTimeField(
-        label=_("End datetime"), widget=widgets.DateTimePickerInput())
+        widget=widgets.DateTimePickerInput(),
+        label=_("End datetime"))
+
     usage = forms.ChoiceField(choices=Voucher.USAGE_CHOICES, label=_("Usage"))
 
     benefit_range = forms.ModelChoiceField(
@@ -111,23 +111,12 @@ class VoucherSetForm(forms.ModelForm):
             'end_datetime',
             'count',
         ]
-
-    def __init__(self, *args, **kwargs):
-        data = kwargs.get('initial', {})
-        instance = kwargs.get('instance', None)
-
-        if not instance and ('start_datetime', 'end_datetime') not in data:
-            start, end = aware_min_max_datetime()
-
-            data.setdefault('start_datetime', start)
-            data.setdefault('end_datetime', end)
-        super(VoucherSetForm, self).__init__(*args, **kwargs)
+        widgets = {
+            'start_datetime': widgets.DateTimePickerInput(),
+            'end_datetime': widgets.DateTimePickerInput(),
+        }
 
     def save(self, commit=True):
-        if not self.instance.start_datetime:
-            self.instance.start_datetime = now()
-        if not self.instance.end_datetime:
-            self.instance.end_datetime = now()
         instance = super(VoucherSetForm, self).save(commit)
         if commit:
             instance.generate_vouchers()
