@@ -251,10 +251,13 @@ class RemoteSelect(forms.Widget):
     is_multiple = False
     css = 'select2 input-xlarge'
     lookup_url = None
+    placeholder = ''
 
     def __init__(self, *args, **kwargs):
         if 'lookup_url' in kwargs:
             self.lookup_url = kwargs.pop('lookup_url')
+        if 'placeholder' in kwargs:
+            self.placeholder = kwargs.pop('placeholder')
         if self.lookup_url is None:
             raise ValueError(
                 "RemoteSelect requires a lookup ULR")
@@ -277,6 +280,7 @@ class RemoteSelect(forms.Widget):
             'name': name,
             'data-ajax-url': self.lookup_url,
             'data-multiple': 'multiple' if self.is_multiple else '',
+            'placeholder': self.placeholder,
             'value': self.format_value(value),
             'data-required': 'required' if self.is_required else '',
         })
