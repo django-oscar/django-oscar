@@ -83,7 +83,7 @@ Given a product, the strategy class is responsible for:
   own stockrecord.
 
 These three entities are wrapped up in a ``PurchaseInfo`` object, which is a
-simple named tuple.  The strategy class provides ``fetch_for_product`` and
+simple class.  The strategy class provides ``fetch_for_product`` and
 ``fetch_for_parent`` methods which takes a product and returns a ``PurchaseInfo``
 instance:
 

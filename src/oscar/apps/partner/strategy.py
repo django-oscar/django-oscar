@@ -1,4 +1,3 @@
-from collections import namedtuple
 from decimal import Decimal as D
 
 from oscar.core.compat import user_is_authenticated
@@ -10,10 +9,7 @@ StockRequiredAvailability = get_class('partner.availability', 'StockRequired')
 UnavailablePrice = get_class('partner.prices', 'Unavailable')
 FixedPrice = get_class('partner.prices', 'FixedPrice')
 TaxInclusiveFixedPrice = get_class('partner.prices', 'TaxInclusiveFixedPrice')
-
-# A container for policies
-PurchaseInfo = namedtuple(
-    'PurchaseInfo', ['price', 'availability', 'stockrecord'])
+PurchaseInfo = get_class('partner.data_structures', 'PurchaseInfo')
 
 
 class Selector(object):
@@ -66,7 +62,7 @@ class Base(object):
         """
         Given a product, return a ``PurchaseInfo`` instance.
 
-        The ``PurchaseInfo`` class is a named tuple with attributes:
+        The ``PurchaseInfo`` class has attributes:
 
         - ``price``: a pricing policy object.
         - ``availability``: an availability policy object.
