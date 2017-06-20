@@ -15,13 +15,6 @@ class CustomerApplication(Application):
                                        'AnonymousOrderDetailView')
     order_line_view = get_class('customer.views', 'OrderLineView')
 
-    address_list_view = get_class('customer.views', 'AddressListView')
-    address_create_view = get_class('customer.views', 'AddressCreateView')
-    address_update_view = get_class('customer.views', 'AddressUpdateView')
-    address_delete_view = get_class('customer.views', 'AddressDeleteView')
-    address_change_status_view = get_class('customer.views',
-                                           'AddressChangeStatusView')
-
     email_list_view = get_class('customer.views', 'EmailHistoryView')
     email_detail_view = get_class('customer.views', 'EmailDetailView')
     login_view = get_class('customer.views', 'AccountAuthView')
@@ -105,23 +98,6 @@ class CustomerApplication(Application):
                 login_required(self.order_line_view.as_view()),
                 name='order-line'),
 
-            # Address book
-            url(r'^addresses/$',
-                login_required(self.address_list_view.as_view()),
-                name='address-list'),
-            url(r'^addresses/add/$',
-                login_required(self.address_create_view.as_view()),
-                name='address-create'),
-            url(r'^addresses/(?P<pk>\d+)/$',
-                login_required(self.address_update_view.as_view()),
-                name='address-detail'),
-            url(r'^addresses/(?P<pk>\d+)/delete/$',
-                login_required(self.address_delete_view.as_view()),
-                name='address-delete'),
-            url(r'^addresses/(?P<pk>\d+)/'
-                r'(?P<action>default_for_(billing|shipping))/$',
-                login_required(self.address_change_status_view.as_view()),
-                name='address-change-status'),
 
             # Email history
             url(r'^emails/$',
