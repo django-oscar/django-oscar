@@ -1,4 +1,3 @@
-import datetime
 import json
 
 from django.views.generic import ListView, FormView, DeleteView
@@ -7,6 +6,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 
@@ -57,8 +57,8 @@ class OfferListView(ListView):
             self.is_filtered = True
         if data['is_active']:
             self.is_filtered = True
-            today = datetime.date.today()
-            qs = qs.filter(start_date__lte=today, end_date__gte=today)
+            now = timezone.now()
+            qs = qs.filter(start_datetime__lte=now, end_datetime__gte=now)
 
         return qs
 
