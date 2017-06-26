@@ -157,4 +157,5 @@ Dependency changes
 The following packages are updated:
 
     - `django>=1.8.8,<1.12`
-    - 'django-phonenumber-field>=1.0.0,<2.0.0
+    - `django-phonenumber-field>=1.0.0,<2.0.0`
+    - `django-haystack>=2.5.0,<2.7.0`

@@ -28,7 +28,7 @@ install_requires = [
     # https://github.com/AndrewIngram/django-extra-views/issues/114
     'django-extra-views>=0.2,<0.6.5',
     # Search support
-    'django-haystack>=2.5.0,<2.6.0',
+    'django-haystack>=2.5.0,<2.7.0',
     # Treebeard is used for categories
     'django-treebeard>=4.1.0',
     # Sorl is used as the default thumbnailer
