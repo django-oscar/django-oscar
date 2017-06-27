@@ -78,6 +78,33 @@ class TestBasketLine(TestCase):
         queryset = basket.all_lines()
         self.assertTrue(queryset.ordered)
 
+    def test_line_tax_for_zero_tax_strategies(self):
+        basket = Basket()
+        basket.strategy = strategy.Default()
+        product = factories.create_product()
+        # Tax for the default strategy will be 0
+        factories.create_stockrecord(
+            product, price_excl_tax=D('75.00'), num_in_stock=10)
+        basket.add(product, 1)
+
+        self.assertEqual(basket.lines.first().line_tax, D('0'))
+
+    def test_line_tax_for_unknown_tax_strategies(self):
+
+        class UnknownTaxStrategy(strategy.Default):
+            """ A test strategy where the tax is not known """
+
+            def pricing_policy(self, product, stockrecord):
+                return prices.FixedPrice('GBP', stockrecord.price_excl_tax, tax=None)
+
+        basket = Basket()
+        basket.strategy = UnknownTaxStrategy()
+        product = factories.create_product()
+        factories.create_stockrecord(product, num_in_stock=10)
+        basket.add(product, 1)
+
+        self.assertEqual(basket.lines.first().line_tax, None)
+
 
 class TestAddingAProductToABasket(TestCase):
 

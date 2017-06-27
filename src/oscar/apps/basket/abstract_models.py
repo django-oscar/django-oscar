@@ -828,7 +828,7 @@ class AbstractLine(models.Model):
 
     @property
     def line_tax(self):
-        if self.unit_tax:
+        if self.is_tax_known:
             return self.quantity * self.unit_tax
 
     @property
