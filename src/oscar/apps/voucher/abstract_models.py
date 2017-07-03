@@ -50,13 +50,14 @@ class AbstractVoucherSet(models.Model):
         """Add a new voucher to this set"""
         Voucher = get_model('voucher', 'Voucher')
         code = get_unused_code(length=self.code_length)
-        return Voucher.objects.create(
+        voucher = Voucher.objects.create(
             name=self.name,
             code=code,
             voucher_set=self,
             usage=Voucher.SINGLE_USE,
             start_datetime=self.start_datetime,
             end_datetime=self.end_datetime)
+        return voucher
 
     def is_active(self, test_datetime=None):
         """Test whether this voucher set is currently active. """

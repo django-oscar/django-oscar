@@ -235,7 +235,33 @@ class VoucherSetCreateView(generic.CreateView):
         return ctx
 
     def form_valid(self, form):
-        form.save()
+        condition = Condition.objects.create(
+            range=form.cleaned_data['benefit_range'],
+            type=Condition.COUNT,
+            value=1
+        )
+        benefit = Benefit.objects.create(
+            range=form.cleaned_data['benefit_range'],
+            type=form.cleaned_data['benefit_type'],
+            value=form.cleaned_data['benefit_value']
+        )
+        name = form.cleaned_data['name']
+        offer = ConditionalOffer.objects.create(
+            name=_("Offer for voucher '%s'") % name,
+            offer_type=ConditionalOffer.VOUCHER,
+            benefit=benefit,
+            condition=condition,
+        )
+
+        VoucherSet.objects.create(
+            name=name,
+            count=form.cleaned_data['count'],
+            code_length=form.cleaned_data['code_length'],
+            description=form.cleaned_data['description'],
+            start_datetime=form.cleaned_data['start_datetime'],
+            end_datetime=form.cleaned_data['end_datetime'],
+            offer=offer,
+        )
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
@@ -254,8 +280,61 @@ class VoucherSetUpdateView(generic.UpdateView):
         ctx['voucher'] = self.object
         return ctx
 
+    def get_voucherset(self):
+        if not hasattr(self, 'voucherset'):
+            self.voucherset = VoucherSet.objects.get(id=self.kwargs['pk'])
+        return self.voucherset
+
+    def get_initial(self):
+        voucherset = self.get_voucherset()
+        offer = voucherset.offer
+        benefit = offer.benefit
+        return {
+            'name': voucherset.name,
+            'count': voucherset.count,
+            'code_length': voucherset.code_length,
+            'start_datetime': voucherset.start_datetime,
+            'end_datetime': voucherset.end_datetime,
+            'description': voucherset.description,
+            'benefit_type': benefit.type,
+            'benefit_range': benefit.range,
+            'benefit_value': benefit.value,
+        }
+
     def form_valid(self, form):
-        form.save()
+        voucherset = form.save()
+        if not voucherset.offer:
+            condition = Condition.objects.create(
+                range=form.cleaned_data['benefit_range'],
+                type=Condition.COUNT,
+                value=1
+            )
+            benefit = Benefit.objects.create(
+                range=form.cleaned_data['benefit_range'],
+                type=form.cleaned_data['benefit_type'],
+                value=form.cleaned_data['benefit_value']
+            )
+            name = form.cleaned_data['name']
+            offer, created = ConditionalOffer.objects.update_or_create(
+                name=_("Offer for voucher '%s'") % name,
+                defaults=dict(
+                    offer_type=ConditionalOffer.VOUCHER,
+                    benefit=benefit,
+                    condition=condition,
+                )
+            )
+            voucherset.offer = offer
+        else:
+            benefit = voucherset.offer.benefit
+            benefit.range = form.cleaned_data['benefit_range']
+            benefit.type = form.cleaned_data['benefit_type']
+            benefit.value = form.cleaned_data['benefit_value']
+            benefit.save()
+            condition = voucherset.offer.condition
+            condition.range = form.cleaned_data['benefit_range']
+            condition.save()
+        voucherset.save()
+
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
