@@ -1,6 +1,7 @@
+from collections import defaultdict
+
 from django.contrib import messages
 from django.template.loader import render_to_string
-
 from oscar.core.loading import get_class
 
 Applicator = get_class('offer.applicator', 'Applicator')
@@ -62,3 +63,45 @@ class BasketMessageGenerator(object):
 
         for level, msg in self.get_messages(request.basket, offers_before, offers_after):
             messages.add_message(request, level, msg, extra_tags='safe noicon')
+
+
+class LineOfferConsumer(object):
+
+    def __init__(self, line):
+        self.__line = line
+        self.__offers = dict()
+        self.__affected_quantity = 0
+        self.__consumptions = defaultdict(int)
+
+    # private
+    def __cache(self, offer):
+        self.__offers[offer.pk] = offer
+
+    def __update_affected_quantity(self, quantity):
+        if quantity > self.__line.quantity - self.__affected_quantity:
+            inc = self.__line.quantity - self.__affected_quantity
+        else:
+            inc = quantity
+        self.__affected_quantity += int(inc)
+
+    # public
+    def consume(self, quantity, offer=None):
+        self.__update_affected_quantity(quantity)
+        if offer:
+            available = self.available(offer)
+            self.__consumptions[offer.pk] += min(available, quantity)
+
+    def consumed(self, offer=None):
+        if not offer:
+            return self.__affected_quantity
+        self.__cache(offer)
+        return self.__consumptions[offer.pk]
+
+    def available(self, offer):
+        self.__cache(offer)
+        exclusive = any([x.exclusive for x in self.__offers.values()])
+        if exclusive:
+            consumed = self.__affected_quantity
+        else:
+            consumed = self.consumed(offer)
+        return self.__line.quantity - consumed
