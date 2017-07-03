@@ -4,6 +4,7 @@ from django.utils import timezone
 import pytest
 
 from oscar.apps.dashboard.vouchers import forms
+from oscar.test.factories.offer import RangeFactory
 
 
 class TestVoucherForm(test.TestCase):
@@ -37,6 +38,8 @@ class TestVoucherForm(test.TestCase):
 class TestVoucherSetForm:
 
     def test_valid_form(self):
+        range = RangeFactory(includes_all_products=True)
+
         start = timezone.now()
         end = start + timedelta(days=1)
         data = {
@@ -46,6 +49,9 @@ class TestVoucherSetForm:
             'start_datetime': start,
             'end_datetime': end,
             'count': 10,
+            'benefit_range': range.pk,
+            'benefit_type': 'Percentage',
+            'benefit_value': 10,
         }
         form = forms.VoucherSetForm(data=data)
         assert form.is_valid()

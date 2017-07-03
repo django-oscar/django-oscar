@@ -57,6 +57,10 @@ class AbstractVoucherSet(models.Model):
             usage=Voucher.SINGLE_USE,
             start_datetime=self.start_datetime,
             end_datetime=self.end_datetime)
+
+        if self.offer:
+            voucher.offers.add(self.offer)
+
         return voucher
 
     def is_active(self, test_datetime=None):

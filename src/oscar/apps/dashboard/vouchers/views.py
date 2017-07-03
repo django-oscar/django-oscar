@@ -48,7 +48,7 @@ class VoucherListView(generic.ListView):
         is_form_submitted = 'name' in self.request.GET
         if not is_form_submitted:
             self.form = self.form_class()
-            return qs
+            return qs.filter(voucher_set__isnull=True)
 
         self.form = self.form_class(self.request.GET)
         if not self.form.is_valid():

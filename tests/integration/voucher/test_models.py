@@ -108,6 +108,9 @@ class TestVoucherSet(object):
         assert len(code) == 14
         assert code.count('-') == 2
         assert str(voucherset) == voucherset.name
+        assert voucherset.offer
+        for voucher in voucherset.vouchers.all():
+            assert voucherset.offer in voucher.offers.all()
 
     def test_min_count(self):
         voucherset = VoucherSetFactory(count=20)
