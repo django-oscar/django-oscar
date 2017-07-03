@@ -7,7 +7,6 @@ from django.core.mail import send_mail
 from django import http
 from django.core.urlresolvers import reverse
 from django.template.loader import get_template
-from django.template import Context
 
 from apps.gateway import forms
 from oscar.apps.customer.forms import generate_username
@@ -42,11 +41,10 @@ class GatewayView(generic.FormView):
         return user
 
     def send_confirmation_email(self, real_email, user, password):
-        msg = get_template('gateway/email.txt').render(Context({
+        msg = get_template('gateway/email.txt').render({
             'email': user.email,
             'password': password
-        }))
+        })
         send_mail('Dashboard access to Oscar sandbox',
                   msg, 'blackhole@latest.oscarcommerce.com',
                   [real_email])
-
