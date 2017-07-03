@@ -324,6 +324,10 @@ class VoucherSetUpdateView(generic.UpdateView):
                 )
             )
             voucherset.offer = offer
+            for voucher in voucherset.vouchers.all():
+                if offer not in voucher.offers.all():
+                    voucher.offers.add(offer)
+
         else:
             benefit = voucherset.offer.benefit
             benefit.range = form.cleaned_data['benefit_range']
