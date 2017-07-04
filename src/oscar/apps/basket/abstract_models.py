@@ -748,10 +748,10 @@ class AbstractLine(models.Model):
         return self.consumer.consumed(offer)
 
     def quantity_without_offer_discount(self, offer):
-        return int(self.quantity - self.consumer.consumed(offer))
+        return self.consumer.available(offer)
 
     def is_available_for_offer_discount(self, offer):
-        return int(self.consumer.available(offer)) > 0
+        return self.consumer.available(offer) > 0
 
     # ==========
     # Properties
@@ -759,7 +759,7 @@ class AbstractLine(models.Model):
 
     @property
     def has_discount(self):
-        return self.quantity > self.quantity_without_discount
+        return self.consumer.consumed() and True or False
 
     @property
     def quantity_with_discount(self):
@@ -767,11 +767,12 @@ class AbstractLine(models.Model):
 
     @property
     def quantity_without_discount(self):
-        return int(self.quantity - self.consumer.consumed())
+        return self.consumer.available()
 
     @property
     def is_available_for_discount(self):
-        return self.quantity_without_discount > 0
+        # deprecated
+        return self.consumer.available() > 0
 
     @property
     def discount_value(self):

@@ -66,8 +66,9 @@ class PercentageDiscountBenefit(Benefit):
             if discount_amount_available == 0:
                 break
 
-            quantity_affected = min(line.quantity_without_discount,
-                                    max_affected_items - affected_items)
+            quantity_affected = min(
+                line.quantity_without_offer_discount(offer),
+                max_affected_items - affected_items)
             line_discount = self.round(discount_percent / D('100.0') * price
                                        * int(quantity_affected))
 
@@ -127,7 +128,8 @@ class AbsoluteDiscountBenefit(Benefit):
         for price, line in line_tuples:
             if num_affected_items >= max_affected_items:
                 break
-            qty = min(line.quantity_without_discount,
+            qty = min(
+                line.quantity_without_offer_discount(offer),
                       max_affected_items - num_affected_items)
             lines_to_discount.append((line, price, qty))
             num_affected_items += qty
@@ -210,7 +212,7 @@ class FixedPriceBenefit(Benefit):
                 quantity_affected = 1
             else:
                 quantity_affected = min(
-                    line.quantity_without_discount,
+                    line.quantity_without_offer_discount(offer),
                     num_permitted - num_affected)
             num_affected += quantity_affected
             value_affected += quantity_affected * price

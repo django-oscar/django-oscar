@@ -90,11 +90,8 @@ class LineOfferConsumer(object):
         self.__offers[offer.pk] = offer
 
     def __update_affected_quantity(self, quantity):
-        if quantity > self.__line.quantity - self.__affected_quantity:
-            inc = self.__line.quantity - self.__affected_quantity
-        else:
-            inc = quantity
-        self.__affected_quantity += int(inc)
+        available = int(self.__line.quantity - self.__affected_quantity)
+        self.__affected_quantity += min(available, quantity)
 
     # public
     def consume(self, quantity, offer=None):
@@ -131,22 +128,25 @@ class LineOfferConsumer(object):
         if not offer:
             return self.__affected_quantity
         self.__cache(offer)
-        return self.__consumptions[offer.pk]
+        return int(self.__consumptions[offer.pk])
 
-    def available(self, offer):
+    def available(self, offer=None):
         """
-        check how many items are available for the specified
-        offer
+        check how many items are available for offer
 
         :param offer: the offer to check
-        :type offer: ConditionalOffer
+        :type offer: ConditionalOffer or None
         :return: the number of items available for offer
         :rtype: int
         """
-        self.__cache(offer)
-        exclusive = any([x.exclusive for x in self.__offers.values()])
-        if exclusive:
-            consumed = self.__affected_quantity
+        if offer:
+            self.__cache(offer)
+            exclusive = any([x.exclusive for x in self.__offers.values()])
         else:
-            consumed = self.consumed(offer)
-        return self.__line.quantity - consumed
+            exclusive = True
+
+        if exclusive:
+            offer = None
+
+        consumed = self.consumed(offer)
+        return int(self.__line.quantity - consumed)
