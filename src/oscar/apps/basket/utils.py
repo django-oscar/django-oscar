@@ -66,6 +66,18 @@ class BasketMessageGenerator(object):
 
 
 class LineOfferConsumer(object):
+    """
+    facade for marking basket lines as consumed by
+    any or a specific offering.
+
+    historically oscar marks a line as consumed if any
+    offer is applied to it, but more complicated scenarios
+    are possible if we mark the line as being consumed by
+    specific offers.
+
+    this allows combining i.e. multiple vouchers, vouchers
+    with special session discounts, etc.
+    """
 
     def __init__(self, line):
         self.__line = line
@@ -86,18 +98,51 @@ class LineOfferConsumer(object):
 
     # public
     def consume(self, quantity, offer=None):
+        """
+        mark a basket line as consumed by an offer
+
+        :param int quantity: the number of items on the line affected
+        :param offer: the offer to mark the line
+        :type offer: ConditionalOffer or None
+
+        if offer is None, the specified quantity of items on this
+        basket line is consumed for *any* offer, else only for the
+        specified offer.
+        """
         self.__update_affected_quantity(quantity)
         if offer:
             available = self.available(offer)
             self.__consumptions[offer.pk] += min(available, quantity)
 
     def consumed(self, offer=None):
+        """
+        check how many items on this line have been
+        consumed by an offer
+
+        :param offer: the offer to check
+        :type offer: ConditionalOffer or None
+        :return: the number of items marked as consumed
+        :rtype: int
+
+        if offer is not None, only the number of items marked
+        with the specified ConditionalOffer are returned
+
+        """
         if not offer:
             return self.__affected_quantity
         self.__cache(offer)
         return self.__consumptions[offer.pk]
 
     def available(self, offer):
+        """
+        check how many items are available for the specified
+        offer
+
+        :param offer: the offer to check
+        :type offer: ConditionalOffer
+        :return: the number of items available for offer
+        :rtype: int
+        """
         self.__cache(offer)
         exclusive = any([x.exclusive for x in self.__offers.values()])
         if exclusive:
