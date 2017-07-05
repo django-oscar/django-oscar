@@ -670,6 +670,7 @@ class AbstractLine(models.Model):
         """
         self._discount_excl_tax = D('0.00')
         self._discount_incl_tax = D('0.00')
+        self.consumer = LineOfferConsumer(self)
 
     def discount(self, discount_value, affected_quantity, incl_tax=True,
                  offer=None):
@@ -688,7 +689,7 @@ class AbstractLine(models.Model):
                     "Attempting to discount the tax-exclusive price of a line "
                     "when tax-inclusive discounts are already applied")
             self._discount_excl_tax += discount_value
-        self.consumer.consume(int(affected_quantity), offer=offer)
+        self.consume(affected_quantity, offer=offer)
 
     def consume(self, quantity, offer=None):
         """
