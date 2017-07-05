@@ -3,6 +3,8 @@ import os
 import warnings
 
 from django_webtest import WebTest
+
+from django.contrib.auth.models import AnonymousUser
 from django.core.urlresolvers import reverse
 from django.core import mail
 from django.test import TestCase
@@ -10,9 +12,10 @@ from oscar.utils.deprecation import RemovedInOscar20Warning
 
 from oscar.apps.customer.alerts.utils import (send_alert_confirmation,
     send_product_alerts)
+from oscar.apps.customer.forms import ProductAlertForm
 from oscar.apps.customer.models import ProductAlert
-from oscar.test.factories import create_product, create_stockrecord
-from oscar.test.factories import UserFactory
+from oscar.test.factories import (
+    create_product, create_stockrecord, ProductAlertFactory, UserFactory)
 
 
 class TestAUser(WebTest):
@@ -86,6 +89,31 @@ class TestAnAnonymousUser(WebTest):
         alert = alerts[0]
         self.assertEqual(ProductAlert.UNCONFIRMED, alert.status)
         self.assertEqual(alert.product, product)
+
+    def test_can_cancel_unconfirmed_stock_alert(self):
+        alert = ProductAlertFactory(
+            user=None, email='john@smith.com', status=ProductAlert.UNCONFIRMED)
+        self.app.get(
+            reverse('customer:alerts-cancel-by-key', kwargs={'key': alert.key}))
+        alert.refresh_from_db()
+        self.assertTrue(alert.is_cancelled)
+
+    def test_cannot_create_multiple_unconfirmed_alerts(self):
+        # Create an unconfirmed alert
+        alert = ProductAlertFactory(
+            user=None, email='john@smith.com', status=ProductAlert.UNCONFIRMED)
+
+        # Alert form should not allow creation of additional alerts.
+        form = ProductAlertForm(
+            user=AnonymousUser(),
+            product=create_product(num_in_stock=0),
+            data={'email': 'john@smith.com'},
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertIn(
+            "john@smith.com has been sent a confirmation email for another "
+            "product alert on this site.", form.errors['__all__'][0])
 
 
 class TestHurryMode(TestCase):
