@@ -64,8 +64,10 @@ class TestLineOfferConsumer(object):
     def test_consumed_with_exclusive_offer(self, filled_basket):
         offer1 = ConditionalOfferFactory(name='offer1')
         offer2 = ConditionalOfferFactory(name='offer2')
+        offer3 = ConditionalOfferFactory(name='offer3')
         offer1.exclusive = True
         offer2.exclusive = False
+        offer3.exclusive = False
 
         for line in filled_basket.all_lines():
             assert line.consumer.consumed(offer1) == 0
@@ -77,11 +79,12 @@ class TestLineOfferConsumer(object):
         line1.consumer.consume(1, offer1)
         assert line1.is_available_for_offer_discount(offer2) is True
 
-        line1.consumer.consume(9, offer1)
+        line1.consumer.consume(99, offer1)
         assert line1.is_available_for_offer_discount(offer2) is False
 
-        line2.consumer.consume(10, offer2)
+        line2.consumer.consume(1, offer2)
         assert line2.is_available_for_offer_discount(offer1) is True
 
-        line2.consumer.consume(10, offer2)
+        line2.consumer.consume(99, offer2)
         assert line2.is_available_for_offer_discount(offer1) is False
+        assert line2.is_available_for_offer_discount(offer3) is True

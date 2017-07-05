@@ -108,6 +108,7 @@ class LineOfferConsumer(object):
         """
         self.__update_affected_quantity(quantity)
         if offer:
+            self.__cache(offer)
             available = self.available(offer)
             self.__consumptions[offer.pk] += min(available, quantity)
 
@@ -127,7 +128,6 @@ class LineOfferConsumer(object):
         """
         if not offer:
             return self.__affected_quantity
-        self.__cache(offer)
         return int(self.__consumptions[offer.pk])
 
     def available(self, offer=None):
@@ -140,8 +140,8 @@ class LineOfferConsumer(object):
         :rtype: int
         """
         if offer:
-            self.__cache(offer)
             exclusive = any([x.exclusive for x in self.__offers.values()])
+            exclusive |= offer.exclusive
         else:
             exclusive = True
 

@@ -2,10 +2,9 @@ from decimal import Decimal as D
 
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.offer import results, utils
+from oscar.apps.offer import results, utils, conditions
 from oscar.core.loading import get_model
 from oscar.templatetags.currency_filters import currency
-from ibb.apps.offer import conditions
 
 Benefit = get_model('offer', 'Benefit')
 
