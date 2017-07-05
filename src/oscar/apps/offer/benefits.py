@@ -16,11 +16,11 @@ __all__ = [
 ]
 
 
-def apply_discount(line, discount, quantity):
+def apply_discount(line, discount, quantity, offer=None):
     """
     Apply a given discount to the passed basket
     """
-    line.discount(discount, quantity, incl_tax=False)
+    line.discount(discount, quantity, incl_tax=False, offer=offer)
 
 
 class PercentageDiscountBenefit(Benefit):
@@ -76,7 +76,7 @@ class PercentageDiscountBenefit(Benefit):
                 line_discount = min(line_discount, discount_amount_available)
                 discount_amount_available -= line_discount
 
-            apply_discount(line, line_discount, quantity_affected)
+            apply_discount(line, line_discount, quantity_affected, offer)
 
             affected_lines.append((line, line_discount, quantity_affected))
             affected_items += quantity_affected
@@ -130,7 +130,7 @@ class AbsoluteDiscountBenefit(Benefit):
                 break
             qty = min(
                 line.quantity_without_offer_discount(offer),
-                      max_affected_items - num_affected_items)
+                max_affected_items - num_affected_items)
             lines_to_discount.append((line, price, qty))
             num_affected_items += qty
             affected_items_total += qty * price

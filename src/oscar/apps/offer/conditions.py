@@ -99,7 +99,7 @@ class CountCondition(Condition):
             quantity_to_consume = min(
                 line.quantity_without_offer_discount(offer), to_consume
             )
-            line.consume(quantity_to_consume)
+            line.consume(quantity_to_consume, offer=offer)
             to_consume -= quantity_to_consume
             if to_consume == 0:
                 break
@@ -191,7 +191,7 @@ class CoverageCondition(Condition):
             if not line.is_available_for_offer_discount(offer):
                 continue
             # Only consume a quantity of 1 from each line
-            line.consume(1)
+            line.consume(1, offer=offer)
             consumed_products.append(product)
             to_consume -= 1
             if to_consume == 0:
@@ -298,7 +298,7 @@ class ValueCondition(Condition):
             quantity_to_consume = min(
                 line.quantity_without_offer_discount(offer),
                 (to_consume / price).quantize(D(1), ROUND_UP))
-            line.consume(quantity_to_consume)
+            line.consume(quantity_to_consume, offer=offer)
             to_consume -= price * quantity_to_consume
             if to_consume <= 0:
                 break

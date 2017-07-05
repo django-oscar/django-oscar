@@ -671,7 +671,8 @@ class AbstractLine(models.Model):
         self._discount_excl_tax = D('0.00')
         self._discount_incl_tax = D('0.00')
 
-    def discount(self, discount_value, affected_quantity, incl_tax=True):
+    def discount(self, discount_value, affected_quantity, incl_tax=True,
+                 offer=None):
         """
         Apply a discount to this line
         """
@@ -687,15 +688,15 @@ class AbstractLine(models.Model):
                     "Attempting to discount the tax-exclusive price of a line "
                     "when tax-inclusive discounts are already applied")
             self._discount_excl_tax += discount_value
-        self.consumer.consume(int(affected_quantity))
+        self.consumer.consume(int(affected_quantity), offer=offer)
 
-    def consume(self, quantity):
+    def consume(self, quantity, offer=None):
         """
         Mark all or part of the line as 'consumed'
 
         Consumed items are no longer available to be used in offers.
         """
-        self.consumer.consume(quantity)
+        self.consumer.consume(quantity, offer=offer)
 
     def get_price_breakdown(self):
         """
