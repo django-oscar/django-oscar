@@ -141,7 +141,7 @@ class LineOfferConsumer(object):
         """
         if offer:
             exclusive = any([x.exclusive for x in self.__offers.values()])
-            exclusive |= offer.exclusive
+            exclusive |= bool(offer.exclusive)
         else:
             exclusive = True
 
