@@ -64,7 +64,7 @@ class AbstractConditionalOffer(models.Model):
 
     exclusive = models.BooleanField(
         _("Exclusive offer"),
-        help_text=_("Exclusive offers can not be combined on the same items"),
+        help_text=_("Exclusive offers cannot be combined on the same items"),
         default=True
     )
 

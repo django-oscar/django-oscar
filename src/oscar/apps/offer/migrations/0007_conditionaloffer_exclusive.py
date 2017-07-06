@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='conditionaloffer',
             name='exclusive',
-            field=models.BooleanField(default=True, help_text='Exclusive offers can not be combined on the same items', verbose_name='Exclusive offer'),
+            field=models.BooleanField(default=True, help_text='Exclusive offers cannot be combined on the same items', verbose_name='Exclusive offer'),
         ),
     ]

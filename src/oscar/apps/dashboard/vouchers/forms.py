@@ -46,7 +46,7 @@ class VoucherForm(forms.Form):
 
     exclusive = forms.BooleanField(
         required=False,
-        label=_("Exclusive offers can not be combined on the same items"))
+        label=_("Exclusive offers cannot be combined on the same items"))
 
     def __init__(self, voucher=None, *args, **kwargs):
         self.voucher = voucher
