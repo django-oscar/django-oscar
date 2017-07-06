@@ -761,7 +761,7 @@ class AbstractLine(models.Model):
 
     @property
     def has_discount(self):
-        return self.consumer.consumed() and True or False
+        return bool(self.consumer.consumed())
 
     @property
     def quantity_with_discount(self):
