@@ -11,13 +11,7 @@ build_sandbox:
 	-rm -rf sites/sandbox/public/static
 	-rm -f sites/sandbox/db.sqlite
 	sites/sandbox/manage.py migrate
-	# Import some fixtures. Order is important as JSON fixtures include primary keys
-	sites/sandbox/manage.py loaddata sites/sandbox/fixtures/child_products.json
-	sites/sandbox/manage.py oscar_import_catalogue sites/sandbox/fixtures/*.csv
-	sites/sandbox/manage.py oscar_import_catalogue_images sites/sandbox/fixtures/images.tar.gz
 	sites/sandbox/manage.py oscar_populate_countries
-	sites/sandbox/manage.py loaddata sites/_fixtures/pages.json sites/_fixtures/auth.json sites/_fixtures/ranges.json sites/_fixtures/offers.json
-	sites/sandbox/manage.py loaddata sites/sandbox/fixtures/orders.json
 
 sandbox: install build_sandbox
 
