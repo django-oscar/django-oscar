@@ -19,7 +19,6 @@ from oscar.core.validators import password_validators
 
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 CommunicationEventType = get_model('customer', 'communicationeventtype')
-ProductAlert = get_model('customer', 'ProductAlert')
 User = get_user_model()
 
 
@@ -359,58 +358,3 @@ if Profile:  # noqa (too complex (12))
     ProfileForm = UserAndProfileForm
 else:
     ProfileForm = UserForm
-
-
-class ProductAlertForm(forms.ModelForm):
-    email = forms.EmailField(required=True, label=_(u'Send notification to'),
-                             widget=forms.TextInput(attrs={
-                                 'placeholder': _('Enter your email')
-                             }))
-
-    def __init__(self, user, product, *args, **kwargs):
-        self.user = user
-        self.product = product
-        super(ProductAlertForm, self).__init__(*args, **kwargs)
-
-        # Only show email field to unauthenticated users
-        if user and user.is_authenticated():
-            self.fields['email'].widget = forms.HiddenInput()
-            self.fields['email'].required = False
-
-    def save(self, commit=True):
-        alert = super(ProductAlertForm, self).save(commit=False)
-        if self.user.is_authenticated():
-            alert.user = self.user
-        alert.product = self.product
-        if commit:
-            alert.save()
-        return alert
-
-    def clean(self):
-        cleaned_data = self.cleaned_data
-        email = cleaned_data.get('email')
-        if email:
-            try:
-                ProductAlert.objects.get(
-                    product=self.product, email__iexact=email,
-                    status=ProductAlert.ACTIVE)
-            except ProductAlert.DoesNotExist:
-                pass
-            else:
-                raise forms.ValidationError(_(
-                    "There is already an active stock alert for %s") % email)
-        elif self.user.is_authenticated():
-            try:
-                ProductAlert.objects.get(product=self.product,
-                                         user=self.user,
-                                         status=ProductAlert.ACTIVE)
-            except ProductAlert.DoesNotExist:
-                pass
-            else:
-                raise forms.ValidationError(_(
-                    "You already have an active alert for this product"))
-        return cleaned_data
-
-    class Meta:
-        model = ProductAlert
-        fields = ['email']

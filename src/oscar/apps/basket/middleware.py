@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.core.signing import Signer, BadSignature
-from django.db.models import Prefetch
 from django.utils.functional import SimpleLazyObject, empty
 
 from oscar.core.loading import get_model
