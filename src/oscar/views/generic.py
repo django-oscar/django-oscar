@@ -172,7 +172,7 @@ class PhoneNumberMixin(object):
             number_required = False
             number_help_text = ''
 
-        self.fields['phone_number'] = forms.CharField(
+        self.fields['phone_number'] = forms.CharField(label=_('Phone number'),
             max_length=32, required=number_required, help_text=number_help_text)
 
     def get_country(self):
