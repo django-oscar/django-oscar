@@ -22,7 +22,7 @@ import os
 oscar_folder = os.path.realpath(
     os.path.join(os.path.dirname(__file__), '../..'))
 sandbox_folder = os.path.realpath(
-    os.path.join(os.path.dirname(__file__), '../../sites/sandbox'))
+    os.path.join(os.path.dirname(__file__), '../../sandbox'))
 sys.path.append(oscar_folder)
 sys.path.append(sandbox_folder)
 
@@ -45,6 +45,7 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.viewcode',
     'sphinxcontrib.napoleon',
+    'sphinx_issues',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -104,6 +105,9 @@ pygments_style = 'sphinx'
 
 # A list of ignored prefixes for module index sorting.
 #modindex_common_prefix = []
+
+# Github repo for sphinx-issues
+issues_github_path = 'django-oscar/django-oscar'
 
 
 # -- Options for HTML output ---------------------------------------------------
@@ -249,7 +253,7 @@ autoclass_content = 'class'
 
 import inspect
 from django.utils.html import strip_tags
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 
 
 def process_docstring(app, what, name, obj, options, lines):
@@ -268,11 +272,11 @@ def process_docstring(app, what, name, obj, options, lines):
 
         for field in fields:
             # Decode and strip any html out of the field's help text
-            help_text = strip_tags(force_unicode(field.help_text))
+            help_text = strip_tags(force_text(field.help_text))
 
             # Decode and capitalize the verbose name, for use if there isn't
             # any help text
-            verbose_name = force_unicode(field.verbose_name).capitalize()
+            verbose_name = force_text(field.verbose_name).capitalize()
 
             if help_text:
                 # Add the model field to the end of the docstring as a param

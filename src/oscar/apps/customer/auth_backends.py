@@ -1,5 +1,6 @@
 import warnings
 
+import django
 from django.contrib.auth.backends import ModelBackend
 from django.core.exceptions import ImproperlyConfigured
 
@@ -22,7 +23,7 @@ class EmailBackend(ModelBackend):
     For this to work, the User model must have an 'email' field
     """
 
-    def authenticate(self, email=None, password=None, *args, **kwargs):
+    def _authenticate(self, request, email=None, password=None, *args, **kwargs):
         if email is None:
             if 'username' not in kwargs or kwargs['username'] is None:
                 return None
@@ -55,14 +56,11 @@ class EmailBackend(ModelBackend):
                 "password")
         return None
 
-
-# Deprecated since Oscar 1.0 because of the spelling.
-class Emailbackend(EmailBackend):
-
-    def __init__(self):
-        warnings.warn(
-            "Oscar's auth backend EmailBackend has been renamed in Oscar 1.0 "
-            " and you're using the old name of Emailbackend. Please rename "
-            " all references; most likely in the AUTH_BACKENDS setting.",
-            DeprecationWarning)
-        super(Emailbackend, self).__init__()
+    # The signature of the authenticate method changed in Django 1.11 to include
+    # a mandatory `request` argument.
+    if django.VERSION < (1, 11):
+        def authenticate(self, email=None, password=None, *args, **kwargs):
+            return self._authenticate(None, email, password, *args, **kwargs)
+    else:
+        def authenticate(self, *args, **kwargs):
+            return self._authenticate(*args, **kwargs)

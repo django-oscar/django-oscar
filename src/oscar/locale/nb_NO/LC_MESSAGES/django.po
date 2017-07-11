@@ -5,13 +5,14 @@
 # Translators:
 # Erlend Dalen <erlend.dalen@gmail.com>, 2015
 # Tommy Strand <transifex@ireality.no>, 2013
+# Petter Sjulstad <petter.sjulstad@gmail.com>, 2016
 # Tommy Strand <transifex@ireality.no>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-13 13:06+0200\n"
-"PO-Revision-Date: 2016-02-28 22:21+0000\n"
+"PO-Revision-Date: 2016-12-30 15:10+0000\n"
 "Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
 "Language-Team: Norwegian Bokmål (Norway) (http://www.transifex.com/codeinthehole/django-oscar/language/nb_NO/)\n"
 "MIME-Version: 1.0\n"
@@ -111,7 +112,7 @@ msgstr "Adresser"
 #: apps/address/abstract_models.py:274
 #, python-format
 msgid "Addresses in %(country)s require a valid postcode"
-msgstr ""
+msgstr "Adresser i %(country)s krever et gyldig postnummer"
 
 #: apps/address/abstract_models.py:286
 #, python-format
@@ -284,7 +285,7 @@ msgstr "Partneradresser"
 #: templates/oscar/dashboard/users/alerts/list.html:44
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:6
 msgid "Product"
-msgstr "Vare"
+msgstr "Produkt"
 
 #: apps/analytics/abstract_models.py:24 apps/analytics/reports.py:20
 #: templates/oscar/dashboard/reports/partials/product_report.html:9
@@ -743,7 +744,7 @@ msgstr "Denne varen kan ikke legges til i handlekurven da varens valutakode ikke
 msgid ""
 "We have merged a basket from a previous session. Its contents might have "
 "changed."
-msgstr ""
+msgstr "Vi har fusjonert en handlekurv fra en tidligere sesjon. Innholdet kan ha blitt endret."
 
 #: apps/basket/reports.py:18 apps/basket/reports.py:77
 msgid "User ID"
@@ -814,7 +815,7 @@ msgstr "Du kan ikke lagre en vare til senere om du ikke er innlogget!!"
 #: apps/basket/views.py:225
 msgid ""
 "Your basket couldn't be updated. Please correct any validation errors below."
-msgstr ""
+msgstr "Din handlekurv kunne ikke bli oppdatert. Vennligst korriger valideringsmeldinger under."
 
 #: apps/basket/views.py:313
 #, python-format
@@ -824,7 +825,7 @@ msgstr "'%(code)s' kupong har utgått"
 #: apps/basket/views.py:320
 #, python-format
 msgid "The '%(code)s' voucher is not active"
-msgstr ""
+msgstr "'%(code)s' kupongen er ikke aktiv  "
 
 #: apps/basket/views.py:349
 msgid "Your basket does not qualify for a voucher discount"
@@ -963,7 +964,7 @@ msgid ""
 "Only choose a parent product if you're creating a child product.  For "
 "example if this is a size 4 of a particular t-shirt.  Leave blank if this is"
 " a stand-alone product (i.e. there is only one version of this product)."
-msgstr ""
+msgstr "Bare velg et overliggende produkt hvis du lager et underliggende produkt. For eksempel; hvis dette er størrelse 4 av en type t-skjorte. La denne stå blank hvis det er et enkeltstående produkt (for eksempel: det er bare en versjon av dette produktet)."
 
 #: apps/catalogue/abstract_models.py:286 apps/catalogue/abstract_models.py:569
 #: apps/order/abstract_models.py:445 apps/wishlists/abstract_models.py:121
@@ -1026,7 +1027,7 @@ msgstr "Oppdatert dato"
 
 #: apps/catalogue/abstract_models.py:337
 msgid "Is discountable?"
-msgstr "Kan han rabatt?"
+msgstr "Kan den rabatteres?"
 
 #: apps/catalogue/abstract_models.py:338
 msgid "This flag indicates if this product can be used in an offer or not"
@@ -1315,7 +1316,7 @@ msgstr "Bildetekst"
 msgid ""
 "An image with a display order of zero will be the primary image for a "
 "product"
-msgstr ""
+msgstr "Et bilde med visningsrekkefølge 0 vil være det primære bildet for et produkt."
 
 #: apps/catalogue/abstract_models.py:1187
 msgid "Product image"
@@ -1342,7 +1343,7 @@ msgstr "Tittel"
 #: templates/oscar/customer/notifications/detail.html:28
 #: templates/oscar/dashboard/users/detail.html:179
 msgid "Body"
-msgstr ""
+msgstr "Body"
 
 #: apps/catalogue/reviews/abstract_models.py:44
 msgctxt "Anonymous reviewer name"
@@ -1433,7 +1434,7 @@ msgstr "Du kan kun stemme en gang på en tilbakemelding"
 
 #: apps/catalogue/reviews/config.py:8
 msgid "Catalogue reviews"
-msgstr ""
+msgstr "Kataloganmeldelser"
 
 #: apps/catalogue/reviews/forms.py:52
 msgid "Recency"
@@ -1493,7 +1494,7 @@ msgstr "Jeg er en ny kunde og ønsker å gå til kassen som gjest"
 
 #: apps/checkout/forms.py:57
 msgid "I am a new customer and want to create an account before checking out"
-msgstr ""
+msgstr "Jeg er en ny kune og vil lage en konto før jeg går til kassen"
 
 #: apps/checkout/forms.py:59
 msgid "I am a returning customer, and my password is"
@@ -1859,7 +1860,7 @@ msgstr "Ordre bestilt mellom %(date_from)s og %(date_to)s og ordrenummer som inn
 #: apps/customer/forms.py:223 apps/dashboard/orders/forms.py:42
 #, python-format
 msgid "Orders placed between %(date_from)s and %(date_to)s"
-msgstr ""
+msgstr "Bestillinger lagt inn mellom %(date_from)s og %(date_to)s"
 
 #: apps/customer/forms.py:227
 #, python-format
@@ -1926,16 +1927,16 @@ msgstr[1] ""
 
 #: apps/customer/views.py:177
 msgid "Welcome back"
-msgstr ""
+msgstr "Velkommen tilbake"
 
 #: apps/customer/views.py:225
 msgid "Thanks for registering!"
-msgstr ""
+msgstr "Takk for at du registrerte deg!"
 
 #: apps/customer/views.py:256 templates/oscar/customer/baseaccountpage.html:30
 #: templates/oscar/customer/partials/nav_account.html:20
 msgid "Profile"
-msgstr ""
+msgstr "Profil"
 
 #: apps/customer/views.py:308
 msgid "Edit Profile"
@@ -2195,8 +2196,8 @@ msgstr "Antall underkategorier"
 #, python-format
 msgid "%s Category"
 msgid_plural "%s Categories"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s Kategori"
+msgstr[1] "%s Kategorier"
 
 #: apps/dashboard/catalogue/views.py:84
 msgid "Product search results"
@@ -2209,12 +2210,12 @@ msgstr "Velg en varetype"
 #: apps/dashboard/catalogue/views.py:275
 #, python-format
 msgid "Create new %(product_class)s product"
-msgstr ""
+msgstr "Lag nytt %(product_class)s produkt"
 
 #: apps/dashboard/catalogue/views.py:278
 #, python-format
 msgid "Create new variant of %(parent_product)s"
-msgstr ""
+msgstr "Lag en ny variant av %(parent_product)s"
 
 #: apps/dashboard/catalogue/views.py:284
 #, python-format
@@ -2294,7 +2295,7 @@ msgstr ""
 #: defaults.py:114
 #: templates/oscar/dashboard/catalogue/product_class_list.html:23
 msgid "Product Types"
-msgstr ""
+msgstr "Produkt typer"
 
 #: apps/dashboard/catalogue/views.py:734
 #, python-format
@@ -2584,7 +2585,7 @@ msgstr ""
 
 #: apps/dashboard/orders/forms.py:70
 msgid "Product name"
-msgstr ""
+msgstr "Produktnavn"
 
 #: apps/dashboard/orders/forms.py:72 apps/order/abstract_models.py:419
 #: apps/partner/abstract_models.py:102
@@ -3547,7 +3548,7 @@ msgstr ""
 #: apps/offer/abstract_models.py:387 apps/offer/abstract_models.py:638
 #: apps/offer/abstract_models.py:807 apps/offer/abstract_models.py:988
 msgid "Range"
-msgstr ""
+msgstr "Utvalg"
 
 #: apps/offer/abstract_models.py:395
 msgid "Discount is a percentage off of the product's value"
@@ -3684,7 +3685,7 @@ msgstr ""
 #: templates/oscar/dashboard/ranges/range_list.html:27
 #: templates/oscar/dashboard/ranges/range_product_list.html:16
 msgid "Ranges"
-msgstr "Spenn"
+msgstr "Utvalg"
 
 #: apps/offer/abstract_models.py:989
 msgid "File Path"
@@ -4322,7 +4323,7 @@ msgstr ""
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:16
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:22
 msgid "Stock alerts"
-msgstr ""
+msgstr "Lagervarsler"
 
 #: apps/partner/availability.py:42
 msgid "unavailable"
@@ -4644,11 +4645,11 @@ msgstr ""
 
 #: apps/promotions/models.py:256
 msgid "Product list"
-msgstr ""
+msgstr "Produktliste"
 
 #: apps/promotions/models.py:257
 msgid "Product lists"
-msgstr ""
+msgstr "Produktlister"
 
 #: apps/promotions/models.py:285
 msgid "Hand Picked Product List"
@@ -4664,15 +4665,15 @@ msgstr ""
 
 #: apps/promotions/models.py:300 apps/promotions/models.py:301
 msgid "Ordered product"
-msgstr ""
+msgstr "Bestilt produkt"
 
 #: apps/promotions/models.py:309
 msgid "Bestselling products"
-msgstr ""
+msgstr "Bestselgende produkter"
 
 #: apps/promotions/models.py:310
 msgid "Recently added products"
-msgstr ""
+msgstr "Nylig lagt til produkter"
 
 #: apps/promotions/models.py:312 apps/shipping/abstract_models.py:195
 #: templates/oscar/checkout/shipping_methods.html:24
@@ -5607,7 +5608,7 @@ msgstr ""
 #: templates/oscar/dashboard/catalogue/product_class_list.html:9
 #: templates/oscar/dashboard/orders/line_detail.html:47
 msgid "Product Type"
-msgstr ""
+msgstr "Produkttype"
 
 #: templates/oscar/catalogue/detail.html:120
 msgid "Price (incl. tax)"
@@ -8301,7 +8302,7 @@ msgstr ""
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:96
 msgid "Is product discountable?"
-msgstr ""
+msgstr "Kan produktet rabatteres?"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:123
 msgid "Products in Range"

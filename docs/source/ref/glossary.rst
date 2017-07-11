@@ -76,4 +76,9 @@ This is a work-in-progress list of commonly used terms when discussing Oscar.
 
         Options are values that can be associated with a item when it is added
         to a customer's basket.  This could be something like a personalised
-        message to be printed on a T-shirt.
+        message to be printed on a T-shirt, or a colour choice.
+
+        Product Options are different from Product Attributes in that they are
+        used to specify a specific purchase choice by the customer, whereas
+        Attributes exist to store and display the features of a product in
+        a structured way.

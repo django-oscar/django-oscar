@@ -4,16 +4,17 @@ from django.core.signing import BadSignature, Signer
 from django.utils.functional import SimpleLazyObject, empty
 from django.utils.translation import ugettext_lazy as _
 
+from oscar.core.compat import MiddlewareMixin, user_is_authenticated
 from oscar.core.loading import get_class, get_model
 
-Applicator = get_class('offer.utils', 'Applicator')
+Applicator = get_class('offer.applicator', 'Applicator')
 Basket = get_model('basket', 'basket')
 Selector = get_class('partner.strategy', 'Selector')
 
 selector = Selector()
 
 
-class BasketMiddleware(object):
+class BasketMiddleware(MiddlewareMixin):
 
     # Middleware interface methods
 
@@ -80,7 +81,7 @@ class BasketMiddleware(object):
 
         # If a basket has had products added to it, but the user is anonymous
         # then we need to assign it to a cookie
-        if (request.basket.id and not request.user.is_authenticated()
+        if (request.basket.id and not user_is_authenticated(request.user)
                 and not has_basket_cookie):
             cookie = self.get_basket_hash(request.basket.id)
             response.set_cookie(
@@ -130,7 +131,7 @@ class BasketMiddleware(object):
         cookie_key = self.get_cookie_key(request)
         cookie_basket = self.get_cookie_basket(cookie_key, request, manager)
 
-        if hasattr(request, 'user') and request.user.is_authenticated():
+        if hasattr(request, 'user') and user_is_authenticated(request.user):
             # Signed-in user: if they have a cookie basket too, it means
             # that they have just signed in and we need to merge their cookie
             # basket into their user basket, then delete the cookie.

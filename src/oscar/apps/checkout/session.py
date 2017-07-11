@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core import prices
+from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_class, get_model
 
 from . import exceptions
@@ -141,7 +142,7 @@ class CheckoutSessionMixin(object):
             )
 
     def check_user_email_is_captured(self, request):
-        if not request.user.is_authenticated() \
+        if not user_is_authenticated(request.user) \
                 and not self.checkout_session.get_guest_email():
             raise exceptions.FailedPreCondition(
                 url=reverse('checkout:index'),
@@ -263,7 +264,9 @@ class CheckoutSessionMixin(object):
         This can be the right place to perform tax lookups and apply them to
         the basket.
         """
-        basket = kwargs.get('basket', self.request.basket)
+        # Pop the basket if there is one, because we pass it as a positional
+        # argument to methods below
+        basket = kwargs.pop('basket', self.request.basket)
         shipping_address = self.get_shipping_address(basket)
         shipping_method = self.get_shipping_method(
             basket, shipping_address)
@@ -273,7 +276,7 @@ class CheckoutSessionMixin(object):
         else:
             shipping_charge = shipping_method.calculate(basket)
             total = self.get_order_totals(
-                basket, shipping_charge=shipping_charge)
+                basket, shipping_charge=shipping_charge, **kwargs)
         submission = {
             'user': self.request.user,
             'basket': basket,
@@ -298,7 +301,7 @@ class CheckoutSessionMixin(object):
 
         # Set guest email after overrides as we need to update the order_kwargs
         # entry.
-        if (not submission['user'].is_authenticated() and
+        if (not user_is_authenticated(submission['user']) and
                 'guest_email' not in submission['order_kwargs']):
             email = self.checkout_session.get_guest_email()
             submission['order_kwargs']['guest_email'] = email

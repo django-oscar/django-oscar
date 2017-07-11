@@ -26,9 +26,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-30 19:47+0000\n"
-"PO-Revision-Date: 2016-07-31 09:36+0000\n"
-"Last-Translator: Michael van Tellingen <michaelvantellingen@gmail.com>\n"
+"POT-Creation-Date: 2016-07-13 13:06+0200\n"
+"PO-Revision-Date: 2016-12-30 15:10+0000\n"
+"Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/codeinthehole/django-oscar/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2643,14 +2643,17 @@ msgid "New order status"
 msgstr "Nieuwe bestelstatus"
 
 #: apps/dashboard/orders/views.py:248
+#, python-brace-format
 msgid "Order number starts with \"{order_number}\""
 msgstr "Bestelnummer begint met \"{order_number}\""
 
 #: apps/dashboard/orders/views.py:255
+#, python-brace-format
 msgid "Customer name matches \"{customer_name}\""
 msgstr "Klantnaam komt overeen met \"{customer_name}\""
 
 #: apps/dashboard/orders/views.py:262
+#, python-brace-format
 msgid "Product name matches \"{product_name}\""
 msgstr "Productnaam komt overeen met \"{product_name}\""
 
@@ -2659,6 +2662,7 @@ msgstr "Productnaam komt overeen met \"{product_name}\""
 #. "Item" in this context means an item in an order placed
 #. in an online store.
 #: apps/dashboard/orders/views.py:273
+#, python-brace-format
 msgid "Includes an item with UPC \"{upc}\""
 msgstr "Bevat een artikel met UPC \"{upc}\""
 
@@ -2667,24 +2671,28 @@ msgstr "Bevat een artikel met UPC \"{upc}\""
 #. A "partner" is a company that ships items to users who
 #. buy things in an online store.
 #: apps/dashboard/orders/views.py:284
+#, python-brace-format
 msgid "Includes an item with partner SKU \"{partner_sku}\""
 msgstr "Bevat een artikel met partner SKU \"{partner_sku}\""
 
 #. Translators: This string refers to orders in an online
 #. store that were made within a particular date range.
 #: apps/dashboard/orders/views.py:293
+#, python-brace-format
 msgid "Placed between {start_date} and {end_date}"
 msgstr "Geplaatst tussen {start_date} en {end_date}"
 
 #. Translators: This string refers to orders in an online store
 #. that were made after a particular date.
 #: apps/dashboard/orders/views.py:303
+#, python-brace-format
 msgid "Placed after {start_date}"
 msgstr "Geplaatst na {start_date}"
 
 #. Translators: This string refers to orders in an online store
 #. that were made before a particular date.
 #: apps/dashboard/orders/views.py:312
+#, python-brace-format
 msgid "Placed before {end_date}"
 msgstr "Geplaatst voor {end_date}"
 
@@ -2693,6 +2701,7 @@ msgstr "Geplaatst voor {end_date}"
 #. The voucher "code" is a string that users can enter to
 #. receive the discount.
 #: apps/dashboard/orders/views.py:321
+#, python-brace-format
 msgid "Used voucher code \"{voucher_code}\""
 msgstr "Gebruik gemaakt van code \"{voucher_code}\""
 
@@ -2700,6 +2709,7 @@ msgstr "Gebruik gemaakt van code \"{voucher_code}\""
 #. item in an online store.  For example, a user can pay
 #. with a credit card or PayPal.
 #: apps/dashboard/orders/views.py:331
+#, python-brace-format
 msgid "Paid using {payment_method}"
 msgstr "Betaald met {payment_method}"
 
@@ -2707,6 +2717,7 @@ msgstr "Betaald met {payment_method}"
 #. online store.  Some examples of order status are
 #. "purchased", "cancelled", or "refunded".
 #: apps/dashboard/orders/views.py:341
+#, python-brace-format
 msgid "Order status is {order_status}"
 msgstr "Status van bestelling is {order_status}"
 
@@ -4801,7 +4812,7 @@ msgstr "Bestelling en productkosten"
 
 #: apps/shipping/abstract_models.py:104
 msgid "Weight-based shipping"
-msgstr "Gewicht gebaseerde verzending"
+msgstr ""
 
 #: apps/shipping/abstract_models.py:109
 msgid "Default Weight"
@@ -4894,7 +4905,7 @@ msgstr "Hoofdlettergevoelig / Geen spaties toegestaan"
 #: templates/oscar/dashboard/offers/step_form.html:15
 #: templates/oscar/dashboard/offers/step_form.html:24
 #: templates/oscar/offer/detail.html:17 templates/oscar/offer/list.html:8
-#: templates/oscar/offer/list.html.py:16 templates/oscar/offer/list.html:21
+#: templates/oscar/offer/list.html:16 templates/oscar/offer/list.html:21
 #: templates/oscar/partials/nav_primary.html:64
 msgid "Offers"
 msgstr "Aanbiedingen"
@@ -5133,7 +5144,7 @@ msgstr "60+"
 msgid "Check for products that are back in stock and send out alerts"
 msgstr "Controleer voor producten die weer op voorraad zijn en stuur vervolgens meldingen"
 
-#: templates/oscar/403.html:5 templates/oscar/403.html.py:9
+#: templates/oscar/403.html:5 templates/oscar/403.html:9
 msgid "Permission denied!"
 msgstr "Toegang geweigerd!"
 
@@ -5153,7 +5164,7 @@ msgstr "Pagina niet gevonden!"
 msgid "We're sorry but the page you are looking for can't be found."
 msgstr "Het spijt ons, maar de pagina waarnaar u zoekt kan niet worden gevonden."
 
-#: templates/oscar/500.html:5 templates/oscar/500.html.py:9
+#: templates/oscar/500.html:5 templates/oscar/500.html:9
 msgid "Server error!"
 msgstr "Server fout!"
 
@@ -6250,9 +6261,9 @@ msgstr "Hallo,"
 #, python-format
 msgid ""
 "\n"
-"We are happy to inform you that our product '%(title)s' is back in stock:\n"
+"We are happy to inform you that our product '%(product|safe)s' is back in stock:\n"
 "http://%(site)s%(path)s\n"
-msgstr "\nWe zijn blij je te melden dat het product '%(title)s' weer op voorraad is:\nhttp://%(site)s%(path)s\n"
+msgstr ""
 
 #: templates/oscar/customer/alerts/emails/alert_body.txt:5
 msgid ""
@@ -6273,8 +6284,8 @@ msgstr "\nMet deze email hebben wij jouw voorraadmelding uitgeschakeld.\nU ontva
 
 #: templates/oscar/customer/alerts/emails/alert_subject.txt:1
 #, python-format
-msgid "%(title)s is back in stock"
-msgstr "%(title)s is weer op voorraad"
+msgid "%(title|safe)s is back in stock"
+msgstr ""
 
 #: templates/oscar/customer/alerts/emails/confirmation_body.txt:1
 #, python-format
@@ -6282,7 +6293,7 @@ msgid ""
 "Hello,\n"
 "\n"
 "Somebody (hopefully you) has requested an email alert when\n"
-"'%(title)s' is back in stock.  Please click the following link\n"
+"'%(product|safe)s' is back in stock.  Please click the following link\n"
 "to confirm:\n"
 "http://%(domain)s%(confirm_path)s\n"
 "\n"
@@ -6291,7 +6302,7 @@ msgid ""
 "\n"
 "Thanks for your interest,\n"
 "The %(site)s Team\n"
-msgstr "Hallo,\n\nJe hebt een melding via email aangevraagd om te weten wanneer\n'%(title)s' terug op voorraad is. Klik op de volgende link om te bevestigen:\nhttp://%(domain)s%(confirm_path)s\n\nJe kan deze melding stopzetten door op de volgende link te klikken:\nhttp://%(domain)s%(cancel_path)s\n\nBedankt voor je interesse,\nHet %(site)s Team\n"
+msgstr ""
 
 #: templates/oscar/customer/alerts/emails/confirmation_subject.txt:1
 msgid "Confirmation required for stock alert"

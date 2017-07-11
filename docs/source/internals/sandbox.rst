@@ -60,7 +60,7 @@ Install Oscar and its dependencies within a virtualenv:
     $ cd django-oscar
     $ mkvirtualenv oscar  # needs virtualenvwrapper
     (oscar) $ make sandbox
-    (oscar) $ sites/sandbox/manage.py runserver
+    (oscar) $ sandbox/manage.py runserver
 
 .. warning::
     

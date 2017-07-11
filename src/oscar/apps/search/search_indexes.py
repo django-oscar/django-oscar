@@ -5,22 +5,22 @@ from oscar.core.loading import get_class, get_model
 # Load default strategy (without a user/request)
 is_solr_supported = get_class('search.features', 'is_solr_supported')
 Selector = get_class('partner.strategy', 'Selector')
-strategy = Selector().strategy()
 
 
 class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     # Search text
-    text = indexes.EdgeNgramField(
+    text = indexes.CharField(
         document=True, use_template=True,
         template_name='search/indexes/product/item_text.txt')
 
     upc = indexes.CharField(model_attr="upc", null=True)
     title = indexes.EdgeNgramField(model_attr='title', null=True)
+    title_exact = indexes.CharField(model_attr='title', null=True, indexed=False)
 
     # Fields for faceting
     product_class = indexes.CharField(null=True, faceted=True)
     category = indexes.MultiValueField(null=True, faceted=True)
-    price = indexes.DecimalField(null=True, faceted=True)
+    price = indexes.FloatField(null=True, faceted=True)
     num_in_stock = indexes.IntegerField(null=True, faceted=True)
     rating = indexes.IntegerField(null=True, faceted=True)
 
@@ -29,6 +29,8 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
 
     date_created = indexes.DateTimeField(model_attr='date_created')
     date_updated = indexes.DateTimeField(model_attr='date_updated')
+
+    _strategy = None
 
     def get_model(self):
         return get_model('catalogue', 'Product')
@@ -56,7 +58,13 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     # most common case is for customers to see the same prices and stock levels
     # and so we implement that case here.
 
+    def get_strategy(self):
+        if not self._strategy:
+            self._strategy = Selector().strategy()
+        return self._strategy
+
     def prepare_price(self, obj):
+        strategy = self.get_strategy()
         result = None
         if obj.is_parent:
             result = strategy.fetch_for_parent(obj)
@@ -69,6 +77,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
             return result.price.excl_tax
 
     def prepare_num_in_stock(self, obj):
+        strategy = self.get_strategy()
         if obj.is_parent:
             # Don't return a stock level for parent products
             return None

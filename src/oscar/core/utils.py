@@ -57,23 +57,6 @@ def slugify(value):
     return value
 
 
-def compose(*functions):
-    """
-    Compose functions
-
-    This is useful for combining decorators.
-    """
-    def _composed(*args):
-        for fn in functions:
-            try:
-                args = fn(*args)
-            except TypeError:
-                # args must be scalar so we don't try to expand it
-                args = fn(args)
-        return args
-    return _composed
-
-
 def format_datetime(dt, format=None):
     """
     Takes an instance of datetime, converts it to the current timezone and

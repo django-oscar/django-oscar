@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Alexandr Nikiforov <alexnikifforov@gmail.com>, 2016
+# Александр Никифоров <alexnikifforov@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-13 13:06+0200\n"
-"PO-Revision-Date: 2016-03-05 13:38+0000\n"
-"Last-Translator: Alexandr Nikiforov <alexnikifforov@gmail.com>\n"
+"PO-Revision-Date: 2016-12-30 15:10+0000\n"
+"Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
 "Language-Team: Russian (http://www.transifex.com/codeinthehole/django-oscar/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"

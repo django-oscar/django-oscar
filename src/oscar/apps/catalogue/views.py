@@ -9,6 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView, TemplateView
 
 from oscar.apps.catalogue.signals import product_viewed
+from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_class, get_model
 
 Product = get_model('catalogue', 'product')
@@ -71,7 +72,7 @@ class ProductDetailView(DetailView):
     def get_alert_status(self):
         # Check if this user already have an alert for this product
         has_alert = False
-        if self.request.user.is_authenticated():
+        if user_is_authenticated(self.request.user):
             alerts = ProductAlert.objects.filter(
                 product=self.object, user=self.request.user,
                 status=ProductAlert.ACTIVE)

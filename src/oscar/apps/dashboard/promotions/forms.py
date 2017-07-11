@@ -1,6 +1,5 @@
 from django import forms
 from django.conf import settings
-from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.promotions.conf import PROMOTION_CLASSES
@@ -62,12 +61,8 @@ class OrderedProductForm(forms.ModelForm):
         self.fields['product'].widget.attrs['class'] = "select2 input-xlarge"
 
 
-OrderedProductFormSet = inlineformset_factory(
-    HandPickedProductList, OrderedProduct, form=OrderedProductForm, extra=2)
-
-
 class PagePromotionForm(forms.ModelForm):
-    page_url = ExtendedURLField(label=_("URL"), verify_exists=True)
+    page_url = ExtendedURLField(label=_("URL"))
     position = forms.CharField(
         widget=forms.Select(choices=settings.OSCAR_PROMOTION_POSITIONS),
         label=_("Position"),

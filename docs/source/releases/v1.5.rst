@@ -1,0 +1,161 @@
+=======================
+Oscar 1.5 release notes
+=======================
+
+:release: tbd
+
+Welcome to Oscar 1.5
+
+
+Table of contents:
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_1.5:
+
+Compatibility
+-------------
+
+Oscar 1.5 is compatible with Django 1.8, 1.10 and 1.11 as well as Python 2.7,
+3.3, 3.4, 3.5 and 3.6. Support for Django 1.9 is no longer officialy supported
+since it is longer supported by Django (end of life).
+
+
+.. _new_in_1.5:
+
+What's new in Oscar 1.5?
+------------------------
+ - Support for Django 1.11 (:issue:`2221`)
+ - Google Analytics tracking code has been migrated to Universal Analytics.
+ - Passwords are validated using the validators defined in
+   ``AUTH_PASSWORD_VALIDATORS`` for Django 1.9 and above.
+ - The custom PhoneNumberField implementation has been replaced with the
+   `django-phonenumber-field`_ package (:issue:`2227`)
+
+.. _django-phonenumber-field: https://pypi.python.org/pypi/django-phonenumber-field/
+
+Removal of deprecated features
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+These methods/modules have been removed:
+
+ - Profiling middleware. See `silk`_ or `django-cprofile-middleware`_
+   for alternatives.
+ - ``Product.min_child_price_incl_tax`` and ``Product.min_child_price_excl_tax``.
+ - ``oscar.core.logging.handlers.EnvFileHandler()``
+ - The ``ellipses_page_range`` templatetag. See `django-rangepaginator`_ for an
+   alternative.
+ - ``oscar.test.decorators`` module.
+ - ``oscar.core.utils.compose`` function.
+ - ``oscar.apps.customer.auth_backends.Emailbackend``. Use
+   ``oscar.apps.customer.auth_backends.EmailBackend`` instead.
+ - ``oscar.apps.catalogue.search_handlers.ProductSearchHandler``. Use
+ - ``oscar.apps.catalogue.search_handlers.SolrProductSearchHandler`` instead.
+
+
+.. _silk: https://github.com/django-silk/silk
+.. _django-cprofile-middleware: https://github.com/omarish/django-cprofile-middleware
+.. _django-rangepaginator: https://pypi.python.org/pypi/django-rangepaginator/
+
+
+Minor changes
+~~~~~~~~~~~~~
+ - Added billing address to user's address book during checkout (:issue:`1532`).
+   Number of usages for billing and shipping addresses tracked separately:
+   billing address in ``UserAddress.num_orders_as_billing_address`` field and
+   shipping address in ``UserAddress.num_order_as_shipping_address``
+   accordingly.
+
+ - Fixed logic for determining "hurry mode" on stock alerts. Hurry mode is now
+   set if the number of alerts for a product exceeds the quantity in stock,
+   rather than the other way around.
+
+ - Updated search to use the haystack CharField instead of the EdgeNgramField
+   to fix irrelevant results (:issue:`2128`)
+
+ - Updated ``customer.utils.Dispatcher`` to improve the ability to customise
+   the implementation (:issue:`2303`)
+
+ - Fixed logic for determining "hurry mode" on stock alerts. Hurry mode is now
+   set if the number of alerts for a product exceeds the quantity in stock,
+   rather than the other way around.
+
+ - ``Voucher.date_created`` and ``VoucherApplication.date_created`` model
+   fields changed from ``DateField`` to ``DateTimeField``. If you use SQLite
+   database, please make sure to backup data before running migrations, since
+   due to limited support of column altering, Django re-creates new SQLite
+   database with new columns and copies into it original data -
+   https://docs.djangoproject.com/en/1.11/topics/migrations/#sqlite
+
+ - Allowed the communication event dispatcher to accept an optional
+   ``mail_connection`` to use when sending email messages.
+
+ - Changed product alerts to be sent using the Communication Event framework.
+   The old email templates will continue to be supported until Oscar 2.0.
+
+.. _incompatible_in_1.5:
+
+Backwards incompatible changes in Oscar 1.5
+-------------------------------------------
+
+ - Product reviews are now deleted if the associated product is deleted.
+
+ - Formset classes moved to the separate modules, if you import them directly -
+   please update location or use :meth:`oscar.core.loading.get_classes` for
+   loading classes (:issue:`1957`).
+
+   Next classes have new locations:
+
+  - ``BaseBasketLineFormSet``, ``BasketLineFormSet``, ``BaseSavedLineFormSet``,
+    ``SavedLineFormSet`` moved to
+    ``oscar.apps.basket.formsets`` module;
+  - ``BaseStockRecordFormSet``, ``StockRecordFormSet``,
+    ``BaseProductCategoryFormSet``, ``ProductCategoryFormSet``,
+    ``BaseProductImageFormSet``, ``ProductImageFormSet``,
+    ``BaseProductRecommendationFormSet``, ``ProductRecommendationFormSet``,
+    ``ProductAttributesFormSet`` moved to
+    ``oscar.apps.dashboard.catalogue.formsets``;
+  - ``OrderedProductFormSet`` moved to
+    ``oscar.apps.dashboard.promotions.formsets``; - ``LineFormset`` moved to
+    ``oscar.apps.wishlists.formsets``.
+
+ - ``SimpleAddToBasketForm`` doesn't override the quantity field any
+   more. Instead, it just hides the field declared by AddToBasketForm
+   and sets the quantity to one. This means ``SimpleAddToBasketForm``
+   doesn't need to be overridden for most cases, but please check
+   things still work as expected for you if you have customized it.
+
+ - ``OSCAR_CURRENCY_FORMAT`` setting changed to dictionary form in order to
+   support multi-currency for currency formatting. You can set `format`,
+   `format_type` and `currency_digits` in it.  Please refer to documentation
+   for an example.
+
+ - Dashboard order list doesn't have shortcut filters any more, pass `status`
+   parameter instead of `order_status` for the relevant filtering.
+
+ - ``GOOGLE_ANALYTICS_ID`` and ``USE_LESS`` settings were renamed into
+   ``OSCAR_GOOGLE_ANALYTICS_ID`` and ``OSCAR_USE_LESS`` respectively in order
+   to keep all Oscar settings under common namespace.
+
+ - Removed ``display_version`` and ``version`` variables from templates and
+   template context.
+
+ - Offer ``Applicator`` is now loaded from the ``offer.applicator`` module,
+   instead of ``offer.utils``. Old path is deprecated and won't be supported
+   in the next Oscar versions.
+
+ - ``oscar.forms.fields.ExtendedURLField`` no longer accepts a ``verify_exists``
+   argument.
+
+
+Dependency changes
+------------------
+
+The following packages are updated:
+
+    - `django>=1.8.8,<1.12`
+    - `django-phonenumber-field>=1.0.0,<2.0.0`
+    - `django-haystack>=2.5.0,<2.7.0`

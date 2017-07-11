@@ -1,0 +1,69 @@
+=======================
+Oscar 1.4 release notes
+=======================
+
+:release: 2017-02-10
+
+Welcome to Oscar 1.4, a relative minor release which finally brings
+compatibility with Django 1.10.
+
+
+Table of contents:
+
+.. contents::
+    :local:
+    :depth: 1
+
+
+.. _compatibility_of_1.4:
+
+Compatibility
+-------------
+
+Oscar 1.4 is compatible with Django 1.8, 1.9 and 1.10 as well as Python 2.7,
+3.3, 3.4, 3.5 and 3.6.
+
+
+.. _new_in_1.4:
+
+What's new in Oscar 1.4?
+------------------------
+
+ - Django 1.10 compatibility (:issue:`2055`)
+ - If a product variant has no primary image then the primary image of the 
+   parent is now served. (:issue:`1998`)
+
+
+Minor changes
+~~~~~~~~~~~~~
+ - The tracking pixel in the dashboard is removed since the domain didn't exist
+   anymore (:issue:`2144`).
+ - Fix sending direct messages to users (:issue:`2138`)
+ - Remove unique constraint for proxy class field of offer condition model.
+   (:issue:`2166`)
+ - Change the default argument of ProductReview.status to a callable
+ - Use get_class for imports to partner.prices and partner.availability
+   (:issue:`2035`)
+ - Fix an IntegrityError when a product is moved between wishlists
+   (:issue:`2133`)
+ - Fix issue when update product attributes in the dashboard when the product
+   has a related entity (:issue:`2015`)
+ - Fix the offers report in the dashboard on Python 3 (:issue:`2223`)
+ - It is no longer needed to pass ``Application.urls`` to the ``include()``
+   function when creating the urlpatterns. You can pass it directly to the
+   ``url()`` function instead. (:issue:`2222`)
+ - Oscar now set's the ``on_delete`` kwarg on all ForeignKey's since leaving
+   it out is deprecated in Django 1.10+
+ - ``oscar.core.compat.user_is_authenticated()`` is now used instead of 
+   ``user.is_authenticated()``, since this resulted in Deprecation warnings
+   for Django 1.10+. (:issue:`2222`)
+
+
+Dependency changes
+------------------
+
+The following packages are updated:
+    - `treebeard >= 4.1.0` (Django 1.10 support)
+    - `Pillow >= 3.4.2` (Security issue)
+    - `phonenumbers>=6.3.0,<9.0.0` (Allow version 8.x)
+    - `django-tables2 >= 1.2.0,<2.0.0` 

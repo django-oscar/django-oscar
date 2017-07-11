@@ -3,7 +3,7 @@ from django.template.loader import render_to_string
 
 from oscar.core.loading import get_class
 
-Applicator = get_class('offer.utils', 'Applicator')
+Applicator = get_class('offer.applicator', 'Applicator')
 
 
 class BasketMessageGenerator(object):

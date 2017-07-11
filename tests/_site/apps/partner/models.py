@@ -8,4 +8,4 @@ class StockRecord(abstract_models.AbstractStockRecord):
     offer_name = models.CharField(max_length=128, null=True, blank=True)
 
 
-from oscar.apps.partner.models import *
+from oscar.apps.partner.models import *  # noqa

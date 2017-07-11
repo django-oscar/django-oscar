@@ -6,16 +6,20 @@
 # alexeyismirnov <alexey@gmail.com>, 2013
 # alexeyismirnov <alexey@gmail.com>, 2013
 # alexeyismirnov <alexey@gmail.com>, 2013
+# bin <iamsk.info@gmail.com>, 2016
+# bin <iamsk.info@gmail.com>, 2016
 # danielchu <danielchu82@gmail.com>, 2014
 # danielchu <danielchu82@gmail.com>, 2014
 # denishuang <szuprefix@126.com>, 2015
 # dickeny <dickeny@gmail.com>, 2014
 # dickeny <dickeny@gmail.com>, 2014
+# DingBen <huangdingben_1995@163.com>, 2016
 # echochan <echochan522@hotmail.com>, 2014
 # echochan <echochan522@hotmail.com>, 2014
 # Emanuele Bertoldi <emanuele.bertoldi@gmail.com>, 2013-2014
 # guoqiao <guoqiao@gmail.com>, 2014
 # guoqiao <guoqiao@gmail.com>, 2014
+# huaping huang <330769208@qq.com>, 2016
 # Lele Long <schemacs@gmail.com>, 2015
 # phiree yuen <phiree@gmail.com>, 2014
 # Song Jin <songjin@hotmail.com>, 2014
@@ -33,7 +37,7 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-13 13:06+0200\n"
-"PO-Revision-Date: 2016-02-28 22:21+0000\n"
+"PO-Revision-Date: 2016-12-30 15:10+0000\n"
 "Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/codeinthehole/django-oscar/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -662,7 +666,7 @@ msgstr "价格（含税）"
 
 #: apps/basket/abstract_models.py:631
 msgid "Basket line"
-msgstr "购物篮线"
+msgstr "购物车线"
 
 #: apps/basket/abstract_models.py:632
 msgid "Basket lines"
@@ -671,7 +675,7 @@ msgstr "购物车线"
 #: apps/basket/abstract_models.py:636
 #, python-format
 msgid "Basket #%(basket_id)d, Product #%(product_id)d, quantity %(quantity)d"
-msgstr "购物篮 #%(basket_id)d, 商品 #%(product_id)d, 数量 %(quantity)d"
+msgstr "购物车 #%(basket_id)d, 商品 #%(product_id)d, 数量 %(quantity)d"
 
 #: apps/basket/abstract_models.py:644
 #, python-format
@@ -683,14 +687,14 @@ msgstr "您不能修改一个%s购物车"
 msgid ""
 "The price of '%(product)s' has increased from %(old_price)s to %(new_price)s"
 " since you added it to your basket"
-msgstr "'%(product)s' 的价格在您添加到购物篮之后，已经从%(old_price)s升到%(new_price)s"
+msgstr "'%(product)s' 的价格在您添加到购物车之后，已经从%(old_price)s升到%(new_price)s"
 
 #: apps/basket/abstract_models.py:860
 #, python-format
 msgid ""
 "The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s"
 " since you added it to your basket"
-msgstr "'%(product)s' 的价格在您添加到购物篮之后，已经从%(old_price)s降到%(new_price)s"
+msgstr "'%(product)s' 的价格在您添加到购物车之后，已经从%(old_price)s降到%(new_price)s"
 
 #: apps/basket/abstract_models.py:871 apps/order/abstract_models.py:733
 #: apps/order/abstract_models.py:762 apps/order/abstract_models.py:867
@@ -753,19 +757,19 @@ msgstr "请选择一个有效的产品"
 msgid ""
 "Due to technical limitations we are not able to ship more than %(threshold)d"
 " items in one order. Your basket currently has %(basket)d items."
-msgstr "由于技术原因，每个订单不能邮寄超过%(threshold)d件商品。您的购物篮里有%(basket)d件产品。"
+msgstr "由于技术原因，每个订单不能邮寄超过%(threshold)d件商品。您的购物车里有%(basket)d件产品。"
 
 #: apps/basket/forms.py:247
 msgid ""
 "This product cannot be added to the basket as its currency isn't the same as"
 " other products in your basket"
-msgstr "加入购物车失败. 原因:该产品的货币与购物车内其他产品不一样."
+msgstr "加入购物车失败，原因：该产品的货币与购物车内其他产品不一样。"
 
 #: apps/basket/middleware.py:170
 msgid ""
 "We have merged a basket from a previous session. Its contents might have "
 "changed."
-msgstr ""
+msgstr "当我们从上一个会话合并该购物车时，里面的内容也许已被更改。"
 
 #: apps/basket/reports.py:18 apps/basket/reports.py:77
 msgid "User ID"
@@ -818,7 +822,7 @@ msgstr "已创建的时间"
 
 #: apps/basket/reports.py:57
 msgid "Open baskets"
-msgstr "已打开的购物篮"
+msgstr "已打开的购物车"
 
 #: apps/basket/reports.py:83
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:13
@@ -827,7 +831,7 @@ msgstr "创建和提交之间的时间"
 
 #: apps/basket/reports.py:112
 msgid "Submitted baskets"
-msgstr "已递交的购物篮"
+msgstr "已递交的购物车"
 
 #: apps/basket/views.py:162
 msgid "You can't save an item for later if you're not logged in!"
@@ -836,7 +840,7 @@ msgstr "如果您没有登录，那么您不能把产品保存以便以后再买
 #: apps/basket/views.py:225
 msgid ""
 "Your basket couldn't be updated. Please correct any validation errors below."
-msgstr ""
+msgstr "您的购物车不能被更新，请更正下列错误。"
 
 #: apps/basket/views.py:313
 #, python-format
@@ -846,11 +850,11 @@ msgstr "优惠券'%(code)s'已经过期"
 #: apps/basket/views.py:320
 #, python-format
 msgid "The '%(code)s' voucher is not active"
-msgstr ""
+msgstr "优惠券 '%(code)s' 无法使用"
 
 #: apps/basket/views.py:349
 msgid "Your basket does not qualify for a voucher discount"
-msgstr "您的购物篮没有资格使用优惠券"
+msgstr "您的购物车没有资格使用优惠券"
 
 #: apps/basket/views.py:354
 #, python-format
@@ -860,7 +864,7 @@ msgstr "优惠券'%(code)s'已加到了购物车"
 #: apps/basket/views.py:364
 #, python-format
 msgid "You have already added the '%(code)s' voucher to your basket"
-msgstr "您已经添加了优惠券'%(code)s' 到您的购物篮中"
+msgstr "您已经添加了优惠券'%(code)s' 到您的购物车中"
 
 #: apps/basket/views.py:372
 #, python-format
@@ -963,7 +967,7 @@ msgstr "子级产品"
 
 #: apps/catalogue/abstract_models.py:267
 msgid "Product structure"
-msgstr ""
+msgstr "产品结构"
 
 #: apps/catalogue/abstract_models.py:271 apps/dashboard/catalogue/forms.py:47
 #: apps/dashboard/orders/forms.py:71 apps/order/abstract_models.py:448
@@ -1016,7 +1020,7 @@ msgstr "属性"
 msgid ""
 "A product attribute is something that this product may have, such as a size,"
 " as specified by its class"
-msgstr ""
+msgstr "产品属性是指产品可能有的用于标示其类型的特征，如产品尺寸"
 
 #: apps/catalogue/abstract_models.py:305
 msgid "Product options"
@@ -1036,7 +1040,7 @@ msgstr "推荐商品"
 
 #: apps/catalogue/abstract_models.py:314
 msgid "These are products that are recommended to accompany the main product."
-msgstr ""
+msgstr "推荐的商品"
 
 #: apps/catalogue/abstract_models.py:319 defaults.py:225
 msgid "Rating"
@@ -1085,19 +1089,19 @@ msgstr "子级产品需指定父级"
 
 #: apps/catalogue/abstract_models.py:420
 msgid "You can only assign child products to parent products."
-msgstr ""
+msgstr "子产品仅能分配给父产品"
 
 #: apps/catalogue/abstract_models.py:423
 msgid "A child product can't have a product class."
-msgstr ""
+msgstr "子产品不需要产品类别"
 
 #: apps/catalogue/abstract_models.py:426
 msgid "A child product can't have a category assigned."
-msgstr ""
+msgstr "一个子级产品不能指定一个类别"
 
 #: apps/catalogue/abstract_models.py:430
 msgid "A child product can't have options."
-msgstr ""
+msgstr "子产品不需要选项"
 
 #: apps/catalogue/abstract_models.py:439
 msgid "A parent product can't have stockrecords."
@@ -1224,7 +1228,7 @@ msgstr "必要的"
 
 #: apps/catalogue/abstract_models.py:832
 msgid "Product attribute"
-msgstr ""
+msgstr "产品属性"
 
 #: apps/catalogue/abstract_models.py:833
 #: templates/oscar/dashboard/catalogue/product_class_form.html:40
@@ -1254,7 +1258,7 @@ msgstr "必须是一个布尔型"
 
 #: apps/catalogue/abstract_models.py:913
 msgid "Must be a model instance"
-msgstr ""
+msgstr "必须是一个模型实例"
 
 #: apps/catalogue/abstract_models.py:918
 msgid "Must be an AttributeOption model object instance"
@@ -1287,7 +1291,7 @@ msgstr "富类型字段"
 
 #: apps/catalogue/abstract_models.py:957
 msgid "Value option"
-msgstr ""
+msgstr "数值选项"
 
 #: apps/catalogue/abstract_models.py:988
 msgid "Product attribute value"
@@ -1299,11 +1303,11 @@ msgstr "产品属性值"
 
 #: apps/catalogue/abstract_models.py:1054
 msgid "Attribute option group"
-msgstr ""
+msgstr "属性选项组"
 
 #: apps/catalogue/abstract_models.py:1055
 msgid "Attribute option groups"
-msgstr ""
+msgstr "属性选项组"
 
 #: apps/catalogue/abstract_models.py:1071
 msgid "Group"
@@ -1315,7 +1319,7 @@ msgstr "属性选项"
 
 #: apps/catalogue/abstract_models.py:1082
 msgid "Attribute options"
-msgstr ""
+msgstr "属性选项"
 
 #: apps/catalogue/abstract_models.py:1104
 msgid "Required - a value for this option must be specified"
@@ -1527,14 +1531,14 @@ msgstr "已经存在使用那个电子邮件的用户"
 
 #: apps/checkout/session.py:113
 msgid "You need to add some items to your basket to checkout"
-msgstr "您必须要向购物篮里加些东西才能结账"
+msgstr "您必须要向购物车里加些东西才能结账"
 
 #: apps/checkout/session.py:131
 #, python-format
 msgid ""
 "'%(title)s' is no longer available to buy (%(reason)s). Please adjust your "
 "basket to continue"
-msgstr "'%(title)s' is no longer available to buy (%(reason)s). Please adjust your basket to continue"
+msgstr "'%(title)s' 不再提供购买(%(reason)s)，请检查您的购物车再继续"
 
 #: apps/checkout/session.py:149
 msgid "Please either sign in or enter your email address"
@@ -2005,7 +2009,7 @@ msgstr "订单"
 #, python-format
 msgid ""
 "All available lines from order %(number)s have been added to your basket"
-msgstr "从订单号%(number)s开始的所有可用产品线都已经加入了您的购物篮"
+msgstr "从订单号%(number)s开始的所有可用产品线都已经加入了您的购物车"
 
 #: apps/customer/views.py:552
 #, python-format
@@ -2017,7 +2021,7 @@ msgstr "不可能重新下订单 %(number)s ，因为它的所有产品线都不
 #: apps/customer/views.py:589
 #, python-format
 msgid "%(qty)d copies of '%(product)s' have been added to your basket"
-msgstr "%(qty)d 份的'%(product)s'被加入了你的购物篮"
+msgstr "%(qty)d 份的'%(product)s'被加入了你的购物车"
 
 #: apps/customer/views.py:593
 #, python-format
@@ -2162,11 +2166,11 @@ msgstr ""
 
 #: apps/dashboard/catalogue/forms.py:371
 msgid "A child product should not have categories"
-msgstr ""
+msgstr "一个子产品不应该有类别"
 
 #: apps/dashboard/catalogue/forms.py:460
 msgid "Select an option group"
-msgstr ""
+msgstr "请选择一个选项组"
 
 #: apps/dashboard/catalogue/tables.py:15
 #: templates/oscar/dashboard/catalogue/product_update.html:254
@@ -2233,12 +2237,12 @@ msgstr "创建新的 %(product_class)s产品"
 #: apps/dashboard/catalogue/views.py:278
 #, python-format
 msgid "Create new variant of %(parent_product)s"
-msgstr ""
+msgstr "创建一个关于 %(parent_product)s 的新变量"
 
 #: apps/dashboard/catalogue/views.py:284
 #, python-format
 msgid "Editing variant of %(parent_product)s"
-msgstr ""
+msgstr "编辑关于 %(parent_product)s 的变量"
 
 #: apps/dashboard/catalogue/views.py:375 apps/dashboard/catalogue/views.py:661
 msgid "Your submitted data was not valid - please correct the errors below"
@@ -2246,7 +2250,7 @@ msgstr "您提交的数据是无效的 - 请更正下列错误"
 
 #: apps/dashboard/catalogue/views.py:439
 msgid "Delete product variant?"
-msgstr ""
+msgstr "删除同类商品？"
 
 #: apps/dashboard/catalogue/views.py:441
 msgid "Delete product?"
@@ -2255,7 +2259,7 @@ msgstr "是否删除产品?"
 #: apps/dashboard/catalogue/views.py:485
 #, python-format
 msgid "Deleted product variant '%s'"
-msgstr ""
+msgstr "删除同类商品 '%s'"
 
 #: apps/dashboard/catalogue/views.py:491
 #, python-format
@@ -2307,7 +2311,7 @@ msgstr "更新产品种类 '%s'"
 
 #: apps/dashboard/catalogue/views.py:706
 msgid "Product type updated successfully"
-msgstr ""
+msgstr "商品种类已成功更新"
 
 #: apps/dashboard/catalogue/views.py:722 apps/offer/abstract_models.py:785
 #: defaults.py:114
@@ -2336,7 +2340,7 @@ msgstr "商品种类已成功删除"
 
 #: apps/dashboard/communications/config.py:8
 msgid "Communications dashboard"
-msgstr ""
+msgstr "通信仪表板"
 
 #: apps/dashboard/communications/forms.py:15
 msgid "Email subject template"
@@ -2648,17 +2652,17 @@ msgstr "新订单状态"
 #: apps/dashboard/orders/views.py:248
 #, python-brace-format
 msgid "Order number starts with \"{order_number}\""
-msgstr ""
+msgstr "订单号码起始于 \"{order_number}\""
 
 #: apps/dashboard/orders/views.py:255
 #, python-brace-format
 msgid "Customer name matches \"{customer_name}\""
-msgstr ""
+msgstr "客户名字与 \"{customer_name}\" 匹配"
 
 #: apps/dashboard/orders/views.py:262
 #, python-brace-format
 msgid "Product name matches \"{product_name}\""
-msgstr ""
+msgstr "商品名字与 \"{product_name}\" 匹配"
 
 #. Translators: "UPC" means "universal product code" and it is
 #. used to uniquely identify a product in an online store.
@@ -2667,7 +2671,7 @@ msgstr ""
 #: apps/dashboard/orders/views.py:273
 #, python-brace-format
 msgid "Includes an item with UPC \"{upc}\""
-msgstr ""
+msgstr "包含一件UPC为 \"{upc}\" 的物品"
 
 #. Translators: "SKU" means "stock keeping unit" and is used to
 #. identify products that can be shipped from an online store.
@@ -2722,7 +2726,7 @@ msgstr ""
 #: apps/dashboard/orders/views.py:341
 #, python-brace-format
 msgid "Order status is {order_status}"
-msgstr ""
+msgstr "订单状态为 {order_status}"
 
 #: apps/dashboard/orders/views.py:378
 msgid "Order value"
@@ -2790,12 +2794,12 @@ msgstr "您必须选择一些行进行操作"
 
 #: apps/dashboard/orders/views.py:498
 msgid "Invalid lines requested"
-msgstr ""
+msgstr "无效的 lines 请求"
 
 #: apps/dashboard/orders/views.py:509
 #, python-format
 msgid "The entered quantity for line #%s is not valid"
-msgstr ""
+msgstr "为 line #%s 输入的数量无效"
 
 #: apps/dashboard/orders/views.py:513
 #, python-format
@@ -2867,7 +2871,7 @@ msgstr ""
 #: apps/dashboard/orders/views.py:733
 #, python-format
 msgid "Unable to create payment event: %s"
-msgstr ""
+msgstr "无法创建付款事件: %s"
 
 #: apps/dashboard/orders/views.py:735
 msgid "Payment event created"
@@ -2929,7 +2933,7 @@ msgstr "供货商仪表板"
 #: apps/partner/abstract_models.py:26
 msgctxt "Partner's name"
 msgid "Name"
-msgstr ""
+msgstr "名字"
 
 #: apps/dashboard/partners/forms.py:35
 msgid "Full dashboard access"
@@ -3290,7 +3294,7 @@ msgstr "产品提醒已删除"
 
 #: apps/dashboard/vouchers/config.py:8
 msgid "Vouchers dashboard"
-msgstr ""
+msgstr "优惠仪表板"
 
 #: apps/dashboard/vouchers/forms.py:22 apps/voucher/abstract_models.py:46
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:39
@@ -3407,7 +3411,7 @@ msgstr "优惠券已删除"
 
 #: apps/offer/abstract_models.py:36
 msgid "This is displayed within the customer's basket"
-msgstr "这个会在顾客的购物篮里被显示"
+msgstr "这个会在顾客的购物车里被显示"
 
 #: apps/offer/abstract_models.py:40
 msgid "This is displayed on the offer browsing page"
@@ -3473,7 +3477,7 @@ msgstr "同一个用户能重复使用这个促销的次数"
 
 #: apps/offer/abstract_models.py:111
 msgid "Max basket applications"
-msgstr "最大购物篮申请shu"
+msgstr "最大购物车申请数"
 
 #: apps/offer/abstract_models.py:113
 msgid "The number of times this offer can be applied to a basket (and order)"
@@ -3533,12 +3537,12 @@ msgstr "每用户限用%(total)d次"
 
 #: apps/offer/abstract_models.py:315
 msgid "Limited to 1 use per basket"
-msgstr "每个购物篮限用yi'ci"
+msgstr "每个购物车限用 1 次"
 
 #: apps/offer/abstract_models.py:317
 #, python-format
 msgid "Limited to %(total)d uses per basket"
-msgstr "每个购物篮限用%(total)d个用户"
+msgstr "每个购物车限用%(total)d个用户"
 
 #: apps/offer/abstract_models.py:336
 #, python-format
@@ -3649,11 +3653,11 @@ msgstr "固定折扣优惠需要一个数值"
 
 #: apps/offer/abstract_models.py:631
 msgid "Depends on number of items in basket that are in condition range"
-msgstr "取决于购物篮中，在条件产品范围内的产品件数"
+msgstr "取决于购物车中，在条件产品范围内的产品件数"
 
 #: apps/offer/abstract_models.py:633
 msgid "Depends on value of items in basket that are in condition range"
-msgstr "取决于在条件范围内，购物篮内的商品的价值"
+msgstr "取决于在条件范围内，购物车内的商品的价值"
 
 #: apps/offer/abstract_models.py:635
 msgid ""
@@ -3840,15 +3844,15 @@ msgstr "运费比例折扣优惠"
 #: apps/offer/conditions.py:24
 #, python-format
 msgid "Basket includes %(count)d item(s) from %(range)s"
-msgstr "购物篮包括来自%(range)s的%(count)d个商品"
+msgstr "购物车包括来自%(range)s的%(count)d个商品(s)"
 
 #: apps/offer/conditions.py:41
 msgid "Count condition"
-msgstr ""
+msgstr "计数条件"
 
 #: apps/offer/conditions.py:42
 msgid "Count conditions"
-msgstr ""
+msgstr "计数条件"
 
 #: apps/offer/conditions.py:75 apps/offer/conditions.py:162
 #, python-format
@@ -3859,7 +3863,7 @@ msgstr[0] "从%(range)s范围里多买%(delta)d个商品"
 #: apps/offer/conditions.py:112
 #, python-format
 msgid "Basket includes %(count)d distinct item(s) from %(range)s"
-msgstr "购物篮包含了来自%(range)s的%(count)d 不同类商品"
+msgstr "购物车包含了来自 %(range)s 的 %(count)d 不同类商品(s)"
 
 #: apps/offer/conditions.py:130
 msgid "Coverage Condition"
@@ -3872,15 +3876,15 @@ msgstr "覆盖率条件"
 #: apps/offer/conditions.py:217
 #, python-format
 msgid "Basket includes %(amount)s from %(range)s"
-msgstr "购物篮包含来自范围 %(range)s 的价值%(amount)s "
+msgstr "购物车包含来自范围 %(range)s 的价值%(amount)s "
 
 #: apps/offer/conditions.py:234
 msgid "Value condition"
-msgstr ""
+msgstr "价值条件"
 
 #: apps/offer/conditions.py:235
 msgid "Value conditions"
-msgstr ""
+msgstr "价值条件"
 
 #: apps/offer/conditions.py:269
 #, python-format
@@ -4267,7 +4271,7 @@ msgstr "下了的订单"
 
 #: apps/order/utils.py:46
 msgid "Empty baskets cannot be submitted"
-msgstr "不能提交空购物篮"
+msgstr "不能提交空购物车"
 
 #: apps/order/utils.py:57
 #, python-format
@@ -4651,7 +4655,7 @@ msgstr "单个产品"
 #: apps/promotions/models.py:246
 msgctxt "Promotion product list title"
 msgid "Title"
-msgstr ""
+msgstr "称呼"
 
 #: apps/promotions/models.py:250
 msgid "Link text"
@@ -4659,11 +4663,11 @@ msgstr "链接文本"
 
 #: apps/promotions/models.py:256
 msgid "Product list"
-msgstr ""
+msgstr "产品列表"
 
 #: apps/promotions/models.py:257
 msgid "Product lists"
-msgstr ""
+msgstr "产品列表"
 
 #: apps/promotions/models.py:285
 msgid "Hand Picked Product List"
@@ -4679,7 +4683,7 @@ msgstr "列表"
 
 #: apps/promotions/models.py:300 apps/promotions/models.py:301
 msgid "Ordered product"
-msgstr ""
+msgstr "已下订单的商品"
 
 #: apps/promotions/models.py:309
 msgid "Bestselling products"
@@ -4704,7 +4708,7 @@ msgstr "自动生成商品列表"
 
 #: apps/promotions/models.py:330
 msgid "Automatic product lists"
-msgstr ""
+msgstr "自动生成商品列表"
 
 #: apps/promotions/models.py:336 apps/promotions/models.py:355
 msgid "Tabbed Block"
@@ -4721,7 +4725,7 @@ msgstr "已下订单的商品列表"
 #: apps/promotions/models.py:350
 msgctxt "Tabbed block title"
 msgid "Title"
-msgstr ""
+msgstr "称呼"
 
 #: apps/promotions/models.py:356
 msgid "Tabbed Blocks"
@@ -4888,7 +4892,7 @@ msgstr "您需要定义一些送货方式"
 #: apps/voucher/abstract_models.py:26
 msgid ""
 "This will be shown in the checkout and basket once the voucher is entered"
-msgstr "在优惠券被输入后，这个将会在结账和购物篮显示一次"
+msgstr "在优惠券被输入后，这个将会在结账和购物车显示一次"
 
 #: apps/voucher/abstract_models.py:30
 msgid "Case insensitive / No spaces allowed"
@@ -4923,7 +4927,7 @@ msgstr "只能被一个顾客使用一次"
 
 #: apps/voucher/abstract_models.py:51
 msgid "Times added to basket"
-msgstr "被加入购物篮的次数"
+msgstr "被加入购物车的次数"
 
 #: apps/voucher/abstract_models.py:52
 msgid "Times on orders"
@@ -4963,7 +4967,7 @@ msgstr "被用户'%(user)s'使用的优惠券'%(voucher)s'"
 #: apps/voucher/reports.py:19
 #: templates/oscar/dashboard/reports/partials/voucher_report.html:10
 msgid "Added to a basket"
-msgstr "加入购物篮"
+msgstr "加入购物车"
 
 #: apps/voucher/reports.py:20
 #: templates/oscar/dashboard/reports/partials/voucher_report.html:11
@@ -5028,7 +5032,7 @@ msgstr "这个空必须要填写"
 
 #: core/validators.py:99
 msgid "This field is invalid as its value is forbidden"
-msgstr ""
+msgstr "这个属性的值被禁止导致该属性无效"
 
 #: core/validators.py:142
 msgid "Please choose a less common password"
@@ -5228,14 +5232,14 @@ msgid ""
 "    <strong>%(quantity)s</strong> copies of <strong>%(title)s</strong>\n"
 "    have been added to your basket.\n"
 "    "
-msgstr "\n<strong>%(quantity)s</strong> 件的\n<strong>%(title)s</strong>\n被加入您的购物篮."
+msgstr "\n<strong>%(quantity)s</strong> 件的\n<strong>%(title)s</strong>\n被加入您的购物车."
 
 #: templates/oscar/basket/messages/line_restored.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been moved back to your basket.\n"
-msgstr "\n<strong>%(title)s</strong> 被移动回您的购物篮\n"
+msgstr "\n<strong>%(title)s</strong> 被移动回您的购物车\n"
 
 #: templates/oscar/basket/messages/line_saved.html:3
 #, python-format
@@ -5566,7 +5570,7 @@ msgstr "显示结果"
 
 #: templates/oscar/catalogue/browse.html:49
 msgid "Refine by"
-msgstr ""
+msgstr "被改进"
 
 #: templates/oscar/catalogue/browse.html:73
 #, python-format
@@ -5887,7 +5891,7 @@ msgstr "订单详情"
 
 #: templates/oscar/checkout/checkout.html:109
 msgid "Item"
-msgstr ""
+msgstr "商品"
 
 #: templates/oscar/checkout/gateway.html:7
 msgid "Checkout gateway"
@@ -5965,7 +5969,7 @@ msgstr "我们应该寄往哪里？"
 
 #: templates/oscar/checkout/shipping_address.html:22
 msgid "An address from your address book?"
-msgstr ""
+msgstr "一个您地址薄中的地址？"
 
 #: templates/oscar/checkout/shipping_address.html:41
 msgid "Ship to your default shipping address"
@@ -6970,7 +6974,7 @@ msgstr "段落"
 #: templates/oscar/dashboard/catalogue/product_class_form.html:39
 #: templates/oscar/dashboard/catalogue/product_class_form.html:53
 msgid "Product Class details"
-msgstr ""
+msgstr "商品类别详情"
 
 #: templates/oscar/dashboard/catalogue/product_class_list.html:15
 msgid "Create new product type"
@@ -6978,7 +6982,7 @@ msgstr "创建新的商品种类"
 
 #: templates/oscar/dashboard/catalogue/product_class_list.html:16
 msgid "Product types"
-msgstr ""
+msgstr "商品类型"
 
 #: templates/oscar/dashboard/catalogue/product_class_list.html:27
 msgid "Requires shipping"
@@ -7108,11 +7112,11 @@ msgstr "零售价格"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:249
 msgid "Add variant"
-msgstr ""
+msgstr "添加同类产品"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:278
 msgid "This product does not have any variants."
-msgstr ""
+msgstr "这件产品尚没有同类商品"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:280
 msgid "One can't add variants to this product at this point."
@@ -7272,7 +7276,7 @@ msgstr "订单--所有时间的"
 #: templates/oscar/dashboard/index.html:104
 #: templates/oscar/dashboard/index.html:122
 msgid "Total <em>open</em> baskets"
-msgstr "总计打开的购物篮"
+msgstr "总计打开的购物车"
 
 #: templates/oscar/dashboard/index.html:114
 msgid "Total customers"
@@ -8109,7 +8113,7 @@ msgstr "促销名称"
 
 #: templates/oscar/dashboard/promotions/page_detail.html:58
 msgid "Change display order"
-msgstr ""
+msgstr "更改显示订单"
 
 #: templates/oscar/dashboard/promotions/page_detail.html:65
 msgid "No promotions in this position."
@@ -8375,7 +8379,7 @@ msgstr "更新所选评价的状态"
 #: templates/oscar/dashboard/reviews/review_list.html:56
 msgctxt "Review title"
 msgid "Title"
-msgstr ""
+msgstr "标题"
 
 #: templates/oscar/dashboard/reviews/review_list.html:75
 msgid "[Product deleted]"
@@ -8442,7 +8446,7 @@ msgstr ""
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:22
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:27
 msgid "Delete weight band?"
-msgstr ""
+msgstr "删除重量级别?"
 
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:17
 #: templates/oscar/dashboard/shipping/weight_band_form.html:17
@@ -8460,7 +8464,7 @@ msgstr "配送方式"
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:34
 #: templates/oscar/dashboard/shipping/weight_based_detail.html:67
 msgid "Weight range (kg)"
-msgstr ""
+msgstr "重量范围(千克)"
 
 #: templates/oscar/dashboard/shipping/weight_band_delete.html:46
 msgid "Are you sure you want to delete this weight band method?"
@@ -8470,7 +8474,7 @@ msgstr ""
 #: templates/oscar/dashboard/shipping/weight_band_form.html:22
 #: templates/oscar/dashboard/shipping/weight_band_form.html:27
 msgid "Edit weight band"
-msgstr ""
+msgstr "编辑重量级别"
 
 #: templates/oscar/dashboard/shipping/weight_based_delete.html:5
 #, python-format
@@ -8499,19 +8503,19 @@ msgstr "删除邮递方式"
 
 #: templates/oscar/dashboard/shipping/weight_based_detail.html:62
 msgid "Weight bands"
-msgstr ""
+msgstr "重量级别"
 
 #: templates/oscar/dashboard/shipping/weight_based_detail.html:86
 msgid "No weight bands have been added yet."
-msgstr ""
+msgstr "还没有重量级别被添加"
 
 #: templates/oscar/dashboard/shipping/weight_based_detail.html:89
 msgid "Add a new weight band"
-msgstr ""
+msgstr "添加重量级别"
 
 #: templates/oscar/dashboard/shipping/weight_based_detail.html:93
 msgid "Add weight band"
-msgstr ""
+msgstr "添加重量级别"
 
 #: templates/oscar/dashboard/shipping/weight_based_form.html:9
 #: templates/oscar/dashboard/shipping/weight_based_form.html:28
@@ -8521,15 +8525,15 @@ msgstr "新建发货方式"
 
 #: templates/oscar/dashboard/shipping/weight_based_list.html:20
 msgid "Create new shipping charge"
-msgstr ""
+msgstr "创建邮费"
 
 #: templates/oscar/dashboard/shipping/weight_based_list.html:32
 msgid "Number of weight bands"
-msgstr ""
+msgstr "重量级别的数量"
 
 #: templates/oscar/dashboard/shipping/weight_based_list.html:33
 msgid "Default weight (kg)"
-msgstr ""
+msgstr "默认重量(千克)"
 
 #: templates/oscar/dashboard/shipping/weight_based_list.html:54
 msgid "No shipping methods found."
@@ -8691,7 +8695,7 @@ msgstr "促销券细节"
 
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:46
 msgid "Number of basket additions"
-msgstr "购物篮附加项数量"
+msgstr "购物车附加项数量"
 
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:53
 msgid "Recent orders"
@@ -8711,7 +8715,7 @@ msgstr "创建新的促销券"
 
 #: templates/oscar/dashboard/vouchers/voucher_list.html:55
 msgid "Num baskets"
-msgstr "购物篮数量"
+msgstr "购物车数量"
 
 #: templates/oscar/dashboard/vouchers/voucher_list.html:56
 msgid "Num orders"
@@ -8739,7 +8743,7 @@ msgstr "前往主页"
 
 #: templates/oscar/flatpages/default.html:11
 msgid "Edit this page"
-msgstr ""
+msgstr "编辑此页"
 
 #: templates/oscar/login_forbidden.html:5
 msgid "This page is only available to users who aren't logged in."

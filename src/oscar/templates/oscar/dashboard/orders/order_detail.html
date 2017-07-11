@@ -31,12 +31,12 @@
         {% if order.guest_email %}
             <tr>
                 <th>{% trans "Name" %}</th>
+                <th>{% trans "Email address" %}</th>
+            </tr>
+            <tr>
                 <td>
                     {% trans "Customer checked out as a guest." %}
                 </td>
-            </tr>
-            <tr>
-                <th>{% trans "Email address" %}</th>
                 <td>{{ order.email }}</td>
             </tr>
         {% elif order.user %}

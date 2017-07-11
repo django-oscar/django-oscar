@@ -6,7 +6,7 @@ from django.utils.translation import pgettext_lazy
 from oscar.apps.customer.forms import EmailUserCreationForm
 from oscar.core.compat import existing_user_fields, get_user_model
 from oscar.core.loading import get_model
-from oscar.core.validators import password_validators
+from oscar.core.validators import validate_password
 
 User = get_user_model()
 Partner = get_model('partner', 'Partner')
@@ -30,6 +30,7 @@ class PartnerCreateForm(forms.ModelForm):
     class Meta:
         model = Partner
         fields = ('name',)
+
 
 ROLE_CHOICES = (
     ('staff', _('Full dashboard access')),
@@ -75,8 +76,7 @@ class ExistingUserForm(forms.ModelForm):
     password1 = forms.CharField(
         label=_('Password'),
         widget=forms.PasswordInput,
-        required=False,
-        validators=password_validators)
+        required=False)
     password2 = forms.CharField(
         required=False,
         label=_('Confirm Password'),
@@ -89,6 +89,7 @@ class ExistingUserForm(forms.ModelForm):
         if password1 != password2:
             raise forms.ValidationError(
                 _("The two password fields didn't match."))
+        validate_password(password2, self.instance)
         return password2
 
     def __init__(self, *args, **kwargs):

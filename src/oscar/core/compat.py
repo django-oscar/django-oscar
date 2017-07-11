@@ -1,6 +1,8 @@
+import codecs
 import csv
 import sys
 
+import django
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
@@ -67,6 +69,34 @@ def existing_user_fields(fields):
     user_fields = get_user_model()._meta.fields
     user_field_names = [field.name for field in user_fields]
     return [field for field in fields if field in user_field_names]
+
+
+# Supprt new Django 1.10 middleware
+if django.VERSION >= (1, 10):
+    from django.utils.deprecation import MiddlewareMixin
+else:
+    MiddlewareMixin = object
+
+
+def user_is_authenticated(user):
+    if django.VERSION >= (1, 10):
+        return user.is_authenticated
+    else:
+        return user.is_authenticated()
+
+
+def user_is_anonymous(user):
+    if django.VERSION >= (1, 10):
+        return user.is_anonymous
+    else:
+        return user.is_anonymous()
+
+
+def assignment_tag(register):
+    if django.VERSION >= (1, 9):
+        return register.simple_tag
+    else:
+        return register.assignment_tag
 
 
 # Python3 compatibility layer
@@ -144,6 +174,9 @@ class UnicodeCSVWriter:
         self.kw = kw
         self.writer = None
 
+        if self.f:
+            self.add_bom(self.f)
+
     def __enter__(self):
         assert self.filename is not None
         if PY3:
@@ -151,12 +184,21 @@ class UnicodeCSVWriter:
                           encoding=self.encoding, newline='')
         else:
             self.f = open(self.filename, 'wb')
+
+        self.add_bom(self.f)
         return self
 
     def __exit__(self, type, value, traceback):
         assert self.filename is not None
         if self.filename is not None:
             self.f.close()
+
+    def add_bom(self, f):
+        # If encoding is UTF-8, insert a Byte Order Mark at the start of the
+        # file for compatibility with MS Excel.
+        if (self.encoding == 'utf-8'
+                        and getattr(settings, 'OSCAR_CSV_INCLUDE_BOM', False)):
+            self.f.write(u'\ufeff' if PY3 else codecs.BOM_UTF8)
 
     def writerow(self, row):
         if self.writer is None:

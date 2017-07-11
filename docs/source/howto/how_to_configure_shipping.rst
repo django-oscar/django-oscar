@@ -17,8 +17,8 @@ Further complications can arise such as:
 
 * Only making certain shipping methods available to certain customers
 * Tax is only applicable in certain situations
-  
-Oscar can handle all of these shipping scenarios. 
+
+Oscar can handle all of these shipping scenarios.
 
 Shipping in Oscar
 ~~~~~~~~~~~~~~~~~
@@ -29,7 +29,7 @@ returns your chosen shipping method instances.
 
 The primary responsibility of the
 ``Repository`` class is to provide the available shipping methods for a
-particular scenario. This is done via the 
+particular scenario. This is done via the
 :func:`~oscar.apps.shipping.repository.Repository.get_shipping_methods` method,
 which returns the shipping methods available to the customer.
 
@@ -38,7 +38,7 @@ This method is called in several places:
 * To look up a "default" shipping method so that sample shipping charges can be
   shown on the basket detail page.
 
-* To list the available shipping methods on the checkout shipping method page. 
+* To list the available shipping methods on the checkout shipping method page.
 
 * To check the selected shipping method is still available when an order is
   submitted.
@@ -49,7 +49,9 @@ shipping methods depending on the circumstances. For instance, you could use
 the shipping address to provide international shipping rates if the address is
 overseas.
 
-The default behaviour is to return a single free shipping method.
+The ``get_default_shipping_method`` method takes the same parameters and
+returns default shipping method for the current basket. Used for shipping
+cost indication on the basket page. Defaults to free shipping method.
 
 .. note::
 
@@ -82,7 +84,7 @@ For more complex logic, override the ``get_available_shipping_methods`` method:
    class Repository(repository.Repository):
 
        def get_available_shipping_methods(
-               self, basket, user=None, shipping_addr=None, 
+               self, basket, user=None, shipping_addr=None,
                request=None, **kwargs):
            methods = (methods.Standard())
            if shipping_addr and shipping_addr.country.code == 'GB':
@@ -127,7 +129,7 @@ Here's an example:
 
        def calculate(self, basket):
            return prices.Price(
-               currency=basket.currency, 
+               currency=basket.currency,
                excl_tax=D('0.00'), incl_tax=D('0.00'))
 
 Core shipping methods
@@ -138,7 +140,7 @@ subclassed and customised:
 
 * :class:`~oscar.apps.shipping.methods.Free` - no shipping charges
 
-* :class:`~oscar.apps.shipping.methods.FixedPrice` - fixed-price shipping charges.  
+* :class:`~oscar.apps.shipping.methods.FixedPrice` - fixed-price shipping charges.
   Example usage:
 
 .. code-block:: python
@@ -146,18 +148,18 @@ subclassed and customised:
    from oscar.apps.shipping import methods
    from oscar.core import prices
 
-   class Standard(methods.Base):
+   class Standard(methods.FixedPrice):
        code = 'standard'
        name = 'Standard shipping'
        charge_excl_tax = D('5.00')
 
-   class Express(methods.Base):
+   class Express(methods.FixedPrice):
        code = 'express'
        name = 'Express shipping'
        charge_excl_tax = D('10.00')
 
-There is also a weight-based shipping method, 
+There is also a weight-based shipping method,
 :class:`~oscar.apps.shipping.abstract_models.AbstractWeightBased`
 which determines a shipping charge by calculating the weight of a basket's
 contents and looking this up in a model-based set of weight bands.
-           
+

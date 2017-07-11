@@ -1,5 +1,6 @@
 # Packaging
 *.pyc
+__pycache__
 *.egg-info
 /dist/
 /build/
@@ -29,6 +30,7 @@ TODO
 
 # Test files
 .coverage
+.coverage\.*
 .noseids
 coverage.xml
 violations.txt
@@ -37,19 +39,10 @@ nosetests.xml
 /htmlcov/*
 /.tox/*
 
-# Example sites
+# Sandbox content
 settings_local.py
-/sites/sandbox/*.sqlite
-/sites/sandbox/assets/
-/sites/sandbox/public/
-/sites/sandbox/whoosh_index/
-/sites/sandbox/logs/
-/sites/demo/*.sqlite
-/sites/demo/assets/
-/sites/demo/public/
-/sites/demo/whoosh_index/
-/sites/demo/logs/
-/sites/us/*.sqlite
-/sites/us/public/
-/sites/us/logs/
-sites/puppet/modules/
+/sandbox/*.sqlite
+/sandbox/assets/
+/sandbox/public/
+/sandbox/whoosh_index/
+/sandbox/logs/

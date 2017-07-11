@@ -8,7 +8,8 @@ This guide explains how to fork an app in Oscar.
 
   The following steps are now automated by the ``oscar_fork_app`` management
   command. They're explained in detail so you get an idea of what's going on.
-  But there's no need to do this manually anymore! More information is available in :doc:`/topics/customisation#fork-the-oscar-app`.
+  But there's no need to do this manually anymore! More information is
+  available in :ref:`fork-oscar-app`.
 
 Create Python module with same label
 ====================================
@@ -53,8 +54,8 @@ the core app's ``admin.py`` (which will run the register code)::
 
 This isn't great but we haven't found a better way as of yet.
 
-Django 1.7+: Use supplied app config
-====================================
+Use supplied app config
+=======================
 
 Oscar ships with an app config for each app, which sets app labels and
 runs startup code. You need to make sure that happens.

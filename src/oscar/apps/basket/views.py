@@ -6,7 +6,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.utils.http import is_safe_url
 from django.utils.translation import ugettext_lazy as _
@@ -15,15 +14,16 @@ from extra_views import ModelFormSetView
 
 from oscar.apps.basket import signals
 from oscar.core import ajax
+from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import redirect_to_referrer, safe_referrer
 
-Applicator = get_class('offer.utils', 'Applicator')
-(BasketLineFormSet, BasketLineForm, AddToBasketForm, BasketVoucherForm,
- SavedLineFormSet, SavedLineForm) \
-    = get_classes('basket.forms', ('BasketLineFormSet', 'BasketLineForm',
-                                   'AddToBasketForm', 'BasketVoucherForm',
-                                   'SavedLineFormSet', 'SavedLineForm'))
+Applicator = get_class('offer.applicator', 'Applicator')
+(BasketLineForm, AddToBasketForm, BasketVoucherForm, SavedLineForm) = get_classes(
+    'basket.forms', ('BasketLineForm', 'AddToBasketForm',
+                     'BasketVoucherForm', 'SavedLineForm'))
+BasketLineFormSet, SavedLineFormSet = get_classes(
+    'basket.formsets', ('BasketLineFormSet', 'SavedLineFormSet'))
 Repository = get_class('shipping.repository', ('Repository'))
 OrderTotalCalculator = get_class(
     'checkout.calculators', 'OrderTotalCalculator')
@@ -114,7 +114,7 @@ class BasketView(ModelFormSetView):
         context['upsell_messages'] = self.get_upsell_messages(
             self.request.basket)
 
-        if self.request.user.is_authenticated():
+        if user_is_authenticated(self.request.user):
             try:
                 saved_basket = self.basket_model.saved.get(
                     owner=self.request.user)
@@ -149,7 +149,7 @@ class BasketView(ModelFormSetView):
             if (hasattr(form, 'cleaned_data') and
                     form.cleaned_data['save_for_later']):
                 line = form.instance
-                if self.request.user.is_authenticated():
+                if user_is_authenticated(self.request.user):
                     self.move_line_to_saved_basket(line)
 
                     msg = render_to_string(
@@ -207,7 +207,8 @@ class BasketView(ModelFormSetView):
     def json_response(self, ctx, flash_messages):
         basket_html = render_to_string(
             'basket/partials/basket_content.html',
-            RequestContext(self.request, ctx))
+            context=ctx, request=self.request)
+
         payload = {
             'content_html': basket_html,
             'messages': flash_messages.as_dict()}
@@ -397,7 +398,7 @@ class VoucherRemoveView(View):
             voucher = request.basket.vouchers.get(id=voucher_id)
         except ObjectDoesNotExist:
             messages.error(
-                request, _("No voucher found with id '%d'") % voucher_id)
+                request, _("No voucher found with id '%s'") % voucher_id)
         else:
             request.basket.vouchers.remove(voucher)
             self.remove_signal.send(

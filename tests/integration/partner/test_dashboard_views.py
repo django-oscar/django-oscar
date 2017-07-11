@@ -2,7 +2,6 @@ from django.contrib.auth.models import Permission
 from django.test import TestCase
 from django.contrib.contenttypes.models import ContentType
 
-from oscar.core.loading import get_model
 from oscar.test.factories import PartnerFactory, PermissionFactory, UserFactory
 from oscar.apps.dashboard.partners import views
 

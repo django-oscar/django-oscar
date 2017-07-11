@@ -27,7 +27,9 @@ class AbstractTransaction(models.Model):
     * A 'settle' with a credit provider (see django-oscar-accounts)
     """
     source = models.ForeignKey(
-        'payment.Source', related_name='transactions',
+        'payment.Source',
+        on_delete=models.CASCADE,
+        related_name='transactions',
         verbose_name=_("Source"))
 
     # We define some sample types but don't constrain txn_type to be one of
@@ -68,10 +70,15 @@ class AbstractSource(models.Model):
     refunded, which is useful when payment takes place in multiple stages.
     """
     order = models.ForeignKey(
-        'order.Order', related_name='sources', verbose_name=_("Order"))
+        'order.Order',
+        on_delete=models.CASCADE,
+        related_name='sources',
+        verbose_name=_("Order"))
     source_type = models.ForeignKey(
-        'payment.SourceType', verbose_name=_("Source Type"),
-        related_name="sources")
+        'payment.SourceType',
+        on_delete=models.CASCADE,
+        related_name="sources",
+        verbose_name=_("Source Type"))
     currency = models.CharField(
         _("Currency"), max_length=12, default=get_default_currency)
 
@@ -237,8 +244,11 @@ class AbstractBankcard(models.Model):
         store those fields then the requirements for PCI compliance will be
         more stringent.
     """
-    user = models.ForeignKey(AUTH_USER_MODEL, related_name='bankcards',
-                             verbose_name=_("User"))
+    user = models.ForeignKey(
+        AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='bankcards',
+        verbose_name=_("User"))
     card_type = models.CharField(_("Card Type"), max_length=128)
 
     # Often you don't actually need the name on the bankcard

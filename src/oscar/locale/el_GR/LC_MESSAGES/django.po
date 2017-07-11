@@ -8,14 +8,14 @@
 # Eleni Lixourioti <inelegr88@gmail.com>, 2013
 # Eleni Lixourioti <inelegr88@gmail.com>, 2013
 # Eleni Lixourioti <inelegr88@gmail.com>, 2013
-# Konstantinos Metaxas <kmetaxas@gmail.com>, 2016
+# Konstantinos Metaxas <kmetaxas@gmail.com>, 2016-2017
 # George Giannoulopoulos <vdotoree@yahoo.gr>, 2014-2015
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-13 13:06+0200\n"
-"PO-Revision-Date: 2016-05-24 17:46+0000\n"
+"PO-Revision-Date: 2017-02-01 14:47+0000\n"
 "Last-Translator: Konstantinos Metaxas <kmetaxas@gmail.com>\n"
 "Language-Team: Greek (Greece) (http://www.transifex.com/codeinthehole/django-oscar/language/el_GR/)\n"
 "MIME-Version: 1.0\n"
@@ -1117,7 +1117,7 @@ msgstr "Προϊόν που προτείνεται"
 
 #: apps/catalogue/abstract_models.py:705
 msgid "Product recomendations"
-msgstr "Προϊόντα που προντίνονται"
+msgstr "Προϊόντα που προτείνονται"
 
 #: apps/catalogue/abstract_models.py:733
 #, python-format
@@ -1362,7 +1362,7 @@ msgstr "URL"
 
 #: apps/catalogue/reviews/abstract_models.py:51
 msgid "Requires moderation"
-msgstr "Απαιτεί διαχειρηστή"
+msgstr "Απαιτεί διαχειριστή"
 
 #: apps/catalogue/reviews/abstract_models.py:52
 #: apps/dashboard/reviews/forms.py:11

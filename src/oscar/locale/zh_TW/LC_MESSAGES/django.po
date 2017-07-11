@@ -5,14 +5,15 @@
 # Translators:
 # Chen Chun-Chia <ccc.larc@gmail.com>, 2015
 # Donald Zhan <donald.zhan1984@gmail.com>, 2015
+# Fan-Yu Kuan <fykuan@gmail.com>, 2016
 # Kai-Chu Chung <cage.chung@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-13 13:06+0200\n"
-"PO-Revision-Date: 2016-04-11 06:10+0000\n"
-"Last-Translator: Kai-Chu Chung <cage.chung@gmail.com>\n"
+"PO-Revision-Date: 2016-12-30 15:10+0000\n"
+"Last-Translator: Oscar Bot <maik.hoepfel@tangentsnowball.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/codeinthehole/django-oscar/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,12 +39,12 @@ msgstr "女士"
 
 #: apps/address/abstract_models.py:30
 msgid "Dr"
-msgstr ""
+msgstr "博士"
 
 #: apps/address/abstract_models.py:219
 msgctxt "Treatment Pronouns for the customer"
 msgid "Title"
-msgstr ""
+msgstr "職稱"
 
 #: apps/address/abstract_models.py:221 apps/customer/abstract_models.py:59
 #: templates/oscar/dashboard/partners/partner_manage.html:42
@@ -61,15 +62,15 @@ msgstr "姓"
 
 #: apps/address/abstract_models.py:226
 msgid "First line of address"
-msgstr ""
+msgstr "住址（第一行）"
 
 #: apps/address/abstract_models.py:228
 msgid "Second line of address"
-msgstr ""
+msgstr "住址（第二行）"
 
 #: apps/address/abstract_models.py:230
 msgid "Third line of address"
-msgstr ""
+msgstr "住址（第三行）"
 
 #: apps/address/abstract_models.py:231
 msgid "City"
@@ -77,7 +78,7 @@ msgstr "城市"
 
 #: apps/address/abstract_models.py:232
 msgid "State/County"
-msgstr ""
+msgstr "州/國家"
 
 #: apps/address/abstract_models.py:234
 msgid "Post/Zip-code"
@@ -89,7 +90,7 @@ msgstr "國家"
 
 #: apps/address/abstract_models.py:240
 msgid "Search text - used only for searching addresses"
-msgstr ""
+msgstr "搜尋字串 - 只在搜尋地址時使用"
 
 #: apps/address/abstract_models.py:247 apps/address/config.py:8
 #: templates/oscar/checkout/checkout.html:37
@@ -106,17 +107,17 @@ msgstr "地址"
 #: templates/oscar/dashboard/users/detail.html:107
 #: templates/oscar/dashboard/users/detail.html:148
 msgid "Addresses"
-msgstr ""
+msgstr "地址"
 
 #: apps/address/abstract_models.py:274
 #, python-format
 msgid "Addresses in %(country)s require a valid postcode"
-msgstr ""
+msgstr "%(country)s 的地址需要填寫郵遞區號"
 
 #: apps/address/abstract_models.py:286
 #, python-format
 msgid "The postcode '%(postcode)s' is not valid for %(country)s"
-msgstr ""
+msgstr "%(country)s 的郵遞區號 '%(postcode)s 不正確"
 
 #: apps/address/abstract_models.py:391
 msgid "ISO 3166-1 alpha-2"
@@ -132,7 +133,7 @@ msgstr ""
 
 #: apps/address/abstract_models.py:398
 msgid "Country name"
-msgstr ""
+msgstr "國家名"
 
 #: apps/address/abstract_models.py:401
 msgid "Official name"
@@ -140,11 +141,11 @@ msgstr ""
 
 #: apps/address/abstract_models.py:404 apps/catalogue/abstract_models.py:1175
 msgid "Display order"
-msgstr ""
+msgstr "顯示順序"
 
 #: apps/address/abstract_models.py:405
 msgid "Higher the number, higher the country in the list."
-msgstr ""
+msgstr "數字越大，在國家列表"
 
 #: apps/address/abstract_models.py:408
 msgid "Is shipping country"
@@ -152,7 +153,7 @@ msgstr ""
 
 #: apps/address/abstract_models.py:414 apps/shipping/abstract_models.py:27
 msgid "Countries"
-msgstr ""
+msgstr "國家"
 
 #: apps/address/abstract_models.py:457 models/fields/__init__.py:139
 msgid "Phone number"
@@ -160,18 +161,18 @@ msgstr "手機號碼"
 
 #: apps/address/abstract_models.py:458
 msgid "In case we need to call you about your order"
-msgstr ""
+msgstr "當我們必須要聯絡您時"
 
 #: apps/address/abstract_models.py:460
 #: templates/oscar/checkout/checkout.html:55
 #: templates/oscar/checkout/thank_you.html:58
 #: templates/oscar/dashboard/orders/order_detail.html:461
 msgid "Instructions"
-msgstr ""
+msgstr "說明"
 
 #: apps/address/abstract_models.py:461
 msgid "Tell us anything we should know when delivering your order."
-msgstr ""
+msgstr "告訴我們郵寄您的商品時需要注意的事項"
 
 #: apps/address/abstract_models.py:468
 #: templates/oscar/checkout/shipping_address.html:5
@@ -184,7 +185,7 @@ msgstr "運送地址"
 
 #: apps/address/abstract_models.py:469
 msgid "Shipping addresses"
-msgstr ""
+msgstr "運送地址"
 
 #: apps/address/abstract_models.py:494 apps/analytics/abstract_models.py:49
 #: apps/analytics/abstract_models.py:80 apps/analytics/abstract_models.py:98
@@ -202,15 +203,15 @@ msgstr "使用者"
 
 #: apps/address/abstract_models.py:498
 msgid "Default shipping address?"
-msgstr ""
+msgstr "預設郵寄地址？"
 
 #: apps/address/abstract_models.py:502
 msgid "Default billing address?"
-msgstr ""
+msgstr "預設帳單地址？"
 
 #: apps/address/abstract_models.py:507 apps/offer/abstract_models.py:135
 msgid "Number of Orders"
-msgstr ""
+msgstr "訂單數量"
 
 #: apps/address/abstract_models.py:511
 msgid "Address Hash"
@@ -224,19 +225,19 @@ msgstr ""
 #: apps/payment/abstract_models.py:42 apps/promotions/models.py:28
 #: apps/promotions/models.py:351 apps/voucher/abstract_models.py:168
 msgid "Date Created"
-msgstr ""
+msgstr "建立日期"
 
 #: apps/address/abstract_models.py:541
 msgid "User address"
-msgstr ""
+msgstr "客戶地址"
 
 #: apps/address/abstract_models.py:542
 msgid "User addresses"
-msgstr ""
+msgstr "客戶地址"
 
 #: apps/address/abstract_models.py:555
 msgid "This address is already in your address book"
-msgstr ""
+msgstr "此地址已存在地址簿中"
 
 #: apps/address/abstract_models.py:564
 #: templates/oscar/checkout/thank_you.html:99
@@ -247,7 +248,7 @@ msgstr "帳單地址"
 
 #: apps/address/abstract_models.py:565
 msgid "Billing addresses"
-msgstr ""
+msgstr "帳單地址"
 
 #: apps/address/abstract_models.py:584 apps/order/abstract_models.py:416
 #: apps/partner/abstract_models.py:95 apps/partner/config.py:8
@@ -355,7 +356,7 @@ msgstr ""
 
 #: apps/analytics/abstract_models.py:68
 msgid "Last Order Date"
-msgstr ""
+msgstr "前次訂購日期"
 
 #: apps/analytics/abstract_models.py:73
 msgid "User record"
@@ -397,7 +398,7 @@ msgstr ""
 
 #: apps/analytics/config.py:8
 msgid "Analytics"
-msgstr ""
+msgstr "分析"
 
 #: apps/analytics/reports.py:21 apps/analytics/reports.py:64
 #: templates/oscar/dashboard/reports/partials/product_report.html:10
@@ -446,13 +447,13 @@ msgstr "商品分析"
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:32
 #: templates/oscar/dashboard/vouchers/voucher_list.html:52
 msgid "Name"
-msgstr ""
+msgstr "姓名"
 
 #: apps/analytics/reports.py:62
 #: templates/oscar/customer/profile/profile.html:25
 #: templates/oscar/dashboard/reports/partials/user_report.html:10
 msgid "Date registered"
-msgstr ""
+msgstr "註冊日期"
 
 #: apps/analytics/reports.py:63
 #: templates/oscar/dashboard/reports/partials/user_report.html:11
@@ -547,7 +548,7 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_list.html:17
 #: templates/oscar/dashboard/vouchers/voucher_list.html:27
 msgid "Vouchers"
-msgstr ""
+msgstr "禮券"
 
 #: apps/basket/abstract_models.py:53 apps/basket/reports.py:82
 #: apps/catalogue/abstract_models.py:321
@@ -787,7 +788,7 @@ msgstr ""
 #: apps/basket/reports.py:24
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:12
 msgid "Date of creation"
-msgstr ""
+msgstr "建立日期"
 
 #: apps/basket/reports.py:25
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:13
@@ -819,45 +820,45 @@ msgstr ""
 #: apps/basket/views.py:313
 #, python-format
 msgid "The '%(code)s' voucher has expired"
-msgstr ""
+msgstr "禮券編號 '%(code)s' 已過期"
 
 #: apps/basket/views.py:320
 #, python-format
 msgid "The '%(code)s' voucher is not active"
-msgstr ""
+msgstr "禮券編號 '%(code)s' 尚未啟用"
 
 #: apps/basket/views.py:349
 msgid "Your basket does not qualify for a voucher discount"
-msgstr ""
+msgstr "您的購物車不符合禮券使用對象"
 
 #: apps/basket/views.py:354
 #, python-format
 msgid "Voucher '%(code)s' added to basket"
-msgstr ""
+msgstr "禮券 '%(code)s' 成功加入購物車"
 
 #: apps/basket/views.py:364
 #, python-format
 msgid "You have already added the '%(code)s' voucher to your basket"
-msgstr ""
+msgstr "您已將禮券 '%(code)s' 加入購物車了"
 
 #: apps/basket/views.py:372
 #, python-format
 msgid "No voucher found with code '%(code)s'"
-msgstr ""
+msgstr "禮券 '%(code)s 不存在"
 
 #: apps/basket/views.py:379 apps/dashboard/vouchers/forms.py:66
 msgid "Please enter a voucher code"
-msgstr ""
+msgstr "請輸入禮券代號"
 
 #: apps/basket/views.py:400
 #, python-format
 msgid "No voucher found with id '%d'"
-msgstr ""
+msgstr "禮券代號 '%d' 不存在"
 
 #: apps/basket/views.py:406
 #, python-format
 msgid "Voucher '%s' removed from basket"
-msgstr ""
+msgstr "禮券編號 '%s' 已從購物車中移除"
 
 #: apps/catalogue/abstract_models.py:51 apps/catalogue/abstract_models.py:97
 #: apps/catalogue/abstract_models.py:288 apps/offer/abstract_models.py:38
@@ -892,13 +893,13 @@ msgstr ""
 #: templates/oscar/dashboard/offers/summary.html:12
 #: templates/oscar/dashboard/shipping/weight_based_detail.html:35
 msgid "Description"
-msgstr ""
+msgstr "說明"
 
 #: apps/catalogue/abstract_models.py:95 apps/catalogue/abstract_models.py:816
 #: apps/dashboard/catalogue/tables.py:19 apps/promotions/models.py:181
 #: apps/promotions/models.py:190 apps/promotions/models.py:191
 msgid "Image"
-msgstr ""
+msgstr "圖片"
 
 #: apps/catalogue/abstract_models.py:213 apps/catalogue/abstract_models.py:230
 #: apps/customer/abstract_models.py:167
@@ -1018,11 +1019,11 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:319 defaults.py:225
 msgid "Rating"
-msgstr ""
+msgstr "評價"
 
 #: apps/catalogue/abstract_models.py:325 apps/partner/abstract_models.py:148
 msgid "Date updated"
-msgstr ""
+msgstr "更新日期"
 
 #: apps/catalogue/abstract_models.py:337
 msgid "Is discountable?"
@@ -1051,15 +1052,15 @@ msgstr "商品要有名稱"
 
 #: apps/catalogue/abstract_models.py:408
 msgid "Your product must have a product class."
-msgstr ""
+msgstr "您的商品必需要設定一個類別"
 
 #: apps/catalogue/abstract_models.py:410
 msgid "Only child products can have a parent."
-msgstr ""
+msgstr "只有子項商品允許有母商品"
 
 #: apps/catalogue/abstract_models.py:417
 msgid "A child product needs a parent."
-msgstr ""
+msgstr "子項商品必需要有一個母商品"
 
 #: apps/catalogue/abstract_models.py:420
 msgid "You can only assign child products to parent products."
@@ -1091,7 +1092,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:691
 msgid "Primary product"
-msgstr ""
+msgstr "主商品"
 
 #: apps/catalogue/abstract_models.py:693
 msgid "Recommended product"
@@ -1146,7 +1147,7 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:809
 msgid "True / False"
-msgstr ""
+msgstr " "
 
 #: apps/catalogue/abstract_models.py:810 apps/catalogue/abstract_models.py:952
 msgid "Float"
@@ -2601,7 +2602,7 @@ msgstr ""
 #: apps/dashboard/orders/forms.py:85 apps/voucher/reports.py:18
 #: templates/oscar/dashboard/reports/partials/voucher_report.html:9
 msgid "Voucher code"
-msgstr ""
+msgstr "禮券編號"
 
 #: apps/dashboard/orders/forms.py:88
 msgid "Payment method"
@@ -2684,7 +2685,7 @@ msgstr ""
 #: apps/dashboard/orders/views.py:321
 #, python-brace-format
 msgid "Used voucher code \"{voucher_code}\""
-msgstr ""
+msgstr "已使用的禮券 \"{coucher_code}\""
 
 #. Translators: A payment method is a way of paying for an
 #. item in an online store.  For example, a user can pay
@@ -4911,19 +4912,19 @@ msgstr ""
 #: apps/voucher/config.py:8
 #: templates/oscar/dashboard/orders/order_detail.html:562
 msgid "Voucher"
-msgstr ""
+msgstr "禮券"
 
 #: apps/voucher/abstract_models.py:104
 msgid "This voucher has already been used"
-msgstr ""
+msgstr "這張禮券已使用過"
 
 #: apps/voucher/abstract_models.py:111
 msgid "This voucher is only available to signed in users"
-msgstr ""
+msgstr "這張禮券只能在登入後使用"
 
 #: apps/voucher/abstract_models.py:116
 msgid "You have already used this voucher in a previous order"
-msgstr ""
+msgstr "您在上一次購物時已使用過這張禮券"
 
 #: apps/voucher/abstract_models.py:173
 msgid "Voucher Application"
@@ -5324,11 +5325,11 @@ msgstr "放入暫存清單"
 
 #: templates/oscar/basket/partials/basket_content.html:119
 msgid "Voucher/promo code"
-msgstr ""
+msgstr "禮券/優惠代碼"
 
 #: templates/oscar/basket/partials/basket_content.html:121
 msgid "I have a voucher code..."
-msgstr ""
+msgstr "我有一張禮券..."
 
 #: templates/oscar/basket/partials/basket_content.html:127
 #: templates/oscar/catalogue/partials/add_to_basket_form.html:13
@@ -5342,7 +5343,7 @@ msgstr ""
 
 #: templates/oscar/basket/partials/basket_content.html:127
 msgid "Add voucher"
-msgstr ""
+msgstr "新增禮券"
 
 #: templates/oscar/basket/partials/basket_content.html:128
 #: templates/oscar/catalogue/reviews/review_form.html:48
@@ -8673,7 +8674,7 @@ msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:53
 msgid "Recent orders"
-msgstr ""
+msgstr "最近訂單"
 
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:58
 msgid "No orders have been placed that use this voucher."
@@ -8681,7 +8682,7 @@ msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_form.html:34
 msgid "Edit voucher"
-msgstr ""
+msgstr "編輯優惠卷"
 
 #: templates/oscar/dashboard/vouchers/voucher_list.html:26
 msgid "Create new voucher"

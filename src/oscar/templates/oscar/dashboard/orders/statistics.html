@@ -1,6 +1,7 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
 {% load i18n %}
+{% load django_tables2 %}
 
 {% block body_class %}{{ block.super }} orders{% endblock %}
 
@@ -59,7 +60,7 @@
             </tr>
             {% for dict in order_status_breakdown %}
                 <tr>
-                    <td><a href="{% url 'dashboard:order-list' %}?order_status={{ dict.status }}">{{ dict.status }}</a></td>
+                    <td><a href="{% url 'dashboard:order-list' %}{% querystring 'status'=dict.status %}">{{ dict.status }}</a></td>
                     <td>{{ dict.freq }}</td>
                 </tr>
             {% endfor %}

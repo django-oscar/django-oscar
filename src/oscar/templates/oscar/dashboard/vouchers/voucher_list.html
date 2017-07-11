@@ -63,13 +63,13 @@
                         <tr>
                             <td><a href="{% url 'dashboard:voucher-stats' voucher.id %}">{{ voucher.name }}</a></td>
                             <td>
-                                <span class="label label-inverse">{{ voucher.code }}</span>
+                                <span class="label label-default">{{ voucher.code }}</span>
                             </td>
                             <td>
                                 {% if voucher.is_active %}
                                     <span class="label label-success">{% trans "Active" %}</span>
                                 {% else %}
-                                    <span class="label">{% trans "Inactive" %}</span>
+                                    <span class="label label-default">{% trans "Inactive" %}</span>
                                 {% endif %}
                             </td>
                             <td>{{ voucher.num_basket_additions }}</td>

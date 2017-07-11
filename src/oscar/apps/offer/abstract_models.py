@@ -68,8 +68,15 @@ class AbstractConditionalOffer(models.Model):
     status = models.CharField(_("Status"), max_length=64, default=OPEN)
 
     condition = models.ForeignKey(
-        'offer.Condition', verbose_name=_("Condition"))
-    benefit = models.ForeignKey('offer.Benefit', verbose_name=_("Benefit"))
+        'offer.Condition',
+        on_delete=models.CASCADE,
+        related_name='offers',
+        verbose_name=_("Condition"))
+    benefit = models.ForeignKey(
+        'offer.Benefit',
+        on_delete=models.CASCADE,
+        related_name='offers',
+        verbose_name=_("Benefit"))
 
     # Some complicated situations require offers to be applied in a set order.
     priority = models.IntegerField(
@@ -82,10 +89,13 @@ class AbstractConditionalOffer(models.Model):
     # dates are ignored and only the dates from the voucher are used to
     # determine availability.
     start_datetime = models.DateTimeField(
-        _("Start date"), blank=True, null=True)
+        _("Start date"), blank=True, null=True,
+        help_text=_("Offers are active from the start date. "
+                    "Leave this empty if the offer has no start date."))
     end_datetime = models.DateTimeField(
         _("End date"), blank=True, null=True,
-        help_text=_("Offers are active until the end of the 'end date'"))
+        help_text=_("Offers are active until the end date. "
+                    "Leave this empty if the offer has no expiry date."))
 
     # Use this field to limit the number of times this offer can be applied in
     # total.  Note that a single order can apply an offer multiple times so
@@ -148,7 +158,7 @@ class AbstractConditionalOffer(models.Model):
     class Meta:
         abstract = True
         app_label = 'offer'
-        ordering = ['-priority']
+        ordering = ['-priority', 'pk']
         verbose_name = _("Conditional offer")
         verbose_name_plural = _("Conditional offers")
 
@@ -230,7 +240,7 @@ class AbstractConditionalOffer(models.Model):
     def apply_deferred_benefit(self, basket, order, application):
         """
         Applies any deferred benefits.  These are things like adding loyalty
-        points to somone's account.
+        points to someone's account.
         """
         return self.benefit.proxy().apply_deferred(basket, order, application)
 
@@ -384,7 +394,11 @@ class AbstractConditionalOffer(models.Model):
 @python_2_unicode_compatible
 class AbstractBenefit(models.Model):
     range = models.ForeignKey(
-        'offer.Range', null=True, blank=True, verbose_name=_("Range"))
+        'offer.Range',
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        verbose_name=_("Range"))
 
     # Benefit types
     PERCENTAGE, FIXED, MULTIBUY, FIXED_PRICE = (
@@ -497,60 +511,75 @@ class AbstractBenefit(models.Model):
             getattr(self, method_name)()
 
     def clean_multibuy(self):
+        errors = []
+
         if not self.range:
-            raise exceptions.ValidationError(
-                _("Multibuy benefits require a product range"))
+            errors.append(_("Multibuy benefits require a product range"))
         if self.value:
-            raise exceptions.ValidationError(
-                _("Multibuy benefits don't require a value"))
+            errors.append(_("Multibuy benefits don't require a value"))
         if self.max_affected_items:
-            raise exceptions.ValidationError(
-                _("Multibuy benefits don't require a 'max affected items' "
-                  "attribute"))
+            errors.append(_("Multibuy benefits don't require a "
+                            "'max affected items' attribute"))
+
+        if errors:
+            raise exceptions.ValidationError(errors)
 
     def clean_percentage(self):
+        errors = []
+
         if not self.range:
-            raise exceptions.ValidationError(
-                _("Percentage benefits require a product range"))
-        if self.value > 100:
-            raise exceptions.ValidationError(
-                _("Percentage discount cannot be greater than 100"))
+            errors.append(_("Percentage benefits require a product range"))
+
+        if not self.value:
+            errors.append(_("Percentage discount benefits require a value"))
+        elif self.value > 100:
+            errors.append(_("Percentage discount cannot be greater than 100"))
+
+        if errors:
+            raise exceptions.ValidationError(errors)
 
     def clean_shipping_absolute(self):
+        errors = []
         if not self.value:
-            raise exceptions.ValidationError(
-                _("A discount value is required"))
+            errors.append(_("A discount value is required"))
         if self.range:
-            raise exceptions.ValidationError(
-                _("No range should be selected as this benefit does not "
-                  "apply to products"))
+            errors.append(_("No range should be selected as this benefit does "
+                            "not apply to products"))
         if self.max_affected_items:
-            raise exceptions.ValidationError(
-                _("Shipping discounts don't require a 'max affected items' "
-                  "attribute"))
+            errors.append(_("Shipping discounts don't require a "
+                            "'max affected items' attribute"))
+
+        if errors:
+            raise exceptions.ValidationError(errors)
 
     def clean_shipping_percentage(self):
-        if self.value > 100:
-            raise exceptions.ValidationError(
-                _("Percentage discount cannot be greater than 100"))
+        errors = []
+
+        if not self.value:
+            errors.append(_("Percentage discount benefits require a value"))
+        elif self.value > 100:
+            errors.append(_("Percentage discount cannot be greater than 100"))
+
         if self.range:
-            raise exceptions.ValidationError(
-                _("No range should be selected as this benefit does not "
-                  "apply to products"))
+            errors.append(_("No range should be selected as this benefit does "
+                            "not apply to products"))
         if self.max_affected_items:
-            raise exceptions.ValidationError(
-                _("Shipping discounts don't require a 'max affected items' "
-                  "attribute"))
+            errors.append(_("Shipping discounts don't require a "
+                            "'max affected items' attribute"))
+        if errors:
+            raise exceptions.ValidationError(errors)
 
     def clean_shipping_fixed_price(self):
+        errors = []
         if self.range:
-            raise exceptions.ValidationError(
-                _("No range should be selected as this benefit does not "
-                  "apply to products"))
+            errors.append(_("No range should be selected as this benefit does "
+                            "not apply to products"))
         if self.max_affected_items:
-            raise exceptions.ValidationError(
-                _("Shipping discounts don't require a 'max affected items' "
-                  "attribute"))
+            errors.append(_("Shipping discounts don't require a "
+                            "'max affected items' attribute"))
+
+        if errors:
+            raise exceptions.ValidationError(errors)
 
     def clean_fixed_price(self):
         if self.range:
@@ -559,12 +588,14 @@ class AbstractBenefit(models.Model):
                   "be used instead."))
 
     def clean_absolute(self):
+        errors = []
         if not self.range:
-            raise exceptions.ValidationError(
-                _("Fixed discount benefits require a product range"))
+            errors.append(_("Fixed discount benefits require a product range"))
         if not self.value:
-            raise exceptions.ValidationError(
-                _("Fixed discount benefits require a value"))
+            errors.append(_("Fixed discount benefits require a value"))
+
+        if errors:
+            raise exceptions.ValidationError(errors)
 
     def round(self, amount):
         """
@@ -635,14 +666,18 @@ class AbstractCondition(models.Model):
         (COVERAGE, _("Needs to contain a set number of DISTINCT items "
                      "from the condition range")))
     range = models.ForeignKey(
-        'offer.Range', verbose_name=_("Range"), null=True, blank=True)
+        'offer.Range',
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        verbose_name=_("Range"))
     type = models.CharField(_('Type'), max_length=128, choices=TYPE_CHOICES,
                             blank=True)
     value = fields.PositiveDecimalField(
         _('Value'), decimal_places=2, max_digits=12, null=True, blank=True)
 
     proxy_class = fields.NullCharField(
-        _("Custom class"), max_length=255, unique=True, default=None)
+        _("Custom class"), max_length=255, default=None)
 
     class Meta:
         abstract = True
@@ -997,8 +1032,8 @@ class AbstractRangeProduct(models.Model):
     Allow ordering products inside ranges
     Exists to allow customising.
     """
-    range = models.ForeignKey('offer.Range')
-    product = models.ForeignKey('catalogue.Product')
+    range = models.ForeignKey('offer.Range', on_delete=models.CASCADE)
+    product = models.ForeignKey('catalogue.Product', on_delete=models.CASCADE)
     display_order = models.IntegerField(default=0)
 
     class Meta:
@@ -1008,12 +1043,17 @@ class AbstractRangeProduct(models.Model):
 
 
 class AbstractRangeProductFileUpload(models.Model):
-    range = models.ForeignKey('offer.Range', related_name='file_uploads',
-                              verbose_name=_("Range"))
+    range = models.ForeignKey(
+        'offer.Range',
+        on_delete=models.CASCADE,
+        related_name='file_uploads',
+        verbose_name=_("Range"))
     filepath = models.CharField(_("File Path"), max_length=255)
     size = models.PositiveIntegerField(_("Size"))
-    uploaded_by = models.ForeignKey(AUTH_USER_MODEL,
-                                    verbose_name=_("Uploaded By"))
+    uploaded_by = models.ForeignKey(
+        AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name=_("Uploaded By"))
     date_uploaded = models.DateTimeField(_("Date Uploaded"), auto_now_add=True)
 
     PENDING, FAILED, PROCESSED = 'Pending', 'Failed', 'Processed'
@@ -1101,10 +1141,11 @@ class AbstractRangeProductFileUpload(models.Model):
         """
         Extract all SKU- or UPC-like strings from the file
         """
-        for line in open(self.filepath, 'r'):
-            for id in re.split('[^\w:\.-]', line):
-                if id:
-                    yield id
+        with open(self.filepath, 'r') as fh:
+            for line in fh:
+                for id in re.split('[^\w:\.-]', line):
+                    if id:
+                        yield id
 
     def delete_file(self):
         os.unlink(self.filepath)

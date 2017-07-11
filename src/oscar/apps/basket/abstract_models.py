@@ -28,7 +28,10 @@ class AbstractBasket(models.Model):
     # Baskets can be anonymously owned - hence this field is nullable.  When a
     # anon user signs in, their two baskets are merged.
     owner = models.ForeignKey(
-        AUTH_USER_MODEL, related_name='baskets', null=True,
+        AUTH_USER_MODEL,
+        null=True,
+        related_name='baskets',
+        on_delete=models.CASCADE,
         verbose_name=_("Owner"))
 
     # Basket statuses
@@ -564,27 +567,32 @@ class AbstractBasket(models.Model):
 
 @python_2_unicode_compatible
 class AbstractLine(models.Model):
-    """
-    A line of a basket (product and a quantity)
+    """A line of a basket (product and a quantity)
 
     Common approaches on ordering basket lines:
-    a) First added at top. That's the history-like approach; new items are
-       added to the bottom of the list. Changing quantities doesn't impact
-       position.
-       Oscar does this by default. It just sorts by Line.pk, which is
-       guaranteed to increment after each creation.
-    b) Last modified at top. That means items move to the top when you add
-       another one, and new items are added to the top as well.
-       Amazon mostly does this, but doesn't change the position when you
-       update the quantity in the basket view.
-       To get this behaviour, add a date_updated field, change
-       Meta.ordering and optionally do something similar on wishlist lines.
-       Order lines should already be created in the order of the basket lines,
-       and are sorted by their primary key, so no changes should be necessary
-       there.
+
+        a) First added at top. That's the history-like approach; new items are
+           added to the bottom of the list. Changing quantities doesn't impact
+           position.
+           Oscar does this by default. It just sorts by Line.pk, which is
+           guaranteed to increment after each creation.
+
+        b) Last modified at top. That means items move to the top when you add
+           another one, and new items are added to the top as well.  Amazon
+           mostly does this, but doesn't change the position when you update
+           the quantity in the basket view.
+           To get this behaviour, add a date_updated field, change
+           Meta.ordering and optionally do something similar on wishlist lines.
+           Order lines should already be created in the order of the basket
+           lines, and are sorted by their primary key, so no changes should be
+           necessary there.
+
     """
-    basket = models.ForeignKey('basket.Basket', related_name='lines',
-                               verbose_name=_("Basket"))
+    basket = models.ForeignKey(
+        'basket.Basket',
+        on_delete=models.CASCADE,
+        related_name='lines',
+        verbose_name=_("Basket"))
 
     # This is to determine which products belong to the same line
     # We can't just use product.id as you can have customised products
@@ -594,12 +602,16 @@ class AbstractLine(models.Model):
         _("Line Reference"), max_length=128, db_index=True)
 
     product = models.ForeignKey(
-        'catalogue.Product', related_name='basket_lines',
+        'catalogue.Product',
+        on_delete=models.CASCADE,
+        related_name='basket_lines',
         verbose_name=_("Product"))
 
     # We store the stockrecord that should be used to fulfil this line.
     stockrecord = models.ForeignKey(
-        'partner.StockRecord', related_name='basket_lines')
+        'partner.StockRecord',
+        on_delete=models.CASCADE,
+        related_name='basket_lines')
 
     quantity = models.PositiveIntegerField(_('Quantity'), default=1)
 
@@ -790,13 +802,14 @@ class AbstractLine(models.Model):
 
     @property
     def line_price_excl_tax(self):
-        return self.quantity * self.unit_price_excl_tax
+        if self.unit_price_excl_tax is not None:
+            return self.quantity * self.unit_price_excl_tax
 
     @property
     def line_price_excl_tax_incl_discounts(self):
-        if self._discount_excl_tax:
+        if self._discount_excl_tax and self.line_price_excl_tax is not None:
             return self.line_price_excl_tax - self._discount_excl_tax
-        if self._discount_incl_tax:
+        if self._discount_incl_tax and self.line_price_incl_tax is not None:
             # This is a tricky situation.  We know the discount as calculated
             # against tax inclusive prices but we need to guess how much of the
             # discount applies to tax-exclusive prices.  We do this by
@@ -810,15 +823,18 @@ class AbstractLine(models.Model):
         # We use whichever discount value is set.  If the discount value was
         # calculated against the tax-exclusive prices, then the line price
         # including tax
-        return self.line_price_incl_tax - self.discount_value
+        if self.line_price_incl_tax is not None:
+            return self.line_price_incl_tax - self.discount_value
 
     @property
     def line_tax(self):
-        return self.quantity * self.unit_tax
+        if self.is_tax_known:
+            return self.quantity * self.unit_tax
 
     @property
     def line_price_incl_tax(self):
-        return self.quantity * self.unit_price_incl_tax
+        if self.unit_price_incl_tax is not None:
+            return self.quantity * self.unit_price_incl_tax
 
     @property
     def description(self):
@@ -869,9 +885,15 @@ class AbstractLineAttribute(models.Model):
     """
     An attribute of a basket line
     """
-    line = models.ForeignKey('basket.Line', related_name='attributes',
-                             verbose_name=_("Line"))
-    option = models.ForeignKey('catalogue.Option', verbose_name=_("Option"))
+    line = models.ForeignKey(
+        'basket.Line',
+        on_delete=models.CASCADE,
+        related_name='attributes',
+        verbose_name=_("Line"))
+    option = models.ForeignKey(
+        'catalogue.Option',
+        on_delete=models.CASCADE,
+        verbose_name=_("Option"))
     value = models.CharField(_("Value"), max_length=255)
 
     class Meta:

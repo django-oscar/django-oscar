@@ -1,0 +1,158 @@
+==========================
+Oscar 0.4.11 release notes
+==========================
+
+:release: 2013-08-08
+
+Add extra blocks to order dashboard template.
+
+
+==========================
+Oscar 0.4.10 release notes
+==========================
+
+:release: 2013-07-03
+
+Extend range of bankcard expiry month field.
+
+
+=========================
+Oscar 0.4.9 release notes
+=========================
+
+:release: 2013-04-17
+
+Make ``AbstractStockRecord`` abstract (`#645`)
+
+.. _`#645`: https://github.com/django-oscar/django-oscar/pull/645
+
+
+=========================
+Oscar 0.4.8 release notes
+=========================
+
+:release: 2013-04-08
+
+Fix bug with order dashboard line editing (`#622`_)
+
+.. _`#622`: https://github.com/django-oscar/django-oscar/pull/622
+
+
+=========================
+Oscar 0.4.7 release notes
+=========================
+
+:release: 2013-03-20
+
+Fix bug with order dashboard searching (`#587`_)
+
+.. _`#587`: https://github.com/django-oscar/django-oscar/pull/587
+
+
+=========================
+Oscar 0.4.6 release notes
+=========================
+
+:release: 2013-03-05
+
+Fix dependencies in ``setup.py``
+
+
+=========================
+Oscar 0.4.5 release notes
+=========================
+
+:release: 2013-01-25
+
+
+Extend ``get_class`` to support loading from non-Oscar packages
+
+
+=========================
+Oscar 0.4.4 release notes
+=========================
+
+:release: 2013-01-16
+
+Correct django-haystack in setup.py
+
+
+=========================
+Oscar 0.4.3 release notes
+=========================
+
+:release: 2013-01-16
+
+Pin django-haystack version as backwards-incompatiable changes are happening
+
+
+=========================
+Oscar 0.4.2 release notes
+=========================
+
+:release: 2012-12-14
+
+Nano-release to fix logout redirect bug
+
+
+=========================
+Oscar 0.4.1 release notes
+=========================
+
+:release: 2012-12-06
+
+Nano-release to bump dependency versions.
+
+
+=========================
+Oscar 0.4.0 release notes
+=========================
+
+:release: 2012-10-19
+
+Quite a big release this one.  Several new features have been added since the
+0.3 release series:
+
+* Better support for digital products.  Additional fields added to product class
+  model.
+* HTML editing within the dashboard
+* A new email dashboard
+* Major refactor of the offers module and test suite  
+* Product stock alerts: customers can request an alert when when a product comes
+  back into stock
+* Customer notifications: an API and inbox for sending users notifications
+
+Upgrading
+~~~~~~~~~
+
+Four apps have new migrations.  If you subclass these apps in your project, you
+will need to create a new schema migration for each to pick up the upstream
+changes.
+
+* Basket: 
+  
+  - A ``price_excl_tax`` has been added to ``basket.Line``.  This is
+    useful for applications that use dynamic pricing where both the price with and
+    without tax needs to be stored. 
+
+* Catalogue:
+
+  - A ``requires_shipping`` field has been added to ``catalogue.ProductClass``
+    to facilitate better support for digital products (that don't require
+    shipping).
+
+  - The ``code`` field of ``catalogue.Option`` now has a unique index.
+
+* Customer: 
+
+  - New models for stock alerts and notifications
+  - The ``email_subject_template`` field from
+    ``customer.CommunicationEventType`` is now nullable.
+
+* Order:
+
+  - An ``offer_name`` field has been added to ``order.OrderDiscount`` so retain
+    audit information on discounts after offers are deleted.
+
+Please ask on the mailing list if any other problems are encountered.
+

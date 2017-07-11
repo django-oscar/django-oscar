@@ -34,7 +34,7 @@ Security
 --------
 
 Oscar relies on the Django framework for security measures and therefore no
-Oscar specific configurations with regard to security are in place. See 
+Oscar specific configurations with regard to security are in place. See
 `Django's guidelines for security`_ for more information.
 
 `django-secure`_ is a nice app that comes with a few sanity checks for
@@ -44,11 +44,11 @@ Search Engine Optimisation
 --------------------------
 
 A basic example of what a sitemap for Oscar could look like has been added
-to the sandbox site. Have a look at ``sites/sandbox/urls.py`` for inspiration.
+to the sandbox site. Have a look at ``sandbox/urls.py`` for inspiration.
 
-.. _deployment: https://docs.djangoproject.com/en/dev/howto/deployment/
-.. _`Django's guidelines for security`: https://docs.djangoproject.com/en/dev/topics/security/
-.. _`cached template loader`: https://docs.djangoproject.com/en/dev/ref/templates/api/#django.template.loaders.cached.Loader
+.. _deployment: https://docs.djangoproject.com/en/stable/howto/deployment/
+.. _`Django's guidelines for security`: https://docs.djangoproject.com/en/stable/topics/security/
+.. _`cached template loader`: https://docs.djangoproject.com/en/stable/ref/templates/api/#django.template.loaders.cached.Loader
 .. _django-celery: http://www.celeryproject.org/
 .. _django-secure: https://pypi.python.org/pypi/django-secure
 .. _django_post-office: https://github.com/ui/django-post_office

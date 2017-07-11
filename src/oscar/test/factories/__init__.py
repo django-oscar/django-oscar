@@ -18,7 +18,7 @@ from oscar.test.factories.order import *  # noqa
 from oscar.test.factories.partner import *  # noqa
 from oscar.test.factories.payment import *  # noqa
 from oscar.test.factories.voucher import *  # noqa
-from oscar.test.factories.wishlists import * # noqa
+from oscar.test.factories.wishlists import *  # noqa
 
 
 Basket = get_model('basket', 'Basket')
@@ -214,15 +214,18 @@ def create_offer(name=u"Dùｍϻϒ offer", offer_type="Site",
         priority=priority)
 
 
-def create_voucher():
+def create_voucher(**kwargs):
     """
     Helper method for creating a voucher
     """
-    voucher = Voucher.objects.create(
-        name=u"Dùｍϻϒ voucher",
-        code="test",
-        start_datetime=timezone.now(),
-        end_datetime=timezone.now() + datetime.timedelta(days=12))
+    defaults = {
+        'name': u"Dùｍϻϒ voucher",
+        'code': "test",
+        'start_datetime': timezone.now(),
+        'end_datetime': timezone.now() + datetime.timedelta(days=12)
+    }
+    defaults.update(kwargs)
+    voucher = VoucherFactory(**defaults)
     voucher.offers.add(create_offer(offer_type='Voucher'))
     return voucher
 

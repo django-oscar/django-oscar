@@ -1,12 +1,13 @@
+from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.forms import AuthenticationForm
-from django.conf.urls import include, url
 
-from oscar.core.application import DashboardApplication
+from oscar.core.application import (
+    DashboardApplication as BaseDashboardApplication)
 from oscar.core.loading import get_class
 
 
-class DashboardApplication(DashboardApplication):
+class DashboardApplication(BaseDashboardApplication):
     name = 'dashboard'
     permissions_map = {
         'index': (['is_staff'], ['partner.dashboard_access']),
@@ -30,19 +31,19 @@ class DashboardApplication(DashboardApplication):
     def get_urls(self):
         urls = [
             url(r'^$', self.index_view.as_view(), name='index'),
-            url(r'^catalogue/', include(self.catalogue_app.urls)),
-            url(r'^reports/', include(self.reports_app.urls)),
-            url(r'^orders/', include(self.orders_app.urls)),
-            url(r'^users/', include(self.users_app.urls)),
-            url(r'^content-blocks/', include(self.promotions_app.urls)),
-            url(r'^pages/', include(self.pages_app.urls)),
-            url(r'^partners/', include(self.partners_app.urls)),
-            url(r'^offers/', include(self.offers_app.urls)),
-            url(r'^ranges/', include(self.ranges_app.urls)),
-            url(r'^reviews/', include(self.reviews_app.urls)),
-            url(r'^vouchers/', include(self.vouchers_app.urls)),
-            url(r'^comms/', include(self.comms_app.urls)),
-            url(r'^shipping/', include(self.shipping_app.urls)),
+            url(r'^catalogue/', self.catalogue_app.urls),
+            url(r'^reports/', self.reports_app.urls),
+            url(r'^orders/', self.orders_app.urls),
+            url(r'^users/', self.users_app.urls),
+            url(r'^content-blocks/', self.promotions_app.urls),
+            url(r'^pages/', self.pages_app.urls),
+            url(r'^partners/', self.partners_app.urls),
+            url(r'^offers/', self.offers_app.urls),
+            url(r'^ranges/', self.ranges_app.urls),
+            url(r'^reviews/', self.reviews_app.urls),
+            url(r'^vouchers/', self.vouchers_app.urls),
+            url(r'^comms/', self.comms_app.urls),
+            url(r'^shipping/', self.shipping_app.urls),
 
             url(r'^login/$', auth_views.login, {
                 'template_name': 'dashboard/login.html',

@@ -76,8 +76,8 @@ class SearchForm(FacetedSearchForm):
     }
     # Non Solr backends don't support dynamic fields so we just sort on title
     if not is_solr_supported():
-        SORT_BY_MAP[TITLE_A_TO_Z] = 'title'
-        SORT_BY_MAP[TITLE_Z_TO_A] = '-title'
+        SORT_BY_MAP[TITLE_A_TO_Z] = 'title_exact'
+        SORT_BY_MAP[TITLE_Z_TO_A] = '-title_exact'
 
     sort_by = forms.ChoiceField(
         label=_("Sort by"), choices=SORT_BY_CHOICES,

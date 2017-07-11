@@ -1,16 +1,22 @@
 import os
-import oscar
 
+from django import VERSION as DJANGO_VERSION
+
+import oscar
 from oscar.defaults import *  # noqa
 
 # Path helper
-location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), x)
+location = lambda x: os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), x)
+
+ALLOWED_HOSTS = ['test', '.oscarcommerce.com']
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('DATABASE_ENGINE', 'django.db.backends.sqlite3'),
-        'NAME': os.environ.get('DATABASE_NAME', ':memory:'),
-    },
+        'ENGINE': os.environ.get('DATABASE_ENGINE',
+                                 'django.db.backends.postgresql_psycopg2'),
+        'NAME': os.environ.get('DATABASE_NAME', 'oscar'),
+    }
 }
 
 INSTALLED_APPS = [
@@ -46,7 +52,6 @@ TEMPLATES = [
                 ('django.template.loaders.cached.Loader', [
                     'django.template.loaders.filesystem.Loader',
                     'django.template.loaders.app_directories.Loader',
-                    'django.template.loaders.eggs.Loader'
                 ]),
             ],
             'context_processors': [
@@ -69,20 +74,47 @@ TEMPLATES = [
 ]
 
 
-MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'oscar.apps.basket.middleware.BasketMiddleware',
-)
+if DJANGO_VERSION < (1, 10):
+    MIDDLEWARE_CLASSES = [
+        'django.middleware.common.CommonMiddleware',
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+
+        'oscar.apps.basket.middleware.BasketMiddleware',
+    ]
+else:
+    MIDDLEWARE = [
+        'django.middleware.common.CommonMiddleware',
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+
+        'oscar.apps.basket.middleware.BasketMiddleware',
+    ]
+
 
 AUTHENTICATION_BACKENDS = (
     'oscar.apps.customer.auth_backends.EmailBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 6,
+        }
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
 
 HAYSTACK_CONNECTIONS = {'default': {'ENGINE': 'haystack.backends.simple_backend.SimpleEngine'}}
 PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']

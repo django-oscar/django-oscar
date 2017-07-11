@@ -1,4 +1,4 @@
-from django.conf.urls import include, url
+from django.conf.urls import url
 
 from oscar.apps.catalogue.reviews.app import application as reviews_app
 from oscar.core.application import Application
@@ -36,7 +36,7 @@ class ReviewsApplication(Application):
         urlpatterns = super(ReviewsApplication, self).get_urls()
         urlpatterns += [
             url(r'^(?P<product_slug>[\w-]*)_(?P<product_pk>\d+)/reviews/',
-                include(self.reviews_app.urls)),
+                self.reviews_app.urls)
         ]
         return self.post_process_urls(urlpatterns)
 

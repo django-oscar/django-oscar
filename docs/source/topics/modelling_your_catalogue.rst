@@ -35,6 +35,9 @@ to customise the underlying Django models. There's different types of
 attributes, e.g. ones for just associating text (type ``text`` or ``richtext``),
 for related images and files (type ``image`` and ``file``), etc.
 
+Storing data in structured attributes also makes it easy to search and filter
+products based on specific attributes.
+
 The available product attributes for a product are set when creating the
 product's class. The sandbox comes with a product class for T-shirts, and
 they have a ``size`` attribute::
@@ -44,8 +47,8 @@ they have a ``size`` attribute::
     <AttributeOption: Large>
 
 You can assign ``option`` s to your product. For example you want a Language attribute
-to your product, and a couple of options to choose from, for example English and 
-Croatian. You'd first create an ``AttributeOptionGroup`` that would contain all the 
+to your product, and a couple of options to choose from, for example English and
+Croatian. You'd first create an ``AttributeOptionGroup`` that would contain all the
 ``AttributeOption`` s you want to have available::
 
     > language = AttributeOptionGroup.objects.create(name='Language')
@@ -86,6 +89,20 @@ type::
     > p.attr.admin_user
     <User: superuser>
 
+You can also use the ``multi_option`` attribute type if your options are not
+mutually exclusive.
+
+    > klass = ProductClass.objects.create(name='foo', slug='bar')
+    > ProductAttribute.objects.create(
+    >     product_class=klass,
+    >     name='Size',
+    >     code='size',
+    >     type='multi_option',
+    >     option_group=language
+    > )
+
+This will let you assign multiple values (``size`` in the example above) to the
+attribute.
 
 All attribute types apart from ``entity`` can be edited in the product
 dashboard. The latter is too dependent on your use case and you will need to

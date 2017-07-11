@@ -43,9 +43,9 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('date_created', models.DateField(auto_now_add=True, verbose_name='Date Created')),
-                ('order', models.ForeignKey(verbose_name='Order', to='order.Order')),
-                ('user', models.ForeignKey(null=True, verbose_name='User', to=settings.AUTH_USER_MODEL, blank=True)),
-                ('voucher', models.ForeignKey(verbose_name='Voucher', related_name='applications', to='voucher.Voucher')),
+                ('order', models.ForeignKey(verbose_name='Order', to='order.Order', on_delete=models.CASCADE)),
+                ('user', models.ForeignKey(null=True, verbose_name='User', to=settings.AUTH_USER_MODEL, blank=True, on_delete=models.CASCADE)),
+                ('voucher', models.ForeignKey(verbose_name='Voucher', related_name='applications', to='voucher.Voucher', on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name_plural': 'Voucher Applications',

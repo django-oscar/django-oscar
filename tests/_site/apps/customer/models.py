@@ -1,1 +1,1 @@
-from oscar.apps.customer.models import *
+from oscar.apps.customer.models import *  # noqa
