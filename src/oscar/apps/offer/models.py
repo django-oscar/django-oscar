@@ -747,9 +747,6 @@ class Range(models.Model):
     excluded_products = models.ManyToManyField(
         'catalogue.Product', related_name='excludes', blank=True,
         verbose_name=_("Excluded Products"))
-    classes = models.ManyToManyField(
-        'catalogue.ProductClass', related_name='classes', blank=True,
-        verbose_name=_("Product Types"))
     included_categories = models.ManyToManyField(
         'catalogue.Category', related_name='includes', blank=True,
         verbose_name=_("Included Categories"))
@@ -762,7 +759,6 @@ class Range(models.Model):
 
     __included_product_ids = None
     __excluded_product_ids = None
-    __class_ids = None
     __category_ids = None
 
     objects = models.Manager()
@@ -875,11 +871,6 @@ class Range(models.Model):
                 self.excluded_products)
         return self.__excluded_product_ids
 
-    def _class_ids(self):
-        if None is self.__class_ids:
-            self.__class_ids = self.classes.values_list('pk', flat=True)
-        return self.__class_ids
-
     def _category_ids(self):
         if self.__category_ids is None:
             category_ids_list = list(
@@ -919,7 +910,6 @@ class Range(models.Model):
 
         return Product.objects.filter(
             Q(id__in=self._included_product_ids()) |
-            Q(product_class_id__in=self._class_ids()) |
             Q(productcategory__category_id__in=self._category_ids())
         ).exclude(id__in=self._excluded_product_ids())
 

@@ -34,52 +34,6 @@ Selector = get_class('partner.strategy', 'Selector')
 
 
 @python_2_unicode_compatible
-class AbstractProductClass(models.Model):
-    """
-    Used for defining options and attributes for a subset of products.
-    E.g. Books, DVDs and Toys. A product can only belong to one product class.
-
-    At least one product class must be created when setting up a new
-    Oscar deployment.
-
-    Not necessarily equivalent to top-level categories but usually will be.
-    """
-    name = models.CharField(_('Name'), max_length=128)
-    slug = AutoSlugField(_('Slug'), max_length=128, unique=True,
-                         populate_from='name')
-
-    #: Some product type don't require shipping (eg digital products) - we use
-    #: this field to take some shortcuts in the checkout.
-    requires_shipping = models.BooleanField(_("Requires shipping?"),
-                                            default=True)
-
-    #: Digital products generally don't require their stock levels to be
-    #: tracked.
-    track_stock = models.BooleanField(_("Track stock levels?"), default=True)
-
-    #: These are the options (set by the user when they add to basket) for this
-    #: item class.  For instance, a product class of "SMS message" would always
-    #: require a message to be specified before it could be bought.
-    #: Note that you can also set options on a per-product level.
-    options = models.ManyToManyField(
-        'catalogue.Option', blank=True, verbose_name=_("Options"))
-
-    class Meta:
-        abstract = True
-        app_label = 'catalogue'
-        ordering = ['name']
-        verbose_name = _("Product class")
-        verbose_name_plural = _("Product classes")
-
-    def __str__(self):
-        return self.name
-
-    @property
-    def has_attributes(self):
-        return self.attributes.exists()
-
-
-@python_2_unicode_compatible
 class AbstractCategory(MP_Node):
     """
     A product category. Merely used for navigational purposes; has no
@@ -284,12 +238,6 @@ class AbstractProduct(models.Model):
     slug = models.SlugField(_('Slug'), max_length=255, unique=False)
     description = models.TextField(_('Description'), blank=True)
 
-    #: "Kind" of product, e.g. T-Shirt, Book, etc.
-    #: None for child products, they inherit their parent's product class
-    product_class = models.ForeignKey(
-        'catalogue.ProductClass', null=True, on_delete=models.PROTECT,
-        verbose_name=_('Product type'), related_name="products",
-        help_text=_("Choose what type of product this is"))
     attributes = models.ManyToManyField(
         'catalogue.ProductAttribute',
         through='ProductAttributeValue',
@@ -371,9 +319,6 @@ class AbstractProduct(models.Model):
         if not self.slug:
             self.slug = slugify(self.get_title())
         super(AbstractProduct, self).save(*args, **kwargs)
-        self.attr.save()
-
-    # Properties
 
     @property
     def is_standalone(self):
@@ -410,12 +355,11 @@ class AbstractProduct(models.Model):
         Returns a set of all valid options for this product.
         It's possible to have options product class-wide, and per product.
         """
-        pclass_options = self.get_product_class().options.all()
-        return set(pclass_options) or set(self.product_options.all())
+        return set(self.product_options.all())
 
     @property
     def is_shipping_required(self):
-        return self.get_product_class().requires_shipping
+        return False
 
     @property
     def has_stockrecords(self):
@@ -544,16 +488,6 @@ class AbstractProduct(models.Model):
             title = self.parent.title
         return title
     get_title.short_description = pgettext_lazy(u"Product title", u"Title")
-
-    def get_product_class(self):
-        """
-        Return a product's item class. Child products inherit their parent's.
-        """
-        if self.is_child:
-            return self.parent.product_class
-        else:
-            return self.product_class
-    get_product_class.short_description = _("Product class")
 
     def get_is_discountable(self):
         """
@@ -708,7 +642,7 @@ class ProductAttributesContainer(object):
             return getattr(self, name)
         raise AttributeError(
             _("%(obj)s has no attribute named '%(attr)s'") % {
-                'obj': self.product.get_product_class(), 'attr': name})
+                'obj': self.product, 'attr': name})
 
     def validate_attributes(self):
         for attribute in self.get_all_attributes():
@@ -733,7 +667,8 @@ class ProductAttributesContainer(object):
         return self.get_values().get(attribute=attribute)
 
     def get_all_attributes(self):
-        return self.product.get_product_class().attributes.all()
+        ProductAttribute = get_model('catalogue', 'ProductAttribute')
+        return ProductAttribute.objects.none()
 
     def get_attribute_by_code(self, code):
         return self.get_all_attributes().get(code=code)
@@ -754,9 +689,6 @@ class AbstractProductAttribute(models.Model):
     Defines an attribute for a product class. (For example, number_of_pages for
     a 'book' class)
     """
-    product_class = models.ForeignKey(
-        'catalogue.ProductClass', related_name='attributes', blank=True,
-        null=True, verbose_name=_("Product type"))
     name = models.CharField(_('Name'), max_length=128)
     code = models.SlugField(
         _('Code'), max_length=128,

@@ -11,15 +11,11 @@ from django_tables2 import SingleTableMixin
 
 from oscar.views.generic import ObjectLookupView
 
-(ProductClassSelectForm,
- ProductSearchForm,
- ProductClassForm,
+(ProductSearchForm,
  CategoryForm,
  StockAlertSearchForm) \
     = get_classes('dashboard.catalogue.forms',
-                  ('ProductClassSelectForm',
-                   'ProductSearchForm',
-                   'ProductClassForm',
+                  ('ProductSearchForm',
                    'CategoryForm',
                    'StockAlertSearchForm'))
 ProductTable, CategoryTable \
@@ -29,7 +25,6 @@ Product = get_model('catalogue', 'Product')
 Category = get_model('catalogue', 'Category')
 ProductImage = get_model('catalogue', 'ProductImage')
 ProductCategory = get_model('catalogue', 'ProductCategory')
-ProductClass = get_model('catalogue', 'ProductClass')
 StockRecord = get_model('partner', 'StockRecord')
 StockAlert = get_model('partner', 'StockAlert')
 Partner = get_model('partner', 'Partner')
@@ -56,14 +51,12 @@ class ProductListView(SingleTableMixin, generic.TemplateView):
 
     template_name = 'dashboard/catalogue/product_list.html'
     form_class = ProductSearchForm
-    productclass_form_class = ProductClassSelectForm
     table_class = ProductTable
     context_table_name = 'products'
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductListView, self).get_context_data(**kwargs)
         ctx['form'] = self.form
-        ctx['productclass_form'] = self.productclass_form_class()
         return ctx
 
     def get_description(self, form):
@@ -122,29 +115,6 @@ class ProductListView(SingleTableMixin, generic.TemplateView):
             queryset = queryset.filter(title__icontains=data['title'])
 
         return queryset
-
-
-class ProductCreateRedirectView(generic.RedirectView):
-    permanent = False
-    productclass_form_class = ProductClassSelectForm
-
-    def get_product_create_url(self, product_class):
-        """ Allow site to provide custom URL """
-        return reverse('dashboard:catalogue-product-create',
-                       kwargs={'product_class_slug': product_class.slug})
-
-    def get_invalid_product_class_url(self):
-        messages.error(self.request, _("Please choose a product type"))
-        return reverse('dashboard:catalogue-product-list')
-
-    def get_redirect_url(self, **kwargs):
-        form = self.productclass_form_class(self.request.GET)
-        if form.is_valid():
-            product_class = form.cleaned_data['product_class']
-            return self.get_product_create_url(product_class)
-
-        else:
-            return self.get_invalid_product_class_url()
 
 
 class ProductDeleteView(generic.DeleteView):
@@ -351,69 +321,3 @@ class ProductLookupView(ObjectLookupView):
     def lookup_filter(self, qs, term):
         return qs.filter(Q(title__icontains=term)
                          | Q(parent__title__icontains=term))
-
-
-class ProductClassCreateView(generic.CreateView):
-    template_name = 'dashboard/catalogue/product_class_form.html'
-    model = ProductClass
-    form_class = ProductClassForm
-
-    def get_context_data(self, **kwargs):
-        ctx = super(ProductClassCreateView, self).get_context_data(**kwargs)
-        ctx['title'] = _("Add a new product type")
-        return ctx
-
-    def get_success_url(self):
-        messages.info(self.request, _("Product type created successfully"))
-        return reverse("dashboard:catalogue-class-list")
-
-
-class ProductClassListView(generic.ListView):
-    template_name = 'dashboard/catalogue/product_class_list.html'
-    context_object_name = 'classes'
-    model = ProductClass
-
-    def get_context_data(self, *args, **kwargs):
-        ctx = super(ProductClassListView, self).get_context_data(*args,
-                                                                 **kwargs)
-        ctx['title'] = _("Product Types")
-        return ctx
-
-
-class ProductClassUpdateView(generic.UpdateView):
-    template_name = 'dashboard/catalogue/product_class_form.html'
-    model = ProductClass
-    form_class = ProductClassForm
-
-    def get_context_data(self, **kwargs):
-        ctx = super(ProductClassUpdateView, self).get_context_data(**kwargs)
-        ctx['title'] = _("Update product type '%s'") % self.object.name
-        return ctx
-
-    def get_success_url(self):
-        messages.info(self.request, _("Product type update successfully"))
-        return reverse("dashboard:catalogue-class-list")
-
-
-class ProductClassDeleteView(generic.DeleteView):
-    template_name = 'dashboard/catalogue/product_class_delete.html'
-    model = ProductClass
-    form_class = ProductClassForm
-
-    def get_context_data(self, *args, **kwargs):
-        ctx = super(ProductClassDeleteView, self).get_context_data(*args,
-                                                                   **kwargs)
-        ctx['title'] = _("Delete product type '%s'") % self.object.name
-        product_count = self.object.products.count()
-
-        if product_count > 0:
-            ctx['disallow'] = True
-            ctx['title'] = _("Unable to delete '%s'") % self.object.name
-            messages.error(self.request,
-                           _("%i products are still assigned to this type") %
-                           product_count)
-        return ctx
-
-    def get_success_url(self):
-        messages.info(self.request, _("Product type deleted successfully"))
-        return reverse("dashboard:catalogue-class-list")

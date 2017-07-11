@@ -213,11 +213,7 @@ class StockRequired(object):
     def availability_policy(self, product, stockrecord):
         if not stockrecord:
             return availability.Unavailable()
-        if not product.get_product_class().track_stock:
-            return availability.Available()
-        else:
-            return availability.StockRequired(
-                stockrecord.net_stock_level)
+        return availability.Available()
 
     def parent_availability_policy(self, product, children_stock):
         # A parent product is available if one of its children is

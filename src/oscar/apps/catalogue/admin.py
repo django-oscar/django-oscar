@@ -10,7 +10,6 @@ Product = get_model('catalogue', 'Product')
 ProductAttribute = get_model('catalogue', 'ProductAttribute')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 ProductCategory = get_model('catalogue', 'ProductCategory')
-ProductClass = get_model('catalogue', 'ProductClass')
 ProductImage = get_model('catalogue', 'ProductImage')
 ProductRecommendation = get_model('catalogue', 'ProductRecommendation')
 
@@ -34,14 +33,9 @@ class ProductAttributeInline(admin.TabularInline):
     extra = 2
 
 
-class ProductClassAdmin(admin.ModelAdmin):
-    list_display = ('name', 'requires_shipping', 'track_stock')
-    inlines = [ProductAttributeInline]
-
-
 class ProductAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_created'
-    list_display = ('get_title', 'upc', 'get_product_class', 'structure',
+    list_display = ('get_title', 'upc', 'structure',
                     'attribute_summary', 'date_created')
     list_filter = ['structure', 'is_discountable']
     inlines = [AttributeInline, CategoryInline, ProductRecommendationInline]
@@ -52,14 +46,14 @@ class ProductAdmin(admin.ModelAdmin):
         qs = super(ProductAdmin, self).queryset(request)
         return (
             qs
-            .select_related('product_class', 'parent')
+            .select_related('parent')
             .prefetch_related(
                 'attribute_values',
                 'attribute_values__attribute'))
 
 
 class ProductAttributeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code', 'product_class', 'type')
+    list_display = ('name', 'code', 'type')
     prepopulated_fields = {"code": ("name", )}
 
 
@@ -84,7 +78,6 @@ class CategoryAdmin(TreeAdmin):
     pass
 
 
-admin.site.register(ProductClass, ProductClassAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductAttribute, ProductAttributeAdmin)
 admin.site.register(ProductAttributeValue, ProductAttributeValueAdmin)

@@ -8,10 +8,8 @@ class ProductQuerySet(models.query.QuerySet):
         Applies select_related and prefetch_related for commonly related
         models to save on queries
         """
-        return self.select_related('product_class')\
-            .prefetch_related('children',
+        return self.prefetch_related('children',
                               'product_options',
-                              'product_class__options',
                               'stockrecords',
                               'images',
                               )
