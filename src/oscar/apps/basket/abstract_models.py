@@ -1,5 +1,4 @@
 from decimal import Decimal as D
-import zlib
 
 from django.db import models
 from django.db.models import Sum
@@ -123,7 +122,7 @@ class AbstractBasket(models.Model):
                 self.lines
                 .select_related('product', 'stockrecord')
                 .prefetch_related(
-                    'attributes', 'product__images', 'product__stockrecords'))
+                    'product__images', 'product__stockrecords'))
         return self._lines
 
     def is_quantity_allowed(self, qty):
@@ -156,24 +155,18 @@ class AbstractBasket(models.Model):
         self.lines.all().delete()
         self._lines = None
 
-    def add_product(self, product, quantity=1, options=None):
+    def add_product(self, product, quantity=1):
         """
         Add a product to the basket
 
         'stock_info' is the price and availability data returned from
         a partner strategy class.
 
-        The 'options' list should contains dicts with keys 'option' and 'value'
-        which link the relevant product.Option model and string value
-        respectively.
-
         Returns (line, created).
           line: the matching basket line
           created: whether the line was created or updated
 
         """
-        if options is None:
-            options = []
         if not self.id:
             self.save()
 
@@ -194,7 +187,7 @@ class AbstractBasket(models.Model):
         # Line reference is used to distinguish between variations of the same
         # product (eg T-shirts with different personalisations)
         line_ref = self._create_line_reference(
-            product, stock_info.stockrecord, options)
+            product, stock_info.stockrecord)
 
         # Determine price to store (if one exists).  It is only stored for
         # audit and sometimes caching.
@@ -211,11 +204,7 @@ class AbstractBasket(models.Model):
             product=product,
             stockrecord=stock_info.stockrecord,
             defaults=defaults)
-        if created:
-            for option_dict in options:
-                line.attributes.create(option=option_dict['option'],
-                                       value=option_dict['value'])
-        else:
+        if not created:
             line.quantity += quantity
             line.save()
         self.reset_offer_applications()
@@ -351,15 +340,11 @@ class AbstractBasket(models.Model):
     # Helpers
     # =======
 
-    def _create_line_reference(self, product, stockrecord, options):
+    def _create_line_reference(self, product, stockrecord):
         """
-        Returns a reference string for a line based on the item
-        and its options.
+        Returns a reference string for a line based on the item.
         """
-        base = '%s_%s' % (product.id, stockrecord.id)
-        if not options:
-            return base
-        return "%s_%s" % (base, zlib.crc32(repr(options).encode('utf8')))
+        return '%s_%s' % (product.id, stockrecord.id)
 
     def _get_total(self, property):
         """
@@ -553,17 +538,17 @@ class AbstractBasket(models.Model):
         Return the quantity of a product in the basket
 
         The basket can contain multiple lines with the same product, but
-        different options and stockrecords. Those quantities are summed up.
+        different stockrecords. Those quantities are summed up.
         """
         matching_lines = self.lines.filter(product=product)
         quantity = matching_lines.aggregate(Sum('quantity'))['quantity__sum']
         return quantity or 0
 
-    def line_quantity(self, product, stockrecord, options=None):
+    def line_quantity(self, product, stockrecord):
         """
-        Return the current quantity of a specific product and options
+        Return the current quantity of a specific product
         """
-        ref = self._create_line_reference(product, stockrecord, options)
+        ref = self._create_line_reference(product, stockrecord)
         try:
             return self.lines.get(line_reference=ref).quantity
         except ObjectDoesNotExist:
@@ -800,13 +785,7 @@ class AbstractLine(models.Model):
 
     @property
     def description(self):
-        d = str(self.product)
-        ops = []
-        for attribute in self.attributes.all():
-            ops.append("%s = '%s'" % (attribute.option.name, attribute.value))
-        if ops:
-            d = "%s (%s)" % (d.decode('utf-8'), ", ".join(ops))
-        return d
+        return str(self.product)
 
     def get_warning(self):
         """
@@ -841,19 +820,3 @@ class AbstractLine(models.Model):
                             " %(old_price)s to %(new_price)s since you added"
                             " it to your basket")
                 return warning % product_prices
-
-
-class AbstractLineAttribute(models.Model):
-    """
-    An attribute of a basket line
-    """
-    line = models.ForeignKey('basket.Line', related_name='attributes',
-                             verbose_name=_("Line"))
-    option = models.ForeignKey('catalogue.Option', verbose_name=_("Option"))
-    value = models.CharField(_("Value"), max_length=255)
-
-    class Meta:
-        abstract = True
-        app_label = 'basket'
-        verbose_name = _('Line attribute')
-        verbose_name_plural = _('Line attributes')

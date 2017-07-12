@@ -1,6 +1,6 @@
 from oscar.core.loading import is_model_registered
 from oscar.apps.basket.abstract_models import (
-    AbstractBasket, AbstractLine, AbstractLineAttribute)
+    AbstractBasket, AbstractLine)
 
 __all__ = [
     'InvalidBasketLineError',
@@ -23,10 +23,3 @@ if not is_model_registered('basket', 'Line'):
         pass
 
     __all__.append('Line')
-
-
-if not is_model_registered('basket', 'LineAttribute'):
-    class LineAttribute(AbstractLineAttribute):
-        pass
-
-    __all__.append('LineAttribute')

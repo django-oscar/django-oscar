@@ -550,16 +550,9 @@ class AbstractLine(models.Model):
     @property
     def description(self):
         """
-        Returns a description of this line including details of any
-        line attributes.
+        Returns a description of this line.
         """
-        desc = self.title
-        ops = []
-        for attribute in self.attributes.all():
-            ops.append("%s = '%s'" % (attribute.type, attribute.value))
-        if ops:
-            desc = "%s (%s)" % (desc, ", ".join(ops))
-        return desc
+        return self.title
 
     @property
     def discount_incl_tax(self):
@@ -717,30 +710,6 @@ class AbstractLine(models.Model):
         if not is_available:
             return False, reason
         return True, None
-
-
-@python_2_unicode_compatible
-class AbstractLineAttribute(models.Model):
-    """
-    An attribute of a line
-    """
-    line = models.ForeignKey(
-        'order.Line', related_name='attributes',
-        verbose_name=_("Line"))
-    option = models.ForeignKey(
-        'catalogue.Option', null=True, on_delete=models.SET_NULL,
-        related_name="line_attributes", verbose_name=_("Option"))
-    type = models.CharField(_("Type"), max_length=128)
-    value = models.CharField(_("Value"), max_length=255)
-
-    class Meta:
-        abstract = True
-        app_label = 'order'
-        verbose_name = _("Line Attribute")
-        verbose_name_plural = _("Line Attributes")
-
-    def __str__(self):
-        return "%s = %s" % (self.type, self.value)
 
 
 @python_2_unicode_compatible

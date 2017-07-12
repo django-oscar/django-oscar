@@ -146,7 +146,6 @@ class AddToBasketForm(forms.Form):
         # Dynamically build fields
         if product.is_parent:
             self._create_parent_product_fields(product)
-        self._create_product_fields(product)
 
     # Dynamic form building methods
 
@@ -178,23 +177,6 @@ class AddToBasketForm(forms.Form):
         self.fields['child_id'] = forms.ChoiceField(
             choices=tuple(choices), label=_("Variant"),
             widget=widgets.AdvancedSelect(disabled_values=disabled_values))
-
-    def _create_product_fields(self, product):
-        """
-        Add the product option fields.
-        """
-        for option in product.options:
-            self._add_option_field(product, option)
-
-    def _add_option_field(self, product, option):
-        """
-        Creates the appropriate form field for the product option.
-
-        This is designed to be overridden so that specific widgets can be used
-        for certain types of options.
-        """
-        kwargs = {'required': option.is_required}
-        self.fields[option.code] = forms.CharField(**kwargs)
 
     # Cleaning
 
@@ -257,20 +239,6 @@ class AddToBasketForm(forms.Form):
             raise forms.ValidationError(reason)
 
         return self.cleaned_data
-
-    # Helpers
-
-    def cleaned_options(self):
-        """
-        Return submitted options in a clean format
-        """
-        options = []
-        for option in self.parent_product.options:
-            if option.code in self.cleaned_data:
-                options.append({
-                    'option': option,
-                    'value': self.cleaned_data[option.code]})
-        return options
 
 
 class SimpleAddToBasketForm(AddToBasketForm):

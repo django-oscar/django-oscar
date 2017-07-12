@@ -6,7 +6,7 @@ Vanilla product models
 from oscar.core.loading import is_model_registered
 from oscar.apps.catalogue.abstract_models import *  # noqa
 
-__all__ = ['ProductAttributesContainer']
+__all__ = []
 
 
 
@@ -36,41 +36,6 @@ if not is_model_registered('catalogue', 'ProductRecommendation'):
         pass
 
     __all__.append('ProductRecommendation')
-
-
-if not is_model_registered('catalogue', 'ProductAttribute'):
-    class ProductAttribute(AbstractProductAttribute):
-        pass
-
-    __all__.append('ProductAttribute')
-
-
-if not is_model_registered('catalogue', 'ProductAttributeValue'):
-    class ProductAttributeValue(AbstractProductAttributeValue):
-        pass
-
-    __all__.append('ProductAttributeValue')
-
-
-if not is_model_registered('catalogue', 'AttributeOptionGroup'):
-    class AttributeOptionGroup(AbstractAttributeOptionGroup):
-        pass
-
-    __all__.append('AttributeOptionGroup')
-
-
-if not is_model_registered('catalogue', 'AttributeOption'):
-    class AttributeOption(AbstractAttributeOption):
-        pass
-
-    __all__.append('AttributeOption')
-
-
-if not is_model_registered('catalogue', 'Option'):
-    class Option(AbstractOption):
-        pass
-
-    __all__.append('Option')
 
 
 if not is_model_registered('catalogue', 'ProductImage'):

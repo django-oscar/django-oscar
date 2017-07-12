@@ -522,13 +522,7 @@ class OrderDetailView(PageTitleMixin, PostActionMixin, generic.DetailView):
             messages.warning(self.request, warning)
 
         for line in lines_to_add:
-            options = []
-            for attribute in line.attributes.all():
-                if attribute.option:
-                    options.append({
-                        'option': attribute.option,
-                        'value': attribute.value})
-            basket.add_product(line.product, line.quantity, options)
+            basket.add_product(line.product, line.quantity)
 
         if len(lines_to_add) > 0:
             self.response = redirect('basket:summary')
@@ -569,13 +563,7 @@ class OrderLineView(PostActionMixin, generic.DetailView):
         # as a new basket might need to be created
         self.response = redirect('basket:summary')
 
-        # Convert line attributes into basket options
-        options = []
-        for attribute in line.attributes.all():
-            if attribute.option:
-                options.append({'option': attribute.option,
-                                'value': attribute.value})
-        basket.add_product(line.product, line.quantity, options)
+        basket.add_product(line.product, line.quantity)
 
         if line.quantity > 1:
             msg = _("%(qty)d copies of '%(product)s' have been added to your"
