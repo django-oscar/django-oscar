@@ -19,7 +19,6 @@ from . import signals
 
 PageTitleMixin, RegisterUserMixin = get_classes(
     'customer.mixins', ['PageTitleMixin', 'RegisterUserMixin'])
-Dispatcher = get_class('customer.utils', 'Dispatcher')
 EmailAuthenticationForm, EmailUserCreationForm, OrderSearchForm = get_classes(
     'customer.forms', ['EmailAuthenticationForm', 'EmailUserCreationForm',
                        'OrderSearchForm'])
@@ -32,7 +31,6 @@ Line = get_model('basket', 'Line')
 Basket = get_model('basket', 'Basket')
 UserAddress = get_model('address', 'UserAddress')
 Email = get_model('customer', 'Email')
-CommunicationEventType = get_model('customer', 'CommunicationEventType')
 
 User = get_user_model()
 
@@ -296,7 +294,6 @@ class ProfileView(PageTitleMixin, generic.TemplateView):
 class ProfileUpdateView(PageTitleMixin, generic.FormView):
     form_class = ProfileForm
     template_name = 'customer/profile/profile_form.html'
-    communication_type_code = 'EMAIL_CHANGED'
     page_title = _('Edit Profile')
     active_tab = 'profile'
     success_url = reverse_lazy('customer:profile-view')
@@ -331,9 +328,6 @@ class ProfileUpdateView(PageTitleMixin, generic.FormView):
                 'reset_url': get_password_reset_url(old_user),
                 'new_email': new_email,
             }
-            msgs = CommunicationEventType.objects.get_and_render(
-                code=self.communication_type_code, context=ctx)
-            Dispatcher().dispatch_user_messages(old_user, msgs)
 
         messages.success(self.request, _("Profile updated"))
         return redirect(self.get_success_url())
@@ -362,7 +356,6 @@ class ProfileDeleteView(PageTitleMixin, generic.FormView):
 class ChangePasswordView(PageTitleMixin, generic.FormView):
     form_class = PasswordChangeForm
     template_name = 'customer/profile/change_password_form.html'
-    communication_type_code = 'PASSWORD_CHANGED'
     page_title = _('Change Password')
     active_tab = 'profile'
     success_url = reverse_lazy('customer:profile-view')
@@ -381,10 +374,6 @@ class ChangePasswordView(PageTitleMixin, generic.FormView):
             'site': get_current_site(self.request),
             'reset_url': get_password_reset_url(self.request.user),
         }
-        msgs = CommunicationEventType.objects.get_and_render(
-            code=self.communication_type_code, context=ctx)
-        Dispatcher().dispatch_user_messages(self.request.user, msgs)
-
         return redirect(self.get_success_url())
 
 

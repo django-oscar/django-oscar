@@ -9,8 +9,6 @@ from oscar.apps.customer.signals import user_registered
 from oscar.core.compat import get_user_model
 
 User = get_user_model()
-CommunicationEventType = get_model('customer', 'CommunicationEventType')
-Dispatcher = get_class('customer.utils', 'Dispatcher')
 
 logger = logging.getLogger('oscar.customer')
 
@@ -37,8 +35,6 @@ class PageTitleMixin(object):
 
 
 class RegisterUserMixin(object):
-    communication_type_code = 'REGISTRATION'
-
     def register_user(self, form):
         """
         Create a user instance and send a new registration email (if configured
@@ -50,9 +46,6 @@ class RegisterUserMixin(object):
         # handling).
         user_registered.send_robust(
             sender=self, request=self.request, user=user)
-
-        if getattr(settings, 'OSCAR_SEND_REGISTRATION_EMAIL', True):
-            self.send_registration_email(user)
 
         # We have to authenticate before login
         try:
@@ -81,12 +74,3 @@ class RegisterUserMixin(object):
         auth_login(self.request, user)
 
         return user
-
-    def send_registration_email(self, user):
-        code = self.communication_type_code
-        ctx = {'user': user,
-               'site': get_current_site(self.request)}
-        messages = CommunicationEventType.objects.get_and_render(
-            code, ctx)
-        if messages and messages['body']:
-            Dispatcher().dispatch_user_messages(user, messages)

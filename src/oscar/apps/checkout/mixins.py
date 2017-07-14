@@ -13,8 +13,6 @@ from . import signals
 Basket = get_model('basket', 'Basket')
 CheckoutSessionMixin = get_class('checkout.session', 'CheckoutSessionMixin')
 Clerk = get_class('checkout.clerk', 'Clerk')
-CommunicationEventType = get_model('customer', 'CommunicationEventType')
-Dispatcher = get_class('customer.utils', 'Dispatcher')
 
 PaymentRedirectRequired, UnableToTakePayment, PaymentError \
     = get_classes('payment.exceptions', ['RedirectRequired',
@@ -35,9 +33,6 @@ class CheckoutFailed(Exception):
 
 
 class OrderPlacementMixin(CheckoutSessionMixin):
-    # Default code for the email to send after successful checkout
-    communication_type_code = 'ORDER_PLACED'
-
     # Payment handling methods
     # ------------------------
 
@@ -146,34 +141,11 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         Override this view if you want to perform custom actions when an
         order is submitted.
         """
-        # Send confirmation message (normally an email)
-        self.send_confirmation_message(order, self.communication_type_code)
-
         # Save order id in session so thank-you page can load it
         self.request.session['checkout_order_id'] = order.id
 
     def send_confirmation_message(self, order, code, **kwargs):
-        ctx = self.get_message_context(order)
-        try:
-            event_type = CommunicationEventType.objects.get(code=code)
-        except CommunicationEventType.DoesNotExist:
-            # No event-type in database, attempt to find templates for this
-            # type and render them immediately to get the messages.  Since we
-            # have not CommunicationEventType to link to, we can't create a
-            # CommunicationEvent instance.
-            messages = CommunicationEventType.objects.get_and_render(code, ctx)
-            event_type = None
-        else:
-            messages = event_type.get_messages(ctx)
-
-        if messages and messages['body']:
-            logger.info("Order #%s - sending %s messages", order.number, code)
-            dispatcher = Dispatcher(logger)
-            dispatcher.dispatch_order_messages(order, messages,
-                                               event_type, **kwargs)
-        else:
-            logger.warning("Order #%s - no %s communication event type",
-                           order.number, code)
+        pass
 
     def get_message_context(self, order):
         ctx = {

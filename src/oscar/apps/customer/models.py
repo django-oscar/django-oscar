@@ -12,15 +12,6 @@ if not is_model_registered('customer', 'Email'):
 
     __all__.append('Email')
 
-
-if not is_model_registered('customer', 'CommunicationEventType'):
-    class CommunicationEventType(
-            abstract_models.AbstractCommunicationEventType):
-        pass
-
-    __all__.append('CommunicationEventType')
-
-
 if not is_model_registered('customer', 'Notification'):
     class Notification(abstract_models.AbstractNotification):
         pass
