@@ -55,13 +55,6 @@ if not is_model_registered('order', 'LinePrice'):
     __all__.append('LinePrice')
 
 
-if not is_model_registered('order', 'LineAttribute'):
-    class LineAttribute(AbstractLineAttribute):
-        pass
-
-    __all__.append('LineAttribute')
-
-
 if not is_model_registered('order', 'ShippingEvent'):
     class ShippingEvent(AbstractShippingEvent):
         pass

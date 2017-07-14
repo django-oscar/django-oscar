@@ -55,17 +55,6 @@
                 <tr>
                     <th>{% trans "Quantity" %}</th><td>{{ line.quantity }}</td>
                 </tr>
-                {% if line.attributes.exists %}
-                    <tr>
-                        <th colspan="2">{% trans "Product Options" %}</th>
-                    </tr>
-                    {% for attribute in line.attributes.all %}
-                        <tr>
-                            <th>{{ attribute.option }}</th>
-                            <td>{{ attribute.value }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
             </table>
         </div>
         <div class="span4">

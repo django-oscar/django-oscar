@@ -324,8 +324,7 @@ class BasketAddView(FormView):
         offers_before = self.request.basket.applied_offers()
 
         self.request.basket.add_product(
-            form.product, form.cleaned_data['quantity'],
-            form.cleaned_options())
+            form.product, form.cleaned_data['quantity'])
 
         messages.success(self.request, self.get_success_message(form),
                          extra_tags='safe noicon')
