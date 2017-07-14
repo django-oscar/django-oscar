@@ -80,12 +80,6 @@ var oscar = (function(o, $) {
                 if (!form || $(":invalid", form).length == 0)
                     $(this).button('loading');
             });
-            // stuff for star rating on review page
-            // show clickable stars instead of a select dropdown for product rating
-            ratings = $('.reviewrating');
-            if(ratings.length){
-                ratings.find('.star-rating i').on('click',o.forms.reviewRatingClick);
-            }
         },
         submitIfNotLocked: function(event) {
             var $form = $(this);
@@ -93,11 +87,6 @@ var oscar = (function(o, $) {
                 return false;
             }
             $form.data('locked', true);
-        },
-        reviewRatingClick: function(event){
-            var ratings = ['One','Two','Three','Four','Five']; //possible classes for display state
-            $(this).parent().removeClass('One Two Three Four Five').addClass(ratings[$(this).index()]);
-            $(this).closest('.controls').find('select').val($(this).index() + 1); //select is hidden, set value
         }
     };
 

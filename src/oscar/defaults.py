@@ -53,10 +53,6 @@ OSCAR_PROMOTION_POSITIONS = (('page', 'Page'),
                              ('right', 'Right-hand sidebar'),
                              ('left', 'Left-hand sidebar'))
 
-# Reviews
-OSCAR_ALLOW_ANON_REVIEWS = True
-OSCAR_MODERATE_REVIEWS = False
-
 # Accounts
 OSCAR_ACCOUNTS_REDIRECT_URL = 'customer:profile-view'
 
@@ -161,11 +157,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
             {
                 'label': _('Email templates'),
                 'url_name': 'dashboard:comms-list',
-            },
-            {
-                'label': _('Reviews'),
-                'url_name': 'dashboard:reviews-list',
-            },
+            }
         ]
     },
     {
@@ -184,16 +176,6 @@ OSCAR_SEARCH_FACETS = {
         'product_class': {
             'name': _('Type'),
             'field': 'product_class'
-        },
-        'rating': {
-            'name': _('Rating'),
-            'field': 'rating',
-            # You can specify an 'options' element that will be passed to the
-            # SearchQuerySet.facet() call.  It's hard to get 'missing' to work
-            # correctly though as of Solr's hilarious syntax for selecting
-            # items without a specific facet:
-            # http://wiki.apache.org/solr/SimpleFacetParameters#facet.method
-            # 'options': {'missing': 'true'}
         }
     },
     'queries': {
