@@ -12,7 +12,7 @@ from django_tables2 import SingleTableMixin
 from oscar.apps.customer.utils import normalise_email
 from oscar.views.generic import BulkEditMixin
 from oscar.core.compat import get_user_model
-from oscar.core.loading import get_class, get_classes
+from oscar.core.loading import get_class
 
 UserSearchForm = get_class('dashboard.users.forms', 'UserSearchForm')
 PasswordResetForm = get_class('customer.forms', 'PasswordResetForm')
