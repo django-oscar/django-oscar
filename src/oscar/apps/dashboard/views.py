@@ -7,7 +7,6 @@ from oscar.core.loading import get_model
 from django.db.models import Avg, Sum, Count
 
 from oscar.core.compat import get_user_model
-from oscar.apps.promotions.models import AbstractPromotion
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 Voucher = get_model('voucher', 'Voucher')
@@ -54,21 +53,6 @@ class IndexView(TemplateView):
         is filtered by end date greater then the current date.
         """
         return Voucher.objects.filter(end_datetime__gt=now())
-
-    def get_number_of_promotions(self, abstract_base=AbstractPromotion):
-        """
-        Get the number of promotions for all promotions derived from
-        *abstract_base*. All subclasses of *abstract_base* are queried
-        and if another abstract base class is found this method is executed
-        recursively.
-        """
-        total = 0
-        for cls in abstract_base.__subclasses__():
-            if cls._meta.abstract:
-                total += self.get_number_of_promotions(cls)
-            else:
-                total += cls.objects.count()
-        return total
 
     def get_open_baskets(self, filters=None):
         """
@@ -175,7 +159,6 @@ class IndexView(TemplateView):
 
             'total_site_offers': self.get_active_site_offers().count(),
             'total_vouchers': self.get_active_vouchers().count(),
-            'total_promotions': self.get_number_of_promotions(),
 
             'total_customers': User.objects.count(),
             'total_open_baskets': self.get_open_baskets().count(),

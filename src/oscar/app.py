@@ -18,7 +18,6 @@ class Shop(Application):
     customer_app = get_class('customer.app', 'application')
     basket_app = get_class('basket.app', 'application')
     checkout_app = get_class('checkout.app', 'application')
-    promotions_app = get_class('promotions.app', 'application')
     dashboard_app = get_class('dashboard.app', 'application')
     offer_app = get_class('offer.app', 'application')
 
@@ -73,7 +72,6 @@ class Shop(Application):
             url(r'^password-reset/complete/$',
                 login_forbidden(auth_views.password_reset_complete),
                 name='password-reset-complete'),
-            url(r'', include(self.promotions_app.urls)),
         ]
         return urls
 

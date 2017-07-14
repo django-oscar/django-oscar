@@ -36,15 +36,6 @@ class I18nSitemap(Sitemap):
         return location
 
 
-class StaticSitemap(I18nSitemap):
-
-    def items(self):
-        return ['promotions:home', ]
-
-    def get_obj_location(self, obj):
-        return reverse(obj)
-
-
 class ProductSitemap(I18nSitemap):
 
     def items(self):
