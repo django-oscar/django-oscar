@@ -12,12 +12,6 @@ class UserManagementApplication(Application):
     user_detail_view = get_class('dashboard.users.views', 'UserDetailView')
     password_reset_view = get_class('dashboard.users.views',
                                     'PasswordResetView')
-    alert_list_view = get_class('dashboard.users.views',
-                                'ProductAlertListView')
-    alert_update_view = get_class('dashboard.users.views',
-                                  'ProductAlertUpdateView')
-    alert_delete_view = get_class('dashboard.users.views',
-                                  'ProductAlertDeleteView')
 
     def get_urls(self):
         urls = [
@@ -27,17 +21,6 @@ class UserManagementApplication(Application):
             url(r'^(?P<pk>-?\d+)/password-reset/$',
                 self.password_reset_view.as_view(),
                 name='user-password-reset'),
-
-            # Alerts
-            url(r'^alerts/$',
-                self.alert_list_view.as_view(),
-                name='user-alert-list'),
-            url(r'^alerts/(?P<pk>-?\d+)/delete/$',
-                self.alert_delete_view.as_view(),
-                name='user-alert-delete'),
-            url(r'^alerts/(?P<pk>-?\d+)/update/$',
-                self.alert_update_view.as_view(),
-                name='user-alert-update'),
         ]
         return self.post_process_urls(urls)
 

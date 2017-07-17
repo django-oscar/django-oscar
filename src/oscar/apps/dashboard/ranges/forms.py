@@ -16,7 +16,7 @@ class RangeForm(forms.ModelForm):
         model = Range
         fields = [
             'name', 'description', 'is_public',
-            'includes_all_products','included_categories'
+            'includes_all_products', 'included_categories'
         ]
 
 

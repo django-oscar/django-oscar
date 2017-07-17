@@ -28,13 +28,6 @@ if not is_model_registered('customer', 'Notification'):
     __all__.append('Notification')
 
 
-if not is_model_registered('customer', 'ProductAlert'):
-    class ProductAlert(abstract_models.AbstractProductAlert):
-        pass
-
-    __all__.append('ProductAlert')
-
-
 if django.VERSION < (1, 7):
     from .receivers import *  # noqa
     from .alerts import receivers  # noqa

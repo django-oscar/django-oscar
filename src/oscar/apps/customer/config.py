@@ -9,4 +9,3 @@ class CustomerConfig(AppConfig):
 
     def ready(self):
         from . import receivers  # noqa
-        from .alerts import receivers  # noqa

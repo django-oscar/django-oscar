@@ -34,15 +34,6 @@ class CustomerApplication(Application):
     notification_detail_view = get_class('customer.notifications.views',
                                          'DetailView')
 
-    alert_list_view = get_class('customer.alerts.views',
-                                'ProductAlertListView')
-    alert_create_view = get_class('customer.alerts.views',
-                                  'ProductAlertCreateView')
-    alert_confirm_view = get_class('customer.alerts.views',
-                                   'ProductAlertConfirmView')
-    alert_cancel_view = get_class('customer.alerts.views',
-                                  'ProductAlertCancelView')
-
     wishlists_add_product_view = get_class('customer.wishlists.views',
                                            'WishListAddProduct')
     wishlists_list_view = get_class('customer.wishlists.views',
@@ -123,25 +114,6 @@ class CustomerApplication(Application):
             url(r'^notifications/(?P<pk>\d+)/$',
                 login_required(self.notification_detail_view.as_view()),
                 name='notifications-detail'),
-
-            # Alerts
-            # Alerts can be setup by anonymous users: some views do not
-            # require login
-            url(r'^alerts/$',
-                login_required(self.alert_list_view.as_view()),
-                name='alerts-list'),
-            url(r'^alerts/create/(?P<pk>\d+)/$',
-                self.alert_create_view.as_view(),
-                name='alert-create'),
-            url(r'^alerts/confirm/(?P<key>[a-z0-9]+)/$',
-                self.alert_confirm_view.as_view(),
-                name='alerts-confirm'),
-            url(r'^alerts/cancel/key/(?P<key>[a-z0-9]+)/$',
-                self.alert_cancel_view.as_view(),
-                name='alerts-cancel-by-key'),
-            url(r'^alerts/cancel/(?P<pk>[a-z0-9]+)/$',
-                login_required(self.alert_cancel_view.as_view()),
-                name='alerts-cancel-by-pk'),
 
             # Wishlists
             url(r'wishlists/$',

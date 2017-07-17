@@ -11,7 +11,6 @@ build_sandbox:
 	-rm -rf sites/sandbox/public/static
 	-rm -f sites/sandbox/db.sqlite
 	sites/sandbox/manage.py migrate
-	sites/sandbox/manage.py oscar_populate_countries
 
 sandbox: install build_sandbox
 
