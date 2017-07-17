@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-{% load promotion_tags %}
 
 {% block mainstyles %}
     {% block styles %}
@@ -40,13 +39,6 @@
                 {% block subnavigation %}{% endblock %}
                 <div class="content">
                     {% block subheader %}{% endblock subheader %}
-
-                    {# Render promotions #}
-                    <div id="promotions">
-                        {% for promotion in promotions_page %}
-                            {% render_promotion promotion %}
-                        {% endfor %}
-                    </div>
 
                     {# Div exists for AJAX updates to entire content section #}
                     <div id="content_inner">{% block content %}{% endblock %}</div>

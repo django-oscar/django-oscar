@@ -15,7 +15,6 @@ class DashboardApplication(Application):
     orders_app = get_class('dashboard.orders.app', 'application')
     users_app = get_class('dashboard.users.app', 'application')
     catalogue_app = get_class('dashboard.catalogue.app', 'application')
-    promotions_app = get_class('dashboard.promotions.app', 'application')
     pages_app = get_class('dashboard.pages.app', 'application')
     partners_app = get_class('dashboard.partners.app', 'application')
     offers_app = get_class('dashboard.offers.app', 'application')
@@ -31,7 +30,6 @@ class DashboardApplication(Application):
             url(r'^reports/', include(self.reports_app.urls)),
             url(r'^orders/', include(self.orders_app.urls)),
             url(r'^users/', include(self.users_app.urls)),
-            url(r'^content-blocks/', include(self.promotions_app.urls)),
             url(r'^pages/', include(self.pages_app.urls)),
             url(r'^partners/', include(self.partners_app.urls)),
             url(r'^offers/', include(self.offers_app.urls)),
