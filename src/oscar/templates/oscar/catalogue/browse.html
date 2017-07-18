@@ -64,7 +64,7 @@
         {% for value in selected_facets %}
             <input type="hidden" name="selected_facets" value="{{ value }}" />
         {% endfor %}
-        <input type="hidden" name="q" value="{{ search_form.q.value }}" />
+        <input type="hidden" name="q" value="{{ search_form.q.value|default_if_none:"" }}" />
 
         {% if paginator.count %}
             {% if paginator.num_pages > 1 %}
