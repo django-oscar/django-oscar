@@ -13,6 +13,7 @@ from django.utils.timezone import now
 
 from oscar.core.utils import get_default_currency
 from oscar.core.compat import AUTH_USER_MODEL
+from oscar.core.loading import get_model
 from oscar.models.fields import AutoSlugField
 from . import exceptions
 
@@ -1022,7 +1023,7 @@ class AbstractOrderDiscount(models.Model):
 
     @property
     def offer(self):
-        Offer = models.get_model('offer', 'ConditionalOffer')
+        Offer = get_model('offer', 'ConditionalOffer')
         try:
             return Offer.objects.select_related('benefit').get(id=self.offer_id)
         except Offer.DoesNotExist:
@@ -1030,7 +1031,7 @@ class AbstractOrderDiscount(models.Model):
 
     @property
     def voucher(self):
-        Voucher = models.get_model('voucher', 'Voucher')
+        Voucher = get_model('voucher', 'Voucher')
         try:
             return Voucher.objects.get(id=self.voucher_id)
         except Voucher.DoesNotExist:

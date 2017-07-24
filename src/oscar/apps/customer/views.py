@@ -50,6 +50,7 @@ class AccountSummaryView(generic.RedirectView):
     having to change a lot of templates.
     """
     url = reverse_lazy(settings.OSCAR_ACCOUNTS_REDIRECT_URL)
+    permanent = True
 
 
 class AccountRegistrationView(RegisterUserMixin, generic.FormView):
