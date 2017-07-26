@@ -368,34 +368,6 @@ class AbstractOrderNote(models.Model):
 
 
 @python_2_unicode_compatible
-class AbstractCommunicationEvent(models.Model):
-    """
-    An order-level event involving a communication to the customer, such
-    as an confirmation email being sent.
-    """
-    order = models.ForeignKey(
-        'order.Order', related_name="communication_events",
-        verbose_name=_("Order"))
-    event_type = models.ForeignKey(
-        'customer.CommunicationEventType', verbose_name=_("Event Type"))
-    date_created = models.DateTimeField(_("Date"), auto_now_add=True)
-
-    class Meta:
-        abstract = True
-        app_label = 'order'
-        verbose_name = _("Communication Event")
-        verbose_name_plural = _("Communication Events")
-        ordering = ['-date_created']
-
-    def __str__(self):
-        return _("'%(type)s' event for order #%(number)s") \
-            % {'type': self.event_type.name, 'number': self.order.number}
-
-
-# LINES
-
-
-@python_2_unicode_compatible
 class AbstractLine(models.Model):
     """
     An order line

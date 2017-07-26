@@ -17,8 +17,6 @@ from oscar.apps.customer.utils import get_password_reset_url, normalise_email
 from oscar.core.validators import password_validators
 
 
-Dispatcher = get_class('customer.utils', 'Dispatcher')
-CommunicationEventType = get_model('customer', 'communicationeventtype')
 User = get_user_model()
 
 
@@ -41,8 +39,6 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
     """
     This form takes the same structure as its parent from django.contrib.auth
     """
-    communication_type_code = "PASSWORD_RESET"
-
     def save(self, domain_override=None, use_https=False, request=None,
              **kwargs):
         """
@@ -61,9 +57,6 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
                 'user': user,
                 'site': site,
                 'reset_url': reset_url}
-            messages = CommunicationEventType.objects.get_and_render(
-                code=self.communication_type_code, context=ctx)
-            Dispatcher().dispatch_user_messages(user, messages)
 
     def get_reset_url(self, site, request, user, use_https):
         # the request argument isn't used currently, but implementors might

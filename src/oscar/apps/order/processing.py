@@ -232,9 +232,6 @@ class EventHandler(object):
                     line=line, quantity=quantity)
         return event
 
-    def create_communication_event(self, order, event_type):
-        return order.communication_events.create(event_type=event_type)
-
     def create_note(self, order, message, note_type='System'):
         return order.notes.create(
             message=message, note_type=note_type, user=self.user)

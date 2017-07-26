@@ -20,13 +20,6 @@ if not is_model_registered('order', 'OrderNote'):
     __all__.append('OrderNote')
 
 
-if not is_model_registered('order', 'CommunicationEvent'):
-    class CommunicationEvent(AbstractCommunicationEvent):
-        pass
-
-    __all__.append('CommunicationEvent')
-
-
 if not is_model_registered('order', 'ShippingAddress'):
     class ShippingAddress(AbstractShippingAddress):
         pass
