@@ -1,4 +1,3 @@
-{% load reviews_tags %}
 {% load thumbnail %}
 {% load i18n %}
 {% load display_tags %}
@@ -14,18 +13,6 @@
                     {% endthumbnail %}
                 {% endwith %}
             </div>
-        {% endblock %}
-
-        {% block product_review %}
-            {% iffeature "reviews" %}
-                <p class="star-rating {{ product.rating|as_stars }}">
-                    <i class="icon-star"></i>
-                    <i class="icon-star"></i>
-                    <i class="icon-star"></i>
-                    <i class="icon-star"></i>
-                    <i class="icon-star"></i>
-                </p>
-            {% endiffeature %}
         {% endblock %}
 
         {% block product_title %}

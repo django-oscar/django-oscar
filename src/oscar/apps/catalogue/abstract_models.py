@@ -7,10 +7,8 @@ from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models import Sum, Count
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy
-from django.utils.functional import cached_property
 
 from treebeard.mp_tree import MP_Node
 
@@ -235,10 +233,6 @@ class AbstractProduct(models.Model):
         verbose_name=_("Recommended products"),
         help_text=_("These are products that are recommended to accompany the "
                     "main product."))
-
-    # Denormalised product rating - used by reviews app.
-    # Product has no ratings if rating is None
-    rating = models.FloatField(_('Rating'), null=True, editable=False)
 
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
 
@@ -494,56 +488,6 @@ class AbstractProduct(models.Model):
                 'original': self.get_missing_image(),
                 'caption': '',
                 'is_missing': True}
-
-    # Updating methods
-
-    def update_rating(self):
-        """
-        Recalculate rating field
-        """
-        self.rating = self.calculate_rating()
-        self.save()
-    update_rating.alters_data = True
-
-    def calculate_rating(self):
-        """
-        Calculate rating value
-        """
-        result = self.reviews.filter(
-            status=self.reviews.model.APPROVED
-        ).aggregate(
-            sum=Sum('score'), count=Count('id'))
-        reviews_sum = result['sum'] or 0
-        reviews_count = result['count'] or 0
-        rating = None
-        if reviews_count > 0:
-            rating = float(reviews_sum) / reviews_count
-        return rating
-
-    def has_review_by(self, user):
-        if user.is_anonymous():
-            return False
-        return self.reviews.filter(user=user).exists()
-
-    def is_review_permitted(self, user):
-        """
-        Determines whether a user may add a review on this product.
-
-        Default implementation respects OSCAR_ALLOW_ANON_REVIEWS and only
-        allows leaving one review per user and product.
-
-        Override this if you want to alter the default behaviour; e.g. enforce
-        that a user purchased the product to be allowed to leave a review.
-        """
-        if user.is_authenticated() or settings.OSCAR_ALLOW_ANON_REVIEWS:
-            return not self.has_review_by(user)
-        else:
-            return False
-
-    @cached_property
-    def num_approved_reviews(self):
-        return self.reviews.filter(
-            status=self.reviews.model.APPROVED).count()
 
 
 class AbstractProductRecommendation(models.Model):

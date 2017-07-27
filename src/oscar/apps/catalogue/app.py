@@ -1,11 +1,10 @@
-from django.conf.urls import url, include
+from django.conf.urls import url
 
 from oscar.core.application import Application
 from oscar.core.loading import get_class
-from oscar.apps.catalogue.reviews.app import application as reviews_app
 
 
-class BaseCatalogueApplication(Application):
+class CatalogueApplication(Application):
     name = 'catalogue'
     detail_view = get_class('catalogue.views', 'ProductDetailView')
     catalogue_view = get_class('catalogue.views', 'CatalogueView')
@@ -13,7 +12,7 @@ class BaseCatalogueApplication(Application):
     range_view = get_class('offer.views', 'RangeDetailView')
 
     def get_urls(self):
-        urlpatterns = super(BaseCatalogueApplication, self).get_urls()
+        urlpatterns = super(CatalogueApplication, self).get_urls()
         urlpatterns += [
             url(r'^$', self.catalogue_view.as_view(), name='index'),
             url(r'^(?P<product_slug>[\w-]*)_(?P<pk>\d+)/$',
@@ -26,25 +25,6 @@ class BaseCatalogueApplication(Application):
             url(r'^ranges/(?P<slug>[\w-]+)/$',
                 self.range_view.as_view(), name='range')]
         return self.post_process_urls(urlpatterns)
-
-
-class ReviewsApplication(Application):
-    name = None
-    reviews_app = reviews_app
-
-    def get_urls(self):
-        urlpatterns = super(ReviewsApplication, self).get_urls()
-        urlpatterns += [
-            url(r'^(?P<product_slug>[\w-]*)_(?P<product_pk>\d+)/reviews/',
-                include(self.reviews_app.urls)),
-        ]
-        return self.post_process_urls(urlpatterns)
-
-
-class CatalogueApplication(BaseCatalogueApplication, ReviewsApplication):
-    """
-    Composite class combining Products with Reviews
-    """
 
 
 application = CatalogueApplication()

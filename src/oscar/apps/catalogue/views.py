@@ -9,7 +9,6 @@ from oscar.core.loading import get_model
 from oscar.apps.catalogue.signals import product_viewed
 
 Product = get_model('catalogue', 'product')
-ProductReview = get_model('reviews', 'ProductReview')
 Category = get_model('catalogue', 'category')
 
 
@@ -55,14 +54,6 @@ class ProductDetailView(DetailView):
             expected_path = product.get_absolute_url()
             if expected_path != urlquote(current_path):
                 return HttpResponsePermanentRedirect(expected_path)
-
-    def get_context_data(self, **kwargs):
-        ctx = super(ProductDetailView, self).get_context_data(**kwargs)
-        ctx['reviews'] = self.get_reviews()
-        return ctx
-
-    def get_reviews(self):
-        return self.object.reviews.filter(status=ProductReview.APPROVED)
 
     def send_signal(self, request, response, product):
         self.view_signal.send(

@@ -80,10 +80,6 @@
                             </tr>
                         {% endwith %}
                     {% endif %}
-                    <tr>
-                        <th>{% trans "Reviews written" %}</th>
-                        <td>{{ customer.reviews.count }}</td>
-                    </tr>
                     {% if customer.email %}
                         <tr>
                             <th>{% trans "Actions" %}</th>
@@ -106,7 +102,6 @@
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#user_orders" data-toggle="tab">{% trans "Orders" %}</a></li>
                         <li><a href="#user_addresses" data-toggle="tab">{% trans "Addresses" %}</a></li>
-                        <li><a href="#user_reviews" data-toggle="tab">{% trans "Reviews" %}</a></li>
                     </ul>
                 {% endblock %}
 
@@ -167,35 +162,6 @@
                                     <p>{% trans "This customer has not saved any addresses." %}</p>
                                 {% endfor %}
                             </div>
-                        </div>
-                    {% endblock %}
-
-                    {% block user_reviews %}
-                        <div id="user_reviews" class="tab-pane">
-                            <table class="table table-striped table-bordered table-hover">
-                                <caption>{% trans "Reviews" %}</caption>
-                                {% if customer.reviews.count %}
-                                    <tr>
-                                        <th>{% trans "Product ID" %}</th>
-                                        <th>{% trans "Score" %}</th>
-                                        <th>{% trans "Title" context "Product review title" %}</th>
-                                        <th>{% trans "Body" %}</th>
-                                        <th>{% trans "Date created" %}</th>
-                                    </tr>
-                                    {% for review in customer.reviews.all %}
-                                        <tr>
-                                            <td>{{ review.product_id }}</td>
-                                            <td>{{ review.score }}</td>
-                                            <td>{{ review.title }}</td>
-                                            <td>{{ review.body }}</td>
-                                            <td>{{ review.date_created }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                {% else %}
-                                    <tr><td>{% trans "This customer has not written any reviews yet." %}</td></tr>
-                                {% endif %}
-                            </table>
-
                         </div>
                     {% endblock %}
                 </div>

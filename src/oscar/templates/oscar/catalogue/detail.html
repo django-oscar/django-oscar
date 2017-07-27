@@ -2,7 +2,6 @@
 
 {% load history_tags %}
 {% load currency_filters %}
-{% load reviews_tags %}
 {% load staticfiles %}
 {% load product_tags %}
 {% load display_tags %}
@@ -72,10 +71,6 @@
                 {% include "catalogue/partials/stock_record.html" with verbose=1 %}
             {% endblock %}
 
-            {% iffeature "reviews" %}
-                {% include "catalogue/reviews/partials/review_stars.html" %}
-            {% endiffeature %}
-
             <hr/>
         </div><!-- /col-sm-6 -->
         {% endblock %}
@@ -123,48 +118,8 @@
                 <td>{{ session.availability.message }}</td>
             </tr>
         {% endif %}
-        {% iffeature "reviews" %}
-            <tr>
-                <th>{% trans "Number of reviews" %}</th>
-                <td>{{ product.num_approved_reviews }}</td>
-            </tr>
-        {% endiffeature %}
     </table>
     {% endblock %}
-
-    {% iffeature "reviews" %}
-        {% block product_review %}
-        <section>
-            <div id="reviews" class="sub-header">
-                {% if product.num_approved_reviews > 3 %}
-                    <a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.id %}" class="btn pull-right">{% trans "See all reviews" %}</a>
-                {% endif %}
-                <h2>{% trans "Customer Reviews" %}</h2>
-            </div>
-
-            {% if product.num_approved_reviews == 0 %}
-                <p>
-                    {% if product|is_review_permitted:user %}
-                        {% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id as add_review_url %}
-                            {% blocktrans %}This product does not have any reviews yet -
-                            <a href="{{ add_review_url }}#addreview">be the first to write one</a>.
-                        {% endblocktrans %}
-                    {% else %}
-                        {% trans "This product does not have any reviews yet" %}.
-                    {% endif %}
-                </p>
-            {% else %}
-                <ol class="list-unstyled review-list">
-                    {% for review in reviews|slice:":3" %}
-                        <li>
-                        {% include 'catalogue/partials/review.html' %}
-                        </li>
-                    {% endfor %}
-                </ol>
-            {% endif %}
-        </section>
-        {% endblock product_review %}
-    {% endiffeature %}
 
     {% with recommended_products=product.recommended_products.all|slice:":6" %}
         {% if recommended_products %}

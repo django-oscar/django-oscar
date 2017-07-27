@@ -34,25 +34,6 @@ class CustomerApplication(Application):
     notification_detail_view = get_class('customer.notifications.views',
                                          'DetailView')
 
-    wishlists_add_product_view = get_class('customer.wishlists.views',
-                                           'WishListAddProduct')
-    wishlists_list_view = get_class('customer.wishlists.views',
-                                    'WishListListView')
-    wishlists_detail_view = get_class('customer.wishlists.views',
-                                      'WishListDetailView')
-    wishlists_create_view = get_class('customer.wishlists.views',
-                                      'WishListCreateView')
-    wishlists_create_with_product_view = get_class('customer.wishlists.views',
-                                                   'WishListCreateView')
-    wishlists_update_view = get_class('customer.wishlists.views',
-                                      'WishListUpdateView')
-    wishlists_delete_view = get_class('customer.wishlists.views',
-                                      'WishListDeleteView')
-    wishlists_remove_product_view = get_class('customer.wishlists.views',
-                                              'WishListRemoveProduct')
-    wishlists_move_product_to_another_view = get_class(
-        'customer.wishlists.views', 'WishListMoveProductToAnotherWishList')
-
     def get_urls(self):
         urls = [
             # Login, logout and register doesn't require login
@@ -113,45 +94,7 @@ class CustomerApplication(Application):
                 name='notifications-update'),
             url(r'^notifications/(?P<pk>\d+)/$',
                 login_required(self.notification_detail_view.as_view()),
-                name='notifications-detail'),
-
-            # Wishlists
-            url(r'wishlists/$',
-                login_required(self.wishlists_list_view.as_view()),
-                name='wishlists-list'),
-            url(r'wishlists/add/(?P<product_pk>\d+)/$',
-                login_required(self.wishlists_add_product_view.as_view()),
-                name='wishlists-add-product'),
-            url(r'wishlists/(?P<key>[a-z0-9]+)/add/(?P<product_pk>\d+)/',
-                login_required(self.wishlists_add_product_view.as_view()),
-                name='wishlists-add-product'),
-            url(r'wishlists/create/$',
-                login_required(self.wishlists_create_view.as_view()),
-                name='wishlists-create'),
-            url(r'wishlists/create/with-product/(?P<product_pk>\d+)/$',
-                login_required(self.wishlists_create_view.as_view()),
-                name='wishlists-create-with-product'),
-            # Wishlists can be publicly shared, no login required
-            url(r'wishlists/(?P<key>[a-z0-9]+)/$',
-                self.wishlists_detail_view.as_view(), name='wishlists-detail'),
-            url(r'wishlists/(?P<key>[a-z0-9]+)/update/$',
-                login_required(self.wishlists_update_view.as_view()),
-                name='wishlists-update'),
-            url(r'wishlists/(?P<key>[a-z0-9]+)/delete/$',
-                login_required(self.wishlists_delete_view.as_view()),
-                name='wishlists-delete'),
-            url(r'wishlists/(?P<key>[a-z0-9]+)/lines/(?P<line_pk>\d+)/delete/',
-                login_required(self.wishlists_remove_product_view.as_view()),
-                name='wishlists-remove-product'),
-            url(r'wishlists/(?P<key>[a-z0-9]+)/products/(?P<product_pk>\d+)/'
-                r'delete/',
-                login_required(self.wishlists_remove_product_view.as_view()),
-                name='wishlists-remove-product'),
-            url(r'wishlists/(?P<key>[a-z0-9]+)/lines/(?P<line_pk>\d+)/move-to/'
-                r'(?P<to_key>[a-z0-9]+)/$',
-                login_required(self.wishlists_move_product_to_another_view
-                               .as_view()),
-                name='wishlists-move-product-to-another')]
+                name='notifications-detail')]
 
         return self.post_process_urls(urls)
 
