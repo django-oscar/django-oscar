@@ -406,6 +406,16 @@ class ProductAlertForm(forms.ModelForm):
             else:
                 raise forms.ValidationError(_(
                     "There is already an active stock alert for %s") % email)
+
+            # Check that the email address hasn't got other unconfirmed alerts.
+            # If they do then we don't want to spam them with more until they
+            # have confirmed or cancelled the existing alert.
+            if ProductAlert.objects.filter(email__iexact=email,
+                                    status=ProductAlert.UNCONFIRMED).count():
+                raise forms.ValidationError(_(
+                    "%s has been sent a confirmation email for another product "
+                    "alert on this site. Please confirm or cancel that request "
+                    "before signing up for more alerts.") % email)
         elif user_is_authenticated(self.user):
             try:
                 ProductAlert.objects.get(product=self.product,
