@@ -60,9 +60,6 @@
             <th>{% trans 'Quantity' %}</th>
             <th>{% trans 'Line price excl. tax' %}</th>
             <th>{% trans 'Line price incl. tax' %}</th>
-            {% iffeature "reviews" %}
-                <th></th>
-            {% endiffeature %}
         </tr>
         {% for line in order.lines.all %}
             <tr>
