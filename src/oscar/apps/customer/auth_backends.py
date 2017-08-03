@@ -1,5 +1,3 @@
-import warnings
-
 import django
 from django.contrib.auth.backends import ModelBackend
 from django.core.exceptions import ImproperlyConfigured

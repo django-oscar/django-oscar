@@ -168,8 +168,8 @@ def validate_password(password, user=None):
                 password_validation.MinimumLengthValidator(min_length=6),
                 password_validation.CommonPasswordValidator(),
             ]
-        return password_validation.validate_password(password, user=user,
-                                        password_validators=password_validators)
+        return password_validation.validate_password(
+            password, user=user, password_validators=password_validators)
     except ImportError:
         # Django 1.8 - use our custom validators. Note that these are Field
         # validators and have a different signature to the password validators

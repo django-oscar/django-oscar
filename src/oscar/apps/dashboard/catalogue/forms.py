@@ -5,7 +5,7 @@ from treebeard.forms import movenodeform_factory
 
 from oscar.core.loading import get_class, get_model
 from oscar.core.utils import slugify
-from oscar.forms.widgets import ImageInput, DateTimePickerInput
+from oscar.forms.widgets import DateTimePickerInput, ImageInput
 
 Product = get_model('catalogue', 'Product')
 ProductClass = get_model('catalogue', 'ProductClass')
@@ -358,4 +358,3 @@ class ProductAttributesForm(forms.ModelForm):
     class Meta:
         model = ProductAttribute
         fields = ["name", "code", "type", "option_group", "required"]
-

@@ -16,9 +16,9 @@ class CountryAdmin(admin.ModelAdmin):
         'is_shipping_country'
     ]
     search_fields = [
-        'name', 
-        'printable_name', 
-        'iso_3166_1_a2', 
+        'name',
+        'printable_name',
+        'iso_3166_1_a2',
         'iso_3166_1_a3'
     ]
 

@@ -197,7 +197,7 @@ class UnicodeCSVWriter:
         # If encoding is UTF-8, insert a Byte Order Mark at the start of the
         # file for compatibility with MS Excel.
         if (self.encoding == 'utf-8'
-                        and getattr(settings, 'OSCAR_CSV_INCLUDE_BOM', False)):
+                and getattr(settings, 'OSCAR_CSV_INCLUDE_BOM', False)):
             self.f.write(u'\ufeff' if PY3 else codecs.BOM_UTF8)
 
     def writerow(self, row):

@@ -84,7 +84,7 @@ class TestAShippingPercentageDiscountAppliedWithCountCondition(TestCase):
     def test_shipping_percentage_required(self):
         benefit = models.Benefit(
             type=models.Benefit.SHIPPING_PERCENTAGE,
-            value=None, # This should be required
+            value=None,     # This should be required
         )
 
         with self.assertRaises(ValidationError):
@@ -101,7 +101,7 @@ class TestAShippingPercentageDiscountAppliedWithCountCondition(TestCase):
 
     def test_shipping_range_must_not_be_set(self):
         product_range = models.Range.objects.create(
-                            name="Foo", includes_all_products=True)
+            name="Foo", includes_all_products=True)
         benefit = models.Benefit(
             type=models.Benefit.SHIPPING_PERCENTAGE,
             value=50,

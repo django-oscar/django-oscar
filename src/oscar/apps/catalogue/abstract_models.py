@@ -768,7 +768,7 @@ class AbstractProductAttribute(models.Model):
     def __str__(self):
         return self.name
 
-    def save_value(self, product, value):
+    def save_value(self, product, value):   # noqa: C901 too complex
         ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
         try:
             value_obj = product.attribute_values.get(attribute=self)
