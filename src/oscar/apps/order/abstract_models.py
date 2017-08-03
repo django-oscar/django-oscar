@@ -10,11 +10,12 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import pgettext_lazy
+
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.core.loading import get_model
+from oscar.core.loading import get_class, get_model
 from oscar.core.utils import get_default_currency
 from oscar.models.fields import AutoSlugField
-from oscar.core.loading import get_class
+
 from . import exceptions
 
 order_status_changed = get_class('order.signals', 'order_status_changed')

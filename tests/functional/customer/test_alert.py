@@ -1,5 +1,4 @@
 import mock
-import os
 import warnings
 
 from django_webtest import WebTest
@@ -10,8 +9,8 @@ from django.core import mail
 from django.test import TestCase
 from oscar.utils.deprecation import RemovedInOscar20Warning
 
-from oscar.apps.customer.alerts.utils import (send_alert_confirmation,
-    send_product_alerts)
+from oscar.apps.customer.alerts.utils import (
+    send_alert_confirmation, send_product_alerts)
 from oscar.apps.customer.forms import ProductAlertForm
 from oscar.apps.customer.models import ProductAlert
 from oscar.test.factories import (
@@ -36,8 +35,8 @@ class TestAUser(WebTest):
         self.assertEqual(alert.product, self.product)
 
     def test_cannot_create_multiple_alerts_for_one_product(self):
-        alert = ProductAlertFactory(user=self.user, product=self.product,
-                                    status = ProductAlert.ACTIVE)
+        ProductAlertFactory(user=self.user, product=self.product,
+                            status=ProductAlert.ACTIVE)
         # Alert form should not allow creation of additional alerts.
         form = ProductAlertForm(user=self.user, product=self.product, data={})
 
@@ -129,7 +128,7 @@ class TestAnAnonymousUser(WebTest):
 
     def test_cannot_create_multiple_unconfirmed_alerts(self):
         # Create an unconfirmed alert
-        alert = ProductAlertFactory(
+        ProductAlertFactory(
             user=None, email='john@smith.com', status=ProductAlert.UNCONFIRMED)
 
         # Alert form should not allow creation of additional alerts.
@@ -159,7 +158,8 @@ class TestHurryMode(TestCase):
         send_product_alerts(self.product)
 
         self.assertEqual(1, len(mail.outbox))
-        self.assertNotIn('Beware that the amount of items in stock is limited',
+        self.assertNotIn(
+            'Beware that the amount of items in stock is limited',
             mail.outbox[0].body)
 
     def test_hurry_mode_set_when_stock_low(self):
@@ -171,7 +171,8 @@ class TestHurryMode(TestCase):
         send_product_alerts(self.product)
 
         self.assertEqual(2, len(mail.outbox))
-        self.assertIn('Beware that the amount of items in stock is limited',
+        self.assertIn(
+            'Beware that the amount of items in stock is limited',
             mail.outbox[0].body)
 
     def test_hurry_mode_not_set_multiple_stockrecords(self):
@@ -182,7 +183,8 @@ class TestHurryMode(TestCase):
 
         send_product_alerts(self.product)
 
-        self.assertNotIn('Beware that the amount of items in stock is limited',
+        self.assertNotIn(
+            'Beware that the amount of items in stock is limited',
             mail.outbox[0].body)
 
     def test_hurry_mode_set_multiple_stockrecords(self):
@@ -194,7 +196,8 @@ class TestHurryMode(TestCase):
 
         send_product_alerts(self.product)
 
-        self.assertIn('Beware that the amount of items in stock is limited',
+        self.assertIn(
+            'Beware that the amount of items in stock is limited',
             mail.outbox[0].body)
 
 
@@ -267,8 +270,8 @@ class TestAlertMessageSending(TestCase):
             )
             send_alert_confirmation(alert)
             # Check that warnings were raised
-            self.assertTrue(any(item.category == RemovedInOscar20Warning
-                                                    for item in warning_list))
+            self.assertTrue(
+                any(item.category == RemovedInOscar20Warning for item in warning_list))
             # Check that alerts were still sent
             self.assertEqual(len(mail.outbox), 1)
 
@@ -285,7 +288,7 @@ class TestAlertMessageSending(TestCase):
             ProductAlert.objects.create(user=self.user, product=self.product)
             send_product_alerts(self.product)
             # Check that warnings were raised
-            self.assertTrue(any(item.category == RemovedInOscar20Warning
-                                                    for item in warning_list))
+            self.assertTrue(
+                any(item.category == RemovedInOscar20Warning for item in warning_list))
             # Check that alerts were still sent
             self.assertEqual(len(mail.outbox), 1)

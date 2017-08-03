@@ -1,11 +1,10 @@
 import logging
 import warnings
 
-from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core import mail
 from django.db.models import Max
-from django.template import loader, TemplateDoesNotExist
+from django.template import TemplateDoesNotExist, loader
 
 from oscar.apps.customer.notifications import services
 from oscar.apps.customer.utils import Dispatcher
@@ -74,7 +73,7 @@ def send_alert_confirmation(alert):
         Dispatcher().dispatch_direct_messages(alert.email, messages)
 
 
-def send_product_alerts(product):
+def send_product_alerts(product):   # noqa C901 too complex
     """
     Check for notifications for this product and send email to users
     if the product is back in stock. Add a little 'hurry' note if the

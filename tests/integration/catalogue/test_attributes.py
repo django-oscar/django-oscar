@@ -1,6 +1,5 @@
-import sys
-import os
 from datetime import datetime, date
+import six
 
 from django.test import TestCase
 from django.core.exceptions import ValidationError
@@ -55,8 +54,7 @@ class TestMultiOptionAttributes(TestCase):
         # We'll save two out of the three available options
         self.attr.save_value(product, [self.options[0], self.options[2]])
         product.refresh_from_db()
-        self.assertEqual(list(product.attr.sizes),
-            [self.options[0], self.options[2]])
+        self.assertEqual(list(product.attr.sizes), [self.options[0], self.options[2]])
 
     def test_delete_multi_option_value(self):
         product = factories.ProductFactory()
@@ -70,8 +68,7 @@ class TestMultiOptionAttributes(TestCase):
         product = factories.ProductFactory()
         self.attr.save_value(product, self.options)
         attr_val = product.attribute_values.get(attribute=self.attr)
-        self.assertEqual(attr_val.value_as_text,
-            ", ".join(o.option for o in self.options))
+        self.assertEqual(attr_val.value_as_text, ", ".join(o.option for o in self.options))
 
 
 class TestDatetimeAttributes(TestCase):
@@ -145,9 +142,9 @@ class TestTextAttributes(TestCase):
 
     def test_validate_string_and_unicode_values(self):
         self.assertIsNone(self.attr.validate_value('String'))
-        if sys.version_info[0] < 3:
-            self.assertIsNone(self.attr.validate_value(unicode('ascii_unicode', 'ascii')))
-            self.assertIsNone(self.attr.validate_value(unicode('utf-8_unicode', 'utf-8')))
+        if six.PY2:
+            self.assertIsNone(self.attr.validate_value(unicode('ascii_unicode', 'ascii'))) # noqa F821
+            self.assertIsNone(self.attr.validate_value(unicode('utf-8_unicode', 'utf-8'))) # noqa F821
 
     def test_validate_invalid_float_values(self):
         with self.assertRaises(ValidationError):

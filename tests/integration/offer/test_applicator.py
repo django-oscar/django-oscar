@@ -59,10 +59,10 @@ class TestOfferApplicator(TestCase):
         self.assertEqual(sorted(priorities, reverse=True), priorities)
 
     def test_get_site_offers(self):
-        site_offer = models.ConditionalOffer.objects.create(
+        models.ConditionalOffer.objects.create(
             name="globaloffer", condition=self.condition,
             benefit=self.benefit, offer_type=models.ConditionalOffer.SITE)
-        session_offer = models.ConditionalOffer.objects.create(
+        models.ConditionalOffer.objects.create(
             name="sessionoffer", condition=self.condition,
             benefit=self.benefit, offer_type=models.ConditionalOffer.SESSION)
 

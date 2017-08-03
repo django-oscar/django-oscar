@@ -10,7 +10,6 @@ from django.utils.translation import pgettext_lazy
 from oscar.core.loading import get_model
 from oscar.models.fields import ExtendedURLField
 
-
 # Linking models - these link promotions to content (eg pages, or keywords)
 
 
