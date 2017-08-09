@@ -1,4 +1,3 @@
-from oscar.core.loading import feature_hidden
 from oscar.views.decorators import permissions_required
 
 
@@ -11,9 +10,6 @@ class Application(object):
     """
     #: Namespace name
     name = None
-
-    #: A name that allows the functionality within this app to be disabled
-    hidable_feature_name = None
 
     #: Maps view names to lists of permissions. We expect tuples of
     #: lists as dictionary values. A list is a set of permissions that all
@@ -52,11 +48,6 @@ class Application(object):
             urlpatterns (list): A list of URL patterns
 
         """
-        # Test if this the URLs in the Application instance should be
-        # available.  If the feature is hidden then we don't include the URLs.
-        if feature_hidden(self.hidable_feature_name):
-            return []
-
         for pattern in urlpatterns:
             if hasattr(pattern, 'url_patterns'):
                 self.post_process_urls(pattern.url_patterns)

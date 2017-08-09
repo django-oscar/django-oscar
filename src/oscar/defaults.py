@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse_lazy
 
 OSCAR_SHOP_NAME = 'Oscar'
 OSCAR_SHOP_TAGLINE = ''
-OSCAR_HOMEPAGE = reverse_lazy('promotions:home')
+OSCAR_HOMEPAGE = ''
 
 # Basket settings
 OSCAR_BASKET_COOKIE_LIFETIME = 7 * 24 * 60 * 60
@@ -71,9 +71,6 @@ OSCAR_SLUG_BLACKLIST = []
 
 # Cookies
 OSCAR_COOKIES_DELETE_ON_LOGOUT = ['oscar_recently_viewed_products', ]
-
-# Hidden Oscar features, e.g. wishlists or reviews
-OSCAR_HIDDEN_FEATURES = []
 
 # Menu structure of the dashboard navigation
 OSCAR_DASHBOARD_NAVIGATION = [
@@ -150,10 +147,6 @@ OSCAR_DASHBOARD_NAVIGATION = [
         'label': _('Content'),
         'icon': 'icon-folder-close',
         'children': [
-            {
-                'label': _('Pages'),
-                'url_name': 'dashboard:page-list',
-            },
             {
                 'label': _('Email templates'),
                 'url_name': 'dashboard:comms-list',

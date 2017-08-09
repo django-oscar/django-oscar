@@ -255,14 +255,6 @@ def get_profile_class():
     return get_model(app_label, model_name)
 
 
-def feature_hidden(feature_name):
-    """
-    Test if a certain Oscar feature is disabled.
-    """
-    return (feature_name is not None and
-            feature_name in settings.OSCAR_HIDDEN_FEATURES)
-
-
 # The following section is concerned with offering both the
 # get_model(app_label, model_name) and
 # is_model_registered(app_label, model_name) methods. Because the Django
