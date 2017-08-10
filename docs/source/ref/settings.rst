@@ -380,9 +380,11 @@ For example::
     OSCAR_CURRENCY_FORMAT = {
         'USD': {
             'currency_digits': False,
-            'currency_digits': "accounting",
+            'format_type': "accounting",
         },
-        'EUR': { .. }
+        'EUR': {
+            'format': u'#,##0\xa0¤',
+        }
     }
 
 .. _`Babel library`: http://babel.pocoo.org/en/latest/api/numbers.html#babel.numbers.format_currency

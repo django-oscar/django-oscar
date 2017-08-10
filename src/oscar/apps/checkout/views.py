@@ -677,3 +677,16 @@ class ThankYouView(generic.DetailView):
                 raise http.Http404(_("No order found"))
 
         return order
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(ThankYouView, self).get_context_data(*args, **kwargs)
+        # Remember whether this view has been loaded.
+        # Only send tracking information on the first load.
+        key = 'order_{}_thankyou_viewed'.format(ctx['order'].pk)
+        if not self.request.session.get(key, False):
+            self.request.session[key] = True
+            ctx['send_analytics_event'] = True
+        else:
+            ctx['send_analytics_event'] = False
+
+        return ctx
