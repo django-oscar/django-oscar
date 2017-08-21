@@ -1,11 +1,7 @@
 from django.contrib.auth import models as auth_models
 from django.db import models
-from django.utils import timezone, six
-from django.utils.encoding import python_2_unicode_compatible
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-
-from oscar.core.compat import AUTH_USER_MODEL
-from oscar.models.fields import AutoSlugField
 
 
 class UserManager(auth_models.BaseUserManager):
@@ -93,73 +89,3 @@ class AbstractUser(auth_models.AbstractBaseUser,
 
         user_address.num_orders += 1
         user_address.save()
-
-
-@python_2_unicode_compatible
-class AbstractEmail(models.Model):
-    """
-    This is a record of all emails sent to a customer.
-    Normally, we only record order-related emails.
-    """
-    user = models.ForeignKey(AUTH_USER_MODEL, related_name='emails',
-                             verbose_name=_("User"))
-    subject = models.TextField(_('Subject'), max_length=255)
-    body_text = models.TextField(_("Body Text"))
-    body_html = models.TextField(_("Body HTML"), blank=True)
-    date_sent = models.DateTimeField(_("Date Sent"), auto_now_add=True)
-
-    class Meta:
-        abstract = True
-        app_label = 'customer'
-        verbose_name = _('Email')
-        verbose_name_plural = _('Emails')
-
-    def __str__(self):
-        return _(u"Email to %(user)s with subject '%(subject)s'") % {
-            'user': self.user.get_username(), 'subject': self.subject}
-
-
-@python_2_unicode_compatible
-class AbstractNotification(models.Model):
-    recipient = models.ForeignKey(AUTH_USER_MODEL,
-                                  related_name='notifications', db_index=True)
-
-    # Not all notifications will have a sender.
-    sender = models.ForeignKey(AUTH_USER_MODEL, null=True)
-
-    # HTML is allowed in this field as it can contain links
-    subject = models.CharField(max_length=255)
-    body = models.TextField()
-
-    # Some projects may want to categorise their notifications.  You may want
-    # to use this field to show a different icons next to the notification.
-    category = models.CharField(max_length=255, blank=True)
-
-    INBOX, ARCHIVE = 'Inbox', 'Archive'
-    choices = (
-        (INBOX, _('Inbox')),
-        (ARCHIVE, _('Archive')))
-    location = models.CharField(max_length=32, choices=choices,
-                                default=INBOX)
-
-    date_sent = models.DateTimeField(auto_now_add=True)
-    date_read = models.DateTimeField(blank=True, null=True)
-
-    class Meta:
-        abstract = True
-        app_label = 'customer'
-        ordering = ('-date_sent',)
-        verbose_name = _('Notification')
-        verbose_name_plural = _('Notifications')
-
-    def __str__(self):
-        return self.subject
-
-    def archive(self):
-        self.location = self.ARCHIVE
-        self.save()
-    archive.alters_data = True
-
-    @property
-    def is_read(self):
-        return self.date_read is not None
