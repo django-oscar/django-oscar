@@ -163,17 +163,21 @@ class PhoneNumberMixin(object):
         # number is entered. We add the field in the init since on Python 2
         # using forms.Form as base class results in errors when using this
         # class as mixin.
+        field_kwargs = {
+            'required': False,
+            'help_text': '',
+            'max_length': 32,
+            'label': _('Phone number'),
+        }
 
-        # If the model field already exists, copy some properties from it
-        try:
-            number_required = self.fields['phone_number'].required
-            number_help_text = self.fields['phone_number'].help_text
-        except KeyError:
-            number_required = False
-            number_help_text = ''
+        # If the model field already exists, copy existing properties from it
+        for key in field_kwargs:
+            try:
+                field_kwargs[key] = getattr(self.fields['phone_number'], key)
+            except (KeyError, AttributeError):
+                pass
 
-        self.fields['phone_number'] = forms.CharField(
-            max_length=32, required=number_required, help_text=number_help_text)
+        self.fields['phone_number'] = forms.CharField(**field_kwargs)
 
     def get_country(self):
         # If the form data contains valid country information, we use that.
