@@ -23,8 +23,6 @@ MetaDataForm, ConditionForm, BenefitForm, RestrictionsForm, OfferSearchForm \
     = get_classes('dashboard.offers.forms',
                   ['MetaDataForm', 'ConditionForm', 'BenefitForm',
                    'RestrictionsForm', 'OfferSearchForm'])
-OrderDiscountCSVFormatter = get_class(
-    'dashboard.offers.reports', 'OrderDiscountCSVFormatter')
 
 
 class OfferListView(ListView):
@@ -377,8 +375,4 @@ class OfferDetailView(ListView):
         return ctx
 
     def render_to_response(self, context):
-        if self.request.GET.get('format') == 'csv':
-            formatter = OrderDiscountCSVFormatter()
-            return formatter.generate_response(context['order_discounts'],
-                                               offer=self.offer)
         return super(OfferDetailView, self).render_to_response(context)

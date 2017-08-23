@@ -11,7 +11,6 @@ class DashboardApplication(Application):
     }
 
     index_view = get_class('dashboard.views', 'IndexView')
-    reports_app = get_class('dashboard.reports.app', 'application')
     orders_app = get_class('dashboard.orders.app', 'application')
     users_app = get_class('dashboard.users.app', 'application')
     catalogue_app = get_class('dashboard.catalogue.app', 'application')
@@ -23,7 +22,6 @@ class DashboardApplication(Application):
         urls = [
             url(r'^$', self.index_view.as_view(), name='index'),
             url(r'^catalogue/', include(self.catalogue_app.urls)),
-            url(r'^reports/', include(self.reports_app.urls)),
             url(r'^orders/', include(self.orders_app.urls)),
             url(r'^users/', include(self.users_app.urls)),
             url(r'^partners/', include(self.partners_app.urls)),

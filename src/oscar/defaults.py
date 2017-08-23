@@ -152,12 +152,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
                 'url_name': 'dashboard:comms-list',
             }
         ]
-    },
-    {
-        'label': _('Reports'),
-        'icon': 'icon-bar-chart',
-        'url_name': 'dashboard:reports-index',
-    },
+    }
 ]
 OSCAR_DASHBOARD_DEFAULT_ACCESS_FUNCTION = 'oscar.apps.dashboard.nav.default_access_fn'  # noqa
 
