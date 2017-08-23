@@ -28,17 +28,17 @@ class TestBenefitProxyModels(object):
         This test became necessary because the complex name/description logic
         broke with the python_2_unicode_compatible decorator.
         """
-        for type, __ in Benefit.TYPE_CHOICES:
-            benefit = Benefit(type=type, range=range)
+        for benefit_type, __ in Benefit.TYPE_CHOICES:
+            benefit = Benefit(type=benefit_type, range=range)
             assert all([
                 benefit.name,
                 benefit.description,
                 six.text_type(benefit)])
 
     def test_proxy(self, range):
-        for type, __ in Benefit.TYPE_CHOICES:
+        for benefit_type, __ in Benefit.TYPE_CHOICES:
             benefit = Benefit(
-                type=type, value=10, range=range, max_affected_items=1)
+                type=benefit_type, value=10, range=range, max_affected_items=1)
             proxy = benefit.proxy()
             assert benefit.type == proxy.type
             assert benefit.value == proxy.value
