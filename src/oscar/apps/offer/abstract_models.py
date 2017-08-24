@@ -444,18 +444,28 @@ class AbstractBenefit(models.Model):
         verbose_name = _("Benefit")
         verbose_name_plural = _("Benefits")
 
-    def proxy(self):
-        from oscar.apps.offer import benefits
-
-        klassmap = {
-            self.PERCENTAGE: benefits.PercentageDiscountBenefit,
-            self.FIXED: benefits.AbsoluteDiscountBenefit,
-            self.MULTIBUY: benefits.MultibuyDiscountBenefit,
-            self.FIXED_PRICE: benefits.FixedPriceBenefit,
-            self.SHIPPING_ABSOLUTE: benefits.ShippingAbsoluteDiscountBenefit,
-            self.SHIPPING_FIXED_PRICE: benefits.ShippingFixedPriceBenefit,
-            self.SHIPPING_PERCENTAGE: benefits.ShippingPercentageDiscountBenefit
+    @property
+    def proxy_map(self):
+        return {
+            self.PERCENTAGE: get_class(
+                'offer.benefits', 'PercentageDiscountBenefit'),
+            self.FIXED: get_class(
+                'offer.benefits', 'AbsoluteDiscountBenefit'),
+            self.MULTIBUY: get_class(
+                'offer.benefits', 'MultibuyDiscountBenefit'),
+            self.FIXED_PRICE: get_class(
+                'offer.benefits', 'FixedPriceBenefit'),
+            self.SHIPPING_ABSOLUTE: get_class(
+                'offer.benefits', 'ShippingAbsoluteDiscountBenefit'),
+            self.SHIPPING_FIXED_PRICE: get_class(
+                'offer.benefits', 'ShippingFixedPriceBenefit'),
+            self.SHIPPING_PERCENTAGE: get_class(
+                'offer.benefits', 'ShippingPercentageDiscountBenefit')
         }
+
+    def proxy(self):
+        klassmap = self.proxy_map
+
         # Short-circuit logic if current class is already a proxy class.
         if self.__class__ in klassmap.values():
             return self
@@ -685,17 +695,22 @@ class AbstractCondition(models.Model):
         verbose_name = _("Condition")
         verbose_name_plural = _("Conditions")
 
+    @property
+    def proxy_map(self):
+        return {
+            self.COUNT: get_class(
+                'offer.conditions', 'CountCondition'),
+            self.VALUE: get_class(
+                'offer.conditions', 'ValueCondition'),
+            self.COVERAGE: get_class(
+                'offer.conditions', 'CoverageCondition'),
+        }
+
     def proxy(self):
         """
         Return the proxy model
         """
-        from oscar.apps.offer import conditions
-
-        klassmap = {
-            self.COUNT: conditions.CountCondition,
-            self.VALUE: conditions.ValueCondition,
-            self.COVERAGE: conditions.CoverageCondition
-        }
+        klassmap = self.proxy_map
         # Short-circuit logic if current class is already a proxy class.
         if self.__class__ in klassmap.values():
             return self
