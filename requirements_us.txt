@@ -1,1 +1,0 @@
-django-localflavor==1.0
