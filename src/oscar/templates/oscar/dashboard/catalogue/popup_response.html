@@ -1,0 +1,11 @@
+{% load i18n static %}<!DOCTYPE html>
+<html>
+  <head><title>{% trans 'Popup closing...' %}</title></head>
+  <body>
+    <script type="text/javascript"
+            id="oscar-popup-response-constants"
+            src="{% static "oscar/js/oscar/popup_response.js" %}"
+            data-popup-response="{{ popup_response_data }}">
+    </script>
+  </body>
+</html>

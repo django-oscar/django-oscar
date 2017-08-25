@@ -742,6 +742,7 @@ class AbstractProductAttribute(models.Model):
         blank=True,
         null=True,
         on_delete=models.CASCADE,
+        related_name='product_attributes',
         verbose_name=_("Option Group"),
         help_text=_('Select an option group if using type "Option" or "Multi Option"'))
     required = models.BooleanField(_('Required'), default=False)

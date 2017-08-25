@@ -1,0 +1,36 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+{% load render_table from django_tables2 %}
+
+{% block title %}
+    {% trans "Attribute Option Groups" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="active">{% trans "Attribute Option Group" %}</li>
+    </ul>
+{% endblock %}
+
+{% block header %}
+    <div class="page-header">
+        <a href="{% url 'dashboard:catalogue-attribute-option-group-create' %}?{{ querystring }}" class="btn btn-primary btn-lg pull-right"><i class="icon-plus"></i> {% trans "Create new Attribute Option Group" %}</a>
+        <h1>{% trans "Attribute Option Group" %}</h1>
+    </div>
+{% endblock header %}
+
+{% block dashboard_content %}
+    {% if attribute_option_groups %}
+        {% block product_list %}
+            <form action="." method="post">
+                {% csrf_token %}
+                {% render_table attribute_option_groups %}
+            </form>
+        {% endblock product_list %}
+    {% else %}
+        <p>{% trans "No Attribute Option Groups found." %}</p>
+    {% endif %}
+{% endblock dashboard_content %}

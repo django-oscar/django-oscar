@@ -1,3 +1,5 @@
+import json
+
 from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse
@@ -5,11 +7,13 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
+from django.template.response import TemplateResponse
+from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 from django_tables2 import SingleTableMixin, SingleTableView
 
-from oscar.core.loading import get_classes, get_model
+from oscar.core.loading import get_class, get_classes, get_model
 from oscar.views.generic import ObjectLookupView
 
 (ProductForm,
@@ -17,28 +21,33 @@ from oscar.views.generic import ObjectLookupView
  ProductSearchForm,
  ProductClassForm,
  CategoryForm,
- StockAlertSearchForm) \
+ StockAlertSearchForm,
+ AttributeOptionGroupForm) \
     = get_classes('dashboard.catalogue.forms',
                   ('ProductForm',
                    'ProductClassSelectForm',
                    'ProductSearchForm',
                    'ProductClassForm',
                    'CategoryForm',
-                   'StockAlertSearchForm'))
+                   'StockAlertSearchForm',
+                   'AttributeOptionGroupForm'))
 (StockRecordFormSet,
  ProductCategoryFormSet,
  ProductImageFormSet,
  ProductRecommendationFormSet,
- ProductAttributesFormSet) \
+ ProductAttributesFormSet,
+ AttributeOptionFormSet) \
     = get_classes('dashboard.catalogue.formsets',
                   ('StockRecordFormSet',
                    'ProductCategoryFormSet',
                    'ProductImageFormSet',
                    'ProductRecommendationFormSet',
-                   'ProductAttributesFormSet'))
-ProductTable, CategoryTable \
+                   'ProductAttributesFormSet',
+                   'AttributeOptionFormSet'))
+ProductTable, CategoryTable, AttributeOptionGroupTable \
     = get_classes('dashboard.catalogue.tables',
-                  ('ProductTable', 'CategoryTable'))
+                  ('ProductTable', 'CategoryTable',
+                   'AttributeOptionGroupTable'))
 Product = get_model('catalogue', 'Product')
 Category = get_model('catalogue', 'Category')
 ProductImage = get_model('catalogue', 'ProductImage')
@@ -47,6 +56,9 @@ ProductClass = get_model('catalogue', 'ProductClass')
 StockRecord = get_model('partner', 'StockRecord')
 StockAlert = get_model('partner', 'StockAlert')
 Partner = get_model('partner', 'Partner')
+AttributeOptionGroup = get_model('catalogue', 'AttributeOptionGroup')
+
+RelatedFieldWidgetWrapper = get_class('dashboard.catalogue.widgets', 'RelatedFieldWidgetWrapper')
 
 
 def filter_products(queryset, user):
@@ -747,3 +759,238 @@ class ProductClassDeleteView(generic.DeleteView):
     def get_success_url(self):
         messages.info(self.request, _("Product type deleted successfully"))
         return reverse("dashboard:catalogue-class-list")
+
+
+class AttributeOptionGroupCreateUpdateView(generic.UpdateView):
+
+    template_name = 'dashboard/catalogue/attribute_option_group_form.html'
+    model = AttributeOptionGroup
+    form_class = AttributeOptionGroupForm
+    attribute_option_formset = AttributeOptionFormSet
+
+    def process_all_forms(self, form):
+        """
+        This validates both the AttributeOptionGroup form and the
+        AttributeOptions formset at once making it possible to display all their
+        errors at once.
+        """
+        if self.creating and form.is_valid():
+            # the object will be needed by the attribute_option_formset
+            self.object = form.save(commit=False)
+
+        attribute_option_formset = self.attribute_option_formset(
+            self.request.POST, self.request.FILES, instance=self.object)
+
+        is_valid = form.is_valid() and attribute_option_formset.is_valid()
+
+        if is_valid:
+            return self.forms_valid(form, attribute_option_formset)
+        else:
+            return self.forms_invalid(form, attribute_option_formset)
+
+    def forms_valid(self, form, attribute_option_formset):
+        form.save()
+        attribute_option_formset.save()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def forms_invalid(self, form, attribute_option_formset):
+        messages.error(self.request,
+                       _("Your submitted data was not valid - please "
+                         "correct the errors below"
+                         ))
+        ctx = self.get_context_data(form=form,
+                                    attribute_option_formset=attribute_option_formset)
+        return self.render_to_response(ctx)
+
+    form_valid = form_invalid = process_all_forms
+
+    def get_context_data(self, **kwargs):
+        ctx = super(AttributeOptionGroupCreateUpdateView, self).get_context_data(**kwargs)
+
+        if "attribute_option_formset" not in ctx:
+            ctx["attribute_option_formset"] = self.attribute_option_formset(
+                instance=self.object)
+
+        ctx["title"] = self.get_title()
+
+        if RelatedFieldWidgetWrapper.TO_FIELD_VAR in self.request.GET or RelatedFieldWidgetWrapper.TO_FIELD_VAR in self.request.POST:
+            to_field = self.request.GET.get(RelatedFieldWidgetWrapper.TO_FIELD_VAR,
+                                            self.request.POST.get(RelatedFieldWidgetWrapper.TO_FIELD_VAR))
+            ctx['to_field'] = to_field
+            ctx['to_field_var'] = RelatedFieldWidgetWrapper.TO_FIELD_VAR
+
+        if RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.GET or RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.POST:
+            is_popup = self.request.GET.get(RelatedFieldWidgetWrapper.IS_POPUP_VAR,
+                                            self.request.POST.get(RelatedFieldWidgetWrapper.IS_POPUP_VAR))
+            ctx['is_popup'] = is_popup
+            ctx['is_popup_var'] = RelatedFieldWidgetWrapper.IS_POPUP_VAR
+
+        return ctx
+
+    def get_url_with_querystring(self, url):
+        url_parts = [url]
+        if self.request.GET.urlencode():
+            url_parts += [self.request.GET.urlencode()]
+        return "?".join(url_parts)
+
+
+class AttributeOptionGroupCreateView(AttributeOptionGroupCreateUpdateView):
+
+    creating = True
+
+    def get_object(self):
+        return None
+
+    def get_title(self):
+        return _("Add a new Attribute Option Group")
+
+    def get_success_url(self):
+        messages.info(self.request, _("Attribute Option Group created successfully"))
+        url = reverse("dashboard:catalogue-attribute-option-group-list")
+        return self.get_url_with_querystring(url)
+
+    def forms_valid(self, form, attribute_option_formset):
+        response = super(AttributeOptionGroupCreateView, self).forms_valid(form, attribute_option_formset)
+
+        if RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.POST:
+            obj = form.instance
+            to_field = self.request.POST.get(RelatedFieldWidgetWrapper.TO_FIELD_VAR)
+            if to_field:
+                attr = str(to_field)
+            else:
+                attr = obj._meta.pk.attname
+            value = obj.serializable_value(attr)
+            popup_response_data = json.dumps({
+                'value': six.text_type(value),
+                'obj': six.text_type(obj),
+            })
+            return TemplateResponse(self.request, 'dashboard/catalogue/popup_response.html', {
+                'popup_response_data': popup_response_data,
+            })
+
+        else:
+            return response
+
+
+class AttributeOptionGroupUpdateView(AttributeOptionGroupCreateUpdateView):
+
+    creating = False
+
+    def get_object(self):
+        attribute_option_group = get_object_or_404(AttributeOptionGroup, pk=self.kwargs['pk'])
+        return attribute_option_group
+
+    def get_title(self):
+        return _("Update Attribute Option Group '%s'") % self.object.name
+
+    def get_success_url(self):
+        messages.info(self.request, _("Attribute Option Group updated successfully"))
+        url = reverse("dashboard:catalogue-attribute-option-group-list")
+        return self.get_url_with_querystring(url)
+
+    def forms_valid(self, form, attribute_option_formset):
+        response = super(AttributeOptionGroupUpdateView, self).forms_valid(form, attribute_option_formset)
+
+        if RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.POST:
+            obj = form.instance
+            opts = obj._meta
+            to_field = self.request.POST.get(RelatedFieldWidgetWrapper.TO_FIELD_VAR)
+            if to_field:
+                attr = str(to_field)
+            else:
+                attr = opts.pk.attname
+            # Retrieve the `object_id` from the resolved pattern arguments.
+            value = self.request.resolver_match.kwargs['pk']
+            new_value = obj.serializable_value(attr)
+            popup_response_data = json.dumps({
+                'action': 'change',
+                'value': six.text_type(value),
+                'obj': six.text_type(obj),
+                'new_value': six.text_type(new_value),
+            })
+            return TemplateResponse(self.request, 'dashboard/catalogue/popup_response.html', {
+                'popup_response_data': popup_response_data,
+            })
+
+        else:
+            return response
+
+
+class AttributeOptionGroupListView(SingleTableView):
+
+    template_name = 'dashboard/catalogue/attribute_option_group_list.html'
+    model = AttributeOptionGroup
+    table_class = AttributeOptionGroupTable
+    context_table_name = 'attribute_option_groups'
+
+    def get_context_data(self, **kwargs):
+        ctx = super(AttributeOptionGroupListView, self).get_context_data(**kwargs)
+        ctx['querystring'] = self.request.GET.urlencode()
+        return ctx
+
+
+class AttributeOptionGroupDeleteView(generic.DeleteView):
+
+    template_name = 'dashboard/catalogue/attribute_option_group_delete.html'
+    model = AttributeOptionGroup
+    form_class = AttributeOptionGroupForm
+
+    def get_context_data(self, **kwargs):
+        ctx = super(AttributeOptionGroupDeleteView, self).get_context_data(**kwargs)
+
+        ctx['title'] = _("Delete Attribute Option Group '%s'") % self.object.name
+
+        product_attribute_count = self.object.product_attributes.count()
+        if product_attribute_count > 0:
+            ctx['disallow'] = True
+            ctx['title'] = _("Unable to delete '%s'") % self.object.name
+            messages.error(self.request,
+                           _("%i product attributes are still assigned to this attribute option group") %
+                           product_attribute_count)
+
+        if RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.GET:
+            ctx['is_popup'] = self.request.GET.get(RelatedFieldWidgetWrapper.IS_POPUP_VAR)
+            ctx['is_popup_var'] = RelatedFieldWidgetWrapper.IS_POPUP_VAR
+
+        ctx['http_get_params'] = self.request.GET
+
+        return ctx
+
+    def delete(self, request, *args, **kwargs):
+        """
+        Calls the delete() method on the fetched object and then
+        redirects to the success URL, or closes the popup, it it is one.
+        """
+        obj = self.get_object()
+
+        response = super(AttributeOptionGroupDeleteView, self).delete(request, *args, **kwargs)
+
+        if RelatedFieldWidgetWrapper.IS_POPUP_VAR in request.POST:
+            obj_id = obj.pk
+            popup_response_data = json.dumps({
+                'action': 'delete',
+                'value': six.text_type(obj_id),
+            })
+            return TemplateResponse(request, 'dashboard/catalogue/popup_response.html', {
+                'popup_response_data': popup_response_data,
+            })
+
+        else:
+            return response
+
+    def get_url_with_querystring(self, url):
+        url_parts = [url]
+        http_post_params = self.request.POST.copy()
+        try:
+            del http_post_params['csrfmiddlewaretoken']
+        except KeyError:
+            pass
+        if http_post_params.urlencode():
+            url_parts += [http_post_params.urlencode()]
+        return "?".join(url_parts)
+
+    def get_success_url(self):
+        messages.info(self.request, _("Attribute Option Group deleted successfully"))
+        url = reverse("dashboard:catalogue-attribute-option-group-list")
+        return self.get_url_with_querystring(url)

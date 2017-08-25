@@ -15,7 +15,11 @@ StockRecord = get_model('partner', 'StockRecord')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductImage = get_model('catalogue', 'ProductImage')
 ProductRecommendation = get_model('catalogue', 'ProductRecommendation')
+AttributeOptionGroup = get_model('catalogue', 'AttributeOptionGroup')
+AttributeOption = get_model('catalogue', 'AttributeOption')
 ProductSelect = get_class('dashboard.catalogue.widgets', 'ProductSelect')
+RelatedFieldWidgetWrapper = get_class('dashboard.catalogue.widgets',
+                                      'RelatedFieldWidgetWrapper')
 
 CategoryForm = movenodeform_factory(
     Category,
@@ -345,6 +349,9 @@ class ProductAttributesForm(forms.ModelForm):
         self.fields["code"].required = False
 
         self.fields["option_group"].help_text = _("Select an option group")
+        self.fields["option_group"].widget = RelatedFieldWidgetWrapper(
+            self.fields["option_group"].widget,
+            self._meta.model._meta.get_field('option_group').remote_field)
 
     def clean_code(self):
         code = self.cleaned_data.get("code")
@@ -358,3 +365,17 @@ class ProductAttributesForm(forms.ModelForm):
     class Meta:
         model = ProductAttribute
         fields = ["name", "code", "type", "option_group", "required"]
+
+
+class AttributeOptionGroupForm(forms.ModelForm):
+
+    class Meta:
+        model = AttributeOptionGroup
+        fields = ['name']
+
+
+class AttributeOptionForm(forms.ModelForm):
+
+    class Meta:
+        model = AttributeOption
+        fields = ['option']
