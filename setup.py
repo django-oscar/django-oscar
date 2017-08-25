@@ -24,7 +24,7 @@ install_requires = [
     # PIL is required for image fields, Pillow is the "friendly" PIL fork
     'pillow>=3.4.2',
     # We use the ModelFormSetView from django-extra-views for the basket page
-    'django-extra-views>=0.2,<0.9.0',
+    'django-extra-views>=0.2,<1.0',
     # Search support
     'django-haystack>=2.5.0,<2.7.0',
     # Treebeard is used for categories
