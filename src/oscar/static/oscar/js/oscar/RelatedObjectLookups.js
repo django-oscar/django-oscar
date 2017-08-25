@@ -1,6 +1,6 @@
 // Handles related-objects functionality: Add Another links.
 
-var oscar = (function(o, $) {
+(function(o, $) {
     'use strict';
 
     // Copied in from Django's JavaScript translation catalog library
