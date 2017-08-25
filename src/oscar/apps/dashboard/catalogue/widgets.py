@@ -3,7 +3,7 @@ import re
 
 from django.core.urlresolvers import reverse_lazy
 from django.forms import Widget
-from django.urls import reverse
+from django.core.urlresolvers import reverse
 
 from oscar.forms.widgets import MultipleRemoteSelect, RemoteSelect
 
