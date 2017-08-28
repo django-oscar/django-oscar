@@ -1,4 +1,5 @@
-from django import forms, VERSION as DJANGO_VERSION
+from django import forms
+from django import VERSION as DJANGO_VERSION
 from django.core import exceptions
 from django.utils.translation import ugettext_lazy as _
 from treebeard.forms import movenodeform_factory
