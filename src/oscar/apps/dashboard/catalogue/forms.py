@@ -1,4 +1,4 @@
-from django import forms
+from django import forms, VERSION as DJANGO_VERSION
 from django.core import exceptions
 from django.utils.translation import ugettext_lazy as _
 from treebeard.forms import movenodeform_factory
@@ -349,9 +349,14 @@ class ProductAttributesForm(forms.ModelForm):
         self.fields["code"].required = False
 
         self.fields["option_group"].help_text = _("Select an option group")
+        # The "Field.rel" attribute was renamed to "remote_field" in Django 1.9
+        # Documentation URL: <https://docs.djangoproject.com/en/1.11/releases/1.9/#field-rel-changes>
+        if DJANGO_VERSION < (1, 9):
+            remote_field = self._meta.model._meta.get_field('option_group').rel
+        else:
+            remote_field = self._meta.model._meta.get_field('option_group').remote_field
         self.fields["option_group"].widget = RelatedFieldWidgetWrapper(
-            self.fields["option_group"].widget,
-            self._meta.model._meta.get_field('option_group').remote_field)
+            self.fields["option_group"].widget, remote_field)
 
     def clean_code(self):
         code = self.cleaned_data.get("code")
