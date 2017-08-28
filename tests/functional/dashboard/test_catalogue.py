@@ -8,11 +8,10 @@ from django.utils.six.moves import http_client
 from django.utils.translation import ugettext
 
 from oscar.core.loading import get_class, get_model
-from oscar.test.testcases import WebTestCase, add_permissions
-from oscar.test.factories import create_product
 from oscar.test.factories import (
     AttributeOptionFactory, AttributeOptionGroupFactory, CategoryFactory,
-    PartnerFactory, ProductAttributeFactory, ProductFactory)
+    PartnerFactory, ProductAttributeFactory, ProductFactory, create_product)
+from oscar.test.testcases import WebTestCase, add_permissions
 
 Product = get_model('catalogue', 'Product')
 ProductClass = get_model('catalogue', 'ProductClass')
