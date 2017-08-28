@@ -14,30 +14,6 @@ build_sandbox:
 
 sandbox: install build_sandbox
 
-geoip:
-	wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
-	gunzip GeoLiteCity.dat.gz
-	mv GeoLiteCity.dat sites/demo/geoip
-
-docs:
-	cd docs && make html
-
-coverage:
-	coverage run ./runtests.py --with-xunit
-	coverage xml -i
-
-lint:
-	./lint.sh
-
-testmigrations:
-	pip install -r requirements_migrations.txt
-	cd sites/sandbox && ./test_migrations.sh
-
-# This target is run on Travis.ci. We lint, test and build the sandbox/demo
-# sites as well as testing migrations apply correctly. We don't call 'install'
-# first as that is run as a separate part of the Travis build process.
-travis: lint coverage build_sandbox build_demo testmigrations
-
 messages:
 	# Create the .po files used for i18n
 	cd src/oscar; django-admin.py makemessages -a
@@ -59,14 +35,3 @@ clean:
 	# Remove files not in source control
 	find . -type f -name "*.pyc" -delete
 	rm -rf nosetests.xml coverage.xml htmlcov *.egg-info *.pdf dist violations.txt
-
-preflight: lint
-    # Bare minimum of tests to run before pushing to master
-	./runtests.py
-
-todo:
-	# Look for areas of the code that need updating when some event has taken place (like 
-	# Oscar dropping support for a Django version)
-	-grep -rnH TODO *.txt
-	-grep -rnH TODO src/oscar/apps/
-	-grep -rnH "django.VERSION" src/oscar/apps
