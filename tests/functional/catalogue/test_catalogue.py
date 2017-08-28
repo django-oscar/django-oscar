@@ -254,7 +254,7 @@ class AttributeOptionGroupDeleteMixin(object):
 class AttributeOptionGroupPopUpWindowMixin(object):
 
     def _set_up_pop_up_window_vars(self):
-        self.to_field = AttributeOptionGroup.id.field_name
+        self.to_field = AttributeOptionGroup._meta.pk.name
         self.is_popup = RelatedFieldWidgetWrapper.IS_POPUP_VALUE
         self.to_field_var = RelatedFieldWidgetWrapper.TO_FIELD_VAR
         self.is_popup_var = RelatedFieldWidgetWrapper.IS_POPUP_VAR
