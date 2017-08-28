@@ -9,7 +9,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 
-        <title>{% if display_version %}[{% trans "Build" %} {{ version }}] {% endif %}{% block title %}{{ shop_name }} - {{ shop_tagline }}{% endblock %}</title>
+        <title>{% block title %}{{ shop_name }} - {{ shop_tagline }}{% endblock %}</title>
 
         <meta name="created" content="{% now "jS M Y h:i" %}" />
         <meta name="description" content="{% block description %}{% endblock %}" />
@@ -34,10 +34,6 @@
 
         {% block extrahead %}{% endblock %}
 
-        {% block tracking %}
-            {# Default to using Google analytics #}
-            {% include "partials/google_analytics.html" %}
-        {% endblock %}
     </head>
 
     <body id="{% block body_id %}default{% endblock %}" class="{% block body_class %}default{% endblock %}">

@@ -30,7 +30,6 @@ Order = get_model('order', 'Order')
 Line = get_model('basket', 'Line')
 Basket = get_model('basket', 'Basket')
 UserAddress = get_model('address', 'UserAddress')
-Email = get_model('customer', 'Email')
 
 User = get_user_model()
 
@@ -375,37 +374,6 @@ class ChangePasswordView(PageTitleMixin, generic.FormView):
             'reset_url': get_password_reset_url(self.request.user),
         }
         return redirect(self.get_success_url())
-
-
-# =============
-# Email history
-# =============
-
-class EmailHistoryView(PageTitleMixin, generic.ListView):
-    context_object_name = "emails"
-    template_name = 'customer/email/email_list.html'
-    paginate_by = 20
-    page_title = _('Email History')
-    active_tab = 'emails'
-
-    def get_queryset(self):
-        return Email._default_manager.filter(user=self.request.user)
-
-
-class EmailDetailView(PageTitleMixin, generic.DetailView):
-    """Customer email"""
-    template_name = "customer/email/email_detail.html"
-    context_object_name = 'email'
-    active_tab = 'emails'
-
-    def get_object(self, queryset=None):
-        return get_object_or_404(Email, user=self.request.user,
-                                 id=self.kwargs['email_id'])
-
-    def get_page_title(self):
-        """Append email subject to page title"""
-        return u'%s: %s' % (_('Email'), self.object.subject)
-
 
 # =============
 # Order history

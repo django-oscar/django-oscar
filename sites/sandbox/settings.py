@@ -137,8 +137,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     # Oscar specific
     'oscar.apps.checkout.context_processors.checkout',
-    'oscar.core.context_processors.metadata',
-    'oscar.apps.customer.notifications.context_processors.notifications',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -362,11 +360,6 @@ OSCAR_SHOP_TAGLINE = 'Sandbox'
 
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = True
-
-# This is added to each template context by the core context processor.  It is
-# useful for test/stage/qa sites where you want to show the version of the site
-# in the page title.
-DISPLAY_VERSION = False
 
 
 # Order processing

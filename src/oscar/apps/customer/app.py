@@ -1,6 +1,5 @@
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
-from django.views import generic
 
 from oscar.core.application import Application
 from oscar.core.loading import get_class
@@ -15,8 +14,6 @@ class CustomerApplication(Application):
                                        'AnonymousOrderDetailView')
     order_line_view = get_class('customer.views', 'OrderLineView')
 
-    email_list_view = get_class('customer.views', 'EmailHistoryView')
-    email_detail_view = get_class('customer.views', 'EmailDetailView')
     login_view = get_class('customer.views', 'AccountAuthView')
     logout_view = get_class('customer.views', 'LogoutView')
     register_view = get_class('customer.views', 'AccountRegistrationView')
@@ -24,15 +21,6 @@ class CustomerApplication(Application):
     profile_update_view = get_class('customer.views', 'ProfileUpdateView')
     profile_delete_view = get_class('customer.views', 'ProfileDeleteView')
     change_password_view = get_class('customer.views', 'ChangePasswordView')
-
-    notification_inbox_view = get_class('customer.notifications.views',
-                                        'InboxView')
-    notification_archive_view = get_class('customer.notifications.views',
-                                          'ArchiveView')
-    notification_update_view = get_class('customer.notifications.views',
-                                         'UpdateView')
-    notification_detail_view = get_class('customer.notifications.views',
-                                         'DetailView')
 
     def get_urls(self):
         urls = [
@@ -69,32 +57,7 @@ class CustomerApplication(Application):
             url(r'^orders/(?P<order_number>[\w-]*)/(?P<line_id>\d+)$',
                 login_required(self.order_line_view.as_view()),
                 name='order-line'),
-
-
-            # Email history
-            url(r'^emails/$',
-                login_required(self.email_list_view.as_view()),
-                name='email-list'),
-            url(r'^emails/(?P<email_id>\d+)/$',
-                login_required(self.email_detail_view.as_view()),
-                name='email-detail'),
-
-            # Notifications
-            # Redirect to notification inbox
-            url(r'^notifications/$', generic.RedirectView.as_view(
-                url='/accounts/notifications/inbox/', permanent=True)),
-            url(r'^notifications/inbox/$',
-                login_required(self.notification_inbox_view.as_view()),
-                name='notifications-inbox'),
-            url(r'^notifications/archive/$',
-                login_required(self.notification_archive_view.as_view()),
-                name='notifications-archive'),
-            url(r'^notifications/update/$',
-                login_required(self.notification_update_view.as_view()),
-                name='notifications-update'),
-            url(r'^notifications/(?P<pk>\d+)/$',
-                login_required(self.notification_detail_view.as_view()),
-                name='notifications-detail')]
+        ]
 
         return self.post_process_urls(urls)
 
