@@ -123,6 +123,4 @@
     });
     $('.related-widget-wrapper select').trigger('change');
 
-    return o;
-
 })(oscar || {}, jQuery);
