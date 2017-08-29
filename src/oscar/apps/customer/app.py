@@ -9,7 +9,6 @@ class CustomerApplication(Application):
     name = 'customer'
     summary_view = get_class('customer.views', 'AccountSummaryView')
     order_history_view = get_class('customer.views', 'OrderHistoryView')
-    order_line_view = get_class('customer.views', 'OrderLineView')
 
     login_view = get_class('customer.views', 'AccountAuthView')
     logout_view = get_class('customer.views', 'LogoutView')
@@ -37,10 +36,7 @@ class CustomerApplication(Application):
             # Order history
             url(r'^orders/$',
                 login_required(self.order_history_view.as_view()),
-                name='order-list'),
-            url(r'^orders/(?P<order_number>[\w-]*)/(?P<line_id>\d+)$',
-                login_required(self.order_line_view.as_view()),
-                name='order-line'),
+                name='order-list')
         ]
 
         return self.post_process_urls(urls)

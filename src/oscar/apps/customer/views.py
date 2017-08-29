@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import redirect
 from django.views import generic
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist
@@ -10,7 +10,6 @@ from django.contrib.sites.models import get_current_site
 from django.conf import settings
 
 from oscar.core.utils import safe_referrer
-from oscar.views.generic import PostActionMixin
 from oscar.apps.customer.utils import get_password_reset_url
 from oscar.core.loading import (
     get_class, get_profile_class, get_classes, get_model)
@@ -23,13 +22,8 @@ EmailAuthenticationForm, EmailUserCreationForm, OrderSearchForm = get_classes(
     'customer.forms', ['EmailAuthenticationForm', 'EmailUserCreationForm',
                        'OrderSearchForm'])
 PasswordChangeForm = get_class('customer.forms', 'PasswordChangeForm')
-ProfileForm, ConfirmPasswordForm = get_classes(
-    'customer.forms', ['ProfileForm', 'ConfirmPasswordForm'])
-UserAddressForm = get_class('address.forms', 'UserAddressForm')
+ConfirmPasswordForm = get_class('customer.forms', 'ConfirmPasswordForm')
 Order = get_model('order', 'Order')
-Line = get_model('basket', 'Line')
-Basket = get_model('basket', 'Basket')
-UserAddress = get_model('address', 'UserAddress')
 
 User = get_user_model()
 
@@ -364,39 +358,3 @@ class OrderHistoryView(PageTitleMixin, generic.ListView):
         ctx = super(OrderHistoryView, self).get_context_data(*args, **kwargs)
         ctx['form'] = self.form
         return ctx
-
-
-class OrderLineView(PostActionMixin, generic.DetailView):
-    """Customer order line"""
-
-    def get_object(self, queryset=None):
-        order = get_object_or_404(Order, user=self.request.user,
-                                  number=self.kwargs['order_number'])
-        return order.lines.get(id=self.kwargs['line_id'])
-
-    def do_reorder(self, line):
-        self.response = redirect(
-            'customer:order', int(self.kwargs['order_number']))
-        basket = self.request.basket
-
-        line_available_to_reorder, reason = line.is_available_to_reorder(
-            basket, self.request.strategy)
-
-        if not line_available_to_reorder:
-            messages.warning(self.request, reason)
-            return
-
-        # We need to pass response to the get_or_create... method
-        # as a new basket might need to be created
-        self.response = redirect('basket:summary')
-
-        basket.add_product(line.product, line.quantity)
-
-        if line.quantity > 1:
-            msg = _("%(qty)d copies of '%(product)s' have been added to your"
-                    " basket") % {
-                'qty': line.quantity, 'product': line.product}
-        else:
-            msg = _("'%s' has been added to your basket") % line.product
-
-        messages.info(self.request, msg)
