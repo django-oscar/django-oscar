@@ -400,16 +400,3 @@ class OrderLineView(PostActionMixin, generic.DetailView):
             msg = _("'%s' has been added to your basket") % line.product
 
         messages.info(self.request, msg)
-
-
-class AnonymousOrderDetailView(generic.DetailView):
-    model = Order
-    template_name = "customer/anon_order.html"
-
-    def get_object(self, queryset=None):
-        # Check URL hash matches that for order to prevent spoof attacks
-        order = get_object_or_404(self.model, user=None,
-                                  number=self.kwargs['order_number'])
-        if self.kwargs['hash'] != order.verification_hash():
-            raise http.Http404()
-        return order

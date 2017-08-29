@@ -9,8 +9,6 @@ class CustomerApplication(Application):
     name = 'customer'
     summary_view = get_class('customer.views', 'AccountSummaryView')
     order_history_view = get_class('customer.views', 'OrderHistoryView')
-    anon_order_detail_view = get_class('customer.views',
-                                       'AnonymousOrderDetailView')
     order_line_view = get_class('customer.views', 'OrderLineView')
 
     login_view = get_class('customer.views', 'AccountAuthView')
@@ -40,8 +38,6 @@ class CustomerApplication(Application):
             url(r'^orders/$',
                 login_required(self.order_history_view.as_view()),
                 name='order-list'),
-            url(r'^order-status/(?P<order_number>[\w-]*)/(?P<hash>\w+)/$',
-                self.anon_order_detail_view.as_view(), name='anon-order'),
             url(r'^orders/(?P<order_number>[\w-]*)/(?P<line_id>\d+)$',
                 login_required(self.order_line_view.as_view()),
                 name='order-line'),
