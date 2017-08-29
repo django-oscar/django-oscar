@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-23 17:56+0200\n"
+"POT-Creation-Date: 2017-08-29 10:37+0200\n"
 "PO-Revision-Date: 2013-02-18 17:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: English (United States) (http://www.transifex.com/projects/p/"
@@ -92,8 +92,6 @@ msgstr ""
 #: apps/address/abstract_models.py:243 apps/address/config.py:8
 #: templates/oscar/checkout/checkout.html:37
 #: templates/oscar/checkout/thank_you.html:39
-#: templates/oscar/customer/anon_order.html:24
-#: templates/oscar/customer/order/order_detail.html:148
 #: templates/oscar/dashboard/orders/order_detail.html:448
 msgid "Address"
 msgstr ""
@@ -173,7 +171,6 @@ msgstr ""
 #: apps/address/abstract_models.py:464
 #: templates/oscar/checkout/shipping_address.html:5
 #: templates/oscar/checkout/shipping_address.html:12
-#: templates/oscar/customer/anon_order.html:20
 #: templates/oscar/dashboard/orders/order_list.html:98
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:5
 msgid "Shipping address"
@@ -259,8 +256,6 @@ msgstr ""
 #: apps/basket/abstract_models.py:575 apps/catalogue/abstract_models.py:168
 #: apps/catalogue/abstract_models.py:264 apps/catalogue/abstract_models.py:560
 #: apps/order/abstract_models.py:414 apps/partner/abstract_models.py:90
-#: templates/oscar/customer/anon_order.html:57
-#: templates/oscar/customer/order/order_detail.html:16
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:49
 #: templates/oscar/dashboard/orders/order_detail.html:111
 msgid "Product"
@@ -399,8 +394,6 @@ msgstr ""
 #: apps/offer/models.py:1284 apps/order/abstract_models.py:81
 #: apps/order/abstract_models.py:460 apps/partner/abstract_models.py:241
 #: apps/payment/abstract_models.py:41
-#: templates/oscar/customer/anon_order.html:13
-#: templates/oscar/customer/anon_order.html:58
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:54
 #: templates/oscar/dashboard/orders/line_detail.html:66
 #: templates/oscar/dashboard/orders/order_detail.html:66
@@ -472,7 +465,6 @@ msgstr ""
 #: templates/oscar/basket/partials/basket_content.html:30
 #: templates/oscar/checkout/checkout.html:110
 #: templates/oscar/checkout/thank_you.html:119
-#: templates/oscar/customer/anon_order.html:60
 #: templates/oscar/dashboard/orders/line_detail.html:56
 #: templates/oscar/dashboard/orders/line_detail.html:103
 #: templates/oscar/dashboard/orders/line_detail.html:128
@@ -1032,78 +1024,30 @@ msgstr ""
 msgid "A user with this email address already exists"
 msgstr ""
 
-#: apps/customer/views.py:166
+#: apps/customer/views.py:160
 msgid "Welcome back"
 msgstr ""
 
-#: apps/customer/views.py:214
+#: apps/customer/views.py:208
 msgid "Thanks for registering!"
 msgstr ""
 
-#: apps/customer/views.py:245 templates/oscar/customer/baseaccountpage.html:30
+#: apps/customer/views.py:239 templates/oscar/customer/baseaccountpage.html:30
 #: templates/oscar/customer/partials/nav_account.html:20
 msgid "Profile"
 msgstr ""
 
-#: apps/customer/views.py:296
-msgid "Edit Profile"
-msgstr ""
-
-#: apps/customer/views.py:331
-msgid "Profile updated"
-msgstr ""
-
-#: apps/customer/views.py:338 templates/oscar/customer/profile/profile.html:33
-msgid "Delete profile"
-msgstr ""
-
-#: apps/customer/views.py:351
-msgid "Your profile has now been deleted. Thanks for using the site."
-msgstr ""
-
-#: apps/customer/views.py:358
+#: apps/customer/views.py:290
 msgid "Change Password"
 msgstr ""
 
-#: apps/customer/views.py:369
+#: apps/customer/views.py:301
 msgid "Password updated"
 msgstr ""
 
-#: apps/customer/views.py:391 templates/oscar/customer/baseaccountpage.html:33
+#: apps/customer/views.py:323 templates/oscar/customer/baseaccountpage.html:33
 #: templates/oscar/customer/partials/nav_account.html:23
 msgid "Order History"
-msgstr ""
-
-#: apps/customer/views.py:442 apps/order/abstract_models.py:281
-#: apps/order/abstract_models.py:336 apps/order/abstract_models.py:376
-#: apps/order/abstract_models.py:762 apps/order/abstract_models.py:825
-#: apps/order/abstract_models.py:931 apps/order/config.py:8
-#: apps/payment/abstract_models.py:71 apps/voucher/abstract_models.py:147
-#: templates/oscar/dashboard/orders/shippingaddress_form.html:5
-msgid "Order"
-msgstr ""
-
-#: apps/customer/views.py:488
-#, python-format
-msgid ""
-"All available lines from order %(number)s have been added to your basket"
-msgstr ""
-
-#: apps/customer/views.py:494
-#, python-format
-msgid ""
-"It is not possible to re-order order %(number)s as none of its lines are "
-"available to purchase"
-msgstr ""
-
-#: apps/customer/views.py:526
-#, python-format
-msgid "%(qty)d copies of '%(product)s' have been added to your basket"
-msgstr ""
-
-#: apps/customer/views.py:530
-#, python-format
-msgid "'%s' has been added to your basket"
 msgstr ""
 
 #: apps/dashboard/catalogue/forms.py:17
@@ -2297,7 +2241,7 @@ msgstr ""
 msgid "Order total (excl. tax)"
 msgstr ""
 
-#: apps/order/abstract_models.py:62 templates/oscar/customer/anon_order.html:90
+#: apps/order/abstract_models.py:62
 msgid "Shipping charge (inc. tax)"
 msgstr ""
 
@@ -2306,7 +2250,6 @@ msgid "Shipping charge (excl. tax)"
 msgstr ""
 
 #: apps/order/abstract_models.py:72
-#: templates/oscar/customer/order/order_detail.html:144
 msgid "Shipping Address"
 msgstr ""
 
@@ -2317,7 +2260,6 @@ msgstr ""
 #: templates/oscar/checkout/shipping_methods.html:15
 #: templates/oscar/checkout/thank_you.html:67
 #: templates/oscar/checkout/thank_you.html:222
-#: templates/oscar/customer/anon_order.html:47
 msgid "Shipping method"
 msgstr ""
 
@@ -2334,6 +2276,15 @@ msgstr ""
 
 #: apps/order/abstract_models.py:245
 msgid "In progress"
+msgstr ""
+
+#: apps/order/abstract_models.py:281 apps/order/abstract_models.py:336
+#: apps/order/abstract_models.py:376 apps/order/abstract_models.py:762
+#: apps/order/abstract_models.py:825 apps/order/abstract_models.py:931
+#: apps/order/config.py:8 apps/payment/abstract_models.py:71
+#: apps/voucher/abstract_models.py:147
+#: templates/oscar/dashboard/orders/shippingaddress_form.html:5
+msgid "Order"
 msgstr ""
 
 #: apps/order/abstract_models.py:345
@@ -2877,7 +2828,6 @@ msgid "American Express cards use a 4 digit security code"
 msgstr ""
 
 #: apps/shipping/abstract_models.py:33
-#: templates/oscar/customer/order/order_detail.html:139
 msgid "Shipping Method"
 msgstr ""
 
@@ -2951,8 +2901,6 @@ msgstr ""
 #: templates/oscar/dashboard/offers/step_form.html:15
 #: templates/oscar/dashboard/offers/step_form.html:25
 #: templates/oscar/dashboard/partials/nav_primary.html:65
-#: templates/oscar/offer/detail.html:17 templates/oscar/offer/list.html:8
-#: templates/oscar/offer/list.html.py:16 templates/oscar/offer/list.html:21
 #: templates/oscar/partials/nav_primary.html:64
 msgid "Offers"
 msgstr ""
@@ -3155,10 +3103,6 @@ msgid ""
 "as possible."
 msgstr ""
 
-#: templates/oscar/base.html:12
-msgid "Build"
-msgstr ""
-
 #: templates/oscar/base.html:61
 msgid "Version:"
 msgstr ""
@@ -3173,7 +3117,6 @@ msgstr ""
 #: templates/oscar/customer/registration.html:12
 #: templates/oscar/dashboard/catalogue/category_list.html:32
 #: templates/oscar/flatpages/default.html:20
-#: templates/oscar/offer/detail.html:14 templates/oscar/offer/list.html:14
 #: templates/oscar/offer/range.html:15
 #: templates/oscar/registration/password_reset_complete.html:9
 #: templates/oscar/registration/password_reset_confirm.html:9
@@ -3328,7 +3271,6 @@ msgstr ""
 #: templates/oscar/checkout/shipping_address.html:79
 #: templates/oscar/checkout/user_address_delete.html:30
 #: templates/oscar/checkout/user_address_form.html:25
-#: templates/oscar/customer/profile/profile_delete.html:18
 #: templates/oscar/customer/registration.html:30
 #: templates/oscar/dashboard/catalogue/category_delete.html:36
 #: templates/oscar/dashboard/catalogue/product_delete.html:63
@@ -3348,7 +3290,6 @@ msgstr ""
 #: templates/oscar/basket/partials/basket_content.html:125
 #: templates/oscar/checkout/user_address_delete.html:30
 #: templates/oscar/checkout/user_address_form.html:25
-#: templates/oscar/customer/profile/profile_delete.html:18
 #: templates/oscar/customer/registration.html:30
 #: templates/oscar/dashboard/catalogue/category_delete.html:36
 #: templates/oscar/dashboard/catalogue/product_delete.html:64
@@ -3367,7 +3308,6 @@ msgstr ""
 #: templates/oscar/basket/partials/basket_content.html:135
 #: templates/oscar/checkout/checkout.html:151
 #: templates/oscar/checkout/thank_you.html:168
-#: templates/oscar/customer/anon_order.html:84
 msgid "Totals"
 msgstr ""
 
@@ -3398,7 +3338,6 @@ msgid "Move to basket"
 msgstr ""
 
 #: templates/oscar/basket/partials/basket_quick.html:25
-#: templates/oscar/customer/order/order_detail.html:18
 msgid "Qty"
 msgstr ""
 
@@ -3416,8 +3355,6 @@ msgstr ""
 #: templates/oscar/basket/partials/basket_totals.html:134
 #: templates/oscar/checkout/thank_you.html:185
 #: templates/oscar/checkout/thank_you.html:232
-#: templates/oscar/customer/order/order_detail.html:68
-#: templates/oscar/customer/order/order_detail.html:101
 #: templates/oscar/dashboard/orders/order_detail.html:161
 #: templates/oscar/dashboard/orders/order_detail.html:179
 #: templates/oscar/dashboard/orders/order_detail.html:217
@@ -3431,7 +3368,6 @@ msgstr ""
 
 #: templates/oscar/basket/partials/basket_totals.html:74
 #: templates/oscar/checkout/thank_you.html:200
-#: templates/oscar/customer/order/order_detail.html:85
 #: templates/oscar/dashboard/orders/order_detail.html:197
 msgid "Basket total"
 msgstr ""
@@ -3464,8 +3400,6 @@ msgstr ""
 
 #: templates/oscar/basket/partials/basket_totals.html:205
 #: templates/oscar/checkout/thank_you.html:289
-#: templates/oscar/customer/anon_order.html:94
-#: templates/oscar/customer/order/order_detail.html:121
 #: templates/oscar/dashboard/offers/offer_detail.html:109
 #: templates/oscar/dashboard/orders/order_detail.html:244
 msgid "Order total"
@@ -3518,7 +3452,7 @@ msgstr ""
 #: templates/oscar/catalogue/browse.html:106
 #: templates/oscar/dashboard/catalogue/product_list.html:63
 #: templates/oscar/dashboard/ranges/range_product_list.html:128
-#: templates/oscar/offer/detail.html:61 templates/oscar/offer/range.html:39
+#: templates/oscar/offer/range.html:39
 msgid "No products found."
 msgstr ""
 
@@ -3587,7 +3521,6 @@ msgstr ""
 
 #: templates/oscar/checkout/checkout.html:105
 #: templates/oscar/checkout/thank_you.html:113
-#: templates/oscar/customer/anon_order.html:52
 #: templates/oscar/dashboard/orders/order_detail.html:88
 msgid "Order contents"
 msgstr ""
@@ -3712,7 +3645,6 @@ msgid "Edit address"
 msgstr ""
 
 #: templates/oscar/checkout/shipping_address.html:52
-#: templates/oscar/customer/profile/profile_delete.html:17
 #: templates/oscar/dashboard/catalogue/category_delete.html:35
 #: templates/oscar/dashboard/catalogue/category_row_actions.html:32
 #: templates/oscar/dashboard/catalogue/product_delete.html:62
@@ -3874,40 +3806,6 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: templates/oscar/customer/anon_order.html:7
-#: templates/oscar/dashboard/orders/order_detail.html:26
-#, python-format
-msgid "Order #%(number)s"
-msgstr ""
-
-#: templates/oscar/customer/anon_order.html:33
-msgid "Contact number"
-msgstr ""
-
-#: templates/oscar/customer/anon_order.html:39
-#: templates/oscar/dashboard/orders/order_detail.html:92
-#: templates/oscar/dashboard/orders/order_detail.html:605
-msgid "Notes"
-msgstr ""
-
-#: templates/oscar/customer/anon_order.html:59
-msgid "Estimated dispatch date"
-msgstr ""
-
-#: templates/oscar/customer/anon_order.html:61
-#: templates/oscar/customer/order/order_detail.html:19
-msgid "Line price excl. tax"
-msgstr ""
-
-#: templates/oscar/customer/anon_order.html:62
-#: templates/oscar/customer/order/order_detail.html:20
-msgid "Line price incl. tax"
-msgstr ""
-
-#: templates/oscar/customer/anon_order.html:86
-msgid "Basket total (inc. tax)"
-msgstr ""
-
 #: templates/oscar/customer/baseaccountpage.html:6
 #: templates/oscar/customer/baseaccountpage.html:17
 #: templates/oscar/customer/order/order_list.html:12
@@ -3916,26 +3814,6 @@ msgstr ""
 #: templates/oscar/partials/nav_accounts.html:39
 #: templates/oscar/partials/nav_accounts.html:43
 msgid "Account"
-msgstr ""
-
-#: templates/oscar/customer/baseaccountpage.html:36
-#: templates/oscar/customer/partials/nav_account.html:26
-msgid "Address Book"
-msgstr ""
-
-#: templates/oscar/customer/baseaccountpage.html:39
-#: templates/oscar/customer/partials/nav_account.html:29
-msgid "Email History"
-msgstr ""
-
-#: templates/oscar/customer/baseaccountpage.html:42
-#: templates/oscar/customer/partials/nav_account.html:32
-msgid "Product Alerts"
-msgstr ""
-
-#: templates/oscar/customer/baseaccountpage.html:45
-#: templates/oscar/customer/partials/nav_account.html:35
-msgid "Notifications"
 msgstr ""
 
 #: templates/oscar/customer/history/recently_viewed_products.html:7
@@ -3976,64 +3854,8 @@ msgstr ""
 msgid "Registering..."
 msgstr ""
 
-#: templates/oscar/customer/order/order_detail.html:8
 #: templates/oscar/customer/order/order_list.html:14
 msgid "Order history"
-msgstr ""
-
-#: templates/oscar/customer/order/order_detail.html:17
-msgid "Dispatch date"
-msgstr ""
-
-#: templates/oscar/customer/order/order_detail.html:48
-#: templates/oscar/customer/order/order_detail.html:133
-msgid "Re-ordering..."
-msgstr ""
-
-#: templates/oscar/customer/order/order_detail.html:48
-#: templates/oscar/dashboard/ranges/range_product_list.html:114
-msgid "Re-order"
-msgstr ""
-
-#: templates/oscar/customer/order/order_detail.html:51
-msgid "Not available anymore"
-msgstr ""
-
-#: templates/oscar/customer/order/order_detail.html:62
-#: templates/oscar/dashboard/orders/order_detail.html:170
-msgid "Basket total (excl. discounts)"
-msgstr ""
-
-#: templates/oscar/customer/order/order_detail.html:80
-#: templates/oscar/dashboard/orders/order_detail.html:189
-msgid "Basket total (inc. discounts)"
-msgstr ""
-
-#: templates/oscar/customer/order/order_detail.html:95
-#: templates/oscar/dashboard/orders/order_detail.html:208
-msgid "Shipping total (excl. discounts)"
-msgstr ""
-
-#: templates/oscar/customer/order/order_detail.html:108
-#: templates/oscar/dashboard/orders/order_detail.html:227
-msgid "Shipping total (inc. discounts)"
-msgstr ""
-
-#: templates/oscar/customer/order/order_detail.html:113
-#: templates/oscar/dashboard/orders/order_detail.html:235
-msgid "Shipping total"
-msgstr ""
-
-#: templates/oscar/customer/order/order_detail.html:133
-msgid "Re-order all items"
-msgstr ""
-
-#: templates/oscar/customer/order/order_detail.html:149
-msgid "Contact Number"
-msgstr ""
-
-#: templates/oscar/customer/order/order_detail.html:150
-msgid "Shipping Notes"
 msgstr ""
 
 #: templates/oscar/customer/order/order_list.html:22
@@ -4078,6 +3900,22 @@ msgstr ""
 msgid "You haven't placed any orders."
 msgstr ""
 
+#: templates/oscar/customer/partials/nav_account.html:26
+msgid "Address Book"
+msgstr ""
+
+#: templates/oscar/customer/partials/nav_account.html:29
+msgid "Email History"
+msgstr ""
+
+#: templates/oscar/customer/partials/nav_account.html:32
+msgid "Product Alerts"
+msgstr ""
+
+#: templates/oscar/customer/partials/nav_account.html:35
+msgid "Notifications"
+msgstr ""
+
 #: templates/oscar/customer/profile/profile.html:25
 msgid "Date registered"
 msgstr ""
@@ -4088,32 +3926,6 @@ msgstr ""
 
 #: templates/oscar/customer/profile/profile.html:32
 msgid "Edit profile"
-msgstr ""
-
-#: templates/oscar/customer/profile/profile_delete.html:5
-msgid "Please confirm your password to delete your profile."
-msgstr ""
-
-#: templates/oscar/customer/profile/profile_delete.html:10
-msgid "Warning"
-msgstr ""
-
-#: templates/oscar/customer/profile/profile_delete.html:11
-msgid ""
-"\n"
-"                This will delete all information about you from the site.  "
-"Deleting your profile cannot be\n"
-"                undone.\n"
-"            "
-msgstr ""
-
-#: templates/oscar/customer/profile/profile_delete.html:17
-#: templates/oscar/dashboard/catalogue/category_delete.html:35
-#: templates/oscar/dashboard/catalogue/product_delete.html:62
-#: templates/oscar/dashboard/offers/offer_delete.html:37
-#: templates/oscar/dashboard/partners/partner_delete.html:37
-#: templates/oscar/dashboard/ranges/range_delete.html:37
-msgid "Deleting..."
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/category_delete.html:16
@@ -4132,6 +3944,14 @@ msgid ""
 "            <p>Delete category <strong>%(name)s</strong> - are you sure?</"
 "p>\n"
 "        "
+msgstr ""
+
+#: templates/oscar/dashboard/catalogue/category_delete.html:35
+#: templates/oscar/dashboard/catalogue/product_delete.html:62
+#: templates/oscar/dashboard/offers/offer_delete.html:37
+#: templates/oscar/dashboard/partners/partner_delete.html:37
+#: templates/oscar/dashboard/ranges/range_delete.html:37
+msgid "Deleting..."
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/category_list.html:24
@@ -4768,6 +4588,11 @@ msgstr ""
 msgid "Order %(number)s"
 msgstr ""
 
+#: templates/oscar/dashboard/orders/order_detail.html:26
+#, python-format
+msgid "Order #%(number)s"
+msgstr ""
+
 #: templates/oscar/dashboard/orders/order_detail.html:32
 msgid "Customer Information"
 msgstr ""
@@ -4799,6 +4624,11 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:91
 #: templates/oscar/dashboard/orders/order_detail.html:557
 msgid "Discounts"
+msgstr ""
+
+#: templates/oscar/dashboard/orders/order_detail.html:92
+#: templates/oscar/dashboard/orders/order_detail.html:605
+msgid "Notes"
 msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:99
@@ -4834,6 +4664,26 @@ msgstr ""
 #: templates/oscar/dashboard/users/detail.html:130
 #: templates/oscar/dashboard/users/user_row_actions.html:2
 msgid "View"
+msgstr ""
+
+#: templates/oscar/dashboard/orders/order_detail.html:170
+msgid "Basket total (excl. discounts)"
+msgstr ""
+
+#: templates/oscar/dashboard/orders/order_detail.html:189
+msgid "Basket total (inc. discounts)"
+msgstr ""
+
+#: templates/oscar/dashboard/orders/order_detail.html:208
+msgid "Shipping total (excl. discounts)"
+msgstr ""
+
+#: templates/oscar/dashboard/orders/order_detail.html:227
+msgid "Shipping total (inc. discounts)"
+msgstr ""
+
+#: templates/oscar/dashboard/orders/order_detail.html:235
+msgid "Shipping total"
 msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:261
@@ -5359,6 +5209,10 @@ msgstr ""
 msgid "Is product discountable?"
 msgstr ""
 
+#: templates/oscar/dashboard/ranges/range_product_list.html:114
+msgid "Re-order"
+msgstr ""
+
 #: templates/oscar/dashboard/ranges/range_product_list.html:126
 msgid "Products in Range"
 msgstr ""
@@ -5499,22 +5353,6 @@ msgstr ""
 
 #: templates/oscar/login_forbidden.html:5
 msgid "This page is only available to users who aren't logged in."
-msgstr ""
-
-#: templates/oscar/offer/detail.html:28
-msgid " This offer is no longer available."
-msgstr ""
-
-#: templates/oscar/offer/detail.html:40
-msgid "What you need to do"
-msgstr ""
-
-#: templates/oscar/offer/list.html:26
-msgid "There are no site offers at the moment."
-msgstr ""
-
-#: templates/oscar/offer/list.html:40
-msgid "Browse products in offer"
 msgstr ""
 
 #: templates/oscar/partials/ellipses_pagination.html:9
