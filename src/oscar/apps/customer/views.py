@@ -332,26 +332,6 @@ class ProfileUpdateView(PageTitleMixin, generic.FormView):
         return redirect(self.get_success_url())
 
 
-class ProfileDeleteView(PageTitleMixin, generic.FormView):
-    form_class = ConfirmPasswordForm
-    template_name = 'customer/profile/profile_delete.html'
-    page_title = _('Delete profile')
-    active_tab = 'profile'
-    success_url = settings.OSCAR_HOMEPAGE
-
-    def get_form_kwargs(self):
-        kwargs = super(ProfileDeleteView, self).get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
-
-    def form_valid(self, form):
-        self.request.user.delete()
-        messages.success(
-            self.request,
-            _("Your profile has now been deleted. Thanks for using the site."))
-        return redirect(self.get_success_url())
-
-
 class ChangePasswordView(PageTitleMixin, generic.FormView):
     form_class = PasswordChangeForm
     template_name = 'customer/profile/change_password_form.html'
