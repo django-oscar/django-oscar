@@ -181,7 +181,7 @@ class ConditionalOffer(models.Model):
         return super(ConditionalOffer, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('offer:detail', kwargs={'slug': self.slug})
+        return reverse('dashboard:offer-detail', kwargs={'pk': self.pk})
 
     def __str__(self):
         return self.name

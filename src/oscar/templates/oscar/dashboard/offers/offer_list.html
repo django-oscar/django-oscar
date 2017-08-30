@@ -89,7 +89,6 @@
                                         <span class="caret"></span>
                                     </a>
                                     <ul class="dropdown-menu pull-right">
-                                        <li><a class="" href="{% url 'offer:detail' slug=offer.slug %}">{% trans "Browse" %}</a></li>
                                         <li><a class="" href="{% url 'dashboard:offer-detail' pk=offer.pk %}">{% trans "Stats" %}</a></li>
                                         <li><a class="" href="{% url 'dashboard:offer-metadata' pk=offer.pk %}">{% trans "Edit" %}</a></li>
                                         <li><a class="" href="{% url 'dashboard:offer-delete' pk=offer.pk %}">{% trans "Delete" %}</a></li>
