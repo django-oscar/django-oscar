@@ -9,19 +9,14 @@ class CatalogueApplication(Application):
 
     default_permissions = ['is_staff', ]
     permissions_map = _map = {
-        'catalogue-product-list': (['is_staff'], ['partner.dashboard_access']),
         'catalogue-product-delete': (['is_staff'],
                                      ['partner.dashboard_access']),
         'catalogue-product-lookup': (['is_staff'],
                                      ['partner.dashboard_access']),
     }
 
-    product_list_view = get_class('dashboard.catalogue.views',
-                                  'ProductListView')
     product_lookup_view = get_class('dashboard.catalogue.views',
                                     'ProductLookupView')
-    product_delete_view = get_class('dashboard.catalogue.views',
-                                    'ProductDeleteView')
 
     category_list_view = get_class('dashboard.catalogue.views',
                                    'CategoryListView')
@@ -39,11 +34,6 @@ class CatalogueApplication(Application):
 
     def get_urls(self):
         urls = [
-            url(r'^products/(?P<pk>\d+)/delete/$',
-                self.product_delete_view.as_view(),
-                name='catalogue-product-delete'),
-            url(r'^$', self.product_list_view.as_view(),
-                name='catalogue-product-list'),
             url(r'^stock-alerts/$', self.stock_alert_view.as_view(),
                 name='stock-alert-list'),
             url(r'^product-lookup/$', self.product_lookup_view.as_view(),

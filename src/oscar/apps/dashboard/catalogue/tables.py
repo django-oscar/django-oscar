@@ -10,39 +10,6 @@ Product = get_model('catalogue', 'Product')
 Category = get_model('catalogue', 'Category')
 
 
-class ProductTable(DashboardTable):
-    title = TemplateColumn(
-        verbose_name=_('Title'),
-        template_name='dashboard/catalogue/product_row_title.html',
-        order_by='title', accessor=A('title'))
-    image = TemplateColumn(
-        verbose_name=_('Image'),
-        template_name='dashboard/catalogue/product_row_image.html',
-        orderable=False)
-    variants = TemplateColumn(
-        verbose_name=_("Variants"),
-        template_name='dashboard/catalogue/product_row_variants.html',
-        orderable=False
-    )
-    stock_records = TemplateColumn(
-        verbose_name=_('Stock records'),
-        template_name='dashboard/catalogue/product_row_stockrecords.html',
-        orderable=False)
-    actions = TemplateColumn(
-        verbose_name=_('Actions'),
-        template_name='dashboard/catalogue/product_row_actions.html',
-        orderable=False)
-
-    icon = "sitemap"
-
-    class Meta(DashboardTable.Meta):
-        model = Product
-        fields = ('upc', 'date_updated')
-        sequence = ('title', 'upc', 'image', 'variants',
-                    'stock_records', '...', 'date_updated', 'actions')
-        order_by = '-date_updated'
-
-
 class CategoryTable(DashboardTable):
     name = LinkColumn('dashboard:catalogue-category-update', args=[A('pk')])
     description = TemplateColumn(
