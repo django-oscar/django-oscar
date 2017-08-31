@@ -26,13 +26,8 @@ class CatalogueApplication(Application):
     category_delete_view = get_class('dashboard.catalogue.views',
                                      'CategoryDeleteView')
 
-    stock_alert_view = get_class('dashboard.catalogue.views',
-                                 'StockAlertListView')
-
     def get_urls(self):
         urls = [
-            url(r'^stock-alerts/$', self.stock_alert_view.as_view(),
-                name='stock-alert-list'),
             url(r'^categories/$', self.category_list_view.as_view(),
                 name='catalogue-category-list'),
             url(r'^categories/(?P<pk>\d+)/$',

@@ -1,52 +1,16 @@
 from django.views import generic
-from django.db.models import Q
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.core.loading import get_classes, get_model, get_class
+from oscar.core.loading import get_model, get_class
 
 from django_tables2 import SingleTableMixin
 
-from oscar.views.generic import ObjectLookupView
 
-(CategoryForm,
- StockAlertSearchForm) \
-    = get_classes('dashboard.catalogue.forms',
-                  ('CategoryForm',
-                   'StockAlertSearchForm'))
+CategoryForm = get_class('dashboard.catalogue.forms', 'CategoryForm')
 CategoryTable = get_class('dashboard.catalogue.tables', 'CategoryTable')
-Product = get_model('catalogue', 'Product')
 Category = get_model('catalogue', 'Category')
-ProductImage = get_model('catalogue', 'ProductImage')
-ProductCategory = get_model('catalogue', 'ProductCategory')
-StockRecord = get_model('partner', 'StockRecord')
-StockAlert = get_model('partner', 'StockAlert')
-Partner = get_model('partner', 'Partner')
-
-class StockAlertListView(generic.ListView):
-    template_name = 'dashboard/catalogue/stockalert_list.html'
-    model = StockAlert
-    context_object_name = 'alerts'
-    paginate_by = 20
-
-    def get_context_data(self, **kwargs):
-        ctx = super(StockAlertListView, self).get_context_data(**kwargs)
-        ctx['form'] = self.form
-        ctx['description'] = self.description
-        return ctx
-
-    def get_queryset(self):
-        if 'status' in self.request.GET:
-            self.form = StockAlertSearchForm(self.request.GET)
-            if self.form.is_valid():
-                status = self.form.cleaned_data['status']
-                self.description = _('Alerts with status "%s"') % status
-                return self.model.objects.filter(status=status)
-        else:
-            self.description = _('All alerts')
-            self.form = StockAlertSearchForm()
-        return self.model.objects.all()
 
 
 class CategoryListView(SingleTableMixin, generic.TemplateView):
