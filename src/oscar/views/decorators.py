@@ -3,7 +3,6 @@ from functools import wraps
 from django.utils.six.moves.urllib import parse
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import user_passes_test
-from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
@@ -112,15 +111,3 @@ def permissions_required(permissions, login_url=None):
     return user_passes_test(_check_permissions, login_url=login_url)
 
 
-def login_forbidden(view_func, template_name='login_forbidden.html',
-                    status=403):
-    """
-    Only allow anonymous users to access this view.
-    """
-    @wraps(view_func)
-    def _checklogin(request, *args, **kwargs):
-        if not request.user.is_authenticated():
-            return view_func(request, *args, **kwargs)
-        return render(request, template_name, status=status)
-
-    return _checklogin
