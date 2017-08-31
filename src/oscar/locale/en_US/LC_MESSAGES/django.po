@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-07 16:52+0200\n"
+"POT-Creation-Date: 2017-09-07 16:54+0200\n"
 "PO-Revision-Date: 2013-02-18 17:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: English (United States) (http://www.transifex.com/projects/p/"
@@ -239,7 +239,6 @@ msgstr ""
 
 #: apps/address/abstract_models.py:580 apps/order/abstract_models.py:387
 #: apps/partner/abstract_models.py:92 apps/partner/config.py:8
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:50
 #: templates/oscar/dashboard/orders/line_detail.html:69
 msgid "Partner"
 msgstr ""
@@ -256,7 +255,6 @@ msgstr ""
 #: apps/basket/abstract_models.py:575 apps/catalogue/abstract_models.py:168
 #: apps/catalogue/abstract_models.py:264 apps/catalogue/abstract_models.py:560
 #: apps/order/abstract_models.py:414 apps/partner/abstract_models.py:90
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:49
 #: templates/oscar/dashboard/orders/order_detail.html:111
 msgid "Product"
 msgstr ""
@@ -389,12 +387,10 @@ msgstr ""
 msgid "Submitted - has been ordered at the checkout"
 msgstr ""
 
-#: apps/basket/abstract_models.py:42 apps/dashboard/catalogue/forms.py:27
-#: apps/dashboard/orders/forms.py:74 apps/offer/models.py:91
-#: apps/offer/models.py:1284 apps/order/abstract_models.py:81
-#: apps/order/abstract_models.py:460 apps/partner/abstract_models.py:241
-#: apps/payment/abstract_models.py:41
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:54
+#: apps/basket/abstract_models.py:42 apps/dashboard/orders/forms.py:74
+#: apps/offer/models.py:91 apps/offer/models.py:1284
+#: apps/order/abstract_models.py:81 apps/order/abstract_models.py:460
+#: apps/partner/abstract_models.py:241 apps/payment/abstract_models.py:41
 #: templates/oscar/dashboard/orders/line_detail.html:66
 #: templates/oscar/dashboard/orders/order_detail.html:66
 #: templates/oscar/dashboard/orders/order_detail.html:113
@@ -623,7 +619,7 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:36 apps/dashboard/catalogue/tables.py:19
+#: apps/catalogue/abstract_models.py:36
 msgid "Image"
 msgstr ""
 
@@ -639,12 +635,6 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:154 apps/catalogue/abstract_models.py:245
 #: apps/catalogue/abstract_models.py:457 defaults.py:91
-#: templates/oscar/dashboard/catalogue/category_delete.html:13
-#: templates/oscar/dashboard/catalogue/category_form.html:8
-#: templates/oscar/dashboard/catalogue/category_form.html:18
-#: templates/oscar/dashboard/catalogue/category_list.html:9
-#: templates/oscar/dashboard/catalogue/category_list.html:18
-#: templates/oscar/dashboard/catalogue/category_list.html:25
 msgid "Categories"
 msgstr ""
 
@@ -672,9 +662,8 @@ msgstr ""
 msgid "Product structure"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:211 apps/dashboard/catalogue/forms.py:15
-#: apps/dashboard/orders/forms.py:68 apps/order/abstract_models.py:419
-#: templates/oscar/catalogue/detail.html:97
+#: apps/catalogue/abstract_models.py:211 apps/dashboard/orders/forms.py:68
+#: apps/order/abstract_models.py:419 templates/oscar/catalogue/detail.html:97
 #: templates/oscar/dashboard/orders/line_detail.html:53
 #: templates/oscar/dashboard/orders/order_detail.html:112
 #: templates/oscar/dashboard/ranges/range_product_list.html:97
@@ -722,11 +711,7 @@ msgstr ""
 msgid "This flag indicates if this product can be used in an offer or not"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:265 apps/dashboard/catalogue/views.py:65
-#: defaults.py:87 templates/oscar/dashboard/catalogue/product_delete.html:18
-#: templates/oscar/dashboard/catalogue/product_list.html:11
-#: templates/oscar/dashboard/catalogue/product_list.html:20
-#: templates/oscar/dashboard/catalogue/product_list.html:26
+#: apps/catalogue/abstract_models.py:265 defaults.py:87
 #: templates/oscar/dashboard/ranges/range_product_list.html:24
 msgid "Products"
 msgstr ""
@@ -786,8 +771,7 @@ msgstr ""
 msgid "Product images"
 msgstr ""
 
-#: apps/catalogue/config.py:8 apps/dashboard/catalogue/config.py:8
-#: defaults.py:83
+#: apps/catalogue/config.py:8 defaults.py:83
 msgid "Catalogue"
 msgstr ""
 
@@ -1046,103 +1030,7 @@ msgstr ""
 msgid "Order History"
 msgstr ""
 
-#: apps/dashboard/catalogue/forms.py:17
-msgid "Product title"
-msgstr ""
-
-#: apps/dashboard/catalogue/tables.py:15
-msgid "Title"
-msgstr ""
-
-#: apps/dashboard/catalogue/tables.py:23
-msgid "Variants"
-msgstr ""
-
-#: apps/dashboard/catalogue/tables.py:28 apps/partner/abstract_models.py:160
-msgid "Stock records"
-msgstr ""
-
-#: apps/dashboard/catalogue/tables.py:32
-#: templates/oscar/dashboard/catalogue/category_row_actions.html:6
-#: templates/oscar/dashboard/catalogue/product_row_actions.html:6
-#: templates/oscar/dashboard/offers/offer_list.html:88
-#: templates/oscar/dashboard/orders/order_detail.html:119
-#: templates/oscar/dashboard/partners/partner_list.html:89
-#: templates/oscar/dashboard/ranges/range_list.html:65
-#: templates/oscar/dashboard/users/detail.html:85
-msgid "Actions"
-msgstr ""
-
-#: apps/dashboard/catalogue/tables.py:55
-msgid "Number of child categories"
-msgstr ""
-
-#: apps/dashboard/catalogue/tables.py:63
-#, python-format
-msgid "%s Category"
-msgid_plural "%s Categories"
-msgstr[0] ""
-msgstr[1] ""
-
-#: apps/dashboard/catalogue/views.py:64
-msgid "Product search results"
-msgstr ""
-
-#: apps/dashboard/catalogue/views.py:139
-msgid "Delete product variant?"
-msgstr ""
-
-#: apps/dashboard/catalogue/views.py:141
-msgid "Delete product?"
-msgstr ""
-
-#: apps/dashboard/catalogue/views.py:185
-#, python-format
-msgid "Deleted product variant '%s'"
-msgstr ""
-
-#: apps/dashboard/catalogue/views.py:191
-#, python-format
-msgid "Deleted product '%s'"
-msgstr ""
-
-#: apps/dashboard/catalogue/views.py:213
-#, python-format
-msgid "Alerts with status \"%s\""
-msgstr ""
-
-#: apps/dashboard/catalogue/views.py:216
-msgid "All alerts"
-msgstr ""
-
-#: apps/dashboard/catalogue/views.py:271
-msgid "Add a new category"
-msgstr ""
-
-#: apps/dashboard/catalogue/views.py:275
-msgid "Category created successfully"
-msgstr ""
-
-#: apps/dashboard/catalogue/views.py:293
-#, python-format
-msgid "Update category '%s'"
-msgstr ""
-
-#: apps/dashboard/catalogue/views.py:297
-msgid "Category updated successfully"
-msgstr ""
-
-#: apps/dashboard/catalogue/views.py:311
-msgid "Category deleted successfully"
-msgstr ""
-
 #: apps/dashboard/config.py:8 defaults.py:78
-#: templates/oscar/dashboard/catalogue/category_delete.html:9
-#: templates/oscar/dashboard/catalogue/category_form.html:14
-#: templates/oscar/dashboard/catalogue/category_list.html:15
-#: templates/oscar/dashboard/catalogue/product_delete.html:14
-#: templates/oscar/dashboard/catalogue/product_list.html:17
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:14
 #: templates/oscar/dashboard/index.html:16
 #: templates/oscar/dashboard/layout.html:25
 #: templates/oscar/dashboard/layout.html:84
@@ -2596,6 +2484,10 @@ msgstr ""
 msgid "Low Stock Threshold"
 msgstr ""
 
+#: apps/partner/abstract_models.py:160
+msgid "Stock records"
+msgstr ""
+
 #: apps/partner/abstract_models.py:207
 msgid "Invalid stock consumption request"
 msgstr ""
@@ -2609,12 +2501,10 @@ msgid "Threshold"
 msgstr ""
 
 #: apps/partner/abstract_models.py:238
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:39
 msgid "Open"
 msgstr ""
 
 #: apps/partner/abstract_models.py:239
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:40
 msgid "Closed"
 msgstr ""
 
@@ -2632,9 +2522,6 @@ msgid "Stock alert"
 msgstr ""
 
 #: apps/partner/abstract_models.py:260
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:8
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:17
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:23
 msgid "Stock alerts"
 msgstr ""
 
@@ -3073,7 +2960,6 @@ msgstr ""
 #: templates/oscar/customer/login_registration.html:11
 #: templates/oscar/customer/order/order_list.html:9
 #: templates/oscar/customer/registration.html:12
-#: templates/oscar/dashboard/catalogue/category_list.html:32
 #: templates/oscar/offer/range.html:15
 #: templates/oscar/registration/password_reset_complete.html:9
 #: templates/oscar/registration/password_reset_confirm.html:9
@@ -3191,7 +3077,6 @@ msgid "Updating..."
 msgstr ""
 
 #: templates/oscar/basket/partials/basket_content.html:65
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:70
 #: templates/oscar/dashboard/orders/order_detail.html:454
 msgid "Update"
 msgstr ""
@@ -3229,8 +3114,6 @@ msgstr ""
 #: templates/oscar/checkout/user_address_delete.html:30
 #: templates/oscar/checkout/user_address_form.html:25
 #: templates/oscar/customer/registration.html:30
-#: templates/oscar/dashboard/catalogue/category_delete.html:36
-#: templates/oscar/dashboard/catalogue/product_delete.html:63
 #: templates/oscar/dashboard/offers/offer_delete.html:37
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:37
 #: templates/oscar/dashboard/partials/form.html:10
@@ -3247,8 +3130,6 @@ msgstr ""
 #: templates/oscar/checkout/user_address_delete.html:30
 #: templates/oscar/checkout/user_address_form.html:25
 #: templates/oscar/customer/registration.html:30
-#: templates/oscar/dashboard/catalogue/category_delete.html:36
-#: templates/oscar/dashboard/catalogue/product_delete.html:64
 #: templates/oscar/dashboard/offers/offer_delete.html:38
 #: templates/oscar/dashboard/offers/step_form.html:84
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:37
@@ -3405,7 +3286,6 @@ msgid "<strong>0</strong> results."
 msgstr ""
 
 #: templates/oscar/catalogue/browse.html:106
-#: templates/oscar/dashboard/catalogue/product_list.html:63
 #: templates/oscar/dashboard/ranges/range_product_list.html:128
 #: templates/oscar/offer/range.html:39
 msgid "No products found."
@@ -3598,10 +3478,6 @@ msgid "Edit address"
 msgstr ""
 
 #: templates/oscar/checkout/shipping_address.html:52
-#: templates/oscar/dashboard/catalogue/category_delete.html:35
-#: templates/oscar/dashboard/catalogue/category_row_actions.html:32
-#: templates/oscar/dashboard/catalogue/product_delete.html:62
-#: templates/oscar/dashboard/catalogue/product_row_actions.html:17
 #: templates/oscar/dashboard/offers/offer_delete.html:37
 #: templates/oscar/dashboard/offers/offer_list.html:94
 #: templates/oscar/dashboard/orders/order_detail.html:630
@@ -3811,7 +3687,6 @@ msgid "Order history"
 msgstr ""
 
 #: templates/oscar/customer/order/order_list.html:22
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:34
 #: templates/oscar/dashboard/orders/statistics.html:29
 msgid "Filter"
 msgstr ""
@@ -3878,204 +3753,6 @@ msgstr ""
 
 #: templates/oscar/customer/profile/profile.html:32
 msgid "Edit profile"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/category_delete.html:16
-#: templates/oscar/dashboard/catalogue/category_delete.html:21
-msgid "Delete category?"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/category_delete.html:26
-msgid "Delete category"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/category_delete.html:31
-#, python-format
-msgid ""
-"\n"
-"            <p>Delete category <strong>%(name)s</strong> - are you sure?</"
-"p>\n"
-"        "
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/category_delete.html:35
-#: templates/oscar/dashboard/catalogue/product_delete.html:62
-#: templates/oscar/dashboard/offers/offer_delete.html:37
-#: templates/oscar/dashboard/partners/partner_delete.html:37
-#: templates/oscar/dashboard/ranges/range_delete.html:37
-msgid "Deleting..."
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/category_list.html:24
-msgid "Create new category"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/category_list.html:31
-msgid "You are editing:"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/category_list.html:45
-msgid "There are no categories."
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/category_row_actions.html:12
-msgid "Edit category"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/category_row_actions.html:17
-msgid "Add child category"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/category_row_actions.html:22
-msgid "Edit children"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/category_row_actions.html:27
-#: templates/oscar/dashboard/catalogue/product_row_actions.html:14
-#: templates/oscar/dashboard/ranges/range_list.html:76
-msgid "View on site"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/messages/product_saved.html:10
-#, python-format
-msgid ""
-"\n"
-"                    Created product variant '%(name)s'.\n"
-"                "
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/messages/product_saved.html:14
-#, python-format
-msgid ""
-"\n"
-"                    Created variant of '%(parent_name)s'.\n"
-"                "
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/messages/product_saved.html:20
-#, python-format
-msgid ""
-"\n"
-"                    Updated product variant '%(name)s'.\n"
-"                "
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/messages/product_saved.html:24
-#, python-format
-msgid ""
-"\n"
-"                    Updated a variant of '%(parent_name)s'.\n"
-"                "
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/messages/product_saved.html:33
-#, python-format
-msgid ""
-"\n"
-"                Created product '%(name)s'.\n"
-"            "
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/messages/product_saved.html:37
-#, python-format
-msgid ""
-"\n"
-"                Updated product '%(name)s'.\n"
-"            "
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/messages/product_saved.html:48
-#: templates/oscar/dashboard/ranges/messages/range_saved.html:6
-msgid "Edit again"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/messages/product_saved.html:49
-msgid "View it on the site"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/product_delete.html:40
-#, python-format
-msgid ""
-"\n"
-"                    Delete product variant <strong>%(title)s</strong> - are "
-"you sure?\n"
-"                "
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/product_delete.html:44
-#, python-format
-msgid ""
-"\n"
-"                    Delete product <strong>%(title)s</strong> - are you "
-"sure?\n"
-"                "
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/product_delete.html:52
-msgid "This will also delete the following child products:"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/product_list.html:34
-msgid "Search Products"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/product_list.html:50
-#: templates/oscar/dashboard/offers/offer_list.html:32
-#: templates/oscar/dashboard/orders/order_list.html:67
-#: templates/oscar/dashboard/partners/partner_list.html:30
-#: templates/oscar/dashboard/partners/partner_user_select.html:36
-#: templates/oscar/dashboard/users/index.html:35
-msgid "Searching..."
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/product_list.html:50
-#: templates/oscar/dashboard/offers/offer_list.html:32
-#: templates/oscar/dashboard/orders/order_list.html:30
-#: templates/oscar/dashboard/orders/order_list.html:51
-#: templates/oscar/dashboard/orders/order_list.html:67
-#: templates/oscar/dashboard/partners/partner_list.html:30
-#: templates/oscar/dashboard/partners/partner_user_select.html:36
-#: templates/oscar/dashboard/users/index.html:30
-#: templates/oscar/dashboard/users/index.html:35
-#: templates/oscar/partials/search.html:7
-#: templates/oscar/search/results.html:18
-msgid "Search"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/product_row_actions.html:11
-#: templates/oscar/dashboard/offers/offer_detail.html:66
-#: templates/oscar/dashboard/offers/offer_detail.html:75
-#: templates/oscar/dashboard/offers/offer_detail.html:80
-#: templates/oscar/dashboard/offers/offer_detail.html:95
-#: templates/oscar/dashboard/offers/offer_list.html:93
-#: templates/oscar/dashboard/offers/summary.html:9
-#: templates/oscar/dashboard/offers/summary.html:18
-#: templates/oscar/dashboard/offers/summary.html:25
-#: templates/oscar/dashboard/offers/summary.html:31
-#: templates/oscar/dashboard/orders/order_detail.html:625
-#: templates/oscar/dashboard/ranges/range_list.html:70
-msgid "Edit"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:38
-#: templates/oscar/dashboard/ranges/range_list.html:50
-msgid "All"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:51
-msgid "Low stock threshold"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:52
-msgid "Current available stock"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:53
-msgid "Date alert raised"
-msgstr ""
-
-#: templates/oscar/dashboard/catalogue/stockalert_list.html:77
-msgid "No stock alerts found."
 msgstr ""
 
 #: templates/oscar/dashboard/index.html:22
@@ -4236,6 +3913,12 @@ msgstr ""
 msgid "Are you sure you want to delete this offer?"
 msgstr ""
 
+#: templates/oscar/dashboard/offers/offer_delete.html:37
+#: templates/oscar/dashboard/partners/partner_delete.html:37
+#: templates/oscar/dashboard/ranges/range_delete.html:37
+msgid "Deleting..."
+msgstr ""
+
 #: templates/oscar/dashboard/offers/offer_detail.html:6
 #, python-format
 msgid ""
@@ -4288,6 +3971,20 @@ msgstr ""
 msgid "Offer details"
 msgstr ""
 
+#: templates/oscar/dashboard/offers/offer_detail.html:66
+#: templates/oscar/dashboard/offers/offer_detail.html:75
+#: templates/oscar/dashboard/offers/offer_detail.html:80
+#: templates/oscar/dashboard/offers/offer_detail.html:95
+#: templates/oscar/dashboard/offers/offer_list.html:93
+#: templates/oscar/dashboard/offers/summary.html:9
+#: templates/oscar/dashboard/offers/summary.html:18
+#: templates/oscar/dashboard/offers/summary.html:25
+#: templates/oscar/dashboard/offers/summary.html:31
+#: templates/oscar/dashboard/orders/order_detail.html:625
+#: templates/oscar/dashboard/ranges/range_list.html:70
+msgid "Edit"
+msgstr ""
+
 #: templates/oscar/dashboard/offers/offer_detail.html:102
 msgid "Export to CSV"
 msgstr ""
@@ -4305,6 +4002,27 @@ msgstr ""
 #: templates/oscar/dashboard/offers/step_form.html:35
 #: templates/oscar/dashboard/offers/step_form.html:45
 msgid "Create new offer"
+msgstr ""
+
+#: templates/oscar/dashboard/offers/offer_list.html:32
+#: templates/oscar/dashboard/orders/order_list.html:67
+#: templates/oscar/dashboard/partners/partner_list.html:30
+#: templates/oscar/dashboard/partners/partner_user_select.html:36
+#: templates/oscar/dashboard/users/index.html:35
+msgid "Searching..."
+msgstr ""
+
+#: templates/oscar/dashboard/offers/offer_list.html:32
+#: templates/oscar/dashboard/orders/order_list.html:30
+#: templates/oscar/dashboard/orders/order_list.html:51
+#: templates/oscar/dashboard/orders/order_list.html:67
+#: templates/oscar/dashboard/partners/partner_list.html:30
+#: templates/oscar/dashboard/partners/partner_user_select.html:36
+#: templates/oscar/dashboard/users/index.html:30
+#: templates/oscar/dashboard/users/index.html:35
+#: templates/oscar/partials/search.html:7
+#: templates/oscar/search/results.html:18
+msgid "Search"
 msgstr ""
 
 #: templates/oscar/dashboard/offers/offer_list.html:52
@@ -4325,6 +4043,14 @@ msgstr ""
 #: templates/oscar/dashboard/ranges/range_list.html:58
 #: templates/oscar/dashboard/ranges/range_product_list.html:111
 msgid "No"
+msgstr ""
+
+#: templates/oscar/dashboard/offers/offer_list.html:88
+#: templates/oscar/dashboard/orders/order_detail.html:119
+#: templates/oscar/dashboard/partners/partner_list.html:89
+#: templates/oscar/dashboard/ranges/range_list.html:65
+#: templates/oscar/dashboard/users/detail.html:85
+msgid "Actions"
 msgstr ""
 
 #: templates/oscar/dashboard/offers/offer_list.html:92
@@ -4979,6 +4705,10 @@ msgid ""
 "<p>Range <strong>%(name)s</strong> saved.</p>\n"
 msgstr ""
 
+#: templates/oscar/dashboard/ranges/messages/range_saved.html:6
+msgid "Edit again"
+msgstr ""
+
 #: templates/oscar/dashboard/ranges/messages/range_saved.html:7
 msgid "Edit included products"
 msgstr ""
@@ -5005,8 +4735,16 @@ msgstr ""
 msgid "Num products"
 msgstr ""
 
+#: templates/oscar/dashboard/ranges/range_list.html:50
+msgid "All"
+msgstr ""
+
 #: templates/oscar/dashboard/ranges/range_list.html:72
 msgid "Edit products"
+msgstr ""
+
+#: templates/oscar/dashboard/ranges/range_list.html:76
+msgid "View on site"
 msgstr ""
 
 #: templates/oscar/dashboard/ranges/range_list.html:87
