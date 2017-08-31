@@ -15,9 +15,6 @@ class CatalogueApplication(Application):
                                      ['partner.dashboard_access']),
     }
 
-    product_lookup_view = get_class('dashboard.catalogue.views',
-                                    'ProductLookupView')
-
     category_list_view = get_class('dashboard.catalogue.views',
                                    'CategoryListView')
     category_detail_list_view = get_class('dashboard.catalogue.views',
@@ -36,8 +33,6 @@ class CatalogueApplication(Application):
         urls = [
             url(r'^stock-alerts/$', self.stock_alert_view.as_view(),
                 name='stock-alert-list'),
-            url(r'^product-lookup/$', self.product_lookup_view.as_view(),
-                name='catalogue-product-lookup'),
             url(r'^categories/$', self.category_list_view.as_view(),
                 name='catalogue-category-list'),
             url(r'^categories/(?P<pk>\d+)/$',

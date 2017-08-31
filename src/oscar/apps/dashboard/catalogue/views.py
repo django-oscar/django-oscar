@@ -141,14 +141,3 @@ class CategoryDeleteView(CategoryListMixin, generic.DeleteView):
     def get_success_url(self):
         messages.info(self.request, _("Category deleted successfully"))
         return super(CategoryDeleteView, self).get_success_url()
-
-
-class ProductLookupView(ObjectLookupView):
-    model = Product
-
-    def get_lookup_queryset(self):
-        return self.model.browsable.all()
-
-    def lookup_filter(self, qs, term):
-        return qs.filter(Q(title__icontains=term)
-                         | Q(parent__title__icontains=term))
