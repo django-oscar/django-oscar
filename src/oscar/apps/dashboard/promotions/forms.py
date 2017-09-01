@@ -37,10 +37,6 @@ class SingleProductForm(forms.ModelForm):
         fields = ['name', 'product', 'description']
         widgets = {'product': ProductSelect}
 
-    def __init__(self, *args, **kwargs):
-        super(SingleProductForm, self).__init__(*args, **kwargs)
-        self.fields['product'].widget.attrs['class'] = "select2 input-xlarge"
-
 
 class HandPickedProductListForm(forms.ModelForm):
     class Meta:
@@ -55,10 +51,6 @@ class OrderedProductForm(forms.ModelForm):
         widgets = {
             'product': ProductSelect,
         }
-
-    def __init__(self, *args, **kwargs):
-        super(OrderedProductForm, self).__init__(*args, **kwargs)
-        self.fields['product'].widget.attrs['class'] = "select2 input-xlarge"
 
 
 class PagePromotionForm(forms.ModelForm):

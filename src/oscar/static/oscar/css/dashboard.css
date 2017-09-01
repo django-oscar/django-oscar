@@ -3419,6 +3419,9 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .navbar-form .control-group {
   margin-right: 10px;
 }
+.navbar-form .product-select {
+  width: 270px;
+}
 .navbar-form .help-block,
 .navbar-form .error-block {
   display: inline-block;
@@ -5659,6 +5662,9 @@ form.flat {
 }
 .form-inline .control-group {
   margin-right: 10px;
+}
+.form-inline .product-select {
+  width: 270px;
 }
 .create-page .form-horizontal input[type=text],
 .create-page .form-stacked input[type=text],
