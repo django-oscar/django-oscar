@@ -323,10 +323,6 @@ class ProductRecommendationForm(forms.ModelForm):
             'recommendation': ProductSelect,
         }
 
-    def __init__(self, *args, **kwargs):
-        super(ProductRecommendationForm, self).__init__(*args, **kwargs)
-        self.fields['recommendation'].widget.attrs['class'] = "select2"
-
 
 class ProductClassForm(forms.ModelForm):
 
