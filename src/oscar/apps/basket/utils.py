@@ -1,6 +1,7 @@
+from collections import defaultdict
+
 from django.contrib import messages
 from django.template.loader import render_to_string
-
 from oscar.core.loading import get_class
 
 Applicator = get_class('offer.applicator', 'Applicator')
@@ -62,3 +63,90 @@ class BasketMessageGenerator(object):
 
         for level, msg in self.get_messages(request.basket, offers_before, offers_after):
             messages.add_message(request, level, msg, extra_tags='safe noicon')
+
+
+class LineOfferConsumer(object):
+    """
+    facade for marking basket lines as consumed by
+    any or a specific offering.
+
+    historically oscar marks a line as consumed if any
+    offer is applied to it, but more complicated scenarios
+    are possible if we mark the line as being consumed by
+    specific offers.
+
+    this allows combining i.e. multiple vouchers, vouchers
+    with special session discounts, etc.
+    """
+
+    def __init__(self, line):
+        self.__line = line
+        self.__offers = dict()
+        self.__affected_quantity = 0
+        self.__consumptions = defaultdict(int)
+
+    # private
+    def __cache(self, offer):
+        self.__offers[offer.pk] = offer
+
+    def __update_affected_quantity(self, quantity):
+        available = int(self.__line.quantity - self.__affected_quantity)
+        self.__affected_quantity += min(available, quantity)
+
+    # public
+    def consume(self, quantity, offer=None):
+        """
+        mark a basket line as consumed by an offer
+
+        :param int quantity: the number of items on the line affected
+        :param offer: the offer to mark the line
+        :type offer: ConditionalOffer or None
+
+        if offer is None, the specified quantity of items on this
+        basket line is consumed for *any* offer, else only for the
+        specified offer.
+        """
+        self.__update_affected_quantity(quantity)
+        if offer:
+            self.__cache(offer)
+            available = self.available(offer)
+            self.__consumptions[offer.pk] += min(available, quantity)
+
+    def consumed(self, offer=None):
+        """
+        check how many items on this line have been
+        consumed by an offer
+
+        :param offer: the offer to check
+        :type offer: ConditionalOffer or None
+        :return: the number of items marked as consumed
+        :rtype: int
+
+        if offer is not None, only the number of items marked
+        with the specified ConditionalOffer are returned
+
+        """
+        if not offer:
+            return self.__affected_quantity
+        return int(self.__consumptions[offer.pk])
+
+    def available(self, offer=None):
+        """
+        check how many items are available for offer
+
+        :param offer: the offer to check
+        :type offer: ConditionalOffer or None
+        :return: the number of items available for offer
+        :rtype: int
+        """
+        if offer:
+            exclusive = any([x.exclusive for x in self.__offers.values()])
+            exclusive |= bool(offer.exclusive)
+        else:
+            exclusive = True
+
+        if exclusive:
+            offer = None
+
+        consumed = self.consumed(offer)
+        return int(self.__line.quantity - consumed)

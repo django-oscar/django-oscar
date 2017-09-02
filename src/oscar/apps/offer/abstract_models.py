@@ -62,6 +62,12 @@ class AbstractConditionalOffer(models.Model):
     offer_type = models.CharField(
         _("Type"), choices=TYPE_CHOICES, default=SITE, max_length=128)
 
+    exclusive = models.BooleanField(
+        _("Exclusive offer"),
+        help_text=_("Exclusive offers cannot be combined on the same items"),
+        default=True
+    )
+
     # We track a status variable so it's easier to load offers that are
     # 'available' in some sense.
     OPEN, SUSPENDED, CONSUMED = "Open", "Suspended", "Consumed"
@@ -650,7 +656,7 @@ class AbstractBenefit(models.Model):
             if not price:
                 # Avoid zero price products
                 continue
-            if line.quantity_without_discount == 0:
+            if line.quantity_without_offer_discount(offer) == 0:
                 continue
             line_tuples.append((price, line))
 
