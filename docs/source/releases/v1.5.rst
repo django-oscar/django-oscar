@@ -150,7 +150,6 @@ Backwards incompatible changes in Oscar 1.5
  - ``oscar.forms.fields.ExtendedURLField`` no longer accepts a ``verify_exists``
    argument.
 
-
 Dependency changes
 ------------------
 

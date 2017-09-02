@@ -44,6 +44,10 @@ class VoucherForm(forms.Form):
     benefit_value = forms.DecimalField(
         label=_('Discount value'))
 
+    exclusive = forms.BooleanField(
+        required=False,
+        label=_("Exclusive offers cannot be combined on the same items"))
+
     def __init__(self, voucher=None, *args, **kwargs):
         self.voucher = voucher
         super(VoucherForm, self).__init__(*args, **kwargs)

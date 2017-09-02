@@ -48,29 +48,29 @@ class CountCondition(Condition):
         num_matches = 0
         for line in basket.all_lines():
             if (self.can_apply_condition(line)
-                    and line.quantity_without_discount > 0):
-                num_matches += line.quantity_without_discount
+                    and line.quantity_without_offer_discount(offer) > 0):
+                num_matches += line.quantity_without_offer_discount(offer)
             if num_matches >= self.value:
                 return True
         return False
 
-    def _get_num_matches(self, basket):
+    def _get_num_matches(self, basket, offer):
         if hasattr(self, '_num_matches'):
             return getattr(self, '_num_matches')
         num_matches = 0
         for line in basket.all_lines():
             if (self.can_apply_condition(line)
-                    and line.quantity_without_discount > 0):
-                num_matches += line.quantity_without_discount
+                    and line.quantity_without_offer_discount(offer) > 0):
+                num_matches += line.quantity_without_offer_discount(offer)
         self._num_matches = num_matches
         return num_matches
 
     def is_partially_satisfied(self, offer, basket):
-        num_matches = self._get_num_matches(basket)
+        num_matches = self._get_num_matches(basket, offer)
         return 0 < num_matches < self.value
 
     def get_upsell_message(self, offer, basket):
-        num_matches = self._get_num_matches(basket)
+        num_matches = self._get_num_matches(basket, offer)
         delta = self.value - num_matches
         return ungettext('Buy %(delta)d more product from %(range)s',
                          'Buy %(delta)d more products from %(range)s', delta) \
@@ -96,9 +96,10 @@ class CountCondition(Condition):
 
         for __, line in self.get_applicable_lines(offer, basket,
                                                   most_expensive_first=True):
-            quantity_to_consume = min(line.quantity_without_discount,
-                                      to_consume)
-            line.consume(quantity_to_consume)
+            quantity_to_consume = min(
+                line.quantity_without_offer_discount(offer), to_consume
+            )
+            line.consume(quantity_to_consume, offer=offer)
             to_consume -= quantity_to_consume
             if to_consume == 0:
                 break
@@ -136,7 +137,7 @@ class CoverageCondition(Condition):
         """
         covered_ids = []
         for line in basket.all_lines():
-            if not line.is_available_for_discount:
+            if not line.is_available_for_offer_discount(offer):
                 continue
             product = line.product
             if (self.can_apply_condition(line) and product.id not in
@@ -146,10 +147,10 @@ class CoverageCondition(Condition):
                 return True
         return False
 
-    def _get_num_covered_products(self, basket):
+    def _get_num_covered_products(self, basket, offer):
         covered_ids = []
         for line in basket.all_lines():
-            if not line.is_available_for_discount:
+            if not line.is_available_for_offer_discount(offer):
                 continue
             product = line.product
             if (self.can_apply_condition(line) and product.id not in
@@ -158,13 +159,13 @@ class CoverageCondition(Condition):
         return len(covered_ids)
 
     def get_upsell_message(self, offer, basket):
-        delta = self.value - self._get_num_covered_products(basket)
+        delta = self.value - self._get_num_covered_products(basket, offer)
         return ungettext('Buy %(delta)d more product from %(range)s',
                          'Buy %(delta)d more products from %(range)s', delta) \
             % {'delta': delta, 'range': self.range}
 
     def is_partially_satisfied(self, offer, basket):
-        return 0 < self._get_num_covered_products(basket) < self.value
+        return 0 < self._get_num_covered_products(basket, offer) < self.value
 
     def consume_items(self, offer, basket, affected_lines):
         """
@@ -187,10 +188,10 @@ class CoverageCondition(Condition):
                 continue
             if product in consumed_products:
                 continue
-            if not line.is_available_for_discount:
+            if not line.is_available_for_offer_discount(offer):
                 continue
             # Only consume a quantity of 1 from each line
-            line.consume(1)
+            line.consume(1, offer=offer)
             consumed_products.append(product)
             to_consume -= 1
             if to_consume == 0:
@@ -241,9 +242,11 @@ class ValueCondition(Condition):
         value_of_matches = D('0.00')
         for line in basket.all_lines():
             if (self.can_apply_condition(line) and
-                    line.quantity_without_discount > 0):
+                    line.quantity_without_offer_discount(offer) > 0):
                 price = utils.unit_price(offer, line)
-                value_of_matches += price * int(line.quantity_without_discount)
+                value_of_matches += price * int(
+                    line.quantity_without_offer_discount(offer)
+                )
             if value_of_matches >= self.value:
                 return True
         return False
@@ -254,9 +257,11 @@ class ValueCondition(Condition):
         value_of_matches = D('0.00')
         for line in basket.all_lines():
             if (self.can_apply_condition(line) and
-                    line.quantity_without_discount > 0):
+                    line.quantity_without_offer_discount(offer) > 0):
                 price = utils.unit_price(offer, line)
-                value_of_matches += price * int(line.quantity_without_discount)
+                value_of_matches += price * int(
+                    line.quantity_without_offer_discount(offer)
+                )
         self._value_of_matches = value_of_matches
         return value_of_matches
 
@@ -291,9 +296,9 @@ class ValueCondition(Condition):
         for price, line in self.get_applicable_lines(
                 offer, basket, most_expensive_first=True):
             quantity_to_consume = min(
-                line.quantity_without_discount,
+                line.quantity_without_offer_discount(offer),
                 (to_consume / price).quantize(D(1), ROUND_UP))
-            line.consume(quantity_to_consume)
+            line.consume(quantity_to_consume, offer=offer)
             to_consume -= price * quantity_to_consume
             if to_consume <= 0:
                 break

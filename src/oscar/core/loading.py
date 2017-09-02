@@ -11,7 +11,6 @@ from django.core.exceptions import AppRegistryNotReady
 from oscar.core.exceptions import (
     AppNotFoundError, ClassNotFoundError, ModuleNotFoundError)
 
-
 # To preserve backwards compatibility of loading classes which moved
 # from one Oscar module to another, we look into the dictionary below
 # for the moved items during loading.

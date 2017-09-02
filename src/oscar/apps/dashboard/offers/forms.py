@@ -36,7 +36,8 @@ class RestrictionsForm(forms.ModelForm):
         model = ConditionalOffer
         fields = ('start_datetime', 'end_datetime',
                   'max_basket_applications', 'max_user_applications',
-                  'max_global_applications', 'max_discount')
+                  'max_global_applications', 'max_discount',
+                  'exclusive')
 
     def clean(self):
         cleaned_data = super(RestrictionsForm, self).clean()

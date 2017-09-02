@@ -277,6 +277,7 @@ class TestConcurrentOrderPlacement(TransactionTestCase):
         # Make the order creator a bit more slow too reliable trigger
         # concurrency issues
         org_create_order_model = OrderCreator.create_order_model
+
         def new_create_order_model(*args, **kwargs):
             time.sleep(0.5)
             return org_create_order_model(creator, *args, **kwargs)
@@ -310,12 +311,14 @@ class TestConcurrentOrderPlacement(TransactionTestCase):
         # Make the order creator a bit more slow too reliable trigger
         # concurrency issues
         org_create_order_model = OrderCreator.create_order_model
+
         def new_create_order_model(*args, **kwargs):
             time.sleep(0.5)
             return org_create_order_model(creator, *args, **kwargs)
         creator.create_order_model = new_create_order_model
 
         org_record_voucher_usage = OrderCreator.record_voucher_usage
+
         def record_voucher_usage(*args, **kwargs):
             time.sleep(0.5)
             return org_record_voucher_usage(creator, *args, **kwargs)

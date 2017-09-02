@@ -13,7 +13,14 @@ Please follow these conventions while remaining sensible:
 
 `Code Like a Pythonista`_ is recommended reading.
 
+flake8_ and isort_ are used to enforce basic coding standards. To run these
+checks, use:
+
+    $ make lint
+
 .. _Code Like a Pythonista: http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html
+.. _flake8: http://flake8.pycqa.org/en/latest/
+.. _isort: http://timothycrosley.github.io/isort/
 
 URLs
 ----

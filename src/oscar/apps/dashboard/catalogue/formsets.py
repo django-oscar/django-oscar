@@ -124,6 +124,7 @@ class ProductCategoryFormSet(BaseProductCategoryFormSet):
                 num_categories += 1
         return num_categories
 
+
 BaseProductImageFormSet = inlineformset_factory(
     Product, ProductImage, form=ProductImageForm, extra=2)
 

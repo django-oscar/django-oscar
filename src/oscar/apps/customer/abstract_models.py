@@ -340,7 +340,7 @@ class AbstractProductAlert(models.Model):
     key = models.CharField(_("Key"), max_length=128, blank=True, db_index=True)
 
     # An alert can have two different statuses for authenticated
-    # users ``ACTIVE`` and ``INACTIVE`` and anonymous users have an
+    # users ``ACTIVE`` and ``CANCELLED`` and anonymous users have an
     # additional status ``UNCONFIRMED``. For anonymous users a confirmation
     # and unsubscription key are generated when an instance is saved for
     # the first time and can be used to confirm and unsubscribe the
@@ -379,7 +379,7 @@ class AbstractProductAlert(models.Model):
 
     @property
     def can_be_cancelled(self):
-        return self.status == self.ACTIVE
+        return self.status in (self.ACTIVE, self.UNCONFIRMED)
 
     @property
     def is_cancelled(self):

@@ -75,7 +75,7 @@ class Dispatcher(object):
         Create Email instance in database for logging purposes.
         """
         # Is user is signed in, record the event for audit
-        if email and user.is_authenticated():
+        if email and user_is_authenticated(user):
             return Email._default_manager.create(user=user,
                                                  email=user.email,
                                                  subject=email.subject,

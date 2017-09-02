@@ -18,6 +18,7 @@ from oscar.models.fields.slugfield import SlugField
 from oscar.templatetags.currency_filters import currency
 
 Unavailable = get_class('partner.availability', 'Unavailable')
+LineOfferConsumer = get_class('basket.utils', 'LineOfferConsumer')
 
 
 @python_2_unicode_compatible
@@ -634,7 +635,7 @@ class AbstractLine(models.Model):
         # Instance variables used to persist discount information
         self._discount_excl_tax = D('0.00')
         self._discount_incl_tax = D('0.00')
-        self._affected_quantity = 0
+        self.consumer = LineOfferConsumer(self)
 
     class Meta:
         abstract = True
@@ -669,9 +670,10 @@ class AbstractLine(models.Model):
         """
         self._discount_excl_tax = D('0.00')
         self._discount_incl_tax = D('0.00')
-        self._affected_quantity = 0
+        self.consumer = LineOfferConsumer(self)
 
-    def discount(self, discount_value, affected_quantity, incl_tax=True):
+    def discount(self, discount_value, affected_quantity, incl_tax=True,
+                 offer=None):
         """
         Apply a discount to this line
         """
@@ -687,19 +689,15 @@ class AbstractLine(models.Model):
                     "Attempting to discount the tax-exclusive price of a line "
                     "when tax-inclusive discounts are already applied")
             self._discount_excl_tax += discount_value
-        self._affected_quantity += int(affected_quantity)
+        self.consume(affected_quantity, offer=offer)
 
-    def consume(self, quantity):
+    def consume(self, quantity, offer=None):
         """
         Mark all or part of the line as 'consumed'
 
         Consumed items are no longer available to be used in offers.
         """
-        if quantity > self.quantity - self._affected_quantity:
-            inc = self.quantity - self._affected_quantity
-        else:
-            inc = quantity
-        self._affected_quantity += int(inc)
+        self.consumer.consume(quantity, offer=offer)
 
     def get_price_breakdown(self):
         """
@@ -719,12 +717,12 @@ class AbstractLine(models.Model):
             # Need to split the discount among the affected quantity
             # of products.
             item_incl_tax_discount = (
-                self.discount_value / int(self._affected_quantity))
+                self.discount_value / int(self.consumer.consumed()))
             item_excl_tax_discount = item_incl_tax_discount * self._tax_ratio
             item_excl_tax_discount = item_excl_tax_discount.quantize(D('0.01'))
             prices.append((self.unit_price_incl_tax - item_incl_tax_discount,
                            self.unit_price_excl_tax - item_excl_tax_discount,
-                           self._affected_quantity))
+                           self.consumer.consumed()))
             if self.quantity_without_discount:
                 prices.append((self.unit_price_incl_tax,
                                self.unit_price_excl_tax,
@@ -741,25 +739,42 @@ class AbstractLine(models.Model):
             return 0
         return self.unit_price_excl_tax / self.unit_price_incl_tax
 
+    # ===============
+    # Offer Discounts
+    # ===============
+
+    def has_offer_discount(self, offer):
+        return self.consumer.consumed(offer) > 0
+
+    def quantity_with_offer_discount(self, offer):
+        return self.consumer.consumed(offer)
+
+    def quantity_without_offer_discount(self, offer):
+        return self.consumer.available(offer)
+
+    def is_available_for_offer_discount(self, offer):
+        return self.consumer.available(offer) > 0
+
     # ==========
     # Properties
     # ==========
 
     @property
     def has_discount(self):
-        return self.quantity > self.quantity_without_discount
+        return bool(self.consumer.consumed())
 
     @property
     def quantity_with_discount(self):
-        return self._affected_quantity
+        return self.consumer.consumed()
 
     @property
     def quantity_without_discount(self):
-        return int(self.quantity - self._affected_quantity)
+        return self.consumer.available()
 
     @property
     def is_available_for_discount(self):
-        return self.quantity_without_discount > 0
+        # deprecated
+        return self.consumer.available() > 0
 
     @property
     def discount_value(self):

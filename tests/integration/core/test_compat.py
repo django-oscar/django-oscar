@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import codecs
-import csv
 import datetime
 import os
 from tempfile import NamedTemporaryFile

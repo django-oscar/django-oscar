@@ -1,3 +1,4 @@
+import pytest
 from decimal import Decimal as D
 
 import mock
@@ -215,9 +216,15 @@ class TestCoverageCondition(TestCase):
         self.assertEqual(0, self.basket.num_items_without_discount)
 
 
-class TestConditionProxyModels(TestCase):
+@pytest.fixture()
+def range():
+    return factories.RangeFactory()
 
-    def test_name_and_description(self):
+
+@pytest.mark.django_db
+class TestConditionProxyModels(object):
+
+    def test_name_and_description(self, range):
         """
         Tests that the condition proxy classes all return a name and
         description. Unfortunately, the current implementations means
@@ -225,13 +232,20 @@ class TestConditionProxyModels(TestCase):
         This test became necessary because the complex name/description logic
         broke with the python_2_unicode_compatible decorator.
         """
-        range = factories.RangeFactory()
         for type, __ in models.Condition.TYPE_CHOICES:
             condition = models.Condition(type=type, range=range, value=5)
-            self.assertTrue(all([
+            assert all([
                 condition.name,
                 condition.description,
-                six.text_type(condition)]))
+                six.text_type(condition)])
+
+    def test_proxy(self, range):
+        for type, __ in models.Condition.TYPE_CHOICES:
+            condition = models.Condition(type=type, range=range, value=5)
+            proxy = condition.proxy()
+            assert condition.type == proxy.type
+            assert condition.range == proxy.range
+            assert condition.value == proxy.value
 
 
 class TestCustomCondition(TestCase):
