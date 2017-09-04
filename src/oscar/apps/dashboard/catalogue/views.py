@@ -678,6 +678,12 @@ class ProductClassCreateUpdateView(generic.UpdateView):
                                     attributes_formset=attributes_formset)
         return self.render_to_response(ctx)
 
+    # form_valid and form_invalid are called depending on the validation result
+    # of just the product class form, and return a redirect to the success URL
+    # or redisplay the form, respectively. In both cases we need to check our
+    # formsets as well, so both methods do the same. process_all_forms then
+    # calls forms_valid or forms_invalid respectively, which do the redisplay
+    # or redirect.
     form_valid = form_invalid = process_all_forms
 
     def get_context_data(self, *args, **kwargs):
