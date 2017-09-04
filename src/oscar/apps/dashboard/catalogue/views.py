@@ -1,5 +1,3 @@
-import json
-
 from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse
@@ -7,13 +5,11 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
-from django.template.response import TemplateResponse
-from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 from django_tables2 import SingleTableMixin, SingleTableView
 
-from oscar.core.loading import get_class, get_classes, get_model
+from oscar.core.loading import get_classes, get_model
 from oscar.views.generic import ObjectLookupView
 
 (ProductForm,
@@ -48,7 +44,13 @@ ProductTable, CategoryTable, AttributeOptionGroupTable \
     = get_classes('dashboard.catalogue.tables',
                   ('ProductTable', 'CategoryTable',
                    'AttributeOptionGroupTable'))
-RelatedFieldWidgetWrapper = get_class('dashboard.catalogue.widgets', 'RelatedFieldWidgetWrapper')
+(PopUpWindowCreateMixin,
+ PopUpWindowUpdateMixin,
+ PopUpWindowDeleteMixin) \
+    = get_classes('dashboard.views',
+                  ('PopUpWindowCreateMixin',
+                   'PopUpWindowUpdateMixin',
+                   'PopUpWindowDeleteMixin'))
 Product = get_model('catalogue', 'Product')
 Category = get_model('catalogue', 'Category')
 ProductImage = get_model('catalogue', 'ProductImage')
@@ -818,23 +820,8 @@ class AttributeOptionGroupCreateUpdateView(generic.UpdateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(AttributeOptionGroupCreateUpdateView, self).get_context_data(**kwargs)
-
         ctx.setdefault("attribute_option_formset", self.attribute_option_formset(instance=self.object))
-
         ctx["title"] = self.get_title()
-
-        if RelatedFieldWidgetWrapper.TO_FIELD_VAR in self.request.GET or RelatedFieldWidgetWrapper.TO_FIELD_VAR in self.request.POST:
-            to_field = self.request.GET.get(RelatedFieldWidgetWrapper.TO_FIELD_VAR,
-                                            self.request.POST.get(RelatedFieldWidgetWrapper.TO_FIELD_VAR))
-            ctx['to_field'] = to_field
-            ctx['to_field_var'] = RelatedFieldWidgetWrapper.TO_FIELD_VAR
-
-        if RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.GET or RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.POST:
-            is_popup = self.request.GET.get(RelatedFieldWidgetWrapper.IS_POPUP_VAR,
-                                            self.request.POST.get(RelatedFieldWidgetWrapper.IS_POPUP_VAR))
-            ctx['is_popup'] = is_popup
-            ctx['is_popup_var'] = RelatedFieldWidgetWrapper.IS_POPUP_VAR
-
         return ctx
 
     def get_url_with_querystring(self, url):
@@ -844,7 +831,7 @@ class AttributeOptionGroupCreateUpdateView(generic.UpdateView):
         return "?".join(url_parts)
 
 
-class AttributeOptionGroupCreateView(AttributeOptionGroupCreateUpdateView):
+class AttributeOptionGroupCreateView(PopUpWindowCreateMixin, AttributeOptionGroupCreateUpdateView):
 
     creating = True
 
@@ -859,30 +846,8 @@ class AttributeOptionGroupCreateView(AttributeOptionGroupCreateUpdateView):
         url = reverse("dashboard:catalogue-attribute-option-group-list")
         return self.get_url_with_querystring(url)
 
-    def forms_valid(self, form, attribute_option_formset):
-        response = super(AttributeOptionGroupCreateView, self).forms_valid(form, attribute_option_formset)
 
-        if RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.POST:
-            obj = form.instance
-            to_field = self.request.POST.get(RelatedFieldWidgetWrapper.TO_FIELD_VAR)
-            if to_field:
-                attr = str(to_field)
-            else:
-                attr = obj._meta.pk.attname
-            value = obj.serializable_value(attr)
-            popup_response_data = json.dumps({
-                'value': six.text_type(value),
-                'obj': six.text_type(obj),
-            })
-            return TemplateResponse(self.request, 'dashboard/catalogue/popup_response.html', {
-                'popup_response_data': popup_response_data,
-            })
-
-        else:
-            return response
-
-
-class AttributeOptionGroupUpdateView(AttributeOptionGroupCreateUpdateView):
+class AttributeOptionGroupUpdateView(PopUpWindowUpdateMixin, AttributeOptionGroupCreateUpdateView):
 
     creating = False
 
@@ -898,33 +863,6 @@ class AttributeOptionGroupUpdateView(AttributeOptionGroupCreateUpdateView):
         url = reverse("dashboard:catalogue-attribute-option-group-list")
         return self.get_url_with_querystring(url)
 
-    def forms_valid(self, form, attribute_option_formset):
-        response = super(AttributeOptionGroupUpdateView, self).forms_valid(form, attribute_option_formset)
-
-        if RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.POST:
-            obj = form.instance
-            opts = obj._meta
-            to_field = self.request.POST.get(RelatedFieldWidgetWrapper.TO_FIELD_VAR)
-            if to_field:
-                attr = str(to_field)
-            else:
-                attr = opts.pk.attname
-            # Retrieve the `object_id` from the resolved pattern arguments.
-            value = self.request.resolver_match.kwargs['pk']
-            new_value = obj.serializable_value(attr)
-            popup_response_data = json.dumps({
-                'action': 'change',
-                'value': six.text_type(value),
-                'obj': six.text_type(obj),
-                'new_value': six.text_type(new_value),
-            })
-            return TemplateResponse(self.request, 'dashboard/catalogue/popup_response.html', {
-                'popup_response_data': popup_response_data,
-            })
-
-        else:
-            return response
-
 
 class AttributeOptionGroupListView(SingleTableView):
 
@@ -939,7 +877,7 @@ class AttributeOptionGroupListView(SingleTableView):
         return ctx
 
 
-class AttributeOptionGroupDeleteView(generic.DeleteView):
+class AttributeOptionGroupDeleteView(PopUpWindowDeleteMixin, generic.DeleteView):
 
     template_name = 'dashboard/catalogue/attribute_option_group_delete.html'
     model = AttributeOptionGroup
@@ -958,35 +896,9 @@ class AttributeOptionGroupDeleteView(generic.DeleteView):
                            _("%i product attributes are still assigned to this attribute option group") %
                            product_attribute_count)
 
-        if RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.GET:
-            ctx['is_popup'] = self.request.GET.get(RelatedFieldWidgetWrapper.IS_POPUP_VAR)
-            ctx['is_popup_var'] = RelatedFieldWidgetWrapper.IS_POPUP_VAR
-
         ctx['http_get_params'] = self.request.GET
 
         return ctx
-
-    def delete(self, request, *args, **kwargs):
-        """
-        Calls the delete() method on the fetched object and then
-        redirects to the success URL, or closes the popup, it it is one.
-        """
-        obj = self.get_object()
-
-        response = super(AttributeOptionGroupDeleteView, self).delete(request, *args, **kwargs)
-
-        if RelatedFieldWidgetWrapper.IS_POPUP_VAR in request.POST:
-            obj_id = obj.pk
-            popup_response_data = json.dumps({
-                'action': 'delete',
-                'value': six.text_type(obj_id),
-            })
-            return TemplateResponse(request, 'dashboard/catalogue/popup_response.html', {
-                'popup_response_data': popup_response_data,
-            })
-
-        else:
-            return response
 
     def get_url_with_querystring(self, url):
         url_parts = [url]
