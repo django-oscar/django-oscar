@@ -48,6 +48,7 @@ ProductTable, CategoryTable, AttributeOptionGroupTable \
     = get_classes('dashboard.catalogue.tables',
                   ('ProductTable', 'CategoryTable',
                    'AttributeOptionGroupTable'))
+RelatedFieldWidgetWrapper = get_class('dashboard.catalogue.widgets', 'RelatedFieldWidgetWrapper')
 Product = get_model('catalogue', 'Product')
 Category = get_model('catalogue', 'Category')
 ProductImage = get_model('catalogue', 'ProductImage')
@@ -57,8 +58,6 @@ StockRecord = get_model('partner', 'StockRecord')
 StockAlert = get_model('partner', 'StockAlert')
 Partner = get_model('partner', 'Partner')
 AttributeOptionGroup = get_model('catalogue', 'AttributeOptionGroup')
-
-RelatedFieldWidgetWrapper = get_class('dashboard.catalogue.widgets', 'RelatedFieldWidgetWrapper')
 
 
 def filter_products(queryset, user):
