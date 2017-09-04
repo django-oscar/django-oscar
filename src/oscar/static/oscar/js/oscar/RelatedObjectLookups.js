@@ -1,11 +1,32 @@
+/*!
+ * Code in this file copied and modified from Django's admin app
+ * Source-code file: django/contrib/admin/static/admin/js/admin/RelatedObjectLookups.js
+ *
+ * Django v1.11.4
+ * Copyright (c) Django Software Foundation and individual contributors
+ * Released under the BSD 3-clause "New" or "Revised" License
+ * <https://github.com/django/django/blob/stable/1.11.x/LICENSE>
+ *
+ * Date: 2017-08-25T12:16:21+03:00
+ */
+
 // Handles related-objects functionality: Add Another links.
 
 (function(o, $) {
     'use strict';
 
-    // Copied in from Django's JavaScript translation catalog library
-    // Documentation URL: <https://docs.djangoproject.com/en/1.11/topics/i18n/translation/#interpolate>
-    // Source-code file: django/views/i18n.py
+    /*!
+     * Function copied in from Django's JavaScript translation catalog library
+     * Documentation URL: <https://docs.djangoproject.com/en/1.11/topics/i18n/translation/#interpolate>
+     * Source-code file: django/views/i18n.py
+     *
+     * Django v1.11.4
+     * Copyright (c) Django Software Foundation and individual contributors
+     * Released under the BSD 3-clause "New" or "Revised" License
+     * <https://github.com/django/django/blob/stable/1.11.x/LICENSE>
+     *
+     * Date: 2017-08-25T12:16:21+03:00
+     */
     o.interpolate = function(fmt, obj, named) {
       if (named) {
         return fmt.replace(/%\(\w+\)s/g, function(match){return String(obj[match.slice(2,-2)])});
