@@ -813,9 +813,7 @@ class AttributeOptionGroupCreateUpdateView(generic.UpdateView):
     def get_context_data(self, **kwargs):
         ctx = super(AttributeOptionGroupCreateUpdateView, self).get_context_data(**kwargs)
 
-        if "attribute_option_formset" not in ctx:
-            ctx["attribute_option_formset"] = self.attribute_option_formset(
-                instance=self.object)
+        ctx.setdefault("attribute_option_formset", self.attribute_option_formset(instance=self.object))
 
         ctx["title"] = self.get_title()
 
