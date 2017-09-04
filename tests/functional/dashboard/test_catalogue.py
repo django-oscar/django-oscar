@@ -25,7 +25,7 @@ AttributeOptionGroupForm = get_class('dashboard.catalogue.forms',
                                      'AttributeOptionGroupForm')
 AttributeOptionFormSet = get_class('dashboard.catalogue.formsets',
                                    'AttributeOptionFormSet')
-RelatedFieldWidgetWrapper = get_class('dashboard.catalogue.widgets',
+RelatedFieldWidgetWrapper = get_class('dashboard.widgets',
                                       'RelatedFieldWidgetWrapper')
 
 
@@ -457,7 +457,7 @@ class AttributeOptionGroupPopUpWindowMixin(object):
         response = self.response
 
         self.assertEqual(response.status_code, http_client.OK)
-        self.assertTemplateUsed(response, 'dashboard/catalogue/popup_response.html')
+        self.assertTemplateUsed(response, 'dashboard/widgets/popup_response.html')
         self.assertInContext(response, 'popup_response_data')
         self.popup_response_data = json.loads(response.context['popup_response_data'])
 
