@@ -19,7 +19,7 @@ ProductRecommendation = get_model('catalogue', 'ProductRecommendation')
 AttributeOptionGroup = get_model('catalogue', 'AttributeOptionGroup')
 AttributeOption = get_model('catalogue', 'AttributeOption')
 ProductSelect = get_class('dashboard.catalogue.widgets', 'ProductSelect')
-RelatedFieldWidgetWrapper = get_class('dashboard.catalogue.widgets',
+RelatedFieldWidgetWrapper = get_class('dashboard.widgets',
                                       'RelatedFieldWidgetWrapper')
 
 CategoryForm = movenodeform_factory(

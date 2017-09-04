@@ -13,7 +13,7 @@ from oscar.apps.promotions.models import AbstractPromotion
 from oscar.core.compat import get_user_model
 from oscar.core.loading import get_class, get_model
 
-RelatedFieldWidgetWrapper = get_class('dashboard.catalogue.widgets', 'RelatedFieldWidgetWrapper')
+RelatedFieldWidgetWrapper = get_class('dashboard.widgets', 'RelatedFieldWidgetWrapper')
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 Voucher = get_model('voucher', 'Voucher')
 Basket = get_model('basket', 'Basket')
@@ -241,7 +241,7 @@ class PopUpWindowCreateMixin(PopUpWindowCreateUpdateMixin):
                 'value': six.text_type(value),
                 'obj': six.text_type(obj),
             })
-            return TemplateResponse(self.request, 'dashboard/catalogue/popup_response.html', {
+            return TemplateResponse(self.request, 'dashboard/widgets/popup_response.html', {
                 'popup_response_data': popup_response_data,
             })
 
@@ -278,7 +278,7 @@ class PopUpWindowUpdateMixin(PopUpWindowCreateUpdateMixin):
                 'obj': six.text_type(obj),
                 'new_value': six.text_type(new_value),
             })
-            return TemplateResponse(self.request, 'dashboard/catalogue/popup_response.html', {
+            return TemplateResponse(self.request, 'dashboard/widgets/popup_response.html', {
                 'popup_response_data': popup_response_data,
             })
 
@@ -312,7 +312,7 @@ class PopUpWindowDeleteMixin(object):
                 'action': 'delete',
                 'value': six.text_type(obj_id),
             })
-            return TemplateResponse(request, 'dashboard/catalogue/popup_response.html', {
+            return TemplateResponse(request, 'dashboard/widgets/popup_response.html', {
                 'popup_response_data': popup_response_data,
             })
 
