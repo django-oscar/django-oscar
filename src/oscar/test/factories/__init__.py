@@ -13,6 +13,7 @@ from oscar.test.factories.basket import *  # noqa
 from oscar.test.factories.catalogue import *  # noqa
 from oscar.test.factories.contrib import *  # noqa
 from oscar.test.factories.customer import *  # noqa
+from oscar.test.factories.models import *  # noqa
 from oscar.test.factories.offer import *  # noqa
 from oscar.test.factories.order import *  # noqa
 from oscar.test.factories.partner import *  # noqa
