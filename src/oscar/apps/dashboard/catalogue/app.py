@@ -119,9 +119,13 @@ class CatalogueApplication(DashboardApplication):
             url(r'^attribute-option-group/$',
                 self.attribute_option_group_list_view.as_view(),
                 name='catalogue-attribute-option-group-list'),
+            # The RelatedFieldWidgetWrapper code does something funny with
+            # placeholder urls, so it does need to match more than just a pk
             url(r'^attribute-option-group/(?P<pk>\w+)/update/$',
                 self.attribute_option_group_update_view.as_view(),
                 name='catalogue-attribute-option-group-update'),
+            # The RelatedFieldWidgetWrapper code does something funny with
+            # placeholder urls, so it does need to match more than just a pk
             url(r'^attribute-option-group/(?P<pk>\w+)/delete/$',
                 self.attribute_option_group_delete_view.as_view(),
                 name='catalogue-attribute-option-group-delete'),
