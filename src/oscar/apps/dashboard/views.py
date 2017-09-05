@@ -216,6 +216,15 @@ class PopUpWindowCreateUpdateMixin(object):
 
         return ctx
 
+    def forms_valid(self, form, formset):
+        # So that base view classes can do pop-up window specific things, like
+        # not displaying notification messages using the messages framework
+        self.is_popup = False
+        if RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.POST:
+            self.is_popup = True
+
+        return super(PopUpWindowCreateUpdateMixin, self).forms_valid(form, formset)
+
 
 class PopUpWindowCreateMixin(PopUpWindowCreateUpdateMixin):
 
@@ -302,6 +311,12 @@ class PopUpWindowDeleteMixin(object):
         Calls the delete() method on the fetched object and then
         redirects to the success URL, or closes the popup, it it is one.
         """
+        # So that base view classes can do pop-up window specific things, like
+        # not displaying notification messages using the messages framework
+        self.is_popup = False
+        if RelatedFieldWidgetWrapper.IS_POPUP_VAR in self.request.POST:
+            self.is_popup = True
+
         obj = self.get_object()
 
         response = super(PopUpWindowDeleteMixin, self).delete(request, *args, **kwargs)

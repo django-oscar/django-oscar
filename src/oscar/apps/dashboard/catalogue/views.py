@@ -842,7 +842,8 @@ class AttributeOptionGroupCreateView(PopUpWindowCreateMixin, AttributeOptionGrou
         return _("Add a new Attribute Option Group")
 
     def get_success_url(self):
-        messages.info(self.request, _("Attribute Option Group created successfully"))
+        if not self.is_popup:
+            messages.info(self.request, _("Attribute Option Group created successfully"))
         url = reverse("dashboard:catalogue-attribute-option-group-list")
         return self.get_url_with_querystring(url)
 
@@ -859,7 +860,8 @@ class AttributeOptionGroupUpdateView(PopUpWindowUpdateMixin, AttributeOptionGrou
         return _("Update Attribute Option Group '%s'") % self.object.name
 
     def get_success_url(self):
-        messages.info(self.request, _("Attribute Option Group updated successfully"))
+        if not self.is_popup:
+            messages.info(self.request, _("Attribute Option Group updated successfully"))
         url = reverse("dashboard:catalogue-attribute-option-group-list")
         return self.get_url_with_querystring(url)
 
@@ -912,6 +914,7 @@ class AttributeOptionGroupDeleteView(PopUpWindowDeleteMixin, generic.DeleteView)
         return "?".join(url_parts)
 
     def get_success_url(self):
-        messages.info(self.request, _("Attribute Option Group deleted successfully"))
+        if not self.is_popup:
+            messages.info(self.request, _("Attribute Option Group deleted successfully"))
         url = reverse("dashboard:catalogue-attribute-option-group-list")
         return self.get_url_with_querystring(url)

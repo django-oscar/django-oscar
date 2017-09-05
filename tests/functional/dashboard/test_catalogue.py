@@ -469,6 +469,10 @@ class AttributeOptionGroupPopUpWindowMixin(object):
         self.assertTrue('obj' in popup_response_data)
         self.assertFalse('action' in popup_response_data)
 
+        response = self.response
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 0)
+
     def _test_update_pop_up_window_success_response(self):
         self._test_pop_up_window_success_response()
         popup_response_data = self.popup_response_data
@@ -479,6 +483,10 @@ class AttributeOptionGroupPopUpWindowMixin(object):
         self.assertTrue('obj' in popup_response_data)
         self.assertTrue('new_value' in popup_response_data)
 
+        response = self.response
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 0)
+
     def _test_delete_pop_up_window_success_response(self):
         self._test_pop_up_window_success_response()
         popup_response_data = self.popup_response_data
@@ -486,6 +494,10 @@ class AttributeOptionGroupPopUpWindowMixin(object):
         self.assertTrue('action' in popup_response_data)
         self.assertEqual(popup_response_data['action'], 'delete')
         self.assertTrue('value' in popup_response_data)
+
+        response = self.response
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 0)
 
 
 class AttributeOptionGroupRegularWindowMixin(object):
