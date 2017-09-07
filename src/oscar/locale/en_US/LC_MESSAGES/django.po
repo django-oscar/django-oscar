@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-29 10:37+0200\n"
+"POT-Creation-Date: 2017-08-31 10:50+0200\n"
 "PO-Revision-Date: 2013-02-18 17:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: English (United States) (http://www.transifex.com/projects/p/"
@@ -3067,42 +3067,6 @@ msgstr ""
 msgid "URL"
 msgstr ""
 
-#: templates/oscar/403.html:5 templates/oscar/403.html.py:9
-msgid "Permission denied!"
-msgstr ""
-
-#: templates/oscar/403.html:13
-msgid "We're sorry but you are not permitted to access this page."
-msgstr ""
-
-#: templates/oscar/404.html:5
-msgid "Page not found"
-msgstr ""
-
-#: templates/oscar/404.html:9
-msgid "Page not found!"
-msgstr ""
-
-#: templates/oscar/404.html:13
-msgid "We're sorry but the page you are looking for can't be found."
-msgstr ""
-
-#: templates/oscar/500.html:5 templates/oscar/500.html.py:9
-msgid "Server error!"
-msgstr ""
-
-#: templates/oscar/500.html:13
-msgid ""
-"We're sorry but something went terribly wrong and we've been unable to "
-"generate the page you requested."
-msgstr ""
-
-#: templates/oscar/500.html:14
-msgid ""
-"This incident has been logged and will be addressed by an engineer as soon "
-"as possible."
-msgstr ""
-
 #: templates/oscar/base.html:61
 msgid "Version:"
 msgstr ""
@@ -3650,7 +3614,7 @@ msgstr ""
 #: templates/oscar/dashboard/catalogue/product_delete.html:62
 #: templates/oscar/dashboard/catalogue/product_row_actions.html:17
 #: templates/oscar/dashboard/offers/offer_delete.html:37
-#: templates/oscar/dashboard/offers/offer_list.html:95
+#: templates/oscar/dashboard/offers/offer_list.html:94
 #: templates/oscar/dashboard/orders/order_detail.html:630
 #: templates/oscar/dashboard/partners/partner_delete.html:37
 #: templates/oscar/dashboard/ranges/range_delete.html:37
@@ -4097,7 +4061,7 @@ msgstr ""
 #: templates/oscar/dashboard/offers/offer_detail.html:75
 #: templates/oscar/dashboard/offers/offer_detail.html:80
 #: templates/oscar/dashboard/offers/offer_detail.html:95
-#: templates/oscar/dashboard/offers/offer_list.html:94
+#: templates/oscar/dashboard/offers/offer_list.html:93
 #: templates/oscar/dashboard/offers/summary.html:9
 #: templates/oscar/dashboard/offers/summary.html:18
 #: templates/oscar/dashboard/offers/summary.html:25
@@ -4457,14 +4421,10 @@ msgid "No"
 msgstr ""
 
 #: templates/oscar/dashboard/offers/offer_list.html:92
-msgid "Browse"
-msgstr ""
-
-#: templates/oscar/dashboard/offers/offer_list.html:93
 msgid "Stats"
 msgstr ""
 
-#: templates/oscar/dashboard/offers/offer_list.html:104
+#: templates/oscar/dashboard/offers/offer_list.html:103
 msgid "No offers found."
 msgstr ""
 
@@ -5335,24 +5295,8 @@ msgstr ""
 msgid "Make inactive"
 msgstr ""
 
-#: templates/oscar/error.html:9
-msgid "Sorry!"
-msgstr ""
-
-#: templates/oscar/error.html:12
-msgid "Return to previous page"
-msgstr ""
-
-#: templates/oscar/error.html:13
-msgid "Go to homepage"
-msgstr ""
-
 #: templates/oscar/flatpages/default.html:11
 msgid "Edit this page"
-msgstr ""
-
-#: templates/oscar/login_forbidden.html:5
-msgid "This page is only available to users who aren't logged in."
 msgstr ""
 
 #: templates/oscar/partials/ellipses_pagination.html:9
@@ -5519,7 +5463,7 @@ msgstr ""
 msgid "Back to search results"
 msgstr ""
 
-#: views/decorators.py:44
+#: views/decorators.py:43
 msgid "You must log in to access this page"
 msgstr ""
 

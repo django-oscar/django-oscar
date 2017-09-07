@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-29 10:37+0200\n"
+"POT-Creation-Date: 2017-08-31 10:50+0200\n"
 "PO-Revision-Date: 2015-03-06 21:39+0000\n"
 "Last-Translator: Marc Wienhold <marc.wienhold@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/django-oscar/"
@@ -3181,46 +3181,6 @@ msgstr "60+"
 msgid "URL"
 msgstr "URL"
 
-#: templates/oscar/403.html:5 templates/oscar/403.html.py:9
-msgid "Permission denied!"
-msgstr "Zugriff verweigert!"
-
-#: templates/oscar/403.html:13
-msgid "We're sorry but you are not permitted to access this page."
-msgstr "Sie haben keine Berechtigung für diese Seite"
-
-#: templates/oscar/404.html:5
-msgid "Page not found"
-msgstr "Seite nicht gefunden"
-
-#: templates/oscar/404.html:9
-msgid "Page not found!"
-msgstr "Seite nicht gefunden!"
-
-#: templates/oscar/404.html:13
-msgid "We're sorry but the page you are looking for can't be found."
-msgstr "Die gesuchte Seite kann nicht gefunden werden."
-
-#: templates/oscar/500.html:5 templates/oscar/500.html.py:9
-msgid "Server error!"
-msgstr "Serverfehler!"
-
-#: templates/oscar/500.html:13
-msgid ""
-"We're sorry but something went terribly wrong and we've been unable to "
-"generate the page you requested."
-msgstr ""
-"Tut uns leid, aber irgendetwas ist vollkommen schiefgelaufen. Wir konnten "
-"die von Ihnen angeforderte Seite leider nicht erzeugen."
-
-#: templates/oscar/500.html:14
-msgid ""
-"This incident has been logged and will be addressed by an engineer as soon "
-"as possible."
-msgstr ""
-"Dieser Vorfall wurde protokolliert und wird zeitnah von einem Entwickler "
-"bearbeitet."
-
 #: templates/oscar/base.html:61
 msgid "Version:"
 msgstr "Version:"
@@ -3808,7 +3768,7 @@ msgstr "Adresse ändern"
 #: templates/oscar/dashboard/catalogue/product_delete.html:62
 #: templates/oscar/dashboard/catalogue/product_row_actions.html:17
 #: templates/oscar/dashboard/offers/offer_delete.html:37
-#: templates/oscar/dashboard/offers/offer_list.html:95
+#: templates/oscar/dashboard/offers/offer_list.html:94
 #: templates/oscar/dashboard/orders/order_detail.html:630
 #: templates/oscar/dashboard/partners/partner_delete.html:37
 #: templates/oscar/dashboard/ranges/range_delete.html:37
@@ -4296,7 +4256,7 @@ msgstr "Suche"
 #: templates/oscar/dashboard/offers/offer_detail.html:75
 #: templates/oscar/dashboard/offers/offer_detail.html:80
 #: templates/oscar/dashboard/offers/offer_detail.html:95
-#: templates/oscar/dashboard/offers/offer_list.html:94
+#: templates/oscar/dashboard/offers/offer_list.html:93
 #: templates/oscar/dashboard/offers/summary.html:9
 #: templates/oscar/dashboard/offers/summary.html:18
 #: templates/oscar/dashboard/offers/summary.html:25
@@ -4661,14 +4621,10 @@ msgid "No"
 msgstr "Nein"
 
 #: templates/oscar/dashboard/offers/offer_list.html:92
-msgid "Browse"
-msgstr "Durchsuchen"
-
-#: templates/oscar/dashboard/offers/offer_list.html:93
 msgid "Stats"
 msgstr "Statistiken"
 
-#: templates/oscar/dashboard/offers/offer_list.html:104
+#: templates/oscar/dashboard/offers/offer_list.html:103
 msgid "No offers found."
 msgstr "Keine Angebote gefunden."
 
@@ -5598,25 +5554,9 @@ msgstr "Aktivieren"
 msgid "Make inactive"
 msgstr "Deaktivieren"
 
-#: templates/oscar/error.html:9
-msgid "Sorry!"
-msgstr "Entschuldigung!"
-
-#: templates/oscar/error.html:12
-msgid "Return to previous page"
-msgstr "Zur vorherigen Seite zurückkehren"
-
-#: templates/oscar/error.html:13
-msgid "Go to homepage"
-msgstr "Zur Startseite gehen"
-
 #: templates/oscar/flatpages/default.html:11
 msgid "Edit this page"
 msgstr "Diese Seite bearbeiten"
-
-#: templates/oscar/login_forbidden.html:5
-msgid "This page is only available to users who aren't logged in."
-msgstr "Diese Seite ist nur für nicht-eingeloggte Benutzer verfügbar"
 
 #: templates/oscar/partials/ellipses_pagination.html:9
 #: templates/oscar/partials/pagination.html:8
@@ -5810,7 +5750,7 @@ msgstr ""
 msgid "Back to search results"
 msgstr "Zurück zu den Suchergebnissen"
 
-#: views/decorators.py:44
+#: views/decorators.py:43
 msgid "You must log in to access this page"
 msgstr "Sie müssen eingeloggt sein, um diese Seite angezeigt zu bekommen"
 
@@ -5831,6 +5771,53 @@ msgstr "Dies ist keine gültige Vorwahl für %s."
 #: views/generic.py:208
 msgid "This is not a valid local or international phone format."
 msgstr "Dies ist keine gültige lokale oder internationale Telefonnummer."
+
+#~ msgid "Permission denied!"
+#~ msgstr "Zugriff verweigert!"
+
+#~ msgid "We're sorry but you are not permitted to access this page."
+#~ msgstr "Sie haben keine Berechtigung für diese Seite"
+
+#~ msgid "Page not found"
+#~ msgstr "Seite nicht gefunden"
+
+#~ msgid "Page not found!"
+#~ msgstr "Seite nicht gefunden!"
+
+#~ msgid "We're sorry but the page you are looking for can't be found."
+#~ msgstr "Die gesuchte Seite kann nicht gefunden werden."
+
+#~ msgid "Server error!"
+#~ msgstr "Serverfehler!"
+
+#~ msgid ""
+#~ "We're sorry but something went terribly wrong and we've been unable to "
+#~ "generate the page you requested."
+#~ msgstr ""
+#~ "Tut uns leid, aber irgendetwas ist vollkommen schiefgelaufen. Wir konnten "
+#~ "die von Ihnen angeforderte Seite leider nicht erzeugen."
+
+#~ msgid ""
+#~ "This incident has been logged and will be addressed by an engineer as "
+#~ "soon as possible."
+#~ msgstr ""
+#~ "Dieser Vorfall wurde protokolliert und wird zeitnah von einem Entwickler "
+#~ "bearbeitet."
+
+#~ msgid "Browse"
+#~ msgstr "Durchsuchen"
+
+#~ msgid "Sorry!"
+#~ msgstr "Entschuldigung!"
+
+#~ msgid "Return to previous page"
+#~ msgstr "Zur vorherigen Seite zurückkehren"
+
+#~ msgid "Go to homepage"
+#~ msgstr "Zur Startseite gehen"
+
+#~ msgid "This page is only available to users who aren't logged in."
+#~ msgstr "Diese Seite ist nur für nicht-eingeloggte Benutzer verfügbar"
 
 #~ msgid " This offer is no longer available."
 #~ msgstr "Dieses Angebot ist nicht mehr verfügbar."
