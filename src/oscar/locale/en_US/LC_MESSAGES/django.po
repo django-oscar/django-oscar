@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-04 09:50+0200\n"
+"POT-Creation-Date: 2017-09-07 16:52+0200\n"
 "PO-Revision-Date: 2013-02-18 17:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: English (United States) (http://www.transifex.com/projects/p/"
@@ -530,7 +530,6 @@ msgstr ""
 #: apps/order/abstract_models.py:901 apps/order/abstract_models.py:952
 #: apps/partner/abstract_models.py:21 apps/payment/abstract_models.py:207
 #: apps/voucher/abstract_models.py:25
-#: templates/oscar/dashboard/comms/list.html:32
 msgid "Code"
 msgstr ""
 
@@ -607,7 +606,6 @@ msgstr ""
 #: apps/payment/abstract_models.py:245 apps/shipping/abstract_models.py:19
 #: apps/voucher/abstract_models.py:21
 #: templates/oscar/customer/profile/profile.html:9
-#: templates/oscar/dashboard/comms/list.html:33
 #: templates/oscar/dashboard/offers/offer_detail.html:64
 #: templates/oscar/dashboard/offers/summary.html:10
 #: templates/oscar/dashboard/orders/order_detail.html:35
@@ -636,7 +634,6 @@ msgid "Slug"
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:153 apps/catalogue/abstract_models.py:170
-#: templates/oscar/dashboard/comms/list.html:34
 msgid "Category"
 msgstr ""
 
@@ -965,7 +962,6 @@ msgstr ""
 #: apps/customer/forms.py:184 apps/dashboard/orders/forms.py:65
 #: apps/dashboard/orders/views.py:330 apps/order/abstract_models.py:27
 #: templates/oscar/customer/order/order_list.html:37
-#: templates/oscar/dashboard/comms/detail.html:67
 #: templates/oscar/dashboard/offers/offer_detail.html:107
 #: templates/oscar/dashboard/orders/order_list.html:93
 msgid "Order number"
@@ -1147,8 +1143,6 @@ msgstr ""
 #: templates/oscar/dashboard/catalogue/product_delete.html:14
 #: templates/oscar/dashboard/catalogue/product_list.html:17
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:14
-#: templates/oscar/dashboard/comms/detail.html:14
-#: templates/oscar/dashboard/comms/list.html:13
 #: templates/oscar/dashboard/index.html:16
 #: templates/oscar/dashboard/layout.html:25
 #: templates/oscar/dashboard/layout.html:84
@@ -3237,7 +3231,6 @@ msgstr ""
 #: templates/oscar/customer/registration.html:30
 #: templates/oscar/dashboard/catalogue/category_delete.html:36
 #: templates/oscar/dashboard/catalogue/product_delete.html:63
-#: templates/oscar/dashboard/comms/detail.html:106
 #: templates/oscar/dashboard/offers/offer_delete.html:37
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:37
 #: templates/oscar/dashboard/partials/form.html:10
@@ -3256,7 +3249,6 @@ msgstr ""
 #: templates/oscar/customer/registration.html:30
 #: templates/oscar/dashboard/catalogue/category_delete.html:36
 #: templates/oscar/dashboard/catalogue/product_delete.html:64
-#: templates/oscar/dashboard/comms/detail.html:106
 #: templates/oscar/dashboard/offers/offer_delete.html:38
 #: templates/oscar/dashboard/offers/step_form.html:84
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:37
@@ -3561,7 +3553,6 @@ msgstr ""
 #: templates/oscar/checkout/preview.html:35
 #: templates/oscar/checkout/shipping_methods.html:58
 #: templates/oscar/checkout/user_address_delete.html:29
-#: templates/oscar/dashboard/comms/detail.html:82
 #: templates/oscar/dashboard/offers/step_form.html:78
 #: templates/oscar/dashboard/orders/order_list.html:85
 #: templates/oscar/dashboard/orders/partials/bulk_edit_form.html:6
@@ -3585,7 +3576,6 @@ msgstr ""
 #: templates/oscar/checkout/shipping_address.html:41
 #: templates/oscar/checkout/shipping_address.html:43
 #: templates/oscar/checkout/user_address_form.html:24
-#: templates/oscar/dashboard/comms/detail.html:105
 #: templates/oscar/dashboard/offers/restrictions_form.html:14
 #: templates/oscar/dashboard/offers/step_form.html:80
 #: templates/oscar/dashboard/ranges/range_form.html:38
@@ -3762,7 +3752,6 @@ msgid "Yes!"
 msgstr ""
 
 #: templates/oscar/checkout/user_address_form.html:24
-#: templates/oscar/dashboard/comms/detail.html:105
 #: templates/oscar/dashboard/partials/form.html:9
 #: templates/oscar/dashboard/ranges/range_form.html:38
 #: templates/oscar/partials/form.html:10
@@ -4054,8 +4043,6 @@ msgid "Search"
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_row_actions.html:11
-#: templates/oscar/dashboard/comms/detail.html:39
-#: templates/oscar/dashboard/comms/list.html:45
 #: templates/oscar/dashboard/offers/offer_detail.html:66
 #: templates/oscar/dashboard/offers/offer_detail.html:75
 #: templates/oscar/dashboard/offers/offer_detail.html:80
@@ -4089,85 +4076,6 @@ msgstr ""
 
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:77
 msgid "No stock alerts found."
-msgstr ""
-
-#: templates/oscar/dashboard/comms/detail.html:18
-#: templates/oscar/dashboard/comms/list.html:7
-#: templates/oscar/dashboard/comms/list.html:16
-#: templates/oscar/dashboard/comms/list.html:22
-#: templates/oscar/dashboard/comms/list.html:28
-msgid "Emails"
-msgstr ""
-
-#: templates/oscar/dashboard/comms/detail.html:40
-#: templates/oscar/dashboard/comms/detail.html:75
-msgid "Preview"
-msgstr ""
-
-#: templates/oscar/dashboard/comms/detail.html:44
-msgid "Edit email"
-msgstr ""
-
-#: templates/oscar/dashboard/comms/detail.html:53
-msgid "Email content"
-msgstr ""
-
-#: templates/oscar/dashboard/comms/detail.html:56
-msgid "These fields are rendered using Django's template system."
-msgstr ""
-
-#: templates/oscar/dashboard/comms/detail.html:57
-msgid "You can use the following variables:"
-msgstr ""
-
-#: templates/oscar/dashboard/comms/detail.html:60
-msgid "The full name of the user (if they have one)"
-msgstr ""
-
-#: templates/oscar/dashboard/comms/detail.html:62
-msgid "The user's email address"
-msgstr ""
-
-#: templates/oscar/dashboard/comms/detail.html:64
-msgid "The name of the site (eg example.com)"
-msgstr ""
-
-#: templates/oscar/dashboard/comms/detail.html:79
-msgid "View a preview of this email using order:"
-msgstr ""
-
-#: templates/oscar/dashboard/comms/detail.html:82
-msgid "View preview"
-msgstr ""
-
-#: templates/oscar/dashboard/comms/detail.html:83
-msgid "or send a preview to:"
-msgstr ""
-
-#: templates/oscar/dashboard/comms/detail.html:85
-#: templates/oscar/dashboard/users/detail.html:90
-#: templates/oscar/registration/password_reset_form.html:24
-msgid "Sending..."
-msgstr ""
-
-#: templates/oscar/dashboard/comms/detail.html:85
-msgid "Send preview email"
-msgstr ""
-
-#: templates/oscar/dashboard/comms/detail.html:91
-msgid "Subject"
-msgstr ""
-
-#: templates/oscar/dashboard/comms/detail.html:95
-msgid "Body text"
-msgstr ""
-
-#: templates/oscar/dashboard/comms/detail.html:99
-msgid "Body HTML"
-msgstr ""
-
-#: templates/oscar/dashboard/comms/list.html:53
-msgid "There are no defined emails to edit."
 msgstr ""
 
 #: templates/oscar/dashboard/index.html:22
@@ -5248,6 +5156,11 @@ msgstr ""
 
 #: templates/oscar/dashboard/users/detail.html:78
 msgid "Total spent"
+msgstr ""
+
+#: templates/oscar/dashboard/users/detail.html:90
+#: templates/oscar/registration/password_reset_form.html:24
+msgid "Sending..."
 msgstr ""
 
 #: templates/oscar/dashboard/users/detail.html:90
