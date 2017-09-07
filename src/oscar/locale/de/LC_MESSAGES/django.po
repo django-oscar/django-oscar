@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-31 10:50+0200\n"
+"POT-Creation-Date: 2017-09-04 09:50+0200\n"
 "PO-Revision-Date: 2015-03-06 21:39+0000\n"
 "Last-Translator: Marc Wienhold <marc.wienhold@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/django-oscar/"
@@ -3090,20 +3090,20 @@ msgstr "„%(voucher)s“ benutzt von „%(user)s“"
 msgid "The phone number entered is not valid."
 msgstr "Die angegebene Telefonnummer ist nicht gültig."
 
-#: core/validators.py:45
+#: core/validators.py:35
 #, python-format
 msgid "The URL \"%s\" does not exist"
 msgstr "Die URL „%s“ existiert nicht"
 
-#: core/validators.py:82
+#: core/validators.py:72
 msgid "Specified page already exists!"
 msgstr "Angegebene Seite existiert bereits!"
 
-#: core/validators.py:89
+#: core/validators.py:79
 msgid "This field is required"
 msgstr "Dieses Feld ist erforderlich"
 
-#: core/validators.py:132
+#: core/validators.py:122
 msgid "Please choose a less common password"
 msgstr "Bitte wählen Sie ein ungewöhnlicheres Passwort"
 
@@ -3194,7 +3194,6 @@ msgstr "Version:"
 #: templates/oscar/customer/order/order_list.html:9
 #: templates/oscar/customer/registration.html:12
 #: templates/oscar/dashboard/catalogue/category_list.html:32
-#: templates/oscar/flatpages/default.html:20
 #: templates/oscar/offer/range.html:15
 #: templates/oscar/registration/password_reset_complete.html:9
 #: templates/oscar/registration/password_reset_confirm.html:9
@@ -5554,10 +5553,6 @@ msgstr "Aktivieren"
 msgid "Make inactive"
 msgstr "Deaktivieren"
 
-#: templates/oscar/flatpages/default.html:11
-msgid "Edit this page"
-msgstr "Diese Seite bearbeiten"
-
 #: templates/oscar/partials/ellipses_pagination.html:9
 #: templates/oscar/partials/pagination.html:8
 #: templates/oscar/search/partials/pagination.html:8
@@ -5771,6 +5766,9 @@ msgstr "Dies ist keine gültige Vorwahl für %s."
 #: views/generic.py:208
 msgid "This is not a valid local or international phone format."
 msgstr "Dies ist keine gültige lokale oder internationale Telefonnummer."
+
+#~ msgid "Edit this page"
+#~ msgstr "Diese Seite bearbeiten"
 
 #~ msgid "Permission denied!"
 #~ msgstr "Zugriff verweigert!"

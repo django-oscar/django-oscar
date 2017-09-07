@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-31 10:50+0200\n"
+"POT-Creation-Date: 2017-09-04 09:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2975,20 +2975,20 @@ msgstr ""
 msgid "The phone number entered is not valid."
 msgstr ""
 
-#: core/validators.py:45
+#: core/validators.py:35
 #, python-format
 msgid "The URL \"%s\" does not exist"
 msgstr ""
 
-#: core/validators.py:82
+#: core/validators.py:72
 msgid "Specified page already exists!"
 msgstr ""
 
-#: core/validators.py:89
+#: core/validators.py:79
 msgid "This field is required"
 msgstr ""
 
-#: core/validators.py:132
+#: core/validators.py:122
 msgid "Please choose a less common password"
 msgstr ""
 
@@ -3079,7 +3079,6 @@ msgstr ""
 #: templates/oscar/customer/order/order_list.html:9
 #: templates/oscar/customer/registration.html:12
 #: templates/oscar/dashboard/catalogue/category_list.html:32
-#: templates/oscar/flatpages/default.html:20
 #: templates/oscar/offer/range.html:15
 #: templates/oscar/registration/password_reset_complete.html:9
 #: templates/oscar/registration/password_reset_confirm.html:9
@@ -5292,10 +5291,6 @@ msgstr ""
 
 #: templates/oscar/dashboard/users/table.html:14
 msgid "Make inactive"
-msgstr ""
-
-#: templates/oscar/flatpages/default.html:11
-msgid "Edit this page"
 msgstr ""
 
 #: templates/oscar/partials/ellipses_pagination.html:9

@@ -32,16 +32,6 @@ class ExtendedURLValidator(validators.URLValidator):
         try:
             resolve(value)
         except Http404:
-            # We load flatpages here as it causes a circular reference problem
-            # sometimes.  FlatPages is None if not installed
-            FlatPage = get_model('flatpages', 'FlatPage')
-            if FlatPage is not None:
-                try:
-                    FlatPage.objects.get(url=value)
-                except FlatPage.DoesNotExist:
-                    self.is_local_url = True
-                else:
-                    return
             raise ValidationError(_('The URL "%s" does not exist') % value)
         else:
             self.is_local_url = True
