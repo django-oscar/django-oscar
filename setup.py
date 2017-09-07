@@ -62,6 +62,7 @@ test_requires = [
     'coverage==4.4.1',
     'django-webtest==1.9.2',
     'py>=1.4.31',
+    'psycopg2==2.7.3.1',
     'pytest==3.2.1',
     'pytest-cov==2.5.1',
     'pytest-django==3.1.2',
