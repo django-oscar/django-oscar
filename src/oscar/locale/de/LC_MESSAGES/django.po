@@ -113,8 +113,6 @@ msgstr "Adresse"
 
 #: apps/address/abstract_models.py:244
 #: templates/oscar/dashboard/partners/partner_list.html:47
-#: templates/oscar/dashboard/users/detail.html:104
-#: templates/oscar/dashboard/users/detail.html:144
 msgid "Addresses"
 msgstr "Adressen"
 
@@ -318,8 +316,6 @@ msgstr "Produktansichten"
 #: templates/oscar/dashboard/orders/order_list.html:24
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:15
 #: templates/oscar/dashboard/orders/statistics.html:18
-#: templates/oscar/dashboard/users/detail.html:103
-#: templates/oscar/dashboard/users/detail.html:112
 msgid "Orders"
 msgstr "Bestellungen"
 
@@ -415,7 +411,6 @@ msgstr "Abgeschickt – wurde an der Kasse bestellt"
 #: templates/oscar/dashboard/orders/order_detail.html:530
 #: templates/oscar/dashboard/orders/order_list.html:96
 #: templates/oscar/dashboard/orders/statistics.html:59
-#: templates/oscar/dashboard/users/detail.html:120
 msgid "Status"
 msgstr "Status"
 
@@ -638,7 +633,6 @@ msgstr "Gutschein „%s“ wurde aus Ihrem Warenkorb entfernt"
 #: templates/oscar/dashboard/orders/order_detail.html:46
 #: templates/oscar/dashboard/partners/partner_list.html:45
 #: templates/oscar/dashboard/ranges/range_list.html:32
-#: templates/oscar/dashboard/users/detail.html:34
 msgid "Name"
 msgstr "Name"
 
@@ -936,7 +930,6 @@ msgid "Designates whether the user can log into this admin site."
 msgstr "Bestimmt, ob sich ein Benutzer in das Admin-Interface einloggen darf."
 
 #: apps/customer/abstract_models.py:54
-#: templates/oscar/dashboard/users/detail.html:42
 msgid "Active"
 msgstr "Aktiv"
 
@@ -1120,8 +1113,6 @@ msgstr "Meine Bestellungen"
 #: templates/oscar/dashboard/ranges/range_form.html:13
 #: templates/oscar/dashboard/ranges/range_list.html:11
 #: templates/oscar/dashboard/ranges/range_product_list.html:13
-#: templates/oscar/dashboard/users/detail.html:12
-#: templates/oscar/dashboard/users/index.html:21
 #: templates/oscar/partials/nav_accounts.html:47
 msgid "Cockpit"
 msgstr ""
@@ -1716,51 +1707,6 @@ msgid "%d Row"
 msgid_plural "%d Rows"
 msgstr[0] ""
 msgstr[1] ""
-
-#: apps/dashboard/users/config.py:8
-msgid "Users dashboard"
-msgstr "Benutzer-Dashboard"
-
-#: apps/dashboard/users/forms.py:6 templates/oscar/checkout/checkout.html:49
-#: templates/oscar/checkout/thank_you.html:52
-#: templates/oscar/dashboard/partners/partner_manage.html:33
-#: templates/oscar/dashboard/partners/partner_user_list.html:45
-#: templates/oscar/dashboard/partners/partner_user_select.html:52
-#: templates/oscar/dashboard/users/detail.html:38
-msgid "Email"
-msgstr "E-Mail-Adresse"
-
-#: apps/dashboard/users/forms.py:8
-msgctxt "User's name"
-msgid "Name"
-msgstr "Name"
-
-#: apps/dashboard/users/views.py:31
-#, python-format
-msgid "%(main_filter)s %(email_filter)s %(name_filter)s"
-msgstr "%(main_filter)s %(email_filter)s %(name_filter)s"
-
-#: apps/dashboard/users/views.py:59
-msgid "All users"
-msgstr "Alle Benutzer"
-
-#: apps/dashboard/users/views.py:76
-#, python-format
-msgid " with email matching '%s'"
-msgstr "mit übereinstimmender E-Mail „%s“"
-
-#: apps/dashboard/users/views.py:89
-#, python-format
-msgid " with name matching '%s'"
-msgstr "mit übereinstimmendem Namen „%s“"
-
-#: apps/dashboard/users/views.py:114
-msgid "Users' status successfully changed"
-msgstr "Benutzerstatus erfolgreich aktualisiert"
-
-#: apps/dashboard/users/views.py:145
-msgid "A password reset email has been sent"
-msgstr "Eine E-Mail zum Zurücksetzen des Passworts wurde gesendet"
 
 #: apps/offer/config.py:8
 msgid "Offer"
@@ -3018,10 +2964,6 @@ msgid "Partners"
 msgstr "Partner"
 
 #: defaults.py:123 defaults.py:127 templates/oscar/dashboard/index.html:112
-#: templates/oscar/dashboard/users/detail.html:16
-#: templates/oscar/dashboard/users/index.html:9
-#: templates/oscar/dashboard/users/index.html:14
-#: templates/oscar/dashboard/users/index.html:24
 msgid "Customers"
 msgstr "Kunden"
 
@@ -3497,6 +3439,14 @@ msgstr "Kontakt"
 msgid "Phone"
 msgstr "Telefon"
 
+#: templates/oscar/checkout/checkout.html:49
+#: templates/oscar/checkout/thank_you.html:52
+#: templates/oscar/dashboard/partners/partner_manage.html:33
+#: templates/oscar/dashboard/partners/partner_user_list.html:45
+#: templates/oscar/dashboard/partners/partner_user_select.html:52
+msgid "Email"
+msgstr "E-Mail-Adresse"
+
 #: templates/oscar/checkout/checkout.html:91
 msgid "Payment details to go here"
 msgstr "Zahlungsdaten hier eintragen"
@@ -3879,12 +3829,10 @@ msgstr "Ergebnisse filtern"
 #: templates/oscar/dashboard/orders/statistics.html:35
 #: templates/oscar/dashboard/partners/partner_list.html:32
 #: templates/oscar/dashboard/partners/partner_user_select.html:38
-#: templates/oscar/dashboard/users/index.html:36
 msgid "Reset"
 msgstr "Zurücksetzen"
 
 #: templates/oscar/customer/order/order_list.html:38
-#: templates/oscar/dashboard/users/detail.html:117
 msgid "Num items"
 msgstr "Anzahl Artikel"
 
@@ -4187,7 +4135,6 @@ msgstr "Neues Angebot erstellen"
 #: templates/oscar/dashboard/orders/order_list.html:67
 #: templates/oscar/dashboard/partners/partner_list.html:30
 #: templates/oscar/dashboard/partners/partner_user_select.html:36
-#: templates/oscar/dashboard/users/index.html:35
 msgid "Searching..."
 msgstr "Suche..."
 
@@ -4197,8 +4144,6 @@ msgstr "Suche..."
 #: templates/oscar/dashboard/orders/order_list.html:67
 #: templates/oscar/dashboard/partners/partner_list.html:30
 #: templates/oscar/dashboard/partners/partner_user_select.html:36
-#: templates/oscar/dashboard/users/index.html:30
-#: templates/oscar/dashboard/users/index.html:35
 #: templates/oscar/partials/search.html:7
 #: templates/oscar/search/results.html:18
 msgid "Search"
@@ -4228,7 +4173,6 @@ msgstr "Nein"
 #: templates/oscar/dashboard/orders/order_detail.html:119
 #: templates/oscar/dashboard/partners/partner_list.html:89
 #: templates/oscar/dashboard/ranges/range_list.html:65
-#: templates/oscar/dashboard/users/detail.html:85
 msgid "Actions"
 msgstr "Aktionen"
 
@@ -4436,8 +4380,6 @@ msgstr "Preise inkl. Steuer (ohne Rabatte)"
 
 #: templates/oscar/dashboard/orders/order_detail.html:154
 #: templates/oscar/dashboard/orders/order_list.html:125
-#: templates/oscar/dashboard/users/detail.html:130
-#: templates/oscar/dashboard/users/user_row_actions.html:2
 msgid "View"
 msgstr "Ansicht"
 
@@ -4497,7 +4439,6 @@ msgstr "mit Betrag"
 
 #: templates/oscar/dashboard/orders/order_detail.html:314
 #: templates/oscar/dashboard/ranges/range_product_list.html:49
-#: templates/oscar/dashboard/users/table.html:16
 msgid "Go!"
 msgstr "Los!"
 
@@ -5089,100 +5030,6 @@ msgstr ""
 "\n"
 "<p>Versandart <strong>%(name)s</strong> wurde aktualisiert.</p>\n"
 
-#: templates/oscar/dashboard/users/detail.html:30
-msgid "General"
-msgstr "Allgemein"
-
-#: templates/oscar/dashboard/users/detail.html:44
-msgid "Yes,No"
-msgstr "Ja,Nein"
-
-#: templates/oscar/dashboard/users/detail.html:48
-msgid "Superuser"
-msgstr "Superuser"
-
-#: templates/oscar/dashboard/users/detail.html:49
-#: templates/oscar/dashboard/users/detail.html:53
-msgid "True,False"
-msgstr "Ja,Nein"
-
-#: templates/oscar/dashboard/users/detail.html:52
-msgid "Staff"
-msgstr "Mitarbeiter"
-
-#: templates/oscar/dashboard/users/detail.html:56
-msgid "Last login"
-msgstr "Letzter Besuch"
-
-#: templates/oscar/dashboard/users/detail.html:60
-msgid "Date joined"
-msgstr "Registrierungsdatum"
-
-#: templates/oscar/dashboard/users/detail.html:66
-msgid "Products viewed"
-msgstr "Angesehene Produkte"
-
-#: templates/oscar/dashboard/users/detail.html:70
-msgid "Number of orders"
-msgstr "Anzahl der Bestellungen"
-
-#: templates/oscar/dashboard/users/detail.html:74
-msgid "Number of ordered items"
-msgstr "Anzahl bestellter Artikel"
-
-#: templates/oscar/dashboard/users/detail.html:78
-msgid "Total spent"
-msgstr "Gesamtbetrag"
-
-#: templates/oscar/dashboard/users/detail.html:90
-#: templates/oscar/registration/password_reset_form.html:24
-msgid "Sending..."
-msgstr "Sende..."
-
-#: templates/oscar/dashboard/users/detail.html:90
-msgid "Send password reset email"
-msgstr "E-Mail zum Zurücksetzen des Passworts senden"
-
-#: templates/oscar/dashboard/users/detail.html:116
-msgid "Order Number"
-msgstr "Bestellnummer"
-
-#: templates/oscar/dashboard/users/detail.html:118
-msgid "Total value"
-msgstr "Gesamtwert"
-
-#: templates/oscar/dashboard/users/detail.html:119
-msgid "Date placed"
-msgstr "Bestelldatum"
-
-#: templates/oscar/dashboard/users/detail.html:134
-msgid "This customer has not placed any orders yet."
-msgstr "Dieser Kunde hat noch keine Bestellungen aufgegeben."
-
-#: templates/oscar/dashboard/users/detail.html:162
-msgid "This customer has not saved any addresses."
-msgstr "Dieser Kunde hat keine Adressen gespeichert."
-
-#: templates/oscar/dashboard/users/index.html:49
-msgid "No customers found."
-msgstr "Keine Kunden gefunden."
-
-#: templates/oscar/dashboard/users/table.html:8
-msgid "Bulk Actions"
-msgstr "Sammelaktion"
-
-#: templates/oscar/dashboard/users/table.html:9
-msgid "With selected customers:"
-msgstr "Mit ausgewählten Kunden:"
-
-#: templates/oscar/dashboard/users/table.html:11
-msgid "Make active"
-msgstr "Aktivieren"
-
-#: templates/oscar/dashboard/users/table.html:14
-msgid "Make inactive"
-msgstr "Deaktivieren"
-
 #: templates/oscar/partials/ellipses_pagination.html:9
 #: templates/oscar/partials/pagination.html:8
 #: templates/oscar/search/partials/pagination.html:8
@@ -5308,6 +5155,10 @@ msgstr ""
 "Ihnen Anweisungen für das Zurücksetzen."
 
 #: templates/oscar/registration/password_reset_form.html:24
+msgid "Sending..."
+msgstr "Sende..."
+
+#: templates/oscar/registration/password_reset_form.html:24
 msgid "Send reset email"
 msgstr "E-Mail zum Zurücksetzen senden "
 
@@ -5396,6 +5247,97 @@ msgstr "Dies ist keine gültige Vorwahl für %s."
 #: views/generic.py:208
 msgid "This is not a valid local or international phone format."
 msgstr "Dies ist keine gültige lokale oder internationale Telefonnummer."
+
+#~ msgid "Users dashboard"
+#~ msgstr "Benutzer-Dashboard"
+
+#~ msgctxt "User's name"
+#~ msgid "Name"
+#~ msgstr "Name"
+
+#~ msgid "%(main_filter)s %(email_filter)s %(name_filter)s"
+#~ msgstr "%(main_filter)s %(email_filter)s %(name_filter)s"
+
+#~ msgid "All users"
+#~ msgstr "Alle Benutzer"
+
+#~ msgid " with email matching '%s'"
+#~ msgstr "mit übereinstimmender E-Mail „%s“"
+
+#~ msgid " with name matching '%s'"
+#~ msgstr "mit übereinstimmendem Namen „%s“"
+
+#~ msgid "Users' status successfully changed"
+#~ msgstr "Benutzerstatus erfolgreich aktualisiert"
+
+#~ msgid "A password reset email has been sent"
+#~ msgstr "Eine E-Mail zum Zurücksetzen des Passworts wurde gesendet"
+
+#~ msgid "General"
+#~ msgstr "Allgemein"
+
+#~ msgid "Yes,No"
+#~ msgstr "Ja,Nein"
+
+#~ msgid "Superuser"
+#~ msgstr "Superuser"
+
+#~ msgid "True,False"
+#~ msgstr "Ja,Nein"
+
+#~ msgid "Staff"
+#~ msgstr "Mitarbeiter"
+
+#~ msgid "Last login"
+#~ msgstr "Letzter Besuch"
+
+#~ msgid "Date joined"
+#~ msgstr "Registrierungsdatum"
+
+#~ msgid "Products viewed"
+#~ msgstr "Angesehene Produkte"
+
+#~ msgid "Number of orders"
+#~ msgstr "Anzahl der Bestellungen"
+
+#~ msgid "Number of ordered items"
+#~ msgstr "Anzahl bestellter Artikel"
+
+#~ msgid "Total spent"
+#~ msgstr "Gesamtbetrag"
+
+#~ msgid "Send password reset email"
+#~ msgstr "E-Mail zum Zurücksetzen des Passworts senden"
+
+#~ msgid "Order Number"
+#~ msgstr "Bestellnummer"
+
+#~ msgid "Total value"
+#~ msgstr "Gesamtwert"
+
+#~ msgid "Date placed"
+#~ msgstr "Bestelldatum"
+
+#~ msgid "This customer has not placed any orders yet."
+#~ msgstr "Dieser Kunde hat noch keine Bestellungen aufgegeben."
+
+#~ msgid "This customer has not saved any addresses."
+#~ msgstr "Dieser Kunde hat keine Adressen gespeichert."
+
+#~ msgid "No customers found."
+#~ msgstr "Keine Kunden gefunden."
+
+#~ msgid "Bulk Actions"
+#~ msgstr "Sammelaktion"
+
+#~ msgid "With selected customers:"
+#~ msgstr "Mit ausgewählten Kunden:"
+
+#~ msgid "Make active"
+#~ msgstr "Aktivieren"
+
+#~ msgid "Make inactive"
+#~ msgstr "Deaktivieren"
 
 #~ msgid "Product title"
 #~ msgstr "Produktname"

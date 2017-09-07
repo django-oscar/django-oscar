@@ -98,8 +98,6 @@ msgstr ""
 
 #: apps/address/abstract_models.py:244
 #: templates/oscar/dashboard/partners/partner_list.html:47
-#: templates/oscar/dashboard/users/detail.html:104
-#: templates/oscar/dashboard/users/detail.html:144
 msgid "Addresses"
 msgstr ""
 
@@ -300,8 +298,6 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_list.html:24
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:15
 #: templates/oscar/dashboard/orders/statistics.html:18
-#: templates/oscar/dashboard/users/detail.html:103
-#: templates/oscar/dashboard/users/detail.html:112
 msgid "Orders"
 msgstr ""
 
@@ -397,7 +393,6 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:530
 #: templates/oscar/dashboard/orders/order_list.html:96
 #: templates/oscar/dashboard/orders/statistics.html:59
-#: templates/oscar/dashboard/users/detail.html:120
 msgid "Status"
 msgstr ""
 
@@ -608,7 +603,6 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:46
 #: templates/oscar/dashboard/partners/partner_list.html:45
 #: templates/oscar/dashboard/ranges/range_list.html:32
-#: templates/oscar/dashboard/users/detail.html:34
 msgid "Name"
 msgstr ""
 
@@ -879,7 +873,6 @@ msgid "Designates whether the user can log into this admin site."
 msgstr ""
 
 #: apps/customer/abstract_models.py:54
-#: templates/oscar/dashboard/users/detail.html:42
 msgid "Active"
 msgstr ""
 
@@ -1055,8 +1048,6 @@ msgstr ""
 #: templates/oscar/dashboard/ranges/range_form.html:13
 #: templates/oscar/dashboard/ranges/range_list.html:11
 #: templates/oscar/dashboard/ranges/range_product_list.html:13
-#: templates/oscar/dashboard/users/detail.html:12
-#: templates/oscar/dashboard/users/index.html:21
 #: templates/oscar/partials/nav_accounts.html:47
 msgid "Cockpit"
 msgstr ""
@@ -1629,51 +1620,6 @@ msgid "%d Row"
 msgid_plural "%d Rows"
 msgstr[0] ""
 msgstr[1] ""
-
-#: apps/dashboard/users/config.py:8
-msgid "Users dashboard"
-msgstr ""
-
-#: apps/dashboard/users/forms.py:6 templates/oscar/checkout/checkout.html:49
-#: templates/oscar/checkout/thank_you.html:52
-#: templates/oscar/dashboard/partners/partner_manage.html:33
-#: templates/oscar/dashboard/partners/partner_user_list.html:45
-#: templates/oscar/dashboard/partners/partner_user_select.html:52
-#: templates/oscar/dashboard/users/detail.html:38
-msgid "Email"
-msgstr ""
-
-#: apps/dashboard/users/forms.py:8
-msgctxt "User's name"
-msgid "Name"
-msgstr ""
-
-#: apps/dashboard/users/views.py:31
-#, python-format
-msgid "%(main_filter)s %(email_filter)s %(name_filter)s"
-msgstr ""
-
-#: apps/dashboard/users/views.py:59
-msgid "All users"
-msgstr ""
-
-#: apps/dashboard/users/views.py:76
-#, python-format
-msgid " with email matching '%s'"
-msgstr ""
-
-#: apps/dashboard/users/views.py:89
-#, python-format
-msgid " with name matching '%s'"
-msgstr ""
-
-#: apps/dashboard/users/views.py:114
-msgid "Users' status successfully changed"
-msgstr ""
-
-#: apps/dashboard/users/views.py:145
-msgid "A password reset email has been sent"
-msgstr ""
 
 #: apps/offer/config.py:8
 msgid "Offer"
@@ -2905,10 +2851,6 @@ msgid "Partners"
 msgstr ""
 
 #: defaults.py:123 defaults.py:127 templates/oscar/dashboard/index.html:112
-#: templates/oscar/dashboard/users/detail.html:16
-#: templates/oscar/dashboard/users/index.html:9
-#: templates/oscar/dashboard/users/index.html:14
-#: templates/oscar/dashboard/users/index.html:24
 msgid "Customers"
 msgstr ""
 
@@ -3346,6 +3288,14 @@ msgstr ""
 msgid "Phone"
 msgstr ""
 
+#: templates/oscar/checkout/checkout.html:49
+#: templates/oscar/checkout/thank_you.html:52
+#: templates/oscar/dashboard/partners/partner_manage.html:33
+#: templates/oscar/dashboard/partners/partner_user_list.html:45
+#: templates/oscar/dashboard/partners/partner_user_select.html:52
+msgid "Email"
+msgstr ""
+
 #: templates/oscar/checkout/checkout.html:91
 msgid "Payment details to go here"
 msgstr ""
@@ -3705,12 +3655,10 @@ msgstr ""
 #: templates/oscar/dashboard/orders/statistics.html:35
 #: templates/oscar/dashboard/partners/partner_list.html:32
 #: templates/oscar/dashboard/partners/partner_user_select.html:38
-#: templates/oscar/dashboard/users/index.html:36
 msgid "Reset"
 msgstr ""
 
 #: templates/oscar/customer/order/order_list.html:38
-#: templates/oscar/dashboard/users/detail.html:117
 msgid "Num items"
 msgstr ""
 
@@ -4008,7 +3956,6 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_list.html:67
 #: templates/oscar/dashboard/partners/partner_list.html:30
 #: templates/oscar/dashboard/partners/partner_user_select.html:36
-#: templates/oscar/dashboard/users/index.html:35
 msgid "Searching..."
 msgstr ""
 
@@ -4018,8 +3965,6 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_list.html:67
 #: templates/oscar/dashboard/partners/partner_list.html:30
 #: templates/oscar/dashboard/partners/partner_user_select.html:36
-#: templates/oscar/dashboard/users/index.html:30
-#: templates/oscar/dashboard/users/index.html:35
 #: templates/oscar/partials/search.html:7
 #: templates/oscar/search/results.html:18
 msgid "Search"
@@ -4049,7 +3994,6 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:119
 #: templates/oscar/dashboard/partners/partner_list.html:89
 #: templates/oscar/dashboard/ranges/range_list.html:65
-#: templates/oscar/dashboard/users/detail.html:85
 msgid "Actions"
 msgstr ""
 
@@ -4254,8 +4198,6 @@ msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:154
 #: templates/oscar/dashboard/orders/order_list.html:125
-#: templates/oscar/dashboard/users/detail.html:130
-#: templates/oscar/dashboard/users/user_row_actions.html:2
 msgid "View"
 msgstr ""
 
@@ -4315,7 +4257,6 @@ msgstr ""
 
 #: templates/oscar/dashboard/orders/order_detail.html:314
 #: templates/oscar/dashboard/ranges/range_product_list.html:49
-#: templates/oscar/dashboard/users/table.html:16
 msgid "Go!"
 msgstr ""
 
@@ -4851,100 +4792,6 @@ msgid ""
 "    <p>The <strong>%(name)s</strong> shipping method has been updated.</p>\n"
 msgstr ""
 
-#: templates/oscar/dashboard/users/detail.html:30
-msgid "General"
-msgstr ""
-
-#: templates/oscar/dashboard/users/detail.html:44
-msgid "Yes,No"
-msgstr ""
-
-#: templates/oscar/dashboard/users/detail.html:48
-msgid "Superuser"
-msgstr ""
-
-#: templates/oscar/dashboard/users/detail.html:49
-#: templates/oscar/dashboard/users/detail.html:53
-msgid "True,False"
-msgstr ""
-
-#: templates/oscar/dashboard/users/detail.html:52
-msgid "Staff"
-msgstr ""
-
-#: templates/oscar/dashboard/users/detail.html:56
-msgid "Last login"
-msgstr ""
-
-#: templates/oscar/dashboard/users/detail.html:60
-msgid "Date joined"
-msgstr ""
-
-#: templates/oscar/dashboard/users/detail.html:66
-msgid "Products viewed"
-msgstr ""
-
-#: templates/oscar/dashboard/users/detail.html:70
-msgid "Number of orders"
-msgstr ""
-
-#: templates/oscar/dashboard/users/detail.html:74
-msgid "Number of ordered items"
-msgstr ""
-
-#: templates/oscar/dashboard/users/detail.html:78
-msgid "Total spent"
-msgstr ""
-
-#: templates/oscar/dashboard/users/detail.html:90
-#: templates/oscar/registration/password_reset_form.html:24
-msgid "Sending..."
-msgstr ""
-
-#: templates/oscar/dashboard/users/detail.html:90
-msgid "Send password reset email"
-msgstr ""
-
-#: templates/oscar/dashboard/users/detail.html:116
-msgid "Order Number"
-msgstr ""
-
-#: templates/oscar/dashboard/users/detail.html:118
-msgid "Total value"
-msgstr ""
-
-#: templates/oscar/dashboard/users/detail.html:119
-msgid "Date placed"
-msgstr ""
-
-#: templates/oscar/dashboard/users/detail.html:134
-msgid "This customer has not placed any orders yet."
-msgstr ""
-
-#: templates/oscar/dashboard/users/detail.html:162
-msgid "This customer has not saved any addresses."
-msgstr ""
-
-#: templates/oscar/dashboard/users/index.html:49
-msgid "No customers found."
-msgstr ""
-
-#: templates/oscar/dashboard/users/table.html:8
-msgid "Bulk Actions"
-msgstr ""
-
-#: templates/oscar/dashboard/users/table.html:9
-msgid "With selected customers:"
-msgstr ""
-
-#: templates/oscar/dashboard/users/table.html:11
-msgid "Make active"
-msgstr ""
-
-#: templates/oscar/dashboard/users/table.html:14
-msgid "Make inactive"
-msgstr ""
-
 #: templates/oscar/partials/ellipses_pagination.html:9
 #: templates/oscar/partials/pagination.html:8
 #: templates/oscar/search/partials/pagination.html:8
@@ -5052,6 +4899,10 @@ msgstr ""
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll e-mail "
 "instructions for setting a new one."
+msgstr ""
+
+#: templates/oscar/registration/password_reset_form.html:24
+msgid "Sending..."
 msgstr ""
 
 #: templates/oscar/registration/password_reset_form.html:24
