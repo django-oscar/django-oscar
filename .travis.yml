@@ -2,6 +2,7 @@ sudo: false
 language: python
 
 matrix:
+  fast_finish: true
   include:
     - python: 2.7
       env: TOXENV=py27-django18
@@ -25,11 +26,15 @@ matrix:
       env: TOXENV=py35-django111
     - python: 3.6
       env: TOXENV=py36-django111
+    - python: 3.6
+      env: TOXENV=py36-djangomaster
 
     - python: 3.5
       env: TOXENV=lint
     - python: 3.5
       env: TOXENV=sandbox
+  allow_failures:
+    - env: TOXENV=py36-djangomaster
 
 
 env:
