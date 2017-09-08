@@ -44,16 +44,10 @@ msgid "Title"
 msgstr ""
 
 #: apps/address/abstract_models.py:217 apps/customer/abstract_models.py:46
-#: templates/oscar/dashboard/partners/partner_manage.html:34
-#: templates/oscar/dashboard/partners/partner_user_list.html:46
-#: templates/oscar/dashboard/partners/partner_user_select.html:53
 msgid "First name"
 msgstr ""
 
 #: apps/address/abstract_models.py:218 apps/customer/abstract_models.py:48
-#: templates/oscar/dashboard/partners/partner_manage.html:35
-#: templates/oscar/dashboard/partners/partner_user_list.html:47
-#: templates/oscar/dashboard/partners/partner_user_select.html:54
 msgid "Last name"
 msgstr ""
 
@@ -97,7 +91,6 @@ msgid "Address"
 msgstr ""
 
 #: apps/address/abstract_models.py:244
-#: templates/oscar/dashboard/partners/partner_list.html:47
 msgid "Addresses"
 msgstr ""
 
@@ -601,7 +594,6 @@ msgstr ""
 #: templates/oscar/dashboard/offers/summary.html:10
 #: templates/oscar/dashboard/orders/order_detail.html:35
 #: templates/oscar/dashboard/orders/order_detail.html:46
-#: templates/oscar/dashboard/partners/partner_list.html:45
 #: templates/oscar/dashboard/ranges/range_list.html:32
 msgid "Name"
 msgstr ""
@@ -887,8 +879,6 @@ msgid "date joined"
 msgstr ""
 
 #: apps/customer/abstract_models.py:67 apps/partner/abstract_models.py:30
-#: templates/oscar/dashboard/partners/partner_list.html:46
-#: templates/oscar/dashboard/partners/partner_manage.html:28
 msgid "Users"
 msgstr ""
 
@@ -898,7 +888,6 @@ msgid "Customer"
 msgstr ""
 
 #: apps/customer/forms.py:92 apps/customer/forms.py:127
-#: apps/dashboard/partners/forms.py:118
 #: templates/oscar/customer/profile/profile.html:13
 #: templates/oscar/dashboard/orders/order_detail.html:41
 #: templates/oscar/dashboard/orders/order_detail.html:47
@@ -906,7 +895,6 @@ msgid "Email address"
 msgstr ""
 
 #: apps/customer/forms.py:112 apps/customer/forms.py:129
-#: apps/dashboard/partners/forms.py:67
 msgid "Password"
 msgstr ""
 
@@ -922,7 +910,7 @@ msgstr ""
 msgid "A user with that email address already exists"
 msgstr ""
 
-#: apps/customer/forms.py:159 apps/dashboard/partners/forms.py:82
+#: apps/customer/forms.py:159
 msgid "The two password fields didn't match."
 msgstr ""
 
@@ -1037,13 +1025,6 @@ msgstr ""
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:11
 #: templates/oscar/dashboard/orders/statistics.html:14
 #: templates/oscar/dashboard/partials/nav_accounts.html:44
-#: templates/oscar/dashboard/partners/partner_delete.html:13
-#: templates/oscar/dashboard/partners/partner_form.html:14
-#: templates/oscar/dashboard/partners/partner_list.html:12
-#: templates/oscar/dashboard/partners/partner_manage.html:12
-#: templates/oscar/dashboard/partners/partner_user_form.html:14
-#: templates/oscar/dashboard/partners/partner_user_list.html:12
-#: templates/oscar/dashboard/partners/partner_user_select.html:12
 #: templates/oscar/dashboard/ranges/range_delete.html:13
 #: templates/oscar/dashboard/ranges/range_form.html:13
 #: templates/oscar/dashboard/ranges/range_list.html:11
@@ -1464,95 +1445,6 @@ msgstr ""
 msgid "Delivery address updated"
 msgstr ""
 
-#: apps/dashboard/partners/config.py:8
-msgid "Partners dashboard"
-msgstr ""
-
-#: apps/dashboard/partners/forms.py:17 apps/dashboard/partners/forms.py:123
-#: apps/partner/abstract_models.py:24
-msgctxt "Partner's name"
-msgid "Name"
-msgstr ""
-
-#: apps/dashboard/partners/forms.py:26
-msgid "Full dashboard access"
-msgstr ""
-
-#: apps/dashboard/partners/forms.py:27
-msgid "Limited dashboard access"
-msgstr ""
-
-#: apps/dashboard/partners/forms.py:33 apps/dashboard/partners/forms.py:65
-msgid "User role"
-msgstr ""
-
-#: apps/dashboard/partners/forms.py:73
-msgid "Confirm Password"
-msgstr ""
-
-#: apps/dashboard/partners/views.py:35
-msgid "All partners"
-msgstr ""
-
-#: apps/dashboard/partners/views.py:48
-#, python-format
-msgid "Partners matching '%s'"
-msgstr ""
-
-#: apps/dashboard/partners/views.py:69
-#: templates/oscar/dashboard/partners/partner_list.html:21
-msgid "Create new partner"
-msgstr ""
-
-#: apps/dashboard/partners/views.py:74
-#, python-format
-msgid "Partner '%s' was created successfully."
-msgstr ""
-
-#: apps/dashboard/partners/views.py:107
-#, python-format
-msgid "Partner '%s' was updated successfully."
-msgstr ""
-
-#: apps/dashboard/partners/views.py:120
-#, python-format
-msgid "Partner '%s' was deleted successfully."
-msgstr ""
-
-#: apps/dashboard/partners/views.py:144
-msgid "Create user"
-msgstr ""
-
-#: apps/dashboard/partners/views.py:155
-#, python-format
-msgid "User '%s' was created successfully."
-msgstr ""
-
-#: apps/dashboard/partners/views.py:204
-#, python-format
-msgid "User '%(name)s' was linked to '%(partner_name)s'"
-msgstr ""
-
-#: apps/dashboard/partners/views.py:209
-#, python-format
-msgid "User '%(name)s' is already linked to '%(partner_name)s'"
-msgstr ""
-
-#: apps/dashboard/partners/views.py:264
-#, python-format
-msgid "User '%(name)s' is not linked to '%(partner_name)s'"
-msgstr ""
-
-#: apps/dashboard/partners/views.py:286
-#, python-format
-msgid "Edit user '%s'"
-msgstr ""
-
-#: apps/dashboard/partners/views.py:292
-#, python-format
-msgid "User '%s' was updated successfully."
-msgstr ""
-
 #: apps/dashboard/ranges/config.py:8
 msgid "Ranges dashboard"
 msgstr ""
@@ -1653,7 +1545,7 @@ msgid ""
 msgstr ""
 
 #: apps/offer/models.py:86 apps/offer/models.py:421 apps/offer/models.py:521
-#: apps/payment/abstract_models.py:37 defaults.py:165
+#: apps/payment/abstract_models.py:37 defaults.py:161
 #: templates/oscar/dashboard/orders/order_detail.html:563
 #: templates/oscar/dashboard/orders/order_detail.html:613
 msgid "Type"
@@ -2402,6 +2294,11 @@ msgstr ""
 msgid "There is already an order with number %s"
 msgstr ""
 
+#: apps/partner/abstract_models.py:24
+msgctxt "Partner's name"
+msgid "Name"
+msgstr ""
+
 #: apps/partner/abstract_models.py:70
 msgid "Fulfillment partner"
 msgstr ""
@@ -2718,7 +2615,7 @@ msgstr ""
 msgid "Case insensitive / No spaces allowed"
 msgstr ""
 
-#: apps/voucher/abstract_models.py:30 defaults.py:137 defaults.py:141
+#: apps/voucher/abstract_models.py:30 defaults.py:133 defaults.py:137
 #: templates/oscar/dashboard/offers/offer_delete.html:7
 #: templates/oscar/dashboard/offers/offer_delete.html:17
 #: templates/oscar/dashboard/offers/offer_detail.html:18
@@ -2832,57 +2729,39 @@ msgstr ""
 msgid "Statistics"
 msgstr ""
 
-#: defaults.py:117 templates/oscar/dashboard/partners/partner_delete.html:7
-#: templates/oscar/dashboard/partners/partner_delete.html:17
-#: templates/oscar/dashboard/partners/partner_form.html:8
-#: templates/oscar/dashboard/partners/partner_form.html:18
-#: templates/oscar/dashboard/partners/partner_list.html:6
-#: templates/oscar/dashboard/partners/partner_list.html:15
-#: templates/oscar/dashboard/partners/partner_list.html:22
-#: templates/oscar/dashboard/partners/partner_manage.html:6
-#: templates/oscar/dashboard/partners/partner_manage.html:16
-#: templates/oscar/dashboard/partners/partner_user_form.html:8
-#: templates/oscar/dashboard/partners/partner_user_form.html:18
-#: templates/oscar/dashboard/partners/partner_user_list.html:6
-#: templates/oscar/dashboard/partners/partner_user_list.html:16
-#: templates/oscar/dashboard/partners/partner_user_select.html:6
-#: templates/oscar/dashboard/partners/partner_user_select.html:16
-msgid "Partners"
-msgstr ""
-
-#: defaults.py:123 defaults.py:127 templates/oscar/dashboard/index.html:112
+#: defaults.py:119 defaults.py:123 templates/oscar/dashboard/index.html:112
 msgid "Customers"
 msgstr ""
 
-#: defaults.py:131
+#: defaults.py:127
 msgid "Stock alert requests"
 msgstr ""
 
-#: defaults.py:147
+#: defaults.py:143
 msgid "Content"
 msgstr ""
 
-#: defaults.py:151
+#: defaults.py:147
 msgid "Email templates"
 msgstr ""
 
-#: defaults.py:171
+#: defaults.py:167
 msgid "Price range"
 msgstr ""
 
-#: defaults.py:176
+#: defaults.py:172
 msgid "0 to 20"
 msgstr ""
 
-#: defaults.py:177
+#: defaults.py:173
 msgid "20 to 40"
 msgstr ""
 
-#: defaults.py:178
+#: defaults.py:174
 msgid "40 to 60"
 msgstr ""
 
-#: defaults.py:179
+#: defaults.py:175
 msgid "60+"
 msgstr ""
 
@@ -3059,7 +2938,6 @@ msgstr ""
 #: templates/oscar/dashboard/offers/offer_delete.html:37
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:37
 #: templates/oscar/dashboard/partials/form.html:10
-#: templates/oscar/dashboard/partners/partner_delete.html:37
 #: templates/oscar/dashboard/ranges/range_delete.html:37
 #: templates/oscar/dashboard/ranges/range_form.html:38
 #: templates/oscar/dashboard/ranges/range_form.html:41
@@ -3076,7 +2954,6 @@ msgstr ""
 #: templates/oscar/dashboard/offers/step_form.html:84
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:37
 #: templates/oscar/dashboard/partials/form.html:10
-#: templates/oscar/dashboard/partners/partner_delete.html:38
 #: templates/oscar/dashboard/ranges/range_delete.html:38
 #: templates/oscar/dashboard/ranges/range_form.html:42
 #: templates/oscar/partials/form.html:11
@@ -3290,9 +3167,6 @@ msgstr ""
 
 #: templates/oscar/checkout/checkout.html:49
 #: templates/oscar/checkout/thank_you.html:52
-#: templates/oscar/dashboard/partners/partner_manage.html:33
-#: templates/oscar/dashboard/partners/partner_user_list.html:45
-#: templates/oscar/dashboard/partners/partner_user_select.html:52
 msgid "Email"
 msgstr ""
 
@@ -3431,7 +3305,6 @@ msgstr ""
 #: templates/oscar/dashboard/offers/offer_delete.html:37
 #: templates/oscar/dashboard/offers/offer_list.html:94
 #: templates/oscar/dashboard/orders/order_detail.html:630
-#: templates/oscar/dashboard/partners/partner_delete.html:37
 #: templates/oscar/dashboard/ranges/range_delete.html:37
 #: templates/oscar/dashboard/ranges/range_list.html:78
 msgid "Delete"
@@ -3653,8 +3526,6 @@ msgstr ""
 #: templates/oscar/customer/order/order_list.html:27
 #: templates/oscar/dashboard/offers/offer_list.html:42
 #: templates/oscar/dashboard/orders/statistics.html:35
-#: templates/oscar/dashboard/partners/partner_list.html:32
-#: templates/oscar/dashboard/partners/partner_user_select.html:38
 msgid "Reset"
 msgstr ""
 
@@ -3852,7 +3723,6 @@ msgid "Delete offer"
 msgstr ""
 
 #: templates/oscar/dashboard/offers/offer_delete.html:24
-#: templates/oscar/dashboard/partners/partner_delete.html:24
 #: templates/oscar/dashboard/ranges/range_delete.html:24
 msgid "Delete?"
 msgstr ""
@@ -3862,7 +3732,6 @@ msgid "Are you sure you want to delete this offer?"
 msgstr ""
 
 #: templates/oscar/dashboard/offers/offer_delete.html:37
-#: templates/oscar/dashboard/partners/partner_delete.html:37
 #: templates/oscar/dashboard/ranges/range_delete.html:37
 msgid "Deleting..."
 msgstr ""
@@ -3954,8 +3823,6 @@ msgstr ""
 
 #: templates/oscar/dashboard/offers/offer_list.html:32
 #: templates/oscar/dashboard/orders/order_list.html:67
-#: templates/oscar/dashboard/partners/partner_list.html:30
-#: templates/oscar/dashboard/partners/partner_user_select.html:36
 msgid "Searching..."
 msgstr ""
 
@@ -3963,8 +3830,6 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_list.html:30
 #: templates/oscar/dashboard/orders/order_list.html:51
 #: templates/oscar/dashboard/orders/order_list.html:67
-#: templates/oscar/dashboard/partners/partner_list.html:30
-#: templates/oscar/dashboard/partners/partner_user_select.html:36
 #: templates/oscar/partials/search.html:7
 #: templates/oscar/search/results.html:18
 msgid "Search"
@@ -3992,7 +3857,6 @@ msgstr ""
 
 #: templates/oscar/dashboard/offers/offer_list.html:88
 #: templates/oscar/dashboard/orders/order_detail.html:119
-#: templates/oscar/dashboard/partners/partner_list.html:89
 #: templates/oscar/dashboard/ranges/range_list.html:65
 msgid "Actions"
 msgstr ""
@@ -4470,115 +4334,6 @@ msgstr ""
 #: templates/oscar/dashboard/partials/nav_primary.html:41
 #: templates/oscar/partials/nav_primary.html:40
 msgid "Browse store"
-msgstr ""
-
-#: templates/oscar/dashboard/partners/messages/user_unlinked.html:2
-#, python-format
-msgid ""
-"\n"
-"User %(user_name)s was unlinked from %(partner_name)s.\n"
-msgstr ""
-
-#: templates/oscar/dashboard/partners/messages/user_unlinked.html:5
-msgid "Undo"
-msgstr ""
-
-#: templates/oscar/dashboard/partners/partner_delete.html:7
-#: templates/oscar/dashboard/partners/partner_list.html:94
-msgid "Delete partner"
-msgstr ""
-
-#: templates/oscar/dashboard/partners/partner_delete.html:35
-msgid "Are you sure you want to delete this partner?"
-msgstr ""
-
-#: templates/oscar/dashboard/partners/partner_list.html:61
-msgid "Edit the user's details"
-msgstr ""
-
-#: templates/oscar/dashboard/partners/partner_list.html:68
-msgid "No users associated."
-msgstr ""
-
-#: templates/oscar/dashboard/partners/partner_list.html:81
-msgid "No address associated."
-msgstr ""
-
-#: templates/oscar/dashboard/partners/partner_list.html:93
-msgid "Manage partner and users"
-msgstr ""
-
-#: templates/oscar/dashboard/partners/partner_list.html:95
-#: templates/oscar/dashboard/partners/partner_manage.html:60
-#: templates/oscar/dashboard/partners/partner_user_list.html:33
-#: templates/oscar/dashboard/partners/partner_user_select.html:6
-#: templates/oscar/dashboard/partners/partner_user_select.html:23
-#: templates/oscar/dashboard/partners/partner_user_select.html:28
-msgid "Link an existing user"
-msgstr ""
-
-#: templates/oscar/dashboard/partners/partner_list.html:96
-#: templates/oscar/dashboard/partners/partner_manage.html:59
-#: templates/oscar/dashboard/partners/partner_user_list.html:32
-msgid "Link a new user"
-msgstr ""
-
-#: templates/oscar/dashboard/partners/partner_list.html:104
-msgid "No partners found."
-msgstr ""
-
-#: templates/oscar/dashboard/partners/partner_manage.html:48
-#: templates/oscar/dashboard/partners/partner_user_list.html:60
-msgid "Unlinking..."
-msgstr ""
-
-#: templates/oscar/dashboard/partners/partner_manage.html:48
-#: templates/oscar/dashboard/partners/partner_user_list.html:60
-msgid "Unlink user"
-msgstr ""
-
-#: templates/oscar/dashboard/partners/partner_manage.html:56
-#: templates/oscar/dashboard/partners/partner_user_list.html:68
-msgid "No users linked."
-msgstr ""
-
-#: templates/oscar/dashboard/partners/partner_user_list.html:28
-msgid "Link a user"
-msgstr ""
-
-#: templates/oscar/dashboard/partners/partner_user_list.html:36
-msgid "Manage users"
-msgstr ""
-
-#: templates/oscar/dashboard/partners/partner_user_list.html:72
-msgid "Update details"
-msgstr ""
-
-#: templates/oscar/dashboard/partners/partner_user_select.html:40
-msgid ""
-"A partial email address can be entered (eg '@example.com') to match multiple "
-"addresses."
-msgstr ""
-
-#: templates/oscar/dashboard/partners/partner_user_select.html:68
-#, python-format
-msgid ""
-"\n"
-"                                                User is already linked to "
-"%(name)s.\n"
-"                                            "
-msgstr ""
-
-#: templates/oscar/dashboard/partners/partner_user_select.html:74
-msgid "Linking..."
-msgstr ""
-
-#: templates/oscar/dashboard/partners/partner_user_select.html:74
-msgid "Link user"
-msgstr ""
-
-#: templates/oscar/dashboard/partners/partner_user_select.html:86
-msgid "No users found."
 msgstr ""
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:2
