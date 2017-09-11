@@ -140,11 +140,7 @@
                                         <td>{{ line.upc|default:"-" }}</td>
                                         <td>{{ line.status|default:"-" }}</td>
                                         <td>
-                                            {% if line.partner %}
-                                                <a href="{% url 'dashboard:partner-manage' pk=line.partner.id %}">{{ line.partner_name }}</a>
-                                            {% else %}
-                                                {{ line.partner_name }}
-                                            {% endif %}
+                                            {{ line.partner_name }}
                                         </td>
                                         <td>{{ line.partner_sku }}</td>
                                         <td>{{ line.est_dispatch_date|default:"-" }}</td>
