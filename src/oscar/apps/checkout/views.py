@@ -128,8 +128,7 @@ class ShippingAddressView(CheckoutFlow, generic.FormView):
         # Include only addresses where the country is flagged as valid for
         # shipping. Also, use ordering to ensure the default address comes
         # first.
-        return self.request.user.addresses.filter(
-            country__is_shipping_country=True).order_by(
+        return self.request.user.addresses.order_by(
             '-is_default_for_shipping')
 
     def post(self, request, *args, **kwargs):
