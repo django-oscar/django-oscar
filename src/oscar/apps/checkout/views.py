@@ -195,52 +195,6 @@ class UserAddressDeleteView(CheckoutFlow, generic.DeleteView):
         return super(UserAddressDeleteView, self).get_success_url()
 
 
-# ===============
-# Shipping method
-# ===============
-
-
-class ShippingMethodView(CheckoutFlow, generic.TemplateView):
-    """
-    Determine the shipping method for the order.
-
-    Shipping methods are largely domain-specific and so this view
-    will commonly need to be subclassed and customised.
-
-    The default behaviour is to load all the available shipping methods
-    using the shipping Repository.  If there is only 1, then it is
-    automatically selected.  Otherwise, a page is rendered where
-    the user can choose the appropriate one.
-    """
-    template_name = 'checkout/shipping_methods.html'
-
-    def get_context_data(self, **kwargs):
-        kwargs = super(ShippingMethodView, self).get_context_data(**kwargs)
-        kwargs['methods'] = self.get_available_shipping_methods(
-            self.request.basket)
-        return kwargs
-
-    def post(self, request, *args, **kwargs):
-        # Need to check that this code is valid for this user
-        method_code = request.POST.get('method_code', None)
-        if not self.is_valid_shipping_method(self.request.basket, method_code):
-            messages.error(request, _("Your submitted shipping method is not"
-                                      " permitted"))
-        else:
-            # Save the code for the chosen shipping method in the session and
-            # continue to the next step.
-            self.checkout_session.use_shipping_method(method_code)
-
-        return self.checkout()
-
-    def is_valid_shipping_method(self, basket, method_code,
-                                 shipping_address=None):
-        for method in self.get_available_shipping_methods(basket):
-            if method.code == method_code:
-                return True
-        return False
-
-
 # ================
 # Order submission
 # ================
