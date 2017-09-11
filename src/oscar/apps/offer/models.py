@@ -506,16 +506,9 @@ class Benefit(models.Model):
 
     # Benefit types
     PERCENTAGE, FIXED = ("Percentage", "Fixed")
-    SHIPPING_PERCENTAGE, SHIPPING_ABSOLUTE, SHIPPING_FIXED_PRICE = (
-        'Shipping percentage', 'Shipping absolute', 'Shipping fixed price')
     TYPE_CHOICES = (
         (PERCENTAGE, _("Discount is a percentage off of the product's value")),
         (FIXED, _("Discount is a fixed amount off of the product's value")),
-        (SHIPPING_ABSOLUTE,
-         _("Discount is a fixed amount of the shipping cost")),
-        (SHIPPING_FIXED_PRICE, _("Get shipping for a fixed price")),
-        (SHIPPING_PERCENTAGE, _("Discount is a percentage off of the shipping"
-                                " cost")),
     )
     type = models.CharField(
         _("Type"), max_length=128, choices=TYPE_CHOICES, blank=True)
@@ -551,10 +544,7 @@ class Benefit(models.Model):
     def proxy(self):
         klassmap = {
             self.PERCENTAGE: PercentageDiscountBenefit,
-            self.FIXED: AbsoluteDiscountBenefit,
-            self.SHIPPING_ABSOLUTE: ShippingAbsoluteDiscountBenefit,
-            self.SHIPPING_FIXED_PRICE: ShippingFixedPriceBenefit,
-            self.SHIPPING_PERCENTAGE: ShippingPercentageDiscountBenefit}
+            self.FIXED: AbsoluteDiscountBenefit}
         # Short-circuit logic if current class is already a proxy class.
         if self.__class__ in klassmap.values():
             return self
@@ -639,42 +629,6 @@ class Benefit(models.Model):
         if self.value > 100:
             raise ValidationError(
                 _("Percentage discount cannot be greater than 100"))
-
-    def clean_shipping_absolute(self):
-        if not self.value:
-            raise ValidationError(
-                _("A discount value is required"))
-        if self.range:
-            raise ValidationError(
-                _("No range should be selected as this benefit does not "
-                  "apply to products"))
-        if self.max_affected_items:
-            raise ValidationError(
-                _("Shipping discounts don't require a 'max affected items' "
-                  "attribute"))
-
-    def clean_shipping_percentage(self):
-        if self.value > 100:
-            raise ValidationError(
-                _("Percentage discount cannot be greater than 100"))
-        if self.range:
-            raise ValidationError(
-                _("No range should be selected as this benefit does not "
-                  "apply to products"))
-        if self.max_affected_items:
-            raise ValidationError(
-                _("Shipping discounts don't require a 'max affected items' "
-                  "attribute"))
-
-    def clean_shipping_fixed_price(self):
-        if self.range:
-            raise ValidationError(
-                _("No range should be selected as this benefit does not "
-                  "apply to products"))
-        if self.max_affected_items:
-            raise ValidationError(
-                _("Shipping discounts don't require a 'max affected items' "
-                  "attribute"))
 
     def clean_fixed_price(self):
         if self.range:
@@ -1193,77 +1147,6 @@ class AbsoluteDiscountBenefit(Benefit):
             return False
 
         return BasketDiscount(discount)
-
-# =================
-# Shipping benefits
-# =================
-
-
-class ShippingBenefit(Benefit):
-
-    def apply(self, set_of_lines):
-        return SHIPPING_DISCOUNT
-
-    class Meta:
-        app_label = 'offer'
-        proxy = True
-
-
-class ShippingAbsoluteDiscountBenefit(ShippingBenefit):
-    _description = _("%(amount)s off shipping cost")
-
-    @property
-    def name(self):
-        return self._description % {
-            'amount': currency(self.value)}
-
-    class Meta:
-        app_label = 'offer'
-        proxy = True
-        verbose_name = _("Shipping absolute discount benefit")
-        verbose_name_plural = _("Shipping absolute discount benefits")
-
-    def shipping_discount(self, charge):
-        return min(charge, self.value)
-
-
-class ShippingFixedPriceBenefit(ShippingBenefit):
-    _description = _("Get shipping for %(amount)s")
-
-    @property
-    def name(self):
-        return self._description % {
-            'amount': currency(self.value)}
-
-    class Meta:
-        app_label = 'offer'
-        proxy = True
-        verbose_name = _("Fixed price shipping benefit")
-        verbose_name_plural = _("Fixed price shipping benefits")
-
-    def shipping_discount(self, charge):
-        if charge < self.value:
-            return D('0.00')
-        return charge - self.value
-
-
-class ShippingPercentageDiscountBenefit(ShippingBenefit):
-    _description = _("%(value)s%% off of shipping cost")
-
-    @property
-    def name(self):
-        return self._description % {
-            'value': self.value}
-
-    class Meta:
-        app_label = 'offer'
-        proxy = True
-        verbose_name = _("Shipping percentage discount benefit")
-        verbose_name_plural = _("Shipping percentage discount benefits")
-
-    def shipping_discount(self, charge):
-        discount = charge * self.value / D('100.0')
-        return discount.quantize(D('0.01'))
 
 
 class RangeProductFileUpload(models.Model):
