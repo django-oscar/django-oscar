@@ -1,6 +1,5 @@
 {% load i18n %}
 {% load currency_filters %}
-{% load shipping_tags %}
 
 <div id="basket_totals">
     <table class="table table-condensed">
@@ -84,71 +83,6 @@
                 {% endblock %}
             {% endwith %}
 
-            {% block shipping_totals %}
-                <tr>
-                    <th>&nbsp;</th>
-                    <td></td>
-                </tr>
-
-                <tr>
-                    <th colspan="2">
-                        <h3>{% trans "Shipping" %}</h3>
-                        {% if shipping_methods|length > 1 and editable %}
-                            <small>{% trans "Alternative shipping methods can be chosen during checkout" %}</small>
-                        {% endif %}
-                    </th>
-                </tr>
-                {% if not shipping_method.is_discounted %}
-                    <tr>
-                        <th class="total">
-                            {{ shipping_method.name }}
-                        </th>
-                        <th class="total align-right">
-                            {% if not show_tax_separately and shipping_charge.is_tax_known %}
-                                {{ shipping_charge.incl_tax|currency:basket.currency }}
-                            {% else %}
-                                {{ shipping_charge.excl_tax|currency:basket.currency }}
-                            {% endif %}
-                        </th>
-                    </tr>
-                {% else %}
-                    {% shipping_charge_discount shipping_method basket as shipping_discount %}
-                    {% shipping_charge_excl_discount shipping_method basket as shipping_charge_excl_discount %}
-                    {# As shipping is discounted, we break it down into its original charge and a discount #}
-                    <tr>
-                        <th class="total">{% trans "Shipping method" %}</th>
-                        <td class="total align-right">{{ shipping_method.name }}</td>
-                    </tr>
-                    <tr>
-                        <td>{% trans "Shipping total (before discounts)" %}</td>
-                        <td class="align-right">
-                            {% if not show_tax_separately and shipping_charge_excl_discount.is_tax_known %}
-                                {{ shipping_charge_excl_discount.incl_tax|currency:basket.currency }}
-                            {% else %}
-                                {{ shipping_charge_excl_discount.excl_tax|currency:basket.currency }}
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {# This section needs adjustment to when taxes are shown separately #}
-                    <tr>
-                        <td class="basket-discount"><span class="label label-success">{% trans "Discount" %}</span> {{ shipping_method.discount_name }}</td>
-                        <td class="align-right">-{{ shipping_discount|currency:basket.currency }}</td>
-                    </tr>
-                    <tr>
-                        <th class="total">
-                            {% trans "Shipping total (after discounts)" %}
-                        </th>
-                        <th class="total align-right">
-                            {% if not show_tax_separately and shipping_charge.is_tax_known %}
-                                {{ shipping_charge.incl_tax|currency:basket.currency }}
-                            {% else %}
-                                {{ shipping_charge.excl_tax|currency:basket.currency }}
-                            {% endif %}
-                        </th>
-                    </tr>
-                {% endif %}
-            {% endblock %}
-
             {% block tax_totals %}
                 {% if show_tax_separately %}
                     <tr>
@@ -164,12 +98,6 @@
                         <th class="total">{% trans "Basket" %}</th>
                         <th class="total align-right">
                             {{ basket.total_tax|currency:basket.currency }}
-                        </th>
-                    </tr>
-                    <tr>
-                        <th class="total">{% trans "Shipping" %}</th>
-                        <th class="total align-right">
-                            {{ shipping_charge.tax|currency:basket.currency }}
                         </th>
                     </tr>
                 {% endif %}
