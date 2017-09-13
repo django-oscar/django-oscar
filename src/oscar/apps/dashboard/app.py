@@ -15,7 +15,6 @@ class DashboardApplication(Application):
     users_app = get_class('dashboard.users.app', 'application')
     catalogue_app = get_class('dashboard.catalogue.app', 'application')
     offers_app = get_class('dashboard.offers.app', 'application')
-    ranges_app = get_class('dashboard.ranges.app', 'application')
 
     def get_urls(self):
         urls = [
@@ -24,7 +23,6 @@ class DashboardApplication(Application):
             url(r'^orders/', include(self.orders_app.urls)),
             url(r'^users/', include(self.users_app.urls)),
             url(r'^offers/', include(self.offers_app.urls)),
-            url(r'^ranges/', include(self.ranges_app.urls)),
         ]
         return self.post_process_urls(urls)
 

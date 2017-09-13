@@ -92,10 +92,6 @@ OSCAR_DASHBOARD_NAVIGATION = [
                 'url_name': 'dashboard:catalogue-category-list',
             },
             {
-                'label': _('Ranges'),
-                'url_name': 'dashboard:range-list',
-            },
-            {
                 'label': _('Low stock alerts'),
                 'url_name': 'dashboard:stock-alert-list',
             },
