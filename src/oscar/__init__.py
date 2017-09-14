@@ -33,7 +33,6 @@ OSCAR_CORE_APPS = [
     'oscar.apps.offer',
     'oscar.apps.order',
     'oscar.apps.customer',
-    'oscar.apps.voucher',
     'oscar.apps.dashboard',
     'oscar.apps.dashboard.orders',
     'oscar.apps.dashboard.offers',
