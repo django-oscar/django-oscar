@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-13 17:20+0200\n"
+"POT-Creation-Date: 2017-09-13 17:34+0200\n"
 "PO-Revision-Date: 2015-03-06 21:39+0000\n"
 "Last-Translator: Marc Wienhold <marc.wienhold@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/django-oscar/"
@@ -1072,7 +1072,6 @@ msgid "Order History"
 msgstr "Meine Bestellungen"
 
 #: apps/dashboard/config.py:8 defaults.py:78
-#: templates/oscar/dashboard/index.html:16
 #: templates/oscar/dashboard/layout.html:25
 #: templates/oscar/dashboard/layout.html:84
 #: templates/oscar/dashboard/offers/offer_delete.html:13
@@ -2756,7 +2755,7 @@ msgstr "Auftragsabwicklung"
 msgid "Statistics"
 msgstr "Statistiken"
 
-#: defaults.py:115 defaults.py:119 templates/oscar/dashboard/index.html:112
+#: defaults.py:115 defaults.py:119
 msgid "Customers"
 msgstr "Kunden"
 
@@ -3650,114 +3649,6 @@ msgstr "Passwort ändern"
 msgid "Edit profile"
 msgstr "Profil bearbeiten"
 
-#: templates/oscar/dashboard/index.html:22
-msgid "Your Store Statistics"
-msgstr "Ihre Webshop-Statistiken"
-
-#: templates/oscar/dashboard/index.html:28
-msgid "Total Orders"
-msgstr "Bestellungen gesamt"
-
-#: templates/oscar/dashboard/index.html:29
-msgid "New Customers"
-msgstr "Neue Kunden"
-
-#: templates/oscar/dashboard/index.html:30
-msgid "Total Customers"
-msgstr "Kunden gesamt"
-
-#: templates/oscar/dashboard/index.html:31
-msgid "Total Products"
-msgstr "Produkte gesamt"
-
-#: templates/oscar/dashboard/index.html:35
-msgid "Latest Orders (last 24 hours)"
-msgstr "Neuste Bestellungen (letzte 24 Stunden)"
-
-#: templates/oscar/dashboard/index.html:62
-msgid "Orders - Last 24 Hours"
-msgstr "Bestellungen – Letzte 24 Stunden"
-
-#: templates/oscar/dashboard/index.html:65
-#: templates/oscar/dashboard/index.html:92
-#: templates/oscar/dashboard/orders/statistics.html:42
-msgid "Total orders"
-msgstr "Gesamtbestellungen"
-
-#: templates/oscar/dashboard/index.html:69
-#: templates/oscar/dashboard/index.html:96
-#: templates/oscar/dashboard/orders/statistics.html:46
-msgid "Total lines"
-msgstr "Gesamtanzahl Posten"
-
-#: templates/oscar/dashboard/index.html:73
-#: templates/oscar/dashboard/index.html:100
-#: templates/oscar/dashboard/orders/statistics.html:50
-msgid "Total revenue"
-msgstr "Gesamtumsatz"
-
-#: templates/oscar/dashboard/index.html:77
-msgid "Average order costs"
-msgstr "Durchschnittliche Bestellkosten"
-
-#: templates/oscar/dashboard/index.html:87
-#: templates/oscar/dashboard/index.html:136
-msgid "Manage"
-msgstr "Verwalten"
-
-#: templates/oscar/dashboard/index.html:89
-msgid "Orders - All Time"
-msgstr "Alle Bestellungen"
-
-#: templates/oscar/dashboard/index.html:104
-#: templates/oscar/dashboard/index.html:122
-msgid "Total <em>open</em> baskets"
-msgstr "Anzahl <em>offener</em> Warenkörbe"
-
-#: templates/oscar/dashboard/index.html:114
-msgid "Total customers"
-msgstr "Anzahl Kunden"
-
-#: templates/oscar/dashboard/index.html:118
-msgid "New customers"
-msgstr "Neue Kunden"
-
-#: templates/oscar/dashboard/index.html:141
-msgid "View Stock Alerts"
-msgstr "Bestandsbenachrichtigungen"
-
-#: templates/oscar/dashboard/index.html:145
-msgid "Catalogue and stock"
-msgstr "Katalog und Lager"
-
-#: templates/oscar/dashboard/index.html:148
-msgid "Total products"
-msgstr "Anzahl Produkte"
-
-#: templates/oscar/dashboard/index.html:152
-msgid "<em>Open</em> stock alerts"
-msgstr "<em>Offene</em> Bestandsbenachrichtigungen"
-
-#: templates/oscar/dashboard/index.html:156
-msgid "<em>Closed</em> stock alerts"
-msgstr "<em>Geschlossene</em> Bestandsbenachrichtigungen "
-
-#: templates/oscar/dashboard/index.html:164
-msgid "Offers, vouchers and promotions"
-msgstr "Angebote, Gutscheine und Kampagnen"
-
-#: templates/oscar/dashboard/index.html:166
-msgid "Active <em>Site</em> Offers"
-msgstr "Aktive <em>seitenweite</em> Angebote"
-
-#: templates/oscar/dashboard/index.html:170
-msgid "Active <em>Vouchers</em>"
-msgstr "Aktive <em>Gutscheine</em>"
-
-#: templates/oscar/dashboard/index.html:173
-msgid "Promotions"
-msgstr "Kampagnen"
-
 #: templates/oscar/dashboard/offers/benefit_form.html:14
 msgid "Build a new incentive"
 msgstr "Einen neuen Anreiz einrichten"
@@ -4375,6 +4266,18 @@ msgstr "Ergebnisse filtern"
 msgid "Summary"
 msgstr "Zusammenfassung"
 
+#: templates/oscar/dashboard/orders/statistics.html:42
+msgid "Total orders"
+msgstr "Gesamtbestellungen"
+
+#: templates/oscar/dashboard/orders/statistics.html:46
+msgid "Total lines"
+msgstr "Gesamtanzahl Posten"
+
+#: templates/oscar/dashboard/orders/statistics.html:50
+msgid "Total revenue"
+msgstr "Gesamtumsatz"
+
 #: templates/oscar/dashboard/orders/statistics.html:57
 msgid "Order status breakdown"
 msgstr "Bestellstatuszusammenfassung"
@@ -4663,6 +4566,72 @@ msgstr "Dies ist keine gültige Vorwahl für %s."
 #: views/generic.py:208
 msgid "This is not a valid local or international phone format."
 msgstr "Dies ist keine gültige lokale oder internationale Telefonnummer."
+
+#~ msgid "Your Store Statistics"
+#~ msgstr "Ihre Webshop-Statistiken"
+
+#~ msgid "Total Orders"
+#~ msgstr "Bestellungen gesamt"
+
+#~ msgid "New Customers"
+#~ msgstr "Neue Kunden"
+
+#~ msgid "Total Customers"
+#~ msgstr "Kunden gesamt"
+
+#~ msgid "Total Products"
+#~ msgstr "Produkte gesamt"
+
+#~ msgid "Latest Orders (last 24 hours)"
+#~ msgstr "Neuste Bestellungen (letzte 24 Stunden)"
+
+#~ msgid "Orders - Last 24 Hours"
+#~ msgstr "Bestellungen – Letzte 24 Stunden"
+
+#~ msgid "Average order costs"
+#~ msgstr "Durchschnittliche Bestellkosten"
+
+#~ msgid "Manage"
+#~ msgstr "Verwalten"
+
+#~ msgid "Orders - All Time"
+#~ msgstr "Alle Bestellungen"
+
+#~ msgid "Total <em>open</em> baskets"
+#~ msgstr "Anzahl <em>offener</em> Warenkörbe"
+
+#~ msgid "Total customers"
+#~ msgstr "Anzahl Kunden"
+
+#~ msgid "New customers"
+#~ msgstr "Neue Kunden"
+
+#~ msgid "View Stock Alerts"
+#~ msgstr "Bestandsbenachrichtigungen"
+
+#~ msgid "Catalogue and stock"
+#~ msgstr "Katalog und Lager"
+
+#~ msgid "Total products"
+#~ msgstr "Anzahl Produkte"
+
+#~ msgid "<em>Open</em> stock alerts"
+#~ msgstr "<em>Offene</em> Bestandsbenachrichtigungen"
+
+#~ msgid "<em>Closed</em> stock alerts"
+#~ msgstr "<em>Geschlossene</em> Bestandsbenachrichtigungen "
+
+#~ msgid "Offers, vouchers and promotions"
+#~ msgstr "Angebote, Gutscheine und Kampagnen"
+
+#~ msgid "Active <em>Site</em> Offers"
+#~ msgstr "Aktive <em>seitenweite</em> Angebote"
+
+#~ msgid "Active <em>Vouchers</em>"
+#~ msgstr "Aktive <em>Gutscheine</em>"
+
+#~ msgid "Promotions"
+#~ msgstr "Kampagnen"
 
 #~ msgid "Ranges dashboard"
 #~ msgstr "Sortimente-Dashboard"
