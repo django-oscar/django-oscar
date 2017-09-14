@@ -22,7 +22,6 @@ OSCAR_MAIN_TEMPLATE_DIR = os.path.join(
 
 OSCAR_CORE_APPS = [
     'oscar',
-    'oscar.apps.analytics',
     'oscar.apps.checkout',
     'oscar.apps.address',
     'oscar.apps.shipping',
