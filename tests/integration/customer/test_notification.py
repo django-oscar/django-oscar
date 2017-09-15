@@ -34,17 +34,25 @@ class TestANotification(TestCase):
         self.assertEqual(Notification.ARCHIVE, self.notification.location)
 
 
-class TestAServiceExistsTo(TestCase):
+class NotificationServiceTestCase(TestCase):
 
     def test_notify_a_single_user(self):
         user = UserFactory()
-        services.notify_user(user, "Hello you!")
-        self.assertEqual(1, Notification.objects.filter(
-            recipient=user).count())
+        subj = "Hello you!"
+        body = "This is the notification body."
+
+        services.notify_user(user, subj, body=body)
+        user_notification = Notification.objects.get(recipient=user)
+        self.assertEqual(user_notification.subject, subj)
+        self.assertEqual(user_notification.body, body)
 
     def test_notify_a_set_of_users(self):
-        users = [UserFactory() for i in range(3)]
-        services.notify_users(User.objects.all(), "Hello everybody!")
+        users = UserFactory.create_batch(3)
+        subj = "Hello everyone!"
+        body = "This is the notification body."
+
+        services.notify_users(User.objects.all(), subj, body=body)
         for user in users:
-            self.assertEqual(1, Notification.objects.filter(
-                recipient=user).count())
+            user_notification = Notification.objects.get(recipient=user)
+            self.assertEqual(user_notification.subject, subj)
+            self.assertEqual(user_notification.body, body)
