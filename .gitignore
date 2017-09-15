@@ -46,3 +46,4 @@ settings_local.py
 /sandbox/public/
 /sandbox/whoosh_index/
 /sandbox/logs/
+/oscar
