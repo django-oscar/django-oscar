@@ -67,8 +67,7 @@ test_requires = [
     'pytest-cov==2.5.1',
     'pytest-django==3.1.2',
     'pytest-xdist==1.20.0',
-    'pytest-warnings==0.3.0',
-    'tox==2.7.0',
+    'tox==2.8.2',
 ]
 
 with open(os.path.join(PROJECT_DIR, 'README.rst')) as fh:
