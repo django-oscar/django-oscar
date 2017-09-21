@@ -198,7 +198,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         if not billing_address:
             return None
         billing_address.save()
-        if user.is_authenticated():
+        if user_is_authenticated(user):
             self.update_address_book(user, billing_address)
         return billing_address
 
