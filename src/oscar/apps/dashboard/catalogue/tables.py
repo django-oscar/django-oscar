@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
@@ -8,6 +9,7 @@ from oscar.core.loading import get_class, get_model
 DashboardTable = get_class('dashboard.tables', 'DashboardTable')
 Product = get_model('catalogue', 'Product')
 Category = get_model('catalogue', 'Category')
+AttributeOptionGroup = get_model('catalogue', 'AttributeOptionGroup')
 
 
 class ProductTable(DashboardTable):
@@ -69,3 +71,27 @@ class CategoryTable(DashboardTable):
     class Meta(DashboardTable.Meta):
         model = Category
         fields = ('name', 'description')
+
+
+class AttributeOptionGroupTable(DashboardTable):
+    name = TemplateColumn(
+        verbose_name=_('Name'),
+        template_name='dashboard/catalogue/attribute_option_group_row_name.html',
+        order_by='name')
+    option_summary = TemplateColumn(
+        verbose_name=_('Option summary'),
+        template_name='dashboard/catalogue/attribute_option_group_row_option_summary.html',
+        orderable=False)
+    actions = TemplateColumn(
+        verbose_name=_('Actions'),
+        template_name='dashboard/catalogue/attribute_option_group_row_actions.html',
+        orderable=False)
+
+    icon = "sitemap"
+    caption = ungettext_lazy("%s Attribute Option Group", "%s Attribute Option Groups")
+
+    class Meta(DashboardTable.Meta):
+        model = AttributeOptionGroup
+        fields = ('name',)
+        sequence = ('name', 'option_summary', 'actions')
+        per_page = settings.OSCAR_DASHBOARD_ITEMS_PER_PAGE

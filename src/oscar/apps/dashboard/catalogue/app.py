@@ -53,6 +53,15 @@ class CatalogueApplication(DashboardApplication):
     stock_alert_view = get_class('dashboard.catalogue.views',
                                  'StockAlertListView')
 
+    attribute_option_group_create_view = get_class('dashboard.catalogue.views',
+                                                   'AttributeOptionGroupCreateView')
+    attribute_option_group_list_view = get_class('dashboard.catalogue.views',
+                                                 'AttributeOptionGroupListView')
+    attribute_option_group_update_view = get_class('dashboard.catalogue.views',
+                                                   'AttributeOptionGroupUpdateView')
+    attribute_option_group_delete_view = get_class('dashboard.catalogue.views',
+                                                   'AttributeOptionGroupDeleteView')
+
     def get_urls(self):
         urls = [
             url(r'^products/(?P<pk>\d+)/$',
@@ -104,6 +113,22 @@ class CatalogueApplication(DashboardApplication):
             url(r'^product-type/(?P<pk>\d+)/delete/$',
                 self.product_class_delete_view.as_view(),
                 name='catalogue-class-delete'),
+            url(r'^attribute-option-group/create/$',
+                self.attribute_option_group_create_view.as_view(),
+                name='catalogue-attribute-option-group-create'),
+            url(r'^attribute-option-group/$',
+                self.attribute_option_group_list_view.as_view(),
+                name='catalogue-attribute-option-group-list'),
+            # The RelatedFieldWidgetWrapper code does something funny with
+            # placeholder urls, so it does need to match more than just a pk
+            url(r'^attribute-option-group/(?P<pk>\w+)/update/$',
+                self.attribute_option_group_update_view.as_view(),
+                name='catalogue-attribute-option-group-update'),
+            # The RelatedFieldWidgetWrapper code does something funny with
+            # placeholder urls, so it does need to match more than just a pk
+            url(r'^attribute-option-group/(?P<pk>\w+)/delete/$',
+                self.attribute_option_group_delete_view.as_view(),
+                name='catalogue-attribute-option-group-delete'),
         ]
         return self.post_process_urls(urls)
 

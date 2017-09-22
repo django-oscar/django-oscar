@@ -1,13 +1,12 @@
 from django.conf import settings
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext
 from django.utils.six.moves import http_client
+from django.utils.translation import ugettext
 
 from oscar.apps.catalogue.models import Category
-from oscar.test.testcases import WebTestCase
-
 from oscar.test.factories import create_product
+from oscar.test.testcases import WebTestCase
 
 
 class TestProductDetailView(WebTestCase):

@@ -1,0 +1,68 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+
+{% block title %}
+    {{ title }} | {% trans "Create Attribute Option Group" %} | {{ block.super }}
+{% endblock %}
+
+{% block body_class %}{{ block.super }} create-page{% endblock %}
+
+{% block navbar %}
+{% if not is_popup %}
+    {{ block.super }}
+{% endif %}
+{% endblock %}
+
+{% block dashboard_nav %}
+{% if not is_popup %}
+    {{ block.super }}
+{% endif %}
+{% endblock %}
+
+{% block breadcrumbs %}
+{% if not is_popup %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li>
+        <a href="{% url 'dashboard:catalogue-attribute-option-group-list' %}">{% trans "Attribute Option Group" %}</a>
+    </li>
+    <li class="active">{% trans "Delete Attribute Option Group?" %}</li>
+</ul>
+{% endif %}
+{% endblock %}
+
+{% block headertext %}
+    {{ title }}
+{% endblock %}
+
+{% block dashboard_content %}
+    {% if disallow %}
+        <p>{% trans "Please make sure all Product Attributes are assigned to another Attribute Option Group before deletion." %}</p>
+    {% else %}
+        <div class="table-header">
+            <h2>{% trans "Delete Attribute Option Group" %}</h2>
+        </div>
+        <form action="." method="post" class="well">
+            {% csrf_token %}
+            {% if is_popup %}<input type="hidden" name="{{ is_popup_var }}" value="1" />{% endif %}
+            {% if not is_popup %}
+            {% for key, value in http_get_params.items %}
+                <input type="hidden" name="{{ key }}" value="{{ value }}" />
+            {% endfor %}
+            {% endif %}
+            <p>
+                {% blocktrans with name=object.name %}Delete Attribute Option Group <strong>{{ name }}</strong> - are you sure?{% endblocktrans %}
+            </p>
+            <div class="form-actions">
+                <a {% if not is_popup %}href="{% url 'dashboard:catalogue-attribute-option-group-list' %}"{% else %}href="#" onclick="window.close();return false;"{% endif %}>
+                    {% trans "Cancel" %}
+                </a>
+                <button type="submit" class="btn btn-danger" data-loading-text="{% trans 'Deleting...' %}">
+                    {% trans "Delete" %}
+                </button>
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}

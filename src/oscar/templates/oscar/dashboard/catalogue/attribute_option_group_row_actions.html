@@ -1,0 +1,18 @@
+{% load django_tables2 %}
+{% load i18n %}
+<div class="btn-toolbar">
+    <div class="btn-group">
+        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
+            {% trans "Actions" %}
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu pull-right">
+            <li>
+                <a href="{% url 'dashboard:catalogue-attribute-option-group-update' pk=record.id %}{% querystring %}">{% trans "Edit Attribute Option Group" %}</a>
+            </li>
+            <li>
+                <a href="{% url 'dashboard:catalogue-attribute-option-group-delete' pk=record.id %}{% querystring %}">{% trans "Delete" %}</a>
+            </li>
+        </ul>
+    </div>
+</div>
