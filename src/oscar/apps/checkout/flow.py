@@ -156,18 +156,7 @@ class CheckoutFlow(OrderPlacementMixin):
                 # Only one shipping method - use it
                 self.checkout_session.use_shipping_method(methods[0].code)
 
-            else:
-                # Must be more than one available shipping method, we
-                # present them to the user to make a choice.
-                raise RedirectRequired('checkout:shipping-method')
-
         shipping_method = self.get_shipping_method(basket, shipping_address)
-        if not shipping_method:
-            messages.warning(self.request,
-                             _("Your previously chosen shipping method is no "
-                               "longer valid.  Please choose another one"))
-            raise RedirectRequired('checkout:shipping-method')
-
         return shipping_method, shipping_address
 
     def capture_payment_data(self, basket, shipping_charge):

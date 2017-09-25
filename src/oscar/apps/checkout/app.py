@@ -16,7 +16,6 @@ class CheckoutApplication(Application):
                                          'UserAddressUpdateView')
     user_address_delete_view = get_class('checkout.views',
                                          'UserAddressDeleteView')
-    shipping_method_view = get_class('checkout.views', 'ShippingMethodView')
     payment_details_view = get_class('checkout.views', 'PaymentDetailsView')
     thankyou_view = get_class('checkout.views', 'ThankYouView')
 
@@ -37,10 +36,6 @@ class CheckoutApplication(Application):
             url(r'user-address/delete/(?P<pk>\d+)/$',
                 self.user_address_delete_view.as_view(),
                 name='user-address-delete'),
-
-            # Shipping method views
-            url(r'shipping-method/$',
-                self.shipping_method_view.as_view(), name='shipping-method'),
 
             # Payment views
             url(r'payment-details/$',

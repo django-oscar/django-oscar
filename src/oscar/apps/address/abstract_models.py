@@ -400,9 +400,6 @@ class AbstractCountry(models.Model):
         _("Display order"), default=0, db_index=True,
         help_text=_('Higher the number, higher the country in the list.'))
 
-    is_shipping_country = models.BooleanField(
-        _("Is shipping country"), default=False, db_index=True)
-
     class Meta:
         abstract = True
         app_label = 'address'
