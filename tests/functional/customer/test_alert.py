@@ -86,6 +86,34 @@ class TestAUserWithAnActiveStockAlert(WebTest):
         self.stockrecord.save()
         self.assertEqual(0, len(mail.outbox))
 
+    @mock.patch('oscar.apps.customer.alerts.utils.services.notify_user')
+    def test_site_notification_sent(self, mock_notify):
+        self.stockrecord.num_in_stock = 10
+        self.stockrecord.save()
+        mock_notify.assert_called_once_with(
+            self.user,
+            u'{} is back in stock'.format(self.product.title),
+            body=u'<a href="{}">{}</a> is back in stock'.format(
+                self.product.get_absolute_url(), self.product.title)
+        )
+
+    @mock.patch('oscar.apps.customer.alerts.utils.services.notify_user')
+    def test_product_title_truncated_in_alert_notification_subject(self, mock_notify):
+        self.product.title = ('Aut nihil dignissimos perspiciatis. Beatae sed consequatur odit incidunt. '
+                              'Quaerat labore perferendis quasi aut sunt maxime accusamus laborum. '
+                              'Ut quam repudiandae occaecati eligendi. Nihil rem vel eos.')
+        self.product.save()
+
+        self.stockrecord.num_in_stock = 10
+        self.stockrecord.save()
+
+        mock_notify.assert_called_once_with(
+            self.user,
+            u'{} is back in stock'.format(self.product.title[:200]),
+            body=u'<a href="{}">{}</a> is back in stock'.format(
+                self.product.get_absolute_url(), self.product.title)
+        )
+
 
 class TestAnAnonymousUser(WebTest):
 
