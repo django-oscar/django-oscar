@@ -153,6 +153,8 @@ The following extensions are stable and ready for use:
 * django-oscar-stores_ - Physical stores integration (opening hours, store
   locator etc)
 
+* django-oscar-support_ - Customer services and ticketing plugin for Oscar
+
 * django-oscar-eway_ - Integration with the eWay_ payment gateway.
 
 * django-oscar-sagepay-direct_ - Integration with "DIRECT" part of Sagepay's API
@@ -171,6 +173,7 @@ The following extensions are stable and ready for use:
 .. _EasyRec: http://easyrec.org/
 .. _django-oscar-eway: https://github.com/snowball-one/django-oscar-eway
 .. _django-oscar-stores: https://github.com/django-oscar/django-oscar-stores
+.. _django-oscar-support: https://github.com/SalahAdDin/django-oscar-support
 .. _django-oscar-sagepay-direct: https://github.com/django-oscar/django-oscar-sagepay-direct
 .. _eWay: https://www.eway.com.au
 
