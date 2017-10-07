@@ -363,7 +363,20 @@ var oscar = (function(o, $) {
                     });
                 }
             }
-        }
+        },
+        product_lists: {
+            init: function() {
+                var imageModal = $("#product-image-modal")
+                    thumbnails = $('.sub-image');
+                thumbnails.click(function(e){
+                    e.preventDefault();
+                    var a = $(this);
+                    imageModal.find('h4').text(a.find('img').attr('alt'));
+                    imageModal.find('img').attr('src', a.data('original'));
+                    imageModal.modal();
+                });
+            }
+        },
     };
 
     return o;
