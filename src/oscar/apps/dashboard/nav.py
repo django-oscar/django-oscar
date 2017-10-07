@@ -1,11 +1,14 @@
+import logging
 import re
 
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import NoReverseMatch, resolve, reverse
-from django.http import Http404
 
 from oscar.core.loading import AppNotFoundError, get_class
 from oscar.views.decorators import check_permissions
+
+
+logger = logging.getLogger('oscar.dashboard')
 
 
 class Node(object):
@@ -74,13 +77,18 @@ def default_access_fn(user, url_name, url_args=None, url_kwargs=None):
         "custom access_fn")
     if url_name is None:  # it's a heading
         return True
-    # get view module string
+
+    # get view module string.
     try:
         url = reverse(url_name, args=url_args, kwargs=url_kwargs)
-        view_module = resolve(url).func.__module__
-    except (NoReverseMatch, Http404):
-        # if there's no match, no need to display it
+    except NoReverseMatch:
+        # In Oscar 1.5 this exception was silently ignored which made debugging
+        # very difficult. Now it is being logged and in future the exception will
+        # be propagated.
+        logger.exception('Invalid URL name {}'.format(url_name))
         return False
+
+    view_module = resolve(url).func.__module__
 
     # We can't assume that the view has the same parent module as the app,
     # as either the app or view can be customised. So we turn the module

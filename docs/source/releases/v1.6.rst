@@ -45,7 +45,7 @@ Backwards incompatible changes in Oscar 1.6
  - ``oscar.apps.offer.models.ConditionalOffer`` now has a new flag
    ``exclusive`` to denote that the offer involved can not be combined on the
    same item on the same basket line with another offer.
-   This flag is used by ``oscar.apps.basket.utils.LineOfferConsumer``, a facade 
+   This flag is used by ``oscar.apps.basket.utils.LineOfferConsumer``, a facade
    that supercedes the old ``oscar.apps.basket.models.Line._affected_items`` counter,
    and replaces it with a more finegrained approach. This makes it possible to apply
    two distinct non-exclusive offers on the same basketline items, for example
@@ -55,6 +55,10 @@ Backwards incompatible changes in Oscar 1.6
    are using a customized basketline model, you have to update your methods'
    signatures.
 
+ - Invalid URL names supplied to the ``OSCAR_DASHBOARD_NAVIGATION`` setting
+   are now logged as an exception (previously they were silently ignored).
+   The offending menu item will be skipped during menu rendering.
+   In Oscar 1.8 the exception will be raised without being intercepted.
 
 Dependency changes
 ------------------
