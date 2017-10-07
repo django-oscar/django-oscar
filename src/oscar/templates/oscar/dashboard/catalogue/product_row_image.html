@@ -2,10 +2,24 @@
 {% if record.primary_image.original.url %}
     {% with image=record.primary_image %}
         {% thumbnail image.original "70x70" upscale=False as thumb %}
-        <a href="{{ image.original.url }}" rel="lightbox_{{ record.upc|default:"-" }}" class="sub-image">
-            <img src="{{ thumb.url }}" alt="{{ record.get_title }}" data-description="{% if image.caption %}{{ image.caption }}{% endif %}">
+        <a href="#" data-toggle="modal" data-target="#modal-{{ record.upc|default:"-" }}" class="sub-image">
+            <img src="{{ thumb.url }}" alt="{{ record.get_title }}" height="{{ thumb.height }}" width="{{ thumb.width }}">
         </a>
         {% endthumbnail %}
+
+        <div class="modal fade" id="modal-{{ record.upc|default:"-" }}" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">{% if image.caption %}{{ image.caption }}{% else %}{{ record.get_title }}{% endif %}</h4>
+              </div>
+              <div class="modal-body text-center">
+                <img src="{{ image.original.url }}" class="img-responsive" style="display: inline-block;">
+              </div>
+            </div>
+          </div>
+        </div>
     {% endwith %}
 {% else %}
     —
