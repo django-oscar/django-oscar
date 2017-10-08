@@ -17,6 +17,8 @@ from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import redirect_to_referrer, safe_referrer
 
+from oscar.apps.basket.signals import basket_addition, voucher_addition, voucher_removal
+
 Applicator = get_class('offer.applicator', 'Applicator')
 (BasketLineForm, AddToBasketForm, BasketVoucherForm, SavedLineForm) = get_classes(
     'basket.forms', ('BasketLineForm', 'AddToBasketForm',
@@ -24,8 +26,7 @@ Applicator = get_class('offer.applicator', 'Applicator')
 BasketLineFormSet, SavedLineFormSet = get_classes(
     'basket.formsets', ('BasketLineFormSet', 'SavedLineFormSet'))
 Repository = get_class('shipping.repository', 'Repository')
-basket_addition, voucher_addition, voucher_removal = get_classes(
-    'basket.signals', ('basket_addition', 'voucher_addition', 'voucher_removal'))
+
 OrderTotalCalculator = get_class(
     'checkout.calculators', 'OrderTotalCalculator')
 BasketMessageGenerator = get_class('basket.utils', 'BasketMessageGenerator')
