@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.urls import NoReverseMatch, reverse
 
+from oscar.apps.checkout.signals import post_checkout
 from oscar.core.loading import get_class, get_model
 
 OrderCreator = get_class('order.utils', 'OrderCreator')
@@ -21,8 +22,6 @@ UserAddress = get_model('address', 'UserAddress')
 Basket = get_model('basket', 'Basket')
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
 UnableToPlaceOrder = get_class('order.exceptions', 'UnableToPlaceOrder')
-
-post_checkout = get_class('checkout.signals', 'post_checkout')
 
 # Standard logger for checkout events
 logger = logging.getLogger('oscar.checkout')

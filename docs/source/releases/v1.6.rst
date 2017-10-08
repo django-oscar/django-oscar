@@ -66,6 +66,8 @@ Backwards incompatible changes in Oscar 1.6
    The offending menu item will be skipped during menu rendering.
    In Oscar 1.8 the exception will be raised without being intercepted.
 
+ - All signals are now loaded directly.
+
 Dependency changes
 ------------------
 
