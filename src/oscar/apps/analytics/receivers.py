@@ -4,13 +4,12 @@ from django.db import IntegrityError
 from django.db.models import F
 from django.dispatch import receiver
 
-from oscar.core.compat import user_is_authenticated
-from oscar.core.loading import get_classes
-
 from oscar.apps.basket.signals import basket_addition
 from oscar.apps.catalogue.signals import product_viewed
 from oscar.apps.order.signals import order_placed
 from oscar.apps.search.signals import user_search
+from oscar.core.compat import user_is_authenticated
+from oscar.core.loading import get_classes
 
 UserSearch, UserRecord, ProductRecord, UserProductView = get_classes(
     'analytics.models', ['UserSearch', 'UserRecord', 'ProductRecord',
