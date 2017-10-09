@@ -14,7 +14,7 @@ from django.utils.translation import pgettext_lazy
 from oscar.apps.order.signals import (
     order_line_status_changed, order_status_changed)
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.core.loading import get_class, get_model
+from oscar.core.loading import get_model
 from oscar.core.utils import get_default_currency
 from oscar.models.fields import AutoSlugField
 

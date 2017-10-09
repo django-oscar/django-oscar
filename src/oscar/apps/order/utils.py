@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.order.signals import order_placed
 from oscar.core.compat import user_is_authenticated
-from oscar.core.loading import get_class, get_model
+from oscar.core.loading import get_model
 
 from . import exceptions
 
