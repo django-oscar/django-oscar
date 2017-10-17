@@ -3,8 +3,9 @@ from django.core import mail
 from django.utils.translation import ugettext_lazy as _
 from webtest import AppError
 
+from oscar.apps.customer.models import ProductAlert
 from oscar.core.compat import get_user_model
-from oscar.test.factories import UserFactory
+from oscar.test.factories import ProductAlertFactory, UserFactory
 from oscar.test.testcases import WebTestCase
 
 User = get_user_model()
@@ -142,3 +143,23 @@ class SearchTests(WebTestCase):
         self.assertEqual(data[0].email, 'lars@example.org')
         self.assertEqual(data[0].first_name, 'Lars')
         self.assertEqual(data[0].last_name, 'van der Berg')
+
+
+class ProductAlertListViewTestCase(WebTestCase):
+
+    is_staff = True
+
+    def test_list_view_get_queryset_ordering(self):
+        ProductAlertFactory.create_batch(3)
+        response = self.get(reverse('dashboard:user-alert-list'))
+        self.assertEqual(
+            list(response.context['alerts']),
+            list(ProductAlert.objects.order_by('-date_created'))
+        )
+
+    def test_list_view_status_filtering(self):
+        ProductAlertFactory.create_batch(3, status=ProductAlert.CANCELLED)
+        ProductAlertFactory.create_batch(2, status=ProductAlert.ACTIVE)
+
+        response = self.get(reverse('dashboard:user-alert-list'), params={'status': ProductAlert.ACTIVE})
+        self.assertEqual(len(response.context['alerts']), 2)

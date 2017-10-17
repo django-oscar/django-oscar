@@ -161,7 +161,7 @@ class ProductAlertListView(ListView):
     description = ''
 
     def get_queryset(self):
-        queryset = self.model.objects.all()
+        queryset = self.model.objects.all().order_by('-date_created')
         self.description = self.base_description
 
         self.form = self.form_class(self.request.GET)
@@ -171,7 +171,7 @@ class ProductAlertListView(ListView):
         data = self.form.cleaned_data
 
         if data['status']:
-            queryset = queryset.filter(status=data['status']).distinct()
+            queryset = queryset.filter(status=data['status'])
             self.description \
                 += _(" with status matching '%s'") % data['status']
 
