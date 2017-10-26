@@ -12,7 +12,7 @@ class Application(object):
     This is subclassed by each app to provide a customisable container for an
     app's views and permissions.
     """
-    #: Application namespace name
+    #: Application name
     name = None
 
     login_url = None
