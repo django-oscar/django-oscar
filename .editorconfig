@@ -1,10 +1,14 @@
+# http://editorconfig.org
+
 root = true
+
+[*]
+charset = utf-8
+indent_style = space
+insert_final_newline = true
 
 [*.{scss,less,js}]
 line_length = 119
-end_of_line = lf
-insert_final_newline = true
-indent_style = space
 indent_size = 2
 
 [*.html]
@@ -13,8 +17,6 @@ indent_size = 4
 [*.py]
 line_length = 79
 multi_line_output = 4
-balanced_wrapping = true
-use_parentheses = true
 
 [*.yml]
 indent_size = 2
