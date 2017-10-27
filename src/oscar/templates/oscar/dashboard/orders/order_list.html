@@ -49,11 +49,11 @@
                 {% endif %}
             {% endfor %}
             <input type="submit" value="{% trans "Search" %}" class="btn btn-primary" />
-            <a data-toggle="modal" data-target="#SearchModal" href="#">{% trans "Advanced Search" %}</a>
+            <a data-toggle="modal" data-target="#searchModal" href="#">{% trans "Advanced Search" %}</a>
         </form>
 
         {# Search modal, if there are form errors the form is automatically openend #}
-        <div class="modal fade" data-show="true" id="SearchModal" role="dialog">
+        <div class="modal fade" data-show="true" id="searchModal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -198,6 +198,6 @@
         oscar.dashboard.orders.initTable();
         oscar.dashboard.search.init();
         {% if form.errors %}
-        $('#SearchModal').modal('show');
+        $('#searchModal').modal('show');
         {% endif %}
     {% endblock onbodyload %}

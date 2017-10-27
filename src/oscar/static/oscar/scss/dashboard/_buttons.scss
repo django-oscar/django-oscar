@@ -1,5 +1,3 @@
-// BUTTONS
-// -------
 .btn {
   font-weight: normal;
 }
@@ -20,11 +18,12 @@ td .btn-toolbar {
   margin: 0;
 }
 
-
 .control-group.pull-left.no-float {
+  
   > label {
     width: 140px;
   }
+
   .controls {
     margin-left: 160px;
   }
@@ -39,6 +38,7 @@ td .btn-toolbar {
 }
 
 .controls {
+
   ul {
     margin-left:0px;
     list-style:none;
@@ -47,6 +47,7 @@ td .btn-toolbar {
 
 .fixed-actions {
   margin-bottom: 180px;
+  
   .fixed-actions-group {
     margin: 0;
     z-index: 1010;
@@ -57,6 +58,7 @@ td .btn-toolbar {
     padding: 20px;
     background: #2a2a2a;
   }
+
   .form-group {
     margin: 0;
   }

@@ -1,4 +1,3 @@
-
 body {
   background: url("../img/ui/dashboard/bg_subtle_dots.png") repeat scroll 0 0 #fff;
 }
@@ -6,7 +5,7 @@ body {
 // TYPES CHANGES
 // -----------
 h1, h2, h3, h4, h5, h6 {
-  margin-bottom: @line-height-base / 2;
+  margin-bottom: $line-height-base / 2;
   margin-top: 0;
   font-weight: normal;
 }
@@ -62,11 +61,11 @@ label, input, button, select, textarea {
   border: 1px solid #ccc;
   margin-bottom: 20px;
   padding: 15px;
-  background: @white;
+  background: $white;
 }
 
 .tabbable.dashboard {
-  margin-bottom: @line-height-base;
+  margin-bottom: $line-height-base;
   .navbar, .nav-tabs {
     margin-bottom: 0;
   }
@@ -86,33 +85,33 @@ label, input, button, select, textarea {
 .well,
 .alert,
 .table-bordered {
-  .border-radius(0);
+  border-radius: 0;
 }
 
 .well {
-  .clearfix();
+  @include clearfix();
   box-shadow: none;
   background-color: #efefef;
   border-color: #bbb;
 }
 
 .well-success {
-  background-color: @state-success-bg;
-  border-color: @state-success-border;
+  background-color: $state-success-bg;
+  border-color: $state-success-border;
 }
 
 .well-danger {
-  background-color: @state-danger-bg;
-  border-color: @state-danger-border;
+  background-color: $state-danger-bg;
+  border-color: $state-danger-border;
 }
 
 .well-info {
-  background-color: @state-info-bg;
-  border-color: @state-info-border;
+  background-color: $state-info-bg;
+  border-color: $state-info-border;
 }
 
 .well-blank {
-  background-color: @white;
+  background-color: $white;
   border-color: rgba(0,0,0,.1);
 }
 
@@ -128,7 +127,7 @@ label, input, button, select, textarea {
 
 .create-page .well,
 .promotions .well-info {
-    background-color: @white;
+    background-color: $white;
 }
 
 
@@ -155,7 +154,7 @@ div[data-spy="affix"] {
 }
 
 div[data-spy="affix"].affix {
-  top: @line-height-base;
+  top: $line-height-base;
 }
 
 .bs-docs-sidenav {
@@ -172,7 +171,7 @@ div[data-spy="affix"].affix {
   padding: 8px 14px;
   border: 1px solid #e5e5e5;
   border-top-width: 0;
-  color: @link-color;
+  color: $link-color;
   &:hover {
    background: #f1faff;
   }
@@ -188,14 +187,14 @@ div[data-spy="affix"].affix {
 .bs-docs-sidenav > .active > span {
   font-weight: bold;
   position: relative;
-  color: @link-color;
+  color: $link-color;
   background: #f1faff;
   z-index: 2;
   padding: 9px 15px;
   text-shadow: 0 1px 0 rgba(0,0,0,.15);
   &:hover {
     background: #f1faff;
-    color: @link-color;
+    color: $link-color;
   }
   &:after {
     border-bottom: 10px solid transparent;
@@ -233,8 +232,8 @@ div[data-spy="affix"].affix {
   }
   table .btn {
     padding: 3px 9px;
-    font-size: @font-size-base - 2px;
-    line-height: @line-height-base - 2px;
+    font-size: $font-size-base - 2px;
+    line-height: $line-height-base - 2px;
   }
 }
 @media (max-width: 979px) {
@@ -243,11 +242,11 @@ div[data-spy="affix"].affix {
   }
   div[data-spy="affix"] {
     width: 100%;
-    margin-bottom: @line-height-base;
+    margin-bottom: $line-height-base;
   }
   .navbar-primary .nav > li > a {
     border: 0;
-    .border-radius(4px);
+    border-radius: 4px;
   }
   .navbar-primary .nav > li > a:hover {
     background: #222;

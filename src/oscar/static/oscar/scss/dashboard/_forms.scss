@@ -9,9 +9,11 @@ form.flat {
   .control-label {
     text-align: left;
   }
+
   .control-group {
-    margin-bottom: @line-height-base / 2;
+    margin-bottom: $line-height-base / 2;
   }
+
   input[type=text],
   input[type=number],
   input[type=email],
@@ -20,18 +22,22 @@ form.flat {
   select {
     font-size: 12px;
   }
+
   textarea {
     max-height: 200px;
   }
 }
 
 .form-inline {
+
   select {
     min-width: 200px;
   }
+
   .select2-container.form-control {
       display: inline-block;
   }
+
   .form-group .form-inline {
       display: inline-block;
   }
@@ -39,21 +45,26 @@ form.flat {
 
 .form-inline {
   margin-bottom: 0;
+
   .help-block:first-child, .error-block:first-child {
     display: none;
   }
+
   label {
     margin-right: 5px;
   }
+
   .control-group {
     margin-right: 10px;
   }
+
   .product-select{
     width: 270px;
   }
 }
 
 .create-page {
+
   .form-horizontal,
   .form-stacked {
     input[type=text],
@@ -64,6 +75,7 @@ form.flat {
       width:95%;
     }
   }
+
   .form-stacked {
     .form-inline {
       input[type=text],
@@ -75,12 +87,14 @@ form.flat {
       }
     }
   }
+
   label {
     font-weight:bold;
   }
 }
 
 .form-stacked {
+
   .error-block {
     display: block;
     color: #b94a48;
@@ -88,12 +102,15 @@ form.flat {
 }
 
 form {
+
   .form-group .form-inline {
+
     .input-group.date input {
       width: 100%;
     }
 
-    @media (min-width: @screen-sm-min) {
+    @media (min-width: $screen-sm-min) {
+
       .input-group.date input {
         width: 145px;
       }
@@ -102,6 +119,7 @@ form {
 }
 
 .fields-full {
+
   input[type=text],
   textarea {
     width: 100%;
@@ -114,6 +132,7 @@ textarea.plain {
 
 .well,
 .tabbable.dashboard .tab-content {
+
   .form-actions {
     margin-bottom: 0;
     position: relative;
@@ -126,6 +145,7 @@ textarea.plain {
 }
 
 .tabbable.dashboard .tab-content {
+
   .form-actions {
     bottom: -50px;
     left: -29px;
@@ -139,7 +159,7 @@ textarea.plain {
 }
 
 .wysihtml5-toolbar {
-  .clearfix();
+  @include clearfix();
 }
 
 textarea {
@@ -147,11 +167,11 @@ textarea {
 	height: 400px;
 }
 
-/* ADDITIONAL ERRORS */
 .errorlist {
   margin: 0 0 0 20px;
   padding: 0 0 10px 0;
   color: #B94A48;
+
   li {
     padding: 0 0 5px 0;
     list-style: none;
@@ -159,14 +179,17 @@ textarea {
 }
 
 .form-inline {
+
   .help-block, .error-block {
     display: inline-block;
     margin: 0 20px 0 10px;
+
     li {
       list-style: none;
       color: #B94A48;
     }
   }
+  
   input[type=number],
   input[type=email],
   input[type=url],
