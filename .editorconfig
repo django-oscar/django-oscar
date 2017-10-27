@@ -1,5 +1,24 @@
 root = true
 
+[*.{scss,less,js}]
+line_length = 119
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 2
+
+[*.html]
+indent_size = 4
+
+[*.py]
+line_length = 79
+multi_line_output = 4
+balanced_wrapping = true
+use_parentheses = true
+
 [*.yml]
-indent = 2
-shift_width = 2
+indent_size = 2
+
+[Makefile]
+indent_style = tab
+indent_size = 4
