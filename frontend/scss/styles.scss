@@ -1,0 +1,25 @@
+//== Overrides
+$icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
+$fa-font-path: "~font-awesome/fonts";
+
+//== Vendor
+@import 'vendor/bootstrap';
+@import 'vendor/font-awesome';
+
+//== Core variables and mixins
+@import 'page/mixins';
+
+//== Components
+@import 'page/alerts';
+@import 'page/checkout';
+@import 'page/forms';
+@import 'page/header';
+@import 'page/layout';
+@import 'page/plugins';
+@import 'page/product_lists';
+@import 'page/product_page';
+@import 'page/promotions';
+@import 'page/responsive-767px-max';
+@import 'page/reviews';
+@import 'page/type';
+@import 'page/wells';
