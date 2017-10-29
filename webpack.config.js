@@ -1,18 +1,20 @@
 const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
+  devtool: 'source-map',
+
   entry: {
-    main: './src/oscar/static/oscar/js/main.js'
+    dashboard: './frontend/js/dashboard.js',
+    ui: './frontend/js/ui.js'
   },
 
   output: {
-    filename: 'js/bundle.js',
+    filename: 'js/[name].js',
     path: path.join(__dirname, 'src', 'oscar', 'static', 'oscar')
   },
-
-  devtool: 'source-map',
 
   module: {
     rules: [
@@ -35,7 +37,8 @@ module.exports = {
         test: /\.(jpg|png|svg)$/,
         loader: 'file-loader',
         options: {
-          name: '[path][name].[ext]',
+          name: '[name].[ext]',
+          outputPath: 'img/'
         },
       },
       {
@@ -58,7 +61,12 @@ module.exports = {
   },
 
   plugins: [
-    new ExtractTextPlugin('css/dashboard-new.css'),
+    new ExtractTextPlugin('css/[name].css'),
+
+    new CopyWebpackPlugin([
+      { from: './frontend/img', to: './img' }
+    ]),
+
     new webpack.ProvidePlugin({
       '$': "jquery",
       'jQuery': "jquery",
