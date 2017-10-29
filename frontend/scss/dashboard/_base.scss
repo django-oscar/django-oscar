@@ -55,6 +55,7 @@ label, input, button, select, textarea {
   margin: 0 auto;
   position: relative;
   padding: 0 20px;
+  margin-left: $sidebar-width;
 }
 
 .content-block {

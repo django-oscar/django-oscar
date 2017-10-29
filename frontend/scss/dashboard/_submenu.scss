@@ -1,0 +1,56 @@
+.submenu {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  background-color: #42525E;
+  min-height: 500px;
+  visibility: hidden;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  transition: all .5s;
+  transform: translateX(-100%);
+  box-shadow: 0 0 3px $black;
+  z-index: -1;
+  
+  &__item {
+      min-width: 300px;
+  }
+
+  &__title {
+      display: block;
+      font-size: 2rem;
+      font-weight: 600;
+      color: $white;
+      padding: 15px;
+  }
+
+  &__close {
+      font-size: 2rem;
+      color: $text-light-secondary;
+      position: absolute;
+      top: 15px;
+      right: 15px;
+  
+      &:hover,
+      &:focus {
+          color: $white;
+          text-decoration: none;
+      }
+  }
+
+  &__link {
+      display: block;
+      color: $text-light-secondary;
+      padding: 15px;
+      font-size: 14px;
+      position: relative;
+      z-index: 10;
+  
+      &:hover,
+      &:focus {
+          color: $white;
+          text-decoration: none;
+      }
+  }
+}

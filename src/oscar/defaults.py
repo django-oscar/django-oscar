@@ -99,38 +99,12 @@ OSCAR_HIDDEN_FEATURES = []
 OSCAR_DASHBOARD_NAVIGATION = [
     {
         'label': _('Dashboard'),
-        'icon': 'fa fa-th-list',
+        'icon': 'view_quilt',
         'url_name': 'dashboard:index',
     },
     {
-        'label': _('Catalogue'),
-        'icon': 'fa fa-sitemap',
-        'children': [
-            {
-                'label': _('Products'),
-                'url_name': 'dashboard:catalogue-product-list',
-            },
-            {
-                'label': _('Product Types'),
-                'url_name': 'dashboard:catalogue-class-list',
-            },
-            {
-                'label': _('Categories'),
-                'url_name': 'dashboard:catalogue-category-list',
-            },
-            {
-                'label': _('Ranges'),
-                'url_name': 'dashboard:range-list',
-            },
-            {
-                'label': _('Low stock alerts'),
-                'url_name': 'dashboard:stock-alert-list',
-            },
-        ]
-    },
-    {
         'label': _('Fulfilment'),
-        'icon': 'fa fa-shopping-cart',
+        'icon': 'shopping_cart',
         'children': [
             {
                 'label': _('Orders'),
@@ -155,8 +129,34 @@ OSCAR_DASHBOARD_NAVIGATION = [
         ]
     },
     {
+        'label': _('Catalogue'),
+        'icon': 'local_offer',
+        'children': [
+            {
+                'label': _('Products'),
+                'url_name': 'dashboard:catalogue-product-list',
+            },
+            {
+                'label': _('Product Types'),
+                'url_name': 'dashboard:catalogue-class-list',
+            },
+            {
+                'label': _('Categories'),
+                'url_name': 'dashboard:catalogue-category-list',
+            },
+            {
+                'label': _('Ranges'),
+                'url_name': 'dashboard:range-list',
+            },
+            {
+                'label': _('Low stock alerts'),
+                'url_name': 'dashboard:stock-alert-list',
+            },
+        ]
+    },
+    {
         'label': _('Customers'),
-        'icon': 'fa fa-group',
+        'icon': 'people',
         'children': [
             {
                 'label': _('Customers'),
@@ -170,7 +170,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
     },
     {
         'label': _('Offers'),
-        'icon': 'fa fa-bullhorn',
+        'icon': 'shopping_cart',
         'children': [
             {
                 'label': _('Offers'),
@@ -184,7 +184,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
     },
     {
         'label': _('Content'),
-        'icon': 'fa fa-folder',
+        'icon': 'folder',
         'children': [
             {
                 'label': _('Content blocks'),
@@ -210,7 +210,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
     },
     {
         'label': _('Reports'),
-        'icon': 'fa fa-bar-chart',
+        'icon': 'insert_chart',
         'url_name': 'dashboard:reports-index',
     },
 ]

@@ -5,10 +5,28 @@ $font-family-sans-serif: "Open Sans", 'Helvetica Neue', Helvetica, Arial, sans-s
 $white: rgba(255, 255, 255, 1);
 $black: rgba(0, 0, 0, 1);
 
-//== Other
+$text-dark-primary: rgba(0, 0, 0, .87);
+$text-dark-secondary: rgba(0, 0, 0, .54);
+$text-dark-disabled: rgba(0, 0, 0, .38);
+$text-dark-divided: rgba(0, 0, 0, .12);
+
+$text-light-primary: rgba(255, 255, 255, 1);
+$text-light-secondary: rgba(255, 255, 255, .7);
+$text-light-disabled: rgba(255, 255, 255, .5);
+$text-light-divided: rgba(255, 255, 255, .12);
+
+$oscar-brand: rgba(67, 92, 104, 1);
+$oscar-brand-dark: rgba(66, 82, 94, 1);
+
+//== Navbar
+$navbar-height: 80px;
 $navbar-padding-vertical: 14px;
-$graph-height: 330px;
-$graph-segments-height: 33px;
+
+//== Sidebar
+$sidebar-width: 200px;
+
+//== Charts
 $bar-height: 300px;
 $bar-width: 8%;
-
+$graph-height: 330px;
+$graph-segments-height: 33px;

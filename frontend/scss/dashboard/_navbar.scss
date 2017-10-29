@@ -1,5 +1,6 @@
 .navbar {
   margin-bottom: 0;
+  margin-left: $sidebar-width;
 
   .nav > li span {
     display:block;
@@ -26,17 +27,6 @@
     line-height: 1.6666;
     @include gradient-vertical(#373737, #242424);
     border: none;
-
-    .navbar-brand {
-      background: url("../img/ui/dashboard/logo_oscar.png") no-repeat scroll 0 0 transparent;
-      text-indent: -9999px;
-      display: block;
-      width: 60px;
-      height: 38px;
-      padding: 0;
-      margin-left: 0;
-      margin-top: 5px;
-    }
 
     .navbar-nav {
       top: 5px;

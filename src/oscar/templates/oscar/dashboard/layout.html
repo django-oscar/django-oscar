@@ -8,6 +8,7 @@
 {% block styles %}
     <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard.css" %}" />
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 {% endblock %}
 
 {% block extrastyles %}
@@ -32,7 +33,6 @@
                     <span class="fa fa-bar"></span>
                     <span class="fa fa-bar"></span>
                 </button>
-                <span class="navbar-brand">{{ shop_name }}</span>
             </div>
             <div class="collapse navbar-collapse nav-accounts">
                 <ul class="nav navbar-nav navbar-right">
@@ -48,39 +48,39 @@
 
     {% block dashboard_nav %}
         {% dashboard_navigation user as nav_items %}
-
-        <nav class="navbar navbar-static-top navbar-inverse navbar-primary">
-            <div class="container-fluid dashboard">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".nav-primary">
-                        <span class="fa fa-bar"></span>
-                        <span class="fa fa-bar"></span>
-                        <span class="fa fa-bar"></span>
-                    </button>
-                </div>
-
-                <div class="collapse navbar-collapse nav-primary">
-                    <ul class="nav navbar-nav dashboard">
+        <div class="sidebar">
+            <div class="sidebar__brand">
+                <img src="{% static 'oscar/img/ui/dashboard/logo_oscar.svg' %}" width="113" height="70">
+            </div>
+            <nav class="sidebar__navigation">
+                <div class="sidebar__inner">
+                    <ul class="sidebar__list">{{ item.icon }}
+                            {{ item.icon }}
                         {% for item in nav_items %}
-                        <li class="dropdown">
+                        <li {% if item.url and item.url == request.path %} class="sidebar__item active" {% else %} class="sidebar__item" {% endif %}>
                             {% if item.is_heading %}
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %}
-                                {{ item.label }} <b class="caret"></b>
+                            <a href="#" class="sidebar__link">
+                                {% if item.icon %}<i class="material-icons">{{ item.icon }}</i>{% endif %}
+                                <span>{{ item.label }}</span>
+                                <i class="material-icons dropdown-arrow">arrow_drop_down</i>
                             </a>
                             {% else %}
-                            <a href="{{ item.url }}">
-                                {% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %}
-                                {{ item.label }}
+                            <a href="{{ item.url }}" class="sidebar__link">
+                                {% if item.icon %}<i class="material-icons">{{ item.icon }}</i>{% endif %}
+                                <span>{{ item.label }}</span>
                             </a>
                             {% endif %}
                             {% if item.has_children %}
-                            <ul class="dropdown-menu">
+                            <ul class="submenu">
+                                <a href="#" class="submenu__close">
+                                    <i class="material-icons dropdown-arrow">close</i>
+                                </a>
+                                <span class="submenu__title">{{ item.label }}</span>
                                 {% for subitem in item.children %}
-                                <li>
-                                    <a href="{{ subitem.url }}">
-                                    {% if subitem.icon %}<i class="{{ subitem.icon }}"></i>{% endif %}
-                                    {{ subitem.label }}
+                                <li class="submenu__item">
+                                    <a href="{{ subitem.url }}" class="submenu__link">
+                                        {% if subitem.icon %}<i class="{{ subitem.icon }}"></i>{% endif %}
+                                        <span>{{ subitem.label }}</span>
                                     </a>
                                 </li>
                                 {% endfor %}
@@ -90,8 +90,8 @@
                         {% endfor %}
                     </ul>
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </div>
     {% endblock %}
 
     <div class="container-fluid dashboard">
@@ -121,11 +121,12 @@
 {# Local scripts #}
 {% block scripts %}
     {# Oscar #}
+    <script src="{% static "oscar/js/vendor/bootstrap/bootstrap.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "oscar/js/old/ui.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "oscar/js/old/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "oscar/js/ui.js" %}" type="text/javascript" charset="utf-8"></script>
-    <!-- <script src="{% static "oscar/js/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/RelatedObjectLookups.js" %}" type="text/javascript" charset="utf-8"></script> -->
+    <script src="{% static "oscar/js/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/old/RelatedObjectLookups.js" %}" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
 
 {% block extrascripts %}

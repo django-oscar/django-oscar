@@ -8202,7 +8202,8 @@ label, input, button, select, textarea {
 .container-fluid.dashboard {
   margin: 0 auto;
   position: relative;
-  padding: 0 20px; }
+  padding: 0 20px;
+  margin-left: 200px; }
 
 .content-block {
   border: 1px solid #ccc;
@@ -8736,7 +8737,8 @@ textarea {
     border-left: none; }
 
 .navbar {
-  margin-bottom: 0; }
+  margin-bottom: 0;
+  margin-left: 200px; }
   .navbar .nav > li span {
     display: block;
     padding: 14px; }
@@ -8760,15 +8762,6 @@ textarea {
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF373737', endColorstr='#FF242424', GradientType=0);
   border: none; }
-  .navbar-accounts .container-fluid .navbar-brand {
-    background: url(../img/logo_oscar.png) no-repeat scroll 0 0 transparent;
-    text-indent: -9999px;
-    display: block;
-    width: 60px;
-    height: 38px;
-    padding: 0;
-    margin-left: 0;
-    margin-top: 5px; }
   .navbar-accounts .container-fluid .navbar-nav {
     top: 5px; }
   .navbar-accounts .container-fluid .navbar-nav > li > a {
@@ -8839,6 +8832,55 @@ textarea {
   .search-filter-list .label {
     font-size: 100%; }
 
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 100vh;
+  z-index: 1040; }
+  .sidebar__brand {
+    height: 80px;
+    padding: 10px;
+    background-color: #4C5C68; }
+    .sidebar__brand > img {
+      height: 60px;
+      width: auto; }
+  .sidebar__navigation {
+    height: 100%;
+    background-color: #4C5C68; }
+  .sidebar__inner {
+    padding-top: 40px; }
+  .sidebar__list {
+    padding: 0;
+    margin: 0; }
+  .sidebar__item span {
+    display: inline-block;
+    vertical-align: middle; }
+  .sidebar__item i {
+    vertical-align: middle;
+    padding-right: 5px; }
+  .sidebar__item .dropdown-arrow {
+    padding-right: 0;
+    float: right; }
+  .sidebar__item.active > .sidebar__link {
+    color: white;
+    background-color: #42525E; }
+  .sidebar__link {
+    display: block;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 15px;
+    font-size: 14px;
+    position: relative;
+    z-index: 10; }
+    .sidebar__link:hover, .sidebar__link:focus {
+      color: white;
+      background-color: #42525E;
+      text-decoration: none; }
+  .sidebar__item.open .submenu {
+    visibility: visible;
+    transform: translateX(0); }
+
 body.dragging, body.dragging * {
   cursor: move !important; }
 
@@ -8849,6 +8891,48 @@ body.dragging, body.dragging * {
   position: absolute;
   opacity: 0.5;
   z-index: 2000; }
+
+.submenu {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  background-color: #42525E;
+  min-height: 500px;
+  visibility: hidden;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  transition: all .5s;
+  transform: translateX(-100%);
+  box-shadow: 0 0 3px black;
+  z-index: -1; }
+  .submenu__item {
+    min-width: 300px; }
+  .submenu__title {
+    display: block;
+    font-size: 2rem;
+    font-weight: 600;
+    color: white;
+    padding: 15px; }
+  .submenu__close {
+    font-size: 2rem;
+    color: rgba(255, 255, 255, 0.7);
+    position: absolute;
+    top: 15px;
+    right: 15px; }
+    .submenu__close:hover, .submenu__close:focus {
+      color: white;
+      text-decoration: none; }
+  .submenu__link {
+    display: block;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 15px;
+    font-size: 14px;
+    position: relative;
+    z-index: 10; }
+    .submenu__link:hover, .submenu__link:focus {
+      color: white;
+      text-decoration: none; }
 
 .table-bordered,
 .table-bordered th,
