@@ -6,7 +6,8 @@
   "license": "MIT",
   "homepage": "https://github.com/django-oscar/django-oscar#readme",
   "scripts": {
-    "start": "webpack"
+    "start": "webpack --watch",
+    "build": "webpack"
   },
   "dependencies": {
     "bootstrap-sass": "^3.3.7",

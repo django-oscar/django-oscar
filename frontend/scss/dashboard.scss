@@ -1,8 +1,5 @@
-//== Overrides
-$icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
-$fa-font-path: "~font-awesome/fonts";
-
 //== Vendor
+@import 'vendor/overrides';
 @import 'vendor/bootstrap';
 @import 'vendor/font-awesome';
 
