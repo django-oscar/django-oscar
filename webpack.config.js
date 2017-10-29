@@ -68,6 +68,8 @@ module.exports = {
 
     new CopyWebpackPlugin([
       { from: './frontend/favicon.ico' },
+      { from: './frontend/js/vendor', to: './js/vendor' },
+      { from: './frontend/js/old', to: './js/old' },
       { from: './frontend/img', to: './img' }
     ]),
 
