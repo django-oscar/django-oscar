@@ -70,6 +70,7 @@ module.exports = {
       { from: './frontend/favicon.ico' },
       { from: './frontend/js/vendor', to: './js/vendor' },
       { from: './frontend/js/old', to: './js/old' },
+      { from: './frontend/css/vendor', to: './css/vendor' },
       { from: './frontend/img', to: './img' }
     ]),
 

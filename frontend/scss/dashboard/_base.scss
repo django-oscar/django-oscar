@@ -1,5 +1,6 @@
 body {
   background: url("../img/ui/dashboard/bg_subtle_dots.png") repeat scroll 0 0 #fff;
+  font-family: $font-family-base;
 }
 
 // TYPES CHANGES
@@ -52,10 +53,9 @@ label, input, button, select, textarea {
 }
 
 .container-fluid.dashboard {
-  margin: 0 auto;
-  position: relative;
-  padding: 0 20px;
   margin-left: $sidebar-width;
+  margin-top: $navbar-height;
+  position: relative;
 }
 
 .content-block {
