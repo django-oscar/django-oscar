@@ -6,20 +6,15 @@
 {% load staticfiles %}
 
 {% block styles %}
-    {% if use_less %}
-        <link rel="stylesheet/less" type="text/css" href="{% static "oscar/less/dashboard.less" %}" />
-    {% else %}
-        <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard.css" %}" />
-    {% endif %}
-    <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard-new.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard.css" %}" />
 {% endblock %}
 
 {% block extrastyles %}
     {{ block.super }}
-    <link rel="stylesheet" href="{% static "oscar/js/select2/select2.css" %}" />
-    <link rel="stylesheet" href="{% static "oscar/css/select2-bootstrap.css" %}" />
-    <link rel="stylesheet" href="{% static "oscar/js/bootstrap-datetimepicker/bootstrap-datetimepicker.css" %}" />
-    <link rel="stylesheet" href="{% static "oscar/css/datetimepicker.css" %}" />
+    <link rel="stylesheet" href="{% static "oscar/js/vendor/select2/select2.css" %}" />
+    <link rel="stylesheet" href="{% static "oscar/css/vendor/select2-bootstrap.css" %}" />
+    <link rel="stylesheet" href="{% static "oscar/js/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.css" %}" />
+    <link rel="stylesheet" href="{% static "oscar/css/vendor/datetimepicker.css" %}" />
 {% endblock %}
 
 {% block title %}
@@ -124,24 +119,24 @@
 
 {# Local scripts #}
 {% block scripts %}
-    <!-- Twitter Bootstrap -->
-    <script type="text/javascript" src="{% static "oscar/js/bootstrap3/bootstrap.min.js" %}"></script>
-    <!-- Oscar -->
-    <script src="{% static "oscar/js/oscar/ui.js" %}" type="text/javascript" charset="utf-8"></script>
+    {# Oscar #}
+    <script src="{% static "oscar/js/old/ui.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/old/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/ui.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/RelatedObjectLookups.js" %}" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
 
 {% block extrascripts %}
     {{ block.super }}
 
     {# jQuery plugins #}
-    <script src="{% static "oscar/js/mousewheel/jquery.mousewheel.min.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/bootstrap-datetimepicker/bootstrap-datetimepicker.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.all.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/inputmask/jquery.inputmask.bundle.min.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/select2/select2.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/jquery-sortable/jquery-sortable-min.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/oscar/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/oscar/RelatedObjectLookups.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/vendor/mousewheel/jquery.mousewheel.min.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/vendor/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.all.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/vendor/inputmask/jquery.inputmask.bundle.min.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/vendor/select2/select2.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/vendor/jquery-sortable/jquery-sortable-min.js" %}" type="text/javascript" charset="utf-8"></script>
 
     {# We don't use a fallback for tinyMCE as it dynamically loads several other files #}
     <script src="//cdn.tinymce.com/4/tinymce.min.js" type="text/javascript" charset="utf-8"></script>

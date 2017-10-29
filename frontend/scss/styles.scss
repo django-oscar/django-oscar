@@ -7,7 +7,7 @@ $fa-font-path: "~font-awesome/fonts";
 @import 'vendor/font-awesome';
 
 //== Core variables and mixins
-@import 'page/mixins';
+@import 'page/variables';
 
 //== Components
 @import 'page/alerts';
@@ -19,7 +19,7 @@ $fa-font-path: "~font-awesome/fonts";
 @import 'page/product_lists';
 @import 'page/product_page';
 @import 'page/promotions';
-@import 'page/responsive-767px-max';
+@import 'page/responsive';
 @import 'page/reviews';
 @import 'page/type';
 @import 'page/wells';
