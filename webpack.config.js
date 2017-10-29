@@ -3,6 +3,8 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
+const staticPath = path.join(__dirname, 'src', 'oscar', 'static', 'oscar');
+
 module.exports = {
   devtool: 'source-map',
 
@@ -13,7 +15,7 @@ module.exports = {
 
   output: {
     filename: 'js/[name].js',
-    path: path.join(__dirname, 'src', 'oscar', 'static', 'oscar')
+    path: staticPath
   },
 
   module: {
@@ -65,6 +67,7 @@ module.exports = {
     new ExtractTextPlugin('css/[name].css'),
 
     new CopyWebpackPlugin([
+      { from: './frontend/favicon.ico' },
       { from: './frontend/img', to: './img' }
     ]),
 
