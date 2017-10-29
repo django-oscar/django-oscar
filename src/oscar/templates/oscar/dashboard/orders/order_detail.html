@@ -27,7 +27,7 @@
 {% block dashboard_content %}
     {% block customer_information %}
     <table class="table  table-bordered table-hover">
-        <caption><i class="icon-group icon-large"></i>{% trans "Customer Information" %}</caption>
+        <caption><i class="fa fa-users icon-large"></i>{% trans "Customer Information" %}</caption>
         {% if order.guest_email %}
             <tr>
                 <th>{% trans "Name" %}</th>
@@ -56,7 +56,7 @@
 
     {% block order_information %}
     <table class="table table-striped table-bordered table-hover">
-        <caption><i class="icon-shopping-cart icon-large"></i>{% trans "Order information" %}</caption>
+        <caption><i class="fa fa-shopping-cart icon-large"></i>{% trans "Order information" %}</caption>
         <tr>
             <th>{% trans "Order Total" %}</th>
             <th>{% trans "Date of purchase" %}</th>
@@ -317,7 +317,7 @@
                     {% csrf_token %}
                     {% block order_actions %}
                         <div class="well">
-                            <h3><i class="icon-warning-sign"></i> {% trans "Change order status" %}:</h3>
+                            <h3><i class="fa fa-exclamation-triangle"></i> {% trans "Change order status" %}:</h3>
                             {% if order_status_form.has_choices %}
                                 {% include "dashboard/partials/form_fields.html" with form=order_status_form %}
                                 <input type="hidden" value="change_order_status" name="order_action" />

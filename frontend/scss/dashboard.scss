@@ -1,0 +1,22 @@
+//== Vendor
+@import 'vendor/overrides';
+@import 'vendor/bootstrap';
+@import 'vendor/font-awesome';
+
+//== Core variables and mixins
+@import 'dashboard/variables';
+@import 'dashboard/mixins';
+
+//== Components
+@import 'dashboard/alerts';
+@import 'dashboard/base';
+@import 'dashboard/buttons';
+@import 'dashboard/catalogue';
+@import 'dashboard/datetimepicker';
+@import 'dashboard/forms';
+@import 'dashboard/index';
+@import 'dashboard/login';
+@import 'dashboard/navbar';
+@import 'dashboard/order';
+@import 'dashboard/sortable';
+@import 'dashboard/tables';

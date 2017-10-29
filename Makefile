@@ -60,9 +60,9 @@ compiledmessages:
 	# Compile the gettext files
 	cd src/oscar; django-admin.py compilemessages
 
-css:
-	npm install
-	npm run build
+frontend:
+	yarn install
+	yarn start
 
 clean:
 	# Remove files not in source control
@@ -75,7 +75,6 @@ todo:
 	-grep -rnH TODO *.txt
 	-grep -rnH TODO src/oscar/apps/
 	-grep -rnH "django.VERSION" src/oscar/apps
-
 
 release: clean
 	pip install twine wheel

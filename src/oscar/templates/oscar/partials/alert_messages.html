@@ -26,11 +26,11 @@ Use message tags to control these alerts.  Available tags include:
                     {% if 'success' in message.tags %}
                         <i class="icon-ok-sign"></i>
                     {% elif 'info' in message.tags %}
-                        <i class="icon-info-sign"></i>
+                        <i class="fa fa-info-circle"></i>
                     {% elif 'warning' in message.tags %}
-                        <i class="icon-warning-sign"></i>
+                        <i class="fa fa-exclamation-triangle"></i>
                     {% elif 'danger' in message.tags or 'error' in message.tags %}
-                        <i class="icon-exclamation-sign"></i>
+                        <i class="fa fa-exclamation-circle"></i>
                     {% endif %}
                 {% endif %}
             </div>

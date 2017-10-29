@@ -36,7 +36,7 @@
         {% csrf_token %}
         <table class="table table-striped table-bordered">
             <caption>
-                <i class="icon-gift icon-large"></i>{{ queryset_description }}
+                <i class="fa fa-gift icon-large"></i>{{ queryset_description }}
                 {% if is_filtered %}
                     <a href="{% url 'dashboard:offer-list' %}" >{% trans "Reset" %}</a>
                 {% endif %}
