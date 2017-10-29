@@ -7,6 +7,7 @@
 
 {% block styles %}
     <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard.css" %}" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
 {% endblock %}
 
 {% block extrastyles %}
@@ -27,22 +28,22 @@
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".nav-accounts">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+                    <span class="fa fa-bar"></span>
+                    <span class="fa fa-bar"></span>
+                    <span class="fa fa-bar"></span>
                 </button>
                 <span class="navbar-brand">{{ shop_name }}</span>
             </div>
             <div class="collapse navbar-collapse nav-accounts">
                 <ul class="nav navbar-nav navbar-right">
                     <li><span>{% trans "Welcome" %} <em>{{ user.get_full_name|default:request.user.email }}</em></span></li>
-                    <li><a href="{{ homepage_url }}"><i class="icon-home"></i> {% trans "Return to site" %}</a></li>
-                    <li><a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "Account" %}</a></li>
-                    <li><a href="{% url 'dashboard:logout' %}"><i class="icon-signout"></i> {% trans "Log out" %}</a></li>
+                    <li><a href="{{ homepage_url }}"><i class="fa fa-home"></i> {% trans "Return to site" %}</a></li>
+                    <li><a href="{% url 'customer:summary' %}"><i class="fa fa-users"></i> {% trans "Account" %}</a></li>
+                    <li><a href="{% url 'dashboard:logout' %}"><i class="fa fa-sign-out"></i> {% trans "Log out" %}</a></li>
                 </ul>
             </div>
-        </div><!-- /navbar-inner -->
-    </nav><!-- /navbar -->
+        </div>
+    </nav>
     {% endblock navbar %}
 
     {% block dashboard_nav %}
@@ -52,9 +53,9 @@
             <div class="container-fluid dashboard">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".nav-primary">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
+                        <span class="fa fa-bar"></span>
+                        <span class="fa fa-bar"></span>
+                        <span class="fa fa-bar"></span>
                     </button>
                 </div>
 
@@ -113,7 +114,7 @@
                 {% endblock content %}
             </div>
         </div>
-    </div><!-- /container -->
+    </div>
 
 {% endblock %}
 
@@ -123,8 +124,8 @@
     <script src="{% static "oscar/js/old/ui.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "oscar/js/old/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "oscar/js/ui.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/RelatedObjectLookups.js" %}" type="text/javascript" charset="utf-8"></script>
+    <!-- <script src="{% static "oscar/js/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/RelatedObjectLookups.js" %}" type="text/javascript" charset="utf-8"></script> -->
 {% endblock %}
 
 {% block extrascripts %}

@@ -99,12 +99,12 @@ OSCAR_HIDDEN_FEATURES = []
 OSCAR_DASHBOARD_NAVIGATION = [
     {
         'label': _('Dashboard'),
-        'icon': 'icon-th-list',
+        'icon': 'fa fa-th-list',
         'url_name': 'dashboard:index',
     },
     {
         'label': _('Catalogue'),
-        'icon': 'icon-sitemap',
+        'icon': 'fa fa-sitemap',
         'children': [
             {
                 'label': _('Products'),
@@ -130,7 +130,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
     },
     {
         'label': _('Fulfilment'),
-        'icon': 'icon-shopping-cart',
+        'icon': 'fa fa-shopping-cart',
         'children': [
             {
                 'label': _('Orders'),
@@ -156,7 +156,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
     },
     {
         'label': _('Customers'),
-        'icon': 'icon-group',
+        'icon': 'fa fa-group',
         'children': [
             {
                 'label': _('Customers'),
@@ -170,7 +170,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
     },
     {
         'label': _('Offers'),
-        'icon': 'icon-bullhorn',
+        'icon': 'fa fa-bullhorn',
         'children': [
             {
                 'label': _('Offers'),
@@ -184,7 +184,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
     },
     {
         'label': _('Content'),
-        'icon': 'icon-folder-close',
+        'icon': 'fa fa-folder',
         'children': [
             {
                 'label': _('Content blocks'),
@@ -210,7 +210,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
     },
     {
         'label': _('Reports'),
-        'icon': 'icon-bar-chart',
+        'icon': 'fa fa-bar-chart',
         'url_name': 'dashboard:reports-index',
     },
 ]
