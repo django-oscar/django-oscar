@@ -2,21 +2,31 @@
   "name": "django-oscar",
   "version": "1.1.1",
   "description": "A domain-driven e-commerce framework for Django",
-  "main": "index.js",
-  "dependencies": {},
-  "devDependencies": {
-    "gulp": "~3.8.11",
-    "gulp-autoprefixer": "~1.0.1",
-    "gulp-less": "^3.0.5",
-    "gulp-sourcemaps": "^1.6.0",
-    "gulp-watch": "^4.3.5",
-    "less": "^2.5.3",
-    "require-dir": "^0.3.0"
-  },
-  "scripts": {
-    "build": "gulp",
-    "start": "gulp watch"
-  },
+  "main": "src/oscar/static/oscar/js/main.js",
   "license": "MIT",
-  "homepage": "https://github.com/django-oscar/django-oscar#readme"
+  "homepage": "https://github.com/django-oscar/django-oscar#readme",
+  "scripts": {
+    "start": "webpack --watch",
+    "build": "webpack"
+  },
+  "dependencies": {
+    "bootstrap-sass": "^3.3.7",
+    "jquery": "^3.2.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "copy-webpack-plugin": "^4.2.0",
+    "css-loader": "^0.28.7",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "file-loader": "^1.1.5",
+    "font-awesome": "^4.7.0",
+    "node-sass": "^4.5.3",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.19.0",
+    "url-loader": "^0.6.2",
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.3"
+  }
 }
