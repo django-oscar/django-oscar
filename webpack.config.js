@@ -30,8 +30,9 @@ module.exports = {
             { loader: "css-loader" },
             { loader: "sass-loader" }
           ],
-          fallback: "style-loader"
-        })
+          fallback: "style-loader",
+          publicPath: '../'
+        }),
       },
       {
         test: /\.(jpg|png|svg)$/,
