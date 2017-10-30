@@ -42,6 +42,9 @@ Minor changes
 Backwards incompatible changes in Oscar 1.6
 -------------------------------------------
 
+ - ``oscar.apps.customer.auth_backends.EmailBackend`` now rejects inactive users
+   (where ``User.is_active`` is ``False``).
+
  - ``oscar.apps.offer.models.ConditionalOffer`` now has a new flag
    ``exclusive`` to denote that the offer involved can not be combined on the
    same item on the same basket line with another offer.
