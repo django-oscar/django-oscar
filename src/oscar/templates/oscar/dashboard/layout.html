@@ -25,21 +25,26 @@
 
 {% block layout %}
     {% block navbar %}
-    <nav class="navbar navbar-static-top navbar-inverse navbar-accounts">
+    <nav class="navbar navbar-fixed-top">
         <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".nav-accounts">
-                    <span class="fa fa-bar"></span>
-                    <span class="fa fa-bar"></span>
-                    <span class="fa fa-bar"></span>
-                </button>
-            </div>
-            <div class="collapse navbar-collapse nav-accounts">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><span>{% trans "Welcome" %} <em>{{ user.get_full_name|default:request.user.email }}</em></span></li>
-                    <li><a href="{{ homepage_url }}"><i class="fa fa-home"></i> {% trans "Return to site" %}</a></li>
-                    <li><a href="{% url 'customer:summary' %}"><i class="fa fa-users"></i> {% trans "Account" %}</a></li>
-                    <li><a href="{% url 'dashboard:logout' %}"><i class="fa fa-sign-out"></i> {% trans "Log out" %}</a></li>
+            <a href="#" class="navbar__close-sidebar">
+                <i class="material-icons">menu</i>
+            </a>
+            <div class="navbar__accounts">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <i class="material-icons">person</i>
+                    <span>{{ user.get_full_name|default:request.user.email }}</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="{% url 'customer:summary' %}">{% trans "Account" %}</a>
+                    </li>
+                    <li>
+                        <a href="{{ homepage_url }}">{% trans "Return to site" %}</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'dashboard:logout' %}">{% trans "Log out" %}</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -50,7 +55,9 @@
         {% dashboard_navigation user as nav_items %}
         <div class="sidebar">
             <div class="sidebar__brand">
-                <img src="{% static 'oscar/img/ui/dashboard/logo_oscar.svg' %}" width="113" height="70">
+                <a href="/dashboard" class="sidebar__brand-link">
+                    <img src="{% static 'oscar/img/ui/dashboard/logo_oscar.svg' %}" width="113" height="70">
+                </a>
             </div>
             <nav class="sidebar__navigation">
                 <div class="sidebar__inner">
@@ -59,21 +66,21 @@
                         {% for item in nav_items %}
                         <li {% if item.url and item.url == request.path %} class="sidebar__item active" {% else %} class="sidebar__item" {% endif %}>
                             {% if item.is_heading %}
-                            <a href="#" class="sidebar__link">
-                                {% if item.icon %}<i class="material-icons">{{ item.icon }}</i>{% endif %}
-                                <span>{{ item.label }}</span>
+                            <a href="#" class="sidebar__link" data-toggle="dropdown">
+                                {% if item.icon %}<i class="material-icons sidebar__icon">{{ item.icon }}</i>{% endif %}
+                                <span class="sidebar__label">{{ item.label }}</span>
                                 <i class="material-icons dropdown-arrow">arrow_drop_down</i>
                             </a>
                             {% else %}
                             <a href="{{ item.url }}" class="sidebar__link">
-                                {% if item.icon %}<i class="material-icons">{{ item.icon }}</i>{% endif %}
-                                <span>{{ item.label }}</span>
+                                {% if item.icon %}<i class="material-icons sidebar__icon">{{ item.icon }}</i>{% endif %}
+                                <span class="sidebar__label">{{ item.label }}</span>
                             </a>
                             {% endif %}
                             {% if item.has_children %}
                             <ul class="submenu">
                                 <a href="#" class="submenu__close">
-                                    <i class="material-icons dropdown-arrow">close</i>
+                                    <i class="material-icons">close</i>
                                 </a>
                                 <span class="submenu__title">{{ item.label }}</span>
                                 {% for subitem in item.children %}

@@ -1,0 +1,35 @@
+body.compact {
+  .sidebar {
+    width: $sidebar-compact-width
+  }
+
+  .sidebar__label {
+    display: none;
+  }
+
+  .sidebar__link {
+    padding: 15px 28px;
+    
+    .dropdown-arrow {
+      display: none;
+    }
+  }
+
+  .sidebar__icon {
+    font-size: 24px;
+    padding-right: 0;
+  }
+
+  .navbar-fixed-top {
+    margin-left: $sidebar-compact-width;
+  }
+
+  .container-fluid.dashboard {
+    margin-left: $sidebar-compact-width;
+  }
+
+  .sidebar__brand > a > img {
+    height: auto;
+    width: 60px;
+  }
+}
