@@ -1,0 +1,68 @@
+.navbar {
+  min-height: $navbar-height;
+  background-color: $oscar-brand-darker;
+  border: 0;
+  margin-bottom: 0;
+  margin-left: $sidebar-width;
+
+  &__close-sidebar {
+    display: block;
+    margin-top: 24px;
+    float: left;
+
+    > i {
+      color: $icon-light;
+      display: block;
+      font-size: 32px;
+    }
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+  }
+
+  &__accounts {
+    float: right;
+    position: relative;
+
+    > a {
+      display: block;
+      font-size: 12px;
+      color: $white;
+      margin-top: 18px;
+      padding: 10px 0;
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+
+      span {
+        display: inline-block;
+        vertical-align: middle;
+      }
+    }
+
+    .material-icons {
+      display: inline-block;
+      vertical-align: middle;
+      font-size: 24px;
+      padding-right: 10px;
+    }
+
+    .dropdown-menu {
+      right: 0;
+      top: 100%;
+      left: auto;
+    }
+  }
+}
+
+.navbar-brand {
+  height: $navbar-height;
+
+  > img {
+    height: 100%;
+  }
+}

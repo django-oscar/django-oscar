@@ -6,19 +6,17 @@
 {% load staticfiles %}
 
 {% block styles %}
-    {% if use_less %}
-        <link rel="stylesheet/less" type="text/css" href="{% static "oscar/less/dashboard.less" %}" />
-    {% else %}
-        <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard.css" %}" />
-    {% endif %}
+    <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard.css" %}" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 {% endblock %}
 
 {% block extrastyles %}
     {{ block.super }}
-    <link rel="stylesheet" href="{% static "oscar/js/select2/select2.css" %}" />
-    <link rel="stylesheet" href="{% static "oscar/css/select2-bootstrap.css" %}" />
-    <link rel="stylesheet" href="{% static "oscar/js/bootstrap-datetimepicker/bootstrap-datetimepicker.css" %}" />
-    <link rel="stylesheet" href="{% static "oscar/css/datetimepicker.css" %}" />
+    <link rel="stylesheet" href="{% static "oscar/js/vendor/select2/select2.css" %}" />
+    <link rel="stylesheet" href="{% static "oscar/css/vendor/select2-bootstrap.css" %}" />
+    <link rel="stylesheet" href="{% static "oscar/js/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.css" %}" />
+    <link rel="stylesheet" href="{% static "oscar/css/vendor/datetimepicker.css" %}" />
 {% endblock %}
 
 {% block title %}
@@ -27,74 +25,42 @@
 
 {% block layout %}
     {% block navbar %}
-    <nav class="navbar navbar-static-top navbar-inverse navbar-accounts">
+    <nav class="navbar navbar-fixed-top">
         <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".nav-accounts">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <span class="navbar-brand">{{ shop_name }}</span>
-            </div>
-            <div class="collapse navbar-collapse nav-accounts">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><span>{% trans "Welcome" %} <em>{{ user.get_full_name|default:request.user.email }}</em></span></li>
-                    <li><a href="{{ homepage_url }}"><i class="icon-home"></i> {% trans "Return to site" %}</a></li>
-                    <li><a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "Account" %}</a></li>
-                    <li><a href="{% url 'dashboard:logout' %}"><i class="icon-signout"></i> {% trans "Log out" %}</a></li>
+            <a href="#" class="navbar__close-sidebar">
+                <i class="material-icons">menu</i>
+            </a>
+            <div class="navbar__accounts">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <i class="material-icons">person</i>
+                    <span>{{ user.get_full_name|default:request.user.email }}</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="{% url 'customer:summary' %}">{% trans "Account" %}</a>
+                    </li>
+                    <li>
+                        <a href="{{ homepage_url }}">{% trans "Return to site" %}</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'dashboard:logout' %}">{% trans "Log out" %}</a>
+                    </li>
                 </ul>
             </div>
-        </div><!-- /navbar-inner -->
-    </nav><!-- /navbar -->
+        </div>
+    </nav>
     {% endblock navbar %}
 
     {% block dashboard_nav %}
-        {% dashboard_navigation user as nav_items %}
-
-        <nav class="navbar navbar-static-top navbar-inverse navbar-primary">
-            <div class="container-fluid dashboard">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".nav-primary">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                </div>
-
-                <div class="collapse navbar-collapse nav-primary">
-                    <ul class="nav navbar-nav dashboard">
-                        {% for item in nav_items %}
-                        <li class="dropdown">
-                            {% if item.is_heading %}
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %}
-                                {{ item.label }} <b class="caret"></b>
-                            </a>
-                            {% else %}
-                            <a href="{{ item.url }}">
-                                {% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %}
-                                {{ item.label }}
-                            </a>
-                            {% endif %}
-                            {% if item.has_children %}
-                            <ul class="dropdown-menu">
-                                {% for subitem in item.children %}
-                                <li>
-                                    <a href="{{ subitem.url }}">
-                                    {% if subitem.icon %}<i class="{{ subitem.icon }}"></i>{% endif %}
-                                    {{ subitem.label }}
-                                    </a>
-                                </li>
-                                {% endfor %}
-                            </ul>
-                            {% endif %}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
+        {% dashboard_navigation user request as nav_items %}
+        <div class="sidebar">
+            <div class="sidebar__brand">
+                <a href="/dashboard" class="sidebar__brand-link">
+                    <img src="{% static 'oscar/img/ui/dashboard/logo_oscar.svg' %}" width="113" height="70">
+                </a>
             </div>
-        </nav>
+            {% draw_navigation request item nav_items %}
+        </div>
     {% endblock %}
 
     <div class="container-fluid dashboard">
@@ -117,30 +83,31 @@
                 {% endblock content %}
             </div>
         </div>
-    </div><!-- /container -->
+    </div>
 
 {% endblock %}
 
 {# Local scripts #}
 {% block scripts %}
-    <!-- Twitter Bootstrap -->
-    <script type="text/javascript" src="{% static "oscar/js/bootstrap3/bootstrap.min.js" %}"></script>
-    <!-- Oscar -->
-    <script src="{% static "oscar/js/oscar/ui.js" %}" type="text/javascript" charset="utf-8"></script>
+    {# Oscar #}
+    <script src="{% static "oscar/js/vendor/bootstrap/bootstrap.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/old/ui.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/old/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/ui.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/old/RelatedObjectLookups.js" %}" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
 
 {% block extrascripts %}
     {{ block.super }}
 
     {# jQuery plugins #}
-    <script src="{% static "oscar/js/mousewheel/jquery.mousewheel.min.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/bootstrap-datetimepicker/bootstrap-datetimepicker.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.all.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/inputmask/jquery.inputmask.bundle.min.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/select2/select2.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/jquery-sortable/jquery-sortable-min.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/oscar/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
-    <script src="{% static "oscar/js/oscar/RelatedObjectLookups.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/vendor/mousewheel/jquery.mousewheel.min.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/vendor/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.all.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/vendor/inputmask/jquery.inputmask.bundle.min.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/vendor/select2/select2.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/vendor/jquery-sortable/jquery-sortable-min.js" %}" type="text/javascript" charset="utf-8"></script>
 
     {# We don't use a fallback for tinyMCE as it dynamically loads several other files #}
     <script src="//cdn.tinymce.com/4/tinymce.min.js" type="text/javascript" charset="utf-8"></script>

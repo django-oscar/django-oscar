@@ -1,0 +1,27 @@
+@mixin remove_bullets() {
+  margin: 0px;
+  padding: 0px;
+
+  li {
+    padding: 0px;
+    list-style: none;
+  }
+}
+
+@mixin horiz_col() {
+  padding: 0px;
+  margin: 0px;
+  @include clearfix();
+
+  > li {
+    list-style: none;
+  }
+
+  li {
+    float: left;
+
+    li {
+      float: none;
+    }
+  }
+}

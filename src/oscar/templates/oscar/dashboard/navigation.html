@@ -1,0 +1,39 @@
+<nav class="sidebar__navigation">
+    <div class="sidebar__inner">
+        <ul class="sidebar__list">{{ item.icon }}
+                {{ item.icon }}
+            {% for item in nav_items %}
+            <li {% if item.active  %} class="sidebar__item active" {% else %} class="sidebar__item" {% endif %}>
+                {% if item.is_heading %}
+                <a href="#" class="sidebar__link" data-toggle="dropdown">
+                    {% if item.icon %}<i class="material-icons sidebar__icon">{{ item.icon }}</i>{% endif %}
+                    <span class="sidebar__label">{{ item.label }}</span>
+                    <i class="material-icons dropdown-arrow">arrow_drop_down</i>
+                </a>
+                {% else %}
+                <a href="{{ item.url }}" class="sidebar__link">
+                    {% if item.icon %}<i class="material-icons sidebar__icon">{{ item.icon }}</i>{% endif %}
+                    <span class="sidebar__label">{{ item.label }}</span>
+                </a>
+                {% endif %}
+                {% if item.has_children %}
+                <ul class="submenu">
+                    <a href="#" class="submenu__close">
+                        <i class="material-icons">close</i>
+                    </a>
+                    <span class="submenu__title">{{ item.label }}</span>
+                    {% for subitem in item.children %}
+                    <li  {% if subitem.active  %} class="submenu__item active" {% else %} class="submenu__item" {% endif %}>
+                        <a href="{{ subitem.url }}" class="submenu__link">
+                            {% if subitem.icon %}<i class="{{ subitem.icon }}"></i>{% endif %}
+                            <span>{{ subitem.label }}</span>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</nav>

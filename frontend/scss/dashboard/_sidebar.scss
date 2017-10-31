@@ -1,0 +1,80 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: $sidebar-width;
+  height: 100vh;
+  z-index: 1040;
+
+  &__brand {
+    height: $navbar-height;
+    padding: 10px;
+    background-color: #4C5C68;
+
+    img {
+      height: 60px;
+      width: auto;
+    }
+  }
+
+  &__navigation {
+    height: 100%;
+    background-color: #4C5C68;
+  }
+
+  &__inner {
+    padding-top: 40px;    
+  }
+
+  &__list {
+    padding: 0;
+    margin: 0;
+  }
+
+  &__item span {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  &__item i {
+    vertical-align: middle;
+    padding-right: 5px;
+  }
+
+  &__item .dropdown-arrow {
+    padding-right: 0;
+    float: right;
+    transform: rotate(-90deg);
+    transition: all .4s;
+  }
+
+  &__item.active > .sidebar__link {
+    color: $white;
+    background-color: #546877;
+  }
+
+  &__link {
+    display: block;
+    color: rgba(255, 255, 255, .7);
+    padding: 15px;
+    font-size: 14px;
+    position: relative;
+    z-index: 10;
+
+    &:hover,
+    &:focus {
+      color: $white;
+      background-color: #42525E;
+      text-decoration: none;
+    }
+  }
+
+  &__item.open .submenu {
+    visibility: visible;
+    transform: translateX(0);
+  }
+
+  &__item.open .dropdown-arrow {
+    transform: rotate(90deg);
+  }
+}

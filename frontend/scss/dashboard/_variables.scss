@@ -1,0 +1,40 @@
+//== Typography
+$font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+$text-dark-primary: rgba(0, 0, 0, .87);
+$text-dark-secondary: rgba(0, 0, 0, .54);
+$text-dark-disabled: rgba(0, 0, 0, .38);
+$text-dark-divided: rgba(0, 0, 0, .12);
+
+$text-light-primary: rgba(255, 255, 255, 1);
+$text-light-secondary: rgba(255, 255, 255, .7);
+$text-light-disabled: rgba(255, 255, 255, .5);
+$text-light-divided: rgba(255, 255, 255, .12);
+
+//== Icons
+$icon-dark: rgba(0, 0, 0, 0.54);
+$icon-dark-inactive: rgba(0, 0, 0, 0.26);
+
+$icon-light: rgba(255, 255, 255, 1);
+$icon-light-inactive: rgba(255, 255, 255, 0.3);
+
+//== Colors
+$white: rgba(255, 255, 255, 1);
+$black: rgba(0, 0, 0, 1);
+
+$oscar-brand: rgba(67, 92, 104, 1);
+$oscar-brand-dark: rgba(66, 82, 94, 1);
+$oscar-brand-darker: rgba(51, 63, 72, 1);
+
+//== Navbar
+$navbar-height: 80px;
+
+//== Sidebar
+$sidebar-width: 200px;
+$sidebar-compact-width: 80px;
+
+//== Charts
+$bar-height: 300px;
+$bar-width: 8%;
+$graph-height: 330px;
+$graph-segments-height: 33px;
