@@ -41,7 +41,7 @@ class EmailBackend(ModelBackend):
         # We make a case-insensitive match when looking for emails.
         matching_users = User.objects.filter(email__iexact=clean_email)
         authenticated_users = [
-            user for user in matching_users if user.check_password(password)]
+            user for user in matching_users if (user.check_password(password) and self.user_can_authenticate(user))]
         if len(authenticated_users) == 1:
             # Happy path
             return authenticated_users[0]
@@ -62,3 +62,9 @@ class EmailBackend(ModelBackend):
     else:
         def authenticate(self, *args, **kwargs):
             return self._authenticate(*args, **kwargs)
+
+    if django.VERSION < (1, 10):
+        def user_can_authenticate(self, user):
+            # user_can_authenticate was introduced in Django 1.10. Prior to that
+            # inactive users could log in. That behaviour is retained for Django < 1.10.
+            return True

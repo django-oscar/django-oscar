@@ -24,3 +24,10 @@ class AuthBackendTestCase(TestCase):
     def test_authentication_method_signature_post_django_1_11(self):
         auth_result = self.backend.authenticate(None, 'foo@example.com', 'letmein')
         self.assertEqual(auth_result, self.user)
+
+    def test_inactive_users_cannot_authenticate(self):
+        self.user.is_active = False
+        self.user.save()
+
+        auth_result = self.backend.authenticate(None, 'foo@example.com', 'letmein')
+        self.assertIsNone(auth_result)
