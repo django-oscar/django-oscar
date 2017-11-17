@@ -184,6 +184,8 @@ The following are community-written extensions:
 * django-oscar-erp_
 * django-oscar-sofortueberweisung_ - Integration with SOFORT
 
+* django-oscar-support_ - Customer services and ticketing plugin for Oscar
+
 Let us know if you're writing a new one!
 
 .. _django-oscar-unicredit: https://bitbucket.org/marsim/django-oscar-unicredit/
@@ -194,6 +196,8 @@ Let us know if you're writing a new one!
 .. _django-oscar-przelewy24: https://github.com/kisiel/django-oscar-przelewy24
 .. _oscar-sagepay: https://github.com/udox/oscar-sagepay
 .. _django-oscar-sofortueberweisung: https://github.com/byteyard/django-oscar-sofortueberweisung
+
+.. _django-oscar-support: https://github.com/SalahAdDin/django-oscar-support
 
 Videos
 ------
