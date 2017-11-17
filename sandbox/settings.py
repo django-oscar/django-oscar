@@ -9,7 +9,6 @@ location = lambda x: os.path.join(
     os.path.dirname(os.path.realpath(__file__)), x)
 
 DEBUG = env.bool('DEBUG', default=True)
-SQL_DEBUG = DEBUG
 
 ALLOWED_HOSTS = [
     'latest.oscarcommerce.com',
@@ -346,11 +345,6 @@ OSCAR_SHOP_TAGLINE = 'Sandbox'
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = True
 
-# This is added to each template context by the core context processor.  It is
-# useful for test/stage/qa sites where you want to show the version of the site
-# in the page title.
-DISPLAY_VERSION = False
-
 
 # Order processing
 # ================
@@ -381,9 +375,9 @@ OSCAR_ORDER_STATUS_CASCADE = {
 # ========
 
 # We default to using CSS files, rather than the LESS files that generate them.
-# If you want to develop Oscar's CSS, then set USE_LESS=True to enable the
+# If you want to develop Oscar's CSS, then set OSCAR_USE_LESS=True to enable the
 # on-the-fly less processor.
-USE_LESS = False
+OSCAR_USE_LESS = False
 
 
 # Sentry
