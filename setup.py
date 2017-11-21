@@ -30,7 +30,7 @@ install_requires = [
     # Treebeard is used for categories
     'django-treebeard>=4.1.0',
     # Sorl is used as the default thumbnailer
-    'sorl-thumbnail>=12.4a1',
+    'sorl-thumbnail>=12.4.1,<12.5',
     # Babel is used for currency formatting
     'Babel>=1.0,<3.0',
     # For converting non-ASCII to ASCII when creating slugs
