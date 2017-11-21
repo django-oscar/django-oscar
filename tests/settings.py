@@ -129,11 +129,6 @@ DDF_DEFAULT_DATA_FIXTURE = 'tests.dynamic_fixtures.OscarDynamicDataFixtureClass'
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 LANGUAGE_CODE = 'en-gb'
 
-
-# temporary workaround for issue in sorl-thumbnail in Python 3
-# https://github.com/mariocesar/sorl-thumbnail/pull/254
-THUMBNAIL_DEBUG = False,
-
 OSCAR_INITIAL_ORDER_STATUS = 'A'
 OSCAR_ORDER_STATUS_PIPELINE = {'A': ('B',), 'B': ()}
 OSCAR_INITIAL_LINE_STATUS = 'a'
