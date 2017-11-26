@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 
 from oscar.core.loading import get_model
 

@@ -1,5 +1,5 @@
 from django.contrib.messages.constants import SUCCESS, WARNING
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.test import TestCase
 
 from oscar.apps.dashboard.ranges import forms

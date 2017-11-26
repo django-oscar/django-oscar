@@ -3,7 +3,7 @@ from decimal import Decimal as D
 from django import http
 from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core import prices

@@ -3,8 +3,8 @@ import logging
 from django import http
 from django.contrib import messages
 from django.contrib.auth import login
-from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import redirect
+from django.urls import reverse, reverse_lazy
 from django.utils import six
 from django.utils.http import urlquote
 from django.utils.translation import ugettext as _

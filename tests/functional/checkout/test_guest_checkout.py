@@ -2,8 +2,8 @@ import sys
 from importlib import import_module
 
 from django.test.utils import override_settings
-from django.core.urlresolvers import clear_url_caches, reverse
 from django.conf import settings
+from django.urls import clear_url_caches, reverse
 from django.utils.http import urlquote
 from django.utils.six.moves import http_client
 import mock

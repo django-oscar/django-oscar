@@ -30,13 +30,13 @@ class TestPriorityOffers(TestCase):
             start_datetime=timezone.now(),
             end_datetime=timezone.now() + datetime.timedelta(days=12))
 
-        voucher.offers = [
+        voucher.offers.set([
             factories.create_offer(name="A", priority=0),
             factories.create_offer(name="B", priority=7),
             factories.create_offer(name="C", priority=5),
             factories.create_offer(name="D", priority=7),
             factories.create_offer(name="E", priority=1),
-        ]
+        ])
 
         basket = factories.create_basket()
         user = mock.Mock()

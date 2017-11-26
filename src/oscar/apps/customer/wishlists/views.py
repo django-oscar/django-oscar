@@ -2,9 +2,9 @@
 from django.contrib import messages
 from django.core.exceptions import (
     MultipleObjectsReturned, ObjectDoesNotExist, PermissionDenied)
-from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import (
     CreateView, DeleteView, FormView, ListView, UpdateView, View)

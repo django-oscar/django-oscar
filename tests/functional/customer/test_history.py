@@ -1,6 +1,6 @@
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.http import HttpRequest
+from django.urls import reverse
 
 from oscar.test.factories import create_product
 from oscar.core.compat import get_user_model
