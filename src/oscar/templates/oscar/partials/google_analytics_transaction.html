@@ -8,21 +8,17 @@
       "value": '{{ order.total_incl_tax|unlocalize|escapejs }}',
       "currency": '{{ order.currency|escapejs }}',
       "tax": '{{ order.total_tax|unlocalize|escapejs }}',
-      "shipping": '{{ order.shipping_incl_tax|unlocalize|escapejs }}'
+      "shipping": '{{ order.shipping_incl_tax|unlocalize|escapejs }}',
+      items: [
+          {% for line in order.lines.all %}
+          {
+            'id': '{{ line.partner_sku|escapejs }}',
+            'name': '{{ line.title|escapejs }}',
+            'category': '{{ line.category|default:"Uncategorised"|escapejs }}',
+            'price': '{{ line.unit_price_incl_tax|unlocalize|escapejs }}',
+            'quantity': '{{ line.quantity|escapejs }}'
+         }{% if not forloop.last %},{% endif %}
+          {% endfor %}
+      ]
     });
-
-    {% for line in order.lines.all %}
-      gtag('event', 'add_to_cart', {
-        "items": [
-            {
-              'id': '{{ order.number|escapejs }}',
-              'name': '{{ line.title|escapejs }}',
-              'sku': '{{ line.partner_sku|escapejs }}',
-              'category': '{{ line.category|default:"Uncategorised"|escapejs }}',
-              'price': '{{ line.unit_price_incl_tax|unlocalize|escapejs }}',
-              'quantity': '{{ line.quantity|escapejs }}'
-            }
-        ]
-      });
-    {% endfor %}
 {% endblock %}
