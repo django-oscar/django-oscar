@@ -1,27 +1,18 @@
 {% extends "partials/google_analytics.html" %}
-{% load l10n %}
+{% load l10n google_analytics_tags %}
 
 {% block extratracking %}
-    ga('require', 'ecommerce', 'ecommerce.js');
-    ga('ecommerce:addTransaction', {
-      'id': '{{ order.number|escapejs }}',
-      'affiliation': '{{ shop_name|escapejs }}',
-      'revenue': '{{ order.total_incl_tax|unlocalize|escapejs }}',
-      'shipping': '{{ order.shipping_incl_tax|unlocalize|escapejs }}',
-      'tax': '{{ order.total_tax|unlocalize|escapejs }}',
-      'currency': '{{ order.currency|escapejs }}'
+    gtag('event', 'purchase', {
+      "transaction_id": '{{ order.number|escapejs }}',
+      "affiliation": '{{ shop_name|escapejs }}',
+      "value": '{{ order.total_incl_tax|unlocalize|escapejs }}',
+      "currency": '{{ order.currency|escapejs }}',
+      "tax": '{{ order.total_tax|unlocalize|escapejs }}',
+      "shipping": '{{ order.shipping_incl_tax|unlocalize|escapejs }}',
+      "items": '{{ order|make_gtag_item_list|escapejs }}'
     });
 
-    {% for line in order.lines.all %}
-    ga('ecommerce:addItem', {
-      'id': '{{ order.number|escapejs }}',
-      'name': '{{ line.title|escapejs }}',
-      'sku': '{{ line.partner_sku|escapejs }}',
-      'category': '{{ line.category|default:"Uncategorised"|escapejs }}',
-      'price': '{{ line.unit_price_incl_tax|unlocalize|escapejs }}',
-      'quantity': '{{ line.quantity|escapejs }}'
+    gtag('event', 'add_to_cart', {
+      "items": '{{ order|make_gtag_item_list|escapejs }}'
     });
-    {% endfor %}
-    ga('ecommerce:send');
 {% endblock %}
-
