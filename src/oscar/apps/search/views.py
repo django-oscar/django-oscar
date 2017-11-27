@@ -1,8 +1,7 @@
 from haystack import views
 
+from oscar.apps.search.signals import user_search
 from oscar.core.loading import get_class, get_model
-
-from . import signals
 
 Product = get_model('catalogue', 'Product')
 FacetMunger = get_class('search.facets', 'FacetMunger')
@@ -20,7 +19,7 @@ class FacetedSearchView(views.FacetedSearchView):
 
     # Haystack uses a different class attribute to CBVs
     template = "search/results.html"
-    search_signal = signals.user_search
+    search_signal = user_search
 
     def __call__(self, request):
         response = super(FacetedSearchView, self).__call__(request)

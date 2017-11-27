@@ -7,7 +7,6 @@ from django.core.urlresolvers import NoReverseMatch, resolve, reverse
 from oscar.core.loading import AppNotFoundError, get_class
 from oscar.views.decorators import check_permissions
 
-
 logger = logging.getLogger('oscar.dashboard')
 
 

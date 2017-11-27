@@ -12,7 +12,6 @@ import sys
 
 from setuptools import find_packages, setup
 
-
 PROJECT_DIR = os.path.dirname(__file__)
 PY3 = sys.version_info >= (3, 0)
 

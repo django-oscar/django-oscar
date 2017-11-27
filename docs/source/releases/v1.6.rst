@@ -36,6 +36,9 @@ Removal of deprecated features
 
 Minor changes
 ~~~~~~~~~~~~~
+ - Majority of the Oscar imports now using dynamic loading, instead of
+   direct importing for better extensibility and customizability, except
+   signals.
 
 .. _incompatible_in_1.6:
 
@@ -62,6 +65,8 @@ Backwards incompatible changes in Oscar 1.6
    are now logged as an exception (previously they were silently ignored).
    The offending menu item will be skipped during menu rendering.
    In Oscar 1.8 the exception will be raised without being intercepted.
+
+ - All signals are now loaded directly.
 
 Dependency changes
 ------------------
