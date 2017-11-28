@@ -37,7 +37,7 @@ class RestrictionsForm(forms.ModelForm):
         fields = ('start_datetime', 'end_datetime',
                   'max_basket_applications', 'max_user_applications',
                   'max_global_applications', 'max_discount',
-                  'exclusive')
+                  'priority', 'exclusive')
 
     def clean(self):
         cleaned_data = super(RestrictionsForm, self).clean()

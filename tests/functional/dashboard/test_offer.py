@@ -121,8 +121,8 @@ class TestAnAdmin(testcases.WebTestCase):
         form = detail_page.forms['status_form']
         form.submit('suspend')
 
-        reloaded_offer = models.ConditionalOffer.objects.get(pk=offer.pk)
-        self.assertTrue(reloaded_offer.is_suspended)
+        offer.refresh_from_db()
+        self.assertTrue(offer.is_suspended)
 
     def test_can_reinstate_a_suspended_offer(self):
         # Create a suspended offer
@@ -135,5 +135,14 @@ class TestAnAdmin(testcases.WebTestCase):
         form = detail_page.forms['status_form']
         form.submit('unsuspend')
 
-        reloaded_offer = models.ConditionalOffer.objects.get(pk=offer.pk)
-        self.assertFalse(reloaded_offer.is_suspended)
+        offer.refresh_from_db()
+        self.assertFalse(offer.is_suspended)
+
+    def test_can_change_offer_priority(self):
+        offer = factories.create_offer()
+        restrictions_page = self.get(reverse('dashboard:offer-restrictions', kwargs={'pk': offer.pk}))
+        restrictions_page.form['priority'] = '12'
+        restrictions_page.form.submit()
+        offer.refresh_from_db()
+
+        self.assertEqual(offer.priority, 12)
