@@ -46,6 +46,7 @@
                     <th>{% anchor 'name' _('Offer name') %}</th>
                     <th>{% anchor 'start_date' _('Start date') %}</th>
                     <th>{% anchor 'end_date' _('End date') %}</th>
+                    <th>{% trans "Priority" %}</th>
                     <th>{% trans "Incentive" %}</th>
                     <th>{% trans "Condition" %}</th>
                     <th>{% trans "Is available?" %}</th>
@@ -59,6 +60,7 @@
                         <td><a href="{% url 'dashboard:offer-detail' pk=offer.pk %}">{{ offer.name }}</a></td>
                         <td>{{ offer.start_date|default:"-" }}</td>
                         <td>{{ offer.end_date|default:"-" }}</td>
+                        <td>{{ offer.priority }}</td>
                         <td>{{ offer.benefit.description|safe }}</td>
                         <td>{{ offer.condition.description|safe }}</td>
                         <td>{% if offer.is_available %}
