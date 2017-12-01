@@ -7,8 +7,8 @@ from django.utils.translation import pgettext_lazy
 
 from oscar.apps.address.forms import AbstractAddressForm
 from oscar.core.loading import get_model
+from oscar.forms.mixins import PhoneNumberMixin
 from oscar.forms.widgets import DatePickerInput
-from oscar.views.generic import PhoneNumberMixin
 
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')

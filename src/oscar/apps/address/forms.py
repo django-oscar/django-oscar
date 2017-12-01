@@ -2,7 +2,7 @@ from django import forms
 from django.conf import settings
 
 from oscar.core.loading import get_model
-from oscar.views.generic import PhoneNumberMixin
+from oscar.forms.mixins import PhoneNumberMixin
 
 UserAddress = get_model('address', 'useraddress')
 

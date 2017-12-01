@@ -32,7 +32,6 @@ def get_address_fields():
 
     form = ShippingAddressForm(data)
     form.is_valid()
-    form.clean()
     address_fields = dict(
         (k, v) for (k, v) in form.instance.__dict__.items()
         if not k.startswith('_'))
