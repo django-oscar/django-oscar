@@ -29,6 +29,7 @@ install_requires = [
     'django-treebeard>=4.3.0',
     # Sorl is used as the default thumbnailer
     'sorl-thumbnail>=12.4.1,<12.5',
+    'easy-thumbnails==2.5',
     # Babel is used for currency formatting
     'Babel>=1.0,<3.0',
     # For manipulating search URLs

@@ -244,3 +244,5 @@ OSCAR_SEARCH_FACETS = {
 }
 
 OSCAR_PRODUCT_SEARCH_HANDLER = None
+
+OSCAR_THUMBNAILER = 'oscar.core.thumbnails.SorlThumbnail'
