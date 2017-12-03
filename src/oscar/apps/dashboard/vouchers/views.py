@@ -315,7 +315,7 @@ class VoucherSetUpdateView(generic.UpdateView):
                 value=form.cleaned_data['benefit_value']
             )
             name = form.cleaned_data['name']
-            offer, created = ConditionalOffer.objects.update_or_create(
+            offer, __ = ConditionalOffer.objects.update_or_create(
                 name=_("Offer for voucher '%s'") % name,
                 defaults=dict(
                     offer_type=ConditionalOffer.VOUCHER,
@@ -354,9 +354,11 @@ class VoucherSetDetailView(generic.ListView):
     description_template = _("%(main_filter)s %(name_filter)s %(code_filter)s")
     paginate_by = 50
 
-    def dispatch(self, request, pk):
+    def dispatch(self, request, *args, **kwargs):
+        pk = args[0]
         self.voucher_set = get_object_or_404(VoucherSet, pk=pk)
-        return super(VoucherSetDetailView, self).dispatch(request, pk)
+        return super(VoucherSetDetailView, self).dispatch(
+            request, *args, **kwargs)
 
     def get_queryset(self):
         qs = (
