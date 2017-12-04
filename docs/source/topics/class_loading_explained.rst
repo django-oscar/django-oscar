@@ -6,7 +6,7 @@ Dynamic class loading is the foundation for making Oscar extensively
 customisable. It is hence worth understanding how it works, because most
 customisations depend on it.
 
-It is achieved by :meth:`oscar.core.loading.get_classes` and it's
+It is achieved by :meth:`oscar.core.loading.get_classes` and its
 single-class cousin :meth:`~oscar.core.loading.get_class`.  Wherever feasible,
 Oscar's codebase uses ``get_classes`` instead of a regular import statement::
 
