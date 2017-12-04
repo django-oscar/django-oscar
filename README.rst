@@ -157,6 +157,8 @@ The following extensions are stable and ready for use:
 
 * django-oscar-sagepay-direct_ - Integration with "DIRECT" part of Sagepay's API
 
+* django_oscar_docdata_ - Integration with Docdata_ payment gateway.
+
 .. _django-oscar-api: https://github.com/django-oscar/django-oscar-api
 .. _django-oscar-adyen: https://github.com/django-oscar/django-oscar-adyen
 .. _django-oscar-datacash: https://github.com/django-oscar/django-oscar-datacash
@@ -173,6 +175,8 @@ The following extensions are stable and ready for use:
 .. _django-oscar-stores: https://github.com/django-oscar/django-oscar-stores
 .. _django-oscar-sagepay-direct: https://github.com/django-oscar/django-oscar-sagepay-direct
 .. _eWay: https://www.eway.com.au
+.. _django_oscar_docdata: https://github.com/django-oscar/django-oscar-docdata
+.. _Docdata: https://www.docdatapayments.com/
 
 The following are community-written extensions:
 
@@ -186,6 +190,30 @@ The following are community-written extensions:
 
 * django-oscar-support_ - Customer services and ticketing plugin for Oscar
 
+* django-oscar-api-checkout_ - Oscar API Checkout is a layer on top of
+  django-oscar and django-oscar-api, adding support for more complex and
+  multiple payment options during an API checkout.
+
+* django-oscar-bundles_ - Oscar Bundles adds multi-product bundles to
+  django-oscar.
+
+* django-oscar-bluelight_ - `Bluelight Specials`_ is a layer on-top of
+  django-oscar that adds support for more complex offers and vouchers,
+  including conjunctive and disjunctive compound conditions.
+
+* django-oscar-cch_ - Oscar CCH is a plugin for django-oscar adding support
+  for calculating taxes using the Wolters Kluwer `CCH Sales Tax Office`_ SOAP
+  API.
+
+* django-oscar-cybersource_ - Oscar CyberSource is a plugin for Oscar API
+  Checkout that makes it possible to use
+  `CyberSource Secure Acceptance Silent Order Post`_ as an order payment
+  method.
+
+* django-oscar-wfrs_ - Oscar WFRS is a plugin for django-oscar-api-checkout_
+  that makes it possible to use `Wells Fargo Retail Services`_ as an order
+  payment method.
+
 Let us know if you're writing a new one!
 
 .. _django-oscar-unicredit: https://bitbucket.org/marsim/django-oscar-unicredit/
@@ -198,6 +226,16 @@ Let us know if you're writing a new one!
 .. _django-oscar-sofortueberweisung: https://github.com/byteyard/django-oscar-sofortueberweisung
 
 .. _django-oscar-support: https://github.com/SalahAdDin/django-oscar-support
+.. _django-oscar-api-checkout: https://github.com/thelabnyc/django-oscar-api-checkout
+.. _django-oscar-bundles: https://github.com/thelabnyc/django-oscar-bundles
+.. _django-oscar-bluelight: https://github.com/thelabnyc/django-oscar-bluelight
+.. _`Bluelight Specials`: https://en.wiktionary.org/wiki/blue-light_special
+.. _django-oscar-cch: https://github.com/thelabnyc/django-oscar-cch
+.. _`CCH Sales Tax Office`: http://www.salestax.com/solutions/calculation/cch-salestax-office/
+.. _django-oscar-cybersource: https://github.com/thelabnyc/django-oscar-cybersource
+.. _`CyberSource Secure Acceptance Silent Order Post`: https://www.cybersource.com/products/payment_security/secure_acceptance_silent_order_post/
+.. _django-oscar-wfrs: https://github.com/thelabnyc/django-oscar-wfrs
+.. _`Wells Fargo Retail Services`: https://retailservices.wellsfargo.com/
 
 Videos
 ------
