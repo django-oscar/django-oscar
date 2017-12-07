@@ -32,7 +32,11 @@ A benefit class must be a proxy class and have the following methods::
 
         class Meta:
             proxy = True
-        
+
+        @property
+        def name(self):
+            return "My Custom Benefit"
+
         @property
         def description(self):
             """
@@ -86,7 +90,7 @@ Here's an example of a post-order action benefit::
         class Meta:
             proxy = True
         
-        description = "Changes customer's name"
+        name = description = "Changes customer's name"
 
         def apply(self, basket, condition, offer):
             # We need to mark all items from the matched condition as 'consumed'
