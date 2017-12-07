@@ -27,6 +27,57 @@ BrowsableRangeManager = get_class('offer.managers', 'BrowsableRangeManager')
 
 
 @python_2_unicode_compatible
+class BaseOfferMixin(models.Model):
+    class Meta:
+        abstract = True
+
+    def proxy(self):
+        """
+        Return the proxy model
+        """
+        klassmap = self.proxy_map
+        # Short-circuit logic if current class is already a proxy class.
+        if self.__class__ in klassmap.values():
+            return self
+
+        field_dict = dict(self.__dict__)
+        for field in list(field_dict.keys()):
+            if field.startswith('_'):
+                del field_dict[field]
+
+        if self.proxy_class:
+            klass = utils.load_proxy(self.proxy_class)
+            # Short-circuit again.
+            if self.__class__ == klass:
+                return self
+            return klass(**field_dict)
+        if self.type in klassmap:
+            return klassmap[self.type](**field_dict)
+        raise RuntimeError("Unrecognised %s type (%s)" % (self.__class__.__name__.lower(), self.type))
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def name(self):
+        """
+        A plaintext description of the benefit/condition. Every proxy class
+        has to implement it.
+
+        This is used in the dropdowns within the offer dashboard.
+        """
+        return self.proxy().name
+
+    @property
+    def description(self):
+        """
+        A description of the benefit/condition.
+        Defaults to the name. May contain HTML.
+        """
+        return self.name
+
+
+@python_2_unicode_compatible
 class AbstractConditionalOffer(models.Model):
     """
     A conditional offer (eg buy 1, get 10% off)
@@ -397,8 +448,7 @@ class AbstractConditionalOffer(models.Model):
             structure=Product.CHILD)
 
 
-@python_2_unicode_compatible
-class AbstractBenefit(models.Model):
+class AbstractBenefit(BaseOfferMixin, models.Model):
     range = models.ForeignKey(
         'offer.Range',
         blank=True,
@@ -468,50 +518,6 @@ class AbstractBenefit(models.Model):
             self.SHIPPING_PERCENTAGE: get_class(
                 'offer.benefits', 'ShippingPercentageDiscountBenefit')
         }
-
-    def proxy(self):
-        klassmap = self.proxy_map
-
-        # Short-circuit logic if current class is already a proxy class.
-        if self.__class__ in klassmap.values():
-            return self
-
-        field_dict = dict(self.__dict__)
-        for field in list(field_dict.keys()):
-            if field.startswith('_'):
-                del field_dict[field]
-
-        if self.proxy_class:
-            klass = utils.load_proxy(self.proxy_class)
-            # Short-circuit again.
-            if self.__class__ == klass:
-                return self
-            return klass(**field_dict)
-
-        if self.type in klassmap:
-            return klassmap[self.type](**field_dict)
-        raise RuntimeError("Unrecognised benefit type (%s)" % self.type)
-
-    def __str__(self):
-        return self.name
-
-    @property
-    def name(self):
-        """
-        A plaintext description of the benefit. Every proxy class has to
-        implement it.
-
-        This is used in the dropdowns within the offer dashboard.
-        """
-        return self.proxy().name
-
-    @property
-    def description(self):
-        """
-        A description of the benefit.
-        Defaults to the name. May contain HTML.
-        """
-        return self.name
 
     def apply(self, basket, condition, offer):
         return results.ZERO_DISCOUNT
@@ -667,8 +673,7 @@ class AbstractBenefit(models.Model):
         return D('0.00')
 
 
-@python_2_unicode_compatible
-class AbstractCondition(models.Model):
+class AbstractCondition(BaseOfferMixin, models.Model):
     """
     A condition for an offer to be applied. You can either specify a custom
     proxy class, or need to specify a type, range and value.
@@ -711,51 +716,6 @@ class AbstractCondition(models.Model):
             self.COVERAGE: get_class(
                 'offer.conditions', 'CoverageCondition'),
         }
-
-    def proxy(self):
-        """
-        Return the proxy model
-        """
-        klassmap = self.proxy_map
-        # Short-circuit logic if current class is already a proxy class.
-        if self.__class__ in klassmap.values():
-            return self
-
-        field_dict = dict(self.__dict__)
-        for field in list(field_dict.keys()):
-            if field.startswith('_'):
-                del field_dict[field]
-
-        if self.proxy_class:
-            klass = utils.load_proxy(self.proxy_class)
-            # Short-circuit again.
-            if self.__class__ == klass:
-                return self
-            return klass(**field_dict)
-        if self.type in klassmap:
-            return klassmap[self.type](**field_dict)
-        raise RuntimeError("Unrecognised condition type (%s)" % self.type)
-
-    def __str__(self):
-        return self.name
-
-    @property
-    def name(self):
-        """
-        A plaintext description of the condition. Every proxy class has to
-        implement it.
-
-        This is used in the dropdowns within the offer dashboard.
-        """
-        return self.proxy().name
-
-    @property
-    def description(self):
-        """
-        A description of the condition.
-        Defaults to the name. May contain HTML.
-        """
-        return self.name
 
     def consume_items(self, offer, basket, affected_lines):
         pass
