@@ -1,18 +1,29 @@
 {% extends "customer/emails/base.html" %}
 {% load i18n %}
 
-{% block body %}{% autoescape off %}
-<p>
-    {% blocktrans with email=new_email %}
-    You're receiving this email because your email address has been changed to <strong>{{ email }}</strong>.
-    {% endblocktrans %}
-</p>
+{% block tbody %}
+<tr>
+    <td class="content-block">
+         {% blocktrans with email=new_email %}You're receiving this email because your email address has been changed to <strong>{{ email }}</strong>.{% endblocktrans %}
+    </td>
+</tr>
 
-<p>
-{% trans "If it wasn't you who changed it, please reset your password immediately and correct your email address:" %}
-http://{{ site.domain }}{{ reset_url }}
-</p>
+<tr>
+    <td class="content-block">
+        {% trans "If it wasn't you who changed it, please reset your password immediately and correct your email address:" %}
+    </td>
+</tr>
 
-<p>{% trans "If it was you who changed the email address, you can ignore this email." %}</p>
+<tr>
+    <td class="content-block">
+        <a href="http://{{ site.domain }}{{ reset_url }}" class="btn-primary">Reset password</a>
+    </td>
+</tr>
 
-{% endautoescape %}{% endblock %}
+<tr>
+    <td class="content-block">
+        {% trans "If it was you who changed the email address, you can ignore this email." %}
+    </td>
+</tr>
+
+{% endblock %}
