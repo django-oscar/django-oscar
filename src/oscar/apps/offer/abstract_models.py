@@ -66,7 +66,10 @@ class BaseOfferMixin(models.Model):
 
         This is used in the dropdowns within the offer dashboard.
         """
-        return self.proxy().name
+        proxy_instance = self.proxy()
+        if self.proxy_class and self == proxy_instance:
+            raise AssertionError('Name property is not defined on proxy class.')
+        return proxy_instance.name
 
     @property
     def description(self):
