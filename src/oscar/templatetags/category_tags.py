@@ -1,15 +1,12 @@
 from django import template
 
-from oscar.core.compat import assignment_tag
 from oscar.core.loading import get_model
 
 register = template.Library()
 Category = get_model('catalogue', 'category')
 
-assignment_tag = assignment_tag(register)
 
-
-@assignment_tag(name="category_tree")
+@register.simple_tag(name="category_tree")
 def get_annotated_list(depth=None, parent=None):
     """
     Gets an annotated list from a tree branch.
