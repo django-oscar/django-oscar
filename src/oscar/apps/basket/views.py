@@ -15,7 +15,6 @@ from extra_views import ModelFormSetView
 from oscar.apps.basket.signals import (
     basket_addition, voucher_addition, voucher_removal)
 from oscar.core import ajax
-from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import redirect_to_referrer, safe_referrer
 
@@ -55,9 +54,8 @@ class BasketView(ModelFormSetView):
             request=self.request)
 
     def get_default_shipping_address(self):
-        if user_is_authenticated(self.request.user):
+        if self.request.user.is_authenticated:
             return self.request.user.addresses.filter(is_default_for_shipping=True).first()
-        return
 
     def get_default_shipping_method(self, basket):
         return Repository().get_default_shipping_method(
@@ -121,7 +119,7 @@ class BasketView(ModelFormSetView):
         context['upsell_messages'] = self.get_upsell_messages(
             self.request.basket)
 
-        if user_is_authenticated(self.request.user):
+        if self.request.user.is_authenticated:
             try:
                 saved_basket = self.basket_model.saved.get(
                     owner=self.request.user)
@@ -156,7 +154,7 @@ class BasketView(ModelFormSetView):
             if (hasattr(form, 'cleaned_data') and
                     form.cleaned_data['save_for_later']):
                 line = form.instance
-                if user_is_authenticated(self.request.user):
+                if self.request.user.is_authenticated:
                     self.move_line_to_saved_basket(line)
 
                     msg = render_to_string(

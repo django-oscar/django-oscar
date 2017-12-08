@@ -7,7 +7,6 @@ from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
-from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_model
 
 
@@ -76,7 +75,7 @@ class Dispatcher(object):
         Create Email instance in database for logging purposes.
         """
         # Is user is signed in, record the event for audit
-        if email and user_is_authenticated(user):
+        if email and user.is_authenticated:
             return Email._default_manager.create(user=user,
                                                  email=user.email,
                                                  subject=email.subject,

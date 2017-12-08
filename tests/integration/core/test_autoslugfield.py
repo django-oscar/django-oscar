@@ -24,9 +24,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
-from unittest import skipIf
-
-from django import VERSION as DJANGO_VERSION
 from django.db import models
 from django.test import TestCase
 from django.test.utils import override_settings
@@ -68,16 +65,12 @@ class AutoSlugFieldTest(TestCase):
         m.save()
         self.assertEqual(m.slug, 'foo-2012')
 
-    @skipIf(DJANGO_VERSION < (1, 9),
-            "unicode slugs not supported by Django<1.9")
     def test_auto_create_unicode_slug(self):
         with override_settings(OSCAR_SLUG_ALLOW_UNICODE=True):
             m = SluggedTestModel(title=u'Château Margaux 1960')
             m.save()
             self.assertEqual(m.slug, u'château-margaux-1960')
 
-    @skipIf(DJANGO_VERSION < (1, 9),
-            "unicode slugs not supported by Django<1.9")
     def test_auto_create_next_unicode_slug(self):
         with override_settings(OSCAR_SLUG_ALLOW_UNICODE=True):
             m1 = SluggedTestModel(title=u'Château Margaux 1960')
@@ -88,8 +81,6 @@ class AutoSlugFieldTest(TestCase):
 
             self.assertEqual(m2.slug, u'château-margaux-1960-2')
 
-    @skipIf(DJANGO_VERSION < (1, 9),
-            "unicode slugs not supported by Django<1.9")
     def test_switch_to_unicode_slug(self):
         m = SluggedTestModel(title=u'Château Margaux 1960')
         m.save()
@@ -99,8 +90,6 @@ class AutoSlugFieldTest(TestCase):
             m.save()
             self.assertEqual(m.slug, u'château-margaux-1960')
 
-    @skipIf(DJANGO_VERSION < (1, 9),
-            "unicode slugs not supported by Django<1.9")
     def test_autoslugfield_allow_unicode_kwargs_precedence(self):
         from oscar.models.fields import AutoSlugField
         with override_settings(OSCAR_SLUG_ALLOW_UNICODE=True):

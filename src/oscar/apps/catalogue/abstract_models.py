@@ -22,7 +22,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import get_language, pgettext_lazy
 from treebeard.mp_tree import MP_Node
 
-from oscar.core.compat import user_is_anonymous, user_is_authenticated
 from oscar.core.loading import get_class, get_classes, get_model
 from oscar.core.utils import slugify
 from oscar.core.validators import non_python_keyword
@@ -624,7 +623,7 @@ class AbstractProduct(models.Model):
         return rating
 
     def has_review_by(self, user):
-        if user_is_anonymous(user):
+        if user.is_anonymous:
             return False
         return self.reviews.filter(user=user).exists()
 
@@ -638,7 +637,7 @@ class AbstractProduct(models.Model):
         Override this if you want to alter the default behaviour; e.g. enforce
         that a user purchased the product to be allowed to leave a review.
         """
-        if user_is_authenticated(user) or settings.OSCAR_ALLOW_ANON_REVIEWS:
+        if user.is_authenticated or settings.OSCAR_ALLOW_ANON_REVIEWS:
             return not self.has_review_by(user)
         else:
             return False

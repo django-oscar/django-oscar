@@ -73,34 +73,6 @@ def existing_user_fields(fields):
     return [field for field in fields if field in user_field_names]
 
 
-# Supprt new Django 1.10 middleware
-if django.VERSION >= (1, 10):
-    from django.utils.deprecation import MiddlewareMixin
-else:
-    MiddlewareMixin = object
-
-
-def user_is_authenticated(user):
-    if django.VERSION >= (1, 10):
-        return user.is_authenticated
-    else:
-        return user.is_authenticated()
-
-
-def user_is_anonymous(user):
-    if django.VERSION >= (1, 10):
-        return user.is_anonymous
-    else:
-        return user.is_anonymous()
-
-
-def assignment_tag(register):
-    if django.VERSION >= (1, 9):
-        return register.simple_tag
-    else:
-        return register.assignment_tag
-
-
 # Python3 compatibility layer
 
 """

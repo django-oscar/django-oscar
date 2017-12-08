@@ -7,7 +7,6 @@ from django.http import HttpResponseRedirect
 from django.urls import NoReverseMatch, reverse
 
 from oscar.apps.checkout.signals import post_checkout
-from oscar.core.compat import user_is_authenticated
 from oscar.core.loading import get_class, get_model
 
 OrderCreator = get_class('order.utils', 'OrderCreator')
@@ -168,7 +167,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         if not shipping_address:
             return None
         shipping_address.save()
-        if user_is_authenticated(user):
+        if user.is_authenticated:
             self.update_address_book(user, shipping_address)
         return shipping_address
 
@@ -197,7 +196,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         if not billing_address:
             return None
         billing_address.save()
-        if user_is_authenticated(user):
+        if user.is_authenticated:
             self.update_address_book(user, billing_address)
         return billing_address
 
@@ -301,7 +300,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             'lines': order.lines.all()
         }
 
-        if not user_is_authenticated(self.request.user):
+        if not self.request.user.is_authenticated:
             # Attempt to add the anon order status URL to the email template
             # ctx.
             try:
