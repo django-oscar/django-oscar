@@ -12,7 +12,7 @@ ALLOWED_HOSTS = ['test', '.oscarcommerce.com']
 DATABASES = {
     'default': {
         'ENGINE': os.environ.get('DATABASE_ENGINE',
-                                 'django.db.backends.postgresql_psycopg2'),
+                                 'django.db.backends.postgresql'),
         'NAME': os.environ.get('DATABASE_NAME', 'oscar'),
     }
 }
