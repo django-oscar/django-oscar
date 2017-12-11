@@ -13,7 +13,7 @@ from django.utils.translation import pgettext_lazy
 
 from oscar.apps.customer.utils import get_password_reset_url, normalise_email
 from oscar.core.compat import (
-    existing_user_fields, get_user_model, user_is_authenticated)
+    existing_user_fields, get_user_model)
 from oscar.core.loading import get_class, get_model, get_profile_class
 from oscar.core.validators import validate_password
 from oscar.forms import widgets
@@ -380,13 +380,13 @@ class ProductAlertForm(forms.ModelForm):
         super(ProductAlertForm, self).__init__(*args, **kwargs)
 
         # Only show email field to unauthenticated users
-        if user and user_is_authenticated(user):
+        if user and user.is_authenticated:
             self.fields['email'].widget = forms.HiddenInput()
             self.fields['email'].required = False
 
     def save(self, commit=True):
         alert = super(ProductAlertForm, self).save(commit=False)
-        if user_is_authenticated(self.user):
+        if self.user.is_authenticated:
             alert.user = self.user
         alert.product = self.product
         if commit:
@@ -416,7 +416,7 @@ class ProductAlertForm(forms.ModelForm):
                     "%s has been sent a confirmation email for another product "
                     "alert on this site. Please confirm or cancel that request "
                     "before signing up for more alerts.") % email)
-        elif user_is_authenticated(self.user):
+        elif self.user.is_authenticated:
             try:
                 ProductAlert.objects.get(product=self.product,
                                          user=self.user,

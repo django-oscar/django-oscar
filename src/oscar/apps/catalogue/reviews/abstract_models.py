@@ -9,7 +9,7 @@ from django.utils.translation import pgettext_lazy
 from oscar.apps.catalogue.reviews.managers import ProductReviewQuerySet
 from oscar.apps.catalogue.reviews.utils import get_default_review_status
 from oscar.core import validators
-from oscar.core.compat import AUTH_USER_MODEL, user_is_authenticated
+from oscar.core.compat import AUTH_USER_MODEL
 
 
 @python_2_unicode_compatible
@@ -168,7 +168,7 @@ class AbstractProductReview(models.Model):
         Test whether the passed user is allowed to vote on this
         review
         """
-        if not user_is_authenticated(user):
+        if not user.is_authenticated:
             return False, _(u"Only signed in users can vote")
         vote = self.votes.model(review=self, user=user, delta=1)
         try:
