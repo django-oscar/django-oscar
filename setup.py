@@ -27,7 +27,7 @@ install_requires = [
     # Search support
     'django-haystack>=2.5.0,<3.0.0',
     # Treebeard is used for categories
-    'django-treebeard>=4.1.0',
+    'django-treebeard>=4.2.0',
     # Sorl is used as the default thumbnailer
     'sorl-thumbnail>=12.4.1,<12.5',
     # Babel is used for currency formatting
