@@ -225,6 +225,8 @@ class TestAStaffUser(WebTestCase):
             'dashboard:catalogue-product-create-child',
             kwargs={'parent_pk': parent_product.pk})
         form = self.get(url).form
+        form['title'] = '{} - variant 1'.format(parent_product.title)
+        form['upc'] = '{}-1'.format(parent_product.upc)
         form.submit()
 
         self.assertEqual(Product.objects.count(), 2)
