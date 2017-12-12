@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
 from django.core.signing import BadSignature, Signer
-from django.utils.deprecation import MiddlewareMixin
 from django.utils.functional import SimpleLazyObject, empty
 from django.utils.translation import ugettext_lazy as _
 
@@ -14,11 +13,12 @@ Selector = get_class('partner.strategy', 'Selector')
 selector = Selector()
 
 
-class BasketMiddleware(MiddlewareMixin):
+class BasketMiddleware:
 
-    # Middleware interface methods
+    def __init__(self, get_response):
+        self.get_response = get_response
 
-    def process_request(self, request):
+    def __call__(self, request):
         # Keep track of cookies that need to be deleted (which can only be done
         # when we're processing the response instance).
         request.cookies_to_delete = []
@@ -57,6 +57,9 @@ class BasketMiddleware(MiddlewareMixin):
         # when the attribute is accessed.
         request.basket = SimpleLazyObject(load_full_basket)
         request.basket_hash = SimpleLazyObject(load_basket_hash)
+
+        response = self.get_response(request)
+        return self.process_response(request, response)
 
     def process_response(self, request, response):
         # Delete any surplus cookies
