@@ -1,7 +1,6 @@
 import copy
 import re
 
-import django
 from django import forms
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.forms.utils import flatatt
@@ -39,10 +38,7 @@ class ImageInput(FileInput):
             'type': self.input_type,
             'name': name,
         }
-        if django.VERSION < (1, 11):
-            final_attrs = self.build_attrs(attrs, **extra_attrs)
-        else:
-            final_attrs = self.build_attrs(attrs, extra_attrs=extra_attrs)
+        final_attrs = self.build_attrs(attrs, extra_attrs=extra_attrs)
 
         if not value or isinstance(value, InMemoryUploadedFile):
             # can't display images that aren't stored
