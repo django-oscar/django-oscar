@@ -234,6 +234,12 @@ class VoucherSetCreateView(generic.CreateView):
         ctx['title'] = _('Create voucher set')
         return ctx
 
+    def get_initial(self):
+        return {
+            'start_datetime': timezone.now(),
+            'end_datetime': timezone.now()
+        }
+
     def form_valid(self, form):
         condition = Condition.objects.create(
             range=form.cleaned_data['benefit_range'],
