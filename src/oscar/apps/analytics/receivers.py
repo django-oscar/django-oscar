@@ -10,7 +10,6 @@ from oscar.apps.order.signals import order_placed
 from oscar.apps.search.signals import user_search
 from oscar.core.loading import get_classes
 
-
 UserSearch, UserRecord, ProductRecord, UserProductView = get_classes(
     'analytics.models', ['UserSearch', 'UserRecord', 'ProductRecord',
                          'UserProductView'])

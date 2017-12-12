@@ -1,13 +1,13 @@
 from django import VERSION
 from django.urls import reverse_lazy
 
+from oscar.core.loading import feature_hidden
+from oscar.views.decorators import permissions_required
+
 if VERSION > (2, 0):
     from django.urls.resolvers import URLPattern
 else:
     from django.urls.resolvers import RegexURLPattern as URLPattern
-
-from oscar.core.loading import feature_hidden
-from oscar.views.decorators import permissions_required
 
 
 class Application(object):

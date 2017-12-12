@@ -9,7 +9,6 @@ from django.urls import NoReverseMatch, reverse
 from oscar.apps.checkout.signals import post_checkout
 from oscar.core.loading import get_class, get_model
 
-
 OrderCreator = get_class('order.utils', 'OrderCreator')
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 CheckoutSessionMixin = get_class('checkout.session', 'CheckoutSessionMixin')
@@ -48,7 +47,6 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     communication_type_code = 'ORDER_PLACED'
 
     view_signal = post_checkout
-    
 
     # Payment handling methods
     # ------------------------
