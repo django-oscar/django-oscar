@@ -96,10 +96,7 @@ class NullCharField(CharField):
     CharField that stores '' as None and returns None as ''
     Useful when using unique=True and forms. Implies null==blank==True.
 
-    When a ModelForm with a CharField with null=True gets saved, the field will
-    be set to '': https://code.djangoproject.com/ticket/9590
-    This breaks usage with unique=True, as '' is considered equal to another
-    field set to ''.
+    Django's CharField stores '' as None, but does not return None as ''.
     """
     description = "CharField that stores '' as None and returns None as ''"
 
@@ -115,11 +112,9 @@ class NullCharField(CharField):
         setattr(cls, self.name, Creator(self))
 
     def from_db_value(self, value, expression, connection, context):
-        return self.to_python(value)
-
-    def to_python(self, value):
-        val = super(NullCharField, self).to_python(value)
-        return val if val is not None else u''
+        value = self.to_python(value)
+        # If the value was stored as null, return empty string instead
+        return value if value is not None else u''
 
     def get_prep_value(self, value):
         prepped = super(NullCharField, self).get_prep_value(value)

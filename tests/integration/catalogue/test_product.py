@@ -40,6 +40,8 @@ class ProductCreationTests(ProductTests):
     def test_none_upc_is_represented_as_empty_string(self):
         product = Product(product_class=self.product_class,
                           title='testing', upc=None)
+        product.save()
+        product.refresh_from_db()
         self.assertEqual(product.upc, u'')
 
     def test_upc_uniqueness_enforced(self):
